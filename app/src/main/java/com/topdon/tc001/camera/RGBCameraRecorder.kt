@@ -134,7 +134,7 @@ class RGBCameraRecorder(
 
         // TODO: Pass session timing metadata to Camera2System for embedding in video metadata
         // This would require extending Camera2System to support metadata embedding
-        
+
         return camera2System.startRecording(sessionMetadata.sessionId)
     }
 
@@ -145,7 +145,7 @@ class RGBCameraRecorder(
         this.sessionId = sessionId
 
         Log.i(TAG, "Starting RGB video recording (legacy mode)")
-        
+
         return camera2System.startRecording(sessionId)
     }
 

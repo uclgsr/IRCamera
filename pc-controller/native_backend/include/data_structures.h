@@ -19,7 +19,7 @@ namespace ircamera {
         double get_packet_loss_rate() const {
             if (total_packets_received + total_packets_lost == 0) return 0.0;
             return static_cast<double>(total_packets_lost) /
-                   (total_packets_received + total_packets_lost) * 100.0;
+                    (total_packets_received + total_packets_lost) * 100.0;
         }
     };
 
@@ -41,7 +41,8 @@ namespace ircamera {
         std::string description;
         uint64_t sequence_number;
 
-        SyncMarker() : sequence_number(0) {}
+        SyncMarker() : sequence_number(0) {
+        }
 
         SyncMarker(const std::string &type, const std::string &desc = "")
                 : marker_type(type), description(desc), sequence_number(0) {
@@ -59,7 +60,8 @@ namespace ircamera {
         uint64_t frame_number;
         bool valid = true;
 
-        CameraFrame() : width(0), height(0), channels(0), frame_number(0) {}
+        CameraFrame() : width(0), height(0), channels(0), frame_number(0) {
+        }
 
         size_t size() const {
             return width * height * channels;

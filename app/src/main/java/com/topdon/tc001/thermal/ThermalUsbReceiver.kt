@@ -30,9 +30,11 @@ class ThermalUsbReceiver : BroadcastReceiver() {
                 UsbManager.ACTION_USB_DEVICE_ATTACHED -> {
                     handleDeviceAttached(context, intent)
                 }
+
                 UsbManager.ACTION_USB_DEVICE_DETACHED -> {
                     handleDeviceDetached(context, intent)
                 }
+
                 USB_PERMISSION_ACTION -> {
                     handleUsbPermissionResult(context, intent)
                 }
@@ -43,22 +45,28 @@ class ThermalUsbReceiver : BroadcastReceiver() {
     }
 
     private fun handleDeviceAttached(context: Context, intent: Intent) {
-        val device = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
-            intent.getParcelableExtra(UsbManager.EXTRA_DEVICE, UsbDevice::class.java)
-        } else {
-            @Suppress("DEPRECATION")
-            intent.getParcelableExtra(UsbManager.EXTRA_DEVICE) as? UsbDevice
-        }
+        val device =
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+                intent.getParcelableExtra(UsbManager.EXTRA_DEVICE, UsbDevice::class.java)
+            } else {
+                @Suppress("DEPRECATION")
+                intent.getParcelableExtra(UsbManager.EXTRA_DEVICE) as? UsbDevice
+            }
 
         if (device != null) {
-            Log.i(TAG, "USB device attached: ${device.productName} (VID=${device.vendorId.toString(16)}, PID=${device.productId.toString(16)})")
+            Log.i(
+                TAG,
+                "USB device attached: ${device.productName} (VID=${device.vendorId.toString(16)}, PID=${
+                    device.productId.toString(16)
+                })"
+            )
 
             if (device.isTcTsDevice()) {
                 Log.i(TAG, "Topdon thermal camera detected: ${device.productName}")
-                
+
                 val usbManager = context.getSystemService(Context.USB_SERVICE) as UsbManager
                 val hasPermission = usbManager.hasPermission(device)
-                
+
                 if (hasPermission) {
                     // Device attached with permission - notify via EventBus
                     Log.i(TAG, "Thermal camera attached with existing permission")
@@ -75,19 +83,25 @@ class ThermalUsbReceiver : BroadcastReceiver() {
     }
 
     private fun handleDeviceDetached(context: Context, intent: Intent) {
-        val device = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
-            intent.getParcelableExtra(UsbManager.EXTRA_DEVICE, UsbDevice::class.java)
-        } else {
-            @Suppress("DEPRECATION")
-            intent.getParcelableExtra(UsbManager.EXTRA_DEVICE) as? UsbDevice
-        }
+        val device =
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+                intent.getParcelableExtra(UsbManager.EXTRA_DEVICE, UsbDevice::class.java)
+            } else {
+                @Suppress("DEPRECATION")
+                intent.getParcelableExtra(UsbManager.EXTRA_DEVICE) as? UsbDevice
+            }
 
         if (device != null) {
-            Log.i(TAG, "USB device detached: ${device.productName} (VID=${device.vendorId.toString(16)}, PID=${device.productId.toString(16)})")
+            Log.i(
+                TAG,
+                "USB device detached: ${device.productName} (VID=${device.vendorId.toString(16)}, PID=${
+                    device.productId.toString(16)
+                })"
+            )
 
             if (device.isTcTsDevice()) {
                 Log.w(TAG, "Topdon thermal camera disconnected: ${device.productName}")
-                
+
                 // Notify via EventBus that thermal camera was disconnected
                 EventBus.getDefault().post(DeviceConnectEvent(false, device))
             }
@@ -95,18 +109,19 @@ class ThermalUsbReceiver : BroadcastReceiver() {
     }
 
     private fun handleUsbPermissionResult(context: Context, intent: Intent) {
-        val device = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
-            intent.getParcelableExtra(UsbManager.EXTRA_DEVICE, UsbDevice::class.java)
-        } else {
-            @Suppress("DEPRECATION")
-            intent.getParcelableExtra(UsbManager.EXTRA_DEVICE) as? UsbDevice
-        }
-        
+        val device =
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+                intent.getParcelableExtra(UsbManager.EXTRA_DEVICE, UsbDevice::class.java)
+            } else {
+                @Suppress("DEPRECATION")
+                intent.getParcelableExtra(UsbManager.EXTRA_DEVICE) as? UsbDevice
+            }
+
         val granted = intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)
-        
+
         if (device != null) {
             Log.i(TAG, "USB permission result for ${device.productName}: granted=$granted")
-            
+
             if (device.isTcTsDevice()) {
                 if (granted) {
                     Log.i(TAG, "USB permission granted for thermal camera")

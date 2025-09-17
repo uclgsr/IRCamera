@@ -134,7 +134,13 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
         try {
             // Note: For ViewModel context, we'll pass a minimal RecordingController
             // In a real implementation, this would be injected or managed differently
-            gsrSensorRecorder = GSRSensorRecorder(getApplication(), "gsr_viewmodel_1", 128, null as? com.topdon.tc001.controller.RecordingController ?: throw IllegalStateException("RecordingController required"))
+            gsrSensorRecorder = GSRSensorRecorder(
+                getApplication(),
+                "gsr_viewmodel_1",
+                128,
+                null as? com.topdon.tc001.controller.RecordingController
+                    ?: throw IllegalStateException("RecordingController required")
+            )
             gsrSessionManager = GSRSessionManager.getInstance(getApplication())
 
             // Set up GSR state monitoring

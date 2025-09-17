@@ -60,7 +60,7 @@ class ThermalCameraDemo : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_thermal_demo)
-        
+
         // Initialize UI components
         statusText = findViewById(R.id.statusText)
         thermalPreview = findViewById(R.id.thermalPreview)
@@ -75,28 +75,28 @@ class ThermalCameraDemo : AppCompatActivity() {
 
         requestPermissions()
     }
-    
+
     private fun setupButtonListeners() {
         startButton.setOnClickListener {
             lifecycleScope.launch {
                 startThermalRecording()
             }
         }
-        
+
         stopButton.setOnClickListener {
             lifecycleScope.launch {
                 stopThermalRecording()
             }
         }
-        
+
         networkButton.setOnClickListener {
             toggleNetworkStreaming()
         }
-        
+
         configButton.setOnClickListener {
             showConfigurationDialog()
         }
-        
+
         exportButton.setOnClickListener {
             lifecycleScope.launch {
                 exportThermalData()
@@ -129,7 +129,7 @@ class ThermalCameraDemo : AppCompatActivity() {
 
                 // Initialize network server
                 networkServer = NetworkServer(this@ThermalCameraDemo, NETWORK_PORT)
-                
+
                 // Initialize thermal camera recorder
                 thermalRecorder = ThermalCameraRecorder(this@ThermalCameraDemo)
 
@@ -146,19 +146,19 @@ class ThermalCameraDemo : AppCompatActivity() {
                                 Log.d(TAG, "Thermal frame received: ${it.width}x${it.height}")
                                 thermalPreview.setImageBitmap(it)
                             }
-                            
+
                             // Update temperature display
                             temperatureData?.let { data ->
-                                findViewById<TextView>(R.id.minTempText)?.text = 
+                                findViewById<TextView>(R.id.minTempText)?.text =
                                     String.format("%.1f°C", data.minTemperature)
-                                findViewById<TextView>(R.id.maxTempText)?.text = 
+                                findViewById<TextView>(R.id.maxTempText)?.text =
                                     String.format("%.1f°C", data.maxTemperature)
-                                    
+
                                 // Update performance metrics
                                 val metrics = thermalRecorder.getPerformanceMetrics()
-                                findViewById<TextView>(R.id.fpsText)?.text = 
+                                findViewById<TextView>(R.id.fpsText)?.text =
                                     String.format("%.1f", metrics.averageFrameRate)
-                                findViewById<TextView>(R.id.cpuText)?.text = 
+                                findViewById<TextView>(R.id.cpuText)?.text =
                                     String.format("%.1f%%", metrics.cpuUsagePercent)
                             }
                         }
@@ -169,7 +169,7 @@ class ThermalCameraDemo : AppCompatActivity() {
 
                 if (success) {
                     updateStatus("✅ Thermal camera ready. Plug in TC001 for hardware mode or use simulation.")
-                    
+
                     // Enable UI controls
                     runOnUiThread {
                         startButton.isEnabled = true
@@ -177,7 +177,7 @@ class ThermalCameraDemo : AppCompatActivity() {
                         configButton.isEnabled = true
                         exportButton.isEnabled = true
                     }
-                    
+
                     // Start network server
                     networkServer.start()
                     updateStatus("✅ Network server started on port $NETWORK_PORT")
@@ -245,7 +245,7 @@ class ThermalCameraDemo : AppCompatActivity() {
             networkButton.text = "Enable Network Streaming"
         }
     }
-    
+
     private fun toggleNetworkStreaming() {
         if (isNetworkEnabled) {
             disableNetworkStreaming()
@@ -253,7 +253,7 @@ class ThermalCameraDemo : AppCompatActivity() {
             enableNetworkStreaming()
         }
     }
-    
+
     private suspend fun startThermalRecording() {
         try {
             val sessionDir = File(filesDir, "thermal_demo_${System.currentTimeMillis()}")
@@ -277,25 +277,25 @@ class ThermalCameraDemo : AppCompatActivity() {
             updateStatus("❌ Recording failed: ${e.message}")
         }
     }
-    
+
     private suspend fun stopThermalRecording() {
         try {
             val stopSuccess = thermalRecorder.stopRecording()
             if (stopSuccess) {
                 val stats = thermalRecorder.getRecordingStats()
                 updateStatus("✅ Recording stopped! Recorded ${stats.totalSamplesRecorded} thermal frames")
-                
+
                 runOnUiThread {
                     startButton.isEnabled = true
                     stopButton.isEnabled = false
                 }
-                
+
                 Toast.makeText(
                     this@ThermalCameraDemo,
                     "Recording Complete!\n" +
-                    "Frames: ${stats.totalSamplesRecorded}\n" +
-                    "Data Rate: ${String.format("%.1f", stats.averageDataRate)} FPS\n" +
-                    "Storage: ${String.format("%.2f", stats.storageUsedMB)} MB",
+                            "Frames: ${stats.totalSamplesRecorded}\n" +
+                            "Data Rate: ${String.format("%.1f", stats.averageDataRate)} FPS\n" +
+                            "Storage: ${String.format("%.2f", stats.storageUsedMB)} MB",
                     Toast.LENGTH_LONG
                 ).show()
             } else {
@@ -306,11 +306,11 @@ class ThermalCameraDemo : AppCompatActivity() {
             updateStatus("❌ Stop recording failed: ${e.message}")
         }
     }
-    
+
     private fun showConfigurationDialog() {
         val configItems = arrayOf(
             "Emissivity: 0.95",
-            "Temperature Range: -20°C to 400°C", 
+            "Temperature Range: -20°C to 400°C",
             "Atmospheric Temp: 25°C",
             "Humidity: 50%",
             "Distance: 1.0m",
@@ -318,7 +318,7 @@ class ThermalCameraDemo : AppCompatActivity() {
             "Noise Reduction: ON",
             "Auto Gain: ON"
         )
-        
+
         AlertDialog.Builder(this)
             .setTitle("Thermal Camera Configuration")
             .setItems(configItems) { _, which ->
@@ -328,18 +328,22 @@ class ThermalCameraDemo : AppCompatActivity() {
                     2 -> showAtmosphericTempDialog()
                     5 -> showPaletteDialog()
                     else -> {
-                        Toast.makeText(this, "Configuration option selected: ${configItems[which]}", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            this,
+                            "Configuration option selected: ${configItems[which]}",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
             }
             .setNegativeButton("Cancel", null)
             .show()
     }
-    
+
     private fun showEmissivityDialog() {
         val input = EditText(this)
         input.setText("0.95")
-        
+
         AlertDialog.Builder(this)
             .setTitle("Set Emissivity")
             .setView(input)
@@ -350,7 +354,11 @@ class ThermalCameraDemo : AppCompatActivity() {
                         thermalRecorder.updateCalibration(25.0, emissivity, 23.0)
                         updateStatus("✅ Emissivity updated to $emissivity")
                     } else {
-                        Toast.makeText(this, "Emissivity must be between 0.1 and 1.0", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            this,
+                            "Emissivity must be between 0.1 and 1.0",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 } catch (e: Exception) {
                     Toast.makeText(this, "Invalid emissivity value", Toast.LENGTH_SHORT).show()
@@ -359,7 +367,7 @@ class ThermalCameraDemo : AppCompatActivity() {
             .setNegativeButton("Cancel", null)
             .show()
     }
-    
+
     private fun showTemperatureRangeDialog() {
         AlertDialog.Builder(this)
             .setTitle("Temperature Range")
@@ -367,11 +375,11 @@ class ThermalCameraDemo : AppCompatActivity() {
             .setPositiveButton("OK", null)
             .show()
     }
-    
+
     private fun showAtmosphericTempDialog() {
         val input = EditText(this)
         input.setText("25.0")
-        
+
         AlertDialog.Builder(this)
             .setTitle("Set Atmospheric Temperature (°C)")
             .setView(input)
@@ -382,7 +390,11 @@ class ThermalCameraDemo : AppCompatActivity() {
                         thermalRecorder.updateCalibration(temp, 0.95, temp - 2.0)
                         updateStatus("✅ Atmospheric temperature updated to ${temp}°C")
                     } else {
-                        Toast.makeText(this, "Temperature must be between -40°C and 80°C", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            this,
+                            "Temperature must be between -40°C and 80°C",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 } catch (e: Exception) {
                     Toast.makeText(this, "Invalid temperature value", Toast.LENGTH_SHORT).show()
@@ -391,10 +403,10 @@ class ThermalCameraDemo : AppCompatActivity() {
             .setNegativeButton("Cancel", null)
             .show()
     }
-    
+
     private fun showPaletteDialog() {
         val palettes = arrayOf("IRON", "RAINBOW", "GRAYSCALE", "HOT", "COOL", "JET")
-        
+
         AlertDialog.Builder(this)
             .setTitle("Select Color Palette")
             .setItems(palettes) { _, which ->
@@ -405,34 +417,34 @@ class ThermalCameraDemo : AppCompatActivity() {
             .setNegativeButton("Cancel", null)
             .show()
     }
-    
+
     private suspend fun exportThermalData() {
         try {
             updateStatus("📁 Exporting thermal data...")
-            
+
             val exportDir = File(filesDir, "thermal_exports")
             val success = thermalRecorder.exportThermalData(
                 exportDir.absolutePath,
                 ThermalCameraRecorder.ThermalExportFormat.CSV,
                 includeImages = true
             )
-            
+
             if (success) {
                 updateStatus("✅ Thermal data exported successfully")
                 val metrics = thermalRecorder.getPerformanceMetrics()
-                
+
                 Toast.makeText(
                     this@ThermalCameraDemo,
                     "Export Complete!\n" +
-                    "Location: ${exportDir.absolutePath}\n" +
-                    "Avg FPS: ${String.format("%.1f", metrics.averageFrameRate)}\n" +
-                    "Memory: ${String.format("%.1f", metrics.memoryUsageMB)} MB",
+                            "Location: ${exportDir.absolutePath}\n" +
+                            "Avg FPS: ${String.format("%.1f", metrics.averageFrameRate)}\n" +
+                            "Memory: ${String.format("%.1f", metrics.memoryUsageMB)} MB",
                     Toast.LENGTH_LONG
                 ).show()
             } else {
                 updateStatus("❌ Failed to export thermal data")
             }
-            
+
         } catch (e: Exception) {
             Log.e(TAG, "Failed to export thermal data", e)
             updateStatus("❌ Export failed: ${e.message}")

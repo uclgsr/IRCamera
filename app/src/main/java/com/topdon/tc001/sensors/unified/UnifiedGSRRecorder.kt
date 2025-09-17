@@ -265,7 +265,10 @@ class UnifiedGSRRecorder(
     /**
      * Enhanced startRecording with session metadata for precise synchronization
      */
-    override suspend fun startRecording(sessionDirectory: String, sessionMetadata: SessionMetadata): Boolean =
+    override suspend fun startRecording(
+        sessionDirectory: String,
+        sessionMetadata: SessionMetadata
+    ): Boolean =
         withContext(Dispatchers.IO) {
             Log.i(TAG, "Starting GSR recording session with metadata: ${sessionMetadata.sessionId}")
 
@@ -285,20 +288,23 @@ class UnifiedGSRRecorder(
                 this@UnifiedGSRRecorder.sessionDirectory = File(sessionDirectory)
                 this@UnifiedGSRRecorder.sessionDirectory?.mkdirs()
 
-                val csvFile = File(this@UnifiedGSRRecorder.sessionDirectory, "gsr_data_${sessionMetadata.sessionId}.csv")
+                val csvFile = File(
+                    this@UnifiedGSRRecorder.sessionDirectory,
+                    "gsr_data_${sessionMetadata.sessionId}.csv"
+                )
                 csvWriter = FileWriter(csvFile)
 
                 // Write comprehensive timing header
                 csvWriter?.write(sessionMetadata.createTimingHeader())
                 csvWriter?.write("# GSR Recording Session with Synchronized Timing\n")
                 csvWriter?.write("# Device: ${selectedDevice?.name} (${selectedDevice?.address})\n")
-                csvWriter?.write("# Sampling Rate: ${samplingRate}Hz\n") 
+                csvWriter?.write("# Sampling Rate: ${samplingRate}Hz\n")
                 csvWriter?.write("# ADC Resolution: 12-bit (0-${ADC_RESOLUTION_12BIT.toInt()})\n")
                 csvWriter?.write("# Session Start: ${sessionMetadata.sessionStartIso}\n")
                 csvWriter?.write("#\n")
                 csvWriter?.write("# GSR Data Columns:\n")
                 csvWriter?.write("#   timestamp_wall_ms: Wall clock time (UTC)\n")
-                csvWriter?.write("#   timestamp_relative_ms: Milliseconds since session start (monotonic)\n") 
+                csvWriter?.write("#   timestamp_relative_ms: Milliseconds since session start (monotonic)\n")
                 csvWriter?.write("#   timestamp_monotonic_ns: Raw monotonic nanoseconds for precise intervals\n")
                 csvWriter?.write("#   gsr_microsiemens: Galvanic skin response in microsiemens\n")
                 csvWriter?.write("#   gsr_raw_12bit: Raw ADC value (0-4095)\n")
@@ -450,10 +456,10 @@ class UnifiedGSRRecorder(
                     val objectCluster = createMockObjectCluster()
                     processGSRData(shimmer, objectCluster)
                 }
-                
+
                 // Update connection quality
                 updateConnectionQuality()
-                
+
                 // Process at ~10Hz (100ms intervals) for reasonable data rate
                 delay(100)
             } catch (e: Exception) {
@@ -461,7 +467,7 @@ class UnifiedGSRRecorder(
                 delay(100) // Continue processing even if there's an error
             }
         }
-        
+
         Log.i(TAG, "GSR data processing stopped")
     }
 
@@ -619,7 +625,9 @@ class UnifiedGSRRecorder(
         try {
             val monotonicNs = android.os.SystemClock.elapsedRealtimeNanos()
             val wallClockMs = System.currentTimeMillis()
-            val iso = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.getDefault()).format(Date(wallClockMs))
+            val iso = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.getDefault()).format(
+                Date(wallClockMs)
+            )
 
             // Calculate relative timestamp from session start if available
             val relativeMs = sessionMetadata?.let { metadata ->
@@ -665,7 +673,7 @@ class UnifiedGSRRecorder(
                 // Legacy format
                 csvWriter?.write("${monotonicNs},${iso},${gsrMicrosiemens},${gsrRawInt},${ppgRaw.toInt()},${qualityScore},-50\n")
             }
-            
+
             if (recordedSamples.incrementAndGet() % 100 == 0L) {
                 csvWriter?.flush()  // Flush every 100 samples
             }

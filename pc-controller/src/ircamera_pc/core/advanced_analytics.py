@@ -431,7 +431,7 @@ class AdvancedAnalyticsEngine:
 
             # Temperature stability
             features['temp_stability'] = 1.0 / (
-                        1.0 + features['std_temp']) if 'std_temp' in features else 0.0
+                    1.0 + features['std_temp']) if 'std_temp' in features else 0.0
 
             return features
 

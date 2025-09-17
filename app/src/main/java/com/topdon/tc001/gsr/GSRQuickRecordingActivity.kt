@@ -217,7 +217,7 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
                     }
                     return@launch
                 }
-                
+
                 if (storageStatus.shouldWarn) {
                     runOnUiThread {
                         Toast.makeText(
@@ -240,13 +240,13 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
                     if (success) {
                         val sessionDir = recordingController.getCurrentSessionDirectory()
                         currentSessionDirectory = sessionDir?.rootDir?.absolutePath
-                        
+
                         Toast.makeText(
                             this@GSRQuickRecordingActivity,
                             "Recording started",
                             Toast.LENGTH_SHORT
                         ).show()
-                        
+
                         // Show session info
                         currentSessionDirectory?.let { sessionDirPath ->
                             binding.sessionInfoText.text = "Session saved to:\n$sessionDirPath"

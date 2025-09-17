@@ -571,22 +571,22 @@ class NetworkServer:
         """Handle time synchronization request using enhanced NTP-like protocol."""
         try:
             device_id = message.get("device_id", "unknown")
-            
+
             # Delegate to enhanced time sync service
             response = await self._enhanced_timesync.handle_time_sync_request(message, device_id)
-            
+
             # Add message ID for proper protocol compliance
             message_id = message.get("message_id")
             if message_id:
                 response["message_id"] = message_id
-                
+
             return response
-            
+
         except Exception as e:
             logger.error(f"Error in time sync handler: {e}")
             return create_message(
                 "error",
-                error_code="SYNC_ERROR", 
+                error_code="SYNC_ERROR",
                 error_message=f"Time sync error: {e}"
             )
 
@@ -1411,8 +1411,6 @@ class NetworkServer:
             logger.error(f"Error handling GSR stream end: {e}")
             return {"message_type": "error", "error": str(e)}
 
-
-
     def get_gsr_session_stats(self) -> Dict[str, Any]:
         """Get GSR session statistics for monitoring"""
         try:
@@ -1435,7 +1433,7 @@ class NetworkServer:
             return None
 
     # Enhanced Time Synchronization Interface
-    
+
     def get_time_sync_stats(self, device_id: str = None) -> Dict[str, Any]:
         """Get time synchronization statistics."""
         if device_id:
@@ -1443,23 +1441,23 @@ class NetworkServer:
             return asdict(stats) if stats else {}
         else:
             return self._enhanced_timesync.get_sync_quality_summary()
-    
+
     def get_all_time_sync_stats(self) -> Dict[str, Any]:
         """Get time synchronization statistics for all devices."""
         all_stats = self._enhanced_timesync.get_all_sync_stats()
         return {
-            device_id: asdict(stats) 
+            device_id: asdict(stats)
             for device_id, stats in all_stats.items()
         }
-    
+
     def is_device_time_synchronized(self, device_id: str) -> bool:
         """Check if device is properly time synchronized."""
         return self._enhanced_timesync.is_device_synchronized(device_id)
-    
+
     async def register_time_sync_session(self, session_id: str, device_id: str) -> bool:
         """Register a session for time synchronization tracking."""
         return await self._enhanced_timesync.register_session(session_id, device_id)
-    
+
     async def end_time_sync_session(self, session_id: str) -> bool:
         """End a time synchronization session."""
         return await self._enhanced_timesync.end_session(session_id)

@@ -41,9 +41,13 @@ namespace ircamera {
 
             bool stop_streaming();
 
-            bool is_connected() const { return connected_.load(); }
+            bool is_connected() const {
+                return connected_.load();
+            }
 
-            bool is_streaming() const { return streaming_.load(); }
+            bool is_streaming() const {
+                return streaming_.load();
+            }
 
             bool get_data(ShimmerData &data);
 
@@ -55,7 +59,9 @@ namespace ircamera {
 
             void set_gsr_range(int range);
 
-            std::string get_last_error() const { return last_error_; }
+            std::string get_last_error() const {
+                return last_error_;
+            }
 
             struct Statistics {
                 uint64_t total_samples;

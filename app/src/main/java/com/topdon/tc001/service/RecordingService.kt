@@ -224,23 +224,27 @@ class RecordingService : LifecycleService() {
             lifecycleScope.launch {
                 try {
                     Log.i(TAG, "Initializing RecordingService with enhanced fault tolerance")
-                    
+
                     // Initialize sensors with enhanced error handling
                     val sensorsSuccess = recordingController.initializeSensors()
                     val networkSuccess = initializeNetworkClient()
-                    
+
                     // Service is considered initialized if at least one sensor is available
                     isInitialized = sensorsSuccess
                     isNetworkInitialized = networkSuccess
 
                     if (sensorsSuccess) {
-                        Log.i(TAG, "Recording service initialized successfully with ${recordingController.getAvailableSensors().size} sensors")
+                        Log.i(
+                            TAG,
+                            "Recording service initialized successfully with ${recordingController.getAvailableSensors().size} sensors"
+                        )
                         structuredLogger.log(
                             StructuredLogger.LogLevel.INFO,
                             "RecordingService",
                             "service_initialized",
                             mapOf(
-                                "available_sensors" to recordingController.getAvailableSensors().map { it.sensorId },
+                                "available_sensors" to recordingController.getAvailableSensors()
+                                    .map { it.sensorId },
                                 "sensor_count" to recordingController.getAvailableSensors().size
                             )
                         )
@@ -405,7 +409,7 @@ class RecordingService : LifecycleService() {
             Log.e(TAG, "Service not initialized, cannot start recording")
             structuredLogger.log(
                 StructuredLogger.LogLevel.ERROR,
-                "RecordingService", 
+                "RecordingService",
                 "recording_start_failed",
                 mapOf("reason" to "service_not_initialized")
             )
@@ -429,7 +433,8 @@ class RecordingService : LifecycleService() {
                     "recording_session_start",
                     mapOf(
                         "session_directory" to sessionDirectory,
-                        "available_sensors" to recordingController.getAvailableSensors().map { it.sensorId }
+                        "available_sensors" to recordingController.getAvailableSensors()
+                            .map { it.sensorId }
                     )
                 )
 
@@ -444,9 +449,12 @@ class RecordingService : LifecycleService() {
                 if (success) {
                     val activeSensors = recordingController.getActiveSensorCount()
                     val totalSensors = recordingController.getAvailableSensors().size
-                    Log.i(TAG, "Recording session started successfully with $activeSensors/$totalSensors sensors")
+                    Log.i(
+                        TAG,
+                        "Recording session started successfully with $activeSensors/$totalSensors sensors"
+                    )
                     updateNotification("Recording: $activeSensors sensors active")
-                    
+
                     structuredLogger.log(
                         StructuredLogger.LogLevel.INFO,
                         "RecordingService",
@@ -495,11 +503,19 @@ class RecordingService : LifecycleService() {
                         (System.nanoTime() - recordingStartTime) / 1_000_000_000.0
                     } else 0.0
 
-                    Log.i(TAG, "Recording session stopped successfully (duration: ${String.format("%.1f", sessionDuration)}s)")
+                    Log.i(
+                        TAG,
+                        "Recording session stopped successfully (duration: ${
+                            String.format(
+                                "%.1f",
+                                sessionDuration
+                            )
+                        }s)"
+                    )
                     updateNotification(
                         "Recording completed (${String.format("%.1f", sessionDuration)}s)"
                     )
-                    
+
                     structuredLogger.log(
                         StructuredLogger.LogLevel.INFO,
                         "RecordingService",
@@ -509,7 +525,7 @@ class RecordingService : LifecycleService() {
                             "session_directory" to (currentSessionDirectory ?: "unknown")
                         )
                     )
-                    
+
                     delay(2000)
                     stopForeground(true)
                 } else {
@@ -1370,7 +1386,10 @@ class RecordingService : LifecycleService() {
                         val success = previewStreamer.startStreaming()
                         sendResponseToPC("preview_streaming_response", JSONObject().apply {
                             put("status", if (success) "started" else "failed")
-                            put("message", if (success) "Preview streaming started" else "Failed to start preview streaming")
+                            put(
+                                "message",
+                                if (success) "Preview streaming started" else "Failed to start preview streaming"
+                            )
                         })
                     }
                 }
@@ -1389,12 +1408,18 @@ class RecordingService : LifecycleService() {
                 "configure_preview_streaming" -> {
                     Log.i(TAG, "PC Controller requested to configure preview streaming")
                     val frameInterval = message.optLong("frame_interval_ms", 1000L)
-                    val sensorInterval = message.optLong("sensor_interval_ms", 1000L) 
+                    val sensorInterval = message.optLong("sensor_interval_ms", 1000L)
                     val previewWidth = message.optInt("preview_width", 320)
                     val previewHeight = message.optInt("preview_height", 240)
                     val jpegQuality = message.optInt("jpeg_quality", 70)
-                    
-                    previewStreamer.configure(frameInterval, sensorInterval, previewWidth, previewHeight, jpegQuality)
+
+                    previewStreamer.configure(
+                        frameInterval,
+                        sensorInterval,
+                        previewWidth,
+                        previewHeight,
+                        jpegQuality
+                    )
                     sendResponseToPC("preview_config_response", JSONObject().apply {
                         put("status", "configured")
                         put("frame_interval_ms", frameInterval)

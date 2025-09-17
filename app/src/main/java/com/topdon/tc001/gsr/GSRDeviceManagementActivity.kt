@@ -55,7 +55,7 @@ class GSRDeviceManagementActivity : AppCompatActivity(), View.OnClickListener {
         setContentView(R.layout.activity_gsr_device_management)
 
         prefs = getSharedPreferences("gsr_device_prefs", Context.MODE_PRIVATE)
-        
+
         // Initialize Bluetooth components
         bluetoothManager = getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager?
         bluetoothAdapter = bluetoothManager?.adapter
@@ -365,15 +365,18 @@ class GSRDeviceManagementActivity : AppCompatActivity(), View.OnClickListener {
             }
 
             val isPaired = bluetoothDevice.bondState == BluetoothDevice.BOND_BONDED
-            Log.d(TAG, "Device ${device.name} pairing status: ${if (isPaired) "Paired" else "Not paired"}")
-            
+            Log.d(
+                TAG,
+                "Device ${device.name} pairing status: ${if (isPaired) "Paired" else "Not paired"}"
+            )
+
             if (!isPaired) {
                 showPairingDialog(device, bluetoothDevice)
             } else {
                 // Device is already paired, proceed with connection
                 proceedWithConnection(device)
             }
-            
+
         } catch (e: SecurityException) {
             Log.e(TAG, "Security exception checking device pairing status", e)
             showErrorMessage("Bluetooth permissions required to check device pairing")
@@ -406,12 +409,12 @@ class GSRDeviceManagementActivity : AppCompatActivity(), View.OnClickListener {
             }
 
             Log.i(TAG, "Initiating pairing for device: ${deviceInfo.name}")
-            
+
             val pairingResult = bluetoothDevice.createBond()
             if (pairingResult) {
                 showToast("Pairing request sent. Please confirm on the device.")
                 Log.i(TAG, "Pairing request sent for ${deviceInfo.name}")
-                
+
                 // Monitor pairing result (simplified - in real app you'd register a BroadcastReceiver)
                 lifecycleScope.launch {
                     delay(5000) // Wait 5 seconds for pairing to complete
@@ -429,7 +432,7 @@ class GSRDeviceManagementActivity : AppCompatActivity(), View.OnClickListener {
 
         } catch (e: SecurityException) {
             Log.e(TAG, "Security exception during device pairing", e)
-            showErrorMessage("Bluetooth permissions required for device pairing")  
+            showErrorMessage("Bluetooth permissions required for device pairing")
         } catch (e: Exception) {
             Log.e(TAG, "Error initiating device pairing", e)
             showErrorMessage("Error during device pairing: ${e.message}")

@@ -18,7 +18,7 @@ import java.util.concurrent.atomic.AtomicReference
 
 /**
  * PreviewStreamer handles streaming of live preview data to PC Controller.
- * 
+ *
  * Provides low-bandwidth preview streaming including:
  * - Downscaled camera frames (RGB and thermal)
  * - Real-time sensor readings (GSR)
@@ -38,17 +38,17 @@ class PreviewStreamer(
 
     private val isStreaming = AtomicBoolean(false)
     private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
-    
+
     private var frameStreamingJob: Job? = null
     private var sensorStreamingJob: Job? = null
-    
+
     // Configuration
     private var frameIntervalMs = DEFAULT_FRAME_INTERVAL_MS
     private var sensorIntervalMs = DEFAULT_SENSOR_INTERVAL_MS
     private var previewWidth = DEFAULT_PREVIEW_WIDTH
     private var previewHeight = DEFAULT_PREVIEW_HEIGHT
     private var jpegQuality = DEFAULT_JPEG_QUALITY
-    
+
     // Current data references
     private val currentRgbFrame = AtomicReference<Bitmap?>()
     private val currentThermalFrame = AtomicReference<Bitmap?>()
@@ -71,17 +71,17 @@ class PreviewStreamer(
 
         Log.i(TAG, "Starting preview streaming to PC")
         isStreaming.set(true)
-        
+
         // Start frame streaming
         frameStreamingJob = scope.launch {
             streamFrames()
         }
-        
+
         // Start sensor data streaming
         sensorStreamingJob = scope.launch {
             streamSensorData()
         }
-        
+
         return true
     }
 
@@ -95,10 +95,10 @@ class PreviewStreamer(
 
         Log.i(TAG, "Stopping preview streaming")
         isStreaming.set(false)
-        
+
         frameStreamingJob?.cancel()
         sensorStreamingJob?.cancel()
-        
+
         frameStreamingJob = null
         sensorStreamingJob = null
     }
@@ -146,43 +146,46 @@ class PreviewStreamer(
         this.previewWidth = previewWidth
         this.previewHeight = previewHeight
         this.jpegQuality = jpegQuality
-        
-        Log.i(TAG, "Preview streaming configured: ${frameIntervalMs}ms frames, ${sensorIntervalMs}ms sensors, ${previewWidth}x${previewHeight}@${jpegQuality}%")
+
+        Log.i(
+            TAG,
+            "Preview streaming configured: ${frameIntervalMs}ms frames, ${sensorIntervalMs}ms sensors, ${previewWidth}x${previewHeight}@${jpegQuality}%"
+        )
     }
 
     private suspend fun streamFrames() {
         Log.i(TAG, "Frame streaming started")
-        
+
         while (isActive && isStreaming.get()) {
             try {
                 // Stream RGB frame if available
                 currentRgbFrame.get()?.let { rgbBitmap ->
                     streamFrame("rgb", rgbBitmap)
                 }
-                
+
                 // Stream thermal frame if available
                 currentThermalFrame.get()?.let { thermalBitmap ->
                     streamFrame("thermal", thermalBitmap)
                 }
-                
+
                 delay(frameIntervalMs)
             } catch (e: Exception) {
                 Log.e(TAG, "Error in frame streaming", e)
                 if (isActive) delay(1000) // Wait before retrying
             }
         }
-        
+
         Log.i(TAG, "Frame streaming stopped")
     }
 
     private suspend fun streamSensorData() {
         Log.i(TAG, "Sensor data streaming started")
-        
+
         while (isActive && isStreaming.get()) {
             try {
                 val gsrValue = currentGsrValue.get()
                 val recordingStatus = currentRecordingStatus.get()
-                
+
                 val sensorMessage = JSONObject().apply {
                     put("message_type", "sensor_data")
                     put("timestamp_ns", System.nanoTime())
@@ -194,16 +197,16 @@ class PreviewStreamer(
                         put("client_count", if (networkServer.isClientConnected()) 1 else 0)
                     })
                 }
-                
+
                 networkServer.sendMessage(sensorMessage)
-                
+
                 delay(sensorIntervalMs)
             } catch (e: Exception) {
                 Log.e(TAG, "Error in sensor data streaming", e)
                 if (isActive) delay(1000) // Wait before retrying
             }
         }
-        
+
         Log.i(TAG, "Sensor data streaming stopped")
     }
 
@@ -211,21 +214,21 @@ class PreviewStreamer(
         try {
             // Scale bitmap to preview dimensions
             val scaledBitmap = BitmapUtils.scaleWithWH(
-                bitmap, 
-                previewWidth.toDouble(), 
+                bitmap,
+                previewWidth.toDouble(),
                 previewHeight.toDouble()
             )
-            
+
             // Convert to JPEG bytes
             val jpegBytes = BitmapUtils.bitmapToBytes(scaledBitmap, jpegQuality)
             if (jpegBytes == null) {
                 Log.w(TAG, "Failed to convert $frameType frame to JPEG")
                 return
             }
-            
+
             // Encode as base64 for JSON transmission
             val base64Data = Base64.encodeToString(jpegBytes, Base64.NO_WRAP)
-            
+
             val frameMessage = JSONObject().apply {
                 put("message_type", "preview_frame")
                 put("timestamp_ns", System.nanoTime())
@@ -237,16 +240,19 @@ class PreviewStreamer(
                 put("data_base64", base64Data)
                 put("data_size_bytes", jpegBytes.size)
             }
-            
+
             networkServer.sendMessage(frameMessage)
-            
-            Log.d(TAG, "Streamed $frameType frame: ${scaledBitmap.width}x${scaledBitmap.height}, ${jpegBytes.size} bytes")
-            
+
+            Log.d(
+                TAG,
+                "Streamed $frameType frame: ${scaledBitmap.width}x${scaledBitmap.height}, ${jpegBytes.size} bytes"
+            )
+
             // Clean up scaled bitmap if it's different from original
             if (scaledBitmap != bitmap && !scaledBitmap.isRecycled) {
                 scaledBitmap.recycle()
             }
-            
+
         } catch (e: Exception) {
             Log.e(TAG, "Error streaming $frameType frame", e)
         }

@@ -209,7 +209,7 @@ namespace ircamera {
             if (is_connected_) {
 
                 uint8_t cmd[] = {0x05, static_cast<uint8_t>(rate_hz & 0xFF),
-                                 static_cast<uint8_t>((rate_hz >> 8) & 0xFF)};
+                        static_cast<uint8_t>((rate_hz >> 8) & 0xFF)};
                 return write_command(cmd, sizeof(cmd));
             }
 

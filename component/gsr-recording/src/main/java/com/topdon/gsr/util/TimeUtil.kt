@@ -216,7 +216,7 @@ object TimeUtil {
     fun createSessionTimingMetadata(sessionId: String): Map<String, Any> {
         val wallClockMs = getSynchronizedTimestamp()
         val monotonicNs = getMonotonicTimestampNs()
-        
+
         return mapOf(
             "session_id" to sessionId,
             "wall_clock_start_ms" to wallClockMs,

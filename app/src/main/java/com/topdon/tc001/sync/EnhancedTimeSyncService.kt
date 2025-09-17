@@ -54,7 +54,7 @@ class EnhancedTimeSyncService(
     suspend fun performEnhancedTimeSync(
         networkClient: com.topdon.tc001.network.NetworkClient? = null
     ): SyncResult = withContext(Dispatchers.IO) {
-        
+
         logger.log(
             StructuredLogger.LogLevel.INFO,
             "EnhancedTimeSyncService",
@@ -64,7 +64,7 @@ class EnhancedTimeSyncService(
 
         try {
             val measurements = mutableListOf<TimeSyncMeasurement>()
-            
+
             // Perform multiple sync rounds for statistical accuracy
             repeat(SYNC_ROUNDS) { round ->
                 val measurement = performSingleSyncRound(networkClient, round)
@@ -77,7 +77,7 @@ class EnhancedTimeSyncService(
             if (measurements.isEmpty()) {
                 logger.log(
                     StructuredLogger.LogLevel.ERROR,
-                    "EnhancedTimeSyncService", 
+                    "EnhancedTimeSyncService",
                     "sync_failed",
                     mapOf("reason" to "no_valid_measurements")
                 )
@@ -92,21 +92,23 @@ class EnhancedTimeSyncService(
 
             // Analyze measurements and calculate optimal offset
             val result = analyzeSyncMeasurements(measurements)
-            
+
             // Update internal state
             currentOffset.set(result.offsetNs)
             currentRTT.set(result.rttNs)
             lastSyncTime.set(System.nanoTime())
             syncQuality.set(result.quality)
-            
+
             // Store in history for drift detection
-            offsetHistory.offer(TimeSyncMeasurement(
-                timestampNs = System.nanoTime(),
-                offsetNs = result.offsetNs,
-                rttNs = result.rttNs,
-                quality = result.quality
-            ))
-            
+            offsetHistory.offer(
+                TimeSyncMeasurement(
+                    timestampNs = System.nanoTime(),
+                    offsetNs = result.offsetNs,
+                    rttNs = result.rttNs,
+                    quality = result.quality
+                )
+            )
+
             // Limit history size
             while (offsetHistory.size > 100) {
                 offsetHistory.poll()
@@ -137,7 +139,7 @@ class EnhancedTimeSyncService(
                 "sync_error",
                 mapOf("error" to (e.message ?: "Unknown error"))
             )
-            
+
             SyncResult(
                 success = false,
                 offsetNs = 0L,
@@ -152,33 +154,33 @@ class EnhancedTimeSyncService(
         networkClient: com.topdon.tc001.network.NetworkClient?,
         round: Int
     ): TimeSyncMeasurement? {
-        
+
         return try {
             val t1 = System.nanoTime() // Client send time
-            
+
             // Send sync request (simulate or use actual network client)
             val response = networkClient?.sendTimeSyncRequest() ?: simulateSyncRequest()
-            
+
             val t4 = System.nanoTime() // Client receive time
-            
+
             // Extract server timestamps from response
             val t2 = response.serverReceiveTime // Server receive time
             val t3 = response.serverSendTime // Server send time
-            
+
             // Calculate offset using NTP algorithm
             val offset = ((t2 - t1) + (t3 - t4)) / 2
             val rtt = (t4 - t1) - (t3 - t2)
-            
+
             // Validate measurement quality
             val quality = evaluateMeasurementQuality(rtt, offset, round)
-            
+
             TimeSyncMeasurement(
                 timestampNs = t1,
                 offsetNs = offset,
                 rttNs = rtt,
                 quality = quality
             )
-            
+
         } catch (e: Exception) {
             logger.log(
                 StructuredLogger.LogLevel.WARNING,
@@ -193,7 +195,7 @@ class EnhancedTimeSyncService(
     private suspend fun simulateSyncRequest(): TimeSyncResponse {
         // Simulate network delay and server processing
         delay(kotlin.random.Random.nextLong(10, 50)) // 10-50ms RTT simulation
-        
+
         val now = System.nanoTime()
         return TimeSyncResponse(
             serverReceiveTime = now - 1000000L, // 1ms ago
@@ -203,24 +205,24 @@ class EnhancedTimeSyncService(
 
     private fun analyzeSyncMeasurements(measurements: List<TimeSyncMeasurement>): SyncResult {
         // Filter out poor quality measurements
-        val goodMeasurements = measurements.filter { 
-            it.quality == SyncQuality.EXCELLENT || it.quality == SyncQuality.GOOD 
+        val goodMeasurements = measurements.filter {
+            it.quality == SyncQuality.EXCELLENT || it.quality == SyncQuality.GOOD
         }
-        
+
         val analysisSet = if (goodMeasurements.size >= 3) goodMeasurements else measurements
-        
+
         // Calculate statistical metrics
         val offsets = analysisSet.map { it.offsetNs }
         val rtts = analysisSet.map { it.rttNs }
-        
+
         // Use median for robustness against outliers
-        val medianOffset = offsets.sorted()[offsets.size / 2] 
+        val medianOffset = offsets.sorted()[offsets.size / 2]
         val medianRTT = rtts.sorted()[rtts.size / 2]
-        
+
         // Calculate jitter (standard deviation of RTT)
         val meanRTT = rtts.average()
         val jitter = kotlin.math.sqrt(rtts.map { (it - meanRTT) * (it - meanRTT) }.average())
-        
+
         // Determine overall quality
         val overallQuality = when {
             medianRTT < 10_000_000L && jitter < 2_000_000L -> SyncQuality.EXCELLENT // <10ms RTT, <2ms jitter
@@ -228,10 +230,10 @@ class EnhancedTimeSyncService(
             medianRTT < 100_000_000L && jitter < 10_000_000L -> SyncQuality.ACCEPTABLE // <100ms RTT, <10ms jitter
             else -> SyncQuality.POOR
         }
-        
-        val success = kotlin.math.abs(medianOffset) < MAX_ACCEPTABLE_OFFSET_MS * 1_000_000L && 
-                     overallQuality != SyncQuality.POOR
-        
+
+        val success = kotlin.math.abs(medianOffset) < MAX_ACCEPTABLE_OFFSET_MS * 1_000_000L &&
+                overallQuality != SyncQuality.POOR
+
         return SyncResult(
             success = success,
             offsetNs = medianOffset,
@@ -254,24 +256,24 @@ class EnhancedTimeSyncService(
     private fun updateClockDriftEstimate() {
         val history = offsetHistory.toList()
         if (history.size < 10) return // Need at least 10 measurements
-        
+
         // Linear regression on offset over time to estimate drift
         val n = history.size
         val sumX = history.mapIndexed { i, _ -> i.toLong() }.sum()
         val sumY = history.map { it.offsetNs }.sum()
         val sumXY = history.mapIndexed { i, measurement -> i * measurement.offsetNs }.sum()
         val sumXX = history.mapIndexed { i, _ -> (i * i).toLong() }.sum()
-        
+
         // Calculate slope (drift rate)
         val denominator = n * sumXX - sumX * sumX
         if (denominator != 0L) {
             clockDriftRate = (n * sumXY - sumX * sumY).toDouble() / denominator.toDouble()
             lastDriftCalculation = System.nanoTime()
-            
+
             logger.log(
                 StructuredLogger.LogLevel.DEBUG,
                 "EnhancedTimeSyncService",
-                "drift_updated", 
+                "drift_updated",
                 mapOf("drift_rate_ppm" to (clockDriftRate * 1_000_000).toString())
             )
         }
@@ -284,7 +286,7 @@ class EnhancedTimeSyncService(
         val baseOffset = currentOffset.get()
         val timeSinceLastSync = System.nanoTime() - lastSyncTime.get()
         val driftCorrection = (clockDriftRate * timeSinceLastSync).toLong()
-        
+
         return baseOffset + driftCorrection
     }
 

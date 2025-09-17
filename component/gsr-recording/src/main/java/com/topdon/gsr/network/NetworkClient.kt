@@ -207,12 +207,14 @@ class NetworkClient(private val context: Context) {
             val controllers = mutableListOf<ControllerInfo>()
 
             try {
-                val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+                val connectivityManager =
+                    context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
                 val activeNetwork = connectivityManager.activeNetwork
                 val networkCapabilities = connectivityManager.getNetworkCapabilities(activeNetwork)
-                
-                if (activeNetwork == null || networkCapabilities == null || 
-                    !networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
+
+                if (activeNetwork == null || networkCapabilities == null ||
+                    !networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
+                ) {
                     Log.w(TAG, "No WiFi network found, cannot discover controllers")
                     return@withContext controllers
                 }

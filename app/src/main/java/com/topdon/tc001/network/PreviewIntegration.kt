@@ -8,17 +8,17 @@ import com.topdon.tc001.service.RecordingService
 /**
  * PreviewIntegration provides easy integration points for camera and sensor components
  * to feed data into the live preview streaming system.
- * 
+ *
  * This is a utility class that other components can use to update preview data
  * without needing to directly manage the PreviewStreamer or PreviewDataAdapter.
  */
 object PreviewIntegration {
     private const val TAG = "PreviewIntegration"
-    
+
     /**
      * Update RGB camera frame for live preview streaming.
      * Call this whenever a new RGB camera frame is available.
-     * 
+     *
      * @param context Application context to access RecordingService
      * @param rgbFrame The RGB camera frame bitmap
      */
@@ -31,11 +31,11 @@ object PreviewIntegration {
             Log.w(TAG, "Failed to update RGB frame for preview", e)
         }
     }
-    
+
     /**
      * Update thermal camera frame for live preview streaming.
      * Call this whenever a new thermal camera frame is available.
-     * 
+     *
      * @param context Application context to access RecordingService
      * @param thermalFrame The thermal camera frame bitmap
      */
@@ -43,16 +43,19 @@ object PreviewIntegration {
         try {
             val adapter = getPreviewDataAdapter(context)
             adapter?.updateThermalFrameDirect(thermalFrame)
-            Log.v(TAG, "Updated thermal frame for preview: ${thermalFrame.width}x${thermalFrame.height}")
+            Log.v(
+                TAG,
+                "Updated thermal frame for preview: ${thermalFrame.width}x${thermalFrame.height}"
+            )
         } catch (e: Exception) {
             Log.w(TAG, "Failed to update thermal frame for preview", e)
         }
     }
-    
+
     /**
      * Update GSR sensor value for live preview streaming.
      * Call this whenever a new GSR reading is available.
-     * 
+     *
      * @param context Application context to access RecordingService
      * @param gsrValue The GSR value in microsiemens
      */
@@ -65,10 +68,10 @@ object PreviewIntegration {
             Log.w(TAG, "Failed to update GSR value for preview", e)
         }
     }
-    
+
     /**
      * Check if preview streaming is currently active.
-     * 
+     *
      * @param context Application context to access RecordingService
      * @return true if preview streaming is active, false otherwise
      */
@@ -81,10 +84,10 @@ object PreviewIntegration {
             false
         }
     }
-    
+
     /**
      * Get the current preview streaming configuration.
-     * 
+     *
      * @param context Application context to access RecordingService
      * @return Map of configuration parameters, or empty map if not available
      */
@@ -98,10 +101,10 @@ object PreviewIntegration {
             emptyMap()
         }
     }
-    
+
     /**
      * Configure preview streaming parameters.
-     * 
+     *
      * @param context Application context to access RecordingService
      * @param frameIntervalMs Interval between frame updates in milliseconds
      * @param sensorIntervalMs Interval between sensor updates in milliseconds
@@ -119,25 +122,34 @@ object PreviewIntegration {
     ) {
         try {
             val streamer = getPreviewStreamer(context)
-            streamer?.configure(frameIntervalMs, sensorIntervalMs, previewWidth, previewHeight, jpegQuality)
-            Log.i(TAG, "Configured preview streaming: ${frameIntervalMs}ms frames, ${previewWidth}x${previewHeight}@${jpegQuality}%")
+            streamer?.configure(
+                frameIntervalMs,
+                sensorIntervalMs,
+                previewWidth,
+                previewHeight,
+                jpegQuality
+            )
+            Log.i(
+                TAG,
+                "Configured preview streaming: ${frameIntervalMs}ms frames, ${previewWidth}x${previewHeight}@${jpegQuality}%"
+            )
         } catch (e: Exception) {
             Log.w(TAG, "Failed to configure preview streaming", e)
         }
     }
-    
+
     // Helper methods to access service components
-    
+
     private fun getPreviewDataAdapter(context: Context): PreviewDataAdapter? {
         val service = getRecordingService(context)
         return service?.previewDataAdapter
     }
-    
+
     private fun getPreviewStreamer(context: Context): PreviewStreamer? {
         val service = getRecordingService(context)
         return service?.previewStreamer
     }
-    
+
     private fun getRecordingService(context: Context): RecordingService? {
         // This is a simplified approach - in a real implementation you might:
         // 1. Use a service connection/binding

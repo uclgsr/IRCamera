@@ -31,10 +31,10 @@ class PermissionControllerTest {
     fun setup() {
         mockActivity = mockk(relaxed = true)
         mockUsbManager = mockk(relaxed = true)
-        
+
         every { mockActivity.getSystemService(Context.USB_SERVICE) } returns mockUsbManager
         every { mockActivity.packageName } returns "com.topdon.tc001"
-        
+
         permissionController = PermissionController(mockActivity)
         permissionController.initialize()
     }
@@ -48,8 +48,8 @@ class PermissionControllerTest {
     fun `test hasCameraPermission returns true when camera permission granted`() {
         // Mock camera permission as granted
         mockkStatic(ContextCompat::class)
-        every { 
-            ContextCompat.checkSelfPermission(mockActivity, Manifest.permission.CAMERA) 
+        every {
+            ContextCompat.checkSelfPermission(mockActivity, Manifest.permission.CAMERA)
         } returns PackageManager.PERMISSION_GRANTED
 
         assertTrue(permissionController.hasCameraPermission())
@@ -59,8 +59,8 @@ class PermissionControllerTest {
     fun `test hasCameraPermission returns false when camera permission denied`() {
         // Mock camera permission as denied
         mockkStatic(ContextCompat::class)
-        every { 
-            ContextCompat.checkSelfPermission(mockActivity, Manifest.permission.CAMERA) 
+        every {
+            ContextCompat.checkSelfPermission(mockActivity, Manifest.permission.CAMERA)
         } returns PackageManager.PERMISSION_DENIED
 
         assertFalse(permissionController.hasCameraPermission())
@@ -69,11 +69,17 @@ class PermissionControllerTest {
     @Test
     fun `test hasLocationPermission returns true when fine location granted`() {
         mockkStatic(ContextCompat::class)
-        every { 
-            ContextCompat.checkSelfPermission(mockActivity, Manifest.permission.ACCESS_FINE_LOCATION) 
+        every {
+            ContextCompat.checkSelfPermission(
+                mockActivity,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            )
         } returns PackageManager.PERMISSION_GRANTED
-        every { 
-            ContextCompat.checkSelfPermission(mockActivity, Manifest.permission.ACCESS_COARSE_LOCATION) 
+        every {
+            ContextCompat.checkSelfPermission(
+                mockActivity,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            )
         } returns PackageManager.PERMISSION_DENIED
 
         assertTrue(permissionController.hasLocationPermission())
@@ -82,11 +88,17 @@ class PermissionControllerTest {
     @Test
     fun `test hasLocationPermission returns true when coarse location granted`() {
         mockkStatic(ContextCompat::class)
-        every { 
-            ContextCompat.checkSelfPermission(mockActivity, Manifest.permission.ACCESS_FINE_LOCATION) 
+        every {
+            ContextCompat.checkSelfPermission(
+                mockActivity,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            )
         } returns PackageManager.PERMISSION_DENIED
-        every { 
-            ContextCompat.checkSelfPermission(mockActivity, Manifest.permission.ACCESS_COARSE_LOCATION) 
+        every {
+            ContextCompat.checkSelfPermission(
+                mockActivity,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            )
         } returns PackageManager.PERMISSION_GRANTED
 
         assertTrue(permissionController.hasLocationPermission())
@@ -95,24 +107,27 @@ class PermissionControllerTest {
     @Test
     fun `test canStartRecording returns true when camera and storage permissions granted`() {
         mockkStatic(ContextCompat::class)
-        
+
         // Mock camera permission
-        every { 
-            ContextCompat.checkSelfPermission(mockActivity, Manifest.permission.CAMERA) 
+        every {
+            ContextCompat.checkSelfPermission(mockActivity, Manifest.permission.CAMERA)
         } returns PackageManager.PERMISSION_GRANTED
-        every { 
-            ContextCompat.checkSelfPermission(mockActivity, Manifest.permission.RECORD_AUDIO) 
+        every {
+            ContextCompat.checkSelfPermission(mockActivity, Manifest.permission.RECORD_AUDIO)
         } returns PackageManager.PERMISSION_GRANTED
-        
+
         // Mock storage permissions for Android 13+
-        every { 
-            ContextCompat.checkSelfPermission(mockActivity, Manifest.permission.READ_MEDIA_VIDEO) 
+        every {
+            ContextCompat.checkSelfPermission(mockActivity, Manifest.permission.READ_MEDIA_VIDEO)
         } returns PackageManager.PERMISSION_GRANTED
-        every { 
-            ContextCompat.checkSelfPermission(mockActivity, Manifest.permission.READ_MEDIA_IMAGES) 
+        every {
+            ContextCompat.checkSelfPermission(mockActivity, Manifest.permission.READ_MEDIA_IMAGES)
         } returns PackageManager.PERMISSION_GRANTED
-        every { 
-            ContextCompat.checkSelfPermission(mockActivity, Manifest.permission.READ_MEDIA_VISUAL_USER_SELECTED) 
+        every {
+            ContextCompat.checkSelfPermission(
+                mockActivity,
+                Manifest.permission.READ_MEDIA_VISUAL_USER_SELECTED
+            )
         } returns PackageManager.PERMISSION_GRANTED
 
         assertTrue(permissionController.canStartRecording())
@@ -121,24 +136,30 @@ class PermissionControllerTest {
     @Test
     fun `test canConnectToShimmer returns true when bluetooth and location permissions granted`() {
         mockkStatic(ContextCompat::class)
-        
+
         // Mock Android 12+ Bluetooth permissions
-        every { 
-            ContextCompat.checkSelfPermission(mockActivity, Manifest.permission.BLUETOOTH_SCAN) 
+        every {
+            ContextCompat.checkSelfPermission(mockActivity, Manifest.permission.BLUETOOTH_SCAN)
         } returns PackageManager.PERMISSION_GRANTED
-        every { 
-            ContextCompat.checkSelfPermission(mockActivity, Manifest.permission.BLUETOOTH_CONNECT) 
+        every {
+            ContextCompat.checkSelfPermission(mockActivity, Manifest.permission.BLUETOOTH_CONNECT)
         } returns PackageManager.PERMISSION_GRANTED
-        every { 
-            ContextCompat.checkSelfPermission(mockActivity, Manifest.permission.BLUETOOTH_ADVERTISE) 
+        every {
+            ContextCompat.checkSelfPermission(mockActivity, Manifest.permission.BLUETOOTH_ADVERTISE)
         } returns PackageManager.PERMISSION_GRANTED
-        
+
         // Mock location permissions
-        every { 
-            ContextCompat.checkSelfPermission(mockActivity, Manifest.permission.ACCESS_COARSE_LOCATION) 
+        every {
+            ContextCompat.checkSelfPermission(
+                mockActivity,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            )
         } returns PackageManager.PERMISSION_GRANTED
-        every { 
-            ContextCompat.checkSelfPermission(mockActivity, Manifest.permission.ACCESS_FINE_LOCATION) 
+        every {
+            ContextCompat.checkSelfPermission(
+                mockActivity,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            )
         } returns PackageManager.PERMISSION_GRANTED
 
         assertTrue(permissionController.canConnectToShimmer())
@@ -147,10 +168,10 @@ class PermissionControllerTest {
     @Test
     fun `test getMissingPermissions returns empty list when all permissions granted`() {
         mockkStatic(ContextCompat::class)
-        
+
         // Mock all permissions as granted
-        every { 
-            ContextCompat.checkSelfPermission(mockActivity, any()) 
+        every {
+            ContextCompat.checkSelfPermission(mockActivity, any())
         } returns PackageManager.PERMISSION_GRANTED
 
         val missingPermissions = permissionController.getMissingPermissions()
@@ -160,16 +181,16 @@ class PermissionControllerTest {
     @Test
     fun `test getMissingPermissions returns camera permission when denied`() {
         mockkStatic(ContextCompat::class)
-        
+
         // Mock camera permission as denied, others as granted
-        every { 
-            ContextCompat.checkSelfPermission(mockActivity, Manifest.permission.CAMERA) 
+        every {
+            ContextCompat.checkSelfPermission(mockActivity, Manifest.permission.CAMERA)
         } returns PackageManager.PERMISSION_DENIED
-        every { 
-            ContextCompat.checkSelfPermission(mockActivity, Manifest.permission.RECORD_AUDIO) 
+        every {
+            ContextCompat.checkSelfPermission(mockActivity, Manifest.permission.RECORD_AUDIO)
         } returns PackageManager.PERMISSION_DENIED
-        every { 
-            ContextCompat.checkSelfPermission(mockActivity, any()) 
+        every {
+            ContextCompat.checkSelfPermission(mockActivity, any())
         } returns PackageManager.PERMISSION_GRANTED andThen PackageManager.PERMISSION_GRANTED
 
         val missingPermissions = permissionController.getMissingPermissions()
@@ -180,13 +201,13 @@ class PermissionControllerTest {
     @Test
     fun `test getPermissionStatusMessage returns appropriate status`() {
         mockkStatic(ContextCompat::class)
-        
+
         // Mock camera permission as denied, others as granted
-        every { 
-            ContextCompat.checkSelfPermission(mockActivity, Manifest.permission.CAMERA) 
+        every {
+            ContextCompat.checkSelfPermission(mockActivity, Manifest.permission.CAMERA)
         } returns PackageManager.PERMISSION_DENIED
-        every { 
-            ContextCompat.checkSelfPermission(mockActivity, any()) 
+        every {
+            ContextCompat.checkSelfPermission(mockActivity, any())
         } returns PackageManager.PERMISSION_GRANTED
 
         val statusMessage = permissionController.getPermissionStatusMessage()
@@ -202,7 +223,7 @@ class PermissionControllerTest {
         every { mockUsbManager.hasPermission(mockDevice) } returns false
 
         var callbackResult: Pair<Boolean, UsbDevice?>? = null
-        
+
         permissionController.requestUsbPermission(mockDevice) { granted, device ->
             callbackResult = Pair(granted, device)
         }
@@ -218,7 +239,7 @@ class PermissionControllerTest {
         every { mockUsbManager.hasPermission(mockDevice) } returns true
 
         var callbackResult: Pair<Boolean, UsbDevice?>? = null
-        
+
         permissionController.requestUsbPermission(mockDevice) { granted, device ->
             callbackResult = Pair(granted, device)
         }

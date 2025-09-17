@@ -16,16 +16,17 @@ sys.path.insert(0, str(Path(__file__).parent / "src"))
 
 from loguru import logger
 from ircamera_pc.core.device_manager import DeviceManager, DeviceConnectionState
-from ircamera_pc.core.session_manager import EnhancedSessionManager, SessionConfiguration, SessionState
+from ircamera_pc.core.session_manager import EnhancedSessionManager, SessionConfiguration, \
+    SessionState
 from ircamera_pc.network.discovery import DeviceType, DiscoveredDevice
 
 
 async def test_device_manager():
     """Test device manager functionality."""
     print("\n=== Testing Device Manager ===")
-    
+
     device_manager = DeviceManager()
-    
+
     # Test starting device manager
     print("Starting device manager...")
     success = await device_manager.start()
@@ -34,71 +35,71 @@ async def test_device_manager():
     else:
         print("✗ Failed to start device manager")
         return False
-    
+
     # Test manual device addition
     print("Adding mock devices...")
     device_id1 = device_manager.add_device_manually("192.168.1.100", 8080, "TestDevice1")
     device_id2 = device_manager.add_device_manually("192.168.1.101", 8080, "TestDevice2")
-    
+
     if device_id1 and device_id2:
         print(f"✓ Added devices: {device_id1}, {device_id2}")
     else:
         print("✗ Failed to add mock devices")
         return False
-    
+
     # Test device state updates
     registry = device_manager.get_registry()
-    
+
     print("Testing device state updates...")
     success1 = registry.update_device_state(device_id1, DeviceConnectionState.ONLINE)
     success2 = registry.update_device_state(device_id2, DeviceConnectionState.ONLINE)
-    
+
     if success1 and success2:
         print("✓ Device states updated successfully")
     else:
         print("✗ Failed to update device states")
         return False
-    
+
     # Test device queries
     online_devices = registry.get_online_devices()
     print(f"✓ Found {len(online_devices)} online devices")
-    
+
     # Test heartbeat updates
     registry.update_heartbeat(device_id1)
     registry.update_heartbeat(device_id2)
     print("✓ Heartbeats updated")
-    
+
     # Clean up
     await device_manager.stop()
     print("✓ Device manager stopped")
-    
+
     return True
 
 
 async def test_session_manager():
     """Test session manager functionality."""
     print("\n=== Testing Session Manager ===")
-    
+
     # Create temporary directory for sessions
     with tempfile.TemporaryDirectory() as temp_dir:
         session_dir = Path(temp_dir) / "sessions"
-        
+
         # Create device manager for session manager
         device_manager = DeviceManager()
         await device_manager.start()
-        
+
         # Add mock devices
         device_id1 = device_manager.add_device_manually("192.168.1.100", 8080, "TestDevice1")
         device_id2 = device_manager.add_device_manually("192.168.1.101", 8080, "TestDevice2")
-        
+
         # Set devices online
         registry = device_manager.get_registry()
         registry.update_device_state(device_id1, DeviceConnectionState.ONLINE)
         registry.update_device_state(device_id2, DeviceConnectionState.ONLINE)
-        
+
         # Create session manager
         session_manager = EnhancedSessionManager(device_manager, session_dir)
-        
+
         # Test session creation
         print("Creating test session...")
         config = SessionConfiguration(
@@ -106,14 +107,14 @@ async def test_session_manager():
             modalities=["rgb", "gsr"],
             auto_start_recording=False
         )
-        
+
         session_id = session_manager.create_session("Test Session MVP", config)
         if session_id:
             print(f"✓ Session created: {session_id}")
         else:
             print("✗ Failed to create session")
             return False
-        
+
         # Test session state
         session = session_manager.get_current_session()
         if session and session.state == SessionState.ACTIVE:
@@ -121,7 +122,7 @@ async def test_session_manager():
         else:
             print("✗ Session not in expected state")
             return False
-        
+
         # Test starting recording
         print("Starting recording...")
         success = await session_manager.start_recording()
@@ -130,17 +131,17 @@ async def test_session_manager():
         else:
             print("✗ Failed to start recording")
             return False
-        
+
         # Verify recording state
         if session_manager.is_recording():
             print("✓ Session is in RECORDING state")
         else:
             print("✗ Session not in recording state")
             return False
-        
+
         # Wait a bit to simulate recording
         await asyncio.sleep(1)
-        
+
         # Test stopping recording  
         print("Stopping recording...")
         success = await session_manager.stop_recording()
@@ -149,7 +150,7 @@ async def test_session_manager():
         else:
             print("✗ Failed to stop recording")
             return False
-        
+
         # Test finalization
         print("Finalizing session...")
         success = session_manager.finalize_session()
@@ -158,7 +159,7 @@ async def test_session_manager():
         else:
             print("✗ Failed to finalize session")
             return False
-        
+
         # Test session metadata
         final_session = session_manager.get_current_session()
         if final_session and final_session.state == SessionState.COMPLETE:
@@ -168,17 +169,17 @@ async def test_session_manager():
         else:
             print("✗ Session not in expected final state")
             return False
-        
+
         # Check session directory and metadata file
         session_path = session_dir / session_id
         metadata_file = session_path / "session_metadata.json"
-        
+
         if session_path.exists() and metadata_file.exists():
             print("✓ Session directory and metadata file created")
         else:
             print("✗ Session files not created properly")
             return False
-        
+
         # Test reset
         session_manager.reset_for_next_session()
         if not session_manager.is_session_active():
@@ -186,26 +187,26 @@ async def test_session_manager():
         else:
             print("✗ Session manager not reset properly")
             return False
-        
+
         # Clean up
         await device_manager.stop()
-        
+
         return True
 
 
 def test_discovery_service():
     """Test discovery service basic functionality."""
     print("\n=== Testing Discovery Service ===")
-    
+
     try:
         from ircamera_pc.network.discovery import NetworkDiscoveryService
-        
+
         discovery = NetworkDiscoveryService()
         print("✓ Discovery service created")
-        
+
         # Test device type determination
         test_attributes = {"capabilities": "rgb_camera,gsr_sensor", "device_type": "ANDROID_NODE"}
-        
+
         # Create mock discovered device
         mock_device = DiscoveredDevice(
             service_name="TestDevice",
@@ -215,13 +216,13 @@ def test_discovery_service():
             device_type=DeviceType.ANDROID_NODE,
             attributes=test_attributes
         )
-        
+
         print(f"✓ Mock device created: {mock_device.service_name}")
         print(f"  Type: {mock_device.device_type.name}")
         print(f"  Address: {mock_device.ip_address}:{mock_device.port}")
-        
+
         return True
-        
+
     except Exception as e:
         print(f"✗ Discovery service test failed: {e}")
         return False
@@ -231,15 +232,15 @@ async def run_all_tests():
     """Run all MVP tests."""
     print("IRCamera PC Controller Hub - MVP Test Suite")
     print("=" * 50)
-    
+
     tests = [
         ("Discovery Service", test_discovery_service),
-        ("Device Manager", test_device_manager),  
+        ("Device Manager", test_device_manager),
         ("Session Manager", test_session_manager),
     ]
-    
+
     results = []
-    
+
     for test_name, test_func in tests:
         print(f"\nRunning {test_name} tests...")
         try:
@@ -247,36 +248,36 @@ async def run_all_tests():
                 result = await test_func()
             else:
                 result = test_func()
-            
+
             results.append((test_name, result))
-            
+
             if result:
                 print(f"✅ {test_name} tests PASSED")
             else:
                 print(f"❌ {test_name} tests FAILED")
-                
+
         except Exception as e:
             print(f"❌ {test_name} tests FAILED with exception: {e}")
             results.append((test_name, False))
-    
+
     # Summary
     print("\n" + "=" * 50)
     print("TEST SUMMARY")
     print("=" * 50)
-    
+
     passed = 0
     total = len(results)
-    
+
     for test_name, result in results:
         status = "PASSED" if result else "FAILED"
         icon = "✅" if result else "❌"
         print(f"{icon} {test_name}: {status}")
-        
+
         if result:
             passed += 1
-    
+
     print(f"\nOverall: {passed}/{total} tests passed")
-    
+
     if passed == total:
         print("🎉 All tests passed! MVP implementation is working correctly.")
         return True
@@ -289,7 +290,7 @@ if __name__ == "__main__":
     # Setup basic logging
     logger.remove()
     logger.add(sys.stderr, level="WARNING")  # Reduce log noise during tests
-    
+
     # Run tests
     try:
         success = asyncio.run(run_all_tests())

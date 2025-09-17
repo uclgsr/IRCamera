@@ -57,12 +57,13 @@ class IRMonitorChartLiteActivity : BaseActivity(), ITsTempListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        selectBean = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
-            intent.getParcelableExtra("select", SelectPositionBean::class.java)!!
-        } else {
-            @Suppress("DEPRECATION")
-            intent.getParcelableExtra("select")!!
-        }
+        selectBean =
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+                intent.getParcelableExtra("select", SelectPositionBean::class.java)!!
+            } else {
+                @Suppress("DEPRECATION")
+                intent.getParcelableExtra("select")!!
+            }
         lifecycleScope.launch {
             withContext(Dispatchers.IO) {
                 if (BaseApplication.instance.tau_data_H == null) {

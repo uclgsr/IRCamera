@@ -4,9 +4,11 @@
 Going forward, YOU WILL ALWAYS RUN ./gradlew build before committing to catch these issues early
 
 [//]: # ()
+
 [//]: # (## 1. Project Context and Documentation)
 
 [//]: # ()
+
 [//]: # (This document contains the primary set of instructions for you, the AI coding agent. All guidelines)
 
 [//]: # (herein are derived)
@@ -16,6 +18,7 @@ Going forward, YOU WILL ALWAYS RUN ./gradlew build before committing to catch th
 [//]: # (source of truth:)
 
 [//]: # ()
+
 [//]: # (* `docs/latex/1.tex` &#40;Introduction and Objectives&#41;)
 
 [//]: # (* `docs/latex/2.tex` &#40;Background and Literature Review&#41;)
@@ -23,6 +26,7 @@ Going forward, YOU WILL ALWAYS RUN ./gradlew build before committing to catch th
 [//]: # (* `docs/latex/3.tex` &#40;Requirements and Analysis&#41;)
 
 [//]: # ()
+
 [//]: # (You must adhere to the specifications, architectures, and requirements detailed in these source)
 
 [//]: # (documents by following)
@@ -30,9 +34,11 @@ Going forward, YOU WILL ALWAYS RUN ./gradlew build before committing to catch th
 [//]: # (the specific instructions laid out in the subsequent sections of this guideline file.)
 
 [//]: # ()
+
 [//]: # (## **2. Project-Level Instructions for the AI Agent**)
 
 [//]: # ()
+
 [//]: # (You are an expert software architect and developer. Your task is to generate the complete source)
 
 [//]: # (code and project)
@@ -40,9 +46,11 @@ Going forward, YOU WILL ALWAYS RUN ./gradlew build before committing to catch th
 [//]: # (structure for the "Multi-Modal Physiological Sensing Platform.")
 
 [//]: # ()
+
 [//]: # (### **2.1. Project Overview and Goal**)
 
 [//]: # ()
+
 [//]: # (The goal is to create a scientific data acquisition tool consisting of two main applications: a **PC)
 
 [//]: # (Controller &#40;Hub&#41;**)
@@ -54,12 +62,15 @@ Going forward, YOU WILL ALWAYS RUN ./gradlew build before committing to catch th
 [//]: # (temporal precision, preparing it for research and machine learning analysis.)
 
 [//]: # ()
+
 [//]: # (### **2.2. Core Architecture: Hub-and-Spoke Model**)
 
 [//]: # ()
+
 [//]: # (The system must be built on a **Hub-and-Spoke** client-server architecture.)
 
 [//]: # ()
+
 [//]: # (* **Hub &#40;PC Controller&#41;:** The central master controller. It manages sessions, controls all)
 
 [//]: # (  connected devices, and)
@@ -73,18 +84,23 @@ Going forward, YOU WILL ALWAYS RUN ./gradlew build before committing to catch th
 [//]: # (  storage.)
 
 [//]: # ()
+
 [//]: # (-----)
 
 [//]: # ()
+
 [//]: # (## **3. Coding Guidelines and Standards**)
 
 [//]: # ()
+
 [//]: # (You must adhere to the following coding standards and best practices for all generated code.)
 
 [//]: # ()
+
 [//]: # (### **3.1. General Guidelines**)
 
 [//]: # ()
+
 [//]: # (* **Language:** All code, comments, and documentation must be in English.)
 
 [//]: # (* **Readability:** Prioritize clean, readable, and self-documenting code. Use clear and descriptive)
@@ -112,9 +128,11 @@ Going forward, YOU WILL ALWAYS RUN ./gradlew build before committing to catch th
 [//]: # (  errors, and state changes.)
 
 [//]: # ()
+
 [//]: # (### **3.2. Python &#40;PC Controller&#41; Guidelines**)
 
 [//]: # ()
+
 [//]: # (* **Style Guide:** Adhere strictly to the **PEP 8** style guide for all Python code.)
 
 [//]: # (* **Type Hinting:** All function and method signatures **must** include type hints.)
@@ -132,9 +150,11 @@ Going forward, YOU WILL ALWAYS RUN ./gradlew build before committing to catch th
 [//]: # (  you must implement the logic in the C++ `native_backend` and expose it to Python via PyBind11.)
 
 [//]: # ()
+
 [//]: # (### **3.3. Kotlin &#40;Android Spoke&#41; Guidelines**)
 
 [//]: # ()
+
 [//]: # (* **Style Guide:** Adhere strictly to the official **Kotlin Style Guide** recommended by Google for)
 
 [//]: # (  Android development.)
@@ -172,9 +192,11 @@ Going forward, YOU WILL ALWAYS RUN ./gradlew build before committing to catch th
 [//]: # (  API for the `RecordingController`.)
 
 [//]: # ()
+
 [//]: # (### **3.4. Version Control &#40;Git&#41; Guidelines**)
 
 [//]: # ()
+
 [//]: # (* **Commit Messages:** All commit messages must follow the **Conventional Commits** specification.)
 
 [//]: # (  Each message must)
@@ -192,15 +214,19 @@ Going forward, YOU WILL ALWAYS RUN ./gradlew build before committing to catch th
 [//]: # (    * `feat/...`: Feature branches for new development.)
 
 [//]: # ()
+
 [//]: # (-----)
 
 [//]: # ()
+
 [//]: # (## **4. PC Controller &#40;Hub&#41; Specifications**)
 
 [//]: # ()
+
 [//]: # (### **4.1. Technology Stack**)
 
 [//]: # ()
+
 [//]: # (* **Language:** Python 3.11+)
 
 [//]: # (* **GUI Framework:** PyQt6)
@@ -210,12 +236,15 @@ Going forward, YOU WILL ALWAYS RUN ./gradlew build before committing to catch th
 [//]: # (* **Dependencies:** `zeroconf`, `PyQtGraph`, `pandas`, `h5py`.)
 
 [//]: # ()
+
 [//]: # (### **4.2. Project Structure**)
 
 [//]: # ()
+
 [//]: # (Generate the following directory structure for the PC Controller:)
 
 [//]: # ()
+
 [//]: # (```plaintext)
 
 [//]: # (/pc_controller/)
@@ -239,9 +268,11 @@ Going forward, YOU WILL ALWAYS RUN ./gradlew build before committing to catch th
 [//]: # (```)
 
 [//]: # ()
+
 [//]: # (### 4.3. Key Module Implementation)
 
 [//]: # ()
+
 [//]: # (* **`GUIManager`:** Implement a tabbed interface &#40;Dashboard, Logs, Playback&#41;. The Dashboard must use)
 
 [//]: # (  a dynamic grid to)
@@ -271,15 +302,19 @@ Going forward, YOU WILL ALWAYS RUN ./gradlew build before committing to catch th
 [//]: # (      zero-copy memory sharing to expose frames to Python as NumPy arrays.)
 
 [//]: # ()
+
 [//]: # (-----)
 
 [//]: # ()
+
 [//]: # (## **5. Android Sensor Node &#40;Spoke&#41; Specifications**)
 
 [//]: # ()
+
 [//]: # (### **5.1. Technology Stack**)
 
 [//]: # ()
+
 [//]: # (* **Language:** Kotlin)
 
 [//]: # (* **Architecture:** Follow the **MVVM &#40;Model-View-ViewModel&#41;** pattern.)
@@ -289,12 +324,15 @@ Going forward, YOU WILL ALWAYS RUN ./gradlew build before committing to catch th
 [//]: # (* **Key Libraries:** CameraX, Nordic BLE Library, `UVCCamera` &#40;for thermal&#41;.)
 
 [//]: # ()
+
 [//]: # (### **5.2. Project Structure**)
 
 [//]: # ()
+
 [//]: # (Generate the following package structure for the Android application:)
 
 [//]: # ()
+
 [//]: # (```plaintext)
 
 [//]: # (/com/yourcompany/sensorspoke/)
@@ -322,9 +360,11 @@ Going forward, YOU WILL ALWAYS RUN ./gradlew build before committing to catch th
 [//]: # (```)
 
 [//]: # ()
+
 [//]: # (### **5.3. Sensor Integration Logic**)
 
 [//]: # ()
+
 [//]: # (* **`RgbCameraRecorder`:** Use CameraX to configure two simultaneous streams: a 1080p MP4 video file)
 
 [//]: # (  and a continuous)
@@ -360,12 +400,15 @@ Going forward, YOU WILL ALWAYS RUN ./gradlew build before committing to catch th
 [//]: # (    * Log the converted GSR &#40;in microsiemens&#41; and raw PPG values to a timestamped CSV file.)
 
 [//]: # ()
+
 [//]: # (-----)
 
 [//]: # ()
+
 [//]: # (## **6. Communication and Synchronization**)
 
 [//]: # ()
+
 [//]: # (* **Protocol:** All communication between the Hub and Spokes must be over a **TLS 1.2+ secured)
 
 [//]: # (  TCP/IP socket**. All)
@@ -387,12 +430,15 @@ Going forward, YOU WILL ALWAYS RUN ./gradlew build before committing to catch th
 [//]: # (  NFR2&#41;. [1, 1])
 
 [//]: # ()
+
 [//]: # (-----)
 
 [//]: # ()
+
 [//]: # (## **7. Testing and Verification**)
 
 [//]: # ()
+
 [//]: # (* **Mandatory Unit Tests:** You must generate unit tests for all new code.)
 
 [//]: # (* **Frameworks:** Use `pytest` for the Python PC Controller and `JUnit`/`Robolectric` for the)
@@ -410,12 +456,15 @@ Going forward, YOU WILL ALWAYS RUN ./gradlew build before committing to catch th
 [//]: # (  all video and data streams align to within the required 5ms tolerance &#40;FR7&#41;.)
 
 [//]: # ()
+
 [//]: # (-----)
 
 [//]: # ()
+
 [//]: # (## **8. Security and Data Handling**)
 
 [//]: # ()
+
 [//]: # (* **Data Protection:** The Android app must use AES256-GCM encryption via the Android Keystore for)
 
 [//]: # (  local storage. The PC)
@@ -435,12 +484,15 @@ Going forward, YOU WILL ALWAYS RUN ./gradlew build before committing to catch th
 [//]: # (  the GSR sensor and passive sensing for the thermal camera.)
 
 [//]: # ()
+
 [//]: # (-----)
 
 [//]: # ()
+
 [//]: # (## **9. Mandatory Libraries and SDKs**)
 
 [//]: # ()
+
 [//]: # (You **must** use the following official and community-provided libraries for all hardware and data)
 
 [//]: # (streaming)
@@ -450,9 +502,11 @@ Going forward, YOU WILL ALWAYS RUN ./gradlew build before committing to catch th
 [//]: # (instructed.)
 
 [//]: # ()
+
 [//]: # (### **9.1. PC Controller &#40;Hub&#41; Libraries**)
 
 [//]: # ()
+
 [//]: # (* **Shimmer Sensor Communication &#40;Python Layer&#41;:**)
 
 [//]: # (    * **Repository:** `https://github.com/seemoo-lab/pyshimmer`)
@@ -466,6 +520,7 @@ Going forward, YOU WILL ALWAYS RUN ./gradlew build before committing to catch th
 [//]: # (      or serial dock.)
 
 [//]: # ()
+
 [//]: # (* **Shimmer Sensor Communication &#40;C++ Backend&#41;:**)
 
 [//]: # (    * **Repository:** `https://github.com/ShimmerEngineering/Shimmer-C-API`)
@@ -479,9 +534,11 @@ Going forward, YOU WILL ALWAYS RUN ./gradlew build before committing to catch th
 [//]: # (      High-Integrity Mode.")
 
 [//]: # ()
+
 [//]: # (### **9.2. Android Sensor Node &#40;Spoke&#41; Libraries**)
 
 [//]: # ()
+
 [//]: # (* **Shimmer Sensor Communication &#40;Kotlin/Android&#41;:**)
 
 [//]: # (    * **Repository:** `https://github.com/ShimmerEngineering/ShimmerAndroidAPI`)
@@ -497,6 +554,7 @@ Going forward, YOU WILL ALWAYS RUN ./gradlew build before committing to catch th
 [//]: # (      Mode.")
 
 [//]: # ()
+
 [//]: # (* **Thermal Camera Integration &#40;Kotlin/Android&#41;:**)
 
 [//]: # (    * **Primary Repository:** `https://github.com/buccancs/topdon-sdk`)
@@ -514,9 +572,11 @@ Going forward, YOU WILL ALWAYS RUN ./gradlew build before committing to catch th
 [//]: # (      to all device-specific features and improve reliability.)
 
 [//]: # ()
+
 [//]: # (### **9.3. Data Streaming and Synchronization**)
 
 [//]: # ()
+
 [//]: # (* **Lab Streaming Layer &#40;LSL&#41;:**)
 
 [//]: # (    * **Repository:** `https://github.com/sccn/labstreaminglayer`)
@@ -538,4 +598,5 @@ Going forward, YOU WILL ALWAYS RUN ./gradlew build before committing to catch th
 [//]: # (      protocol.)
 
 [//]: # ()
+
 [//]: # (-----)

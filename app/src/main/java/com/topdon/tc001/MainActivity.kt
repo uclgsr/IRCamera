@@ -86,7 +86,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
     companion object {
         private const val TAG = "MainActivity"
     }
-    
+
     private val versionViewModel: VersionViewModel by viewModels()
 
     private var webSocketClient: WebSocketClient? = null
@@ -235,7 +235,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         binding.networkStatusBar.setOnClickListener {
             handleNetworkStatusClick()
         }
-        
+
         // Thermal Camera Quick Access
         binding.thermalQuickAccess.setOnClickListener {
             launchThermalCamera()
@@ -387,7 +387,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             e.printStackTrace()
         }
     }
-    
+
     /**
      * Launch the thermal camera demo interface
      */
@@ -435,11 +435,13 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
     private fun onPartialPermissions(deniedPermissions: List<String>) {
         // Handle partial functionality based on what's available
         val permissionNames = permissionController.getPermissionNames(deniedPermissions)
-        
+
         // Show user what functionality might be limited
-        val message = "Some features may be limited due to missing permissions: ${permissionNames.joinToString(", ")}"
+        val message = "Some features may be limited due to missing permissions: ${
+            permissionNames.joinToString(", ")
+        }"
         Toast.makeText(this, message, Toast.LENGTH_LONG).show()
-        
+
         Log.w(TAG, "Running with limited functionality: $message")
     }
 
@@ -459,14 +461,14 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        
+
         // Delegate to permission controller
         permissionController.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        
+
         // Delegate to permission controller for battery optimization results
         permissionController.onActivityResult(requestCode, resultCode)
     }
@@ -544,7 +546,10 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         if (SharedManager.isConnectAutoOpen) {
             // Check camera permissions when device connects
             if (permissionController.canStartRecording()) {
-                Log.i(TAG, "Camera permissions available - device connected and ready for recording")
+                Log.i(
+                    TAG,
+                    "Camera permissions available - device connected and ready for recording"
+                )
                 // Proceed with camera functionality
             } else {
                 Log.w(TAG, "Camera permissions missing - requesting permissions")
@@ -621,8 +626,6 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
     }
 
 
-
-
     fun jumpIRActivity() {
         // Updated to work with new permission system
         // Check permissions before proceeding with thermal imaging activities
@@ -633,14 +636,17 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                     NavigationManager.build(RouterConfig.IR_MAIN).navigation(this@MainActivity)
                     startActivity(Intent(this@MainActivity, IRThermalPlusActivity::class.java))
                 }
+
                 DeviceTools.isTC001LiteConnect() -> {
                     NavigationManager.build(RouterConfig.IR_MAIN).navigation(this@MainActivity)
                     startActivity(Intent(this@MainActivity, IRThermalLiteActivity::class.java))
                 }
+
                 DeviceTools.isHikConnect() -> {
                     NavigationManager.build(RouterConfig.IR_MAIN).navigation(this@MainActivity)
                     startActivity(Intent(this@MainActivity, IRThermalNightActivity::class.java))
                 }
+
                 else -> {
                     NavigationManager.build(RouterConfig.IR_MAIN).navigation(this@MainActivity)
                     startActivity(Intent(this@MainActivity, IRThermalNightActivity::class.java))
@@ -648,7 +654,11 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             }
         } else {
             // Request permissions if not available
-            Toast.makeText(this, "Camera permission required for thermal imaging", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                this,
+                "Camera permission required for thermal imaging",
+                Toast.LENGTH_SHORT
+            ).show()
             permissionController.ensureAll { granted, _ ->
                 if (granted && permissionController.canStartRecording()) {
                     jumpIRActivity() // Retry after permissions granted

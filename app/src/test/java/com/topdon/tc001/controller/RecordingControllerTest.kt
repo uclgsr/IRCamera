@@ -16,7 +16,7 @@ import java.io.File
 
 /**
  * Tests for fault-tolerant session management in RecordingController
- * 
+ *
  * These tests validate the key improvements:
  * - Partial session start capability
  * - Individual sensor error isolation
@@ -49,7 +49,7 @@ class RecordingControllerTest {
 
         // Create mock sensors with default behaviors
         mockRgbSensor = createMockSensor("RGB", "camera")
-        mockThermalSensor = createMockSensor("Thermal", "thermal")  
+        mockThermalSensor = createMockSensor("Thermal", "thermal")
         mockGsrSensor = createMockSensor("GSR", "gsr")
 
         recordingController = RecordingController(context, lifecycleOwner)
@@ -94,7 +94,9 @@ class RecordingControllerTest {
         val availableSensors = recordingController.getAvailableSensors()
         assertEquals("Should have 3 registered sensors", 3, availableSensors.size)
         assertTrue("RGB should be registered", availableSensors.any { it.sensorId == "RGB" })
-        assertTrue("Thermal should be registered", availableSensors.any { it.sensorId == "Thermal" })
+        assertTrue(
+            "Thermal should be registered",
+            availableSensors.any { it.sensorId == "Thermal" })
         assertTrue("GSR should be registered", availableSensors.any { it.sensorId == "GSR" })
     }
 
@@ -203,8 +205,14 @@ class RecordingControllerTest {
         // Verify metadata contains required fields for synchronization
         val metadataContent = metadataFile.readText()
         assertTrue("Metadata should contain session_id", metadataContent.contains("session_id"))
-        assertTrue("Metadata should contain start timestamps", metadataContent.contains("start_timestamp"))
-        assertTrue("Metadata should contain available sensors", metadataContent.contains("available_sensors"))
+        assertTrue(
+            "Metadata should contain start timestamps",
+            metadataContent.contains("start_timestamp")
+        )
+        assertTrue(
+            "Metadata should contain available sensors",
+            metadataContent.contains("available_sensors")
+        )
 
         sessionDir.deleteRecursively()
     }
@@ -261,13 +269,17 @@ class RecordingControllerTest {
         val sessionDir2 = createTempDirectory()
 
         // First session
-        assertTrue("First session should start", 
-                  recordingController.startSession(sessionDir1.absolutePath))
+        assertTrue(
+            "First session should start",
+            recordingController.startSession(sessionDir1.absolutePath)
+        )
         assertTrue("First session should stop", recordingController.stopSession())
 
         // Second session - should work cleanly
-        assertTrue("Second session should start after first completed", 
-                  recordingController.startSession(sessionDir2.absolutePath))
+        assertTrue(
+            "Second session should start after first completed",
+            recordingController.startSession(sessionDir2.absolutePath)
+        )
         assertTrue("Second session should stop", recordingController.stopSession())
 
         sessionDir1.deleteRecursively()

@@ -9,7 +9,7 @@ class EnhancedTimeSyncServer:
     This class provides advanced time synchronization capabilities built on top of
     the base TimeSyncService, with additional features for the Hub-and-Spoke architecture.
     """
-    
+
     def __init__(self, port: int = 1234):
         """
         Initialize the Enhanced Time Sync Server.
@@ -20,7 +20,7 @@ class EnhancedTimeSyncServer:
         self.port = port
         self.sync_service = TimeSyncService()
         self._running = False
-        
+
     async def start(self) -> bool:
         """
         Start the enhanced time synchronization server.
@@ -38,13 +38,13 @@ class EnhancedTimeSyncServer:
             from loguru import logger
             logger.error(f"Failed to start enhanced time sync server: {e}")
             return False
-    
+
     async def stop(self):
         """Stop the enhanced time synchronization server."""
         if self._running:
             await self.sync_service.stop()
             self._running = False
-    
+
     def get_stats(self) -> dict:
         """
         Get time synchronization statistics.
@@ -53,7 +53,7 @@ class EnhancedTimeSyncServer:
             Dictionary of sync stats by device
         """
         return self.sync_service.get_stats()
-    
+
     def is_running(self) -> bool:
         """Check if the server is running."""
         return self._running

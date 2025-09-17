@@ -428,27 +428,27 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
     private fun checkAndRequestPermissions() {
         if (!permissionController.hasAllRequiredPermissions()) {
             Log.i(TAG, "Not all permissions granted, requesting permissions...")
-            
+
             // Use the new ensureAll() method for better UX
             permissionController.ensureAll { allGranted, deniedPermissions ->
                 if (allGranted) {
                     binding.statusText.text =
                         "All permissions granted. Multi-sensor recording ready."
                     Log.i(TAG, "All permissions granted successfully")
-                    
+
                     // Update UI to enable recording functionality
                     updateUIForPermissionState(true)
-                    
+
                 } else {
                     val permissionNames = permissionController.getPermissionNames(deniedPermissions)
                     val statusMessage = permissionController.getPermissionStatusMessage()
-                    
+
                     binding.statusText.text = "Limited functionality: Some permissions missing"
                     Log.w(TAG, "Some permissions denied: ${deniedPermissions.joinToString(", ")}")
-                    
+
                     // Update UI based on which permissions are available
                     updateUIForPartialPermissions(deniedPermissions)
-                    
+
                     Toast.makeText(
                         this,
                         "Missing permissions: ${permissionNames.joinToString(", ")}",
@@ -466,7 +466,7 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
         // Enable/disable recording button based on camera permission
         val canRecord = permissionController.canStartRecording()
         binding.startButton.isEnabled = canRecord
-        
+
         if (!canRecord) {
             binding.startButton.text = "Camera Permission Required"
         } else {
@@ -478,13 +478,13 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
         // Check what functionality can still be available
         val canRecord = permissionController.canStartRecording()
         val canConnectShimmer = permissionController.canConnectToShimmer()
-        
+
         binding.startButton.isEnabled = canRecord
-        
+
         if (!canRecord) {
             binding.startButton.text = "Camera Permission Required"
         }
-        
+
         // Show specific warnings for missing functionality
         val warnings = mutableListOf<String>()
         if (!canRecord) {
@@ -493,7 +493,7 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
         if (!canConnectShimmer) {
             warnings.add("GSR sensor disabled")
         }
-        
+
         if (warnings.isNotEmpty()) {
             binding.statusText.text = "Limited functionality: ${warnings.joinToString(", ")}"
         }
@@ -510,7 +510,7 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        
+
         // Delegate to permission controller for battery optimization results
         permissionController.onActivityResult(requestCode, resultCode)
     }
@@ -580,7 +580,7 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
                     Log.e(TAG, "No session directory available for RGB camera recording")
                     return@launch
                 }
-                
+
                 val cameraStarted = rgbCameraRecorder?.startRecording(sessionDir) ?: false
                 if (!cameraStarted) {
                     // Reset guard flags on failure

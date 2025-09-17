@@ -1,10 +1,13 @@
 # IRCamera PC Controller Hub - MVP Implementation
 
-This directory contains the **Minimum Viable Product (MVP)** implementation of the PC Controller Hub for the IRCamera multi-modal physiological sensing platform. The Hub implements a complete **Hub-and-Spoke architecture** for coordinating distributed Android sensor nodes.
+This directory contains the **Minimum Viable Product (MVP)** implementation of the PC Controller Hub
+for the IRCamera multi-modal physiological sensing platform. The Hub implements a complete *
+*Hub-and-Spoke architecture** for coordinating distributed Android sensor nodes.
 
 ## 🏗️ Architecture Overview
 
 The PC Controller serves as the central **Hub** that:
+
 - Discovers and manages Android **Spokes** (sensor nodes)
 - Coordinates synchronized multi-modal recording sessions
 - Provides a comprehensive GUI for researchers
@@ -14,6 +17,7 @@ The PC Controller serves as the central **Hub** that:
 ## 🎯 MVP Features Implemented
 
 ### ✅ Core Architecture
+
 - [x] **Hub-and-Spoke Model**: Central coordination of distributed devices
 - [x] **Device Management**: Complete registry with real-time status tracking
 - [x] **Session Lifecycle**: Full session creation, recording, and finalization
@@ -21,6 +25,7 @@ The PC Controller serves as the central **Hub** that:
 - [x] **GUI Framework**: Comprehensive PyQt6 interface
 
 ### ✅ Device Discovery & Management
+
 - [x] **mDNS Service Discovery**: Automatic Android device detection
 - [x] **Device Registry**: Centralized capability and status tracking
 - [x] **Connection Management**: Robust device connection handling
@@ -28,6 +33,7 @@ The PC Controller serves as the central **Hub** that:
 - [x] **Manual Fallback**: Manual device addition if mDNS fails
 
 ### ✅ Session Management
+
 - [x] **Session Creation**: Structured session setup with metadata
 - [x] **Recording Coordination**: Synchronized start/stop across devices
 - [x] **Device Acknowledgments**: Robust command confirmation system
@@ -35,6 +41,7 @@ The PC Controller serves as the central **Hub** that:
 - [x] **Directory Structure**: Organized session file management
 
 ### ✅ User Interface
+
 - [x] **Device Dashboard**: Live device list with status indicators
 - [x] **Session Controls**: Complete recording management interface
 - [x] **Real-time Logging**: System event monitoring console
@@ -104,26 +111,34 @@ QT_QPA_PLATFORM=offscreen python run_mvp_app.py
 ## 🔧 Usage Guide
 
 ### 1. Device Discovery
+
 The Hub automatically discovers Android sensor nodes using mDNS:
+
 - Devices appear in the **Device Dashboard** when detected
 - Status indicators show connection state (Discovered/Online/Recording)
 - Manual device addition available if automatic discovery fails
 
 ### 2. Session Creation
+
 Create recording sessions through the **Session Control Panel**:
+
 1. Click **"Create Session"** and provide a session name
 2. Session transitions to **ACTIVE** state
 3. Participating devices are automatically selected from online devices
 
 ### 3. Recording Management
+
 Control multi-device recording:
+
 1. **"Start Recording"** - Sends synchronized start commands to all devices
 2. **Real-time Monitoring** - Track recording progress and device status
 3. **"Stop Recording"** - Coordinated stop across all devices
 4. **"Finalize Session"** - Complete session and generate metadata
 
 ### 4. Monitoring & Logging
+
 Track system activity:
+
 - **Device Dashboard** - Live device status and capabilities
 - **Session Status** - Current recording state and duration
 - **System Log** - Detailed event logging with timestamps
@@ -134,6 +149,7 @@ Track system activity:
 The Hub communicates with Android spokes using JSON messages over TCP:
 
 ### Command Message Format
+
 ```json
 {
   "message_id": "unique-id",
@@ -149,6 +165,7 @@ The Hub communicates with Android spokes using JSON messages over TCP:
 ```
 
 ### Device Response Format
+
 ```json
 {
   "message_id": "unique-id",
@@ -166,33 +183,34 @@ The Hub communicates with Android spokes using JSON messages over TCP:
 ## 📋 Session Workflow
 
 1. **Discovery Phase**
-   - Hub starts mDNS discovery
-   - Android devices advertise capabilities
-   - Hub registers discovered devices
+    - Hub starts mDNS discovery
+    - Android devices advertise capabilities
+    - Hub registers discovered devices
 
 2. **Session Setup**
-   - Researcher creates session via GUI
-   - Hub generates session ID and directory
-   - Session metadata initialized
+    - Researcher creates session via GUI
+    - Hub generates session ID and directory
+    - Session metadata initialized
 
 3. **Recording Phase**
-   - Hub sends start commands to all online devices
-   - Devices acknowledge and begin recording
-   - Hub monitors device status via heartbeats
+    - Hub sends start commands to all online devices
+    - Devices acknowledge and begin recording
+    - Hub monitors device status via heartbeats
 
 4. **Data Collection**
-   - Devices record multi-modal sensor data
-   - Real-time status updates sent to Hub
-   - Hub aggregates session metadata
+    - Devices record multi-modal sensor data
+    - Real-time status updates sent to Hub
+    - Hub aggregates session metadata
 
 5. **Session Completion**
-   - Hub sends stop commands to all devices
-   - Devices finalize recordings and respond
-   - Hub completes session metadata and files
+    - Hub sends stop commands to all devices
+    - Devices finalize recordings and respond
+    - Hub completes session metadata and files
 
 ## 🧪 Testing & Validation
 
 ### Run Component Tests
+
 ```bash
 # Test all components
 python test_mvp.py
@@ -205,6 +223,7 @@ python demo_mvp_components.py
 ```
 
 ### Test Results
+
 - ✅ Configuration System (100%)
 - ✅ Device Discovery Framework (100%)
 - ✅ Communication Protocol (100%)
@@ -223,6 +242,7 @@ The Hub is designed to work with Android devices that:
 5. **Send Status Updates** including heartbeats and error reports
 
 ### Expected Android Device Configuration
+
 ```json
 {
   "device_type": "ANDROID_NODE",
@@ -245,20 +265,21 @@ The Hub is designed to work with Android devices that:
 ### Common Issues
 
 1. **GUI Not Starting**
-   - Install PyQt6: `pip install PyQt6`
-   - For headless: `QT_QPA_PLATFORM=offscreen python run_mvp_app.py`
+    - Install PyQt6: `pip install PyQt6`
+    - For headless: `QT_QPA_PLATFORM=offscreen python run_mvp_app.py`
 
 2. **Device Discovery Failed**
-   - Check network connectivity
-   - Ensure mDNS is enabled on network
-   - Use manual device addition as fallback
+    - Check network connectivity
+    - Ensure mDNS is enabled on network
+    - Use manual device addition as fallback
 
 3. **Session Creation Error**
-   - Check session directory permissions
-   - Verify configuration file accessibility
-   - Review logs for detailed error information
+    - Check session directory permissions
+    - Verify configuration file accessibility
+    - Review logs for detailed error information
 
 ### Debug Mode
+
 ```bash
 # Enable detailed logging
 IRCAMERA_LOG_LEVEL=DEBUG python run_mvp_app.py
@@ -276,17 +297,19 @@ IRCAMERA_LOG_LEVEL=DEBUG python run_mvp_app.py
 ### Code Organization
 
 - **Core Logic**: Business logic in `core/` modules
-- **GUI Components**: PyQt6 widgets in `gui/` modules  
+- **GUI Components**: PyQt6 widgets in `gui/` modules
 - **Network Layer**: Discovery and communication in `network/`
 - **Configuration**: YAML-based config in `config/`
 
 ## 📄 License & Contributing
 
-This is part of the IRCamera multi-modal sensing platform. Please refer to the main project documentation for license and contribution guidelines.
+This is part of the IRCamera multi-modal sensing platform. Please refer to the main project
+documentation for license and contribution guidelines.
 
 ## 🎉 MVP Status: 100% Complete
 
 The PC Hub Application MVP successfully implements:
+
 - Complete Hub-and-Spoke architecture
 - Comprehensive device management system
 - Full session lifecycle coordination

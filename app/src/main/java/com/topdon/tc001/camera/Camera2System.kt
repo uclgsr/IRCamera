@@ -388,16 +388,16 @@ class Camera2System(
                 val videoFile = createVideoFile()
                 val videoSize = Size(3840, 2160)
                 val frameRate = if (caps.supports4k60) 60 else 30
-                
+
                 // Calculate proper orientation hint for video
                 val orientationHint = calculateOrientationHint(caps.sensorOrientation)
 
                 val recorderSurface =
                     videoEngine.prepare(
-                        videoFile, 
-                        videoSize, 
-                        frameRate, 
-                        DEFAULT_BITRATE, 
+                        videoFile,
+                        videoSize,
+                        frameRate,
+                        DEFAULT_BITRATE,
                         true,
                         orientationHint,
                         enableStabilization = true
@@ -506,13 +506,14 @@ class Camera2System(
         val filename = "Video_${currentSessionId}_$timestamp.mp4"
         return File(outputDirectory, filename)
     }
-    
+
     /**
      * Calculate proper orientation hint for video recording
      */
     private fun calculateOrientationHint(sensorOrientation: Int): Int {
         return try {
-            val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as android.view.WindowManager
+            val windowManager =
+                context.getSystemService(Context.WINDOW_SERVICE) as android.view.WindowManager
             val deviceRotation = when (windowManager.defaultDisplay.rotation) {
                 android.view.Surface.ROTATION_0 -> 0
                 android.view.Surface.ROTATION_90 -> 90
@@ -520,10 +521,13 @@ class Camera2System(
                 android.view.Surface.ROTATION_270 -> 270
                 else -> 0
             }
-            
+
             // For back camera, calculate proper orientation
             val orientationHint = (sensorOrientation - deviceRotation + 360) % 360
-            Log.d(TAG, "Orientation calculation: device=$deviceRotation, sensor=$sensorOrientation, hint=$orientationHint")
+            Log.d(
+                TAG,
+                "Orientation calculation: device=$deviceRotation, sensor=$sensorOrientation, hint=$orientationHint"
+            )
             orientationHint
         } catch (e: Exception) {
             Log.w(TAG, "Failed to calculate orientation hint", e)

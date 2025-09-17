@@ -20,17 +20,17 @@ class BufferedDataWriter(
     companion object {
         private const val TAG = "BufferedDataWriter"
     }
-    
+
     private var writer: BufferedWriter? = null
     private val writeQueue = LinkedBlockingQueue<String>(maxQueueSize)
     private val isRunning = AtomicBoolean(false)
     private val bytesWritten = AtomicLong(0)
     private val linesWritten = AtomicLong(0)
-    
+
     private var writerJob: Job? = null
     private var flushJob: Job? = null
     private val writerScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
-    
+
     /**
      * Start the buffered writer
      */
@@ -39,35 +39,35 @@ class BufferedDataWriter(
             Log.w(TAG, "Writer already running for ${outputFile.name}")
             return@withContext true
         }
-        
+
         try {
             // Ensure parent directory exists
             outputFile.parentFile?.mkdirs()
-            
+
             // Create writer with buffer
             writer = BufferedWriter(FileWriter(outputFile, true), bufferSize)
             isRunning.set(true)
-            
+
             // Start writer coroutine
             writerJob = writerScope.launch {
                 runWriterLoop()
             }
-            
+
             // Start periodic flush coroutine
             flushJob = writerScope.launch {
                 runFlushLoop()
             }
-            
+
             Log.i(TAG, "Started buffered writer for ${outputFile.absolutePath}")
             true
-            
+
         } catch (e: Exception) {
             Log.e(TAG, "Failed to start writer for ${outputFile.name}", e)
             cleanup()
             false
         }
     }
-    
+
     /**
      * Write a line to the buffer (non-blocking)
      */
@@ -76,15 +76,15 @@ class BufferedDataWriter(
             Log.w(TAG, "Writer not running, cannot write line")
             return false
         }
-        
+
         val success = writeQueue.offer(line)
         if (!success) {
             Log.w(TAG, "Write queue full, dropping line for ${outputFile.name}")
         }
-        
+
         return success
     }
-    
+
     /**
      * Write multiple lines efficiently
      */
@@ -92,7 +92,7 @@ class BufferedDataWriter(
         if (!isRunning.get()) {
             return 0
         }
-        
+
         var written = 0
         for (line in lines) {
             if (writeQueue.offer(line)) {
@@ -102,10 +102,10 @@ class BufferedDataWriter(
                 break
             }
         }
-        
+
         return written
     }
-    
+
     /**
      * Force flush all pending data
      */
@@ -116,7 +116,7 @@ class BufferedDataWriter(
             Log.e(TAG, "Failed to flush writer for ${outputFile.name}", e)
         }
     }
-    
+
     /**
      * Stop the writer and cleanup resources
      */
@@ -124,34 +124,37 @@ class BufferedDataWriter(
         if (!isRunning.get()) {
             return@withContext
         }
-        
+
         Log.i(TAG, "Stopping buffered writer for ${outputFile.name}")
         isRunning.set(false)
-        
+
         try {
             // Cancel jobs
             writerJob?.cancel()
             flushJob?.cancel()
-            
+
             // Wait for any remaining writes
             writerJob?.join()
-            
+
             // Write any remaining queued data
             drainQueue()
-            
+
             // Final flush and close
             writer?.flush()
             writer?.close()
             writer = null
-            
+
             val stats = getWriteStats()
-            Log.i(TAG, "Writer stopped for ${outputFile.name}: ${stats.linesWritten} lines, ${stats.bytesWritten} bytes")
-            
+            Log.i(
+                TAG,
+                "Writer stopped for ${outputFile.name}: ${stats.linesWritten} lines, ${stats.bytesWritten} bytes"
+            )
+
         } catch (e: Exception) {
             Log.e(TAG, "Error stopping writer for ${outputFile.name}", e)
         }
     }
-    
+
     /**
      * Get current write statistics
      */
@@ -164,13 +167,13 @@ class BufferedDataWriter(
             isRunning = isRunning.get()
         )
     }
-    
+
     /**
      * Main writer loop - processes queued writes
      */
     private suspend fun runWriterLoop() {
         Log.d(TAG, "Starting writer loop for ${outputFile.name}")
-        
+
         while (isRunning.get()) {
             try {
                 val line = withContext(Dispatchers.IO) {
@@ -179,17 +182,17 @@ class BufferedDataWriter(
                         writeQueue.poll(100, java.util.concurrent.TimeUnit.MILLISECONDS)
                     }
                 }
-                
+
                 if (line != null) {
                     writer?.let { w ->
                         w.write(line)
                         w.newLine()
-                        
+
                         bytesWritten.addAndGet(line.length.toLong() + 1) // +1 for newline
                         linesWritten.incrementAndGet()
                     }
                 }
-                
+
             } catch (e: InterruptedException) {
                 Log.d(TAG, "Writer loop interrupted for ${outputFile.name}")
                 break
@@ -201,10 +204,10 @@ class BufferedDataWriter(
                 }
             }
         }
-        
+
         Log.d(TAG, "Writer loop ended for ${outputFile.name}")
     }
-    
+
     /**
      * Periodic flush loop
      */
@@ -212,11 +215,11 @@ class BufferedDataWriter(
         while (isRunning.get()) {
             try {
                 delay(flushIntervalMs)
-                
+
                 if (isRunning.get()) {
                     writer?.flush()
                 }
-                
+
             } catch (e: Exception) {
                 if (e !is CancellationException) {
                     Log.e(TAG, "Error in flush loop for ${outputFile.name}", e)
@@ -224,7 +227,7 @@ class BufferedDataWriter(
             }
         }
     }
-    
+
     /**
      * Drain remaining items from queue
      */
@@ -232,10 +235,10 @@ class BufferedDataWriter(
         try {
             val remainingLines = mutableListOf<String>()
             writeQueue.drainTo(remainingLines)
-            
+
             if (remainingLines.isNotEmpty()) {
                 Log.i(TAG, "Writing ${remainingLines.size} remaining lines for ${outputFile.name}")
-                
+
                 writer?.let { w ->
                     for (line in remainingLines) {
                         w.write(line)
@@ -249,7 +252,7 @@ class BufferedDataWriter(
             Log.e(TAG, "Error draining queue for ${outputFile.name}", e)
         }
     }
-    
+
     /**
      * Cleanup resources
      */
@@ -278,7 +281,7 @@ data class WriteStats(
 ) {
     val avgLineSize: Double
         get() = if (linesWritten > 0) bytesWritten.toDouble() / linesWritten else 0.0
-        
+
     val formattedSize: String
         get() = when {
             bytesWritten > 1024 * 1024 -> String.format("%.2f MB", bytesWritten / (1024.0 * 1024.0))

@@ -317,11 +317,11 @@ class MainWindow(QMainWindow):
         """Set up WebSocket server and TCP server event callbacks."""
         # WebSocket server handles callbacks through message handlers internally
         # For now, we'll implement basic device tracking through the server's client management
-        
+
         # Enhanced networking includes both WebSocket and TCP server components
         logger.info("Enhanced networking callbacks configured:")
         logger.info("- WebSocket server for real-time communication")
-        logger.info("- TCP server for Android device connections") 
+        logger.info("- TCP server for Android device connections")
         logger.info("- TLS encryption support enabled")
         logger.info("- mDNS device discovery active")
 
@@ -340,107 +340,108 @@ class MainWindow(QMainWindow):
             )
         )
         self.bluetooth_control_widget.disconnect_requested.connect(
-            lambda addr: asyncio.create_task(
-                self.bluetooth_manager.disconnect_device(addr)
-            )
+        lambda addr: asyncio.create_task(
+            self.bluetooth_manager.disconnect_device(addr)
         )
 
-        # Connect manager signals to widget updates
-        self.bluetooth_manager.device_discovered.connect(
-            lambda device: self._update_bluetooth_devices()
-        )
-        self.bluetooth_manager.device_connected.connect(
-            lambda addr, name: self.bluetooth_control_widget.set_connection_status(
-                addr, True
-            )
-        )
-        self.bluetooth_manager.device_disconnected.connect(
-            lambda addr,
-                   reason: self.bluetooth_control_widget.set_connection_status(
-                addr, False
-            )
-        )
-        self.bluetooth_manager.error_occurred.connect(
-            lambda op, err: self.bluetooth_control_widget.set_error_status(err)
-        )
+    )
 
-    # WiFi manager callbacks
-    if self.wifi_manager and self.wifi_control_widget:
-        # Connect widget signals to manager methods
-        self.wifi_control_widget.scan_requested.connect(
-            lambda: self.wifi_manager.start_scanning(continuous=False)
-        )
-        self.wifi_control_widget.connect_requested.connect(
-            lambda ssid, pwd: asyncio.create_task(
-                self.wifi_manager.connect_to_network(ssid, pwd)
-            )
-        )
-        self.wifi_control_widget.disconnect_requested.connect(
-            lambda: asyncio.create_task(self.wifi_manager.disconnect_from_network())
-        )
-        self.wifi_control_widget.hotspot_start_requested.connect(
-            lambda ssid, pwd, ch: asyncio.create_task(
-                self.wifi_manager.start_hotspot(ssid, pwd, ch)
-            )
-        )
-        self.wifi_control_widget.hotspot_stop_requested.connect(
-            lambda: asyncio.create_task(self.wifi_manager.stop_hotspot())
-        )
+    # Connect manager signals to widget updates
+    self.bluetooth_manager.device_discovered.connect(
+    lambda device: self._update_bluetooth_devices()
 
-        # Connect manager signals to widget updates
-        self.wifi_manager.networks_discovered.connect(
-            lambda networks: self.wifi_control_widget.update_networks(networks)
-        )
-        self.wifi_manager.network_connected.connect(
-            lambda ssid, ip: self.wifi_control_widget.set_connection_status(
-                ssid, True, ip
-            )
-        )
-        self.wifi_manager.network_disconnected.connect(
-            lambda ssid, reason: self.wifi_control_widget.set_connection_status(
-                ssid, False
-            )
-        )
-        self.wifi_manager.hotspot_state_changed.connect(
-            lambda state, msg: self.wifi_control_widget.set_hotspot_status(
-                state.value, msg
-            )
-        )
-        self.wifi_manager.error_occurred.connect(
-            lambda op, err: self.wifi_control_widget.set_error_status(err)
-        )
+)
+self.bluetooth_manager.device_connected.connect(
+lambda addr, name: self.bluetooth_control_widget.set_connection_status(
+    addr, True
+)
+)
+self.bluetooth_manager.device_disconnected.connect(
+lambda addr,
+       reason: self.bluetooth_control_widget.set_connection_status(
+    addr, False
+)
+)
+self.bluetooth_manager.error_occurred.connect(
+lambda op, err: self.bluetooth_control_widget.set_error_status(err)
+)
 
-    # Admin privileges manager callbacks
-    if self.admin_privileges_manager and self.system_integration_widget:
-        # Connect widget signals to manager methods
-        self.system_integration_widget.elevation_requested.connect(
-            lambda reason: self.admin_privileges_manager.request_elevation(reason)
-        )
+# WiFi manager callbacks
+if self.wifi_manager and self.wifi_control_widget:
+# Connect widget signals to manager methods
+    self.wifi_control_widget.scan_requested.connect(
+lambda: self.wifi_manager.start_scanning(continuous=False)
+)
+self.wifi_control_widget.connect_requested.connect(
+lambda ssid, pwd: asyncio.create_task(
+    self.wifi_manager.connect_to_network(ssid, pwd)
+)
+)
+self.wifi_control_widget.disconnect_requested.connect(
+lambda: asyncio.create_task(self.wifi_manager.disconnect_from_network())
+)
+self.wifi_control_widget.hotspot_start_requested.connect(
+lambda ssid, pwd, ch: asyncio.create_task(
+    self.wifi_manager.start_hotspot(ssid, pwd, ch)
+)
+)
+self.wifi_control_widget.hotspot_stop_requested.connect(
+lambda: asyncio.create_task(self.wifi_manager.stop_hotspot())
+)
 
-        # Connect manager signals to widget updates
-        self.admin_privileges_manager.privilege_changed.connect(
-            lambda level: self.system_integration_widget.update_privilege_level(
-                level.value
-            )
-        )
-        self.admin_privileges_manager.system_ready.connect(
-            lambda perms: self.system_integration_widget.update_permissions(
-                {
-                    "network_config": perms.network_config,
-                    "bluetooth_control": perms.bluetooth_control,
-                    "service_management": perms.service_management,
-                    "registry_access": perms.registry_access,
-                    "hardware_access": perms.hardware_access,
-                    "firewall_control": perms.firewall_control,
-                }
-            )
-        )
-        self.admin_privileges_manager.elevation_completed.connect(
-            lambda result, msg: self.system_integration_widget.set_status_message(
-                msg, result.value == "failed"
-            )
-        )
+# Connect manager signals to widget updates
+self.wifi_manager.networks_discovered.connect(
+lambda networks: self.wifi_control_widget.update_networks(networks)
+)
+self.wifi_manager.network_connected.connect(
+lambda ssid, ip: self.wifi_control_widget.set_connection_status(
+    ssid, True, ip
+)
+)
+self.wifi_manager.network_disconnected.connect(
+lambda ssid, reason: self.wifi_control_widget.set_connection_status(
+    ssid, False
+)
+)
+self.wifi_manager.hotspot_state_changed.connect(
+lambda state, msg: self.wifi_control_widget.set_hotspot_status(
+    state.value, msg
+)
+)
+self.wifi_manager.error_occurred.connect(
+lambda op, err: self.wifi_control_widget.set_error_status(err)
+)
 
+# Admin privileges manager callbacks
+if self.admin_privileges_manager and self.system_integration_widget:
+# Connect widget signals to manager methods
+    self.system_integration_widget.elevation_requested.connect(
+lambda reason: self.admin_privileges_manager.request_elevation(reason)
+)
+
+# Connect manager signals to widget updates
+self.admin_privileges_manager.privilege_changed.connect(
+lambda level: self.system_integration_widget.update_privilege_level(
+    level.value
+)
+)
+self.admin_privileges_manager.system_ready.connect(
+lambda perms: self.system_integration_widget.update_permissions(
+    {
+        "network_config": perms.network_config,
+        "bluetooth_control": perms.bluetooth_control,
+        "service_management": perms.service_management,
+        "registry_access": perms.registry_access,
+        "hardware_access": perms.hardware_access,
+        "firewall_control": perms.firewall_control,
+    }
+)
+)
+self.admin_privileges_manager.elevation_completed.connect(
+lambda result, msg: self.system_integration_widget.set_status_message(
+    msg, result.value == "failed"
+)
+)
 
 def _start_ui_updates(self) -> None:
     """Start periodic UI updates."""

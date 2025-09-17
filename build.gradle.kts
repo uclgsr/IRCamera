@@ -27,7 +27,7 @@ tasks.register("buildRelease") {
     description = "Builds all modules using only release variants"
     dependsOn(
         ":app:assembleRelease",
-        ":BleModule:assembleRelease", 
+        ":BleModule:assembleRelease",
         ":libapp:assembleRelease",
         ":libcom:assembleRelease",
         ":libir:assembleRelease",
