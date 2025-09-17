@@ -53,7 +53,7 @@ import java.util.concurrent.atomic.AtomicLong
 class ThermalCameraRecorder(
     private val context: Context,
     override val sensorId: String = "thermal_camera_1",
-    private val thermalFrameRate: Double = 9.0, // TC001 typical frame rate
+    private val thermalFrameRate: Double = detectOptimalFrameRate(), // Auto-detect TC001 capabilities
     private val thermalResolution: Pair<Int, Int> = Pair(256, 192) // TC001 resolution
 ) : SensorRecorder {
 
@@ -65,9 +65,146 @@ class ThermalCameraRecorder(
 
         private const val IR_CAMERA_WIDTH = 256 // Real IR camera resolution
         private const val IR_CAMERA_HEIGHT = 192 // Real IR camera resolution
-        private const val IR_FRAME_RATE = 9.0 // Typical IR camera frame rate
+        
+        // Dynamic frame rate based on hardware detection
+        private const val IR_FRAME_RATE_STANDARD = 9.0 // Standard TC001 frame rate
+        private const val IR_FRAME_RATE_ENHANCED = 25.0 // TC001 Plus with ISP/TNR capabilities
 
         private const val TEMPERATURE_OFFSET = 273.15 // Kelvin to Celsius
+        private const val DEFAULT_EMISSIVITY = 0.95 // Default emissivity
+        private const val DEFAULT_REFLECTED_TEMP = 20.0 // Default reflected temperature in Celsius
+
+        /**
+         * Detect optimal frame rate based on TC001 hardware capabilities
+         * Checks for TC001 Plus model and ISP/TNR support to unlock 25Hz
+         * Falls back to 9Hz for standard TC001 models
+         * 
+         * @return Optimal frame rate for the detected hardware
+         */
+        private fun detectOptimalFrameRate(): Double {
+            return try {
+                // Check for TC001 Plus capabilities (ISP algorithm with TNR support)
+                // This enables 25Hz frame rate as per the IR library documentation
+                val hasEnhancedCapabilities = checkForEnhancedThermalCapabilities()
+                
+                if (hasEnhancedCapabilities) {
+                    Log.i(TAG, "TC001 Plus detected - enabling 25Hz frame rate with ISP/TNR")
+                    IR_FRAME_RATE_ENHANCED
+                } else {
+                    Log.i(TAG, "Standard TC001 detected - using 9Hz frame rate")
+                    IR_FRAME_RATE_STANDARD
+                }
+            } catch (e: Exception) {
+                Log.w(TAG, "Error detecting thermal hardware capabilities, using standard 9Hz: ${e.message}")
+                IR_FRAME_RATE_STANDARD
+            }
+        }
+
+        /**
+         * Check for enhanced thermal camera capabilities (TC001 Plus features)
+         * Detects ISP algorithm and TNR support that enables 25Hz operation
+         * 
+         * @return true if enhanced capabilities are available
+         */
+        private fun checkForEnhancedThermalCapabilities(): Boolean {
+            return try {
+                // Check system properties for TC001 Plus identification
+                val modelProperty = System.getProperty("ro.product.model", "")
+                val deviceProperty = System.getProperty("ro.product.device", "")
+                
+                // Look for TC001 Plus identifiers in system properties
+                val isTC001Plus = modelProperty.contains("TC001", ignoreCase = true) && 
+                                 (modelProperty.contains("Plus", ignoreCase = true) ||
+                                  deviceProperty.contains("plus", ignoreCase = true))
+                
+                if (isTC001Plus) {
+                    Log.d(TAG, "TC001 Plus model detected via system properties")
+                    return true
+                }
+
+                // Alternative detection: Check for ISP/TNR library availability
+                // These features indicate enhanced thermal processing capabilities
+                val ispAvailable = checkForISPLibrarySupport()
+                if (ispAvailable) {
+                    Log.d(TAG, "Enhanced ISP/TNR capabilities detected - assuming TC001 Plus")
+                    return true
+                }
+
+                // Check USB device capabilities if available
+                // Enhanced models typically have different USB descriptors
+                val enhancedUSB = checkUSBDeviceCapabilities()
+                if (enhancedUSB) {
+                    Log.d(TAG, "Enhanced USB thermal device detected")
+                    return true
+                }
+
+                Log.d(TAG, "Standard TC001 capabilities detected")
+                return false
+
+            } catch (e: Exception) {
+                Log.w(TAG, "Error checking thermal capabilities: ${e.message}")
+                return false // Default to standard capabilities
+            }
+        }
+
+        /**
+         * Check for ISP library support which indicates TC001 Plus capabilities
+         */
+        private fun checkForISPLibrarySupport(): Boolean {
+            return try {
+                // Try to access ISP-related classes that are available in TC001 Plus
+                Class.forName("com.energy.iruvc.sdkisp.LibIRProcess")
+                
+                // Check for TNR (Temporal Noise Reduction) support
+                val ispMethod = Class.forName("com.energy.iruvc.ircmd.IRCMD")
+                    .getMethod("isTempReplacedWithTNREnabled", 
+                              Class.forName("com.energy.iruvc.utils.DeviceType"))
+                
+                Log.d(TAG, "ISP/TNR library support confirmed")
+                true
+                
+            } catch (e: ClassNotFoundException) {
+                Log.d(TAG, "ISP/TNR libraries not available")
+                false
+            } catch (e: NoSuchMethodException) {
+                Log.d(TAG, "ISP/TNR methods not available")
+                false
+            } catch (e: Exception) {
+                Log.d(TAG, "ISP library check failed: ${e.message}")
+                false
+            }
+        }
+
+        /**
+         * Check USB device capabilities for enhanced thermal features
+         */
+        private fun checkUSBDeviceCapabilities(): Boolean {
+            return try {
+                // This would require context to check USB devices
+                // For now, return false and rely on other detection methods
+                // Could be enhanced with actual USB device enumeration
+                false
+                
+            } catch (e: Exception) {
+                Log.d(TAG, "USB capability check failed: ${e.message}")
+                false
+            }
+        }
+        
+        /**
+         * Get current hardware-optimized frame rate
+         * @return Current frame rate setting
+         */
+        fun getCurrentOptimalFrameRate(): Double = detectOptimalFrameRate()
+        
+        /**
+         * Check if device supports enhanced 25Hz frame rate
+         * @return true if 25Hz is supported
+         */
+        fun supportsEnhancedFrameRate(): Boolean = checkForEnhancedThermalCapabilities()
+    }
+
+    // Instance variables
         private const val THERMAL_SENSITIVITY = 0.1 // Temperature resolution for IR Camera
         private const val IR_TEMP_RANGE_MIN = -20.0f // IR camera minimum temperature
         private const val IR_TEMP_RANGE_MAX = 400.0f // IR camera maximum temperature
@@ -124,7 +261,10 @@ class ThermalCameraRecorder(
     @Volatile
     private var enableNetworkStreaming = false
     private var networkFrameCounter = 0
-    private val networkStreamingInterval = 5 // Send every 5th frame (~2 FPS at 9 FPS capture rate)
+    
+    // Dynamic network streaming interval based on frame rate to maintain ~2 FPS stream
+    private val networkStreamingInterval: Int
+        get() = maxOf(1, (thermalFrameRate / 2.0).toInt()) // Maintain ~2 FPS regardless of capture rate
 
     // Thermal preview callback interface
     interface ThermalPreviewCallback {
@@ -1755,7 +1895,16 @@ class ThermalCameraRecorder(
                 "width": $IR_CAMERA_WIDTH,
                 "height": $IR_CAMERA_HEIGHT
             },
-            "frame_rate": $IR_FRAME_RATE,
+            "frame_rate_hz": $thermalFrameRate,
+            "frame_rate_info": {
+                "detected_rate": $thermalFrameRate,
+                "hardware_support": {
+                    "enhanced_25hz": ${supportsEnhancedFrameRate()},
+                    "standard_9hz": true,
+                    "tc001_plus_detected": ${supportsEnhancedFrameRate()}
+                },
+                "network_streaming_interval": $networkStreamingInterval
+            },
             "ambient_temperature_c": $ambientTemperature,
             "emissivity": $emissivity,
             "reflected_temperature_c": $reflectedTemperature,
@@ -1766,7 +1915,7 @@ class ThermalCameraRecorder(
             "simulation_mode": $isSimulationMode,
             "topdon_sdk_initialized": $isTopdonSdkInitialized,
             "device_info": "$deviceInfo",
-            "sdk_version": "Topdon AC020 SDK v1.1.1 with IrcamEngine Integration",
+            "sdk_version": "Topdon AC020 SDK v1.1.1 with IrcamEngine Integration - Enhanced Frame Rate Detection",
             "temp_range_min_c": $IR_TEMP_RANGE_MIN,
             "temp_range_max_c": $IR_TEMP_RANGE_MAX,
             "usb_device_details": ${

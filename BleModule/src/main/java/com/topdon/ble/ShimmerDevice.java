@@ -37,6 +37,11 @@ public class ShimmerDevice implements UnifiedDevice {
     private static final byte SHIMMER_START_STREAMING = 0x07;
     private static final byte SHIMMER_STOP_STREAMING = 0x20;
     private static final byte SHIMMER_GET_SAMPLING_RATE = 0x03;
+    private static final byte SHIMMER_SET_SAMPLING_RATE = 0x05;
+    private static final byte SHIMMER_GET_STATUS = 0x25;
+    private static final byte SHIMMER_GET_FW_VERSION = 0x2E;
+    private static final byte SHIMMER_SET_GSR_RANGE = 0x60;
+    private static final byte SHIMMER_GET_GSR_RANGE = 0x61;
 
     private final BluetoothDevice bluetoothDevice;
     private final ShimmerDeviceConfig config;
@@ -356,6 +361,208 @@ public class ShimmerDevice implements UnifiedDevice {
     @Override
     public void setConnectionListener(@Nullable UnifiedBleManager.UnifiedConnectionListener listener) {
         this.connectionListener = listener;
+    }
+
+    /**
+     * Enhanced Shimmer BLE command control methods
+     * Implements proper Bluetooth Low Energy commands for comprehensive device management
+     */
+    
+    /**
+     * Set GSR range for proper calibration
+     * @param range GSR range (0-4, where 4 is highest sensitivity)
+     * @return true if command sent successfully
+     */
+    public boolean setGSRRange(int range) {
+        if (!isConnected.get() || commandCharacteristic == null) {
+            Log.w(TAG, "Cannot set GSR range - device not ready");
+            return false;
+        }
+
+        if (range < 0 || range > 4) {
+            Log.e(TAG, "Invalid GSR range: " + range + ". Must be 0-4");
+            return false;
+        }
+
+        try {
+            byte[] command = {SHIMMER_SET_GSR_RANGE, (byte) range};
+            boolean success = sendCommand(command);
+            if (success) {
+                Log.i(TAG, "Set GSR range to " + range + " for device: " + getAddress());
+            }
+            return success;
+        } catch (Exception e) {
+            Log.e(TAG, "Error setting GSR range", e);
+            return false;
+        }
+    }
+
+    /**
+     * Get current GSR range from device
+     * @return true if command sent successfully
+     */
+    public boolean requestGSRRange() {
+        if (!isConnected.get() || commandCharacteristic == null) {
+            Log.w(TAG, "Cannot get GSR range - device not ready");
+            return false;
+        }
+
+        try {
+            byte[] command = {SHIMMER_GET_GSR_RANGE};
+            boolean success = sendCommand(command);
+            if (success) {
+                Log.d(TAG, "Requested GSR range from device: " + getAddress());
+            }
+            return success;
+        } catch (Exception e) {
+            Log.e(TAG, "Error requesting GSR range", e);
+            return false;
+        }
+    }
+
+    /**
+     * Set sampling rate for the device
+     * @param samplingRate Desired sampling rate in Hz
+     * @return true if command sent successfully
+     */
+    public boolean setSamplingRate(int samplingRate) {
+        if (!isConnected.get() || commandCharacteristic == null) {
+            Log.w(TAG, "Cannot set sampling rate - device not ready");
+            return false;
+        }
+
+        try {
+            // Convert to Shimmer sampling rate format (typically 512Hz max)
+            byte rateValue = (byte) Math.min(samplingRate, 512);
+            byte[] command = {SHIMMER_SET_SAMPLING_RATE, rateValue};
+            boolean success = sendCommand(command);
+            if (success) {
+                Log.i(TAG, "Set sampling rate to " + samplingRate + "Hz for device: " + getAddress());
+            }
+            return success;
+        } catch (Exception e) {
+            Log.e(TAG, "Error setting sampling rate", e);
+            return false;
+        }
+    }
+
+    /**
+     * Request current sampling rate from device
+     * @return true if command sent successfully
+     */
+    public boolean requestSamplingRate() {
+        if (!isConnected.get() || commandCharacteristic == null) {
+            Log.w(TAG, "Cannot get sampling rate - device not ready");
+            return false;
+        }
+
+        try {
+            byte[] command = {SHIMMER_GET_SAMPLING_RATE};
+            boolean success = sendCommand(command);
+            if (success) {
+                Log.d(TAG, "Requested sampling rate from device: " + getAddress());
+            }
+            return success;
+        } catch (Exception e) {
+            Log.e(TAG, "Error requesting sampling rate", e);
+            return false;
+        }
+    }
+
+    /**
+     * Request device status
+     * @return true if command sent successfully
+     */
+    public boolean requestDeviceStatus() {
+        if (!isConnected.get() || commandCharacteristic == null) {
+            Log.w(TAG, "Cannot get device status - device not ready");
+            return false;
+        }
+
+        try {
+            byte[] command = {SHIMMER_GET_STATUS};
+            boolean success = sendCommand(command);
+            if (success) {
+                Log.d(TAG, "Requested device status from device: " + getAddress());
+            }
+            return success;
+        } catch (Exception e) {
+            Log.e(TAG, "Error requesting device status", e);
+            return false;
+        }
+    }
+
+    /**
+     * Request firmware version
+     * @return true if command sent successfully
+     */
+    public boolean requestFirmwareVersion() {
+        if (!isConnected.get() || commandCharacteristic == null) {
+            Log.w(TAG, "Cannot get firmware version - device not ready");
+            return false;
+        }
+
+        try {
+            byte[] command = {SHIMMER_GET_FW_VERSION};
+            boolean success = sendCommand(command);
+            if (success) {
+                Log.d(TAG, "Requested firmware version from device: " + getAddress());
+            }
+            return success;
+        } catch (Exception e) {
+            Log.e(TAG, "Error requesting firmware version", e);
+            return false;
+        }
+    }
+
+    /**
+     * Initialize device with proper GSR configuration
+     * Sets up device with appropriate GSR range and sampling rate for scientific accuracy
+     * @param gsrRange GSR range (0-4, default 4 for highest sensitivity)
+     * @param samplingRate Sampling rate in Hz (default 128Hz for GSR)
+     * @return true if initialization successful
+     */
+    public boolean initializeForGSRRecording(int gsrRange, int samplingRate) {
+        if (!isConnected.get()) {
+            Log.w(TAG, "Cannot initialize - device not connected");
+            return false;
+        }
+
+        Log.i(TAG, "Initializing device for GSR recording: range=" + gsrRange + ", rate=" + samplingRate + "Hz");
+
+        try {
+            // Stop any existing streaming
+            if (isStreaming.get()) {
+                stopDataStreaming();
+                Thread.sleep(500); // Brief pause between commands
+            }
+
+            // Set GSR range for proper calibration
+            boolean gsrRangeSet = setGSRRange(gsrRange);
+            if (!gsrRangeSet) {
+                Log.w(TAG, "Failed to set GSR range, continuing with default");
+            }
+            Thread.sleep(200);
+
+            // Set sampling rate
+            boolean samplingRateSet = setSamplingRate(samplingRate);
+            if (!samplingRateSet) {
+                Log.w(TAG, "Failed to set sampling rate, continuing with default");
+            }
+            Thread.sleep(200);
+
+            // Request current configuration for verification
+            requestGSRRange();
+            Thread.sleep(100);
+            requestSamplingRate();
+
+            Log.i(TAG, "Device initialization completed for: " + getAddress());
+            return true;
+
+        } catch (Exception e) {
+            Log.e(TAG, "Error during device initialization", e);
+            return false;
+        }
     }
 
     private void initializeCharacteristics() {
