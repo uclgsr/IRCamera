@@ -30,6 +30,12 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeoutOrNull
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -229,24 +235,14 @@ class UnifiedGSRRecorder(
                 }
             }
             
-            // Fallback to simplified discovery if enhanced scanning failed or is unavailable
-            Log.i(TAG, "Using fallback device discovery method")
-            val defaultDevice = DeviceInfo(
-                address = "00:06:66:00:00:00", // Example Shimmer MAC
-                name = "Shimmer3 GSR+",
-                deviceType = "GSR+",
-                rssi = -50,
-                isGSRCapable = true,
-                priority = 1
-            )
-            discoveredDevices.add(defaultDevice)
-            Log.i(TAG, "Added default GSR device for testing")
-
+            // Don't add dummy devices - require actual hardware detection
+            Log.i(TAG, "BLE scan completed without finding real Shimmer devices")
+            
             if (discoveredDevices.isNotEmpty()) {
-                _deviceStatus.value = "Found ${discoveredDevices.size} devices"
+                _deviceStatus.value = "Found ${discoveredDevices.size} real Shimmer devices"
                 return@withContext true
             } else {
-                _deviceStatus.value = "No devices found"
+                _deviceStatus.value = "No Shimmer devices found - ensure device is powered on and in range"
                 return@withContext false
             }
 
@@ -607,7 +603,7 @@ class UnifiedGSRRecorder(
             sessionDurationMs = sessionDuration,
             totalSamplesRecorded = recordedSamples.get(),
             averageDataRate = if (sessionDuration > 0) {
-                recordedSamples.get() / (sessionDuration / 1000.0)
+                recordedSamples.get().toDouble() / (sessionDuration / 1000.0)
             } else 0.0,
             droppedSamples = droppedSamples.get(), // Implemented: Actual dropped sample tracking
             storageUsedMB = sessionDirectory?.let { dir ->

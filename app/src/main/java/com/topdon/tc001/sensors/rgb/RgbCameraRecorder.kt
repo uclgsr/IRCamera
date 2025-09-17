@@ -156,17 +156,10 @@ class RgbCameraRecorder(
             false
         }
     }
-            }
 
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to initialize CameraX", e)
-            emitError(
-                ErrorType.INITIALIZATION_FAILED,
-                "CameraX initialization failed: ${e.message}"
-            )
-            false
-        }
-    }
+    /**
+     * Initialize CameraX with preview, video and image capture use cases
+     */
 
     /**
      * Initialize CameraX with preview, video and image capture use cases
