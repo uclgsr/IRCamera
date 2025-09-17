@@ -209,10 +209,12 @@ class UnifiedGSRRecorder(
                 
                 val scanSuccess = deviceManager.startDeviceScanning()
                 if (scanSuccess) {
-                    // Collect scan results for a reasonable time period
                     delay(10000) // 10 seconds of scanning
                     
-                    val scanResults = deviceManager.scanResults.value
+                    val scanResults = withTimeoutOrNull(1000) {
+                        deviceManager.scanResults.first()
+                    } ?: emptyList()
+                    
                     discoveredDevices.clear()
                     discoveredDevices.addAll(scanResults)
                     
