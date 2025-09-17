@@ -275,9 +275,21 @@ class RecordingController(
                             sensorDir.mkdirs()
 
                             val sensorStartReference = SystemClock.elapsedRealtimeNanos()
+                            if (sessionMetadata == null) {
+                                Log.w(TAG, "sessionMetadata is null when starting sensor: $sensorName")
+                                emitError(
+                                    RecordingControllerError(
+                                        errorType = "SESSION_METADATA_NULL",
+                                        message = "Session metadata is null when starting sensor $sensorName",
+                                        sensorId = sensorName,
+                                        isRecoverable = false
+                                    )
+                                )
+                                return@async Triple(sensorName, false, IllegalStateException("Session metadata is null"))
+                            }
                             val success = sensor.startRecording(
                                 sensorDir.absolutePath,
-                                sessionMetadata!!
+                                sessionMetadata
                             )
                             if (success) {
                                 activeRecorders[sensorName] = true
