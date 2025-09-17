@@ -1285,7 +1285,7 @@ class GSRSensorRecorder(
             device.enableGSRSensor(true)
             
             // Configure sampling rate
-            device.setSamplingRateShimmer(SHIMMER_DEFAULT_SAMPLING_RATE)
+            device.setSamplingRateShimmer(51.2)
             
             // Start streaming
             device.startStreaming()
