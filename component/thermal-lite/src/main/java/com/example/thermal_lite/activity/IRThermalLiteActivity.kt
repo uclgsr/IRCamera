@@ -164,6 +164,7 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
     private var mPreviewHeight = 192
     private var mPreviewLayoutParams: RelativeLayout.LayoutParams? = null
     private var mOnUSBConnectListener: OnUSBConnectListener? = null
+
     @Suppress("DEPRECATION")
     private var mProgressDialog: ProgressDialog? = null
 
@@ -706,12 +707,16 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
     private val pseudoSetResult =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == RESULT_OK) {
-                val customBean = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
-                    it.data?.getParcelableExtra(ExtraKeyConfig.CUSTOM_PSEUDO_BEAN, CustomPseudoBean::class.java)
-                } else {
-                    @Suppress("DEPRECATION")
-                    it.data?.getParcelableExtra(ExtraKeyConfig.CUSTOM_PSEUDO_BEAN)
-                }
+                val customBean =
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+                        it.data?.getParcelableExtra(
+                            ExtraKeyConfig.CUSTOM_PSEUDO_BEAN,
+                            CustomPseudoBean::class.java
+                        )
+                    } else {
+                        @Suppress("DEPRECATION")
+                        it.data?.getParcelableExtra(ExtraKeyConfig.CUSTOM_PSEUDO_BEAN)
+                    }
                 updateImageAndSeekbarColorList(customBean ?: CustomPseudoBean())
                 customPseudoBean.saveToShared()
             }

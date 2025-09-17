@@ -137,12 +137,12 @@ class SessionManagerActivity : BaseBindingActivity<ActivitySessionManagerBinding
             try {
                 // Display storage information
                 displayStorageInfo()
-                
+
                 // Clean up failed sessions
                 val cleanedSessions = withContext(Dispatchers.IO) {
                     sessionDirectoryManager.cleanupFailedSessions()
                 }
-                
+
                 if (cleanedSessions.isNotEmpty()) {
                     Log.i(TAG, "Cleaned up ${cleanedSessions.size} failed sessions")
                     Toast.makeText(
@@ -174,14 +174,15 @@ class SessionManagerActivity : BaseBindingActivity<ActivitySessionManagerBinding
             }
         }
     }
-    
+
     private suspend fun displayStorageInfo() {
         try {
             val storageStatus = sessionDirectoryManager.checkStorageSpace()
             runOnUiThread {
-                val storageText = "Storage: ${storageStatus.formattedAvailable} available (${100 - storageStatus.usagePercentage}% free)"
+                val storageText =
+                    "Storage: ${storageStatus.formattedAvailable} available (${100 - storageStatus.usagePercentage}% free)"
                 supportActionBar?.subtitle = storageText
-                
+
                 if (storageStatus.isLowStorage) {
                     Toast.makeText(
                         this@SessionManagerActivity,

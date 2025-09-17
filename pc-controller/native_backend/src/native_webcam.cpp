@@ -102,9 +102,9 @@ namespace ircamera {
 
                 if (actual_width != width || actual_height != height) {
                     last_error_ = "Failed to set resolution to " +
-                                  std::to_string(width) + "x" + std::to_string(height) +
-                                  ". Actual: " + std::to_string(actual_width) + "x" +
-                                  std::to_string(actual_height);
+                            std::to_string(width) + "x" + std::to_string(height) +
+                            ". Actual: " + std::to_string(actual_width) + "x" +
+                            std::to_string(actual_height);
                     return false;
                 }
             }
@@ -287,7 +287,7 @@ namespace ircamera {
 
             if (actual_width <= 0 || actual_height <= 0) {
                 last_error_ = "Invalid frame dimensions after configuration: " +
-                              std::to_string(actual_width) + "x" + std::to_string(actual_height);
+                        std::to_string(actual_width) + "x" + std::to_string(actual_height);
                 return false;
             }
 

@@ -267,7 +267,7 @@ public class UnifiedBleManager {
     @NonNull
     public List<UnifiedDevice> getConnectedShimmerDevices() {
         List<UnifiedDevice> shimmerDevices = new ArrayList<>();
-        
+
         // Return actual connected Shimmer devices from shimmerController
         if (shimmerController != null) {
             try {
@@ -277,14 +277,15 @@ public class UnifiedBleManager {
                 Log.e(TAG, "Error getting connected Shimmer devices", e);
             }
         }
-        
+
         return shimmerDevices;
     }
 
     /**
      * Scan for nearby Shimmer devices using BLE discovery
+     *
      * @param scanDurationMs Duration of scan in milliseconds
-     * @param callback Callback to receive discovered devices
+     * @param callback       Callback to receive discovered devices
      */
     public void scanForShimmerDevices(long scanDurationMs, ShimmerScanCallback callback) {
         if (shimmerController != null) {
@@ -297,20 +298,11 @@ public class UnifiedBleManager {
         }
     }
 
-    /**
-     * Interface for Shimmer device scan callbacks
-     */
-    public interface ShimmerScanCallback {
-        void onDeviceFound(UnifiedDevice device);
-        void onScanComplete(List<UnifiedDevice> foundDevices);
-        void onScanFailed(String error);
-    }
-
     @NonNull
     public List<UnifiedDevice> getConnectedTopdonDevices() {
         List<UnifiedDevice> topdonDevices = new ArrayList<>();
-        
-        // Return actual connected Topdon devices from topdonController  
+
+        // Return actual connected Topdon devices from topdonController
         if (topdonController != null) {
             try {
                 topdonDevices.addAll(topdonController.getConnectedDevices());
@@ -319,7 +311,7 @@ public class UnifiedBleManager {
                 Log.e(TAG, "Error getting connected Topdon devices", e);
             }
         }
-        
+
         return topdonDevices;
     }
 
@@ -445,6 +437,17 @@ public class UnifiedBleManager {
         TOPDON_ENV,         // Topdon environmental sensors
         TOPDON_MULTI,       // Topdon multi-sensor devices
         UNKNOWN             // Unknown or generic BLE device
+    }
+
+    /**
+     * Interface for Shimmer device scan callbacks
+     */
+    public interface ShimmerScanCallback {
+        void onDeviceFound(UnifiedDevice device);
+
+        void onScanComplete(List<UnifiedDevice> foundDevices);
+
+        void onScanFailed(String error);
     }
 
     public interface UnifiedScanListener {

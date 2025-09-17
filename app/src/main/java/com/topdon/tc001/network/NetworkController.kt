@@ -134,7 +134,7 @@ class NetworkController(private val context: Context) {
 
             // Cancel all coroutines
             controllerScope.cancel()
-            
+
             // Wait for cancellation to complete
             runBlocking {
                 delay(100) // Give some time for graceful shutdown

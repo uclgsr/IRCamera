@@ -17,7 +17,7 @@ import java.util.concurrent.atomic.AtomicReference
 
 /**
  * PreviewDataAdapter connects sensor data sources to PreviewStreamer.
- * 
+ *
  * This adapter polls data from various sensors and cameras and feeds it to
  * the PreviewStreamer for transmission to the PC Controller.
  */
@@ -96,10 +96,10 @@ class PreviewDataAdapter(
     private suspend fun pollSensorData() {
         // Poll thermal camera frame
         pollThermalFrame()
-        
+
         // Poll GSR data
         pollGsrData()
-        
+
         // Update recording status
         updateRecordingStatus()
     }
@@ -112,7 +112,10 @@ class PreviewDataAdapter(
                 val thermalBitmap = manager.scaledBitmap()
                 if (thermalBitmap != null && !thermalBitmap.isRecycled) {
                     previewStreamer.updateThermalFrame(thermalBitmap)
-                    Log.v(TAG, "Updated thermal frame: ${thermalBitmap.width}x${thermalBitmap.height}")
+                    Log.v(
+                        TAG,
+                        "Updated thermal frame: ${thermalBitmap.width}x${thermalBitmap.height}"
+                    )
                 }
             }
         } catch (e: Exception) {
@@ -127,7 +130,7 @@ class PreviewDataAdapter(
                 // Get latest GSR value - this is a simplified approach
                 // In a real implementation, you'd get the latest sample from the recorder
                 val stats = recorder.getRecordingStats()
-                
+
                 // Use a mock GSR value based on recording activity
                 // In real implementation, extract from actual data stream
                 val mockGsrValue = if (stats.totalSamplesRecorded > 0) {
@@ -135,7 +138,7 @@ class PreviewDataAdapter(
                 } else {
                     0.0f
                 }
-                
+
                 previewStreamer.updateGsrValue(mockGsrValue)
                 Log.v(TAG, "Updated GSR value: $mockGsrValue µS")
             }
@@ -152,7 +155,7 @@ class PreviewDataAdapter(
                 recordingService.isConnectedToPC -> "CONNECTED"
                 else -> "IDLE"
             }
-            
+
             previewStreamer.updateRecordingStatus(status)
             Log.v(TAG, "Updated recording status: $status")
         } catch (e: Exception) {
@@ -168,7 +171,7 @@ class PreviewDataAdapter(
     }
 
     fun updateThermalFrameDirect(bitmap: Bitmap) {
-        previewStreamer.updateThermalFrame(bitmap)  
+        previewStreamer.updateThermalFrame(bitmap)
     }
 
     fun updateGsrValueDirect(gsrValue: Float) {

@@ -46,14 +46,14 @@ android {
             languageVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_0)
         }
     }
-    
+
     packaging {
         jniLibs {
             // Exclude libc++_shared.so to avoid conflicts with app dependencies
             excludes += listOf("**/libc++_shared.so")
         }
     }
-    
+
     sourceSets {
         getByName("main") {
             jniLibs.srcDirs("libs", "src/main/jnilibs")

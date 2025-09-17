@@ -14,13 +14,13 @@ class CSVBufferedWriter(
     bufferSize: Int = 8192,
     flushIntervalMs: Long = 1000L
 ) : BufferedDataWriter(outputFile, bufferSize, flushIntervalMs) {
-    
+
     companion object {
         private const val TAG = "CSVBufferedWriter"
     }
-    
+
     private val headerWritten = AtomicBoolean(false)
-    
+
     /**
      * Start the writer and automatically write headers
      */
@@ -31,7 +31,7 @@ class CSVBufferedWriter(
         }
         return started
     }
-    
+
     /**
      * Write CSV headers
      */
@@ -42,7 +42,7 @@ class CSVBufferedWriter(
             Log.d(TAG, "CSV headers written: $headerLine")
         }
     }
-    
+
     /**
      * Write a CSV row from a list of values
      */
@@ -55,18 +55,18 @@ class CSVBufferedWriter(
         }
         return writeLine(csvLine)
     }
-    
+
     /**
      * Escape CSV values that contain special characters
      */
     private fun escapeCSVValue(value: String): String {
         return if (value.contains(",") || value.contains("\"") || value.contains("\n")) {
-            "\"${value.replace("\"", "\"\"")}\"" 
+            "\"${value.replace("\"", "\"\"")}\""
         } else {
             value
         }
     }
-    
+
     /**
      * Get CSV-specific write statistics
      */
@@ -92,7 +92,7 @@ data class CSVWriteStats(
 ) {
     val rowsWritten: Long
         get() = if (headerWritten) baseStats.linesWritten - 1 else baseStats.linesWritten
-        
+
     val averageRowSize: Double
         get() = if (rowsWritten > 0) baseStats.bytesWritten.toDouble() / rowsWritten else 0.0
 }

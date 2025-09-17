@@ -11,7 +11,7 @@ import android.util.Log
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
-import android.widget.EditText  
+import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
@@ -281,7 +281,11 @@ class GSRSettingsActivity : BaseBindingActivity<ActivityGsrSettingsBinding>() {
         availableDevices.add("No devices found")
 
         deviceAdapter =
-            ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, availableDevices).apply {
+            ArrayAdapter<String>(
+                this,
+                android.R.layout.simple_spinner_item,
+                availableDevices
+            ).apply {
                 setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             }
         binding.shimmerDeviceSpinner.adapter = deviceAdapter
@@ -306,13 +310,21 @@ class GSRSettingsActivity : BaseBindingActivity<ActivityGsrSettingsBinding>() {
         val videoResolutions =
             arrayOf("4K UHD (3840×2160)", "Full HD (1920×1080)", "HD (1280×720)", "SD (720×480)")
         binding.videoResolutionSpinner.adapter =
-            ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, videoResolutions).apply {
+            ArrayAdapter<String>(
+                this,
+                android.R.layout.simple_spinner_item,
+                videoResolutions
+            ).apply {
                 setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             }
 
         val videoFrameRates = arrayOf("30 fps", "60 fps", "24 fps", "15 fps")
         binding.videoFrameRateSpinner.adapter =
-            ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, videoFrameRates).apply {
+            ArrayAdapter<String>(
+                this,
+                android.R.layout.simple_spinner_item,
+                videoFrameRates
+            ).apply {
                 setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             }
 

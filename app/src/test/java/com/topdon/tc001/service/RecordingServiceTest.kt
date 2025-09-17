@@ -45,13 +45,13 @@ class RecordingServiceTest {
     @Test
     fun `test service handles partial sensor failures gracefully`() = runTest {
         every { mockRecordingController.getAvailableSensors() } returns listOf(
-            mockk { 
+            mockk {
                 every { sensorId } returns "RGB"
                 every { sensorType } returns "camera"
             }
         )
         every { mockRecordingController.getActiveSensorCount() } returns 1
-        
+
         assertTrue("Service should handle partial sensor scenarios", true)
     }
 
@@ -59,7 +59,8 @@ class RecordingServiceTest {
     fun `test backward compatibility maintained`() = runTest {
         try {
             RecordingService::class.java.getDeclaredMethod(
-                "startRecording", Context::class.java, String::class.java)
+                "startRecording", Context::class.java, String::class.java
+            )
             assertTrue("startRecording method should exist", true)
         } catch (e: NoSuchMethodException) {
             fail("Backward compatibility broken")

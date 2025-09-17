@@ -62,7 +62,7 @@ class RgbCameraRecorder(
     private var imageCapture: ImageCapture? = null
     private var camera: Camera? = null
     private var activeRecording: Recording? = null
-    
+
     private val cameraExecutor: ExecutorService = Executors.newSingleThreadExecutor()
 
     private val statusFlow = MutableStateFlow(createInitialStatus())
@@ -93,7 +93,7 @@ class RgbCameraRecorder(
     }
 
     private val recordingScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
-    
+
     // Frame capture job for continuous JPEG frames
     private var frameCaptureJob: Job? = null
 
@@ -110,6 +110,7 @@ class RgbCameraRecorder(
                 val cameraType = if (useFrontCamera) "Front" else "Back"
                 _cameraStatus.value = "$cameraType Camera Not Available"
                 emitError(ErrorType.INITIALIZATION_FAILED, "$cameraType camera not available")
+
                 return@withContext false
             }
 
@@ -159,11 +160,14 @@ class RgbCameraRecorder(
 
         } catch (e: Exception) {
             Log.e(TAG, "Failed to initialize CameraX", e)
-            emitError(ErrorType.INITIALIZATION_FAILED, "CameraX initialization failed: ${e.message}")
+            emitError(
+                ErrorType.INITIALIZATION_FAILED,
+                "CameraX initialization failed: ${e.message}"
+            )
             false
         }
     }
-    
+
     /**
      * Initialize CameraX with preview, video and image capture use cases
      */
@@ -197,9 +201,9 @@ class RgbCameraRecorder(
 
             // Bind use cases to lifecycle
             val useCases = mutableListOf<UseCase>(videoCapture!!, imageCapture!!)
-            
+
             // Add preview if PreviewView is available
-            previewView?.let { 
+            previewView?.let {
                 preview?.setSurfaceProvider(it.surfaceProvider)
                 useCases.add(preview!!)
                 Log.d(TAG, "Preview bound to PreviewView")
@@ -215,7 +219,10 @@ class RgbCameraRecorder(
             true
         } catch (e: Exception) {
             Log.e(TAG, "Failed to initialize CameraX use cases", e)
-            emitError(ErrorType.INITIALIZATION_FAILED, "Failed to bind camera use cases: ${e.message}")
+            emitError(
+                ErrorType.INITIALIZATION_FAILED,
+                "Failed to bind camera use cases: ${e.message}"
+            )
             false
         }
     }
@@ -241,7 +248,7 @@ class RgbCameraRecorder(
             }
 
             setupOutputFiles()
-            
+
             // Start video recording
             val videoRecordingStarted = startVideoRecording()
             if (!videoRecordingStarted) {
@@ -279,13 +286,13 @@ class RgbCameraRecorder(
         if (!rgbDir.exists()) {
             rgbDir.mkdirs()
         }
-        
+
         // Create frames subdirectory for JPEG captures
         val framesDir = File(rgbDir, "frames")
         if (!framesDir.exists()) {
             framesDir.mkdirs()
         }
-        
+
         // Use standard file names from SessionDirectoryManager
         videoFile = File(rgbDir, SessionDirectoryManager.RGB_VIDEO_FILE)
         csvFile = File(rgbDir, "rgb_timestamps.csv")
@@ -300,13 +307,14 @@ class RgbCameraRecorder(
             val outputFile = videoFile ?: return false
 
             val mediaStoreOutput = FileOutputOptions.Builder(outputFile).build()
-            
+
             activeRecording = videoCapture.output
                 .prepareRecording(context, mediaStoreOutput)
                 .apply {
                     // Enable audio recording if permission is available
-                    if (context.checkSelfPermission(android.Manifest.permission.RECORD_AUDIO) == 
-                        android.content.pm.PackageManager.PERMISSION_GRANTED) {
+                    if (context.checkSelfPermission(android.Manifest.permission.RECORD_AUDIO) ==
+                        android.content.pm.PackageManager.PERMISSION_GRANTED
+                    ) {
                         withAudioEnabled()
                     }
                 }
@@ -318,13 +326,17 @@ class RgbCameraRecorder(
                                 updateStatus(isRecording = true)
                             }
                         }
+
                         is VideoRecordEvent.Finalize -> {
                             if (!recordEvent.hasError()) {
                                 Log.i(TAG, "Video recording saved: ${outputFile.absolutePath}")
                             } else {
                                 Log.e(TAG, "Video recording error: ${recordEvent.error}")
                                 recordingScope.launch {
-                                    emitError(ErrorType.RECORDING_FAILED, "Video recording failed: ${recordEvent.error}")
+                                    emitError(
+                                        ErrorType.RECORDING_FAILED,
+                                        "Video recording failed: ${recordEvent.error}"
+                                    )
                                 }
                             }
                         }
@@ -346,17 +358,17 @@ class RgbCameraRecorder(
         frameCaptureJob = recordingScope.launch {
             val framesDir = File(sessionDirectory, "RGB/frames")
             val captureInterval = 1000L / CAPTURE_FPS // ~33ms for 30fps
-            
+
             Log.i(TAG, "Starting continuous frame capture at ${CAPTURE_FPS} FPS")
-            
+
             while (_isRecording.get()) {
                 try {
                     val timestamp = System.nanoTime()
                     val frameNumber = framesCaptured.incrementAndGet()
                     val outputFile = File(framesDir, "frame_${timestamp}.jpg")
-                    
+
                     val outputOptions = ImageCapture.OutputFileOptions.Builder(outputFile).build()
-                    
+
                     imageCapture?.takePicture(
                         outputOptions,
                         cameraExecutor,
@@ -367,20 +379,20 @@ class RgbCameraRecorder(
                                     logFrameCapture(timestamp, frameNumber, outputFile)
                                 }
                             }
-                            
+
                             override fun onError(exception: ImageCaptureException) {
                                 handleFrameCaptureError(exception)
                             }
                         }
                     )
-                    
+
                     delay(captureInterval)
                 } catch (e: Exception) {
                     Log.w(TAG, "Error during frame capture", e)
                     delay(captureInterval)
                 }
             }
-            
+
             Log.i(TAG, "Frame capture stopped")
         }
     }
@@ -392,7 +404,7 @@ class RgbCameraRecorder(
         try {
             csvBufferedWriter?.let { writer ->
                 val sessionTimeMs = (timestampNs - sessionStartTime.get()) / 1_000_000
-                
+
                 writer.writeNext(
                     arrayOf(
                         timestampNs.toString(),
@@ -403,7 +415,7 @@ class RgbCameraRecorder(
                     )
                 )
             }
-            
+
             samplesRecorded.incrementAndGet()
             lastFrameTime.set(timestampNs)
         } catch (e: Exception) {
@@ -419,7 +431,7 @@ class RgbCameraRecorder(
                     writeNext(
                         arrayOf(
                             "timestamp_ns",
-                            "sample_number", 
+                            "sample_number",
                             "session_time_ms",
                             "event_type",      // frame_capture, video_start, video_stop, sync_marker
                             "metadata"         // Additional info like filename, size, etc.
@@ -427,22 +439,22 @@ class RgbCameraRecorder(
                     )
                     flush()
                 }
-                
+
                 val headers = listOf(
                     "timestamp_ns",
-                    "frame_number", 
+                    "frame_number",
                     "session_time_ms",
                     "sync_marker",
                     "metadata"
                 )
-                
+
                 csvBufferedWriter = CSVBufferedWriter(
                     outputFile = file,
                     headers = headers,
                     bufferSize = 4096,
                     flushIntervalMs = 500L  // 0.5 second flush for video metadata
                 )
-                
+
                 csvBufferedWriter?.startWithHeaders()
             }
             Log.d(TAG, "Buffered CSV writer initialized for frame timestamps")
@@ -509,26 +521,29 @@ class RgbCameraRecorder(
             }
 
             _isRecording.set(false)
-            
+
             // Stop frame capture job
             frameCaptureJob?.cancel()
             frameCaptureJob = null
-            
+
             // Stop video recording
             activeRecording?.stop()
             activeRecording = null
-            
+
             // Close CSV writer
             csvWriter?.close()
             csvWriter = null
-            
+
             // Stop buffered writer properly
             csvBufferedWriter?.stop()
             csvBufferedWriter = null
 
             Log.i(TAG, "RGB CameraX recording stopped successfully")
-            Log.i(TAG, "Session stats - Frames captured: ${framesCaptured.get()}, Dropped frames: ${droppedFrames.get()}")
-            
+            Log.i(
+                TAG,
+                "Session stats - Frames captured: ${framesCaptured.get()}, Dropped frames: ${droppedFrames.get()}"
+            )
+
             updateStatus(isRecording = false)
             true
         } catch (e: Exception) {
@@ -606,7 +621,6 @@ class RgbCameraRecorder(
             videoCapture = null
             imageCapture = null
             cameraProvider = null
-            
             // Shutdown camera executor with timeout
             try {
                 cameraExecutor.shutdown()
@@ -645,7 +659,7 @@ class RgbCameraRecorder(
 
         // Calculate total samples (frames captured)
         val totalSamples = framesCaptured.get()
-        
+
         return RecordingStats(
             sensorId = sensorId,
             sensorType = sensorType,
@@ -725,15 +739,15 @@ class RgbCameraRecorder(
 
         errorFlow.emit(error)
     }
-    
+
     /**
      * Check if camera permission is granted
      */
     fun hasCameraPermission(): Boolean {
-        return context.checkSelfPermission(android.Manifest.permission.CAMERA) == 
-            android.content.pm.PackageManager.PERMISSION_GRANTED
+        return context.checkSelfPermission(android.Manifest.permission.CAMERA) ==
+                android.content.pm.PackageManager.PERMISSION_GRANTED
     }
-    
+
     /**
      * Get camera capabilities
      */
@@ -744,7 +758,7 @@ class RgbCameraRecorder(
             false
         }
     }
-    
+
     /**
      * Get current recording status text for UI feedback
      */

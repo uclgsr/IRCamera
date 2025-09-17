@@ -134,10 +134,7 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
 
     private suspend fun initializeGSRComponents() = withContext(Dispatchers.IO) {
         try {
-            // Initialize UnifiedGSRRecorder with enhanced BLE scanning
-            // This requires a proper LifecycleOwner, so we'll need to be careful about context
-            // For now, we'll initialize it when needed in the connection method
-            
+
             gsrSessionManager = GSRSessionManager.getInstance(getApplication())
 
             // Set up GSR state monitoring

@@ -38,7 +38,9 @@ namespace ircamera {
 
             void clear();
 
-            size_t capacity() const { return capacity_; }
+            size_t capacity() const {
+                return capacity_;
+            }
 
         private:
             struct Node {

@@ -22,9 +22,9 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_marginEnd="16dp"
-            android:src="@drawable/ic_device_type_shimmer_gsr"
             android:contentDescription="Shimmer GSR Device"
-            android:scaleType="centerInside" />
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_device_type_shimmer_gsr" />
 
         <!-- Device Information -->
         <LinearLayout
@@ -38,27 +38,27 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Shimmer3 GSR+"
+                android:textColor="@android:color/black"
                 android:textSize="16sp"
-                android:textStyle="bold"
-                android:textColor="@android:color/black" />
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/textDeviceAddress"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
                 android:text="00:06:66:XX:XX:XX"
-                android:textSize="12sp"
                 android:textColor="@android:color/darker_gray"
-                android:layout_marginTop="2dp" />
+                android:textSize="12sp" />
 
             <TextView
                 android:id="@+id/textDeviceType"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
                 android:text="Shimmer3 GSR+ (Galvanic Skin Response)"
-                android:textSize="12sp"
                 android:textColor="@android:color/darker_gray"
-                android:layout_marginTop="2dp" />
+                android:textSize="12sp" />
 
         </LinearLayout>
 
@@ -66,26 +66,26 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
+            android:layout_marginStart="8dp"
             android:gravity="center"
-            android:layout_marginStart="8dp">
+            android:orientation="vertical">
 
             <ImageView
                 android:id="@+id/imageSignalStrength"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/ic_bluetooth_disabled"
                 android:contentDescription="Signal Strength"
+                android:src="@drawable/ic_bluetooth_disabled"
                 android:tint="@android:color/holo_green_dark" />
 
             <TextView
                 android:id="@+id/textSignalStrength"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
                 android:text="-65 dBm"
-                android:textSize="10sp"
                 android:textColor="@android:color/darker_gray"
-                android:layout_marginTop="2dp" />
+                android:textSize="10sp" />
 
         </LinearLayout>
 

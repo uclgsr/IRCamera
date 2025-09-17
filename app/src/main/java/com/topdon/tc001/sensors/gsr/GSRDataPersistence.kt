@@ -44,10 +44,10 @@ class GSRDataPersistence(
         return try {
             val sessionDir = createSessionDirectory()
             csvFile = createCsvFile(sessionDir)
-            
+
             // Create CSV headers for buffered writer
             val headers = createCsvHeaders()
-            
+
             // Initialize buffered CSV writer with optimized settings for GSR data
             csvBufferedWriter = CSVBufferedWriter(
                 outputFile = csvFile!!,
@@ -55,7 +55,7 @@ class GSRDataPersistence(
                 bufferSize = 4096,  // 4KB buffer for GSR data
                 flushIntervalMs = FLUSH_INTERVAL_MS
             )
-            
+
             csvBufferedWriter?.startWithHeaders()
 
             Log.i(TAG, "GSR data persistence initialized for session: $sessionId")
@@ -91,19 +91,19 @@ class GSRDataPersistence(
     private fun createCsvHeaders(): List<String> {
         return listOf(
             // Timestamp fields (matching TimestampRecord properties)
-            "system_nanos", "elapsed_realtime_ms", "device_timestamp_ms", 
+            "system_nanos", "elapsed_realtime_ms", "device_timestamp_ms",
             "session_relative_ms", "synchronized_timestamp_ms",
-            
+
             // GSR data fields
             "gsr_raw_value", "gsr_microsiemens", "gsr_resistance_kohm",
-            
+
             // PPG data fields  
             "ppg_raw_value", "ppg_filtered", "heart_rate_bpm",
-            
+
             // Device info fields
             "device_id", "battery_level", "signal_quality",
             "sampling_rate_hz", "packet_sequence",
-            
+
             // Session info fields
             "session_id", "participant_id", "recording_mode"
         )
@@ -251,24 +251,24 @@ data class GSRDataRecord(
             timestamp.deviceTimestampMs,
             timestamp.sessionRelativeMs,
             timestamp.synchronizedTimestampMs,
-            
+
             // GSR data fields
             gsrRawValue,
             gsrMicrosiemens,
             gsrResistanceKohm,
-            
+
             // PPG data fields  
             ppgRawValue,
             ppgFiltered,
             heartRateBpm,
-            
+
             // Device info fields
             deviceId,
             batteryLevel,
             signalQuality,
             samplingRateHz,
             packetSequence,
-            
+
             // Session info fields
             sessionId,
             participantId,
@@ -323,12 +323,17 @@ data class GSRPersistenceStats(
 ) {
     val totalDataSizeBytes: Long
         get() = bufferStats?.bytesWritten ?: 0L
-        
+
     val averageSampleSize: Double
         get() = if (samplesWritten > 0) totalDataSizeBytes.toDouble() / samplesWritten else 0.0
-        
+
     val writePerformanceInfo: String
         get() = bufferStats?.let { stats ->
-            "Queue: ${stats.queueSize}, Size: ${stats.formattedSize}, Avg: ${String.format("%.1f", averageSampleSize)} bytes/sample"
+            "Queue: ${stats.queueSize}, Size: ${stats.formattedSize}, Avg: ${
+                String.format(
+                    "%.1f",
+                    averageSampleSize
+                )
+            } bytes/sample"
         } ?: "No buffer stats available"
 }

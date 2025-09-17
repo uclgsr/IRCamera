@@ -125,7 +125,8 @@ namespace ircamera {
         & (Size - 1)) == 0, "Size must be power of 2");
 
     public:
-        mpsc_lockfree_queue() : head_(0), tail_(0) {}
+        mpsc_lockfree_queue() : head_(0), tail_(0) {
+        }
 
         bool try_push(const T &item) {
             const size_t head = head_.fetch_add(1, std::memory_order_relaxed);
@@ -162,11 +163,15 @@ namespace ircamera {
             return head - tail;
         }
 
-        bool empty() const { return size() == 0; }
+        bool empty() const {
+            return size() == 0;
+        }
 
         constexpr size_t
 
-        capacity() const { return Size; }
+        capacity() const {
+            return Size;
+        }
 
     private:
         static constexpr size_t

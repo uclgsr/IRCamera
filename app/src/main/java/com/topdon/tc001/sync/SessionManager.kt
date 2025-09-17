@@ -55,7 +55,7 @@ class SessionManager(
 
     // Enhanced session management with workflow tracking
     private val sessionScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
-    
+
     enum class SessionWorkflowState {
         IDLE,
         INITIALIZING,
@@ -76,6 +76,7 @@ class SessionManager(
         val timeout: Long = 30000L, // 30 seconds default
         val required: Boolean = true
     )
+
     private var onDeviceJoined: ((DeviceInfo) -> Unit)? = null
     private var onDeviceLeft: ((DeviceInfo) -> Unit)? = null
     private var onSyncRequired: ((List<DeviceInfo>) -> Unit)? = null
@@ -566,7 +567,7 @@ class SessionManager(
         } catch (e: Exception) {
             logger.log(
                 StructuredLogger.LogLevel.ERROR,
-                "SessionManager", 
+                "SessionManager",
                 "workflow_init_failed",
                 mapOf("error" to (e.message ?: "Unknown error"))
             )
@@ -583,54 +584,64 @@ class SessionManager(
         currentStepIndex = 0
 
         // Step 1: Permission verification
-        workflowSteps.add(WorkflowStep(
-            name = "Permission Check",
-            action = {
-                _sessionWorkflowState.value = SessionWorkflowState.PERMISSION_CHECK
-                permissionController?.hasAllRequiredPermissions() ?: true
-            },
-            timeout = 15000L
-        ))
+        workflowSteps.add(
+            WorkflowStep(
+                name = "Permission Check",
+                action = {
+                    _sessionWorkflowState.value = SessionWorkflowState.PERMISSION_CHECK
+                    permissionController?.hasAllRequiredPermissions() ?: true
+                },
+                timeout = 15000L
+            )
+        )
 
         // Step 2: Device discovery
-        workflowSteps.add(WorkflowStep(
-            name = "Device Discovery",
-            action = {
-                _sessionWorkflowState.value = SessionWorkflowState.DEVICE_DISCOVERY
-                discoverDevices(config.expectedDevices)
-            },
-            timeout = 20000L
-        ))
+        workflowSteps.add(
+            WorkflowStep(
+                name = "Device Discovery",
+                action = {
+                    _sessionWorkflowState.value = SessionWorkflowState.DEVICE_DISCOVERY
+                    discoverDevices(config.expectedDevices)
+                },
+                timeout = 20000L
+            )
+        )
 
         // Step 3: Device connection
-        workflowSteps.add(WorkflowStep(
-            name = "Device Connection",
-            action = {
-                _sessionWorkflowState.value = SessionWorkflowState.DEVICE_CONNECTION
-                connectToDevices()
-            },
-            timeout = 30000L
-        ))
+        workflowSteps.add(
+            WorkflowStep(
+                name = "Device Connection",
+                action = {
+                    _sessionWorkflowState.value = SessionWorkflowState.DEVICE_CONNECTION
+                    connectToDevices()
+                },
+                timeout = 30000L
+            )
+        )
 
         // Step 4: Time synchronization
-        workflowSteps.add(WorkflowStep(
-            name = "Time Synchronization",
-            action = {
-                _sessionWorkflowState.value = SessionWorkflowState.TIME_SYNCHRONIZATION
-                performTimeSynchronization()
-            },
-            timeout = 15000L
-        ))
+        workflowSteps.add(
+            WorkflowStep(
+                name = "Time Synchronization",
+                action = {
+                    _sessionWorkflowState.value = SessionWorkflowState.TIME_SYNCHRONIZATION
+                    performTimeSynchronization()
+                },
+                timeout = 15000L
+            )
+        )
 
         // Step 5: Recording setup
-        workflowSteps.add(WorkflowStep(
-            name = "Recording Setup",
-            action = {
-                _sessionWorkflowState.value = SessionWorkflowState.RECORDING_SETUP
-                setupRecording(config)
-            },
-            timeout = 10000L
-        ))
+        workflowSteps.add(
+            WorkflowStep(
+                name = "Recording Setup",
+                action = {
+                    _sessionWorkflowState.value = SessionWorkflowState.RECORDING_SETUP
+                    setupRecording(config)
+                },
+                timeout = 10000L
+            )
+        )
 
         logger.log(
             StructuredLogger.LogLevel.INFO,
@@ -652,16 +663,16 @@ class SessionManager(
                     "index" to "${index + 1}/${workflowSteps.size}"
                 )
             )
-            
+
             try {
                 val success = withContext(Dispatchers.IO) {
                     kotlinx.coroutines.withTimeout(step.timeout) {
                         step.action()
                     }
                 }
-                
+
                 onWorkflowStepCompleted?.invoke(step.name, success)
-                
+
                 if (!success && step.required) {
                     logger.log(
                         StructuredLogger.LogLevel.ERROR,
@@ -679,14 +690,14 @@ class SessionManager(
                         mapOf("step" to step.name, "required" to "false")
                     )
                 }
-                
+
                 logger.log(
                     StructuredLogger.LogLevel.INFO,
-                    "SessionManager", 
+                    "SessionManager",
                     "workflow_step_success",
                     mapOf("step" to step.name)
                 )
-                
+
             } catch (e: kotlinx.coroutines.TimeoutCancellationException) {
                 logger.log(
                     StructuredLogger.LogLevel.ERROR,
@@ -695,7 +706,7 @@ class SessionManager(
                     mapOf("step" to step.name, "timeout" to step.timeout.toString())
                 )
                 onWorkflowStepCompleted?.invoke(step.name, false)
-                
+
                 if (step.required) {
                     _sessionWorkflowState.value = SessionWorkflowState.ERROR
                     return false
@@ -708,7 +719,7 @@ class SessionManager(
                     mapOf("step" to step.name, "error" to (e.message ?: "Unknown"))
                 )
                 onWorkflowStepCompleted?.invoke(step.name, false)
-                
+
                 if (step.required) {
                     _sessionWorkflowState.value = SessionWorkflowState.ERROR
                     return false

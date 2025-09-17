@@ -41,9 +41,13 @@ namespace ircamera {
 
             bool stop_capture();
 
-            bool is_open() const { return opened_.load(); }
+            bool is_open() const {
+                return opened_.load();
+            }
 
-            bool is_capturing() const { return capturing_.load(); }
+            bool is_capturing() const {
+                return capturing_.load();
+            }
 
             bool get_frame(WebcamFrame &frame);
 
@@ -80,7 +84,9 @@ namespace ircamera {
 
             Statistics get_statistics() const;
 
-            std::string get_last_error() const { return last_error_; }
+            std::string get_last_error() const {
+                return last_error_;
+            }
 
             bool set_auto_exposure(bool enable);
 

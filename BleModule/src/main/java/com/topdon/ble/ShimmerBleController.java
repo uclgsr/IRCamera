@@ -230,8 +230,9 @@ public class ShimmerBleController {
 
     /**
      * Scan for nearby Shimmer devices for the specified duration
+     *
      * @param scanDurationMs Duration of scan in milliseconds
-     * @param callback Callback to receive discovered devices
+     * @param callback       Callback to receive discovered devices
      */
     public void scanForDevices(long scanDurationMs, UnifiedBleManager.ShimmerScanCallback callback) {
         if (callback == null) {
@@ -285,7 +286,7 @@ public class ShimmerBleController {
     private UnifiedDevice createUnifiedDeviceFromBluetooth(BluetoothDevice device, UnifiedBleManager.DeviceType type, int rssi, byte[] scanRecord) {
         try {
             String deviceName = BluetoothPermissionUtils.getDeviceName(context, device);
-            
+
             // Create ShimmerDevice as UnifiedDevice
             ShimmerDeviceConfig config = new ShimmerDeviceConfig.Builder()
                     .setDeviceType(type)
@@ -294,7 +295,7 @@ public class ShimmerBleController {
                     .build();
 
             return new ShimmerDevice(device, config, null);
-            
+
         } catch (Exception e) {
             Log.e(TAG, "Error creating UnifiedDevice from BluetoothDevice", e);
             return null;

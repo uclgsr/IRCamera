@@ -97,7 +97,8 @@ class ShimmerGSRRecorderTest {
     @Test
     fun testSensorConfiguration() {
 
-        val customRecorder = ShimmerGSRRecorder(context, MockShimmerDeviceFactory(), samplingRateHz = 256)
+        val customRecorder =
+            ShimmerGSRRecorder(context, MockShimmerDeviceFactory(), samplingRateHz = 256)
         assertNotNull("Custom recorder should be created", customRecorder)
 
         assertNotNull("Default recorder should have context", recorder)
@@ -169,7 +170,8 @@ class ShimmerGSRRecorderTest {
     fun testMultipleInstances() {
 
         val recorder2 = ShimmerGSRRecorder(context, MockShimmerDeviceFactory(), samplingRateHz = 64)
-        val recorder3 = ShimmerGSRRecorder(context, MockShimmerDeviceFactory(), samplingRateHz = 512)
+        val recorder3 =
+            ShimmerGSRRecorder(context, MockShimmerDeviceFactory(), samplingRateHz = 512)
 
         assertNotNull("Second recorder should be created", recorder2)
         assertNotNull("Third recorder should be created", recorder3)

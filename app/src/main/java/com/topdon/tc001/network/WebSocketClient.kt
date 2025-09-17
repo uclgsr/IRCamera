@@ -1192,7 +1192,8 @@ class WebSocketClient(private val context: Context) {
         includeFiles: Boolean = false,
     ): String? {
         return try {
-            val exportFormat = DataManagementService.Companion.ExportFormat.valueOf(format.uppercase())
+            val exportFormat =
+                DataManagementService.Companion.ExportFormat.valueOf(format.uppercase())
             dataManagementService?.exportSession(sessionId, exportFormat, includeFiles)
         } catch (e: IllegalArgumentException) {
             Log.w(TAG, "Invalid export format: $format, defaulting to JSON")

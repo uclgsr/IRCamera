@@ -84,7 +84,7 @@ class PermissionController(
     private val isInitialized = AtomicBoolean(false)
     private var permissionCallback: ((Boolean, List<String>) -> Unit)? = null
     private var usbPermissionCallback: ((Boolean, UsbDevice?) -> Unit)? = null
-    
+
     // Track remaining permission groups for sequential processing
     private var remainingPermissionGroups: MutableList<List<String>> = mutableListOf()
     private var allRequestedPermissions: List<String> = emptyList()
@@ -126,7 +126,7 @@ class PermissionController(
      */
     fun requestUsbPermission(device: UsbDevice, callback: (Boolean, UsbDevice?) -> Unit) {
         usbPermissionCallback = callback
-        
+
         if (usbManager?.hasPermission(device) == true) {
             Log.i(TAG, "USB permission already granted for device: ${device.deviceName}")
             callback(true, device)
@@ -134,11 +134,11 @@ class PermissionController(
         }
 
         Log.i(TAG, "Requesting USB permission for device: ${device.deviceName}")
-        
+
         val permissionIntent = Intent("com.topdon.tc001.USB_PERMISSION").apply {
             setPackage(activity.packageName)
         }
-        
+
         val pendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             android.app.PendingIntent.getBroadcast(
                 activity,
@@ -154,7 +154,7 @@ class PermissionController(
                 android.app.PendingIntent.FLAG_UPDATE_CURRENT
             )
         }
-        
+
         usbManager?.requestPermission(device, pendingIntent)
     }
 
@@ -192,7 +192,7 @@ class PermissionController(
         // Request permission for the first device needing it
         requestUsbPermission(devicesNeedingPermission.first()) { granted, device ->
             if (granted && device != null) {
-                devicesWithPermission.add(device)  
+                devicesWithPermission.add(device)
             }
             callback(granted, devicesWithPermission)
         }
@@ -215,7 +215,12 @@ class PermissionController(
             return
         }
 
-        Log.i(TAG, "Requesting ${missingPermissions.size} missing permissions: ${missingPermissions.joinToString(", ")}")
+        Log.i(
+            TAG,
+            "Requesting ${missingPermissions.size} missing permissions: ${
+                missingPermissions.joinToString(", ")
+            }"
+        )
 
         // Show rationale first, then request permissions
         showPermissionRationaleDialog(missingPermissions) { userAccepted ->
@@ -228,11 +233,14 @@ class PermissionController(
         }
     }
 
-@Deprecated("Use ensureAll() for better clarity and future compatibility.", ReplaceWith("ensureAll(callback)"))
-fun requestAllPermissions(callback: (Boolean, List<String>) -> Unit) {
-    // Legacy method - delegates to ensureAll for consistency
-    ensureAll(callback)
-}
+    @Deprecated(
+        "Use ensureAll() for better clarity and future compatibility.",
+        ReplaceWith("ensureAll(callback)")
+    )
+    fun requestAllPermissions(callback: (Boolean, List<String>) -> Unit) {
+        // Legacy method - delegates to ensureAll for consistency
+        ensureAll(callback)
+    }
 
     fun onRequestPermissionsResult(
         requestCode: Int,
@@ -249,20 +257,30 @@ fun requestAllPermissions(callback: (Boolean, List<String>) -> Unit) {
                     }
                 }
 
-                Log.i(TAG, "Permission result: granted=${permissions.size - deniedPermissions.size}, denied=${deniedPermissions.size}")
-                
+                Log.i(
+                    TAG,
+                    "Permission result: granted=${permissions.size - deniedPermissions.size}, denied=${deniedPermissions.size}"
+                )
+
                 // Continue processing remaining permission groups
                 if (remainingPermissionGroups.isNotEmpty()) {
-                    Log.i(TAG, "Continuing with next permission group (${remainingPermissionGroups.size} groups remaining)")
+                    Log.i(
+                        TAG,
+                        "Continuing with next permission group (${remainingPermissionGroups.size} groups remaining)"
+                    )
                     requestNextPermissionGroup()
                 } else {
                     // All groups processed, evaluate final result
-                    val stillMissingPermissions = allRequestedPermissions.filter { !isPermissionGranted(it) }
+                    val stillMissingPermissions =
+                        allRequestedPermissions.filter { !isPermissionGranted(it) }
                     if (stillMissingPermissions.isEmpty()) {
                         Log.i(TAG, "All permissions successfully granted")
                         permissionCallback?.invoke(true, emptyList())
                     } else {
-                        Log.w(TAG, "Some permissions still denied: ${stillMissingPermissions.joinToString(", ")}")
+                        Log.w(
+                            TAG,
+                            "Some permissions still denied: ${stillMissingPermissions.joinToString(", ")}"
+                        )
                         handleDeniedPermissions(stillMissingPermissions)
                         permissionCallback?.invoke(false, stillMissingPermissions)
                     }
@@ -277,7 +295,7 @@ fun requestAllPermissions(callback: (Boolean, List<String>) -> Unit) {
                 // Check if battery optimization is now disabled
                 val isBatteryOptimizationDisabled = isBatteryOptimizationDisabled()
                 Log.i(TAG, "Battery optimization result: disabled=$isBatteryOptimizationDisabled")
-                
+
                 // Note: We can't reliably get a callback here since the battery optimization
                 // request flow doesn't provide a direct way to get the callback reference.
                 // The calling code should re-check isBatteryOptimizationDisabled() after this.
@@ -382,13 +400,21 @@ fun requestAllPermissions(callback: (Boolean, List<String>) -> Unit) {
                             Log.e(TAG, "Failed to open battery optimization settings", e)
                             // Fallback to general battery optimization settings
                             try {
-                                val fallbackIntent = Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS)
+                                val fallbackIntent =
+                                    Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS)
                                 activity.startActivity(fallbackIntent)
                                 // Since we can't get a result from the fallback, invoke the callback with false
-                                Log.w(TAG, "Fallback battery optimization settings opened - treating as not granted")
+                                Log.w(
+                                    TAG,
+                                    "Fallback battery optimization settings opened - treating as not granted"
+                                )
                                 callback(false)
                             } catch (fallbackException: Exception) {
-                                Log.e(TAG, "Failed to open fallback battery optimization settings", fallbackException)
+                                Log.e(
+                                    TAG,
+                                    "Failed to open fallback battery optimization settings",
+                                    fallbackException
+                                )
                                 callback(false)
                             }
                         }
@@ -442,7 +468,8 @@ fun requestAllPermissions(callback: (Boolean, List<String>) -> Unit) {
      */
     fun isBatteryOptimizationDisabled(): Boolean {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            val powerManager = activity.getSystemService(Context.POWER_SERVICE) as android.os.PowerManager
+            val powerManager =
+                activity.getSystemService(Context.POWER_SERVICE) as android.os.PowerManager
             powerManager.isIgnoringBatteryOptimizations(activity.packageName)
         } else {
             true // Not applicable on older versions
@@ -568,7 +595,7 @@ fun requestAllPermissions(callback: (Boolean, List<String>) -> Unit) {
      */
     fun getPermissionStatusMessage(): String {
         val status = mutableListOf<String>()
-        
+
         if (!hasCameraPermission()) {
             status.add("Camera permission required for video recording")
         }
@@ -628,7 +655,7 @@ fun requestAllPermissions(callback: (Boolean, List<String>) -> Unit) {
     private fun requestPermissionsSequentially(missingPermissions: List<String>) {
         // Group permissions logically for better user experience
         val permissionGroups = groupPermissionsLogically(missingPermissions)
-        
+
         if (permissionGroups.isEmpty()) {
             permissionCallback?.invoke(true, emptyList())
             return
@@ -637,26 +664,32 @@ fun requestAllPermissions(callback: (Boolean, List<String>) -> Unit) {
         // Store all permission groups and track original request
         remainingPermissionGroups = permissionGroups.toMutableList()
         allRequestedPermissions = missingPermissions
-        
+
         // Request the first group of permissions
         requestNextPermissionGroup()
     }
-    
+
     private fun requestNextPermissionGroup() {
         if (remainingPermissionGroups.isEmpty()) {
             // All groups processed, check final results
-            val stillMissingPermissions = allRequestedPermissions.filter { !isPermissionGranted(it) }
+            val stillMissingPermissions =
+                allRequestedPermissions.filter { !isPermissionGranted(it) }
             if (stillMissingPermissions.isEmpty()) {
                 Log.i(TAG, "All permission groups successfully granted")
                 permissionCallback?.invoke(true, emptyList())
             } else {
-                Log.w(TAG, "Some permissions still missing after all groups: ${stillMissingPermissions.joinToString(", ")}")
+                Log.w(
+                    TAG,
+                    "Some permissions still missing after all groups: ${
+                        stillMissingPermissions.joinToString(", ")
+                    }"
+                )
                 handleDeniedPermissions(stillMissingPermissions)
                 permissionCallback?.invoke(false, stillMissingPermissions)
             }
             return
         }
-        
+
         val nextGroup = remainingPermissionGroups.removeAt(0)
         Log.i(TAG, "Requesting permission group: ${nextGroup.joinToString(", ")}")
         activity.requestPermissions(nextGroup.toTypedArray(), REQUEST_PERMISSIONS)
@@ -664,7 +697,7 @@ fun requestAllPermissions(callback: (Boolean, List<String>) -> Unit) {
 
     private fun groupPermissionsLogically(permissions: List<String>): List<List<String>> {
         val groups = mutableListOf<List<String>>()
-        
+
         // Group 1: Camera and Audio (if recording with sound)
         val cameraGroup = permissions.filter { it in CAMERA_PERMISSIONS }
         if (cameraGroup.isNotEmpty()) {
@@ -677,7 +710,7 @@ fun requestAllPermissions(callback: (Boolean, List<String>) -> Unit) {
         } else {
             BLUETOOTH_PERMISSIONS_LEGACY
         }
-        
+
         val bluetoothGroup = permissions.filter { it in bluetoothPermissions }
         if (bluetoothGroup.isNotEmpty()) {
             groups.add(bluetoothGroup)
@@ -689,15 +722,15 @@ fun requestAllPermissions(callback: (Boolean, List<String>) -> Unit) {
         } else {
             STORAGE_PERMISSIONS_LEGACY
         }
-        
+
         val storageGroup = permissions.filter { it in storagePermissions }
         if (storageGroup.isNotEmpty()) {
             groups.add(storageGroup)
         }
 
         // Group 4: Notifications and Foreground Service
-        val notificationGroup = permissions.filter { 
-            it in NOTIFICATION_PERMISSIONS || it in FOREGROUND_SERVICE_PERMISSIONS 
+        val notificationGroup = permissions.filter {
+            it in NOTIFICATION_PERMISSIONS || it in FOREGROUND_SERVICE_PERMISSIONS
         }
         if (notificationGroup.isNotEmpty()) {
             groups.add(notificationGroup)
@@ -882,10 +915,10 @@ fun requestAllPermissions(callback: (Boolean, List<String>) -> Unit) {
     private fun getCriticalPermissions(permissions: List<String>): List<String> {
         return permissions.filter { permission ->
             permission in CAMERA_PERMISSIONS ||
-            permission == Manifest.permission.ACCESS_FINE_LOCATION ||
-            permission == Manifest.permission.ACCESS_COARSE_LOCATION ||
-            permission == Manifest.permission.BLUETOOTH_SCAN ||
-            permission == Manifest.permission.BLUETOOTH_CONNECT
+                    permission == Manifest.permission.ACCESS_FINE_LOCATION ||
+                    permission == Manifest.permission.ACCESS_COARSE_LOCATION ||
+                    permission == Manifest.permission.BLUETOOTH_SCAN ||
+                    permission == Manifest.permission.BLUETOOTH_CONNECT
         }
     }
 

@@ -8,7 +8,7 @@ import android.util.Log
  */
 interface ShimmerDataCluster {
     fun getGSRRawValue(): Double
-    fun getGSRCalibratedValue(): Double  
+    fun getGSRCalibratedValue(): Double
     fun getPPGValue(): Double
     fun getTimestamp(): Long
     fun hasValidGSRData(): Boolean
@@ -50,39 +50,39 @@ class MockShimmerDevice : ShimmerDeviceInterface {
     private var streaming = false
     private var dataCallback: ((ShimmerDataCluster) -> Unit)? = null
     private var connectionCallback: ((String) -> Unit)? = null
-    
+
     override fun connect(address: String, name: String): Boolean {
         Log.d("MockShimmerDevice", "Mock connect to $address")
         connected = true
         connectionCallback?.invoke("CONNECTED")
         return true
     }
-    
+
     override fun startStreaming(): Boolean {
         Log.d("MockShimmerDevice", "Mock start streaming")
         streaming = true
         return true
     }
-    
+
     override fun stopStreaming(): Boolean {
-        Log.d("MockShimmerDevice", "Mock stop streaming")  
+        Log.d("MockShimmerDevice", "Mock stop streaming")
         streaming = false
         return true
     }
-    
+
     override fun disconnect(): Boolean {
         Log.d("MockShimmerDevice", "Mock disconnect")
         connected = false
         connectionCallback?.invoke("DISCONNECTED")
         return true
     }
-    
+
     override fun isConnected(): Boolean = connected
-    
+
     override fun setDataCallback(callback: (ShimmerDataCluster) -> Unit) {
         this.dataCallback = callback
     }
-    
+
     override fun setConnectionCallback(callback: (String) -> Unit) {
         this.connectionCallback = callback
     }

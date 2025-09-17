@@ -106,8 +106,10 @@ const WebcamFrame &frame
 ) {
 
 return py::array_t<uint8_t>(
-{ frame.height, frame.width, frame.channels},
-{ sizeof(uint8_t) * frame.
+{
+frame.height, frame.width, frame.channels},
+{
+sizeof(uint8_t) * frame.
 width *frame
 .channels,
 sizeof(uint8_t) * frame.channels,

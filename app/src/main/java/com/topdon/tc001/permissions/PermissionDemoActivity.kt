@@ -17,10 +17,10 @@ import com.csl.irCamera.R
  * for comprehensive permission handling in the multi-sensor recording app.
  */
 class PermissionDemoActivity : AppCompatActivity() {
-    
+
     companion object {
         private const val TAG = "PermissionDemo"
-        
+
         fun start(context: Context) {
             val intent = Intent(context, PermissionDemoActivity::class.java)
             context.startActivity(intent)
@@ -39,14 +39,14 @@ class PermissionDemoActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
+
         // Create simple layout programmatically for demo
         setContentView(createDemoLayout())
-        
+
         // Initialize permission controller
         permissionController = PermissionController(this)
         permissionController.initialize()
-        
+
         setupClickListeners()
         updatePermissionStatus()
     }
@@ -70,7 +70,7 @@ class PermissionDemoActivity : AppCompatActivity() {
         requestBluetoothBtn = Button(this).apply { text = "Request Bluetooth Only" }
         requestBatteryBtn = Button(this).apply { text = "Request Battery Exemption" }
         requestUsbBtn = Button(this).apply { text = "Request USB Permission" }
-        startRecordingBtn = Button(this).apply { 
+        startRecordingBtn = Button(this).apply {
             text = "Start Recording (Check Permissions)"
             isEnabled = false
         }
@@ -155,7 +155,7 @@ class PermissionDemoActivity : AppCompatActivity() {
 
     private fun requestAllPermissions() {
         Log.i(TAG, "Requesting all permissions using ensureAll()")
-        
+
         permissionController.ensureAll { allGranted, deniedPermissions ->
             if (allGranted) {
                 showToast("All permissions granted! Multi-sensor recording ready.")
@@ -172,7 +172,7 @@ class PermissionDemoActivity : AppCompatActivity() {
     private fun requestUsbPermissionDemo() {
         val usbManager = getSystemService(Context.USB_SERVICE) as UsbManager
         val devices = usbManager.deviceList.values
-        
+
         if (devices.isEmpty()) {
             showToast("No USB devices connected")
             return
@@ -180,7 +180,7 @@ class PermissionDemoActivity : AppCompatActivity() {
 
         // Use the first available USB device for demo
         val device = devices.first()
-        
+
         showToast("Requesting USB permission for: ${device.productName}")
         permissionController.requestUsbPermission(device) { granted, grantedDevice ->
             if (granted && grantedDevice != null) {
@@ -199,11 +199,13 @@ class PermissionDemoActivity : AppCompatActivity() {
                 showToast("Cannot start recording - missing camera or storage permissions")
                 requestAllPermissions()
             }
+
             !permissionController.canShowNotifications() -> {
                 showToast("Recording can start but notifications may not work")
                 // Continue anyway
                 showToast("Starting recording with limited notification support...")
             }
+
             else -> {
                 showToast("All permissions ready - starting multi-sensor recording!")
                 // Here you would actually start the recording service
@@ -215,7 +217,7 @@ class PermissionDemoActivity : AppCompatActivity() {
     private fun updatePermissionStatus() {
         val statusMessage = permissionController.getPermissionStatusMessage()
         statusText.text = "Permission Status:\n$statusMessage"
-        
+
         // Update recording button state
         val canRecord = permissionController.canStartRecording()
         startRecordingBtn.isEnabled = canRecord
@@ -224,7 +226,7 @@ class PermissionDemoActivity : AppCompatActivity() {
         } else {
             "Start Recording (Permissions Needed)"
         }
-        
+
         Log.i(TAG, "Permission status updated: $statusMessage")
     }
 
@@ -234,20 +236,20 @@ class PermissionDemoActivity : AppCompatActivity() {
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        
+
         // Delegate to permission controller
         permissionController.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        
+
         // Update UI after permission result
         updatePermissionStatus()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        
+
         // Delegate to permission controller for battery optimization results
         permissionController.onActivityResult(requestCode, resultCode)
-        
+
         // Update UI after activity result
         updatePermissionStatus()
     }

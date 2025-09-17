@@ -34,7 +34,7 @@ class ThermalCameraUSBPermissionTest {
     @Before
     fun setup() {
         `when`(mockContext.getSystemService(Context.USB_SERVICE)).thenReturn(mockUsbManager)
-        
+
         // Mock Topdon TC001 device
         `when`(mockUsbDevice.vendorId).thenReturn(0x4206)
         `when`(mockUsbDevice.productId).thenReturn(0x3702)
@@ -104,8 +104,16 @@ class ThermalCameraUSBPermissionTest {
     @Test
     fun `test thermal camera sensor properties`() {
         // Assert thermal camera characteristics
-        assertEquals("Sensor ID should be thermal_camera_1", "thermal_camera_1", thermalRecorder.sensorId)
-        assertEquals("Sensor type should be IR Thermal Camera", "IR Thermal Camera", thermalRecorder.sensorType)
+        assertEquals(
+            "Sensor ID should be thermal_camera_1",
+            "thermal_camera_1",
+            thermalRecorder.sensorId
+        )
+        assertEquals(
+            "Sensor type should be IR Thermal Camera",
+            "IR Thermal Camera",
+            thermalRecorder.sensorType
+        )
         assertEquals("Sampling rate should be 9.0 FPS", 9.0, thermalRecorder.samplingRate, 0.1)
     }
 }

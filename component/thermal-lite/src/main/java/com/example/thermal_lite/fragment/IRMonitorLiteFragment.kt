@@ -77,6 +77,7 @@ class IRMonitorLiteFragment : BaseFragment(), ITsTempListener {
     var rotateAngle = 270
     private val imageRes = LibIRProcess.ImageRes_t() // 原图尺寸
     val dstTempBytes = ByteArray(192 * 256 * 2)
+
     @Suppress("DEPRECATION")
     private var mProgressDialog: ProgressDialog? = null
     private var temperaturerun = false

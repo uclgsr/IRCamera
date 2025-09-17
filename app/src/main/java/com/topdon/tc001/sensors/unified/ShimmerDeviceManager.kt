@@ -40,7 +40,6 @@ class ShimmerDeviceManager(
     var bluetoothManager: BluetoothManager? = null
         private set
     private var bluetoothAdapter: BluetoothAdapter? = null
-    
     val shimmerBluetoothManager: ShimmerBluetoothManagerAndroid? get() = shimmerManager
 
     private val connectedDevices = ConcurrentHashMap<String, Shimmer>()
@@ -300,49 +299,67 @@ class ShimmerDeviceManager(
         return connectedDevices[deviceAddress]
     }
 
-    suspend fun handleDeviceDisconnection(deviceAddress: String, shouldAttemptReconnection: Boolean = true) {
+    suspend fun handleDeviceDisconnection(
+        deviceAddress: String,
+        shouldAttemptReconnection: Boolean = true
+    ) {
         withContext(Dispatchers.IO) {
             Log.w(TAG, "Device disconnected: $deviceAddress")
-            
+
             // Remove from connected devices
             connectedDevices.remove(deviceAddress)
-            
+
             // Emit disconnection event
             _connectionEvents.emit(ConnectionEvent(deviceAddress, ConnectionState.DISCONNECTED))
 
             if (shouldAttemptReconnection) {
                 val currentAttempts = reconnectionAttempts.getOrDefault(deviceAddress, 0)
-                
+
                 if (currentAttempts < RECONNECTION_ATTEMPTS) {
-                    Log.i(TAG, "Starting automatic reconnection for device: $deviceAddress (attempt ${currentAttempts + 1}/$RECONNECTION_ATTEMPTS)")
-                    
+                    Log.i(
+                        TAG,
+                        "Starting automatic reconnection for device: $deviceAddress (attempt ${currentAttempts + 1}/$RECONNECTION_ATTEMPTS)"
+                    )
+
                     // Increment attempt counter
                     reconnectionAttempts[deviceAddress] = currentAttempts + 1
-                    
+
                     // Emit reconnecting state
-                    _connectionEvents.emit(ConnectionEvent(deviceAddress, ConnectionState.CONNECTING, "Reconnecting..."))
-                    
+                    _connectionEvents.emit(
+                        ConnectionEvent(
+                            deviceAddress,
+                            ConnectionState.CONNECTING,
+                            "Reconnecting..."
+                        )
+                    )
+
                     // Wait before reconnection attempt
                     delay(RECONNECTION_DELAY_MS)
-                    
+
                     // Find device info for reconnection
                     val deviceInfo = discoveredDevices[deviceAddress]
                     if (deviceInfo != null) {
                         val reconnectSuccess = connectToDevice(deviceInfo)
-                        
+
                         if (reconnectSuccess) {
-                            Log.i(TAG, "Automatic reconnection successful for device: $deviceAddress")
+                            Log.i(
+                                TAG,
+                                "Automatic reconnection successful for device: $deviceAddress"
+                            )
                             // Reset reconnection attempts on success
                             reconnectionAttempts.remove(deviceAddress)
                         } else {
                             Log.w(TAG, "Automatic reconnection failed for device: $deviceAddress")
                             // If this was the last attempt, emit failure and switch to simulation
                             if (currentAttempts + 1 >= RECONNECTION_ATTEMPTS) {
-                                Log.e(TAG, "All reconnection attempts failed for device: $deviceAddress. Switching to simulation mode.")
+                                Log.e(
+                                    TAG,
+                                    "All reconnection attempts failed for device: $deviceAddress. Switching to simulation mode."
+                                )
                                 _connectionEvents.emit(
                                     ConnectionEvent(
-                                        deviceAddress, 
-                                        ConnectionState.FAILED, 
+                                        deviceAddress,
+                                        ConnectionState.FAILED,
                                         "All reconnection attempts failed. Switching to simulation mode."
                                     )
                                 )
@@ -353,11 +370,14 @@ class ShimmerDeviceManager(
                             }
                         }
                     } else {
-                        Log.e(TAG, "Cannot reconnect to device $deviceAddress: device info not found")
+                        Log.e(
+                            TAG,
+                            "Cannot reconnect to device $deviceAddress: device info not found"
+                        )
                         _connectionEvents.emit(
                             ConnectionEvent(
-                                deviceAddress, 
-                                ConnectionState.FAILED, 
+                                deviceAddress,
+                                ConnectionState.FAILED,
                                 "Device info not found for reconnection"
                             )
                         )
@@ -367,8 +387,8 @@ class ShimmerDeviceManager(
                     Log.e(TAG, "Maximum reconnection attempts reached for device: $deviceAddress")
                     _connectionEvents.emit(
                         ConnectionEvent(
-                            deviceAddress, 
-                            ConnectionState.FAILED, 
+                            deviceAddress,
+                            ConnectionState.FAILED,
                             "Maximum reconnection attempts reached"
                         )
                     )

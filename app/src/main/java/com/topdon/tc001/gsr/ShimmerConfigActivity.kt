@@ -22,7 +22,7 @@ import kotlinx.coroutines.launch
 
 /**
  * Shimmer Configuration Activity - Device Discovery and Pairing UI
- * 
+ *
  * This activity provides the UI for:
  * - Scanning for nearby Shimmer3 GSR+ devices
  * - Displaying discovered devices with signal strength
@@ -31,32 +31,33 @@ import kotlinx.coroutines.launch
  * - Testing device connectivity before recording sessions
  */
 class ShimmerConfigActivity : AppCompatActivity() {
-    
+
     companion object {
         private const val TAG = "ShimmerConfigActivity"
-        
+
         // Required permissions for Shimmer BLE operations
-        private val REQUIRED_PERMISSIONS = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
-            arrayOf(
-                Manifest.permission.BLUETOOTH_SCAN,
-                Manifest.permission.BLUETOOTH_CONNECT,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            )
-        } else {
-            arrayOf(
-                Manifest.permission.BLUETOOTH,
-                Manifest.permission.BLUETOOTH_ADMIN,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            )
-        }
+        private val REQUIRED_PERMISSIONS =
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+                arrayOf(
+                    Manifest.permission.BLUETOOTH_SCAN,
+                    Manifest.permission.BLUETOOTH_CONNECT,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                )
+            } else {
+                arrayOf(
+                    Manifest.permission.BLUETOOTH,
+                    Manifest.permission.BLUETOOTH_ADMIN,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                )
+            }
     }
-    
+
     // private lateinit var binding: ActivityShimmerConfigBinding
     private lateinit var deviceAdapter: ShimmerDeviceAdapter
     private var shimmerDeviceManager: ShimmerDeviceManager? = null
     private var isScanning = false
     private var connectedDevice: DeviceInfo? = null
-    
+
     // Permission launcher for Bluetooth permissions
     private val permissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
@@ -71,47 +72,47 @@ class ShimmerConfigActivity : AppCompatActivity() {
             showPermissionError()
         }
     }
-    
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
+
         // Use efficient view inflation without DataBinding for better performance
         setContentView(R.layout.activity_shimmer_config)
-        
+
         setupUI()
         checkPermissionsAndInitialize()
     }
-    
+
     private fun setupUI() {
         // Efficient UI setup with direct view references
         setupToolbar()
-        setupRecyclerView()  
+        setupRecyclerView()
         setupButtonListeners()
-        
+
         // Initial UI state
         updateUI("Ready to scan for Shimmer devices")
         updateScanButton(false)
         updateConnectionStatus(null)
     }
-    
+
     private fun setupToolbar() {
         // Set up toolbar with support for navigation
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = "Shimmer GSR Configuration"
     }
-    
+
     private fun setupRecyclerView() {
         // Set up RecyclerView for discovered devices
         deviceAdapter = ShimmerDeviceAdapter { device ->
             onDeviceSelected(device)
         }
-        
+
         findViewById<RecyclerView>(R.id.recyclerViewDevices)?.apply {
             layoutManager = LinearLayoutManager(this@ShimmerConfigActivity)
             adapter = deviceAdapter
         }
     }
-    
+
     private fun setupButtonListeners() {
         // Set up button listeners with proper error handling
         findViewById<android.widget.Button>(R.id.buttonScan)?.setOnClickListener {
@@ -123,34 +124,43 @@ class ShimmerConfigActivity : AppCompatActivity() {
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "Error handling scan button click", e)
-                Toast.makeText(this, "Scan operation failed: ${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Scan operation failed: ${e.message}", Toast.LENGTH_SHORT)
+                    .show()
             }
         }
-        
+
         findViewById<android.widget.Button>(R.id.buttonTestConnection)?.setOnClickListener {
             try {
                 testSelectedDeviceConnection()
             } catch (e: Exception) {
                 Log.e(TAG, "Error handling test connection button click", e)
-                Toast.makeText(this, "Connection test failed: ${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Connection test failed: ${e.message}", Toast.LENGTH_SHORT)
+                    .show()
             }
         }
-        
+
         findViewById<android.widget.Button>(R.id.buttonDisconnect)?.setOnClickListener {
             try {
                 disconnectCurrentDevice()
             } catch (e: Exception) {
                 Log.e(TAG, "Error handling disconnect button click", e)
-                Toast.makeText(this, "Disconnect operation failed: ${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this,
+                    "Disconnect operation failed: ${e.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
     }
-    
+
     private fun checkPermissionsAndInitialize() {
         val missingPermissions = REQUIRED_PERMISSIONS.filter { permission ->
-            ActivityCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED
+            ActivityCompat.checkSelfPermission(
+                this,
+                permission
+            ) != PackageManager.PERMISSION_GRANTED
         }
-        
+
         if (missingPermissions.isEmpty()) {
             Log.i(TAG, "All required permissions already granted")
             initializeShimmerManager()
@@ -159,17 +169,17 @@ class ShimmerConfigActivity : AppCompatActivity() {
             permissionLauncher.launch(REQUIRED_PERMISSIONS)
         }
     }
-    
+
     private fun initializeShimmerManager() {
         try {
             shimmerDeviceManager = ShimmerDeviceManager(this, this)
-            
+
             lifecycleScope.launch {
                 val initialized = shimmerDeviceManager!!.initialize()
                 if (initialized) {
                     Log.i(TAG, "Shimmer Device Manager initialized successfully")
                     updateUI("Shimmer device manager ready - tap 'Start Scan' to discover devices")
-                    
+
                     // Set up flow collectors for device events
                     setupDeviceFlowCollectors()
                 } else {
@@ -182,14 +192,14 @@ class ShimmerConfigActivity : AppCompatActivity() {
             updateUI("Initialization error: ${e.message}")
         }
     }
-    
+
     private fun setupDeviceFlowCollectors() {
         // Collect scan results
         lifecycleScope.launch {
             shimmerDeviceManager?.scanResults?.collectLatest { devices ->
                 Log.d(TAG, "Received ${devices.size} discovered Shimmer devices")
                 deviceAdapter.updateDevices(devices)
-                
+
                 if (devices.isEmpty() && isScanning) {
                     updateUI("Scanning for Shimmer devices... (${devices.size} found)")
                 } else if (devices.isNotEmpty()) {
@@ -197,57 +207,74 @@ class ShimmerConfigActivity : AppCompatActivity() {
                 }
             }
         }
-        
+
         // Collect connection events
         lifecycleScope.launch {
             shimmerDeviceManager?.connectionEvents?.collectLatest { event ->
                 Log.d(TAG, "Connection event: ${event.state} for device ${event.deviceAddress}")
-                
+
                 when (event.state) {
                     ShimmerDeviceManager.ConnectionState.CONNECTING -> {
                         updateUI("Connecting to Shimmer device...")
-                        findViewById<android.widget.ProgressBar>(R.id.progressBar)?.visibility = View.VISIBLE
+                        findViewById<android.widget.ProgressBar>(R.id.progressBar)?.visibility =
+                            View.VISIBLE
                     }
-                    
+
                     ShimmerDeviceManager.ConnectionState.CONNECTED -> {
                         val device = deviceAdapter.getDeviceByAddress(event.deviceAddress)
                         connectedDevice = device
                         updateConnectionStatus(device)
                         updateUI("Successfully connected to ${device?.name ?: event.deviceAddress}")
-                        findViewById<android.widget.ProgressBar>(R.id.progressBar)?.visibility = View.GONE
-                        Toast.makeText(this@ShimmerConfigActivity, "Connected to Shimmer device!", Toast.LENGTH_SHORT).show()
+                        findViewById<android.widget.ProgressBar>(R.id.progressBar)?.visibility =
+                            View.GONE
+                        Toast.makeText(
+                            this@ShimmerConfigActivity,
+                            "Connected to Shimmer device!",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
-                    
+
                     ShimmerDeviceManager.ConnectionState.DISCONNECTED -> {
                         connectedDevice = null
                         updateConnectionStatus(null)
                         updateUI("Shimmer device disconnected")
-                        findViewById<android.widget.ProgressBar>(R.id.progressBar)?.visibility = View.GONE
+                        findViewById<android.widget.ProgressBar>(R.id.progressBar)?.visibility =
+                            View.GONE
                     }
-                    
+
                     ShimmerDeviceManager.ConnectionState.FAILED -> {
                         updateUI("Connection failed: ${event.message ?: "Unknown error"}")
-                        findViewById<android.widget.ProgressBar>(R.id.progressBar)?.visibility = View.GONE
-                        Toast.makeText(this@ShimmerConfigActivity, "Connection failed", Toast.LENGTH_LONG).show()
+                        findViewById<android.widget.ProgressBar>(R.id.progressBar)?.visibility =
+                            View.GONE
+                        Toast.makeText(
+                            this@ShimmerConfigActivity,
+                            "Connection failed",
+                            Toast.LENGTH_LONG
+                        ).show()
                     }
-                    
+
                     ShimmerDeviceManager.ConnectionState.TIMEOUT -> {
                         updateUI("Connection timeout - device may be out of range or not responding")
-                        findViewById<android.widget.ProgressBar>(R.id.progressBar)?.visibility = View.GONE
-                        Toast.makeText(this@ShimmerConfigActivity, "Connection timeout", Toast.LENGTH_LONG).show()
+                        findViewById<android.widget.ProgressBar>(R.id.progressBar)?.visibility =
+                            View.GONE
+                        Toast.makeText(
+                            this@ShimmerConfigActivity,
+                            "Connection timeout",
+                            Toast.LENGTH_LONG
+                        ).show()
                     }
                 }
             }
         }
     }
-    
+
     private fun startDeviceScanning() {
         val manager = shimmerDeviceManager
         if (manager == null) {
             updateUI("Device manager not initialized")
             return
         }
-        
+
         lifecycleScope.launch {
             try {
                 val scanStarted = manager.startDeviceScanning()
@@ -267,17 +294,17 @@ class ShimmerConfigActivity : AppCompatActivity() {
             }
         }
     }
-    
+
     private fun stopDeviceScanning() {
         val manager = shimmerDeviceManager ?: return
-        
+
         lifecycleScope.launch {
             try {
                 val scanStopped = manager.stopDeviceScanning()
                 if (scanStopped) {
                     isScanning = false
                     updateScanButton(false)
-                    
+
                     val deviceCount = deviceAdapter.itemCount
                     if (deviceCount > 0) {
                         updateUI("Scan completed - found $deviceCount Shimmer device(s)")
@@ -293,27 +320,28 @@ class ShimmerConfigActivity : AppCompatActivity() {
             }
         }
     }
-    
+
     private fun onDeviceSelected(device: DeviceInfo) {
         Log.i(TAG, "User selected Shimmer device: ${device.name} (${device.address})")
-        
+
         val manager = shimmerDeviceManager
         if (manager == null) {
             Toast.makeText(this, "Device manager not available", Toast.LENGTH_SHORT).show()
             return
         }
-        
+
         // Stop scanning if active
         if (isScanning) {
             stopDeviceScanning()
         }
-        
+
         // Connect to selected device
         lifecycleScope.launch {
             try {
                 updateUI("Connecting to ${device.name}...")
-                findViewById<android.widget.ProgressBar>(R.id.progressBar)?.visibility = View.VISIBLE
-                
+                findViewById<android.widget.ProgressBar>(R.id.progressBar)?.visibility =
+                    View.VISIBLE
+
                 val connected = manager.connectToDevice(device)
                 if (!connected) {
                     // Connection event flow will handle the result
@@ -326,44 +354,53 @@ class ShimmerConfigActivity : AppCompatActivity() {
             }
         }
     }
-    
+
     private fun testSelectedDeviceConnection() {
         val device = connectedDevice
         if (device == null) {
             Toast.makeText(this, "No device connected", Toast.LENGTH_SHORT).show()
             return
         }
-        
+
         lifecycleScope.launch {
             try {
                 updateUI("Testing connection to ${device.name}...")
-                findViewById<android.widget.ProgressBar>(R.id.progressBar)?.visibility = View.VISIBLE
-                
+                findViewById<android.widget.ProgressBar>(R.id.progressBar)?.visibility =
+                    View.VISIBLE
+
                 // Simple connection test - try to get device info
                 kotlinx.coroutines.delay(1000)
-                
+
                 updateUI("Connection test successful - device is responsive")
                 findViewById<android.widget.ProgressBar>(R.id.progressBar)?.visibility = View.GONE
-                Toast.makeText(this@ShimmerConfigActivity, "Device connection test passed!", Toast.LENGTH_SHORT).show()
-                
+                Toast.makeText(
+                    this@ShimmerConfigActivity,
+                    "Device connection test passed!",
+                    Toast.LENGTH_SHORT
+                ).show()
+
             } catch (e: Exception) {
                 Log.e(TAG, "Connection test failed", e)
                 updateUI("Connection test failed: ${e.message}")
                 findViewById<android.widget.ProgressBar>(R.id.progressBar)?.visibility = View.GONE
-                Toast.makeText(this@ShimmerConfigActivity, "Connection test failed", Toast.LENGTH_LONG).show()
+                Toast.makeText(
+                    this@ShimmerConfigActivity,
+                    "Connection test failed",
+                    Toast.LENGTH_LONG
+                ).show()
             }
         }
     }
-    
+
     private fun disconnectCurrentDevice() {
         val device = connectedDevice
         if (device == null) {
             Toast.makeText(this, "No device connected", Toast.LENGTH_SHORT).show()
             return
         }
-        
+
         val manager = shimmerDeviceManager ?: return
-        
+
         lifecycleScope.launch {
             try {
                 val disconnected = manager.disconnectDevice(device.address)
@@ -374,23 +411,27 @@ class ShimmerConfigActivity : AppCompatActivity() {
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "Error disconnecting device", e)
-                Toast.makeText(this@ShimmerConfigActivity, "Disconnect error: ${e.message}", Toast.LENGTH_LONG).show()
+                Toast.makeText(
+                    this@ShimmerConfigActivity,
+                    "Disconnect error: ${e.message}",
+                    Toast.LENGTH_LONG
+                ).show()
             }
         }
     }
-    
+
     private fun updateUI(message: String) {
         runOnUiThread {
             findViewById<android.widget.TextView>(R.id.textViewStatus)?.text = message
             Log.d(TAG, "UI Status: $message")
         }
     }
-    
+
     private fun updateScanButton(isScanning: Boolean) {
         runOnUiThread {
             val scanButton = findViewById<android.widget.Button>(R.id.buttonScan)
             val progressBar = findViewById<android.widget.ProgressBar>(R.id.progressBar)
-            
+
             if (isScanning) {
                 scanButton?.text = "Stop Scan"
                 progressBar?.visibility = View.VISIBLE
@@ -400,13 +441,13 @@ class ShimmerConfigActivity : AppCompatActivity() {
             }
         }
     }
-    
+
     private fun updateConnectionStatus(device: DeviceInfo?) {
         runOnUiThread {
             val statusView = findViewById<android.widget.TextView>(R.id.textViewConnectionStatus)
             val testButton = findViewById<android.widget.Button>(R.id.buttonTestConnection)
             val disconnectButton = findViewById<android.widget.Button>(R.id.buttonDisconnect)
-            
+
             if (device != null) {
                 statusView?.text = "Connected: ${device.name}"
                 statusView?.setTextColor(getColor(android.R.color.holo_green_dark))
@@ -420,7 +461,7 @@ class ShimmerConfigActivity : AppCompatActivity() {
             }
         }
     }
-    
+
     private fun showPermissionError() {
         Toast.makeText(
             this,
@@ -428,10 +469,10 @@ class ShimmerConfigActivity : AppCompatActivity() {
             Toast.LENGTH_LONG
         ).show()
     }
-    
+
     override fun onDestroy() {
         super.onDestroy()
-        
+
         // Clean up scanning and connections
         lifecycleScope.launch {
             try {
@@ -444,7 +485,7 @@ class ShimmerConfigActivity : AppCompatActivity() {
             }
         }
     }
-    
+
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
         return true

@@ -27,34 +27,34 @@ LIBYUV_API
         uint64_t
 
 ComputeHammingDistance(const uint8_t *src_a,
-                       const uint8_t *src_b,
-                       int count);
+        const uint8_t *src_b,
+        int count);
 
 
 LIBYUV_API
         uint32_t
 
 ARGBDetect(const uint8_t *argb,
-           int stride_argb,
-           int width,
-           int height);
+        int stride_argb,
+        int width,
+        int height);
 
 LIBYUV_API
         uint64_t
 
 ComputeSumSquareError(const uint8_t *src_a,
-                      const uint8_t *src_b,
-                      int count);
+        const uint8_t *src_b,
+        int count);
 
 LIBYUV_API
         uint64_t
 
 ComputeSumSquareErrorPlane(const uint8_t *src_a,
-                           int stride_a,
-                           const uint8_t *src_b,
-                           int stride_b,
-                           int width,
-                           int height);
+        int stride_a,
+        const uint8_t *src_b,
+        int stride_b,
+        int width,
+        int height);
 
 static const int kMaxPsnr = 128;
 
@@ -66,51 +66,51 @@ uint64_t count
 
 LIBYUV_API
 double CalcFramePsnr(const uint8_t *src_a,
-                     int stride_a,
-                     const uint8_t *src_b,
-                     int stride_b,
-                     int width,
-                     int height);
+        int stride_a,
+        const uint8_t *src_b,
+        int stride_b,
+        int width,
+        int height);
 
 LIBYUV_API
 double I420Psnr(const uint8_t *src_y_a,
-                int stride_y_a,
-                const uint8_t *src_u_a,
-                int stride_u_a,
-                const uint8_t *src_v_a,
-                int stride_v_a,
-                const uint8_t *src_y_b,
-                int stride_y_b,
-                const uint8_t *src_u_b,
-                int stride_u_b,
-                const uint8_t *src_v_b,
-                int stride_v_b,
-                int width,
-                int height);
+        int stride_y_a,
+        const uint8_t *src_u_a,
+        int stride_u_a,
+        const uint8_t *src_v_a,
+        int stride_v_a,
+        const uint8_t *src_y_b,
+        int stride_y_b,
+        const uint8_t *src_u_b,
+        int stride_u_b,
+        const uint8_t *src_v_b,
+        int stride_v_b,
+        int width,
+        int height);
 
 LIBYUV_API
 double CalcFrameSsim(const uint8_t *src_a,
-                     int stride_a,
-                     const uint8_t *src_b,
-                     int stride_b,
-                     int width,
-                     int height);
+        int stride_a,
+        const uint8_t *src_b,
+        int stride_b,
+        int width,
+        int height);
 
 LIBYUV_API
 double I420Ssim(const uint8_t *src_y_a,
-                int stride_y_a,
-                const uint8_t *src_u_a,
-                int stride_u_a,
-                const uint8_t *src_v_a,
-                int stride_v_a,
-                const uint8_t *src_y_b,
-                int stride_y_b,
-                const uint8_t *src_u_b,
-                int stride_u_b,
-                const uint8_t *src_v_b,
-                int stride_v_b,
-                int width,
-                int height);
+        int stride_y_a,
+        const uint8_t *src_u_a,
+        int stride_u_a,
+        const uint8_t *src_v_a,
+        int stride_v_a,
+        const uint8_t *src_y_b,
+        int stride_y_b,
+        const uint8_t *src_u_b,
+        int stride_u_b,
+        const uint8_t *src_v_b,
+        int stride_v_b,
+        int width,
+        int height);
 
 #ifdef __cplusplus
 }  // extern "C"

@@ -66,7 +66,11 @@ class ThermalRecorder(private val context: Context) {
     /**
      * Enhanced start recording with session metadata for precise synchronization
      */
-    suspend fun startRecording(sessionDir: String, sessionMetadata: SessionMetadata, saveImages: Boolean = false): Boolean =
+    suspend fun startRecording(
+        sessionDir: String,
+        sessionMetadata: SessionMetadata,
+        saveImages: Boolean = false
+    ): Boolean =
         withContext(Dispatchers.IO) {
             if (isRecording.get()) {
                 Log.w(TAG, "Thermal recording already in progress")
@@ -83,18 +87,19 @@ class ThermalRecorder(private val context: Context) {
                 }
 
                 // Create thermal stats CSV file with session timestamp
-                val csvFile = File(sessionDirectory, "thermal_stats_${sessionMetadata.sessionId}.csv")
+                val csvFile =
+                    File(sessionDirectory, "thermal_stats_${sessionMetadata.sessionId}.csv")
                 csvWriter = FileWriter(csvFile, false)
 
                 // Write comprehensive timing header
                 csvWriter?.write(sessionMetadata.createTimingHeader())
                 csvWriter?.write("# THERMAL FRAME DATA - Temperatures in Celsius\n")
                 csvWriter?.write("# Frame timestamps include:\n")
-                csvWriter?.write("#   timestamp_wall_ms: Wall clock time (UTC)\n") 
+                csvWriter?.write("#   timestamp_wall_ms: Wall clock time (UTC)\n")
                 csvWriter?.write("#   timestamp_relative_ms: Milliseconds since session start (monotonic)\n")
                 csvWriter?.write("#   timestamp_monotonic_ns: Raw monotonic nanoseconds for precise intervals\n")
                 csvWriter?.write("#\n")
-                
+
                 // Enhanced CSV header with session timing
                 csvWriter?.write("timestamp_wall_ms,timestamp_relative_ms,timestamp_monotonic_ns,frame_sequence,min_temp_c,avg_temp_c,max_temp_c,pixel_count\n")
                 csvWriter?.flush()
@@ -372,7 +377,7 @@ class ThermalRecorder(private val context: Context) {
                     val sm = sessionMetadata!!
                     val wallClockMs = sm.monotonicToWallClock(stats.timestampNs)
                     val relativeMs = (stats.timestampNs - sm.sessionStartMonotonicNs) / 1_000_000L
-                    
+
                     StringBuilder().apply {
                         append(wallClockMs)
                         append(',')
