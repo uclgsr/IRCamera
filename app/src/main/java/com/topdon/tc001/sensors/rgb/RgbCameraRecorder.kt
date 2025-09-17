@@ -156,17 +156,10 @@ class RgbCameraRecorder(
             false
         }
     }
-            }
 
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to initialize CameraX", e)
-            emitError(
-                ErrorType.INITIALIZATION_FAILED,
-                "CameraX initialization failed: ${e.message}"
-            )
-            false
-        }
-    }
+    /**
+     * Initialize CameraX with preview, video and image capture use cases
+     */
 
     /**
      * Initialize CameraX with preview, video and image capture use cases
@@ -363,9 +356,9 @@ class RgbCameraRecorder(
 
             while (_isRecording.get()) {
                 try {
-                    val timestamp = System.nanoTime()
+                    val timestampRecord = TimestampManager.createTimestampRecord()
                     val frameNumber = framesCaptured.incrementAndGet()
-                    val outputFile = File(framesDir, "frame_${timestamp}.jpg")
+                    val outputFile = File(framesDir, "frame_${timestampRecord.systemNanos}.jpg")
 
                     val outputOptions = ImageCapture.OutputFileOptions.Builder(outputFile).build()
 
@@ -376,7 +369,7 @@ class RgbCameraRecorder(
                             override fun onImageSaved(output: ImageCapture.OutputFileResults) {
                                 resetFrameErrorTracking()
                                 recordingScope.launch {
-                                    logFrameCapture(timestamp, frameNumber, outputFile)
+                                    logFrameCapture(timestampRecord, frameNumber, outputFile)
                                 }
                             }
 
@@ -398,18 +391,17 @@ class RgbCameraRecorder(
     }
 
     /**
-     * Log frame capture event to CSV
+     * Log frame capture event to CSV with unified timestamp system
      */
-    private fun logFrameCapture(timestampNs: Long, frameNumber: Long, outputFile: File) {
+    private fun logFrameCapture(timestampRecord: TimestampRecord, frameNumber: Long, outputFile: File) {
         try {
             csvBufferedWriter?.let { writer ->
-                val sessionTimeMs = (timestampNs - sessionStartTime.get()) / 1_000_000
-
                 writer.writeNext(
                     arrayOf(
-                        timestampNs.toString(),
+                        timestampRecord.systemNanos.toString(), // Monotonic nanosecond timestamp
+                        timestampRecord.systemTimeMs.toString(), // Wall clock time
+                        timestampRecord.sessionRelativeMs.toString(), // Session-relative time
                         frameNumber.toString(),
-                        sessionTimeMs.toString(),
                         "frame_capture",
                         "filename=${outputFile.name},size=${outputFile.length()}"
                     )
@@ -417,7 +409,7 @@ class RgbCameraRecorder(
             }
 
             samplesRecorded.incrementAndGet()
-            lastFrameTime.set(timestampNs)
+            lastFrameTime.set(timestampRecord.systemNanos)
         } catch (e: Exception) {
             Log.w(TAG, "Failed to log frame capture", e)
         }
@@ -427,12 +419,13 @@ class RgbCameraRecorder(
         try {
             csvFile?.let { file ->
                 csvWriter = CSVWriter(FileWriter(file)).apply {
-                    // Enhanced CSV header for frame tracking
+                    // Enhanced CSV header for frame tracking with unified timestamp system
                     writeNext(
                         arrayOf(
-                            "timestamp_ns",
+                            "system_nanos", // Monotonic nanosecond timestamp for precise alignment
+                            "system_time_ms", // Wall clock time for human readability
+                            "session_relative_ms", // Session-relative time for analysis
                             "sample_number",
-                            "session_time_ms",
                             "event_type",      // frame_capture, video_start, video_stop, sync_marker
                             "metadata"         // Additional info like filename, size, etc.
                         )
