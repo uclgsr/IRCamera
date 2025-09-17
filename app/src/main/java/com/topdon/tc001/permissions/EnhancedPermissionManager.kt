@@ -217,12 +217,24 @@ class EnhancedPermissionManager(
                 Log.w(TAG, "Storage permissions denied - data export may be limited")
             }
             
+            // Step 4: Notification permissions (Android 13+)
+            val notificationGranted = requestNotificationPermissions()
+            if (!notificationGranted) {
+                Log.w(TAG, "Notification permissions denied - recording alerts may be limited")
+            }
+            
+            // Step 5: Foreground service permissions
+            val foregroundServiceGranted = requestForegroundServicePermissions()
+            if (!foregroundServiceGranted) {
+                Log.w(TAG, "Foreground service permissions denied - background recording may be limited")
+            }
+            
             // At least one critical permission should be granted
             val criticalGranted = cameraGranted || bluetoothGranted
             
             if (criticalGranted) {
                 Log.i(TAG, "Critical permissions granted - app can function")
-                showPermissionSummaryDialog(cameraGranted, bluetoothGranted, storageGranted)
+                showPermissionSummaryDialog(cameraGranted, bluetoothGranted, storageGranted, notificationGranted, foregroundServiceGranted)
             } else {
                 Log.e(TAG, "No critical permissions granted - app functionality severely limited")
                 showAllPermissionsDeniedDialog()
@@ -232,6 +244,87 @@ class EnhancedPermissionManager(
         } catch (e: Exception) {
             Log.e(TAG, "Error during permission request sequence", e)
             false
+        }
+    }
+
+    /**
+     * Request notification permissions for Android 13+ devices
+     */
+    suspend fun requestNotificationPermissions(): Boolean = suspendCancellableCoroutine { continuation ->
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+            Log.d(TAG, "Notification permissions not required on Android < 13")
+            continuation.resume(true)
+            return@suspendCancellableCoroutine
+        }
+
+        val notificationPermissions = arrayOf(
+            Manifest.permission.POST_NOTIFICATIONS
+        )
+        
+        val missingPermissions = notificationPermissions.filter { permission ->
+            ActivityCompat.checkSelfPermission(activity, permission) != PackageManager.PERMISSION_GRANTED
+        }
+        
+        if (missingPermissions.isEmpty()) {
+            Log.i(TAG, "Notification permissions already granted")
+            continuation.resume(true)
+            return@suspendCancellableCoroutine
+        }
+        
+        showPermissionRationaleDialog(
+            "Notification Access Required",
+            """
+            The IRCamera app needs notification permissions to:
+            
+            • Show recording status updates
+            • Alert about sensor connection issues  
+            • Notify about session completion
+            • Display background recording indicators
+            
+            This helps you monitor sensor data collection without keeping the app open.
+            """.trimIndent()
+        ) { granted ->
+            if (granted) {
+                requestPermissionsWithCallback(
+                    missingPermissions.toTypedArray(),
+                    REQUEST_ALL_PERMISSIONS
+                ) { success, deniedPermissions ->
+                    if (success) {
+                        Log.i(TAG, "Notification permissions granted successfully")
+                        continuation.resume(true)
+                    } else {
+                        Log.w(TAG, "Notification permissions denied: ${deniedPermissions.joinToString(", ")}")
+                        handlePermissionDenied("Notification", deniedPermissions) {
+                            continuation.resume(false)
+                        }
+                    }
+                }
+            } else {
+                Log.w(TAG, "User declined notification permission rationale")
+                continuation.resume(false)
+            }
+        }
+    }
+
+    /**
+     * Request foreground service permissions for background recording
+     */  
+    suspend fun requestForegroundServicePermissions(): Boolean = suspendCancellableCoroutine { continuation ->
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            Log.d(TAG, "Foreground service permissions handled by manifest on Android < 14")
+            continuation.resume(true)
+            return@suspendCancellableCoroutine
+        }
+
+        // Check if we can ignore battery optimizations (important for background recording)
+        val batteryOptimizationGranted = checkBatteryOptimizationPermission()
+        if (!batteryOptimizationGranted) {
+            showBatteryOptimizationDialog { granted ->
+                continuation.resume(granted)
+            }
+        } else {
+            Log.i(TAG, "Battery optimization permissions already configured")
+            continuation.resume(true)
         }
     }
 
@@ -379,51 +472,6 @@ class EnhancedPermissionManager(
             .show()
     }
 
-    private fun showPermissionSummaryDialog(cameraGranted: Boolean, bluetoothGranted: Boolean, storageGranted: Boolean) {
-        val features = mutableListOf<String>()
-        val limitations = mutableListOf<String>()
-        
-        if (cameraGranted) {
-            features.add("✅ RGB Camera Recording (4K@60fps)")
-        } else {
-            limitations.add("❌ RGB Camera Recording disabled")
-        }
-        
-        if (bluetoothGranted) {
-            features.add("✅ Shimmer GSR Sensor connectivity")
-        } else {
-            limitations.add("❌ GSR Sensor connectivity disabled")
-        }
-        
-        if (storageGranted) {
-            features.add("✅ Data export and external storage")
-        } else {
-            limitations.add("⚠️ Limited data export options")
-        }
-        
-        val message = buildString {
-            if (features.isNotEmpty()) {
-                appendLine("Available Features:")
-                features.forEach { appendLine(it) }
-                appendLine()
-            }
-            
-            if (limitations.isNotEmpty()) {
-                appendLine("Limitations:")
-                limitations.forEach { appendLine(it) }
-                appendLine()
-            }
-            
-            appendLine("You can change permissions anytime in Settings > Apps > IRCamera > Permissions")
-        }
-        
-        AlertDialog.Builder(activity)
-            .setTitle("Permission Setup Complete")
-            .setMessage(message)
-            .setPositiveButton("Continue") { _, _ -> }
-            .show()
-    }
-
     private fun showAllPermissionsDeniedDialog() {
         val message = """
             Critical permissions were denied. The app cannot function properly without:
@@ -480,5 +528,82 @@ class EnhancedPermissionManager(
             // For this implementation, we'll provide the callback mechanism
             callback(true, emptyList()) // Simplified for now
         }
+    }
+
+    /**
+     * Check battery optimization permission status
+     */
+    private fun checkBatteryOptimizationPermission(): Boolean {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val powerManager = activity.getSystemService(Context.POWER_SERVICE) as android.os.PowerManager
+            powerManager.isIgnoringBatteryOptimizations(activity.packageName)
+        } else {
+            true // Not applicable on older versions
+        }
+    }
+
+    /**
+     * Show dialog to request battery optimization exemption
+     */
+    private fun showBatteryOptimizationDialog(callback: (Boolean) -> Unit) {
+        val dialog = AlertDialog.Builder(activity)
+            .setTitle("Battery Optimization")
+            .setMessage("""
+                For reliable background recording, please disable battery optimization for IRCamera.
+                
+                This ensures:
+                • Continuous sensor data collection
+                • Uninterrupted long recordings
+                • Proper session completion
+                
+                You'll be taken to system settings to configure this.
+            """.trimIndent())
+            .setPositiveButton("Open Settings") { _, _ ->
+                try {
+                    val intent = Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS).apply {
+                        data = Uri.parse("package:${activity.packageName}")
+                    }
+                    activity.startActivity(intent)
+                    callback(true)
+                } catch (e: Exception) {
+                    Log.e(TAG, "Failed to open battery optimization settings", e)
+                    callback(false)
+                }
+            }
+            .setNegativeButton("Skip") { _, _ ->
+                callback(false)
+            }
+            .setCancelable(false)
+            .create()
+            
+        dialog.show()
+    }
+
+    /**
+     * Update permission summary dialog to include notification and foreground service status
+     */
+    private fun showPermissionSummaryDialog(camera: Boolean, bluetooth: Boolean, storage: Boolean, 
+                                           notification: Boolean = true, foregroundService: Boolean = true) {
+        val summary = buildString {
+            append("Permission Status Summary:\n\n")
+            append("📹 Camera & Audio: ${if (camera) "✅ Granted" else "❌ Denied"}\n")
+            append("📡 Bluetooth & Location: ${if (bluetooth) "✅ Granted" else "❌ Denied"}\n")
+            append("💾 Storage: ${if (storage) "✅ Granted" else "❌ Denied"}\n")
+            append("🔔 Notifications: ${if (notification) "✅ Granted" else "❌ Denied"}\n")
+            append("🔄 Background Services: ${if (foregroundService) "✅ Granted" else "❌ Denied"}\n\n")
+            
+            if (!camera) append("• RGB video recording disabled\n")
+            if (!bluetooth) append("• GSR sensor connection disabled\n")
+            if (!storage) append("• Limited data export options\n")
+            if (!notification) append("• Recording notifications limited\n")
+            if (!foregroundService) append("• Background recording may be interrupted\n")
+        }
+
+        AlertDialog.Builder(activity)
+            .setTitle("IRCamera Setup Complete")
+            .setMessage(summary)
+            .setPositiveButton("Continue") { _, _ -> }
+            .setCancelable(true)
+            .show()
     }
 }
