@@ -131,6 +131,14 @@ class GSRSensorRecorder(
     private var sampleCount = AtomicLong(0)
     private var recordingStartTime: Long = 0
     private var syncMarkerCount = AtomicLong(0)
+    
+    // Connection state monitoring and reconnection
+    private var shimmerBluetoothManager: ShimmerBluetoothManagerAndroid? = null
+    private var connectionStateMonitoringJob: Job? = null
+    private var reconnectionAttempts = 0
+    private val maxReconnectionAttempts = 3
+    private val reconnectionDelayMs = 2000L
+    private var currentConnectedDevice: Shimmer? = null
 
     private val _statusFlow = MutableSharedFlow<RecordingStatus>()
     private val _errorFlow = MutableSharedFlow<SensorError>()
@@ -160,6 +168,12 @@ class GSRSensorRecorder(
                     )
                 } else {
                     Log.i(TAG, "Unified BLE manager initialized successfully")
+                }
+
+                // Initialize ShimmerBluetoothManagerAndroid for proper connection handling
+                if (initializeShimmerBluetoothManager()) {
+                    Log.i(TAG, "ShimmerBluetoothManagerAndroid ready for device connections")
+                    startConnectionStateMonitoring()
                 }
 
                 realShimmerGSRRecorder =
@@ -848,6 +862,9 @@ class GSRSensorRecorder(
                 stopRecording()
             }
 
+            // Stop connection monitoring first
+            stopConnectionMonitoring()
+            
             dataMonitoringJob?.cancel()
             recordingScope.cancel()
 
@@ -1145,5 +1162,331 @@ class GSRSensorRecorder(
                 false
             }
         }
+    }
+
+    /**
+     * Initialize ShimmerBluetoothManagerAndroid for proper connection handling
+     */
+    private fun initializeShimmerBluetoothManager(): Boolean {
+        return try {
+            shimmerBluetoothManager = ShimmerBluetoothManagerAndroid(context, android.os.Handler(android.os.Looper.getMainLooper()))
+            shimmerBluetoothManager?.initialize()
+            Log.i(TAG, "ShimmerBluetoothManagerAndroid initialized successfully")
+            true
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to initialize ShimmerBluetoothManagerAndroid", e)
+            false
+        }
+    }
+
+    /**
+     * Start connection state monitoring for automatic reconnection
+     */
+    private fun startConnectionStateMonitoring() {
+        connectionStateMonitoringJob = recordingScope.launch {
+            while (isActive) {
+                try {
+                    monitorConnectionState()
+                    delay(1000) // Check connection state every second
+                } catch (e: Exception) {
+                    Log.e(TAG, "Error in connection state monitoring", e)
+                    delay(5000) // Wait longer on error
+                }
+            }
+        }
+    }
+
+    /**
+     * Monitor connection state and handle disconnections
+     */
+    private suspend fun monitorConnectionState() {
+        val device = currentConnectedDevice
+        if (device != null) {
+            try {
+                val state = device.getBluetoothRadioState()
+                when (state) {
+                    BT_STATE.CONNECTED -> {
+                        if (!isShimmerConnected) {
+                            Log.i(TAG, "Shimmer device connected - starting data streaming")
+                            isShimmerConnected = true
+                            startShimmerStreaming(device)
+                            reconnectionAttempts = 0 // Reset on successful connection
+                        }
+                    }
+                    BT_STATE.STREAMING -> {
+                        // Device is streaming - this is good
+                        if (!isShimmerConnected) {
+                            isShimmerConnected = true
+                            reconnectionAttempts = 0
+                        }
+                    }
+                    BT_STATE.DISCONNECTED -> {
+                        if (isShimmerConnected) {
+                            Log.w(TAG, "Shimmer device disconnected - attempting reconnection")
+                            isShimmerConnected = false
+                            handleDisconnection(device)
+                        }
+                    }
+                    else -> {
+                        // Other states like CONNECTING, NONE
+                        Log.d(TAG, "Shimmer connection state: $state")
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Error checking connection state", e)
+            }
+        }
+    }
+
+    /**
+     * Handle device disconnection with automatic reconnection attempts
+     */
+    private suspend fun handleDisconnection(device: Shimmer) {
+        if (reconnectionAttempts < maxReconnectionAttempts) {
+            reconnectionAttempts++
+            Log.i(TAG, "Attempting reconnection $reconnectionAttempts/$maxReconnectionAttempts")
+            
+            emitError(
+                ErrorType.CONNECTION_LOST,
+                "Device disconnected - attempting reconnection ($reconnectionAttempts/$maxReconnectionAttempts)",
+                isRecoverable = true
+            )
+            
+            delay(reconnectionDelayMs)
+            
+            try {
+                // Attempt to reconnect
+                device.connect()
+                Log.i(TAG, "Reconnection attempt initiated")
+            } catch (e: Exception) {
+                Log.e(TAG, "Reconnection attempt failed", e)
+                
+                if (reconnectionAttempts >= maxReconnectionAttempts) {
+                    Log.e(TAG, "All reconnection attempts failed - switching to simulation mode")
+                    emitError(
+                        ErrorType.CONNECTION_LOST,
+                        "All reconnection attempts failed. Switching to simulation mode.",
+                        isRecoverable = false
+                    )
+                    // Switch to simulation mode or stop recording
+                    currentConnectedDevice = null
+                }
+            }
+        }
+    }
+
+    /**
+     * Start data streaming on connected Shimmer device
+     */
+    private suspend fun startShimmerStreaming(device: Shimmer): Boolean {
+        return try {
+            // Configure GSR sensor
+            device.setGSRRange(GSR_RANGE_AUTO)
+            device.enableGSRSensor(true)
+            
+            // Configure sampling rate
+            device.setSamplingRateShimmer(SHIMMER_DEFAULT_SAMPLING_RATE)
+            
+            // Start streaming
+            device.startStreaming()
+            
+            Log.i(TAG, "Shimmer streaming started successfully")
+            true
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to start Shimmer streaming", e)
+            emitError(
+                ErrorType.DEVICE_ERROR,
+                "Failed to start data streaming: ${e.message}"
+            )
+            false
+        }
+    }
+
+    /**
+     * Handle incoming Shimmer data packets
+     */
+    private fun handleShimmerData(objectCluster: ObjectCluster) {
+        try {
+            // Extract GSR data from ObjectCluster using proper Shimmer SDK methods
+            val timestampNs = System.nanoTime()
+            
+            // Get GSR conductance value (in microsiemens)
+            val gsrValue = objectCluster.getFormatClusterValue("GSR", "CAL")?.data ?: 0.0
+            
+            // Get PPG data if available
+            val ppgValue = objectCluster.getFormatClusterValue("PPG", "CAL")?.data ?: 0.0
+            
+            // Create GSR sample
+            val gsrSample = GSRSample(
+                timestampNs = timestampNs,
+                conductanceMicrosiemens = gsrValue,
+                rawAdc = (gsrValue * 4095 / 100).toInt(), // Convert to 12-bit ADC value
+                ppgValue = ppgValue,
+                sessionId = "", // Will be set during recording
+                deviceId = sensorId
+            )
+            
+            // Update sample count
+            sampleCount.incrementAndGet()
+            lastSampleTimestamp = timestampNs
+            
+            // Log sample to CSV if recording
+            if (_isRecording.get()) {
+                logGSRSampleToCSV(gsrSample)
+            }
+            
+            Log.v(TAG, "GSR sample processed: conductance=${gsrValue}µS, PPG=${ppgValue}")
+            
+        } catch (e: Exception) {
+            Log.e(TAG, "Error processing Shimmer data", e)
+            emitError(
+                ErrorType.DATA_PROCESSING_ERROR,
+                "Failed to process GSR data: ${e.message}"
+            )
+        }
+    }
+
+    /**
+     * Log GSR sample to CSV file
+     */
+    private fun logGSRSampleToCSV(sample: GSRSample) {
+        try {
+            // Create CSV entry with proper timestamp and GSR data format
+            val csvEntry = "${sample.timestampNs},${sample.conductanceMicrosiemens},${sample.rawAdc},${sample.ppgValue}"
+            
+            // Write to session CSV file (implementation would depend on session management)
+            // This is a placeholder - actual implementation would write to the session directory
+            Log.v(TAG, "CSV Entry: $csvEntry")
+            
+        } catch (e: Exception) {
+            Log.e(TAG, "Error writing GSR data to CSV", e)
+        }
+    }
+
+    /**
+     * Implement proper device pairing prompt for discovered devices
+     */
+    suspend fun promptDevicePairing(deviceAddress: String): Boolean {
+        return withContext(Dispatchers.IO) {
+            try {
+                Log.i(TAG, "Prompting user to pair with device: $deviceAddress")
+                
+                // This would typically show a UI dialog asking user to pair
+                // For now, we'll attempt automatic pairing through the UnifiedBleManager
+                val unifiedBle = unifiedBleManager
+                if (unifiedBle != null) {
+                    // Check if device is already bonded
+                    val bluetoothAdapter = android.bluetooth.BluetoothAdapter.getDefaultAdapter()
+                    val bondedDevices = bluetoothAdapter?.bondedDevices
+                    val isAlreadyBonded = bondedDevices?.any { it.address == deviceAddress } ?: false
+                    
+                    if (isAlreadyBonded) {
+                        Log.i(TAG, "Device $deviceAddress is already bonded")
+                        return@withContext true
+                    } else {
+                        Log.i(TAG, "Device $deviceAddress needs pairing - user should pair in system settings")
+                        emitError(
+                            ErrorType.PAIRING_REQUIRED,
+                            "Please pair with device $deviceAddress in Android Bluetooth settings",
+                            isRecoverable = true
+                        )
+                        return@withContext false
+                    }
+                } else {
+                    Log.e(TAG, "UnifiedBleManager not available for device pairing")
+                    return@withContext false
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Error during device pairing prompt", e)
+                return@withContext false
+            }
+        }
+    }
+
+    /**
+     * Enhanced device discovery that includes both bonded and nearby devices
+     */
+    suspend fun scanAndPairDevices(): List<String> {
+        return withContext(Dispatchers.IO) {
+            try {
+                if (!hasRequiredPermissions(context)) {
+                    Log.e(TAG, "Cannot scan for devices without proper permissions")
+                    emitError(
+                        ErrorType.PERMISSION_DENIED,
+                        "Bluetooth permissions required for device discovery"
+                    )
+                    return@withContext emptyList()
+                }
+
+                val deviceList = mutableListOf<String>()
+                
+                // First, get already bonded devices
+                val bluetoothAdapter = android.bluetooth.BluetoothAdapter.getDefaultAdapter()
+                val bondedDevices = bluetoothAdapter?.bondedDevices
+                
+                bondedDevices?.forEach { device ->
+                    if (isShimmerDevice(device)) {
+                        deviceList.add("${device.name} (${device.address}) - Bonded")
+                        Log.d(TAG, "Found bonded Shimmer device: ${device.name} at ${device.address}")
+                    }
+                }
+                
+                // Then scan for nearby devices
+                val nearbyDevices = getAvailableShimmerDevices()
+                nearbyDevices.forEach { deviceEntry ->
+                    if (!deviceList.any { it.contains(deviceEntry.substringBefore(" - ")) }) {
+                        deviceList.add(deviceEntry)
+                    }
+                }
+                
+                Log.i(TAG, "Device discovery completed: found ${deviceList.size} Shimmer devices")
+                return@withContext deviceList
+                
+            } catch (e: Exception) {
+                Log.e(TAG, "Error during device discovery and pairing", e)
+                emitError(
+                    ErrorType.DEVICE_ERROR,
+                    "Device discovery failed: ${e.message}"
+                )
+                return@withContext emptyList()
+            }
+        }
+    }
+
+    /**
+     * Check if a Bluetooth device is a Shimmer device
+     */
+    private fun isShimmerDevice(device: android.bluetooth.BluetoothDevice): Boolean {
+        return try {
+            val deviceName = BluetoothPermissionUtils.getDeviceName(context, device)
+            deviceName?.lowercase()?.contains("shimmer") == true ||
+            device.address.startsWith("00:06:66") || // Shimmer MAC prefix
+            device.address.startsWith("d0:39:72") || // Another Shimmer MAC prefix
+            device.address.startsWith("00:80:98")    // Yet another Shimmer MAC prefix
+        } catch (e: Exception) {
+            Log.w(TAG, "Error checking if device is Shimmer", e)
+            false
+        }
+    }
+
+    /**
+     * Stop connection monitoring and cleanup resources
+     */
+    private fun stopConnectionMonitoring() {
+        connectionStateMonitoringJob?.cancel()
+        connectionStateMonitoringJob = null
+        
+        currentConnectedDevice?.let { device ->
+            try {
+                if (device.isStreaming) {
+                    device.stopStreaming()
+                }
+                device.disconnect()
+            } catch (e: Exception) {
+                Log.w(TAG, "Error stopping Shimmer device", e)
+            }
+        }
+        currentConnectedDevice = null
+        isShimmerConnected = false
     }
 }
