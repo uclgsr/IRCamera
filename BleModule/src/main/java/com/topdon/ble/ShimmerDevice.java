@@ -342,8 +342,8 @@ public class ShimmerDevice implements UnifiedDevice {
 
     @NonNull
     @Override
-    public DeviceInfo getDeviceInfo() {
-        return new DeviceInfo(
+    public UnifiedDevice.DeviceInfo getDeviceInfo() {
+        return new UnifiedDevice.DeviceInfo(
             getDeviceName(),
             getAddress(),
             getDeviceType(),
