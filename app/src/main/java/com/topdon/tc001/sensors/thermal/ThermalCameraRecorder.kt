@@ -22,6 +22,8 @@ import com.topdon.tc001.sensors.RecordingStats
 import com.topdon.tc001.sensors.RecordingStatus
 import com.topdon.tc001.sensors.SensorError
 import com.topdon.tc001.sensors.SensorRecorder
+import com.topdon.tc001.sensors.TimestampManager
+import com.topdon.tc001.sensors.TimestampRecord
 import com.topdon.tc001.network.NetworkServer
 import org.json.JSONObject
 import java.io.ByteArrayOutputStream
@@ -604,22 +606,22 @@ class ThermalCameraRecorder(
                                 if (currentBitmap != null && !currentBitmap.isRecycled) {
                                     // Process real thermal frame from hardware
                                     val frameNumber = frameCount.incrementAndGet()
-                                    val timestamp = System.nanoTime()
+                                    val timestampRecord = TimestampManager.createTimestampRecord()
 
                                     // Extract temperature data using IrcamEngine if available, otherwise from bitmap
                                     val thermalData =
                                         if (ircamEngine != null && isTopdonSdkInitialized) {
-                                            extractRealThermalDataFromEngine(timestamp, frameNumber)
+                                            extractRealThermalDataFromEngine(timestampRecord.systemNanos, frameNumber)
                                         } else {
                                             extractThermalDataFromBitmap(
                                                 currentBitmap,
-                                                timestamp,
+                                                timestampRecord.systemNanos,
                                                 frameNumber
                                             )
                                         }
 
-                                    // Process real thermal frame
-                                    processRealThermalFrameData(thermalData, frameNumber, timestamp)
+                                    // Process real thermal frame with unified timestamp
+                                    processRealThermalFrameData(thermalData, frameNumber, timestampRecord)
                                 }
                             }
                         }
@@ -949,7 +951,7 @@ class ThermalCameraRecorder(
     }
 
     private suspend fun saveRealIRThermalData(
-        timestamp: Long,
+        timestampRecord: TimestampRecord,
         frameNumber: Long,
         thermalData: ThermalFrameData
     ) {
@@ -965,6 +967,7 @@ class ThermalCameraRecorder(
                     alignedNs.toString(),
                     relativeMs.toString(),
                     wallMs?.toString() ?: "",
+
                     frameNumber.toString(),
                     "%.2f".format(thermalData.minTemperature),
                     "%.2f".format(thermalData.maxTemperature),
@@ -977,11 +980,13 @@ class ThermalCameraRecorder(
                 )
                 thermalDataWriter?.writeRow(summaryData.toList())
 
+                // Save frame data with unified timestamp system
                 val frameData = mutableListOf<Any>().apply {
                     add(timestamp)
                     add(alignedNs)
                     add(relativeMs)
                     add(wallMs?.toString() ?: "")
+
                     add(frameNumber)
                     thermalData.temperatureMatrix.forEach { row ->
                         row.forEach { temp ->
@@ -1516,15 +1521,15 @@ class ThermalCameraRecorder(
     }
 
     /**
-     * Process real thermal frame data from hardware
+     * Process real thermal frame data from hardware with unified timestamp system
      */
     private suspend fun processRealThermalFrameData(
         thermalData: ThermalFrameData,
         frameNumber: Long,
-        timestamp: Long
+        timestampRecord: TimestampRecord
     ) {
-        // Save thermal data if recording
-        saveRealIRThermalData(timestamp, frameNumber, thermalData)
+        // Save thermal data with unified timestamp system
+        saveRealIRThermalData(timestampRecord, frameNumber, thermalData)
 
         // Process frame for preview and network streaming
         processFrameForPreviewAndNetwork(
@@ -1654,7 +1659,7 @@ class ThermalCameraRecorder(
         )
         thermalFramesFile = File(thermalDir, SessionDirectoryManager.THERMAL_FRAMES_FILE)
 
-        // Setup buffered CSV writer for thermal data
+        // Setup buffered CSV writer for thermal data with unified timestamp columns
         val thermalDataHeaders = listOf(
             "raw_timestamp_ns",
             "aligned_timestamp_ns",

@@ -160,17 +160,10 @@ class RgbCameraRecorder(
             false
         }
     }
-            }
 
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to initialize CameraX", e)
-            emitError(
-                ErrorType.INITIALIZATION_FAILED,
-                "CameraX initialization failed: ${e.message}"
-            )
-            false
-        }
-    }
+    /**
+     * Initialize CameraX with preview, video and image capture use cases
+     */
 
     /**
      * Initialize CameraX with preview, video and image capture use cases
@@ -413,9 +406,9 @@ class RgbCameraRecorder(
 
             while (_isRecording.get()) {
                 try {
-                    val timestamp = System.nanoTime()
+                    val timestampRecord = TimestampManager.createTimestampRecord()
                     val frameNumber = framesCaptured.incrementAndGet()
-                    val outputFile = File(framesDir, "frame_${timestamp}.jpg")
+                    val outputFile = File(framesDir, "frame_${timestampRecord.systemNanos}.jpg")
 
                     val outputOptions = ImageCapture.OutputFileOptions.Builder(outputFile).build()
 
@@ -426,7 +419,7 @@ class RgbCameraRecorder(
                             override fun onImageSaved(output: ImageCapture.OutputFileResults) {
                                 resetFrameErrorTracking()
                                 recordingScope.launch {
-                                    logFrameCapture(timestamp, frameNumber, outputFile)
+                                    logFrameCapture(timestampRecord, frameNumber, outputFile)
                                 }
                             }
 
@@ -448,9 +441,9 @@ class RgbCameraRecorder(
     }
 
     /**
-     * Log frame capture event to CSV
+     * Log frame capture event to CSV with unified timestamp system
      */
-    private fun logFrameCapture(timestampNs: Long, frameNumber: Long, outputFile: File) {
+    private fun logFrameCapture(timestampRecord: TimestampRecord, frameNumber: Long, outputFile: File) {
         try {
             csvBufferedWriter?.let { writer ->
                 val alignedNs = alignedTimestampNs(timestampNs)
@@ -483,6 +476,7 @@ class RgbCameraRecorder(
 
             samplesRecorded.incrementAndGet()
             lastFrameTime.set(alignedNs)
+
         } catch (e: Exception) {
             Log.w(TAG, "Failed to log frame capture", e)
         }
