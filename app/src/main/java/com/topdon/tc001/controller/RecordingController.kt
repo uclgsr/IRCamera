@@ -9,6 +9,8 @@ import com.topdon.tc001.sensors.RecordingStatus
 import com.topdon.tc001.sensors.SensorError
 import com.topdon.tc001.sensors.ErrorType
 import com.topdon.tc001.sensors.RecordingStats
+import com.topdon.tc001.sensors.TimeSynchronizationService
+import com.topdon.tc001.sensors.TimestampManager
 import com.topdon.tc001.sensors.gsr.GSRSensorRecorder
 import com.topdon.tc001.sensors.thermal.ThermalCameraRecorder
 import com.topdon.tc001.util.SessionDirectoryManager
@@ -54,6 +56,9 @@ class RecordingController(
 
     private val sensorRecorders = ConcurrentHashMap<String, SensorRecorder>()
     private val sessionDirectoryManager = SessionDirectoryManager(context)
+    
+    // Time synchronization service for unified timestamp coordination
+    private val timeSynchronizationService = TimeSynchronizationService()
 
     private var _isRecording = AtomicBoolean(false)
     val isRecording: Boolean get() = _isRecording.get()
@@ -248,14 +253,17 @@ class RecordingController(
 
                 currentSessionDirectory = sessionDir
 
+                // Initialize unified timestamp synchronization system
+                val sessionReference = timeSynchronizationService.initializeSession(sessionDir.rootDir.absolutePath)
+                
                 // Capture common timestamp reference for all sensors
-                sessionStartTimestampMs = sessionMetadata!!.sessionStartTimestampMs
-                sessionStartTimestampNs = sessionMetadata!!.sessionStartMonotonicNs
+                sessionStartTimestampMs = sessionReference.sessionStartSystemMs
+                sessionStartTimestampNs = sessionReference.sessionStartMonotonicNs
                 recordingStartTime = sessionStartTimestampNs
 
                 Log.i(
                     TAG,
-                    "Session reference timestamps: ${sessionStartTimestampMs}ms, ${sessionStartTimestampNs}ns"
+                    "Session initialized with unified timestamp reference: system=${sessionStartTimestampMs}ms, monotonic=${sessionStartTimestampNs}ns"
                 )
 
                 // Create session metadata file with reference timing
@@ -615,13 +623,16 @@ class RecordingController(
                     updateSessionMetadata(sessionDir.rootDir, stopResult)
                 }
 
+                // Finalize time synchronization service and calculate session duration
+                val sessionDurationMs = timeSynchronizationService.finalizeSession()
+
                 // Reset session state for next session
                 activeRecorders.clear()
                 sessionStartTimestampMs = 0
                 sessionStartTimestampNs = 0
                 currentSessionDirectory = null
 
-                Log.i(TAG, "Multi-modal recording stopped (duration: ${sessionDuration}s)")
+                Log.i(TAG, "Multi-modal recording stopped (duration: ${sessionDurationMs / 1000.0}s)")
 
                 true
 
@@ -774,6 +785,9 @@ class RecordingController(
         controllerScope.launch {
             try {
                 Log.i(TAG, "Distributing sync marker: $markerType at $timestampNs")
+
+                // Log sync event to TimeSynchronizationService for cross-sensor alignment
+                timeSynchronizationService.logSyncEvent(markerType, metadata)
 
                 val syncJobs = sensorRecorders.values.map { sensor ->
                     async {
@@ -1299,6 +1313,56 @@ class RecordingController(
      * Get current session directory info
      */
     fun getCurrentSessionDirectory(): SessionDirectory? = currentSessionDirectory
+    
+    /**
+     * Get synchronized timestamp from the time synchronization service
+     * All sensors should use this for consistent cross-sensor timing
+     */
+    fun createSynchronizedTimestamp() = timeSynchronizationService.createSynchronizedTimestamp()
+    
+    /**
+     * Get current session timestamp reference for cross-sensor alignment
+     */
+    fun getSessionTimestampReference() = timeSynchronizationService.getSessionReference()
+    
+    /**
+     * Manually emit sync event for cross-sensor validation
+     */
+    suspend fun emitSyncEvent(eventType: String, metadata: Map<String, String> = emptyMap()) {
+        timeSynchronizationService.emitSyncEvent(eventType, metadata)
+    }
+    
+    /**
+     * Validate timestamp consistency across currently active sensors
+     */
+    suspend fun validateTimestampConsistency(): Map<String, Long> {
+        val timestamps = mutableMapOf<String, Long>()
+        sensorRecorders.forEach { (sensorName, sensor) ->
+            if (activeRecorders[sensorName] == true && sensor.isRecording) {
+                // Get current timestamp from each active sensor
+                val currentTime = TimestampManager.getCurrentTimestampNanos()
+                timestamps[sensorName] = currentTime
+            }
+        }
+        
+        // Log consistency validation event
+        if (timestamps.size >= 2) {
+            val maxTimestamp = timestamps.values.maxOrNull() ?: 0L
+            val minTimestamp = timestamps.values.minOrNull() ?: 0L
+            val maxDifference = maxTimestamp - minTimestamp
+            
+            timeSynchronizationService.logSyncEvent(
+                "timestamp_consistency_check",
+                mapOf(
+                    "max_difference_ns" to maxDifference.toString(),
+                    "sensor_count" to timestamps.size.toString(),
+                    "is_consistent" to (maxDifference < 5_000_000L).toString() // 5ms tolerance
+                )
+            )
+        }
+        
+        return timestamps
+    }
 }
 
 enum class RecordingState {
