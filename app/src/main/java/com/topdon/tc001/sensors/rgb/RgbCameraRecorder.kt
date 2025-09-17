@@ -10,6 +10,7 @@ import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import com.opencsv.CSVWriter
+import com.topdon.tc001.data.SessionMetadata
 import com.topdon.tc001.sensors.*
 import com.topdon.tc001.sensors.RecordingStats
 import com.topdon.tc001.sensors.ErrorType
@@ -69,6 +70,7 @@ class RgbCameraRecorder(
     private val errorFlow = MutableSharedFlow<SensorError>()
 
     private var sessionDirectory: String = ""
+    private var sessionMetadata: SessionMetadata? = null
     private var csvWriter: CSVWriter? = null
     private var videoFile: File? = null
     private var csvBufferedWriter: CSVBufferedWriter? = null
@@ -76,6 +78,8 @@ class RgbCameraRecorder(
 
     private val samplesRecorded = AtomicLong(0)
     private val sessionStartTime = AtomicLong(0)
+    private val sessionReferenceTimestampNs = AtomicLong(0)
+    private val sessionStartOffsetNs = AtomicLong(0)
     private val lastFrameTime = AtomicLong(0)
     private var droppedFrames = AtomicLong(0)
     private val syncMarkersRecorded = AtomicLong(0)
@@ -100,7 +104,7 @@ class RgbCameraRecorder(
     override suspend fun initialize(): Boolean = withContext(Dispatchers.Main) {
         try {
             Log.d(TAG, "Initializing ${if (useFrontCamera) "front" else "back"} camera")
-            
+
             if (!checkAndRequestPermissions()) return@withContext false
             
             _cameraStatus.value = "Initializing..."
@@ -220,6 +224,14 @@ class RgbCameraRecorder(
         }
     }
 
+    override suspend fun startRecording(
+        sessionDirectory: String,
+        sessionMetadata: SessionMetadata
+    ): Boolean {
+        this.sessionMetadata = sessionMetadata
+        return startRecording(sessionDirectory)
+    }
+
     override suspend fun startRecording(sessionDirectory: String): Boolean {
         return try {
             if (_isRecording.get()) {
@@ -249,6 +261,8 @@ class RgbCameraRecorder(
                 return false
             }
 
+            initializeSessionTiming()
+
             // Initialize CSV writer asynchronously
             recordingScope.launch {
                 initializeCsvWriter()
@@ -258,7 +272,6 @@ class RgbCameraRecorder(
             startFrameCapture()
 
             _isRecording.set(true)
-            sessionStartTime.set(System.nanoTime())
             samplesRecorded.set(0)
             droppedFrames.set(0)
             framesCaptured.set(0)
@@ -274,8 +287,8 @@ class RgbCameraRecorder(
     }
 
     private fun setupOutputFiles() {
-        // Use standard directory structure
-        val rgbDir = File(sessionDirectory, "RGB")
+        // Use provided sensor directory as root
+        val rgbDir = File(sessionDirectory)
         if (!rgbDir.exists()) {
             rgbDir.mkdirs()
         }
@@ -289,6 +302,43 @@ class RgbCameraRecorder(
         // Use standard file names from SessionDirectoryManager
         videoFile = File(rgbDir, SessionDirectoryManager.RGB_VIDEO_FILE)
         csvFile = File(rgbDir, "rgb_timestamps.csv")
+    }
+
+    private fun initializeSessionTiming() {
+        val localStartNs = System.nanoTime()
+        sessionStartTime.set(localStartNs)
+        val metadata = sessionMetadata
+        if (metadata != null) {
+            sessionReferenceTimestampNs.set(metadata.sessionStartMonotonicNs)
+            sessionStartOffsetNs.set(localStartNs - metadata.sessionStartMonotonicNs)
+        } else {
+            sessionReferenceTimestampNs.set(localStartNs)
+            sessionStartOffsetNs.set(0L)
+        }
+    }
+
+    private fun alignedTimestampNs(timestampNs: Long): Long {
+        return if (sessionMetadata != null) {
+            timestampNs - sessionStartOffsetNs.get()
+        } else {
+            timestampNs
+        }
+    }
+
+    private fun sessionRelativeMs(timestampNs: Long): Long {
+        val metadata = sessionMetadata
+        return if (metadata != null) {
+            val alignedNs = alignedTimestampNs(timestampNs)
+            (alignedNs - metadata.sessionStartMonotonicNs) / 1_000_000
+        } else {
+            (timestampNs - sessionStartTime.get()) / 1_000_000
+        }
+    }
+
+    private fun wallClockMs(timestampNs: Long): Long? {
+        val metadata = sessionMetadata ?: return null
+        val alignedNs = alignedTimestampNs(timestampNs)
+        return metadata.monotonicToWallClock(alignedNs)
     }
 
     /**
@@ -349,7 +399,7 @@ class RgbCameraRecorder(
      */
     private fun startFrameCapture() {
         frameCaptureJob = recordingScope.launch {
-            val framesDir = File(sessionDirectory, "RGB/frames")
+            val framesDir = File(sessionDirectory, "frames")
             val captureInterval = 1000L / CAPTURE_FPS // ~33ms for 30fps
 
             Log.i(TAG, "Starting continuous frame capture at ${CAPTURE_FPS} FPS")
@@ -396,20 +446,37 @@ class RgbCameraRecorder(
     private fun logFrameCapture(timestampRecord: TimestampRecord, frameNumber: Long, outputFile: File) {
         try {
             csvBufferedWriter?.let { writer ->
-                writer.writeNext(
-                    arrayOf(
-                        timestampRecord.systemNanos.toString(), // Monotonic nanosecond timestamp
-                        timestampRecord.systemTimeMs.toString(), // Wall clock time
-                        timestampRecord.sessionRelativeMs.toString(), // Session-relative time
-                        frameNumber.toString(),
+                val alignedNs = alignedTimestampNs(timestampNs)
+                val sessionTimeMs = sessionRelativeMs(timestampNs)
+                val wallMs = wallClockMs(timestampNs)
+                val metadataParts = mutableListOf(
+                    "filename=${outputFile.name}",
+                    "size=${outputFile.length()}"
+                )
+                metadataParts.add("aligned_ns=$alignedNs")
+                wallMs?.let { metadataParts.add("wall_ms=$it") }
+                sessionMetadata?.let {
+                    metadataParts.add(
+                        "session_reference_ns=${sessionReferenceTimestampNs.get()}"
+                    )
+                }
+
+                writer.writeRow(
+                    listOf(
+                        timestampNs,
+                        alignedNs,
+                        frameNumber,
+                        sessionTimeMs,
+                        wallMs?.toString() ?: "",
                         "frame_capture",
-                        "filename=${outputFile.name},size=${outputFile.length()}"
+                        metadataParts.joinToString(",")
                     )
                 )
             }
 
             samplesRecorded.incrementAndGet()
-            lastFrameTime.set(timestampRecord.systemNanos)
+            lastFrameTime.set(alignedNs)
+
         } catch (e: Exception) {
             Log.w(TAG, "Failed to log frame capture", e)
         }
@@ -418,19 +485,20 @@ class RgbCameraRecorder(
     private suspend fun initializeCsvWriter() {
         try {
             csvFile?.let { file ->
-                csvWriter = CSVWriter(FileWriter(file)).apply {
-                    // Enhanced CSV header for frame tracking with unified timestamp system
-                    writeNext(
-                        arrayOf(
-                            "system_nanos", // Monotonic nanosecond timestamp for precise alignment
-                            "system_time_ms", // Wall clock time for human readability
-                            "session_relative_ms", // Session-relative time for analysis
-                            "sample_number",
-                            "event_type",      // frame_capture, video_start, video_stop, sync_marker
-                            "metadata"         // Additional info like filename, size, etc.
+                    csvWriter = CSVWriter(FileWriter(file)).apply {
+                        // Enhanced CSV header for frame tracking
+                        writeNext(
+                            arrayOf(
+                                "timestamp_ns",
+                                "aligned_timestamp_ns",
+                                "sample_number",
+                                "session_time_ms",
+                                "wall_time_ms",
+                                "event_type",      // frame_capture, video_start, video_stop, sync_marker
+                                "metadata"         // Additional info like filename, size, etc.
+                            )
                         )
-                    )
-                    flush()
+                        flush()
                 }
 
                 val headers = listOf(
@@ -538,6 +606,9 @@ class RgbCameraRecorder(
             )
 
             updateStatus(isRecording = false)
+            sessionReferenceTimestampNs.set(0)
+            sessionStartOffsetNs.set(0)
+            sessionMetadata = null
             true
         } catch (e: Exception) {
             Log.e(TAG, "Failed to stop RGB CameraX recording", e)
@@ -553,13 +624,23 @@ class RgbCameraRecorder(
     ) {
         try {
             csvBufferedWriter?.let { writer ->
-                val sessionTimeMs = (timestampNs - sessionStartTime.get()) / 1_000_000
-                val metadataStr = metadata.entries.joinToString(",") { "${it.key}=${it.value}" }
+                val alignedNs = alignedTimestampNs(timestampNs)
+                val sessionTimeMs = sessionRelativeMs(timestampNs)
+                val wallMs = wallClockMs(timestampNs)
+                val metadataMap = metadata.toMutableMap()
+                metadataMap["aligned_ns"] = alignedNs.toString()
+                wallMs?.let { metadataMap["wall_ms"] = it.toString() }
+                sessionMetadata?.let {
+                    metadataMap["session_reference_ns"] = sessionReferenceTimestampNs.get().toString()
+                }
+                val metadataStr = metadataMap.entries.joinToString(",") { "${it.key}=${it.value}" }
 
                 val row = listOf(
                     timestampNs,
+                    alignedNs,
                     samplesRecorded.get(),
                     sessionTimeMs,
+                    wallMs?.toString() ?: "",
                     markerType,
                     metadataStr
                 )

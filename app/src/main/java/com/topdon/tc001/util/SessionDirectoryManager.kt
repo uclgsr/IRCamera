@@ -28,7 +28,7 @@ class SessionDirectoryManager(private val context: Context) {
         // Standard file names
         const val RGB_VIDEO_FILE = "rgb_video.mp4"
         const val SHIMMER_DATA_FILE = "shimmer_data.csv"
-        const val THERMAL_FRAMES_FILE = "thermal_frames.raw"
+        const val THERMAL_FRAMES_FILE = "thermal_frames.csv"
         const val THERMAL_METADATA_FILE = "thermal_metadata.csv"
         const val SESSION_METADATA_FILE = "session_metadata.json"
         const val SYNC_MARKERS_FILE = "sync_markers.csv"

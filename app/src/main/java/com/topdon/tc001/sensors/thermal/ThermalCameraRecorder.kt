@@ -27,6 +27,7 @@ import com.topdon.tc001.sensors.TimestampRecord
 import com.topdon.tc001.network.NetworkServer
 import org.json.JSONObject
 import java.io.ByteArrayOutputStream
+import com.topdon.tc001.data.SessionMetadata
 import com.topdon.tc001.util.BufferedDataWriter
 import com.topdon.tc001.util.CSVBufferedWriter
 import com.topdon.tc001.util.SessionDirectoryManager
@@ -104,10 +105,14 @@ class ThermalCameraRecorder(
     private val _errorFlow = MutableSharedFlow<SensorError>()
 
     private var sessionDirectory: String = ""
+    private var sessionMetadata: SessionMetadata? = null
     private var frameCount = AtomicLong(0)
     private var recordingStartTime: Long = 0
     private var thermalDataFile: File? = null
     private var thermalFramesFile: File? = null
+
+    private val sessionReferenceTimestampNs = AtomicLong(0)
+    private val sessionStartOffsetNs = AtomicLong(0)
 
     private var ambientTemperature = 25.0 // Default ambient temp in Celsius
     private var emissivity = 0.95 // Default emissivity
@@ -952,11 +957,17 @@ class ThermalCameraRecorder(
     ) {
         withContext(Dispatchers.IO) {
             try {
-                // Save summary data with unified timestamp system for cross-sensor alignment
+
+                val alignedNs = alignedTimestampNs(timestamp)
+                val relativeMs = sessionRelativeMs(timestamp)
+                val wallMs = wallClockMs(timestamp)
+
                 val summaryData = arrayOf(
-                    timestampRecord.systemNanos.toString(), // Monotonic nanosecond timestamp
-                    timestampRecord.systemTimeMs.toString(), // Wall clock time for human readability
-                    timestampRecord.sessionRelativeMs.toString(), // Session-relative time for analysis
+                    timestamp.toString(),
+                    alignedNs.toString(),
+                    relativeMs.toString(),
+                    wallMs?.toString() ?: "",
+
                     frameNumber.toString(),
                     "%.2f".format(thermalData.minTemperature),
                     "%.2f".format(thermalData.maxTemperature),
@@ -964,15 +975,18 @@ class ThermalCameraRecorder(
                     "%.2f".format(thermalData.centerTemperature),
                     "%.2f".format(thermalData.ambientTemperature),
                     "%.3f".format(thermalData.emissivity),
-                    "%.2f".format(thermalData.reflectedTemperature)
+                    "%.2f".format(thermalData.reflectedTemperature),
+                    "frame"
                 )
                 thermalDataWriter?.writeRow(summaryData.toList())
 
                 // Save frame data with unified timestamp system
                 val frameData = mutableListOf<Any>().apply {
-                    add(timestampRecord.systemNanos) // Monotonic nanosecond timestamp
-                    add(timestampRecord.systemTimeMs) // Wall clock time
-                    add(timestampRecord.sessionRelativeMs) // Session-relative time
+                    add(timestamp)
+                    add(alignedNs)
+                    add(relativeMs)
+                    add(wallMs?.toString() ?: "")
+
                     add(frameNumber)
                     thermalData.temperatureMatrix.forEach { row ->
                         row.forEach { temp ->
@@ -1170,6 +1184,14 @@ class ThermalCameraRecorder(
         }
     }
 
+    override suspend fun startRecording(
+        sessionDirectory: String,
+        sessionMetadata: SessionMetadata
+    ): Boolean {
+        this.sessionMetadata = sessionMetadata
+        return startRecording(sessionDirectory)
+    }
+
     override suspend fun startRecording(sessionDirectory: String): Boolean =
         withContext(Dispatchers.IO) {
             try {
@@ -1179,7 +1201,7 @@ class ThermalCameraRecorder(
                 }
 
                 this@ThermalCameraRecorder.sessionDirectory = sessionDirectory
-                recordingStartTime = System.nanoTime()
+                initializeSessionTiming()
 
                 setupOutputFiles()
 
@@ -1599,6 +1621,9 @@ class ThermalCameraRecorder(
 
             Log.i(TAG, "Real IR thermal camera recording stopped")
             emitStatus()
+            sessionReferenceTimestampNs.set(0)
+            sessionStartOffsetNs.set(0)
+            sessionMetadata = null
             return true
 
         } catch (e: Exception) {
@@ -1625,21 +1650,21 @@ class ThermalCameraRecorder(
 
     private suspend fun setupOutputFiles() {
         // Use standard file paths from SessionDirectoryManager
-        val thermalDir = File(sessionDirectory, "Thermal")
+        val thermalDir = File(sessionDirectory)
         thermalDir.mkdirs()
 
         thermalDataFile = File(
             thermalDir,
             SessionDirectoryManager.THERMAL_METADATA_FILE.replace(".csv", "_data.csv")
         )
-        thermalFramesFile =
-            File(thermalDir, SessionDirectoryManager.THERMAL_FRAMES_FILE.replace(".raw", ".csv"))
+        thermalFramesFile = File(thermalDir, SessionDirectoryManager.THERMAL_FRAMES_FILE)
 
         // Setup buffered CSV writer for thermal data with unified timestamp columns
         val thermalDataHeaders = listOf(
-            "system_nanos", // Monotonic nanosecond timestamp for precise alignment
-            "system_time_ms", // Wall clock time for human readability and export
-            "session_relative_ms", // Session-relative time for analysis
+            "raw_timestamp_ns",
+            "aligned_timestamp_ns",
+            "timestamp_relative_ms",
+            "timestamp_wall_ms",
             "frame_number",
             "min_temp_c",
             "max_temp_c",
@@ -1647,7 +1672,8 @@ class ThermalCameraRecorder(
             "center_temp_c",
             "ambient_temp_c",
             "emissivity",
-            "reflected_temp_c"
+            "reflected_temp_c",
+            "event_type"
         )
 
         thermalDataWriter = CSVBufferedWriter(
@@ -1667,12 +1693,49 @@ class ThermalCameraRecorder(
         )
         thermalFramesWriter?.start()
 
-        // Write header for frames file with unified timestamp system
-        val framesHeader = "system_nanos,system_time_ms,session_relative_ms,frame_number," +
+        // Write header for frames file
+        val framesHeader = "raw_timestamp_ns,aligned_timestamp_ns,timestamp_relative_ms,timestamp_wall_ms,frame_number," +
                 (0 until thermalResolution.first * thermalResolution.second).joinToString(",") { "temp_$it" }
         thermalFramesWriter?.writeLine(framesHeader)
 
         writeThermalCalibration()
+    }
+
+    private fun initializeSessionTiming() {
+        val localStartNs = System.nanoTime()
+        recordingStartTime = localStartNs
+        val metadata = sessionMetadata
+        if (metadata != null) {
+            sessionReferenceTimestampNs.set(metadata.sessionStartMonotonicNs)
+            sessionStartOffsetNs.set(localStartNs - metadata.sessionStartMonotonicNs)
+        } else {
+            sessionReferenceTimestampNs.set(localStartNs)
+            sessionStartOffsetNs.set(0L)
+        }
+    }
+
+    private fun alignedTimestampNs(timestampNs: Long): Long {
+        return if (sessionMetadata != null) {
+            timestampNs - sessionStartOffsetNs.get()
+        } else {
+            timestampNs
+        }
+    }
+
+    private fun sessionRelativeMs(timestampNs: Long): Long {
+        val metadata = sessionMetadata
+        return if (metadata != null) {
+            val alignedNs = alignedTimestampNs(timestampNs)
+            (alignedNs - metadata.sessionStartMonotonicNs) / 1_000_000
+        } else {
+            (timestampNs - recordingStartTime) / 1_000_000
+        }
+    }
+
+    private fun wallClockMs(timestampNs: Long): Long? {
+        val metadata = sessionMetadata ?: return null
+        val alignedNs = alignedTimestampNs(timestampNs)
+        return metadata.monotonicToWallClock(alignedNs)
     }
 
     private suspend fun writeThermalCalibration() {
@@ -1733,11 +1796,15 @@ class ThermalCameraRecorder(
 
             val syncRow = arrayOf(
                 timestampNs.toString(),
-                "SYNC_$markerType",
+                alignedTimestampNs(timestampNs).toString(),
+                sessionRelativeMs(timestampNs).toString(),
+                wallClockMs(timestampNs)?.toString() ?: "",
+                "-1",
                 "0", "0", "0", "0", // Zero temps for sync marker
                 ambientTemperature.toString(),
                 emissivity.toString(),
-                reflectedTemperature.toString()
+                reflectedTemperature.toString(),
+                "SYNC_$markerType"
             )
             thermalDataWriter?.writeRow(syncRow.toList())
 
