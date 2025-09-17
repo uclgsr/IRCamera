@@ -279,9 +279,6 @@ class RgbCameraRecorder(
             startFrameCapture()
 
             _isRecording.set(true)
-            if (sessionStartTime.get() == 0L) {
-                sessionStartTime.set(System.nanoTime())
-            }
             samplesRecorded.set(0)
             droppedFrames.set(0)
             framesCaptured.set(0)
