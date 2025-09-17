@@ -157,10 +157,6 @@ class RgbCameraRecorder(
     }
             }
 
-            Log.i(TAG, "CameraX provider initialized successfully")
-            _cameraStatus.value = "Initialized"
-            updateStatus(isInitialized = true)
-            true
         } catch (e: Exception) {
             Log.e(TAG, "Failed to initialize CameraX", e)
             emitError(ErrorType.INITIALIZATION_FAILED, "CameraX initialization failed: ${e.message}")
