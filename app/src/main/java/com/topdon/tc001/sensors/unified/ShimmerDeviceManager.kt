@@ -129,44 +129,6 @@ class ShimmerDeviceManager(
         return BluetoothAdapter.getDefaultAdapter()?.bondedDevices
             ?.filter { isValidShimmerDevice(it) } ?: emptyList()
     }
-            ) {
-                bluetoothAdapter?.bondedDevices ?: emptySet()
-            } else {
-                emptySet()
-            }
-
-            // Add paired Shimmer devices first
-            val pairedShimmers = pairedDevices.mapNotNull { btDevice ->
-                if (isValidShimmerDevice(btDevice)) {
-                    DeviceInfo(
-                        address = btDevice.address,
-                        name = btDevice.name ?: "Unknown Shimmer",
-                        rssi = -50, // Default RSSI for paired devices
-                        deviceType = "Shimmer3 GSR+",
-                        isGSRCapable = true
-                    )
-                } else null
-            }
-
-            pairedShimmers.forEach { device ->
-                discoveredDevices[device.address] = device
-            }
-
-            Log.i(TAG, "Found ${pairedShimmers.size} paired Shimmer devices")
-
-            // Perform actual BLE scanning for nearby devices
-            scanJob = lifecycleOwner.lifecycleScope.launch {
-                performBluetoothLeScanning()
-            }
-
-            return@withContext true
-
-        } catch (e: Exception) {
-            Log.e(TAG, "Error starting device scan", e)
-            isScanning.set(false)
-            return@withContext false
-        }
-    }
 
     private suspend fun performBluetoothLeScanning() {
         val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
