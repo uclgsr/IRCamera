@@ -5,7 +5,6 @@ import android.util.Log
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.csl.irCamera.R
 import com.topdon.tc001.sensors.unified.UnifiedGSRRecorder
 import com.topdon.tc001.sensors.unified.ShimmerDeviceManager
 import com.topdon.tc001.permissions.PermissionController
