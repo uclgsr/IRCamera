@@ -12,10 +12,8 @@ import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
-import com.shimmerresearch.android.Shimmer
 import com.shimmerresearch.android.manager.ShimmerBluetoothManagerAndroid
 import com.shimmerresearch.driver.ObjectCluster
-import com.shimmerresearch.driver.ShimmerDevice
 import com.shimmerresearch.bluetooth.ShimmerBluetooth.BT_STATE
 import com.topdon.tc001.sensors.unified.model.DeviceInfo
 import kotlinx.coroutines.*
@@ -31,49 +29,32 @@ class ShimmerDeviceManager(
         private const val TAG = "ShimmerDeviceManager"
         private const val SCAN_TIMEOUT_MS = 30000L
         private const val CONNECTION_TIMEOUT_MS = 15000L
-
-        // Reconnection constants as mentioned in the problem statement
         private const val RECONNECTION_ATTEMPTS = 3
         private const val RECONNECTION_DELAY_MS = 2000L
 
-        private val SHIMMER_MAC_PREFIXES = listOf(
-            "00:06:66", // Shimmer Research MAC prefix
-            "d0:39:72", // Alternative Shimmer prefix
-            "00:80:98"  // Additional Shimmer prefix
-        )
-
-        private val SHIMMER_NAME_PATTERNS = listOf(
-            "shimmer", "gsr", "rn4", "shimmer3"
-        )
+        private val SHIMMER_MAC_PREFIXES = listOf("00:06:66", "d0:39:72", "00:80:98")
+        private val SHIMMER_NAME_PATTERNS = listOf("shimmer", "gsr", "rn4", "shimmer3")
     }
 
-    // Manager instances
     private var shimmerManager: ShimmerBluetoothManagerAndroid? = null
     var bluetoothManager: BluetoothManager? = null
         private set
     private var bluetoothAdapter: BluetoothAdapter? = null
+    val shimmerBluetoothManager: ShimmerBluetoothManagerAndroid? get() = shimmerManager
 
-    // Expose shimmer manager for data callbacks (read-only access)
-    val shimmerBluetoothManager: ShimmerBluetoothManagerAndroid?
-        get() = shimmerManager
-
-    // Device tracking
     private val connectedDevices = ConcurrentHashMap<String, Shimmer>()
     private val discoveredDevices = ConcurrentHashMap<String, DeviceInfo>()
     private val reconnectionAttempts = ConcurrentHashMap<String, Int>()
 
-    // State management
     private val isScanning = AtomicBoolean(false)
     private var scanJob: Job? = null
 
-    // Flow emissions
     private val _scanResults = MutableSharedFlow<List<DeviceInfo>>()
     val scanResults: SharedFlow<List<DeviceInfo>> = _scanResults.asSharedFlow()
 
     private val _connectionEvents = MutableSharedFlow<ConnectionEvent>()
     val connectionEvents: SharedFlow<ConnectionEvent> = _connectionEvents.asSharedFlow()
 
-    // Handler for Shimmer manager
     private val mainHandler = Handler(Looper.getMainLooper())
 
     data class ConnectionEvent(
@@ -83,119 +64,134 @@ class ShimmerDeviceManager(
     )
 
     enum class ConnectionState {
-        CONNECTING,
-        CONNECTED,
-        DISCONNECTED,
-        FAILED,
-        TIMEOUT
+        CONNECTING, CONNECTED, DISCONNECTED, FAILED, TIMEOUT
     }
 
-    // Simplified approach without callbacks due to API limitations
-
     suspend fun initialize(): Boolean = withContext(Dispatchers.IO) {
-        Log.i(TAG, "Initializing Shimmer Device Manager")
 
-        try {
-            // Check permissions
-            if (!hasRequiredPermissions()) {
-                Log.e(TAG, "Missing required Bluetooth permissions")
-                return@withContext false
-            }
-
-            // Initialize Bluetooth
-            bluetoothManager =
-                context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
-            bluetoothAdapter = bluetoothManager?.adapter
-
-            if (bluetoothAdapter == null || !bluetoothAdapter!!.isEnabled) {
-                Log.e(TAG, "Bluetooth not available or disabled")
-                return@withContext false
-            }
-
-            // Initialize Shimmer manager with Handler
-            shimmerManager = ShimmerBluetoothManagerAndroid(context, mainHandler)
-            // Note: setCallback method may not exist - using simplified approach
-
-            Log.i(TAG, "Shimmer Device Manager initialized successfully")
-            return@withContext true
-
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to initialize Shimmer Device Manager", e)
+        if (!hasRequiredPermissions()) {
+            Log.e(TAG, "Missing Bluetooth permissions")
             return@withContext false
         }
+
+        bluetoothManager = context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
+        bluetoothAdapter = bluetoothManager?.adapter
+
+        if (bluetoothAdapter?.isEnabled != true) {
+            Log.e(TAG, "Bluetooth unavailable")
+            return@withContext false
+        }
+
+        shimmerManager = ShimmerBluetoothManagerAndroid(context, mainHandler)
+        return@withContext true
+    } catch (e: Exception) {
+        Log.e(TAG, "Shimmer initialization failed", e)
+        return@withContext false
     }
 
     suspend fun startDeviceScanning(): Boolean = withContext(Dispatchers.IO) {
-        Log.i(TAG, "Starting Shimmer device discovery with MAC filtering")
+        if (isScanning.get()) return@withContext true
 
-        if (isScanning.get()) {
-            Log.w(TAG, "Device scanning already in progress")
-            return@withContext true
-        }
-
-        val shimmerMgr = shimmerManager ?: run {
-            Log.e(TAG, "Shimmer manager not initialized")
-            return@withContext false
-        }
+        val shimmerMgr = shimmerManager ?: return@withContext false
+        if (!hasRequiredPermissions()) return@withContext false
 
         try {
             discoveredDevices.clear()
             isScanning.set(true)
 
-            // Use standard Bluetooth scanning - Shimmer-specific scanning not available
-            // shimmerMgr.startScanBtDevices() // Method doesn't exist
-
-            // Start discovery monitoring job
-            scanJob = lifecycleOwner.lifecycleScope.launch {
-                var scanTime = 0L
-                while (isScanning.get() && scanTime < SCAN_TIMEOUT_MS) {
-                    delay(1000)
-                    scanTime += 1000
-
-                    // Get discovered devices from Bluetooth adapter
-                    val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
-                    val pairedDevices = if (ActivityCompat.checkSelfPermission(
-                            context,
-                            Manifest.permission.BLUETOOTH_CONNECT
-                        ) == PackageManager.PERMISSION_GRANTED
-                    ) {
-                        bluetoothAdapter?.bondedDevices ?: emptySet()
-                    } else {
-                        emptySet()
-                    }
-
-                    val detectedDevices = pairedDevices.mapNotNull { btDevice ->
-                        if (isValidShimmerDevice(btDevice)) {
-                            DeviceInfo(
-                                address = btDevice.address,
-                                name = btDevice.name ?: "Unknown Shimmer",
-                                rssi = -50, // Default RSSI - actual value from scan callback
-                                deviceType = "Shimmer3 GSR+",
-                                isGSRCapable = true
-                            )
-                        } else null
-                    }
-
-                    // Update discovered devices map
-                    detectedDevices.forEach { device ->
-                        discoveredDevices[device.address] = device
-                    }
-
-                    // Emit current results
-                    _scanResults.emit(discoveredDevices.values.toList())
-
-                    Log.d(TAG, "Scan progress: ${discoveredDevices.size} Shimmer devices found")
-                }
-
-                stopDeviceScanning()
+            val pairedDevices = getPairedShimmerDevices()
+            pairedDevices.forEach { device ->
+                discoveredDevices[device.address] = DeviceInfo(
+                    address = device.address,
+                    name = device.name ?: "Unknown Shimmer",
+                    rssi = -50,
+                    deviceType = "Shimmer3 GSR+",
+                    isGSRCapable = true
+                )
             }
 
-            return@withContext true
+            _scanResults.emit(discoveredDevices.values.toList())
+            performBluetoothLeScanning()
 
+            return@withContext true
         } catch (e: Exception) {
-            Log.e(TAG, "Error starting device scan", e)
+            Log.e(TAG, "Device scan failed", e)
             isScanning.set(false)
             return@withContext false
+        }
+    }
+
+    private fun getPairedShimmerDevices(): List<BluetoothDevice> {
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) 
+            != PackageManager.PERMISSION_GRANTED) return emptyList()
+            
+        return BluetoothAdapter.getDefaultAdapter()?.bondedDevices
+            ?.filter { isValidShimmerDevice(it) } ?: emptyList()
+    }
+
+    private suspend fun performBluetoothLeScanning() {
+        val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+        val bluetoothLeScanner = bluetoothAdapter?.bluetoothLeScanner
+
+        if (bluetoothLeScanner == null) {
+            Log.w(TAG, "BLE Scanner not available")
+            return
+        }
+
+        val scanCallback = object : android.bluetooth.le.ScanCallback() {
+            override fun onScanResult(callbackType: Int, result: android.bluetooth.le.ScanResult) {
+                val device = result.device
+                val rssi = result.rssi
+                
+                if (isValidShimmerDevice(device) && !discoveredDevices.containsKey(device.address)) {
+                    Log.d(TAG, "Discovered new Shimmer device: ${device.name} (${device.address}) RSSI: $rssi")
+                    
+                    val deviceInfo = DeviceInfo(
+                        address = device.address,
+                        name = device.name ?: "Unknown Shimmer",
+                        rssi = rssi,
+                        deviceType = "Shimmer3 GSR+",
+                        isGSRCapable = true
+                    )
+                    
+                    discoveredDevices[device.address] = deviceInfo
+                    
+                    // Emit updated results
+                    lifecycleOwner.lifecycleScope.launch {
+                        _scanResults.emit(discoveredDevices.values.toList())
+                    }
+                }
+            }
+
+            override fun onScanFailed(errorCode: Int) {
+                Log.e(TAG, "BLE scan failed with error code: $errorCode")
+            }
+        }
+
+        try {
+            Log.i(TAG, "Starting BLE scan for nearby Shimmer devices...")
+            bluetoothLeScanner.startScan(scanCallback)
+
+            // Scan for specified timeout period with periodic updates
+            var scanTime = 0L
+            while (isScanning.get() && scanTime < SCAN_TIMEOUT_MS) {
+                delay(1000)
+                scanTime += 1000
+
+                // Emit current results every second
+                _scanResults.emit(discoveredDevices.values.toList())
+                Log.d(TAG, "Scan progress: ${discoveredDevices.size} Shimmer devices found")
+            }
+
+            bluetoothLeScanner.stopScan(scanCallback)
+            Log.i(TAG, "BLE scan completed. Total ${discoveredDevices.size} Shimmer devices found")
+
+        } catch (e: SecurityException) {
+            Log.e(TAG, "Security exception during BLE scan", e)
+        } catch (e: Exception) {
+            Log.e(TAG, "Exception during BLE scan", e)
+        } finally {
+            stopDeviceScanning()
         }
     }
 

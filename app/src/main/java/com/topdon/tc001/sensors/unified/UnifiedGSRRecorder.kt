@@ -102,6 +102,9 @@ class UnifiedGSRRecorder(
     private var bluetoothAdapter: BluetoothAdapter? = null
     private var shimmerManager: ShimmerBluetoothManagerAndroid? = null
     private var connectedShimmer: Shimmer? = null
+    
+    // Enhanced BLE device manager for improved scanning
+    private var shimmerDeviceManager: ShimmerDeviceManager? = null
 
     private val discoveredDevices = mutableListOf<DeviceInfo>()
     private var selectedDevice: DeviceInfo? = null
@@ -117,6 +120,19 @@ class UnifiedGSRRecorder(
     private var sessionMetadata: SessionMetadata? = null
     private val recordedSamples = AtomicLong(0)
     private var recordingStartTime: Long = 0
+    
+    // Sample tracking for quality monitoring
+    private val droppedSamples = AtomicLong(0)
+    private var lastExpectedSampleTime: Long = 0
+    private val sampleInterval = (1000.0 / samplingRateHz).toLong() // Expected interval in ms
+    
+    // Sync marker tracking
+    private val syncMarkers = mutableListOf<SyncMarker>()
+    private data class SyncMarker(
+        val timestampNs: Long,
+        val markerType: String,
+        val metadata: Map<String, String>
+    )
 
     private val _connectionQuality = MutableStateFlow(0.0)
     val connectionQuality: StateFlow<Double> = _connectionQuality.asStateFlow()
@@ -152,6 +168,16 @@ class UnifiedGSRRecorder(
             }
 
             shimmerManager = ShimmerBluetoothManagerAndroid(context, mainHandler)
+            
+            // Initialize enhanced device manager for improved BLE scanning
+            shimmerDeviceManager = ShimmerDeviceManager(context, lifecycleOwner)
+            val deviceManagerInitialized = shimmerDeviceManager?.initialize() ?: false
+            
+            if (!deviceManagerInitialized) {
+                Log.w(TAG, "Enhanced device manager initialization failed, using basic mode")
+            } else {
+                Log.i(TAG, "Enhanced BLE device manager initialized successfully")
+            }
 
             _deviceStatus.value = "Initialized"
             Log.i(TAG, "GSR Recorder initialization completed successfully")
@@ -165,7 +191,7 @@ class UnifiedGSRRecorder(
     }
 
     suspend fun startDeviceDiscovery(): Boolean = withContext(Dispatchers.IO) {
-        Log.i(TAG, "Starting Shimmer3 GSR+ device discovery with MAC filtering")
+        Log.i(TAG, "Starting enhanced Shimmer3 GSR+ device discovery with BLE scanning")
 
         if (shimmerManager == null) {
             Log.e(TAG, "Shimmer manager not initialized")
@@ -176,8 +202,35 @@ class UnifiedGSRRecorder(
             _deviceStatus.value = "Discovering..."
             discoveredDevices.clear()
 
-            // Simplified device discovery - add default GSR device
-            // In a real implementation, this would use BluetoothAdapter to scan for devices
+            // Use enhanced device manager if available, otherwise fall back to simplified discovery
+            val deviceManager = shimmerDeviceManager
+            if (deviceManager != null) {
+                Log.i(TAG, "Using enhanced BLE scanning for device discovery")
+                
+                val scanSuccess = deviceManager.startDeviceScanning()
+                if (scanSuccess) {
+                    delay(10000) // 10 seconds of scanning
+                    
+                    val scanResults = withTimeoutOrNull(1000) {
+                        deviceManager.scanResults.first()
+                    } ?: emptyList()
+                    
+                    discoveredDevices.clear()
+                    discoveredDevices.addAll(scanResults)
+                    
+                    deviceManager.stopDeviceScanning()
+                    
+                    Log.i(TAG, "Enhanced BLE scan completed: found ${discoveredDevices.size} devices")
+                    
+                    if (discoveredDevices.isNotEmpty()) {
+                        _deviceStatus.value = "Found ${discoveredDevices.size} Shimmer devices"
+                        return@withContext true
+                    }
+                }
+            }
+            
+            // Fallback to simplified discovery if enhanced scanning failed or is unavailable
+            Log.i(TAG, "Using fallback device discovery method")
             val defaultDevice = DeviceInfo(
                 address = "00:06:66:00:00:00", // Example Shimmer MAC
                 name = "Shimmer3 GSR+",
@@ -198,7 +251,7 @@ class UnifiedGSRRecorder(
             }
 
         } catch (e: Exception) {
-            Log.e(TAG, "Error during device discovery", e)
+            Log.e(TAG, "Error during enhanced device discovery", e)
             _deviceStatus.value = "Discovery Failed"
             return@withContext false
         }
@@ -514,13 +567,26 @@ class UnifiedGSRRecorder(
         metadata: Map<String, String>
     ) {
         try {
+            // Add to sync marker tracking
+            val syncMarker = SyncMarker(timestampNs, markerType, metadata)
+            syncMarkers.add(syncMarker)
+            
             if (_isRecording.get() && csvWriter != null) {
                 val iso = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.getDefault()).format(
                     Date(timestampNs / 1_000_000)
                 )
-                csvWriter?.write("# SYNC_MARKER: $markerType at $timestampNs ($iso)\n")
+                
+                // Write detailed sync marker information
+                csvWriter?.write("# SYNC_MARKER: $markerType at $timestampNs ($iso)")
+                if (metadata.isNotEmpty()) {
+                    csvWriter?.write(" metadata: ${metadata.entries.joinToString(", ") { "${it.key}=${it.value}" }}")
+                }
+                csvWriter?.write("\n")
                 csvWriter?.flush()
-                Log.i(TAG, "Added sync marker: $markerType at $timestampNs")
+                
+                Log.i(TAG, "Added sync marker: $markerType at $timestampNs with ${metadata.size} metadata entries")
+            } else {
+                Log.i(TAG, "Sync marker added to tracking: $markerType (recording not active)")
             }
         } catch (e: Exception) {
             Log.e(TAG, "Error adding sync marker", e)
@@ -543,11 +609,11 @@ class UnifiedGSRRecorder(
             averageDataRate = if (sessionDuration > 0) {
                 recordedSamples.get() / (sessionDuration / 1000.0)
             } else 0.0,
-            droppedSamples = 0L, // TODO: Implement dropped sample tracking
+            droppedSamples = droppedSamples.get(), // Implemented: Actual dropped sample tracking
             storageUsedMB = sessionDirectory?.let { dir ->
                 dir.walkTopDown().filter { it.isFile }.sumOf { it.length() } / (1024.0 * 1024.0)
             } ?: 0.0,
-            syncMarkersCount = 0, // TODO: Implement sync marker counting
+            syncMarkersCount = syncMarkers.size.toLong(), // Implemented: Actual sync marker counting
             lastSampleTimestampNs = System.nanoTime()
         )
     }
@@ -605,6 +671,10 @@ class UnifiedGSRRecorder(
 
             disconnectDevice()
 
+            // Clean up enhanced device manager
+            shimmerDeviceManager?.release()
+            shimmerDeviceManager = null
+
             shimmerManager = null
 
             discoveredDevices.clear()
@@ -628,6 +698,20 @@ class UnifiedGSRRecorder(
             val iso = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.getDefault()).format(
                 Date(wallClockMs)
             )
+
+            // Detect dropped samples by checking time intervals
+            if (lastExpectedSampleTime > 0) {
+                val expectedInterval = sampleInterval
+                val actualInterval = wallClockMs - lastExpectedSampleTime
+                
+                if (actualInterval > expectedInterval * 1.5) { // Allow 50% tolerance
+                    val estimatedDroppedSamples = ((actualInterval - expectedInterval) / expectedInterval).toLong()
+                    droppedSamples.addAndGet(estimatedDroppedSamples)
+                    
+                    Log.w(TAG, "Detected $estimatedDroppedSamples dropped samples (gap: ${actualInterval}ms, expected: ${expectedInterval}ms)")
+                }
+            }
+            lastExpectedSampleTime = wallClockMs
 
             // Calculate relative timestamp from session start if available
             val relativeMs = sessionMetadata?.let { metadata ->
