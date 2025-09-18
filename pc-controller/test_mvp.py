@@ -16,7 +16,7 @@ sys.path.insert(0, str(Path(__file__).parent / "src"))
 
 from loguru import logger
 from ircamera_pc.core.device_manager import DeviceManager, DeviceConnectionState
-from ircamera_pc.core.session_manager import EnhancedSessionManager, SessionConfiguration, \
+from ircamera_pc.core.session_manager import AdvancedSessionManager, SessionConfiguration, \
     SessionState
 from ircamera_pc.network.discovery import DeviceType, DiscoveredDevice
 
@@ -98,7 +98,7 @@ async def test_session_manager():
         registry.update_device_state(device_id2, DeviceConnectionState.ONLINE)
 
         # Create session manager
-        session_manager = EnhancedSessionManager(device_manager, session_dir)
+        session_manager = AdvancedSessionManager(device_manager, session_dir)
 
         # Test session creation
         print("Creating test session...")

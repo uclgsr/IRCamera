@@ -257,6 +257,13 @@ namespace ircamera {
             return true;
         }
 
+        // Public accessor methods
+        bool is_open() const { return is_open_.load(); }
+        bool is_capturing() const { return is_capturing_.load(); }
+        void set_frame_callback(FrameCallback callback) { frame_callback_ = callback; }
+        CameraConfig get_current_config() const { return config_; }
+        std::string get_last_error() const { return last_error_; }
+
     private:
         bool apply_configuration() {
 
@@ -381,7 +388,7 @@ namespace ircamera {
     }
 
     bool NativeWebcam::is_open() const {
-        return pimpl->is_open_;
+        return pimpl->is_open();
     }
 
     bool NativeWebcam::start_capture() {
@@ -393,7 +400,7 @@ namespace ircamera {
     }
 
     bool NativeWebcam::is_capturing() const {
-        return pimpl->is_capturing_;
+        return pimpl->is_capturing();
     }
 
     bool NativeWebcam::set_resolution(int width, int height) {
@@ -417,7 +424,7 @@ namespace ircamera {
     }
 
     void NativeWebcam::set_frame_callback(FrameCallback callback) {
-        pimpl->frame_callback_ = callback;
+        pimpl->set_frame_callback(callback);
     }
 
     FrameData NativeWebcam::get_latest_frame() {
@@ -437,7 +444,7 @@ namespace ircamera {
     }
 
     CameraConfig NativeWebcam::get_current_config() const {
-        return pimpl->config_;
+        return pimpl->get_current_config();
     }
 
     std::string NativeWebcam::get_camera_info() const {
@@ -445,7 +452,7 @@ namespace ircamera {
     }
 
     std::string NativeWebcam::get_last_error() const {
-        return pimpl->last_error_;
+        return pimpl->get_last_error();
     }
 
     bool NativeWebcam::test_camera_capture() {

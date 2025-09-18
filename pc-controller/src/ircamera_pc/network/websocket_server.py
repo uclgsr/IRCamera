@@ -27,9 +27,9 @@ try:
 except ImportError:
     from ..utils.simple_logger import logger
 
-# from ..sync import EnhancedTimeSyncServer  # TODO: Implement when needed
+# from ..sync import AdvancedTimeSyncServer  # TODO: Implement when needed
 from .discovery import NetworkDiscoveryService
-from .enhanced_security import AuthLevel, EnhancedSecurityManager
+from .security_manager import AuthLevel, AdvancedSecurityManager
 from .protocol import create_message, get_protocol_manager
 from .security import SecurityManager
 
@@ -81,7 +81,7 @@ class WebSocketServer:
 
         # Services
         self.security_manager = SecurityManager()
-        self.enhanced_security = EnhancedSecurityManager()  # Phase 4
+        self.advanced_security = AdvancedSecurityManager()  # Phase 4
         self.discovery_service = NetworkDiscoveryService()
         self.protocol_manager = get_protocol_manager()
 

@@ -7,7 +7,15 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Find required packages
 find_package(Python3 COMPONENTS Interpreter Development REQUIRED)
-find_package(OpenCV REQUIRED)
+
+# Find OpenCV (make it optional for now)
+find_package(OpenCV QUIET)
+if(OpenCV_FOUND)
+    message(STATUS "OpenCV found: ${OpenCV_VERSION}")
+    add_definitions(-DHAVE_OPENCV)
+else()
+    message(WARNING "OpenCV not found - webcam functionality will be limited")
+endif()
 
 # Add pybind11 - handle both system installation and bundled version
 find_package(pybind11 QUIET)
@@ -20,20 +28,23 @@ endif ()
 
 # Include directories
 include_directories(include)
-include_directories(${OpenCV_INCLUDE_DIRS})
+if(OpenCV_FOUND)
+    include_directories(${OpenCV_INCLUDE_DIRS})
+endif()
 
 # Source files
 set(SOURCES
         src/native_shimmer.cpp
-        src/native_webcam.cpp
-        src/pybind_module.cpp
+        src/simple_pybind_module.cpp
 )
 
 # Create the pybind11 module
 pybind11_add_module(native_backend ${SOURCES})
 
 # Link libraries
-target_link_libraries(native_backend PRIVATE ${OpenCV_LIBS})
+if(OpenCV_FOUND)
+    target_link_libraries(native_backend PRIVATE ${OpenCV_LIBS})
+endif()
 
 # Set properties
 set_target_properties(native_backend PROPERTIES

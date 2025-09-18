@@ -1,5 +1,5 @@
 """
-Enhanced Time Synchronization Service - PC Controller Side
+Advanced Time Synchronization Service - PC Controller Side
 
 Implements NTP-like time synchronization protocol to match Android TimeManager
 for precise temporal alignment in the Hub-and-Spoke architecture.
@@ -129,16 +129,16 @@ class DeviceTimeSyncStats:
             self.is_synchronized = False
 
 
-class EnhancedTimeSyncService:
+class AdvancedTimeSyncService:
     """
-    Enhanced Time Synchronization Service for PC Controller Hub.
+    Advanced Time Synchronization Service for PC Controller Hub.
     
     Implements comprehensive NTP-like protocol matching Android TimeManager
     to achieve <5ms clock offset precision (not round-trip time measurement accuracy) across Hub-Spoke architecture.
     """
 
     def __init__(self, stale_threshold_s: int = 60):
-        """Initialize enhanced time synchronization service."""
+        """Initialize advanced time synchronization service."""
         self._device_stats: Dict[str, DeviceTimeSyncStats] = {}
         self._active_sessions: Dict[str, Set[str]] = defaultdict(
             set)  # session_id -> set of device_ids
@@ -154,12 +154,12 @@ class EnhancedTimeSyncService:
         # Statistics monitoring
         self._stats_update_task: Optional[asyncio.Task] = None
 
-        logger.info("Enhanced Time Synchronization Service initialized")
+        logger.info("Advanced Time Synchronization Service initialized")
 
     async def start(self) -> None:
-        """Start the enhanced time synchronization service."""
+        """Start the advanced time synchronization service."""
         if self._is_running:
-            logger.warning("Enhanced time sync service already running")
+            logger.warning("Advanced time sync service already running")
             return
 
         self._is_running = True
@@ -167,10 +167,10 @@ class EnhancedTimeSyncService:
         # Start periodic statistics update
         self._stats_update_task = asyncio.create_task(self._periodic_stats_update())
 
-        logger.info("Enhanced Time Synchronization Service started")
+        logger.info("Advanced Time Synchronization Service started")
 
     async def stop(self) -> None:
-        """Stop the enhanced time synchronization service."""
+        """Stop the advanced time synchronization service."""
         if not self._is_running:
             return
 
@@ -183,7 +183,7 @@ class EnhancedTimeSyncService:
             except asyncio.CancelledError:
                 pass
 
-        logger.info("Enhanced Time Synchronization Service stopped")
+        logger.info("Advanced Time Synchronization Service stopped")
 
     async def handle_time_sync_request(self, message: Dict[str, any], device_id: str) -> Dict[
         str, any]:

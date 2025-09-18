@@ -17,9 +17,9 @@ from PyQt6.QtWidgets import QApplication, QMessageBox
 
 from ..core.config import config
 from ..core.device_manager import DeviceManager
-from ..core.session_manager import EnhancedSessionManager
+from ..core.session_manager import AdvancedSessionManager
 from ..network.websocket_server import WebSocketServer
-from ..sync import EnhancedTimeSyncServer
+from ..sync import AdvancedTimeSyncServer
 from .main_window_mvp import MVPMainWindow
 
 
@@ -39,9 +39,9 @@ class IRCameraHubApplication:
         self.app: Optional[QApplication] = None
         self.main_window: Optional[MVPMainWindow] = None
         self.device_manager: Optional[DeviceManager] = None
-        self.session_manager: Optional[EnhancedSessionManager] = None
+        self.session_manager: Optional[AdvancedSessionManager] = None
         self.websocket_server: Optional[WebSocketServer] = None
-        self.time_sync_server: Optional[EnhancedTimeSyncServer] = None
+        self.time_sync_server: Optional[AdvancedTimeSyncServer] = None
 
         # Configuration
         self.base_session_dir = Path(config.get("sessions.base_directory", "./sessions"))
@@ -123,7 +123,7 @@ class IRCameraHubApplication:
         logger.info("Device manager initialized")
 
         # Initialize session manager
-        self.session_manager = EnhancedSessionManager(
+        self.session_manager = AdvancedSessionManager(
             device_manager=self.device_manager,
             base_session_dir=self.base_session_dir
         )
@@ -324,7 +324,7 @@ class IRCameraHubApplication:
             logger.info(f"Starting time sync server on port {self.time_sync_port}...")
 
             # Create time sync server instance
-            self.time_sync_server = EnhancedTimeSyncServer(port=self.time_sync_port)
+            self.time_sync_server = AdvancedTimeSyncServer(port=self.time_sync_port)
 
             # Start the server
             success = await self.time_sync_server.start()
@@ -425,7 +425,7 @@ class IRCameraHubApplication:
         """Get device manager instance."""
         return self.device_manager
 
-    def get_session_manager(self) -> Optional[EnhancedSessionManager]:
+    def get_session_manager(self) -> Optional[AdvancedSessionManager]:
         """Get session manager instance."""
         return self.session_manager
 

@@ -50,11 +50,11 @@ namespace ircamera {
 
             std::atomic<Node *> head_;
             std::atomic<Node *> tail_;
-            std::atomic <size_t> size_;
+            std::atomic<size_t> size_;
             const size_t capacity_;
 
-            std::vector <std::unique_ptr<Node>> node_pool_;
-            std::atomic <size_t> pool_index_;
+            std::vector<std::unique_ptr<Node>> node_pool_;
+            std::atomic<size_t> pool_index_;
         };
 
         template<typename T>

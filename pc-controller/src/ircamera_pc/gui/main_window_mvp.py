@@ -38,7 +38,7 @@ from PyQt6.QtWidgets import (
 )
 
 from ..core.device_manager import DeviceConnectionState, DeviceInfo, DeviceManager, DeviceType
-from ..core.session_manager import EnhancedSessionManager, SessionConfiguration, SessionState
+from ..core.session_manager import AdvancedSessionManager, SessionConfiguration, SessionState
 
 
 class DeviceDashboardWidget(QWidget):
@@ -246,7 +246,7 @@ class SessionControlWidget(QWidget):
     def __init__(self):
         """Initialize session control widget."""
         super().__init__()
-        self.session_manager: Optional[EnhancedSessionManager] = None
+        self.session_manager: Optional[AdvancedSessionManager] = None
         self._setup_ui()
 
         # Update timer for session info
@@ -334,7 +334,7 @@ class SessionControlWidget(QWidget):
 
         layout.addStretch()
 
-    def set_session_manager(self, session_manager: EnhancedSessionManager):
+    def set_session_manager(self, session_manager: AdvancedSessionManager):
         """Set the session manager and setup callbacks."""
         self.session_manager = session_manager
 
@@ -533,7 +533,7 @@ class MVPMainWindow(QMainWindow):
     - Dynamic status updates
     """
 
-    def __init__(self, device_manager: DeviceManager, session_manager: EnhancedSessionManager):
+    def __init__(self, device_manager: DeviceManager, session_manager: AdvancedSessionManager):
         """
         Initialize MVP main window.
         
