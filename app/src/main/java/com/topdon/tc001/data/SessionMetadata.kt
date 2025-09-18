@@ -89,7 +89,7 @@ data class SessionMetadata(
         companion object {
             private fun getDeviceSerial(): String {
                 return try {
-                    android.os.Build.SERIAL.takeIf { it != "unknown" } ?: "SN-${System.currentTimeMillis().toString().takeLast(8)}"
+                    android.os.Build.SERIAL.takeIf { it != "unknown" } ?: getPersistentDeviceId()
                 } catch (e: Exception) {
                     "SN-UNAVAILABLE"
                 }
