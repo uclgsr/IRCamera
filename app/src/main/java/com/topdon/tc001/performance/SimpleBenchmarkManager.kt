@@ -21,6 +21,8 @@ class SimpleBenchmarkManager {
         const val GSR_TARGET_RATE = 128.0 // Hz
         const val RGB_TARGET_RATE = 30.0 // fps
         const val MAX_SYNC_DRIFT_MS = 5.0 // ms
+        const val GSR_RATE_TOLERANCE = 0.05
+        const val RGB_RATE_TOLERANCE = 0.2
     }
     
     // GSR benchmark data
