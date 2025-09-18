@@ -38,9 +38,7 @@ fi
 
 # Clean previous builds
 print_status "Cleaning previous builds..."
-./gradlew clean
-
-if [ $? -ne 0 ]; then
+if ! ./gradlew clean; then
     print_error "Clean failed"
     exit 1
 fi
@@ -82,7 +80,8 @@ if [ $BUILD_RESULT -eq 0 ]; then
     # Build PC Controller if available
     if [ -d "pc-controller" ]; then
         print_status "Building PC Controller (Hub)..."
-        cd pc-controller
+        (
+        cd pc-controller || exit
         
         # Check if virtual environment exists, create if not
         if [ ! -d "venv" ]; then
@@ -96,9 +95,7 @@ if [ $BUILD_RESULT -eq 0 ]; then
         # Install dependencies
         if [ -f "requirements.txt" ]; then
             print_status "Installing PC Controller dependencies..."
-            pip install -r requirements.txt
-            
-            if [ $? -eq 0 ]; then
+            if pip install -r requirements.txt; then
                 print_success "PC Controller dependencies installed"
                 
                 # Test PC Controller
@@ -119,7 +116,7 @@ except Exception as e:
             print_warning "requirements.txt not found in pc-controller"
         fi
         
-        cd ..
+        )
     fi
     
     echo ""

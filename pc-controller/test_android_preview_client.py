@@ -2,7 +2,7 @@
 """
 Simple PC client to test Android phone preview streaming.
 
-This script connects to the Android app's TCP server and receives live preview 
+This script connects to the Android app's TCP server and receives live preview
 data including camera frames and sensor readings.
 """
 
@@ -13,7 +13,6 @@ import base64
 import time
 import sys
 from threading import Thread
-from pathlib import Path
 from typing import Optional, Dict, Any
 import argparse
 
@@ -42,7 +41,7 @@ class AndroidPreviewClient:
             self.socket.settimeout(10.0)  # 10 second timeout
             self.socket.connect((self.host, self.port))
             self.connected = True
-            print(f"Connected successfully!")
+            print("Connected successfully!")
             return True
         except Exception as e:
             print(f"Failed to connect: {e}")
@@ -55,7 +54,7 @@ class AndroidPreviewClient:
         if self.socket:
             try:
                 self.socket.close()
-            except:
+            except Exception:
                 pass
             self.socket = None
         print("Disconnected from Android device")
@@ -130,7 +129,9 @@ class AndroidPreviewClient:
                 with open(filename, 'wb') as f:
                     f.write(frame_data)
                 print(
-                    f"Saved {frame_type} frame: {width}x{height} ({data_size} bytes) -> {filename}")
+                    f"Saved {frame_type} frame: {width}x{height} "
+                    f"({data_size} bytes) -> {filename}"
+                )
             except Exception as e:
                 print(f"Failed to save {frame_type} frame: {e}")
 
@@ -151,7 +152,7 @@ class AndroidPreviewClient:
         if elapsed > 0:
             frame_rate = self.frames_received / elapsed
             data_rate = self.bytes_received / elapsed / 1024  # KB/s
-            print(f"\nStatistics:")
+            print("Statistics:")
             print(f"  Connected for: {elapsed:.1f}s")
             print(f"  Frames received: {self.frames_received} ({frame_rate:.1f} fps)")
             print(f"  Sensor messages: {self.sensor_messages_received}")
@@ -219,7 +220,9 @@ class AndroidPreviewClient:
 def main():
     parser = argparse.ArgumentParser(description='Android Preview Client')
     parser.add_argument('host', help='Android device IP address')
-    parser.add_argument('--port', type=int, default=8080, help='Port number (default: 8080)')
+    parser.add_argument(
+        '--port', type=int, default=8080, help='Port number (default: 8080)'
+    )
     parser.add_argument('--duration', type=int, default=30,
                         help='Test duration in seconds (default: 30)')
 

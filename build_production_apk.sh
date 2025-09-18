@@ -72,7 +72,7 @@ build_apk() {
         -Dorg.gradle.jvmargs="-Xmx6144m -XX:+UseG1GC" \
         2>&1 | tee -a "${LOG_FILE}"
     
-    if [ ${PIPESTATUS[0]} -eq 0 ]; then
+    if [ "${PIPESTATUS[0]}" -eq 0 ]; then
         log "✅ APK build completed successfully"
     else
         log "❌ APK build failed"
@@ -104,8 +104,7 @@ verify_apk() {
     
     # Verify APK signature
     if command -v aapt >/dev/null 2>&1; then
-        aapt dump badging "${APK_PATH}" > /dev/null 2>&1
-        if [ $? -eq 0 ]; then
+        if aapt dump badging "${APK_PATH}" > /dev/null 2>&1; then
             log "✅ APK signature verification passed"
         else
             log "❌ ERROR: APK signature verification failed"
@@ -183,11 +182,12 @@ generate_report() {
         <h1>🚀 IRCamera Production Build Report</h1>
 EOF
     
-    echo "        <p>Generated: $(date)</p>" >> "${REPORT_FILE}"
-    echo "    </div>" >> "${REPORT_FILE}"
-    
-    echo "    <div class=\"section\">" >> "${REPORT_FILE}"
-    echo "        <h2>✅ Build Summary</h2>" >> "${REPORT_FILE}"
+    {
+        echo "        <p>Generated: $(date)</p>"
+        echo "    </div>"
+        echo "    <div class=\"section\">"
+        echo "        <h2>✅ Build Summary</h2>"
+    } >> "${REPORT_FILE}"
     echo "        <p><strong>Status:</strong> SUCCESS</p>" >> "${REPORT_FILE}"
     echo "        <p><strong>Build Time:</strong> ${TIMESTAMP}</p>" >> "${REPORT_FILE}"
     echo "        <p><strong>Artifacts:</strong> $(find "${OUTPUT_DIR}/${TIMESTAMP}" -name "*.apk" | wc -l) APK files</p>" >> "${REPORT_FILE}"
