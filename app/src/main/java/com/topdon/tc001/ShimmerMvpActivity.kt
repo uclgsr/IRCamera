@@ -22,6 +22,7 @@ import com.shimmerresearch.android.manager.ShimmerBluetoothManagerAndroid
 import com.shimmerresearch.driver.CallbackObject
 import com.shimmerresearch.driver.ObjectCluster
 import com.shimmerresearch.driver.ShimmerDevice
+import com.topdon.tc001.performance.PerformanceBenchmarkManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -65,6 +66,11 @@ class ShimmerMvpActivity : AppCompatActivity() {
 
     private var networkClient: ShimmerNetworkClient? = null
     private var currentSessionId: String? = null
+    
+    // Performance benchmarking
+    private val performanceBenchmarkManager = PerformanceBenchmarkManager()
+    private var gsrBenchmarkId: String? = null
+    private var networkBenchmarkId: String? = null
 
     data class GSRSample(
         val timestamp: Long,
@@ -401,29 +407,41 @@ class ShimmerMvpActivity : AppCompatActivity() {
     private fun startRecording() {
         shimmerDevice?.let { shimmer ->
             try {
-                Log.i(TAG, "Starting GSR recording")
+                Log.i(TAG, "Starting GSR recording with performance benchmarking")
                 isRecording = true
                 sampleCount = 0
                 gsrDataBuffer.clear()
 
                 currentSessionId = "session_${System.currentTimeMillis()}"
 
+                // Start performance benchmarks
+                gsrBenchmarkId = performanceBenchmarkManager.startGSRSamplingRateBenchmark(currentSessionId!!)
+                networkBenchmarkId = performanceBenchmarkManager.startNetworkThroughputBenchmark(currentSessionId!!)
+                
+                Log.i(TAG, "Performance benchmarks started - GSR: $gsrBenchmarkId, Network: $networkBenchmarkId")
+
                 shimmer.startStreaming()
 
                 networkClient?.sendRecordingStart(currentSessionId!!)
 
                 runOnUiThread {
-                    updateConnectionStatus("Recording GSR data...")
+                    updateConnectionStatus("Recording GSR data with performance monitoring...")
                     binding.startRecordingButton.isEnabled = false
                     binding.stopRecordingButton.isEnabled = true
                 }
 
-                Log.i(TAG, "GSR recording started successfully")
+                Log.i(TAG, "GSR recording started successfully with performance monitoring")
 
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to start recording", e)
                 showToast("Failed to start recording: ${e.message}")
                 isRecording = false
+                
+                // Clean up benchmark sessions on error
+                gsrBenchmarkId?.let { performanceBenchmarkManager.finalizeGSRSamplingRateBenchmark(it) }
+                networkBenchmarkId?.let { performanceBenchmarkManager.finalizeNetworkThroughputBenchmark(it) }
+                gsrBenchmarkId = null
+                networkBenchmarkId = null
             }
         } ?: run {
             showToast("No Shimmer device connected")
@@ -433,22 +451,48 @@ class ShimmerMvpActivity : AppCompatActivity() {
     private fun stopRecording() {
         shimmerDevice?.let { shimmer ->
             try {
-                Log.i(TAG, "Stopping GSR recording")
+                Log.i(TAG, "Stopping GSR recording and finalizing performance benchmarks")
                 isRecording = false
 
                 shimmer.stopStreaming()
 
                 networkClient?.sendRecordingStop(currentSessionId ?: "unknown", sampleCount)
 
+                // Finalize performance benchmarks and generate reports
+                gsrBenchmarkId?.let { benchmarkId ->
+                    val gsrResult = performanceBenchmarkManager.finalizeGSRSamplingRateBenchmark(benchmarkId)
+                    Log.i(TAG, "GSR Performance: ${gsrResult.summary}")
+                }
+
+                networkBenchmarkId?.let { benchmarkId ->
+                    val networkResult = performanceBenchmarkManager.finalizeNetworkThroughputBenchmark(benchmarkId)
+                    Log.i(TAG, "Network Performance: ${networkResult.summary}")
+                }
+
+                // Export performance benchmark data
+                try {
+                    val performanceFile = performanceBenchmarkManager.exportBenchmarkResults(cacheDir)
+                    Log.i(TAG, "Performance benchmark results exported to: ${performanceFile.absolutePath}")
+                    
+                    val performanceSummary = performanceBenchmarkManager.generatePerformanceSummary()
+                    Log.i(TAG, "Performance Summary:\n$performanceSummary")
+                } catch (e: Exception) {
+                    Log.w(TAG, "Error exporting performance results", e)
+                }
+
                 exportDataToCSV()
 
                 runOnUiThread {
-                    updateConnectionStatus("Recording stopped - Data exported")
+                    updateConnectionStatus("Recording stopped - Data and performance metrics exported")
                     binding.startRecordingButton.isEnabled = true
                     binding.stopRecordingButton.isEnabled = false
                 }
 
-                Log.i(TAG, "GSR recording stopped, ${gsrDataBuffer.size} samples collected")
+                Log.i(TAG, "GSR recording stopped, ${gsrDataBuffer.size} samples collected with performance analysis")
+
+                // Clean up benchmark IDs
+                gsrBenchmarkId = null
+                networkBenchmarkId = null
 
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to stop recording", e)
@@ -483,7 +527,19 @@ class ShimmerMvpActivity : AppCompatActivity() {
                 gsrDataBuffer.add(sample)
                 sampleCount++
 
+                // Record GSR sample for performance benchmarking
+                gsrBenchmarkId?.let { benchmarkId ->
+                    performanceBenchmarkManager.recordGSRSample(benchmarkId, timestamp)
+                }
+
                 networkClient?.sendGSRSample(sample, sampleCount)
+                
+                // Record network activity for performance benchmarking
+                networkBenchmarkId?.let { benchmarkId ->
+                    // Estimate data size (timestamp + GSR + raw + resistance + metadata ~50 bytes)
+                    val estimatedDataSize = 50L
+                    performanceBenchmarkManager.recordNetworkActivity(benchmarkId, estimatedDataSize)
+                }
 
                 runOnUiThread {
                     binding.gsrValueText.text =

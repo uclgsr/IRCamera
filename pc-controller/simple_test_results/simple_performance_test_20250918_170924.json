@@ -1,0 +1,63 @@
+{
+  "test_id": "simple_test_1758215354",
+  "start_time": 1758215354.722032,
+  "metrics": {},
+  "benchmarks": [
+    {
+      "test_type": "GSR_SAMPLING_RATE",
+      "target_rate_hz": 128.0,
+      "actual_rate_hz": 127.99149117599191,
+      "rate_error_percent": 0.006647518756319748,
+      "total_samples": 640,
+      "duration_seconds": 4.992519378662109,
+      "variance": 0.0038248449597925492,
+      "success": true,
+      "score": 0.9999335248124368,
+      "summary": "GSR: 127.99 Hz (target: 128.0 Hz) - PASSED"
+    },
+    {
+      "test_type": "RGB_FRAME_RATE",
+      "target_rate_fps": 30.0,
+      "actual_rate_fps": 29.989987833463054,
+      "rate_error_percent": 0.03337388845648566,
+      "total_frames": 90,
+      "duration_seconds": 2.9676570892333984,
+      "avg_processing_time_ms": 2.8546666666666667,
+      "avg_frame_size_kb": 173.18333333333334,
+      "success": true,
+      "score": 0.9996662611154351,
+      "summary": "RGB: 29.99 fps (target: 30.0 fps) - PASSED"
+    },
+    {
+      "test_type": "NETWORK_THROUGHPUT",
+      "throughput_kbps": 94.61871065383123,
+      "avg_latency_ms": 25.18578680203046,
+      "packet_loss_percent": 0.0075,
+      "total_packets": 197,
+      "total_bytes": 193113,
+      "duration_seconds": 1.9931249618530273,
+      "success": true,
+      "score": 0.9,
+      "summary": "Network: 94.6 KB/s, Latency: 25.2ms - PASSED"
+    },
+    {
+      "test_type": "TIMESTAMP_SYNC_ACCURACY",
+      "avg_drift_ms": 1.235671043395996,
+      "max_drift_ms": 2.7899742126464844,
+      "sync_accuracy_score": 0.8764328956604004,
+      "sample_count": 100,
+      "success": true,
+      "score": 0.8764328956604004,
+      "summary": "Sync: 1.24ms avg drift (max: 2.79ms) - PASSED"
+    }
+  ],
+  "end_time": 1758215364.7267716,
+  "duration_seconds": 10.00473952293396,
+  "overall": {
+    "success": true,
+    "score": 0.9440081703970681,
+    "success_rate": 1.0,
+    "assessment": "\ud83d\udfe2 EXCELLENT",
+    "summary": "\ud83d\udfe2 EXCELLENT - Score: 0.944, Success Rate: 100.0%"
+  }
+}

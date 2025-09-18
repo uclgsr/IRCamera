@@ -1,0 +1,16 @@
+SIMPLE PERFORMANCE EVALUATION TEST RESULTS
+==================================================
+
+Test ID: simple_test_1758215354
+Duration: 10.00 seconds
+Overall Score: 0.944
+Overall Assessment: 🟢 EXCELLENT
+
+INDIVIDUAL BENCHMARK RESULTS
+------------------------------
+GSR_SAMPLING_RATE: GSR: 127.99 Hz (target: 128.0 Hz) - PASSED
+RGB_FRAME_RATE: RGB: 29.99 fps (target: 30.0 fps) - PASSED
+NETWORK_THROUGHPUT: Network: 94.6 KB/s, Latency: 25.2ms - PASSED
+TIMESTAMP_SYNC_ACCURACY: Sync: 1.24ms avg drift (max: 2.79ms) - PASSED
+
+Detailed results saved to: simple_test_results/simple_performance_test_20250918_170924.json

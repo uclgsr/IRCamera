@@ -16,6 +16,7 @@ import com.topdon.tc001.sensors.RecordingStats
 import com.topdon.tc001.sensors.ErrorType
 import com.topdon.tc001.util.CSVBufferedWriter
 import com.topdon.tc001.util.SessionDirectoryManager
+import com.topdon.tc001.performance.PerformanceBenchmarkManager
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import java.io.File
@@ -118,6 +119,10 @@ class RgbCameraRecorder(
     private var lastFrameErrorTime = AtomicLong(0)
     private val _cameraStatus = MutableStateFlow("Uninitialized")
     val cameraStatus: StateFlow<String> = _cameraStatus.asStateFlow()
+    
+    // Performance benchmarking
+    private val performanceBenchmarkManager = PerformanceBenchmarkManager()
+    private var rgbBenchmarkId: String? = null
     
     private val cameraSelector = if (useFrontCamera) {
         CameraSelector.DEFAULT_FRONT_CAMERA
@@ -389,9 +394,16 @@ class RgbCameraRecorder(
                 sessionDir.mkdirs()
             }
 
+            // Start RGB performance benchmarking
+            val sessionId = sessionDirectory.substringAfterLast("/")
+            rgbBenchmarkId = performanceBenchmarkManager.startRGBFrameRateBenchmark(sessionId)
+            Log.i(TAG, "RGB performance benchmarking started: $rgbBenchmarkId")
+
             // Initialize CameraX use cases
             if (!initializeCameraX()) {
                 Log.e(TAG, "Failed to initialize CameraX")
+                rgbBenchmarkId?.let { performanceBenchmarkManager.finalizeRGBFrameRateBenchmark(it) }
+                rgbBenchmarkId = null
                 return false
             }
 
@@ -401,6 +413,8 @@ class RgbCameraRecorder(
             val videoRecordingStarted = startVideoRecording()
             if (!videoRecordingStarted) {
                 Log.e(TAG, "Failed to start video recording")
+                rgbBenchmarkId?.let { performanceBenchmarkManager.finalizeRGBFrameRateBenchmark(it) }
+                rgbBenchmarkId = null
                 return false
             }
 
@@ -677,6 +691,17 @@ class RgbCameraRecorder(
                         object : ImageCapture.OnImageSavedCallback {
                             override fun onImageSaved(output: ImageCapture.OutputFileResults) {
                                 resetFrameErrorTracking()
+                                
+                                // Record frame for performance benchmarking
+                                rgbBenchmarkId?.let { benchmarkId ->
+                                    val frameSize = outputFile.length()
+                                    performanceBenchmarkManager.recordRGBFrame(
+                                        benchmarkId, 
+                                        timestampRecord.systemNanos / 1_000_000, // Convert to ms
+                                        frameSize
+                                    )
+                                }
+                                
                                 recordingScope.launch {
                                     logFrameCapture(timestampRecord, frameNumber, outputFile)
                                 }
@@ -850,6 +875,18 @@ class RgbCameraRecorder(
             activeRecording?.stop()
             activeRecording = null
 
+            // Finalize RGB performance benchmarking
+            rgbBenchmarkId?.let { benchmarkId ->
+                val resolution = "${selectedVideoWidth}x${selectedVideoHeight}"
+                val result = performanceBenchmarkManager.finalizeRGBFrameRateBenchmark(
+                    benchmarkId, 
+                    resolution, 
+                    CAPTURE_FPS.toDouble()
+                )
+                Log.i(TAG, "RGB Performance Result: ${result.summary}")
+            }
+            rgbBenchmarkId = null
+
             // Close CSV writer
             csvWriter?.close()
             csvWriter = null
@@ -858,7 +895,10 @@ class RgbCameraRecorder(
             csvBufferedWriter?.stop()
             csvBufferedWriter = null
 
-            Log.i(TAG, "RGB CameraX recording stopped successfully")
+            // Log final frame rate statistics
+            logFinalFrameRateStats()
+
+            Log.i(TAG, "RGB CameraX recording stopped successfully with performance analysis")
             Log.i(
                 TAG,
                 "Session stats - Frames captured: ${framesCaptured.get()}, Dropped frames: ${droppedFrames.get()}"
