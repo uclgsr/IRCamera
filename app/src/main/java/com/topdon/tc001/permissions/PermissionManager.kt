@@ -8,47 +8,53 @@ import androidx.core.app.ActivityCompat
 import androidx.fragment.app.FragmentActivity
 
 /**
- * Simple Permission Manager for MVP - focuses on core functionality
+ * Permission Manager for MVP - focuses on core functionality with proper constants
  */
-class SimplePermissionManager(
-    private val activity: FragmentActivity
+class PermissionManager(
+    private val activity: FragmentActivity,
+    private val permissionController: PermissionController
 ) {
     companion object {
-        private const val TAG = "SimplePermissionManager"
+        private const val TAG = "PermissionManager"
         private const val REQUEST_CAMERA_PERMISSIONS = 100
         private const val REQUEST_BLUETOOTH_PERMISSIONS = 101
+        private const val REQUEST_STORAGE_PERMISSIONS = 102
+        private const val REQUEST_ALL_PERMISSIONS = 200
     }
 
     /**
-     * Request camera permissions - MVP version
+     * Request camera permissions - MVP version with proper error handling
      */
     suspend fun requestCameraPermissions(): Boolean {
-        val permissions = arrayOf(Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO)
+        val cameraPermissions = arrayOf(
+            Manifest.permission.CAMERA,
+            Manifest.permission.RECORD_AUDIO
+        )
         
-        val missing = permissions.filter { 
-            ActivityCompat.checkSelfPermission(activity, it) != PackageManager.PERMISSION_GRANTED
+        val missingPermissions = cameraPermissions.filter { permission ->
+            ActivityCompat.checkSelfPermission(activity, permission) != PackageManager.PERMISSION_GRANTED
         }
         
-        if (missing.isEmpty()) {
+        if (missingPermissions.isEmpty()) {
             Log.i(TAG, "Camera permissions already granted")
             return true
         }
         
         Log.i(TAG, "Requesting camera permissions")
-        ActivityCompat.requestPermissions(activity, missing.toTypedArray(), REQUEST_CAMERA_PERMISSIONS)
+        ActivityCompat.requestPermissions(activity, missingPermissions.toTypedArray(), REQUEST_CAMERA_PERMISSIONS)
         
         // For MVP: Check permissions immediately after request
         // In production, this would use a proper callback mechanism
-        return missing.all { 
+        return missingPermissions.all { 
             ActivityCompat.checkSelfPermission(activity, it) == PackageManager.PERMISSION_GRANTED
         }
     }
 
     /**
-     * Request bluetooth permissions - MVP version  
+     * Request bluetooth permissions - MVP version with proper error handling
      */
     suspend fun requestBluetoothPermissions(): Boolean {
-        val permissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        val bluetoothPermissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             arrayOf(
                 Manifest.permission.BLUETOOTH_SCAN,
                 Manifest.permission.BLUETOOTH_CONNECT,
@@ -62,21 +68,21 @@ class SimplePermissionManager(
             )
         }
         
-        val missing = permissions.filter { 
-            ActivityCompat.checkSelfPermission(activity, it) != PackageManager.PERMISSION_GRANTED
+        val missingPermissions = bluetoothPermissions.filter { permission ->
+            ActivityCompat.checkSelfPermission(activity, permission) != PackageManager.PERMISSION_GRANTED
         }
         
-        if (missing.isEmpty()) {
+        if (missingPermissions.isEmpty()) {
             Log.i(TAG, "Bluetooth permissions already granted")
             return true
         }
         
         Log.i(TAG, "Requesting bluetooth permissions")
-        ActivityCompat.requestPermissions(activity, missing.toTypedArray(), REQUEST_BLUETOOTH_PERMISSIONS)
+        ActivityCompat.requestPermissions(activity, missingPermissions.toTypedArray(), REQUEST_BLUETOOTH_PERMISSIONS)
         
         // For MVP: Check permissions immediately after request
         // In production, this would use a proper callback mechanism
-        return missing.all { 
+        return missingPermissions.all { 
             ActivityCompat.checkSelfPermission(activity, it) == PackageManager.PERMISSION_GRANTED
         }
     }

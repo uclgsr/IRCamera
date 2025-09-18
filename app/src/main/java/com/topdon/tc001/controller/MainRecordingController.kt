@@ -13,14 +13,14 @@ import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean
 
 /**
- * Simple Recording Controller for MVP
+ * Main Recording Controller for MVP
  */
-class SimpleRecordingController(
+class MainRecordingController(
     private val context: Context,
     private val lifecycleOwner: LifecycleOwner
 ) {
     companion object {
-        private const val TAG = "SimpleRecordingController"
+        private const val TAG = "MainRecordingController"
         private const val FALLBACK_AVAILABLE_SPACE_GB = 10.0
         private const val RGB_STORAGE_MB_PER_MIN = 50.0
         private const val THERMAL_STORAGE_MB_PER_MIN = 5.0
