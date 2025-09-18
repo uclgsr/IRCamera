@@ -15,6 +15,7 @@ import com.csl.irCamera.R
 import com.topdon.tc001.controller.HardwareValidationController
 import com.topdon.tc001.controller.RecordingController
 import com.topdon.tc001.controller.ValidationReport
+import com.topdon.tc001.controller.ValidationResult
 import com.topdon.tc001.permissions.PermissionController
 import kotlinx.coroutines.launch
 import org.json.JSONObject
