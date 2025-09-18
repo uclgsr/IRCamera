@@ -5,7 +5,8 @@ import android.util.Log
 import android.view.TextureView
 import com.topdon.gsr.util.TimeUtil
 import com.topdon.tc001.camera.ui.SensorSelectionDialog
-import com.topdon.tc001.gsr.EnhancedThermalRecorder
+import com.topdon.tc001.sensors.thermal.ThermalCameraRecorder
+import com.topdon.tc001.data.SessionMetadata
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
@@ -18,12 +19,14 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import java.io.File
+import java.text.SimpleDateFormat
+import java.util.*
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
 
 class ParallelMultiModalRecorder(
     private val context: Context,
-    private val thermalRecorder: EnhancedThermalRecorder,
+    private val thermalRecorder: ThermalCameraRecorder,
     private val rgbTextureView: TextureView,
 ) {
     companion object {
@@ -125,8 +128,15 @@ class ParallelMultiModalRecorder(
                             when (sensor) {
                                 SensorSelectionDialog.SensorType.THERMAL -> {
 
-                                    val success =
-                                        thermalRecorder.startRecording(unifiedSessionId, null, true)
+                                    val sessionMetadata = SessionMetadata(
+                                        sessionId = unifiedSessionId,
+                                        sessionStartTimestampMs = System.currentTimeMillis(),
+                                        sessionStartMonotonicNs = System.nanoTime(),
+                                        sessionStartIso = java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US).apply {
+                                            timeZone = TimeZone.getTimeZone("UTC")
+                                        }.format(Date())
+                                    )
+                                    val success = thermalRecorder.startRecording(unifiedSessionId, sessionMetadata)
                                     if (success) {
 
                                         delay(50) // Small delay to ensure recording is active

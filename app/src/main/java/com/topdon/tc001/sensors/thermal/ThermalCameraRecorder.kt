@@ -3215,6 +3215,34 @@ class ThermalCameraRecorder(
         }
     }
 
+    /**
+     * Trigger a synchronization event for cross-modal recording coordination
+     * This method logs sync events with timestamps for post-processing alignment
+     */
+    fun triggerSyncEvent(eventName: String, eventData: Map<String, String>) {
+        try {
+            val timestamp = System.nanoTime()
+            Log.d(TAG, "Thermal sync event: $eventName at $timestamp with data: $eventData")
+            
+            // Log to current CSV if recording
+            if (_isRecording.get() && csvWriter != null) {
+                csvWriter?.writeNext(arrayOf(
+                    timestamp.toString(),
+                    "SYNC_EVENT",
+                    "0.0", // min_temp
+                    "0.0", // avg_temp  
+                    "0.0", // max_temp
+                    "0",   // pixel_count
+                    eventName,
+                    eventData.toString()
+                ))
+                csvWriter?.flush()
+            }
+        } catch (e: Exception) {
+            Log.w(TAG, "Error recording sync event", e)
+        }
+    }
+
     enum class ThermalExportFormat {
         CSV, JSON, HDF5, MATLAB
     }

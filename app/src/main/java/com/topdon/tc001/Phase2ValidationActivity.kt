@@ -15,6 +15,10 @@ import com.csl.irCamera.R
 import com.topdon.tc001.controller.HardwareValidationController
 import com.topdon.tc001.controller.RecordingController
 import com.topdon.tc001.controller.ValidationReport
+import com.topdon.tc001.controller.ValidationResult
+import com.topdon.tc001.controller.ValidationSummary
+import com.topdon.tc001.controller.SensorCapability
+import com.topdon.tc001.controller.DeviceInfo
 import com.topdon.tc001.permissions.PermissionController
 import kotlinx.coroutines.launch
 import org.json.JSONObject
@@ -291,7 +295,7 @@ class Phase2ValidationActivity : AppCompatActivity() {
         }
 
         sb.append("DETAILED RESULTS:\n")
-        for ((category, result) in report.validationResults) {
+        for ((category, result: ValidationResult) in report.validationResults) {
             val status = if (result.success) "✓" else "✗"
             sb.append("$status $category: ${result.message}\n")
             if (result.metrics.isNotEmpty()) {
@@ -362,7 +366,7 @@ class Phase2ValidationActivity : AppCompatActivity() {
         })
 
         val resultsJson = JSONObject()
-        for ((key, result) in report.validationResults) {
+        for ((key, result: ValidationResult) in report.validationResults) {
             resultsJson.put(key, JSONObject().apply {
                 put("success", result.success)
                 put("message", result.message)
