@@ -21,9 +21,9 @@ def test_core_continued_features():
 
     try:
         # Test enhanced time sync server
-        from ircamera_pc.sync import EnhancedTimeSyncServer
-        time_sync = EnhancedTimeSyncServer(port=1235)
-        print("✓ EnhancedTimeSyncServer creation successful")
+        from ircamera_pc.sync import AdvancedTimeSyncServer
+        time_sync = AdvancedTimeSyncServer(port=1235)
+        print("✓ AdvancedTimeSyncServer creation successful")
 
         # Test manual device creation with proper parameters
         from ircamera_pc.core.device_manager import DeviceManager, DeviceInfo, DeviceType, \

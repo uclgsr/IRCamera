@@ -55,7 +55,7 @@ pc-controller/
 ├── src/ircamera_pc/              # Main application package
 │   ├── core/                     # Core business logic
 │   │   ├── device_manager.py     # Device discovery & registry (NEW)
-│   │   ├── session_manager.py    # Enhanced session lifecycle (NEW)
+│   │   ├── session_manager.py    # Advanced session lifecycle (NEW)
 │   │   ├── config.py            # Configuration management
 │   │   └── [other modules...]
 │   ├── gui/                      # User interface components
