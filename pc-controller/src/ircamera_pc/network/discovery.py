@@ -82,8 +82,8 @@ class DiscoveredDevice:
     port: int
     device_type: DeviceType
     attributes: Dict[str, str]
-    discovered_at: datetime = None
-    last_seen: datetime = None
+    discovered_at: Optional[datetime] = None
+    last_seen: Optional[datetime] = None
 
     def __post_init__(self):
         """Set default timestamps if not provided."""
