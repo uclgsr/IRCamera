@@ -1,5 +1,13 @@
 """Enhanced Time Synchronization & Session Management - PC Controller Side"""
-from ..core.timesync import TimeSyncService, TimeSyncStats, TimeSyncProtocol
+try:
+    from ..core.timesync import TimeSyncService, TimeSyncStats, TimeSyncProtocol
+except ImportError:
+    # Fallback for missing core components
+    TimeSyncService = None
+    TimeSyncStats = None
+    TimeSyncProtocol = None
+
+from .enhanced_timesync import EnhancedTimeSyncService
 
 
 class EnhancedTimeSyncServer:
@@ -59,4 +67,4 @@ class EnhancedTimeSyncServer:
         return self._running
 
 
-__all__ = ['EnhancedTimeSyncServer', 'TimeSyncService', 'TimeSyncStats', 'TimeSyncProtocol']
+__all__ = ['EnhancedTimeSyncServer', 'EnhancedTimeSyncService', 'TimeSyncService', 'TimeSyncStats', 'TimeSyncProtocol']

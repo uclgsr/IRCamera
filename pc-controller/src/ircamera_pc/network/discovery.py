@@ -68,6 +68,7 @@ class DeviceType(Enum):
     THERMAL_CAMERA_TS004 = "THERMAL_CAMERA_TS004"
     THERMAL_CAMERA_TC007 = "THERMAL_CAMERA_TC007"
     ANDROID_SENSOR_NODE = "ANDROID_SENSOR_NODE"
+    ANDROID_NODE = "ANDROID_NODE"  # Alias for compatibility
     UNKNOWN = "UNKNOWN"
 
 
@@ -81,8 +82,15 @@ class DiscoveredDevice:
     port: int
     device_type: DeviceType
     attributes: Dict[str, str]
-    discovered_at: datetime
-    last_seen: datetime
+    discovered_at: datetime = None
+    last_seen: datetime = None
+
+    def __post_init__(self):
+        """Set default timestamps if not provided."""
+        if self.discovered_at is None:
+            self.discovered_at = datetime.now()
+        if self.last_seen is None:
+            self.last_seen = datetime.now()
 
 
 class NetworkDiscoveryService:

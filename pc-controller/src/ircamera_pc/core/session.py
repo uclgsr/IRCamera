@@ -276,6 +276,17 @@ class SessionManager:
         """Get current session metadata."""
         return self._current_session
 
+    def get_session_state(self) -> Optional[str]:
+        """
+        Get the current session state.
+        
+        Returns:
+            Current session state as string, or None if no active session
+        """
+        if self._current_session:
+            return self._current_session.state
+        return None
+
     def get_session(self, session_id: str) -> Optional[SessionMetadata]:
         """
         Get session by ID. First checks if it's the current session,
