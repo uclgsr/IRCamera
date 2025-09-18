@@ -190,6 +190,10 @@ class RecordingController(
     // Store session start timestamp for synchronization
     private var sessionStartTimestampMs: Long = 0
     private var sessionStartTimestampNs: Long = 0
+    /**
+     * Enhanced start recording with comprehensive validation and fault tolerance
+     * Addresses Phase 5 requirement: "Enhance start/stop sequence validation"
+     */
     suspend fun startRecording(
         sessionId: String? = null,
         participantId: String? = null,
@@ -204,26 +208,49 @@ class RecordingController(
                     return@withContext true
                 }
 
+                Log.i(TAG, "🚀 Starting enhanced multi-modal recording with validation")
+                _recordingStateFlow.value = RecordingState.STARTING
 
-                // Check storage space before starting
+                // Phase 1: Pre-recording validation with detailed checks
+                Log.d(TAG, "Phase 1: Validating recording prerequisites...")
+                val validationResult = validateRecordingPrerequisites(enabledSensors)
+                if (!validationResult.isValid) {
+                    Log.e(TAG, "❌ Recording validation failed: ${validationResult.errorMessage}")
+                    _recordingStateFlow.value = RecordingState.ERROR
+                    emitError(
+                        RecordingControllerError(
+                            errorType = "VALIDATION_FAILED",
+                            message = validationResult.errorMessage,
+                            isRecoverable = validationResult.isRecoverable,
+                            details = validationResult.details
+                        )
+                    )
+                    return@withContext false
+                }
+
+                // Phase 2: Storage space validation with enhanced checks
+                Log.d(TAG, "Phase 2: Validating storage requirements...")
                 val storageStatus = sessionDirectoryManager.checkStorageSpace()
                 if (storageStatus.isLowStorage) {
-                    Log.e(
-                        TAG,
-                        "Insufficient storage space: ${storageStatus.formattedAvailable} available"
-                    )
+                    Log.e(TAG, "❌ Insufficient storage space: ${storageStatus.formattedAvailable} available")
+                    _recordingStateFlow.value = RecordingState.ERROR
                     emitError(
                         RecordingControllerError(
                             errorType = "STORAGE_FULL",
                             message = "Insufficient storage space. Only ${storageStatus.formattedAvailable} available. Need at least 500MB free.",
-                            isRecoverable = false
+                            isRecoverable = false,
+                            details = mapOf(
+                                "available_space" to storageStatus.formattedAvailable,
+                                "required_space" to "500MB",
+                                "estimated_session_size" to estimateSessionSize(enabledSensors)
+                            )
                         )
                     )
                     return@withContext false
                 }
 
                 if (storageStatus.shouldWarn) {
-                    Log.w(TAG, "Low storage warning: ${storageStatus.formattedAvailable} available")
+                    Log.w(TAG, "⚠️ Low storage warning: ${storageStatus.formattedAvailable} available")
                     emitError(
                         RecordingControllerError(
                             errorType = "STORAGE_WARNING",
@@ -233,13 +260,21 @@ class RecordingController(
                     )
                 }
 
-                Log.i(TAG, "Starting multi-modal recording")
-
-                _recordingStateFlow.value = RecordingState.STARTING
-
-                // Generate session ID and create directory structure
+                // Phase 3: Session setup with crash recovery preparation
+                Log.d(TAG, "Phase 3: Setting up session with crash recovery...")
                 val finalSessionId = sessionId ?: sessionDirectoryManager.generateSessionId()
                 val sessionDir = sessionDirectoryManager.createSessionDirectory(finalSessionId)
+                
+                // Create enhanced session metadata
+                sessionMetadata = SessionMetadata.createSessionStart(finalSessionId).apply {
+                    this.participantId = participantId
+                    this.studyName = studyName
+                    this.enabledSensors = enabledSensors
+                    this.validationResults = validationResult.details
+                }
+
+                // Setup crash recovery marker
+                createCrashRecoveryMarker(finalSessionId, enabledSensors)
 
                 // Create session metadata
                 sessionMetadata = SessionMetadata.createSessionStart(finalSessionId)
