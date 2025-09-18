@@ -1,7 +1,9 @@
 package com.topdon.tc001.sensors.rgb
 
 import android.content.Context
+import android.os.Build
 import android.util.Log
+import android.util.Range
 import android.util.Size
 import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
@@ -119,11 +121,16 @@ class RgbCameraRecorder(
     private val _cameraStatus = MutableStateFlow("Uninitialized")
     val cameraStatus: StateFlow<String> = _cameraStatus.asStateFlow()
     
-    private val cameraSelector = if (useFrontCamera) {
+    private var currentCameraSelector = if (useFrontCamera) {
         CameraSelector.DEFAULT_FRONT_CAMERA
     } else {
         CameraSelector.DEFAULT_BACK_CAMERA
     }
+
+    // Enhanced camera selection properties
+    private var isUsingFrontCamera = useFrontCamera
+    private var supportsFrontCamera = false
+    private var supportsBackCamera = false
 
     private val recordingScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
@@ -139,8 +146,8 @@ class RgbCameraRecorder(
             _cameraStatus.value = "Initializing..."
             cameraProvider = ProcessCameraProvider.getInstance(context).get()
             
-            if (!cameraProvider!!.hasCamera(cameraSelector)) {
-                val cameraType = if (useFrontCamera) "Front" else "Back"
+            if (!cameraProvider!!.hasCamera(currentCameraSelector)) {
+                val cameraType = if (isUsingFrontCamera) "Front" else "Back"
                 _cameraStatus.value = "$cameraType Camera Not Available"
                 emitError(ErrorType.INITIALIZATION_FAILED, "$cameraType camera not available")
 
@@ -149,6 +156,7 @@ class RgbCameraRecorder(
 
             // Enhanced device capability detection and video configuration
             detectDeviceCapabilities()
+            detectAvailableCameras()
             optimizeVideoConfiguration()
 
             setupCameraUseCases()
@@ -182,7 +190,7 @@ class RgbCameraRecorder(
             
             // Additional capability detection using CameraX
             cameraProvider?.let { provider ->
-                val camera = provider.bindToLifecycle(lifecycleOwner, cameraSelector)
+                val camera = provider.bindToLifecycle(lifecycleOwner, currentCameraSelector)
                 val cameraInfo = camera.cameraInfo
                 
                 // Check available video profiles (if accessible)
@@ -209,6 +217,143 @@ class RgbCameraRecorder(
             Log.w(TAG, "Could not check video profile support", e)
             false
         }
+    }
+
+    /**
+     * Enhanced camera availability detection
+     * Addresses Phase 2 requirement: "Add front camera option if needed for the use-case"
+     */
+    private fun detectAvailableCameras() {
+        try {
+            cameraProvider?.let { provider ->
+                supportsBackCamera = provider.hasCamera(CameraSelector.DEFAULT_BACK_CAMERA)
+                supportsFrontCamera = provider.hasCamera(CameraSelector.DEFAULT_FRONT_CAMERA)
+                
+                Log.i(TAG, "📷 Camera availability detected:")
+                Log.i(TAG, "  • Back camera: ${if (supportsBackCamera) "Available" else "Not available"}")
+                Log.i(TAG, "  • Front camera: ${if (supportsFrontCamera) "Available" else "Not available"}")
+                
+                // Validate current camera selection
+                if (isUsingFrontCamera && !supportsFrontCamera) {
+                    Log.w(TAG, "⚠️ Front camera requested but not available, switching to back camera")
+                    switchToBackCamera()
+                } else if (!isUsingFrontCamera && !supportsBackCamera) {
+                    Log.w(TAG, "⚠️ Back camera not available, switching to front camera")
+                    switchToFrontCamera()
+                }
+            }
+        } catch (e: Exception) {
+            Log.w(TAG, "Error detecting available cameras", e)
+            // Assume back camera is available as fallback
+            supportsBackCamera = true
+            supportsFrontCamera = false
+        }
+    }
+
+    /**
+     * Switch to front camera if available
+     * @return true if switch was successful
+     */
+    suspend fun switchToFrontCamera(): Boolean {
+        return switchCamera(useFrontCamera = true)
+    }
+
+    /**
+     * Switch to back camera if available  
+     * @return true if switch was successful
+     */
+    suspend fun switchToBackCamera(): Boolean {
+        return switchCamera(useFrontCamera = false)
+    }
+
+    /**
+     * Enhanced camera switching with proper resource management
+     * Addresses Phase 2 requirement: "front-camera support" and "ensure code doesn't accidentally select unavailable camera"
+     */
+    private suspend fun switchCamera(useFrontCamera: Boolean): Boolean = withContext(Dispatchers.Main) {
+        return@withContext try {
+            val targetCameraSelector = if (useFrontCamera) {
+                CameraSelector.DEFAULT_FRONT_CAMERA
+            } else {
+                CameraSelector.DEFAULT_BACK_CAMERA
+            }
+
+            // Check if target camera is available
+            val isAvailable = cameraProvider?.hasCamera(targetCameraSelector) ?: false
+            if (!isAvailable) {
+                val cameraType = if (useFrontCamera) "front" else "back"
+                Log.w(TAG, "Cannot switch to $cameraType camera - not available on this device")
+                emitError(
+                    ErrorType.INITIALIZATION_FAILED,
+                    "$cameraType camera not available",
+                    isRecoverable = true
+                )
+                return@withContext false
+            }
+
+            // Don't switch if already using the requested camera
+            if (isUsingFrontCamera == useFrontCamera) {
+                Log.d(TAG, "Already using ${if (useFrontCamera) "front" else "back"} camera")
+                return@withContext true
+            }
+
+            val wasRecording = _isRecording.get()
+            if (wasRecording) {
+                Log.w(TAG, "Cannot switch camera during recording")
+                emitError(
+                    ErrorType.RECORDING_FAILED,
+                    "Cannot switch camera while recording",
+                    isRecoverable = true
+                )
+                return@withContext false
+            }
+
+            Log.i(TAG, "🔄 Switching to ${if (useFrontCamera) "front" else "back"} camera")
+            _cameraStatus.value = "Switching Camera..."
+
+            // Update camera configuration
+            currentCameraSelector = targetCameraSelector
+            isUsingFrontCamera = useFrontCamera
+
+            // Rebind camera use cases
+            cameraProvider?.unbindAll()
+            val rebindSuccess = bindUseCasesToCamera()
+            
+            if (rebindSuccess) {
+                _cameraStatus.value = "Camera Switched - ${if (useFrontCamera) "Front" else "Back"} Camera Active"
+                Log.i(TAG, "✅ Successfully switched to ${if (useFrontCamera) "front" else "back"} camera")
+                true
+            } else {
+                _cameraStatus.value = "Camera Switch Failed"
+                Log.e(TAG, "❌ Failed to switch camera")
+                false
+            }
+
+        } catch (e: Exception) {
+            Log.e(TAG, "Error during camera switch", e)
+            _cameraStatus.value = "Camera Switch Error"
+            emitError(ErrorType.INITIALIZATION_FAILED, "Camera switch failed: ${e.message}")
+            false
+        }
+    }
+
+    /**
+     * Get current camera information for UI display
+     */
+    fun getCurrentCameraInfo(): CameraDisplayInfo {
+        return object : CameraDisplayInfo {
+            override val isUsingFrontCamera = this@RgbCameraRecorder.isUsingFrontCamera
+            override val backAvailable = supportsBackCamera
+            override val frontAvailable = supportsFrontCamera
+            override val canSwitch = !_isRecording.get() && (frontAvailable && backAvailable)
+        }
+    }
+
+    interface CameraDisplayInfo {
+        val isUsingFrontCamera: Boolean
+        val backAvailable: Boolean  
+        val frontAvailable: Boolean
+        val canSwitch: Boolean
     }
 
     /**
@@ -242,6 +387,136 @@ class RgbCameraRecorder(
         }
     }
 
+    /**
+     * Setup camera use cases with current configuration
+     */
+    private suspend fun setupCameraUseCases() = withContext(Dispatchers.Main) {
+        try {
+            // Enhanced Preview use case with optimized resolution and configuration
+            preview = Preview.Builder().apply {
+                // Use optimal preview resolution for performance while maintaining aspect ratio
+                val previewSize = if (deviceSupports4K) {
+                    Size(1920, 1080) // 1080p preview for 4K recording
+                } else {
+                    Size(1280, 720) // 720p preview for 1080p recording  
+                }
+                setTargetResolution(previewSize)
+                
+                // Enable high-quality preview for user framing
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                    setTargetFrameRate(Range(24, 30)) // Smooth preview frame rate
+                }
+                
+                Log.d(TAG, "Preview configured with resolution: ${previewSize.width}x${previewSize.height}")
+            }.build()
+
+            // Enhanced video capture use case with optimized configuration
+            val recorder = createOptimizedRecorder()
+            videoCapture = VideoCapture.withOutput(recorder)
+
+            // Image capture use case - matches video resolution for consistency
+            imageCapture = ImageCapture.Builder()
+                .setTargetResolution(Size(selectedVideoWidth, selectedVideoHeight))
+                .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY) // Fast capture for 30fps
+                .setJpegQuality(JPEG_QUALITY)
+                .setFlashMode(ImageCapture.FLASH_MODE_AUTO) // Auto flash for better frame quality
+                .build()
+
+            Log.d(TAG, "Camera use cases configured successfully")
+        } catch (e: Exception) {
+            Log.e(TAG, "Error setting up camera use cases", e)
+            throw e
+        }
+    }
+
+    /**
+     * Bind configured use cases to the camera
+     */
+    private suspend fun bindUseCases(): Boolean = withContext(Dispatchers.Main) {
+        return@withContext bindUseCasesToCamera()
+    }
+
+    /**
+     * Bind use cases to camera with enhanced error handling and preview integration
+     */
+    private suspend fun bindUseCasesToCamera(): Boolean = withContext(Dispatchers.Main) {
+        try {
+            cameraProvider?.unbindAll()
+
+            // Build use cases list
+            val useCases = mutableListOf<UseCase>()
+            
+            // Always add video and image capture
+            videoCapture?.let { useCases.add(it) }
+            imageCapture?.let { useCases.add(it) }
+
+            // Enhanced preview binding with error handling
+            preview?.let { preview ->
+                previewView?.let { previewView ->
+                    try {
+                        preview.setSurfaceProvider(previewView.surfaceProvider)
+                        useCases.add(preview)
+                        Log.i(TAG, "✅ Preview bound to PreviewView successfully - live camera feed enabled")
+                        
+                        // Configure preview view settings for optimal display
+                        previewView.implementationMode = PreviewView.ImplementationMode.PERFORMANCE
+                        previewView.scaleType = PreviewView.ScaleType.FILL_CENTER
+                        
+                    } catch (e: Exception) {
+                        Log.w(TAG, "Preview binding failed, continuing without preview", e)
+                        emitError(
+                            ErrorType.INITIALIZATION_FAILED,
+                            "Camera preview unavailable but recording will continue",
+                            isRecoverable = true
+                        )
+                    }
+                } ?: run {
+                    Log.w(TAG, "No PreviewView provided - recording without live preview")
+                }
+            }
+
+            // Bind all use cases to lifecycle
+            if (useCases.isEmpty()) {
+                Log.e(TAG, "No use cases available for binding")
+                return@withContext false
+            }
+
+            camera = cameraProvider?.bindToLifecycle(
+                lifecycleOwner,
+                currentCameraSelector,
+                *useCases.toTypedArray()
+            )
+
+            // Verify camera capabilities and log information for user feedback
+            camera?.let { cam ->
+                val cameraInfo = cam.cameraInfo
+                val hasFlash = cameraInfo.hasFlashUnit()
+                val zoomRatio = cameraInfo.zoomState.value?.zoomRatio ?: 1.0f
+                
+                Log.i(TAG, "📷 Camera bound successfully:")
+                Log.i(TAG, "  - Camera: ${if (isUsingFrontCamera) "Front" else "Back"}")
+                Log.i(TAG, "  - Resolution: ${selectedVideoWidth}x${selectedVideoHeight}@${selectedVideoFps}fps")
+                Log.i(TAG, "  - Flash available: $hasFlash")
+                Log.i(TAG, "  - Zoom ratio: ${String.format("%.1f", zoomRatio)}x")
+                Log.i(TAG, "  - Preview: ${if (previewView != null) "Enabled" else "Disabled"}")
+                
+                return@withContext true
+                
+            } ?: run {
+                Log.e(TAG, "Camera binding returned null")
+                return@withContext false
+            }
+
+        } catch (e: Exception) {
+            Log.e(TAG, "❌ Failed to bind camera use cases", e)
+            emitError(
+                ErrorType.INITIALIZATION_FAILED,
+                "Failed to bind camera use cases: ${e.message}"
+            )
+            return@withContext false
+        }
+    }
+
     private suspend fun checkAndRequestPermissions(): Boolean {
         if (hasCameraPermission()) return true
         
@@ -266,57 +541,6 @@ class RgbCameraRecorder(
         } ?: run {
             _cameraStatus.value = "Permission Required - Check Settings"
             emitError(ErrorType.PERMISSION_DENIED, "Camera permission required")
-            false
-        }
-    }
-
-    /**
-     * Initialize CameraX with preview, video and image capture use cases
-     */
-
-    /**
-     * Initialize CameraX with preview, video and image capture use cases
-     */
-    private suspend fun initializeCameraX(): Boolean = withContext(Dispatchers.Main) {
-        try {
-            cameraProvider?.unbindAll()
-
-            // Preview use case - optimized resolution for performance
-            preview = Preview.Builder()
-                .setTargetResolution(Size(selectedVideoWidth / 2, selectedVideoHeight / 2)) // Half resolution for smooth preview
-                .build()
-
-            // Enhanced video capture use case with optimized configuration
-            val recorder = createOptimizedRecorder()
-            videoCapture = VideoCapture.withOutput(recorder)
-
-            // Image capture use case - matches video resolution for consistency
-            imageCapture = ImageCapture.Builder()
-                .setTargetResolution(Size(selectedVideoWidth, selectedVideoHeight))
-                .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY) // Fast capture for 30fps
-                .setJpegQuality(JPEG_QUALITY)
-                .build()
-
-            // Bind use cases to lifecycle
-            val useCases = mutableListOf<UseCase>(videoCapture!!, imageCapture!!)
-
-            // Add preview if PreviewView is available
-            previewView?.let {
-                preview?.setSurfaceProvider(it.surfaceProvider)
-                useCases.add(preview!!)
-                Log.d(TAG, "Preview bound to PreviewView")
-            }
-
-            camera = cameraProvider?.bindToLifecycle(
-                lifecycleOwner,
-                cameraSelector,
-                *useCases.toTypedArray()
-            )
-
-            Log.i(TAG, "CameraX use cases bound successfully with optimized configuration: ${selectedVideoWidth}x${selectedVideoHeight}@${selectedVideoFps}fps")
-            true
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to bind camera use cases", e)
             false
         }
     }
@@ -355,15 +579,6 @@ class RgbCameraRecorder(
                     )
                 )
                 .build()
-        }
-    }
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to initialize CameraX use cases", e)
-            emitError(
-                ErrorType.INITIALIZATION_FAILED,
-                "Failed to bind camera use cases: ${e.message}"
-            )
-            false
         }
     }
 
@@ -538,8 +753,8 @@ class RgbCameraRecorder(
     }
 
     /**
-     * Start continuous frame capture at ~30 FPS with frame rate validation
-     * Implements TODO requirement: "Ensure the recorded video and extracted frame timestamps (in rgb.csv) remain in sync"
+     * Start continuous frame capture at ~30 FPS with enhanced backpressure handling
+     * Addresses Phase 2 requirement: "Optimize frame capture performance with backpressure handling"
      */
     private fun startFrameCapture() {
         frameCaptureJob = recordingScope.launch {
@@ -551,23 +766,44 @@ class RgbCameraRecorder(
 
             val captureInterval = 1000L / CAPTURE_FPS // ~33ms for 30fps
             
+            // Enhanced backpressure handling with frame buffer
+            val maxPendingCaptures = 3 // Prevent memory buildup
+            var pendingCaptureCount = 0
+            
             // Reset frame rate monitoring
             frameTimestamps.clear()
             lastFrameRateCheck.set(System.currentTimeMillis())
             actualFrameRateAchieved = 0.0
 
+            Log.i(TAG, "🎬 Starting enhanced frame capture with backpressure handling at ${CAPTURE_FPS} FPS")
+
             while (_isRecording.get() && isActive) {
                 try {
+                    // Backpressure handling - skip frames if too many are pending
+                    if (pendingCaptureCount >= maxPendingCaptures) {
+                        droppedFrames.incrementAndGet()
+                        Log.d(TAG, "Frame dropped due to backpressure (pending: $pendingCaptureCount)")
+                        delay(captureInterval)
+                        continue
+                    }
+
                     val frameStartTime = System.nanoTime()
-                    captureFrame(framesDir, frameStartTime)
+                    pendingCaptureCount++
                     
-                    // Enhanced frame rate monitoring
-                    monitorFrameRate(frameStartTime)
+                    // Asynchronous frame capture with callback handling
+                    captureFrameAsync(framesDir, frameStartTime) {
+                        pendingCaptureCount--
+                        // Enhanced frame rate monitoring
+                        monitorFrameRate(frameStartTime)
+                    }
                     
                     delay(captureInterval)
                 } catch (e: Exception) {
-                    Log.e(TAG, "Error in frame capture loop", e)
+                    Log.e(TAG, "Error in enhanced frame capture loop", e)
                     handleFrameCaptureError(null)
+                    
+                    // Reset pending count on error
+                    pendingCaptureCount = 0
                     
                     // Avoid tight loop on persistent errors
                     delay(1000)
@@ -576,6 +812,57 @@ class RgbCameraRecorder(
             
             // Log final frame rate statistics
             logFinalFrameRateStats()
+            Log.i(TAG, "📸 Enhanced frame capture completed")
+        }
+    }
+
+    /**
+     * Enhanced asynchronous frame capture with backpressure handling
+     * Prevents I/O overwhelm and ensures stable 30 FPS operation
+     */
+    private fun captureFrameAsync(framesDir: File, frameStartTime: Long, onComplete: () -> Unit) {
+        try {
+            val timestampRecord = TimestampManager.createTimestampRecord()
+            val frameNumber = framesCaptured.incrementAndGet()
+            val outputFile = File(framesDir, "frame_${String.format("%08d", frameNumber)}_${timestampRecord.systemNanos}.jpg")
+
+            val outputOptions = ImageCapture.OutputFileOptions.Builder(outputFile).build()
+
+            imageCapture?.takePicture(
+                outputOptions,
+                cameraExecutor,
+                object : ImageCapture.OnImageSavedCallback {
+                    override fun onImageSaved(output: ImageCapture.OutputFileResults) {
+                        try {
+                            resetFrameErrorTracking()
+                            
+                            // Log frame capture in background to avoid blocking
+                            recordingScope.launch(Dispatchers.IO) {
+                                logFrameCapture(timestampRecord, frameNumber, outputFile)
+                            }
+                            
+                            onComplete()
+                            
+                        } catch (e: Exception) {
+                            Log.w(TAG, "Error in onImageSaved callback", e)
+                            onComplete()
+                        }
+                    }
+
+                    override fun onError(exception: ImageCaptureException) {
+                        Log.w(TAG, "Frame capture failed: ${exception.message}")
+                        handleFrameCaptureError(exception)
+                        onComplete()
+                    }
+                }
+            ) ?: run {
+                Log.w(TAG, "ImageCapture not available for frame capture")
+                onComplete()
+            }
+
+        } catch (e: Exception) {
+            Log.e(TAG, "Error setting up frame capture", e)
+            onComplete()
         }
     }
 
@@ -833,6 +1120,10 @@ class RgbCameraRecorder(
         }
     }
 
+    /**
+     * Enhanced stop recording with comprehensive lifecycle management
+     * Addresses Phase 2 requirement: "Enhance error handling and lifecycle management"
+     */
     override suspend fun stopRecording(): Boolean {
         return try {
             if (!_isRecording.get()) {
@@ -840,41 +1131,119 @@ class RgbCameraRecorder(
                 return false
             }
 
+            Log.i(TAG, "🛑 Stopping RGB camera recording with enhanced cleanup...")
             _isRecording.set(false)
+            _cameraStatus.value = "Stopping Recording..."
 
-            // Stop frame capture job
-            frameCaptureJob?.cancel()
-            frameCaptureJob = null
+            // Enhanced frame capture cleanup
+            frameCaptureJob?.let { job ->
+                Log.d(TAG, "Cancelling frame capture job...")
+                job.cancel()
+                try {
+                    job.join() // Wait for cancellation to complete
+                    Log.d(TAG, "Frame capture job cancelled successfully")
+                } catch (e: Exception) {
+                    Log.w(TAG, "Frame capture job cancellation timeout", e)
+                }
+                frameCaptureJob = null
+            }
 
-            // Stop video recording
-            activeRecording?.stop()
-            activeRecording = null
+            // Enhanced video recording cleanup
+            activeRecording?.let { recording ->
+                Log.d(TAG, "Stopping active video recording...")
+                try {
+                    recording.stop()
+                    Log.d(TAG, "Video recording stopped successfully")
+                } catch (e: Exception) {
+                    Log.w(TAG, "Error stopping video recording", e)
+                }
+                activeRecording = null
+            }
 
-            // Close CSV writer
-            csvWriter?.close()
-            csvWriter = null
+            // Enhanced CSV cleanup with proper resource management
+            try {
+                csvWriter?.let { writer ->
+                    writer.flush()
+                    writer.close()
+                    Log.d(TAG, "CSV writer closed successfully")
+                }
+                csvWriter = null
 
-            // Stop buffered writer properly
-            csvBufferedWriter?.stop()
-            csvBufferedWriter = null
+                csvBufferedWriter?.let { bufferedWriter ->
+                    bufferedWriter.stop()
+                    Log.d(TAG, "CSV buffered writer stopped successfully")
+                }
+                csvBufferedWriter = null
+            } catch (e: Exception) {
+                Log.w(TAG, "Error during CSV cleanup", e)
+            }
 
-            Log.i(TAG, "RGB CameraX recording stopped successfully")
-            Log.i(
-                TAG,
-                "Session stats - Frames captured: ${framesCaptured.get()}, Dropped frames: ${droppedFrames.get()}"
-            )
+            // Enhanced camera resource cleanup
+            try {
+                cameraProvider?.unbindAll()
+                Log.d(TAG, "Camera provider unbound successfully")
+            } catch (e: Exception) {
+                Log.w(TAG, "Error unbinding camera provider", e)
+            }
 
+            // Log comprehensive session statistics
+            val sessionStats = generateSessionStats()
+            Log.i(TAG, "📊 RGB Camera Session Complete:")
+            Log.i(TAG, "  • Frames captured: ${sessionStats.framesCaptured}")
+            Log.i(TAG, "  • Frames dropped: ${sessionStats.framesDropped}")
+            Log.i(TAG, "  • Frame drop rate: ${String.format("%.2f", sessionStats.dropRate)}%")
+            Log.i(TAG, "  • Average frame rate: ${String.format("%.2f", sessionStats.averageFrameRate)} fps")
+            Log.i(TAG, "  • Video file: ${videoFile?.name ?: "N/A"}")
+            Log.i(TAG, "  • Storage used: ${String.format("%.1f", sessionStats.storageMB)} MB")
+
+            // Reset session state
             updateStatus(isRecording = false)
             sessionReferenceTimestampNs.set(0)
             sessionStartOffsetNs.set(0)
             sessionMetadata = null
+            _cameraStatus.value = "Recording Stopped"
+
+            Log.i(TAG, "✅ RGB camera recording stopped successfully with enhanced cleanup")
             true
+
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to stop RGB CameraX recording", e)
+            Log.e(TAG, "❌ Failed to stop RGB CameraX recording", e)
+            _cameraStatus.value = "Stop Recording Failed"
             emitError(ErrorType.RECORDING_FAILED, "Failed to stop recording: ${e.message}")
             false
         }
     }
+
+    /**
+     * Generate comprehensive session statistics for analysis
+     */
+    private fun generateSessionStats(): SessionStats {
+        val totalFrames = framesCaptured.get()
+        val droppedFrames = droppedFrames.get()
+        val dropRate = if (totalFrames > 0) (droppedFrames.toDouble() / totalFrames * 100) else 0.0
+        
+        val videoSize = videoFile?.length() ?: 0L
+        val framesDirSize = File(sessionDirectory, "frames").let { dir ->
+            if (dir.exists()) dir.walkTopDown().filter { it.isFile }.map { it.length() }.sum() else 0L
+        }
+        val totalStorageMB = (videoSize + framesDirSize) / (1024.0 * 1024.0)
+        
+        return SessionStats(
+            framesCaptured = totalFrames,
+            framesDropped = droppedFrames,
+            dropRate = dropRate,
+            averageFrameRate = actualFrameRateAchieved,
+            storageMB = totalStorageMB
+        )
+    }
+
+    private data class SessionStats(
+        val framesCaptured: Long,
+        val framesDropped: Long,
+        val dropRate: Double,
+        val averageFrameRate: Double,
+        val storageMB: Double
+    )
 
     override suspend fun addSyncMarker(
         markerType: String,
