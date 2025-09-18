@@ -197,15 +197,15 @@ class ComprehensiveSystemDemo : AppCompatActivity() {
                 // Step 2: Initialize sensor recorders
                 updateStatus("Initializing sensors...")
                 addLog("Initializing GSR Sensor Recorder...")
-                gsrRecorder = GSRSensorRecorder(this@ComprehensiveSystemDemo, this@ComprehensiveSystemDemo)
+                gsrRecorder = GSRSensorRecorder(this@ComprehensiveSystemDemo, "gsr_shimmer_1", 128, recordingController)
                 recordingController.registerSensor("GSR", gsrRecorder!!)
 
                 addLog("Initializing Thermal Camera Recorder...")  
-                thermalRecorder = ThermalCameraRecorder(this@ComprehensiveSystemDemo, this@ComprehensiveSystemDemo)
+                thermalRecorder = ThermalCameraRecorder(this@ComprehensiveSystemDemo, "thermal_camera_1")
                 recordingController.registerSensor("Thermal", thermalRecorder!!)
 
                 addLog("Initializing RGB Camera Recorder...")
-                rgbRecorder = RgbCameraRecorder(this@ComprehensiveSystemDemo, this@ComprehensiveSystemDemo)
+                rgbRecorder = RgbCameraRecorder(this@ComprehensiveSystemDemo, this@ComprehensiveSystemDemo, null, false, permissionManager)
                 recordingController.registerSensor("RGB", rgbRecorder!!)
 
                 updateProgress(50)
@@ -272,7 +272,7 @@ class ComprehensiveSystemDemo : AppCompatActivity() {
             try {
                 addLog("Checking for Topdon TC001 thermal camera...")
                 thermalRecorder?.let { recorder ->
-                    val isConnected = recorder.initializeDevice()
+                    val isConnected = recorder.initialize()
                     if (isConnected) {
                         addLog("✅ Thermal camera detected and initialized")
                     } else {
