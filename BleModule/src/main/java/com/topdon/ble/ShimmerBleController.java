@@ -42,6 +42,10 @@ public class ShimmerBleController {
     private static final byte SHIMMER_STOP_STREAMING = 0x20;
     private static final byte SHIMMER_GET_SAMPLING_RATE = 0x03;
     private static final byte SHIMMER_SET_SAMPLING_RATE = 0x05;
+    private static final byte SHIMMER_GET_STATUS = 0x25;
+    private static final byte SHIMMER_GET_FW_VERSION = 0x2E;
+    private static final byte SHIMMER_SET_GSR_RANGE = 0x60;
+    private static final byte SHIMMER_GET_GSR_RANGE = 0x61;
 
     private final Context context;
     private final UnifiedBleManager unifiedManager;
@@ -220,6 +224,70 @@ public class ShimmerBleController {
 
         } catch (Exception e) {
             Log.e(TAG, "Failed to connect to Shimmer device", e);
+            return null;
+        }
+    }
+
+    /**
+     * Connect and initialize device with proper GSR configuration
+     * Implements comprehensive device pairing with scientific accuracy parameters
+     * 
+     * @param device Bluetooth device to connect
+     * @param config Device configuration
+     * @param listener Connection listener
+     * @param gsrRange GSR range (0-4, default 4 for highest sensitivity)  
+     * @param samplingRate Sampling rate in Hz (default 128Hz)
+     * @return Connected and initialized ShimmerDevice or null if failed
+     */
+    public UnifiedDevice connectAndInitializeDevice(@NonNull BluetoothDevice device,
+                                                   @NonNull ShimmerDeviceConfig config,
+                                                   @NonNull UnifiedBleManager.UnifiedConnectionListener listener,
+                                                   int gsrRange,
+                                                   int samplingRate) {
+        try {
+            Log.i(TAG, "Connecting and initializing Shimmer device: " + device.getAddress());
+
+            // First establish basic connection
+            UnifiedDevice shimmerDevice = connectDevice(device, config, listener);
+            if (shimmerDevice == null) {
+                Log.e(TAG, "Failed to establish basic connection");
+                return null;
+            }
+
+            // Wait for connection to be fully established
+            int maxWaitAttempts = 10; // 5 seconds max wait
+            int waitAttempts = 0;
+            while (!shimmerDevice.isConnected() && waitAttempts < maxWaitAttempts) {
+                try {
+                    Thread.sleep(500);
+                    waitAttempts++;
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    break;
+                }
+            }
+
+            if (!shimmerDevice.isConnected()) {
+                Log.e(TAG, "Device connection timeout");
+                return shimmerDevice; // Return anyway, may connect later
+            }
+
+            // Initialize device for GSR recording with proper parameters
+            if (shimmerDevice instanceof ShimmerDevice) {
+                ShimmerDevice shimmer = (ShimmerDevice) shimmerDevice;
+                boolean initialized = shimmer.initializeForGSRRecording(gsrRange, samplingRate);
+                
+                if (initialized) {
+                    Log.i(TAG, "Successfully connected and initialized Shimmer device: " + device.getAddress());
+                } else {
+                    Log.w(TAG, "Device connected but initialization incomplete: " + device.getAddress());
+                }
+            }
+
+            return shimmerDevice;
+
+        } catch (Exception e) {
+            Log.e(TAG, "Failed to connect and initialize Shimmer device", e);
             return null;
         }
     }

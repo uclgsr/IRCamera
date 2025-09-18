@@ -276,6 +276,24 @@ class SessionManager:
         """Get current session metadata."""
         return self._current_session
 
+    def get_session(self, session_id: str) -> Optional[SessionMetadata]:
+        """
+        Get session by ID. First checks if it's the current session,
+        then attempts to load from storage.
+        
+        Args:
+            session_id: Session ID to retrieve
+            
+        Returns:
+            SessionMetadata if found, None otherwise
+        """
+        # Check if it's the current session
+        if self._current_session and self._current_session.session_id == session_id:
+            return self._current_session
+            
+        # Otherwise, load from storage
+        return self.load_session(session_id)
+
     def get_session_directory(self, session_id: Optional[str] = None) -> Path:
         """
         Get session directory path.

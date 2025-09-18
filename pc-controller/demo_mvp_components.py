@@ -53,9 +53,10 @@ def demonstrate_session_management():
 
             # Create a test session
             session_name = "MVP Demo Session"
-            session_id = session_manager.create_session(session_name)
+            session_metadata = session_manager.create_session(session_name)
+            session_id = session_metadata.session_id
             print(f"✓ Session created: {session_name}")
-            print(f"  Session ID: {session_id}")
+            print(f"  Session ID: {session_metadata}")
 
             # Get session details
             session = session_manager.get_session(session_id)

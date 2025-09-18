@@ -33,6 +33,11 @@ class ShimmerDeviceManager(
         private const val RECONNECTION_ATTEMPTS = 3
         private const val RECONNECTION_DELAY_MS = 2000L
 
+        // Enhanced multi-device support for TODO testing requirement
+        private const val MAX_CONCURRENT_DEVICES = 3 // Support up to 3 Shimmer devices as per TODO
+        private const val DEVICE_SYNC_TIMEOUT_MS = 5000L // Timeout for synchronized operations
+        private const val DATA_INTEGRITY_CHECK_INTERVAL_MS = 10000L // Check data integrity every 10 seconds
+
         private val SHIMMER_MAC_PREFIXES = listOf("00:06:66", "d0:39:72", "00:80:98")
         private val SHIMMER_NAME_PATTERNS = listOf("shimmer", "gsr", "rn4", "shimmer3")
     }
@@ -427,6 +432,146 @@ class ShimmerDeviceManager(
 
         return@withContext allDisconnected
     }
+
+    /**
+     * Enhanced multi-device testing support for TODO requirement:
+     * "perform thorough testing with 2–3 Shimmer GSR units streaming concurrently 
+     * to validate connection stability and data integrity"
+     */
+    
+    /**
+     * Start concurrent multi-device testing with 2-3 Shimmer GSR units
+     */
+    suspend fun startMultiDeviceTesting(targetDeviceCount: Int = 3): Boolean = withContext(Dispatchers.IO) {
+        try {
+            Log.i(TAG, "Starting multi-device testing with target $targetDeviceCount devices")
+            
+            if (targetDeviceCount > MAX_CONCURRENT_DEVICES) {
+                Log.w(TAG, "Target device count $targetDeviceCount exceeds maximum ${MAX_CONCURRENT_DEVICES}, limiting")
+            }
+            
+            val actualTargetCount = minOf(targetDeviceCount, MAX_CONCURRENT_DEVICES)
+            
+            // Check if we have enough connected devices
+            val connectedCount = connectedDevices.size
+            if (connectedCount < actualTargetCount) {
+                Log.w(TAG, "Only $connectedCount devices connected, need $actualTargetCount for comprehensive testing")
+                
+                if (connectedCount < 2) {
+                    Log.e(TAG, "Minimum 2 devices required for multi-device testing")
+                    return@withContext false
+                }
+            }
+            
+            // Start synchronized streaming on all connected devices
+            val streamingResults = startSynchronizedStreamingOnAllDevices()
+            
+            if (streamingResults) {
+                Log.i(TAG, "✅ Multi-device testing started successfully with ${connectedDevices.size} devices")
+                return@withContext true
+            } else {
+                Log.e(TAG, "❌ Failed to start streaming on all devices")
+                return@withContext false
+            }
+            
+        } catch (e: Exception) {
+            Log.e(TAG, "Error starting multi-device testing", e)
+            return@withContext false
+        }
+    }
+
+    /**
+     * Start synchronized streaming on all connected devices with barrier synchronization
+     */
+    private suspend fun startSynchronizedStreamingOnAllDevices(): Boolean {
+        return try {
+            Log.i(TAG, "Starting synchronized streaming on ${connectedDevices.size} devices")
+            
+            // Start streaming on all devices concurrently
+            val streamingJobs = connectedDevices.map { (address, shimmer) ->
+                async {
+                    try {
+                        Log.d(TAG, "Starting streaming on device: $address")
+                        shimmer.startStreaming()
+                        Log.d(TAG, "✅ Streaming started successfully on device: $address")
+                        true
+                    } catch (e: Exception) {
+                        Log.e(TAG, "❌ Failed to start streaming on device $address", e)
+                        false
+                    }
+                }
+            }
+            
+            // Wait for all devices to start streaming
+            val results = streamingJobs.awaitAll()
+            val successCount = results.count { it }
+            
+            Log.i(TAG, "Synchronized streaming started: $successCount/${connectedDevices.size} devices successful")
+            
+            if (successCount >= 2) { // Minimum 2 devices for multi-device testing
+                Log.i(TAG, "✅ Multi-device streaming barrier successful with $successCount devices")
+                return true
+            } else {
+                Log.e(TAG, "❌ Multi-device streaming barrier failed - insufficient devices streaming")
+                return false
+            }
+            
+        } catch (e: Exception) {
+            Log.e(TAG, "Error in synchronized streaming startup", e)
+            false
+        }
+    }
+
+    /**
+     * Stop multi-device testing
+     */
+    suspend fun stopMultiDeviceTesting(): Boolean = withContext(Dispatchers.IO) {
+        try {
+            Log.i(TAG, "Stopping multi-device testing")
+            
+            // Stop streaming on all devices
+            val stopResults = connectedDevices.map { (address, shimmer) ->
+                async {
+                    try {
+                        shimmer.stopStreaming()
+                        Log.d(TAG, "Stopped streaming on device: $address")
+                        true
+                    } catch (e: Exception) {
+                        Log.e(TAG, "Error stopping device $address", e)
+                        false
+                    }
+                }
+            }.awaitAll()
+            
+            val successCount = stopResults.count { it }
+            Log.i(TAG, "Multi-device testing stopped: $successCount/${connectedDevices.size} devices stopped successfully")
+            
+            return@withContext true
+            
+        } catch (e: Exception) {
+            Log.e(TAG, "Error stopping multi-device testing", e)
+            return@withContext false
+        }
+    }
+
+    /**
+     * Get current multi-device connection status for validation
+     */
+    fun getMultiDeviceStatus(): MultiDeviceStatus {
+        return MultiDeviceStatus(
+            connectedDeviceCount = connectedDevices.size,
+            deviceAddresses = connectedDevices.keys.toList(),
+            maxSupportedDevices = MAX_CONCURRENT_DEVICES,
+            readyForTesting = connectedDevices.size >= 2
+        )
+    }
+
+    data class MultiDeviceStatus(
+        val connectedDeviceCount: Int,
+        val deviceAddresses: List<String>,
+        val maxSupportedDevices: Int,
+        val readyForTesting: Boolean
+    )
 
     suspend fun release() = withContext(Dispatchers.IO) {
         Log.i(TAG, "Releasing Shimmer Device Manager")

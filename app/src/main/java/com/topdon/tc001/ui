@@ -1,0 +1,377 @@
+package com.topdon.tc001.ui
+
+import android.content.Context
+import android.graphics.Color
+import android.util.AttributeSet
+import android.view.Gravity
+import android.view.LayoutInflater
+import android.widget.*
+import androidx.core.content.ContextCompat
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.lifecycleScope
+import com.csl.irCamera.R
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.*
+
+/**
+ * Enhanced Comprehensive Sensor Status Dashboard
+ * Implements TODO requirement: "Provide clear UI indicators for each sensor's status 
+ * (connected, streaming, error). Connection status indicators for each sensor."
+ */
+class ComprehensiveSensorStatusWidget @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
+) : LinearLayout(context, attrs, defStyleAttr) {
+
+    companion object {
+        private const val TAG = "ComprehensiveSensorStatus"
+        
+        // Status colors for clear visual feedback
+        private const val COLOR_CONNECTED = Color.GREEN
+        private const val COLOR_STREAMING = Color.BLUE
+        private const val COLOR_ERROR = Color.RED
+        private const val COLOR_DISCONNECTED = Color.GRAY
+        private const val COLOR_SIMULATION = Color.YELLOW
+    }
+
+    // UI Components
+    private lateinit var titleText: TextView
+    private lateinit var overallStatusText: TextView
+    private lateinit var recordingIndicator: ImageView
+    private lateinit var recordingTimer: TextView
+    private lateinit var sensorsContainer: LinearLayout
+    
+    // Sensor status tracking
+    private val sensorStatusViews = mutableMapOf<String, SensorStatusView>()
+    private var isRecording = false
+    private var recordingStartTime = 0L
+    private var timerUpdateJob: Job? = null
+    
+    // Current session info  
+    private var currentSessionId: String? = null
+    private var activeSensorCount = 0
+    private var errorSensorCount = 0
+
+    init {
+        orientation = VERTICAL
+        setPadding(16, 16, 16, 16)
+        setupUI()
+    }
+
+    private fun setupUI() {
+        // Title
+        titleText = TextView(context).apply {
+            text = "📊 Multi-Modal Sensor Dashboard"
+            textSize = 18f
+            setTextColor(ContextCompat.getColor(context, android.R.color.primary_text_dark))
+            gravity = Gravity.CENTER
+            setPadding(0, 0, 0, 16)
+        }
+        addView(titleText)
+
+        // Overall status
+        overallStatusText = TextView(context).apply {
+            text = "System Status: Initializing..."
+            textSize = 14f
+            setTextColor(COLOR_DISCONNECTED)
+            gravity = Gravity.CENTER
+            setPadding(0, 0, 0, 8)
+        }
+        addView(overallStatusText)
+
+        // Recording status section
+        val recordingSection = LinearLayout(context).apply {
+            orientation = HORIZONTAL
+            gravity = Gravity.CENTER
+            setPadding(0, 8, 0, 16)
+        }
+
+        recordingIndicator = ImageView(context).apply {
+            layoutParams = LayoutParams(24, 24).apply {
+                marginEnd = 8
+            }
+            setBackgroundColor(COLOR_DISCONNECTED)
+        }
+        recordingSection.addView(recordingIndicator)
+
+        recordingTimer = TextView(context).apply {
+            text = "⏱️ Ready to Record"
+            textSize = 14f
+            setTextColor(ContextCompat.getColor(context, android.R.color.primary_text_dark))
+        }
+        recordingSection.addView(recordingTimer)
+
+        addView(recordingSection)
+
+        // Sensors container
+        val sensorsTitle = TextView(context).apply {
+            text = "🔗 Sensor Connections"
+            textSize = 16f
+            setTextColor(ContextCompat.getColor(context, android.R.color.primary_text_dark))
+            setPadding(0, 8, 0, 8)
+        }
+        addView(sensorsTitle)
+
+        sensorsContainer = LinearLayout(context).apply {
+            orientation = VERTICAL
+            setPadding(8, 0, 8, 0)
+        }
+        addView(sensorsContainer)
+
+        // Initialize default sensor status views
+        initializeDefaultSensors()
+    }
+
+    private fun initializeDefaultSensors() {
+        // Add status views for each sensor type
+        addSensorStatusView("thermal_camera", "🌡️ TC001 Thermal Camera", SensorType.THERMAL)
+        addSensorStatusView("rgb_camera", "📹 RGB Camera", SensorType.RGB)
+        addSensorStatusView("shimmer_gsr", "⚡ Shimmer GSR Sensor", SensorType.GSR)
+        addSensorStatusView("audio_recorder", "🎤 Audio Recorder", SensorType.AUDIO)
+    }
+
+    /**
+     * Add a sensor status view to the dashboard
+     */
+    private fun addSensorStatusView(sensorId: String, displayName: String, type: SensorType) {
+        val statusView = SensorStatusView(context, sensorId, displayName, type)
+        sensorStatusViews[sensorId] = statusView
+        sensorsContainer.addView(statusView)
+    }
+
+    /**
+     * Update sensor status with clear visual indicators
+     * Implements TODO requirement: "sensor icon or label turns green when connected and red or grey if disconnected"
+     */
+    fun updateSensorStatus(sensorId: String, status: SensorStatus, message: String? = null) {
+        sensorStatusViews[sensorId]?.updateStatus(status, message)
+        updateOverallStatus()
+    }
+
+    /**
+     * Update recording status with prominent indicator
+     * Implements TODO requirement: "When a session is recording, the user should see a prominent indicator 
+     * (e.g. a red "Recording" dot and timer)"
+     */
+    fun updateRecordingStatus(recording: Boolean, sessionId: String? = null) {
+        isRecording = recording
+        currentSessionId = sessionId
+        
+        if (recording) {
+            recordingStartTime = System.currentTimeMillis()
+            recordingIndicator.setBackgroundColor(COLOR_ERROR) // Red for recording
+            startRecordingTimer()
+        } else {
+            recordingIndicator.setBackgroundColor(COLOR_DISCONNECTED)
+            recordingTimer.text = "⏱️ Ready to Record"
+            stopRecordingTimer()
+        }
+        
+        updateOverallStatus()
+    }
+
+    /**
+     * Show simulation mode warning
+     * Implements TODO requirement: "indicate if the thermal camera is in simulation mode vs real 
+     * (perhaps a warning icon or text if simulation is active) so users know the data source"
+     */
+    fun showSimulationWarning(sensorId: String, isSimulation: Boolean) {
+        sensorStatusViews[sensorId]?.showSimulationMode(isSimulation)
+    }
+
+    /**
+     * Display error notification to user
+     * Implements TODO requirement: "Surface any sensor errors to the user in real time"
+     */
+    fun showSensorError(sensorId: String, errorMessage: String) {
+        sensorStatusViews[sensorId]?.showError(errorMessage)
+        
+        // Show toast for immediate user attention
+        Toast.makeText(context, "⚠️ $sensorId: $errorMessage", Toast.LENGTH_LONG).show()
+    }
+
+    /**
+     * Update multi-device status for Shimmer GSR testing
+     */
+    fun updateMultiDeviceStatus(connectedCount: Int, streamingCount: Int, maxDevices: Int) {
+        val shimmerStatusView = sensorStatusViews["shimmer_gsr"]
+        shimmerStatusView?.updateMultiDeviceInfo(connectedCount, streamingCount, maxDevices)
+    }
+
+    private fun updateOverallStatus() {
+        activeSensorCount = sensorStatusViews.values.count { it.isConnected() }
+        errorSensorCount = sensorStatusViews.values.count { it.hasError() }
+        
+        val statusText = when {
+            isRecording -> "🔴 RECORDING - Session: ${currentSessionId ?: "Unknown"}"
+            errorSensorCount > 0 -> "⚠️ ${errorSensorCount} Sensor Error(s) Detected"
+            activeSensorCount == 0 -> "🔌 No Sensors Connected"
+            activeSensorCount < sensorStatusViews.size -> "🟡 ${activeSensorCount}/${sensorStatusViews.size} Sensors Connected"
+            else -> "✅ All Sensors Connected & Ready"
+        }
+        
+        val statusColor = when {
+            isRecording -> COLOR_ERROR
+            errorSensorCount > 0 -> COLOR_ERROR
+            activeSensorCount == 0 -> COLOR_DISCONNECTED
+            activeSensorCount < sensorStatusViews.size -> COLOR_SIMULATION
+            else -> COLOR_CONNECTED
+        }
+        
+        overallStatusText.text = statusText
+        overallStatusText.setTextColor(statusColor)
+    }
+
+    private fun startRecordingTimer() {
+        timerUpdateJob?.cancel()
+        timerUpdateJob = (context as? LifecycleOwner)?.lifecycleScope?.launch {
+            while (isRecording) {
+                val elapsed = System.currentTimeMillis() - recordingStartTime
+                val formattedTime = formatElapsedTime(elapsed)
+                recordingTimer.text = "🔴 RECORDING: $formattedTime"
+                delay(1000)
+            }
+        }
+    }
+
+    private fun stopRecordingTimer() {
+        timerUpdateJob?.cancel()
+    }
+
+    private fun formatElapsedTime(elapsedMs: Long): String {
+        val seconds = (elapsedMs / 1000) % 60
+        val minutes = (elapsedMs / (1000 * 60)) % 60
+        val hours = (elapsedMs / (1000 * 60 * 60))
+        
+        return if (hours > 0) {
+            String.format("%02d:%02d:%02d", hours, minutes, seconds)
+        } else {
+            String.format("%02d:%02d", minutes, seconds)
+        }
+    }
+
+    enum class SensorType {
+        THERMAL, RGB, GSR, AUDIO
+    }
+
+    enum class SensorStatus {
+        DISCONNECTED, CONNECTING, CONNECTED, STREAMING, ERROR, SIMULATION
+    }
+
+    /**
+     * Individual sensor status view with detailed information
+     */
+    private class SensorStatusView(
+        context: Context,
+        private val sensorId: String,
+        private val displayName: String,
+        private val sensorType: SensorType
+    ) : LinearLayout(context) {
+
+        private val statusIcon: ImageView
+        private val nameText: TextView
+        private val statusText: TextView
+        private val detailsText: TextView
+        
+        private var currentStatus = SensorStatus.DISCONNECTED
+        private var hasErrorState = false
+        private var isSimulationMode = false
+
+        init {
+            orientation = HORIZONTAL
+            setPadding(8, 4, 8, 4)
+            
+            statusIcon = ImageView(context).apply {
+                layoutParams = LayoutParams(20, 20).apply {
+                    marginEnd = 12
+                    gravity = Gravity.CENTER_VERTICAL
+                }
+                setBackgroundColor(COLOR_DISCONNECTED)
+            }
+            addView(statusIcon)
+            
+            val textContainer = LinearLayout(context).apply {
+                orientation = VERTICAL
+                layoutParams = LayoutParams(0, LayoutParams.WRAP_CONTENT, 1f)
+            }
+            
+            nameText = TextView(context).apply {
+                text = displayName
+                textSize = 14f
+                setTextColor(ContextCompat.getColor(context, android.R.color.primary_text_dark))
+            }
+            textContainer.addView(nameText)
+            
+            statusText = TextView(context).apply {
+                text = "Disconnected"
+                textSize = 12f
+                setTextColor(COLOR_DISCONNECTED)
+            }
+            textContainer.addView(statusText)
+            
+            detailsText = TextView(context).apply {
+                text = ""
+                textSize = 10f
+                setTextColor(ContextCompat.getColor(context, android.R.color.secondary_text_dark))
+                visibility = GONE
+            }
+            textContainer.addView(detailsText)
+            
+            addView(textContainer)
+        }
+
+        fun updateStatus(status: SensorStatus, message: String? = null) {
+            currentStatus = status
+            hasErrorState = (status == SensorStatus.ERROR)
+            
+            val (statusColor, statusString) = when (status) {
+                SensorStatus.DISCONNECTED -> COLOR_DISCONNECTED to "Disconnected"
+                SensorStatus.CONNECTING -> COLOR_SIMULATION to "Connecting..."
+                SensorStatus.CONNECTED -> COLOR_CONNECTED to "Connected"
+                SensorStatus.STREAMING -> COLOR_STREAMING to "Streaming"
+                SensorStatus.ERROR -> COLOR_ERROR to "Error"
+                SensorStatus.SIMULATION -> COLOR_SIMULATION to "Simulation Mode"
+            }
+            
+            statusIcon.setBackgroundColor(statusColor)
+            statusText.text = statusString
+            statusText.setTextColor(statusColor)
+            
+            if (message != null) {
+                detailsText.text = message
+                detailsText.visibility = VISIBLE
+            } else {
+                detailsText.visibility = GONE
+            }
+        }
+
+        fun showSimulationMode(isSimulation: Boolean) {
+            isSimulationMode = isSimulation
+            if (isSimulation) {
+                detailsText.text = "⚠️ Using simulated data - no hardware detected"
+                detailsText.setTextColor(COLOR_SIMULATION)
+                detailsText.visibility = VISIBLE
+            } else if (detailsText.text.toString().contains("simulated")) {
+                detailsText.visibility = GONE
+            }
+        }
+
+        fun showError(errorMessage: String) {
+            updateStatus(SensorStatus.ERROR, errorMessage)
+        }
+
+        fun updateMultiDeviceInfo(connectedCount: Int, streamingCount: Int, maxDevices: Int) {
+            if (sensorType == SensorType.GSR) {
+                detailsText.text = "Multi-device: $connectedCount/$maxDevices connected, $streamingCount streaming"
+                detailsText.visibility = VISIBLE
+            }
+        }
+
+        fun isConnected(): Boolean = currentStatus in listOf(SensorStatus.CONNECTED, SensorStatus.STREAMING)
+        fun hasError(): Boolean = hasErrorState
+    }
+}
