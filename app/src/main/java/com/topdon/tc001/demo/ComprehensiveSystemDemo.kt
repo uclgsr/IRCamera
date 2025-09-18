@@ -1,12 +1,9 @@
 package com.topdon.tc001.demo
 
-import android.Manifest
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.topdon.tc001.controller.RecordingController
@@ -15,7 +12,8 @@ import com.topdon.tc001.sensors.thermal.ThermalCameraRecorder
 import com.topdon.tc001.sensors.rgb.RgbCameraRecorder
 import com.topdon.tc001.network.DataStreamingService
 import com.topdon.tc001.network.NetworkClient
-import com.topdon.tc001.permissions.EnhancedPermissionManager
+import com.topdon.tc001.permissions.PermissionManager
+import com.topdon.tc001.permissions.PermissionController
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -38,24 +36,6 @@ class ComprehensiveSystemDemo : AppCompatActivity() {
 
     companion object {
         private const val TAG = "SystemDemo"
-        private const val PERMISSIONS_REQUEST_CODE = 1001
-        
-        private val REQUIRED_PERMISSIONS = arrayOf(
-            Manifest.permission.CAMERA,
-            Manifest.permission.BLUETOOTH,
-            Manifest.permission.BLUETOOTH_ADMIN,
-            Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.ACCESS_COARSE_LOCATION,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            Manifest.permission.READ_EXTERNAL_STORAGE
-        ).plus(
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
-                arrayOf(
-                    Manifest.permission.BLUETOOTH_SCAN,
-                    Manifest.permission.BLUETOOTH_CONNECT
-                )
-            } else emptyArray()
-        )
     }
 
     // UI Components
@@ -70,7 +50,8 @@ class ComprehensiveSystemDemo : AppCompatActivity() {
 
     // System Components
     private lateinit var recordingController: RecordingController
-    private lateinit var permissionManager: EnhancedPermissionManager
+    private lateinit var permissionManager: PermissionManager
+    private lateinit var permissionController: PermissionController
     private var gsrRecorder: GSRSensorRecorder? = null
     private var thermalRecorder: ThermalCameraRecorder? = null
     private var rgbRecorder: RgbCameraRecorder? = null
@@ -88,6 +69,9 @@ class ComprehensiveSystemDemo : AppCompatActivity() {
         
         setupUI()
         initializeSystemComponents()
+        
+        // Initialize permission controller after system components
+        permissionController.initialize()
         
         addLog("Comprehensive Multi-Modal Physiological Sensing Platform Demo")
         addLog("Demonstrates: Shimmer GSR + Thermal Camera + RGB Camera + Time Sync + Network Streaming")
@@ -185,7 +169,8 @@ class ComprehensiveSystemDemo : AppCompatActivity() {
     private fun initializeSystemComponents() {
         try {
             recordingController = RecordingController(this, this)
-            permissionManager = EnhancedPermissionManager(this)
+            permissionController = PermissionController(this)
+            permissionManager = PermissionManager(this, permissionController)
             
             addLog("System components created successfully")
         } catch (e: Exception) {
@@ -482,13 +467,23 @@ class ComprehensiveSystemDemo : AppCompatActivity() {
     }
 
     private fun checkAllPermissions(): Boolean {
-        return REQUIRED_PERMISSIONS.all { permission ->
-            ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED
-        }
+        return permissionController.hasAllRequiredPermissions()
     }
 
     private fun requestPermissions() {
-        ActivityCompat.requestPermissions(this, REQUIRED_PERMISSIONS, PERMISSIONS_REQUEST_CODE)
+        permissionController.ensureAll { success, deniedPermissions ->
+            if (success) {
+                addLog("✅ All permissions granted - ready to initialize")
+                lifecycleScope.launch {
+                    delay(500)
+                    initializeSystemDemo()
+                }
+            } else {
+                addLog("❌ Some permissions denied - system functionality limited")
+                addLog("Denied permissions: ${deniedPermissions.joinToString(", ")}")
+                updateStatus("Permissions Required")
+            }
+        }
     }
 
     override fun onRequestPermissionsResult(
@@ -498,20 +493,7 @@ class ComprehensiveSystemDemo : AppCompatActivity() {
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         
-        if (requestCode == PERMISSIONS_REQUEST_CODE) {
-            val allGranted = grantResults.all { it == PackageManager.PERMISSION_GRANTED }
-            
-            if (allGranted) {
-                addLog("✅ All permissions granted - ready to initialize")
-                lifecycleScope.launch {
-                    delay(500)
-                    initializeSystemDemo()
-                }
-            } else {
-                addLog("❌ Some permissions denied - system functionality limited")
-                updateStatus("Permissions Required")
-            }
-        }
+        permissionController.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
     private fun updateStatus(status: String) {
