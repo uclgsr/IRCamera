@@ -22,7 +22,7 @@ import com.shimmerresearch.android.manager.ShimmerBluetoothManagerAndroid
 import com.shimmerresearch.driver.CallbackObject
 import com.shimmerresearch.driver.ObjectCluster
 import com.shimmerresearch.driver.ShimmerDevice
-import com.topdon.tc001.performance.PerformanceBenchmarkManager
+import com.topdon.tc001.performance.SimpleBenchmarkManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -67,10 +67,10 @@ class ShimmerMvpActivity : AppCompatActivity() {
     private var networkClient: ShimmerNetworkClient? = null
     private var currentSessionId: String? = null
     
-    // Performance benchmarking
-    private val performanceBenchmarkManager = PerformanceBenchmarkManager()
-    private var gsrBenchmarkId: String? = null
-    private var networkBenchmarkId: String? = null
+    // Performance benchmarking - simplified for MVP
+    private val simpleBenchmarkManager = SimpleBenchmarkManager()
+    private var gsrBenchmarkActive = false
+    private var networkBenchmarkActive = false
 
     data class GSRSample(
         val timestamp: Long,
@@ -414,11 +414,9 @@ class ShimmerMvpActivity : AppCompatActivity() {
 
                 currentSessionId = "session_${System.currentTimeMillis()}"
 
-                // Start performance benchmarks
-                gsrBenchmarkId = performanceBenchmarkManager.startGSRSamplingRateBenchmark(currentSessionId!!)
-                networkBenchmarkId = performanceBenchmarkManager.startNetworkThroughputBenchmark(currentSessionId!!)
-                
-                Log.i(TAG, "Performance benchmarks started - GSR: $gsrBenchmarkId, Network: $networkBenchmarkId")
+                // Start simple performance benchmarks for MVP
+                gsrBenchmarkActive = simpleBenchmarkManager.startGSRBenchmark()
+                Log.i(TAG, "Simple GSR performance benchmark started: $gsrBenchmarkActive")
 
                 shimmer.startStreaming()
 
@@ -438,10 +436,7 @@ class ShimmerMvpActivity : AppCompatActivity() {
                 isRecording = false
                 
                 // Clean up benchmark sessions on error
-                gsrBenchmarkId?.let { performanceBenchmarkManager.finalizeGSRSamplingRateBenchmark(it) }
-                networkBenchmarkId?.let { performanceBenchmarkManager.finalizeNetworkThroughputBenchmark(it) }
-                gsrBenchmarkId = null
-                networkBenchmarkId = null
+                gsrBenchmarkActive = false
             }
         } ?: run {
             showToast("No Shimmer device connected")
@@ -458,26 +453,21 @@ class ShimmerMvpActivity : AppCompatActivity() {
 
                 networkClient?.sendRecordingStop(currentSessionId ?: "unknown", sampleCount)
 
-                // Finalize performance benchmarks and generate reports
-                gsrBenchmarkId?.let { benchmarkId ->
-                    val gsrResult = performanceBenchmarkManager.finalizeGSRSamplingRateBenchmark(benchmarkId)
-                    Log.i(TAG, "GSR Performance: ${gsrResult.summary}")
+                // Finalize simple performance benchmarks
+                if (gsrBenchmarkActive) {
+                    val gsrResult = simpleBenchmarkManager.stopGSRBenchmark()
+                    Log.i(TAG, "GSR Performance Result: ${gsrResult.summary}")
+                    gsrBenchmarkActive = false
                 }
 
-                networkBenchmarkId?.let { benchmarkId ->
-                    val networkResult = performanceBenchmarkManager.finalizeNetworkThroughputBenchmark(benchmarkId)
-                    Log.i(TAG, "Network Performance: ${networkResult.summary}")
-                }
-
-                // Export performance benchmark data
+                // Export simple performance results
                 try {
-                    val performanceFile = performanceBenchmarkManager.exportBenchmarkResults(cacheDir)
-                    Log.i(TAG, "Performance benchmark results exported to: ${performanceFile.absolutePath}")
-                    
-                    val performanceSummary = performanceBenchmarkManager.generatePerformanceSummary()
-                    Log.i(TAG, "Performance Summary:\n$performanceSummary")
+                    val performanceFile = simpleBenchmarkManager.exportResults(emptyList(), cacheDir)
+                    performanceFile?.let {
+                        Log.i(TAG, "Simple performance results exported to: ${it.absolutePath}")
+                    }
                 } catch (e: Exception) {
-                    Log.w(TAG, "Error exporting performance results", e)
+                    Log.w(TAG, "Error exporting simple performance results", e)
                 }
 
                 exportDataToCSV()
@@ -491,8 +481,7 @@ class ShimmerMvpActivity : AppCompatActivity() {
                 Log.i(TAG, "GSR recording stopped, ${gsrDataBuffer.size} samples collected with performance analysis")
 
                 // Clean up benchmark IDs
-                gsrBenchmarkId = null
-                networkBenchmarkId = null
+                gsrBenchmarkActive = false
 
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to stop recording", e)
@@ -527,18 +516,9 @@ class ShimmerMvpActivity : AppCompatActivity() {
                 gsrDataBuffer.add(sample)
                 sampleCount++
 
-                // Record GSR sample for performance benchmarking
-                gsrBenchmarkId?.let { benchmarkId ->
-                    performanceBenchmarkManager.recordGSRSample(benchmarkId, timestamp)
-                }
-
-                networkClient?.sendGSRSample(sample, sampleCount)
-                
-                // Record network activity for performance benchmarking
-                networkBenchmarkId?.let { benchmarkId ->
-                    // Estimate data size (timestamp + GSR + raw + resistance + metadata ~50 bytes)
-                    val estimatedDataSize = 50L
-                    performanceBenchmarkManager.recordNetworkActivity(benchmarkId, estimatedDataSize)
+                // Record GSR sample for simple performance benchmarking
+                if (gsrBenchmarkActive) {
+                    simpleBenchmarkManager.recordGSRSample()
                 }
 
                 runOnUiThread {

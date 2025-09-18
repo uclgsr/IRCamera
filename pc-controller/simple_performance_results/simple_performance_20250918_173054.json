@@ -1,0 +1,41 @@
+{
+  "total_tests": 4,
+  "passed_tests": 4,
+  "success_rate": 1.0,
+  "overall_success": true,
+  "session_duration": 0.0006301403045654297,
+  "results": [
+    {
+      "test_name": "gsr_rate",
+      "success": true,
+      "value": 128.0,
+      "target": 128.0,
+      "unit": "Hz",
+      "summary": "\u2705 GSR: 128.00 Hz"
+    },
+    {
+      "test_name": "rgb_rate",
+      "success": true,
+      "value": 30.0,
+      "target": 30.0,
+      "unit": "Hz",
+      "summary": "\u2705 RGB: 30.00 Hz"
+    },
+    {
+      "test_name": "sync_drift",
+      "success": true,
+      "value": 2.000093460083008,
+      "target": 5.0,
+      "unit": "ms",
+      "summary": "\u2705 Sync drift: 2.00ms"
+    },
+    {
+      "test_name": "network_latency",
+      "success": true,
+      "value": 25.0,
+      "target": 50.0,
+      "unit": "ms",
+      "summary": "\u2705 Network latency: 25.00ms"
+    }
+  ]
+}

@@ -16,7 +16,7 @@ import com.topdon.tc001.sensors.RecordingStats
 import com.topdon.tc001.sensors.ErrorType
 import com.topdon.tc001.util.CSVBufferedWriter
 import com.topdon.tc001.util.SessionDirectoryManager
-import com.topdon.tc001.performance.PerformanceBenchmarkManager
+import com.topdon.tc001.performance.SimpleBenchmarkManager
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import java.io.File
@@ -120,9 +120,9 @@ class RgbCameraRecorder(
     private val _cameraStatus = MutableStateFlow("Uninitialized")
     val cameraStatus: StateFlow<String> = _cameraStatus.asStateFlow()
     
-    // Performance benchmarking
-    private val performanceBenchmarkManager = PerformanceBenchmarkManager()
-    private var rgbBenchmarkId: String? = null
+    // Simple performance benchmarking for MVP
+    private val simpleBenchmarkManager = SimpleBenchmarkManager()
+    private var rgbBenchmarkActive = false
     
     private val cameraSelector = if (useFrontCamera) {
         CameraSelector.DEFAULT_FRONT_CAMERA
@@ -394,16 +394,14 @@ class RgbCameraRecorder(
                 sessionDir.mkdirs()
             }
 
-            // Start RGB performance benchmarking
-            val sessionId = sessionDirectory.substringAfterLast("/")
-            rgbBenchmarkId = performanceBenchmarkManager.startRGBFrameRateBenchmark(sessionId)
-            Log.i(TAG, "RGB performance benchmarking started: $rgbBenchmarkId")
+            // Start simple RGB performance benchmarking for MVP
+            rgbBenchmarkActive = simpleBenchmarkManager.startRGBBenchmark()
+            Log.i(TAG, "Simple RGB performance benchmarking started: $rgbBenchmarkActive")
 
             // Initialize CameraX use cases
             if (!initializeCameraX()) {
                 Log.e(TAG, "Failed to initialize CameraX")
-                rgbBenchmarkId?.let { performanceBenchmarkManager.finalizeRGBFrameRateBenchmark(it) }
-                rgbBenchmarkId = null
+                rgbBenchmarkActive = false
                 return false
             }
 
@@ -413,8 +411,7 @@ class RgbCameraRecorder(
             val videoRecordingStarted = startVideoRecording()
             if (!videoRecordingStarted) {
                 Log.e(TAG, "Failed to start video recording")
-                rgbBenchmarkId?.let { performanceBenchmarkManager.finalizeRGBFrameRateBenchmark(it) }
-                rgbBenchmarkId = null
+                rgbBenchmarkActive = false
                 return false
             }
 
@@ -692,14 +689,9 @@ class RgbCameraRecorder(
                             override fun onImageSaved(output: ImageCapture.OutputFileResults) {
                                 resetFrameErrorTracking()
                                 
-                                // Record frame for performance benchmarking
-                                rgbBenchmarkId?.let { benchmarkId ->
-                                    val frameSize = outputFile.length()
-                                    performanceBenchmarkManager.recordRGBFrame(
-                                        benchmarkId, 
-                                        timestampRecord.systemNanos / 1_000_000, // Convert to ms
-                                        frameSize
-                                    )
+                                // Record frame for simple performance benchmarking
+                                if (rgbBenchmarkActive) {
+                                    simpleBenchmarkManager.recordRGBFrame()
                                 }
                                 
                                 recordingScope.launch {
@@ -875,17 +867,12 @@ class RgbCameraRecorder(
             activeRecording?.stop()
             activeRecording = null
 
-            // Finalize RGB performance benchmarking
-            rgbBenchmarkId?.let { benchmarkId ->
-                val resolution = "${selectedVideoWidth}x${selectedVideoHeight}"
-                val result = performanceBenchmarkManager.finalizeRGBFrameRateBenchmark(
-                    benchmarkId, 
-                    resolution, 
-                    CAPTURE_FPS.toDouble()
-                )
+            // Finalize simple RGB performance benchmarking
+            if (rgbBenchmarkActive) {
+                val result = simpleBenchmarkManager.stopRGBBenchmark()
                 Log.i(TAG, "RGB Performance Result: ${result.summary}")
+                rgbBenchmarkActive = false
             }
-            rgbBenchmarkId = null
 
             // Close CSV writer
             csvWriter?.close()
