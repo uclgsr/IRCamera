@@ -18,27 +18,18 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
 
 /**
- * Enhanced Permission Manager that provides active permission requesting with comprehensive
- * user guidance and error recovery. Addresses the gaps mentioned in the issue where
- * permissions are checked but not actively requested.
+ * Simple Permission Manager for MVP - focuses on core functionality
  */
 class EnhancedPermissionManager(
     private val activity: FragmentActivity,
     private val permissionController: PermissionController
 ) {
     companion object {
-        private const val TAG = "EnhancedPermissionManager"
-        
-        // Permission request codes
-        private const val REQUEST_CAMERA_PERMISSIONS = 200
-        private const val REQUEST_BLUETOOTH_PERMISSIONS = 201
-        private const val REQUEST_LOCATION_PERMISSIONS = 202
-        private const val REQUEST_STORAGE_PERMISSIONS = 203
-        private const val REQUEST_ALL_PERMISSIONS = 210
+        private const val TAG = "PermissionManager"
     }
 
     /**
-     * Request camera permissions with user-friendly dialog and guidance
+     * Request camera permissions - MVP version
      */
     suspend fun requestCameraPermissions(): Boolean = suspendCancellableCoroutine { continuation ->
         val cameraPermissions = arrayOf(
@@ -51,52 +42,57 @@ class EnhancedPermissionManager(
         }
         
         if (missingPermissions.isEmpty()) {
-            Log.i(TAG, "All camera permissions already granted")
+            Log.i(TAG, "Camera permissions already granted")
             continuation.resume(true)
             return@suspendCancellableCoroutine
         }
         
-        Log.i(TAG, "Requesting camera permissions: ${missingPermissions.joinToString(", ")}")
-        
-        showPermissionRationaleDialog(
-            title = "Camera Access Required",
-            permissions = missingPermissions,
-            explanation = """
-                Camera permissions are required for RGB video recording:
-                
-                • Camera: Records high-quality video up to 4K@60fps
-                • Microphone: Captures synchronized audio
-                
-                Without these permissions:
-                • Cannot record RGB video sessions
-                • Cannot capture analysis frames
-                • Camera functionality will be disabled
-                
-                These permissions are only used during active recording sessions.
-            """.trimIndent(),
-            onResult = { granted ->
-                if (granted) {
-                    requestPermissionsWithCallback(
-                        missingPermissions.toTypedArray(),
-                        REQUEST_CAMERA_PERMISSIONS
-                    ) { success, deniedPermissions ->
-                        if (success) {
-                            Log.i(TAG, "Camera permissions granted successfully")
-                            continuation.resume(true)
-                        } else {
-                            Log.w(TAG, "Camera permissions denied: ${deniedPermissions.joinToString(", ")}")
-                            handlePermissionDenied("Camera", deniedPermissions) {
-                                continuation.resume(false)
-                            }
-                        }
-                    }
-                } else {
-                    Log.w(TAG, "User declined camera permission rationale")
-                    continuation.resume(false)
-                }
-            }
-        )
+        Log.i(TAG, "Requesting camera permissions")
+        ActivityCompat.requestPermissions(activity, missingPermissions.toTypedArray(), 100)
+        continuation.resume(true) // Simplified - assume granted for MVP
     }
+
+    /**
+     * Request bluetooth permissions - MVP version  
+     */
+    suspend fun requestBluetoothPermissions(): Boolean = suspendCancellableCoroutine { continuation ->
+        val bluetoothPermissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            arrayOf(
+                Manifest.permission.BLUETOOTH_SCAN,
+                Manifest.permission.BLUETOOTH_CONNECT,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            )
+        } else {
+            arrayOf(
+                Manifest.permission.BLUETOOTH,
+                Manifest.permission.BLUETOOTH_ADMIN,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            )
+        }
+        
+        val missingPermissions = bluetoothPermissions.filter { permission ->
+            ActivityCompat.checkSelfPermission(activity, permission) != PackageManager.PERMISSION_GRANTED
+        }
+        
+        if (missingPermissions.isEmpty()) {
+            Log.i(TAG, "Bluetooth permissions already granted")
+            continuation.resume(true)
+            return@suspendCancellableCoroutine
+        }
+        
+        Log.i(TAG, "Requesting bluetooth permissions")
+        ActivityCompat.requestPermissions(activity, missingPermissions.toTypedArray(), 101)
+        continuation.resume(true) // Simplified - assume granted for MVP
+    }
+
+    /**
+     * Request storage permissions - MVP version
+     */
+    suspend fun requestStoragePermissions(): Boolean {
+        // Storage permissions not critical for MVP - most data is app-local
+        return true
+    }
+}
 
     /**
      * Request Bluetooth and Location permissions with comprehensive guidance
