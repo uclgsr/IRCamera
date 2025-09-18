@@ -7,11 +7,8 @@ plugins {
 
 ksp {
     arg("room.schemaLocation", "$projectDir/schemas")
-    arg("room.incremental", "true")
+    arg("room.incremental", "true")  
     arg("room.expandProjection", "true")
-    // Force KSP to use Kotlin 2.1 language version
-    arg("kotlin.compiler.version", "2.1.0")
-    arg("kotlincArguments", "-language-version 2.1 -api-version 2.1")
 }
 
 android {
@@ -142,7 +139,7 @@ dependencies {
     api(libs.lifecycle.runtime.ktx)
     api(libs.lifecycle.viewmodel.ktx)
     api(libs.lifecycle.livedata.ktx)
-    ksp(libs.room.compiler) // Migrated from kapt to KSP
+    ksp(libs.room.compiler) // KSP for Room
     api(libs.room.ktx)
     api(libs.work.runtime.ktx)
     api(libs.retrofit2)
@@ -150,7 +147,7 @@ dependencies {
     api(libs.adapter.rxjava2)
     api(libs.eventbus)
     api(libs.glide)
-    ksp(libs.glide.compiler) // Migrated from kapt to KSP
+    ksp(libs.glide.compiler) // KSP for Glide
     api(libs.rxjava2)
     api(libs.rxandroid)
     api(libs.utilcode)
