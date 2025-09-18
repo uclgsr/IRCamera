@@ -361,7 +361,7 @@ class FileSchemaManager {
             }
             
             // Validate header
-            val header = lines[0].split(",").map { it.trim() }
+            val header = firstLine.split(",").map { it.trim() }
             validateCsvHeader(header, schema)
             
         } catch (e: Exception) {
