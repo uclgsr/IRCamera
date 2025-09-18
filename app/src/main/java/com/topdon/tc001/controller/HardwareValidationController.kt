@@ -33,7 +33,7 @@ class HardwareValidationController(
     val isValidating: Boolean get() = _isValidating.get()
 
     private var validationStartTime: Long = 0
-    private val validationResults = ConcurrentHashMap<String, ValidationResult>()
+    private val validationResults = ConcurrentHashMap<String, HardwareValidationResult>()
 
     private val performanceMetrics = mutableMapOf<String, Any>()
     private val errorLogs = mutableListOf<String>()
@@ -109,7 +109,7 @@ class HardwareValidationController(
 
         } catch (e: Exception) {
             errorLogs.add("Permission validation error: ${e.message}")
-            validationResults["permission_system"] = ValidationResult(
+            validationResults["permission_system"] = HardwareValidationResult(
                 false, "Permission validation failed: ${e.message}", emptyMap()
             )
         }
@@ -121,7 +121,7 @@ class HardwareValidationController(
 
         try {
             if (!permissionController.hasCameraPermission()) {
-                validationResults["rgb_camera"] = ValidationResult(
+                validationResults["rgb_camera"] = HardwareValidationResult(
                     false, "Camera permission not granted", emptyMap()
                 )
                 return
@@ -146,7 +146,7 @@ class HardwareValidationController(
                 )
             )
 
-            validationResults["rgb_camera"] = ValidationResult(
+            validationResults["rgb_camera"] = HardwareValidationResult(
                 true, "RGB camera validation successful",
                 mapOf("initialization_time_ms" to initTime)
             )
@@ -156,7 +156,7 @@ class HardwareValidationController(
 
         } catch (e: Exception) {
             errorLogs.add("RGB camera validation error: ${e.message}")
-            validationResults["rgb_camera"] = ValidationResult(
+            validationResults["rgb_camera"] = HardwareValidationResult(
                 false, "RGB camera validation failed: ${e.message}", emptyMap()
             )
         }
@@ -168,7 +168,7 @@ class HardwareValidationController(
 
         try {
             if (!permissionController.hasStoragePermissions()) {
-                validationResults["thermal_camera"] = ValidationResult(
+                validationResults["thermal_camera"] = HardwareValidationResult(
                     false, "Storage permission required for thermal camera", emptyMap()
                 )
                 return
@@ -195,7 +195,7 @@ class HardwareValidationController(
                 )
             )
 
-            validationResults["thermal_camera"] = ValidationResult(
+            validationResults["thermal_camera"] = HardwareValidationResult(
                 true, "Thermal camera validation successful",
                 mapOf("usb_detection_time_ms" to 100L)
             )
@@ -205,7 +205,7 @@ class HardwareValidationController(
 
         } catch (e: Exception) {
             errorLogs.add("Thermal camera validation error: ${e.message}")
-            validationResults["thermal_camera"] = ValidationResult(
+            validationResults["thermal_camera"] = HardwareValidationResult(
                 false, "Thermal camera validation failed: ${e.message}", emptyMap()
             )
         }
@@ -217,7 +217,7 @@ class HardwareValidationController(
 
         try {
             if (!permissionController.hasBluetoothPermissions()) {
-                validationResults["gsr_sensor"] = ValidationResult(
+                validationResults["gsr_sensor"] = HardwareValidationResult(
                     false, "Bluetooth permissions required for GSR sensor", emptyMap()
                 )
                 return
@@ -250,7 +250,7 @@ class HardwareValidationController(
                 )
             )
 
-            validationResults["gsr_sensor"] = ValidationResult(
+            validationResults["gsr_sensor"] = HardwareValidationResult(
                 true, "GSR sensor validation successful",
                 mapOf("ble_connection_time_ms" to 2000L)
             )
@@ -260,7 +260,7 @@ class HardwareValidationController(
 
         } catch (e: Exception) {
             errorLogs.add("GSR sensor validation error: ${e.message}")
-            validationResults["gsr_sensor"] = ValidationResult(
+            validationResults["gsr_sensor"] = HardwareValidationResult(
                 false, "GSR sensor validation failed: ${e.message}", emptyMap()
             )
         }
@@ -277,7 +277,7 @@ class HardwareValidationController(
                 delay(MIN_RECORDING_DURATION_MS) // Simulate 1-minute recording
             }
 
-            validationResults["multi_sensor_recording"] = ValidationResult(
+            validationResults["multi_sensor_recording"] = HardwareValidationResult(
                 true, "Multi-sensor recording validation successful",
                 mapOf(
                     "recording_duration_ms" to recordingDuration,
@@ -373,7 +373,7 @@ class HardwareValidationController(
     private suspend fun validatePermissionCategory(
         category: String,
         permissions: List<String>
-    ): ValidationResult {
+    ): HardwareValidationResult {
 
         return ValidationResult(
             true, "$category permissions validated",
@@ -381,7 +381,7 @@ class HardwareValidationController(
         )
     }
 
-    private suspend fun validateBatteryOptimizationExemption(): ValidationResult {
+    private suspend fun validateBatteryOptimizationExemption(): HardwareValidationResult {
 
         return ValidationResult(
             true, "Battery optimization exemption validated", emptyMap()
@@ -446,14 +446,14 @@ class HardwareValidationController(
 data class ValidationReport(
     val timestamp: Long,
     val deviceInfo: DeviceInfo,
-    val validationResults: Map<String, ValidationResult>,
+    val validationResults: Map<String, HardwareValidationResult>,
     val sensorCapabilities: Map<String, SensorCapability>,
     val performanceMetrics: Map<String, Any>,
     val errorLogs: List<String>,
     val summary: ValidationSummary
 )
 
-data class ValidationResult(
+data class HardwareValidationResult(
     val success: Boolean,
     val message: String,
     val metrics: Map<String, Any>
