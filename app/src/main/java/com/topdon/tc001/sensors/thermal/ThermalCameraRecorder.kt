@@ -2334,7 +2334,7 @@ class ThermalCameraRecorder(
     }
 
     /**
-     * Enhanced thermal metadata helper methods for TODO requirement:
+     * Enhanced thermal metadata helper methods for requirement:
      * "Persist accurate session-specific details like emissivity and calibration settings"
      */
     
@@ -2382,7 +2382,7 @@ class ThermalCameraRecorder(
 
     /**
      * Enhanced CSV header writing with comprehensive metadata
-     * Implements TODO requirement: "ensure metadata (emissivity, ambient temp, etc.) 
+     * Implements requirement: "ensure metadata (emissivity, ambient temp, etc.) 
      * for each session is properly recorded"
      */
     private fun writeEnhancedThermalCSVHeaders() {

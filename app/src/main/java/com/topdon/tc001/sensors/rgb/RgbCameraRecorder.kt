@@ -45,7 +45,7 @@ class RgbCameraRecorder(
         private const val VIDEO_HEIGHT_4K = 2160
         private const val VIDEO_WIDTH_1080P = 1920
         private const val VIDEO_HEIGHT_1080P = 1080
-        private const val VIDEO_FPS_TARGET = 30 // Target 30 FPS as per TODO requirements
+        private const val VIDEO_FPS_TARGET = 30 // Target 30 FPS for high-quality recording
         private const val VIDEO_FPS_FALLBACK = 24 // Fallback if 30 FPS not supported
         private const val VIDEO_BITRATE_4K = 50_000_000
         private const val VIDEO_BITRATE_1080P = 20_000_000
@@ -111,7 +111,7 @@ class RgbCameraRecorder(
     private val syncMarkersRecorded = AtomicLong(0)
     private val framesCaptured = AtomicLong(0)
     
-    // Enhanced frame rate monitoring for TODO validation
+    // Enhanced frame rate monitoring for validation
     private val frameTimestamps = mutableListOf<Long>()
     private var lastFrameRateCheck = AtomicLong(0)
     private val frameRateCheckInterval = 5000L // 5 seconds
@@ -176,7 +176,7 @@ class RgbCameraRecorder(
 
     /**
      * Detect device capabilities for optimal video configuration
-     * Implements TODO requirement: "4K on S22 devices with fallback to 1080p if needed"
+     * Implements requirement: "4K on S22 devices with fallback to 1080p if needed"
      */
     private fun detectDeviceCapabilities() {
         try {
@@ -358,7 +358,7 @@ class RgbCameraRecorder(
 
     /**
      * Optimize video configuration based on device capabilities
-     * Implements TODO requirement: "Verify that the RGB camera reliably records at the intended 30 FPS @ 1080p/4K"
+     * Implements requirement: "Verify that the RGB camera reliably records at the intended 30 FPS @ 1080p/4K"
      */
     private fun optimizeVideoConfiguration() {
         try {
@@ -547,7 +547,7 @@ class RgbCameraRecorder(
 
     /**
      * Create optimized recorder based on device capabilities and target specifications
-     * Implements TODO requirement: "Verify that the RGB camera reliably records at the intended 30 FPS"
+     * Implements requirement: "Verify that the RGB camera reliably records at the intended 30 FPS"
      */
     private fun createOptimizedRecorder(): Recorder {
         return try {
@@ -868,7 +868,7 @@ class RgbCameraRecorder(
 
     /**
      * Monitor and validate actual frame rate against target
-     * Implements TODO requirement: "Verify that the RGB camera reliably records at the intended 30 FPS"
+     * Implements requirement: "Verify that the RGB camera reliably records at the intended 30 FPS"
      */
     private fun monitorFrameRate(frameTimestamp: Long) {
         synchronized(frameTimestamps) {

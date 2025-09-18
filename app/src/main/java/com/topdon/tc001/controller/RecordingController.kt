@@ -276,9 +276,6 @@ class RecordingController(
                 // Setup crash recovery marker
                 createCrashRecoveryMarker(finalSessionId, enabledSensors)
 
-                // Create session metadata
-                sessionMetadata = SessionMetadata.createSessionStart(finalSessionId)
-
                 // Create the util.SessionMetadata for SessionDirectoryManager (legacy compatibility)
                 val utilMetadata = com.topdon.tc001.util.SessionMetadata(
                     startTime = sessionMetadata!!.sessionStartTimestampMs,
@@ -1569,6 +1566,140 @@ data class SessionDiagnostics(
             totalSensorsActive > 0 -> "Partial recording (${totalSensorsActive}/${totalSensorsConfigured} sensors)"
             else -> "Recording failed (no active sensors)"
         }
+
+    /**
+     * Enhanced recording prerequisites validation
+     * Addresses requirement: "Enhance start/stop sequence validation"
+     */
+    private suspend fun validateRecordingPrerequisites(enabledSensors: List<String>): ValidationResult {
+        val issues = mutableListOf<String>()
+        val warnings = mutableListOf<String>()
+        val details = mutableMapOf<String, String>()
+
+        Log.d(TAG, "Validating prerequisites for sensors: ${enabledSensors.joinToString(", ")}")
+
+        // Check sensor availability and readiness
+        for (sensorName in enabledSensors) {
+            when (sensorName.uppercase()) {
+                "RGB" -> {
+                    val rgbRecorder = sensorRecorders["RGB"] as? RgbCameraRecorder
+                    if (rgbRecorder != null) {
+                        details["rgb_camera"] = "available"
+                        
+                        // Check camera permissions
+                        if (!rgbRecorder.hasCameraPermission()) {
+                            issues.add("RGB: Camera permission required")
+                        }
+                    } else {
+                        warnings.add("RGB: Camera recorder not initialized")
+                    }
+                }
+                
+                "SHIMMER" -> {
+                    val gsrRecorder = sensorRecorders["Shimmer"] as? GSRSensorRecorder
+                    if (gsrRecorder != null) {
+                        details["gsr_devices"] = "available"
+                        warnings.add("GSR: Will use best available mode (hardware or simulation)")
+                    } else {
+                        warnings.add("GSR: Shimmer recorder not initialized")
+                    }
+                }
+                
+                "THERMAL" -> {
+                    val thermalRecorder = sensorRecorders["Thermal"] as? ThermalCameraRecorder
+                    if (thermalRecorder != null) {
+                        val thermalStatus = thermalRecorder.getThermalSystemStatus()
+                        details["thermal_connected"] = thermalStatus.isConnected.toString()
+                        details["thermal_usb_permission"] = thermalStatus.hasUsbPermission.toString()
+                        details["thermal_simulation"] = thermalStatus.isSimulationMode.toString()
+                        
+                        if (!thermalStatus.hasUsbPermission) {
+                            warnings.add("Thermal: USB permission required - will use simulation")
+                        }
+                        if (!thermalStatus.isConnected) {
+                            warnings.add("Thermal: Camera not connected - will use simulation")
+                        }
+                    } else {
+                        warnings.add("Thermal: Thermal recorder not initialized")
+                    }
+                }
+            }
+        }
+
+        // Check system prerequisites
+        val availableSensors = sensorRecorders.keys.size
+        val requestedSensors = enabledSensors.size
+        
+        details["available_sensors"] = availableSensors.toString()
+        details["requested_sensors"] = requestedSensors.toString()
+        
+        if (availableSensors == 0) {
+            issues.add("System: No sensors available for recording")
+        }
+
+        val isValid = issues.isEmpty()
+        val isRecoverable = issues.all { it.contains("permission") }
+
+        Log.d(TAG, "Validation result: ${if (isValid) "PASSED" else "FAILED"} with ${issues.size} issues, ${warnings.size} warnings")
+
+        return ValidationResult(
+            isValid = isValid,
+            isRecoverable = isRecoverable,
+            errorMessage = if (issues.isNotEmpty()) issues.joinToString("; ") else "",
+            warnings = warnings,
+            details = details
+        )
+    }
+
+    /**
+     * Estimate session storage requirements
+     */
+    private fun estimateSessionSize(enabledSensors: List<String>, durationMinutes: Int = 10): String {
+        var estimatedMB = 0.0
+        
+        for (sensor in enabledSensors) {
+            when (sensor.uppercase()) {
+                "RGB" -> estimatedMB += durationMinutes * 50.0 // ~50MB/min for 1080p video + frames
+                "THERMAL" -> estimatedMB += durationMinutes * 5.0 // ~5MB/min for thermal data
+                "SHIMMER" -> estimatedMB += durationMinutes * 1.0 // ~1MB/min for GSR data
+            }
+        }
+        
+        return "${String.format("%.1f", estimatedMB)}MB (${durationMinutes}min estimate)"
+    }
+
+    /**
+     * Create crash recovery marker
+     * Addresses requirement: "Complete stop sequence & cleanup with crash recovery"
+     */
+    private fun createCrashRecoveryMarker(sessionId: String, enabledSensors: List<String>) {
+        try {
+            val recoveryFile = File(sessionDirectoryManager.getSessionDirectory(sessionId), ".recovery_marker")
+            val recoveryInfo = mapOf(
+                "session_id" to sessionId,
+                "enabled_sensors" to enabledSensors.joinToString(","),
+                "start_timestamp" to System.currentTimeMillis().toString(),
+                "controller_pid" to android.os.Process.myPid().toString()
+            )
+            
+            recoveryFile.writeText(recoveryInfo.entries.joinToString("\n") { "${it.key}=${it.value}" })
+            Log.d(TAG, "Crash recovery marker created for session: $sessionId")
+            
+        } catch (e: Exception) {
+            Log.w(TAG, "Failed to create crash recovery marker", e)
+        }
+    }
+
+    /**
+     * Enhanced validation result data class
+     */
+    data class ValidationResult(
+        val isValid: Boolean,
+        val isRecoverable: Boolean,
+        val errorMessage: String,
+        val warnings: List<String> = emptyList(),
+        val details: Map<String, String> = emptyMap()
+    )
 }
 
 /**

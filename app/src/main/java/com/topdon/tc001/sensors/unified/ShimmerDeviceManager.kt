@@ -33,8 +33,8 @@ class ShimmerDeviceManager(
         private const val RECONNECTION_ATTEMPTS = 3
         private const val RECONNECTION_DELAY_MS = 2000L
 
-        // Enhanced multi-device support for TODO testing requirement
-        private const val MAX_CONCURRENT_DEVICES = 3 // Support up to 3 Shimmer devices as per TODO
+        // Enhanced multi-device support for research requirement
+        private const val MAX_CONCURRENT_DEVICES = 3 // Support up to 3 Shimmer devices for research
         private const val DEVICE_SYNC_TIMEOUT_MS = 5000L // Timeout for synchronized operations
         private const val DATA_INTEGRITY_CHECK_INTERVAL_MS = 10000L // Check data integrity every 10 seconds
 
@@ -662,7 +662,7 @@ class ShimmerDeviceManager(
     }
 
     /**
-     * Enhanced multi-device testing support for TODO requirement:
+     * Enhanced multi-device testing support for research requirement:
      * "perform thorough testing with 2–3 Shimmer GSR units streaming concurrently 
      * to validate connection stability and data integrity"
      */
