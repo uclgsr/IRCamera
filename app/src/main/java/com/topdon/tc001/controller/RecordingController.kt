@@ -53,6 +53,11 @@ class RecordingController(
         private const val SYNC_MARKER_DISTRIBUTION_DELAY_MS = 50L
         private const val STATUS_UPDATE_INTERVAL_MS = 1000L
         private const val ERROR_RECOVERY_DELAY_MS = 2000L
+        
+        // Storage estimation constants
+        private const val RGB_STORAGE_MB_PER_MIN = 50.0
+        private const val THERMAL_STORAGE_MB_PER_MIN = 5.0
+        private const val SHIMMER_STORAGE_MB_PER_MIN = 1.0
     }
 
     private val sensorRecorders = ConcurrentHashMap<String, SensorRecorder>()
@@ -190,6 +195,10 @@ class RecordingController(
     // Store session start timestamp for synchronization
     private var sessionStartTimestampMs: Long = 0
     private var sessionStartTimestampNs: Long = 0
+    /**
+     * Enhanced start recording with comprehensive validation and fault tolerance
+     * Addresses Phase 5 requirement: "Enhance start/stop sequence validation"
+     */
     suspend fun startRecording(
         sessionId: String? = null,
         participantId: String? = null,
@@ -204,26 +213,49 @@ class RecordingController(
                     return@withContext true
                 }
 
+                Log.i(TAG, "🚀 Starting enhanced multi-modal recording with validation")
+                _recordingStateFlow.value = RecordingState.STARTING
 
-                // Check storage space before starting
+                // Phase 1: Pre-recording validation with detailed checks
+                Log.d(TAG, "Phase 1: Validating recording prerequisites...")
+                val validationResult = validateRecordingPrerequisites(enabledSensors)
+                if (!validationResult.isValid) {
+                    Log.e(TAG, "❌ Recording validation failed: ${validationResult.errorMessage}")
+                    _recordingStateFlow.value = RecordingState.ERROR
+                    emitError(
+                        RecordingControllerError(
+                            errorType = "VALIDATION_FAILED",
+                            message = validationResult.errorMessage,
+                            isRecoverable = validationResult.isRecoverable,
+                            details = validationResult.details
+                        )
+                    )
+                    return@withContext false
+                }
+
+                // Phase 2: Storage space validation with enhanced checks
+                Log.d(TAG, "Phase 2: Validating storage requirements...")
                 val storageStatus = sessionDirectoryManager.checkStorageSpace()
                 if (storageStatus.isLowStorage) {
-                    Log.e(
-                        TAG,
-                        "Insufficient storage space: ${storageStatus.formattedAvailable} available"
-                    )
+                    Log.e(TAG, "❌ Insufficient storage space: ${storageStatus.formattedAvailable} available")
+                    _recordingStateFlow.value = RecordingState.ERROR
                     emitError(
                         RecordingControllerError(
                             errorType = "STORAGE_FULL",
                             message = "Insufficient storage space. Only ${storageStatus.formattedAvailable} available. Need at least 500MB free.",
-                            isRecoverable = false
+                            isRecoverable = false,
+                            details = mapOf(
+                                "available_space" to storageStatus.formattedAvailable,
+                                "required_space" to "500MB",
+                                "estimated_session_size" to estimateSessionSize(enabledSensors)
+                            )
                         )
                     )
                     return@withContext false
                 }
 
                 if (storageStatus.shouldWarn) {
-                    Log.w(TAG, "Low storage warning: ${storageStatus.formattedAvailable} available")
+                    Log.w(TAG, "⚠️ Low storage warning: ${storageStatus.formattedAvailable} available")
                     emitError(
                         RecordingControllerError(
                             errorType = "STORAGE_WARNING",
@@ -233,16 +265,21 @@ class RecordingController(
                     )
                 }
 
-                Log.i(TAG, "Starting multi-modal recording")
-
-                _recordingStateFlow.value = RecordingState.STARTING
-
-                // Generate session ID and create directory structure
+                // Phase 3: Session setup with crash recovery preparation
+                Log.d(TAG, "Phase 3: Setting up session with crash recovery...")
                 val finalSessionId = sessionId ?: sessionDirectoryManager.generateSessionId()
                 val sessionDir = sessionDirectoryManager.createSessionDirectory(finalSessionId)
+                
+                // Create enhanced session metadata
+                sessionMetadata = SessionMetadata.createSessionStart(finalSessionId).apply {
+                    this.participantId = participantId
+                    this.studyName = studyName
+                    this.enabledSensors = enabledSensors
+                    this.validationResults = validationResult.details
+                }
 
-                // Create session metadata
-                sessionMetadata = SessionMetadata.createSessionStart(finalSessionId)
+                // Setup crash recovery marker
+                createCrashRecoveryMarker(finalSessionId, enabledSensors)
 
                 // Create the util.SessionMetadata for SessionDirectoryManager (legacy compatibility)
                 val utilMetadata = com.topdon.tc001.util.SessionMetadata(
@@ -1534,6 +1571,140 @@ data class SessionDiagnostics(
             totalSensorsActive > 0 -> "Partial recording (${totalSensorsActive}/${totalSensorsConfigured} sensors)"
             else -> "Recording failed (no active sensors)"
         }
+
+    /**
+     * Enhanced recording prerequisites validation
+     * Addresses requirement: "Enhance start/stop sequence validation"
+     */
+    private suspend fun validateRecordingPrerequisites(enabledSensors: List<String>): ValidationResult {
+        val issues = mutableListOf<String>()
+        val warnings = mutableListOf<String>()
+        val details = mutableMapOf<String, String>()
+
+        Log.d(TAG, "Validating prerequisites for sensors: ${enabledSensors.joinToString(", ")}")
+
+        // Check sensor availability and readiness
+        for (sensorName in enabledSensors) {
+            when (sensorName.uppercase()) {
+                "RGB" -> {
+                    val rgbRecorder = sensorRecorders["RGB"] as? RgbCameraRecorder
+                    if (rgbRecorder != null) {
+                        details["rgb_camera"] = "available"
+                        
+                        // Check camera permissions
+                        if (!rgbRecorder.hasCameraPermission()) {
+                            issues.add("RGB: Camera permission required")
+                        }
+                    } else {
+                        warnings.add("RGB: Camera recorder not initialized")
+                    }
+                }
+                
+                "SHIMMER" -> {
+                    val gsrRecorder = sensorRecorders["Shimmer"] as? GSRSensorRecorder
+                    if (gsrRecorder != null) {
+                        details["gsr_devices"] = "available"
+                        warnings.add("GSR: Will use best available mode (hardware or simulation)")
+                    } else {
+                        warnings.add("GSR: Shimmer recorder not initialized")
+                    }
+                }
+                
+                "THERMAL" -> {
+                    val thermalRecorder = sensorRecorders["Thermal"] as? ThermalCameraRecorder
+                    if (thermalRecorder != null) {
+                        val thermalStatus = thermalRecorder.getThermalSystemStatus()
+                        details["thermal_connected"] = thermalStatus.isConnected.toString()
+                        details["thermal_usb_permission"] = thermalStatus.hasUsbPermission.toString()
+                        details["thermal_simulation"] = thermalStatus.isSimulationMode.toString()
+                        
+                        if (!thermalStatus.hasUsbPermission) {
+                            warnings.add("Thermal: USB permission required - will use simulation")
+                        }
+                        if (!thermalStatus.isConnected) {
+                            warnings.add("Thermal: Camera not connected - will use simulation")
+                        }
+                    } else {
+                        warnings.add("Thermal: Thermal recorder not initialized")
+                    }
+                }
+            }
+        }
+
+        // Check system prerequisites
+        val availableSensors = sensorRecorders.keys.size
+        val requestedSensors = enabledSensors.size
+        
+        details["available_sensors"] = availableSensors.toString()
+        details["requested_sensors"] = requestedSensors.toString()
+        
+        if (availableSensors == 0) {
+            issues.add("System: No sensors available for recording")
+        }
+
+        val isValid = issues.isEmpty()
+        val isRecoverable = issues.all { it.contains("permission") }
+
+        Log.d(TAG, "Validation result: ${if (isValid) "PASSED" else "FAILED"} with ${issues.size} issues, ${warnings.size} warnings")
+
+        return ValidationResult(
+            isValid = isValid,
+            isRecoverable = isRecoverable,
+            errorMessage = if (issues.isNotEmpty()) issues.joinToString("; ") else "",
+            warnings = warnings,
+            details = details
+        )
+    }
+
+    /**
+     * Estimate session storage requirements
+     */
+    private fun estimateSessionSize(enabledSensors: List<String>, durationMinutes: Int = 10): String {
+        var estimatedMB = 0.0
+        
+        for (sensor in enabledSensors) {
+            when (sensor.uppercase()) {
+                "RGB" -> estimatedMB += durationMinutes * RGB_STORAGE_MB_PER_MIN // ~50MB/min for 1080p video + frames
+                "THERMAL" -> estimatedMB += durationMinutes * THERMAL_STORAGE_MB_PER_MIN // ~5MB/min for thermal data
+                "SHIMMER" -> estimatedMB += durationMinutes * SHIMMER_STORAGE_MB_PER_MIN // ~1MB/min for GSR data
+            }
+        }
+        
+        return "${String.format("%.1f", estimatedMB)}MB (${durationMinutes}min estimate)"
+    }
+
+    /**
+     * Create crash recovery marker
+     * Addresses requirement: "Complete stop sequence & cleanup with crash recovery"
+     */
+    private fun createCrashRecoveryMarker(sessionId: String, enabledSensors: List<String>) {
+        try {
+            val recoveryFile = File(sessionDirectoryManager.getSessionDirectory(sessionId), ".recovery_marker")
+            val recoveryInfo = mapOf(
+                "session_id" to sessionId,
+                "enabled_sensors" to enabledSensors.joinToString(","),
+                "start_timestamp" to System.currentTimeMillis().toString(),
+                "controller_pid" to android.os.Process.myPid().toString()
+            )
+            
+            recoveryFile.writeText(recoveryInfo.entries.joinToString("\n") { "${it.key}=${it.value}" })
+            Log.d(TAG, "Crash recovery marker created for session: $sessionId")
+            
+        } catch (e: Exception) {
+            Log.w(TAG, "Failed to create crash recovery marker", e)
+        }
+    }
+
+    /**
+     * Enhanced validation result data class
+     */
+    data class ValidationResult(
+        val isValid: Boolean,
+        val isRecoverable: Boolean,
+        val errorMessage: String,
+        val warnings: List<String> = emptyList(),
+        val details: Map<String, String> = emptyMap()
+    )
 }
 
 /**
