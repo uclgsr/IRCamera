@@ -23,7 +23,7 @@ python3 pc_controller.py --help
 - **Device Registration**: Simple device discovery and registration
 - **Session Management**: Basic recording session lifecycle
 - **Data Logging**: GSR and sensor data reception with logging
-- **Native Backend**: Optional C++ backend for enhanced GSR processing performance
+- **Native Backend**: Optional C++ backend for high-performance GSR processing
 - **Simple Architecture**: Single file implementation focused on core functionality
 
 ### Architecture

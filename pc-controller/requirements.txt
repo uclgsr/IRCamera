@@ -54,7 +54,7 @@ comtypes>=1.1.14; sys_platform == "win32"
 # Administrator privileges and system control
 elevate>=0.1.3
 
-# Additional dependencies for enhanced functionality - SECURE VERSIONS
+# Additional dependencies for advanced functionality - SECURE VERSIONS
 aiofiles>=23.1.0
 cryptography>=45.0.7
 typing-extensions>=4.8.0

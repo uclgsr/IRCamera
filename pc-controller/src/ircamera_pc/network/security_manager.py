@@ -1,5 +1,5 @@
 """
-Enhanced Security Module for PC Controller - Phase 4 Implementation
+Advanced Security Module for PC Controller - Phase 4 Implementation
 
 Provides advanced authentication, certificate management, and security monitoring
 to match the Android implementation.
@@ -148,7 +148,7 @@ class SecurityAlert:
         }
 
 
-class EnhancedAuthenticationManager:
+class AdvancedAuthenticationManager:
     """Advanced authentication manager for PC Controller"""
 
     def __init__(self, cert_dir: Optional[Path] = None):
@@ -160,8 +160,8 @@ class EnhancedAuthenticationManager:
         self.failed_attempts: Dict[str, List[float]] = {}
         self.locked_devices: Dict[str, float] = {}  # device_id: unlock_time
 
-        # Enhanced credentials beyond admin/admin
-        self.enhanced_credentials = {
+        # Advanced credentials beyond admin/admin
+        self.advanced_credentials = {
             "admin": "admin",
             "researcher": "research2024!",
             "operator": "operate@safe",
@@ -171,7 +171,7 @@ class EnhancedAuthenticationManager:
         # Session management
         self.session_tokens: Dict[str, AuthenticationContext] = {}
 
-        logger.info("Enhanced authentication manager initialized")
+        logger.info("Advanced authentication manager initialized")
 
     async def authenticate(
             self, device_id: str, auth_level: AuthLevel, credentials: Dict[str, Any]
@@ -232,8 +232,8 @@ class EnhancedAuthenticationManager:
         password = credentials.get("password", "")
 
         return (
-                username in self.enhanced_credentials
-                and self.enhanced_credentials[username] == password
+                username in self.advanced_credentials
+                and self.advanced_credentials[username] == password
         )
 
     async def _authenticate_certificate(
@@ -436,12 +436,12 @@ class EnhancedAuthenticationManager:
                 [d for d, t in self.locked_devices.items() if time.time() < t]
             ),
             "total_devices_seen": len(self.failed_attempts),
-            "enhanced_auth_enabled": True,
+            "advanced_auth_enabled": True,
             "supported_auth_levels": [level.name for level in AuthLevel],
         }
 
 
-class EnhancedSecurityMonitor:
+class AdvancedSecurityMonitor:
     """Security monitoring system for PC Controller"""
 
     def __init__(self):
@@ -455,7 +455,7 @@ class EnhancedSecurityMonitor:
         self.total_failed_logins = 0
         self.total_alerts = 0
 
-        logger.info("Enhanced security monitor initialized")
+        logger.info("Advanced security monitor initialized")
 
     async def start_monitoring(self) -> Any:
         """Start security monitoring"""
@@ -627,8 +627,8 @@ class EnhancedSecurityManager:
     """Main security manager integrating all Phase 4 security features"""
 
     def __init__(self, cert_dir: Optional[Path] = None):
-        self.auth_manager = EnhancedAuthenticationManager(cert_dir)
-        self.security_monitor = EnhancedSecurityMonitor()
+        self.auth_manager = AdvancedAuthenticationManager(cert_dir)
+        self.security_monitor = AdvancedSecurityMonitor()
 
         logger.info("Enhanced security manager initialized")
 

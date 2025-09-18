@@ -50,7 +50,7 @@ except ImportError:
     class QMainWindow:
         pass
 
-# Try to import native backend for enhanced performance
+# Try to import native backend for high-performance processing
 try:
     import sys
     import os
@@ -60,7 +60,7 @@ try:
         sys.path.insert(0, native_backend_path)
     import native_backend
     NATIVE_BACKEND_AVAILABLE = True
-    logger.info("🚀 Native C++ backend available for enhanced performance")
+    logger.info("🚀 Native C++ backend available for high-performance processing")
 except ImportError:
     NATIVE_BACKEND_AVAILABLE = False
     logger.info("📱 Using Python-only implementation (native backend not available)")
