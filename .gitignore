@@ -134,6 +134,12 @@ pc-controller/.pytest_cache/
 pc-controller/venv/
 pc-controller/.env
 
+# Backup files
+*.backup
+*.bak
+*.orig
+*~
+
 # Documentation temporary and generated files
 # -------------------------------------------------------------------
 # Prevent accumulation of outdated documentation
