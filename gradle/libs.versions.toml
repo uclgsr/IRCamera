@@ -95,8 +95,8 @@ gsyVideoPlayerThermal = "v8.6.0-release-jitpack"
 # Shimmer GSR Sensor SDK
 shimmerAndroidApi = "1.0.0"
 
-# BLE - Stable version hopefully compatible with Kotlin 2.0.21
-nordicBle = "2.10.2"
+# BLE - Compatible version with Kotlin 2.0.21 binary metadata
+nordicBle = "2.8.0"
 
 # OpenGL
 opengl = "2.0.0"

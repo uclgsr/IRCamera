@@ -2,13 +2,18 @@ plugins {
     id("com.android.library")
     kotlin("android") // Modern plugin ID format
     id("kotlin-parcelize") // Correct plugin ID for Parcelize
-    id("com.google.devtools.ksp") // Use KSP plugin from classpath
+    kotlin("kapt") // Use KAPT for stable annotation processing
 }
 
-ksp {
-    arg("room.schemaLocation", "$projectDir/schemas")
-    arg("room.incremental", "true")  
-    arg("room.expandProjection", "true")
+// Use KAPT for stable annotation processing with Kotlin 2.0.21
+kapt {
+    arguments {
+        arg("room.schemaLocation", "$projectDir/schemas")
+        arg("room.incremental", "true")
+        arg("room.expandProjection", "true")
+    }
+    useBuildCache = true
+    correctErrorTypes = true
 }
 
 android {
@@ -139,7 +144,8 @@ dependencies {
     api(libs.lifecycle.runtime.ktx)
     api(libs.lifecycle.viewmodel.ktx)
     api(libs.lifecycle.livedata.ktx)
-    ksp(libs.room.compiler) // KSP for Room
+    // Hybrid annotation processing: Use KAPT for problematic processors
+    kapt(libs.room.compiler) // KAPT for Room (better compatibility)
     api(libs.room.ktx)
     api(libs.work.runtime.ktx)
     api(libs.retrofit2)
@@ -147,7 +153,7 @@ dependencies {
     api(libs.adapter.rxjava2)
     api(libs.eventbus)
     api(libs.glide)
-    ksp(libs.glide.compiler) // KSP for Glide
+    kapt(libs.glide.compiler) // KAPT for Glide (better compatibility)
     api(libs.rxjava2)
     api(libs.rxandroid)
     api(libs.utilcode)
