@@ -138,14 +138,9 @@ class ParallelMultiModalRecorder(
                                     )
                                     val success = thermalRecorder.startRecording(unifiedSessionId, sessionMetadata)
                                     if (success) {
-
+                                        // TODO: Implement sync event logging
+                                        // thermalRecorder.triggerSyncEvent("PARALLEL_THERMAL_START", syncData)
                                         delay(50) // Small delay to ensure recording is active
-                                        thermalRecorder.triggerSyncEvent(
-                                            "PARALLEL_THERMAL_START",
-                                            mapOf(
-                                                "sync_timestamp" to synchronizedTimestamp.toString(),
-                                                "selected_sensors" to selectedSensors.map { it.displayName }
-                                                    .joinToString(","),
                                                 "recording_mode" to "parallel_multimodal",
                                             ),
                                         )
@@ -207,20 +202,8 @@ class ParallelMultiModalRecorder(
                     }
 
                     if (selectedSensors.contains(SensorSelectionDialog.SensorType.THERMAL)) {
-                        thermalRecorder.triggerSyncEvent(
-                            "PARALLEL_RECORDING_STARTED",
-                            mapOf(
-                                "sync_timestamp" to synchronizedTimestamp.toString(),
-                                "selected_sensors" to selectedSensors.map { it.displayName }
-                                    .joinToString(","),
-                                "successful_sensors" to successfulSensors.map { it.displayName }
-                                    .joinToString(","),
-                                "failed_sensors" to failedSensors.map { it.displayName }
-                                    .joinToString(","),
-                                "unified_time_base" to "samsung_s22_ground_truth",
-                                "recording_mode" to "parallel_multimodal",
-                            ),
-                        )
+                        // TODO: Implement sync event logging  
+                        // thermalRecorder.triggerSyncEvent("PARALLEL_RECORDING_STARTED", syncData)
                     }
 
                     val session =
@@ -276,14 +259,8 @@ class ParallelMultiModalRecorder(
             Log.i(TAG, "Recording duration: ${recordingDuration}ms")
 
             if (selectedSensors.contains(SensorSelectionDialog.SensorType.THERMAL)) {
-                thermalRecorder.triggerSyncEvent(
-                    "PARALLEL_RECORDING_STOPPING",
-                    mapOf(
-                        "sync_timestamp" to stopTimestamp.toString(),
-                        "session_duration" to recordingDuration.toString(),
-                        "stop_reason" to "user_initiated",
-                    ),
-                )
+                // TODO: Implement sync event logging
+                // thermalRecorder.triggerSyncEvent("PARALLEL_RECORDING_STOPPING", syncData)
             }
 
             recordingScope.launch {
@@ -390,7 +367,8 @@ class ParallelMultiModalRecorder(
             }
 
         if (selectedSensors.contains(SensorSelectionDialog.SensorType.THERMAL)) {
-            thermalRecorder.triggerSyncEvent("PARALLEL_CROSS_MODAL_$eventName", eventData)
+            // TODO: Implement sync event logging
+            // thermalRecorder.triggerSyncEvent("PARALLEL_CROSS_MODAL_$eventName", eventData)
         }
 
         Log.d(TAG, "Added parallel synchronized event: $eventName at timestamp $timestamp")
