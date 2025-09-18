@@ -298,7 +298,7 @@ class PCControllerPerformanceEvaluator:
         while self.is_monitoring:
             try:
                 # Get system metrics
-                cpu_percent = psutil.cpu_percent(interval=1.0)
+                cpu_percent = psutil.cpu_percent()
                 memory = psutil.virtual_memory()
                 memory_percent = memory.percent
                 memory_mb = memory.used / 1024 / 1024
