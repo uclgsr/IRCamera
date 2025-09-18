@@ -26,23 +26,37 @@ class MultiModalIntegrationTest {
     
     @Before
     fun setup() {
-        mockContext = mockk(relaxed = true)
-        mockLifecycleOwner = mockk(relaxed = true)
+        mockContext = mockk()
+        mockLifecycleOwner = mockk()
         recordingController = RecordingController()
         timestampManager = TimestampManager()
+        
+        // Setup basic context behaviors
+        every { mockContext.packageManager } returns mockk()
+        every { mockContext.getSystemService(any()) } returns mockk()
     }
     
     @Test
-    fun `should coordinate multiple sensors simultaneously`() = runTest {
-        // Setup
-        val gsrRecorder = mockk<UnifiedGSRRecorder>(relaxed = true)
-        val thermalRecorder = mockk<ThermalCameraRecorder>(relaxed = true)
-        val rgbRecorder = mockk<RgbCameraRecorder>(relaxed = true)
+    fun `should coordinate multiple sensors with proper initialization checks`() = runTest {
+        // Setup - Create specific mock behaviors instead of relaxed mocks
+        val gsrRecorder = mockk<UnifiedGSRRecorder>()
+        val thermalRecorder = mockk<ThermalCameraRecorder>()
+        val rgbRecorder = mockk<RgbCameraRecorder>()
         
-        // Mock initialization success for all sensors
+        // Mock specific initialization behaviors
         coEvery { gsrRecorder.initialize() } returns true
         coEvery { thermalRecorder.initialize() } returns true
         coEvery { rgbRecorder.initialize() } returns true
+        
+        // Mock recording start methods
+        coEvery { gsrRecorder.startRecording(any()) } returns true
+        coEvery { thermalRecorder.startRecording(any()) } returns true
+        coEvery { rgbRecorder.startRecording(any()) } returns true
+        
+        // Mock status checks
+        every { gsrRecorder.isRecording() } returns true
+        every { thermalRecorder.isRecording() } returns true  
+        every { rgbRecorder.isRecording() } returns true
         
         // Register sensors with controller
         recordingController.registerSensor("GSR", gsrRecorder)
@@ -50,7 +64,7 @@ class MultiModalIntegrationTest {
         recordingController.registerSensor("RGB", rgbRecorder)
         
         // Execute - start multi-modal recording
-        val sessionDir = File("/tmp/test-session")
+        val sessionDir = File("/tmp/test-session-${System.currentTimeMillis()}")
         sessionDir.mkdirs()
         
         val startSuccess = recordingController.startRecording(sessionDir.absolutePath)
@@ -58,10 +72,17 @@ class MultiModalIntegrationTest {
         // Verify
         assertTrue("Should start multi-modal recording successfully", startSuccess)
         
-        // Verify all sensors were started
-        coVerify { gsrRecorder.startRecording(any()) }
-        coVerify { thermalRecorder.startRecording(any()) }
-        coVerify { rgbRecorder.startRecording(any()) }
+        // Verify all sensors were properly initialized and started
+        coVerify(exactly = 1) { gsrRecorder.initialize() }
+        coVerify(exactly = 1) { thermalRecorder.initialize() }
+        coVerify(exactly = 1) { rgbRecorder.initialize() }
+        
+        coVerify(exactly = 1) { gsrRecorder.startRecording(any()) }
+        coVerify(exactly = 1) { thermalRecorder.startRecording(any()) }
+        coVerify(exactly = 1) { rgbRecorder.startRecording(any()) }
+        
+        // Cleanup
+        sessionDir.deleteRecursively()
     }
     
     @Test
@@ -98,34 +119,48 @@ class MultiModalIntegrationTest {
     }
     
     @Test
-    fun `should handle partial sensor failure gracefully`() = runTest {
-        // Setup
-        val gsrRecorder = mockk<UnifiedGSRRecorder>(relaxed = true)
-        val thermalRecorder = mockk<ThermalCameraRecorder>(relaxed = true)
-        val rgbRecorder = mockk<RgbCameraRecorder>(relaxed = true)
+    fun `should handle partial sensor failure with specific error scenarios`() = runTest {
+        // Setup - Create specific failure scenarios
+        val gsrRecorder = mockk<UnifiedGSRRecorder>()
+        val thermalRecorder = mockk<ThermalCameraRecorder>()
+        val rgbRecorder = mockk<RgbCameraRecorder>()
         
-        // Mock GSR failure, others succeed
+        // Mock GSR initialization failure (e.g., Bluetooth not available)
         coEvery { gsrRecorder.initialize() } returns false
         coEvery { thermalRecorder.initialize() } returns true
         coEvery { rgbRecorder.initialize() } returns true
+        
+        // Mock successful sensors can start recording
+        coEvery { thermalRecorder.startRecording(any()) } returns true
+        coEvery { rgbRecorder.startRecording(any()) } returns true
+        
+        // Mock status checks
+        every { thermalRecorder.isRecording() } returns true
+        every { rgbRecorder.isRecording() } returns true
+        every { gsrRecorder.isRecording() } returns false
         
         recordingController.registerSensor("GSR", gsrRecorder)
         recordingController.registerSensor("Thermal", thermalRecorder)
         recordingController.registerSensor("RGB", rgbRecorder)
         
         // Execute
-        val sessionDir = File("/tmp/test-session-partial")
+        val sessionDir = File("/tmp/test-session-partial-${System.currentTimeMillis()}")
         sessionDir.mkdirs()
         
         val startSuccess = recordingController.startRecording(sessionDir.absolutePath)
         
         // Verify - recording should continue with available sensors
-        assertTrue("Should start recording with partial sensors", startSuccess)
+        assertTrue("Should start recording with partial sensors available", startSuccess)
         
-        // Verify only working sensors were started
+        // Verify failed sensor was not started but others were
+        coVerify(exactly = 1) { gsrRecorder.initialize() }
         coVerify(exactly = 0) { gsrRecorder.startRecording(any()) }
-        coVerify { thermalRecorder.startRecording(any()) }
-        coVerify { rgbRecorder.startRecording(any()) }
+        
+        coVerify(exactly = 1) { thermalRecorder.startRecording(any()) }
+        coVerify(exactly = 1) { rgbRecorder.startRecording(any()) }
+        
+        // Cleanup
+        sessionDir.deleteRecursively()
     }
     
     @Test

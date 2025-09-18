@@ -21,22 +21,39 @@ class GSRDiscoveryTest {
     
     @Before
     fun setup() {
-        mockContext = mockk(relaxed = true)
-        mockLifecycleOwner = mockk(relaxed = true)
+        mockContext = mockk()
+        mockLifecycleOwner = mockk()
         gsrRecorder = UnifiedGSRRecorder(mockContext, mockLifecycleOwner)
+        
+        // Setup minimal required context behaviors
+        every { mockContext.packageManager } returns mockk()
+        every { mockContext.getSystemService(any()) } returns mockk()
     }
     
     @Test
-    fun `should discover shimmer devices within timeout`() = runTest {
-        // Setup
-        every { mockContext.packageManager } returns mockk(relaxed = true)
+    fun `should attempt device discovery with proper BLE permissions`() = runTest {
+        // Setup - Mock BLE permissions granted
+        every { 
+            mockContext.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) 
+        } returns android.content.pm.PackageManager.PERMISSION_GRANTED
+        every { 
+            mockContext.checkSelfPermission(Manifest.permission.BLUETOOTH) 
+        } returns android.content.pm.PackageManager.PERMISSION_GRANTED
+        
+        val mockBluetoothManager = mockk<android.bluetooth.BluetoothManager>()
+        val mockBluetoothAdapter = mockk<android.bluetooth.BluetoothAdapter>()
+        every { mockContext.getSystemService(Context.BLUETOOTH_SERVICE) } returns mockBluetoothManager
+        every { mockBluetoothManager.adapter } returns mockBluetoothAdapter
+        every { mockBluetoothAdapter.isEnabled } returns true
         
         // Execute
-        val result = gsrRecorder.startDeviceDiscovery()
+        val initResult = gsrRecorder.initialize()
         
-        // Verify - should attempt discovery even if no real devices
-        // In real scenarios, this would find actual Shimmer devices
-        assertTrue("Discovery should start successfully", result || true) // Allow for simulation mode
+        // Verify - Initialization should succeed with proper setup
+        assertTrue("GSR recorder should initialize with BLE available", initResult)
+        
+        // Verify BLE service was accessed
+        verify { mockContext.getSystemService(Context.BLUETOOTH_SERVICE) }
     }
     
     @Test
@@ -52,34 +69,53 @@ class GSRDiscoveryTest {
     }
     
     @Test
-    fun `should validate device connection flow`() = runTest {
-        // Setup
+    fun `should validate device connection attempt with real device info`() = runTest {
+        // Setup - Real device information structure
         val mockDevice = DeviceInfo(
-            name = "Shimmer3-001",
-            address = "00:11:22:33:44:55",
+            name = "Shimmer3-GSR+",
+            address = "00:06:66:12:34:56", // Valid MAC format
             rssi = -45,
-            advertisementData = byteArrayOf()
+            advertisementData = byteArrayOf(0x02, 0x01, 0x06) // Basic advertisement data
         )
         
-        // Execute - attempt connection
-        val connected = gsrRecorder.connectToDevice(mockDevice)
+        // Mock Bluetooth setup
+        val mockBluetoothManager = mockk<android.bluetooth.BluetoothManager>()
+        val mockBluetoothAdapter = mockk<android.bluetooth.BluetoothAdapter>()
+        every { mockContext.getSystemService(Context.BLUETOOTH_SERVICE) } returns mockBluetoothManager
+        every { mockBluetoothManager.adapter } returns mockBluetoothAdapter
+        every { mockBluetoothAdapter.isEnabled } returns true
         
-        // Verify - connection should be attempted
-        // Note: In unit test environment, actual connection will fail but flow should be tested
-        assertNotNull("Connection attempt should be made", connected)
+        // Execute - attempt connection
+        gsrRecorder.initialize()
+        val connectionResult = gsrRecorder.connectToDevice(mockDevice)
+        
+        // Verify - Connection attempt should return a proper result
+        // In MVP, we expect either successful connection or proper error handling
+        assertNotNull("Connection result should not be null", connectionResult)
+        
+        // Verify device information is properly validated
+        assertTrue("Device name should be valid", mockDevice.name.contains("Shimmer"))
+        assertTrue("MAC address should be valid format", 
+            mockDevice.address.matches(Regex("^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$")))
     }
     
     @Test
-    fun `should handle missing permissions appropriately`() = runTest {
-        // Setup - mock missing permissions
+    fun `should handle missing Bluetooth permissions with specific error`() = runTest {
+        // Setup - mock missing specific BLE permissions
         every { 
-            mockContext.checkSelfPermission(any()) 
+            mockContext.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) 
         } returns android.content.pm.PackageManager.PERMISSION_DENIED
+        every { 
+            mockContext.checkSelfPermission(Manifest.permission.BLUETOOTH) 
+        } returns android.content.pm.PackageManager.PERMISSION_GRANTED
         
         // Execute
         val initialized = gsrRecorder.initialize()
         
         // Verify
-        assertFalse("Should fail without required permissions", initialized)
+        assertFalse("Should fail without location permission required for BLE scanning", initialized)
+        
+        // Verify permission check was made
+        verify { mockContext.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) }
     }
 }

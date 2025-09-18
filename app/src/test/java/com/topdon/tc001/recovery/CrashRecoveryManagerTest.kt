@@ -22,10 +22,11 @@ class CrashRecoveryManagerTest {
     
     @Before
     fun setup() {
-        mockContext = mockk(relaxed = true)
-        mockSharedPreferences = mockk(relaxed = true)
-        mockEditor = mockk(relaxed = true)
+        mockContext = mockk()
+        mockSharedPreferences = mockk()
+        mockEditor = mockk()
         
+        // Setup specific SharedPreferences behaviors
         every { mockContext.getSharedPreferences(any(), any()) } returns mockSharedPreferences
         every { mockSharedPreferences.edit() } returns mockEditor
         every { mockEditor.putString(any(), any()) } returns mockEditor
@@ -39,18 +40,27 @@ class CrashRecoveryManagerTest {
     }
     
     @Test
-    fun `should detect incomplete recording session on startup`() = runTest {
-        // Setup - simulate incomplete session data
+    fun `should detect incomplete recording session with MVP recovery data`() = runTest {
+        // Setup - simulate real incomplete session scenario
+        val sessionId = "session_$(System.currentTimeMillis())"
+        val sessionStartTime = System.currentTimeMillis() - 300000L // 5 minutes ago
+        
         every { mockSharedPreferences.contains("last_session_id") } returns true
-        every { mockSharedPreferences.getString("last_session_id", null) } returns "session_20240101_120000"
-        every { mockSharedPreferences.getLong("last_session_start", 0L) } returns System.currentTimeMillis() - 300000L // 5 minutes ago
+        every { mockSharedPreferences.getString("last_session_id", null) } returns sessionId
+        every { mockSharedPreferences.getLong("last_session_start", 0L) } returns sessionStartTime
         every { mockSharedPreferences.getBoolean("last_session_completed", false) } returns false
         
         // Execute
         val hasIncompleteSession = crashRecoveryManager.checkForIncompleteSession()
         
-        // Verify
-        assertTrue("Should detect incomplete session", hasIncompleteSession)
+        // Verify - should detect the incomplete session
+        assertTrue("Should detect incomplete session from previous app run", hasIncompleteSession)
+        
+        // Verify specific SharedPreferences interactions
+        verify(exactly = 1) { mockSharedPreferences.contains("last_session_id") }
+        verify(exactly = 1) { mockSharedPreferences.getString("last_session_id", null) }
+        verify(exactly = 1) { mockSharedPreferences.getLong("last_session_start", 0L) }
+        verify(exactly = 1) { mockSharedPreferences.getBoolean("last_session_completed", false) }
     }
     
     @Test
