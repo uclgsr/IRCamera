@@ -71,7 +71,7 @@ class MVPTCPServer:
         if self.server_socket:
             try:
                 self.server_socket.close()
-            except:
+            except Exception:
                 pass
         logger.info("MVP TCP server stopped")
     
