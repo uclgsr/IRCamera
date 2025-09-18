@@ -2,13 +2,21 @@ plugins {
     id("com.android.library")
     kotlin("android") // Modern plugin ID format
     id("kotlin-parcelize") // Correct plugin ID for Parcelize
-    id("com.google.devtools.ksp") // Use KSP plugin from classpath
+    kotlin("kapt") // Switch back to KAPT for compatibility with Kotlin 2.1.0
+    // id("com.google.devtools.ksp") // Temporarily disabled due to version compatibility issues
 }
 
-ksp {
-    arg("room.schemaLocation", "$projectDir/schemas")
-    arg("room.incremental", "true")
-    arg("room.expandProjection", "true")
+// Temporarily switch to KAPT for compatibility with Kotlin 2.1.0
+kapt {
+    arguments {
+        arg("room.schemaLocation", "$projectDir/schemas")
+        arg("room.incremental", "true")
+        arg("room.expandProjection", "true")
+    }
+    useBuildCache = true
+    correctErrorTypes = true
+    // Enable explicit support for Kotlin 2.1.0 in KAPT
+    includeCompileClasspath = false
 }
 
 android {
@@ -136,7 +144,7 @@ dependencies {
     api(libs.lifecycle.runtime.ktx)
     api(libs.lifecycle.viewmodel.ktx)
     api(libs.lifecycle.livedata.ktx)
-    ksp(libs.room.compiler) // Migrated from kapt to KSP
+    kapt(libs.room.compiler) // Switched back to KAPT for Kotlin 2.1.0 compatibility
     api(libs.room.ktx)
     api(libs.work.runtime.ktx)
     api(libs.retrofit2)
@@ -144,7 +152,7 @@ dependencies {
     api(libs.adapter.rxjava2)
     api(libs.eventbus)
     api(libs.glide)
-    ksp(libs.glide.compiler) // Migrated from kapt to KSP
+    kapt(libs.glide.compiler) // Switched back to KAPT for Kotlin 2.1.0 compatibility
     api(libs.rxjava2)
     api(libs.rxandroid)
     api(libs.utilcode)
