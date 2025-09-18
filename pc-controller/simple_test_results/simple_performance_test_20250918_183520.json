@@ -1,0 +1,63 @@
+{
+  "test_id": "simple_test_1758220510",
+  "start_time": 1758220510.2896798,
+  "metrics": {},
+  "benchmarks": [
+    {
+      "test_type": "GSR_SAMPLING_RATE",
+      "target_rate_hz": 128.0,
+      "actual_rate_hz": 127.99472464035274,
+      "rate_error_percent": 0.004121374724419535,
+      "total_samples": 640,
+      "duration_seconds": 4.992393255233765,
+      "variance": 0.0037106838314863912,
+      "success": true,
+      "score": 0.9999587862527558,
+      "summary": "GSR: 127.99 Hz (target: 128.0 Hz) - PASSED"
+    },
+    {
+      "test_type": "RGB_FRAME_RATE",
+      "target_rate_fps": 30.0,
+      "actual_rate_fps": 29.99943311026616,
+      "rate_error_percent": 0.0018896324461318652,
+      "total_frames": 90,
+      "duration_seconds": 2.9667227268218994,
+      "avg_processing_time_ms": 3.047111111111111,
+      "avg_frame_size_kb": 175.5888888888889,
+      "success": true,
+      "score": 0.9999811036755387,
+      "summary": "RGB: 30.00 fps (target: 30.0 fps) - PASSED"
+    },
+    {
+      "test_type": "NETWORK_THROUGHPUT",
+      "throughput_kbps": 96.83683425815548,
+      "avg_latency_ms": 24.575757575757574,
+      "packet_loss_percent": 0.2425,
+      "total_packets": 198,
+      "total_bytes": 198084,
+      "duration_seconds": 1.9976015090942383,
+      "success": true,
+      "score": 0.9,
+      "summary": "Network: 96.8 KB/s, Latency: 24.6ms - PASSED"
+    },
+    {
+      "test_type": "TIMESTAMP_SYNC_ACCURACY",
+      "avg_drift_ms": 1.2273907661437988,
+      "max_drift_ms": 2.939939498901367,
+      "sync_accuracy_score": 0.8772609233856201,
+      "sample_count": 100,
+      "success": true,
+      "score": 0.8772609233856201,
+      "summary": "Sync: 1.23ms avg drift (max: 2.94ms) - PASSED"
+    }
+  ],
+  "end_time": 1758220520.3000488,
+  "duration_seconds": 10.010369062423706,
+  "overall": {
+    "success": true,
+    "score": 0.9443002033284786,
+    "success_rate": 1.0,
+    "assessment": "\ud83d\udfe2 EXCELLENT",
+    "summary": "\ud83d\udfe2 EXCELLENT - Score: 0.944, Success Rate: 100.0%"
+  }
+}
