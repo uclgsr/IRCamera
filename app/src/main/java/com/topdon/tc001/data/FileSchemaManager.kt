@@ -355,8 +355,8 @@ class FileSchemaManager {
         }
         
         return try {
-            val lines = file.readLines()
-            if (lines.isEmpty()) {
+            val firstLine = file.bufferedReader().use { it.readLine() }
+            if (firstLine == null) {
                 return ValidationResult(false, listOf("CSV file is empty"))
             }
             
