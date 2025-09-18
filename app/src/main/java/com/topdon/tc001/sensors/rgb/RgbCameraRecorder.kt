@@ -62,26 +62,24 @@ class RgbCameraRecorder(
         private const val MAX_CONSECUTIVE_FRAME_ERRORS = 10
         private const val FRAME_ERROR_RESET_INTERVAL = 30000L // 30 seconds
         
-        // Device capability detection
+        // Device capability detection - Samsung Galaxy S22 series only
         private val KNOWN_4K_DEVICES = setOf(
-            "SM-S916B", // Galaxy S22 Ultra
-            "SM-S918B", // Galaxy S22 Ultra
-            "SM-G998B", // Galaxy S21 Ultra
-            "SM-N986B", // Galaxy Note 20 Ultra
-            "Pixel 6 Pro",
-            "Pixel 7 Pro"
+            "SM-S906B", // Galaxy S22
+            "SM-S916B", // Galaxy S22+  
+            "SM-S908B", // Galaxy S22 Ultra
+            "SM-S901B", // Galaxy S22 (alternate model)
+            "SM-S911B", // Galaxy S22+ (alternate model)
+            "SM-S918B"  // Galaxy S22 Ultra (alternate model)
         )
         
-        // Devices known to support RAW capture
+        // Devices known to support RAW capture - Samsung Galaxy S22 series only
         private val KNOWN_RAW_DEVICES = setOf(
-            "SM-S916B", // Galaxy S22 Ultra
-            "SM-S918B", // Galaxy S22 Ultra
-            "SM-G998B", // Galaxy S21 Ultra
-            "SM-N986B", // Galaxy Note 20 Ultra
-            "Pixel 6 Pro",
-            "Pixel 7 Pro",
-            "Pixel 6",
-            "Pixel 7"
+            "SM-S906B", // Galaxy S22
+            "SM-S916B", // Galaxy S22+
+            "SM-S908B", // Galaxy S22 Ultra  
+            "SM-S901B", // Galaxy S22 (alternate model)
+            "SM-S911B", // Galaxy S22+ (alternate model)
+            "SM-S918B"  // Galaxy S22 Ultra (alternate model)
         )
     }
 
@@ -204,13 +202,13 @@ class RgbCameraRecorder(
             
             Log.d(TAG, "Detecting capabilities for device: $deviceManufacturer $deviceModel")
             
-            // Check if device is known to support 4K recording
-            deviceSupports4K = KNOWN_4K_DEVICES.contains(deviceModel) || deviceModel.contains("S22", ignoreCase = true)
+            // Check if device is Samsung Galaxy S22 series for 4K recording
+            deviceSupports4K = KNOWN_4K_DEVICES.contains(deviceModel) || 
+                              (deviceModel.contains("S22", ignoreCase = true) && deviceManufacturer.equals("samsung", ignoreCase = true))
             
-            // Check if device is known to support RAW capture
-            deviceSupportsRAW = KNOWN_RAW_DEVICES.contains(deviceModel) || 
-                               deviceModel.contains("S22", ignoreCase = true) ||
-                               deviceModel.contains("Pixel", ignoreCase = true)
+            // Check if device is Samsung Galaxy S22 series for RAW capture  
+            deviceSupportsRAW = KNOWN_RAW_DEVICES.contains(deviceModel) ||
+                               (deviceModel.contains("S22", ignoreCase = true) && deviceManufacturer.equals("samsung", ignoreCase = true))
             
             // Additional capability detection using CameraX
             cameraProvider?.let { provider ->
@@ -234,7 +232,7 @@ class RgbCameraRecorder(
                 }
             }
             
-            Log.i(TAG, "Device capabilities - 4K: $deviceSupports4K, RAW: $deviceSupportsRAW for $deviceManufacturer $deviceModel")
+            Log.i(TAG, "Samsung Galaxy S22 capabilities - 4K: $deviceSupports4K, RAW: $deviceSupportsRAW for $deviceManufacturer $deviceModel")
             
         } catch (e: Exception) {
             Log.w(TAG, "Error detecting device capabilities, using safe defaults", e)
@@ -403,8 +401,8 @@ class RgbCameraRecorder(
     }
 
     /**
-     * Optimize video configuration based on device capabilities
-     * Implements requirement: "Verify that the RGB camera reliably records at the intended 30 FPS @ 1080p/4K"
+     * Optimize video configuration based on Samsung Galaxy S22 series capabilities
+     * Implements requirement: "4K on S22 devices with fallback to 1080p if needed"
      */
     private fun optimizeVideoConfiguration() {
         try {
