@@ -15,6 +15,7 @@ object ByteUtils {
         return count
     }
 
+    @OptIn(ExperimentalUnsignedTypes::class)
     fun ByteArray.toHexString() =
         asUByteArray().joinToString(" ") {
             it.toString(16).padStart(2, '0').uppercase(Locale.getDefault())

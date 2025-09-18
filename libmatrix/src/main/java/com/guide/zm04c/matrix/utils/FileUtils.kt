@@ -35,15 +35,17 @@ class FileUtils {
             flag = true
             val files = dirFile.listFiles()
 
-            for (i in files.indices) {
-                if (files[i].isFile) {
+            files?.let { fileArray ->
+                for (i in fileArray.indices) {
+                    if (fileArray[i].isFile) {
 
-                    flag = deleteFile(files[i].absolutePath)
-                    if (!flag) break
-                } else {
+                        flag = deleteFile(fileArray[i].absolutePath)
+                        if (!flag) break
+                    } else {
 
-                    flag = deleteDirectory(files[i].absolutePath)
-                    if (!flag) break
+                        flag = deleteDirectory(fileArray[i].absolutePath)
+                        if (!flag) break
+                    }
                 }
             }
             return if (!flag) false else dirFile.delete()
@@ -224,7 +226,7 @@ class FileUtils {
                 }
 
                 options.inJustDecodeBounds = false
-                options.inDither = false
+                // Removed deprecated inDither field
                 options.inScaled = true
 
                 var fs: FileInputStream? = null
