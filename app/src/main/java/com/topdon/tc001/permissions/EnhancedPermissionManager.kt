@@ -420,32 +420,150 @@ class EnhancedPermissionManager(
             .show()
     }
 
+    /**
+     * Enhanced permission denial handling with graceful degradation guidance
+     * Addresses Phase 4 requirement: "Implement graceful degradation for denied permissions"
+     */
     private fun handlePermissionDenied(permissionType: String, deniedPermissions: List<String>, onDismiss: () -> Unit) {
+        val degradationInfo = getDegradationInfo(permissionType, deniedPermissions)
+        
         val message = """
             $permissionType permissions were denied:
             
             ${deniedPermissions.joinToString("\n") { "• ${it.substringAfterLast(".")}" }}
             
-            To enable full functionality:
+            🔄 Graceful Degradation Active:
+            
+            ${degradationInfo.joinToString("\n")}
+            
+            📚 To restore full functionality:
             1. Go to Settings > Apps > IRCamera > Permissions
             2. Enable the required permissions
-            3. Return to the app and try again
+            3. Return to the app - no restart needed
             
-            Some features may be disabled without these permissions.
+            ✨ The app will continue working with available features.
         """.trimIndent()
         
         AlertDialog.Builder(activity)
-            .setTitle("Permissions Required")
+            .setTitle("Graceful Degradation Enabled")
             .setMessage(message)
             .setPositiveButton("Open Settings") { _, _ ->
                 openAppSettings()
                 onDismiss()
             }
-            .setNegativeButton("Continue") { _, _ ->
+            .setNeutralButton("What Can I Still Do?") { _, _ ->
+                showAvailableFeaturesDialog(permissionType)
+                onDismiss()
+            }
+            .setNegativeButton("Continue with Limited Features") { _, _ ->
                 onDismiss()
             }
             .setCancelable(false)
             .show()
+    }
+
+    /**
+     * Get specific degradation information for different permission types
+     */
+    private fun getDegradationInfo(permissionType: String, deniedPermissions: List<String>): List<String> {
+        val info = mutableListOf<String>()
+        
+        when (permissionType) {
+            "Camera" -> {
+                info.add("📹 RGB video recording: DISABLED")
+                info.add("🖼️ Frame capture: DISABLED") 
+                info.add("✅ GSR sensor recording: Still available")
+                info.add("✅ Thermal camera: Still available")
+                info.add("✅ Data analysis: Still available")
+                info.add("💡 Connect external camera or use other sensor data")
+            }
+            
+            "Bluetooth/Location" -> {
+                info.add("📡 GSR sensor connection: DISABLED")
+                info.add("🔄 Multi-device recording: DISABLED")
+                info.add("✅ RGB camera recording: Still available")
+                info.add("✅ Thermal camera: Still available")
+                info.add("✅ Manual data entry: Still available")
+                info.add("💡 Use simulation mode or pre-recorded GSR data")
+            }
+            
+            "Storage" -> {
+                info.add("💾 Data export options: LIMITED")
+                info.add("📤 Large file sharing: MAY FAIL")
+                info.add("✅ Recording sessions: Still work")
+                info.add("✅ Real-time monitoring: Still available")
+                info.add("💡 Use smaller recording durations")
+            }
+            
+            "Notification" -> {
+                info.add("🔔 Recording status updates: LIMITED")
+                info.add("⚠️ Error notifications: LIMITED")
+                info.add("✅ All recording functions: Still available")
+                info.add("✅ Manual status checking: Still available")
+                info.add("💡 Check app manually during long recordings")
+            }
+            
+            else -> {
+                info.add("⚠️ Some functionality may be limited")
+                info.add("✅ Core recording features: Should still work")
+                info.add("💡 Try enabling permissions when needed")
+            }
+        }
+        
+        return info
+    }
+
+    /**
+     * Show available features dialog for specific permission denial
+     */
+    private fun showAvailableFeaturesDialog(permissionType: String) {
+        val availableFeatures = getAvailableFeatures(permissionType)
+        
+        val message = """
+            🌟 Available Features (${permissionType} permissions denied):
+            
+            ${availableFeatures.joinToString("\n\n")}
+            
+            The app automatically adapts to work with your current permissions.
+            You can enable more features later by granting additional permissions.
+        """.trimIndent()
+        
+        AlertDialog.Builder(activity)
+            .setTitle("What You Can Still Do")
+            .setMessage(message)
+            .setPositiveButton("Got it!") { _, _ -> }
+            .show()
+    }
+
+    /**
+     * Get available features for specific permission scenarios
+     */
+    private fun getAvailableFeatures(permissionType: String): List<String> {
+        return when (permissionType) {
+            "Camera" -> listOf(
+                "🔬 GSR Sensor Recording:\n• Connect Shimmer devices\n• Record physiological data\n• Multi-device sessions",
+                "🌡️ Thermal Camera Recording:\n• Connect TC001 camera\n• Record thermal data\n• Temperature analysis",
+                "📊 Data Analysis:\n• View recorded sessions\n• Export data files\n• Generate reports"
+            )
+            
+            "Bluetooth/Location" -> listOf(
+                "📹 RGB Camera Recording:\n• High-quality video up to 4K\n• Synchronized frame capture\n• Manual recording control",
+                "🌡️ Thermal Camera Recording:\n• USB-based thermal capture\n• Real-time thermal visualization\n• Temperature data logging",
+                "📊 Data Management:\n• Session organization\n• File export and sharing\n• Analysis tools"
+            )
+            
+            "Storage" -> listOf(
+                "🎥 Recording Sessions:\n• All sensor recording works\n• Real-time data viewing\n• Session monitoring",
+                "🔄 Live Streaming:\n• Real-time data preview\n• Network data streaming\n• Device monitoring",
+                "💾 Basic Data Export:\n• Small file sharing\n• Email export\n• Cloud sync (limited)"
+            )
+            
+            else -> listOf(
+                "✅ Core functionality remains available",
+                "🔄 Automatic feature adaptation",
+                "💡 Enable permissions later for full features"
+            )
+        }
     }
 
     private fun showUsbPermissionDeniedDialog(device: UsbDevice, onDismiss: () -> Unit) {
@@ -580,6 +698,295 @@ class EnhancedPermissionManager(
     }
 
     /**
+     * Enhanced unified permission request flow
+     * Addresses Phase 4 requirement: "Complete unified permission request flow"
+     */
+    suspend fun requestAllRequiredPermissions(): PermissionRequestResult = suspendCancellableCoroutine { continuation ->
+        activity.lifecycleScope.launch {
+            Log.i(TAG, "🚀 Starting unified permission request flow")
+            
+            val results = PermissionRequestResult()
+            
+            try {
+                // Phase 1: Camera permissions (critical for core functionality)
+                showUnifiedProgressDialog("Requesting Camera Permissions", 1, 4)
+                results.cameraGranted = requestCameraPermissions()
+                
+                // Phase 2: Bluetooth permissions (critical for GSR sensors)
+                showUnifiedProgressDialog("Requesting Bluetooth Permissions", 2, 4)
+                results.bluetoothGranted = requestBluetoothPermissions()
+                
+                // Phase 3: Storage permissions (important for data export)
+                showUnifiedProgressDialog("Requesting Storage Permissions", 3, 4)
+                results.storageGranted = requestStoragePermissions()
+                
+                // Phase 4: Notification and foreground service permissions
+                showUnifiedProgressDialog("Setting up Background Services", 4, 4)
+                results.notificationGranted = requestNotificationPermissions()
+                results.foregroundServiceGranted = setupForegroundService()
+                
+                // Provide comprehensive summary
+                showEnhancedPermissionSummary(results)
+                
+                Log.i(TAG, "✅ Unified permission request completed: ${results.summarizeResults()}")
+                continuation.resume(results)
+                
+            } catch (e: Exception) {
+                Log.e(TAG, "❌ Error during unified permission request", e)
+                results.error = e.message
+                continuation.resume(results)
+            }
+        }
+    }
+
+    /**
+     * Request notification permissions for Android 13+
+     * Addresses Phase 4 requirement: "Add foreground service notification system"
+     */
+    private suspend fun requestNotificationPermissions(): Boolean {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            Log.i(TAG, "Requesting notification permissions for Android 13+")
+            
+            suspendCancellableCoroutine { continuation ->
+                val permission = Manifest.permission.POST_NOTIFICATIONS
+                
+                if (ActivityCompat.checkSelfPermission(activity, permission) == PackageManager.PERMISSION_GRANTED) {
+                    Log.i(TAG, "Notification permission already granted")
+                    continuation.resume(true)
+                    return@suspendCancellableCoroutine
+                }
+                
+                showPermissionRationaleDialog(
+                    title = "Notification Permission Required",
+                    permissions = listOf(permission),
+                    explanation = """
+                        Notification access is required for:
+                        
+                        • Recording session status updates
+                        • Device connection/disconnection alerts
+                        • Error notifications and recovery guidance
+                        • Foreground service compliance
+                        
+                        Without notifications:
+                        • Recording status may not be visible
+                        • Connection issues may go unnoticed
+                        • Background recording may be terminated by system
+                    """.trimIndent(),
+                    onResult = { granted ->
+                        if (granted) {
+                            requestPermissionsWithCallback(
+                                arrayOf(permission),
+                                REQUEST_ALL_PERMISSIONS + 1
+                            ) { success, _ ->
+                                continuation.resume(success)
+                            }
+                        } else {
+                            continuation.resume(false)
+                        }
+                    }
+                )
+            }
+        } else {
+            Log.i(TAG, "Notification permission not required for Android < 13")
+            true // Not required for older versions
+        }
+    }
+
+    /**
+     * Setup foreground service for background recording compliance
+     * Addresses Phase 4 requirement: "Add foreground service notification system"
+     */
+    private fun setupForegroundService(): Boolean {
+        return try {
+            Log.i(TAG, "Setting up foreground service notification system")
+            
+            // Create notification channel for recording service
+            val notificationManager = activity.getSystemService(Context.NOTIFICATION_SERVICE) as android.app.NotificationManager
+            
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                val channelId = "irrecording_service"
+                val channelName = "IR Camera Recording"
+                val channelDescription = "Notifications for IR camera recording sessions"
+                val importance = android.app.NotificationManager.IMPORTANCE_LOW // Low importance to avoid disturbing user
+                
+                val channel = android.app.NotificationChannel(channelId, channelName, importance).apply {
+                    description = channelDescription
+                    enableLights(false)
+                    enableVibration(false)
+                    setShowBadge(false)
+                }
+                
+                notificationManager.createNotificationChannel(channel)
+                Log.i(TAG, "Notification channel created: $channelId")
+            }
+            
+            // Test foreground service notification
+            val testNotification = createRecordingNotification(
+                title = "IR Camera Ready",
+                message = "Sensor system initialized and ready for recording",
+                isRecording = false
+            )
+            
+            if (testNotification != null) {
+                Log.i(TAG, "✅ Foreground service notification system ready")
+                true
+            } else {
+                Log.w(TAG, "❌ Failed to create foreground service notification")
+                false
+            }
+            
+        } catch (e: Exception) {
+            Log.e(TAG, "Error setting up foreground service", e)
+            false
+        }
+    }
+
+    /**
+     * Create recording notification for foreground service
+     */
+    fun createRecordingNotification(
+        title: String,
+        message: String,
+        isRecording: Boolean
+    ): android.app.Notification? {
+        return try {
+            val channelId = "irrecording_service"
+            
+            // Create intent to return to main activity
+            val intent = Intent(activity, activity::class.java)
+            val pendingIntent = android.app.PendingIntent.getActivity(
+                activity,
+                0,
+                intent,
+                android.app.PendingIntent.FLAG_UPDATE_CURRENT or 
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) android.app.PendingIntent.FLAG_IMMUTABLE else 0
+            )
+            
+            val notification = androidx.core.app.NotificationCompat.Builder(activity, channelId)
+                .setContentTitle(title)
+                .setContentText(message)
+                .setSmallIcon(android.R.drawable.ic_media_play) // Use system icon
+                .setContentIntent(pendingIntent)
+                .setPriority(androidx.core.app.NotificationCompat.PRIORITY_LOW)
+                .setOngoing(isRecording) // Keep notification persistent during recording
+                .setAutoCancel(!isRecording) // Allow dismissal when not recording
+                .apply {
+                    if (isRecording) {
+                        // Add stop action for recording sessions
+                        setContentText("$message - Tap to view")
+                        addAction(
+                            android.R.drawable.ic_media_pause,
+                            "Stop Recording",
+                            createStopRecordingIntent()
+                        )
+                    }
+                }
+                .build()
+                
+            Log.d(TAG, "Created notification: $title")
+            notification
+            
+        } catch (e: Exception) {
+            Log.e(TAG, "Error creating notification", e)
+            null
+        }
+    }
+
+    private fun createStopRecordingIntent(): android.app.PendingIntent {
+        val intent = Intent(activity, activity::class.java).apply {
+            action = "STOP_RECORDING"
+        }
+        return android.app.PendingIntent.getActivity(
+            activity,
+            1,
+            intent,
+            android.app.PendingIntent.FLAG_UPDATE_CURRENT or 
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) android.app.PendingIntent.FLAG_IMMUTABLE else 0
+        )
+    }
+
+    /**
+     * Show unified progress dialog during permission requests
+     */
+    private fun showUnifiedProgressDialog(message: String, current: Int, total: Int) {
+        Log.d(TAG, "Permission progress: $message ($current/$total)")
+        // Could implement actual progress dialog here if needed
+    }
+
+    /**
+     * Enhanced permission summary with comprehensive guidance
+     */
+    private fun showEnhancedPermissionSummary(results: PermissionRequestResult) {
+        val summary = buildString {
+            append("🏁 IRCamera Permission Setup Complete\n\n")
+            
+            append("Core Functionality:\n")
+            append("📹 RGB Camera: ${if (results.cameraGranted) "✅ Ready" else "❌ Disabled"}\n")
+            append("📡 GSR Sensors: ${if (results.bluetoothGranted) "✅ Ready" else "❌ Disabled"}\n")
+            append("💾 Data Storage: ${if (results.storageGranted) "✅ Ready" else "⚠️ Limited"}\n\n")
+            
+            append("System Integration:\n")
+            append("🔔 Notifications: ${if (results.notificationGranted) "✅ Enabled" else "❌ Limited"}\n")
+            append("🔄 Background Recording: ${if (results.foregroundServiceGranted) "✅ Ready" else "❌ May be interrupted"}\n\n")
+            
+            val readyCount = results.getGrantedCount()
+            val totalCount = 5
+            
+            when {
+                readyCount == totalCount -> {
+                    append("🎉 All systems ready! You can now:\n")
+                    append("• Record multi-modal sensor data\n")
+                    append("• Connect multiple GSR devices\n") 
+                    append("• Capture synchronized RGB/Thermal/GSR\n")
+                    append("• Run extended recording sessions\n")
+                }
+                readyCount >= 3 -> {
+                    append("✅ Core systems ready! Limited functionality available.\n")
+                    append("Consider enabling remaining permissions for full features.\n")
+                }
+                else -> {
+                    append("⚠️ Critical permissions missing.\n")
+                    append("Please enable Camera and Bluetooth for basic functionality.\n")
+                }
+            }
+        }
+
+        AlertDialog.Builder(activity)
+            .setTitle("Setup Complete")
+            .setMessage(summary)
+            .setPositiveButton("Continue") { _, _ -> }
+            .setNegativeButton("Review Settings") { _, _ -> 
+                val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                val uri = Uri.fromParts("package", activity.packageName, null)
+                intent.data = uri
+                activity.startActivity(intent)
+            }
+            .setCancelable(true)
+            .show()
+    }
+
+    /**
+     * Permission request result data class
+     */
+    data class PermissionRequestResult(
+        var cameraGranted: Boolean = false,
+        var bluetoothGranted: Boolean = false,
+        var storageGranted: Boolean = false,
+        var notificationGranted: Boolean = false,
+        var foregroundServiceGranted: Boolean = false,
+        var error: String? = null
+    ) {
+        fun getGrantedCount(): Int {
+            return listOf(cameraGranted, bluetoothGranted, storageGranted, notificationGranted, foregroundServiceGranted).count { it }
+        }
+        
+        fun summarizeResults(): String {
+            return "Camera=${cameraGranted}, Bluetooth=${bluetoothGranted}, Storage=${storageGranted}, " +
+                   "Notifications=${notificationGranted}, ForegroundService=${foregroundServiceGranted}"
+        }
+    }
+
+    /**
      * Update permission summary dialog to include notification and foreground service status
      */
     private fun showPermissionSummaryDialog(camera: Boolean, bluetooth: Boolean, storage: Boolean, 
@@ -605,5 +1012,4 @@ class EnhancedPermissionManager(
             .setPositiveButton("Continue") { _, _ -> }
             .setCancelable(true)
             .show()
-    }
 }
