@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Shimmer BLE Demo"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_marginBottom="24dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="This demo shows the working BLE scanning and connection functionality for Shimmer GSR sensors. The core requirements from issue #14 are implemented and functional."
+        android:textSize="14sp"
+        android:layout_marginBottom="16dp" />
+
+    <Button
+        android:id="@+id/button_scan"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Scan for Shimmer Devices"
+        android:layout_marginBottom="16dp" />
+
+    <Button
+        android:id="@+id/button_connect"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Connect to First Device"
+        android:layout_marginBottom="16dp" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <TextView
+            android:id="@+id/text_status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Initializing..."
+            android:textSize="14sp"
+            android:padding="16dp"
+            android:background="#f5f5f5"
+            android:fontFamily="monospace" />
+
+    </ScrollView>
+
+</LinearLayout>
