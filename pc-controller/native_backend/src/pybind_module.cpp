@@ -3,8 +3,16 @@
 #include <pybind11/numpy.h>
 #include <pybind11/functional.h>
 
+// System includes for file operations
+#include <fcntl.h>
+#include <unistd.h>
+#include <vector>
+#include <string>
+
 #include "native_shimmer.h"
+#ifdef HAVE_OPENCV
 #include "native_webcam.h"
+#endif
 
 namespace py = pybind11;
 
