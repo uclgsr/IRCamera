@@ -63,8 +63,8 @@ class SimpleBenchmarkManager {
      * Stop and evaluate GSR benchmark
      */
     fun stopGSRBenchmark(): BenchmarkResult {
-        val endTime = System.currentTimeMillis()
-        val durationMs = endTime - gsrSessionStart
+        val endTime = SystemClock.elapsedRealtime()
+        val durationMs = if (gsrSessionStart > 0) endTime - gsrSessionStart else 0L
         val sampleCount = gsrSamples.size
         
         val actualRate = if (durationMs > 0) {
