@@ -14,9 +14,7 @@ import androidx.lifecycle.lifecycleScope
 import com.shimmerresearch.android.Shimmer
 import com.shimmerresearch.android.manager.ShimmerBluetoothManagerAndroid
 import com.shimmerresearch.driver.ObjectCluster
-import com.shimmerresearch.driver.ShimmerDevice
 import com.shimmerresearch.bluetooth.ShimmerBluetooth.BT_STATE
-import com.shimmerresearch.driver.ShimmerDevice.SENSING_STATE
 import com.topdon.tc001.sensors.SensorRecorder
 import com.topdon.tc001.sensors.RecordingStatus
 import com.topdon.tc001.sensors.SensorError

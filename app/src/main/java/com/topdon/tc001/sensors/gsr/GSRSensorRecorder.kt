@@ -7,7 +7,6 @@ import androidx.core.content.ContextCompat
 import com.shimmerresearch.android.Shimmer
 import com.shimmerresearch.android.manager.ShimmerBluetoothManagerAndroid
 import com.shimmerresearch.driver.ObjectCluster
-import com.shimmerresearch.driver.ShimmerDevice
 import com.shimmerresearch.bluetooth.ShimmerBluetooth.BT_STATE
 import com.topdon.ble.ShimmerBleController
 import com.topdon.ble.ShimmerDevice as CustomShimmerDevice
@@ -111,7 +110,6 @@ class GSRSensorRecorder(
     override val isRecording: Boolean get() = _isRecording.get()
 
     private var unifiedBleManager: UnifiedBleManager? = null
-    private var unifiedShimmerDevice: ShimmerDevice? = null
 
     private var realShimmerGSRRecorder: ShimmerGSRRecorder? = null
     private var shimmerDevice: ShimmerBleController? = null
