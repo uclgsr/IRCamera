@@ -37,6 +37,11 @@ class SimplePerformanceMonitor:
     def __init__(self):
         self.results: List[SimplePerformanceResult] = []
         self.session_start = 0.0
+        self.config = {
+            "sync_drift_target_ms": 5.0,
+            "sampling_rate_tolerance": 0.05,
+            "network_latency_target_ms": 50.0,
+        }
     
     def start_monitoring(self) -> str:
         """Start performance monitoring session"""
