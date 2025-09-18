@@ -25,7 +25,7 @@ appsecretTopinfrared10 = "2870276D969B45C1B4A312B336274079"
 appsecretTopinfraredCn = "9D33C48FD7CE4440B7D922FBF9B6DE2A"
 appsecretTopinfraredCn10 = "F4511AAA6C694E54A3676CF2345A4A8E"
 
-# Kotlin and Core - Updated to stable versions that work together
+# Kotlin and Core - Using latest stable versions with confirmed KSP compatibility
 kotlin = "2.1.0"
 agp = "8.8.0"
 # androidx.core - Updated to latest version compatible with AGP 8.13.0
@@ -40,8 +40,8 @@ multidex = "2.0.1"
 # Lifecycle - Updated versions
 lifecycle = "2.9.3"
 
-# Room - Compatible with Kotlin 2.1.0 and KSP
-room = "2.6.1"
+# Room - Updated to version compatible with Kotlin 2.1.0 and KSP
+room = "2.7.0"
 
 # Work Manager - Latest stable
 work = "2.10.4"

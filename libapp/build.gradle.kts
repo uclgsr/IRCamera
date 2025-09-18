@@ -2,21 +2,16 @@ plugins {
     id("com.android.library")
     kotlin("android") // Modern plugin ID format
     id("kotlin-parcelize") // Correct plugin ID for Parcelize
-    kotlin("kapt") // Switch back to KAPT for compatibility with Kotlin 2.1.0
-    // id("com.google.devtools.ksp") // Temporarily disabled due to version compatibility issues
+    id("com.google.devtools.ksp") // Use KSP plugin from classpath
 }
 
-// Temporarily switch to KAPT for compatibility with Kotlin 2.1.0
-kapt {
-    arguments {
-        arg("room.schemaLocation", "$projectDir/schemas")
-        arg("room.incremental", "true")
-        arg("room.expandProjection", "true")
-    }
-    useBuildCache = true
-    correctErrorTypes = true
-    // Enable explicit support for Kotlin 2.1.0 in KAPT
-    includeCompileClasspath = false
+ksp {
+    arg("room.schemaLocation", "$projectDir/schemas")
+    arg("room.incremental", "true")
+    arg("room.expandProjection", "true")
+    // Force KSP to use Kotlin 2.1 language version
+    arg("kotlin.compiler.version", "2.1.0")
+    arg("kotlincArguments", "-language-version 2.1 -api-version 2.1")
 }
 
 android {
@@ -54,8 +49,8 @@ android {
     kotlin {
         compilerOptions {
             jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
-            apiVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_1)
-            languageVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_1)
+            apiVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_0)
+            languageVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_0)
             freeCompilerArgs.addAll(
                 listOf(
                     "-opt-in=kotlin.RequiresOptIn",
@@ -126,6 +121,9 @@ configurations.all {
         force("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${libs.versions.kotlin.get()}")
         force("org.jetbrains.kotlinx:kotlinx-coroutines-core:${libs.versions.coroutines.get()}")
         force("org.jetbrains.kotlinx:kotlinx-coroutines-android:${libs.versions.coroutines.get()}")
+        // Force KSP to use correct Kotlin version
+        force("com.google.devtools.ksp:symbol-processing-api:${libs.versions.ksp.get()}")
+        force("com.google.devtools.ksp:symbol-processing:${libs.versions.ksp.get()}")
     }
 }
 
@@ -144,7 +142,7 @@ dependencies {
     api(libs.lifecycle.runtime.ktx)
     api(libs.lifecycle.viewmodel.ktx)
     api(libs.lifecycle.livedata.ktx)
-    kapt(libs.room.compiler) // Switched back to KAPT for Kotlin 2.1.0 compatibility
+    ksp(libs.room.compiler) // Migrated from kapt to KSP
     api(libs.room.ktx)
     api(libs.work.runtime.ktx)
     api(libs.retrofit2)
@@ -152,7 +150,7 @@ dependencies {
     api(libs.adapter.rxjava2)
     api(libs.eventbus)
     api(libs.glide)
-    kapt(libs.glide.compiler) // Switched back to KAPT for Kotlin 2.1.0 compatibility
+    ksp(libs.glide.compiler) // Migrated from kapt to KSP
     api(libs.rxjava2)
     api(libs.rxandroid)
     api(libs.utilcode)
