@@ -130,6 +130,7 @@ class PCControllerPerformanceEvaluator:
             "acceptable_packet_loss_percent": 5.0,  # %
             "resource_warning_cpu_percent": 80.0,   # %
             "resource_warning_memory_percent": 80.0, # %
+            "max_latency_for_score_ms": 200.0,  # ms - latency at which score becomes 0
         }
         
         # Monitoring state
@@ -460,7 +461,7 @@ class PCControllerPerformanceEvaluator:
         
         # Network performance score (30% weight)
         if "avg_network_latency_ms" in overall_metrics:
-            latency_score = max(0.0, 1.0 - (overall_metrics["avg_network_latency_ms"] / 200.0))  # 200ms = 0 score
+            latency_score = max(0.0, 1.0 - (overall_metrics["avg_network_latency_ms"] / self.benchmark_config["max_latency_for_score_ms"]))
             score_components.append(latency_score * 0.3)
         
         # Resource efficiency score (40% weight)
