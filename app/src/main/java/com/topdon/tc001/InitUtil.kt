@@ -50,13 +50,11 @@ object InitUtil {
         if (BuildConfig.DEBUG) {
             XLog.init(config, androidPrinter, filePrinter)
         } else {
-
             XLog.init(config, filePrinter)
         }
     }
 
     fun initLms() {
-
         val privacyPolicyUrl =
             "https://plat.topdon.com/topdon-plat/out-user/baseinfo/template/getHtmlContentById?" +
                     "softCode=${BaseApplication.instance.getSoftWareCode()}&" +
@@ -78,11 +76,8 @@ object InitUtil {
                 if (!BaseApplication.instance.isDomestic()) {
                     initXutils()
                 } else {
-
                     setWxAppId("wx588cb319449b72dd")
                     setBuglyAppId("0b375add84")
-
-
                 }
                 setAppKey(BuildConfig.APP_KEY)
                 setAppSecret(BuildConfig.APP_SECRET)
@@ -91,17 +86,12 @@ object InitUtil {
     }
 
     fun initUM() {
-
-
+        // TODO: Implement UM initialization
     }
 
     fun initJPush() {
-        var registrationID = ""
-
-
-
-
-
+        val registrationID = ""
+        // TODO: Implement JPush initialization
 
         if (SharedManager.getHasShowClause()) {
             XLog.w("registrationID= $registrationID")
@@ -112,6 +102,7 @@ object InitUtil {
         try {
             BaseApplication.instance.unregisterReceiver(BaseApplication.usbObserver)
         } catch (e: Exception) {
+            // Receiver may not be registered, this is expected
         }
 
         val filter = IntentFilter()
