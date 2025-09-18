@@ -462,7 +462,7 @@ class ShimmerMvpActivity : AppCompatActivity() {
 
                 // Export simple performance results
                 try {
-                    val performanceFile = simpleBenchmarkManager.exportResults(emptyList(), cacheDir)
+                    val performanceFile = simpleBenchmarkManager.exportResults(listOf(gsrResult), cacheDir)
                     performanceFile?.let {
                         Log.i(TAG, "Simple performance results exported to: ${it.absolutePath}")
                     }
