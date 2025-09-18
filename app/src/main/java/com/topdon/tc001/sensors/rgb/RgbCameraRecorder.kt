@@ -27,14 +27,14 @@ import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
-import com.topdon.tc001.permissions.EnhancedPermissionManager
+import com.topdon.tc001.permissions.PermissionManager
 
 class RgbCameraRecorder(
     private val context: Context,
     private val lifecycleOwner: LifecycleOwner,
     private val previewView: PreviewView? = null,
     private val useFrontCamera: Boolean = false,
-    private val enhancedPermissionManager: EnhancedPermissionManager? = null
+    private val permissionManager: PermissionManager? = null
 ) : SensorRecorder {
 
     companion object {
@@ -647,7 +647,63 @@ class RgbCameraRecorder(
         sessionMetadata: SessionMetadata
     ): Boolean {
         this.sessionMetadata = sessionMetadata
-        return startRecording(sessionDirectory)
+        this.sessionDirectory = sessionDirectory
+        
+        return withContext(Dispatchers.IO) {
+            try {
+                if (_isRecording.get()) {
+                    Log.w(TAG, "Recording already in progress")
+                    return@withContext true
+                }
+
+                Log.i(TAG, "Starting RGB camera recording with Samsung Galaxy S22 optimization")
+                _isRecording.set(true)
+                sessionStartTime.set(System.currentTimeMillis())
+
+                // Use session metadata timestamps for proper synchronization
+                sessionReferenceTimestampNs.set(sessionMetadata.sessionStartTimestampNs)
+                sessionStartOffsetNs.set(sessionMetadata.sessionStartOffsetNs)
+
+                // Setup session directory and files
+                val sessionDir = File(sessionDirectory)
+                if (!sessionDir.exists()) sessionDir.mkdirs()
+                
+                setupOutputFiles(sessionDir)
+                initializeCsvWriter()
+
+                // Initialize camera if not already done
+                if (cameraProvider == null) {
+                    withContext(Dispatchers.Main) {
+                        if (!initialize()) {
+                            _isRecording.set(false)
+                            return@withContext false
+                        }
+                    }
+                }
+
+                // Start video recording on main thread
+                withContext(Dispatchers.Main) {
+                    if (!startVideoRecording()) {
+                        _isRecording.set(false)
+                        return@withContext false
+                    }
+                }
+
+                // Start continuous frame capture
+                startFrameCapture()
+                _cameraStatus.value = "Recording - ${selectedVideoWidth}x${selectedVideoHeight}@${selectedVideoFps}fps"
+
+                Log.i(TAG, "RGB camera recording started successfully with ${selectedVideoWidth}x${selectedVideoHeight} resolution")
+                return@withContext true
+
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to start RGB camera recording", e)
+                _isRecording.set(false)
+                _cameraStatus.value = "Recording Failed"
+                emitError(ErrorType.RECORDING_FAILED, "Failed to start recording: ${e.message}")
+                return@withContext false
+            }
+        }
     }
 
     override suspend fun startRecording(sessionDirectory: String): Boolean {

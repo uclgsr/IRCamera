@@ -6,6 +6,8 @@ import android.os.Build
 import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.FragmentActivity
+import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlin.coroutines.resume
 
 /**
  * Permission Manager for MVP - focuses on core functionality with proper constants
@@ -23,9 +25,9 @@ class PermissionManager(
     }
 
     /**
-     * Request camera permissions - MVP version with proper error handling
+     * Request camera permissions with proper callback mechanism
      */
-    suspend fun requestCameraPermissions(): Boolean {
+    suspend fun requestCameraPermissions(): Boolean = suspendCancellableCoroutine { continuation ->
         val cameraPermissions = arrayOf(
             Manifest.permission.CAMERA,
             Manifest.permission.RECORD_AUDIO
@@ -37,23 +39,25 @@ class PermissionManager(
         
         if (missingPermissions.isEmpty()) {
             Log.i(TAG, "Camera permissions already granted")
-            return true
+            continuation.resume(true)
+            return@suspendCancellableCoroutine
         }
         
         Log.i(TAG, "Requesting camera permissions")
-        ActivityCompat.requestPermissions(activity, missingPermissions.toTypedArray(), REQUEST_CAMERA_PERMISSIONS)
         
-        // For MVP: Check permissions immediately after request
-        // In production, this would use a proper callback mechanism
-        return missingPermissions.all { 
-            ActivityCompat.checkSelfPermission(activity, it) == PackageManager.PERMISSION_GRANTED
+        // Set up callback for permission result
+        permissionController.setPermissionCallback(REQUEST_CAMERA_PERMISSIONS) { granted ->
+            Log.i(TAG, "Camera permissions result: $granted")
+            continuation.resume(granted)
         }
+        
+        ActivityCompat.requestPermissions(activity, missingPermissions.toTypedArray(), REQUEST_CAMERA_PERMISSIONS)
     }
 
     /**
-     * Request bluetooth permissions - MVP version with proper error handling
+     * Request bluetooth permissions with proper callback mechanism
      */
-    suspend fun requestBluetoothPermissions(): Boolean {
+    suspend fun requestBluetoothPermissions(): Boolean = suspendCancellableCoroutine { continuation ->
         val bluetoothPermissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             arrayOf(
                 Manifest.permission.BLUETOOTH_SCAN,
@@ -74,17 +78,19 @@ class PermissionManager(
         
         if (missingPermissions.isEmpty()) {
             Log.i(TAG, "Bluetooth permissions already granted")
-            return true
+            continuation.resume(true)
+            return@suspendCancellableCoroutine
         }
         
         Log.i(TAG, "Requesting bluetooth permissions")
-        ActivityCompat.requestPermissions(activity, missingPermissions.toTypedArray(), REQUEST_BLUETOOTH_PERMISSIONS)
         
-        // For MVP: Check permissions immediately after request
-        // In production, this would use a proper callback mechanism
-        return missingPermissions.all { 
-            ActivityCompat.checkSelfPermission(activity, it) == PackageManager.PERMISSION_GRANTED
+        // Set up callback for permission result
+        permissionController.setPermissionCallback(REQUEST_BLUETOOTH_PERMISSIONS) { granted ->
+            Log.i(TAG, "Bluetooth permissions result: $granted")
+            continuation.resume(granted)
         }
+        
+        ActivityCompat.requestPermissions(activity, missingPermissions.toTypedArray(), REQUEST_BLUETOOTH_PERMISSIONS)
     }
 
     /**
