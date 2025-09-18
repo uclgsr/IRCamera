@@ -655,7 +655,7 @@ class NetworkErrorRecoveryManager(
      */
     private fun createControllerInfo(): NetworkClient.ControllerInfo {
         return NetworkClient.ControllerInfo(
-            ipAddress = "192.168.1.100", // This would be the actual discovered IP
+            ipAddress = lastKnownGoodController?.ipAddress ?: "127.0.0.1", // This would be the actual discovered IP
             port = 8080,
             serviceName = "IRCamera-PC-Controller",
             isAvailable = true
