@@ -21,10 +21,13 @@ def test_core_continued_features():
 
     try:
         # Test enhanced time sync server
-        print("✓ EnhancedTimeSyncServer creation successful")
+        from ircamera_pc.sync import AdvancedTimeSyncServer
+        time_sync = AdvancedTimeSyncServer(port=1235)
+        print("✓ AdvancedTimeSyncServer creation successful")
 
         # Test manual device creation with proper parameters
-        from ircamera_pc.core.device_manager import DeviceManager, DeviceType
+        from ircamera_pc.core.device_manager import DeviceManager, DeviceInfo, DeviceType, \
+            DeviceConnectionState
 
         device_manager = DeviceManager()
         registry = device_manager.get_registry()
@@ -84,10 +87,7 @@ def test_network_components():
         except Exception as e:
             print(f"❌ WebSocket server creation failed: {e}")
             # This is expected in some configurations, so don't fail the test
-            print(
-                "⚠ WebSocket server creation failed - may need additional "
-                "dependencies or config"
-            )
+            print("⚠ WebSocket server creation failed - may need additional dependencies or config")
             return True  # Don't fail the whole test for this
 
         # Check if server has basic expected attributes

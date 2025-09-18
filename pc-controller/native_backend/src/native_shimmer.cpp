@@ -254,6 +254,17 @@ namespace ircamera {
             return send_inquiry_command();
         }
 
+        // Public accessor methods
+        bool is_connected() const { return is_connected_.load(); }
+        bool is_streaming() const { return is_streaming_.load(); }
+        int get_sampling_rate() const { return sampling_rate_; }
+        bool set_gsr_range(int range) { 
+            gsr_range_ = range; 
+            return true; 
+        }
+        void set_data_callback(DataCallback callback) { data_callback_ = callback; }
+        std::string get_last_error() const { return last_error_; }
+
     private:
         std::string detect_shimmer_port() {
 
@@ -477,7 +488,7 @@ namespace ircamera {
     }
 
     bool NativeShimmer::is_connected() const {
-        return pimpl->is_connected_;
+        return pimpl->is_connected();
     }
 
     bool NativeShimmer::start_streaming() {
@@ -489,7 +500,7 @@ namespace ircamera {
     }
 
     bool NativeShimmer::is_streaming() const {
-        return pimpl->is_streaming_;
+        return pimpl->is_streaming();
     }
 
     bool NativeShimmer::set_sampling_rate(int rate_hz) {
@@ -497,12 +508,11 @@ namespace ircamera {
     }
 
     int NativeShimmer::get_sampling_rate() const {
-        return pimpl->sampling_rate_;
+        return pimpl->get_sampling_rate();
     }
 
     bool NativeShimmer::set_gsr_range(int range) {
-        pimpl->gsr_range_ = range;
-        return true;
+        return pimpl->set_gsr_range(range);
     }
 
     bool NativeShimmer::calibrate_gsr(double known_resistance_ohms) {
@@ -511,7 +521,7 @@ namespace ircamera {
     }
 
     void NativeShimmer::set_data_callback(DataCallback callback) {
-        pimpl->data_callback_ = callback;
+        pimpl->set_data_callback(callback);
     }
 
     std::vector <GSRData> NativeShimmer::get_buffered_data() {
@@ -527,7 +537,7 @@ namespace ircamera {
     }
 
     std::string NativeShimmer::get_last_error() const {
-        return pimpl->last_error_;
+        return pimpl->get_last_error();
     }
 
     bool NativeShimmer::perform_self_test() {

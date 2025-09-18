@@ -102,7 +102,7 @@ class SessionMetadata:
         return result
 
 
-class EnhancedSessionManager:
+class AdvancedSessionManager:
     """
     Enhanced session manager with device coordination.
     
