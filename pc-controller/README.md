@@ -1,55 +1,54 @@
-# IRCamera PC Controller
+# IRCamera PC Controller - MVP
 
 ## Main Application
 
-**`pc_controller.py`** - The unified PC Controller application for multi-modal physiological sensing.
+**`pc_controller.py`** - The MVP PC Controller application for multi-modal physiological sensing.
 
 ### Usage
 
 ```bash
-# Run headless demo
-python3 pc_controller.py --headless --duration 30
+# Run MVP demo (default 30 seconds)
+python3 pc_controller.py
 
-# Run with GUI (requires PyQt6)
-python3 pc_controller.py --gui
+# Run for specific duration
+python3 pc_controller.py --duration 60
 
 # Show help
 python3 pc_controller.py --help
 ```
 
-### Features
+### Core MVP Features
 
 - **TCP Server**: Handles Android device connections on port 8080
-- **Session Management**: Recording session lifecycle with metadata
-- **Device Discovery**: Automatic detection of Android sensor nodes
-- **Native Backend**: High-performance C++ processing for GSR data
-- **GUI Interface**: Optional PyQt6 desktop interface
-- **Real-time Processing**: Live data visualization and analysis
+- **Device Registration**: Simple device discovery and registration
+- **Session Management**: Basic recording session lifecycle
+- **Data Logging**: GSR and sensor data reception with logging
+- **Simple Architecture**: Single file implementation focused on core functionality
 
-### Supporting Files
+### Architecture
 
-- `enhanced_tcp_server.py` - Advanced TCP server with TLS support
-- `realtime_visualization.py` - PyQtGraph visualization components
-- `security_manager.py` - TLS certificate and authentication
-- `demo_mvp_components.py` - Component demonstration
-- `headless_demo.py` - Alternative headless demo
-- `native_backend/` - C++ native processing module
+The MVP PC Controller implements a simplified Hub-and-Spoke architecture:
+- **Hub**: PC Controller manages sessions and receives data from devices  
+- **Spokes**: Android devices provide sensor data streams
+- **Communication**: JSON protocol over basic TCP connections
+- **Processing**: Simple Python-based data handling and logging
 
 ### Dependencies
 
 Core (required):
-- Python 3.12+
-- loguru
+- Python 3.12+ (standard library only)
 
 Optional:
-- PyQt6 (for GUI)
-- numpy (for visualization)
-- native_backend (for high-performance processing)
+- Custom logging libraries (defaults to standard logging)
 
-### Architecture
+### Removed Over-engineered Components
 
-The PC Controller implements a Hub-and-Spoke architecture where:
-- **Hub**: PC Controller manages sessions and coordinates devices
-- **Spokes**: Android devices provide sensor data streams
-- **Communication**: JSON protocol over TCP with optional TLS encryption
-- **Processing**: Native C++ backend for performance-critical operations
+The following were removed to focus on MVP functionality:
+- Complex TCP server with TLS/SSL
+- Real-time visualization with PyQtGraph
+- Native C++ backend for performance
+- Advanced GUI components
+- Certificate management and security layers
+- Complex error handling and async patterns
+
+The MVP implementation is ~300 lines in a single file vs 2000+ lines across multiple files.
