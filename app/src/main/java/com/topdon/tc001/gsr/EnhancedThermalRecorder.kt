@@ -1,0 +1,178 @@
+package com.topdon.tc001.gsr
+
+import android.content.Context
+import android.util.Log
+import com.topdon.tc001.sensors.thermal.ThermalCameraRecorder
+import com.topdon.tc001.data.SessionMetadata
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import com.topdon.tc001.sensors.RecordingStatus
+import com.topdon.tc001.sensors.SensorError
+import com.topdon.tc001.sensors.RecordingStats
+import java.io.File
+import java.io.FileWriter
+
+/**
+ * Enhanced thermal recorder that wraps ThermalCameraRecorder and provides additional
+ * synchronization and session management functionality needed by multi-modal recording.
+ */
+class EnhancedThermalRecorder(context: Context) {
+    
+    companion object {
+        private const val TAG = "EnhancedThermalRecorder"
+    }
+    
+    private val thermalCameraRecorder = ThermalCameraRecorder(context)
+    private var currentSessionDirectory: File? = null
+    private var syncEventWriter: FileWriter? = null
+    
+    // Initialize the underlying thermal camera recorder
+    suspend fun initialize(): Boolean {
+        return thermalCameraRecorder.initialize()
+    }
+    
+    /**
+     * Start recording with session management
+     */
+    suspend fun startRecording(
+        sessionId: String,
+        sessionMetadata: SessionMetadata?,
+        saveImages: Boolean = false
+    ): Boolean {
+        try {
+            // Set up session directory
+            currentSessionDirectory = File("/storage/emulated/0/IRCamera/sessions/$sessionId")
+            currentSessionDirectory?.mkdirs()
+            
+            // Initialize sync events file
+            setupSyncEventsFile()
+            
+            val success = if (sessionMetadata != null) {
+                thermalCameraRecorder.startRecording(
+                    currentSessionDirectory!!.absolutePath,
+                    sessionMetadata
+                )
+            } else {
+                thermalCameraRecorder.startRecording(currentSessionDirectory!!.absolutePath)
+            }
+            
+            if (success) {
+                Log.i(TAG, "Enhanced thermal recording started for session: $sessionId")
+            }
+            
+            return success
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to start enhanced thermal recording", e)
+            return false
+        }
+    }
+    
+    /**
+     * Stop recording and return session info
+     */
+    suspend fun stopRecording(): SessionInfo? {
+        return try {
+            val success = thermalCameraRecorder.stopRecording()
+            if (success) {
+                closeSyncEventsFile()
+                val sessionInfo = SessionInfo(
+                    sessionDirectory = currentSessionDirectory,
+                    sampleCount = thermalCameraRecorder.getRecordingStats().frameCount
+                )
+                Log.i(TAG, "Enhanced thermal recording stopped successfully")
+                sessionInfo
+            } else {
+                null
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to stop enhanced thermal recording", e)
+            null
+        }
+    }
+    
+    /**
+     * Trigger synchronization event for multi-modal coordination
+     */
+    fun triggerSyncEvent(eventType: String, eventData: Map<String, Any>) {
+        try {
+            val timestamp = System.nanoTime()
+            val eventLine = buildString {
+                append(timestamp)
+                append(",")
+                append(eventType)
+                append(",")
+                append(eventData.entries.joinToString(";") { "${it.key}=${it.value}" })
+            }
+            
+            syncEventWriter?.let { writer ->
+                writer.write(eventLine)
+                writer.write("\n")
+                writer.flush()
+            }
+            
+            Log.d(TAG, "Sync event triggered: $eventType")
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to trigger sync event: $eventType", e)
+        }
+    }
+    
+    /**
+     * Get the current session directory
+     */
+    fun getSessionDirectory(): File? {
+        return currentSessionDirectory
+    }
+    
+    /**
+     * Cleanup resources
+     */
+    fun cleanup() {
+        try {
+            closeSyncEventsFile()
+            // Launch cleanup in a coroutine since underlying cleanup is suspend
+            kotlinx.coroutines.GlobalScope.launch {
+                thermalCameraRecorder.cleanup()
+            }
+            currentSessionDirectory = null
+            Log.i(TAG, "Enhanced thermal recorder cleaned up")
+        } catch (e: Exception) {
+            Log.e(TAG, "Error during cleanup", e)
+        }
+    }
+    
+    // Delegate methods to underlying thermal camera recorder
+    fun getStatusFlow(): Flow<RecordingStatus> = thermalCameraRecorder.getStatusFlow()
+    fun getErrorFlow(): Flow<SensorError> = thermalCameraRecorder.getErrorFlow()
+    fun getRecordingStats(): RecordingStats = thermalCameraRecorder.getRecordingStats()
+    
+    private fun setupSyncEventsFile() {
+        try {
+            currentSessionDirectory?.let { dir ->
+                val syncEventsFile = File(dir, "sync_events.csv")
+                syncEventWriter = FileWriter(syncEventsFile, true)
+                syncEventWriter?.write("timestamp_ns,event_type,event_data\n")
+                syncEventWriter?.flush()
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to setup sync events file", e)
+        }
+    }
+    
+    private fun closeSyncEventsFile() {
+        try {
+            syncEventWriter?.close()
+            syncEventWriter = null
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to close sync events file", e)
+        }
+    }
+    
+    /**
+     * Session information returned when recording stops
+     */
+    data class SessionInfo(
+        val sessionDirectory: File?,
+        val sampleCount: Long
+    )
+}
