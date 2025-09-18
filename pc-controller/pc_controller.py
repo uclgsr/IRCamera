@@ -162,7 +162,7 @@ class MVPTCPServer:
             
             try:
                 client_socket.close()
-            except:
+            except Exception:
                 pass
     
     def _send_message(self, client_socket: socket.socket, message: Dict[str, Any]) -> bool:
