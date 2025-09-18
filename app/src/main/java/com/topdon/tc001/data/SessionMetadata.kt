@@ -463,10 +463,10 @@ data class SessionMetadata(
             "data_files" to mapOf(
                 "modality_files" to modalityFiles,
                 "file_schema" to mapOf(
-                    "thermal_data_csv" to "timestamp_ns,frame_index,temp_matrix_serialized,min_temp_c,max_temp_c,avg_temp_c,emissivity,ambient_temp_c",
-                    "rgb_data_csv" to "timestamp_ns,frame_filename,processing_time_ms,compression_ratio,file_size_bytes",
-                    "gsr_data_csv" to "timestamp_ns,gsr_microsiemens,raw_value,resistance_ohms,device_id",
-                    "audio_data_csv" to "timestamp_ns,sample_rate,channels,bit_depth,file_reference"
+                    "thermal_data_csv" to com.topdon.tc001.data.FileSchemaManager().generateCsvHeader("thermal", includeUnits = false),
+                    "rgb_data_csv" to com.topdon.tc001.data.FileSchemaManager().generateCsvHeader("rgb", includeUnits = false),
+                    "gsr_data_csv" to com.topdon.tc001.data.FileSchemaManager().generateCsvHeader("gsr", includeUnits = false),
+                    "audio_data_csv" to com.topdon.tc001.data.FileSchemaManager().generateCsvHeader("audio", includeUnits = false)
                 )
             ),
             
