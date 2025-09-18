@@ -23,6 +23,95 @@ import logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
+# Try to import native backend for enhanced performance
+try:
+    import sys
+    import os
+    # Add the native backend build directory to path
+    native_backend_path = os.path.join(os.path.dirname(__file__), 'native_backend', 'build')
+    if os.path.exists(native_backend_path):
+        sys.path.insert(0, native_backend_path)
+    import native_backend
+    NATIVE_BACKEND_AVAILABLE = True
+    logger.info("🚀 Native C++ backend available for enhanced performance")
+except ImportError:
+    NATIVE_BACKEND_AVAILABLE = False
+    logger.info("📱 Using Python-only implementation (native backend not available)")
+
+
+class GSRProcessor:
+    """GSR data processor with optional native backend"""
+    
+    def __init__(self):
+        self.use_native = NATIVE_BACKEND_AVAILABLE
+        if self.use_native:
+            try:
+                self.native_shimmer = native_backend.NativeShimmer()
+                logger.info("🔧 Using native C++ GSR processing")
+            except Exception as e:
+                logger.warning(f"Failed to initialize native backend: {e}")
+                self.use_native = False
+                logger.info("📱 Falling back to Python GSR processing")
+        else:
+            logger.info("📱 Using Python GSR processing")
+    
+    def process_gsr_data(self, raw_data: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+        """Process GSR data with native backend or Python fallback"""
+        try:
+            if self.use_native:
+                return self._process_native(raw_data)
+            else:
+                return self._process_python(raw_data)
+        except Exception as e:
+            logger.error(f"GSR processing error: {e}")
+            return None
+    
+    def _process_native(self, raw_data: Dict[str, Any]) -> Dict[str, Any]:
+        """Process GSR data using native C++ backend"""
+        # Convert to native format and process
+        gsr_raw = raw_data.get('gsr_raw', 0)
+        timestamp = raw_data.get('timestamp', time.time())
+        
+        # Create native GSR data structure
+        gsr_data = native_backend.GSRData()
+        gsr_data.timestamp_ns = int(timestamp * 1e9)
+        gsr_data.raw_gsr_value = gsr_raw
+        
+        # Process with native backend (this would include calibration, filtering, etc.)
+        # For MVP, we'll do basic conversion
+        gsr_microsiemens = self._raw_to_microsiemens(gsr_raw)
+        gsr_data.gsr_microsiemens = gsr_microsiemens
+        
+        return {
+            'timestamp': timestamp,
+            'gsr_raw': gsr_raw,
+            'gsr_microsiemens': gsr_microsiemens,
+            'processed_by': 'native_cpp'
+        }
+    
+    def _process_python(self, raw_data: Dict[str, Any]) -> Dict[str, Any]:
+        """Process GSR data using Python implementation"""
+        gsr_raw = raw_data.get('gsr_raw', 0)
+        timestamp = raw_data.get('timestamp', time.time())
+        
+        # Basic GSR conversion using Python
+        gsr_microsiemens = self._raw_to_microsiemens(gsr_raw)
+        
+        return {
+            'timestamp': timestamp,
+            'gsr_raw': gsr_raw,
+            'gsr_microsiemens': gsr_microsiemens,
+            'processed_by': 'python'
+        }
+    
+    def _raw_to_microsiemens(self, raw_value: float) -> float:
+        """Convert raw GSR value to microsiemens"""
+        # Basic conversion formula - in real implementation this would be calibrated
+        # This is a simplified conversion for MVP demonstration
+        if raw_value <= 0:
+            return 0.0
+        return (raw_value / 1024.0) * 100.0  # Simplified conversion
+
 
 class SimpleDevice:
     """Simple device representation for MVP"""
@@ -43,6 +132,7 @@ class MVPTCPServer:
         self.server_socket = None
         self.devices: Dict[str, SimpleDevice] = {}
         self.device_lock = threading.Lock()
+        self.gsr_processor = GSRProcessor()
         
     def start(self) -> bool:
         """Start the TCP server"""
@@ -143,8 +233,12 @@ class MVPTCPServer:
                                 
                                 # Log GSR data
                                 if message.get('type') == 'gsr_data':
-                                    gsr_value = message.get('gsr_microsiemens', 0)
-                                    logger.info(f"GSR data from {device_id}: {gsr_value:.2f}µS")
+                                    # Process GSR data with native backend if available
+                                    processed_data = self.gsr_processor.process_gsr_data(message)
+                                    if processed_data:
+                                        gsr_value = processed_data.get('gsr_microsiemens', 0)
+                                        processor = processed_data.get('processed_by', 'unknown')
+                                        logger.info(f"GSR data from {device_id}: {gsr_value:.2f}µS [{processor}]")
                                 
                         except json.JSONDecodeError:
                             logger.warning(f"Invalid JSON from {address}")

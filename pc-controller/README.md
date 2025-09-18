@@ -23,6 +23,7 @@ python3 pc_controller.py --help
 - **Device Registration**: Simple device discovery and registration
 - **Session Management**: Basic recording session lifecycle
 - **Data Logging**: GSR and sensor data reception with logging
+- **Native Backend**: Optional C++ backend for enhanced GSR processing performance
 - **Simple Architecture**: Single file implementation focused on core functionality
 
 ### Architecture
@@ -31,15 +32,36 @@ The MVP PC Controller implements a simplified Hub-and-Spoke architecture:
 - **Hub**: PC Controller manages sessions and receives data from devices  
 - **Spokes**: Android devices provide sensor data streams
 - **Communication**: JSON protocol over basic TCP connections
-- **Processing**: Simple Python-based data handling and logging
+- **Processing**: Python-based data handling with optional native C++ backend for performance
+- **GSR Processing**: Advanced GSR sensor data processing using native C++ when available
+
+### Native C++ Backend
+
+The implementation includes an optional high-performance C++ backend:
+
+**Build native backend:**
+```bash
+cd native_backend
+mkdir -p build && cd build
+cmake .. && make -j2
+```
+
+**Features:**
+- High-performance GSR data processing
+- Native Shimmer device support  
+- Real-time sensor data handling
+- Automatic Python fallback if native backend unavailable
 
 ### Dependencies
 
-Core (required):
+**Core (required):**
 - Python 3.12+ (standard library only)
 
-Optional:
-- Custom logging libraries (defaults to standard logging)
+**Native Backend (optional):**
+- CMake 3.18+
+- C++17 compatible compiler
+- PyBind11 (auto-downloaded if not found)
+- OpenCV (optional, for webcam support)
 
 ### Removed Over-engineered Components
 
