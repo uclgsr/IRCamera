@@ -938,19 +938,20 @@ class RgbCameraRecorder(
     }
 
     /**
-     * Attempt RAW/DNG capture - best effort, non-blocking
+     * Attempt RAW/DNG capture - FRAMEWORK ONLY (not functional in current implementation)
      * This provides a framework for RAW capture when Camera2 API integration is needed
+     * Current implementation only provides high-quality JPEG on RAW-capable devices
      */
     private fun captureRawFrameAsync(rawFile: File, timestampRecord: TimestampRecord, frameNumber: Long) {
         try {
             // RAW capture capability detected and enabled
-            Log.d(TAG, "RAW capture ready for frame $frameNumber - ${rawFile.name}")
+            Log.d(TAG, "RAW capture framework ready for frame $frameNumber - ${rawFile.name}")
             
-            // Framework for RAW capture - would need Camera2 API integration for full DNG support
+            // FRAMEWORK ONLY: Would need Camera2 API integration for full DNG support
             // Current implementation provides JPEG with maximum quality on RAW-capable devices
             // Future enhancement: Direct Camera2 integration for true RAW/DNG capture
             
-            Log.i(TAG, "Enhanced quality capture (RAW-capable device) for frame $frameNumber")
+            Log.i(TAG, "Enhanced quality capture (RAW-capable device) for frame $frameNumber - FRAMEWORK ONLY")
             
         } catch (e: Exception) {
             Log.w(TAG, "RAW capture framework error for frame $frameNumber", e)

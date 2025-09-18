@@ -53,6 +53,11 @@ class RecordingController(
         private const val SYNC_MARKER_DISTRIBUTION_DELAY_MS = 50L
         private const val STATUS_UPDATE_INTERVAL_MS = 1000L
         private const val ERROR_RECOVERY_DELAY_MS = 2000L
+        
+        // Storage estimation constants
+        private const val RGB_STORAGE_MB_PER_MIN = 50.0
+        private const val THERMAL_STORAGE_MB_PER_MIN = 5.0
+        private const val SHIMMER_STORAGE_MB_PER_MIN = 1.0
     }
 
     private val sensorRecorders = ConcurrentHashMap<String, SensorRecorder>()
@@ -1659,9 +1664,9 @@ data class SessionDiagnostics(
         
         for (sensor in enabledSensors) {
             when (sensor.uppercase()) {
-                "RGB" -> estimatedMB += durationMinutes * 50.0 // ~50MB/min for 1080p video + frames
-                "THERMAL" -> estimatedMB += durationMinutes * 5.0 // ~5MB/min for thermal data
-                "SHIMMER" -> estimatedMB += durationMinutes * 1.0 // ~1MB/min for GSR data
+                "RGB" -> estimatedMB += durationMinutes * RGB_STORAGE_MB_PER_MIN // ~50MB/min for 1080p video + frames
+                "THERMAL" -> estimatedMB += durationMinutes * THERMAL_STORAGE_MB_PER_MIN // ~5MB/min for thermal data
+                "SHIMMER" -> estimatedMB += durationMinutes * SHIMMER_STORAGE_MB_PER_MIN // ~1MB/min for GSR data
             }
         }
         

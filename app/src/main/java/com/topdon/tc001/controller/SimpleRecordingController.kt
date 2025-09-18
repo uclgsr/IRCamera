@@ -21,6 +21,10 @@ class SimpleRecordingController(
 ) {
     companion object {
         private const val TAG = "SimpleRecordingController"
+        private const val FALLBACK_AVAILABLE_SPACE_GB = 10.0
+        private const val RGB_STORAGE_MB_PER_MIN = 50.0
+        private const val THERMAL_STORAGE_MB_PER_MIN = 5.0
+        private const val SHIMMER_STORAGE_MB_PER_MIN = 1.0
     }
 
     // Recording state
@@ -87,12 +91,14 @@ class SimpleRecordingController(
                             val sensorDir = File(sessionDir, sensorName.lowercase())
                             sensorDir.mkdirs()
                             
-                            val success = sensor.startRecording(sensorDir.absolutePath, sessionMetadata!!)
+                        sessionMetadata?.let { meta ->
+                            val success = sensor.startRecording(sensorDir.absolutePath, meta)
                             if (success) {
                                 activeRecorders[sensorName] = true
                                 sensorsStarted++
                                 Log.i(TAG, "Started sensor: $sensorName")
                             }
+                        }
                         } catch (e: Exception) {
                             Log.w(TAG, "Failed to start sensor $sensorName", e)
                         }
@@ -176,7 +182,7 @@ class SimpleRecordingController(
             val sessionDir = File(context.filesDir, "sessions")
             sessionDir.freeSpace / (1024.0 * 1024.0 * 1024.0)
         } catch (e: Exception) {
-            10.0 // Assume 10GB available on error
+            FALLBACK_AVAILABLE_SPACE_GB // Assume 10GB available on error
         }
     }
 }

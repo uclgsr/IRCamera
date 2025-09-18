@@ -47,6 +47,7 @@ class SimpleRgbCameraRecorder(
     private val cameraExecutor: ExecutorService = Executors.newSingleThreadExecutor()
     private var activeRecording: Recording? = null
     private var sessionDirectory: String = ""
+    private var sessionMetadata: SessionMetadata? = null
     
     // Flow emissions
     private val _statusFlow = MutableSharedFlow<RecordingStatus>()
@@ -109,6 +110,7 @@ class SimpleRgbCameraRecorder(
     }
 
     override suspend fun startRecording(sessionDirectory: String, sessionMetadata: SessionMetadata): Boolean {
+        this.sessionMetadata = sessionMetadata
         return startRecording(sessionDirectory)
     }
 

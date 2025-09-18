@@ -73,6 +73,10 @@ class ThermalCameraRecorder(
         private const val TEMPERATURE_OFFSET = 273.15 // Kelvin to Celsius
         private const val DEFAULT_EMISSIVITY = 0.95 // Default emissivity
         private const val DEFAULT_REFLECTED_TEMP = 20.0 // Default reflected temperature in Celsius
+        
+        // Preview throttling constants
+        private const val PREVIEW_UPDATE_FRAME_INTERVAL = 10 // Update preview every 10th frame
+        private const val PREVIEW_THROTTLE_MODULO = 100 // Modulo base for throttling
 
         /**
          * Detect optimal frame rate based on TC001 hardware capabilities
@@ -215,6 +219,8 @@ class ThermalCameraRecorder(
 
     private var _isRecording = AtomicBoolean(false)
     override val isRecording: Boolean get() = _isRecording.get()
+    
+    private val frameCount = AtomicLong(0) // Frame counter for preview throttling
 
     private var iruvctc: IRUVCTC? = null
     private var uvcCamera: UVCCamera? = null
@@ -1824,8 +1830,8 @@ class ThermalCameraRecorder(
                         }
                     }
 
-                    // Generate preview for UI with throttling
-                    if (previewCallback != null && tempData != null && currentTime % 100 < 10) {
+                    // Generate preview for UI with frame-based throttling
+                    if (previewCallback != null && tempData != null && frameCount.get() % PREVIEW_UPDATE_FRAME_INTERVAL == 0) {
                         recordingScope.launch {
                             try {
                                 val thermalData = processRealThermalData(tempData, width, height)
