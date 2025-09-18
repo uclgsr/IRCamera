@@ -16,7 +16,7 @@
 #include "libyuv/basic_types.h"
 
 #ifdef __cplusplus
-                                                                                                                        namespace libyuv {
+namespace libyuv {
 extern "C" {
 #endif
 
@@ -30,19 +30,19 @@ extern "C" {
 #endif
 
 #if defined(__has_feature)
-                                                                                                                        #if __has_feature(memory_sanitizer)
+#if __has_feature(memory_sanitizer)
 #define LIBYUV_DISABLE_X86
 #endif
 #endif
 
 #if defined(__clang__) && defined(__aarch64__) && !defined(LIBYUV_DISABLE_NEON)
-                                                                                                                        #if (__clang_major__ < 3) || (__clang_major__ == 3 && (__clang_minor__ < 5))
+#if (__clang_major__ < 3) || (__clang_major__ == 3 && (__clang_minor__ < 5))
 #define LIBYUV_DISABLE_NEON
 #endif  // clang >= 3.5
 #endif  // __clang__
 
 #if defined(__GNUC__) && (defined(__x86_64__) || defined(__i386__))
-                                                                                                                        #if (__GNUC__ > 4) || (__GNUC__ == 4 && (__GNUC_MINOR__ >= 7))
+#if (__GNUC__ > 4) || (__GNUC__ == 4 && (__GNUC_MINOR__ >= 7))
 #define GCC_HAS_AVX2 1
 #endif  // GNUC >= 4.7
 #endif  // __GNUC__
