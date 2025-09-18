@@ -1,5 +1,6 @@
 plugins {
     id("com.android.library")
+    kotlin("android")
 }
 
 android {
@@ -30,6 +31,12 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
         isCoreLibraryDesugaringEnabled = true
     }
+
+    kotlin {
+        compilerOptions {
+            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
+        }
+    }
 }
 
 dependencies {
@@ -49,13 +56,13 @@ dependencies {
         logger.warn("BleModule: Skipping lms_international AAR because no valid file found in shared/app/libapp libs")
     }
 
-    api("androidx.appcompat:appcompat:1.2.0")
-    api("org.greenrobot:eventbus:3.2.0")
-    api("com.blankj:utilcodex:1.31.1") // Utility library
-    api("com.google.code.gson:gson:2.13.2")
-    api("com.elvishew:xlog:1.10.1")
+    api(libs.androidx.appcompat)
+    api(libs.eventbus)
+    api(libs.utilcode)
+    api(libs.gson)
+    api(libs.xlog)
 
-    api("no.nordicsemi.android:ble:2.11.0")
+    api(libs.nordic.ble)
     api(libs.nordic.ble.ktx)
 
     implementation(files("libs/ini4j-0.5.5.jar"))

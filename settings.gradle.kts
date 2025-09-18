@@ -4,9 +4,10 @@ dependencyResolutionManagement {
         google()
         mavenCentral()
         maven { url = uri("https://www.jitpack.io") }
-        maven { url = uri("https://developer.huawei.com/repo/") }
-        maven { url = uri("https://maven.aliyun.com/repository/central") }
-        maven { url = uri("https://maven.aliyun.com/repository/google") }
+        // Removed problematic repositories
+        // maven { url = uri("https://developer.huawei.com/repo/") }
+        // maven { url = uri("https://maven.aliyun.com/repository/central") }
+        // maven { url = uri("https://maven.aliyun.com/repository/google") }
 
         flatDir {
             dirs("libir/libs", "libapp/libs", "app/libs", "libmatrix/libs", "BleModule/libs")
