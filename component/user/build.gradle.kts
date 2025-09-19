@@ -92,7 +92,7 @@ dependencies {
     implementation(project(":libui"))
     // implementation(project(":libmenu")) // CONSOLIDATED into libapp - already included via libapp
     implementation(project(":BleModule"))
-    compileOnly(files("../../app/libs/lms_international-3.90.009.0.aar"))
+    // compileOnly(files("../../app/libs/lms_international-3.90.009.0.aar")) // REMOVED - using stub implementation from libapp
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)

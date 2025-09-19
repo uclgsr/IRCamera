@@ -160,16 +160,17 @@ dependencies {
     api(libs.javacpp)
     api(project(":BleModule"))
 
-    val lmsAarCandidates = listOf(
-        file("libs/lms_international-3.90.009.0.aar"),
-        file("../app/libs/lms_international-3.90.009.0.aar"),
-        file("../shared/libs/lms_international-3.90.009.0.aar")
-    )
-    val lmsAar = lmsAarCandidates.firstOrNull { it.exists() && it.length() > 0L }
-    if (lmsAar != null) {
-        compileOnly(files(lmsAar))
-        logger.lifecycle("libapp: Using LMS AAR from ${lmsAar.absolutePath}")
-    } else {
-        logger.warn("libapp: Skipping lms_international AAR because no valid file found in libapp/app/shared libs")
-    }
+    // LMS AAR dependency removed - replaced with stub implementations
+    // val lmsAarCandidates = listOf(
+    //     file("libs/lms_international-3.90.009.0.aar"),
+    //     file("../app/libs/lms_international-3.90.009.0.aar"),
+    //     file("../shared/libs/lms_international-3.90.009.0.aar")
+    // )
+    // val lmsAar = lmsAarCandidates.firstOrNull { it.exists() && it.length() > 0L }
+    // if (lmsAar != null) {
+    //     compileOnly(files(lmsAar))
+    //     logger.lifecycle("libapp: Using LMS AAR from ${lmsAar.absolutePath}")
+    // } else {
+    //     logger.warn("libapp: Skipping lms_international AAR because no valid file found in libapp/app/shared libs")
+    // }
 }
