@@ -187,7 +187,7 @@ class GSRNetworkStreamer(
 
         try {
             val batchMessage = createBatchMessage(batch)
-            
+            // TODO: Implement proper message sending when EnhancedNetworkClient exposes public messaging API
             Log.d(TAG, "Would send GSR batch: ${batchMessage.toString().take(100)}...")
 
             
@@ -240,7 +240,7 @@ class GSRNetworkStreamer(
                     put("client_timestamp", System.nanoTime())
                 }
 
-            
+            // TODO: Implement proper time sync when EnhancedNetworkClient exposes messaging API
             Log.d(TAG, "Would send time sync request: ${syncRequest}")
 
             
@@ -272,7 +272,7 @@ class GSRNetworkStreamer(
                         put("buffer_size", sampleBuffer.size)
                     }
 
-                
+                // TODO: Implement proper heartbeat sending when EnhancedNetworkClient exposes messaging API
                 Log.d(TAG, "Would send heartbeat: ${heartbeat}")
             } catch (e: Exception) {
                 Log.w(TAG, "Failed to send heartbeat", e)
@@ -298,7 +298,7 @@ class GSRNetworkStreamer(
                         put("uptime_ms", System.currentTimeMillis() - startTime)
                     }
 
-                
+                // TODO: Implement proper metrics sending when EnhancedNetworkClient exposes messaging API
                 Log.d(TAG, "Would send quality metrics: ${metrics}")
             } catch (e: Exception) {
                 Log.w(TAG, "Failed to send quality metrics", e)
@@ -326,7 +326,7 @@ class GSRNetworkStreamer(
                     put("timestamp", System.currentTimeMillis())
                 }
 
-            
+            // TODO: Implement proper stream registration when EnhancedNetworkClient exposes messaging API
             Log.d(TAG, "Would send stream registration: ${registration}")
             Log.i(TAG, "GSR stream registration simulated")
         } catch (e: Exception) {
@@ -346,7 +346,7 @@ class GSRNetworkStreamer(
                     put("timestamp", System.currentTimeMillis())
                 }
 
-            
+            // TODO: Implement proper stream end notification when EnhancedNetworkClient exposes messaging API
             Log.d(TAG, "Would send stream end notification: ${endNotification}")
             Log.i(TAG, "GSR stream end notification simulated")
         } catch (e: Exception) {

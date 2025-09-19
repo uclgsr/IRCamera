@@ -1,9 +1,4 @@
-"""
-Advanced Security Module for PC Controller - Phase 4 Implementation
 
-Provides advanced authentication, certificate management, and security monitoring
-to match the Android implementation.
-"""
 
 import asyncio
 import hashlib
@@ -36,7 +31,7 @@ MONITORING_INTERVAL_SECONDS = 30
 
 
 class AuthLevel(Enum):
-    """Authentication levels matching Android implementation"""
+    
 
     NONE = 0
     BASIC = 1
@@ -46,7 +41,7 @@ class AuthLevel(Enum):
 
 
 class DeviceRole(Enum):
-    """Device roles with permissions"""
+    
 
     GUEST = (0, {"view_status"})
     OBSERVER = (1, {"view_status", "view_sessions", "download_data"})
@@ -83,7 +78,7 @@ class DeviceRole(Enum):
 
 
 class AlertSeverity(Enum):
-    """Security alert severity levels"""
+    
 
     LOW = 1
     MEDIUM = 2
@@ -93,7 +88,7 @@ class AlertSeverity(Enum):
 
 @dataclass
 class AuthenticationContext:
-    """Authentication context for authenticated devices"""
+    
 
     device_id: str
     auth_level: AuthLevel
@@ -124,7 +119,7 @@ class AuthenticationContext:
 
 @dataclass
 class SecurityAlert:
-    """Security alert data structure"""
+    
 
     id: str
     alert_type: str
@@ -149,7 +144,7 @@ class SecurityAlert:
 
 
 class AdvancedAuthenticationManager:
-    """Advanced authentication manager for PC Controller"""
+    
 
     def __init__(self, cert_dir: Optional[Path] = None):
         self.cert_dir = cert_dir or Path("certificates")
@@ -176,13 +171,7 @@ class AdvancedAuthenticationManager:
     async def authenticate(
             self, device_id: str, auth_level: AuthLevel, credentials: Dict[str, Any]
     ) -> Tuple[bool, Optional[AuthenticationContext], str]:
-        """
-        Perform multi-tier authentication
-
-        Returns:
-            Tuple[bool, Optional[AuthenticationContext], str]: (success, context,
-                reason)
-        """
+        
 
         
         if self._is_device_locked(device_id):
@@ -227,7 +216,7 @@ class AdvancedAuthenticationManager:
             return False, None, "authentication_error"
 
     async def _authenticate_basic(self, credentials: Dict[str, Any]) -> bool:
-        """Basic username/password authentication"""
+        
         username = credentials.get("username", "")
         password = credentials.get("password", "")
 
@@ -239,7 +228,7 @@ class AdvancedAuthenticationManager:
     async def _authenticate_certificate(
             self, device_id: str, credentials: Dict[str, Any]
     ) -> bool:
-        """Certificate-based authentication"""
+        
         cert_data = credentials.get("certificate")
         signature = credentials.get("signature")
         challenge = credentials.get("challenge")
@@ -266,7 +255,7 @@ class AdvancedAuthenticationManager:
     async def _authenticate_token(
             self, device_id: str, credentials: Dict[str, Any]
     ) -> bool:
-        """Token-based authentication with HMAC"""
+        
         token = credentials.get("token")
         timestamp = credentials.get("timestamp")
         hmac_signature = credentials.get("hmac")
@@ -285,7 +274,7 @@ class AdvancedAuthenticationManager:
     async def _authenticate_biometric(
             self, device_id: str, credentials: Dict[str, Any]
     ) -> bool:
-        """Biometric/hardware key authentication"""
+        
         hardware_key = credentials.get("hardware_key")
         biometric_signature = credentials.get("biometric_signature")
 
@@ -299,7 +288,7 @@ class AdvancedAuthenticationManager:
     async def _create_auth_context(
             self, device_id: str, auth_level: AuthLevel, credentials: Dict[str, Any]
     ) -> AuthenticationContext:
-        """Create authentication context for successful authentication"""
+        
 
         
         device_type = credentials.get("device_type", "unknown")
@@ -323,7 +312,7 @@ class AdvancedAuthenticationManager:
     def _determine_role(
             self, device_type: str, auth_level: AuthLevel, credentials: Dict[str, Any]
     ) -> DeviceRole:
-        """Determine device role based on context"""
+        
 
         
         if device_type == "PC_CONTROLLER":
@@ -341,18 +330,18 @@ class AdvancedAuthenticationManager:
             return DeviceRole.GUEST
 
     def _generate_session_token(self, device_id: str, role: DeviceRole) -> str:
-        """Generate secure session token"""
+        
         token_data = f"{device_id}:{role.name}:{time.time()}:{secrets.token_hex(16)}"
         return hashlib.sha256(token_data.encode()).hexdigest()
 
     def _generate_hmac(self, device_id: str, token: str, timestamp: float) -> str:
-        """Generate HMAC for token authentication"""
+        
         key = f"hmac_key_{device_id}".encode()
         message = f"{device_id}:{token}:{timestamp}".encode()
         return hmac.new(key, message, hashlib.sha256).hexdigest()
 
     async def _handle_auth_failure(self, device_id: str):
-        """Handle authentication failure"""
+        
         current_time = time.time()
 
         
@@ -379,7 +368,7 @@ class AdvancedAuthenticationManager:
             )
 
     def _is_device_locked(self, device_id: str) -> bool:
-        """Check if device is currently locked"""
+        
         if device_id in self.locked_devices:
             if time.time() < self.locked_devices[device_id]:
                 return True
@@ -389,7 +378,7 @@ class AdvancedAuthenticationManager:
         return False
 
     def validate_session_token(self, token: str) -> Optional[AuthenticationContext]:
-        """Validate session token and return context if valid"""
+        
         context = self.session_tokens.get(token)
         if context and context.is_valid():
             return context
@@ -400,12 +389,12 @@ class AdvancedAuthenticationManager:
         return None
 
     def has_permission(self, token: str, permission: str) -> bool:
-        """Check if token has specific permission"""
+        
         context = self.validate_session_token(token)
         return context and context.role.has_permission(permission)
 
     def logout_device(self, device_id: str) -> bool:
-        """Logout device and invalidate session"""
+        
         context = self.authenticated_devices.pop(device_id, None)
         if context:
             self.session_tokens.pop(context.session_token, None)
@@ -414,7 +403,7 @@ class AdvancedAuthenticationManager:
         return False
 
     def get_active_sessions(self) -> List[AuthenticationContext]:
-        """Get all active authentication sessions"""
+        
         current_time = time.time()
         active_sessions = []
 
@@ -429,7 +418,7 @@ class AdvancedAuthenticationManager:
         return active_sessions
 
     def get_diagnostics(self) -> Dict[str, Any]:
-        """Get authentication system diagnostics"""
+        
         return {
             "active_sessions": len(self.get_active_sessions()),
             "locked_devices": len(
@@ -442,7 +431,7 @@ class AdvancedAuthenticationManager:
 
 
 class AdvancedSecurityMonitor:
-    """Security monitoring system for PC Controller"""
+    
 
     def __init__(self):
         self.is_monitoring = False
@@ -458,7 +447,7 @@ class AdvancedSecurityMonitor:
         logger.info("Advanced security monitor initialized")
 
     async def start_monitoring(self) -> Any:
-        """Start security monitoring"""
+        
         if self.is_monitoring:
             return
 
@@ -470,12 +459,12 @@ class AdvancedSecurityMonitor:
         logger.info("Security monitoring started")
 
     def stop_monitoring(self) -> Any:
-        """Stop security monitoring"""
+        
         self.is_monitoring = False
         logger.info("Security monitoring stopped")
 
     async def _monitoring_loop(self):
-        """Main monitoring loop"""
+        
         while self.is_monitoring:
             try:
                 await self._perform_security_check()
@@ -484,7 +473,7 @@ class AdvancedSecurityMonitor:
                 logger.error(f"Error in security monitoring loop: {e}")
 
     async def _perform_security_check(self):
-        """Perform comprehensive security check"""
+        
         current_time = time.time()
 
         
@@ -497,7 +486,7 @@ class AdvancedSecurityMonitor:
         await self._cleanup_old_data(current_time)
 
     async def _check_brute_force_attacks(self):
-        """Check for brute force attack patterns"""
+        
         current_time = time.time()
         cutoff_time = current_time - 3600  
 
@@ -514,7 +503,7 @@ class AdvancedSecurityMonitor:
                 )
 
     async def _check_connection_patterns(self):
-        """Check for suspicious connection patterns"""
+        
         current_time = time.time()
         cutoff_time = current_time - 60  
 
@@ -531,7 +520,7 @@ class AdvancedSecurityMonitor:
                 )
 
     async def _cleanup_old_data(self, current_time: float):
-        """Clean up old monitoring data"""
+        
         cutoff_time = current_time - (24 * 3600)  
 
         
@@ -550,7 +539,7 @@ class AdvancedSecurityMonitor:
     def report_connection_attempt(
             self, device_id: str, successful: bool, details: Optional[Dict[str, Any]] = None
     ) -> None:
-        """Report connection attempt for monitoring"""
+        
         current_time = time.time()
 
         if device_id not in self.connection_attempts:
@@ -574,7 +563,7 @@ class AdvancedSecurityMonitor:
             description: str,
             details: Dict[str, Any],
     ):
-        """Generate security alert"""
+        
         alert = SecurityAlert(
             id=f"ALERT_{int(time.time())}_{secrets.randbelow(1000)}",
             alert_type=alert_type,
@@ -597,11 +586,11 @@ class AdvancedSecurityMonitor:
         )
 
     def get_security_alerts(self, limit: int = 100) -> List[Dict[str, Any]]:
-        """Get recent security alerts"""
+        
         return [alert.to_dict() for alert in self.security_alerts[-limit:]]
 
     def acknowledge_alert(self, alert_id: str) -> bool:
-        """Acknowledge security alert"""
+        
         for alert in self.security_alerts:
             if alert.id == alert_id:
                 alert.acknowledged = True
@@ -610,7 +599,7 @@ class AdvancedSecurityMonitor:
         return False
 
     def get_monitoring_statistics(self) -> Dict[str, Any]:
-        """Get monitoring statistics"""
+        
         return {
             "monitoring_active": self.is_monitoring,
             "total_connections": self.total_connections,
@@ -624,7 +613,7 @@ class AdvancedSecurityMonitor:
 
 
 class EnhancedSecurityManager:
-    """Main security manager integrating all Phase 4 security features"""
+    
 
     def __init__(self, cert_dir: Optional[Path] = None):
         self.auth_manager = AdvancedAuthenticationManager(cert_dir)
@@ -633,19 +622,19 @@ class EnhancedSecurityManager:
         logger.info("Enhanced security manager initialized")
 
     async def initialize(self) -> Any:
-        """Initialize all security components"""
+        
         await self.security_monitor.start_monitoring()
         logger.info("Enhanced security system fully initialized")
 
     def shutdown(self) -> Any:
-        """Shutdown security system"""
+        
         self.security_monitor.stop_monitoring()
         logger.info("Enhanced security system shutdown complete")
 
     async def authenticate_device(
             self, device_id: str, auth_level: AuthLevel, credentials: Dict[str, Any]
     ) -> Tuple[bool, Optional[AuthenticationContext], str]:
-        """Authenticate device with security monitoring"""
+        
 
         
         success, context, reason = await self.auth_manager.authenticate(
@@ -659,15 +648,15 @@ class EnhancedSecurityManager:
         return success, context, reason
 
     def validate_session(self, token: str) -> Optional[AuthenticationContext]:
-        """Validate session token"""
+        
         return self.auth_manager.validate_session_token(token)
 
     def check_permission(self, token: str, permission: str) -> bool:
-        """Check if session has permission"""
+        
         return self.auth_manager.has_permission(token, permission)
 
     def get_comprehensive_diagnostics(self) -> Dict[str, Any]:
-        """Get comprehensive security diagnostics"""
+        
         return {
             "authentication": self.auth_manager.get_diagnostics(),
             "monitoring": self.security_monitor.get_monitoring_statistics(),

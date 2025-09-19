@@ -1,10 +1,5 @@
 #!/usr/bin/env python3
-"""
-GSR Receiver for IRCamera PC Controller (Hub)
 
-Handles real-time GSR data reception from Android Sensor Nodes (Spokes)
-in the Multi-Modal Physiological Sensing Platform hub-and-spoke architecture.
-"""
 
 import asyncio
 import json
@@ -24,7 +19,7 @@ from .gsr_analytics import GSRAnalytics
 
 @dataclass
 class GSRSample:
-    """Individual GSR sample from Android device"""
+    
 
     timestamp: float
     gsr_value: float
@@ -36,7 +31,7 @@ class GSRSample:
 
 @dataclass
 class DeviceSession:
-    """GSR session data for a specific Android device"""
+    
 
     device_id: str
     session_id: str
@@ -49,20 +44,10 @@ class DeviceSession:
 
 
 class GSRReceiver:
-    """
-    GSR Data Receiver for PC Controller Hub
-
-    Receives and processes real-time GSR data from multiple Android Sensor Nodes.
-    Provides data aggregation, quality monitoring, and storage capabilities.
-    """
+    
 
     def __init__(self, config: Dict[str, Any]):
-        """
-        Initialize GSR Receiver
-
-        Args:
-            config: Configuration dictionary with GSR receiver settings
-        """
+        
         self.config = config.get("gsr_receiver", {})
         self.data_dir = Path(self.config.get("data_dir", "data/gsr"))
         self.data_dir.mkdir(parents=True, exist_ok=True)
@@ -109,39 +94,15 @@ class GSRReceiver:
         )
 
     def init_database(self) -> Any:
-        """Initialize SQLite database for GSR data storage"""
+        
         try:
             with sqlite3.connect(self.db_path) as conn:
                 conn.execute(
-                    """
-                    CREATE TABLE IF NOT EXISTS gsr_samples (
-                        id INTEGER PRIMARY KEY AUTOINCREMENT,
-                        device_id TEXT NOT NULL,
-                        session_id TEXT NOT NULL,
-                        timestamp REAL NOT NULL,
-                        gsr_value REAL NOT NULL,
-                        raw_value INTEGER NOT NULL,
-                        quality INTEGER NOT NULL,
-                        received_time REAL NOT NULL,
-                        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-                    )
-                """
+                    
                 )
 
                 conn.execute(
-                    """
-                    CREATE TABLE IF NOT EXISTS device_sessions (
-                        device_id TEXT NOT NULL,
-                        session_id TEXT NOT NULL,
-                        start_time REAL NOT NULL,
-                        end_time REAL,
-                        sample_count INTEGER DEFAULT 0,
-                        avg_quality REAL,
-                        status TEXT DEFAULT 'active',
-                        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                        PRIMARY KEY (device_id, session_id)
-                    )
-                """
+                    
                 )
 
                 
@@ -161,7 +122,7 @@ class GSRReceiver:
             raise
 
     async def start(self) -> Any:
-        """Start GSR receiver background tasks"""
+        
         if self._running:
             logger.warning("GSR Receiver already running")
             return
@@ -175,7 +136,7 @@ class GSRReceiver:
         logger.info("GSR Receiver started")
 
     async def stop(self) -> Any:
-        """Stop GSR receiver and cleanup"""
+        
         if not self._running:
             return
 
@@ -206,16 +167,7 @@ class GSRReceiver:
         logger.info("GSR Receiver stopped")
 
     async def register_device_session(self, device_id: str, session_id: str) -> bool:
-        """
-        Register a new GSR session from an Android device
-
-        Args:
-            device_id: Unique identifier for the Android device
-            session_id: Session identifier
-
-        Returns:
-            True if session registered successfully
-        """
+        
         try:
             if len(self.active_sessions) >= self.max_devices:
                 logger.error(f"Maximum device limit ({self.max_devices}) reached")
@@ -244,11 +196,7 @@ class GSRReceiver:
             
             with sqlite3.connect(self.db_path) as conn:
                 conn.execute(
-                    """
-                    INSERT INTO device_sessions 
-                    (device_id, session_id, start_time, status)
-                    VALUES (?, ?, ?, 'active')
-                """,
+                    ,
                     (device_id, session_id, session.start_time),
                 )
                 conn.commit()
@@ -265,17 +213,7 @@ class GSRReceiver:
     async def process_gsr_batch(
             self, device_id: str, session_id: str, samples_data: List[Dict]
     ) -> bool:
-        """
-        Process a batch of GSR samples from Android device
-
-        Args:
-            device_id: Device identifier
-            session_id: Session identifier
-            samples_data: List of sample dictionaries
-
-        Returns:
-            True if batch processed successfully
-        """
+        
         try:
             session_key = f"{device_id}_{session_id}"
             session = self.active_sessions.get(session_key)
@@ -338,17 +276,7 @@ class GSRReceiver:
     async def handle_heartbeat(
             self, device_id: str, session_id: str, heartbeat_data: Dict
     ) -> bool:
-        """
-        Handle heartbeat message from Android device
-
-        Args:
-            device_id: Device identifier
-            session_id: Session identifier
-            heartbeat_data: Heartbeat data dictionary
-
-        Returns:
-            True if heartbeat processed successfully
-        """
+        
         try:
             session_key = f"{device_id}_{session_id}"
             session = self.active_sessions.get(session_key)
@@ -376,17 +304,7 @@ class GSRReceiver:
     async def handle_quality_metrics(
             self, device_id: str, session_id: str, metrics_data: Dict
     ) -> bool:
-        """
-        Handle quality metrics from Android device
-
-        Args:
-            device_id: Device identifier
-            session_id: Session identifier
-            metrics_data: Quality metrics data
-
-        Returns:
-            True if metrics processed successfully
-        """
+        
         try:
             session_key = f"{device_id}_{session_id}"
             session = self.active_sessions.get(session_key)
@@ -421,16 +339,7 @@ class GSRReceiver:
             return False
 
     async def end_session(self, device_id: str, session_id: str) -> bool:
-        """
-        End GSR session and finalize data
-
-        Args:
-            device_id: Device identifier
-            session_id: Session identifier
-
-        Returns:
-            True if session ended successfully
-        """
+        
         try:
             session_key = f"{device_id}_{session_id}"
             session = self.active_sessions.get(session_key)
@@ -448,12 +357,7 @@ class GSRReceiver:
 
             with sqlite3.connect(self.db_path) as conn:
                 conn.execute(
-                    """
-                    UPDATE device_sessions 
-                    SET end_time = ?, sample_count = ?, avg_quality = ?,
-                        status = 'completed'
-                    WHERE device_id = ? AND session_id = ?
-                """,
+                    ,
                     (
                         end_time,
                         session.sample_count,
@@ -530,7 +434,7 @@ class GSRReceiver:
             return False
 
     def _validate_sample(self, sample: GSRSample) -> bool:
-        """Validate GSR sample data"""
+        
         try:
             
             current_time = time.time()
@@ -557,7 +461,7 @@ class GSRReceiver:
             return False
 
     async def _periodic_flush(self):
-        """Periodically flush buffered data to database"""
+        
         while self._running:
             try:
                 await asyncio.sleep(self.buffer_flush_interval)
@@ -569,7 +473,7 @@ class GSRReceiver:
                 logger.error(f"Error in periodic flush: {e}")
 
     async def _flush_to_database(self):
-        """Flush all buffered samples to database"""
+        
         if not self.sample_buffer:
             return
 
@@ -579,12 +483,7 @@ class GSRReceiver:
 
             with sqlite3.connect(self.db_path) as conn:
                 conn.executemany(
-                    """
-                    INSERT INTO gsr_samples 
-                    (device_id, session_id, timestamp, gsr_value, raw_value, quality,
-                        received_time)
-                    VALUES (?, ?, ?, ?, ?, ?, ?)
-                """,
+                    ,
                     [
                         (
                             sample.device_id,
@@ -606,7 +505,7 @@ class GSRReceiver:
             logger.error(f"Failed to flush samples to database: {e}")
 
     async def _flush_session_to_database(self, session: DeviceSession):
-        """Flush specific session samples to database"""
+        
         if not session.samples:
             return
 
@@ -615,12 +514,7 @@ class GSRReceiver:
 
             with sqlite3.connect(self.db_path) as conn:
                 conn.executemany(
-                    """
-                    INSERT INTO gsr_samples 
-                    (device_id, session_id, timestamp, gsr_value, raw_value, quality,
-                        received_time)
-                    VALUES (?, ?, ?, ?, ?, ?, ?)
-                """,
+                    ,
                     [
                         (
                             session.device_id,
@@ -644,7 +538,7 @@ class GSRReceiver:
             logger.error(f"Failed to flush session samples to database: {e}")
 
     async def _quality_monitor(self):
-        """Monitor data quality and generate alerts"""
+        
         while self._running:
             try:
                 await asyncio.sleep(10.0)  
@@ -675,7 +569,7 @@ class GSRReceiver:
     def get_session_stats(
             self, device_id: str, session_id: str
     ) -> Optional[Dict[str, Any]]:
-        """Get statistics for a specific session"""
+        
         session_key = f"{device_id}_{session_id}"
         session = self.active_sessions.get(session_key)
 
@@ -694,7 +588,7 @@ class GSRReceiver:
         }
 
     def get_all_session_stats(self) -> Dict[str, Dict[str, Any]]:
-        """Get statistics for all active sessions"""
+        
         return {
             session_key: self.get_session_stats(session.device_id, session.session_id)
             for session_key, session in self.active_sessions.items()
@@ -703,16 +597,7 @@ class GSRReceiver:
     def get_real_time_analytics(
             self, device_id: str, session_id: str
     ) -> Optional[Dict[str, Any]]:
-        """
-        Get real-time analytics features for a session
-
-        Args:
-            device_id: Device identifier
-            session_id: Session identifier
-
-        Returns:
-            Dictionary with latest analytics features or None
-        """
+        
         features = self.analytics.get_real_time_features(device_id, session_id)
         if not features:
             return None
@@ -732,11 +617,11 @@ class GSRReceiver:
         }
 
     def get_stress_summary(self) -> Dict[str, Any]:
-        """Get stress level summary for all active sessions"""
+        
         return self.analytics.get_stress_summary()
 
     def get_analytics_alerts(self) -> List[Dict[str, Any]]:
-        """Get current analytics-based alerts"""
+        
         alerts = []
 
         for session_key, session in self.active_sessions.items():
@@ -788,26 +673,12 @@ class GSRReceiver:
     async def export_session_data(
             self, device_id: str, session_id: str, format: str = "csv"
     ) -> Optional[Path]:
-        """
-        Export session data to file
-
-        Args:
-            device_id: Device identifier
-            session_id: Session identifier
-            format: Export format ('csv', 'json', 'hdf5')
-
-        Returns:
-            Path to exported file or None if failed
-        """
+        
         try:
             
             with sqlite3.connect(self.db_path) as conn:
                 df = pd.read_sql_query(
-                    """
-                    SELECT * FROM gsr_samples 
-                    WHERE device_id = ? AND session_id = ?
-                    ORDER BY timestamp
-                """,
+                    ,
                     conn,
                     params=(device_id, session_id),
                 )

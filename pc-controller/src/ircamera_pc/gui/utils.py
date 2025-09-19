@@ -1,8 +1,4 @@
-"""
-GUI utilities for IRCamera PC Controller
 
-Utility functions and classes for GUI components.
-"""
 
 import sys
 import logging
@@ -44,16 +40,16 @@ except ImportError:
 
 
 class LogHandler(QObject):
-    """Custom log handler that emits Qt signals for GUI integration."""
+    
 
     log_message = pyqtSignal(str, str, str)  
 
     def __init__(self):
-        """Initialize log handler."""
+        
         super().__init__()
 
     def write(self, record) -> Any:
-        """Write log record."""
+        
         
         level = record["level"].name
         message = record["message"]
@@ -64,12 +60,7 @@ class LogHandler(QObject):
 
 
 def setup_logging() -> LogHandler:
-    """
-    Set up logging configuration for the application.
-
-    Returns:
-        LogHandler instance for GUI integration
-    """
+    
     
     logger.remove()
 
@@ -151,24 +142,13 @@ def setup_logging() -> LogHandler:
 
 
 def get_app_icon() -> Any:
-    """
-    Get application icon.
-
-    Returns:
-        QIcon or None if no icon available
-    """
+    
     
     return None
 
 
 def apply_theme(app: Any, theme_name: str = "default") -> Any:
-    """
-    Apply theme to the Qt application.
-
-    Args:
-        app: QApplication instance
-        theme_name: Theme name to apply
-    """
+    
     if theme_name == "dark":
         
         dark_style = """
@@ -293,15 +273,7 @@ def apply_theme(app: Any, theme_name: str = "default") -> Any:
 
 
 def format_file_size(size_bytes: int) -> str:
-    """
-    Format file size in human-readable format.
-
-    Args:
-        size_bytes: Size in bytes
-
-    Returns:
-        Formatted size string
-    """
+    
     if size_bytes == 0:
         return "0 B"
 
@@ -314,15 +286,7 @@ def format_file_size(size_bytes: int) -> str:
 
 
 def format_duration(seconds: float) -> str:
-    """
-    Format duration in human-readable format.
-
-    Args:
-        seconds: Duration in seconds
-
-    Returns:
-        Formatted duration string (HH:MM:SS)
-    """
+    
     total_seconds = int(seconds)
     hours = total_seconds // 3600
     minutes = (total_seconds % 3600) // 60
@@ -335,15 +299,7 @@ def format_duration(seconds: float) -> str:
 
 
 def get_status_color(status: str) -> str:
-    """
-    Get color for status display.
-
-    Args:
-        status: Status string
-
-    Returns:
-        CSS color value
-    """
+    
     status = status.lower()
 
     if status in ["connected", "ok", "active", "recording"]:
@@ -357,15 +313,7 @@ def get_status_color(status: str) -> str:
 
 
 def validate_session_name(name: str) -> tuple[bool, str]:
-    """
-    Validate session name.
-
-    Args:
-        name: Session name to validate
-
-    Returns:
-        Tuple of (is_valid, error_message)
-    """
+    
     if not name or not name.strip():
         return True, ""  
 
@@ -385,17 +333,7 @@ def validate_session_name(name: str) -> tuple[bool, str]:
 
 
 def confirm_action(parent, title: str, message: str) -> bool:
-    """
-    Show confirmation dialog.
-
-    Args:
-        parent: Parent widget
-        title: Dialog title
-        message: Confirmation message
-
-    Returns:
-        True if user confirmed, False otherwise
-    """
+    
     from PyQt6.QtWidgets import QMessageBox
 
     reply = QMessageBox.question(

@@ -1,10 +1,5 @@
 #!/usr/bin/env python3
-"""
-Launch script for IRCamera PC Controller Hub MVP
 
-This script launches the complete MVP application with all components.
-Use this to start the Hub application for testing with Android devices.
-"""
 
 import os
 import sys
@@ -16,7 +11,7 @@ sys.path.insert(0, str(src_dir))
 
 
 def main():
-    """Launch the IRCamera Hub MVP application."""
+    
 
     print("=" * 70)
     print("IRCamera PC Controller Hub - MVP Application")

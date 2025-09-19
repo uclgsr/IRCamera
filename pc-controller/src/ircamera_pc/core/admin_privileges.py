@@ -1,9 +1,4 @@
-"""
-Administrator Privileges Manager for IRCamera PC Controller
 
-Handles privilege elevation and system integration for full PC control
-including network, Bluetooth, and system-level operations.
-"""
 
 import ctypes
 import os
@@ -73,7 +68,7 @@ except ImportError:
 
 
 class PrivilegeLevel(Enum):
-    """Current privilege levels."""
+    
 
     USER = "user"
     ELEVATED = "elevated"
@@ -83,7 +78,7 @@ class PrivilegeLevel(Enum):
 
 
 class ElevationResult(Enum):
-    """Results of privilege elevation attempts."""
+    
 
     SUCCESS = "success"
     CANCELLED = "cancelled"
@@ -94,7 +89,7 @@ class ElevationResult(Enum):
 
 @dataclass
 class SystemPermissions:
-    """System permission status."""
+    
 
     network_config: bool = False
     bluetooth_control: bool = False
@@ -105,16 +100,7 @@ class SystemPermissions:
 
 
 class AdminPrivilegesManager(BaseManager):
-    """
-    Manages administrator privileges and system integration.
-
-    Provides:
-    - Privilege elevation and UAC handling
-    - Permission verification and status checking
-    - System service integration
-    - Security context management
-    - Platform-specific privilege handling
-    """
+    
 
     
     if PYQT_AVAILABLE:
@@ -135,19 +121,19 @@ class AdminPrivilegesManager(BaseManager):
         self._check_system_permissions()
 
     def _emit_signal(self, signal_name: str, *args):
-        """Emit a signal if PyQt6 is available."""
+        
         if PYQT_AVAILABLE and hasattr(self, signal_name):
             signal = getattr(self, signal_name)
             signal.emit(*args)
 
     @property
     def current_privilege_level(self) -> PrivilegeLevel:
-        """Get current privilege level."""
+        
         return self._current_privilege
 
     @property
     def is_elevated(self) -> bool:
-        """Check if running with elevated privileges."""
+        
         return self._current_privilege in [
             PrivilegeLevel.ELEVATED,
             PrivilegeLevel.ADMIN,
@@ -156,19 +142,11 @@ class AdminPrivilegesManager(BaseManager):
 
     @property
     def system_permissions(self) -> SystemPermissions:
-        """Get current system permissions status."""
+        
         return self._permissions
 
     def request_elevation(self, reason: str = "System Integration") -> ElevationResult:
-        """
-        Request privilege elevation for system integration.
-
-        Args:
-            reason: Reason for elevation request
-
-        Returns:
-            Result of elevation attempt
-        """
+        
         if self.is_elevated:
             return ElevationResult.ALREADY_ELEVATED
 
@@ -201,18 +179,7 @@ class AdminPrivilegesManager(BaseManager):
             self._elevation_requested = False
 
     def verify_operation_permissions(self, operation: str) -> bool:
-        """
-        Verify if current privileges allow specific operation.
-
-        Args:
-            operation: Operation to verify ('bluetooth',
-                'wifi',
-                'service',
-                etc.)
-
-        Returns:
-            True if operation is permitted
-        """
+        
         operation_lower = operation.lower()
 
         permission_map = {
@@ -237,16 +204,7 @@ class AdminPrivilegesManager(BaseManager):
         return False
 
     def run_as_admin(self, command: str, arguments: Optional[list] = None) -> bool:
-        """
-        Run a command with administrator privileges.
-
-        Args:
-            command: Command to run
-            arguments: Command arguments
-
-        Returns:
-            True if command executed successfully
-        """
+        
         if not self.is_elevated:
             logger.error("Cannot run admin command without elevation")
             return False
@@ -267,15 +225,7 @@ class AdminPrivilegesManager(BaseManager):
             return False
 
     def check_service_status(self, service_name: str) -> Optional[str]:
-        """
-        Check the status of a system service.
-
-        Args:
-            service_name: Name of the service
-
-        Returns:
-            Service status or None if not accessible
-        """
+        
         if not self.verify_operation_permissions("service"):
             return None
 
@@ -296,17 +246,7 @@ class AdminPrivilegesManager(BaseManager):
             return None
 
     def manage_firewall_rule(self, rule_name: str, action: str, **kwargs) -> bool:
-        """
-        Manage Windows Firewall rules for IRCamera communication.
-
-        Args:
-            rule_name: Firewall rule name
-            action: 'add', 'remove', or 'modify'
-            **kwargs: Rule parameters (port, protocol, direction, etc.)
-
-        Returns:
-            True if operation successful
-        """
+        
         if not self.verify_operation_permissions("firewall"):
             return False
 
@@ -322,7 +262,7 @@ class AdminPrivilegesManager(BaseManager):
             return False
 
     def _check_current_privileges(self) -> None:
-        """Check and update current privilege level."""
+        
         system = platform.system()
 
         try:
@@ -341,7 +281,7 @@ class AdminPrivilegesManager(BaseManager):
             self._current_privilege = PrivilegeLevel.UNKNOWN
 
     def _check_windows_privileges(self) -> PrivilegeLevel:
-        """Check privilege level on Windows."""
+        
         try:
             
             if ctypes.windll.shell32.IsUserAnAdmin():
@@ -375,7 +315,7 @@ class AdminPrivilegesManager(BaseManager):
             return PrivilegeLevel.UNKNOWN
 
     def _check_unix_privileges(self) -> PrivilegeLevel:
-        """Check privilege level on Unix-like systems."""
+        
         try:
             uid = os.getuid()
 
@@ -404,7 +344,7 @@ class AdminPrivilegesManager(BaseManager):
             return PrivilegeLevel.UNKNOWN
 
     def _check_system_permissions(self) -> None:
-        """Check specific system permissions."""
+        
         try:
             system = platform.system()
 
@@ -421,7 +361,7 @@ class AdminPrivilegesManager(BaseManager):
             logger.error(f"Permission check failed: {e}")
 
     def _check_windows_permissions(self) -> None:
-        """Check Windows-specific permissions."""
+        
         
         self._permissions.network_config = self._test_network_config_access()
 
@@ -441,7 +381,7 @@ class AdminPrivilegesManager(BaseManager):
         self._permissions.firewall_control = self._test_firewall_access()
 
     def _check_unix_permissions(self) -> None:
-        """Check Unix-specific permissions."""
+        
         
         if platform.system() == "Windows":
             logger.error("_check_unix_permissions called on Windows - this is a bug")
@@ -466,7 +406,7 @@ class AdminPrivilegesManager(BaseManager):
             self._permissions.hardware_access = False
 
     def _perform_elevation(self, reason: str) -> ElevationResult:
-        """Perform the actual privilege elevation."""
+        
         system = platform.system()
 
         if system == "Windows":
@@ -477,7 +417,7 @@ class AdminPrivilegesManager(BaseManager):
             return ElevationResult.NOT_SUPPORTED
 
     def _elevate_windows(self, reason: str) -> ElevationResult:
-        """Elevate privileges on Windows using UAC."""
+        
         try:
             if ELEVATE_AVAILABLE:
                 
@@ -514,7 +454,7 @@ class AdminPrivilegesManager(BaseManager):
             return ElevationResult.FAILED
 
     def _elevate_unix(self, reason: str) -> ElevationResult:
-        """Elevate privileges on Unix systems."""
+        
         try:
             
             reply = QMessageBox.question(
@@ -555,7 +495,7 @@ class AdminPrivilegesManager(BaseManager):
             return ElevationResult.FAILED
 
     def _manual_uac_elevation(self) -> ElevationResult:
-        """Manual UAC elevation for Windows."""
+        
         try:
             if WIN32_AVAILABLE:
                 
@@ -580,7 +520,7 @@ class AdminPrivilegesManager(BaseManager):
             return ElevationResult.FAILED
 
     def _get_result_message(self, result: ElevationResult) -> str:
-        """Get user-friendly message for elevation result."""
+        
         messages = {
             ElevationResult.SUCCESS: "Administrator privileges" "granted successfully",
             ElevationResult.CANCELLED: "Privilege elevation was" "cancelled by user",
@@ -596,7 +536,7 @@ class AdminPrivilegesManager(BaseManager):
 
     
     def _test_network_config_access(self) -> bool:
-        """Test network configuration access."""
+        
         try:
             if platform.system() == "Windows":
                 
@@ -619,11 +559,11 @@ class AdminPrivilegesManager(BaseManager):
             return False
 
     def _test_bluetooth_access(self) -> bool:
-        """Test Bluetooth control access."""
+        
         return self.is_elevated  
 
     def _test_service_management_access(self) -> bool:
-        """Test service management access."""
+        
         try:
             if platform.system() == "Windows":
                 
@@ -641,7 +581,7 @@ class AdminPrivilegesManager(BaseManager):
             return False
 
     def _test_registry_access(self) -> bool:
-        """Test Windows registry access."""
+        
         if platform.system() != "Windows":
             return False
 
@@ -657,11 +597,11 @@ class AdminPrivilegesManager(BaseManager):
             return False
 
     def _test_hardware_access(self) -> bool:
-        """Test hardware access permissions."""
+        
         return self.is_elevated
 
     def _test_firewall_access(self) -> bool:
-        """Test Windows Firewall access."""
+        
         if platform.system() != "Windows":
             return False
 
@@ -676,7 +616,7 @@ class AdminPrivilegesManager(BaseManager):
             return False
 
     def _can_sudo(self) -> bool:
-        """Check if user can use sudo."""
+        
         
         if platform.system() == "Windows":
             return False
@@ -691,7 +631,7 @@ class AdminPrivilegesManager(BaseManager):
 
     
     def _run_windows_admin_command(self, command: str, arguments: list) -> bool:
-        """Run Windows admin command."""
+        
         try:
             result = subprocess.run(
                 [command] + arguments, capture_output=True, timeout=30
@@ -702,7 +642,7 @@ class AdminPrivilegesManager(BaseManager):
             return False
 
     def _run_unix_admin_command(self, command: str, arguments: list) -> bool:
-        """Run Unix admin command."""
+        
         try:
             if os.getuid() == 0:
                 result = subprocess.run(
@@ -721,7 +661,7 @@ class AdminPrivilegesManager(BaseManager):
 
     
     def _check_windows_service(self, service_name: str) -> Optional[str]:
-        """Check Windows service status."""
+        
         try:
             result = subprocess.run(
                 ["sc", "query", service_name],
@@ -740,7 +680,7 @@ class AdminPrivilegesManager(BaseManager):
             return None
 
     def _check_linux_service(self, service_name: str) -> Optional[str]:
-        """Check Linux service status."""
+        
         try:
             result = subprocess.run(
                 ["systemctl", "is-active", service_name],
@@ -753,7 +693,7 @@ class AdminPrivilegesManager(BaseManager):
             return None
 
     def _check_macos_service(self, service_name: str) -> Optional[str]:
-        """Check macOS service status."""
+        
         try:
             result = subprocess.run(
                 ["launchctl", "list", service_name],
@@ -768,7 +708,7 @@ class AdminPrivilegesManager(BaseManager):
     def _manage_windows_firewall_rule(
             self, rule_name: str, action: str, **kwargs
     ) -> bool:
-        """Manage Windows Firewall rules."""
+        
         try:
             base_cmd = ["netsh", "advfirewall", "firewall"]
 

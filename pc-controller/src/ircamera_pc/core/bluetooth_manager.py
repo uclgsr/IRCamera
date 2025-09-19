@@ -1,9 +1,4 @@
-"""
-Bluetooth Manager for IRCamera PC Controller
 
-Provides Bluetooth device discovery, connection management, and integration
-with IRCamera devices for wireless communication.
-"""
 
 import asyncio
 import platform
@@ -59,7 +54,7 @@ except ImportError:
 
 
 class BluetoothDeviceType(Enum):
-    """Bluetooth device types."""
+    
 
     BLE = "ble"
     CLASSIC = "classic"
@@ -67,7 +62,7 @@ class BluetoothDeviceType(Enum):
 
 
 class ConnectionState(Enum):
-    """Bluetooth connection states."""
+    
 
     DISCONNECTED = "disconnected"
     CONNECTING = "connecting"
@@ -77,7 +72,7 @@ class ConnectionState(Enum):
 
 @dataclass
 class BluetoothDevice:
-    """Bluetooth device information."""
+    
 
     address: str
     name: str
@@ -90,16 +85,7 @@ class BluetoothDevice:
 
 
 class BluetoothManager(BaseManager):
-    """
-    Manages Bluetooth connectivity for IRCamera devices.
-
-    Provides:
-    - BLE (Bluetooth Low Energy) device discovery and connection
-    - Classic Bluetooth support (Windows)
-    - IRCamera device identification and pairing
-    - Connection state management
-    - Data transmission capabilities
-    """
+    
 
     
     if PYQT_AVAILABLE:
@@ -133,24 +119,24 @@ class BluetoothManager(BaseManager):
             )
 
     def _emit_signal(self, signal_name: str, *args):
-        """Emit a signal if PyQt6 is available."""
+        
         if PYQT_AVAILABLE and hasattr(self, signal_name):
             signal = getattr(self, signal_name)
             signal.emit(*args)
 
     @property
     def is_available(self) -> bool:
-        """Check if Bluetooth functionality is available."""
+        
         return BLUETOOTH_AVAILABLE
 
     @property
     def discovered_devices(self) -> List[BluetoothDevice]:
-        """Get list of discovered devices."""
+        
         return list(self._devices.values())
 
     @property
     def connected_devices(self) -> List[BluetoothDevice]:
-        """Get list of connected devices."""
+        
         return [
             device
             for device in self._devices.values()
@@ -158,13 +144,7 @@ class BluetoothManager(BaseManager):
         ]
 
     def start_scanning(self, continuous: bool = False, interval: int = 10) -> None:
-        """
-        Start scanning for Bluetooth devices.
-
-        Args:
-            continuous: If True, scan continuously at specified intervals
-            interval: Scan interval in seconds for continuous scanning
-        """
+        
         if not self.is_available:
             self._emit_signal("error_occurred", "scan", "Bluetooth not available")
             return
@@ -183,14 +163,14 @@ class BluetoothManager(BaseManager):
             self._scan_timer.start(interval * 1000)  
 
     def stop_scanning(self) -> None:
-        """Stop scanning for devices."""
+        
         self._scanning = False
         if self._scan_timer:
             self._scan_timer.stop()
         logger.info("Stopped Bluetooth device scanning")
 
     async def _scan_devices(self) -> None:
-        """Scan for BLE devices."""
+        
         try:
             logger.debug("Scanning for BLE devices...")
             devices = await BleakScanner.discover(timeout=5.0)
@@ -216,28 +196,12 @@ class BluetoothManager(BaseManager):
             self._emit_signal("error_occurred", "scan", str(e))
 
     def _periodic_scan(self) -> None:
-        """
-        Periodic scan callback.
-
-        Initiates device scanning if scanning is currently active.
-        Called automatically by the scan timer to maintain device discovery.
-        """
+        
         if self._scanning:
             asyncio.create_task(self._scan_devices())
 
     def _should_update_device(self, device: BLEDevice) -> bool:
-        """
-        Check if device information should be updated.
-
-        Determines whether a discovered device's information has changed
-        enough to warrant updating the stored device record.
-
-        Args:
-            device: BLE device to check for updates
-
-        Returns:
-            True if device should be updated, False otherwise
-        """
+        
         if device.address not in self._devices:
             return True
 
@@ -248,18 +212,7 @@ class BluetoothManager(BaseManager):
         )
 
     def _create_bluetooth_device(self, device: BLEDevice) -> BluetoothDevice:
-        """
-        Create BluetoothDevice from BLEDevice.
-
-        Converts a BLEDevice from the bleak library into our internal
-        BluetoothDevice representation with additional metadata.
-
-        Args:
-            device: BLE device from bleak scan results
-
-        Returns:
-            BluetoothDevice with enhanced information and IRCamera detection
-        """
+        
         
         is_ircamera = self._is_ircamera_device(device)
 
@@ -274,10 +227,7 @@ class BluetoothManager(BaseManager):
         )
 
     def _is_ircamera_device(self, device: BLEDevice) -> bool:
-        """
-        Identify if a device is an IRCamera based on name or advertised services.
-        This would need to be customized based on actual device characteristics.
-        """
+        
         if not device.name:
             return False
 
@@ -294,15 +244,7 @@ class BluetoothManager(BaseManager):
         return any(pattern in name_lower for pattern in ircamera_patterns)
 
     async def connect_device(self, address: str) -> bool:
-        """
-        Connect to a Bluetooth device.
-
-        Args:
-            address: Device MAC address
-
-        Returns:
-            True if connection successful, False otherwise
-        """
+        
         if not self.is_available:
             self._emit_signal("error_occurred", "connect", "Bluetooth not available")
             return False
@@ -350,7 +292,7 @@ class BluetoothManager(BaseManager):
             return False
 
     async def disconnect_device(self, address: str) -> None:
-        """Disconnect from a Bluetooth device."""
+        
         if address not in self._connections:
             logger.warning(f"Device {address} not connected")
             return
@@ -371,16 +313,7 @@ class BluetoothManager(BaseManager):
             self._emit_signal("error_occurred", "disconnect", str(e))
 
     async def send_data(self, address: str, data: bytes) -> bool:
-        """
-        Send data to a connected device.
-
-        Args:
-            address: Device address
-            data: Data to send
-
-        Returns:
-            True if data sent successfully
-        """
+        
         if address not in self._connections:
             self._emit_signal(
                 "error_occurred", "send", f"Device {address} not connected"
@@ -407,7 +340,7 @@ class BluetoothManager(BaseManager):
             return False
 
     async def _setup_ircamera_notifications(self, client: BleakClient) -> None:
-        """Set up notifications for IRCamera data characteristic."""
+        
         try:
             await client.start_notify(
                 self.IRCAMERA_DATA_CHARACTERISTIC,
@@ -421,7 +354,7 @@ class BluetoothManager(BaseManager):
     def _handle_ircamera_notification(
             self, sender: BleakGATTCharacteristic, data: bytearray
     ) -> None:
-        """Handle incoming data from IRCamera device."""
+        
         try:
             address = sender.service.client.address
             self._emit_signal("data_received", address, bytes(data))
@@ -431,11 +364,11 @@ class BluetoothManager(BaseManager):
             logger.error(f"Error handling notification: {e}")
 
     def get_device_info(self, address: str) -> Optional[BluetoothDevice]:
-        """Get information about a specific device."""
+        
         return self._devices.get(address)
 
     def clear_devices(self) -> None:
-        """Clear the list of discovered devices."""
+        
         
         connected_addresses = set(self._connections.keys())
         self._devices = {
@@ -446,7 +379,7 @@ class BluetoothManager(BaseManager):
         logger.info("Cleared discovered devices list")
 
     async def cleanup(self) -> None:
-        """Clean up all connections and stop scanning."""
+        
         self.stop_scanning()
 
         

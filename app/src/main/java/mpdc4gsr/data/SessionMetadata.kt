@@ -44,7 +44,7 @@ data class SessionMetadata(
     
     val recordingDurationMs: Long? = null,
     
-    
+    // Enhanced metadata for TODO requirement: "Expand the metadata.json to include all relevant session info"
     val sessionName: String? = null,
     val studyName: String? = null,
     val participantId: String? = null,
@@ -327,7 +327,10 @@ data class SessionMetadata(
         return metadataFile
     }
 
-    
+    /**
+     * Enhanced metadata export functionality for TODO requirement:
+     * "Unify contributions from each recorder (RGB, GSR, audio) into one metadata file at session end"
+     */
     
     
     fun exportToUnifiedMetadataFile(sessionDirectory: File): Boolean {

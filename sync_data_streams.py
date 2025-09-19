@@ -1,21 +1,5 @@
 #!/usr/bin/env python3
-"""
-Multi-Modal Data Stream Synchronization Script
 
-This script demonstrates how to align timestamps across different sensor modalities
-using the session metadata and timing information recorded by the IRCamera system.
-
-Usage:
-    python sync_data_streams.py <session_directory>
-
-The script expects to find the following files in the session directory:
-- session_metadata.json: Session timing and metadata
-- thermal_stats_*.csv: Thermal camera data with synchronized timestamps
-- gsr_data_*.csv: GSR sensor data with synchronized timestamps
-- rgb_video_*.mp4: RGB video file (timing derived from metadata)
-
-Author: IRCamera Synchronization System
-"""
 
 import json
 import pandas as pd
@@ -29,9 +13,7 @@ import glob
 
 
 class MultiModalSynchronizer:
-    """
-    Synchronizes data streams from multiple sensor modalities using session metadata.
-    """
+    
 
     def __init__(self, session_directory: str):
         self.session_dir = Path(session_directory)
@@ -44,7 +26,7 @@ class MultiModalSynchronizer:
         self._load_session_metadata()
 
     def _load_session_metadata(self):
-        """Load session metadata from JSON file."""
+        
         metadata_file = self.session_dir / "session_metadata.json"
 
         if not metadata_file.exists():
@@ -58,7 +40,7 @@ class MultiModalSynchronizer:
         print(f"Recording duration: {self.session_metadata.get('recordingDurationMs', 'N/A')}ms")
 
     def load_thermal_data(self) -> pd.DataFrame:
-        """Load and parse thermal camera data."""
+        
         thermal_files = glob.glob(str(self.session_dir / "thermal_stats_*.csv"))
 
         if not thermal_files:
@@ -88,7 +70,7 @@ class MultiModalSynchronizer:
         return df
 
     def load_gsr_data(self) -> pd.DataFrame:
-        """Load and parse GSR sensor data."""
+        
         gsr_files = glob.glob(str(self.session_dir / "gsr_data_*.csv"))
 
         if not gsr_files:
@@ -119,7 +101,7 @@ class MultiModalSynchronizer:
         return df
 
     def extract_sync_events(self) -> pd.DataFrame:
-        """Extract synchronization events from session metadata."""
+        
         if not self.session_metadata or 'syncEvents' not in self.session_metadata:
             print("Warning: No sync events found in session metadata")
             return pd.DataFrame()
@@ -141,15 +123,7 @@ class MultiModalSynchronizer:
         return df
 
     def align_data_streams(self, window_ms: int = 100) -> Dict[str, pd.DataFrame]:
-        """
-        Align data streams using relative timestamps from session start.
         
-        Args:
-            window_ms: Time window in milliseconds for alignment tolerance
-            
-        Returns:
-            Dictionary containing aligned data frames
-        """
         aligned_data = {}
 
         
@@ -172,15 +146,7 @@ class MultiModalSynchronizer:
         return aligned_data
 
     def find_simultaneous_events(self, window_ms: int = 50) -> List[Dict]:
-        """
-        Find data points that occur simultaneously across modalities.
         
-        Args:
-            window_ms: Time window for considering events simultaneous
-            
-        Returns:
-            List of simultaneous event dictionaries
-        """
         aligned_data = self.align_data_streams()
         simultaneous_events = []
 
@@ -220,7 +186,7 @@ class MultiModalSynchronizer:
         return simultaneous_events
 
     def generate_sync_report(self) -> str:
-        """Generate a synchronization quality report."""
+        
         report = []
         report.append("=== Multi-Modal Data Synchronization Report ===")
         report.append(f"Session ID: {self.session_metadata['sessionId']}")
@@ -260,7 +226,7 @@ class MultiModalSynchronizer:
         return "\n".join(report)
 
     def export_aligned_data(self, output_file: str = "aligned_data.csv"):
-        """Export aligned data to CSV for further analysis."""
+        
         aligned_data = self.align_data_streams()
         simultaneous_events = self.find_simultaneous_events()
 

@@ -415,7 +415,11 @@ class NetworkErrorRecoveryManager(
         }
     }
 
-    
+    /**
+     * Enhanced NSD reconnection robustness implementation for TODO requirement:
+     * "Improve the Network Service Discovery and socket communication reliability.
+     * Ensure the Android recording service cleanly handles the PC controller disconnecting and reconnecting"
+     */
     
     
     fun enableEnhancedNSDReconnection() {

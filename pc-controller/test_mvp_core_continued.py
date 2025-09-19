@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
-"""
-Test script to validate continued MVP implementation - core features only.
-"""
+
 
 import os
 import sys
@@ -16,7 +14,7 @@ sys.path.insert(0, str(src_dir))
 
 
 def test_core_continued_features():
-    """Test the core continued implementation features."""
+    
     print("Testing continued core features...")
 
     try:
@@ -68,7 +66,7 @@ def test_core_continued_features():
 
 
 def test_network_components():
-    """Test network components without starting them."""
+    
     print("\nTesting network component creation...")
 
     try:
@@ -108,7 +106,7 @@ def test_network_components():
 
 
 def test_device_type_mappings():
-    """Test device type enumeration mappings."""
+    
     print("\nTesting device type mappings...")
 
     try:
@@ -144,7 +142,7 @@ def test_device_type_mappings():
 
 
 def main():
-    """Run continued implementation tests."""
+    
     print("=" * 70)
     print("IRCamera PC Controller MVP - Continued Implementation Validation")
     print("=" * 70)

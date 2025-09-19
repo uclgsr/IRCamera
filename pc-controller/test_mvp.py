@@ -1,10 +1,5 @@
 #!/usr/bin/env python3
-"""
-Test script for IRCamera PC Controller Hub MVP
 
-Tests the core functionality of the Hub-and-Spoke implementation
-without requiring full GUI interaction.
-"""
 
 import asyncio
 import sys
@@ -22,7 +17,7 @@ from ircamera_pc.network.discovery import DeviceType, DiscoveredDevice
 
 
 async def test_device_manager():
-    """Test device manager functionality."""
+    
     print("\n=== Testing Device Manager ===")
 
     device_manager = DeviceManager()
@@ -77,7 +72,7 @@ async def test_device_manager():
 
 
 async def test_session_manager():
-    """Test session manager functionality."""
+    
     print("\n=== Testing Session Manager ===")
 
     
@@ -195,7 +190,7 @@ async def test_session_manager():
 
 
 def test_discovery_service():
-    """Test discovery service basic functionality."""
+    
     print("\n=== Testing Discovery Service ===")
 
     try:
@@ -229,7 +224,7 @@ def test_discovery_service():
 
 
 async def run_all_tests():
-    """Run all MVP tests."""
+    
     print("IRCamera PC Controller Hub - MVP Test Suite")
     print("=" * 50)
 

@@ -1,10 +1,5 @@
 #!/usr/bin/env python3
-"""
-Hub-Spoke Architecture Integration Demo
 
-Demonstrates the enhanced PC Controller (Hub) integration with
-Android Sensor Nodes (Spokes) including NTP-like time synchronization.
-"""
 
 import asyncio
 import json
@@ -22,7 +17,7 @@ logging.basicConfig(level=logging.INFO)
 
 
 async def main():
-    """Main demo function."""
+    
     print("=== Enhanced Hub-Spoke Architecture Demo ===")
     print("PC Controller (Hub) with Android Sensor Nodes (Spokes)")
     print("Features: NTP-like time sync, session coordination, device management\n")
@@ -171,7 +166,7 @@ async def main():
 
 
 def run_demo():
-    """Run the hub-spoke demo."""
+    
     try:
         asyncio.run(main())
     except KeyboardInterrupt:

@@ -1,9 +1,4 @@
-"""
-Main GUI Application for IRCamera PC Controller
 
-Provides PyQt6-based researcher interface for controlling recording sessions.
-Implements FR6: User Interface for Monitoring & Control requirements.
-"""
 
 import asyncio
 import os
@@ -89,15 +84,10 @@ else:
 
 
 class IRCameraApp:
-    """
-    Main application controller for IRCamera PC Controller.
-
-    Coordinates between GUI components and backend services including
-    all new components: GSR Ingestor, File Transfer Manager, and Calibration Tools.
-    """
+    
 
     def __init__(self):
-        """Initialize the application with all components."""
+        
         
         self.config = config
 
@@ -141,7 +131,7 @@ class IRCameraApp:
         logger.info(f"Components: {', '.join(components)}")
 
     def setup_qt_app(self) -> None:
-        """Set up Qt application."""
+        
         if not GUI_AVAILABLE:
             logger.info("Running in headless mode - GUI not available")
             self.qt_app = QApplication(sys.argv)
@@ -154,95 +144,7 @@ class IRCameraApp:
 
             
             self.qt_app.setStyleSheet(
-                """
-                QMainWindow {
-                    background-color: #f0f0f0;
-                }
-
-                QGroupBox {
-                    font-weight: bold;
-                    border: 2px solid #cccccc;
-                    border-radius: 5px;
-                    margin-top: 1ex;
-                    padding-top: 10px;
-                }
-
-                QGroupBox::title {
-                    subcontrol-origin: margin;
-                    left: 10px;
-                    padding: 0 5px 0 5px;
-                }
-
-                QPushButton {
-                    background-color: #e1e1e1;
-                    border: 1px solid #969696;
-                    border-radius: 3px;
-                    padding: 6px;
-                    min-width: 80px;
-                }
-
-                QPushButton:hover {
-                    background-color: #e8e8e8;
-                }
-
-                QPushButton:pressed {
-                    background-color: #d0d0d0;
-                }
-
-                QPushButton:disabled {
-                    color: #888888;
-                    background-color: #f0f0f0;
-                }
-
-                QPushButton.primary {
-                    background-color: #0078d4;
-                    color: white;
-                    font-weight: bold;
-                }
-
-                QPushButton.primary:hover {
-                    background-color: #106ebe;
-                }
-
-                QPushButton.primary:pressed {
-                    background-color: #005a9e;
-                }
-
-                QPushButton.danger {
-                    background-color: #d13438;
-                    color: white;
-                    font-weight: bold;
-                }
-
-                QPushButton.danger:hover {
-                    background-color: #c4292e;
-                }
-
-                QPushButton.danger:pressed {
-                    background-color: #a01e22;
-                }
-
-                QListWidget {
-                    border: 1px solid #cccccc;
-                    border-radius: 3px;
-                    background-color: white;
-                }
-
-                QListWidget::item {
-                    padding: 8px;
-                    border-bottom: 1px solid #eeeeee;
-                }
-
-                QListWidget::item:selected {
-                    background-color: #0078d4;
-                    color: white;
-                }
-
-                QStatusBar {
-                    border-top: 1px solid #cccccc;
-                    background-color: #f8f8f8;
-                }
-            """
+                
             )
 
         
@@ -268,7 +170,7 @@ class IRCameraApp:
         logger.info("Qt application set up")
 
     def setup_event_loop_integration(self) -> None:
-        """Set up asyncio event loop integration with Qt."""
+        
         
         try:
             self._loop = asyncio.get_event_loop()
@@ -287,7 +189,7 @@ class IRCameraApp:
         logger.debug("Event loop integration set up")
 
     def _process_async_events(self) -> None:
-        """Process pending asyncio events."""
+        
         if self._loop:
             try:
                 
@@ -302,7 +204,7 @@ class IRCameraApp:
                 logger.error(f"Error processing async events: {e}")
 
     async def start_services(self) -> None:
-        """Start backend services."""
+        
         try:
             
             await self.time_sync_service.start()
@@ -317,7 +219,7 @@ class IRCameraApp:
             raise
 
     async def stop_services(self) -> None:
-        """Stop backend services and clean up system integration managers."""
+        
         try:
             
             if self.wifi_manager:
@@ -336,12 +238,7 @@ class IRCameraApp:
             logger.error(f"Error stopping services: {e}")
 
     def run(self) -> int:
-        """
-        Run the application.
-
-        Returns:
-            Application exit code
-        """
+        
         try:
             
             setup_logging()
@@ -404,7 +301,7 @@ class IRCameraApp:
                     logger.error(f"Error during cleanup: {e}")
 
     def _handle_signal(self, signum: int, frame) -> None:
-        """Handle system signals."""
+        
         logger.info(f"Received signal {signum}, shutting down...")
 
         if self.qt_app:
@@ -412,7 +309,7 @@ class IRCameraApp:
 
 
 def main() -> int:
-    """Main entry point for the application."""
+    
     import argparse
 
     parser = argparse.ArgumentParser(

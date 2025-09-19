@@ -1,25 +1,4 @@
-"""
-Multi-Modal HDF5 Data Exporter - Phase 3 Implementation
 
-This module provides comprehensive HDF5 export functionality for the
-Multi-Modal Physiological Sensing Platform, implementing research-grade
-data preservation with temporal alignment and metadata integration.
-
-Key Features:
-- HDF5 hierarchical data organization with proper compression
-- Temporal alignment of multi-sensor data streams
-- Comprehensive metadata preservation and provenance tracking
-- Research-grade data integrity validation
-- Support for streaming export during long recordings
-- Sync marker integration for post-processing alignment
-- Compatible with major analysis frameworks (MATLAB, Python, R)
-
-Requirements Implementation:
-- FR8: Scientific data export with temporal alignment
-- FR9: Metadata preservation and data provenance
-- NFR4: Research-grade data integrity and validation
-- NFR5: Interoperability with analysis frameworks
-"""
 
 import h5py
 import hashlib
@@ -38,7 +17,7 @@ from typing import Dict, List, Optional, Any, Union, Tuple
 
 @dataclass
 class DataStreamInfo:
-    """Information about a data stream for HDF5 export."""
+    
     stream_id: str
     device_id: str
     sensor_type: str  
@@ -54,7 +33,7 @@ class DataStreamInfo:
 
 @dataclass
 class SyncMarkerInfo:
-    """Synchronization marker information."""
+    
     timestamp: float
     marker_type: str
     description: str
@@ -64,7 +43,7 @@ class SyncMarkerInfo:
 
 @dataclass
 class SessionMetadata:
-    """Complete session metadata for research documentation."""
+    
     session_id: str
     participant_id: str
     start_time: datetime
@@ -94,22 +73,10 @@ class SessionMetadata:
 
 
 class MultiModalHDF5Exporter:
-    """
-    Comprehensive HDF5 exporter for multi-modal physiological sensing data.
     
-    Provides research-grade data export with proper temporal alignment,
-    metadata preservation, and data integrity validation for the
-    Multi-Modal Physiological Sensing Platform.
-    """
 
     def __init__(self, session_id: str, output_dir: Optional[Path] = None):
-        """
-        Initialize the HDF5 exporter.
         
-        Args:
-            session_id: Unique session identifier
-            output_dir: Output directory path (default: ./data/exports/)
-        """
         self.session_id = session_id
         self.output_dir = Path(output_dir) if output_dir else Path("./data/exports/")
         self.output_dir.mkdir(parents=True, exist_ok=True)
@@ -135,16 +102,16 @@ class MultiModalHDF5Exporter:
         logger.info(f"HDF5 Exporter initialized for session {session_id}")
 
     def __enter__(self):
-        """Context manager entry."""
+        
         self.open()
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        """Context manager exit."""
+        
         self.close()
 
     def open(self):
-        """Open HDF5 file for writing."""
+        
         try:
             self.h5_file = h5py.File(self.output_file, 'w')
             self.is_open = True
@@ -159,7 +126,7 @@ class MultiModalHDF5Exporter:
             raise
 
     def close(self):
-        """Close HDF5 file and finalize export."""
+        
         if self.h5_file and self.is_open:
             try:
                 
@@ -185,19 +152,14 @@ class MultiModalHDF5Exporter:
                 raise
 
     def set_session_metadata(self, metadata: SessionMetadata):
-        """Set session metadata for export."""
+        
         self.session_metadata = metadata
 
         if self.is_open:
             self._write_session_metadata()
 
     def register_data_stream(self, stream_info: DataStreamInfo):
-        """
-        Register a data stream for export.
         
-        Args:
-            stream_info: Information about the data stream
-        """
         self.data_streams[stream_info.stream_id] = stream_info
 
         if self.is_open:
@@ -207,15 +169,7 @@ class MultiModalHDF5Exporter:
 
     def add_timeseries_data(self, stream_id: str, timestamps: np.ndarray,
                             data: np.ndarray, metadata: Optional[Dict] = None):
-        """
-        Add timeseries data to a registered stream.
         
-        Args:
-            stream_id: Stream identifier
-            timestamps: Array of timestamps (seconds since epoch)
-            data: Data array (1D or 2D)
-            metadata: Optional metadata dictionary
-        """
         if not self.is_open:
             raise RuntimeError("HDF5 file not open")
 
@@ -288,15 +242,7 @@ class MultiModalHDF5Exporter:
 
     def add_video_data(self, stream_id: str, timestamps: np.ndarray,
                        frames: np.ndarray, metadata: Optional[Dict] = None):
-        """
-        Add video data to a registered stream.
         
-        Args:
-            stream_id: Stream identifier  
-            timestamps: Frame timestamps (seconds since epoch)
-            frames: Video frames array (N, H, W, C)
-            metadata: Optional metadata dictionary
-        """
         if not self.is_open:
             raise RuntimeError("HDF5 file not open")
 
@@ -345,12 +291,7 @@ class MultiModalHDF5Exporter:
             raise
 
     def add_sync_marker(self, marker: SyncMarkerInfo):
-        """
-        Add synchronization marker.
         
-        Args:
-            marker: Sync marker information
-        """
         self.sync_markers.append(marker)
 
         if self.is_open:
@@ -360,15 +301,7 @@ class MultiModalHDF5Exporter:
 
     def create_streaming_dataset(self, stream_id: str, data_shape: Tuple[int, ...],
                                  dtype: np.dtype = np.float64, initial_size: int = 1000):
-        """
-        Create a dataset optimized for streaming data.
         
-        Args:
-            stream_id: Stream identifier
-            data_shape: Shape of individual data points (excluding time dimension)
-            dtype: Data type
-            initial_size: Initial dataset size (will grow automatically)
-        """
         if not self.is_open:
             raise RuntimeError("HDF5 file not open")
 
@@ -415,15 +348,7 @@ class MultiModalHDF5Exporter:
             raise
 
     def export_to_formats(self, formats: List[str] = None) -> Dict[str, Path]:
-        """
-        Export data to additional formats (CSV, MATLAB, etc.).
         
-        Args:
-            formats: List of formats ('csv', 'mat', 'json')
-            
-        Returns:
-            Dictionary mapping format to output file path
-        """
         if formats is None:
             formats = ['csv']
 
@@ -451,7 +376,7 @@ class MultiModalHDF5Exporter:
         return exported_files
 
     def _create_file_structure(self):
-        """Create basic HDF5 file structure."""
+        
         
         self.h5_file.create_group("metadata")
         self.h5_file.create_group("data_streams")
@@ -465,7 +390,7 @@ class MultiModalHDF5Exporter:
         self.h5_file.attrs['session_id'] = self.session_id
 
     def _create_dataset_for_stream(self, stream_info: DataStreamInfo):
-        """Create dataset structure for a data stream."""
+        
         group = self.h5_file.create_group(f"data_streams/{stream_info.stream_id}")
 
         
@@ -478,7 +403,7 @@ class MultiModalHDF5Exporter:
         group.attrs['start_timestamp'] = stream_info.start_timestamp
 
     def _write_session_metadata(self):
-        """Write session metadata to HDF5 file."""
+        
         if not self.session_metadata:
             return
 
@@ -503,7 +428,7 @@ class MultiModalHDF5Exporter:
                     metadata_group.attrs[key] = value
 
     def _write_sync_marker(self, marker: SyncMarkerInfo):
-        """Write sync marker to HDF5 file."""
+        
         markers_group = self.h5_file["sync_markers"]
 
         
@@ -541,7 +466,7 @@ class MultiModalHDF5Exporter:
         )
 
     def _finalize_metadata(self):
-        """Finalize session metadata before closing."""
+        
         if self.session_metadata:
             
             self.session_metadata.end_time = datetime.now(timezone.utc)
@@ -559,7 +484,7 @@ class MultiModalHDF5Exporter:
         self._write_data_stream_summary()
 
     def _write_data_stream_summary(self):
-        """Write summary of all data streams."""
+        
         summary_group = self.h5_file.create_group("metadata/data_stream_summary")
 
         for stream_id, stream_info in self.data_streams.items():
@@ -571,7 +496,7 @@ class MultiModalHDF5Exporter:
                     stream_group.attrs[key] = value
 
     def _validate_data_integrity(self):
-        """Validate data integrity and completeness."""
+        
         validation_results = {
             'total_streams': len(self.data_streams),
             'total_sync_markers': len(self.sync_markers),
@@ -628,7 +553,7 @@ class MultiModalHDF5Exporter:
         return validation_results
 
     def _generate_validation_report(self) -> Dict:
-        """Generate final validation report."""
+        
         if not self.output_file.exists():
             return {"error": "Output file does not exist"}
 
@@ -644,7 +569,7 @@ class MultiModalHDF5Exporter:
         }
 
     def _get_optimal_chunks(self, shape: Tuple[int, ...]) -> Tuple[int, ...]:
-        """Calculate optimal chunk size for HDF5 dataset."""
+        
         
         target_size = 1024 * 1024  
 
@@ -668,7 +593,7 @@ class MultiModalHDF5Exporter:
             return (chunk_size,) + shape[1:]
 
     def _export_to_csv(self, h5_file: h5py.File) -> Path:
-        """Export timeseries data to CSV format."""
+        
         csv_file = self.output_file.with_suffix('.csv')
 
         
@@ -710,7 +635,7 @@ class MultiModalHDF5Exporter:
         return csv_file
 
     def _export_to_matlab(self, h5_file: h5py.File) -> Path:
-        """Export data to MATLAB .mat format."""
+        
         try:
             from scipy.io import savemat
         except ImportError:
@@ -742,7 +667,7 @@ class MultiModalHDF5Exporter:
         return mat_file
 
     def _export_metadata_to_json(self, h5_file: h5py.File) -> Path:
-        """Export metadata to JSON format."""
+        
         json_file = self.output_file.with_suffix('.json')
 
         
@@ -804,17 +729,7 @@ class MultiModalHDF5Exporter:
 
 def create_session_exporter(participant_id: str, experiment_name: str = "",
                             output_dir: Optional[Path] = None) -> MultiModalHDF5Exporter:
-    """
-    Factory function to create a session exporter with proper metadata.
     
-    Args:
-        participant_id: Participant identifier
-        experiment_name: Name of the experiment
-        output_dir: Output directory path
-        
-    Returns:
-        Configured MultiModalHDF5Exporter instance
-    """
     
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     session_id = f"{participant_id}_{timestamp}"

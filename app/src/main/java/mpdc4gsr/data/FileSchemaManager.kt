@@ -5,7 +5,13 @@ import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 
-
+/**
+ * File Schema Manager
+ * 
+ * Enforces consistent file naming and schema conventions across all sensor modalities.
+ * Addresses TODO: "Continue enforcing the standardized session directory structure"
+ * and "Ensure each sensor's CSV has a clear header and units"
+ */
 class FileSchemaManager {
     companion object {
         private const val TAG = "FileSchemaManager"

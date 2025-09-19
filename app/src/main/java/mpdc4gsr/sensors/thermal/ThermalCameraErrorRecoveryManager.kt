@@ -12,7 +12,11 @@ import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.atomic.AtomicLong
 
-
+/**
+ * Enhanced Thermal Camera Error Recovery Manager
+ * Implements TODO requirement: "Refine error recovery for the thermal camera" and
+ * "Ensure the UI clearly notifies the user of this fallback and attempt automatic reconnection"
+ */
 class ThermalCameraErrorRecoveryManager(
     private val context: Context,
     private val lifecycleOwner: LifecycleOwner,

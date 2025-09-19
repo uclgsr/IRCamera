@@ -1,10 +1,5 @@
 #!/usr/bin/env python3
-"""
-File Transfer Manager for IRCamera PC Controller
 
-Handles resumable file transfers from Android devices as per FR10 requirements.
-Provides secure, reliable, and efficient data aggregation after recording sessions.
-"""
 
 import asyncio
 import hashlib
@@ -18,7 +13,7 @@ from typing import Any, Callable, Dict, List, Optional
 
 
 class TransferStatus(Enum):
-    """File transfer status states"""
+    
 
     PENDING = "pending"
     IN_PROGRESS = "in_progress"
@@ -29,7 +24,7 @@ class TransferStatus(Enum):
 
 
 class FileType(Enum):
-    """Types of files transferred from devices"""
+    
 
     THERMAL_VIDEO = "thermal_video"
     VISUAL_VIDEO = "visual_video"
@@ -42,7 +37,7 @@ class FileType(Enum):
 
 @dataclass
 class FileManifest:
-    """File information from device"""
+    
 
     file_id: str
     filename: str
@@ -55,7 +50,7 @@ class FileManifest:
     compression: Optional[str] = None  
 
     def to_dict(self) -> Dict[str, Any]:
-        """Convert to dictionary for JSON serialization"""
+        
         data = asdict(self)
         data["file_type"] = self.file_type.value
         return data
@@ -63,7 +58,7 @@ class FileManifest:
 
 @dataclass
 class TransferJob:
-    """Individual file transfer job"""
+    
 
     job_id: str
     manifest: FileManifest
@@ -79,14 +74,14 @@ class TransferJob:
 
     @property
     def progress_percent(self) -> float:
-        """Calculate transfer progress percentage"""
+        
         if self.manifest.size_bytes == 0:
             return 100.0
         return (self.bytes_transferred / self.manifest.size_bytes) * 100.0
 
     @property
     def transfer_rate(self) -> float:
-        """Calculate transfer rate in bytes/second"""
+        
         if self.status != TransferStatus.IN_PROGRESS or self.start_time == 0:
             return 0.0
         elapsed = time.time() - self.start_time
@@ -95,7 +90,7 @@ class TransferJob:
         return self.bytes_transferred / elapsed
 
     def to_dict(self) -> Dict[str, Any]:
-        """Convert to dictionary for JSON serialization"""
+        
         data = asdict(self)
         data["status"] = self.status.value
         data["manifest"] = self.manifest.to_dict()
@@ -104,20 +99,10 @@ class TransferJob:
 
 
 class FileTransferManager:
-    """
-    Resumable File Transfer Manager
-
-    Handles secure and efficient transfer of files from Android devices
-    with support for resume, retry, and integrity verification.
-    """
+    
 
     def __init__(self, config: Dict[str, Any]):
-        """
-        Initialize File Transfer Manager
-
-        Args:
-            config: Configuration dictionary with transfer settings
-        """
+        
         self.config = config.get("file_transfer", {})
         self.data_dir = Path(self.config.get("data_dir", "data/transfers"))
         self.data_dir.mkdir(parents=True, exist_ok=True)
@@ -148,25 +133,11 @@ class FileTransferManager:
     def add_progress_callback(
             self, callback: None = Callable[[str, float, float], None]
     ) -> None:
-        """
-        Add callback for transfer progress updates
-
-        Args:
-            callback: Function(job_id, progress_percent, transfer_rate)
-        """
+        
         self.progress_callbacks.append(callback)
 
     async def queue_transfer(self, manifest: FileManifest, device_conn: Any) -> str:
-        """
-        Queue a file for transfer
-
-        Args:
-            manifest: File information from device
-            device_conn: Connection to source device
-
-        Returns:
-            Transfer job ID
-        """
+        
         try:
             
             job_id = f"transfer_{manifest.device_id}_{manifest.session_id}_{int(time.time())}"
@@ -226,15 +197,7 @@ class FileTransferManager:
             raise
 
     async def cancel_transfer(self, job_id: str) -> bool:
-        """
-        Cancel an active or queued transfer
-
-        Args:
-            job_id: Transfer job identifier
-
-        Returns:
-            True if cancelled successfully
-        """
+        
         try:
             if job_id in self.active_jobs:
                 job = self.active_jobs[job_id]
@@ -255,7 +218,7 @@ class FileTransferManager:
             return False
 
     async def pause_transfer(self, job_id: str) -> bool:
-        """Pause an active transfer"""
+        
         try:
             if job_id in self.active_jobs:
                 job = self.active_jobs[job_id]
@@ -269,7 +232,7 @@ class FileTransferManager:
             return False
 
     async def resume_transfer(self, job_id: str) -> bool:
-        """Resume a paused transfer"""
+        
         try:
             if job_id in self.active_jobs:
                 job = self.active_jobs[job_id]
@@ -290,7 +253,7 @@ class FileTransferManager:
             return False
 
     async def _start_next_transfer(self):
-        """Start the next queued transfer"""
+        
         if not self.transfer_queue or self.concurrent_transfers >= self.max_concurrent:
             return
 
@@ -307,7 +270,7 @@ class FileTransferManager:
         asyncio.create_task(self._execute_transfer(job))
 
     async def _execute_transfer(self, job: TransferJob):
-        """Execute the actual file transfer"""
+        
         try:
             job.status = TransferStatus.IN_PROGRESS
             job.start_time = time.time()
@@ -369,7 +332,7 @@ class FileTransferManager:
                 await self._start_next_transfer()
 
     async def _transfer_file_chunks(self, job: TransferJob):
-        """Transfer file in chunks with progress updates"""
+        
         try:
             
             mode = "ab" if job.resume_offset > 0 else "wb"
@@ -411,17 +374,7 @@ class FileTransferManager:
     async def _read_chunk_from_device(
             self, job: TransferJob, offset: int, size: int
     ) -> bytes:
-        """
-        Read a chunk of data from the device using real network communication
-
-        Args:
-            job: Transfer job containing device connection info
-            offset: File offset to read from
-            size: Number of bytes to read
-
-        Returns:
-            Chunk data as bytes
-        """
+        
         try:
             
             device_conn = job.device_connection
@@ -490,16 +443,7 @@ class FileTransferManager:
             raise
 
     async def _send_device_request(self, device_conn: Any, request_data: dict) -> dict:
-        """
-        Send request to Android device and get response
-
-        Args:
-            device_conn: Device connection object
-            request_data: Request data as dict
-
-        Returns:
-            Response data as dict
-        """
+        
         try:
             import json
 
@@ -527,7 +471,7 @@ class FileTransferManager:
             return {"status": "error", "error": str(e)}
 
     async def _update_progress(self, job: TransferJob):
-        """Update transfer progress and notify callbacks"""
+        
         progress = job.progress_percent
         rate = job.transfer_rate
 
@@ -539,7 +483,7 @@ class FileTransferManager:
                 logger.error(f"Error in progress callback: {e}")
 
     async def _verify_file_integrity(self, job: TransferJob) -> bool:
-        """Verify transferred file integrity using checksum"""
+        
         try:
             logger.info(f"Verifying file integrity: {job.manifest.filename}")
 
@@ -568,7 +512,7 @@ class FileTransferManager:
     async def _verify_existing_file(
             self, filepath: Path, manifest: FileManifest
     ) -> bool:
-        """Verify that an existing file matches the expected manifest"""
+        
         try:
             if not filepath.exists():
                 return False
@@ -595,7 +539,7 @@ class FileTransferManager:
             return False
 
     def get_transfer_status(self, job_id: str) -> Optional[Dict[str, Any]]:
-        """Get status of a transfer job"""
+        
         if job_id in self.active_jobs:
             job = self.active_jobs[job_id]
             return {
@@ -625,11 +569,11 @@ class FileTransferManager:
             return None
 
     def get_active_transfers(self) -> List[Dict[str, Any]]:
-        """Get list of all active transfer statuses"""
+        
         return [self.get_transfer_status(job_id) for job_id in self.active_jobs.keys()]
 
     def get_transfer_summary(self) -> Dict[str, Any]:
-        """Get overall transfer manager status"""
+        
         return {
             "active_transfers": len(self.active_jobs),
             "queued_transfers": len(self.transfer_queue),
@@ -639,7 +583,7 @@ class FileTransferManager:
         }
 
     async def save_job_state(self) -> Any:
-        """Save transfer job states to disk for recovery"""
+        
         try:
             state_file = self.data_dir / "transfer_state.json"
 
@@ -662,7 +606,7 @@ class FileTransferManager:
             logger.error(f"Failed to save transfer state: {e}")
 
     async def load_job_state(self) -> Any:
-        """Load transfer job states from disk for recovery"""
+        
         try:
             state_file = self.data_dir / "transfer_state.json"
 

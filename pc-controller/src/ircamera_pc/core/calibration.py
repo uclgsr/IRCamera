@@ -1,13 +1,5 @@
 #!/usr/bin/env python3
-"""
-Calibration Tools for IRCamera PC Controller
 
-Provides camera calibration utilities as per FR9 requirements.
-Handles both thermal and visual camera calibration for Android devices.
-
-GUI Integration: Uses crosshair calibration icon (ic_menu_coordinate_svg.xml)
-for visual representation in GUI widgets and calibration interfaces.
-"""
 
 import json
 import time
@@ -62,7 +54,7 @@ from loguru import logger
 
 
 class CameraType(Enum):
-    """Types of cameras for calibration"""
+    
 
     THERMAL = "thermal"
     VISUAL = "visual"
@@ -70,7 +62,7 @@ class CameraType(Enum):
 
 
 class CalibrationStatus(Enum):
-    """Calibration process status"""
+    
 
     NOT_STARTED = "not_started"
     IN_PROGRESS = "in_progress"
@@ -80,7 +72,7 @@ class CalibrationStatus(Enum):
 
 @dataclass
 class CameraIntrinsics:
-    """Camera intrinsic parameters"""
+    
 
     fx: float  
     fy: float  
@@ -94,22 +86,22 @@ class CameraIntrinsics:
 
     @property
     def camera_matrix(self) -> np.ndarray:
-        """Get camera matrix as numpy array"""
+        
         return np.array([[self.fx, 0, self.cx], [0, self.fy, self.cy], [0, 0, 1]])
 
     @property
     def distortion_coeffs(self) -> np.ndarray:
-        """Get distortion coefficients as numpy array"""
+        
         return np.array([self.k1, self.k2, self.p1, self.p2, self.k3])
 
     def to_dict(self) -> Dict[str, float]:
-        """Convert to dictionary for JSON serialization"""
+        
         return asdict(self)
 
 
 @dataclass
 class StereoCalibration:
-    """Stereo camera calibration parameters"""
+    
 
     rotation_matrix: List[List[float]]  
     translation_vector: List[float]  
@@ -122,13 +114,13 @@ class StereoCalibration:
     baseline_mm: float  
 
     def to_dict(self) -> Dict[str, Any]:
-        """Convert to dictionary for JSON serialization"""
+        
         return asdict(self)
 
 
 @dataclass
 class CalibrationResult:
-    """Complete calibration result for a device"""
+    
 
     device_id: str
     session_id: str
@@ -142,7 +134,7 @@ class CalibrationResult:
     image_resolution: Tuple[int, int]  
 
     def to_dict(self) -> Dict[str, Any]:
-        """Convert to dictionary for JSON serialization"""
+        
         data = asdict(self)
         data["camera_type"] = self.camera_type.value
         data["status"] = self.status.value
@@ -154,18 +146,12 @@ class CalibrationResult:
 
 
 class ChessboardDetector:
-    """Chessboard pattern detector for calibration"""
+    
 
     def __init__(
             self, pattern_size: Tuple[int, int] = (9, 6), square_size: float = 25.0
     ):
-        """
-        Initialize chessboard detector
-
-        Args:
-            pattern_size: (cols, rows) of interior chessboard corners
-            square_size: Size of each square in millimeters
-        """
+        
         self.pattern_size = pattern_size
         self.square_size = square_size
 
@@ -179,15 +165,7 @@ class ChessboardDetector:
         self.object_points_3d *= square_size
 
     def detect_corners(self, image: np.ndarray) -> Tuple[bool, Optional[np.ndarray]]:
-        """
-        Detect chessboard corners in image
-
-        Args:
-            image: Input image (grayscale or color)
-
-        Returns:
-            Tuple of (success, corner_points)
-        """
+        
         try:
             
             if len(image.shape) == 3:
@@ -222,20 +200,10 @@ class ChessboardDetector:
 
 
 class CameraCalibrator:
-    """
-    Camera Calibration Service
-
-    Provides camera calibration functionality for thermal and visual cameras
-    on Android devices using chessboard patterns.
-    """
+    
 
     def __init__(self, config: Optional[Dict[str, Any]] = None):
-        """
-        Initialize Camera Calibrator
-
-        Args:
-            config: Optional configuration dictionary with calibration settings
-        """
+        
         self.config = (config or {}).get("calibration", {})
         self.data_dir = Path(self.config.get("data_dir", "data/calibration"))
         self.data_dir.mkdir(parents=True, exist_ok=True)
@@ -265,17 +233,7 @@ class CameraCalibrator:
     async def start_calibration(
             self, device_id: str, session_id: str, camera_type: CameraType
     ) -> bool:
-        """
-        Start camera calibration for a device
-
-        Args:
-            device_id: Device identifier
-            session_id: Calibration session ID
-            camera_type: Type of camera to calibrate
-
-        Returns:
-            True if calibration started successfully
-        """
+        
         try:
             calibration_id = f"{device_id}_{camera_type.value}_{session_id}"
 
@@ -310,18 +268,7 @@ class CameraCalibrator:
             camera_type: CameraType,
             image_data: bytes,
     ) -> Dict[str, Any]:
-        """
-        Process a calibration image from device
-
-        Args:
-            device_id: Device identifier
-            session_id: Session identifier
-            camera_type: Camera type
-            image_data: Raw image data
-
-        Returns:
-            Processing result with detection status
-        """
+        
         try:
             calibration_id = f"{device_id}_{camera_type.value}_{session_id}"
 
@@ -394,17 +341,7 @@ class CameraCalibrator:
     async def finalize_calibration(
             self, device_id: str, session_id: str, camera_type: CameraType
     ) -> Optional[CalibrationResult]:
-        """
-        Finalize calibration and compute camera parameters
-
-        Args:
-            device_id: Device identifier
-            session_id: Session identifier
-            camera_type: Camera type
-
-        Returns:
-            Calibration result or None if failed
-        """
+        
         try:
             calibration_id = f"{device_id}_{camera_type.value}_{session_id}"
 
@@ -488,17 +425,7 @@ class CameraCalibrator:
     def get_calibration_status(
             self, device_id: str, session_id: str, camera_type: Union[CameraType, str]
     ) -> Dict[str, Any]:
-        """
-        Get calibration session status
-
-        Args:
-            device_id: Device identifier
-            session_id: Session identifier
-            camera_type: Camera type (CameraType enum or string)
-
-        Returns:
-            Dictionary containing session status
-        """
+        
         
         if isinstance(camera_type, CameraType):
             camera_type_str = camera_type.value
@@ -530,17 +457,7 @@ class CameraCalibrator:
     def cancel_calibration(
             self, device_id: str, session_id: str, camera_type: Union[CameraType, str]
     ) -> bool:
-        """
-        Cancel an active calibration session
-
-        Args:
-            device_id: Device identifier
-            session_id: Session identifier
-            camera_type: Camera type (CameraType enum or string)
-
-        Returns:
-            True if session was canceled, False if not found
-        """
+        
         
         if isinstance(camera_type, CameraType):
             camera_type_str = camera_type.value
@@ -557,12 +474,7 @@ class CameraCalibrator:
         return False
 
     def get_active_calibrations(self) -> List[str]:
-        """
-        Get list of active calibration session IDs
-
-        Returns:
-            List of calibration session identifiers
-        """
+        
         return list(self.active_sessions.keys())
 
     async def calibrate_stereo_pair(
@@ -572,18 +484,7 @@ class CameraCalibrator:
             left_result: CalibrationResult,
             right_result: CalibrationResult,
     ) -> Optional[StereoCalibration]:
-        """
-        Calibrate stereo camera pair
-
-        Args:
-            device_id: Device identifier
-            session_id: Session identifier
-            left_result: Left camera calibration result
-            right_result: Right camera calibration result
-
-        Returns:
-            Stereo calibration parameters or None if failed
-        """
+        
         try:
             logger.info(f"Starting stereo calibration for device {device_id}")
 
@@ -747,7 +648,7 @@ class CameraCalibrator:
     def _generate_realistic_corners(
             self, pattern_size: tuple, image_size: tuple, seed: int
     ) -> np.ndarray:
-        """Generate realistic chessboard corner points with noise."""
+        
         np.random.seed(seed)
 
         
@@ -776,7 +677,7 @@ class CameraCalibrator:
     def _generate_stereo_corners(
             self, left_corners: np.ndarray, baseline_offset: float
     ) -> np.ndarray:
-        """Generate corresponding right camera corners with stereo disparity."""
+        
         right_corners = left_corners.copy()
 
         

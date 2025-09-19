@@ -7,7 +7,14 @@ import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
 
-
+/**
+ * Lab Streaming Layer (LSL) GSR Data Outlet
+ * 
+ * Implements optional LSL outlet for real-time GSR monitoring and visualization.
+ * Addresses TODO: "Implement an optional Lab Streaming Layer outlet or similar 
+ * for live GSR monitoring. This feature (for real-time visualization) is noted 
+ * but not yet implemented"
+ */
 class LSLGSROutlet {
     companion object {
         private const val TAG = "LSLGSROutlet"

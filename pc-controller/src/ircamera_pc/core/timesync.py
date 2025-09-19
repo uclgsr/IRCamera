@@ -1,9 +1,4 @@
-"""
-Time Synchronization Service for IRCamera PC Controller
 
-Provides SNTP-like time synchronization service for Android devices.
-Implements FR3: Time Synchronisation Service requirements.
-"""
 
 import asyncio
 import struct
@@ -22,7 +17,7 @@ from .config import config
 
 @dataclass
 class TimeSyncStats:
-    """Time synchronization statistics for a device."""
+    
 
     device_id: str
     last_sync: Optional[datetime] = None
@@ -39,17 +34,10 @@ class TimeSyncStats:
 
 
 class TimeSyncService:
-    """
-    Time synchronization service for maintaining clock synchronization across devices.
-
-    Implements the Time Synchronisation Service functional requirement (FR3):
-    - Runs SNTP-like service for devices to calibrate against PC's clock
-    - Maintains millisecond-level accuracy (target: 5ms median, 15ms p95)
-    - Provides periodic synchronization and statistics
-    """
+    
 
     def __init__(self):
-        """Initialize time synchronization service."""
+        
         self._server_socket: Optional[asyncio.DatagramTransport] = None
         self._protocol: Optional[TimeSyncProtocol] = None
         self._device_stats: Dict[str, TimeSyncStats] = {}
@@ -64,13 +52,7 @@ class TimeSyncService:
         logger.info("Time Synchronization Service initialized")
 
     async def start(self, host: str = "127.0.0.1", port: int = 8123) -> None:
-        """
-        Start the time synchronization service.
-
-        Args:
-            host: Host to bind to
-            port: Port to bind to
-        """
+        
         if self._is_running:
             logger.warning("Time sync service is already running")
             return
@@ -94,7 +76,7 @@ class TimeSyncService:
             raise
 
     async def stop(self) -> None:
-        """Stop the time synchronization service."""
+        
         if not self._is_running:
             return
 
@@ -107,17 +89,7 @@ class TimeSyncService:
     def handle_sync_request(
             self, device_id: str, request_data: bytes, addr: Tuple[str, int]
     ) -> bytes:
-        """
-        Handle time synchronization request from device.
-
-        Args:
-            device_id: Device identifier
-            request_data: Request data from device
-            addr: Device address
-
-        Returns:
-            Response data with time information
-        """
+        
         try:
             
             if len(request_data) < 16:
@@ -151,7 +123,7 @@ class TimeSyncService:
     def _update_device_stats(
             self, device_id: str, client_time: float, server_time: float
     ) -> None:
-        """Update synchronization statistics for device."""
+        
         if device_id not in self._device_stats:
             self._device_stats[device_id] = TimeSyncStats(device_id=device_id)
 
@@ -209,23 +181,15 @@ class TimeSyncService:
         )
 
     def get_device_stats(self, device_id: str) -> Optional[TimeSyncStats]:
-        """Get synchronization statistics for device."""
+        
         return self._device_stats.get(device_id)
 
     def get_all_stats(self) -> Dict[str, TimeSyncStats]:
-        """Get synchronization statistics for all devices."""
+        
         return self._device_stats.copy()
 
     def is_device_synchronized(self, device_id: str) -> bool:
-        """
-        Check if device is properly synchronized.
-
-        Args:
-            device_id: Device identifier
-
-        Returns:
-            True if device meets synchronization criteria
-        """
+        
         stats = self._device_stats.get(device_id)
         if not stats or not stats.last_sync:
             return False
@@ -242,12 +206,7 @@ class TimeSyncService:
         )
 
     def get_synchronization_quality(self) -> Dict[str, any]:
-        """
-        Get overall synchronization quality metrics.
-
-        Returns:
-            Dictionary with quality metrics
-        """
+        
         if not self._device_stats:
             return {
                 "total_devices": 0,
@@ -301,31 +260,25 @@ class TimeSyncService:
 
     @property
     def is_running(self) -> bool:
-        """Check if service is running."""
+        
         return self._is_running
 
 
 class TimeSyncProtocol(asyncio.DatagramProtocol):
-    """UDP protocol for time synchronization."""
+    
 
     def __init__(self, service: TimeSyncService):
-        """Initialize protocol with reference to service."""
+        
         self.service = service
         self.transport: Optional[asyncio.DatagramTransport] = None
 
     def connection_made(self, transport: asyncio.DatagramTransport) -> None:
-        """Called when connection is made."""
+        
         self.transport = transport
         logger.debug("Time sync protocol connection made")
 
     def datagram_received(self, data: bytes, addr: Tuple[str, int]) -> None:
-        """
-        Handle received datagram.
-
-        Args:
-            data: Received data
-            addr: Sender address
-        """
+        
         try:
             
             if len(data) < 16:
@@ -346,11 +299,11 @@ class TimeSyncProtocol(asyncio.DatagramProtocol):
             logger.error(f"Error processing time sync datagram from {addr}: {e}")
 
     def error_received(self, exc: Exception) -> None:
-        """Handle protocol errors."""
+        
         logger.error(f"Time sync protocol error: {exc}")
 
     def connection_lost(self, exc: Optional[Exception]) -> None:
-        """Handle connection lost."""
+        
         if exc:
             logger.error(f"Time sync connection lost: {exc}")
         else:

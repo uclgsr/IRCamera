@@ -1,9 +1,4 @@
-"""
-Advanced Time Synchronization Service - PC Controller Side
 
-Implements NTP-like time synchronization protocol to match Android TimeManager
-for precise temporal alignment in the Hub-and-Spoke architecture.
-"""
 
 import asyncio
 import json
@@ -22,7 +17,7 @@ except ImportError:
 
 @dataclass
 class TimeSyncMeasurement:
-    """Individual time synchronization measurement."""
+    
 
     t1_client_send: float  
     t2_server_receive: float  
@@ -35,7 +30,7 @@ class TimeSyncMeasurement:
     measurement_time: float = field(default_factory=time.time)
 
     def calculate_ntp_values(self):
-        """Calculate NTP-style timing values if all timestamps are available."""
+        
         if self.t4_client_receive is not None:
             
             self.round_trip_time_ns = (self.t4_client_receive - self.t1_client_send)
@@ -49,7 +44,7 @@ class TimeSyncMeasurement:
 
 @dataclass
 class DeviceTimeSyncStats:
-    """Time synchronization statistics for a device."""
+    
 
     device_id: str
     last_sync_time: Optional[float] = None
@@ -73,7 +68,7 @@ class DeviceTimeSyncStats:
     sync_quality: str = "UNKNOWN"  
 
     def update_stats(self, stale_threshold_s: int = 60):
-        """Update statistical measures from recent measurements."""
+        
         if not self.measurements:
             return
 
@@ -106,7 +101,7 @@ class DeviceTimeSyncStats:
         self._assess_sync_quality(stale_threshold_s)
 
     def _assess_sync_quality(self, stale_threshold_s: int = 60):
-        """Assess synchronization quality based on current metrics."""
+        
         
         if (self.last_sync_time is None or
                 time.time() - self.last_sync_time > stale_threshold_s):
@@ -130,15 +125,10 @@ class DeviceTimeSyncStats:
 
 
 class AdvancedTimeSyncService:
-    """
-    Advanced Time Synchronization Service for PC Controller Hub.
     
-    Implements comprehensive NTP-like protocol matching Android TimeManager
-    to achieve <5ms clock offset precision (not round-trip time measurement accuracy) across Hub-Spoke architecture.
-    """
 
     def __init__(self, stale_threshold_s: int = 60):
-        """Initialize advanced time synchronization service."""
+        
         self._device_stats: Dict[str, DeviceTimeSyncStats] = {}
         self._active_sessions: Dict[str, Set[str]] = defaultdict(
             set)  
@@ -157,7 +147,7 @@ class AdvancedTimeSyncService:
         logger.info("Advanced Time Synchronization Service initialized")
 
     async def start(self) -> None:
-        """Start the advanced time synchronization service."""
+        
         if self._is_running:
             logger.warning("Advanced time sync service already running")
             return
@@ -170,7 +160,7 @@ class AdvancedTimeSyncService:
         logger.info("Advanced Time Synchronization Service started")
 
     async def stop(self) -> None:
-        """Stop the advanced time synchronization service."""
+        
         if not self._is_running:
             return
 
@@ -187,16 +177,7 @@ class AdvancedTimeSyncService:
 
     async def handle_time_sync_request(self, message: Dict[str, any], device_id: str) -> Dict[
         str, any]:
-        """
-        Handle time synchronization request with full NTP-like protocol.
         
-        Args:
-            message: Sync request message with client_timestamp
-            device_id: Device identifier
-            
-        Returns:
-            Time sync response with server timestamps
-        """
         try:
             
             client_timestamp = message.get("client_timestamp")
@@ -246,7 +227,7 @@ class AdvancedTimeSyncService:
             }
 
     def _record_measurement(self, device_id: str, measurement: TimeSyncMeasurement) -> None:
-        """Record time sync measurement for device."""
+        
         
         if device_id not in self._device_stats:
             self._device_stats[device_id] = DeviceTimeSyncStats(device_id=device_id)
@@ -276,7 +257,7 @@ class AdvancedTimeSyncService:
                          f"offset={stats.median_offset_ms:.1f}ms")
 
     async def register_session(self, session_id: str, device_id: str) -> bool:
-        """Register a session for time synchronization tracking."""
+        
         try:
             self._active_sessions[session_id].add(device_id)
 
@@ -292,7 +273,7 @@ class AdvancedTimeSyncService:
             return False
 
     async def end_session(self, session_id: str) -> bool:
-        """End a time synchronization session for all devices."""
+        
         try:
             device_ids = self._active_sessions.pop(session_id, set())
             if device_ids:
@@ -305,15 +286,15 @@ class AdvancedTimeSyncService:
             return False
 
     def get_device_sync_stats(self, device_id: str) -> Optional[DeviceTimeSyncStats]:
-        """Get time synchronization statistics for a device."""
+        
         return self._device_stats.get(device_id)
 
     def get_all_sync_stats(self) -> Dict[str, DeviceTimeSyncStats]:
-        """Get time synchronization statistics for all devices."""
+        
         return self._device_stats.copy()
 
     def get_sync_quality_summary(self) -> Dict[str, any]:
-        """Get overall synchronization quality summary."""
+        
         if not self._device_stats:
             return {
                 "total_devices": 0,
@@ -354,7 +335,7 @@ class AdvancedTimeSyncService:
         }
 
     async def _periodic_stats_update(self) -> None:
-        """Periodically update device statistics."""
+        
         while self._is_running:
             try:
                 
@@ -377,16 +358,7 @@ class AdvancedTimeSyncService:
                 await asyncio.sleep(60)  
 
     def is_device_synchronized(self, device_id: str, max_age_seconds: float = None) -> bool:
-        """
-        Check if device is properly synchronized within time tolerance.
         
-        Args:
-            device_id: Device identifier
-            max_age_seconds: Maximum age of last sync in seconds (uses instance default if None)
-            
-        Returns:
-            True if device is synchronized within requirements
-        """
         stats = self._device_stats.get(device_id)
         if not stats:
             return False
@@ -406,10 +378,10 @@ class AdvancedTimeSyncService:
 
     @property
     def is_running(self) -> bool:
-        """Check if service is running."""
+        
         return self._is_running
 
     @property
     def active_sessions(self) -> Dict[str, str]:
-        """Get active session mappings."""
+        
         return self._active_sessions.copy()

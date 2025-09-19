@@ -1,7 +1,4 @@
-"""
-Phase 6: Advanced Multi-Modal Analytics Engine
-Real-time sensor fusion, behavioral pattern recognition, and stress prediction
-"""
+
 
 import asyncio
 import json
@@ -22,7 +19,7 @@ logger = logging.getLogger(__name__)
 
 
 class BiometricPattern(Enum):
-    """Advanced biometric pattern classification"""
+    
     BASELINE = "baseline"
     ACUTE_STRESS = "acute_stress"
     CHRONIC_STRESS = "chronic_stress"
@@ -35,7 +32,7 @@ class BiometricPattern(Enum):
 
 
 class SensorModality(Enum):
-    """Multi-modal sensor types"""
+    
     GSR = "gsr"
     THERMAL = "thermal"
     RGB_FACIAL = "rgb_facial"
@@ -47,7 +44,7 @@ class SensorModality(Enum):
 
 @dataclass
 class SensorReading:
-    """Unified sensor reading structure"""
+    
     timestamp: float
     device_id: str
     session_id: str
@@ -61,7 +58,7 @@ class SensorReading:
 
 @dataclass
 class MultiModalFeatures:
-    """Advanced multi-modal feature set"""
+    
     timestamp: float
     device_id: str
     session_id: str
@@ -95,7 +92,7 @@ class MultiModalFeatures:
 
 @dataclass
 class BehavioralInsight:
-    """AI-generated behavioral insights"""
+    
     timestamp: float
     insight_type: str
     severity: str  
@@ -107,7 +104,7 @@ class BehavioralInsight:
 
 @dataclass
 class ResearchMetrics:
-    """Research-grade metrics for academic studies"""
+    
     session_id: str
     participant_id: str
 
@@ -132,10 +129,10 @@ class ResearchMetrics:
 
 
 class AdvancedAnalyticsEngine:
-    """Phase 6: Advanced Multi-Modal Analytics with AI-Enhanced Pattern Recognition"""
+    
 
     def __init__(self, config: Dict[str, Any] = None):
-        """Initialize advanced analytics engine"""
+        
         self.config = config or {}
 
         
@@ -167,7 +164,7 @@ class AdvancedAnalyticsEngine:
         logger.info("Advanced Analytics Engine initialized with multi-modal fusion")
 
     def add_sensor_reading(self, reading: SensorReading) -> None:
-        """Add sensor reading to processing pipeline"""
+        
         session_key = f"{reading.device_id}_{reading.session_id}"
 
         if session_key not in self.sensor_buffers:
@@ -189,7 +186,7 @@ class AdvancedAnalyticsEngine:
         self.processing_queue.put((priority, reading.timestamp, session_key))
 
     def _background_processor(self) -> None:
-        """Background thread for continuous data processing"""
+        
         while self._processing_active:
             try:
                 
@@ -224,7 +221,7 @@ class AdvancedAnalyticsEngine:
                 logger.error(f"Error in background processor: {e}")
 
     def _has_sufficient_data(self, session_key: str) -> bool:
-        """Check if we have sufficient sensor data for fusion analysis"""
+        
         if session_key not in self.sensor_buffers:
             return False
 
@@ -241,7 +238,7 @@ class AdvancedAnalyticsEngine:
 
     def _extract_multimodal_features(self, session_key: str, timestamp: float) -> Optional[
         MultiModalFeatures]:
-        """Extract comprehensive multi-modal features"""
+        
         try:
             buffers = self.sensor_buffers[session_key]
 
@@ -304,7 +301,7 @@ class AdvancedAnalyticsEngine:
             return None
 
     def _extract_gsr_advanced_features(self, gsr_readings: List[SensorReading]) -> Dict[str, float]:
-        """Extract advanced GSR features with enhanced signal processing"""
+        
         if not gsr_readings:
             return {}
 
@@ -406,7 +403,7 @@ class AdvancedAnalyticsEngine:
             return {}
 
     def _extract_thermal_features(self, thermal_readings: List[SensorReading]) -> Dict[str, float]:
-        """Extract thermal imaging features"""
+        
         if not thermal_readings:
             return {}
 
@@ -440,7 +437,7 @@ class AdvancedAnalyticsEngine:
             return {}
 
     def _extract_facial_features(self, facial_readings: List[SensorReading]) -> Dict[str, float]:
-        """Extract facial expression and micro-expression features"""
+        
         if not facial_readings:
             return {}
 
@@ -467,7 +464,7 @@ class AdvancedAnalyticsEngine:
             return {}
 
     def _extract_motion_features(self, motion_readings: List[SensorReading]) -> Dict[str, float]:
-        """Extract motion and activity features"""
+        
         if not motion_readings:
             return {}
 
@@ -500,7 +497,7 @@ class AdvancedAnalyticsEngine:
 
     def _fuse_stress_indicators(self, gsr_features: Dict, thermal_features: Dict,
                                 facial_features: Dict) -> float:
-        """Fuse multi-modal stress indicators using weighted combination"""
+        
         stress_score = 0.0
         total_weight = 0.0
 
@@ -564,7 +561,7 @@ class AdvancedAnalyticsEngine:
         return max(0.0, min(100.0, stress_score))
 
     def _calculate_arousal(self, gsr_features: Dict, motion_features: Dict) -> float:
-        """Calculate physiological arousal level"""
+        
         arousal = 0.0
 
         
@@ -586,7 +583,7 @@ class AdvancedAnalyticsEngine:
         return max(0.0, min(100.0, arousal))
 
     def _calculate_valence(self, facial_features: Dict, gsr_features: Dict) -> float:
-        """Calculate emotional valence (-100 to +100)"""
+        
         
         
 
@@ -607,7 +604,7 @@ class AdvancedAnalyticsEngine:
         return max(-100.0, min(100.0, valence))
 
     def _calculate_cognitive_load(self, gsr_features: Dict, thermal_features: Dict) -> float:
-        """Calculate cognitive load assessment"""
+        
         cognitive_load = 0.0
 
         
@@ -635,7 +632,7 @@ class AdvancedAnalyticsEngine:
 
     def _detect_biometric_pattern(self, stress: float, arousal: float, valence: float,
                                   cognitive_load: float) -> Tuple[BiometricPattern, float]:
-        """Detect biometric pattern using multi-dimensional analysis"""
+        
 
         
         patterns = {
@@ -670,7 +667,7 @@ class AdvancedAnalyticsEngine:
         return best_pattern, best_confidence
 
     def _calculate_stress_trend(self, session_key: str) -> float:
-        """Calculate stress trend over recent history"""
+        
         if session_key not in self.feature_history or len(self.feature_history[session_key]) < 3:
             return 0.0
 
@@ -688,7 +685,7 @@ class AdvancedAnalyticsEngine:
         return slope if p_value < 0.05 else 0.0
 
     def _predict_future_stress(self, session_key: str, current_stress: float) -> float:
-        """Predict stress level in 5 minutes using trend analysis"""
+        
         trend = self._calculate_stress_trend(session_key)
 
         
@@ -699,7 +696,7 @@ class AdvancedAnalyticsEngine:
 
     def _assess_risk_level(self, stress_level: float, stress_trend: float,
                            pattern: BiometricPattern) -> str:
-        """Assess overall risk level"""
+        
 
         
         if (stress_level > 85 or
@@ -718,7 +715,7 @@ class AdvancedAnalyticsEngine:
             return "low"
 
     def _assess_data_quality(self, buffers: Dict[SensorModality, List]) -> float:
-        """Assess overall data quality across modalities"""
+        
         total_quality = 0.0
         modality_count = 0
 
@@ -733,7 +730,7 @@ class AdvancedAnalyticsEngine:
         return (total_quality / modality_count) if modality_count > 0 else 0.0
 
     def _calculate_sensor_coverage(self, buffers: Dict[SensorModality, List]) -> float:
-        """Calculate percentage of expected sensors that are active"""
+        
         expected_sensors = [SensorModality.GSR, SensorModality.THERMAL]  
         active_sensors = sum(1 for modality in expected_sensors if buffers.get(modality, []))
 
@@ -741,7 +738,7 @@ class AdvancedAnalyticsEngine:
 
     def _calculate_pattern_stability(self, session_key: str,
                                      current_pattern: BiometricPattern) -> float:
-        """Calculate how stable the current pattern has been"""
+        
         if session_key not in self.feature_history:
             return 0.0
 
@@ -757,7 +754,7 @@ class AdvancedAnalyticsEngine:
 
     def _generate_behavioral_insights(self, session_key: str, features: MultiModalFeatures) -> List[
         BehavioralInsight]:
-        """Generate AI-powered behavioral insights"""
+        
         insights = []
         timestamp = features.timestamp
 
@@ -825,7 +822,7 @@ class AdvancedAnalyticsEngine:
         return insights
 
     def _calculate_sample_entropy(self, data: np.ndarray, m: int = 2, r: float = 0.2) -> float:
-        """Calculate sample entropy as a measure of signal complexity"""
+        
         try:
             N = len(data)
             if N < m + 1:
@@ -856,7 +853,7 @@ class AdvancedAnalyticsEngine:
             return 0.0
 
     def _calculate_dfa_alpha(self, data: np.ndarray) -> float:
-        """Calculate Detrended Fluctuation Analysis alpha coefficient"""
+        
         try:
             N = len(data)
             if N < 50:
@@ -920,7 +917,7 @@ class AdvancedAnalyticsEngine:
             return 0.0
 
     def get_latest_analysis(self, device_id: str, session_id: str) -> Optional[MultiModalFeatures]:
-        """Get the most recent multi-modal analysis"""
+        
         session_key = f"{device_id}_{session_id}"
 
         if session_key in self.feature_history and self.feature_history[session_key]:
@@ -930,7 +927,7 @@ class AdvancedAnalyticsEngine:
 
     def get_recent_insights(self, device_id: str, session_id: str, limit: int = 5) -> List[
         BehavioralInsight]:
-        """Get recent behavioral insights"""
+        
         session_key = f"{device_id}_{session_id}"
 
         if session_key in self.insight_history:
@@ -940,7 +937,7 @@ class AdvancedAnalyticsEngine:
 
     def generate_research_report(self, device_id: str, session_id: str,
                                  participant_id: str = None) -> Optional[ResearchMetrics]:
-        """Generate research-grade metrics and compliance report"""
+        
         session_key = f"{device_id}_{session_id}"
 
         if session_key not in self.feature_history or not self.feature_history[session_key]:
@@ -1001,7 +998,7 @@ class AdvancedAnalyticsEngine:
 
     def export_research_data(self, device_id: str, session_id: str,
                              output_dir: str, format: str = "bids") -> bool:
-        """Export data in research-ready formats"""
+        
         try:
             session_key = f"{device_id}_{session_id}"
 
@@ -1075,7 +1072,7 @@ class AdvancedAnalyticsEngine:
             return False
 
     def cleanup_session(self, device_id: str, session_id: str) -> None:
-        """Clean up resources for completed session"""
+        
         session_key = f"{device_id}_{session_id}"
 
         
@@ -1085,7 +1082,7 @@ class AdvancedAnalyticsEngine:
         logger.info(f"Cleaned up advanced analytics for {session_key}")
 
     def get_system_status(self) -> Dict[str, Any]:
-        """Get comprehensive system status"""
+        
         return {
             "active_sessions": len(self.sensor_buffers),
             "processing_queue_size": self.processing_queue.qsize(),
@@ -1098,7 +1095,7 @@ class AdvancedAnalyticsEngine:
         }
 
     def shutdown(self) -> None:
-        """Gracefully shutdown the analytics engine"""
+        
         self._processing_active = False
         if hasattr(self, '_processing_thread'):
             self._processing_thread.join(timeout=5.0)
@@ -1110,7 +1107,7 @@ class AdvancedAnalyticsEngine:
 
 def create_gsr_reading(device_id: str, session_id: str, timestamp: float,
                        gsr_value: float, quality: float = 95.0) -> SensorReading:
-    """Create a GSR sensor reading"""
+    
     return SensorReading(
         timestamp=timestamp,
         device_id=device_id,
@@ -1126,7 +1123,7 @@ def create_gsr_reading(device_id: str, session_id: str, timestamp: float,
 
 def create_thermal_reading(device_id: str, session_id: str, timestamp: float,
                            temperature: float, quality: float = 90.0) -> SensorReading:
-    """Create a thermal sensor reading"""
+    
     return SensorReading(
         timestamp=timestamp,
         device_id=device_id,

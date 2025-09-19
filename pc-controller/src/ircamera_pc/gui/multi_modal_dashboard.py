@@ -1,24 +1,4 @@
-"""
-Multi-Modal Physiological Sensing Platform - Phase 3 Real-Time Dashboard
 
-This module implements the PyQt6 real-time dashboard for the PC Controller Hub,
-providing live visualization and control of multi-sensor Android devices.
-
-Key Features:
-- Real-time GSR plotting at 100Hz with PyQtGraph
-- Live thermal camera feed display with temperature mapping
-- RGB camera preview with FPS monitoring and quality indicators
-- Multi-device status dashboard with connection monitoring
-- Session management with recording control and sync markers
-- Performance metrics and data quality visualization
-- Samsung S22 specific optimizations and device detection
-
-Requirements Implementation:
-- FR6: Real-time GUI with device monitoring
-- FR7: Synchronization control and timing indicators
-- NFR2: Sub-5ms synchronization accuracy monitoring
-- NFR3: Multi-device coordination interface
-"""
 
 import asyncio
 import numpy as np
@@ -51,7 +31,7 @@ pg.setConfigOptions(antialias=True, useOpenGL=True)
 
 @dataclass
 class DeviceStatus:
-    """Real-time status information for connected Android devices."""
+    
     device_id: str
     device_name: str
     android_version: str
@@ -78,7 +58,7 @@ class DeviceStatus:
 
 @dataclass
 class SensorData:
-    """Real-time sensor data packet for visualization."""
+    
     timestamp: float
     device_id: str
     sensor_type: str  
@@ -87,7 +67,7 @@ class SensorData:
 
 
 class GSRPlotWidget(PlotWidget):
-    """High-performance real-time GSR plotting widget optimized for 100Hz."""
+    
 
     def __init__(self, parent=None, update_rate: int = 100):
         super().__init__(parent)
@@ -107,7 +87,7 @@ class GSRPlotWidget(PlotWidget):
         self.update_timer.start(1000 // update_rate)  
 
     def setup_plot(self):
-        """Configure the GSR plot appearance and settings."""
+        
         self.setLabel('left', 'GSR (μS)', color='white', size='12pt')
         self.setLabel('bottom', 'Time (seconds)', color='white', size='12pt')
         self.setTitle('Real-Time GSR Data (100Hz)', color='white', size='14pt')
@@ -125,7 +105,7 @@ class GSRPlotWidget(PlotWidget):
         self.addLegend()
 
     def add_device(self, device_id: str, device_name: str):
-        """Add a new device to the GSR plot."""
+        
         if device_id not in self.device_buffers:
             
             time_buffer = np.zeros(self.buffer_size)
@@ -138,7 +118,7 @@ class GSRPlotWidget(PlotWidget):
             self.device_curves[device_id] = curve
 
     def remove_device(self, device_id: str):
-        """Remove a device from the GSR plot."""
+        
         if device_id in self.device_buffers:
             del self.device_buffers[device_id]
 
@@ -147,7 +127,7 @@ class GSRPlotWidget(PlotWidget):
             del self.device_curves[device_id]
 
     def add_gsr_data(self, device_id: str, timestamp: float, gsr_value: float):
-        """Add new GSR data point for real-time plotting."""
+        
         if device_id not in self.device_buffers:
             return
 
@@ -165,7 +145,7 @@ class GSRPlotWidget(PlotWidget):
         gsr_buffer[-1] = gsr_value
 
     def update_plots(self):
-        """Update all device plots with latest data."""
+        
         for device_id, curve in self.device_curves.items():
             if device_id in self.device_buffers:
                 time_buffer, gsr_buffer = self.device_buffers[device_id]
@@ -173,7 +153,7 @@ class GSRPlotWidget(PlotWidget):
 
 
 class ThermalVideoWidget(ImageView):
-    """Real-time thermal camera display with temperature mapping."""
+    
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -183,7 +163,7 @@ class ThermalVideoWidget(ImageView):
         self.setup_thermal_display()
 
     def setup_thermal_display(self):
-        """Configure the thermal imaging display."""
+        
         
         colormap = pg.colormap.get('thermal')  
         self.setColorMap(colormap)
@@ -197,12 +177,12 @@ class ThermalVideoWidget(ImageView):
         self.setLevels(*self.temperature_range)
 
     def set_device(self, device_id: str, device_name: str):
-        """Set the device being displayed."""
+        
         self.device_id = device_id
 
     def update_thermal_frame(self, thermal_data: np.ndarray,
                              temperature_range: Tuple[float, float]):
-        """Update thermal display with new frame."""
+        
         if thermal_data is not None:
             
             if temperature_range != self.temperature_range:
@@ -214,7 +194,7 @@ class ThermalVideoWidget(ImageView):
 
 
 class RGBVideoWidget(QLabel):
-    """RGB camera preview with FPS monitoring and quality indicators."""
+    
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -230,7 +210,7 @@ class RGBVideoWidget(QLabel):
         self.setup_display()
 
     def setup_display(self):
-        """Configure the RGB video display."""
+        
         self.setMinimumSize(320, 240)
         self.setScaledContents(True)
         self.setStyleSheet("""
@@ -246,12 +226,12 @@ class RGBVideoWidget(QLabel):
         self.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
     def set_device(self, device_id: str, device_name: str):
-        """Set the device being displayed."""
+        
         self.device_id = device_id
         self.setText(f"RGB Camera\n{device_name}\nConnecting...")
 
     def update_rgb_frame(self, rgb_data: np.ndarray):
-        """Update RGB display with new frame."""
+        
         if rgb_data is not None:
             
             height, width, channels = rgb_data.shape
@@ -265,7 +245,7 @@ class RGBVideoWidget(QLabel):
             self.frame_count += 1
 
     def calculate_fps(self):
-        """Calculate and display current FPS."""
+        
         current_time = time.time()
         time_diff = current_time - self.last_fps_time
 
@@ -277,7 +257,7 @@ class RGBVideoWidget(QLabel):
 
 
 class DeviceStatusWidget(QGroupBox):
-    """Comprehensive device status display with Samsung S22 detection."""
+    
 
     def __init__(self, parent=None):
         super().__init__("Connected Devices", parent)
@@ -286,7 +266,7 @@ class DeviceStatusWidget(QGroupBox):
         self.setup_ui()
 
     def setup_ui(self):
-        """Set up the device status display."""
+        
         self.layout = QVBoxLayout(self)
 
         
@@ -305,7 +285,7 @@ class DeviceStatusWidget(QGroupBox):
         self.scroll_layout.addWidget(self.no_devices_label)
 
     def add_device(self, device_status: DeviceStatus):
-        """Add a new device to the status display."""
+        
         device_id = device_status.device_id
 
         
@@ -318,7 +298,7 @@ class DeviceStatusWidget(QGroupBox):
         self.scroll_layout.addWidget(device_widget)
 
     def remove_device(self, device_id: str):
-        """Remove a device from the status display."""
+        
         if device_id in self.device_status_widgets:
             widget = self.device_status_widgets[device_id]
             self.scroll_layout.removeWidget(widget)
@@ -330,7 +310,7 @@ class DeviceStatusWidget(QGroupBox):
             self.no_devices_label.show()
 
     def create_device_widget(self, status: DeviceStatus) -> QWidget:
-        """Create a comprehensive device status widget."""
+        
         widget = QFrame()
         widget.setFrameStyle(QFrame.Shape.StyledPanel)
         widget.setStyleSheet("""
@@ -407,7 +387,7 @@ class DeviceStatusWidget(QGroupBox):
         return widget
 
     def create_status_indicator(self, name: str, active: bool) -> QWidget:
-        """Create a sensor status indicator."""
+        
         widget = QFrame()
         layout = QVBoxLayout(widget)
         layout.setContentsMargins(4, 4, 4, 4)
@@ -430,7 +410,7 @@ class DeviceStatusWidget(QGroupBox):
         return widget
 
     def update_device_status(self, device_status: DeviceStatus):
-        """Update the status display for a device."""
+        
         device_id = device_status.device_id
         if device_id in self.device_status_widgets:
             
@@ -439,7 +419,7 @@ class DeviceStatusWidget(QGroupBox):
 
 
 class SessionControlPanel(QGroupBox):
-    """Session management and recording control interface."""
+    
 
     
     start_recording_signal = pyqtSignal(str)  
@@ -459,7 +439,7 @@ class SessionControlPanel(QGroupBox):
         self.update_timer.start(1000)  
 
     def setup_ui(self):
-        """Set up the session control interface."""
+        
         layout = QVBoxLayout(self)
 
         
@@ -537,7 +517,7 @@ class SessionControlPanel(QGroupBox):
         layout.addWidget(self.duration_label)
 
     def start_recording(self):
-        """Start a recording session."""
+        
         participant_id = self.participant_id_input.currentText().strip()
         if not participant_id:
             QMessageBox.warning(self, "Invalid Input", "Please enter a valid Participant ID")
@@ -562,7 +542,7 @@ class SessionControlPanel(QGroupBox):
         self.start_recording_signal.emit(participant_id)
 
     def stop_recording(self):
-        """Stop the current recording session."""
+        
         self.is_recording = False
         self.session_start_time = None
 
@@ -585,25 +565,25 @@ class SessionControlPanel(QGroupBox):
         QTimer.singleShot(3000, self.reset_status)
 
     def reset_status(self):
-        """Reset status to ready state."""
+        
         self.status_label.setText("Ready to record")
         self.status_label.setStyleSheet("font-weight: bold; color: #96CEB4;")
         self.duration_label.setText("Duration: 00:00:00")
 
     def inject_sync_marker(self, marker_type: str):
-        """Inject a synchronization marker."""
+        
         if self.is_recording:
             self.inject_sync_marker_signal.emit(marker_type)
 
     def inject_custom_marker(self):
-        """Inject a custom synchronization marker."""
+        
         if self.is_recording:
             text, ok = QInputDialog.getText(self, "Custom Sync Marker", "Enter marker description:")
             if ok and text.strip():
                 self.inject_sync_marker_signal.emit(f"custom:{text.strip()}")
 
     def update_recording_status(self):
-        """Update recording duration display."""
+        
         if self.is_recording and self.session_start_time:
             elapsed = datetime.now() - self.session_start_time
             hours, remainder = divmod(elapsed.total_seconds(), 3600)
@@ -614,12 +594,7 @@ class SessionControlPanel(QGroupBox):
 
 
 class MultiModalDashboard(QMainWindow):
-    """
-    Main multi-modal physiological sensing dashboard.
     
-    Implements Phase 3 requirements for PC Controller Hub with real-time
-    visualization, device management, and session control.
-    """
 
     def __init__(self):
         super().__init__()
@@ -649,7 +624,7 @@ class MultiModalDashboard(QMainWindow):
         self.showMaximized()
 
     def setup_ui(self):
-        """Set up the main dashboard user interface."""
+        
         self.setWindowTitle("Multi-Modal Physiological Sensing Platform - PC Controller")
         self.setMinimumSize(1400, 900)
 
@@ -738,7 +713,7 @@ class MultiModalDashboard(QMainWindow):
         self.status_bar.showMessage("Ready - Waiting for device connections")
 
     def setup_services(self):
-        """Initialize core services for the PC Controller."""
+        
         try:
             
             self.session_manager = SessionManager()
@@ -759,14 +734,14 @@ class MultiModalDashboard(QMainWindow):
             QMessageBox.critical(self, "Initialization Error", f"Failed to start services: {e}")
 
     def connect_signals(self):
-        """Connect UI signals to handler functions."""
+        
         if self.session_control_panel:
             self.session_control_panel.start_recording_signal.connect(self.on_start_recording)
             self.session_control_panel.stop_recording_signal.connect(self.on_stop_recording)
             self.session_control_panel.inject_sync_marker_signal.connect(self.on_inject_sync_marker)
 
     def on_device_connected(self, device_info: Dict):
-        """Handle new device connection."""
+        
         device_id = device_info.get('device_id')
         device_name = device_info.get('device_name', 'Unknown Device')
 
@@ -807,7 +782,7 @@ class MultiModalDashboard(QMainWindow):
         logger.info(f"Device connected: {device_name} ({device_id})")
 
     def on_device_disconnected(self, device_id: str):
-        """Handle device disconnection."""
+        
         if device_id in self.connected_devices:
             device_name = self.connected_devices[device_id].device_name
 
@@ -829,7 +804,7 @@ class MultiModalDashboard(QMainWindow):
             logger.info(f"Device disconnected: {device_name} ({device_id})")
 
     def on_sensor_data_received(self, sensor_data: SensorData):
-        """Handle incoming sensor data from devices."""
+        
         device_id = sensor_data.device_id
         sensor_type = sensor_data.sensor_type
 
@@ -866,7 +841,7 @@ class MultiModalDashboard(QMainWindow):
             self.device_status_widget.update_device_status(self.connected_devices[device_id])
 
     def on_start_recording(self, participant_id: str):
-        """Handle recording start request."""
+        
         try:
             if self.session_manager:
                 session_id = self.session_manager.start_session(participant_id)
@@ -887,7 +862,7 @@ class MultiModalDashboard(QMainWindow):
             QMessageBox.critical(self, "Recording Error", f"Failed to start recording: {e}")
 
     def on_stop_recording(self):
-        """Handle recording stop request."""
+        
         try:
             
             for device_id in self.connected_devices:
@@ -910,7 +885,7 @@ class MultiModalDashboard(QMainWindow):
             QMessageBox.critical(self, "Recording Error", f"Failed to stop recording: {e}")
 
     def on_inject_sync_marker(self, marker_type: str):
-        """Handle sync marker injection request."""
+        
         try:
             timestamp = time.time()
 
@@ -926,7 +901,7 @@ class MultiModalDashboard(QMainWindow):
             logger.error(f"Failed to inject sync marker: {e}")
 
     def send_recording_command(self, device_id: str, command: str, parameters: Dict):
-        """Send recording command to specific device."""
+        
         if self.websocket_server:
             message = {
                 'type': 'recording_command',
@@ -938,7 +913,7 @@ class MultiModalDashboard(QMainWindow):
             
 
     def send_sync_marker(self, device_id: str, marker_type: str, timestamp: float):
-        """Send sync marker to specific device."""
+        
         if self.websocket_server:
             message = {
                 'type': 'sync_marker',
@@ -949,7 +924,7 @@ class MultiModalDashboard(QMainWindow):
             
 
     def closeEvent(self, event):
-        """Handle application close event."""
+        
         
         if self.session_control_panel and self.session_control_panel.is_recording:
             self.on_stop_recording()
@@ -963,7 +938,7 @@ class MultiModalDashboard(QMainWindow):
 
 
 def main():
-    """Main entry point for the Multi-Modal Dashboard application."""
+    
     import sys
     from PyQt6.QtWidgets import QApplication
 

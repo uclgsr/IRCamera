@@ -1,9 +1,4 @@
-"""
-Enhanced Session Manager for IRCamera PC Controller
 
-Manages session lifecycle with device coordination according to Hub-and-Spoke architecture.
-Implements session lifecycle management from the PC Hub Application MVP checklist.
-"""
 
 import asyncio
 import json
@@ -24,7 +19,7 @@ from .device_manager import DeviceConnectionState, DeviceInfo, DeviceManager, De
 
 
 class SessionState(Enum):
-    """Enhanced session states for the Hub-and-Spoke model."""
+    
 
     IDLE = "idle"
     INITIALIZING = "initializing"
@@ -38,7 +33,7 @@ class SessionState(Enum):
 
 @dataclass
 class SessionConfiguration:
-    """Configuration for a recording session."""
+    
 
     session_name: str
     participant_id: Optional[str] = None
@@ -52,7 +47,7 @@ class SessionConfiguration:
 
 @dataclass
 class SessionMetadata:
-    """Comprehensive session metadata structure."""
+    
 
     session_id: str
     session_name: str
@@ -84,7 +79,7 @@ class SessionMetadata:
     error_log: List[Dict[str, Any]] = field(default_factory=list)
 
     def to_dict(self) -> Dict[str, Any]:
-        """Convert to dictionary for JSON serialization."""
+        
         result = asdict(self)
 
         
@@ -103,29 +98,14 @@ class SessionMetadata:
 
 
 class AdvancedSessionManager:
-    """
-    Enhanced session manager with device coordination.
     
-    Implements session lifecycle management requirements:
-    - Session creation and initialization
-    - Start/stop recording workflows  
-    - Device acknowledgment handling
-    - Session metadata management
-    - Error handling and recovery
-    """
 
     
     MIN_SUCCESS_RATE_FOR_START = 0.5  
     MIN_SUCCESS_RATE_FOR_STOP = 0.5  
 
     def __init__(self, device_manager: DeviceManager, base_session_dir: Path):
-        """
-        Initialize session manager.
         
-        Args:
-            device_manager: Device manager instance
-            base_session_dir: Base directory for session storage
-        """
         self.device_manager = device_manager
         self.base_session_dir = Path(base_session_dir)
         self.base_session_dir.mkdir(parents=True, exist_ok=True)
@@ -148,22 +128,22 @@ class AdvancedSessionManager:
 
     def add_state_callback(self, callback: Callable[
         [SessionState, Optional[SessionMetadata]], None]) -> None:
-        """Add callback for session state changes."""
+        
         self._state_callbacks.append(callback)
 
     def remove_state_callback(self, callback: Callable[
         [SessionState, Optional[SessionMetadata]], None]) -> None:
-        """Remove session state callback."""
+        
         if callback in self._state_callbacks:
             self._state_callbacks.remove(callback)
 
     def add_device_ack_callback(self, callback: Callable[[str, str, bool], None]) -> None:
-        """Add callback for device acknowledgments (device_id, command, success)."""
+        
         self._device_ack_callbacks.append(callback)
 
     def _notify_state_callbacks(self, state: SessionState,
                                 session: Optional[SessionMetadata] = None) -> None:
-        """Notify all callbacks of session state change."""
+        
         for callback in self._state_callbacks:
             try:
                 callback(state, session or self.current_session)
@@ -171,7 +151,7 @@ class AdvancedSessionManager:
                 logger.error(f"Error in session state callback: {e}")
 
     def _notify_ack_callbacks(self, device_id: str, command: str, success: bool) -> None:
-        """Notify all callbacks of device acknowledgment."""
+        
         for callback in self._device_ack_callbacks:
             try:
                 callback(device_id, command, success)
@@ -183,19 +163,7 @@ class AdvancedSessionManager:
             session_name: str,
             configuration: Optional[SessionConfiguration] = None
     ) -> str:
-        """
-        Create a new recording session.
         
-        Args:
-            session_name: Name for the session
-            configuration: Session configuration (optional)
-            
-        Returns:
-            Session ID
-            
-        Raises:
-            RuntimeError: If session is already active
-        """
         if self.current_session and self.current_session.state in [
             SessionState.ACTIVE,
             SessionState.RECORDING,
@@ -239,18 +207,7 @@ class AdvancedSessionManager:
         return session_id
 
     async def start_recording(self, device_filter: Optional[List[str]] = None) -> bool:
-        """
-        Start recording on all connected devices.
         
-        Args:
-            device_filter: Optional list of specific device IDs to record with
-            
-        Returns:
-            True if recording started successfully
-            
-        Raises:
-            RuntimeError: If no session is active or no devices available
-        """
         if not self.current_session:
             raise RuntimeError("No active session to start recording")
 
@@ -285,7 +242,7 @@ class AdvancedSessionManager:
         self._update_session_state(SessionState.RECORDING)
         self.current_session.started_at = datetime.now(timezone.utc)
 
-        
+        # TODO: Send start recording commands to devices
         
         success = await self._send_start_commands_to_devices(available_devices)
 
@@ -304,12 +261,7 @@ class AdvancedSessionManager:
             return False
 
     async def stop_recording(self) -> bool:
-        """
-        Stop recording on all devices.
         
-        Returns:
-            True if recording stopped successfully
-        """
         if not self.current_session:
             logger.warning("No active session to stop recording")
             return False
@@ -326,7 +278,7 @@ class AdvancedSessionManager:
         
         self.current_session.devices_acknowledged_stop.clear()
 
-        
+        # TODO: Send stop recording commands to devices
         success = await self._send_stop_commands_to_devices()
 
         
@@ -348,12 +300,7 @@ class AdvancedSessionManager:
         return success
 
     def finalize_session(self) -> bool:
-        """
-        Finalize the current session.
         
-        Returns:
-            True if finalization successful
-        """
         if not self.current_session:
             logger.warning("No active session to finalize")
             return False
@@ -381,7 +328,7 @@ class AdvancedSessionManager:
         return True
 
     def reset_for_next_session(self) -> None:
-        """Reset session manager for next session."""
+        
         if self.current_session and self.current_session.state not in [
             SessionState.COMPLETE, SessionState.ERROR
         ]:
@@ -393,16 +340,8 @@ class AdvancedSessionManager:
         logger.info("Session manager reset for next session")
 
     async def _send_start_commands_to_devices(self, devices: List[DeviceInfo]) -> bool:
-        """
-        Send start recording commands to devices.
         
-        Args:
-            devices: List of devices to send commands to
-            
-        Returns:
-            True if all devices acknowledged successfully
-        """
-        
+        # TODO: Integrate with network server to send actual JSON commands
         
 
         success_count = 0
@@ -443,16 +382,11 @@ class AdvancedSessionManager:
         return success_rate >= self.MIN_SUCCESS_RATE_FOR_START
 
     async def _send_stop_commands_to_devices(self) -> bool:
-        """
-        Send stop recording commands to devices.
         
-        Returns:
-            True if all devices acknowledged successfully
-        """
         if not self.current_session.participating_devices:
             return True
 
-        
+        # TODO: Integrate with network server to send actual JSON commands
         
 
         success_count = 0
@@ -494,7 +428,7 @@ class AdvancedSessionManager:
         return success_rate >= self.MIN_SUCCESS_RATE_FOR_STOP
 
     def _update_session_state(self, new_state: SessionState) -> None:
-        """Update session state and notify callbacks."""
+        
         if not self.current_session:
             return
 
@@ -506,7 +440,7 @@ class AdvancedSessionManager:
         self._notify_state_callbacks(new_state)
 
     def _log_session_event(self, event_type: str, data: Dict[str, Any]) -> None:
-        """Log session event to metadata."""
+        
         if not self.current_session:
             return
 
@@ -520,7 +454,7 @@ class AdvancedSessionManager:
         self.current_session.sync_events.append(event)
 
     def _save_session_metadata(self) -> None:
-        """Save session metadata to file."""
+        
         if not self.current_session:
             return
 
@@ -539,38 +473,30 @@ class AdvancedSessionManager:
     
 
     def get_current_session(self) -> Optional[SessionMetadata]:
-        """Get current session metadata."""
+        
         return self.current_session
 
     def get_session_history(self) -> Dict[str, SessionMetadata]:
-        """Get all session history."""
+        
         return self.session_history.copy()
 
     def get_session_by_id(self, session_id: str) -> Optional[SessionMetadata]:
-        """Get session by ID."""
+        
         return self.session_history.get(session_id)
 
     def is_session_active(self) -> bool:
-        """Check if a session is currently active."""
+        
         return (self.current_session is not None and
                 self.current_session.state in [SessionState.ACTIVE, SessionState.RECORDING,
                                                SessionState.STOPPING])
 
     def is_recording(self) -> bool:
-        """Check if currently recording."""
+        
         return (self.current_session is not None and
                 self.current_session.state == SessionState.RECORDING)
 
     def get_session_directory(self, session_id: Optional[str] = None) -> Optional[Path]:
-        """
-        Get session directory path.
         
-        Args:
-            session_id: Session ID (uses current session if None)
-            
-        Returns:
-            Session directory path or None if not found
-        """
         if session_id is None:
             if not self.current_session:
                 return None
@@ -579,7 +505,7 @@ class AdvancedSessionManager:
         return self.base_session_dir / session_id
 
     def get_session_stats(self) -> Dict[str, Any]:
-        """Get session statistics."""
+        
         stats = {
             "total_sessions": len(self.session_history),
             "current_session_id": self.current_session.session_id if self.current_session else None,

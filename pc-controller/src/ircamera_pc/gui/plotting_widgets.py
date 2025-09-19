@@ -1,9 +1,4 @@
-"""
-Real-time plotting widgets for multi-modal sensor data visualization
 
-Implements PyQtGraph-based widgets for live GSR, thermal, and video display
-according to the PC Controller GUI requirements.
-"""
 
 import time
 from collections import deque
@@ -18,27 +13,12 @@ from PyQt6.QtWidgets import QGridLayout, QLabel, QVBoxLayout, QWidget
 
 
 class GSRPlotWidget(pg.PlotWidget):
-    """
-    Real-time GSR data plotting widget.
-
-    Features:
-    - High-frequency GSR data plotting (128Hz+)
-    - Automatic scaling and windowing
-    - Multiple GSR sensor support
-    - Sync event markers
-    - Data quality indicators
-    """
+    
 
     data_updated = pyqtSignal(float, float)  
 
     def __init__(self, max_points: int = 10000, time_window: float = 30.0):
-        """
-        Initialize GSR plot widget.
-
-        Args:
-            max_points: Maximum number of data points to display
-            time_window: Time window in seconds for display
-        """
+        
         super().__init__()
 
         self.max_points = max_points
@@ -59,7 +39,7 @@ class GSRPlotWidget(pg.PlotWidget):
         self.update_timer.start(50)  
 
     def _setup_plot(self) -> None:
-        """Set up the plot appearance and configuration."""
+        
         self.setLabel("left", "GSR (µS)", color="white", size="12pt")
         self.setLabel("bottom", "Time (s)", color="white", size="12pt")
         self.setTitle("Real-time GSR Data", color="white", size="14pt")
@@ -76,13 +56,7 @@ class GSRPlotWidget(pg.PlotWidget):
         self.addLegend()
 
     def add_device(self, device_id: str, color: Optional[str] = None) -> None:
-        """
-        Add a new GSR device for plotting.
-
-        Args:
-            device_id: Unique device identifier
-            color: Plot line color (auto-assigned if None)
-        """
+        
         if device_id in self.gsr_data:
             return
 
@@ -103,7 +77,7 @@ class GSRPlotWidget(pg.PlotWidget):
         logger.info(f"Added GSR device {device_id} with color {color}")
 
     def remove_device(self, device_id: str) -> None:
-        """Remove a GSR device from plotting."""
+        
         if device_id not in self.gsr_data:
             return
 
@@ -120,14 +94,7 @@ class GSRPlotWidget(pg.PlotWidget):
     def add_gsr_data(
             self, device_id: str, timestamp_ns: int, gsr_microsiemens: float
     ) -> None:
-        """
-        Add new GSR data point.
-
-        Args:
-            device_id: Device identifier
-            timestamp_ns: Timestamp in nanoseconds
-            gsr_microsiemens: GSR value in microsiemens
-        """
+        
         if device_id not in self.gsr_data:
             self.add_device(device_id)
 
@@ -143,14 +110,7 @@ class GSRPlotWidget(pg.PlotWidget):
     def add_sync_marker(
             self, timestamp_ns: int, label: str = "Sync", color: str = "white"
     ) -> None:
-        """
-        Add synchronization marker to the plot.
-
-        Args:
-            timestamp_ns: Timestamp in nanoseconds
-            label: Marker label
-            color: Marker color
-        """
+        
         current_time = time.time()
         relative_time = (timestamp_ns / 1e9) - current_time
 
@@ -168,7 +128,7 @@ class GSRPlotWidget(pg.PlotWidget):
         self._cleanup_old_markers()
 
     def _update_plot(self) -> None:
-        """Update plot with latest data."""
+        
         current_time = time.time()
 
         for device_id, data_deque in self.gsr_data.items():
@@ -192,7 +152,7 @@ class GSRPlotWidget(pg.PlotWidget):
         self.setXRange(-self.time_window, 0)
 
     def _cleanup_old_markers(self) -> None:
-        """Remove sync markers outside the time window."""
+        
         current_time = time.time()
 
         markers_to_remove = []
@@ -206,7 +166,7 @@ class GSRPlotWidget(pg.PlotWidget):
             self.sync_markers.remove(marker)
 
     def clear_data(self) -> None:
-        """Clear all plot data."""
+        
         for device_id in list(self.gsr_data.keys()):
             self.remove_device(device_id)
 
@@ -216,26 +176,12 @@ class GSRPlotWidget(pg.PlotWidget):
 
 
 class VideoPreviewWidget(QLabel):
-    """
-    Live video preview widget for RGB and thermal cameras.
-
-    Features:
-    - Real-time frame display
-    - Automatic scaling and aspect ratio preservation
-    - Frame rate monitoring
-    - Device status indicators
-    """
+    
 
     frame_updated = pyqtSignal(int, int)  
 
     def __init__(self, device_id: str, device_type: str = "RGB"):
-        """
-        Initialize video preview widget.
-
-        Args:
-            device_id: Device identifier
-            device_type: Type of camera (RGB, Thermal, etc.)
-        """
+        
         super().__init__()
 
         self.device_id = device_id
@@ -254,17 +200,10 @@ class VideoPreviewWidget(QLabel):
         self.fps_timer.start(1000)  
 
     def _setup_widget(self) -> None:
-        """Set up widget appearance."""
+        
         self.setMinimumSize(320, 240)
         self.setStyleSheet(
-            """
-            QLabel {
-                border: 2px solid #333;
-                background-color: #111;
-                color: white;
-                text-align: center;
-            }
-        """
+            
         )
 
         self.setText(
@@ -272,12 +211,7 @@ class VideoPreviewWidget(QLabel):
         )
 
     def update_frame(self, frame_data: np.ndarray) -> None:
-        """
-        Update widget with new frame.
-
-        Args:
-            frame_data: Frame data as numpy array (H, W, C)
-        """
+        
         if frame_data is None or frame_data.size == 0:
             return
 
@@ -317,7 +251,7 @@ class VideoPreviewWidget(QLabel):
             logger.error(f"Error updating frame for {self.device_id}: {e}")
 
     def _calculate_fps(self) -> None:
-        """Calculate and display current FPS."""
+        
         current_time = time.time()
         time_diff = current_time - self.last_fps_time
 
@@ -334,23 +268,19 @@ class VideoPreviewWidget(QLabel):
         )
 
     def get_fps(self) -> float:
-        """Get current frame rate."""
+        
         return self.current_fps
 
     def set_status_text(self, text: str) -> None:
-        """Set status text when no frames are available."""
+        
         self.setText(f"{self.device_type} Camera\\n{self.device_id}\\n{text}")
 
 
 class MultiModalDashboard(QWidget):
-    """
-    Main dashboard widget that combines GSR plots and video previews.
-
-    Implements the dynamic grid layout requirement from FR6.
-    """
+    
 
     def __init__(self):
-        """Initialize multi-modal dashboard."""
+        
         super().__init__()
 
         self.gsr_plot = None
@@ -359,7 +289,7 @@ class MultiModalDashboard(QWidget):
         self._setup_layout()
 
     def _setup_layout(self) -> None:
-        """Set up the dashboard layout."""
+        
         self.layout = QGridLayout(self)
 
         
@@ -371,30 +301,21 @@ class MultiModalDashboard(QWidget):
         self.video_col = 2
 
     def add_gsr_device(self, device_id: str, color: Optional[str] = None) -> None:
-        """Add GSR device to the plot."""
+        
         if self.gsr_plot:
             self.gsr_plot.add_device(device_id, color)
 
     def add_gsr_data(
             self, device_id: str, timestamp_ns: int, gsr_microsiemens: float
     ) -> None:
-        """Add GSR data point."""
+        
         if self.gsr_plot:
             self.gsr_plot.add_gsr_data(device_id, timestamp_ns, gsr_microsiemens)
 
     def add_video_device(
             self, device_id: str, device_type: str = "RGB"
     ) -> VideoPreviewWidget:
-        """
-        Add video preview widget for a device.
-
-        Args:
-            device_id: Device identifier
-            device_type: Type of camera
-
-        Returns:
-            Created video widget
-        """
+        
         if device_id in self.video_widgets:
             return self.video_widgets[device_id]
 
@@ -408,7 +329,7 @@ class MultiModalDashboard(QWidget):
         return widget
 
     def remove_video_device(self, device_id: str) -> None:
-        """Remove video device widget."""
+        
         if device_id not in self.video_widgets:
             return
 
@@ -424,7 +345,7 @@ class MultiModalDashboard(QWidget):
         logger.info(f"Removed video device {device_id}")
 
     def _add_video_widget_to_grid(self, widget: VideoPreviewWidget) -> None:
-        """Add video widget to the dynamic grid."""
+        
         num_videos = len(self.video_widgets)
 
         
@@ -439,7 +360,7 @@ class MultiModalDashboard(QWidget):
             self.layout.addWidget(widget, grid_row, self.video_col + grid_col)
 
     def _reorganize_video_grid(self) -> None:
-        """Reorganize video widgets in the grid after removal."""
+        
         
         for widget in self.video_widgets.values():
             self.layout.removeWidget(widget)
@@ -451,12 +372,12 @@ class MultiModalDashboard(QWidget):
             self.layout.addWidget(widget, grid_row, self.video_col + grid_col)
 
     def add_sync_marker(self, timestamp_ns: int, label: str = "Sync") -> None:
-        """Add sync marker to GSR plot."""
+        
         if self.gsr_plot:
             self.gsr_plot.add_sync_marker(timestamp_ns, label)
 
     def clear_all_data(self) -> None:
-        """Clear all data from dashboard."""
+        
         if self.gsr_plot:
             self.gsr_plot.clear_data()
 
@@ -464,26 +385,24 @@ class MultiModalDashboard(QWidget):
             widget.set_status_text("Cleared")
 
     def get_device_fps(self, device_id: str) -> float:
-        """Get FPS for a video device."""
+        
         if device_id in self.video_widgets:
             return self.video_widgets[device_id].get_fps()
         return 0.0
 
 
 class DataAggregationWidget(QWidget):
-    """
-    Widget for displaying data aggregation statistics and synchronization quality.
-    """
+    
 
     def __init__(self):
-        """Initialize data aggregation widget."""
+        
         super().__init__()
 
         self.stats_labels: Dict[str, QLabel] = {}
         self._setup_layout()
 
     def _setup_layout(self) -> None:
-        """Set up the widget layout."""
+        
         layout = QVBoxLayout(self)
 
         
@@ -505,7 +424,7 @@ class DataAggregationWidget(QWidget):
             layout.addWidget(label)
 
     def update_stats(self, stats: Dict[str, Any]) -> None:
-        """Update aggregation statistics."""
+        
         for stat_name, value in stats.items():
             if stat_name in self.stats_labels:
                 if isinstance(value, float):
@@ -514,7 +433,7 @@ class DataAggregationWidget(QWidget):
                     self.stats_labels[stat_name].setText(f"{stat_name}: {value}")
 
     def set_sync_quality(self, quality_percent: float) -> None:
-        """Set synchronization quality indicator."""
+        
         label = self.stats_labels.get("Sync Quality")
         if label:
             if quality_percent >= 95:

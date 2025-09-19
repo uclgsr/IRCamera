@@ -1,9 +1,4 @@
-"""
-Session Manager for IRCamera PC Controller
 
-Manages recording sessions including lifecycle, metadata, and storage organization.
-Implements FR4: Session Management requirements.
-"""
 
 import json
 import uuid
@@ -22,7 +17,7 @@ from .config import config
 
 
 class SessionState(Enum):
-    """Session states as per requirements."""
+    
 
     IDLE = "idle"
     ACTIVE = "active"
@@ -34,7 +29,7 @@ class SessionState(Enum):
 
 @dataclass
 class SessionMetadata:
-    """Session metadata structure."""
+    
 
     session_id: str
     name: str
@@ -61,18 +56,10 @@ class SessionMetadata:
 
 
 class SessionManager:
-    """
-    Manages recording sessions and metadata.
-
-    Implements the Session Management functional requirement (FR4):
-    - Organizes recordings into discrete sessions with unique IDs
-    - Creates session directories and metadata files
-    - Handles session lifecycle (create, start, stop, finalize)
-    - Only one session active at a time
-    """
+    
 
     def __init__(self):
-        """Initialize session manager."""
+        
         self._current_session: Optional[SessionMetadata] = None
         self._session_history: List[str] = []
         self._data_root = Path(config.get("session.data_root", "./sessions"))
@@ -81,23 +68,12 @@ class SessionManager:
         logger.info("Session Manager initialized")
 
     def _ensure_data_root(self) -> None:
-        """Ensure the data root directory exists."""
+        
         self._data_root.mkdir(parents=True, exist_ok=True)
         logger.debug(f"Session data root: {self._data_root}")
 
     def create_session(self, name: Optional[str] = None) -> SessionMetadata:
-        """
-        Create a new session.
-
-        Args:
-            name: Optional session name. If None, generates timestamp-based name.
-
-        Returns:
-            Created session metadata
-
-        Raises:
-            ValueError: If a session is already active
-        """
+        
         if self._current_session and self._current_session.state in [
             SessionState.ACTIVE.value,
             SessionState.RECORDING.value,
@@ -133,12 +109,7 @@ class SessionManager:
         return self._current_session
 
     def start_session(self) -> None:
-        """
-        Start the current session.
-
-        Raises:
-            ValueError: If no session exists or session is not in IDLE state
-        """
+        
         if not self._current_session:
             raise ValueError("No session to start")
 
@@ -155,12 +126,7 @@ class SessionManager:
         logger.info(f"Session started: {self._current_session.name}")
 
     def begin_recording(self) -> None:
-        """
-        Begin recording phase of the session.
-
-        Raises:
-            ValueError: If session is not in ACTIVE state
-        """
+        
         if not self._current_session:
             raise ValueError("No active session")
 
@@ -175,15 +141,7 @@ class SessionManager:
         logger.info(f"Recording started for session: {self._current_session.name}")
 
     def end_session(self) -> SessionMetadata:
-        """
-        End the current session.
-
-        Returns:
-            Final session metadata
-
-        Raises:
-            ValueError: If no active session
-        """
+        
         if not self._current_session:
             raise ValueError("No session to end")
 
@@ -213,12 +171,7 @@ class SessionManager:
         return completed_session
 
     def add_device(self, device_info: Dict[str, Any]) -> None:
-        """
-        Add device information to current session.
-
-        Args:
-            device_info: Device information dictionary
-        """
+        
         if not self._current_session:
             raise ValueError("No active session")
 
@@ -232,12 +185,7 @@ class SessionManager:
         )
 
     def add_file(self, file_info: Dict[str, Any]) -> None:
-        """
-        Add file information to current session.
-
-        Args:
-            file_info: File information dictionary
-        """
+        
         if not self._current_session:
             raise ValueError("No active session")
 
@@ -251,13 +199,7 @@ class SessionManager:
     def add_sync_event(
             self, event_type: str, event_data: Dict[str, Any] = None
     ) -> None:
-        """
-        Add synchronization event to current session.
-
-        Args:
-            event_type: Type of sync event (e.g., 'flash', 'marker')
-            event_data: Additional event data
-        """
+        
         if not self._current_session:
             raise ValueError("No active session")
 
@@ -273,31 +215,17 @@ class SessionManager:
         logger.info(f"Sync event added: {event_type}")
 
     def get_current_session(self) -> Optional[SessionMetadata]:
-        """Get current session metadata."""
+        
         return self._current_session
 
     def get_session_state(self) -> Optional[str]:
-        """
-        Get the current session state.
         
-        Returns:
-            Current session state as string, or None if no active session
-        """
         if self._current_session:
             return self._current_session.state
         return None
 
     def get_session(self, session_id: str) -> Optional[SessionMetadata]:
-        """
-        Get session by ID. First checks if it's the current session,
-        then attempts to load from storage.
         
-        Args:
-            session_id: Session ID to retrieve
-            
-        Returns:
-            SessionMetadata if found, None otherwise
-        """
         
         if self._current_session and self._current_session.session_id == session_id:
             return self._current_session
@@ -306,15 +234,7 @@ class SessionManager:
         return self.load_session(session_id)
 
     def get_session_directory(self, session_id: Optional[str] = None) -> Path:
-        """
-        Get session directory path.
-
-        Args:
-            session_id: Session ID. If None, uses current session.
-
-        Returns:
-            Path to session directory
-        """
+        
         if session_id is None:
             if not self._current_session:
                 raise ValueError("No current session")
@@ -323,11 +243,11 @@ class SessionManager:
         return self._get_session_directory(session_id)
 
     def _get_session_directory(self, session_id: str) -> Path:
-        """Get session directory path by ID."""
+        
         return self._data_root / session_id
 
     def _save_metadata(self) -> None:
-        """Save current session metadata to file."""
+        
         if not self._current_session:
             return
 
@@ -351,15 +271,7 @@ class SessionManager:
             logger.error(f"Failed to save session metadata: {e}")
 
     def load_session(self, session_id: str) -> Optional[SessionMetadata]:
-        """
-        Load session metadata from file.
-
-        Args:
-            session_id: Session ID to load
-
-        Returns:
-            Loaded session metadata or None if not found
-        """
+        
         metadata_file = self._get_session_directory(session_id) / "metadata.json"
 
         try:
@@ -377,12 +289,7 @@ class SessionManager:
             return None
 
     def list_sessions(self) -> List[str]:
-        """
-        List all session IDs in the data root.
-
-        Returns:
-            List of session IDs
-        """
+        
         sessions = []
 
         try:

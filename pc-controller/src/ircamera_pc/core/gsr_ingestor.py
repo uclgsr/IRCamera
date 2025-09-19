@@ -1,10 +1,5 @@
 #!/usr/bin/env python3
-"""
-GSR Ingestor for IRCamera PC Controller
 
-Handles GSR (Galvanic Skin Response) data reconciliation and processing
-as per FR11 requirements. Manages data from both Local and Bridged GSR modes.
-"""
 
 import json
 import struct
@@ -17,7 +12,7 @@ from typing import Any, Dict, List, Optional
 
 
 class GSRMode(Enum):
-    """GSR acquisition modes"""
+    
 
     LOCAL = "local"
     BRIDGED = "bridged"
@@ -25,7 +20,7 @@ class GSRMode(Enum):
 
 @dataclass
 class GSRSample:
-    """Individual GSR sensor sample"""
+    
 
     timestamp: float  
     value: float  
@@ -33,13 +28,13 @@ class GSRSample:
     device_id: str  
 
     def to_dict(self) -> Dict[str, Any]:
-        """Convert to dictionary for JSON serialization"""
+        
         return asdict(self)
 
 
 @dataclass
 class GSRDataSet:
-    """Collection of GSR samples with metadata"""
+    
 
     session_id: str
     device_id: str
@@ -51,7 +46,7 @@ class GSRDataSet:
     quality_stats: Dict[str, float]  
 
     def to_dict(self) -> Dict[str, Any]:
-        """Convert to dictionary for JSON serialization"""
+        
         return {
             "session_id": self.session_id,
             "device_id": self.device_id,
@@ -65,20 +60,10 @@ class GSRDataSet:
 
 
 class GSRIngestor:
-    """
-    GSR Data Reconciliation and Processing Service
-
-    Handles GSR data from Android devices in both Local and Bridged modes.
-    Provides data validation, synchronization, and quality assessment.
-    """
+    
 
     def __init__(self, config: Dict[str, Any]):
-        """
-        Initialize GSR Ingestor
-
-        Args:
-            config: Configuration dictionary with GSR settings
-        """
+        
         self.config = config.get("gsr", {})
         self.data_dir = Path(self.config.get("data_dir", "data/gsr"))
         self.data_dir.mkdir(parents=True, exist_ok=True)
@@ -98,17 +83,7 @@ class GSRIngestor:
     async def start_session(
             self, session_id: str, device_id: str, mode: GSRMode
     ) -> bool:
-        """
-        Start GSR data collection for a session
-
-        Args:
-            session_id: Unique session identifier
-            device_id: GSR device identifier
-            mode: GSR acquisition mode (Local/Bridged)
-
-        Returns:
-            True if session started successfully
-        """
+        
         try:
             if session_id in self.active_sessions:
                 logger.warning(f"GSR session {session_id} already active")
@@ -137,16 +112,7 @@ class GSRIngestor:
             return False
 
     async def ingest_sample(self, session_id: str, sample_data: bytes) -> bool:
-        """
-        Ingest a raw GSR sample from device
-
-        Args:
-            session_id: Session identifier
-            sample_data: Raw sample data from device
-
-        Returns:
-            True if sample processed successfully
-        """
+        
         try:
             if session_id not in self.active_sessions:
                 logger.warning(
@@ -184,15 +150,7 @@ class GSRIngestor:
             return False
 
     async def end_session(self, session_id: str) -> Optional[GSRDataSet]:
-        """
-        End GSR data collection and finalize dataset
-
-        Args:
-            session_id: Session identifier
-
-        Returns:
-            Finalized GSR dataset or None if error
-        """
+        
         try:
             if session_id not in self.active_sessions:
                 logger.warning(f"Cannot end inactive GSR session: {session_id}")
@@ -239,7 +197,7 @@ class GSRIngestor:
             return None
 
     def _validate_sample(self, sample: GSRSample, dataset: GSRDataSet) -> bool:
-        """Validate GSR sample quality and consistency"""
+        
         
         if sample.quality < self.quality_threshold:
             logger.debug(
@@ -268,7 +226,7 @@ class GSRIngestor:
         return True
 
     def _update_quality_stats(self, dataset: GSRDataSet, sample: GSRSample):
-        """Update running quality statistics"""
+        
         stats = dataset.quality_stats
         stats["min"] = min(stats["min"], sample.quality)
         stats["max"] = max(stats["max"], sample.quality)
@@ -281,7 +239,7 @@ class GSRIngestor:
             stats["mean"] = ((stats["mean"] * (n - 1)) + sample.quality) / n
 
     async def _save_dataset(self, dataset: GSRDataSet):
-        """Save GSR dataset to JSON file"""
+        
         try:
             filename = f"gsr_{dataset.session_id}_{dataset.device_id}.json"
             filepath = self.data_dir / filename
@@ -297,7 +255,7 @@ class GSRIngestor:
     async def load_dataset(
             self, session_id: str, device_id: str
     ) -> Optional[GSRDataSet]:
-        """Load GSR dataset from file"""
+        
         try:
             filename = f"gsr_{session_id}_{device_id}.json"
             filepath = self.data_dir / filename
@@ -331,7 +289,7 @@ class GSRIngestor:
             return None
 
     def get_session_status(self, session_id: str) -> Optional[Dict[str, Any]]:
-        """Get status of GSR session"""
+        
         if session_id in self.active_sessions:
             dataset = self.active_sessions[session_id]
             return {
@@ -357,9 +315,9 @@ class GSRIngestor:
             return None
 
     def get_active_sessions(self) -> List[str]:
-        """Get list of active GSR session IDs"""
+        
         return list(self.active_sessions.keys())
 
     def get_completed_sessions(self) -> List[str]:
-        """Get list of completed GSR session IDs"""
+        
         return list(self.completed_sessions.keys())

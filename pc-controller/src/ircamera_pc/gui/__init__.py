@@ -1,8 +1,4 @@
-"""
-GUI modules for IRCamera PC Controller
 
-This package contains the PyQt6-based user interface components.
-"""
 
 import os
 

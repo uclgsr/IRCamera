@@ -1,8 +1,5 @@
 #!/usr/bin/env python3
-"""
-PC Thermal Viewer for Topdon TC001 Thermal Camera
-Connects to Android app's NetworkServer to receive thermal frames
-"""
+
 
 import socket
 import json
@@ -24,7 +21,7 @@ class ThermalViewer:
         self.frame_count = 0
 
     def connect(self):
-        """Connect to Android app's NetworkServer"""
+        
         try:
             self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self.socket.connect((self.android_ip, self.android_port))
@@ -35,7 +32,7 @@ class ThermalViewer:
             return False
 
     def receive_thermal_frames(self):
-        """Receive and process thermal frames from Android app"""
+        
         if not self.socket:
             print("❌ Not connected to Android app")
             return
@@ -73,7 +70,7 @@ class ThermalViewer:
         self.running = False
 
     def process_message(self, message_str):
-        """Process received thermal frame message"""
+        
         try:
             message = json.loads(message_str)
 
@@ -103,7 +100,7 @@ class ThermalViewer:
             print(f"❌ Error processing message: {e}")
 
     def display_thermal_image(self, base64_image, frame_num):
-        """Display thermal image using OpenCV"""
+        
         try:
             
             image_bytes = base64.b64decode(base64_image)
@@ -128,7 +125,7 @@ class ThermalViewer:
             print(f"❌ Error displaying image: {e}")
 
     def start(self):
-        """Start thermal viewer"""
+        
         print("🚀 Starting PC Thermal Viewer for Topdon TC001")
         print(f"📱 Connecting to Android app at {self.android_ip}:{self.android_port}")
 
@@ -150,7 +147,7 @@ class ThermalViewer:
             self.stop()
 
     def stop(self):
-        """Stop thermal viewer"""
+        
         self.running = False
         if self.socket:
             self.socket.close()

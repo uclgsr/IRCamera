@@ -1,17 +1,12 @@
 #!/usr/bin/env python3
-"""
-Icon Resources for IRCamera PC Controller
 
-This module provides access to generic icons for GUI widgets and utilities,
-sourced from Android drawable resources for cross-platform visual consistency.
-"""
 
 from pathlib import Path
 from typing import Any, Dict, List
 
 
 class IconRegistry:
-    """Registry of available icons and their references."""
+    
 
     
     ICONS = {
@@ -51,30 +46,30 @@ class IconRegistry:
 
     @classmethod
     def get_icon_info(cls, icon_name: str) -> Dict[str, Any]:
-        """Get information about a specific icon."""
+        
         return cls.ICONS.get(icon_name, {})
 
     @classmethod
     def list_available_icons(cls) -> Dict[str, str]:
-        """List all available icons with their descriptions."""
+        
         return {name: str(info["description"]) for name, info in cls.ICONS.items()}
 
     @classmethod
     def get_android_resource_path(cls, icon_name: str) -> str:
-        """Get the Android resource path for an icon."""
+        
         icon_info = cls.ICONS.get(icon_name, {})
         return str(icon_info.get("android_path", ""))
 
     @classmethod
     def get_icon_use_cases(cls, icon_name: str) -> List[str]:
-        """Get recommended use cases for an icon."""
+        
         icon_info = cls.ICONS.get(icon_name, {})
         use_cases = icon_info.get("use_cases", [])
         return [str(case) for case in use_cases] if use_cases else []
 
 
 def get_project_icon_path(icon_name: str) -> Path:
-    """Get the full path to an icon in the project structure."""
+    
     android_path = IconRegistry.get_android_resource_path(icon_name)
     if android_path:
         

@@ -1,9 +1,4 @@
-"""
-MVP Application Entry Point for IRCamera PC Controller Hub
 
-Integrates all components and provides the main application framework.
-Implements the architecture and module setup requirements from the PC Hub Application MVP checklist.
-"""
 
 import asyncio
 import signal
@@ -24,18 +19,10 @@ from .main_window_mvp import MVPMainWindow
 
 
 class IRCameraHubApplication:
-    """
-    Main Hub Application coordinating all components.
     
-    Implements the Hub-and-Spoke architecture with:
-    - Device discovery and management
-    - Session lifecycle coordination
-    - Network communication
-    - GUI interface
-    """
 
     def __init__(self):
-        """Initialize the Hub application."""
+        
         self.app: Optional[QApplication] = None
         self.main_window: Optional[MVPMainWindow] = None
         self.device_manager: Optional[DeviceManager] = None
@@ -53,12 +40,7 @@ class IRCameraHubApplication:
         self._loop_timer: Optional[QTimer] = None
 
     def initialize(self) -> bool:
-        """
-        Initialize all application components.
         
-        Returns:
-            True if initialization successful
-        """
         try:
             logger.info("Initializing IRCamera PC Controller Hub...")
 
@@ -89,7 +71,7 @@ class IRCameraHubApplication:
             return False
 
     def _setup_async_integration(self):
-        """Setup async event loop integration with Qt."""
+        
         
         self._loop = asyncio.new_event_loop()
         asyncio.set_event_loop(self._loop)
@@ -102,7 +84,7 @@ class IRCameraHubApplication:
         logger.debug("Async event loop integration setup complete")
 
     def _process_async_events(self):
-        """Process pending async events."""
+        
         if self._loop:
             
             for _ in range(10):
@@ -112,7 +94,7 @@ class IRCameraHubApplication:
                     break
 
     def _initialize_core_components(self):
-        """Initialize core application components."""
+        
         logger.info("Initializing core components...")
 
         
@@ -135,7 +117,7 @@ class IRCameraHubApplication:
         logger.info("Core components initialization complete")
 
     def _setup_component_integration(self):
-        """Setup integration between components."""
+        
 
         
         def on_device_status_change(device_id: str, device_info, event_type: str):
@@ -155,7 +137,7 @@ class IRCameraHubApplication:
         logger.debug("Component integration setup complete")
 
     def _initialize_gui(self):
-        """Initialize GUI components."""
+        
         logger.info("Initializing GUI...")
 
         
@@ -174,12 +156,7 @@ class IRCameraHubApplication:
         logger.info("GUI initialization complete")
 
     def _start_services(self) -> bool:
-        """
-        Start core services.
         
-        Returns:
-            True if all services started successfully
-        """
         logger.info("Starting core services...")
 
         try:
@@ -229,7 +206,7 @@ class IRCameraHubApplication:
             return False
 
     def _start_additional_services(self) -> None:
-        """Start additional services after device manager is ready."""
+        
         try:
             
             async def start_websocket():
@@ -282,12 +259,7 @@ class IRCameraHubApplication:
             logger.error(f"Error starting additional services: {e}")
 
     async def _start_websocket_server(self) -> bool:
-        """
-        Start the WebSocket server for device communication.
         
-        Returns:
-            True if started successfully
-        """
         try:
             logger.info(f"Starting WebSocket server on port {self.server_port}...")
 
@@ -314,12 +286,7 @@ class IRCameraHubApplication:
             return False
 
     async def _start_time_sync_server(self) -> bool:
-        """
-        Start the time synchronization server.
         
-        Returns:
-            True if started successfully
-        """
         try:
             logger.info(f"Starting time sync server on port {self.time_sync_port}...")
 
@@ -343,12 +310,7 @@ class IRCameraHubApplication:
             return False
 
     def run(self) -> int:
-        """
-        Run the application.
         
-        Returns:
-            Application exit code
-        """
         if not self.app:
             logger.error("Application not initialized")
             return 1
@@ -375,14 +337,14 @@ class IRCameraHubApplication:
             self._cleanup()
 
     def _signal_handler(self, signum, frame):
-        """Handle system signals for graceful shutdown."""
+        
         logger.info(f"Received signal {signum}, initiating shutdown...")
 
         if self.app:
             self.app.quit()
 
     def _cleanup(self):
-        """Cleanup resources on application exit."""
+        
         logger.info("Cleaning up application resources...")
 
         try:
@@ -422,25 +384,20 @@ class IRCameraHubApplication:
     
 
     def get_device_manager(self) -> Optional[DeviceManager]:
-        """Get device manager instance."""
+        
         return self.device_manager
 
     def get_session_manager(self) -> Optional[AdvancedSessionManager]:
-        """Get session manager instance."""
+        
         return self.session_manager
 
     def get_main_window(self) -> Optional[MVPMainWindow]:
-        """Get main window instance."""
+        
         return self.main_window
 
 
 def main() -> int:
-    """
-    Main entry point for the IRCamera PC Controller Hub application.
     
-    Returns:
-        Application exit code
-    """
     
     logger.remove()  
     logger.add(

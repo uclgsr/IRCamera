@@ -1,8 +1,4 @@
-"""
-Advanced GSR Analytics and Signal Processing Module
-Provides real-time analysis, feature extraction, and stress detection capabilities
-for the Multi-Modal Physiological Sensing Platform
-"""
+
 
 import asyncio
 import json
@@ -25,7 +21,7 @@ logger = logging.getLogger(__name__)
 
 
 class StressLevel(Enum):
-    """Stress level classification"""
+    
 
     VERY_LOW = "very_low"
     LOW = "low"
@@ -36,7 +32,7 @@ class StressLevel(Enum):
 
 @dataclass
 class GSRFeatures:
-    """GSR signal features extracted from a time window"""
+    
 
     timestamp: float
     device_id: str
@@ -77,7 +73,7 @@ class GSRFeatures:
 
 @dataclass
 class GSRAnalysisReport:
-    """Comprehensive GSR analysis report"""
+    
 
     session_id: str
     device_id: str
@@ -107,7 +103,7 @@ class GSRAnalysisReport:
 
 
 class GSRAnalytics:
-    """Advanced GSR analytics and signal processing"""
+    
 
     def __init__(
             self,
@@ -115,14 +111,7 @@ class GSRAnalytics:
             overlap_seconds: int = 30,
             sampling_rate: float = 128.0,
     ):
-        """
-        Initialize GSR analytics engine
-
-        Args:
-            window_size_seconds: Analysis window size in seconds
-            overlap_seconds: Overlap between analysis windows
-            sampling_rate: Expected GSR sampling rate in Hz
-        """
+        
         self.window_size_seconds = window_size_seconds
         self.overlap_seconds = overlap_seconds
         self.sampling_rate = sampling_rate
@@ -152,15 +141,7 @@ class GSRAnalytics:
             gsr_values: None = List[float],
             timestamps: None = List[float],
     ) -> None:
-        """
-        Add GSR samples for real-time analysis
-
-        Args:
-            device_id: Device identifier
-            session_id: Session identifier
-            gsr_values: GSR values in microsiemens
-            timestamps: Corresponding timestamps
-        """
+        
         if not gsr_values or not timestamps:
             return
 
@@ -212,7 +193,7 @@ class GSRAnalytics:
     async def _analyze_window_async(
             self, device_id: str, session_id: str, current_time: float
     ):
-        """Perform window analysis asynchronously"""
+        
         try:
             
             loop = asyncio.get_event_loop()
@@ -229,7 +210,7 @@ class GSRAnalytics:
     def _analyze_window_sync(
             self, device_id: str, session_id: str, current_time: float
     ):
-        """Perform window analysis synchronously"""
+        
         device_key = f"{device_id}_{session_id}"
 
         try:
@@ -275,18 +256,7 @@ class GSRAnalytics:
             gsr_data: np.ndarray,
             timestamps: np.ndarray,
     ) -> Optional[GSRFeatures]:
-        """
-        Extract comprehensive GSR features from a data window
-
-        Args:
-            device_id: Device identifier
-            session_id: Session identifier
-            gsr_data: GSR values in microsiemens
-            timestamps: Corresponding timestamps
-
-        Returns:
-            GSRFeatures object or None if analysis fails
-        """
+        
         try:
             if len(gsr_data) < 10:  
                 return None
@@ -363,7 +333,7 @@ class GSRAnalytics:
             return None
 
     def _clean_gsr_signal(self, gsr_data: np.ndarray) -> np.ndarray:
-        """Clean GSR signal by removing artifacts and outliers"""
+        
         
         mean_val = np.mean(gsr_data)
         std_val = np.std(gsr_data)
@@ -392,7 +362,7 @@ class GSRAnalytics:
         return clean_data
 
     def _calculate_trend(self, gsr_data: np.ndarray) -> Tuple[float, float]:
-        """Calculate trend in GSR signal using linear regression"""
+        
         try:
             x = np.arange(len(gsr_data))
             slope, intercept, r_value, p_value, std_err = stats.linregress(x, gsr_data)
@@ -401,7 +371,7 @@ class GSRAnalytics:
             return 0.0, 1.0
 
     def _detect_peaks(self, gsr_data: np.ndarray) -> np.ndarray:
-        """Detect significant peaks in GSR signal"""
+        
         try:
             
             prominence_threshold = np.std(gsr_data) * 0.5
@@ -416,7 +386,7 @@ class GSRAnalytics:
             return np.array([])
 
     def _calculate_rising_time(self, gsr_data: np.ndarray) -> float:
-        """Calculate percentage of time GSR is rising"""
+        
         try:
             diff = np.diff(gsr_data)
             rising_samples = np.sum(diff > 0)
@@ -428,7 +398,7 @@ class GSRAnalytics:
             return 0.0
 
     def _count_rapid_changes(self, gsr_data: np.ndarray) -> int:
-        """Count rapid changes in GSR signal"""
+        
         try:
             
             diff = np.diff(gsr_data)
@@ -443,7 +413,7 @@ class GSRAnalytics:
             return 0
 
     def _analyze_frequency_domain(self, gsr_data: np.ndarray) -> Dict[str, float]:
-        """Analyze frequency domain characteristics of GSR signal"""
+        
         try:
             
             freqs, psd = signal.welch(
@@ -501,12 +471,7 @@ class GSRAnalytics:
             rising_time: float,
             rapid_changes: int,
     ) -> Tuple[float, StressLevel, float]:
-        """
-        Assess stress level based on GSR features
-
-        Returns:
-            Tuple of (stress_score, stress_level, confidence)
-        """
+        
         try:
             
             indicators = []
@@ -562,7 +527,7 @@ class GSRAnalytics:
     def get_real_time_features(
             self, device_id: str, session_id: str
     ) -> Optional[GSRFeatures]:
-        """Get the most recent features for a device/session"""
+        
         device_key = f"{device_id}_{session_id}"
 
         if device_key in self.feature_history and self.feature_history[device_key]:
@@ -573,7 +538,7 @@ class GSRAnalytics:
     def generate_session_report(
             self, device_id: str, session_id: str
     ) -> Optional[GSRAnalysisReport]:
-        """Generate comprehensive analysis report for a session"""
+        
         device_key = f"{device_id}_{session_id}"
 
         if (
@@ -657,7 +622,7 @@ class GSRAnalytics:
             stress_trend: str,
             stress_distribution: Dict[str, float],
     ) -> List[str]:
-        """Generate personalized recommendations based on stress analysis"""
+        
         recommendations = []
 
         
@@ -706,7 +671,7 @@ class GSRAnalytics:
     def export_features_csv(
             self, device_id: str, session_id: str, filename: str
     ) -> bool:
-        """Export features to CSV file"""
+        
         device_key = f"{device_id}_{session_id}"
 
         if (
@@ -761,7 +726,7 @@ class GSRAnalytics:
     def cleanup_device_session(
             self, device_id: Any = str, session_id: Any = str
     ) -> Any:
-        """Clean up buffers and history for a completed session"""
+        
         device_key = f"{device_id}_{session_id}"
 
         
@@ -775,7 +740,7 @@ class GSRAnalytics:
         logger.debug(f"Cleaned up GSR analytics for {device_key}")
 
     def get_stress_summary(self) -> Dict[str, Any]:
-        """Get summary of all active sessions"""
+        
         summary = {"active_sessions": len(self.feature_history), "sessions": {}}
 
         for device_key, features in self.feature_history.items():

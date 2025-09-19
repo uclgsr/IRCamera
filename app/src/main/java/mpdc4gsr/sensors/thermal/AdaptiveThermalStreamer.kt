@@ -6,7 +6,15 @@ import java.util.*
 import kotlin.math.min
 import kotlin.math.max
 
-
+/**
+ * Adaptive Thermal Frame Streaming Optimization
+ * 
+ * Implements dynamic frame interval adjustment based on network conditions
+ * to balance bandwidth usage and latency for thermal camera streaming.
+ * 
+ * Addresses TODO: "Optimize thermal frame streaming by making frame interval
+ * adaptive or configurable to balance bandwidth and latency"
+ */
 class AdaptiveThermalStreamer {
     companion object {
         private const val TAG = "AdaptiveThermalStreamer"
@@ -196,7 +204,7 @@ class AdaptiveThermalStreamer {
             
             val startTime = System.currentTimeMillis()
             
-            
+            // TODO: Replace with actual network streaming implementation
             
             simulateNetworkSend(frame)
             

@@ -1,9 +1,4 @@
-"""
-Data Aggregation Engine for Multi-Modal Physiological Sensing Platform
 
-This module implements the data aggregation engine that handles synchronized
-data streams from multiple sensors according to the Hub-and-Spoke architecture.
-"""
 
 import asyncio
 import h5py
@@ -22,7 +17,7 @@ from typing import Any, Dict, List, Optional, Tuple, Union
 
 @dataclass
 class DataStream:
-    """Represents a single data stream from a sensor."""
+    
 
     device_id: str
     stream_type: str  
@@ -37,7 +32,7 @@ class DataStream:
 
 @dataclass
 class SyncEvent:
-    """Represents a synchronization event across all streams."""
+    
 
     timestamp_ns: int
     event_type: str  
@@ -47,7 +42,7 @@ class SyncEvent:
 
 @dataclass
 class AggregationStats:
-    """Statistics for data aggregation performance."""
+    
 
     total_devices: int = 0
     active_streams: int = 0
@@ -60,26 +55,10 @@ class AggregationStats:
 
 
 class DataAggregationEngine:
-    """
-    Core data aggregation engine for synchronized multi-modal streams.
-
-    Features:
-    - Real-time data stream management
-    - Temporal synchronization with sub-5ms accuracy
-    - HDF5-based data export for analysis
-    - Automatic buffer management
-    - Sync event tracking and alignment
-    - Performance monitoring and statistics
-    """
+    
 
     def __init__(self, session_directory: Path, buffer_size_mb: int = 1000):
-        """
-        Initialize data aggregation engine.
-
-        Args:
-            session_directory: Directory for session data storage
-            buffer_size_mb: Maximum buffer size in megabytes
-        """
+        
         self.session_directory = Path(session_directory)
         self.session_directory.mkdir(parents=True, exist_ok=True)
 
@@ -109,7 +88,7 @@ class DataAggregationEngine:
         )
 
     def start(self) -> None:
-        """Start the data aggregation engine."""
+        
         if self.is_running.is_set():
             logger.warning("Data aggregation engine already running")
             return
@@ -129,7 +108,7 @@ class DataAggregationEngine:
         logger.info("Data aggregation engine started")
 
     def stop(self) -> None:
-        """Stop the data aggregation engine and finalize exports."""
+        
         if not self.is_running.is_set():
             return
 
@@ -147,17 +126,7 @@ class DataAggregationEngine:
         logger.info("Data aggregation engine stopped")
 
     def add_stream(self, device_id: str, stream_type: str, sample_rate: float) -> str:
-        """
-        Add a new data stream.
-
-        Args:
-            device_id: Unique device identifier
-            stream_type: Type of stream ('gsr', 'rgb_video', etc.)
-            sample_rate: Expected sample rate in Hz
-
-        Returns:
-            Stream ID for referencing this stream
-        """
+        
         stream_id = f"{device_id}_{stream_type}"
 
         if stream_id in self.streams:
@@ -180,15 +149,7 @@ class DataAggregationEngine:
         return stream_id
 
     def remove_stream(self, stream_id: str) -> bool:
-        """
-        Remove a data stream.
-
-        Args:
-            stream_id: Stream identifier
-
-        Returns:
-            True if stream was removed, False if not found
-        """
+        
         if stream_id not in self.streams:
             return False
 
@@ -205,17 +166,7 @@ class DataAggregationEngine:
         return True
 
     def add_data(self, stream_id: str, timestamp_ns: int, data: Any) -> bool:
-        """
-        Add data point to a stream.
-
-        Args:
-            stream_id: Stream identifier
-            timestamp_ns: Data timestamp in nanoseconds
-            data: Data payload (varies by stream type)
-
-        Returns:
-            True if data was added successfully
-        """
+        
         if not self.is_running.is_set():
             return False
 
@@ -242,15 +193,7 @@ class DataAggregationEngine:
             timestamp_ns: Optional[int] = None,
             metadata: Optional[Dict] = None,
     ) -> None:
-        """
-        Add synchronization event.
-
-        Args:
-            event_type: Type of sync event
-            source_device: Device that triggered the event
-            timestamp_ns: Event timestamp (current time if None)
-            metadata: Additional event metadata
-        """
+        
         if timestamp_ns is None:
             timestamp_ns = time.time_ns()
 
@@ -269,23 +212,14 @@ class DataAggregationEngine:
         logger.info(f"Added sync event: {event_type} from {source_device}")
 
     def get_statistics(self) -> AggregationStats:
-        """Get current aggregation statistics."""
+        
         self._update_statistics()
         return self.stats
 
     def get_stream_data(
             self, stream_id: str, last_n: int = 1000
     ) -> List[Tuple[int, Any]]:
-        """
-        Get recent data from a stream.
-
-        Args:
-            stream_id: Stream identifier
-            last_n: Number of most recent samples to return
-
-        Returns:
-            List of (timestamp_ns, data) tuples
-        """
+        
         if stream_id not in self.streams:
             return []
 
@@ -298,15 +232,7 @@ class DataAggregationEngine:
         return data_list
 
     def export_session_data(self, export_path: Optional[Path] = None) -> Path:
-        """
-        Export all session data to various formats.
-
-        Args:
-            export_path: Custom export path (uses session directory if None)
-
-        Returns:
-            Path to exported data directory
-        """
+        
         if export_path is None:
             export_path = self.session_directory / "exports"
 
@@ -368,7 +294,7 @@ class DataAggregationEngine:
         return export_path
 
     def _aggregation_loop(self) -> None:
-        """Main aggregation loop running in separate thread."""
+        
         logger.info("Data aggregation loop started")
 
         while self.is_running.is_set():
@@ -396,7 +322,7 @@ class DataAggregationEngine:
         logger.info("Data aggregation loop stopped")
 
     def _process_data_queue(self) -> None:
-        """Process queued data points."""
+        
         processed_count = 0
 
         while processed_count < 1000:  
@@ -429,7 +355,7 @@ class DataAggregationEngine:
                 break
 
     def _process_sync_queue(self) -> None:
-        """Process queued sync events."""
+        
         while True:
             try:
                 sync_event = self.sync_queue.get_nowait()
@@ -443,7 +369,7 @@ class DataAggregationEngine:
                 break
 
     def _update_statistics(self) -> None:
-        """Update aggregation statistics."""
+        
         current_time = time.time()
 
         
@@ -494,7 +420,7 @@ class DataAggregationEngine:
         self.stats.session_duration_seconds = duration
 
     def _initialize_hdf5_export(self) -> None:
-        """Initialize HDF5 export file."""
+        
         try:
             hdf5_path = self.session_directory / "session_data.h5"
             self.hdf5_file = h5py.File(hdf5_path, "w")
@@ -514,7 +440,7 @@ class DataAggregationEngine:
             self.export_enabled = False
 
     def _create_hdf5_dataset(self, stream_id: str, stream: DataStream) -> None:
-        """Create HDF5 dataset for a stream."""
+        
         if not self.hdf5_file:
             return
 
@@ -564,7 +490,7 @@ class DataAggregationEngine:
             logger.error(f"Failed to create HDF5 dataset for {stream_id}: {e}")
 
     def _export_stream_data(self, stream_id: str) -> None:
-        """Export stream data to HDF5."""
+        
         if not self.hdf5_file or stream_id not in self.streams:
             return
 
@@ -607,7 +533,7 @@ class DataAggregationEngine:
             logger.error(f"Failed to export stream data for {stream_id}: {e}")
 
     def _export_sync_event(self, sync_event: SyncEvent) -> None:
-        """Export sync event to HDF5."""
+        
         if not self.hdf5_file:
             return
 
@@ -644,7 +570,7 @@ class DataAggregationEngine:
             logger.error(f"Failed to export sync event: {e}")
 
     def _periodic_export(self) -> None:
-        """Perform periodic data export."""
+        
         current_time = time.time()
 
         
@@ -659,7 +585,7 @@ class DataAggregationEngine:
             self.last_stats_update = current_time
 
     def _finalize_exports(self) -> None:
-        """Finalize all data exports."""
+        
         try:
             
             for stream_id in self.streams:
@@ -685,16 +611,7 @@ class DataAggregationEngine:
 def calculate_temporal_alignment(
         sync_events: List[SyncEvent], tolerance_ms: float = 5.0
 ) -> Dict[str, float]:
-    """
-    Calculate temporal alignment offsets for devices based on sync events.
-
-    Args:
-        sync_events: List of synchronization events
-        tolerance_ms: Maximum acceptable offset in milliseconds
-
-    Returns:
-        Dictionary mapping device_id to offset in nanoseconds
-    """
+    
     device_offsets = {}
 
     if not sync_events:
@@ -732,16 +649,7 @@ def calculate_temporal_alignment(
 def validate_data_synchronization(
         streams: Dict[str, DataStream], tolerance_ms: float = 5.0
 ) -> Dict[str, Any]:
-    """
-    Validate synchronization quality across data streams.
-
-    Args:
-        streams: Dictionary of data streams
-        tolerance_ms: Synchronization tolerance in milliseconds
-
-    Returns:
-        Synchronization quality report
-    """
+    
     report = {
         "total_streams": len(streams),
         "synchronized_streams": 0,

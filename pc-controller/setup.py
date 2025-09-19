@@ -1,6 +1,4 @@
-"""
-Setup script for IRCamera PC Controller with native backend
-"""
+
 
 import os
 import platform

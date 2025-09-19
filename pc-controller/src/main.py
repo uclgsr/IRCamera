@@ -1,9 +1,5 @@
 #!/usr/bin/env python3
-"""
-Main entry point for IRCamera PC Controller
 
-This script starts the PC controller application with all required services.
-"""
 
 import sys
 from pathlib import Path

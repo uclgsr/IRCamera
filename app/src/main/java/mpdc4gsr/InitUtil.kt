@@ -86,12 +86,12 @@ object InitUtil {
     }
 
     fun initUM() {
-        
+        // TODO: Implement UM initialization
     }
 
     fun initJPush() {
         val registrationID = ""
-        
+        // TODO: Implement JPush initialization
 
         if (SharedManager.getHasShowClause()) {
             XLog.w("registrationID= $registrationID")

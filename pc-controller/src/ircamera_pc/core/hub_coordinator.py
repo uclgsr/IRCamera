@@ -1,10 +1,4 @@
-"""
-Hub Coordinator for Multi-Modal Physiological Sensing Platform
 
-Central coordinator for the Hub-and-Spoke architecture, managing device
-synchronization, session coordination, and data aggregation across Android
-Sensor Nodes (Spokes) from the PC Controller (Hub).
-"""
 
 import asyncio
 import json
@@ -26,7 +20,7 @@ from ..sync import EnhancedTimeSyncService
 
 
 class SessionState(Enum):
-    """Recording session states."""
+    
     IDLE = "idle"
     PREPARING = "preparing"
     RECORDING = "recording"
@@ -36,7 +30,7 @@ class SessionState(Enum):
 
 
 class SyncMarkerType(Enum):
-    """Types of synchronization markers."""
+    
     SESSION_START = "session_start"
     SESSION_END = "session_end"
     FLASH_SYNC = "flash_sync"
@@ -47,7 +41,7 @@ class SyncMarkerType(Enum):
 
 @dataclass
 class RecordingSession:
-    """Recording session information."""
+    
 
     session_id: str
     session_name: str
@@ -74,19 +68,10 @@ class RecordingSession:
 
 
 class HubCoordinator:
-    """
-    Central Hub Coordinator for Multi-Modal Physiological Sensing Platform.
     
-    Coordinates the Hub-and-Spoke architecture by:
-    - Managing device discovery and connection
-    - Synchronizing time across all devices with <5ms accuracy
-    - Orchestrating recording sessions across multiple spokes
-    - Ensuring data temporal alignment and quality
-    - Providing session management and monitoring
-    """
 
     def __init__(self):
-        """Initialize hub coordinator."""
+        
         self._network_server = NetworkServer()
         self._is_running = False
 
@@ -115,13 +100,13 @@ class HubCoordinator:
         logger.info("Hub Coordinator initialized")
 
     def _setup_network_callbacks(self) -> None:
-        """Setup network server event callbacks."""
+        
         self._network_server.set_device_connected_callback(self._on_device_connected)
         self._network_server.set_device_disconnected_callback(self._on_device_disconnected)
         self._network_server.set_device_status_update_callback(self._on_device_status_update)
 
     async def start(self) -> bool:
-        """Start the hub coordinator."""
+        
         if self._is_running:
             logger.warning("Hub coordinator already running")
             return True
@@ -149,7 +134,7 @@ class HubCoordinator:
             return False
 
     async def stop(self) -> None:
-        """Stop the hub coordinator."""
+        
         if not self._is_running:
             return
 
@@ -184,19 +169,7 @@ class HubCoordinator:
             notes: Optional[str] = None,
             target_devices: Optional[List[str]] = None
     ) -> Optional[str]:
-        """
-        Start a synchronized recording session across all or specified devices.
         
-        Args:
-            session_name: Human-readable session name
-            participant_id: Participant identifier
-            experiment_type: Type of experiment 
-            notes: Additional notes
-            target_devices: Specific devices to include (None = all connected)
-            
-        Returns:
-            Session ID if successful, None otherwise
-        """
         try:
             session_id = str(uuid.uuid4())
 
@@ -299,15 +272,7 @@ class HubCoordinator:
             return None
 
     async def stop_recording_session(self, session_id: str) -> bool:
-        """
-        Stop a recording session across all participating devices.
         
-        Args:
-            session_id: Session identifier
-            
-        Returns:
-            True if successful
-        """
         try:
             session = self._active_sessions.get(session_id)
             if not session:
@@ -366,17 +331,7 @@ class HubCoordinator:
             marker_type: SyncMarkerType,
             metadata: Dict[str, Any] = None
     ) -> Optional[str]:
-        """
-        Create a synchronization marker across all devices in session.
         
-        Args:
-            session_id: Session identifier
-            marker_type: Type of sync marker
-            metadata: Additional marker metadata
-            
-        Returns:
-            Marker ID if successful
-        """
         try:
             session = self._active_sessions.get(session_id)
             if not session:
@@ -419,16 +374,7 @@ class HubCoordinator:
             return None
 
     async def send_flash_sync(self, session_id: str, duration_ms: int = 100) -> bool:
-        """
-        Send flash synchronization signal to all devices in session.
         
-        Args:
-            session_id: Session identifier 
-            duration_ms: Flash duration in milliseconds
-            
-        Returns:
-            True if successful
-        """
         try:
             session = self._active_sessions.get(session_id)
             if not session:
@@ -457,7 +403,7 @@ class HubCoordinator:
             return False
 
     async def _monitor_synchronization(self) -> None:
-        """Monitor device synchronization quality."""
+        
         while self._is_running:
             try:
                 await asyncio.sleep(self._sync_check_interval)
@@ -490,11 +436,11 @@ class HubCoordinator:
                 logger.error(f"Error in synchronization monitoring: {e}")
 
     def _on_device_connected(self, device_info: DeviceInfo) -> None:
-        """Handle device connection event."""
+        
         logger.info(f"Device connected: {device_info.device_id} ({device_info.device_type})")
 
     def _on_device_disconnected(self, device_info: DeviceInfo) -> None:
-        """Handle device disconnection event."""
+        
         logger.warning(f"Device disconnected: {device_info.device_id}")
 
         
@@ -504,11 +450,11 @@ class HubCoordinator:
                                f"'{session.session_name}'")
 
     def _on_device_status_update(self, device_info: DeviceInfo) -> None:
-        """Handle device status update."""
+        
         logger.debug(f"Device status update: {device_info.device_id} -> {device_info.state}")
 
     def _trigger_session_callback(self, event_type: str, data: Any) -> None:
-        """Trigger session event callbacks."""
+        
         try:
             for callback in self._session_callbacks.get(event_type, []):
                 callback(data)
@@ -518,36 +464,36 @@ class HubCoordinator:
     
 
     def get_connected_devices(self) -> Dict[str, DeviceInfo]:
-        """Get all connected devices."""
+        
         return self._network_server.get_connected_devices()
 
     def get_active_sessions(self) -> Dict[str, RecordingSession]:
-        """Get all active recording sessions."""
+        
         return self._active_sessions.copy()
 
     def get_session(self, session_id: str) -> Optional[RecordingSession]:
-        """Get specific session information."""
+        
         return self._active_sessions.get(session_id)
 
     def get_sync_quality_summary(self) -> Dict[str, Any]:
-        """Get overall synchronization quality summary."""
+        
         return self._network_server.get_time_sync_stats()
 
     def get_device_sync_stats(self, device_id: str) -> Dict[str, Any]:
-        """Get synchronization statistics for specific device."""
+        
         return self._network_server.get_time_sync_stats(device_id)
 
     def is_device_synchronized(self, device_id: str) -> bool:
-        """Check if a specific device is synchronized."""
+        
         return self._network_server.is_device_time_synchronized(device_id)
 
     def add_session_callback(self, event_type: str, callback: Callable) -> None:
-        """Add session event callback."""
+        
         if event_type in self._session_callbacks:
             self._session_callbacks[event_type].append(callback)
 
     def remove_session_callback(self, event_type: str, callback: Callable) -> None:
-        """Remove session event callback."""
+        
         if event_type in self._session_callbacks:
             try:
                 self._session_callbacks[event_type].remove(callback)
@@ -556,5 +502,5 @@ class HubCoordinator:
 
     @property
     def is_running(self) -> bool:
-        """Check if hub coordinator is running."""
+        
         return self._is_running

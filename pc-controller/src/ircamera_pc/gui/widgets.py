@@ -1,10 +1,4 @@
-"""
-PyQt6-based GUI widgets for IRCamera PC Controller
 
-This module contains all the user interface widgets for the PC Controller
-application, providing device management, network control, and system
-integration with enhanced error handling and real-time status monitoring.
-"""
 
 import logging
 from typing import Any, Dict, List, Optional
@@ -51,7 +45,7 @@ except ImportError:
 
 
 class DeviceListWidget(QWidget):
-    """Widget for displaying and managing connected devices."""
+    
 
     device_selected = pyqtSignal(str)
 
@@ -61,7 +55,7 @@ class DeviceListWidget(QWidget):
         self._setup_ui()
 
     def _setup_ui(self):
-        """Set up the device list UI."""
+        
         layout = QVBoxLayout(self)
 
         self.device_list = QListWidget()
@@ -73,7 +67,7 @@ class DeviceListWidget(QWidget):
         layout.addWidget(self.status_label)
 
     def update_devices(self, devices: List[Dict[str, Any]]) -> None:
-        """Update the device list with current devices."""
+        
         
         self.device_list.clear()
         self.devices.clear()
@@ -105,13 +99,13 @@ class DeviceListWidget(QWidget):
         self.status_label.setText(f"{count} devices ({connected_count} connected)")
 
     def _on_item_clicked(self, item):
-        """Handle device selection."""
+        
         device_id = item.text().split(" ")[0]  
         self.device_selected.emit(device_id)
 
 
 class SessionControlWidget(QWidget):
-    """Widget for session management and control."""
+    
 
     start_session_requested = pyqtSignal()
     stop_session_requested = pyqtSignal()
@@ -122,7 +116,7 @@ class SessionControlWidget(QWidget):
         self._setup_ui()
 
     def _setup_ui(self):
-        """Set up the session control UI."""
+        
         layout = QVBoxLayout(self)
 
         
@@ -149,7 +143,7 @@ class SessionControlWidget(QWidget):
         layout.addWidget(self.timer_label)
 
     def update_state(self, session, has_devices) -> None:
-        """Update widget state based on session and device status."""
+        
         if session:
             self.session_label.setText(f"Session: {session.name}")
 
@@ -170,14 +164,14 @@ class SessionControlWidget(QWidget):
 
 
 class StatusDisplayWidget(QWidget):
-    """Widget for displaying system status and statistics."""
+    
 
     def __init__(self):
         super().__init__()
         self._setup_ui()
 
     def _setup_ui(self):
-        """Set up the status display UI."""
+        
         layout = QVBoxLayout(self)
 
         
@@ -213,7 +207,7 @@ class StatusDisplayWidget(QWidget):
         layout.addWidget(self.data_aggregation)
 
     def update_time_sync_stats(self, stats) -> None:
-        """Update time synchronization statistics."""
+        
         if stats:
             quality = stats.get("synchronization_rate", 0) * 100
             max_offset = stats.get("max_offset_ms", 0)
@@ -227,7 +221,7 @@ class StatusDisplayWidget(QWidget):
             self.data_aggregation.set_sync_quality(quality)
 
     def update_session_info(self, session) -> None:
-        """Update session information."""
+        
         if session:
             self.session_name_label.setText(f"Name: {session.name}")
             self.session_duration_label.setText(
@@ -238,7 +232,7 @@ class StatusDisplayWidget(QWidget):
 
 
 class SystemIntegrationWidget(QWidget):
-    """Widget for system integration controls."""
+    
 
     elevation_requested = pyqtSignal(str)
 
@@ -247,7 +241,7 @@ class SystemIntegrationWidget(QWidget):
         self._setup_ui()
 
     def _setup_ui(self):
-        """Set up the system integration UI."""
+        
         layout = QVBoxLayout(self)
 
         self.privilege_label = QLabel("Privilege Level: User")
@@ -263,11 +257,11 @@ class SystemIntegrationWidget(QWidget):
         layout.addWidget(self.status_label)
 
     def update_privilege_level(self, level: str) -> None:
-        """Update privilege level display."""
+        
         self.privilege_label.setText(f"Privilege Level: {level}")
 
     def update_permissions(self, permissions: None = Dict) -> None:
-        """Update permission status."""
+        
         
         perm_text = "\n".join(
             [f"{k}: {'✓' if v else '✗'}" for k, v in permissions.items()]
@@ -275,14 +269,14 @@ class SystemIntegrationWidget(QWidget):
         self.setToolTip(f"Permissions:\n{perm_text}")
 
     def set_status_message(self, message: str, is_error: bool = False) -> None:
-        """Set status message."""
+        
         self.status_label.setText(message)
         color = "red" if is_error else "green"
         self.status_label.setStyleSheet(f"color: {color};")
 
 
 class BluetoothControlWidget(QWidget):
-    """Widget for Bluetooth device management."""
+    
 
     scan_requested = pyqtSignal()
     connect_requested = pyqtSignal(str)
@@ -293,7 +287,7 @@ class BluetoothControlWidget(QWidget):
         self._setup_ui()
 
     def _setup_ui(self):
-        """Set up Bluetooth control UI."""
+        
         layout = QVBoxLayout(self)
 
         
@@ -323,21 +317,21 @@ class BluetoothControlWidget(QWidget):
         layout.addWidget(self.status_label)
 
     def _on_connect_clicked(self):
-        """Handle connect button click."""
+        
         current_item = self.device_list.currentItem()
         if current_item:
             device_addr = current_item.text().split(" ")[0]
             self.connect_requested.emit(device_addr)
 
     def _on_disconnect_clicked(self):
-        """Handle disconnect button click."""
+        
         current_item = self.device_list.currentItem()
         if current_item:
             device_addr = current_item.text().split(" ")[0]
             self.disconnect_requested.emit(device_addr)
 
     def update_devices(self, devices) -> None:
-        """Update discovered devices list."""
+        
         self.device_list.clear()
         for device in devices:
             addr = device.get("address", "Unknown")
@@ -345,18 +339,18 @@ class BluetoothControlWidget(QWidget):
             self.device_list.addItem(f"{addr} - {name}")
 
     def set_connection_status(self, device_addr: str, connected: bool) -> None:
-        """Update connection status for a device."""
+        
         status = "Connected" if connected else "Disconnected"
         self.status_label.setText(f"{device_addr}: {status}")
 
     def set_error_status(self, error: str) -> None:
-        """Set error status."""
+        
         self.status_label.setText(f"Error: {error}")
         self.status_label.setStyleSheet("color: red;")
 
 
 class IntegrationManagementWidget(QWidget):
-    """Enhanced widget for managing Hub-Spoke integration with comprehensive error handling."""
+    
 
     integration_status_changed = pyqtSignal(str, bool)  
     hub_connection_requested = pyqtSignal()
@@ -370,7 +364,7 @@ class IntegrationManagementWidget(QWidget):
         self._setup_monitoring()
 
     def _setup_ui(self):
-        """Set up the integration management UI."""
+        
         layout = QVBoxLayout(self)
 
         
@@ -437,19 +431,19 @@ class IntegrationManagementWidget(QWidget):
         layout.addWidget(log_group)
 
     def _setup_monitoring(self):
-        """Set up real-time monitoring timer."""
+        
         self.monitor_timer = QTimer()
         self.monitor_timer.timeout.connect(self._update_metrics)
         self.monitor_timer.start(1000)  
 
     @pyqtSlot()
     def _update_metrics(self):
-        """Update real-time metrics display."""
+        
         
         pass
 
     def update_hub_status(self, connected: bool = False, address: str = "") -> None:
-        """Update Hub connection status."""
+        
         if connected:
             self.hub_status_label.setText(f"Hub: Connected ({address})")
             self.hub_status_label.setStyleSheet("color: green;")
@@ -462,7 +456,7 @@ class IntegrationManagementWidget(QWidget):
     def update_spoke_count(
             self, count: int = 0, active_spokes: Optional[List[str]] = None
     ) -> None:
-        """Update active spoke count and list."""
+        
         self.spoke_count_label.setText(f"Active Spokes: {count}")
         if count > 0:
             self.spoke_count_label.setStyleSheet("color: green;")
@@ -475,7 +469,7 @@ class IntegrationManagementWidget(QWidget):
     def update_sync_status(
             self, synchronized: bool = False, max_offset_ms: float = 0
     ) -> None:
-        """Update time synchronization status."""
+        
         if synchronized:
             self.sync_status_label.setText(
                 f"Time Sync: Active (±{max_offset_ms:.1f}ms)"
@@ -491,7 +485,7 @@ class IntegrationManagementWidget(QWidget):
     def update_metrics(
             self, data_rate_mbps: float, latency_ms: float, error_count: int
     ) -> None:
-        """Update real-time performance metrics."""
+        
         self.data_rate_label.setText(f"Data Rate: {data_rate_mbps:.2f} MB/s")
         self.latency_label.setText(f"Network Latency: {latency_ms:.1f} ms")
         self.error_count_label.setText(f"Error Count: {error_count}")
@@ -505,7 +499,7 @@ class IntegrationManagementWidget(QWidget):
             self.latency_label.setStyleSheet("color: red;")
 
     def add_status_message(self, message: str, level: str = "INFO") -> None:
-        """Add a status message to the log."""
+        
         timestamp = QTimer().time().toString("hh:mm:ss")
         formatted_msg = f"[{timestamp}] {level}: {message}"
 
@@ -528,7 +522,7 @@ class IntegrationManagementWidget(QWidget):
         self.integration_status_changed.emit(message, level == "ERROR")
 
     def set_integration_error(self, error: str) -> None:
-        """Handle integration errors."""
+        
         self.add_status_message(f"Integration Error: {error}", "ERROR")
         self.logger.error(f"Integration error: {error}")
 
@@ -538,7 +532,7 @@ class IntegrationManagementWidget(QWidget):
 
 
 class WiFiControlWidget(QWidget):
-    """Widget for WiFi network management."""
+    
 
     scan_requested = pyqtSignal()
     connect_requested = pyqtSignal(str, str)  
@@ -551,7 +545,7 @@ class WiFiControlWidget(QWidget):
         self._setup_ui()
 
     def _setup_ui(self):
-        """Set up WiFi control UI."""
+        
         layout = QVBoxLayout(self)
 
         
@@ -587,7 +581,7 @@ class WiFiControlWidget(QWidget):
         layout.addWidget(self.status_label)
 
     def update_networks(self, networks) -> None:
-        """Update available networks list."""
+        
         self.network_list.clear()
         for network in networks:
             ssid = network.get("ssid", "Unknown")
@@ -595,18 +589,18 @@ class WiFiControlWidget(QWidget):
             self.network_list.addItem(f"{ssid} ({signal}%)")
 
     def set_connection_status(self, ssid: str, connected: bool, ip: str = "") -> None:
-        """Update connection status."""
+        
         if connected:
             self.status_label.setText(f"Connected to {ssid} ({ip})")
         else:
             self.status_label.setText(f"Disconnected from {ssid}")
 
     def set_hotspot_status(self, active: bool, message: str = "") -> None:
-        """Update hotspot status."""
+        
         status = "Active" if active else "Inactive"
         self.status_label.setText(f"Hotspot: {status} {message}")
 
     def set_error_status(self, error: str) -> None:
-        """Set error status."""
+        
         self.status_label.setText(f"Error: {error}")
         self.status_label.setStyleSheet("color: red;")

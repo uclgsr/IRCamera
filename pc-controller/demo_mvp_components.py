@@ -1,10 +1,5 @@
 #!/usr/bin/env python3
-"""
-MVP Components Demo for IRCamera PC Controller Hub
 
-Demonstrates the implemented MVP components and their integration
-without requiring a full GUI environment.
-"""
 
 import sys
 import tempfile
@@ -16,7 +11,7 @@ sys.path.insert(0, str(Path(__file__).parent / "src"))
 
 
 def demonstrate_configuration():
-    """Demonstrate configuration system."""
+    
     print("=" * 60)
     print("CONFIGURATION SYSTEM")
     print("=" * 60)
@@ -38,7 +33,7 @@ def demonstrate_configuration():
 
 
 def demonstrate_session_management():
-    """Demonstrate session management capabilities."""
+    
     print("\n" + "=" * 60)
     print("SESSION MANAGEMENT")
     print("=" * 60)
@@ -86,7 +81,7 @@ def demonstrate_session_management():
 
 
 def demonstrate_device_discovery():
-    """Demonstrate device discovery concepts."""
+    
     print("\n" + "=" * 60)
     print("DEVICE DISCOVERY & MANAGEMENT")
     print("=" * 60)
@@ -126,7 +121,7 @@ def demonstrate_device_discovery():
 
 
 def demonstrate_communication_protocol():
-    """Demonstrate communication protocol concepts."""
+    
     print("\n" + "=" * 60)
     print("COMMUNICATION PROTOCOL")
     print("=" * 60)
@@ -189,7 +184,7 @@ def demonstrate_communication_protocol():
 
 
 def demonstrate_gui_architecture():
-    """Demonstrate GUI architecture concepts."""
+    
     print("\n" + "=" * 60)
     print("GUI ARCHITECTURE")
     print("=" * 60)
@@ -225,7 +220,7 @@ def demonstrate_gui_architecture():
 
 
 def demonstrate_integration_architecture():
-    """Demonstrate the overall Hub-and-Spoke integration."""
+    
     print("\n" + "=" * 60)
     print("HUB-AND-SPOKE INTEGRATION ARCHITECTURE")
     print("=" * 60)
@@ -274,7 +269,7 @@ def demonstrate_integration_architecture():
 
 
 def main():
-    """Run the MVP components demonstration."""
+    
     print("IRCamera PC Controller Hub - MVP Implementation Demo")
     print("=" * 80)
     print("This demonstration shows the implemented components of the")

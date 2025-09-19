@@ -16,7 +16,11 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
-
+/**
+ * Enhanced Comprehensive Sensor Status Dashboard
+ * Implements TODO requirement: "Provide clear UI indicators for each sensor's status 
+ * (connected, streaming, error). Connection status indicators for each sensor."
+ */
 class ComprehensiveSensorStatusWidget @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
@@ -137,13 +141,20 @@ class ComprehensiveSensorStatusWidget @JvmOverloads constructor(
         sensorsContainer.addView(statusView)
     }
 
-    
+    /**
+     * Update sensor status with clear visual indicators
+     * Implements TODO requirement: "sensor icon or label turns green when connected and red or grey if disconnected"
+     */
     fun updateSensorStatus(sensorId: String, status: SensorStatus, message: String? = null) {
         sensorStatusViews[sensorId]?.updateStatus(status, message)
         updateOverallStatus()
     }
 
-    
+    /**
+     * Update recording status with prominent indicator
+     * Implements TODO requirement: "When a session is recording, the user should see a prominent indicator 
+     * (e.g. a red "Recording" dot and timer)"
+     */
     fun updateRecordingStatus(recording: Boolean, sessionId: String? = null) {
         isRecording = recording
         currentSessionId = sessionId
@@ -161,12 +172,19 @@ class ComprehensiveSensorStatusWidget @JvmOverloads constructor(
         updateOverallStatus()
     }
 
-    
+    /**
+     * Show simulation mode warning
+     * Implements TODO requirement: "indicate if the thermal camera is in simulation mode vs real 
+     * (perhaps a warning icon or text if simulation is active) so users know the data source"
+     */
     fun showSimulationWarning(sensorId: String, isSimulation: Boolean) {
         sensorStatusViews[sensorId]?.showSimulationMode(isSimulation)
     }
 
-    
+    /**
+     * Display error notification to user
+     * Implements TODO requirement: "Surface any sensor errors to the user in real time"
+     */
     fun showSensorError(sensorId: String, errorMessage: String) {
         sensorStatusViews[sensorId]?.showError(errorMessage)
         

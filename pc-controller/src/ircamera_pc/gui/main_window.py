@@ -1,8 +1,4 @@
-"""
-Main Window for IRCamera PC Controller
 
-Provides the main researcher interface with device monitoring and session control.
-"""
 
 import asyncio
 import time
@@ -39,16 +35,7 @@ from .widgets import (
 
 
 class MainWindow(QMainWindow):
-    """
-    Main application window for IRCamera PC Controller.
-
-    Implements the GUI requirements from FR6:
-    - Device list with status indicators
-    - Session start/stop controls
-    - Real-time monitoring displays
-    - Recording status and elapsed time
-    - Device disconnect alerts
-    """
+    
 
     
     session_started = pyqtSignal(str)
@@ -67,20 +54,7 @@ class MainWindow(QMainWindow):
             wifi_manager=None,
             admin_privileges_manager=None,
     ):
-        """
-        Initialize main window with all components.
-
-        Args:
-            session_manager: Session management service
-            network_server: Network server for device communication
-            time_sync_service: Time synchronization service
-            gsr_ingestor: GSR data ingestor (optional)
-            file_transfer_manager: File transfer manager (optional)
-            camera_calibrator: Camera calibration service (optional)
-            bluetooth_manager: Bluetooth device manager (optional)
-            wifi_manager: WiFi network manager (optional)
-            admin_privileges_manager: Administrator privileges manager (optional)
-        """
+        
         super().__init__()
 
         
@@ -125,7 +99,7 @@ class MainWindow(QMainWindow):
         logger.info("Main window initialized with system integration features")
 
     def _setup_ui(self) -> None:
-        """Set up the user interface."""
+        
         self.setWindowTitle("IRCamera PC Controller - System Integration")
         self.setMinimumSize(1200, 800)  
 
@@ -164,7 +138,7 @@ class MainWindow(QMainWindow):
         
 
     def _create_left_pane(self) -> QWidget:
-        """Create the left pane with device management and session controls."""
+        
         pane = QWidget()
         layout = QVBoxLayout(pane)
 
@@ -208,7 +182,7 @@ class MainWindow(QMainWindow):
         return pane
 
     def _create_center_pane(self) -> QWidget:
-        """Create the center pane with system integration controls."""
+        
         pane = QWidget()
         layout = QVBoxLayout(pane)
 
@@ -252,7 +226,7 @@ class MainWindow(QMainWindow):
         return pane
 
     def _create_right_pane(self) -> QWidget:
-        """Create the right pane with status displays and logs."""
+        
         pane = QWidget()
         layout = QVBoxLayout(pane)
 
@@ -282,7 +256,7 @@ class MainWindow(QMainWindow):
         return pane
 
     def _setup_status_bar(self) -> None:
-        """Set up the status bar."""
+        
         self.status_bar = QStatusBar()
         self.setStatusBar(self.status_bar)
 
@@ -296,7 +270,7 @@ class MainWindow(QMainWindow):
         self.status_bar.addPermanentWidget(self.session_label)
 
     def _setup_connections(self) -> None:
-        """Set up signal connections."""
+        
         
         if self.session_control_widget:
             self.session_control_widget.start_session_requested.connect(
@@ -314,7 +288,7 @@ class MainWindow(QMainWindow):
             self.device_list_widget.device_selected.connect(self._on_device_selected)
 
     def _setup_network_callbacks(self) -> None:
-        """Set up WebSocket server and TCP server event callbacks."""
+        
         
         
 
@@ -326,7 +300,7 @@ class MainWindow(QMainWindow):
         logger.info("- mDNS device discovery active")
 
     def _setup_system_integration_callbacks(self) -> None:
-        """Set up system integration callbacks and connections."""
+        
         
         if self.bluetooth_manager and self.bluetooth_control_widget:
             
@@ -444,14 +418,14 @@ lambda result, msg: self.system_integration_widget.set_status_message(
 )
 
 def _start_ui_updates(self) -> None:
-    """Start periodic UI updates."""
+    
     self._update_timer = QTimer()
     self._update_timer.timeout.connect(self._update_displays)
     self._update_timer.start(1000)  
 
 
 def _update_displays(self) -> None:
-    """Update all display components."""
+    
     try:
         
         connected_clients = (
@@ -511,8 +485,7 @@ def _update_displays(self) -> None:
 
 
 def _update_ui_state(self) -> None:
-    """Update UI component enabled/disabled"
-    "state based on current state."""
+    
     current_session = self.session_manager.get_current_session()
     has_devices = (
         len(self.websocket_server.clients) > 0 if self.websocket_server else False
@@ -539,7 +512,7 @@ def _update_ui_state(self) -> None:
 
 
 def _on_start_session_requested(self) -> None:
-    """Handle session start request."""
+    
     try:
         current_session = self.session_manager.get_current_session()
         if not current_session:
@@ -591,7 +564,7 @@ def _on_start_session_requested(self) -> None:
 
 
 def _on_stop_session_requested(self) -> None:
-    """Handle session stop request."""
+    
     try:
         current_session = self.session_manager.get_current_session()
         if not current_session:
@@ -634,7 +607,7 @@ def _on_stop_session_requested(self) -> None:
 
 
 def _on_new_session_requested(self) -> None:
-    """Handle new session creation request."""
+    
     try:
         
         name, ok = QInputDialog.getText(
@@ -660,7 +633,7 @@ def _on_new_session_requested(self) -> None:
 
 
 def _on_sync_flash_clicked(self) -> None:
-    """Handle sync flash button click."""
+    
     try:
         
         if self.websocket_server:
@@ -692,7 +665,7 @@ def _on_sync_flash_clicked(self) -> None:
 
 
 def _on_sync_mark_clicked(self) -> None:
-    """Handle sync mark button click."""
+    
     try:
         
         description, ok = QInputDialog.getText(
@@ -737,7 +710,7 @@ def _on_sync_mark_clicked(self) -> None:
 
 
 def _on_device_selected(self, device_id: str) -> None:
-    """Handle device selection in list - WebSocket client."""
+    
     if self.websocket_server and device_id in self.websocket_server.clients:
         client = self.websocket_server.clients[device_id]
         logger.debug(
@@ -747,7 +720,7 @@ def _on_device_selected(self, device_id: str) -> None:
 
 
 def _on_device_connected(self, device_info: DeviceInfo) -> None:
-    """Handle device connection."""
+    
     logger.info(f"Device connected: {device_info.device_id}")
     self._add_log_message(
         f"Device connected: {device_info.device_id}"
@@ -762,7 +735,7 @@ def _on_device_connected(self, device_info: DeviceInfo) -> None:
 
 
 def _on_device_disconnected(self, device_info: DeviceInfo) -> None:
-    """Handle device disconnection."""
+    
     logger.warning(f"Device disconnected: {device_info.device_id}")
     self._add_log_message(f"Device disconnected: {device_info.device_id}")
 
@@ -776,13 +749,13 @@ def _on_device_disconnected(self, device_info: DeviceInfo) -> None:
 
 
 def _on_device_status_updated(self, device_info: DeviceInfo) -> None:
-    """Handle device status update."""
+    
     logger.debug(f"Device status updated: {device_info.device_id}")
 
 
 
 def _add_log_message(self, message: str) -> None:
-    """Add message to log display."""
+    
     if self.log_display:
         timestamp = datetime.now().strftime("%H:%M:%S")
         formatted_message = f"[{timestamp}] {message}"
@@ -790,36 +763,36 @@ def _add_log_message(self, message: str) -> None:
 
 
 def _show_error(self, title: str, message: str) -> None:
-    """Show error message box."""
+    
     QMessageBox.critical(self, title, message)
 
 
 def _show_warning(self, title: str, message: str) -> None:
-    """Show warning message box."""
+    
     QMessageBox.warning(self, title, message)
 
 
 def _show_info(self, title: str, message: str) -> None:
-    """Show information message box."""
+    
     QMessageBox.information(self, title, message)
 
 
 def _update_bluetooth_devices(self) -> None:
-    """Update Bluetooth device list in the UI."""
+    
     if self.bluetooth_manager and self.bluetooth_control_widget:
         devices = self.bluetooth_manager.discovered_devices
         self.bluetooth_control_widget.update_devices(devices)
 
 
 def _update_wifi_networks(self) -> None:
-    """Update WiFi network list in the UI."""
+    
     if self.wifi_manager and self.wifi_control_widget:
         networks = self.wifi_manager.available_networks
         self.wifi_control_widget.update_networks(networks)
 
 
 def closeEvent(self, event) -> None:
-    """Handle window close event."""
+    
     
     current_session = self.session_manager.get_current_session()
     if current_session and current_session.state in [

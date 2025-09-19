@@ -1,10 +1,4 @@
-"""
-Network Server for IRCamera PC Controller
 
-Manages JSON-based communication with Android devices using formal protocol
-definition. Implements FR2: Synchronised Multi-Modal Recording and FR7:
-Device Synchronisation with enhanced security and discovery features.
-"""
 
 import asyncio
 import json
@@ -36,7 +30,7 @@ from .security import SecurityManager
 
 
 class DeviceState(Enum):
-    """Device connection states."""
+    
 
     DISCONNECTED = "disconnected"
     CONNECTING = "connecting"
@@ -46,7 +40,7 @@ class DeviceState(Enum):
 
 
 class MessageType(Enum):
-    """Message types for device communication."""
+    
 
     
     DEVICE_REGISTER = "device_register"
@@ -81,7 +75,7 @@ class MessageType(Enum):
 
 @dataclass
 class DeviceInfo:
-    """Information about a connected device."""
+    
 
     device_id: str
     device_type: str
@@ -95,27 +89,15 @@ class DeviceInfo:
     gsr_mode: str = "local"
 
     def to_dict(self) -> Dict[str, Any]:
-        """Convert to dictionary."""
+        
         return asdict(self)
 
 
 class NetworkServer:
-    """
-    Enhanced network server for device communication and coordination.
-
-    Implements device communication requirements with enhanced security:
-    - JSON/TCP/IP command protocol for Android devices with TLS support
-    - Automatic device discovery via mDNS/Zeroconf
-    - Device registration and heartbeat monitoring
-    - Reliable message delivery with acknowledgments
-    - Synchronised start/stop commands across all devices
-    - Sync signal broadcasting (flash cues)
-    - Device fault detection and recovery
-    - TLS encryption and device authentication
-    """
+    
 
     def __init__(self):
-        """Initialize enhanced network server."""
+        
         self._server: Optional[asyncio.Server] = None
         self._secure_server: Optional[asyncio.Server] = None
         self._clients: Dict[str, asyncio.StreamWriter] = {}
@@ -176,7 +158,7 @@ class NetworkServer:
         )
 
     def _setup_enhanced_services(self) -> None:
-        """Set up enhanced networking services."""
+        
         
         self._messaging_service.set_transport(self._send_message_to_device)
 
@@ -195,7 +177,7 @@ class NetworkServer:
         )
 
     def _setup_message_handlers(self) -> None:
-        """Set up message handlers for different message types."""
+        
         self._message_handlers = {
             "device_register": self._handle_device_register,
             "device_heartbeat": self._handle_device_heartbeat,
@@ -217,7 +199,7 @@ class NetworkServer:
         }
 
     async def start(self) -> bool:
-        """Start the enhanced network server with security and discovery."""
+        
         if self._is_running:
             logger.warning("Network server is already running")
             return True
@@ -292,7 +274,7 @@ class NetworkServer:
             return False
 
     async def stop(self) -> None:
-        """Stop the enhanced network server."""
+        
         if not self._is_running:
             return
 
@@ -351,7 +333,7 @@ class NetworkServer:
             writer: asyncio.StreamWriter,
             is_secure: bool = False,
     ) -> None:
-        """Handle new client connection."""
+        
         addr = writer.get_extra_info("peername")
         connection_type = "secure" if is_secure else "plaintext"
         logger.info(f"Client connected from {addr} ({connection_type})")
@@ -400,7 +382,7 @@ class NetworkServer:
     async def _process_message(
             self, message: Dict[str, Any], writer: asyncio.StreamWriter
     ) -> None:
-        """Process incoming message from device using protocol validation."""
+        
         try:
             
             if not validate_message(message, strict=False):
@@ -436,7 +418,7 @@ class NetworkServer:
     async def _handle_device_register(
             self, message: Dict[str, Any], writer: asyncio.StreamWriter
     ) -> Dict[str, Any]:
-        """Handle device registration."""
+        
         try:
             device_id = message.get("device_id")
             device_type = message.get("device_type", "unknown")
@@ -502,7 +484,7 @@ class NetworkServer:
     async def _handle_device_heartbeat(
             self, message: Dict[str, Any], writer: asyncio.StreamWriter
     ) -> Dict[str, Any]:
-        """Handle device heartbeat using protocol format."""
+        
         device_id = message.get("device_id")
 
         if device_id in self._devices:
@@ -526,7 +508,7 @@ class NetworkServer:
     async def _handle_device_status(
             self, message: Dict[str, Any], writer: asyncio.StreamWriter
     ) -> Dict[str, Any]:
-        """Handle device status update using protocol format."""
+        
         device_id = message.get("device_id")
 
         if device_id in self._devices:
@@ -555,8 +537,7 @@ class NetworkServer:
     async def _handle_file_transfer_complete(
             self, message: Dict[str, Any], writer: asyncio.StreamWriter
     ) -> Dict[str, Any]:
-        """Handle file transfer completion notification"
-        "using protocol format."""
+        
         device_id = message.get("device_id")
         transfer_id = message.get("transfer_id")
         status = message.get("status")
@@ -568,7 +549,7 @@ class NetworkServer:
     async def _handle_time_sync_request(
             self, message: Dict[str, Any], writer: asyncio.StreamWriter
     ) -> Dict[str, Any]:
-        """Handle time synchronization request using enhanced NTP-like protocol."""
+        
         try:
             device_id = message.get("device_id", "unknown")
 
@@ -593,7 +574,7 @@ class NetworkServer:
     async def _handle_gsr_data_batch(
             self, message: Dict[str, Any], writer: asyncio.StreamWriter
     ) -> Dict[str, Any]:
-        """Handle GSR data batch using protocol format."""
+        
         device_id = message.get("device_id")
         message.get("session_id")
         data_points = message.get("data_points", [])
@@ -688,7 +669,7 @@ class NetworkServer:
     async def _handle_gsr_leader_election(
             self, message: Dict[str, Any], writer: asyncio.StreamWriter
     ) -> Dict[str, Any]:
-        """Handle GSR leader election using protocol format."""
+        
         device_id = message.get("device_id")
         election_type = message.get("election_type")
         priority_score = message.get("priority_score", 0)
@@ -724,7 +705,7 @@ class NetworkServer:
         return create_message("ack", ack_for="gsr_leader_election", status="success")
 
     async def _handle_device_disconnect(self, device_id: str) -> None:
-        """Handle device disconnection."""
+        
         if device_id in self._devices:
             device_info = self._devices[device_id]
             device_info.state = DeviceState.DISCONNECTED.value
@@ -743,7 +724,7 @@ class NetworkServer:
                 await self._handle_gsr_leader_disconnect(device_id)
 
     async def _handle_gsr_leader_disconnect(self, device_id: str) -> None:
-        """Handle GSR leader disconnection by electing new leader."""
+        
         logger.warning(f"GSR leader {device_id} disconnected")
 
         
@@ -772,7 +753,7 @@ class NetworkServer:
                 break
 
     async def _monitor_heartbeats(self) -> None:
-        """Monitor device heartbeats and handle timeouts."""
+        
         while self._is_running:
             try:
                 current_time = datetime.now(timezone.utc)
@@ -805,16 +786,7 @@ class NetworkServer:
             command: Dict[str, Any],
             target_devices: Optional[List[str]] = None,
     ) -> Dict[str, bool]:
-        """
-        Broadcast command to devices.
-
-        Args:
-            command: Command to broadcast
-            target_devices: List of device IDs to target. If None, broadcasts to all.
-
-        Returns:
-            Dictionary mapping device_id to success status
-        """
+        
         results = {}
 
         devices_to_target = target_devices or list(self._clients.keys())
@@ -838,7 +810,7 @@ class NetworkServer:
     async def start_recording_session(
             self, session_id: str, session_name: Optional[str] = None
     ) -> Dict[str, bool]:
-        """Start recording session on all devices using protocol format."""
+        
         command = create_message(
             "session_start",
             session_id=session_id,
@@ -849,14 +821,14 @@ class NetworkServer:
         return await self.broadcast_command(command)
 
     async def stop_recording_session(self, session_id: str) -> Dict[str, bool]:
-        """Stop recording session on all devices using protocol format."""
+        
         command = create_message("session_stop", session_id=session_id)
 
         logger.info(f"Stopping recording session {session_id} on all devices")
         return await self.broadcast_command(command)
 
     async def send_sync_flash(self, duration_ms: int = 100) -> Dict[str, bool]:
-        """Send sync flash command to all devices using protocol format."""
+        
         command = create_message(
             "sync_flash", duration_ms=duration_ms, intensity=1.0, color="white"
         )
@@ -867,7 +839,7 @@ class NetworkServer:
     async def send_sync_mark(
             self, mark_type: str, metadata: Dict[str, Any] = None
     ) -> Dict[str, bool]:
-        """Send sync mark to all devices using protocol format."""
+        
         command = create_message(
             "sync_mark",
             mark_type=mark_type,
@@ -881,7 +853,7 @@ class NetworkServer:
     async def _send_message(
             self, writer: asyncio.StreamWriter, message: Dict[str, Any]
     ) -> None:
-        """Send JSON message to client."""
+        
         try:
             message_data = json.dumps(message).encode("utf-8")
             length_data = len(message_data).to_bytes(4, "big")
@@ -899,7 +871,7 @@ class NetworkServer:
             error_message: str,
             message_id: Optional[str] = None,
     ) -> None:
-        """Send error response to client using protocol format."""
+        
         error_response = create_message(
             "error", error_code="INVALID_MESSAGE", error_message=error_message
         )
@@ -913,24 +885,24 @@ class NetworkServer:
     def set_device_connected_callback(
             self, callback: Callable[[DeviceInfo], None]
     ) -> None:
-        """Set callback for device connection events."""
+        
         self._on_device_connected = callback
 
     def set_device_disconnected_callback(
             self, callback: Callable[[DeviceInfo], None]
     ) -> None:
-        """Set callback for device disconnection events."""
+        
         self._on_device_disconnected = callback
 
     def set_device_status_update_callback(
             self, callback: Callable[[DeviceInfo], None]
     ) -> None:
-        """Set callback for device status updates."""
+        
         self._on_device_status_update = callback
 
     
     def get_connected_devices(self) -> Dict[str, DeviceInfo]:
-        """Get all connected devices."""
+        
         return {
             did: device
             for did, device in self._devices.items()
@@ -938,11 +910,11 @@ class NetworkServer:
         }
 
     def get_device_info(self, device_id: str) -> Optional[DeviceInfo]:
-        """Get device information."""
+        
         return self._devices.get(device_id)
 
     def get_gsr_leader(self) -> Optional[DeviceInfo]:
-        """Get current GSR leader device."""
+        
         for device in self._devices.values():
             if device.is_gsr_leader and device.state != DeviceState.DISCONNECTED.value:
                 return device
@@ -952,7 +924,7 @@ class NetworkServer:
     async def _handle_secure_client(
             self, reader: asyncio.StreamReader, writer: asyncio.StreamWriter
     ) -> None:
-        """Handle secure client connections with TLS."""
+        
         peer_addr = writer.get_extra_info("peername")
         logger.info(f"Secure client connected from {peer_addr}")
 
@@ -962,17 +934,7 @@ class NetworkServer:
     async def _send_message_to_device(
             self, host: str, port: int, message: Dict[str, Any]
     ) -> bool:
-        """
-        Send message to a specific device (transport for reliable messaging).
-
-        Args:
-            host: Target device IP address
-            port: Target device port
-            message: Message data to send
-
-        Returns:
-            bool: True if message was sent successfully
-        """
+        
         try:
             
             target_device = None
@@ -994,7 +956,7 @@ class NetworkServer:
             return False
 
     async def _on_device_discovered(self, event_type: str, device) -> None:
-        """Handle device discovery events."""
+        
         try:
             if event_type == "discovered":
                 logger.info(
@@ -1018,7 +980,7 @@ class NetworkServer:
     async def _handle_device_auth(
             self, message: Dict[str, Any], device_id: str
     ) -> Dict[str, Any]:
-        """Handle device authentication request."""
+        
         try:
             auth_token = message.get("auth_token")
             certificate_data = message.get("certificate")
@@ -1079,7 +1041,7 @@ class NetworkServer:
     async def _handle_message_ack(
             self, message: Dict[str, Any], device_id: str
     ) -> Optional[Dict[str, Any]]:
-        """Handle message acknowledgment."""
+        
         await self._messaging_service.handle_acknowledgment(
             message.get("original_message_id", ""), True
         )
@@ -1088,7 +1050,7 @@ class NetworkServer:
     async def _handle_message_nack(
             self, message: Dict[str, Any], device_id: str
     ) -> Optional[Dict[str, Any]]:
-        """Handle message negative acknowledgment."""
+        
         await self._messaging_service.handle_acknowledgment(
             message.get("original_message_id", ""),
             False,
@@ -1099,7 +1061,7 @@ class NetworkServer:
     async def _handle_reliable_session_start(
             self, message: Dict[str, Any]
     ) -> Optional[Dict[str, Any]]:
-        """Handle reliable session start message."""
+        
         try:
             session_id = message.get("session_id")
             if session_id:
@@ -1117,7 +1079,7 @@ class NetworkServer:
     async def _handle_reliable_session_stop(
             self, message: Dict[str, Any]
     ) -> Optional[Dict[str, Any]]:
-        """Handle reliable session stop message."""
+        
         try:
             session_id = message.get("session_id")
             if session_id:
@@ -1135,7 +1097,7 @@ class NetworkServer:
     async def _handle_reliable_sync_flash(
             self, message: Dict[str, Any]
     ) -> Optional[Dict[str, Any]]:
-        """Handle reliable sync flash message."""
+        
         try:
             flash_id = message.get("flash_id")
             if flash_id:
@@ -1158,19 +1120,7 @@ class NetworkServer:
             priority: MessagePriority = MessagePriority.NORMAL,
             timeout_seconds: float = 30.0,
     ) -> str:
-        """
-        Send a reliable message to a specific device.
-
-        Args:
-            device_id: Target device ID
-            message_type: Type of message
-            content: Message content
-            priority: Message priority
-            timeout_seconds: Message timeout
-
-        Returns:
-            str: Message ID for tracking
-        """
+        
         device = self._devices.get(device_id)
         if not device:
             raise ValueError(f"Device {device_id} not found")
@@ -1186,11 +1136,11 @@ class NetworkServer:
 
     @property
     def is_running(self) -> bool:
-        """Check if server is running."""
+        
         return self._is_running
 
     def _calculate_network_latency(self, device_id: str) -> float:
-        """Calculate network latency for a device."""
+        
         
         device = self._devices.get(device_id)
         if device and hasattr(device, "last_heartbeat"):
@@ -1204,7 +1154,7 @@ class NetworkServer:
         return 50.0  
 
     def _calculate_data_hash(self, data_point: Dict[str, Any]) -> str:
-        """Calculate integrity hash for data verification."""
+        
         import hashlib
 
         
@@ -1219,7 +1169,7 @@ class NetworkServer:
     def _update_realtime_gsr_visualization(
             self, device_id: str, data_points: List[Dict[str, Any]]
     ) -> None:
-        """Update real-time GSR visualization if available."""
+        
         try:
             
             
@@ -1240,7 +1190,7 @@ class NetworkServer:
     def _buffer_gsr_data(
             self, device_id: str, data_points: List[Dict[str, Any]]
     ) -> None:
-        """Fallback method to buffer GSR data when aggregator is unavailable."""
+        
         if not hasattr(self, "_gsr_data_buffer"):
             self._gsr_data_buffer = {}
 
@@ -1273,7 +1223,7 @@ class NetworkServer:
     async def _handle_gsr_stream_registration(
             self, message: Dict[str, Any], writer: asyncio.StreamWriter
     ) -> Dict[str, Any]:
-        """Handle GSR stream registration from Android device"""
+        
         try:
             device_id = message.get("device_id")
             session_id = message.get("session_id")
@@ -1304,7 +1254,7 @@ class NetworkServer:
     async def _handle_gsr_data_stream(
             self, message: Dict[str, Any], writer: asyncio.StreamWriter
     ) -> Optional[Dict[str, Any]]:
-        """Handle real-time GSR data stream from Android device"""
+        
         try:
             device_id = message.get("device_id")
             session_id = message.get("session_id")
@@ -1336,7 +1286,7 @@ class NetworkServer:
     async def _handle_gsr_quality_metrics(
             self, message: Dict[str, Any], writer: asyncio.StreamWriter
     ) -> Optional[Dict[str, Any]]:
-        """Handle GSR quality metrics from Android device"""
+        
         try:
             device_id = message.get("device_id")
             session_id = message.get("session_id")
@@ -1361,7 +1311,7 @@ class NetworkServer:
     async def _handle_gsr_heartbeat(
             self, message: Dict[str, Any], writer: asyncio.StreamWriter
     ) -> Optional[Dict[str, Any]]:
-        """Handle GSR heartbeat from Android device"""
+        
         try:
             device_id = message.get("device_id")
             session_id = message.get("session_id")
@@ -1386,7 +1336,7 @@ class NetworkServer:
     async def _handle_gsr_stream_end(
             self, message: Dict[str, Any], writer: asyncio.StreamWriter
     ) -> Dict[str, Any]:
-        """Handle GSR stream end notification from Android device"""
+        
         try:
             device_id = message.get("device_id")
             session_id = message.get("session_id")
@@ -1412,7 +1362,7 @@ class NetworkServer:
             return {"message_type": "error", "error": str(e)}
 
     def get_gsr_session_stats(self) -> Dict[str, Any]:
-        """Get GSR session statistics for monitoring"""
+        
         try:
             return self._gsr_receiver.get_all_session_stats()
         except Exception as e:
@@ -1422,7 +1372,7 @@ class NetworkServer:
     async def export_gsr_session_data(
             self, device_id: str, session_id: str, format: str = "csv"
     ) -> Optional[str]:
-        """Export GSR session data to file"""
+        
         try:
             export_path = await self._gsr_receiver.export_session_data(
                 device_id, session_id, format
@@ -1435,7 +1385,7 @@ class NetworkServer:
     
 
     def get_time_sync_stats(self, device_id: str = None) -> Dict[str, Any]:
-        """Get time synchronization statistics."""
+        
         if device_id:
             stats = self._enhanced_timesync.get_device_sync_stats(device_id)
             return asdict(stats) if stats else {}
@@ -1443,7 +1393,7 @@ class NetworkServer:
             return self._enhanced_timesync.get_sync_quality_summary()
 
     def get_all_time_sync_stats(self) -> Dict[str, Any]:
-        """Get time synchronization statistics for all devices."""
+        
         all_stats = self._enhanced_timesync.get_all_sync_stats()
         return {
             device_id: asdict(stats)
@@ -1451,13 +1401,13 @@ class NetworkServer:
         }
 
     def is_device_time_synchronized(self, device_id: str) -> bool:
-        """Check if device is properly time synchronized."""
+        
         return self._enhanced_timesync.is_device_synchronized(device_id)
 
     async def register_time_sync_session(self, session_id: str, device_id: str) -> bool:
-        """Register a session for time synchronization tracking."""
+        
         return await self._enhanced_timesync.register_session(session_id, device_id)
 
     async def end_time_sync_session(self, session_id: str) -> bool:
-        """End a time synchronization session."""
+        
         return await self._enhanced_timesync.end_session(session_id)

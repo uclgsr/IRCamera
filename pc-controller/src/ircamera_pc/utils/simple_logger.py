@@ -1,8 +1,4 @@
-"""
-Simple logger fallback for when loguru is not available
 
-Provides basic logging functionality for development and testing.
-"""
 
 import logging
 import sys
@@ -20,7 +16,7 @@ logging.basicConfig(
 
 
 class SimpleLogger:
-    """Simple logger that mimics loguru interface."""
+    
 
     def __init__(self, name: str = "ircamera_pc"):
         self._logger = logging.getLogger(name)
@@ -41,10 +37,10 @@ class SimpleLogger:
         self._logger.critical(message, *args)
 
     def remove(self, *args, **kwargs) -> None:
-        """Remove handler - no-op for simple logger."""
+        
 
     def add(self, *args, **kwargs) -> None:
-        """Add handler - no-op for simple logger."""
+        
 
 
 
@@ -73,5 +69,5 @@ def critical(message: str, *args, **kwargs) -> None:
 
 
 def get_logger(name: str = "ircamera_pc") -> SimpleLogger:
-    """Get a logger instance for the given name."""
+    
     return SimpleLogger(name)

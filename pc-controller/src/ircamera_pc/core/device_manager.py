@@ -1,9 +1,4 @@
-"""
-Device Manager for IRCamera PC Controller
 
-Manages device registry, capabilities, and lifecycle according to Hub-and-Spoke architecture.
-Implements device discovery and registration from the PC Hub Application MVP checklist.
-"""
 
 import asyncio
 import time
@@ -21,7 +16,7 @@ from ..network.discovery import DeviceType, DiscoveredDevice, NetworkDiscoverySe
 
 
 class DeviceConnectionState(Enum):
-    """Device connection states for the registry."""
+    
 
     DISCOVERED = "discovered"
     ONLINE = "online"
@@ -31,7 +26,7 @@ class DeviceConnectionState(Enum):
 
 
 class ConnectionQuality(Enum):
-    """Connection quality levels for monitoring."""
+    
 
     EXCELLENT = "excellent"
     GOOD = "good"
@@ -41,7 +36,7 @@ class ConnectionQuality(Enum):
 
 @dataclass
 class DeviceCapabilities:
-    """Device capability information."""
+    
 
     supports_rgb_camera: bool = False
     supports_thermal_camera: bool = False
@@ -55,7 +50,7 @@ class DeviceCapabilities:
 
 @dataclass
 class DeviceInfo:
-    """Comprehensive device information for the registry."""
+    
 
     device_id: str
     device_name: str
@@ -82,12 +77,12 @@ class DeviceInfo:
     sessions_participated: List[str] = field(default_factory=list)
 
     def __post_init__(self):
-        """Ensure device_id is set if not provided."""
+        
         if not self.device_id:
             self.device_id = f"{self.device_name}_{self.ip_address}_{self.port}"
 
     def to_dict(self) -> Dict[str, Any]:
-        """Convert to dictionary for JSON serialization."""
+        
         result = asdict(self)
         result['discovered_at'] = self.discovered_at.isoformat()
         if self.connected_at:
@@ -98,34 +93,26 @@ class DeviceInfo:
 
 
 class DeviceRegistry:
-    """
-    Central registry for managing discovered and connected devices.
-    Maintains device state and provides discovery integration.
-    """
+    
 
     def __init__(self):
-        """Initialize the device registry."""
+        
         self.devices: Dict[str, DeviceInfo] = {}
         self._callbacks: List[Callable[[str, DeviceInfo, str], None]] = []
         self._heartbeat_timeout = 30.0  
         self._discovery_service: Optional[NetworkDiscoveryService] = None
 
     def add_status_callback(self, callback: Callable[[str, DeviceInfo, str], None]) -> None:
-        """
-        Add callback for device status changes.
         
-        Args:
-            callback: Function called with (device_id, device_info, event_type)
-        """
         self._callbacks.append(callback)
 
     def remove_status_callback(self, callback: Callable[[str, DeviceInfo, str], None]) -> None:
-        """Remove status change callback."""
+        
         if callback in self._callbacks:
             self._callbacks.remove(callback)
 
     def _notify_callbacks(self, device_id: str, device_info: DeviceInfo, event_type: str) -> None:
-        """Notify all callbacks of device status change."""
+        
         for callback in self._callbacks:
             try:
                 callback(device_id, device_info, event_type)
@@ -133,15 +120,7 @@ class DeviceRegistry:
                 logger.error(f"Error in device status callback: {e}")
 
     def register_device(self, discovered_device: DiscoveredDevice) -> str:
-        """
-        Register a discovered device in the registry.
         
-        Args:
-            discovered_device: Device discovered via mDNS
-            
-        Returns:
-            Device ID for the registered device
-        """
         device_id = f"{discovered_device.service_name}_{discovered_device.ip_address}_{discovered_device.port}"
 
         
@@ -176,7 +155,7 @@ class DeviceRegistry:
         return device_id
 
     def _parse_capabilities(self, attributes: Dict[str, str]) -> DeviceCapabilities:
-        """Parse capabilities from discovery attributes."""
+        
         capabilities = DeviceCapabilities()
 
         
@@ -204,16 +183,7 @@ class DeviceRegistry:
         return capabilities
 
     def update_device_state(self, device_id: str, new_state: DeviceConnectionState) -> bool:
-        """
-        Update device connection state.
         
-        Args:
-            device_id: ID of device to update
-            new_state: New connection state
-            
-        Returns:
-            True if update successful, False if device not found
-        """
         if device_id not in self.devices:
             logger.warning(f"Cannot update state for unknown device: {device_id}")
             return False
@@ -235,15 +205,7 @@ class DeviceRegistry:
         return True
 
     def update_heartbeat(self, device_id: str) -> bool:
-        """
-        Update device heartbeat timestamp.
         
-        Args:
-            device_id: ID of device
-            
-        Returns:
-            True if update successful, False if device not found
-        """
         if device_id not in self.devices:
             return False
 
@@ -251,16 +213,7 @@ class DeviceRegistry:
         return True
 
     def remove_device(self, device_id: str, reason: str = "manual") -> bool:
-        """
-        Remove device from registry.
         
-        Args:
-            device_id: ID of device to remove
-            reason: Reason for removal
-            
-        Returns:
-            True if removal successful, False if device not found
-        """
         if device_id not in self.devices:
             return False
 
@@ -273,32 +226,27 @@ class DeviceRegistry:
         return True
 
     def get_device(self, device_id: str) -> Optional[DeviceInfo]:
-        """Get device information by ID."""
+        
         return self.devices.get(device_id)
 
     def get_devices_by_state(self, state: DeviceConnectionState) -> List[DeviceInfo]:
-        """Get all devices in a specific state."""
+        
         return [device for device in self.devices.values() if device.state == state]
 
     def get_devices_by_type(self, device_type: DeviceType) -> List[DeviceInfo]:
-        """Get all devices of a specific type."""
+        
         return [device for device in self.devices.values() if device.device_type == device_type]
 
     def get_recording_devices(self) -> List[DeviceInfo]:
-        """Get all devices currently recording."""
+        
         return self.get_devices_by_state(DeviceConnectionState.RECORDING)
 
     def get_online_devices(self) -> List[DeviceInfo]:
-        """Get all online devices."""
+        
         return self.get_devices_by_state(DeviceConnectionState.ONLINE)
 
     def check_heartbeat_timeouts(self) -> List[str]:
-        """
-        Check for devices with heartbeat timeouts.
         
-        Returns:
-            List of device IDs that have timed out
-        """
         current_time = datetime.now(timezone.utc)
         timed_out_devices = []
 
@@ -315,26 +263,23 @@ class DeviceRegistry:
         return timed_out_devices
 
     def get_all_devices(self) -> Dict[str, DeviceInfo]:
-        """Get all registered devices."""
+        
         return self.devices.copy()
 
     def get_device_count(self) -> int:
-        """Get total number of registered devices."""
+        
         return len(self.devices)
 
     def get_device_count_by_state(self, state: DeviceConnectionState) -> int:
-        """Get count of devices in a specific state."""
+        
         return len(self.get_devices_by_state(state))
 
 
 class DeviceManager:
-    """
-    High-level device manager coordinating discovery and registry.
-    Implements the device discovery and registration requirements from the MVP checklist.
-    """
+    
 
     def __init__(self):
-        """Initialize the device manager."""
+        
         self.registry = DeviceRegistry()
         self.discovery_service = NetworkDiscoveryService()
         self._running = False
@@ -345,12 +290,7 @@ class DeviceManager:
         self.discovery_service.add_discovery_listener(self._on_device_lost)
 
     async def start(self) -> bool:
-        """
-        Start device management services.
         
-        Returns:
-            True if started successfully
-        """
         try:
             
             if not await self.discovery_service.start_discovery():
@@ -369,7 +309,7 @@ class DeviceManager:
             return False
 
     async def stop(self) -> None:
-        """Stop device management services."""
+        
         try:
             self._running = False
 
@@ -390,7 +330,7 @@ class DeviceManager:
             logger.error(f"Error stopping device manager: {e}")
 
     async def _monitoring_loop(self) -> None:
-        """Background monitoring loop for device health."""
+        
         while self._running:
             try:
                 
@@ -410,13 +350,13 @@ class DeviceManager:
                 await asyncio.sleep(5.0)
 
     def _on_device_discovered(self, event_type: str, discovered_device: DiscoveredDevice) -> None:
-        """Handle device discovery events."""
+        
         if event_type == "discovered":  
             device_id = self.registry.register_device(discovered_device)
             logger.info(f"Device discovered and registered: {device_id}")
 
     def _on_device_lost(self, event_type: str, lost_device: DiscoveredDevice) -> None:
-        """Handle device loss events."""
+        
         if event_type == "lost":  
             
             service_name = lost_device.service_name
@@ -428,17 +368,7 @@ class DeviceManager:
                     break
 
     def add_device_manually(self, ip_address: str, port: int, device_name: str) -> Optional[str]:
-        """
-        Manually add device if mDNS fails.
         
-        Args:
-            ip_address: Device IP address
-            port: Device port
-            device_name: Device name
-            
-        Returns:
-            Device ID if added successfully, None otherwise
-        """
         try:
             
             discovered_device = DiscoveredDevice(
@@ -461,31 +391,23 @@ class DeviceManager:
             return None
 
     async def refresh_discovery(self) -> None:
-        """Refresh device discovery."""
+        
         await self.discovery_service.refresh_discovery()
 
     def get_registry(self) -> DeviceRegistry:
-        """Get the device registry."""
+        
         return self.registry
 
     def add_status_callback(self, callback: Callable[[str, DeviceInfo, str], None]) -> None:
-        """Add callback for device status changes."""
+        
         self.registry.add_status_callback(callback)
 
     def remove_status_callback(self, callback: Callable[[str, DeviceInfo, str], None]) -> None:
-        """Remove device status callback."""
+        
         self.registry.remove_status_callback(callback)
 
     async def connect_to_device(self, device_id: str) -> bool:
-        """
-        Connect to a specific device.
         
-        Args:
-            device_id: ID of the device to connect to
-            
-        Returns:
-            True if connection successful, False otherwise
-        """
         try:
             device_info = self.registry.get_device(device_id)
             if not device_info:
@@ -495,7 +417,7 @@ class DeviceManager:
             
             self.registry.update_device_state(device_id, DeviceConnectionState.ONLINE)
 
-            
+            # TODO: Implement actual network connection logic
             
             logger.info(f"Connected to device: {device_id}")
             return True

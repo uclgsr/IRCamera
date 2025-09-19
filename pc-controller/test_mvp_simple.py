@@ -1,9 +1,5 @@
 #!/usr/bin/env python3
-"""
-Simplified MVP Test for IRCamera PC Controller Hub
 
-Tests core functionality without heavy dependencies
-"""
 
 import asyncio
 import sys
@@ -15,7 +11,7 @@ sys.path.insert(0, str(Path(__file__).parent / "src"))
 
 
 def test_imports():
-    """Test that core modules can be imported."""
+    
     print("\n=== Testing Core Imports ===")
 
     try:
@@ -44,7 +40,7 @@ def test_imports():
 
 
 async def test_basic_discovery():
-    """Test basic discovery functionality."""
+    
     print("\n=== Testing Basic Discovery ===")
 
     try:
@@ -77,7 +73,7 @@ async def test_basic_discovery():
 
 
 async def test_basic_session():
-    """Test basic session functionality."""
+    
     print("\n=== Testing Basic Session ===")
 
     try:
@@ -116,7 +112,7 @@ async def test_basic_session():
 
 
 def test_configuration():
-    """Test configuration system."""
+    
     print("\n=== Testing Configuration ===")
 
     try:
@@ -138,7 +134,7 @@ def test_configuration():
 
 
 async def run_simple_tests():
-    """Run simplified MVP tests."""
+    
     print("IRCamera PC Controller Hub - Simplified MVP Test")
     print("=" * 60)
 

@@ -1,9 +1,4 @@
-"""
-Security Manager for IRCamera PC Controller
 
-Provides TLS/SSL certificate management, device authentication, and secure
-communication features to match the Android implementation.
-"""
 
 import hashlib
 import ipaddress
@@ -57,15 +52,10 @@ except ImportError:
 
 
 class SecurityManager:
-    """
-    Manages security features for the PC Controller including:
-    - TLS/SSL certificate generation and validation
-    - Device authentication tokens
-    - Secure connection context creation
-    """
+    
 
     def __init__(self):
-        """Initialize the security manager."""
+        
         self.cert_dir = Path(config.get("security.cert_directory", "certificates"))
         self.cert_dir.mkdir(exist_ok=True)
 
@@ -80,12 +70,7 @@ class SecurityManager:
         )  
 
     def initialize(self) -> bool:
-        """
-        Initialize the security manager by generating or loading certificates.
-
-        Returns:
-            bool: True if initialization successful, False otherwise
-        """
+        
         try:
             logger.info("Initializing security manager...")
 
@@ -107,15 +92,7 @@ class SecurityManager:
             return False
 
     def create_ssl_context(self, for_client_auth: bool = True) -> ssl.SSLContext:
-        """
-        Create SSL context for secure connections.
-
-        Args:
-            for_client_auth: Whether to require client certificate authentication
-
-        Returns:
-            ssl.SSLContext: Configured SSL context
-        """
+        
         context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
 
         
@@ -137,15 +114,7 @@ class SecurityManager:
     def validate_device_certificate(
             self, cert_data: bytes
     ) -> Tuple[bool, Optional[str]]:
-        """
-        Validate a device certificate for known Topdon devices.
-
-        Args:
-            cert_data: Raw certificate data
-
-        Returns:
-            Tuple[bool, Optional[str]]: (is_valid, device_type)
-        """
+        
         try:
             certificate = x509.load_pem_x509_certificate(cert_data)
 
@@ -181,16 +150,7 @@ class SecurityManager:
             return False, None
 
     def generate_auth_token(self, device_id: str, duration_minutes: int = 5) -> str:
-        """
-        Generate a time-based authentication token for a device.
-
-        Args:
-            device_id: Unique device identifier
-            duration_minutes: Token validity duration in minutes
-
-        Returns:
-            str: Authentication token
-        """
+        
         
         timestamp = str(int(time.time()))
         nonce = secrets.token_hex(8)
@@ -212,16 +172,7 @@ class SecurityManager:
     def validate_auth_token(
             self, token: str, max_age_seconds: int = 300
     ) -> Tuple[bool, Optional[str]]:
-        """
-        Validate an authentication token.
-
-        Args:
-            token: Authentication token to validate
-            max_age_seconds: Maximum token age in seconds
-
-        Returns:
-            Tuple[bool, Optional[str]]: (is_valid, device_id)
-        """
+        
         try:
             
             if token in self.auth_tokens:
@@ -259,7 +210,7 @@ class SecurityManager:
             return False, None
 
     def cleanup_expired_tokens(self) -> Any:
-        """Remove expired authentication tokens."""
+        
         current_time = time.time()
         expired_tokens = [
             token
@@ -274,7 +225,7 @@ class SecurityManager:
             logger.debug(f"Cleaned up {len(expired_tokens)} expired tokens")
 
     def _load_ca_certificate(self) -> bool:
-        """Load existing CA certificate if available."""
+        
         try:
             if self.ca_cert_path.exists() and self.ca_key_path.exists():
                 
@@ -287,7 +238,7 @@ class SecurityManager:
         return False
 
     def _load_server_certificate(self) -> bool:
-        """Load existing server certificate if available."""
+        
         try:
             if self.server_cert_path.exists() and self.server_key_path.exists():
                 
@@ -300,7 +251,7 @@ class SecurityManager:
         return False
 
     def _generate_ca_certificate(self):
-        """Generate a new CA certificate and private key."""
+        
         
         private_key = rsa.generate_private_key(
             public_exponent=65537,
@@ -349,7 +300,7 @@ class SecurityManager:
         logger.info(f"Generated CA certificate: {self.ca_cert_path}")
 
     def _generate_server_certificate(self):
-        """Generate a new server certificate signed by the CA."""
+        
         
         with open(self.ca_cert_path, "rb") as f:
             ca_cert = x509.load_pem_x509_certificate(f.read())

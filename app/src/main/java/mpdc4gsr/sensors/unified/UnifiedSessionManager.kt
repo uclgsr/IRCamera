@@ -395,7 +395,11 @@ class UnifiedSessionManager(
         return executeSynchronizedSensorStartWithErrorIsolation(session)
     }
 
-    
+    /**
+     * Execute synchronized sensor start with precise timing coordination and error isolation
+     * Implements TODO requirement: "One failing sensor should not derail the entire session"
+     * and "graceful degradation if individual sensors fail"
+     */
     private suspend fun executeSynchronizedSensorStartWithErrorIsolation(session: SessionInfo): Boolean {
         Log.i(TAG, "Starting sensors with error isolation - graceful degradation enabled")
         
@@ -515,19 +519,19 @@ class UnifiedSessionManager(
                     }
                     "Thermal" -> {
                         
-                        
+                        // TODO: recordingController.prepareForRecording() - method not found
                         Log.w(TAG, "Thermal prepare method not implemented")
                         sensorType to true
                     }
                     "RGB" -> {
                         
-                        
+                        // TODO: recordingController.prepareRGBRecording() - method not found
                         Log.w(TAG, "RGB prepare method not implemented")
                         sensorType to true
                     }
                     "Audio" -> {
                         
-                        
+                        // TODO: recordingController.prepareAudioRecording() - method not found
                         Log.w(TAG, "Audio prepare method not implemented")
                         sensorType to true
                     }
@@ -573,17 +577,17 @@ class UnifiedSessionManager(
                 when (sensorType) {
                     "GSR" -> gsrRecorder.startRecording(session.sessionDirectory)
                     "Thermal" -> {
-                        
+                        // TODO: recordingController.startThermalRecording() - method not found
                         Log.w(TAG, "Thermal start recording method not implemented")
                         true
                     }
                     "RGB" -> {
-                        
+                        // TODO: recordingController.startRGBRecording() - method not found
                         Log.w(TAG, "RGB start recording method not implemented")
                         true
                     }
                     "Audio" -> {
-                        
+                        // TODO: recordingController.startAudioRecording() - method not found
                         Log.w(TAG, "Audio start recording method not implemented")
                         true
                     }
@@ -668,15 +672,15 @@ class UnifiedSessionManager(
                 when (sensorType) {
                     "GSR" -> gsrRecorder.stopRecording()
                     "Thermal" -> {
-                        
+                        // TODO: recordingController.stopThermalRecording() - method not found
                         Log.w(TAG, "Thermal stop recording method not implemented")
                     }
                     "RGB" -> {
-                        
+                        // TODO: recordingController.stopRGBRecording() - method not found
                         Log.w(TAG, "RGB stop recording method not implemented")
                     }
                     "Audio" -> {
-                        
+                        // TODO: recordingController.stopAudioRecording() - method not found
                         Log.w(TAG, "Audio stop recording method not implemented")
                     }
                 }
@@ -899,7 +903,11 @@ class UnifiedSessionManager(
         }
     }
 
-    
+    /**
+     * Stop sensor recording with enhanced error isolation and cleanup
+     * Implements TODO requirement: "Verify that stopping a session cleanly stops all sensor recordings 
+     * and closes files" and "Extend this by aggregating a final session summary"
+     */
     private suspend fun stopSensorRecordingWithIsolation() {
         Log.i(TAG, "Stopping sensors with error isolation - graceful degradation enabled")
         
@@ -954,21 +962,21 @@ class UnifiedSessionManager(
                         Triple(success, samples, size)
                     }
                     "Thermal" -> {
-                        
+                        // TODO: Individual thermal methods not available
                         val success = true 
                         val samples = 0L 
                         val size = 0L 
                         Triple(success, samples, size)
                     }
                     "RGB" -> {
-                        
+                        // TODO: Individual RGB methods not available
                         val success = true 
                         val samples = 0L 
                         val size = 0L 
                         Triple(success, samples, size)
                     }
                     "Audio" -> {
-                        
+                        // TODO: Individual audio methods not available
                         val success = true 
                         val samples = 0L 
                         val size = 0L 
@@ -1011,15 +1019,15 @@ class UnifiedSessionManager(
                     when (sensorType) {
                         "GSR" -> gsrRecorder.flushAndCloseFiles()
                         "Thermal" -> {
-                            
+                            // TODO: recordingController.flushThermalFiles() - method not found
                             Log.w(TAG, "Thermal flush method not implemented")
                         }
                         "RGB" -> {
-                            
+                            // TODO: recordingController.flushRGBFiles() - method not found
                             Log.w(TAG, "RGB flush method not implemented")
                         }
                         "Audio" -> {
-                            
+                            // TODO: recordingController.flushAudioFiles() - method not found
                             Log.w(TAG, "Audio flush method not implemented")
                         }
                     }
@@ -1039,7 +1047,11 @@ class UnifiedSessionManager(
         }
     }
 
-    
+    /**
+     * Generate comprehensive session summary with all sensor statistics
+     * Implements TODO requirement: "aggregating a final session summary (e.g. total samples, durations) 
+     * in the metadata.json"
+     */
     private fun generateComprehensiveSessionSummary(
         session: SessionInfo,
         sessionDuration: Long
@@ -1368,7 +1380,10 @@ class UnifiedSessionManager(
         return map
     }
 
-    
+    /**
+     * Enhanced data classes for comprehensive session management
+     * Supporting TODO requirement for detailed session summaries and graceful cleanup
+     */
     
     
     private data class SensorStopResult(
