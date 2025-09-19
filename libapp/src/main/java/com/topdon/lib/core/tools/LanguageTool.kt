@@ -6,7 +6,7 @@ import com.topdon.lib.core.R
 object LanguageTool {
 
     fun showLanguage(context: Context): String {
-        return context.getString(R.string.english)
+        return "English"
     }
 
     fun useLanguage(context: Context): String {
