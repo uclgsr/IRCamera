@@ -23,7 +23,7 @@
             android:textSize="16sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="点(P)" />
+            tools:text="Point(P)" />
 
         <TextView
             android:id="@+id/tv_range_title"
@@ -38,7 +38,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_title"
             app:layout_constraintWidth_percent="0.5"
-            tools:text="最低温-最高温" />
+            tools:text="Min Temp-Max Temp" />
 
         <TextView
             android:id="@+id/tv_range_value"
@@ -90,7 +90,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintWidth_percent="0.5"
-            tools:text="L1 平均温" />
+            tools:text="L1 Avg Temp" />
 
         <TextView
             android:id="@+id/tv_average_value"
@@ -139,7 +139,7 @@
             android:textSize="14sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="L1 注释" />
+            tools:text="L1 Comment" />
 
         <TextView
             android:id="@+id/tv_explain_value"
@@ -153,7 +153,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_explain_title"
-            tools:text="Open阀门" />
+            tools:text="OpenValve" />
 
         <View
             android:id="@+id/view_line_explain"

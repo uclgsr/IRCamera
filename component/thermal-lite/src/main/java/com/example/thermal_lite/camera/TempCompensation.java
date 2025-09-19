@@ -158,7 +158,7 @@ public class TempCompensation {
                         }
                     } else if (HANDLER_KEY_AFTER == msg.what) {
                         if (DeviceIrcmdControlManager.getInstance().getIrcmdEngine() != null) {
-                            Log.d(TAG, "打快门");
+                            Log.d(TAG, "Shutter Release");
 
                             IrcmdError advManualFFCUpdateResult = DeviceIrcmdControlManager.getInstance().getIrcmdEngine()
                                     .advManualFFCUpdate(CommonParams.FFCShutterBehaviorMode.ONLY_B_UPDATE);
@@ -171,7 +171,7 @@ public class TempCompensation {
                         }
                     }
                 } catch (Exception e) {
-                    Log.d(TAG, "温度补偿异常=" + e.getMessage());
+                    Log.d(TAG, "Temperature Compensation Error=" + e.getMessage());
                 }
             }
         };

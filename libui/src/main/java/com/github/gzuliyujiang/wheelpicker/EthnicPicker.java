@@ -137,24 +137,24 @@ public class EthnicPicker extends OptionPicker {
             case EthnicSpec.DEFAULT:
                 EthnicEntity other = new EthnicEntity();
                 other.setCode("97");
-                other.setName("其他");
+                other.setName("Other");
                 other.setSpelling("Other");
                 data.add(other);
                 EthnicEntity foreign = new EthnicEntity();
                 foreign.setCode("98");
-                foreign.setName("外国血统");
+                foreign.setName("Foreign Ancestry");
                 foreign.setSpelling("Foreign");
                 data.add(foreign);
                 break;
             case EthnicSpec.SEVENTH_NATIONAL_CENSUS:
                 EthnicEntity unrecognized = new EthnicEntity();
                 unrecognized.setCode("97");
-                unrecognized.setName("未定族称human口");
+                unrecognized.setName("Undetermined EthnicityhumanPopulation");
                 unrecognized.setSpelling("Unrecognized");
                 data.add(unrecognized);
                 EthnicEntity naturalization = new EthnicEntity();
                 naturalization.setCode("98");
-                naturalization.setName("入籍");
+                naturalization.setName("Naturalized");
                 naturalization.setSpelling("Naturalization");
                 data.add(naturalization);
                 break;

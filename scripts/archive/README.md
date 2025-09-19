@@ -115,11 +115,11 @@ chcp 65001
 
 call gradlew clean
 
-echo "开始编译[variant]版本"
+echo "Start Compilation[variant]Version"
 call gradlew :app:assembleRelease
 
-echo "编译打包完成，apk文件在根目录outputs/"
-echo "[variant]版本APK已完成"
+echo "Build Package Complete，apkFile in Root Directoryoutputs/"
+echo "[variant]VersionAPKCompleted"
 
 pause
 ```
