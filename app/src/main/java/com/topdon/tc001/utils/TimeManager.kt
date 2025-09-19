@@ -424,7 +424,7 @@ class TimeManager(
 
                     // Adaptive delay based on network performance
                     val avgLatency = if (measurements.isNotEmpty()) measurements.average() else 0.0
-                    val delayMs = if (avgLatency > HIGH_LATENCY_THRESHOLD_MS) 500 else 100
+                    val delayMs = if (avgLatency > HIGH_LATENCY_THRESHOLD_MS) 500L else 100L
                     
                     delay(delayMs)
                 } catch (e: Exception) {
