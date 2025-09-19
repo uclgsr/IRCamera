@@ -54,7 +54,7 @@ public class UnifiedBleExample {
             public void onTopdonDeviceFound(BluetoothDevice device, UnifiedBleManager.DeviceType type, int rssi, byte[] scanRecord) {
                 String deviceName = BluetoothPermissionUtils.getDeviceName(context, device);
                 String deviceAddress = BluetoothPermissionUtils.getDeviceAddress(context, device);
-                Log.i(TAG, "Found Topdon device: " + deviceName + " (" + deviceAddress + ") Type: " + type + " RSSI: " + rssi);
+                Log.i(TAG, "Found MPDC4GSR device: " + deviceName + " (" + deviceAddress + ") Type: " + type + " RSSI: " + rssi);
 
                 if (type == UnifiedBleManager.DeviceType.MPDC4GSR_THERMAL && topdonThermalDevice == null) {
                     connectToTopdonThermalDevice(device);
