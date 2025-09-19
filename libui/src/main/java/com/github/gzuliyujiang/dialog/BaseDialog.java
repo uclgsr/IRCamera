@@ -30,7 +30,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StyleRes;
 
-import com.topdon.lib.ui.R;
+import com.mpdc4gsr.lib.ui.R;
 
 @SuppressWarnings({"WeakerAccess", "unused"})
 public abstract class BaseDialog extends Dialog implements DialogInterface.OnShowListener, DialogInterface.OnDismissListener {

@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.topdon.module.thermal.ir"
+    namespace = "com.mpdc4gsr.module.thermal.ir"
     compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {

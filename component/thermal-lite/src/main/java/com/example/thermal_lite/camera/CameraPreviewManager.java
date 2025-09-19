@@ -42,8 +42,8 @@ import com.example.thermal_lite.ui.activity.IrDisplayActivity;
 import com.example.thermal_lite.util.CommonUtil;
 import com.infisense.usbir.utils.IRImageHelp;
 import com.infisense.usbir.utils.PseudocodeUtils;
-import com.topdon.lib.core.bean.AlarmBean;
-import com.topdon.lib.ui.widget.LiteSurfaceView;
+import com.mpdc4gsr.lib.core.bean.AlarmBean;
+import com.mpdc4gsr.lib.ui.widget.LiteSurfaceView;
 
 import java.nio.ByteBuffer;
 import java.util.List;

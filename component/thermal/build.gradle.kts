@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.topdon.module.thermal"
+    namespace = "com.mpdc4gsr.module.thermal"
     compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {

@@ -73,7 +73,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@id/cl_close" />
 
-            <com.topdon.lib.core.view.MyTextView
+            <com.mpdc4gsr.lib.core.view.MyTextView
                 android:id="@+id/tv_alarm_high"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -145,7 +145,7 @@
                 tools:text="56" />
 
 
-            <com.topdon.lib.core.view.MyTextView
+            <com.mpdc4gsr.lib.core.view.MyTextView
                 android:id="@+id/tv_alarm_low"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -228,7 +228,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/et_alarm_low" />
 
-            <com.topdon.lib.core.view.MyTextView
+            <com.mpdc4gsr.lib.core.view.MyTextView
                 android:id="@+id/tv_alarm_mark"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -410,7 +410,7 @@
                     app:layout_constraintTop_toTopOf="@id/iv_check_matrix" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <com.topdon.lib.core.view.MyTextView
+            <com.mpdc4gsr.lib.core.view.MyTextView
                 android:id="@+id/tv_alarm_ringtone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

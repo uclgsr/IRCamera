@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="#16131e">
 
-    <com.topdon.lib.core.view.TitleView
+    <com.mpdc4gsr.lib.core.view.TitleView
         android:id="@+id/title_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -379,7 +379,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@id/tv_ambient_humidity" />
 
-                <com.topdon.lib.ui.widget.TipsSeekBar
+                <com.mpdc4gsr.lib.ui.widget.TipsSeekBar
                     android:id="@+id/tip_seek_humidity"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -465,7 +465,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@id/tv_emissivity" />
 
-                <com.topdon.lib.ui.widget.TipsSeekBar
+                <com.mpdc4gsr.lib.ui.widget.TipsSeekBar
                     android:id="@+id/tip_seek_emissivity"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"

@@ -9,7 +9,7 @@ ksp {
 }
 
 android {
-    namespace = "com.topdon.libcom"
+    namespace = "com.mpdc4gsr.libcom"
     compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {

@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "com.topdon.module.user"
+    namespace = "com.mpdc4gsr.module.user"
     compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {

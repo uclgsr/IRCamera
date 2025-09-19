@@ -7,7 +7,7 @@
     android:background="@android:color/black"
     android:fitsSystemWindows="true">
 
-    <com.topdon.lib.core.view.TitleView
+    <com.mpdc4gsr.lib.core.view.TitleView
         android:id="@+id/title_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -101,7 +101,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <com.topdon.module.thermal.ir.view.MyGSYVideoPlayer
+    <com.mpdc4gsr.module.thermal.ir.view.MyGSYVideoPlayer
         android:id="@+id/gsy_play"
         android:layout_width="0dp"
         android:layout_height="0dp"

@@ -22,7 +22,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintWidth_percent="0.24" />
 
-    <com.topdon.lms.sdk.weiget.LmsLoadView
+    <com.mpdc4gsr.lms.sdk.weiget.LmsLoadView
         android:id="@+id/lms_load_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

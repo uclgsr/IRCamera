@@ -53,7 +53,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_title" />
 
-        <com.topdon.lib.ui.widget.IndicateView
+        <com.mpdc4gsr.lib.ui.widget.IndicateView
             android:id="@+id/indicate_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

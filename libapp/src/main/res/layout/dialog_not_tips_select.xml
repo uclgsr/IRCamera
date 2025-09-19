@@ -31,7 +31,7 @@
         app:layout_constraintTop_toBottomOf="@id/tv_title"
         tools:text="在图像上绘制一根线段，查看线段内的温度变化趋势。" />
 
-    <com.topdon.lib.core.view.MyTextView
+    <com.mpdc4gsr.lib.core.view.MyTextView
         android:id="@+id/tv_select"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
