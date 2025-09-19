@@ -19,7 +19,7 @@ class ThermalUsbReceiver : BroadcastReceiver() {
 
     companion object {
         private const val TAG = "ThermalUsbReceiver"
-        private const val USB_PERMISSION_ACTION = "com.topdon.tc001.USB_PERMISSION"
+        private const val USB_PERMISSION_ACTION = "mpdc4gsr.USB_PERMISSION"
     }
 
     override fun onReceive(context: Context?, intent: Intent?) {

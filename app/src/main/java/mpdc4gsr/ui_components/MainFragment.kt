@@ -446,7 +446,7 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
                 try {
                     val intent = Intent(
                         requireContext(),
-                        Class.forName("com.topdon.tc001.gsr.GSRQuickRecordingActivity")
+                        Class.forName("mpdc4gsr.sensors.gsr.GSRQuickRecordingActivity")
                     )
                     startActivity(intent)
                 } catch (e: ClassNotFoundException) {

@@ -569,7 +569,7 @@ class ThermalCameraRecorder(
                         context: android.content.Context?,
                         intent: android.content.Intent?
                     ) {
-                        if ("com.topdon.tc001.USB_PERMISSION" == intent?.action) {
+                        if ("mpdc4gsr.USB_PERMISSION" == intent?.action) {
                             val device =
                                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
                                     intent.getParcelableExtra(
@@ -601,7 +601,7 @@ class ThermalCameraRecorder(
                 }
 
                 // Register receiver
-                val filter = android.content.IntentFilter("com.topdon.tc001.USB_PERMISSION")
+                val filter = android.content.IntentFilter("mpdc4gsr.USB_PERMISSION")
                 context.registerReceiver(permissionReceiver, filter)
 
                 // Request permission

@@ -550,7 +550,7 @@ class SessionManager(
      */
     suspend fun initializeSessionWithWorkflow(
         sessionConfig: SessionConfig,
-        permissionController: com.topdon.tc001.permissions.PermissionController? = null
+        permissionController: mpdc4gsr.permissions.PermissionController? = null
     ): Boolean = withContext(Dispatchers.IO) {
         try {
             logger.log(
@@ -581,7 +581,7 @@ class SessionManager(
 
     private suspend fun setupWorkflowSteps(
         config: SessionConfig,
-        permissionController: com.topdon.tc001.permissions.PermissionController?
+        permissionController: mpdc4gsr.permissions.PermissionController?
     ) {
         workflowSteps.clear()
         currentStepIndex = 0
