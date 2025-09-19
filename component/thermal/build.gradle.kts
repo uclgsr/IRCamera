@@ -85,11 +85,11 @@ android {
 dependencies {
     coreLibraryDesugaring(libs.desugar.jdk.libs)
     implementation(project(":libapp"))
-    implementation(project(":libcom"))
+    // implementation(project(":libcom")) // CONSOLIDATED into libapp - already included via libapp
     implementation(project(":libir"))
     implementation(project(":libui"))
-    implementation(project(":libmenu"))
-    implementation(project(":libmatrix"))
+    // implementation(project(":libmenu")) // CONSOLIDATED into libapp - already included via libapp
+    // implementation(project(":libmatrix")) // CONSOLIDATED into libapp - already included via libapp
     implementation(project(":component:pseudo"))
     implementation(project(":BleModule"))
     implementation(libs.bundles.ui.common)

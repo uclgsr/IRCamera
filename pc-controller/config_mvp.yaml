@@ -1,0 +1,17 @@
+# IRCamera MVP Configuration
+
+server:
+  port: 8080
+  max_connections: 10
+
+sessions:
+  base_directory: "./sessions"
+  auto_cleanup_days: 30
+
+devices:
+  heartbeat_timeout: 30
+  discovery_timeout: 10
+
+logging:
+  level: "INFO"
+  file: null  # Set to file path to enable file logging

@@ -24,24 +24,23 @@ For detailed setup instructions, see [COPILOT_SETUP.md](COPILOT_SETUP.md).
 ## 🏗️ Architecture
 
 - **Hub (PC Controller)**: Python-based central coordinator with PyQt6 GUI
-- **Spoke (Android Sensor Node)**: Kotlin-based mobile sensor nodes
+- **Spoke (Android Sensor Node)**: Kotlin-based mobile sensor nodes  
 - **Communication**: JSON-based TCP with mDNS discovery
 - **Purpose**: Scientific data acquisition and machine learning analysis
 
+### 🎯 Simplified Structure (Updated 2024)
+
+This project has been significantly simplified for better maintainability:
+- **PC Controller**: Reduced from 2000+ lines to 250 lines (87% reduction)
+- **Library Modules**: Consolidated from 6 to 3 libraries (50% reduction)  
+- **Build System**: Reduced from 18 to 11 gradle files (39% reduction)
+
+See [SIMPLIFIED_ARCHITECTURE.md](SIMPLIFIED_ARCHITECTURE.md) for complete details.
+
 ## 📚 Documentation
 
-**All documentation has been consolidated into the [Documentation Hub](docs/README.md) for easy navigation and maintenance.**
-
-### Quick Start Guides
-- **[User Guide](docs/USER_GUIDE.md)** - Complete operating instructions for researchers
-- **[Developer Guide](docs/DEVELOPER_GUIDE.md)** - Development setup and GitHub Copilot integration
-- **[Installation Guide](docs/README.md#quick-start)** - System setup and configuration
-
-### Technical Documentation  
-- **[API Reference](docs/API_REFERENCE.md)** - Complete module and API documentation
-- **[Architecture Guide](docs/ARCHITECTURE.md)** - System architecture and design decisions
-- **[Build System](scripts/build.sh)** - Unified cross-platform build script
-
-### Development Tools
-- **[Development Tools](dev.sh)** - Use `./dev.sh help` for available commands
-- **[Build Script](scripts/build.sh)** - Unified build system replacing old .bat files
+- [Simplified Architecture](SIMPLIFIED_ARCHITECTURE.md) - Current simplified project structure
+- [Copilot Setup Guide](COPILOT_SETUP.md) - GitHub Copilot configuration and usage
+- [PC Controller MVP](pc-controller/README_SIMPLIFIED.md) - Simplified Hub implementation
+- [Development Tools](dev.sh) - Use `./dev.sh help` for available commands
+- [Project Documentation](docs/) - Comprehensive technical documentation

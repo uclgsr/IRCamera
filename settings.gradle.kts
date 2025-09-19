@@ -23,12 +23,12 @@ include(":component:thermal-ir")
 include(":component:thermal-lite")
 include(":component:pseudo")
 include(":component:user")
-include(":component:CommonComponent")
+// include(":component:CommonComponent") // CONSOLIDATED into thermal-lite
 include(":libapp")
-include(":libcom")
+// include(":libcom") // CONSOLIDATED into :libapp
 include(":libir")
-include(":libmatrix")
+// include(":libmatrix") // CONSOLIDATED into :libapp
 include(":libui")
-include(":libmenu")
+// include(":libmenu") // CONSOLIDATED into :libapp
 include(":BleModule")
 include(":RangeSeekBar")

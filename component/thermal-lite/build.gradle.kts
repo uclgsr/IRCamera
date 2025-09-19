@@ -66,11 +66,11 @@ android {
 dependencies {
     coreLibraryDesugaring(libs.desugar.jdk.libs)
     implementation(project(":libapp"))
-    implementation(project(":libcom"))
+    // implementation(project(":libcom")) // CONSOLIDATED into libapp - already included via libapp
     implementation(project(":libir"))
     implementation(project(":libui"))
-    implementation(project(":libmenu"))
-    implementation(project(":component:CommonComponent"))
+    // implementation(project(":libmenu")) // CONSOLIDATED into libapp - already included via libapp
+    // implementation(project(":component:CommonComponent")) // CONSOLIDATED into thermal-lite
     implementation(project(":component:pseudo"))
     implementation(project(":component:thermal-ir"))
     implementation(project(":BleModule"))
