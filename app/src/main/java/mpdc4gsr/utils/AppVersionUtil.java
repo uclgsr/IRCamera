@@ -175,7 +175,7 @@ public class AppVersionUtil {
 
         down.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
 
-        fileName = "topinfrared" + System.currentTimeMillis() + ".zip";
+        fileName = "mpdc4gsr" + System.currentTimeMillis() + ".zip";
         down.setDestinationInExternalFilesDir(mContext, Environment.DIRECTORY_DOWNLOADS, fileName);
         DownloadManager downloadManager = (DownloadManager) mContext.getSystemService(DOWNLOAD_SERVICE);
 
@@ -230,7 +230,7 @@ public class AppVersionUtil {
         } catch (Exception e) {
             XLog.e("bcf", "升级接口解析异常");
         }
-        fileName = "topinfrared" + System.currentTimeMillis() + ".zip";
+        fileName = "mpdc4gsr" + System.currentTimeMillis() + ".zip";
         String path = mContext.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath() + File.separator + fileName;
         XLog.e("bcf", "download path:" + path);
         params.setSaveFilePath(path);

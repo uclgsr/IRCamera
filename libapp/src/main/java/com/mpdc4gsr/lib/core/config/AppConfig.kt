@@ -1,9 +1,9 @@
-package com.topdon.lib.core.config
+package com.mpdc4gsr.lib.core.config
 
 object AppConfig {
 
     const val GOOGLE_APK_URL =
-        "https://play.google.com/store/apps/details?id=com.topdon.topInfrared"
+        "https://play.google.com/store/apps/details?id=com.mpdc4gsr.MPDC4GSR"
 
-    const val GOOGLE_APK_MARKET_URL = "market://details?id=com.topdon.topInfrared"
+    const val GOOGLE_APK_MARKET_URL = "market://details?id=com.mpdc4gsr.MPDC4GSR"
 }

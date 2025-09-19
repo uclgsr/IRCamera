@@ -20,20 +20,20 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class TopdonDevice implements UnifiedDevice {
-    private static final String TAG = "TopdonDevice";
+    private static final String TAG = "MPDC4GSRDevice";
 
-    private static final UUID TOPDON_SERVICE_UUID = UUID.fromString("6E400001-B5A3-F393-E0A9-E50E24DCCA9E");
-    private static final UUID TOPDON_DATA_CHAR_UUID = UUID.fromString("6E400003-B5A3-F393-E0A9-E50E24DCCA9E");
-    private static final UUID TOPDON_CMD_CHAR_UUID = UUID.fromString("6E400002-B5A3-F393-E0A9-E50E24DCCA9E");
+    private static final UUID MPDC4GSR_SERVICE_UUID = UUID.fromString("6E400001-B5A3-F393-E0A9-E50E24DCCA9E");
+    private static final UUID MPDC4GSR_DATA_CHAR_UUID = UUID.fromString("6E400003-B5A3-F393-E0A9-E50E24DCCA9E");
+    private static final UUID MPDC4GSR_CMD_CHAR_UUID = UUID.fromString("6E400002-B5A3-F393-E0A9-E50E24DCCA9E");
     private static final UUID CLIENT_CHARACTERISTIC_CONFIG = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb");
 
-    private static final UUID TOPDON_THERMAL_SERVICE_UUID = UUID.fromString("12345678-1234-5678-9012-123456789ABC");
-    private static final UUID TOPDON_THERMAL_DATA_CHAR_UUID = UUID.fromString("12345678-1234-5678-9012-123456789ABD");
+    private static final UUID MPDC4GSR_THERMAL_SERVICE_UUID = UUID.fromString("12345678-1234-5678-9012-123456789ABC");
+    private static final UUID MPDC4GSR_THERMAL_DATA_CHAR_UUID = UUID.fromString("12345678-1234-5678-9012-123456789ABD");
 
-    private static final byte TOPDON_START_THERMAL = 0x01;
-    private static final byte TOPDON_STOP_THERMAL = 0x02;
-    private static final byte TOPDON_START_ENV = 0x03;
-    private static final byte TOPDON_STOP_ENV = 0x04;
+    private static final byte MPDC4GSR_START_THERMAL = 0x01;
+    private static final byte MPDC4GSR_STOP_THERMAL = 0x02;
+    private static final byte MPDC4GSR_START_ENV = 0x03;
+    private static final byte MPDC4GSR_STOP_ENV = 0x04;
 
     private final BluetoothDevice bluetoothDevice;
     private final TopdonDeviceConfig config;
@@ -85,19 +85,19 @@ public class TopdonDevice implements UnifiedDevice {
                 if (status == BluetoothGatt.GATT_SUCCESS) {
                     Log.i(TAG, "Services discovered for Topdon device: " + getAddress());
 
-                    BluetoothGattService topdonService = gatt.getService(TOPDON_SERVICE_UUID);
+                    BluetoothGattService topdonService = gatt.getService(MPDC4GSR_SERVICE_UUID);
                     if (topdonService == null) {
 
-                        topdonService = gatt.getService(TOPDON_THERMAL_SERVICE_UUID);
+                        topdonService = gatt.getService(MPDC4GSR_THERMAL_SERVICE_UUID);
                     }
 
                     if (topdonService != null) {
-                        dataCharacteristic = topdonService.getCharacteristic(TOPDON_DATA_CHAR_UUID);
+                        dataCharacteristic = topdonService.getCharacteristic(MPDC4GSR_DATA_CHAR_UUID);
                         if (dataCharacteristic == null) {
-                            dataCharacteristic = topdonService.getCharacteristic(TOPDON_THERMAL_DATA_CHAR_UUID);
+                            dataCharacteristic = topdonService.getCharacteristic(MPDC4GSR_THERMAL_DATA_CHAR_UUID);
                         }
 
-                        commandCharacteristic = topdonService.getCharacteristic(TOPDON_CMD_CHAR_UUID);
+                        commandCharacteristic = topdonService.getCharacteristic(MPDC4GSR_CMD_CHAR_UUID);
 
                         if (dataCharacteristic != null && commandCharacteristic != null) {
 
@@ -141,8 +141,8 @@ public class TopdonDevice implements UnifiedDevice {
         @Override
         public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
             try {
-                if (characteristic.getUuid().equals(TOPDON_DATA_CHAR_UUID) ||
-                        characteristic.getUuid().equals(TOPDON_THERMAL_DATA_CHAR_UUID)) {
+                if (characteristic.getUuid().equals(MPDC4GSR_DATA_CHAR_UUID) ||
+                        characteristic.getUuid().equals(MPDC4GSR_THERMAL_DATA_CHAR_UUID)) {
                     byte[] data = characteristic.getValue();
 
                     if (data != null && data.length > 0) {
@@ -303,19 +303,19 @@ public class TopdonDevice implements UnifiedDevice {
 
             byte[] startCommand;
             switch (config.getDeviceType()) {
-                case TOPDON_THERMAL:
-                    startCommand = new byte[]{TOPDON_START_THERMAL};
+                case MPDC4GSR_THERMAL:
+                    startCommand = new byte[]{MPDC4GSR_START_THERMAL};
                     break;
-                case TOPDON_ENV:
-                    startCommand = new byte[]{TOPDON_START_ENV};
+                case MPDC4GSR_ENV:
+                    startCommand = new byte[]{MPDC4GSR_START_ENV};
                     break;
-                case TOPDON_MULTI:
+                case MPDC4GSR_MULTI:
 
-                    sendCommand(new byte[]{TOPDON_START_THERMAL});
-                    startCommand = new byte[]{TOPDON_START_ENV};
+                    sendCommand(new byte[]{MPDC4GSR_START_THERMAL});
+                    startCommand = new byte[]{MPDC4GSR_START_ENV};
                     break;
                 default:
-                    startCommand = new byte[]{TOPDON_START_THERMAL};
+                    startCommand = new byte[]{MPDC4GSR_START_THERMAL};
                     break;
             }
 
@@ -346,19 +346,19 @@ public class TopdonDevice implements UnifiedDevice {
 
             byte[] stopCommand;
             switch (config.getDeviceType()) {
-                case TOPDON_THERMAL:
-                    stopCommand = new byte[]{TOPDON_STOP_THERMAL};
+                case MPDC4GSR_THERMAL:
+                    stopCommand = new byte[]{MPDC4GSR_STOP_THERMAL};
                     break;
-                case TOPDON_ENV:
-                    stopCommand = new byte[]{TOPDON_STOP_ENV};
+                case MPDC4GSR_ENV:
+                    stopCommand = new byte[]{MPDC4GSR_STOP_ENV};
                     break;
-                case TOPDON_MULTI:
+                case MPDC4GSR_MULTI:
 
-                    sendCommand(new byte[]{TOPDON_STOP_THERMAL});
-                    stopCommand = new byte[]{TOPDON_STOP_ENV};
+                    sendCommand(new byte[]{MPDC4GSR_STOP_THERMAL});
+                    stopCommand = new byte[]{MPDC4GSR_STOP_ENV};
                     break;
                 default:
-                    stopCommand = new byte[]{TOPDON_STOP_THERMAL};
+                    stopCommand = new byte[]{MPDC4GSR_STOP_THERMAL};
                     break;
             }
 

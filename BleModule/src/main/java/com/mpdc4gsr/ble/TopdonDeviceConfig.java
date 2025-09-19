@@ -60,7 +60,7 @@ public class TopdonDeviceConfig {
 
     public static TopdonDeviceConfig createDefaultThermalConfig() {
         return new Builder()
-                .setDeviceType(UnifiedBleManager.DeviceType.TOPDON_THERMAL)
+                .setDeviceType(UnifiedBleManager.DeviceType.MPDC4GSR_THERMAL)
                 .setThermalResolution(RESOLUTION_256x192)
                 .setThermalFrameRate(FRAME_RATE_9HZ)
                 .setTemperatureRange(TEMP_RANGE_MINUS_20_TO_120)
@@ -73,7 +73,7 @@ public class TopdonDeviceConfig {
 
     public static TopdonDeviceConfig createDefaultEnvironmentalConfig() {
         return new Builder()
-                .setDeviceType(UnifiedBleManager.DeviceType.TOPDON_ENV)
+                .setDeviceType(UnifiedBleManager.DeviceType.MPDC4GSR_ENV)
                 .setEnvironmentalSensors(ENV_ALL)
                 .enableTimestamp(true)
                 .enableAutoReconnect(true)
@@ -82,7 +82,7 @@ public class TopdonDeviceConfig {
 
     public static TopdonDeviceConfig createHighResThermalConfig() {
         return new Builder()
-                .setDeviceType(UnifiedBleManager.DeviceType.TOPDON_THERMAL)
+                .setDeviceType(UnifiedBleManager.DeviceType.MPDC4GSR_THERMAL)
                 .setThermalResolution(RESOLUTION_640x480)
                 .setThermalFrameRate(FRAME_RATE_15HZ)
                 .setTemperatureRange(TEMP_RANGE_0_TO_250)
@@ -95,7 +95,7 @@ public class TopdonDeviceConfig {
 
     public static TopdonDeviceConfig createMultiSensorConfig() {
         return new Builder()
-                .setDeviceType(UnifiedBleManager.DeviceType.TOPDON_MULTI)
+                .setDeviceType(UnifiedBleManager.DeviceType.MPDC4GSR_MULTI)
                 .setThermalResolution(RESOLUTION_384x288)
                 .setThermalFrameRate(FRAME_RATE_15HZ)
                 .setTemperatureRange(TEMP_RANGE_MINUS_20_TO_120)
@@ -184,7 +184,7 @@ public class TopdonDeviceConfig {
     }
 
     public static class Builder {
-        private UnifiedBleManager.DeviceType deviceType = UnifiedBleManager.DeviceType.TOPDON_THERMAL;
+        private UnifiedBleManager.DeviceType deviceType = UnifiedBleManager.DeviceType.MPDC4GSR_THERMAL;
         private String thermalResolution = RESOLUTION_256x192;
         private double thermalFrameRate = FRAME_RATE_9HZ;
         private int temperatureRange = TEMP_RANGE_MINUS_20_TO_120;

@@ -22,16 +22,16 @@ import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class TopdonBleController {
-    private static final String TAG = "TopdonBleController";
+    private static final String TAG = "MPDC4GSRBleController";
 
-    private static final UUID TOPDON_SERVICE_UUID = UUID.fromString("6E400001-B5A3-F393-E0A9-E50E24DCCA9E");
-    private static final UUID TOPDON_DATA_CHAR_UUID = UUID.fromString("6E400003-B5A3-F393-E0A9-E50E24DCCA9E");
-    private static final UUID TOPDON_CMD_CHAR_UUID = UUID.fromString("6E400002-B5A3-F393-E0A9-E50E24DCCA9E");
+    private static final UUID MPDC4GSR_SERVICE_UUID = UUID.fromString("6E400001-B5A3-F393-E0A9-E50E24DCCA9E");
+    private static final UUID MPDC4GSR_DATA_CHAR_UUID = UUID.fromString("6E400003-B5A3-F393-E0A9-E50E24DCCA9E");
+    private static final UUID MPDC4GSR_CMD_CHAR_UUID = UUID.fromString("6E400002-B5A3-F393-E0A9-E50E24DCCA9E");
 
-    private static final UUID TOPDON_THERMAL_SERVICE_UUID = UUID.fromString("12345678-1234-5678-9012-123456789ABC");
-    private static final UUID TOPDON_THERMAL_DATA_CHAR_UUID = UUID.fromString("12345678-1234-5678-9012-123456789ABD");
+    private static final UUID MPDC4GSR_THERMAL_SERVICE_UUID = UUID.fromString("12345678-1234-5678-9012-123456789ABC");
+    private static final UUID MPDC4GSR_THERMAL_DATA_CHAR_UUID = UUID.fromString("12345678-1234-5678-9012-123456789ABD");
 
-    private static final String[] TOPDON_DEVICE_PATTERNS = {
+    private static final String[] MPDC4GSR_DEVICE_PATTERNS = {
             "Topdon",
             "TC001",
             "TC-001",
@@ -41,11 +41,11 @@ public class TopdonBleController {
             "TopdonSensor"
     };
 
-    private static final byte TOPDON_START_THERMAL = 0x01;
-    private static final byte TOPDON_STOP_THERMAL = 0x02;
-    private static final byte TOPDON_GET_TEMP_RANGE = 0x03;
-    private static final byte TOPDON_SET_TEMP_RANGE = 0x04;
-    private static final byte TOPDON_CALIBRATE = 0x05;
+    private static final byte MPDC4GSR_START_THERMAL = 0x01;
+    private static final byte MPDC4GSR_STOP_THERMAL = 0x02;
+    private static final byte MPDC4GSR_GET_TEMP_RANGE = 0x03;
+    private static final byte MPDC4GSR_SET_TEMP_RANGE = 0x04;
+    private static final byte MPDC4GSR_CALIBRATE = 0x05;
 
     private final Context context;
     private final UnifiedBleManager unifiedManager;
@@ -251,7 +251,7 @@ public class TopdonBleController {
     private boolean isTopdonDevice(String deviceName) {
         if (deviceName == null) return false;
 
-        for (String pattern : TOPDON_DEVICE_PATTERNS) {
+        for (String pattern : MPDC4GSR_DEVICE_PATTERNS) {
             if (deviceName.toLowerCase().contains(pattern.toLowerCase())) {
                 return true;
             }
@@ -263,14 +263,14 @@ public class TopdonBleController {
         String name = deviceName.toLowerCase();
 
         if (name.contains("tc001") || name.contains("tc-001") || name.contains("thermal")) {
-            return UnifiedBleManager.DeviceType.TOPDON_THERMAL;
+            return UnifiedBleManager.DeviceType.MPDC4GSR_THERMAL;
         } else if (name.contains("env") || name.contains("sensor")) {
-            return UnifiedBleManager.DeviceType.TOPDON_ENV;
+            return UnifiedBleManager.DeviceType.MPDC4GSR_ENV;
         } else if (name.contains("multi")) {
-            return UnifiedBleManager.DeviceType.TOPDON_MULTI;
+            return UnifiedBleManager.DeviceType.MPDC4GSR_MULTI;
         }
 
-        return UnifiedBleManager.DeviceType.TOPDON_THERMAL;
+        return UnifiedBleManager.DeviceType.MPDC4GSR_THERMAL;
     }
 
     public interface TopdonScanListener {

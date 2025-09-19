@@ -56,7 +56,7 @@ public class UnifiedBleExample {
                 String deviceAddress = BluetoothPermissionUtils.getDeviceAddress(context, device);
                 Log.i(TAG, "Found Topdon device: " + deviceName + " (" + deviceAddress + ") Type: " + type + " RSSI: " + rssi);
 
-                if (type == UnifiedBleManager.DeviceType.TOPDON_THERMAL && topdonThermalDevice == null) {
+                if (type == UnifiedBleManager.DeviceType.MPDC4GSR_THERMAL && topdonThermalDevice == null) {
                     connectToTopdonThermalDevice(device);
                 }
             }
@@ -127,7 +127,7 @@ public class UnifiedBleExample {
                     case SHIMMER_GSR:
                         hasShimmerGSR = true;
                         break;
-                    case TOPDON_THERMAL:
+                    case MPDC4GSR_THERMAL:
                         hasTopdonThermal = true;
                         break;
                 }
@@ -214,7 +214,7 @@ public class UnifiedBleExample {
                 case SHIMMER_GSR:
                     handleGSRData(device, data);
                     break;
-                case TOPDON_THERMAL:
+                case MPDC4GSR_THERMAL:
                     handleThermalData(device, data);
                     break;
                 default:

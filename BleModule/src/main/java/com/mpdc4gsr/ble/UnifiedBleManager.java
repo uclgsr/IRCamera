@@ -428,9 +428,9 @@ public class UnifiedBleManager {
         SHIMMER_GSR,        
         SHIMMER_PPG,        
         SHIMMER_IMU,        
-        TOPDON_THERMAL,     
-        TOPDON_ENV,         
-        TOPDON_MULTI,       
+        MPDC4GSR_THERMAL,     
+        MPDC4GSR_ENV,         
+        MPDC4GSR_MULTI,       
         UNKNOWN             
     }
 

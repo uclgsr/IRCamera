@@ -84,7 +84,7 @@ public class ComprehensiveIntegrationExample {
                 configureShimmerGSRDevice(device);
                 break;
 
-            case TOPDON_THERMAL:
+            case MPDC4GSR_THERMAL:
                 Log.d(TAG, "Configuring Topdon thermal camera: " + device.getName());
 
                 configureTopdonThermalDevice(device);
