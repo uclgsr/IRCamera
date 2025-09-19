@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicLong
  * High-performance buffered data writer for sensor data
  * Provides efficient writing with periodic flushing and proper cleanup
  */
-open class BufferedDataWriter(
+class BufferedDataWriter(
     private val outputFile: File,
     private val bufferSize: Int = 8192,
     private val flushIntervalMs: Long = 1000L,

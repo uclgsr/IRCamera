@@ -1210,6 +1210,17 @@ class ThermalCameraRecorder(
         val reflectedTemperature: Float
     )
 
+    data class ThermalFrameData(
+        val temperatureMatrix: Array<FloatArray>,
+        val minTemperature: Float,
+        val maxTemperature: Float,
+        val avgTemperature: Float,
+        val centerTemperature: Float,
+        val ambientTemperature: Float,
+        val emissivity: Float,
+        val reflectedTemperature: Float
+    )
+
     private fun generateThermalPreviewBitmap(
         thermalData: ThermalFrameData,
         width: Int,
