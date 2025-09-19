@@ -17,15 +17,5 @@
         <attr name="lms_dot_radius" format="dimension" />
         <attr name="lms_dot_move_rate" format="float" />
     </declare-styleable>
-  
-    <declare-styleable name="MenuSecondView">
-        <attr name="deviceType" format="enum">
-            <enum name="single_light" value="0" /> 
-            <enum name="double_light" value="1" /> 
-            <enum name="lite" value="2" />         
-            <enum name="tc007" value="3" />        
-            <enum name="gallery_edit" value="4" /> 
-        </attr>
-    </declare-styleable>
 
 </resources>
