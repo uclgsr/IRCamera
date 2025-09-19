@@ -6,7 +6,7 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.activity.ComponentActivity
 import androidx.lifecycle.lifecycleScope
-import mpdc4gsr.R
+import com.csl.irCamera.R
 import mpdc4gsr.controller.RecordingController
 import mpdc4gsr.data.SessionMetadata
 import kotlinx.coroutines.delay

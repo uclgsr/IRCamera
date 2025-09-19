@@ -49,7 +49,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/tv_title">
 
                     <!-- 去Connect -->
-                    <com.topdon.tc001.view.ConnectionGuideView
+                    <mpdc4gsr.ui_components.ConnectionGuideView
                         android:id="@+id/main_guide_tip1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -59,7 +59,7 @@
                         app:guide_text="@string/ts004_guide_text9"
                         app:layout_constraintTop_toTopOf="parent" />
 
-                    <com.topdon.tc001.view.ConnectionGuideView
+                    <mpdc4gsr.ui_components.ConnectionGuideView
                         android:id="@+id/main_guide_tip2"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -69,7 +69,7 @@
                         app:guide_text="@string/ts004_guide_text10"
                         app:layout_constraintTop_toBottomOf="@+id/main_guide_tip1" />
 
-                    <com.topdon.tc001.view.ConnectionGuideView
+                    <mpdc4gsr.ui_components.ConnectionGuideView
                         android:id="@+id/main_guide_tip3"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -80,7 +80,7 @@
                         app:guide_text="@string/ts004_guide_text11"
                         app:layout_constraintTop_toBottomOf="@+id/main_guide_tip2" />
 
-                    <com.topdon.tc001.view.ConnectionGuideView
+                    <mpdc4gsr.ui_components.ConnectionGuideView
                         android:id="@+id/main_guide_tip4"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -90,7 +90,7 @@
                         app:layout_constraintTop_toBottomOf="@+id/main_guide_tip3" />
 
                     <!-- DisconnectConnect -->
-                    <com.topdon.tc001.view.ConnectionGuideView
+                    <mpdc4gsr.ui_components.ConnectionGuideView
                         android:id="@+id/disconnect_tip1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -101,7 +101,7 @@
                         app:guide_text="@string/ts004_disconnect_tips2"
                         app:layout_constraintTop_toTopOf="parent" />
 
-                    <com.topdon.tc001.view.ConnectionGuideView
+                    <mpdc4gsr.ui_components.ConnectionGuideView
                         android:id="@+id/disconnect_tip2"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
