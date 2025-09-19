@@ -19,12 +19,12 @@ import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.listener.ChartTouchListener
 import com.github.mikephil.charting.listener.OnChartGestureListener
 import com.mpdc4gsr.lib.core.db.entity.ThermalEntity
-import com.topdon.module.thermal.ir.R
-import com.topdon.module.thermal.ir.chart.IRMyValueFormatter
-import com.topdon.module.thermal.ir.chart.YValueFormatter
-import com.topdon.module.thermal.ir.utils.ChartTools
+import com.mpdc4gsr.module.thermal.ir.R
+import com.mpdc4gsr.module.thermal.ir.chart.IRMyValueFormatter
+import com.mpdc4gsr.module.thermal.ir.chart.YValueFormatter
+import com.mpdc4gsr.module.thermal.ir.utils.ChartTools
 import com.mpdc4gsr.lib.core.R as LibR
-import com.topdon.module.thermal.R as ThermalR
+import com.mpdc4gsr.module.thermal.R as ThermalR
 
 class ChartMonitorView : LineChart, OnChartGestureListener {
     private val mHandler by lazy { Handler(Looper.getMainLooper()) }

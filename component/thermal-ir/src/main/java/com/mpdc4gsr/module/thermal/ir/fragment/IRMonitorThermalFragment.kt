@@ -34,11 +34,11 @@ import com.mpdc4gsr.lib.core.common.SaveSettingUtil
 import com.mpdc4gsr.lib.core.config.DeviceConfig
 import com.mpdc4gsr.lib.core.ktbase.BaseFragment
 import com.mpdc4gsr.lib.core.utils.ScreenUtil
-import com.topdon.module.thermal.ir.R
-import com.topdon.module.thermal.ir.activity.IRMonitorActivity
-import com.topdon.module.thermal.ir.bean.SelectPositionBean
-import com.topdon.module.thermal.ir.event.ThermalActionEvent
-import com.topdon.module.thermal.ir.repository.ConfigRepository
+import com.mpdc4gsr.module.thermal.ir.R
+import com.mpdc4gsr.module.thermal.ir.activity.IRMonitorActivity
+import com.mpdc4gsr.module.thermal.ir.bean.SelectPositionBean
+import com.mpdc4gsr.module.thermal.ir.event.ThermalActionEvent
+import com.mpdc4gsr.module.thermal.ir.repository.ConfigRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay

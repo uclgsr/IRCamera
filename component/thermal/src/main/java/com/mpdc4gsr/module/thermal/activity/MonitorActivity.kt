@@ -7,9 +7,9 @@ import com.blankj.utilcode.util.BarUtils
 import com.mpdc4gsr.lib.core.config.RouterConfig
 import com.mpdc4gsr.lib.core.ktbase.BaseActivity
 import com.mpdc4gsr.lib.core.navigation.NavigationManager
-import com.topdon.lib.ui.dialog.MonitorSelectDialog
-import com.topdon.module.thermal.R
-import com.topdon.module.thermal.fragment.event.ThermalActionEvent
+import com.mpdc4gsr.lib.ui.dialog.MonitorSelectDialog
+import com.mpdc4gsr.module.thermal.R
+import com.mpdc4gsr.module.thermal.fragment.event.ThermalActionEvent
 import org.greenrobot.eventbus.EventBus
 
 class MonitorActivity : BaseActivity(), View.OnClickListener {

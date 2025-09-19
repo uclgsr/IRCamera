@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import com.mpdc4gsr.lib.core.R
 import com.mpdc4gsr.lib.core.utils.ScreenUtil
-import com.topdon.lib.ui.databinding.DialogMonitorSelectBinding
+import com.mpdc4gsr.lib.ui.databinding.DialogMonitorSelectBinding
 
 
 

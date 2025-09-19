@@ -27,11 +27,11 @@ import com.mpdc4gsr.lib.core.repository.TC007Repository
 import com.mpdc4gsr.lib.core.socket.WebSocketProxy
 import com.mpdc4gsr.lib.core.tools.DeviceTools
 import com.mpdc4gsr.lib.core.viewmodel.FirmwareViewModel
-import com.topdon.lib.ui.SettingNightView
-import com.topdon.lms.sdk.weiget.TToast
-import com.topdon.module.user.R
-import com.topdon.module.user.dialog.DownloadProDialog
-import com.topdon.module.user.dialog.FirmwareInstallDialog
+import com.mpdc4gsr.lib.ui.SettingNightView
+import com.mpdc4gsr.lms.sdk.weiget.TToast
+import com.mpdc4gsr.module.user.R
+import com.mpdc4gsr.module.user.dialog.DownloadProDialog
+import com.mpdc4gsr.module.user.dialog.FirmwareInstallDialog
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus

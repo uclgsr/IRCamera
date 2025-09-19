@@ -8,7 +8,7 @@ import android.view.View
 import android.widget.PopupWindow
 import android.widget.SeekBar
 import androidx.core.view.isVisible
-import com.topdon.module.thermal.ir.databinding.PopSeekBarBinding
+import com.mpdc4gsr.module.thermal.ir.databinding.PopSeekBarBinding
 
 
 @SuppressLint("SetTextI18n")

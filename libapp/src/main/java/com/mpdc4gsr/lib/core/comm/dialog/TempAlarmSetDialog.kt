@@ -1,5 +1,7 @@
 package com.mpdc4gsr.lib.core.comm.dialog
 
+import com.mpdc4gsr.lib.core.R
+
 import android.app.Dialog
 import android.content.Context
 import android.graphics.drawable.ColorDrawable
@@ -19,7 +21,6 @@ import com.bumptech.glide.Glide
 import com.mpdc4gsr.lib.core.bean.AlarmBean
 import com.mpdc4gsr.lib.core.tools.ToastTools
 import com.mpdc4gsr.lib.core.tools.UnitTools
-import com.mpdc4gsr.lib.core.comm.R
 
 class TempAlarmSetDialog(
     context: Context,
@@ -222,11 +223,11 @@ class TempAlarmSetDialog(
                     null
                 }
             if (inputHigh != null && inputLow != null && inputLow > inputHigh) {
-                ToastTools.showShort(com.topdon.lib.ui.R.string.tip_input_format)
+                ToastTools.showShort(R.string.tip_input_format)
                 return
             }
         } catch (e: Exception) {
-            ToastTools.showShort(com.topdon.lib.ui.R.string.tip_input_format)
+            ToastTools.showShort(R.string.tip_input_format)
             return
         }
 

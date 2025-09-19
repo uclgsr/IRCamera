@@ -13,17 +13,17 @@ import com.mpdc4gsr.lib.core.ktbase.BaseActivity
 import com.mpdc4gsr.lib.core.tools.FileTools
 import com.mpdc4gsr.lib.core.tools.GlideLoader
 import com.mpdc4gsr.lib.core.view.TitleView
-import com.mpdc4gsr.lib.core.comm.PDFHelp
-import com.topdon.module.thermal.ir.R
-import com.topdon.module.thermal.ir.report.bean.ReportBean
-import com.topdon.module.thermal.ir.report.view.ReportIRShowView
-import com.topdon.module.thermal.ir.report.view.ReportInfoView
-import com.topdon.module.thermal.ir.report.view.WatermarkView
+import com.mpdc4gsr.libcom.PDFHelp
+import com.mpdc4gsr.module.thermal.ir.R
+import com.mpdc4gsr.module.thermal.ir.report.bean.ReportBean
+import com.mpdc4gsr.module.thermal.ir.report.view.ReportIRShowView
+import com.mpdc4gsr.module.thermal.ir.report.view.ReportInfoView
+import com.mpdc4gsr.module.thermal.ir.report.view.WatermarkView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.File
 import com.mpdc4gsr.lib.core.R as LibCoreR
-import com.topdon.lib.ui.R as UiR
+import com.mpdc4gsr.lib.ui.R as UiR
 
 
 

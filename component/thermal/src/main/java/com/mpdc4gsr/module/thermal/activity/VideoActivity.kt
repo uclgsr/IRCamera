@@ -9,7 +9,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import com.blankj.utilcode.util.BarUtils
 import com.mpdc4gsr.lib.core.ktbase.BaseActivity
-import com.topdon.module.thermal.R
+import com.mpdc4gsr.module.thermal.R
 import java.io.File
 import com.mpdc4gsr.lib.core.R as LibR
 

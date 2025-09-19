@@ -11,7 +11,7 @@ import android.util.AttributeSet
 import android.view.View
 import androidx.core.content.ContextCompat
 import com.blankj.utilcode.util.SizeUtils
-import com.mpdc4gsr.lib.core.R as MenuR
+import com.mpdc4gsr.lib.core.R
 
 
 class ColorView : View {
@@ -53,7 +53,7 @@ class ColorView : View {
         defStyleRes,
     ) {
         paint.color = 0xffffffff.toInt()
-        triangleDrawable = ContextCompat.getDrawable(context, MenuR.drawable.svg_color_select)!!
+        triangleDrawable = ContextCompat.getDrawable(context, R.drawable.svg_color_select)!!
     }
 
     @SuppressLint("DrawAllocation")

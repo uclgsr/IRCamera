@@ -16,7 +16,7 @@ class DeviceBroadcastReceiver : BroadcastReceiver() {
 
     companion object {
 
-        const val ACTION_USB_PERMISSION = "com.topdon.topInfrared.USB_PERMISSION"
+        const val ACTION_USB_PERMISSION = "com.mpdc4gsr.topInfrared.USB_PERMISSION"
     }
 
     override fun onReceive(

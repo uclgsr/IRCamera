@@ -111,11 +111,11 @@ import com.mpdc4gsr.lib.core.utils.Constants
 import com.mpdc4gsr.lib.core.utils.ImageUtils
 import com.mpdc4gsr.lib.core.utils.ScreenUtil
 import com.mpdc4gsr.lib.core.view.MainTitleView
-import com.topdon.lib.ui.dialog.ThermalInputDialog
-import com.topdon.lib.ui.dialog.TipGuideDialog
-import com.topdon.lib.ui.dialog.TipPreviewDialog
-import com.topdon.lib.ui.widget.seekbar.OnRangeChangedListener
-import com.topdon.lib.ui.widget.seekbar.RangeSeekBar
+import com.mpdc4gsr.lib.ui.dialog.ThermalInputDialog
+import com.mpdc4gsr.lib.ui.dialog.TipGuideDialog
+import com.mpdc4gsr.lib.ui.dialog.TipPreviewDialog
+import com.mpdc4gsr.lib.ui.widget.seekbar.OnRangeChangedListener
+import com.mpdc4gsr.lib.ui.widget.seekbar.RangeSeekBar
 import com.mpdc4gsr.lib.core.comm.AlarmHelp
 import com.mpdc4gsr.lib.core.comm.dialog.ColorPickDialog
 import com.mpdc4gsr.lib.core.comm.dialog.TempAlarmSetDialog
@@ -124,20 +124,20 @@ import com.mpdc4gsr.lib.core.menu.constant.SettingType
 import com.mpdc4gsr.lib.core.menu.constant.TargetType
 import com.mpdc4gsr.lib.core.menu.constant.TempPointType
 import com.mpdc4gsr.lib.core.menu.constant.TwoLightType
-import com.topdon.module.thermal.ir.R
-import com.topdon.module.thermal.ir.adapter.CameraItemAdapter
-import com.topdon.module.thermal.ir.adapter.MeasureItemAdapter
-import com.topdon.module.thermal.ir.adapter.TargetItemAdapter
-import com.topdon.module.thermal.ir.bean.DataBean
-import com.topdon.module.thermal.ir.event.GalleryAddEvent
-import com.topdon.module.thermal.ir.frame.FrameStruct
-import com.topdon.module.thermal.ir.popup.SeekBarPopup
-import com.topdon.module.thermal.ir.repository.ConfigRepository
-import com.topdon.module.thermal.ir.utils.IRConfigData
-import com.topdon.module.thermal.ir.video.VideoRecordFFmpeg
-import com.topdon.module.thermal.ir.view.compass.SensorService
-import com.topdon.pseudo.activity.PseudoSetActivity
-import com.topdon.pseudo.bean.CustomPseudoBean
+import com.mpdc4gsr.module.thermal.ir.R
+import com.mpdc4gsr.module.thermal.ir.adapter.CameraItemAdapter
+import com.mpdc4gsr.module.thermal.ir.adapter.MeasureItemAdapter
+import com.mpdc4gsr.module.thermal.ir.adapter.TargetItemAdapter
+import com.mpdc4gsr.module.thermal.ir.bean.DataBean
+import com.mpdc4gsr.module.thermal.ir.event.GalleryAddEvent
+import com.mpdc4gsr.module.thermal.ir.frame.FrameStruct
+import com.mpdc4gsr.module.thermal.ir.popup.SeekBarPopup
+import com.mpdc4gsr.module.thermal.ir.repository.ConfigRepository
+import com.mpdc4gsr.module.thermal.ir.utils.IRConfigData
+import com.mpdc4gsr.module.thermal.ir.video.VideoRecordFFmpeg
+import com.mpdc4gsr.module.thermal.ir.view.compass.SensorService
+import com.mpdc4gsr.pseudo.activity.PseudoSetActivity
+import com.mpdc4gsr.pseudo.bean.CustomPseudoBean
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -277,7 +277,7 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
     private val popTimeLay by lazy { findViewById<View>(R.id.pop_time_lay) }
     private val popTimeText by lazy { findViewById<TextView>(R.id.pop_time_text) }
     protected val layCarDetectPrompt by lazy { findViewById<View>(R.id.lay_car_detect_prompt) }
-    protected val temp_bg by lazy { findViewById<com.mpdc4gsr.lib.core.comm.view.TempLayout>(R.id.temp_bg) }
+    protected val temp_bg by lazy { findViewById<com.topdon.lib.core.comm.view.TempLayout>(R.id.temp_bg) }
     protected val cl_seek_bar by lazy {
         findViewById<com.topdon.lib.ui.widget.BitmapConstraintLayout>(
             R.id.cl_seek_bar

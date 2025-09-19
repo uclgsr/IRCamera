@@ -8,12 +8,12 @@ import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import com.csl.irCamera.R
 import com.csl.irCamera.databinding.ActivityGsrDemoBinding
-import com.topdon.gsr.model.GSRSample
-import com.topdon.gsr.model.SessionInfo
-import com.topdon.gsr.model.SyncMark
-import com.topdon.gsr.service.GSRRecorder
-import com.topdon.gsr.service.MockShimmerDeviceFactory
-import com.topdon.gsr.util.TimeUtil
+import com.mpdc4gsr.gsr.model.GSRSample
+import com.mpdc4gsr.gsr.model.SessionInfo
+import com.mpdc4gsr.gsr.model.SyncMark
+import com.mpdc4gsr.gsr.service.GSRRecorder
+import com.mpdc4gsr.gsr.service.MockShimmerDeviceFactory
+import com.mpdc4gsr.gsr.util.TimeUtil
 import com.mpdc4gsr.lib.core.ktbase.BaseBindingActivity
 import kotlinx.coroutines.launch
 

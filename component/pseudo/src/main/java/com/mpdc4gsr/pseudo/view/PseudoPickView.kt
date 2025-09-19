@@ -15,7 +15,7 @@ import androidx.annotation.CheckResult
 import androidx.annotation.ColorInt
 import androidx.core.content.ContextCompat
 import com.blankj.utilcode.util.SizeUtils
-import com.topdon.pseudo.R
+import com.mpdc4gsr.pseudo.R
 import kotlin.math.abs
 
 

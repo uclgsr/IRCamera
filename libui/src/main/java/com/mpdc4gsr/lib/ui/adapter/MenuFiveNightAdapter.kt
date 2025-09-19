@@ -13,8 +13,8 @@ import com.mpdc4gsr.lib.core.bean.CameraItemBean
 import com.mpdc4gsr.lib.core.common.SaveSettingUtil
 import com.mpdc4gsr.lib.core.common.SharedManager
 import com.mpdc4gsr.lib.core.tools.DeviceTools
-import com.topdon.lib.ui.bean.TemperatureBean
-import com.topdon.lib.ui.R as UiR
+import com.mpdc4gsr.lib.ui.bean.TemperatureBean
+import com.mpdc4gsr.lib.ui.R as UiR
 import com.mpdc4gsr.lib.core.R as MenuR
 
 @Deprecated("旧的temperature levelmenu，已重构过了")

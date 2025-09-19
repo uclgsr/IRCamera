@@ -17,9 +17,9 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.viewpager.widget.ViewPager
 import com.mpdc4gsr.lib.core.R
-import com.topdon.lib.ui.databinding.DialogTipGuideBinding
-import com.topdon.lib.ui.widget.IndicateView
-import com.topdon.lib.ui.R as UiR
+import com.mpdc4gsr.lib.ui.databinding.DialogTipGuideBinding
+import com.mpdc4gsr.lib.ui.widget.IndicateView
+import com.mpdc4gsr.lib.ui.R as UiR
 
 
 class TipGuideDialog : DialogFragment() {

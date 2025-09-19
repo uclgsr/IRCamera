@@ -1,5 +1,7 @@
 package com.mpdc4gsr.lib.core.menu
 
+import com.mpdc4gsr.lib.core.R
+
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.TypedArray
@@ -24,7 +26,7 @@ import com.mpdc4gsr.lib.core.menu.constant.SettingType
 import com.mpdc4gsr.lib.core.menu.constant.TargetType
 import com.mpdc4gsr.lib.core.menu.constant.TempPointType
 import com.mpdc4gsr.lib.core.menu.constant.TwoLightType
-import com.mpdc4gsr.lib.core.menu.databinding.ViewMenuSecondBinding
+import com.mpdc4gsr.lib.core.databinding.ViewMenuSecondBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

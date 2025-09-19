@@ -8,7 +8,7 @@ import android.view.View.MeasureSpec
 import android.widget.PopupWindow
 import android.widget.TextView
 import com.blankj.utilcode.util.SizeUtils
-import com.topdon.module.thermal.ir.R
+import com.mpdc4gsr.module.thermal.ir.R
 
 
 

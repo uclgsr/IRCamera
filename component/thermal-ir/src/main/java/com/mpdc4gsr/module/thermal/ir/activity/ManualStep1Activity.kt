@@ -3,8 +3,8 @@ package com.mpdc4gsr.module.thermal.ir.activity
 import android.content.Intent
 import android.widget.TextView
 import com.mpdc4gsr.lib.core.ktbase.BaseActivity
-import com.topdon.module.thermal.ir.R
-import com.topdon.module.thermal.ir.event.ManualFinishBean
+import com.mpdc4gsr.module.thermal.ir.R
+import com.mpdc4gsr.module.thermal.ir.event.ManualFinishBean
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 

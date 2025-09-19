@@ -6,7 +6,6 @@ import androidx.annotation.StringRes
 import com.mpdc4gsr.lib.core.R
 import com.mpdc4gsr.lib.core.menu.constant.MenuType
 import com.mpdc4gsr.lib.core.menu.constant.TwoLightType
-import com.mpdc4gsr.lib.core.menu.R as MenuR
 
 @SuppressLint("NotifyDataSetChanged")
 internal class TwoLightAdapter(private val menuType: MenuType) : BaseMenuAdapter() {
@@ -71,7 +70,7 @@ internal class TwoLightAdapter(private val menuType: MenuType) : BaseMenuAdapter
                 dataList.add(
                     Data(
                         R.string.dual_menu_1,
-                        MenuR.drawable.selector_menu2_two_light_1,
+                        R.drawable.selector_menu2_two_light_1,
                         TwoLightType.TWO_LIGHT_1,
                         true
                     )
@@ -79,7 +78,7 @@ internal class TwoLightAdapter(private val menuType: MenuType) : BaseMenuAdapter
                 dataList.add(
                     Data(
                         R.string.dual_menu_2,
-                        MenuR.drawable.selector_menu2_two_light_2,
+                        R.drawable.selector_menu2_two_light_2,
                         TwoLightType.TWO_LIGHT_2,
                         true
                     )
@@ -88,7 +87,7 @@ internal class TwoLightAdapter(private val menuType: MenuType) : BaseMenuAdapter
                 dataList.add(
                     Data(
                         R.string.menu_thermal_merge,
-                        MenuR.drawable.selector_menu2_two_light_2,
+                        R.drawable.selector_menu2_two_light_2,
                         TwoLightType.TWO_LIGHT_2,
                         true
                     )
@@ -97,7 +96,7 @@ internal class TwoLightAdapter(private val menuType: MenuType) : BaseMenuAdapter
             dataList.add(
                 Data(
                     R.string.menu_thermal_imaging,
-                    MenuR.drawable.selector_menu2_two_light_3,
+                    R.drawable.selector_menu2_two_light_3,
                     TwoLightType.IR,
                     true
                 )
@@ -105,7 +104,7 @@ internal class TwoLightAdapter(private val menuType: MenuType) : BaseMenuAdapter
             dataList.add(
                 Data(
                     R.string.menu_thermal_visible_light,
-                    MenuR.drawable.selector_menu2_two_light_4,
+                    R.drawable.selector_menu2_two_light_4,
                     TwoLightType.LIGHT,
                     true
                 )
@@ -113,7 +112,7 @@ internal class TwoLightAdapter(private val menuType: MenuType) : BaseMenuAdapter
             dataList.add(
                 Data(
                     R.string.menu_thermal_registration,
-                    MenuR.drawable.selector_menu2_two_light_5,
+                    R.drawable.selector_menu2_two_light_5,
                     TwoLightType.CORRECT,
                     false
                 )
@@ -122,7 +121,7 @@ internal class TwoLightAdapter(private val menuType: MenuType) : BaseMenuAdapter
         dataList.add(
             Data(
                 R.string.thermal_picture_in_camera,
-                MenuR.drawable.selector_menu2_two_light_6,
+                R.drawable.selector_menu2_two_light_6,
                 TwoLightType.P_IN_P,
                 menuType == MenuType.TC007,
             ),
@@ -130,7 +129,7 @@ internal class TwoLightAdapter(private val menuType: MenuType) : BaseMenuAdapter
         dataList.add(
             Data(
                 R.string.ios_double_light,
-                MenuR.drawable.selector_menu2_two_light_7,
+                R.drawable.selector_menu2_two_light_7,
                 TwoLightType.BLEND_EXTENT,
                 false
             )

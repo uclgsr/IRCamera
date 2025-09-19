@@ -5,8 +5,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
 
-import com.topdon.lms.sdk.utils.NetworkUtil;
-import com.topdon.lms.sdk.weiget.TToast;
+import com.mpdc4gsr.lms.sdk.utils.NetworkUtil;
+import com.mpdc4gsr.lms.sdk.weiget.TToast;
 import com.mpdc4gsr.module.user.R;
 
 public class ActivityUtil {

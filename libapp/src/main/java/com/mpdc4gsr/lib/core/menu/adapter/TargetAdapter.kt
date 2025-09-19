@@ -5,7 +5,6 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.mpdc4gsr.lib.core.R
 import com.mpdc4gsr.lib.core.menu.constant.TargetType
-import com.mpdc4gsr.lib.core.menu.R as MenuR
 
 @SuppressLint("NotifyDataSetChanged")
 internal class TargetAdapter : BaseMenuAdapter() {
@@ -30,10 +29,10 @@ internal class TargetAdapter : BaseMenuAdapter() {
             if (dataArray[i].targetType == TargetType.MODE) {
                 dataArray[i].drawableId =
                     when (modeCode) {
-                        11 -> MenuR.drawable.selector_menu2_target_1_sheep
-                        12 -> MenuR.drawable.selector_menu2_target_1_dog
-                        13 -> MenuR.drawable.selector_menu2_target_1_bird
-                        else -> MenuR.drawable.selector_menu2_target_1_person
+                        11 -> R.drawable.selector_menu2_target_1_sheep
+                        12 -> R.drawable.selector_menu2_target_1_dog
+                        13 -> R.drawable.selector_menu2_target_1_bird
+                        else -> R.drawable.selector_menu2_target_1_person
                     }
                 notifyItemChanged(i)
                 break
@@ -45,23 +44,23 @@ internal class TargetAdapter : BaseMenuAdapter() {
         arrayOf(
             Data(
                 R.string.main_tab_second_measure_mode,
-                MenuR.drawable.selector_menu2_target_1_person,
+                R.drawable.selector_menu2_target_1_person,
                 TargetType.MODE
             ),
             Data(
                 R.string.main_tab_first_target,
-                MenuR.drawable.selector_menu2_target_2_style,
+                R.drawable.selector_menu2_target_2_style,
                 TargetType.STYLE
             ),
             Data(
                 R.string.main_tab_second_target_color,
-                MenuR.drawable.selector_menu2_target_3_color,
+                R.drawable.selector_menu2_target_3_color,
                 TargetType.COLOR
             ),
-            Data(R.string.thermal_delete, MenuR.drawable.selector_menu2_del, TargetType.DELETE),
+            Data(R.string.thermal_delete, R.drawable.selector_menu2_del, TargetType.DELETE),
             Data(
                 R.string.main_tab_second_target_help,
-                MenuR.drawable.selector_menu2_target_4_help,
+                R.drawable.selector_menu2_target_4_help,
                 TargetType.HELP
             ),
         )

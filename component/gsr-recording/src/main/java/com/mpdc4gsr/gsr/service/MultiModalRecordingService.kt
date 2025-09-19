@@ -10,9 +10,9 @@ import android.os.Build
 import android.os.IBinder
 import android.util.Log
 import androidx.core.app.NotificationCompat
-import com.topdon.gsr.model.GSRSample
-import com.topdon.gsr.model.SessionInfo
-import com.topdon.gsr.model.SyncMark
+import com.mpdc4gsr.gsr.model.GSRSample
+import com.mpdc4gsr.gsr.model.SessionInfo
+import com.mpdc4gsr.gsr.model.SyncMark
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

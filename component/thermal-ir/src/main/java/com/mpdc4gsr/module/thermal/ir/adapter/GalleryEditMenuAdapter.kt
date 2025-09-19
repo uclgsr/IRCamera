@@ -9,7 +9,7 @@ import android.widget.TextView
 import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.topdon.module.thermal.ir.R
+import com.mpdc4gsr.module.thermal.ir.R
 import com.mpdc4gsr.lib.core.R as MenuR
 
 @Deprecated("旧的2D编辑一级菜单，已重构过了")

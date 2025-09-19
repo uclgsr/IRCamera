@@ -22,9 +22,9 @@ import com.mpdc4gsr.lib.core.socket.WebSocketProxy
 import com.mpdc4gsr.lib.core.tools.DeviceTools
 import com.mpdc4gsr.lib.core.utils.CommUtils
 import com.mpdc4gsr.lib.core.utils.NetWorkUtils
-import com.topdon.module.thermal.ir.R
-import com.topdon.module.thermal.ir.activity.IRThermalNightActivity
-import com.topdon.module.thermal.ir.activity.IRThermalPlusActivity
+import com.mpdc4gsr.module.thermal.ir.R
+import com.mpdc4gsr.module.thermal.ir.activity.IRThermalNightActivity
+import com.mpdc4gsr.module.thermal.ir.activity.IRThermalPlusActivity
 
 class IRThermalFragment : BaseFragment(), View.OnClickListener {
     

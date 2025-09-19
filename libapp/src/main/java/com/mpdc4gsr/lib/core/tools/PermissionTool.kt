@@ -10,7 +10,7 @@ import com.hjq.permissions.XXPermissions
 import com.mpdc4gsr.lib.core.BaseApplication
 import com.mpdc4gsr.lib.core.R
 import com.mpdc4gsr.lib.core.dialog.TipDialog
-import com.topdon.lms.sdk.weiget.TToast
+import com.mpdc4gsr.lms.sdk.weiget.TToast
 
 object PermissionTool {
 

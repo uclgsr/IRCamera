@@ -3,7 +3,7 @@ package mpdc4gsr.camera
 import android.content.Context
 import android.util.Log
 import android.view.TextureView
-import com.topdon.gsr.util.TimeUtil
+import com.mpdc4gsr.gsr.util.TimeUtil
 import mpdc4gsr.sensors.gsr.EnhancedThermalRecorder
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch

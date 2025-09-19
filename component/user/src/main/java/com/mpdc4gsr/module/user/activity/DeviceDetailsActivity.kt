@@ -11,9 +11,9 @@ import com.mpdc4gsr.lib.core.ktbase.BaseActivity
 import com.mpdc4gsr.lib.core.repository.ProductBean
 import com.mpdc4gsr.lib.core.repository.TC007Repository
 import com.mpdc4gsr.lib.core.repository.TS004Repository
-import com.topdon.lms.sdk.utils.TLog
-import com.topdon.lms.sdk.weiget.TToast
-import com.topdon.module.user.R
+import com.mpdc4gsr.lms.sdk.utils.TLog
+import com.mpdc4gsr.lms.sdk.weiget.TToast
+import com.mpdc4gsr.module.user.R
 import kotlinx.coroutines.launch
 import com.mpdc4gsr.lib.core.R as RCore
 

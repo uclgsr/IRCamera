@@ -3,7 +3,7 @@ package com.mpdc4gsr.module.thermal.activity
 import android.widget.TextView
 import com.mpdc4gsr.lib.core.ktbase.BaseActivity
 import com.mpdc4gsr.lib.core.tools.DeviceTools
-import com.topdon.module.thermal.R
+import com.mpdc4gsr.module.thermal.R
 
 
 class ConnectActivity : BaseActivity() {

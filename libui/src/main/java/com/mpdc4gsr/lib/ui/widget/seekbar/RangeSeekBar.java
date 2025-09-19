@@ -1,7 +1,7 @@
 package com.mpdc4gsr.lib.ui.widget.seekbar;
 
-import static com.topdon.lib.ui.widget.seekbar.SeekBar.INDICATOR_ALWAYS_HIDE;
-import static com.topdon.lib.ui.widget.seekbar.SeekBar.INDICATOR_ALWAYS_SHOW;
+import static com.mpdc4gsr.lib.ui.widget.seekbar.SeekBar.INDICATOR_ALWAYS_HIDE;
+import static com.mpdc4gsr.lib.ui.widget.seekbar.SeekBar.INDICATOR_ALWAYS_SHOW;
 
 import android.content.Context;
 import android.content.res.TypedArray;

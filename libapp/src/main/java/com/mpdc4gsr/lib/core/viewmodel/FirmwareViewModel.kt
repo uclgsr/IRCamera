@@ -13,15 +13,15 @@ import com.mpdc4gsr.lib.core.config.FileConfig
 import com.mpdc4gsr.lib.core.repository.ProductBean
 import com.mpdc4gsr.lib.core.repository.TC007Repository
 import com.mpdc4gsr.lib.core.repository.TS004Repository
-import com.topdon.lms.sdk.LMS
-import com.topdon.lms.sdk.UrlConstant
-import com.topdon.lms.sdk.bean.CommonBean
-import com.topdon.lms.sdk.network.HttpProxy
-import com.topdon.lms.sdk.network.IResponseCallback
-import com.topdon.lms.sdk.network.ResponseBean
-import com.topdon.lms.sdk.utils.DateUtils
-import com.topdon.lms.sdk.utils.LanguageUtil
-import com.topdon.lms.sdk.xutils.http.RequestParams
+import com.mpdc4gsr.lms.sdk.LMS
+import com.mpdc4gsr.lms.sdk.UrlConstant
+import com.mpdc4gsr.lms.sdk.bean.CommonBean
+import com.mpdc4gsr.lms.sdk.network.HttpProxy
+import com.mpdc4gsr.lms.sdk.network.IResponseCallback
+import com.mpdc4gsr.lms.sdk.network.ResponseBean
+import com.mpdc4gsr.lms.sdk.utils.DateUtils
+import com.mpdc4gsr.lms.sdk.utils.LanguageUtil
+import com.mpdc4gsr.lms.sdk.xutils.http.RequestParams
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -160,7 +160,7 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
     ) {
 
         val bindCode = bindDevice(sn, randomNum)
-        if (bindCode != LMS.SUCCESS && bindCode != 15109) {
+        if (bindCode != LMS.SUCCESS.toInt() && bindCode != 15109) {
             XLog.w("${if (isTS004) "TS004" else "TC007"} 固件升级 - 绑定设备失败! sn: $sn")
             failLD.postValue(bindCode == 15162)
             isRequest = false
@@ -195,7 +195,7 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
         }
 
         val downloadData = queryDownloadUrl(sn, record.maxUpdateVersionSoftId)
-        if (downloadData?.responseCode == LMS.SUCCESS) {
+        if (downloadData?.responseCode == LMS.SUCCESS.toInt()) {
             firmwareDataLD.postValue(
                 FirmwareData(
                     newVersionStr,
@@ -216,12 +216,19 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
         randomNum: String,
     ): Int {
         return withContext(Dispatchers.IO) {
-            var code = LMS.SUCCESS
+            var code = LMS.SUCCESS.toInt()
             val countDownLatch = CountDownLatch(1)
-            LMS.getInstance().bindDevice(sn, randomNum, "", "") {
-                code = it.code
-                countDownLatch.countDown()
-            }
+            LMS.getInstance().bindDevice(sn, randomNum, "", "", object : IResponseCallback {
+                override fun onResponse(response: String) {
+                    try {
+                        val responseBean = Gson().fromJson(response, ResponseBean::class.java)
+                        code = responseBean.code.toInt()
+                    } catch (e: Exception) {
+                        code = 9999 // Error code
+                    }
+                    countDownLatch.countDown()
+                }
+            })
             countDownLatch.await()
             return@withContext code
         }
@@ -246,20 +253,16 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
             params.addBodyParameter("downloadPlatformId", 2) 
             params.addBodyParameter(
                 "queryTime",
-                DateUtils.format(
-                    System.currentTimeMillis(),
-                    "yyyy-MM-dd HH:mm:ss",
-                    TimeZone.getTimeZone("GMT")
-                ),
+                DateUtils.formatDate(System.currentTimeMillis()),
             )
-            HttpProxy.instant.post(
+            HttpProxy.getInstance().post(
                 url,
                 params,
                 object : IResponseCallback {
                     override fun onResponse(response: String?) {
                         try {
                             val commonBean: CommonBean =
-                                ResponseBean.convertCommonBean(response, null)
+                                Gson().fromJson(response, CommonBean::class.java)
                             packageData = Gson().fromJson(commonBean.data, PackageData::class.java)
                         } catch (_: Exception) {
                         }
@@ -290,19 +293,19 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
             params.addBodyParameter("businessType", 20) 
             params.addBodyParameter("productType", 20) 
             params.addBodyParameter("isCheckPoint", 0) 
-            HttpProxy.instant.post(
+            HttpProxy.getInstance().post(
                 url,
                 params,
                 object : IResponseCallback {
                     override fun onResponse(response: String?) {
                         try {
                             val commonBean: CommonBean =
-                                ResponseBean.convertCommonBean(response, null)
+                                Gson().fromJson(response, CommonBean::class.java)
                             if (commonBean.code == LMS.SUCCESS) {
                                 result = Gson().fromJson(commonBean.data, DownloadData::class.java)
-                                result?.responseCode = commonBean.code
+                                result?.responseCode = commonBean.code.toInt()
                             } else {
-                                result = DownloadData("", 0, commonBean.code)
+                                result = DownloadData("", 0, commonBean.code.toInt())
                             }
                         } catch (_: Exception) {
                         }

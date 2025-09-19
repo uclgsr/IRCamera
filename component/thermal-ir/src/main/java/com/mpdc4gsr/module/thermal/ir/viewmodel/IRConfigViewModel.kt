@@ -4,9 +4,9 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.mpdc4gsr.lib.core.utils.SingleLiveEvent
-import com.topdon.module.thermal.ir.bean.DataBean
-import com.topdon.module.thermal.ir.bean.ModelBean
-import com.topdon.module.thermal.ir.repository.ConfigRepository
+import com.mpdc4gsr.module.thermal.ir.bean.DataBean
+import com.mpdc4gsr.module.thermal.ir.bean.ModelBean
+import com.mpdc4gsr.module.thermal.ir.repository.ConfigRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 

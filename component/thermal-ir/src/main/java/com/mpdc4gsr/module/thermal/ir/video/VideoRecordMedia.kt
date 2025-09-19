@@ -5,8 +5,8 @@ import com.infisense.usbir.view.CameraView
 import com.infisense.usbir.view.TemperatureView
 import com.mpdc4gsr.lib.core.config.FileConfig
 import com.mpdc4gsr.lib.core.utils.BitmapUtils
-import com.topdon.module.thermal.ir.video.media.Encoder
-import com.topdon.module.thermal.ir.video.media.MP4Encoder
+import com.mpdc4gsr.module.thermal.ir.video.media.Encoder
+import com.mpdc4gsr.module.thermal.ir.video.media.MP4Encoder
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable

@@ -3,7 +3,7 @@ package com.mpdc4gsr.pseudo.bean
 import android.os.Parcelable
 import com.google.gson.Gson
 import com.mpdc4gsr.lib.core.common.SharedManager
-import com.topdon.pseudo.constant.ColorRecommend
+import com.mpdc4gsr.pseudo.constant.ColorRecommend
 import kotlinx.android.parcel.Parcelize
 import java.nio.ByteBuffer
 

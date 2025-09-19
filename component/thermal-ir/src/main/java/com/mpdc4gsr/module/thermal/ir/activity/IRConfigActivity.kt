@@ -23,16 +23,16 @@ import com.mpdc4gsr.lib.core.repository.TC007Repository
 import com.mpdc4gsr.lib.core.socket.WebSocketProxy
 import com.mpdc4gsr.lib.core.tools.NumberTools
 import com.mpdc4gsr.lib.core.tools.UnitTools
-import com.topdon.lib.ui.widget.MyItemDecoration
-import com.topdon.lms.sdk.weiget.TToast
-import com.topdon.module.thermal.ir.R
-import com.topdon.module.thermal.ir.adapter.ConfigEmAdapter
-import com.topdon.module.thermal.ir.bean.DataBean
-import com.topdon.module.thermal.ir.bean.ModelBean
-import com.topdon.module.thermal.ir.dialog.ConfigGuideDialog
-import com.topdon.module.thermal.ir.dialog.IRConfigInputDialog
-import com.topdon.module.thermal.ir.repository.ConfigRepository
-import com.topdon.module.thermal.ir.viewmodel.IRConfigViewModel
+import com.mpdc4gsr.lib.ui.widget.MyItemDecoration
+import com.mpdc4gsr.lms.sdk.weiget.TToast
+import com.mpdc4gsr.module.thermal.ir.R
+import com.mpdc4gsr.module.thermal.ir.adapter.ConfigEmAdapter
+import com.mpdc4gsr.module.thermal.ir.bean.DataBean
+import com.mpdc4gsr.module.thermal.ir.bean.ModelBean
+import com.mpdc4gsr.module.thermal.ir.dialog.ConfigGuideDialog
+import com.mpdc4gsr.module.thermal.ir.dialog.IRConfigInputDialog
+import com.mpdc4gsr.module.thermal.ir.repository.ConfigRepository
+import com.mpdc4gsr.module.thermal.ir.viewmodel.IRConfigViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import com.mpdc4gsr.lib.core.R as LibR

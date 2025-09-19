@@ -7,10 +7,11 @@ import com.google.gson.reflect.TypeToken
 import com.mpdc4gsr.lib.core.bean.base.Resp
 import com.mpdc4gsr.lib.core.bean.json.CheckVersionJson
 import com.mpdc4gsr.lib.core.bean.json.StatementJson
-import com.topdon.lms.sdk.LMS
-import com.topdon.lms.sdk.network.IResponseCallback
-import com.topdon.lms.sdk.utils.StringUtils
-import com.topdon.lms.sdk.weiget.TToast
+import com.mpdc4gsr.lms.sdk.LMS
+import com.mpdc4gsr.lms.sdk.network.IResponseCallback
+import com.mpdc4gsr.lms.sdk.network.ResponseBean
+import com.mpdc4gsr.lms.sdk.utils.StringUtils
+import com.mpdc4gsr.lms.sdk.weiget.TToast
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.util.concurrent.CountDownLatch
@@ -20,10 +21,11 @@ object LmsRepository {
     suspend fun getVersionInfo(): CheckVersionJson? {
         var result: CheckVersionJson? = null
         val downLatch = CountDownLatch(1)
-        LMS.getInstance().checkAppUpdate {
+        LMS.getInstance().checkAppUpdate { response ->
             try {
-                if (it.code == 2000) {
-                    result = Gson().fromJson(it.data, CheckVersionJson::class.java)
+                val responseBean = Gson().fromJson(response, ResponseBean::class.java)
+                if (responseBean.code == "2000") {
+                    result = Gson().fromJson(responseBean.data.toString(), CheckVersionJson::class.java)
                 }
             } catch (e: Exception) {
                 XLog.e("version json解析异常: ${e.message}")

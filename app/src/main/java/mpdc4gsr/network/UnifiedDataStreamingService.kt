@@ -4,7 +4,7 @@ import android.content.Context
 import android.util.Log
 import mpdc4gsr.sensors.TimestampManager
 import mpdc4gsr.sensors.TimestampRecord
-import com.topdon.gsr.model.GSRSample
+import com.mpdc4gsr.gsr.model.GSRSample
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import org.json.JSONArray

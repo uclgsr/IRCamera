@@ -9,8 +9,8 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.mpdc4gsr.lib.core.bean.ObserveBean
-import com.topdon.lib.ui.bean.ColorBean
-import com.topdon.module.thermal.ir.R
+import com.mpdc4gsr.lib.ui.bean.ColorBean
+import com.mpdc4gsr.module.thermal.ir.R
 
 class MeasureItemAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     var listener: ((index: Int, code: Int) -> Unit)? = null

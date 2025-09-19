@@ -3,7 +3,7 @@ package com.mpdc4gsr.lib.ui.recycler
 import android.content.Context
 import android.util.AttributeSet
 import android.widget.LinearLayout
-import com.topdon.lib.ui.R as UiR
+import com.mpdc4gsr.lib.ui.R as UiR
 
 
 class LoadingView : LinearLayout {

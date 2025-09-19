@@ -2,7 +2,7 @@ package mpdc4gsr.sensors.gsr
 
 import android.content.Context
 import android.util.Log
-import com.topdon.gsr.model.GSRSample
+import com.mpdc4gsr.gsr.model.GSRSample
 import mpdc4gsr.network.EnhancedNetworkClient
 import mpdc4gsr.controller.RecordingController
 import kotlinx.coroutines.*

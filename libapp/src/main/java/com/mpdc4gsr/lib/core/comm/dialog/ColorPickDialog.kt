@@ -1,5 +1,6 @@
 package com.mpdc4gsr.lib.core.comm.dialog
 
+import com.mpdc4gsr.lib.core.R
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
@@ -14,7 +15,6 @@ import com.jaygoo.widget.DefRangeSeekBar
 import com.jaygoo.widget.OnRangeChangedListener
 import com.mpdc4gsr.lib.core.utils.ScreenUtil
 import com.mpdc4gsr.lib.core.view.ColorSelectView
-import com.mpdc4gsr.lib.core.comm.R
 import com.mpdc4gsr.lib.core.comm.util.ColorUtils
 
 class ColorPickDialog(
@@ -22,7 +22,7 @@ class ColorPickDialog(
     @ColorInt private var color: Int,
     var textSize: Int,
     var textSizeIsDP: Boolean = false,
-) : Dialog(context, com.mpdc4gsr.lib.core.R.style.InfoDialog), View.OnClickListener {
+) : Dialog(context, R.style.InfoDialog), View.OnClickListener {
 
     var onPickListener: ((color: Int, textSize: Int) -> Unit)? = null
 
@@ -86,13 +86,13 @@ class ColorPickDialog(
                         text =
                             if (leftValue <= 0) {
                                 textSize = 14
-                                context.getString(com.topdon.lib.ui.R.string.temp_text_standard)
+                                context.getString(R.string.temp_text_standard)
                             } else if (leftValue <= 50) {
                                 textSize = 16
-                                context.getString(com.topdon.lib.ui.R.string.temp_text_big)
+                                context.getString(R.string.temp_text_big)
                             } else {
                                 textSize = 18
-                                context.getString(com.topdon.lib.ui.R.string.temp_text_sup_big)
+                                context.getString(R.string.temp_text_sup_big)
                             }
                         findViewById<TextView>(R.id.tv_size_value).text = text
                     }

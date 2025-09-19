@@ -3,7 +3,7 @@ package mpdc4gsr.network
 import android.content.Context
 import android.net.wifi.WifiManager
 import android.util.Log
-import com.topdon.gsr.model.SessionInfo
+import com.mpdc4gsr.gsr.model.SessionInfo
 import com.mpdc4gsr.lib.core.discovery.NetworkDiscoveryService
 import com.mpdc4gsr.lib.core.messaging.ReliableMessageService
 import com.mpdc4gsr.lib.core.security.CertificateManager

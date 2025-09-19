@@ -2,8 +2,8 @@ package com.mpdc4gsr.gsr.service
 
 import android.content.Context
 import android.util.Log
-import com.topdon.gsr.model.SessionInfo
-import com.topdon.gsr.util.TimeUtil
+import com.mpdc4gsr.gsr.model.SessionInfo
+import com.mpdc4gsr.gsr.util.TimeUtil
 import java.util.concurrent.ConcurrentHashMap
 
 class SessionManager private constructor(context: Context) {

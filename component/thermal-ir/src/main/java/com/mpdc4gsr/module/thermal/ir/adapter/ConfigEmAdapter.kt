@@ -12,8 +12,8 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.SizeUtils
-import com.topdon.module.thermal.ir.R
-import com.topdon.module.thermal.ir.utils.IRConfigData
+import com.mpdc4gsr.module.thermal.ir.R
+import com.mpdc4gsr.module.thermal.ir.utils.IRConfigData
 
 
 
