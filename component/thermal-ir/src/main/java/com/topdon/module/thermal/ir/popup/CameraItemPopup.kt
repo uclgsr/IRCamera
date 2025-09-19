@@ -17,11 +17,7 @@ import com.topdon.libcom.bean.SaveSettingBean
 import com.topdon.module.thermal.ir.R
 import com.topdon.module.thermal.ir.databinding.PopCameraItemBinding
 
-/**
 
- *
- * Created by LCG on 2025/1/3.
- */
 
 @SuppressLint("SetTextI18n")
 class CameraItemPopup(val context: Context, private val saveSetBean: SaveSettingBean) :
@@ -101,7 +97,7 @@ class CameraItemPopup(val context: Context, private val saveSetBean: SaveSetting
                     binding.ivDelay.setImageLevel(saveSetBean.delayCaptureSecond)
                 }
 
-            binding.clAuto -> { // 自动快门
+            binding.clAuto -> { 
                 saveSetBean.isAutoShutter = !saveSetBean.isAutoShutter
                 binding.ivAuto.isSelected = saveSetBean.isAutoShutter
                 if (SharedManager.isTipShutter && !saveSetBean.isAutoShutter) {

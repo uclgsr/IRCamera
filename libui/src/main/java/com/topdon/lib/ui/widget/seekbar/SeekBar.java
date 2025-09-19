@@ -188,14 +188,14 @@ public class SeekBar {
 
         canvas.translate(left, 0);
         if (isShowIndicator) {
-            onDrawIndicator(canvas, paint, formatCurrentIndicatorText(userText2Draw)); //滑动轴外标签
+            onDrawIndicator(canvas, paint, formatCurrentIndicatorText(userText2Draw)); 
         }
 
 
         if (thumbShow) {
             onDrawThumb(canvas);
         } else {
-            onDrawThumb(canvas, isLeft); //轴上标签
+            onDrawThumb(canvas, isLeft); 
         }
         canvas.restore();
     }

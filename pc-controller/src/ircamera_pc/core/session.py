@@ -104,13 +104,13 @@ class SessionManager:
         ]:
             raise ValueError("Cannot create new session:" "another session is active")
 
-        # Generate session ID and name
+        
         session_id = str(uuid.uuid4())
         if name is None:
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
             name = f"session_{timestamp}"
 
-        # Create session metadata
+        
         self._current_session = SessionMetadata(
             session_id=session_id,
             name=name,
@@ -119,14 +119,14 @@ class SessionManager:
             gsr_mode=config.get("gsr.default_mode", "local"),
         )
 
-        # Create session directory
+        
         session_dir = self._get_session_directory(session_id)
         session_dir.mkdir(parents=True, exist_ok=True)
 
-        # Save initial metadata
+        
         self._save_metadata()
 
-        # Add to history
+        
         self._session_history.append(session_id)
 
         logger.info(f"Session created: {name} [{session_id}]")
@@ -187,7 +187,7 @@ class SessionManager:
         if not self._current_session:
             raise ValueError("No session to end")
 
-        # Calculate duration if started
+        
         if self._current_session.started_at:
             start_time = datetime.fromisoformat(
                 self._current_session.started_at.replace("Z", "+00:00")
@@ -199,7 +199,7 @@ class SessionManager:
         self._current_session.state = SessionState.COMPLETED.value
         self._current_session.ended_at = datetime.now(timezone.utc).isoformat()
 
-        # Final metadata save
+        
         self._save_metadata()
 
         logger.info(
@@ -298,11 +298,11 @@ class SessionManager:
         Returns:
             SessionMetadata if found, None otherwise
         """
-        # Check if it's the current session
+        
         if self._current_session and self._current_session.session_id == session_id:
             return self._current_session
             
-        # Otherwise, load from storage
+        
         return self.load_session(session_id)
 
     def get_session_directory(self, session_id: Optional[str] = None) -> Path:

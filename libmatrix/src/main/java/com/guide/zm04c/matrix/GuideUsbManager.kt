@@ -35,10 +35,7 @@ class GuideUsbManager {
         val PRODUCT_ID = 0x3702
     }
 
-    /*
-        public static final int VENDOR_ID = 0x0525;
-        public static final int PRODUCT_ID = 0xa4a0;
-     */
+    
     private var mConnectCode: Int = ResultCode.READY_CONNECT_DEVICE
     private val TAG = "guidecore"
     private var mNativeGuideCore: NativeGuideCore? = null
@@ -71,13 +68,7 @@ class GuideUsbManager {
     }
 
     fun isUsbValid(): Boolean {
-        /*
-                if (mConnection == null || mEndpointDataIn == null || mEndpointControlIn == null || mEndpointControlOut == null) {
-                    return false;
-                } else {
-                    return true;
-                }
-        */
+        
         return true
     }
 
@@ -116,59 +107,9 @@ class GuideUsbManager {
         }
     }
 
-    /*
-        private void findInterface() {
+    
 
-            if (mUsbDevice != null) {
-
-                int count = mUsbDevice.getInterfaceCount();
-                if (count == 1) {
-                    mUsbInterface = mUsbDevice.getInterface(0);
-                } else {
-                    for (int i = 0; i < count; i++) {
-                        UsbInterface usbInterface = mUsbDevice.getInterface(i);
-
-                        if (usbInterface.getEndpointCount() == 2 && usbInterface.getAlternateSetting() == 1) {
-                            mUsbInterface = usbInterface;
-                            mConnectCode = ResultCode.SUCC_FIND_DEVICE_INTERFACE;
-                            break;
-                        }
-                    }
-
-                    if (mUsbInterface == null) {
-                        mConnectCode = ResultCode.ERROR_NOT_FIND_INTERFACE;
-                    }
-                }
-            }
-        }
-    */
-
-    /*
-    private void findInterface() {
-
-        if (mUsbDevice != null) {
-
-            int count = mUsbDevice.getInterfaceCount();
-            if (count == 1) {
-                mUsbInterface = mUsbDevice.getInterface(0);
-            } else {
-                for (int i = 0; i < count; i++) {
-                    UsbInterface usbInterface = mUsbDevice.getInterface(i);
-
-                    if (usbInterface.getEndpointCount() == 2 && usbInterface.getAlternateSetting() == 1) {
-                        mUsbInterface = usbInterface;
-                        mConnectCode = ResultCode.SUCC_FIND_DEVICE_INTERFACE;
-                        break;
-                    }
-                }
-
-                if (mUsbInterface == null) {
-                    mConnectCode = ResultCode.ERROR_NOT_FIND_INTERFACE;
-                }
-            }
-        }
-    }
-*/
+    
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private fun findInterface() {
         if (mUsbDevice != null) {

@@ -68,7 +68,7 @@ class BatteryView : AppCompatImageView {
 
                     MeasureSpec.AT_MOST -> {
                         if (widthSize < 58) {
-                            if (heightSize < 30) { // 宽✘ 高✘
+                            if (heightSize < 30) { 
                                 if ((widthSize * 30 / 58f).toInt() <= heightSize) {
                                     setMeasuredDimension(widthSize, (widthSize * 30 / 58f).toInt())
                                 } else {
@@ -77,13 +77,13 @@ class BatteryView : AppCompatImageView {
                                         heightSize
                                     )
                                 }
-                            } else { // 宽✘ 高✔
+                            } else { 
                                 setMeasuredDimension(widthSize, (widthSize * 30 / 58f).toInt())
                             }
                         } else {
-                            if (heightSize < 30) { // 宽✔ 高✘
+                            if (heightSize < 30) { 
                                 setMeasuredDimension((heightSize * 58 / 30f).toInt(), heightSize)
-                            } else { // 宽✔ 高✔
+                            } else { 
                                 setMeasuredDimension(58, 30)
                             }
                         }

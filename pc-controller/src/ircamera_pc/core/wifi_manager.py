@@ -37,7 +37,7 @@ except ImportError:
     PYQT_AVAILABLE = False
 
 
-    # Fallback signal implementation for when PyQt is not available
+    
     class pyqtSignal:
         def __init__(self, *args):
             self._callbacks = []
@@ -62,7 +62,7 @@ except ImportError:
             pass
 
         def start(self) -> Any:
-            # Run in current thread if PyQt6 not available
+            
             self.run()
 
         def run(self) -> Any:
@@ -126,8 +126,8 @@ class WiFiNetwork:
 
     ssid: str
     bssid: str
-    signal_strength: int  # -100 to 0 dBm
-    frequency: int  # MHz
+    signal_strength: int  
+    frequency: int  
     security_type: NetworkSecurityType
     channel: int
     is_ircamera_hotspot: bool = False
@@ -167,7 +167,7 @@ class WiFiScanWorker(BaseThread):
         self._running = True
         try:
             networks = self._scan_networks()
-            if self._running:  # Check if still running after scan
+            if self._running:  
                 self.networks_found.emit(networks)
                 self.scan_completed.emit(len(networks))
         except (OSError, ValueError, RuntimeError) as e:
@@ -187,7 +187,7 @@ class WiFiScanWorker(BaseThread):
             return self._scan_windows()
         elif system == "Linux":
             return self._scan_linux()
-        elif system == "Darwin":  # macOS
+        elif system == "Darwin":  
             return self._scan_macos()
         else:
             raise RuntimeError(f"Unsupported platform: {system}")
@@ -197,12 +197,12 @@ class WiFiScanWorker(BaseThread):
         networks = []
 
         try:
-            # Security: Use full path for netsh command
+            
             netsh_path = "C:\\Windows\\System32\\netsh.exe"
             if not os.path.exists(netsh_path):
                 raise FileNotFoundError("netsh.exe not found at expected location")
 
-            # Run netsh command to get WiFi profiles
+            
             result = subprocess.run(
                 [netsh_path, "wlan", "show", "profiles"],
                 capture_output=True,
@@ -215,7 +215,7 @@ class WiFiScanWorker(BaseThread):
             if result.returncode != 0:
                 raise RuntimeError(f"netsh failed: {result.stderr}")
 
-            # Parse available networks
+            
             result = subprocess.run(
                 [netsh_path, "wlan", "show", "profile", "interface=*"],
                 capture_output=True,
@@ -225,7 +225,7 @@ class WiFiScanWorker(BaseThread):
                 check=False,
             )
 
-            # Get current scan results
+            
             scan_result = subprocess.run(
                 [netsh_path, "wlan", "show", "networks", "mode=bssid"],
                 capture_output=True,
@@ -286,7 +286,7 @@ class WiFiScanWorker(BaseThread):
             elif "Signal" in line:
                 signal_match = re.search(r"(\d+)%", line)
                 if signal_match:
-                    # Convert percentage to dBm approximation
+                    
                     percentage = int(signal_match.group(1))
                     current_network["signal"] = -100 + (percentage * 70 // 100)
             elif "BSSID" in line and ":" in line:
@@ -297,7 +297,7 @@ class WiFiScanWorker(BaseThread):
                 if channel_match:
                     current_network["channel"] = int(channel_match.group(1))
 
-        # Don't forget the last network
+        
         if current_network and "ssid" in current_network:
             network = self._create_network_from_dict(current_network)
             if network:
@@ -310,7 +310,7 @@ class WiFiScanWorker(BaseThread):
         networks = []
 
         try:
-            # Try nmcli first (NetworkManager) - Security: use full path and validation
+            
             nmcli_path = shutil.which("nmcli")
             if nmcli_path:
                 result = subprocess.run(
@@ -333,10 +333,10 @@ class WiFiScanWorker(BaseThread):
                 if result.returncode == 0:
                     networks = self._parse_nmcli_output(result.stdout)
                 else:
-                    # Fallback to iwlist
+                    
                     networks = self._scan_linux_iwlist()
             else:
-                # Fallback to iwlist
+                
                 networks = self._scan_linux_iwlist()
 
         except (OSError, ValueError, RuntimeError) as e:
@@ -350,7 +350,7 @@ class WiFiScanWorker(BaseThread):
         networks = []
 
         try:
-            # Security: Validate iwlist path and sudo access
+            
             iwlist_path = shutil.which("iwlist")
             sudo_path = shutil.which("sudo")
 
@@ -379,7 +379,7 @@ class WiFiScanWorker(BaseThread):
         networks = []
 
         try:
-            # Use the built-in airport utility - Security: validate path
+            
             airport_path = "/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport"
 
             if not os.path.exists(airport_path):
@@ -412,14 +412,14 @@ class WiFiScanWorker(BaseThread):
             if not ssid or ssid == "Unknown":
                 return None
 
-            # Check if this might be an IRCamera hotspot
+            
             is_ircamera = self._is_ircamera_network(ssid)
 
             return WiFiNetwork(
                 ssid=ssid,
                 bssid=data.get("bssid", "00:00:00:00:00:00"),
                 signal_strength=data.get("signal", -100),
-                frequency=data.get("frequency", 2400),  # Default 2.4 GHz
+                frequency=data.get("frequency", 2400),  
                 security_type=data.get("security", NetworkSecurityType.OPEN),
                 channel=data.get("channel", 1),
                 is_ircamera_hotspot=is_ircamera,
@@ -458,7 +458,7 @@ class WiFiScanWorker(BaseThread):
         elif "open" in auth_lower or "none" in auth_lower:
             return NetworkSecurityType.OPEN
         else:
-            return NetworkSecurityType.WPA2  # Default assumption
+            return NetworkSecurityType.WPA2  
 
 
 class WiFiManager(BaseManager):
@@ -473,20 +473,20 @@ class WiFiManager(BaseManager):
     - Network interface monitoring
     """
 
-    # Signals
-    networks_discovered = pyqtSignal(list)  # List[WiFiNetwork]
-    network_connected = pyqtSignal(str, str)  # ssid, ip_address
-    network_disconnected = pyqtSignal(str, str)  # ssid, reason
-    connection_failed = pyqtSignal(str, str)  # ssid, error
-    hotspot_state_changed = pyqtSignal(HotspotState, str)  # state, message
-    interface_changed = pyqtSignal(str, bool)  # interface_name, is_active
-    error_occurred = pyqtSignal(str, str)  # operation, error_message
+    
+    networks_discovered = pyqtSignal(list)  
+    network_connected = pyqtSignal(str, str)  
+    network_disconnected = pyqtSignal(str, str)  
+    connection_failed = pyqtSignal(str, str)  
+    hotspot_state_changed = pyqtSignal(HotspotState, str)  
+    interface_changed = pyqtSignal(str, bool)  
+    error_occurred = pyqtSignal(str, str)  
 
     def __init__(self):
         super().__init__("wifi_manager")
-        self._networks: Dict[str, WiFiNetwork] = {}  # SSID: WiFiNetwork
+        self._networks: Dict[str, WiFiNetwork] = {}  
         self._interfaces = Dict[str, NetworkInterface] = {}
-        self._current_connection: Optional[str] = None  # Current SSID
+        self._current_connection: Optional[str] = None  
         self._scan_worker: Optional[WiFiScanWorker] = None
         self._hotspot_state = HotspotState.STOPPED
         self._hotspot_config = {
@@ -496,13 +496,13 @@ class WiFiManager(BaseManager):
             "max_clients": 8,
         }
 
-        # Initialize interface monitoring
+        
         self._init_interfaces()
 
-        # Timer for periodic status updates
+        
         self._status_timer = QTimer()
         self._status_timer.timeout.connect(self._update_status)
-        self._status_timer.start(5000)  # Update every 5 seconds
+        self._status_timer.start(5000)  
 
     @property
     def available_networks(self) -> List[WiFiNetwork]:
@@ -554,7 +554,7 @@ class WiFiManager(BaseManager):
         """Stop WiFi scanning."""
         if self._scan_worker and self._scan_worker.isRunning():
             self._scan_worker.stop()
-            self._scan_worker.wait(5000)  # Wait up to 5 seconds
+            self._scan_worker.wait(5000)  
             logger.info("WiFi scanning stopped")
 
     @pyqtSlot(list)
@@ -603,7 +603,7 @@ class WiFiManager(BaseManager):
 
             if success:
                 self._current_connection = ssid
-                # Get IP address after connection
+                
                 ip_address = await self._get_interface_ip()
                 self.network_connected.emit(ssid, ip_address or "Unknown")
                 logger.info(f"Successfully connected to {ssid}")
@@ -658,7 +658,7 @@ class WiFiManager(BaseManager):
             logger.warning("Hotspot already running or starting")
             return True
 
-        # Update configuration if provided
+        
         if ssid:
             self._hotspot_config["ssid"] = ssid
         if password:
@@ -731,22 +731,22 @@ class WiFiManager(BaseManager):
                 if name in stats:
                     stat = stats[name]
 
-                    # Find MAC and IP addresses
+                    
                     mac_addr = None
                     ip_addr = None
 
                     for addr in addrs:
-                        if addr.family == psutil.AF_LINK:  # MAC address
+                        if addr.family == psutil.AF_LINK:  
                             mac_addr = addr.address
-                        elif addr.family == 2:  # IPv4
+                        elif addr.family == 2:  
                             ip_addr = addr.address
 
-                    # Determine if it's a WiFi interface
+                    
                     is_wifi = self._is_wifi_interface(name)
 
                     interface = NetworkInterface(
                         name=name,
-                        description=name,  # Could be enhanced with more details
+                        description=name,  
                         is_wifi=is_wifi,
                         is_active=stat.isup,
                         ip_address=ip_addr,
@@ -780,7 +780,7 @@ class WiFiManager(BaseManager):
     def _update_status(self) -> None:
         """Periodic status update."""
         try:
-            # Update interface status
+            
             if PSUTIL_AVAILABLE:
                 stats = psutil.net_if_stats()
                 for name, interface in self._interfaces.items():
@@ -817,16 +817,16 @@ class WiFiManager(BaseManager):
         try:
             logger.info(f"Connecting to {ssid} on Windows")
 
-            # Security: Use full path for netsh command
+            
             netsh_path = "C:\\Windows\\System32\\netsh.exe"
             if not os.path.exists(netsh_path):
                 raise FileNotFoundError("netsh.exe not found")
 
-            # Create WiFi profile if password is provided
+            
             if password and security != NetworkSecurityType.OPEN:
                 profile_xml = self._create_wifi_profile_xml(ssid, password, security)
 
-                # Write profile to temporary file
+                
                 import tempfile
 
                 with tempfile.NamedTemporaryFile(
@@ -836,7 +836,7 @@ class WiFiManager(BaseManager):
                     profile_path = f.name
 
                 try:
-                    # Add the profile
+                    
                     result = await asyncio.create_subprocess_exec(
                         netsh_path,
                         "wlan",
@@ -852,13 +852,13 @@ class WiFiManager(BaseManager):
                         logger.error(f"Failed to add WiFi profile: {stderr.decode()}")
                         return False
                 finally:
-                    # Clean up temporary profile file
+                    
                     try:
                         os.unlink(profile_path)
                     except OSError:
                         pass
 
-            # Connect to the network
+            
             result = await asyncio.create_subprocess_exec(
                 netsh_path,
                 "wlan",
@@ -872,7 +872,7 @@ class WiFiManager(BaseManager):
             if result.returncode == 0:
                 logger.info(f"Successfully initiated connection to {ssid}")
 
-                # Wait for connection to establish (up to 30 seconds)
+                
                 for _ in range(30):
                     await asyncio.sleep(1)
                     if await self._check_connection_status(ssid):
@@ -895,19 +895,19 @@ class WiFiManager(BaseManager):
         try:
             logger.info(f"Connecting to {ssid} on Linux")
 
-            # Security: Validate nmcli path
+            
             nmcli_path = shutil.which("nmcli")
             if not nmcli_path:
                 raise FileNotFoundError("nmcli not found - NetworkManager required")
 
-            # Build connection command
+            
             cmd = [nmcli_path, "device", "wifi", "connect", ssid]
 
-            # Add password if required
+            
             if password and security != NetworkSecurityType.OPEN:
                 cmd.extend(["password", password])
 
-            # Execute connection command
+            
             result = await asyncio.create_subprocess_exec(
                 *cmd, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
             )
@@ -920,7 +920,7 @@ class WiFiManager(BaseManager):
                 error_msg = stderr.decode().strip()
                 logger.error(f"Failed to connect to {ssid}: {error_msg}")
 
-                # Try alternative approach with connection profile
+                
                 if "already exists" in error_msg or "activation failed" in error_msg:
                     return await self._connect_linux_with_profile(
                         ssid, password, security
@@ -939,12 +939,12 @@ class WiFiManager(BaseManager):
         try:
             logger.info(f"Connecting to {ssid} on macOS")
 
-            # Security: Validate networksetup path
+            
             networksetup_path = "/usr/sbin/networksetup"
             if not os.path.exists(networksetup_path):
                 raise FileNotFoundError("networksetup not found")
 
-            # Get WiFi interface name
+            
             result = await asyncio.create_subprocess_exec(
                 networksetup_path,
                 "-listallhardwareports",
@@ -966,9 +966,9 @@ class WiFiManager(BaseManager):
                 logger.error("Could not find WiFi interface")
                 return False
 
-            # Connect to network
+            
             if password and security != NetworkSecurityType.OPEN:
-                # For secured networks, use networksetup with password
+                
                 result = await asyncio.create_subprocess_exec(
                     networksetup_path,
                     "-setairportnetwork",
@@ -979,7 +979,7 @@ class WiFiManager(BaseManager):
                     stderr=asyncio.subprocess.PIPE,
                 )
             else:
-                # For open networks
+                
                 result = await asyncio.create_subprocess_exec(
                     networksetup_path,
                     "-setairportnetwork",
@@ -1007,7 +1007,7 @@ class WiFiManager(BaseManager):
         """Platform-specific WiFi disconnection."""
         system = platform.system()
         logger.info(f"Disconnecting WiFi on {system}")
-        # Implementation would be platform-specific
+        
 
     async def _platform_start_hotspot(self) -> bool:
         """Platform-specific hotspot start implementation."""
@@ -1022,7 +1022,7 @@ class WiFiManager(BaseManager):
     async def _start_hotspot_windows(self) -> bool:
         """Start hotspot on Windows using netsh."""
         try:
-            # Create hotspot profile
+            
             result = subprocess.run(
                 [
                     "netsh",
@@ -1040,7 +1040,7 @@ class WiFiManager(BaseManager):
                 logger.error(f"Failed to set hotspot profile: {result.stderr}")
                 return False
 
-            # Start hotspot
+            
             result = subprocess.run(
                 ["netsh", "wlan", "start", "hostednetwork"],
                 capture_output=True,
@@ -1152,7 +1152,7 @@ class WiFiManager(BaseManager):
             if not nmcli_path:
                 return False
 
-            # Try to activate existing connection first
+            
             result = await asyncio.create_subprocess_exec(
                 nmcli_path,
                 "connection",
@@ -1167,7 +1167,7 @@ class WiFiManager(BaseManager):
                 logger.info(f"Activated existing connection to {ssid}")
                 return True
 
-            # Create new connection profile
+            
             security_type = (
                 "wpa-psk"
                 if security in [NetworkSecurityType.WPA, NetworkSecurityType.WPA2]
@@ -1197,7 +1197,7 @@ class WiFiManager(BaseManager):
             stdout, stderr = await result.communicate()
 
             if result.returncode == 0:
-                # Activate the new connection
+                
                 result = await asyncio.create_subprocess_exec(
                     nmcli_path,
                     "connection",

@@ -11,7 +11,7 @@ import sys
 import tempfile
 from pathlib import Path
 
-# Add src to path
+
 sys.path.insert(0, str(Path(__file__).parent / "src"))
 
 from loguru import logger
@@ -27,7 +27,7 @@ async def test_device_manager():
 
     device_manager = DeviceManager()
 
-    # Test starting device manager
+    
     print("Starting device manager...")
     success = await device_manager.start()
     if success:
@@ -36,7 +36,7 @@ async def test_device_manager():
         print("✗ Failed to start device manager")
         return False
 
-    # Test manual device addition
+    
     print("Adding mock devices...")
     device_id1 = device_manager.add_device_manually("192.168.1.100", 8080, "TestDevice1")
     device_id2 = device_manager.add_device_manually("192.168.1.101", 8080, "TestDevice2")
@@ -47,7 +47,7 @@ async def test_device_manager():
         print("✗ Failed to add mock devices")
         return False
 
-    # Test device state updates
+    
     registry = device_manager.get_registry()
 
     print("Testing device state updates...")
@@ -60,16 +60,16 @@ async def test_device_manager():
         print("✗ Failed to update device states")
         return False
 
-    # Test device queries
+    
     online_devices = registry.get_online_devices()
     print(f"✓ Found {len(online_devices)} online devices")
 
-    # Test heartbeat updates
+    
     registry.update_heartbeat(device_id1)
     registry.update_heartbeat(device_id2)
     print("✓ Heartbeats updated")
 
-    # Clean up
+    
     await device_manager.stop()
     print("✓ Device manager stopped")
 
@@ -80,27 +80,27 @@ async def test_session_manager():
     """Test session manager functionality."""
     print("\n=== Testing Session Manager ===")
 
-    # Create temporary directory for sessions
+    
     with tempfile.TemporaryDirectory() as temp_dir:
         session_dir = Path(temp_dir) / "sessions"
 
-        # Create device manager for session manager
+        
         device_manager = DeviceManager()
         await device_manager.start()
 
-        # Add mock devices
+        
         device_id1 = device_manager.add_device_manually("192.168.1.100", 8080, "TestDevice1")
         device_id2 = device_manager.add_device_manually("192.168.1.101", 8080, "TestDevice2")
 
-        # Set devices online
+        
         registry = device_manager.get_registry()
         registry.update_device_state(device_id1, DeviceConnectionState.ONLINE)
         registry.update_device_state(device_id2, DeviceConnectionState.ONLINE)
 
-        # Create session manager
+        
         session_manager = AdvancedSessionManager(device_manager, session_dir)
 
-        # Test session creation
+        
         print("Creating test session...")
         config = SessionConfiguration(
             session_name="Test Session",
@@ -115,7 +115,7 @@ async def test_session_manager():
             print("✗ Failed to create session")
             return False
 
-        # Test session state
+        
         session = session_manager.get_current_session()
         if session and session.state == SessionState.ACTIVE:
             print("✓ Session is in ACTIVE state")
@@ -123,7 +123,7 @@ async def test_session_manager():
             print("✗ Session not in expected state")
             return False
 
-        # Test starting recording
+        
         print("Starting recording...")
         success = await session_manager.start_recording()
         if success:
@@ -132,17 +132,17 @@ async def test_session_manager():
             print("✗ Failed to start recording")
             return False
 
-        # Verify recording state
+        
         if session_manager.is_recording():
             print("✓ Session is in RECORDING state")
         else:
             print("✗ Session not in recording state")
             return False
 
-        # Wait a bit to simulate recording
+        
         await asyncio.sleep(1)
 
-        # Test stopping recording  
+        
         print("Stopping recording...")
         success = await session_manager.stop_recording()
         if success:
@@ -151,7 +151,7 @@ async def test_session_manager():
             print("✗ Failed to stop recording")
             return False
 
-        # Test finalization
+        
         print("Finalizing session...")
         success = session_manager.finalize_session()
         if success:
@@ -160,7 +160,7 @@ async def test_session_manager():
             print("✗ Failed to finalize session")
             return False
 
-        # Test session metadata
+        
         final_session = session_manager.get_current_session()
         if final_session and final_session.state == SessionState.COMPLETE:
             print("✓ Session is in COMPLETE state")
@@ -170,7 +170,7 @@ async def test_session_manager():
             print("✗ Session not in expected final state")
             return False
 
-        # Check session directory and metadata file
+        
         session_path = session_dir / session_id
         metadata_file = session_path / "session_metadata.json"
 
@@ -180,7 +180,7 @@ async def test_session_manager():
             print("✗ Session files not created properly")
             return False
 
-        # Test reset
+        
         session_manager.reset_for_next_session()
         if not session_manager.is_session_active():
             print("✓ Session manager reset successfully")
@@ -188,7 +188,7 @@ async def test_session_manager():
             print("✗ Session manager not reset properly")
             return False
 
-        # Clean up
+        
         await device_manager.stop()
 
         return True
@@ -204,10 +204,10 @@ def test_discovery_service():
         discovery = NetworkDiscoveryService()
         print("✓ Discovery service created")
 
-        # Test device type determination
+        
         test_attributes = {"capabilities": "rgb_camera,gsr_sensor", "device_type": "ANDROID_NODE"}
 
-        # Create mock discovered device
+        
         mock_device = DiscoveredDevice(
             service_name="TestDevice",
             service_type="_ircamera._tcp.local.",
@@ -260,7 +260,7 @@ async def run_all_tests():
             print(f"❌ {test_name} tests FAILED with exception: {e}")
             results.append((test_name, False))
 
-    # Summary
+    
     print("\n" + "=" * 50)
     print("TEST SUMMARY")
     print("=" * 50)
@@ -287,11 +287,11 @@ async def run_all_tests():
 
 
 if __name__ == "__main__":
-    # Setup basic logging
+    
     logger.remove()
-    logger.add(sys.stderr, level="WARNING")  # Reduce log noise during tests
+    logger.add(sys.stderr, level="WARNING")  
 
-    # Run tests
+    
     try:
         success = asyncio.run(run_all_tests())
         sys.exit(0 if success else 1)

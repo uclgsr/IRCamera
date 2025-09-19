@@ -56,12 +56,12 @@ class GSRDataViewActivity : BaseBindingActivity<ActivityGsrDataViewBinding>() {
     )
 
     data class GSRDataPoint(
-        val timestamp: Long, // nanoseconds
-        val gsrValue: Double, // microsiemens
-        val gsrRaw: Int, // raw ADC value (0-4095)
-        val resistance: Double, // kohms
-        val ppgValue: Int, // raw PPG value
-        val ppgRaw: Int = ppgValue, // alias for ppgValue
+        val timestamp: Long, 
+        val gsrValue: Double, 
+        val gsrRaw: Int, 
+        val resistance: Double, 
+        val ppgValue: Int, 
+        val ppgRaw: Int = ppgValue, 
         val syncMarker: Boolean = false,
         val notes: String? = null,
     )
@@ -124,7 +124,7 @@ class GSRDataViewActivity : BaseBindingActivity<ActivityGsrDataViewBinding>() {
                         parseGSRDataRow(
                             line,
                             index + 2
-                        ) // +2 because we skip header and 0-based index
+                        ) 
                     }.filterNotNull()
 
                 val statistics = calculateStatistics(rows)
@@ -593,11 +593,11 @@ class GSRDataViewActivity : BaseBindingActivity<ActivityGsrDataViewBinding>() {
     private fun preparePlotData(): GSRPlotData {
 
         val timestamps =
-            gsrDataPoints.map { (it.timestamp - gsrDataPoints.first().timestamp) / 1000000.0 } // Convert to seconds
+            gsrDataPoints.map { (it.timestamp - gsrDataPoints.first().timestamp) / 1000000.0 } 
         val gsrValues = gsrDataPoints.map { it.gsrValue.toDouble() }
         val ppgValues = gsrDataPoints.map { it.ppgValue.toDouble() }
 
-        val windowSize = maxOf(1, gsrDataPoints.size / 100) // 1% of data or minimum 1
+        val windowSize = maxOf(1, gsrDataPoints.size / 100) 
         val gsrMovingAvg = calculateMovingAverage(gsrValues, windowSize)
         val ppgMovingAvg = calculateMovingAverage(ppgValues, windowSize)
 
@@ -646,7 +646,7 @@ class GSRDataViewActivity : BaseBindingActivity<ActivityGsrDataViewBinding>() {
             gsrValues.let { values ->
                 val mean = values.sum() / values.size
                 val variance = values.map { (it - mean) * (it - mean) }.sum() / values.size
-                kotlin.math.sqrt(variance) * 2.0 // 2 standard deviations
+                kotlin.math.sqrt(variance) * 2.0 
             }
 
         for (i in 1 until gsrValues.size) {
@@ -671,7 +671,7 @@ class GSRDataViewActivity : BaseBindingActivity<ActivityGsrDataViewBinding>() {
         values: List<Double>,
         timestamps: List<Double>,
     ): List<TimeWindowStats> {
-        val windowDuration = 30.0 // 30-second windows
+        val windowDuration = 30.0 
         val maxTime = timestamps.lastOrNull() ?: return emptyList()
         val stats = mutableListOf<TimeWindowStats>()
 
@@ -721,15 +721,15 @@ class GSRDataViewActivity : BaseBindingActivity<ActivityGsrDataViewBinding>() {
 
     private fun normalizeGSRValue(gsrValue: Float): Double {
 
-        val minGSR = 0.1 // Minimum typical GSR in µS
-        val maxGSR = 50.0 // Maximum typical GSR in µS
+        val minGSR = 0.1 
+        val maxGSR = 50.0 
         return ((gsrValue - minGSR) / (maxGSR - minGSR)).coerceIn(0.0, 1.0)
     }
 
     private fun normalizePPGValue(ppgValue: Int): Double {
 
         val minPPG = 0
-        val maxPPG = 4095 // 12-bit ADC range
+        val maxPPG = 4095 
         return (ppgValue.toDouble() / maxPPG).coerceIn(0.0, 1.0)
     }
 
@@ -825,15 +825,15 @@ class GSRDataViewActivity : BaseBindingActivity<ActivityGsrDataViewBinding>() {
             try {
 
                 val timestampNs =
-                    System.nanoTime() // Placeholder - real implementation would parse timestamp
+                    System.nanoTime() 
                 val gsrDataPoint =
                     GSRDataPoint(
                         timestamp = timestampNs,
                         gsrValue = row.gsrValue,
                         gsrRaw = (row.gsrValue * 100).toInt()
-                            .coerceIn(0, 4095), // Convert to ADC range
+                            .coerceIn(0, 4095), 
                         resistance = row.resistance,
-                        ppgValue = (Math.random() * 1000 + 1000).toInt(), // Placeholder PPG value
+                        ppgValue = (Math.random() * 1000 + 1000).toInt(), 
                         syncMarker = false,
                     )
                 gsrDataPoints.add(gsrDataPoint)

@@ -84,7 +84,7 @@ class RGBCameraRecorder(
         camera2System.onProgress = { message -> Log.d(TAG, "Progress: $message") }
         camera2System.onModeChanged = { mode -> Log.i(TAG, "Mode changed to: $mode") }
         camera2System.onRecordingStarted = { onVideoRecordingStarted?.invoke() }
-        camera2System.onRecordingStopped = { /* Handle stopped */ }
+        camera2System.onRecordingStopped = {  }
     }
 
     suspend fun initializeCamera(cameraId: String = "0"): Boolean =
@@ -114,9 +114,7 @@ class RGBCameraRecorder(
         return camera2System.switchMode(systemMode)
     }
 
-    /**
-     * Enhanced startRecording with session metadata for precise timing synchronization
-     */
+    
     suspend fun startRecording(
         outputDir: File,
         sessionMetadata: SessionMetadata,
@@ -128,12 +126,12 @@ class RGBCameraRecorder(
         Log.i(TAG, "Session: ${sessionMetadata.sessionId}")
         Log.i(TAG, "Start time: ${sessionMetadata.sessionStartIso}")
 
-        // Create video filename with session information
+        
         val videoFileName = "rgb_video_${sessionMetadata.sessionId}.mp4"
         sessionMetadata.addModalityFile("rgb_video", videoFileName)
 
-        // TODO: Pass session timing metadata to Camera2System for embedding in video metadata
-        // This would require extending Camera2System to support metadata embedding
+        
+        
 
         return camera2System.startRecording(sessionMetadata.sessionId)
     }
@@ -209,7 +207,7 @@ class RGBCameraRecorder(
 
     fun getAvailableCameras(): List<CameraInfo> {
 
-        return emptyList() // Simplified for now
+        return emptyList() 
     }
 
     fun getCurrentMode(): CameraMode {
@@ -251,14 +249,14 @@ class RGBCameraRecorder(
         val caps = getDeviceCaps()
         return when (mode) {
             CameraMode.RAW_50MP -> caps?.supportsRaw ?: false
-            CameraMode.VIDEO_4K -> caps?.supports4k60 ?: true // Video is generally supported
-            CameraMode.PREVIEW_ONLY -> true // Always supported
+            CameraMode.VIDEO_4K -> caps?.supports4k60 ?: true 
+            CameraMode.PREVIEW_ONLY -> true 
         }
     }
 
     fun getAvailableModes(): List<CameraMode> {
         val modes = mutableListOf<CameraMode>()
-        modes.add(CameraMode.PREVIEW_ONLY) // Always available
+        modes.add(CameraMode.PREVIEW_ONLY) 
         if (isModeSupported(CameraMode.VIDEO_4K)) modes.add(CameraMode.VIDEO_4K)
         if (isModeSupported(CameraMode.RAW_50MP)) modes.add(CameraMode.RAW_50MP)
         return modes
@@ -272,7 +270,7 @@ class RGBCameraRecorder(
 
     fun getMaxRawResolution(): VideoResolution? {
 
-        return VideoResolution.UHD_4K // Simplified
+        return VideoResolution.UHD_4K 
     }
 
     fun getCurrentVideoResolution(): VideoResolution = recordingSettings.resolution
@@ -317,9 +315,9 @@ class RGBCameraRecorder(
 
     fun getRawCaptureCount(): Int = camera2System.getDeviceCaps()?.let { 0 } ?: 0
 
-    fun getCurrentVideoFile(): File? = null // Not exposed in clean architecture
+    fun getCurrentVideoFile(): File? = null 
 
-    fun getRawImagesDirectory(): File? = null // Not exposed in clean architecture
+    fun getRawImagesDirectory(): File? = null 
 
-    fun isSessionSwitching(): Boolean = false // Clean architecture handles this internally
+    fun isSessionSwitching(): Boolean = false 
 }

@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <paths>
-    <!-- App-specific external storage directory for recordings -->
+    
     <external-files-path
         name="MPDC4GSR_files"
         path="." />
 
-    <!-- App-specific external storage subdirectory for pictures -->
+    
     <external-files-path
         name="Pictures"
         path="Pictures" />
 
-    <!-- External cache directory for temporary files -->
+    
     <external-cache-path
         name="external_cache"
         path="." />
 
-    <!-- Legacy support for external storage (deprecated but needed for older Android versions) -->
+    
     <external-path
         name="MPDC4GSR"
         path="." />
@@ -23,7 +23,7 @@
         name="Pictures_legacy"
         path="Pictures/MPDC4GSR" />
 
-    <!-- Root path for special cases (use with caution) -->
+    
     <root-path
         name="MPDC4GSR_root"
         path="" />

@@ -27,10 +27,7 @@ import com.topdon.module.thermal.ir.activity.IRThermalNightActivity
 import com.topdon.module.thermal.ir.activity.IRThermalPlusActivity
 
 class IRThermalFragment : BaseFragment(), View.OnClickListener {
-    /**
-
-
-     */
+    
     private var isTC007 = false
 
     private lateinit var titleView: com.topdon.lib.core.view.TitleView
@@ -133,7 +130,7 @@ class IRThermalFragment : BaseFragment(), View.OnClickListener {
             connected()
         } else {
             disConnected()
-            if (DeviceTools.findUsbDevice() != null) { // 找到设备,但不能连接
+            if (DeviceTools.findUsbDevice() != null) { 
                 showConnectTip()
             }
         }
@@ -224,13 +221,13 @@ class IRThermalFragment : BaseFragment(), View.OnClickListener {
                 }
             }
 
-            cl07ConnectTips -> { // TC007 连接提示
+            cl07ConnectTips -> { 
                 NavigationManager.getInstance().build(RouterConfig.IR_CONNECT_TIPS)
                     .withBoolean(ExtraKeyConfig.IS_TC007, true)
                     .navigation(requireContext())
             }
 
-            tv07Connect -> { // TC007 连接设备
+            tv07Connect -> { 
                 NavigationManager.getInstance()
                     .build(RouterConfig.IR_DEVICE_ADD)
                     .withBoolean("isTS004", false)

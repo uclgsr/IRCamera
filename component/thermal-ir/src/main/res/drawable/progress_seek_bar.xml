@@ -6,7 +6,7 @@
             <solid android:color="#dddddd" />
         </shape>
     </item>
-    <!-- SettingsProgress条颜色 -->
+    
     <item android:id="@android:id/progress">
         <clip>
             <shape>

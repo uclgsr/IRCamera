@@ -90,7 +90,7 @@ class TipObserveDialog : Dialog {
 
                     0.35
                 }
-            lp.width = (ScreenUtil.getScreenWidth(context!!) * wRatio).toInt() // 设置宽度
+            lp.width = (ScreenUtil.getScreenWidth(context!!) * wRatio).toInt() 
             dialog!!.window!!.attributes = lp
 
             dialog!!.setCanceledOnTouchOutside(canceled)

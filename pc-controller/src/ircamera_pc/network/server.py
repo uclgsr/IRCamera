@@ -48,33 +48,33 @@ class DeviceState(Enum):
 class MessageType(Enum):
     """Message types for device communication."""
 
-    # Device lifecycle
+    
     DEVICE_REGISTER = "device_register"
     DEVICE_HEARTBEAT = "device_heartbeat"
     DEVICE_STATUS = "device_status"
 
-    # Session control
+    
     SESSION_START = "session_start"
     SESSION_STOP = "session_stop"
     RECORDING_START = "recording_start"
     RECORDING_STOP = "recording_stop"
 
-    # Synchronization
+    
     SYNC_MARK = "sync_mark"
     SYNC_FLASH = "sync_flash"
 
-    # File transfer
+    
     FILE_TRANSFER_REQUEST = "file_transfer_request"
     FILE_TRANSFER_COMPLETE = "file_transfer_complete"
 
-    # GSR data streaming
+    
     GSR_STREAM_REGISTER = "stream_registration"
     GSR_DATA = "gsr_data"
     GSR_QUALITY_METRICS = "quality_metrics"
     TIME_SYNC_REQUEST = "time_sync_request"
     TIME_SYNC_RESPONSE = "time_sync_response"
 
-    # Responses
+    
     ACK = "ack"
     ERROR = "error"
 
@@ -124,19 +124,19 @@ class NetworkServer:
         self._heartbeat_task: Optional[asyncio.Task] = None
         self._is_running = False
 
-        # Enhanced networking services
+        
         self._security_manager = SecurityManager()
         self._discovery_service = NetworkDiscoveryService()
         self._messaging_service = ReliableMessageService()
         self._enhanced_timesync = EnhancedTimeSyncService()
 
-        # GSR data receiver for hub-spoke communication
+        
         self._gsr_receiver = GSRReceiver(config.get("gsr_receiver", {}))
 
-        # Protocol manager
+        
         self._protocol = get_protocol_manager()
 
-        # Configuration
+        
         transport_config = self._protocol.get_transport_config()
         self._host = config.get(
             "network.server_host", transport_config.get("host", "127.0.0.1")
@@ -157,13 +157,13 @@ class NetworkServer:
             connection_config.get("timeout_s", 30),
         )
 
-        # Get max message size from protocol
+        
         framing = transport_config.get("message_framing", {})
         self._max_message_size = framing.get(
             "max_message_size", 1024 * 1024
-        )  # 1MB default
+        )  
 
-        # Event callbacks
+        
         self._on_device_connected: Optional[Callable] = None
         self._on_device_disconnected: Optional[Callable] = None
         self._on_device_status_update: Optional[Callable] = None
@@ -177,13 +177,13 @@ class NetworkServer:
 
     def _setup_enhanced_services(self) -> None:
         """Set up enhanced networking services."""
-        # Configure messaging service transport
+        
         self._messaging_service.set_transport(self._send_message_to_device)
 
-        # Register discovery listener
+        
         self._discovery_service.add_discovery_listener(self._on_device_discovered)
 
-        # Register reliable message handlers
+        
         self._messaging_service.register_message_handler(
             "session_start", self._handle_reliable_session_start
         )
@@ -204,13 +204,13 @@ class NetworkServer:
             "time_sync_request": self._handle_time_sync_request,
             "gsr_data_batch": self._handle_gsr_data_batch,
             "gsr_leader_election": self._handle_gsr_leader_election,
-            # Enhanced GSR streaming handlers
+            
             "stream_registration": self._handle_gsr_stream_registration,
             "gsr_data": self._handle_gsr_data_stream,
             "quality_metrics": self._handle_gsr_quality_metrics,
             "heartbeat": self._handle_gsr_heartbeat,
             "stream_end": self._handle_gsr_stream_end,
-            # Enhanced message types
+            
             "device_auth": self._handle_device_auth,
             "message_ack": self._handle_message_ack,
             "message_nack": self._handle_message_nack,
@@ -225,39 +225,39 @@ class NetworkServer:
         try:
             logger.info("Starting enhanced network server...")
 
-            # Initialize security manager
+            
             if not self._security_manager.initialize():
                 logger.error("Failed to initialize security manager")
                 return False
 
-            # Initialize messaging service
+            
             if not await self._messaging_service.initialize():
                 logger.error("Failed to initialize messaging service")
                 return False
 
-            # Start discovery service
+            
             if not await self._discovery_service.start_discovery():
                 logger.warning(
                     "Discovery service failed to start - continuing without discovery"
                 )
 
-            # Start GSR receiver for hub-spoke communication
+            
             await self._gsr_receiver.start()
             logger.info("GSR receiver started for hub-spoke communication")
 
-            # Start enhanced time synchronization service
+            
             await self._enhanced_timesync.start()
             logger.info("Enhanced time synchronization service started")
 
-            # Start plaintext server
+            
             self._server = await asyncio.start_server(
                 self._handle_client,
                 self._host,
                 self._port,
-                limit=2 ** 16,  # 64KB buffer
+                limit=2 ** 16,  
             )
 
-            # Start secure server with TLS
+            
             ssl_context = self._security_manager.create_ssl_context(
                 for_client_auth=True
             )
@@ -266,10 +266,10 @@ class NetworkServer:
                 self._host,
                 self._secure_port,
                 ssl=ssl_context,
-                limit=2 ** 16,  # 64KB buffer
+                limit=2 ** 16,  
             )
 
-            # Start heartbeat monitoring
+            
             self._heartbeat_task = asyncio.create_task(self._monitor_heartbeats())
 
             self._is_running = True
@@ -299,19 +299,19 @@ class NetworkServer:
         logger.info("Stopping enhanced network server...")
         self._is_running = False
 
-        # Stop enhanced services
+        
         await self._messaging_service.shutdown()
         await self._discovery_service.stop_discovery()
 
-        # Stop GSR receiver
+        
         await self._gsr_receiver.stop()
         logger.info("GSR receiver stopped")
 
-        # Stop enhanced time sync service
+        
         await self._enhanced_timesync.stop()
         logger.info("Enhanced time synchronization service stopped")
 
-        # Cancel heartbeat monitoring
+        
         if self._heartbeat_task:
             self._heartbeat_task.cancel()
             try:
@@ -319,14 +319,14 @@ class NetworkServer:
             except asyncio.CancelledError:
                 pass
 
-        # Close all client connections
+        
         for client in self._clients.values():
             client.close()
             await client.wait_closed()
 
         self._clients.clear()
 
-        # Close servers
+        
         if self._server:
             self._server.close()
             await self._server.wait_closed()
@@ -338,7 +338,7 @@ class NetworkServer:
         logger.info("Enhanced network server stopped")
         self._devices.clear()
 
-        # Close server
+        
         if self._server:
             self._server.close()
             await self._server.wait_closed()
@@ -358,7 +358,7 @@ class NetworkServer:
 
         try:
             while True:
-                # Read message length (4 bytes)
+                
                 length_data = await reader.readexactly(4)
                 message_length = int.from_bytes(length_data, "big")
 
@@ -368,7 +368,7 @@ class NetworkServer:
                     )
                     break
 
-                # Read message data
+                
                 message_data = await reader.readexactly(message_length)
 
                 try:
@@ -384,7 +384,7 @@ class NetworkServer:
         except (OSError, ValueError, RuntimeError) as e:
             logger.error(f"Error handling client {addr}: {e}")
         finally:
-            # Clean up client
+            
             device_id = None
             for did, client in self._clients.items():
                 if client == writer:
@@ -402,7 +402,7 @@ class NetworkServer:
     ) -> None:
         """Process incoming message from device using protocol validation."""
         try:
-            # Validate message against protocol
+            
             if not validate_message(message, strict=False):
                 await self._send_error(writer, "Message validation failed")
                 return
@@ -414,7 +414,7 @@ class NetworkServer:
                 await self._send_error(writer, "Missing message_type field", message_id)
                 return
 
-            # Handle message using protocol-aware handlers
+            
             if message_type in self._message_handlers:
                 response = await self._message_handlers[message_type](message, writer)
                 if response:
@@ -448,17 +448,17 @@ class NetworkServer:
                     "error": "Missing device_id",
                 }
 
-            # Check connection limit
+            
             if len(self._devices) >= self._max_connections:
                 return {
                     "type": MessageType.ERROR.value,
                     "error": "Maximum connections exceeded",
                 }
 
-            # Get client address
+            
             addr = writer.get_extra_info("peername")
 
-            # Create device info
+            
             device_info = DeviceInfo(
                 device_id=device_id,
                 device_type=device_type,
@@ -468,7 +468,7 @@ class NetworkServer:
                 last_heartbeat=datetime.now(timezone.utc).isoformat(),
             )
 
-            # Determine GSR leader
+            
             if "gsr_sensor" in capabilities and not any(
                     d.is_gsr_leader for d in self._devices.values()
             ):
@@ -476,7 +476,7 @@ class NetworkServer:
                 device_info.gsr_mode = config.get("gsr.default_mode", "local")
                 logger.info(f"Device {device_id} elected as GSR leader")
 
-            # Store device and client
+            
             self._devices[device_id] = device_info
             self._clients[device_id] = writer
 
@@ -485,7 +485,7 @@ class NetworkServer:
                 "with capabilities: {capabilities}"
             )
 
-            # Notify callback
+            
             if self._on_device_connected:
                 self._on_device_connected(device_info)
 
@@ -510,7 +510,7 @@ class NetworkServer:
                 timezone.utc
             ).isoformat()
 
-            # Update device status if provided
+            
             if "battery_level" in message:
                 self._devices[device_id].battery_level = message["battery_level"]
 
@@ -532,7 +532,7 @@ class NetworkServer:
         if device_id in self._devices:
             device = self._devices[device_id]
 
-            # Update status fields
+            
             if "status" in message:
                 device.state = message["status"]
             if "battery_level" in message:
@@ -540,7 +540,7 @@ class NetworkServer:
 
             logger.debug(f"Status update from {device_id}: {message}")
 
-            # Notify callback
+            
             if self._on_device_status_update:
                 self._on_device_status_update(device)
 
@@ -572,10 +572,10 @@ class NetworkServer:
         try:
             device_id = message.get("device_id", "unknown")
 
-            # Delegate to enhanced time sync service
+            
             response = await self._enhanced_timesync.handle_time_sync_request(message, device_id)
 
-            # Add message ID for proper protocol compliance
+            
             message_id = message.get("message_id")
             if message_id:
                 response["message_id"] = message_id
@@ -602,14 +602,14 @@ class NetworkServer:
             f"Received GSR data batch from {device_id}: {len(data_points)} points"
         )
 
-        # Forward to enhanced GSR data ingestion system
+        
         try:
             from ..data import get_data_aggregator
 
-            # Get the data aggregator instance for real-time processing
+            
             aggregator = get_data_aggregator()
 
-            # Process each GSR data point with enhanced metadata
+            
             for point in data_points:
                 enhanced_point = {
                     "device_id": device_id,
@@ -629,10 +629,10 @@ class NetworkServer:
                     },
                 }
 
-                # Add to aggregator with device synchronization
+                
                 await aggregator.add_gsr_data_point(enhanced_point)
 
-            # Update real-time visualization if available
+            
             self._update_realtime_gsr_visualization(device_id, data_points)
 
             logger.info(
@@ -644,11 +644,11 @@ class NetworkServer:
                 "Data aggregator not available, trying fallback GSR ingestor"
             )
 
-            # Fallback to GSR ingestor for processing
+            
             try:
                 from ..core.gsr_ingestor import GSRIngestor, GSRMode, GSRSample
 
-                # Convert data points to GSR samples
+                
                 gsr_samples = []
                 for point in data_points:
                     sample = GSRSample(
@@ -659,11 +659,11 @@ class NetworkServer:
                     )
                     gsr_samples.append(sample)
 
-                # Get or create GSR ingestor instance
+                
                 if not hasattr(self, "_gsr_ingestor"):
                     self._gsr_ingestor = GSRIngestor()
 
-                # Process the data batch
+                
                 await self._gsr_ingestor.process_data_batch(
                     session_id=message.get("session_id"),
                     device_id=device_id,
@@ -674,7 +674,7 @@ class NetworkServer:
 
             except Exception as e:
                 logger.warning(f"GSR ingestor also failed, storing data to buffer: {e}")
-                # Final fallback to simple storage
+                
                 self._buffer_gsr_data(device_id, data_points)
 
         except Exception as e:
@@ -699,15 +699,15 @@ class NetworkServer:
         )
 
         if election_type == "candidate" and device_id in self._devices:
-            # Simple leader election - highest priority score wins
+            
             current_leader = None
             for did, device in self._devices.items():
                 if device.is_gsr_leader:
                     current_leader = device
                     break
 
-            if not current_leader or priority_score > 0.8:  # High priority threshold
-                # Elect new leader
+            if not current_leader or priority_score > 0.8:  
+                
                 if current_leader:
                     current_leader.is_gsr_leader = False
 
@@ -729,16 +729,16 @@ class NetworkServer:
             device_info = self._devices[device_id]
             device_info.state = DeviceState.DISCONNECTED.value
 
-            # Remove from active connections
+            
             self._clients.pop(device_id, None)
 
             logger.info(f"Device disconnected: {device_id}")
 
-            # Notify callback
+            
             if self._on_device_disconnected:
                 self._on_device_disconnected(device_info)
 
-            # Handle GSR leader disconnection
+            
             if device_info.is_gsr_leader:
                 await self._handle_gsr_leader_disconnect(device_id)
 
@@ -746,7 +746,7 @@ class NetworkServer:
         """Handle GSR leader disconnection by electing new leader."""
         logger.warning(f"GSR leader {device_id} disconnected")
 
-        # Find new GSR leader
+        
         for did, device in self._devices.items():
             if (
                     did != device_id
@@ -757,7 +757,7 @@ class NetworkServer:
                 device.is_gsr_leader = True
                 device.gsr_mode = config.get("gsr.default_mode", "local")
 
-                # Notify new leader
+                
                 if did in self._clients:
                     await self._send_message(
                         self._clients[did],
@@ -909,7 +909,7 @@ class NetworkServer:
 
         await self._send_message(writer, error_response)
 
-    # Event callback setters
+    
     def set_device_connected_callback(
             self, callback: Callable[[DeviceInfo], None]
     ) -> None:
@@ -928,7 +928,7 @@ class NetworkServer:
         """Set callback for device status updates."""
         self._on_device_status_update = callback
 
-    # Property accessors
+    
     def get_connected_devices(self) -> Dict[str, DeviceInfo]:
         """Get all connected devices."""
         return {
@@ -948,7 +948,7 @@ class NetworkServer:
                 return device
         return None
 
-    # Enhanced networking methods
+    
     async def _handle_secure_client(
             self, reader: asyncio.StreamReader, writer: asyncio.StreamWriter
     ) -> None:
@@ -956,7 +956,7 @@ class NetworkServer:
         peer_addr = writer.get_extra_info("peername")
         logger.info(f"Secure client connected from {peer_addr}")
 
-        # Handle the same way as regular clients but with security context
+        
         await self._handle_client(reader, writer, is_secure=True)
 
     async def _send_message_to_device(
@@ -974,7 +974,7 @@ class NetworkServer:
             bool: True if message was sent successfully
         """
         try:
-            # Find device by IP address
+            
             target_device = None
             for device in self._devices.values():
                 if device.ip_address == host:
@@ -985,7 +985,7 @@ class NetworkServer:
                 logger.warning(f"No device found for {host}:{port}")
                 return False
 
-            # Send message to device
+            
             await self._send_to_client(target_device.device_id, message)
             return True
 
@@ -1001,13 +1001,13 @@ class NetworkServer:
                     f"Discovered device: {device.service_name} ({device.device_type.value}) at {device.ip_address}:{device.port}"
                 )
 
-                # Optionally auto-connect to discovered devices
+                
                 auto_connect = config.get("network.auto_connect_discovered", False)
                 if auto_connect:
                     logger.debug(
                         f"Auto-connecting to discovered device: {device.service_name}"
                     )
-                    # Could implement auto-connection logic here
+                    
 
             elif event_type == "lost":
                 logger.info(f"Lost device: {device.service_name}")
@@ -1024,14 +1024,14 @@ class NetworkServer:
             certificate_data = message.get("certificate")
 
             if certificate_data:
-                # Validate device certificate
+                
                 cert_bytes = certificate_data.encode("utf-8")
                 is_valid, device_type = (
                     self._security_manager.validate_device_certificate(cert_bytes)
                 )
 
                 if is_valid:
-                    # Generate auth token for the device
+                    
                     token = self._security_manager.generate_auth_token(device_id)
 
                     return create_message(
@@ -1049,7 +1049,7 @@ class NetworkServer:
                         {"success": False, "error": "Certificate validation failed"},
                     )
             elif auth_token:
-                # Validate existing token
+                
                 is_valid, token_device_id = self._security_manager.validate_auth_token(
                     auth_token
                 )
@@ -1104,7 +1104,7 @@ class NetworkServer:
             session_id = message.get("session_id")
             if session_id:
                 logger.info(f"Reliable session start received: {session_id}")
-                # Process session start logic here
+                
                 return {
                     "message_type": "session_start_ack",
                     "session_id": session_id,
@@ -1122,7 +1122,7 @@ class NetworkServer:
             session_id = message.get("session_id")
             if session_id:
                 logger.info(f"Reliable session stop received: {session_id}")
-                # Process session stop logic here
+                
                 return {
                     "message_type": "session_stop_ack",
                     "session_id": session_id,
@@ -1140,7 +1140,7 @@ class NetworkServer:
             flash_id = message.get("flash_id")
             if flash_id:
                 logger.info(f"Reliable sync flash received: {flash_id}")
-                # Process sync flash logic here
+                
                 return {
                     "message_type": "sync_flash_ack",
                     "flash_id": flash_id,
@@ -1191,23 +1191,23 @@ class NetworkServer:
 
     def _calculate_network_latency(self, device_id: str) -> float:
         """Calculate network latency for a device."""
-        # Simple latency estimation based on heartbeat timing
+        
         device = self._devices.get(device_id)
         if device and hasattr(device, "last_heartbeat"):
             current_time = datetime.now()
             if device.last_heartbeat:
-                # Estimate round-trip time based on heartbeat response
+                
                 latency_ms = (
                                      current_time - device.last_heartbeat
-                             ).total_seconds() * 500  # Rough estimate
-                return min(latency_ms, 1000.0)  # Cap at 1 second
-        return 50.0  # Default estimate
+                             ).total_seconds() * 500  
+                return min(latency_ms, 1000.0)  
+        return 50.0  
 
     def _calculate_data_hash(self, data_point: Dict[str, Any]) -> str:
         """Calculate integrity hash for data verification."""
         import hashlib
 
-        # Create hash from critical data fields
+        
         hash_data = (
             f"{data_point.get('timestamp_ns', 0)}"
             f"{data_point.get('gsr_raw', 0)}"
@@ -1221,18 +1221,18 @@ class NetworkServer:
     ) -> None:
         """Update real-time GSR visualization if available."""
         try:
-            # This would interface with the PyQtGraph plotting widgets
-            # For now, just log the data summary
+            
+            
             if data_points:
                 latest_point = data_points[-1]
                 gsr_value = latest_point.get("gsr_microsiemens", 0)
                 logger.debug(f"Real-time GSR from {device_id}: {gsr_value:.4f} µS")
 
-                # In a full implementation, this would:
-                # 1. Send data to GUI plotting thread
-                # 2. Update real-time charts
-                # 3. Trigger alarms if values exceed thresholds
-                # 4. Update device status indicators
+                
+                
+                
+                
+                
 
         except Exception as e:
             logger.debug(f"Real-time visualization update failed: {e}")
@@ -1247,7 +1247,7 @@ class NetworkServer:
         if device_id not in self._gsr_data_buffer:
             self._gsr_data_buffer[device_id] = []
 
-        # Add timestamp for when data was received
+        
         timestamped_points = []
         for point in data_points:
             enhanced_point = point.copy()
@@ -1256,8 +1256,8 @@ class NetworkServer:
 
         self._gsr_data_buffer[device_id].extend(timestamped_points)
 
-        # Limit buffer size to prevent memory issues
-        max_buffer_size = 10000  # Keep last 10k points per device
+        
+        max_buffer_size = 10000  
         if len(self._gsr_data_buffer[device_id]) > max_buffer_size:
             self._gsr_data_buffer[device_id] = self._gsr_data_buffer[device_id][
                                                -max_buffer_size:
@@ -1268,7 +1268,7 @@ class NetworkServer:
             f"buffer size: {len(self._gsr_data_buffer[device_id])}"
         )
 
-    # Enhanced GSR Streaming Handlers for Hub-Spoke Communication
+    
 
     async def _handle_gsr_stream_registration(
             self, message: Dict[str, Any], writer: asyncio.StreamWriter
@@ -1282,7 +1282,7 @@ class NetworkServer:
             if not all([device_id, session_id, stream_type]):
                 return {"message_type": "error", "error": "Missing required fields"}
 
-            # Register with GSR receiver
+            
             success = await self._gsr_receiver.register_device_session(
                 device_id, session_id
             )
@@ -1314,7 +1314,7 @@ class NetworkServer:
                 logger.warning("Invalid GSR data stream message")
                 return None
 
-            # Process GSR batch with receiver
+            
             success = await self._gsr_receiver.process_gsr_batch(
                 device_id, session_id, samples
             )
@@ -1326,7 +1326,7 @@ class NetworkServer:
             else:
                 logger.warning(f"Failed to process GSR batch from {device_id}")
 
-            # No explicit response needed for streaming data
+            
             return None
 
         except Exception as e:
@@ -1344,7 +1344,7 @@ class NetworkServer:
             if not device_id:
                 return None
 
-            # Process quality metrics with receiver
+            
             success = await self._gsr_receiver.handle_quality_metrics(
                 device_id, session_id, message
             )
@@ -1369,7 +1369,7 @@ class NetworkServer:
             if not device_id:
                 return None
 
-            # Process heartbeat with receiver
+            
             success = await self._gsr_receiver.handle_heartbeat(
                 device_id, session_id, message
             )
@@ -1394,7 +1394,7 @@ class NetworkServer:
             if not all([device_id, session_id]):
                 return {"message_type": "error", "error": "Missing required fields"}
 
-            # End session with GSR receiver
+            
             success = await self._gsr_receiver.end_session(device_id, session_id)
 
             if success:
@@ -1432,7 +1432,7 @@ class NetworkServer:
             logger.error(f"Error exporting GSR session data: {e}")
             return None
 
-    # Enhanced Time Synchronization Interface
+    
 
     def get_time_sync_stats(self, device_id: str = None) -> Dict[str, Any]:
         """Get time synchronization statistics."""

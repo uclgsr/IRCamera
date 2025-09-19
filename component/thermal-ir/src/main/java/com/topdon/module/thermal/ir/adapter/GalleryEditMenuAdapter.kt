@@ -17,10 +17,10 @@ class GalleryEditMenuAdapter(val context: Context) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     var listener: ((code: Int) -> Unit)? = null
 
-    private var pointColor = false // 点
-    private var pseudoColor = false // 伪彩
-    private var pseudoColorBar = false // 伪彩条
-    private var settingColorBar = false // 设置
+    private var pointColor = false 
+    private var pseudoColor = false 
+    private var pseudoColorBar = false 
+    private var settingColorBar = false 
 
     private val bean =
         arrayListOf(
@@ -28,22 +28,22 @@ class GalleryEditMenuAdapter(val context: Context) :
                 name = context.getString(R.string.menu_3d_calibrate),
                 icon = MenuR.drawable.selector_menu_first_2_5,
                 code = 1000,
-            ), // 标定
+            ), 
             IconBean(
                 name = context.getString(R.string.thermal_false_color),
                 icon = MenuR.drawable.selector_menu_first_4_3,
                 code = 2000,
-            ), // 伪彩
+            ), 
             IconBean(
                 name = context.getString(R.string.app_setting),
                 icon = MenuR.drawable.selector_menu_first_5_6,
                 code = 4000
-            ), // 设置
+            ), 
             IconBean(
                 name = context.getString(R.string.func_temper_ruler),
                 icon = MenuR.drawable.selector_menu_first_edit_4,
                 code = 3000,
-            ), // 等温尺
+            ), 
         )
 
     fun enPointColor(pointColor: Boolean) {

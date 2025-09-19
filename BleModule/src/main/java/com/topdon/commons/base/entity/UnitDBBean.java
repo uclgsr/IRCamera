@@ -7,15 +7,15 @@ public class UnitDBBean implements Serializable {
 
     private static final long serialVersionUID = -1L;
     public Long dbid;
-    String LoginName;//登录账号
-    int unitType;//0 公制类型  1 英制类型
-    String conversionRelation;//转换关系
-    String preUnit;//转换前单位
-    String preName;//转换前中文名称
-    String afterUnit;//转换后单位
-    String afterName;//转换后中文名称
-    String conversionFormula;//转换公式
-    String calcFactor;//计算因子
+    String LoginName;
+    int unitType;
+    String conversionRelation;
+    String preUnit;
+    String preName;
+    String afterUnit;
+    String afterName;
+    String conversionFormula;
+    String calcFactor;
 
 
     public Long getDbid() {

@@ -13,7 +13,7 @@ from typing import Any, Dict, List
 class IconRegistry:
     """Registry of available icons and their references."""
 
-    # Icon definitions based on Android drawable resources
+    
     ICONS = {
         "settings": {
             "name": "Settings Gear",
@@ -77,13 +77,13 @@ def get_project_icon_path(icon_name: str) -> Path:
     """Get the full path to an icon in the project structure."""
     android_path = IconRegistry.get_android_resource_path(icon_name)
     if android_path:
-        # Assume we're running from pc-controller directory
+        
         project_root = Path(__file__).parent.parent.parent.parent
         return project_root / android_path
     return Path()
 
 
-# Icon usage documentation
+
 ICON_USAGE_GUIDE = """
 Generic Icon Usage Guide for IRCamera PC Controller
 ================================================
@@ -121,7 +121,7 @@ compatibility, based on the visual design of the Android SVG resources.
 """
 
 if __name__ == "__main__":
-    # Print icon registry for debugging
+    
     print("IRCamera Icon Registry")
     print("====================")
 

@@ -92,7 +92,7 @@ data class DeviceInfo(
         ): DeviceInfo? {
 
             if (!isShimmerDevice(address)) {
-                return null  // Not a Shimmer device
+                return null  
             }
 
             val deviceName = name ?: "Shimmer Device"
@@ -105,9 +105,9 @@ data class DeviceInfo(
             }
 
             val priority = when {
-                isGSRDevice -> 1  // Highest priority
-                deviceType.startsWith("Shimmer3") -> 2  // Medium priority
-                else -> 3  // Lower priority
+                isGSRDevice -> 1  
+                deviceType.startsWith("Shimmer3") -> 2  
+                else -> 3  
             }
 
             return DeviceInfo(
@@ -115,7 +115,7 @@ data class DeviceInfo(
                 name = deviceName,
                 deviceType = deviceType,
                 rssi = rssi,
-                isGSRCapable = true,  // All Shimmer devices can potentially do GSR
+                isGSRCapable = true,  
                 priority = priority
             )
         }
@@ -123,8 +123,8 @@ data class DeviceInfo(
         fun sortByPriority(devices: List<DeviceInfo>): List<DeviceInfo> {
             return devices.sortedWith(
                 compareBy<DeviceInfo> { it.priority }
-                    .thenByDescending { it.rssi }  // Better signal as tiebreaker
-                    .thenBy { it.name }  // Name as final tiebreaker
+                    .thenByDescending { it.rssi }  
+                    .thenBy { it.name }  
             )
         }
 

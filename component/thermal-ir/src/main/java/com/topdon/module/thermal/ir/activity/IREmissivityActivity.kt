@@ -15,11 +15,7 @@ import com.topdon.module.thermal.ir.R
 import com.topdon.module.thermal.ir.view.EmissivityView
 import com.topdon.lib.core.R as LibR
 
-/**
 
- *
- * Created by LCG on 2024/10/14.
- */
 
 class IREmissivityActivity : BaseActivity() {
     override fun initContentView(): Int = R.layout.activity_ir_emissivity
@@ -70,7 +66,7 @@ class IREmissivityActivity : BaseActivity() {
                 return
             }
 
-            if (dataArray[seeFirstPosition].isTitle) { // 往上顶，将下一目录的标题顶到顶部了
+            if (dataArray[seeFirstPosition].isTitle) { 
                 currentPosition = seeFirstPosition
                 tvTitle.text = dataArray[currentPosition].name
                 titleView.translationY = 0f
@@ -121,12 +117,12 @@ class IREmissivityActivity : BaseActivity() {
             parent: ViewGroup,
             viewType: Int,
         ): RecyclerView.ViewHolder {
-            return if (viewType == 0) { // 标题
+            return if (viewType == 0) { 
                 TitleViewHolder(
                     LayoutInflater.from(context)
                         .inflate(R.layout.item_ir_emissivity_title, parent, false)
                 )
-            } else { // 内容
+            } else { 
                 val emissivityView = EmissivityView(context)
                 emissivityView.setPadding(SizeUtils.dp2px(12f), 0, SizeUtils.dp2px(12f), 0)
                 ValueViewHolder(emissivityView)
@@ -158,14 +154,7 @@ class IREmissivityActivity : BaseActivity() {
             RecyclerView.ViewHolder(emissivityView)
     }
 
-    /**
-
-
-
-
-
-
-     */
+    
     private data class ItemBean(
         val isTitle: Boolean = false,
         val name: String,

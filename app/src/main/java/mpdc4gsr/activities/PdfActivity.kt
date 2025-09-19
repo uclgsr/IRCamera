@@ -9,9 +9,7 @@ import java.io.FileOutputStream
 import java.io.IOException
 import java.io.OutputStream
 
-/**
- * create by fylder on 2018/8/9
- **/
+
 
 class PdfActivity : BaseBindingActivity<ActivityPdfBinding>() {
 
@@ -31,19 +29,7 @@ class PdfActivity : BaseBindingActivity<ActivityPdfBinding>() {
         pdfView.text =
             "PDF functionality temporarily unavailable - $pdfFileName will be displayed here when PDF library is available"
 
-        /*
-        pdfView.fromAsset(pdfFileName)
-        .enableSwipe(true) // allows to block changing pages using swipe
-        .swipeHorizontal(false)
-        .enableDoubletap(true)
-        .defaultPage(0)
-        .enableAnnotationRendering(false) // render annotations (such as comments, colors or forms)
-        .password(null)
-        .scrollHandle(null)
-        .enableAntialiasing(true) // improve rendering a little bit on low-res screens
-        .spacing(0) // spacing between pages in dp. To define spacing color, set view background
-        .load()
-         */
+        
     }
 
     private fun initData() {

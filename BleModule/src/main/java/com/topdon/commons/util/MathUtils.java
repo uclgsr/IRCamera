@@ -142,27 +142,27 @@ public class MathUtils {
     }
 
     public static int calcCRC16_Modbus(byte[] data) {
-        int crc = 0xffff;//16位
+        int crc = 0xffff;
         for (byte b : data) {
             if (b < 0) {
-                crc ^= (int) b + 256; // XOR byte into least sig. byte of
+                crc ^= (int) b + 256; 
             } else {
-                crc ^= (int) b; // XOR byte into least sig. byte of crc
+                crc ^= (int) b; 
             }
-            for (int i = 8; i != 0; i--) { // Loop over each bit
-                if ((crc & 0x0001) != 0) { // If the LSB is set
-                    crc >>= 1; // Shift right and XOR 0xA001
+            for (int i = 8; i != 0; i--) { 
+                if ((crc & 0x0001) != 0) { 
+                    crc >>= 1; 
                     crc ^= 0xA001;
                 } else
 
-                    crc >>= 1; // Just shift right
+                    crc >>= 1; 
             }
         }
         return crc & 0xffff;
     }
 
     public static int calcCRC_CCITT_XModem(byte[] bytes) {
-        int crc = 0;          // initial value
+        int crc = 0;          
         int polynomial = 0x1021;
         for (byte b : bytes) {
             for (int i = 0; i < 8; i++) {
@@ -176,7 +176,7 @@ public class MathUtils {
     }
 
     public static int calcCRC_CCITT_XModem(byte[] bytes, int offset, int len) {
-        int crc = 0;          // initial value
+        int crc = 0;          
         int polynomial = 0x1021;
         for (int i = offset; i < offset + len; i++) {
             byte b = bytes[i];
@@ -191,8 +191,8 @@ public class MathUtils {
     }
 
     public static int calcCRC_CCITT_0xFFFF(byte[] bytes) {
-        int crc = 0xffff; // initial value
-        int polynomial = 0x1021; // poly value
+        int crc = 0xffff; 
+        int polynomial = 0x1021; 
         for (byte b : bytes) {
             for (int i = 0; i < 8; i++) {
                 boolean bit = ((b >> (7 - i) & 1) == 1);
@@ -205,8 +205,8 @@ public class MathUtils {
     }
 
     public static int calcCRC_CCITT_0xFFFF(byte[] bytes, int offset, int len) {
-        int crc = 0xffff; // initial value
-        int polynomial = 0x1021; // poly value
+        int crc = 0xffff; 
+        int polynomial = 0x1021; 
         for (int i = offset; i < offset + len; i++) {
             byte b = bytes[i];
             for (int j = 0; j < 8; j++) {

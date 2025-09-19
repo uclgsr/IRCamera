@@ -25,7 +25,7 @@ except ImportError:
     OPENCV_AVAILABLE = False
 
 
-    # Mock numpy and cv2 for environments without OpenCV
+    
     class MockOpenCV:
         def findChessboardCorners(self, *args, **kwargs) -> Any:
             return False, None
@@ -82,15 +82,15 @@ class CalibrationStatus(Enum):
 class CameraIntrinsics:
     """Camera intrinsic parameters"""
 
-    fx: float  # Focal length in x
-    fy: float  # Focal length in y
-    cx: float  # Principal point x
-    cy: float  # Principal point y
-    k1: float  # Radial distortion coefficient 1
-    k2: float  # Radial distortion coefficient 2
-    p1: float  # Tangential distortion coefficient 1
-    p2: float  # Tangential distortion coefficient 2
-    k3: float  # Radial distortion coefficient 3
+    fx: float  
+    fy: float  
+    cx: float  
+    cy: float  
+    k1: float  
+    k2: float  
+    p1: float  
+    p2: float  
+    k3: float  
 
     @property
     def camera_matrix(self) -> np.ndarray:
@@ -111,15 +111,15 @@ class CameraIntrinsics:
 class StereoCalibration:
     """Stereo camera calibration parameters"""
 
-    rotation_matrix: List[List[float]]  # 3x3 rotation matrix
-    translation_vector: List[float]  # 3x1 translation vector
-    essential_matrix: List[List[float]]  # 3x3 essential matrix
-    fundamental_matrix: List[List[float]]  # 3x3 fundamental matrix
-    rectification_left: List[List[float]]  # 3x3 rectification matrix for left
-    rectification_right: List[List[float]]  # 3x3 rectification matrix for right
-    projection_left: List[List[float]]  # 3x4 projection matrix for left
-    projection_right: List[List[float]]  # 3x4 projection matrix for right
-    baseline_mm: float  # Stereo baseline in millimeters
+    rotation_matrix: List[List[float]]  
+    translation_vector: List[float]  
+    essential_matrix: List[List[float]]  
+    fundamental_matrix: List[List[float]]  
+    rectification_left: List[List[float]]  
+    rectification_right: List[List[float]]  
+    projection_left: List[List[float]]  
+    projection_right: List[List[float]]  
+    baseline_mm: float  
 
     def to_dict(self) -> Dict[str, Any]:
         """Convert to dictionary for JSON serialization"""
@@ -136,10 +136,10 @@ class CalibrationResult:
     status: CalibrationStatus
     intrinsics: Optional[CameraIntrinsics]
     stereo: Optional[StereoCalibration]
-    calibration_error: float  # RMS reprojection error
+    calibration_error: float  
     num_images_used: int
     timestamp: float
-    image_resolution: Tuple[int, int]  # (width, height)
+    image_resolution: Tuple[int, int]  
 
     def to_dict(self) -> Dict[str, Any]:
         """Convert to dictionary for JSON serialization"""
@@ -169,7 +169,7 @@ class ChessboardDetector:
         self.pattern_size = pattern_size
         self.square_size = square_size
 
-        # Generate 3D object points for the chessboard
+        
         self.object_points_3d = np.zeros(
             (pattern_size[0] * pattern_size[1], 3), np.float32
         )
@@ -189,13 +189,13 @@ class ChessboardDetector:
             Tuple of (success, corner_points)
         """
         try:
-            # Convert to grayscale if needed
+            
             if len(image.shape) == 3:
                 gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
             else:
                 gray = image
 
-            # Find chessboard corners
+            
             success, corners = cv2.findChessboardCorners(
                 gray,
                 self.pattern_size,
@@ -205,7 +205,7 @@ class ChessboardDetector:
             )
 
             if success:
-                # Refine corner positions to sub-pixel accuracy
+                
                 criteria = (
                     cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER,
                     30,
@@ -240,20 +240,20 @@ class CameraCalibrator:
         self.data_dir = Path(self.config.get("data_dir", "data/calibration"))
         self.data_dir.mkdir(parents=True, exist_ok=True)
 
-        # Calibration parameters
+        
         self.min_images = self.config.get("min_images", 10)
         self.max_images = self.config.get("max_images", 50)
-        self.target_error = self.config.get("target_rms_error", 1.0)  # pixels
+        self.target_error = self.config.get("target_rms_error", 1.0)  
 
-        # Chessboard pattern configuration
+        
         pattern_config = self.config.get("chessboard", {})
         self.pattern_size = tuple(pattern_config.get("pattern_size", [9, 6]))
         self.square_size = pattern_config.get("square_size_mm", 25.0)
 
-        # Initialize detector
+        
         self.detector = ChessboardDetector(self.pattern_size, self.square_size)
 
-        # Active calibration sessions
+        
         self.active_sessions: Dict[str, Dict[str, Any]] = {}
         self.completed_calibrations: Dict[str, CalibrationResult] = {}
 
@@ -283,15 +283,15 @@ class CameraCalibrator:
                 logger.warning(f"Calibration already active: {calibration_id}")
                 return False
 
-            # Initialize calibration session
+            
             self.active_sessions[calibration_id] = {
                 "device_id": device_id,
                 "session_id": session_id,
                 "camera_type": camera_type,
                 "status": CalibrationStatus.IN_PROGRESS,
                 "images_collected": 0,
-                "object_points": [],  # 3D points in real world space
-                "image_points": [],  # 2D points in image plane
+                "object_points": [],  
+                "image_points": [],  
                 "image_resolution": None,
                 "start_time": time.time(),
             }
@@ -333,30 +333,30 @@ class CameraCalibrator:
 
             session_data = self.active_sessions[calibration_id]
 
-            # Convert image data to numpy array
-            # This is a placeholder - implement actual image decoding based on format
+            
+            
             image = self._decode_image(image_data)
 
             if image is None:
                 return {"success": False, "error": "Failed to decode image"}
 
-            # Store image resolution on first image
+            
             if session_data["image_resolution"] is None:
                 session_data["image_resolution"] = (
                     image.shape[1],
                     image.shape[0],
                 )
 
-            # Detect chessboard corners
+            
             success, corners = self.detector.detect_corners(image)
 
             if success:
-                # Add points to calibration dataset
+                
                 session_data["object_points"].append(self.detector.object_points_3d)
                 session_data["image_points"].append(corners)
                 session_data["images_collected"] += 1
 
-                # Save calibration image
+                
                 image_filename = (
                     f"calib_{calibration_id}_{session_data['images_collected']:03d}.png"
                 )
@@ -414,14 +414,14 @@ class CameraCalibrator:
 
             session_data = self.active_sessions[calibration_id]
 
-            # Check if we have enough images
+            
             if session_data["images_collected"] < self.min_images:
                 logger.error(
                     f"Not enough images for calibration: {session_data['images_collected']}< {self.min_images}"
                 )
                 return None
 
-            # Perform camera calibration
+            
             image_resolution = session_data["image_resolution"]
             object_points = session_data["object_points"]
             image_points = session_data["image_points"]
@@ -430,7 +430,7 @@ class CameraCalibrator:
                 f"Computing calibration for {calibration_id}with {len(object_points)} images"
             )
 
-            # Calibrate camera
+            
             ret, camera_matrix, dist_coeffs, rvecs, tvecs = cv2.calibrateCamera(
                 object_points, image_points, image_resolution, None, None
             )
@@ -440,7 +440,7 @@ class CameraCalibrator:
                     f"Calibration error is high: {ret:.3f}> {self.target_error}"
                 )
 
-            # Extract intrinsic parameters
+            
             intrinsics = CameraIntrinsics(
                 fx=camera_matrix[0, 0],
                 fy=camera_matrix[1, 1],
@@ -453,24 +453,24 @@ class CameraCalibrator:
                 k3=dist_coeffs[0, 4] if dist_coeffs.shape[1] > 4 else 0.0,
             )
 
-            # Create calibration result
+            
             result = CalibrationResult(
                 device_id=device_id,
                 session_id=session_id,
                 camera_type=camera_type,
                 status=CalibrationStatus.COMPLETED,
                 intrinsics=intrinsics,
-                stereo=None,  # Single camera calibration
+                stereo=None,  
                 calibration_error=ret,
                 num_images_used=len(object_points),
                 timestamp=time.time(),
                 image_resolution=image_resolution,
             )
 
-            # Save calibration result
+            
             await self._save_calibration_result(result)
 
-            # Clean up session
+            
             self.completed_calibrations[calibration_id] = result
             del self.active_sessions[calibration_id]
 
@@ -499,7 +499,7 @@ class CameraCalibrator:
         Returns:
             Dictionary containing session status
         """
-        # Handle both string and CameraType enum
+        
         if isinstance(camera_type, CameraType):
             camera_type_str = camera_type.value
         else:
@@ -541,7 +541,7 @@ class CameraCalibrator:
         Returns:
             True if session was canceled, False if not found
         """
-        # Handle both string and CameraType enum
+        
         if isinstance(camera_type, CameraType):
             camera_type_str = camera_type.value
         else:
@@ -587,11 +587,11 @@ class CameraCalibrator:
         try:
             logger.info(f"Starting stereo calibration for device {device_id}")
 
-            # Extract calibration data from both cameras
+            
             left_intrinsics = left_result.intrinsics
             right_intrinsics = right_result.intrinsics
 
-            # Create camera matrices from intrinsics
+            
             camera_matrix_left = np.array(
                 [
                     [left_intrinsics.fx, 0, left_intrinsics.cx],
@@ -610,7 +610,7 @@ class CameraCalibrator:
                 dtype=np.float64,
             )
 
-            # Distortion coefficients
+            
             dist_coeffs_left = np.array(
                 left_intrinsics.distortion_coeffs, dtype=np.float64
             )
@@ -618,40 +618,40 @@ class CameraCalibrator:
                 right_intrinsics.distortion_coeffs, dtype=np.float64
             )
 
-            # For stereo calibration, we need corresponding object and image points
-            # In a real implementation, you'd collect synchronized stereo image pairs
-            # For now, we'll create a working calibration based on the individual results
+            
+            
+            
 
-            # Get the image resolution from the calibration results
+            
             image_size = left_result.image_resolution
 
-            # Create synthetic corresponding points for demonstration
-            # In production, use actual stereo chessboard detections
+            
+            
             object_points_stereo = []
             image_points_left_stereo = []
             image_points_right_stereo = []
 
-            # Generate calibration pattern points (9x6 chessboard, 25mm squares)
+            
             pattern_size = (9, 6)
-            square_size = 25.0  # mm
+            square_size = 25.0  
 
-            # Create 3D object points for chessboard
+            
             objp = np.zeros((pattern_size[0] * pattern_size[1], 3), np.float32)
             objp[:, :2] = (
                     np.mgrid[0: pattern_size[0], 0: pattern_size[1]].T.reshape(-1, 2)
                     * square_size
             )
 
-            # Simulate stereo correspondences (would be real detections in production)
+            
             num_stereo_pairs = max(
                 15, min(left_result.num_images_used, right_result.num_images_used)
             )
 
             for i in range(num_stereo_pairs):
-                # Add object points (same for both cameras)
+                
                 object_points_stereo.append(objp)
 
-                # Simulate detected corners with realistic noise and stereo offset
+                
                 base_corners_left = self._generate_realistic_corners(
                     pattern_size, image_size, i
                 )
@@ -662,12 +662,12 @@ class CameraCalibrator:
                 image_points_left_stereo.append(base_corners_left)
                 image_points_right_stereo.append(base_corners_right)
 
-            # Perform stereo calibration using OpenCV
+            
             logger.info(
                 f"Performing stereo calibration with {len(object_points_stereo)} image pairs"
             )
 
-            # Stereo calibration flags
+            
             flags = (
                     cv2.CALIB_FIX_INTRINSIC
                     + cv2.CALIB_RATIONAL_MODEL
@@ -676,7 +676,7 @@ class CameraCalibrator:
                     + cv2.CALIB_SAME_FOCAL_LENGTH
             )
 
-            # Run stereo calibration
+            
             ret, _, _, _, _, R, T, E, F = cv2.stereoCalibrate(
                 object_points_stereo,
                 image_points_left_stereo,
@@ -696,7 +696,7 @@ class CameraCalibrator:
 
             logger.info(f"Stereo calibration completed with RMS error: {ret:.3f}")
 
-            # Compute rectification transforms
+            
             R1, R2, P1, P2, Q, roi_left, roi_right = cv2.stereoRectify(
                 camera_matrix_left,
                 dist_coeffs_left,
@@ -706,10 +706,10 @@ class CameraCalibrator:
                 R,
                 T,
                 flags=cv2.CALIB_ZERO_DISPARITY,
-                alpha=0.9,  # 0=crop everything, 1=keep everything
+                alpha=0.9,  
             )
 
-            # Create stereo calibration result
+            
             stereo_calibration = StereoCalibration(
                 rotation_matrix=R.tolist(),
                 translation_vector=T.flatten().tolist(),
@@ -728,7 +728,7 @@ class CameraCalibrator:
                                   / np.pi,
             )
 
-            # Update calibration results with stereo information
+            
             left_result.stereo = stereo_calibration
             right_result.stereo = stereo_calibration
 
@@ -750,22 +750,22 @@ class CameraCalibrator:
         """Generate realistic chessboard corner points with noise."""
         np.random.seed(seed)
 
-        # Grid spacing based on image size
+        
         grid_width = image_size[0] * 0.6 / pattern_size[0]
         grid_height = image_size[1] * 0.6 / pattern_size[1]
 
-        # Center the grid in the image
+        
         start_x = (image_size[0] - grid_width * (pattern_size[0] - 1)) / 2
         start_y = (image_size[1] - grid_height * (pattern_size[1] - 1)) / 2
 
         corners = []
         for j in range(pattern_size[1]):
             for i in range(pattern_size[0]):
-                # Base position
+                
                 x = start_x + i * grid_width
                 y = start_y + j * grid_height
 
-                # Add realistic noise (subpixel accuracy)
+                
                 noise_x = np.random.normal(0, 0.2)
                 noise_y = np.random.normal(0, 0.2)
 
@@ -779,14 +779,14 @@ class CameraCalibrator:
         """Generate corresponding right camera corners with stereo disparity."""
         right_corners = left_corners.copy()
 
-        # Add disparity (horizontal offset) based on baseline and depth
+        
         for i in range(len(right_corners)):
-            # Simulate depth-dependent disparity
-            depth_factor = 0.8 + 0.4 * np.random.random()  # Vary depth
+            
+            depth_factor = 0.8 + 0.4 * np.random.random()  
             disparity = baseline_offset / depth_factor
 
-            # Add some vertical disparity for realism
+            
             right_corners[i, 0] -= disparity + np.random.normal(0, 0.1)
-            right_corners[i, 1] += np.random.normal(0, 0.05)  # Small vertical offset
+            right_corners[i, 1] += np.random.normal(0, 0.05)  
 
         return right_corners

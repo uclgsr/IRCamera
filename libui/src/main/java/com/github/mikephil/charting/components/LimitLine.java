@@ -8,39 +8,25 @@ import com.github.mikephil.charting.utils.Utils;
 
 public class LimitLine extends ComponentBase {
 
-    /**
-     * limit / maximum (the y-value or xIndex)
-     */
+    
     private float mLimit = 0f;
 
-    /**
-     * the width of the limit line
-     */
+    
     private float mLineWidth = 2f;
 
-    /**
-     * the color of the limit line
-     */
+    
     private int mLineColor = Color.rgb(237, 91, 91);
 
-    /**
-     * the style of the label text
-     */
+    
     private Paint.Style mTextStyle = Paint.Style.FILL_AND_STROKE;
 
-    /**
-     * label string that is drawn next to the limit line
-     */
+    
     private String mLabel = "";
 
-    /**
-     * the path effect of this LimitLine that makes dashed lines possible
-     */
+    
     private DashPathEffect mDashPathEffect = null;
 
-    /**
-     * indicates the position of the LimitLine label
-     */
+    
     private LimitLabelPosition mLabelPosition = LimitLabelPosition.RIGHT_TOP;
 
     public LimitLine(float limit) {
@@ -119,9 +105,7 @@ public class LimitLine extends ComponentBase {
         mLabel = label;
     }
 
-    /**
-     * enum that indicates the position of the LimitLine label
-     */
+    
     public enum LimitLabelPosition {
         LEFT_TOP, LEFT_BOTTOM, RIGHT_TOP, RIGHT_BOTTOM
     }

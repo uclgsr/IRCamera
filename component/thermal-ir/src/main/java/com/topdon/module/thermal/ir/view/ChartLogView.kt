@@ -60,52 +60,52 @@ class ChartLogView : LineChart {
             this.setTouchEnabled(true)
             this.isDragEnabled = true
             this.setDrawGridBackground(false)
-            this.description = null // 图标描述文本
+            this.description = null 
             this.setBackgroundResource(LibcoreR.color.chart_bg)
-            this.setScaleEnabled(false) // 缩放
-            this.setPinchZoom(false) // 禁用后，可以分别在x轴和y轴上进行缩放
-            this.isDoubleTapToZoomEnabled = false // 双击不可缩放
-            this.isScaleYEnabled = false // 禁止Y轴缩放
-            this.isScaleXEnabled = true // 禁止X轴缩放
+            this.setScaleEnabled(false) 
+            this.setPinchZoom(false) 
+            this.isDoubleTapToZoomEnabled = false 
+            this.isScaleYEnabled = false 
+            this.isScaleXEnabled = true 
             this.setExtraOffsets(
                 0f,
                 0f,
                 SizeUtils.dp2px(8f).toFloat(),
                 SizeUtils.dp2px(4f).toFloat(),
-            ) // 图表区域偏移
+            ) 
             setNoDataText(context.getString(ThermalR.string.lms_http_code998))
             setNoDataTextColor(ContextCompat.getColor(context, LibcoreR.color.chart_text))
             val mv = MyMarkerView(context, R.layout.marker_lay)
             mv.chartView = this
-            marker = mv // 设置点击坐标显示提示框
+            marker = mv 
             val data = LineData()
             data.setValueTextColor(textColor)
             this.data = data
             val l = this.legend
             l.form = Legend.LegendForm.CIRCLE
             l.textColor = textColor
-            l.isEnabled = false // 隐藏曲线标签
+            l.isEnabled = false 
 
             val xAxis = this.xAxis
             xAxis.textColor = textColor
-            xAxis.setDrawGridLines(false) // 竖向格线
-            xAxis.gridColor = axisChartColors // x轴网格颜色
-            xAxis.axisLineColor = 0x00000000 // x轴颜色
+            xAxis.setDrawGridLines(false) 
+            xAxis.gridColor = axisChartColors 
+            xAxis.axisLineColor = 0x00000000 
             xAxis.setAvoidFirstLastClipping(true)
             xAxis.isEnabled = true
             xAxis.position = XAxis.XAxisPosition.BOTTOM
             xAxis.granularity = 1f
-            xAxis.isGranularityEnabled = true // 重复值不显示
+            xAxis.isGranularityEnabled = true 
             xAxis.textSize = 8f
 
             val leftAxis = this.axisLeft
-            leftAxis.textColor = textColor // y轴文本颜色
-            leftAxis.axisLineColor = 0x00000000 // y轴颜色
-            leftAxis.setDrawGridLines(true) // 横向格线
-            leftAxis.gridColor = axisChartColors // y轴网格颜色
+            leftAxis.textColor = textColor 
+            leftAxis.axisLineColor = 0x00000000 
+            leftAxis.setDrawGridLines(true) 
+            leftAxis.gridColor = axisChartColors 
             leftAxis.gridLineWidth = 1.5f
             leftAxis.setLabelCount(6, true)
-            leftAxis.valueFormatter = YValueFormatter() // 设置小数点一位
+            leftAxis.valueFormatter = YValueFormatter() 
             leftAxis.textSize = 8f
 
             this.axisRight.isEnabled = false
@@ -130,13 +130,13 @@ class ChartLogView : LineChart {
                 Log.w("chart", "update chart start")
                 val lineData: LineData = this@ChartLogView.data
                 if (lineData != null) {
-                    val startTime = data[0].createTime / 1000 * 1000 // 毫秒 (毫秒归零,否则有可能x对应不上时间)
+                    val startTime = data[0].createTime / 1000 * 1000 
                     xAxis.valueFormatter = IRMyValueFormatter(startTime = startTime, type = type)
                     XLog.w("chart init startTime:$startTime")
 
                     when (data[0].type) {
                         "point" -> {
-                            var set = lineData.getDataSetByIndex(0) // 读取x为0的坐标点
+                            var set = lineData.getDataSetByIndex(0) 
                             if (set == null) {
                                 set = createSet(0, "point temp")
                                 lineData.addDataSet(set)
@@ -157,12 +157,12 @@ class ChartLogView : LineChart {
                         }
 
                         "line" -> {
-                            var maxDataSet = lineData.getDataSetByIndex(0) // 读取x为0的坐标点
+                            var maxDataSet = lineData.getDataSetByIndex(0) 
                             if (maxDataSet == null) {
                                 maxDataSet = createSet(0, "line max temp")
                             }
 
-                            var minDataSet = lineData.getDataSetByIndex(1) // 读取x为0的坐标点
+                            var minDataSet = lineData.getDataSetByIndex(1) 
                             if (minDataSet == null) {
                                 minDataSet = createSet(1, "line min temp")
                             }
@@ -191,13 +191,13 @@ class ChartLogView : LineChart {
 
                         else -> {
 
-                            var maxTempDataSet = lineData.getDataSetByIndex(0) // 读取x为0的坐标点
+                            var maxTempDataSet = lineData.getDataSetByIndex(0) 
                             if (maxTempDataSet == null) {
                                 maxTempDataSet = createSet(0, "fence max temp")
                                 lineData.addDataSet(maxTempDataSet)
                             }
 
-                            var centerTempDataSet = lineData.getDataSetByIndex(1) // 读取x为0的坐标点
+                            var centerTempDataSet = lineData.getDataSetByIndex(1) 
                             if (centerTempDataSet == null) {
                                 centerTempDataSet = createSet(1, "fence min temp")
                                 lineData.addDataSet(centerTempDataSet)
@@ -225,9 +225,9 @@ class ChartLogView : LineChart {
                     lineData.notifyDataChanged()
                     notifyDataSetChanged()
                     moveViewToX(xChartMin)
-                    setVisibleXRangeMinimum(ChartTools.getMinimum(type = type) / 2) // 设置显示X轴区间大小
-                    setVisibleXRangeMaximum(ChartTools.getMaximum(type = type)) // 设置显示X轴区间大小
-                    zoom(1f, 1f, xChartMin, 0f) // 默认无缩放，全部显示
+                    setVisibleXRangeMinimum(ChartTools.getMinimum(type = type) / 2) 
+                    setVisibleXRangeMaximum(ChartTools.getMaximum(type = type)) 
+                    zoom(1f, 1f, xChartMin, 0f) 
                     ChartTools.setX(this@ChartLogView, type)
 
                 }
@@ -263,24 +263,24 @@ class ChartLogView : LineChart {
         val set = LineDataSet(null, label)
         set.mode = LineDataSet.Mode.HORIZONTAL_BEZIER
         set.setDrawFilled(false)
-        set.fillDrawable = ContextCompat.getDrawable(context, bgChartColors[index]) // 设置填充颜色渐变
+        set.fillDrawable = ContextCompat.getDrawable(context, bgChartColors[index]) 
         set.axisDependency = YAxis.AxisDependency.LEFT
-        set.color = ContextCompat.getColor(context, lineChartColors[index]) // 曲线颜色
-        set.circleHoleColor = ContextCompat.getColor(context, linePointColors[index]) // 坐标圆心颜色
-        set.setCircleColor(ContextCompat.getColor(context, lineChartColors[index])) // 坐标颜色
+        set.color = ContextCompat.getColor(context, lineChartColors[index]) 
+        set.circleHoleColor = ContextCompat.getColor(context, linePointColors[index]) 
+        set.setCircleColor(ContextCompat.getColor(context, lineChartColors[index])) 
         set.valueTextColor = Color.WHITE
         set.lineWidth = 2f
-        set.circleRadius = 1f // 坐标点半径
+        set.circleRadius = 1f 
         set.fillAlpha = 200
         set.valueTextSize = 10f
-        set.setDrawValues(false) // 设置是否显示坐标值文本
+        set.setDrawValues(false) 
         return set
     }
 
     private fun clearEntity(isEmpty: Boolean) {
         initChart()
         if (isEmpty) {
-            clear() // 无数据显示
+            clear() 
         } else {
             clearValues()
         }

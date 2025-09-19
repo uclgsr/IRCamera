@@ -67,30 +67,30 @@ class GSRReceiver:
         self.data_dir = Path(self.config.get("data_dir", "data/gsr"))
         self.data_dir.mkdir(parents=True, exist_ok=True)
 
-        # Database for persistent storage
+        
         self.db_path = self.data_dir / "gsr_data.db"
         self.init_database()
 
-        # Active device sessions
+        
         self.active_sessions: Dict[str, DeviceSession] = {}
         self.completed_sessions: Dict[str, DeviceSession] = {}
 
-        # Real-time monitoring
+        
         self.sample_buffer = deque(maxlen=1000)
         self.quality_alerts: Set[str] = set()
 
-        # Performance settings
+        
         self.max_devices = self.config.get("max_devices", 10)
         self.buffer_flush_interval = self.config.get("buffer_flush_interval", 5.0)
         self.quality_threshold = self.config.get("quality_threshold", 50)
 
-        # Time synchronization
+        
         self.time_offset_correction = self.config.get("time_offset_correction", True)
         self.sync_precision_threshold = self.config.get(
             "sync_precision_threshold", 1000000
-        )  # 1ms in ns
+        )  
 
-        # Advanced analytics integration
+        
         analytics_config = self.config.get("analytics", {})
         self.analytics = GSRAnalytics(
             window_size_seconds=analytics_config.get("window_size_seconds", 60),
@@ -98,7 +98,7 @@ class GSRReceiver:
             sampling_rate=analytics_config.get("sampling_rate", 128.0),
         )
 
-        # Background tasks
+        
         self._running = False
         self._flush_task: Optional[asyncio.Task] = None
         self._quality_monitor_task: Optional[asyncio.Task] = None
@@ -144,7 +144,7 @@ class GSRReceiver:
                 """
                 )
 
-                # Create indexes for performance
+                
                 conn.execute(
                     "CREATE INDEX IF NOT EXISTS idx_samples_device_session ON gsr_samples(device_id, "
                     "session_id)"
@@ -168,7 +168,7 @@ class GSRReceiver:
 
         self._running = True
 
-        # Start background monitoring tasks
+        
         self._flush_task = asyncio.create_task(self._periodic_flush())
         self._quality_monitor_task = asyncio.create_task(self._quality_monitor())
 
@@ -181,7 +181,7 @@ class GSRReceiver:
 
         self._running = False
 
-        # Cancel background tasks
+        
         if self._flush_task:
             self._flush_task.cancel()
             try:
@@ -196,11 +196,11 @@ class GSRReceiver:
             except asyncio.CancelledError:
                 pass
 
-        # Finalize all active sessions
+        
         for session in list(self.active_sessions.values()):
             await self.end_session(session.device_id, session.session_id)
 
-        # Final database flush
+        
         await self._flush_to_database()
 
         logger.info("GSR Receiver stopped")
@@ -241,7 +241,7 @@ class GSRReceiver:
 
             self.active_sessions[session_key] = session
 
-            # Record in database
+            
             with sqlite3.connect(self.db_path) as conn:
                 conn.execute(
                     """
@@ -284,7 +284,7 @@ class GSRReceiver:
                 logger.warning(f"Received GSR batch for unknown session: {session_key}")
                 return False
 
-            # Process each sample in the batch
+            
             processed_samples = []
             for sample_data in samples_data:
                 sample = GSRSample(
@@ -295,19 +295,19 @@ class GSRReceiver:
                     device_id=device_id,
                 )
 
-                # Validate sample
+                
                 if self._validate_sample(sample):
                     processed_samples.append(sample)
                     session.samples.append(sample)
                     self.sample_buffer.append(sample)
 
-            # Update session statistics
+            
             session.sample_count += len(processed_samples)
             session.last_sample_time = time.time()
             session.network_stats["packets_received"] += 1
             session.network_stats["bytes_received"] += len(str(samples_data))
 
-            # Update quality statistics
+            
             if processed_samples:
                 qualities = [s.quality for s in processed_samples]
                 session.quality_stats.update(
@@ -319,7 +319,7 @@ class GSRReceiver:
                     }
                 )
 
-                # Send samples to analytics engine for real-time processing
+                
                 gsr_values = [s.gsr_value for s in processed_samples]
                 timestamps = [s.timestamp for s in processed_samples]
                 self.analytics.add_gsr_samples(
@@ -357,12 +357,12 @@ class GSRReceiver:
                 logger.warning(f"Received heartbeat for unknown session: {session_key}")
                 return False
 
-            # Update last heartbeat time
+            
             session.network_stats["last_heartbeat"] = time.time()
 
-            # Extract buffer size information
+            
             buffer_size = heartbeat_data.get("buffer_size", 0)
-            if buffer_size > 500:  # High buffer indicates potential network issues
+            if buffer_size > 500:  
                 logger.warning(
                     f"High buffer size ({buffer_size}) detected for {session_key}"
                 )
@@ -397,7 +397,7 @@ class GSRReceiver:
                 )
                 return False
 
-            # Update network statistics
+            
             session.network_stats.update(
                 {
                     "samples_sent": metrics_data.get("samples_sent", 0),
@@ -407,7 +407,7 @@ class GSRReceiver:
                 }
             )
 
-            # Check for quality issues
+            
             error_count = metrics_data.get("network_errors", 0)
             if error_count > 10:
                 self.quality_alerts.add(
@@ -439,10 +439,10 @@ class GSRReceiver:
                 logger.warning(f"Cannot end unknown session: {session_key}")
                 return False
 
-            # Final database flush for this session
+            
             await self._flush_session_to_database(session)
 
-            # Update session status in database
+            
             end_time = time.time()
             avg_quality = session.quality_stats.get("avg_quality", 0)
 
@@ -464,19 +464,19 @@ class GSRReceiver:
                 )
                 conn.commit()
 
-            # Generate analytics report for completed session
+            
             analysis_report = self.analytics.generate_session_report(
                 device_id, session_id
             )
             if analysis_report:
-                # Save analytics report
+                
                 report_filename = (
                     f"gsr_analysis_{device_id}_{session_id}_{int(end_time)}.json"
                 )
                 report_path = self.data_dir / "analytics" / report_filename
                 report_path.parent.mkdir(exist_ok=True)
 
-                # Convert report to JSON-serializable format
+                
                 report_dict = {
                     "session_id": analysis_report.session_id,
                     "device_id": analysis_report.device_id,
@@ -498,7 +498,7 @@ class GSRReceiver:
                 with open(report_path, "w") as f:
                     json.dump(report_dict, f, indent=2)
 
-                # Export features to CSV
+                
                 features_filename = (
                     f"gsr_features_{device_id}_{session_id}_{int(end_time)}.csv"
                 )
@@ -513,10 +513,10 @@ class GSRReceiver:
                     f"trend={analysis_report.stress_trend}"
                 )
 
-            # Clean up analytics buffers
+            
             self.analytics.cleanup_device_session(device_id, session_id)
 
-            # Move to completed sessions
+            
             self.completed_sessions[session_key] = session
             del self.active_sessions[session_key]
 
@@ -532,23 +532,23 @@ class GSRReceiver:
     def _validate_sample(self, sample: GSRSample) -> bool:
         """Validate GSR sample data"""
         try:
-            # Check timestamp validity
+            
             current_time = time.time()
             if (
                     abs(sample.timestamp - current_time) > 3600
-            ):  # More than 1 hour difference
+            ):  
                 logger.warning(f"Sample timestamp seems invalid: {sample.timestamp}")
                 return False
 
-            # Check GSR value range (typical range: 0.1 to 100 µS)
+            
             if not (0.01 <= sample.gsr_value <= 1000):
                 logger.warning(f"GSR value out of range: {sample.gsr_value}")
                 return False
 
-            # Check quality threshold
+            
             if sample.quality < self.quality_threshold:
                 logger.debug(f"Low quality sample: {sample.quality}")
-                # Still accept but log the issue
+                
 
             return True
 
@@ -588,7 +588,7 @@ class GSRReceiver:
                     [
                         (
                             sample.device_id,
-                            "unknown",  # Session ID may need to be tracked separately
+                            "unknown",  
                             sample.timestamp,
                             sample.gsr_value,
                             sample.raw_value,
@@ -647,21 +647,21 @@ class GSRReceiver:
         """Monitor data quality and generate alerts"""
         while self._running:
             try:
-                await asyncio.sleep(10.0)  # Check every 10 seconds
+                await asyncio.sleep(10.0)  
 
                 current_time = time.time()
 
-                # Check for stale sessions
+                
                 for session_key, session in self.active_sessions.items():
                     last_heartbeat = session.network_stats.get("last_heartbeat", 0)
                     if (
                             current_time - last_heartbeat > 30
-                    ):  # No heartbeat for 30 seconds
+                    ):  
                         self.quality_alerts.add(
                             f"Stale session detected: {session_key}"
                         )
 
-                # Log quality alerts
+                
                 if self.quality_alerts:
                     for alert in self.quality_alerts:
                         logger.warning(f"Quality Alert: {alert}")
@@ -744,7 +744,7 @@ class GSRReceiver:
                 session.device_id, session.session_id
             )
             if features:
-                # High stress alert
+                
                 if features.stress_score > 80:
                     alerts.append(
                         {
@@ -757,7 +757,7 @@ class GSRReceiver:
                         }
                     )
 
-                # Low confidence alert
+                
                 if features.confidence < 50:
                     alerts.append(
                         {
@@ -770,7 +770,7 @@ class GSRReceiver:
                         }
                     )
 
-                # Rapid changes alert
+                
                 if features.rapid_changes > 20:
                     alerts.append(
                         {
@@ -800,7 +800,7 @@ class GSRReceiver:
             Path to exported file or None if failed
         """
         try:
-            # Query database for session data
+            
             with sqlite3.connect(self.db_path) as conn:
                 df = pd.read_sql_query(
                     """
@@ -816,7 +816,7 @@ class GSRReceiver:
                 logger.warning(f"No data found for session {device_id}_{session_id}")
                 return None
 
-            # Export in requested format
+            
             timestamp = int(time.time())
             filename = f"gsr_{device_id}_{session_id}_{timestamp}.{format}"
             export_path = self.data_dir / filename

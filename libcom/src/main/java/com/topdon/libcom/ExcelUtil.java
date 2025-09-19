@@ -121,17 +121,17 @@ public class ExcelUtil {
             CellStyle titleStyle = wb.createCellStyle();
             titleStyle.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
             titleStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-            titleStyle.setAlignment(HorizontalAlignment.CENTER); // 居中
+            titleStyle.setAlignment(HorizontalAlignment.CENTER); 
             titleStyle.setVerticalAlignment(VerticalAlignment.CENTER);
             Font font = wb.createFont();
-            font.setBold(true);//粗体显示
+            font.setBold(true);
             titleStyle.setFont(font);
             CellStyle contentStyle = wb.createCellStyle();
-            contentStyle.setAlignment(HorizontalAlignment.CENTER); // 居中
+            contentStyle.setAlignment(HorizontalAlignment.CENTER); 
             contentStyle.setVerticalAlignment(VerticalAlignment.CENTER);
 
             for (int i = 0; i < colNum; i++) {
-                sheet.setColumnWidth(i, 20 * 256);  // 显示20个字符的宽度
+                sheet.setColumnWidth(i, 20 * 256);  
                 Cell cell1 = row.createCell(i);
                 cell1.setCellStyle(titleStyle);
 

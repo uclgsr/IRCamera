@@ -31,7 +31,7 @@ public class MyMarkerView extends MarkerView {
     @SuppressLint("DefaultLocale")
     @Override
     public void refreshContent(Entry e, Highlight highlight) {
-        int index = highlight.getDataIndex();//曲线序号
+        int index = highlight.getDataIndex();
         ThermalEntity data = (ThermalEntity) e.getData();
         if (e instanceof CandleEntry) {
             CandleEntry ce = (CandleEntry) e;

@@ -12,7 +12,7 @@ object TimestampManager {
     private val clockOffset = AtomicLong(0L)
     private val sessionStartTime = AtomicLong(0L)
     
-    // Session reference timestamps for cross-sensor alignment
+    
     private val sessionStartSystemMs = AtomicLong(0L)
     private val sessionStartMonotonicNs = AtomicLong(0L)
 
@@ -25,26 +25,17 @@ object TimestampManager {
         Log.i(TAG, "Timestamp system initialized with boot reference: ${bootTimeReference.get()}")
     }
 
-    /**
-     * High-precision nanosecond timestamp using monotonic clock
-     * Use for sensor data that requires precise relative timing
-     */
+    
     fun nowNanos(): Long {
         return System.nanoTime()
     }
 
-    /**
-     * More precise monotonic clock for relative timing between sensors
-     * Preferred over System.nanoTime() for consistency
-     */
+    
     fun getCurrentTimestampNanos(): Long {
         return SystemClock.elapsedRealtimeNanos()
     }
 
-    /**
-     * Wall clock time in milliseconds
-     * Use for data export and human-readable timestamps
-     */
+    
     fun getCurrentSystemTimeMs(): Long {
         return System.currentTimeMillis()
     }
@@ -66,10 +57,7 @@ object TimestampManager {
         return getCurrentElapsedRealtimeMs() - sessionStart
     }
 
-    /**
-     * Start a new recording session and establish reference timestamps
-     * Returns session reference data for cross-sensor synchronization
-     */
+    
     fun startSession(): SessionTimestampReference {
         val sessionStart = getCurrentElapsedRealtimeMs()
         val systemStart = getCurrentSystemTimeMs()
@@ -109,10 +97,7 @@ object TimestampManager {
         return getDeviceTimestampMs() + clockOffset.get()
     }
 
-    /**
-     * Create a comprehensive timestamp record with all timing references
-     * This ensures all sensors can use a common time reference
-     */
+    
     fun createTimestampRecord(): TimestampRecord {
         val currentNanos = getCurrentTimestampNanos()
         val systemMs = getCurrentSystemTimeMs()
@@ -131,9 +116,7 @@ object TimestampManager {
         )
     }
 
-    /**
-     * Convert monotonic nanosecond timestamp to system time for cross-sensor alignment
-     */
+    
     fun convertMonotonicToSystemTime(monotonicNs: Long): Long {
         val sessionStartMono = sessionStartMonotonicNs.get()
         val sessionStartSys = sessionStartSystemMs.get()
@@ -148,9 +131,7 @@ object TimestampManager {
         return sessionStartSys + offsetMs
     }
 
-    /**
-     * Get session-relative timestamp in nanoseconds from monotonic clock
-     */
+    
     fun getSessionRelativeNanos(currentMonotonicNs: Long = getCurrentTimestampNanos()): Long {
         val sessionStartMono = sessionStartMonotonicNs.get()
         if (sessionStartMono == 0L) {
@@ -168,9 +149,7 @@ object TimestampManager {
     }
 }
 
-/**
- * Session reference timestamps for cross-sensor synchronization
- */
+
 data class SessionTimestampReference(
     val sessionStartElapsedMs: Long,
     val sessionStartSystemMs: Long, 
@@ -187,12 +166,12 @@ data class SessionTimestampReference(
 }
 
 data class TimestampRecord(
-    val systemNanos: Long, // High-precision nanosecond timestamp (for GSR samples)
-    val systemTimeMs: Long, // Wall clock time (for human-readable timestamps)
-    val elapsedRealtimeMs: Long, // System elapsed time (for sensor alignment)
-    val deviceTimestampMs: Long, // Absolute device time (for data export)
-    val sessionRelativeMs: Long, // Session-relative time (for analysis)
-    val synchronizedTimestampMs: Long, // Hub-synchronized time (for multi-device sessions)
+    val systemNanos: Long, 
+    val systemTimeMs: Long, 
+    val elapsedRealtimeMs: Long, 
+    val deviceTimestampMs: Long, 
+    val sessionRelativeMs: Long, 
+    val synchronizedTimestampMs: Long, 
 ) {
 
     fun toCsvFormat(): String {

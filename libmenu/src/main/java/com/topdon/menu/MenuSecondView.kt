@@ -236,7 +236,7 @@ class MenuSecondView : FrameLayout {
     }
 
     fun refreshImg(type: GalleryRepository.DirType = GalleryRepository.DirType.LINE) {
-        updateCameraModel() // Restore state
+        updateCameraModel() 
         CoroutineScope(Dispatchers.IO).launch {
             val path = GalleryRepository.readLatest(type)
             launch(Dispatchers.Main) {

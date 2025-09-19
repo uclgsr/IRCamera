@@ -9,15 +9,7 @@ import com.topdon.module.thermal.ir.event.CorrectionFinishEvent
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
-/**
- *
 
- * @author: CaiSongL
- * @date: 2023/8/4 9:06
- *
-
-
- */
 
 class IRCorrectionActivity : BaseActivity() {
     override fun initContentView(): Int = R.layout.activity_ir_correction

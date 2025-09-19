@@ -380,7 +380,7 @@ class Phase2ValidationActivity : AppCompatActivity() {
             put("overall_success", report.summary.overallSuccess)
         })
 
-        return json.toString(2) // Pretty print with 2-space indentation
+        return json.toString(2) 
     }
 
     private fun showReportExportDialog(jsonContent: String, filename: String) {
@@ -430,10 +430,10 @@ class Phase2ValidationActivity : AppCompatActivity() {
 
 private fun PermissionController.hasAudioPermission(): Boolean {
 
-    return true // Placeholder
+    return true 
 }
 
 private fun PermissionController.hasLocationPermission(): Boolean {
 
-    return true // Placeholder
+    return true 
 }

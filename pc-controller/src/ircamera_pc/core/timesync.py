@@ -55,11 +55,11 @@ class TimeSyncService:
         self._device_stats: Dict[str, TimeSyncStats] = {}
         self._is_running = False
 
-        # Configuration
+        
         self._sync_interval = config.get("time_sync.sync_interval", 30)
         self._target_accuracy_ms = config.get("time_sync.target_accuracy_ms", 5)
         self._max_offset_ms = config.get("time_sync.max_offset_ms", 15)
-        self._history_size = 100  # Keep last 100 sync measurements
+        self._history_size = 100  
 
         logger.info("Time Synchronization Service initialized")
 
@@ -78,7 +78,7 @@ class TimeSyncService:
         try:
             loop = asyncio.get_event_loop()
 
-            # Create UDP server
+            
             transport, protocol = await loop.create_datagram_endpoint(
                 lambda: TimeSyncProtocol(self), local_addr=(host, port)
             )
@@ -119,26 +119,26 @@ class TimeSyncService:
             Response data with time information
         """
         try:
-            # Parse request
+            
             if len(request_data) < 16:
                 logger.warning(f"Invalid sync request from {device_id}: too short")
                 return b""
 
-            # Extract client timestamp (when request was sent)
+            
             client_send_time = struct.unpack("!Q", request_data[:8])[0] / 1000.0
 
-            # Get current time
+            
             server_time = time.time()
             server_time_ms = int(server_time * 1000)
 
-            # Create response
+            
             response = struct.pack(
                 "!QQ",
                 int(client_send_time * 1000),
-                server_time_ms,  # Echo client time
-            )  # Server time
+                server_time_ms,  
+            )  
 
-            # Update statistics
+            
             self._update_device_stats(device_id, client_send_time, server_time)
 
             logger.debug(f"Time sync response sent to {device_id} at {addr}")
@@ -157,25 +157,25 @@ class TimeSyncService:
 
         stats = self._device_stats[device_id]
 
-        # Calculate offset (positive means client is ahead)
+        
         offset_ms = (client_time - server_time) * 1000
 
-        # Update stats
+        
         stats.last_sync = datetime.now(timezone.utc)
         stats.offset_ms = offset_ms
         stats.sync_count += 1
 
-        # Maintain history of recent offsets
+        
         stats.recent_offsets.append(abs(offset_ms))
         if len(stats.recent_offsets) > self._history_size:
             stats.recent_offsets.pop(0)
 
-        # Calculate median and p95
+        
         if stats.recent_offsets:
             sorted_offsets = sorted(stats.recent_offsets)
             n = len(sorted_offsets)
 
-            # Median
+            
             if n % 2 == 0:
                 stats.median_offset_ms = (
                                                  sorted_offsets[n // 2 - 1] + sorted_offsets[n // 2]
@@ -183,11 +183,11 @@ class TimeSyncService:
             else:
                 stats.median_offset_ms = sorted_offsets[n // 2]
 
-            # P95
+            
             p95_index = int(0.95 * n)
             stats.p95_offset_ms = sorted_offsets[min(p95_index, n - 1)]
 
-        # Log accuracy warnings
+        
         if stats.median_offset_ms > self._target_accuracy_ms:
             logger.warning(
                 f"Device {device_id} median offset"
@@ -230,12 +230,12 @@ class TimeSyncService:
         if not stats or not stats.last_sync:
             return False
 
-        # Check if sync is recent
+        
         time_since_sync = (datetime.now(timezone.utc) - stats.last_sync).total_seconds()
         if time_since_sync > self._sync_interval * 2:
             return False
 
-        # Check accuracy
+        
         return (
                 stats.median_offset_ms <= self._target_accuracy_ms
                 and stats.p95_offset_ms <= self._max_offset_ms
@@ -263,7 +263,7 @@ class TimeSyncService:
             if self.is_device_synchronized(device_id)
         )
 
-        # Calculate overall metrics
+        
         all_offsets = []
         for stats in self._device_stats.values():
             all_offsets.extend(stats.recent_offsets)
@@ -275,7 +275,7 @@ class TimeSyncService:
             sorted_offsets = sorted(all_offsets)
             n = len(sorted_offsets)
 
-            # Overall median
+            
             if n % 2 == 0:
                 overall_median = (
                                          sorted_offsets[n // 2 - 1] + sorted_offsets[n // 2]
@@ -283,7 +283,7 @@ class TimeSyncService:
             else:
                 overall_median = sorted_offsets[n // 2]
 
-            # Overall P95
+            
             p95_index = int(0.95 * n)
             overall_p95 = sorted_offsets[min(p95_index, n - 1)]
 
@@ -327,16 +327,16 @@ class TimeSyncProtocol(asyncio.DatagramProtocol):
             addr: Sender address
         """
         try:
-            # Extract device ID from data
+            
             if len(data) < 16:
                 logger.warning(f"Invalid time sync request from {addr}: too short")
                 return
 
-            # Simple protocol: first 8 bytes timestamp, next 8 bytes device ID hash
+            
             device_id_hash = struct.unpack("!Q", data[8:16])[0]
             device_id = f"device_{device_id_hash:016x}"
 
-            # Handle sync request
+            
             response = self.service.handle_sync_request(device_id, data, addr)
 
             if response and self.transport:

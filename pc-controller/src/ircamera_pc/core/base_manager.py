@@ -33,12 +33,12 @@ try:
         - PyQt6 signal support
         """
 
-        # Common signals
-        status_changed = pyqtSignal(str, dict)  # status_name, details
-        error_occurred = pyqtSignal(str, str)  # error_type, message
-        operation_completed = pyqtSignal(str, bool, str)  # operation,
+        
+        status_changed = pyqtSignal(str, dict)  
+        error_occurred = pyqtSignal(str, str)  
+        operation_completed = pyqtSignal(str, bool, str)  
 
-        # success, message
+        
 
         def __init__(self, name: str, parent: Optional[QtQObject] = None):
             super().__init__(parent)
@@ -76,7 +76,7 @@ except ImportError:
         - No PyQt6 dependencies
         """
 
-        # Mock signals
+        
         status_changed = None
         error_occurred = None
         operation_completed = None

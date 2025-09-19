@@ -14,9 +14,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
-/**
- * create by fylder on 2018/7/13
- **/
+
 abstract class BaseFragment : Fragment() {
     val TAG = BaseFragment::class.java.simpleName
 
@@ -47,7 +45,7 @@ abstract class BaseFragment : Fragment() {
         super.onHiddenChanged(hidden)
         if (hidden) {
 
-        } else { // 在最前端显示 相当于调用了onResume();
+        } else { 
 
             initData()
         }

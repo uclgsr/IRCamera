@@ -238,17 +238,17 @@ class ColorSelectView : View {
         invalidate()
     }
 
-    private var currentRow: Int = -1 // 当前选中行
-    private var currentColumn: Int = -1 // 当前选中列
+    private var currentRow: Int = -1 
+    private var currentColumn: Int = -1 
 
-    private val widthPixels: Int // 屏幕宽度
-    private val density: Float // 屏幕缩放等级，用于dp与px转换
-    private val strokeWidth: Int // 描边宽度，单位px
+    private val widthPixels: Int 
+    private val density: Float 
+    private val strokeWidth: Int 
 
     private val path = Path()
-    private val itemPaint = Paint() // 未选中画笔
-    private val itemSelectPaint = Paint() // 选中描边效果画笔
-    private val strokePaint = Paint() // 整体描边效果画笔
+    private val itemPaint = Paint() 
+    private val itemSelectPaint = Paint() 
+    private val strokePaint = Paint() 
 
     constructor(context: Context) : this(context, null)
 

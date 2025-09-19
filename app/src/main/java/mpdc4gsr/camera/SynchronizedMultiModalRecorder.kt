@@ -166,7 +166,7 @@ class SynchronizedMultiModalRecorder(
                     sessionId = sessionId,
                     startTimestamp = gsrSession?.startTime ?: System.currentTimeMillis(),
                     endTimestamp = stopTimestamp,
-                    rgbVideoFile = null, // Boolean return type doesn't match File expected
+                    rgbVideoFile = null, 
                     gsrDataFile = gsrSession?.let { session ->
                         thermalRecorder.getSessionDirectory()?.let { dir ->
                             File(dir, "signals.csv")
@@ -357,11 +357,11 @@ class SynchronizedMultiModalRecorder(
     private fun detectSamsungS22Processor(): String {
         val deviceModel = android.os.Build.MODEL
         return when {
-            deviceModel.contains("SM-S901E") -> "Exynos_2200" // International
-            deviceModel.contains("SM-S901U") -> "Snapdragon_8_Gen_1" // US
-            deviceModel.contains("SM-S901W") -> "Snapdragon_8_Gen_1" // Canada
-            deviceModel.contains("SM-S901N") -> "Snapdragon_8_Gen_1" // Korea
-            deviceModel.contains("SM-S901") -> "Samsung_S22_Generic" // Generic S22
+            deviceModel.contains("SM-S901E") -> "Exynos_2200" 
+            deviceModel.contains("SM-S901U") -> "Snapdragon_8_Gen_1" 
+            deviceModel.contains("SM-S901W") -> "Snapdragon_8_Gen_1" 
+            deviceModel.contains("SM-S901N") -> "Snapdragon_8_Gen_1" 
+            deviceModel.contains("SM-S901") -> "Samsung_S22_Generic" 
             else -> "Unknown_Device"
         }
     }

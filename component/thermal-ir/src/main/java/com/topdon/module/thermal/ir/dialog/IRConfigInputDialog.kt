@@ -14,11 +14,7 @@ import com.topdon.lib.core.utils.ScreenUtil
 import com.topdon.lms.sdk.weiget.TToast
 import com.topdon.module.thermal.ir.R
 
-/**
 
- *
- * Created by LCG on 2024/10/24.
- */
 
 class IRConfigInputDialog(context: Context, val type: Type, val isTC007: Boolean) :
     Dialog(context, R.style.TextInputDialog) {

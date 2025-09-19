@@ -21,12 +21,12 @@ import argparse
 from datetime import datetime, timezone
 from typing import Dict, List, Optional, Any
 
-# Simple logging
+
 import logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
-# Try to import PyQt6 for GUI
+
 try:
     from PyQt6.QtWidgets import (QApplication, QMainWindow, QVBoxLayout, QHBoxLayout, 
                                  QWidget, QLabel, QPushButton, QTextEdit, QListWidget, 
@@ -44,17 +44,17 @@ try:
 except ImportError:
     GUI_AVAILABLE = False
     logger.info("💻 Running in CLI mode (PyQt6 not available)")
-    # Define dummy classes to avoid errors
+    
     class QThread:
         pass
     class QMainWindow:
         pass
 
-# Try to import native backend for high-performance processing
+
 try:
     import sys
     import os
-    # Add the native backend build directory to path
+    
     native_backend_path = os.path.join(os.path.dirname(__file__), 'native_backend', 'build')
     if os.path.exists(native_backend_path):
         sys.path.insert(0, native_backend_path)
@@ -86,11 +86,11 @@ class GSRProcessor:
         """Process GSR data using available backend"""
         try:
             if self.use_native:
-                # Use native C++ processing (placeholder for actual native processing)
-                return float(gsr_value)  # In actual implementation, would use native_shimmer methods
+                
+                return float(gsr_value)  
             else:
-                # Python fallback processing
-                return float(gsr_value)  # Simple passthrough for MVP
+                
+                return float(gsr_value)  
         except Exception as e:
             logger.error(f"GSR processing error: {e}")
             return 0.0
@@ -172,7 +172,7 @@ class MVPTCPServer:
             self.server_socket.listen(5)
             self.running = True
             
-            # Start server thread
+            
             server_thread = threading.Thread(target=self._server_loop, daemon=True)
             server_thread.start()
             
@@ -200,7 +200,7 @@ class MVPTCPServer:
                 client_socket, address = self.server_socket.accept()
                 logger.info(f"🔗 New connection from {address}")
                 
-                # Start client handler thread
+                
                 client_thread = threading.Thread(
                     target=self._handle_client,
                     args=(client_socket, address),
@@ -227,17 +227,17 @@ class MVPTCPServer:
                 
                 buffer += data
                 lines = buffer.split('\n')
-                buffer = lines[-1]  # Keep incomplete line
+                buffer = lines[-1]  
                 
                 for line in lines[:-1]:
                     if line.strip():
                         try:
                             message = json.loads(line.strip())
                             
-                            # Extract device_id from message if available
+                            
                             msg_device_id = message.get('device_id', device_id)
                             
-                            # Call data callback if provided
+                            
                             if self.data_callback:
                                 self.data_callback(msg_device_id, message)
                                 
@@ -257,7 +257,7 @@ class PCControllerGUI(QMainWindow):
     def __init__(self):
         super().__init__()
         self.controller = None
-        self.data_buffer = {}  # Store GSR data for plotting
+        self.data_buffer = {}  
         self.plot_timer = QTimer()
         self.plot_timer.timeout.connect(self.update_plots)
         
@@ -268,31 +268,31 @@ class PCControllerGUI(QMainWindow):
         self.setWindowTitle("IRCamera PC Controller - Hub Interface")
         self.setGeometry(100, 100, 1200, 800)
         
-        # Create central widget and layout
+        
         central_widget = QWidget()
         self.setCentralWidget(central_widget)
         main_layout = QHBoxLayout(central_widget)
         
-        # Create splitter for resizable panes
+        
         splitter = QSplitter(Qt.Orientation.Horizontal)
         main_layout.addWidget(splitter)
         
-        # Left panel - Device management and controls
+        
         left_panel = self.create_left_panel()
         splitter.addWidget(left_panel)
         
-        # Right panel - Data visualization
+        
         right_panel = self.create_right_panel()
         splitter.addWidget(right_panel)
         
-        # Set splitter proportions
+        
         splitter.setStretchFactor(0, 1)
         splitter.setStretchFactor(1, 2)
         
-        # Create menu bar
+        
         self.create_menu_bar()
         
-        # Create status bar
+        
         self.status_bar = QStatusBar()
         self.setStatusBar(self.status_bar)
         self.status_bar.showMessage("Ready - Waiting for connections...")
@@ -302,7 +302,7 @@ class PCControllerGUI(QMainWindow):
         panel = QWidget()
         layout = QVBoxLayout(panel)
         
-        # Server controls
+        
         server_group = QGroupBox("Server Control")
         server_layout = QVBoxLayout(server_group)
         
@@ -316,7 +316,7 @@ class PCControllerGUI(QMainWindow):
         server_layout.addWidget(self.stop_button)
         layout.addWidget(server_group)
         
-        # Connected devices
+        
         devices_group = QGroupBox("Connected Devices")
         devices_layout = QVBoxLayout(devices_group)
         
@@ -324,7 +324,7 @@ class PCControllerGUI(QMainWindow):
         devices_layout.addWidget(self.devices_list)
         layout.addWidget(devices_group)
         
-        # Session controls
+        
         session_group = QGroupBox("Session Management")
         session_layout = QVBoxLayout(session_group)
         
@@ -339,7 +339,7 @@ class PCControllerGUI(QMainWindow):
         
         layout.addWidget(session_group)
         
-        # Log display
+        
         log_group = QGroupBox("System Log")
         log_layout = QVBoxLayout(log_group)
         
@@ -357,11 +357,11 @@ class PCControllerGUI(QMainWindow):
         panel = QWidget()
         layout = QVBoxLayout(panel)
         
-        # Create tab widget for different data types
+        
         self.tab_widget = QTabWidget()
         layout.addWidget(self.tab_widget)
         
-        # GSR plot tab
+        
         if PYQTGRAPH_AVAILABLE:
             self.gsr_plot = pg.PlotWidget(title="GSR Data (Real-time)")
             self.gsr_plot.setLabel('left', 'GSR', units='µS')
@@ -369,12 +369,12 @@ class PCControllerGUI(QMainWindow):
             self.gsr_plot.showGrid(True, True)
             self.tab_widget.addTab(self.gsr_plot, "GSR Data")
         else:
-            # Fallback text display if pyqtgraph not available
+            
             self.gsr_text = QTextEdit()
             self.gsr_text.setReadOnly(True)
             self.tab_widget.addTab(self.gsr_text, "GSR Data (Text)")
         
-        # Status display tab
+        
         self.status_text = QTextEdit()
         self.status_text.setReadOnly(True)
         self.tab_widget.addTab(self.status_text, "Status & Messages")
@@ -385,7 +385,7 @@ class PCControllerGUI(QMainWindow):
         """Create application menu bar"""
         menubar = self.menuBar()
         
-        # File menu
+        
         file_menu = menubar.addMenu('File')
         
         export_action = QAction('Export Data...', self)
@@ -398,7 +398,7 @@ class PCControllerGUI(QMainWindow):
         exit_action.triggered.connect(self.close)
         file_menu.addAction(exit_action)
         
-        # Server menu
+        
         server_menu = menubar.addMenu('Server')
         
         start_action = QAction('Start Server', self)
@@ -422,9 +422,9 @@ class PCControllerGUI(QMainWindow):
             self.status_bar.showMessage("Server started - Listening on port 8080")
             self.log_message("✅ Server started successfully")
             
-            # Start plot updates
+            
             if PYQTGRAPH_AVAILABLE:
-                self.plot_timer.start(100)  # Update every 100ms
+                self.plot_timer.start(100)  
             
         except Exception as e:
             self.log_message(f"❌ Failed to start server: {e}")
@@ -443,19 +443,19 @@ class PCControllerGUI(QMainWindow):
         self.status_bar.showMessage("Server stopped")
         self.log_message("🛑 Server stopped")
         
-        # Stop plot updates
+        
         self.plot_timer.stop()
         
     def toggle_recording(self):
         """Toggle recording session"""
         if self.controller and hasattr(self.controller, 'session_manager'):
             if self.controller.session_manager.current_session:
-                # Stop recording
+                
                 self.controller.session_manager.stop_recording()
                 self.session_button.setText("Start Recording")
                 self.log_message("🔴 Recording stopped")
             else:
-                # Start recording
+                
                 session_id = self.controller.session_manager.create_session()
                 self.controller.session_manager.start_recording(session_id)
                 self.session_button.setText("Stop Recording")
@@ -490,20 +490,20 @@ class PCControllerGUI(QMainWindow):
             timestamp = time.time()
             gsr_value = data.get('gsr_microsiemens', 0.0)
             
-            # Store data for plotting
+            
             if device_id not in self.data_buffer:
                 self.data_buffer[device_id] = []
             self.data_buffer[device_id].append((timestamp, gsr_value))
             
-            # Keep only last 1000 points per device
+            
             if len(self.data_buffer[device_id]) > 1000:
                 self.data_buffer[device_id] = self.data_buffer[device_id][-1000:]
             
-            # Update status
+            
             self.log_message(f"📊 GSR data from {device_id}: {gsr_value:.2f} µS")
             
         elif data.get('type') == 'device_info':
-            # Update device list
+            
             self.update_device_list()
             self.log_message(f"🔗 Device connected: {device_id}")
     
@@ -522,12 +522,12 @@ class PCControllerGUI(QMainWindow):
             
         self.gsr_plot.clear()
         
-        # Plot data for each device with different colors
+        
         colors = ['r', 'g', 'b', 'c', 'm', 'y']
         for i, (device_id, data_points) in enumerate(self.data_buffer.items()):
             if data_points:
                 timestamps, gsr_values = zip(*data_points)
-                # Normalize timestamps to start from 0
+                
                 start_time = timestamps[0]
                 x_data = [(t - start_time) for t in timestamps]
                 y_data = list(gsr_values)
@@ -535,7 +535,7 @@ class PCControllerGUI(QMainWindow):
                 color = colors[i % len(colors)]
                 self.gsr_plot.plot(x_data, y_data, pen=color, name=device_id)
         
-        # Auto-range the plot
+        
         self.gsr_plot.enableAutoRange()
     
     def log_message(self, message: str):
@@ -545,7 +545,7 @@ class PCControllerGUI(QMainWindow):
         self.log_display.append(formatted_message)
         self.status_text.append(formatted_message)
         
-        # Keep log display size manageable
+        
         if self.log_display.document().lineCount() > 100:
             cursor = self.log_display.textCursor()
             cursor.movePosition(cursor.MoveOperation.Start)
@@ -568,7 +568,7 @@ class MVPPCController:
         self.gsr_processor = GSRProcessor()
         self.connected_devices: Dict[str, SimpleDevice] = {}
         self.running = False
-        self.gui_callback = gui_callback  # Callback for GUI updates
+        self.gui_callback = gui_callback  
         
     def start(self):
         """Start the PC controller server"""
@@ -588,7 +588,7 @@ class MVPPCController:
         """Handle incoming data from Android devices"""
         try:
             if data.get('type') == 'device_info':
-                # Register new device
+                
                 device = SimpleDevice(
                     device_id=device_id,
                     device_type=data.get('device_type', 'android'),
@@ -598,19 +598,19 @@ class MVPPCController:
                 logger.info(f"📱 Device registered: {device_id} with capabilities: {device.capabilities}")
                 
             elif data.get('type') == 'gsr_data':
-                # Process GSR data
+                
                 gsr_value = data.get('gsr_microsiemens', 0.0)
                 processed_data = self.gsr_processor.process_data(gsr_value)
                 
-                # Log the data
+                
                 backend_type = "native_cpp" if self.gsr_processor.use_native else "python"
                 logger.info(f"📊 GSR data from {device_id}: {processed_data:.2f} µS [{backend_type}]")
                 
-                # Update device
+                
                 if device_id in self.connected_devices:
                     self.connected_devices[device_id].last_data_time = datetime.now(timezone.utc)
                 
-            # Notify GUI if callback provided
+            
             if self.gui_callback:
                 self.gui_callback(device_id, data)
                 
@@ -624,7 +624,7 @@ class MVPPCController:
         self.start()
         
         try:
-            # Wait for the specified duration
+            
             time.sleep(duration)
             
         except KeyboardInterrupt:
@@ -643,7 +643,7 @@ def main():
     
     args = parser.parse_args()
     
-    # Determine interface mode
+    
     if args.cli:
         use_gui = False
         logger.info("💻 CLI mode requested")
@@ -655,7 +655,7 @@ def main():
             logger.warning("⚠️ GUI requested but PyQt6 not available, falling back to CLI")
             use_gui = False
     else:
-        # Auto-detect best interface
+        
         use_gui = GUI_AVAILABLE
         if use_gui:
             logger.info("🎨 Auto-selected GUI mode (PyQt6 available)")
@@ -663,13 +663,13 @@ def main():
             logger.info("💻 Auto-selected CLI mode (PyQt6 not available)")
     
     if use_gui:
-        # Launch GUI application
+        
         try:
             app = QApplication(sys.argv)
             app.setApplicationName("IRCamera PC Controller")
             app.setApplicationVersion("1.0")
             
-            # Create and show main window
+            
             main_window = PCControllerGUI()
             main_window.show()
             
@@ -682,7 +682,7 @@ def main():
             use_gui = False
     
     if not use_gui:
-        # Run CLI mode
+        
         controller = MVPPCController()
         controller.run_demo(duration=args.duration)
 

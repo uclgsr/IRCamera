@@ -155,7 +155,7 @@ object UnitTools {
     @JvmStatic
     fun showNoUnit(float: Float): String {
         val str =
-            if (SharedManager.getTemperature() == 1) { // 摄氏度
+            if (SharedManager.getTemperature() == 1) { 
                 String.format(Locale.ENGLISH, "%.1f", float)
             } else {
                 String.format(Locale.ENGLISH, "%.1f", (float * 1.8000 + 32.00))
@@ -166,7 +166,7 @@ object UnitTools {
     @JvmStatic
     fun showWithUnit(float: Float): String {
         val str =
-            if (SharedManager.getTemperature() == 1) { // 摄氏度
+            if (SharedManager.getTemperature() == 1) { 
                 String.format(Locale.ENGLISH, "%.1f", float)
             } else {
                 String.format(Locale.ENGLISH, "%.1f", (float * 1.8000 + 32.00))

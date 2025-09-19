@@ -15,10 +15,7 @@ import com.topdon.lib.core.R
 import com.topdon.lib.core.databinding.DialogMsgBinding
 import com.topdon.lib.core.utils.ScreenUtil
 
-/**
- * 消息提示窗
- * create by fylder on 2018/6/15
- **/
+
 class MsgDialog : Dialog {
     constructor(context: Context) : super(context)
 
@@ -90,7 +87,7 @@ class MsgDialog : Dialog {
 
                     0.3
                 }
-            lp.width = (ScreenUtil.getScreenWidth(context!!) * wRatio).toInt() // 设置宽度
+            lp.width = (ScreenUtil.getScreenWidth(context!!) * wRatio).toInt() 
             dialog!!.window!!.attributes = lp
 
             dialog!!.setCanceledOnTouchOutside(false)

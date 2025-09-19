@@ -29,7 +29,7 @@ class GSRPlotWidget(pg.PlotWidget):
     - Data quality indicators
     """
 
-    data_updated = pyqtSignal(float, float)  # timestamp, gsr_value
+    data_updated = pyqtSignal(float, float)  
 
     def __init__(self, max_points: int = 10000, time_window: float = 30.0):
         """
@@ -44,19 +44,19 @@ class GSRPlotWidget(pg.PlotWidget):
         self.max_points = max_points
         self.time_window = time_window
 
-        # Data storage
+        
         self.gsr_data: Dict[str, deque] = (
             {}
-        )  # device_id: deque of (timestamp, gsr_value)
+        )  
         self.plot_items: Dict[str, pg.PlotDataItem] = {}
         self.sync_markers: List[pg.InfiniteLine] = []
 
         self._setup_plot()
 
-        # Update timer
+        
         self.update_timer = QTimer()
         self.update_timer.timeout.connect(self._update_plot)
-        self.update_timer.start(50)  # 20fps update rate
+        self.update_timer.start(50)  
 
     def _setup_plot(self) -> None:
         """Set up the plot appearance and configuration."""
@@ -64,15 +64,15 @@ class GSRPlotWidget(pg.PlotWidget):
         self.setLabel("bottom", "Time (s)", color="white", size="12pt")
         self.setTitle("Real-time GSR Data", color="white", size="14pt")
 
-        # Configure plot appearance
+        
         self.showGrid(x=True, y=True, alpha=0.3)
         self.setBackground("black")
 
-        # Enable auto-range
+        
         self.enableAutoRange(axis="y")
         self.setXRange(-self.time_window, 0)
 
-        # Add legend
+        
         self.addLegend()
 
     def add_device(self, device_id: str, color: Optional[str] = None) -> None:
@@ -88,13 +88,13 @@ class GSRPlotWidget(pg.PlotWidget):
 
         self.gsr_data[device_id] = deque(maxlen=self.max_points)
 
-        # Auto-assign color if not specified
+        
         if color is None:
             colors = ["cyan", "yellow", "magenta", "green", "red", "blue"]
             color_idx = len(self.plot_items) % len(colors)
             color = colors[color_idx]
 
-        # Create plot item
+        
         plot_item = self.plot(
             pen=pg.mkPen(color=color, width=2), name=f"GSR {device_id}"
         )
@@ -107,12 +107,12 @@ class GSRPlotWidget(pg.PlotWidget):
         if device_id not in self.gsr_data:
             return
 
-        # Remove plot item
+        
         if device_id in self.plot_items:
             self.removeItem(self.plot_items[device_id])
             del self.plot_items[device_id]
 
-        # Clear data
+        
         del self.gsr_data[device_id]
 
         logger.info(f"Removed GSR device {device_id}")
@@ -131,11 +131,11 @@ class GSRPlotWidget(pg.PlotWidget):
         if device_id not in self.gsr_data:
             self.add_device(device_id)
 
-        # Convert timestamp to relative seconds
+        
         current_time = time.time()
         relative_time = (timestamp_ns / 1e9) - current_time
 
-        # Add data point
+        
         self.gsr_data[device_id].append((relative_time, gsr_microsiemens))
 
         self.data_updated.emit(relative_time, gsr_microsiemens)
@@ -157,14 +157,14 @@ class GSRPlotWidget(pg.PlotWidget):
         marker = pg.InfiniteLine(
             pos=relative_time,
             angle=90,
-            pen=pg.mkPen(color=color, width=2, style=2),  # Dashed line
+            pen=pg.mkPen(color=color, width=2, style=2),  
             label=label,
         )
 
         self.addItem(marker)
         self.sync_markers.append(marker)
 
-        # Clean up old markers
+        
         self._cleanup_old_markers()
 
     def _update_plot(self) -> None:
@@ -175,7 +175,7 @@ class GSRPlotWidget(pg.PlotWidget):
             if not data_deque or device_id not in self.plot_items:
                 continue
 
-            # Filter data within time window
+            
             times = []
             values = []
 
@@ -188,7 +188,7 @@ class GSRPlotWidget(pg.PlotWidget):
             if times and values:
                 self.plot_items[device_id].setData(times, values)
 
-        # Update time axis
+        
         self.setXRange(-self.time_window, 0)
 
     def _cleanup_old_markers(self) -> None:
@@ -226,7 +226,7 @@ class VideoPreviewWidget(QLabel):
     - Device status indicators
     """
 
-    frame_updated = pyqtSignal(int, int)  # width, height
+    frame_updated = pyqtSignal(int, int)  
 
     def __init__(self, device_id: str, device_type: str = "RGB"):
         """
@@ -241,17 +241,17 @@ class VideoPreviewWidget(QLabel):
         self.device_id = device_id
         self.device_type = device_type
 
-        # Frame statistics
+        
         self.frame_count = 0
         self.last_fps_time = time.time()
         self.current_fps = 0.0
 
         self._setup_widget()
 
-        # FPS calculation timer
+        
         self.fps_timer = QTimer()
         self.fps_timer.timeout.connect(self._calculate_fps)
-        self.fps_timer.start(1000)  # Update FPS every second
+        self.fps_timer.start(1000)  
 
     def _setup_widget(self) -> None:
         """Set up widget appearance."""
@@ -282,11 +282,11 @@ class VideoPreviewWidget(QLabel):
             return
 
         try:
-            # Convert numpy array to QPixmap
+            
             if len(frame_data.shape) == 3:
                 height, width, channels = frame_data.shape
                 if channels == 3:
-                    # BGR to RGB conversion for OpenCV frames
+                    
                     rgb_frame = frame_data[:, :, ::-1]
                     pixmap = QPixmap.fromImage(
                         pg.makeQImage(rgb_frame, transpose=False)
@@ -296,19 +296,19 @@ class VideoPreviewWidget(QLabel):
                         pg.makeQImage(frame_data, transpose=False)
                     )
             else:
-                # Grayscale image
+                
                 pixmap = QPixmap.fromImage(pg.makeQImage(frame_data, transpose=False))
 
-            # Scale pixmap to fit widget while preserving aspect ratio
+            
             scaled_pixmap = pixmap.scaled(
                 self.size(),
-                aspectRatioMode=1,  # KeepAspectRatio
-                transformMode=1,  # SmoothTransformation
+                aspectRatioMode=1,  
+                transformMode=1,  
             )
 
             self.setPixmap(scaled_pixmap)
 
-            # Update statistics
+            
             self.frame_count += 1
             height, width = frame_data.shape[:2]
             self.frame_updated.emit(width, height)
@@ -324,11 +324,11 @@ class VideoPreviewWidget(QLabel):
         if time_diff > 0:
             self.current_fps = self.frame_count / time_diff
 
-        # Reset counters
+        
         self.frame_count = 0
         self.last_fps_time = current_time
 
-        # Update tooltip with FPS info
+        
         self.setToolTip(
             f"{self.device_type} Camera {self.device_id}\\nFPS: {self.current_fps:.1f}"
         )
@@ -362,11 +362,11 @@ class MultiModalDashboard(QWidget):
         """Set up the dashboard layout."""
         self.layout = QGridLayout(self)
 
-        # Create GSR plot widget (takes up left half)
+        
         self.gsr_plot = GSRPlotWidget()
         self.layout.addWidget(self.gsr_plot, 0, 0, 2, 2)
 
-        # Video preview area (right half, dynamic grid)
+        
         self.video_row = 0
         self.video_col = 2
 
@@ -401,7 +401,7 @@ class MultiModalDashboard(QWidget):
         widget = VideoPreviewWidget(device_id, device_type)
         self.video_widgets[device_id] = widget
 
-        # Add to grid layout
+        
         self._add_video_widget_to_grid(widget)
 
         logger.info(f"Added video device {device_id} ({device_type})")
@@ -418,7 +418,7 @@ class MultiModalDashboard(QWidget):
 
         del self.video_widgets[device_id]
 
-        # Reorganize grid
+        
         self._reorganize_video_grid()
 
         logger.info(f"Removed video device {device_id}")
@@ -427,24 +427,24 @@ class MultiModalDashboard(QWidget):
         """Add video widget to the dynamic grid."""
         num_videos = len(self.video_widgets)
 
-        # Calculate grid position (2x2 grid for videos on the right side)
+        
         if num_videos <= 4:
             grid_row = (num_videos - 1) // 2
             grid_col = (num_videos - 1) % 2
             self.layout.addWidget(widget, grid_row, self.video_col + grid_col)
         else:
-            # For more than 4 videos, stack vertically
+            
             grid_row = num_videos - 1
             grid_col = 0
             self.layout.addWidget(widget, grid_row, self.video_col + grid_col)
 
     def _reorganize_video_grid(self) -> None:
         """Reorganize video widgets in the grid after removal."""
-        # Remove all video widgets from layout
+        
         for widget in self.video_widgets.values():
             self.layout.removeWidget(widget)
 
-        # Re-add them in order
+        
         for i, widget in enumerate(self.video_widgets.values()):
             grid_row = i // 2
             grid_col = i % 2
@@ -486,7 +486,7 @@ class DataAggregationWidget(QWidget):
         """Set up the widget layout."""
         layout = QVBoxLayout(self)
 
-        # Create statistics labels
+        
         stats = [
             "Total Devices",
             "GSR Devices",

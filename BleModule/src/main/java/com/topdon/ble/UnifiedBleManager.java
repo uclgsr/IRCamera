@@ -268,7 +268,7 @@ public class UnifiedBleManager {
     public List<UnifiedDevice> getConnectedShimmerDevices() {
         List<UnifiedDevice> shimmerDevices = new ArrayList<>();
 
-        // Return actual connected Shimmer devices from shimmerController
+        
         if (shimmerController != null) {
             try {
                 shimmerDevices.addAll(shimmerController.getConnectedDevices());
@@ -281,12 +281,7 @@ public class UnifiedBleManager {
         return shimmerDevices;
     }
 
-    /**
-     * Scan for nearby Shimmer devices using BLE discovery
-     *
-     * @param scanDurationMs Duration of scan in milliseconds
-     * @param callback       Callback to receive discovered devices
-     */
+    
     public void scanForShimmerDevices(long scanDurationMs, ShimmerScanCallback callback) {
         if (shimmerController != null) {
             shimmerController.scanForDevices(scanDurationMs, callback);
@@ -302,7 +297,7 @@ public class UnifiedBleManager {
     public List<UnifiedDevice> getConnectedTopdonDevices() {
         List<UnifiedDevice> topdonDevices = new ArrayList<>();
 
-        // Return actual connected Topdon devices from topdonController
+        
         if (topdonController != null) {
             try {
                 topdonDevices.addAll(topdonController.getConnectedDevices());
@@ -319,8 +314,8 @@ public class UnifiedBleManager {
     public SystemBleStatus getSystemBleStatus() {
         return new SystemBleStatus(
                 activeConnections.get(),
-                true, // multiDeviceMode
-                true, // enhancedErrorRecovery
+                true, 
+                true, 
                 connectedDevices.size()
         );
     }
@@ -355,10 +350,10 @@ public class UnifiedBleManager {
             for (UnifiedDevice device : shimmerDevices) {
                 CrossModalSyncManager.DeviceCapabilities capabilities =
                         new CrossModalSyncManager.DeviceCapabilities(
-                                true,  // supportsHardwareSync
-                                true,  // supportsTimestampGeneration
-                                128,   // maxSamplingRateHz (for GSR)
-                                1000   // syncAccuracyMicros (1ms)
+                                true,  
+                                true,  
+                                128,   
+                                1000   
                         );
 
                 syncManager.registerDevice(
@@ -374,10 +369,10 @@ public class UnifiedBleManager {
             for (UnifiedDevice device : topdonDevices) {
                 CrossModalSyncManager.DeviceCapabilities capabilities =
                         new CrossModalSyncManager.DeviceCapabilities(
-                                true,  // supportsHardwareSync
-                                true,  // supportsTimestampGeneration
-                                30,    // maxSamplingRateHz (for thermal)
-                                5000   // syncAccuracyMicros (5ms)
+                                true,  
+                                true,  
+                                30,    
+                                5000   
                         );
 
                 syncManager.registerDevice(
@@ -430,18 +425,16 @@ public class UnifiedBleManager {
     }
 
     public enum DeviceType {
-        SHIMMER_GSR,        // Shimmer3 GSR+ sensors
-        SHIMMER_PPG,        // Shimmer PPG sensors
-        SHIMMER_IMU,        // Shimmer IMU sensors
-        TOPDON_THERMAL,     // Topdon thermal cameras with BLE
-        TOPDON_ENV,         // Topdon environmental sensors
-        TOPDON_MULTI,       // Topdon multi-sensor devices
-        UNKNOWN             // Unknown or generic BLE device
+        SHIMMER_GSR,        
+        SHIMMER_PPG,        
+        SHIMMER_IMU,        
+        TOPDON_THERMAL,     
+        TOPDON_ENV,         
+        TOPDON_MULTI,       
+        UNKNOWN             
     }
 
-    /**
-     * Interface for Shimmer device scan callbacks
-     */
+    
     public interface ShimmerScanCallback {
         void onDeviceFound(UnifiedDevice device);
 

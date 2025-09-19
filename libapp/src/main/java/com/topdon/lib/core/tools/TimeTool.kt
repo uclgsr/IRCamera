@@ -76,10 +76,10 @@ object TimeTool {
     ): Long {
         val dateFormat =
             when (type) {
-                1 -> SimpleDateFormat("yyyy-MM-dd HH:mm:ss") // 秒
-                2 -> SimpleDateFormat("yyyy-MM-dd HH:mm:00") // 分
-                3 -> SimpleDateFormat("yyyy-MM-dd HH:00:00") // 时
-                4 -> SimpleDateFormat("yyyy-MM-dd 00:00:0") // 天
+                1 -> SimpleDateFormat("yyyy-MM-dd HH:mm:ss") 
+                2 -> SimpleDateFormat("yyyy-MM-dd HH:mm:00") 
+                3 -> SimpleDateFormat("yyyy-MM-dd HH:00:00") 
+                4 -> SimpleDateFormat("yyyy-MM-dd 00:00:0") 
                 else -> SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
             }
         val date = Date(time)

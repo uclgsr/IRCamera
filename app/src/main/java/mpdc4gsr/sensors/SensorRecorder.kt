@@ -17,14 +17,12 @@ interface SensorRecorder {
 
     suspend fun startRecording(sessionDirectory: String): Boolean
 
-    /**
-     * Enhanced startRecording method with session metadata for precise synchronization
-     */
+    
     suspend fun startRecording(
         sessionDirectory: String,
         sessionMetadata: SessionMetadata
     ): Boolean {
-        // Default implementation delegates to original method for backward compatibility
+        
         return startRecording(sessionDirectory)
     }
 

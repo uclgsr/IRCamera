@@ -31,8 +31,8 @@ object InitUtil {
         val fileDir = BaseApplication.instance.getExternalFilesDir("log")!!.absolutePath
         val tag = "MPDC4GSR_LOG"
         val pattern = "{d}, {L}, {t}, {m}"
-        val backupStrategy = FileSizeBackupStrategy2(5 * 1024 * 1024L, 10) // 一份文件的大小
-        val cleanStrategy = FileLastModifiedCleanStrategy(30 * 24 * 60 * 60) // 设置自动清除时间
+        val backupStrategy = FileSizeBackupStrategy2(5 * 1024 * 1024L, 10) 
+        val cleanStrategy = FileLastModifiedCleanStrategy(30 * 24 * 60 * 60) 
 
         val config =
             LogConfiguration.Builder()
@@ -41,11 +41,11 @@ object InitUtil {
                 .build()
         val androidPrinter = AndroidPrinter(true)
         val filePrinter =
-            FilePrinter.Builder(fileDir) // 指定保存日志文件的路径
-                .fileNameGenerator(ChangelessFileNameGenerator(fileName)) // 指定日志文件名生成器
-                .backupStrategy(backupStrategy) // 指定日志文件备份策略
-                .cleanStrategy(cleanStrategy) // 指定日志文件清除策略
-                .flattener(PatternFlattener(pattern)) // 自定义日志格式
+            FilePrinter.Builder(fileDir) 
+                .fileNameGenerator(ChangelessFileNameGenerator(fileName)) 
+                .backupStrategy(backupStrategy) 
+                .cleanStrategy(cleanStrategy) 
+                .flattener(PatternFlattener(pattern)) 
                 .build()
         if (BuildConfig.DEBUG) {
             XLog.init(config, androidPrinter, filePrinter)
@@ -86,12 +86,12 @@ object InitUtil {
     }
 
     fun initUM() {
-        // TODO: Implement UM initialization
+        
     }
 
     fun initJPush() {
         val registrationID = ""
-        // TODO: Implement JPush initialization
+        
 
         if (SharedManager.getHasShowClause()) {
             XLog.w("registrationID= $registrationID")
@@ -102,7 +102,7 @@ object InitUtil {
         try {
             BaseApplication.instance.unregisterReceiver(BaseApplication.usbObserver)
         } catch (e: Exception) {
-            // Receiver may not be registered, this is expected
+            
         }
 
         val filter = IntentFilter()
@@ -110,7 +110,7 @@ object InitUtil {
         filter.addAction(UsbManager.ACTION_USB_DEVICE_DETACHED)
         filter.addAction(UsbManager.ACTION_USB_ACCESSORY_ATTACHED)
         filter.addAction(UsbManager.ACTION_USB_ACCESSORY_DETACHED)
-        filter.addAction(DeviceBroadcastReceiver.ACTION_USB_PERMISSION) // 申请USB权限
+        filter.addAction(DeviceBroadcastReceiver.ACTION_USB_PERMISSION) 
         if (Build.VERSION.SDK_INT < 33) {
             BaseApplication.instance.registerReceiver(BaseApplication.usbObserver, filter)
         } else {

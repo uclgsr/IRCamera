@@ -13,7 +13,7 @@ import org.greenrobot.eventbus.EventBus
 
 class IRMonitorActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var binding: ActivityIrMonitorBinding
-    private var selectIndex: SelectPositionBean? = null // 选取点
+    private var selectIndex: SelectPositionBean? = null 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

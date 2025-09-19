@@ -5,14 +5,11 @@ import android.graphics.Rect
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
-/**
 
-
- */
 
 @Parcelize
 data class SelectPositionBean(
-    val type: Int = 0, // 1-点 2-线 3-面
+    val type: Int = 0, 
     val startPosition: Point = Point(),
     val endPosition: Point = Point(),
 ) : Parcelable {

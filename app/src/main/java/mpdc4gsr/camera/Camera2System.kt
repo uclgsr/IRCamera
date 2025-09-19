@@ -31,7 +31,7 @@ class Camera2System(
 ) {
     companion object {
         private const val TAG = "Camera2System"
-        private const val DEFAULT_BITRATE = 20_000_000 // 20Mbps for 4K
+        private const val DEFAULT_BITRATE = 20_000_000 
     }
 
     private val cameraController = CameraController(context)
@@ -158,7 +158,7 @@ class Camera2System(
                 when (modeManager.getCurrentMode()) {
                     ModeManager.CameraMode.RAW_50MP -> rawEngine.stopCapture()
                     ModeManager.CameraMode.VIDEO_4K -> videoEngine.stop()
-                    ModeManager.CameraMode.PREVIEW_ONLY -> { /* Nothing to stop */
+                    ModeManager.CameraMode.PREVIEW_ONLY -> { 
                     }
                 }
 
@@ -280,7 +280,7 @@ class Camera2System(
                 val caps = cameraController.getDeviceCaps() ?: return@withContext false
                 val previewSurface = uiBridge.getPreviewSurface() ?: return@withContext false
 
-                val videoSize = Size(3840, 2160) // 4K
+                val videoSize = Size(3840, 2160) 
                 val frameRate = if (caps.supports4k60) 60 else 30
 
                 val surfaces = listOf(previewSurface)
@@ -389,7 +389,7 @@ class Camera2System(
                 val videoSize = Size(3840, 2160)
                 val frameRate = if (caps.supports4k60) 60 else 30
 
-                // Calculate proper orientation hint for video
+                
                 val orientationHint = calculateOrientationHint(caps.sensorOrientation)
 
                 val recorderSurface =
@@ -451,7 +451,7 @@ class Camera2System(
 
     private fun startPeriodicRawCapture() {
 
-        val captureInterval = 1000L / 15 // 15fps
+        val captureInterval = 1000L / 15 
 
         CoroutineScope(Dispatchers.IO).launch {
             while (isRecording && modeManager.getCurrentMode() == ModeManager.CameraMode.RAW_50MP) {
@@ -507,9 +507,7 @@ class Camera2System(
         return File(outputDirectory, filename)
     }
 
-    /**
-     * Calculate proper orientation hint for video recording
-     */
+    
     private fun calculateOrientationHint(sensorOrientation: Int): Int {
         return try {
             val windowManager =
@@ -522,7 +520,7 @@ class Camera2System(
                 else -> 0
             }
 
-            // For back camera, calculate proper orientation
+            
             val orientationHint = (sensorOrientation - deviceRotation + 360) % 360
             Log.d(
                 TAG,
@@ -531,7 +529,7 @@ class Camera2System(
             orientationHint
         } catch (e: Exception) {
             Log.w(TAG, "Failed to calculate orientation hint", e)
-            90 // Default to 90 degrees for most devices
+            90 
         }
     }
 }

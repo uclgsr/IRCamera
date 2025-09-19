@@ -83,10 +83,10 @@ class PCControllerAdapter(
             )
 
             val priorityColor = when {
-                controller.connectionPriority >= 120 -> Color.GREEN  // High priority
-                controller.connectionPriority >= 100 -> Color.BLUE   // Medium priority
-                controller.connectionPriority >= 50 -> Color.YELLOW  // Low priority
-                else -> Color.GRAY  // Very low priority
+                controller.connectionPriority >= 120 -> Color.GREEN  
+                controller.connectionPriority >= 100 -> Color.BLUE   
+                controller.connectionPriority >= 50 -> Color.YELLOW  
+                else -> Color.GRAY  
             }
             priorityIndicator.setBackgroundColor(priorityColor)
 

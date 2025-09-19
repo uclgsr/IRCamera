@@ -73,7 +73,7 @@ class MonitorThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> 
 
     override fun initView() {
         requireActivity().window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-        rotateType = 3 // 默认旋转270度
+        rotateType = 3 
         mCenterTextView = requireView().findViewById(R.id.temp_display)
         mMaxTextView = requireView().findViewById(R.id.max_temp_display)
         mMinTextView = requireView().findViewById(R.id.min_temp_display)
@@ -186,7 +186,7 @@ class MonitorThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> 
                         if (mIrBitmap == null) {
                             mIrBitmap = Bitmap.createBitmap(256, 192, Bitmap.Config.ARGB_8888)
                         }
-                        mGuideInterface!!.yuv2Bitmap(mIrBitmap, yuv) // 视频转码yuv
+                        mGuideInterface!!.yuv2Bitmap(mIrBitmap, yuv) 
 
                         try {
                             mIrSurfaceView!!.doDraw(mIrBitmap, mGuideInterface!!.getImageStatus())
@@ -339,11 +339,11 @@ class MonitorThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> 
     }
 
 
-//            } catch (e: Exception) {
-//                e.printStackTrace()
-//            }
-//        }, 1500)
-//    }
+
+
+
+
+
 
     fun onLut(view: View) {
         mIrSurfaceView!!.setOpenLut()
@@ -354,59 +354,59 @@ class MonitorThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> 
         Log.w("123", "event:${event.action}")
         when (event.action) {
             1001 -> {
-// 拍照
+
                 ToastUtils.showShort("拍照")
                 picture()
             }
 
             1002 -> {
-// 录制
+
                 ToastUtils.showShort("录制")
                 video()
             }
 
             2001 -> {
-// 添加点
+
                 addPoint()
             }
 
             2002 -> {
-// 添加线
+
                 addLine()
             }
 
             2003 -> {
-// 添加围栏
+
                 addFence()
             }
 
             2004 -> {
-// 添加temperature
+
                 onTempBtnClick()
             }
 
             2006 -> {
-// 清除还原
+
                 clearFence()
             }
 
             in 3000..3010 -> {
-// setpseudo-color
+
                 setColor(event.action)
             }
 
             in 5000..5010 -> {
-// 全屏
+
                 full()
             }
 
             10001 -> {
-// 开始记录
+
                 recordThermal()
             }
 
             10003 -> {
-// 停止记录
+
                 isRecord = false
             }
         }
@@ -451,10 +451,10 @@ class MonitorThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> 
         type = "fence"
     }
 
-    // display点线面布局
+    
     private fun showFence(index: Int) {
         if (fenceFlag.getIndex(index) == 0) {
-            fenceFlag = 1.shl(4 * (index - 1)) // 设置001 or 010 or 100
+            fenceFlag = 1.shl(4 * (index - 1)) 
             mFenceLayout!!.visibility = View.VISIBLE
             requireView().findViewById<com.topdon.lib.ui.fence.FencePointView>(R.id.fence_point_view).visibility =
                 if (fenceFlag.getIndex(1) > 0) View.VISIBLE else View.GONE
@@ -468,7 +468,7 @@ class MonitorThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> 
         }
     }
 
-    var selectIndex: ArrayList<Int> = arrayListOf() // 选取点
+    var selectIndex: ArrayList<Int> = arrayListOf() 
 
     private fun initFence() {
         requireView().findViewById<com.topdon.lib.ui.fence.FencePointView>(R.id.fence_point_view).listener =
@@ -477,7 +477,7 @@ class MonitorThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> 
                     startPoint: IntArray,
                     srcRect: IntArray,
                 ) {
-// get点
+
                     val activity: MonitorActivity = requireActivity() as MonitorActivity
                     selectIndex.clear()
                     selectIndex =
@@ -492,7 +492,7 @@ class MonitorThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> 
                     endPoint: IntArray,
                     srcRect: IntArray,
                 ) {
-// get线
+
                     selectIndex =
                         Fence(srcRect = srcRect, rotateType = rotateType)
                             .getLineIndex(startPoint, endPoint)
@@ -507,7 +507,7 @@ class MonitorThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> 
                     endPoint: IntArray,
                     srcRect: IntArray,
                 ) {
-// get面
+
                     selectIndex =
                         Fence(srcRect = srcRect, rotateType = rotateType)
                             .getAreaIndex(startPoint, endPoint)
@@ -518,9 +518,9 @@ class MonitorThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> 
     }
 
     private fun picture() {
-//        ScreenShotUtils.shotScreen(requireContext(), temp_display_lay, 1, ScreenBean())
-        // Note: ScreenShotUtils functionality requires integration with screenshot utility module
-        // ScreenShotUtils.shotScreenBitmap(requireContext(), mIrBitmap, 1, ScreenBean())
+
+        
+        
     }
 
     var isVideoRunning = false
@@ -530,10 +530,10 @@ class MonitorThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> 
             Log.w("123", "正在录制")
             return
         }
-        // Note: FileConfig.galleryPath requires integration with file configuration module
-        // val latestResultPath = "${FileConfig.galleryPath}YapBitmapToMp4_${System.currentTimeMillis()}.mp4"
+        
+        
         val latestResultPath =
-            "/tmp/YapBitmapToMp4_${System.currentTimeMillis()}.mp4" // Temporary fallback
+            "/tmp/YapBitmapToMp4_${System.currentTimeMillis()}.mp4" 
         Log.w("123", "latestResultPath:$latestResultPath")
         YapVideoEncoder(this, File(latestResultPath)).start()
     }
@@ -566,7 +566,7 @@ class MonitorThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> 
 
     var isRecord = false
     var type = ""
-    var timeMillis = 1000L // 间隔1s
+    var timeMillis = 1000L 
 
     private fun recordThermal() {
         val thermalId = TimeTool.showDateSecond()

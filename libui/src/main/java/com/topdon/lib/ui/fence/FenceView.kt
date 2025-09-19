@@ -16,8 +16,8 @@ class FenceView : View {
     var listener: CallBack? = null
 
     private val mPaint by lazy { Paint() }
-    private val rect: Rect = Rect(0, 0, 0, 0) // 手动绘制矩形
-    private val strokeWidth by lazy { SizeUtils.dp2px(2f).toFloat() } // 线宽度
+    private val rect: Rect = Rect(0, 0, 0, 0) 
+    private val strokeWidth by lazy { SizeUtils.dp2px(2f).toFloat() } 
 
     constructor (context: Context) : super(context)
 
@@ -61,7 +61,7 @@ class FenceView : View {
             MotionEvent.ACTION_DOWN -> {
                 rect.right += strokeWidth.toInt()
                 rect.bottom += strokeWidth.toInt()
-                invalidate() // Invalidate entire view
+                invalidate() 
                 rect.left = mX.toInt()
                 rect.top = mY.toInt()
                 rect.right = rect.left
@@ -99,7 +99,7 @@ class FenceView : View {
                 rect.right = x
                 rect.bottom = y
                 old.union(x, y)
-                invalidate() // Invalidate entire view
+                invalidate() 
                 result()
             }
 
@@ -114,7 +114,7 @@ class FenceView : View {
                 rect.right = mX.toInt()
                 rect.bottom = mY.toInt()
                 old.union(mX.toInt(), mY.toInt())
-                invalidate() // Invalidate entire view
+                invalidate() 
             }
         }
         return true

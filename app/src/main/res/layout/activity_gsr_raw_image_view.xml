@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-        <!-- Data binding placeholder -->
+        
     </data>
 
     <ScrollView
@@ -17,7 +17,7 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- RAW Image Display Card -->
+            
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -35,7 +35,7 @@
 
             </androidx.cardview.widget.CardView>
 
-            <!-- Metadata Card -->
+            
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

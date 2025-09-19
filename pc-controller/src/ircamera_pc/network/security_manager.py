@@ -27,7 +27,7 @@ try:
 except ImportError:
     logger = logging.getLogger(__name__)
 
-# Configuration
+
 CERTIFICATE_VALIDITY_DAYS = 365
 TOKEN_VALIDITY_HOURS = 24
 MAX_FAILED_ATTEMPTS = 5
@@ -155,12 +155,12 @@ class AdvancedAuthenticationManager:
         self.cert_dir = cert_dir or Path("certificates")
         self.cert_dir.mkdir(exist_ok=True)
 
-        # Authentication state
+        
         self.authenticated_devices: Dict[str, AuthenticationContext] = {}
         self.failed_attempts: Dict[str, List[float]] = {}
-        self.locked_devices: Dict[str, float] = {}  # device_id: unlock_time
+        self.locked_devices: Dict[str, float] = {}  
 
-        # Advanced credentials beyond admin/admin
+        
         self.advanced_credentials = {
             "admin": "admin",
             "researcher": "research2024!",
@@ -168,7 +168,7 @@ class AdvancedAuthenticationManager:
             "observer": "view_only_123",
         }
 
-        # Session management
+        
         self.session_tokens: Dict[str, AuthenticationContext] = {}
 
         logger.info("Advanced authentication manager initialized")
@@ -184,12 +184,12 @@ class AdvancedAuthenticationManager:
                 reason)
         """
 
-        # Check if device is locked
+        
         if self._is_device_locked(device_id):
             return False, None, "device_locked"
 
         try:
-            # Perform authentication based on level
+            
             if auth_level == AuthLevel.BASIC:
                 success = await self._authenticate_basic(credentials)
             elif auth_level == AuthLevel.CERTIFICATE:
@@ -202,14 +202,14 @@ class AdvancedAuthenticationManager:
                 success = False
 
             if success:
-                # Create authentication context
+                
                 context = await self._create_auth_context(
                     device_id, auth_level, credentials
                 )
                 self.authenticated_devices[device_id] = context
                 self.session_tokens[context.session_token] = context
 
-                # Clear failed attempts
+                
                 self.failed_attempts.pop(device_id, None)
                 self.locked_devices.pop(device_id, None)
 
@@ -218,7 +218,7 @@ class AdvancedAuthenticationManager:
                 )
                 return True, context, "success"
             else:
-                # Handle failed authentication
+                
                 await self._handle_auth_failure(device_id)
                 return False, None, "invalid_credentials"
 
@@ -248,16 +248,16 @@ class AdvancedAuthenticationManager:
             return False
 
         try:
-            # Load and validate certificate
+            
             certificate = x509.load_pem_x509_certificate(cert_data.encode())
 
-            # Check certificate validity
+            
             now = datetime.utcnow()
             if now < certificate.not_valid_before or now > certificate.not_valid_after:
                 return False
 
-            # Verify signature (simplified - in production would verify with certificate public key)
-            return True  # Placeholder for certificate validation
+            
+            return True  
 
         except Exception as e:
             logger.error(f"Certificate authentication failed for {device_id}: {e}")
@@ -274,11 +274,11 @@ class AdvancedAuthenticationManager:
         if not all([token, timestamp, hmac_signature]):
             return False
 
-        # Check token age
+        
         if time.time() - timestamp > TOKEN_VALIDITY_HOURS * 3600:
             return False
 
-        # Verify HMAC
+        
         expected_hmac = self._generate_hmac(device_id, token, timestamp)
         return hmac.compare_digest(expected_hmac, hmac_signature)
 
@@ -292,8 +292,8 @@ class AdvancedAuthenticationManager:
         if not all([hardware_key, biometric_signature]):
             return False
 
-        # Placeholder for hardware key verification
-        # In production, this would verify against stored hardware keys
+        
+        
         return True
 
     async def _create_auth_context(
@@ -301,14 +301,14 @@ class AdvancedAuthenticationManager:
     ) -> AuthenticationContext:
         """Create authentication context for successful authentication"""
 
-        # Determine role based on device type and auth level
+        
         device_type = credentials.get("device_type", "unknown")
         role = self._determine_role(device_type, auth_level, credentials)
 
-        # Generate session token
+        
         session_token = self._generate_session_token(device_id, role)
 
-        # Set expiry time
+        
         expiry_time = time.time() + (TOKEN_VALIDITY_HOURS * 3600)
 
         return AuthenticationContext(
@@ -325,7 +325,7 @@ class AdvancedAuthenticationManager:
     ) -> DeviceRole:
         """Determine device role based on context"""
 
-        # Role mapping based on device type and auth level
+        
         if device_type == "PC_CONTROLLER":
             return DeviceRole.ADMINISTRATOR
         elif device_type == "ANDROID_PHONE":
@@ -355,13 +355,13 @@ class AdvancedAuthenticationManager:
         """Handle authentication failure"""
         current_time = time.time()
 
-        # Track failed attempts
+        
         if device_id not in self.failed_attempts:
             self.failed_attempts[device_id] = []
 
         self.failed_attempts[device_id].append(current_time)
 
-        # Remove old attempts (older than 1 hour)
+        
         cutoff_time = current_time - 3600
         self.failed_attempts[device_id] = [
             attempt
@@ -369,7 +369,7 @@ class AdvancedAuthenticationManager:
             if attempt > cutoff_time
         ]
 
-        # Lock device if too many failures
+        
         if len(self.failed_attempts[device_id]) >= MAX_FAILED_ATTEMPTS:
             self.locked_devices[device_id] = current_time + (
                     LOCKOUT_DURATION_MINUTES * 60
@@ -384,7 +384,7 @@ class AdvancedAuthenticationManager:
             if time.time() < self.locked_devices[device_id]:
                 return True
             else:
-                # Lock expired
+                
                 del self.locked_devices[device_id]
         return False
 
@@ -394,7 +394,7 @@ class AdvancedAuthenticationManager:
         if context and context.is_valid():
             return context
         elif context:
-            # Token expired, remove it
+            
             self.session_tokens.pop(token, None)
             self.authenticated_devices.pop(context.device_id, None)
         return None
@@ -422,7 +422,7 @@ class AdvancedAuthenticationManager:
             if context.is_valid():
                 active_sessions.append(context)
             else:
-                # Remove expired session
+                
                 self.authenticated_devices.pop(context.device_id, None)
                 self.session_tokens.pop(context.session_token, None)
 
@@ -450,7 +450,7 @@ class AdvancedSecurityMonitor:
         self.connection_attempts: Dict[str, List[float]] = {}
         self.suspicious_activities: Dict[str, int] = {}
 
-        # Statistics
+        
         self.total_connections = 0
         self.total_failed_logins = 0
         self.total_alerts = 0
@@ -464,7 +464,7 @@ class AdvancedSecurityMonitor:
 
         self.is_monitoring = True
 
-        # Start monitoring loop
+        
         asyncio.create_task(self._monitoring_loop())
 
         logger.info("Security monitoring started")
@@ -487,24 +487,24 @@ class AdvancedSecurityMonitor:
         """Perform comprehensive security check"""
         current_time = time.time()
 
-        # Check for brute force attacks
+        
         await self._check_brute_force_attacks()
 
-        # Check for unusual connection patterns
+        
         await self._check_connection_patterns()
 
-        # Clean up old data
+        
         await self._cleanup_old_data(current_time)
 
     async def _check_brute_force_attacks(self):
         """Check for brute force attack patterns"""
         current_time = time.time()
-        cutoff_time = current_time - 3600  # Last hour
+        cutoff_time = current_time - 3600  
 
         for device_id, attempts in self.connection_attempts.items():
             recent_attempts = [a for a in attempts if a > cutoff_time]
 
-            if len(recent_attempts) >= 10:  # 10 attempts in 1 hour
+            if len(recent_attempts) >= 10:  
                 await self._generate_alert(
                     "brute_force_attack",
                     AlertSeverity.HIGH,
@@ -516,12 +516,12 @@ class AdvancedSecurityMonitor:
     async def _check_connection_patterns(self):
         """Check for suspicious connection patterns"""
         current_time = time.time()
-        cutoff_time = current_time - 60  # Last minute
+        cutoff_time = current_time - 60  
 
         for device_id, attempts in self.connection_attempts.items():
             recent_attempts = [a for a in attempts if a > cutoff_time]
 
-            if len(recent_attempts) > 10:  # More than 10 attempts per minute
+            if len(recent_attempts) > 10:  
                 await self._generate_alert(
                     "suspicious_connection",
                     AlertSeverity.MEDIUM,
@@ -532,9 +532,9 @@ class AdvancedSecurityMonitor:
 
     async def _cleanup_old_data(self, current_time: float):
         """Clean up old monitoring data"""
-        cutoff_time = current_time - (24 * 3600)  # 24 hours
+        cutoff_time = current_time - (24 * 3600)  
 
-        # Clean old connection attempts
+        
         for device_id in list(self.connection_attempts.keys()):
             self.connection_attempts[device_id] = [
                 a for a in self.connection_attempts[device_id] if a > cutoff_time
@@ -542,7 +542,7 @@ class AdvancedSecurityMonitor:
             if not self.connection_attempts[device_id]:
                 del self.connection_attempts[device_id]
 
-        # Clean old alerts
+        
         self.security_alerts = [
             alert for alert in self.security_alerts if alert.timestamp > cutoff_time
         ]
@@ -588,7 +588,7 @@ class AdvancedSecurityMonitor:
         self.security_alerts.append(alert)
         self.total_alerts += 1
 
-        # Keep only last 1000 alerts
+        
         if len(self.security_alerts) > 1000:
             self.security_alerts = self.security_alerts[-1000:]
 
@@ -647,7 +647,7 @@ class EnhancedSecurityManager:
     ) -> Tuple[bool, Optional[AuthenticationContext], str]:
         """Authenticate device with security monitoring"""
 
-        # Report connection attempt to monitor
+        
         success, context, reason = await self.auth_manager.authenticate(
             device_id, auth_level, credentials
         )

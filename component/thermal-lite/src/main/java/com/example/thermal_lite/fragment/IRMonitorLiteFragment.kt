@@ -61,11 +61,7 @@ import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
-/**
- * des:
- * author: CaiSongL
- * date: 2024/8/5 14:44
- **/
+
 class IRMonitorLiteFragment : BaseFragment(), ITsTempListener {
 
     lateinit var temperatureView: com.infisense.usbir.view.TemperatureView
@@ -73,9 +69,9 @@ class IRMonitorLiteFragment : BaseFragment(), ITsTempListener {
 
     private var configJob: Job? = null
     protected var isConfigWait = true
-    protected var temperatureBytes = ByteArray(192 * 256 * 2) // 温度数据
+    protected var temperatureBytes = ByteArray(192 * 256 * 2) 
     var rotateAngle = 270
-    private val imageRes = LibIRProcess.ImageRes_t() // 原图尺寸
+    private val imageRes = LibIRProcess.ImageRes_t() 
     val dstTempBytes = ByteArray(192 * 256 * 2)
 
     @Suppress("DEPRECATION")
@@ -156,7 +152,7 @@ class IRMonitorLiteFragment : BaseFragment(), ITsTempListener {
                     CameraPreviewManager.getInstance()?.setLimit(
                         Float.MAX_VALUE, Float.MIN_VALUE,
                         0, 0,
-                    ) // 自定义颜色
+                    ) 
                     shutterHandler = Handler(Looper.getMainLooper())
 
                     fun takePicture() {
@@ -170,8 +166,8 @@ class IRMonitorLiteFragment : BaseFragment(), ITsTempListener {
                     shutterRunnable =
                         object : Runnable {
                             override fun run() {
-                                if (shutterCount < 4) { // 确保只执行前40秒的操作（8次）
-                                    shutterHandler?.postDelayed(this, 5000L) // 延迟5秒后再次执行
+                                if (shutterCount < 4) { 
+                                    shutterHandler?.postDelayed(this, 5000L) 
                                     takePicture()
                                 }
                             }
@@ -179,7 +175,7 @@ class IRMonitorLiteFragment : BaseFragment(), ITsTempListener {
 
                     shutterHandler?.postDelayed(shutterRunnable!!, 300)
 
-                    delay(2000) // sdk的高低增益需要延迟2秒后才能设置成功
+                    delay(2000) 
                     withContext(Dispatchers.IO) {
                         IRTool.basicGainSet(SaveSettingUtil.temperatureMode)
                     }
@@ -443,7 +439,7 @@ class IRMonitorLiteFragment : BaseFragment(), ITsTempListener {
                         this@IRMonitorLiteFragment
                     )
                     temperatureView.temperatureRegionMode =
-                        TemperatureView.REGION_MODE_CLEAN // 全屏测温
+                        TemperatureView.REGION_MODE_CLEAN 
                 }
             }
         }

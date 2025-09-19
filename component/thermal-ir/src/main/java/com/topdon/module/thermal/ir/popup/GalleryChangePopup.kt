@@ -10,11 +10,7 @@ import android.widget.TextView
 import com.blankj.utilcode.util.SizeUtils
 import com.topdon.module.thermal.ir.R
 
-/**
 
- *
- * Created by LCG on 2024/1/5.
- */
 
 class GalleryChangePopup(private val context: Context) : PopupWindow() {
 

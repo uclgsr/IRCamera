@@ -13,29 +13,20 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import mpdc4gsr.R
-// import mpdc4gsr.databinding.ActivityShimmerConfigBinding
+
 import android.view.LayoutInflater
 import mpdc4gsr.sensors.unified.ShimmerDeviceManager
 import mpdc4gsr.sensors.unified.model.DeviceInfo
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-/**
- * Shimmer Configuration Activity - Device Discovery and Pairing UI
- *
- * This activity provides the UI for:
- * - Scanning for nearby Shimmer3 GSR+ devices
- * - Displaying discovered devices with signal strength
- * - Connecting to selected devices
- * - Managing device pairing and connection status
- * - Testing device connectivity before recording sessions
- */
+
 class ShimmerConfigActivity : AppCompatActivity() {
 
     companion object {
         private const val TAG = "ShimmerConfigActivity"
 
-        // Required permissions for Shimmer BLE operations
+        
         private val REQUIRED_PERMISSIONS =
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
                 arrayOf(
@@ -52,13 +43,13 @@ class ShimmerConfigActivity : AppCompatActivity() {
             }
     }
 
-    // private lateinit var binding: ActivityShimmerConfigBinding
+    
     private lateinit var deviceAdapter: ShimmerDeviceAdapter
     private var shimmerDeviceManager: ShimmerDeviceManager? = null
     private var isScanning = false
     private var connectedDevice: DeviceInfo? = null
 
-    // Permission launcher for Bluetooth permissions
+    
     private val permissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
     ) { permissions ->
@@ -76,7 +67,7 @@ class ShimmerConfigActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Use efficient view inflation without DataBinding for better performance
+        
         setContentView(R.layout.activity_shimmer_config)
 
         setupUI()
@@ -84,25 +75,25 @@ class ShimmerConfigActivity : AppCompatActivity() {
     }
 
     private fun setupUI() {
-        // Efficient UI setup with direct view references
+        
         setupToolbar()
         setupRecyclerView()
         setupButtonListeners()
 
-        // Initial UI state
+        
         updateUI("Ready to scan for Shimmer devices")
         updateScanButton(false)
         updateConnectionStatus(null)
     }
 
     private fun setupToolbar() {
-        // Set up toolbar with support for navigation
+        
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = "Shimmer GSR Configuration"
     }
 
     private fun setupRecyclerView() {
-        // Set up RecyclerView for discovered devices
+        
         deviceAdapter = ShimmerDeviceAdapter { device ->
             onDeviceSelected(device)
         }
@@ -114,7 +105,7 @@ class ShimmerConfigActivity : AppCompatActivity() {
     }
 
     private fun setupButtonListeners() {
-        // Set up button listeners with proper error handling
+        
         findViewById<android.widget.Button>(R.id.buttonScan)?.setOnClickListener {
             try {
                 if (isScanning) {
@@ -180,7 +171,7 @@ class ShimmerConfigActivity : AppCompatActivity() {
                     Log.i(TAG, "Shimmer Device Manager initialized successfully")
                     updateUI("Shimmer device manager ready - tap 'Start Scan' to discover devices")
 
-                    // Set up flow collectors for device events
+                    
                     setupDeviceFlowCollectors()
                 } else {
                     Log.e(TAG, "Failed to initialize Shimmer Device Manager")
@@ -194,7 +185,7 @@ class ShimmerConfigActivity : AppCompatActivity() {
     }
 
     private fun setupDeviceFlowCollectors() {
-        // Collect scan results
+        
         lifecycleScope.launch {
             shimmerDeviceManager?.scanResults?.collectLatest { devices ->
                 Log.d(TAG, "Received ${devices.size} discovered Shimmer devices")
@@ -208,7 +199,7 @@ class ShimmerConfigActivity : AppCompatActivity() {
             }
         }
 
-        // Collect connection events
+        
         lifecycleScope.launch {
             shimmerDeviceManager?.connectionEvents?.collectLatest { event ->
                 Log.d(TAG, "Connection event: ${event.state} for device ${event.deviceAddress}")
@@ -330,12 +321,12 @@ class ShimmerConfigActivity : AppCompatActivity() {
             return
         }
 
-        // Stop scanning if active
+        
         if (isScanning) {
             stopDeviceScanning()
         }
 
-        // Connect to selected device
+        
         lifecycleScope.launch {
             try {
                 updateUI("Connecting to ${device.name}...")
@@ -344,7 +335,7 @@ class ShimmerConfigActivity : AppCompatActivity() {
 
                 val connected = manager.connectToDevice(device)
                 if (!connected) {
-                    // Connection event flow will handle the result
+                    
                     Log.w(TAG, "Initial connection attempt returned false")
                 }
             } catch (e: Exception) {
@@ -368,7 +359,7 @@ class ShimmerConfigActivity : AppCompatActivity() {
                 findViewById<android.widget.ProgressBar>(R.id.progressBar)?.visibility =
                     View.VISIBLE
 
-                // Simple connection test - try to get device info
+                
                 kotlinx.coroutines.delay(1000)
 
                 updateUI("Connection test successful - device is responsive")
@@ -473,7 +464,7 @@ class ShimmerConfigActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
 
-        // Clean up scanning and connections
+        
         lifecycleScope.launch {
             try {
                 if (isScanning) {

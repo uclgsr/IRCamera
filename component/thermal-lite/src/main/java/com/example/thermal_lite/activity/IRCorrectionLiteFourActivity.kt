@@ -16,12 +16,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 
-/**
- *
 
- * @author: CaiSongL
- * @date: 2023/8/4 9:06
- */
 
 class IRCorrectionLiteFourActivity : BaseActivity() {
     private lateinit var binding: ActivityIrCorrectionLiteFourBinding
@@ -33,7 +28,7 @@ class IRCorrectionLiteFourActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Handle back press with modern approach
+        
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 TipDialog.Builder(this@IRCorrectionLiteFourActivity)

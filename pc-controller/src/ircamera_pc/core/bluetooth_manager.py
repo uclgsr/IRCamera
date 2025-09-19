@@ -41,7 +41,7 @@ except ImportError:
         "Bluetooth dependencies not available." "Install 'bleak' for Bluetooth support"
     )
     BLUETOOTH_AVAILABLE = False
-    # Create fallback type for when bleak is not available
+    
     BLEDevice = object
     BleakClient = object
     BleakGATTCharacteristic = object
@@ -49,7 +49,7 @@ except ImportError:
 
 try:
     if platform.system() == "Windows":
-        pass  # Using bleak for all Bluetooth operations now
+        pass  
 
         CLASSIC_BT_AVAILABLE = True
     else:
@@ -101,16 +101,16 @@ class BluetoothManager(BaseManager):
     - Data transmission capabilities
     """
 
-    # Signals (only available with PyQt6)
+    
     if PYQT_AVAILABLE:
         device_discovered = pyqtSignal(BluetoothDevice)
-        device_connected = pyqtSignal(str, str)  # address, name
-        device_disconnected = pyqtSignal(str, str)  # address, reason
-        data_received = pyqtSignal(str, bytes)  # address, data
-        scan_completed = pyqtSignal(int)  # device_count
-        error_occurred = pyqtSignal(str, str)  # operation, error_message
+        device_connected = pyqtSignal(str, str)  
+        device_disconnected = pyqtSignal(str, str)  
+        data_received = pyqtSignal(str, bytes)  
+        scan_completed = pyqtSignal(int)  
+        error_occurred = pyqtSignal(str, str)  
 
-    # IRCamera service UUIDs (these would be specific to the actual device)
+    
     IRCAMERA_SERVICE_UUID = "12345678-1234-1234-1234-123456789abc"
     IRCAMERA_DATA_CHARACTERISTIC = "87654321-4321-4321-4321-cba987654321"
 
@@ -120,7 +120,7 @@ class BluetoothManager(BaseManager):
         self._connections: Dict[str, BleakClient] = {}
         self._scanning = False
 
-        # Timer for periodic scanning (only available with PyQt6)
+        
         if PYQT_AVAILABLE:
             self._scan_timer = QTimer()
             self._scan_timer.timeout.connect(self._periodic_scan)
@@ -176,11 +176,11 @@ class BluetoothManager(BaseManager):
         self._scanning = True
         logger.info("Starting Bluetooth device scan")
 
-        # Start immediate scan
+        
         asyncio.create_task(self._scan_devices())
 
         if continuous and self._scan_timer:
-            self._scan_timer.start(interval * 1000)  # Convert to milliseconds
+            self._scan_timer.start(interval * 1000)  
 
     def stop_scanning(self) -> None:
         """Stop scanning for devices."""
@@ -242,7 +242,7 @@ class BluetoothManager(BaseManager):
             return True
 
         existing = self._devices[device.address]
-        # Update if RSSI changed significantly or name became available
+        
         return abs(existing.rssi - (device.rssi or -100)) > 10 or (
                 not existing.name and device.name
         )
@@ -260,7 +260,7 @@ class BluetoothManager(BaseManager):
         Returns:
             BluetoothDevice with enhanced information and IRCamera detection
         """
-        # Check if this could be an IRCamera device
+        
         is_ircamera = self._is_ircamera_device(device)
 
         return BluetoothDevice(
@@ -268,7 +268,7 @@ class BluetoothManager(BaseManager):
             name=device.name or "Unknown Device",
             device_type=BluetoothDeviceType.BLE,
             rssi=device.rssi or -100,
-            services=[],  # Services discovered during connection
+            services=[],  
             last_seen=datetime.now(),
             is_ircamera=is_ircamera,
         )
@@ -281,7 +281,7 @@ class BluetoothManager(BaseManager):
         if not device.name:
             return False
 
-        # Look for IRCamera-specific naming patterns
+        
         name_lower = device.name.lower()
         ircamera_patterns = [
             "ircamera",
@@ -322,11 +322,11 @@ class BluetoothManager(BaseManager):
             client = BleakClient(address)
             await client.connect()
 
-            # Discover services
+            
             services = await client.get_services()
             device.services = [str(service.uuid) for service in services]
 
-            # Check for IRCamera-specific services
+            
             if self.IRCAMERA_SERVICE_UUID in device.services:
                 device.is_ircamera = True
                 logger.info(f"IRCamera service detected on {device.name}")
@@ -337,7 +337,7 @@ class BluetoothManager(BaseManager):
             self._emit_signal("device_connected", address, device.name)
             logger.info(f"Successfully connected to {device.name}")
 
-            # Set up notifications if it's an IRCamera device
+            
             if device.is_ircamera:
                 await self._setup_ircamera_notifications(client)
 
@@ -436,7 +436,7 @@ class BluetoothManager(BaseManager):
 
     def clear_devices(self) -> None:
         """Clear the list of discovered devices."""
-        # Don't clear connected devices
+        
         connected_addresses = set(self._connections.keys())
         self._devices = {
             addr: device
@@ -449,7 +449,7 @@ class BluetoothManager(BaseManager):
         """Clean up all connections and stop scanning."""
         self.stop_scanning()
 
-        # Disconnect all devices
+        
         for address in list(self._connections.keys()):
             await self.disconnect_device(address)
 

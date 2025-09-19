@@ -65,19 +65,19 @@ class DeviceInfo:
     state: DeviceConnectionState
     capabilities: DeviceCapabilities
 
-    # Connection metadata
+    
     discovered_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
     connected_at: Optional[datetime] = None
     last_heartbeat: Optional[datetime] = None
     connection_quality: ConnectionQuality = ConnectionQuality.GOOD
 
-    # Statistics
+    
     total_connections: int = 0
     total_disconnections: int = 0
     bytes_sent: int = 0
     bytes_received: int = 0
 
-    # Session tracking
+    
     current_session_id: Optional[str] = None
     sessions_participated: List[str] = field(default_factory=list)
 
@@ -107,7 +107,7 @@ class DeviceRegistry:
         """Initialize the device registry."""
         self.devices: Dict[str, DeviceInfo] = {}
         self._callbacks: List[Callable[[str, DeviceInfo, str], None]] = []
-        self._heartbeat_timeout = 30.0  # seconds
+        self._heartbeat_timeout = 30.0  
         self._discovery_service: Optional[NetworkDiscoveryService] = None
 
     def add_status_callback(self, callback: Callable[[str, DeviceInfo, str], None]) -> None:
@@ -144,7 +144,7 @@ class DeviceRegistry:
         """
         device_id = f"{discovered_device.service_name}_{discovered_device.ip_address}_{discovered_device.port}"
 
-        # Parse capabilities from discovery attributes
+        
         capabilities = self._parse_capabilities(discovered_device.attributes)
 
         device_info = DeviceInfo(
@@ -157,9 +157,9 @@ class DeviceRegistry:
             capabilities=capabilities
         )
 
-        # Check if device already exists
+        
         if device_id in self.devices:
-            # Update existing device
+            
             existing = self.devices[device_id]
             existing.ip_address = discovered_device.ip_address
             existing.port = discovered_device.port
@@ -168,7 +168,7 @@ class DeviceRegistry:
             logger.info(f"Updated existing device: {device_id}")
             self._notify_callbacks(device_id, existing, "updated")
         else:
-            # Add new device
+            
             self.devices[device_id] = device_info
             logger.info(f"Registered new device: {device_id} ({device_info.device_type.name})")
             self._notify_callbacks(device_id, device_info, "discovered")
@@ -179,21 +179,21 @@ class DeviceRegistry:
         """Parse capabilities from discovery attributes."""
         capabilities = DeviceCapabilities()
 
-        # Parse capabilities string (comma-separated)
+        
         caps_str = attributes.get("capabilities", "")
         caps_list = [cap.strip() for cap in caps_str.split(",") if cap.strip()]
 
-        # Map capability strings to boolean flags
+        
         capabilities.supports_rgb_camera = "rgb_camera" in caps_list
         capabilities.supports_thermal_camera = "thermal_camera" in caps_list
         capabilities.supports_gsr_sensor = "gsr_sensor" in caps_list
         capabilities.supports_file_transfer = "file_transfer" in caps_list
         capabilities.supports_time_sync = "time_sync" in caps_list
 
-        # Parse resolution
+        
         capabilities.max_resolution = attributes.get("max_resolution", "1080p")
 
-        # Parse sampling rates
+        
         rates_str = attributes.get("sampling_rates", "")
         if rates_str:
             try:
@@ -222,7 +222,7 @@ class DeviceRegistry:
         old_state = device.state
         device.state = new_state
 
-        # Update connection timestamps
+        
         if new_state == DeviceConnectionState.ONLINE:
             device.connected_at = datetime.now(timezone.utc)
             device.total_connections += 1
@@ -340,7 +340,7 @@ class DeviceManager:
         self._running = False
         self._monitoring_task: Optional[asyncio.Task] = None
 
-        # Setup discovery callbacks
+        
         self.discovery_service.add_discovery_listener(self._on_device_discovered)
         self.discovery_service.add_discovery_listener(self._on_device_lost)
 
@@ -352,12 +352,12 @@ class DeviceManager:
             True if started successfully
         """
         try:
-            # Start discovery service
+            
             if not await self.discovery_service.start_discovery():
                 logger.error("Failed to start discovery service")
                 return False
 
-            # Start monitoring
+            
             self._running = True
             self._monitoring_task = asyncio.create_task(self._monitoring_loop())
 
@@ -373,7 +373,7 @@ class DeviceManager:
         try:
             self._running = False
 
-            # Stop monitoring task
+            
             if self._monitoring_task:
                 self._monitoring_task.cancel()
                 try:
@@ -381,7 +381,7 @@ class DeviceManager:
                 except asyncio.CancelledError:
                     pass
 
-            # Stop discovery service
+            
             await self.discovery_service.stop_discovery()
 
             logger.info("Device manager stopped")
@@ -393,15 +393,15 @@ class DeviceManager:
         """Background monitoring loop for device health."""
         while self._running:
             try:
-                # Check for heartbeat timeouts
+                
                 timed_out_devices = self.registry.check_heartbeat_timeouts()
 
-                # Mark timed out devices as disconnected
+                
                 for device_id in timed_out_devices:
                     self.registry.update_device_state(device_id, DeviceConnectionState.DISCONNECTED)
 
-                # Sleep before next check
-                await asyncio.sleep(5.0)  # Check every 5 seconds
+                
+                await asyncio.sleep(5.0)  
 
             except asyncio.CancelledError:
                 break
@@ -411,16 +411,16 @@ class DeviceManager:
 
     def _on_device_discovered(self, event_type: str, discovered_device: DiscoveredDevice) -> None:
         """Handle device discovery events."""
-        if event_type == "discovered":  # Fix: Changed from "device_discovered" to "discovered"
+        if event_type == "discovered":  
             device_id = self.registry.register_device(discovered_device)
             logger.info(f"Device discovered and registered: {device_id}")
 
     def _on_device_lost(self, event_type: str, lost_device: DiscoveredDevice) -> None:
         """Handle device loss events."""
-        if event_type == "lost":  # Fix: Changed from "device_lost" to "lost"
-            # Fix: Parameter is now DiscoveredDevice, not service_name string
+        if event_type == "lost":  
+            
             service_name = lost_device.service_name
-            # Find device by service name
+            
             for device_id, device in self.registry.get_all_devices().items():
                 if device.device_name == service_name:
                     self.registry.update_device_state(device_id, DeviceConnectionState.DISCONNECTED)
@@ -440,13 +440,13 @@ class DeviceManager:
             Device ID if added successfully, None otherwise
         """
         try:
-            # Create discovered device manually
+            
             discovered_device = DiscoveredDevice(
                 service_name=device_name,
                 service_type="_ircamera._tcp.local.",
                 ip_address=ip_address,
                 port=port,
-                device_type=DeviceType.ANDROID_SENSOR_NODE,  # Default type
+                device_type=DeviceType.ANDROID_SENSOR_NODE,  
                 attributes={},
                 discovered_at=datetime.now(timezone.utc),
                 last_seen=datetime.now()
@@ -492,11 +492,11 @@ class DeviceManager:
                 logger.error(f"Device not found in registry: {device_id}")
                 return False
 
-            # Update device state to connecting
+            
             self.registry.update_device_state(device_id, DeviceConnectionState.ONLINE)
 
-            # TODO: Implement actual network connection logic
-            # For now, just mark as connected if device exists
+            
+            
             logger.info(f"Connected to device: {device_id}")
             return True
 

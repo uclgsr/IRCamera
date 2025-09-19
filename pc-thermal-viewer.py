@@ -44,7 +44,7 @@ class ThermalViewer:
 
         while self.running:
             try:
-                # Read message length (4-byte big-endian integer)
+                
                 header = self.socket.recv(4)
                 if not header or len(header) < 4:
                     print("❌ Connection closed by Android app or invalid header")
@@ -52,12 +52,12 @@ class ThermalViewer:
 
                 msg_len = int.from_bytes(header, 'big')
 
-                # Read the full message payload
+                
                 data = b""
                 while len(data) < msg_len:
                     packet = self.socket.recv(msg_len - len(data))
                     if not packet:
-                        break  # Connection broken
+                        break  
                     data += packet
 
                 if len(data) == msg_len:
@@ -80,7 +80,7 @@ class ThermalViewer:
             if message.get('type') == 'thermal_frame':
                 self.frame_count += 1
 
-                # Extract thermal data
+                
                 frame_num = message.get('frame_number', 0)
                 sensor_id = message.get('sensor_id', 'unknown')
                 min_temp = message.get('min_temp_c', 'N/A')
@@ -93,7 +93,7 @@ class ThermalViewer:
                     f"🌡️  Frame #{frame_num} | Temp: {min_temp}°C - {max_temp}°C (avg: {avg_temp}°C) | "
                     f"Center: {center_temp}°C | {'SIM' if simulation else 'REAL'}")
 
-                # Decode and display thermal image
+                
                 if 'image_jpeg_base64' in message:
                     self.display_thermal_image(message['image_jpeg_base64'], frame_num)
 
@@ -105,21 +105,21 @@ class ThermalViewer:
     def display_thermal_image(self, base64_image, frame_num):
         """Display thermal image using OpenCV"""
         try:
-            # Decode base64 to image
+            
             image_bytes = base64.b64decode(base64_image)
             image = Image.open(io.BytesIO(image_bytes))
 
-            # Convert to OpenCV format
+            
             cv_image = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
 
-            # Add frame number overlay
+            
             cv2.putText(cv_image, f"Frame #{frame_num}", (10, 30),
                         cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
 
-            # Display image
+            
             cv2.imshow('Topdon TC001 Thermal Camera', cv_image)
 
-            # Allow OpenCV to process events
+            
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 print("👋 User requested quit")
                 self.stop()
@@ -133,7 +133,7 @@ class ThermalViewer:
         print(f"📱 Connecting to Android app at {self.android_ip}:{self.android_port}")
 
         if self.connect():
-            # Start receiving frames in background thread
+            
             receive_thread = threading.Thread(target=self.receive_thermal_frames)
             receive_thread.daemon = True
             receive_thread.start()
@@ -163,12 +163,12 @@ def main():
     print("PC Thermal Viewer for Topdon TC001 Thermal Camera")
     print("=" * 60)
 
-    # Get Android device IP from user
+    
     android_ip = input("Enter Android device IP address (default: 192.168.1.2): ").strip()
     if not android_ip:
         android_ip = "192.168.1.2"
 
-    # Create and start viewer
+    
     viewer = ThermalViewer(android_ip=android_ip)
     viewer.start()
 

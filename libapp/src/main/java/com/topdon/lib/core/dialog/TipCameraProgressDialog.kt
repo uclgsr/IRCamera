@@ -9,10 +9,7 @@ import android.view.ViewGroup.LayoutParams
 import com.topdon.lib.core.R
 import com.topdon.lib.core.utils.ScreenUtil
 
-/**
- * 提示窗
- * create by fylder on 2018/6/15
- **/
+
 class TipCameraProgressDialog : Dialog {
     constructor(context: Context) : super(context)
 
@@ -57,7 +54,7 @@ class TipCameraProgressDialog : Dialog {
 
                     0.35
                 }
-            lp.width = (ScreenUtil.getScreenWidth(context!!) * wRatio).toInt() // 设置宽度
+            lp.width = (ScreenUtil.getScreenWidth(context!!) * wRatio).toInt() 
             dialog!!.window!!.attributes = lp
             dialog!!.setCanceledOnTouchOutside(canceleable)
             dialog!!.setCancelable(canceleable)

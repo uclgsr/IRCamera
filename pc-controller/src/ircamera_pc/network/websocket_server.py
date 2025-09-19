@@ -27,7 +27,7 @@ try:
 except ImportError:
     from ..utils.simple_logger import logger
 
-# from ..sync import AdvancedTimeSyncServer  # TODO: Implement when needed
+
 from .discovery import NetworkDiscoveryService
 from .security_manager import AuthLevel, AdvancedSecurityManager
 from .protocol import create_message, get_protocol_manager
@@ -43,7 +43,7 @@ class ClientConnection:
     device_type: str
     authenticated: bool = False
     auth_level: AuthLevel = AuthLevel.NONE
-    auth_context: Optional[Any] = None  # Enhanced authentication context
+    auth_context: Optional[Any] = None  
     last_ping: float = 0
     connected_at: float = 0
     capabilities: Set[str] = None
@@ -66,30 +66,30 @@ class WebSocketServer:
         self.server = None
         self.is_running = False
 
-        # Client management
+        
         self.clients: Dict[str, ClientConnection] = {}
         self.client_lock = asyncio.Lock()
 
-        # Authentication
+        
         self.auth_username = "admin"
-        self.auth_password = "admin"  # Development credentials
+        self.auth_password = "admin"  
 
-        # Heartbeat configuration
-        self.heartbeat_interval = 5.0  # 5 seconds
-        self.heartbeat_timeout = 15.0  # 15 seconds silence = disconnect
+        
+        self.heartbeat_interval = 5.0  
+        self.heartbeat_timeout = 15.0  
         self.heartbeat_task = None
 
-        # Services
+        
         self.security_manager = SecurityManager()
-        self.advanced_security = AdvancedSecurityManager()  # Phase 4
+        self.advanced_security = AdvancedSecurityManager()  
         self.discovery_service = NetworkDiscoveryService()
         self.protocol_manager = get_protocol_manager()
 
-        # Message handlers
+        
         self.message_handlers: Dict[str, Callable] = {}
         self._setup_message_handlers()
 
-        # TLS configuration
+        
         self.ssl_context = None
         self._setup_tls()
 
@@ -98,7 +98,7 @@ class WebSocketServer:
         try:
             self.ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
 
-            # Load certificates - use self-signed for development
+            
             cert_dir = Path(__file__).parent.parent.parent.parent / "certificates"
             cert_file = cert_dir / "server.crt"
             key_file = cert_dir / "server.key"
@@ -107,7 +107,7 @@ class WebSocketServer:
                 self.ssl_context.load_cert_chain(cert_file, key_file)
                 logger.info(f"Loaded TLS certificates from {cert_dir}")
             else:
-                # Generate self-signed certificate for development
+                
                 logger.warning(
                     "No TLS certificates found, generating self-signed certificate"
                 )
@@ -116,7 +116,7 @@ class WebSocketServer:
 
         except Exception as e:
             logger.error(f"Failed to setup TLS: {e}")
-            # Fallback to no TLS for development
+            
             self.ssl_context = None
             logger.warning("Running without TLS encryption")
 
@@ -131,10 +131,10 @@ class WebSocketServer:
             "status_request": self._handle_status_request,
             "heartbeat": self._handle_heartbeat,
             "pong": self._handle_pong,
-            # Phase 2 - Enhanced time synchronization
+            
             "time_sync_request": self._handle_time_sync_request,
             "multi_round_sync_request": self._handle_multi_round_sync_request,
-            # Phase 3 - File Transfer & Data Management
+            
             "upload_initiate": self._handle_upload_initiate,
             "upload_chunk": self._handle_upload_chunk,
             "upload_verify": self._handle_upload_verify,
@@ -142,7 +142,7 @@ class WebSocketServer:
             "file_chunk_response": self._handle_file_chunk_response,
             "data_export_request": self._handle_data_export_request,
             "session_manifest_request": self._handle_session_manifest_request,
-            # Phase 4 - Advanced Authentication & Security
+            
             "enhanced_auth_request": self._handle_enhanced_auth,
             "certificate_auth_request": self._handle_certificate_auth,
             "token_auth_request": self._handle_token_auth,
@@ -161,26 +161,26 @@ class WebSocketServer:
         try:
             logger.info(f"Starting WebSocket Secure server on {self.host}:{self.port}")
 
-            # Initialize enhanced security (Phase 4)
+            
             await self.enhanced_security.initialize()
 
-            # Start mDNS advertising
+            
             await self._start_mdns_advertising()
 
-            # Start WebSocket server
+            
             self.server = await websockets.serve(
                 self._handle_client,
                 self.host,
                 self.port,
                 ssl=self.ssl_context,
-                ping_interval=None,  # We handle our own heartbeat
+                ping_interval=None,  
                 ping_timeout=None,
                 close_timeout=10,
             )
 
             self.is_running = True
 
-            # Start heartbeat monitoring
+            
             self.heartbeat_task = asyncio.create_task(self._heartbeat_monitor())
 
             logger.info("WebSocket Secure server started successfully")
@@ -198,7 +198,7 @@ class WebSocketServer:
         logger.info("Stopping WebSocket Secure server")
 
         try:
-            # Stop heartbeat monitoring
+            
             if self.heartbeat_task:
                 self.heartbeat_task.cancel()
                 try:
@@ -206,7 +206,7 @@ class WebSocketServer:
                 except asyncio.CancelledError:
                     pass
 
-            # Disconnect all clients
+            
             async with self.client_lock:
                 for client_id, client in list(self.clients.items()):
                     try:
@@ -215,12 +215,12 @@ class WebSocketServer:
                         logger.warning(f"Error closing client {client_id}: {e}")
                 self.clients.clear()
 
-            # Stop server
+            
             if self.server:
                 self.server.close()
                 await self.server.wait_closed()
 
-            # Stop mDNS advertising
+            
             await self._stop_mdns_advertising()
 
             self.is_running = False
@@ -266,17 +266,17 @@ class WebSocketServer:
         logger.info(f"New WebSocket connection from {client_address} (ID: {client_id})")
 
         try:
-            # Create client connection object
+            
             client = ClientConnection(
                 websocket=websocket,
-                device_id="",  # Will be set during handshake
+                device_id="",  
                 device_type="unknown",
             )
 
             async with self.client_lock:
                 self.clients[client_id] = client
 
-            # Handle client messages
+            
             async for message in websocket:
                 try:
                     await self._process_message(client_id, message)
@@ -291,7 +291,7 @@ class WebSocketServer:
         except Exception as e:
             logger.error(f"Error handling client {client_id}: {e}")
         finally:
-            # Clean up client
+            
             async with self.client_lock:
                 if client_id in self.clients:
                     del self.clients[client_id]
@@ -300,10 +300,10 @@ class WebSocketServer:
     async def _process_message(self, client_id: str, raw_message: str):
         """Process incoming message from client"""
         try:
-            # Parse JSON message
+            
             message = json.loads(raw_message)
 
-            # Validate protocol version
+            
             if not self.protocol_manager.validate_message_version(message):
                 await self._send_error(
                     client_id, "protocol_version_error", "Unsupported protocol version"
@@ -317,14 +317,14 @@ class WebSocketServer:
                 )
                 return
 
-            # Get client
+            
             async with self.client_lock:
                 client = self.clients.get(client_id)
                 if not client:
                     logger.error(f"Client {client_id} not found")
                     return
 
-            # Check authentication for protected messages
+            
             if (
                     message_type not in ["protocol_handshake", "auth_request", "pong"]
                     and not client.authenticated
@@ -334,7 +334,7 @@ class WebSocketServer:
                 )
                 return
 
-            # Handle message
+            
             handler = self.message_handlers.get(message_type)
             if handler:
                 await handler(client_id, message)
@@ -360,7 +360,7 @@ class WebSocketServer:
             device_type = message.get("device_type", "unknown")
             capabilities = set(message.get("capabilities", "").split(","))
 
-            # Update client info
+            
             async with self.client_lock:
                 client = self.clients.get(client_id)
                 if client:
@@ -368,7 +368,7 @@ class WebSocketServer:
                     client.device_type = device_type
                     client.capabilities = capabilities
 
-            # Send handshake response
+            
             response = create_message(
                 "protocol_handshake_response",
                 {
@@ -401,7 +401,7 @@ class WebSocketServer:
                 )
                 return
 
-            # Decode basic auth credentials
+            
             try:
                 decoded = base64.b64decode(credentials).decode("utf-8")
                 username, password = decoded.split(":", 1)
@@ -411,20 +411,20 @@ class WebSocketServer:
                 )
                 return
 
-            # Validate credentials
+            
             if username == self.auth_username and password == self.auth_password:
-                # Mark client as authenticated
+                
                 async with self.client_lock:
                     client = self.clients.get(client_id)
                     if client:
                         client.authenticated = True
 
-                # Send success response
+                
                 response = create_message(
                     "auth_response",
                     {
                         "success": True,
-                        "session_token": str(uuid.uuid4()),  # Simple session token
+                        "session_token": str(uuid.uuid4()),  
                     },
                 )
                 await self._send_message(client_id, response)
@@ -464,7 +464,7 @@ class WebSocketServer:
         duration = message.get("duration_ms", 500)
         logger.info(f"Sync flash requested by client {client_id} for {duration}ms")
 
-        # Broadcast sync flash to all authenticated clients
+        
         flash_message = create_message(
             "sync_flash_trigger", {"duration_ms": duration, "timestamp": time.time()}
         )
@@ -506,7 +506,7 @@ class WebSocketServer:
             if client:
                 client.last_ping = time.time()
 
-        # Send heartbeat response
+        
         response = create_message("heartbeat_response", {"timestamp": time.time()})
         await self._send_message(client_id, response)
 
@@ -517,7 +517,7 @@ class WebSocketServer:
             if client:
                 client.last_ping = time.time()
 
-    # Phase 2 - Enhanced Time Synchronization Handlers
+    
 
     async def _handle_time_sync_request(self, client_id: str, message: dict):
         """Handle time synchronization request with enhanced precision"""
@@ -528,19 +528,19 @@ class WebSocketServer:
                 )
                 return
 
-            # Get device ID for this client
+            
             device_id = "unknown"
             async with self.client_lock:
                 client = self.clients.get(client_id)
                 if client:
                     device_id = client.device_id or client_id
 
-            # Handle sync request with enhanced precision
+            
             response_data = await self.time_sync_server.handle_time_sync_request(
                 message, device_id
             )
 
-            # Send response
+            
             await self._send_message(client_id, response_data)
 
             logger.debug(
@@ -565,7 +565,7 @@ class WebSocketServer:
                             if time_since_ping > self.heartbeat_timeout:
                                 stale_clients.append(client_id)
 
-                # Disconnect stale clients
+                
                 for client_id in stale_clients:
                     logger.warning(f"Disconnecting stale client {client_id}")
                     try:
@@ -578,7 +578,7 @@ class WebSocketServer:
                             f"Error disconnecting stale client {client_id}: {e}"
                         )
 
-                # Send ping to all authenticated clients
+                
                 ping_message = create_message("ping", {"timestamp": current_time})
                 await self._broadcast_message(ping_message, authenticated_only=True)
 
@@ -639,7 +639,7 @@ class WebSocketServer:
                 except Exception as e:
                     logger.error(f"Error broadcasting to client {client_id}: {e}")
 
-    # Phase 3 - File Transfer & Data Management Handlers
+    
 
     async def _handle_upload_initiate(self, client_id: str, message: dict):
         """Handle file upload initiation from Android device"""
@@ -652,7 +652,7 @@ class WebSocketServer:
                 )
                 return
 
-            # Extract upload parameters
+            
             job_id = message.get("job_id")
             file_name = message.get("file_name")
             file_size = message.get("file_size")
@@ -669,13 +669,13 @@ class WebSocketServer:
                 )
                 return
 
-            # Initialize file transfer using FileTransferManager
+            
             if hasattr(self, "file_transfer_manager"):
-                # Create file manifest for the transfer
+                
                 from ircamera_pc.core.file_transfer import FileManifest, FileType
 
-                # Map file type string to enum
-                file_type_enum = FileType.METADATA  # default
+                
+                file_type_enum = FileType.METADATA  
                 try:
                     file_type_enum = FileType(file_type.lower())
                 except:
@@ -692,10 +692,10 @@ class WebSocketServer:
                     timestamp=time.time(),
                 )
 
-                # Create client connection wrapper for file transfer
+                
                 client_conn = self.clients.get(client_id)
                 if client_conn:
-                    # Queue the transfer
+                    
                     transfer_job_id = await self.file_transfer_manager.queue_transfer(
                         manifest, client_conn
                     )
@@ -704,7 +704,7 @@ class WebSocketServer:
                         f"File upload initiated: {file_name} ({file_size} bytes) from {device_id}"
                     )
 
-                    # Send success response
+                    
                     response = create_message(
                         "upload_initiate_response",
                         {
@@ -754,7 +754,7 @@ class WebSocketServer:
                 )
                 return
 
-            # Decode base64 chunk data
+            
             try:
                 import base64
 
@@ -765,15 +765,15 @@ class WebSocketServer:
                 )
                 return
 
-            # Process chunk with file transfer manager
+            
             if hasattr(self, "file_transfer_manager"):
-                # Find the transfer job and write chunk
+                
                 success = await self._write_chunk_to_transfer(
                     job_id, chunk_index, chunk_offset, chunk_bytes
                 )
 
                 if success:
-                    # Send chunk acknowledgment
+                    
                     response = create_message(
                         "upload_chunk_response",
                         {
@@ -825,7 +825,7 @@ class WebSocketServer:
                 )
                 return
 
-            # Verify file with transfer manager
+            
             if hasattr(self, "file_transfer_manager"):
                 verification_result = await self._verify_transfer_completion(
                     job_id, expected_size, expected_checksum
@@ -887,7 +887,7 @@ class WebSocketServer:
                 )
                 return
 
-            # Check for existing partial file
+            
             existing_size = 0
             if hasattr(self, "file_transfer_manager"):
                 existing_size = await self._check_existing_partial_file(
@@ -913,8 +913,8 @@ class WebSocketServer:
     async def _handle_file_chunk_response(self, client_id: str, message: dict):
         """Handle file chunk response from device (for PC->Android downloads)"""
         try:
-            # This would be used when PC requests file chunks from Android
-            # Implementation depends on download requirements
+            
+            
             pass
         except Exception as e:
             logger.error(f"Error handling file chunk response from {client_id}: {e}")
@@ -938,7 +938,7 @@ class WebSocketServer:
                 )
                 return
 
-            # Trigger export process
+            
             export_path = await self._export_session_data(
                 session_id, export_format, include_files
             )
@@ -990,7 +990,7 @@ class WebSocketServer:
                 )
                 return
 
-            # Get session manifest
+            
             manifest = await self._get_session_manifest(session_id)
 
             response = create_message(
@@ -1007,15 +1007,15 @@ class WebSocketServer:
             )
             await self._send_error(client_id, "manifest_error", str(e))
 
-    # Helper methods for Phase 3 file transfer operations
+    
 
     async def _write_chunk_to_transfer(
             self, job_id: str, chunk_index: int, chunk_offset: int, chunk_data: bytes
     ) -> bool:
         """Write chunk data to transfer job"""
         try:
-            # Implementation would integrate with FileTransferManager
-            # For now, return success
+            
+            
             return True
         except Exception as e:
             logger.error(f"Error writing chunk for {job_id}: {e}")
@@ -1026,7 +1026,7 @@ class WebSocketServer:
     ) -> dict:
         """Verify completed file transfer"""
         try:
-            # Implementation would verify file integrity
+            
             return {
                 "success": True,
                 "actual_size": expected_size,
@@ -1041,7 +1041,7 @@ class WebSocketServer:
     ) -> int:
         """Check for existing partial file and return its size"""
         try:
-            # Implementation would check file system for partial uploads
+            
             return 0
         except Exception as e:
             logger.error(f"Error checking existing file for {job_id}: {e}")
@@ -1052,7 +1052,7 @@ class WebSocketServer:
     ) -> str:
         """Export session data in specified format"""
         try:
-            # Implementation would use data management service
+            
             return f"/exports/{session_id}.{format}"
         except Exception as e:
             logger.error(f"Error exporting session {session_id}: {e}")
@@ -1061,7 +1061,7 @@ class WebSocketServer:
     async def _get_session_manifest(self, session_id: str) -> dict:
         """Get session file manifest"""
         try:
-            # Implementation would return session file information
+            
             return {
                 "session_id": session_id,
                 "files": [],
@@ -1072,13 +1072,13 @@ class WebSocketServer:
             return {}
 
 
-# Convenience function to create server instance
+
 def create_websocket_server(host: str = "0.0.0.0", port: int = 8443) -> WebSocketServer:
     """Create a WebSocket Secure server instance"""
     return WebSocketServer(host, port)
 
 
-# Phase 4 - Advanced Authentication & Security Handler Extensions
+
 class WebSocketServerPhase4Extension:
     """Extension methods for Phase 4 security features"""
 
@@ -1092,14 +1092,14 @@ class WebSocketServerPhase4Extension:
             credentials = message.get("credentials", {})
             device_id = credentials.get("device_id", "")
 
-            # Map auth level value to enum
+            
             auth_level = (
                 AuthLevel(auth_level_value)
                 if auth_level_value <= 4
                 else AuthLevel.BASIC
             )
 
-            # Authenticate with enhanced security manager
+            
             success, context, reason = (
                 await self.server.enhanced_security.authenticate_device(
                     device_id, auth_level, credentials
@@ -1107,7 +1107,7 @@ class WebSocketServerPhase4Extension:
             )
 
             if success and context:
-                # Update client connection with enhanced context
+                
                 async with self.server.client_lock:
                     client = self.server.clients.get(client_id)
                     if client:
@@ -1116,7 +1116,7 @@ class WebSocketServerPhase4Extension:
                         client.auth_context = context
                         client.device_id = device_id
 
-                # Send success response
+                
                 response = create_message(
                     "enhanced_auth_response",
                     {
@@ -1163,7 +1163,7 @@ class WebSocketServerPhase4Extension:
             )
 
             if success and context:
-                # Update client with certificate auth context
+                
                 async with self.server.client_lock:
                     client = self.server.clients.get(client_id)
                     if client:
@@ -1306,7 +1306,7 @@ class WebSocketServerPhase4Extension:
                 f"Security alert received from {device_id}: {alert_type} ({severity})"
             )
 
-            # Log security alert
+            
             alert_details = {
                 "client_id": client_id,
                 "device_id": device_id,
@@ -1316,12 +1316,12 @@ class WebSocketServerPhase4Extension:
                 "details": details,
             }
 
-            # Report to security monitor
+            
             self.server.enhanced_security.security_monitor.report_connection_attempt(
                 device_id, False, alert_details
             )
 
-            # Send acknowledgment
+            
             response = create_message(
                 "security_alert_response",
                 {
@@ -1342,7 +1342,7 @@ class WebSocketServerPhase4Extension:
             requested_permission = message.get("permission", "")
             device_id = message.get("device_id", "")
 
-            # Get authentication context
+            
             async with self.server.client_lock:
                 client = self.server.clients.get(client_id)
                 if not client or not client.auth_context:
@@ -1351,7 +1351,7 @@ class WebSocketServerPhase4Extension:
                     )
                     return
 
-            # Check permission with enhanced security
+            
             has_permission = self.server.enhanced_security.check_permission(
                 client.auth_context.session_token, requested_permission
             )
@@ -1381,7 +1381,7 @@ class WebSocketServerPhase4Extension:
             device_id = message.get("device_id", "")
             justification = message.get("justification", "")
 
-            # Get current authentication context
+            
             async with self.server.client_lock:
                 client = self.server.clients.get(client_id)
                 if not client or not client.auth_context:
@@ -1390,8 +1390,8 @@ class WebSocketServerPhase4Extension:
                     )
                     return
 
-            # For security reasons, role changes require administrator approval
-            # For now, reject all role change requests
+            
+            
             response = create_message(
                 "role_change_response",
                 {
@@ -1412,12 +1412,12 @@ class WebSocketServerPhase4Extension:
             await self.server._send_error(client_id, "role_change_error", str(e))
 
 
-# Monkey patch the Phase 4 handlers into the main WebSocket server
+
 def extend_websocket_server_with_phase4(server: Any = WebSocketServer) -> Any:
     """Extend WebSocket server with Phase 4 security handlers"""
     extension = WebSocketServerPhase4Extension(server)
 
-    # Add Phase 4 handlers to the server
+    
     server._handle_enhanced_auth = extension._handle_enhanced_auth
     server._handle_certificate_auth = extension._handle_certificate_auth
     server._handle_token_auth = extension._handle_token_auth

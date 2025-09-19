@@ -80,49 +80,49 @@ public class CrossModalIntegrationExample {
 
             CrossModalSyncManager.DeviceCapabilities thermalCapabilities =
                     new CrossModalSyncManager.DeviceCapabilities(
-                            false, // supportsHardwareSync (USB cameras typically don't)
-                            true,  // supportsTimestampGeneration
-                            30,    // maxSamplingRateHz
-                            10000  // syncAccuracyMicros (10ms for USB)
+                            false, 
+                            true,  
+                            30,    
+                            10000  
                     );
 
             boolean thermalRegistered = syncManager.registerDevice(
                     "usb_thermal_001",
                     "USB Thermal Camera TC001",
                     CrossModalSyncManager.DeviceCategory.USB_CAMERA,
-                    new Object(), // Placeholder device reference
+                    new Object(), 
                     thermalCapabilities
             );
 
             CrossModalSyncManager.DeviceCapabilities rgbCapabilities =
                     new CrossModalSyncManager.DeviceCapabilities(
-                            false, // supportsHardwareSync
-                            true,  // supportsTimestampGeneration
-                            60,    // maxSamplingRateHz
-                            16667  // syncAccuracyMicros (16.67ms for 60fps)
+                            false, 
+                            true,  
+                            60,    
+                            16667  
                     );
 
             boolean rgbRegistered = syncManager.registerDevice(
                     "rgb_camera_001",
                     "Android RGB Camera",
                     CrossModalSyncManager.DeviceCategory.RGB_CAMERA,
-                    new Object(), // Placeholder device reference
+                    new Object(), 
                     rgbCapabilities
             );
 
             CrossModalSyncManager.DeviceCapabilities networkCapabilities =
                     new CrossModalSyncManager.DeviceCapabilities(
-                            true,  // supportsHardwareSync (network sync)
-                            true,  // supportsTimestampGeneration
-                            1000,  // maxSamplingRateHz (high network rate)
-                            1000   // syncAccuracyMicros (1ms network)
+                            true,  
+                            true,  
+                            1000,  
+                            1000   
                     );
 
             boolean networkRegistered = syncManager.registerDevice(
                     "pc_controller_001",
                     "PC Controller Hub",
                     CrossModalSyncManager.DeviceCategory.NETWORK_DEVICE,
-                    new Object(), // Placeholder device reference
+                    new Object(), 
                     networkCapabilities
             );
 
@@ -244,10 +244,10 @@ public class CrossModalIntegrationExample {
             try {
                 CrossModalSyncManager.DeviceCapabilities capabilities =
                         new CrossModalSyncManager.DeviceCapabilities(
-                                true,  // supportsHardwareSync
-                                true,  // supportsTimestampGeneration
-                                128,   // maxSamplingRateHz (GSR)
-                                1000   // syncAccuracyMicros (1ms)
+                                true,  
+                                true,  
+                                128,   
+                                1000   
                         );
 
                 syncManager.registerDevice(
@@ -274,10 +274,10 @@ public class CrossModalIntegrationExample {
             try {
                 CrossModalSyncManager.DeviceCapabilities capabilities =
                         new CrossModalSyncManager.DeviceCapabilities(
-                                true,  // supportsHardwareSync
-                                true,  // supportsTimestampGeneration
-                                30,    // maxSamplingRateHz (thermal)
-                                5000   // syncAccuracyMicros (5ms)
+                                true,  
+                                true,  
+                                30,    
+                                5000   
                         );
 
                 syncManager.registerDevice(

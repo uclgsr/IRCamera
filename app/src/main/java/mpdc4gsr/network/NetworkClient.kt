@@ -47,8 +47,8 @@ class NetworkClient(private val context: Context) {
     private var inputStream: DataInputStream? = null
     private var isConnected = false
     private var isSecureConnection = false
-    private var useSecureDefault = true // Default to using a secure connection
-    private var clockOffset: Long = 0 // Time synchronization offset in nanoseconds
+    private var useSecureDefault = true 
+    private var clockOffset: Long = 0 
     private var deviceId: String =
         android.provider.Settings.Secure.getString(
             context.contentResolver,
@@ -260,7 +260,7 @@ class NetworkClient(private val context: Context) {
                 Log.i(TAG, "Starting enhanced controller discovery")
                 discoveryService.startDiscovery()
 
-                delay(5000) // Give mDNS time to discover devices
+                delay(5000) 
 
                 val discoveredDevices =
                     discoveryService.getDiscoveredDevicesByType(
@@ -541,7 +541,7 @@ class NetworkClient(private val context: Context) {
                         put(
                             "timestamp",
                             getCurrentTimestamp()
-                        ) // Using system time for status reports
+                        ) 
                     }
 
                 sendMessageInternal(message)
@@ -611,7 +611,7 @@ class NetworkClient(private val context: Context) {
                         put(
                             "timestamp",
                             getCurrentTimestamp()
-                        ) // Using system time for non-secure registration
+                        ) 
                     }
 
                 sendMessageInternal(registrationMessage)
@@ -732,7 +732,7 @@ class NetworkClient(private val context: Context) {
             output.write(messageData)
             output.flush()
 
-            errorRecoveryManager.recordDataTransfer(messageData.size.toLong() + 4) // +4 for length prefix
+            errorRecoveryManager.recordDataTransfer(messageData.size.toLong() + 4) 
 
             if (message.optString("message_type") == "device_heartbeat") {
                 val latency = System.currentTimeMillis() - startTime
@@ -750,7 +750,7 @@ class NetworkClient(private val context: Context) {
                 socketToUse?.soTimeout = timeoutMs.toInt()
 
                 val messageLength = input.readInt()
-                if (messageLength > 1024 * 1024) { // 1MB limit
+                if (messageLength > 1024 * 1024) { 
                     throw IOException("Message too large: $messageLength bytes")
                 }
 
@@ -761,7 +761,7 @@ class NetworkClient(private val context: Context) {
 
                 JSONObject(String(messageData, Charsets.UTF_8))
             } catch (e: SocketTimeoutException) {
-                null // Normal timeout, not an error
+                null 
             } catch (e: Exception) {
                 throw e
             }

@@ -54,21 +54,21 @@ class RecordingSession:
     start_time: float
     state: SessionState = SessionState.IDLE
 
-    # Device participation
+    
     participating_devices: Set[str] = field(default_factory=set)
     synchronized_devices: Set[str] = field(default_factory=set)
 
-    # Session metadata
+    
     participant_id: Optional[str] = None
     experiment_type: Optional[str] = None
     notes: Optional[str] = None
 
-    # Timing and sync
+    
     sync_markers: List[Dict[str, Any]] = field(default_factory=list)
     session_duration: Optional[float] = None
     end_time: Optional[float] = None
 
-    # Quality metrics
+    
     sync_quality_stats: Dict[str, Any] = field(default_factory=dict)
     data_collection_stats: Dict[str, Any] = field(default_factory=dict)
 
@@ -90,19 +90,19 @@ class HubCoordinator:
         self._network_server = NetworkServer()
         self._is_running = False
 
-        # Session management
+        
         self._active_sessions: Dict[str, RecordingSession] = {}
-        self._session_history: List[str] = []  # Keep session IDs for history
+        self._session_history: List[str] = []  
 
-        # Synchronization requirements
+        
         self._sync_tolerance_ms = config.get("sync.tolerance_ms", 5.0)
         self._min_sync_quality = config.get("sync.min_quality", "GOOD")
         self._sync_check_interval = config.get("sync.check_interval_s", 10.0)
 
-        # Monitoring
+        
         self._sync_monitor_task: Optional[asyncio.Task] = None
 
-        # Event callbacks
+        
         self._session_callbacks: Dict[str, List[Callable]] = {
             "session_started": [],
             "session_stopped": [],
@@ -127,12 +127,12 @@ class HubCoordinator:
             return True
 
         try:
-            # Start network server
+            
             if not await self._network_server.start():
                 logger.error("Failed to start network server")
                 return False
 
-            # Start synchronization monitoring
+            
             self._sync_monitor_task = asyncio.create_task(self._monitor_synchronization())
 
             self._is_running = True
@@ -156,14 +156,14 @@ class HubCoordinator:
         logger.info("Stopping hub coordinator...")
         self._is_running = False
 
-        # Stop active sessions
+        
         for session_id in list(self._active_sessions.keys()):
             try:
                 await self.stop_recording_session(session_id)
             except Exception as e:
                 logger.warning(f"Error stopping session {session_id}: {e}")
 
-        # Cancel monitoring
+        
         if self._sync_monitor_task:
             self._sync_monitor_task.cancel()
             try:
@@ -171,7 +171,7 @@ class HubCoordinator:
             except asyncio.CancelledError:
                 pass
 
-        # Stop network server
+        
         await self._network_server.stop()
 
         logger.info("Hub Coordinator stopped")
@@ -202,7 +202,7 @@ class HubCoordinator:
 
             logger.info(f"Starting recording session '{session_name}' (ID: {session_id})")
 
-            # Get participating devices
+            
             connected_devices = self._network_server.get_connected_devices()
             if target_devices:
                 participating_devices = {
@@ -219,7 +219,7 @@ class HubCoordinator:
             logger.info(f"Session will include {len(participating_devices)} devices: " +
                         f"{list(participating_devices)}")
 
-            # Check synchronization quality
+            
             sync_ready_devices = set()
             for device_id in participating_devices:
                 if self._network_server.is_device_time_synchronized(device_id):
@@ -231,12 +231,12 @@ class HubCoordinator:
                 logger.warning(f"Only {len(sync_ready_devices)}/{len(participating_devices)} " +
                                "devices are properly synchronized")
 
-                # Allow proceeding if we have at least one synced device
+                
                 if not sync_ready_devices:
                     logger.error("No devices are properly synchronized - cannot start session")
                     return None
 
-            # Create session record
+            
             session = RecordingSession(
                 session_id=session_id,
                 session_name=session_name,
@@ -251,17 +251,17 @@ class HubCoordinator:
 
             self._active_sessions[session_id] = session
 
-            # Register time sync sessions for all devices concurrently
+            
             await asyncio.gather(*(
                 self._network_server.register_time_sync_session(session_id, device_id)
                 for device_id in participating_devices
             ))
 
-            # Send session start command to devices
+            
             session.state = SessionState.RECORDING
             results = await self._network_server.start_recording_session(session_id, session_name)
 
-            # Check results
+            
             successful_devices = {
                 device_id for device_id, success in results.items()
                 if success
@@ -275,10 +275,10 @@ class HubCoordinator:
             if len(successful_devices) < len(participating_devices):
                 logger.warning(
                     f"Recording started on {len(successful_devices)}/{len(participating_devices)} devices")
-                # Update participating devices to only include successful ones
+                
                 session.participating_devices = successful_devices
 
-            # Create session start sync marker
+            
             await self.create_sync_marker(session_id, SyncMarkerType.SESSION_START, {
                 "session_name": session_name,
                 "participant_id": participant_id,
@@ -289,7 +289,7 @@ class HubCoordinator:
             logger.info(f"Recording session '{session_name}' started successfully " +
                         f"on {len(successful_devices)} devices")
 
-            # Notify callbacks
+            
             self._trigger_session_callback("session_started", session)
 
             return session_id
@@ -322,36 +322,36 @@ class HubCoordinator:
 
             session.state = SessionState.STOPPING
 
-            # Create session end sync marker
+            
             await self.create_sync_marker(session_id, SyncMarkerType.SESSION_END, {
                 "session_duration": time.time() - session.start_time,
                 "total_sync_markers": len(session.sync_markers)
             })
 
-            # Send session stop command to devices  
+            
             results = await self._network_server.stop_recording_session(session_id)
 
-            # Check results
+            
             successful_stops = sum(1 for success in results.values() if success)
 
-            # Finalize session
+            
             session.end_time = time.time()
             session.session_duration = session.end_time - session.start_time
             session.state = SessionState.COMPLETED
 
-            # Collect final sync quality stats
+            
             session.sync_quality_stats = self._network_server.get_time_sync_stats()
 
-            # End time sync session once for all devices
+            
             await self._network_server.end_time_sync_session(session_id)
 
-            # Move to history
+            
             self._session_history.append(session_id)
 
             logger.info(f"Recording session '{session.session_name}' stopped successfully " +
                         f"(duration: {session.session_duration:.1f}s, sync_markers: {len(session.sync_markers)})")
 
-            # Notify callbacks
+            
             self._trigger_session_callback("session_stopped", session)
 
             return True
@@ -386,7 +386,7 @@ class HubCoordinator:
             marker_id = str(uuid.uuid4())
             timestamp = time.time_ns()
 
-            # Create sync marker record
+            
             marker = {
                 "marker_id": marker_id,
                 "marker_type": marker_type.value,
@@ -395,13 +395,13 @@ class HubCoordinator:
                 "metadata": metadata or {}
             }
 
-            # Send sync marker to all devices
+            
             results = await self._network_server.send_sync_mark(
                 marker_type.value,
                 {**marker, "session_id": session_id}
             )
 
-            # Record marker in session
+            
             session.sync_markers.append(marker)
 
             successful_marks = sum(1 for success in results.values() if success)
@@ -409,7 +409,7 @@ class HubCoordinator:
             logger.info(f"Sync marker '{marker_type.value}' created for session {session_id} " +
                         f"(delivered to {successful_marks}/{len(session.participating_devices)} devices)")
 
-            # Notify callbacks
+            
             self._trigger_session_callback("sync_marker_created", marker)
 
             return marker_id
@@ -435,10 +435,10 @@ class HubCoordinator:
                 logger.warning(f"Session {session_id} not found for flash sync")
                 return False
 
-            # Send flash command
+            
             results = await self._network_server.send_sync_flash(duration_ms)
 
-            # Create corresponding sync marker
+            
             await self.create_sync_marker(session_id, SyncMarkerType.FLASH_SYNC, {
                 "duration_ms": duration_ms,
                 "devices_flashed": list(results.keys())
@@ -462,14 +462,14 @@ class HubCoordinator:
             try:
                 await asyncio.sleep(self._sync_check_interval)
 
-                # Check sync quality for all connected devices
+                
                 connected_devices = self._network_server.get_connected_devices()
 
                 for device_id in connected_devices:
                     sync_stats = self._network_server.get_time_sync_stats(device_id)
 
                     if sync_stats:
-                        # Check if device lost synchronization
+                        
                         if not sync_stats.get("is_synchronized", False):
                             logger.warning(f"Device {device_id} lost synchronization")
                             self._trigger_session_callback("device_sync_lost", {
@@ -477,7 +477,7 @@ class HubCoordinator:
                                 "sync_stats": sync_stats
                             })
 
-                        # Log poor sync quality
+                        
                         quality = sync_stats.get("sync_quality", "UNKNOWN")
                         if quality in ["POOR", "STALE"]:
                             offset_ms = sync_stats.get("median_offset_ms", 0)
@@ -497,7 +497,7 @@ class HubCoordinator:
         """Handle device disconnection event."""
         logger.warning(f"Device disconnected: {device_info.device_id}")
 
-        # Check if device was part of active sessions
+        
         for session in self._active_sessions.values():
             if device_info.device_id in session.participating_devices:
                 logger.warning(f"Device {device_info.device_id} disconnected during session " +
@@ -515,7 +515,7 @@ class HubCoordinator:
         except Exception as e:
             logger.error(f"Error in session callback for {event_type}: {e}")
 
-    # Public interface methods
+    
 
     def get_connected_devices(self) -> Dict[str, DeviceInfo]:
         """Get all connected devices."""

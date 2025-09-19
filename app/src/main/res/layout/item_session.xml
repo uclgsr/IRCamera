@@ -14,14 +14,14 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <!-- Header Row -->
+        
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
-            <!-- Session Info -->
+            
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -48,7 +48,7 @@
 
             </LinearLayout>
 
-            <!-- Action Buttons -->
+            
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -77,7 +77,7 @@
 
         </LinearLayout>
 
-        <!-- Status and Data Types -->
+        
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -105,7 +105,7 @@
 
         </LinearLayout>
 
-        <!-- Progress Bar for Active Sessions -->
+        
         <ProgressBar
             android:id="@+id/session_progress"
             style="?android:attr/progressBarStyleHorizontal"

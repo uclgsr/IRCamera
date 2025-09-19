@@ -24,7 +24,7 @@ class IRMyValueFormatter(private val startTime: Long, private val type: Int = 1)
             } else {
                 value.toLong()
             }
-        val realTime = startTime + time * ChartTools.scale(type) // 还原
+        val realTime = startTime + time * ChartTools.scale(type) 
         return showDateSecond(realTime)
     }
 

@@ -35,11 +35,11 @@ class GSRDataPoint:
     """GSR data point with timestamp and metadata"""
 
     timestamp: float
-    gsr_value: float  # in microsiemens
-    raw_value: int  # raw ADC value (12-bit: 0-4095)
+    gsr_value: float  
+    raw_value: int  
     device_id: str
     session_id: str
-    quality: str = "good"  # good, fair, poor, invalid
+    quality: str = "good"  
 
 
 @dataclass
@@ -47,7 +47,7 @@ class ThermalDataPoint:
     """Thermal camera data point"""
 
     timestamp: float
-    temperature_data: List[List[float]]  # 2D temperature matrix
+    temperature_data: List[List[float]]  
     min_temp: float
     max_temp: float
     avg_temp: float
@@ -79,7 +79,7 @@ class GSRIngestor:
         self.session_manager = session_manager
         self.active_sessions: Dict[str, Dict] = {}
         self.data_buffer: List[GSRDataPoint] = []
-        self.buffer_size = 1000  # Maximum buffer size
+        self.buffer_size = 1000  
         self.processing_queue = asyncio.Queue()
 
         logger.info("GSRIngestor initialized")
@@ -103,17 +103,17 @@ class GSRIngestor:
                 f"Processing GSR batch: {len(gsr_data)} points from {device_id}"
             )
 
-            # Convert raw GSR data to structured data points
+            
             processed_points = []
             for data_point in gsr_data:
-                # Extract raw 12-bit ADC value (0-4095 range)
+                
                 raw_value = data_point.get("raw_value", 0)
 
-                # Convert to GSR in microsiemens using proper 12-bit scaling
-                # This implements the correct ADC resolution as per requirements
+                
+                
                 gsr_value = self._convert_raw_to_gsr(raw_value)
 
-                # Create structured data point
+                
                 point = GSRDataPoint(
                     timestamp=data_point.get("timestamp", time.time()),
                     gsr_value=gsr_value,
@@ -125,14 +125,14 @@ class GSRIngestor:
 
                 processed_points.append(point)
 
-            # Add to buffer and trigger processing
+            
             self.data_buffer.extend(processed_points)
 
-            # Maintain buffer size limit
+            
             if len(self.data_buffer) > self.buffer_size:
                 self.data_buffer = self.data_buffer[-self.buffer_size:]
 
-            # Queue for async processing
+            
             await self.processing_queue.put(
                 {
                     "type": "gsr_batch",
@@ -162,23 +162,23 @@ class GSRIngestor:
         Returns:
             GSR value in microsiemens
         """
-        # Voltage calculation based on 12-bit ADC (0-4095) with 3.3V reference
+        
         voltage = (raw_value / 4095.0) * 3.3
 
-        # Convert voltage to resistance using known circuit parameters
-        # Assuming standard Shimmer3 GSR+ circuit with 40.2k reference resistor
+        
+        
         if voltage == 0:
-            return 0.0  # Avoid division by zero
+            return 0.0  
 
         resistance = (40200.0 * voltage) / (3.3 - voltage)
 
-        # Convert resistance to conductance (microsiemens)
+        
         if resistance <= 0:
             return 0.0
 
         gsr_microsiemens = 1000000.0 / resistance
 
-        return max(0.0, min(gsr_microsiemens, 1000.0))  # Clamp to reasonable range
+        return max(0.0, min(gsr_microsiemens, 1000.0))  
 
     def _assess_signal_quality(self, raw_value: int) -> str:
         """Assess GSR signal quality based on raw ADC value"""
@@ -306,7 +306,7 @@ class DataProcessor:
             if format.lower() == "json":
                 output_file = self.output_dir / f"session_{session_id}_{timestamp}.json"
 
-                # Convert data points to serializable format
+                
                 export_data = {
                     "session_info": {
                         "session_id": session_id,
@@ -336,12 +336,12 @@ class DataProcessor:
                 output_file = self.output_dir / f"session_{session_id}_{timestamp}.h5"
 
                 with h5py.File(output_file, "w") as f:
-                    # Session metadata
+                    
                     f.attrs["session_id"] = session_id
                     f.attrs["start_time"] = session_data["start_time"]
                     f.attrs["export_time"] = time.time()
 
-                    # GSR data group
+                    
                     if session_data["data_points"]["gsr"]:
                         gsr_group = f.create_group("gsr_data")
                         gsr_points = session_data["data_points"]["gsr"]
@@ -356,7 +356,7 @@ class DataProcessor:
                             "raw_values", data=[p.raw_value for p in gsr_points]
                         )
 
-                    # Thermal data group
+                    
                     if session_data["data_points"]["thermal"]:
                         thermal_group = f.create_group("thermal_data")
                         thermal_points = session_data["data_points"]["thermal"]
@@ -414,7 +414,7 @@ class DataProcessor:
         }
 
 
-# Export the main classes
+
 __all__ = [
     "DataProcessor",
     "GSRIngestor",

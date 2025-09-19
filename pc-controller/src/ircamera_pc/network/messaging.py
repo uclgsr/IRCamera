@@ -21,7 +21,7 @@ except ImportError:
     try:
         from ..utils.simple_logger import logger
     except ImportError:
-        # Fallback logger for testing
+        
         class FallbackLogger:
             def info(self, msg) -> Any:
                 print(f"INFO: {msg}")
@@ -41,7 +41,7 @@ except ImportError:
 try:
     from ..core.config import config
 except ImportError:
-    # Fallback config for testing
+    
     class FallbackConfig:
         def get(self, key, default=None) -> Any:
             config_map = {
@@ -120,15 +120,15 @@ class ReliableMessageService:
             priority: deque() for priority in MessagePriority
         }
 
-        # Message transport - will be set by the server
+        
         self.transport: Optional[Callable] = None
 
-        # Service state
+        
         self.is_running = False
         self.processing_task: Optional[asyncio.Task] = None
         self.cleanup_task: Optional[asyncio.Task] = None
 
-        # Configuration
+        
         self.base_retry_delay = config.get("messaging.base_retry_delay", 1.0)
         self.max_retry_delay = config.get("messaging.max_retry_delay", 30.0)
         self.default_timeout = config.get("messaging.default_timeout", 30.0)
@@ -179,7 +179,7 @@ class ReliableMessageService:
 
             logger.info("Initializing reliable messaging service...")
 
-            # Start background tasks
+            
             self.processing_task = asyncio.create_task(self._message_processor())
             self.cleanup_task = asyncio.create_task(self._cleanup_processor())
 
@@ -201,7 +201,7 @@ class ReliableMessageService:
 
         self.is_running = False
 
-        # Cancel background tasks
+        
         if self.processing_task:
             self.processing_task.cancel()
             try:
@@ -216,7 +216,7 @@ class ReliableMessageService:
             except asyncio.CancelledError:
                 pass
 
-        # Fail any pending messages
+        
         for message_id, message in self.pending_messages.items():
             message.status = MessageStatus.FAILED
             message.error_message = "Service shutdown"
@@ -260,14 +260,14 @@ class ReliableMessageService:
         if not self.transport:
             raise RuntimeError("No transport configured for messaging service")
 
-        # Generate unique message ID
+        
         message_id = str(uuid.uuid4())
 
-        # Set default timeout
+        
         if timeout_seconds is None:
             timeout_seconds = self.default_timeout
 
-        # Create message
+        
         current_time = time.time()
         message = ReliableMessage(
             message_id=message_id,
@@ -281,12 +281,12 @@ class ReliableMessageService:
             max_retries=max_retries,
         )
 
-        # Store message and callback
+        
         self.pending_messages[message_id] = message
         if callback:
             self.message_callbacks[message_id] = callback
 
-        # Add to priority queue
+        
         self.priority_queues[priority].append(message_id)
 
         logger.debug(
@@ -321,7 +321,7 @@ class ReliableMessageService:
             await self._notify_message_failed(message_id, message.error_message)
             logger.warning(f"Message {message_id} failed: {message.error_message}")
 
-        # Remove from pending messages
+        
         self._remove_pending_message(message_id)
 
     async def handle_incoming_message(
@@ -343,7 +343,7 @@ class ReliableMessageService:
                 logger.warning("Received message without message_type")
                 return self._create_error_response("Missing message_type")
 
-            # Check for acknowledgment messages
+            
             if message_type == "message_ack":
                 await self._handle_ack_message(message_data)
                 return None
@@ -351,14 +351,14 @@ class ReliableMessageService:
                 await self._handle_nack_message(message_data)
                 return None
 
-            # Handle regular messages
+            
             if message_type in self.message_handlers:
                 handler = self.message_handlers[message_type]
 
                 try:
                     response = handler(message_data)
 
-                    # Send positive acknowledgment
+                    
                     await self._send_acknowledgment(message_data, True, sender_info)
 
                     return response
@@ -366,7 +366,7 @@ class ReliableMessageService:
                 except Exception as e:
                     logger.error(f"Handler error for {message_type}: {e}")
 
-                    # Send negative acknowledgment
+                    
                     await self._send_acknowledgment(
                         message_data, False, sender_info, str(e)
                     )
@@ -375,7 +375,7 @@ class ReliableMessageService:
             else:
                 logger.warning(f"No handler for message type: {message_type}")
 
-                # Send negative acknowledgment
+                
                 await self._send_acknowledgment(
                     message_data, False, sender_info, f"No handler for {message_type}"
                 )
@@ -394,7 +394,7 @@ class ReliableMessageService:
 
         while self.is_running:
             try:
-                # Process messages by priority (highest first)
+                
                 message_processed = False
 
                 for priority in reversed(list(MessagePriority)):
@@ -409,7 +409,7 @@ class ReliableMessageService:
                             break
 
                 if not message_processed:
-                    # No messages to process, sleep briefly
+                    
                     await asyncio.sleep(0.1)
 
             except Exception as e:
@@ -426,27 +426,27 @@ class ReliableMessageService:
 
         current_time = time.time()
 
-        # Check if message has expired
+        
         if current_time >= message.expires_at:
             message.status = MessageStatus.EXPIRED
             await self._notify_message_failed(message_id, "Message expired")
             self._remove_pending_message(message_id)
             return
 
-        # Check if we should retry yet (exponential backoff)
+        
         if message.last_attempt:
             retry_delay = min(
                 self.base_retry_delay * (2 ** message.retry_count), self.max_retry_delay
             )
 
             if current_time - message.last_attempt < retry_delay:
-                # Not time to retry yet, put back in queue
+                
                 self.priority_queues[message.priority].append(message_id)
                 return
 
-        # Attempt to send message
+        
         try:
-            # Create message payload
+            
             payload = {
                 "message_id": message.message_id,
                 "message_type": message.message_type,
@@ -455,7 +455,7 @@ class ReliableMessageService:
                 "requires_ack": True,
             }
 
-            # Attempt delivery
+            
             success = await self.transport(
                 message.target_host, message.target_port, payload
             )
@@ -464,10 +464,10 @@ class ReliableMessageService:
 
             if success:
                 message.status = MessageStatus.SENT
-                # Wait for acknowledgment (timeout handled by expiry)
+                
                 logger.debug(f"Message {message_id} sent, waiting for acknowledgment")
             else:
-                # Send failed, check for retry
+                
                 await self._handle_send_failure(message_id, "Transport failed")
 
         except Exception as e:
@@ -483,14 +483,14 @@ class ReliableMessageService:
         message.retry_count += 1
 
         if message.retry_count <= message.max_retries:
-            # Schedule retry
+            
             await self._notify_message_retrying(message_id, message.retry_count)
             self.priority_queues[message.priority].append(message_id)
             logger.debug(
                 f"Retrying message {message_id} (attempt {message.retry_count}/{message.max_retries})"
             )
         else:
-            # Max retries exceeded
+            
             message.status = MessageStatus.FAILED
             message.error_message = f"Max retries exceeded: {error}"
             await self._notify_message_failed(message_id, message.error_message)
@@ -510,7 +510,7 @@ class ReliableMessageService:
                 current_time = time.time()
                 expired_messages = []
 
-                # Find expired messages
+                
                 for message_id, message in self.pending_messages.items():
                     if current_time >= message.expires_at and message.status in [
                         MessageStatus.PENDING,
@@ -518,7 +518,7 @@ class ReliableMessageService:
                     ]:
                         expired_messages.append(message_id)
 
-                # Clean up expired messages
+                
                 for message_id in expired_messages:
                     message = self.pending_messages[message_id]
                     message.status = MessageStatus.EXPIRED

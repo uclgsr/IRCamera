@@ -8,11 +8,7 @@ import com.infisense.usbir.view.TemperatureView
 import com.topdon.module.thermal.ir.R
 import com.topdon.module.thermal.ir.activity.BaseIRPlushFragment
 
-/**
- * des:
- * author: CaiSongL
- * date: 2024/9/3 11:43
- **/
+
 
 class IRPlushFragment : BaseIRPlushFragment() {
 

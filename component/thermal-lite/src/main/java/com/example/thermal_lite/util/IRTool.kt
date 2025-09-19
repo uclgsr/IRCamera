@@ -11,11 +11,7 @@ import com.example.thermal_lite.camera.DeviceIrcmdControlManager
 import com.topdon.lib.core.bean.CameraItemBean
 import kotlinx.coroutines.delay
 
-/**
- * des:
- * author: CaiSongL
- * date: 2024/8/2 16:43
- **/
+
 object IRTool {
     const val TAG: String = "IRTool"
 
@@ -43,15 +39,7 @@ object IRTool {
         )
     }
 
-    /**
-     *
-     *
-
-     *
-
-     *
-
-     */
+    
     fun basicGainSet(gainType: Int) {
         if (gainType == CameraItemBean.TYPE_TMP_ZD) {
             CameraPreviewManager.getInstance().setAutoSwitchGainEnable(true)
@@ -99,21 +87,7 @@ object IRTool {
         Log.d(TAG, "basicGlobalContrastLevelSet=$basicMirrorAndFlipStatusSet")
     }
 
-    /**
-
-     * https://alidocs.dingtalk.com/i/p/QqWXwywDMb9xKG31/docs/14lgGw3P8vL0P2qbu7OR39d5V5daZ90D
-
-
-
-
-
-
-
-
-     * mIrcmdEngine.advRmcoverCaliCancel();
-
-     * mIrcmdEngine.basicSaveData(CommonParams.DeviceDataSaveType.BASIC_SAVE_RMCOVER_DATA);
-     */
+    
     fun onceAuto(): Boolean {
 
         DeviceIrcmdControlManager.getInstance().getIrcmdEngine()
@@ -161,32 +135,19 @@ object IRTool {
             )
     }
 
-    /**
-
-
-     */
+    
     fun advEnvCorrectEMSSet(value: Int) {
         DeviceIrcmdControlManager.getInstance().getIrcmdEngine()
             .advEnvCorrectEMSSet(value)
     }
 
-    /**
-
-
-     */
+    
     fun advEnvCorrectTUSet(value: Int) {
         DeviceIrcmdControlManager.getInstance().getIrcmdEngine()
             ?.advEnvCorrectTUSet(value)
     }
 
-    /**
-
-     * @param temp Float
-     * @param params_array FloatArray
-
-
-     * @return Float
-     */
+    
     fun temperatureCorrection(
         temp: Float,
         params_array: FloatArray,

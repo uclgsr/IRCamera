@@ -67,7 +67,7 @@ class ProtocolManager:
     def _load_protocol(self) -> None:
         """Load and parse the protocol definition."""
         if self._protocol_file is None:
-            # Default to protocol.json in config directory
+            
             current_dir = Path(__file__).parent
             config_dir = current_dir.parent.parent.parent / "config"
             self._protocol_file = config_dir / "protocol.json"
@@ -149,7 +149,7 @@ class ProtocolManager:
             ValidationError: If validation fails and strict=True
         """
         try:
-            # Check message has required structure
+            
             if not isinstance(message, dict):
                 raise ValidationError("Message must be a dictionary")
 
@@ -157,16 +157,16 @@ class ProtocolManager:
             if not message_type:
                 raise ValidationError("Message must have 'message_type' field")
 
-            # Get message definition
+            
             msg_def = self._message_definitions.get(message_type)
             if not msg_def:
                 raise ValidationError(f"Unknown message type: {message_type}")
 
-            # Validate against JSON schema
+            
             validator = self._get_validator(message_type, msg_def.schema)
             validator.validate(message)
 
-            # Additional validation
+            
             self._validate_timestamp(message)
 
             return True
@@ -191,7 +191,7 @@ class ProtocolManager:
     ) -> jsonschema.protocols.Validator:
         """Get cached validator for message type."""
         if message_type not in self._validator_cache:
-            # Add common fields to schema
+            
             complete_schema = self._add_common_fields(schema)
             validator = jsonschema.Draft7Validator(complete_schema)
             self._validator_cache[message_type] = validator
@@ -205,10 +205,10 @@ class ProtocolManager:
 
         common_fields = self._protocol_def.get("common_fields", {})
 
-        # Make a copy of the schema
+        
         complete_schema = json.loads(json.dumps(schema))
 
-        # Add common fields to properties
+        
         if "properties" not in complete_schema:
             complete_schema["properties"] = {}
 
@@ -219,13 +219,13 @@ class ProtocolManager:
                     "description": field_def.get("description", ""),
                 }
 
-                # Add format if specified
+                
                 if "format" in field_def:
                     complete_schema["properties"][field_name]["format"] = field_def[
                         "format"
                     ]
 
-        # Add required common fields
+        
         if "required" not in complete_schema:
             complete_schema["required"] = []
 
@@ -242,13 +242,13 @@ class ProtocolManager:
         """Validate message timestamp."""
         timestamp_str = message.get("timestamp")
         if not timestamp_str:
-            return  # Timestamp is optional for some messages
+            return  
 
         try:
-            # Parse ISO 8601 timestamp
+            
             timestamp = datetime.fromisoformat(timestamp_str.replace("Z", "+00:00"))
 
-            # Check timestamp is not too far in the future or past
+            
             now = datetime.now(timezone.utc)
             if self._protocol_def is None:
                 tolerance_ms = 5000
@@ -282,16 +282,16 @@ class ProtocolManager:
         if not msg_def:
             raise ValidationError(f"Unknown message type: {message_type}")
 
-        # Start with basic structure
+        
         message = {
             "message_type": message_type,
             "timestamp": datetime.now(timezone.utc).isoformat(),
         }
 
-        # Add provided fields
+        
         message.update(kwargs)
 
-        # Validate the created message
+        
         self.validate_message(message, strict=True)
 
         return message
@@ -312,7 +312,7 @@ class ProtocolManager:
         logger.info("Protocol definition reloaded")
 
 
-# Global protocol manager instance
+
 _protocol_manager: Optional[ProtocolManager] = None
 
 

@@ -27,7 +27,7 @@ class ElectronicManualActivity : BaseActivity() {
         titleView = findViewById(R.id.title_view)
         electronicManualRecycler = findViewById(R.id.electronic_manual_recycler)
 
-        val productType = intent.getIntExtra(Constants.SETTING_TYPE, 0) // 0-电子说明书 1-FAQ
+        val productType = intent.getIntExtra(Constants.SETTING_TYPE, 0) 
 
         titleView.setTitleText(if (productType == Constants.SETTING_BOOK) RCore.string.electronic_manual else RCore.string.app_question)
 

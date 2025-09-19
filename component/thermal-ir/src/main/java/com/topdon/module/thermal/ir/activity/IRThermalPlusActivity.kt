@@ -27,11 +27,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 
-/**
 
- * @author: CaiSongL
- * @date: 2024/1/17 17:47
- */
 
 
 class IRThermalPlusActivity : BaseIRPlushActivity() {
@@ -70,29 +66,25 @@ class IRThermalPlusActivity : BaseIRPlushActivity() {
 
 
         when (SaveSettingUtil.fusionType) {
-            SaveSettingUtil.FusionTypeLPYFusion -> { // 双光1
+            SaveSettingUtil.FusionTypeLPYFusion -> { 
                 thermalRecyclerNight?.twoLightType = TwoLightType.TWO_LIGHT_1
             }
 
-            SaveSettingUtil.FusionTypeMeanFusion -> { // 双光2
+            SaveSettingUtil.FusionTypeMeanFusion -> { 
                 thermalRecyclerNight?.twoLightType = TwoLightType.TWO_LIGHT_2
             }
 
-            SaveSettingUtil.FusionTypeIROnly -> { // 单红外
+            SaveSettingUtil.FusionTypeIROnly -> { 
                 thermalRecyclerNight?.twoLightType = TwoLightType.IR
             }
 
-            SaveSettingUtil.FusionTypeVLOnly -> { // 可见光
+            SaveSettingUtil.FusionTypeVLOnly -> { 
                 thermalRecyclerNight?.twoLightType = TwoLightType.LIGHT
             }
         }
     }
 
-    /**
-
-
-
-     */
+    
     private fun setDisp(
         action: Int,
         data: Int,
@@ -127,19 +119,19 @@ class IRThermalPlusActivity : BaseIRPlushActivity() {
         isSelected: Boolean,
     ) {
         when (twoLightType) {
-            TwoLightType.TWO_LIGHT_1 -> { // 双光1
+            TwoLightType.TWO_LIGHT_1 -> { 
                 mCurrentFusionType = DualCameraParams.FusionType.LPYFusion
                 SaveSettingUtil.fusionType = SaveSettingUtil.FusionTypeLPYFusion
                 setFusion(mCurrentFusionType)
             }
 
-            TwoLightType.TWO_LIGHT_2 -> { // 双光2
+            TwoLightType.TWO_LIGHT_2 -> { 
                 mCurrentFusionType = DualCameraParams.FusionType.MeanFusion
                 SaveSettingUtil.fusionType = SaveSettingUtil.FusionTypeMeanFusion
                 setFusion(mCurrentFusionType)
             }
 
-            TwoLightType.IR -> { // 单红外
+            TwoLightType.IR -> { 
                 mCurrentFusionType = DualCameraParams.FusionType.IROnly
                 SaveSettingUtil.fusionType = SaveSettingUtil.FusionTypeIROnly
                 setFusion(mCurrentFusionType)
@@ -147,7 +139,7 @@ class IRThermalPlusActivity : BaseIRPlushActivity() {
 
             }
 
-            TwoLightType.LIGHT -> { // 单可见光
+            TwoLightType.LIGHT -> { 
                 mCurrentFusionType = DualCameraParams.FusionType.VLOnly
                 SaveSettingUtil.fusionType = SaveSettingUtil.FusionTypeVLOnly
                 setFusion(mCurrentFusionType)
@@ -155,7 +147,7 @@ class IRThermalPlusActivity : BaseIRPlushActivity() {
                 thermalRecyclerNight.setTwoLightSelected(TwoLightType.CORRECT, false)
             }
 
-            TwoLightType.CORRECT -> { // 配准
+            TwoLightType.CORRECT -> { 
                 if (isSelected) {
 
                     if (mCurrentFusionType != DualCameraParams.FusionType.LPYFusion && mCurrentFusionType != DualCameraParams.FusionType.MeanFusion) {
@@ -198,10 +190,7 @@ class IRThermalPlusActivity : BaseIRPlushActivity() {
     override fun setPColor(code: Int) {
         pseudoColorMode = code
         temperatureSeekbar.setPseudocode(pseudoColorMode)
-        /**
-
-
-         */
+        
 
         SaveSettingUtil.pseudoColorMode = pseudoColorMode
         thermalRecyclerNight.setPseudoColor(code)

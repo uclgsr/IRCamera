@@ -7,7 +7,7 @@ Provides basic logging functionality for development and testing.
 import logging
 import sys
 
-# Configure basic logging
+
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s | %(levelname)-8s | %(name)s:%(funcName)s:%(lineno)d"
@@ -47,11 +47,11 @@ class SimpleLogger:
         """Add handler - no-op for simple logger."""
 
 
-# Create global logger instance
+
 logger = SimpleLogger()
 
 
-# Make it available at module level
+
 def debug(message: str, *args, **kwargs) -> None:
     logger.debug(message, *args, **kwargs)
 

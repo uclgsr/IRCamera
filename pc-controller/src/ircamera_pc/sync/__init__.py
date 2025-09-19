@@ -2,7 +2,7 @@
 try:
     from ..core.timesync import TimeSyncService, TimeSyncStats, TimeSyncProtocol
 except ImportError:
-    # Fallback for missing core components
+    
     TimeSyncService = None
     TimeSyncStats = None
     TimeSyncProtocol = None

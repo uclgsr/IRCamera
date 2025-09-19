@@ -27,10 +27,10 @@ class GSRMode(Enum):
 class GSRSample:
     """Individual GSR sensor sample"""
 
-    timestamp: float  # Unix timestamp with microsecond precision
-    value: float  # GSR resistance value in ohms
-    quality: int  # Quality indicator (0-100)
-    device_id: str  # Source device identifier
+    timestamp: float  
+    value: float  
+    quality: int  
+    device_id: str  
 
     def to_dict(self) -> Dict[str, Any]:
         """Convert to dictionary for JSON serialization"""
@@ -47,8 +47,8 @@ class GSRDataSet:
     start_time: float
     end_time: float
     samples: List[GSRSample]
-    sample_rate: float  # Hz
-    quality_stats: Dict[str, float]  # min, max, mean quality
+    sample_rate: float  
+    quality_stats: Dict[str, float]  
 
     def to_dict(self) -> Dict[str, Any]:
         """Convert to dictionary for JSON serialization"""
@@ -83,13 +83,13 @@ class GSRIngestor:
         self.data_dir = Path(self.config.get("data_dir", "data/gsr"))
         self.data_dir.mkdir(parents=True, exist_ok=True)
 
-        # GSR processing parameters
-        self.min_sample_rate = self.config.get("min_sample_rate", 10.0)  # Hz
-        self.max_sample_rate = self.config.get("max_sample_rate", 1000.0)  # Hz
-        self.quality_threshold = self.config.get("quality_threshold", 50)  # 0-100
-        self.max_gap_duration = self.config.get("max_gap_duration", 5.0)  # seconds
+        
+        self.min_sample_rate = self.config.get("min_sample_rate", 10.0)  
+        self.max_sample_rate = self.config.get("max_sample_rate", 1000.0)  
+        self.quality_threshold = self.config.get("quality_threshold", 50)  
+        self.max_gap_duration = self.config.get("max_gap_duration", 5.0)  
 
-        # Active sessions and datasets
+        
         self.active_sessions: Dict[str, GSRDataSet] = {}
         self.completed_sessions: Dict[str, GSRDataSet] = {}
 
@@ -156,7 +156,7 @@ class GSRIngestor:
 
             dataset = self.active_sessions[session_id]
 
-            # Parse raw sample data (format: timestamp(8) + value(4) + quality(4))
+            
             if len(sample_data) < 16:
                 logger.warning(f"Invalid GSR sample data length: {len(sample_data)}")
                 return False
@@ -170,7 +170,7 @@ class GSRIngestor:
                 device_id=dataset.device_id,
             )
 
-            # Validate sample
+            
             if not self._validate_sample(sample, dataset):
                 return False
 
@@ -201,14 +201,14 @@ class GSRIngestor:
             dataset = self.active_sessions[session_id]
             dataset.end_time = time.time()
 
-            # Calculate sample rate
+            
             if len(dataset.samples) > 1:
                 duration = dataset.end_time - dataset.start_time
                 dataset.sample_rate = (
                     len(dataset.samples) / duration if duration > 0 else 0.0
                 )
 
-            # Finalize quality statistics
+            
             if dataset.samples:
                 qualities = [sample.quality for sample in dataset.samples]
                 dataset.quality_stats = {
@@ -217,11 +217,11 @@ class GSRIngestor:
                     "mean": sum(qualities) / len(qualities),
                 }
 
-            # Move to completed sessions
+            
             self.completed_sessions[session_id] = dataset
             del self.active_sessions[session_id]
 
-            # Save dataset to file
+            
             await self._save_dataset(dataset)
 
             logger.info(
@@ -240,7 +240,7 @@ class GSRIngestor:
 
     def _validate_sample(self, sample: GSRSample, dataset: GSRDataSet) -> bool:
         """Validate GSR sample quality and consistency"""
-        # Check quality threshold
+        
         if sample.quality < self.quality_threshold:
             logger.debug(
                 f"GSR sample below quality threshold: {sample.quality}"
@@ -248,22 +248,22 @@ class GSRIngestor:
             )
             return False
 
-        # Check for reasonable GSR values (typically 10 - 1000k ohms)
+        
         if not (10.0 <= sample.value <= 1000000.0):
             logger.warning(f"GSR value out of range: {sample.value} ohms")
             return False
 
-        # Check timestamp ordering (if not first sample)
+        
         if dataset.samples and sample.timestamp <= dataset.samples[-1].timestamp:
             logger.warning(f"GSR sample timestamp not monotonic: {sample.timestamp}")
             return False
 
-        # Check for excessive gaps
+        
         if dataset.samples:
             gap = sample.timestamp - dataset.samples[-1].timestamp
             if gap > self.max_gap_duration:
                 logger.warning(f"Large gap in GSR data: {gap:.2f}s")
-                # Still accept the sample but log the gap
+                
 
         return True
 
@@ -273,7 +273,7 @@ class GSRIngestor:
         stats["min"] = min(stats["min"], sample.quality)
         stats["max"] = max(stats["max"], sample.quality)
 
-        # Update running mean
+        
         n = len(dataset.samples)
         if n == 1:
             stats["mean"] = sample.quality
@@ -309,7 +309,7 @@ class GSRIngestor:
             with open(filepath, "r") as f:
                 data = json.load(f)
 
-            # Reconstruct dataset
+            
             samples = [GSRSample(**sample_data) for sample_data in data["samples"]]
 
             dataset = GSRDataSet(

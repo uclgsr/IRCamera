@@ -4,10 +4,7 @@ import android.util.Log
 import java.io.File
 import java.util.concurrent.atomic.AtomicBoolean
 
-/**
- * CSV-specific buffered writer that extends BufferedDataWriter
- * Provides header management and CSV-specific functionality
- */
+
 class CSVBufferedWriter(
     outputFile: File,
     private val headers: List<String>,
@@ -21,9 +18,7 @@ class CSVBufferedWriter(
 
     private val headerWritten = AtomicBoolean(false)
 
-    /**
-     * Start the writer and automatically write headers
-     */
+    
     suspend fun startWithHeaders(): Boolean {
         val started = start()
         if (started && !headerWritten.get()) {
@@ -32,9 +27,7 @@ class CSVBufferedWriter(
         return started
     }
 
-    /**
-     * Write CSV headers
-     */
+    
     private suspend fun writeHeaders() {
         if (headerWritten.compareAndSet(false, true)) {
             val headerLine = headers.joinToString(",")
@@ -43,9 +36,7 @@ class CSVBufferedWriter(
         }
     }
 
-    /**
-     * Write a CSV row from a list of values
-     */
+    
     fun writeRow(values: List<Any>): Boolean {
         val csvLine = values.joinToString(",") { value ->
             when (value) {
@@ -56,9 +47,7 @@ class CSVBufferedWriter(
         return writeLine(csvLine)
     }
 
-    /**
-     * Escape CSV values that contain special characters
-     */
+    
     private fun escapeCSVValue(value: String): String {
         return if (value.contains(",") || value.contains("\"") || value.contains("\n")) {
             "\"${value.replace("\"", "\"\"")}\""
@@ -67,9 +56,7 @@ class CSVBufferedWriter(
         }
     }
 
-    /**
-     * Get CSV-specific write statistics
-     */
+    
     fun getCSVStats(): CSVWriteStats {
         val stats = getWriteStats()
         return CSVWriteStats(
@@ -81,9 +68,7 @@ class CSVBufferedWriter(
     }
 }
 
-/**
- * CSV-specific write statistics
- */
+
 data class CSVWriteStats(
     val baseStats: WriteStats,
     val headerWritten: Boolean,

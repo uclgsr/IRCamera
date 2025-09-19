@@ -9,7 +9,7 @@
         android:background="#f5f5f5"
         android:orientation="vertical">
 
-        <!-- Search and Filter Bar -->
+        
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -18,7 +18,7 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- Search View -->
+            
             <SearchView
                 android:id="@+id/search_view"
                 android:layout_width="match_parent"
@@ -27,7 +27,7 @@
                 android:iconifiedByDefault="false"
                 android:queryHint="Search sessions..." />
 
-            <!-- Filter Spinner -->
+            
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -53,13 +53,13 @@
 
         </LinearLayout>
 
-        <!-- Content Area -->
+        
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1">
 
-            <!-- Sessions RecyclerView -->
+            
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/sessions_recycler_view"
                 android:layout_width="match_parent"
@@ -67,7 +67,7 @@
                 android:clipToPadding="false"
                 android:padding="8dp" />
 
-            <!-- Loading View -->
+            
             <LinearLayout
                 android:id="@+id/loading_view"
                 android:layout_width="match_parent"
@@ -90,7 +90,7 @@
 
             </LinearLayout>
 
-            <!-- Empty View -->
+            
             <LinearLayout
                 android:id="@+id/empty_view"
                 android:layout_width="match_parent"

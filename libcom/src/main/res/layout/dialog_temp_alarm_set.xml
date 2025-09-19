@@ -36,7 +36,7 @@
             android:layout_height="wrap_content"
             android:paddingBottom="24dp">
 
-            <!-- 关闭 -->
+            
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/cl_close"
                 android:layout_width="0dp"
@@ -59,7 +59,7 @@
                     app:layout_constraintWidth_percent="0.4" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <!-- Title -->
+            
             <TextView
                 android:id="@+id/tv_title"
                 android:layout_width="wrap_content"

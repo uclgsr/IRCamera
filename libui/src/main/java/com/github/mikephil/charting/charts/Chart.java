@@ -82,15 +82,11 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
     protected IHighlighter mHighlighter;
     protected ViewPortHandler mViewPortHandler = new ViewPortHandler();
     protected ChartAnimator mAnimator;
-    /**
-     * BELOW THIS CODE FOR HIGHLIGHTING
-     */
+    
 
     protected Highlight[] mIndicesToHighlight;
     protected float mMaxHighlightDistance = 0f;
-    /**
-     * BELOW CODE IS FOR THE MARKER VIEW
-     */
+    
 
     protected boolean mDrawMarkers = true;
     protected IMarker mMarker;
@@ -148,7 +144,7 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
         mDescPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
         mInfoPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mInfoPaint.setColor(Color.rgb(247, 189, 51)); // orange
+        mInfoPaint.setColor(Color.rgb(247, 189, 51)); 
         mInfoPaint.setTextAlign(Align.CENTER);
         mInfoPaint.setTextSize(Utils.convertDpToPixel(12f));
 
@@ -414,9 +410,7 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
         return new float[]{high.getDrawX(), high.getDrawY()};
     }
 
-    /**
-     * CODE BELOW THIS RELATED TO ANIMATION
-     */
+    
 
     public ChartAnimator getAnimator() {
         return mAnimator;
@@ -426,9 +420,7 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
         return mDragDecelerationEnabled;
     }
 
-    /**
-     * CODE BELOW FOR PREDEFINED EASING OPTIONS
-     */
+    
 
     public void setDragDecelerationEnabled(boolean enabled) {
         mDragDecelerationEnabled = enabled;
@@ -449,9 +441,7 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
         mDragDecelerationFrictionCoef = newValue;
     }
 
-    /**
-     * CODE BELOW FOR PROVIDING EASING FUNCTIONS
-     */
+    
 
     @RequiresApi(11)
     public void animateXY(int durationMillisX, int durationMillisY, EasingFunction easingX,
@@ -474,9 +464,7 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
         mAnimator.animateY(durationMillis, easing);
     }
 
-    /**
-     * CODE BELOW FOR ANIMATIONS WITHOUT EASING
-     */
+    
 
     @RequiresApi(11)
     public void animateX(int durationMillis) {
@@ -493,9 +481,7 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
         mAnimator.animateXY(durationMillisX, durationMillisY);
     }
 
-    /**
-     * BELOW THIS ONLY GETTERS AND SETTERS
-     */
+    
 
     public XAxis getXAxis() {
         return mXAxis;
@@ -787,10 +773,7 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
                     + pathOnSD + "/" + title
                     + ".png");
 
-            /*
-             * Write bitmap to file using JPEG or PNG and 40% quality hint for
-             * JPEG.
-             */
+            
             b.compress(CompressFormat.PNG, 40, stream);
 
             stream.close();

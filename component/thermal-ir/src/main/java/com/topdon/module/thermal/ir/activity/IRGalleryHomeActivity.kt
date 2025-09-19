@@ -10,14 +10,7 @@ import com.topdon.module.thermal.ir.R
 import com.topdon.module.thermal.ir.fragment.IRGalleryTabFragment
 import com.topdon.module.thermal.ir.viewmodel.IRGalleryTabViewModel
 
-/**
 
- *
-
-
- *
- * Created by LCG on 2024/2/22.
- */
 
 class IRGalleryHomeActivity : BaseActivity() {
     private var isTS004Remote = false

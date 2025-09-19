@@ -79,32 +79,8 @@ class ReportPreviewAdapter(private val cxt: Context, var dataList: List<HouseRep
                 false
             }
 
-            /*
-            holder.hsvReport.setOnScrollStopListner(object : OnScrollStopListner {
-                override fun onScrollToRightEdge() {
-                    holder.viewCategoryMask.visibility = View.VISIBLE
-                }
-
-                override fun onScrollToMiddle() {
-                    holder.viewCategoryMask.visibility = View.VISIBLE
-                }
-
-                override fun onScrollToLeftEdge() {
-                    holder.viewCategoryMask.visibility = View.GONE
-                }
-
-                override fun onScrollStoped() {
-                }
-
-                override fun onScrollChanged(l: Int, t: Int, oldl: Int, oldt: Int) {
-                    if (holder.viewCategoryMask.visibility == View.VISIBLE) {
-                        return
-                    }
-                    holder.viewCategoryMask.visibility = View.VISIBLE
-                }
-            })
-             */
-        } // End of if (holder is ItemView) block
+            
+        } 
     }
 
     override fun getItemCount(): Int {

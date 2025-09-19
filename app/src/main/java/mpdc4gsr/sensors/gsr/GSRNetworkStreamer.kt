@@ -43,9 +43,9 @@ class GSRNetworkStreamer(
     private val networkErrors = AtomicLong(0)
     private var startTime: Long = 0
 
-    private var clockOffset: Long = 0 // Nanoseconds
+    private var clockOffset: Long = 0 
     private var lastSyncTime: Long = 0
-    private val syncInterval = 30000L // 30 seconds
+    private val syncInterval = 30000L 
 
     suspend fun initialize(): Boolean {
         return withContext(Dispatchers.IO) {
@@ -146,7 +146,7 @@ class GSRNetworkStreamer(
             sampleBuffer.offer(syncedSample)
 
             if (sampleBuffer.size > BUFFER_SIZE) {
-                sampleBuffer.poll() // Remove oldest sample
+                sampleBuffer.poll() 
                 Log.w(TAG, "GSR sample buffer overflow, dropping oldest sample")
             }
         } catch (e: Exception) {
@@ -169,7 +169,7 @@ class GSRNetworkStreamer(
             } catch (e: Exception) {
                 Log.e(TAG, "Error in GSR streaming loop", e)
                 networkErrors.incrementAndGet()
-                delay(1000) // Error recovery delay
+                delay(1000) 
             }
         }
     }
@@ -187,10 +187,10 @@ class GSRNetworkStreamer(
 
         try {
             val batchMessage = createBatchMessage(batch)
-            // TODO: Implement proper message sending when EnhancedNetworkClient exposes public messaging API
+            
             Log.d(TAG, "Would send GSR batch: ${batchMessage.toString().take(100)}...")
 
-            // Simulate successful sending for now
+            
             samplesSent.addAndGet(batch.size.toLong())
             bytesTransmitted.addAndGet(batchMessage.toString().length.toLong())
             Log.d(TAG, "Simulated sending GSR batch of ${batch.size} samples")
@@ -215,7 +215,7 @@ class GSRNetworkStreamer(
                                 put("timestamp", sample.timestamp)
                                 put("gsr_value", sample.conductance)
                                 put("raw_value", sample.rawValue)
-                                put("quality", 1.0) // Default quality value
+                                put("quality", 1.0) 
                                 put(
                                     "device_id", android.provider.Settings.Secure.getString(
                                         context.contentResolver,
@@ -240,12 +240,12 @@ class GSRNetworkStreamer(
                     put("client_timestamp", System.nanoTime())
                 }
 
-            // TODO: Implement proper time sync when EnhancedNetworkClient exposes messaging API
+            
             Log.d(TAG, "Would send time sync request: ${syncRequest}")
 
-            // Simulate time sync response for now
+            
             val clientSent = System.nanoTime()
-            val serverTime = clientSent // Assume no offset for simulation
+            val serverTime = clientSent 
             val clientReceived = System.nanoTime()
 
             val roundTripTime = clientReceived - clientSent
@@ -272,7 +272,7 @@ class GSRNetworkStreamer(
                         put("buffer_size", sampleBuffer.size)
                     }
 
-                // TODO: Implement proper heartbeat sending when EnhancedNetworkClient exposes messaging API
+                
                 Log.d(TAG, "Would send heartbeat: ${heartbeat}")
             } catch (e: Exception) {
                 Log.w(TAG, "Failed to send heartbeat", e)
@@ -298,7 +298,7 @@ class GSRNetworkStreamer(
                         put("uptime_ms", System.currentTimeMillis() - startTime)
                     }
 
-                // TODO: Implement proper metrics sending when EnhancedNetworkClient exposes messaging API
+                
                 Log.d(TAG, "Would send quality metrics: ${metrics}")
             } catch (e: Exception) {
                 Log.w(TAG, "Failed to send quality metrics", e)
@@ -322,11 +322,11 @@ class GSRNetworkStreamer(
                             android.provider.Settings.Secure.ANDROID_ID,
                         ),
                     )
-                    put("sampling_rate", 128) // Hz
+                    put("sampling_rate", 128) 
                     put("timestamp", System.currentTimeMillis())
                 }
 
-            // TODO: Implement proper stream registration when EnhancedNetworkClient exposes messaging API
+            
             Log.d(TAG, "Would send stream registration: ${registration}")
             Log.i(TAG, "GSR stream registration simulated")
         } catch (e: Exception) {
@@ -346,7 +346,7 @@ class GSRNetworkStreamer(
                     put("timestamp", System.currentTimeMillis())
                 }
 
-            // TODO: Implement proper stream end notification when EnhancedNetworkClient exposes messaging API
+            
             Log.d(TAG, "Would send stream end notification: ${endNotification}")
             Log.i(TAG, "GSR stream end notification simulated")
         } catch (e: Exception) {

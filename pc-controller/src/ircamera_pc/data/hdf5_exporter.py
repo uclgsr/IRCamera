@@ -41,9 +41,9 @@ class DataStreamInfo:
     """Information about a data stream for HDF5 export."""
     stream_id: str
     device_id: str
-    sensor_type: str  # 'gsr', 'thermal', 'rgb', 'audio'
+    sensor_type: str  
     sampling_rate_hz: float
-    data_type: str  # 'timeseries', 'video', 'image_sequence'
+    data_type: str  
     units: str
     description: str
     start_timestamp: float
@@ -71,20 +71,20 @@ class SessionMetadata:
     end_time: Optional[datetime] = None
     duration_seconds: float = 0.0
 
-    # Experimental metadata
+    
     experiment_name: str = ""
     condition: str = ""
     trial_number: int = 0
     researcher: str = ""
     notes: str = ""
 
-    # Technical metadata
+    
     platform_version: str = "3.0.0"
     sync_accuracy_ms: float = 5.0
     total_devices: int = 0
     device_info: Dict[str, Dict] = None
 
-    # Data quality
+    
     overall_quality_score: float = 100.0
     data_integrity_validated: bool = False
 
@@ -114,21 +114,21 @@ class MultiModalHDF5Exporter:
         self.output_dir = Path(output_dir) if output_dir else Path("./data/exports/")
         self.output_dir.mkdir(parents=True, exist_ok=True)
 
-        # Generate output filename with timestamp
+        
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         self.output_file = self.output_dir / f"session_{session_id}_{timestamp}.h5"
 
-        # Data management
+        
         self.session_metadata: Optional[SessionMetadata] = None
         self.data_streams: Dict[str, DataStreamInfo] = {}
         self.sync_markers: List[SyncMarkerInfo] = []
 
-        # HDF5 file management
+        
         self.h5_file: Optional[h5py.File] = None
         self.is_open = False
-        self.compression_level = 6  # Good balance of speed vs compression
+        self.compression_level = 6  
 
-        # Streaming support
+        
         self.streaming_datasets: Dict[str, h5py.Dataset] = {}
         self.streaming_positions: Dict[str, int] = {}
 
@@ -149,7 +149,7 @@ class MultiModalHDF5Exporter:
             self.h5_file = h5py.File(self.output_file, 'w')
             self.is_open = True
 
-            # Create basic file structure
+            
             self._create_file_structure()
 
             logger.info(f"HDF5 file opened: {self.output_file}")
@@ -162,17 +162,17 @@ class MultiModalHDF5Exporter:
         """Close HDF5 file and finalize export."""
         if self.h5_file and self.is_open:
             try:
-                # Finalize metadata
+                
                 self._finalize_metadata()
 
-                # Validate data integrity
+                
                 self._validate_data_integrity()
 
-                # Close file
+                
                 self.h5_file.close()
                 self.is_open = False
 
-                # Generate validation report
+                
                 validation_report = self._generate_validation_report()
 
                 logger.info(f"HDF5 export completed: {self.output_file}")
@@ -223,31 +223,31 @@ class MultiModalHDF5Exporter:
             raise ValueError(f"Stream {stream_id} not registered")
 
         try:
-            # Get or create dataset
+            
             if stream_id in self.streaming_datasets:
                 dataset = self.streaming_datasets[stream_id]
                 timestamp_dataset = self.streaming_datasets[f"{stream_id}_timestamps"]
 
-                # Append to existing dataset (streaming mode)
+                
                 current_pos = self.streaming_positions[stream_id]
                 new_size = current_pos + len(data)
 
-                # Resize datasets if needed
+                
                 if new_size > dataset.shape[0]:
                     dataset.resize((new_size,) + dataset.shape[1:])
                     timestamp_dataset.resize((new_size,))
 
-                # Write data
+                
                 dataset[current_pos:new_size] = data
                 timestamp_dataset[current_pos:new_size] = timestamps
 
                 self.streaming_positions[stream_id] = new_size
 
             else:
-                # Create new dataset
+                
                 group = self.h5_file[f"data_streams/{stream_id}"]
 
-                # Create datasets with chunking and compression
+                
                 chunks = self._get_optimal_chunks(data.shape)
 
                 dataset = group.create_dataset(
@@ -267,7 +267,7 @@ class MultiModalHDF5Exporter:
                     compression_opts=self.compression_level
                 )
 
-                # Add attributes
+                
                 dataset.attrs['units'] = self.data_streams[stream_id].units
                 dataset.attrs['sampling_rate_hz'] = self.data_streams[stream_id].sampling_rate_hz
                 dataset.attrs['description'] = self.data_streams[stream_id].description
@@ -276,7 +276,7 @@ class MultiModalHDF5Exporter:
                     for key, value in metadata.items():
                         dataset.attrs[key] = value
 
-            # Update stream info
+            
             self.data_streams[stream_id].total_samples += len(data)
             self.data_streams[stream_id].end_timestamp = float(timestamps[-1])
 
@@ -303,7 +303,7 @@ class MultiModalHDF5Exporter:
         try:
             group = self.h5_file[f"data_streams/{stream_id}"]
 
-            # Create video dataset with optimal compression for video data
+            
             chunks = (1, frames.shape[1], frames.shape[2], frames.shape[3])
 
             video_dataset = group.create_dataset(
@@ -311,7 +311,7 @@ class MultiModalHDF5Exporter:
                 data=frames,
                 chunks=chunks,
                 compression='gzip',
-                compression_opts=3,  # Lower compression for video (speed vs size)
+                compression_opts=3,  
                 shuffle=True
             )
 
@@ -322,7 +322,7 @@ class MultiModalHDF5Exporter:
                 compression_opts=self.compression_level
             )
 
-            # Add video-specific attributes
+            
             video_dataset.attrs['frame_count'] = frames.shape[0]
             video_dataset.attrs['height'] = frames.shape[1]
             video_dataset.attrs['width'] = frames.shape[2]
@@ -334,7 +334,7 @@ class MultiModalHDF5Exporter:
                 for key, value in metadata.items():
                     video_dataset.attrs[key] = value
 
-            # Update stream info
+            
             self.data_streams[stream_id].total_samples = frames.shape[0]
             self.data_streams[stream_id].end_timestamp = float(timestamps[-1])
 
@@ -378,7 +378,7 @@ class MultiModalHDF5Exporter:
         try:
             group = self.h5_file[f"data_streams/{stream_id}"]
 
-            # Create resizable datasets
+            
             full_shape = (initial_size,) + data_shape
             max_shape = (None,) + data_shape
             chunks = self._get_optimal_chunks(full_shape)
@@ -428,7 +428,7 @@ class MultiModalHDF5Exporter:
             formats = ['csv']
 
         if not self.is_open:
-            # Open temporarily for reading
+            
             temp_file = h5py.File(self.output_file, 'r')
         else:
             temp_file = self.h5_file
@@ -452,13 +452,13 @@ class MultiModalHDF5Exporter:
 
     def _create_file_structure(self):
         """Create basic HDF5 file structure."""
-        # Create main groups
+        
         self.h5_file.create_group("metadata")
         self.h5_file.create_group("data_streams")
         self.h5_file.create_group("sync_markers")
         self.h5_file.create_group("analysis")
 
-        # Add file-level attributes
+        
         self.h5_file.attrs['created_at'] = datetime.now(timezone.utc).isoformat()
         self.h5_file.attrs['platform_version'] = "3.0.0"
         self.h5_file.attrs['file_format_version'] = "1.0"
@@ -468,7 +468,7 @@ class MultiModalHDF5Exporter:
         """Create dataset structure for a data stream."""
         group = self.h5_file.create_group(f"data_streams/{stream_info.stream_id}")
 
-        # Add stream attributes
+        
         group.attrs['device_id'] = stream_info.device_id
         group.attrs['sensor_type'] = stream_info.sensor_type
         group.attrs['sampling_rate_hz'] = stream_info.sampling_rate_hz
@@ -484,20 +484,20 @@ class MultiModalHDF5Exporter:
 
         metadata_group = self.h5_file["metadata"]
 
-        # Convert metadata to dictionary
+        
         metadata_dict = asdict(self.session_metadata)
 
-        # Handle datetime objects
+        
         if isinstance(metadata_dict['start_time'], datetime):
             metadata_dict['start_time'] = metadata_dict['start_time'].isoformat()
         if metadata_dict['end_time'] and isinstance(metadata_dict['end_time'], datetime):
             metadata_dict['end_time'] = metadata_dict['end_time'].isoformat()
 
-        # Write metadata as attributes
+        
         for key, value in metadata_dict.items():
             if value is not None:
                 if isinstance(value, dict):
-                    # Store complex objects as JSON strings
+                    
                     metadata_group.attrs[key] = json.dumps(value)
                 else:
                     metadata_group.attrs[key] = value
@@ -506,9 +506,9 @@ class MultiModalHDF5Exporter:
         """Write sync marker to HDF5 file."""
         markers_group = self.h5_file["sync_markers"]
 
-        # Create dataset for marker if it doesn't exist
+        
         if 'markers' not in markers_group:
-            # Create compound datatype for sync markers
+            
             marker_dtype = np.dtype([
                 ('timestamp', 'f8'),
                 ('marker_type', 'S50'),
@@ -528,7 +528,7 @@ class MultiModalHDF5Exporter:
 
         dataset = markers_group['markers']
 
-        # Append marker
+        
         current_size = dataset.shape[0]
         dataset.resize((current_size + 1,))
 
@@ -543,19 +543,19 @@ class MultiModalHDF5Exporter:
     def _finalize_metadata(self):
         """Finalize session metadata before closing."""
         if self.session_metadata:
-            # Update end time and duration
+            
             self.session_metadata.end_time = datetime.now(timezone.utc)
             if self.session_metadata.start_time:
                 duration = self.session_metadata.end_time - self.session_metadata.start_time
                 self.session_metadata.duration_seconds = duration.total_seconds()
 
-            # Update device count
+            
             self.session_metadata.total_devices = len(self.data_streams)
 
-            # Write updated metadata
+            
             self._write_session_metadata()
 
-        # Write data stream summary
+        
         self._write_data_stream_summary()
 
     def _write_data_stream_summary(self):
@@ -565,7 +565,7 @@ class MultiModalHDF5Exporter:
         for stream_id, stream_info in self.data_streams.items():
             stream_group = summary_group.create_group(stream_id)
 
-            # Write stream info as attributes
+            
             for key, value in asdict(stream_info).items():
                 if value is not None:
                     stream_group.attrs[key] = value
@@ -580,7 +580,7 @@ class MultiModalHDF5Exporter:
             'missing_data_check': True
         }
 
-        # Check each data stream
+        
         for stream_id, stream_info in self.data_streams.items():
             if f"data_streams/{stream_id}" in self.h5_file:
                 group = self.h5_file[f"data_streams/{stream_id}"]
@@ -599,7 +599,7 @@ class MultiModalHDF5Exporter:
                     stream_validation['sample_count'] = data_shape[0]
                     stream_validation['temporal_consistency'] = data_shape[0] == timestamp_shape[0]
 
-                    # Check for temporal ordering
+                    
                     timestamps = group['timestamps'][:]
                     if len(timestamps) > 1:
                         stream_validation['temporal_ordering'] = np.all(np.diff(timestamps) >= 0)
@@ -608,7 +608,7 @@ class MultiModalHDF5Exporter:
 
                 validation_results['data_integrity_checks'][stream_id] = stream_validation
 
-        # Write validation results
+        
         validation_group = self.h5_file.create_group("metadata/validation")
         for key, value in validation_results.items():
             if isinstance(value, dict):
@@ -616,7 +616,7 @@ class MultiModalHDF5Exporter:
             else:
                 validation_group.attrs[key] = value
 
-        # Update session metadata
+        
         if self.session_metadata:
             all_checks_passed = all(
                 check.get('temporal_consistency', False) and
@@ -645,23 +645,23 @@ class MultiModalHDF5Exporter:
 
     def _get_optimal_chunks(self, shape: Tuple[int, ...]) -> Tuple[int, ...]:
         """Calculate optimal chunk size for HDF5 dataset."""
-        # Target chunk size around 1MB
-        target_size = 1024 * 1024  # 1MB
+        
+        target_size = 1024 * 1024  
 
         if len(shape) == 1:
-            # 1D data - chunk along time dimension
-            element_size = 8  # Assume 8 bytes per element
+            
+            element_size = 8  
             chunk_size = min(shape[0], target_size // element_size)
             return (max(1, chunk_size),)
 
         elif len(shape) == 2:
-            # 2D data - chunk along time dimension primarily
+            
             element_size = 8 * shape[1]
             chunk_size = min(shape[0], target_size // element_size)
             return (max(1, chunk_size), shape[1])
 
         else:
-            # Higher dimensional data - chunk first dimension
+            
             total_elements = np.prod(shape[1:])
             element_size = 8 * total_elements
             chunk_size = min(shape[0], max(1, target_size // element_size))
@@ -671,7 +671,7 @@ class MultiModalHDF5Exporter:
         """Export timeseries data to CSV format."""
         csv_file = self.output_file.with_suffix('.csv')
 
-        # Collect all timeseries data
+        
         all_data = []
 
         for stream_id in self.data_streams:
@@ -682,14 +682,14 @@ class MultiModalHDF5Exporter:
                     timestamps = group['timestamps'][:]
                     data = group['data'][:]
 
-                    # Create DataFrame
+                    
                     if len(data.shape) == 1:
                         df = pd.DataFrame({
                             'timestamp': timestamps,
                             f'{stream_id}': data
                         })
                     else:
-                        # Multi-channel data
+                        
                         df_data = {'timestamp': timestamps}
                         for i in range(data.shape[1]):
                             df_data[f'{stream_id}_ch{i}'] = data[:, i]
@@ -698,12 +698,12 @@ class MultiModalHDF5Exporter:
                     all_data.append(df)
 
         if all_data:
-            # Merge all dataframes on timestamp
+            
             combined_df = all_data[0]
             for df in all_data[1:]:
                 combined_df = pd.merge(combined_df, df, on='timestamp', how='outer')
 
-            # Sort by timestamp and save
+            
             combined_df = combined_df.sort_values('timestamp')
             combined_df.to_csv(csv_file, index=False)
 
@@ -719,7 +719,7 @@ class MultiModalHDF5Exporter:
 
         mat_file = self.output_file.with_suffix('.mat')
 
-        # Collect data for MATLAB export
+        
         matlab_data = {}
 
         for stream_id in self.data_streams:
@@ -730,14 +730,14 @@ class MultiModalHDF5Exporter:
                     matlab_data[f"{stream_id}_data"] = group['data'][:]
                     matlab_data[f"{stream_id}_timestamps"] = group['timestamps'][:]
 
-        # Add metadata
+        
         if 'metadata' in h5_file:
             metadata_dict = {}
             for key in h5_file['metadata'].attrs:
                 metadata_dict[key] = h5_file['metadata'].attrs[key]
             matlab_data['metadata'] = metadata_dict
 
-        # Save to MATLAB file
+        
         savemat(mat_file, matlab_data)
         return mat_file
 
@@ -745,7 +745,7 @@ class MultiModalHDF5Exporter:
         """Export metadata to JSON format."""
         json_file = self.output_file.with_suffix('.json')
 
-        # Collect all metadata
+        
         export_metadata = {
             'session_metadata': {},
             'data_streams': {},
@@ -753,7 +753,7 @@ class MultiModalHDF5Exporter:
             'file_info': {}
         }
 
-        # Session metadata
+        
         if 'metadata' in h5_file:
             for key in h5_file['metadata'].attrs:
                 value = h5_file['metadata'].attrs[key]
@@ -761,7 +761,7 @@ class MultiModalHDF5Exporter:
                     value = value.decode('utf-8')
                 export_metadata['session_metadata'][key] = value
 
-        # Data stream metadata
+        
         for stream_id in self.data_streams:
             if f"data_streams/{stream_id}" in h5_file:
                 group = h5_file[f"data_streams/{stream_id}"]
@@ -775,7 +775,7 @@ class MultiModalHDF5Exporter:
 
                 export_metadata['data_streams'][stream_id] = stream_meta
 
-        # Sync markers
+        
         if 'sync_markers/markers' in h5_file:
             markers_dataset = h5_file['sync_markers/markers']
             for marker in markers_dataset:
@@ -787,7 +787,7 @@ class MultiModalHDF5Exporter:
                     'sequence_number': int(marker['sequence_number'])
                 })
 
-        # File info
+        
         export_metadata['file_info'] = {
             'hdf5_file': str(self.output_file),
             'created_at': datetime.now(timezone.utc).isoformat(),
@@ -795,7 +795,7 @@ class MultiModalHDF5Exporter:
             'total_sync_markers': len(self.sync_markers)
         }
 
-        # Write JSON file
+        
         with open(json_file, 'w') as f:
             json.dump(export_metadata, f, indent=2)
 
@@ -815,14 +815,14 @@ def create_session_exporter(participant_id: str, experiment_name: str = "",
     Returns:
         Configured MultiModalHDF5Exporter instance
     """
-    # Generate session ID
+    
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     session_id = f"{participant_id}_{timestamp}"
 
-    # Create exporter
+    
     exporter = MultiModalHDF5Exporter(session_id, output_dir)
 
-    # Set initial metadata
+    
     metadata = SessionMetadata(
         session_id=session_id,
         participant_id=participant_id,

@@ -10,7 +10,7 @@ import sys
 import tempfile
 from pathlib import Path
 
-# Add src to path
+
 sys.path.insert(0, str(Path(__file__).parent / "src"))
 
 
@@ -19,7 +19,7 @@ def test_imports():
     print("\n=== Testing Core Imports ===")
 
     try:
-        # Test individual imports to isolate issues
+        
         print("Testing device discovery...")
         from ircamera_pc.network.discovery import DeviceType, DiscoveredDevice, \
             NetworkDiscoveryService
@@ -34,7 +34,7 @@ def test_imports():
         print("✓ Configuration imports successful")
 
         print("Testing device manager...")
-        # Skip the problematic imports for now
+        
 
         return True
 
@@ -51,11 +51,11 @@ async def test_basic_discovery():
         from ircamera_pc.network.discovery import DeviceType, DiscoveredDevice, \
             NetworkDiscoveryService
 
-        # Test discovery service creation
+        
         discovery = NetworkDiscoveryService()
         print("✓ Discovery service created")
 
-        # Test mock device creation
+        
         mock_device = DiscoveredDevice(
             service_name="TestDevice",
             service_type="_ircamera._tcp.local.",
@@ -83,16 +83,16 @@ async def test_basic_session():
     try:
         from ircamera_pc.core.session import SessionManager, SessionState
 
-        # Create temporary directory
+        
         with tempfile.TemporaryDirectory() as temp_dir:
             session_dir = Path(temp_dir) / "sessions"
             session_dir.mkdir(parents=True)
 
-            # Create session manager
+            
             session_manager = SessionManager()
             print("✓ Session manager created")
 
-            # Test session creation
+            
             session_id = session_manager.create_session("Test Session")
             if session_id:
                 print(f"✓ Session created: {session_id}")
@@ -100,7 +100,7 @@ async def test_basic_session():
                 print("✗ Failed to create session")
                 return False
 
-            # Test state retrieval
+            
             state = session_manager.get_session_state()
             if state:
                 print(f"✓ Session state: {state}")
@@ -122,11 +122,11 @@ def test_configuration():
     try:
         from ircamera_pc.core.config import config
 
-        # Test config access
+        
         version = config.get("version", "unknown")
         print(f"✓ Config loaded, version: {version}")
 
-        # Test network config
+        
         port = config.get("network.server_port", 8080)
         print(f"✓ Network port configured: {port}")
 
@@ -170,7 +170,7 @@ async def run_simple_tests():
             print(f"❌ {test_name} test FAILED with exception: {e}")
             results.append((test_name, False))
 
-    # Summary
+    
     print("\n" + "=" * 60)
     print("TEST SUMMARY")
     print("=" * 60)

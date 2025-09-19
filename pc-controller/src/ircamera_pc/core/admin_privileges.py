@@ -28,7 +28,7 @@ except ImportError:
     PYQT_AVAILABLE = False
 
 
-    # Mock classes for when PyQt6 is not available
+    
     class QMessageBox:
         StandardButton = type(
             "StandardButton",
@@ -116,12 +116,12 @@ class AdminPrivilegesManager(BaseManager):
     - Platform-specific privilege handling
     """
 
-    # Signals (only available with PyQt6)
+    
     if PYQT_AVAILABLE:
         privilege_changed = pyqtSignal(PrivilegeLevel)
-        elevation_requested = pyqtSignal(str)  # reason
-        elevation_completed = pyqtSignal(ElevationResult, str)  # result, message
-        permission_denied = pyqtSignal(str, str)  # operation, reason
+        elevation_requested = pyqtSignal(str)  
+        elevation_completed = pyqtSignal(ElevationResult, str)  
+        permission_denied = pyqtSignal(str, str)  
         system_ready = pyqtSignal(SystemPermissions)
 
     def __init__(self):
@@ -130,7 +130,7 @@ class AdminPrivilegesManager(BaseManager):
         self._permissions = SystemPermissions()
         self._elevation_requested = False
 
-        # Check initial privilege level
+        
         self._check_current_privileges()
         self._check_system_permissions()
 
@@ -343,9 +343,9 @@ class AdminPrivilegesManager(BaseManager):
     def _check_windows_privileges(self) -> PrivilegeLevel:
         """Check privilege level on Windows."""
         try:
-            # Check if running as administrator
+            
             if ctypes.windll.shell32.IsUserAnAdmin():
-                # Check if running as SYSTEM
+                
                 if WIN32_AVAILABLE:
                     try:
                         token = win32security.OpenProcessToken(
@@ -355,7 +355,7 @@ class AdminPrivilegesManager(BaseManager):
                             token, win32security.TokenUser
                         )[0]
 
-                        # SYSTEM SID: S-1-5-18
+                        
                         system_sid = win32security.ConvertStringSidToSid("S-1-5-18")
 
                         if win32security.EqualSid(user_sid, system_sid):
@@ -382,9 +382,9 @@ class AdminPrivilegesManager(BaseManager):
             if uid == 0:
                 return PrivilegeLevel.ADMIN
             else:
-                # Check if user can sudo
+                
                 try:
-                    # Security: Use explicit command list and timeout
+                    
                     result = subprocess.run(
                         ["/usr/bin/sudo", "-n", "true"],
                         capture_output=True,
@@ -422,27 +422,27 @@ class AdminPrivilegesManager(BaseManager):
 
     def _check_windows_permissions(self) -> None:
         """Check Windows-specific permissions."""
-        # Network configuration
+        
         self._permissions.network_config = self._test_network_config_access()
 
-        # Bluetooth control
+        
         self._permissions.bluetooth_control = self._test_bluetooth_access()
 
-        # Service management
+        
         self._permissions.service_management = self._test_service_management_access()
 
-        # Registry access
+        
         self._permissions.registry_access = self._test_registry_access()
 
-        # Hardware access
+        
         self._permissions.hardware_access = self._test_hardware_access()
 
-        # Firewall control
+        
         self._permissions.firewall_control = self._test_firewall_access()
 
     def _check_unix_permissions(self) -> None:
         """Check Unix-specific permissions."""
-        # Basic checks for Unix systems - should only be called on Unix-like systems
+        
         if platform.system() == "Windows":
             logger.error("_check_unix_permissions called on Windows - this is a bug")
             return
@@ -456,9 +456,9 @@ class AdminPrivilegesManager(BaseManager):
             self._permissions.service_management = is_root or can_sudo
             self._permissions.hardware_access = is_root
         except AttributeError:
-            # os.getuid() not available (shouldn't happen on Unix systems)
+            
             logger.error("os.getuid() not available - platform detection failed")
-            # Fallback to checking sudo only
+            
             can_sudo = self._can_sudo()
             self._permissions.network_config = can_sudo
             self._permissions.bluetooth_control = can_sudo
@@ -480,7 +480,7 @@ class AdminPrivilegesManager(BaseManager):
         """Elevate privileges on Windows using UAC."""
         try:
             if ELEVATE_AVAILABLE:
-                # Show user dialog before elevation
+                
                 reply = QMessageBox.question(
                     None,
                     "Administrator Privileges Required",
@@ -500,11 +500,11 @@ class AdminPrivilegesManager(BaseManager):
                 if reply != QMessageBox.StandardButton.Yes:
                     return ElevationResult.CANCELLED
 
-                # Attempt elevation
+                
                 elevate(show_console=False)
                 return ElevationResult.SUCCESS
             else:
-                # Fallback to manual UAC prompt
+                
                 return self._manual_uac_elevation()
 
         except PermissionError:
@@ -516,7 +516,7 @@ class AdminPrivilegesManager(BaseManager):
     def _elevate_unix(self, reason: str) -> ElevationResult:
         """Elevate privileges on Unix systems."""
         try:
-            # Show user dialog
+            
             reply = QMessageBox.question(
                 None,
                 "Administrator Privileges Required",
@@ -532,11 +532,11 @@ class AdminPrivilegesManager(BaseManager):
             if reply != QMessageBox.StandardButton.Yes:
                 return ElevationResult.CANCELLED
 
-            # Restart with sudo
+            
             python_path = sys.executable
             script_path = sys.argv[0]
 
-            # Security: Validate paths before subprocess call
+            
             if not os.path.exists(python_path) or not os.path.exists(script_path):
                 raise FileNotFoundError("Required executable paths not found")
 
@@ -545,7 +545,7 @@ class AdminPrivilegesManager(BaseManager):
                 shell=False,
             )
 
-            # Exit current process
+            
             QApplication.quit()
 
             return ElevationResult.SUCCESS
@@ -558,7 +558,7 @@ class AdminPrivilegesManager(BaseManager):
         """Manual UAC elevation for Windows."""
         try:
             if WIN32_AVAILABLE:
-                # Use ShellExecute with "runas" to trigger UAC
+                
                 python_path = sys.executable
                 script_path = " ".join(sys.argv)
 
@@ -566,8 +566,8 @@ class AdminPrivilegesManager(BaseManager):
                     None, "runas", python_path, script_path, None, 1
                 )
 
-                if result > 32:  # Success
-                    # Exit current process as new elevated one will start
+                if result > 32:  
+                    
                     QApplication.quit()
                     return ElevationResult.SUCCESS
                 else:
@@ -594,12 +594,12 @@ class AdminPrivilegesManager(BaseManager):
         }
         return messages.get(result, "Unknown elevation result")
 
-    # Permission testing methods
+    
     def _test_network_config_access(self) -> bool:
         """Test network configuration access."""
         try:
             if platform.system() == "Windows":
-                # Security: Use full path and explicit security settings
+                
                 result = subprocess.run(
                     [
                         "C:\\Windows\\System32\\netsh.exe",
@@ -620,13 +620,13 @@ class AdminPrivilegesManager(BaseManager):
 
     def _test_bluetooth_access(self) -> bool:
         """Test Bluetooth control access."""
-        return self.is_elevated  # Simplified check
+        return self.is_elevated  
 
     def _test_service_management_access(self) -> bool:
         """Test service management access."""
         try:
             if platform.system() == "Windows":
-                # Security: Use full path and proper command structure
+                
                 result = subprocess.run(
                     ["C:\\Windows\\System32\\sc.exe", "query", "type=service"],
                     capture_output=True,
@@ -677,7 +677,7 @@ class AdminPrivilegesManager(BaseManager):
 
     def _can_sudo(self) -> bool:
         """Check if user can use sudo."""
-        # sudo is not available on Windows
+        
         if platform.system() == "Windows":
             return False
 
@@ -689,7 +689,7 @@ class AdminPrivilegesManager(BaseManager):
         except (OSError, ValueError, RuntimeError):
             return False
 
-    # Command execution methods
+    
     def _run_windows_admin_command(self, command: str, arguments: list) -> bool:
         """Run Windows admin command."""
         try:
@@ -719,7 +719,7 @@ class AdminPrivilegesManager(BaseManager):
             logger.error(f"Unix admin command failed: {e}")
             return False
 
-    # Service management methods
+    
     def _check_windows_service(self, service_name: str) -> Optional[str]:
         """Check Windows service status."""
         try:
@@ -731,7 +731,7 @@ class AdminPrivilegesManager(BaseManager):
             )
 
             if result.returncode == 0:
-                # Parse service status from output
+                
                 for line in result.stdout.split("\n"):
                     if "STATE" in line:
                         return line.split(":")[1].strip()

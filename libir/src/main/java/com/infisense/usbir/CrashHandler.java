@@ -20,9 +20,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
     private static CrashHandler crashHandler = new CrashHandler();
     private Thread.UncaughtExceptionHandler mDefaultHandler;
     private Context mContext;
-    /**
-     * 错误日志文件
-     */
+    
     private File logFile;
 
     private CrashHandler() {
@@ -125,7 +123,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
         pw.print("versionName : ");
         pw.println(pi.versionName);
         try {
-            /** 暴力反射获取数据 */
+            
             Field[] Fields = Build.class.getDeclaredFields();
             for (Field field : Fields) {
                 field.setAccessible(true);

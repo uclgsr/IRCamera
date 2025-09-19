@@ -40,10 +40,10 @@ object ViewBindingAdapter {
                     drawableList.add(effectDrawable)
                 }
             } else {
-                if (drawableList.size == layerCount) { // 本来就没有 hint
+                if (drawableList.size == layerCount) { 
                     return
                 }
-                if (drawableList.isEmpty()) { // 只有1个且为 hint，移除
+                if (drawableList.isEmpty()) { 
                     view.background = null
                     return
                 }

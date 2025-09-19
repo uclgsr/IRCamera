@@ -23,8 +23,8 @@ class ShimmerAPIBridge private constructor() {
     }
 
     private fun initializeShimmerProcessing() {
-        // Note: Official Shimmer processing is now handled by main app module
-        // This component uses fallback processing to avoid duplicate dependencies
+        
+        
         Log.i(TAG, "Using fallback processing - official Shimmer SDK handled by main app module")
         setupEnhancedFallback()
     }
@@ -77,7 +77,7 @@ class ShimmerAPIBridge private constructor() {
     ): GSRSample {
 
         val resistance = convertToResistanceShimmer3(rawValue)
-        val conductance = if (resistance > 0) 1000000.0 / resistance else 0.0 // Convert to µS
+        val conductance = if (resistance > 0) 1000000.0 / resistance else 0.0 
 
         return GSRSample(
             timestamp = timestamp,
@@ -106,17 +106,17 @@ class ShimmerAPIBridge private constructor() {
             if (conductance > 0) 1000000.0 / conductance else Double.MAX_VALUE
         } catch (e: Exception) {
             Log.w(TAG, "Official resistance conversion failed: ${e.message}")
-            100.0 // Default physiological value
+            100.0 
         }
     }
 
     private fun convertToResistanceShimmer3(rawValue: Double): Double {
 
 
-        val vRef = 3.0 // Reference voltage (3.0V)
-        val rRef = 40200.0 // Reference resistor (40.2kΩ)
-        val adcMax = 4095.0 // 12-bit ADC resolution
-        val adcMin = 1.0 // Avoid division by zero
+        val vRef = 3.0 
+        val rRef = 40200.0 
+        val adcMax = 4095.0 
+        val adcMin = 1.0 
 
         val clampedRaw = rawValue.coerceIn(adcMin, adcMax)
 
@@ -124,8 +124,8 @@ class ShimmerAPIBridge private constructor() {
 
 
         val denominator = vOut
-        if (denominator <= 0.001) { // Avoid near-zero division
-            return 10000.0 // Return high resistance value (10MΩ)
+        if (denominator <= 0.001) { 
+            return 10000.0 
         }
 
         val resistance = rRef * (vRef - vOut) / denominator

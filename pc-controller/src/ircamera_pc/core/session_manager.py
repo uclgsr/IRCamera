@@ -42,7 +42,7 @@ class SessionConfiguration:
 
     session_name: str
     participant_id: Optional[str] = None
-    recording_duration: Optional[int] = None  # seconds
+    recording_duration: Optional[int] = None  
     modalities: List[str] = field(default_factory=lambda: ["rgb", "thermal", "gsr"])
     quality_settings: Dict[str, Any] = field(default_factory=dict)
     sync_flash_enabled: bool = True
@@ -59,27 +59,27 @@ class SessionMetadata:
     state: SessionState
     configuration: SessionConfiguration
 
-    # Timestamps
+    
     created_at: datetime
     started_at: Optional[datetime] = None
     stopped_at: Optional[datetime] = None
     completed_at: Optional[datetime] = None
 
-    # Participants
+    
     participating_devices: List[str] = field(default_factory=list)
     device_capabilities: Dict[str, Dict[str, Any]] = field(default_factory=dict)
 
-    # Recording info
+    
     duration_seconds: Optional[float] = None
     files_generated: List[Dict[str, Any]] = field(default_factory=list)
     sync_events: List[Dict[str, Any]] = field(default_factory=list)
 
-    # Status tracking
+    
     devices_acknowledged_start: List[str] = field(default_factory=list)
     devices_acknowledged_stop: List[str] = field(default_factory=list)
     devices_failed: List[Dict[str, Any]] = field(default_factory=list)
 
-    # Metadata
+    
     total_data_size: int = 0
     error_log: List[Dict[str, Any]] = field(default_factory=list)
 
@@ -87,7 +87,7 @@ class SessionMetadata:
         """Convert to dictionary for JSON serialization."""
         result = asdict(self)
 
-        # Convert datetime objects to ISO format
+        
         result['created_at'] = self.created_at.isoformat()
         if self.started_at:
             result['started_at'] = self.started_at.isoformat()
@@ -96,7 +96,7 @@ class SessionMetadata:
         if self.completed_at:
             result['completed_at'] = self.completed_at.isoformat()
 
-        # Convert enum to string
+        
         result['state'] = self.state.value
 
         return result
@@ -114,9 +114,9 @@ class AdvancedSessionManager:
     - Error handling and recovery
     """
 
-    # Constants
-    MIN_SUCCESS_RATE_FOR_START = 0.5  # Minimum success rate (50%) to consider start successful
-    MIN_SUCCESS_RATE_FOR_STOP = 0.5  # Minimum success rate (50%) to consider stop successful
+    
+    MIN_SUCCESS_RATE_FOR_START = 0.5  
+    MIN_SUCCESS_RATE_FOR_STOP = 0.5  
 
     def __init__(self, device_manager: DeviceManager, base_session_dir: Path):
         """
@@ -130,19 +130,19 @@ class AdvancedSessionManager:
         self.base_session_dir = Path(base_session_dir)
         self.base_session_dir.mkdir(parents=True, exist_ok=True)
 
-        # Session state
+        
         self.current_session: Optional[SessionMetadata] = None
         self.session_history: Dict[str, SessionMetadata] = {}
 
-        # Callbacks
+        
         self._state_callbacks: List[Callable[[SessionState, Optional[SessionMetadata]], None]] = []
         self._device_ack_callbacks: List[Callable[[str, str, bool], None]] = []
 
-        # Acknowledgment tracking
+        
         self._pending_acknowledgments: Dict[str, Dict[str, Any]] = {}
-        self._ack_timeout = 10.0  # seconds
+        self._ack_timeout = 10.0  
 
-        # Recovery settings
+        
         self._max_start_retries = 3
         self._max_stop_retries = 2
 
@@ -203,13 +203,13 @@ class AdvancedSessionManager:
         ]:
             raise RuntimeError("Cannot create session: another session is active")
 
-        # Generate session ID and setup configuration
+        
         session_id = f"session_{datetime.now(timezone.utc).strftime('%Y%m%d_%H%M%S')}_{uuid.uuid4().hex[:8]}"
 
         if configuration is None:
             configuration = SessionConfiguration(session_name=session_name)
 
-        # Create session metadata
+        
         session_metadata = SessionMetadata(
             session_id=session_id,
             session_name=session_name,
@@ -218,22 +218,22 @@ class AdvancedSessionManager:
             created_at=datetime.now(timezone.utc)
         )
 
-        # Create session directory
+        
         session_dir = self.base_session_dir / session_id
         session_dir.mkdir(parents=True, exist_ok=True)
 
-        # Store session
+        
         self.current_session = session_metadata
         self.session_history[session_id] = session_metadata
 
-        # Log session creation
+        
         logger.info(f"Created session: {session_id} ({session_name})")
         self._log_session_event("session_created", {"session_id": session_id, "name": session_name})
 
-        # Transition to ACTIVE state
+        
         self._update_session_state(SessionState.ACTIVE)
 
-        # Save initial metadata
+        
         self._save_session_metadata()
 
         return session_id
@@ -257,7 +257,7 @@ class AdvancedSessionManager:
         if self.current_session.state != SessionState.ACTIVE:
             raise RuntimeError(f"Cannot start recording in state: {self.current_session.state}")
 
-        # Get available devices
+        
         available_devices = self.device_manager.get_registry().get_online_devices()
 
         if device_filter:
@@ -266,13 +266,13 @@ class AdvancedSessionManager:
         if not available_devices:
             raise RuntimeError("No online devices available for recording")
 
-        # Update participating devices
+        
         self.current_session.participating_devices = [d.device_id for d in available_devices]
         self.current_session.device_capabilities = {
             d.device_id: asdict(d.capabilities) for d in available_devices
         }
 
-        # Clear previous acknowledgments
+        
         self.current_session.devices_acknowledged_start.clear()
         self.current_session.devices_failed.clear()
 
@@ -281,12 +281,12 @@ class AdvancedSessionManager:
             f"with {len(available_devices)} devices"
         )
 
-        # Update state to recording
+        
         self._update_session_state(SessionState.RECORDING)
         self.current_session.started_at = datetime.now(timezone.utc)
 
-        # TODO: Send start recording commands to devices
-        # This would integrate with the network server to send JSON commands
+        
+        
         success = await self._send_start_commands_to_devices(available_devices)
 
         if success:
@@ -297,7 +297,7 @@ class AdvancedSessionManager:
             self._save_session_metadata()
             return True
         else:
-            # Rollback on failure
+            
             self._update_session_state(SessionState.ACTIVE)
             self.current_session.started_at = None
             self._log_session_event("recording_start_failed", {})
@@ -320,16 +320,16 @@ class AdvancedSessionManager:
 
         logger.info(f"Stopping recording for session {self.current_session.session_id}")
 
-        # Update state
+        
         self._update_session_state(SessionState.STOPPING)
 
-        # Clear previous stop acknowledgments  
+        
         self.current_session.devices_acknowledged_stop.clear()
 
-        # TODO: Send stop recording commands to devices
+        
         success = await self._send_stop_commands_to_devices()
 
-        # Always mark as stopped (even if some devices failed to respond)
+        
         self.current_session.stopped_at = datetime.now(timezone.utc)
 
         if self.current_session.started_at:
@@ -364,18 +364,18 @@ class AdvancedSessionManager:
 
         logger.info(f"Finalizing session {self.current_session.session_id}")
 
-        # Mark completion
+        
         self.current_session.completed_at = datetime.now(timezone.utc)
         self._update_session_state(SessionState.COMPLETE)
 
-        # Log finalization
+        
         self._log_session_event("session_finalized", {
             "duration": self.current_session.duration_seconds,
             "devices": len(self.current_session.participating_devices),
             "files": len(self.current_session.files_generated)
         })
 
-        # Save final metadata
+        
         self._save_session_metadata()
 
         return True
@@ -402,20 +402,20 @@ class AdvancedSessionManager:
         Returns:
             True if all devices acknowledged successfully
         """
-        # TODO: Integrate with network server to send actual JSON commands
-        # For now, simulate the process
+        
+        
 
         success_count = 0
 
         for device in devices:
             try:
-                # Simulate command sending and acknowledgment
-                await asyncio.sleep(0.1)  # Simulate network delay
+                
+                await asyncio.sleep(0.1)  
 
-                # Mark device as acknowledged (simulation)
+                
                 self.current_session.devices_acknowledged_start.append(device.device_id)
 
-                # Update device state in registry
+                
                 self.device_manager.get_registry().update_device_state(
                     device.device_id, DeviceConnectionState.RECORDING
                 )
@@ -439,7 +439,7 @@ class AdvancedSessionManager:
         logger.info(
             f"Start command success rate: {success_count}/{len(devices)} ({success_rate:.1%})")
 
-        # Consider success if at least minimum threshold of devices responded
+        
         return success_rate >= self.MIN_SUCCESS_RATE_FOR_START
 
     async def _send_stop_commands_to_devices(self) -> bool:
@@ -452,20 +452,20 @@ class AdvancedSessionManager:
         if not self.current_session.participating_devices:
             return True
 
-        # TODO: Integrate with network server to send actual JSON commands
-        # For now, simulate the process
+        
+        
 
         success_count = 0
 
         for device_id in self.current_session.participating_devices:
             try:
-                # Simulate command sending and acknowledgment
-                await asyncio.sleep(0.1)  # Simulate network delay
+                
+                await asyncio.sleep(0.1)  
 
-                # Mark device as acknowledged (simulation)
+                
                 self.current_session.devices_acknowledged_stop.append(device_id)
 
-                # Update device state in registry
+                
                 self.device_manager.get_registry().update_device_state(
                     device_id, DeviceConnectionState.ONLINE
                 )
@@ -490,7 +490,7 @@ class AdvancedSessionManager:
         logger.info(
             f"Stop command success rate: {success_count}/{device_count} ({success_rate:.1%})")
 
-        # Consider success if at least minimum threshold of devices responded
+        
         return success_rate >= self.MIN_SUCCESS_RATE_FOR_STOP
 
     def _update_session_state(self, new_state: SessionState) -> None:
@@ -516,7 +516,7 @@ class AdvancedSessionManager:
             "data": data
         }
 
-        # Fix: Use sync_events directly instead of dynamically adding event_log
+        
         self.current_session.sync_events.append(event)
 
     def _save_session_metadata(self) -> None:
@@ -536,7 +536,7 @@ class AdvancedSessionManager:
         except Exception as e:
             logger.error(f"Failed to save session metadata: {e}")
 
-    # Getters and Status Methods
+    
 
     def get_current_session(self) -> Optional[SessionMetadata]:
         """Get current session metadata."""
@@ -587,7 +587,7 @@ class AdvancedSessionManager:
             "sessions_by_state": {}
         }
 
-        # Count sessions by state
+        
         for session in self.session_history.values():
             state = session.state.value
             stats["sessions_by_state"][state] = stats["sessions_by_state"].get(state, 0) + 1

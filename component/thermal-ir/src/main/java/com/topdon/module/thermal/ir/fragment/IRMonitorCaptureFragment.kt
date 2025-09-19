@@ -17,10 +17,7 @@ import com.topdon.module.thermal.ir.R
 import com.topdon.module.thermal.ir.activity.IRMonitorActivity
 
 class IRMonitorCaptureFragment : BaseFragment() {
-    /**
-
-
-     */
+    
     private var isTC007 = false
 
     private lateinit var animationView: LottieAnimationView

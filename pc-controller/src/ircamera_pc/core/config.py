@@ -26,7 +26,7 @@ class ConfigManager:
             config_path: Path to configuration file. If None, uses default location.
         """
         if config_path is None:
-            # Default to config/config.yaml relative to project root
+            
             project_root = Path(__file__).parent.parent.parent.parent
             config_path = project_root / "config" / "config.yaml"
 
@@ -55,7 +55,7 @@ class ConfigManager:
         """Return default configuration if file loading fails."""
         return {
             "network": {
-                "server_host": "127.0.0.1",  # Safer default - localhost only
+                "server_host": "127.0.0.1",  
                 "server_port": 8080,
                 "max_connections": 8,
                 "heartbeat_interval": 5,
@@ -127,13 +127,13 @@ class ConfigManager:
         keys = key.split(".")
         config = self._config
 
-        # Navigate to parent of target key
+        
         for k in keys[:-1]:
             if k not in config:
                 config[k] = {}
             config = config[k]
 
-        # Set the final key
+        
         config[keys[-1]] = value
         logger.debug(f"Configuration updated: {key} = {value}")
 
@@ -159,5 +159,5 @@ class ConfigManager:
         return self._config.copy()
 
 
-# Global configuration instance
+
 config = ConfigManager()

@@ -10,7 +10,7 @@ import os
 import sys
 from pathlib import Path
 
-# Add src to path
+
 src_dir = Path(__file__).parent / "src"
 sys.path.insert(0, str(src_dir))
 
@@ -24,7 +24,7 @@ def main():
     print("Starting Hub-and-Spoke Architecture Implementation...")
     print()
 
-    # Check environment
+    
     print("Environment Check:")
     try:
         import PyQt6
@@ -40,13 +40,13 @@ def main():
 
     print()
 
-    # Set Qt platform for headless environments
+    
     if "DISPLAY" not in os.environ and "QT_QPA_PLATFORM" not in os.environ:
         os.environ["QT_QPA_PLATFORM"] = "offscreen"
         print("ℹ Running in headless mode (no display detected)")
         print()
 
-    # Launch application
+    
     try:
         from ircamera_pc.gui.app_mvp import main as app_main
 

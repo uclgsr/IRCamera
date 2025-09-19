@@ -44,7 +44,7 @@ class App : BaseApplication() {
     override fun getSoftWareCode(): String = BuildConfig.SOFT_CODE
 
     override fun isDomestic(): Boolean =
-        false // Default to international since flavors were removed
+        false 
 
     val activityNameList: MutableList<String> = mutableListOf()
 
@@ -66,7 +66,7 @@ class App : BaseApplication() {
         if (!isDomestic()) {
 
             UrlConstant.setBaseUrl("${HttpConfig.HOST}/", false)
-            SharedManager.setBaseHost(UrlConstant.BASE_URL) // 更新app服务地址
+            SharedManager.setBaseHost(UrlConstant.BASE_URL) 
         }
 
         CoroutineScope(Dispatchers.IO).launch {
@@ -114,23 +114,6 @@ class App : BaseApplication() {
 
     private fun initZoho() {
 
-        /*
-        ZohoSalesIQ.init(
-            this,
-            "IjGWlJ%2FAnwvKPO0yHSMeLDRbq9%2Bcumf0TA6lWzHNybOq7Ew5UI7135B1F4y60Vwh",
-            "CvYpd1tLP6hT1aJmYxGdvW8UtM0LUMt6bBvazW%2FbsCBFODZM54UgnVzDVtVbh%2F3hcFU7q4JlCZCw7vElzm8MeN5MdZjWoFSAKHNNgYfT33vNaBPm8ASTII05T57%2F3WxK",
-            null,
-            object : InitListener {
-                override fun onInitSuccess() {
-
-                    XLog.e("bcf", "ZohoSalesIQ成功")
-                }
-
-                override fun onInitError(errorCode: Int, errorMessage: String?) {
-
-                    XLog.e("bcf", "ZohoSalesIQ失敗")
-                }
-            })
-         */
+        
     }
 }

@@ -11,14 +11,14 @@ from typing import Any
 try:
     from loguru import logger
 except ImportError:
-    # Fallback to standard logging if loguru is not available
+    
     logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
     logger = logging.getLogger(__name__)
 
 try:
     from ..core.config import config
 except ImportError:
-    # Mock config for headless mode
+    
     class MockConfig:
         def __getattr__(self, name):
             return "default"
@@ -34,7 +34,7 @@ except ImportError:
     GUI_AVAILABLE = False
 
 
-    # Mock classes for headless mode
+    
     class QObject:
         pass
 
@@ -46,7 +46,7 @@ except ImportError:
 class LogHandler(QObject):
     """Custom log handler that emits Qt signals for GUI integration."""
 
-    log_message = pyqtSignal(str, str, str)  # level, message, timestamp
+    log_message = pyqtSignal(str, str, str)  
 
     def __init__(self):
         """Initialize log handler."""
@@ -54,12 +54,12 @@ class LogHandler(QObject):
 
     def write(self, record) -> Any:
         """Write log record."""
-        # Extract relevant information from loguru record
+        
         level = record["level"].name
         message = record["message"]
         timestamp = record["time"].strftime("%Y-%m-%d %H:%M:%S")
 
-        # Emit signal for GUI components
+        
         self.log_message.emit(level, message, timestamp)
 
 
@@ -70,16 +70,16 @@ def setup_logging() -> LogHandler:
     Returns:
         LogHandler instance for GUI integration
     """
-    # Remove default handler
+    
     logger.remove()
 
-    # Get logging configuration
+    
     log_level = config.get("logging.level", "INFO")
     console_output = config.get("logging.console_output", True)
     file_rotation = config.get("logging.file_rotation", "1 MB")
     retention = config.get("logging.retention", "30 days")
 
-    # Set up console logging if enabled
+    
     if console_output:
         logger.add(
             sys.stdout,
@@ -93,7 +93,7 @@ def setup_logging() -> LogHandler:
             ),
         )
 
-    # Set up file logging
+    
     logger.add(
         "logs/ircamera_pc.log",
         level=log_level,
@@ -104,20 +104,20 @@ def setup_logging() -> LogHandler:
         compression="zip",
     )
 
-    # Create and configure GUI log handler
+    
     gui_handler = LogHandler()
 
-    # Add custom sink for GUI integration only if GUI is available
+    
     def gui_sink(record) -> Any:
         try:
-            # Handle both dict and Record object formats
+            
             if hasattr(record, "level"):
-                # New loguru Record object format
+                
                 level = record.level.name
                 message = record.message
                 timestamp = record.time.strftime("%H:%M:%S")
             elif hasattr(record, "get"):
-                # Dictionary format for backwards compatibility
+                
                 level = record.get("level", {}).get("name", "INFO")
                 message = record.get("message", "")
                 timestamp = (
@@ -126,24 +126,24 @@ def setup_logging() -> LogHandler:
                     else ""
                 )
             else:
-                # Fallback for unknown formats
+                
                 level = "INFO"
                 message = str(record)
                 timestamp = ""
             gui_handler.log_message.emit(level, message, timestamp)
         except Exception:
-            # Fallback for any formatting issues - handle both modes
+            
             try:
                 gui_handler.log_message.emit("INFO", str(record), "")
             except Exception:
-                # Silently ignore GUI logging errors in headless mode
+                
                 pass
 
-    # Only add GUI sink if GUI components are available
+    
     try:
         logger.add(gui_sink, level=log_level)
     except Exception:
-        # GUI not available, skip GUI logging
+        
         pass
 
     logger.info("Logging system initialized")
@@ -157,7 +157,7 @@ def get_app_icon() -> Any:
     Returns:
         QIcon or None if no icon available
     """
-    # For now, return None - icon can be added later
+    
     return None
 
 
@@ -170,7 +170,7 @@ def apply_theme(app: Any, theme_name: str = "default") -> Any:
         theme_name: Theme name to apply
     """
     if theme_name == "dark":
-        # Dark theme stylesheet
+        
         dark_style = """
         QMainWindow {
             background-color: #2d2d2d;
@@ -289,7 +289,7 @@ def apply_theme(app: Any, theme_name: str = "default") -> Any:
 
         app.setStyleSheet(dark_style)
 
-    # Default theme is handled by the main app stylesheet
+    
 
 
 def format_file_size(size_bytes: int) -> str:
@@ -367,15 +367,15 @@ def validate_session_name(name: str) -> tuple[bool, str]:
         Tuple of (is_valid, error_message)
     """
     if not name or not name.strip():
-        return True, ""  # Empty names are allowed (auto-generated)
+        return True, ""  
 
     name = name.strip()
 
-    # Check length
+    
     if len(name) > 100:
         return False, "Session name must be 100 characters or less"
 
-    # Check for invalid characters
+    
     invalid_chars = ["<", ">", ":", '"', "|", "?", "*", "/", "\\"]
     for char in invalid_chars:
         if char in name:

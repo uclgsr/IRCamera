@@ -18,18 +18,7 @@ import com.blankj.utilcode.util.SizeUtils
 import com.topdon.pseudo.R
 import kotlin.math.abs
 
-/**
 
- *
-
-
-
-
-
-
- *
- * Created by LCG on 2024/10/15.
- */
 class PseudoPickView : View {
     companion object {
         @CheckResult
@@ -85,11 +74,7 @@ class PseudoPickView : View {
 
     var selectIndex = 0
 
-    /**
-
-
-
-     */
+    
     var sourceColors: IntArray =
         intArrayOf(0xff0000ff.toInt(), 0xffff0000.toInt(), 0xffffff00.toInt())
 
@@ -130,13 +115,7 @@ class PseudoPickView : View {
         selectNotDrawable.setBounds(0, 0, SizeUtils.dp2px(16f), SizeUtils.dp2px(10f))
     }
 
-    /**
-
-
-
-
-
-     */
+    
     fun reset(
         selectIndex: Int,
         colors: IntArray,
@@ -182,7 +161,7 @@ class PseudoPickView : View {
     private var addCount = 0
 
     fun add() {
-        if (sourceColors.size >= 7) { // 最多7个圆形色块
+        if (sourceColors.size >= 7) { 
             return
         }
         addCount++
@@ -231,7 +210,7 @@ class PseudoPickView : View {
         if (sourceColors.size <= 3) {
             return
         }
-        if (isCurrentOnlyLimit()) { // 仅有的最左最右不允许删除
+        if (isCurrentOnlyLimit()) { 
             return
         }
 
@@ -260,7 +239,7 @@ class PseudoPickView : View {
 
     fun isCurrentOnlyLimit(): Boolean {
         val place: Float = places[selectIndex]
-        if (place == 0f || place == 1f) { // 是最左或最右，接下来看看是不是唯一
+        if (place == 0f || place == 1f) { 
             for (i in places.indices) {
                 if (i != selectIndex && places[i] == place) {
                     return false
@@ -394,7 +373,7 @@ class PseudoPickView : View {
                 var targetIndex = -1
                 for (i in places.indices) {
                     val centerX: Int = (barRect.left + barRect.width() * places[i]).toInt()
-                    if (downX >= centerX - selectRadius && downX <= centerX + selectRadius) { // 在该圆形色块范围内
+                    if (downX >= centerX - selectRadius && downX <= centerX + selectRadius) { 
                         if (targetIndex == -1) {
                             targetIndex = i
                             continue
@@ -420,13 +399,13 @@ class PseudoPickView : View {
                     parent.requestDisallowInterceptTouchEvent(true)
                     val oldPlace: Float = places[selectIndex]
                     val newPlace: Float = (x - barRect.left) / barRect.width()
-                    if (newPlace == oldPlace) { // 没变化，不用往下处理了
+                    if (newPlace == oldPlace) { 
                         return handleTouch
                     }
                     val currentColor: Int = sourceColors[selectIndex]
                     val oldIndex: Int = selectIndex
                     var newIndex: Int = selectIndex
-                    if (oldPlace < newPlace) { // 从左往右移
+                    if (oldPlace < newPlace) { 
                         for (i in places.indices) {
                             if (places[i] <= newPlace) {
                                 newIndex = i
@@ -434,7 +413,7 @@ class PseudoPickView : View {
                                 break
                             }
                         }
-                    } else { // 从右往左移
+                    } else { 
                         for (i in places.size - 1 downTo 0) {
                             val place = places[i]
                             if (place > newPlace) {

@@ -725,10 +725,7 @@ public class PieChartRenderer extends DataRenderer {
     @Override
     public void drawHighlighted(Canvas c, Highlight[] indices) {
 
-        /* Skip entirely if using rounded circle slices, because it doesn't make sense to highlight
-         * in this way.
-         * TODO: add support for changing slice color with highlighting rather than only shifting the slice
-         */
+        
 
         final boolean drawInnerArc = mChart.isDrawHoleEnabled() && !mChart.isDrawSlicesUnderHoleEnabled();
         if (drawInnerArc && mChart.isDrawRoundedSlicesEnabled())

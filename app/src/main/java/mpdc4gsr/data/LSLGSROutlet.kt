@@ -7,36 +7,27 @@ import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
 
-/**
- * Lab Streaming Layer (LSL) GSR Data Outlet
- * 
- * Implements optional LSL outlet for real-time GSR monitoring and visualization.
- * Addresses TODO: "Implement an optional Lab Streaming Layer outlet or similar 
- * for live GSR monitoring. This feature (for real-time visualization) is noted 
- * but not yet implemented"
- */
+
 class LSLGSROutlet {
     companion object {
         private const val TAG = "LSLGSROutlet"
         
-        // LSL stream configuration
+        
         private const val DEFAULT_SAMPLE_RATE = 128.0
         private const val DEFAULT_CHANNEL_COUNT = 1
         private const val STREAM_TYPE = "GSR"
         private const val STREAM_FORMAT = "double64"
         
-        // Buffer management
+        
         private const val MAX_BUFFER_SIZE = 1000
         private const val CHUNK_SIZE = 32
         
-        // Quality monitoring
+        
         private const val QUALITY_HISTORY_SIZE = 100
         private const val MIN_QUALITY_THRESHOLD = 0.7
     }
     
-    /**
-     * LSL Stream Information (Mock implementation - replace with actual LSL library)
-     */
+    
     data class LSLStreamInfo(
         val name: String,
         val type: String,
@@ -48,9 +39,7 @@ class LSLGSROutlet {
         val sessionId: String? = null
     )
     
-    /**
-     * LSL Stream Outlet (Mock implementation - replace with actual LSL library)
-     */
+    
     class LSLStreamOutlet(private val streamInfo: LSLStreamInfo) {
         private val isActive = AtomicBoolean(false)
         private var startTime = 0L
@@ -74,10 +63,10 @@ class LSLGSROutlet {
             }
             
             return try {
-                // Mock LSL push_sample implementation
+                
                 val actualTimestamp = timestamp ?: (System.nanoTime() / 1_000_000_000.0)
                 
-                // Simulate LSL streaming (replace with actual LSL library call)
+                
                 simulateLSLPush(data, actualTimestamp)
                 
                 sampleCount.incrementAndGet()
@@ -96,7 +85,7 @@ class LSLGSROutlet {
             }
             
             return try {
-                // Mock LSL push_chunk implementation
+                
                 for (i in dataMatrix.indices) {
                     val timestamp = timestamps?.getOrNull(i) ?: (System.nanoTime() / 1_000_000_000.0)
                     simulateLSLPush(dataMatrix[i], timestamp)
@@ -124,19 +113,17 @@ class LSLGSROutlet {
         fun getUptime(): Long = if (startTime > 0) System.currentTimeMillis() - startTime else 0L
         
         private fun simulateLSLPush(data: DoubleArray, timestamp: Double) {
-            // Simulate network latency and processing
+            
             Thread.sleep((1..5).random().toLong())
             
-            // Simulate occasional network issues
-            if (Math.random() < 0.001) { // 0.1% failure rate
+            
+            if (Math.random() < 0.001) { 
                 throw RuntimeException("Simulated network error")
             }
         }
     }
     
-    /**
-     * GSR data sample for LSL streaming
-     */
+    
     data class GSRSample(
         val timestamp: Long,
         val gsrMicrosiemens: Double,
@@ -146,9 +133,7 @@ class LSLGSROutlet {
         val quality: Double = 1.0
     )
     
-    /**
-     * LSL outlet statistics
-     */
+    
     data class OutletStatistics(
         val deviceId: String,
         val streamName: String,
@@ -160,30 +145,28 @@ class LSLGSROutlet {
         val lastSampleTime: Long
     )
     
-    // LSL outlet management
+    
     private val activeOutlets = ConcurrentHashMap<String, LSLStreamOutlet>()
     private val deviceBuffers = ConcurrentHashMap<String, LinkedList<GSRSample>>()
     private val qualityHistory = ConcurrentHashMap<String, LinkedList<Double>>()
     
-    // Streaming management
+    
     private val isStreamingEnabled = AtomicBoolean(false)
     private var streamingJob: Job? = null
     private val streamingScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     
-    // Statistics
+    
     private val totalSamplesStreamed = AtomicLong(0)
     private val streamingErrors = AtomicLong(0)
     
-    /**
-     * Create LSL stream for GSR device
-     */
+    
     fun createGSRStream(
         deviceId: String, 
         sampleRate: Double = DEFAULT_SAMPLE_RATE,
         sessionId: String? = null
     ): Boolean {
         return try {
-            // Create stream info
+            
             val streamInfo = LSLStreamInfo(
                 name = "GSR-$deviceId",
                 type = STREAM_TYPE,
@@ -194,7 +177,7 @@ class LSLGSROutlet {
                 sessionId = sessionId
             )
             
-            // Create and open outlet
+            
             val outlet = LSLStreamOutlet(streamInfo)
             if (outlet.open()) {
                 activeOutlets[deviceId] = outlet
@@ -214,9 +197,7 @@ class LSLGSROutlet {
         }
     }
     
-    /**
-     * Start LSL streaming for all active outlets
-     */
+    
     fun startStreaming(): Boolean {
         if (isStreamingEnabled.get()) {
             Log.w(TAG, "LSL streaming already enabled")
@@ -235,9 +216,7 @@ class LSLGSROutlet {
         return true
     }
     
-    /**
-     * Stop LSL streaming
-     */
+    
     fun stopStreaming() {
         if (!isStreamingEnabled.get()) {
             return
@@ -249,9 +228,7 @@ class LSLGSROutlet {
         Log.i(TAG, "Stopped LSL streaming")
     }
     
-    /**
-     * Add GSR sample to streaming buffer
-     */
+    
     fun addGSRSample(sample: GSRSample) {
         if (!isStreamingEnabled.get()) {
             return
@@ -260,44 +237,42 @@ class LSLGSROutlet {
         val buffer = deviceBuffers[sample.deviceId]
         if (buffer != null) {
             synchronized(buffer) {
-                // Add sample to buffer
+                
                 buffer.offer(sample)
                 
-                // Maintain buffer size limit
+                
                 while (buffer.size > MAX_BUFFER_SIZE) {
                     buffer.poll()
                 }
             }
             
-            // Update quality history
+            
             updateQualityHistory(sample.deviceId, sample.quality)
             
             Log.v(TAG, "Added GSR sample to LSL buffer: ${sample.deviceId} = ${sample.gsrMicrosiemens} µS")
         }
     }
     
-    /**
-     * Add batch of GSR samples
-     */
+    
     fun addGSRBatch(samples: List<GSRSample>) {
         if (!isStreamingEnabled.get() || samples.isEmpty()) {
             return
         }
         
-        // Group samples by device
+        
         val samplesByDevice = samples.groupBy { it.deviceId }
         
         for ((deviceId, deviceSamples) in samplesByDevice) {
             val buffer = deviceBuffers[deviceId]
             if (buffer != null) {
                 synchronized(buffer) {
-                    // Add all samples
+                    
                     for (sample in deviceSamples) {
                         buffer.offer(sample)
                         updateQualityHistory(deviceId, sample.quality)
                     }
                     
-                    // Maintain buffer size limit
+                    
                     while (buffer.size > MAX_BUFFER_SIZE) {
                         buffer.poll()
                     }
@@ -308,9 +283,7 @@ class LSLGSROutlet {
         }
     }
     
-    /**
-     * Remove LSL stream for device
-     */
+    
     fun removeGSRStream(deviceId: String): Boolean {
         val outlet = activeOutlets.remove(deviceId)
         deviceBuffers.remove(deviceId)
@@ -326,9 +299,7 @@ class LSLGSROutlet {
         }
     }
     
-    /**
-     * Remove all LSL streams
-     */
+    
     fun removeAllStreams() {
         stopStreaming()
         
@@ -344,27 +315,23 @@ class LSLGSROutlet {
         Log.i(TAG, "Removed all LSL GSR streams")
     }
     
-    /**
-     * Start streaming job
-     */
+    
     private fun startStreamingJob() {
         streamingJob = streamingScope.launch {
             while (isActive && isStreamingEnabled.get()) {
                 try {
                     processBufferedSamples()
-                    delay(50) // 20Hz processing rate
+                    delay(50) 
                 } catch (e: Exception) {
                     Log.e(TAG, "Error in LSL streaming job: ${e.message}")
                     streamingErrors.incrementAndGet()
-                    delay(1000) // Longer delay on error
+                    delay(1000) 
                 }
             }
         }
     }
     
-    /**
-     * Process buffered samples for all devices
-     */
+    
     private suspend fun processBufferedSamples() {
         for ((deviceId, buffer) in deviceBuffers) {
             val outlet = activeOutlets[deviceId]
@@ -374,14 +341,12 @@ class LSLGSROutlet {
         }
     }
     
-    /**
-     * Process buffer for specific device
-     */
+    
     private suspend fun processDeviceBuffer(deviceId: String, buffer: LinkedList<GSRSample>, outlet: LSLStreamOutlet) {
         val samplesToStream = mutableListOf<GSRSample>()
         
         synchronized(buffer) {
-            // Extract chunk of samples
+            
             while (samplesToStream.size < CHUNK_SIZE && buffer.isNotEmpty()) {
                 buffer.poll()?.let { samplesToStream.add(it) }
             }
@@ -392,22 +357,20 @@ class LSLGSROutlet {
         }
     }
     
-    /**
-     * Stream chunk of samples via LSL
-     */
+    
     private suspend fun streamSampleChunk(deviceId: String, samples: List<GSRSample>, outlet: LSLStreamOutlet) {
         return withContext(Dispatchers.IO) {
             try {
-                // Prepare data matrices
+                
                 val dataMatrix = Array(samples.size) { i ->
                     doubleArrayOf(samples[i].gsrMicrosiemens)
                 }
                 
                 val timestamps = DoubleArray(samples.size) { i ->
-                    samples[i].timestamp / 1_000_000_000.0 // Convert ns to seconds
+                    samples[i].timestamp / 1_000_000_000.0 
                 }
                 
-                // Stream chunk
+                
                 if (outlet.pushChunk(dataMatrix, timestamps)) {
                     totalSamplesStreamed.addAndGet(samples.size.toLong())
                     Log.v(TAG, "Streamed ${samples.size} GSR samples via LSL: $deviceId")
@@ -423,16 +386,14 @@ class LSLGSROutlet {
         }
     }
     
-    /**
-     * Update quality history for device
-     */
+    
     private fun updateQualityHistory(deviceId: String, quality: Double) {
         val history = qualityHistory[deviceId]
         if (history != null) {
             synchronized(history) {
                 history.offer(quality)
                 
-                // Maintain history size limit
+                
                 while (history.size > QUALITY_HISTORY_SIZE) {
                     history.poll()
                 }
@@ -440,9 +401,7 @@ class LSLGSROutlet {
         }
     }
     
-    /**
-     * Get outlet statistics for device
-     */
+    
     fun getOutletStatistics(deviceId: String): OutletStatistics? {
         val outlet = activeOutlets[deviceId] ?: return null
         val buffer = deviceBuffers[deviceId] ?: return null
@@ -468,9 +427,7 @@ class LSLGSROutlet {
         )
     }
     
-    /**
-     * Get statistics for all outlets
-     */
+    
     fun getAllOutletStatistics(): Map<String, OutletStatistics> {
         val allStats = mutableMapOf<String, OutletStatistics>()
         
@@ -483,9 +440,7 @@ class LSLGSROutlet {
         return allStats
     }
     
-    /**
-     * Get overall LSL system statistics
-     */
+    
     fun getSystemStatistics(): Map<String, Any> {
         val activeOutletCount = activeOutlets.count { it.value.isOpen() }
         val totalBufferSize = deviceBuffers.values.sumOf { buffer ->
@@ -511,32 +466,26 @@ class LSLGSROutlet {
         )
     }
     
-    /**
-     * Check if LSL is available (mock implementation)
-     */
+    
     fun isLSLAvailable(): Boolean {
-        // Mock LSL availability check - replace with actual LSL library detection
+        
         return try {
-            // Simulate LSL library availability check
+            
             Log.d(TAG, "Checking LSL availability...")
-            true // Always available in mock implementation
+            true 
         } catch (e: Exception) {
             Log.w(TAG, "LSL not available: ${e.message}")
             false
         }
     }
     
-    /**
-     * Get LSL library version (mock implementation)
-     */
+    
     fun getLSLVersion(): String {
-        // Mock version - replace with actual LSL library version
+        
         return "1.16.2-mock"
     }
     
-    /**
-     * Cleanup all resources
-     */
+    
     fun cleanup() {
         stopStreaming()
         removeAllStreams()

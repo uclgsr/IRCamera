@@ -15,14 +15,10 @@ import com.infisense.usbir.utils.OpencvTools
 import com.infisense.usbir.utils.PseudocodeUtils
 import com.topdon.lib.core.bean.AlarmBean
 
-import com.topdon.module.thermal.ir.bean.DataBean // Use local data bean instead
+import com.topdon.module.thermal.ir.bean.DataBean 
 import java.nio.ByteBuffer
 
-/**
 
- *
- * Created by LCG on 2024/11/30.
- */
 
 class HikSurfaceView : SurfaceView {
     companion object {
@@ -65,11 +61,7 @@ class HikSurfaceView : SurfaceView {
     @Volatile
     private var pseudoType: PseudoColorType = PseudoColorType.PSEUDO_3
 
-    /**
-
-     *
-
-     */
+    
     fun setPseudoCode(code: Int) {
         pseudoType = PseudocodeUtils.changePseudocodeModeByOld(code)
     }

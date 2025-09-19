@@ -40,7 +40,7 @@ class MultiModalSynchronizer:
         self.gsr_data = None
         self.sync_events = None
 
-        # Load session metadata
+        
         self._load_session_metadata()
 
     def _load_session_metadata(self):
@@ -65,13 +65,13 @@ class MultiModalSynchronizer:
             print("Warning: No thermal data files found")
             return pd.DataFrame()
 
-        thermal_file = thermal_files[0]  # Use first file found
+        thermal_file = thermal_files[0]  
         print(f"Loading thermal data from: {thermal_file}")
 
-        # Read CSV, skipping comment lines
+        
         df = pd.read_csv(thermal_file, comment='#')
 
-        # Ensure we have the expected columns
+        
         expected_cols = ['timestamp_wall_ms', 'timestamp_relative_ms', 'timestamp_monotonic_ns',
                          'frame_sequence', 'min_temp_c', 'avg_temp_c', 'max_temp_c', 'pixel_count']
 
@@ -80,7 +80,7 @@ class MultiModalSynchronizer:
         else:
             print("Warning: Thermal data may be in legacy format without full synchronization")
 
-        # Convert timestamps to datetime for easier handling
+        
         if 'timestamp_wall_ms' in df.columns:
             df['datetime'] = pd.to_datetime(df['timestamp_wall_ms'], unit='ms')
 
@@ -95,13 +95,13 @@ class MultiModalSynchronizer:
             print("Warning: No GSR data files found")
             return pd.DataFrame()
 
-        gsr_file = gsr_files[0]  # Use first file found
+        gsr_file = gsr_files[0]  
         print(f"Loading GSR data from: {gsr_file}")
 
-        # Read CSV, skipping comment lines
+        
         df = pd.read_csv(gsr_file, comment='#')
 
-        # Ensure we have the expected columns
+        
         expected_cols = ['timestamp_wall_ms', 'timestamp_relative_ms', 'timestamp_monotonic_ns',
                          'gsr_microsiemens', 'gsr_raw_12bit', 'ppg_raw', 'quality_score',
                          'connection_rssi']
@@ -111,7 +111,7 @@ class MultiModalSynchronizer:
         else:
             print("Warning: GSR data may be in legacy format without full synchronization")
 
-        # Convert timestamps to datetime
+        
         if 'timestamp_wall_ms' in df.columns:
             df['datetime'] = pd.to_datetime(df['timestamp_wall_ms'], unit='ms')
 
@@ -152,7 +152,7 @@ class MultiModalSynchronizer:
         """
         aligned_data = {}
 
-        # Use relative timestamps as the common time base
+        
         if self.thermal_data is not None and not self.thermal_data.empty:
             if 'timestamp_relative_ms' in self.thermal_data.columns:
                 thermal_aligned = self.thermal_data.copy()
@@ -191,13 +191,13 @@ class MultiModalSynchronizer:
         thermal_df = aligned_data['thermal']
         gsr_df = aligned_data['gsr']
 
-        # Find overlapping time ranges
+        
         thermal_times = thermal_df['common_time_ms'].values
         gsr_times = gsr_df['common_time_ms'].values
 
         for thermal_time in thermal_times[
-                            ::10]:  # Sample every 10th thermal frame to reduce computation
-            # Find GSR samples within window
+                            ::10]:  
+            
             gsr_matches = gsr_df[
                 (gsr_df['common_time_ms'] >= thermal_time - window_ms) &
                 (gsr_df['common_time_ms'] <= thermal_time + window_ms)
@@ -205,7 +205,7 @@ class MultiModalSynchronizer:
 
             if not gsr_matches.empty:
                 thermal_match = thermal_df[thermal_df['common_time_ms'] == thermal_time].iloc[0]
-                gsr_match = gsr_matches.iloc[0]  # Take closest match
+                gsr_match = gsr_matches.iloc[0]  
 
                 simultaneous_events.append({
                     'common_time_ms': thermal_time,
@@ -229,7 +229,7 @@ class MultiModalSynchronizer:
             f"Recording Duration: {self.session_metadata.get('recordingDurationMs', 'N/A')}ms")
         report.append("")
 
-        # Data stream summary
+        
         if self.thermal_data is not None and not self.thermal_data.empty:
             thermal_duration = self.thermal_data['timestamp_relative_ms'].max() - self.thermal_data[
                 'timestamp_relative_ms'].min()
@@ -241,13 +241,13 @@ class MultiModalSynchronizer:
                 'timestamp_relative_ms'].min()
             report.append(f"GSR Data: {len(self.gsr_data)} samples over {gsr_duration:.1f}ms")
 
-        # Sync events
+        
         if self.sync_events is not None and not self.sync_events.empty:
             report.append(f"Sync Events: {len(self.sync_events)} recorded")
             for _, event in self.sync_events.iterrows():
                 report.append(f"  - {event['event_type']} at {event['relative_offset_ms']:.1f}ms")
 
-        # Simultaneous events analysis
+        
         simultaneous = self.find_simultaneous_events()
         if simultaneous:
             report.append(f"\nSimultaneous Events: {len(simultaneous)} found")
@@ -282,19 +282,19 @@ def main():
     args = parser.parse_args()
 
     try:
-        # Initialize synchronizer
+        
         synchronizer = MultiModalSynchronizer(args.session_directory)
 
-        # Load data streams
+        
         synchronizer.load_thermal_data()
         synchronizer.load_gsr_data()
         synchronizer.extract_sync_events()
 
-        # Generate and display sync report
+        
         report = synchronizer.generate_sync_report()
         print(report)
 
-        # Export aligned data if requested
+        
         if args.export:
             synchronizer.export_aligned_data()
 

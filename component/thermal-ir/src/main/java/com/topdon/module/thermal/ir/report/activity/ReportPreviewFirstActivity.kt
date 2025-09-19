@@ -9,13 +9,7 @@ import com.topdon.module.thermal.ir.report.view.ReportInfoView
 import com.topdon.module.thermal.ir.report.view.WatermarkView
 import com.topdon.lib.ui.R as UiR
 
-/**
 
- *
-
-
-
- */
 
 
 class ReportPreviewFirstActivity : BaseActivity() {
