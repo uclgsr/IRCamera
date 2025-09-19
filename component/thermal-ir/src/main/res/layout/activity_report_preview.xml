@@ -123,7 +123,7 @@
                             android:includeFontPadding="false"
                             android:textColor="@color/white"
                             android:textSize="14sp"
-                            tools:text="深圳市南山区前海街道" />
+                            tools:text="[TEXT]" />
                     </LinearLayout>
 
                     <TextView
@@ -134,7 +134,7 @@
                         android:paddingHorizontal="16dp"
                         android:textColor="@color/white"
                         android:textSize="22sp"
-                        tools:text="豪华大别墅" />
+                        tools:text="[TEXT]" />
 
                     <TextView
                         android:id="@+id/tv_detect_time"
@@ -144,7 +144,7 @@
                         android:paddingHorizontal="16dp"
                         android:textColor="@color/color_B3FFFFFF"
                         android:textSize="12sp"
-                        tools:text="检测时间：2024-7-30 08:19" />
+                        tools:text="[TEXT]Time：2024-7-30 08:19" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -196,7 +196,7 @@
                                 android:layout_height="wrap_content"
                                 android:textColor="@color/white"
                                 android:textSize="18sp"
-                                tools:text="2028年" />
+                                tools:text="2028Year" />
 
                             <TextView
                                 android:layout_width="wrap_content"
