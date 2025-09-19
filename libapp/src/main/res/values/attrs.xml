@@ -18,4 +18,8 @@
         <attr name="lms_dot_move_rate" format="float" />
     </declare-styleable>
 
+    <!-- Custom attributes for UI components -->
+    <attr name="titleText" format="string" />
+    <attr name="start_height" format="dimension" />
+
 </resources>
