@@ -537,7 +537,7 @@ class ThermalCameraRecorder(
                         context: android.content.Context?,
                         intent: android.content.Intent?
                     ) {
-                        if ("mpdc4gsr.USB_PERMISSION" == intent?.action) {
+                        if ("${com.csl.irCamera.BuildConfig.APPLICATION_ID}.USB_PERMISSION" == intent?.action) {
                             val device =
                                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
                                     intent.getParcelableExtra(
