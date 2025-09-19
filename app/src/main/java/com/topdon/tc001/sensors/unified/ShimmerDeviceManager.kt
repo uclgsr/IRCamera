@@ -226,10 +226,10 @@ class ShimmerDeviceManager(
             // Store callback for stopping later
             currentScanCallback = scanCallback
             
-        } catch (SecurityException e) {
+        } catch (e: SecurityException) {
             Log.e(TAG, "Security exception during BLE scan start", e)
             isScanning.set(false)
-        } catch (Exception e) {
+        } catch (e: Exception) {
             Log.e(TAG, "Unexpected error starting BLE scan", e)
             isScanning.set(false)
         }
@@ -305,9 +305,9 @@ class ShimmerDeviceManager(
                 try {
                     bluetoothLeScanner?.stopScan(callback)
                     Log.d(TAG, "BLE scan stopped successfully")
-                } catch (SecurityException e) {
+                } catch (e: SecurityException) {
                     Log.w(TAG, "Security exception stopping BLE scan", e)
-                } catch (Exception e) {
+                } catch (e: Exception) {
                     Log.w(TAG, "Error stopping BLE scan", e)
                 }
             }
@@ -319,48 +319,6 @@ class ShimmerDeviceManager(
             
         } catch (e: Exception) {
             Log.e(TAG, "Error stopping device scanning", e)
-            isScanning.set(false)
-        }
-    }
-                    
-                    discoveredDevices[device.address] = deviceInfo
-                    
-                    // Emit updated results
-                    lifecycleOwner.lifecycleScope.launch {
-                        _scanResults.emit(discoveredDevices.values.toList())
-                    }
-                }
-            }
-
-            override fun onScanFailed(errorCode: Int) {
-                Log.e(TAG, "BLE scan failed with error code: $errorCode")
-                isScanning.set(false)
-            }
-        }
-
-        try {
-            Log.i(TAG, "Starting enhanced BLE scan for nearby Shimmer devices...")
-            bluetoothLeScanner.startScan(null, scanSettings, scanCallback)
-
-            // Scan for specified timeout period with periodic updates
-            var scanTime = 0L
-            while (isScanning.get() && scanTime < SCAN_TIMEOUT_MS) {
-                delay(1000)
-                scanTime += 1000
-
-                // Emit current results every second
-                _scanResults.emit(discoveredDevices.values.toList())
-                Log.d(TAG, "Scan progress: ${discoveredDevices.size} Shimmer devices found")
-            }
-
-            bluetoothLeScanner.stopScan(scanCallback)
-            Log.i(TAG, "BLE scan completed. Total ${discoveredDevices.size} Shimmer devices found")
-
-        } catch (e: SecurityException) {
-            Log.e(TAG, "Security exception during BLE scan - check permissions", e)
-            isScanning.set(false)
-        } catch (e: Exception) {
-            Log.e(TAG, "Exception during BLE scan", e)
             isScanning.set(false)
         }
     }
