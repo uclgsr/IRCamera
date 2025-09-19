@@ -208,7 +208,7 @@ class FaultTolerantSessionDemoActivity : ComponentActivity() {
 
             Log.i(TAG, "Starting session: ${sessionDir.absolutePath}")
 
-            val success = recordingController.startSession(sessionDir.absolutePath)
+            val success = recordingController.startRecording(sessionDir.absolutePath)
 
             if (success) {
                 val activeSensors = recordingController.getActiveSensorCount()

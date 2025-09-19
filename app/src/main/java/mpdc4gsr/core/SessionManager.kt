@@ -77,9 +77,12 @@ class SessionManager(
         val required: Boolean = true
     )
 
+    private var onSessionStateChanged: ((SessionState) -> Unit)? = null
     private var onDeviceJoined: ((DeviceInfo) -> Unit)? = null
     private var onDeviceLeft: ((DeviceInfo) -> Unit)? = null
     private var onSyncRequired: ((List<DeviceInfo>) -> Unit)? = null
+    private var onWorkflowStateChanged: ((SessionWorkflowState) -> Unit)? = null
+    private var onWorkflowStepCompleted: ((String, Boolean) -> Unit)? = null
 
     data class SessionInfo(
         val id: String,
