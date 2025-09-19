@@ -334,7 +334,7 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
         try {
             sessionManager = SessionManager(
                 getApplication(),
-                com.topdon.tc001.logging.StructuredLogger.getInstance(getApplication())
+                mpdc4gsr.core.StructuredLogger.getInstance(getApplication())
             )
 
             _sessionState.postValue(SessionState.IDLE)

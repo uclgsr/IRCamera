@@ -485,7 +485,7 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
         try {
             val intent = Intent(
                 requireContext(),
-                com.topdon.tc001.camera.integration.DualModeCameraActivity::class.java
+                mpdc4gsr.camera.integration.DualModeCameraActivity::class.java
             )
             intent.putExtra("INITIAL_MODE", initialMode)
             intent.putExtra("ENABLE_SAMSUNG_OPTIMIZATIONS", true)

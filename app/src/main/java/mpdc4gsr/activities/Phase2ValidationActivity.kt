@@ -15,7 +15,7 @@ import com.csl.irCamera.R
 import mpdc4gsr.controller.HardwareValidationController
 import mpdc4gsr.controller.RecordingController
 import mpdc4gsr.controller.ValidationReport
-import mpdc4gsr.controller.ValidationResult
+import mpdc4gsr.controller.HardwareValidationResult
 import mpdc4gsr.permissions.PermissionController
 import kotlinx.coroutines.launch
 import org.json.JSONObject
@@ -42,7 +42,7 @@ class Phase2ValidationActivity : AppCompatActivity() {
     private lateinit var recordingController: RecordingController
     private lateinit var hardwareValidationController: HardwareValidationController
 
-    private var currentValidationReport: mpdc4gsr.controller.HardwareValidationController.ValidationReport? = null
+    private var currentValidationReport: ValidationReport? = null
     private var isValidationRunning = false
 
     private val permissionLauncher = registerForActivityResult(
@@ -258,7 +258,7 @@ class Phase2ValidationActivity : AppCompatActivity() {
         Log.i(TAG, "Validation status: $status")
     }
 
-    private fun displayValidationResults(report: mpdc4gsr.controller.HardwareValidationController.ValidationReport) {
+    private fun displayValidationResults(report: ValidationReport) {
         val resultsText = generateValidationResultsText(report)
         validationResultsText.text = resultsText
         validationResultsScrollView.visibility = View.VISIBLE
@@ -274,7 +274,7 @@ class Phase2ValidationActivity : AppCompatActivity() {
         validationStatusText.text = statusMessage
     }
 
-    private fun generateValidationResultsText(report: mpdc4gsr.controller.HardwareValidationController.ValidationReport): String {
+    private fun generateValidationResultsText(report: ValidationReport): String {
         val sb = StringBuilder()
 
         sb.append("=== HARDWARE VALIDATION REPORT ===\n")
@@ -351,7 +351,7 @@ class Phase2ValidationActivity : AppCompatActivity() {
         } ?: showToast("No validation report available to export")
     }
 
-    private fun convertReportToJson(report: mpdc4gsr.controller.HardwareValidationController.ValidationReport): String {
+    private fun convertReportToJson(report: ValidationReport): String {
         val json = JSONObject()
         json.put("timestamp", report.timestamp)
         json.put("device_info", JSONObject().apply {
