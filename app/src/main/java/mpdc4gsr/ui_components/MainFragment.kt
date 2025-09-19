@@ -198,7 +198,7 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
 
     override fun onClick(v: View?) {
         when (v) {
-            binding.tvConnectDevice, binding.ivAdd -> { // 添加设备
+            binding.tvConnectDevice, binding.ivAdd -> { 
                 startActivity(Intent(requireContext(), DeviceTypeActivity::class.java))
 
 
@@ -208,8 +208,8 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onSocketMsgEvent(event: SocketMsgEvent) {
-        if (SocketCmdUtil.getCmdResponse(event.text) == WsCmdConstants.APP_EVENT_HEART_BEATS) { // 心跳
-            if (!adapter.hasConnectTC007) { // 当前连接的不是 TC007
+        if (SocketCmdUtil.getCmdResponse(event.text) == WsCmdConstants.APP_EVENT_HEART_BEATS) { 
+            if (!adapter.hasConnectTC007) { 
                 return
             }
             try {
@@ -438,11 +438,11 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
             .setTitleMessage("GSR Multi-modal Recording")
             .setMessage("Choose recording option:")
             .setPositiveListener("Dual-Mode Camera") {
-                // Dual-Mode Camera
+                
                 showDualModeCameraOptions()
             }
             .setCancelListener("Quick Recording") {
-                // Quick Recording
+                
                 try {
                     val intent = Intent(
                         requireContext(),
@@ -450,19 +450,19 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
                     )
                     startActivity(intent)
                 } catch (e: ClassNotFoundException) {
-                    // Fallback
+                    
                     NavigationManager.getInstance()
                         .build(RouterConfig.GSR_MULTI_MODAL)
                         .navigation(requireContext())
                 }
             }
-            // Remove setNeutralListener since it's not available in TipDialog API
-            // .setNeutralListener("GSR Demo") {
-            //     // GSR Demo
-            //     NavigationManager.getInstance()
-            //         .build(RouterConfig.GSR_DEMO)
-            //         .navigation(requireContext())
-            // }
+            
+            
+            
+            
+            
+            
+            
             .create().show()
     }
 

@@ -10,15 +10,7 @@ import android.widget.SeekBar
 import androidx.core.view.isVisible
 import com.topdon.module.thermal.ir.databinding.PopSeekBarBinding
 
-/**
 
- *
-
- *
- * Created by LCG on 2024/12/3.
- *
-
- */
 @SuppressLint("SetTextI18n")
 class SeekBarPopup(context: Context, hasTitle: Boolean = false) : PopupWindow() {
     var progress: Int
@@ -33,11 +25,7 @@ class SeekBarPopup(context: Context, hasTitle: Boolean = false) : PopupWindow() 
             binding.seekBar.max = value
         }
 
-    /**
-
-     *
-
-     */
+    
     var isRealTimeTrigger = false
 
     var onValuePickListener: ((progress: Int) -> Unit)? = null

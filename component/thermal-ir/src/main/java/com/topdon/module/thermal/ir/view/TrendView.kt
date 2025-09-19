@@ -11,11 +11,7 @@ import com.topdon.module.thermal.ir.R
 import com.topdon.module.thermal.ir.databinding.ViewTrendBinding
 import kotlin.math.min
 
-/**
 
- *
- * Created by LCG on 2024/12/31.
- */
 
 class TrendView : FrameLayout {
 
@@ -29,10 +25,7 @@ class TrendView : FrameLayout {
         binding.llClose.isVisible = true
     }
 
-    /**
-
-
-     */
+    
     fun refreshChart(tempList: List<Float>) {
         if (isVisible && binding.clOpen.isVisible) {
             binding.viewChartTrend.refresh(tempList)

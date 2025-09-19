@@ -17,11 +17,11 @@ object SaveSettingUtil {
 
     const val FusionTypeMeanFusion = 2
 
-    const val FusionTypeIROnly = 1 // 单独infrared
+    const val FusionTypeIROnly = 1 
 
-    const val FusionTypeVLOnly = 0 // 单独visible light
+    const val FusionTypeVLOnly = 0 
 
-    const val FusionTypeTC007Fusion = 7 // tc007的picture-in-picture
+    const val FusionTypeTC007Fusion = 7 
 
     const val FusionTypeHSLFusion = 3
     const val FusionTypeScreenFusion = 5

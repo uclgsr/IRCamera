@@ -15,39 +15,25 @@ public interface IPieDataSet extends IDataSet<PieEntry> {
 
     PieDataSet.ValuePosition getYValuePosition();
 
-    /**
-     * When valuePosition is OutsideSlice, use slice colors as line color if true
-     */
+    
     boolean isUsingSliceColorAsValueLineColor();
 
-    /**
-     * When valuePosition is OutsideSlice, indicates line color
-     */
+    
     int getValueLineColor();
 
-    /**
-     * When valuePosition is OutsideSlice, indicates line width
-     */
+    
     float getValueLineWidth();
 
-    /**
-     * When valuePosition is OutsideSlice, indicates offset as percentage out of the slice size
-     */
+    
     float getValueLinePart1OffsetPercentage();
 
-    /**
-     * When valuePosition is OutsideSlice, indicates length of first half of the line
-     */
+    
     float getValueLinePart1Length();
 
-    /**
-     * When valuePosition is OutsideSlice, indicates length of second half of the line
-     */
+    
     float getValueLinePart2Length();
 
-    /**
-     * When valuePosition is OutsideSlice, this allows variable line length
-     */
+    
     boolean isValueLineVariableLength();
 
 }

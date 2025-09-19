@@ -79,11 +79,11 @@ enum class NetworkStatus(
         }
 
     enum class StatusColor {
-        GREEN,    // Success/Connected
-        BLUE,     // Ready/Available
-        YELLOW,   // In Progress
-        ORANGE,   // Warning
-        RED       // Error/Disconnected
+        GREEN,    
+        BLUE,     
+        YELLOW,   
+        ORANGE,   
+        RED       
     }
 
     companion object {

@@ -114,9 +114,7 @@ public class ViewPortHandler {
         return Math.min(mContentRect.width(), mContentRect.height());
     }
 
-    /**
-     * CODE BELOW THIS RELATED TO SCALING AND GESTURES
-     */
+    
 
     public Matrix zoomIn(float x, float y) {
 

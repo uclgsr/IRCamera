@@ -77,7 +77,7 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
 
     override fun initView() {
         requireActivity().window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-        rotateType = 3 // 默认旋转270度
+        rotateType = 3 
         mCenterTextView = requireView().findViewById(R.id.temp_display)
         mMaxTextView = requireView().findViewById(R.id.max_temp_display)
         mMinTextView = requireView().findViewById(R.id.min_temp_display)
@@ -223,7 +223,7 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
                         if (upValue > downValue) {
                             viewModel.yuvArea(yuv, temp, upValue, downValue)
                         }
-                        mGuideInterface!!.yuv2Bitmap(mIrBitmap, yuv) // 视频转码yuv
+                        mGuideInterface!!.yuv2Bitmap(mIrBitmap, yuv) 
 
                         try {
                             mIrSurfaceView!!.doDraw(mIrBitmap, mGuideInterface!!.getImageStatus())
@@ -415,60 +415,60 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
             }
 
             2002 -> {
-// 添加线
+
                 clearFenceUI()
                 addLine()
             }
 
             2003 -> {
-// 添加围栏
+
                 clearFenceUI()
                 addFence()
             }
 
             2004 -> {
-// 添加temperature
-//                onTempBtnClick()
+
+
                 addLimit()
             }
 
             2006 -> {
-// 清除还原
+
                 clearFence()
             }
 
             in 3000..3010 -> {
-// setpseudo-color
+
                 setColor(event.action)
             }
 
             4001 -> {
-// rotation
+
                 rotate()
                 clearFence()
             }
 
             4002 -> {
-// image增强
+
                 enhance()
             }
 
             4003 -> {
-// image增强
+
                 camera()
             }
 
             in 5000..5010 -> {
-// 全屏
+
                 ToastTools.showShort("全屏")
             }
         }
     }
 
-    // 复位
+    
     private fun clearFence() {
         clearFenceUI()
-// temperature限值
+
         upValue = 0f
         downValue = 0f
         selectType = 0
@@ -490,7 +490,7 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
         if (type < 0 || type > 10) {
             type = 0
         }
-        updatePalette(type) // 默认2
+        updatePalette(type) 
     }
 
     private fun updatePalette(index: Int) {
@@ -515,10 +515,10 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
         showFence(3)
     }
 
-    // display点线面布局
+    
     private fun showFence(index: Int) {
         if (fenceFlag.getIndex(index) == 0) {
-            fenceFlag = 1.shl(4 * (index - 1)) // 设置001 or 010 or 100
+            fenceFlag = 1.shl(4 * (index - 1)) 
             mFenceLayout!!.visibility = View.VISIBLE
             requireView().findViewById<com.topdon.lib.ui.fence.FencePointView>(R.id.fence_point_view).visibility =
                 if (fenceFlag.getIndex(1) > 0) View.VISIBLE else View.GONE
@@ -542,7 +542,7 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
                     startPoint: IntArray,
                     srcRect: IntArray,
                 ) {
-// get点
+
                     selectType = 1
                     selectIndex =
                         Fence(srcRect = srcRect, rotateType = rotateType).getPointIndex(startPoint)
@@ -555,7 +555,7 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
                     endPoint: IntArray,
                     srcRect: IntArray,
                 ) {
-// get线
+
                     selectType = 2
                     selectIndex =
                         Fence(srcRect = srcRect, rotateType = rotateType)
@@ -569,7 +569,7 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
                     endPoint: IntArray,
                     srcRect: IntArray,
                 ) {
-// get面
+
                     selectType = 3
                     selectIndex =
                         Fence(srcRect = srcRect, rotateType = rotateType)
@@ -579,9 +579,9 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
     }
 
     private fun picture() {
-//        ScreenShotUtils.shotScreen(requireContext(), temp_display_lay, 1, ScreenBean())
-        // Note: ScreenShotUtils functionality requires integration with screenshot utility module
-        // ScreenShotUtils.shotScreenBitmap(requireContext(), mIrBitmap, 1, ScreenBean())
+
+        
+        
     }
 
     var isVideoRunning = false
@@ -591,48 +591,37 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
             Log.w("123", "正在录制")
             return
         }
-        // Note: FileConfig.galleryPath requires integration with file configuration module
-        // val latestResultPath = "${FileConfig.galleryPath}YapBitmapToMp4_${System.currentTimeMillis()}.mp4"
+        
+        
         val latestResultPath =
             "/tmp/YapBitmapToMp4_${System.currentTimeMillis()}.mp4" // Temporary fallback
         Log.w("123", "latestResultPath:$latestResultPath")
         YapVideoEncoder(this, File(latestResultPath)).start()
     }
 
-    // rotation
+    
     private fun rotate() {
         rotateType = if (rotateType >= 3) 0 else rotateType + 1
         mIrSurfaceView!!.setMatrix(ThermalTool.getRotate(rotateType), 256f, 192f)
         ToastTools.showShort("旋转:${ThermalTool.getRotate(rotateType)}度")
     }
 
-    // image增强
+    
     private fun enhance() {
         mIrSurfaceView!!.setOpenLut()
         val saturation = mIrSurfaceView?.getSaturationValue() ?: 0
-        // Note: SeekDialog functionality requires integration with dialog utility module
-        /*
-        SeekDialog.Builder(requireContext())
-            .setMessage(LibUiR.string.thermal_enhance)
-            .setSaturation(saturation)
-            .setPositiveListener(LibUiR.string.app_confirm) { value: Int ->
-                mIrSurfaceView?.setSaturationValue(value)//设置对比度
-            }
-            .setListener { value: Int ->
-// 实时监听
-// mIrSurfaceView?.setSaturationValue(value)//set对比度
-            }.create().show()
-         */
+        
+        
     }
 
     var isRunCamera = false
 
     private fun checkCameraPermission() {
-        // Check camera permission using modern Android APIs
+        
         if (requireContext().checkSelfPermission(android.Manifest.permission.CAMERA) == android.content.pm.PackageManager.PERMISSION_GRANTED) {
             camera()
         } else {
-            // Request camera permission
+            
             requestPermissions(arrayOf(android.Manifest.permission.CAMERA), 100)
         }
     }
@@ -650,15 +639,15 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
 
     @SuppressLint("CheckResult")
     private fun camera() {
-        // Note: RxPermissions dependency requires integration with reactive permissions module
-        // RxPermissions(requireActivity()).request(Manifest.permission.CAMERA)
-        //     .subscribe { granted: Boolean ->
+        
+        
+        
         if (isRunCamera) {
-// disabled
+
             requireView().findViewById<FrameLayout>(R.id.temp_camera_layout).visibility = View.GONE
             isRunCamera = false
         } else {
-// 打开
+
             requireView().findViewById<FrameLayout>(R.id.temp_camera_layout).visibility =
                 View.VISIBLE
             val tempCameraView =
@@ -668,7 +657,7 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
                 isRunCamera = true
             }
         }
-        //     }
+        
     }
 
     override fun size(): Int = 5 * 60

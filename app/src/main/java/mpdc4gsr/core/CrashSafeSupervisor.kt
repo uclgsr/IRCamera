@@ -437,7 +437,7 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
 
         try {
             runBlocking {
-                withTimeout(10000) { // 10 second timeout
+                withTimeout(10000) { 
                     supervisorScope.coroutineContext[Job]?.join()
                 }
             }

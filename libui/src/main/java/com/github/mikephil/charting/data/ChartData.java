@@ -125,9 +125,7 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
         }
     }
 
-    /**
-     * ONLY GETTERS AND SETTERS BELOW THIS
-     */
+    
 
     public int getDataSetCount() {
         if (mDataSets == null)

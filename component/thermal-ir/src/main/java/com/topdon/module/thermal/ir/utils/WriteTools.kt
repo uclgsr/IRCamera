@@ -12,7 +12,7 @@ object WriteTools {
     fun delete(file: File): Int {
         val uri: Uri = FileTools.getUri(file)
         XLog.w("删除文件 uri:$uri")
-        val mediaId = queryId(uri) // MediaStore.Audio.Media._ID of item to update.
+        val mediaId = queryId(uri) 
         val resolver = Utils.getApp().applicationContext.contentResolver
         val selection = "${MediaStore.Images.Media._ID} = ?"
 

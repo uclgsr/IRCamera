@@ -19,7 +19,7 @@ class GenericRequest implements Request, Comparable<GenericRequest> {
     int priority;
     RequestCallback callback;
     WriteOptions writeOptions;
-    byte[] descriptorTemp;//临时保存描述符的值
+    byte[] descriptorTemp;
 
     Queue<byte[]> remainQueue;
     byte[] sendingBytes;

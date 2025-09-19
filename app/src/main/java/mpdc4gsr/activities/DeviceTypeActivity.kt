@@ -291,12 +291,12 @@ class DeviceTypeActivity : BaseBindingActivity<ActivityDeviceTypeBinding>() {
             override fun getDeviceName(): String = "TS004"
         },
         SHIMMER3_GSR {
-            override fun isLine(): Boolean = false // Bluetooth connection
+            override fun isLine(): Boolean = false 
 
             override fun getDeviceName(): String = "Shimmer3 GSR"
         },
         PC_CONTROLLER {
-            override fun isLine(): Boolean = false // Network connection
+            override fun isLine(): Boolean = false 
 
             override fun getDeviceName(): String = "PC Controller"
         }, ;

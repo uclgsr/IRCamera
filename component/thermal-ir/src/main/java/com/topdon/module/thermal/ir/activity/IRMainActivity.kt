@@ -44,22 +44,12 @@ import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import com.topdon.lib.core.R as LibR
 
-/**
 
- *
-
-
- *
- * Created by LCG on 2024/4/18.
- */
 
 class IRMainActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var binding: ActivityIrMainBinding
 
-    /**
-
-
-     */
+    
     private var isTC007 = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -153,16 +143,16 @@ class IRMainActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(v: View?) {
         when (v) {
-            binding.clIconMonitor -> { // 监控
+            binding.clIconMonitor -> { 
                 binding.viewPage.setCurrentItem(0, false)
             }
 
-            binding.clIconGallery -> { // 图库
+            binding.clIconGallery -> { 
                 checkStoragePermission()
             }
 
 
-            binding.clIconReport -> { // 报告
+            binding.clIconReport -> { 
                 if (LMS.getInstance().isLogin) {
                     binding.viewPage.setCurrentItem(3, false)
                 } else {
@@ -175,16 +165,13 @@ class IRMainActivity : AppCompatActivity(), View.OnClickListener {
                 }
             }
 
-            binding.clIconMine -> { // 我的
+            binding.clIconMine -> { 
                 binding.viewPage.setCurrentItem(4, false)
             }
         }
     }
 
-    /**
-
-
-     */
+    
     private fun refreshTabSelect(index: Int) {
         binding.ivIconMonitor.isSelected = false
         binding.tvIconMonitor.isSelected = false
@@ -218,7 +205,7 @@ class IRMainActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun showGuideDialog() {
-        if (SharedManager.homeGuideStep == 0) { // 已看过或不再提示
+        if (SharedManager.homeGuideStep == 0) { 
             return
         }
 
@@ -377,7 +364,7 @@ class IRMainActivity : AppCompatActivity(), View.OnClickListener {
         override fun getItemCount() = 5
 
         override fun createFragment(position: Int): Fragment {
-            if (position == 1) { // 图库
+            if (position == 1) { 
                 return IRGalleryTabFragment().apply {
                     arguments =
                         Bundle().also {

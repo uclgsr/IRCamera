@@ -70,13 +70,13 @@ class PermissionController(
                 emptyArray()
             }
 
-        // USB permissions for thermal camera integration
+        
         private val USB_PERMISSIONS = arrayOf(
             "android.permission.USB_PERMISSION",
             "android.permission.ACCESS_USB_ACCESSORY"
         )
 
-        // Thermal camera device identifiers
+        
         private const val TOPDON_VENDOR_ID = 16902
         private const val TC001_PRODUCT_ID = 14082
     }
@@ -85,7 +85,7 @@ class PermissionController(
     private var permissionCallback: ((Boolean, List<String>) -> Unit)? = null
     private var usbPermissionCallback: ((Boolean, UsbDevice?) -> Unit)? = null
 
-    // Track remaining permission groups for sequential processing
+    
     private var remainingPermissionGroups: MutableList<List<String>> = mutableListOf()
     private var allRequestedPermissions: List<String> = emptyList()
 
@@ -107,9 +107,7 @@ class PermissionController(
                 hasUsbPermissions()
     }
 
-    /**
-     * Check if USB permissions are granted for thermal camera integration
-     */
+    
     fun hasUsbPermissions(): Boolean {
         return usbManager?.deviceList?.values?.any { device ->
             device.vendorId == TOPDON_VENDOR_ID && device.productId == TC001_PRODUCT_ID
@@ -117,13 +115,11 @@ class PermissionController(
     }
 
     private fun hasManualUsbPermissions(): Boolean {
-        // Check if we have at least USB host permissions
+        
         return activity.packageManager.hasSystemFeature(PackageManager.FEATURE_USB_HOST)
     }
 
-    /**
-     * Request USB permission for a specific thermal camera device
-     */
+    
     fun requestUsbPermission(device: UsbDevice, callback: (Boolean, UsbDevice?) -> Unit) {
         usbPermissionCallback = callback
 
@@ -158,9 +154,7 @@ class PermissionController(
         usbManager?.requestPermission(device, pendingIntent)
     }
 
-    /**
-     * Check for connected thermal camera devices and request permissions
-     */
+    
     fun checkAndRequestThermalCameraPermissions(callback: (Boolean, List<UsbDevice>) -> Unit) {
         val thermalDevices = usbManager?.deviceList?.values?.filter { device ->
             device.vendorId == TOPDON_VENDOR_ID && device.productId == TC001_PRODUCT_ID
@@ -189,7 +183,7 @@ class PermissionController(
             return
         }
 
-        // Request permission for the first device needing it
+        
         requestUsbPermission(devicesNeedingPermission.first()) { granted, device ->
             if (granted && device != null) {
                 devicesWithPermission.add(device)
@@ -198,13 +192,7 @@ class PermissionController(
         }
     }
 
-    /**
-     * Centralized method to ensure all required permissions are granted before starting a session.
-     * This groups required permissions logically and requests them together in a single system prompt,
-     * rather than truly sequencing prompts one-by-one. Handles user responses gracefully.
-     *
-     * @param callback Called with (success, deniedPermissions) when permission check completes
-     */
+    
     fun ensureAll(callback: (Boolean, List<String>) -> Unit) {
         permissionCallback = callback
 
@@ -222,7 +210,7 @@ class PermissionController(
             }"
         )
 
-        // Show rationale first, then request permissions
+        
         showPermissionRationaleDialog(missingPermissions) { userAccepted ->
             if (userAccepted) {
                 requestPermissionsSequentially(missingPermissions)
@@ -238,7 +226,7 @@ class PermissionController(
         ReplaceWith("ensureAll(callback)")
     )
     fun requestAllPermissions(callback: (Boolean, List<String>) -> Unit) {
-        // Legacy method - delegates to ensureAll for consistency
+        
         ensureAll(callback)
     }
 
@@ -262,7 +250,7 @@ class PermissionController(
                     "Permission result: granted=${permissions.size - deniedPermissions.size}, denied=${deniedPermissions.size}"
                 )
 
-                // Continue processing remaining permission groups
+                
                 if (remainingPermissionGroups.isNotEmpty()) {
                     Log.i(
                         TAG,
@@ -270,7 +258,7 @@ class PermissionController(
                     )
                     requestNextPermissionGroup()
                 } else {
-                    // All groups processed, evaluate final result
+                    
                     val stillMissingPermissions =
                         allRequestedPermissions.filter { !isPermissionGranted(it) }
                     if (stillMissingPermissions.isEmpty()) {
@@ -292,13 +280,13 @@ class PermissionController(
     fun onActivityResult(requestCode: Int, resultCode: Int) {
         when (requestCode) {
             REQUEST_BATTERY_OPTIMIZATION -> {
-                // Check if battery optimization is now disabled
+                
                 val isBatteryOptimizationDisabled = isBatteryOptimizationDisabled()
                 Log.i(TAG, "Battery optimization result: disabled=$isBatteryOptimizationDisabled")
 
-                // Note: We can't reliably get a callback here since the battery optimization
-                // request flow doesn't provide a direct way to get the callback reference.
-                // The calling code should re-check isBatteryOptimizationDisabled() after this.
+                
+                
+                
             }
         }
     }
@@ -326,7 +314,7 @@ class PermissionController(
             }, PID=${device.productId.toString(16)})"
         )
 
-        // Show rationale for USB permission
+        
         showUsbPermissionRationaleDialog(device) { userAccepted ->
             if (userAccepted) {
                 try {
@@ -398,12 +386,12 @@ class PermissionController(
                             activity.startActivityForResult(intent, REQUEST_BATTERY_OPTIMIZATION)
                         } catch (e: Exception) {
                             Log.e(TAG, "Failed to open battery optimization settings", e)
-                            // Fallback to general battery optimization settings
+                            
                             try {
                                 val fallbackIntent =
                                     Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS)
                                 activity.startActivity(fallbackIntent)
-                                // Since we can't get a result from the fallback, invoke the callback with false
+                                
                                 Log.w(
                                     TAG,
                                     "Fallback battery optimization settings opened - treating as not granted"
@@ -428,7 +416,7 @@ class PermissionController(
                 callback(true)
             }
         } else {
-            // Not needed on older Android versions
+            
             callback(true)
         }
     }
@@ -463,16 +451,14 @@ class PermissionController(
             .show()
     }
 
-    /**
-     * Check if battery optimization is disabled for this app
-     */
+    
     fun isBatteryOptimizationDisabled(): Boolean {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             val powerManager =
                 activity.getSystemService(Context.POWER_SERVICE) as android.os.PowerManager
             powerManager.isIgnoringBatteryOptimizations(activity.packageName)
         } else {
-            true // Not applicable on older versions
+            true 
         }
     }
 
@@ -569,30 +555,22 @@ class PermissionController(
                 isPermissionGranted(Manifest.permission.ACCESS_COARSE_LOCATION)
     }
 
-    /**
-     * Check if all permissions required for recording are granted
-     */
+    
     fun canStartRecording(): Boolean {
         return hasCameraPermission() && hasStoragePermissions()
     }
 
-    /**
-     * Check if all permissions required for Shimmer GSR connection are granted
-     */
+    
     fun canConnectToShimmer(): Boolean {
         return hasBluetoothPermissions() && hasLocationPermission()
     }
 
-    /**
-     * Check if notification permissions are granted (Android 13+)
-     */
+    
     fun canShowNotifications(): Boolean {
         return hasNotificationPermissions()
     }
 
-    /**
-     * Get status message for permission categories
-     */
+    
     fun getPermissionStatusMessage(): String {
         val status = mutableListOf<String>()
 
@@ -653,7 +631,7 @@ class PermissionController(
     }
 
     private fun requestPermissionsSequentially(missingPermissions: List<String>) {
-        // Group permissions logically for better user experience
+        
         val permissionGroups = groupPermissionsLogically(missingPermissions)
 
         if (permissionGroups.isEmpty()) {
@@ -661,17 +639,17 @@ class PermissionController(
             return
         }
 
-        // Store all permission groups and track original request
+        
         remainingPermissionGroups = permissionGroups.toMutableList()
         allRequestedPermissions = missingPermissions
 
-        // Request the first group of permissions
+        
         requestNextPermissionGroup()
     }
 
     private fun requestNextPermissionGroup() {
         if (remainingPermissionGroups.isEmpty()) {
-            // All groups processed, check final results
+            
             val stillMissingPermissions =
                 allRequestedPermissions.filter { !isPermissionGranted(it) }
             if (stillMissingPermissions.isEmpty()) {
@@ -698,13 +676,13 @@ class PermissionController(
     private fun groupPermissionsLogically(permissions: List<String>): List<List<String>> {
         val groups = mutableListOf<List<String>>()
 
-        // Group 1: Camera and Audio (if recording with sound)
+        
         val cameraGroup = permissions.filter { it in CAMERA_PERMISSIONS }
         if (cameraGroup.isNotEmpty()) {
             groups.add(cameraGroup)
         }
 
-        // Group 2: Bluetooth and Location (needed together for BLE)
+        
         val bluetoothPermissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             BLUETOOTH_PERMISSIONS_ANDROID_12
         } else {
@@ -716,7 +694,7 @@ class PermissionController(
             groups.add(bluetoothGroup)
         }
 
-        // Group 3: Storage permissions
+        
         val storagePermissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             STORAGE_PERMISSIONS_ANDROID_13
         } else {
@@ -728,7 +706,7 @@ class PermissionController(
             groups.add(storageGroup)
         }
 
-        // Group 4: Notifications and Foreground Service
+        
         val notificationGroup = permissions.filter {
             it in NOTIFICATION_PERMISSIONS || it in FOREGROUND_SERVICE_PERMISSIONS
         }
@@ -817,7 +795,7 @@ class PermissionController(
     }
 
     private fun handleDeniedPermissions(deniedPermissions: List<String>) {
-        // Check if any permissions were permanently denied
+        
         val permanentlyDeniedPermissions = deniedPermissions.filter { permission ->
             !activity.shouldShowRequestPermissionRationale(permission)
         }
@@ -870,7 +848,7 @@ class PermissionController(
             }
             .setNegativeButton(if (criticalPermissions.isEmpty()) "Continue Limited" else "Exit") { _, _ ->
                 if (criticalPermissions.isNotEmpty()) {
-                    // Exit app if critical permissions are denied
+                    
                     activity.finish()
                 }
             }
@@ -902,12 +880,12 @@ class PermissionController(
             .setMessage(message)
             .setPositiveButton(if (criticalPermissions.isNotEmpty()) "Try Again" else "OK") { _, _ ->
                 if (criticalPermissions.isNotEmpty()) {
-                    // Retry permission request for critical permissions
+                    
                     ensureAll(permissionCallback ?: { _, _ -> })
                 }
             }
             .setNegativeButton(if (criticalPermissions.isNotEmpty()) "Continue Limited" else null) { _, _ ->
-                // Continue with limited functionality
+                
             }
             .show()
     }

@@ -34,9 +34,9 @@ public class SPKeyUtils {
 
     public static final String UNIT_BRITISH = "unit_british";
 
-    public static final String LOAD_USB_COPY = "load_usb_copy";//
+    public static final String LOAD_USB_COPY = "load_usb_copy";
 
-    public static final String COPY_SUCCESS = "copy_success";//车型copy成功
+    public static final String COPY_SUCCESS = "copy_success";
 
     public static final String BIND_VEHICLE = "bind_vehicle";
 

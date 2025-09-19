@@ -1,38 +1,36 @@
 #!/usr/bin/env python3
-"""
-Test script to validate continued MVP implementation - core features only.
-"""
+
 
 import os
 import sys
 from pathlib import Path
 
-# Set Qt platform for headless operation
+
 os.environ["QT_QPA_PLATFORM"] = "offscreen"
 
-# Add src to path
+
 src_dir = Path(__file__).parent / "src"
 sys.path.insert(0, str(src_dir))
 
 
 def test_core_continued_features():
-    """Test the core continued implementation features."""
+    
     print("Testing continued core features...")
 
     try:
-        # Test enhanced time sync server
+        
         from ircamera_pc.sync import AdvancedTimeSyncServer
         time_sync = AdvancedTimeSyncServer(port=1235)
         print("✓ AdvancedTimeSyncServer creation successful")
 
-        # Test manual device creation with proper parameters
+        
         from ircamera_pc.core.device_manager import DeviceManager, DeviceInfo, DeviceType, \
             DeviceConnectionState
 
         device_manager = DeviceManager()
         registry = device_manager.get_registry()
 
-        # Test manual device creation with DiscoveredDevice (correct approach)
+        
         from ircamera_pc.network.discovery import DiscoveredDevice
         from datetime import datetime
 
@@ -50,7 +48,7 @@ def test_core_continued_features():
         device_id = registry.register_device(discovered_device)
         print("✓ Manual device registration with correct parameters successful")
 
-        # Verify device was added
+        
         registered_info = registry.get_device(device_id)
         if registered_info:
             print("✓ Manual device retrieval successful")
@@ -68,11 +66,11 @@ def test_core_continued_features():
 
 
 def test_network_components():
-    """Test network components without starting them."""
+    
     print("\nTesting network component creation...")
 
     try:
-        # Test WebSocket server import first
+        
         try:
             from ircamera_pc.network.websocket_server import WebSocketServer
             print("✓ WebSocket server import successful")
@@ -80,17 +78,17 @@ def test_network_components():
             print(f"❌ WebSocket server import failed: {e}")
             return False
 
-        # Try to create server instance
+        
         try:
             ws_server = WebSocketServer(host="127.0.0.1", port=9999)
             print("✓ WebSocket server creation successful")
         except Exception as e:
             print(f"❌ WebSocket server creation failed: {e}")
-            # This is expected in some configurations, so don't fail the test
+            
             print("⚠ WebSocket server creation failed - may need additional dependencies or config")
-            return True  # Don't fail the whole test for this
+            return True  
 
-        # Check if server has basic expected attributes
+        
         basic_attrs = ['host', 'port']
         for attr in basic_attrs:
             if hasattr(ws_server, attr):
@@ -102,19 +100,19 @@ def test_network_components():
 
     except Exception as e:
         print(f"❌ Network components test failed: {e}")
-        # Don't fail the entire test suite for network server issues
+        
         print("⚠ Network server components may need additional setup")
         return True
 
 
 def test_device_type_mappings():
-    """Test device type enumeration mappings."""
+    
     print("\nTesting device type mappings...")
 
     try:
         from ircamera_pc.network.discovery import DeviceType
 
-        # Test all device types
+        
         device_types = [
             DeviceType.ANDROID_SENSOR_NODE,
             DeviceType.THERMAL_CAMERA_TS004,
@@ -126,7 +124,7 @@ def test_device_type_mappings():
         for dt in device_types:
             print(f"✓ DeviceType.{dt.name} = '{dt.value}'")
 
-        # Test string mapping
+        
         device_type_mapping = {
             "ANDROID_SENSOR_NODE": DeviceType.ANDROID_SENSOR_NODE,
             "THERMAL_CAMERA_TS004": DeviceType.THERMAL_CAMERA_TS004,
@@ -144,22 +142,22 @@ def test_device_type_mappings():
 
 
 def main():
-    """Run continued implementation tests."""
+    
     print("=" * 70)
     print("IRCamera PC Controller MVP - Continued Implementation Validation")
     print("=" * 70)
 
     success = True
 
-    # Test continued core features
+    
     if not test_core_continued_features():
         success = False
 
-    # Test network components
+    
     if not test_network_components():
         success = False
 
-    # Test device type mappings
+    
     if not test_device_type_mappings():
         success = False
 

@@ -16,21 +16,14 @@ import org.json.JSONObject
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
 
-/**
- * PreviewStreamer handles streaming of live preview data to PC Controller.
- *
- * Provides low-bandwidth preview streaming including:
- * - Downscaled camera frames (RGB and thermal)
- * - Real-time sensor readings (GSR)
- * - Status updates
- */
+
 class PreviewStreamer(
     private val networkServer: NetworkServer
 ) {
     companion object {
         private const val TAG = "PreviewStreamer"
-        private const val DEFAULT_FRAME_INTERVAL_MS = 1000L // 1 FPS
-        private const val DEFAULT_SENSOR_INTERVAL_MS = 1000L // 1 Hz
+        private const val DEFAULT_FRAME_INTERVAL_MS = 1000L 
+        private const val DEFAULT_SENSOR_INTERVAL_MS = 1000L 
         private const val DEFAULT_PREVIEW_WIDTH = 320
         private const val DEFAULT_PREVIEW_HEIGHT = 240
         private const val DEFAULT_JPEG_QUALITY = 70
@@ -42,22 +35,20 @@ class PreviewStreamer(
     private var frameStreamingJob: Job? = null
     private var sensorStreamingJob: Job? = null
 
-    // Configuration
+    
     private var frameIntervalMs = DEFAULT_FRAME_INTERVAL_MS
     private var sensorIntervalMs = DEFAULT_SENSOR_INTERVAL_MS
     private var previewWidth = DEFAULT_PREVIEW_WIDTH
     private var previewHeight = DEFAULT_PREVIEW_HEIGHT
     private var jpegQuality = DEFAULT_JPEG_QUALITY
 
-    // Current data references
+    
     private val currentRgbFrame = AtomicReference<Bitmap?>()
     private val currentThermalFrame = AtomicReference<Bitmap?>()
     private val currentGsrValue = AtomicReference<Float?>()
     private val currentRecordingStatus = AtomicReference<String>("IDLE")
 
-    /**
-     * Start preview streaming to connected PC client
-     */
+    
     suspend fun startStreaming(): Boolean {
         if (isStreaming.get()) {
             Log.w(TAG, "Preview streaming already active")
@@ -72,12 +63,12 @@ class PreviewStreamer(
         Log.i(TAG, "Starting preview streaming to PC")
         isStreaming.set(true)
 
-        // Start frame streaming
+        
         frameStreamingJob = scope.launch {
             streamFrames()
         }
 
-        // Start sensor data streaming
+        
         sensorStreamingJob = scope.launch {
             streamSensorData()
         }
@@ -85,9 +76,7 @@ class PreviewStreamer(
         return true
     }
 
-    /**
-     * Stop preview streaming
-     */
+    
     suspend fun stopStreaming() {
         if (!isStreaming.get()) {
             return
@@ -103,37 +92,27 @@ class PreviewStreamer(
         sensorStreamingJob = null
     }
 
-    /**
-     * Update RGB camera frame for streaming
-     */
+    
     fun updateRgbFrame(bitmap: Bitmap?) {
         currentRgbFrame.set(bitmap)
     }
 
-    /**
-     * Update thermal camera frame for streaming
-     */
+    
     fun updateThermalFrame(bitmap: Bitmap?) {
         currentThermalFrame.set(bitmap)
     }
 
-    /**
-     * Update GSR sensor value for streaming
-     */
+    
     fun updateGsrValue(gsrValue: Float) {
         currentGsrValue.set(gsrValue)
     }
 
-    /**
-     * Update recording status for streaming
-     */
+    
     fun updateRecordingStatus(status: String) {
         currentRecordingStatus.set(status)
     }
 
-    /**
-     * Configure streaming parameters
-     */
+    
     fun configure(
         frameIntervalMs: Long = DEFAULT_FRAME_INTERVAL_MS,
         sensorIntervalMs: Long = DEFAULT_SENSOR_INTERVAL_MS,
@@ -158,12 +137,12 @@ class PreviewStreamer(
 
         while (isActive && isStreaming.get()) {
             try {
-                // Stream RGB frame if available
+                
                 currentRgbFrame.get()?.let { rgbBitmap ->
                     streamFrame("rgb", rgbBitmap)
                 }
 
-                // Stream thermal frame if available
+                
                 currentThermalFrame.get()?.let { thermalBitmap ->
                     streamFrame("thermal", thermalBitmap)
                 }
@@ -171,7 +150,7 @@ class PreviewStreamer(
                 delay(frameIntervalMs)
             } catch (e: Exception) {
                 Log.e(TAG, "Error in frame streaming", e)
-                if (isActive) delay(1000) // Wait before retrying
+                if (isActive) delay(1000) 
             }
         }
 
@@ -203,7 +182,7 @@ class PreviewStreamer(
                 delay(sensorIntervalMs)
             } catch (e: Exception) {
                 Log.e(TAG, "Error in sensor data streaming", e)
-                if (isActive) delay(1000) // Wait before retrying
+                if (isActive) delay(1000) 
             }
         }
 
@@ -212,21 +191,21 @@ class PreviewStreamer(
 
     private suspend fun streamFrame(frameType: String, bitmap: Bitmap) {
         try {
-            // Scale bitmap to preview dimensions
+            
             val scaledBitmap = BitmapUtils.scaleWithWH(
                 bitmap,
                 previewWidth.toDouble(),
                 previewHeight.toDouble()
             )
 
-            // Convert to JPEG bytes
+            
             val jpegBytes = BitmapUtils.bitmapToBytes(scaledBitmap, jpegQuality)
             if (jpegBytes == null) {
                 Log.w(TAG, "Failed to convert $frameType frame to JPEG")
                 return
             }
 
-            // Encode as base64 for JSON transmission
+            
             val base64Data = Base64.encodeToString(jpegBytes, Base64.NO_WRAP)
 
             val frameMessage = JSONObject().apply {
@@ -248,7 +227,7 @@ class PreviewStreamer(
                 "Streamed $frameType frame: ${scaledBitmap.width}x${scaledBitmap.height}, ${jpegBytes.size} bytes"
             )
 
-            // Clean up scaled bitmap if it's different from original
+            
             if (scaledBitmap != bitmap && !scaledBitmap.isRecycled) {
                 scaledBitmap.recycle()
             }
@@ -258,14 +237,10 @@ class PreviewStreamer(
         }
     }
 
-    /**
-     * Get current streaming status
-     */
+    
     fun isStreaming(): Boolean = isStreaming.get()
 
-    /**
-     * Cleanup resources
-     */
+    
     fun cleanup() {
         scope.launch {
             stopStreaming()

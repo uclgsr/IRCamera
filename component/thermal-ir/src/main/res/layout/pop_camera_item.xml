@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:paddingBottom="10dp">
 
-        <!-- 背景 -->
+        
         <View
             android:id="@+id/view_bg"
             android:layout_width="0dp"
@@ -21,7 +21,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintWidth_percent="0.9" />
 
-        <!-- 延时拍照时长 -->
+        
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_delay"
             android:layout_width="0dp"
@@ -45,7 +45,7 @@
                 app:layout_constraintWidth_percent="0.42" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <!-- 自动快门 -->
+        
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_auto"
             android:layout_width="0dp"
@@ -69,7 +69,7 @@
                 app:layout_constraintWidth_percent="0.42" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <!-- 手动快门 -->
+        
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_shutter"
             android:layout_width="0dp"
@@ -93,7 +93,7 @@
                 app:layout_constraintWidth_percent="0.42" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <!-- 录音开关 -->
+        
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_audio"
             android:layout_width="0dp"
@@ -117,7 +117,7 @@
                 app:layout_constraintWidth_percent="0.42" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <!-- 更多Settings -->
+        
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_setting"
             android:layout_width="0dp"

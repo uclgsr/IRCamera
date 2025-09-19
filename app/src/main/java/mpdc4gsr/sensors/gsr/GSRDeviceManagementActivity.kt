@@ -38,15 +38,15 @@ class GSRDeviceManagementActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var deviceAdapter: GSRDeviceAdapter
     private val discoveredDevices = mutableListOf<GSRDeviceInfo>()
 
-    // Bluetooth components
+    
     private var bluetoothAdapter: BluetoothAdapter? = null
     private var bluetoothManager: BluetoothManager? = null
 
-    // Permission handling
+    
     private lateinit var permissionLauncher: ActivityResultLauncher<Array<String>>
     private var pendingOperation: (() -> Unit)? = null
 
-    // Device scanning state
+    
     private var isScanning = false
     private var isConnecting = false
 
@@ -56,7 +56,7 @@ class GSRDeviceManagementActivity : AppCompatActivity(), View.OnClickListener {
 
         prefs = getSharedPreferences("gsr_device_prefs", Context.MODE_PRIVATE)
 
-        // Initialize Bluetooth components
+        
         bluetoothManager = getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager?
         bluetoothAdapter = bluetoothManager?.adapter
 
@@ -83,19 +83,19 @@ class GSRDeviceManagementActivity : AppCompatActivity(), View.OnClickListener {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = "GSR Device Management"
 
-        // Setup click listeners
+        
         findViewById<View>(R.id.scanDevicesButton)?.setOnClickListener(this)
         findViewById<View>(R.id.stopScanButton)?.setOnClickListener(this)
         findViewById<View>(R.id.refreshButton)?.setOnClickListener(this)
         findViewById<View>(R.id.settingsButton)?.setOnClickListener(this)
 
-        // Setup device connection status indicators
+        
         updateConnectionStatus("Not Connected")
 
-        // Setup scanning indicator
+        
         findViewById<View>(R.id.scanningIndicator)?.visibility = View.GONE
 
-        // Setup device list empty state
+        
         updateDeviceListState()
     }
 
@@ -150,7 +150,7 @@ class GSRDeviceManagementActivity : AppCompatActivity(), View.OnClickListener {
     private fun setupDeviceListRecycler() {
         deviceAdapter =
             GSRDeviceAdapter(discoveredDevices) { device ->
-                // Device item click handler
+                
                 connectToDevice(device)
             }
 
@@ -163,7 +163,7 @@ class GSRDeviceManagementActivity : AppCompatActivity(), View.OnClickListener {
     private fun loadSavedDevices() {
         try {
             val savedDevicesJson = prefs.getString("saved_devices", "[]")
-            // Parse and load saved devices (simplified implementation)
+            
             Log.i(TAG, "Loaded saved devices configuration")
         } catch (e: Exception) {
             Log.w(TAG, "Failed to load saved devices", e)
@@ -199,25 +199,25 @@ class GSRDeviceManagementActivity : AppCompatActivity(), View.OnClickListener {
 
                 Log.i(TAG, "Starting GSR device scan")
 
-                // Clear previous results
+                
                 discoveredDevices.clear()
                 deviceAdapter.notifyDataSetChanged()
                 updateDeviceListState()
 
-                // Perform device discovery
+                
                 val devices = gsrSensorRecorder?.getAvailableShimmerDevices() ?: emptyList()
 
-                // Simulate progressive discovery (like IR camera scanning)
+                
                 devices.forEach { deviceName ->
-                    delay(500) // Simulate discovery time
+                    delay(500) 
 
                     val deviceInfo =
                         GSRDeviceInfo(
                             name = deviceName,
                             address = extractMacAddress(deviceName),
-                            rssi = -50, // Simulated signal strength
+                            rssi = -50, 
                             isConnected = false,
-                            batteryLevel = 85, // Simulated battery
+                            batteryLevel = 85, 
                             firmwareVersion = "1.0.0",
                         )
 
@@ -252,15 +252,15 @@ class GSRDeviceManagementActivity : AppCompatActivity(), View.OnClickListener {
     private fun refreshDeviceList() {
         lifecycleScope.launch {
             try {
-                // Update connection status for known devices
+                
                 discoveredDevices.forEach { device ->
-                    // Check if device is still available and connected
+                    
                     device.isConnected = checkDeviceConnection(device.address)
                 }
 
                 deviceAdapter.notifyDataSetChanged()
 
-                // Update current connection status
+                
                 val connectedDevice = discoveredDevices.find { it.isConnected }
                 if (connectedDevice != null) {
                     updateConnectionStatus("Connected to ${connectedDevice.name}")
@@ -288,7 +288,7 @@ class GSRDeviceManagementActivity : AppCompatActivity(), View.OnClickListener {
             return
         }
 
-        // Check if device needs pairing first
+        
         checkDevicePairingStatus(device)
     }
 
@@ -373,7 +373,7 @@ class GSRDeviceManagementActivity : AppCompatActivity(), View.OnClickListener {
             if (!isPaired) {
                 showPairingDialog(device, bluetoothDevice)
             } else {
-                // Device is already paired, proceed with connection
+                
                 proceedWithConnection(device)
             }
 
@@ -415,9 +415,9 @@ class GSRDeviceManagementActivity : AppCompatActivity(), View.OnClickListener {
                 showToast("Pairing request sent. Please confirm on the device.")
                 Log.i(TAG, "Pairing request sent for ${deviceInfo.name}")
 
-                // Monitor pairing result (simplified - in real app you'd register a BroadcastReceiver)
+                
                 lifecycleScope.launch {
-                    delay(5000) // Wait 5 seconds for pairing to complete
+                    delay(5000) 
                     if (bluetoothDevice.bondState == BluetoothDevice.BOND_BONDED) {
                         showToast("Device paired successfully!")
                         proceedWithConnection(deviceInfo)
@@ -440,7 +440,7 @@ class GSRDeviceManagementActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun proceedWithConnection(device: GSRDeviceInfo) {
-        // Device is paired, proceed with actual connection logic
+        
         performActualConnection(device)
     }
 
@@ -521,21 +521,21 @@ class GSRDeviceManagementActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun extractMacAddress(deviceName: String): String {
-        // Extract MAC address from device name (format: "DeviceName (XX:XX:XX:XX:XX:XX)")
+        
         return if (deviceName.contains("(") && deviceName.contains(")")) {
             deviceName.substringAfter("(").substringBefore(")")
         } else {
-            "00:00:00:00:00:00" // Default/unknown MAC
+            "00:00:00:00:00:00" 
         }
     }
 
     private suspend fun checkDeviceConnection(address: String): Boolean {
-        // Check if device is currently connected
+        
         return gsrSensorRecorder?.getShimmerConnectionStatus()?.contains("Connected") == true
     }
 
     private fun saveDeviceConnection(device: GSRDeviceInfo) {
-        // Save successful connection for future reference
+        
         prefs.edit().apply {
             putString("last_connected_device", device.address)
             putString("last_connected_name", device.name)
@@ -554,7 +554,7 @@ class GSRDeviceManagementActivity : AppCompatActivity(), View.OnClickListener {
     override fun onDestroy() {
         super.onDestroy()
 
-        // Cleanup GSR components
+        
         lifecycleScope.launch {
             try {
                 gsrSensorRecorder?.cleanup()

@@ -87,10 +87,10 @@ class ErrorRecoveryManager private constructor() {
         val severity: Severity = Severity.MEDIUM,
     ) {
         enum class Severity {
-            LOW, // Warning, service continues
-            MEDIUM, // Error, automatic recovery attempted
-            HIGH, // Critical, immediate recovery required
-            FATAL, // Unrecoverable, stop all operations
+            LOW, 
+            MEDIUM, 
+            HIGH, 
+            FATAL, 
         }
     }
 
@@ -393,7 +393,7 @@ class ErrorRecoveryManager private constructor() {
                             if (!isHealthy && updatedService.consecutiveFailures >= 3) {
                                 reportError(
                                     RecoverableError(
-                                        type = ErrorType.SESSION_CORRUPTION, // Generic service failure
+                                        type = ErrorType.SESSION_CORRUPTION, 
                                         serviceId = service.serviceId,
                                         message = "Service unhealthy for ${updatedService.consecutiveFailures} consecutive checks",
                                         severity = RecoverableError.Severity.HIGH,
@@ -417,7 +417,7 @@ class ErrorRecoveryManager private constructor() {
         return try {
             Log.w(TAG, "Recovering from GSR sensor error: ${error.message}")
 
-            delay(1000L) // Allow time for sensor to stabilize
+            delay(1000L) 
 
             Log.d(TAG, "Attempting GSR sensor reconnection")
 

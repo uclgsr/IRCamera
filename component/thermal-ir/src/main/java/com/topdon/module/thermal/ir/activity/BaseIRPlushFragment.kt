@@ -53,10 +53,7 @@ import kotlinx.coroutines.withContext
 import java.io.IOException
 import java.io.InputStream
 
-/**
 
-
- */
 
 abstract class BaseIRPlushFragment :
     BaseFragment(),
@@ -65,21 +62,12 @@ abstract class BaseIRPlushFragment :
     IIRFrameCallback {
     val INIT_ALIGN_DATA = floatArrayOf(1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f)
 
-    /**
-
-     *
-
-     */
+    
     protected var dualView: DualViewWithExternalCameraCommonApi? = null
 
     protected var pseudoColorModeDual = CommonParams.PseudoColorUsbDualType.IRONBOW_MODE
 
-    /**
-
-
-
-
-     */
+    
     private var hasStartPreview = false
     protected var ircmd: IRCMD? = null
 
@@ -89,15 +77,15 @@ abstract class BaseIRPlushFragment :
 
     private var irPid = 0x5830
     private var irFps = 25
-    private var irCameraWidth = // 传感器的原始宽度
+    private var irCameraWidth = 
         0
-    private var irCameraHeight = // 传感器的原始高度
+    private var irCameraHeight = 
         0
-    private var irTempHeight = // 温度数据高度
+    private var irTempHeight = 
         0
-    private var imageWidth = // 经过旋转后的图像宽度
+    private var imageWidth = 
         0
-    private var imageHeight = // 经过旋转后的图像高度
+    private var imageHeight = 
         0
     protected var temperatureSrc: ByteArray? = null
 
@@ -107,11 +95,11 @@ abstract class BaseIRPlushFragment :
     protected var pseudoColorMode = SaveSettingUtil.pseudoColorMode
 
     private var vlPid = 12337
-    private var vlFps = 30 // 该分辨率支持的帧率
+    private var vlFps = 30 
 
     protected var vlCameraWidth = 1280
     protected var vlCameraHeight = 720
-    private var vlData = ByteArray(vlCameraWidth * vlCameraHeight * 3) // 存储可见光数据
+    private var vlData = ByteArray(vlCameraWidth * vlCameraHeight * 3) 
 
     private var dualCameraWidth = 480
     private var dualCameraHeight = 640
@@ -143,8 +131,8 @@ abstract class BaseIRPlushFragment :
         when (dataFlowMode) {
             CommonParams.DataFlowMode.IMAGE_AND_TEMP_OUTPUT -> {
 
-                irCameraWidth = 256 // 传感器的原始宽度
-                irCameraHeight = 384 // 传感器的原始高度
+                irCameraWidth = 256 
+                irCameraHeight = 384 
                 irTempHeight = 192
                 imageWidth = irCameraHeight - irTempHeight
                 imageHeight = irCameraWidth
@@ -153,8 +141,8 @@ abstract class BaseIRPlushFragment :
 
             CommonParams.DataFlowMode.IMAGE_OUTPUT -> {
 
-                irCameraWidth = 256 // 传感器的原始宽度
-                irCameraHeight = 192 // 传感器的原始高度
+                irCameraWidth = 256 
+                irCameraHeight = 192 
                 irTempHeight = 0
                 imageWidth = irCameraHeight - irTempHeight
                 imageHeight = irCameraWidth
@@ -163,8 +151,8 @@ abstract class BaseIRPlushFragment :
 
             CommonParams.DataFlowMode.TEMP_OUTPUT -> {
 
-                irCameraWidth = 256 // 传感器的原始宽度
-                irCameraHeight = 192 // 传感器的原始高度
+                irCameraWidth = 256 
+                irCameraHeight = 192 
                 irTempHeight = 0
                 imageWidth = irCameraHeight - irTempHeight
                 imageHeight = irCameraWidth
@@ -172,8 +160,8 @@ abstract class BaseIRPlushFragment :
             }
 
             else -> {
-                irCameraWidth = 256 // 传感器的原始宽度
-                irCameraHeight = 192 // 传感器的原始高度
+                irCameraWidth = 256 
+                irCameraHeight = 192 
                 irTempHeight = 0
                 imageWidth = irCameraHeight - irTempHeight
                 imageHeight = irCameraWidth
@@ -322,10 +310,7 @@ abstract class BaseIRPlushFragment :
             TAG,
             "dualStart",
         )
-        /**
-
-
-         */
+        
         USBMonitorManager.getInstance().registerUSB()
 
 
@@ -363,10 +348,7 @@ abstract class BaseIRPlushFragment :
                         "USBMonitorManager HANDLE_CONNECT",
                     )
 
-                    /**
-
-
-                     */
+                    
                     lifecycleScope.launch(Dispatchers.Main) {
                         startVLCamera(vlPid, vlFps, vlCameraWidth, vlCameraHeight)
                         initDualCamera()
@@ -428,13 +410,7 @@ abstract class BaseIRPlushFragment :
         isrun = true
     }
 
-    /**
-
-     *
-
-
-
-     */
+    
     open fun startVLCamera(
         pid: Int,
         fps: Int,
@@ -521,8 +497,8 @@ abstract class BaseIRPlushFragment :
                 }
                 delay(500)
                 val config = ConfigRepository.readConfig(false)
-                val disChar = (config.distance * 128).toInt() // 距离(米)
-                val emsChar = (config.radiation * 128).toInt() // 发射率
+                val disChar = (config.distance * 128).toInt() 
+                val emsChar = (config.radiation * 128).toInt() 
                 XLog.w("设置TPD_PROP DISTANCE:$disChar, EMS:$emsChar}")
                 delay(timeMillis)
 
@@ -676,10 +652,7 @@ abstract class BaseIRPlushFragment :
     protected val preTempData = ByteArray(256 * 192 * 2)
 
     override fun onIrFrame(irFrame: ByteArray?): ByteArray {
-        /**
-
-         * @return
-         */
+        
         System.arraycopy(irFrame, 0, preIrData, 0, preIrData.size)
         LibIRProcess.convertYuyvMapToARGBPseudocolor(
             preIrData,

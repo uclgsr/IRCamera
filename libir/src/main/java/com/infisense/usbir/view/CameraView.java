@@ -27,7 +27,7 @@ public class CameraView extends TextureView {
     private Paint paint;
     private int cross_len = 20;
     private Paint greenPaint;
-    private boolean drawLine = true;//是否画中心十字架
+    private boolean drawLine = true;
     private int irWidth = 192;
     private int irHeight = 256;
 
@@ -45,13 +45,13 @@ public class CameraView extends TextureView {
     public CameraView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
-        paint = new Paint();  //画笔
+        paint = new Paint();  
         paint = new Paint(Paint.FILTER_BITMAP_FLAG);
 
-        paint.setStrokeWidth(2);  //settings线宽。单位为像素
-        paint.setAntiAlias(true); //抗锯齿
-        paint.setDither(true);    //防抖动
-        paint.setColor(Color.WHITE);  //画笔color
+        paint.setStrokeWidth(2);  
+        paint.setAntiAlias(true); 
+        paint.setDither(true);    
+        paint.setColor(Color.WHITE);  
 
         greenPaint = new Paint();
         greenPaint.setStrokeWidth(6);
@@ -79,10 +79,10 @@ public class CameraView extends TextureView {
                                 continue;
                             }
 
-                            paint.setStrokeWidth(2);  //settings线宽。单位为像素
-                            paint.setAntiAlias(true); //抗锯齿
-                            paint.setDither(true);    //防抖动
-                            paint.setColor(Color.WHITE);  //画笔color
+                            paint.setStrokeWidth(2);  
+                            paint.setAntiAlias(true); 
+                            paint.setDither(true);    
+                            paint.setColor(Color.WHITE);  
 
                             Bitmap mScaledBitmap = Bitmap.createScaledBitmap(bitmap, getWidth(), getHeight(), true);
                             canvas.drawBitmap(mScaledBitmap, 0, 0, null);

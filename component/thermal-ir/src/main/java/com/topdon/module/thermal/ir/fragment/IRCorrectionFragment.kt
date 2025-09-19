@@ -49,7 +49,7 @@ class IRCorrectionFragment : BaseFragment(), ITsTempListener {
 
     override fun initContentView() = R.layout.fragment_ir_monitor_thermal
 
-    private var rotateAngle = 270 // 校对默认角度270
+    private var rotateAngle = 270 
 
     override fun initView() {
         requireActivity().window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
@@ -109,7 +109,7 @@ class IRCorrectionFragment : BaseFragment(), ITsTempListener {
         setViewLay()
 
         if (Usbcontorl.isload) {
-            Usbcontorl.usb3803_mode_setting(1) // 打开5V
+            Usbcontorl.usb3803_mode_setting(1) 
             Log.w("123", "打开5V")
         }
         temperatureView.clear()
@@ -287,8 +287,8 @@ class IRCorrectionFragment : BaseFragment(), ITsTempListener {
                 delay(100)
             }
             val config = ConfigRepository.readConfig(false)
-            val disChar = (config.distance * 128).toInt() // 距离(米)
-            val emsChar = (config.radiation * 128).toInt() // 发射率
+            val disChar = (config.distance * 128).toInt() 
+            val emsChar = (config.radiation * 128).toInt() 
             XLog.w("设置TPD_PROP DISTANCE:$disChar, EMS:$emsChar}")
             val timeMillis = 250L
             delay(timeMillis)

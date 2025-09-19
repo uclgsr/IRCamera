@@ -10,26 +10,26 @@ import com.topdon.lib.ui.R as UiR
 
 class RoundImageView : AppCompatImageView {
     companion object {
-        /** 圆角位置 - 左上.  */
+        
         const val LEFT_TOP = 1
 
-        /** 圆角位置 - 右上.  */
+        
         const val RIGHT_TOP = 2
 
-        /** 圆角位置 - 左下.  */
+        
         const val LEFT_BOTTOM = 4
 
-        /** 圆角位置 - 右下.  */
+        
         const val RIGHT_BOTTOM = 8
 
-        /** 默认圆角半径 - 10dp  */
+        
         private const val DEFAULT_RADIUS = 10f
 
-        /** 默认圆角位置 - 4个角均圆角  */
+        
         private const val DEFAULT_POSITION = 15
     }
 
-    var position = 0 // 需圆角的位置
+    var position = 0 
         set(value) {
             if (field != value) {
                 field = value
@@ -37,9 +37,9 @@ class RoundImageView : AppCompatImageView {
             }
         }
 
-    private var radius = 0 // 圆角半径，单位 px
-    private val path = Path() // 绘制range
-    private var density = 0f // 屏幕缩放等级，用于dp与px转换
+    private var radius = 0 
+    private val path = Path() 
+    private var density = 0f 
 
     constructor(context: Context) : this(context, null)
 

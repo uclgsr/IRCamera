@@ -11,13 +11,7 @@ import com.topdon.lib.core.bean.ContinuousBean
 import com.topdon.lib.core.bean.WatermarkBean
 import com.topdon.lib.core.dialog.CarDetectDialog
 
-/**
- * current类封装不受“savedsettings开关”影响的configuration项，
- *
- * [SaveSettingUtil] saved受“savedsettings开关”影响的configuration项.
- *
- * create by fylder on 2018/6/14
- **/
+
 object SharedManager {
 
     var hasClickWinter: Boolean
@@ -278,28 +272,28 @@ object SharedManager {
     private const val HEAD_ICON: String = "head_icon"
 
     private const val BASE_HOST: String = "base_host"
-    private const val LANGUAGE = "language" // 语言settings
+    private const val LANGUAGE = "language" 
 
-    private const val HAS_SHOW_CLAUSE = "hasShowClause" // 是否显示过条款
-    private const val TEMPERATURE_UNIT = "temperature" // 温度单位
-    private const val VERSION_CHECK_DATE = "version_check_date" // 版本检测的日期
+    private const val HAS_SHOW_CLAUSE = "hasShowClause" 
+    private const val TEMPERATURE_UNIT = "temperature" 
+    private const val VERSION_CHECK_DATE = "version_check_date" 
 
-    private const val DEVICE_SN = "deviceSn" // 设备SN
-    private const val DEVICE_VERSION = "deviceVersion" // 设备版本
+    private const val DEVICE_SN = "deviceSn" 
+    private const val DEVICE_VERSION = "deviceVersion" 
 
-    private const val IR_CONFIG = "ir_config" // 温度修正参数(json)
-    private const val SP_CUSTOM_PSEUDO = "sp_custom_pseudo" // 自定义pseudo color条
-    private const val SP_TARGET_POP = "sp_target_pop" // target弹框
+    private const val IR_CONFIG = "ir_config" 
+    private const val SP_CUSTOM_PSEUDO = "sp_custom_pseudo" 
+    private const val SP_TARGET_POP = "sp_target_pop" 
 
-    private const val SP_SETTING_IS_PUSH = "sp_setting_is_push" // 推送开关
+    private const val SP_SETTING_IS_PUSH = "sp_setting_is_push" 
     private const val SP_SETTING_IS_RECOMMEND = "sp_setting_is_recommend"
 
-    /************************TS004************************************/
-    private const val SP_HOT_MODE = "sp_hot_mode" // white hot
-    private const val SP_CHANGE_DEVICE = "sp_change_device" // ts001与ts004相互switch
-    private const val SP_TC007_CUSTOM_PSEUDO = "sp_tc007_custom_pseudo" // tc007自定义pseudo color条
+    
+    private const val SP_HOT_MODE = "sp_hot_mode" 
+    private const val SP_CHANGE_DEVICE = "sp_change_device" 
+    private const val SP_TC007_CUSTOM_PSEUDO = "sp_tc007_custom_pseudo" 
 
-    private const val SP_CAR_DETECT = "sp_car_detect" // 汽车检测项目
+    private const val SP_CAR_DETECT = "sp_car_detect" 
 
     fun setToken(token: String) {
         SPUtils.getInstance().put(TOKEN, token)
@@ -433,8 +427,8 @@ object SharedManager {
         SPUtils.getInstance().put(SP_TARGET_POP, targetPop)
     }
 
-    private const val IR_DUAL_DISP = "ir_dual_disp" // dual lightregistration-水平
-    private const val IR_DUAL_DISP_V = "ir_dual_disp_v" // dual lightregistration-垂直
+    private const val IR_DUAL_DISP = "ir_dual_disp" 
+    private const val IR_DUAL_DISP_V = "ir_dual_disp_v" 
 
     fun saveSettingIsPush(isPush: Boolean) {
         SPUtils.getInstance().put(SP_SETTING_IS_PUSH, isPush)
@@ -468,7 +462,7 @@ object SharedManager {
         return SPUtils.getInstance().put("storage_permissions_state", value)
     }
 
-    /************************TS004************************************/
+    
 
     fun getHotMode(): Int {
         return SPUtils.getInstance().getInt(SP_HOT_MODE, 1)

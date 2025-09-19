@@ -56,7 +56,7 @@ class WebSocketProxy {
     private var reconnectHandler = ReconnectHandler()
     private var network: Network? = null
     private var certificateManager: CertificateManager? = null
-    private var useSecureConnection = true // Default to secure connections
+    private var useSecureConnection = true 
 
     fun initializeSecurity(context: android.content.Context) {
         certificateManager = CertificateManager(context)
@@ -114,7 +114,7 @@ class WebSocketProxy {
         }
 
         network?.socketFactory?.let {
-            if (!useSecureConnection) { // Only apply if not using SSL
+            if (!useSecureConnection) { 
                 builder.socketFactory(it)
             }
         }

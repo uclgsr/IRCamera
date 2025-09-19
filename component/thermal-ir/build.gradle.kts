@@ -71,20 +71,20 @@ dependencies {
     coreLibraryDesugaring(libs.desugar.jdk.libs)
     implementation(project(":BleModule"))
     implementation(project(":libapp"))
-    implementation(project(":libcom"))
+    // implementation(project(":libcom")) // CONSOLIDATED into libapp - already included via libapp
     implementation(project(":libir"))
     implementation(project(":libui"))
-    implementation(project(":libmenu"))
+    // implementation(project(":libmenu")) // CONSOLIDATED into libapp - already included via libapp
     implementation(project(":component:pseudo"))
     implementation(project(":component:thermal"))
     implementation(project(":component:user"))
-    compileOnly(files("../../libir/libs/suplib-release.aar")) // Required for SupHelp class
-    compileOnly(files("../../libir/libs/ai-upscale-release.aar")) // AI upscale functionality
-    compileOnly(files("../../libir/libs/texturegesture-release.aar")) // Texture gesture functionality
-    compileOnly(files("../../libir/libs/libusbdualsdk_1.3.4_2406271906_standard.aar")) // Required for IRCMD classes
-    compileOnly(files("../../libir/libs/libAC020sdk_USB_IR_1.1.1_2408291439.aar")) // AC020 SDK
-    compileOnly(files("../../libir/libs/libirutils_1.2.0_2409241055.aar")) // IR utilities
-    compileOnly(files("../../app/libs/lms_international-3.90.009.0.aar")) // LMS SDK for thermal-ir classes
+    compileOnly(files("../../libir/libs/suplib-release.aar")) 
+    compileOnly(files("../../libir/libs/ai-upscale-release.aar")) 
+    compileOnly(files("../../libir/libs/texturegesture-release.aar")) 
+    compileOnly(files("../../libir/libs/libusbdualsdk_1.3.4_2406271906_standard.aar")) 
+    compileOnly(files("../../libir/libs/libAC020sdk_USB_IR_1.1.1_2408291439.aar")) 
+    compileOnly(files("../../libir/libs/libirutils_1.2.0_2409241055.aar")) 
+    compileOnly(files("../../app/libs/lms_international-3.90.009.0.aar")) 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.localbroadcastmanager)
@@ -94,14 +94,14 @@ dependencies {
     implementation(libs.lottie)
     implementation(libs.easyswipemenulayout)
     implementation(libs.mn.image.browser)
-    // Temporarily commented out to fix build issues - GSY video player not available in repos
-    // implementation(libs.gsy.video.player.thermal) {
-    //     exclude(group = "androidx.media3", module = "media3-cast")
-    //     exclude(group = "androidx.media3", module = "media3-session")
-    //     exclude(group = "androidx.media3", module = "media3-ui")
-    //     exclude(group = "com.google.android.gms", module = "play-services-cast-framework")
-    //     exclude(group = "com.aliyun.sdk.android", module = "AliyunPlayer")
-    // }
+    
+    
+    
+    
+    
+    
+    
+    
     implementation(libs.media3.exoplayer)
     implementation(libs.media3.exoplayer.dash)
     implementation(libs.media3.ui)

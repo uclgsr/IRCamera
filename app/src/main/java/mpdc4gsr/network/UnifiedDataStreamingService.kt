@@ -16,19 +16,7 @@ import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
 
-/**
- * Unified Data Streaming Service with Time Synchronization
- * 
- * Integrates with the unified timestamp system to provide real-time streaming
- * of multi-modal sensor data with synchronized timestamps for network clients.
- * 
- * Features:
- * - Unified timestamp coordination across all sensor streams
- * - Real-time multi-modal data streaming (GSR, Thermal, RGB)
- * - Session synchronization events for client alignment
- * - Network-based sync marker distribution
- * - Cross-sensor timing validation for stream consistency
- */
+
 class UnifiedDataStreamingService(
     private val context: Context
 ) {
@@ -50,14 +38,12 @@ class UnifiedDataStreamingService(
     private var currentSessionId: String? = null
     private var sessionStartReference: TimestampRecord? = null
     
-    // Stream statistics
+    
     private val packetsSent = AtomicLong(0)
     private val clientsConnected = AtomicLong(0)
     private val streamStartTime = AtomicLong(0)
 
-    /**
-     * Start unified streaming service with session synchronization
-     */
+    
     suspend fun startStreaming(sessionId: String, port: Int = DEFAULT_PORT): Boolean {
         return withContext(Dispatchers.IO) {
             try {
@@ -72,28 +58,28 @@ class UnifiedDataStreamingService(
                 sessionStartReference = TimestampManager.createTimestampRecord()
                 streamStartTime.set(System.currentTimeMillis())
                 
-                // Start server socket
+                
                 serverSocket = ServerSocket(port)
                 isStreaming.set(true)
                 
-                // Start client acceptance loop
+                
                 streamingScope.launch {
                     acceptClients()
                 }
                 
-                // Start data processing loop
+                
                 streamingScope.launch {
                     processStreamingData()
                 }
                 
-                // Start heartbeat and sync marker distribution
+                
                 streamingScope.launch {
                     distributeHeartbeats()
                 }
                 
                 Log.i(TAG, "✅ Unified streaming service started on port $port")
                 
-                // Send initial session sync event
+                
                 broadcastSessionSyncEvent("session_start", mapOf(
                     "session_id" to sessionId,
                     "timestamp_reference" to sessionStartReference!!.toCsvFormat()
@@ -109,15 +95,13 @@ class UnifiedDataStreamingService(
         }
     }
 
-    /**
-     * Stop streaming service and cleanup connections
-     */
+    
     suspend fun stopStreaming() {
         withContext(Dispatchers.IO) {
             try {
                 Log.i(TAG, "Stopping unified streaming service")
                 
-                // Send session end sync event
+                
                 currentSessionId?.let { sessionId ->
                     broadcastSessionSyncEvent("session_end", mapOf(
                         "session_id" to sessionId,
@@ -128,7 +112,7 @@ class UnifiedDataStreamingService(
                 
                 isStreaming.set(false)
                 
-                // Close all client connections
+                
                 synchronized(connectedClients) {
                     connectedClients.forEach { client ->
                         client.disconnect()
@@ -136,11 +120,11 @@ class UnifiedDataStreamingService(
                     connectedClients.clear()
                 }
                 
-                // Close server socket
+                
                 serverSocket?.close()
                 serverSocket = null
                 
-                // Clear data queue
+                
                 dataQueue.clear()
                 
                 Log.i(TAG, "Unified streaming service stopped")
@@ -151,9 +135,7 @@ class UnifiedDataStreamingService(
         }
     }
 
-    /**
-     * Stream GSR data with unified timestamp
-     */
+    
     fun streamGSRData(gsrSample: GSRSample, timestampRecord: TimestampRecord) {
         if (!isStreaming.get()) return
         
@@ -171,9 +153,7 @@ class UnifiedDataStreamingService(
         dataQueue.offer(packet)
     }
 
-    /**
-     * Stream thermal data with unified timestamp
-     */
+    
     fun streamThermalData(
         frameNumber: Long,
         timestampRecord: TimestampRecord,
@@ -199,9 +179,7 @@ class UnifiedDataStreamingService(
         dataQueue.offer(packet)
     }
 
-    /**
-     * Stream RGB camera metadata with unified timestamp
-     */
+    
     fun streamRGBMetadata(
         frameNumber: Long,
         timestampRecord: TimestampRecord,
@@ -223,9 +201,7 @@ class UnifiedDataStreamingService(
         dataQueue.offer(packet)
     }
 
-    /**
-     * Broadcast sync marker to all connected clients
-     */
+    
     fun broadcastSyncMarker(markerType: String, timestampRecord: TimestampRecord, metadata: Map<String, String> = emptyMap()) {
         if (!isStreaming.get()) return
         
@@ -241,9 +217,7 @@ class UnifiedDataStreamingService(
         Log.d(TAG, "Broadcasted sync marker: $markerType")
     }
 
-    /**
-     * Get streaming statistics
-     */
+    
     fun getStreamingStats(): StreamingStats {
         val uptime = if (streamStartTime.get() > 0) {
             (System.currentTimeMillis() - streamStartTime.get()) / 1000.0
@@ -273,7 +247,7 @@ class UnifiedDataStreamingService(
                             
                             Log.i(TAG, "Client connected: ${socket.remoteSocketAddress} (${connectedClients.size} total)")
                             
-                            // Send session info to new client
+                            
                             clientHandler.sendSessionInfo()
                             
                         } else {
@@ -295,7 +269,7 @@ class UnifiedDataStreamingService(
         
         while (isStreaming.get()) {
             try {
-                // Collect batch of data packets
+                
                 val startTime = System.currentTimeMillis()
                 
                 while (batch.size < BATCH_SIZE && 
@@ -310,7 +284,7 @@ class UnifiedDataStreamingService(
                 }
                 
                 if (batch.isNotEmpty()) {
-                    // Create batch message
+                    
                     val batchMessage = JSONObject().apply {
                         put("type", "DATA_BATCH")
                         put("session_id", currentSessionId)
@@ -387,7 +361,7 @@ class UnifiedDataStreamingService(
                 }
             }
             
-            // Remove disconnected clients
+            
             disconnectedClients.forEach { client ->
                 connectedClients.remove(client)
                 client.disconnect()

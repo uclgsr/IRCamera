@@ -8,7 +8,7 @@
     android:paddingBottom="20dp"
     tools:background="#16131e">
 
-    <!-- Title -->
+    
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_title"
         android:layout_width="match_parent"
@@ -31,7 +31,7 @@
             tools:text="这是一个标题" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <!-- 分割线 -->
+    
     <View
         android:id="@+id/view_line"
         android:layout_width="match_parent"
@@ -41,24 +41,24 @@
         android:background="@drawable/shape_stroke_1_5b5961_dash_5"
         android:visibility="gone" />
 
-    <!-- 最高温 -->
+    
     <include
         android:id="@+id/cl_max"
         layout="@layout/item_report_ir_input" />
 
-    <!-- 最低温 -->
+    
     <include
         android:id="@+id/cl_min"
         layout="@layout/item_report_ir_input"
         android:visibility="gone" />
 
-    <!-- 平均温 -->
+    
     <include
         android:id="@+id/cl_average"
         layout="@layout/item_report_ir_input"
         android:visibility="gone" />
 
-    <!-- 注释 -->
+    
     <include
         android:id="@+id/cl_explain"
         layout="@layout/item_report_ir_input" />

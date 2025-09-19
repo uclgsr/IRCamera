@@ -12,10 +12,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.csl.irCamera.R
 
-/**
- * Demo activity showing how to use the enhanced PermissionController
- * for comprehensive permission handling in the multi-sensor recording app.
- */
+
 class PermissionDemoActivity : AppCompatActivity() {
 
     companion object {
@@ -40,10 +37,10 @@ class PermissionDemoActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Create simple layout programmatically for demo
+        
         setContentView(createDemoLayout())
 
-        // Initialize permission controller
+        
         permissionController = PermissionController(this)
         permissionController.initialize()
 
@@ -96,7 +93,7 @@ class PermissionDemoActivity : AppCompatActivity() {
         }
 
         requestCameraBtn.setOnClickListener {
-            // Demo of checking specific permission before requesting
+            
             if (!permissionController.hasCameraPermission()) {
                 showToast("Requesting camera permission...")
                 permissionController.ensureAll { granted, denied ->
@@ -178,7 +175,7 @@ class PermissionDemoActivity : AppCompatActivity() {
             return
         }
 
-        // Use the first available USB device for demo
+        
         val device = devices.first()
 
         showToast("Requesting USB permission for: ${device.productName}")
@@ -202,13 +199,13 @@ class PermissionDemoActivity : AppCompatActivity() {
 
             !permissionController.canShowNotifications() -> {
                 showToast("Recording can start but notifications may not work")
-                // Continue anyway
+                
                 showToast("Starting recording with limited notification support...")
             }
 
             else -> {
                 showToast("All permissions ready - starting multi-sensor recording!")
-                // Here you would actually start the recording service
+                
                 Log.i(TAG, "Recording would start now with all permissions granted")
             }
         }
@@ -218,7 +215,7 @@ class PermissionDemoActivity : AppCompatActivity() {
         val statusMessage = permissionController.getPermissionStatusMessage()
         statusText.text = "Permission Status:\n$statusMessage"
 
-        // Update recording button state
+        
         val canRecord = permissionController.canStartRecording()
         startRecordingBtn.isEnabled = canRecord
         startRecordingBtn.text = if (canRecord) {
@@ -237,26 +234,26 @@ class PermissionDemoActivity : AppCompatActivity() {
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
-        // Delegate to permission controller
+        
         permissionController.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
-        // Update UI after permission result
+        
         updatePermissionStatus()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        // Delegate to permission controller for battery optimization results
+        
         permissionController.onActivityResult(requestCode, resultCode)
 
-        // Update UI after activity result
+        
         updatePermissionStatus()
     }
 
     override fun onResume() {
         super.onResume()
-        // Update permission status when returning from settings
+        
         updatePermissionStatus()
     }
 

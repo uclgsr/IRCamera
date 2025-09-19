@@ -7,10 +7,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import java.io.File
 import java.io.FileWriter
 
-/**
- * Service for coordinating time synchronization across all sensors
- * Implements unified timestamping as requested in issue requirements
- */
+
 class TimeSynchronizationService {
     companion object {
         private const val TAG = "TimeSynchronizationService"
@@ -23,38 +20,28 @@ class TimeSynchronizationService {
     private val _syncEvents = MutableSharedFlow<SyncEvent>()
     val syncEvents: SharedFlow<SyncEvent> = _syncEvents.asSharedFlow()
     
-    /**
-     * Initialize session with unified timestamp reference
-     * This establishes the common time reference for all sensors
-     */
+    
     fun initializeSession(sessionDirectory: String): SessionTimestampReference {
         this.sessionDirectory = sessionDirectory
         sessionReference = TimestampManager.startSession()
         
         Log.i(TAG, "Session initialized with unified timestamp reference")
         
-        // Write session reference metadata to file
+        
         writeSessionSyncMetadata()
         
         return sessionReference!!
     }
     
-    /**
-     * Get current session timestamp reference
-     */
+    
     fun getSessionReference(): SessionTimestampReference? = sessionReference
     
-    /**
-     * Create synchronized timestamp for sensor data
-     * All sensors should use this for consistent cross-sensor timing
-     */
+    
     fun createSynchronizedTimestamp(): TimestampRecord {
         return TimestampManager.createTimestampRecord()
     }
     
-    /**
-     * Convert device-specific timestamp to unified session time
-     */
+    
     fun convertDeviceTimestamp(deviceTimestamp: Long, sensorId: String): TimestampRecord {
         val unifiedTimestamp = TimestampManager.createTimestampRecord()
         
@@ -63,9 +50,7 @@ class TimeSynchronizationService {
         return unifiedTimestamp
     }
     
-    /**
-     * Emit sync event for cross-sensor alignment validation
-     */
+    
     suspend fun emitSyncEvent(eventType: String, metadata: Map<String, String> = emptyMap()) {
         val timestampRecord = createSynchronizedTimestamp()
         val syncEvent = SyncEvent(
@@ -78,9 +63,7 @@ class TimeSynchronizationService {
         Log.i(TAG, "Sync event emitted: $eventType at ${timestampRecord.systemTimeMs}ms")
     }
     
-    /**
-     * Finalize session and calculate total session time
-     */
+    
     fun finalizeSession(): Long {
         val sessionDuration = TimestampManager.endSession()
         sessionReference = null
@@ -90,10 +73,7 @@ class TimeSynchronizationService {
         return sessionDuration
     }
     
-    /**
-     * Write session synchronization metadata to CSV file
-     * This file can be used for post-processing alignment verification
-     */
+    
     private fun writeSessionSyncMetadata() {
         val reference = sessionReference ?: return
         val sessionDir = sessionDirectory ?: return
@@ -101,7 +81,7 @@ class TimeSynchronizationService {
         try {
             val metadataFile = File(sessionDir, SYNC_METADATA_FILENAME)
             FileWriter(metadataFile).use { writer ->
-                // Write session reference data for post-processing alignment
+                
                 writer.write(reference.toCsvMetadata())
                 writer.write("# This file contains session timing reference for cross-sensor alignment\n")
                 writer.write("# All sensor CSV files should use these reference timestamps\n")
@@ -118,9 +98,7 @@ class TimeSynchronizationService {
         }
     }
     
-    /**
-     * Log sync event to metadata file
-     */
+    
     suspend fun logSyncEvent(eventType: String, metadata: Map<String, String> = emptyMap()) {
         val timestampRecord = createSynchronizedTimestamp()
         val sessionDir = sessionDirectory ?: return
@@ -138,10 +116,7 @@ class TimeSynchronizationService {
         }
     }
     
-    /**
-     * Validate timestamp consistency across sensors
-     * This can be used for debugging synchronization issues
-     */
+    
     fun validateTimestampConsistency(
         gsrTimestamp: Long,
         thermalTimestamp: Long, 
@@ -153,7 +128,7 @@ class TimeSynchronizationService {
             kotlin.math.abs(rgbTimestamp - gsrTimestamp)
         )
         
-        val isConsistent = maxDiff < 5_000_000L // 5ms tolerance
+        val isConsistent = maxDiff < 5_000_000L 
         
         return TimestampConsistencyReport(
             isConsistent = isConsistent,
@@ -165,18 +140,14 @@ class TimeSynchronizationService {
     }
 }
 
-/**
- * Sync event for cross-sensor alignment validation
- */
+
 data class SyncEvent(
     val eventType: String,
     val timestampRecord: TimestampRecord,
     val metadata: Map<String, String>
 )
 
-/**
- * Report on timestamp consistency across sensors
- */
+
 data class TimestampConsistencyReport(
     val isConsistent: Boolean,
     val maxDifferenceNs: Long,

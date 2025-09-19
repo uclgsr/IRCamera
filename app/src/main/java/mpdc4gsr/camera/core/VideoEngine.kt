@@ -24,7 +24,7 @@ class VideoEngine {
         enableStabilization: Boolean = true
     ): android.view.Surface? {
         try {
-            release() // Clean up any existing recorder
+            release() 
 
             mediaRecorder =
                 MediaRecorder().apply {
@@ -39,7 +39,7 @@ class VideoEngine {
                     setVideoSize(videoSize.width, videoSize.height)
                     setVideoEncoder(MediaRecorder.VideoEncoder.H264)
 
-                    // Set orientation hint for proper video orientation
+                    
                     setOrientationHint(orientationHint)
                     Log.d(TAG, "Video orientation hint set to: $orientationHint degrees")
 

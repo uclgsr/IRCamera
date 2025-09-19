@@ -5,44 +5,44 @@
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
 
-    <!-- Android 12+ Bluetooth permissions for Shimmer3 GSR device connections -->
+    
     <uses-permission
         android:name="android.permission.BLUETOOTH_SCAN"
         android:usesPermissionFlags="neverForLocation" />
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" />
 
-    <!-- Location permissions required for BLE device scanning on most Android versions -->
+    
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
-    <!-- Storage permissions for GSR data recording -->
+    
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
-    <!-- Network permissions for Hub-Spoke communication -->
+    
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
 
-    <!-- Foreground service permissions for background recording -->
+    
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CAMERA" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MICROPHONE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PROJECTION" />
 
-    <!-- Notification permissions for Android 13+ -->
+    
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
-    <!-- Battery optimization exemption for reliable recording -->
+    
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
 
-    <!-- Camera permissions for RGB video recording -->
+    
     <uses-permission android:name="android.permission.CAMERA" />
 
-    <!-- USB permissions for thermal camera integration -->
+    
     <uses-permission android:name="android.permission.USB_PERMISSION" />
     <uses-permission android:name="android.permission.ACCESS_USB_ACCESSORY" />
 
@@ -95,24 +95,24 @@
         <meta-data
             android:name="app_name"
             android:value="${app_name}" />
-        <!--        <service-->
-        <!--            android:name="mpdc4gsr.network.JPushService"-->
-        <!--            android:enabled="true"-->
-        <!--            android:exported="false">-->
-        <!--            <intent-filter>-->
-        <!--                <action android:name="cn.jiguang.user.service.action" />-->
-        <!--            </intent-filter>-->
-        <!--        </service>-->
+        
+        
+        
+        
+        
+        
+        
+        
 
-        <!--        <receiver-->
-        <!--            android:name="mpdc4gsr.network.PushMessageReceiver"-->
-        <!--            android:enabled="true"-->
-        <!--            android:exported="false">-->
-        <!--            <intent-filter>-->
-        <!--                <action android:name="cn.jpush.android.intent.RECEIVE_MESSAGE" />-->
-        <!--                <category android:name="mpdc4gsr" />-->
-        <!--            </intent-filter>-->
-        <!--        </receiver>-->
+        
+        
+        
+        
+        
+        
+        
+        
+        
 
         <meta-data
             android:name="ScopedStorage"
@@ -128,7 +128,7 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="true"
             android:theme="@style/Blank">
-            <!-- 监听USBDevice的插拔 -->
+            
             <intent-filter>
                 <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
             </intent-filter>
@@ -137,7 +137,7 @@
                 android:resource="@xml/ir_device_filter" />
         </activity>
 
-        <!-- USB Device Hotplug Management for Topdon TC001 -->
+        
         <receiver
             android:name="mpdc4gsr.sensors.thermal.ThermalUsbReceiver"
             android:exported="true">
@@ -163,7 +163,7 @@
 
         </activity>
 
-        <!-- Shimmer GSR MVP Activity -->
+        
         <activity
             android:name="mpdc4gsr.activities.ShimmerMvpActivity"
             android:exported="true"
@@ -171,7 +171,7 @@
             android:screenOrientation="userPortrait"
             android:theme="@style/AppTheme" />
 
-        <!-- Unified Sensor Activity for comprehensive IRCamera extension -->
+        
         <activity
             android:name="mpdc4gsr.activities.UnifiedSensorActivity"
             android:exported="true"
@@ -179,7 +179,7 @@
             android:screenOrientation="userPortrait"
             android:theme="@style/AppTheme" />
 
-        <!-- Phase 2 Validation Activity for Hardware Testing -->
+        
         <activity
             android:name="mpdc4gsr.activities.Phase2ValidationActivity"
             android:exported="false"
@@ -187,7 +187,7 @@
             android:screenOrientation="userPortrait"
             android:theme="@style/AppTheme" />
 
-        <!-- Comprehensive System Demo Activity -->
+        
         <activity
             android:name="mpdc4gsr.core.ComprehensiveSystemDemo"
             android:exported="true"
@@ -200,7 +200,7 @@
             </intent-filter>
         </activity>
 
-        <!-- Enhanced Recording Session Test Activity -->
+        
         <activity
             android:name="mpdc4gsr.test.EnhancedRecordingSessionTestActivity"
             android:exported="true"
@@ -235,7 +235,7 @@
             android:name="mpdc4gsr.activities.WebViewActivity"
             android:screenOrientation="userPortrait" />
 
-        <!-- GSR Multi-Modal Recording Activities -->
+        
         <activity
             android:name="mpdc4gsr.sensors.gsr.MultiModalRecordingActivity"
             android:exported="false"
@@ -250,7 +250,7 @@
             android:label="@string/gsr_quick_access"
             android:screenOrientation="userPortrait" />
 
-        <!-- Session Management and Research Template Activities -->
+        
         <activity
             android:name="mpdc4gsr.sensors.gsr.SessionManagerActivity"
             android:exported="false"
@@ -272,7 +272,7 @@
             android:label="Export Session"
             android:screenOrientation="userPortrait" />
 
-        <!-- Hub-and-Spoke System Integration -->
+        
         <activity
             android:name="mpdc4gsr.sensors.HubSpokeIntegrationActivity"
             android:exported="false"
@@ -284,7 +284,7 @@
             android:label="Device Pairing"
             android:screenOrientation="userPortrait" />
 
-        <!-- Testing Activities -->
+        
         <activity
             android:name="mpdc4gsr.test.SynchronizationTestActivity"
             android:exported="false"
@@ -317,14 +317,14 @@
             android:label="Enhanced Permission System Test"
             android:screenOrientation="userPortrait" />
 
-        <!-- Multi-Modal Recording Service -->
+        
         <service
             android:name="mpdc4gsr.core.RecordingService"
             android:enabled="true"
             android:exported="false"
             android:foregroundServiceType="camera|microphone|mediaProjection" />
 
-        <!-- FileProvider configuration to resolve manifest conflicts -->
+        
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"

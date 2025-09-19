@@ -53,7 +53,7 @@ class DistanceMeasureView : View {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
 
         val screenHeight = measuredHeight
-        val lineHeight = 50 // 在dimens.xml中定义line_height
+        val lineHeight = 50 
         margin = ((screenHeight - lineHeight) / 2).toFloat()
         line1Y = margin
         line2Y = margin + lineHeight

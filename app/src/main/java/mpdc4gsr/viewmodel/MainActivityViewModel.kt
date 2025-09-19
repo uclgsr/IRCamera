@@ -18,42 +18,39 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-/**
- * ViewModel for MainActivity managing GSR sensor status, network connectivity, and session control.
- * Implements the UI state management requirements from the problem statement.
- */
+
 class MainActivityViewModel(application: Application) : AndroidViewModel(application) {
 
     companion object {
         private const val TAG = "MainActivityViewModel"
     }
 
-    // GSR Sensor State
+    
     private val _gsrConnectionState = MutableLiveData<GSRConnectionState>()
     val gsrConnectionState: LiveData<GSRConnectionState> = _gsrConnectionState
 
     private val _gsrBatteryLevel = MutableLiveData<Int?>()
     val gsrBatteryLevel: LiveData<Int?> = _gsrBatteryLevel
 
-    // Network State
+    
     private val _networkConnectionState = MutableLiveData<NetworkConnectionState>()
     val networkConnectionState: LiveData<NetworkConnectionState> = _networkConnectionState
 
     private val _connectedControllerInfo = MutableLiveData<NetworkClient.ControllerInfo?>()
     val connectedControllerInfo: LiveData<NetworkClient.ControllerInfo?> = _connectedControllerInfo
 
-    // Session State
+    
     private val _sessionState = MutableLiveData<SessionState>()
     val sessionState: LiveData<SessionState> = _sessionState
 
     private val _currentSession = MutableLiveData<SessionInfo?>()
     val currentSession: LiveData<SessionInfo?> = _currentSession
 
-    // Error and Status Messages
+    
     private val _statusMessage = MutableLiveData<StatusMessage?>()
     val statusMessage: LiveData<StatusMessage?> = _statusMessage
 
-    // Component instances
+    
     private var gsrSensorRecorder: GSRSensorRecorder? = null
     private var unifiedGSRRecorder: UnifiedGSRRecorder? = null
     private var thermalRecorder: ThermalRecorder? = null
@@ -98,7 +95,7 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
     }
 
     init {
-        // Initialize with disconnected states
+        
         _gsrConnectionState.value = GSRConnectionState.DISCONNECTED
         _networkConnectionState.value = NetworkConnectionState.DISCONNECTED
         _sessionState.value = SessionState.IDLE
@@ -109,16 +106,16 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
     fun initializeComponents() {
         viewModelScope.launch {
             try {
-                // Initialize GSR components
+                
                 initializeGSRComponents()
 
-                // Initialize Thermal components
+                
                 initializeThermalComponents()
 
-                // Initialize Network components
+                
                 initializeNetworkComponents()
 
-                // Initialize Session management
+                
                 initializeSessionComponents()
 
                 Log.i(TAG, "All components initialized successfully")
@@ -137,7 +134,7 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
 
             gsrSessionManager = GSRSessionManager.getInstance(getApplication())
 
-            // Set up GSR state monitoring
+            
             _gsrConnectionState.postValue(GSRConnectionState.DISCONNECTED)
 
             Log.d(TAG, "GSR components initialized (UnifiedGSRRecorder will be initialized on connection)")
@@ -152,7 +149,7 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
         try {
             thermalRecorder = ThermalRecorder(getApplication())
 
-            // Set up thermal frame listener
+            
             thermalRecorder?.setFrameListener(object : ThermalRecorder.ThermalFrameListener {
                 override fun onFrameProcessed(stats: ThermalRecorder.ThermalFrameStats) {
                     Log.d(
@@ -181,7 +178,7 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
             networkClient = NetworkClient(getApplication())
             networkController = NetworkController(getApplication())
 
-            // Set up NetworkController event listener for PC remote commands
+            
             networkController?.setEventListener(object :
                 NetworkController.NetworkControllerListener {
                 override fun onStartRecordingCommand(
@@ -202,7 +199,7 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
                         saveImages = options["saveImages"] as? Boolean ?: false
                     )
 
-                    // Start recording session via coroutine
+                    
                     viewModelScope.launch {
                         startRecordingSession(config)
                     }
@@ -211,7 +208,7 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
                 override fun onStopRecordingCommand() {
                     Log.i(TAG, "Remote stop recording command received")
 
-                    // Stop recording session via coroutine
+                    
                     viewModelScope.launch {
                         stopRecordingSession()
                     }
@@ -242,7 +239,7 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
                 }
             })
 
-            // Start NetworkController server
+            
             viewModelScope.launch {
                 val serverStarted = networkController?.start(NetworkController.DEFAULT_PORT)
                 if (serverStarted == true) {
@@ -261,7 +258,7 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
                 }
             }
 
-            // Set up NetworkClient event listener for discovery
+            
             networkClient?.setEventListener(object : NetworkClient.NetworkEventListener {
                 override fun onControllerDiscovered(controller: NetworkClient.ControllerInfo) {
                     _networkConnectionState.postValue(NetworkConnectionState.DISCOVERING)
@@ -294,7 +291,7 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
                 }
 
                 override fun onSyncFlash(durationMs: Int) {
-                    // Handle sync flash for timestamp alignment
+                    
                     Log.d(TAG, "Sync flash requested: ${durationMs}ms")
                 }
 
@@ -346,9 +343,7 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
         }
     }
 
-    /**
-     * Start GSR sensor discovery and connection
-     */
+    
     fun startGSRConnection() {
         viewModelScope.launch {
             try {
@@ -356,25 +351,25 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
                 _statusMessage.value =
                     StatusMessage("Searching for GSR sensor...", StatusMessage.Level.INFO)
 
-                // Implement actual GSR connection logic using UnifiedGSRRecorder
+                
                 withContext(Dispatchers.IO) {
-                    // Note: In a real implementation, the LifecycleOwner would be passed from the Activity
-                    // For now, we'll use a simplified approach
+                    
+                    
                     
                     try {
-                        // Initialize UnifiedGSRRecorder if not already done
+                        
                         if (unifiedGSRRecorder == null) {
-                            // We need a LifecycleOwner for this, which should come from the Activity
-                            // For ViewModel context, we'll skip this and suggest using the recorder directly in the Activity
+                            
+                            
                             Log.w(TAG, "UnifiedGSRRecorder requires LifecycleOwner - should be initialized in Activity context")
                             
-                            // Fall back to basic connection simulation
+                            
                             _gsrConnectionState.postValue(GSRConnectionState.CONNECTING)
                             _statusMessage.postValue(
                                 StatusMessage("Connecting to GSR sensor...", StatusMessage.Level.INFO)
                             )
                             
-                            // Simulate connection process
+                            
                             kotlinx.coroutines.delay(2000)
                             
                             _gsrConnectionState.postValue(GSRConnectionState.CONNECTED)
@@ -385,10 +380,10 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
                             return@withContext
                         }
                         
-                        // Use the UnifiedGSRRecorder for actual connection
+                        
                         val recorder = unifiedGSRRecorder!!
                         
-                        // Initialize the recorder
+                        
                         val initSuccess = recorder.initialize()
                         if (!initSuccess) {
                             _gsrConnectionState.postValue(GSRConnectionState.ERROR)
@@ -403,7 +398,7 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
                             StatusMessage("Starting device discovery...", StatusMessage.Level.INFO)
                         )
                         
-                        // Start device discovery
+                        
                         val discoverySuccess = recorder.startDeviceDiscovery()
                         if (!discoverySuccess) {
                             _gsrConnectionState.postValue(GSRConnectionState.ERROR)
@@ -413,7 +408,7 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
                             return@withContext
                         }
                         
-                        // Get discovered devices
+                        
                         val devices = recorder.getDiscoveredDevices()
                         if (devices.isEmpty()) {
                             _gsrConnectionState.postValue(GSRConnectionState.ERROR)
@@ -423,7 +418,7 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
                             return@withContext
                         }
                         
-                        // Connect to the first available device
+                        
                         val targetDevice = devices.first()
                         _statusMessage.postValue(
                             StatusMessage("Connecting to ${targetDevice.name}...", StatusMessage.Level.INFO)
@@ -436,7 +431,7 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
                                 StatusMessage("Connected to ${targetDevice.name}", StatusMessage.Level.INFO)
                             )
                             
-                            // Monitor device status
+                            
                             monitorGSRStatus(recorder)
                         } else {
                             _gsrConnectionState.postValue(GSRConnectionState.ERROR)
@@ -464,19 +459,17 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
         }
     }
 
-    /**
-     * Monitor GSR sensor status and connection quality
-     */
+    
     private fun monitorGSRStatus(recorder: UnifiedGSRRecorder) {
         viewModelScope.launch {
             try {
-                // Monitor device status
+                
                 recorder.deviceStatus.collect { status ->
                     Log.d(TAG, "GSR device status: $status")
                     
-                    // Update battery level if available (simulated for now)
+                    
                     if (status.contains("Connected")) {
-                        _gsrBatteryLevel.postValue(85) // Simulated battery level
+                        _gsrBatteryLevel.postValue(85) 
                     }
                 }
             } catch (e: Exception) {
@@ -486,11 +479,11 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
         
         viewModelScope.launch {
             try {
-                // Monitor connection quality
+                
                 recorder.connectionQuality.collect { quality ->
                     Log.d(TAG, "GSR connection quality: $quality")
                     
-                    // Update connection state based on quality
+                    
                     if (quality < 0.3) {
                         _statusMessage.postValue(
                             StatusMessage("GSR connection quality low", StatusMessage.Level.WARNING)
@@ -503,9 +496,7 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
         }
     }
 
-    /**
-     * Start network discovery for PC controllers
-     */
+    
     fun startNetworkDiscovery() {
         viewModelScope.launch {
             try {
@@ -517,7 +508,7 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
                     networkClient?.let { client ->
                         val controllers = client.discoverControllers()
                         if (controllers.isNotEmpty()) {
-                            // Auto-connect to first discovered controller
+                            
                             val controller = controllers.first()
                             val connected =
                                 client.connectToController(controller.ipAddress, controller.port)
@@ -547,9 +538,7 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
         }
     }
 
-    /**
-     * Start a new recording session
-     */
+    
     fun startRecordingSession(sessionConfig: SessionConfig = SessionConfig()) {
         viewModelScope.launch {
             try {
@@ -563,7 +552,7 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
                     StatusMessage("Starting recording session...", StatusMessage.Level.INFO)
 
                 withContext(Dispatchers.IO) {
-                    // Create session via GSR session manager
+                    
                     gsrSessionManager?.let { manager ->
                         val session = manager.createSession(
                             sessionId = sessionConfig.sessionId,
@@ -572,7 +561,7 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
                             metadata = sessionConfig.metadata
                         )
 
-                        // Start thermal recording if requested
+                        
                         if (sessionConfig.modalities.contains("thermal")) {
                             val sessionDir =
                                 "/storage/emulated/0/IRCamera/Sessions/${session.sessionId}"
@@ -590,7 +579,7 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
                             }
                         }
 
-                        // Start GSR recording if requested
+                        
                         if (sessionConfig.modalities.contains("GSR")) {
                             val gsrStarted = gsrSensorRecorder?.initialize()
                             if (gsrStarted == true) {
@@ -626,9 +615,7 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
         }
     }
 
-    /**
-     * Stop the current recording session
-     */
+    
     fun stopRecordingSession() {
         viewModelScope.launch {
             try {
@@ -643,7 +630,7 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
 
                 withContext(Dispatchers.IO) {
                     _currentSession.value?.let { session ->
-                        // Stop thermal recording
+                        
                         val thermalStopped = thermalRecorder?.stopRecording()
                         if (thermalStopped == true) {
                             Log.i(
@@ -652,10 +639,10 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
                             )
                         }
 
-                        // Stop GSR recording (if applicable)
-                        // Note: GSR stopping is handled by completing the session
+                        
+                        
 
-                        // Complete the session
+                        
                         gsrSessionManager?.completeSession(session.sessionId)
 
                         _currentSession.postValue(null)
@@ -678,9 +665,7 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
         }
     }
 
-    /**
-     * Handle remote recording request from PC
-     */
+    
     private fun handleRemoteRecordingRequest(sessionInfo: SessionInfo) {
         viewModelScope.launch {
             Log.i(TAG, "Remote recording request received: ${sessionInfo.sessionId}")
@@ -696,17 +681,12 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
         }
     }
 
-    /**
-     * Clear status message (typically called after UI shows it)
-     */
+    
     fun clearStatusMessage() {
         _statusMessage.value = null
     }
 
-    /**
-     * Process thermal frame data through ThermalRecorder
-     * This method bridges the existing camera system with our unified logging
-     */
+    
     fun processThermalFrame(
         frameData: ByteArray,
         width: Int,
@@ -723,7 +703,7 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
     override fun onCleared() {
         super.onCleared()
 
-        // Clean up NetworkController
+        
         viewModelScope.launch {
             networkController?.stop()
         }
@@ -731,9 +711,7 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
         Log.d(TAG, "MainActivityViewModel cleared")
     }
 
-    /**
-     * Configuration for recording sessions
-     */
+    
     data class SessionConfig(
         val sessionId: String? = null,
         val participantId: String? = null,

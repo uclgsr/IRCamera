@@ -18,11 +18,7 @@ import com.topdon.lib.ui.R as UiR
 
 
 object IRImageUtil {
-    /**
-
-
-
-     */
+    
     fun showContrast(
         imageView: ImageView,
         @FloatRange(from = 0.0, to = 2.0) contrast: Double,
@@ -53,12 +49,12 @@ object IRImageUtil {
             val srcMat = Utils.loadResource(
                 com.blankj.utilcode.util.Utils.getApp(),
                 UiR.drawable.ic_main_menu_battery
-            ) // BGR
+            ) 
             val dstMat = Mat()
-            Core.LUT(srcMat, lookUpTable, dstMat) // 对比度
-            Core.add(dstMat, Scalar(brightness, brightness, brightness), dstMat) // 亮度
+            Core.LUT(srcMat, lookUpTable, dstMat) 
+            Core.add(dstMat, Scalar(brightness, brightness, brightness), dstMat) 
             val resultMat = Mat()
-            Imgproc.cvtColor(dstMat, resultMat, Imgproc.COLOR_BGR2RGBA) // android对应图像格式
+            Imgproc.cvtColor(dstMat, resultMat, Imgproc.COLOR_BGR2RGBA) 
             val bitmap = Bitmap.createBitmap(
                 resultMat.size().width.toInt(),
                 resultMat.size().height.toInt(),
@@ -73,12 +69,7 @@ object IRImageUtil {
         }
     }
 
-    /**
-
-     * https://www.cnblogs.com/AlgrithmsRookie/p/13212369.html
-
-
-     */
+    
     private fun lutGamma(
         @FloatRange(from = 0.0, to = 1.0) x: Double,
         a: Double = 0.5,
@@ -93,12 +84,7 @@ object IRImageUtil {
         return y
     }
 
-    /**
-
-     * @param sharpen [1,3,5]
-     *
-
-     */
+    
     private fun showSharpen(
         imageView: ImageView,
         @FloatRange(from = 0.0, to = 2.55) sharpen: Double,
@@ -106,26 +92,26 @@ object IRImageUtil {
         Log.i("123", "show sharpen: $sharpen")
         val scale = 1.0
         val delta = 0.0
-        val kernelSize = 3 // 锐化程度
+        val kernelSize = 3 
 
         val srcMat = Utils.loadResource(
             com.blankj.utilcode.util.Utils.getApp(),
             UiR.drawable.ic_main_menu_battery
-        ) // BGR
+        ) 
         val dstMat = Mat(srcMat.rows(), srcMat.cols(), srcMat.type())
         val preGray = Mat()
         val absDst = Mat()
         Log.i("123", "start kernel_size: $kernelSize")
-        Imgproc.GaussianBlur(srcMat, srcMat, Size(3.0, 3.0), 0.0, 0.0, BORDER_DEFAULT) // 高斯平滑
+        Imgproc.GaussianBlur(srcMat, srcMat, Size(3.0, 3.0), 0.0, 0.0, BORDER_DEFAULT) 
         Imgproc.cvtColor(srcMat, preGray, Imgproc.COLOR_BGR2GRAY)
         Log.w("123", "cvtColor preGray: $preGray")
-        Imgproc.Laplacian(srcMat, dstMat, CV_16S, kernelSize, scale, delta, BORDER_DEFAULT) // 锐化
+        Imgproc.Laplacian(srcMat, dstMat, CV_16S, kernelSize, scale, delta, BORDER_DEFAULT) 
         Log.w("123", "Laplacian dstMat: $dstMat")
         Core.convertScaleAbs(dstMat, absDst)
         Log.w("123", "convertScaleAbs absDst: $absDst")
         val preMat = Mat()
-        Core.addWeighted(srcMat, 1.0, absDst, sharpen, 0.0, preMat) // 融合
-        Imgproc.cvtColor(preMat, dstMat, Imgproc.COLOR_BGR2RGBA) // android对应图像格式
+        Core.addWeighted(srcMat, 1.0, absDst, sharpen, 0.0, preMat) 
+        Imgproc.cvtColor(preMat, dstMat, Imgproc.COLOR_BGR2RGBA) 
         val bitmap = Bitmap.createBitmap(
             dstMat.size().width.toInt(),
             dstMat.size().height.toInt(),

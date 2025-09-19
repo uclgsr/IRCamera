@@ -57,7 +57,7 @@ class IRVideoGSYActivity : BaseActivity() {
         isRemote = intent.getBooleanExtra("isRemote", false)
         data = intent.getParcelableExtra("data") ?: throw NullPointerException("传递 data")
 
-        clBottom.isVisible = isRemote // 查看远端时底部才有3个按钮
+        clBottom.isVisible = isRemote 
 
         if (!isRemote) {
             titleView.setRightDrawable(UiR.drawable.ic_toolbar_info_svg)
@@ -97,30 +97,13 @@ class IRVideoGSYActivity : BaseActivity() {
     ) {
 
 
-        /*
-        PlayerFactory.setPlayManager(SystemPlayerManager::class.java)
-        val url = if (isRemote) {
-            path
-        } else {
-            path.replace("//", "/")
-            "file://$path"
-        }
-
-        GSYVideoOptionBuilder()
-            .setUrl(url)
-            .build(gsyPlay)
-
-        gsyPlay.isNeedShowWifiTip = false //不显示消耗流量弹框
-        gsyPlay.titleTextView.visibility = View.GONE
-        gsyPlay.backButton.visibility = View.GONE
-        gsyPlay.fullscreenButton.visibility = View.GONE
-         */
+        
 
 
     }
 
     private fun actionDownload(isToShare: Boolean) {
-        if (data.hasDownload) { // 已下载
+        if (data.hasDownload) { 
             if (isToShare) {
                 actionShare()
             }
@@ -234,9 +217,5 @@ class IRVideoGSYActivity : BaseActivity() {
         super.onPause()
     }
 
-    /*
-    private fun getCurPlay(): GSYVideoPlayer {
-        return gsyPlay.fullWindowPlayer ?: gsyPlay
-    }
-     */
+    
 }

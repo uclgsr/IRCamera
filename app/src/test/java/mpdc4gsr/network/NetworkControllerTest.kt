@@ -16,9 +16,7 @@ import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 import kotlin.test.*
 
-/**
- * Unit tests for NetworkController JSON command protocol
- */
+
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [28])
 class NetworkControllerTest {
@@ -39,12 +37,12 @@ class NetworkControllerTest {
 
     @Test
     fun testNetworkControllerStartStop() = runTest {
-        // Test starting the server
-        val started = networkController.start(8081) // Use different port for testing
+        
+        val started = networkController.start(8081) 
         assertTrue(started, "NetworkController should start successfully")
         assertTrue(networkController.isRunning(), "NetworkController should be running")
 
-        // Test stopping the server
+        
         networkController.stop()
         assertFalse(networkController.isRunning(), "NetworkController should be stopped")
     }
@@ -56,7 +54,7 @@ class NetworkControllerTest {
         var receivedSessionId: String? = null
         var receivedModalities: List<String>? = null
 
-        // Set up event listener
+        
         networkController.setEventListener(object : NetworkController.NetworkControllerListener {
             override fun onStartRecordingCommand(
                 sessionId: String,
@@ -74,14 +72,14 @@ class NetworkControllerTest {
             override fun onError(operation: String, error: String) {}
         })
 
-        // Start server
+        
         val started = networkController.start(port)
         assertTrue(started, "Server should start")
 
-        // Wait a moment for server to be ready
+        
         Thread.sleep(100)
 
-        // Send JSON command
+        
         val socket = Socket("localhost", port)
         val output = PrintWriter(socket.getOutputStream(), true)
         val input = BufferedReader(InputStreamReader(socket.getInputStream()))
@@ -90,7 +88,7 @@ class NetworkControllerTest {
             """{"command": "start_recording", "session_id": "TEST123", "modalities": ["thermal", "GSR"]}"""
         output.println(command)
 
-        // Wait for response
+        
         val response = input.readLine()
         assertNotNull(response, "Should receive response")
         assertTrue(
@@ -98,7 +96,7 @@ class NetworkControllerTest {
             "Response should indicate recording started"
         )
 
-        // Verify command was processed
+        
         assertTrue(latch.await(1, TimeUnit.SECONDS), "Should receive command callback")
         assertEquals("TEST123", receivedSessionId)
         assertEquals(listOf("thermal", "GSR"), receivedModalities)
@@ -110,13 +108,13 @@ class NetworkControllerTest {
     fun testPingCommand() = runTest {
         val port = 8083
 
-        // Start server
+        
         val started = networkController.start(port)
         assertTrue(started, "Server should start")
 
-        Thread.sleep(100) // Wait for server to be ready
+        Thread.sleep(100) 
 
-        // Send ping command
+        
         val socket = Socket("localhost", port)
         val output = PrintWriter(socket.getOutputStream(), true)
         val input = BufferedReader(InputStreamReader(socket.getInputStream()))
@@ -134,13 +132,13 @@ class NetworkControllerTest {
     fun testInvalidCommand() = runTest {
         val port = 8084
 
-        // Start server
+        
         val started = networkController.start(port)
         assertTrue(started, "Server should start")
 
         Thread.sleep(100)
 
-        // Send invalid command
+        
         val socket = Socket("localhost", port)
         val output = PrintWriter(socket.getOutputStream(), true)
         val input = BufferedReader(InputStreamReader(socket.getInputStream()))
@@ -160,7 +158,7 @@ class NetworkControllerTest {
         val latch = CountDownLatch(1)
         var stopCommandReceived = false
 
-        // Set up event listener
+        
         networkController.setEventListener(object : NetworkController.NetworkControllerListener {
             override fun onStartRecordingCommand(
                 sessionId: String,
@@ -179,13 +177,13 @@ class NetworkControllerTest {
             override fun onError(operation: String, error: String) {}
         })
 
-        // Start server
+        
         val started = networkController.start(port)
         assertTrue(started, "Server should start")
 
         Thread.sleep(100)
 
-        // Send stop command
+        
         val socket = Socket("localhost", port)
         val output = PrintWriter(socket.getOutputStream(), true)
         val input = BufferedReader(InputStreamReader(socket.getInputStream()))
@@ -199,7 +197,7 @@ class NetworkControllerTest {
             "Response should indicate recording stopped"
         )
 
-        // Verify command was processed
+        
         assertTrue(latch.await(1, TimeUnit.SECONDS), "Should receive stop command callback")
         assertTrue(stopCommandReceived, "Stop command should be received")
 

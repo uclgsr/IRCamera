@@ -68,49 +68,14 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
     )
 
     fun queryFirmware(isTS004: Boolean) {
-        if (isRequest) { // 别催别催，在查了
+        if (isRequest) { 
             return
         }
         isRequest = true
 
         viewModelScope.launch(Dispatchers.IO) {
 
-            /*if (isTS004) {
-
-                val deviceInfo: DeviceInfo? = TS004Repository.getDeviceInfo()?.data
-                if (deviceInfo == null) {
-                    XLog.w("TS004 固件升级 - 从设备查询 SN、激活码 失败!")
-                    failLD.postValue(false)
-                    isRequest = false
-                    return@launch
-                }
-
-                val firmware: String? = TS004Repository.getVersion()?.data?.firmware
-                if (firmware == null) {
-                    XLog.w("TS004 固件升级 - 从设备查询 固件版本 失败!")
-                    failLD.postValue(false)
-                    isRequest = false
-                    return@launch
-                }
-
-                val sn: String = if (USE_DEBUG_SN) TS004_DEBUG_SN else deviceInfo.sn
-                val randomNum: String = if (USE_DEBUG_SN) TS004_DEBUG_RANDOM_NUM else deviceInfo.code
-                getInfoFromNetwork(true, sn, randomNum, firmware)
-            } else {
-
-                val productInfo: ProductBean? = TC007Repository.getProductInfo()
-                if (productInfo == null) {
-                    XLog.w("TC007 固件升级 - 从设备查询 SN、激活码 失败!")
-                    failLD.postValue(false)
-                    isRequest = false
-                    return@launch
-                }
-
-                val sn: String = if (USE_DEBUG_SN) TC007_DEBUG_SN else productInfo.ProductSN
-                val randomNum: String = if (USE_DEBUG_SN) TC007_DEBUG_RANDOM_NUM else productInfo.Code
-                val firmware = "V${productInfo.getVersionStr()}"
-                getInfoFromNetwork(false, sn, randomNum, firmware)
-            }*/
+            
 
             if (isTS004) {
 
@@ -148,7 +113,7 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
         val newVersion: Double = getVersionFromStr(apkVersionStr)
         val currentVersion: Double = getVersionFromStr(firmware)
         XLog.d("${if (isTS004) "TS004" else "TC007"} 固件升级 - current版本：$currentVersion apk内置版本：$newVersion")
-        if (newVersion <= currentVersion) { // current固件升级包已是最新
+        if (newVersion <= currentVersion) { 
             firmwareDataLD.postValue(null)
             isRequest = false
             return
@@ -213,7 +178,7 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
 
         val record: PackageData.Record? = packageData.getFirstRecord()
         val newVersionStr: String? = record?.maxUpdateVersion
-        if (record == null || newVersionStr == null) { // 没有固件升级包，即current固件已是最新
+        if (record == null || newVersionStr == null) { 
             XLog.d("${if (isTS004) "TS004" else "TC007"} 固件升级 - 没有固件升级包，即current固件已是最新")
             firmwareDataLD.postValue(null)
             isRequest = false
@@ -223,7 +188,7 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
         val newVersion: Double = getVersionFromStr(newVersionStr)
         val currentVersion: Double = getVersionFromStr(firmware)
         XLog.d("${if (isTS004) "TS004" else "TC007"} 固件升级 - current版本：$currentVersion 服务器版本：$newVersion")
-        if (newVersion <= currentVersion) { // current固件升级包已是最新
+        if (newVersion <= currentVersion) { 
             firmwareDataLD.postValue(null)
             isRequest = false
             return
@@ -278,7 +243,7 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
                 "downloadLanguageId",
                 LanguageUtil.getLanguageId(Utils.getApp())
             )
-            params.addBodyParameter("downloadPlatformId", 2) // 1-IOS 2-APP 3-官网 4-PC 5-生产 6-其他
+            params.addBodyParameter("downloadPlatformId", 2) 
             params.addBodyParameter(
                 "queryTime",
                 DateUtils.format(
@@ -322,9 +287,9 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
             val params = RequestParams()
             params.addBodyParameter("sn", sn)
             params.addBodyParameter("businessId", businessId)
-            params.addBodyParameter("businessType", 20) // 业务类型，20-软件包
-            params.addBodyParameter("productType", 20) // 0-未知 10-贸易体系 20-品牌体系
-            params.addBodyParameter("isCheckPoint", 0) // 0-不校验 1-校验（也不知道校验的是什么，接口文档没说）
+            params.addBodyParameter("businessType", 20) 
+            params.addBodyParameter("productType", 20) 
+            params.addBodyParameter("isCheckPoint", 0) 
             HttpProxy.instant.post(
                 url,
                 params,
@@ -370,8 +335,8 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
         fun getFirstRecord(): Record? = if (records?.isNotEmpty() == true) records?.get(0) else null
 
         data class Record(
-            var maxUpdateVersion: String?, // 版本名，如"V1.32"
-            var maxUpdateVersionSoftId: Int, // 仅用来请求对应URL
+            var maxUpdateVersion: String?, 
+            var maxUpdateVersionSoftId: Int, 
             var maxVersionDetailResVO: MaxVersionDetailResVO?,
         ) {
             fun getUpdateStr(): String {
@@ -392,7 +357,7 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
         )
 
         data class OtherExplain(
-            val valueType: Int, // 1-软件名称 2-软件介绍 3-update说明 4-注意事项
+            val valueType: Int, 
             val textDescription: String?,
         )
     }

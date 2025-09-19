@@ -148,10 +148,7 @@ class TemperatureEditView : TemperatureBaseView {
         }
     }
 
-    /**
-
-
-     */
+    
     private fun drawOnePoint(
         canvas: Canvas,
         point: Point,
@@ -179,10 +176,7 @@ class TemperatureEditView : TemperatureBaseView {
         return result
     }
 
-    /**
-
-
-     */
+    
     private fun drawOneLine(
         canvas: Canvas,
         line: Line,
@@ -226,10 +220,7 @@ class TemperatureEditView : TemperatureBaseView {
         return result
     }
 
-    /**
-
-
-     */
+    
     private fun drawOneRect(
         canvas: Canvas,
         rect: Rect,

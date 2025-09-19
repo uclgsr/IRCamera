@@ -15,16 +15,7 @@ import com.topdon.module.thermal.ir.fragment.IRMonitorHistoryFragment
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
-/**
 
-
-
- *
-
-
- *
- * Created by LCG on 2024/8/20.
- */
 class MonitoryHomeActivity : BaseActivity() {
     override fun initContentView(): Int = R.layout.activity_monitor_home
 

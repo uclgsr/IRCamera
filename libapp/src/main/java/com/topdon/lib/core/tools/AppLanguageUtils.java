@@ -48,7 +48,7 @@ public class AppLanguageUtils {
     @TargetApi(Build.VERSION_CODES.N)
     private static Context updateResources(Context context, String language) {
         Resources resources = context.getResources();
-        Locale locale = Locale.ENGLISH; // Always use English
+        Locale locale = Locale.ENGLISH; 
 
         Configuration configuration = resources.getConfiguration();
         configuration.setLocale(locale);

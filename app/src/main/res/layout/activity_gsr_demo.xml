@@ -11,7 +11,7 @@
         android:orientation="vertical"
         android:padding="32dp">
 
-        <!-- Title -->
+        
         <TextView
             android:id="@+id/title_text"
             android:layout_width="match_parent"
@@ -20,7 +20,7 @@
             android:text="GSR Recording Demo"
             android:textSize="24sp" />
 
-        <!-- Description -->
+        
         <TextView
             android:id="@+id/description_text"
             android:layout_width="match_parent"
@@ -28,7 +28,7 @@
             android:paddingBottom="24dp"
             android:text="Demonstrates 128 Hz GSR data recording with CSV export and sync events." />
 
-        <!-- Control Buttons -->
+        
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -60,7 +60,7 @@
                 android:text="Sync Event" />
         </LinearLayout>
 
-        <!-- Status Text -->
+        
         <TextView
             android:id="@+id/status_text"
             android:layout_width="match_parent"
@@ -70,7 +70,7 @@
             android:text="Ready to record"
             android:textSize="16sp" />
 
-        <!-- Data Display -->
+        
         <TextView
             android:id="@+id/data_text"
             android:layout_width="match_parent"

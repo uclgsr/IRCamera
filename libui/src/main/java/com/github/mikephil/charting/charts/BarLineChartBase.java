@@ -113,7 +113,7 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
         mGridBackgroundPaint = new Paint();
         mGridBackgroundPaint.setStyle(Style.FILL);
 
-        mGridBackgroundPaint.setColor(Color.rgb(240, 240, 240)); // light
+        mGridBackgroundPaint.setColor(Color.rgb(240, 240, 240)); 
 
 
         mBorderPaint = new Paint();
@@ -705,9 +705,7 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
         calculateOffsets();
     }
 
-    /**
-     * CODE BELOW IS GETTERS AND SETTERS
-     */
+    
 
     protected float getAxisRange(AxisDependency axis) {
         if (axis == AxisDependency.LEFT)

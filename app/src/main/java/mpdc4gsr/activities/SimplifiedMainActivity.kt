@@ -105,7 +105,7 @@ class SimplifiedMainActivity : AppCompatActivity() {
         updateUI()
 
         lifecycleScope.launch {
-            repeat(60) { // Run for 60 seconds
+            repeat(60) { 
                 delay(1000)
                 if (isRecording) {
                     val gsrValue = (10..50).random() + kotlin.random.Random.nextDouble()
@@ -133,7 +133,7 @@ class SimplifiedMainActivity : AppCompatActivity() {
         updateStatus("Connecting to PC Controller...")
 
         lifecycleScope.launch {
-            delay(2000) // Simulate connection time
+            delay(2000) 
             isConnected = true
             updateStatus("Connected to PC Controller ✓")
             updateUI()

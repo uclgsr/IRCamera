@@ -23,9 +23,9 @@ class DataStreamingService(
 ) {
     companion object {
         private const val TAG = "DataStreamingService"
-        private const val BATCH_SIZE = 50 // Number of samples per batch
-        private const val BATCH_TIMEOUT_MS = 100L // Maximum time to wait for batch completion
-        private const val MAX_QUEUE_SIZE = 5000 // Maximum queue size to prevent memory issues
+        private const val BATCH_SIZE = 50 
+        private const val BATCH_TIMEOUT_MS = 100L 
+        private const val MAX_QUEUE_SIZE = 5000 
         private const val RETRY_ATTEMPTS = 3
         private const val RETRY_DELAY_MS = 500L
     }
@@ -57,7 +57,7 @@ class DataStreamingService(
         val frameIndex: Long,
         val frameSize: Int,
         val sessionId: String,
-        val cameraType: String, // "rgb" or "thermal"
+        val cameraType: String, 
     )
 
     interface StreamingEventListener {
@@ -216,7 +216,7 @@ class DataStreamingService(
                         if (isActive) {
                             Log.e(TAG, "Error in batching process", e)
                             eventListener?.onStreamingError("Batching error: ${e.message}")
-                            delay(1000) // Wait before retrying
+                            delay(1000) 
                         }
                     }
                 }

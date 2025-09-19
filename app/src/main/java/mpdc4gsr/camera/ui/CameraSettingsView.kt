@@ -221,7 +221,7 @@ constructor(
                     LinearLayout.LayoutParams.WRAP_CONTENT
                 )
                 max = 100
-                progress = 80 // Default to high quality
+                progress = 80 
             }
         qualityLayout.addView(qualitySeekBar)
         settingsPanel.addView(qualityLayout)
@@ -347,7 +347,7 @@ constructor(
                 ) {
                     if (fromUser) {
                         val bitRate =
-                            (progress / 100f * 15_000_000).toInt() + 1_000_000 // 1-16 Mbps
+                            (progress / 100f * 15_000_000).toInt() + 1_000_000 
                         currentSettings = currentSettings.copy(bitRate = bitRate)
                         onSettingsChanged?.invoke(currentSettings)
                     }

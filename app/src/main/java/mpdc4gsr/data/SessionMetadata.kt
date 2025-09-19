@@ -8,46 +8,40 @@ import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 
-/**
- * SessionMetadata captures comprehensive timing information for multi-modal recording sessions
- * to enable precise post-processing synchronization as specified in the requirements.
- *
- * This class implements the common start time approach using both wall clock and monotonic
- * clock references to protect against system time adjustments during recording.
- */
+
 data class SessionMetadata(
     val sessionId: String,
 
-    // Wall clock timestamps (UTC milliseconds) - for human-readable reference
+    
     val sessionStartTimestampMs: Long,
     val sessionEndTimestampMs: Long? = null,
 
-    // Monotonic clock references (nanoseconds) - for interval measurements
+    
     val sessionStartMonotonicNs: Long,
     val sessionEndMonotonicNs: Long? = null,
 
-    // Human-readable timing information
+    
     val sessionStartIso: String,
     val sessionEndIso: String? = null,
 
-    // Device and timing information
+    
     val deviceModel: String = android.os.Build.MODEL,
     val deviceManufacturer: String = android.os.Build.MANUFACTURER,
     val timingSource: String = "android_monotonic_realtime",
 
-    // Modality file references
+    
     val modalityFiles: MutableMap<String, String> = mutableMapOf(),
 
-    // Sync event timestamps for alignment verification
+    
     val syncEvents: MutableList<SyncEvent> = mutableListOf(),
 
-    // Sensor lifecycle summaries keyed by logical sensor name
+    
     val sensorSummaries: MutableMap<String, SensorSummary> = mutableMapOf(),
 
-    // Stop results per sensor for quick lookup
+    
     val stopResults: MutableMap<String, Boolean> = mutableMapOf(),
 
-    // Session statistics
+    
     val recordingDurationMs: Long? = null,
     
     // Enhanced metadata for TODO requirement: "Expand the metadata.json to include all relevant session info"
@@ -57,25 +51,23 @@ data class SessionMetadata(
     val userNotes: String? = null,
     val experimentalConditions: Map<String, Any> = emptyMap(),
     
-    // Device and environment information
+    
     val deviceInfo: DeviceInfo = DeviceInfo(),
     val environmentalConditions: EnvironmentalConditions = EnvironmentalConditions(),
     
-    // Network and synchronization details
+    
     val networkSyncInfo: NetworkSyncInfo = NetworkSyncInfo(),
     
-    // Firmware and version information
+    
     val softwareVersions: Map<String, String> = emptyMap(),
     val calibrationInfo: Map<String, CalibrationData> = emptyMap(),
     
-    // Quality assurance and validation
+    
     val qualityMetrics: QualityMetrics = QualityMetrics(),
     val dataIntegrityChecks: Map<String, Boolean> = emptyMap()
 ) {
 
-    /**
-     * Enhanced device information structure
-     */
+    
     data class DeviceInfo(
         val model: String = android.os.Build.MODEL,
         val manufacturer: String = android.os.Build.MANUFACTURER,
@@ -97,7 +89,7 @@ data class SessionMetadata(
             
             private fun getPersistentDeviceId(): String {
                 return try {
-                    // Use a consistent fallback device identifier
+                    
                     "DEVICE-${android.os.Build.FINGERPRINT.hashCode().toString(16).uppercase()}"
                 } catch (e: Exception) {
                     "DEVICE-UNKNOWN"
@@ -115,7 +107,7 @@ data class SessionMetadata(
             private fun getMemoryInfo(): String {
                 return try {
                     val runtime = Runtime.getRuntime()
-                    val maxMemory = runtime.maxMemory() / (1024 * 1024) // MB
+                    val maxMemory = runtime.maxMemory() / (1024 * 1024) 
                     "Max: ${maxMemory}MB"
                 } catch (e: Exception) {
                     "MEMORY-INFO-UNAVAILABLE"
@@ -124,9 +116,7 @@ data class SessionMetadata(
         }
     }
 
-    /**
-     * Environmental conditions and settings
-     */
+    
     data class EnvironmentalConditions(
         val ambientTemperatureC: Double? = null,
         val humidityPercent: Double? = null,
@@ -137,9 +127,7 @@ data class SessionMetadata(
         val roomConditions: Map<String, Any> = emptyMap()
     )
 
-    /**
-     * Network synchronization information
-     */
+    
     data class NetworkSyncInfo(
         val pcControllerAddress: String? = null,
         val clockOffsetMs: Long = 0,
@@ -150,9 +138,7 @@ data class SessionMetadata(
         val driftMeasurements: List<Long> = emptyList()
     )
 
-    /**
-     * Calibration data for each sensor
-     */
+    
     data class CalibrationData(
         val sensorType: String,
         val calibrationTimestamp: Long,
@@ -162,9 +148,7 @@ data class SessionMetadata(
         val calibrationNotes: String? = null
     )
 
-    /**
-     * Quality metrics for the session
-     */
+    
     data class QualityMetrics(
         val overallQualityScore: Double = 0.0,
         val sensorQualityScores: Map<String, Double> = emptyMap(),
@@ -179,9 +163,7 @@ data class SessionMetadata(
     companion object {
         private const val TAG = "SessionMetadata"
 
-        /**
-         * Creates a new session metadata with synchronized start time
-         */
+        
         fun createSessionStart(sessionId: String): SessionMetadata {
             val wallClockStartMs = System.currentTimeMillis()
             val monotonicStartNs = SystemClock.elapsedRealtimeNanos()
@@ -197,9 +179,7 @@ data class SessionMetadata(
         }
     }
 
-    /**
-     * Marks the session as ended and calculates duration
-     */
+    
     fun markSessionEnd(): SessionMetadata {
         val wallClockEndMs = System.currentTimeMillis()
         val monotonicEndNs = SystemClock.elapsedRealtimeNanos()
@@ -216,13 +196,11 @@ data class SessionMetadata(
         )
     }
 
-    /**
-     * Adds a modality file reference with its start time relative to session start
-     */
+    
     fun addModalityFile(modalityType: String, fileName: String, startOffsetMs: Long = 0) {
         modalityFiles[modalityType] = fileName
 
-        // Add sync event for modality start
+        
         syncEvents.add(
             SyncEvent(
                 eventType = "${modalityType}_START",
@@ -237,9 +215,7 @@ data class SessionMetadata(
         )
     }
 
-    /**
-     * Adds a synchronization event for later alignment verification
-     */
+    
     fun addSyncEvent(eventType: String, metadata: Map<String, String> = emptyMap()) {
         val currentWallMs = System.currentTimeMillis()
         val currentMonotonicNs = SystemClock.elapsedRealtimeNanos()
@@ -259,9 +235,7 @@ data class SessionMetadata(
         return (monotonicNs - sessionStartMonotonicNs) / 1_000_000L
     }
 
-    /**
-     * Records that a sensor successfully started capturing data.
-     */
+    
     fun markSensorStart(
         sensorName: String,
         sensorId: String,
@@ -280,9 +254,7 @@ data class SessionMetadata(
         sensorSummaries[sensorName] = summary
     }
 
-    /**
-     * Updates the sensor summary with stop timing and performance data.
-     */
+    
     fun markSensorStop(
         sensorName: String,
         stopMonotonicNs: Long,
@@ -322,33 +294,25 @@ data class SessionMetadata(
         sensorSummaries[sensorName] = summary
     }
 
-    /**
-     * Stores the final stop results for each sensor.
-     */
+    
     fun recordStopResults(results: Map<String, Boolean>) {
         stopResults.clear()
         stopResults.putAll(results)
     }
 
-    /**
-     * Calculates timestamp relative to session start using monotonic clock
-     */
+    
     fun getRelativeTimestamp(): Long {
         val currentMonotonicNs = SystemClock.elapsedRealtimeNanos()
-        return (currentMonotonicNs - sessionStartMonotonicNs) / 1_000_000L // Convert to milliseconds
+        return (currentMonotonicNs - sessionStartMonotonicNs) / 1_000_000L 
     }
 
-    /**
-     * Converts a monotonic timestamp to wall clock time
-     */
+    
     fun monotonicToWallClock(monotonicNs: Long): Long {
         val offsetFromStartNs = monotonicNs - sessionStartMonotonicNs
         return sessionStartTimestampMs + (offsetFromStartNs / 1_000_000L)
     }
 
-    /**
-     * Saves session metadata to JSON file
-     */
+    
     fun saveToFile(sessionDirectory: File): File {
         val metadataFile = File(sessionDirectory, "session_metadata.json")
         val gson = GsonBuilder().setPrettyPrinting().create()
@@ -368,9 +332,7 @@ data class SessionMetadata(
      * "Unify contributions from each recorder (RGB, GSR, audio) into one metadata file at session end"
      */
     
-    /**
-     * Export comprehensive session metadata to JSON file
-     */
+    
     fun exportToUnifiedMetadataFile(sessionDirectory: File): Boolean {
         return try {
             val metadataFile = File(sessionDirectory, "session_metadata_complete.json")
@@ -390,9 +352,7 @@ data class SessionMetadata(
         }
     }
 
-    /**
-     * Build comprehensive metadata object with all session information
-     */
+    
     private fun buildComprehensiveMetadata(): Map<String, Any> {
         return mapOf(
             "session_header" to mapOf(
@@ -501,9 +461,7 @@ data class SessionMetadata(
         )
     }
 
-    /**
-     * Update quality metrics based on sensor performance
-     */
+    
     fun updateQualityMetrics(
         sensorQualityScores: Map<String, Double>,
         syncAccuracy: Double,
@@ -527,18 +485,14 @@ data class SessionMetadata(
         return this.copy(qualityMetrics = updatedQualityMetrics)
     }
 
-    /**
-     * Add calibration information for a sensor
-     */
+    
     fun addCalibrationInfo(sensorType: String, calibrationData: CalibrationData): SessionMetadata {
         val updatedCalibrationInfo = calibrationInfo.toMutableMap()
         updatedCalibrationInfo[sensorType] = calibrationData
         return this.copy(calibrationInfo = updatedCalibrationInfo)
     }
 
-    /**
-     * Update network synchronization information
-     */
+    
     fun updateNetworkSyncInfo(
         pcAddress: String?,
         clockOffset: Long,
@@ -557,9 +511,7 @@ data class SessionMetadata(
         return this.copy(networkSyncInfo = updatedNetworkSyncInfo)
     }
 
-    /**
-     * Generate session summary report
-     */
+    
     fun generateSessionSummaryText(): String {
         return buildString {
             appendLine("=== IRCamera Session Summary ===")
@@ -607,9 +559,7 @@ data class SessionMetadata(
         }
     }
 
-    /**
-     * Creates timing header for CSV files
-     */
+    
     fun createTimingHeader(): String {
         return buildString {
             appendLine("# Multi-Modal Recording Session Timing Information")
@@ -628,9 +578,7 @@ data class SessionMetadata(
     }
 }
 
-/**
- * Represents a synchronization event for cross-modal alignment
- */
+
 data class SyncEvent(
     val eventType: String,
     val timestampMs: Long,

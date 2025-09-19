@@ -33,10 +33,10 @@ object TC007Repository {
     private fun getOKHttpClient(timeout: Long): OkHttpClient {
         val builder =
             OkHttpClient.Builder()
-                .retryOnConnectionFailure(false) // 不重试
-                .connectTimeout(timeout, TimeUnit.SECONDS) // 2024-5-29 TS004 群中决定接口统一超时15秒
-                .readTimeout(timeout, TimeUnit.SECONDS) // 2024-5-29 TS004 群中决定接口统一超时15秒
-                .writeTimeout(timeout, TimeUnit.SECONDS) // 2024-5-29 TS004 群中决定接口统一超时15秒
+                .retryOnConnectionFailure(false) 
+                .connectTimeout(timeout, TimeUnit.SECONDS) 
+                .readTimeout(timeout, TimeUnit.SECONDS) 
+                .writeTimeout(timeout, TimeUnit.SECONDS) 
                 .addInterceptor(OKLogInterceptor(true))
         netWork?.socketFactory?.let {
             builder.socketFactory(it)
@@ -98,7 +98,7 @@ object TC007Repository {
                 }
 
                 var status = getTC007Service().getUpgradeStatus().Data?.Status
-                while (status == 0 || status == 1 || status == 2) { // 文档跟实际值对不上
+                while (status == 0 || status == 1 || status == 2) { 
                     delay(1000)
                     status = getTC007Service().getUpgradeStatus().Data?.Status
                 }
@@ -111,7 +111,7 @@ object TC007Repository {
 
     private suspend fun sendUpgradeFile(file: File): Boolean =
         withContext(Dispatchers.IO) {
-            val pageSize = 1024 * 1024 * 10 // 10M每包
+            val pageSize = 1024 * 1024 * 10 
             var fileInputStream: FileInputStream? = null
             try {
                 fileInputStream = FileInputStream(file)
@@ -119,7 +119,7 @@ object TC007Repository {
                 var result = true
                 var packNum = 0
                 var hasReadCount = 0
-                var byteArray = ByteArray(pageSize) // 10M每包
+                var byteArray = ByteArray(pageSize) 
                 val totalPackNum =
                     (file.length() / (pageSize) + (if (file.length() % (pageSize) > 0) 1 else 0)).toInt()
                 val md5 = EncryptUtils.encryptMD5File2String(file).lowercase(Locale.ROOT)
@@ -139,14 +139,14 @@ object TC007Repository {
                             md5,
                             part
                         ).Code
-                        if (code == 400805) { // 已在升级中
+                        if (code == 400805) { 
                             return@withContext true
                         }
-                        if (code != 200) { // 200是成功
+                        if (code != 200) { 
                             result = false
                         }
                         hasReadCount = 0
-                        byteArray = ByteArray(pageSize) // 10M每包
+                        byteArray = ByteArray(pageSize) 
                     }
                     readCount =
                         fileInputStream.read(byteArray, hasReadCount, byteArray.size - hasReadCount)
@@ -166,10 +166,10 @@ object TC007Repository {
                         md5,
                         part
                     ).Code
-                    if (code == 400805) { // 已在升级中
+                    if (code == 400805) { 
                         return@withContext true
                     }
-                    if (code != 200) { // 200是成功
+                    if (code != 200) { 
                         result = false
                     }
                 }
@@ -216,11 +216,11 @@ object TC007Repository {
         withContext(Dispatchers.IO) {
             try {
                 val paramMap: HashMap<String, Any> = HashMap()
-                paramMap["TempUnit"] = if (isCelsius) 0 else 2 // 0-摄氏度 1-开尔文 2-华氏度
-                paramMap["Level"] = Level // 0:高增益 1:低增益 3:自动切换
-                paramMap["Fps"] = 12 // 测温帧率,范围[0,采集帧率],默认12,最高支持12帧
-                paramMap["OsdMode"] = 1 // 测温信息叠加方式，0:视频编码前叠加 1:码流信息叠加(编码后预览时叠加) 2:无叠加
-                paramMap["DistanceUnit"] = 0 // 距离单位，0:米 1:英尺
+                paramMap["TempUnit"] = if (isCelsius) 0 else 2 
+                paramMap["Level"] = Level 
+                paramMap["Fps"] = 12 
+                paramMap["OsdMode"] = 1 
+                paramMap["DistanceUnit"] = 0 
                 getTC007Service().setEnvAttr(paramMap.toBody()).isSuccess()
             } catch (_: Exception) {
                 false

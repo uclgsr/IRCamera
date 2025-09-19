@@ -88,7 +88,7 @@ class DemoActivity : AppCompatActivity() {
                 delay(2000)
 
                 if (camera2System.startRecording("demo_session_raw")) {
-                    delay(5000) // Record for 5 seconds
+                    delay(5000) 
                     camera2System.stopRecording()
                 }
             }
@@ -100,7 +100,7 @@ class DemoActivity : AppCompatActivity() {
                 delay(2000)
 
                 if (camera2System.startRecording("demo_session_video")) {
-                    delay(5000) // Record for 5 seconds
+                    delay(5000) 
                     camera2System.stopRecording()
                 }
             }
@@ -111,7 +111,7 @@ class DemoActivity : AppCompatActivity() {
         super.onResume()
 
         lifecycleScope.launch {
-            delay(3000) // Wait for camera to initialize
+            delay(3000) 
             testModeSwitch()
         }
     }

@@ -368,7 +368,7 @@ class BleDeviceManager(private val context: Context) : CoroutineScope {
                 DeviceConnectionStatus(
                     address = address,
                     connectionState = connection.connectionState,
-                    reliabilityScore = 1.0, // Simplified since metrics method doesn't exist
+                    reliabilityScore = 1.0, 
                     dataIntegrity = 1.0,
                     isActive = connection.connectionState == ConnectionState.SERVICE_DISCOVERED,
                 )

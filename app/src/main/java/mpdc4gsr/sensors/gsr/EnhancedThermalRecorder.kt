@@ -13,10 +13,7 @@ import mpdc4gsr.sensors.RecordingStats
 import java.io.File
 import java.io.FileWriter
 
-/**
- * Enhanced thermal recorder that wraps ThermalCameraRecorder and provides additional
- * synchronization and session management functionality needed by multi-modal recording.
- */
+
 class EnhancedThermalRecorder(private val context: Context) {
     
     companion object {
@@ -27,29 +24,27 @@ class EnhancedThermalRecorder(private val context: Context) {
     private var currentSessionDirectory: File? = null
     private var syncEventWriter: FileWriter? = null
     
-    // Initialize the underlying thermal camera recorder
+    
     suspend fun initialize(): Boolean {
         return thermalCameraRecorder.initialize()
     }
     
-    /**
-     * Start recording with session management
-     */
+    
     fun startRecording(
         sessionId: String,
         sessionMetadata: SessionMetadata?,
         saveImages: Boolean = false
     ): Boolean {
         try {
-            // Set up session directory using Android external storage
+            
             val externalDir = File(context.getExternalFilesDir(null), "IRCamera/sessions")
             currentSessionDirectory = File(externalDir, sessionId)
             currentSessionDirectory?.mkdirs()
             
-            // Initialize sync events file
+            
             setupSyncEventsFile()
             
-            // Launch recording in background since underlying method is suspend
+            
             GlobalScope.launch {
                 val success = if (sessionMetadata != null) {
                     thermalCameraRecorder.startRecording(
@@ -67,19 +62,17 @@ class EnhancedThermalRecorder(private val context: Context) {
                 }
             }
             
-            return true // Return immediately, actual result handled asynchronously
+            return true 
         } catch (e: Exception) {
             Log.e(TAG, "Failed to start enhanced thermal recording", e)
             return false
         }
     }
     
-    /**
-     * Stop recording and return session info
-     */
+    
     fun stopRecording(): SessionInfo? {
         return try {
-            // Stop recording asynchronously since underlying method is suspend
+            
             GlobalScope.launch {
                 thermalCameraRecorder.stopRecording()
             }
@@ -97,9 +90,7 @@ class EnhancedThermalRecorder(private val context: Context) {
         }
     }
     
-    /**
-     * Trigger synchronization event for multi-modal coordination
-     */
+    
     fun triggerSyncEvent(eventType: String, eventData: Map<String, String>) {
         try {
             val timestamp = System.nanoTime()
@@ -123,20 +114,16 @@ class EnhancedThermalRecorder(private val context: Context) {
         }
     }
     
-    /**
-     * Get the current session directory
-     */
+    
     fun getSessionDirectory(): File? {
         return currentSessionDirectory
     }
     
-    /**
-     * Cleanup resources
-     */
+    
     fun cleanup() {
         try {
             closeSyncEventsFile()
-            // Launch cleanup in a coroutine since underlying cleanup is suspend
+            
             kotlinx.coroutines.GlobalScope.launch {
                 thermalCameraRecorder.cleanup()
             }
@@ -147,7 +134,7 @@ class EnhancedThermalRecorder(private val context: Context) {
         }
     }
     
-    // Delegate methods to underlying thermal camera recorder
+    
     fun getStatusFlow(): Flow<RecordingStatus> = thermalCameraRecorder.getStatusFlow()
     fun getErrorFlow(): Flow<SensorError> = thermalCameraRecorder.getErrorFlow()
     fun getRecordingStats(): RecordingStats = thermalCameraRecorder.getRecordingStats()
@@ -174,9 +161,7 @@ class EnhancedThermalRecorder(private val context: Context) {
         }
     }
     
-    /**
-     * Session information returned when recording stops
-     */
+    
     data class SessionInfo(
         val sessionDirectory: File?,
         val sampleCount: Long,

@@ -73,7 +73,7 @@ abstract class HouseDetectDao {
         for (i in houseDetect.dirList.indices) {
             val dir = houseDetect.dirList[i]
             dir.position = i
-            if (dir.id == 0L) { // 复制的目录
+            if (dir.id == 0L) { 
                 dir.id = insertDir(dir)
                 for (item in dir.itemList) {
                     item.parentId = dir.id
@@ -91,15 +91,15 @@ abstract class HouseDetectDao {
     }
 
     open fun refreshDir(dirDetect: DirDetect) {
-        if (dirDetect.itemList.isEmpty()) { // 所有子项目都没了，这个目录也干掉
+        if (dirDetect.itemList.isEmpty()) { 
             deleteDir(dirDetect)
         } else {
-            updateDir(dirDetect) // 更新目录名称及数量
+            updateDir(dirDetect) 
             val oldItemList: ArrayList<ItemDetect> = ArrayList(queryItemList(dirDetect.id))
             for (i in dirDetect.itemList.indices) {
                 val item = dirDetect.itemList[i]
                 item.position = i
-                if (item.id == 0L) { // 复制的项目
+                if (item.id == 0L) { 
                     item.id = insertItem(item)
                 } else {
                     updateItem(item)

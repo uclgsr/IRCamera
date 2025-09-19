@@ -12,10 +12,7 @@ import mpdc4gsr.sensors.TimestampManager.TimestampRecord
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-/**
- * Test activity to validate time synchronization system integration
- * Tests the enhanced TimestampManager and TimeSynchronizationService
- */
+
 class TimeSynchronizationTestActivity : AppCompatActivity() {
 
     companion object {
@@ -34,7 +31,7 @@ class TimeSynchronizationTestActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Create simple test layout programmatically
+        
         val layout = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
             setPadding(32, 32, 32, 32)
@@ -86,7 +83,7 @@ class TimeSynchronizationTestActivity : AppCompatActivity() {
 
         setContentView(layout)
 
-        // Initialize services
+        
         timeSyncService = TimeSynchronizationService()
         recordingController = RecordingController(this, this)
 
@@ -98,7 +95,7 @@ class TimeSynchronizationTestActivity : AppCompatActivity() {
             try {
                 addLog("=== Testing Unified Timestamp System ===")
                 
-                // Test 1: Basic TimestampManager functionality
+                
                 addLog("1. Testing TimestampManager basic functionality...")
                 val timestamp1 = TimestampManager.createTimestampRecord()
                 delay(100)
@@ -112,7 +109,7 @@ class TimeSynchronizationTestActivity : AppCompatActivity() {
                 val timeDiff = (timestamp2.systemNanos - timestamp1.systemNanos) / 1_000_000
                 addLog("Time difference: ${timeDiff}ms (should be ~100ms)")
                 
-                // Test 2: Session initialization
+                
                 addLog("\n2. Testing session initialization...")
                 val testSessionDir = "/tmp/test_session"
                 val sessionRef = timeSyncService.initializeSession(testSessionDir)
@@ -122,7 +119,7 @@ class TimeSynchronizationTestActivity : AppCompatActivity() {
                 addLog("  - session_start_monotonic_ns: ${sessionRef.sessionStartMonotonicNs}")
                 addLog("  - boot_time_reference_ms: ${sessionRef.bootTimeReferenceMs}")
                 
-                // Test 3: Synchronized timestamps
+                
                 addLog("\n3. Testing synchronized timestamps...")
                 val syncTimestamp1 = timeSyncService.createSynchronizedTimestamp()
                 delay(50)
@@ -134,7 +131,7 @@ class TimeSynchronizationTestActivity : AppCompatActivity() {
                 val syncDiff = (syncTimestamp2.systemNanos - syncTimestamp1.systemNanos) / 1_000_000
                 addLog("Sync time difference: ${syncDiff}ms (should be ~50ms)")
                 
-                // Test 4: CSV header format
+                
                 addLog("\n4. Testing CSV header format...")
                 addLog("CSV Header: ${TimestampRecord.getCsvHeader()}")
                 
@@ -152,7 +149,7 @@ class TimeSynchronizationTestActivity : AppCompatActivity() {
             try {
                 addLog("=== Testing Cross-Sensor Sync Events ===")
                 
-                // Test sync event emission
+                
                 addLog("1. Testing sync event emission...")
                 timeSyncService.emitSyncEvent("test_sync_event", mapOf(
                     "test_type" to "integration_test",
@@ -161,7 +158,7 @@ class TimeSynchronizationTestActivity : AppCompatActivity() {
                 
                 delay(100)
                 
-                // Test multiple sync events
+                
                 addLog("2. Testing multiple sync events...")
                 val syncEvents = listOf("session_start", "flash_sync", "manual_marker", "session_end")
                 
@@ -170,10 +167,10 @@ class TimeSynchronizationTestActivity : AppCompatActivity() {
                         "sequence" to eventType,
                         "timestamp_test" to "true"
                     ))
-                    delay(25) // 25ms between events
+                    delay(25) 
                 }
                 
-                // Test RecordingController integration
+                
                 addLog("3. Testing RecordingController integration...")
                 recordingController?.let { controller ->
                     val syncTimestamp = controller.createSynchronizedTimestamp()
@@ -215,7 +212,7 @@ class TimeSynchronizationTestActivity : AppCompatActivity() {
                 "$currentText\n$message"
             }
             
-            // Scroll to bottom
+            
             (logText.parent as? ScrollView)?.post {
                 (logText.parent as ScrollView).fullScroll(ScrollView.FOCUS_DOWN)
             }
@@ -229,7 +226,7 @@ class TimeSynchronizationTestActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        // Finalize any active session
+        
         try {
             timeSyncService.finalizeSession()
         } catch (e: Exception) {

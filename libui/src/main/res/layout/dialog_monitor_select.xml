@@ -22,7 +22,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintWidth_percent="0.82" />
 
-    <!-- 第1步：SelectClass型 -->
+    
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_first_step"
         android:layout_width="0dp"
@@ -33,7 +33,7 @@
         app:layout_constraintTop_toBottomOf="@id/tv_title"
         app:layout_constraintWidth_percent="0.82">
 
-        <!-- 点 -->
+        
         <TextView
             android:id="@+id/tv_point"
             android:layout_width="0dp"
@@ -62,7 +62,7 @@
             app:layout_constraintTop_toTopOf="@id/tv_point"
             app:layout_constraintWidth_percent="0.09" />
 
-        <!-- 线 -->
+        
         <TextView
             android:id="@+id/tv_line"
             android:layout_width="0dp"
@@ -92,7 +92,7 @@
             app:layout_constraintTop_toTopOf="@id/tv_line"
             app:layout_constraintWidth_percent="0.09" />
 
-        <!-- 面 -->
+        
         <TextView
             android:id="@+id/tv_rect"
             android:layout_width="0dp"
@@ -123,7 +123,7 @@
             app:layout_constraintWidth_percent="0.09" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <!-- 第2步：SelectLocation -->
+    
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_second_step"
         android:layout_width="0dp"

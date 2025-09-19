@@ -90,7 +90,7 @@ public class PieRadarChartTouchListener extends ChartTouchListener<PieRadarChart
                         if (mDecelerationAngularVelocity != 0.f) {
                             mDecelerationLastTime = AnimationUtils.currentAnimationTimeMillis();
 
-                            Utils.postInvalidateOnAnimation(mChart); // This causes computeScroll to fire, recommended for this by Google
+                            Utils.postInvalidateOnAnimation(mChart); 
                         }
                     }
 
@@ -222,7 +222,7 @@ public class PieRadarChartTouchListener extends ChartTouchListener<PieRadarChart
     public void computeScroll() {
 
         if (mDecelerationAngularVelocity == 0.f)
-            return; // There's no deceleration in progress
+            return; 
 
         final long currentTime = AnimationUtils.currentAnimationTimeMillis();
 
@@ -235,7 +235,7 @@ public class PieRadarChartTouchListener extends ChartTouchListener<PieRadarChart
         mDecelerationLastTime = currentTime;
 
         if (Math.abs(mDecelerationAngularVelocity) >= 0.001)
-            Utils.postInvalidateOnAnimation(mChart); // This causes computeScroll to fire, recommended for this by Google
+            Utils.postInvalidateOnAnimation(mChart); 
         else
             stopDeceleration();
     }

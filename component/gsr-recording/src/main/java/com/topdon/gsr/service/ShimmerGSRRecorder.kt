@@ -10,8 +10,8 @@ import android.os.Looper
 import android.util.Log
 import androidx.core.app.ActivityCompat
 import com.opencsv.CSVWriter
-// Note: Using interfaces to avoid direct dependency on Shimmer SDK classes
-// This prevents duplicate class issues when official Shimmer SDK is in main app module
+
+
 import com.topdon.gsr.model.GSRSample
 import com.topdon.gsr.model.SessionInfo
 import com.topdon.gsr.model.SyncMark
@@ -29,13 +29,13 @@ class ShimmerGSRRecorder(
     private val context: Context,
     private val shimmerDeviceFactory: ShimmerDeviceFactory,
     private val samplingRateHz: Int = 128,
-    private val recordingMode: RecordingMode = RecordingMode.STREAMING, // Step 6: Recording mode support
+    private val recordingMode: RecordingMode = RecordingMode.STREAMING, 
 ) {
-    // Step 6: Recording modes as specified in the problem statement
+    
     enum class RecordingMode {
-        STREAMING,      // Phone receives live data over BLE
-        LOGGING,        // Device logs to internal SD card only
-        LOG_AND_STREAM  // Device logs internally AND streams to phone
+        STREAMING,      
+        LOGGING,        
+        LOG_AND_STREAM  
     }
 
     companion object {
@@ -45,15 +45,15 @@ class ShimmerGSRRecorder(
         private const val SYNC_MARKS_FILENAME = "sync_marks.csv"
         private const val SESSION_METADATA_FILENAME = "session_metadata.json"
 
-        // 12-bit ADC resolution constant for accurate GSR calculations
+        
         private const val ADC_12BIT_MAX = 4095
 
-        // Shimmer3 sensor configuration constants
+        
         private const val GSR_SENSOR_BIT = 0x08.toByte()
         private const val GSR_RANGE_AUTO = 0x00.toByte()
         private const val TIMESTAMP_CHANNEL_BIT = 0x01.toByte()
 
-        // Enabled sensors mask (GSR + Timestamp)
+        
         private const val SENSOR_GSR_BIT = 0x10L
         private const val SENSOR_TIMESTAMP_BIT = 0x08L
 
@@ -371,7 +371,7 @@ class ShimmerGSRRecorder(
                     )
 
                 signalsWriter?.writeNext(sample.toCsvRow())
-                if (currentIndex % 10 == 0L) { // Flush every 10 samples
+                if (currentIndex % 10 == 0L) { 
                     signalsWriter?.flush()
                 }
 
@@ -385,7 +385,7 @@ class ShimmerGSRRecorder(
 
     private fun createGSRConfiguration(): ByteArray {
         try {
-            val config = ByteArray(12) // Basic configuration size
+            val config = ByteArray(12) 
 
             val samplingRateConfig =
                 when (samplingRateHz) {
@@ -393,11 +393,11 @@ class ShimmerGSRRecorder(
                     256 -> 0x03.toByte()
                     512 -> 0x02.toByte()
                     1024 -> 0x01.toByte()
-                    else -> 0x04.toByte() // Default to 128Hz
+                    else -> 0x04.toByte() 
                 }
 
             config[0] = samplingRateConfig
-            config[1] = 0x08.toByte() // GSR sensor bit
+            config[1] = 0x08.toByte() 
             config[3] = TIMESTAMP_CHANNEL_BIT
 
             Log.d(
@@ -504,7 +504,7 @@ class ShimmerGSRRecorder(
     fun isDeviceConnected(): Boolean = isDeviceConnected.get()
 
 
-    // Step 6: Shimmer logging mode support methods
+    
     private fun startShimmerLogging() {
         try {
             // Shimmer internal logging is not implemented in this wrapper
@@ -523,6 +523,6 @@ class ShimmerGSRRecorder(
         }
     }
 
-    // Provide access to recording mode for external components
+    
     fun getRecordingMode(): RecordingMode = recordingMode
 }

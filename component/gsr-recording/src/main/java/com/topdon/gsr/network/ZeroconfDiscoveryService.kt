@@ -13,7 +13,7 @@ class ZeroconfDiscoveryService(private val context: Context) {
         private const val TAG = "ZeroconfDiscovery"
         private const val SERVICE_TYPE = "_ircamera._tcp."
         private const val SERVICE_NAME = "IRCamera-Device"
-        private const val DISCOVERY_TIMEOUT = 30000L // 30 seconds
+        private const val DISCOVERY_TIMEOUT = 30000L 
     }
 
     private val nsdManager: NsdManager by lazy {
@@ -98,8 +98,8 @@ class ZeroconfDiscoveryService(private val context: Context) {
                         serviceName = "$SERVICE_NAME-$deviceId"
                         serviceType = SERVICE_TYPE
                         setPort(port)
-                        // Note: NsdServiceInfo doesn't support attributes in basic Android NSD
-                        // Advanced service advertisement would require DNS-SD TXT records
+                        
+                        
                     }
 
                 registrationListener = createRegistrationListener()
@@ -135,7 +135,7 @@ class ZeroconfDiscoveryService(private val context: Context) {
                 val host = serviceInfo.host?.hostAddress ?: return@mapNotNull null
                 val port = serviceInfo.port
                 val deviceName = serviceInfo.serviceName
-                val capabilities = emptyList<String>() // Capabilities not available in basic NSD
+                val capabilities = emptyList<String>() 
 
                 NetworkClient.ControllerInfo(
                     ipAddress = host,
@@ -159,12 +159,12 @@ class ZeroconfDiscoveryService(private val context: Context) {
             override fun onServiceFound(service: NsdServiceInfo) {
                 Log.d(TAG, "Service discovery success: ${service.serviceName}")
 
-                // Don't discover our own service
+                
                 if (service.serviceName.startsWith(SERVICE_NAME)) {
                     return
                 }
 
-                // Resolve the service to get detailed information
+                
                 @Suppress("DEPRECATION")
                 nsdManager.resolveService(service, createResolveListener())
             }
@@ -217,13 +217,13 @@ class ZeroconfDiscoveryService(private val context: Context) {
 
                 discoveredServices[serviceInfo.serviceName] = serviceInfo
 
-                // Notify listener
+                
                 try {
                     val host = serviceInfo.host?.hostAddress ?: return
                     val port = serviceInfo.port
                     val deviceName = serviceInfo.serviceName
                     val capabilities =
-                        emptyList<String>() // Capabilities not available in basic NSD
+                        emptyList<String>() 
 
                     val controllerInfo =
                         NetworkClient.ControllerInfo(

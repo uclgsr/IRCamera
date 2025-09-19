@@ -19,14 +19,14 @@ import java.util.Locale
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean
 
-// Assuming FileUploadService is defined elsewhere with this structure
-// class FileUploadService(context: Context) {
-//     enum class FileType { VISUAL_VIDEO, GSR_DATA, METADATA }
-//     fun queueUpload(filePath: String, sessionId: String, deviceId: String, fileType: FileType): String {
-//         // Implementation
-//         return "job_${UUID.randomUUID()}"
-//     }
-// }
+
+
+
+
+
+
+
+
 
 class DataManagementService(private val context: Context) {
     companion object {
@@ -56,11 +56,11 @@ class DataManagementService(private val context: Context) {
             ERROR,
         }
 
-        // Using FileUploadService enums for consistency
+        
     }
 
-    // Assuming StructuredLogger has a static logInfo method.
-    // Corrected to use the instance logger as is best practice.
+    
+    
     private val logger = StructuredLogger.getInstance(context)
     private val activeSessions = ConcurrentHashMap<String, SessionData>()
     private val fileRegistry = ConcurrentHashMap<String, FileMetadata>()
@@ -133,7 +133,7 @@ class DataManagementService(private val context: Context) {
         loadExistingSessions()
         isInitialized.set(true)
 
-        // Log service initialization 
+        
         logger.log(
             StructuredLogger.LogLevel.INFO,
             TAG,
@@ -299,7 +299,7 @@ class DataManagementService(private val context: Context) {
                 continue
             }
             try {
-                // Map file extension to FileUploadService.FileType
+                
                 val uploadFileType =
                     when (fileMetadata.fileName.substringAfterLast(".", "").lowercase()) {
                         "mp4" -> FileUploadService.FileType.VISUAL_VIDEO
@@ -431,7 +431,7 @@ class DataManagementService(private val context: Context) {
         )
     }
 
-    suspend fun performCleanup(maxAgeMs: Long = 7 * 24 * 60 * 60 * 1000L) { // 7 days default
+    suspend fun performCleanup(maxAgeMs: Long = 7 * 24 * 60 * 60 * 1000L) { 
         val currentTime = System.currentTimeMillis()
         var cleanedSessions = 0
         var cleanedFiles = 0
@@ -485,7 +485,7 @@ class DataManagementService(private val context: Context) {
 
             exportSessionAsZIP(session, archiveFile, includeFiles = true)
 
-            // Clean up original session directory after successful archival
+            
             sessionDir.deleteRecursively()
 
             activeSessions.remove(sessionId)
@@ -793,8 +793,8 @@ class DataManagementService(private val context: Context) {
     }
 
     private fun exportSessionAsHDF5(session: SessionData, exportFile: File) {
-        // HDF5 export implementation using JSON structure that mimics HDF5 hierarchy
-        // This creates a structured JSON that can later be converted to actual HDF5 format
+        
+        
         
         try {
             val hdf5Structure = JSONObject().apply {
@@ -802,7 +802,7 @@ class DataManagementService(private val context: Context) {
                 put("version", "1.0")
                 put("created", SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault()).format(Date()))
                 
-                // Root group
+                
                 val rootGroup = JSONObject().apply {
                     put("attributes", JSONObject().apply {
                         put("title", "IRCamera Session Data")
@@ -813,10 +813,10 @@ class DataManagementService(private val context: Context) {
                         put("duration_sec", (session.endTime - session.startTime) / 1000.0)
                     })
                     
-                    // Data groups following HDF5 conventions
+                    
                     val dataGroups = JSONObject()
                     
-                    // GSR data group
+                    
                     if (session.files.any { it.type == "gsr_data" }) {
                         dataGroups.put("gsr", JSONObject().apply {
                             put("attributes", JSONObject().apply {
@@ -829,7 +829,7 @@ class DataManagementService(private val context: Context) {
                                 })
                             })
                             
-                            // Datasets (would contain actual data arrays in real HDF5)
+                            
                             put("datasets", JSONObject().apply {
                                 put("timestamps", JSONObject().apply {
                                     put("shape", JSONArray().put(session.totalSamples))
@@ -860,7 +860,7 @@ class DataManagementService(private val context: Context) {
                         })
                     }
                     
-                    // RGB video data group
+                    
                     if (session.files.any { it.type == "rgb_video" }) {
                         dataGroups.put("rgb_video", JSONObject().apply {
                             put("attributes", JSONObject().apply {
@@ -883,7 +883,7 @@ class DataManagementService(private val context: Context) {
                         })
                     }
                     
-                    // Thermal data group
+                    
                     if (session.files.any { it.type == "thermal_data" }) {
                         dataGroups.put("thermal", JSONObject().apply {
                             put("attributes", JSONObject().apply {
@@ -916,7 +916,7 @@ class DataManagementService(private val context: Context) {
                     
                     put("groups", dataGroups)
                     
-                    // Sync markers group
+                    
                     put("sync_markers", JSONObject().apply {
                         put("attributes", JSONObject().apply {
                             put("description", "Synchronization markers for multi-modal alignment")
@@ -940,7 +940,7 @@ class DataManagementService(private val context: Context) {
                 
                 put("root", rootGroup)
                 
-                // File manifest for external data files
+                
                 val fileManifest = JSONArray()
                 session.files.forEach { file ->
                     fileManifest.put(JSONObject().apply {
@@ -959,7 +959,7 @@ class DataManagementService(private val context: Context) {
             
         } catch (e: Exception) {
             Log.e(TAG, "Failed to export session as HDF5", e)
-            // Fallback to regular JSON export
+            
             exportSessionAsJSON(session, exportFile, includeFiles = true)
         }
     }
@@ -969,11 +969,11 @@ class DataManagementService(private val context: Context) {
         exportFile: File,
         includeFiles: Boolean,
     ) {
-        // Implement actual ZIP export functionality
+        
         try {
             val zipOutputStream = java.util.zip.ZipOutputStream(exportFile.outputStream())
             
-            // Add session metadata as JSON
+            
             val sessionMetadata = JSONObject().apply {
                 put("session_id", session.sessionId)
                 put("participant_id", session.participantId)
@@ -986,12 +986,12 @@ class DataManagementService(private val context: Context) {
                 put("export_timestamp", SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault()).format(Date()))
             }
             
-            // Add metadata.json to ZIP
+            
             zipOutputStream.putNextEntry(java.util.zip.ZipEntry("session_metadata.json"))
             zipOutputStream.write(sessionMetadata.toString(2).toByteArray())
             zipOutputStream.closeEntry()
             
-            // Add file manifest
+            
             val manifest = JSONArray()
             session.files.forEach { fileInfo ->
                 manifest.put(JSONObject().apply {
@@ -1008,7 +1008,7 @@ class DataManagementService(private val context: Context) {
             zipOutputStream.closeEntry()
             
             if (includeFiles) {
-                // Add actual data files to ZIP
+                
                 session.files.forEach { fileInfo ->
                     try {
                         val sourceFile = File(fileInfo.absolutePath)
@@ -1030,7 +1030,7 @@ class DataManagementService(private val context: Context) {
                 }
             }
             
-            // Add a README file
+            
             val readme = """
                 IRCamera Session Export (ZIP Format)
                 ===================================
@@ -1065,7 +1065,7 @@ class DataManagementService(private val context: Context) {
             
         } catch (e: Exception) {
             Log.e(TAG, "Failed to create ZIP export", e)
-            // Fallback to JSON export
+            
             exportSessionAsJSON(session, exportFile, includeFiles)
         }
     }

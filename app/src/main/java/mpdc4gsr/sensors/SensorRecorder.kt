@@ -17,9 +17,7 @@ interface SensorRecorder {
 
     suspend fun startRecording(sessionDirectory: String): Boolean
 
-    /**
-     * Enhanced startRecording method with session metadata for precise synchronization
-     */
+    
     suspend fun startRecording(
         sessionDirectory: String,
         sessionMetadata: SessionMetadata

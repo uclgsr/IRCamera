@@ -8,10 +8,7 @@ import com.topdon.module.thermal.ir.event.ManualFinishBean
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
-/**
 
- * Created by LCG on 2023/12/29.
- */
 
 
 class ManualStep1Activity : BaseActivity() {

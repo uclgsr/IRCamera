@@ -6,24 +6,16 @@ import android.graphics.drawable.Drawable;
 @SuppressLint("ParcelCreator")
 public class CandleEntry extends Entry {
 
-    /**
-     * shadow-high value
-     */
+    
     private float mShadowHigh = 0f;
 
-    /**
-     * shadow-low value
-     */
+    
     private float mShadowLow = 0f;
 
-    /**
-     * close value
-     */
+    
     private float mClose = 0f;
 
-    /**
-     * open value
-     */
+    
     private float mOpen = 0f;
 
     public CandleEntry(float x, float shadowH, float shadowL, float open, float close) {

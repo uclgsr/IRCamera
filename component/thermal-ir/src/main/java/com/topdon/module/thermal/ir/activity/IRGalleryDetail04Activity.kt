@@ -42,10 +42,7 @@ import com.topdon.lib.ui.R as UiR
 
 
 class IRGalleryDetail04Activity : BaseActivity() {
-    /**
-
-
-     */
+    
     private var isRemote = false
 
     private var position = 0
@@ -63,7 +60,7 @@ class IRGalleryDetail04Activity : BaseActivity() {
         val titleView = findViewById<com.topdon.lib.core.view.TitleView>(R.id.title_view)
         titleView.setTitleText("${position + 1}/${dataList.size}")
 
-        findViewById<ConstraintLayout>(R.id.cl_bottom).isVisible = isRemote // 查看远端时底部才有3个按钮
+        findViewById<ConstraintLayout>(R.id.cl_bottom).isVisible = isRemote 
 
         if (!isRemote) {
             titleView.setRightDrawable(UiR.drawable.ic_toolbar_info_svg)

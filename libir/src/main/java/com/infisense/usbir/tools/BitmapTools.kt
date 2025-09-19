@@ -66,10 +66,10 @@ object BitmapTools {
                     value = readTempValue(data)
                     if (value > max) {
 
-                        imageBytes[i * 4] = maxR // r
-                        imageBytes[i * 4 + 1] = maxG // g
-                        imageBytes[i * 4 + 2] = maxB // b
-                        imageBytes[i * 4 + 3] = maxA // a
+                        imageBytes[i * 4] = maxR 
+                        imageBytes[i * 4 + 1] = maxG 
+                        imageBytes[i * 4 + 2] = maxB 
+                        imageBytes[i * 4 + 3] = maxA 
                     }
                     if (value < min) {
 

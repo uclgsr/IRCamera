@@ -40,9 +40,9 @@ class WebViewActivity : BaseBindingActivity<ActivityWebViewBinding>() {
         }
 
         val webSettings: WebSettings = binding.webView.settings
-        webSettings.setSupportZoom(false) // 设置不支持字体缩放
+        webSettings.setSupportZoom(false) 
         webSettings.useWideViewPort = true
-        webSettings.javaScriptCanOpenWindowsAutomatically = true // 允许js弹出窗口
+        webSettings.javaScriptCanOpenWindowsAutomatically = true 
         webSettings.defaultTextEncodingName = "UTF-8"
         webSettings.javaScriptEnabled = true
         webSettings.allowFileAccess = true

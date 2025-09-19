@@ -2,9 +2,7 @@ package com.topdon.lib.core.common
 
 import android.text.TextUtils
 
-/**
- * create by fylder on 2018/6/14
- **/
+
 
 class UserInfoManager {
     companion object {

@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?><!-- 为了给Test抓Package用的Configuration，允许User自定 CA 证书、允许明文流量，仅可用于Test，不用正式发行！ -->
-<!-- 在 Manifests File Application 中Add android:networkSecurityConfig 则生效 -->
+<?xml version="1.0" encoding="utf-8"?>
+
 <network-security-config>
     <base-config cleartextTrafficPermitted="true">
         <trust-anchors>

@@ -36,7 +36,7 @@ class ShimmerMvpActivity : AppCompatActivity() {
     companion object {
         private const val TAG = "ShimmerMVP"
         private const val REQUEST_ENABLE_BT = 1
-        private const val GSR_SAMPLING_RATE = 128.0 // Hz
+        private const val GSR_SAMPLING_RATE = 128.0 
 
         private val REQUIRED_PERMISSIONS = arrayOf(
             Manifest.permission.BLUETOOTH,
@@ -180,7 +180,7 @@ class ShimmerMvpActivity : AppCompatActivity() {
             try {
                 Log.i(TAG, "Initializing Shimmer Bluetooth Manager")
 
-                // Simplified Shimmer initialization to avoid API compatibility issues
+                
                 shimmerBluetoothManager =
                     ShimmerBluetoothManagerAndroid(this@ShimmerMvpActivity, android.os.Handler())
                 Log.i(TAG, "Shimmer manager initialized - API compatibility mode")
@@ -200,7 +200,7 @@ class ShimmerMvpActivity : AppCompatActivity() {
                 updateConnectionStatus("Scanning for Shimmer3 GSR+ devices...")
                 binding.connectButton.isEnabled = false
 
-                // Check for required permissions first
+                
                 if (!hasAllRequiredPermissions()) {
                     val missingPermissions = getMissingPermissions()
                     Log.w(TAG, "Missing permissions: ${missingPermissions.joinToString()}")
@@ -221,7 +221,7 @@ class ShimmerMvpActivity : AppCompatActivity() {
                     return@launch
                 }
 
-                // Start with paired devices first (for better UX)
+                
                 val pairedDevices: Set<BluetoothDevice>? = bluetoothAdapter.bondedDevices
                 val pairedShimmers = pairedDevices?.filter { isValidShimmerDevice(it) } ?: emptyList()
 
@@ -231,14 +231,14 @@ class ShimmerMvpActivity : AppCompatActivity() {
                     return@launch
                 }
 
-                // If no paired devices, perform actual BLE scanning
+                
                 Log.i(TAG, "No paired Shimmer devices found. Starting BLE discovery...")
                 updateConnectionStatus("Scanning nearby Shimmer devices...")
                 
                 val discoveredShimmers = performBluetoothLeScanning()
                 if (discoveredShimmers.isNotEmpty()) {
                     Log.i(TAG, "Found ${discoveredShimmers.size} Shimmer devices during scan")
-                    // Attempt to connect to the first discovered device
+                    
                     connectToShimmerDevice(discoveredShimmers.first())
                 } else {
                     updateConnectionStatus("No Shimmer3 GSR+ devices found")
@@ -283,7 +283,7 @@ class ShimmerMvpActivity : AppCompatActivity() {
             Log.i(TAG, "Starting BLE scan for Shimmer devices...")
             bluetoothLeScanner.startScan(scanCallback)
             
-            // Scan for 10 seconds
+            
             delay(10000)
             
             bluetoothLeScanner.stopScan(scanCallback)
@@ -304,7 +304,7 @@ class ShimmerMvpActivity : AppCompatActivity() {
                 val prioritizedDevices = listOf(device).sortedByDescending { dev ->
                     val name = dev.name?.lowercase() ?: ""
                     when {
-                        name.contains("gsr") -> 100 // Highest priority for GSR-specific devices
+                        name.contains("gsr") -> 100 
                         name.contains("shimmer3") -> 90
                         name.contains("shimmer") -> 80
                         name.startsWith("rn4") -> 70
@@ -356,13 +356,13 @@ class ShimmerMvpActivity : AppCompatActivity() {
             null
         }
 
-        // Check MAC address prefix
+        
         val shimmerMacPrefixes = listOf("00:06:66", "d0:39:72", "00:80:98")
         val hasValidPrefix = shimmerMacPrefixes.any { prefix ->
             address.startsWith(prefix, ignoreCase = true)
         }
 
-        // Check device name pattern
+        
         val shimmerNamePatterns = listOf("shimmer", "gsr", "rn4", "shimmer3")
         val hasValidName = name?.let { deviceName ->
             shimmerNamePatterns.any { pattern ->
@@ -384,8 +384,8 @@ class ShimmerMvpActivity : AppCompatActivity() {
             try {
                 Log.i(TAG, "Configuring Shimmer3 GSR+ for recording (compatibility mode)")
 
-                // Using basic configuration to avoid API compatibility issues
-                // Advanced configuration will be implemented once API compatibility is resolved
+                
+                
 
                 Log.i(TAG, "Shimmer3 GSR+ configuration complete - Basic settings applied")
                 updateConnectionStatus("GSR+ Configured - Ready for recording")
@@ -461,19 +461,19 @@ class ShimmerMvpActivity : AppCompatActivity() {
         try {
             val timestamp = System.currentTimeMillis()
 
-            // Extract GSR data from ObjectCluster using proper Shimmer SDK methods
+            
             val gsrRawData = objectCluster.getFormatClusterValue("CAL", "GSR")
             val rawValue =
-                (gsrRawData as? Double)?.toInt() ?: 2048 // Default to middle 12-bit range if null
+                (gsrRawData as? Double)?.toInt() ?: 2048 
 
-            // Calculate GSR value in microsiemens using proper 12-bit ADC conversion (0-4095 range)
+            
             val gsrValue = if (rawValue > 0 && rawValue <= 4095) {
-                // Convert raw 12-bit ADC value to GSR in microsiemens
-                // Using standard Shimmer3 GSR+ calibration formula
-                val resistance = (rawValue / 4095.0) * 40.0 + 0.5 // Convert to resistance range
-                1000000.0 / (resistance * 1000.0) // Convert to microsiemens
+                
+                
+                val resistance = (rawValue / 4095.0) * 40.0 + 0.5 
+                1000000.0 / (resistance * 1000.0) 
             } else {
-                4.5 // Default fallback value
+                4.5 
             }
 
             val resistance = 1000000.0 / gsrValue
@@ -496,7 +496,7 @@ class ShimmerMvpActivity : AppCompatActivity() {
                     }s)"
                 }
 
-                if (sampleCount % 128 == 0L) { // Every second at 128Hz
+                if (sampleCount % 128 == 0L) { 
                     Log.d(
                         TAG,
                         "GSR [${sampleCount}s]: ${
@@ -669,14 +669,14 @@ class ShimmerMvpActivity : AppCompatActivity() {
             .setTitle("Permissions Required")
             .setMessage(message)
             .setPositiveButton("Grant Permissions") { _, _ ->
-                // Re-request permissions
+                
                 val missingPermissions = getMissingPermissions()
                 if (missingPermissions.isNotEmpty()) {
                     permissionLauncher.launch(missingPermissions)
                 }
             }
             .setNegativeButton("Settings") { _, _ ->
-                // Open app settings
+                
                 val intent = android.content.Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
                 intent.data = android.net.Uri.parse("package:$packageName")
                 startActivity(intent)

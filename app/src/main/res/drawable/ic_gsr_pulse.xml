@@ -5,7 +5,7 @@
     android:viewportWidth="24"
     android:viewportHeight="24">
 
-    <!-- GSR pulse wave icon representing physiological monitoring -->
+    
     <path
         android:fillColor="@color/white"
         android:pathData="M2,12h2l1.5,-6L8,18l3,-12l3,6h2l1.5,-3H22"
@@ -14,7 +14,7 @@
         android:strokeLineCap="round"
         android:strokeLineJoin="round" />
 
-    <!-- Small GSR sensor dot as path -->
+    
     <path
         android:fillColor="@color/white"
         android:pathData="M12,10.5 A1.5,1.5 0 1 1 12,13.5 A1.5,1.5 0 1 1 12,10.5 Z" />
