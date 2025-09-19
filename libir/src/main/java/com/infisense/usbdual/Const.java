@@ -12,8 +12,8 @@ public class Const {
 
     public static final int TYPE_IR = 0;
     public static final int TYPE_IR_DUAL = 1;
-    public static final String TAU_HIGH_GAIN_ASSET_PATH = "tau/V262_mini256带防尘片_H.bin";
-    public static final String TAU_HIGH_LOW_ASSET_PATH = "tau/V262_mini256带防尘片_L.bin";
+    public static final String TAU_HIGH_GAIN_ASSET_PATH = "tau/V262_mini256With Dust Cover_H.bin";
+    public static final String TAU_HIGH_LOW_ASSET_PATH = "tau/V262_mini256With Dust Cover_L.bin";
     public static final int PID = 0x5840;
     public static final int SENSOR_WIDTH = 256;
     public static final int SENSOR_HEIGHT = 384;

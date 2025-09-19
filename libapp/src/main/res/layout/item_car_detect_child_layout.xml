@@ -17,7 +17,7 @@
         android:layout_toLeftOf="@+id/iv_select_state"
         android:textColor="@color/white"
         android:textSize="15sp"
-        tools:text="电池电线" />
+        tools:text="[AUTO_COMPONENT]" />
 
     <ImageView
         android:id="@+id/iv_select_state"

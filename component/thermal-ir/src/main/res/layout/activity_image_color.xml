@@ -66,7 +66,7 @@
         android:id="@+id/btn"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:text="差异算法换成由温度数据进行计算"
+        android:text="[TEXT]Data[TEXT]"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -75,7 +75,7 @@
         android:id="@+id/btn_u4"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:text="四通道数据"
+        android:text="[TEXT]Data"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/btn" />
 </androidx.constraintlayout.widget.ConstraintLayout>

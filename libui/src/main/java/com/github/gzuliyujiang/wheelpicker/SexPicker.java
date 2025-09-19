@@ -19,9 +19,9 @@ import java.util.List;
 
 @SuppressWarnings("WeakerAccess")
 public class SexPicker extends OptionPicker {
-    public static String JSON = "[{\"id\":0,\"name\":\"保密\",\"english\":\"Secrecy\"},\n" +
-            "{\"id\":1,\"name\":\"男\",\"english\":\"Male\"},\n" +
-            "{\"id\":2,\"name\":\"女\",\"english\":\"Female\"}]";
+    public static String JSON = "[{\"id\":0,\"name\":\"[TEXT]\",\"english\":\"Secrecy\"},\n" +
+            "{\"id\":1,\"name\":\"[TEXT]\",\"english\":\"Male\"},\n" +
+            "{\"id\":2,\"name\":\"[TEXT]\",\"english\":\"Female\"}]";
     private boolean includeSecrecy;
 
     public SexPicker(Activity activity) {

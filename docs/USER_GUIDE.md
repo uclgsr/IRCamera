@@ -1,10 +1,10 @@
 # IRCamera User Guide
 
-## 📖 Overview
+## [BOOK] Overview
 
 This guide provides comprehensive instructions for operating the IRCamera Multi-Modal Thermal Sensing Platform. The system implements a Hub-and-Spoke architecture where a PC Controller (Hub) coordinates multiple Android sensor nodes (Spokes) for synchronized multi-modal data collection.
 
-## 🎯 System Components
+## [TARGET] System Components
 
 ### PC Controller (Hub)
 - **Purpose**: Central coordinator for distributed sensor network
@@ -18,7 +18,7 @@ This guide provides comprehensive instructions for operating the IRCamera Multi-
 - **Sensors**: Thermal imaging, GSR (Galvanic Skin Response), RGB camera
 - **Location**: Main Android app in repository root
 
-## 🚀 Quick Start
+## [LAUNCH] Quick Start
 
 ### Prerequisites
 
@@ -61,7 +61,7 @@ adb install app/build/outputs/apk/release/app-release.apk
 # The app will automatically advertise itself via mDNS
 ```
 
-## 🖥️ PC Controller Interface
+## [SCREEN] PC Controller Interface
 
 ### Main Dashboard
 
@@ -134,7 +134,7 @@ The PC Controller automatically discovers Android devices using mDNS (Zero-confi
    - File organization and data validation performed
    - Session summary and statistics generated
 
-## 📱 Android App Operation
+## [MOBILE] Android App Operation
 
 ### Initial Setup
 
@@ -174,7 +174,7 @@ The Android app requires several permissions for full functionality:
 3. **Data Storage**: All sensor data saved to device local storage
 4. **Session Export**: Data can be transferred to PC for analysis
 
-## 📊 Data Collection & Management
+## [DATA] Data Collection & Management
 
 ### Data Types Collected
 
@@ -200,17 +200,17 @@ The Android app requires several permissions for full functionality:
 
 ```
 sessions/
-├── session_YYYY-MM-DD_HH-MM-SS/
-│   ├── metadata.json                    # Session configuration and timing
-│   ├── device_001/                      # Android device data
-│   │   ├── thermal_data.csv            # Thermal sensor data
-│   │   ├── gsr_data.csv               # GSR sensor data  
-│   │   ├── rgb_video.mp4              # RGB video recording
-│   │   └── rgb_frames/                # Individual video frames
-│   └── session_summary.json            # Overall session statistics
+|---- session_YYYY-MM-DD_HH-MM-SS/
+|   |---- metadata.json                    # Session configuration and timing
+|   |---- device_001/                      # Android device data
+|   |   |---- thermal_data.csv            # Thermal sensor data
+|   |   |---- gsr_data.csv               # GSR sensor data  
+|   |   |---- rgb_video.mp4              # RGB video recording
+|   |   `---- rgb_frames/                # Individual video frames
+|   `---- session_summary.json            # Overall session statistics
 ```
 
-## 🔧 Advanced Configuration
+## [WRENCH] Advanced Configuration
 
 ### PC Controller Settings
 
@@ -238,7 +238,7 @@ sessions/
 - **TCP Communication**: Connection timeout and retry settings
 - **Data Streaming**: Buffer sizes and transmission frequency
 
-## 🔍 Troubleshooting
+## [SEARCH] Troubleshooting
 
 ### Common Issues
 
@@ -333,7 +333,7 @@ adb logcat | grep IRCamera
 - **Storage Management**: Regular cleanup of temporary files
 - **Resource Monitoring**: Track CPU and memory usage during recording
 
-## 📈 Best Practices
+## [CHART] Best Practices
 
 ### Session Planning
 1. **Pre-Session Checks**: Verify all devices connected and sensors functional
@@ -355,6 +355,6 @@ adb logcat | grep IRCamera
 
 ---
 
-**Status**: ✅ Complete User Documentation  
+**Status**: [DONE] Complete User Documentation  
 **Last Updated**: Documentation Consolidation v1.0  
 **Support**: See [Documentation Hub](README.md) for additional resources

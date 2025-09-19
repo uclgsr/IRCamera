@@ -5,7 +5,7 @@
   "op": 120,
   "w": 1753,
   "h": 2354,
-  "nm": "合成 1",
+  "nm": "Composite 1",
   "ddd": 0,
   "assets": [
     {
@@ -15,7 +15,7 @@
           "ddd": 0,
           "ind": 1,
           "ty": 4,
-          "nm": "路径 12",
+          "nm": "Path 12",
           "sr": 1,
           "ks": {
             "o": {
@@ -150,7 +150,7 @@
                     },
                     "ix": 2
                   },
-                  "nm": "路径 1",
+                  "nm": "Path 1",
                   "mn": "ADBE Vector Shape - Group",
                   "hd": false
                 },
@@ -173,7 +173,7 @@
                   },
                   "r": 1,
                   "bm": 0,
-                  "nm": "填充 1",
+                  "nm": "Fill 1",
                   "mn": "ADBE Vector Graphic - Fill",
                   "hd": false
                 },
@@ -223,10 +223,10 @@
                     "k": 0,
                     "ix": 5
                   },
-                  "nm": "变换"
+                  "nm": "Transform"
                 }
               ],
-              "nm": "路径",
+              "nm": "Path",
               "np": 2,
               "cix": 2,
               "bm": 0,
@@ -244,7 +244,7 @@
           "ddd": 0,
           "ind": 2,
           "ty": 4,
-          "nm": "路径 11",
+          "nm": "Path 11",
           "sr": 1,
           "ks": {
             "o": {
@@ -391,7 +391,7 @@
                     },
                     "ix": 2
                   },
-                  "nm": "路径 1",
+                  "nm": "Path 1",
                   "mn": "ADBE Vector Shape - Group",
                   "hd": false
                 },
@@ -414,7 +414,7 @@
                   },
                   "r": 1,
                   "bm": 0,
-                  "nm": "填充 1",
+                  "nm": "Fill 1",
                   "mn": "ADBE Vector Graphic - Fill",
                   "hd": false
                 },
@@ -464,10 +464,10 @@
                     "k": 0,
                     "ix": 5
                   },
-                  "nm": "变换"
+                  "nm": "Transform"
                 }
               ],
-              "nm": "路径",
+              "nm": "Path",
               "np": 2,
               "cix": 2,
               "bm": 0,
@@ -485,7 +485,7 @@
           "ddd": 0,
           "ind": 3,
           "ty": 4,
-          "nm": "路径 10",
+          "nm": "Path 10",
           "sr": 1,
           "ks": {
             "o": {
@@ -620,7 +620,7 @@
                     },
                     "ix": 2
                   },
-                  "nm": "路径 1",
+                  "nm": "Path 1",
                   "mn": "ADBE Vector Shape - Group",
                   "hd": false
                 },
@@ -643,7 +643,7 @@
                   },
                   "r": 1,
                   "bm": 0,
-                  "nm": "填充 1",
+                  "nm": "Fill 1",
                   "mn": "ADBE Vector Graphic - Fill",
                   "hd": false
                 },
@@ -693,10 +693,10 @@
                     "k": 0,
                     "ix": 5
                   },
-                  "nm": "变换"
+                  "nm": "Transform"
                 }
               ],
-              "nm": "路径",
+              "nm": "Path",
               "np": 2,
               "cix": 2,
               "bm": 0,
@@ -714,7 +714,7 @@
           "ddd": 0,
           "ind": 4,
           "ty": 4,
-          "nm": "路径 9",
+          "nm": "Path 9",
           "sr": 1,
           "ks": {
             "o": {
@@ -861,7 +861,7 @@
                     },
                     "ix": 2
                   },
-                  "nm": "路径 1",
+                  "nm": "Path 1",
                   "mn": "ADBE Vector Shape - Group",
                   "hd": false
                 },
@@ -884,7 +884,7 @@
                   },
                   "r": 1,
                   "bm": 0,
-                  "nm": "填充 1",
+                  "nm": "Fill 1",
                   "mn": "ADBE Vector Graphic - Fill",
                   "hd": false
                 },
@@ -934,10 +934,10 @@
                     "k": 0,
                     "ix": 5
                   },
-                  "nm": "变换"
+                  "nm": "Transform"
                 }
               ],
-              "nm": "路径",
+              "nm": "Path",
               "np": 2,
               "cix": 2,
               "bm": 0,
@@ -955,7 +955,7 @@
           "ddd": 0,
           "ind": 5,
           "ty": 4,
-          "nm": "路径 8",
+          "nm": "Path 8",
           "sr": 1,
           "ks": {
             "o": {
@@ -1114,7 +1114,7 @@
                     },
                     "ix": 2
                   },
-                  "nm": "路径 1",
+                  "nm": "Path 1",
                   "mn": "ADBE Vector Shape - Group",
                   "hd": false
                 },
@@ -1137,7 +1137,7 @@
                   },
                   "r": 1,
                   "bm": 0,
-                  "nm": "填充 1",
+                  "nm": "Fill 1",
                   "mn": "ADBE Vector Graphic - Fill",
                   "hd": false
                 },
@@ -1187,10 +1187,10 @@
                     "k": 0,
                     "ix": 5
                   },
-                  "nm": "变换"
+                  "nm": "Transform"
                 }
               ],
-              "nm": "路径",
+              "nm": "Path",
               "np": 2,
               "cix": 2,
               "bm": 0,
@@ -1208,7 +1208,7 @@
           "ddd": 0,
           "ind": 6,
           "ty": 4,
-          "nm": "路径 7",
+          "nm": "Path 7",
           "sr": 1,
           "ks": {
             "o": {
@@ -1367,7 +1367,7 @@
                     },
                     "ix": 2
                   },
-                  "nm": "路径 1",
+                  "nm": "Path 1",
                   "mn": "ADBE Vector Shape - Group",
                   "hd": false
                 },
@@ -1390,7 +1390,7 @@
                   },
                   "r": 1,
                   "bm": 0,
-                  "nm": "填充 1",
+                  "nm": "Fill 1",
                   "mn": "ADBE Vector Graphic - Fill",
                   "hd": false
                 },
@@ -1440,10 +1440,10 @@
                     "k": 0,
                     "ix": 5
                   },
-                  "nm": "变换"
+                  "nm": "Transform"
                 }
               ],
-              "nm": "路径",
+              "nm": "Path",
               "np": 2,
               "cix": 2,
               "bm": 0,
@@ -1461,7 +1461,7 @@
           "ddd": 0,
           "ind": 7,
           "ty": 4,
-          "nm": "路径 6",
+          "nm": "Path 6",
           "sr": 1,
           "ks": {
             "o": {
@@ -1608,7 +1608,7 @@
                     },
                     "ix": 2
                   },
-                  "nm": "路径 1",
+                  "nm": "Path 1",
                   "mn": "ADBE Vector Shape - Group",
                   "hd": false
                 },
@@ -1631,7 +1631,7 @@
                   },
                   "r": 1,
                   "bm": 0,
-                  "nm": "填充 1",
+                  "nm": "Fill 1",
                   "mn": "ADBE Vector Graphic - Fill",
                   "hd": false
                 },
@@ -1681,10 +1681,10 @@
                     "k": 0,
                     "ix": 5
                   },
-                  "nm": "变换"
+                  "nm": "Transform"
                 }
               ],
-              "nm": "路径",
+              "nm": "Path",
               "np": 2,
               "cix": 2,
               "bm": 0,
@@ -1702,7 +1702,7 @@
           "ddd": 0,
           "ind": 8,
           "ty": 4,
-          "nm": "路径 5",
+          "nm": "Path 5",
           "sr": 1,
           "ks": {
             "o": {
@@ -1849,7 +1849,7 @@
                     },
                     "ix": 2
                   },
-                  "nm": "路径 1",
+                  "nm": "Path 1",
                   "mn": "ADBE Vector Shape - Group",
                   "hd": false
                 },
@@ -1872,7 +1872,7 @@
                   },
                   "r": 1,
                   "bm": 0,
-                  "nm": "填充 1",
+                  "nm": "Fill 1",
                   "mn": "ADBE Vector Graphic - Fill",
                   "hd": false
                 },
@@ -1922,10 +1922,10 @@
                     "k": 0,
                     "ix": 5
                   },
-                  "nm": "变换"
+                  "nm": "Transform"
                 }
               ],
-              "nm": "路径",
+              "nm": "Path",
               "np": 2,
               "cix": 2,
               "bm": 0,
@@ -1943,7 +1943,7 @@
           "ddd": 0,
           "ind": 9,
           "ty": 4,
-          "nm": "路径 4",
+          "nm": "Path 4",
           "sr": 1,
           "ks": {
             "o": {
@@ -2102,7 +2102,7 @@
                     },
                     "ix": 2
                   },
-                  "nm": "路径 1",
+                  "nm": "Path 1",
                   "mn": "ADBE Vector Shape - Group",
                   "hd": false
                 },
@@ -2125,7 +2125,7 @@
                   },
                   "r": 1,
                   "bm": 0,
-                  "nm": "填充 1",
+                  "nm": "Fill 1",
                   "mn": "ADBE Vector Graphic - Fill",
                   "hd": false
                 },
@@ -2175,10 +2175,10 @@
                     "k": 0,
                     "ix": 5
                   },
-                  "nm": "变换"
+                  "nm": "Transform"
                 }
               ],
-              "nm": "路径",
+              "nm": "Path",
               "np": 2,
               "cix": 2,
               "bm": 0,
@@ -2196,7 +2196,7 @@
           "ddd": 0,
           "ind": 10,
           "ty": 4,
-          "nm": "路径 3",
+          "nm": "Path 3",
           "sr": 1,
           "ks": {
             "o": {
@@ -2343,7 +2343,7 @@
                     },
                     "ix": 2
                   },
-                  "nm": "路径 1",
+                  "nm": "Path 1",
                   "mn": "ADBE Vector Shape - Group",
                   "hd": false
                 },
@@ -2366,7 +2366,7 @@
                   },
                   "r": 1,
                   "bm": 0,
-                  "nm": "填充 1",
+                  "nm": "Fill 1",
                   "mn": "ADBE Vector Graphic - Fill",
                   "hd": false
                 },
@@ -2416,10 +2416,10 @@
                     "k": 0,
                     "ix": 5
                   },
-                  "nm": "变换"
+                  "nm": "Transform"
                 }
               ],
-              "nm": "路径",
+              "nm": "Path",
               "np": 2,
               "cix": 2,
               "bm": 0,
@@ -2437,7 +2437,7 @@
           "ddd": 0,
           "ind": 11,
           "ty": 4,
-          "nm": "路径 2",
+          "nm": "Path 2",
           "sr": 1,
           "ks": {
             "o": {
@@ -2584,7 +2584,7 @@
                     },
                     "ix": 2
                   },
-                  "nm": "路径 1",
+                  "nm": "Path 1",
                   "mn": "ADBE Vector Shape - Group",
                   "hd": false
                 },
@@ -2607,7 +2607,7 @@
                   },
                   "r": 1,
                   "bm": 0,
-                  "nm": "填充 1",
+                  "nm": "Fill 1",
                   "mn": "ADBE Vector Graphic - Fill",
                   "hd": false
                 },
@@ -2657,10 +2657,10 @@
                     "k": 0,
                     "ix": 5
                   },
-                  "nm": "变换"
+                  "nm": "Transform"
                 }
               ],
-              "nm": "路径",
+              "nm": "Path",
               "np": 2,
               "cix": 2,
               "bm": 0,
@@ -2678,7 +2678,7 @@
           "ddd": 0,
           "ind": 12,
           "ty": 4,
-          "nm": "路径",
+          "nm": "Path",
           "sr": 1,
           "ks": {
             "o": {
@@ -2813,7 +2813,7 @@
                     },
                     "ix": 2
                   },
-                  "nm": "路径 1",
+                  "nm": "Path 1",
                   "mn": "ADBE Vector Shape - Group",
                   "hd": false
                 },
@@ -2836,7 +2836,7 @@
                   },
                   "r": 1,
                   "bm": 0,
-                  "nm": "填充 1",
+                  "nm": "Fill 1",
                   "mn": "ADBE Vector Graphic - Fill",
                   "hd": false
                 },
@@ -2886,10 +2886,10 @@
                     "k": 0,
                     "ix": 5
                   },
-                  "nm": "变换"
+                  "nm": "Transform"
                 }
               ],
-              "nm": "路径",
+              "nm": "Path",
               "np": 2,
               "cix": 2,
               "bm": 0,
@@ -2911,7 +2911,7 @@
       "ddd": 0,
       "ind": 1,
       "ty": 4,
-      "nm": "形状图层 3",
+      "nm": "[ANIMATION_ELEMENT] 3",
       "sr": 1,
       "ks": {
         "o": {
@@ -3012,7 +3012,7 @@
                 "k": 0,
                 "ix": 4
               },
-              "nm": "矩形路径 1",
+              "nm": "Rectangle Path 1",
               "mn": "ADBE Vector Shape - Rect",
               "hd": false
             },
@@ -3119,10 +3119,10 @@
                 "k": 0,
                 "ix": 5
               },
-              "nm": "变换"
+              "nm": "Transform"
             }
           ],
-          "nm": "矩形 1",
+          "nm": "[ANIMATION_ELEMENT] 1",
           "np": 3,
           "cix": 2,
           "bm": 0,
@@ -3140,7 +3140,7 @@
       "ddd": 0,
       "ind": 2,
       "ty": 4,
-      "nm": "形状图层 2",
+      "nm": "[ANIMATION_ELEMENT] 2",
       "sr": 1,
       "ks": {
         "o": {
@@ -3241,7 +3241,7 @@
                 "k": 0,
                 "ix": 4
               },
-              "nm": "矩形路径 1",
+              "nm": "Rectangle Path 1",
               "mn": "ADBE Vector Shape - Rect",
               "hd": false
             },
@@ -3348,10 +3348,10 @@
                 "k": 0,
                 "ix": 5
               },
-              "nm": "变换"
+              "nm": "Transform"
             }
           ],
-          "nm": "矩形 1",
+          "nm": "[ANIMATION_ELEMENT] 1",
           "np": 3,
           "cix": 2,
           "bm": 0,
@@ -3369,7 +3369,7 @@
       "ddd": 0,
       "ind": 3,
       "ty": 4,
-      "nm": "“Loading...”轮廓",
+      "nm": "“Loading...”[ANIMATION_ELEMENT]",
       "sr": 1,
       "ks": {
         "o": {
@@ -3487,7 +3487,7 @@
             "k": 0,
             "ix": 4
           },
-          "nm": "蒙版 1"
+          "nm": "[ANIMATION_ELEMENT] 1"
         }
       ],
       "shapes": [
@@ -3606,7 +3606,7 @@
               },
               "r": 1,
               "bm": 0,
-              "nm": "填充 1",
+              "nm": "Fill 1",
               "mn": "ADBE Vector Graphic - Fill",
               "hd": false
             },
@@ -3656,7 +3656,7 @@
                 "k": 0,
                 "ix": 5
               },
-              "nm": "变换"
+              "nm": "Transform"
             }
           ],
           "nm": "L",
@@ -4003,7 +4003,7 @@
             {
               "ty": "mm",
               "mm": 1,
-              "nm": "合并路径 1",
+              "nm": "[ANIMATION_ELEMENT]Path 1",
               "mn": "ADBE Vector Filter - Merge",
               "hd": false
             },
@@ -4026,7 +4026,7 @@
               },
               "r": 1,
               "bm": 0,
-              "nm": "填充 1",
+              "nm": "Fill 1",
               "mn": "ADBE Vector Graphic - Fill",
               "hd": false
             },
@@ -4076,7 +4076,7 @@
                 "k": 0,
                 "ix": 5
               },
-              "nm": "变换"
+              "nm": "Transform"
             }
           ],
           "nm": "o",
@@ -4459,7 +4459,7 @@
             {
               "ty": "mm",
               "mm": 1,
-              "nm": "合并路径 1",
+              "nm": "[ANIMATION_ELEMENT]Path 1",
               "mn": "ADBE Vector Filter - Merge",
               "hd": false
             },
@@ -4482,7 +4482,7 @@
               },
               "r": 1,
               "bm": 0,
-              "nm": "填充 1",
+              "nm": "Fill 1",
               "mn": "ADBE Vector Graphic - Fill",
               "hd": false
             },
@@ -4532,7 +4532,7 @@
                 "k": 0,
                 "ix": 5
               },
-              "nm": "变换"
+              "nm": "Transform"
             }
           ],
           "nm": "a",
@@ -4915,7 +4915,7 @@
             {
               "ty": "mm",
               "mm": 1,
-              "nm": "合并路径 1",
+              "nm": "[ANIMATION_ELEMENT]Path 1",
               "mn": "ADBE Vector Filter - Merge",
               "hd": false
             },
@@ -4938,7 +4938,7 @@
               },
               "r": 1,
               "bm": 0,
-              "nm": "填充 1",
+              "nm": "Fill 1",
               "mn": "ADBE Vector Graphic - Fill",
               "hd": false
             },
@@ -4988,7 +4988,7 @@
                 "k": 0,
                 "ix": 5
               },
-              "nm": "变换"
+              "nm": "Transform"
             }
           ],
           "nm": "d",
@@ -5191,7 +5191,7 @@
             {
               "ty": "mm",
               "mm": 1,
-              "nm": "合并路径 1",
+              "nm": "[ANIMATION_ELEMENT]Path 1",
               "mn": "ADBE Vector Filter - Merge",
               "hd": false
             },
@@ -5214,7 +5214,7 @@
               },
               "r": 1,
               "bm": 0,
-              "nm": "填充 1",
+              "nm": "Fill 1",
               "mn": "ADBE Vector Graphic - Fill",
               "hd": false
             },
@@ -5264,7 +5264,7 @@
                 "k": 0,
                 "ix": 5
               },
-              "nm": "变换"
+              "nm": "Transform"
             }
           ],
           "nm": "i",
@@ -5510,7 +5510,7 @@
               },
               "r": 1,
               "bm": 0,
-              "nm": "填充 1",
+              "nm": "Fill 1",
               "mn": "ADBE Vector Graphic - Fill",
               "hd": false
             },
@@ -5560,7 +5560,7 @@
                 "k": 0,
                 "ix": 5
               },
-              "nm": "变换"
+              "nm": "Transform"
             }
           ],
           "nm": "n",
@@ -6039,7 +6039,7 @@
             {
               "ty": "mm",
               "mm": 1,
-              "nm": "合并路径 1",
+              "nm": "[ANIMATION_ELEMENT]Path 1",
               "mn": "ADBE Vector Filter - Merge",
               "hd": false
             },
@@ -6062,7 +6062,7 @@
               },
               "r": 1,
               "bm": 0,
-              "nm": "填充 1",
+              "nm": "Fill 1",
               "mn": "ADBE Vector Graphic - Fill",
               "hd": false
             },
@@ -6112,7 +6112,7 @@
                 "k": 0,
                 "ix": 5
               },
-              "nm": "变换"
+              "nm": "Transform"
             }
           ],
           "nm": "g",
@@ -6262,7 +6262,7 @@
               },
               "r": 1,
               "bm": 0,
-              "nm": "填充 1",
+              "nm": "Fill 1",
               "mn": "ADBE Vector Graphic - Fill",
               "hd": false
             },
@@ -6312,7 +6312,7 @@
                 "k": 0,
                 "ix": 5
               },
-              "nm": "变换"
+              "nm": "Transform"
             }
           ],
           "nm": ".",
@@ -6462,7 +6462,7 @@
               },
               "r": 1,
               "bm": 0,
-              "nm": "填充 1",
+              "nm": "Fill 1",
               "mn": "ADBE Vector Graphic - Fill",
               "hd": false
             },
@@ -6512,7 +6512,7 @@
                 "k": 0,
                 "ix": 5
               },
-              "nm": "变换"
+              "nm": "Transform"
             }
           ],
           "nm": ".",
@@ -6662,7 +6662,7 @@
               },
               "r": 1,
               "bm": 0,
-              "nm": "填充 1",
+              "nm": "Fill 1",
               "mn": "ADBE Vector Graphic - Fill",
               "hd": false
             },
@@ -6712,7 +6712,7 @@
                 "k": 0,
                 "ix": 5
               },
-              "nm": "变换"
+              "nm": "Transform"
             }
           ],
           "nm": ".",
@@ -6733,7 +6733,7 @@
       "ddd": 0,
       "ind": 4,
       "ty": 0,
-      "nm": "预合成 2",
+      "nm": "[ANIMATION_ELEMENT]Composite 2",
       "refId": "comp_0",
       "sr": 1,
       "ks": {
@@ -6816,7 +6816,7 @@
       "ddd": 0,
       "ind": 5,
       "ty": 4,
-      "nm": "形状图层 1",
+      "nm": "[ANIMATION_ELEMENT] 1",
       "sr": 1,
       "ks": {
         "o": {
@@ -6886,7 +6886,7 @@
                 "k": 0,
                 "ix": 4
               },
-              "nm": "矩形路径 1",
+              "nm": "Rectangle Path 1",
               "mn": "ADBE Vector Shape - Rect",
               "hd": false
             },
@@ -6909,7 +6909,7 @@
               },
               "r": 1,
               "bm": 0,
-              "nm": "填充 1",
+              "nm": "Fill 1",
               "mn": "ADBE Vector Graphic - Fill",
               "hd": false
             },
@@ -6959,10 +6959,10 @@
                 "k": 0,
                 "ix": 5
               },
-              "nm": "变换"
+              "nm": "Transform"
             }
           ],
-          "nm": "矩形 1",
+          "nm": "[ANIMATION_ELEMENT] 1",
           "np": 3,
           "cix": 2,
           "bm": 0,

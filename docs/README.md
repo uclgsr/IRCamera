@@ -2,11 +2,11 @@
 
 [![Copilot](https://github.com/buccancs/IRCamera/actions/workflows/copilot.yml/badge.svg?branch=dev)](https://github.com/buccancs/IRCamera/actions/workflows/copilot.yml)
 
-## 📋 Documentation Overview
+## [LIST] Documentation Overview
 
 This is the central documentation hub for the IRCamera Multi-Modal Thermal Sensing Platform. All documentation has been consolidated and organized for easy navigation and maintenance.
 
-## 🏗️ System Architecture
+## [BUILD] System Architecture
 
 **IRCamera** implements a **Hub-and-Spoke architecture** for distributed multi-modal physiological sensing:
 
@@ -23,7 +23,7 @@ This is the central documentation hub for the IRCamera Multi-Modal Thermal Sensi
 - **Real-Time Communication**: TCP/JSON protocol with automatic device discovery
 - **Professional GUI**: Comprehensive PyQt6 interface for researchers
 
-## 📚 Documentation Structure
+## [BOOKS] Documentation Structure
 
 ### Quick Start Guides
 
@@ -49,7 +49,7 @@ This is the central documentation hub for the IRCamera Multi-Modal Thermal Sensi
 | **[Network Protocol](NETWORK_PROTOCOL.md)** | Communication protocol specification | Integration Developers |
 | **[Data Management](DATA_MANAGEMENT.md)** | Data formats and processing pipelines | Data Scientists |
 
-## 🚀 Quick Start
+## [LAUNCH] Quick Start
 
 ### For End Users (Researchers)
 1. Read the **[User Guide](USER_GUIDE.md)** for operating instructions
@@ -67,7 +67,7 @@ This is the central documentation hub for the IRCamera Multi-Modal Thermal Sensi
 - See the **[Developer Guide](DEVELOPER_GUIDE.md)** for Copilot-specific setup instructions
 - Project-aware context helps Copilot understand the Hub-and-Spoke architecture
 
-## 🔧 Development Tools
+## [WRENCH] Development Tools
 
 The repository includes comprehensive development tools accessible via:
 
@@ -82,19 +82,19 @@ The repository includes comprehensive development tools accessible via:
 ./dev.sh diagram        # Generate architecture diagrams
 ```
 
-## 📁 Repository Structure
+## [FOLDER] Repository Structure
 
 ```
 IRCamera/
-├── app/                    # Main Android application
-├── pc-controller/          # Python PC Hub application  
-├── component/             # Feature components (thermal, GSR, etc.)
-├── libir/                 # Core IR processing library
-├── lib*/                  # Support libraries (libapp, libcom, libui, etc.)
-├── docs/                  # **THIS DOCUMENTATION HUB**
-├── scripts/               # Build and utility scripts
-├── .github/               # CI/CD workflows and configurations
-└── README.md              # Project overview and quick start
+|---- app/                    # Main Android application
+|---- pc-controller/          # Python PC Hub application  
+|---- component/             # Feature components (thermal, GSR, etc.)
+|---- libir/                 # Core IR processing library
+|---- lib*/                  # Support libraries (libapp, libcom, libui, etc.)
+|---- docs/                  # **THIS DOCUMENTATION HUB**
+|---- scripts/               # Build and utility scripts
+|---- .github/               # CI/CD workflows and configurations
+`---- README.md              # Project overview and quick start
 ```
 
 ## 🆘 Support & Troubleshooting
@@ -110,14 +110,14 @@ IRCamera/
 3. Use the development tools: `./dev.sh help`
 4. For new issues, provide detailed error logs and system information
 
-## 📄 Project Status
+## [PAGE] Project Status
 
 - **Android Build**: Currently fails due to missing ShimmerDevice class - see [Developer Guide](DEVELOPER_GUIDE.md#known-issues)
 - **PC Controller**: Fully functional MVP implementation - see [User Guide](USER_GUIDE.md)
 - **Integration**: Hub-and-Spoke testing requires working Android APK
-- **Documentation**: ✅ **Fully Consolidated** (this effort)
+- **Documentation**: [DONE] **Fully Consolidated** (this effort)
 
-## 🤝 Contributing
+## [HANDSHAKE] Contributing
 
 Please refer to the **[Developer Guide](DEVELOPER_GUIDE.md)** for:
 - Development environment setup
@@ -129,4 +129,4 @@ Please refer to the **[Developer Guide](DEVELOPER_GUIDE.md)** for:
 
 **Last Updated**: Current consolidation effort  
 **Version**: Documentation Hub v1.0  
-**Status**: ✅ Active Development
+**Status**: [DONE] Active Development
