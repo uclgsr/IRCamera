@@ -198,8 +198,8 @@ data class SimpleRecordingStatus(
 )
 
 /**
- * Simple recording states
+ * Simple recording states for MainRecordingController
  */
-enum class RecordingState {
+enum class MainRecordingState {
     IDLE, STARTING, RECORDING, STOPPING, ERROR
 }
