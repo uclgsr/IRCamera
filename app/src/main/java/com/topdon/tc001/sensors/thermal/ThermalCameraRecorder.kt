@@ -792,6 +792,7 @@ class ThermalCameraRecorder(
                             "Thermal camera unplugged during operation",
                             isRecoverable = false // USB detach requires user intervention
                         )
+                    }
 
                     override fun onCancel() {
                         Log.d(TAG, "USB thermal camera connection cancelled")
