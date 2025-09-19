@@ -4,7 +4,7 @@ This directory contains the **Minimum Viable Product (MVP)** implementation of t
 for the IRCamera multi-modal physiological sensing platform. The Hub implements a complete *
 *Hub-and-Spoke architecture** for coordinating distributed Android sensor nodes.
 
-## 🏗️ Architecture Overview
+## Architecture Overview
 
 The PC Controller serves as the central **Hub** that:
 
@@ -14,9 +14,9 @@ The PC Controller serves as the central **Hub** that:
 - Manages session lifecycle and metadata
 - Implements robust device communication protocols
 
-## 🎯 MVP Features Implemented
+## MVP Features Implemented
 
-### ✅ Core Architecture
+### [DONE] Core Architecture
 
 - [x] **Hub-and-Spoke Model**: Central coordination of distributed devices
 - [x] **Device Management**: Complete registry with real-time status tracking
@@ -24,7 +24,7 @@ The PC Controller serves as the central **Hub** that:
 - [x] **Communication Protocol**: JSON-based command/response system
 - [x] **GUI Framework**: Comprehensive PyQt6 interface
 
-### ✅ Device Discovery & Management
+### [DONE] Device Discovery & Management
 
 - [x] **mDNS Service Discovery**: Automatic Android device detection
 - [x] **Device Registry**: Centralized capability and status tracking
@@ -32,7 +32,7 @@ The PC Controller serves as the central **Hub** that:
 - [x] **Heartbeat Monitoring**: Automatic timeout detection
 - [x] **Manual Fallback**: Manual device addition if mDNS fails
 
-### ✅ Session Management
+### [DONE] Session Management
 
 - [x] **Session Creation**: Structured session setup with metadata
 - [x] **Recording Coordination**: Synchronized start/stop across devices
@@ -40,7 +40,7 @@ The PC Controller serves as the central **Hub** that:
 - [x] **Metadata Management**: Comprehensive session documentation
 - [x] **Directory Structure**: Organized session file management
 
-### ✅ User Interface
+### [DONE] User Interface
 
 - [x] **Device Dashboard**: Live device list with status indicators
 - [x] **Session Controls**: Complete recording management interface
@@ -48,7 +48,7 @@ The PC Controller serves as the central **Hub** that:
 - [x] **Status Feedback**: Dynamic UI updates and notifications
 - [x] **Error Handling**: Graceful failure management and recovery
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 pc-controller/
@@ -73,7 +73,7 @@ pc-controller/
 +-- requirements.txt             # Python dependencies
 ```
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 
@@ -108,7 +108,7 @@ python run_mvp_app.py
 QT_QPA_PLATFORM=offscreen python run_mvp_app.py
 ```
 
-## 🔧 Usage Guide
+## Usage Guide
 
 ### 1. Device Discovery
 
@@ -144,7 +144,7 @@ Track system activity:
 - **System Log** - Detailed event logging with timestamps
 - **Status Bar** - Quick system health overview
 
-## 📊 Communication Protocol
+## Communication Protocol
 
 The Hub communicates with Android spokes using JSON messages over TCP:
 
@@ -180,7 +180,7 @@ The Hub communicates with Android spokes using JSON messages over TCP:
 }
 ```
 
-## 📋 Session Workflow
+## Session Workflow
 
 1. **Discovery Phase**
     - Hub starts mDNS discovery
@@ -207,7 +207,7 @@ The Hub communicates with Android spokes using JSON messages over TCP:
     - Devices finalize recordings and respond
     - Hub completes session metadata and files
 
-## 🧪 Testing & Validation
+## Testing & Validation
 
 ### Run Component Tests
 
@@ -224,14 +224,14 @@ python demo_mvp_components.py
 
 ### Test Results
 
-- ✅ Configuration System (100%)
-- ✅ Device Discovery Framework (100%)
-- ✅ Communication Protocol (100%)
-- ✅ GUI Architecture (100%)
-- ✅ Hub-and-Spoke Integration (100%)
-- ✅ Session Management API (100%)
+- [WORKING] Configuration System (100%)
+- [WORKING] Device Discovery Framework (100%)
+- [WORKING] Communication Protocol (100%)
+- [WORKING] GUI Architecture (100%)
+- [WORKING] Hub-and-Spoke Integration (100%)
+- [WORKING] Session Management API (100%)
 
-## 🔌 Integration with Android Spokes
+## Integration with Android Spokes
 
 The Hub is designed to work with Android devices that:
 
@@ -252,7 +252,7 @@ The Hub is designed to work with Android devices that:
 }
 ```
 
-## 📈 Performance & Scalability
+## Performance & Scalability
 
 - **Multi-threading**: Network operations run in background threads
 - **Async Integration**: Qt event loop integration for responsive GUI
@@ -260,7 +260,7 @@ The Hub is designed to work with Android devices that:
 - **Error Recovery**: Graceful handling of device failures and network issues
 - **Resource Management**: Efficient memory and connection management
 
-## 🔍 Troubleshooting
+## Troubleshooting
 
 ### Common Issues
 
@@ -285,7 +285,7 @@ The Hub is designed to work with Android devices that:
 IRCAMERA_LOG_LEVEL=DEBUG python run_mvp_app.py
 ```
 
-## 🛠️ Development
+## Development
 
 ### Adding New Features
 
@@ -301,12 +301,12 @@ IRCAMERA_LOG_LEVEL=DEBUG python run_mvp_app.py
 - **Network Layer**: Discovery and communication in `network/`
 - **Configuration**: YAML-based config in `config/`
 
-## 📄 License & Contributing
+## License & Contributing
 
 This is part of the IRCamera multi-modal sensing platform. Please refer to the main project
 documentation for license and contribution guidelines.
 
-## 🎉 MVP Status: 100% Complete
+## [COMPLETED] MVP Status: 100% Complete
 
 The PC Hub Application MVP successfully implements:
 

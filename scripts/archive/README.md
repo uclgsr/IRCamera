@@ -1,10 +1,10 @@
 # Build Script Archive
 
-## 📋 Legacy Build Scripts
+## Legacy Build Scripts
 
 This directory contains the original build scripts that have been replaced by the unified cross-platform build system.
 
-## 🔄 Script Consolidation
+## Script Consolidation
 
 ### Archived Windows Batch Files
 
@@ -46,7 +46,7 @@ This directory contains the original build scripts that have been replaced by th
 - **Lines**: 110
 - **Functionality**: Multiple build strategies, error analysis, troubleshooting
 
-## 📊 Consolidation Benefits
+## Consolidation Benefits
 
 ### Before: 6 Separate Scripts
 - **4 Batch Files**: 80% identical content, Windows-only compatibility
@@ -76,9 +76,9 @@ This directory contains the original build scripts that have been replaced by th
 | **Help System** | None | `--help` option |
 | **Performance Optimization** | enhanced_build.sh only | Always included |
 
-## 🚀 Migration Examples
+## Migration Examples
 
-### Old Usage → New Usage
+### Old Usage -> New Usage
 
 ```bash
 # Windows batch file usage (old)
@@ -104,7 +104,7 @@ build_apk_google_script.bat
 ../build.sh -f
 ```
 
-## 🔍 Technical Details
+## Technical Details
 
 ### Legacy Batch File Template
 The 4 batch files were nearly identical, differing only in output messages:
@@ -140,7 +140,7 @@ pause
 
 **All features consolidated into** `../build.sh` **with enhanced capabilities**
 
-## 📋 File Manifest
+## File Manifest
 
 ```
 scripts/archive/
@@ -153,7 +153,7 @@ scripts/archive/
 └── README.md                         # This file
 ```
 
-## ⚠️ Usage Notice
+## Usage Notice
 
 **These scripts are preserved for historical reference only.**
 
