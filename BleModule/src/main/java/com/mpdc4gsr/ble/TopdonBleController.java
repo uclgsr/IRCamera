@@ -251,7 +251,7 @@ public class TopdonBleController {
     private boolean isTopdonDevice(String deviceName) {
         if (deviceName == null) return false;
 
-        for (String pattern : MPDC4GSR_DEVICE_PATTERNS) {
+        for (String pattern : SUPPORTED_DEVICE_PATTERNS) {
             if (deviceName.toLowerCase().contains(pattern.toLowerCase())) {
                 return true;
             }
