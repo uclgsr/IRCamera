@@ -23,7 +23,7 @@ include(":component:thermal-ir")
 include(":component:thermal-lite")
 include(":component:pseudo")
 include(":component:user")
-include(":component:CommonComponent")
+// include(":component:CommonComponent") // CONSOLIDATED into thermal-lite
 include(":libapp")
 // include(":libcom") // CONSOLIDATED into :libapp
 include(":libir")
