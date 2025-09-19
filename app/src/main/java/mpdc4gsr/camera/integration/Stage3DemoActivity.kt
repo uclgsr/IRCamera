@@ -189,7 +189,7 @@ class Stage3DemoActivity : AppCompatActivity() {
         try {
             camera2System.release()
         } catch (e: Exception) {
-            // Ignore cleanup errors
+            android.util.Log.w(TAG, "Error during camera release in onDestroy", e)
         }
     }
 }
