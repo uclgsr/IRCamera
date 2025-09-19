@@ -144,13 +144,13 @@ pause
 
 ```
 scripts/archive/
-├── build_apk_google_script.bat       # 12 lines, Google variant
-├── build_apk_topdon_script.bat       # 12 lines, Topdon variant  
-├── build_release_google_apk_script.bat # 12 lines, duplicate Google
-├── build_release_topdon_apk_script.bat # 12 lines, duplicate Topdon
-├── enhanced_build.sh                 # 147 lines, enhanced features
-├── build_for_testing.sh              # 110 lines, testing focus
-└── README.md                         # This file
++-- build_apk_google_script.bat       # 12 lines, Google variant
++-- build_apk_topdon_script.bat       # 12 lines, Topdon variant  
++-- build_release_google_apk_script.bat # 12 lines, duplicate Google
++-- build_release_topdon_apk_script.bat # 12 lines, duplicate Topdon
++-- enhanced_build.sh                 # 147 lines, enhanced features
++-- build_for_testing.sh              # 110 lines, testing focus
++-- README.md                         # This file
 ```
 
 ## Usage Notice

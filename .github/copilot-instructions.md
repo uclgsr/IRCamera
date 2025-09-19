@@ -66,16 +66,18 @@ Always reference these instructions first and fallback to search or bash command
 ### Repository Structure (Key Locations)
 ```
 IRCamera/
-├── app/                    # Main Android application
-├── BleModule/             # BLE/Shimmer integration (BROKEN - missing ShimmerDevice)
-├── component/             # Feature components (thermal, GSR, pseudo, etc.)
-├── pc-controller/         # Python PC Hub application (WORKING)
-├── libir/                 # Core IR processing library
-├── lib*/                  # Support libraries (libapp, libcom, libui, etc.)
-├── build_*.sh            # Various build scripts
-├── dev.sh                # Development tools
-├── docs/                 # Comprehensive documentation
-└── .github/              # CI/CD workflows
++-- app/                    # Main Android application
++-- BleModule/             # BLE/Shimmer integration (BROKEN - missing ShimmerDevice)
++-- component/             # Feature components (thermal, GSR, pseudo, etc.)
++-- consolidated_libraries/ # Consolidated support libraries (libcom, libmatrix, libmenu)
++-- libapp/                # Application framework library
++-- libir/                 # Core IR processing library
++-- libui/                 # User interface components library
++-- pc-controller/         # Python PC Hub application (WORKING)
++-- scripts/               # Build and utility scripts
++-- dev.sh                # Development tools
++-- docs/                 # Comprehensive documentation
++-- .github/              # CI/CD workflows
 ```
 
 ### Frequently Used Commands

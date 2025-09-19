@@ -377,20 +377,20 @@ graph TB
 #### Session Directory Structure
 ```
 sessions/
-├── session_YYYY-MM-DD_HH-MM-SS/           # Session timestamp
-│   ├── metadata.json                       # Session configuration
-│   ├── session_summary.json                # Session statistics
-│   ├── device_001/                         # First Android device
-│   │   ├── thermal_data.csv               # Temperature matrices
-│   │   ├── gsr_data.csv                   # GSR measurements
-│   │   ├── rgb_video.mp4                  # RGB video recording
-│   │   ├── rgb_frames/                     # Individual video frames
-│   │   │   ├── frame_000001.jpg
-│   │   │   └── ...
-│   │   └── device_metadata.json           # Device-specific info
-│   ├── device_002/                         # Second Android device
-│   │   └── ...                             # Same structure
-│   └── synchronization.json                # Cross-device sync data
++-- session_YYYY-MM-DD_HH-MM-SS/           # Session timestamp
+    +-- metadata.json                       # Session configuration
+    +-- session_summary.json                # Session statistics
+    +-- device_001/                         # First Android device
+        +-- thermal_data.csv               # Temperature matrices
+        +-- gsr_data.csv                   # GSR measurements
+        +-- rgb_video.mp4                  # RGB video recording
+        +-- rgb_frames/                     # Individual video frames
+            +-- frame_000001.jpg
+            +-- ...
+        +-- device_metadata.json           # Device-specific info
+    +-- device_002/                         # Second Android device
+        +-- ...                             # Same structure
+    +-- synchronization.json                # Cross-device sync data
 ```
 
 #### Data Format Examples

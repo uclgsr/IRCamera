@@ -19,30 +19,30 @@ This guide provides comprehensive development instructions for the IRCamera Mult
 
 ```
 IRCamera/
-├── app/                           # Main Android application
-│   └── src/main/java/mpdc4gsr/   # Android application code
-├── pc-controller/                 # Python PC Hub implementation
-│   ├── src/ircamera_pc/          # Main application package
-│   ├── demo_mvp_components.py    # Component demonstration
-│   ├── run_mvp_app.py            # Application launcher
-│   └── requirements.txt          # Python dependencies
-├── component/                     # Feature components
-│   ├── thermal-ir/               # Thermal imaging component
-│   ├── gsr-recording/            # GSR sensor component
-│   ├── pseudo/                   # Simulation components
-│   └── ...                       # Other sensor components
-├── consolidated_libraries/        # Consolidated support libraries
-│   ├── libcom/                   # Communication library
-│   ├── libmatrix/               # Matrix operations library
-│   └── libmenu/                 # Menu components library
-├── libapp/                       # Application framework library
-├── libir/                        # Core IR processing library  
-├── libui/                        # User interface components library
-├── BleModule/                    # Bluetooth Low Energy module
-├── RangeSeekBar/                 # UI range selector component
-├── docs/                         # **Consolidated Documentation**
-├── scripts/                      # Build and utility scripts
-└── .github/                      # CI/CD and GitHub configurations
++-- app/                           # Main Android application
+    +-- src/main/java/mpdc4gsr/   # Android application code
++-- pc-controller/                 # Python PC Hub implementation
+    +-- src/ircamera_pc/          # Main application package
+    +-- demo_mvp_components.py    # Component demonstration
+    +-- run_mvp_app.py            # Application launcher
+    +-- requirements.txt          # Python dependencies
++-- component/                     # Feature components
+    +-- thermal-ir/               # Thermal imaging component
+    +-- gsr-recording/            # GSR sensor component
+    +-- pseudo/                   # Simulation components
+    +-- ...                       # Other sensor components
++-- consolidated_libraries/        # Consolidated support libraries
+    +-- libcom/                   # Communication library
+    +-- libmatrix/               # Matrix operations library
+    +-- libmenu/                 # Menu components library
++-- libapp/                       # Application framework library
++-- libir/                        # Core IR processing library  
++-- libui/                        # User interface components library
++-- BleModule/                    # Bluetooth Low Energy module
++-- RangeSeekBar/                 # UI range selector component
++-- docs/                         # **Consolidated Documentation**
++-- scripts/                      # Build and utility scripts
++-- .github/                      # CI/CD and GitHub configurations
 ```
 
 ## Development Environment Setup
