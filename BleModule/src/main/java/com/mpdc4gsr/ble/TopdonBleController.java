@@ -31,7 +31,7 @@ public class TopdonBleController {
     private static final UUID MPDC4GSR_THERMAL_SERVICE_UUID = UUID.fromString("12345678-1234-5678-9012-123456789ABC");
     private static final UUID MPDC4GSR_THERMAL_DATA_CHAR_UUID = UUID.fromString("12345678-1234-5678-9012-123456789ABD");
 
-    private static final String[] MPDC4GSR_DEVICE_PATTERNS = {
+    private static final String[] SUPPORTED_DEVICE_PATTERNS = {
             "Topdon",
             "TC001",
             "TC-001",
