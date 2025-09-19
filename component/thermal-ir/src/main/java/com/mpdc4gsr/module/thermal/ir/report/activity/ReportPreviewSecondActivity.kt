@@ -24,22 +24,22 @@ import com.mpdc4gsr.lib.core.tools.FileTools
 import com.mpdc4gsr.lib.core.tools.GlideLoader
 import com.mpdc4gsr.lib.core.utils.NetWorkUtils
 import com.mpdc4gsr.lib.core.view.TitleView
-import com.topdon.libcom.PDFHelp
-import com.topdon.lms.sdk.LMS
-import com.topdon.lms.sdk.utils.StringUtils
-import com.topdon.lms.sdk.weiget.TToast
-import com.topdon.module.thermal.ir.R
-import com.topdon.module.thermal.ir.report.bean.ReportBean
-import com.topdon.module.thermal.ir.report.view.ReportIRShowView
-import com.topdon.module.thermal.ir.report.view.ReportInfoView
-import com.topdon.module.thermal.ir.report.view.WatermarkView
-import com.topdon.module.thermal.ir.report.viewmodel.UpReportViewModel
+import com.mpdc4gsr.libcom.PDFHelp
+import com.mpdc4gsr.lms.sdk.LMS
+import com.mpdc4gsr.lms.sdk.utils.StringUtils
+import com.mpdc4gsr.lms.sdk.weiget.TToast
+import com.mpdc4gsr.module.thermal.ir.R
+import com.mpdc4gsr.module.thermal.ir.report.bean.ReportBean
+import com.mpdc4gsr.module.thermal.ir.report.view.ReportIRShowView
+import com.mpdc4gsr.module.thermal.ir.report.view.ReportInfoView
+import com.mpdc4gsr.module.thermal.ir.report.view.WatermarkView
+import com.mpdc4gsr.module.thermal.ir.report.viewmodel.UpReportViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import java.io.File
 import com.mpdc4gsr.lib.core.R as LibCoreR
-import com.topdon.lib.ui.R as UiR
+import com.mpdc4gsr.lib.ui.R as UiR
 
 
 

@@ -45,11 +45,11 @@ import com.mpdc4gsr.lib.core.tools.NumberTools
 import com.mpdc4gsr.lib.core.tools.TimeTool
 import com.mpdc4gsr.lib.core.utils.ScreenUtil
 import com.mpdc4gsr.lib.core.view.TitleView
-import com.topdon.module.thermal.ir.R
-import com.topdon.module.thermal.ir.bean.SelectPositionBean
-import com.topdon.module.thermal.ir.event.MonitorSaveEvent
-import com.topdon.module.thermal.ir.repository.ConfigRepository
-import com.topdon.module.thermal.ir.view.ChartMonitorView
+import com.mpdc4gsr.module.thermal.ir.R
+import com.mpdc4gsr.module.thermal.ir.bean.SelectPositionBean
+import com.mpdc4gsr.module.thermal.ir.event.MonitorSaveEvent
+import com.mpdc4gsr.module.thermal.ir.repository.ConfigRepository
+import com.mpdc4gsr.module.thermal.ir.view.ChartMonitorView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay

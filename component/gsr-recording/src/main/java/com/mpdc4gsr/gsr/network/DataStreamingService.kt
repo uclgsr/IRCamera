@@ -2,7 +2,7 @@ package com.mpdc4gsr.gsr.network
 
 import android.content.Context
 import android.util.Log
-import com.topdon.gsr.model.GSRSample
+import com.mpdc4gsr.gsr.model.GSRSample
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job

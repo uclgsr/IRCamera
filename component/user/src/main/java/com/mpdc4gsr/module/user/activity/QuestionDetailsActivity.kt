@@ -2,7 +2,7 @@ package com.mpdc4gsr.module.user.activity
 
 import android.widget.TextView
 import com.mpdc4gsr.lib.core.ktbase.BaseActivity
-import com.topdon.module.user.R
+import com.mpdc4gsr.module.user.R
 
 class QuestionDetailsActivity : BaseActivity() {
     private lateinit var questionDetailsTitle: TextView

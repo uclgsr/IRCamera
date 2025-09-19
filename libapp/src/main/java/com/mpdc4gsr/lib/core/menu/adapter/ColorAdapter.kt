@@ -3,8 +3,8 @@ package com.mpdc4gsr.lib.core.menu.adapter
 import android.annotation.SuppressLint
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.topdon.lib.core.menu.util.PseudoColorConfig
-import com.topdon.lib.core.menu.view.ColorView
+import com.mpdc4gsr.lib.core.menu.util.PseudoColorConfig
+import com.mpdc4gsr.lib.core.menu.view.ColorView
 
 @SuppressLint("NotifyDataSetChanged")
 internal class ColorAdapter : RecyclerView.Adapter<ColorAdapter.ViewHolder>() {

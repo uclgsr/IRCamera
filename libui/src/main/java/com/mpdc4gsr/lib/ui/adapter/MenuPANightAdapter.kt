@@ -5,9 +5,9 @@ import androidx.core.content.ContextCompat
 import com.blankj.utilcode.util.ScreenUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
-import com.topdon.lib.ui.bean.ColorBean
-import com.topdon.lib.ui.listener.SingleClickListener
-import com.topdon.lib.ui.R as UiR
+import com.mpdc4gsr.lib.ui.bean.ColorBean
+import com.mpdc4gsr.lib.ui.listener.SingleClickListener
+import com.mpdc4gsr.lib.ui.R as UiR
 
 @Deprecated("旧的dual lightmenu，已重构过了")
 

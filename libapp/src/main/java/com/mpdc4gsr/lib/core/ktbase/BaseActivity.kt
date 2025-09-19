@@ -24,8 +24,8 @@ import com.mpdc4gsr.lib.core.dialog.LoadingDialog
 import com.mpdc4gsr.lib.core.dialog.TipCameraProgressDialog
 import com.mpdc4gsr.lib.core.tools.AppLanguageUtils
 import com.mpdc4gsr.lib.core.tools.ConstantLanguages
-import com.topdon.lms.sdk.LMS
-import com.topdon.lms.sdk.bean.CommonBean
+import com.mpdc4gsr.lms.sdk.LMS
+import com.mpdc4gsr.lms.sdk.bean.CommonBean
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode

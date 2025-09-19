@@ -7,7 +7,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup.LayoutParams
 import com.mpdc4gsr.lib.core.R
 import com.mpdc4gsr.lib.core.utils.ScreenUtil
-import com.topdon.lib.ui.databinding.DialogProgressBinding
+import com.mpdc4gsr.lib.ui.databinding.DialogProgressBinding
 
 
 class ProgressDialog(context: Context) : Dialog(context, R.style.InfoDialog) {

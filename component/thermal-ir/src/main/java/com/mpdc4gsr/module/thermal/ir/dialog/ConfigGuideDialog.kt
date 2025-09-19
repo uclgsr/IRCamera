@@ -21,10 +21,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mpdc4gsr.lib.core.common.SharedManager
 import com.mpdc4gsr.lib.core.tools.NumberTools
 import com.mpdc4gsr.lib.core.tools.UnitTools
-import com.topdon.lib.ui.widget.MyItemDecoration
-import com.topdon.module.thermal.ir.R
-import com.topdon.module.thermal.ir.adapter.ConfigEmAdapter
-import com.topdon.module.thermal.ir.bean.DataBean
+import com.mpdc4gsr.lib.ui.widget.MyItemDecoration
+import com.mpdc4gsr.module.thermal.ir.R
+import com.mpdc4gsr.module.thermal.ir.adapter.ConfigEmAdapter
+import com.mpdc4gsr.module.thermal.ir.bean.DataBean
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

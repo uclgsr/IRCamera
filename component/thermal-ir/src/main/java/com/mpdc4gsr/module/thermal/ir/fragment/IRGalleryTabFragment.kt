@@ -13,13 +13,13 @@ import com.mpdc4gsr.lib.core.ktbase.BaseFragment
 import com.mpdc4gsr.lib.core.repository.GalleryRepository.DirType
 import com.mpdc4gsr.lib.core.view.MyTextView
 import com.mpdc4gsr.lib.core.view.TitleView
-import com.topdon.module.thermal.ir.R
-import com.topdon.module.thermal.ir.event.GalleryDirChangeEvent
-import com.topdon.module.thermal.ir.popup.GalleryChangePopup
-import com.topdon.module.thermal.ir.viewmodel.IRGalleryTabViewModel
+import com.mpdc4gsr.module.thermal.ir.R
+import com.mpdc4gsr.module.thermal.ir.event.GalleryDirChangeEvent
+import com.mpdc4gsr.module.thermal.ir.popup.GalleryChangePopup
+import com.mpdc4gsr.module.thermal.ir.viewmodel.IRGalleryTabViewModel
 import org.greenrobot.eventbus.EventBus
 import com.mpdc4gsr.lib.core.R as LibCoreR
-import com.topdon.lib.ui.R as UiR
+import com.mpdc4gsr.lib.ui.R as UiR
 
 
 class IRGalleryTabFragment : BaseFragment() {

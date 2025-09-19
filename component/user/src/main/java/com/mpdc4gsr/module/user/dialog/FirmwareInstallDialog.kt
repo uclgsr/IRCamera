@@ -7,7 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.mpdc4gsr.lib.core.utils.ScreenUtil
-import com.topdon.module.user.R
+import com.mpdc4gsr.module.user.R
 import com.mpdc4gsr.lib.core.R as LibAppR
 
 

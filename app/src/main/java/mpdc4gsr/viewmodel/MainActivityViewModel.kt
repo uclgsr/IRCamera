@@ -12,8 +12,8 @@ import mpdc4gsr.sensors.thermal.ThermalRecorder
 import mpdc4gsr.network.NetworkClient
 import mpdc4gsr.network.NetworkController
 import mpdc4gsr.core.SessionManager
-import com.topdon.gsr.service.SessionManager as GSRSessionManager
-import com.topdon.gsr.model.SessionInfo
+import com.mpdc4gsr.gsr.service.SessionManager as GSRSessionManager
+import com.mpdc4gsr.gsr.model.SessionInfo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext

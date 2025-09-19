@@ -5,7 +5,7 @@ import android.graphics.Bitmap.CompressFormat
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
 import android.media.ExifInterface
-import com.topdon.lib.core.matrix.Logger
+import com.mpdc4gsr.lib.core.matrix.Logger
 import java.io.*
 
 class FileUtils {

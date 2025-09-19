@@ -27,9 +27,9 @@ import com.mpdc4gsr.lib.core.common.SaveSettingUtil
 import com.mpdc4gsr.lib.core.config.DeviceConfig
 import com.mpdc4gsr.lib.core.ktbase.BaseFragment
 import com.mpdc4gsr.lib.core.utils.ScreenUtil
-import com.topdon.module.thermal.ir.R
-import com.topdon.module.thermal.ir.repository.ConfigRepository
-import com.topdon.module.thermal.ir.utils.CalibrationTools
+import com.mpdc4gsr.module.thermal.ir.R
+import com.mpdc4gsr.module.thermal.ir.repository.ConfigRepository
+import com.mpdc4gsr.module.thermal.ir.utils.CalibrationTools
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch

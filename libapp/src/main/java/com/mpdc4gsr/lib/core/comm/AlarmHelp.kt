@@ -3,8 +3,8 @@ package com.mpdc4gsr.lib.core.comm
 import android.content.Context
 import android.media.MediaPlayer
 import com.mpdc4gsr.lib.core.bean.AlarmBean
-import com.topdon.libcom.util.SingletonHolder
-import com.topdon.libcom.view.TempLayout
+import com.mpdc4gsr.libcom.util.SingletonHolder
+import com.mpdc4gsr.libcom.view.TempLayout
 
 class AlarmHelp private constructor(val context: Context) {
     companion object : SingletonHolder<AlarmHelp, Context>(::AlarmHelp)

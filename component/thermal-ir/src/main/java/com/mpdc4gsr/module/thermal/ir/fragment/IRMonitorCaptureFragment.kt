@@ -13,8 +13,8 @@ import com.mpdc4gsr.lib.core.navigation.NavigationManager
 import com.mpdc4gsr.lib.core.socket.WebSocketProxy
 import com.mpdc4gsr.lib.core.tools.DeviceTools
 import com.mpdc4gsr.lib.core.tools.ToastTools
-import com.topdon.module.thermal.ir.R
-import com.topdon.module.thermal.ir.activity.IRMonitorActivity
+import com.mpdc4gsr.module.thermal.ir.R
+import com.mpdc4gsr.module.thermal.ir.activity.IRMonitorActivity
 
 class IRMonitorCaptureFragment : BaseFragment() {
     

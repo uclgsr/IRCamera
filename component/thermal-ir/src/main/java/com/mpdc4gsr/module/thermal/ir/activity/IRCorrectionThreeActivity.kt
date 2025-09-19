@@ -4,8 +4,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.TextView
 import com.mpdc4gsr.lib.core.ktbase.BaseActivity
-import com.topdon.module.thermal.ir.R
-import com.topdon.module.thermal.ir.fragment.IRCorrectionFragment
+import com.mpdc4gsr.module.thermal.ir.R
+import com.mpdc4gsr.module.thermal.ir.fragment.IRCorrectionFragment
 
 
 

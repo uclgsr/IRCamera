@@ -10,7 +10,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.mpdc4gsr.lib.core.bean.HouseRepPreviewProjectItemBean
-import com.topdon.module.thermal.ir.R
+import com.mpdc4gsr.module.thermal.ir.R
 
 @SuppressLint("NotifyDataSetChanged")
 class ReportPreviewFloorAdapter(

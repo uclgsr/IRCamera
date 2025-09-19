@@ -4,11 +4,11 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.mpdc4gsr.lib.core.config.RouterConfig
-import com.topdon.lib.ui.dialog.MonitorSelectDialog
-import com.topdon.lib.core.comm.navigation.NavigationManager
-import com.topdon.module.thermal.ir.bean.SelectPositionBean
-import com.topdon.module.thermal.ir.databinding.ActivityIrMonitorBinding
-import com.topdon.module.thermal.ir.event.ThermalActionEvent
+import com.mpdc4gsr.lib.ui.dialog.MonitorSelectDialog
+import com.mpdc4gsr.lib.core.comm.navigation.NavigationManager
+import com.mpdc4gsr.module.thermal.ir.bean.SelectPositionBean
+import com.mpdc4gsr.module.thermal.ir.databinding.ActivityIrMonitorBinding
+import com.mpdc4gsr.module.thermal.ir.event.ThermalActionEvent
 import org.greenrobot.eventbus.EventBus
 
 class IRMonitorActivity : AppCompatActivity(), View.OnClickListener {

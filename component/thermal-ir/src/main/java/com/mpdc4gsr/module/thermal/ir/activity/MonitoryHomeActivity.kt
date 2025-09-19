@@ -8,10 +8,10 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.mpdc4gsr.lib.core.config.ExtraKeyConfig
 import com.mpdc4gsr.lib.core.ktbase.BaseActivity
-import com.topdon.module.thermal.ir.R
-import com.topdon.module.thermal.ir.event.MonitorSaveEvent
-import com.topdon.module.thermal.ir.fragment.IRMonitorCaptureFragment
-import com.topdon.module.thermal.ir.fragment.IRMonitorHistoryFragment
+import com.mpdc4gsr.module.thermal.ir.R
+import com.mpdc4gsr.module.thermal.ir.event.MonitorSaveEvent
+import com.mpdc4gsr.module.thermal.ir.fragment.IRMonitorCaptureFragment
+import com.mpdc4gsr.module.thermal.ir.fragment.IRMonitorHistoryFragment
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 

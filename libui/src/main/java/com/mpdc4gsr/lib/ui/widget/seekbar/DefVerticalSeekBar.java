@@ -1,8 +1,8 @@
 package com.mpdc4gsr.lib.ui.widget.seekbar;
 
-import static com.topdon.lib.ui.widget.seekbar.DefVerticalRangeSeekBar.DIRECTION_LEFT;
-import static com.topdon.lib.ui.widget.seekbar.DefVerticalRangeSeekBar.DIRECTION_RIGHT;
-import static com.topdon.lib.ui.widget.seekbar.DefVerticalRangeSeekBar.TEXT_DIRECTION_VERTICAL;
+import static com.mpdc4gsr.lib.ui.widget.seekbar.DefVerticalRangeSeekBar.DIRECTION_LEFT;
+import static com.mpdc4gsr.lib.ui.widget.seekbar.DefVerticalRangeSeekBar.DIRECTION_RIGHT;
+import static com.mpdc4gsr.lib.ui.widget.seekbar.DefVerticalRangeSeekBar.TEXT_DIRECTION_VERTICAL;
 
 import android.content.res.TypedArray;
 import android.graphics.Canvas;

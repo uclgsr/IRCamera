@@ -12,7 +12,7 @@ import com.mpdc4gsr.lib.core.ktbase.BaseActivity
 import com.mpdc4gsr.lib.core.navigation.NavigationManager
 import com.mpdc4gsr.lib.core.utils.Constants
 import com.mpdc4gsr.lib.core.view.TitleView
-import com.topdon.module.user.R
+import com.mpdc4gsr.module.user.R
 import com.mpdc4gsr.lib.core.R as RCore
 
 class ElectronicManualActivity : BaseActivity() {

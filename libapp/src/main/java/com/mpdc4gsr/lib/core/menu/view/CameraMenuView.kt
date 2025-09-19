@@ -14,8 +14,8 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.MultiTransformation
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.request.RequestOptions
-import com.topdon.lib.core.databinding.ViewCameraMenuBinding
-import com.topdon.lib.core.R as MenuR
+import com.mpdc4gsr.lib.core.databinding.ViewCameraMenuBinding
+import com.mpdc4gsr.lib.core.R as MenuR
 
 
 class CameraMenuView : FrameLayout, View.OnClickListener {

@@ -12,7 +12,7 @@ import com.mpdc4gsr.lib.core.bean.GalleryBean
 import com.mpdc4gsr.lib.core.bean.GalleryTitle
 import com.mpdc4gsr.lib.core.tools.GlideLoader
 import com.mpdc4gsr.lib.core.tools.TimeTool
-import com.topdon.module.thermal.ir.R
+import com.mpdc4gsr.module.thermal.ir.R
 
 @SuppressLint("NotifyDataSetChanged")
 class GalleryAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {

@@ -1,7 +1,7 @@
 package com.mpdc4gsr.lib.core.comm.util
 
 import android.app.Activity
-import com.topdon.lib.core.comm.navigation.NavigationManager
+import com.mpdc4gsr.lib.core.comm.navigation.NavigationManager
 
 
 object ARouterUtil {

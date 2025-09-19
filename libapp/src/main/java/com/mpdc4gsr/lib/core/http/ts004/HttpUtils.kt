@@ -1,8 +1,8 @@
 package com.mpdc4gsr.lib.core.http.ts004
 
-import com.topdon.lms.sdk.xutils.common.Callback
-import com.topdon.lms.sdk.xutils.http.RequestParams
-import com.topdon.lms.sdk.xutils.x
+import com.mpdc4gsr.lms.sdk.xutils.common.Callback
+import com.mpdc4gsr.lms.sdk.xutils.http.RequestParams
+import com.mpdc4gsr.lms.sdk.xutils.x
 
 object HttpUtils {
 

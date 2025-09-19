@@ -15,8 +15,8 @@ import com.blankj.utilcode.util.CollectionUtils
 
 
 import com.mpdc4gsr.lib.core.bean.HouseRepPreviewItemBean
-import com.topdon.lms.sdk.weiget.TToast
-import com.topdon.module.thermal.ir.R
+import com.mpdc4gsr.lms.sdk.weiget.TToast
+import com.mpdc4gsr.module.thermal.ir.R
 
 @SuppressLint("NotifyDataSetChanged")
 class ReportPreviewAdapter(private val cxt: Context, var dataList: List<HouseRepPreviewItemBean>) :

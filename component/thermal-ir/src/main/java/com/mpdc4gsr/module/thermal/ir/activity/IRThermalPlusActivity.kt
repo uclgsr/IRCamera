@@ -17,10 +17,10 @@ import com.mpdc4gsr.lib.core.bean.CameraItemBean
 import com.mpdc4gsr.lib.core.common.ProductType.PRODUCT_NAME_TCP
 import com.mpdc4gsr.lib.core.common.SaveSettingUtil
 import com.mpdc4gsr.lib.core.tools.ToastTools
-import com.topdon.menu.constant.TwoLightType
-import com.topdon.module.thermal.ir.R
-import com.topdon.module.thermal.ir.event.GalleryAddEvent
-import com.topdon.module.thermal.ir.video.VideoRecordFFmpeg
+import com.mpdc4gsr.menu.constant.TwoLightType
+import com.mpdc4gsr.module.thermal.ir.R
+import com.mpdc4gsr.module.thermal.ir.event.GalleryAddEvent
+import com.mpdc4gsr.module.thermal.ir.video.VideoRecordFFmpeg
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay

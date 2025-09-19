@@ -7,9 +7,9 @@ import com.mpdc4gsr.lib.core.config.RouterConfig
 import com.mpdc4gsr.lib.core.dialog.TipDialog
 import com.mpdc4gsr.lib.core.ktbase.BaseViewModelFragment
 import com.mpdc4gsr.lib.core.navigation.NavigationManager
-import com.topdon.module.thermal.R
-import com.topdon.module.thermal.adapter.GalleryAdapter
-import com.topdon.module.thermal.viewmodel.GalleryViewModel
+import com.mpdc4gsr.module.thermal.R
+import com.mpdc4gsr.module.thermal.adapter.GalleryAdapter
+import com.mpdc4gsr.module.thermal.viewmodel.GalleryViewModel
 
 class GalleryVideoFragment : BaseViewModelFragment<GalleryViewModel>() {
     private val adapter by lazy { GalleryAdapter(requireContext()) }

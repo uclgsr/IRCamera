@@ -3,11 +3,11 @@ package com.mpdc4gsr.module.thermal.ir.report.activity
 import com.mpdc4gsr.lib.core.config.ExtraKeyConfig
 import com.mpdc4gsr.lib.core.ktbase.BaseActivity
 import com.mpdc4gsr.lib.core.view.TitleView
-import com.topdon.module.thermal.ir.R
-import com.topdon.module.thermal.ir.report.bean.ReportInfoBean
-import com.topdon.module.thermal.ir.report.view.ReportInfoView
-import com.topdon.module.thermal.ir.report.view.WatermarkView
-import com.topdon.lib.ui.R as UiR
+import com.mpdc4gsr.module.thermal.ir.R
+import com.mpdc4gsr.module.thermal.ir.report.bean.ReportInfoBean
+import com.mpdc4gsr.module.thermal.ir.report.view.ReportInfoView
+import com.mpdc4gsr.module.thermal.ir.report.view.WatermarkView
+import com.mpdc4gsr.lib.ui.R as UiR
 
 
 

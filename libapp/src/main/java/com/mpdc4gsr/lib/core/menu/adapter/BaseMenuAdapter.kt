@@ -3,7 +3,7 @@ package com.mpdc4gsr.lib.core.menu.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.topdon.lib.core.databinding.ItemMenuBinding
+import com.mpdc4gsr.lib.core.databinding.ItemMenuBinding
 
 internal abstract class BaseMenuAdapter : RecyclerView.Adapter<BaseMenuAdapter.ViewHolder>() {
     companion object {

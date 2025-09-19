@@ -27,8 +27,8 @@ import com.mpdc4gsr.lib.core.tools.NumberTools
 import com.mpdc4gsr.lib.core.tools.ToastTools
 import com.mpdc4gsr.lib.core.tools.UnitTools
 import com.mpdc4gsr.lib.core.utils.ScreenUtil
-import com.topdon.lib.ui.adapter.ColorSelectAdapter
-import com.topdon.lib.ui.databinding.DialogThermalInputBinding
+import com.mpdc4gsr.lib.ui.adapter.ColorSelectAdapter
+import com.mpdc4gsr.lib.ui.databinding.DialogThermalInputBinding
 import java.math.BigDecimal
 
 

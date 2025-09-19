@@ -9,9 +9,9 @@ import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
 import com.mpdc4gsr.lib.core.ktbase.BaseActivity
 import com.mpdc4gsr.lib.core.tools.PermissionTool
-import com.topdon.module.thermal.R
-import com.topdon.module.thermal.fragment.GalleryPictureFragment
-import com.topdon.module.thermal.fragment.GalleryVideoFragment
+import com.mpdc4gsr.module.thermal.R
+import com.mpdc4gsr.module.thermal.fragment.GalleryPictureFragment
+import com.mpdc4gsr.module.thermal.fragment.GalleryVideoFragment
 
 
 class GalleryActivity : BaseActivity() {

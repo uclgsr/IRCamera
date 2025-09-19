@@ -14,14 +14,14 @@ import com.mpdc4gsr.lib.core.config.ExtraKeyConfig
 import com.mpdc4gsr.lib.core.ktbase.BaseActivity
 import com.mpdc4gsr.lib.core.tools.UnitTools
 import com.mpdc4gsr.lib.core.view.ColorSelectView
-import com.topdon.pseudo.R
-import com.topdon.pseudo.bean.CustomPseudoBean
-import com.topdon.pseudo.constant.ColorRecommend
-import com.topdon.pseudo.view.PseudoPickView
+import com.mpdc4gsr.pseudo.R
+import com.mpdc4gsr.pseudo.bean.CustomPseudoBean
+import com.mpdc4gsr.pseudo.constant.ColorRecommend
+import com.mpdc4gsr.pseudo.view.PseudoPickView
 import java.math.BigDecimal
 import java.math.RoundingMode
 import com.mpdc4gsr.lib.core.R as RCore
-import com.topdon.lib.ui.R as RUi
+import com.mpdc4gsr.lib.ui.R as RUi
 
 
 class PseudoSetActivity : BaseActivity(), View.OnClickListener {

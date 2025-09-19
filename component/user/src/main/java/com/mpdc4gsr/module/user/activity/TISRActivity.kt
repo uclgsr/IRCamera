@@ -9,8 +9,8 @@ import com.mpdc4gsr.lib.core.repository.TS004Repository
 import com.mpdc4gsr.lib.core.socket.SocketCmdUtil
 import com.mpdc4gsr.lib.core.utils.WsCmdConstants
 import com.mpdc4gsr.lib.core.view.TitleView
-import com.topdon.lms.sdk.weiget.TToast
-import com.topdon.module.user.R
+import com.mpdc4gsr.lms.sdk.weiget.TToast
+import com.mpdc4gsr.module.user.R
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode

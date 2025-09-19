@@ -20,19 +20,19 @@ import com.mpdc4gsr.lib.core.repository.GalleryRepository.DirType
 import com.mpdc4gsr.lib.core.tools.FileTools.getUri
 import com.mpdc4gsr.lib.core.tools.ToastTools
 import com.mpdc4gsr.lib.core.utils.Constants.IS_REPORT_FIRST
-import com.topdon.lms.sdk.weiget.TToast
-import com.topdon.module.thermal.ir.R
-import com.topdon.module.thermal.ir.adapter.GalleryAdapter
-import com.topdon.module.thermal.ir.report.bean.ReportConditionBean
-import com.topdon.module.thermal.ir.report.bean.ReportIRBean
-import com.topdon.module.thermal.ir.report.bean.ReportInfoBean
-import com.topdon.module.thermal.ir.viewmodel.IRGalleryViewModel
+import com.mpdc4gsr.lms.sdk.weiget.TToast
+import com.mpdc4gsr.module.thermal.ir.R
+import com.mpdc4gsr.module.thermal.ir.adapter.GalleryAdapter
+import com.mpdc4gsr.module.thermal.ir.report.bean.ReportConditionBean
+import com.mpdc4gsr.module.thermal.ir.report.bean.ReportIRBean
+import com.mpdc4gsr.module.thermal.ir.report.bean.ReportInfoBean
+import com.mpdc4gsr.module.thermal.ir.viewmodel.IRGalleryViewModel
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.io.File
 import com.mpdc4gsr.lib.core.R as LibR
-import com.topdon.lib.ui.R as UiR
+import com.mpdc4gsr.lib.ui.R as UiR
 
 
 

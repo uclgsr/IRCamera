@@ -1,7 +1,7 @@
 package mpdc4gsr.utils;
 
 import static android.content.Context.DOWNLOAD_SERVICE;
-import static com.topdon.lms.sdk.LMS.SUCCESS;
+import static com.mpdc4gsr.lms.sdk.LMS.SUCCESS;
 
 import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
@@ -20,14 +20,14 @@ import com.mpdc4gsr.lib.core.common.SharedManager;
 import com.mpdc4gsr.lib.core.config.HttpConfig;
 import com.mpdc4gsr.lib.core.dialog.TipDialog;
 import com.mpdc4gsr.lib.core.utils.AppUtil;
-import com.topdon.lms.sdk.LMS;
-import com.topdon.lms.sdk.activity.LmsUpdateDialog;
-import com.topdon.lms.sdk.bean.AppInfoBean;
-import com.topdon.lms.sdk.utils.NetworkUtil;
-import com.topdon.lms.sdk.weiget.TToast;
-import com.topdon.lms.sdk.xutils.common.Callback;
-import com.topdon.lms.sdk.xutils.common.task.PriorityExecutor;
-import com.topdon.lms.sdk.xutils.http.RequestParams;
+import com.mpdc4gsr.lms.sdk.LMS;
+import com.mpdc4gsr.lms.sdk.activity.LmsUpdateDialog;
+import com.mpdc4gsr.lms.sdk.bean.AppInfoBean;
+import com.mpdc4gsr.lms.sdk.utils.NetworkUtil;
+import com.mpdc4gsr.lms.sdk.weiget.TToast;
+import com.mpdc4gsr.lms.sdk.xutils.common.Callback;
+import com.mpdc4gsr.lms.sdk.xutils.common.task.PriorityExecutor;
+import com.mpdc4gsr.lms.sdk.xutils.http.RequestParams;
 import mpdc4gsr.utils.VersionTools;
 
 import java.io.File;

@@ -13,11 +13,11 @@ import com.mpdc4gsr.lib.core.ktbase.BaseFragment
 import com.mpdc4gsr.lib.core.navigation.NavigationManager
 import com.mpdc4gsr.lib.core.socket.WebSocketProxy
 import com.mpdc4gsr.lib.core.tools.DeviceTools
-import com.topdon.lms.sdk.UrlConstant
-import com.topdon.module.thermal.ir.R
-import com.topdon.module.thermal.ir.activity.IRThermalNightActivity
-import com.topdon.module.thermal.ir.activity.IRThermalPlusActivity
-import com.topdon.module.thermal.ir.activity.MonitoryHomeActivity
+import com.mpdc4gsr.lms.sdk.UrlConstant
+import com.mpdc4gsr.module.thermal.ir.R
+import com.mpdc4gsr.module.thermal.ir.activity.IRThermalNightActivity
+import com.mpdc4gsr.module.thermal.ir.activity.IRThermalPlusActivity
+import com.mpdc4gsr.module.thermal.ir.activity.MonitoryHomeActivity
 import org.greenrobot.eventbus.EventBus
 
 class AbilityFragment : BaseFragment(), View.OnClickListener {

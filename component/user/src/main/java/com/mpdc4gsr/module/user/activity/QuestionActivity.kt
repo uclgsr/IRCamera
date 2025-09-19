@@ -10,9 +10,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mpdc4gsr.lib.core.config.RouterConfig
 import com.mpdc4gsr.lib.core.ktbase.BaseActivity
 import com.mpdc4gsr.lib.core.navigation.NavigationManager
-import com.topdon.module.user.R
-import com.topdon.module.user.model.FaqRepository
-import com.topdon.module.user.model.QuestionData
+import com.mpdc4gsr.module.user.R
+import com.mpdc4gsr.module.user.model.FaqRepository
+import com.mpdc4gsr.module.user.model.QuestionData
 
 class QuestionActivity : BaseActivity() {
 

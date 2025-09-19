@@ -9,11 +9,11 @@ import android.util.AttributeSet
 import android.view.View
 import androidx.core.view.drawToBitmap
 import com.blankj.utilcode.util.SizeUtils
-import com.topdon.module.thermal.ir.R
-import com.topdon.module.thermal.ir.utils.getPixelLinear
-import com.topdon.module.thermal.ir.utils.getValuesBetween
-import com.topdon.module.thermal.ir.utils.realX
-import com.topdon.module.thermal.ir.utils.realY
+import com.mpdc4gsr.module.thermal.ir.R
+import com.mpdc4gsr.module.thermal.ir.utils.getPixelLinear
+import com.mpdc4gsr.module.thermal.ir.utils.getValuesBetween
+import com.mpdc4gsr.module.thermal.ir.utils.realX
+import com.mpdc4gsr.module.thermal.ir.utils.realY
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
