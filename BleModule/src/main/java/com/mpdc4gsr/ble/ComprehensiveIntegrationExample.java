@@ -85,7 +85,7 @@ public class ComprehensiveIntegrationExample {
                 break;
 
             case MPDC4GSR_THERMAL:
-                Log.d(TAG, "Configuring Topdon thermal camera: " + device.getName());
+                Log.d(TAG, "Configuring MPDC4GSR thermal camera: " + device.getName());
 
                 configureTopdonThermalDevice(device);
                 break;
