@@ -33,7 +33,7 @@ python3 run_mvp_app.py
 - **Complex security, visualization, and networking components**
 
 ## Simplification Benefits
-- **Reduced complexity**: 2000+ lines → 250 lines
+- **Reduced complexity**: 2000+ lines -> 250 lines
 - **Eliminated dependencies**: No loguru, cryptography, asyncio complexity
 - **Easier maintenance**: Single file vs distributed architecture
 - **Faster development**: Clear, focused functionality
@@ -51,10 +51,10 @@ The simplified version implements the same Hub-and-Spoke pattern but focuses on 
 
 ```
 PC Controller (Hub)
-├── Device Registry - Track connected Android devices
-├── Session Manager - Handle recording sessions
-├── TCP Server - Communicate with devices
-└── Simple Logging - Basic status and debugging
++-- Device Registry - Track connected Android devices
++-- Session Manager - Handle recording sessions
++-- TCP Server - Communicate with devices
++-- Simple Logging - Basic status and debugging
 ```
 
 ## Migration Strategy

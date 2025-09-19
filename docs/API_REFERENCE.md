@@ -353,7 +353,7 @@ class ThermalProcessor {
 ```
 
 ### libcom - Communication Library
-**Location**: `libcom/`
+**Location**: `consolidated_libraries/libcom/`
 
 #### NetworkManager  
 ```kotlin

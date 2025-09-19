@@ -1,4 +1,4 @@
-[![Copilot](https://github.com/buccancs/IRCamera/actions/workflows/copilot.yml/badge.svg?branch=dev)](https://github.com/buccancs/IRCamera/actions/workflows/copilot.yml)
+[![Copilot](https://github.com/uclgsr/IRCamera/actions/workflows/copilot.yml/badge.svg?branch=dev)](https://github.com/uclgsr/IRCamera/actions/workflows/copilot.yml)
 
 # IRCamera Multi-Modal Thermal Sensing Platform
 
@@ -14,7 +14,7 @@ This repository is fully configured for GitHub Copilot development assistance:
 
 **Quick Start with Copilot:**
 ```bash
-git clone https://github.com/buccancs/IRCamera.git
+git clone https://github.com/uclgsr/IRCamera.git
 cd IRCamera
 code .  # VS Code will prompt to install recommended extensions
 ```

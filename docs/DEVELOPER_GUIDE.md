@@ -31,12 +31,15 @@ IRCamera/
 │   ├── gsr-recording/            # GSR sensor component
 │   ├── pseudo/                   # Simulation components
 │   └── ...                       # Other sensor components
-├── libir/                        # Core IR processing library
-├── lib*/                         # Support libraries
-│   ├── libapp/                   # Application framework
+├── consolidated_libraries/        # Consolidated support libraries
 │   ├── libcom/                   # Communication library
-│   ├── libui/                    # User interface components
-│   └── ...                       # Other libraries
+│   ├── libmatrix/               # Matrix operations library
+│   └── libmenu/                 # Menu components library
+├── libapp/                       # Application framework library
+├── libir/                        # Core IR processing library  
+├── libui/                        # User interface components library
+├── BleModule/                    # Bluetooth Low Energy module
+├── RangeSeekBar/                 # UI range selector component
 ├── docs/                         # **Consolidated Documentation**
 ├── scripts/                      # Build and utility scripts
 └── .github/                      # CI/CD and GitHub configurations

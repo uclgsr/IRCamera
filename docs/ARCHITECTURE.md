@@ -476,7 +476,7 @@ graph TB
 - Image format conversion and enhancement
 - Native code integration for performance
 
-**libcom - Communication Library**
+**libcom - Communication Library** (`consolidated_libraries/libcom/`)
 - Cross-platform networking implementation
 - JSON protocol handling
 - mDNS service discovery
@@ -494,7 +494,7 @@ graph TB
 - Real-time data visualization widgets
 - Responsive layout management
 
-**libmatrix - Matrix Operations Library**
+**libmatrix - Matrix Operations Library** (`consolidated_libraries/libmatrix/`)
 - High-performance matrix operations
 - Image processing algorithms
 - Mathematical computation utilities

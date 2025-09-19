@@ -10,7 +10,7 @@
 **[docs/API_REFERENCE.md](../API_REFERENCE.md)** - Comprehensive API documentation for all components:
 - PC Controller Hub API
 - Android Sensor Node API  
-- Core Libraries API (libir, libcom, libapp, libui, libmatrix)
+- Core Libraries API (libapp, libir, libui, consolidated_libraries/libcom, consolidated_libraries/libmatrix, consolidated_libraries/libmenu)
 - Communication Protocol API
 - Data Processing API
 
@@ -39,7 +39,6 @@ Individual module documentation files have been moved to [../archive/](../archiv
 | **Development Setup** | [Developer Guide - Development Environment Setup](../DEVELOPER_GUIDE.md#development-environment-setup) |
 | **API Reference** | [API Reference - Complete Documentation](../API_REFERENCE.md) |
 | **System Architecture** | [Architecture Guide](../ARCHITECTURE.md) |
-| **Building the Project** | [Build Guide](../BUILD_GUIDE.md) |
 
 ---
 

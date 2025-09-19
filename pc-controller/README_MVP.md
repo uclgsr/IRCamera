@@ -52,25 +52,25 @@ The PC Controller serves as the central **Hub** that:
 
 ```
 pc-controller/
-├── src/ircamera_pc/              # Main application package
-│   ├── core/                     # Core business logic
-│   │   ├── device_manager.py     # Device discovery & registry (NEW)
-│   │   ├── session_manager.py    # Advanced session lifecycle (NEW)
-│   │   ├── config.py            # Configuration management
-│   │   └── [other modules...]
-│   ├── gui/                      # User interface components
-│   │   ├── main_window_mvp.py   # Complete MVP GUI (NEW)
-│   │   ├── app_mvp.py           # Application entry point (NEW)
-│   │   └── [other modules...]
-│   └── network/                  # Network communication
-│       ├── discovery.py         # mDNS service discovery
-│       ├── server.py            # TCP/JSON communication
-│       └── [other modules...]
-├── config/                       # Configuration files
-├── demo_mvp_components.py        # Component demonstration (NEW)
-├── run_mvp_app.py               # Application launcher (NEW)
-├── test_mvp.py                  # Comprehensive testing (NEW)
-└── requirements.txt             # Python dependencies
++-- src/ircamera_pc/              # Main application package
+    +-- core/                     # Core business logic
+        +-- device_manager.py     # Device discovery & registry (NEW)
+        +-- session_manager.py    # Advanced session lifecycle (NEW)
+        +-- config.py            # Configuration management
+        +-- [other modules...]
+    +-- gui/                      # User interface components
+        +-- main_window_mvp.py   # Complete MVP GUI (NEW)
+        +-- app_mvp.py           # Application entry point (NEW)
+        +-- [other modules...]
+    +-- network/                  # Network communication
+        +-- discovery.py         # mDNS service discovery
+        +-- server.py            # TCP/JSON communication
+        +-- [other modules...]
++-- config/                       # Configuration files
++-- demo_mvp_components.py        # Component demonstration (NEW)
++-- run_mvp_app.py               # Application launcher (NEW)
++-- test_mvp.py                  # Comprehensive testing (NEW)
++-- requirements.txt             # Python dependencies
 ```
 
 ## 🚀 Quick Start
