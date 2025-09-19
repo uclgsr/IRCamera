@@ -73,7 +73,7 @@ android {
 dependencies {
     coreLibraryDesugaring(libs.desugar.jdk.libs)
     implementation(project(":libapp"))
-    implementation(project(":libmenu")) // Required for menu references in widget files
+    // libmenu has been consolidated into libapp
     implementation(project(":BleModule"))
     implementation(libs.bundles.ui.common)
 }

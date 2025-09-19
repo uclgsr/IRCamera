@@ -25,10 +25,10 @@ include(":component:pseudo")
 include(":component:user")
 include(":component:CommonComponent")
 include(":libapp")
-include(":libcom")
+// include(":libcom") // CONSOLIDATED into :libapp
 include(":libir")
-include(":libmatrix")
+// include(":libmatrix") // CONSOLIDATED into :libapp
 include(":libui")
-include(":libmenu")
+// include(":libmenu") // CONSOLIDATED into :libapp
 include(":BleModule")
 include(":RangeSeekBar")

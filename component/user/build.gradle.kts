@@ -87,10 +87,10 @@ android {
 dependencies {
     coreLibraryDesugaring(libs.desugar.jdk.libs)
     implementation(project(":libapp"))
-    implementation(project(":libcom"))
+    // implementation(project(":libcom")) // CONSOLIDATED into libapp - already included via libapp
     implementation(project(":libir"))
     implementation(project(":libui"))
-    implementation(project(":libmenu"))
+    // implementation(project(":libmenu")) // CONSOLIDATED into libapp - already included via libapp
     implementation(project(":BleModule"))
     compileOnly(files("../../app/libs/lms_international-3.90.009.0.aar"))
     implementation(libs.androidx.core.ktx)

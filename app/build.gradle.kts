@@ -272,10 +272,10 @@ dependencies {
     implementation(project(":component:gsr-recording"))
     implementation(project(":component:user")) // User module for MoreActivity and settings
     implementation(project(":libapp"))
-    implementation(project(":libcom"))
+    // implementation(project(":libcom")) // CONSOLIDATED INTO libapp
     implementation(project(":libir"))
     implementation(project(":libui"))
-    implementation(project(":libmenu")) // Menu resources needed by app
+    // implementation(project(":libmenu")) // CONSOLIDATED INTO libapp
 
     implementation(project(":BleModule"))
 
