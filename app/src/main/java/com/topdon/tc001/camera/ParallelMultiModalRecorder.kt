@@ -329,12 +329,12 @@ class ParallelMultiModalRecorder(
                                 },
                             gsrDataFile =
                                 if (selectedSensors.contains(SensorSelectionDialog.SensorType.GSR)) {
-                                    sessionDir?.let { File(it, "signals.csv") }
+                                    sessionDir?.let { dir -> File(dir, "signals.csv") }
                                 } else {
                                     null
                                 },
-                            syncMarksFile = sessionDir?.let { File(it, "sync_marks.csv") },
-                            sessionMetadata = sessionDir?.let { File(it, "session_metadata.json") },
+                            syncMarksFile = sessionDir?.let { dir -> File(dir, "sync_marks.csv") },
+                            sessionMetadata = sessionDir?.let { dir -> File(dir, "session_metadata.json") },
                             sensorStatus = selectedSensors.associateWith { "Completed" },
                         )
 

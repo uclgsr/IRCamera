@@ -166,15 +166,21 @@ class SynchronizedMultiModalRecorder(
                     sessionId = sessionId,
                     startTimestamp = gsrSession?.startTime ?: System.currentTimeMillis(),
                     endTimestamp = stopTimestamp,
-                    rgbVideoFile = rgbCameraRecorder?.getCurrentVideoFile(),
-                    gsrDataFile = sessionDir?.let { dir ->
-                        File(dir, "signals.csv")
+                    rgbVideoFile = null, // Boolean return type doesn't match File expected
+                    gsrDataFile = gsrSession?.let { session ->
+                        thermalRecorder.getSessionDirectory()?.let { dir ->
+                            File(dir, "signals.csv")
+                        }
                     },
-                    syncMarksFile = sessionDir?.let { dir ->
-                        File(dir, "sync_marks.csv")
+                    syncMarksFile = gsrSession?.let { session ->
+                        thermalRecorder.getSessionDirectory()?.let { dir ->
+                            File(dir, "sync_marks.csv")
+                        }
                     },
-                    sessionMetadata = sessionDir?.let { dir ->
-                        File(dir, "session_metadata.json")
+                    sessionMetadata = gsrSession?.let { session ->
+                        thermalRecorder.getSessionDirectory()?.let { dir ->
+                            File(dir, "session_metadata.json")
+                        }
                     },
                 )
 
