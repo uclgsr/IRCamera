@@ -111,7 +111,12 @@ class ComprehensiveRecordingController(
                 val finalSessionId = sessionId ?: sessionDirectoryManager.generateSessionId()
                 val sessionDir = sessionDirectoryManager.createSessionDirectory(finalSessionId)
                 
-                sessionMetadata = SessionMetadata.createSessionStart(finalSessionId)
+                sessionMetadata = SessionMetadata.createSessionStart(finalSessionId).copy(
+                    experimentalConditions = mapOf(
+                        "estimatedDurationMinutes" to estimatedDurationMinutes,
+                        "enabledSensors" to enabledSensors
+                    )
+                )
                 
                 currentSessionId = finalSessionId
                 sessionStartTime.set(System.currentTimeMillis())
