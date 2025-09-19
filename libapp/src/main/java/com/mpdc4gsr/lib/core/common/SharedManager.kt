@@ -40,23 +40,7 @@ object SharedManager {
             SPUtils.getInstance().put("hasConnectTcLine", value)
         }
 
-    var hasTS004: Boolean
-        get() = SPUtils.getInstance().getBoolean("hasConnectTS004", false)
-        set(value) {
-            SPUtils.getInstance().put("hasConnectTS004", value)
-        }
-
-    var hasTC007: Boolean
-        get() = SPUtils.getInstance().getBoolean("hasConnectTC007", false)
-        set(value) {
-            SPUtils.getInstance().put("hasConnectTC007", value)
-        }
-
-    var irConfigJsonTC007: String
-        get() = SPUtils.getInstance().getString("irConfigJsonTC007")
-        set(value) {
-            SPUtils.getInstance().put("irConfigJsonTC007", value)
-        }
+    // TS004 and TC007 properties removed
 
     var homeGuideStep: Int
         get() {
@@ -291,7 +275,7 @@ object SharedManager {
     
     private const val SP_HOT_MODE = "sp_hot_mode" 
     private const val SP_CHANGE_DEVICE = "sp_change_device" 
-    private const val SP_TC007_CUSTOM_PSEUDO = "sp_tc007_custom_pseudo" 
+    // SP_TC007_CUSTOM_PSEUDO removed
 
     private const val SP_CAR_DETECT = "sp_car_detect" 
 
@@ -411,13 +395,7 @@ object SharedManager {
         return SPUtils.getInstance().getString(SP_CUSTOM_PSEUDO, "")
     }
 
-    fun saveTC007CustomPseudo(json: String) {
-        SPUtils.getInstance().put(SP_TC007_CUSTOM_PSEUDO, json)
-    }
-
-    fun getTC0007CustomPseudo(): String {
-        return SPUtils.getInstance().getString(SP_TC007_CUSTOM_PSEUDO, "")
-    }
+    // TC007 custom pseudo functions removed
 
     fun getTargetPop(): Boolean {
         return SPUtils.getInstance().getBoolean(SP_TARGET_POP, false)

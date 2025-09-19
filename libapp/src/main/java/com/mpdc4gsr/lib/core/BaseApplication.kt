@@ -120,12 +120,13 @@ abstract class BaseApplication : Application() {
     private fun connectWebSocket() {
         val ssid = WifiUtil.getCurrentWifiSSID(this) ?: return
         Log.i("WebSocket", "current连接 Wifi SSID: $ssid")
-        if (ssid.startsWith(DeviceConfig.TS004_NAME_START)) {
-            SharedManager.hasTS004 = true
-            WebSocketProxy.getInstance().startWebSocket(ssid)
-        } else if (ssid.startsWith(DeviceConfig.TC007_NAME_START)) {
-            SharedManager.hasTC007 = true
-            WebSocketProxy.getInstance().startWebSocket(ssid)
+        // TS004/TC007 device functionality removed
+        // if (ssid.startsWith(DeviceConfig.TS004_NAME_START)) {
+        //     SharedManager.hasTS004 = true
+        //     WebSocketProxy.getInstance().startWebSocket(ssid)
+        // } else if (ssid.startsWith(DeviceConfig.TC007_NAME_START)) {
+        //     SharedManager.hasTC007 = true
+        //     WebSocketProxy.getInstance().startWebSocket(ssid)
         } else {
             NetWorkUtils.switchNetwork(true)
         }

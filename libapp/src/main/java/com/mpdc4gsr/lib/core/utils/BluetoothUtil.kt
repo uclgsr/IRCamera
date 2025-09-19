@@ -126,10 +126,8 @@ object BluetoothUtil {
             result: ScanResult?,
         ) {
             val name: String = result?.device?.name ?: return
-            if (name.startsWith(if (isTS004) DeviceConfig.TS004_NAME_START else DeviceConfig.TC007_NAME_START)) {
-                XLog.v("蓝牙扫描出一个目标设备：$name")
-                listener?.invoke(name)
-            }
+            // TS004/TC007 device scanning functionality removed
+            XLog.v("蓝牙扫描功能已移除：$name")
         }
 
         override fun onScanFailed(errorCode: Int) {
