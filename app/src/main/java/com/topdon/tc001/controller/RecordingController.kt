@@ -271,12 +271,10 @@ class RecordingController(
                 val sessionDir = sessionDirectoryManager.createSessionDirectory(finalSessionId)
                 
                 // Create enhanced session metadata
-                sessionMetadata = SessionMetadata.createSessionStart(finalSessionId).apply {
-                    this.participantId = participantId
-                    this.studyName = studyName
-                    this.enabledSensors = enabledSensors
-                    this.validationResults = validationResult.details
-                }
+                sessionMetadata = SessionMetadata.createSessionStart(finalSessionId).copy(
+                    participantId = participantId,
+                    studyName = studyName
+                )
 
                 // Setup crash recovery marker
                 createCrashRecoveryMarker(finalSessionId, enabledSensors)
@@ -859,11 +857,13 @@ class RecordingController(
     }
 
     private fun updateSessionMetadata(block: SessionMetadata.() -> Unit) {
-        val metadata = sessionMetadata ?: return
-        val sessionDir = currentSessionDirectory ?: return
-        synchronized(sessionMetadataLock) {
-            metadata.block()
-            metadata.saveToFile(sessionDir.rootDir)
+        val metadata = sessionMetadata
+        val sessionDir = currentSessionDirectory
+        if (metadata != null && sessionDir != null) {
+            synchronized(sessionMetadataLock) {
+                metadata.block()
+                metadata.saveToFile(sessionDir.rootDir)
+            }
         }
     }
 
@@ -1465,13 +1465,7 @@ class RecordingController(
     }
 }
 
-enum class RecordingState {
-    STOPPED,
-    STARTING,
-    RECORDING,
-    STOPPING,
-    ERROR
-}
+
 
 data class RecordingControllerError(
     val errorType: String,
@@ -1479,7 +1473,8 @@ data class RecordingControllerError(
     val sensorId: String? = null,
     val isRecoverable: Boolean = true,
     val timestampNs: Long = System.nanoTime(),
-    val originalError: SensorError? = null
+    val originalError: SensorError? = null,
+    val details: Map<String, String> = emptyMap()
 )
 
 data class SyncEvent(
@@ -1705,6 +1700,14 @@ data class SessionDiagnostics(
         val warnings: List<String> = emptyList(),
         val details: Map<String, String> = emptyMap()
     )
+
+    enum class RecordingState {
+        STOPPED,
+        STARTING,
+        RECORDING,
+        STOPPING,
+        ERROR
+    }
 }
 
 /**

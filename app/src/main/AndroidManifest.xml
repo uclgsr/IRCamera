@@ -187,6 +187,19 @@
             android:screenOrientation="userPortrait"
             android:theme="@style/AppTheme" />
 
+        <!-- Comprehensive System Demo Activity -->
+        <activity
+            android:name="com.topdon.tc001.demo.ComprehensiveSystemDemo"
+            android:exported="true"
+            android:label="Comprehensive System Demo"
+            android:screenOrientation="userPortrait"
+            android:theme="@style/AppTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
         <!-- Enhanced Recording Session Test Activity -->
         <activity
             android:name="com.topdon.tc001.test.EnhancedRecordingSessionTestActivity"

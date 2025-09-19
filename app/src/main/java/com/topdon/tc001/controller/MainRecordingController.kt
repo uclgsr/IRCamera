@@ -40,8 +40,8 @@ class MainRecordingController(
     private var sessionMetadata: SessionMetadata? = null
 
     // Flows for status updates
-    private val _recordingStateFlow = MutableStateFlow(RecordingState.IDLE)
-    val recordingStateFlow: StateFlow<RecordingState> = _recordingStateFlow.asStateFlow()
+    private val _recordingStateFlow = MutableStateFlow(MainRecordingState.IDLE)
+    val recordingStateFlow: StateFlow<MainRecordingState> = _recordingStateFlow.asStateFlow()
 
     private val recordingScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
@@ -68,12 +68,12 @@ class MainRecordingController(
                 }
 
                 Log.i(TAG, "Starting simple recording")
-                _recordingStateFlow.value = RecordingState.STARTING
+                _recordingStateFlow.value = MainRecordingState.STARTING
 
                 // Simple storage check
                 if (getAvailableSpaceGB() < 1.0) {
                     Log.e(TAG, "Insufficient storage space")
-                    _recordingStateFlow.value = RecordingState.ERROR
+                    _recordingStateFlow.value = MainRecordingState.ERROR
                     return@withContext false
                 }
 
@@ -88,7 +88,7 @@ class MainRecordingController(
                     val sensor = sensorRecorders[sensorName]
                     if (sensor != null) {
                         try {
-                            val sensorDir = File(sessionDir, sensorName.lowercase())
+                            val sensorDir = File(sessionDir.rootDir, sensorName.lowercase())
                             sensorDir.mkdirs()
                             
                         sessionMetadata?.let { meta ->
@@ -107,18 +107,18 @@ class MainRecordingController(
 
                 if (sensorsStarted > 0) {
                     _isRecording.set(true)
-                    _recordingStateFlow.value = RecordingState.RECORDING
+                    _recordingStateFlow.value = MainRecordingState.RECORDING
                     Log.i(TAG, "Recording started with $sensorsStarted sensors")
                     return@withContext true
                 } else {
                     Log.e(TAG, "No sensors started successfully")
-                    _recordingStateFlow.value = RecordingState.ERROR
+                    _recordingStateFlow.value = MainRecordingState.ERROR
                     return@withContext false
                 }
 
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to start recording", e)
-                _recordingStateFlow.value = RecordingState.ERROR
+                _recordingStateFlow.value = MainRecordingState.ERROR
                 return@withContext false
             }
         }
@@ -135,7 +135,7 @@ class MainRecordingController(
                 }
 
                 Log.i(TAG, "Stopping recording")
-                _recordingStateFlow.value = RecordingState.STOPPING
+                _recordingStateFlow.value = MainRecordingState.STOPPING
                 _isRecording.set(false)
 
                 // Stop all active sensors
@@ -152,7 +152,7 @@ class MainRecordingController(
 
                 activeRecorders.clear()
                 sessionMetadata = null
-                _recordingStateFlow.value = RecordingState.IDLE
+                _recordingStateFlow.value = MainRecordingState.IDLE
 
                 Log.i(TAG, "Recording stopped successfully")
                 return@withContext true
@@ -194,12 +194,12 @@ data class SimpleRecordingStatus(
     val isRecording: Boolean,
     val activeSensors: Int,
     val totalSensors: Int,
-    val state: RecordingState
+    val state: MainRecordingState
 )
 
 /**
- * Simple recording states
+ * Simple recording states for MainRecordingController
  */
-enum class RecordingState {
+enum class MainRecordingState {
     IDLE, STARTING, RECORDING, STOPPING, ERROR
 }

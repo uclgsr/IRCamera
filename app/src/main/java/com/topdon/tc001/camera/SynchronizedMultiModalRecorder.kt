@@ -92,7 +92,7 @@ class SynchronizedMultiModalRecorder(
             if (!rgbStarted) {
                 Log.w(TAG, "RGB recording failed to start")
                 if (gsrStarted) {
-                    thermalRecorder.stopRecording()
+                    runBlocking { thermalRecorder.stopRecording() }
                 }
                 return false
             }
@@ -154,11 +154,13 @@ class SynchronizedMultiModalRecorder(
                 ),
             )
 
-            val gsrSession = thermalRecorder.stopRecording()
+            val gsrSession = runBlocking { thermalRecorder.stopRecording() }
             val rgbVideoFile = runBlocking { rgbCameraRecorder?.stopRecording() }
 
             isRecording = false
 
+            val sessionDir = thermalRecorder.getSessionDirectory()
+            
             val finalSession =
                 RecordingSession(
                     sessionId = sessionId,
