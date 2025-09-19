@@ -290,7 +290,7 @@ class HardwareValidationController(
 
         } catch (e: Exception) {
             errorLogs.add("Multi-sensor recording error: ${e.message}")
-            validationResults["multi_sensor_recording"] = ValidationResult(
+            validationResults["multi_sensor_recording"] = HardwareValidationResult(
                 false, "Multi-sensor recording failed: ${e.message}", emptyMap()
             )
         }
@@ -301,7 +301,7 @@ class HardwareValidationController(
 
 
 
-        validationResults["network"] = ValidationResult(
+        validationResults["network"] = HardwareValidationResult(
             true, "Network validation placeholder - implement in Phase 2", emptyMap()
         )
     }
@@ -311,7 +311,7 @@ class HardwareValidationController(
 
 
 
-        validationResults["background_recording"] = ValidationResult(
+        validationResults["background_recording"] = HardwareValidationResult(
             true, "Background recording validation placeholder - implement in Phase 2", emptyMap()
         )
     }
@@ -320,7 +320,7 @@ class HardwareValidationController(
         Log.i(TAG, "Validating battery optimization...")
 
 
-        validationResults["battery_optimization"] = ValidationResult(
+        validationResults["battery_optimization"] = HardwareValidationResult(
             true, "Battery optimization validation placeholder - implement in Phase 2", emptyMap()
         )
     }
@@ -375,7 +375,7 @@ class HardwareValidationController(
         permissions: List<String>
     ): HardwareValidationResult {
 
-        return ValidationResult(
+        return HardwareValidationResult(
             true, "$category permissions validated",
             mapOf("permissions_count" to permissions.size)
         )
@@ -383,7 +383,7 @@ class HardwareValidationController(
 
     private suspend fun validateBatteryOptimizationExemption(): HardwareValidationResult {
 
-        return ValidationResult(
+        return HardwareValidationResult(
             true, "Battery optimization exemption validated", emptyMap()
         )
     }
