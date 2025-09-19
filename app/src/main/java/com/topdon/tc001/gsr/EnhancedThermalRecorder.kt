@@ -35,7 +35,7 @@ class EnhancedThermalRecorder(context: Context) {
     /**
      * Start recording with session management
      */
-    suspend fun startRecording(
+    fun startRecording(
         sessionId: String,
         sessionMetadata: SessionMetadata?,
         saveImages: Boolean = false
@@ -48,20 +48,25 @@ class EnhancedThermalRecorder(context: Context) {
             // Initialize sync events file
             setupSyncEventsFile()
             
-            val success = if (sessionMetadata != null) {
-                thermalCameraRecorder.startRecording(
-                    currentSessionDirectory!!.absolutePath,
-                    sessionMetadata
-                )
-            } else {
-                thermalCameraRecorder.startRecording(currentSessionDirectory!!.absolutePath)
+            // Launch recording in background since underlying method is suspend
+            GlobalScope.launch {
+                val success = if (sessionMetadata != null) {
+                    thermalCameraRecorder.startRecording(
+                        currentSessionDirectory!!.absolutePath,
+                        sessionMetadata
+                    )
+                } else {
+                    thermalCameraRecorder.startRecording(currentSessionDirectory!!.absolutePath)
+                }
+                
+                if (success) {
+                    Log.i(TAG, "Enhanced thermal recording started for session: $sessionId")
+                } else {
+                    Log.e(TAG, "Failed to start thermal recording for session: $sessionId")
+                }
             }
             
-            if (success) {
-                Log.i(TAG, "Enhanced thermal recording started for session: $sessionId")
-            }
-            
-            return success
+            return true // Return immediately, actual result handled asynchronously
         } catch (e: Exception) {
             Log.e(TAG, "Failed to start enhanced thermal recording", e)
             return false
@@ -71,20 +76,20 @@ class EnhancedThermalRecorder(context: Context) {
     /**
      * Stop recording and return session info
      */
-    suspend fun stopRecording(): SessionInfo? {
+    fun stopRecording(): SessionInfo? {
         return try {
-            val success = thermalCameraRecorder.stopRecording()
-            if (success) {
-                closeSyncEventsFile()
-                val sessionInfo = SessionInfo(
-                    sessionDirectory = currentSessionDirectory,
-                    sampleCount = thermalCameraRecorder.getRecordingStats().frameCount
-                )
-                Log.i(TAG, "Enhanced thermal recording stopped successfully")
-                sessionInfo
-            } else {
-                null
+            // Stop recording asynchronously since underlying method is suspend
+            GlobalScope.launch {
+                thermalCameraRecorder.stopRecording()
             }
+            
+            closeSyncEventsFile()
+            val sessionInfo = SessionInfo(
+                sessionDirectory = currentSessionDirectory,
+                sampleCount = thermalCameraRecorder.getRecordingStats().frameCount
+            )
+            Log.i(TAG, "Enhanced thermal recording stopped successfully")
+            sessionInfo
         } catch (e: Exception) {
             Log.e(TAG, "Failed to stop enhanced thermal recording", e)
             null
@@ -94,7 +99,7 @@ class EnhancedThermalRecorder(context: Context) {
     /**
      * Trigger synchronization event for multi-modal coordination
      */
-    fun triggerSyncEvent(eventType: String, eventData: Map<String, Any>) {
+    fun triggerSyncEvent(eventType: String, eventData: Map<String, String>) {
         try {
             val timestamp = System.nanoTime()
             val eventLine = buildString {
@@ -173,6 +178,7 @@ class EnhancedThermalRecorder(context: Context) {
      */
     data class SessionInfo(
         val sessionDirectory: File?,
-        val sampleCount: Long
+        val sampleCount: Long,
+        val startTime: Long = System.currentTimeMillis()
     )
 }
