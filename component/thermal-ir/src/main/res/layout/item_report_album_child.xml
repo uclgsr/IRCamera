@@ -8,7 +8,7 @@
     android:orientation="vertical"
     tools:ignore="MissingDefaultResource">
 
-    <com.topdon.lib.ui.widget.RoundImageView
+    <com.mpdc4gsr.lib.ui.widget.RoundImageView
         android:id="@+id/riv_photo"
         android:layout_width="match_parent"
         android:layout_height="80dp"

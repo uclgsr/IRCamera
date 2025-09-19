@@ -34,8 +34,8 @@ import com.infisense.usbir.R;
 import com.infisense.usbir.inf.ILiteListener;
 import com.infisense.usbir.utils.TempDrawHelper;
 import com.infisense.usbir.utils.TempUtil;
-import com.topdon.lib.core.common.SharedManager;
-import com.topdon.lib.core.tools.UnitTools;
+import com.mpdc4gsr.lib.core.common.SharedManager;
+import com.mpdc4gsr.lib.core.tools.UnitTools;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

@@ -1,4 +1,4 @@
-package com.topdon.libcom
+package com.mpdc4gsr.libcom
 
 import android.content.ContentValues
 import android.graphics.Canvas
@@ -15,7 +15,7 @@ import android.widget.ScrollView
 import androidx.core.content.ContextCompat
 import com.blankj.utilcode.util.UriUtils
 import com.blankj.utilcode.util.Utils
-import com.topdon.lib.core.config.FileConfig
+import com.mpdc4gsr.lib.core.config.FileConfig
 import java.io.BufferedOutputStream
 import java.io.File
 import java.io.FileOutputStream

@@ -5,14 +5,14 @@ import android.text.method.ScrollingMovementMethod
 import androidx.lifecycle.lifecycleScope
 import com.csl.irCamera.R
 import com.csl.irCamera.databinding.ActivityClauseBinding
-import com.topdon.lib.core.BaseApplication
-import com.topdon.lib.core.common.SharedManager
-import com.topdon.lib.core.config.RouterConfig
-import com.topdon.lib.core.dialog.TipDialog
-import com.topdon.lib.core.dialog.TipProgressDialog
-import com.topdon.lib.core.ktbase.BaseBindingActivity
-import com.topdon.lib.core.navigation.NavigationManager
-import com.topdon.lib.core.utils.CommUtils
+import com.mpdc4gsr.lib.core.BaseApplication
+import com.mpdc4gsr.lib.core.common.SharedManager
+import com.mpdc4gsr.lib.core.config.RouterConfig
+import com.mpdc4gsr.lib.core.dialog.TipDialog
+import com.mpdc4gsr.lib.core.dialog.TipProgressDialog
+import com.mpdc4gsr.lib.core.ktbase.BaseBindingActivity
+import com.mpdc4gsr.lib.core.navigation.NavigationManager
+import com.mpdc4gsr.lib.core.utils.CommUtils
 import com.topdon.lms.sdk.utils.NetworkUtil
 import com.topdon.lms.sdk.weiget.TToast
 import mpdc4gsr.core.App
@@ -22,7 +22,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.Calendar
-import com.topdon.lib.core.R as LibCoreR
+import com.mpdc4gsr.lib.core.R as LibCoreR
 
 class ClauseActivity : BaseBindingActivity<ActivityClauseBinding>() {
     private lateinit var dialog: TipProgressDialog

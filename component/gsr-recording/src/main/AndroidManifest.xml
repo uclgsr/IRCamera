@@ -33,7 +33,7 @@
     <application>
         
         <service
-            android:name="com.topdon.gsr.service.MultiModalRecordingService"
+            android:name="com.mpdc4gsr.gsr.service.MultiModalRecordingService"
             android:enabled="true"
             android:exported="false" />
     </application>

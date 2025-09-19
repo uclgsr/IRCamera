@@ -3,7 +3,7 @@ package mpdc4gsr.network
 import android.graphics.Bitmap
 import android.util.Base64
 import android.util.Log
-import com.topdon.lib.core.utils.BitmapUtils
+import com.mpdc4gsr.lib.core.utils.BitmapUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job

@@ -84,7 +84,7 @@
             android:layout_height="match_parent"
             android:layout_centerHorizontal="true">
 
-            <com.topdon.lib.ui.camera.CameraView
+            <com.mpdc4gsr.lib.ui.camera.CameraView
                 android:id="@+id/temp_camera_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
@@ -102,7 +102,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/final_ir_layout">
 
-            <com.topdon.lib.ui.fence.FenceView
+            <com.mpdc4gsr.lib.ui.fence.FenceView
                 android:id="@+id/fence_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -111,7 +111,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <com.topdon.lib.ui.fence.FenceLineView
+            <com.mpdc4gsr.lib.ui.fence.FenceLineView
                 android:id="@+id/fence_line_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -120,7 +120,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <com.topdon.lib.ui.fence.FencePointView
+            <com.mpdc4gsr.lib.ui.fence.FencePointView
                 android:id="@+id/fence_point_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

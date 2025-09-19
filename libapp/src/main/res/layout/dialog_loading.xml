@@ -10,7 +10,7 @@
     android:paddingEnd="16dp"
     android:paddingBottom="27dp">
 
-    <com.topdon.lms.sdk.weiget.LmsLoadView
+    <com.mpdc4gsr.lms.sdk.weiget.LmsLoadView
         android:id="@+id/lms_load_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

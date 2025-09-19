@@ -1,4 +1,4 @@
-package com.topdon.menu
+package com.mpdc4gsr.menu
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -9,7 +9,7 @@ import android.widget.FrameLayout
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.topdon.lib.core.repository.GalleryRepository
+import com.mpdc4gsr.lib.core.repository.GalleryRepository
 import com.topdon.menu.adapter.ColorAdapter
 import com.topdon.menu.adapter.FenceAdapter
 import com.topdon.menu.adapter.SettingAdapter

@@ -18,7 +18,7 @@ import androidx.core.content.ContextCompat
 import com.blankj.utilcode.util.SizeUtils
 import com.infisense.usbir.R
 import com.infisense.usbir.utils.TargetUtils
-import com.topdon.lib.core.bean.ObserveBean
+import com.mpdc4gsr.lib.core.bean.ObserveBean
 
 class ZoomCaliperView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener {
     private var centerX: Float = Float.MAX_VALUE

@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.csl.irCamera.R
 import com.csl.irCamera.databinding.ActivityResearchTemplateBinding
 import com.topdon.gsr.model.ResearchTemplate
-import com.topdon.lib.core.ktbase.BaseBindingActivity
+import com.mpdc4gsr.lib.core.ktbase.BaseBindingActivity
 
 class ResearchTemplateActivity : BaseBindingActivity<ActivityResearchTemplateBinding>() {
     private lateinit var templateAdapter: TemplateAdapter

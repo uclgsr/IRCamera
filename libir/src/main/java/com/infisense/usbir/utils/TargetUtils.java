@@ -1,7 +1,7 @@
 package com.infisense.usbir.utils;
 
 import com.infisense.usbir.R;
-import com.topdon.lib.core.bean.ObserveBean;
+import com.mpdc4gsr.lib.core.bean.ObserveBean;
 
 public class TargetUtils {
     public static int getSelectTargetDraw(int targetMeasureMode, int targetType, int targetColorType) {

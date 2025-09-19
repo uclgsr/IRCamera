@@ -1,6 +1,6 @@
 package com.example.connectlisten;
 
-import com.topdon.lib.core.so.algorithm;
+import com.mpdc4gsr.lib.core.so.algorithm;
 
 public class JNITest {
     static {

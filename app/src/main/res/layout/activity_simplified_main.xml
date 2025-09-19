@@ -128,7 +128,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:lineSpacingExtra="4dp"
-                android:text="• GSR (Galvanic Skin Response)\n• RGB Camera (1080p)\n• Thermal Camera (Topdon TC001)\n• Accelerometer\n• Network Communication"
+                android:text="• GSR (Galvanic Skin Response)\n• RGB Camera (1080p)\n• Thermal Camera (MPDC4GSR TC001)\n• Accelerometer\n• Network Communication"
                 android:textColor="#7f8c8d"
                 android:textSize="14sp" />
 

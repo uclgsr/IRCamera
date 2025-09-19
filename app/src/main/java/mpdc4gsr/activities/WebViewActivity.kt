@@ -10,8 +10,8 @@ import androidx.core.view.isVisible
 import com.csl.irCamera.R
 import com.csl.irCamera.databinding.ActivityWebViewBinding
 import com.github.lzyzsd.jsbridge.BridgeWebViewClient
-import com.topdon.lib.core.config.ExtraKeyConfig
-import com.topdon.lib.core.ktbase.BaseBindingActivity
+import com.mpdc4gsr.lib.core.config.ExtraKeyConfig
+import com.mpdc4gsr.lib.core.ktbase.BaseBindingActivity
 
 class WebViewActivity : BaseBindingActivity<ActivityWebViewBinding>() {
     override fun initContentLayoutId(): Int = R.layout.activity_web_view

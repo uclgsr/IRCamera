@@ -12,7 +12,7 @@ import android.widget.MediaController
 import androidx.core.content.FileProvider
 import com.csl.irCamera.R
 import com.csl.irCamera.databinding.ActivityGsrVideoPlayerBinding
-import com.topdon.lib.core.ktbase.BaseBindingActivity
+import com.mpdc4gsr.lib.core.ktbase.BaseBindingActivity
 import java.io.File
 
 class GSRVideoPlayerActivity : BaseBindingActivity<ActivityGsrVideoPlayerBinding>() {

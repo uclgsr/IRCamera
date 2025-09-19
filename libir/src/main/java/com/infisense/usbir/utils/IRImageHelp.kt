@@ -2,7 +2,7 @@ package com.infisense.usbir.utils
 
 import android.util.Log
 import com.example.open3d.JNITool
-import com.topdon.lib.core.bean.AlarmBean
+import com.mpdc4gsr.lib.core.bean.AlarmBean
 import org.opencv.core.CvType
 import org.opencv.core.Mat
 import org.opencv.imgproc.Imgproc

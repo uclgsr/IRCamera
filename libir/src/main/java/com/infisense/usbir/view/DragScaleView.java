@@ -9,7 +9,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 
-import com.topdon.lib.core.utils.ScreenUtil;
+import com.mpdc4gsr.lib.core.utils.ScreenUtil;
 
 public class DragScaleView extends FrameLayout implements View.OnTouchListener {
     private static final int TOP = 0x15;

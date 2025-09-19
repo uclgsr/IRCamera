@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="#16131e">
 
-    <com.topdon.lib.core.view.TitleView
+    <com.mpdc4gsr.lib.core.view.TitleView
         android:id="@+id/title_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -25,7 +25,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/title_view" />
 
-    <com.topdon.module.thermal.ir.view.TimeDownView
+    <com.mpdc4gsr.module.thermal.ir.view.TimeDownView
         android:id="@+id/time_down_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

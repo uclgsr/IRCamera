@@ -5,9 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#16131e"
-    tools:context="com.topdon.module.thermal.ir.activity.IRLogMPChartActivity">
+    tools:context="com.mpdc4gsr.module.thermal.ir.activity.IRLogMPChartActivity">
 
-    <com.topdon.lib.core.view.TitleView
+    <com.mpdc4gsr.lib.core.view.TitleView
         android:id="@+id/title_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -82,7 +82,7 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <com.topdon.module.thermal.ir.view.ChartLogView
+        <com.mpdc4gsr.module.thermal.ir.view.ChartLogView
             android:id="@+id/log_chart_time_chart"
             android:layout_width="0dp"
             android:layout_height="0dp"

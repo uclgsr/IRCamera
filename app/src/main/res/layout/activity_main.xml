@@ -9,7 +9,7 @@
         android:background="#16131e"
         android:clipChildren="false"
         android:fitsSystemWindows="true"
-        tools:context="com.topdon.tc001.MainActivity">
+        tools:context="com.mpdc4gsr.tc001.MainActivity">
 
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/view_page"
