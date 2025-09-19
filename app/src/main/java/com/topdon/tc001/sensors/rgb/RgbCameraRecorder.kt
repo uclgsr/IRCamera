@@ -663,7 +663,8 @@ class RgbCameraRecorder(
 
                 // Use session metadata timestamps for proper synchronization
                 sessionReferenceTimestampNs.set(sessionMetadata.sessionStartMonotonicNs)
-                sessionStartOffsetNs.set(sessionMetadata.sessionStartOffsetNs)
+                val localStartNs = System.nanoTime()
+                sessionStartOffsetNs.set(localStartNs - sessionMetadata.sessionStartMonotonicNs)
 
                 // Setup session directory and files
                 val sessionDir = File(sessionDirectory)
@@ -1108,11 +1109,12 @@ class RgbCameraRecorder(
      */
     private fun logFrameCapture(timestampRecord: TimestampRecord, frameNumber: Long, outputFile: File) {
         try {
+            val timestampNs = timestampRecord.systemNanos
+            val alignedNs = alignedTimestampNs(timestampNs)
+            val sessionTimeMs = sessionRelativeMs(timestampNs)
+            val wallMs = wallClockMs(timestampNs)
+            
             csvBufferedWriter?.let { writer ->
-                val timestampNs = timestampRecord.systemNanos
-                val alignedNs = alignedTimestampNs(timestampNs)
-                val sessionTimeMs = sessionRelativeMs(timestampNs)
-                val wallMs = wallClockMs(timestampNs)
                 val metadataParts = mutableListOf(
                     "filename=${outputFile.name}",
                     "size=${outputFile.length()}"
