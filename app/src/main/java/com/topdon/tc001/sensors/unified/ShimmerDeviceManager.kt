@@ -323,23 +323,6 @@ class ShimmerDeviceManager(
         }
     }
 
-    suspend fun stopDeviceScanning(): Boolean = withContext(Dispatchers.IO) {
-        Log.i(TAG, "Stopping Shimmer device scanning")
-
-        try {
-            isScanning.set(false)
-            scanJob?.cancel()
-            // shimmerManager?.stopScanning() // Method doesn't exist
-
-            Log.i(TAG, "Device scanning stopped. Found ${discoveredDevices.size} Shimmer devices")
-            return@withContext true
-
-        } catch (e: Exception) {
-            Log.e(TAG, "Error stopping device scan", e)
-            return@withContext false
-        }
-    }
-
     /**
      * Enhanced connection to device with comprehensive error handling and user feedback
      * Implements robust connection logic with proper status reporting
