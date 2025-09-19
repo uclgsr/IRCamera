@@ -160,6 +160,12 @@ dependencies {
     api(libs.javacv)
     api(libs.javacpp)
     api(project(":BleModule"))
+    
+    // Apache POI dependencies for Excel export functionality
+    api(libs.apache.poi.ooxml)
+    api(libs.xmlbeans)
+    api(libs.stax.api)
+    api(libs.aalto.xml)
 
     // LMS AAR dependency removed - replaced with stub implementations
     // val lmsAarCandidates = listOf(
