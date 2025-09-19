@@ -1,0 +1,17 @@
+package com.mpdc4gsr.lms.sdk;
+
+/**
+ * URL Constant stub for LMS SDK
+ */
+public class UrlConstant {
+    public static volatile String BASE_URL = "https://example.com/";
+    
+    public static synchronized void setBaseUrl(String url, boolean useHttps) {
+        // The useHttps parameter is ignored in this stub implementation
+        BASE_URL = url;
+    }
+    
+    public static String getBaseUrl() {
+        return BASE_URL;
+    }
+}

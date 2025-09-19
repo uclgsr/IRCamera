@@ -13,8 +13,8 @@ import com.mpdc4gsr.lib.core.dialog.TipProgressDialog
 import com.mpdc4gsr.lib.core.ktbase.BaseBindingActivity
 import com.mpdc4gsr.lib.core.navigation.NavigationManager
 import com.mpdc4gsr.lib.core.utils.CommUtils
-import com.topdon.lms.sdk.utils.NetworkUtil
-import com.topdon.lms.sdk.weiget.TToast
+import com.mpdc4gsr.lms.sdk.utils.NetworkUtil
+import com.mpdc4gsr.lms.sdk.weiget.TToast
 import mpdc4gsr.app.App
 import mpdc4gsr.utils.VersionUtils
 import kotlinx.coroutines.Dispatchers

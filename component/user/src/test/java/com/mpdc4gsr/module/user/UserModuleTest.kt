@@ -3,7 +3,7 @@ package com.mpdc4gsr.module.user
 import android.content.Context
 import android.os.Build
 import androidx.test.core.app.ApplicationProvider
-import com.topdon.module.user.ble.BleDeviceManager
+import com.mpdc4gsr.module.user.ble.BleDeviceManager
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals

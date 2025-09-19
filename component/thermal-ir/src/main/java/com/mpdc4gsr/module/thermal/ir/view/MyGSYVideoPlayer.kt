@@ -4,7 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.widget.FrameLayout
 import android.widget.ImageView
-import com.topdon.module.thermal.ir.R
+import com.mpdc4gsr.module.thermal.ir.R
 
 
 class MyGSYVideoPlayer : FrameLayout {

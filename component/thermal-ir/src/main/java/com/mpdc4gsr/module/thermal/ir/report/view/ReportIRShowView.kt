@@ -9,9 +9,9 @@ import android.widget.TextView
 import androidx.core.view.isVisible
 import com.blankj.utilcode.util.SizeUtils
 import com.mpdc4gsr.lib.core.utils.ScreenUtil
-import com.topdon.module.thermal.ir.R
-import com.topdon.module.thermal.ir.report.bean.ReportIRBean
-import com.topdon.module.thermal.ir.report.bean.ReportTempBean
+import com.mpdc4gsr.module.thermal.ir.R
+import com.mpdc4gsr.module.thermal.ir.report.bean.ReportIRBean
+import com.mpdc4gsr.module.thermal.ir.report.bean.ReportTempBean
 import com.mpdc4gsr.lib.core.R as LibR
 
 class ReportIRShowView : LinearLayout {

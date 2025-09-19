@@ -20,9 +20,9 @@ import com.mpdc4gsr.lib.core.BaseApplication
 import com.mpdc4gsr.lib.core.broadcast.DeviceBroadcastReceiver
 import com.mpdc4gsr.lib.core.common.SharedManager
 import com.mpdc4gsr.lib.core.config.HttpConfig
-import com.topdon.lms.sdk.LMS
-import com.topdon.lms.sdk.utils.ConstantUtil
-import com.topdon.lms.sdk.utils.LanguageUtil
+import com.mpdc4gsr.lms.sdk.LMS
+import com.mpdc4gsr.lms.sdk.utils.ConstantUtil
+import com.mpdc4gsr.lms.sdk.utils.LanguageUtil
 import java.util.Date
 
 object InitUtil {

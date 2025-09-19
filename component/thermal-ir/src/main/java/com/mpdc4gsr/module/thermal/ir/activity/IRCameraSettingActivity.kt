@@ -31,9 +31,9 @@ import com.mpdc4gsr.lib.core.dialog.TipDialog
 import com.mpdc4gsr.lib.core.ktbase.BaseActivity
 import com.mpdc4gsr.lib.core.tools.TimeTool
 import com.mpdc4gsr.lib.core.utils.CommUtils
-import com.topdon.lib.ui.listener.SingleClickListener
-import com.topdon.lib.ui.widget.BarPickView
-import com.topdon.module.thermal.ir.R
+import com.mpdc4gsr.lib.ui.listener.SingleClickListener
+import com.mpdc4gsr.lib.ui.widget.BarPickView
+import com.mpdc4gsr.module.thermal.ir.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext

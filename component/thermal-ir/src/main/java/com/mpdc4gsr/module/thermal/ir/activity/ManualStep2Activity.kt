@@ -28,11 +28,11 @@ import com.infisense.usbir.utils.HexDump
 import com.mpdc4gsr.lib.core.common.SharedManager
 import com.mpdc4gsr.lib.core.ktbase.BaseActivity
 import com.mpdc4gsr.lib.core.utils.ByteUtils.toLittleBytes
-import com.topdon.lms.sdk.weiget.LmsLoadDialog
-import com.topdon.module.thermal.ir.R
-import com.topdon.module.thermal.ir.event.ManualFinishBean
-import com.topdon.module.thermal.ir.utils.IRCmdTool
-import com.topdon.module.thermal.ir.view.MoveImageView
+import com.mpdc4gsr.lms.sdk.weiget.LmsLoadDialog
+import com.mpdc4gsr.module.thermal.ir.R
+import com.mpdc4gsr.module.thermal.ir.event.ManualFinishBean
+import com.mpdc4gsr.module.thermal.ir.utils.IRCmdTool
+import com.mpdc4gsr.module.thermal.ir.view.MoveImageView
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import java.io.IOException

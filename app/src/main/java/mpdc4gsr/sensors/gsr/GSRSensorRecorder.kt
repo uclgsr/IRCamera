@@ -9,15 +9,15 @@ import com.shimmerresearch.android.manager.ShimmerBluetoothManagerAndroid
 import com.shimmerresearch.driver.ObjectCluster
 import com.shimmerresearch.driver.ShimmerDevice
 import com.shimmerresearch.bluetooth.ShimmerBluetooth.BT_STATE
-import com.topdon.ble.ShimmerBleController
-import com.topdon.ble.ShimmerDevice as CustomShimmerDevice
-import com.topdon.ble.UnifiedBleManager
-import com.topdon.ble.util.BluetoothPermissionUtils
-import com.topdon.gsr.model.GSRSample
-import com.topdon.gsr.model.SessionInfo
-import com.topdon.gsr.model.SyncMark
-import com.topdon.gsr.service.MockShimmerDeviceFactory
-import com.topdon.gsr.service.ShimmerGSRRecorder
+import com.mpdc4gsr.ble.ShimmerBleController
+import com.mpdc4gsr.ble.ShimmerDevice as CustomShimmerDevice
+import com.mpdc4gsr.ble.UnifiedBleManager
+import com.mpdc4gsr.ble.util.BluetoothPermissionUtils
+import com.mpdc4gsr.gsr.model.GSRSample
+import com.mpdc4gsr.gsr.model.SessionInfo
+import com.mpdc4gsr.gsr.model.SyncMark
+import com.mpdc4gsr.gsr.service.MockShimmerDeviceFactory
+import com.mpdc4gsr.gsr.service.ShimmerGSRRecorder
 import mpdc4gsr.sensors.SensorRecorder
 import mpdc4gsr.sensors.RecordingStatus
 import mpdc4gsr.sensors.SensorError
@@ -41,7 +41,7 @@ import kotlinx.coroutines.withContext
 import kotlinx.coroutines.CompletableDeferred
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
-import com.topdon.gsr.service.GSRRecorder as LegacyGSRRecorder
+import com.mpdc4gsr.gsr.service.GSRRecorder as LegacyGSRRecorder
 
 class GSRSensorRecorder(
     private val context: Context,

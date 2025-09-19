@@ -14,7 +14,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
-import com.topdon.ble.UnifiedBleManager
+import com.mpdc4gsr.ble.UnifiedBleManager
 
 class SensorSelectionDialog(
     context: Context,

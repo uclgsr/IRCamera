@@ -7,10 +7,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.BarUtils
 import com.mpdc4gsr.lib.core.ktbase.BaseActivity
-import com.topdon.menu.MenuFirstTabView
-import com.topdon.module.thermal.R
-import com.topdon.module.thermal.adapter.MenuTabAdapter
-import com.topdon.module.thermal.fragment.event.ThermalActionEvent
+import com.mpdc4gsr.menu.MenuFirstTabView
+import com.mpdc4gsr.module.thermal.R
+import com.mpdc4gsr.module.thermal.adapter.MenuTabAdapter
+import com.mpdc4gsr.module.thermal.fragment.event.ThermalActionEvent
 import org.greenrobot.eventbus.EventBus
 import com.mpdc4gsr.lib.core.R as LibR
 

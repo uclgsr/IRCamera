@@ -48,10 +48,10 @@ import com.infisense.usbir.view.TemperatureView.REGION_MODE_RECTANGLE
 import com.mpdc4gsr.lib.core.BaseApplication
 import com.mpdc4gsr.lib.core.common.SaveSettingUtil
 import com.mpdc4gsr.lib.core.ktbase.BaseFragment
-import com.topdon.module.thermal.ir.bean.DataBean
-import com.topdon.module.thermal.ir.bean.SelectPositionBean
-import com.topdon.module.thermal.ir.event.ThermalActionEvent
-import com.topdon.module.thermal.ir.repository.ConfigRepository
+import com.mpdc4gsr.module.thermal.ir.bean.DataBean
+import com.mpdc4gsr.module.thermal.ir.bean.SelectPositionBean
+import com.mpdc4gsr.module.thermal.ir.event.ThermalActionEvent
+import com.mpdc4gsr.module.thermal.ir.repository.ConfigRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay

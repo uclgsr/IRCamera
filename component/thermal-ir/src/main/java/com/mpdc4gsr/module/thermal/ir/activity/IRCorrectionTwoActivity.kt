@@ -9,8 +9,8 @@ import com.mpdc4gsr.lib.core.ktbase.BaseActivity
 import com.mpdc4gsr.lib.core.navigation.NavigationManager
 import com.mpdc4gsr.lib.core.socket.WebSocketProxy
 import com.mpdc4gsr.lib.core.tools.DeviceTools
-import com.topdon.module.thermal.ir.R
-import com.topdon.module.thermal.ir.event.CorrectionFinishEvent
+import com.mpdc4gsr.module.thermal.ir.R
+import com.mpdc4gsr.module.thermal.ir.event.CorrectionFinishEvent
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 

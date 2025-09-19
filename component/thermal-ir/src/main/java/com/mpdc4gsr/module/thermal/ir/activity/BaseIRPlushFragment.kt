@@ -40,10 +40,10 @@ import com.infisense.usbir.view.ITsTempListener
 import com.infisense.usbir.view.TemperatureView
 import com.mpdc4gsr.lib.core.common.SaveSettingUtil
 import com.mpdc4gsr.lib.core.ktbase.BaseFragment
-import com.topdon.module.thermal.ir.repository.ConfigRepository
-import com.topdon.module.thermal.ir.utils.DualParamsUtil
-import com.topdon.module.thermal.ir.utils.IRCmdTool
-import com.topdon.module.thermal.ir.utils.IRCmdTool.getSNStr
+import com.mpdc4gsr.module.thermal.ir.repository.ConfigRepository
+import com.mpdc4gsr.module.thermal.ir.utils.DualParamsUtil
+import com.mpdc4gsr.module.thermal.ir.utils.IRCmdTool
+import com.mpdc4gsr.module.thermal.ir.utils.IRCmdTool.getSNStr
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay

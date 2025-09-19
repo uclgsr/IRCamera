@@ -10,7 +10,7 @@ import android.view.MotionEvent
 import androidx.appcompat.widget.AppCompatSeekBar
 import com.blankj.utilcode.util.SizeUtils
 import kotlin.math.roundToInt
-import com.topdon.lib.ui.R as UiR
+import com.mpdc4gsr.lib.ui.R as UiR
 
 
 class Comm3DSeekBar : AppCompatSeekBar {

@@ -12,7 +12,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
 import com.csl.irCamera.databinding.UiMainConnectionGuideBinding
-import com.topdon.lib.ui.R as UiR
+import com.mpdc4gsr.lib.ui.R as UiR
 
 class ConnectionGuideView : LinearLayout {
     private var iconRes: Int = 0

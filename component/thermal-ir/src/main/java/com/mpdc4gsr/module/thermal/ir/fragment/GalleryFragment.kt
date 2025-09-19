@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
-import com.topdon.module.thermal.ir.R
+import com.mpdc4gsr.module.thermal.ir.R
 
 class GalleryFragment : Fragment() {
     private var path = ""

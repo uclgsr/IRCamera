@@ -9,10 +9,10 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.mpdc4gsr.lib.core.R
-import com.topdon.lib.ui.bean.ColorBean
-import com.topdon.lib.ui.listener.SingleClickListener
-import com.topdon.lib.ui.R as UiR
-import com.topdon.lib.core.R as MenuR
+import com.mpdc4gsr.lib.ui.bean.ColorBean
+import com.mpdc4gsr.lib.ui.listener.SingleClickListener
+import com.mpdc4gsr.lib.ui.R as UiR
+import com.mpdc4gsr.lib.core.R as MenuR
 
 @Deprecated("看起来是旧版 2D 编辑的menu，根本没使用了")
 class MenuSixAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {

@@ -1,7 +1,7 @@
 package com.mpdc4gsr.gsr.service
 
 import android.util.Log
-import com.topdon.gsr.model.GSRSample
+import com.mpdc4gsr.gsr.model.GSRSample
 
 class ShimmerAPIBridge private constructor() {
     companion object {

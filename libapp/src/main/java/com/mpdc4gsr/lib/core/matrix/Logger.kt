@@ -1,6 +1,7 @@
 package com.mpdc4gsr.lib.core.matrix
 
 import android.util.Log
+import com.mpdc4gsr.lib.core.BuildConfig
 import java.io.BufferedWriter
 import java.io.File
 import java.io.FileWriter

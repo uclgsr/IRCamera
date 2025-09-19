@@ -8,7 +8,7 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.mpdc4gsr.lib.core.R
-import com.topdon.lib.ui.R as UiR
+import com.mpdc4gsr.lib.ui.R as UiR
 
 
 @Deprecated("热成像-menu-capture已重构，不需要这个类了")

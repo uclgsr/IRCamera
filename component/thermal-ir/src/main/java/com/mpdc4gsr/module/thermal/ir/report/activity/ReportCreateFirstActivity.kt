@@ -31,11 +31,11 @@ import com.mpdc4gsr.lib.core.navigation.NavigationManager
 import com.mpdc4gsr.lib.core.tools.NumberTools
 import com.mpdc4gsr.lib.core.tools.UnitTools
 import com.mpdc4gsr.lib.core.utils.CommUtils
-import com.topdon.module.thermal.ir.R
-import com.topdon.module.thermal.ir.report.bean.ImageTempBean
-import com.topdon.module.thermal.ir.report.bean.ReportConditionBean
-import com.topdon.module.thermal.ir.report.bean.ReportInfoBean
-import com.topdon.module.thermal.ir.repository.ConfigRepository
+import com.mpdc4gsr.module.thermal.ir.R
+import com.mpdc4gsr.module.thermal.ir.report.bean.ImageTempBean
+import com.mpdc4gsr.module.thermal.ir.report.bean.ReportConditionBean
+import com.mpdc4gsr.module.thermal.ir.report.bean.ReportInfoBean
+import com.mpdc4gsr.module.thermal.ir.repository.ConfigRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext

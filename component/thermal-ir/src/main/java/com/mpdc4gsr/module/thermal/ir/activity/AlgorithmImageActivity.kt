@@ -7,8 +7,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.open3d.JNITool
-import com.topdon.module.thermal.ir.R
-import com.topdon.module.thermal.ir.utils.ImageColorTools
+import com.mpdc4gsr.module.thermal.ir.R
+import com.mpdc4gsr.module.thermal.ir.utils.ImageColorTools
 import org.opencv.core.CvType
 import org.opencv.core.Mat
 import org.opencv.imgproc.Imgproc

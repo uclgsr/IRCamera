@@ -22,7 +22,7 @@ import androidx.core.app.ActivityCompat
 import androidx.lifecycle.lifecycleScope
 import com.csl.irCamera.R
 import com.csl.irCamera.databinding.ActivityGsrSettingsBinding
-import com.topdon.ble.util.BluetoothPermissionUtils
+import com.mpdc4gsr.ble.util.BluetoothPermissionUtils
 import com.mpdc4gsr.lib.core.ktbase.BaseBindingActivity
 import mpdc4gsr.sensors.gsr.GSRSensorRecorder
 import kotlinx.coroutines.launch

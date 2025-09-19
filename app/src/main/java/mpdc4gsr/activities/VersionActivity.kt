@@ -12,8 +12,8 @@ import com.mpdc4gsr.lib.core.ktbase.BaseBindingActivity
 import com.mpdc4gsr.lib.core.navigation.NavigationManager
 import com.mpdc4gsr.lib.core.tools.CheckDoubleClick
 import com.mpdc4gsr.lib.core.utils.CommUtils
-import com.topdon.lms.sdk.LMS
-import com.topdon.lms.sdk.UrlConstant
+import com.mpdc4gsr.lms.sdk.LMS
+import com.mpdc4gsr.lms.sdk.UrlConstant
 import mpdc4gsr.utils.AppVersionUtil
 import mpdc4gsr.utils.VersionUtils
 import java.util.Calendar

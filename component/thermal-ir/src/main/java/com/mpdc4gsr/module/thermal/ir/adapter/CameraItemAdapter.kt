@@ -3,9 +3,9 @@ package com.mpdc4gsr.module.thermal.ir.adapter
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.mpdc4gsr.lib.core.bean.CameraItemBean
-import com.topdon.lib.ui.listener.SingleClickListener
-import com.topdon.lib.ui.widget.CountDownView
-import com.topdon.module.thermal.ir.R
+import com.mpdc4gsr.lib.ui.listener.SingleClickListener
+import com.mpdc4gsr.lib.ui.widget.CountDownView
+import com.mpdc4gsr.module.thermal.ir.R
 
 
 class CameraItemAdapter(

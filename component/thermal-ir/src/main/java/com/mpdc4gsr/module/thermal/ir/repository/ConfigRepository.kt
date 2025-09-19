@@ -2,8 +2,8 @@ package com.mpdc4gsr.module.thermal.ir.repository
 
 import com.google.gson.Gson
 import com.mpdc4gsr.lib.core.common.SharedManager
-import com.topdon.module.thermal.ir.bean.DataBean
-import com.topdon.module.thermal.ir.bean.ModelBean
+import com.mpdc4gsr.module.thermal.ir.bean.DataBean
+import com.mpdc4gsr.module.thermal.ir.bean.ModelBean
 
 object ConfigRepository {
     fun read(isTC007: Boolean): ModelBean =

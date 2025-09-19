@@ -7,7 +7,7 @@ import android.util.AttributeSet
 import android.view.View
 import com.blankj.utilcode.util.SizeUtils
 import com.mpdc4gsr.lib.core.utils.ScreenUtil
-import com.topdon.lib.ui.R as UiR
+import com.mpdc4gsr.lib.ui.R as UiR
 
 
 class IndicateView : View {

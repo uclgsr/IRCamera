@@ -12,10 +12,10 @@ import com.example.thermal_lite.util.CommonUtil
 import com.mpdc4gsr.lib.core.BaseApplication
 import com.mpdc4gsr.lib.core.common.SharedManager
 import com.mpdc4gsr.lib.core.config.HttpConfig
-import com.topdon.lms.sdk.Config
-import com.topdon.lms.sdk.LMS.mContext
-import com.topdon.lms.sdk.UrlConstant
-import com.topdon.lms.sdk.utils.SPUtils
+import com.mpdc4gsr.lms.sdk.Config
+import com.mpdc4gsr.lms.sdk.LMS.mContext
+import com.mpdc4gsr.lms.sdk.UrlConstant
+import com.mpdc4gsr.lms.sdk.utils.SPUtils
 import mpdc4gsr.InitUtil.initJPush
 import mpdc4gsr.InitUtil.initLms
 import mpdc4gsr.InitUtil.initLog

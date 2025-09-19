@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.csl.irCamera.R
 import com.csl.irCamera.databinding.ActivityResearchTemplateBinding
-import com.topdon.gsr.model.ResearchTemplate
+import com.mpdc4gsr.gsr.model.ResearchTemplate
 import com.mpdc4gsr.lib.core.ktbase.BaseBindingActivity
 
 class ResearchTemplateActivity : BaseBindingActivity<ActivityResearchTemplateBinding>() {

@@ -20,19 +20,19 @@ import com.guide.zm04c.matrix.GuideInterface
 import com.guide.zm04c.matrix.IrSurfaceView
 import com.mpdc4gsr.lib.core.tools.ToastTools
 import com.mpdc4gsr.lib.core.utils.ByteUtils.getIndex
-import com.topdon.lib.ui.dialog.ThermalInputDialog
-import com.topdon.lib.ui.fence.FenceLineView
-import com.topdon.lib.ui.fence.FencePointView
-import com.topdon.lib.ui.fence.FenceView
-import com.topdon.module.thermal.R
-import com.topdon.module.thermal.base.BaseThermalFragment
-import com.topdon.module.thermal.fragment.event.ThermalActionEvent
-import com.topdon.module.thermal.tools.Fence
-import com.topdon.module.thermal.tools.ThermalTool
-import com.topdon.module.thermal.tools.medie.IYapVideoProvider
-import com.topdon.module.thermal.tools.medie.YapVideoEncoder
-import com.topdon.module.thermal.utils.ArrayUtils
-import com.topdon.module.thermal.viewmodel.ThermalViewModel
+import com.mpdc4gsr.lib.ui.dialog.ThermalInputDialog
+import com.mpdc4gsr.lib.ui.fence.FenceLineView
+import com.mpdc4gsr.lib.ui.fence.FencePointView
+import com.mpdc4gsr.lib.ui.fence.FenceView
+import com.mpdc4gsr.module.thermal.R
+import com.mpdc4gsr.module.thermal.base.BaseThermalFragment
+import com.mpdc4gsr.module.thermal.fragment.event.ThermalActionEvent
+import com.mpdc4gsr.module.thermal.tools.Fence
+import com.mpdc4gsr.module.thermal.tools.ThermalTool
+import com.mpdc4gsr.module.thermal.tools.medie.IYapVideoProvider
+import com.mpdc4gsr.module.thermal.tools.medie.YapVideoEncoder
+import com.mpdc4gsr.module.thermal.utils.ArrayUtils
+import com.mpdc4gsr.module.thermal.viewmodel.ThermalViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.Subscribe
@@ -40,7 +40,7 @@ import org.greenrobot.eventbus.ThreadMode
 import java.io.File
 import java.math.BigDecimal
 import java.math.RoundingMode
-import com.topdon.lib.ui.R as LibUiR
+import com.mpdc4gsr.lib.ui.R as LibUiR
 
 class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
     private val viewModel: ThermalViewModel by viewModels()

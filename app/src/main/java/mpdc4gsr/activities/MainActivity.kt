@@ -31,7 +31,7 @@ import com.csl.irCamera.R
 import com.csl.irCamera.databinding.ActivityMainBinding
 import com.elvishew.xlog.XLog
 import com.example.thermal_lite.activity.IRThermalLiteActivity
-import com.topdon.gsr.model.SessionInfo
+import com.mpdc4gsr.gsr.model.SessionInfo
 import com.mpdc4gsr.lib.core.BaseApplication
 import com.mpdc4gsr.lib.core.bean.event.TS004ResetEvent
 import com.mpdc4gsr.lib.core.bean.event.WinterClickEvent
@@ -52,11 +52,11 @@ import com.mpdc4gsr.lib.core.tools.DeviceTools
 import com.mpdc4gsr.lib.core.utils.CommUtils
 import com.mpdc4gsr.lib.core.utils.PermissionUtils
 import com.mpdc4gsr.lib.core.viewmodel.VersionViewModel
-import com.topdon.lms.sdk.LMS
-import com.topdon.module.thermal.ir.activity.IRThermalNightActivity
-import com.topdon.module.thermal.ir.activity.IRThermalPlusActivity
-import com.topdon.module.thermal.ir.fragment.IRGalleryTabFragment
-import com.topdon.module.user.fragment.MineFragment
+import com.mpdc4gsr.lms.sdk.LMS
+import com.mpdc4gsr.module.thermal.ir.activity.IRThermalNightActivity
+import com.mpdc4gsr.module.thermal.ir.activity.IRThermalPlusActivity
+import com.mpdc4gsr.module.thermal.ir.fragment.IRGalleryTabFragment
+import com.mpdc4gsr.module.user.fragment.MineFragment
 import mpdc4gsr.app.App
 import mpdc4gsr.config.FeatureFlags
 import mpdc4gsr.config.ProtocolVersion

@@ -4,8 +4,8 @@ import android.annotation.SuppressLint
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.mpdc4gsr.lib.core.R
-import com.topdon.menu.constant.MenuType
-import com.topdon.menu.R as MenuR
+import com.mpdc4gsr.lib.core.menu.constant.MenuType
+import com.mpdc4gsr.lib.core.menu.R as MenuR
 
 @SuppressLint("NotifyDataSetChanged")
 internal class TempLevelAdapter(menuType: MenuType) : BaseMenuAdapter() {
@@ -34,7 +34,7 @@ internal class TempLevelAdapter(menuType: MenuType) : BaseMenuAdapter() {
         dataList.add(
             Data(
                 R.string.thermal_normal_temperature,
-                MenuR.drawable.selector_menu2_temp_level_1,
+                R.drawable.selector_menu2_temp_level_1,
                 IntRange(-20, 150),
                 1
             )
@@ -43,7 +43,7 @@ internal class TempLevelAdapter(menuType: MenuType) : BaseMenuAdapter() {
             dataList.add(
                 Data(
                     R.string.thermal_high_temperature,
-                    MenuR.drawable.selector_menu2_temp_level_1,
+                    R.drawable.selector_menu2_temp_level_1,
                     IntRange(150, 450),
                     0
                 )
@@ -52,7 +52,7 @@ internal class TempLevelAdapter(menuType: MenuType) : BaseMenuAdapter() {
             dataList.add(
                 Data(
                     R.string.thermal_high_temperature,
-                    MenuR.drawable.selector_menu2_temp_level_1,
+                    R.drawable.selector_menu2_temp_level_1,
                     IntRange(150, 550),
                     0
                 )
@@ -61,7 +61,7 @@ internal class TempLevelAdapter(menuType: MenuType) : BaseMenuAdapter() {
         dataList.add(
             Data(
                 R.string.thermal_automatic,
-                MenuR.drawable.selector_menu2_temp_level_2,
+                R.drawable.selector_menu2_temp_level_2,
                 code = -1
             )
         )

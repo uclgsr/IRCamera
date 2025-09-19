@@ -17,11 +17,11 @@ import com.mpdc4gsr.lib.core.utils.Constants.IR_TC007_MODE
 import com.mpdc4gsr.lib.core.utils.Constants.IR_TCPLUS_MODE
 import com.mpdc4gsr.lib.core.utils.Constants.IR_TEMPERATURE_LITE
 import com.mpdc4gsr.lib.core.utils.Constants.IR_TEMPERATURE_MODE
-import com.topdon.lib.ui.bean.ColorBean
-import com.topdon.lib.ui.config.CameraHelp
-import com.topdon.lib.ui.listener.SingleClickListener
-import com.topdon.lib.ui.R as UiR
-import com.topdon.lib.core.R as MenuR
+import com.mpdc4gsr.lib.ui.bean.ColorBean
+import com.mpdc4gsr.lib.ui.config.CameraHelp
+import com.mpdc4gsr.lib.ui.listener.SingleClickListener
+import com.mpdc4gsr.lib.ui.R as UiR
+import com.mpdc4gsr.lib.core.R as MenuR
 
 @Deprecated("旧的settingsmenu，已重构过了")
 @SuppressLint("NotifyDataSetChanged")

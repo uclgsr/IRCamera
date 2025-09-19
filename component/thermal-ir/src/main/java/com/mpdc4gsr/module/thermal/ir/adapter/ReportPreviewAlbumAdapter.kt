@@ -12,7 +12,7 @@ import com.bumptech.glide.Glide
 
 
 import com.mpdc4gsr.lib.core.bean.HouseRepPreviewAlbumItemBean
-import com.topdon.module.thermal.ir.R
+import com.mpdc4gsr.module.thermal.ir.R
 
 @SuppressLint("NotifyDataSetChanged")
 class ReportPreviewAlbumAdapter(

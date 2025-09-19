@@ -6,9 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
 import androidx.core.view.isVisible
-import com.topdon.module.thermal.ir.R
-import com.topdon.module.thermal.ir.report.bean.ReportConditionBean
-import com.topdon.module.thermal.ir.report.bean.ReportInfoBean
+import com.mpdc4gsr.module.thermal.ir.R
+import com.mpdc4gsr.module.thermal.ir.report.bean.ReportConditionBean
+import com.mpdc4gsr.module.thermal.ir.report.bean.ReportInfoBean
 
 class ReportInfoView : LinearLayout {
 

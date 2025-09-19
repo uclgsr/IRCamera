@@ -19,11 +19,11 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.viewpager.widget.ViewPager
 import com.mpdc4gsr.lib.core.R
-import com.topdon.lib.ui.databinding.DialogTipPreviewBinding
-import com.topdon.lib.ui.widget.IndicateView
+import com.mpdc4gsr.lib.ui.databinding.DialogTipPreviewBinding
+import com.mpdc4gsr.lib.ui.widget.IndicateView
 import io.reactivex.disposables.Disposable
 import java.util.Timer
-import com.topdon.lib.ui.R as UiR
+import com.mpdc4gsr.lib.ui.R as UiR
 
 
 class TipPreviewDialog : DialogFragment() {

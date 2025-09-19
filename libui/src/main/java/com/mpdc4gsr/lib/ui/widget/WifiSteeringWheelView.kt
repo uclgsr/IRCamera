@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnClickListener
 import android.widget.LinearLayout
-import com.topdon.lib.ui.databinding.UiWifiSteeringWheelViewBinding
+import com.mpdc4gsr.lib.ui.databinding.UiWifiSteeringWheelViewBinding
 
 
 class WifiSteeringWheelView : LinearLayout, OnClickListener {

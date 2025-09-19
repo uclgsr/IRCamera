@@ -5,8 +5,8 @@ import android.view.SurfaceView
 import com.infisense.usbdual.Const
 import com.infisense.usbdual.camera.DualViewWithExternalCameraCommonApi
 import com.infisense.usbir.view.TemperatureView
-import com.topdon.module.thermal.ir.R
-import com.topdon.module.thermal.ir.activity.BaseIRPlushFragment
+import com.mpdc4gsr.module.thermal.ir.R
+import com.mpdc4gsr.module.thermal.ir.activity.BaseIRPlushFragment
 
 
 

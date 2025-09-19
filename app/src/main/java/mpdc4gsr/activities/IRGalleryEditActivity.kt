@@ -47,23 +47,23 @@ import com.mpdc4gsr.lib.core.utils.BitmapUtils
 import com.mpdc4gsr.lib.core.utils.Constants.IS_REPORT_FIRST
 import com.mpdc4gsr.lib.core.utils.ImageUtils
 import com.mpdc4gsr.lib.core.utils.ScreenUtil
-import com.topdon.lib.ui.widget.seekbar.OnRangeChangedListener
-import com.topdon.lib.ui.widget.seekbar.RangeSeekBar
-import com.topdon.lib.core.comm.dialog.ColorPickDialog
-import com.topdon.lib.core.comm.dialog.TempAlarmSetDialog
-import com.topdon.lms.sdk.LMS.mContext
-import com.topdon.lib.core.menu.constant.FenceType
-import com.topdon.lib.core.menu.constant.SettingType
-import com.topdon.module.thermal.ir.event.GalleryAddEvent
-import com.topdon.module.thermal.ir.event.ImageGalleryEvent
-import com.topdon.module.thermal.ir.frame.FrameStruct
-import com.topdon.module.thermal.ir.frame.FrameTool
-import com.topdon.module.thermal.ir.frame.ImageParams
-import com.topdon.module.thermal.ir.report.bean.ImageTempBean
-import com.topdon.module.thermal.ir.view.TemperatureBaseView.Mode
-import com.topdon.module.thermal.ir.viewmodel.IRGalleryEditViewModel
-import com.topdon.pseudo.activity.PseudoSetActivity
-import com.topdon.pseudo.bean.CustomPseudoBean
+import com.mpdc4gsr.lib.ui.widget.seekbar.OnRangeChangedListener
+import com.mpdc4gsr.lib.ui.widget.seekbar.RangeSeekBar
+import com.mpdc4gsr.lib.core.comm.dialog.ColorPickDialog
+import com.mpdc4gsr.lib.core.comm.dialog.TempAlarmSetDialog
+import com.mpdc4gsr.lms.sdk.LMS.mContext
+import com.mpdc4gsr.lib.core.menu.constant.FenceType
+import com.mpdc4gsr.lib.core.menu.constant.SettingType
+import com.mpdc4gsr.module.thermal.ir.event.GalleryAddEvent
+import com.mpdc4gsr.module.thermal.ir.event.ImageGalleryEvent
+import com.mpdc4gsr.module.thermal.ir.frame.FrameStruct
+import com.mpdc4gsr.module.thermal.ir.frame.FrameTool
+import com.mpdc4gsr.module.thermal.ir.frame.ImageParams
+import com.mpdc4gsr.module.thermal.ir.report.bean.ImageTempBean
+import com.mpdc4gsr.module.thermal.ir.view.TemperatureBaseView.Mode
+import com.mpdc4gsr.module.thermal.ir.viewmodel.IRGalleryEditViewModel
+import com.mpdc4gsr.pseudo.activity.PseudoSetActivity
+import com.mpdc4gsr.pseudo.bean.CustomPseudoBean
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -72,7 +72,7 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.util.Locale
 import com.example.thermal_lite.R as ThermalLiteR
-import com.topdon.module.thermal.ir.R as ThermalIrR
+import com.mpdc4gsr.module.thermal.ir.R as ThermalIrR
 
 class IRGalleryEditActivity : BaseBindingActivity<ActivityIrGalleryEditBinding>(),
     View.OnClickListener, ITsTempListener {
