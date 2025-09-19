@@ -14,8 +14,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.ToastUtils
-import com.guide.zm04c.matrix.GuideInterface
-import com.guide.zm04c.matrix.IrSurfaceView
+import com.topdon.lib.core.matrix.GuideInterface
+import com.topdon.lib.core.matrix.IrSurfaceView
 import com.mpdc4gsr.lib.core.common.SharedManager
 import com.mpdc4gsr.lib.core.db.AppDatabase
 import com.mpdc4gsr.lib.core.db.entity.ThermalEntity

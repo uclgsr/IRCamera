@@ -10,10 +10,10 @@ import android.hardware.usb.UsbManager
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
-import com.guide.zm04c.matrix.ResultCode.ERROR_CONNECT_DEVICE_FAILD
-import com.guide.zm04c.matrix.ResultCode.SUCC_CONNECT_INTERFACE
-import com.guide.zm04c.matrix.utils.ByteUtils.toHexString
-import com.guide.zm04c.matrix.utils.HexDump
+import com.topdon.lib.core.matrix.ResultCode.ERROR_CONNECT_DEVICE_FAILD
+import com.topdon.lib.core.matrix.ResultCode.SUCC_CONNECT_INTERFACE
+import com.topdon.lib.core.matrix.utils.ByteUtils.toHexString
+import com.topdon.lib.core.matrix.utils.HexDump
 import java.util.Arrays
 
 class GuideUsbManager {

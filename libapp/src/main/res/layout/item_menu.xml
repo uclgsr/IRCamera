@@ -20,7 +20,7 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:src="@drawable/selector_menu2_fence_point" />
 
-        
+        <!-- Temperature range text used only by temperature level menu -->
         <TextView
             android:id="@+id/tv_icon_text"
             android:layout_width="0dp"

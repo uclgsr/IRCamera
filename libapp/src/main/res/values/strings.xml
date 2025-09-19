@@ -1,5 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">guidecore</string>
-    <string name="http_code_z5004">Network error, please try again</string>
-    <string name="ui">UI</string>
+    <string name="app_name">MPDC4GSR</string>
 </resources>

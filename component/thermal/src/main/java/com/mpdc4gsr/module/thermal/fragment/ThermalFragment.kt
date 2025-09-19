@@ -16,8 +16,8 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import com.blankj.utilcode.util.ScreenUtils
-import com.guide.zm04c.matrix.GuideInterface
-import com.guide.zm04c.matrix.IrSurfaceView
+import com.topdon.lib.core.matrix.GuideInterface
+import com.topdon.lib.core.matrix.IrSurfaceView
 import com.mpdc4gsr.lib.core.tools.ToastTools
 import com.mpdc4gsr.lib.core.utils.ByteUtils.getIndex
 import com.topdon.lib.ui.dialog.ThermalInputDialog
