@@ -248,7 +248,7 @@ class Camera2System(
                     outputDirectory ?: createTempDirectory(),
                     currentSessionId,
                     cameraController.getCameraCharacteristics(), // Pass camera characteristics for DNG creation
-                    true // Enable Samsung Stage3/Level3 processing
+                    rawEngine.isStage3ProcessingEnabled() // Respect existing configuration
                 )
                 val rawSurface = rawEngine.getSurface() ?: return@withContext false
 
