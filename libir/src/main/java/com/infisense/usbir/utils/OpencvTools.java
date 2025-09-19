@@ -222,7 +222,7 @@ public class OpencvTools {
 
     public static byte[] convertSingleByteToDoubleByte(byte[] singleByteImage) {
         if (singleByteImage == null) {
-            throw new IllegalArgumentException("Input[CHINESE_TEXT]bytearray[CHINESE_TEXT]null");
+            throw new IllegalArgumentException("Input byte array cannot be null");
         }
         int singleLength = singleByteImage.length;
 
