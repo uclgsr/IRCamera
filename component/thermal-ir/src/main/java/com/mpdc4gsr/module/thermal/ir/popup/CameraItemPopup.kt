@@ -13,7 +13,7 @@ import com.mpdc4gsr.lib.core.common.SharedManager
 import com.mpdc4gsr.lib.core.config.RouterConfig
 import com.mpdc4gsr.lib.core.dialog.TipShutterDialog
 import com.mpdc4gsr.lib.core.navigation.NavigationManager
-import com.topdon.libcom.bean.SaveSettingBean
+import com.mpdc4gsr.lib.core.comm.bean.SaveSettingBean
 import com.topdon.module.thermal.ir.R
 import com.topdon.module.thermal.ir.databinding.PopCameraItemBinding
 

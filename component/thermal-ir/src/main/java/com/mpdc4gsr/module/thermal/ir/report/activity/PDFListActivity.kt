@@ -16,7 +16,7 @@ import com.mpdc4gsr.lib.core.navigation.NavigationManager
 import com.mpdc4gsr.lib.core.socket.WebSocketProxy
 import com.mpdc4gsr.lib.core.utils.NetWorkUtils
 import com.mpdc4gsr.lib.core.view.TitleView
-import com.topdon.libcom.view.CommLoadMoreView
+import com.mpdc4gsr.lib.core.comm.view.CommLoadMoreView
 import com.topdon.lms.sdk.LMS
 import com.topdon.lms.sdk.UrlConstant
 import com.topdon.lms.sdk.network.HttpProxy

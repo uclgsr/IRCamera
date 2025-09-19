@@ -32,7 +32,7 @@ import com.mpdc4gsr.lib.core.tools.ConstantLanguages
 import com.mpdc4gsr.lib.core.tools.DeviceTools
 import com.mpdc4gsr.lib.core.utils.NetWorkUtils
 import com.mpdc4gsr.lib.core.utils.WsCmdConstants
-import com.topdon.libcom.navigation.NavigationManager
+import com.mpdc4gsr.lib.core.comm.navigation.NavigationManager
 import com.topdon.lms.sdk.weiget.TToast
 import mpdc4gsr.activities.DeviceTypeActivity
 import mpdc4gsr.ui_components.DelPopup

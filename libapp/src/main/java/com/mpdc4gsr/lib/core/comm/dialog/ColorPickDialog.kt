@@ -14,8 +14,8 @@ import com.jaygoo.widget.DefRangeSeekBar
 import com.jaygoo.widget.OnRangeChangedListener
 import com.mpdc4gsr.lib.core.utils.ScreenUtil
 import com.mpdc4gsr.lib.core.view.ColorSelectView
-import com.topdon.libcom.R
-import com.topdon.libcom.util.ColorUtils
+import com.mpdc4gsr.lib.core.comm.R
+import com.mpdc4gsr.lib.core.comm.util.ColorUtils
 
 class ColorPickDialog(
     context: Context,
