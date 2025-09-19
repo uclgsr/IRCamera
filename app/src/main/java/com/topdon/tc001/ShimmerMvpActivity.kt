@@ -21,6 +21,7 @@ import com.shimmerresearch.android.Shimmer
 import com.shimmerresearch.android.manager.ShimmerBluetoothManagerAndroid
 import com.shimmerresearch.driver.CallbackObject
 import com.shimmerresearch.driver.ObjectCluster
+import com.shimmerresearch.driver.ShimmerDevice
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
