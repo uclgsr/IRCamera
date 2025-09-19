@@ -439,12 +439,12 @@ public class IRUVCTC {
             setFrameReady(false);
             if (isRestart) {
                 if (ircmd.stopPreview(CommonParams.PreviewPathChannel.PREVIEW_PATH0) == 0) {
-                    Log.i(TAG, "stopPreview complete 中间出图 restart");
+                    Log.i(TAG, "stopPreview complete [CHINESE_TEXT] restart");
                     if (ircmd.startPreview(CommonParams.PreviewPathChannel.PREVIEW_PATH0,
                             CommonParams.StartPreviewSource.SOURCE_SENSOR,
                             ScreenUtils.getPreviewFPSByDataFlowMode(defaultDataFlowMode),
                             CommonParams.StartPreviewMode.VOC_DVP_MODE, defaultDataFlowMode) == 0) {
-                        Log.i(TAG, "startPreview complete 中间出图 restart");
+                        Log.i(TAG, "startPreview complete [CHINESE_TEXT] restart");
                         try {
                             
                             Thread.sleep(1500);
@@ -455,13 +455,13 @@ public class IRUVCTC {
                                 FileUtil.getY16SrcTypeByDataFlowMode(defaultDataFlowMode)) == 0) {
                             handleStartPreviewComplete();
                         } else {
-                            Log.e(TAG, "startY16ModePreview error 中间出图 restart");
+                            Log.e(TAG, "startY16ModePreview error [CHINESE_TEXT] restart");
                         }
                     } else {
-                        Log.e(TAG, "startPreview error 中间出图 restart");
+                        Log.e(TAG, "startPreview error [CHINESE_TEXT] restart");
                     }
                 } else {
-                    Log.e(TAG, "stopPreview error 中间出图 restart");
+                    Log.e(TAG, "stopPreview error [CHINESE_TEXT] restart");
                 }
             } else {
                 
@@ -502,12 +502,12 @@ public class IRUVCTC {
                     
 
                     if (ircmd.stopPreview(CommonParams.PreviewPathChannel.PREVIEW_PATH0) == 0) {
-                        Log.i(TAG, "stopPreview complete 单TNR");
+                        Log.i(TAG, "stopPreview complete [CHINESE_TEXT]TNR");
                         if (ircmd.startPreview(CommonParams.PreviewPathChannel.PREVIEW_PATH0,
                                 CommonParams.StartPreviewSource.SOURCE_SENSOR,
                                 ScreenUtils.getPreviewFPSByDataFlowMode(defaultDataFlowMode),
                                 CommonParams.StartPreviewMode.VOC_DVP_MODE, defaultDataFlowMode) == 0) {
-                            Log.i(TAG, "startPreview complete 单TNR");
+                            Log.i(TAG, "startPreview complete [CHINESE_TEXT]TNR");
                             try {
                                 
                                 Thread.sleep(1500);
@@ -518,13 +518,13 @@ public class IRUVCTC {
                                     FileUtil.getY16SrcTypeByDataFlowMode(defaultDataFlowMode)) == 0) {
                                 handleStartPreviewComplete();
                             } else {
-                                Log.e(TAG, "startY16ModePreview error 单TNR");
+                                Log.e(TAG, "startY16ModePreview error [CHINESE_TEXT]TNR");
                             }
                         } else {
-                            Log.e(TAG, "startPreview error 单TNR");
+                            Log.e(TAG, "startPreview error [CHINESE_TEXT]TNR");
                         }
                     } else {
-                        Log.e(TAG, "stopPreview error 单TNR");
+                        Log.e(TAG, "stopPreview error [CHINESE_TEXT]TNR");
                     }
                 }
             }

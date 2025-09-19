@@ -22,19 +22,19 @@ import java.util.List;
 
 @SuppressWarnings("WeakerAccess")
 public class ConstellationPicker extends OptionPicker {
-    public static String JSON = "[{\"id\":0,\"name\":\"不限\",\"startDate\":\"\",\"endDate\":\"\",\"english\":\"Unlimited\"},\n" +
-            "{\"id\":1,\"name\":\"白sheep座\",\"startDate\":\"3-21\",\"endDate\":\"4-19\",\"english\":\"Aries\"},\n" +
-            "{\"id\":2,\"name\":\"金牛座\",\"startDate\":\"4-20\",\"endDate\":\"5-20\",\"english\":\"Taurus\"},\n" +
-            "{\"id\":3,\"name\":\"双子座\",\"startDate\":\"5-21\",\"endDate\":\"6-21\",\"english\":\"Gemini\"},\n" +
-            "{\"id\":4,\"name\":\"巨蟹座\",\"startDate\":\"6-22\",\"endDate\":\"7-22\",\"english\":\"Cancer\"},\n" +
-            "{\"id\":5,\"name\":\"狮子座\",\"startDate\":\"7-23\",\"endDate\":\"8-22\",\"english\":\"Leo\"},\n" +
-            "{\"id\":6,\"name\":\"处女座\",\"startDate\":\"8-23\",\"endDate\":\"9-22\",\"english\":\"Virgo\"},\n" +
-            "{\"id\":7,\"name\":\"天秤座\",\"startDate\":\"9-23\",\"endDate\":\"10-23\",\"english\":\"Libra\"},\n" +
-            "{\"id\":8,\"name\":\"天蝎座\",\"startDate\":\"10-24\",\"endDate\":\"11-22\",\"english\":\"Scorpio\"},\n" +
-            "{\"id\":9,\"name\":\"射手座\",\"startDate\":\"11-23\",\"endDate\":\"12-21\",\"english\":\"Sagittarius\"},\n" +
-            "{\"id\":10,\"name\":\"摩羯座\",\"startDate\":\"12-22\",\"endDate\":\"1-19\",\"english\":\"Capricorn\"},\n" +
-            "{\"id\":11,\"name\":\"水瓶座\",\"startDate\":\"1-20\",\"endDate\":\"2-18\",\"english\":\"Aquarius\"},\n" +
-            "{\"id\":12,\"name\":\"双鱼座\",\"startDate\":\"2-19\",\"endDate\":\"3-20\",\"english\":\"Pisces\"}]";
+    public static String JSON = "[{\"id\":0,\"name\":\"[CHINESE_TEXT]\",\"startDate\":\"\",\"endDate\":\"\",\"english\":\"Unlimited\"},\n" +
+            "{\"id\":1,\"name\":\"[CHINESE_TEXT]sheep[CHINESE_TEXT]\",\"startDate\":\"3-21\",\"endDate\":\"4-19\",\"english\":\"Aries\"},\n" +
+            "{\"id\":2,\"name\":\"[CHINESE_TEXT]\",\"startDate\":\"4-20\",\"endDate\":\"5-20\",\"english\":\"Taurus\"},\n" +
+            "{\"id\":3,\"name\":\"[CHINESE_TEXT]\",\"startDate\":\"5-21\",\"endDate\":\"6-21\",\"english\":\"Gemini\"},\n" +
+            "{\"id\":4,\"name\":\"[CHINESE_TEXT]\",\"startDate\":\"6-22\",\"endDate\":\"7-22\",\"english\":\"Cancer\"},\n" +
+            "{\"id\":5,\"name\":\"[CHINESE_TEXT]\",\"startDate\":\"7-23\",\"endDate\":\"8-22\",\"english\":\"Leo\"},\n" +
+            "{\"id\":6,\"name\":\"[CHINESE_TEXT]\",\"startDate\":\"8-23\",\"endDate\":\"9-22\",\"english\":\"Virgo\"},\n" +
+            "{\"id\":7,\"name\":\"[CHINESE_TEXT]\",\"startDate\":\"9-23\",\"endDate\":\"10-23\",\"english\":\"Libra\"},\n" +
+            "{\"id\":8,\"name\":\"[CHINESE_TEXT]\",\"startDate\":\"10-24\",\"endDate\":\"11-22\",\"english\":\"Scorpio\"},\n" +
+            "{\"id\":9,\"name\":\"[CHINESE_TEXT]\",\"startDate\":\"11-23\",\"endDate\":\"12-21\",\"english\":\"Sagittarius\"},\n" +
+            "{\"id\":10,\"name\":\"[CHINESE_TEXT]\",\"startDate\":\"12-22\",\"endDate\":\"1-19\",\"english\":\"Capricorn\"},\n" +
+            "{\"id\":11,\"name\":\"[CHINESE_TEXT]\",\"startDate\":\"1-20\",\"endDate\":\"2-18\",\"english\":\"Aquarius\"},\n" +
+            "{\"id\":12,\"name\":\"[CHINESE_TEXT]\",\"startDate\":\"2-19\",\"endDate\":\"3-20\",\"english\":\"Pisces\"}]";
     private boolean includeUnlimited = false;
 
     public ConstellationPicker(Activity activity) {
@@ -85,43 +85,43 @@ public class ConstellationPicker extends OptionPicker {
         String name;
         switch (month) {
             case 1:
-                name = day < 21 ? "摩羯座" : "水瓶座";
+                name = day < 21 ? "[CHINESE_TEXT]" : "[CHINESE_TEXT]";
                 break;
             case 2:
-                name = day < 20 ? "水瓶座" : "双鱼座";
+                name = day < 20 ? "[CHINESE_TEXT]" : "[CHINESE_TEXT]";
                 break;
             case 3:
-                name = day < 21 ? "双鱼座" : "白sheep座";
+                name = day < 21 ? "[CHINESE_TEXT]" : "[CHINESE_TEXT]sheep[CHINESE_TEXT]";
                 break;
             case 4:
-                name = day < 21 ? "白sheep座" : "金牛座";
+                name = day < 21 ? "[CHINESE_TEXT]sheep[CHINESE_TEXT]" : "[CHINESE_TEXT]";
                 break;
             case 5:
-                name = day < 22 ? "金牛座" : "双子座";
+                name = day < 22 ? "[CHINESE_TEXT]" : "[CHINESE_TEXT]";
                 break;
             case 6:
-                name = day < 22 ? "双子座" : "巨蟹座";
+                name = day < 22 ? "[CHINESE_TEXT]" : "[CHINESE_TEXT]";
                 break;
             case 7:
-                name = day < 23 ? "巨蟹座" : "狮子座";
+                name = day < 23 ? "[CHINESE_TEXT]" : "[CHINESE_TEXT]";
                 break;
             case 8:
-                name = day < 24 ? "狮子座" : "处女座";
+                name = day < 24 ? "[CHINESE_TEXT]" : "[CHINESE_TEXT]";
                 break;
             case 9:
-                name = day < 24 ? "处女座" : "天秤座";
+                name = day < 24 ? "[CHINESE_TEXT]" : "[CHINESE_TEXT]";
                 break;
             case 10:
-                name = day < 24 ? "天秤座" : "天蝎座";
+                name = day < 24 ? "[CHINESE_TEXT]" : "[CHINESE_TEXT]";
                 break;
             case 11:
-                name = day < 23 ? "天蝎座" : "射手座";
+                name = day < 23 ? "[CHINESE_TEXT]" : "[CHINESE_TEXT]";
                 break;
             case 12:
-                name = day < 22 ? "射手座" : "摩羯座";
+                name = day < 22 ? "[CHINESE_TEXT]" : "[CHINESE_TEXT]";
                 break;
             default:
-                name = "不限";
+                name = "[CHINESE_TEXT]";
                 break;
         }
         setDefaultValueByName(name);

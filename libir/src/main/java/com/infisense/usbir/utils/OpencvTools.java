@@ -109,7 +109,7 @@ public class OpencvTools {
         byte[] byteArray = new byte[dataOut.capacity()];
 
         dataOut.get(byteArray);
-        Log.e("4倍超分模型：", String.valueOf((System.currentTimeMillis() - startTime)));
+        Log.e("4[CHINESE_TEXT]Minute[CHINESE_TEXT]：", String.valueOf((System.currentTimeMillis() - startTime)));
         return SupRUtils.INSTANCE.byteArrayToBitmap(byteArray);
     }
 
@@ -121,11 +121,11 @@ public class OpencvTools {
         ByteBuffer dataOut = ByteBuffer.allocateDirect(imgByte.length * 4); 
 
         SupHelp.getInstance().imgUpScalerFour(BaseApplication.instance, dataIn, dataOut);
-        Log.e("AI_UPSCALE 4倍超分模型2：", String.valueOf((System.currentTimeMillis() - startTime)));
+        Log.e("AI_UPSCALE 4[CHINESE_TEXT]Minute[CHINESE_TEXT]2：", String.valueOf((System.currentTimeMillis() - startTime)));
 
         byte[] outputData = new byte[dataOut.capacity()];
         dataOut.get(outputData);
-        Log.e("4倍超分模型：", String.valueOf((System.currentTimeMillis() - startTime)));
+        Log.e("4[CHINESE_TEXT]Minute[CHINESE_TEXT]：", String.valueOf((System.currentTimeMillis() - startTime)));
         Bitmap bitmap = SupRUtils.INSTANCE.byteArrayToBitmap(outputData);
         return outputData;
     }
@@ -139,7 +139,7 @@ public class OpencvTools {
         ByteBuffer dataOut = ByteBuffer.allocateDirect(dstArgbBytes.length * 4); 
 
         SupHelp.getInstance().imgUpScalerFour(BaseApplication.instance, dataIn, dataOut);
-        Log.e("AI_UPSCALE 4倍超分模型2：", String.valueOf((System.currentTimeMillis() - startTime)) + "////" + dstArgbBytes.length);
+        Log.e("AI_UPSCALE 4[CHINESE_TEXT]Minute[CHINESE_TEXT]2：", String.valueOf((System.currentTimeMillis() - startTime)) + "////" + dstArgbBytes.length);
 
         byte[] outputData = new byte[dataOut.capacity()];
         dataOut.get(outputData);
@@ -158,7 +158,7 @@ public class OpencvTools {
 
         srcMat.release();
         dstMat.release();
-        Log.e("4倍超分模型：", String.valueOf((System.currentTimeMillis() - startTime)));
+        Log.e("4[CHINESE_TEXT]Minute[CHINESE_TEXT]：", String.valueOf((System.currentTimeMillis() - startTime)));
 
         return finalBitmap;
     }
@@ -175,7 +175,7 @@ public class OpencvTools {
         ByteBuffer dataOut = ByteBuffer.allocateDirect(256 * 192 * 4 * 4); 
 
         SupHelp.getInstance().imgUpScalerFour(BaseApplication.instance, dataIn, dataOut);
-        Log.e("AI_UPSCALE 4倍超分模型2：", String.valueOf((System.currentTimeMillis() - startTime)) + "////" + rawData.length);
+        Log.e("AI_UPSCALE 4[CHINESE_TEXT]Minute[CHINESE_TEXT]2：", String.valueOf((System.currentTimeMillis() - startTime)) + "////" + rawData.length);
 
         byte[] outputData = new byte[dataOut.capacity()];
         dataOut.get(outputData);
@@ -193,7 +193,7 @@ public class OpencvTools {
 
         srcMat.release();
         dstMat.release();
-        Log.e("4倍超分模型：", String.valueOf((System.currentTimeMillis() - startTime)));
+        Log.e("4[CHINESE_TEXT]Minute[CHINESE_TEXT]：", String.valueOf((System.currentTimeMillis() - startTime)));
         return finalBitmap;
     }
 
@@ -222,7 +222,7 @@ public class OpencvTools {
 
     public static byte[] convertSingleByteToDoubleByte(byte[] singleByteImage) {
         if (singleByteImage == null) {
-            throw new IllegalArgumentException("输入的bytearray不能为null");
+            throw new IllegalArgumentException("Input[CHINESE_TEXT]bytearray[CHINESE_TEXT]null");
         }
         int singleLength = singleByteImage.length;
 
@@ -721,7 +721,7 @@ public class OpencvTools {
     public static Bitmap draw_edge_from_temp_reigon_bitmap_argb_psd(byte[] image, byte[] temperature,
                                                                     int image_h, int image_w, float high_t,
                                                                     float low_t, int color_h, int color_l, int type) throws IOException {
-        Log.w("预警值", "最高温：" + high_t + "//最低温：" + low_t);
+        Log.w("[CHINESE_TEXT]", "[CHINESE_TEXT]：" + high_t + "//[CHINESE_TEXT]：" + low_t);
         Mat src = draw_high_temp_edge_argb_pse(image, temperature, image_h, image_w, high_t == Float.MAX_VALUE ? 128f : high_t, color_h, type);
         Mat mat = low_t == Float.MIN_VALUE ? src : draw_temp_edge(src, temperature, low_t, color_l, type);
         Imgproc.cvtColor(mat, mat, Imgproc.COLOR_BGR2RGBA);
@@ -879,7 +879,7 @@ public class OpencvTools {
                 colors[0] = r;
                 colors[1] = g;
                 colors[2] = b;
-                Log.w("测试", "低于最小值");
+                Log.w("[CHINESE_TEXT]", "[CHINESE_TEXT]");
             } else if (maxGrey != -1 && ratio > maxGrey) {
                 if (isGrayUse) {
 
@@ -897,9 +897,9 @@ public class OpencvTools {
                 colors[0] = r;
                 colors[1] = g;
                 colors[2] = b;
-                Log.w("测试", "大于于最大值");
+                Log.w("[CHINESE_TEXT]", "[CHINESE_TEXT]");
             } else if (maxTemp >= customMaxTemp && minTemp <= customMinTemp) {
-                Log.w("测试", "实际温度大于并且小于自定义的最high/low temperature");
+                Log.w("[CHINESE_TEXT]", "[CHINESE_TEXT]Custom[CHINESE_TEXT]high/low temperature");
 
                 colors = capColor(colorList, maxTemp, minTemp, customMaxTemp, customMinTemp, isGrayUse, ratio);
             } else if (customMinTemp > maxTemp) {
@@ -933,7 +933,7 @@ public class OpencvTools {
                 colors = capColor(tmpColor,
                         maxTemp, minTemp, maxTemp, minTemp, isGrayUse, ratio);
             }
-            Log.w("测试", "编号值" + i + ":" + colors[0] + "--" + colors[1] + "--" + colors[2] + "//" + maxTemp + "--" + minTemp + "-" + customMaxTemp);
+            Log.w("[CHINESE_TEXT]", "[CHINESE_TEXT]" + i + ":" + colors[0] + "--" + colors[1] + "--" + colors[2] + "//" + maxTemp + "--" + minTemp + "-" + customMaxTemp);
             colorBar.put(i, 0, colors[2], colors[1], colors[0]);
         }
         return colorBar;

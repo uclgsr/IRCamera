@@ -28,7 +28,7 @@ public class FileSizeUtil {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Log.e("bcf获取文件大小", "getFileOrFilesSize-1-获取失败!");
+            Log.e("bcf[CHINESE_TEXT]FileSize", "getFileOrFilesSize-1-[CHINESE_TEXT]Failed!");
         }
         return FormetFileSize(blockSize, sizeType);
     }
@@ -58,7 +58,7 @@ public class FileSizeUtil {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("bcf获取文件大小--getFilesSize-2-获取失败!");
+            System.out.println("bcf[CHINESE_TEXT]FileSize--getFilesSize-2-[CHINESE_TEXT]Failed!");
 
         }
         return blockSize;
@@ -75,7 +75,7 @@ public class FileSizeUtil {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Log.e("bcf获取文件大小", "getAutoFileOrFilesSize-3-获取失败!");
+            Log.e("bcf[CHINESE_TEXT]FileSize", "getAutoFileOrFilesSize-3-[CHINESE_TEXT]Failed!");
         }
         return FormetFileSize(blockSize, sizeType) + getUnit(sizeType);
     }
@@ -91,7 +91,7 @@ public class FileSizeUtil {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Log.e("bcf获取文件大小", "getAutoFileOrFilesSize-4-获取失败!");
+            Log.e("bcf[CHINESE_TEXT]FileSize", "getAutoFileOrFilesSize-4-[CHINESE_TEXT]Failed!");
         }
         return FormetFileSize(blockSize);
     }
@@ -107,7 +107,7 @@ public class FileSizeUtil {
                 }
             }
         } catch (Exception e) {
-            System.out.println("bcf获取文件大小--getFilesSize-5-获取失败!");
+            System.out.println("bcf[CHINESE_TEXT]FileSize--getFilesSize-5-[CHINESE_TEXT]Failed!");
 
             e.printStackTrace();
         } finally {
@@ -178,13 +178,13 @@ public class FileSizeUtil {
         try {
             File file = new File(filename);
             if (!file.exists() || !file.isFile()) {
-                System.out.println("bcf--getFileSize文件大小不存在");
+                System.out.println("bcf--getFileSizeFileSize[CHINESE_TEXT]");
                 return -1;
             }
             return file.length();
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("bcf--getFileSize获取文件大小--getFilesSize-5-获取失败!");
+            System.out.println("bcf--getFileSize[CHINESE_TEXT]FileSize--getFilesSize-5-[CHINESE_TEXT]Failed!");
         }
         return 0;
     }
