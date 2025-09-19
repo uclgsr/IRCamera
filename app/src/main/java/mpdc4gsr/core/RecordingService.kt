@@ -580,6 +580,7 @@ class RecordingService : LifecycleService() {
         recordingController.recordingStateFlow
             .onEach { state ->
                 when (state) {
+                    RecordingState.IDLE -> updateNotification("Ready")
                     RecordingState.STARTING -> updateNotification("Starting sensors...")
                     RecordingState.RECORDING -> updateNotification("Recording in progress")
                     RecordingState.STOPPING -> updateNotification("Stopping sensors...")

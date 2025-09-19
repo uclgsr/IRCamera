@@ -1702,6 +1702,7 @@ data class SessionDiagnostics(
     )
 
     enum class RecordingState {
+        IDLE,
         STOPPED,
         STARTING,
         RECORDING,

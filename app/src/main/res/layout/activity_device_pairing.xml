@@ -7,7 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#16131e"
-        tools:context="com.topdon.tc001.network.DevicePairingActivity">
+        tools:context="mpdc4gsr.network.DevicePairingActivity">
 
         <!-- Header -->
         <com.topdon.lib.core.view.TitleView

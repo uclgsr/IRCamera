@@ -18,7 +18,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <!-- Camera Mode Selector -->
-    <com.topdon.tc001.camera.ui.CameraModeSelector
+    <mpdc4gsr.camera.ui.CameraModeSelector
         android:id="@+id/camera_mode_selector"
         android:layout_width="0dp"
         android:layout_height="80dp"

@@ -1,6 +1,7 @@
 package mpdc4gsr.network
 
 import android.content.Context
+import android.util.Log
 import mpdc4gsr.core.StructuredLogger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
