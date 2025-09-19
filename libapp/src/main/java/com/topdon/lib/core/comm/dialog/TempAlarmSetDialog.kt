@@ -20,6 +20,7 @@ import com.topdon.lib.core.bean.AlarmBean
 import com.topdon.lib.core.tools.ToastTools
 import com.topdon.lib.core.tools.UnitTools
 import com.topdon.lib.core.R
+import com.topdon.lib.ui.R as UiR
 
 class TempAlarmSetDialog(
     context: Context,

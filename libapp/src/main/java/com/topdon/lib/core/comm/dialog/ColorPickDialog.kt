@@ -15,6 +15,7 @@ import com.jaygoo.widget.OnRangeChangedListener
 import com.topdon.lib.core.utils.ScreenUtil
 import com.topdon.lib.core.view.ColorSelectView
 import com.topdon.lib.core.R
+import com.topdon.lib.ui.R as UiR
 import com.topdon.lib.core.comm.util.ColorUtils
 
 class ColorPickDialog(
