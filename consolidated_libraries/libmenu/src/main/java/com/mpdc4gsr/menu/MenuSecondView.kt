@@ -1,5 +1,7 @@
 package com.mpdc4gsr.menu
 
+import com.mpdc4gsr.menu.R
+
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.TypedArray
