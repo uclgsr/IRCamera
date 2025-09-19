@@ -17,4 +17,13 @@ public interface Callback<T> {
             super(message);
         }
     }
+    
+    // Add CommonCallback interface
+    interface CommonCallback<T> extends Callback<T> {
+        // Default implementation for stub
+        default void onSuccess(T result) {}
+        default void onError(Throwable ex, boolean isOnCallback) {}
+        default void onCancelled(CancelledException cex) {}
+        default void onFinished() {}
+    }
 }

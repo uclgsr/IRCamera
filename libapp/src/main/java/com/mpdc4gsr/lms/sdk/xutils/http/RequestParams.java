@@ -4,9 +4,14 @@ package com.mpdc4gsr.lms.sdk.xutils.http;
  * Request Params stub for LMS SDK
  */
 public class RequestParams {
+    public String uri;
+    public boolean isAsJsonContent = false;
+    
     public RequestParams() {}
     
-    public RequestParams(String url) {}
+    public RequestParams(String url) {
+        this.uri = url;
+    }
     
     public void addParameter(String key, Object value) {}
     
