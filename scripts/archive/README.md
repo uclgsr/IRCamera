@@ -157,9 +157,9 @@ scripts/archive/
 
 **These scripts are preserved for historical reference only.**
 
-- ❌ **Do not use these archived scripts** - they lack modern features and cross-platform support
-- ✅ **Use the unified build script** - `../build.sh` for all build operations
-- 📚 **Documentation available** - See `../../docs/BUILD_GUIDE.md` for complete usage instructions
+- [NOT RECOMMENDED] **Do not use these archived scripts** - they lack modern features and cross-platform support
+- [RECOMMENDED] **Use the unified build script** - `../build.sh` for all build operations
+- [INFO] **Documentation available** - See `../../docs/` for complete usage instructions
 
 ---
 
