@@ -21,14 +21,14 @@ code .  # VS Code will prompt to install recommended extensions
 
 For detailed setup instructions, see [COPILOT_SETUP.md](COPILOT_SETUP.md).
 
-## 🏗️ Architecture
+## [BUILD] Architecture
 
 - **Hub (PC Controller)**: Python-based central coordinator with PyQt6 GUI
 - **Spoke (Android Sensor Node)**: Kotlin-based mobile sensor nodes  
 - **Communication**: JSON-based TCP with mDNS discovery
 - **Purpose**: Scientific data acquisition and machine learning analysis
 
-### 🎯 Simplified Structure (Updated 2024)
+### [TARGET] Simplified Structure (Updated 2024)
 
 This project has been significantly simplified for better maintainability:
 - **PC Controller**: Reduced from 2000+ lines to 250 lines (87% reduction)
@@ -37,7 +37,7 @@ This project has been significantly simplified for better maintainability:
 
 See [SIMPLIFIED_ARCHITECTURE.md](SIMPLIFIED_ARCHITECTURE.md) for complete details.
 
-## 📚 Documentation
+## [BOOKS] Documentation
 
 - [Simplified Architecture](SIMPLIFIED_ARCHITECTURE.md) - Current simplified project structure
 - [Copilot Setup Guide](COPILOT_SETUP.md) - GitHub Copilot configuration and usage
@@ -55,7 +55,7 @@ See [SIMPLIFIED_ARCHITECTURE.md](SIMPLIFIED_ARCHITECTURE.md) for complete detail
 - **Scientific Data Quality**: 12-bit RAW sensor data with minimal processing interference
 - **Flexible Processing**: Toggle between Standard and Samsung Stage3/Level3 processing modes
 
-### 🔄 Hub-and-Spoke Architecture  
+### [REFRESH] Hub-and-Spoke Architecture  
 - **PC Controller Hub**: Central coordination and data aggregation
 - **Android Sensor Nodes**: Mobile data collection points
 - **TCP/mDNS Communication**: Automatic discovery and reliable data streaming

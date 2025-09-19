@@ -1,10 +1,10 @@
 # IRCamera Architecture Guide
 
-## 📋 System Overview
+## [LIST] System Overview
 
 The IRCamera Multi-Modal Thermal Sensing Platform implements a sophisticated **Hub-and-Spoke architecture** designed for distributed multi-modal physiological sensing. This document provides comprehensive technical details about the system design, component interactions, and architectural decisions.
 
-## 🏗️ High-Level Architecture
+## [BUILD] High-Level Architecture
 
 ### Hub-and-Spoke Model
 
@@ -70,7 +70,7 @@ graph TB
 5. **Modularity**: Clear separation of concerns across components
 6. **Real-time Communication**: Low-latency command/response protocol
 
-## 🖥️ PC Controller Hub Architecture
+## [SCREEN] PC Controller Hub Architecture
 
 ### Component Structure
 
@@ -150,7 +150,7 @@ graph TB
   - Command routing and response handling
   - Connection health monitoring
 
-## 📱 Android Sensor Node Architecture
+## [MOBILE] Android Sensor Node Architecture
 
 ### Application Structure
 
@@ -316,7 +316,7 @@ sequenceDiagram
     Note over Hub,Node2: Recording starts synchronously
 ```
 
-## 📊 Data Architecture
+## [DATA] Data Architecture
 
 ### Data Flow Pipeline
 
@@ -377,20 +377,20 @@ graph TB
 #### Session Directory Structure
 ```
 sessions/
-├── session_YYYY-MM-DD_HH-MM-SS/           # Session timestamp
-│   ├── metadata.json                       # Session configuration
-│   ├── session_summary.json                # Session statistics
-│   ├── device_001/                         # First Android device
-│   │   ├── thermal_data.csv               # Temperature matrices
-│   │   ├── gsr_data.csv                   # GSR measurements
-│   │   ├── rgb_video.mp4                  # RGB video recording
-│   │   ├── rgb_frames/                     # Individual video frames
-│   │   │   ├── frame_000001.jpg
-│   │   │   └── ...
-│   │   └── device_metadata.json           # Device-specific info
-│   ├── device_002/                         # Second Android device
-│   │   └── ...                             # Same structure
-│   └── synchronization.json                # Cross-device sync data
+|---- session_YYYY-MM-DD_HH-MM-SS/           # Session timestamp
+|   |---- metadata.json                       # Session configuration
+|   |---- session_summary.json                # Session statistics
+|   |---- device_001/                         # First Android device
+|   |   |---- thermal_data.csv               # Temperature matrices
+|   |   |---- gsr_data.csv                   # GSR measurements
+|   |   |---- rgb_video.mp4                  # RGB video recording
+|   |   |---- rgb_frames/                     # Individual video frames
+|   |   |   |---- frame_000001.jpg
+|   |   |   `---- ...
+|   |   `---- device_metadata.json           # Device-specific info
+|   |---- device_002/                         # Second Android device
+|   |   `---- ...                             # Same structure
+|   `---- synchronization.json                # Cross-device sync data
 ```
 
 #### Data Format Examples
@@ -409,7 +409,7 @@ timestamp,conductance,resistance,ppg_value,signal_quality
 1641234567131,2.47,0.405,1026.1,good
 ```
 
-## 🔧 Component Library Architecture
+## [WRENCH] Component Library Architecture
 
 ### Library Dependency Graph
 
@@ -550,7 +550,7 @@ graph TB
     SecureDeletion --> TamperDetection
 ```
 
-## 🚀 Performance Architecture
+## [LAUNCH] Performance Architecture
 
 ### Performance Optimization Strategy
 
@@ -593,7 +593,7 @@ graph TB
 - **Compression**: Optional data compression for large transfers
 - **Priority Queues**: Prioritize time-critical messages
 
-## 🔄 Build System Architecture
+## [REFRESH] Build System Architecture
 
 ### Gradle Build Structure
 
@@ -645,7 +645,7 @@ graph TB
 5. **APK Assembly**: Final APK generation and signing
 6. **Validation Phase**: Quality checks and testing
 
-## 📈 Monitoring and Observability
+## [CHART] Monitoring and Observability
 
 ### System Monitoring Architecture
 
@@ -707,7 +707,7 @@ graph TB
 
 ---
 
-**Status**: ✅ Complete Architecture Documentation  
+**Status**: [DONE] Complete Architecture Documentation  
 **Last Updated**: Documentation Consolidation v1.0  
 **Scope**: System-wide architecture coverage  
 **Maintenance**: Update when making architectural changes or adding new components
