@@ -1,4 +1,4 @@
-package com.topdon.module.thermal.activity
+package com.mpdc4gsr.module.thermal.activity
 
 import android.view.View
 import android.widget.Button

@@ -1,4 +1,4 @@
-package com.topdon.lib.core.config
+package com.mpdc4gsr.lib.core.config
 
 import android.content.Context
 import android.os.Build

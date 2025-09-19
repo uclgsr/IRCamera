@@ -1,4 +1,4 @@
-package com.topdon.module.thermal.ir.report.activity
+package com.mpdc4gsr.module.thermal.ir.report.activity
 
 import com.topdon.lib.core.config.ExtraKeyConfig
 import com.topdon.lib.core.ktbase.BaseActivity

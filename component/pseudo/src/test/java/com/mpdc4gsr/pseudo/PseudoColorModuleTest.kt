@@ -1,4 +1,4 @@
-package com.topdon.pseudo
+package com.mpdc4gsr.pseudo
 
 import android.content.Context
 import android.graphics.Color

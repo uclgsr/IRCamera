@@ -1,4 +1,4 @@
-package com.topdon.module.thermal.ir.adapter
+package com.mpdc4gsr.module.thermal.ir.adapter
 
 import android.view.View
 import com.chad.library.adapter.base.BaseQuickAdapter

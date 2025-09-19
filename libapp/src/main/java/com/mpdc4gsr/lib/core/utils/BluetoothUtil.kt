@@ -1,4 +1,4 @@
-package com.topdon.lib.core.utils
+package com.mpdc4gsr.lib.core.utils
 
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothAdapter

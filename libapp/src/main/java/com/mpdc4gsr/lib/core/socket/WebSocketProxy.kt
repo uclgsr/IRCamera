@@ -1,4 +1,4 @@
-package com.topdon.lib.core.socket
+package com.mpdc4gsr.lib.core.socket
 
 import android.Manifest
 import android.net.Network

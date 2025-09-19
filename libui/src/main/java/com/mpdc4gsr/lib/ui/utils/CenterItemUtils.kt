@@ -1,4 +1,4 @@
-package com.topdon.lib.ui.utils
+package com.mpdc4gsr.lib.ui.utils
 
 internal object CenterItemUtils {
     fun getMinDifferItem(itemHeights: List<CenterViewItem>): CenterViewItem {

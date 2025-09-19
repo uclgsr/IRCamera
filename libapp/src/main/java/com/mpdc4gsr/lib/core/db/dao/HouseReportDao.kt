@@ -1,4 +1,4 @@
-package com.topdon.lib.core.db.dao
+package com.mpdc4gsr.lib.core.db.dao
 
 import androidx.room.Dao
 import androidx.room.Delete

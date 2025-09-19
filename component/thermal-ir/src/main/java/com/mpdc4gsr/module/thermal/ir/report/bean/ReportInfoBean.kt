@@ -1,4 +1,4 @@
-package com.topdon.module.thermal.ir.report.bean
+package com.mpdc4gsr.module.thermal.ir.report.bean
 
 import android.os.Parcelable
 import com.topdon.lib.core.utils.CommUtils

@@ -1,4 +1,4 @@
-package com.topdon.gsr.service
+package com.mpdc4gsr.gsr.service
 
 import android.Manifest
 import android.bluetooth.BluetoothManager

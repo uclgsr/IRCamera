@@ -1,4 +1,4 @@
-package com.topdon.libmatrix
+package com.mpdc4gsr.libmatrix
 
 import android.content.Context
 import android.os.Build

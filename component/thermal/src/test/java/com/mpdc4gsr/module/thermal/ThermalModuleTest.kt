@@ -1,4 +1,4 @@
-package com.topdon.module.thermal
+package com.mpdc4gsr.module.thermal
 
 import android.content.Context
 import android.os.Build

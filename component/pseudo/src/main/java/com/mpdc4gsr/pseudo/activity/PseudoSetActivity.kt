@@ -1,4 +1,4 @@
-package com.topdon.pseudo.activity
+package com.mpdc4gsr.pseudo.activity
 
 import android.content.Intent
 import android.graphics.drawable.GradientDrawable

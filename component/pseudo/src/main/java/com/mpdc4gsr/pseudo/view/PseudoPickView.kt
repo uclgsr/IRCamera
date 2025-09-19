@@ -1,4 +1,4 @@
-package com.topdon.pseudo.view
+package com.mpdc4gsr.pseudo.view
 
 import android.annotation.SuppressLint
 import android.content.Context

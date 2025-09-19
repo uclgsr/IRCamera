@@ -1,4 +1,4 @@
-package com.topdon.lib.core.binding
+package com.mpdc4gsr.lib.core.binding
 
 import android.content.res.TypedArray
 import android.graphics.drawable.ColorDrawable

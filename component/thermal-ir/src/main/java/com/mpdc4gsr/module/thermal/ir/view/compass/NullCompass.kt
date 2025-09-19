@@ -1,4 +1,4 @@
-package com.topdon.module.thermal.ir.view.compass
+package com.mpdc4gsr.module.thermal.ir.view.compass
 
 import com.kylecorry.andromeda.sense.compass.ICompass
 import com.kylecorry.sol.units.Bearing

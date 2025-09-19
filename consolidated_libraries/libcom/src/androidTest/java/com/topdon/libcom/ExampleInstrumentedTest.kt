@@ -1,4 +1,4 @@
-package com.topdon.libcom
+package com.mpdc4gsr.libcom
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry

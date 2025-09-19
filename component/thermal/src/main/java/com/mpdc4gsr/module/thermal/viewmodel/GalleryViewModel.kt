@@ -1,4 +1,4 @@
-package com.topdon.module.thermal.viewmodel
+package com.mpdc4gsr.module.thermal.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.viewModelScope

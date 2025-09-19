@@ -1,4 +1,4 @@
-package com.topdon.lib.core.http.ts004
+package com.mpdc4gsr.lib.core.http.ts004
 
 object TS004URL {
     const val RTSP_URL = "rtsp://192.168.40.1/ch0/stream0"

@@ -1,4 +1,4 @@
-package com.topdon.lib.core.repository
+package com.mpdc4gsr.lib.core.repository
 
 
 data class TS004Response<T>(

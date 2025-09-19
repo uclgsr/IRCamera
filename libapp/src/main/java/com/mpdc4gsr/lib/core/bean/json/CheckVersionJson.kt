@@ -1,4 +1,4 @@
-package com.topdon.lib.core.bean.json
+package com.mpdc4gsr.lib.core.bean.json
 
 data class CheckVersionJson(
     val downloadPackageUrl: String,

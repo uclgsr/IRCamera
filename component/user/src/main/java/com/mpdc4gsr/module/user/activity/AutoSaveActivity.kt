@@ -1,4 +1,4 @@
-package com.topdon.module.user.activity
+package com.mpdc4gsr.module.user.activity
 
 import androidx.appcompat.widget.SwitchCompat
 import com.topdon.lib.core.common.SharedManager

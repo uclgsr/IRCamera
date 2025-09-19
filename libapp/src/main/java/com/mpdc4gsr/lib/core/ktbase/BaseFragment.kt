@@ -1,4 +1,4 @@
-package com.topdon.lib.core.ktbase
+package com.mpdc4gsr.lib.core.ktbase
 
 import android.os.Bundle
 import android.view.LayoutInflater

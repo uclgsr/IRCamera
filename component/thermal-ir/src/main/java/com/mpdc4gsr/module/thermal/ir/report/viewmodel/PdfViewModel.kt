@@ -1,4 +1,4 @@
-package com.topdon.module.thermal.ir.report.viewmodel
+package com.mpdc4gsr.module.thermal.ir.report.viewmodel
 
 import android.text.TextUtils
 import androidx.lifecycle.MutableLiveData

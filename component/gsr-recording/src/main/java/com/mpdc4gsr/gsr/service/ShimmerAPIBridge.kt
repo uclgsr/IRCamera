@@ -1,4 +1,4 @@
-package com.topdon.gsr.service
+package com.mpdc4gsr.gsr.service
 
 import android.util.Log
 import com.topdon.gsr.model.GSRSample

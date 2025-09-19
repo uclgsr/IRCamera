@@ -1,4 +1,4 @@
-package com.topdon.module.thermal.ir.bean
+package com.mpdc4gsr.module.thermal.ir.bean
 
 import android.graphics.Point
 import android.graphics.Rect

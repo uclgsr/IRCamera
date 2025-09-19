@@ -1,4 +1,4 @@
-package com.topdon.module.user.activity
+package com.mpdc4gsr.module.user.activity
 
 import android.widget.TextView
 import com.topdon.lib.core.ktbase.BaseActivity

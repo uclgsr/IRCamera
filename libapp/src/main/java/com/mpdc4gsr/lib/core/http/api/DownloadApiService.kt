@@ -1,4 +1,4 @@
-package com.topdon.lib.core.http.api
+package com.mpdc4gsr.lib.core.http.api
 
 import okhttp3.ResponseBody
 import retrofit2.http.GET

@@ -1,4 +1,4 @@
-package com.topdon.lib.core.utils
+package com.mpdc4gsr.lib.core.utils
 
 object Constants {
     const val PRODUCT_TYPE_NAME = "product_type"

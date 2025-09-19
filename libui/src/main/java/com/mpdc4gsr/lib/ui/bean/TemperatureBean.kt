@@ -1,4 +1,4 @@
-package com.topdon.lib.ui.bean
+package com.mpdc4gsr.lib.ui.bean
 
 data class TemperatureBean(
     val res: Int,

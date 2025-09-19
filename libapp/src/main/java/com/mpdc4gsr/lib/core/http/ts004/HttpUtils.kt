@@ -1,4 +1,4 @@
-package com.topdon.lib.core.http.ts004
+package com.mpdc4gsr.lib.core.http.ts004
 
 import com.topdon.lms.sdk.xutils.common.Callback
 import com.topdon.lms.sdk.xutils.http.RequestParams

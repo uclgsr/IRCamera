@@ -1,4 +1,4 @@
-package com.topdon.gsr.util
+package com.mpdc4gsr.gsr.util
 
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull

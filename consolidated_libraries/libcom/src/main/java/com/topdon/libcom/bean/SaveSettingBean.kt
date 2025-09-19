@@ -1,4 +1,4 @@
-package com.topdon.libcom.bean
+package com.mpdc4gsr.libcom.bean
 
 import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.SizeUtils

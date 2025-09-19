@@ -1,4 +1,4 @@
-package com.topdon.module.user.activity
+package com.mpdc4gsr.module.user.activity
 
 import android.view.LayoutInflater
 import android.view.View

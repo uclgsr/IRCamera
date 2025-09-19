@@ -1,4 +1,4 @@
-package com.topdon.lib.core.messaging
+package com.mpdc4gsr.lib.core.messaging
 
 import android.content.Context
 import android.util.Log

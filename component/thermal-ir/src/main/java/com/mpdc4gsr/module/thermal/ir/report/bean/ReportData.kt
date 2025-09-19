@@ -1,4 +1,4 @@
-package com.topdon.module.thermal.ir.report.bean
+package com.mpdc4gsr.module.thermal.ir.report.bean
 
 import com.blankj.utilcode.util.GsonUtils
 

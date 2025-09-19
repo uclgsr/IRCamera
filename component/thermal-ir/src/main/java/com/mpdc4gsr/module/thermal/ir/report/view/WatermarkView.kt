@@ -1,4 +1,4 @@
-package com.topdon.module.thermal.ir.report.view
+package com.mpdc4gsr.module.thermal.ir.report.view
 
 import android.content.Context
 import android.graphics.Canvas

@@ -1,4 +1,4 @@
-package com.topdon.module.thermal.ir.frame
+package com.mpdc4gsr.module.thermal.ir.frame
 
 enum class ImageParams(val value: Int) {
     ROTATE_0(0),

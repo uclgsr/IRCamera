@@ -1,4 +1,4 @@
-package com.topdon.gsr.network
+package com.mpdc4gsr.gsr.network
 
 import android.content.Context
 import android.content.SharedPreferences

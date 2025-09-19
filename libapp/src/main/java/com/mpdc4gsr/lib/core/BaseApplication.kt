@@ -1,4 +1,4 @@
-package com.topdon.lib.core
+package com.mpdc4gsr.lib.core
 
 import android.app.Activity
 import android.app.ActivityManager

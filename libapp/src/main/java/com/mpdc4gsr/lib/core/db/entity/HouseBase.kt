@@ -1,4 +1,4 @@
-package com.topdon.lib.core.db.entity
+package com.mpdc4gsr.lib.core.db.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

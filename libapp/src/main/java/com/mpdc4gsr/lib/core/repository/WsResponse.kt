@@ -1,4 +1,4 @@
-package com.topdon.lib.core.repository
+package com.mpdc4gsr.lib.core.repository
 
 data class WsResponse<T>(
     val cmd: Int,

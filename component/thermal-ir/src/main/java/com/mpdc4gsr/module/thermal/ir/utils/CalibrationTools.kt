@@ -1,4 +1,4 @@
-package com.topdon.module.thermal.ir.utils
+package com.mpdc4gsr.module.thermal.ir.utils
 
 import android.util.Log
 import com.elvishew.xlog.XLog

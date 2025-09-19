@@ -1,4 +1,4 @@
-package com.topdon.lib.core.utils
+package com.mpdc4gsr.lib.core.utils
 
 import com.topdon.lib.core.common.SharedManager
 

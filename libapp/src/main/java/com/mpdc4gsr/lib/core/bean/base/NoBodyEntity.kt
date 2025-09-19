@@ -1,3 +1,3 @@
-package com.topdon.lib.core.bean.base
+package com.mpdc4gsr.lib.core.bean.base
 
 class NoBodyEntity

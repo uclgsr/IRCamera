@@ -1,4 +1,4 @@
-package com.topdon.lib.core.bean.event
+package com.mpdc4gsr.lib.core.bean.event
 
 data class VersionUpData(
     val versionNo: String,

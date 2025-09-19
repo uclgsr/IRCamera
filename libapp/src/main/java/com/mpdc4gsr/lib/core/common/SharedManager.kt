@@ -1,4 +1,4 @@
-package com.topdon.lib.core.common
+package com.mpdc4gsr.lib.core.common
 
 import android.content.Context
 import android.util.Base64

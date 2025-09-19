@@ -1,4 +1,4 @@
-package com.topdon.module.thermal.ir.bean
+package com.mpdc4gsr.module.thermal.ir.bean
 
 data class ModelBean(
     var defaultModel: DataBean,

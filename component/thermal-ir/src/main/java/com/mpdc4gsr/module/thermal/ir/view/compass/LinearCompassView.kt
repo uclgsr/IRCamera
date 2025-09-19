@@ -1,4 +1,4 @@
-package com.topdon.module.thermal.ir.view.compass
+package com.mpdc4gsr.module.thermal.ir.view.compass
 
 import android.content.Context
 import android.graphics.Bitmap

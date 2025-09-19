@@ -1,4 +1,4 @@
-package com.topdon.lib.core.http.repository
+package com.mpdc4gsr.lib.core.http.repository
 
 import android.text.TextUtils
 import com.elvishew.xlog.XLog

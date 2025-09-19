@@ -1,4 +1,4 @@
-package com.topdon.module.thermal.activity
+package com.mpdc4gsr.module.thermal.activity
 
 import android.graphics.Color
 import android.util.Log

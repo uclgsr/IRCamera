@@ -1,4 +1,4 @@
-package com.topdon.lib.core.comm.util
+package com.mpdc4gsr.lib.core.comm.util
 
 import android.app.Activity
 import com.topdon.libcom.navigation.NavigationManager

@@ -1,4 +1,4 @@
-package com.topdon.module.thermal.fragment
+package com.mpdc4gsr.module.thermal.fragment
 
 import android.graphics.Bitmap
 import android.graphics.Matrix

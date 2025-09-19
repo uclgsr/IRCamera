@@ -1,4 +1,4 @@
-package com.topdon.lib.core.http.converter
+package com.mpdc4gsr.lib.core.http.converter
 
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody

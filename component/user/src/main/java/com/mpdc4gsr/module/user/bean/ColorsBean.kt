@@ -1,4 +1,4 @@
-package com.topdon.module.user.bean
+package com.mpdc4gsr.module.user.bean
 
 data class ColorsBean(
     var start: Int,

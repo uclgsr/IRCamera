@@ -1,4 +1,4 @@
-package com.topdon.lib.core.dialog
+package com.mpdc4gsr.lib.core.dialog
 
 import android.Manifest
 import android.annotation.SuppressLint

@@ -1,4 +1,4 @@
-package com.topdon.module.thermal.ir.activity
+package com.mpdc4gsr.module.thermal.ir.activity
 
 import com.topdon.lib.core.ktbase.BaseActivity
 import com.topdon.libcom.bean.SaveSettingBean

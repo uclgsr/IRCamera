@@ -1,4 +1,4 @@
-package com.topdon.lib.core.menu.constant
+package com.mpdc4gsr.lib.core.menu.constant
 
 
 enum class MenuType {

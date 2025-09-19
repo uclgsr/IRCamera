@@ -1,4 +1,4 @@
-package com.topdon.gsr.model
+package com.mpdc4gsr.gsr.model
 
 data class ResearchTemplate(
     val id: String,

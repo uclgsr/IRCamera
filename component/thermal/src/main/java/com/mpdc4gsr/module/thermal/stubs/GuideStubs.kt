@@ -1,4 +1,4 @@
-package com.topdon.module.thermal.stubs
+package com.mpdc4gsr.module.thermal.stubs
 
 typealias GuideInterface = com.guide.zm04c.matrix.GuideInterface
 

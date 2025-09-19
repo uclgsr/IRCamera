@@ -1,4 +1,4 @@
-package com.topdon.component.common
+package com.mpdc4gsr.component.common
 
 import android.content.Context
 import android.os.Build

@@ -1,4 +1,4 @@
-package com.topdon.lib.core.bean
+package com.mpdc4gsr.lib.core.bean
 
 data class TargetColorBean(
     val res: Int,

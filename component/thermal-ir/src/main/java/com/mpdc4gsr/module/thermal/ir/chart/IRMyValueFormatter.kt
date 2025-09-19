@@ -1,4 +1,4 @@
-package com.topdon.module.thermal.ir.chart
+package com.mpdc4gsr.module.thermal.ir.chart
 
 import android.annotation.SuppressLint
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter

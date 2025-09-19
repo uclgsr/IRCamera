@@ -1,4 +1,4 @@
-package com.topdon.module.thermal.ir.video
+package com.mpdc4gsr.module.thermal.ir.video
 
 import android.annotation.SuppressLint
 import android.media.AudioFormat

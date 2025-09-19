@@ -1,4 +1,4 @@
-package com.topdon.gsr.model
+package com.mpdc4gsr.gsr.model
 
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse

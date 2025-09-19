@@ -1,4 +1,4 @@
-package com.topdon.menu.constant
+package com.mpdc4gsr.menu.constant
 
 
 enum class FenceType {

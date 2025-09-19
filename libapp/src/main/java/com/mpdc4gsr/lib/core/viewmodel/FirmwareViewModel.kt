@@ -1,4 +1,4 @@
-package com.topdon.lib.core.viewmodel
+package com.mpdc4gsr.lib.core.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel

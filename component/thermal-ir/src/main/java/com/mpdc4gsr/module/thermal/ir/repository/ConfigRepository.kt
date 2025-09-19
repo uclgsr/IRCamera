@@ -1,4 +1,4 @@
-package com.topdon.module.thermal.ir.repository
+package com.mpdc4gsr.module.thermal.ir.repository
 
 import com.google.gson.Gson
 import com.topdon.lib.core.common.SharedManager

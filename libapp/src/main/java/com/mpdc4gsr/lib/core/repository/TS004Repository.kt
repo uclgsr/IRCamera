@@ -1,4 +1,4 @@
-package com.topdon.lib.core.repository
+package com.mpdc4gsr.lib.core.repository
 
 import android.net.Network
 import com.blankj.utilcode.util.EncryptUtils

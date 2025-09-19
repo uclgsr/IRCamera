@@ -1,4 +1,4 @@
-package com.topdon.module.thermal.ir.dialog
+package com.mpdc4gsr.module.thermal.ir.dialog
 
 import android.annotation.SuppressLint
 import android.app.Dialog

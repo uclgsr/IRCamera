@@ -1,4 +1,4 @@
-package com.topdon.lib.core.tools
+package com.mpdc4gsr.lib.core.tools
 
 import com.topdon.lib.core.common.SharedManager
 import java.util.Locale

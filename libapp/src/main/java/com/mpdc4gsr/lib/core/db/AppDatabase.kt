@@ -1,4 +1,4 @@
-package com.topdon.lib.core.db
+package com.mpdc4gsr.lib.core.db
 
 import android.content.Context
 import androidx.room.Database

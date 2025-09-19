@@ -1,4 +1,4 @@
-package com.topdon.lib.core.bean.tools
+package com.mpdc4gsr.lib.core.bean.tools
 
 class ThermalBean {
     var maxTemp = 0f

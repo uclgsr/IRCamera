@@ -1,4 +1,4 @@
-package com.topdon.lib.core.example
+package com.mpdc4gsr.lib.core.example
 
 import android.content.Context
 import android.util.Log

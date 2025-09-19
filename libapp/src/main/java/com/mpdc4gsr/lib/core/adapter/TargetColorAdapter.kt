@@ -1,4 +1,4 @@
-package com.topdon.lib.core.adapter
+package com.mpdc4gsr.lib.core.adapter
 
 import android.content.Context
 import android.view.LayoutInflater

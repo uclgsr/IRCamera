@@ -1,4 +1,4 @@
-package com.topdon.lib.core.utils
+package com.mpdc4gsr.lib.core.utils
 
 object WsCmdConstants {
     const val AR_COMMAND_IP: String = "127.0.0.1"

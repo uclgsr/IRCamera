@@ -1,4 +1,4 @@
-package com.topdon.lib.core.bean
+package com.mpdc4gsr.lib.core.bean
 
 import android.os.Parcel
 import android.os.Parcelable

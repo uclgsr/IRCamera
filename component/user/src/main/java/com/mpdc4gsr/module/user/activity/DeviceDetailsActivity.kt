@@ -1,4 +1,4 @@
-package com.topdon.module.user.activity
+package com.mpdc4gsr.module.user.activity
 
 import android.content.ClipData
 import android.content.ClipboardManager

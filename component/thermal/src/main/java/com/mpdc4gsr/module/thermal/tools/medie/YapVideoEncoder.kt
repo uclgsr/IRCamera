@@ -1,6 +1,6 @@
 @file:Suppress(names = ["DEPRECATION", "SpellCheckingInspection"])
 
-package com.topdon.module.thermal.tools.medie
+package com.mpdc4gsr.module.thermal.tools.medie
 
 import android.graphics.Bitmap
 import android.media.MediaCodec

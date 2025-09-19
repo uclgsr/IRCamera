@@ -1,4 +1,4 @@
-package com.topdon.lib.core.bean.response
+package com.mpdc4gsr.lib.core.bean.response
 
 data class ResponseUserInfo(
     val topdonId: String,

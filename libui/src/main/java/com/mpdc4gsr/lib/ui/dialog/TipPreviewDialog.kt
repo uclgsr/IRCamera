@@ -1,6 +1,6 @@
 @file:Suppress("DEPRECATION")
 
-package com.topdon.lib.ui.dialog
+package com.mpdc4gsr.lib.ui.dialog
 
 import android.app.Dialog
 import android.graphics.Color

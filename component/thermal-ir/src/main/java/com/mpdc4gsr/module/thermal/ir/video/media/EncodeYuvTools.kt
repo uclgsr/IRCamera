@@ -1,4 +1,4 @@
-package com.topdon.module.thermal.ir.video.media
+package com.mpdc4gsr.module.thermal.ir.video.media
 
 import android.graphics.Bitmap
 import android.media.MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420PackedPlanar

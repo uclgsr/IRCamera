@@ -1,4 +1,4 @@
-package com.topdon.module.thermal.ir.report.activity
+package com.mpdc4gsr.module.thermal.ir.report.activity
 
 import android.text.TextUtils
 import android.util.Log

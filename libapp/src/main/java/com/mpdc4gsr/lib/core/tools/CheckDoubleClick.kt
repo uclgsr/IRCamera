@@ -1,4 +1,4 @@
-package com.topdon.lib.core.tools
+package com.mpdc4gsr.lib.core.tools
 
 object CheckDoubleClick {
     private val records: MutableMap<String, Long> = HashMap()

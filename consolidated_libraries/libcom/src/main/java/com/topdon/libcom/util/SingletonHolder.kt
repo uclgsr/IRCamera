@@ -1,4 +1,4 @@
-package com.topdon.libcom.util
+package com.mpdc4gsr.libcom.util
 
 open class SingletonHolder<out T, in A>(creator: (A) -> T) {
     private var creator: ((A) -> T)? = creator

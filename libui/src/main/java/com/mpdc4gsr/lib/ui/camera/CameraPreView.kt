@@ -1,4 +1,4 @@
-package com.topdon.lib.ui.camera
+package com.mpdc4gsr.lib.ui.camera
 
 import android.annotation.SuppressLint
 import android.content.Context

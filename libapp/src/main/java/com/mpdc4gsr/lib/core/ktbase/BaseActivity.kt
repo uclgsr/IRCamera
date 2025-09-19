@@ -1,4 +1,4 @@
-package com.topdon.lib.core.ktbase
+package com.mpdc4gsr.lib.core.ktbase
 
 import android.content.Context
 import android.content.Intent

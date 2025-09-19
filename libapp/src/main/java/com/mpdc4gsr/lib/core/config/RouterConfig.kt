@@ -1,4 +1,4 @@
-package com.topdon.lib.core.config
+package com.mpdc4gsr.lib.core.config
 
 object RouterConfig {
     private const val GROUP_APP = "app"

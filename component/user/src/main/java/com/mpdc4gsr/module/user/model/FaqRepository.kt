@@ -1,4 +1,4 @@
-package com.topdon.module.user.model
+package com.mpdc4gsr.module.user.model
 
 import com.blankj.utilcode.util.Utils
 import com.topdon.lib.core.R as RCore

@@ -1,4 +1,4 @@
-package com.topdon.pseudo.constant
+package com.mpdc4gsr.pseudo.constant
 
 object ColorRecommend {
     val colorList1 =

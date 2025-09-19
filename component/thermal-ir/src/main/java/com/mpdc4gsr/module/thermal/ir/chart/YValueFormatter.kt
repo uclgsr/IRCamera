@@ -1,4 +1,4 @@
-package com.topdon.module.thermal.ir.chart
+package com.mpdc4gsr.module.thermal.ir.chart
 
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.topdon.lib.core.tools.UnitTools

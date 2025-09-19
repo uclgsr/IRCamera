@@ -1,4 +1,4 @@
-package com.topdon.module.thermal.ir.dialog
+package com.mpdc4gsr.module.thermal.ir.dialog
 
 import android.app.Dialog
 import android.content.Context

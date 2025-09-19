@@ -1,4 +1,4 @@
-package com.topdon.lib.core.discovery
+package com.mpdc4gsr.lib.core.discovery
 
 import android.content.Context
 import android.net.nsd.NsdManager

@@ -1,4 +1,4 @@
-package com.topdon.module.thermal.ir.report.viewmodel
+package com.mpdc4gsr.module.thermal.ir.report.viewmodel
 
 import androidx.lifecycle.viewModelScope
 import com.blankj.utilcode.util.GsonUtils

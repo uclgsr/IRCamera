@@ -1,4 +1,4 @@
-package com.topdon.lib.core.utils
+package com.mpdc4gsr.lib.core.utils
 
 import android.Manifest.permission.READ_MEDIA_VISUAL_USER_SELECTED
 import android.content.pm.PackageManager.PERMISSION_GRANTED

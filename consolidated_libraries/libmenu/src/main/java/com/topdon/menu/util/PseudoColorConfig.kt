@@ -1,4 +1,4 @@
-package com.topdon.menu.util
+package com.mpdc4gsr.menu.util
 
 object PseudoColorConfig {
 

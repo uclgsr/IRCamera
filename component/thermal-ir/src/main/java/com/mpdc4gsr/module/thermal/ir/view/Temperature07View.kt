@@ -1,4 +1,4 @@
-package com.topdon.module.thermal.ir.view
+package com.mpdc4gsr.module.thermal.ir.view
 
 import android.annotation.SuppressLint
 import android.content.Context

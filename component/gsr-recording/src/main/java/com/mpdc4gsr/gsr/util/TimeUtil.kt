@@ -1,4 +1,4 @@
-package com.topdon.gsr.util
+package com.mpdc4gsr.gsr.util
 
 object TimeUtil {
     private const val TAG = "TimeUtil"

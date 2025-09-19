@@ -1,4 +1,4 @@
-package com.topdon.lib.core.comm.dialog
+package com.mpdc4gsr.lib.core.comm.dialog
 
 import android.app.Dialog
 import android.content.Context

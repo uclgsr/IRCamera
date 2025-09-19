@@ -1,3 +1,3 @@
-package com.topdon.module.thermal.ir.event
+package com.mpdc4gsr.module.thermal.ir.event
 
 class MonitorCreateEvent

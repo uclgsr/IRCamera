@@ -1,4 +1,4 @@
-package com.topdon.module.thermal.ir.utils
+package com.mpdc4gsr.module.thermal.ir.utils
 
 import com.energy.iruvc.utils.DualCameraParams
 import com.topdon.lib.core.common.SaveSettingUtil

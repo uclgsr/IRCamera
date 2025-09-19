@@ -1,4 +1,4 @@
-package com.topdon.gsr.model
+package com.mpdc4gsr.gsr.model
 
 data class SessionInfo(
     val sessionId: String,

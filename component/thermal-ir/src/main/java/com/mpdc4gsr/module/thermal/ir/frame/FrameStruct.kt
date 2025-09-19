@@ -1,4 +1,4 @@
-package com.topdon.module.thermal.ir.frame
+package com.mpdc4gsr.module.thermal.ir.frame
 
 import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.SizeUtils

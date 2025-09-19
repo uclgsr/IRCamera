@@ -1,4 +1,4 @@
-package com.topdon.lib.core.view
+package com.mpdc4gsr.lib.core.view
 
 import android.app.Activity
 import android.content.Context

@@ -1,4 +1,4 @@
-package com.topdon.module.thermal.viewmodel
+package com.mpdc4gsr.module.thermal.viewmodel
 
 import com.topdon.lib.core.ktbase.BaseViewModel
 

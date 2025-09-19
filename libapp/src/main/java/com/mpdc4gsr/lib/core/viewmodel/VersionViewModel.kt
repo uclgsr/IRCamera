@@ -1,4 +1,4 @@
-package com.topdon.lib.core.viewmodel
+package com.mpdc4gsr.lib.core.viewmodel
 
 import com.elvishew.xlog.XLog
 import com.topdon.lib.core.bean.event.VersionUpData

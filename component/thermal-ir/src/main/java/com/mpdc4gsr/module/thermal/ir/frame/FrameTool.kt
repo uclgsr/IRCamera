@@ -1,4 +1,4 @@
-package com.topdon.module.thermal.ir.frame
+package com.mpdc4gsr.module.thermal.ir.frame
 
 import android.graphics.Bitmap
 import android.graphics.Rect

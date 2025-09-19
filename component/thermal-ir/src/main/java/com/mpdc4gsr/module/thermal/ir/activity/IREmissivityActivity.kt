@@ -1,4 +1,4 @@
-package com.topdon.module.thermal.ir.activity
+package com.mpdc4gsr.module.thermal.ir.activity
 
 import android.content.Context
 import android.view.LayoutInflater

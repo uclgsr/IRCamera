@@ -1,4 +1,4 @@
-package com.topdon.pseudo.bean
+package com.mpdc4gsr.pseudo.bean
 
 import android.os.Parcelable
 import com.google.gson.Gson
