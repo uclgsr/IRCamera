@@ -1,4 +1,4 @@
-package com.topdon.tc001.sensors.rgb
+package com.topdon.tc001.sensors
 
 import android.content.Context
 import android.os.Build

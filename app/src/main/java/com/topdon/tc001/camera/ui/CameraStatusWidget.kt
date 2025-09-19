@@ -10,7 +10,7 @@ import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
-import com.topdon.tc001.sensors.rgb.RgbCameraRecorder
+import com.topdon.tc001.sensors.RgbCameraRecorder
 import com.topdon.tc001.permissions.PermissionController
 import com.topdon.tc001.permissions.PermissionManager
 import kotlinx.coroutines.launch

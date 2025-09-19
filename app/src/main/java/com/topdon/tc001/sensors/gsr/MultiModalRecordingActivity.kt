@@ -24,7 +24,7 @@ import com.topdon.gsr.service.MockShimmerDeviceFactory
 import com.topdon.gsr.service.SessionManager
 import com.topdon.gsr.util.TimeUtil
 import com.topdon.lib.core.ktbase.BaseBindingActivity
-import com.topdon.tc001.sensors.rgb.RgbCameraRecorder
+import com.topdon.tc001.sensors.RgbCameraRecorder
 import com.topdon.tc001.permissions.PermissionController
 import kotlinx.coroutines.launch
 

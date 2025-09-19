@@ -9,7 +9,7 @@ import androidx.lifecycle.lifecycleScope
 import com.topdon.tc001.controller.RecordingController
 import com.topdon.tc001.sensors.gsr.GSRSensorRecorder
 import com.topdon.tc001.sensors.thermal.ThermalCameraRecorder
-import com.topdon.tc001.sensors.rgb.RgbCameraRecorder
+import com.topdon.tc001.sensors.RgbCameraRecorder
 import com.topdon.tc001.network.DataStreamingService
 import com.topdon.tc001.network.NetworkClient
 import com.topdon.tc001.permissions.PermissionManager
