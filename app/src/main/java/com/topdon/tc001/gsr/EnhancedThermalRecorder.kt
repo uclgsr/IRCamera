@@ -17,7 +17,7 @@ import java.io.FileWriter
  * Enhanced thermal recorder that wraps ThermalCameraRecorder and provides additional
  * synchronization and session management functionality needed by multi-modal recording.
  */
-class EnhancedThermalRecorder(context: Context) {
+class EnhancedThermalRecorder(private val context: Context) {
     
     companion object {
         private const val TAG = "EnhancedThermalRecorder"
@@ -41,8 +41,9 @@ class EnhancedThermalRecorder(context: Context) {
         saveImages: Boolean = false
     ): Boolean {
         try {
-            // Set up session directory
-            currentSessionDirectory = File("/storage/emulated/0/IRCamera/sessions/$sessionId")
+            // Set up session directory using Android external storage
+            val externalDir = File(context.getExternalFilesDir(null), "IRCamera/sessions")
+            currentSessionDirectory = File(externalDir, sessionId)
             currentSessionDirectory?.mkdirs()
             
             // Initialize sync events file
