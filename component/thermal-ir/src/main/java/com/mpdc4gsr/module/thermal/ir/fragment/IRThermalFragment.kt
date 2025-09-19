@@ -30,7 +30,7 @@ class IRThermalFragment : BaseFragment(), View.OnClickListener {
     
     private var isTC007 = false
 
-    private lateinit var titleView: com.topdon.lib.core.view.TitleView
+    private lateinit var titleView: com.mpdc4gsr.lib.core.view.TitleView
     private lateinit var clOpenThermal: androidx.constraintlayout.widget.ConstraintLayout
     private lateinit var tvMainEnter: android.widget.TextView
     private lateinit var cl07ConnectTips: androidx.constraintlayout.widget.ConstraintLayout

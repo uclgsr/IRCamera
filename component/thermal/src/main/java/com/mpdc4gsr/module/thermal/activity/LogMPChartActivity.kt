@@ -43,7 +43,7 @@ class LogMPChartActivity : BaseActivity(), OnChartValueSelectedListener {
     override fun initView() {
 
         val toolbar =
-            findViewById<androidx.appcompat.widget.Toolbar>(com.topdon.lib.core.R.id.toolbar_lay)
+            findViewById<androidx.appcompat.widget.Toolbar>(com.mpdc4gsr.lib.core.R.id.toolbar_lay)
         toolbar?.title = getString(R.string.app_record)
 
         chart = findViewById(R.id.log_chart_time_chart)
@@ -107,7 +107,7 @@ class LogMPChartActivity : BaseActivity(), OnChartValueSelectedListener {
         chart.isDragEnabled = true
         chart.setDrawGridBackground(false)
         chart.description = null 
-        chart.setBackgroundResource(com.topdon.lib.core.R.color.chart_bg)
+        chart.setBackgroundResource(com.mpdc4gsr.lib.core.R.color.chart_bg)
         chart.setScaleEnabled(true) 
         chart.setPinchZoom(false) 
         chart.isDoubleTapToZoomEnabled = false 
@@ -158,14 +158,14 @@ class LogMPChartActivity : BaseActivity(), OnChartValueSelectedListener {
         )
     private val lineChartColors =
         intArrayOf(
-            com.topdon.lib.core.R.color.chart_line_max,
-            com.topdon.lib.core.R.color.chart_line_min,
-            com.topdon.lib.core.R.color.chart_line_center,
+            com.mpdc4gsr.lib.core.R.color.chart_line_max,
+            com.mpdc4gsr.lib.core.R.color.chart_line_min,
+            com.mpdc4gsr.lib.core.R.color.chart_line_center,
         )
     private val textColor by lazy {
         ContextCompat.getColor(
             this,
-            com.topdon.lib.core.R.color.chart_text
+            com.mpdc4gsr.lib.core.R.color.chart_text
         )
     }
 
@@ -180,7 +180,7 @@ class LogMPChartActivity : BaseActivity(), OnChartValueSelectedListener {
         set.fillDrawable = ContextCompat.getDrawable(this, bgChartColors[index]) 
         set.axisDependency = YAxis.AxisDependency.LEFT
         set.color = ContextCompat.getColor(this, lineChartColors[index]) 
-        set.setCircleColor(ContextCompat.getColor(this, com.topdon.lib.core.R.color.white)) 
+        set.setCircleColor(ContextCompat.getColor(this, com.mpdc4gsr.lib.core.R.color.white)) 
 
 
         set.valueTextColor = Color.WHITE

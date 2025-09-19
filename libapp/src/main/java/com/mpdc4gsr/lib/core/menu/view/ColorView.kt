@@ -11,7 +11,7 @@ import android.util.AttributeSet
 import android.view.View
 import androidx.core.content.ContextCompat
 import com.blankj.utilcode.util.SizeUtils
-import com.topdon.lib.core.R as MenuR
+import com.mpdc4gsr.lib.core.R as MenuR
 
 
 class ColorView : View {

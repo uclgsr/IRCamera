@@ -10,7 +10,7 @@ import com.mpdc4gsr.lib.core.bean.ObserveBean
 import com.topdon.lib.ui.bean.ColorBean
 import com.topdon.lib.ui.databinding.UiItemMenuSecondViewBinding
 import com.topdon.lib.ui.R as UiR
-import com.topdon.lib.core.R as MenuR
+import com.mpdc4gsr.lib.core.R as MenuR
 
 @Deprecated("旧的high/low temperature源menu，已重构过了")
 

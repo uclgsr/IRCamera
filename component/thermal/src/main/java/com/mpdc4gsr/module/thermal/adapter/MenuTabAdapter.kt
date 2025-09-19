@@ -137,11 +137,11 @@ class MenuTabAdapter(val context: Context) :
                 holder.name.isSelected = position == selected
                 holder.name.setTextColor(
                     if (position == selected) {
-                        ContextCompat.getColor(context, com.topdon.lib.core.R.color.white)
+                        ContextCompat.getColor(context, com.mpdc4gsr.lib.core.R.color.white)
                     } else {
                         ContextCompat.getColor(
                             context,
-                            com.topdon.lib.core.R.color.font_third_color
+                            com.mpdc4gsr.lib.core.R.color.font_third_color
                         )
                     },
                 )

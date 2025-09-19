@@ -22,7 +22,7 @@ class ColorPickDialog(
     @ColorInt private var color: Int,
     var textSize: Int,
     var textSizeIsDP: Boolean = false,
-) : Dialog(context, com.topdon.lib.core.R.style.InfoDialog), View.OnClickListener {
+) : Dialog(context, com.mpdc4gsr.lib.core.R.style.InfoDialog), View.OnClickListener {
 
     var onPickListener: ((color: Int, textSize: Int) -> Unit)? = null
 

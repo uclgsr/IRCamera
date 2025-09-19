@@ -59,7 +59,7 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
     override fun initView() {
 
         val toolbar =
-            findViewById<androidx.appcompat.widget.Toolbar>(com.topdon.lib.core.R.id.toolbar_lay)
+            findViewById<androidx.appcompat.widget.Toolbar>(com.mpdc4gsr.lib.core.R.id.toolbar_lay)
         toolbar?.title = getString(R.string.main_thermal_motion)
 
         selectType = intent.getIntExtra("type", 3)
@@ -222,7 +222,7 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
         chart.isDragEnabled = true
         chart.setDrawGridBackground(false)
         chart.description = null 
-        chart.setBackgroundResource(com.topdon.lib.core.R.color.chart_bg)
+        chart.setBackgroundResource(com.mpdc4gsr.lib.core.R.color.chart_bg)
         chart.setScaleEnabled(true) 
         chart.setPinchZoom(false) 
         chart.isDoubleTapToZoomEnabled = false 
@@ -403,31 +403,31 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
     private val lineRed by lazy {
         ContextCompat.getColor(
             this,
-            com.topdon.lib.core.R.color.chart_line_max
+            com.mpdc4gsr.lib.core.R.color.chart_line_max
         )
     }
     private val lineBlue by lazy {
         ContextCompat.getColor(
             this,
-            com.topdon.lib.core.R.color.chart_line_min
+            com.mpdc4gsr.lib.core.R.color.chart_line_min
         )
     }
     private val lineGreen by lazy {
         ContextCompat.getColor(
             this,
-            com.topdon.lib.core.R.color.chart_line_center
+            com.mpdc4gsr.lib.core.R.color.chart_line_center
         )
     }
     private val whiteColors by lazy {
         ContextCompat.getColor(
             this,
-            com.topdon.lib.core.R.color.circle_white
+            com.mpdc4gsr.lib.core.R.color.circle_white
         )
     }
     private val textColor by lazy {
         ContextCompat.getColor(
             this,
-            com.topdon.lib.core.R.color.chart_text
+            com.mpdc4gsr.lib.core.R.color.chart_text
         )
     }
 
