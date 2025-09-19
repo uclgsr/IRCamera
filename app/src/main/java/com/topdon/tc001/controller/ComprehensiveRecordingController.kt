@@ -52,7 +52,7 @@ class ComprehensiveRecordingController(
     private val sessionStartTime = AtomicLong(0)
 
     // Advanced flow management for status updates
-    private val _recordingStateFlow = MutableStateFlow(RecordingState.STOPPED)
+    private val _recordingStateFlow = MutableStateFlow<RecordingState>(RecordingState.IDLE)
     val recordingStateFlow: StateFlow<RecordingState> = _recordingStateFlow.asStateFlow()
 
     private val _sensorStatusFlow = MutableStateFlow(emptyMap<String, SensorStatus>())
@@ -134,7 +134,7 @@ class ComprehensiveRecordingController(
                     val sensor = sensorRecorders[sensorName]
                     if (sensor != null) {
                         try {
-                            val sensorDir = File(sessionDir, sensorName.lowercase())
+                            val sensorDir = File(sessionDir.rootDir, sensorName.lowercase())
                             sensorDir.mkdirs()
                             
                             sessionMetadata?.let { meta ->
@@ -197,14 +197,14 @@ class ComprehensiveRecordingController(
     private suspend fun validateRecordingPrerequisites(
         enabledSensors: List<String>,
         estimatedDurationMinutes: Int
-    ): ValidationResult {
+    ): ComprehensiveValidationResult {
         try {
             // Storage validation
             val availableSpaceGB = getAvailableSpaceGB()
             val estimatedSpaceGB = estimateSessionSize(enabledSensors, estimatedDurationMinutes) / 1024.0
             
             if (availableSpaceGB < estimatedSpaceGB + MIN_STORAGE_SPACE_GB) {
-                return ValidationResult(
+                return ComprehensiveValidationResult(
                     false,
                     false,
                     "Insufficient storage: ${String.format("%.1f", availableSpaceGB)}GB available, " +
@@ -215,7 +215,7 @@ class ComprehensiveRecordingController(
             // Sensor availability validation
             val unavailableSensors = enabledSensors.filter { sensorRecorders[it] == null }
             if (unavailableSensors.isNotEmpty()) {
-                return ValidationResult(
+                return ComprehensiveValidationResult(
                     false,
                     false,
                     "Sensors not available: ${unavailableSensors.joinToString()}"
@@ -231,11 +231,11 @@ class ComprehensiveRecordingController(
                 // Don't fail validation, but warn - attempt recovery during recording
             }
 
-            return ValidationResult(true, true, "All prerequisites validated successfully")
+            return ComprehensiveValidationResult(true, true, "All prerequisites validated successfully")
 
         } catch (e: Exception) {
             Log.e(TAG, "Error during prerequisite validation", e)
-            return ValidationResult(false, false, "Validation error: ${e.message}")
+            return ComprehensiveValidationResult(false, false, "Validation error: ${e.message}")
         }
     }
 
@@ -353,7 +353,7 @@ class ComprehensiveRecordingController(
 
                 sessionMetadata = null
                 currentSessionId = null
-                _recordingStateFlow.value = RecordingState.STOPPED
+                _recordingStateFlow.value = RecordingState.IDLE
 
                 Log.i(TAG, "🏁 Recording stopped successfully")
                 Log.i(TAG, "📊 Stop results: ${stopResults.entries.joinToString { "${it.key}=${if(it.value) "✅" else "❌"}" }}")
@@ -470,7 +470,13 @@ class ComprehensiveRecordingController(
     }
 }
 
-// Data classes for comprehensive functionality  
+// Data classes for comprehensive functionality
+data class ComprehensiveValidationResult(
+    val isValid: Boolean, 
+    val isRecoverable: Boolean, 
+    val errorMessage: String
+)
+
 data class SensorHealthInfo(
     val name: String,
     val isHealthy: Boolean,
@@ -496,7 +502,7 @@ data class RecordingStats(
 ) {
     companion object {
         fun empty() = RecordingStats(
-            false, null, 0, 0, 0, 0, RecordingState.STOPPED
+            false, null, 0, 0, 0, 0, RecordingState.IDLE
         )
     }
 }
