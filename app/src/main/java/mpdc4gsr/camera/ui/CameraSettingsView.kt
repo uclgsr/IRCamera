@@ -31,6 +31,7 @@ constructor(
     private lateinit var stabilizationToggle: Switch
     private lateinit var audioToggle: Switch
     private lateinit var stage3ProcessingToggle: Switch
+    private lateinit var stage3Layout: LinearLayout
     private lateinit var frameRateSpinner: Spinner
     private lateinit var qualitySeekBar: SeekBar
     private lateinit var settingsPanel: LinearLayout
@@ -285,7 +286,7 @@ constructor(
         settingsPanel.addView(audioLayout)
 
         // Stage3/Level3 Processing toggle
-        val stage3Layout = LinearLayout(context).apply {
+        stage3Layout = LinearLayout(context).apply {
             orientation = LinearLayout.HORIZONTAL
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -487,10 +488,6 @@ constructor(
      * Show or hide Stage3/Level3 processing toggle based on device capabilities
      */
     fun setStage3ProcessingVisible(visible: Boolean) {
-        stage3ProcessingToggle.parent?.let { parent ->
-            if (parent is LinearLayout) {
-                parent.visibility = if (visible) View.VISIBLE else View.GONE
-            }
-        }
+        stage3Layout.visibility = if (visible) View.VISIBLE else View.GONE
     }
 }

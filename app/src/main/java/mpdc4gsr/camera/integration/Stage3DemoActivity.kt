@@ -14,6 +14,7 @@ import com.csl.irCamera.R
 import mpdc4gsr.camera.Camera2System
 import mpdc4gsr.camera.ui.CameraSettingsView
 import mpdc4gsr.camera.core.ModeManager
+import mpdc4gsr.camera.core.SamsungDeviceCompatibility
 import kotlinx.coroutines.launch
 
 /**
@@ -140,10 +141,7 @@ class Stage3DemoActivity : AppCompatActivity() {
                     val caps = camera2System.getDeviceCaps()
                     
                     // Configure Stage3/Level3 processing for Samsung devices
-                    val deviceModel = android.os.Build.MODEL
-                    val isSamsungDevice = deviceModel.contains("SM-S9") || deviceModel.contains("SM-S22")
-                    
-                    if (isSamsungDevice && caps?.supportsRaw == true) {
+                    if (SamsungDeviceCompatibility.isStage3Compatible() && caps?.supportsRaw == true) {
                         // Enable Stage3/Level3 processing
                         camera2System.configureStage3Processing(true)
                         cameraSettingsView.setStage3ProcessingVisible(true)
@@ -151,15 +149,17 @@ class Stage3DemoActivity : AppCompatActivity() {
                         
                         Toast.makeText(
                             this@Stage3DemoActivity,
-                            "Samsung $deviceModel - Stage3/Level3 DNG Ready",
+                            "${SamsungDeviceCompatibility.getDeviceInfo()} - Stage3/Level3 DNG Ready",
                             Toast.LENGTH_LONG
                         ).show()
                     } else {
                         // Hide Stage3/Level3 option for unsupported devices
                         cameraSettingsView.setStage3ProcessingVisible(false)
                         
-                        val reason = if (!isSamsungDevice) {
+                        val reason = if (!SamsungDeviceCompatibility.isSamsungDevice()) {
                             "Non-Samsung device"
+                        } else if (!SamsungDeviceCompatibility.isStage3Compatible()) {
+                            "Stage3/Level3 not supported"
                         } else {
                             "RAW not supported"
                         }

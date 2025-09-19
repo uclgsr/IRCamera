@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import mpdc4gsr.camera.core.ModeManager
+import mpdc4gsr.camera.core.SamsungDeviceCompatibility
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -42,17 +43,14 @@ class DemoActivity : AppCompatActivity() {
                 )
                 
                 // Enable Samsung Stage3/Level3 processing for supported devices
-                val deviceModel = android.os.Build.MODEL
-                val isSamsungDevice = deviceModel.contains("SM-S9") || deviceModel.contains("SM-S22")
-                
-                if (isSamsungDevice && caps?.supportsRaw == true) {
+                if (SamsungDeviceCompatibility.isStage3Compatible() && caps?.supportsRaw == true) {
                     camera2System.configureStage3Processing(true)
-                    Log.i(TAG, "Samsung Stage3/Level3 processing enabled for $deviceModel")
+                    Log.i(TAG, "Samsung Stage3/Level3 processing enabled for ${SamsungDeviceCompatibility.getDeviceInfo()}")
                     runOnUiThread {
                         Toast.makeText(this@DemoActivity, "Stage3/Level3 DNG Recording Enabled", Toast.LENGTH_LONG).show()
                     }
                 } else {
-                    Log.i(TAG, "Standard RAW processing for $deviceModel (Stage3/Level3 not available)")
+                    Log.i(TAG, "Standard RAW processing for ${SamsungDeviceCompatibility.getDeviceInfo()} (Stage3/Level3 not available)")
                 }
             } else {
                 Log.e(TAG, "Failed to initialize Camera2System")

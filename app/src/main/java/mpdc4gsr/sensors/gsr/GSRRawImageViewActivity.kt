@@ -142,12 +142,16 @@ class GSRRawImageViewActivity : BaseBindingActivity<ActivityGsrRawImageViewBindi
         val isStage3Processing = filename.contains("stage3", ignoreCase = true)
         val processingLevel = if (isStage3Processing) "Samsung Stage3/Level3" else "Standard Level 3"
         val processingNote = if (isStage3Processing) {
-            "Samsung Stage3/Level3 RAW capture containing unprocessed sensor data\n" +
-            "            from the Samsung image pipeline for maximum image quality and post-processing flexibility.\n" +
-            "            Uses advanced Samsung ISP processing with minimal noise reduction and edge enhancement disabled."
+            """
+            Samsung Stage3/Level3 RAW capture containing unprocessed sensor data
+            from the Samsung image pipeline for maximum image quality and post-processing flexibility.
+            Uses advanced Samsung ISP processing with minimal noise reduction and edge enhancement disabled.
+            """.trimIndent()
         } else {
-            "Level 3 RAW capture containing unprocessed sensor data\n" +
-            "            for maximum image quality and post-processing flexibility."
+            """
+            Level 3 RAW capture containing unprocessed sensor data
+            for maximum image quality and post-processing flexibility.
+            """.trimIndent()
         }
 
         binding.metadataText.text =

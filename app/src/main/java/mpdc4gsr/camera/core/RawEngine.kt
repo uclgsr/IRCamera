@@ -162,9 +162,22 @@ class RawEngine(private val context: Context) {
                 if (enableStage3Processing) {
                     // Set Stage3/Level3 specific metadata
                     try {
-                        // Add Samsung Stage3/Level3 processing tags
-                        dngCreator.setThumbnail(null) // No thumbnail for maximum raw data preservation
-                        Log.d(TAG, "Configured DNG for Samsung Stage3/Level3 processing")
+                        // Disable thumbnail for maximum raw data preservation
+                        dngCreator.setThumbnail(null)
+                        
+                        // Set DNG orientation based on device orientation
+                        captureResult.get(CaptureResult.JPEG_ORIENTATION)?.let { orientation ->
+                            dngCreator.setOrientation(orientation)
+                        }
+                        
+                        // Note: Additional Samsung Stage3/Level3 specific EXIF tags would be set here
+                        // if Samsung provides specific DNG tag constants for Stage3/Level3 processing
+                        // These may include:
+                        // - Custom processing pipeline identifiers
+                        // - Stage3/Level3 specific color space information
+                        // - Advanced sensor readout parameters
+                        
+                        Log.d(TAG, "Configured DNG for Samsung Stage3/Level3 processing with orientation and no thumbnail")
                     } catch (e: Exception) {
                         Log.w(TAG, "Could not set Stage3/Level3 specific metadata: ${e.message}")
                     }

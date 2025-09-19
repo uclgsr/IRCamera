@@ -12,6 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import com.csl.irCamera.R
 import mpdc4gsr.camera.RGBCameraRecorder
 import mpdc4gsr.camera.ui.CameraModeSelector
+import mpdc4gsr.camera.core.SamsungDeviceCompatibility
 import kotlinx.coroutines.launch
 
 class DualModeCameraActivity : AppCompatActivity() {
@@ -115,14 +116,12 @@ class DualModeCameraActivity : AppCompatActivity() {
             if (success) {
                 // Configure Stage3/Level3 processing for RAW mode on Samsung devices
                 if (newMode == RGBCameraRecorder.CameraMode.RAW_50MP && enableSamsungOptimizations) {
-                    val deviceModel = android.os.Build.MODEL
-                    val isSamsungDevice = deviceModel.contains("SM-S9") || deviceModel.contains("SM-S22")
-                    
-                    if (isSamsungDevice) {
+                    if (SamsungDeviceCompatibility.isStage3Compatible()) {
                         rgbCameraRecorder?.configureStage3Processing(true)
                         Toast.makeText(this, "RAW Mode: Samsung Stage3/Level3 DNG Enabled", Toast.LENGTH_LONG).show()
                     } else {
-                        Toast.makeText(this, "RAW Mode: Standard DNG (Non-Samsung device)", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "RAW Mode: Standard DNG (${SamsungDeviceCompatibility.getDeviceInfo()})", Toast.LENGTH_SHORT).show()
+                    }
                     }
                 } else {
                     Toast.makeText(this, "Switched to ${newMode.displayName}", Toast.LENGTH_SHORT).show()

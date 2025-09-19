@@ -18,6 +18,7 @@ import mpdc4gsr.sensors.RecordingStats
 import mpdc4gsr.sensors.ErrorType
 import mpdc4gsr.utils.CSVBufferedWriter
 import mpdc4gsr.utils.SessionDirectoryManager
+import mpdc4gsr.camera.core.SamsungDeviceCompatibility
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import java.io.File
@@ -963,13 +964,25 @@ class RgbCameraRecorder(
     }
 
     
+    /**
+     * Capture RAW frame asynchronously with Stage3/Level3 processing
+     * 
+     * NOTE: This is currently a placeholder implementation that creates metadata files.
+     * A complete implementation would require:
+     * 1. Using CameraX ImageCapture with RAW format support
+     * 2. Camera2 interop for Stage3/Level3 capture request configuration
+     * 3. Proper DNG creation using DngCreator API
+     * 4. Dynamic use case binding/unbinding to avoid resource conflicts
+     * 
+     * The current implementation serves as a framework for the actual DNG capture
+     * and demonstrates the integration points with the Stage3/Level3 system.
+     */
     private fun captureRawFrameAsync(rawFile: File, timestampRecord: TimestampRecord, frameNumber: Long) {
         try {
             Log.d(TAG, "Capturing Stage3/Level3 DNG frame $frameNumber - ${rawFile.name}")
             
-            // Check if we should use Stage3/Level3 processing
             val useStage3 = deviceSupportsRAW && ENABLE_RAW_CAPTURE && 
-                           (android.os.Build.MODEL.contains("SM-S9") || android.os.Build.MODEL.contains("SM-S22"))
+                           SamsungDeviceCompatibility.isStage3Compatible()
             
             if (useStage3) {
                 // Create Stage3/Level3 DNG file name
@@ -987,17 +1000,32 @@ class RgbCameraRecorder(
                             
                             Log.i(TAG, "Stage3/Level3 RAW capture initiated for frame $frameNumber")
                             
-                            // Create DNG metadata placeholder for Stage3/Level3 processing
+                            // TODO: Replace this placeholder with actual DNG capture implementation
+                            // This should use ImageCapture with RAW format and proper DNG creation
                             val stage3Metadata = """
-                                DNG Stage3/Level3 Capture
+                                DNG Stage3/Level3 Capture Framework Ready
                                 Frame: $frameNumber
                                 Timestamp: ${timestampRecord.systemNanos}
                                 Processing: Samsung Stage3/Level3 Pipeline
-                                Device: ${android.os.Build.MODEL}
+                                Device: ${SamsungDeviceCompatibility.getDeviceInfo()}
+                                Camera ID: ${camera2Info.cameraId}
+                                
+                                Note: This is a framework placeholder. Full implementation requires:
+                                - ImageCapture with ImageFormat.RAW_SENSOR
+                                - DngCreator for proper DNG file creation
+                                - Camera2 capture request configuration for Stage3/Level3
+                                - Dynamic use case binding for RAW capture
                             """.trimIndent()
                             
                             stage3File.writeText(stage3Metadata)
-                            Log.i(TAG, "Stage3/Level3 DNG metadata written for frame $frameNumber")
+                            Log.i(TAG, "Stage3/Level3 DNG framework ready for frame $frameNumber")
+                            
+                            // TODO: Implement actual RAW DNG capture here
+                            // Example structure:
+                            // 1. Create ImageCapture with RAW format
+                            // 2. Configure Camera2 interop for Stage3/Level3
+                            // 3. Capture image with proper DNG creation
+                            // 4. Handle dynamic use case binding
                         }
                     } catch (e: Exception) {
                         Log.w(TAG, "Stage3/Level3 capture failed for frame $frameNumber, using standard: ${e.message}")
