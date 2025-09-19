@@ -26,7 +26,7 @@ import mpdc4gsr.network.NetworkClient
 import mpdc4gsr.network.NetworkServer
 import mpdc4gsr.network.PreviewStreamer
 import mpdc4gsr.network.PreviewDataAdapter
-import mpdc4gsr.core.CrashSafeSupervisor
+import mpdc4gsr.supervisor.CrashSafeSupervisor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -63,14 +63,14 @@ class RecordingService : LifecycleService() {
         private const val SERVICE_TYPE = "_ircamera._tcp."
         private const val SERVICE_NAME = "IRCamera-Android"
 
-        const val ACTION_START_RECORDING = "com.topdon.tc001.START_RECORDING"
-        const val ACTION_STOP_RECORDING = "com.topdon.tc001.STOP_RECORDING"
-        const val ACTION_ADD_SYNC_MARKER = "com.topdon.tc001.ADD_SYNC_MARKER"
-        const val ACTION_START_SERVER = "com.topdon.tc001.START_SERVER"
-        const val ACTION_STOP_SERVER = "com.topdon.tc001.STOP_SERVER"
-        const val ACTION_CONNECT_PC = "com.topdon.tc001.CONNECT_PC"
-        const val ACTION_DISCONNECT_PC = "com.topdon.tc001.DISCONNECT_PC"
-        const val ACTION_START_DISCOVERY = "com.topdon.tc001.START_DISCOVERY"
+        const val ACTION_START_RECORDING = "${com.csl.irCamera.BuildConfig.APPLICATION_ID}.START_RECORDING"
+        const val ACTION_STOP_RECORDING = "${com.csl.irCamera.BuildConfig.APPLICATION_ID}.STOP_RECORDING"
+        const val ACTION_ADD_SYNC_MARKER = "${com.csl.irCamera.BuildConfig.APPLICATION_ID}.ADD_SYNC_MARKER"
+        const val ACTION_START_SERVER = "${com.csl.irCamera.BuildConfig.APPLICATION_ID}.START_SERVER"
+        const val ACTION_STOP_SERVER = "${com.csl.irCamera.BuildConfig.APPLICATION_ID}.STOP_SERVER"
+        const val ACTION_CONNECT_PC = "${com.csl.irCamera.BuildConfig.APPLICATION_ID}.CONNECT_PC"
+        const val ACTION_DISCONNECT_PC = "${com.csl.irCamera.BuildConfig.APPLICATION_ID}.DISCONNECT_PC"
+        const val ACTION_START_DISCOVERY = "${com.csl.irCamera.BuildConfig.APPLICATION_ID}.START_DISCOVERY"
 
         const val EXTRA_SESSION_DIRECTORY = "session_directory"
         const val EXTRA_MARKER_TYPE = "marker_type"
@@ -580,6 +580,7 @@ class RecordingService : LifecycleService() {
         recordingController.recordingStateFlow
             .onEach { state ->
                 when (state) {
+                    RecordingState.IDLE -> updateNotification("Ready")
                     RecordingState.STARTING -> updateNotification("Starting sensors...")
                     RecordingState.RECORDING -> updateNotification("Recording in progress")
                     RecordingState.STOPPING -> updateNotification("Stopping sensors...")

@@ -15,7 +15,7 @@ import com.mpdc4gsr.lib.core.navigation.NavigationManager
 import com.mpdc4gsr.lib.core.utils.CommUtils
 import com.topdon.lms.sdk.utils.NetworkUtil
 import com.topdon.lms.sdk.weiget.TToast
-import mpdc4gsr.core.App
+import mpdc4gsr.app.App
 import mpdc4gsr.utils.VersionUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async

@@ -49,11 +49,11 @@ import com.mpdc4gsr.lib.core.utils.ImageUtils
 import com.mpdc4gsr.lib.core.utils.ScreenUtil
 import com.topdon.lib.ui.widget.seekbar.OnRangeChangedListener
 import com.topdon.lib.ui.widget.seekbar.RangeSeekBar
-import com.topdon.libcom.dialog.ColorPickDialog
-import com.topdon.libcom.dialog.TempAlarmSetDialog
+import com.topdon.lib.core.comm.dialog.ColorPickDialog
+import com.topdon.lib.core.comm.dialog.TempAlarmSetDialog
 import com.topdon.lms.sdk.LMS.mContext
-import com.topdon.menu.constant.FenceType
-import com.topdon.menu.constant.SettingType
+import com.topdon.lib.core.menu.constant.FenceType
+import com.topdon.lib.core.menu.constant.SettingType
 import com.topdon.module.thermal.ir.event.GalleryAddEvent
 import com.topdon.module.thermal.ir.event.ImageGalleryEvent
 import com.topdon.module.thermal.ir.frame.FrameStruct

@@ -8,6 +8,7 @@ import androidx.lifecycle.lifecycleScope
 import mpdc4gsr.controller.RecordingController
 import mpdc4gsr.sensors.TimeSynchronizationService
 import mpdc4gsr.sensors.TimestampManager
+import mpdc4gsr.sensors.TimestampManager.TimestampRecord
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -132,7 +133,7 @@ class TimeSynchronizationTestActivity : AppCompatActivity() {
                 
                 
                 addLog("\n4. Testing CSV header format...")
-                addLog("CSV Header: ${syncTimestamp1.getCsvHeader()}")
+                addLog("CSV Header: ${TimestampRecord.getCsvHeader()}")
                 
                 statusText.text = "Unified Timestamp System Test Completed ✓"
                 

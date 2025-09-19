@@ -6,7 +6,7 @@ import android.widget.*
 import androidx.activity.ComponentActivity
 import androidx.lifecycle.lifecycleScope
 import mpdc4gsr.controller.RecordingController
-import mpdc4gsr.core.RecordingService
+import mpdc4gsr.service.RecordingService
 import kotlinx.coroutines.launch
 import java.io.File
 
@@ -199,7 +199,7 @@ class FaultTolerantSessionDemoActivity : ComponentActivity() {
 
             Log.i(TAG, "Starting session: ${sessionDir.absolutePath}")
 
-            val success = recordingController.startSession(sessionDir.absolutePath)
+            val success = recordingController.startRecording(sessionDir.absolutePath)
 
             if (success) {
                 val activeSensors = recordingController.getActiveSensorCount()

@@ -131,7 +131,7 @@ class PermissionController(
 
         Log.i(TAG, "Requesting USB permission for device: ${device.deviceName}")
 
-        val permissionIntent = Intent("com.topdon.tc001.USB_PERMISSION").apply {
+        val permissionIntent = Intent("${com.csl.irCamera.BuildConfig.APPLICATION_ID}.USB_PERMISSION").apply {
             setPackage(activity.packageName)
         }
 

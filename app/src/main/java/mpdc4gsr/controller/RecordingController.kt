@@ -14,10 +14,10 @@ import mpdc4gsr.sensors.TimeSynchronizationService
 import mpdc4gsr.sensors.TimestampManager
 import mpdc4gsr.sensors.gsr.GSRSensorRecorder
 import mpdc4gsr.sensors.thermal.ThermalCameraRecorder
-import mpdc4gsr.utils.SessionDirectoryManager
-import mpdc4gsr.utils.SessionDirectory
+import mpdc4gsr.util.SessionDirectoryManager
+import mpdc4gsr.util.SessionDirectory
 import mpdc4gsr.data.SessionMetadata
-import mpdc4gsr.utils.StorageStatus
+import mpdc4gsr.util.StorageStatus
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -1663,6 +1663,7 @@ data class SessionDiagnostics(
     )
 
     enum class RecordingState {
+        IDLE,
         STOPPED,
         STARTING,
         RECORDING,

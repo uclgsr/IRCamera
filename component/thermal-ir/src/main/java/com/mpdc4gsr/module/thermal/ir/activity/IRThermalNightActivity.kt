@@ -116,14 +116,14 @@ import com.topdon.lib.ui.dialog.TipGuideDialog
 import com.topdon.lib.ui.dialog.TipPreviewDialog
 import com.topdon.lib.ui.widget.seekbar.OnRangeChangedListener
 import com.topdon.lib.ui.widget.seekbar.RangeSeekBar
-import com.topdon.libcom.AlarmHelp
-import com.topdon.libcom.dialog.ColorPickDialog
-import com.topdon.libcom.dialog.TempAlarmSetDialog
-import com.topdon.menu.constant.FenceType
-import com.topdon.menu.constant.SettingType
-import com.topdon.menu.constant.TargetType
-import com.topdon.menu.constant.TempPointType
-import com.topdon.menu.constant.TwoLightType
+import com.topdon.lib.core.comm.AlarmHelp
+import com.topdon.lib.core.comm.dialog.ColorPickDialog
+import com.topdon.lib.core.comm.dialog.TempAlarmSetDialog
+import com.topdon.lib.core.menu.constant.FenceType
+import com.topdon.lib.core.menu.constant.SettingType
+import com.topdon.lib.core.menu.constant.TargetType
+import com.topdon.lib.core.menu.constant.TempPointType
+import com.topdon.lib.core.menu.constant.TwoLightType
 import com.topdon.module.thermal.ir.R
 import com.topdon.module.thermal.ir.adapter.CameraItemAdapter
 import com.topdon.module.thermal.ir.adapter.MeasureItemAdapter
@@ -277,7 +277,7 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
     private val popTimeLay by lazy { findViewById<View>(R.id.pop_time_lay) }
     private val popTimeText by lazy { findViewById<TextView>(R.id.pop_time_text) }
     protected val layCarDetectPrompt by lazy { findViewById<View>(R.id.lay_car_detect_prompt) }
-    protected val temp_bg by lazy { findViewById<com.topdon.libcom.view.TempLayout>(R.id.temp_bg) }
+    protected val temp_bg by lazy { findViewById<com.topdon.lib.core.comm.view.TempLayout>(R.id.temp_bg) }
     protected val cl_seek_bar by lazy {
         findViewById<com.topdon.lib.ui.widget.BitmapConstraintLayout>(
             R.id.cl_seek_bar

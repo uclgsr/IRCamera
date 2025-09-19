@@ -7,8 +7,7 @@ import java.util.concurrent.LinkedBlockingQueue
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
 
-
-class BufferedDataWriter(
+open class BufferedDataWriter(
     private val outputFile: File,
     private val bufferSize: Int = 8192,
     private val flushIntervalMs: Long = 1000L,
@@ -28,7 +27,7 @@ class BufferedDataWriter(
     private var flushJob: Job? = null
     private val writerScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
-    
+
     suspend fun start(): Boolean = withContext(Dispatchers.IO) {
         if (isRunning.get()) {
             Log.w(TAG, "Writer already running for ${outputFile.name}")
@@ -36,19 +35,15 @@ class BufferedDataWriter(
         }
 
         try {
-            
             outputFile.parentFile?.mkdirs()
 
-            
             writer = BufferedWriter(FileWriter(outputFile, true), bufferSize)
             isRunning.set(true)
 
-            
             writerJob = writerScope.launch {
                 runWriterLoop()
             }
 
-            
             flushJob = writerScope.launch {
                 runFlushLoop()
             }
@@ -63,7 +58,6 @@ class BufferedDataWriter(
         }
     }
 
-    
     fun writeLine(line: String): Boolean {
         if (!isRunning.get()) {
             Log.w(TAG, "Writer not running, cannot write line")
@@ -78,7 +72,6 @@ class BufferedDataWriter(
         return success
     }
 
-    
     fun writeLines(lines: List<String>): Int {
         if (!isRunning.get()) {
             return 0
@@ -97,7 +90,6 @@ class BufferedDataWriter(
         return written
     }
 
-    
     suspend fun flush() = withContext(Dispatchers.IO) {
         try {
             writer?.flush()
@@ -106,7 +98,6 @@ class BufferedDataWriter(
         }
     }
 
-    
     suspend fun stop() = withContext(Dispatchers.IO) {
         if (!isRunning.get()) {
             return@withContext
@@ -116,17 +107,13 @@ class BufferedDataWriter(
         isRunning.set(false)
 
         try {
-            
             writerJob?.cancel()
             flushJob?.cancel()
 
-            
             writerJob?.join()
 
-            
             drainQueue()
 
-            
             writer?.flush()
             writer?.close()
             writer = null
@@ -142,7 +129,6 @@ class BufferedDataWriter(
         }
     }
 
-    
     fun getWriteStats(): WriteStats {
         return WriteStats(
             fileName = outputFile.name,
@@ -153,14 +139,12 @@ class BufferedDataWriter(
         )
     }
 
-    
     private suspend fun runWriterLoop() {
         Log.d(TAG, "Starting writer loop for ${outputFile.name}")
 
         while (isRunning.get()) {
             try {
                 val line = withContext(Dispatchers.IO) {
-                    
                     runInterruptible {
                         writeQueue.poll(100, java.util.concurrent.TimeUnit.MILLISECONDS)
                     }
@@ -171,7 +155,7 @@ class BufferedDataWriter(
                         w.write(line)
                         w.newLine()
 
-                        bytesWritten.addAndGet(line.length.toLong() + 1) 
+                        bytesWritten.addAndGet(line.length.toLong() + 1)
                         linesWritten.incrementAndGet()
                     }
                 }
@@ -182,7 +166,6 @@ class BufferedDataWriter(
             } catch (e: Exception) {
                 Log.e(TAG, "Error in writer loop for ${outputFile.name}", e)
                 if (e is IOException) {
-                    
                     break
                 }
             }
@@ -191,7 +174,6 @@ class BufferedDataWriter(
         Log.d(TAG, "Writer loop ended for ${outputFile.name}")
     }
 
-    
     private suspend fun runFlushLoop() {
         while (isRunning.get()) {
             try {
@@ -209,7 +191,6 @@ class BufferedDataWriter(
         }
     }
 
-    
     private fun drainQueue() {
         try {
             val remainingLines = mutableListOf<String>()
@@ -232,7 +213,6 @@ class BufferedDataWriter(
         }
     }
 
-    
     private fun cleanup() {
         try {
             isRunning.set(false)
@@ -245,7 +225,6 @@ class BufferedDataWriter(
         }
     }
 }
-
 
 data class WriteStats(
     val fileName: String,

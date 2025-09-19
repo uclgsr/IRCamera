@@ -4,7 +4,7 @@ import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LifecycleOwner
 import mpdc4gsr.sensors.SensorRecorder
-import mpdc4gsr.utils.SessionDirectoryManager
+import mpdc4gsr.util.SessionDirectoryManager
 import mpdc4gsr.data.SessionMetadata
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*

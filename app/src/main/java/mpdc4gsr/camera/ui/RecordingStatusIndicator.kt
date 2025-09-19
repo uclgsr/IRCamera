@@ -8,6 +8,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import mpdc4gsr.controller.RecordingController
 
 class RecordingStatusIndicator
 @JvmOverloads
@@ -97,7 +98,7 @@ constructor(
         updateDisplay()
     }
 
-    fun updateWithSensorSummary(summary: com.topdon.tc001.controller.SensorStatusSummary) {
+    fun updateWithSensorSummary(summary: RecordingController.SensorStatusSummary) {
 
         if (summary.isSessionActive) {
             statusIcon.setBackgroundColor(Color.RED)

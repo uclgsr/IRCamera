@@ -5,7 +5,7 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
-import com.topdon.menu.databinding.ViewMenuEditBinding
+import com.topdon.lib.core.databinding.ViewMenuEditBinding
 
 
 class MenuEditView : FrameLayout, View.OnClickListener {

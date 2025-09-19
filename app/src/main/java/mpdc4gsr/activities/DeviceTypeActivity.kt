@@ -58,7 +58,7 @@ class DeviceTypeActivity : BaseBindingActivity<ActivityDeviceTypeBinding>() {
 
                         IRDeviceType.PC_CONTROLLER -> {
 
-                            com.topdon.tc001.network.DevicePairingActivity.start(this@DeviceTypeActivity)
+                            mpdc4gsr.network.DevicePairingActivity.start(this@DeviceTypeActivity)
                         }
 
                         else -> {

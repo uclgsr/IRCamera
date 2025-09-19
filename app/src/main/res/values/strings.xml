@@ -36,6 +36,11 @@
     <string name="app_got_it">Got it</string>
     <string name="app_save_image">Save Image</string>
 
+    <string name="version_code">1.0</string>
+    <string name="top_infrared_up_case">MPDC4GSR</string>
+    <string name="see_more_than">See More Than</string>
+    <string name="english">English</string>
+
     
     <string name="app_album_content">Album access permission is required</string>
     <string name="app_camera_content">Camera access permission is required</string>

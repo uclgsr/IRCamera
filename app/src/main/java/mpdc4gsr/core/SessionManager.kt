@@ -77,9 +77,12 @@ class SessionManager(
         val required: Boolean = true
     )
 
+    private var onSessionStateChanged: ((SessionState) -> Unit)? = null
     private var onDeviceJoined: ((DeviceInfo) -> Unit)? = null
     private var onDeviceLeft: ((DeviceInfo) -> Unit)? = null
     private var onSyncRequired: ((List<DeviceInfo>) -> Unit)? = null
+    private var onWorkflowStateChanged: ((SessionWorkflowState) -> Unit)? = null
+    private var onWorkflowStepCompleted: ((String, Boolean) -> Unit)? = null
 
     data class SessionInfo(
         val id: String,
@@ -545,7 +548,7 @@ class SessionManager(
     
     suspend fun initializeSessionWithWorkflow(
         sessionConfig: SessionConfig,
-        permissionController: com.topdon.tc001.permissions.PermissionController? = null
+        permissionController: mpdc4gsr.permissions.PermissionController? = null
     ): Boolean = withContext(Dispatchers.IO) {
         try {
             logger.log(
@@ -576,7 +579,7 @@ class SessionManager(
 
     private suspend fun setupWorkflowSteps(
         config: SessionConfig,
-        permissionController: com.topdon.tc001.permissions.PermissionController?
+        permissionController: mpdc4gsr.permissions.PermissionController?
     ) {
         workflowSteps.clear()
         currentStepIndex = 0

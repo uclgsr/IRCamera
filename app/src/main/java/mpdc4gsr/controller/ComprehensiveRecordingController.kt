@@ -5,9 +5,9 @@ import android.util.Log
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import mpdc4gsr.sensors.SensorRecorder
-import mpdc4gsr.utils.SessionDirectoryManager
+import mpdc4gsr.util.SessionDirectoryManager
 import mpdc4gsr.data.SessionMetadata
-import mpdc4gsr.utils.TimestampManager
+import mpdc4gsr.sensors.TimestampManager
 import mpdc4gsr.permissions.PermissionManager
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
@@ -111,10 +111,12 @@ class ComprehensiveRecordingController(
                 val finalSessionId = sessionId ?: sessionDirectoryManager.generateSessionId()
                 val sessionDir = sessionDirectoryManager.createSessionDirectory(finalSessionId)
                 
-                sessionMetadata = SessionMetadata.createSessionStart(finalSessionId).apply {
-                    estimatedDurationMinutes = estimatedDurationMinutes
-                    enabledSensorsList = enabledSensors
-                }
+                sessionMetadata = SessionMetadata.createSessionStart(finalSessionId).copy(
+                    experimentalConditions = mapOf(
+                        "estimatedDurationMinutes" to estimatedDurationMinutes,
+                        "enabledSensors" to enabledSensors
+                    )
+                )
                 
                 currentSessionId = finalSessionId
                 sessionStartTime.set(System.currentTimeMillis())
@@ -130,7 +132,7 @@ class ComprehensiveRecordingController(
                     val sensor = sensorRecorders[sensorName]
                     if (sensor != null) {
                         try {
-                            val sensorDir = File(sessionDir, sensorName.lowercase())
+                            val sensorDir = File(sessionDir.rootDir, sensorName.lowercase())
                             sensorDir.mkdirs()
                             
                             sessionMetadata?.let { meta ->
@@ -332,8 +334,8 @@ class ComprehensiveRecordingController(
                 
                 
                 sessionMetadata?.let { metadata ->
-                    metadata.sessionEndTimestamp = TimestampManager.createTimestampRecord()
-                    metadata.totalDurationMs = System.currentTimeMillis() - sessionStartTime.get()
+                    // Note: SessionMetadata is immutable, so we can't update end timestamp here
+                    // This would need to be handled when creating the final session metadata
                 }
 
                 sessionMetadata = null

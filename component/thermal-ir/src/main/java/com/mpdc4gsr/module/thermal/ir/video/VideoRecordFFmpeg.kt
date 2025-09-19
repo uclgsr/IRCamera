@@ -44,7 +44,7 @@ import com.mpdc4gsr.lib.core.utils.BitmapUtils
 import com.topdon.lib.ui.camera.CameraPreView
 import com.topdon.lib.ui.widget.BitmapConstraintLayout
 import com.topdon.lib.ui.widget.LiteSurfaceView
-import com.topdon.libcom.view.TempLayout
+import com.topdon.lib.core.comm.view.TempLayout
 import com.topdon.module.thermal.ir.view.HikSurfaceView
 import com.topdon.module.thermal.ir.view.TemperatureHikView
 import com.topdon.module.thermal.ir.view.compass.LinearCompassView

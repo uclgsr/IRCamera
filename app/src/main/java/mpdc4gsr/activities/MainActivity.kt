@@ -57,7 +57,7 @@ import com.topdon.module.thermal.ir.activity.IRThermalNightActivity
 import com.topdon.module.thermal.ir.activity.IRThermalPlusActivity
 import com.topdon.module.thermal.ir.fragment.IRGalleryTabFragment
 import com.topdon.module.user.fragment.MineFragment
-import mpdc4gsr.core.App
+import mpdc4gsr.app.App
 import mpdc4gsr.config.FeatureFlags
 import mpdc4gsr.config.ProtocolVersion
 import mpdc4gsr.ui_components.MainFragment
@@ -66,9 +66,9 @@ import mpdc4gsr.core.StructuredLogger
 import mpdc4gsr.network.NetworkClient
 import mpdc4gsr.network.WebSocketClient
 import mpdc4gsr.sensors.gsr.GSRSensorRecorder
-import mpdc4gsr.core.RecordingService
+import mpdc4gsr.service.RecordingService
 import mpdc4gsr.controller.RecordingController
-import mpdc4gsr.core.CrashSafeSupervisor
+import mpdc4gsr.supervisor.CrashSafeSupervisor
 import mpdc4gsr.utils.AppVersionUtil
 import mpdc4gsr.permissions.PermissionController
 import mpdc4gsr.sensors.thermal.ThermalCameraDemo
@@ -1682,7 +1682,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                             ).show()
                             val intent = Intent(
                                 this,
-                                com.topdon.tc001.gsr.GSRSettingsActivity::class.java
+                                mpdc4gsr.sensors.gsr.GSRSettingsActivity::class.java
                             )
                             startActivity(intent)
                         }
