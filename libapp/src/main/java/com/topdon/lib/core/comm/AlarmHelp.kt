@@ -5,6 +5,7 @@ import android.media.MediaPlayer
 import com.topdon.lib.core.bean.AlarmBean
 import com.topdon.lib.core.comm.util.SingletonHolder
 import com.topdon.lib.core.comm.view.TempLayout
+import com.topdon.lib.core.R
 
 class AlarmHelp private constructor(val context: Context) {
     companion object : SingletonHolder<AlarmHelp, Context>(::AlarmHelp)
