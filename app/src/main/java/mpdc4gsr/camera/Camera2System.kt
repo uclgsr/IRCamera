@@ -50,6 +50,21 @@ class Camera2System(
     var onRecordingStarted: (() -> Unit)? = null
     var onRecordingStopped: (() -> Unit)? = null
 
+    /**
+     * Configure Samsung Stage3/Level3 RAW processing
+     */
+    fun configureStage3Processing(enabled: Boolean) {
+        rawEngine.setStage3ProcessingEnabled(enabled)
+        val mode = if (enabled) "Stage3/Level3" else "Standard"
+        Log.i(TAG, "Samsung RAW processing mode set to: $mode")
+        onProgress?.invoke("RAW processing: $mode")
+    }
+
+    /**
+     * Check if Samsung Stage3/Level3 processing is enabled
+     */
+    fun isStage3ProcessingEnabled(): Boolean = rawEngine.isStage3ProcessingEnabled()
+
     init {
         setupCallbacks()
     }
@@ -231,7 +246,9 @@ class Camera2System(
                 rawEngine.setup(
                     caps.rawSize,
                     outputDirectory ?: createTempDirectory(),
-                    currentSessionId
+                    currentSessionId,
+                    cameraController.getCameraCharacteristics(), // Pass camera characteristics for DNG creation
+                    rawEngine.isStage3ProcessingEnabled() // Respect existing configuration
                 )
                 val rawSurface = rawEngine.getSurface() ?: return@withContext false
 
@@ -470,6 +487,27 @@ class Camera2System(
                 cameraController.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE)
             requestBuilder?.addTarget(rawSurface)
 
+            // Configure Samsung Stage3/Level3 processing options
+            if (rawEngine.isStage3ProcessingEnabled()) {
+                try {
+                    requestBuilder?.apply {
+                        // Samsung Stage3/Level3 specific settings for maximum raw data preservation
+                        set(CaptureRequest.CONTROL_MODE, android.hardware.camera2.CameraMetadata.CONTROL_MODE_OFF)
+                        set(CaptureRequest.NOISE_REDUCTION_MODE, android.hardware.camera2.CameraMetadata.NOISE_REDUCTION_MODE_OFF)
+                        set(CaptureRequest.EDGE_MODE, android.hardware.camera2.CameraMetadata.EDGE_MODE_OFF)
+                        set(CaptureRequest.COLOR_CORRECTION_MODE, android.hardware.camera2.CameraMetadata.COLOR_CORRECTION_MODE_TRANSFORM_MATRIX)
+                        set(CaptureRequest.TONEMAP_MODE, android.hardware.camera2.CameraMetadata.TONEMAP_MODE_CONTRAST_CURVE)
+                        
+                        // Set highest quality capture settings for Stage3/Level3
+                        set(CaptureRequest.JPEG_QUALITY, 100.toByte())
+                        set(CaptureRequest.HOT_PIXEL_MODE, android.hardware.camera2.CameraMetadata.HOT_PIXEL_MODE_OFF)
+                    }
+                    Log.d(TAG, "Applied Samsung Stage3/Level3 processing settings")
+                } catch (e: Exception) {
+                    Log.w(TAG, "Could not apply Stage3/Level3 settings, using defaults: ${e.message}")
+                }
+            }
+
             session.capture(
                 requestBuilder!!.build(),
                 object : CameraCaptureSession.CaptureCallback() {
@@ -478,7 +516,7 @@ class Camera2System(
                         request: CaptureRequest,
                         result: TotalCaptureResult,
                     ) {
-
+                        // Store the result for DNG metadata
                         rawEngine.storeCaptureResult(result)
                     }
                 },

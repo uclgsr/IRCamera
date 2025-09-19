@@ -30,6 +30,8 @@ constructor(
     private lateinit var settingsButton: ImageButton
     private lateinit var stabilizationToggle: Switch
     private lateinit var audioToggle: Switch
+    private lateinit var stage3ProcessingToggle: Switch
+    private lateinit var stage3Layout: LinearLayout
     private lateinit var frameRateSpinner: Spinner
     private lateinit var qualitySeekBar: SeekBar
     private lateinit var settingsPanel: LinearLayout
@@ -43,6 +45,7 @@ constructor(
     var onRecordingToggle: ((Boolean) -> Unit)? = null
     var onSettingsChanged: ((RGBCameraRecorder.RecordingSettings) -> Unit)? = null
     var onFlashToggle: ((Boolean) -> Unit)? = null
+    var onStage3ProcessingToggle: ((Boolean) -> Unit)? = null
 
     init {
         initView()
@@ -282,6 +285,31 @@ constructor(
         audioLayout.addView(audioToggle)
         settingsPanel.addView(audioLayout)
 
+        // Stage3/Level3 Processing toggle
+        stage3Layout = LinearLayout(context).apply {
+            orientation = LinearLayout.HORIZONTAL
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+        }
+
+        val stage3Label = TextView(context).apply {
+            text = "Samsung Stage3/Level3 RAW:"
+            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+        }
+        stage3Layout.addView(stage3Label)
+
+        stage3ProcessingToggle = Switch(context).apply {
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+            isChecked = true // Enable Stage3/Level3 by default for Samsung devices
+        }
+        stage3Layout.addView(stage3ProcessingToggle)
+        settingsPanel.addView(stage3Layout)
+
         addView(settingsPanel)
     }
 
@@ -368,6 +396,10 @@ constructor(
             currentSettings = currentSettings.copy(audioEnabled = isChecked)
             onSettingsChanged?.invoke(currentSettings)
         }
+
+        stage3ProcessingToggle.setOnCheckedChangeListener { _, isChecked ->
+            onStage3ProcessingToggle?.invoke(isChecked)
+        }
     }
 
     private fun updateUI() {
@@ -443,5 +475,19 @@ constructor(
         audioToggle.isChecked = settings.audioEnabled
 
         updateFlashUI()
+    }
+
+    /**
+     * Set the state of Samsung Stage3/Level3 processing toggle
+     */
+    fun setStage3ProcessingEnabled(enabled: Boolean) {
+        stage3ProcessingToggle.isChecked = enabled
+    }
+
+    /**
+     * Show or hide Stage3/Level3 processing toggle based on device capabilities
+     */
+    fun setStage3ProcessingVisible(visible: Boolean) {
+        stage3Layout.visibility = if (visible) View.VISIBLE else View.GONE
     }
 }

@@ -105,6 +105,18 @@ class CameraController(private val context: Context) {
 
     fun getCaptureSession(): CameraCaptureSession? = captureSession
 
+    fun getCameraCharacteristics(): CameraCharacteristics? {
+        return try {
+            if (currentCameraId.isNotEmpty()) {
+                val manager = context.getSystemService(Context.CAMERA_SERVICE) as CameraManager
+                manager.getCameraCharacteristics(currentCameraId)
+            } else null
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to get camera characteristics", e)
+            null
+        }
+    }
+
     fun close() {
         try {
             cameraOpenCloseLock.acquire()

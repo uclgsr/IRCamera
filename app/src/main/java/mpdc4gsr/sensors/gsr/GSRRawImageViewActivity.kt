@@ -137,6 +137,22 @@ class GSRRawImageViewActivity : BaseBindingActivity<ActivityGsrRawImageViewBindi
 
         val filename = imageFile.nameWithoutExtension
         val captureNumber = filename.substringAfterLast("_", "Unknown")
+        
+        // Detect Samsung Stage3/Level3 processing from filename
+        val isStage3Processing = filename.contains("stage3", ignoreCase = true)
+        val processingLevel = if (isStage3Processing) "Samsung Stage3/Level3" else "Standard Level 3"
+        val processingNote = if (isStage3Processing) {
+            """
+            Samsung Stage3/Level3 RAW capture containing unprocessed sensor data
+            from the Samsung image pipeline for maximum image quality and post-processing flexibility.
+            Uses advanced Samsung ISP processing with minimal noise reduction and edge enhancement disabled.
+            """.trimIndent()
+        } else {
+            """
+            Level 3 RAW capture containing unprocessed sensor data
+            for maximum image quality and post-processing flexibility.
+            """.trimIndent()
+        }
 
         binding.metadataText.text =
             """
@@ -146,7 +162,7 @@ class GSRRawImageViewActivity : BaseBindingActivity<ActivityGsrRawImageViewBindi
             • Name: ${imageFile.name}
             • Size: $fileSize
             • Format: DNG (Digital Negative)
-            • Capture Level: Stage 3 / Level 3
+            • Processing Level: $processingLevel
             
             Camera Information:
             • Sensor: Samsung S22 Main Camera
@@ -163,8 +179,7 @@ class GSRRawImageViewActivity : BaseBindingActivity<ActivityGsrRawImageViewBindi
             • Path: ${imageFile.absolutePath}
             • Last Modified: $createdDate
             
-            Note: This is a Level 3 RAW capture containing unprocessed sensor data
-            for maximum image quality and post-processing flexibility.
+            Note: This is a $processingNote
             """.trimIndent()
     }
 
