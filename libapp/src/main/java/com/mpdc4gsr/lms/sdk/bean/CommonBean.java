@@ -8,6 +8,8 @@ public class CommonBean {
     public String email = "";
     public String userId = "";
     public String avatar = "";
+    public String code = "2000";
+    public String data = "";
     
     public CommonBean() {}
 }
