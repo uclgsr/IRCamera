@@ -30,7 +30,18 @@ For detailed setup instructions, see [COPILOT_SETUP.md](COPILOT_SETUP.md).
 
 ## 📚 Documentation
 
-- [Copilot Setup Guide](COPILOT_SETUP.md) - GitHub Copilot configuration and usage
-- [PC Controller MVP](pc-controller/README_MVP.md) - Hub implementation details
-- [Development Tools](dev.sh) - Use `./dev.sh help` for available commands
-- [Project Documentation](docs/) - Comprehensive technical documentation
+**All documentation has been consolidated into the [Documentation Hub](docs/README.md) for easy navigation and maintenance.**
+
+### Quick Start Guides
+- **[User Guide](docs/USER_GUIDE.md)** - Complete operating instructions for researchers
+- **[Developer Guide](docs/DEVELOPER_GUIDE.md)** - Development setup and GitHub Copilot integration
+- **[Installation Guide](docs/README.md#quick-start)** - System setup and configuration
+
+### Technical Documentation  
+- **[API Reference](docs/API_REFERENCE.md)** - Complete module and API documentation
+- **[Architecture Guide](docs/ARCHITECTURE.md)** - System architecture and design decisions
+- **[Build System](scripts/build.sh)** - Unified cross-platform build script
+
+### Development Tools
+- **[Development Tools](dev.sh)** - Use `./dev.sh help` for available commands
+- **[Build Script](scripts/build.sh)** - Unified build system replacing old .bat files
