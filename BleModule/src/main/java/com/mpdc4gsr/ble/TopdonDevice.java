@@ -83,7 +83,7 @@ public class TopdonDevice implements UnifiedDevice {
         public void onServicesDiscovered(BluetoothGatt gatt, int status) {
             try {
                 if (status == BluetoothGatt.GATT_SUCCESS) {
-                    Log.i(TAG, "Services discovered for Topdon device: " + getAddress());
+                    Log.i(TAG, "Services discovered for MPDC4GSR device: " + getAddress());
 
                     BluetoothGattService topdonService = gatt.getService(MPDC4GSR_SERVICE_UUID);
                     if (topdonService == null) {
