@@ -15,7 +15,7 @@
         android:layout_marginTop="20dp"
         android:textColor="@color/color_B3FFFFFF"
         android:textSize="13sp"
-        tools:text="动力总成与排气System" />
+        tools:text="Powertrain and ExhaustSystem" />
 
     <LinearLayout
         android:layout_width="match_parent"
