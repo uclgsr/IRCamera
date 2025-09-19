@@ -8,9 +8,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.StringRes
 import androidx.core.view.isVisible
-import com.topdon.lib.core.R
-import com.topdon.lib.core.databinding.DialogConfirmSelectBinding
-import com.topdon.lib.core.utils.ScreenUtil
+import com.mpdc4gsr.lib.core.R
+import com.mpdc4gsr.lib.core.databinding.DialogConfirmSelectBinding
+import com.mpdc4gsr.lib.core.utils.ScreenUtil
 
 class ConfirmSelectDialog(context: Context) : Dialog(context, R.style.InfoDialog),
     View.OnClickListener {

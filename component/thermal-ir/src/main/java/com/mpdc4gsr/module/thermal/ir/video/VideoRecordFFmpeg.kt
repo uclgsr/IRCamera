@@ -36,11 +36,11 @@ import com.elvishew.xlog.XLog
 import com.infisense.usbdual.camera.DualViewWithExternalCameraCommonApi
 import com.infisense.usbir.view.CameraView
 import com.infisense.usbir.view.TemperatureView
-import com.topdon.lib.core.common.SharedManager
-import com.topdon.lib.core.config.FileConfig
-import com.topdon.lib.core.dialog.TipDialog
-import com.topdon.lib.core.tools.TimeTool
-import com.topdon.lib.core.utils.BitmapUtils
+import com.mpdc4gsr.lib.core.common.SharedManager
+import com.mpdc4gsr.lib.core.config.FileConfig
+import com.mpdc4gsr.lib.core.dialog.TipDialog
+import com.mpdc4gsr.lib.core.tools.TimeTool
+import com.mpdc4gsr.lib.core.utils.BitmapUtils
 import com.topdon.lib.ui.camera.CameraPreView
 import com.topdon.lib.ui.widget.BitmapConstraintLayout
 import com.topdon.lib.ui.widget.LiteSurfaceView
@@ -68,7 +68,7 @@ import java.util.Date
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicReference
-import com.topdon.lib.core.R as LibcoreR
+import com.mpdc4gsr.lib.core.R as LibcoreR
 
 
 

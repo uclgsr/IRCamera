@@ -8,10 +8,10 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
-import com.topdon.lib.core.bean.GalleryBean
-import com.topdon.lib.core.bean.GalleryTitle
-import com.topdon.lib.core.tools.GlideLoader
-import com.topdon.lib.core.tools.TimeTool
+import com.mpdc4gsr.lib.core.bean.GalleryBean
+import com.mpdc4gsr.lib.core.bean.GalleryTitle
+import com.mpdc4gsr.lib.core.tools.GlideLoader
+import com.mpdc4gsr.lib.core.tools.TimeTool
 import com.topdon.module.thermal.ir.R
 
 @SuppressLint("NotifyDataSetChanged")

@@ -14,10 +14,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.module.LoadMoreModule
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
-import com.topdon.lib.core.config.ExtraKeyConfig
-import com.topdon.lib.core.db.dao.ThermalDao
-import com.topdon.lib.core.dialog.TipDialog
-import com.topdon.lib.core.tools.TimeTool
+import com.mpdc4gsr.lib.core.config.ExtraKeyConfig
+import com.mpdc4gsr.lib.core.db.dao.ThermalDao
+import com.mpdc4gsr.lib.core.dialog.TipDialog
+import com.mpdc4gsr.lib.core.tools.TimeTool
 import com.topdon.libcom.view.CommLoadMoreView
 import com.topdon.module.thermal.ir.R
 import com.topdon.module.thermal.ir.activity.IRLogMPChartActivity

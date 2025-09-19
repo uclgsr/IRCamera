@@ -1,7 +1,7 @@
 package com.mpdc4gsr.module.thermal.ir.activity
 
 import android.graphics.Bitmap
-import com.topdon.lib.core.ktbase.BasePickImgActivity
+import com.mpdc4gsr.lib.core.ktbase.BasePickImgActivity
 import com.topdon.module.thermal.ir.R
 import com.topdon.module.thermal.ir.fragment.IRPlushFragment
 

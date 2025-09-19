@@ -7,9 +7,9 @@ import com.elvishew.xlog.XLog
 import com.hjq.permissions.OnPermissionCallback
 import com.hjq.permissions.Permission
 import com.hjq.permissions.XXPermissions
-import com.topdon.lib.core.BaseApplication
-import com.topdon.lib.core.R
-import com.topdon.lib.core.dialog.TipDialog
+import com.mpdc4gsr.lib.core.BaseApplication
+import com.mpdc4gsr.lib.core.R
+import com.mpdc4gsr.lib.core.dialog.TipDialog
 import com.topdon.lms.sdk.weiget.TToast
 
 object PermissionTool {

@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
-import com.topdon.lib.core.tools.GlideLoader
+import com.mpdc4gsr.lib.core.tools.GlideLoader
 import com.topdon.module.thermal.R
 
 class GalleryAdapter(val context: Context) :

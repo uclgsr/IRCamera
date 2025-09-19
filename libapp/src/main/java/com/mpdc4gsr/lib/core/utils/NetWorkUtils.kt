@@ -11,8 +11,8 @@ import android.net.wifi.WifiManager
 import android.net.wifi.WifiNetworkSpecifier
 import android.os.Build
 import com.elvishew.xlog.XLog
-import com.topdon.lib.core.BaseApplication
-import com.topdon.lib.core.repository.TS004Repository
+import com.mpdc4gsr.lib.core.BaseApplication
+import com.mpdc4gsr.lib.core.repository.TS004Repository
 
 
 object NetWorkUtils {

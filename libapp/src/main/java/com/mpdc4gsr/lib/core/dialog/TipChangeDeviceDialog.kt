@@ -8,9 +8,9 @@ import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.ImageView
 import androidx.annotation.StringRes
-import com.topdon.lib.core.R
-import com.topdon.lib.core.databinding.DialogTipChangeDeviceBinding
-import com.topdon.lib.core.utils.ScreenUtil
+import com.mpdc4gsr.lib.core.R
+import com.mpdc4gsr.lib.core.databinding.DialogTipChangeDeviceBinding
+import com.mpdc4gsr.lib.core.utils.ScreenUtil
 
 @Deprecated("3.80使用新首页设备列表逻辑，不需要设备切换提示弹框了")
 class TipChangeDeviceDialog : Dialog {

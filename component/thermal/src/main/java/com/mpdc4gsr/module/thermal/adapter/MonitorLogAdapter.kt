@@ -6,8 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.topdon.lib.core.db.entity.ThermalEntity
-import com.topdon.lib.core.tools.TimeTool
+import com.mpdc4gsr.lib.core.db.entity.ThermalEntity
+import com.mpdc4gsr.lib.core.tools.TimeTool
 import com.topdon.module.thermal.R
 
 class MonitorLogAdapter(val context: Context) :

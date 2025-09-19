@@ -16,20 +16,20 @@ import com.blankj.utilcode.util.AppUtils
 import com.hjq.permissions.OnPermissionCallback
 import com.hjq.permissions.Permission
 import com.hjq.permissions.XXPermissions
-import com.topdon.lib.core.BaseApplication
-import com.topdon.lib.core.bean.event.PDFEvent
-import com.topdon.lib.core.common.SharedManager
-import com.topdon.lib.core.config.ExtraKeyConfig
-import com.topdon.lib.core.config.RouterConfig
-import com.topdon.lib.core.dialog.TipDialog
-import com.topdon.lib.core.navigation.NavigationManager
-import com.topdon.lib.core.repository.GalleryRepository.DirType
-import com.topdon.lib.core.repository.TC007Repository
-import com.topdon.lib.core.socket.WebSocketProxy
-import com.topdon.lib.core.tools.DeviceTools
-import com.topdon.lib.core.utils.CommUtils
-import com.topdon.lib.core.utils.NetWorkUtils
-import com.topdon.lib.core.utils.PermissionUtils
+import com.mpdc4gsr.lib.core.BaseApplication
+import com.mpdc4gsr.lib.core.bean.event.PDFEvent
+import com.mpdc4gsr.lib.core.common.SharedManager
+import com.mpdc4gsr.lib.core.config.ExtraKeyConfig
+import com.mpdc4gsr.lib.core.config.RouterConfig
+import com.mpdc4gsr.lib.core.dialog.TipDialog
+import com.mpdc4gsr.lib.core.navigation.NavigationManager
+import com.mpdc4gsr.lib.core.repository.GalleryRepository.DirType
+import com.mpdc4gsr.lib.core.repository.TC007Repository
+import com.mpdc4gsr.lib.core.socket.WebSocketProxy
+import com.mpdc4gsr.lib.core.tools.DeviceTools
+import com.mpdc4gsr.lib.core.utils.CommUtils
+import com.mpdc4gsr.lib.core.utils.NetWorkUtils
+import com.mpdc4gsr.lib.core.utils.PermissionUtils
 import com.topdon.lms.sdk.LMS
 import com.topdon.module.thermal.ir.R
 import com.topdon.module.thermal.ir.databinding.ActivityIrMainBinding
@@ -42,7 +42,7 @@ import com.topdon.module.user.fragment.MoreFragment
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
-import com.topdon.lib.core.R as LibR
+import com.mpdc4gsr.lib.core.R as LibR
 
 
 

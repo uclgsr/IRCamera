@@ -6,10 +6,10 @@ import androidx.preference.PreferenceManager
 import com.blankj.utilcode.util.GsonUtils
 import com.blankj.utilcode.util.SPUtils
 import com.google.gson.Gson
-import com.topdon.lib.core.bean.CarDetectChildBean
-import com.topdon.lib.core.bean.ContinuousBean
-import com.topdon.lib.core.bean.WatermarkBean
-import com.topdon.lib.core.dialog.CarDetectDialog
+import com.mpdc4gsr.lib.core.bean.CarDetectChildBean
+import com.mpdc4gsr.lib.core.bean.ContinuousBean
+import com.mpdc4gsr.lib.core.bean.WatermarkBean
+import com.mpdc4gsr.lib.core.dialog.CarDetectDialog
 
 
 object SharedManager {

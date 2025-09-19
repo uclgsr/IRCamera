@@ -1,7 +1,7 @@
 package com.mpdc4gsr.module.thermal.ir.report.bean
 
 import android.os.Parcelable
-import com.topdon.lib.core.utils.CommUtils
+import com.mpdc4gsr.lib.core.utils.CommUtils
 import kotlinx.android.parcel.Parcelize
 
 

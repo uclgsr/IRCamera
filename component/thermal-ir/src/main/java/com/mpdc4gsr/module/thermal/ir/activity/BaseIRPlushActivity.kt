@@ -31,8 +31,8 @@ import com.infisense.usbdual.camera.USBMonitorManager
 import com.infisense.usbdual.inf.OnUSBConnectListener
 import com.infisense.usbir.utils.PseudocodeUtils
 import com.infisense.usbir.view.TemperatureView
-import com.topdon.lib.core.common.SaveSettingUtil
-import com.topdon.lib.core.dialog.TipDialog
+import com.mpdc4gsr.lib.core.common.SaveSettingUtil
+import com.mpdc4gsr.lib.core.dialog.TipDialog
 import com.topdon.module.thermal.ir.R
 import com.topdon.module.thermal.ir.utils.DualParamsUtil
 import com.topdon.module.thermal.ir.utils.IRCmdTool

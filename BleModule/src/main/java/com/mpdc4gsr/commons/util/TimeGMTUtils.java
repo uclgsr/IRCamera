@@ -3,7 +3,7 @@ package com.mpdc4gsr.commons.util;
 import android.annotation.SuppressLint;
 import android.text.TextUtils;
 
-import com.mpdc4gsr.lms.sdk.utils.LanguageUtil;
+import com.topdon.lms.sdk.utils.LanguageUtil;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

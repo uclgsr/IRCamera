@@ -1,7 +1,7 @@
 package com.mpdc4gsr.lib.core.bean
 
-import com.topdon.lib.core.utils.ByteUtils
-import com.topdon.lib.core.utils.CommUtils
+import com.mpdc4gsr.lib.core.utils.ByteUtils
+import com.mpdc4gsr.lib.core.utils.CommUtils
 
 data class WatermarkBean(
     var isOpen: Boolean = false,

@@ -4,8 +4,8 @@ import android.app.Dialog
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
-import com.topdon.lib.core.R
-import com.topdon.lib.core.utils.ScreenUtil
+import com.mpdc4gsr.lib.core.R
+import com.mpdc4gsr.lib.core.utils.ScreenUtil
 import com.topdon.lib.ui.databinding.DialogMonitorSelectBinding
 
 

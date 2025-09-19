@@ -1,11 +1,11 @@
 package com.mpdc4gsr.lib.core.viewmodel
 
 import com.elvishew.xlog.XLog
-import com.topdon.lib.core.bean.event.VersionUpData
-import com.topdon.lib.core.bean.json.CheckVersionJson
-import com.topdon.lib.core.bean.json.SoftConfigOtherTypeVO
-import com.topdon.lib.core.ktbase.BaseViewModel
-import com.topdon.lib.core.utils.SingleLiveEvent
+import com.mpdc4gsr.lib.core.bean.event.VersionUpData
+import com.mpdc4gsr.lib.core.bean.json.CheckVersionJson
+import com.mpdc4gsr.lib.core.bean.json.SoftConfigOtherTypeVO
+import com.mpdc4gsr.lib.core.ktbase.BaseViewModel
+import com.mpdc4gsr.lib.core.utils.SingleLiveEvent
 
 class VersionViewModel : BaseViewModel() {
     val updateLiveData = SingleLiveEvent<VersionUpData>()

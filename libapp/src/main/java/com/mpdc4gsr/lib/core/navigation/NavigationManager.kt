@@ -5,8 +5,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
-import com.topdon.lib.core.config.RouterConfig
-import com.topdon.lib.core.tools.DeviceTools
+import com.mpdc4gsr.lib.core.config.RouterConfig
+import com.mpdc4gsr.lib.core.tools.DeviceTools
 
 object NavigationManager {
 

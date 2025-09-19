@@ -13,14 +13,14 @@ import com.elvishew.xlog.XLog
 import com.hjq.permissions.OnPermissionCallback
 import com.hjq.permissions.Permission
 import com.hjq.permissions.XXPermissions
-import com.topdon.lib.core.BaseApplication
-import com.topdon.lib.core.config.ExtraKeyConfig
-import com.topdon.lib.core.config.FileConfig
-import com.topdon.lib.core.db.entity.ThermalEntity
-import com.topdon.lib.core.dialog.TipDialog
-import com.topdon.lib.core.ktbase.BaseActivity
-import com.topdon.lib.core.tools.FileTools
-import com.topdon.lib.core.tools.ToastTools
+import com.mpdc4gsr.lib.core.BaseApplication
+import com.mpdc4gsr.lib.core.config.ExtraKeyConfig
+import com.mpdc4gsr.lib.core.config.FileConfig
+import com.mpdc4gsr.lib.core.db.entity.ThermalEntity
+import com.mpdc4gsr.lib.core.dialog.TipDialog
+import com.mpdc4gsr.lib.core.ktbase.BaseActivity
+import com.mpdc4gsr.lib.core.tools.FileTools
+import com.mpdc4gsr.lib.core.tools.ToastTools
 import com.topdon.libcom.ExcelUtil
 import com.topdon.module.thermal.ir.R
 import com.topdon.module.thermal.ir.viewmodel.IRMonitorViewModel
@@ -28,7 +28,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
-import com.topdon.lib.core.R as LibR
+import com.mpdc4gsr.lib.core.R as LibR
 
 
 class IRLogMPChartActivity : BaseActivity() {

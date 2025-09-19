@@ -6,9 +6,9 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
-import com.topdon.lib.core.db.entity.DirReport
-import com.topdon.lib.core.db.entity.HouseReport
-import com.topdon.lib.core.db.entity.ItemReport
+import com.mpdc4gsr.lib.core.db.entity.DirReport
+import com.mpdc4gsr.lib.core.db.entity.HouseReport
+import com.mpdc4gsr.lib.core.db.entity.ItemReport
 
 @Dao
 abstract class HouseReportDao {

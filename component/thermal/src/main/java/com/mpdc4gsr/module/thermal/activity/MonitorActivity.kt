@@ -4,9 +4,9 @@ import android.view.View
 import android.widget.Button
 import androidx.core.content.ContextCompat
 import com.blankj.utilcode.util.BarUtils
-import com.topdon.lib.core.config.RouterConfig
-import com.topdon.lib.core.ktbase.BaseActivity
-import com.topdon.lib.core.navigation.NavigationManager
+import com.mpdc4gsr.lib.core.config.RouterConfig
+import com.mpdc4gsr.lib.core.ktbase.BaseActivity
+import com.mpdc4gsr.lib.core.navigation.NavigationManager
 import com.topdon.lib.ui.dialog.MonitorSelectDialog
 import com.topdon.module.thermal.R
 import com.topdon.module.thermal.fragment.event.ThermalActionEvent

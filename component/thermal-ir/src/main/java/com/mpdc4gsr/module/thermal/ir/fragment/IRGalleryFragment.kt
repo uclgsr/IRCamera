@@ -13,20 +13,20 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
-import com.topdon.lib.core.bean.GalleryBean
-import com.topdon.lib.core.bean.GalleryTitle
-import com.topdon.lib.core.bean.event.GalleryDelEvent
-import com.topdon.lib.core.config.ExtraKeyConfig
-import com.topdon.lib.core.config.FileConfig
-import com.topdon.lib.core.config.FileConfig.getGalleryDirByType
-import com.topdon.lib.core.config.RouterConfig
-import com.topdon.lib.core.dialog.ConfirmSelectDialog
-import com.topdon.lib.core.ktbase.BaseFragment
-import com.topdon.lib.core.navigation.NavigationManager
-import com.topdon.lib.core.repository.GalleryRepository.DirType
-import com.topdon.lib.core.repository.TS004Repository
-import com.topdon.lib.core.tools.FileTools.getUri
-import com.topdon.lib.core.tools.ToastTools
+import com.mpdc4gsr.lib.core.bean.GalleryBean
+import com.mpdc4gsr.lib.core.bean.GalleryTitle
+import com.mpdc4gsr.lib.core.bean.event.GalleryDelEvent
+import com.mpdc4gsr.lib.core.config.ExtraKeyConfig
+import com.mpdc4gsr.lib.core.config.FileConfig
+import com.mpdc4gsr.lib.core.config.FileConfig.getGalleryDirByType
+import com.mpdc4gsr.lib.core.config.RouterConfig
+import com.mpdc4gsr.lib.core.dialog.ConfirmSelectDialog
+import com.mpdc4gsr.lib.core.ktbase.BaseFragment
+import com.mpdc4gsr.lib.core.navigation.NavigationManager
+import com.mpdc4gsr.lib.core.repository.GalleryRepository.DirType
+import com.mpdc4gsr.lib.core.repository.TS004Repository
+import com.mpdc4gsr.lib.core.tools.FileTools.getUri
+import com.mpdc4gsr.lib.core.tools.ToastTools
 import com.topdon.lms.sdk.weiget.TToast
 import com.topdon.module.thermal.ir.R
 import com.topdon.module.thermal.ir.adapter.GalleryAdapter
@@ -40,7 +40,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.io.File
-import com.topdon.lib.core.R as LibR
+import com.mpdc4gsr.lib.core.R as LibR
 
 class IRGalleryFragment : BaseFragment() {
 

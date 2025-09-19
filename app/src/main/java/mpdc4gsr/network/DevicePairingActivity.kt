@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.csl.irCamera.R
 import com.csl.irCamera.databinding.ActivityDevicePairingBinding
 import com.topdon.gsr.model.SessionInfo
-import com.topdon.lib.core.ktbase.BaseBindingActivity
+import com.mpdc4gsr.lib.core.ktbase.BaseBindingActivity
 import mpdc4gsr.sensors.gsr.MultiModalRecordingActivity
 import kotlinx.coroutines.launch
 

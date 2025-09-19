@@ -9,11 +9,11 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.topdon.lib.core.R
-import com.topdon.lib.core.adapter.TargetColorAdapter
-import com.topdon.lib.core.bean.ObserveBean
-import com.topdon.lib.core.databinding.DialogTipTargetColorBinding
-import com.topdon.lib.core.utils.ScreenUtil
+import com.mpdc4gsr.lib.core.R
+import com.mpdc4gsr.lib.core.adapter.TargetColorAdapter
+import com.mpdc4gsr.lib.core.bean.ObserveBean
+import com.mpdc4gsr.lib.core.databinding.DialogTipTargetColorBinding
+import com.mpdc4gsr.lib.core.utils.ScreenUtil
 
 class TipTargetColorDialog : Dialog {
     constructor(context: Context) : super(context)

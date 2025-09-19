@@ -11,13 +11,13 @@ import android.widget.CheckBox
 import android.widget.PopupWindow
 import android.widget.TextView
 import com.blankj.utilcode.util.SizeUtils
-import com.topdon.lib.core.R
-import com.topdon.lib.core.config.ExtraKeyConfig
-import com.topdon.lib.core.config.RouterConfig
-import com.topdon.lib.core.databinding.LayoutPopupTipEmissivityBinding
-import com.topdon.lib.core.navigation.NavigationManager
-import com.topdon.lib.core.tools.NumberTools
-import com.topdon.lib.core.tools.UnitTools
+import com.mpdc4gsr.lib.core.R
+import com.mpdc4gsr.lib.core.config.ExtraKeyConfig
+import com.mpdc4gsr.lib.core.config.RouterConfig
+import com.mpdc4gsr.lib.core.databinding.LayoutPopupTipEmissivityBinding
+import com.mpdc4gsr.lib.core.navigation.NavigationManager
+import com.mpdc4gsr.lib.core.tools.NumberTools
+import com.mpdc4gsr.lib.core.tools.UnitTools
 
 
 class EmissivityTipPopup(val context: Context, val isTC007: Boolean) {

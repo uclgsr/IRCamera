@@ -1,7 +1,7 @@
 package com.mpdc4gsr.module.thermal.ir.utils
 
 import android.content.Context
-import com.topdon.lib.core.R as LibcoreR
+import com.mpdc4gsr.lib.core.R as LibcoreR
 
 
 

@@ -38,8 +38,8 @@ import com.infisense.usbir.utils.PseudocodeUtils
 import com.infisense.usbir.utils.ScreenUtils
 import com.infisense.usbir.view.ITsTempListener
 import com.infisense.usbir.view.TemperatureView
-import com.topdon.lib.core.common.SaveSettingUtil
-import com.topdon.lib.core.ktbase.BaseFragment
+import com.mpdc4gsr.lib.core.common.SaveSettingUtil
+import com.mpdc4gsr.lib.core.ktbase.BaseFragment
 import com.topdon.module.thermal.ir.repository.ConfigRepository
 import com.topdon.module.thermal.ir.utils.DualParamsUtil
 import com.topdon.module.thermal.ir.utils.IRCmdTool

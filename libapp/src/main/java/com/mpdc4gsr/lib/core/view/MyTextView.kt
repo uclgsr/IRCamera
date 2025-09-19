@@ -5,7 +5,7 @@ import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import androidx.annotation.DrawableRes
 import androidx.appcompat.widget.AppCompatTextView
-import com.topdon.lib.core.R
+import com.mpdc4gsr.lib.core.R
 
 class MyTextView : AppCompatTextView {
 

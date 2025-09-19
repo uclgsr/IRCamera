@@ -2,7 +2,7 @@ package com.mpdc4gsr.lib.core.comm
 
 import android.content.Context
 import android.media.MediaPlayer
-import com.topdon.lib.core.bean.AlarmBean
+import com.mpdc4gsr.lib.core.bean.AlarmBean
 import com.topdon.libcom.util.SingletonHolder
 import com.topdon.libcom.view.TempLayout
 

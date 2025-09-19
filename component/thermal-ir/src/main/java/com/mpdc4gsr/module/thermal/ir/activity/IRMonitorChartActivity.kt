@@ -33,18 +33,18 @@ import com.infisense.usbir.view.TemperatureView
 import com.infisense.usbir.view.TemperatureView.REGION_MODE_LINE
 import com.infisense.usbir.view.TemperatureView.REGION_MODE_POINT
 import com.infisense.usbir.view.TemperatureView.REGION_MODE_RECTANGLE
-import com.topdon.lib.core.bean.event.device.DeviceCameraEvent
-import com.topdon.lib.core.bean.tools.ThermalBean
-import com.topdon.lib.core.common.SaveSettingUtil
-import com.topdon.lib.core.common.SharedManager
-import com.topdon.lib.core.config.DeviceConfig
-import com.topdon.lib.core.db.AppDatabase
-import com.topdon.lib.core.db.entity.ThermalEntity
-import com.topdon.lib.core.ktbase.BaseActivity
-import com.topdon.lib.core.tools.NumberTools
-import com.topdon.lib.core.tools.TimeTool
-import com.topdon.lib.core.utils.ScreenUtil
-import com.topdon.lib.core.view.TitleView
+import com.mpdc4gsr.lib.core.bean.event.device.DeviceCameraEvent
+import com.mpdc4gsr.lib.core.bean.tools.ThermalBean
+import com.mpdc4gsr.lib.core.common.SaveSettingUtil
+import com.mpdc4gsr.lib.core.common.SharedManager
+import com.mpdc4gsr.lib.core.config.DeviceConfig
+import com.mpdc4gsr.lib.core.db.AppDatabase
+import com.mpdc4gsr.lib.core.db.entity.ThermalEntity
+import com.mpdc4gsr.lib.core.ktbase.BaseActivity
+import com.mpdc4gsr.lib.core.tools.NumberTools
+import com.mpdc4gsr.lib.core.tools.TimeTool
+import com.mpdc4gsr.lib.core.utils.ScreenUtil
+import com.mpdc4gsr.lib.core.view.TitleView
 import com.topdon.module.thermal.ir.R
 import com.topdon.module.thermal.ir.bean.SelectPositionBean
 import com.topdon.module.thermal.ir.event.MonitorSaveEvent
@@ -60,7 +60,7 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.math.BigDecimal
 import java.math.RoundingMode
-import com.topdon.lib.core.R as LibR
+import com.mpdc4gsr.lib.core.R as LibR
 
 
 class IRMonitorChartActivity : BaseActivity(), ITsTempListener {

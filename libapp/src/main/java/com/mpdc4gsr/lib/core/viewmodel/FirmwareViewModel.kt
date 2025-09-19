@@ -8,11 +8,11 @@ import com.blankj.utilcode.util.FileUtils
 import com.blankj.utilcode.util.Utils
 import com.elvishew.xlog.XLog
 import com.google.gson.Gson
-import com.topdon.lib.core.R
-import com.topdon.lib.core.config.FileConfig
-import com.topdon.lib.core.repository.ProductBean
-import com.topdon.lib.core.repository.TC007Repository
-import com.topdon.lib.core.repository.TS004Repository
+import com.mpdc4gsr.lib.core.R
+import com.mpdc4gsr.lib.core.config.FileConfig
+import com.mpdc4gsr.lib.core.repository.ProductBean
+import com.mpdc4gsr.lib.core.repository.TC007Repository
+import com.mpdc4gsr.lib.core.repository.TS004Repository
 import com.topdon.lms.sdk.LMS
 import com.topdon.lms.sdk.UrlConstant
 import com.topdon.lms.sdk.bean.CommonBean

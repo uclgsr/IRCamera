@@ -8,8 +8,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.topdon.lib.core.R
-import com.topdon.lib.core.bean.ObserveBean
+import com.mpdc4gsr.lib.core.R
+import com.mpdc4gsr.lib.core.bean.ObserveBean
 import com.topdon.lib.ui.bean.ColorBean
 import com.topdon.lib.ui.config.CameraHelp
 import com.topdon.menu.constant.TargetType

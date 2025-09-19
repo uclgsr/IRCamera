@@ -7,13 +7,13 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.topdon.lib.core.config.RouterConfig
-import com.topdon.lib.core.ktbase.BaseActivity
-import com.topdon.lib.core.navigation.NavigationManager
-import com.topdon.lib.core.utils.Constants
-import com.topdon.lib.core.view.TitleView
+import com.mpdc4gsr.lib.core.config.RouterConfig
+import com.mpdc4gsr.lib.core.ktbase.BaseActivity
+import com.mpdc4gsr.lib.core.navigation.NavigationManager
+import com.mpdc4gsr.lib.core.utils.Constants
+import com.mpdc4gsr.lib.core.view.TitleView
 import com.topdon.module.user.R
-import com.topdon.lib.core.R as RCore
+import com.mpdc4gsr.lib.core.R as RCore
 
 class ElectronicManualActivity : BaseActivity() {
 

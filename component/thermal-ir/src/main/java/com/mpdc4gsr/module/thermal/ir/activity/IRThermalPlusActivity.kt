@@ -13,10 +13,10 @@ import com.infisense.usbdual.Const
 import com.infisense.usbir.utils.IRImageHelp
 import com.infisense.usbir.utils.PseudocodeUtils
 import com.infisense.usbir.view.TemperatureView
-import com.topdon.lib.core.bean.CameraItemBean
-import com.topdon.lib.core.common.ProductType.PRODUCT_NAME_TCP
-import com.topdon.lib.core.common.SaveSettingUtil
-import com.topdon.lib.core.tools.ToastTools
+import com.mpdc4gsr.lib.core.bean.CameraItemBean
+import com.mpdc4gsr.lib.core.common.ProductType.PRODUCT_NAME_TCP
+import com.mpdc4gsr.lib.core.common.SaveSettingUtil
+import com.mpdc4gsr.lib.core.tools.ToastTools
 import com.topdon.menu.constant.TwoLightType
 import com.topdon.module.thermal.ir.R
 import com.topdon.module.thermal.ir.event.GalleryAddEvent

@@ -6,9 +6,9 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
-import com.topdon.lib.core.db.entity.DirDetect
-import com.topdon.lib.core.db.entity.HouseDetect
-import com.topdon.lib.core.db.entity.ItemDetect
+import com.mpdc4gsr.lib.core.db.entity.DirDetect
+import com.mpdc4gsr.lib.core.db.entity.HouseDetect
+import com.mpdc4gsr.lib.core.db.entity.ItemDetect
 
 @Dao
 abstract class HouseDetectDao {

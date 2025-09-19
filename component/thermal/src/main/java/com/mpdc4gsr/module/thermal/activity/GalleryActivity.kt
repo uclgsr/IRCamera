@@ -7,8 +7,8 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
-import com.topdon.lib.core.ktbase.BaseActivity
-import com.topdon.lib.core.tools.PermissionTool
+import com.mpdc4gsr.lib.core.ktbase.BaseActivity
+import com.mpdc4gsr.lib.core.tools.PermissionTool
 import com.topdon.module.thermal.R
 import com.topdon.module.thermal.fragment.GalleryPictureFragment
 import com.topdon.module.thermal.fragment.GalleryVideoFragment

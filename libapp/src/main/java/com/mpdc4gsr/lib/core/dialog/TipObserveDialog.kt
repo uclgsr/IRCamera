@@ -9,9 +9,9 @@ import android.view.ViewGroup.LayoutParams
 import android.widget.CheckBox
 import android.widget.ImageView
 import android.widget.TextView
-import com.topdon.lib.core.R
-import com.topdon.lib.core.databinding.DialogTipObserveBinding
-import com.topdon.lib.core.utils.ScreenUtil
+import com.mpdc4gsr.lib.core.R
+import com.mpdc4gsr.lib.core.databinding.DialogTipObserveBinding
+import com.mpdc4gsr.lib.core.utils.ScreenUtil
 
 class TipObserveDialog : Dialog {
     constructor(context: Context) : super(context)

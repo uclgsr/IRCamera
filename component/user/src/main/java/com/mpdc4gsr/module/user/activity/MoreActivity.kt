@@ -7,20 +7,20 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import com.blankj.utilcode.util.ToastUtils
 import com.elvishew.xlog.XLog
-import com.topdon.lib.core.BaseApplication
-import com.topdon.lib.core.bean.event.TS004ResetEvent
-import com.topdon.lib.core.config.ExtraKeyConfig
-import com.topdon.lib.core.config.FileConfig
-import com.topdon.lib.core.config.RouterConfig
-import com.topdon.lib.core.dialog.ConfirmSelectDialog
-import com.topdon.lib.core.dialog.FirmwareUpDialog
-import com.topdon.lib.core.dialog.TipDialog
-import com.topdon.lib.core.http.tool.DownloadTool
-import com.topdon.lib.core.ktbase.BaseActivity
-import com.topdon.lib.core.navigation.NavigationManager
-import com.topdon.lib.core.repository.TS004Repository
-import com.topdon.lib.core.utils.Constants
-import com.topdon.lib.core.viewmodel.FirmwareViewModel
+import com.mpdc4gsr.lib.core.BaseApplication
+import com.mpdc4gsr.lib.core.bean.event.TS004ResetEvent
+import com.mpdc4gsr.lib.core.config.ExtraKeyConfig
+import com.mpdc4gsr.lib.core.config.FileConfig
+import com.mpdc4gsr.lib.core.config.RouterConfig
+import com.mpdc4gsr.lib.core.dialog.ConfirmSelectDialog
+import com.mpdc4gsr.lib.core.dialog.FirmwareUpDialog
+import com.mpdc4gsr.lib.core.dialog.TipDialog
+import com.mpdc4gsr.lib.core.http.tool.DownloadTool
+import com.mpdc4gsr.lib.core.ktbase.BaseActivity
+import com.mpdc4gsr.lib.core.navigation.NavigationManager
+import com.mpdc4gsr.lib.core.repository.TS004Repository
+import com.mpdc4gsr.lib.core.utils.Constants
+import com.mpdc4gsr.lib.core.viewmodel.FirmwareViewModel
 import com.topdon.lms.sdk.weiget.TToast
 import com.topdon.module.user.R
 import com.topdon.module.user.dialog.DownloadProDialog
@@ -30,7 +30,7 @@ import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import java.io.File
 import java.text.DecimalFormat
-import com.topdon.lib.core.R as RCore
+import com.mpdc4gsr.lib.core.R as RCore
 
 class MoreActivity : BaseActivity(), View.OnClickListener {
     private val firmwareViewModel: FirmwareViewModel by viewModels()

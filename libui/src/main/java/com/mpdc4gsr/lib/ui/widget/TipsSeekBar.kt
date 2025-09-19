@@ -8,7 +8,7 @@ import android.widget.SeekBar
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.blankj.utilcode.util.SizeUtils
-import com.topdon.lib.core.utils.ScreenUtil
+import com.mpdc4gsr.lib.core.utils.ScreenUtil
 import com.topdon.lib.ui.R as UiR
 
 

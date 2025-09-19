@@ -5,9 +5,9 @@ import android.content.Context
 import android.os.Bundle
 import android.view.ViewGroup
 import androidx.annotation.StringRes
-import com.topdon.lib.core.R
-import com.topdon.lib.core.databinding.DialogNotTipsSelectBinding
-import com.topdon.lib.core.utils.ScreenUtil
+import com.mpdc4gsr.lib.core.R
+import com.mpdc4gsr.lib.core.databinding.DialogNotTipsSelectBinding
+import com.mpdc4gsr.lib.core.utils.ScreenUtil
 
 class NotTipsSelectDialog(context: Context) : Dialog(context, R.style.InfoDialog) {
     @StringRes

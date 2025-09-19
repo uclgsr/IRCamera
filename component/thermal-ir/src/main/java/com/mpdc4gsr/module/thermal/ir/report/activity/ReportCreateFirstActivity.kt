@@ -20,17 +20,17 @@ import com.github.gzuliyujiang.wheelpicker.entity.TimeEntity
 import com.hjq.permissions.OnPermissionCallback
 import com.hjq.permissions.Permission
 import com.hjq.permissions.XXPermissions
-import com.topdon.lib.core.BaseApplication
-import com.topdon.lib.core.bean.event.ReportCreateEvent
-import com.topdon.lib.core.common.SaveSettingUtil
-import com.topdon.lib.core.config.ExtraKeyConfig
-import com.topdon.lib.core.config.RouterConfig
-import com.topdon.lib.core.dialog.TipDialog
-import com.topdon.lib.core.ktbase.BaseActivity
-import com.topdon.lib.core.navigation.NavigationManager
-import com.topdon.lib.core.tools.NumberTools
-import com.topdon.lib.core.tools.UnitTools
-import com.topdon.lib.core.utils.CommUtils
+import com.mpdc4gsr.lib.core.BaseApplication
+import com.mpdc4gsr.lib.core.bean.event.ReportCreateEvent
+import com.mpdc4gsr.lib.core.common.SaveSettingUtil
+import com.mpdc4gsr.lib.core.config.ExtraKeyConfig
+import com.mpdc4gsr.lib.core.config.RouterConfig
+import com.mpdc4gsr.lib.core.dialog.TipDialog
+import com.mpdc4gsr.lib.core.ktbase.BaseActivity
+import com.mpdc4gsr.lib.core.navigation.NavigationManager
+import com.mpdc4gsr.lib.core.tools.NumberTools
+import com.mpdc4gsr.lib.core.tools.UnitTools
+import com.mpdc4gsr.lib.core.utils.CommUtils
 import com.topdon.module.thermal.ir.R
 import com.topdon.module.thermal.ir.report.bean.ImageTempBean
 import com.topdon.module.thermal.ir.report.bean.ReportConditionBean
@@ -45,7 +45,7 @@ import java.text.ParsePosition
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
-import com.topdon.lib.core.R as LibR
+import com.mpdc4gsr.lib.core.R as LibR
 
 
 

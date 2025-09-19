@@ -2,11 +2,11 @@ package com.mpdc4gsr.lib.core.example
 
 import android.content.Context
 import android.util.Log
-import com.topdon.lib.core.discovery.NetworkDiscoveryService
-import com.topdon.lib.core.messaging.ReliableMessageService
-import com.topdon.lib.core.security.CertificateManager
-import com.topdon.lib.core.socket.WebSocketProxy
-import com.topdon.lib.core.sync.TimeSyncService
+import com.mpdc4gsr.lib.core.discovery.NetworkDiscoveryService
+import com.mpdc4gsr.lib.core.messaging.ReliableMessageService
+import com.mpdc4gsr.lib.core.security.CertificateManager
+import com.mpdc4gsr.lib.core.socket.WebSocketProxy
+import com.mpdc4gsr.lib.core.sync.TimeSyncService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

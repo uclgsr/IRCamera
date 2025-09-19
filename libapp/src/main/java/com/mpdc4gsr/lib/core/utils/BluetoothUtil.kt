@@ -15,8 +15,8 @@ import androidx.activity.ComponentActivity
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import com.elvishew.xlog.XLog
-import com.topdon.lib.core.config.DeviceConfig
-import com.topdon.lib.core.tools.PermissionTool
+import com.mpdc4gsr.lib.core.config.DeviceConfig
+import com.mpdc4gsr.lib.core.tools.PermissionTool
 
 object BluetoothUtil {
 

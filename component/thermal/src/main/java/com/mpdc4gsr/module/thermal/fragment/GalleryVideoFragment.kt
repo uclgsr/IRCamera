@@ -3,10 +3,10 @@ package com.mpdc4gsr.module.thermal.fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.ScreenUtils
-import com.topdon.lib.core.config.RouterConfig
-import com.topdon.lib.core.dialog.TipDialog
-import com.topdon.lib.core.ktbase.BaseViewModelFragment
-import com.topdon.lib.core.navigation.NavigationManager
+import com.mpdc4gsr.lib.core.config.RouterConfig
+import com.mpdc4gsr.lib.core.dialog.TipDialog
+import com.mpdc4gsr.lib.core.ktbase.BaseViewModelFragment
+import com.mpdc4gsr.lib.core.navigation.NavigationManager
 import com.topdon.module.thermal.R
 import com.topdon.module.thermal.adapter.GalleryAdapter
 import com.topdon.module.thermal.viewmodel.GalleryViewModel

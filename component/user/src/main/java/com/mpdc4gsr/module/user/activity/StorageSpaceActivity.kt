@@ -5,12 +5,12 @@ import android.view.View
 import android.widget.TextView
 import androidx.lifecycle.lifecycleScope
 import com.elvishew.xlog.XLog
-import com.topdon.lib.core.BaseApplication
-import com.topdon.lib.core.config.RouterConfig
-import com.topdon.lib.core.dialog.TipDialog
-import com.topdon.lib.core.ktbase.BaseActivity
-import com.topdon.lib.core.navigation.NavigationManager
-import com.topdon.lib.core.repository.TS004Repository
+import com.mpdc4gsr.lib.core.BaseApplication
+import com.mpdc4gsr.lib.core.config.RouterConfig
+import com.mpdc4gsr.lib.core.dialog.TipDialog
+import com.mpdc4gsr.lib.core.ktbase.BaseActivity
+import com.mpdc4gsr.lib.core.navigation.NavigationManager
+import com.mpdc4gsr.lib.core.repository.TS004Repository
 import com.topdon.lms.sdk.utils.TLog
 import com.topdon.lms.sdk.weiget.TToast
 import com.topdon.module.user.R
@@ -20,7 +20,7 @@ import com.topdon.module.user.view.ProgressBarView
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.text.DecimalFormat
-import com.topdon.lib.core.R as RCore
+import com.mpdc4gsr.lib.core.R as RCore
 
 class StorageSpaceActivity : BaseActivity(), View.OnClickListener {
 

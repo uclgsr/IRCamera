@@ -18,9 +18,9 @@ import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
-import com.topdon.lib.core.db.entity.ThermalEntity
-import com.topdon.lib.core.ktbase.BaseActivity
-import com.topdon.lib.core.tools.ToastTools
+import com.mpdc4gsr.lib.core.db.entity.ThermalEntity
+import com.mpdc4gsr.lib.core.ktbase.BaseActivity
+import com.mpdc4gsr.lib.core.tools.ToastTools
 import com.topdon.module.thermal.R
 import com.topdon.module.thermal.adapter.SettingTimeAdapter
 import com.topdon.module.thermal.chart.MyValueFormatter

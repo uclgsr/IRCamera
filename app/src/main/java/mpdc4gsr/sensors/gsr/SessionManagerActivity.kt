@@ -20,7 +20,7 @@ import com.csl.irCamera.R
 import com.csl.irCamera.databinding.ActivitySessionManagerBinding
 import com.topdon.gsr.model.SessionInfo
 import com.topdon.gsr.service.SessionManager
-import com.topdon.lib.core.ktbase.BaseBindingActivity
+import com.mpdc4gsr.lib.core.ktbase.BaseBindingActivity
 import mpdc4gsr.utils.SessionDirectoryManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

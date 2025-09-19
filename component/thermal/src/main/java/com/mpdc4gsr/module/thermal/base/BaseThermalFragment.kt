@@ -7,7 +7,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
-import com.topdon.lib.core.ktbase.BaseFragment
+import com.mpdc4gsr.lib.core.ktbase.BaseFragment
 import kotlinx.coroutines.Job
 
 open class BaseThermalFragment : BaseFragment() {

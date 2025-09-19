@@ -8,11 +8,11 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.topdon.lib.core.R
-import com.topdon.lib.core.bean.CameraItemBean
-import com.topdon.lib.core.common.SaveSettingUtil
-import com.topdon.lib.core.common.SharedManager
-import com.topdon.lib.core.tools.DeviceTools
+import com.mpdc4gsr.lib.core.R
+import com.mpdc4gsr.lib.core.bean.CameraItemBean
+import com.mpdc4gsr.lib.core.common.SaveSettingUtil
+import com.mpdc4gsr.lib.core.common.SharedManager
+import com.mpdc4gsr.lib.core.tools.DeviceTools
 import com.topdon.lib.ui.bean.TemperatureBean
 import com.topdon.lib.ui.R as UiR
 import com.topdon.menu.R as MenuR

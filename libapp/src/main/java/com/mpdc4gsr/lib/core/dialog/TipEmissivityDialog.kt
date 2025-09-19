@@ -9,14 +9,14 @@ import android.view.ViewGroup.LayoutParams
 import android.widget.CheckBox
 import android.widget.ImageView
 import android.widget.TextView
-import com.topdon.lib.core.R
-import com.topdon.lib.core.config.ExtraKeyConfig
-import com.topdon.lib.core.config.RouterConfig
-import com.topdon.lib.core.databinding.DialogTipEmissivityBinding
-import com.topdon.lib.core.navigation.NavigationManager
-import com.topdon.lib.core.tools.NumberTools
-import com.topdon.lib.core.tools.UnitTools
-import com.topdon.lib.core.utils.ScreenUtil
+import com.mpdc4gsr.lib.core.R
+import com.mpdc4gsr.lib.core.config.ExtraKeyConfig
+import com.mpdc4gsr.lib.core.config.RouterConfig
+import com.mpdc4gsr.lib.core.databinding.DialogTipEmissivityBinding
+import com.mpdc4gsr.lib.core.navigation.NavigationManager
+import com.mpdc4gsr.lib.core.tools.NumberTools
+import com.mpdc4gsr.lib.core.tools.UnitTools
+import com.mpdc4gsr.lib.core.utils.ScreenUtil
 
 class TipEmissivityDialog : Dialog {
     constructor(context: Context) : super(context)

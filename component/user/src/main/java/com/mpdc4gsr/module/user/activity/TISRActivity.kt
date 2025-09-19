@@ -2,20 +2,20 @@ package com.mpdc4gsr.module.user.activity
 
 import androidx.appcompat.widget.SwitchCompat
 import androidx.lifecycle.lifecycleScope
-import com.topdon.lib.core.bean.event.SocketMsgEvent
-import com.topdon.lib.core.common.SharedManager
-import com.topdon.lib.core.ktbase.BaseActivity
-import com.topdon.lib.core.repository.TS004Repository
-import com.topdon.lib.core.socket.SocketCmdUtil
-import com.topdon.lib.core.utils.WsCmdConstants
-import com.topdon.lib.core.view.TitleView
+import com.mpdc4gsr.lib.core.bean.event.SocketMsgEvent
+import com.mpdc4gsr.lib.core.common.SharedManager
+import com.mpdc4gsr.lib.core.ktbase.BaseActivity
+import com.mpdc4gsr.lib.core.repository.TS004Repository
+import com.mpdc4gsr.lib.core.socket.SocketCmdUtil
+import com.mpdc4gsr.lib.core.utils.WsCmdConstants
+import com.mpdc4gsr.lib.core.view.TitleView
 import com.topdon.lms.sdk.weiget.TToast
 import com.topdon.module.user.R
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.json.JSONObject
-import com.topdon.lib.core.R as RCore
+import com.mpdc4gsr.lib.core.R as RCore
 
 class TISRActivity : BaseActivity() {
 

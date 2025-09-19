@@ -3,8 +3,8 @@ package com.mpdc4gsr.lib.core.ktbase
 import android.os.Bundle
 import android.util.Log
 import androidx.lifecycle.ViewModelProvider
-import com.topdon.lib.core.R
-import com.topdon.lib.core.dialog.MsgDialog
+import com.mpdc4gsr.lib.core.R
+import com.mpdc4gsr.lib.core.dialog.MsgDialog
 import kotlinx.coroutines.TimeoutCancellationException
 import kotlin.coroutines.cancellation.CancellationException
 

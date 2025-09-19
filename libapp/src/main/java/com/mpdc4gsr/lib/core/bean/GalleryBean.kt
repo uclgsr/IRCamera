@@ -2,10 +2,10 @@ package com.mpdc4gsr.lib.core.bean
 
 import android.os.Parcel
 import android.os.Parcelable
-import com.topdon.lib.core.config.FileConfig
-import com.topdon.lib.core.repository.FileBean
-import com.topdon.lib.core.tools.TimeTool
-import com.topdon.lib.core.tools.VideoTools
+import com.mpdc4gsr.lib.core.config.FileConfig
+import com.mpdc4gsr.lib.core.repository.FileBean
+import com.mpdc4gsr.lib.core.tools.TimeTool
+import com.mpdc4gsr.lib.core.tools.VideoTools
 import kotlinx.parcelize.Parcelize
 import java.io.File
 import java.util.TimeZone

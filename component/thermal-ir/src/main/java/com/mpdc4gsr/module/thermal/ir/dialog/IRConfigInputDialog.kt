@@ -9,8 +9,8 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
 import androidx.core.view.isVisible
-import com.topdon.lib.core.tools.UnitTools
-import com.topdon.lib.core.utils.ScreenUtil
+import com.mpdc4gsr.lib.core.tools.UnitTools
+import com.mpdc4gsr.lib.core.utils.ScreenUtil
 import com.topdon.lms.sdk.weiget.TToast
 import com.topdon.module.thermal.ir.R
 

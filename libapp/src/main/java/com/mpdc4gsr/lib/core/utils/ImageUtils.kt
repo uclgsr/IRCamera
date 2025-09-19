@@ -6,7 +6,7 @@ import android.util.Log
 import com.blankj.utilcode.util.ImageUtils
 import com.blankj.utilcode.util.Utils
 import com.elvishew.xlog.XLog
-import com.topdon.lib.core.config.FileConfig.lineIrGalleryDir
+import com.mpdc4gsr.lib.core.config.FileConfig.lineIrGalleryDir
 import java.io.File
 
 object ImageUtils {

@@ -14,20 +14,20 @@ import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.elvishew.xlog.XLog
-import com.topdon.lib.core.bean.GalleryBean
-import com.topdon.lib.core.bean.event.GalleryDelEvent
-import com.topdon.lib.core.config.ExtraKeyConfig
-import com.topdon.lib.core.config.FileConfig
-import com.topdon.lib.core.config.RouterConfig
-import com.topdon.lib.core.dialog.TipDialog
-import com.topdon.lib.core.ktbase.BaseActivity
-import com.topdon.lib.core.navigation.NavigationManager
-import com.topdon.lib.core.tools.FileTools
-import com.topdon.lib.core.tools.TimeTool
-import com.topdon.lib.core.tools.ToastTools
-import com.topdon.lib.core.utils.ByteUtils.bytesToInt
-import com.topdon.lib.core.utils.Constants.IS_REPORT_FIRST
-import com.topdon.lib.core.view.TitleView
+import com.mpdc4gsr.lib.core.bean.GalleryBean
+import com.mpdc4gsr.lib.core.bean.event.GalleryDelEvent
+import com.mpdc4gsr.lib.core.config.ExtraKeyConfig
+import com.mpdc4gsr.lib.core.config.FileConfig
+import com.mpdc4gsr.lib.core.config.RouterConfig
+import com.mpdc4gsr.lib.core.dialog.TipDialog
+import com.mpdc4gsr.lib.core.ktbase.BaseActivity
+import com.mpdc4gsr.lib.core.navigation.NavigationManager
+import com.mpdc4gsr.lib.core.tools.FileTools
+import com.mpdc4gsr.lib.core.tools.TimeTool
+import com.mpdc4gsr.lib.core.tools.ToastTools
+import com.mpdc4gsr.lib.core.utils.ByteUtils.bytesToInt
+import com.mpdc4gsr.lib.core.utils.Constants.IS_REPORT_FIRST
+import com.mpdc4gsr.lib.core.view.TitleView
 import com.topdon.lib.ui.dialog.ProgressDialog
 import com.topdon.libcom.ExcelUtil
 import com.topdon.module.thermal.ir.R
@@ -42,7 +42,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.io.File
-import com.topdon.lib.core.R as LibR
+import com.mpdc4gsr.lib.core.R as LibR
 
 
 class IRGalleryDetail01Activity : BaseActivity(), View.OnClickListener {

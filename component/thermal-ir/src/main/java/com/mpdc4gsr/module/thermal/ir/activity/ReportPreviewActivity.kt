@@ -11,11 +11,11 @@ import com.bumptech.glide.Glide
 import com.google.android.material.appbar.AppBarLayout
 
 
-import com.topdon.lib.core.config.ExtraKeyConfig
-import com.topdon.lib.core.db.AppDatabase
-import com.topdon.lib.core.db.entity.HouseReport
-import com.topdon.lib.core.ktbase.BaseActivity
-import com.topdon.lib.core.tools.TimeTool
+import com.mpdc4gsr.lib.core.config.ExtraKeyConfig
+import com.mpdc4gsr.lib.core.db.AppDatabase
+import com.mpdc4gsr.lib.core.db.entity.HouseReport
+import com.mpdc4gsr.lib.core.ktbase.BaseActivity
+import com.mpdc4gsr.lib.core.tools.TimeTool
 import com.topdon.lms.sdk.weiget.TToast
 import com.topdon.module.thermal.ir.R
 import com.topdon.module.thermal.ir.adapter.ReportPreviewAdapter

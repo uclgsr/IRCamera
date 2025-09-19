@@ -12,7 +12,7 @@ import android.view.MotionEvent
 import android.view.View
 import androidx.annotation.ColorInt
 import com.blankj.utilcode.util.SizeUtils
-import com.topdon.lib.core.utils.ScreenUtil
+import com.mpdc4gsr.lib.core.utils.ScreenUtil
 
 class TargetBarPickView : View {
     companion object {

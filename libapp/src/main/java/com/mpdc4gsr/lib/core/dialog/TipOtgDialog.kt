@@ -11,9 +11,9 @@ import android.widget.Button
 import android.widget.CheckBox
 import android.widget.TextView
 import androidx.annotation.StringRes
-import com.topdon.lib.core.R
-import com.topdon.lib.core.databinding.DialogTipOtgBinding
-import com.topdon.lib.core.utils.ScreenUtil
+import com.mpdc4gsr.lib.core.R
+import com.mpdc4gsr.lib.core.databinding.DialogTipOtgBinding
+import com.mpdc4gsr.lib.core.utils.ScreenUtil
 
 
 class TipOtgDialog : Dialog {

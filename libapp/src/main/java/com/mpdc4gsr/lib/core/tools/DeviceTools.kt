@@ -8,14 +8,14 @@ import android.hardware.usb.UsbDevice
 import android.hardware.usb.UsbManager
 import com.blankj.utilcode.util.Utils
 import com.elvishew.xlog.XLog
-import com.topdon.lib.core.bean.event.device.DeviceConnectEvent
-import com.topdon.lib.core.bean.event.device.DevicePermissionEvent
-import com.topdon.lib.core.broadcast.DeviceBroadcastReceiver
-import com.topdon.lib.core.config.DeviceConfig.isHik256
-import com.topdon.lib.core.config.DeviceConfig.isTcLiteDevice
-import com.topdon.lib.core.config.DeviceConfig.isTcTsDevice
-import com.topdon.lib.core.utils.ByteUtils.toBytes
-import com.topdon.lib.core.utils.ByteUtils.toHexString
+import com.mpdc4gsr.lib.core.bean.event.device.DeviceConnectEvent
+import com.mpdc4gsr.lib.core.bean.event.device.DevicePermissionEvent
+import com.mpdc4gsr.lib.core.broadcast.DeviceBroadcastReceiver
+import com.mpdc4gsr.lib.core.config.DeviceConfig.isHik256
+import com.mpdc4gsr.lib.core.config.DeviceConfig.isTcLiteDevice
+import com.mpdc4gsr.lib.core.config.DeviceConfig.isTcTsDevice
+import com.mpdc4gsr.lib.core.utils.ByteUtils.toBytes
+import com.mpdc4gsr.lib.core.utils.ByteUtils.toHexString
 import org.greenrobot.eventbus.EventBus
 
 object DeviceTools {

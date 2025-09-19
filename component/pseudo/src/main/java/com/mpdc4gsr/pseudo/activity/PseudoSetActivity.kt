@@ -10,17 +10,17 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import com.blankj.utilcode.util.SizeUtils
 import com.blankj.utilcode.util.ToastUtils
-import com.topdon.lib.core.config.ExtraKeyConfig
-import com.topdon.lib.core.ktbase.BaseActivity
-import com.topdon.lib.core.tools.UnitTools
-import com.topdon.lib.core.view.ColorSelectView
+import com.mpdc4gsr.lib.core.config.ExtraKeyConfig
+import com.mpdc4gsr.lib.core.ktbase.BaseActivity
+import com.mpdc4gsr.lib.core.tools.UnitTools
+import com.mpdc4gsr.lib.core.view.ColorSelectView
 import com.topdon.pseudo.R
 import com.topdon.pseudo.bean.CustomPseudoBean
 import com.topdon.pseudo.constant.ColorRecommend
 import com.topdon.pseudo.view.PseudoPickView
 import java.math.BigDecimal
 import java.math.RoundingMode
-import com.topdon.lib.core.R as RCore
+import com.mpdc4gsr.lib.core.R as RCore
 import com.topdon.lib.ui.R as RUi
 
 

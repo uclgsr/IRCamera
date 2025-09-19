@@ -207,7 +207,7 @@ public class BluetoothManager implements EventObserver {
             return false;
         }
 
-        if (!com.topdon.ble.util.BluetoothPermissionUtils.hasBluetoothConnectPermission(EasyBLE.getInstance().getContext())) {
+        if (!com.mpdc4gsr.ble.util.BluetoothPermissionUtils.hasBluetoothConnectPermission(EasyBLE.getInstance().getContext())) {
             Log.w(TAG, "Missing BLUETOOTH_CONNECT permission for GATT operations");
             return false;
         }

@@ -16,7 +16,7 @@ import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
-import com.topdon.lib.core.db.entity.ThermalEntity
+import com.mpdc4gsr.lib.core.db.entity.ThermalEntity
 import com.topdon.module.thermal.ir.R
 import com.topdon.module.thermal.ir.chart.IRMyValueFormatter
 import com.topdon.module.thermal.ir.chart.YValueFormatter
@@ -24,8 +24,8 @@ import com.topdon.module.thermal.ir.utils.ChartTools
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import com.topdon.lib.core.R as LibR
-import com.topdon.lib.core.R as LibcoreR
+import com.mpdc4gsr.lib.core.R as LibR
+import com.mpdc4gsr.lib.core.R as LibcoreR
 import com.topdon.module.thermal.R as ThermalR
 
 class ChartLogView : LineChart {

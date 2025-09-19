@@ -4,8 +4,8 @@ import androidx.lifecycle.viewModelScope
 import com.blankj.utilcode.util.GsonUtils
 import com.blankj.utilcode.util.TimeUtils
 import com.elvishew.xlog.XLog
-import com.topdon.lib.core.ktbase.BaseViewModel
-import com.topdon.lib.core.utils.SingleLiveEvent
+import com.mpdc4gsr.lib.core.ktbase.BaseViewModel
+import com.mpdc4gsr.lib.core.utils.SingleLiveEvent
 import com.topdon.lms.sdk.LMS
 import com.topdon.lms.sdk.UrlConstant
 import com.topdon.lms.sdk.bean.CommonBean

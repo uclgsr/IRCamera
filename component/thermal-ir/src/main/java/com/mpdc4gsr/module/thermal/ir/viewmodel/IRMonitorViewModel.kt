@@ -2,10 +2,10 @@ package com.mpdc4gsr.module.thermal.ir.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.topdon.lib.core.db.AppDatabase
-import com.topdon.lib.core.db.dao.ThermalDao
-import com.topdon.lib.core.db.entity.ThermalEntity
-import com.topdon.lib.core.ktbase.BaseViewModel
+import com.mpdc4gsr.lib.core.db.AppDatabase
+import com.mpdc4gsr.lib.core.db.dao.ThermalDao
+import com.mpdc4gsr.lib.core.db.entity.ThermalEntity
+import com.mpdc4gsr.lib.core.ktbase.BaseViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 

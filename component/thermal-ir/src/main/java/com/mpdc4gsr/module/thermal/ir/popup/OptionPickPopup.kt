@@ -11,7 +11,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.SizeUtils
-import com.topdon.lib.core.view.MyTextView
+import com.mpdc4gsr.lib.core.view.MyTextView
 import com.topdon.module.thermal.ir.R
 
 

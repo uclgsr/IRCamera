@@ -9,9 +9,9 @@ import com.csl.irCamera.BuildConfig
 import com.elvishew.xlog.XLog
 import com.example.thermal_lite.IrConst
 import com.example.thermal_lite.util.CommonUtil
-import com.topdon.lib.core.BaseApplication
-import com.topdon.lib.core.common.SharedManager
-import com.topdon.lib.core.config.HttpConfig
+import com.mpdc4gsr.lib.core.BaseApplication
+import com.mpdc4gsr.lib.core.common.SharedManager
+import com.mpdc4gsr.lib.core.config.HttpConfig
 import com.topdon.lms.sdk.Config
 import com.topdon.lms.sdk.LMS.mContext
 import com.topdon.lms.sdk.UrlConstant

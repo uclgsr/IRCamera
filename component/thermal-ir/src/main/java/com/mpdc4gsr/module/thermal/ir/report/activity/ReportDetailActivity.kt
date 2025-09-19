@@ -7,12 +7,12 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import androidx.lifecycle.lifecycleScope
-import com.topdon.lib.core.config.ExtraKeyConfig
-import com.topdon.lib.core.config.FileConfig
-import com.topdon.lib.core.ktbase.BaseActivity
-import com.topdon.lib.core.tools.FileTools
-import com.topdon.lib.core.tools.GlideLoader
-import com.topdon.lib.core.view.TitleView
+import com.mpdc4gsr.lib.core.config.ExtraKeyConfig
+import com.mpdc4gsr.lib.core.config.FileConfig
+import com.mpdc4gsr.lib.core.ktbase.BaseActivity
+import com.mpdc4gsr.lib.core.tools.FileTools
+import com.mpdc4gsr.lib.core.tools.GlideLoader
+import com.mpdc4gsr.lib.core.view.TitleView
 import com.topdon.libcom.PDFHelp
 import com.topdon.module.thermal.ir.R
 import com.topdon.module.thermal.ir.report.bean.ReportBean
@@ -22,7 +22,7 @@ import com.topdon.module.thermal.ir.report.view.WatermarkView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.File
-import com.topdon.lib.core.R as LibCoreR
+import com.mpdc4gsr.lib.core.R as LibCoreR
 import com.topdon.lib.ui.R as UiR
 
 

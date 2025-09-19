@@ -5,7 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import com.csl.irCamera.R
 import com.csl.irCamera.databinding.ActivitySessionExportBinding
-import com.topdon.lib.core.ktbase.BaseBindingActivity
+import com.mpdc4gsr.lib.core.ktbase.BaseBindingActivity
 
 class SessionExportActivity : BaseBindingActivity<ActivitySessionExportBinding>() {
     companion object {

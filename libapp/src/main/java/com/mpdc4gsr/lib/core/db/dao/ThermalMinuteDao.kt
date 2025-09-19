@@ -4,7 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.topdon.lib.core.db.entity.ThermalMinuteEntity
+import com.mpdc4gsr.lib.core.db.entity.ThermalMinuteEntity
 
 @Dao
 interface ThermalMinuteDao {

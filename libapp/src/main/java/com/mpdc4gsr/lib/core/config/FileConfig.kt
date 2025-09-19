@@ -4,8 +4,8 @@ import android.content.Context
 import android.os.Build
 import android.os.Environment
 import com.blankj.utilcode.util.Utils
-import com.topdon.lib.core.repository.GalleryRepository.DirType
-import com.topdon.lib.core.utils.CommUtils
+import com.mpdc4gsr.lib.core.repository.GalleryRepository.DirType
+import com.mpdc4gsr.lib.core.utils.CommUtils
 import java.io.File
 
 object FileConfig {

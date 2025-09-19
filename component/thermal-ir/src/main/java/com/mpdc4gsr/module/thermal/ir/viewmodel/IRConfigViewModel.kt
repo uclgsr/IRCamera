@@ -3,7 +3,7 @@ package com.mpdc4gsr.module.thermal.ir.viewmodel
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.topdon.lib.core.utils.SingleLiveEvent
+import com.mpdc4gsr.lib.core.utils.SingleLiveEvent
 import com.topdon.module.thermal.ir.bean.DataBean
 import com.topdon.module.thermal.ir.bean.ModelBean
 import com.topdon.module.thermal.ir.repository.ConfigRepository

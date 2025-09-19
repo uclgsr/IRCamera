@@ -1,7 +1,7 @@
 package com.mpdc4gsr.module.thermal.ir.viewmodel
 
 import androidx.lifecycle.MutableLiveData
-import com.topdon.lib.core.ktbase.BaseViewModel
+import com.mpdc4gsr.lib.core.ktbase.BaseViewModel
 
 class IRGalleryTabViewModel : BaseViewModel() {
 

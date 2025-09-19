@@ -1,7 +1,7 @@
 package com.mpdc4gsr.lib.core.repository
 
 import com.elvishew.xlog.XLog
-import com.topdon.lib.core.BuildConfig
+import com.mpdc4gsr.lib.core.BuildConfig
 import okhttp3.Interceptor
 import okhttp3.Response
 import okio.Buffer

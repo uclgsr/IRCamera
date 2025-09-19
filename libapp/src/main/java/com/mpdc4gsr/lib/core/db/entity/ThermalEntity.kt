@@ -3,7 +3,7 @@ package com.mpdc4gsr.lib.core.db.entity
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.topdon.lib.core.tools.TimeTool
+import com.mpdc4gsr.lib.core.tools.TimeTool
 
 @Entity(tableName = "thermal")
 class ThermalEntity {

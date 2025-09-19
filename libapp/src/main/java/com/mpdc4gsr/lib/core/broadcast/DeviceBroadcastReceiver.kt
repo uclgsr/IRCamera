@@ -6,9 +6,9 @@ import android.content.Intent
 import android.hardware.usb.UsbDevice
 import android.hardware.usb.UsbManager
 import com.elvishew.xlog.XLog
-import com.topdon.lib.core.bean.event.device.DeviceConnectEvent
-import com.topdon.lib.core.config.DeviceConfig.isTcTsDevice
-import com.topdon.lib.core.tools.DeviceTools
+import com.mpdc4gsr.lib.core.bean.event.device.DeviceConnectEvent
+import com.mpdc4gsr.lib.core.config.DeviceConfig.isTcTsDevice
+import com.mpdc4gsr.lib.core.tools.DeviceTools
 import org.greenrobot.eventbus.EventBus
 
 class DeviceBroadcastReceiver : BroadcastReceiver() {

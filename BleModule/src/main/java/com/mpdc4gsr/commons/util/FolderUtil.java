@@ -3,7 +3,7 @@ package com.mpdc4gsr.commons.util;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.mpdc4gsr.lms.sdk.LMS;
+import com.topdon.lms.sdk.LMS;
 
 import java.io.File;
 

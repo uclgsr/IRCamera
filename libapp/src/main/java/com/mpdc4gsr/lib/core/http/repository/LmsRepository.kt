@@ -4,9 +4,9 @@ import android.text.TextUtils
 import com.elvishew.xlog.XLog
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.topdon.lib.core.bean.base.Resp
-import com.topdon.lib.core.bean.json.CheckVersionJson
-import com.topdon.lib.core.bean.json.StatementJson
+import com.mpdc4gsr.lib.core.bean.base.Resp
+import com.mpdc4gsr.lib.core.bean.json.CheckVersionJson
+import com.mpdc4gsr.lib.core.bean.json.StatementJson
 import com.topdon.lms.sdk.LMS
 import com.topdon.lms.sdk.network.IResponseCallback
 import com.topdon.lms.sdk.utils.StringUtils

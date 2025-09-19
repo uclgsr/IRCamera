@@ -20,13 +20,13 @@ import androidx.appcompat.widget.SwitchCompat
 import com.blankj.utilcode.util.ToastUtils
 import com.hjq.permissions.OnPermissionCallback
 import com.hjq.permissions.XXPermissions
-import com.topdon.lib.core.BaseApplication
-import com.topdon.lib.core.R
-import com.topdon.lib.core.bean.WatermarkBean
-import com.topdon.lib.core.common.SharedManager
-import com.topdon.lib.core.databinding.DialogTipWatermarkBinding
-import com.topdon.lib.core.utils.CommUtils
-import com.topdon.lib.core.utils.ScreenUtil
+import com.mpdc4gsr.lib.core.BaseApplication
+import com.mpdc4gsr.lib.core.R
+import com.mpdc4gsr.lib.core.bean.WatermarkBean
+import com.mpdc4gsr.lib.core.common.SharedManager
+import com.mpdc4gsr.lib.core.databinding.DialogTipWatermarkBinding
+import com.mpdc4gsr.lib.core.utils.CommUtils
+import com.mpdc4gsr.lib.core.utils.ScreenUtil
 import java.util.Locale
 
 class TipWaterMarkDialog : Dialog {

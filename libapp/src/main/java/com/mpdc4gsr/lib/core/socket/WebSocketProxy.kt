@@ -12,11 +12,11 @@ import androidx.lifecycle.LifecycleOwner
 import com.blankj.utilcode.util.Utils
 import com.elvishew.xlog.XLog
 import com.hjq.permissions.XXPermissions
-import com.topdon.lib.core.bean.event.SocketStateEvent
-import com.topdon.lib.core.config.DeviceConfig
-import com.topdon.lib.core.security.CertificateManager
-import com.topdon.lib.core.utils.WifiUtil
-import com.topdon.lib.core.utils.WsCmdConstants
+import com.mpdc4gsr.lib.core.bean.event.SocketStateEvent
+import com.mpdc4gsr.lib.core.config.DeviceConfig
+import com.mpdc4gsr.lib.core.security.CertificateManager
+import com.mpdc4gsr.lib.core.utils.WifiUtil
+import com.mpdc4gsr.lib.core.utils.WsCmdConstants
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Request

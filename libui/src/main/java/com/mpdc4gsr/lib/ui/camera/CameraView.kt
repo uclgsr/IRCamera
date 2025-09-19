@@ -30,7 +30,7 @@ import android.widget.LinearLayout
 import androidx.annotation.NonNull
 import com.blankj.utilcode.util.ThreadUtils.runOnUiThread
 import com.blankj.utilcode.util.ToastUtils
-import com.topdon.lib.core.utils.ScreenUtil
+import com.mpdc4gsr.lib.core.utils.ScreenUtil
 import com.topdon.lib.ui.databinding.CameraLayBinding
 import java.nio.ByteBuffer
 import java.util.Collections

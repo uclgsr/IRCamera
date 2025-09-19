@@ -13,7 +13,7 @@ import androidx.annotation.StringRes
 import androidx.core.view.isVisible
 import androidx.core.view.setPadding
 import com.blankj.utilcode.util.SizeUtils
-import com.topdon.lib.core.R
+import com.mpdc4gsr.lib.core.R
 
 open class TitleView : ViewGroup {
     companion object {

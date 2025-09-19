@@ -11,7 +11,7 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.FitCenter
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
-import com.topdon.lib.core.R
+import com.mpdc4gsr.lib.core.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 

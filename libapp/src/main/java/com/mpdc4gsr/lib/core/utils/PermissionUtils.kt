@@ -4,7 +4,7 @@ import android.Manifest.permission.READ_MEDIA_VISUAL_USER_SELECTED
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.os.Build
 import androidx.core.content.ContextCompat
-import com.topdon.lib.core.BaseApplication
+import com.mpdc4gsr.lib.core.BaseApplication
 
 object PermissionUtils {
 

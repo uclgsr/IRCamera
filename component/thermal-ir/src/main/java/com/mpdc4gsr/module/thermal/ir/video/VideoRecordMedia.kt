@@ -3,8 +3,8 @@ package com.mpdc4gsr.module.thermal.ir.video
 import android.graphics.Bitmap
 import com.infisense.usbir.view.CameraView
 import com.infisense.usbir.view.TemperatureView
-import com.topdon.lib.core.config.FileConfig
-import com.topdon.lib.core.utils.BitmapUtils
+import com.mpdc4gsr.lib.core.config.FileConfig
+import com.mpdc4gsr.lib.core.utils.BitmapUtils
 import com.topdon.module.thermal.ir.video.media.Encoder
 import com.topdon.module.thermal.ir.video.media.MP4Encoder
 import io.reactivex.Observable

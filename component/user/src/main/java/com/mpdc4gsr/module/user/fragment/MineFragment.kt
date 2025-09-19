@@ -19,22 +19,22 @@ import com.blankj.utilcode.util.SizeUtils
 import com.bumptech.glide.request.RequestOptions
 import com.elvishew.xlog.XLog
 import com.google.gson.Gson
-import com.topdon.lib.core.BaseApplication
-import com.topdon.lib.core.bean.event.PDFEvent
-import com.topdon.lib.core.bean.event.WinterClickEvent
-import com.topdon.lib.core.bean.response.ResponseUserInfo
-import com.topdon.lib.core.common.SharedManager
-import com.topdon.lib.core.common.UserInfoManager
-import com.topdon.lib.core.config.ExtraKeyConfig
-import com.topdon.lib.core.config.RouterConfig
-import com.topdon.lib.core.db.AppDatabase
-import com.topdon.lib.core.dialog.TipDialog
-import com.topdon.lib.core.ktbase.BaseFragment
-import com.topdon.lib.core.navigation.NavigationManager
-import com.topdon.lib.core.socket.WebSocketProxy
-import com.topdon.lib.core.tools.GlideLoader
-import com.topdon.lib.core.utils.Constants
-import com.topdon.lib.core.utils.NetWorkUtils
+import com.mpdc4gsr.lib.core.BaseApplication
+import com.mpdc4gsr.lib.core.bean.event.PDFEvent
+import com.mpdc4gsr.lib.core.bean.event.WinterClickEvent
+import com.mpdc4gsr.lib.core.bean.response.ResponseUserInfo
+import com.mpdc4gsr.lib.core.common.SharedManager
+import com.mpdc4gsr.lib.core.common.UserInfoManager
+import com.mpdc4gsr.lib.core.config.ExtraKeyConfig
+import com.mpdc4gsr.lib.core.config.RouterConfig
+import com.mpdc4gsr.lib.core.db.AppDatabase
+import com.mpdc4gsr.lib.core.dialog.TipDialog
+import com.mpdc4gsr.lib.core.ktbase.BaseFragment
+import com.mpdc4gsr.lib.core.navigation.NavigationManager
+import com.mpdc4gsr.lib.core.socket.WebSocketProxy
+import com.mpdc4gsr.lib.core.tools.GlideLoader
+import com.mpdc4gsr.lib.core.utils.Constants
+import com.mpdc4gsr.lib.core.utils.NetWorkUtils
 import com.topdon.lms.sdk.LMS
 import com.topdon.lms.sdk.UrlConstant
 import com.topdon.lms.sdk.bean.CommonBean
@@ -48,8 +48,8 @@ import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import com.topdon.lib.core.R as LibAppR
-import com.topdon.lib.core.R as RCore
+import com.mpdc4gsr.lib.core.R as LibAppR
+import com.mpdc4gsr.lib.core.R as RCore
 
 
 class MineFragment : BaseFragment(), View.OnClickListener {

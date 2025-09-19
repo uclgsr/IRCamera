@@ -11,10 +11,10 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.widget.SwitchCompat
 import androidx.core.view.isVisible
-import com.topdon.lib.core.tools.UnitTools
+import com.mpdc4gsr.lib.core.tools.UnitTools
 import com.topdon.module.thermal.ir.R
 import com.topdon.module.thermal.ir.report.bean.ImageTempBean
-import com.topdon.lib.core.R as LibR
+import com.mpdc4gsr.lib.core.R as LibR
 
 class ReportIRInputView : LinearLayout {
     companion object {

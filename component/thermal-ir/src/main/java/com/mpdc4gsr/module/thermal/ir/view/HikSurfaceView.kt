@@ -13,7 +13,7 @@ import com.energy.iruvc.utils.CommonParams.PseudoColorType
 import com.infisense.usbir.utils.IRImageHelp
 import com.infisense.usbir.utils.OpencvTools
 import com.infisense.usbir.utils.PseudocodeUtils
-import com.topdon.lib.core.bean.AlarmBean
+import com.mpdc4gsr.lib.core.bean.AlarmBean
 
 import com.topdon.module.thermal.ir.bean.DataBean 
 import java.nio.ByteBuffer

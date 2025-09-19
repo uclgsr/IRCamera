@@ -3,7 +3,7 @@ package com.mpdc4gsr.lib.core.tools
 import android.content.Context
 import android.util.DisplayMetrics
 import com.blankj.utilcode.util.Utils
-import com.topdon.lib.core.utils.ScreenUtil
+import com.mpdc4gsr.lib.core.utils.ScreenUtil
 import kotlin.math.pow
 import kotlin.math.sqrt
 

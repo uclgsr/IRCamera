@@ -5,9 +5,9 @@ import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.topdon.lib.core.R
-import com.topdon.lib.core.databinding.DialogLongTextBinding
-import com.topdon.lib.core.utils.ScreenUtil
+import com.mpdc4gsr.lib.core.R
+import com.mpdc4gsr.lib.core.databinding.DialogLongTextBinding
+import com.mpdc4gsr.lib.core.utils.ScreenUtil
 
 
 class LongTextDialog(context: Context, val title: String?, val content: String?) :

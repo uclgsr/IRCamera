@@ -15,14 +15,14 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.topdon.lib.core.common.SharedManager
-import com.topdon.lib.core.config.ExtraKeyConfig
-import com.topdon.lib.core.dialog.TipDialog
-import com.topdon.lib.core.ktbase.BaseActivity
-import com.topdon.lib.core.repository.TC007Repository
-import com.topdon.lib.core.socket.WebSocketProxy
-import com.topdon.lib.core.tools.NumberTools
-import com.topdon.lib.core.tools.UnitTools
+import com.mpdc4gsr.lib.core.common.SharedManager
+import com.mpdc4gsr.lib.core.config.ExtraKeyConfig
+import com.mpdc4gsr.lib.core.dialog.TipDialog
+import com.mpdc4gsr.lib.core.ktbase.BaseActivity
+import com.mpdc4gsr.lib.core.repository.TC007Repository
+import com.mpdc4gsr.lib.core.socket.WebSocketProxy
+import com.mpdc4gsr.lib.core.tools.NumberTools
+import com.mpdc4gsr.lib.core.tools.UnitTools
 import com.topdon.lib.ui.widget.MyItemDecoration
 import com.topdon.lms.sdk.weiget.TToast
 import com.topdon.module.thermal.ir.R
@@ -35,7 +35,7 @@ import com.topdon.module.thermal.ir.repository.ConfigRepository
 import com.topdon.module.thermal.ir.viewmodel.IRConfigViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import com.topdon.lib.core.R as LibR
+import com.mpdc4gsr.lib.core.R as LibR
 
 
 

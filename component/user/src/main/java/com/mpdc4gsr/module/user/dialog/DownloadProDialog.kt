@@ -6,11 +6,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.topdon.lib.core.utils.ScreenUtil
+import com.mpdc4gsr.lib.core.utils.ScreenUtil
 import com.topdon.module.user.R
 import java.text.DecimalFormat
-import com.topdon.lib.core.R as LibAppR
-import com.topdon.lib.core.R as RCore
+import com.mpdc4gsr.lib.core.R as LibAppR
+import com.mpdc4gsr.lib.core.R as RCore
 
 
 class DownloadProDialog(context: Context) : Dialog(context, LibAppR.style.InfoDialog) {

@@ -1,8 +1,8 @@
 package com.mpdc4gsr.module.thermal.ir.report.activity
 
-import com.topdon.lib.core.config.ExtraKeyConfig
-import com.topdon.lib.core.ktbase.BaseActivity
-import com.topdon.lib.core.view.TitleView
+import com.mpdc4gsr.lib.core.config.ExtraKeyConfig
+import com.mpdc4gsr.lib.core.ktbase.BaseActivity
+import com.mpdc4gsr.lib.core.view.TitleView
 import com.topdon.module.thermal.ir.R
 import com.topdon.module.thermal.ir.report.bean.ReportInfoBean
 import com.topdon.module.thermal.ir.report.view.ReportInfoView

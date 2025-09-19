@@ -9,10 +9,10 @@ import android.widget.PopupWindow
 import com.blankj.utilcode.util.ToastUtils
 import com.hjq.permissions.Permission
 import com.hjq.permissions.XXPermissions
-import com.topdon.lib.core.common.SharedManager
-import com.topdon.lib.core.config.RouterConfig
-import com.topdon.lib.core.dialog.TipShutterDialog
-import com.topdon.lib.core.navigation.NavigationManager
+import com.mpdc4gsr.lib.core.common.SharedManager
+import com.mpdc4gsr.lib.core.config.RouterConfig
+import com.mpdc4gsr.lib.core.dialog.TipShutterDialog
+import com.mpdc4gsr.lib.core.navigation.NavigationManager
 import com.topdon.libcom.bean.SaveSettingBean
 import com.topdon.module.thermal.ir.R
 import com.topdon.module.thermal.ir.databinding.PopCameraItemBinding

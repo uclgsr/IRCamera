@@ -6,11 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
-import com.topdon.lib.core.R
-import com.topdon.lib.core.bean.ObserveBean
-import com.topdon.lib.core.bean.TargetColorBean
-import com.topdon.lib.core.databinding.ItmeTargetColorBinding
-import com.topdon.lib.core.utils.ScreenUtil
+import com.mpdc4gsr.lib.core.R
+import com.mpdc4gsr.lib.core.bean.ObserveBean
+import com.mpdc4gsr.lib.core.bean.TargetColorBean
+import com.mpdc4gsr.lib.core.databinding.ItmeTargetColorBinding
+import com.mpdc4gsr.lib.core.utils.ScreenUtil
 
 class TargetColorAdapter(val context: Context, var targetColor: Int) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {

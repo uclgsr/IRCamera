@@ -5,8 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.blankj.utilcode.util.Utils
 import com.google.gson.Gson
-import com.topdon.lib.core.ktbase.BaseViewModel
-import com.topdon.lib.core.utils.HttpHelp
+import com.mpdc4gsr.lib.core.ktbase.BaseViewModel
+import com.mpdc4gsr.lib.core.utils.HttpHelp
 import com.topdon.lms.sdk.LMS
 import com.topdon.lms.sdk.network.IResponseCallback
 import com.topdon.lms.sdk.utils.NetworkUtil
@@ -18,7 +18,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.concurrent.CountDownLatch
-import com.topdon.lib.core.R as LibR
+import com.mpdc4gsr.lib.core.R as LibR
 
 
 class PdfViewModel : BaseViewModel() {

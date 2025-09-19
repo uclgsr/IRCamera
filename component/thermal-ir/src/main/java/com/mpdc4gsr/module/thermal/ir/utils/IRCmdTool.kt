@@ -10,7 +10,7 @@ import com.energy.iruvc.utils.DualCameraParams
 import com.energy.iruvc.utils.SynchronizedBitmap
 import com.infisense.usbdual.camera.BaseDualView
 import com.infisense.usbir.utils.HexDump
-import com.topdon.lib.core.common.SharedManager
+import com.mpdc4gsr.lib.core.common.SharedManager
 import java.io.IOException
 import java.io.InputStream
 import kotlin.math.ceil

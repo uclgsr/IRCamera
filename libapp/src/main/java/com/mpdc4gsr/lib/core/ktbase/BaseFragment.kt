@@ -6,10 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
-import com.topdon.lib.core.R
-import com.topdon.lib.core.bean.event.SocketStateEvent
-import com.topdon.lib.core.bean.event.device.DeviceConnectEvent
-import com.topdon.lib.core.dialog.LoadingDialog
+import com.mpdc4gsr.lib.core.R
+import com.mpdc4gsr.lib.core.bean.event.SocketStateEvent
+import com.mpdc4gsr.lib.core.bean.event.device.DeviceConnectEvent
+import com.mpdc4gsr.lib.core.dialog.LoadingDialog
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode

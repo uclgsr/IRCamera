@@ -7,9 +7,9 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.StringRes
 import androidx.core.view.isVisible
-import com.topdon.lib.core.R
-import com.topdon.lib.core.databinding.DialogLoadingBinding
-import com.topdon.lib.core.utils.ScreenUtil
+import com.mpdc4gsr.lib.core.R
+import com.mpdc4gsr.lib.core.databinding.DialogLoadingBinding
+import com.mpdc4gsr.lib.core.utils.ScreenUtil
 
 class LoadingDialog(context: Context) : Dialog(context, R.style.TransparentDialog) {
     private val binding: DialogLoadingBinding =

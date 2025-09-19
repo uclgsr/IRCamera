@@ -22,11 +22,11 @@ import com.infisense.usbir.view.CameraView
 import com.infisense.usbir.view.ITsTempListener
 import com.infisense.usbir.view.TemperatureView
 import com.infisense.usbir.view.TemperatureView.REGION_MODE_CLEAN
-import com.topdon.lib.core.bean.event.device.DeviceCameraEvent
-import com.topdon.lib.core.common.SaveSettingUtil
-import com.topdon.lib.core.config.DeviceConfig
-import com.topdon.lib.core.ktbase.BaseFragment
-import com.topdon.lib.core.utils.ScreenUtil
+import com.mpdc4gsr.lib.core.bean.event.device.DeviceCameraEvent
+import com.mpdc4gsr.lib.core.common.SaveSettingUtil
+import com.mpdc4gsr.lib.core.config.DeviceConfig
+import com.mpdc4gsr.lib.core.ktbase.BaseFragment
+import com.mpdc4gsr.lib.core.utils.ScreenUtil
 import com.topdon.module.thermal.ir.R
 import com.topdon.module.thermal.ir.repository.ConfigRepository
 import com.topdon.module.thermal.ir.utils.CalibrationTools

@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.view.WindowManager
 import androidx.preference.PreferenceManager
 import com.hjq.permissions.Permission
-import com.topdon.lib.core.utils.NetWorkUtils
+import com.mpdc4gsr.lib.core.utils.NetWorkUtils
 
 
 abstract class BaseWifiActivity : BaseActivity() {

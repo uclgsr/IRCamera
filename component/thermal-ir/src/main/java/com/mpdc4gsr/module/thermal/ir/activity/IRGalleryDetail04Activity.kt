@@ -20,16 +20,16 @@ import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
-import com.topdon.lib.core.bean.GalleryBean
-import com.topdon.lib.core.bean.event.GalleryDelEvent
-import com.topdon.lib.core.config.FileConfig
-import com.topdon.lib.core.dialog.ConfirmSelectDialog
-import com.topdon.lib.core.dialog.TipDialog
-import com.topdon.lib.core.ktbase.BaseActivity
-import com.topdon.lib.core.repository.TS004Repository
-import com.topdon.lib.core.tools.FileTools
-import com.topdon.lib.core.tools.TimeTool
-import com.topdon.lib.core.tools.ToastTools
+import com.mpdc4gsr.lib.core.bean.GalleryBean
+import com.mpdc4gsr.lib.core.bean.event.GalleryDelEvent
+import com.mpdc4gsr.lib.core.config.FileConfig
+import com.mpdc4gsr.lib.core.dialog.ConfirmSelectDialog
+import com.mpdc4gsr.lib.core.dialog.TipDialog
+import com.mpdc4gsr.lib.core.ktbase.BaseActivity
+import com.mpdc4gsr.lib.core.repository.TS004Repository
+import com.mpdc4gsr.lib.core.tools.FileTools
+import com.mpdc4gsr.lib.core.tools.TimeTool
+import com.mpdc4gsr.lib.core.tools.ToastTools
 import com.topdon.lms.sdk.weiget.TToast
 import com.topdon.module.thermal.ir.R
 import com.topdon.module.thermal.ir.event.GalleryDownloadEvent
@@ -37,7 +37,7 @@ import com.topdon.module.thermal.ir.fragment.GalleryFragment
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import java.io.File
-import com.topdon.lib.core.R as LibR
+import com.mpdc4gsr.lib.core.R as LibR
 import com.topdon.lib.ui.R as UiR
 
 

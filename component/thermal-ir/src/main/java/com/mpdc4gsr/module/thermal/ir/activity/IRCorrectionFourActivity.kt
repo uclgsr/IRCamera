@@ -2,8 +2,8 @@ package com.mpdc4gsr.module.thermal.ir.activity
 
 import android.os.Bundle
 import androidx.lifecycle.lifecycleScope
-import com.topdon.lib.core.dialog.TipDialog
-import com.topdon.lib.core.ktbase.BaseActivity
+import com.mpdc4gsr.lib.core.dialog.TipDialog
+import com.mpdc4gsr.lib.core.ktbase.BaseActivity
 import com.topdon.module.thermal.ir.R
 import com.topdon.module.thermal.ir.event.CorrectionFinishEvent
 import com.topdon.module.thermal.ir.fragment.IRCorrectionFragment

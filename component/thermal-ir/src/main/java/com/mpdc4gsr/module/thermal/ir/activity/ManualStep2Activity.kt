@@ -25,9 +25,9 @@ import com.infisense.usbdual.camera.DualViewWithManualAlignExternalCamera
 import com.infisense.usbdual.camera.USBMonitorDualManager
 import com.infisense.usbdual.inf.OnUSBConnectListener
 import com.infisense.usbir.utils.HexDump
-import com.topdon.lib.core.common.SharedManager
-import com.topdon.lib.core.ktbase.BaseActivity
-import com.topdon.lib.core.utils.ByteUtils.toLittleBytes
+import com.mpdc4gsr.lib.core.common.SharedManager
+import com.mpdc4gsr.lib.core.ktbase.BaseActivity
+import com.mpdc4gsr.lib.core.utils.ByteUtils.toLittleBytes
 import com.topdon.lms.sdk.weiget.LmsLoadDialog
 import com.topdon.module.thermal.ir.R
 import com.topdon.module.thermal.ir.event.ManualFinishBean

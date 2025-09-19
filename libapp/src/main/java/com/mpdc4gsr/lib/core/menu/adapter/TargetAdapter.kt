@@ -3,7 +3,7 @@ package com.mpdc4gsr.lib.core.menu.adapter
 import android.annotation.SuppressLint
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import com.topdon.lib.core.R
+import com.mpdc4gsr.lib.core.R
 import com.topdon.menu.constant.TargetType
 import com.topdon.menu.R as MenuR
 

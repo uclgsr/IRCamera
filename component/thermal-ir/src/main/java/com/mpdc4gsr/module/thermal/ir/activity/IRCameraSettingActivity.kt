@@ -23,14 +23,14 @@ import com.blankj.utilcode.util.ToastUtils
 import com.hjq.permissions.OnPermissionCallback
 import com.hjq.permissions.Permission
 import com.hjq.permissions.XXPermissions
-import com.topdon.lib.core.BaseApplication
-import com.topdon.lib.core.bean.ContinuousBean
-import com.topdon.lib.core.bean.WatermarkBean
-import com.topdon.lib.core.common.SharedManager
-import com.topdon.lib.core.dialog.TipDialog
-import com.topdon.lib.core.ktbase.BaseActivity
-import com.topdon.lib.core.tools.TimeTool
-import com.topdon.lib.core.utils.CommUtils
+import com.mpdc4gsr.lib.core.BaseApplication
+import com.mpdc4gsr.lib.core.bean.ContinuousBean
+import com.mpdc4gsr.lib.core.bean.WatermarkBean
+import com.mpdc4gsr.lib.core.common.SharedManager
+import com.mpdc4gsr.lib.core.dialog.TipDialog
+import com.mpdc4gsr.lib.core.ktbase.BaseActivity
+import com.mpdc4gsr.lib.core.tools.TimeTool
+import com.mpdc4gsr.lib.core.utils.CommUtils
 import com.topdon.lib.ui.listener.SingleClickListener
 import com.topdon.lib.ui.widget.BarPickView
 import com.topdon.module.thermal.ir.R
@@ -38,7 +38,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.Locale
-import com.topdon.lib.core.R as LibR
+import com.mpdc4gsr.lib.core.R as LibR
 
 
 

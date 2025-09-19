@@ -12,8 +12,8 @@ import androidx.core.content.ContextCompat
 import com.blankj.utilcode.util.SizeUtils
 import com.jaygoo.widget.DefRangeSeekBar
 import com.jaygoo.widget.OnRangeChangedListener
-import com.topdon.lib.core.utils.ScreenUtil
-import com.topdon.lib.core.view.ColorSelectView
+import com.mpdc4gsr.lib.core.utils.ScreenUtil
+import com.mpdc4gsr.lib.core.view.ColorSelectView
 import com.topdon.libcom.R
 import com.topdon.libcom.util.ColorUtils
 

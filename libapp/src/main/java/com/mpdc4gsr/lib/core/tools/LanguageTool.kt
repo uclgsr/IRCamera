@@ -1,7 +1,7 @@
 package com.mpdc4gsr.lib.core.tools
 
 import android.content.Context
-import com.topdon.lib.core.R
+import com.mpdc4gsr.lib.core.R
 
 object LanguageTool {
 

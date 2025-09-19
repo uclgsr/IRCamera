@@ -1,6 +1,6 @@
 package com.mpdc4gsr.lib.core.utils
 
-import com.topdon.lib.core.common.SharedManager
+import com.mpdc4gsr.lib.core.common.SharedManager
 
 object TemperatureUtil {
     fun getTempStr(

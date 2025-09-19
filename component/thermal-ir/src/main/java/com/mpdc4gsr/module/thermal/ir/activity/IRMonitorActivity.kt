@@ -3,7 +3,7 @@ package com.mpdc4gsr.module.thermal.ir.activity
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import com.topdon.lib.core.config.RouterConfig
+import com.mpdc4gsr.lib.core.config.RouterConfig
 import com.topdon.lib.ui.dialog.MonitorSelectDialog
 import com.topdon.libcom.navigation.NavigationManager
 import com.topdon.module.thermal.ir.bean.SelectPositionBean

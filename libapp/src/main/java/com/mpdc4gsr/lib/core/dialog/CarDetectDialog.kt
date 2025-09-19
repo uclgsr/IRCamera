@@ -12,14 +12,14 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.topdon.lib.core.BaseApplication
-import com.topdon.lib.core.R
-import com.topdon.lib.core.bean.CarDetectBean
-import com.topdon.lib.core.bean.CarDetectChildBean
-import com.topdon.lib.core.common.SharedManager
-import com.topdon.lib.core.databinding.DialogCarDetectBinding
-import com.topdon.lib.core.databinding.ItemCarDetectChildLayoutBinding
-import com.topdon.lib.core.databinding.ItemCarDetectLayoutBinding
+import com.mpdc4gsr.lib.core.BaseApplication
+import com.mpdc4gsr.lib.core.R
+import com.mpdc4gsr.lib.core.bean.CarDetectBean
+import com.mpdc4gsr.lib.core.bean.CarDetectChildBean
+import com.mpdc4gsr.lib.core.common.SharedManager
+import com.mpdc4gsr.lib.core.databinding.DialogCarDetectBinding
+import com.mpdc4gsr.lib.core.databinding.ItemCarDetectChildLayoutBinding
+import com.mpdc4gsr.lib.core.databinding.ItemCarDetectLayoutBinding
 
 
 class CarDetectDialog(context: Context, val listener: ((bean: CarDetectChildBean) -> Unit)) :

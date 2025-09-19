@@ -1,8 +1,8 @@
 package com.mpdc4gsr.module.thermal.activity
 
 import android.widget.TextView
-import com.topdon.lib.core.ktbase.BaseActivity
-import com.topdon.lib.core.tools.DeviceTools
+import com.mpdc4gsr.lib.core.ktbase.BaseActivity
+import com.mpdc4gsr.lib.core.tools.DeviceTools
 import com.topdon.module.thermal.R
 
 

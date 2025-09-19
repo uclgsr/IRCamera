@@ -3,11 +3,11 @@ package com.mpdc4gsr.lib.core.common
 import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.google.gson.Gson
-import com.topdon.lib.core.bean.AlarmBean
-import com.topdon.lib.core.bean.CameraItemBean
-import com.topdon.lib.core.bean.ObserveBean
-import com.topdon.lib.core.config.DeviceConfig
-import com.topdon.lib.core.utils.CommUtils
+import com.mpdc4gsr.lib.core.bean.AlarmBean
+import com.mpdc4gsr.lib.core.bean.CameraItemBean
+import com.mpdc4gsr.lib.core.bean.ObserveBean
+import com.mpdc4gsr.lib.core.config.DeviceConfig
+import com.mpdc4gsr.lib.core.utils.CommUtils
 
 object SaveSettingUtil {
 

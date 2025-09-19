@@ -2,7 +2,7 @@ package com.mpdc4gsr.module.thermal.ir.activity
 
 import android.content.Intent
 import android.widget.TextView
-import com.topdon.lib.core.ktbase.BaseActivity
+import com.mpdc4gsr.lib.core.ktbase.BaseActivity
 import com.topdon.module.thermal.ir.R
 import com.topdon.module.thermal.ir.event.ManualFinishBean
 import org.greenrobot.eventbus.Subscribe

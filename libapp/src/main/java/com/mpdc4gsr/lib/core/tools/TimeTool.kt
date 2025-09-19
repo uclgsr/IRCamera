@@ -2,7 +2,7 @@ package com.mpdc4gsr.lib.core.tools
 
 import android.annotation.SuppressLint
 import android.util.Log
-import com.topdon.lib.core.utils.CommUtils
+import com.mpdc4gsr.lib.core.utils.CommUtils
 import java.io.File
 import java.text.ParsePosition
 import java.text.SimpleDateFormat
