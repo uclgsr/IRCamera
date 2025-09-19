@@ -154,7 +154,7 @@ public class BluetoothManager implements EventObserver {
             EventBus.getDefault().post(device.getConnectionState());
             Log.e("wangchen", "Send[CHINESE_TEXT]--" + device.getConnectionState());
         }
-        Log.d("ywq", "MyObserver Connect[CHINESE_TEXT]：" + device.getConnectionState() + " [CHINESE_TEXT]Connected： " + device.isConnected() + "-----[CHINESE_TEXT]：" + device.getName() + "-------mac: " + device.getAddress());
+        Log.d("ywq", "MyObserver Connection state: " + device.getConnectionState() + " Is connected: " + device.isConnected() + "-----Name: " + device.getName() + "-------mac: " + device.getAddress());
         switch (device.getConnectionState()) {
             case SCANNING_FOR_RECONNECTION:
                 break;
