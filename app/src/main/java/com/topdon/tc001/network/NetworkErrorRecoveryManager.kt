@@ -26,6 +26,8 @@ class NetworkErrorRecoveryManager(
         private const val CONNECTION_TIMEOUT_MS = 10000L
         private const val RAPID_FAILURE_THRESHOLD = 3
         private const val RAPID_FAILURE_WINDOW_MS = 60000L // 1 minute
+        private const val MAX_LATENCY_MS = 100L // Maximum acceptable latency in ms
+        private const val MIN_BANDWIDTH_KBPS = 1.0 // Minimum acceptable bandwidth in KB/s
     }
 
     private val recoveryJob = SupervisorJob()
@@ -37,6 +39,16 @@ class NetworkErrorRecoveryManager(
     private var lastFailureTime = 0L
     private var lastKnownGoodController: NetworkClient.ControllerInfo? = null
     private var healthCheckJob: Job? = null
+
+    // Enhanced NSD reconnection properties
+    private var serviceReadvertiseJob: Job? = null
+    private val isAutoReconnectEnabled = AtomicBoolean(true)
+    private var pcControllerLastSeen: Long = 0L
+    private val pcControllerTimeoutMs: Long = 60000L // 1 minute timeout
+    private val nsdServiceReconnectionAttempts = AtomicInteger(0)
+    private val serviceDiscoveryBackoffMs = AtomicInteger(5000) // Initial 5 second backoff
+    private var lastServiceDiscoveryAttempt: Long = 0L
+    private var connectionQualityScore: Double = 0.0
 
     private val latencyMeasurements = mutableListOf<Long>()
     private val throughputMeasurements = mutableListOf<Double>()
@@ -382,6 +394,10 @@ class NetworkErrorRecoveryManager(
         }
     }
 
+    fun getAverageLatencyMs(): Long {
+        return getAverageLatency()
+    }
+
     fun getThroughputKBps(): Double {
         synchronized(throughputMeasurements) {
             return if (throughputMeasurements.isNotEmpty()) {
@@ -657,15 +673,20 @@ class NetworkErrorRecoveryManager(
         return NetworkClient.ControllerInfo(
             ipAddress = lastKnownGoodController?.ipAddress ?: "127.0.0.1", // This would be the actual discovered IP
             port = 8080,
-            serviceName = "IRCamera-PC-Controller",
-            isAvailable = true
+            deviceName = "IRCamera-PC-Controller",
+            capabilities = listOf("recording", "thermal", "gsr")
         )
     }
 
     fun cleanup() {
         disableAutoRecovery()
+        serviceReadvertiseJob?.cancel()
+        serviceReadvertiseJob = null
         recoveryJob.cancel()
         eventListener = null
         lastKnownGoodController = null
+        pcControllerLastSeen = 0L
+        connectionQualityScore = 0.0
+        lastServiceDiscoveryAttempt = 0L
     }
 }
