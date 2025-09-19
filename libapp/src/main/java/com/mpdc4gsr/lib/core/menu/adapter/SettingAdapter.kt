@@ -44,28 +44,28 @@ internal class SettingAdapter(
             dataList.add(
                 Data(
                     R.string.main_tab_second_compass,
-                    MenuR.drawable.selector_menu2_setting_8,
+                    R.drawable.selector_menu2_setting_8,
                     SettingType.COMPASS
                 )
             )
             dataList.add(
                 Data(
                     R.string.thermal_rotate,
-                    MenuR.drawable.selector_menu2_setting_4,
+                    R.drawable.selector_menu2_setting_4,
                     SettingType.ROTATE
                 )
             )
             dataList.add(
                 Data(
                     R.string.mirror,
-                    MenuR.drawable.selector_menu2_setting_5,
+                    R.drawable.selector_menu2_setting_5,
                     SettingType.MIRROR
                 )
             )
             dataList.add(
                 Data(
                     R.string.thermal_contrast,
-                    MenuR.drawable.selector_menu2_setting_2,
+                    R.drawable.selector_menu2_setting_2,
                     SettingType.CONTRAST
                 )
             )
@@ -74,21 +74,21 @@ internal class SettingAdapter(
                 dataList.add(
                     Data(
                         R.string.temp_alarm_alarm,
-                        MenuR.drawable.selector_menu2_setting_6,
+                        R.drawable.selector_menu2_setting_6,
                         SettingType.ALARM
                     )
                 )
                 dataList.add(
                     Data(
                         R.string.menu_thermal_font,
-                        MenuR.drawable.selector_menu2_setting_7,
+                        R.drawable.selector_menu2_setting_7,
                         SettingType.FONT
                     )
                 )
                 dataList.add(
                     Data(
                         R.string.app_watemarking,
-                        MenuR.drawable.selector_menu2_setting_9,
+                        R.drawable.selector_menu2_setting_9,
                         SettingType.WATERMARK
                     )
                 )
@@ -96,14 +96,14 @@ internal class SettingAdapter(
                 dataList.add(
                     Data(
                         R.string.thermal_pseudo,
-                        MenuR.drawable.selector_menu2_setting_1,
+                        R.drawable.selector_menu2_setting_1,
                         SettingType.PSEUDO_BAR
                     )
                 )
                 dataList.add(
                     Data(
                         R.string.thermal_contrast,
-                        MenuR.drawable.selector_menu2_setting_2,
+                        R.drawable.selector_menu2_setting_2,
                         SettingType.CONTRAST
                     )
                 )
@@ -111,7 +111,7 @@ internal class SettingAdapter(
                     dataList.add(
                         Data(
                             R.string.thermal_sharpen,
-                            MenuR.drawable.selector_menu2_setting_3,
+                            R.drawable.selector_menu2_setting_3,
                             SettingType.DETAIL
                         )
                     )
@@ -119,7 +119,7 @@ internal class SettingAdapter(
                 dataList.add(
                     Data(
                         R.string.temp_alarm_alarm,
-                        MenuR.drawable.selector_menu2_setting_6,
+                        R.drawable.selector_menu2_setting_6,
                         SettingType.ALARM
                     )
                 )
@@ -127,7 +127,7 @@ internal class SettingAdapter(
                     dataList.add(
                         Data(
                             R.string.thermal_rotate,
-                            MenuR.drawable.selector_menu2_setting_4,
+                            R.drawable.selector_menu2_setting_4,
                             SettingType.ROTATE
                         )
                     )
@@ -135,7 +135,7 @@ internal class SettingAdapter(
                 dataList.add(
                     Data(
                         R.string.menu_thermal_font,
-                        MenuR.drawable.selector_menu2_setting_7,
+                        R.drawable.selector_menu2_setting_7,
                         SettingType.FONT
                     )
                 )
@@ -143,7 +143,7 @@ internal class SettingAdapter(
                     dataList.add(
                         Data(
                             R.string.mirror,
-                            MenuR.drawable.selector_menu2_setting_5,
+                            R.drawable.selector_menu2_setting_5,
                             SettingType.MIRROR
                         )
                     )

@@ -195,7 +195,7 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
         }
 
         val downloadData = queryDownloadUrl(sn, record.maxUpdateVersionSoftId)
-        if (downloadData?.responseCode == LMS.SUCCESS) {
+        if (downloadData?.responseCode == LMS.SUCCESS.toInt()) {
             firmwareDataLD.postValue(
                 FirmwareData(
                     newVersionStr,
@@ -303,9 +303,9 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
                                 Gson().fromJson(response, CommonBean::class.java)
                             if (commonBean.code == LMS.SUCCESS) {
                                 result = Gson().fromJson(commonBean.data, DownloadData::class.java)
-                                result?.responseCode = commonBean.code
+                                result?.responseCode = commonBean.code.toInt()
                             } else {
-                                result = DownloadData("", 0, commonBean.code)
+                                result = DownloadData("", 0, commonBean.code.toInt())
                             }
                         } catch (_: Exception) {
                         }

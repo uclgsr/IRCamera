@@ -23,17 +23,17 @@ internal class TempSourceAdapter : BaseMenuAdapter() {
         arrayOf(
             Data(
                 R.string.main_tab_second_dynamic_recognition,
-                MenuR.drawable.selector_menu2_source_1_auto,
+                R.drawable.selector_menu2_source_1_auto,
                 0
             ),
             Data(
                 R.string.main_tab_second_high_temperature_source,
-                MenuR.drawable.selector_menu2_source_2_high,
+                R.drawable.selector_menu2_source_2_high,
                 1
             ),
             Data(
                 R.string.main_tab_second_low_temperature_source,
-                MenuR.drawable.selector_menu2_source_3_low,
+                R.drawable.selector_menu2_source_3_low,
                 2
             ),
         )
