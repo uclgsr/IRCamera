@@ -255,7 +255,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             versionViewModel.checkVersion()
         }
 
-        if (!SharedManager.hasTcLine && !SharedManager.hasTS004 && !SharedManager.hasTC007) {
+        if (!SharedManager.hasTcLine) { // TS004/TC007 functionality removed
 
             if (DeviceTools.isConnect()) {
                 if (!WebSocketProxy.getInstance().isConnected()) {
@@ -277,12 +277,13 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         if (DeviceTools.isConnect()) {
             SharedManager.hasTcLine = true
         }
-        if (WebSocketProxy.getInstance().isTS004Connect()) {
-            SharedManager.hasTS004 = true
-        }
-        if (WebSocketProxy.getInstance().isTC007Connect()) {
-            SharedManager.hasTC007 = true
-        }
+        // TS004/TC007 functionality removed
+        // if (WebSocketProxy.getInstance().isTS004Connect()) {
+        //     SharedManager.hasTS004 = true
+        // }
+        // if (WebSocketProxy.getInstance().isTC007Connect()) {
+        //     SharedManager.hasTC007 = true
+        // }
 
     }
 
