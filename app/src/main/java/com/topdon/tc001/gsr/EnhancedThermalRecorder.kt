@@ -56,12 +56,19 @@ class EnhancedThermalRecorder(private val context: Context) {
                 studyName = "ThermalRecording"
             )
             
-            // Start thermal recording
-            val success = thermalRecorder.startRecording(
-                sessionDirectory!!.absolutePath,
-                sessionMetadata ?: createDefaultSessionMetadata(sessionId),
-                saveImages
-            )
+            // Start thermal recording - use the appropriate overload
+            val success = if (sessionMetadata != null) {
+                thermalRecorder.startRecording(
+                    sessionDirectory!!.absolutePath,
+                    sessionMetadata,
+                    saveImages
+                )
+            } else {
+                thermalRecorder.startRecording(
+                    sessionDirectory!!.absolutePath,
+                    saveImages
+                )
+            }
             
             if (success) {
                 isRecording.set(true)
