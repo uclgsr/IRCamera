@@ -186,7 +186,7 @@ public class BluetoothManager implements EventObserver {
 
     @Override
     public void onConnectTimeout(Device device, int type) {
-        Log.e("bcf_ble", "Connect[CHINESE_TEXT]Hour");
+        Log.e("bcf_ble", "Connection timeout");
     }
 
     @Observe
