@@ -36,7 +36,7 @@ import com.mpdc4gsr.lib.core.utils.WifiUtil
 import com.mpdc4gsr.lib.core.utils.WsCmdConstants
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.json.JSONObject
@@ -47,6 +47,9 @@ abstract class BaseApplication : Application() {
         lateinit var instance: BaseApplication
         val usbObserver by lazy { DeviceBroadcastReceiver() }
     }
+
+    // Application-scoped coroutine scope for database operations
+    private val applicationScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
 
     var tau_data_H: ByteArray? = null
     var tau_data_L: ByteArray? = null
@@ -229,7 +232,7 @@ abstract class BaseApplication : Application() {
     }
 
     fun clearDb() {
-        GlobalScope.launch(Dispatchers.Default) {
+        applicationScope.launch {
             try {
                 AppDatabase.getInstance().thermalDao().deleteZero(SharedManager.getUserId())
             } catch (e: Exception) {

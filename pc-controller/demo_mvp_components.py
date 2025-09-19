@@ -3,7 +3,6 @@
 
 import sys
 import tempfile
-import time
 from pathlib import Path
 
 
@@ -11,7 +10,7 @@ sys.path.insert(0, str(Path(__file__).parent / "src"))
 
 
 def demonstrate_configuration():
-    
+
     print("=" * 60)
     print("CONFIGURATION SYSTEM")
     print("=" * 60)
@@ -33,39 +32,35 @@ def demonstrate_configuration():
 
 
 def demonstrate_session_management():
-    
+
     print("\n" + "=" * 60)
     print("SESSION MANAGEMENT")
     print("=" * 60)
 
     try:
-        from ircamera_pc.core.session import SessionManager, SessionState
+        from ircamera_pc.core.session import SessionManager
 
         # Create session manager with temporary directory
         with tempfile.TemporaryDirectory() as temp_dir:
             session_manager = SessionManager()
             print("✓ Session manager initialized")
 
-            
             session_name = "MVP Demo Session"
             session_metadata = session_manager.create_session(session_name)
             session_id = session_metadata.session_id
             print(f"✓ Session created: {session_name}")
             print(f"  Session ID: {session_metadata}")
 
-            
             session = session_manager.get_session(session_id)
             if session:
                 print(f"  Session state: {session.state}")
                 print(f"  Created at: {session.created_at}")
                 print(f"  Session directory: {session_manager.get_session_directory(session_id)}")
 
-            
             session_dir = session_manager.get_session_directory(session_id)
             if session_dir and session_dir.exists():
                 print("✓ Session directory created successfully")
 
-                
                 metadata_file = session_dir / "metadata.json"
                 if metadata_file.exists():
                     print("✓ Session metadata file created")
@@ -81,20 +76,19 @@ def demonstrate_session_management():
 
 
 def demonstrate_device_discovery():
-    
+
     print("\n" + "=" * 60)
     print("DEVICE DISCOVERY & MANAGEMENT")
     print("=" * 60)
 
     try:
-        
+
         print("Device Discovery Components:")
         print("✓ Zeroconf service discovery framework")
         print("✓ Device registry and capability management")
         print("✓ Connection state tracking")
         print("✓ Heartbeat monitoring")
 
-        
         print("\nSimulated Device Discovery:")
         devices = [
             {"name": "Android-GSR-001", "type": "ANDROID_NODE", "ip": "192.168.1.100",
@@ -121,7 +115,7 @@ def demonstrate_device_discovery():
 
 
 def demonstrate_communication_protocol():
-    
+
     print("\n" + "=" * 60)
     print("COMMUNICATION PROTOCOL")
     print("=" * 60)
@@ -133,7 +127,6 @@ def demonstrate_communication_protocol():
         print("✓ Response types: ack, error, status_update")
         print("✓ Data streaming: gsr_data, heartbeat")
 
-        
         print("\nSample Protocol Messages:")
 
         start_command = {
@@ -184,7 +177,7 @@ def demonstrate_communication_protocol():
 
 
 def demonstrate_gui_architecture():
-    
+
     print("\n" + "=" * 60)
     print("GUI ARCHITECTURE")
     print("=" * 60)
@@ -220,7 +213,7 @@ def demonstrate_gui_architecture():
 
 
 def demonstrate_integration_architecture():
-    
+
     print("\n" + "=" * 60)
     print("HUB-AND-SPOKE INTEGRATION ARCHITECTURE")
     print("=" * 60)
@@ -269,7 +262,7 @@ def demonstrate_integration_architecture():
 
 
 def main():
-    
+
     print("IRCamera PC Controller Hub - MVP Implementation Demo")
     print("=" * 80)
     print("This demonstration shows the implemented components of the")
@@ -301,7 +294,6 @@ def main():
             print(f"\n❌ {demo_name} - ERROR: {e}")
             results.append((demo_name, False))
 
-    
     print("\n" + "=" * 80)
     print("IMPLEMENTATION SUMMARY")
     print("=" * 80)

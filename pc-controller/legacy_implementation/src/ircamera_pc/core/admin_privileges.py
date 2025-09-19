@@ -22,7 +22,6 @@ except ImportError:
 
     PYQT_AVAILABLE = False
 
-
     # Mock classes for when PyQt6 is not available
     class QMessageBox:
         StandardButton = type(
@@ -38,7 +37,6 @@ except ImportError:
         @staticmethod
         def warning(*args, **kwargs) -> Any:
             pass
-
 
     class QApplication:
         @staticmethod
@@ -68,7 +66,6 @@ except ImportError:
 
 
 class PrivilegeLevel(Enum):
-    
 
     USER = "user"
     ELEVATED = "elevated"
@@ -78,7 +75,6 @@ class PrivilegeLevel(Enum):
 
 
 class ElevationResult(Enum):
-    
 
     SUCCESS = "success"
     CANCELLED = "cancelled"
@@ -89,7 +85,6 @@ class ElevationResult(Enum):
 
 @dataclass
 class SystemPermissions:
-    
 
     network_config: bool = False
     bluetooth_control: bool = False
@@ -100,14 +95,12 @@ class SystemPermissions:
 
 
 class AdminPrivilegesManager(BaseManager):
-    
 
-    
     if PYQT_AVAILABLE:
         privilege_changed = pyqtSignal(PrivilegeLevel)
-        elevation_requested = pyqtSignal(str)  
-        elevation_completed = pyqtSignal(ElevationResult, str)  
-        permission_denied = pyqtSignal(str, str)  
+        elevation_requested = pyqtSignal(str)
+        elevation_completed = pyqtSignal(ElevationResult, str)
+        permission_denied = pyqtSignal(str, str)
         system_ready = pyqtSignal(SystemPermissions)
 
     def __init__(self):
@@ -116,24 +109,23 @@ class AdminPrivilegesManager(BaseManager):
         self._permissions = SystemPermissions()
         self._elevation_requested = False
 
-        
         self._check_current_privileges()
         self._check_system_permissions()
 
     def _emit_signal(self, signal_name: str, *args):
-        
+
         if PYQT_AVAILABLE and hasattr(self, signal_name):
             signal = getattr(self, signal_name)
             signal.emit(*args)
 
     @property
     def current_privilege_level(self) -> PrivilegeLevel:
-        
+
         return self._current_privilege
 
     @property
     def is_elevated(self) -> bool:
-        
+
         return self._current_privilege in [
             PrivilegeLevel.ELEVATED,
             PrivilegeLevel.ADMIN,
@@ -142,11 +134,11 @@ class AdminPrivilegesManager(BaseManager):
 
     @property
     def system_permissions(self) -> SystemPermissions:
-        
+
         return self._permissions
 
     def request_elevation(self, reason: str = "System Integration") -> ElevationResult:
-        
+
         if self.is_elevated:
             return ElevationResult.ALREADY_ELEVATED
 
@@ -179,7 +171,7 @@ class AdminPrivilegesManager(BaseManager):
             self._elevation_requested = False
 
     def verify_operation_permissions(self, operation: str) -> bool:
-        
+
         operation_lower = operation.lower()
 
         permission_map = {
@@ -204,7 +196,7 @@ class AdminPrivilegesManager(BaseManager):
         return False
 
     def run_as_admin(self, command: str, arguments: Optional[list] = None) -> bool:
-        
+
         if not self.is_elevated:
             logger.error("Cannot run admin command without elevation")
             return False
@@ -225,7 +217,7 @@ class AdminPrivilegesManager(BaseManager):
             return False
 
     def check_service_status(self, service_name: str) -> Optional[str]:
-        
+
         if not self.verify_operation_permissions("service"):
             return None
 
@@ -246,7 +238,7 @@ class AdminPrivilegesManager(BaseManager):
             return None
 
     def manage_firewall_rule(self, rule_name: str, action: str, **kwargs) -> bool:
-        
+
         if not self.verify_operation_permissions("firewall"):
             return False
 
@@ -262,7 +254,7 @@ class AdminPrivilegesManager(BaseManager):
             return False
 
     def _check_current_privileges(self) -> None:
-        
+
         system = platform.system()
 
         try:
@@ -281,11 +273,11 @@ class AdminPrivilegesManager(BaseManager):
             self._current_privilege = PrivilegeLevel.UNKNOWN
 
     def _check_windows_privileges(self) -> PrivilegeLevel:
-        
+
         try:
-            
+
             if ctypes.windll.shell32.IsUserAnAdmin():
-                
+
                 if WIN32_AVAILABLE:
                     try:
                         token = win32security.OpenProcessToken(
@@ -295,7 +287,6 @@ class AdminPrivilegesManager(BaseManager):
                             token, win32security.TokenUser
                         )[0]
 
-                        
                         system_sid = win32security.ConvertStringSidToSid("S-1-5-18")
 
                         if win32security.EqualSid(user_sid, system_sid):
@@ -315,16 +306,16 @@ class AdminPrivilegesManager(BaseManager):
             return PrivilegeLevel.UNKNOWN
 
     def _check_unix_privileges(self) -> PrivilegeLevel:
-        
+
         try:
             uid = os.getuid()
 
             if uid == 0:
                 return PrivilegeLevel.ADMIN
             else:
-                
+
                 try:
-                    
+
                     result = subprocess.run(
                         ["/usr/bin/sudo", "-n", "true"],
                         capture_output=True,
@@ -344,7 +335,7 @@ class AdminPrivilegesManager(BaseManager):
             return PrivilegeLevel.UNKNOWN
 
     def _check_system_permissions(self) -> None:
-        
+
         try:
             system = platform.system()
 
@@ -361,28 +352,21 @@ class AdminPrivilegesManager(BaseManager):
             logger.error(f"Permission check failed: {e}")
 
     def _check_windows_permissions(self) -> None:
-        
-        
+
         self._permissions.network_config = self._test_network_config_access()
 
-        
         self._permissions.bluetooth_control = self._test_bluetooth_access()
 
-        
         self._permissions.service_management = self._test_service_management_access()
 
-        
         self._permissions.registry_access = self._test_registry_access()
 
-        
         self._permissions.hardware_access = self._test_hardware_access()
 
-        
         self._permissions.firewall_control = self._test_firewall_access()
 
     def _check_unix_permissions(self) -> None:
-        
-        
+
         if platform.system() == "Windows":
             logger.error("_check_unix_permissions called on Windows - this is a bug")
             return
@@ -396,9 +380,9 @@ class AdminPrivilegesManager(BaseManager):
             self._permissions.service_management = is_root or can_sudo
             self._permissions.hardware_access = is_root
         except AttributeError:
-            
+
             logger.error("os.getuid() not available - platform detection failed")
-            
+
             can_sudo = self._can_sudo()
             self._permissions.network_config = can_sudo
             self._permissions.bluetooth_control = can_sudo
@@ -406,7 +390,7 @@ class AdminPrivilegesManager(BaseManager):
             self._permissions.hardware_access = False
 
     def _perform_elevation(self, reason: str) -> ElevationResult:
-        
+
         system = platform.system()
 
         if system == "Windows":
@@ -417,10 +401,10 @@ class AdminPrivilegesManager(BaseManager):
             return ElevationResult.NOT_SUPPORTED
 
     def _elevate_windows(self, reason: str) -> ElevationResult:
-        
+
         try:
             if ELEVATE_AVAILABLE:
-                
+
                 reply = QMessageBox.question(
                     None,
                     "Administrator Privileges Required",
@@ -440,11 +424,10 @@ class AdminPrivilegesManager(BaseManager):
                 if reply != QMessageBox.StandardButton.Yes:
                     return ElevationResult.CANCELLED
 
-                
                 elevate(show_console=False)
                 return ElevationResult.SUCCESS
             else:
-                
+
                 return self._manual_uac_elevation()
 
         except PermissionError:
@@ -454,9 +437,9 @@ class AdminPrivilegesManager(BaseManager):
             return ElevationResult.FAILED
 
     def _elevate_unix(self, reason: str) -> ElevationResult:
-        
+
         try:
-            
+
             reply = QMessageBox.question(
                 None,
                 "Administrator Privileges Required",
@@ -472,11 +455,9 @@ class AdminPrivilegesManager(BaseManager):
             if reply != QMessageBox.StandardButton.Yes:
                 return ElevationResult.CANCELLED
 
-            
             python_path = sys.executable
             script_path = sys.argv[0]
 
-            
             if not os.path.exists(python_path) or not os.path.exists(script_path):
                 raise FileNotFoundError("Required executable paths not found")
 
@@ -485,7 +466,6 @@ class AdminPrivilegesManager(BaseManager):
                 shell=False,
             )
 
-            
             QApplication.quit()
 
             return ElevationResult.SUCCESS
@@ -495,10 +475,10 @@ class AdminPrivilegesManager(BaseManager):
             return ElevationResult.FAILED
 
     def _manual_uac_elevation(self) -> ElevationResult:
-        
+
         try:
             if WIN32_AVAILABLE:
-                
+
                 python_path = sys.executable
                 script_path = " ".join(sys.argv)
 
@@ -506,8 +486,8 @@ class AdminPrivilegesManager(BaseManager):
                     None, "runas", python_path, script_path, None, 1
                 )
 
-                if result > 32:  
-                    
+                if result > 32:
+
                     QApplication.quit()
                     return ElevationResult.SUCCESS
                 else:
@@ -520,7 +500,7 @@ class AdminPrivilegesManager(BaseManager):
             return ElevationResult.FAILED
 
     def _get_result_message(self, result: ElevationResult) -> str:
-        
+
         messages = {
             ElevationResult.SUCCESS: "Administrator privileges" "granted successfully",
             ElevationResult.CANCELLED: "Privilege elevation was" "cancelled by user",
@@ -534,12 +514,11 @@ class AdminPrivilegesManager(BaseManager):
         }
         return messages.get(result, "Unknown elevation result")
 
-    
     def _test_network_config_access(self) -> bool:
-        
+
         try:
             if platform.system() == "Windows":
-                
+
                 result = subprocess.run(
                     [
                         "C:\\Windows\\System32\\netsh.exe",
@@ -559,14 +538,14 @@ class AdminPrivilegesManager(BaseManager):
             return False
 
     def _test_bluetooth_access(self) -> bool:
-        
-        return self.is_elevated  
+
+        return self.is_elevated
 
     def _test_service_management_access(self) -> bool:
-        
+
         try:
             if platform.system() == "Windows":
-                
+
                 result = subprocess.run(
                     ["C:\\Windows\\System32\\sc.exe", "query", "type=service"],
                     capture_output=True,
@@ -581,7 +560,7 @@ class AdminPrivilegesManager(BaseManager):
             return False
 
     def _test_registry_access(self) -> bool:
-        
+
         if platform.system() != "Windows":
             return False
 
@@ -597,11 +576,11 @@ class AdminPrivilegesManager(BaseManager):
             return False
 
     def _test_hardware_access(self) -> bool:
-        
+
         return self.is_elevated
 
     def _test_firewall_access(self) -> bool:
-        
+
         if platform.system() != "Windows":
             return False
 
@@ -616,8 +595,7 @@ class AdminPrivilegesManager(BaseManager):
             return False
 
     def _can_sudo(self) -> bool:
-        
-        
+
         if platform.system() == "Windows":
             return False
 
@@ -629,9 +607,8 @@ class AdminPrivilegesManager(BaseManager):
         except (OSError, ValueError, RuntimeError):
             return False
 
-    
     def _run_windows_admin_command(self, command: str, arguments: list) -> bool:
-        
+
         try:
             result = subprocess.run(
                 [command] + arguments, capture_output=True, timeout=30
@@ -642,7 +619,7 @@ class AdminPrivilegesManager(BaseManager):
             return False
 
     def _run_unix_admin_command(self, command: str, arguments: list) -> bool:
-        
+
         try:
             if os.getuid() == 0:
                 result = subprocess.run(
@@ -659,9 +636,8 @@ class AdminPrivilegesManager(BaseManager):
             logger.error(f"Unix admin command failed: {e}")
             return False
 
-    
     def _check_windows_service(self, service_name: str) -> Optional[str]:
-        
+
         try:
             result = subprocess.run(
                 ["sc", "query", service_name],
@@ -671,7 +647,7 @@ class AdminPrivilegesManager(BaseManager):
             )
 
             if result.returncode == 0:
-                
+
                 for line in result.stdout.split("\n"):
                     if "STATE" in line:
                         return line.split(":")[1].strip()
@@ -680,7 +656,7 @@ class AdminPrivilegesManager(BaseManager):
             return None
 
     def _check_linux_service(self, service_name: str) -> Optional[str]:
-        
+
         try:
             result = subprocess.run(
                 ["systemctl", "is-active", service_name],
@@ -693,7 +669,7 @@ class AdminPrivilegesManager(BaseManager):
             return None
 
     def _check_macos_service(self, service_name: str) -> Optional[str]:
-        
+
         try:
             result = subprocess.run(
                 ["launchctl", "list", service_name],
@@ -708,7 +684,7 @@ class AdminPrivilegesManager(BaseManager):
     def _manage_windows_firewall_rule(
             self, rule_name: str, action: str, **kwargs
     ) -> bool:
-        
+
         try:
             base_cmd = ["netsh", "advfirewall", "firewall"]
 

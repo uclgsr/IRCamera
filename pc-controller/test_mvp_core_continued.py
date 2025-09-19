@@ -14,23 +14,20 @@ sys.path.insert(0, str(src_dir))
 
 
 def test_core_continued_features():
-    
+
     print("Testing continued core features...")
 
     try:
-        
+
         from ircamera_pc.sync import AdvancedTimeSyncServer
         time_sync = AdvancedTimeSyncServer(port=1235)
         print("✓ AdvancedTimeSyncServer creation successful")
 
-        
-        from ircamera_pc.core.device_manager import DeviceManager, DeviceInfo, DeviceType, \
-            DeviceConnectionState
+        from ircamera_pc.core.device_manager import DeviceManager, DeviceType
 
         device_manager = DeviceManager()
         registry = device_manager.get_registry()
 
-        
         from ircamera_pc.network.discovery import DiscoveredDevice
         from datetime import datetime
 
@@ -48,7 +45,6 @@ def test_core_continued_features():
         device_id = registry.register_device(discovered_device)
         print("✓ Manual device registration with correct parameters successful")
 
-        
         registered_info = registry.get_device(device_id)
         if registered_info:
             print("✓ Manual device retrieval successful")
@@ -66,11 +62,11 @@ def test_core_continued_features():
 
 
 def test_network_components():
-    
+
     print("\nTesting network component creation...")
 
     try:
-        
+
         try:
             from ircamera_pc.network.websocket_server import WebSocketServer
             print("✓ WebSocket server import successful")
@@ -78,17 +74,15 @@ def test_network_components():
             print(f"❌ WebSocket server import failed: {e}")
             return False
 
-        
         try:
             ws_server = WebSocketServer(host="127.0.0.1", port=9999)
             print("✓ WebSocket server creation successful")
         except Exception as e:
             print(f"❌ WebSocket server creation failed: {e}")
-            
-            print("⚠ WebSocket server creation failed - may need additional dependencies or config")
-            return True  
 
-        
+            print("⚠ WebSocket server creation failed - may need additional dependencies or config")
+            return True
+
         basic_attrs = ['host', 'port']
         for attr in basic_attrs:
             if hasattr(ws_server, attr):
@@ -100,19 +94,18 @@ def test_network_components():
 
     except Exception as e:
         print(f"❌ Network components test failed: {e}")
-        
+
         print("⚠ Network server components may need additional setup")
         return True
 
 
 def test_device_type_mappings():
-    
+
     print("\nTesting device type mappings...")
 
     try:
         from ircamera_pc.network.discovery import DeviceType
 
-        
         device_types = [
             DeviceType.ANDROID_SENSOR_NODE,
             DeviceType.THERMAL_CAMERA_TS004,
@@ -124,7 +117,6 @@ def test_device_type_mappings():
         for dt in device_types:
             print(f"✓ DeviceType.{dt.name} = '{dt.value}'")
 
-        
         device_type_mapping = {
             "ANDROID_SENSOR_NODE": DeviceType.ANDROID_SENSOR_NODE,
             "THERMAL_CAMERA_TS004": DeviceType.THERMAL_CAMERA_TS004,
@@ -142,22 +134,19 @@ def test_device_type_mappings():
 
 
 def main():
-    
+
     print("=" * 70)
     print("IRCamera PC Controller MVP - Continued Implementation Validation")
     print("=" * 70)
 
     success = True
 
-    
     if not test_core_continued_features():
         success = False
 
-    
     if not test_network_components():
         success = False
 
-    
     if not test_device_type_mappings():
         success = False
 

@@ -112,7 +112,7 @@ clean_project() {
         print_status "Cleaning project (this may take 80-90 seconds)..."
         
         cd "$PROJECT_ROOT"
-        if ! timeout 180 ./gradlew clean $GRADLE_ARGS 2>&1 | tee -a "$BUILD_LOG"; then
+        if ! timeout 180 ./gradlew clean "$GRADLE_ARGS" 2>&1 | tee -a "$BUILD_LOG"; then
             print_warning "Clean operation timed out or failed, but continuing..."
         else
             print_success "Clean completed successfully"
@@ -157,7 +157,7 @@ primary_build() {
     print_status "This may take 1-2 minutes, please be patient..."
     
     # Build with timeout to prevent hanging
-    if timeout 300 ./gradlew $GRADLE_TASK $GRADLE_ARGS 2>&1 | tee -a "$BUILD_LOG"; then
+    if timeout 300 ./gradlew "$GRADLE_TASK" "$GRADLE_ARGS" 2>&1 | tee -a "$BUILD_LOG"; then
         return 0
     else
         return 1
@@ -177,7 +177,7 @@ fallback_build_strategies() {
     # Strategy 2: Try debug build if release failed
     if [ "$BUILD_TYPE" = "release" ]; then
         print_status "Strategy 2: Trying debug build as fallback..."
-        if timeout 300 ./gradlew :app:assembleDebug $GRADLE_ARGS 2>&1 | tee -a "$BUILD_LOG"; then
+        if timeout 300 ./gradlew :app:assembleDebug "$GRADLE_ARGS" 2>&1 | tee -a "$BUILD_LOG"; then
             print_warning "Release build failed, but debug build succeeded"
             BUILD_TYPE="debug"  # Update for output messages
             return 0
@@ -192,7 +192,7 @@ fallback_build_strategies() {
     for module in "${modules[@]}"; do
         if [ -d "$PROJECT_ROOT/$module" ]; then
             print_status "Building module: $module"
-            if timeout 120 ./gradlew :$module:build $GRADLE_ARGS 2>&1 | tee -a "$BUILD_LOG"; then
+            if timeout 120 ./gradlew :"$module":build "$GRADLE_ARGS" 2>&1 | tee -a "$BUILD_LOG"; then
                 ((built_modules++))
                 print_success "Module $module built successfully"
             else
@@ -203,7 +203,7 @@ fallback_build_strategies() {
     
     if [ $built_modules -gt 0 ]; then
         print_status "Some modules built successfully, retrying main build..."
-        if timeout 300 ./gradlew $GRADLE_TASK $GRADLE_ARGS 2>&1 | tee -a "$BUILD_LOG"; then
+        if timeout 300 ./gradlew "$GRADLE_TASK" "$GRADLE_ARGS" 2>&1 | tee -a "$BUILD_LOG"; then
             return 0
         fi
     fi

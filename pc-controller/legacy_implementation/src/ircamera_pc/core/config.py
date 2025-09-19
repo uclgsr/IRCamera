@@ -11,12 +11,11 @@ except ImportError:
 
 
 class ConfigManager:
-    
 
     def __init__(self, config_path: Optional[str] = None):
-        
+
         if config_path is None:
-            
+
             project_root = Path(__file__).parent.parent.parent.parent
             config_path = project_root / "config" / "config.yaml"
 
@@ -25,7 +24,7 @@ class ConfigManager:
         self._load_config()
 
     def _load_config(self) -> None:
-        
+
         try:
             if not self.config_path.exists():
                 logger.warning(f"Config file not found: {self.config_path}")
@@ -42,10 +41,10 @@ class ConfigManager:
             self._config = self._get_default_config()
 
     def _get_default_config(self) -> Dict[str, Any]:
-        
+
         return {
             "network": {
-                "server_host": "127.0.0.1",  
+                "server_host": "127.0.0.1",
                 "server_port": 8080,
                 "max_connections": 8,
                 "heartbeat_interval": 5,
@@ -83,7 +82,7 @@ class ConfigManager:
         }
 
     def get(self, key: str, default: Optional[Any] = None) -> Any:
-        
+
         try:
             keys = key.split(".")
             value = self._config
@@ -97,22 +96,20 @@ class ConfigManager:
             return default
 
     def set(self, key: str, value: Any) -> None:
-        
+
         keys = key.split(".")
         config = self._config
 
-        
         for k in keys[:-1]:
             if k not in config:
                 config[k] = {}
             config = config[k]
 
-        
         config[keys[-1]] = value
         logger.debug(f"Configuration updated: {key} = {value}")
 
     def save(self) -> None:
-        
+
         try:
             self.config_path.parent.mkdir(parents=True, exist_ok=True)
 
@@ -125,13 +122,12 @@ class ConfigManager:
             logger.error(f"Failed to save configuration: {e}")
 
     def reload(self) -> None:
-        
+
         self._load_config()
 
     def get_all(self) -> Dict[str, Any]:
-        
-        return self._config.copy()
 
+        return self._config.copy()
 
 
 config = ConfigManager()

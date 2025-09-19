@@ -7,7 +7,7 @@ from typing import Any
 try:
     from loguru import logger
 except ImportError:
-    
+
     logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
     logger = logging.getLogger(__name__)
 
@@ -19,7 +19,6 @@ except ImportError:
         def __getattr__(self, name):
             return "default"
 
-
     config = MockConfig()
 
 try:
@@ -29,48 +28,40 @@ try:
 except ImportError:
     GUI_AVAILABLE = False
 
-
     # Mock classes for headless mode
     class QObject:
         pass
-
 
     def pyqtSignal(*args, **kwargs):
         return None
 
 
 class LogHandler(QObject):
-    
 
-    log_message = pyqtSignal(str, str, str)  
+    log_message = pyqtSignal(str, str, str)
 
     def __init__(self):
-        
+
         super().__init__()
 
     def write(self, record) -> Any:
-        
-        
+
         level = record["level"].name
         message = record["message"]
         timestamp = record["time"].strftime("%Y-%m-%d %H:%M:%S")
 
-        
         self.log_message.emit(level, message, timestamp)
 
 
 def setup_logging() -> LogHandler:
-    
-    
+
     logger.remove()
 
-    
     log_level = config.get("logging.level", "INFO")
     console_output = config.get("logging.console_output", True)
     file_rotation = config.get("logging.file_rotation", "1 MB")
     retention = config.get("logging.retention", "30 days")
 
-    
     if console_output:
         logger.add(
             sys.stdout,
@@ -84,7 +75,6 @@ def setup_logging() -> LogHandler:
             ),
         )
 
-    
     logger.add(
         "logs/ircamera_pc.log",
         level=log_level,
@@ -95,20 +85,18 @@ def setup_logging() -> LogHandler:
         compression="zip",
     )
 
-    
     gui_handler = LogHandler()
 
-    
     def gui_sink(record) -> Any:
         try:
-            
+
             if hasattr(record, "level"):
-                
+
                 level = record.level.name
                 message = record.message
                 timestamp = record.time.strftime("%H:%M:%S")
             elif hasattr(record, "get"):
-                
+
                 level = record.get("level", {}).get("name", "INFO")
                 message = record.get("message", "")
                 timestamp = (
@@ -117,24 +105,23 @@ def setup_logging() -> LogHandler:
                     else ""
                 )
             else:
-                
+
                 level = "INFO"
                 message = str(record)
                 timestamp = ""
             gui_handler.log_message.emit(level, message, timestamp)
         except Exception:
-            
+
             try:
                 gui_handler.log_message.emit("INFO", str(record), "")
             except Exception:
-                
+
                 pass
 
-    
     try:
         logger.add(gui_sink, level=log_level)
     except Exception:
-        
+
         pass
 
     logger.info("Logging system initialized")
@@ -142,15 +129,14 @@ def setup_logging() -> LogHandler:
 
 
 def get_app_icon() -> Any:
-    
-    
+
     return None
 
 
 def apply_theme(app: Any, theme_name: str = "default") -> Any:
-    
+
     if theme_name == "dark":
-        
+
         dark_style = """
         QMainWindow {
             background-color: #2d2d2d;
@@ -269,11 +255,9 @@ def apply_theme(app: Any, theme_name: str = "default") -> Any:
 
         app.setStyleSheet(dark_style)
 
-    
-
 
 def format_file_size(size_bytes: int) -> str:
-    
+
     if size_bytes == 0:
         return "0 B"
 
@@ -286,7 +270,7 @@ def format_file_size(size_bytes: int) -> str:
 
 
 def format_duration(seconds: float) -> str:
-    
+
     total_seconds = int(seconds)
     hours = total_seconds // 3600
     minutes = (total_seconds % 3600) // 60
@@ -299,7 +283,7 @@ def format_duration(seconds: float) -> str:
 
 
 def get_status_color(status: str) -> str:
-    
+
     status = status.lower()
 
     if status in ["connected", "ok", "active", "recording"]:
@@ -313,17 +297,15 @@ def get_status_color(status: str) -> str:
 
 
 def validate_session_name(name: str) -> tuple[bool, str]:
-    
+
     if not name or not name.strip():
-        return True, ""  
+        return True, ""
 
     name = name.strip()
 
-    
     if len(name) > 100:
         return False, "Session name must be 100 characters or less"
 
-    
     invalid_chars = ["<", ">", ":", '"', "|", "?", "*", "/", "\\"]
     for char in invalid_chars:
         if char in name:
@@ -333,7 +315,7 @@ def validate_session_name(name: str) -> tuple[bool, str]:
 
 
 def confirm_action(parent, title: str, message: str) -> bool:
-    
+
     from PyQt6.QtWidgets import QMessageBox
 
     reply = QMessageBox.question(
