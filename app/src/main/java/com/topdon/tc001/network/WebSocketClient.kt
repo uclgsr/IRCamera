@@ -7,12 +7,12 @@ import android.util.Base64
 import android.util.Log
 import com.topdon.tc001.config.FeatureFlags
 import com.topdon.tc001.config.ProtocolVersion
-import com.topdon.tc001.logging.StructuredLogger
+import com.topdon.tc001.core.StructuredLogger
 import com.topdon.tc001.network.DataManagementService
 import com.topdon.tc001.network.FileUploadService
 import com.topdon.tc001.security.AdvancedAuthenticationManager
 import com.topdon.tc001.sync.EnhancedTimeSyncService
-import com.topdon.tc001.sync.SessionManager
+import com.topdon.tc001.core.SessionManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope

@@ -5,9 +5,9 @@ import android.util.Log
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import com.topdon.tc001.sensors.SensorRecorder
-import com.topdon.tc001.util.SessionDirectoryManager
+import com.topdon.tc001.utils.SessionDirectoryManager
 import com.topdon.tc001.data.SessionMetadata
-import com.topdon.tc001.util.TimestampManager
+import com.topdon.tc001.utils.TimestampManager
 import com.topdon.tc001.permissions.PermissionManager
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*

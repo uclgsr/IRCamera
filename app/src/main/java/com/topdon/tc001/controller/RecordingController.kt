@@ -14,10 +14,10 @@ import com.topdon.tc001.sensors.TimeSynchronizationService
 import com.topdon.tc001.sensors.TimestampManager
 import com.topdon.tc001.sensors.gsr.GSRSensorRecorder
 import com.topdon.tc001.sensors.thermal.ThermalCameraRecorder
-import com.topdon.tc001.util.SessionDirectoryManager
-import com.topdon.tc001.util.SessionDirectory
+import com.topdon.tc001.utils.SessionDirectoryManager
+import com.topdon.tc001.utils.SessionDirectory
 import com.topdon.tc001.data.SessionMetadata
-import com.topdon.tc001.util.StorageStatus
+import com.topdon.tc001.utils.StorageStatus
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

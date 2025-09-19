@@ -1,7 +1,7 @@
 package com.topdon.tc001.network
 
 import android.content.Context
-import com.topdon.tc001.logging.StructuredLogger
+import com.topdon.tc001.core.StructuredLogger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope

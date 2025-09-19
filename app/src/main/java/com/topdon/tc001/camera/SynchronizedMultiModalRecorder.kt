@@ -4,7 +4,7 @@ import android.content.Context
 import android.util.Log
 import android.view.TextureView
 import com.topdon.gsr.util.TimeUtil
-import com.topdon.tc001.gsr.EnhancedThermalRecorder
+import com.topdon.tc001.sensors.gsr.EnhancedThermalRecorder
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking

@@ -5,7 +5,7 @@ import android.util.Log
 import android.view.TextureView
 import com.topdon.gsr.util.TimeUtil
 import com.topdon.tc001.camera.ui.SensorSelectionDialog
-import com.topdon.tc001.gsr.EnhancedThermalRecorder
+import com.topdon.tc001.sensors.gsr.EnhancedThermalRecorder
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers

@@ -5,7 +5,7 @@ import android.util.Log
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import com.topdon.tc001.controller.RecordingController
-import com.topdon.tc001.logging.StructuredLogger
+import com.topdon.tc001.core.StructuredLogger
 import com.topdon.tc001.sensors.unified.model.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*

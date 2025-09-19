@@ -16,8 +16,8 @@ import com.topdon.tc001.data.SessionMetadata
 import com.topdon.tc001.sensors.*
 import com.topdon.tc001.sensors.RecordingStats
 import com.topdon.tc001.sensors.ErrorType
-import com.topdon.tc001.util.CSVBufferedWriter
-import com.topdon.tc001.util.SessionDirectoryManager
+import com.topdon.tc001.utils.CSVBufferedWriter
+import com.topdon.tc001.utils.SessionDirectoryManager
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import java.io.File

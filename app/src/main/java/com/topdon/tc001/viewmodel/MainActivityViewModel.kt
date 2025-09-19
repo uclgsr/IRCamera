@@ -11,7 +11,7 @@ import com.topdon.tc001.sensors.unified.UnifiedGSRRecorder
 import com.topdon.tc001.sensors.thermal.ThermalRecorder
 import com.topdon.tc001.network.NetworkClient
 import com.topdon.tc001.network.NetworkController
-import com.topdon.tc001.sync.SessionManager
+import com.topdon.tc001.core.SessionManager
 import com.topdon.gsr.service.SessionManager as GSRSessionManager
 import com.topdon.gsr.model.SessionInfo
 import kotlinx.coroutines.Dispatchers

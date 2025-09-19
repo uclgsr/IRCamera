@@ -6,7 +6,7 @@ import android.widget.*
 import androidx.activity.ComponentActivity
 import androidx.lifecycle.lifecycleScope
 import com.topdon.tc001.controller.RecordingController
-import com.topdon.tc001.service.RecordingService
+import com.topdon.tc001.core.RecordingService
 import kotlinx.coroutines.launch
 import java.io.File
 

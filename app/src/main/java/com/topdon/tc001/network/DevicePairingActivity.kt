@@ -14,7 +14,7 @@ import com.csl.irCamera.R
 import com.csl.irCamera.databinding.ActivityDevicePairingBinding
 import com.topdon.gsr.model.SessionInfo
 import com.topdon.lib.core.ktbase.BaseBindingActivity
-import com.topdon.tc001.gsr.MultiModalRecordingActivity
+import com.topdon.tc001.sensors.gsr.MultiModalRecordingActivity
 import kotlinx.coroutines.launch
 
 class DevicePairingActivity : BaseBindingActivity<ActivityDevicePairingBinding>(),

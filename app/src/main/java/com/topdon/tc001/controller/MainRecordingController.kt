@@ -4,7 +4,7 @@ import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LifecycleOwner
 import com.topdon.tc001.sensors.SensorRecorder
-import com.topdon.tc001.util.SessionDirectoryManager
+import com.topdon.tc001.utils.SessionDirectoryManager
 import com.topdon.tc001.data.SessionMetadata
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*

@@ -3,7 +3,7 @@ package com.topdon.tc001.network
 import android.content.Context
 import android.graphics.Bitmap
 import android.util.Log
-import com.topdon.tc001.service.RecordingService
+import com.topdon.tc001.core.RecordingService
 
 /**
  * PreviewIntegration provides easy integration points for camera and sensor components

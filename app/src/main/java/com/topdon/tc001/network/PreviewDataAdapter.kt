@@ -4,7 +4,7 @@ import android.graphics.Bitmap
 import android.util.Log
 import com.example.thermal_lite.camera.CameraPreviewManager
 import com.topdon.tc001.sensors.gsr.GSRSensorRecorder
-import com.topdon.tc001.service.RecordingService
+import com.topdon.tc001.core.RecordingService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job

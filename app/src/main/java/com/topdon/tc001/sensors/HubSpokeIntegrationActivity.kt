@@ -17,7 +17,7 @@ import com.topdon.lib.core.ktbase.BaseBindingActivity
 import com.topdon.tc001.controller.RecordingController
 import com.topdon.tc001.controller.RecordingState
 import com.topdon.tc001.network.NetworkServer
-import com.topdon.tc001.service.RecordingService
+import com.topdon.tc001.core.RecordingService
 import com.topdon.tc001.utils.TimeManager
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach

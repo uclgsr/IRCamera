@@ -2,7 +2,7 @@ package com.topdon.tc001.security
 
 import android.content.Context
 import android.util.Log
-import com.topdon.tc001.logging.StructuredLogger
+import com.topdon.tc001.core.StructuredLogger
 import org.json.JSONObject
 import java.util.concurrent.ConcurrentHashMap
 

@@ -4,8 +4,8 @@ import android.content.Context
 import android.util.Log
 import com.topdon.tc001.sensors.TimestampManager
 import com.topdon.tc001.sensors.TimestampRecord
-import com.topdon.tc001.util.CSVBufferedWriter
-import com.topdon.tc001.util.SessionDirectoryManager
+import com.topdon.tc001.utils.CSVBufferedWriter
+import com.topdon.tc001.utils.SessionDirectoryManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
