@@ -17,22 +17,22 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.csl.irCamera.R
 import com.csl.irCamera.databinding.FragmentMainBinding
-import com.topdon.lib.core.bean.event.SocketMsgEvent
-import com.topdon.lib.core.common.SharedManager
-import com.topdon.lib.core.config.ExtraKeyConfig
-import com.topdon.lib.core.config.RouterConfig
-import com.topdon.lib.core.dialog.TipDialog
-import com.topdon.lib.core.ktbase.BaseBindingFragment
-import com.topdon.lib.core.repository.BatteryInfo
-import com.topdon.lib.core.repository.TC007Repository
-import com.topdon.lib.core.socket.SocketCmdUtil
-import com.topdon.lib.core.socket.WebSocketProxy
-import com.topdon.lib.core.tools.AppLanguageUtils
-import com.topdon.lib.core.tools.ConstantLanguages
-import com.topdon.lib.core.tools.DeviceTools
-import com.topdon.lib.core.utils.NetWorkUtils
-import com.topdon.lib.core.utils.WsCmdConstants
-import com.topdon.lib.core.navigation.NavigationManager
+import com.mpdc4gsr.lib.core.bean.event.SocketMsgEvent
+import com.mpdc4gsr.lib.core.common.SharedManager
+import com.mpdc4gsr.lib.core.config.ExtraKeyConfig
+import com.mpdc4gsr.lib.core.config.RouterConfig
+import com.mpdc4gsr.lib.core.dialog.TipDialog
+import com.mpdc4gsr.lib.core.ktbase.BaseBindingFragment
+import com.mpdc4gsr.lib.core.repository.BatteryInfo
+import com.mpdc4gsr.lib.core.repository.TC007Repository
+import com.mpdc4gsr.lib.core.socket.SocketCmdUtil
+import com.mpdc4gsr.lib.core.socket.WebSocketProxy
+import com.mpdc4gsr.lib.core.tools.AppLanguageUtils
+import com.mpdc4gsr.lib.core.tools.ConstantLanguages
+import com.mpdc4gsr.lib.core.tools.DeviceTools
+import com.mpdc4gsr.lib.core.utils.NetWorkUtils
+import com.mpdc4gsr.lib.core.utils.WsCmdConstants
+import com.topdon.libcom.navigation.NavigationManager
 import com.topdon.lms.sdk.weiget.TToast
 import mpdc4gsr.activities.DeviceTypeActivity
 import mpdc4gsr.ui_components.DelPopup
@@ -446,7 +446,7 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
                 try {
                     val intent = Intent(
                         requireContext(),
-                        Class.forName("mpdc4gsr.sensors.gsr.GSRQuickRecordingActivity")
+                        Class.forName("com.topdon.tc001.gsr.GSRQuickRecordingActivity")
                     )
                     startActivity(intent)
                 } catch (e: ClassNotFoundException) {
@@ -485,7 +485,7 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
         try {
             val intent = Intent(
                 requireContext(),
-                mpdc4gsr.camera.integration.DualModeCameraActivity::class.java
+                com.topdon.tc001.camera.integration.DualModeCameraActivity::class.java
             )
             intent.putExtra("INITIAL_MODE", initialMode)
             intent.putExtra("ENABLE_SAMSUNG_OPTIMIZATIONS", true)

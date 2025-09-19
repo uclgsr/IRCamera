@@ -24,7 +24,7 @@ import com.github.gzuliyujiang.wheelview.annotation.ItemTextAlign;
 import com.github.gzuliyujiang.wheelview.annotation.ScrollState;
 import com.github.gzuliyujiang.wheelview.widget.NumberWheelView;
 import com.github.gzuliyujiang.wheelview.widget.WheelView;
-import com.topdon.lib.ui.R;
+import com.mpdc4gsr.lib.ui.R;
 
 import java.util.ArrayList;
 import java.util.List;

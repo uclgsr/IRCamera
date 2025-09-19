@@ -21,7 +21,7 @@ BUILD_LOG="$PROJECT_ROOT/build.log"
 
 # Build configuration
 BUILD_TYPE="release"          # Default: release, can be debug  
-BUILD_VARIANT="standard"      # Default: standard, can be google/topdon
+BUILD_VARIANT="standard"      # Default: standard, can be google/mpdc4gsr
 GRADLE_OPTS="-Xmx4g -XX:MaxMetaspaceSize=512m -XX:+HeapDumpOnOutOfMemoryError"
 GRADLE_ARGS="--no-configuration-cache"
 
@@ -55,7 +55,7 @@ show_help() {
     echo ""
     echo "Options:"
     echo "  -t, --type TYPE        Build type: release|debug (default: release)"
-    echo "  -v, --variant VARIANT  Build variant: standard|google|topdon (default: standard)"
+    echo "  -v, --variant VARIANT  Build variant: standard|google|mpdc4gsr (default: standard)"
     echo "  -c, --clean           Clean project before building"
     echo "  -f, --fallback        Try fallback build strategies if primary fails"
     echo "  -q, --quick           Skip validation steps for faster build"
@@ -66,13 +66,13 @@ show_help() {
     echo "  $0                           # Standard release build"
     echo "  $0 -t debug                  # Debug build"
     echo "  $0 -v google -c              # Google variant with clean"
-    echo "  $0 -t release -v topdon -f   # Topdon release with fallback strategies"
+    echo "  $0 -t release -v mpdc4gsr -f   # MPDC4GSR release with fallback strategies"
     echo ""
     echo "Previous .bat file equivalents:"
     echo "  build_apk_google_script.bat     → $0 -v google"
-    echo "  build_apk_topdon_script.bat     → $0 -v topdon"
+    echo "  build_apk_mpdc4gsr_script.bat     → $0 -v mpdc4gsr"
     echo "  build_release_google_apk_script.bat → $0 -t release -v google"
-    echo "  build_release_topdon_apk_script.bat → $0 -t release -v topdon"
+    echo "  build_release_mpdc4gsr_apk_script.bat → $0 -t release -v mpdc4gsr"
     echo ""
     echo "Output:"
     echo "  APK files: app/build/outputs/apk/[variant]/[type]/"
@@ -135,7 +135,7 @@ determine_gradle_task() {
         google)
             GRADLE_TASK=":app:${task_base}"
             ;;
-        topdon)
+        mpdc4gsr)
             GRADLE_TASK=":app:${task_base}"
             ;;
         standard|*)
@@ -221,7 +221,7 @@ analyze_build_failure() {
         if grep -q "ShimmerDevice" "$BUILD_LOG"; then
             print_error "❌ KNOWN ISSUE: ShimmerDevice class not found in BleModule"
             echo "  This is a known blocking issue preventing APK generation."
-            echo "  Location: BleModule/src/main/java/com/topdon/ble/ShimmerBleController.java"
+            echo "  Location: BleModule/src/main/java/com/mpdc4gsr/ble/ShimmerBleController.java"
             echo "  Resolution required: Implement or import ShimmerDevice class"
         fi
         
@@ -362,8 +362,8 @@ if [[ ! "$BUILD_TYPE" =~ ^(release|debug)$ ]]; then
     exit 1
 fi
 
-if [[ ! "$BUILD_VARIANT" =~ ^(standard|google|topdon)$ ]]; then
-    print_error "Invalid build variant: $BUILD_VARIANT. Must be 'standard', 'google', or 'topdon'"
+if [[ ! "$BUILD_VARIANT" =~ ^(standard|google|mpdc4gsr)$ ]]; then
+    print_error "Invalid build variant: $BUILD_VARIANT. Must be 'standard', 'google', or 'mpdc4gsr'"
     exit 1
 fi
 

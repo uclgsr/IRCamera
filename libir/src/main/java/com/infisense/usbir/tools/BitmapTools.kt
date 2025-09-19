@@ -2,8 +2,8 @@ package com.infisense.usbir.tools
 
 import androidx.annotation.ColorInt
 import com.elvishew.xlog.XLog
-import com.topdon.lib.core.utils.ByteUtils.bytesToInt
-import com.topdon.lib.core.utils.ByteUtils.descBytes
+import com.mpdc4gsr.lib.core.utils.ByteUtils.bytesToInt
+import com.mpdc4gsr.lib.core.utils.ByteUtils.descBytes
 
 object BitmapTools {
     private fun readTempValue(bytes: ByteArray): Float {

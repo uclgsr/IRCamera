@@ -1,12 +1,12 @@
-package com.topdon.menu.adapter
+package com.mpdc4gsr.menu.adapter
 
 import android.annotation.SuppressLint
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import com.topdon.lib.core.R
-import com.topdon.lib.core.menu.constant.FenceType
-import com.topdon.lib.core.menu.constant.MenuType
-import com.topdon.lib.core.R as MenuR
+import com.mpdc4gsr.lib.core.R
+import com.topdon.menu.constant.FenceType
+import com.topdon.menu.constant.MenuType
+import com.topdon.menu.R as MenuR
 
 @SuppressLint("NotifyDataSetChanged")
 internal class FenceAdapter(menuType: MenuType) : BaseMenuAdapter() {

@@ -10,7 +10,7 @@
 
     <fragment
         android:id="@+id/thermal_fragment"
-        android:name="com.topdon.module.thermal.fragment.MonitorThermalFragment"
+        android:name="com.mpdc4gsr.module.thermal.fragment.MonitorThermalFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@id/motion_action_lay"

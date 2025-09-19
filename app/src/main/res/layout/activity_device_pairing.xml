@@ -7,10 +7,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#16131e"
-        tools:context="mpdc4gsr.network.DevicePairingActivity">
+        tools:context="com.mpdc4gsr.tc001.network.DevicePairingActivity">
 
         
-        <com.topdon.lib.core.view.TitleView
+        <com.mpdc4gsr.lib.core.view.TitleView
             android:id="@+id/title_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -1,4 +1,4 @@
-package com.topdon.libcom.dialog
+package com.mpdc4gsr.libcom.dialog
 
 import android.app.Dialog
 import android.content.Context
@@ -16,9 +16,9 @@ import androidx.appcompat.widget.SwitchCompat
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
-import com.topdon.lib.core.bean.AlarmBean
-import com.topdon.lib.core.tools.ToastTools
-import com.topdon.lib.core.tools.UnitTools
+import com.mpdc4gsr.lib.core.bean.AlarmBean
+import com.mpdc4gsr.lib.core.tools.ToastTools
+import com.mpdc4gsr.lib.core.tools.UnitTools
 import com.topdon.libcom.R
 
 class TempAlarmSetDialog(

@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:background="@drawable/bg_corners10_solid_3b3e44"
     android:paddingBottom="24dp"
-    tools:context="com.topdon.lib.ui.dialog.MonitorSelectDialog">
+    tools:context="com.mpdc4gsr.lib.ui.dialog.MonitorSelectDialog">
 
     <TextView
         android:id="@+id/tv_title"

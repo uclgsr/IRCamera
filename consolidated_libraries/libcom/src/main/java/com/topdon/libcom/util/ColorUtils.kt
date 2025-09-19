@@ -1,4 +1,4 @@
-package com.topdon.libcom.util
+package com.mpdc4gsr.libcom.util
 
 import android.content.res.Resources
 import android.util.TypedValue

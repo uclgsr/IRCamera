@@ -3,7 +3,7 @@
     <string name="app_name">MPDC4GSR</string>
 
     
-    <string name="version_year">Copyright %s TOPDON Technology Co.,Ltd.\nAll Rights Reserved.</string>
+    <string name="version_year">Copyright %s MPDC4GSR Technology Co.,Ltd.\nAll Rights Reserved.</string>
     <string name="privacy_tips">If you disagree, you will not be able to use our product or service.</string>
     <string name="privacy_confirm">Agree and Use</string>
     <string name="privacy_cancel">Disagree and Cancel</string>
@@ -109,4 +109,8 @@
     <string name="gsr_multi_modal_recording">GSR Multi-Modal Recording</string>
     <string name="gsr_physiological_monitoring">Physiological Monitoring</string>
     <string name="gsr_quick_access">Quick GSR Access</string>
+    
+    <!-- Missing strings -->
+    <string name="top_infrared_up_case">MPDC4GSR</string>
+    <string name="see_more_than">See more than</string>
 </resources>

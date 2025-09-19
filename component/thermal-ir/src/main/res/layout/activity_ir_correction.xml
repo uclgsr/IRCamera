@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/ir_bg_color">
 
-    <com.topdon.lib.core.view.TitleView
+    <com.mpdc4gsr.lib.core.view.TitleView
         android:id="@+id/title_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

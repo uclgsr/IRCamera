@@ -12,7 +12,7 @@ ksp {
 }
 
 android {
-    namespace = "com.topdon.lib.ui"
+    namespace = "com.mpdc4gsr.lib.ui"
     compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
@@ -73,6 +73,7 @@ android {
 dependencies {
     coreLibraryDesugaring(libs.desugar.jdk.libs)
     implementation(project(":libapp"))
+    // implementation(project(":libmenu")) // CONSOLIDATED into :libapp
     implementation(project(":BleModule"))
     implementation(libs.bundles.ui.common)
 }

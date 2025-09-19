@@ -14,7 +14,7 @@ import com.topdon.gsr.model.SyncMark
 import com.topdon.gsr.service.GSRRecorder
 import com.topdon.gsr.service.MockShimmerDeviceFactory
 import com.topdon.gsr.util.TimeUtil
-import com.topdon.lib.core.ktbase.BaseBindingActivity
+import com.mpdc4gsr.lib.core.ktbase.BaseBindingActivity
 import kotlinx.coroutines.launch
 
 class GSRDemoActivity : BaseBindingActivity<ActivityGsrDemoBinding>() {

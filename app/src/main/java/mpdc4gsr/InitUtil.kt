@@ -16,10 +16,10 @@ import com.elvishew.xlog.printer.file.FilePrinter
 import com.elvishew.xlog.printer.file.backup.FileSizeBackupStrategy2
 import com.elvishew.xlog.printer.file.clean.FileLastModifiedCleanStrategy
 import com.elvishew.xlog.printer.file.naming.ChangelessFileNameGenerator
-import com.topdon.lib.core.BaseApplication
-import com.topdon.lib.core.broadcast.DeviceBroadcastReceiver
-import com.topdon.lib.core.common.SharedManager
-import com.topdon.lib.core.config.HttpConfig
+import com.mpdc4gsr.lib.core.BaseApplication
+import com.mpdc4gsr.lib.core.broadcast.DeviceBroadcastReceiver
+import com.mpdc4gsr.lib.core.common.SharedManager
+import com.mpdc4gsr.lib.core.config.HttpConfig
 import com.topdon.lms.sdk.LMS
 import com.topdon.lms.sdk.utils.ConstantUtil
 import com.topdon.lms.sdk.utils.LanguageUtil

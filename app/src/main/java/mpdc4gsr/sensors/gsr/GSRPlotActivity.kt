@@ -11,7 +11,7 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.ValueFormatter
-import com.topdon.lib.core.ktbase.BaseBindingActivity
+import com.mpdc4gsr.lib.core.ktbase.BaseBindingActivity
 
 class GSRPlotActivity : BaseBindingActivity<ActivityGsrPlotBinding>() {
     private lateinit var plotData: GSRDataViewActivity.GSRPlotData

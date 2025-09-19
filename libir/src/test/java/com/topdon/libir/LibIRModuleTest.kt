@@ -1,4 +1,4 @@
-package com.topdon.libir
+package com.mpdc4gsr.libir
 
 import android.content.Context
 import android.graphics.Bitmap

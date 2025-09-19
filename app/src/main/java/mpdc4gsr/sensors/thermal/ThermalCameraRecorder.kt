@@ -13,10 +13,10 @@ import com.energy.ac020library.bean.IIrFrameCallback
 import com.energy.ac020library.bean.UvcHandleParam
 import com.energy.ac020library.bean.CommonParams
 import com.opencsv.CSVWriter
-import com.topdon.lib.core.bean.event.device.DeviceConnectEvent
-import com.topdon.lib.core.bean.event.device.DevicePermissionEvent
-import com.topdon.lib.core.config.DeviceConfig.isTcTsDevice
-import com.topdon.lib.core.tools.DeviceTools
+import com.mpdc4gsr.lib.core.bean.event.device.DeviceConnectEvent
+import com.mpdc4gsr.lib.core.bean.event.device.DevicePermissionEvent
+import com.mpdc4gsr.lib.core.config.DeviceConfig.isTcTsDevice
+import com.mpdc4gsr.lib.core.tools.DeviceTools
 import mpdc4gsr.sensors.ErrorType
 import mpdc4gsr.sensors.RecordingStats
 import mpdc4gsr.sensors.RecordingStatus

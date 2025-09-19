@@ -19,7 +19,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.topdon.lib.ui.widget.CountDownView
+    <com.mpdc4gsr.lib.ui.widget.CountDownView
         android:id="@+id/count_down_view"
         android:layout_width="0dp"
         android:layout_height="0dp"

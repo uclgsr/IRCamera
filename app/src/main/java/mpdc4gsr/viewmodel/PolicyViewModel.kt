@@ -1,9 +1,9 @@
 package mpdc4gsr.viewmodel
 
 import androidx.lifecycle.viewModelScope
-import com.topdon.lib.core.http.repository.LmsRepository
-import com.topdon.lib.core.ktbase.BaseViewModel
-import com.topdon.lib.core.utils.SingleLiveEvent
+import com.mpdc4gsr.lib.core.http.repository.LmsRepository
+import com.mpdc4gsr.lib.core.ktbase.BaseViewModel
+import com.mpdc4gsr.lib.core.utils.SingleLiveEvent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 

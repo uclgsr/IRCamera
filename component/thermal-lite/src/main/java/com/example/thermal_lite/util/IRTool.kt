@@ -8,7 +8,7 @@ import com.energy.irutilslibrary.LibIRTempAC020
 import com.energy.irutilslibrary.bean.GainStatus
 import com.example.thermal_lite.camera.CameraPreviewManager
 import com.example.thermal_lite.camera.DeviceIrcmdControlManager
-import com.topdon.lib.core.bean.CameraItemBean
+import com.mpdc4gsr.lib.core.bean.CameraItemBean
 import kotlinx.coroutines.delay
 
 

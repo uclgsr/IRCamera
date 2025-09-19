@@ -12,10 +12,9 @@ import android.text.style.UnderlineSpan
 import android.view.View
 import com.csl.irCamera.R
 import com.csl.irCamera.databinding.ActivityMoreHelpBinding
-import com.topdon.lib.core.dialog.TipDialog
-import com.topdon.lib.core.ktbase.BaseBindingActivity
-import com.topdon.lib.core.utils.Constants
-import mpdc4gsr.ui_components.ConnectionGuideView
+import com.mpdc4gsr.lib.core.dialog.TipDialog
+import com.mpdc4gsr.lib.core.ktbase.BaseBindingActivity
+import com.mpdc4gsr.lib.core.utils.Constants
 
 class MoreHelpActivity : BaseBindingActivity<ActivityMoreHelpBinding>() {
     private var connectionType: Int = 0

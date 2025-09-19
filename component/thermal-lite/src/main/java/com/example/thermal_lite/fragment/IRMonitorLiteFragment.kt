@@ -45,9 +45,9 @@ import com.infisense.usbir.view.TemperatureView
 import com.infisense.usbir.view.TemperatureView.REGION_MODE_LINE
 import com.infisense.usbir.view.TemperatureView.REGION_MODE_POINT
 import com.infisense.usbir.view.TemperatureView.REGION_MODE_RECTANGLE
-import com.topdon.lib.core.BaseApplication
-import com.topdon.lib.core.common.SaveSettingUtil
-import com.topdon.lib.core.ktbase.BaseFragment
+import com.mpdc4gsr.lib.core.BaseApplication
+import com.mpdc4gsr.lib.core.common.SaveSettingUtil
+import com.mpdc4gsr.lib.core.ktbase.BaseFragment
 import com.topdon.module.thermal.ir.bean.DataBean
 import com.topdon.module.thermal.ir.bean.SelectPositionBean
 import com.topdon.module.thermal.ir.event.ThermalActionEvent

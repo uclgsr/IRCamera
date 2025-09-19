@@ -16,7 +16,7 @@ import com.energy.commoncomponent.Const;
 import com.energy.commoncomponent.bean.DeviceType;
 import com.energy.irutilslibrary.LibIRTemp;
 import com.infisense.usbir.utils.FileUtil;
-import com.topdon.lib.core.BaseApplication;
+import com.mpdc4gsr.lib.core.BaseApplication;
 
 import java.io.File;
 import java.io.IOException;

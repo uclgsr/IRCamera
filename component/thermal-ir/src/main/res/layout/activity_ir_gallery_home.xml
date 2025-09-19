@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#16131e"
-    tools:context="com.topdon.module.thermal.ir.activity.IRGalleryHomeActivity">
+    tools:context="com.mpdc4gsr.module.thermal.ir.activity.IRGalleryHomeActivity">
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragment_container_view"

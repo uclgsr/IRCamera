@@ -3,9 +3,9 @@ package com.infisense.usbir.tools
 import androidx.annotation.ColorInt
 import com.elvishew.xlog.XLog
 import com.infisense.usbir.tools.bean.SelectIndexBean
-import com.topdon.lib.core.tools.NumberTools
-import com.topdon.lib.core.utils.ByteUtils.bytesToInt
-import com.topdon.lib.core.utils.ByteUtils.descBytes
+import com.mpdc4gsr.lib.core.tools.NumberTools
+import com.mpdc4gsr.lib.core.utils.ByteUtils.bytesToInt
+import com.mpdc4gsr.lib.core.utils.ByteUtils.descBytes
 import java.util.concurrent.LinkedBlockingQueue
 
 object ImageTools {

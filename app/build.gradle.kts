@@ -272,8 +272,10 @@ dependencies {
     implementation(project(":component:gsr-recording"))
     implementation(project(":component:user")) 
     implementation(project(":libapp"))
+    // implementation(project(":libcom")) // CONSOLIDATED into :libapp
     implementation(project(":libir"))
-    implementation(project(":libui")) 
+    implementation(project(":libui"))
+    // implementation(project(":libmenu")) // CONSOLIDATED into :libapp 
 
     implementation(project(":BleModule"))
 
@@ -285,7 +287,7 @@ dependencies {
     implementation(files("libs/libirutils_1.2.0_2409241055.aar"))
     implementation(files("libs/libcommon_1.2.0_24052117.aar"))
 
-    implementation(files("libs/lms_international-3.90.009.0.aar")) 
+    // implementation(files("libs/lms_international-3.90.009.0.aar")) // REMOVED - replaced with stub implementation in libapp 
     implementation(files("libs/abtest-1.0.1.aar"))
     implementation(files("libs/auth-number-2.13.2.1.aar"))
     implementation(files("libs/logger-2.2.1-release.aar"))

@@ -3,7 +3,7 @@
 
     <application>
         <activity
-            android:name="com.topdon.pseudo.activity.PseudoSetActivity"
+            android:name="com.mpdc4gsr.pseudo.activity.PseudoSetActivity"
             android:screenOrientation="userPortrait" />
     </application>
 

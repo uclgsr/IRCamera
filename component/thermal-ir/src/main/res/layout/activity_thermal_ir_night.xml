@@ -8,7 +8,7 @@
     android:fitsSystemWindows="true"
     tools:context=".activity.IRThermalNightActivity">
 
-    <com.topdon.lib.core.view.MainTitleView
+    <com.mpdc4gsr.lib.core.view.MainTitleView
         android:id="@+id/title_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -20,7 +20,7 @@
         app:right2Drawable="@drawable/svg_tisr_off"
         app:rightDrawable="@drawable/ic_info_svg" />
 
-    <com.topdon.lib.core.view.MyTextView
+    <com.mpdc4gsr.lib.core.view.MyTextView
         android:id="@+id/tv_title_temp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -47,7 +47,7 @@
         tools:textColor="#ffffff"
         tools:visibility="visible" />
 
-    <com.topdon.lib.core.view.MyTextView
+    <com.mpdc4gsr.lib.core.view.MyTextView
         android:id="@+id/tv_title_observe"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -81,7 +81,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <com.topdon.menu.MenuFirstTabView
+        <com.mpdc4gsr.menu.MenuFirstTabView
             android:id="@+id/view_menu_first"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -91,7 +91,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <com.topdon.menu.MenuSecondView
+        <com.mpdc4gsr.menu.MenuSecondView
             android:id="@+id/thermal_recycler_night"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -125,7 +125,7 @@
             android:layout_height="match_parent"
             android:visibility="gone" />
 
-        <com.topdon.lib.ui.camera.CameraPreView
+        <com.mpdc4gsr.lib.ui.camera.CameraPreView
             android:id="@+id/cameraPreview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -137,7 +137,7 @@
             android:layout_height="match_parent"
             android:visibility="gone" />
 
-        <com.topdon.module.thermal.ir.view.compass.LinearCompassView
+        <com.mpdc4gsr.module.thermal.ir.view.compass.LinearCompassView
             android:id="@+id/compassView"
             android:layout_width="match_parent"
             android:layout_height="50dp"
@@ -155,12 +155,12 @@
             android:textColor="@color/white"
             android:textSize="12sp" />
 
-        <com.topdon.libcom.view.TempLayout
+        <com.mpdc4gsr.libcom.view.TempLayout
             android:id="@+id/temp_bg"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-        <com.topdon.module.thermal.ir.view.DistanceMeasureView
+        <com.mpdc4gsr.module.thermal.ir.view.DistanceMeasureView
             android:id="@+id/distance_measure_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -172,7 +172,7 @@
             android:layout_height="match_parent"
             android:visibility="gone" />
 
-        <com.topdon.lib.ui.widget.SteeringWheelView
+        <com.mpdc4gsr.lib.ui.widget.SteeringWheelView
             android:id="@+id/thermal_steering_view"
             android:layout_width="200dp"
             android:layout_height="200dp"
@@ -212,7 +212,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <com.topdon.module.thermal.ir.view.ChartTrendView
+        <com.mpdc4gsr.module.thermal.ir.view.ChartTrendView
             android:id="@+id/view_chart_trend"
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -255,7 +255,7 @@
     </LinearLayout>
 
     
-    <com.topdon.lib.ui.widget.BitmapConstraintLayout
+    <com.mpdc4gsr.lib.ui.widget.BitmapConstraintLayout
         android:id="@+id/cl_seek_bar"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
@@ -300,7 +300,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/temperature_seekbar" />
 
-        <com.topdon.lib.ui.widget.seekbar.VerticalRangeSeekBar
+        <com.mpdc4gsr.lib.ui.widget.seekbar.VerticalRangeSeekBar
             android:id="@+id/temperature_seekbar"
             android:layout_width="80dp"
             android:layout_height="0dp"
@@ -331,9 +331,9 @@
             app:rsb_thumb_height="24dp"
             app:rsb_thumb_width="24dp"
             app:rsb_tick_mark_mode="number" />
-    </com.topdon.lib.ui.widget.BitmapConstraintLayout>
+    </com.mpdc4gsr.lib.ui.widget.BitmapConstraintLayout>
 
-    <com.topdon.module.thermal.ir.view.TimeDownView
+    <com.mpdc4gsr.module.thermal.ir.view.TimeDownView
         android:id="@+id/time_down_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

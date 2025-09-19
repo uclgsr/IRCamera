@@ -15,7 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.infisense.usbir.R;
-import com.topdon.lib.core.utils.BitmapUtils;
+import com.mpdc4gsr.lib.core.utils.BitmapUtils;
 
 public class ZoomableDraggableView extends View {
     private ScaleGestureDetector scaleGestureDetector;

@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="#16131e">
 
-    <com.topdon.lib.core.view.TitleView
+    <com.mpdc4gsr.lib.core.view.TitleView
         android:id="@+id/title_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -24,7 +24,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/title_view" />
 
-    <com.topdon.lib.core.view.ImageEditView
+    <com.mpdc4gsr.lib.core.view.ImageEditView
         android:id="@+id/image_edit_view"
         android:layout_width="192dp"
         android:layout_height="256dp"

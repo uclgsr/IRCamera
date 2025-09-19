@@ -13,7 +13,7 @@ import com.csl.irCamera.R
 import com.csl.irCamera.databinding.ActivityHubSpokeIntegrationBinding
 import com.topdon.ble.Device
 import com.topdon.ble.EasyBLE
-import com.topdon.lib.core.ktbase.BaseBindingActivity
+import com.mpdc4gsr.lib.core.ktbase.BaseBindingActivity
 import mpdc4gsr.controller.RecordingController
 import mpdc4gsr.controller.RecordingState
 import mpdc4gsr.network.NetworkServer

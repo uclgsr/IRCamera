@@ -17,7 +17,7 @@ import com.infisense.usbir.bean.ColorRGB;
 import com.infisense.usbir.utils.IRImageHelp;
 import com.infisense.usbir.utils.OpencvTools;
 import com.infisense.usbir.utils.PseudocodeUtils;
-import com.topdon.lib.core.bean.AlarmBean;
+import com.mpdc4gsr.lib.core.bean.AlarmBean;
 
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;

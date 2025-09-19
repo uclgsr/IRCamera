@@ -7,8 +7,8 @@ import com.blankj.utilcode.util.ToastUtils
 import com.example.thermal_lite.R
 import com.example.thermal_lite.databinding.ActivityIrCorrectionLiteFourBinding
 import com.example.thermal_lite.fragment.IRMonitorLiteFragment
-import com.topdon.lib.core.dialog.TipDialog
-import com.topdon.lib.core.ktbase.BaseActivity
+import com.mpdc4gsr.lib.core.dialog.TipDialog
+import com.mpdc4gsr.lib.core.ktbase.BaseActivity
 import com.topdon.module.thermal.ir.event.CorrectionFinishEvent
 import com.topdon.module.thermal.ir.view.TimeDownView
 import kotlinx.coroutines.Dispatchers

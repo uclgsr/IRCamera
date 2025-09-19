@@ -16,10 +16,10 @@ import com.blankj.utilcode.util.GsonUtils;
 import com.blankj.utilcode.util.ZipUtils;
 import com.csl.irCamera.R;
 import com.elvishew.xlog.XLog;
-import com.topdon.lib.core.common.SharedManager;
-import com.topdon.lib.core.config.HttpConfig;
-import com.topdon.lib.core.dialog.TipDialog;
-import com.topdon.lib.core.utils.AppUtil;
+import com.mpdc4gsr.lib.core.common.SharedManager;
+import com.mpdc4gsr.lib.core.config.HttpConfig;
+import com.mpdc4gsr.lib.core.dialog.TipDialog;
+import com.mpdc4gsr.lib.core.utils.AppUtil;
 import com.topdon.lms.sdk.LMS;
 import com.topdon.lms.sdk.activity.LmsUpdateDialog;
 import com.topdon.lms.sdk.bean.AppInfoBean;
@@ -175,7 +175,7 @@ public class AppVersionUtil {
 
         down.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
 
-        fileName = "topinfrared" + System.currentTimeMillis() + ".zip";
+        fileName = "mpdc4gsr" + System.currentTimeMillis() + ".zip";
         down.setDestinationInExternalFilesDir(mContext, Environment.DIRECTORY_DOWNLOADS, fileName);
         DownloadManager downloadManager = (DownloadManager) mContext.getSystemService(DOWNLOAD_SERVICE);
 
@@ -230,7 +230,7 @@ public class AppVersionUtil {
         } catch (Exception e) {
             XLog.e("bcf", "升级接口解析异常");
         }
-        fileName = "topinfrared" + System.currentTimeMillis() + ".zip";
+        fileName = "mpdc4gsr" + System.currentTimeMillis() + ".zip";
         String path = mContext.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath() + File.separator + fileName;
         XLog.e("bcf", "download path:" + path);
         params.setSaveFilePath(path);
