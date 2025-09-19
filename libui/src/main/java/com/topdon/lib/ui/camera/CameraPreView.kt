@@ -74,7 +74,7 @@ class CameraPreView :
         mCameraHandler?.removeCallbacksAndMessages(null)
     }
 
-    private var startX = 0f // 记录落点到控件的距离
+    private var startX = 0f 
     private var startY = 0f
     private var moveX = 0f
     private var moveY = 0f
@@ -82,7 +82,7 @@ class CameraPreView :
     private var parentViewH = 0f
     private var isScale = false
     private var scale = 1f
-    private var scaleW = 0f // 单边缩放长度
+    private var scaleW = 0f 
     private var scaleH = 0f
 
     private lateinit var lis: ScaleGestureDetector
@@ -129,7 +129,7 @@ class CameraPreView :
             }
 
             MotionEvent.ACTION_UP -> {
-                isScale = false // 实际以手指抬起设定缩放结束
+                isScale = false 
                 val startX = viewX
                 val startY = viewY
 
@@ -190,40 +190,40 @@ class CameraPreView :
     }
 
 
-    /**相机权限请求标识 */
+    
     private val REQUEST_CAMERA_CODE = 0x100
 
-    /**图片 */
+    
     private var mImageView: ImageView? = null
 
-    /**照相机ID，标识前置后置 */
+    
     private lateinit var mCameraId: String
 
-    /**相机尺寸 */
+    
     private var mCaptureSize: Size? = null
 
-    /**图像读取者 */
+    
     private var mImageReader: ImageReader? = null
 
-    /**图像主线程Handler */
+    
     private var mCameraHandler: Handler? = null
 
-    /**相机设备 */
+    
     private var mCameraDevice: CameraDevice? = null
 
-    /**预览大小 */
+    
     private var mPreviewSize: Size? = null
 
-    /**相机请求 */
+    
     private lateinit var mCaptureBuilder: CaptureRequest.Builder
 
-    /**相机capture捕获会话 */
+    
     private var mCameraCaptureSession: CameraCaptureSession? = null
 
-    /**相机管理者 */
+    
     private var mCameraManager: CameraManager? = null
 
-    /**相机设备state回调 */
+    
     private val mStateCallback: CameraDevice.StateCallback =
         object : CameraDevice.StateCallback() {
             override fun onOpened(

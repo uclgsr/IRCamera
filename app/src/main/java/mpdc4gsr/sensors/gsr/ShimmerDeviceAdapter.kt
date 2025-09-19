@@ -10,17 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import mpdc4gsr.R
 import mpdc4gsr.sensors.unified.model.DeviceInfo
 
-/**
- * RecyclerView Adapter for Shimmer Device List
- *
- * Displays discovered Shimmer3 GSR+ devices with:
- * - Device name and MAC address
- * - Signal strength (RSSI) indicator
- * - Device type and capabilities
- * - Connection status
- *
- * Uses DiffUtil for efficient updates instead of notifyDataSetChanged()
- */
+
 class ShimmerDeviceAdapter(
     private val onDeviceClick: (DeviceInfo) -> Unit
 ) : RecyclerView.Adapter<ShimmerDeviceAdapter.DeviceViewHolder>() {
@@ -47,62 +37,62 @@ class ShimmerDeviceAdapter(
     override fun onBindViewHolder(holder: DeviceViewHolder, position: Int) {
         val device = devices[position]
 
-        // Set device information
+        
         holder.deviceName.text = device.name.ifEmpty { "Unknown Shimmer" }
         holder.deviceAddress.text = device.address
         holder.deviceType.text = device.deviceType
 
-        // Set signal strength
+        
         val rssiText = "${device.rssi} dBm"
         holder.signalStrength.text = rssiText
 
-        // Set signal strength icon based on RSSI value
+        
         val signalIconRes = when {
-            device.rssi >= -50 -> R.drawable.ic_bluetooth_disabled // Excellent - reusing available icon
-            device.rssi >= -60 -> R.drawable.ic_bluetooth_disabled // Good 
-            device.rssi >= -70 -> R.drawable.ic_bluetooth_disabled // Fair
-            device.rssi >= -80 -> R.drawable.ic_bluetooth_disabled // Poor
-            else -> R.drawable.ic_bluetooth_disabled // Very poor
+            device.rssi >= -50 -> R.drawable.ic_bluetooth_disabled 
+            device.rssi >= -60 -> R.drawable.ic_bluetooth_disabled 
+            device.rssi >= -70 -> R.drawable.ic_bluetooth_disabled 
+            device.rssi >= -80 -> R.drawable.ic_bluetooth_disabled 
+            else -> R.drawable.ic_bluetooth_disabled 
         }
 
         try {
             holder.signalIcon.setImageResource(signalIconRes)
         } catch (e: Exception) {
-            // Fallback if signal strength icons don't exist
+            
             holder.signalIcon.visibility = View.GONE
         }
 
-        // Set GSR capability indicator
+        
         if (device.isGSRCapable) {
             try {
                 holder.gsrCapableIcon.setImageResource(R.drawable.ic_device_type_shimmer_gsr)
                 holder.gsrCapableIcon.visibility = View.VISIBLE
             } catch (e: Exception) {
-                // Fallback if icon doesn't exist
+                
                 holder.gsrCapableIcon.visibility = View.GONE
             }
         } else {
             holder.gsrCapableIcon.visibility = View.GONE
         }
 
-        // Highlight selected device
+        
         if (device == selectedDevice) {
             try {
                 holder.root.setBackgroundResource(R.drawable.item_background_selected)
             } catch (e: Exception) {
-                // Fallback highlighting without drawable
+                
                 holder.root.alpha = 0.8f
             }
         } else {
             try {
                 holder.root.setBackgroundResource(R.drawable.item_background_default)
             } catch (e: Exception) {
-                // Fallback default appearance
+                
                 holder.root.alpha = 1.0f
             }
         }
 
-        // Set click listener
+        
         holder.root.setOnClickListener {
             selectDevice(device, position)
             onDeviceClick(device)
@@ -111,9 +101,7 @@ class ShimmerDeviceAdapter(
 
     override fun getItemCount(): Int = devices.size
 
-    /**
-     * Efficiently update devices using DiffUtil instead of notifyDataSetChanged()
-     */
+    
     fun updateDevices(newDevices: List<DeviceInfo>) {
         val diffCallback = DeviceInfoDiffCallback(devices, newDevices)
         val diffResult = DiffUtil.calculateDiff(diffCallback)
@@ -123,9 +111,7 @@ class ShimmerDeviceAdapter(
         diffResult.dispatchUpdatesTo(this)
     }
 
-    /**
-     * Clear all devices efficiently
-     */
+    
     fun clearDevices() {
         val oldSize = devices.size
         devices.clear()
@@ -133,14 +119,12 @@ class ShimmerDeviceAdapter(
         notifyItemRangeRemoved(0, oldSize)
     }
 
-    /**
-     * Select a device and update only the affected items
-     */
+    
     fun selectDevice(device: DeviceInfo, position: Int) {
         val previousSelection = selectedDevice
         selectedDevice = device
 
-        // Refresh only the previously selected item and the new selection
+        
         if (previousSelection != null) {
             val previousIndex = devices.indexOfFirst { it == previousSelection }
             if (previousIndex >= 0) {
@@ -156,9 +140,7 @@ class ShimmerDeviceAdapter(
 
     fun getSelectedDevice(): DeviceInfo? = selectedDevice
 
-    /**
-     * DiffUtil callback for efficient list updates
-     */
+    
     private class DeviceInfoDiffCallback(
         private val oldList: List<DeviceInfo>,
         private val newList: List<DeviceInfo>

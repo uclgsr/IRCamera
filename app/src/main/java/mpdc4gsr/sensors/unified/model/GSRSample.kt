@@ -46,10 +46,10 @@ data class GSRSample(
     }
 
     enum class QualityLevel {
-        EXCELLENT,  // > 0.9
-        GOOD,       // 0.7 - 0.9
-        FAIR,       // 0.5 - 0.7
-        POOR        // < 0.5
+        EXCELLENT,  
+        GOOD,       
+        FAIR,       
+        POOR        
     }
 
     companion object {
@@ -67,10 +67,10 @@ data class GSRSample(
         ): GSRSample {
 
             val qualityScore = when {
-                gsrRawValue < 0 || gsrRawValue > 4095 -> 0.0  // Out of ADC range
-                gsrCalibratedValue <= 0 -> 0.3  // Calibration issue
-                gsrRawValue < 50 || gsrRawValue > 4000 -> 0.6  // Near ADC limits
-                else -> 0.9  // Good data
+                gsrRawValue < 0 || gsrRawValue > 4095 -> 0.0  
+                gsrCalibratedValue <= 0 -> 0.3  
+                gsrRawValue < 50 || gsrRawValue > 4000 -> 0.6  
+                else -> 0.9  
             }
 
             return GSRSample(

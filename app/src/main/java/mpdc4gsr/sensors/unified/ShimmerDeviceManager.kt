@@ -33,10 +33,10 @@ class ShimmerDeviceManager(
         private const val RECONNECTION_ATTEMPTS = 3
         private const val RECONNECTION_DELAY_MS = 2000L
 
-        // Enhanced multi-device support for research requirement
-        private const val MAX_CONCURRENT_DEVICES = 3 // Support up to 3 Shimmer devices for research
-        private const val DEVICE_SYNC_TIMEOUT_MS = 5000L // Timeout for synchronized operations
-        private const val DATA_INTEGRITY_CHECK_INTERVAL_MS = 10000L // Check data integrity every 10 seconds
+        
+        private const val MAX_CONCURRENT_DEVICES = 3 
+        private const val DEVICE_SYNC_TIMEOUT_MS = 5000L 
+        private const val DATA_INTEGRITY_CHECK_INTERVAL_MS = 10000L 
 
         private val SHIMMER_MAC_PREFIXES = listOf("00:06:66", "d0:39:72", "00:80:98")
         private val SHIMMER_NAME_PATTERNS = listOf("shimmer", "gsr", "rn4", "shimmer3")
@@ -118,7 +118,7 @@ class ShimmerDeviceManager(
             discoveredDevices.clear()
             isScanning.set(true)
 
-            // First, add already paired Shimmer devices
+            
             val pairedDevices = getPairedShimmerDevices()
             Log.d(TAG, "Found ${pairedDevices.size} paired Shimmer devices")
             
@@ -126,7 +126,7 @@ class ShimmerDeviceManager(
                 val deviceInfo = DeviceInfo(
                     address = device.address,
                     name = device.name ?: "Unknown Shimmer",
-                    rssi = -50, // Default RSSI for paired devices
+                    rssi = -50, 
                     deviceType = detectShimmerDeviceType(device),
                     isGSRCapable = true
                 )
@@ -134,13 +134,13 @@ class ShimmerDeviceManager(
                 Log.d(TAG, "Added paired device: ${deviceInfo.name} (${deviceInfo.address})")
             }
 
-            // Emit initial results with paired devices
+            
             _scanResults.emit(discoveredDevices.values.toList())
 
-            // Start active BLE scanning for new devices
+            
             performEnhancedBluetoothLeScanning()
 
-            // Schedule scan timeout
+            
             lifecycleOwner.lifecycleScope.launch {
                 delay(SCAN_TIMEOUT_MS)
                 if (isScanning.get()) {
@@ -165,10 +165,7 @@ class ShimmerDeviceManager(
             ?.filter { isValidShimmerDevice(it) } ?: emptyList()
     }
 
-    /**
-     * Enhanced BLE scanning with better error handling and device filtering
-     * Implements comprehensive device discovery with user feedback
-     */
+    
     private suspend fun performEnhancedBluetoothLeScanning() {
         val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
         val bluetoothLeScanner = bluetoothAdapter?.bluetoothLeScanner
@@ -178,7 +175,7 @@ class ShimmerDeviceManager(
             return
         }
 
-        // Check permissions before starting scan
+        
         if (!hasRequiredPermissions()) {
             Log.e(TAG, "Required BLE permissions not granted, cannot start scan")
             return
@@ -223,7 +220,7 @@ class ShimmerDeviceManager(
             bluetoothLeScanner.startScan(scanCallback)
             Log.i(TAG, "Enhanced BLE scan started successfully")
             
-            // Store callback for stopping later
+            
             currentScanCallback = scanCallback
             
         } catch (e: SecurityException) {
@@ -252,22 +249,19 @@ class ShimmerDeviceManager(
             
             discoveredDevices[device.address] = deviceInfo
             
-            // Emit updated scan results
+            
             lifecycleOwner.lifecycleScope.launch {
                 _scanResults.emit(discoveredDevices.values.toList())
             }
         } else if (discoveredDevices.containsKey(device.address)) {
-            // Update RSSI for existing device
+            
             discoveredDevices[device.address]?.let { existingInfo ->
                 discoveredDevices[device.address] = existingInfo.copy(rssi = rssi)
             }
         }
     }
 
-    /**
-     * Detect Shimmer device type based on device name and characteristics
-     * Provides more accurate device identification for different Shimmer models
-     */
+    
     private fun detectShimmerDeviceType(device: BluetoothDevice): String {
         val deviceName = try {
             device.name?.lowercase() ?: ""
@@ -285,9 +279,7 @@ class ShimmerDeviceManager(
         }
     }
 
-    /**
-     * Stop device scanning and cleanup resources
-     */
+    
     suspend fun stopDeviceScanning() = withContext(Dispatchers.IO) {
         if (!isScanning.get()) {
             Log.d(TAG, "Scanning not active")
@@ -297,7 +289,7 @@ class ShimmerDeviceManager(
         try {
             Log.i(TAG, "Stopping BLE device scanning")
             
-            // Stop BLE scanning
+            
             currentScanCallback?.let { callback ->
                 val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
                 val bluetoothLeScanner = bluetoothAdapter?.bluetoothLeScanner
@@ -323,10 +315,7 @@ class ShimmerDeviceManager(
         }
     }
 
-    /**
-     * Enhanced connection to device with comprehensive error handling and user feedback
-     * Implements robust connection logic with proper status reporting
-     */
+    
     suspend fun connectToDevice(deviceInfo: DeviceInfo): Boolean = withContext(Dispatchers.IO) {
         Log.i(TAG, "Initiating connection to Shimmer device: ${deviceInfo.address} (${deviceInfo.name})")
 
@@ -348,7 +337,7 @@ class ShimmerDeviceManager(
         }
 
         try {
-            // Emit connecting state for UI feedback
+            
             _connectionEvents.emit(
                 ConnectionEvent(
                     deviceInfo.address, 
@@ -357,7 +346,7 @@ class ShimmerDeviceManager(
                 )
             )
 
-            // Check Bluetooth permissions before attempting connection
+            
             if (!hasRequiredPermissions()) {
                 Log.e(TAG, "Missing Bluetooth permissions for connection")
                 _connectionEvents.emit(
@@ -370,21 +359,21 @@ class ShimmerDeviceManager(
                 return@withContext false
             }
 
-            // Connect via Shimmer API with enhanced error handling
+            
             Log.d(TAG, "Attempting BLE connection to ${deviceInfo.address}")
             shimmerMgr.connectShimmerThroughBTAddress(deviceInfo.address)
 
-            // Wait for connection with timeout and periodic status updates
+            
             var attempts = 0
             val maxAttempts = CONNECTION_TIMEOUT_MS / 1000
-            val statusUpdateInterval = 3 // Update every 3 seconds
+            val statusUpdateInterval = 3 
 
             while (attempts < maxAttempts) {
-                // Check if connection succeeded
+                
                 if (connectedDevices.containsKey(deviceInfo.address)) {
                     Log.i(TAG, "✅ Successfully connected to Shimmer device: ${deviceInfo.address}")
                     
-                    // Reset any previous reconnection attempts for this device
+                    
                     reconnectionAttempts.remove(deviceInfo.address)
                     
                     _connectionEvents.emit(
@@ -397,7 +386,7 @@ class ShimmerDeviceManager(
                     return@withContext true
                 }
 
-                // Provide periodic status updates for user feedback
+                
                 if (attempts % statusUpdateInterval == 0 && attempts > 0) {
                     val remainingTime = maxAttempts - attempts
                     _connectionEvents.emit(
@@ -413,7 +402,7 @@ class ShimmerDeviceManager(
                 attempts++
             }
 
-            // Connection timeout
+            
             Log.w(TAG, "⏰ Connection timeout for device: ${deviceInfo.address} after ${CONNECTION_TIMEOUT_MS}ms")
             _connectionEvents.emit(
                 ConnectionEvent(
@@ -457,7 +446,7 @@ class ShimmerDeviceManager(
                 return@withContext false
             }
 
-            // Stop streaming and disconnect  
+            
             shimmer.stopStreaming()
             shimmer.stopBtConnection()
 
@@ -477,7 +466,7 @@ class ShimmerDeviceManager(
             DeviceInfo(
                 address = shimmer.getMacId() ?: "Unknown",
                 name = "Connected Shimmer (${shimmer.getMacId()})",
-                rssi = -50, // Connected devices don't report RSSI
+                rssi = -50, 
                 deviceType = "Shimmer3 GSR+",
                 isGSRCapable = true
             )
@@ -495,10 +484,10 @@ class ShimmerDeviceManager(
         withContext(Dispatchers.IO) {
             Log.w(TAG, "Device disconnected: $deviceAddress")
 
-            // Remove from connected devices
+            
             connectedDevices.remove(deviceAddress)
 
-            // Emit disconnection event
+            
             _connectionEvents.emit(ConnectionEvent(deviceAddress, ConnectionState.DISCONNECTED))
 
             if (shouldAttemptReconnection) {
@@ -510,10 +499,10 @@ class ShimmerDeviceManager(
                         "Starting automatic reconnection for device: $deviceAddress (attempt ${currentAttempts + 1}/$RECONNECTION_ATTEMPTS)"
                     )
 
-                    // Increment attempt counter
+                    
                     reconnectionAttempts[deviceAddress] = currentAttempts + 1
 
-                    // Emit reconnecting state
+                    
                     _connectionEvents.emit(
                         ConnectionEvent(
                             deviceAddress,
@@ -522,10 +511,10 @@ class ShimmerDeviceManager(
                         )
                     )
 
-                    // Wait before reconnection attempt
+                    
                     delay(RECONNECTION_DELAY_MS)
 
-                    // Find device info for reconnection
+                    
                     val deviceInfo = discoveredDevices[deviceAddress]
                     if (deviceInfo != null) {
                         val reconnectSuccess = connectToDevice(deviceInfo)
@@ -535,11 +524,11 @@ class ShimmerDeviceManager(
                                 TAG,
                                 "Automatic reconnection successful for device: $deviceAddress"
                             )
-                            // Reset reconnection attempts on success
+                            
                             reconnectionAttempts.remove(deviceAddress)
                         } else {
                             Log.w(TAG, "Automatic reconnection failed for device: $deviceAddress")
-                            // If this was the last attempt, emit failure and switch to simulation
+                            
                             if (currentAttempts + 1 >= RECONNECTION_ATTEMPTS) {
                                 Log.e(
                                     TAG,
@@ -554,7 +543,7 @@ class ShimmerDeviceManager(
                                 )
                                 reconnectionAttempts.remove(deviceAddress)
                             } else {
-                                // Try again after delay
+                                
                                 handleDeviceDisconnection(deviceAddress, true)
                             }
                         }
@@ -602,15 +591,9 @@ class ShimmerDeviceManager(
         return@withContext allDisconnected
     }
 
-    /**
-     * Enhanced multi-device testing support for research requirement:
-     * "perform thorough testing with 2–3 Shimmer GSR units streaming concurrently 
-     * to validate connection stability and data integrity"
-     */
     
-    /**
-     * Start concurrent multi-device testing with 2-3 Shimmer GSR units
-     */
+    
+    
     suspend fun startMultiDeviceTesting(targetDeviceCount: Int = 3): Boolean = withContext(Dispatchers.IO) {
         try {
             Log.i(TAG, "Starting multi-device testing with target $targetDeviceCount devices")
@@ -621,7 +604,7 @@ class ShimmerDeviceManager(
             
             val actualTargetCount = minOf(targetDeviceCount, MAX_CONCURRENT_DEVICES)
             
-            // Check if we have enough connected devices
+            
             val connectedCount = connectedDevices.size
             if (connectedCount < actualTargetCount) {
                 Log.w(TAG, "Only $connectedCount devices connected, need $actualTargetCount for comprehensive testing")
@@ -632,7 +615,7 @@ class ShimmerDeviceManager(
                 }
             }
             
-            // Start synchronized streaming on all connected devices
+            
             val streamingResults = startSynchronizedStreamingOnAllDevices()
             
             if (streamingResults) {
@@ -649,14 +632,12 @@ class ShimmerDeviceManager(
         }
     }
 
-    /**
-     * Start synchronized streaming on all connected devices with barrier synchronization
-     */
+    
     private suspend fun startSynchronizedStreamingOnAllDevices(): Boolean {
         return try {
             Log.i(TAG, "Starting synchronized streaming on ${connectedDevices.size} devices")
             
-            // Start streaming on all devices concurrently
+            
             val streamingJobs = connectedDevices.map { (address, shimmer) ->
                 async {
                     try {
@@ -671,13 +652,13 @@ class ShimmerDeviceManager(
                 }
             }
             
-            // Wait for all devices to start streaming
+            
             val results = streamingJobs.awaitAll()
             val successCount = results.count { it }
             
             Log.i(TAG, "Synchronized streaming started: $successCount/${connectedDevices.size} devices successful")
             
-            if (successCount >= 2) { // Minimum 2 devices for multi-device testing
+            if (successCount >= 2) { 
                 Log.i(TAG, "✅ Multi-device streaming barrier successful with $successCount devices")
                 return true
             } else {
@@ -691,14 +672,12 @@ class ShimmerDeviceManager(
         }
     }
 
-    /**
-     * Stop multi-device testing
-     */
+    
     suspend fun stopMultiDeviceTesting(): Boolean = withContext(Dispatchers.IO) {
         try {
             Log.i(TAG, "Stopping multi-device testing")
             
-            // Stop streaming on all devices
+            
             val stopResults = connectedDevices.map { (address, shimmer) ->
                 async {
                     try {
@@ -723,9 +702,7 @@ class ShimmerDeviceManager(
         }
     }
 
-    /**
-     * Get current multi-device connection status for validation
-     */
+    
     fun getMultiDeviceStatus(): MultiDeviceStatus {
         return MultiDeviceStatus(
             connectedDeviceCount = connectedDevices.size,
@@ -742,15 +719,9 @@ class ShimmerDeviceManager(
         val readyForTesting: Boolean
     )
 
-    /**
-     * Enhanced User Feedback & UI Integration Methods
-     * Provides comprehensive status information for UI components
-     */
+    
 
-    /**
-     * Get comprehensive Shimmer system status for UI display
-     * Addresses issue requirement: "Integrate Shimmer status into the app's UI/UX"
-     */
+    
     fun getShimmerSystemStatus(): ShimmerSystemStatus {
         val bluetoothEnabled = bluetoothAdapter?.isEnabled == true
         val hasPermissions = hasRequiredPermissions()
@@ -828,10 +799,7 @@ class ShimmerDeviceManager(
         READY
     }
 
-    /**
-     * Get user-friendly error messages for common issues
-     * Addresses issue requirement: "display a dialog or toast instead of failing silently"
-     */
+    
     fun getErrorMessage(error: ConnectionEvent): String {
         return when (error.state) {
             ConnectionState.FAILED -> {
@@ -854,10 +822,7 @@ class ShimmerDeviceManager(
         }
     }
 
-    /**
-     * Get actionable recommendations for current system state
-     * Helps users understand next steps to resolve issues
-     */
+    
     fun getActionableRecommendations(): List<String> {
         val recommendations = mutableListOf<String>()
         val status = getShimmerSystemStatus()
@@ -918,12 +883,12 @@ class ShimmerDeviceManager(
             null
         }
 
-        // Check MAC address prefix
+        
         val hasValidPrefix = SHIMMER_MAC_PREFIXES.any { prefix ->
             address.startsWith(prefix, ignoreCase = true)
         }
 
-        // Check device name pattern
+        
         val hasValidName = name?.let { deviceName ->
             SHIMMER_NAME_PATTERNS.any { pattern ->
                 deviceName.contains(pattern, ignoreCase = true)

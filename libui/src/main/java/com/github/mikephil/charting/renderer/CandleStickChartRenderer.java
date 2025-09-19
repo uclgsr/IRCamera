@@ -151,7 +151,7 @@ public class CandleStickChartRenderer extends LineScatterCandleRadarRenderer {
 
                 trans.pointValuesToPixel(mBodyBuffers);
 
-                if (open > close) { // decreasing
+                if (open > close) { 
 
                     if (dataSet.getDecreasingColor() == ColorTemplate.COLOR_NONE) {
                         mRenderPaint.setColor(dataSet.getColor(j));
@@ -180,7 +180,7 @@ public class CandleStickChartRenderer extends LineScatterCandleRadarRenderer {
                             mBodyBuffers[0], mBodyBuffers[1],
                             mBodyBuffers[2], mBodyBuffers[3],
                             mRenderPaint);
-                } else { // equal values
+                } else { 
 
                     if (dataSet.getNeutralColor() == ColorTemplate.COLOR_NONE) {
                         mRenderPaint.setColor(dataSet.getColor(j));

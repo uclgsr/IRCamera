@@ -253,7 +253,7 @@ class LibMatrixModuleTest {
     fun testRotationMatrix() =
         runTest {
 
-            val angleRadians = kotlin.math.PI / 4.0 // 45 degrees
+            val angleRadians = kotlin.math.PI / 4.0 
             val cosAngle = kotlin.math.cos(angleRadians).toFloat()
             val sinAngle = kotlin.math.sin(angleRadians).toFloat()
 

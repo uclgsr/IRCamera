@@ -9,7 +9,7 @@
         android:background="#16131e"
         tools:context="com.topdon.tc001.network.DevicePairingActivity">
 
-        <!-- Header -->
+        
         <com.topdon.lib.core.view.TitleView
             android:id="@+id/title_view"
             android:layout_width="match_parent"
@@ -17,7 +17,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:titleText="Device Pairing" />
 
-        <!-- Connection Status -->
+        
         <androidx.cardview.widget.CardView
             android:id="@+id/status_card"
             android:layout_width="0dp"
@@ -67,7 +67,7 @@
 
         </androidx.cardview.widget.CardView>
 
-        <!-- Scan Controls -->
+        
         <androidx.cardview.widget.CardView
             android:id="@+id/scan_card"
             android:layout_width="0dp"
@@ -140,7 +140,7 @@
 
         </androidx.cardview.widget.CardView>
 
-        <!-- Controllers List -->
+        
         <androidx.cardview.widget.CardView
             android:id="@+id/controllers_card"
             android:layout_width="0dp"
@@ -179,7 +179,7 @@
 
         </androidx.cardview.widget.CardView>
 
-        <!-- Flash Overlay for Sync -->
+        
         <View
             android:id="@+id/flash_overlay"
             android:layout_width="match_parent"

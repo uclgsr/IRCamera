@@ -43,7 +43,7 @@ class RawEngine(private val context: Context) {
                     rawSize.width,
                     rawSize.height,
                     ImageFormat.RAW_SENSOR,
-                    2, // Conservative buffer count for Samsung devices
+                    2, 
                 )
 
             rawImageReader?.setOnImageAvailableListener(rawImageAvailableListener, null)

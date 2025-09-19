@@ -1,8 +1,8 @@
 plugins {
     id("com.android.library")
-    kotlin("android") // Modern plugin ID format
-    id("com.google.devtools.ksp") // Use KSP plugin from classpath
-    id("kotlin-parcelize") // Correct plugin ID - Use modern kotlin-parcelize instead of kotlin-android-extensions for Parcelable
+    kotlin("android") 
+    id("com.google.devtools.ksp") 
+    id("kotlin-parcelize") 
 }
 
 ksp {
@@ -73,7 +73,7 @@ android {
 dependencies {
     coreLibraryDesugaring(libs.desugar.jdk.libs)
     implementation(project(":libapp"))
-    // libmenu has been consolidated into libapp
+    implementation(project(":libmenu")) 
     implementation(project(":BleModule"))
     implementation(libs.bundles.ui.common)
 }

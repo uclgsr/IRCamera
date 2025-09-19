@@ -17,7 +17,7 @@ public class VerticalSeekBar extends SeekBar {
 
     VerticalRangeSeekBar verticalSeekBar;
     private int indicatorTextOrientation;
-    private boolean drawIndPathBg = true;//是否绘制背景
+    private boolean drawIndPathBg = true;
     private boolean noNegativeNumber = false;
 
     public VerticalSeekBar(RangeSeekBar rangeSeekBar, AttributeSet attrs, boolean isLeft) {

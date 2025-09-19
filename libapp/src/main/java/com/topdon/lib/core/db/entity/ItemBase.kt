@@ -108,7 +108,7 @@ open class ItemBase {
             }
 
             3 -> {
-                if (image4.isEmpty()) { // 只有3张删第3张
+                if (image4.isEmpty()) { 
                     image3 = ""
                 } else {
                     image3 = image4
@@ -117,7 +117,7 @@ open class ItemBase {
             }
 
             2 -> {
-                if (image3.isEmpty()) { // 只有2张删第2张
+                if (image3.isEmpty()) { 
                     image2 = ""
                 } else {
                     image2 = image3
@@ -131,7 +131,7 @@ open class ItemBase {
             }
 
             1 -> {
-                if (image2.isEmpty()) { // 只有1张删第1张
+                if (image2.isEmpty()) { 
                     image1 = ""
                 } else {
                     image1 = image2

@@ -40,11 +40,7 @@ import kotlinx.coroutines.withContext
 import java.util.Locale
 import com.topdon.lib.core.R as LibR
 
-/**
 
- * @author: CaiSongL
- * @date: 2023/4/3 15:00
- */
 
 
 class IRCameraSettingActivity : BaseActivity() {
@@ -73,7 +69,7 @@ class IRCameraSettingActivity : BaseActivity() {
     override fun initView() {
         productName = intent.getStringExtra(KEY_PRODUCT_TYPE) ?: ""
         if (isTC007()) {
-            watermarkBean = SharedManager.wifiWatermarkBean // TC007只有水印
+            watermarkBean = SharedManager.wifiWatermarkBean 
             continuousBean = SharedManager.continuousBean
         } else {
             watermarkBean = SharedManager.watermarkBean

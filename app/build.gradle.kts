@@ -5,7 +5,7 @@ import java.util.Locale
 plugins {
     id("com.android.application")
     kotlin("android")
-    id("com.google.devtools.ksp") // Use KSP for Room and Glide
+    id("com.google.devtools.ksp") 
 }
 
 val buildDayStr = SimpleDateFormat("yyMMdd", Locale.getDefault()).format(Date())
@@ -103,7 +103,7 @@ android {
 
     androidComponents {
         beforeVariants { variant ->
-            // Enable both debug and release builds for CI/CD compatibility
+            
             variant.enable = variant.buildType == "release" || variant.buildType == "debug"
         }
     }
@@ -117,7 +117,7 @@ android {
     kotlin {
         compilerOptions {
             jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
-            // Updated to match Kotlin 2.2.0 for consistency and to eliminate version warnings
+            
             apiVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_0)
             languageVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_0)
             freeCompilerArgs.addAll(
@@ -212,12 +212,12 @@ android {
 
             keepDebugSymbols +=
                 listOf(
-                    "**/*.so", // Keep all debug symbols to prevent stripping issues
+                    "**/*.so", 
                 )
 
             excludes +=
                 listOf(
-                    "**/libSRImage.so", // Primary culprit for stripping errors
+                    "**/libSRImage.so", 
                 )
         }
         jniLibs {
@@ -240,7 +240,7 @@ android {
 configurations.all {
     resolutionStrategy {
         force("com.google.guava:guava:31.1-android")
-        // Force androidx.core to compatible version for AGP 8.5.2
+        
         force("androidx.core:core:1.13.1")
         force("androidx.core:core-ktx:1.13.1")
 
@@ -265,29 +265,29 @@ dependencies {
 
     implementation(libs.guava)
 
-    implementation(project(":component:thermal")) // Consolidated thermal functionality
-    implementation(project(":component:thermal-ir")) // Thermal IR resources needed by app
-    implementation(project(":component:thermal-lite")) // Thermal Lite functionality
-    implementation(project(":component:pseudo")) // Pseudo color functionality needed by app
+    implementation(project(":component:thermal")) 
+    implementation(project(":component:thermal-ir")) 
+    implementation(project(":component:thermal-lite")) 
+    implementation(project(":component:pseudo")) 
     implementation(project(":component:gsr-recording"))
-    implementation(project(":component:user")) // User module for MoreActivity and settings
+    implementation(project(":component:user")) 
     implementation(project(":libapp"))
-    // implementation(project(":libcom")) // CONSOLIDATED INTO libapp
+    implementation(project(":libcom"))
     implementation(project(":libir"))
     implementation(project(":libui"))
-    // implementation(project(":libmenu")) // CONSOLIDATED INTO libapp
+    implementation(project(":libmenu")) 
 
     implementation(project(":BleModule"))
 
-    // Navigation - Using NavigationManager instead of ARouter
-    // implementation(libs.arouter.api)
-    // kapt(libs.arouter.compiler) // Removed ARouter to eliminate kapt dependency
+    
+    
+    
 
     implementation(files("libs/libAC020sdk_USB_IR_1.1.1_2408291439.aar"))
     implementation(files("libs/libirutils_1.2.0_2409241055.aar"))
     implementation(files("libs/libcommon_1.2.0_24052117.aar"))
 
-    implementation(files("libs/lms_international-3.90.009.0.aar")) // LMS SDK for libapp
+    implementation(files("libs/lms_international-3.90.009.0.aar")) 
     implementation(files("libs/abtest-1.0.1.aar"))
     implementation(files("libs/auth-number-2.13.2.1.aar"))
     implementation(files("libs/logger-2.2.1-release.aar"))
@@ -302,9 +302,9 @@ dependencies {
                 "dir" to "libir/libs"
             )
         )
-    ) // All libir AAR files
+    ) 
 
-    implementation(files("../libir/libs/libusbdualsdk_1.3.4_2406271906_standard.aar")) // Required for iruvc classes in app module
+    implementation(files("../libir/libs/libusbdualsdk_1.3.4_2406271906_standard.aar")) 
 
     implementation(libs.jsbridge)
     implementation(libs.fastjson2)
@@ -322,7 +322,7 @@ dependencies {
     implementation(libs.opencsv)
     implementation(libs.gson)
 
-    // JmDNS dependency for network service discovery
+    
     implementation(libs.jmdns)
 
     implementation(libs.kotlinx.coroutines.android)
@@ -334,14 +334,14 @@ dependencies {
     implementation(libs.nordic.ble.ktx)
 
 
-    // Shimmer GSR+ Sensor SDK - Updated to 3.2.4_beta for enhanced BLE stability
+    
     implementation(files("libs/shimmerandroidinstrumentdriver-3.2.4_beta.aar"))
     implementation(files("libs/shimmerdriver-0.11.5_beta.jar"))
     implementation(files("libs/shimmerdriverpc-0.11.5_beta.jar"))
     implementation(files("libs/shimmerbluetoothmanager-0.11.5_beta.jar"))
 
 
-    // CameraX dependencies - Compatible with AGP 8.5.2
+    
     implementation(libs.bundles.camerax)
 
 

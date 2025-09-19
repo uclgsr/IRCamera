@@ -63,7 +63,7 @@ public interface UnifiedDevice {
 
     default boolean addSyncMark(long timestamp) {
 
-        byte[] syncCommand = new byte[]{0x00, 0x01}; // Generic sync mark
+        byte[] syncCommand = new byte[]{0x00, 0x01}; 
         return sendCommand(syncCommand);
     }
 

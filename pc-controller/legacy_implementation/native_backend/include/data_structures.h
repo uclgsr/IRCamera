@@ -26,10 +26,10 @@ namespace ircamera {
     struct DeviceInfo {
         std::string device_id;
         std::string device_name;
-        std::string device_type;  // "shimmer", "webcam", etc.
+        std::string device_type;  
         std::string serial_number;
         std::string firmware_version;
-        std::string connection_type;  // "serial", "usb", "bluetooth"
+        std::string connection_type;  
         bool is_connected = false;
         bool is_streaming = false;
         std::chrono::system_clock::time_point connection_time;
@@ -37,7 +37,7 @@ namespace ircamera {
 
     struct SyncMarker {
         std::chrono::high_resolution_clock::time_point timestamp;
-        std::string marker_type;  // "flash", "audio", "custom", etc.
+        std::string marker_type;  
         std::string description;
         uint64_t sequence_number;
 
@@ -55,8 +55,8 @@ namespace ircamera {
         std::vector <uint8_t> data;
         uint32_t width;
         uint32_t height;
-        uint32_t channels;  // 1=grayscale, 3=RGB, 4=RGBA
-        std::string format;  // "RGB", "BGR", "GRAY", etc.
+        uint32_t channels;  
+        std::string format;  
         uint64_t frame_number;
         bool valid = true;
 
@@ -68,4 +68,4 @@ namespace ircamera {
         }
     };
 
-} // namespace ircamera
+} 

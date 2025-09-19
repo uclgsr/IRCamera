@@ -1,15 +1,4 @@
-/*
- * Copyright (c) 2016-present 贵州纳雍穿青human李裕江<1032694760@qq.com>
- *
- * The software is licensed under the Mulan PSL v2.
- * You can use this software according to the terms and conditions of the Mulan PSL v2.
- * You may obtain a copy of Mulan PSL v2 at:
- *     http://license.coscl.org.cn/MulanPSL2
- * THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR
- * PURPOSE.
- * See the Mulan PSL v2 for more details.
- */
+
 
 package com.github.gzuliyujiang.wheelpicker;
 
@@ -44,12 +33,12 @@ public class YearPicker extends ModalDialog {
         defaultEntity.setDate(DateEntity.target(year == null ? nowYear : year, 1, 1));
         wheelLayout.setRange(startTimeEntity, DatimeEntity.now(), defaultEntity);
 
-        wheelLayout.setCurtainEnabled(true);//selected栏是否有背景color
-        wheelLayout.setCurtainColor(ContextCompat.getColor(getContext(), R.color.wheel_select_bg));       //selected栏背景color
-        wheelLayout.setSelectedTextColor(ContextCompat.getColor(getContext(), R.color.wheel_select_text));//selected文字color
-        wheelLayout.setTextColor(ContextCompat.getColor(getContext(), R.color.wheel_unselect_text));      //未selected文字color
+        wheelLayout.setCurtainEnabled(true);
+        wheelLayout.setCurtainColor(ContextCompat.getColor(getContext(), R.color.wheel_select_bg));       
+        wheelLayout.setSelectedTextColor(ContextCompat.getColor(getContext(), R.color.wheel_select_text));
+        wheelLayout.setTextColor(ContextCompat.getColor(getContext(), R.color.wheel_unselect_text));      
 
-        wheelLayout.setResetWhenLinkage(false, false);//他娘的不知道什么鬼，连个注释都没有
+        wheelLayout.setResetWhenLinkage(false, false);
 
     }
 

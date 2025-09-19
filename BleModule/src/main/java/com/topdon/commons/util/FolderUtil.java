@@ -11,7 +11,7 @@ import java.io.File;
 public class FolderUtil {
     public static String mPath = "/data/user/0/com.topdon.diag.artidiag/files";
     public static String mUserId;
-    public static String fileName; //在APPlication 传入文件名路径 区分APP
+    public static String fileName; 
     public static String tdartsSn;
 
     public static String getFileName() {

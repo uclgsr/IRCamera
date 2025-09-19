@@ -52,9 +52,9 @@ class GSRSensorRecorder(
     companion object {
         private const val TAG = "GSRSensorRecorder"
 
-        private const val SHIMMER_DEFAULT_SAMPLING_RATE = 128.0 // Hz
-        private const val GSR_CHANNEL_ID = 0x01 // GSR sensor channel ID
-        private const val GSR_RANGE_AUTO = 0x00 // Auto range setting
+        private const val SHIMMER_DEFAULT_SAMPLING_RATE = 128.0 
+        private const val GSR_CHANNEL_ID = 0x01 
+        private const val GSR_RANGE_AUTO = 0x00 
 
         fun hasRequiredPermissions(context: Context): Boolean {
             return hasBleScanningPermissions(context)
@@ -132,7 +132,7 @@ class GSRSensorRecorder(
     private var recordingStartTime: Long = 0
     private var syncMarkerCount = AtomicLong(0)
     
-    // Connection state monitoring and reconnection
+    
     private var shimmerBluetoothManager: ShimmerBluetoothManagerAndroid? = null
     private var connectionStateMonitoringJob: Job? = null
     private var reconnectionAttempts = 0
@@ -170,7 +170,7 @@ class GSRSensorRecorder(
                     Log.i(TAG, "Unified BLE manager initialized successfully")
                 }
 
-                // Initialize ShimmerBluetoothManagerAndroid for proper connection handling
+                
                 if (initializeShimmerBluetoothManager()) {
                     Log.i(TAG, "ShimmerBluetoothManagerAndroid ready for device connections")
                     startConnectionStateMonitoring()
@@ -247,7 +247,7 @@ class GSRSensorRecorder(
                         monitorGSRData()
                         emitStatus()
                     }
-                    delay(1000) // Update every second
+                    delay(1000) 
                 }
             }
     }
@@ -321,7 +321,7 @@ class GSRSensorRecorder(
                     "Starting GSR sensor recording - checking for Shimmer3 device connectivity"
                 )
 
-                // Check Bluetooth permissions first
+                
                 if (!BluetoothPermissionUtils.hasBleScanningPermissions(context)) {
                     Log.w(
                         TAG,
@@ -336,13 +336,13 @@ class GSRSensorRecorder(
                         }"
                     )
 
-                    // Log warning but continue - this allows the session to proceed without GSR
+                    
                     emitError(
                         ErrorType.PERMISSION_DENIED,
                         "Bluetooth permissions required for Shimmer GSR - session will continue without GSR data",
                         isRecoverable = true
                     )
-                    return@withContext false // Return false to indicate GSR not available, but don't crash
+                    return@withContext false 
                 }
 
                 this@GSRSensorRecorder.sessionDirectory = sessionDirectory
@@ -351,14 +351,14 @@ class GSRSensorRecorder(
                 var shimmerRecordingStarted = false
                 var recordingSuccessful = false
 
-                // Attempt Shimmer3 GSR+ recording (primary method)
+                
                 if (BluetoothPermissionUtils.hasBleScanningPermissions(context)) {
                     val shimmerRecorder = realShimmerGSRRecorder
                     if (shimmerRecorder != null) {
                         Log.i(TAG, "Attempting Shimmer3 GSR+ recording with enhanced BLE backend")
 
                         try {
-                            // Try to initialize device if not already connected
+                            
                             val connectionSuccess = if (!shimmerRecorder.isDeviceConnected()) {
                                 Log.i(TAG, "Shimmer device not connected, attempting connection...")
                                 shimmerRecorder.initializeDevice()
@@ -368,7 +368,7 @@ class GSRSensorRecorder(
                             }
 
                             if (connectionSuccess) {
-                                // Start the enhanced Shimmer recording
+                                
                                 val sessionId = sessionDirectory.substringAfterLast("/").ifEmpty {
                                     "session_${System.currentTimeMillis()}"
                                 }
@@ -395,7 +395,7 @@ class GSRSensorRecorder(
                     }
                 }
 
-                // Fallback to legacy recording if Shimmer failed
+                
                 if (!shimmerRecordingStarted) {
                     Log.i(TAG, "Shimmer3 recording unavailable, attempting legacy GSR fallback")
 
@@ -429,7 +429,7 @@ class GSRSensorRecorder(
                     }
                 }
 
-                // Handle the recording result
+                
                 if (recordingSuccessful) {
                     _isRecording.set(true)
                     sampleCount.set(0)
@@ -440,7 +440,7 @@ class GSRSensorRecorder(
                         "session_${System.currentTimeMillis()}"
                     }
 
-                    // Initialize data persistence and network streaming
+                    
                     try {
                         initializeDataHandling()
                     } catch (e: Exception) {
@@ -454,7 +454,7 @@ class GSRSensorRecorder(
                     emitStatus()
                     return@withContext true
                 } else {
-                    // All recording methods failed - log error but don't crash the session
+                    
                     Log.w(
                         TAG,
                         "All GSR recording methods failed - no GSR data will be recorded for this session"
@@ -464,7 +464,7 @@ class GSRSensorRecorder(
                         "Shimmer GSR device not available - check device pairing, power, and proximity. Session will continue without GSR data.",
                         isRecoverable = true
                     )
-                    return@withContext false // Indicate GSR unavailable, but allow session to continue
+                    return@withContext false 
                 }
 
             } catch (e: Exception) {
@@ -474,13 +474,13 @@ class GSRSensorRecorder(
                     "GSR recording initialization failed: ${e.message} - Session will continue without GSR data",
                     isRecoverable = true
                 )
-                return@withContext false // Don't crash the entire session
+                return@withContext false 
             }
         }
 
     private suspend fun initializeDataHandling() {
         try {
-            // Initialize data persistence
+            
             gsrDataPersistence = GSRDataPersistence(context, currentSessionId!!)
             val persistenceInitialized = gsrDataPersistence?.initialize() ?: false
 
@@ -494,7 +494,7 @@ class GSRSensorRecorder(
                 )
             }
 
-            // Initialize network streaming if enabled
+            
             if (isNetworkStreamingEnabled) {
                 gsrNetworkStreamer =
                     GSRNetworkStreamer(context, currentSessionId!!, recordingController)
@@ -808,9 +808,9 @@ class GSRSensorRecorder(
 
     private fun calculateResistanceFromGSR(gsrMicrosiemens: Double): Double {
         return if (gsrMicrosiemens > 0) {
-            1000000.0 / gsrMicrosiemens // Convert µS to kΩ
+            1000000.0 / gsrMicrosiemens 
         } else {
-            Double.MAX_VALUE // Infinite resistance for zero conductance
+            Double.MAX_VALUE 
         }
     }
 
@@ -862,7 +862,7 @@ class GSRSensorRecorder(
                 stopRecording()
             }
 
-            // Stop connection monitoring first
+            
             stopConnectionMonitoring()
             
             dataMonitoringJob?.cancel()
@@ -924,7 +924,7 @@ class GSRSensorRecorder(
             sessionDurationMs = sessionDuration,
             totalSamplesRecorded = sampleCount.get(),
             averageDataRate = if (sessionDuration > 0) sampleCount.get() * 1000.0 / sessionDuration else 0.0,
-            droppedSamples = 0L, // Would be calculated from data monitoring
+            droppedSamples = 0L, 
             storageUsedMB = calculateStorageUsed(),
             syncMarkersCount = syncMarkerCount.get().toInt(),
             lastSampleTimestampNs = lastSampleTimestamp,
@@ -933,7 +933,7 @@ class GSRSensorRecorder(
 
     private fun calculateStorageUsed(): Double {
 
-        val bytesPerSample = 32 // Approximate size of GSR sample data
+        val bytesPerSample = 32 
         val totalBytes = sampleCount.get() * bytesPerSample
         return totalBytes / (1024.0 * 1024.0)
     }
@@ -1006,16 +1006,16 @@ class GSRSensorRecorder(
 
                 val unifiedBle = unifiedBleManager
                 if (unifiedBle != null) {
-                    // First get already connected devices
+                    
                     val connectedDevices = unifiedBle.getConnectedShimmerDevices()
                     val deviceList = mutableListOf<String>()
 
-                    // Add connected devices
+                    
                     connectedDevices.forEach { device ->
                         deviceList.add("${device.getName()} (${device.getAddress()}) - Connected")
                     }
 
-                    // Now scan for nearby devices
+                    
                     val scanResultDeferred = CompletableDeferred<List<String>>()
 
                     unifiedBle.scanForShimmerDevices(
@@ -1023,7 +1023,7 @@ class GSRSensorRecorder(
                         object : UnifiedBleManager.ShimmerScanCallback {
                             override fun onDeviceFound(device: UnifiedDevice) {
                                 val deviceAddress = device.getAddress()
-                                // Only add if not already connected
+                                
                                 val isAlreadyConnected =
                                     connectedDevices.any { it.getAddress() == deviceAddress }
                                 if (!isAlreadyConnected) {
@@ -1049,7 +1049,7 @@ class GSRSensorRecorder(
 
                             override fun onScanFailed(error: String) {
                                 Log.e(TAG, "Shimmer device scan failed: $error")
-                                // Still return connected devices even if scan fails
+                                
                                 scanResultDeferred.complete(deviceList.toList())
                             }
                         })
@@ -1080,10 +1080,10 @@ class GSRSensorRecorder(
 
                 Log.i(TAG, "Attempting to connect to Shimmer device: $deviceAddress")
 
-                // Use UnifiedBleManager to connect to the specific device
+                
                 val unifiedBle = unifiedBleManager
                 if (unifiedBle != null) {
-                    // Try to find the device in connected devices first
+                    
                     val connectedShimmerDevices = unifiedBle.getConnectedShimmerDevices()
                     val alreadyConnected =
                         connectedShimmerDevices.any { it.getAddress() == deviceAddress }
@@ -1094,7 +1094,7 @@ class GSRSensorRecorder(
                         return@withContext true
                     }
 
-                    // Device not connected, attempt connection via scan and connect
+                    
                     Log.i(TAG, "Scanning for device $deviceAddress to establish connection")
 
                     var connectionSuccess = false
@@ -1109,8 +1109,8 @@ class GSRSensorRecorder(
                                         TAG,
                                         "Found target device $deviceAddress, attempting connection"
                                     )
-                                    // Here we would normally initiate connection to the specific device
-                                    // For now, we'll use the existing shimmer recorder initialization
+                                    
+                                    
                                     val shimmerRecorder = realShimmerGSRRecorder
                                     if (shimmerRecorder != null) {
                                         val success = shimmerRecorder.initializeDevice()
@@ -1164,9 +1164,7 @@ class GSRSensorRecorder(
         }
     }
 
-    /**
-     * Initialize ShimmerBluetoothManagerAndroid for proper connection handling
-     */
+    
     private fun initializeShimmerBluetoothManager(): Boolean {
         return try {
             shimmerBluetoothManager = ShimmerBluetoothManagerAndroid(context, android.os.Handler(android.os.Looper.getMainLooper()))
@@ -1179,26 +1177,22 @@ class GSRSensorRecorder(
         }
     }
 
-    /**
-     * Start connection state monitoring for automatic reconnection
-     */
+    
     private fun startConnectionStateMonitoring() {
         connectionStateMonitoringJob = recordingScope.launch {
             while (isActive) {
                 try {
                     monitorConnectionState()
-                    delay(1000) // Check connection state every second
+                    delay(1000) 
                 } catch (e: Exception) {
                     Log.e(TAG, "Error in connection state monitoring", e)
-                    delay(5000) // Wait longer on error
+                    delay(5000) 
                 }
             }
         }
     }
 
-    /**
-     * Monitor connection state and handle disconnections
-     */
+    
     private suspend fun monitorConnectionState() {
         val device = currentConnectedDevice
         if (device != null) {
@@ -1210,11 +1204,11 @@ class GSRSensorRecorder(
                             Log.i(TAG, "Shimmer device connected - starting data streaming")
                             isShimmerConnected = true
                             startShimmerStreaming(device)
-                            reconnectionAttempts = 0 // Reset on successful connection
+                            reconnectionAttempts = 0 
                         }
                     }
                     BT_STATE.STREAMING -> {
-                        // Device is streaming - this is good
+                        
                         if (!isShimmerConnected) {
                             isShimmerConnected = true
                             reconnectionAttempts = 0
@@ -1228,7 +1222,7 @@ class GSRSensorRecorder(
                         }
                     }
                     else -> {
-                        // Other states like CONNECTING, NONE
+                        
                         Log.d(TAG, "Shimmer connection state: $state")
                     }
                 }
@@ -1238,9 +1232,7 @@ class GSRSensorRecorder(
         }
     }
 
-    /**
-     * Handle device disconnection with automatic reconnection attempts
-     */
+    
     private suspend fun handleDisconnection(device: Shimmer) {
         if (reconnectionAttempts < maxReconnectionAttempts) {
             reconnectionAttempts++
@@ -1255,7 +1247,7 @@ class GSRSensorRecorder(
             delay(reconnectionDelayMs)
             
             try {
-                // Attempt to reconnect
+                
                 device.connect()
                 Log.i(TAG, "Reconnection attempt initiated")
             } catch (e: Exception) {
@@ -1268,26 +1260,24 @@ class GSRSensorRecorder(
                         "All reconnection attempts failed. Switching to simulation mode.",
                         isRecoverable = false
                     )
-                    // Switch to simulation mode or stop recording
+                    
                     currentConnectedDevice = null
                 }
             }
         }
     }
 
-    /**
-     * Start data streaming on connected Shimmer device
-     */
+    
     private suspend fun startShimmerStreaming(device: Shimmer): Boolean {
         return try {
-            // Configure GSR sensor
+            
             device.setGSRRange(Shimmer.GSR_RANGE_AUTO)
             device.enableGSRSensor(true)
             
-            // Configure sampling rate
+            
             device.setSamplingRateShimmer(51.2)
             
-            // Start streaming
+            
             device.startStreaming()
             
             Log.i(TAG, "Shimmer streaming started successfully")
@@ -1302,38 +1292,36 @@ class GSRSensorRecorder(
         }
     }
 
-    /**
-     * Handle incoming Shimmer data packets with unified timestamp handling
-     */
+    
     private fun handleShimmerData(objectCluster: ObjectCluster) {
         try {
-            // Use unified timestamp system for consistent cross-sensor timing
+            
             val timestampRecord = timestampManager?.createTimestampRecord() ?: TimestampManager.createTimestampRecord()
             
-            // Extract device timestamp from Shimmer packet if available
+            
             val deviceTimestamp = objectCluster.getFormatClusterValue("Timestamp", "CAL")?.data?.toLong() ?: 0L
             
-            // Get GSR conductance value (in microsiemens)
+            
             val gsrValue = objectCluster.getFormatClusterValue("GSR", "CAL")?.data ?: 0.0
             
-            // Get PPG data if available  
+            
             val ppgValue = objectCluster.getFormatClusterValue("PPG", "CAL")?.data ?: 0.0
             
-            // Create GSR sample with comprehensive timestamp data
+            
             val gsrSample = GSRSample(
                 timestampNs = timestampRecord.systemNanos,
                 conductanceMicrosiemens = gsrValue,
-                rawAdc = (gsrValue * 4095 / 100).toInt(), // Convert to 12-bit ADC value
+                rawAdc = (gsrValue * 4095 / 100).toInt(), 
                 ppgValue = ppgValue,
-                sessionId = "", // Will be set during recording
+                sessionId = "", 
                 deviceId = sensorId
             )
             
-            // Update sample count
+            
             sampleCount.incrementAndGet()
             lastSampleTimestamp = timestampRecord.systemNanos
             
-            // Log sample to CSV if recording
+            
             if (_isRecording.get()) {
                 logGSRSampleToCSV(gsrSample, timestampRecord, deviceTimestamp)
             }
@@ -1349,24 +1337,22 @@ class GSRSensorRecorder(
         }
     }
 
-    /**
-     * Log GSR sample to CSV file with unified timestamp system
-     */
+    
     private fun logGSRSampleToCSV(sample: GSRSample, timestampRecord: TimestampRecord, deviceTimestamp: Long) {
         try {
-            // Create comprehensive CSV entry with all timestamp references for cross-sensor alignment
+            
             val csvEntry = buildString {
-                append("${timestampRecord.systemNanos},") // Monotonic nanosecond timestamp
-                append("${timestampRecord.systemTimeMs},") // Wall clock time for human readability
-                append("${timestampRecord.sessionRelativeMs},") // Session-relative time for analysis
-                append("${deviceTimestamp},") // Device timestamp from Shimmer if available
-                append("${sample.conductanceMicrosiemens},") // GSR conductance in microsiemens
-                append("${sample.rawAdc},") // Raw 12-bit ADC value
-                append("${sample.ppgValue}") // PPG value if available
+                append("${timestampRecord.systemNanos},") 
+                append("${timestampRecord.systemTimeMs},") 
+                append("${timestampRecord.sessionRelativeMs},") 
+                append("${deviceTimestamp},") 
+                append("${sample.conductanceMicrosiemens},") 
+                append("${sample.rawAdc},") 
+                append("${sample.ppgValue}") 
             }
             
-            // Write to session CSV file (implementation would depend on session management)
-            // This provides all necessary timing information for post-processing synchronization
+            
+            
             Log.v(TAG, "GSR CSV Entry: $csvEntry")
             
         } catch (e: Exception) {
@@ -1374,26 +1360,22 @@ class GSRSensorRecorder(
         }
     }
 
-    /**
-     * Get CSV header for GSR data with unified timestamp columns
-     */
+    
     private fun getGSRCsvHeader(): String {
         return "system_nanos,system_time_ms,session_relative_ms,device_timestamp,conductance_microsiemens,raw_adc,ppg_value"
     }
 
-    /**
-     * Implement proper device pairing prompt for discovered devices
-     */
+    
     suspend fun promptDevicePairing(deviceAddress: String): Boolean {
         return withContext(Dispatchers.IO) {
             try {
                 Log.i(TAG, "Prompting user to pair with device: $deviceAddress")
                 
-                // This would typically show a UI dialog asking user to pair
-                // For now, we'll attempt automatic pairing through the UnifiedBleManager
+                
+                
                 val unifiedBle = unifiedBleManager
                 if (unifiedBle != null) {
-                    // Check if device is already bonded
+                    
                     val bluetoothAdapter = android.bluetooth.BluetoothAdapter.getDefaultAdapter()
                     val bondedDevices = bluetoothAdapter?.bondedDevices
                     val isAlreadyBonded = bondedDevices?.any { it.address == deviceAddress } ?: false
@@ -1421,9 +1403,7 @@ class GSRSensorRecorder(
         }
     }
 
-    /**
-     * Enhanced device discovery that includes both bonded and nearby devices
-     */
+    
     suspend fun scanAndPairDevices(): List<String> {
         return withContext(Dispatchers.IO) {
             try {
@@ -1438,7 +1418,7 @@ class GSRSensorRecorder(
 
                 val deviceList = mutableListOf<String>()
                 
-                // First, get already bonded devices
+                
                 val bluetoothAdapter = android.bluetooth.BluetoothAdapter.getDefaultAdapter()
                 val bondedDevices = bluetoothAdapter?.bondedDevices
                 
@@ -1449,7 +1429,7 @@ class GSRSensorRecorder(
                     }
                 }
                 
-                // Then scan for nearby devices
+                
                 val nearbyDevices = getAvailableShimmerDevices()
                 nearbyDevices.forEach { deviceEntry ->
                     if (!deviceList.any { it.contains(deviceEntry.substringBefore(" - ")) }) {
@@ -1471,25 +1451,21 @@ class GSRSensorRecorder(
         }
     }
 
-    /**
-     * Check if a Bluetooth device is a Shimmer device
-     */
+    
     private fun isShimmerDevice(device: android.bluetooth.BluetoothDevice): Boolean {
         return try {
             val deviceName = BluetoothPermissionUtils.getDeviceName(context, device)
             deviceName?.lowercase()?.contains("shimmer") == true ||
-            device.address.startsWith("00:06:66") || // Shimmer MAC prefix
-            device.address.startsWith("d0:39:72") || // Another Shimmer MAC prefix
-            device.address.startsWith("00:80:98")    // Yet another Shimmer MAC prefix
+            device.address.startsWith("00:06:66") || 
+            device.address.startsWith("d0:39:72") || 
+            device.address.startsWith("00:80:98")    
         } catch (e: Exception) {
             Log.w(TAG, "Error checking if device is Shimmer", e)
             false
         }
     }
 
-    /**
-     * Stop connection monitoring and cleanup resources
-     */
+    
     private fun stopConnectionMonitoring() {
         connectionStateMonitoringJob?.cancel()
         connectionStateMonitoringJob = null

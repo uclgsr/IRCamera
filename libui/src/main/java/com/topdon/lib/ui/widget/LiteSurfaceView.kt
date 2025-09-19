@@ -6,11 +6,7 @@ import android.util.AttributeSet
 import android.view.SurfaceView
 import java.nio.ByteBuffer
 
-/**
- * des:
- * author: CaiSongL
- * date: 2024/8/1 13:52
- **/
+
 
 
 class LiteSurfaceView

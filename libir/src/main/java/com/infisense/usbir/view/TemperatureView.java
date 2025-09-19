@@ -43,14 +43,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
-/*
- * @Description:
- * @Author:         brilliantzhao
- * @CreateDate:     2022.7.19 17:20
- * @UpdateUser:
- * @UpdateDate:     2022.7.19 17:20
- * @UpdateRemark:
- */
+
 public class TemperatureView extends SurfaceView implements SurfaceHolder.Callback,
         View.OnTouchListener, BaseDualView.OnFrameCallback {
 
@@ -97,7 +90,7 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
     private Runnable onTrendRemoveListener = null;
     private ILiteListener iLiteListener = null;
     private TempListener listener;
-    private boolean isMonitor = false;//如果是温度监控，则进行实时校验point/line/area的比例
+    private boolean isMonitor = false;
     private boolean isUserHighTemp = false;
     private boolean isUserLowTemp = false;
     private SynchronizedBitmap syncimage;
@@ -115,7 +108,7 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
     private int downY = 0;
     private Line movingLine;
     private LineMoveType lineMoveType = LineMoveType.ALL;
-    /* **************************************** 面 **************************************** */
+    
     private Rect movingRect;
     private RectMoveType rectMoveType = RectMoveType.ALL;
     private RectMoveEdge rectMoveEdge = RectMoveEdge.LEFT;
@@ -569,7 +562,7 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
 
 
 
-    /* **************************************** Touch **************************************** */
+    
 
     public void stop() {
         runflag = false;
@@ -638,7 +631,7 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
         lineList.add(line);
     }
 
-    /* **************************************** 点 **************************************** */
+    
 
     public void addScaleRectangle(Rect r) {
         float sx = getMeasuredWidth() / (float) temperatureWidth;
@@ -667,7 +660,7 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
     }
 
 
-    /* **************************************** 线 **************************************** */
+    
 
     public Line getLine() {
         if (!lineList.isEmpty()) {
@@ -750,7 +743,7 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
                 downX = TempDrawHelper.Companion.correctPoint(event.getX(), getWidth());
                 downY = TempDrawHelper.Companion.correctPoint(event.getY(), getHeight());
                 Point point = getPoint(downX, downY);
-                if (point == null) {//新增
+                if (point == null) {
                     isAddAction = true;
                     if (pointList.size() == POINT_MAX_COUNT) {
                         synchronized (regionLock) {
@@ -763,7 +756,7 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
                     surfaceViewCanvas.drawBitmap(regionBitmap, new Rect(0, 0, viewWidth, viewHeight), new Rect(0, 0, viewWidth, viewHeight), null);
                     drawPoint(surfaceViewCanvas, downX, downY);
                     getHolder().unlockCanvasAndPost(surfaceViewCanvas);
-                } else {//移动或删除
+                } else {
                     isAddAction = false;
                     synchronized (regionLock) {
                         pointList.remove(point);
@@ -850,7 +843,7 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
                     }
                     if (isTrend) {
                         synchronized (regionLock) {
-                            trendLine = null; //手势操作过程中不需要绘制温度，置为 null
+                            trendLine = null; 
                         }
                         if (onTrendRemoveListener != null) {
                             onTrendRemoveListener.run();
@@ -1024,7 +1017,7 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
                     isAddAction = false;
                     movingRect = rect;
 
-                    if (isIn(downX, rect.left)) {//selected最左那条边
+                    if (isIn(downX, rect.left)) {
                         if (isIn(downY, rect.top)) {
                             rectMoveType = RectMoveType.CORNER;
                             rectMoveCorner = RectMoveCorner.LT;
@@ -1035,7 +1028,7 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
                             rectMoveType = RectMoveType.EDGE;
                             rectMoveEdge = RectMoveEdge.LEFT;
                         }
-                    } else if (isIn(downX, rect.right)) {//selected最右那条边
+                    } else if (isIn(downX, rect.right)) {
                         if (isIn(downY, rect.top)) {
                             rectMoveType = RectMoveType.CORNER;
                             rectMoveCorner = RectMoveCorner.RT;
@@ -1046,10 +1039,10 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
                             rectMoveType = RectMoveType.EDGE;
                             rectMoveEdge = RectMoveEdge.RIGHT;
                         }
-                    } else if (isIn(downY, rect.top)) {//selected顶边
+                    } else if (isIn(downY, rect.top)) {
                         rectMoveType = RectMoveType.EDGE;
                         rectMoveEdge = RectMoveEdge.TOP;
-                    } else if (isIn(downY, rect.bottom)) {//selected底边
+                    } else if (isIn(downY, rect.bottom)) {
                         rectMoveType = RectMoveType.EDGE;
                         rectMoveEdge = RectMoveEdge.BOTTOM;
                     } else {
@@ -1245,7 +1238,7 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
 
 
 
-    /* **************************************** Draw **************************************** */
+    
 
     private void drawLine(Canvas canvas, int x1, int y1, int x2, int y2, boolean isTrend) {
 

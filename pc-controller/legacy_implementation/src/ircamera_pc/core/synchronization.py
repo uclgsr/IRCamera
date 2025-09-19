@@ -1,15 +1,9 @@
 #!/usr/bin/env python3
-"""
-Phase 4: Multi-Device Synchronization Validation System
 
-This module implements the comprehensive synchronization testing framework for the
-Multi-Modal Physiological Sensing Platform, validating sub-5ms temporal accuracy
-across multiple Android devices and sensor modalities.
-"""
 
 import asyncio
 import json
-# Use standard logging instead of loguru for better compatibility
+
 import logging
 import socket
 import statistics
@@ -24,7 +18,7 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class SyncTestResult:
-    """Result of a synchronization test measurement."""
+    
     device_id: str
     sync_accuracy_ms: float
     latency_ms: float
@@ -36,9 +30,9 @@ class SyncTestResult:
 
 @dataclass
 class DeviceCoordinationStatus:
-    """Status of a device in multi-device coordination test."""
+    
     device_id: str
-    device_type: str  # "samsung_s22", "generic_android", etc.
+    device_type: str  
     connection_status: str
     last_sync_accuracy: float
     battery_level: int
@@ -48,34 +42,21 @@ class DeviceCoordinationStatus:
 
 
 class FlashSyncValidator:
-    """
-    Implements the Flash Sync accuracy measurement system.
     
-    This validates the <5ms requirement by triggering simultaneous visual markers
-    across all devices and measuring timestamp alignment in recorded video streams.
-    """
 
     def __init__(self):
         self.sync_events: List[Dict[str, Any]] = []
-        self.flash_duration_ms = 100  # Duration of flash marker
-        self.tolerance_ms = 5.0  # Maximum allowed deviation
+        self.flash_duration_ms = 100  
+        self.tolerance_ms = 5.0  
 
     async def trigger_flash_sync(self, devices: List[str]) -> Dict[str, SyncTestResult]:
-        """
-        Trigger simultaneous flash markers on all devices and measure alignment.
         
-        Args:
-            devices: List of device IDs to trigger flash sync on
-            
-        Returns:
-            Dictionary mapping device_id to SyncTestResult
-        """
         logger.info(f"Triggering flash sync on {len(devices)} devices")
 
-        # Record master timestamp
-        master_timestamp = time.time_ns() / 1_000_000  # Convert to milliseconds
+        
+        master_timestamp = time.time_ns() / 1_000_000  
 
-        # Trigger flash command on all devices simultaneously
+        
         sync_results = {}
         flash_tasks = []
 
@@ -85,12 +66,12 @@ class FlashSyncValidator:
             )
             flash_tasks.append((device_id, task))
 
-        # Wait for all flash commands to be sent
+        
         for device_id, task in flash_tasks:
             try:
                 device_response_time = await task
 
-                # Calculate synchronization accuracy
+                
                 sync_accuracy = abs(device_response_time - master_timestamp)
                 success = sync_accuracy <= self.tolerance_ms
 
@@ -122,21 +103,17 @@ class FlashSyncValidator:
         return sync_results
 
     async def _send_flash_command(self, device_id: str, master_timestamp: float) -> float:
-        """Send flash sync command to a specific device."""
-        # Implementation would send actual command to Android device
-        # For now, simulate network communication
-        await asyncio.sleep(0.001)  # Simulate network delay
+        
+        
+        
+        await asyncio.sleep(0.001)  
 
-        # Return simulated response timestamp
-        return master_timestamp + (0.001 * 1000)  # 1ms delay in milliseconds
+        
+        return master_timestamp + (0.001 * 1000)  
 
 
 class MultiDeviceCoordinator:
-    """
-    Framework for managing and coordinating multiple Android devices simultaneously.
     
-    Supports up to 8 devices as specified in requirements, with Samsung S22 optimization.
-    """
 
     def __init__(self, max_devices: int = 8):
         self.max_devices = max_devices
@@ -145,7 +122,7 @@ class MultiDeviceCoordinator:
         self.sync_marker_counter = 0
 
     def register_device(self, device_id: str, device_type: str) -> bool:
-        """Register a new device for coordination."""
+        
         if len(self.connected_devices) >= self.max_devices:
             logger.warning(f"Maximum devices ({self.max_devices}) already connected")
             return False
@@ -165,19 +142,19 @@ class MultiDeviceCoordinator:
         return True
 
     def unregister_device(self, device_id: str):
-        """Unregister a device from coordination."""
+        
         if device_id in self.connected_devices:
             del self.connected_devices[device_id]
             logger.info(f"Device unregistered: {device_id}")
 
     async def start_coordinated_recording(self) -> Dict[str, bool]:
-        """Start recording on all connected devices simultaneously."""
+        
         logger.info(f"Starting coordinated recording on {len(self.connected_devices)} devices")
 
         if self.recording_session_active:
             raise RuntimeError("Recording session already active")
 
-        # Send start command to all devices
+        
         start_results = {}
         start_tasks = []
 
@@ -185,7 +162,7 @@ class MultiDeviceCoordinator:
             task = asyncio.create_task(self._send_start_command(device_id))
             start_tasks.append((device_id, task))
 
-        # Wait for all start commands
+        
         for device_id, task in start_tasks:
             try:
                 success = await task
@@ -201,20 +178,20 @@ class MultiDeviceCoordinator:
                 logger.error(f"Start command failed for device {device_id}: {e}")
                 start_results[device_id] = False
 
-        # Set session active if at least one device started successfully
+        
         self.recording_session_active = any(start_results.values())
 
         return start_results
 
     async def stop_coordinated_recording(self) -> Dict[str, bool]:
-        """Stop recording on all connected devices simultaneously."""
+        
         logger.info("Stopping coordinated recording on all devices")
 
         if not self.recording_session_active:
             logger.warning("No active recording session to stop")
             return {}
 
-        # Send stop command to all devices
+        
         stop_results = {}
         stop_tasks = []
 
@@ -223,7 +200,7 @@ class MultiDeviceCoordinator:
                 task = asyncio.create_task(self._send_stop_command(device_id))
                 stop_tasks.append((device_id, task))
 
-        # Wait for all stop commands
+        
         for device_id, task in stop_tasks:
             try:
                 success = await task
@@ -243,13 +220,13 @@ class MultiDeviceCoordinator:
         return stop_results
 
     async def inject_sync_marker(self, marker_type: str = "auto") -> Dict[str, bool]:
-        """Inject synchronization marker on all devices."""
+        
         self.sync_marker_counter += 1
         marker_id = f"sync_{self.sync_marker_counter}_{int(time.time())}"
 
         logger.info(f"Injecting sync marker {marker_id} ({marker_type}) on all devices")
 
-        # Send sync marker to all devices
+        
         marker_results = {}
         marker_tasks = []
 
@@ -259,7 +236,7 @@ class MultiDeviceCoordinator:
             )
             marker_tasks.append((device_id, task))
 
-        # Wait for all marker commands
+        
         for device_id, task in marker_tasks:
             try:
                 success = await task
@@ -278,7 +255,7 @@ class MultiDeviceCoordinator:
         return marker_results
 
     def get_device_status_summary(self) -> Dict[str, Any]:
-        """Get comprehensive status summary of all connected devices."""
+        
         return {
             "total_devices": len(self.connected_devices),
             "recording_active": self.recording_session_active,
@@ -297,34 +274,26 @@ class MultiDeviceCoordinator:
         }
 
     async def _send_start_command(self, device_id: str) -> bool:
-        """Send recording start command to device."""
-        # Implementation would send actual command to Android device
-        await asyncio.sleep(0.05)  # Simulate command processing
+        
+        
+        await asyncio.sleep(0.05)  
         return True
 
     async def _send_stop_command(self, device_id: str) -> bool:
-        """Send recording stop command to device."""
-        # Implementation would send actual command to Android device
-        await asyncio.sleep(0.05)  # Simulate command processing
+        
+        
+        await asyncio.sleep(0.05)  
         return True
 
     async def _send_sync_marker(self, device_id: str, marker_id: str, marker_type: str) -> bool:
-        """Send sync marker command to device."""
-        # Implementation would send actual command to Android device
-        await asyncio.sleep(0.01)  # Simulate command processing
+        
+        
+        await asyncio.sleep(0.01)  
         return True
 
 
 class SynchronizationValidator:
-    """
-    Comprehensive synchronization validation system for multi-device testing.
     
-    This is the main class that orchestrates all synchronization testing including:
-    - Flash sync accuracy measurement
-    - Multi-device coordination testing  
-    - Long-duration stability validation
-    - Performance benchmarking under load
-    """
 
     def __init__(self):
         self.flash_sync = FlashSyncValidator()
@@ -340,17 +309,9 @@ class SynchronizationValidator:
 
     async def run_comprehensive_sync_validation(
             self,
-            device_list: List[Tuple[str, str]]  # List of (device_id, device_type)
+            device_list: List[Tuple[str, str]]  
     ) -> Dict[str, Any]:
-        """
-        Run complete synchronization validation test suite.
         
-        Args:
-            device_list: List of tuples containing (device_id, device_type)
-            
-        Returns:
-            Comprehensive validation report
-        """
         logger.info(f"Starting comprehensive sync validation with {len(device_list)} devices")
 
         validation_report = {
@@ -362,14 +323,14 @@ class SynchronizationValidator:
         }
 
         try:
-            # 1. Register all devices
+            
             logger.info("Phase 1: Device Registration")
             for device_id, device_type in device_list:
                 success = self.device_coordinator.register_device(device_id, device_type)
                 if not success:
                     logger.error(f"Failed to register device {device_id}")
 
-            # 2. Flash sync accuracy test
+            
             logger.info("Phase 2: Flash Sync Accuracy Test")
             device_ids = [device_id for device_id, _ in device_list]
             flash_results = await self.flash_sync.trigger_flash_sync(device_ids)
@@ -382,13 +343,13 @@ class SynchronizationValidator:
                 for device_id, result in flash_results.items()
             }
 
-            # 3. Coordinated recording test
+            
             logger.info("Phase 3: Coordinated Recording Test")
             start_results = await self.device_coordinator.start_coordinated_recording()
 
-            # Let recording run for 30 seconds with periodic sync markers
+            
             logger.info("Testing 30-second recording with sync markers")
-            for i in range(6):  # 6 markers over 30 seconds
+            for i in range(6):  
                 await asyncio.sleep(5)
                 marker_results = await self.device_coordinator.inject_sync_marker(
                     f"test_marker_{i + 1}")
@@ -403,15 +364,15 @@ class SynchronizationValidator:
                 "recording_duration": 30.0
             }
 
-            # 4. Multi-device stress test
+            
             logger.info("Phase 4: Multi-Device Stress Test")
             stress_results = await self._run_stress_test(device_ids)
             validation_report["test_results"]["stress_test"] = stress_results
 
-            # 5. Generate performance summary
+            
             validation_report["performance_summary"] = self._generate_performance_summary()
 
-            # 6. Check compliance with requirements
+            
             validation_report["compliance_status"] = self._check_compliance_requirements(
                 flash_results)
 
@@ -420,7 +381,7 @@ class SynchronizationValidator:
             validation_report["error"] = str(e)
 
         finally:
-            # Clean up - unregister all devices
+            
             for device_id, _ in device_list:
                 self.device_coordinator.unregister_device(device_id)
 
@@ -428,11 +389,11 @@ class SynchronizationValidator:
         return validation_report
 
     async def _run_stress_test(self, device_ids: List[str]) -> Dict[str, Any]:
-        """Run multi-device stress testing."""
+        
         logger.info("Running multi-device stress test")
 
         stress_results = {
-            "test_duration": 60.0,  # 1 minute stress test
+            "test_duration": 60.0,  
             "operations_per_second": 10,
             "total_operations": 0,
             "successful_operations": 0,
@@ -443,25 +404,25 @@ class SynchronizationValidator:
         start_time = time.time()
         response_times = []
 
-        # Run operations for 1 minute
+        
         while time.time() - start_time < 60.0:
             operation_start = time.time()
 
             try:
-                # Alternate between different operations
+                
                 operation_type = stress_results["total_operations"] % 3
 
                 if operation_type == 0:
-                    # Flash sync test
-                    await self.flash_sync.trigger_flash_sync(device_ids[:2])  # Test with 2 devices
+                    
+                    await self.flash_sync.trigger_flash_sync(device_ids[:2])  
                 elif operation_type == 1:
-                    # Sync marker injection
+                    
                     await self.device_coordinator.inject_sync_marker("stress_test")
                 else:
-                    # Status query
+                    
                     self.device_coordinator.get_device_status_summary()
 
-                operation_time = (time.time() - operation_start) * 1000  # Convert to ms
+                operation_time = (time.time() - operation_start) * 1000  
                 response_times.append(operation_time)
                 stress_results["successful_operations"] += 1
 
@@ -471,8 +432,8 @@ class SynchronizationValidator:
 
             stress_results["total_operations"] += 1
 
-            # Wait before next operation to maintain target rate
-            await asyncio.sleep(0.1)  # 10 operations per second
+            
+            await asyncio.sleep(0.1)  
 
         if response_times:
             stress_results["average_response_time"] = statistics.mean(response_times)
@@ -480,7 +441,7 @@ class SynchronizationValidator:
         return stress_results
 
     def _generate_performance_summary(self) -> Dict[str, Any]:
-        """Generate comprehensive performance metrics summary."""
+        
         return {
             "tests_completed": len(self.test_results),
             "success_rate": sum(1 for r in self.test_results if r.success) / len(
@@ -494,27 +455,27 @@ class SynchronizationValidator:
 
     def _check_compliance_requirements(self, flash_results: Dict[str, SyncTestResult]) -> Dict[
         str, bool]:
-        """Check compliance with system requirements."""
+        
         compliance = {}
 
-        # Check sub-5ms synchronization requirement
+        
         sync_accuracies = [result.sync_accuracy_ms for result in flash_results.values() if
                            result.success]
         compliance["sub_5ms_sync"] = all(
             acc <= 5.0 for acc in sync_accuracies) if sync_accuracies else False
 
-        # Check multi-device support (up to 8 devices)
+        
         compliance["multi_device_support"] = len(flash_results) <= 8
 
-        # Check overall system reliability
+        
         success_rate = sum(1 for result in flash_results.values() if result.success) / len(
             flash_results) if flash_results else 0
-        compliance["system_reliability"] = success_rate >= 0.95  # 95% success rate required
+        compliance["system_reliability"] = success_rate >= 0.95  
 
         return compliance
 
 
-# Export main classes for use in validation scripts
+
 __all__ = [
     'SynchronizationValidator',
     'FlashSyncValidator',

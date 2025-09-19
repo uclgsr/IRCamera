@@ -3,11 +3,7 @@ package com.topdon.module.thermal.ir.utils
 import android.content.Context
 import com.topdon.lib.core.R as LibcoreR
 
-/**
- * des:
- * author: CaiSongL
- * date: 2024/4/3 11:12
- **/
+
 
 data class IRConfigData(val name: String, val value: String) {
     companion object {

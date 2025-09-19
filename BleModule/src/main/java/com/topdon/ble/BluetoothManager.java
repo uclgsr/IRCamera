@@ -27,10 +27,10 @@ import java.util.UUID;
 public class BluetoothManager implements EventObserver {
     private static final String TAG = "BluetoothManager";
 
-    public static boolean iSReset = false;//是否复位
-    public static boolean isSending = false;//是否正在发送蓝牙数据
-    public static boolean isClickStopCharging = false;//是否点击了停止充电
-    public static boolean isReceiveBleData = false;//是否接收蓝牙数据
+    public static boolean iSReset = false;
+    public static boolean isSending = false;
+    public static boolean isClickStopCharging = false;
+    public static boolean isReceiveBleData = false;
     private static BluetoothManager instance = null;
     private Device mDevice;
     private Connection connection;
@@ -109,7 +109,7 @@ public class BluetoothManager implements EventObserver {
         config.setRequestTimeoutMillis(7000);
         config.setAutoReconnect(false);
         config.setReconnectImmediatelyMaxTimes(3);
-        connection = EasyBLE.getInstance().connect(device, config, this);//回调监听连接状态，设置此回调不影响观察者接收连接状态消息
+        connection = EasyBLE.getInstance().connect(device, config, this);
         connection.setBluetoothGattCallback(new BluetoothGattCallback() {
             @Override
             public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
@@ -214,7 +214,7 @@ public class BluetoothManager implements EventObserver {
 
         try {
             writeCharact = connection.getCharacteristic(UUID.fromString(UUIDManager.SERVICE_UUID), UUID.fromString(UUIDManager.WRITE_UUID));
-            connection.getGatt().setCharacteristicNotification(writeCharact, true); // 设置监听
+            connection.getGatt().setCharacteristicNotification(writeCharact, true); 
 
             writeCharact.setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE);
             writeCharact.setValue(data);
@@ -230,7 +230,7 @@ public class BluetoothManager implements EventObserver {
     @Override
     public void onCharacteristicRead(Request request, byte[] value) {
 
-        String data = StringUtils.toHex(value); // 将字节转化为String字符串
+        String data = StringUtils.toHex(value); 
 
     }
 

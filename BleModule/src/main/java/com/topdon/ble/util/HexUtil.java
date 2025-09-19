@@ -97,7 +97,7 @@ public class HexUtil {
 
     public static byte[] hexToByte(String hex) {
         int m = 0, n = 0;
-        int byteLen = hex.length() / 2; // 每两个字符描述一个字节
+        int byteLen = hex.length() / 2; 
         byte[] ret = new byte[byteLen];
         for (int i = 0; i < byteLen; i++) {
             m = i * 2 + 1;
@@ -126,14 +126,14 @@ public class HexUtil {
         }
         try {
             in = new FileInputStream(file);
-            long inSize = in.getChannel().size();//判断FileInputStream中是否有内容
+            long inSize = in.getChannel().size();
             if (inSize == 0) {
                 Log.d("bcf", "The FileInputStream has no content!");
                 return null;
             }
 
-            byte[] buffer = new byte[in.available()];//in.available() 表示要读取的文件中的数据长度
-            in.read(buffer);  //将文件中的数据读到buffer中
+            byte[] buffer = new byte[in.available()];
+            in.read(buffer);  
             return buffer;
         } catch (FileNotFoundException e) {
             e.printStackTrace();

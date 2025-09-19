@@ -10,10 +10,7 @@ import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 
-/**
- * Crash Recovery Manager that implements crash recovery functionality as requested in the issue.
- * This handles detection of unfinished sessions and provides recovery options.
- */
+
 class CrashRecoveryManager(private val context: Context) {
     
     companion object {
@@ -24,21 +21,19 @@ class CrashRecoveryManager(private val context: Context) {
         private const val KEY_ACTIVE_SENSORS = "active_sensors"
         private const val KEY_SESSION_DIRECTORY = "session_directory"
         
-        // Recovery timeouts
-        private const val SESSION_TIMEOUT_MS = 3600000L // 1 hour
-        private const val RECOVERY_SCAN_TIMEOUT_MS = 30000L // 30 seconds
+        
+        private const val SESSION_TIMEOUT_MS = 3600000L 
+        private const val RECOVERY_SCAN_TIMEOUT_MS = 30000L 
     }
     
     private val preferences: SharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
     
-    /**
-     * Check for crashed sessions on app startup as requested in the issue
-     */
+    
     suspend fun checkForCrashedSessions(): CrashRecoveryResult = withContext(Dispatchers.IO) {
         Log.i(TAG, "Checking for crashed sessions on app startup")
         
         try {
-            // Check if there was an active session when the app last closed
+            
             val activeSessionId = preferences.getString(KEY_ACTIVE_SESSION, null)
             val sessionStartTime = preferences.getLong(KEY_SESSION_START_TIME, 0L)
             val activeSensorsJson = preferences.getString(KEY_ACTIVE_SENSORS, null)
@@ -57,7 +52,7 @@ class CrashRecoveryManager(private val context: Context) {
             Log.i(TAG, "Session start time: ${Date(sessionStartTime)}")
             Log.i(TAG, "Session directory: $sessionDirectory")
             
-            // Parse active sensors
+            
             val activeSensors = try {
                 activeSensorsJson?.let { 
                     val jsonArray = JSONArray(it)
@@ -68,7 +63,7 @@ class CrashRecoveryManager(private val context: Context) {
                 emptyList<String>()
             }
             
-            // Determine if this is actually a crashed session
+            
             val currentTime = System.currentTimeMillis()
             val sessionAge = currentTime - sessionStartTime
             
@@ -82,7 +77,7 @@ class CrashRecoveryManager(private val context: Context) {
                 )
             }
             
-            // Analyze the crashed session
+            
             val sessionAnalysis = analyzeSessionDirectory(sessionDirectory, activeSensors)
             
             val recoveredSession = RecoveredSession(
@@ -112,9 +107,7 @@ class CrashRecoveryManager(private val context: Context) {
         }
     }
     
-    /**
-     * Mark session as active for crash recovery tracking
-     */
+    
     fun markSessionActive(
         sessionId: String,
         sessionDirectory: String,
@@ -130,21 +123,17 @@ class CrashRecoveryManager(private val context: Context) {
             .apply()
     }
     
-    /**
-     * Mark session as completed successfully (clear crash recovery state)
-     */
+    
     fun markSessionCompleted(sessionId: String) {
         Log.i(TAG, "Marking session as completed: $sessionId")
         clearCrashRecoveryState()
     }
     
-    /**
-     * Mark session as failed and handle cleanup
-     */
+    
     fun markSessionFailed(sessionId: String, reason: String) {
         Log.i(TAG, "Marking session as failed: $sessionId (reason: $reason)")
         
-        // Update session metadata to indicate failure
+        
         try {
             val sessionDirectory = preferences.getString(KEY_SESSION_DIRECTORY, null)
             if (sessionDirectory != null) {
@@ -157,38 +146,36 @@ class CrashRecoveryManager(private val context: Context) {
         clearCrashRecoveryState()
     }
     
-    /**
-     * Recover a crashed session by cleaning up resources and updating metadata
-     */
+    
     suspend fun recoverCrashedSession(recoveredSession: RecoveredSession): SessionRecoveryResult = withContext(Dispatchers.IO) {
         Log.i(TAG, "Recovering crashed session: ${recoveredSession.sessionId}")
         
         try {
             val recoveryActions = mutableListOf<String>()
             
-            // 1. Update session metadata to mark as crashed/recovered
+            
             val metadataUpdated = updateSessionMetadataWithCrashRecovery(recoveredSession)
             if (metadataUpdated) {
                 recoveryActions.add("Updated session metadata with crash recovery info")
             }
             
-            // 2. Clean up any stale resources (camera locks, file handles, etc.)
+            
             val resourcesCleanedUp = cleanupStaleResources(recoveredSession)
             recoveryActions.addAll(resourcesCleanedUp)
             
-            // 3. Analyze and preserve partial data
+            
             val dataPreserved = preservePartialSessionData(recoveredSession)
             if (dataPreserved) {
                 recoveryActions.add("Preserved partial session data")
             }
             
-            // 4. Generate session recovery report
+            
             val reportGenerated = generateRecoveryReport(recoveredSession, recoveryActions)
             if (reportGenerated) {
                 recoveryActions.add("Generated crash recovery report")
             }
             
-            // 5. Clear crash recovery state
+            
             clearCrashRecoveryState()
             recoveryActions.add("Cleared crash recovery tracking state")
             
@@ -212,9 +199,7 @@ class CrashRecoveryManager(private val context: Context) {
         }
     }
     
-    /**
-     * Analyze session directory to understand what data was recorded
-     */
+    
     private suspend fun analyzeSessionDirectory(
         sessionDirectory: String?,
         activeSensors: List<String>
@@ -245,7 +230,7 @@ class CrashRecoveryManager(private val context: Context) {
             val dataFiles = mutableMapOf<String, SessionDataInfo>()
             var totalDataSize = 0L
             
-            // Analyze data files for each sensor
+            
             activeSensors.forEach { sensorName ->
                 val sensorDir = File(sessionDir, sensorName.lowercase())
                 if (sensorDir.exists()) {
@@ -263,7 +248,7 @@ class CrashRecoveryManager(private val context: Context) {
                 }
             }
             
-            // Check for session metadata files
+            
             val metadataFile = File(sessionDir, "session_metadata.json")
             val hasMetadata = metadataFile.exists()
             
@@ -298,9 +283,7 @@ class CrashRecoveryManager(private val context: Context) {
         }
     }
     
-    /**
-     * Generate recovery actions based on the recovered session
-     */
+    
     private fun generateRecoveryActions(recoveredSession: RecoveredSession): List<String> {
         val actions = mutableListOf<String>()
         
@@ -324,9 +307,7 @@ class CrashRecoveryManager(private val context: Context) {
         return actions
     }
     
-    /**
-     * Update session metadata with crash recovery information
-     */
+    
     private fun updateSessionMetadataWithCrashRecovery(recoveredSession: RecoveredSession): Boolean {
         return try {
             val sessionDir = File(recoveredSession.sessionDirectory)
@@ -354,7 +335,7 @@ class CrashRecoveryManager(private val context: Context) {
                 })
             }
             
-            // Read existing metadata if available
+            
             val existingMetadata = if (metadataFile.exists()) {
                 try {
                     JSONObject(metadataFile.readText())
@@ -365,7 +346,7 @@ class CrashRecoveryManager(private val context: Context) {
                 JSONObject()
             }
             
-            // Merge crash recovery info
+            
             existingMetadata.put("crash_recovery", crashRecoveryInfo)
             
             metadataFile.writeText(existingMetadata.toString(2))
@@ -378,9 +359,7 @@ class CrashRecoveryManager(private val context: Context) {
         }
     }
     
-    /**
-     * Update session metadata to mark as failed
-     */
+    
     private fun updateSessionMetadataWithFailure(sessionDirectory: String, reason: String) {
         try {
             val sessionDir = File(sessionDirectory)
@@ -410,21 +389,19 @@ class CrashRecoveryManager(private val context: Context) {
         }
     }
     
-    /**
-     * Clean up stale resources that might be left from crashed session
-     */
+    
     private suspend fun cleanupStaleResources(recoveredSession: RecoveredSession): List<String> = withContext(Dispatchers.IO) {
         val cleanupActions = mutableListOf<String>()
         
         try {
-            // Note: In a real implementation, this would clean up:
-            // - Camera resources/locks
-            // - File handles
-            // - Network connections
-            // - Bluetooth connections
-            // - Background jobs/services
             
-            // For now, we'll just log what we would clean up
+            
+            
+            
+            
+            
+            
+            
             recoveredSession.activeSensors.forEach { sensor ->
                 when (sensor.uppercase()) {
                     "RGB" -> cleanupActions.add("Released camera resources for RGB sensor")
@@ -433,7 +410,7 @@ class CrashRecoveryManager(private val context: Context) {
                 }
             }
             
-            // Generic cleanup
+            
             cleanupActions.add("Cleared any remaining background jobs")
             cleanupActions.add("Released file system locks")
             
@@ -445,9 +422,7 @@ class CrashRecoveryManager(private val context: Context) {
         return@withContext cleanupActions
     }
     
-    /**
-     * Preserve partial session data by marking it appropriately
-     */
+    
     private suspend fun preservePartialSessionData(recoveredSession: RecoveredSession): Boolean = withContext(Dispatchers.IO) {
         return@withContext try {
             if (recoveredSession.analysis.partialDataSize > 0) {
@@ -480,9 +455,7 @@ class CrashRecoveryManager(private val context: Context) {
         }
     }
     
-    /**
-     * Generate comprehensive recovery report
-     */
+    
     private suspend fun generateRecoveryReport(
         recoveredSession: RecoveredSession,
         recoveryActions: List<String>
@@ -528,9 +501,7 @@ class CrashRecoveryManager(private val context: Context) {
         }
     }
     
-    /**
-     * Clear crash recovery state
-     */
+    
     private fun clearCrashRecoveryState() {
         preferences.edit()
             .remove(KEY_ACTIVE_SESSION)
@@ -541,7 +512,7 @@ class CrashRecoveryManager(private val context: Context) {
     }
 }
 
-// Data classes for crash recovery
+
 
 data class CrashRecoveryResult(
     val hasCrashedSession: Boolean,

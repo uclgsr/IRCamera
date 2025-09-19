@@ -155,7 +155,7 @@ public class ShimmerDeviceConfig {
         private int ppgMode = PPG_GREEN;
         private boolean enableTimestamp = true;
         private boolean enableAutoReconnect = true;
-        private int connectionTimeout = 10000; // 10 seconds
+        private int connectionTimeout = 10000; 
         private String sessionId = null;
 
         public Builder setDeviceType(UnifiedBleManager.DeviceType deviceType) {

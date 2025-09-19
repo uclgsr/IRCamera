@@ -182,7 +182,7 @@ class ShimmerGSRRecorderTest {
 
     @Test
     fun testRecordingModeConfiguration() {
-        // Test Step 6: Recording mode support
+        
         val streamingRecorder = ShimmerGSRRecorder(
             context,
             MockShimmerDeviceFactory(),
@@ -204,7 +204,7 @@ class ShimmerGSRRecorderTest {
             recordingMode = ShimmerGSRRecorder.RecordingMode.LOG_AND_STREAM
         )
 
-        // Verify mode configuration
+        
         assertEquals(
             "Should be streaming mode",
             ShimmerGSRRecorder.RecordingMode.STREAMING,
@@ -226,10 +226,10 @@ class ShimmerGSRRecorderTest {
 
     @Test
     fun testGSRDataProcessingAccuracy() {
-        // Test Step 7: 12-bit ADC processing accuracy
+        
         val apisBridge = ShimmerAPIBridge.getInstance()
 
-        // Test with various raw ADC values within 12-bit range (0-4095)
+        
         val testValues = arrayOf(0.0, 1024.0, 2048.0, 3072.0, 4095.0)
 
         for (rawValue in testValues) {
@@ -239,7 +239,7 @@ class ShimmerGSRRecorderTest {
                 sessionId = "test_session"
             )
 
-            // Verify values are within expected ranges
+            
             assertTrue(
                 "Raw value should be preserved: $rawValue",
                 sample.rawValue.toDouble() == rawValue

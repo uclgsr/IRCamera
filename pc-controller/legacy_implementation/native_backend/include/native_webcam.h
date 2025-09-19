@@ -13,24 +13,24 @@
 namespace ircamera {
 
     struct FrameData {
-        uint64_t timestamp_ns;      // Nanosecond timestamp
-        int width;                  // Frame width
-        int height;                 // Frame height
-        int channels;               // Number of channels (3 for BGR, 1 for grayscale)
-        std::shared_ptr<uint8_t[]> data;  // Shared frame data buffer
-        size_t data_size;           // Size of data buffer in bytes
-        int frame_number;           // Sequential frame number
+        uint64_t timestamp_ns;      
+        int width;                  
+        int height;                 
+        int channels;               
+        std::shared_ptr<uint8_t[]> data;  
+        size_t data_size;           
+        int frame_number;           
     };
 
     struct CameraConfig {
-        int device_id = 0;          // Camera device ID (0 for default)
-        int width = 1920;           // Capture width
-        int height = 1080;          // Capture height
-        double fps = 30.0;          // Frames per second
-        int fourcc = cv::VideoWriter::fourcc('M', 'J', 'P', 'G');  // Video codec
-        bool auto_exposure = true;  // Auto exposure control
-        double exposure = -1;       // Manual exposure value (-1 for auto)
-        double gain = -1;           // Manual gain value (-1 for auto)
+        int device_id = 0;          
+        int width = 1920;           
+        int height = 1080;          
+        double fps = 30.0;          
+        int fourcc = cv::VideoWriter::fourcc('M', 'J', 'P', 'G');  
+        bool auto_exposure = true;  
+        double exposure = -1;       
+        double gain = -1;           
     };
 
     class NativeWebcam {
@@ -87,4 +87,4 @@ namespace ircamera {
         std::unique_ptr <Impl> pimpl;
     };
 
-} // namespace ircamera
+} 

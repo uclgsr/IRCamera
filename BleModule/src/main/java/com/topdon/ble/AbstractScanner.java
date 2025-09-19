@@ -76,7 +76,7 @@ abstract class AbstractScanner implements Scanner {
 
     private boolean noLocationPermission(Context context) {
         int sdkVersion = context.getApplicationInfo().targetSdkVersion;
-        if (sdkVersion >= 29) {//target sdk版本在29以上的需要精确定位权限才能搜索到蓝牙设备
+        if (sdkVersion >= 29) {
             return ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED;
         } else {
             return ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED &&

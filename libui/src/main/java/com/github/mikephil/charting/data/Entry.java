@@ -18,9 +18,7 @@ public class Entry extends BaseEntry implements Parcelable {
             return new Entry[size];
         }
     };
-    /**
-     * the x value
-     */
+    
     private float x = 0f;
 
     public Entry() {

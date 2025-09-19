@@ -30,7 +30,7 @@ class ComprehensiveSensorStatusWidget @JvmOverloads constructor(
     companion object {
         private const val TAG = "ComprehensiveSensorStatus"
         
-        // Status colors for clear visual feedback
+        
         private const val COLOR_CONNECTED = Color.GREEN
         private const val COLOR_STREAMING = Color.BLUE
         private const val COLOR_ERROR = Color.RED
@@ -38,20 +38,20 @@ class ComprehensiveSensorStatusWidget @JvmOverloads constructor(
         private const val COLOR_SIMULATION = Color.YELLOW
     }
 
-    // UI Components
+    
     private lateinit var titleText: TextView
     private lateinit var overallStatusText: TextView
     private lateinit var recordingIndicator: ImageView
     private lateinit var recordingTimer: TextView
     private lateinit var sensorsContainer: LinearLayout
     
-    // Sensor status tracking
+    
     private val sensorStatusViews = mutableMapOf<String, SensorStatusView>()
     private var isRecording = false
     private var recordingStartTime = 0L
     private var timerUpdateJob: Job? = null
     
-    // Current session info  
+    
     private var currentSessionId: String? = null
     private var activeSensorCount = 0
     private var errorSensorCount = 0
@@ -63,7 +63,7 @@ class ComprehensiveSensorStatusWidget @JvmOverloads constructor(
     }
 
     private fun setupUI() {
-        // Title
+        
         titleText = TextView(context).apply {
             text = "📊 Multi-Modal Sensor Dashboard"
             textSize = 18f
@@ -73,7 +73,7 @@ class ComprehensiveSensorStatusWidget @JvmOverloads constructor(
         }
         addView(titleText)
 
-        // Overall status
+        
         overallStatusText = TextView(context).apply {
             text = "System Status: Initializing..."
             textSize = 14f
@@ -83,7 +83,7 @@ class ComprehensiveSensorStatusWidget @JvmOverloads constructor(
         }
         addView(overallStatusText)
 
-        // Recording status section
+        
         val recordingSection = LinearLayout(context).apply {
             orientation = HORIZONTAL
             gravity = Gravity.CENTER
@@ -107,7 +107,7 @@ class ComprehensiveSensorStatusWidget @JvmOverloads constructor(
 
         addView(recordingSection)
 
-        // Sensors container
+        
         val sensorsTitle = TextView(context).apply {
             text = "🔗 Sensor Connections"
             textSize = 16f
@@ -122,21 +122,19 @@ class ComprehensiveSensorStatusWidget @JvmOverloads constructor(
         }
         addView(sensorsContainer)
 
-        // Initialize default sensor status views
+        
         initializeDefaultSensors()
     }
 
     private fun initializeDefaultSensors() {
-        // Add status views for each sensor type
+        
         addSensorStatusView("thermal_camera", "🌡️ TC001 Thermal Camera", SensorType.THERMAL)
         addSensorStatusView("rgb_camera", "📹 RGB Camera", SensorType.RGB)
         addSensorStatusView("shimmer_gsr", "⚡ Shimmer GSR Sensor", SensorType.GSR)
         addSensorStatusView("audio_recorder", "🎤 Audio Recorder", SensorType.AUDIO)
     }
 
-    /**
-     * Add a sensor status view to the dashboard
-     */
+    
     private fun addSensorStatusView(sensorId: String, displayName: String, type: SensorType) {
         val statusView = SensorStatusView(context, sensorId, displayName, type)
         sensorStatusViews[sensorId] = statusView
@@ -163,7 +161,7 @@ class ComprehensiveSensorStatusWidget @JvmOverloads constructor(
         
         if (recording) {
             recordingStartTime = System.currentTimeMillis()
-            recordingIndicator.setBackgroundColor(COLOR_ERROR) // Red for recording
+            recordingIndicator.setBackgroundColor(COLOR_ERROR) 
             startRecordingTimer()
         } else {
             recordingIndicator.setBackgroundColor(COLOR_DISCONNECTED)
@@ -190,13 +188,11 @@ class ComprehensiveSensorStatusWidget @JvmOverloads constructor(
     fun showSensorError(sensorId: String, errorMessage: String) {
         sensorStatusViews[sensorId]?.showError(errorMessage)
         
-        // Show toast for immediate user attention
+        
         Toast.makeText(context, "⚠️ $sensorId: $errorMessage", Toast.LENGTH_LONG).show()
     }
 
-    /**
-     * Update multi-device status for Shimmer GSR testing
-     */
+    
     fun updateMultiDeviceStatus(connectedCount: Int, streamingCount: Int, maxDevices: Int) {
         val shimmerStatusView = sensorStatusViews["shimmer_gsr"]
         shimmerStatusView?.updateMultiDeviceInfo(connectedCount, streamingCount, maxDevices)
@@ -262,9 +258,7 @@ class ComprehensiveSensorStatusWidget @JvmOverloads constructor(
         DISCONNECTED, CONNECTING, CONNECTED, STREAMING, ERROR, SIMULATION
     }
 
-    /**
-     * Individual sensor status view with detailed information
-     */
+    
     private class SensorStatusView(
         context: Context,
         private val sensorId: String,

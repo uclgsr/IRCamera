@@ -49,8 +49,8 @@ class NetworkClient(private val context: Context) {
     private var outputStream: DataOutputStream? = null
     private var inputStream: DataInputStream? = null
     private var isConnected = false
-    private var useTLS = true // Enable TLS by default
-    private var clockOffset: Long = 0 // Time synchronization offset in nanoseconds
+    private var useTLS = true 
+    private var clockOffset: Long = 0 
     private var deviceId: String =
         android.provider.Settings.Secure.getString(
             context.contentResolver,
@@ -219,8 +219,8 @@ class NetworkClient(private val context: Context) {
                     return@withContext controllers
                 }
 
-                // Use a common subnet for discovery when dhcpInfo is not available
-                val subnet = "192.168.1" // Common default subnet
+                
+                val subnet = "192.168.1" 
 
                 Log.i(TAG, "Scanning subnet: $subnet.x for PC Controllers")
 
@@ -339,7 +339,7 @@ class NetworkClient(private val context: Context) {
         isConnected = false
         heartbeatJob.cancel()
 
-        // Disable auto recovery when manually disconnecting
+        
         errorRecoveryManager.disableAutoRecovery()
 
         try {
@@ -436,7 +436,7 @@ class NetworkClient(private val context: Context) {
 
                 sendMessage(registrationMessage)
 
-                // Wait for ACK
+                
                 val response = receiveMessage(5000)
                 response?.optString("message_type") == "ack" &&
                         response.optString("ack_for") == "device_register"
@@ -489,7 +489,7 @@ class NetworkClient(private val context: Context) {
     private fun handleIncomingMessage(message: JSONObject) {
         val messageType = message.optString("message_type")
 
-        // Check for custom message handlers first
+        
         messageHandlers[messageType]?.let { handler ->
             handler(message)
             return
@@ -517,7 +517,7 @@ class NetworkClient(private val context: Context) {
             }
 
             "session_stop" -> {
-                // Handle session stop request
+                
                 Log.i(TAG, "Remote session stop requested")
             }
 
@@ -557,7 +557,7 @@ class NetworkClient(private val context: Context) {
                 socket?.soTimeout = timeoutMs.toInt()
 
                 val messageLength = input.readInt()
-                if (messageLength > 1024 * 1024) { // 1MB limit
+                if (messageLength > 1024 * 1024) { 
                     throw IOException("Message too large: $messageLength bytes")
                 }
 
@@ -569,7 +569,7 @@ class NetworkClient(private val context: Context) {
 
                 JSONObject(String(messageData, Charsets.UTF_8))
             } catch (e: SocketTimeoutException) {
-                null // Normal timeout, not an error
+                null 
             } catch (e: Exception) {
                 throw e
             }
@@ -583,7 +583,7 @@ class NetworkClient(private val context: Context) {
                 var successfulAttempts = 0
 
                 repeat(attempts) {
-                    val t1 = System.nanoTime() // Client timestamp before request
+                    val t1 = System.nanoTime() 
 
                     val syncRequest =
                         JSONObject().apply {
@@ -595,15 +595,15 @@ class NetworkClient(private val context: Context) {
                     sendMessage(syncRequest)
 
                     val response = receiveMessage(2000)
-                    val t4 = System.nanoTime() // Client timestamp after response
+                    val t4 = System.nanoTime() 
 
                     if (response?.optString("message_type") == "time_sync_response") {
                         val t2 =
-                            response.optLong("server_receive_timestamp") // Server timestamp when request received
+                            response.optLong("server_receive_timestamp") 
                         val t3 =
-                            response.optLong("server_send_timestamp") // Server timestamp when response sent
+                            response.optLong("server_send_timestamp") 
 
-                        // Calculate network delay and clock offset
+                        
                         val networkDelay = ((t4 - t1) - (t3 - t2)) / 2
                         val offset = ((t2 - t1) + (t3 - t4)) / 2
 
@@ -616,7 +616,7 @@ class NetworkClient(private val context: Context) {
                         )
                     }
 
-                    delay(100) // Small delay between attempts
+                    delay(100) 
                 }
 
                 if (successfulAttempts > 0) {
@@ -709,7 +709,7 @@ class NetworkClient(private val context: Context) {
                 val output = DataOutputStream(socket.getOutputStream())
                 val input = DataInputStream(socket.getInputStream())
 
-                // Send info query
+                
                 val query =
                     JSONObject().apply {
                         put("message_type", "info_query")
@@ -721,7 +721,7 @@ class NetworkClient(private val context: Context) {
                 output.write(queryData)
                 output.flush()
 
-                // Read response
+                
                 val responseLength = input.readInt()
                 val responseData = ByteArray(responseLength)
                 input.readFully(responseData)
@@ -894,7 +894,7 @@ class NetworkClient(private val context: Context) {
 
     fun getLatencyMs(): Int {
         return if (isConnected) {
-            // Simplified latency calculation - in production this would measure actual round-trip time
+            
             kotlin.random.Random.nextInt(10, 50)
         } else {
             0
@@ -903,14 +903,14 @@ class NetworkClient(private val context: Context) {
 
     fun getThroughputKBps(): Double {
         return if (isConnected) {
-            // Simplified throughput calculation - in production this would measure actual data transfer
+            
             kotlin.random.Random.nextDouble(50.0, 200.0)
         } else {
             0.0
         }
     }
 
-    // Authentication methods
+    
 
     fun generatePairingPin(): String {
         return authManager.generatePairingPin()

@@ -64,7 +64,7 @@ class TimeUtilTest {
 
     @Test
     fun testFormatTimestamp() {
-        val timestamp = 1640995200000L // 2022-01-01 00:00:00 UTC
+        val timestamp = 1640995200000L 
         val formatted = TimeUtil.formatTimestamp(timestamp)
 
         assertTrue(

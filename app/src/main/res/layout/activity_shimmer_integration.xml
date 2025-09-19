@@ -6,7 +6,7 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-    <!-- Header -->
+    
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -17,7 +17,7 @@
         android:textSize="24sp"
         android:textStyle="bold" />
 
-    <!-- Status Section -->
+    
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -45,7 +45,7 @@
 
     </LinearLayout>
 
-    <!-- GSR Data Display -->
+    
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -90,7 +90,7 @@
 
     </LinearLayout>
 
-    <!-- Control Buttons -->
+    
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -144,7 +144,7 @@
 
     </LinearLayout>
 
-    <!-- Progress Bar -->
+    
     <ProgressBar
         android:id="@+id/progressBar"
         android:layout_width="match_parent"
@@ -152,7 +152,7 @@
         android:layout_marginBottom="8dp"
         android:visibility="gone" />
 
-    <!-- Device List Header -->
+    
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -162,7 +162,7 @@
         android:textSize="16sp"
         android:textStyle="bold" />
 
-    <!-- Device List -->
+    
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/deviceRecyclerView"
         android:layout_width="match_parent"

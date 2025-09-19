@@ -1,10 +1,5 @@
 #!/usr/bin/env python3
-"""
-GSR Monitoring Widgets for IRCamera PC Controller
 
-Real-time GSR data visualization and device management widgets for the hub-spoke
-Multi-Modal Physiological Sensing Platform.
-"""
 
 import asyncio
 import sys
@@ -15,7 +10,7 @@ from typing import Dict, List, Optional, Tuple, Any
 import numpy as np
 
 try:
-    # Import PyQtGraph for real-time plotting
+    
     import pyqtgraph as pg
     from PyQt6.QtCore import QMutex, Qt, QThread, QTimer, pyqtSignal, pyqtSlot
     from PyQt6.QtGui import QColor, QFont, QPalette, QPixmap
@@ -53,28 +48,28 @@ from loguru import logger
 
 
 class GSRDeviceStatusWidget(QWidget):
-    """Widget showing status of connected GSR devices"""
+    
 
     def __init__(self, parent=None):
         super().__init__(parent)
         self.devices = {}
         self.init_ui()
 
-        # Update timer
+        
         self.update_timer = QTimer()
         self.update_timer.timeout.connect(self.update_display)
-        self.update_timer.start(1000)  # Update every second
+        self.update_timer.start(1000)  
 
     def init_ui(self) -> Any:
-        """Initialize the user interface"""
+        
         layout = QVBoxLayout()
 
-        # Title
+        
         title = QLabel("GSR Device Status")
         title.setFont(QFont("Arial", 12, QFont.Weight.Bold))
         layout.addWidget(title)
 
-        # Device list area
+        
         self.scroll_area = QScrollArea()
         self.scroll_widget = QWidget()
         self.scroll_layout = QVBoxLayout(self.scroll_widget)
@@ -82,7 +77,7 @@ class GSRDeviceStatusWidget(QWidget):
         self.scroll_area.setWidgetResizable(True)
         layout.addWidget(self.scroll_area)
 
-        # Controls
+        
         controls_layout = QHBoxLayout()
 
         self.refresh_btn = QPushButton("Refresh")
@@ -99,7 +94,7 @@ class GSRDeviceStatusWidget(QWidget):
         self.setLayout(layout)
 
     def add_device(self, device_id: None = str, device_info: None = Dict) -> None:
-        """Add or update device display"""
+        
         if device_id not in self.devices:
             device_widget = self.create_device_widget(device_id, device_info)
             self.devices[device_id] = device_widget
@@ -108,47 +103,47 @@ class GSRDeviceStatusWidget(QWidget):
             self.update_device_info(device_id, device_info)
 
     def create_device_widget(self, device_id: str, device_info: Dict) -> QGroupBox:
-        """Create widget for a single GSR device"""
+        
         group = QGroupBox(f"Device: {device_id}")
         layout = QGridLayout()
 
-        # Device ID
+        
         layout.addWidget(QLabel("Device ID:"), 0, 0)
         device_id_label = QLabel(device_id)
         device_id_label.setStyleSheet("font-weight: bold;")
         layout.addWidget(device_id_label, 0, 1)
 
-        # Session ID
+        
         layout.addWidget(QLabel("Session:"), 0, 2)
         session_label = QLabel(device_info.get("session_id", "N/A"))
         layout.addWidget(session_label, 0, 3)
 
-        # Connection status
+        
         layout.addWidget(QLabel("Status:"), 1, 0)
         status_label = QLabel("Connected")
         status_label.setStyleSheet("color: green; font-weight: bold;")
         layout.addWidget(status_label, 1, 1)
 
-        # Sample count
+        
         layout.addWidget(QLabel("Samples:"), 1, 2)
         samples_label = QLabel(str(device_info.get("sample_count", 0)))
         layout.addWidget(samples_label, 1, 3)
 
-        # Quality metrics
+        
         layout.addWidget(QLabel("Quality:"), 2, 0)
         quality_bar = QProgressBar()
         quality_bar.setRange(0, 100)
         quality_bar.setValue(device_info.get("avg_quality", 0))
         layout.addWidget(quality_bar, 2, 1, 1, 3)
 
-        # Network stats
+        
         network_stats = device_info.get("network_stats", {})
         layout.addWidget(QLabel("Packets:"), 3, 0)
         layout.addWidget(QLabel(str(network_stats.get("packets_received", 0))), 3, 1)
         layout.addWidget(QLabel("Errors:"), 3, 2)
         layout.addWidget(QLabel(str(network_stats.get("network_errors", 0))), 3, 3)
 
-        # Store references for updates
+        
         group.device_id = device_id
         group.session_label = session_label
         group.status_label = status_label
@@ -161,7 +156,7 @@ class GSRDeviceStatusWidget(QWidget):
     def update_device_info(
             self, device_id: None = str, device_info: None = Dict
     ) -> None:
-        """Update device information display"""
+        
         if device_id not in self.devices:
             return
 
@@ -171,7 +166,7 @@ class GSRDeviceStatusWidget(QWidget):
         widget.quality_bar.setValue(int(device_info.get("avg_quality", 0)))
 
     def remove_device(self, device_id: None = str) -> None:
-        """Remove device from display"""
+        
         if device_id in self.devices:
             widget = self.devices[device_id]
             self.scroll_layout.removeWidget(widget)
@@ -179,44 +174,44 @@ class GSRDeviceStatusWidget(QWidget):
             del self.devices[device_id]
 
     def update_display(self) -> None:
-        """Update display with latest data"""
-        # This will be called by the parent to update with fresh data
+        
+        
         pass
 
     def refresh_devices(self) -> Any:
-        """Refresh device list"""
-        # Emit signal to parent to refresh data
+        
+        
         self.parent().refresh_gsr_devices()
 
     def export_selected_data(self) -> Any:
-        """Export data for selected devices"""
-        # Open export dialog
+        
+        
         export_dialog = GSRExportDialog(list(self.devices.keys()), self)
         export_dialog.exec()
 
 
 class GSRPlotWidget(QWidget):
-    """Real-time GSR data plotting widget"""
+    
 
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.data_buffers = {}  # device_id -> (timestamps, values)
-        self.plot_items = {}  # device_id -> PlotDataItem
+        self.data_buffers = {}  
+        self.plot_items = {}  
         self.colors = ["r", "g", "b", "c", "m", "y", "w"]
         self.color_index = 0
 
         self.init_ui()
 
-        # Data update timer
+        
         self.plot_timer = QTimer()
         self.plot_timer.timeout.connect(self.update_plots)
-        self.plot_timer.start(100)  # Update every 100ms
+        self.plot_timer.start(100)  
 
     def init_ui(self) -> Any:
-        """Initialize the plotting interface"""
+        
         layout = QVBoxLayout()
 
-        # Title and controls
+        
         header_layout = QHBoxLayout()
 
         title = QLabel("Real-time GSR Data")
@@ -225,7 +220,7 @@ class GSRPlotWidget(QWidget):
 
         header_layout.addStretch()
 
-        # Plot controls
+        
         self.auto_scale_cb = QCheckBox("Auto Scale")
         self.auto_scale_cb.setChecked(True)
         header_layout.addWidget(self.auto_scale_cb)
@@ -236,16 +231,16 @@ class GSRPlotWidget(QWidget):
 
         layout.addLayout(header_layout)
 
-        # Plot widget
+        
         self.plot_widget = PlotWidget()
         self.plot_widget.setLabel("left", "GSR (µS)")
         self.plot_widget.setLabel("bottom", "Time")
         self.plot_widget.showGrid(x=True, y=True)
-        self.plot_widget.setYRange(0, 50)  # Typical GSR range
+        self.plot_widget.setYRange(0, 50)  
 
         layout.addWidget(self.plot_widget)
 
-        # Legend area
+        
         self.legend_layout = QHBoxLayout()
         layout.addLayout(self.legend_layout)
 
@@ -254,18 +249,18 @@ class GSRPlotWidget(QWidget):
     def add_device_data(
             self, device_id: None = str, timestamp: None = float, gsr_value: None = float
     ) -> None:
-        """Add data point for a device"""
+        
         if device_id not in self.data_buffers:
             self.data_buffers[device_id] = ([], [])
 
-            # Create plot item
+            
             color = self.colors[self.color_index % len(self.colors)]
             pen = mkPen(color=color, width=2)
             plot_item = self.plot_widget.plot(pen=pen, name=device_id)
             self.plot_items[device_id] = plot_item
             self.color_index += 1
 
-            # Add legend
+            
             legend_label = QLabel(f"● {device_id}")
             legend_label.setStyleSheet(f"color: {color}; font-weight: bold;")
             self.legend_layout.addWidget(legend_label)
@@ -274,42 +269,42 @@ class GSRPlotWidget(QWidget):
         timestamps.append(timestamp)
         values.append(gsr_value)
 
-        # Keep only last 1000 points for performance
+        
         if len(timestamps) > 1000:
             timestamps.pop(0)
             values.pop(0)
 
     def update_plots(self) -> None:
-        """Update all plot lines"""
+        
         current_time = datetime.now().timestamp()
 
         for device_id, (timestamps, values) in self.data_buffers.items():
             if timestamps and device_id in self.plot_items:
-                # Convert timestamps to relative time (seconds ago)
+                
                 relative_times = [current_time - ts for ts in timestamps]
-                relative_times.reverse()  # Make it ascending
+                relative_times.reverse()  
                 values_copy = list(reversed(values))
 
                 self.plot_items[device_id].setData(relative_times, values_copy)
 
-        # Auto-scale if enabled
+        
         if self.auto_scale_cb.isChecked():
             self.plot_widget.autoRange()
 
     def clear_plots(self) -> None:
-        """Clear all plot data"""
+        
         self.data_buffers.clear()
         self.plot_widget.clear()
         self.plot_items.clear()
 
-        # Clear legend
+        
         for i in reversed(range(self.legend_layout.count())):
             child = self.legend_layout.itemAt(i).widget()
             if child:
                 child.deleteLater()
 
     def remove_device(self, device_id: None = str) -> None:
-        """Remove device from plots"""
+        
         if device_id in self.data_buffers:
             del self.data_buffers[device_id]
 
@@ -319,40 +314,40 @@ class GSRPlotWidget(QWidget):
 
 
 class GSRStatisticsWidget(QWidget):
-    """Widget showing GSR statistics and analytics"""
+    
 
     def __init__(self, parent=None):
         super().__init__(parent)
         self.init_ui()
 
-        # Update timer
+        
         self.stats_timer = QTimer()
         self.stats_timer.timeout.connect(self.update_statistics)
-        self.stats_timer.start(5000)  # Update every 5 seconds
+        self.stats_timer.start(5000)  
 
     def init_ui(self) -> Any:
-        """Initialize statistics display"""
+        
         layout = QVBoxLayout()
 
-        # Title
+        
         title = QLabel("GSR Session Statistics")
         title.setFont(QFont("Arial", 12, QFont.Weight.Bold))
         layout.addWidget(title)
 
-        # Statistics table
+        
         self.stats_table = QTableWidget()
         self.stats_table.setColumnCount(6)
         self.stats_table.setHorizontalHeaderLabels(
             ["Device ID", "Session", "Samples", "Avg Quality", "Duration", "Status"]
         )
 
-        # Make table stretch to fill width
+        
         header = self.stats_table.horizontalHeader()
         header.setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
 
         layout.addWidget(self.stats_table)
 
-        # Summary stats
+        
         summary_layout = QHBoxLayout()
 
         self.total_devices_label = QLabel("Total Devices: 0")
@@ -370,11 +365,11 @@ class GSRStatisticsWidget(QWidget):
         self.setLayout(layout)
 
     def update_statistics(self, session_stats: Optional[Dict[str, Any]] = None) -> None:
-        """Update statistics display"""
+        
         if not session_stats:
             return
 
-        # Clear and repopulate table
+        
         self.stats_table.setRowCount(len(session_stats))
 
         total_samples = 0
@@ -385,27 +380,27 @@ class GSRStatisticsWidget(QWidget):
             if not stats:
                 continue
 
-            # Device ID
+            
             device_id = stats.get("device_id", "Unknown")
             self.stats_table.setItem(row, 0, QTableWidgetItem(device_id))
 
-            # Session ID
+            
             session_id = stats.get("session_id", "Unknown")
             self.stats_table.setItem(row, 1, QTableWidgetItem(session_id))
 
-            # Sample count
+            
             sample_count = stats.get("sample_count", 0)
             total_samples += sample_count
             self.stats_table.setItem(row, 2, QTableWidgetItem(str(sample_count)))
 
-            # Average quality
+            
             avg_quality = stats.get("quality_stats", {}).get("avg_quality", 0)
             if avg_quality > 0:
                 quality_count += 1
                 total_quality += avg_quality
             self.stats_table.setItem(row, 3, QTableWidgetItem(f"{avg_quality:.1f}%"))
 
-            # Duration
+            
             start_time = stats.get("start_time", 0)
             if start_time > 0:
                 duration = datetime.now().timestamp() - start_time
@@ -414,10 +409,10 @@ class GSRStatisticsWidget(QWidget):
             else:
                 self.stats_table.setItem(row, 4, QTableWidgetItem("N/A"))
 
-            # Status
+            
             self.stats_table.setItem(row, 5, QTableWidgetItem("Active"))
 
-        # Update summary
+        
         self.total_devices_label.setText(f"Total Devices: {len(session_stats)}")
         self.total_samples_label.setText(f"Total Samples: {total_samples:,}")
 
@@ -429,7 +424,7 @@ class GSRStatisticsWidget(QWidget):
 
 
 class GSRExportDialog(QWidget):
-    """Dialog for exporting GSR data"""
+    
 
     def __init__(self, available_devices: List[str], parent=None):
         super().__init__(parent)
@@ -439,10 +434,10 @@ class GSRExportDialog(QWidget):
         self.init_ui()
 
     def init_ui(self) -> Any:
-        """Initialize export dialog"""
+        
         layout = QVBoxLayout()
 
-        # Device selection
+        
         device_group = QGroupBox("Select Devices")
         device_layout = QVBoxLayout()
 
@@ -456,7 +451,7 @@ class GSRExportDialog(QWidget):
         device_group.setLayout(device_layout)
         layout.addWidget(device_group)
 
-        # Export format
+        
         format_group = QGroupBox("Export Format")
         format_layout = QVBoxLayout()
 
@@ -467,7 +462,7 @@ class GSRExportDialog(QWidget):
         format_group.setLayout(format_layout)
         layout.addWidget(format_group)
 
-        # Buttons
+        
         button_layout = QHBoxLayout()
 
         export_btn = QPushButton("Export")
@@ -482,7 +477,7 @@ class GSRExportDialog(QWidget):
         self.setLayout(layout)
 
     def export_data(self) -> Any:
-        """Perform data export"""
+        
         selected_devices = [
             device_id
             for device_id, cb in self.device_checkboxes.items()
@@ -495,13 +490,13 @@ class GSRExportDialog(QWidget):
 
         format_str = self.format_combo.currentText().lower()
 
-        # Get export directory
+        
         export_dir = QFileDialog.getExistingDirectory(self, "Select Export Directory")
 
         if not export_dir:
             return
 
-        # Notify parent to perform export
+        
         if hasattr(self.parent(), "export_gsr_data"):
             self.parent().export_gsr_data(selected_devices, format_str, export_dir)
 
@@ -509,34 +504,34 @@ class GSRExportDialog(QWidget):
 
 
 class GSRMainWidget(QWidget):
-    """Main GSR monitoring widget combining all components"""
+    
 
     def __init__(self, network_server=None, parent=None):
         super().__init__(parent)
         self.network_server = network_server
         self.init_ui()
 
-        # Data update timer
+        
         self.data_timer = QTimer()
         self.data_timer.timeout.connect(self.update_gsr_data)
-        self.data_timer.start(1000)  # Update every second
+        self.data_timer.start(1000)  
 
     def init_ui(self) -> Any:
-        """Initialize main GSR interface"""
+        
         layout = QVBoxLayout()
 
-        # Create tab widget
+        
         self.tab_widget = QTabWidget()
 
-        # Device status tab
+        
         self.device_widget = GSRDeviceStatusWidget()
         self.tab_widget.addTab(self.device_widget, "Device Status")
 
-        # Real-time plotting tab
+        
         self.plot_widget = GSRPlotWidget()
         self.tab_widget.addTab(self.plot_widget, "Real-time Data")
 
-        # Statistics tab
+        
         self.stats_widget = GSRStatisticsWidget()
         self.tab_widget.addTab(self.stats_widget, "Statistics")
 
@@ -544,25 +539,25 @@ class GSRMainWidget(QWidget):
         self.setLayout(layout)
 
     def update_gsr_data(self) -> None:
-        """Update GSR data from network server"""
+        
         if not self.network_server:
             return
 
         try:
-            # Get session statistics
+            
             session_stats = self.network_server.get_gsr_session_stats()
 
-            # Update device status
+            
             for session_key, stats in session_stats.items():
                 if stats:
                     device_id = stats.get("device_id")
                     if device_id:
                         self.device_widget.add_device(device_id, stats)
 
-            # Update statistics
+            
             self.stats_widget.update_statistics(session_stats)
 
-            # Update plots with simulated real-time data
+            
             # In real implementation, this would come from the GSR receiver
             self.update_real_time_plots()
 
@@ -571,25 +566,25 @@ class GSRMainWidget(QWidget):
 
     def update_real_time_plots(self) -> None:
         """Update real-time plots (placeholder for real data)"""
-        # This would be replaced with actual real-time data from GSR receiver
+        
         import random
         import time
 
-        # Simulate data for demonstration
+        
         current_time = time.time()
         for device_id in ["device_001", "device_002"]:
-            gsr_value = 10 + random.random() * 20  # Simulate GSR data
+            gsr_value = 10 + random.random() * 20  
             self.plot_widget.add_device_data(device_id, current_time, gsr_value)
 
     def refresh_gsr_devices(self) -> Any:
-        """Refresh GSR device data"""
-        # Force immediate update
+        
+        
         self.update_gsr_data()
 
     def export_gsr_data(
             self, device_ids: Any = List[str], format_str: Any = str, export_dir: Any = str
     ) -> Any:
-        """Export GSR data for selected devices"""
+        
         if not self.network_server:
             QMessageBox.warning(
                 self, "Warning", "No network server available for export."
@@ -597,7 +592,7 @@ class GSRMainWidget(QWidget):
             return
 
         try:
-            # Export data for each selected device
+            
             exported_files = []
 
             for device_id in device_ids:
@@ -628,7 +623,7 @@ class GSRMainWidget(QWidget):
 
 
 class GSRAnalyticsWidget(QWidget):
-    """Advanced GSR analytics and stress monitoring widget"""
+    
 
     def __init__(self, gsr_receiver=None, parent=None):
         super().__init__(parent)
@@ -637,30 +632,30 @@ class GSRAnalyticsWidget(QWidget):
         self.stress_history = {}
         self.init_ui()
 
-        # Update timer for real-time analytics
+        
         self.analytics_timer = QTimer()
         self.analytics_timer.timeout.connect(self.update_analytics)
-        self.analytics_timer.start(2000)  # Update every 2 seconds
+        self.analytics_timer.start(2000)  
 
     def init_ui(self) -> Any:
-        """Initialize analytics UI"""
+        
         layout = QVBoxLayout(self)
 
-        # Title
+        
         title = QLabel("GSR Analytics & Stress Monitoring")
         title.setFont(QFont("Arial", 16, QFont.Weight.Bold))
         title.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(title)
 
-        # Main content in splitter
+        
         splitter = QSplitter(Qt.Orientation.Horizontal)
         layout.addWidget(splitter)
 
-        # Left panel - Current status
+        
         left_widget = QWidget()
         left_layout = QVBoxLayout(left_widget)
 
-        # Stress levels group
+        
         stress_group = QGroupBox("Current Stress Levels")
         stress_layout = QVBoxLayout(stress_group)
 
@@ -673,7 +668,7 @@ class GSRAnalyticsWidget(QWidget):
 
         left_layout.addWidget(stress_group)
 
-        # Analytics alerts
+        
         alerts_group = QGroupBox("Analytics Alerts")
         alerts_layout = QVBoxLayout(alerts_group)
 
@@ -684,7 +679,7 @@ class GSRAnalyticsWidget(QWidget):
 
         left_layout.addWidget(alerts_group)
 
-        # Recommendations
+        
         rec_group = QGroupBox("Recommendations")
         rec_layout = QVBoxLayout(rec_group)
 
@@ -697,11 +692,11 @@ class GSRAnalyticsWidget(QWidget):
 
         splitter.addWidget(left_widget)
 
-        # Right panel - Charts
+        
         right_widget = QWidget()
         right_layout = QVBoxLayout(right_widget)
 
-        # Stress trend chart
+        
         chart_group = QGroupBox("Stress Trend Analysis")
         chart_layout = QVBoxLayout(chart_group)
 
@@ -712,7 +707,7 @@ class GSRAnalyticsWidget(QWidget):
         self.stress_plot.showGrid(x=True, y=True)
         self.stress_plot.setYRange(0, 100)
 
-        # Setup plot lines for different devices
+        
         self.stress_curves = {}
         colors = ["r", "g", "b", "c", "m", "y"]
         self.color_index = 0
@@ -720,11 +715,11 @@ class GSRAnalyticsWidget(QWidget):
         chart_layout.addWidget(self.stress_plot)
         right_layout.addWidget(chart_group)
 
-        # Feature analysis
+        
         features_group = QGroupBox("GSR Features")
         features_layout = QGridLayout(features_group)
 
-        # Feature displays
+        
         self.feature_labels = {}
         feature_names = [
             ("Mean GSR", "μS"),
@@ -752,7 +747,7 @@ class GSRAnalyticsWidget(QWidget):
 
         right_layout.addWidget(features_group)
 
-        # Session summary
+        
         summary_group = QGroupBox("Session Summary")
         summary_layout = QVBoxLayout(summary_group)
 
@@ -769,7 +764,7 @@ class GSRAnalyticsWidget(QWidget):
         splitter.addWidget(right_widget)
         splitter.setSizes([300, 500])
 
-        # Control buttons
+        
         button_layout = QHBoxLayout()
 
         self.export_analytics_btn = QPushButton("Export Analytics")
@@ -789,30 +784,30 @@ class GSRAnalyticsWidget(QWidget):
         layout.addLayout(button_layout)
 
     def update_analytics(self) -> None:
-        """Update analytics display with latest data"""
+        
         if not self.gsr_receiver:
             return
 
         try:
-            # Get stress summary
+            
             stress_summary = self.gsr_receiver.get_stress_summary()
             self.update_stress_table(stress_summary)
 
-            # Get analytics alerts
+            
             alerts = self.gsr_receiver.get_analytics_alerts()
             self.update_alerts_display(alerts)
 
-            # Update stress trend plots
+            
             self.update_stress_plots(stress_summary)
 
-            # Update selected device features
+            
             self.update_feature_display()
 
         except Exception as e:
             logger.error(f"Error updating analytics display: {e}")
 
     def update_stress_table(self, stress_summary: None = Dict) -> None:
-        """Update the stress levels table"""
+        
         sessions = stress_summary.get("sessions", {})
 
         self.stress_table.setRowCount(len(sessions))
@@ -823,14 +818,14 @@ class GSRAnalyticsWidget(QWidget):
             stress_level = data.get("latest_stress_level", "unknown")
             confidence = data.get("confidence", 0)
 
-            # Format stress level with color coding
+            
             stress_item = QTableWidgetItem(f"{stress_score:.1f}")
             if stress_score > 80:
-                stress_item.setBackground(QColor(255, 200, 200))  # Light red
+                stress_item.setBackground(QColor(255, 200, 200))  
             elif stress_score > 60:
-                stress_item.setBackground(QColor(255, 255, 200))  # Light yellow
+                stress_item.setBackground(QColor(255, 255, 200))  
             else:
-                stress_item.setBackground(QColor(200, 255, 200))  # Light green
+                stress_item.setBackground(QColor(200, 255, 200))  
 
             level_item = QTableWidgetItem(stress_level.replace("_", " ").title())
             confidence_item = QTableWidgetItem(f"{confidence:.1f}%")
@@ -841,13 +836,13 @@ class GSRAnalyticsWidget(QWidget):
             self.stress_table.setItem(row, 3, confidence_item)
 
     def update_alerts_display(self, alerts: None = List[Dict]) -> None:
-        """Update analytics alerts display"""
+        
         if not alerts:
             self.alerts_text.setText("No alerts")
             return
 
         alert_text = ""
-        for alert in alerts[-5:]:  # Show last 5 alerts
+        for alert in alerts[-5:]:  
             timestamp = datetime.fromtimestamp(alert["timestamp"]).strftime("%H:%M:%S")
             device = alert["device_id"]
             message = alert["message"]
@@ -855,13 +850,13 @@ class GSRAnalyticsWidget(QWidget):
 
         self.alerts_text.setText(alert_text)
 
-        # Auto-scroll to bottom
+        
         cursor = self.alerts_text.textCursor()
         cursor.movePosition(cursor.MoveOperation.End)
         self.alerts_text.setTextCursor(cursor)
 
     def update_stress_plots(self, stress_summary: None = Dict) -> None:
-        """Update stress trend plots"""
+        
         current_time = datetime.now().timestamp()
 
         sessions = stress_summary.get("sessions", {})
@@ -870,22 +865,22 @@ class GSRAnalyticsWidget(QWidget):
             device_id = data.get("device_id", "Unknown")
             stress_score = data.get("latest_stress_score", 0)
 
-            # Initialize history for new devices
+            
             if device_id not in self.stress_history:
                 self.stress_history[device_id] = {"times": [], "scores": []}
 
-                # Create plot curve for this device
+                
                 color = ["r", "g", "b", "c", "m", "y"][self.color_index % 6]
                 self.stress_curves[device_id] = self.stress_plot.plot(
                     pen=mkPen(color, width=2), name=device_id
                 )
                 self.color_index += 1
 
-            # Add current data point
+            
             self.stress_history[device_id]["times"].append(current_time)
             self.stress_history[device_id]["scores"].append(stress_score)
 
-            # Keep last 100 points (about 3 minutes at 2-second intervals)
+            
             if len(self.stress_history[device_id]["times"]) > 100:
                 self.stress_history[device_id]["times"] = self.stress_history[
                                                               device_id
@@ -894,18 +889,18 @@ class GSRAnalyticsWidget(QWidget):
                                                                device_id
                                                            ]["scores"][-100:]
 
-            # Update plot
+            
             if device_id in self.stress_curves:
                 times = self.stress_history[device_id]["times"]
                 scores = self.stress_history[device_id]["scores"]
 
-                # Convert to relative time (seconds from start)
+                
                 if times:
                     start_time = times[0]
                     rel_times = [(t - start_time) for t in times]
                     self.stress_curves[device_id].setData(rel_times, scores)
 
-        # Auto-scroll if enabled
+        
         if self.auto_scroll_cb.isChecked() and self.stress_history:
             all_times = []
             for history in self.stress_history.values():
@@ -920,12 +915,12 @@ class GSRAnalyticsWidget(QWidget):
                     self.stress_plot.setXRange(0, time_range, padding=0.1)
 
     def update_feature_display(self) -> None:
-        """Update feature display for selected device"""
+        
         if not self.gsr_receiver or not self.stress_table.currentRow() >= 0:
             return
 
         try:
-            # Get selected device
+            
             row = self.stress_table.currentRow()
             if row < 0 or row >= self.stress_table.rowCount():
                 return
@@ -936,7 +931,7 @@ class GSRAnalyticsWidget(QWidget):
 
             device_id = device_item.text()
 
-            # Find active session for this device
+            
             active_sessions = getattr(self.gsr_receiver, "active_sessions", {})
             session_id = None
 
@@ -948,19 +943,19 @@ class GSRAnalyticsWidget(QWidget):
             if not session_id:
                 return
 
-            # Get real-time analytics
+            
             analytics = self.gsr_receiver.get_real_time_analytics(device_id, session_id)
             if not analytics:
                 return
 
-            # Update feature labels
+            
             feature_mapping = {
                 "Mean GSR": analytics.get("mean_gsr", 0),
                 "Peak Frequency": analytics.get("peak_frequency", 0),
                 "Rising Time": analytics.get("rising_time", 0),
                 "Rapid Changes": analytics.get("rapid_changes", 0),
                 "Trend Slope": analytics.get("trend_slope", 0),
-                "Spectral Entropy": 0,  # Not available in simplified analytics
+                "Spectral Entropy": 0,  
             }
 
             for name, value in feature_mapping.items():
@@ -970,14 +965,14 @@ class GSRAnalyticsWidget(QWidget):
                     else:
                         self.feature_labels[name].setText(str(value))
 
-            # Update session summary
+            
             self.update_session_summary(analytics)
 
         except Exception as e:
             logger.error(f"Error updating feature display: {e}")
 
     def update_session_summary(self, analytics: None = Dict) -> None:
-        """Update session summary table"""
+        
         summary_data = [
             (
                 "Current Stress Score",
@@ -1009,7 +1004,7 @@ class GSRAnalyticsWidget(QWidget):
             self.summary_table.setItem(row, 2, QTableWidgetItem(interpretation))
 
     def interpret_stress_score(self, score: float) -> str:
-        """Interpret stress score"""
+        
         if score > 80:
             return "Very High - Consider intervention"
         elif score > 60:
@@ -1022,7 +1017,7 @@ class GSRAnalyticsWidget(QWidget):
             return "Very Low - Calm state"
 
     def interpret_confidence(self, confidence: float) -> str:
-        """Interpret confidence level"""
+        
         if confidence > 80:
             return "High confidence"
         elif confidence > 60:
@@ -1033,7 +1028,7 @@ class GSRAnalyticsWidget(QWidget):
             return "Low confidence - Check signal quality"
 
     def interpret_trend(self, slope: float) -> str:
-        """Interpret trend slope"""
+        
         if abs(slope) < 0.001:
             return "Stable"
         elif slope > 0.001:
@@ -1042,7 +1037,7 @@ class GSRAnalyticsWidget(QWidget):
             return "Decreasing stress"
 
     def interpret_stability(self, rapid_changes: int) -> str:
-        """Interpret signal stability"""
+        
         if rapid_changes > 30:
             return "Very unstable"
         elif rapid_changes > 15:
@@ -1053,7 +1048,7 @@ class GSRAnalyticsWidget(QWidget):
             return "Stable"
 
     def export_analytics_data(self) -> Any:
-        """Export analytics data to file"""
+        
         try:
             filename, _ = QFileDialog.getSaveFileName(
                 self,
@@ -1069,7 +1064,7 @@ class GSRAnalyticsWidget(QWidget):
                 QMessageBox.warning(self, "No Data", "No GSR receiver available")
                 return
 
-            # Get current analytics data
+            
             stress_summary = self.gsr_receiver.get_stress_summary()
             alerts = self.gsr_receiver.get_analytics_alerts()
 
@@ -1095,10 +1090,10 @@ class GSRAnalyticsWidget(QWidget):
                 with open(filename, "w") as f:
                     json.dump(export_data, f, indent=2)
             else:
-                # Export as CSV
+                
                 import pandas as pd
 
-                # Flatten stress history for CSV
+                
                 csv_data = []
                 for device_id, history in self.stress_history.items():
                     for time_val, score in zip(history["times"], history["scores"]):
@@ -1124,27 +1119,27 @@ class GSRAnalyticsWidget(QWidget):
             QMessageBox.critical(self, "Export Error", f"Export failed: {str(e)}")
 
     def clear_stress_history(self) -> None:
-        """Clear stress history and reset plots"""
+        
         self.stress_history.clear()
 
-        # Clear all plot curves
+        
         for curve in self.stress_curves.values():
             self.stress_plot.removeItem(curve)
         self.stress_curves.clear()
         self.color_index = 0
 
-        # Clear feature displays
+        
         for label in self.feature_labels.values():
             label.setText("--")
 
-        # Clear summary table
+        
         self.summary_table.setRowCount(0)
 
         logger.info("Cleared GSR analytics history")
 
 
 class GSRMainWidget(QTabWidget):
-    """Main GSR monitoring widget with all tabs"""
+    
 
     def __init__(self, gsr_receiver=None, parent=None):
         super().__init__(parent)
@@ -1152,25 +1147,25 @@ class GSRMainWidget(QTabWidget):
         self.init_ui()
 
     def init_ui(self) -> Any:
-        """Initialize tabbed interface"""
-        # Device status tab
+        
+        
         self.device_widget = GSRDeviceStatusWidget()
         self.addTab(self.device_widget, "Device Status")
 
-        # Real-time monitoring tab
+        
         self.monitor_widget = GSRMonitorWidget(self.gsr_receiver)
         self.addTab(self.monitor_widget, "Real-time Monitor")
 
-        # Analytics tab
+        
         self.analytics_widget = GSRAnalyticsWidget(self.gsr_receiver)
         self.addTab(self.analytics_widget, "Analytics & Stress")
 
-        # Data export tab
+        
         self.export_widget = GSRDataExportWidget(self.gsr_receiver)
         self.addTab(self.export_widget, "Data Export")
 
     def set_gsr_receiver(self, gsr_receiver) -> None:
-        """Set GSR receiver for all widgets"""
+        
         self.gsr_receiver = gsr_receiver
         self.monitor_widget.gsr_receiver = gsr_receiver
         self.analytics_widget.gsr_receiver = gsr_receiver

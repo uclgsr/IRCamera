@@ -120,7 +120,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/iv_before"
         app:layout_constraintWidth_percent="0.18" />
-    <!-- 校准 -->
+    
     <TextView
         android:id="@+id/tv_manual"
         android:layout_width="match_parent"

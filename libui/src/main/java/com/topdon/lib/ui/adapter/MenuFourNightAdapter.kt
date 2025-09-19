@@ -28,16 +28,16 @@ import com.topdon.menu.R as MenuR
 class MenuFourNightAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     var listener: ((index: Int, code: Int) -> Unit)? = null
 
-    private var colorEnable = false // pseudo color条
-    private var contrastEnable = false // 对比度
-    private var ddeEnable = false // 细节
-    private var alarmEnable = false // 预警
-    private var textColorEnable = false // font
-    private var mirrorEnable = false // 镜像
-    private var waterMarkEnable = false // watermark
-    private var compassEnable = false // 指南针
+    private var colorEnable = false 
+    private var contrastEnable = false 
+    private var ddeEnable = false 
+    private var alarmEnable = false 
+    private var textColorEnable = false 
+    private var mirrorEnable = false 
+    private var waterMarkEnable = false 
+    private var compassEnable = false 
 
-    private var rotateAngle = DeviceConfig.S_ROTATE_ANGLE // 校对默认角度0
+    private var rotateAngle = DeviceConfig.S_ROTATE_ANGLE 
 
     fun selectRotate(rotateAngle: Int) {
         this.rotateAngle = rotateAngle

@@ -16,7 +16,7 @@ internal class FenceAdapter(menuType: MenuType) : BaseMenuAdapter() {
             when (value) {
                 FenceType.FULL -> isFullSelect = true
                 FenceType.DEL -> isFullSelect = false
-                else -> { // 点、线、面、趋势图，不会影响全图state
+                else -> { 
                 }
             }
             field = value
@@ -58,7 +58,7 @@ internal class FenceAdapter(menuType: MenuType) : BaseMenuAdapter() {
                 FenceType.FULL
             )
         )
-        if (menuType != MenuType.GALLERY_EDIT) { // 2D编辑的menu没有趋势图
+        if (menuType != MenuType.GALLERY_EDIT) { 
             dataList.add(
                 Data(
                     R.string.thermal_trend,

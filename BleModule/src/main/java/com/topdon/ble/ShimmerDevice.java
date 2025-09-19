@@ -20,20 +20,17 @@ import com.topdon.ble.util.BluetoothPermissionUtils;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-/**
- * Implementation of UnifiedDevice for Shimmer3 GSR+ devices
- * Provides BLE connectivity and data streaming capabilities
- */
+
 public class ShimmerDevice implements UnifiedDevice {
     private static final String TAG = "ShimmerDevice";
 
-    // Shimmer BLE service and characteristic UUIDs
+    
     private static final UUID SHIMMER_SERVICE_UUID = UUID.fromString("49535343-FE7D-4AE5-8FA9-9FAFD205E455");
     private static final UUID SHIMMER_DATA_CHAR_UUID = UUID.fromString("49535343-1E4D-4BD9-BA61-23C647249616");
     private static final UUID SHIMMER_CMD_CHAR_UUID = UUID.fromString("49535343-8841-43F4-A8D4-ECBE34729BB3");
     private static final UUID CLIENT_CHARACTERISTIC_CONFIG = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb");
 
-    // Shimmer command constants
+    
     private static final byte SHIMMER_START_STREAMING = 0x07;
     private static final byte SHIMMER_STOP_STREAMING = 0x20;
     private static final byte SHIMMER_GET_SAMPLING_RATE = 0x03;
@@ -56,7 +53,7 @@ public class ShimmerDevice implements UnifiedDevice {
     private final AtomicBoolean isConnected = new AtomicBoolean(false);
     private final AtomicBoolean isStreaming = new AtomicBoolean(false);
     private ConnectionState connectionState = ConnectionState.DISCONNECTED;
-    private int lastRssi = -50; // Default RSSI value
+    private int lastRssi = -50; 
 
     private final BluetoothGattCallback gattCallback = new BluetoothGattCallback() {
         @Override
@@ -70,7 +67,7 @@ public class ShimmerDevice implements UnifiedDevice {
                     mainHandler.post(() -> connectionListener.onDeviceConnected(ShimmerDevice.this));
                 }
                 
-                // Discover services
+                
                 if (bluetoothGatt != null) {
                     try {
                         bluetoothGatt.discoverServices();
@@ -98,7 +95,7 @@ public class ShimmerDevice implements UnifiedDevice {
                 Log.i(TAG, "Services discovered for device: " + bluetoothDevice.getAddress());
                 initializeCharacteristics();
                 
-                // Notify that device is ready
+                
                 if (connectionListener != null) {
                     mainHandler.post(() -> connectionListener.onDeviceReady(ShimmerDevice.this));
                 }
@@ -131,7 +128,7 @@ public class ShimmerDevice implements UnifiedDevice {
         this.bluetoothDevice = bluetoothDevice;
         this.config = config;
         this.connectionListener = listener;
-        // Try to get context from EasyBLE instance, fallback to null
+        
         Context tmpContext = null;
         try {
             if (EasyBLE.getInstance() != null) {
@@ -195,7 +192,7 @@ public class ShimmerDevice implements UnifiedDevice {
                 mainHandler.post(() -> connectionListener.onDeviceConnected(this));
             }
 
-            // Connect to GATT server
+            
             bluetoothGatt = bluetoothDevice.connectGatt(context, false, gattCallback);
             
             Log.i(TAG, "Initiated GATT connection to device: " + getAddress());
@@ -252,7 +249,7 @@ public class ShimmerDevice implements UnifiedDevice {
         }
 
         try {
-            // Enable notifications on data characteristic
+            
             if (dataCharacteristic != null) {
                 boolean notificationEnabled = enableNotifications(dataCharacteristic);
                 if (!notificationEnabled) {
@@ -261,7 +258,7 @@ public class ShimmerDevice implements UnifiedDevice {
                 }
             }
 
-            // Send start streaming command
+            
             if (commandCharacteristic != null) {
                 byte[] startCommand = {SHIMMER_START_STREAMING};
                 boolean commandSent = sendCommand(startCommand);
@@ -292,7 +289,7 @@ public class ShimmerDevice implements UnifiedDevice {
         }
 
         try {
-            // Send stop streaming command
+            
             if (commandCharacteristic != null) {
                 byte[] stopCommand = {SHIMMER_STOP_STREAMING};
                 boolean commandSent = sendCommand(stopCommand);
@@ -352,9 +349,9 @@ public class ShimmerDevice implements UnifiedDevice {
             getDeviceName(),
             getAddress(),
             getDeviceType(),
-            "Unknown", // Hardware version
-            "Unknown", // Firmware version  
-            "Unknown"  // Serial number
+            "Unknown", 
+            "Unknown", 
+            "Unknown"  
         );
     }
 
@@ -363,16 +360,9 @@ public class ShimmerDevice implements UnifiedDevice {
         this.connectionListener = listener;
     }
 
-    /**
-     * Enhanced Shimmer BLE command control methods
-     * Implements proper Bluetooth Low Energy commands for comprehensive device management
-     */
     
-    /**
-     * Set GSR range for proper calibration
-     * @param range GSR range (0-4, where 4 is highest sensitivity)
-     * @return true if command sent successfully
-     */
+    
+    
     public boolean setGSRRange(int range) {
         if (!isConnected.get() || commandCharacteristic == null) {
             Log.w(TAG, "Cannot set GSR range - device not ready");
@@ -397,10 +387,7 @@ public class ShimmerDevice implements UnifiedDevice {
         }
     }
 
-    /**
-     * Get current GSR range from device
-     * @return true if command sent successfully
-     */
+    
     public boolean requestGSRRange() {
         if (!isConnected.get() || commandCharacteristic == null) {
             Log.w(TAG, "Cannot get GSR range - device not ready");
@@ -420,11 +407,7 @@ public class ShimmerDevice implements UnifiedDevice {
         }
     }
 
-    /**
-     * Set sampling rate for the device
-     * @param samplingRate Desired sampling rate in Hz
-     * @return true if command sent successfully
-     */
+    
     public boolean setSamplingRate(int samplingRate) {
         if (!isConnected.get() || commandCharacteristic == null) {
             Log.w(TAG, "Cannot set sampling rate - device not ready");
@@ -432,7 +415,7 @@ public class ShimmerDevice implements UnifiedDevice {
         }
 
         try {
-            // Convert to Shimmer sampling rate format (typically 512Hz max)
+            
             byte rateValue = (byte) Math.min(samplingRate, 512);
             byte[] command = {SHIMMER_SET_SAMPLING_RATE, rateValue};
             boolean success = sendCommand(command);
@@ -446,10 +429,7 @@ public class ShimmerDevice implements UnifiedDevice {
         }
     }
 
-    /**
-     * Request current sampling rate from device
-     * @return true if command sent successfully
-     */
+    
     public boolean requestSamplingRate() {
         if (!isConnected.get() || commandCharacteristic == null) {
             Log.w(TAG, "Cannot get sampling rate - device not ready");
@@ -469,10 +449,7 @@ public class ShimmerDevice implements UnifiedDevice {
         }
     }
 
-    /**
-     * Request device status
-     * @return true if command sent successfully
-     */
+    
     public boolean requestDeviceStatus() {
         if (!isConnected.get() || commandCharacteristic == null) {
             Log.w(TAG, "Cannot get device status - device not ready");
@@ -492,10 +469,7 @@ public class ShimmerDevice implements UnifiedDevice {
         }
     }
 
-    /**
-     * Request firmware version
-     * @return true if command sent successfully
-     */
+    
     public boolean requestFirmwareVersion() {
         if (!isConnected.get() || commandCharacteristic == null) {
             Log.w(TAG, "Cannot get firmware version - device not ready");
@@ -515,13 +489,7 @@ public class ShimmerDevice implements UnifiedDevice {
         }
     }
 
-    /**
-     * Initialize device with proper GSR configuration
-     * Sets up device with appropriate GSR range and sampling rate for scientific accuracy
-     * @param gsrRange GSR range (0-4, default 4 for highest sensitivity)
-     * @param samplingRate Sampling rate in Hz (default 128Hz for GSR)
-     * @return true if initialization successful
-     */
+    
     public boolean initializeForGSRRecording(int gsrRange, int samplingRate) {
         if (!isConnected.get()) {
             Log.w(TAG, "Cannot initialize - device not connected");
@@ -531,27 +499,27 @@ public class ShimmerDevice implements UnifiedDevice {
         Log.i(TAG, "Initializing device for GSR recording: range=" + gsrRange + ", rate=" + samplingRate + "Hz");
 
         try {
-            // Stop any existing streaming
+            
             if (isStreaming.get()) {
                 stopDataStreaming();
-                Thread.sleep(500); // Brief pause between commands
+                Thread.sleep(500); 
             }
 
-            // Set GSR range for proper calibration
+            
             boolean gsrRangeSet = setGSRRange(gsrRange);
             if (!gsrRangeSet) {
                 Log.w(TAG, "Failed to set GSR range, continuing with default");
             }
             Thread.sleep(200);
 
-            // Set sampling rate
+            
             boolean samplingRateSet = setSamplingRate(samplingRate);
             if (!samplingRateSet) {
                 Log.w(TAG, "Failed to set sampling rate, continuing with default");
             }
             Thread.sleep(200);
 
-            // Request current configuration for verification
+            
             requestGSRRange();
             Thread.sleep(100);
             requestSamplingRate();

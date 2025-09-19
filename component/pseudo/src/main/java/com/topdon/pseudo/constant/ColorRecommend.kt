@@ -40,10 +40,7 @@ object ColorRecommend {
             0xffffff00.toInt(),
         )
 
-    /**
-     *
-
-     */
+    
     fun getColorByIndex(
         isTC007: Boolean,
         index: Int,

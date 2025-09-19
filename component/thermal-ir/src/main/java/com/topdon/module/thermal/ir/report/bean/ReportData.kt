@@ -4,12 +4,7 @@ import com.blankj.utilcode.util.GsonUtils
 
 
 class ReportData {
-    /**
-     * code : 2000
-     * data : {"total":0,"current":1,"hitCount":false,"pages":0,"size":10,"optimizeCountSql":true,"records":[],"searchCount":true,"orders":[]}
-
-     * serverTime : 2023-05-13 06:54:10
-     */
+    
     var code = 0
     var data: DataBean? = null
     var msg: String? = null

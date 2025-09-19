@@ -1,8 +1,8 @@
 plugins {
     id("com.android.library")
-    kotlin("android") // Modern plugin ID format
-    id("kotlin-parcelize") // Correct plugin ID for Parcelize
-    id("com.google.devtools.ksp") // Use KSP plugin from classpath
+    kotlin("android") 
+    id("kotlin-parcelize") 
+    id("com.google.devtools.ksp") 
 }
 
 ksp {
@@ -80,7 +80,7 @@ android {
             pickFirsts += listOf("**/libc++_shared.so")
             excludes +=
                 listOf(
-                    "**/libavcodec.so", // FFmpeg libraries with stripping issues
+                    "**/libavcodec.so", 
                     "**/libavdevice.so",
                     "**/libavfilter.so",
                     "**/libavformat.so",
@@ -122,7 +122,7 @@ configurations.all {
 }
 
 dependencies {
-    // Force consistent Kotlin stdlib version
+    
     implementation(libs.kotlin.stdlib)
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.coroutines.android)
@@ -136,7 +136,7 @@ dependencies {
     api(libs.lifecycle.runtime.ktx)
     api(libs.lifecycle.viewmodel.ktx)
     api(libs.lifecycle.livedata.ktx)
-    ksp(libs.room.compiler) // Migrated from kapt to KSP
+    ksp(libs.room.compiler) 
     api(libs.room.ktx)
     api(libs.work.runtime.ktx)
     api(libs.retrofit2)
@@ -144,7 +144,7 @@ dependencies {
     api(libs.adapter.rxjava2)
     api(libs.eventbus)
     api(libs.glide)
-    ksp(libs.glide.compiler) // Migrated from kapt to KSP
+    ksp(libs.glide.compiler) 
     api(libs.rxjava2)
     api(libs.rxandroid)
     api(libs.utilcode)

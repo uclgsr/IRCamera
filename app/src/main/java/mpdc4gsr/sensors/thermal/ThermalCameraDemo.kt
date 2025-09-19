@@ -21,10 +21,7 @@ import mpdc4gsr.network.NetworkServer
 import kotlinx.coroutines.launch
 import java.io.File
 
-/**
- * Demo activity to showcase the USB permission flow, thermal camera integration,
- * and network streaming for the Topdon TC001 thermal camera.
- */
+
 class ThermalCameraDemo : AppCompatActivity() {
 
     companion object {
@@ -61,7 +58,7 @@ class ThermalCameraDemo : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_thermal_demo)
 
-        // Initialize UI components
+        
         statusText = findViewById(R.id.statusText)
         thermalPreview = findViewById(R.id.thermalPreview)
         startButton = findViewById(R.id.startButton)
@@ -70,7 +67,7 @@ class ThermalCameraDemo : AppCompatActivity() {
         configButton = findViewById(R.id.configButton)
         exportButton = findViewById(R.id.exportButton)
 
-        // Set up button click listeners
+        
         setupButtonListeners()
 
         requestPermissions()
@@ -127,13 +124,13 @@ class ThermalCameraDemo : AppCompatActivity() {
             try {
                 updateStatus("Initializing thermal camera and network server...")
 
-                // Initialize network server
+                
                 networkServer = NetworkServer(this@ThermalCameraDemo, NETWORK_PORT)
 
-                // Initialize thermal camera recorder
+                
                 thermalRecorder = ThermalCameraRecorder(this@ThermalCameraDemo)
 
-                // Set up thermal preview callback
+                
                 thermalRecorder.setThermalPreviewCallback(object :
                     ThermalCameraRecorder.ThermalPreviewCallback {
                     override fun onThermalFrame(
@@ -141,20 +138,20 @@ class ThermalCameraDemo : AppCompatActivity() {
                         temperatureData: ThermalCameraRecorder.ThermalFrameData?
                     ) {
                         runOnUiThread {
-                            // Update UI with thermal preview
+                            
                             bitmap?.let {
                                 Log.d(TAG, "Thermal frame received: ${it.width}x${it.height}")
                                 thermalPreview.setImageBitmap(it)
                             }
 
-                            // Update temperature display
+                            
                             temperatureData?.let { data ->
                                 findViewById<TextView>(R.id.minTempText)?.text =
                                     String.format("%.1f°C", data.minTemperature)
                                 findViewById<TextView>(R.id.maxTempText)?.text =
                                     String.format("%.1f°C", data.maxTemperature)
 
-                                // Update performance metrics
+                                
                                 val metrics = thermalRecorder.getPerformanceMetrics()
                                 findViewById<TextView>(R.id.fpsText)?.text =
                                     String.format("%.1f", metrics.averageFrameRate)
@@ -170,7 +167,7 @@ class ThermalCameraDemo : AppCompatActivity() {
                 if (success) {
                     updateStatus("✅ Thermal camera ready. Plug in TC001 for hardware mode or use simulation.")
 
-                    // Enable UI controls
+                    
                     runOnUiThread {
                         startButton.isEnabled = true
                         networkButton.isEnabled = true
@@ -178,11 +175,11 @@ class ThermalCameraDemo : AppCompatActivity() {
                         exportButton.isEnabled = true
                     }
 
-                    // Start network server
+                    
                     networkServer.start()
                     updateStatus("✅ Network server started on port $NETWORK_PORT")
 
-                    // Monitor thermal camera status and errors
+                    
                     lifecycleScope.launch {
                         thermalRecorder.getStatusFlow().collect { status ->
                             updateStatus("${status.sensorType}: ${if (status.isRecording) "🔴 Recording" else "⚪ Idle"} - Frames: ${status.samplesRecorded}")
@@ -200,7 +197,7 @@ class ThermalCameraDemo : AppCompatActivity() {
                         }
                     }
 
-                    // Monitor network server connection
+                    
                     lifecycleScope.launch {
                         networkServer.connectionStateFlow.collect { connected ->
                             if (connected) {

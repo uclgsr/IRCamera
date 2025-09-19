@@ -12,12 +12,12 @@
 namespace ircamera {
 
     struct GSRData {
-        uint64_t timestamp_ns;      // Nanosecond timestamp
-        uint16_t raw_gsr_value;     // Raw 12-bit ADC value (0-4095)
-        double gsr_microsiemens;    // Converted GSR value in microsiemens
-        uint16_t raw_ppg_value;     // Raw PPG value
-        double ppg_normalized;      // Normalized PPG value
-        uint8_t packet_sequence;    // Packet sequence number for sync
+        uint64_t timestamp_ns;      
+        uint16_t raw_gsr_value;     
+        double gsr_microsiemens;    
+        uint16_t raw_ppg_value;     
+        double ppg_normalized;      
+        uint8_t packet_sequence;    
     };
 
     class NativeShimmer {
@@ -66,4 +66,4 @@ namespace ircamera {
         std::unique_ptr <Impl> pimpl;
     };
 
-} // namespace ircamera
+} 

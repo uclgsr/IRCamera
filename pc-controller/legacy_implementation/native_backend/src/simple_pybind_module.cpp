@@ -3,7 +3,7 @@
 #include <pybind11/numpy.h>
 #include <pybind11/functional.h>
 
-// System includes for file operations
+
 #include <fcntl.h>
 #include <unistd.h>
 #include <vector>
@@ -16,7 +16,7 @@ namespace py = pybind11;
 PYBIND11_MODULE(native_backend, m) {
     m.doc() = "IRCamera Native Backend - High-performance sensor interfacing (Shimmer GSR only)";
 
-    // GSR Data structure
+    
     py::class_<ircamera::GSRData>(m, "GSRData")
         .def(py::init<>())
         .def_readwrite("timestamp_ns", &ircamera::GSRData::timestamp_ns)
@@ -30,7 +30,7 @@ PYBIND11_MODULE(native_backend, m) {
                    " gsr=" + std::to_string(data.gsr_microsiemens) + "μS>";
         });
 
-    // Native Shimmer interface
+    
     py::class_<ircamera::NativeShimmer>(m, "NativeShimmer")
         .def(py::init<const std::string &>(), py::arg("port_name") = "")
         .def("connect", &ircamera::NativeShimmer::connect,
@@ -71,12 +71,12 @@ PYBIND11_MODULE(native_backend, m) {
         .def("perform_self_test", &ircamera::NativeShimmer::perform_self_test,
              "Perform device self-test");
 
-    // Utility functions for serial port detection
+    
     m.def("get_available_serial_ports", []() {
         std::vector<std::string> ports;
         
         #ifdef __linux__
-        // Linux serial ports
+        
         std::vector<std::string> candidates = {
             "/dev/ttyUSB0", "/dev/ttyUSB1", "/dev/ttyUSB2", "/dev/ttyUSB3",
             "/dev/ttyACM0", "/dev/ttyACM1", "/dev/ttyACM2", "/dev/ttyACM3",
@@ -90,17 +90,17 @@ PYBIND11_MODULE(native_backend, m) {
             }
         }
         #elif _WIN32
-        // Windows COM ports - simplified version
+        
         for (int i = 1; i <= 20; i++) {
             std::string port = "COM" + std::to_string(i);
-            ports.push_back(port);  // Simplified - would need actual detection
+            ports.push_back(port);  
         }
         #endif
         
         return ports;
     }, "Get list of available serial ports for Shimmer devices");
 
-    // Utility function to check if Shimmer device is connected
+    
     m.def("detect_shimmer_device", []() {
         auto ports = []() {
             std::vector<std::string> ports;
@@ -124,13 +124,13 @@ PYBIND11_MODULE(native_backend, m) {
         }();
         
         if (!ports.empty()) {
-            return ports[0];  // Return first available port
+            return ports[0];  
         }
         
-        return std::string("");  // No ports found
+        return std::string("");  
     }, "Detect if a Shimmer device is connected and return port");
 
-    // Module metadata
+    
     m.attr("__version__") = "1.0.0";
     m.attr("__author__") = "IRCamera Team";
     m.attr("__description__") = "High-performance native backend for GSR sensor processing";

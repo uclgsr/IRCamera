@@ -3,5 +3,5 @@
     <usb-device
         product-id="0x3702"
         vendor-id="0x4206" />
-    <!--    <usb-device vendor-id="0x0525" product-id="0xa4a0"/>-->
+    
 </resources>

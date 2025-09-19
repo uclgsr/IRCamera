@@ -2,7 +2,7 @@ package com.topdon.lib.ui.widget.seekbar;
 
 public class SeekBarState {
     public String indicatorText;
-    public float value; //now progress value
+    public float value; 
     public boolean isMin;
     public boolean isMax;
 

@@ -1,7 +1,7 @@
 plugins {
     id("com.android.library")
     kotlin("android")
-    id("com.google.devtools.ksp") // Use KSP plugin from classpath
+    id("com.google.devtools.ksp") 
     id("kotlin-parcelize")
 }
 

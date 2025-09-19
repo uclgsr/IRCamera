@@ -54,7 +54,7 @@ class RecordingController(
         private const val STATUS_UPDATE_INTERVAL_MS = 1000L
         private const val ERROR_RECOVERY_DELAY_MS = 2000L
         
-        // Storage estimation constants
+        
         private const val RGB_STORAGE_MB_PER_MIN = 50.0
         private const val THERMAL_STORAGE_MB_PER_MIN = 5.0
         private const val SHIMMER_STORAGE_MB_PER_MIN = 1.0
@@ -63,7 +63,7 @@ class RecordingController(
     private val sensorRecorders = ConcurrentHashMap<String, SensorRecorder>()
     private val sessionDirectoryManager = SessionDirectoryManager(context)
     
-    // Time synchronization service for unified timestamp coordination
+    
     private val timeSynchronizationService = TimeSynchronizationService()
 
     private var _isRecording = AtomicBoolean(false)
@@ -107,18 +107,18 @@ class RecordingController(
             try {
                 Log.i(TAG, "Initializing sensor recorders with robust error handling")
 
-                // Create RGB camera recorder with CameraX integration
+                
                 val rgbCamera = RgbCameraRecorder(context, lifecycleOwner, null)
                 val thermalCamera = ThermalCameraRecorder(context, "thermal_camera_1")
                 val gsrSensor =
                     GSRSensorRecorder(context, "gsr_shimmer_1", 128, this@RecordingController)
 
-                // Register all sensors first
+                
                 registerSensor("RGB", rgbCamera)
                 registerSensor("Thermal", thermalCamera)
                 registerSensor("Shimmer", gsrSensor)
 
-                // Initialize sensors with individual error handling
+                
                 val initJobs = sensorRecorders.map { (sensorName, sensor) ->
                     async {
                         try {
@@ -147,7 +147,7 @@ class RecordingController(
                 val successfulInits = initResults.filter { it.third }
                 val failedInits = initResults.filter { !it.third }
 
-                // Remove failed sensors from the registry to prevent start attempts
+                
                 failedInits.forEach { (sensorName, _, _) ->
                     Log.w(TAG, "Removing failed sensor $sensorName from registry")
                     sensorRecorders.remove(sensorName)
@@ -172,7 +172,7 @@ class RecordingController(
                 )
                 Log.i(TAG, "Available sensors: ${sensorRecorders.keys.joinToString(", ")}")
 
-                // Return true if at least one sensor initialized successfully
+                
                 successCount > 0
 
             } catch (e: Exception) {
@@ -189,16 +189,13 @@ class RecordingController(
         }
     }
 
-    // Track which sensors started successfully for clean stopping
+    
     private val activeRecorders = ConcurrentHashMap<String, Boolean>()
 
-    // Store session start timestamp for synchronization
+    
     private var sessionStartTimestampMs: Long = 0
     private var sessionStartTimestampNs: Long = 0
-    /**
-     * Enhanced start recording with comprehensive validation and fault tolerance
-     * Addresses Phase 5 requirement: "Enhance start/stop sequence validation"
-     */
+    
     suspend fun startRecording(
         sessionId: String? = null,
         participantId: String? = null,
@@ -216,7 +213,7 @@ class RecordingController(
                 Log.i(TAG, "🚀 Starting enhanced multi-modal recording with validation")
                 _recordingStateFlow.value = RecordingState.STARTING
 
-                // Phase 1: Pre-recording validation with detailed checks
+                
                 Log.d(TAG, "Phase 1: Validating recording prerequisites...")
                 val validationResult = validateRecordingPrerequisites(enabledSensors)
                 if (!validationResult.isValid) {
@@ -233,7 +230,7 @@ class RecordingController(
                     return@withContext false
                 }
 
-                // Phase 2: Storage space validation with enhanced checks
+                
                 Log.d(TAG, "Phase 2: Validating storage requirements...")
                 val storageStatus = sessionDirectoryManager.checkStorageSpace()
                 if (storageStatus.isLowStorage) {
@@ -265,21 +262,21 @@ class RecordingController(
                     )
                 }
 
-                // Phase 3: Session setup with crash recovery preparation
+                
                 Log.d(TAG, "Phase 3: Setting up session with crash recovery...")
                 val finalSessionId = sessionId ?: sessionDirectoryManager.generateSessionId()
                 val sessionDir = sessionDirectoryManager.createSessionDirectory(finalSessionId)
                 
-                // Create enhanced session metadata
+                
                 sessionMetadata = SessionMetadata.createSessionStart(finalSessionId).copy(
                     participantId = participantId,
                     studyName = studyName
                 )
 
-                // Setup crash recovery marker
+                
                 createCrashRecoveryMarker(finalSessionId, enabledSensors)
 
-                // Create the util.SessionMetadata for SessionDirectoryManager (legacy compatibility)
+                
                 val utilMetadata = com.topdon.tc001.util.SessionMetadata(
                     startTime = sessionMetadata!!.sessionStartTimestampMs,
                     enabledSensors = enabledSensors,
@@ -291,10 +288,10 @@ class RecordingController(
                 currentSessionDirectory = sessionDir
                 persistSessionMetadata()
 
-                // Initialize unified timestamp synchronization system
+                
                 val sessionReference = timeSynchronizationService.initializeSession(sessionDir.rootDir.absolutePath)
                 
-                // Capture common timestamp reference for all sensors
+                
                 sessionStartTimestampMs = sessionReference.sessionStartSystemMs
                 sessionStartTimestampNs = sessionReference.sessionStartMonotonicNs
                 recordingStartTime = sessionStartTimestampNs
@@ -304,16 +301,16 @@ class RecordingController(
                     "Session initialized with unified timestamp reference: system=${sessionStartTimestampMs}ms, monotonic=${sessionStartTimestampNs}ns"
                 )
 
-                // Clear previous active recorder tracking
+                
                 activeRecorders.clear()
 
-                // Start sensors with individual error handling using SupervisorJob
+                
                 val startJobs = sensorRecorders.map { (sensorName, sensor) ->
                     async(SupervisorJob()) {
                         try {
                             Log.i(TAG, "Starting sensor: $sensorName")
 
-                            // Resolve sensor-specific directory within the session structure
+                            
                             val sensorDir = resolveSensorDirectory(sessionDir, sensorName)
                             sensorDir.mkdirs()
 
@@ -394,7 +391,7 @@ class RecordingController(
                 val successfulStarts = startResults.filter { it.second }
                 val failedStarts = startResults.filter { !it.second }
 
-                // Log results for each sensor
+                
                 successfulStarts.forEach { (sensorName, _, _) ->
                     Log.i(TAG, "✓ Sensor $sensorName: STARTED")
                 }
@@ -416,12 +413,12 @@ class RecordingController(
                     )
                 }
 
-                // Proceed if at least one sensor started successfully
+                
                 if (successfulStarts.isNotEmpty()) {
                     _isRecording.set(true)
                     _recordingStateFlow.value = RecordingState.RECORDING
 
-                    // Add session start sync marker with reference timestamp
+                    
                     addSyncMarker("session_start", sessionStartTimestampNs)
 
                     val totalSensors = startResults.size
@@ -446,7 +443,7 @@ class RecordingController(
                 } else {
                     _recordingStateFlow.value = RecordingState.ERROR
 
-                    // Update session metadata to mark as failed
+                    
                     currentSessionDirectory?.let { sessionDir ->
                         sessionDirectoryManager.updateSessionMetadata(
                             sessionDir,
@@ -477,7 +474,7 @@ class RecordingController(
                 Log.e(TAG, "Failed to start recording session", e)
                 _recordingStateFlow.value = RecordingState.ERROR
 
-                // Update session metadata to mark as failed
+                
                 currentSessionDirectory?.let { sessionDir ->
                     sessionDirectoryManager.updateSessionMetadata(
                         sessionDir,
@@ -499,10 +496,7 @@ class RecordingController(
         }
     }
 
-    /**
-     * Start recording with legacy API (backward compatibility)
-     * @param sessionDirectory The directory path where session data should be stored
-     */
+    
     suspend fun startRecording(sessionDirectory: String): Boolean {
         return withContext(Dispatchers.IO) {
             try {
@@ -514,16 +508,16 @@ class RecordingController(
                 Log.i(TAG, "Starting recording with legacy API")
                 _recordingStateFlow.value = RecordingState.STARTING
 
-                // Create session directory if it doesn't exist
+                
                 val sessionDir = File(sessionDirectory)
                 if (!sessionDir.exists()) {
                     sessionDir.mkdirs()
                 }
-                // Create a simple SessionDirectory wrapper for the provided path
+                
                 val sessionDirWrapper = SessionDirectory(
                     sessionId = sessionDir.name,
                     rootDir = sessionDir,
-                    rgbDir = sessionDir,  // Legacy: use same directory for all sensors
+                    rgbDir = sessionDir,  
                     thermalDir = sessionDir,
                     shimmerDir = sessionDir
                 )
@@ -531,7 +525,7 @@ class RecordingController(
                 currentSessionDirectory = sessionDirWrapper
                 recordingStartTime = System.nanoTime()
 
-                // Create session metadata for timing synchronization
+                
                 sessionMetadata = SessionMetadata.createSessionStart(sessionDir.name)
 
                 Log.i(TAG, "Session created: ${sessionDir.name}")
@@ -542,7 +536,7 @@ class RecordingController(
                 val startJobs = sensorRecorders.values.map { sensor ->
                     async {
                         try {
-                            // Pass session metadata to sensors for consistent timing
+                            
                             val success = sensor.startRecording(sessionDirectory, sessionMetadata!!)
                             Triple(sensor.sensorId, success, null)
                         } catch (e: Exception) {
@@ -575,7 +569,7 @@ class RecordingController(
                         " (Returned false)"
                     }
 
-                    // Special handling for GSR sensor - don't treat as critical failure
+                    
                     if (sensorId.contains("gsr", ignoreCase = true)) {
                         Log.w(
                             TAG,
@@ -602,12 +596,12 @@ class RecordingController(
                     }
                 }
 
-                // Allow session to start even if some sensors fail (graceful degradation)
+                
                 if (successfulStarts.isNotEmpty()) {
                     _isRecording.set(true)
                     _recordingStateFlow.value = RecordingState.RECORDING
 
-                    // Add session start sync marker with session metadata
+                    
                     sessionMetadata?.addSyncEvent(
                         "session_start", mapOf(
                             "total_sensors" to startResults.size.toString(),
@@ -678,7 +672,7 @@ class RecordingController(
                 Log.i(TAG, "Stopping multi-modal recording session")
                 _recordingStateFlow.value = RecordingState.STOPPING
 
-                // Add session end sync marker for downstream alignment
+                
                 sessionMetadata?.let { metadata ->
                     metadata.addSyncEvent(
                         "session_end", mapOf(
@@ -689,7 +683,7 @@ class RecordingController(
 
                 addSyncMarker("session_end", System.nanoTime())
 
-                // Allow sync marker to propagate
+                
                 delay(SYNC_MARKER_DISTRIBUTION_DELAY_MS)
 
                 val stopResult = safeStopAll()
@@ -720,10 +714,10 @@ class RecordingController(
                     )
                 }
 
-                // Finalize time synchronization service and calculate session duration
+                
                 val sessionDurationMs = timeSynchronizationService.finalizeSession()
 
-                // Reset session state for next session
+                
                 activeRecorders.clear()
                 sessionStartTimestampMs = 0
                 sessionStartTimestampNs = 0
@@ -737,7 +731,7 @@ class RecordingController(
                 Log.e(TAG, "Failed to stop recording session", e)
                 _recordingStateFlow.value = RecordingState.ERROR
 
-                // Update session metadata to mark error during stop
+                
                 currentSessionDirectory?.let { sessionDir ->
                     sessionDirectoryManager.updateSessionMetadata(
                         sessionDir,
@@ -759,18 +753,16 @@ class RecordingController(
         }
     }
 
-    // Legacy method for backward compatibility  
+    
     suspend fun stopRecording(): Boolean {
         return stopSession()
     }
 
-    /**
-     * Safely stop all active recorders, only attempting to stop those that started successfully
-     */
+    
     private suspend fun safeStopAll(): Map<String, Boolean> = coroutineScope {
         val stopResults = mutableMapOf<String, Boolean>()
 
-        // Only stop recorders that are marked as active
+        
         val activeRecordersList = activeRecorders.keys.mapNotNull { sensorName ->
             sensorRecorders[sensorName]?.let { sensor -> sensorName to sensor }
         }
@@ -825,7 +817,7 @@ class RecordingController(
                     sensorType = sensor?.sensorType
                 )
             }
-            // Remove from active recorders regardless of stop result
+            
             activeRecorders.remove(sensorName)
         }
 
@@ -886,7 +878,7 @@ class RecordingController(
             try {
                 Log.i(TAG, "Distributing sync marker: $markerType at $timestampNs")
 
-                // Log sync event to TimeSynchronizationService for cross-sensor alignment
+                
                 timeSynchronizationService.logSyncEvent(markerType, metadata)
 
                 val syncJobs = sensorRecorders.values.map { sensor ->
@@ -931,7 +923,7 @@ class RecordingController(
                     try {
 
                         val stats = sensor.getRecordingStats()
-                        sensorId to true // If we can get stats, sensor is responsive
+                        sensorId to true 
                     } catch (e: Exception) {
                         Log.w(TAG, "Sensor $sensorId test failed", e)
                         sensorId to false
@@ -1030,10 +1022,10 @@ class RecordingController(
             DetailedSensorStatus(
                 sensorId = sensor.sensorId,
                 sensorType = sensor.sensorType,
-                isInitialized = true, // If it's in the map, it was successfully initialized
+                isInitialized = true, 
                 isRecording = sensor.isRecording,
                 samplingRate = sensor.samplingRate,
-                lastError = null // Could be enhanced to track last error per sensor
+                lastError = null 
             )
         }
 
@@ -1041,7 +1033,7 @@ class RecordingController(
         val totalRecording = sensors.count { it.isRecording }
 
         return SensorStatusSummary(
-            totalSensorsConfigured = 3, // RGB, Thermal, GSR
+            totalSensorsConfigured = 3, 
             totalSensorsInitialized = totalInitialized,
             totalSensorsRecording = totalRecording,
             isSessionActive = _isRecording.get(),
@@ -1054,9 +1046,7 @@ class RecordingController(
         return sensorRecorders.values.count { it.isRecording }
     }
 
-    /**
-     * Provides comprehensive session diagnostics for debugging and monitoring
-     */
+    
     fun getSessionDiagnostics(): SessionDiagnostics {
         val currentTime = System.currentTimeMillis()
         val sessionDuration = if (sessionStartTimestampMs > 0) {
@@ -1070,7 +1060,7 @@ class RecordingController(
             sessionDurationMs = sessionDuration,
             sessionStartTimestamp = sessionStartTimestampMs,
             referenceTimestampNs = sessionStartTimestampNs,
-            totalSensorsConfigured = 3, // RGB, Thermal, GSR
+            totalSensorsConfigured = 3, 
             totalSensorsInitialized = sensorRecorders.size,
             totalSensorsActive = activeRecorders.size,
             activeSensorNames = activeRecorders.keys.toList(),
@@ -1079,18 +1069,16 @@ class RecordingController(
             partialStartCapable = true,
             midSessionRecoveryEnabled = true,
             smartCleanupEnabled = true,
-            lastError = null // Could be enhanced to track last controller error
+            lastError = null 
         )
     }
 
-    /**
-     * Validates current session state and reports any inconsistencies
-     */
+    
     fun validateSessionState(): SessionValidationResult {
         val issues = mutableListOf<String>()
         val warnings = mutableListOf<String>()
 
-        // Check for state inconsistencies
+        
         if (_isRecording.get() && activeRecorders.isEmpty()) {
             issues.add("Recording flag is true but no active recorders found")
         }
@@ -1107,13 +1095,13 @@ class RecordingController(
             warnings.add("Recording is active but session start timestamp not set")
         }
 
-        // Check sensor state consistency
+        
         val recordingSensors = sensorRecorders.values.count { it.isRecording }
         if (recordingSensors != activeRecorders.size) {
             warnings.add("Mismatch between active recorders (${activeRecorders.size}) and recording sensors ($recordingSensors)")
         }
 
-        // Check metadata file existence
+        
         if (_isRecording.get() && currentSessionDirectory != null) {
             val metadataFile = File(currentSessionDirectory!!.rootDir, "session_metadata.json")
             if (!metadataFile.exists()) {
@@ -1218,7 +1206,7 @@ class RecordingController(
 
         emitError(controllerError)
 
-        // Handle mid-session sensor failures gracefully
+        
         if (_isRecording.get()) {
             when (sensorError.errorType) {
                 ErrorType.HARDWARE_DISCONNECTED -> {
@@ -1228,7 +1216,7 @@ class RecordingController(
                     )
                     activeRecorders.remove(sensorError.sensorId)
 
-                    // Check if we still have at least one active sensor
+                    
                     if (activeRecorders.isEmpty()) {
                         Log.e(TAG, "All sensors have failed - stopping session")
                         emitError(
@@ -1269,7 +1257,7 @@ class RecordingController(
                             isRecoverable = false
                         )
                     )
-                    // For storage errors, we might want to stop the entire session
+                    
                     if (!sensorError.isRecoverable) {
                         stopSession()
                     }
@@ -1285,7 +1273,7 @@ class RecordingController(
                 }
             }
         } else if (sensorError.isRecoverable) {
-            // Not currently recording, but still attempt recovery for future sessions
+            
             attemptErrorRecovery(sensor, sensorError)
         }
     }
@@ -1395,57 +1383,42 @@ class RecordingController(
         _errorFlow.emit(error)
     }
 
-    /**
-     * Get current storage status
-     */
+    
     fun getStorageStatus(): StorageStatus {
         return sessionDirectoryManager.checkStorageSpace()
     }
 
-    /**
-     * Clean up failed sessions
-     */
+    
     suspend fun cleanupFailedSessions(): List<String> = withContext(Dispatchers.IO) {
         sessionDirectoryManager.cleanupFailedSessions()
     }
 
-    /**
-     * Get current session directory info
-     */
+    
     fun getCurrentSessionDirectory(): SessionDirectory? = currentSessionDirectory
     
-    /**
-     * Get synchronized timestamp from the time synchronization service
-     * All sensors should use this for consistent cross-sensor timing
-     */
+    
     fun createSynchronizedTimestamp() = timeSynchronizationService.createSynchronizedTimestamp()
     
-    /**
-     * Get current session timestamp reference for cross-sensor alignment
-     */
+    
     fun getSessionTimestampReference() = timeSynchronizationService.getSessionReference()
     
-    /**
-     * Manually emit sync event for cross-sensor validation
-     */
+    
     suspend fun emitSyncEvent(eventType: String, metadata: Map<String, String> = emptyMap()) {
         timeSynchronizationService.emitSyncEvent(eventType, metadata)
     }
     
-    /**
-     * Validate timestamp consistency across currently active sensors
-     */
+    
     suspend fun validateTimestampConsistency(): Map<String, Long> {
         val timestamps = mutableMapOf<String, Long>()
         sensorRecorders.forEach { (sensorName, sensor) ->
             if (activeRecorders[sensorName] == true && sensor.isRecording) {
-                // Get current timestamp from each active sensor
+                
                 val currentTime = TimestampManager.getCurrentTimestampNanos()
                 timestamps[sensorName] = currentTime
             }
         }
         
-        // Log consistency validation event
+        
         if (timestamps.size >= 2) {
             val maxTimestamp = timestamps.values.maxOrNull() ?: 0L
             val minTimestamp = timestamps.values.minOrNull() ?: 0L
@@ -1456,7 +1429,7 @@ class RecordingController(
                 mapOf(
                     "max_difference_ns" to maxDifference.toString(),
                     "sensor_count" to timestamps.size.toString(),
-                    "is_consistent" to (maxDifference < 5_000_000L).toString() // 5ms tolerance
+                    "is_consistent" to (maxDifference < 5_000_000L).toString() 
                 )
             )
         }
@@ -1530,9 +1503,7 @@ data class SensorStatusSummary(
         }
 }
 
-/**
- * Comprehensive session diagnostics for enhanced monitoring and debugging
- */
+
 data class SessionDiagnostics(
     val isRecording: Boolean,
     val sessionState: RecordingState,
@@ -1567,10 +1538,7 @@ data class SessionDiagnostics(
             else -> "Recording failed (no active sensors)"
         }
 
-    /**
-     * Enhanced recording prerequisites validation
-     * Addresses requirement: "Enhance start/stop sequence validation"
-     */
+    
     private suspend fun validateRecordingPrerequisites(enabledSensors: List<String>): ValidationResult {
         val issues = mutableListOf<String>()
         val warnings = mutableListOf<String>()
@@ -1578,7 +1546,7 @@ data class SessionDiagnostics(
 
         Log.d(TAG, "Validating prerequisites for sensors: ${enabledSensors.joinToString(", ")}")
 
-        // Check sensor availability and readiness
+        
         for (sensorName in enabledSensors) {
             when (sensorName.uppercase()) {
                 "RGB" -> {
@@ -1586,7 +1554,7 @@ data class SessionDiagnostics(
                     if (rgbRecorder != null) {
                         details["rgb_camera"] = "available"
                         
-                        // Check camera permissions
+                        
                         if (!rgbRecorder.hasCameraPermission()) {
                             issues.add("RGB: Camera permission required")
                         }
@@ -1626,7 +1594,7 @@ data class SessionDiagnostics(
             }
         }
 
-        // Check system prerequisites
+        
         val availableSensors = sensorRecorders.keys.size
         val requestedSensors = enabledSensors.size
         
@@ -1651,27 +1619,22 @@ data class SessionDiagnostics(
         )
     }
 
-    /**
-     * Estimate session storage requirements
-     */
+    
     private fun estimateSessionSize(enabledSensors: List<String>, durationMinutes: Int = 10): String {
         var estimatedMB = 0.0
         
         for (sensor in enabledSensors) {
             when (sensor.uppercase()) {
-                "RGB" -> estimatedMB += durationMinutes * RGB_STORAGE_MB_PER_MIN // ~50MB/min for 1080p video + frames
-                "THERMAL" -> estimatedMB += durationMinutes * THERMAL_STORAGE_MB_PER_MIN // ~5MB/min for thermal data
-                "SHIMMER" -> estimatedMB += durationMinutes * SHIMMER_STORAGE_MB_PER_MIN // ~1MB/min for GSR data
+                "RGB" -> estimatedMB += durationMinutes * RGB_STORAGE_MB_PER_MIN 
+                "THERMAL" -> estimatedMB += durationMinutes * THERMAL_STORAGE_MB_PER_MIN 
+                "SHIMMER" -> estimatedMB += durationMinutes * SHIMMER_STORAGE_MB_PER_MIN 
             }
         }
         
         return "${String.format("%.1f", estimatedMB)}MB (${durationMinutes}min estimate)"
     }
 
-    /**
-     * Create crash recovery marker
-     * Addresses requirement: "Complete stop sequence & cleanup with crash recovery"
-     */
+    
     private fun createCrashRecoveryMarker(sessionId: String, enabledSensors: List<String>) {
         try {
             val recoveryFile = File(sessionDirectoryManager.getSessionDirectory(sessionId), ".recovery_marker")
@@ -1690,9 +1653,7 @@ data class SessionDiagnostics(
         }
     }
 
-    /**
-     * Enhanced validation result data class
-     */
+    
     data class ValidationResult(
         val isValid: Boolean,
         val isRecoverable: Boolean,
@@ -1710,9 +1671,7 @@ data class SessionDiagnostics(
     }
 }
 
-/**
- * Result of session state validation
- */
+
 data class SessionValidationResult(
     val isValid: Boolean,
     val issues: List<String>,

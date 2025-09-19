@@ -21,7 +21,7 @@ tasks.register<Delete>("clean") {
     delete(rootProject.layout.buildDirectory.get().asFile)
 }
 
-// Custom task to build only release variants (since debug variants are disabled)
+
 tasks.register("buildRelease") {
     group = "build"
     description = "Builds all modules using only release variants"

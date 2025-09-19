@@ -1,19 +1,19 @@
 #!/bin/bash
-# Comprehensive build script for IRCamera testing
-# This script attempts to build the APK with fallback strategies for dependency issues
+
+
 
 set -e
 
 echo "🚀 IRCamera Build Script for Testing"
 echo "====================================="
 
-# Check if gradlew exists
+
 if [ ! -f "./gradlew" ]; then
     echo "❌ gradlew not found in current directory"
     exit 1
 fi
 
-# Make gradlew executable
+
 chmod +x ./gradlew
 
 echo "📋 Checking build environment..."
@@ -23,11 +23,11 @@ echo ""
 
 echo "🔧 Attempting standard build..."
 
-# Try standard build first
+
 if ./gradlew assembleRelease --no-configuration-cache 2>&1 | tee build.log; then
     echo "✅ Standard build successful!"
     
-    # Find and show APK location
+    
     echo "📱 APK files generated:"
     find . -name "*.apk" -type f -exec ls -lh {} \;
     
@@ -45,12 +45,12 @@ if ./gradlew assembleRelease --no-configuration-cache 2>&1 | tee build.log; then
 else
     echo "❌ Standard build failed. Checking build log..."
     
-    # Check for common dependency issues
+    
     if grep -q "gsyVideoPlayer" build.log; then
         echo "🔍 Detected GSYVideoPlayer dependency issue"
         echo "💡 Attempting to fix GSYVideoPlayer dependency..."
         
-        # Try with different video player version
+        
         sed -i 's/gsyVideoPlayer-java:v11.1.0/gsyVideoPlayer-java:v8.6.0-release-jitpack/g' component/thermal-ir/build.gradle.kts
         
         echo "🔄 Retrying build with fixed dependency..."
@@ -76,7 +76,7 @@ else
     echo "❌ Build failed with multiple strategies"
     echo "🔧 Attempting minimal build (debug variant)..."
     
-    # Try debug build as fallback
+    
     if ./gradlew assembleDebug --no-configuration-cache; then
         echo "✅ Debug build successful!"
         echo "📱 Debug APK files generated:"

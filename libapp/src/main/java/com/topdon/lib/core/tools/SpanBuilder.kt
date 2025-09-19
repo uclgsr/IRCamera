@@ -48,7 +48,7 @@ class SpanBuilder : SpannableStringBuilder {
         text: CharSequence,
         @ColorInt color: Int,
     ): SpanBuilder {
-        if (text.isEmpty()) { // 搞个空字符串过来干嘛
+        if (text.isEmpty()) { 
             return this
         }
         val oldLength = this.length
@@ -67,7 +67,7 @@ class SpanBuilder : SpannableStringBuilder {
         @ColorInt color: Int,
         listener: OnClickListener,
     ): SpanBuilder {
-        if (text.isEmpty()) { // 搞个空字符串过来干嘛
+        if (text.isEmpty()) { 
             return this
         }
         val oldLength = this.length

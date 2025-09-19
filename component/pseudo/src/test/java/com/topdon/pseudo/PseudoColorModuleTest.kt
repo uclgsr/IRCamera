@@ -89,7 +89,7 @@ class PseudoColorModuleTest {
                     normalized >= 0f && normalized <= 1f
                 )
 
-                val hue = (1f - normalized) * 240f // Blue (cold) to Red (hot)
+                val hue = (1f - normalized) * 240f 
                 assertTrue("Hue should be valid HSV range", hue >= 0f && hue <= 360f)
             }
         }
@@ -187,7 +187,7 @@ class PseudoColorModuleTest {
     @Test
     fun testThermalColorMapping() =
         runTest {
-            // Test thermal color mapping ranges
+            
             val minTemp = -10f
             val maxTemp = 50f
             val tempRange = maxTemp - minTemp
@@ -195,18 +195,18 @@ class PseudoColorModuleTest {
             val testTemperatures = listOf(minTemp, 0f, 25f, maxTemp, minTemp + tempRange * 0.5f)
 
             testTemperatures.forEach { temp ->
-                // Normalize temperature
+                
                 val normalized = ((temp - minTemp) / tempRange).coerceIn(0f, 1f)
                 assertTrue(
                     "Normalized temperature should be in range",
                     normalized >= 0f && normalized <= 1f
                 )
 
-                // Test color mapping
-                val colorHue = (1f - normalized) * 240f // Blue to red spectrum
+                
+                val colorHue = (1f - normalized) * 240f 
                 assertTrue("Color hue should be valid", colorHue >= 0f && colorHue <= 240f)
 
-                // Test HSV to RGB conversion principles
+                
                 val hsv = floatArrayOf(colorHue, 1f, 1f)
                 val rgb = Color.HSVToColor(hsv)
 
@@ -218,7 +218,7 @@ class PseudoColorModuleTest {
     @Test
     fun testAdvancedColorMappingAlgorithms() =
         runTest {
-            // Test advanced color mapping algorithms
+            
             val temperatureData =
                 floatArrayOf(
                     15.5f,
@@ -231,7 +231,7 @@ class PseudoColorModuleTest {
                     44.7f,
                 )
 
-            // Test histogram equalization simulation
+            
             val sortedTemps = temperatureData.sorted()
             val equalizedMapping =
                 sortedTemps.mapIndexed { index, temp ->
@@ -249,7 +249,7 @@ class PseudoColorModuleTest {
                 equalizedMapping.all { it.second >= 0f && it.second <= 1f },
             )
 
-            // Test color palette interpolation
+            
             val key1 = Color.BLUE
             val key2 = Color.RED
             val interpolationSteps = 10
@@ -289,7 +289,7 @@ class PseudoColorModuleTest {
 
     @Test
     fun testSystemServiceAccess() {
-        // Test system services that pseudo color processing might use
+        
         val displayService = context.getSystemService(Context.DISPLAY_SERVICE)
         assertNotNull("Display service should be available", displayService)
 
@@ -310,10 +310,10 @@ class PseudoColorModuleTest {
     @Test
     fun testAsyncOperations() =
         runTest {
-            // Test that coroutines work with pseudo color processing context
+            
             val result =
                 kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
-                    // Simulate pseudo color processing operation
+                    
                     context.packageName
                 }
 
@@ -324,7 +324,7 @@ class PseudoColorModuleTest {
             )
         }
 
-    // Helper function to generate pseudo colors based on configuration
+    
     private fun generatePseudoColor(
         normalized: Float,
         config: String,
@@ -356,8 +356,8 @@ class PseudoColorModuleTest {
             }
 
             else -> {
-                // Default rainbow mapping
-                val hue = (1f - normalized) * 240f // Blue to red
+                
+                val hue = (1f - normalized) * 240f 
                 Color.HSVToColor(floatArrayOf(hue, 1f, 1f))
             }
         }

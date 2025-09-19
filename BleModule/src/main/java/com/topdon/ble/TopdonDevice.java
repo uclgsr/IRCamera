@@ -184,9 +184,9 @@ public class TopdonDevice implements UnifiedDevice {
                 deviceName != null && !deviceName.isEmpty() ? deviceName : "Topdon Device",
                 deviceAddress,
                 config.getDeviceType(),
-                "1.0", // Hardware version
-                "1.0", // Firmware version
-                deviceAddress // Serial number based on MAC
+                "1.0", 
+                "1.0", 
+                deviceAddress 
         );
 
         Log.i(TAG, "Created TopdonDevice: " + deviceAddress);

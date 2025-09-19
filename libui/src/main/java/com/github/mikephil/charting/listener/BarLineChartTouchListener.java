@@ -56,9 +56,7 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
         this.mMinScalePointerDistance = Utils.convertDpToPixel(3.5f);
     }
 
-    /**
-     * DOING THE MATH BELOW ;-)
-     */
+    
 
     private static void midPoint(MPPointF point, MotionEvent event) {
         float x = event.getX(0) + event.getX(1);
@@ -226,7 +224,7 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
                         mDecelerationVelocity.x = velocityX;
                         mDecelerationVelocity.y = velocityY;
 
-                        Utils.postInvalidateOnAnimation(mChart); // This causes computeScroll to fire, recommended for this by
+                        Utils.postInvalidateOnAnimation(mChart); 
 
                     }
                 }
@@ -267,12 +265,10 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
 
         mMatrix = mChart.getViewPortHandler().refresh(mMatrix, mChart, true);
 
-        return true; // indicate event was handled
+        return true; 
     }
 
-    /**
-     * BELOW CODE PERFORMS THE ACTUAL TOUCH ACTIONS
-     */
+    
 
     private void saveTouchStart(MotionEvent event) {
 
@@ -308,7 +304,7 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
 
     private void performZoom(MotionEvent event) {
 
-        if (event.getPointerCount() >= 2) { // two finger zoom
+        if (event.getPointerCount() >= 2) { 
 
             OnChartGestureListener l = mChart.getOnChartGestureListener();
 
@@ -323,7 +319,7 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
 
                     mLastGesture = ChartGesture.PINCH_ZOOM;
 
-                    float scale = totalDist / mSavedDist; // total scale
+                    float scale = totalDist / mSavedDist; 
 
                     boolean isZoomingOut = (scale < 1);
 
@@ -352,7 +348,7 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
                     mLastGesture = ChartGesture.X_ZOOM;
 
                     float xDist = getXDist(event);
-                    float scaleX = xDist / mSavedXDist; // x-axis scale
+                    float scaleX = xDist / mSavedXDist; 
 
                     boolean isZoomingOut = (scaleX < 1);
                     boolean canZoomMoreX = isZoomingOut ?
@@ -373,7 +369,7 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
                     mLastGesture = ChartGesture.Y_ZOOM;
 
                     float yDist = getYDist(event);
-                    float scaleY = yDist / mSavedYDist; // y-axis scale
+                    float scaleY = yDist / mSavedYDist; 
 
                     boolean isZoomingOut = (scaleY < 1);
                     boolean canZoomMoreY = isZoomingOut ?
@@ -426,9 +422,7 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
                 && mChart.isInverted(mClosestDataSetToTouch.getAxisDependency()));
     }
 
-    /**
-     * GETTERS AND GESTURE RECOGNITION BELOW
-     */
+    
 
     public Matrix getMatrix() {
         return mMatrix;
@@ -521,7 +515,7 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
     public void computeScroll() {
 
         if (mDecelerationVelocity.x == 0.f && mDecelerationVelocity.y == 0.f)
-            return; // There's no deceleration in progress
+            return; 
 
         final long currentTime = AnimationUtils.currentAnimationTimeMillis();
 
@@ -550,7 +544,7 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
         mDecelerationLastTime = currentTime;
 
         if (Math.abs(mDecelerationVelocity.x) >= 0.01 || Math.abs(mDecelerationVelocity.y) >= 0.01)
-            Utils.postInvalidateOnAnimation(mChart); // This causes computeScroll to fire, recommended for this by Google
+            Utils.postInvalidateOnAnimation(mChart); 
         else {
 
 

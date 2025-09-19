@@ -15,10 +15,7 @@ import mpdc4gsr.permissions.PermissionController
 import mpdc4gsr.permissions.PermissionManager
 import kotlinx.coroutines.launch
 
-/**
- * Camera status widget that integrates with RgbCameraRecorder to show live camera status,
- * preview, and recording statistics. Demonstrates the enhanced camera functionality.
- */
+
 class CameraStatusWidget @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
@@ -41,7 +38,7 @@ class CameraStatusWidget @JvmOverloads constructor(
     }
 
     private fun setupUI() {
-        // Status text
+        
         statusText = TextView(context).apply {
             text = "Camera Status: Not Initialized"
             textSize = 16f
@@ -51,11 +48,11 @@ class CameraStatusWidget @JvmOverloads constructor(
         }
         addView(statusText)
 
-        // Preview view
+        
         previewView = PreviewView(context).apply {
             layoutParams = LayoutParams(
                 LayoutParams.MATCH_PARENT,
-                400 // Fixed height for preview
+                400 
             ).apply {
                 setMargins(0, 8, 0, 8)
             }
@@ -63,7 +60,7 @@ class CameraStatusWidget @JvmOverloads constructor(
         }
         addView(previewView)
 
-        // Statistics text
+        
         statsText = TextView(context).apply {
             text = "Camera Statistics:\nNot Available"
             textSize = 12f
@@ -74,16 +71,14 @@ class CameraStatusWidget @JvmOverloads constructor(
         addView(statsText)
     }
 
-    /**
-     * Initialize the widget with a camera recorder and enhanced permission system
-     */
+    
     fun initializeWithCamera(
         lifecycleOwner: LifecycleOwner,
         useFrontCamera: Boolean = false,
         permissionManager: PermissionManager? = null
     ) {
         try {
-            // Create camera recorder with preview support and permission system
+            
             cameraRecorder = RgbCameraRecorder(
                 context = context,
                 lifecycleOwner = lifecycleOwner,
@@ -92,10 +87,10 @@ class CameraStatusWidget @JvmOverloads constructor(
                 permissionManager = permissionManager
             )
 
-            // Start monitoring camera status
+            
             startStatusMonitoring(lifecycleOwner)
 
-            // Initialize camera
+            
             lifecycleOwner.lifecycleScope.launch {
                 val success = cameraRecorder?.initialize() ?: false
                 if (success) {
@@ -113,18 +108,18 @@ class CameraStatusWidget @JvmOverloads constructor(
     private fun startStatusMonitoring(lifecycleOwner: LifecycleOwner) {
         val recorder = cameraRecorder ?: return
 
-        // Monitor camera status
+        
         lifecycleOwner.lifecycleScope.launch {
             recorder.cameraStatus.collect { status ->
                 updateStatusText("Camera: $status", getStatusColor(status))
             }
         }
 
-        // Update statistics periodically
+        
         lifecycleOwner.lifecycleScope.launch {
             while (true) {
                 updateStatistics()
-                kotlinx.coroutines.delay(1000) // Update every second
+                kotlinx.coroutines.delay(1000) 
             }
         }
     }
@@ -176,9 +171,7 @@ class CameraStatusWidget @JvmOverloads constructor(
         }
     }
 
-    /**
-     * Start recording with the camera
-     */
+    
     fun startRecording(sessionDirectory: String, callback: (Boolean) -> Unit) {
         cameraRecorder?.let { recorder ->
             Thread {
@@ -197,9 +190,7 @@ class CameraStatusWidget @JvmOverloads constructor(
         }
     }
 
-    /**
-     * Stop recording
-     */
+    
     fun stopRecording(callback: (Boolean) -> Unit) {
         cameraRecorder?.let { recorder ->
             Thread {
@@ -218,9 +209,7 @@ class CameraStatusWidget @JvmOverloads constructor(
         }
     }
 
-    /**
-     * Clean up resources
-     */
+    
     fun cleanup() {
         cameraRecorder?.let { recorder ->
             Thread {
@@ -232,8 +221,6 @@ class CameraStatusWidget @JvmOverloads constructor(
         cameraRecorder = null
     }
 
-    /**
-     * Get the camera recorder instance for advanced usage
-     */
+    
     fun getCameraRecorder(): RgbCameraRecorder? = cameraRecorder
 }

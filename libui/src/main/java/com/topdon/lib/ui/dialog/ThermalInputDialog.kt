@@ -31,14 +31,11 @@ import com.topdon.lib.ui.adapter.ColorSelectAdapter
 import com.topdon.lib.ui.databinding.DialogThermalInputBinding
 import java.math.BigDecimal
 
-/**
- * 提示窗
- * create by fylder on 2018/6/15
- **/
+
 
 
 class ThermalInputDialog : Dialog {
-    private var action = 100 // 100:初始温度输入界面     201: 温度上限color选择界面   301: 温度下限color选择界面
+    private var action = 100 
 
     constructor(context: Context) : super(context)
 

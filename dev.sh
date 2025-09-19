@@ -1,11 +1,11 @@
 #!/bin/bash
 
-# IRCamera Development Tools - CI/CD Core
-# Usage: ./dev.sh [command]
+
+
 
 set -e
 
-# Colors
+
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
@@ -41,7 +41,7 @@ print_warning() {
 lint_code() {
     echo -e "${BLUE}Running linting checks...${NC}"
     
-    # Kotlin linting
+    
     echo "Checking Kotlin files..."
     if ./gradlew ktlintCheck; then
         print_status "Kotlin linting passed"
@@ -49,7 +49,7 @@ lint_code() {
         print_warning "Kotlin linting issues found"
     fi
     
-    # Java checkstyle
+    
     echo "Checking Java files..."
     if ./gradlew checkstyle; then
         print_status "Java checkstyle passed"
@@ -57,7 +57,7 @@ lint_code() {
         print_warning "Java checkstyle issues found"
     fi
     
-    # Python linting (if python files exist)
+    
     if find . -name "*.py" -type f | head -1 | grep -q .; then
         echo "Checking Python files..."
         if command -v flake8 >/dev/null 2>&1; then
@@ -75,7 +75,7 @@ lint_code() {
 static_analysis() {
     echo -e "${BLUE}Running static analysis...${NC}"
     
-    # Shell script analysis
+    
     if find . -name "*.sh" -type f | head -1 | grep -q .; then
         if command -v shellcheck >/dev/null 2>&1; then
             echo "Checking shell scripts..."
@@ -95,7 +95,7 @@ static_analysis() {
 build_check() {
     echo -e "${BLUE}Running build validation...${NC}"
     
-    # Quick build check
+    
     if ./gradlew assembleDebug; then
         print_status "Build check passed"
     else
@@ -117,12 +117,12 @@ validate_all() {
 generate_diagram() {
     echo -e "${BLUE}Generating repository architecture diagram...${NC}"
     
-    # Create docs directory if it doesn't exist
+    
     mkdir -p docs
     
-    # Generate comprehensive Mermaid diagram
+    
     cat > docs/architecture-diagram.md << 'EOF'
-# IRCamera Repository Architecture
+
 
 ```mermaid
 graph TB
@@ -208,12 +208,12 @@ graph TB
     GradleBuild2 --> Settings
     
     %% Styling
-    classDef appLayer fill:#e1f5fe,stroke:#01579b,stroke-width:2px
-    classDef libLayer fill:#f3e5f5,stroke:#4a148c,stroke-width:2px  
-    classDef componentLayer fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px
-    classDef externalLayer fill:#fff3e0,stroke:#e65100,stroke-width:2px
-    classDef cicdLayer fill:#fce4ec,stroke:#880e4f,stroke-width:2px
-    classDef buildLayer fill:#f1f8e9,stroke:#33691e,stroke-width:2px
+    classDef appLayer fill:
+    classDef libLayer fill:
+    classDef componentLayer fill:
+    classDef externalLayer fill:
+    classDef cicdLayer fill:
+    classDef buildLayer fill:
     
     class App,MainActivity appLayer
     class LibApp,LibCom,LibIR,LibMatrix,LibMenu,LibUI libLayer
@@ -223,7 +223,7 @@ graph TB
     class GradleBuild2,VersionCatalog,Settings buildLayer
 ```
 
-## Architecture Overview
+
 
 This diagram shows the complete IRCamera repository architecture with:
 
@@ -234,7 +234,7 @@ This diagram shows the complete IRCamera repository architecture with:
 - **CI/CD Pipeline**: Automated build validation, testing, and quality assurance
 - **Build System**: Gradle configuration and dependency management
 
-### Key Dependencies
+
 
 1. **App → Libraries**: Main app depends on libapp, libui, libcom, libir
 2. **Components → Libraries**: Thermal components use libir, GSR uses libcom  
@@ -243,7 +243,7 @@ This diagram shows the complete IRCamera repository architecture with:
 5. **Build System**: Centralized version catalog and gradle configuration
 EOF
     
-    # Generate interactive HTML viewer
+    
     cat > docs/architecture-viewer.html << 'EOF'
 <!DOCTYPE html>
 <html lang="en">
@@ -253,14 +253,14 @@ EOF
     <title>IRCamera Architecture Viewer</title>
     <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
     <style>
-        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background: #f5f5f5; }
+        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background: 
         .container { max-width: 1200px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        h1 { color: #333; text-align: center; margin-bottom: 30px; }
-        .diagram-container { width: 100%; height: 600px; border: 1px solid #ddd; border-radius: 4px; overflow: auto; }
-        .info { background: #e3f2fd; padding: 15px; border-radius: 4px; margin-top: 20px; }
+        h1 { color: 
+        .diagram-container { width: 100%; height: 600px; border: 1px solid 
+        .info { background: 
         .controls { margin-bottom: 20px; text-align: center; }
-        button { background: #2196f3; color: white; border: none; padding: 10px 20px; margin: 0 5px; border-radius: 4px; cursor: pointer; }
-        button:hover { background: #1976d2; }
+        button { background: 
+        button:hover { background: 
     </style>
 </head>
 <body>
@@ -407,7 +407,7 @@ EOF
     print_status "Interactive viewer created: docs/architecture-viewer.html"
 }
 
-# Main script logic
+
 case "${1:-help}" in
     lint)
         lint_code

@@ -14,9 +14,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 
-/**
- * Created by fengjibo on 2023/3/29.
- */
+
 public class DeviceIrcmdControlManager {
 
     private static final String TAG = "DeviceIrcmdControlManager";
@@ -38,9 +36,7 @@ public class DeviceIrcmdControlManager {
         return mInstance;
     }
 
-    /**
-     *
-     */
+    
     public static byte[] intToBytes2(int value) {
         byte[] src = new byte[4];
         src[0] = (byte) ((value >> 24) & 0xFF);
@@ -59,23 +55,14 @@ public class DeviceIrcmdControlManager {
         return src;
     }
 
-    /**
-     *
-     */
+    
     public static int bytesToInt2(byte[] src, int offset) {
         int value =
                 (((src[offset] & 0xFF) << 24) | ((src[offset + 1] & 0xFF) << 16) | ((src[offset + 2] & 0xFF) << 8) | (src[offset + 3] & 0xFF));
         return value;
     }
 
-    /**
-     * @param name
-     * @param ispParamReadByteArray
-     * @param byteWidth
-     * @param begin
-     * @param end
-     * @return
-     */
+    
     public static String getReadValue(String name, byte[] ispParamReadByteArray, int byteWidth, int begin, int end) {
 
         StringBuilder ispParamReadByteArrStr = new StringBuilder();
@@ -94,15 +81,7 @@ public class DeviceIrcmdControlManager {
         return String.valueOf(Long.parseLong(orgValue, 2));
     }
 
-    /**
-     * @param name
-     * @param ispParamReadByteArray
-     * @param byteWidth
-     * @param begin
-     * @param end
-     * @param valueArray
-     * @return
-     */
+    
     public static long byteArrToBinStr(String name, byte[] ispParamReadByteArray, int byteWidth, int begin, int end,
                                        byte[] valueArray) {
 
@@ -215,19 +194,13 @@ public class DeviceIrcmdControlManager {
         }).start();
     }
 
-    /**
-     * @param param_path
-     */
+    
     public void setISPChangePath(String param_path) {
         ispParamPath = param_path;
         mSendISPCommand = true;
     }
 
-    /**
-     * <p>
-     *
-     * @throws IllegalArgumentException
-     */
+    
     public void sendISPParam() {
         if (!mSendISPCommand) {
             return;

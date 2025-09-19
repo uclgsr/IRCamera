@@ -20,19 +20,19 @@ import com.topdon.menu.R as MenuR
 
 class CameraMenuView : FrameLayout, View.OnClickListener {
     companion object {
-        /** onCameraClickListener event code: photo/video capture */
+        
         const val CODE_ACTION = 0
 
-        /** onCameraClickListener event code: gallery */
+        
         const val CODE_GALLERY = 1
 
-        /** onCameraClickListener event code: more menu */
+        
         const val CODE_MORE = 2
 
-        /** onCameraClickListener event code: switch to photo */
+        
         const val CODE_TO_PHOTO = 3
 
-        /** onCameraClickListener event code: switch to video */
+        
         const val CODE_TO_VIDEO = 4
     }
 
@@ -135,7 +135,7 @@ class CameraMenuView : FrameLayout, View.OnClickListener {
 
     override fun onClick(v: View?) {
         when (v) {
-            binding.ivAction -> { // Start photo/Start recording/Stop recording
+            binding.ivAction -> { 
                 val currentTime = System.currentTimeMillis()
                 if (currentTime - lastClickTime > 500) {
                     lastClickTime = currentTime
@@ -147,15 +147,15 @@ class CameraMenuView : FrameLayout, View.OnClickListener {
                 onCameraClickListener?.invoke(CODE_GALLERY)
             }
 
-            binding.ivMore -> { // More menu
+            binding.ivMore -> { 
                 onCameraClickListener?.invoke(CODE_MORE)
             }
 
-            binding.tvPhoto -> { // Photo text
+            binding.tvPhoto -> { 
                 binding.viewPager2.currentItem = 0
             }
 
-            binding.tvVideo -> { // Video text
+            binding.tvVideo -> { 
                 binding.viewPager2.currentItem = 1
             }
         }

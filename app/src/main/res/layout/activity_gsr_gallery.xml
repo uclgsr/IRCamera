@@ -12,7 +12,7 @@
         android:background="#16131e"
         android:fitsSystemWindows="true">
 
-        <!-- Toolbar -->
+        
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="0dp"
@@ -24,7 +24,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:titleTextColor="@android:color/white" />
 
-        <!-- Tab Layout -->
+        
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/gsr_gallery_tab"
             android:layout_width="0dp"
@@ -40,7 +40,7 @@
             app:tabSelectedTextColor="@color/colorAccent"
             app:tabTextColor="#ccffffff" />
 
-        <!-- ViewPager for tab content -->
+        
         <androidx.viewpager.widget.ViewPager
             android:id="@+id/gsr_gallery_viewpager"
             android:layout_width="0dp"

@@ -12,10 +12,7 @@ import java.text.DecimalFormat
 import com.topdon.lib.core.R as LibAppR
 import com.topdon.lib.core.R as RCore
 
-/**
 
- * Created by LCG on 2024/3/5.
- */
 class DownloadProDialog(context: Context) : Dialog(context, LibAppR.style.InfoDialog) {
     private val rootView: View =
         LayoutInflater.from(context).inflate(R.layout.dialog_download_pro, null)

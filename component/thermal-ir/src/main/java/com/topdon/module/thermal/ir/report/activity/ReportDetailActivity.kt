@@ -25,12 +25,7 @@ import java.io.File
 import com.topdon.lib.core.R as LibCoreR
 import com.topdon.lib.ui.R as UiR
 
-/**
 
- *
-
-
- */
 
 
 class ReportDetailActivity : BaseActivity() {
@@ -136,10 +131,7 @@ class ReportDetailActivity : BaseActivity() {
         startActivity(Intent.createChooser(shareIntent, getString(LibCoreR.string.battery_share)))
     }
 
-    /**
-
-
-     */
+    
     private fun getPrintViewList(): ArrayList<View> {
         val result = ArrayList<View>()
         result.add(reportInfoView)

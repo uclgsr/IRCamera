@@ -346,9 +346,7 @@ public abstract class PieRadarChartBase<T extends ChartData<? extends IDataSet<?
         return 0;
     }
 
-    /**
-     * CODE BELOW THIS RELATED TO ANIMATION
-     */
+    
 
     @SuppressLint("NewApi")
     public void spin(int durationmillis, float fromangle, float toangle, EasingFunction easing) {

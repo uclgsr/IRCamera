@@ -153,7 +153,7 @@ public class CombinedData extends BarLineScatterCandleBubbleData<IBarLineScatter
         if (mBubbleData != null)
             mBubbleData.notifyDataChanged();
 
-        calcMinMax(); // recalculate everything
+        calcMinMax(); 
     }
 
     @Override

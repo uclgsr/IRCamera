@@ -55,11 +55,7 @@ data class HouseRepPreviewAlbumItemBean(
     var title: String = "",
 )
 
-/**
 
-
-
- */
 
 
 class ReportPreviewActivity : BaseActivity(), View.OnClickListener {
@@ -203,7 +199,7 @@ class ReportPreviewActivity : BaseActivity(), View.OnClickListener {
             }
 
             tvSave -> {
-                if (isReport) { // 分享
+                if (isReport) { 
                     lifecycleScope.launch {
                         showLoadingDialog()
 
@@ -218,7 +214,7 @@ class ReportPreviewActivity : BaseActivity(), View.OnClickListener {
 
 
                     }
-                } else { // 定稿并保存
+                } else { 
                     if (houseReport.inspectorWhitePath.isEmpty() || houseReport.houseOwnerWhitePath.isEmpty()) {
                         if (clSign.bottom + layAppbar.height > llSave.top) {
                             layAppbar.setExpanded(false, true)

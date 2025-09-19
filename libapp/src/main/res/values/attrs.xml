@@ -1,14 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- Thermal imaging menu -->
-    <declare-styleable name="MenuSecondView">
-        <attr name="deviceType" format="enum">
-            <enum name="single_light" value="0" /> <!-- Single light -->
-            <enum name="double_light" value="1" /> <!-- Dual light -->
-            <enum name="lite" value="2" />         <!-- Lite -->
-            <enum name="tc007" value="3" />        <!-- TC007 -->
-            <enum name="gallery_edit" value="4" /> <!-- 2DEdit -->
+    
+    <declare-styleable name="MyTextView">
+        <attr name="drawable_height" format="dimension">
+            <enum name="wrap_content" value="-2" />
+        </attr>
+        <attr name="top_height" format="dimension">
+            <enum name="wrap_content" value="-2" />
+        </attr>
+        <attr name="bottom_height" format="dimension">
+            <enum name="wrap_content" value="-2" />
+        </attr>
+        <attr name="start_height" format="dimension">
+            <enum name="wrap_content" value="-2" />
+        </attr>
+        <attr name="end_height" format="dimension">
+            <enum name="wrap_content" value="-2" />
+        </attr>
+        <attr name="left_height" format="dimension">
+            <enum name="wrap_content" value="-2" />
+        </attr>
+        <attr name="right_height" format="dimension">
+            <enum name="wrap_content" value="-2" />
         </attr>
     </declare-styleable>
+
+    
+    <declare-styleable name="TitleView">
+        <attr name="titleText" format="string" />
+        <attr name="leftText" format="string" />
+        <attr name="rightText" format="string" />
+        <attr name="leftDrawable" format="reference" />
+        <attr name="rightDrawable" format="reference" />
+        <attr name="right2Drawable" format="reference" />
+        <attr name="right3Drawable" format="reference" />
+        <attr name="leftTextColor" format="reference|color" />
+        <attr name="rightTextColor" format="reference|color" />
+        <attr name="isInitLeft" format="boolean" />   
+        <attr name="isTitleCenter" format="boolean" />
+    </declare-styleable>
+
+    
+    <declare-styleable name="LoadingDots">
+        <attr name="lms_dot_spacing" format="dimension" />
+        <attr name="lms_dot_radius" format="dimension" />
+        <attr name="lms_dot_move_rate" format="float" />
+    </declare-styleable>
+
+
 </resources>

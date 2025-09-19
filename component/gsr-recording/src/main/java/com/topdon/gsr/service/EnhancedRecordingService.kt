@@ -191,7 +191,7 @@ class EnhancedRecordingService : Service() {
             ACTION_STOP_DISCOVERY -> stopPCDiscovery()
         }
 
-        return START_STICKY // Restart service if killed
+        return START_STICKY 
     }
 
     override fun onBind(intent: Intent?): IBinder = binder
@@ -248,7 +248,7 @@ class EnhancedRecordingService : Service() {
                         dataStreamingService.queueGSRSample(sample)
                     }
 
-                    if (sample.sampleIndex % 1280 == 0L) { // Every 10 seconds at 128Hz
+                    if (sample.sampleIndex % 1280 == 0L) { 
                         updateNotification("Recording... ${sample.sampleIndex} samples")
                     }
                 }
@@ -521,7 +521,7 @@ class EnhancedRecordingService : Service() {
                                 contentResolver,
                                 android.provider.Settings.Secure.ANDROID_ID,
                             ),
-                        port = 0, // Client doesn't listen on a port
+                        port = 0, 
                     )
                 } else {
                     eventListener?.onServiceError("start_discovery", "Failed to start discovery")
@@ -545,7 +545,7 @@ class EnhancedRecordingService : Service() {
                 PowerManager.PARTIAL_WAKE_LOCK,
                 WAKE_LOCK_TAG,
             ).apply {
-                acquire(10 * 60 * 1000L /* 10 minutes */)
+                acquire(10 * 60 * 1000L )
             }
     }
 

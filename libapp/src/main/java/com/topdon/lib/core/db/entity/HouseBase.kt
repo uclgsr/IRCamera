@@ -59,15 +59,15 @@ open class HouseBase {
 
     fun getCostUnitStr(): String =
         when (costUnit) {
-            1 -> "EUR" // 欧元EUR
-            2 -> "GBP" // 英镑GBP
-            3 -> "AUD" // 澳元AUD
-            4 -> "JPY" // 日元JPY
-            5 -> "CAD" // 加元CAD
-            6 -> "NZD" // 新西兰NZD
-            7 -> "RMB" // 人民币RMB
-            8 -> "HKD" // 港币HKD
-            else -> "USD" // 美元USD
+            1 -> "EUR" 
+            2 -> "GBP" 
+            3 -> "AUD" 
+            4 -> "JPY" 
+            5 -> "CAD" 
+            6 -> "NZD" 
+            7 -> "RMB" 
+            8 -> "HKD" 
+            else -> "USD" 
         }
 
     fun getPdfFileName(): String =

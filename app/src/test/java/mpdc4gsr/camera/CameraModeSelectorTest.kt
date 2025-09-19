@@ -95,7 +95,7 @@ class CameraModeSelectorTest {
     @Test
     fun `test samsung device capability detection`() {
 
-        val samsungDevicePatterns = listOf("SM-S901", "SM-S906", "SM-S908") // S22 series
+        val samsungDevicePatterns = listOf("SM-S901", "SM-S906", "SM-S908") 
 
         samsungDevicePatterns.forEach { pattern ->
             val isSamsungS22 = pattern.startsWith("SM-S9")

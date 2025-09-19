@@ -11,10 +11,7 @@ import com.topdon.lib.core.bean.event.device.DevicePermissionEvent
 import com.topdon.lib.core.config.DeviceConfig.isTcTsDevice
 import org.greenrobot.eventbus.EventBus
 
-/**
- * USB broadcast receiver for handling Topdon TC001 thermal camera device attach/detach events
- * and USB permission responses.
- */
+
 class ThermalUsbReceiver : BroadcastReceiver() {
 
     companion object {
@@ -68,11 +65,11 @@ class ThermalUsbReceiver : BroadcastReceiver() {
                 val hasPermission = usbManager.hasPermission(device)
 
                 if (hasPermission) {
-                    // Device attached with permission - notify via EventBus
+                    
                     Log.i(TAG, "Thermal camera attached with existing permission")
                     EventBus.getDefault().post(DeviceConnectEvent(true, device))
                 } else {
-                    // Device attached without permission - request permission
+                    
                     Log.i(TAG, "Thermal camera attached, requesting USB permission")
                     EventBus.getDefault().post(DevicePermissionEvent(device))
                 }
@@ -102,7 +99,7 @@ class ThermalUsbReceiver : BroadcastReceiver() {
             if (device.isTcTsDevice()) {
                 Log.w(TAG, "Topdon thermal camera disconnected: ${device.productName}")
 
-                // Notify via EventBus that thermal camera was disconnected
+                
                 EventBus.getDefault().post(DeviceConnectEvent(false, device))
             }
         }
@@ -125,11 +122,11 @@ class ThermalUsbReceiver : BroadcastReceiver() {
             if (device.isTcTsDevice()) {
                 if (granted) {
                     Log.i(TAG, "USB permission granted for thermal camera")
-                    // Notify that device is connected with permission
+                    
                     EventBus.getDefault().post(DeviceConnectEvent(true, device))
                 } else {
                     Log.w(TAG, "USB permission denied for thermal camera")
-                    // Notify permission event for handling in ThermalCameraRecorder
+                    
                     EventBus.getDefault().post(DevicePermissionEvent(device))
                 }
             }

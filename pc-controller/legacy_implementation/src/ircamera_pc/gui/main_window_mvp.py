@@ -1,9 +1,4 @@
-"""
-MVP Main Window for IRCamera PC Controller Hub
 
-Implements the UI Design and Feedback requirements from the PC Hub Application MVP checklist.
-Provides comprehensive device management and session control interface.
-"""
 
 import asyncio
 from datetime import datetime
@@ -42,33 +37,30 @@ from ..core.session_manager import AdvancedSessionManager, SessionConfiguration,
 
 
 class DeviceDashboardWidget(QWidget):
-    """
-    Device Dashboard showing connected devices with status indicators.
-    Implements device list display requirements from the MVP checklist.
-    """
+    
 
-    # Signals
+    
     device_connect_requested = pyqtSignal(str)
     device_disconnect_requested = pyqtSignal(str)
     device_refresh_requested = pyqtSignal()
     manual_add_requested = pyqtSignal()
 
     def __init__(self):
-        """Initialize device dashboard."""
+        
         super().__init__()
         self.device_manager: Optional[DeviceManager] = None
         self._setup_ui()
 
-        # Update timer
+        
         self.update_timer = QTimer()
         self.update_timer.timeout.connect(self._update_device_list)
-        self.update_timer.start(2000)  # Update every 2 seconds
+        self.update_timer.start(2000)  
 
     def _setup_ui(self):
-        """Setup the device dashboard UI."""
+        
         layout = QVBoxLayout(self)
 
-        # Title and controls
+        
         header_layout = QHBoxLayout()
 
         title_label = QLabel("Device Dashboard")
@@ -77,7 +69,7 @@ class DeviceDashboardWidget(QWidget):
 
         header_layout.addStretch()
 
-        # Control buttons
+        
         self.refresh_btn = QPushButton("Refresh")
         self.refresh_btn.clicked.connect(self.device_refresh_requested.emit)
         header_layout.addWidget(self.refresh_btn)
@@ -88,14 +80,14 @@ class DeviceDashboardWidget(QWidget):
 
         layout.addLayout(header_layout)
 
-        # Device table
+        
         self.device_table = QTableWidget()
         self.device_table.setColumnCount(6)
         self.device_table.setHorizontalHeaderLabels([
             "Device Name", "Type", "IP Address", "Status", "Capabilities", "Actions"
         ])
 
-        # Configure table
+        
         header = self.device_table.horizontalHeader()
         header.setSectionResizeMode(0, QHeaderView.ResizeMode.ResizeToContents)
         header.setSectionResizeMode(1, QHeaderView.ResizeMode.ResizeToContents)
@@ -109,53 +101,53 @@ class DeviceDashboardWidget(QWidget):
 
         layout.addWidget(self.device_table)
 
-        # Status summary
+        
         self.status_label = QLabel("No devices discovered")
         self.status_label.setStyleSheet("color: gray; padding: 5px;")
         layout.addWidget(self.status_label)
 
     def set_device_manager(self, device_manager: DeviceManager):
-        """Set the device manager and setup callbacks."""
+        
         self.device_manager = device_manager
 
-        # Add callback for device status changes
+        
         self.device_manager.add_status_callback(self._on_device_status_changed)
 
-        # Initial update
+        
         self._update_device_list()
 
     def _on_device_status_changed(self, device_id: str, device_info: DeviceInfo, event_type: str):
-        """Handle device status changes."""
+        
         logger.debug(f"Device status changed: {device_id} - {event_type}")
-        # Update will happen on next timer cycle
+        
 
     @pyqtSlot()
     def _update_device_list(self):
-        """Update the device list display."""
+        
         if not self.device_manager:
             return
 
         try:
-            # Get all devices
+            
             devices = self.device_manager.get_registry().get_all_devices()
 
-            # Update table
+            
             self.device_table.setRowCount(len(devices))
 
             for row, (device_id, device) in enumerate(devices.items()):
-                # Device name
+                
                 name_item = QTableWidgetItem(device.device_name)
                 self.device_table.setItem(row, 0, name_item)
 
-                # Device type
+                
                 type_item = QTableWidgetItem(device.device_type.name)
                 self.device_table.setItem(row, 1, type_item)
 
-                # IP address
+                
                 ip_item = QTableWidgetItem(f"{device.ip_address}:{device.port}")
                 self.device_table.setItem(row, 2, ip_item)
 
-                # Status with color coding
+                
                 status_item = QTableWidgetItem(device.state.value.title())
                 if device.state == DeviceConnectionState.ONLINE:
                     status_item.setBackground(Qt.GlobalColor.green)
@@ -170,7 +162,7 @@ class DeviceDashboardWidget(QWidget):
 
                 self.device_table.setItem(row, 3, status_item)
 
-                # Capabilities
+                
                 caps = []
                 if device.capabilities.supports_rgb_camera:
                     caps.append("RGB")
@@ -182,7 +174,7 @@ class DeviceDashboardWidget(QWidget):
                 caps_item = QTableWidgetItem(", ".join(caps))
                 self.device_table.setItem(row, 4, caps_item)
 
-                # Actions button
+                
                 actions_widget = QWidget()
                 actions_layout = QHBoxLayout(actions_widget)
                 actions_layout.setContentsMargins(2, 2, 2, 2)
@@ -201,25 +193,25 @@ class DeviceDashboardWidget(QWidget):
                 actions_layout.addStretch()
                 self.device_table.setCellWidget(row, 5, actions_widget)
 
-            # Update status summary
+            
             self._update_status_summary(devices)
 
         except Exception as e:
             logger.error(f"Error updating device list: {e}")
 
     def _update_status_summary(self, devices: Dict[str, DeviceInfo]):
-        """Update the status summary label."""
+        
         if not devices:
             self.status_label.setText("No devices discovered")
             return
 
-        # Count devices by state
+        
         state_counts = {}
         for device in devices.values():
             state = device.state.value
             state_counts[state] = state_counts.get(state, 0) + 1
 
-        # Build status string
+        
         status_parts = []
         total = len(devices)
         status_parts.append(f"Total: {total}")
@@ -231,39 +223,36 @@ class DeviceDashboardWidget(QWidget):
 
 
 class SessionControlWidget(QWidget):
-    """
-    Session Control Panel for recording management.
-    Implements session control buttons requirements from the MVP checklist.
-    """
+    
 
-    # Signals
-    create_session_requested = pyqtSignal(str, dict)  # name, config
+    
+    create_session_requested = pyqtSignal(str, dict)  
     start_recording_requested = pyqtSignal()
     stop_recording_requested = pyqtSignal()
     finalize_session_requested = pyqtSignal()
     reset_session_requested = pyqtSignal()
 
     def __init__(self):
-        """Initialize session control widget."""
+        
         super().__init__()
         self.session_manager: Optional[AdvancedSessionManager] = None
         self._setup_ui()
 
-        # Update timer for session info
+        
         self.update_timer = QTimer()
         self.update_timer.timeout.connect(self._update_session_display)
-        self.update_timer.start(1000)  # Update every second
+        self.update_timer.start(1000)  
 
     def _setup_ui(self):
-        """Setup the session control UI."""
+        
         layout = QVBoxLayout(self)
 
-        # Title
+        
         title_label = QLabel("Session Control Panel")
         title_label.setFont(QFont("Arial", 14, QFont.Weight.Bold))
         layout.addWidget(title_label)
 
-        # Current session info
+        
         session_group = QGroupBox("Current Session")
         session_layout = QVBoxLayout(session_group)
 
@@ -280,11 +269,11 @@ class SessionControlWidget(QWidget):
 
         layout.addWidget(session_group)
 
-        # Control buttons
+        
         controls_group = QGroupBox("Controls")
         controls_layout = QVBoxLayout(controls_group)
 
-        # Session management buttons
+        
         session_btn_layout = QHBoxLayout()
 
         self.create_session_btn = QPushButton("Create Session")
@@ -302,7 +291,7 @@ class SessionControlWidget(QWidget):
 
         controls_layout.addLayout(session_btn_layout)
 
-        # Recording control buttons
+        
         recording_btn_layout = QHBoxLayout()
 
         self.start_recording_btn = QPushButton("Start Recording")
@@ -323,7 +312,7 @@ class SessionControlWidget(QWidget):
 
         layout.addWidget(controls_group)
 
-        # Device participation info
+        
         participation_group = QGroupBox("Device Participation")
         participation_layout = QVBoxLayout(participation_group)
 
@@ -335,17 +324,17 @@ class SessionControlWidget(QWidget):
         layout.addStretch()
 
     def set_session_manager(self, session_manager: AdvancedSessionManager):
-        """Set the session manager and setup callbacks."""
+        
         self.session_manager = session_manager
 
-        # Add callback for session state changes
+        
         self.session_manager.add_state_callback(self._on_session_state_changed)
 
-        # Initial update
+        
         self._update_session_display()
 
     def _create_session_clicked(self):
-        """Handle create session button click."""
+        
         session_name, ok = QInputDialog.getText(
             self,
             "Create Session",
@@ -353,7 +342,7 @@ class SessionControlWidget(QWidget):
         )
 
         if ok and session_name.strip():
-            # Create basic configuration
+            
             config = {
                 "modalities": ["rgb", "thermal", "gsr"],
                 "auto_start": False
@@ -361,13 +350,13 @@ class SessionControlWidget(QWidget):
             self.create_session_requested.emit(session_name.strip(), config)
 
     def _on_session_state_changed(self, state: SessionState, session):
-        """Handle session state changes."""
+        
         logger.debug(f"Session state changed to: {state.value}")
-        # Update will happen on next timer cycle
+        
 
     @pyqtSlot()
     def _update_session_display(self):
-        """Update session display information."""
+        
         if not self.session_manager:
             return
 
@@ -375,11 +364,11 @@ class SessionControlWidget(QWidget):
             session = self.session_manager.get_current_session()
 
             if session:
-                # Update session info
+                
                 self.session_info_label.setText(
                     f"Session: {session.session_name} ({session.session_id})")
 
-                # Update status with color coding
+                
                 status_text = f"Status: {session.state.value.upper()}"
                 if session.state == SessionState.RECORDING:
                     self.session_status_label.setStyleSheet("color: red; font-weight: bold;")
@@ -392,7 +381,7 @@ class SessionControlWidget(QWidget):
 
                 self.session_status_label.setText(status_text)
 
-                # Update recording timer
+                
                 if session.started_at and session.state == SessionState.RECORDING:
                     duration = (datetime.now() - session.started_at.replace(
                         tzinfo=None)).total_seconds()
@@ -411,18 +400,18 @@ class SessionControlWidget(QWidget):
                 else:
                     self.recording_timer_label.setText("Duration: --:--:--")
 
-                # Update participation info
+                
                 if session.participating_devices:
                     device_count = len(session.participating_devices)
                     self.participation_label.setText(f"{device_count} devices participating")
                 else:
                     self.participation_label.setText("No devices selected")
 
-                # Update button states
+                
                 self._update_button_states(session.state)
 
             else:
-                # No active session
+                
                 self.session_info_label.setText("No active session")
                 self.session_status_label.setText("Status: IDLE")
                 self.session_status_label.setStyleSheet("color: gray;")
@@ -435,37 +424,34 @@ class SessionControlWidget(QWidget):
             logger.error(f"Error updating session display: {e}")
 
     def _update_button_states(self, session_state: SessionState):
-        """Update button enabled states based on session state."""
-        # Create session button
+        
+        
         self.create_session_btn.setEnabled(session_state == SessionState.IDLE)
 
-        # Recording buttons
+        
         self.start_recording_btn.setEnabled(session_state == SessionState.ACTIVE)
         self.stop_recording_btn.setEnabled(session_state == SessionState.RECORDING)
 
-        # Session management buttons
+        
         self.finalize_session_btn.setEnabled(
             session_state in [SessionState.STOPPED, SessionState.ERROR])
         self.reset_session_btn.setEnabled(session_state != SessionState.RECORDING)
 
 
 class LoggingConsoleWidget(QWidget):
-    """
-    Logging console for real-time system messages.
-    Implements logging console UI requirements from the MVP checklist.
-    """
+    
 
     def __init__(self):
-        """Initialize logging console."""
+        
         super().__init__()
         self.max_lines = 1000
         self._setup_ui()
 
     def _setup_ui(self):
-        """Setup logging console UI."""
+        
         layout = QVBoxLayout(self)
 
-        # Title and controls
+        
         header_layout = QHBoxLayout()
 
         title_label = QLabel("System Log")
@@ -480,7 +466,7 @@ class LoggingConsoleWidget(QWidget):
 
         layout.addLayout(header_layout)
 
-        # Log text area
+        
         self.log_text = QTextEdit()
         self.log_text.setReadOnly(True)
         self.log_text.setFont(QFont("Consolas", 9))
@@ -489,17 +475,11 @@ class LoggingConsoleWidget(QWidget):
         layout.addWidget(self.log_text)
 
     def add_log_message(self, message: str, level: str = "INFO"):
-        """
-        Add a log message to the console.
         
-        Args:
-            message: Log message text
-            level: Log level (INFO, WARNING, ERROR, etc.)
-        """
         timestamp = datetime.now().strftime("%H:%M:%S.%f")[:-3]
         formatted_message = f"[{timestamp}] {level}: {message}"
 
-        # Add color coding based on level
+        
         if level == "ERROR":
             color = "red"
         elif level == "WARNING":
@@ -509,38 +489,24 @@ class LoggingConsoleWidget(QWidget):
         else:
             color = "black"
 
-        # Append with color
+        
         self.log_text.append(f'<span style="color: {color}">{formatted_message}</span>')
 
-        # Scroll to bottom
+        
         cursor = self.log_text.textCursor()
         cursor.movePosition(cursor.MoveOperation.End)
         self.log_text.setTextCursor(cursor)
 
     def _clear_log(self):
-        """Clear the log console."""
+        
         self.log_text.clear()
 
 
 class MVPMainWindow(QMainWindow):
-    """
-    MVP Main Window implementing all UI requirements from the PC Hub Application MVP checklist.
     
-    Provides:
-    - Device dashboard with status indicators
-    - Session control panel 
-    - Real-time logging console
-    - Dynamic status updates
-    """
 
     def __init__(self, device_manager: DeviceManager, session_manager: AdvancedSessionManager):
-        """
-        Initialize MVP main window.
         
-        Args:
-            device_manager: Device manager instance
-            session_manager: Session manager instance
-        """
         super().__init__()
 
         self.device_manager = device_manager
@@ -550,41 +516,41 @@ class MVPMainWindow(QMainWindow):
         self._setup_connections()
         self._setup_status_bar()
 
-        # Setup periodic updates
+        
         self.status_timer = QTimer()
         self.status_timer.timeout.connect(self._update_status)
-        self.status_timer.start(1000)  # Update every second
+        self.status_timer.start(1000)  
 
     def _setup_ui(self):
-        """Setup the main window UI."""
+        
         self.setWindowTitle("IRCamera PC Controller Hub - MVP")
         self.setMinimumSize(1200, 800)
 
-        # Central widget with tab layout
+        
         central_widget = QWidget()
         self.setCentralWidget(central_widget)
 
         layout = QVBoxLayout(central_widget)
 
-        # Tab widget for main content
+        
         self.tab_widget = QTabWidget()
         layout.addWidget(self.tab_widget)
 
-        # Dashboard tab - main operational view
+        
         self._create_dashboard_tab()
 
-        # Logs tab - system logging
+        
         self._create_logs_tab()
 
-        # Device management tab
+        
         self._create_device_management_tab()
 
     def _create_dashboard_tab(self):
-        """Create the main dashboard tab."""
+        
         dashboard_widget = QWidget()
         layout = QHBoxLayout(dashboard_widget)
 
-        # Left side - Device dashboard
+        
         left_widget = QWidget()
         left_layout = QVBoxLayout(left_widget)
 
@@ -592,9 +558,9 @@ class MVPMainWindow(QMainWindow):
         self.device_dashboard.set_device_manager(self.device_manager)
         left_layout.addWidget(self.device_dashboard)
 
-        layout.addWidget(left_widget, 2)  # 2/3 of space
+        layout.addWidget(left_widget, 2)  
 
-        # Right side - Session control
+        
         right_widget = QWidget()
         right_layout = QVBoxLayout(right_widget)
 
@@ -602,7 +568,7 @@ class MVPMainWindow(QMainWindow):
         self.session_control.set_session_manager(self.session_manager)
         right_layout.addWidget(self.session_control)
 
-        # Add some status indicators
+        
         status_group = QGroupBox("System Status")
         status_layout = QVBoxLayout(status_group)
 
@@ -617,27 +583,27 @@ class MVPMainWindow(QMainWindow):
         right_layout.addWidget(status_group)
         right_layout.addStretch()
 
-        layout.addWidget(right_widget, 1)  # 1/3 of space
+        layout.addWidget(right_widget, 1)  
 
         self.tab_widget.addTab(dashboard_widget, "Dashboard")
 
     def _create_logs_tab(self):
-        """Create the logs tab."""
+        
         self.logging_console = LoggingConsoleWidget()
         self.tab_widget.addTab(self.logging_console, "Logs")
 
     def _create_device_management_tab(self):
-        """Create device management tab with detailed controls."""
+        
         device_mgmt_widget = QWidget()
         layout = QVBoxLayout(device_mgmt_widget)
 
-        # Manual device addition
+        
         manual_group = QGroupBox("Manual Device Management")
         manual_layout = QVBoxLayout(manual_group)
 
         add_device_layout = QHBoxLayout()
 
-        # Manual device addition form
+        
         from PyQt6.QtWidgets import QLineEdit, QComboBox
 
         add_device_layout.addWidget(QLabel("IP Address:"))
@@ -664,7 +630,7 @@ class MVPMainWindow(QMainWindow):
         manual_layout.addLayout(add_device_layout)
         layout.addWidget(manual_group)
 
-        # Device details
+        
         details_group = QGroupBox("Device Details")
         details_layout = QVBoxLayout(details_group)
 
@@ -679,14 +645,14 @@ class MVPMainWindow(QMainWindow):
         self.tab_widget.addTab(device_mgmt_widget, "Device Management")
 
     def _setup_connections(self):
-        """Setup signal connections between components."""
-        # Device dashboard connections
+        
+        
         self.device_dashboard.device_connect_requested.connect(self._connect_device)
         self.device_dashboard.device_disconnect_requested.connect(self._disconnect_device)
         self.device_dashboard.device_refresh_requested.connect(self._refresh_devices)
         self.device_dashboard.manual_add_requested.connect(self._add_device_manually)
 
-        # Session control connections
+        
         self.session_control.create_session_requested.connect(self._create_session)
         self.session_control.start_recording_requested.connect(self._start_recording)
         self.session_control.stop_recording_requested.connect(self._stop_recording)
@@ -694,27 +660,27 @@ class MVPMainWindow(QMainWindow):
         self.session_control.reset_session_requested.connect(self._reset_session)
 
     def _setup_status_bar(self):
-        """Setup status bar with system information."""
+        
         self.status_bar = QStatusBar()
         self.setStatusBar(self.status_bar)
 
-        # Add permanent status indicators
+        
         self.device_count_label = QLabel("Devices: 0")
         self.status_bar.addPermanentWidget(self.device_count_label)
 
         self.session_status_label = QLabel("Session: IDLE")
         self.status_bar.addPermanentWidget(self.session_status_label)
 
-        # Initial message
+        
         self.status_bar.showMessage("IRCamera PC Controller Hub initialized")
 
-    # Event handlers
+    
 
     @pyqtSlot(str)
     def _connect_device(self, device_id: str):
-        """Handle device connection request."""
+        
         try:
-            # Get device info from registry
+            
             registry = self.device_manager.get_registry()
             device_info = registry.get_device(device_id)
 
@@ -723,7 +689,7 @@ class MVPMainWindow(QMainWindow):
                                                      "ERROR")
                 return
 
-            # Use device manager to establish connection
+            
             async def connect_async():
                 success = await self.device_manager.connect_to_device(device_id)
                 if success:
@@ -734,7 +700,7 @@ class MVPMainWindow(QMainWindow):
                     self.logging_console.add_log_message(
                         f"Failed to connect to device: {device_id}", "ERROR")
 
-            # Schedule async connection
+            
             asyncio.ensure_future(connect_async())
 
         except Exception as e:
@@ -744,7 +710,7 @@ class MVPMainWindow(QMainWindow):
 
     @pyqtSlot(str)
     def _disconnect_device(self, device_id: str):
-        """Handle device disconnection request."""
+        
         try:
             registry = self.device_manager.get_registry()
             success = registry.update_device_state(device_id, DeviceConnectionState.DISCONNECTED)
@@ -760,9 +726,9 @@ class MVPMainWindow(QMainWindow):
 
     @pyqtSlot()
     def _refresh_devices(self):
-        """Handle device refresh request."""
+        
         try:
-            # Trigger discovery refresh
+            
             asyncio.create_task(self.device_manager.refresh_discovery())
             self.logging_console.add_log_message("Device discovery refreshed")
             self.status_bar.showMessage("Refreshing device discovery...", 2000)
@@ -773,20 +739,20 @@ class MVPMainWindow(QMainWindow):
 
     @pyqtSlot()
     def _add_device_manually(self):
-        """Handle manual device addition request from dashboard."""
-        # Show dialog for manual device addition
+        
+        
         self._show_manual_device_dialog()
 
     @pyqtSlot()
     def _on_add_manual_device(self):
-        """Handle manual device addition from form."""
+        
         try:
-            # Get form values
+            
             ip_address = self.manual_ip_input.text().strip()
             port_text = self.manual_port_input.text().strip()
             device_type = self.manual_type_combo.currentText()
 
-            # Validation
+            
             if not ip_address:
                 QMessageBox.warning(self, "Invalid Input", "Please enter an IP address.")
                 return
@@ -800,10 +766,10 @@ class MVPMainWindow(QMainWindow):
                                     "Please enter a valid port number (1-65535).")
                 return
 
-            # Create device info
+            
             device_id = f"manual_{ip_address}_{port}"
 
-            # Convert string device type to enum
+            
             device_type_mapping = {
                 "ANDROID_SENSOR_NODE": DeviceType.ANDROID_SENSOR_NODE,
                 "THERMAL_CAMERA_TS004": DeviceType.THERMAL_CAMERA_TS004,
@@ -811,7 +777,7 @@ class MVPMainWindow(QMainWindow):
             }
             device_type_enum = device_type_mapping.get(device_type, DeviceType.ANDROID_SENSOR_NODE)
 
-            # Create discovered device for registry
+            
             from datetime import datetime
             from ..network.discovery import DiscoveredDevice
 
@@ -826,15 +792,15 @@ class MVPMainWindow(QMainWindow):
                 last_seen=datetime.now()
             )
 
-            # Add to device registry
+            
             registry = self.device_manager.get_registry()
             device_id = registry.register_device(discovered_device)
 
-            # Clear form
+            
             self.manual_ip_input.clear()
             self.manual_port_input.setText("8080")
 
-            # Update display and log
+            
             self._update_device_display()
             self.logging_console.add_log_message(f"Manually added device: {device_id}")
             self.status_bar.showMessage(f"Device {device_id} added manually", 3000)
@@ -845,7 +811,7 @@ class MVPMainWindow(QMainWindow):
             QMessageBox.critical(self, "Error", f"Failed to add device: {e}")
 
     def _show_manual_device_dialog(self):
-        """Show dialog for manual device addition with more options."""
+        
         from PyQt6.QtWidgets import QDialog, QFormLayout, QDialogButtonBox
 
         dialog = QDialog(self)
@@ -854,7 +820,7 @@ class MVPMainWindow(QMainWindow):
 
         layout = QFormLayout(dialog)
 
-        # Form fields
+        
         ip_input = QLineEdit()
         ip_input.setPlaceholderText("192.168.1.100")
         layout.addRow("IP Address:", ip_input)
@@ -871,7 +837,7 @@ class MVPMainWindow(QMainWindow):
         type_combo.addItems(["ANDROID_SENSOR_NODE", "THERMAL_CAMERA_TS004", "THERMAL_CAMERA_TC007"])
         layout.addRow("Device Type:", type_combo)
 
-        # Buttons
+        
         buttons = QDialogButtonBox(
             QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel)
         buttons.accepted.connect(dialog.accept)
@@ -889,12 +855,12 @@ class MVPMainWindow(QMainWindow):
                     QMessageBox.warning(self, "Invalid Input", "Please enter an IP address.")
                     return
 
-                # Create device
+                
                 device_id = f"manual_{ip}_{port}"
                 if name:
                     device_id = f"manual_{name}_{ip}_{port}"
 
-                # Convert string device type to enum
+                
                 device_type_mapping = {
                     "ANDROID_SENSOR_NODE": DeviceType.ANDROID_SENSOR_NODE,
                     "THERMAL_CAMERA_TS004": DeviceType.THERMAL_CAMERA_TS004,
@@ -903,7 +869,7 @@ class MVPMainWindow(QMainWindow):
                 device_type_enum = device_type_mapping.get(device_type,
                                                            DeviceType.ANDROID_SENSOR_NODE)
 
-                # Create discovered device for registry
+                
                 from datetime import datetime
                 from ..network.discovery import DiscoveredDevice
 
@@ -918,11 +884,11 @@ class MVPMainWindow(QMainWindow):
                     last_seen=datetime.now()
                 )
 
-                # Add to registry
+                
                 registry = self.device_manager.get_registry()
                 device_id = registry.register_device(discovered_device)
 
-                # Update display and log
+                
                 self._update_device_display()
                 self.logging_console.add_log_message(f"Manually added device: {device_id}")
 
@@ -931,7 +897,7 @@ class MVPMainWindow(QMainWindow):
 
     @pyqtSlot(str, dict)
     def _create_session(self, session_name: str, config: dict):
-        """Handle session creation request."""
+        
         try:
             session_config = SessionConfiguration(
                 session_name=session_name,
@@ -951,9 +917,9 @@ class MVPMainWindow(QMainWindow):
 
     @pyqtSlot()
     def _start_recording(self):
-        """Handle start recording request."""
+        
         try:
-            # Check if devices are available
+            
             online_devices = self.device_manager.get_registry().get_online_devices()
             if not online_devices:
                 QMessageBox.warning(
@@ -963,7 +929,7 @@ class MVPMainWindow(QMainWindow):
                 )
                 return
 
-            # Start recording asynchronously
+            
             asyncio.create_task(self._async_start_recording())
 
         except Exception as e:
@@ -972,7 +938,7 @@ class MVPMainWindow(QMainWindow):
             logger.error(f"Error starting recording: {e}")
 
     async def _async_start_recording(self):
-        """Asynchronously start recording."""
+        
         try:
             success = await self.session_manager.start_recording()
 
@@ -990,7 +956,7 @@ class MVPMainWindow(QMainWindow):
 
     @pyqtSlot()
     def _stop_recording(self):
-        """Handle stop recording request."""
+        
         try:
             asyncio.create_task(self._async_stop_recording())
 
@@ -999,7 +965,7 @@ class MVPMainWindow(QMainWindow):
             logger.error(f"Error stopping recording: {e}")
 
     async def _async_stop_recording(self):
-        """Asynchronously stop recording."""
+        
         try:
             success = await self.session_manager.stop_recording()
 
@@ -1016,7 +982,7 @@ class MVPMainWindow(QMainWindow):
 
     @pyqtSlot()
     def _finalize_session(self):
-        """Handle session finalization request."""
+        
         try:
             success = self.session_manager.finalize_session()
 
@@ -1032,9 +998,9 @@ class MVPMainWindow(QMainWindow):
 
     @pyqtSlot()
     def _reset_session(self):
-        """Handle session reset request."""
+        
         try:
-            # Confirm reset if session is active
+            
             if self.session_manager.is_session_active():
                 reply = QMessageBox.question(
                     self,
@@ -1056,9 +1022,9 @@ class MVPMainWindow(QMainWindow):
 
     @pyqtSlot()
     def _update_status(self):
-        """Update status bar with current information."""
+        
         try:
-            # Update device count
+            
             if self.device_manager:
                 registry = self.device_manager.get_registry()
                 device_count = registry.get_device_count()
@@ -1069,7 +1035,7 @@ class MVPMainWindow(QMainWindow):
                 device_text = f"Devices: {device_count} ({online_count} online, {recording_count} recording)"
                 self.device_count_label.setText(device_text)
 
-            # Update session status
+            
             if self.session_manager:
                 session = self.session_manager.get_current_session()
                 if session:
@@ -1079,7 +1045,7 @@ class MVPMainWindow(QMainWindow):
 
                 self.session_status_label.setText(session_text)
 
-            # Update system status indicators (in dashboard tab)
+            
             # TODO: Add actual network and discovery status
             self.network_status_label.setText("Network: Active")
             self.discovery_status_label.setText("Discovery: Running")
@@ -1088,8 +1054,8 @@ class MVPMainWindow(QMainWindow):
             logger.error(f"Error updating status: {e}")
 
     def closeEvent(self, event):
-        """Handle window close event."""
-        # Check if recording is active
+        
+        
         if self.session_manager and self.session_manager.is_recording():
             reply = QMessageBox.question(
                 self,
@@ -1102,7 +1068,7 @@ class MVPMainWindow(QMainWindow):
                 event.ignore()
                 return
 
-        # Stop services gracefully
+        
         try:
             if self.device_manager:
                 asyncio.create_task(self.device_manager.stop())

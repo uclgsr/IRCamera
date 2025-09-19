@@ -149,7 +149,7 @@ public class LegendRenderer extends Renderer {
                             increasingColor
                     ));
 
-                } else { // all others
+                } else { 
 
                     for (int j = 0; j < clrs.size() && j < entryCount; j++) {
 
@@ -157,7 +157,7 @@ public class LegendRenderer extends Renderer {
 
                         if (j < clrs.size() - 1 && j < entryCount - 1) {
                             label = null;
-                        } else { // add label to the last entry
+                        } else { 
                             label = data.getDataSetByIndex(i).getLabel();
                         }
 
@@ -318,7 +318,7 @@ public class LegendRenderer extends Renderer {
                         lineIndex++;
                     }
 
-                    boolean isStacked = e.label == null; // grouped forms have null labels
+                    boolean isStacked = e.label == null; 
 
                     if (drawingForm) {
                         if (direction == Legend.LegendDirection.RIGHT_TO_LEFT)

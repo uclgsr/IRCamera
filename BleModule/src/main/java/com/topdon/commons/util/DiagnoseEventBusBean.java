@@ -2,13 +2,13 @@ package com.topdon.commons.util;
 
 
 public class DiagnoseEventBusBean {
-    private int what;//1 语言  2 sn连接  3进入诊断或者百公里加速 4 诊断或者保养  5 Folder sn号路径   6 diagMenuMask
+    private int what;
     private String language;
-    private boolean snConnection;// true sn不相等  false 相等
-    private boolean isDiagnose;// true 进入诊断或者百公里加速  false  未进入诊断或者百公里加速
-    private long mDiagEntryType;// 进入诊断的方式
-    private long mDiagMenuMask;//车型实际开发内容配置
-    private String snPath;//sn文件夹路径
+    private boolean snConnection;
+    private boolean isDiagnose;
+    private long mDiagEntryType;
+    private long mDiagMenuMask;
+    private String snPath;
 
     public String getSnPath() {
         return snPath;
