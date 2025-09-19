@@ -16,6 +16,7 @@ import mpdc4gsr.controller.HardwareValidationController
 import mpdc4gsr.controller.RecordingController
 import mpdc4gsr.controller.ValidationReport
 import mpdc4gsr.controller.HardwareValidationResult
+import mpdc4gsr.controller.ValidationSummary
 import mpdc4gsr.permissions.PermissionController
 import kotlinx.coroutines.launch
 import org.json.JSONObject

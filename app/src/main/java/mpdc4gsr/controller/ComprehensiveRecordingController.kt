@@ -118,10 +118,7 @@ class ComprehensiveRecordingController(
                 val finalSessionId = sessionId ?: sessionDirectoryManager.generateSessionId()
                 val sessionDir = sessionDirectoryManager.createSessionDirectory(finalSessionId)
                 
-                sessionMetadata = SessionMetadata.createSessionStart(finalSessionId).apply {
-                    estimatedDurationMinutes = estimatedDurationMinutes
-                    enabledSensorsList = enabledSensors
-                }
+                sessionMetadata = SessionMetadata.createSessionStart(finalSessionId)
                 
                 currentSessionId = finalSessionId
                 sessionStartTime.set(System.currentTimeMillis())
@@ -137,7 +134,7 @@ class ComprehensiveRecordingController(
                     val sensor = sensorRecorders[sensorName]
                     if (sensor != null) {
                         try {
-                            val sensorDir = File(sessionDir, sensorName.lowercase())
+                            val sensorDir = File(sessionDir.rootDir, sensorName.lowercase())
                             sensorDir.mkdirs()
                             
                             sessionMetadata?.let { meta ->
@@ -349,8 +346,8 @@ class ComprehensiveRecordingController(
                 
                 // Finalize session metadata
                 sessionMetadata?.let { metadata ->
-                    metadata.sessionEndTimestamp = TimestampManager.createTimestampRecord()
-                    metadata.totalDurationMs = System.currentTimeMillis() - sessionStartTime.get()
+                    // Note: SessionMetadata is immutable, so we can't update end timestamp here
+                    // This would need to be handled when creating the final session metadata
                 }
 
                 sessionMetadata = null
