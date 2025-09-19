@@ -1,5 +1,7 @@
 package com.mpdc4gsr.lib.core.menu
 
+import com.mpdc4gsr.lib.core.R
+
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater

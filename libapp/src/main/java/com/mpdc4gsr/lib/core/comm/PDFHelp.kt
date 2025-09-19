@@ -1,5 +1,7 @@
 package com.mpdc4gsr.lib.core.comm
 
+import com.mpdc4gsr.lib.core.R
+
 import android.content.ContentValues
 import android.graphics.Canvas
 import android.graphics.Paint

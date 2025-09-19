@@ -4,8 +4,8 @@ import android.annotation.SuppressLint
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.mpdc4gsr.lib.core.R
-import com.mpdc4gsr.menu.constant.TargetType
-import com.mpdc4gsr.menu.R as MenuR
+import com.mpdc4gsr.lib.core.menu.constant.TargetType
+import com.mpdc4gsr.lib.core.menu.R as MenuR
 
 @SuppressLint("NotifyDataSetChanged")
 internal class TargetAdapter : BaseMenuAdapter() {

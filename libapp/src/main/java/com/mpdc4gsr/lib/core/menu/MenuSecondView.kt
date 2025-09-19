@@ -1,5 +1,7 @@
 package com.mpdc4gsr.lib.core.menu
 
+import com.mpdc4gsr.lib.core.R
+
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.TypedArray
@@ -10,21 +12,21 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mpdc4gsr.lib.core.repository.GalleryRepository
-import com.mpdc4gsr.menu.adapter.ColorAdapter
-import com.mpdc4gsr.menu.adapter.FenceAdapter
-import com.mpdc4gsr.menu.adapter.SettingAdapter
-import com.mpdc4gsr.menu.adapter.TargetAdapter
-import com.mpdc4gsr.menu.adapter.TempLevelAdapter
-import com.mpdc4gsr.menu.adapter.TempPointAdapter
-import com.mpdc4gsr.menu.adapter.TempSourceAdapter
-import com.mpdc4gsr.menu.adapter.TwoLightAdapter
-import com.mpdc4gsr.menu.constant.FenceType
-import com.mpdc4gsr.menu.constant.MenuType
-import com.mpdc4gsr.menu.constant.SettingType
-import com.mpdc4gsr.menu.constant.TargetType
-import com.mpdc4gsr.menu.constant.TempPointType
-import com.mpdc4gsr.menu.constant.TwoLightType
-import com.mpdc4gsr.menu.databinding.ViewMenuSecondBinding
+import com.mpdc4gsr.lib.core.menu.adapter.ColorAdapter
+import com.mpdc4gsr.lib.core.menu.adapter.FenceAdapter
+import com.mpdc4gsr.lib.core.menu.adapter.SettingAdapter
+import com.mpdc4gsr.lib.core.menu.adapter.TargetAdapter
+import com.mpdc4gsr.lib.core.menu.adapter.TempLevelAdapter
+import com.mpdc4gsr.lib.core.menu.adapter.TempPointAdapter
+import com.mpdc4gsr.lib.core.menu.adapter.TempSourceAdapter
+import com.mpdc4gsr.lib.core.menu.adapter.TwoLightAdapter
+import com.mpdc4gsr.lib.core.menu.constant.FenceType
+import com.mpdc4gsr.lib.core.menu.constant.MenuType
+import com.mpdc4gsr.lib.core.menu.constant.SettingType
+import com.mpdc4gsr.lib.core.menu.constant.TargetType
+import com.mpdc4gsr.lib.core.menu.constant.TempPointType
+import com.mpdc4gsr.lib.core.menu.constant.TwoLightType
+import com.mpdc4gsr.lib.core.menu.databinding.ViewMenuSecondBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
