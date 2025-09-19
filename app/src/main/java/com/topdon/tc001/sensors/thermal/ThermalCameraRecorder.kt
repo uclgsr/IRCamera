@@ -52,8 +52,8 @@ import java.util.concurrent.atomic.AtomicLong
 
 class ThermalCameraRecorder(
     private val context: Context,
-    override val sensorId: String = "thermal_camera_1",
-    private val thermalFrameRate: Double = detectOptimalFrameRate(), // Auto-detect TC001 capabilities
+    private val sensorIdParam: String = "thermal_camera_1", // Renamed to avoid conflict
+    private val thermalFrameRate: Double = IR_FRAME_RATE_STANDARD, // Use standard rate by default, detect optimal later
     private val thermalResolution: Pair<Int, Int> = Pair(256, 192) // TC001 resolution
 ) : SensorRecorder {
 
@@ -206,21 +206,85 @@ class ThermalCameraRecorder(
          * @return true if 25Hz is supported
          */
         fun supportsEnhancedFrameRate(): Boolean = checkForEnhancedThermalCapabilities()
-    }
-
-    // Instance variables
-        private const val THERMAL_SENSITIVITY = 0.1 // Temperature resolution for IR Camera
+        
+        // Temperature constants for IR Camera
+        private const val THERMAL_SENSITIVITY = 0.1 // Temperature resolution for IR Camera  
         private const val IR_TEMP_RANGE_MIN = -20.0f // IR camera minimum temperature
         private const val IR_TEMP_RANGE_MAX = 400.0f // IR camera maximum temperature
     }
 
+    // Data classes for thermal camera configuration and performance metrics
+    data class ThermalCameraConfig(
+        val width: Int = 256,
+        val height: Int = 192,
+        val frameRate: Double = 9.0,
+        val emissivity: Float = 0.95f,
+        val reflectedTemperature: Float = 20.0f,
+        val ambientTemperature: Float = 25.0f
+    )
+
+    data class ThermalPerformanceMetrics(
+        val averageFrameTime: Double,
+        val maxFrameTime: Double,
+        val minFrameTime: Double,
+        val frameDropRate: Double,
+        val thermalProcessingTime: Double,
+        val networkStreamingTime: Double,
+        val memoryUsage: Double
+    )
+
+    /**
+     * Data class representing thermal frame data for recording
+     */
+    data class ThermalFrameData(
+        val temperatureMatrix: Array<FloatArray>,
+        val minTemperature: Float,
+        val maxTemperature: Float,
+        val avgTemperature: Float,
+        val centerTemperature: Float,
+        val ambientTemperature: Float,
+        val emissivity: Float,
+        val reflectedTemperature: Float,
+        val timestamp: Long = System.nanoTime()
+    ) {
+        override fun equals(other: Any?): Boolean {
+            if (this === other) return true
+            if (javaClass != other?.javaClass) return false
+
+            other as ThermalFrameData
+
+            return temperatureMatrix.contentDeepEquals(other.temperatureMatrix) &&
+                    minTemperature == other.minTemperature &&
+                    maxTemperature == other.maxTemperature &&
+                    avgTemperature == other.avgTemperature &&
+                    centerTemperature == other.centerTemperature &&
+                    ambientTemperature == other.ambientTemperature &&
+                    emissivity == other.emissivity &&
+                    reflectedTemperature == other.reflectedTemperature &&
+                    timestamp == other.timestamp
+        }
+
+        override fun hashCode(): Int {
+            var result = temperatureMatrix.contentDeepHashCode()
+            result = 31 * result + minTemperature.hashCode()
+            result = 31 * result + maxTemperature.hashCode()
+            result = 31 * result + avgTemperature.hashCode()
+            result = 31 * result + centerTemperature.hashCode()
+            result = 31 * result + ambientTemperature.hashCode()
+            result = 31 * result + emissivity.hashCode()
+            result = 31 * result + reflectedTemperature.hashCode()
+            result = 31 * result + timestamp.hashCode()
+            return result
+        }
+    }
+
+    // Instance variables and property overrides
+    override val sensorId: String = sensorIdParam
     override val sensorType: String = "IR Thermal Camera"
     override val samplingRate: Double = thermalFrameRate
 
     private var _isRecording = AtomicBoolean(false)
     override val isRecording: Boolean get() = _isRecording.get()
-    
-    private val frameCount = AtomicLong(0) // Frame counter for preview throttling
 
     private var iruvctc: IRUVCTC? = null
     private var uvcCamera: UVCCamera? = null
@@ -728,6 +792,7 @@ class ThermalCameraRecorder(
                             "Thermal camera unplugged during operation",
                             isRecoverable = false // USB detach requires user intervention
                         )
+                    }
 
                     override fun onCancel() {
                         Log.d(TAG, "USB thermal camera connection cancelled")
@@ -1168,58 +1233,6 @@ class ThermalCameraRecorder(
     /**
      * Advanced thermal camera configuration options
      */
-    data class ThermalCameraConfig(
-        val emissivity: Double = 0.95,
-        val reflectedTemperature: Double = 25.0,
-        val atmosphericTemperature: Double = 25.0,
-        val relativeHumidity: Double = 50.0,
-        val distance: Double = 1.0,
-        val temperatureRange: Pair<Float, Float> = Pair(-20.0f, 400.0f),
-        val pseudoColorPalette: String = "IRON",
-        val enableNoiseReduction: Boolean = true,
-        val enableImageEnhancement: Boolean = true,
-        val enableAutoGainControl: Boolean = true,
-        val frameRate: Int = 10,
-        val resolution: Pair<Int, Int> = Pair(256, 192)
-    )
-
-    /**
-     * Performance monitoring data
-     */
-    data class ThermalPerformanceMetrics(
-        val averageFrameRate: Double,
-        val frameProcessingTimeMs: Double,
-        val memoryUsageMB: Double,
-        val cpuUsagePercent: Double,
-        val thermalDrift: Double,
-        val calibrationAccuracy: Double,
-        val networkLatencyMs: Double
-    )
-
-    /**
-     * Data class representing thermal frame information - made public for interface usage
-     */
-    data class ThermalFrameData(
-        val temperatureMatrix: Array<FloatArray>,
-        val minTemperature: Float,
-        val maxTemperature: Float,
-        val avgTemperature: Float,
-        val centerTemperature: Float,
-        val ambientTemperature: Float,
-        val emissivity: Float,
-        val reflectedTemperature: Float
-    )
-
-    data class ThermalFrameData(
-        val temperatureMatrix: Array<FloatArray>,
-        val minTemperature: Float,
-        val maxTemperature: Float,
-        val avgTemperature: Float,
-        val centerTemperature: Float,
-        val ambientTemperature: Float,
-        val emissivity: Float,
-        val reflectedTemperature: Float
-    )
 
     private fun generateThermalPreviewBitmap(
         thermalData: ThermalFrameData,
