@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">MPDC4GSR</string>
+    
+    <!-- Dialog and UI strings -->
+    <string name="base_dialog">Base Dialog</string>
+    <string name="http_code_z5004">HTTP Error Z5004</string>
+
 </resources>
