@@ -95,6 +95,15 @@ data class SessionMetadata(
                 }
             }
             
+            private fun getPersistentDeviceId(): String {
+                return try {
+                    // Use a consistent fallback device identifier
+                    "DEVICE-${android.os.Build.FINGERPRINT.hashCode().toString(16).uppercase()}"
+                } catch (e: Exception) {
+                    "DEVICE-UNKNOWN"
+                }
+            }
+            
             private fun getCPUInfo(): String {
                 return try {
                     "${android.os.Build.HARDWARE} - ${android.os.Build.SUPPORTED_ABIS.joinToString(",")}"
