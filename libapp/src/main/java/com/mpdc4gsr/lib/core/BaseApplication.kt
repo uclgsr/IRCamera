@@ -26,7 +26,7 @@ import com.mpdc4gsr.lib.core.config.DeviceConfig
 import com.mpdc4gsr.lib.core.config.FileConfig
 import com.mpdc4gsr.lib.core.db.AppDatabase
 import com.mpdc4gsr.lib.core.repository.FileBean
-import com.mpdc4gsr.lib.core.repository.TS004Repository
+
 import com.mpdc4gsr.lib.core.socket.SocketCmdUtil
 import com.mpdc4gsr.lib.core.socket.WebSocketProxy
 import com.mpdc4gsr.lib.core.tools.AppLanguageUtils
@@ -161,21 +161,22 @@ abstract class BaseApplication : Application() {
     }
 
     private fun autoSaveNewest(isVideo: Boolean) {
-        CoroutineScope(Dispatchers.IO).launch {
-            val fileList: List<FileBean>? = TS004Repository.getNewestFile(if (isVideo) 1 else 0)
-            if (!fileList.isNullOrEmpty()) {
-                val fileBean: FileBean = fileList[0]
-                val url = "http://192.168.40.1:8080/DCIM/${fileBean.name}"
-                val file = File(FileConfig.ts004GalleryDir, fileBean.name)
-                TS004Repository.download(url, file)
-                MediaScannerConnection.scanFile(
-                    this@BaseApplication,
-                    arrayOf(FileConfig.ts004GalleryDir),
-                    null,
-                    null
-                )
-            }
-        }
+        // TS004Repository functionality removed
+        // CoroutineScope(Dispatchers.IO).launch {
+        //     val fileList: List<FileBean>? = TS004Repository.getNewestFile(if (isVideo) 1 else 0)
+        //     if (!fileList.isNullOrEmpty()) {
+        //         val fileBean: FileBean = fileList[0]
+        //         val url = "http://192.168.40.1:8080/DCIM/${fileBean.name}"
+        //         val file = File(FileConfig.ts004GalleryDir, fileBean.name)
+        //         TS004Repository.download(url, file)
+        //         MediaScannerConnection.scanFile(
+        //             this@BaseApplication,
+        //             arrayOf(FileConfig.ts004GalleryDir),
+        //             null,
+        //             null
+        //         )
+        //     }
+        // }
     }
 
     private inner class NetworkChangedReceiver : BroadcastReceiver() {

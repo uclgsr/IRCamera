@@ -11,8 +11,7 @@ import com.google.gson.Gson
 import com.mpdc4gsr.lib.core.R
 import com.mpdc4gsr.lib.core.config.FileConfig
 import com.mpdc4gsr.lib.core.repository.ProductBean
-import com.mpdc4gsr.lib.core.repository.TC007Repository
-import com.mpdc4gsr.lib.core.repository.TS004Repository
+
 import com.mpdc4gsr.lms.sdk.LMS
 import com.mpdc4gsr.lms.sdk.UrlConstant
 import com.mpdc4gsr.lms.sdk.bean.CommonBean
@@ -78,27 +77,18 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
             
 
             if (isTS004) {
-
-                val firmware: String? = TS004Repository.getVersion()?.data?.firmware
-                if (firmware == null) {
-                    XLog.w("TS004 固件升级 - 从设备查询 固件版本 失败!")
-                    failLD.postValue(false)
-                    isRequest = false
-                    return@launch
-                }
-
-                getInfoFromAssets(true, firmware)
+                // TS004Repository functionality removed
+                XLog.w("TS004 功能已移除")
+                failLD.postValue(false)
+                isRequest = false
+                return@launch
             } else {
-
-                val productInfo: ProductBean? = TC007Repository.getProductInfo()
-                if (productInfo == null) {
-                    XLog.w("TC007 固件升级 - 从设备查询 SN、激活码 失败!")
-                    failLD.postValue(false)
-                    isRequest = false
-                    return@launch
-                }
-
-                getInfoFromAssets(false, "V${productInfo.getVersionStr()}")
+                // TC007Repository functionality removed  
+                XLog.w("TC007 功能已移除")
+                failLD.postValue(false)
+                isRequest = false
+                return@launch
+            }
             }
         }
     }
