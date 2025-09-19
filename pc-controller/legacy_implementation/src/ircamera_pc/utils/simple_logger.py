@@ -37,10 +37,10 @@ class SimpleLogger:
         self._logger.critical(message, *args)
 
     def remove(self, *args, **kwargs) -> None:
-        
+        pass
 
     def add(self, *args, **kwargs) -> None:
-        
+        pass
 
 
 

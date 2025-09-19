@@ -98,11 +98,11 @@ class GSRReceiver:
         try:
             with sqlite3.connect(self.db_path) as conn:
                 conn.execute(
-                    
+                    "CREATE TABLE IF NOT EXISTS gsr_sessions (device_id TEXT, session_id TEXT, start_time REAL)"
                 )
 
                 conn.execute(
-                    
+                    "CREATE TABLE IF NOT EXISTS gsr_samples (device_id TEXT, session_id TEXT, timestamp REAL, value REAL)"
                 )
 
                 
@@ -196,7 +196,7 @@ class GSRReceiver:
             
             with sqlite3.connect(self.db_path) as conn:
                 conn.execute(
-                    ,
+                    "INSERT INTO gsr_sessions (device_id, session_id, start_time) VALUES (?, ?, ?)",
                     (device_id, session_id, session.start_time),
                 )
                 conn.commit()
@@ -357,7 +357,7 @@ class GSRReceiver:
 
             with sqlite3.connect(self.db_path) as conn:
                 conn.execute(
-                    ,
+                    "UPDATE gsr_sessions SET end_time=?, sample_count=?, avg_quality=? WHERE device_id=? AND session_id=?",
                     (
                         end_time,
                         session.sample_count,
@@ -483,7 +483,7 @@ class GSRReceiver:
 
             with sqlite3.connect(self.db_path) as conn:
                 conn.executemany(
-                    ,
+                    "INSERT INTO gsr_samples (device_id, session_id, timestamp, gsr_value, raw_value, quality, received_time) VALUES (?, ?, ?, ?, ?, ?, ?)",
                     [
                         (
                             sample.device_id,
@@ -514,7 +514,7 @@ class GSRReceiver:
 
             with sqlite3.connect(self.db_path) as conn:
                 conn.executemany(
-                    ,
+                    "INSERT INTO gsr_samples (device_id, session_id, timestamp, gsr_value, raw_value, quality, received_time) VALUES (?, ?, ?, ?, ?, ?, ?)",
                     [
                         (
                             session.device_id,
@@ -678,7 +678,7 @@ class GSRReceiver:
             
             with sqlite3.connect(self.db_path) as conn:
                 df = pd.read_sql_query(
-                    ,
+                    "SELECT * FROM gsr_samples WHERE device_id=? AND session_id=? ORDER BY timestamp",
                     conn,
                     params=(device_id, session_id),
                 )

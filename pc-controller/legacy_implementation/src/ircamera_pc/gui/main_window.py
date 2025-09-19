@@ -312,7 +312,6 @@ class MainWindow(QMainWindow):
                     self.bluetooth_manager.connect_device(addr)
                 )
             )
-        )
         self.bluetooth_control_widget.disconnect_requested.connect(
         lambda addr: asyncio.create_task(
             self.bluetooth_manager.disconnect_device(addr)

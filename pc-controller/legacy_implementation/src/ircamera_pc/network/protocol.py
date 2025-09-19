@@ -11,7 +11,7 @@ from typing import Any, Dict, List, Optional
 
 
 class ValidationError(Exception):
-    
+    pass
 
 
 class MessageDirection(Enum):

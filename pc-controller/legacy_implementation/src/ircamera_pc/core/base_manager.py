@@ -14,7 +14,7 @@ try:
 
 
     class QObjectMeta(type(QtQObject), ABCMeta):
-        
+        pass
 
 
     class BaseManager(QtQObject, ABC, metaclass=QObjectMeta):
@@ -105,12 +105,12 @@ except ImportError:
 
     @abstractmethod
     async def initialize(self) -> bool:
-        
+        pass
 
 
     @abstractmethod
     async def cleanup(self) -> None:
-        
+        pass
 
 
     def _set_state(self, key: str, value: Any) -> None:
