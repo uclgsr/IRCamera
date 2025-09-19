@@ -569,7 +569,7 @@ class ThermalCameraRecorder(
                 }
 
                 // Register receiver
-                val filter = android.content.IntentFilter("mpdc4gsr.USB_PERMISSION")
+                val filter = android.content.IntentFilter("${com.csl.irCamera.BuildConfig.APPLICATION_ID}.USB_PERMISSION")
                 context.registerReceiver(permissionReceiver, filter)
 
 
