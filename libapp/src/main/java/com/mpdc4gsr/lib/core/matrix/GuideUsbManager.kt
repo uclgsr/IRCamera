@@ -355,6 +355,7 @@ class GuideUsbManager {
         return data
     }
 
+    @OptIn(ExperimentalStdlibApi::class)
     private fun sendUsbCmd(
         cmd: ByteArray,
         data: ByteArray,
