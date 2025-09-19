@@ -296,8 +296,8 @@ class Phase2ValidationActivity : AppCompatActivity() {
             val status = if (result.success) "✓" else "✗"
             sb.append("$status $category: ${result.message}\n")
             if (result.metrics.isNotEmpty()) {
-                for ((metric, value) in result.metrics) {
-                    sb.append("  - $metric: $value\n")
+                for (entry in result.metrics.entries) {
+                    sb.append("  - ${entry.key}: ${entry.value}\n")
                 }
             }
             sb.append("\n")
@@ -308,8 +308,8 @@ class Phase2ValidationActivity : AppCompatActivity() {
             for ((sensor, capability) in report.sensorCapabilities) {
                 sb.append("${capability.sensorType}:\n")
                 sb.append("  - Available: ${if (capability.isAvailable) "Yes" else "No"}\n")
-                for ((key, value) in capability.capabilities) {
-                    sb.append("  - $key: $value\n")
+                for (entry in capability.capabilities.entries) {
+                    sb.append("  - ${entry.key}: ${entry.value}\n")
                 }
                 sb.append("\n")
             }
@@ -317,8 +317,8 @@ class Phase2ValidationActivity : AppCompatActivity() {
 
         if (report.performanceMetrics.isNotEmpty()) {
             sb.append("PERFORMANCE METRICS:\n")
-            for ((metric, value) in report.performanceMetrics) {
-                sb.append("- $metric: $value\n")
+            for (entry in report.performanceMetrics.entries) {
+                sb.append("- ${entry.key}: ${entry.value}\n")
             }
             sb.append("\n")
         }
