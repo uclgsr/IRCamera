@@ -11,8 +11,8 @@ import java.io.File;
  * This is a minimal stub to replace the proprietary lms_international AAR
  */
 public class LMS {
-    private static LMS instance;
-    public static Context mContext;
+    private static volatile LMS instance;
+    private Context mContext;
     
     private boolean isLogin = false;
     private String token = "";
@@ -22,13 +22,19 @@ public class LMS {
     
     public static LMS getInstance() {
         if (instance == null) {
-            instance = new LMS();
+            synchronized (LMS.class) {
+                if (instance == null) {
+                    instance = new LMS();
+                }
+            }
         }
         return instance;
     }
     
     public LMS init(Context context) {
-        mContext = context;
+        if (context != null) {
+            this.mContext = context.getApplicationContext();
+        }
         return this;
     }
     

@@ -7,6 +7,7 @@ import android.content.Context;
  */
 public class StringUtils {
     public static String getResString(Context context, int resId) {
+        // The context parameter is unused in this stub implementation
         return "";
     }
     

@@ -4,9 +4,10 @@ package com.topdon.lms.sdk;
  * URL Constant stub for LMS SDK
  */
 public class UrlConstant {
-    public static String BASE_URL = "https://example.com/";
+    public static volatile String BASE_URL = "https://example.com/";
     
-    public static void setBaseUrl(String url, boolean useHttps) {
+    public static synchronized void setBaseUrl(String url, boolean useHttps) {
+        // The useHttps parameter is ignored in this stub implementation
         BASE_URL = url;
     }
     

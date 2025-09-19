@@ -6,11 +6,16 @@ import android.content.Context;
  * SPUtils stub for LMS SDK
  */
 public class SPUtils {
-    private static SPUtils instance;
+    private static volatile SPUtils instance;
     
     public static SPUtils getInstance(Context context) {
+        // The context parameter is unused in this stub implementation
         if (instance == null) {
-            instance = new SPUtils();
+            synchronized (SPUtils.class) {
+                if (instance == null) {
+                    instance = new SPUtils();
+                }
+            }
         }
         return instance;
     }
