@@ -73,7 +73,6 @@ android {
 dependencies {
     coreLibraryDesugaring(libs.desugar.jdk.libs)
     implementation(project(":libapp"))
-    implementation(project(":libmenu")) 
     implementation(project(":BleModule"))
     implementation(libs.bundles.ui.common)
 }

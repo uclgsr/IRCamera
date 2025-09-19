@@ -272,10 +272,8 @@ dependencies {
     implementation(project(":component:gsr-recording"))
     implementation(project(":component:user")) 
     implementation(project(":libapp"))
-    implementation(project(":libcom"))
     implementation(project(":libir"))
-    implementation(project(":libui"))
-    implementation(project(":libmenu")) 
+    implementation(project(":libui")) 
 
     implementation(project(":BleModule"))
 
