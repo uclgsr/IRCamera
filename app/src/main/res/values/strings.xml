@@ -110,7 +110,5 @@
     <string name="gsr_physiological_monitoring">Physiological Monitoring</string>
     <string name="gsr_quick_access">Quick GSR Access</string>
     
-    <!-- Missing strings -->
-    <string name="top_infrared_up_case">MPDC4GSR</string>
-    <string name="see_more_than">See more than</string>
+    <!-- Missing strings added above - removing duplicates -->
 </resources>

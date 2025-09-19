@@ -267,7 +267,7 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
     protected var isOpenAmplify = SaveSettingUtil.isOpenAmplify
 
     private val titleView by lazy { findViewById<MainTitleView>(R.id.title_view) }
-    protected val thermalRecyclerNight by lazy { findViewById<com.topdon.menu.MenuSecondView>(R.id.thermal_recycler_night) }
+    protected val thermalRecyclerNight by lazy { findViewById<com.mpdc4gsr.lib.core.menu.MenuSecondView>(R.id.thermal_recycler_night) }
     private val thermalLay by lazy { findViewById<ConstraintLayout>(R.id.thermal_lay) }
     protected val tvTypeInd by lazy { findViewById<TextView>(R.id.tv_type_ind) }
 
