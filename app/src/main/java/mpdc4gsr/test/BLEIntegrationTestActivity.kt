@@ -10,10 +10,7 @@ import mpdc4gsr.sensors.unified.ShimmerDeviceManager
 import mpdc4gsr.permissions.PermissionController
 import kotlinx.coroutines.launch
 
-/**
- * Integration test activity to validate enhanced BLE scanning functionality
- * Tests the integration between ShimmerMvpActivity improvements and UnifiedGSRRecorder
- */
+
 class BLEIntegrationTestActivity : AppCompatActivity() {
 
     companion object {
@@ -32,7 +29,7 @@ class BLEIntegrationTestActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Create simple test layout programmatically since we might not have layout resources
+        
         val layout = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
             setPadding(32, 32, 32, 32)
@@ -85,7 +82,7 @@ class BLEIntegrationTestActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             try {
-                // Test 1: Initialize UnifiedGSRRecorder with enhanced device manager
+                
                 addLog("Test 1: Initializing UnifiedGSRRecorder with enhanced BLE scanning...")
                 
                 gsrRecorder = UnifiedGSRRecorder(this@BLEIntegrationTestActivity, this@BLEIntegrationTestActivity)
@@ -98,7 +95,7 @@ class BLEIntegrationTestActivity : AppCompatActivity() {
                     return@launch
                 }
 
-                // Test 2: Test enhanced device discovery
+                
                 addLog("Test 2: Testing enhanced BLE device discovery...")
                 
                 val discoverySuccess = gsrRecorder?.startDeviceDiscovery() ?: false
@@ -114,7 +111,7 @@ class BLEIntegrationTestActivity : AppCompatActivity() {
                     addLog("❌ Device discovery failed")
                 }
 
-                // Test 3: Test direct ShimmerDeviceManager functionality
+                
                 addLog("Test 3: Testing ShimmerDeviceManager directly...")
                 
                 deviceManager = ShimmerDeviceManager(this@BLEIntegrationTestActivity, this@BLEIntegrationTestActivity)
@@ -127,7 +124,7 @@ class BLEIntegrationTestActivity : AppCompatActivity() {
                     if (scanSuccess) {
                         addLog("✅ Enhanced BLE scanning started successfully")
                         
-                        // Let it scan for a few seconds
+                        
                         kotlinx.coroutines.delay(5000)
                         
                         val scanResults = deviceManager?.scanResults?.value ?: emptyList()
@@ -142,7 +139,7 @@ class BLEIntegrationTestActivity : AppCompatActivity() {
                     addLog("❌ ShimmerDeviceManager initialization failed")
                 }
 
-                // Test 4: Permission validation
+                
                 addLog("Test 4: Validating BLE permissions...")
                 
                 val hasPermissions = UnifiedGSRRecorder.hasRequiredPermissions(this@BLEIntegrationTestActivity)
@@ -164,7 +161,7 @@ class BLEIntegrationTestActivity : AppCompatActivity() {
             } finally {
                 testButton.isEnabled = true
                 
-                // Cleanup
+                
                 try {
                     gsrRecorder?.cleanup()
                     deviceManager?.release()
@@ -180,13 +177,13 @@ class BLEIntegrationTestActivity : AppCompatActivity() {
             val timestamp = java.text.SimpleDateFormat("HH:mm:ss", java.util.Locale.getDefault()).format(java.util.Date())
             logText.append("[$timestamp] $message\n")
             
-            // Auto-scroll to bottom
+            
             (logText.parent as? ScrollView)?.post {
                 (logText.parent as ScrollView).fullScroll(ScrollView.FOCUS_DOWN)
             }
         }
         
-        // Also log to system log
+        
         Log.i(TAG, message)
     }
 
@@ -198,7 +195,7 @@ class BLEIntegrationTestActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         
-        // Ensure cleanup
+        
         lifecycleScope.launch {
             try {
                 gsrRecorder?.cleanup()

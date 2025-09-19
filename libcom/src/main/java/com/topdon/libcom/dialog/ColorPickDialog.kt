@@ -151,7 +151,7 @@ class ColorPickDialog(
         when (v) {
             rootView.findViewById<View>(R.id.rl_close) -> dismiss()
 
-            rootView.findViewById<View>(R.id.tv_save) -> { // 保存
+            rootView.findViewById<View>(R.id.tv_save) -> { 
                 dismiss()
                 onPickListener?.invoke(color, textSize)
             }

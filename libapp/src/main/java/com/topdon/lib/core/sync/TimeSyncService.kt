@@ -24,8 +24,8 @@ class TimeSyncService {
         private const val SYNC_TIMEOUT_MS = 5000L
         private const val MAX_SYNC_ATTEMPTS = 5
         private const val MIN_SAMPLES = 3
-        private const val MAX_ACCEPTABLE_DELAY_MS = 100L // Maximum acceptable round-trip delay
-        private const val SYNC_INTERVAL_MS = 30000L // Re-sync every 30 seconds
+        private const val MAX_ACCEPTABLE_DELAY_MS = 100L 
+        private const val SYNC_INTERVAL_MS = 30000L 
     }
 
     private val syncScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
@@ -40,10 +40,10 @@ class TimeSyncService {
     )
 
     data class SyncSample(
-        val t1: Long, // Client send time
-        val t2: Long, // Server receive time
-        val t3: Long, // Server response time
-        val t4: Long, // Client receive time
+        val t1: Long, 
+        val t2: Long, 
+        val t3: Long, 
+        val t4: Long, 
         val roundTripDelay: Long,
         val clockOffset: Long,
     )
@@ -97,7 +97,7 @@ class TimeSyncService {
                 } catch (e: Exception) {
                     lastError = e.message
                     Log.w(TAG, "Sync attempt ${attempt + 1} failed: ${e.message}")
-                    delay(500) // Longer delay after failures
+                    delay(500) 
                 }
             }
 
@@ -139,7 +139,7 @@ class TimeSyncService {
                     } catch (e: Exception) {
                         Log.e(TAG, "Periodic sync error", e)
                         listener?.onSyncError("Periodic sync failed: ${e.message}")
-                        delay(intervalMs) // Continue trying
+                        delay(intervalMs) 
                     }
                 }
             }
@@ -196,8 +196,8 @@ class TimeSyncService {
                     throw IllegalStateException("Invalid sync response")
                 }
 
-                val t2 = response.getLong("server_receive_time") // Server receive time
-                val t3 = response.getLong("server_send_time") // Server send time
+                val t2 = response.getLong("server_receive_time") 
+                val t3 = response.getLong("server_send_time") 
 
 
                 val roundTripDelay = (t4 - t1) - (t3 - t2)
@@ -235,12 +235,12 @@ class TimeSyncService {
     private fun getHighPrecisionTime(): Long {
 
         val systemTime = System.currentTimeMillis()
-        val nanoOffset = (System.nanoTime() % 1000000) / 1000 // microsecond precision
-        return systemTime * 1000 + nanoOffset // Return in microseconds
+        val nanoOffset = (System.nanoTime() % 1000000) / 1000 
+        return systemTime * 1000 + nanoOffset 
     }
 
     fun getSynchronizedTime(clockOffsetMs: Long): Long {
-        return getHighPrecisionTime() + (clockOffsetMs * 1000) // Convert offset to microseconds
+        return getHighPrecisionTime() + (clockOffsetMs * 1000) 
     }
 
     fun validateSync(
@@ -250,7 +250,7 @@ class TimeSyncService {
         toleranceMs: Long = 5L,
     ): Boolean {
         val synchronizedLocalTime = localTime + (clockOffsetMs * 1000)
-        val diff = abs(synchronizedLocalTime - (remoteTime * 1000)) / 1000 // Convert back to ms
+        val diff = abs(synchronizedLocalTime - (remoteTime * 1000)) / 1000 
 
         return diff <= toleranceMs
     }

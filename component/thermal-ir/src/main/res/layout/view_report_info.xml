@@ -15,7 +15,7 @@
         android:layout_marginEnd="20dp"
         android:paddingBottom="32dp">
 
-        <!-- Report名称 -->
+        
         <TextView
             android:id="@+id/tv_report_name"
             android:layout_width="0dp"
@@ -28,7 +28,7 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:text="TCVIEW" />
 
-        <!-- 作者 -->
+        
         <TextView
             android:id="@+id/tv_report_author"
             android:layout_width="0dp"
@@ -40,7 +40,7 @@
             app:layout_constraintTop_toBottomOf="@id/tv_report_name"
             tools:text="This is name" />
 
-        <!-- Time -->
+        
         <TextView
             android:id="@+id/tv_report_date"
             android:layout_width="0dp"
@@ -52,7 +52,7 @@
             app:layout_constraintTop_toBottomOf="@id/tv_report_author"
             tools:text="2013-11-08 14:15:30" />
 
-        <!-- Address -->
+        
         <ImageView
             android:id="@+id/iv_report_place"
             android:layout_width="20sp"
@@ -82,7 +82,7 @@
             tools:visibility="visible" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <!-- 检测条件 -->
+    
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_report_condition"
         android:layout_width="match_parent"
@@ -111,7 +111,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <!-- 环境温度 -->
+        
         <TextView
             android:id="@+id/tv_ambient_temperature_title"
             android:layout_width="0dp"
@@ -162,7 +162,7 @@
             app:layout_constraintStart_toStartOf="parent"
             tools:visibility="visible" />
 
-        <!-- 环境湿度 -->
+        
         <TextView
             android:id="@+id/tv_ambient_humidity_title"
             android:layout_width="0dp"
@@ -213,7 +213,7 @@
             app:layout_constraintStart_toStartOf="parent"
             tools:visibility="visible" />
 
-        <!-- TestDistance -->
+        
         <TextView
             android:id="@+id/tv_test_distance_title"
             android:layout_width="0dp"
@@ -264,7 +264,7 @@
             app:layout_constraintStart_toStartOf="parent"
             tools:visibility="visible" />
 
-        <!-- 发射率 -->
+        
         <TextView
             android:id="@+id/tv_emissivity_title"
             android:layout_width="0dp"

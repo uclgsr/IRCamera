@@ -39,7 +39,7 @@ class CompassProvider(private val context: Context) {
 
                 CompassSource.CustomMagnetometer -> {
 
-                    RotationSensor(context, SensorService.MOTION_SENSOR_DELAY) // Fallback
+                    RotationSensor(context, SensorService.MOTION_SENSOR_DELAY) 
                 }
 
                 CompassSource.Orientation -> {
@@ -47,7 +47,7 @@ class CompassProvider(private val context: Context) {
                 }
             }
 
-        return compass as ICompass // Cast to ICompass for compatibility
+        return compass as ICompass 
     }
 
 

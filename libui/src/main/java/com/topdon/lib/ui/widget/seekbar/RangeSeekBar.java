@@ -40,10 +40,10 @@ public class RangeSeekBar extends View {
 
     public final static int SEEKBAR_MODE_SINGLE = 1;
     public final static int SEEKBAR_MODE_RANGE = 2;
-    public final static int TEMP_MODE_CLOSE = 0;//close
-    public final static int TEMP_MODE_MAX = 2;//阈值下
-    public final static int TEMP_MODE_MIN = 1;//阈值上
-    public final static int TEMP_MODE_INTERVAL = 3;//区间
+    public final static int TEMP_MODE_CLOSE = 0;
+    public final static int TEMP_MODE_MAX = 2;
+    public final static int TEMP_MODE_MIN = 1;
+    public final static int TEMP_MODE_INTERVAL = 3;
     public final static int TRICK_MARK_MODE_NUMBER = 0;
     public final static int TRICK_MARK_MODE_OTHER = 1;
     public final static int TICK_MARK_GRAVITY_LEFT = 0;
@@ -259,12 +259,7 @@ public class RangeSeekBar extends View {
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int heightSize = MeasureSpec.getSize(heightMeasureSpec);
         int heightMode = MeasureSpec.getMode(heightMeasureSpec);
-        /*
-         * onMeasure传入的widthMeasureSpec和heightMeasureSpec不是一般的尺寸数值，而是将模式和尺寸组合在一起的数值
-         * MeasureSpec.EXACTLY 是精确尺寸
-         * MeasureSpec.AT_MOST 是最大尺寸
-         * MeasureSpec.UNSPECIFIED 是未指定尺寸
-         */
+        
 
         if (heightMode == MeasureSpec.EXACTLY) {
             heightSize = MeasureSpec.makeMeasureSpec(heightSize, MeasureSpec.EXACTLY);
@@ -330,10 +325,10 @@ public class RangeSeekBar extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        onDrawTickMark(canvas, paint); //固定刻度
-        onDrawProgressBar(canvas, paint); //轴
+        onDrawTickMark(canvas, paint); 
+        onDrawProgressBar(canvas, paint); 
         onDrawSteps(canvas, paint);
-        onDrawSeekBar(canvas); //滑动标签
+        onDrawSeekBar(canvas); 
     }
 
     protected void onDrawTickMark(Canvas canvas, Paint paint) {

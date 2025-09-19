@@ -8,7 +8,7 @@
     android:orientation="vertical"
     android:padding="12dp">
 
-    <!-- Device Name and MAC -->
+    
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -40,7 +40,7 @@
 
     </LinearLayout>
 
-    <!-- MAC Address -->
+    
     <TextView
         android:id="@+id/deviceMacText"
         android:layout_width="match_parent"
@@ -51,7 +51,7 @@
         android:textColor="#757575"
         android:textSize="12sp" />
 
-    <!-- Device Type and Signal Strength -->
+    
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -77,7 +77,7 @@
 
     </LinearLayout>
 
-    <!-- Connection Status -->
+    
     <TextView
         android:id="@+id/connectionStatusText"
         android:layout_width="match_parent"

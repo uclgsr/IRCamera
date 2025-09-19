@@ -70,13 +70,7 @@ import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicReference
 import com.topdon.lib.core.R as LibcoreR
 
-/**
 
- * bitmap -> mp4
- *
-
-
- */
 
 @SuppressLint("MissingPermission")
 class VideoRecordFFmpeg(
@@ -86,8 +80,8 @@ class VideoRecordFFmpeg(
     private val isRecordTemp: Boolean,
     private val thermalPseudoBarView: BitmapConstraintLayout?,
     private val tempBg: TempLayout?,
-    private val compassView: LinearCompassView? = null, // 指南针
-    private val dualView: DualViewWithExternalCameraCommonApi? = null, // 双光
+    private val compassView: LinearCompassView? = null, 
+    private val dualView: DualViewWithExternalCameraCommonApi? = null, 
     private val isTC007: Boolean = false,
     private val carView: View? = null,
 ) : VideoRecord() {
@@ -155,7 +149,7 @@ class VideoRecordFFmpeg(
     val recordExecutor = Executors.newScheduledThreadPool(1)
     val audioExecutor = Executors.newScheduledThreadPool(1)
     val paint = TextPaint(Paint.ANTI_ALIAS_FLAG)
-    private var rectText = Rect() // 得到text占用宽高， 单位：像素
+    private var rectText = Rect() 
     private val pix20 = SizeUtils.dp2px(20f)
     private val pix10 = SizeUtils.dp2px(10f)
     private val pix6 = SizeUtils.dp2px(6f)
@@ -178,13 +172,7 @@ class VideoRecordFFmpeg(
     }
 
 
-    /**
-     *
-
-
-     *
-
-     */
+    
     private fun getVideoCodec(): Int {
         return if (Build.BRAND == "motorola" && Build.MODEL == "XT2201-2") {
             XLog.i("使用视频编码AV_CODEC_ID_H264")
@@ -223,7 +211,7 @@ class VideoRecordFFmpeg(
                 MediaRecorder.AudioSource.MIC, SAMPLE_AUDIO_RETE_INHZ,
                 AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT, bufferSize,
             )
-        paint.color = Color.WHITE // 白色半透明
+        paint.color = Color.WHITE 
         paint.textSize = SizeUtils.sp2px(6f).toFloat()
         paint.isDither = true
         paint.isFilterBitmap = true
@@ -552,10 +540,7 @@ class VideoRecordFFmpeg(
         }
     }
 
-    /**
-
-
-     */
+    
     private fun createBitmapFromView(): Bitmap {
         var cameraViewBitmap: Bitmap
 
@@ -714,9 +699,9 @@ class VideoRecordFFmpeg(
         val newBmp = Bitmap.createBitmap(bmp.width, bmp.height, Bitmap.Config.ARGB_8888)
 
         val canvas = Canvas(newBmp)
-        canvas.drawBitmap(bmp, 0f, 0f, null) // 绘制原始图片
+        canvas.drawBitmap(bmp, 0f, 0f, null) 
         canvas.save()
-        val beginX = pix10.toDouble() // 45度角度值是1.414
+        val beginX = pix10.toDouble() 
         var beginY = (bmp.height - pix10).toDouble()
         paint.getTextBounds("占位高度文本", 0, "占位高度文本".length, rectText)
         if (!TextUtils.isEmpty(time)) {

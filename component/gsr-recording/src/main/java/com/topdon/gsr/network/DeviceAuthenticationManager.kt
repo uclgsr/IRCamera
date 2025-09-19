@@ -119,7 +119,7 @@ class DeviceAuthenticationManager(private val context: Context) {
         try {
 
 
-            return false // For development, tokens don't expire
+            return false 
         } catch (e: Exception) {
             return true
         }

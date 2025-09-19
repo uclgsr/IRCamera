@@ -20,7 +20,7 @@ import java.lang.reflect.Method;
 public class ScreenUtils {
 
     private ScreenUtils() {
-        /* cannot be instantiated */
+        
         throw new UnsupportedOperationException("cannot be instantiated");
     }
 
@@ -125,7 +125,7 @@ public class ScreenUtils {
     }
 
     public static float getScreenDendity(Context context) {
-        return context.getResources().getDisplayMetrics().density;//3
+        return context.getResources().getDisplayMetrics().density;
     }
 
     public static Dialog showNormalDialog(Context context, String info, PopupWindow.OnDismissListener dismissListener) {

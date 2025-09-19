@@ -16,7 +16,7 @@ import org.robolectric.annotation.Config
 import org.robolectric.shadows.ShadowApplication
 
 @RunWith(RobolectricTestRunner::class)
-@Config(sdk = [Build.VERSION_CODES.S]) // Android 12+ for new Bluetooth permissions
+@Config(sdk = [Build.VERSION_CODES.S]) 
 @OptIn(ExperimentalCoroutinesApi::class)
 class GSRSensorRecorderTest {
     private lateinit var context: Context
@@ -85,7 +85,7 @@ class GSRSensorRecorderTest {
             assertTrue(
                 "Recording should start with fallback methods or fail gracefully",
                 result || !result,
-            ) // Either succeeds with fallback or fails gracefully
+            ) 
         }
 
     @Test
@@ -180,7 +180,7 @@ class GSRSensorRecorderTest {
             assertTrue(
                 "Should attempt recording with available methods",
                 result || !result,
-            ) // Either succeeds with fallback or reports failure clearly
+            ) 
         }
 
     @Test

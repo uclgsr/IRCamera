@@ -40,11 +40,11 @@ import kotlin.jvm.functions.Function0;
 
 public class AppVersionUtil {
     private Context mContext;
-    private DownloadCompleteReceiver completeReceiver; // Declare download completion broadcast receiver
+    private DownloadCompleteReceiver completeReceiver; 
     private DownloadManager dowanloadmanager = null;
     private DotIsShowListener dotIsShowListener = null;
-    private String fileName = "";//文件名称
-    private Long mDownloadId = 0l;//下载id
+    private String fileName = "";
+    private Long mDownloadId = 0l;
 
     public AppVersionUtil(Context context, DotIsShowListener dotIsShow) {
         this.mContext = context;
@@ -147,7 +147,7 @@ public class AppVersionUtil {
                     .setCancelListener(R.string.app_cancel, new Function0<Unit>() {
                         @Override
                         public Unit invoke() {
-                            SharedManager.INSTANCE.setVersionCheckDate(System.currentTimeMillis());//刷新版本提示时间
+                            SharedManager.INSTANCE.setVersionCheckDate(System.currentTimeMillis());
                             return null;
                         }
                     })
@@ -166,10 +166,10 @@ public class AppVersionUtil {
             mContext.registerReceiver(completeReceiver, intentFilter, Context.RECEIVER_NOT_EXPORTED);
         }
 
-        Uri uri = Uri.parse(url); // 根据下载地址构建一个Uri对象
-        DownloadManager.Request down = new DownloadManager.Request(uri); // 创建一个下载请求对象，指定从哪里下载文件
-        down.setTitle(mContext.getString(R.string.tips_download_information)); // 设置任务标题
-        down.setDescription(mContext.getString(R.string.installation_package_download_progress)); // 设置任务描述
+        Uri uri = Uri.parse(url); 
+        DownloadManager.Request down = new DownloadManager.Request(uri); 
+        down.setTitle(mContext.getString(R.string.tips_download_information)); 
+        down.setDescription(mContext.getString(R.string.installation_package_download_progress)); 
 
         down.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_MOBILE | DownloadManager.Request.NETWORK_WIFI);
 
@@ -179,7 +179,7 @@ public class AppVersionUtil {
         down.setDestinationInExternalFilesDir(mContext, Environment.DIRECTORY_DOWNLOADS, fileName);
         DownloadManager downloadManager = (DownloadManager) mContext.getSystemService(DOWNLOAD_SERVICE);
 
-        mDownloadId = downloadManager.enqueue(down); // 把下载请求对象加入到下载队列
+        mDownloadId = downloadManager.enqueue(down); 
         VersionTools.INSTANCE.setMDownloadId(mDownloadId);
     }
 
@@ -189,7 +189,7 @@ public class AppVersionUtil {
         mContext.unregisterReceiver(completeReceiver);
         try {
             File file = new File(mContext.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath(), fileName);
-            File localFile = new File(mContext.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath());//本地文件
+            File localFile = new File(mContext.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath());
             List<File> files = ZipUtils.unzipFile(file, localFile);
             if (files != null && files.size() != 0) {
                 AppUtil.installApp(mContext, files.get(0));
@@ -286,7 +286,7 @@ public class AppVersionUtil {
     public void installApkNew() {
         try {
             File file = new File(mContext.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath(), fileName);
-            File localFile = new File(mContext.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath());//本地文件
+            File localFile = new File(mContext.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath());
             List<File> files = ZipUtils.unzipFile(file, localFile);
             if (files != null && files.size() != 0) {
                 AppUtil.installApp(mContext, files.get(0));
@@ -308,7 +308,7 @@ public class AppVersionUtil {
         @Override
         public void onReceive(Context context, Intent intent) {
 
-            if (intent.getAction().equals(DownloadManager.ACTION_DOWNLOAD_COMPLETE))   // 下载完毕
+            if (intent.getAction().equals(DownloadManager.ACTION_DOWNLOAD_COMPLETE))   
             {
 
                 installApk();

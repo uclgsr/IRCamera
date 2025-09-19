@@ -12,12 +12,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 
-/**
- *
 
- * @author: CaiSongL
- * @date: 2023/8/4 9:06
- */
 
 
 class IRCorrectionFourActivity : BaseActivity() {

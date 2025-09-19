@@ -46,7 +46,7 @@ class ImageEditView : View {
 
     var sourceBitmap: Bitmap? = null
         set(value) {
-            if (value == null) { // 没有把背景图清掉的需求，故而此处直接 return
+            if (value == null) { 
                 return
             }
             if (width == 0 || height == 0) {
@@ -187,7 +187,7 @@ class ImageEditView : View {
                 paint.style = Paint.Style.FILL
                 path.reset()
 
-                if (downX == currentX) { // 垂直于X轴的直线
+                if (downX == currentX) { 
 
                     val endY =
                         if (downY > currentY) currentY + PAINT_WIDTH else (currentY - PAINT_WIDTH)
@@ -211,7 +211,7 @@ class ImageEditView : View {
                     path.lineTo(x2, y)
                     path.close()
                     canvas?.drawPath(path, paint)
-                } else if (downY == currentY) { // 垂直于Y轴的直线
+                } else if (downY == currentY) { 
 
                     val endX =
                         if (downX > currentX) currentX + PAINT_WIDTH else (currentX - PAINT_WIDTH)
@@ -246,18 +246,18 @@ class ImageEditView : View {
                     val endY: Float =
                         if (k1 > 0) {
                             val hypotenuse: Float =
-                                sqrt((currentX - a1).pow(2) + currentY.toFloat().pow(2)) // 斜边长
-                            if (currentX > downX) { // 左上到右下
+                                sqrt((currentX - a1).pow(2) + currentY.toFloat().pow(2)) 
+                            if (currentX > downX) { 
                                 currentY * (hypotenuse - backWidth) / hypotenuse
-                            } else { // 右下到左上
+                            } else { 
                                 currentY * (hypotenuse + backWidth) / hypotenuse
                             }
                         } else {
                             val hypotenuse: Float =
-                                sqrt((a1 - currentX).pow(2) + currentY.toFloat().pow(2)) // 斜边长
-                            if (currentX > downX) { // 左下到右上
+                                sqrt((a1 - currentX).pow(2) + currentY.toFloat().pow(2)) 
+                            if (currentX > downX) { 
                                 currentY * (hypotenuse + backWidth) / hypotenuse
-                            } else { // 右上到左下
+                            } else { 
                                 currentY * (hypotenuse - backWidth) / hypotenuse
                             }
                         }
@@ -268,18 +268,18 @@ class ImageEditView : View {
                     val y: Float =
                         if (k1 > 0) {
                             val hypotenuse: Float =
-                                sqrt((currentX - a1).pow(2) + currentY.toFloat().pow(2)) // 斜边长
-                            if (currentX > downX) { // 左上到右下
+                                sqrt((currentX - a1).pow(2) + currentY.toFloat().pow(2)) 
+                            if (currentX > downX) { 
                                 currentY * (hypotenuse - triangleH) / hypotenuse
-                            } else { // 右下到左上
+                            } else { 
                                 currentY * (hypotenuse + triangleH) / hypotenuse
                             }
                         } else {
                             val hypotenuse: Float =
-                                sqrt((a1 - currentX).pow(2) + currentY.toFloat().pow(2)) // 斜边长
-                            if (currentX > downX) { // 左下到右上
+                                sqrt((a1 - currentX).pow(2) + currentY.toFloat().pow(2)) 
+                            if (currentX > downX) { 
                                 currentY * (hypotenuse + triangleH) / hypotenuse
-                            } else { // 右上到左下
+                            } else { 
                                 currentY * (hypotenuse - triangleH) / hypotenuse
                             }
                         }
@@ -290,7 +290,7 @@ class ImageEditView : View {
                     val a2: Float = -b2 / k2
 
                     val hypotenuse2: Float =
-                        sqrt((if (k2 > 0) x - a2 else (a2 - x)).pow(2) + y.pow(2)) // 斜边长
+                        sqrt((if (k2 > 0) x - a2 else (a2 - x)).pow(2) + y.pow(2)) 
                     val yLeft = y * (hypotenuse2 - ARROW_WIDTH / 2) / hypotenuse2
                     val yRight = y * (hypotenuse2 + ARROW_WIDTH / 2) / hypotenuse2
                     val xLeft = (yLeft - b2) / k2

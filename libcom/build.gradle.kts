@@ -1,8 +1,8 @@
 plugins {
     id("com.android.library")
-    kotlin("android") // Modern plugin ID format
-    id("kotlin-parcelize") // Correct plugin ID for Parcelize
-    id("com.google.devtools.ksp") // Use KSP plugin from classpath
+    kotlin("android") 
+    id("kotlin-parcelize") 
+    id("com.google.devtools.ksp") 
 }
 
 ksp {

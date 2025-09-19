@@ -67,9 +67,7 @@ class MoreActivity : BaseActivity(), View.OnClickListener {
         settingDisconnect.setOnClickListener(this)
         settingAutoSave.setOnClickListener(this)
 
-        /*if (Build.VERSION.SDK_INT < 29) {//Lower than Android 10
-            settingVersion.isVisible = false
-        }*/
+        
 
         settingVersion.isVisible = false
     }
@@ -80,7 +78,7 @@ class MoreActivity : BaseActivity(), View.OnClickListener {
         firmwareViewModel.firmwareDataLD.observe(this) {
             tvUpgradePoint.isVisible = it != null
             dismissCameraLoading()
-            if (it == null) { // 请求成功但没有固件升级包，即已是最新
+            if (it == null) { 
                 ToastUtils.showShort(RCore.string.setting_firmware_update_latest_version)
             } else {
                 showFirmwareUpDialog(it)
@@ -98,29 +96,29 @@ class MoreActivity : BaseActivity(), View.OnClickListener {
 
     override fun onClick(v: View?) {
         when (v) {
-            settingDeviceInformation -> { // 设备信息
+            settingDeviceInformation -> { 
                 NavigationManager.getInstance()
                     .build(RouterConfig.DEVICE_INFORMATION)
                     .withBoolean(ExtraKeyConfig.IS_TC007, false)
                     .navigation(this@MoreActivity)
             }
 
-            settingTisr -> { // 设置超分
+            settingTisr -> { 
                 NavigationManager.getInstance().build(RouterConfig.TISR)
                     .navigation(this@MoreActivity)
             }
 
-            settingAutoSave -> { // 自动保存到手机
+            settingAutoSave -> { 
                 NavigationManager.getInstance().build(RouterConfig.AUTO_SAVE)
                     .navigation(this@MoreActivity)
             }
 
-            settingStorageSpace -> { // TS004储存空间
+            settingStorageSpace -> { 
                 NavigationManager.getInstance().build(RouterConfig.STORAGE_SPACE)
                     .navigation(this@MoreActivity)
             }
 
-            settingVersion -> { // Firmware version
+            settingVersion -> { 
 
 
                 val firmwareData = firmwareViewModel.firmwareDataLD.value
@@ -135,11 +133,11 @@ class MoreActivity : BaseActivity(), View.OnClickListener {
 
             }
 
-            settingReset -> { // 恢复出厂设置
+            settingReset -> { 
                 restoreFactory()
             }
 
-            settingDisconnect -> { // 断开连接
+            settingDisconnect -> { 
                 NavigationManager.getInstance().build(RouterConfig.IR_MORE_HELP)
                     .withInt(Constants.SETTING_CONNECTION_TYPE, Constants.SETTING_DISCONNECTION)
                     .navigation(this@MoreActivity)

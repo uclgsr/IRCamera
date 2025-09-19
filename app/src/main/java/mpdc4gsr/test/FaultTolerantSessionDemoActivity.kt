@@ -10,16 +10,7 @@ import mpdc4gsr.core.RecordingService
 import kotlinx.coroutines.launch
 import java.io.File
 
-/**
- * Demonstration activity showcasing the enhanced fault-tolerant session management
- *
- * This activity demonstrates:
- * - Partial sensor start capability
- * - Mid-session error recovery
- * - Enhanced logging and diagnostics
- * - Session state validation
- * - Smart cleanup behavior
- */
+
 class FaultTolerantSessionDemoActivity : ComponentActivity() {
     companion object {
         private const val TAG = "FaultTolerantDemo"
@@ -30,7 +21,7 @@ class FaultTolerantSessionDemoActivity : ComponentActivity() {
     private lateinit var diagnosticsText: TextView
     private lateinit var scrollView: ScrollView
 
-    // UI Controls
+    
     private lateinit var initButton: Button
     private lateinit var startSessionButton: Button
     private lateinit var stopSessionButton: Button
@@ -70,7 +61,7 @@ class FaultTolerantSessionDemoActivity : ComponentActivity() {
             setPadding(16, 16, 16, 16)
         }
 
-        // Control buttons
+        
         initButton = Button(this).apply { text = "Initialize Sensors" }
         startSessionButton = Button(this).apply {
             text = "Start Session (Fault Tolerant)"
@@ -89,7 +80,7 @@ class FaultTolerantSessionDemoActivity : ComponentActivity() {
         }
         startServiceButton = Button(this).apply { text = "Start Recording Service" }
 
-        // Diagnostics display
+        
         diagnosticsText = TextView(this).apply {
             text = "Diagnostics will appear here..."
             textSize = 12f
@@ -386,7 +377,7 @@ class FaultTolerantSessionDemoActivity : ComponentActivity() {
     }
 
     private fun updateUI() {
-        // Initial UI state
+        
         startSessionButton.isEnabled = false
         stopSessionButton.isEnabled = false
         simulateFailureButton.isEnabled = false

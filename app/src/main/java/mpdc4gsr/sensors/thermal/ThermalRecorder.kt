@@ -14,13 +14,7 @@ import java.util.concurrent.atomic.AtomicLong
 import kotlin.math.max
 import kotlin.math.min
 
-/**
- * ThermalRecorder handles thermal camera integration as specified in the requirements:
- * - Integrates with existing UVC camera flow via frame callbacks
- * - Computes thermal statistics (min/avg/max temperature) per frame
- * - Logs thermal data to CSV with nanosecond timestamps
- * - Optionally saves thermal frame images
- */
+
 class ThermalRecorder(private val context: Context) {
 
     companion object {
@@ -38,7 +32,7 @@ class ThermalRecorder(private val context: Context) {
 
     private val recordingScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
-    // Frame callback interface to integrate with existing UVC camera
+    
     interface ThermalFrameCallback {
         fun onFrameReceived(frameData: ByteArray, width: Int, height: Int, timestamp: Long)
     }
@@ -63,9 +57,7 @@ class ThermalRecorder(private val context: Context) {
         this.frameListener = listener
     }
 
-    /**
-     * Enhanced start recording with session metadata for precise synchronization
-     */
+    
     suspend fun startRecording(
         sessionDir: String,
         sessionMetadata: SessionMetadata,
@@ -86,12 +78,12 @@ class ThermalRecorder(private val context: Context) {
                     sessionDirectory!!.mkdirs()
                 }
 
-                // Create thermal stats CSV file with session timestamp
+                
                 val csvFile =
                     File(sessionDirectory, "thermal_stats_${sessionMetadata.sessionId}.csv")
                 csvWriter = FileWriter(csvFile, false)
 
-                // Write comprehensive timing header
+                
                 csvWriter?.write(sessionMetadata.createTimingHeader())
                 csvWriter?.write("# THERMAL FRAME DATA - Temperatures in Celsius\n")
                 csvWriter?.write("# Frame timestamps include:\n")
@@ -100,11 +92,11 @@ class ThermalRecorder(private val context: Context) {
                 csvWriter?.write("#   timestamp_monotonic_ns: Raw monotonic nanoseconds for precise intervals\n")
                 csvWriter?.write("#\n")
 
-                // Enhanced CSV header with session timing
+                
                 csvWriter?.write("timestamp_wall_ms,timestamp_relative_ms,timestamp_monotonic_ns,frame_sequence,min_temp_c,avg_temp_c,max_temp_c,pixel_count\n")
                 csvWriter?.flush()
 
-                // Reset counters
+                
                 frameSequence.set(0)
 
                 isRecording.set(true)
@@ -127,9 +119,7 @@ class ThermalRecorder(private val context: Context) {
             }
         }
 
-    /**
-     * Legacy start recording method for backward compatibility
-     */
+    
     suspend fun startRecording(sessionDir: String, saveImages: Boolean = false): Boolean =
         withContext(Dispatchers.IO) {
             if (isRecording.get()) {
@@ -145,19 +135,19 @@ class ThermalRecorder(private val context: Context) {
                     sessionDirectory!!.mkdirs()
                 }
 
-                // Create thermal stats CSV file
+                
                 val timestamp =
                     SimpleDateFormat("yyyy-MM-dd_HH-mm-ss", Locale.getDefault()).format(Date())
                 val csvFile = File(sessionDirectory, "thermal_stats_$timestamp.csv")
                 csvWriter = FileWriter(csvFile, false)
 
-                // Write CSV header (legacy format)
+                
                 csvWriter?.write("# Legacy thermal recording - no session synchronization metadata\n")
                 csvWriter?.write(CSV_HEADER)
                 csvWriter?.write("\n")
                 csvWriter?.flush()
 
-                // Reset counters
+                
                 frameSequence.set(0)
 
                 isRecording.set(true)
@@ -179,9 +169,7 @@ class ThermalRecorder(private val context: Context) {
             }
         }
 
-    /**
-     * Stop thermal recording
-     */
+    
     suspend fun stopRecording(): Boolean = withContext(Dispatchers.IO) {
         if (!isRecording.get()) {
             Log.w(TAG, "No thermal recording in progress")
@@ -191,7 +179,7 @@ class ThermalRecorder(private val context: Context) {
         try {
             isRecording.set(false)
 
-            // Close CSV writer
+            
             csvWriter?.flush()
             csvWriter?.close()
             csvWriter = null
@@ -205,10 +193,7 @@ class ThermalRecorder(private val context: Context) {
         }
     }
 
-    /**
-     * Process thermal frame data - this method should be called from the UVC camera callback
-     * Assumes thermal data is provided as temperature values in Celsius
-     */
+    
     fun processFrame(
         frameData: ByteArray,
         width: Int,
@@ -237,10 +222,7 @@ class ThermalRecorder(private val context: Context) {
         }
     }
 
-    /**
-     * Process thermal frame from raw pixel intensities (0-255) with temperature mapping
-     * For cases where thermal camera provides raw intensity data that needs conversion
-     */
+    
     fun processFrameFromIntensity(
         intensityData: ByteArray,
         width: Int,
@@ -255,12 +237,12 @@ class ThermalRecorder(private val context: Context) {
 
         recordingScope.launch {
             try {
-                // Convert intensity data to temperature values
+                
                 val tempData = FloatArray(width * height)
                 val tempRange = maxTempRange - minTempRange
 
                 for (i in intensityData.indices) {
-                    val intensity = intensityData[i].toInt() and 0xFF // Convert to unsigned byte
+                    val intensity = intensityData[i].toInt() and 0xFF 
                     tempData[i] = minTempRange + (intensity / 255.0f) * tempRange
                 }
 
@@ -280,18 +262,16 @@ class ThermalRecorder(private val context: Context) {
         }
     }
 
-    /**
-     * Calculate frame statistics from temperature data (assuming float values in Celsius)
-     */
+    
     private fun calculateFrameStats(
         frameData: ByteArray,
         width: Int,
         height: Int,
         timestampNs: Long
     ): ThermalFrameStats {
-        // Assume frameData contains float temperature values (4 bytes per pixel)
+        
         val pixelCount = width * height
-        val expectedSize = pixelCount * 4 // 4 bytes per float
+        val expectedSize = pixelCount * 4 
 
         if (frameData.size < expectedSize) {
             Log.w(TAG, "Frame data size mismatch: expected $expectedSize, got ${frameData.size}")
@@ -302,13 +282,13 @@ class ThermalRecorder(private val context: Context) {
         var totalTemp = 0.0f
         var validPixels = 0
 
-        // Convert bytes to floats and calculate statistics
+        
         for (i in 0 until min(pixelCount, frameData.size / 4)) {
             val byteIndex = i * 4
             val temp = ByteBuffer.wrap(frameData, byteIndex, 4)
                 .order(java.nio.ByteOrder.LITTLE_ENDIAN).float
 
-            // Skip invalid temperature readings
+            
             if (!temp.isNaN() && !temp.isInfinite()) {
                 minTemp = min(minTemp, temp)
                 maxTemp = max(maxTemp, temp)
@@ -330,9 +310,7 @@ class ThermalRecorder(private val context: Context) {
         )
     }
 
-    /**
-     * Calculate frame statistics from float array
-     */
+    
     private fun calculateFrameStatsFromFloat(
         tempData: FloatArray,
         width: Int,
@@ -366,14 +344,12 @@ class ThermalRecorder(private val context: Context) {
         )
     }
 
-    /**
-     * Log frame statistics to CSV with enhanced timing information
-     */
+    
     private suspend fun logFrameStats(stats: ThermalFrameStats) = withContext(Dispatchers.IO) {
         try {
             csvWriter?.let { writer ->
                 val csvLine = if (sessionMetadata != null) {
-                    // Enhanced format with session timing
+                    
                     val sm = sessionMetadata!!
                     val wallClockMs = sm.monotonicToWallClock(stats.timestampNs)
                     val relativeMs = (stats.timestampNs - sm.sessionStartMonotonicNs) / 1_000_000L
@@ -396,7 +372,7 @@ class ThermalRecorder(private val context: Context) {
                         append(stats.pixelCount)
                     }.toString()
                 } else {
-                    // Legacy format
+                    
                     StringBuilder().apply {
                         append(stats.timestampNs)
                         append(',')
@@ -426,9 +402,7 @@ class ThermalRecorder(private val context: Context) {
         }
     }
 
-    /**
-     * Save thermal frame as image file
-     */
+    
     private suspend fun saveFrameImage(
         frameData: ByteArray,
         width: Int,
@@ -450,9 +424,7 @@ class ThermalRecorder(private val context: Context) {
         }
     }
 
-    /**
-     * Save thermal frame from intensity data as PNG
-     */
+    
     private suspend fun saveFrameImageFromIntensity(
         intensityData: ByteArray,
         width: Int,
@@ -461,13 +433,13 @@ class ThermalRecorder(private val context: Context) {
     ) = withContext(Dispatchers.IO) {
         try {
             sessionDirectory?.let { dir ->
-                // Create bitmap from intensity data
+                
                 val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
 
                 val pixels = IntArray(width * height)
                 for (i in intensityData.indices) {
                     val intensity = intensityData[i].toInt() and 0xFF
-                    // Create grayscale color
+                    
                     val color =
                         (0xFF000000.toInt()) or (intensity shl 16) or (intensity shl 8) or intensity
                     pixels[i] = color
@@ -488,13 +460,9 @@ class ThermalRecorder(private val context: Context) {
         }
     }
 
-    /**
-     * Check if currently recording
-     */
+    
     fun isRecording(): Boolean = isRecording.get()
 
-    /**
-     * Get frame count
-     */
+    
     fun getFrameCount(): Long = frameSequence.get()
 }

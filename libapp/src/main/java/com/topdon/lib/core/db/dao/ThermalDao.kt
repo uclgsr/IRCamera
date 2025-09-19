@@ -75,8 +75,8 @@ interface ThermalDao {
     ): Float
 
     data class Record(
-        var type: String? = "point", // point-点 line-线 fence-面
-        var startTime: Long = 0, // 开始时刻时间戳，单位毫秒
+        var type: String? = "point", 
+        var startTime: Long = 0, 
         var duration: Int = 0,
         @Ignore
         var showTitle: Boolean = false,

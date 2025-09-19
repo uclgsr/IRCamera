@@ -1,12 +1,4 @@
-/*
- *  Copyright 2012 The LibYuv Project Authors. All rights reserved.
- *
- *  Use of this source code is governed by a BSD-style license
- *  that can be found in the LICENSE file in the root of the source
- *  tree. An additional intellectual property rights grant can be found
- *  in the file PATENTS. All contributing project authors may
- *  be found in the AUTHORS file in the root of the source tree.
- */
+
 
 #ifndef INCLUDE_LIBYUV_MJPEG_DECODER_H_
 #define INCLUDE_LIBYUV_MJPEG_DECODER_H_
@@ -29,7 +21,7 @@ extern "C" {
 LIBYUV_BOOL ValidateJpeg(const uint8_t* sample, size_t sample_size);
 
 #ifdef __cplusplus
-}  // extern "C"
+}  
 #endif
 
 static const uint32_t kUnknownDataSize = 0xFFFFFFFF;
@@ -160,7 +152,7 @@ class LIBYUV_API MJpegDecoder {
 
   LIBYUV_BOOL has_scanline_padding_;
 
-  int num_outbufs_;  // Outermost size of all arrays below.
+  int num_outbufs_;  
   uint8_t*** scanlines_;
   int* scanlines_sizes_;
 
@@ -169,7 +161,7 @@ class LIBYUV_API MJpegDecoder {
   int* databuf_strides_;
 };
 
-}  // namespace libyuv
+}  
 
-#endif  //  __cplusplus
-#endif  // INCLUDE_LIBYUV_MJPEG_DECODER_H_
+#endif  
+#endif  

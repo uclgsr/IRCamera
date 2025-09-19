@@ -15,7 +15,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:titleText="@string/ir_camera_take_photo" />
 
-    <!-- 为适配平板，这两个 View 的尺寸在 Activity 里去动态算 -->
+    
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragment_container_view"
         android:layout_width="192dp"

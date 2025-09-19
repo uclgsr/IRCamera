@@ -189,14 +189,14 @@ class CertificateManager(private val context: Context) {
 
             val validHosts =
                 setOf(
-                    "192.168.40.1", // Standard thermal camera IP
-                    "localhost", // Local testing
-                    "127.0.0.1", // Local testing
+                    "192.168.40.1", 
+                    "localhost", 
+                    "127.0.0.1", 
                 )
 
             val isValid =
                 validHosts.contains(hostname) ||
-                        hostname.matches(Regex("192\\.168\\.\\d+\\.\\d+")) // Local network IPs
+                        hostname.matches(Regex("192\\.168\\.\\d+\\.\\d+")) 
 
             if (!isValid) {
                 Log.w(TAG, "Hostname verification failed for: $hostname")
@@ -225,7 +225,7 @@ class CertificateManager(private val context: Context) {
     fun validateAuthToken(
         token: String,
         maxAgeMs: Long = 300000,
-    ): Boolean { // 5 minutes default
+    ): Boolean { 
         return try {
             val parts = token.split(":")
             if (parts.size != 4) return false

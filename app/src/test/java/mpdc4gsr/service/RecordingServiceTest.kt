@@ -13,9 +13,7 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 
-/**
- * Tests for enhanced RecordingService integration with fault-tolerant session management
- */
+
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [28])
 @OptIn(ExperimentalCoroutinesApi::class)

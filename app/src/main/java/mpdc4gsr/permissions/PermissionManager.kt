@@ -9,9 +9,7 @@ import androidx.fragment.app.FragmentActivity
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
 
-/**
- * Permission Manager for MVP - focuses on core functionality with proper constants
- */
+
 class PermissionManager(
     private val activity: FragmentActivity,
     private val permissionController: PermissionController
@@ -24,9 +22,7 @@ class PermissionManager(
         private const val REQUEST_ALL_PERMISSIONS = 200
     }
 
-    /**
-     * Request camera permissions with proper callback mechanism
-     */
+    
     suspend fun requestCameraPermissions(): Boolean = suspendCancellableCoroutine { continuation ->
         val cameraPermissions = arrayOf(
             Manifest.permission.CAMERA,
@@ -45,7 +41,7 @@ class PermissionManager(
         
         Log.i(TAG, "Requesting camera permissions")
         
-        // Set up callback for permission result
+        
         permissionController.setPermissionCallback(REQUEST_CAMERA_PERMISSIONS) { granted ->
             Log.i(TAG, "Camera permissions result: $granted")
             continuation.resume(granted)
@@ -54,9 +50,7 @@ class PermissionManager(
         ActivityCompat.requestPermissions(activity, missingPermissions.toTypedArray(), REQUEST_CAMERA_PERMISSIONS)
     }
 
-    /**
-     * Request bluetooth permissions with proper callback mechanism
-     */
+    
     suspend fun requestBluetoothPermissions(): Boolean = suspendCancellableCoroutine { continuation ->
         val bluetoothPermissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             arrayOf(
@@ -84,7 +78,7 @@ class PermissionManager(
         
         Log.i(TAG, "Requesting bluetooth permissions")
         
-        // Set up callback for permission result
+        
         permissionController.setPermissionCallback(REQUEST_BLUETOOTH_PERMISSIONS) { granted ->
             Log.i(TAG, "Bluetooth permissions result: $granted")
             continuation.resume(granted)
@@ -93,11 +87,9 @@ class PermissionManager(
         ActivityCompat.requestPermissions(activity, missingPermissions.toTypedArray(), REQUEST_BLUETOOTH_PERMISSIONS)
     }
 
-    /**
-     * Request storage permissions - MVP version
-     */
+    
     suspend fun requestStoragePermissions(): Boolean {
-        // Storage permissions not critical for MVP - most data is app-local
+        
         return true
     }
 }

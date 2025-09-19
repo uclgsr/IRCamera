@@ -58,7 +58,7 @@ class LogMPChartActivity : BaseActivity(), OnChartValueSelectedListener {
                     time: Int,
                 ) {
 
-                    chart.highlightValue(null) // 关闭高亮点Marker
+                    chart.highlightValue(null) 
                     selectType = index + 1
                     queryLog()
                 }
@@ -94,7 +94,7 @@ class LogMPChartActivity : BaseActivity(), OnChartValueSelectedListener {
 
         lifecycleScope.launch(Dispatchers.IO) {
             viewModel.queryLogVolsByStartTime(
-                type = 1, // Default fence type since getSelectFenceType() is not available
+                type = 1, 
                 selectTimeType = selectType,
             )
         }
@@ -106,30 +106,30 @@ class LogMPChartActivity : BaseActivity(), OnChartValueSelectedListener {
         chart.setTouchEnabled(true)
         chart.isDragEnabled = true
         chart.setDrawGridBackground(false)
-        chart.description = null // 图标描述文本
+        chart.description = null 
         chart.setBackgroundResource(com.topdon.lib.core.R.color.chart_bg)
-        chart.setScaleEnabled(true) // 缩放
-        chart.setPinchZoom(false) // 禁用后，可以分别在x轴和y轴上进行缩放
-        chart.isDoubleTapToZoomEnabled = false // 双击不可缩放
-        chart.isScaleYEnabled = false // 禁止Y轴缩放
+        chart.setScaleEnabled(true) 
+        chart.setPinchZoom(false) 
+        chart.isDoubleTapToZoomEnabled = false 
+        chart.isScaleYEnabled = false 
         chart.setExtraOffsets(
             0f,
             0f,
             SizeUtils.dp2px(8f).toFloat(),
             SizeUtils.dp2px(4f).toFloat(),
-        ) // 图表区域偏移
+        ) 
         chart.setNoDataText(getString(R.string.lms_http_code998))
         chart.setNoDataTextColor(textColor)
         val mv = MyMarkerView(this, R.layout.marker_lay)
         mv.chartView = chart
-        chart.marker = mv // 设置点击坐标显示提示框
+        chart.marker = mv 
         val data = LineData()
         data.setValueTextColor(textColor)
         chart.data = data
         val l = chart.legend
         l.form = Legend.LegendForm.CIRCLE
         l.textColor = textColor
-        l.isEnabled = false // 隐藏曲线标签
+        l.isEnabled = false 
         val xAxis = chart.xAxis
         xAxis.textColor = textColor
         xAxis.setDrawGridLines(true)
@@ -138,13 +138,13 @@ class LogMPChartActivity : BaseActivity(), OnChartValueSelectedListener {
         xAxis.position = XAxis.XAxisPosition.BOTTOM
         xAxis.axisLineColor = textColor
         xAxis.granularity = 1f
-        xAxis.isGranularityEnabled = true // 重复值不显示
+        xAxis.isGranularityEnabled = true 
         xAxis.textSize = 9f
         val leftAxis = chart.axisLeft
         leftAxis.textSize = 9f
         leftAxis.textColor = textColor
         leftAxis.setDrawGridLines(true)
-        leftAxis.setLabelCount(6, false) // 固定x刻度
+        leftAxis.setLabelCount(6, false) 
         val rightAxis = chart.axisRight
         rightAxis.isEnabled = false
 
@@ -177,20 +177,20 @@ class LogMPChartActivity : BaseActivity(), OnChartValueSelectedListener {
 
         set.mode = LineDataSet.Mode.LINEAR
         set.setDrawFilled(false)
-        set.fillDrawable = ContextCompat.getDrawable(this, bgChartColors[index]) // 设置填充颜色渐变
+        set.fillDrawable = ContextCompat.getDrawable(this, bgChartColors[index]) 
         set.axisDependency = YAxis.AxisDependency.LEFT
-        set.color = ContextCompat.getColor(this, lineChartColors[index]) // 曲线颜色
-        set.setCircleColor(ContextCompat.getColor(this, com.topdon.lib.core.R.color.white)) // 坐标颜色
+        set.color = ContextCompat.getColor(this, lineChartColors[index]) 
+        set.setCircleColor(ContextCompat.getColor(this, com.topdon.lib.core.R.color.white)) 
 
 
         set.valueTextColor = Color.WHITE
         set.lineWidth = 2f
-        set.circleRadius = 1f // 不显示坐标点
-        set.setCircleColor(ContextCompat.getColor(this, lineChartColors[index])) // 坐标颜色(隐藏处理)
+        set.circleRadius = 1f 
+        set.setCircleColor(ContextCompat.getColor(this, lineChartColors[index])) 
 
         set.fillAlpha = 200
         set.valueTextSize = 10f
-        set.setDrawValues(false) // 设置是否显示坐标值文本
+        set.setDrawValues(false) 
         return set
     }
 
@@ -216,7 +216,7 @@ class LogMPChartActivity : BaseActivity(), OnChartValueSelectedListener {
                     data[0].type = "default"
                     when (data[0].type) {
                         "point" -> {
-                            var set = lineData.getDataSetByIndex(0) // 读取x为0的坐标点
+                            var set = lineData.getDataSetByIndex(0) 
                             if (set == null) {
                                 set = createSet(2, "temp")
                                 lineData.addDataSet(set)
@@ -231,13 +231,13 @@ class LogMPChartActivity : BaseActivity(), OnChartValueSelectedListener {
                         }
 
                         "line" -> {
-                            var maxDataSet = lineData.getDataSetByIndex(0) // 读取x为0的坐标点
+                            var maxDataSet = lineData.getDataSetByIndex(0) 
                             if (maxDataSet == null) {
                                 maxDataSet = createSet(0, "line maxTemp")
                                 lineData.addDataSet(maxDataSet)
                             }
 
-                            var minDataSet = lineData.getDataSetByIndex(1) // 读取x为0的坐标点
+                            var minDataSet = lineData.getDataSetByIndex(1) 
                             if (minDataSet == null) {
                                 minDataSet = createSet(1, "line minTemp")
                                 lineData.addDataSet(minDataSet)
@@ -259,13 +259,13 @@ class LogMPChartActivity : BaseActivity(), OnChartValueSelectedListener {
 
                         else -> {
 
-                            var maxTempDataSet = lineData.getDataSetByIndex(0) // 读取x为0的坐标点
+                            var maxTempDataSet = lineData.getDataSetByIndex(0) 
                             if (maxTempDataSet == null) {
                                 maxTempDataSet = createSet(0, "fence maxTemp")
                                 lineData.addDataSet(maxTempDataSet)
                             }
 
-                            var centerTempDataSet = lineData.getDataSetByIndex(1) // 读取x为0的坐标点
+                            var centerTempDataSet = lineData.getDataSetByIndex(1) 
                             if (centerTempDataSet == null) {
                                 centerTempDataSet = createSet(1, "fence minTemp")
                                 lineData.addDataSet(centerTempDataSet)
@@ -286,11 +286,11 @@ class LogMPChartActivity : BaseActivity(), OnChartValueSelectedListener {
                     }
                     lineData.notifyDataChanged()
                     chart.notifyDataSetChanged()
-                    chart.setVisibleXRangeMinimum(getMinimum()) // 设置显示X轴区间大小
-                    chart.setVisibleXRangeMaximum(getMaximum()) // 设置显示X轴区间大小
-                    chart.xAxis.setLabelCount(5, false) // true保证有刻度数量不变
-                    chart.moveViewToX(chart.xChartMax) // 移动到最右端
-                    chart.zoom(1f, 1f, chart.xChartMax, 0f) // 默认无缩放，全部显示
+                    chart.setVisibleXRangeMinimum(getMinimum()) 
+                    chart.setVisibleXRangeMaximum(getMaximum()) 
+                    chart.xAxis.setLabelCount(5, false) 
+                    chart.moveViewToX(chart.xChartMax) 
+                    chart.zoom(1f, 1f, chart.xChartMax, 0f) 
                 }
                 Log.w("chart", "update chart finish")
             }
@@ -319,11 +319,11 @@ class LogMPChartActivity : BaseActivity(), OnChartValueSelectedListener {
     private fun getMinimum(): Float {
         val min =
             when (selectType) {
-                1 -> 1 * 10 * 1000f // 10s
-                2 -> 10 * 60 * 1000f // 10min
-                3 -> 10 * 60 * 60 * 1000f // 10hour
-                4 -> 10 * 24 * 60 * 60 * 1000f // 10day
-                else -> 1 * 10 * 1000f // 10s
+                1 -> 1 * 10 * 1000f 
+                2 -> 10 * 60 * 1000f 
+                3 -> 10 * 60 * 60 * 1000f 
+                4 -> 10 * 24 * 60 * 60 * 1000f 
+                else -> 1 * 10 * 1000f 
             }
         return min
     }

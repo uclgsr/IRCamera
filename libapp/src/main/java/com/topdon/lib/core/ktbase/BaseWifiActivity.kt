@@ -41,7 +41,7 @@ abstract class BaseWifiActivity : BaseActivity() {
 
     override fun onResume() {
         super.onResume()
-        if (Build.VERSION.SDK_INT >= 29) { // Android10 及以上
+        if (Build.VERSION.SDK_INT >= 29) { 
             NetWorkUtils.switchNetwork(true)
         }
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)

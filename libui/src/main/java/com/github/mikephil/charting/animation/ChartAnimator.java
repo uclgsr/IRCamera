@@ -9,19 +9,13 @@ import com.github.mikephil.charting.animation.Easing.EasingFunction;
 
 public class ChartAnimator {
 
-    /**
-     * The phase of drawn values on the y-axis. 0 - 1
-     */
+    
     @SuppressWarnings("WeakerAccess")
     protected float mPhaseY = 1f;
-    /**
-     * The phase of drawn values on the x-axis. 0 - 1
-     */
+    
     @SuppressWarnings("WeakerAccess")
     protected float mPhaseX = 1f;
-    /**
-     * object that is updated upon animation update
-     */
+    
     private AnimatorUpdateListener mListener;
 
     public ChartAnimator() {

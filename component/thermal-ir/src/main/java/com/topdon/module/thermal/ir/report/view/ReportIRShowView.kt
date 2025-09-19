@@ -16,10 +16,10 @@ import com.topdon.lib.core.R as LibR
 
 class ReportIRShowView : LinearLayout {
     companion object {
-        private const val TYPE_FULL = 0 // Full image
-        private const val TYPE_POINT = 1 // 点
-        private const val TYPE_LINE = 2 // 线
-        private const val TYPE_RECT = 3 // 面
+        private const val TYPE_FULL = 0 
+        private const val TYPE_POINT = 1 
+        private const val TYPE_LINE = 2 
+        private const val TYPE_RECT = 3 
     }
 
     private lateinit var clImage: View
@@ -115,7 +115,7 @@ class ReportIRShowView : LinearLayout {
             }
         tvAverageTitle.text =
             when (type) {
-                TYPE_FULL, TYPE_POINT -> "" // Full image and points have no average temperature
+                TYPE_FULL, TYPE_POINT -> "" 
                 TYPE_LINE -> "L${index + 1} " + context.getString(LibR.string.album_report_mean_temperature)
                 else -> "R${index + 1} " + context.getString(LibR.string.album_report_mean_temperature)
             }

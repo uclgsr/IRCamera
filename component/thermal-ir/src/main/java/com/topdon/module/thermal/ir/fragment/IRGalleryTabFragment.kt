@@ -21,16 +21,7 @@ import org.greenrobot.eventbus.EventBus
 import com.topdon.lib.core.R as LibCoreR
 import com.topdon.lib.ui.R as UiR
 
-/**
 
- *
-
-
-
-
- *
- * Created by chenggeng.lin on 2023/11/14.
- */
 class IRGalleryTabFragment : BaseFragment() {
 
     private var hasBackIcon = false
@@ -92,9 +83,9 @@ class IRGalleryTabFragment : BaseFragment() {
         titleView.setTitleText(if (canSwitchDir) "" else getString(R.string.app_gallery))
         titleView.setLeftDrawable(if (hasBackIcon) R.drawable.ic_back_white_svg else 0)
         titleView.setLeftClickListener {
-            if (viewModel.isEditModeLD.value == true) { // 当前为编辑状态，退出编辑
+            if (viewModel.isEditModeLD.value == true) { 
                 viewModel.isEditModeLD.value = false
-            } else { // 当前为非编辑状态，退出页面
+            } else { 
                 if (hasBackIcon) {
                     requireActivity().finish()
                 }
@@ -102,9 +93,9 @@ class IRGalleryTabFragment : BaseFragment() {
         }
         titleView.setRightDrawable(UiR.drawable.ic_toolbar_check_svg)
         titleView.setRightClickListener {
-            if (viewModel.isEditModeLD.value == true) { // 当前为编辑状态，全选
+            if (viewModel.isEditModeLD.value == true) { 
                 viewModel.selectAllIndex.value = viewPager2.currentItem
-            } else { // 当前为非编辑状态，进入编辑
+            } else { 
                 viewModel.isEditModeLD.value = true
             }
         }

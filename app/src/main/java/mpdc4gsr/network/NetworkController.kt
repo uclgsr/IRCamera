@@ -30,16 +30,13 @@ import java.net.SocketTimeoutException
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.ConcurrentHashMap
 
-/**
- * NetworkController implements the JSON command protocol for PC remote orchestration.
- * Handles start_recording/stop_recording commands as specified in the requirements.
- */
+
 class NetworkController(private val context: Context) {
 
     companion object {
         private const val TAG = "NetworkController"
         const val DEFAULT_PORT = 8080
-        private const val SOCKET_TIMEOUT = 30000 // 30 seconds
+        private const val SOCKET_TIMEOUT = 30000 
         private const val BUFFER_SIZE = 4096
     }
 
@@ -82,9 +79,7 @@ class NetworkController(private val context: Context) {
         this.eventListener = listener
     }
 
-    /**
-     * Start the network controller server to listen for PC connections
-     */
+    
     suspend fun start(port: Int = DEFAULT_PORT): Boolean = withContext(Dispatchers.IO) {
         if (isRunning.get()) {
             Log.w(TAG, "NetworkController already running")
@@ -98,7 +93,7 @@ class NetworkController(private val context: Context) {
 
             Log.i(TAG, "NetworkController started on port $port")
 
-            // Start accepting client connections
+            
             controllerScope.launch {
                 acceptConnections()
             }
@@ -111,14 +106,12 @@ class NetworkController(private val context: Context) {
         }
     }
 
-    /**
-     * Stop the network controller server
-     */
+    
     suspend fun stop() = withContext(Dispatchers.IO) {
         isRunning.set(false)
 
         try {
-            // Close all client connections
+            
             clientConnections.values.forEach { connection ->
                 try {
                     connection.socket.close()
@@ -128,16 +121,16 @@ class NetworkController(private val context: Context) {
             }
             clientConnections.clear()
 
-            // Close server socket
+            
             serverSocket?.close()
             serverSocket = null
 
-            // Cancel all coroutines
+            
             controllerScope.cancel()
 
-            // Wait for cancellation to complete
+            
             runBlocking {
-                delay(100) // Give some time for graceful shutdown
+                delay(100) 
             }
 
             Log.i(TAG, "NetworkController stopped")
@@ -146,9 +139,7 @@ class NetworkController(private val context: Context) {
         }
     }
 
-    /**
-     * Accept incoming client connections
-     */
+    
     private suspend fun acceptConnections() = withContext(Dispatchers.IO) {
         while (isRunning.get() && serverSocket != null) {
             try {
@@ -157,7 +148,7 @@ class NetworkController(private val context: Context) {
                     handleNewClient(clientSocket)
                 }
             } catch (e: SocketTimeoutException) {
-                // Timeout is expected, continue loop
+                
                 continue
             } catch (e: Exception) {
                 if (isRunning.get()) {
@@ -169,9 +160,7 @@ class NetworkController(private val context: Context) {
         }
     }
 
-    /**
-     * Handle new client connection
-     */
+    
     private suspend fun handleNewClient(clientSocket: Socket) = withContext(Dispatchers.IO) {
         try {
             val clientId = "${clientSocket.inetAddress.hostAddress}:${clientSocket.port}"
@@ -190,10 +179,10 @@ class NetworkController(private val context: Context) {
 
             Log.i(TAG, "New client connected: $clientId")
 
-            // Send welcome message
+            
             sendResponse(connection, createResponse("welcome", "Connected to IRCamera Android"))
 
-            // Start handling messages from this client
+            
             controllerScope.launch {
                 handleClientMessages(connection)
             }
@@ -207,16 +196,14 @@ class NetworkController(private val context: Context) {
         }
     }
 
-    /**
-     * Handle messages from a connected client
-     */
+    
     private suspend fun handleClientMessages(connection: ClientConnection) =
         withContext(Dispatchers.IO) {
             try {
                 while (isRunning.get() && !connection.socket.isClosed) {
                     val message = connection.inputStream.readLine()
                     if (message == null) {
-                        // Client disconnected
+                        
                         break
                     }
 
@@ -226,14 +213,12 @@ class NetworkController(private val context: Context) {
             } catch (e: Exception) {
                 Log.e(TAG, "Error handling client messages", e)
             } finally {
-                // Clean up connection
+                
                 disconnectClient(connection.clientId, "Connection closed")
             }
         }
 
-    /**
-     * Handle JSON command from PC controller
-     */
+    
     private suspend fun handleCommand(connection: ClientConnection, message: String) {
         try {
             val json = JSONObject(message)
@@ -264,9 +249,7 @@ class NetworkController(private val context: Context) {
         }
     }
 
-    /**
-     * Handle start_recording command
-     */
+    
     private suspend fun handleStartRecordingCommand(
         connection: ClientConnection,
         json: JSONObject
@@ -287,7 +270,7 @@ class NetworkController(private val context: Context) {
                 modalities.add(modalitiesArray.getString(i))
             }
 
-            // Extract options
+            
             val options = mutableMapOf<String, Any>()
             json.optBoolean("saveImages", false).let { options["saveImages"] = it }
             json.optInt("samplingRate", 64).let { options["samplingRate"] = it }
@@ -300,10 +283,10 @@ class NetworkController(private val context: Context) {
 
             Log.i(TAG, "Start recording command: sessionId=$sessionId, modalities=$modalities")
 
-            // Notify listener
+            
             eventListener?.onStartRecordingCommand(sessionId, modalities, options)
 
-            // Send acknowledgment
+            
             sendResponse(
                 connection, createResponse(
                     "recording_started", "Recording session started", mapOf(
@@ -322,17 +305,15 @@ class NetworkController(private val context: Context) {
         }
     }
 
-    /**
-     * Handle stop_recording command
-     */
+    
     private suspend fun handleStopRecordingCommand(connection: ClientConnection, json: JSONObject) {
         try {
             Log.i(TAG, "Stop recording command received")
 
-            // Notify listener
+            
             eventListener?.onStopRecordingCommand()
 
-            // Send acknowledgment
+            
             sendResponse(
                 connection,
                 createResponse("recording_stopped", "Recording session stopped")
@@ -347,16 +328,12 @@ class NetworkController(private val context: Context) {
         }
     }
 
-    /**
-     * Handle ping command (for connection testing)
-     */
+    
     private suspend fun handlePingCommand(connection: ClientConnection, json: JSONObject) {
         sendResponse(connection, createResponse("pong", "Server is alive"))
     }
 
-    /**
-     * Handle get_status command
-     */
+    
     private suspend fun handleGetStatusCommand(connection: ClientConnection, json: JSONObject) {
         val status = mapOf(
             "connected_clients" to clientConnections.size,
@@ -367,9 +344,7 @@ class NetworkController(private val context: Context) {
         sendResponse(connection, createResponse("status", "Server status", status))
     }
 
-    /**
-     * Send response to client
-     */
+    
     private fun sendResponse(connection: ClientConnection, response: String) {
         try {
             connection.outputStream.println(response)
@@ -379,9 +354,7 @@ class NetworkController(private val context: Context) {
         }
     }
 
-    /**
-     * Create success response JSON
-     */
+    
     private fun createResponse(
         status: String,
         message: String,
@@ -399,9 +372,7 @@ class NetworkController(private val context: Context) {
         return json.toString()
     }
 
-    /**
-     * Create error response JSON
-     */
+    
     private fun createErrorResponse(error: String, message: String): String {
         val json = JSONObject()
         json.put("status", "error")
@@ -412,9 +383,7 @@ class NetworkController(private val context: Context) {
         return json.toString()
     }
 
-    /**
-     * Disconnect a client
-     */
+    
     private fun disconnectClient(clientId: String, reason: String) {
         clientConnections[clientId]?.let { connection ->
             try {
@@ -429,13 +398,9 @@ class NetworkController(private val context: Context) {
         }
     }
 
-    /**
-     * Get number of connected clients
-     */
+    
     fun getConnectedClientsCount(): Int = clientConnections.size
 
-    /**
-     * Check if server is running
-     */
+    
     fun isRunning(): Boolean = isRunning.get()
 }

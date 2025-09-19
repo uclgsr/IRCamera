@@ -46,7 +46,7 @@ class LibIRModuleTest {
             val mockThermalData =
                 Array(height) { row ->
                     FloatArray(width) { col ->
-                        25.0f + (row * col * 0.01f) // Simulate temperature gradient
+                        25.0f + (row * col * 0.01f) 
                     }
                 }
 
@@ -89,7 +89,7 @@ class LibIRModuleTest {
                                 ((col - centerX) * (col - centerX) + (row - centerY) * (row - centerY)).toDouble(),
                             ).toFloat()
 
-                        baseTemp + (10.0f / (1.0f + distanceFromCenter * 0.5f)) // Hot spot falloff
+                        baseTemp + (10.0f / (1.0f + distanceFromCenter * 0.5f)) 
                     }
                 }
 
@@ -151,20 +151,20 @@ class LibIRModuleTest {
 
     fun testThermalCalibration() =
         runTest {
-            // Test thermal calibration functions
+            
             val rawValues = listOf(512, 1024, 1536, 2048, 2560, 3072, 3584, 4096)
             val calibrationOffset = 0.0f
             val calibrationGain = 0.1f
 
             rawValues.forEach { rawValue ->
-                // Test linear calibration
+                
                 val calibratedTemp = (rawValue * calibrationGain) + calibrationOffset
                 assertTrue(
                     "Calibrated temperature should be reasonable",
                     calibratedTemp >= -50f && calibratedTemp <= 500f,
                 )
 
-                // Test reverse calibration
+                
                 val backToRaw = ((calibratedTemp - calibrationOffset) / calibrationGain).toInt()
                 assertEquals("Reverse calibration should match", rawValue, backToRaw)
             }
@@ -174,16 +174,16 @@ class LibIRModuleTest {
 
     fun testIRImageFiltering() =
         runTest {
-            // Test IR image filtering algorithms
+            
             val size = 5
             val mockImage =
                 Array(size) { row ->
                     FloatArray(size) { col ->
-                        if ((row + col) % 2 == 0) 30.0f else 25.0f // Checkerboard pattern
+                        if ((row + col) % 2 == 0) 30.0f else 25.0f 
                     }
                 }
 
-            // Test smoothing filter (simple averaging)
+            
             val smoothedImage = Array(size) { FloatArray(size) }
 
             for (y in 1 until size - 1) {
@@ -191,7 +191,7 @@ class LibIRModuleTest {
                     var sum = 0.0f
                     var count = 0
 
-                    // 3x3 averaging kernel
+                    
                     for (dy in -1..1) {
                         for (dx in -1..1) {
                             sum += mockImage[y + dy][x + dx]
@@ -203,18 +203,18 @@ class LibIRModuleTest {
                 }
             }
 
-            // Test that smoothed image has reduced variation
+            
             val originalVariation = calculateImageVariation(mockImage)
             val smoothedVariation = calculateImageVariation(smoothedImage)
 
             assertTrue("Original image should have some variation", originalVariation > 0)
-            // Note: Smoothed variation might be 0 at borders, so we don't test reduction here
+            
         }
 
     @Test
 
     fun testSystemServiceAccess() {
-        // Test system services that IR processing might use
+        
         val displayService = context.getSystemService(Context.DISPLAY_SERVICE)
         assertNotNull("Display service should be available", displayService)
 
@@ -240,7 +240,7 @@ class LibIRModuleTest {
 
     fun testBitmapOperations() =
         runTest {
-            // Test bitmap operations for IR image display
+            
             val width = 10
             val height = 10
             val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
@@ -249,13 +249,13 @@ class LibIRModuleTest {
             assertEquals("Bitmap width should match", width, bitmap.width)
             assertEquals("Bitmap height should match", height, bitmap.height)
 
-            // Test pixel operations
+            
             val testColor = Color.RED
             bitmap.setPixel(5, 5, testColor)
             val retrievedColor = bitmap.getPixel(5, 5)
             assertEquals("Pixel color should match", testColor, retrievedColor)
 
-            // Test bitmap properties
+            
             assertFalse("Bitmap should not be recycled", bitmap.isRecycled)
             assertTrue("Bitmap should be mutable", bitmap.isMutable)
         }
@@ -263,7 +263,7 @@ class LibIRModuleTest {
     @Test
 
     fun testFileSystemAccess() {
-        // Test file system access for IR image storage
+        
         val filesDir = context.filesDir
         assertNotNull("Files directory should be accessible", filesDir)
         assertTrue("Files directory should exist", filesDir.exists())
@@ -277,10 +277,10 @@ class LibIRModuleTest {
 
     fun testAsyncOperations() =
         runTest {
-            // Test that coroutines work with IR processing context
+            
             val result =
                 kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
-                    // Simulate IR processing operation
+                    
                     context.packageName
                 }
 
@@ -291,7 +291,7 @@ class LibIRModuleTest {
             )
         }
 
-    // Helper function to calculate image variation
+    
     private fun calculateImageVariation(image: Array<FloatArray>): Float {
         val flatData = image.flatMap { it.toList() }
         if (flatData.isEmpty()) return 0.0f

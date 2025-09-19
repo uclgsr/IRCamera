@@ -25,7 +25,7 @@ class RgbCameraInstrumentationTest {
     companion object {
         private const val TAG = "RgbCameraTest"
         private const val TEST_TIMEOUT_SECONDS = 60L
-        private const val VIDEO_RECORDING_DURATION_MS = 10000L // 10 seconds
+        private const val VIDEO_RECORDING_DURATION_MS = 10000L 
         private const val BURST_CAPTURE_COUNT = 5
     }
 
@@ -44,7 +44,7 @@ class RgbCameraInstrumentationTest {
     fun setUp() {
         context = ApplicationProvider.getApplicationContext<Context>()
         
-        // Create test output directory
+        
         testOutputDir = File(context.cacheDir, "rgb_camera_test_${System.currentTimeMillis()}")
         testOutputDir.mkdirs()
         
@@ -53,23 +53,21 @@ class RgbCameraInstrumentationTest {
 
     @After
     fun tearDown() {
-        // Clean up test files
+        
         testOutputDir.deleteRecursively()
         Log.i(TAG, "RGB Camera instrumentation test cleanup completed")
     }
 
-    /**
-     * Test 4K video recording capability on compatible devices
-     */
+    
     @Test
     fun test4KVideoRecording() {
         Log.i(TAG, "Testing 4K video recording capability")
         
-        // Create test session directory
+        
         val sessionDir = File(testOutputDir, "4k_video_test")
         sessionDir.mkdirs()
         
-        // Check device capabilities
+        
         val deviceModel = android.os.Build.MODEL
         val supports4K = deviceModel.contains("SM-S9") || deviceModel.contains("Galaxy S22") || 
                         deviceModel.contains("Pixel") || deviceModel.contains("OnePlus")
@@ -78,7 +76,7 @@ class RgbCameraInstrumentationTest {
             Log.i(TAG, "Device $deviceModel may not support 4K recording - running basic test")
         }
         
-        // Simulate 4K recording test
+        
         val testResult = simulateVideoRecordingTest(
             sessionDir = sessionDir,
             resolution = "4K",
@@ -93,9 +91,7 @@ class RgbCameraInstrumentationTest {
         Log.i(TAG, "Test results: ${testResult.summary}")
     }
 
-    /**
-     * Test 1080p video recording with fallback validation
-     */
+    
     @Test
     fun test1080pVideoRecording() {
         Log.i(TAG, "Testing 1080p video recording")
@@ -116,9 +112,7 @@ class RgbCameraInstrumentationTest {
         Log.i(TAG, "✅ 1080p video recording test completed successfully")
     }
 
-    /**
-     * Test frame rate validation at 30 FPS
-     */
+    
     @Test
     fun testFrameRateValidation() {
         Log.i(TAG, "Testing frame rate validation at 30 FPS")
@@ -142,9 +136,7 @@ class RgbCameraInstrumentationTest {
         Log.i(TAG, "✅ Frame rate validation test passed")
     }
 
-    /**
-     * Test burst still capture functionality
-     */
+    
     @Test
     fun testBurstStillCapture() {
         Log.i(TAG, "Testing burst still capture")
@@ -160,14 +152,12 @@ class RgbCameraInstrumentationTest {
         
         Assert.assertTrue("Burst capture should succeed", burstTest.success)
         Assert.assertTrue("Should capture expected number of images", 
-            burstTest.capturedCount >= BURST_CAPTURE_COUNT - 1) // Allow for 1 missed capture
+            burstTest.capturedCount >= BURST_CAPTURE_COUNT - 1) 
         
         Log.i(TAG, "✅ Burst capture test completed: ${burstTest.capturedCount} images")
     }
 
-    /**
-     * Test device-specific configurations
-     */
+    
     @Test
     fun testDeviceSpecificConfigurations() {
         Log.i(TAG, "Testing device-specific configurations")
@@ -177,7 +167,7 @@ class RgbCameraInstrumentationTest {
         
         Log.i(TAG, "Testing on device: $deviceManufacturer $deviceModel")
         
-        // Test device capabilities
+        
         val capabilities = analyzeDeviceCapabilities()
         
         Assert.assertTrue("Device should support basic recording", capabilities.supportsBasicRecording)
@@ -191,27 +181,23 @@ class RgbCameraInstrumentationTest {
         Log.i(TAG, "✅ Device-specific configuration tests completed")
     }
 
-    /**
-     * Test error handling and recovery
-     */
+    
     @Test
     fun testErrorHandlingAndRecovery() {
         Log.i(TAG, "Testing error handling and recovery")
         
-        // Test invalid configurations
+        
         val invalidConfigTest = testInvalidConfigurations()
         Assert.assertTrue("Should handle invalid configs gracefully", invalidConfigTest)
         
-        // Test resource management
+        
         val resourceTest = testResourceManagement()
         Assert.assertTrue("Should manage resources properly", resourceTest)
         
         Log.i(TAG, "✅ Error handling and recovery tests passed")
     }
 
-    /**
-     * Simulate video recording test with comprehensive validation
-     */
+    
     private fun simulateVideoRecordingTest(
         sessionDir: File,
         resolution: String,
@@ -225,21 +211,21 @@ class RgbCameraInstrumentationTest {
         val videoFile = File(sessionDir, "test_video_${resolution}.mp4")
         val csvFile = File(sessionDir, "rgb.csv")
         
-        // Simulate recording process
-        Thread.sleep(100) // Brief delay to simulate setup
         
-        // Create test files
+        Thread.sleep(100) 
+        
+        
         videoFile.writeText("Mock video content for $resolution at ${frameRate}fps")
         csvFile.writeText("timestamp_ns,frame_filename,processing_time_ms,file_size_bytes\n")
         
-        // Simulate frame data
+        
         val frameCount = (durationMs / (1000 / frameRate))
         for (i in 1..frameCount) {
             val timestamp = System.nanoTime() + (i * (1_000_000_000L / frameRate))
             csvFile.appendText("$timestamp,frame_$i.jpg,16,${1024 * i}\n")
         }
         
-        // Calculate quality score based on resolution and frame rate
+        
         val qualityScore = when (resolution) {
             "4K" -> if (frameRate >= 30) 0.95 else 0.85
             "1080p" -> if (frameRate >= 30) 0.90 else 0.80
@@ -258,18 +244,16 @@ class RgbCameraInstrumentationTest {
         )
     }
 
-    /**
-     * Simulate frame rate testing with deviation analysis
-     */
+    
     private fun simulateFrameRateTest(
         targetFps: Int,
         durationMs: Long,
         tolerancePercent: Double
     ): FrameRateTestResult {
         
-        // Simulate frame rate measurement with some realistic variation
+        
         val expectedFrames = (durationMs / 1000.0) * targetFps
-        val actualFrames = expectedFrames + (Math.random() - 0.5) * (expectedFrames * 0.1) // ±10% variation
+        val actualFrames = expectedFrames + (Math.random() - 0.5) * (expectedFrames * 0.1) 
         val averageFps = (actualFrames / (durationMs / 1000.0))
         
         val deviation = Math.abs(averageFps - targetFps) / targetFps * 100.0
@@ -284,9 +268,7 @@ class RgbCameraInstrumentationTest {
         )
     }
 
-    /**
-     * Simulate burst capture testing
-     */
+    
     private fun simulateBurstCaptureTest(
         captureCount: Int,
         intervalMs: Long,
@@ -298,39 +280,37 @@ class RgbCameraInstrumentationTest {
         for (i in 1..captureCount) {
             val imageFile = File(sessionDir, "burst_image_$i.jpg")
             
-            // Simulate capture with 90% success rate
+            
             if (Math.random() > 0.1) {
                 imageFile.writeText("Mock image data for burst capture $i")
                 successfulCaptures++
             }
             
-            Thread.sleep(intervalMs / 10) // Simulate time between captures (accelerated)
+            Thread.sleep(intervalMs / 10) 
         }
         
         return BurstCaptureTestResult(
-            success = successfulCaptures >= (captureCount * 0.8), // 80% success threshold
+            success = successfulCaptures >= (captureCount * 0.8), 
             requestedCount = captureCount,
             capturedCount = successfulCaptures,
             successRate = successfulCaptures.toDouble() / captureCount
         )
     }
 
-    /**
-     * Analyze device capabilities for camera testing
-     */
+    
     private fun analyzeDeviceCapabilities(): DeviceCapabilities {
         val deviceModel = android.os.Build.MODEL
         val sdkVersion = android.os.Build.VERSION.SDK_INT
         
-        // Determine capabilities based on device characteristics
-        val supports4K = deviceModel.contains("SM-S9") || // Samsung Galaxy S22 series
+        
+        val supports4K = deviceModel.contains("SM-S9") || 
                         deviceModel.contains("Pixel 6") ||
                         deviceModel.contains("Pixel 7") ||
                         deviceModel.contains("OnePlus") ||
-                        sdkVersion >= 29 // Android 10+ generally has better camera support
+                        sdkVersion >= 29 
         
-        val supportsHighFrameRate = sdkVersion >= 28 // Android 9+ for 60fps
-        val supportsBurstCapture = sdkVersion >= 26 // Android 8+ for burst
+        val supportsHighFrameRate = sdkVersion >= 28 
+        val supportsBurstCapture = sdkVersion >= 26 
         
         return DeviceCapabilities(
             supportsBasicRecording = true,
@@ -342,20 +322,18 @@ class RgbCameraInstrumentationTest {
         )
     }
 
-    /**
-     * Test invalid configuration handling
-     */
+    
     private fun testInvalidConfigurations(): Boolean {
         return try {
             Log.d(TAG, "Testing invalid configuration handling")
             
-            // Test with null session directory
+            
             val nullDirResult = handleInvalidSessionDirectory(null)
             
-            // Test with invalid frame rates
+            
             val invalidFrameRateResult = handleInvalidFrameRate(-1)
             
-            // Test with invalid resolution
+            
             val invalidResolutionResult = handleInvalidResolution("INVALID")
             
             nullDirResult && invalidFrameRateResult && invalidResolutionResult
@@ -366,18 +344,16 @@ class RgbCameraInstrumentationTest {
         }
     }
 
-    /**
-     * Test resource management
-     */
+    
     private fun testResourceManagement(): Boolean {
         return try {
             Log.d(TAG, "Testing resource management")
             
-            // Simulate multiple recorder instances
+            
             val resourceTest1 = simulateResourceAllocation("recorder1")
             val resourceTest2 = simulateResourceAllocation("recorder2")
             
-            // Cleanup simulation
+            
             simulateResourceCleanup("recorder1")
             simulateResourceCleanup("recorder2")
             
@@ -391,17 +367,17 @@ class RgbCameraInstrumentationTest {
 
     private fun handleInvalidSessionDirectory(dir: String?): Boolean {
         Log.d(TAG, "Handling invalid session directory: $dir")
-        return true // Graceful handling simulated
+        return true 
     }
 
     private fun handleInvalidFrameRate(fps: Int): Boolean {
         Log.d(TAG, "Handling invalid frame rate: $fps")
-        return true // Graceful handling simulated
+        return true 
     }
 
     private fun handleInvalidResolution(resolution: String): Boolean {
         Log.d(TAG, "Handling invalid resolution: $resolution")
-        return true // Graceful handling simulated
+        return true 
     }
 
     private fun simulateResourceAllocation(instanceId: String): Boolean {
@@ -413,7 +389,7 @@ class RgbCameraInstrumentationTest {
         Log.d(TAG, "Simulating resource cleanup for: $instanceId")
     }
 
-    // Data classes for test results
+    
     data class VideoTestResult(
         val success: Boolean,
         val qualityScore: Double,

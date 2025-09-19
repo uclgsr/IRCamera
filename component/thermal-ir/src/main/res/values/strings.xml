@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Compass direction strings -->
+    
     <string name="compass_north">North</string>
     <string name="compass_northeast">Northeast</string>
     <string name="compass_east">East</string>
@@ -10,7 +10,7 @@
     <string name="compass_west">West</string>
     <string name="compass_northwest">Northwest</string>
 
-    <!-- Error messages -->
+    
     <string name="tips_tisr_fail">Super resolution initialization failed</string>
     <string name="tips_tisr_on">Super resolution enabled</string>
     <string name="tips_tisr_off">Super resolution disabled</string>
@@ -25,7 +25,7 @@
     <string name="app_video">Video</string>
     <string name="ts004_download_complete">Download complete</string>
 
-    <!-- Dialog and tip strings -->
+    
     <string name="app_tip">Tip</string>
     <string name="tips_observe_photo_content">Switch to observation mode to capture images with enhanced thermal analysis features.</string>
     <string name="app_yes">Yes</string>
@@ -38,7 +38,7 @@
     <string name="tips_ai">AI Detection</string>
     <string name="tips_ai_content">AI detection mode enabled for enhanced thermal analysis</string>
 
-    <!-- Location and permissions -->
+    
     <string name="permission_request_location_app">%s needs location permission to get current address</string>
     <string name="get_current_address">Getting current address</string>
     <string name="app_location_content">Location service is not available</string>
@@ -47,14 +47,14 @@
     <string name="app_cancel">Cancel</string>
     <string name="app_confirm">Confirm</string>
 
-    <!-- Missing string resources -->
-    <!-- Chart temperature strings -->
+    
+    
     <string name="chart_temperature">Temperature</string>
     <string name="chart_temperature_high">High Temperature</string>
     <string name="chart_temperature_low">Low Temperature</string>
     <string name="tc_temp_test_materials">Test Materials</string>
 
-    <!-- Additional thermal strings -->
+    
     <string name="thermal_trend_tips">Thermal trend analysis</string>
     <string name="off_photography">Off Photography</string>
     <string name="seconds_dalay_3">3 Second Delay</string>
@@ -101,7 +101,7 @@
     <string name="album_report_on_edit">Report On Edit</string>
     <string name="tip_delete_chosen">Delete Chosen</string>
 
-    <!-- Additional missing strings -->
+    
     <string name="tip_least_select">Please select at least one image</string>
     <string name="Limite_di_9carte">Limited to 9 cards maximum</string>
     <string name="finalize_and_save">Finalize and Save</string>
@@ -115,7 +115,7 @@
     <string name="request_fail">Request failed</string>
     <string name="tip_no_more_data">No more data available</string>
 
-    <!-- Additional adapter resources -->
+    
     <string name="menu_3d_calibrate">3D Calibrate</string>
     <string name="thermal_false_color">False Color</string>
     <string name="app_setting">Settings</string>

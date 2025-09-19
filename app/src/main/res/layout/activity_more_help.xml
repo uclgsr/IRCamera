@@ -48,7 +48,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tv_title">
 
-                    <!-- 去Connect -->
+                    
                     <com.topdon.tc001.view.ConnectionGuideView
                         android:id="@+id/main_guide_tip1"
                         android:layout_width="match_parent"
@@ -89,7 +89,7 @@
                         app:guide_text="@string/ts004_guide_text12"
                         app:layout_constraintTop_toBottomOf="@+id/main_guide_tip3" />
 
-                    <!-- DisconnectConnect -->
+                    
                     <com.topdon.tc001.view.ConnectionGuideView
                         android:id="@+id/disconnect_tip1"
                         android:layout_width="match_parent"

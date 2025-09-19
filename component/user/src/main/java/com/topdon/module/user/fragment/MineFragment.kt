@@ -51,13 +51,7 @@ import org.greenrobot.eventbus.ThreadMode
 import com.topdon.lib.core.R as LibAppR
 import com.topdon.lib.core.R as RCore
 
-/**
 
-
-
- *
- * Created by LCG on 2024/4/19.
- */
 class MineFragment : BaseFragment(), View.OnClickListener {
 
     private var isNeedRefreshLogin = false
@@ -101,12 +95,12 @@ class MineFragment : BaseFragment(), View.OnClickListener {
         settingElectronicManual.setOnClickListener(this)
         settingFaq.setOnClickListener(this)
         settingFeedback.setOnClickListener(this)
-        settingItemUnit.setOnClickListener(this) // 温度单温
+        settingItemUnit.setOnClickListener(this) 
         dragCustomerView.setOnClickListener(this)
 
         viewWinterPoint.isVisible = !SharedManager.hasClickWinter
 
-        if (BaseApplication.instance.isDomestic()) { // 国内版
+        if (BaseApplication.instance.isDomestic()) { 
 
         }
 
@@ -147,7 +141,7 @@ class MineFragment : BaseFragment(), View.OnClickListener {
 
     override fun onClick(v: View?) {
         when (v) {
-            ivWinter -> { // 冬季特辑入口
+            ivWinter -> { 
                 viewWinterPoint.isVisible = false
                 SharedManager.hasClickWinter = true
                 EventBus.getDefault().post(WinterClickEvent())
@@ -155,7 +149,7 @@ class MineFragment : BaseFragment(), View.OnClickListener {
                 val url =
                     if (UrlConstant.BASE_URL == "https://api.topdon.com/") {
                         "https://app.topdon.com/h5/share/#/detectionGuidanceIndex?showHeader=1&" +
-                                "languageId=1" // Fixed to English (languageId=1)
+                                "languageId=1" 
                     } else {
                         "http://172.16.66.77:8081/#/detectionGuidanceIndex?languageId=1&showHeader=1"
                     }
@@ -180,21 +174,21 @@ class MineFragment : BaseFragment(), View.OnClickListener {
                 }
             }
 
-            settingElectronicManual -> { // 电子说明书
+            settingElectronicManual -> { 
                 NavigationManager.getInstance().build(
                     RouterConfig.ELECTRONIC_MANUAL,
                 ).withInt(Constants.SETTING_TYPE, Constants.SETTING_BOOK)
                     .navigation(requireContext())
             }
 
-            settingFaq -> { // FAQ
+            settingFaq -> { 
                 NavigationManager.getInstance().build(
                     RouterConfig.ELECTRONIC_MANUAL,
                 ).withInt(Constants.SETTING_TYPE, Constants.SETTING_FAQ)
                     .navigation(requireContext())
             }
 
-            settingFeedback -> { // 意见反馈
+            settingFeedback -> { 
                 if (LMS.getInstance().isLogin) {
                     val devSn = SharedManager.getDeviceSn()
                     FeedBackBean().apply {
@@ -212,21 +206,21 @@ class MineFragment : BaseFragment(), View.OnClickListener {
                 }
             }
 
-            settingItemUnit -> { // 温度单位
+            settingItemUnit -> { 
                 NavigationManager.getInstance().build(RouterConfig.UNIT)
                     .navigation(requireContext())
             }
 
-            settingItemVersion -> { // 版本
+            settingItemVersion -> { 
                 NavigationManager.getInstance().build(RouterConfig.VERSION)
                     .navigation(requireContext())
             }
 
-            settingItemClear -> { // 清除缓存，实际已隐藏
+            settingItemClear -> { 
                 clearCache()
             }
 
-            dragCustomerView -> { // 客服
+            dragCustomerView -> { 
 
                 val sn = SharedManager.getDeviceSn()
 
@@ -245,7 +239,7 @@ class MineFragment : BaseFragment(), View.OnClickListener {
         val bgBitmap = BitmapFactory.decodeResource(
             resources,
             LibAppR.mipmap.ic_default_user_head
-        ) // Use available resource from libapp
+        ) 
         LMS.getInstance().activityLogin(null, null, false, null, bgBitmap)
     }
 
@@ -274,7 +268,7 @@ class MineFragment : BaseFragment(), View.OnClickListener {
 
             XLog.e(" 登录失败")
             changeLoginStyle()
-            settingUserImgNight.setImageResource(LibAppR.mipmap.ic_default_user_head) // 恢复默认头像
+            settingUserImgNight.setImageResource(LibAppR.mipmap.ic_default_user_head) 
         }
     }
 
@@ -334,7 +328,7 @@ class MineFragment : BaseFragment(), View.OnClickListener {
             settingUserLay.visibility = View.GONE
             val tvEmail = requireView().findViewById<TextView>(R.id.tv_email)
             tvEmail.text = ""
-            settingUserImgNight.setImageResource(LibAppR.mipmap.ic_default_user_head) // 恢复默认头像
+            settingUserImgNight.setImageResource(LibAppR.mipmap.ic_default_user_head) 
         }
     }
 

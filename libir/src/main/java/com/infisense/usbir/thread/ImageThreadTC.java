@@ -26,24 +26,17 @@ import org.opencv.imgproc.Imgproc;
 import java.nio.ByteBuffer;
 import java.util.LinkedHashMap;
 
-/*
- * @Description:
- * @Author:         brilliantzhao
- * @CreateDate:     2022.2.24 11:06
- * @UpdateUser:
- * @UpdateDate:     2022.2.24 11:06
- * @UpdateRemark:
- */
+
 public class ImageThreadTC extends Thread {
 
 
-    public static final int TYPE_AI_C = -1;//不开启
-    public static final int TYPE_AI_D = 0;//动态检测
-    public static final int TYPE_AI_H = 1;//high temperature source检测
-    public static final int TYPE_AI_L = 2;//low temperature source检测
+    public static final int TYPE_AI_C = -1;
+    public static final int TYPE_AI_D = 0;
+    public static final int TYPE_AI_H = 1;
+    public static final int TYPE_AI_L = 2;
     public static final int MULTIPLE = 2;
     private final byte[] amplifyRotateArray;
-    public byte[] imageTemp;//艾睿需要的测试数据，处理完可以删除
+    public byte[] imageTemp;
     private byte[] imgTmp;
     private String TAG = "ImageThread";
     private Context mContext;
@@ -53,7 +46,7 @@ public class ImageThreadTC extends Thread {
     private int imageHeight;
     private byte[] imageSrc;
     private byte[] temperatureSrc;
-    private boolean rotate; // 屏幕旋转
+    private boolean rotate; 
     private CommonParams.DataFlowMode dataFlowMode = CommonParams.DataFlowMode.IMAGE_AND_TEMP_OUTPUT;
     private byte[] imageYUV422;
     private byte[] imageARGB;
@@ -166,10 +159,7 @@ public class ImageThreadTC extends Thread {
                     } else {
                         LibIRProcess.convertYuyvMapToARGBPseudocolor(imageSrc, imageHeight * imageWidth, PseudocodeUtils.INSTANCE.changePseudocodeModeByOld(pseudocolorMode), imageARGB);
                     }
-                    /*
-                     * 经过转换之后的infrared数据
-                     * 其中的数据是旋转90度的，需要旋转回来,infrared旋转的逻辑放在这里处理。
-                     */
+                    
                     if (rotateInt == 270) {
                         LibIRProcess.ImageRes_t imageRes = new LibIRProcess.ImageRes_t();
                         imageRes.height = (char) imageWidth;
@@ -192,9 +182,7 @@ public class ImageThreadTC extends Thread {
                         imageDst = imageARGB;
                     }
                     irImageHelp.customPseudoColor(imageDst, temperatureSrc, imageWidth, imageHeight);
-                    /*
-                     * 等温尺处理,展示pseudo color的温度range内信息
-                     */
+                    
                     irImageHelp.setPseudoColorMaxMin(imageDst, temperatureSrc, max, min, imageWidth, imageHeight);
                 }
                 imageDst = irImageHelp.contourDetection(alarmBean,

@@ -62,7 +62,7 @@
         app:layout_constraintTop_toTopOf="@id/view_input_bg"
         tools:text="25.00" />
 
-    <!-- Cancel -->
+    
     <TextView
         android:id="@+id/tv_cancel"
         android:layout_width="0dp"
@@ -78,7 +78,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/et_input" />
 
-    <!-- 确定 -->
+    
     <TextView
         android:id="@+id/tv_confirm"
         android:layout_width="0dp"

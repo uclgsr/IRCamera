@@ -2,10 +2,7 @@ package com.topdon.gsr.service
 
 import android.util.Log
 
-/**
- * Abstraction for Shimmer data to avoid direct dependency on Shimmer SDK classes
- * This allows the component to work with official Shimmer libraries without creating duplicates
- */
+
 interface ShimmerDataCluster {
     fun getGSRRawValue(): Double
     fun getGSRCalibratedValue(): Double
@@ -14,9 +11,7 @@ interface ShimmerDataCluster {
     fun hasValidGSRData(): Boolean
 }
 
-/**
- * Abstraction for Shimmer device to avoid direct dependency on Shimmer SDK classes
- */
+
 interface ShimmerDeviceInterface {
     fun connect(address: String, name: String): Boolean
     fun startStreaming(): Boolean
@@ -27,10 +22,7 @@ interface ShimmerDeviceInterface {
     fun setConnectionCallback(callback: (String) -> Unit)
 }
 
-/**
- * Factory to create Shimmer device instances
- * Implementation will be provided by the main app module which has the official Shimmer SDK
- */
+
 interface ShimmerDeviceFactory {
     fun createShimmerDevice(): ShimmerDeviceInterface
 }

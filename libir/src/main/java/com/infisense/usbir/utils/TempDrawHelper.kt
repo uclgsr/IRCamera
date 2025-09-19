@@ -78,8 +78,8 @@ class TempDrawHelper {
         val top: Float = y - POINT_SIZE / 2f
         val right: Float = x + POINT_SIZE / 2f
         val bottom: Float = y + POINT_SIZE / 2f
-        canvas.drawLine(left, y.toFloat(), right, y.toFloat(), linePaint) // 画横线
-        canvas.drawLine(x.toFloat(), top, x.toFloat(), bottom, linePaint) // 画竖线
+        canvas.drawLine(left, y.toFloat(), right, y.toFloat(), linePaint) 
+        canvas.drawLine(x.toFloat(), top, x.toFloat(), bottom, linePaint) 
     }
 
     fun drawLine(
@@ -156,12 +156,12 @@ class TempDrawHelper {
         var textY: Float = (y - TEMP_TEXT_OFFSET).toFloat()
 
         val textWidth: Float = textPaint.measureText(text)
-        if (x > width - textWidth - TEMP_TEXT_OFFSET) { // 超出右边界，那就挪到左边
+        if (x > width - textWidth - TEMP_TEXT_OFFSET) { 
             textX = x - TEMP_TEXT_OFFSET - textWidth
         }
 
         val textFontTop: Float = -textPaint.getFontMetrics().top
-        if (y < textFontTop + TEMP_TEXT_OFFSET / 2) { // 超出上边界，那就挪到下面
+        if (y < textFontTop + TEMP_TEXT_OFFSET / 2) { 
             textY = y + TEMP_TEXT_OFFSET / 2 + textFontTop
         }
 
@@ -210,13 +210,13 @@ class TempDrawHelper {
         var textX = x - textWidth / 2
         var textY = y + POINT_SIZE / 2 + textHeight
 
-        if (textX < 0) { // x超出左边界
+        if (textX < 0) { 
             textX = 0f
         }
-        if (textX + textWidth > width) { // x超出右边界
+        if (textX + textWidth > width) { 
             textX = width - textWidth
         }
-        if (textY > height) { // 若名字放点下面要超出range时，放点上面
+        if (textY > height) { 
             textY = y - POINT_SIZE / 2 - textPaint.fontMetrics.bottom
         }
         canvas.drawText(name, textX, textY, textPaint)
@@ -242,16 +242,16 @@ class TempDrawHelper {
         var textX: Float = centerX - textWidth / 2
         var textY: Float = centerY + offset
 
-        if (textX < 0) { // x超出左边界
+        if (textX < 0) { 
             textX = 0f
         }
-        if (textX + textWidth > width) { // x超出右边界
+        if (textX + textWidth > width) { 
             textX = width - textWidth
         }
-        if (textY < textHeight) { // y超出上边界
+        if (textY < textHeight) { 
             textY = textHeight
         }
-        if (textY > height) { // y超出下边界
+        if (textY > height) { 
             textY = height.toFloat()
         }
         canvas.drawText(name, textX, textY, textPaint)

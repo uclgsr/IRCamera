@@ -120,7 +120,7 @@ class RoleBasedAccessControl(
     private val deviceRoles = ConcurrentHashMap<String, Role>()
     private val sessionPermissions = ConcurrentHashMap<String, Set<String>>()
     private val temporaryPermissions =
-        ConcurrentHashMap<String, Pair<Set<String>, Long>>() // permissions -> expiry
+        ConcurrentHashMap<String, Pair<Set<String>, Long>>() 
 
     private val accessAttempts = mutableListOf<AccessAttempt>()
 
@@ -221,7 +221,7 @@ class RoleBasedAccessControl(
                 )
 
                 AdvancedAuthenticationManager.AUTH_LEVEL_TOKEN -> minOf(mappedRole, Role.RESEARCHER)
-                AdvancedAuthenticationManager.AUTH_LEVEL_BIOMETRIC -> mappedRole // Full role access
+                AdvancedAuthenticationManager.AUTH_LEVEL_BIOMETRIC -> mappedRole 
                 else -> Role.GUEST
             }
 
@@ -263,7 +263,7 @@ class RoleBasedAccessControl(
     fun grantTemporaryPermissions(
         deviceId: String,
         permissions: Set<String>,
-        durationMs: Long = 60 * 60 * 1000L, // 1 hour default
+        durationMs: Long = 60 * 60 * 1000L, 
     ) {
         val expiryTime = System.currentTimeMillis() + durationMs
         temporaryPermissions[deviceId] = Pair(permissions, expiryTime)
@@ -459,7 +459,7 @@ class RoleBasedAccessControl(
             put("temporary_permissions_count", temporaryPermissions.size)
             put("session_permissions_count", sessionPermissions.size)
             put("total_access_attempts", accessAttempts.size)
-            put("recent_violations", getSecurityViolations(60 * 60 * 1000L).size) // Last hour
+            put("recent_violations", getSecurityViolations(60 * 60 * 1000L).size) 
             put("available_roles", Role.values().map { it.name })
             put("available_permissions", getAllPermissions().sorted())
         }

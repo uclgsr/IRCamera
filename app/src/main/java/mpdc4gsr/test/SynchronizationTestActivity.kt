@@ -13,23 +13,13 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.io.File
 
-/**
- * Activity for testing synchronization between multiple sensor modalities.
- *
- * This activity implements the "Flash Sync" test mentioned in the requirements:
- * - Performs a test where a simultaneous event is captured by all sensors
- * - Triggers a flash on the screen while recording to create a sync marker
- * - Verifies alignment by checking timestamps across video, thermal, and GSR data
- *
- * The test helps validate that the synchronization system achieves the target
- * accuracy of within 50-100ms alignment across all modalities.
- */
+
 class SynchronizationTestActivity : ComponentActivity() {
 
     companion object {
         private const val TAG = "SynchronizationTest"
         private const val FLASH_DURATION_MS = 500L
-        private const val TEST_RECORDING_DURATION_MS = 10000L // 10 seconds
+        private const val TEST_RECORDING_DURATION_MS = 10000L 
     }
 
     private lateinit var recordingController: RecordingController
@@ -98,12 +88,12 @@ class SynchronizationTestActivity : ComponentActivity() {
 
                 updateStatus("Starting synchronization test...")
 
-                // Create test session directory
+                
                 val testSessionDir =
                     File(getExternalFilesDir(null), "sync_test_${System.currentTimeMillis()}")
                 testSessionDir.mkdirs()
 
-                // Start recording with session metadata
+                
                 val sessionId = "SYNC_TEST_${System.currentTimeMillis()}"
                 val success =
                     recordingController.startRecording(testSessionDir.absolutePath, sessionId)
@@ -111,10 +101,10 @@ class SynchronizationTestActivity : ComponentActivity() {
                 if (success) {
                     updateStatus("Recording started. You can now trigger flash sync events.")
 
-                    // Schedule automatic sync events for testing
+                    
                     scheduleAutomaticSyncEvents()
 
-                    // Auto-stop after test duration
+                    
                     lifecycleScope.launch {
                         delay(TEST_RECORDING_DURATION_MS)
                         if (isTestRunning) {
@@ -138,8 +128,8 @@ class SynchronizationTestActivity : ComponentActivity() {
 
     private fun scheduleAutomaticSyncEvents() {
         lifecycleScope.launch {
-            // Schedule sync events at regular intervals
-            val eventTimes = listOf(2000L, 4000L, 6000L, 8000L) // 2, 4, 6, 8 seconds
+            
+            val eventTimes = listOf(2000L, 4000L, 6000L, 8000L) 
 
             for (eventTime in eventTimes) {
                 delay(eventTime)
@@ -157,10 +147,10 @@ class SynchronizationTestActivity : ComponentActivity() {
             try {
                 Log.i(TAG, "Triggering manual flash sync event")
 
-                // Flash the screen white
+                
                 flashScreen()
 
-                // Add sync marker to all sensors
+                
                 recordingController.addSyncMarker(
                     "MANUAL_FLASH_SYNC",
                     android.os.SystemClock.elapsedRealtimeNanos(),
@@ -185,10 +175,10 @@ class SynchronizationTestActivity : ComponentActivity() {
             try {
                 Log.i(TAG, "Triggering automatic sync event: $eventName")
 
-                // Brief screen flash for automatic sync
+                
                 flashScreen(duration = 200L)
 
-                // Add sync marker
+                
                 recordingController.addSyncMarker(
                     eventName,
                     android.os.SystemClock.elapsedRealtimeNanos(),
@@ -209,12 +199,12 @@ class SynchronizationTestActivity : ComponentActivity() {
 
     private fun flashScreen(duration: Long = FLASH_DURATION_MS) {
         lifecycleScope.launch {
-            // Change background to white
+            
             window.decorView.setBackgroundColor(android.graphics.Color.WHITE)
 
             delay(duration)
 
-            // Restore original background
+            
             window.decorView.setBackgroundColor(android.graphics.Color.BLACK)
         }
     }
@@ -229,7 +219,7 @@ class SynchronizationTestActivity : ComponentActivity() {
                 if (success) {
                     updateStatus("Test completed. Check recorded data for sync event alignment.")
 
-                    // Generate test report
+                    
                     generateSyncTestReport()
                 } else {
                     updateStatus("Warning: Some sensors may not have stopped cleanly")

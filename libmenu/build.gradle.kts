@@ -1,7 +1,7 @@
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
-    id("com.google.devtools.ksp") // Use KSP plugin from classpath
+    id("com.google.devtools.ksp") 
     id("kotlin-parcelize")
 }
 
@@ -52,9 +52,9 @@ android {
 
 dependencies {
     coreLibraryDesugaring(libs.desugar.jdk.libs)
-    implementation(libs.material) // Requires ConstraintLayout, ViewPager2
+    implementation(libs.material) 
     implementation(libs.glide)
-    implementation(project(":libapp")) // Requires string resources
+    implementation(project(":libapp")) 
     implementation(project(":BleModule"))
     testImplementation(libs.junit)
     testImplementation("org.robolectric:robolectric:4.10.3")

@@ -12,9 +12,9 @@ import com.topdon.libcom.R
 
 class TempLayout : LinearLayout {
     companion object {
-        val TYPE_HOT = 1 // 高温预警
-        val TYPE_LT = 2 // 低温预警
-        val TYPE_A = 3 // 高低温交叉预警
+        val TYPE_HOT = 1 
+        val TYPE_LT = 2 
+        val TYPE_A = 3 
     }
 
     private var alphaAnimator: ObjectAnimator? = null
@@ -37,7 +37,7 @@ class TempLayout : LinearLayout {
         alphaAnimator = ObjectAnimator.ofFloat(this, "alpha", 0f, 1f)
         alphaAnimator?.duration = 500
         alphaAnimator?.interpolator =
-            BreatheInterpolator() // 使用自定义的插值器
+            BreatheInterpolator() 
         alphaAnimator?.addUpdateListener {
             animatorAlpha = it.getAnimatedValue("alpha") as Float
 

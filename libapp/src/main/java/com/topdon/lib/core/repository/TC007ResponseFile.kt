@@ -203,11 +203,11 @@ data class CustomColor(
 )
 
 data class Param(
-    var brightness: Int = 50, // 亮度, 0-100, 默认50
-    var contrast: Int = 50, // 对比度, 0-100, 默认50
-    var saturation: Int = 50, // 饱和度, 0-100, 默认50
-    var sharpness: Int = 50, // 锐度, 0-100, 默认50
-    var flipMode: Int = 0, // 翻转, 0:正常, 1:水平翻转 2:垂直翻转 3:180度翻转
+    var brightness: Int = 50, 
+    var contrast: Int = 50, 
+    var saturation: Int = 50, 
+    var sharpness: Int = 50, 
+    var flipMode: Int = 0, 
 )
 
 data class Isotherm(
@@ -222,7 +222,7 @@ data class IsothermColor(
 )
 
 data class IsothermC(
-    val mode: Int, // 0：关，1：阈值上，2：阈值下，3：区间内
+    val mode: Int, 
     val highThreshold: Int,
     val lowThreshold: Int,
     var greaterThreshold: Int = 0,

@@ -24,7 +24,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class ShimmerBleController {
     private static final String TAG = "ShimmerBleController";
 
-    // Shimmer BLE UUIDs and constants
+    
     private static final UUID SHIMMER_SERVICE_UUID = UUID.fromString("49535343-FE7D-4AE5-8FA9-9FAFD205E455");
     private static final UUID SHIMMER_DATA_CHAR_UUID = UUID.fromString("49535343-1E4D-4BD9-BA61-23C647249616");
     private static final UUID SHIMMER_CMD_CHAR_UUID = UUID.fromString("49535343-8841-43F4-A8D4-ECBE34729BB3");
@@ -228,17 +228,7 @@ public class ShimmerBleController {
         }
     }
 
-    /**
-     * Connect and initialize device with proper GSR configuration
-     * Implements comprehensive device pairing with scientific accuracy parameters
-     * 
-     * @param device Bluetooth device to connect
-     * @param config Device configuration
-     * @param listener Connection listener
-     * @param gsrRange GSR range (0-4, default 4 for highest sensitivity)  
-     * @param samplingRate Sampling rate in Hz (default 128Hz)
-     * @return Connected and initialized ShimmerDevice or null if failed
-     */
+    
     public UnifiedDevice connectAndInitializeDevice(@NonNull BluetoothDevice device,
                                                    @NonNull ShimmerDeviceConfig config,
                                                    @NonNull UnifiedBleManager.UnifiedConnectionListener listener,
@@ -247,15 +237,15 @@ public class ShimmerBleController {
         try {
             Log.i(TAG, "Connecting and initializing Shimmer device: " + device.getAddress());
 
-            // First establish basic connection
+            
             UnifiedDevice shimmerDevice = connectDevice(device, config, listener);
             if (shimmerDevice == null) {
                 Log.e(TAG, "Failed to establish basic connection");
                 return null;
             }
 
-            // Wait for connection to be fully established
-            int maxWaitAttempts = 10; // 5 seconds max wait
+            
+            int maxWaitAttempts = 10; 
             int waitAttempts = 0;
             while (!shimmerDevice.isConnected() && waitAttempts < maxWaitAttempts) {
                 try {
@@ -269,10 +259,10 @@ public class ShimmerBleController {
 
             if (!shimmerDevice.isConnected()) {
                 Log.e(TAG, "Device connection timeout");
-                return shimmerDevice; // Return anyway, may connect later
+                return shimmerDevice; 
             }
 
-            // Initialize device for GSR recording with proper parameters
+            
             if (shimmerDevice instanceof ShimmerDevice) {
                 ShimmerDevice shimmer = (ShimmerDevice) shimmerDevice;
                 boolean initialized = shimmer.initializeForGSRRecording(gsrRange, samplingRate);
@@ -296,12 +286,7 @@ public class ShimmerBleController {
         return new ArrayList<>(connectedShimmerDevices);
     }
 
-    /**
-     * Scan for nearby Shimmer devices for the specified duration
-     *
-     * @param scanDurationMs Duration of scan in milliseconds
-     * @param callback       Callback to receive discovered devices
-     */
+    
     public void scanForDevices(long scanDurationMs, UnifiedBleManager.ShimmerScanCallback callback) {
         if (callback == null) {
             Log.e(TAG, "Scan callback cannot be null");
@@ -314,7 +299,7 @@ public class ShimmerBleController {
             @Override
             public void onShimmerDeviceFound(BluetoothDevice device, UnifiedBleManager.DeviceType type, int rssi, byte[] scanRecord) {
                 try {
-                    // Create UnifiedDevice from BluetoothDevice
+                    
                     UnifiedDevice unifiedDevice = createUnifiedDeviceFromBluetooth(device, type, rssi, scanRecord);
                     foundDevices.add(unifiedDevice);
                     callback.onDeviceFound(unifiedDevice);
@@ -334,9 +319,9 @@ public class ShimmerBleController {
             }
         };
 
-        // Start scanning with the specified duration
+        
         if (startDeviceDiscovery(scanListener)) {
-            // Schedule scan stop after specified duration
+            
             mainHandler.postDelayed(() -> {
                 if (isScanning.get()) {
                     stopDeviceDiscovery();
@@ -348,17 +333,15 @@ public class ShimmerBleController {
         }
     }
 
-    /**
-     * Create a UnifiedDevice from BluetoothDevice scan result
-     */
+    
     private UnifiedDevice createUnifiedDeviceFromBluetooth(BluetoothDevice device, UnifiedBleManager.DeviceType type, int rssi, byte[] scanRecord) {
         try {
             String deviceName = BluetoothPermissionUtils.getDeviceName(context, device);
 
-            // Create ShimmerDevice as UnifiedDevice
+            
             ShimmerDeviceConfig config = new ShimmerDeviceConfig.Builder()
                     .setDeviceType(type)
-                    .setSamplingRate(128) // Default GSR sampling rate
+                    .setSamplingRate(128) 
                     .setConnectionTimeout(15000)
                     .build();
 

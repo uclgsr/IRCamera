@@ -25,7 +25,7 @@ object TimeUtil {
         detectSamsungS22Processor()
 
         try {
-            bootTimeReference = System.nanoTime() / 1_000_000L // Convert to milliseconds
+            bootTimeReference = System.nanoTime() / 1_000_000L 
         } catch (e: Exception) {
             bootTimeReference = 0L
         }
@@ -84,7 +84,7 @@ object TimeUtil {
                         soc.contains("samsung", ignoreCase = true) -> {
                     detectedProcessor = "Exynos_2200"
                 }
-                // Generic Samsung S22 detection
+                
                 deviceBrand.contains("samsung", ignoreCase = true) &&
                         deviceModel.contains("SM-S90", ignoreCase = true) -> {
                     detectedProcessor = "Samsung_S22_Generic"
@@ -102,7 +102,7 @@ object TimeUtil {
 
     fun setPcTimeOffset(offset: Long) {
         pcTimeOffset = offset
-        // Only log if Android Log is available (not in unit tests)
+        
         try {
             android.util.Log.d(
                 TAG,
@@ -113,7 +113,7 @@ object TimeUtil {
                 "Samsung S22 ($detectedProcessor) maintains authoritative timing with ${offset}ms PC coordination"
             )
         } catch (e: Exception) {
-            // Ignore - running in unit tests
+            
         }
     }
 
@@ -136,11 +136,11 @@ object TimeUtil {
 
     fun getHighPrecisionTimestamp(): Long {
         return try {
-            // Use Samsung S22 nanoTime for sub-millisecond precision, adjusted to ground truth base
+            
             val nanoOffset = (System.nanoTime() / 1_000_000L) - bootTimeReference
             deviceGroundTruthBase + nanoOffset + pcTimeOffset
         } catch (e: Exception) {
-            // Fallback to standard millisecond precision
+            
             getSynchronizedTimestamp()
         }
     }
@@ -150,7 +150,7 @@ object TimeUtil {
             java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", java.util.Locale.US)
                 .format(java.util.Date(timestamp))
         } catch (e: Exception) {
-            // Fallback for unit tests
+            
             timestamp.toString()
         }
     }
@@ -162,7 +162,7 @@ object TimeUtil {
                     .format(java.util.Date(getSynchronizedTimestamp()))
             "${prefix}_$timestamp"
         } catch (e: Exception) {
-            // Fallback for unit tests
+            
             "${prefix}_${getSynchronizedTimestamp()}"
         }
     }
@@ -181,38 +181,27 @@ object TimeUtil {
         )
     }
 
-    /**
-     * Gets monotonic elapsed time since boot in nanoseconds.
-     * Use this for measuring intervals to avoid clock adjustments.
-     */
+    
     fun getMonotonicTimestampNs(): Long {
         return try {
             android.os.SystemClock.elapsedRealtimeNanos()
         } catch (e: Exception) {
-            // Fallback to System.nanoTime() if SystemClock not available (tests)
+            
             System.nanoTime()
         }
     }
 
-    /**
-     * Gets monotonic elapsed time since boot in milliseconds.
-     * Use this for measuring intervals to avoid clock adjustments.
-     */
+    
     fun getMonotonicTimestampMs(): Long {
         return getMonotonicTimestampNs() / 1_000_000L
     }
 
-    /**
-     * Calculates elapsed time from a monotonic start timestamp.
-     * Use this to measure recording duration without clock drift issues.
-     */
+    
     fun getElapsedTimeMs(startMonotonicNs: Long): Long {
         return (getMonotonicTimestampNs() - startMonotonicNs) / 1_000_000L
     }
 
-    /**
-     * Creates session timing metadata with both wall clock and monotonic references
-     */
+    
     fun createSessionTimingMetadata(sessionId: String): Map<String, Any> {
         val wallClockMs = getSynchronizedTimestamp()
         val monotonicNs = getMonotonicTimestampNs()
@@ -237,7 +226,7 @@ object TimeUtil {
             try {
                 val nano1 = System.nanoTime()
                 val nano2 = System.nanoTime()
-                (nano2 - nano1) / 1_000_000.0 // Convert to milliseconds
+                (nano2 - nano1) / 1_000_000.0 
             } catch (e: Exception) {
                 -1.0
             }

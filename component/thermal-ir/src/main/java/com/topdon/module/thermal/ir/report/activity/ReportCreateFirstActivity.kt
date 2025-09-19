@@ -47,20 +47,10 @@ import java.util.Calendar
 import java.util.Locale
 import com.topdon.lib.core.R as LibR
 
-/**
 
- *
-
-
-
-
- */
 
 class ReportCreateFirstActivity : BaseActivity(), View.OnClickListener {
-    /**
-
-
-     */
+    
     private var isTC007 = false
     private var locationManager: LocationManager? = null
     private var locationProvider: String? = null
@@ -170,9 +160,9 @@ class ReportCreateFirstActivity : BaseActivity(), View.OnClickListener {
 
     @SuppressLint("SetTextI18n")
     private fun readConfig() {
-        var environment = 30f // 环境温度
-        var distance = 0.25f // 测试距离
-        var radiation = 0.95f // 发射率
+        var environment = 30f 
+        var distance = 0.25f 
+        var radiation = 0.95f 
         val config = ConfigRepository.readConfig(isTC007)
         distance = config.distance
         radiation = config.radiation
@@ -192,11 +182,11 @@ class ReportCreateFirstActivity : BaseActivity(), View.OnClickListener {
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            R.id.tv_report_date -> { // 报告日期
+            R.id.tv_report_date -> { 
                 selectTime()
             }
 
-            R.id.tv_preview -> { // 预览
+            R.id.tv_preview -> { 
                 val reportInfoBean = buildReportInfo()
                 val reportConditionBean = buildReportCondition()
                 NavigationManager.getInstance().build(RouterConfig.REPORT_PREVIEW_FIRST)
@@ -205,7 +195,7 @@ class ReportCreateFirstActivity : BaseActivity(), View.OnClickListener {
                     .navigation(this)
             }
 
-            R.id.tv_next -> { // 下一步
+            R.id.tv_next -> { 
                 val reportInfoBean = buildReportInfo()
                 val reportConditionBean = buildReportCondition()
                 val imageTempBean: ImageTempBean? =

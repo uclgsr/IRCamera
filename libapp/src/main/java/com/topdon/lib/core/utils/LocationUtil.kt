@@ -43,7 +43,7 @@ object LocationUtil {
                 }
                 val address = resultList[0]
                 return@withContext (address.adminArea ?: "") + (address.locality
-                    ?: "") + (address.subLocality ?: "") // 省-市-区
+                    ?: "") + (address.subLocality ?: "") 
             } catch (e: Exception) {
                 e.printStackTrace()
                 return@withContext null
@@ -54,7 +54,7 @@ object LocationUtil {
         activity: ComponentActivity,
         listener: ((isEnable: Boolean) -> Unit),
     ) {
-        if (Build.VERSION.SDK_INT >= 28) { // Android 9及以上版本才有位置信息开关
+        if (Build.VERSION.SDK_INT >= 28) { 
             activity.lifecycle.addObserver(ModeChangeObserver(activity, listener))
         }
     }

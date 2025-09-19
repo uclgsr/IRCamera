@@ -1,12 +1,4 @@
-/*
- *  Copyright 2013 The LibYuv Project Authors. All rights reserved.
- *
- *  Use of this source code is governed by a BSD-style license
- *  that can be found in the LICENSE file in the root of the source
- *  tree. An additional intellectual property rights grant can be found
- *  in the file PATENTS. All contributing project authors may
- *  be found in the AUTHORS file in the root of the source tree.
- */
+
 
 #ifndef INCLUDE_LIBYUV_SCALE_ROW_H_
 #define INCLUDE_LIBYUV_SCALE_ROW_H_
@@ -37,19 +29,19 @@ extern "C" {
 #if defined(__GNUC__) && (defined(__x86_64__) || defined(__i386__))
 #if (__GNUC__ > 4) || (__GNUC__ == 4 && (__GNUC_MINOR__ >= 7))
 #define GCC_HAS_AVX2 1
-#endif  // GNUC >= 4.7
-#endif  // __GNUC__
+#endif  
+#endif  
 
 #if defined(__clang__) && (defined(__x86_64__) || defined(__i386__))
 #if (__clang_major__ > 3) || (__clang_major__ == 3 && (__clang_minor__ >= 4))
 #define CLANG_HAS_AVX2 1
-#endif  // clang >= 3.4
-#endif  // __clang__
+#endif  
+#endif  
 
 #if defined(_M_IX86) && !defined(__clang__) && defined(_MSC_VER) && \
     _MSC_VER >= 1700
 #define VISUALC_HAS_AVX2 1
-#endif  // VisualStudio >= 2012
+#endif  
 
 #if !defined(LIBYUV_DISABLE_X86) && \
     (defined(_M_IX86) || defined(__x86_64__) || defined(__i386__))
@@ -1273,8 +1265,8 @@ void ScaleAddRow_Any_MMI(const uint8_t *src_ptr,
         int src_width);
 
 #ifdef __cplusplus
-}  // extern "C"
-}  // namespace libyuv
+}  
+}  
 #endif
 
-#endif  // INCLUDE_LIBYUV_SCALE_ROW_H_
+#endif  

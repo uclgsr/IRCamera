@@ -1,19 +1,19 @@
 #!/bin/bash
 
-# Enhanced Build Script for Hub-and-Spoke Implementation
-# Optimized build process with better error handling and performance
+
+
 
 echo "🚀 Enhanced Hub-and-Spoke Build System"
 echo "======================================"
 
-# Colors for output
+
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
-NC='\033[0m' # No Color
+NC='\033[0m' 
 
-# Function to print colored output
+
 print_status() {
     echo -e "${BLUE}[INFO]${NC} $1"
 }
@@ -30,13 +30,13 @@ print_error() {
     echo -e "${RED}[ERROR]${NC} $1"
 }
 
-# Check if we're in the right directory
+
 if [ ! -f "gradlew" ]; then
     print_error "gradlew not found. Please run this script from the project root directory."
     exit 1
 fi
 
-# Clean previous builds
+
 print_status "Cleaning previous builds..."
 if ! ./gradlew clean; then
     print_error "Clean failed"
@@ -45,14 +45,14 @@ fi
 
 print_success "Clean completed"
 
-# Optimize Gradle daemon
+
 print_status "Optimizing Gradle daemon..."
 export GRADLE_OPTS="-Xmx4g -XX:MaxMetaspaceSize=512m -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8"
 
-# Build with enhanced configuration
+
 print_status "Building Android application with enhanced Hub-Spoke features..."
 
-# Use parallel builds and configure compiler
+
 ./gradlew build \
     --parallel \
     --configure-on-demand \
@@ -69,7 +69,7 @@ BUILD_RESULT=$?
 if [ $BUILD_RESULT -eq 0 ]; then
     print_success "Android application build completed successfully!"
     
-    # Check if APK was generated
+    
     if [ -f "app/build/outputs/apk/debug/app-debug.apk" ]; then
         APK_SIZE=$(stat -f%z "app/build/outputs/apk/debug/app-debug.apk" 2>/dev/null || stat -c%s "app/build/outputs/apk/debug/app-debug.apk" 2>/dev/null)
         APK_SIZE_MB=$((APK_SIZE / 1024 / 1024))
@@ -77,28 +77,28 @@ if [ $BUILD_RESULT -eq 0 ]; then
         print_status "Location: app/build/outputs/apk/debug/app-debug.apk"
     fi
     
-    # Build PC Controller if available
+    
     if [ -d "pc-controller" ]; then
         print_status "Building PC Controller (Hub)..."
         (
         cd pc-controller || exit
         
-        # Check if virtual environment exists, create if not
+        
         if [ ! -d "venv" ]; then
             print_status "Creating Python virtual environment..."
             python3 -m venv venv
         fi
         
-        # Activate virtual environment
+        
         source venv/bin/activate 2>/dev/null || source venv/Scripts/activate 2>/dev/null
         
-        # Install dependencies
+        
         if [ -f "requirements.txt" ]; then
             print_status "Installing PC Controller dependencies..."
             if pip install -r requirements.txt; then
                 print_success "PC Controller dependencies installed"
                 
-                # Test PC Controller
+                
                 print_status "Testing PC Controller..."
                 python -c "
 try:
@@ -134,7 +134,7 @@ except Exception as e:
 else
     print_error "Build failed with exit code $BUILD_RESULT"
     
-    # Show helpful error information
+    
     print_status "Troubleshooting tips:"
     echo "  • Check Android SDK and build tools are properly installed"
     echo "  • Verify Gradle wrapper permissions: chmod +x gradlew"

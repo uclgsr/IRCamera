@@ -1,10 +1,5 @@
 #!/usr/bin/env python3
-"""
-Data Processing Module for IRCamera PC Controller
 
-Provides real-time data processing and aggregation capabilities for
-multi-modal physiological sensing data including GSR, thermal, and RGB camera data.
-"""
 
 import asyncio
 import json
@@ -32,22 +27,22 @@ except ImportError:
 
 @dataclass
 class GSRDataPoint:
-    """GSR data point with timestamp and metadata"""
+    
 
     timestamp: float
-    gsr_value: float  # in microsiemens
-    raw_value: int  # raw ADC value (12-bit: 0-4095)
+    gsr_value: float  
+    raw_value: int  
     device_id: str
     session_id: str
-    quality: str = "good"  # good, fair, poor, invalid
+    quality: str = "good"  
 
 
 @dataclass
 class ThermalDataPoint:
-    """Thermal camera data point"""
+    
 
     timestamp: float
-    temperature_data: List[List[float]]  # 2D temperature matrix
+    temperature_data: List[List[float]]  
     min_temp: float
     max_temp: float
     avg_temp: float
@@ -58,7 +53,7 @@ class ThermalDataPoint:
 
 @dataclass
 class RGBDataPoint:
-    """RGB camera data point"""
+    
 
     timestamp: float
     image_path: str
@@ -70,16 +65,13 @@ class RGBDataPoint:
 
 
 class GSRIngestor:
-    """
-    Real-time GSR data ingestor that processes incoming GSR data
-    from Android devices with proper 12-bit ADC handling
-    """
+    
 
     def __init__(self, session_manager=None):
         self.session_manager = session_manager
         self.active_sessions: Dict[str, Dict] = {}
         self.data_buffer: List[GSRDataPoint] = []
-        self.buffer_size = 1000  # Maximum buffer size
+        self.buffer_size = 1000  
         self.processing_queue = asyncio.Queue()
 
         logger.info("GSRIngestor initialized")
@@ -87,33 +79,23 @@ class GSRIngestor:
     async def process_gsr_batch(
             self, device_id: str, session_id: str, gsr_data: List[Dict[str, Any]]
     ) -> bool:
-        """
-        Process a batch of GSR data from an Android device
-
-        Args:
-            device_id: Android device identifier
-            session_id: Current recording session ID
-            gsr_data: List of GSR data points with timestamp, raw_value, etc.
-
-        Returns:
-            True if processed successfully, False otherwise
-        """
+        
         try:
             logger.debug(
                 f"Processing GSR batch: {len(gsr_data)} points from {device_id}"
             )
 
-            # Convert raw GSR data to structured data points
+            
             processed_points = []
             for data_point in gsr_data:
-                # Extract raw 12-bit ADC value (0-4095 range)
+                
                 raw_value = data_point.get("raw_value", 0)
 
-                # Convert to GSR in microsiemens using proper 12-bit scaling
-                # This implements the correct ADC resolution as per requirements
+                
+                
                 gsr_value = self._convert_raw_to_gsr(raw_value)
 
-                # Create structured data point
+                
                 point = GSRDataPoint(
                     timestamp=data_point.get("timestamp", time.time()),
                     gsr_value=gsr_value,
@@ -125,14 +107,14 @@ class GSRIngestor:
 
                 processed_points.append(point)
 
-            # Add to buffer and trigger processing
+            
             self.data_buffer.extend(processed_points)
 
-            # Maintain buffer size limit
+            
             if len(self.data_buffer) > self.buffer_size:
                 self.data_buffer = self.data_buffer[-self.buffer_size:]
 
-            # Queue for async processing
+            
             await self.processing_queue.put(
                 {
                     "type": "gsr_batch",
@@ -150,38 +132,27 @@ class GSRIngestor:
             return False
 
     def _convert_raw_to_gsr(self, raw_value: int) -> float:
-        """
-        Convert raw 12-bit ADC value to GSR in microsiemens
-
-        Critical Technical Detail: Uses 12-bit ADC resolution (0-4095)
-        as mandated in the requirements, not 16-bit.
-
-        Args:
-            raw_value: Raw ADC value (0-4095)
-
-        Returns:
-            GSR value in microsiemens
-        """
-        # Voltage calculation based on 12-bit ADC (0-4095) with 3.3V reference
+        
+        
         voltage = (raw_value / 4095.0) * 3.3
 
-        # Convert voltage to resistance using known circuit parameters
-        # Assuming standard Shimmer3 GSR+ circuit with 40.2k reference resistor
+        
+        
         if voltage == 0:
-            return 0.0  # Avoid division by zero
+            return 0.0  
 
         resistance = (40200.0 * voltage) / (3.3 - voltage)
 
-        # Convert resistance to conductance (microsiemens)
+        
         if resistance <= 0:
             return 0.0
 
         gsr_microsiemens = 1000000.0 / resistance
 
-        return max(0.0, min(gsr_microsiemens, 1000.0))  # Clamp to reasonable range
+        return max(0.0, min(gsr_microsiemens, 1000.0))  
 
     def _assess_signal_quality(self, raw_value: int) -> str:
-        """Assess GSR signal quality based on raw ADC value"""
+        
         if raw_value < 100 or raw_value > 4000:
             return "poor"
         elif raw_value < 200 or raw_value > 3800:
@@ -190,7 +161,7 @@ class GSRIngestor:
             return "good"
 
     def get_recent_data(self, session_id: str, seconds: int = 30) -> List[GSRDataPoint]:
-        """Get recent GSR data for a session"""
+        
         cutoff_time = time.time() - seconds
         return [
             point
@@ -200,9 +171,7 @@ class GSRIngestor:
 
 
 class DataProcessor:
-    """
-    Main data processing and aggregation service for multi-modal data
-    """
+    
 
     def __init__(self, output_dir: str = "data_output"):
         self.output_dir = Path(output_dir)
@@ -217,7 +186,7 @@ class DataProcessor:
         )
 
     async def start_session(self, session_id: str, devices: List[str]) -> bool:
-        """Start a new data processing session"""
+        
         try:
             self.active_sessions[session_id] = {
                 "start_time": time.time(),
@@ -237,13 +206,13 @@ class DataProcessor:
     async def process_gsr_data(
             self, device_id: str, session_id: str, data: List[Dict]
     ) -> bool:
-        """Process GSR data through the ingestor"""
+        
         return await self.gsr_ingestor.process_gsr_batch(device_id, session_id, data)
 
     async def process_thermal_data(
             self, device_id: str, session_id: str, thermal_frame: Dict
     ) -> bool:
-        """Process thermal camera frame data"""
+        
         try:
             point = ThermalDataPoint(
                 timestamp=thermal_frame.get("timestamp", time.time()),
@@ -269,7 +238,7 @@ class DataProcessor:
     async def process_rgb_data(
             self, device_id: str, session_id: str, rgb_frame: Dict
     ) -> bool:
-        """Process RGB camera frame data"""
+        
         try:
             point = RGBDataPoint(
                 timestamp=rgb_frame.get("timestamp", time.time()),
@@ -294,7 +263,7 @@ class DataProcessor:
     async def export_session_data(
             self, session_id: str, format: str = "json"
     ) -> Optional[str]:
-        """Export session data to specified format"""
+        
         try:
             if session_id not in self.active_sessions:
                 logger.error(f"Session {session_id} not found")
@@ -306,7 +275,7 @@ class DataProcessor:
             if format.lower() == "json":
                 output_file = self.output_dir / f"session_{session_id}_{timestamp}.json"
 
-                # Convert data points to serializable format
+                
                 export_data = {
                     "session_info": {
                         "session_id": session_id,
@@ -336,12 +305,12 @@ class DataProcessor:
                 output_file = self.output_dir / f"session_{session_id}_{timestamp}.h5"
 
                 with h5py.File(output_file, "w") as f:
-                    # Session metadata
+                    
                     f.attrs["session_id"] = session_id
                     f.attrs["start_time"] = session_data["start_time"]
                     f.attrs["export_time"] = time.time()
 
-                    # GSR data group
+                    
                     if session_data["data_points"]["gsr"]:
                         gsr_group = f.create_group("gsr_data")
                         gsr_points = session_data["data_points"]["gsr"]
@@ -356,7 +325,7 @@ class DataProcessor:
                             "raw_values", data=[p.raw_value for p in gsr_points]
                         )
 
-                    # Thermal data group
+                    
                     if session_data["data_points"]["thermal"]:
                         thermal_group = f.create_group("thermal_data")
                         thermal_points = session_data["data_points"]["thermal"]
@@ -386,7 +355,7 @@ class DataProcessor:
             return None
 
     def get_session_stats(self, session_id: str) -> Optional[Dict[str, Any]]:
-        """Get statistics for a data processing session"""
+        
         if session_id not in self.active_sessions:
             return None
 
@@ -414,7 +383,7 @@ class DataProcessor:
         }
 
 
-# Export the main classes
+
 __all__ = [
     "DataProcessor",
     "GSRIngestor",

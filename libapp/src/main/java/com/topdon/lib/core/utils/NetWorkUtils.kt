@@ -14,11 +14,7 @@ import com.elvishew.xlog.XLog
 import com.topdon.lib.core.BaseApplication
 import com.topdon.lib.core.repository.TS004Repository
 
-/**
- * des:
- * author: CaiSongL
- * date: 2024/3/5 9:07
- **/
+
 object NetWorkUtils {
     private var mNetworkCallback: ConnectivityManager.NetworkCallback? = null
     private var netWorkListener: ((network: Network?) -> Unit)? = null
@@ -53,11 +49,11 @@ object NetWorkUtils {
         listener: ((network: Network?) -> Unit)? = null,
     ) {
         netWorkListener = listener
-        if (Build.VERSION.SDK_INT < 29) { // 低于 Android10
+        if (Build.VERSION.SDK_INT < 29) { 
             val request =
                 NetworkRequest.Builder()
                     .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
-                    .removeCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) // 不需要能访问 internet
+                    .removeCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) 
                     .build()
             val callback =
                 object : ConnectivityManager.NetworkCallback() {
@@ -170,7 +166,7 @@ object NetWorkUtils {
         isWifi: Boolean,
         listener: ((network: Network?) -> Unit)? = null,
     ) {
-        if (Build.VERSION.SDK_INT < 29) { // 低于 Android10
+        if (Build.VERSION.SDK_INT < 29) { 
             return
         }
         if (isWifi) {

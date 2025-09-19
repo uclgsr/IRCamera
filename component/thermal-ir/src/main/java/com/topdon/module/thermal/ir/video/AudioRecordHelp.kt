@@ -10,11 +10,7 @@ import org.bytedeco.javacv.FFmpegFrameRecorder
 import java.lang.ref.WeakReference
 import java.nio.ShortBuffer
 
-/**
 
- * @author: CaiSongL
- * @date: 2023/3/28
- */
 
 class AudioRecordHelp private constructor() {
     private var audioRecord: AudioRecord? = null

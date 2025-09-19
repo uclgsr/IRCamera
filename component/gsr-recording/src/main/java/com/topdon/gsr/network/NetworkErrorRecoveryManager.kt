@@ -21,11 +21,11 @@ class NetworkErrorRecoveryManager(
         private const val TAG = "NetworkErrorRecovery"
         private const val MAX_RECONNECTION_ATTEMPTS = 10
         private const val INITIAL_RETRY_DELAY_MS = 1000L
-        private const val MAX_RETRY_DELAY_MS = 30000L // 30 seconds
-        private const val HEALTH_CHECK_INTERVAL_MS = 15000L // 15 seconds
+        private const val MAX_RETRY_DELAY_MS = 30000L 
+        private const val HEALTH_CHECK_INTERVAL_MS = 15000L 
         private const val CONNECTION_TIMEOUT_MS = 10000L
         private const val RAPID_FAILURE_THRESHOLD = 3
-        private const val RAPID_FAILURE_WINDOW_MS = 60000L // 1 minute
+        private const val RAPID_FAILURE_WINDOW_MS = 60000L 
     }
 
     private val recoveryJob = SupervisorJob()
@@ -107,7 +107,7 @@ class NetworkErrorRecoveryManager(
 
         if (isRapidFailure()) {
             eventListener?.onRapidFailureDetected(rapidFailureCount.get())
-            // Delay recovery for rapid failures to avoid overwhelming the network
+            
             recoveryScope.launch {
                 delay(5000)
                 if (isRecoveryActive.get()) {
@@ -155,14 +155,14 @@ class NetworkErrorRecoveryManager(
         }
 
         return try {
-            // Send a simple ping message to test connectivity
+            
             val pingMessage =
                 org.json.JSONObject().apply {
                     put("message_type", "ping")
                     put("timestamp", System.currentTimeMillis())
                 }
 
-            // Use a shorter timeout for health checks
+            
             withTimeout(5000) {
                 networkClient.sendMeasurementData("health_check", pingMessage)
             }
@@ -193,12 +193,12 @@ class NetworkErrorRecoveryManager(
             eventListener?.onRecoveryAttempt(attempt, maxAttempts)
 
             try {
-                // Try to reconnect to last known good controller
+                
                 val controller = lastKnownGoodController
                 if (controller != null) {
                     success = attemptReconnection(controller)
                 } else {
-                    // Fallback: try to discover new controllers
+                    
                     success = attemptDiscoveryAndConnect()
                 }
 
@@ -237,9 +237,9 @@ class NetworkErrorRecoveryManager(
                 "Attempting reconnection to ${controller.deviceName} at ${controller.ipAddress}"
             )
 
-            // Disconnect first to clean up any existing connection
+            
             networkClient.disconnect()
-            delay(1000) // Brief delay before reconnecting
+            delay(1000) 
 
             withTimeout(CONNECTION_TIMEOUT_MS) {
                 networkClient.connectToController(controller.ipAddress, controller.port)
@@ -284,7 +284,7 @@ class NetworkErrorRecoveryManager(
     }
 
     private fun calculateRetryDelay(attempt: Int): Long {
-        // Exponential backoff with jitter
+        
         val baseDelay = INITIAL_RETRY_DELAY_MS * (1L shl (attempt - 1))
         val cappedDelay = minOf(baseDelay, MAX_RETRY_DELAY_MS)
         val jitter = (Math.random() * 0.1 * cappedDelay).toLong()
@@ -295,7 +295,7 @@ class NetworkErrorRecoveryManager(
         val currentTime = System.currentTimeMillis()
 
         if (currentTime - lastFailureTime > RAPID_FAILURE_WINDOW_MS) {
-            // Reset rapid failure count if outside the window
+            
             rapidFailureCount.set(1)
         } else {
             rapidFailureCount.incrementAndGet()

@@ -14,11 +14,7 @@ import com.blankj.utilcode.util.SizeUtils
 import com.topdon.lib.core.view.MyTextView
 import com.topdon.module.thermal.ir.R
 
-/**
 
- *
- * Created by LCG on 2024/1/5.
- */
 
 class OptionPickPopup(
     private val context: Context,
@@ -73,14 +69,14 @@ class OptionPickPopup(
         if (context.resources.displayMetrics.heightPixels - locationArray[1] - anchor.height > height - SizeUtils.dp2px(
                 5f
             )
-        ) { // 在 anchor 底部放得下
+        ) { 
             showAtLocation(
                 anchor,
                 Gravity.NO_GRAVITY,
                 x,
                 locationArray[1] + anchor.height - SizeUtils.dp2px(5f)
             )
-        } else { // 下面放不下就放上面吧
+        } else { 
             showAtLocation(
                 anchor,
                 Gravity.NO_GRAVITY,

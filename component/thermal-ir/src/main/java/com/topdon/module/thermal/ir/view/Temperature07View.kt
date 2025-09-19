@@ -6,11 +6,7 @@ import android.graphics.Canvas
 import android.util.AttributeSet
 import android.view.MotionEvent
 
-/**
 
- *
- * Created by LCG on 2024/5/7.
- */
 
 class Temperature07View : TemperatureBaseView {
     constructor(context: Context) : this(context, null)

@@ -46,10 +46,7 @@ import com.topdon.lib.core.R as LibR
 
 
 class IRGalleryDetail01Activity : BaseActivity(), View.OnClickListener {
-    /**
-
-
-     */
+    
     private var isTC007 = false
 
     private var position = 0

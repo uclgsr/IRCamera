@@ -78,7 +78,7 @@ class DualModeCameraActivity : AppCompatActivity() {
                     frameRate = 30,
                     bitRate = 10_000_000,
                     enableStabilization = true,
-                    enableHighSpeedVideo = false, // Start conservative for Samsung compatibility
+                    enableHighSpeedVideo = false, 
                 )
 
             rgbCameraRecorder?.updateRecordingSettings(settings)

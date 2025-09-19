@@ -1,9 +1,4 @@
-"""
-Network Discovery Service for IRCamera PC Controller
 
-Provides mDNS/Zeroconf service registration and device discovery to match
-the Android implementation and enable automatic device discovery.
-"""
 
 import asyncio
 import socket
@@ -16,7 +11,7 @@ try:
     from zeroconf import ServiceInfo, Zeroconf
     from zeroconf.asyncio import AsyncServiceBrowser, AsyncZeroconf
 except ImportError:
-    # Fallback implementation without zeroconf
+    
     ServiceInfo = None
     Zeroconf = None
     AsyncServiceBrowser = None
@@ -28,7 +23,7 @@ except ImportError:
     try:
         from ..utils.simple_logger import logger
     except ImportError:
-        # Fallback logger for testing
+        
         class FallbackLogger:
             def info(self, msg) -> Any:
                 print(f"INFO: {msg}")
@@ -48,7 +43,7 @@ except ImportError:
 try:
     from ..core.config import config
 except ImportError:
-    # Fallback config for testing
+    
     class FallbackConfig:
         def get(self, key, default=None) -> Any:
             config_map = {
@@ -62,19 +57,19 @@ except ImportError:
 
 
 class DeviceType(Enum):
-    """Device types for discovery."""
+    
 
     PC_CONTROLLER = "PC_CONTROLLER"
     THERMAL_CAMERA_TS004 = "THERMAL_CAMERA_TS004"
     THERMAL_CAMERA_TC007 = "THERMAL_CAMERA_TC007"
     ANDROID_SENSOR_NODE = "ANDROID_SENSOR_NODE"
-    ANDROID_NODE = "ANDROID_NODE"  # Alias for compatibility
+    ANDROID_NODE = "ANDROID_NODE"  
     UNKNOWN = "UNKNOWN"
 
 
 @dataclass
 class DiscoveredDevice:
-    """Represents a discovered device on the network."""
+    
 
     service_name: str
     service_type: str
@@ -86,7 +81,7 @@ class DiscoveredDevice:
     last_seen: Optional[datetime] = None
 
     def __post_init__(self):
-        """Set default timestamps if not provided."""
+        
         if self.discovered_at is None:
             self.discovered_at = datetime.now()
         if self.last_seen is None:
@@ -94,17 +89,14 @@ class DiscoveredDevice:
 
 
 class NetworkDiscoveryService:
-    """
-    Network discovery service using mDNS/Zeroconf for automatic device discovery.
-    Implements the PC controller side of the discovery protocol.
-    """
+    
 
     SERVICE_TYPE_PC_CONTROLLER = "_topdon-pc._tcp.local."
     SERVICE_TYPE_THERMAL_CAMERA = "_topdon-thermal._tcp.local."
     SERVICE_TYPE_ANDROID_NODE = "_topdon-android._tcp.local."
 
     def __init__(self):
-        """Initialize the discovery service."""
+        
         self.zeroconf: Optional[AsyncZeroconf] = None
         self.service_browser: Optional[AsyncServiceBrowser] = None
         self.discovered_devices: Dict[str, DiscoveredDevice] = {}
@@ -112,26 +104,21 @@ class NetworkDiscoveryService:
         self.discovery_listeners: List[callable] = []
         self.is_running = False
 
-        # Service registration info
+        
         self.hostname = socket.gethostname()
         self.local_ip = self._get_local_ip()
 
     def add_discovery_listener(self, callback: None = callable) -> None:
-        """Add a callback for discovery events."""
+        
         self.discovery_listeners.append(callback)
 
     def remove_discovery_listener(self, callback: None = callable) -> None:
-        """Remove a discovery callback."""
+        
         if callback in self.discovery_listeners:
             self.discovery_listeners.remove(callback)
 
     async def start_discovery(self) -> bool:
-        """
-        Start the mDNS discovery service.
-
-        Returns:
-            bool: True if started successfully, False otherwise
-        """
+        
         if not self._check_zeroconf_available():
             logger.warning("Zeroconf not available, using fallback discovery")
             return await self._start_fallback_discovery()
@@ -141,10 +128,10 @@ class NetworkDiscoveryService:
 
             self.zeroconf = AsyncZeroconf()
 
-            # Register our PC controller service
+            
             await self._register_pc_controller_service()
 
-            # Start browsing for Android devices and thermal cameras
+            
             await self._start_service_browser()
 
             self.is_running = True
@@ -157,25 +144,25 @@ class NetworkDiscoveryService:
             return False
 
     async def stop_discovery(self) -> Any:
-        """Stop the discovery service."""
+        
         if not self.is_running:
             return
 
         logger.info("Stopping discovery service...")
 
         try:
-            # Unregister services
+            
             if self.zeroconf and self.registered_services:
                 for service in self.registered_services:
                     await self.zeroconf.async_unregister_service(service)
                 self.registered_services.clear()
 
-            # Stop service browser
+            
             if self.service_browser:
                 await self.service_browser.async_cancel()
                 self.service_browser = None
 
-            # Close zeroconf
+            
             if self.zeroconf:
                 await self.zeroconf.async_close()
                 self.zeroconf = None
@@ -187,13 +174,13 @@ class NetworkDiscoveryService:
             logger.error(f"Error stopping discovery service: {e}")
 
     async def get_discovered_devices(self) -> List[DiscoveredDevice]:
-        """Get list of all discovered devices."""
+        
         return list(self.discovered_devices.values())
 
     async def get_devices_by_type(
             self, device_type: DeviceType
     ) -> List[DiscoveredDevice]:
-        """Get discovered devices of a specific type."""
+        
         return [
             device
             for device in self.discovered_devices.values()
@@ -201,17 +188,17 @@ class NetworkDiscoveryService:
         ]
 
     async def refresh_discovery(self) -> Any:
-        """Refresh device discovery by restarting the browser."""
+        
         if self.is_running and self.service_browser:
             await self.service_browser.async_cancel()
             await self._start_service_browser()
 
     def _check_zeroconf_available(self) -> bool:
-        """Check if zeroconf dependencies are available."""
+        
         return all([ServiceInfo, Zeroconf, AsyncServiceBrowser, AsyncZeroconf])
 
     async def _register_pc_controller_service(self):
-        """Register this PC as a discoverable controller service."""
+        
         try:
             service_name = f"IRCamera-PC-{self.hostname}"
             port = config.get("network.discovery_port", 8081)
@@ -224,7 +211,7 @@ class NetworkDiscoveryService:
                 "secure": "true",
             }
 
-            # Convert properties to bytes
+            
             properties_bytes = {
                 k: str(v).encode("utf-8") for k, v in properties.items()
             }
@@ -249,7 +236,7 @@ class NetworkDiscoveryService:
             logger.error(f"Failed to register PC controller service: {e}")
 
     async def _start_service_browser(self):
-        """Start browsing for Android and thermal camera services."""
+        
         try:
             service_types = [
                 self.SERVICE_TYPE_THERMAL_CAMERA,
@@ -271,11 +258,11 @@ class NetworkDiscoveryService:
             logger.error(f"Failed to start service browser: {e}")
 
     async def _start_fallback_discovery(self) -> bool:
-        """Start fallback discovery using subnet scanning."""
+        
         logger.info("Starting fallback subnet discovery...")
 
         # This would implement subnet scanning as a fallback
-        # For now, just log that it would be implemented
+        
         logger.warning(
             "Fallback discovery not fully implemented - install zeroconf for full functionality"
         )
@@ -284,7 +271,7 @@ class NetworkDiscoveryService:
         return True
 
     def _get_local_ip(self) -> str:
-        """Get the local IP address of this machine."""
+        
         try:
             # Connect to a dummy address to determine local IP
             with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
@@ -296,9 +283,9 @@ class NetworkDiscoveryService:
     def _determine_device_type(
             self, service_type: str, properties: Dict[str, bytes]
     ) -> DeviceType:
-        """Determine device type from service information."""
+        
         try:
-            # Check explicit device type property
+            
             if b"device_type" in properties:
                 device_type_str = properties[b"device_type"].decode("utf-8")
                 try:
@@ -306,18 +293,18 @@ class NetworkDiscoveryService:
                 except ValueError:
                     pass
 
-            # Infer from service type and name
+            
             if self.SERVICE_TYPE_PC_CONTROLLER in service_type:
                 return DeviceType.PC_CONTROLLER
             elif self.SERVICE_TYPE_THERMAL_CAMERA in service_type:
-                # Check for specific thermal camera models
+                
                 if b"model" in properties:
                     model = properties[b"model"].decode("utf-8").upper()
                     if "TS004" in model:
                         return DeviceType.THERMAL_CAMERA_TS004
                     elif "TC007" in model:
                         return DeviceType.THERMAL_CAMERA_TC007
-                return DeviceType.THERMAL_CAMERA_TS004  # Default
+                return DeviceType.THERMAL_CAMERA_TS004  
             elif self.SERVICE_TYPE_ANDROID_NODE in service_type:
                 return DeviceType.ANDROID_SENSOR_NODE
 
@@ -328,15 +315,15 @@ class NetworkDiscoveryService:
             return DeviceType.UNKNOWN
 
     async def _on_device_discovered(self, service_info: ServiceInfo):
-        """Handle a newly discovered device."""
+        
         try:
-            # Extract device information
+            
             ip_address = socket.inet_ntoa(service_info.addresses[0])
             port = service_info.port
             service_name = service_info.name
             service_type = service_info.type
 
-            # Convert properties from bytes to strings
+            
             properties = {}
             if service_info.properties:
                 properties = {
@@ -349,7 +336,7 @@ class NetworkDiscoveryService:
                 service_type, service_info.properties or {}
             )
 
-            # Create device record
+            
             device = DiscoveredDevice(
                 service_name=service_name,
                 service_type=service_type,
@@ -361,7 +348,7 @@ class NetworkDiscoveryService:
                 last_seen=datetime.now(),
             )
 
-            # Store device
+            
             device_key = f"{ip_address}:{port}"
             self.discovered_devices[device_key] = device
 
@@ -369,7 +356,7 @@ class NetworkDiscoveryService:
                 f"Discovered device: {service_name} ({device_type.value}) at {ip_address}:{port}"
             )
 
-            # Notify listeners
+            
             for callback in self.discovery_listeners:
                 try:
                     if asyncio.iscoroutinefunction(callback):
@@ -383,9 +370,9 @@ class NetworkDiscoveryService:
             logger.error(f"Error processing discovered device: {e}")
 
     async def _on_device_lost(self, service_name: str):
-        """Handle a device that is no longer available."""
+        
         try:
-            # Find and remove the device
+            
             device_to_remove = None
             key_to_remove = None
 
@@ -399,7 +386,7 @@ class NetworkDiscoveryService:
                 del self.discovered_devices[key_to_remove]
                 logger.info(f"Lost device: {service_name}")
 
-                # Notify listeners
+                
                 for callback in self.discovery_listeners:
                     try:
                         if asyncio.iscoroutinefunction(callback):
@@ -414,7 +401,7 @@ class NetworkDiscoveryService:
 
 
 class ServiceBrowserHandler:
-    """Handler for service browser events."""
+    
 
     def __init__(self, discovery_service: NetworkDiscoveryService, service_type: str):
         self.discovery_service = discovery_service
@@ -423,24 +410,24 @@ class ServiceBrowserHandler:
     def add_service(
             self, zc: None = Zeroconf, type_: None = str, name: None = str
     ) -> None:
-        """Called when a service is discovered."""
+        
         asyncio.create_task(self._add_service_async(zc, type_, name))
 
     def remove_service(
             self, zc: None = Zeroconf, type_: None = str, name: None = str
     ) -> None:
-        """Called when a service is removed."""
+        
         asyncio.create_task(self.discovery_service._on_device_lost(name))
 
     def update_service(
             self, zc: None = Zeroconf, type_: None = str, name: None = str
     ) -> None:
-        """Called when a service is updated."""
-        # Treat updates as new discoveries
+        
+        
         asyncio.create_task(self._add_service_async(zc, type_, name))
 
     async def _add_service_async(self, zc: Zeroconf, type_: str, name: str):
-        """Async handler for service addition."""
+        
         try:
             service_info = zc.get_service_info(type_, name)
             if service_info:

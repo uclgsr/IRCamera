@@ -1,8 +1,4 @@
-"""
-Core modules for IRCamera PC Controller
 
-This package contains the core business logic and services.
-"""
 
 from .admin_privileges import (
     AdminPrivilegesManager,

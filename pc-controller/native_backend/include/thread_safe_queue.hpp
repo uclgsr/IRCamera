@@ -73,7 +73,7 @@ namespace ircamera {
         template<typename T>
         bool ThreadSafeQueue<T>::push(const T &item) {
             if (size_.load() >= capacity_) {
-                return false; // Queue full
+                return false; 
             }
 
             size_t pool_idx = pool_index_.fetch_add(1) % node_pool_.size();
@@ -92,7 +92,7 @@ namespace ircamera {
         template<typename T>
         bool ThreadSafeQueue<T>::push(T &&item) {
             if (size_.load() >= capacity_) {
-                return false; // Queue full
+                return false; 
             }
 
             size_t pool_idx = pool_index_.fetch_add(1) % node_pool_.size();
@@ -114,12 +114,12 @@ namespace ircamera {
             Node *next = head->next.load();
 
             if (next == nullptr) {
-                return false; // Queue empty
+                return false; 
             }
 
             T *data = next->data.load();
             if (data == nullptr) {
-                return false; // Data not ready
+                return false; 
             }
 
             item = *data;
@@ -155,5 +155,5 @@ namespace ircamera {
             }
         }
 
-    } // namespace utils
-} // namespace ircamera
+    } 
+} 

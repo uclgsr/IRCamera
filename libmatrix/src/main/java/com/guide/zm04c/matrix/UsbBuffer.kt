@@ -115,7 +115,7 @@ class UsbBuffer {
             try {
                 synchronized(this) {
                     Log.d(TAG, "wait(100)")
-                    lock.wait(100) // kotlin any没有wait()
+                    lock.wait(100) 
                 }
             } catch (e: InterruptedException) {
                 e.printStackTrace()

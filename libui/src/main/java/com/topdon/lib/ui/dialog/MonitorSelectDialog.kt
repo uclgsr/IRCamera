@@ -8,10 +8,7 @@ import com.topdon.lib.core.R
 import com.topdon.lib.core.utils.ScreenUtil
 import com.topdon.lib.ui.databinding.DialogMonitorSelectBinding
 
-/**
- * 提示窗
- * create by fylder on 2018/6/15
- **/
+
 
 
 class MonitorSelectDialog(context: Context) : Dialog(context, R.style.InfoDialog) {
@@ -39,12 +36,12 @@ class MonitorSelectDialog(context: Context) : Dialog(context, R.style.InfoDialog
 
             val lp = dialog.window!!.attributes
             lp.width =
-                (ScreenUtil.getScreenWidth(context) * if (ScreenUtil.isPortrait(context)) 0.85 else 0.35).toInt() // settings宽度
+                (ScreenUtil.getScreenWidth(context) * if (ScreenUtil.isPortrait(context)) 0.85 else 0.35).toInt() 
             dialog.window!!.attributes = lp
 
             binding.btnConfirmOrBack.setOnClickListener {
-                if (isFirstStep) { // 步骤1->步骤2 逻辑为“确认”
-                    if (monitorType == 0) { // 还没选取类型不允许点确认
+                if (isFirstStep) { 
+                    if (monitorType == 0) { 
                         return@setOnClickListener
                     }
                     isFirstStep = false
@@ -54,7 +51,7 @@ class MonitorSelectDialog(context: Context) : Dialog(context, R.style.InfoDialog
                     binding.tvTitle.text = context.getString(R.string.select_monitor_type_step2)
                     binding.btnConfirmOrBack.text =
                         context.getString(R.string.select_monitor_return)
-                } else { // 步骤2->步骤1 逻辑为“返回”
+                } else { 
                     isFirstStep = true
                     binding.btnCancel.visibility = View.GONE
                     binding.clFirstStep.visibility = View.VISIBLE

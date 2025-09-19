@@ -228,7 +228,7 @@ class PermissionControllerTest {
             callbackResult = Pair(granted, device)
         }
 
-        // Verify that permission request was attempted
+        
         verify { mockUsbManager.requestPermission(mockDevice, any()) }
     }
 
@@ -244,7 +244,7 @@ class PermissionControllerTest {
             callbackResult = Pair(granted, device)
         }
 
-        // Should return immediately without requesting permission
+        
         assertEquals(true, callbackResult?.first)
         assertEquals(mockDevice, callbackResult?.second)
     }

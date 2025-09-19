@@ -45,54 +45,54 @@ class ThermalCameraUSBPermissionTest {
 
     @Test
     fun `test USB device filter matches Topdon TC001`() {
-        // Assert that our device filter VID/PID matches what we're testing
+        
         assertEquals("Vendor ID should match Topdon", 0x4206, mockUsbDevice.vendorId)
         assertEquals("Product ID should match TC001", 0x3702, mockUsbDevice.productId)
     }
 
     @Test
     fun `test thermal recorder initialization with no devices`() = runTest {
-        // Arrange
+        
         `when`(mockUsbManager.deviceList).thenReturn(hashMapOf())
 
-        // Act
+        
         val result = thermalRecorder.initialize()
 
-        // Assert
+        
         assertTrue("Should initialize successfully in simulation mode", result)
     }
 
     @Test
     fun `test USB permission request flow`() = runTest {
-        // Arrange
+        
         val deviceList = hashMapOf("device1" to mockUsbDevice)
         `when`(mockUsbManager.deviceList).thenReturn(deviceList)
         `when`(mockUsbManager.hasPermission(mockUsbDevice)).thenReturn(false)
 
-        // Act
+        
         val result = thermalRecorder.initialize()
 
-        // Assert
+        
         assertTrue("Should complete initialization even without permission", result)
-        // Permission request should be initiated (would verify with additional mocking)
+        
     }
 
     @Test
     fun `test thermal data recording in simulation mode`() = runTest {
-        // Arrange
+        
         `when`(mockUsbManager.deviceList).thenReturn(hashMapOf())
         thermalRecorder.initialize()
         val tempDir = java.nio.file.Files.createTempDirectory("thermal_test").toFile()
 
         try {
-            // Act
+            
             val recordingStarted = thermalRecorder.startRecording(tempDir.absolutePath)
 
-            // Assert
+            
             assertTrue("Recording should start in simulation mode", recordingStarted)
             assertTrue("Should be recording", thermalRecorder.isRecording)
 
-            // Stop recording
+            
             val recordingStopped = thermalRecorder.stopRecording()
             assertTrue("Recording should stop successfully", recordingStopped)
             assertFalse("Should not be recording after stop", thermalRecorder.isRecording)
@@ -103,7 +103,7 @@ class ThermalCameraUSBPermissionTest {
 
     @Test
     fun `test thermal camera sensor properties`() {
-        // Assert thermal camera characteristics
+        
         assertEquals(
             "Sensor ID should be thermal_camera_1",
             "thermal_camera_1",

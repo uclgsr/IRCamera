@@ -7,12 +7,7 @@ import com.topdon.lib.core.ktbase.BaseActivity
 import com.topdon.module.thermal.ir.R
 import com.topdon.module.thermal.ir.fragment.IRCorrectionFragment
 
-/**
- *
 
- * @author: CaiSongL
- * @date: 2023/8/4 9:06
- */
 
 
 class IRCorrectionThreeActivity : BaseActivity() {

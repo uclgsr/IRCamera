@@ -19,9 +19,9 @@ class MenuSixAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.V
     var listener: ((index: Int, code: Int) -> Unit)? = null
     private var type = 0
     private var selected = -1
-    private var colorEnable = false // pseudo color条
-    private var contrastEnable = false // 对比度
-    private var ddeEnable = false // 细节
+    private var colorEnable = false 
+    private var contrastEnable = false 
+    private var ddeEnable = false 
 
     fun selected(index: Int) {
         selected = index

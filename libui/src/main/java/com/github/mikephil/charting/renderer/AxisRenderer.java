@@ -13,14 +13,10 @@ import com.github.mikephil.charting.utils.ViewPortHandler;
 
 public abstract class AxisRenderer extends Renderer {
 
-    /**
-     * base axis this axis renderer works with
-     */
+    
     protected AxisBase mAxis;
 
-    /**
-     * transformer to transform values to screen pixels and return
-     */
+    
     protected Transformer mTrans;
 
     protected Paint mGridPaint;
@@ -176,7 +172,7 @@ public abstract class AxisRenderer extends Renderer {
 
             for (f = first, i = 0; i < n; f += interval, ++i) {
 
-                if (f == 0.0) // Fix for negative zero case (Where value == -0.0, and 0.0 == -0.0)
+                if (f == 0.0) 
                     f = 0.0;
 
                 mAxis.mEntries[i] = (float) f;

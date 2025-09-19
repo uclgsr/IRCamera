@@ -69,7 +69,7 @@ dependencies {
     implementation(project(":BleModule"))
     implementation(libs.coroutines.core.legacy)
     implementation(libs.coroutines.android.legacy)
-    // CameraX dependencies - Compatible with AGP 8.5.2
+    
     implementation(libs.bundles.camerax)
     implementation(libs.opencsv)
     implementation(libs.guava.legacy)
@@ -77,11 +77,11 @@ dependencies {
     implementation(libs.commons.lang3)
     implementation(libs.fastble)
 
-    // Shimmer GSR+ Sensor SDK - Official Shimmer Research Libraries
-    // Note: ShimmerBiophysicalProcessingLibrary and androidplot-core are now provided by 
-    // shimmerandroidinstrumentdriver-3.2.4_beta.aar in the main app module to prevent duplicate classes
-    // implementation(files("libs/ShimmerBiophysicalProcessingLibrary_Rev_0_11.jar"))
-    // implementation(files("libs/androidplot-core-0.5.0-release.jar"))
+    
+    
+    
+    
+    
     testImplementation(libs.junit)
     testImplementation(libs.robolectric)
     testImplementation(libs.test.core)

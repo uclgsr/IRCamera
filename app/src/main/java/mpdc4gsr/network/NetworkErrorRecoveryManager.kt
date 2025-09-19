@@ -21,13 +21,13 @@ class NetworkErrorRecoveryManager(
         private const val TAG = "NetworkErrorRecovery"
         private const val MAX_RECONNECTION_ATTEMPTS = 10
         private const val INITIAL_RETRY_DELAY_MS = 1000L
-        private const val MAX_RETRY_DELAY_MS = 30000L // 30 seconds
-        private const val HEALTH_CHECK_INTERVAL_MS = 15000L // 15 seconds
+        private const val MAX_RETRY_DELAY_MS = 30000L 
+        private const val HEALTH_CHECK_INTERVAL_MS = 15000L 
         private const val CONNECTION_TIMEOUT_MS = 10000L
         private const val RAPID_FAILURE_THRESHOLD = 3
-        private const val RAPID_FAILURE_WINDOW_MS = 60000L // 1 minute
-        private const val MAX_LATENCY_MS = 100L // Maximum acceptable latency in ms
-        private const val MIN_BANDWIDTH_KBPS = 1.0 // Minimum acceptable bandwidth in KB/s
+        private const val RAPID_FAILURE_WINDOW_MS = 60000L 
+        private const val MAX_LATENCY_MS = 100L 
+        private const val MIN_BANDWIDTH_KBPS = 1.0 
     }
 
     private val recoveryJob = SupervisorJob()
@@ -40,13 +40,13 @@ class NetworkErrorRecoveryManager(
     private var lastKnownGoodController: NetworkClient.ControllerInfo? = null
     private var healthCheckJob: Job? = null
 
-    // Enhanced NSD reconnection properties
+    
     private var serviceReadvertiseJob: Job? = null
     private val isAutoReconnectEnabled = AtomicBoolean(true)
     private var pcControllerLastSeen: Long = 0L
-    private val pcControllerTimeoutMs: Long = 60000L // 1 minute timeout
+    private val pcControllerTimeoutMs: Long = 60000L 
     private val nsdServiceReconnectionAttempts = AtomicInteger(0)
-    private val serviceDiscoveryBackoffMs = AtomicInteger(5000) // Initial 5 second backoff
+    private val serviceDiscoveryBackoffMs = AtomicInteger(5000) 
     private var lastServiceDiscoveryAttempt: Long = 0L
     private var connectionQualityScore: Double = 0.0
 
@@ -55,7 +55,7 @@ class NetworkErrorRecoveryManager(
     private var lastPingTime = 0L
     private var lastDataTransferTime = 0L
     private var bytesTransferred = 0L
-    private val maxMeasurements = 50 // Keep last 50 measurements
+    private val maxMeasurements = 50 
 
     private var isHealthy = false
     private val successfulConnections = AtomicInteger(0)
@@ -262,7 +262,7 @@ class NetworkErrorRecoveryManager(
             )
 
             networkClient.disconnect()
-            delay(1000) // Brief delay before reconnecting
+            delay(1000) 
 
             withTimeout(CONNECTION_TIMEOUT_MS) {
                 networkClient.connectToController(controller.ipAddress, controller.port)
@@ -357,9 +357,9 @@ class NetworkErrorRecoveryManager(
     fun recordDataTransfer(bytes: Long) {
         val currentTime = System.currentTimeMillis()
         if (lastDataTransferTime > 0) {
-            val timeDiff = (currentTime - lastDataTransferTime) / 1000.0 // seconds
+            val timeDiff = (currentTime - lastDataTransferTime) / 1000.0 
             if (timeDiff > 0) {
-                val throughput = (bytesTransferred + bytes) / 1024.0 / timeDiff // KB/s
+                val throughput = (bytesTransferred + bytes) / 1024.0 / timeDiff 
                 synchronized(throughputMeasurements) {
                     throughputMeasurements.add(throughput)
                     if (throughputMeasurements.size > maxMeasurements) {
@@ -389,7 +389,7 @@ class NetworkErrorRecoveryManager(
                     else -> 30L
                 }
             } else {
-                200L // Unhealthy connection estimated latency
+                200L 
             }
         }
     }
@@ -410,7 +410,7 @@ class NetworkErrorRecoveryManager(
                     else -> 80.0
                 }
             } else {
-                10.0 // Degraded throughput for unhealthy connection
+                10.0 
             }
         }
     }
@@ -421,9 +421,7 @@ class NetworkErrorRecoveryManager(
      * Ensure the Android recording service cleanly handles the PC controller disconnecting and reconnecting"
      */
     
-    /**
-     * Enable enhanced NSD auto-readvertising and reconnection
-     */
+    
     fun enableEnhancedNSDReconnection() {
         if (serviceReadvertiseJob?.isActive == true) {
             Log.d(TAG, "Enhanced NSD reconnection already active")
@@ -435,20 +433,20 @@ class NetworkErrorRecoveryManager(
                 try {
                     val currentTime = System.currentTimeMillis()
                     
-                    // Check if PC controller connection has been lost
+                    
                     if (pcControllerLastSeen > 0 && (currentTime - pcControllerLastSeen) > pcControllerTimeoutMs) {
                         Log.w(TAG, "PC controller connection timeout detected - triggering NSD recovery")
                         handlePCControllerDisconnection()
                     }
                     
-                    // Monitor service discovery health
+                    
                     monitorServiceDiscoveryHealth()
                     
                     delay(HEALTH_CHECK_INTERVAL_MS)
                     
                 } catch (e: Exception) {
                     Log.e(TAG, "Error in enhanced NSD reconnection loop", e)
-                    delay(10000) // Back off on errors
+                    delay(10000) 
                 }
             }
         }
@@ -456,9 +454,7 @@ class NetworkErrorRecoveryManager(
         Log.i(TAG, "Enhanced NSD reconnection enabled")
     }
 
-    /**
-     * Handle PC controller disconnection with automatic service re-advertising
-     */
+    
     private suspend fun handlePCControllerDisconnection() {
         try {
             Log.i(TAG, "Handling PC controller disconnection - attempting service re-advertising")
@@ -471,7 +467,7 @@ class NetworkErrorRecoveryManager(
                 return
             }
             
-            // Calculate backoff delay with exponential backoff
+            
             val backoffDelay = minOf(
                 serviceDiscoveryBackoffMs.get() * currentAttempts,
                 MAX_RETRY_DELAY_MS.toInt()
@@ -479,15 +475,15 @@ class NetworkErrorRecoveryManager(
             
             Log.d(TAG, "NSD reconnection attempt $currentAttempts with ${backoffDelay}ms backoff")
             
-            // Re-advertise service
+            
             val readvertiseSuccess = reAdvertiseNSDService()
             
             if (readvertiseSuccess) {
                 Log.i(TAG, "✅ NSD service re-advertising successful")
                 nsdServiceReconnectionAttempts.set(0)
-                serviceDiscoveryBackoffMs.set(5000) // Reset backoff
+                serviceDiscoveryBackoffMs.set(5000) 
                 
-                // Attempt to reconnect to PC controller
+                
                 attemptPCControllerReconnection()
                 
             } else {
@@ -501,19 +497,17 @@ class NetworkErrorRecoveryManager(
         }
     }
 
-    /**
-     * Re-advertise NSD service with error handling
-     */
+    
     private suspend fun reAdvertiseNSDService(): Boolean {
         return try {
             Log.d(TAG, "Re-advertising NSD service for PC controller discovery")
             
-            // This would integrate with the actual NSD service registration
-            // For now, simulate the re-advertising process
+            
+            
             withTimeout(10000L) {
-                delay(2000) // Simulate service registration time
+                delay(2000) 
                 
-                // Update last service discovery attempt
+                
                 lastServiceDiscoveryAttempt = System.currentTimeMillis()
                 
                 Log.d(TAG, "NSD service re-advertising completed")
@@ -526,14 +520,12 @@ class NetworkErrorRecoveryManager(
         }
     }
 
-    /**
-     * Attempt to reconnect to PC controller after service re-advertising
-     */
+    
     private suspend fun attemptPCControllerReconnection() {
         try {
             Log.d(TAG, "Attempting PC controller reconnection after NSD re-advertising")
             
-            // Simulate controller discovery and connection
+            
             delay(3000)
             
             val reconnectionSuccess = networkClient.isConnected()
@@ -552,13 +544,11 @@ class NetworkErrorRecoveryManager(
         }
     }
 
-    /**
-     * Monitor service discovery health and trigger recovery if needed
-     */
+    
     private suspend fun monitorServiceDiscoveryHealth() {
         val currentTime = System.currentTimeMillis()
         
-        // Check if service discovery is stale
+        
         if (lastServiceDiscoveryAttempt > 0 && 
             (currentTime - lastServiceDiscoveryAttempt) > (HEALTH_CHECK_INTERVAL_MS * 4)) {
             
@@ -566,26 +556,24 @@ class NetworkErrorRecoveryManager(
             refreshServiceDiscovery()
         }
         
-        // Update connection quality score
+        
         connectionQualityScore = calculateConnectionQuality()
         
-        // Log periodic health status
-        if (currentTime % 60000 < HEALTH_CHECK_INTERVAL_MS) { // Every minute
+        
+        if (currentTime % 60000 < HEALTH_CHECK_INTERVAL_MS) { 
             logNSDHealthStatus()
         }
     }
 
-    /**
-     * Refresh service discovery to maintain connectivity
-     */
+    
     private suspend fun refreshServiceDiscovery() {
         try {
             Log.d(TAG, "Refreshing service discovery to maintain PC controller connectivity")
             
-            // Trigger service discovery refresh
+            
             lastServiceDiscoveryAttempt = System.currentTimeMillis()
             
-            // This would integrate with actual service discovery refresh
+            
             delay(1000)
             
             Log.d(TAG, "Service discovery refresh completed")
@@ -595,9 +583,7 @@ class NetworkErrorRecoveryManager(
         }
     }
 
-    /**
-     * Calculate connection quality score based on various factors
-     */
+    
     private fun calculateConnectionQuality(): Double {
         return try {
             val latencyScore = if (getAverageLatencyMs() < MAX_LATENCY_MS) 0.4 else 0.1
@@ -612,9 +598,7 @@ class NetworkErrorRecoveryManager(
         }
     }
 
-    /**
-     * Log NSD health status for monitoring
-     */
+    
     private fun logNSDHealthStatus() {
         val currentTime = System.currentTimeMillis()
         val lastSeenMinutes = if (pcControllerLastSeen > 0) {
@@ -634,16 +618,12 @@ class NetworkErrorRecoveryManager(
         Log.d(TAG, "========================")
     }
 
-    /**
-     * Update PC controller last seen timestamp
-     */
+    
     fun updatePCControllerLastSeen() {
         pcControllerLastSeen = System.currentTimeMillis()
     }
 
-    /**
-     * Get current NSD connection status
-     */
+    
     fun getNSDConnectionStatus(): NSDConnectionStatus {
         return NSDConnectionStatus(
             isConnected = networkClient.isConnected(),
@@ -666,12 +646,10 @@ class NetworkErrorRecoveryManager(
         val isAutoReconnectEnabled: Boolean
     )
 
-    /**
-     * Create controller info for recovery events
-     */
+    
     private fun createControllerInfo(): NetworkClient.ControllerInfo {
         return NetworkClient.ControllerInfo(
-            ipAddress = lastKnownGoodController?.ipAddress ?: "127.0.0.1", // This would be the actual discovered IP
+            ipAddress = lastKnownGoodController?.ipAddress ?: "127.0.0.1", 
             port = 8080,
             deviceName = "IRCamera-PC-Controller",
             capabilities = listOf("recording", "thermal", "gsr")

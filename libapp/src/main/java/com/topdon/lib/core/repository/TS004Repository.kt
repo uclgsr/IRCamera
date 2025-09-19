@@ -30,10 +30,10 @@ object TS004Repository {
     private fun getOKHttpClient(): OkHttpClient {
         val build =
             OkHttpClient.Builder()
-                .retryOnConnectionFailure(false) // 不重试
-                .connectTimeout(15, TimeUnit.SECONDS) // 2024-5-29 TS004 群中决定接口统一超时15秒
-                .readTimeout(15, TimeUnit.SECONDS) // 2024-5-29 TS004 群中决定接口统一超时15秒
-                .writeTimeout(15, TimeUnit.SECONDS) // 2024-5-29 TS004 群中决定接口统一超时15秒
+                .retryOnConnectionFailure(false) 
+                .connectTimeout(15, TimeUnit.SECONDS) 
+                .readTimeout(15, TimeUnit.SECONDS) 
+                .writeTimeout(15, TimeUnit.SECONDS) 
                 .addInterceptor(OKLogInterceptor(false))
         netWork?.socketFactory?.let {
             build.socketFactory(it)
@@ -253,7 +253,7 @@ object TS004Repository {
                 }
 
                 var status = getTS004Service().getUpgradeStatus().data?.status
-                while (status == 0 || status == 1 || status == 2) { // 文档跟实际值对不上
+                while (status == 0 || status == 1 || status == 2) { 
                     delay(1000)
                     status = getTS004Service().getUpgradeStatus().data?.status
                 }
@@ -284,7 +284,7 @@ object TS004Repository {
                 fileInputStream = FileInputStream(file)
 
                 var hasReadCount = 0
-                var byteArray = ByteArray(1024 * 1024 * 5) // 5M每包
+                var byteArray = ByteArray(1024 * 1024 * 5) 
 
                 var readCount = fileInputStream.read(byteArray)
                 while (readCount != -1) {
@@ -292,7 +292,7 @@ object TS004Repository {
                     if (hasReadCount == 1024 * 1024 * 5) {
                         getTS004Service().sendUpgradeFile(byteArray.toRequestBody())
                         hasReadCount = 0
-                        byteArray = ByteArray(1024 * 1024 * 5) // 5M每包
+                        byteArray = ByteArray(1024 * 1024 * 5) 
                     }
                     readCount =
                         fileInputStream.read(byteArray, hasReadCount, byteArray.size - hasReadCount)

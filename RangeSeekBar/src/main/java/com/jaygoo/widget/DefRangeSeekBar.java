@@ -219,12 +219,7 @@ public class DefRangeSeekBar extends View {
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int heightSize = MeasureSpec.getSize(heightMeasureSpec);
         int heightMode = MeasureSpec.getMode(heightMeasureSpec);
-        /*
-         * onMeasure传入的widthMeasureSpec和heightMeasureSpec不是一般的尺寸数值，而是将模式和尺寸组合在一起的数值
-         * MeasureSpec.EXACTLY 是精确尺寸
-         * MeasureSpec.AT_MOST 是最大尺寸
-         * MeasureSpec.UNSPECIFIED 是未指定尺寸
-         */
+        
 
         if (heightMode == MeasureSpec.EXACTLY) {
             heightSize = MeasureSpec.makeMeasureSpec(heightSize, MeasureSpec.EXACTLY);

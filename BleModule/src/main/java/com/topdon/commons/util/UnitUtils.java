@@ -20,9 +20,9 @@ public class UnitUtils {
     public static List<UnitDBBean> getUnitDBBeanList(int unitType) {
         try {
             String jsonStr;
-            if (unitType == 0) {//公制
+            if (unitType == 0) {
                 jsonStr = PreUtil.getInstance(Topdon.getApp()).get(SPKeyUtils.UNIT_METRIC);
-            } else {//英制
+            } else {
                 jsonStr = PreUtil.getInstance(Topdon.getApp()).get(SPKeyUtils.UNIT_BRITISH);
             }
             LLog.w("bcf--jsonStr", jsonStr);
@@ -73,18 +73,18 @@ public class UnitUtils {
             if (unitDBBean == null) {
                 return new String[]{numericalValue, preUnit};
             }
-            if (unitType == 0) {//当前是公制
+            if (unitType == 0) {
                 if (preUnit.equalsIgnoreCase(unitDBBean.getAfterUnit())) {
                     return new String[]{numericalValue, unitDBBean.getAfterUnit()};
                 }
-                if (preUnit.equalsIgnoreCase("K")) {//开氏度
+                if (preUnit.equalsIgnoreCase("K")) {
                     try {
                         return new String[]{String.valueOf(getResult(Double.parseDouble(numericalValue) - 273.15)), unitDBBean.getAfterUnit()};
                     } catch (NumberFormatException e) {
                         e.printStackTrace();
                         return new String[]{numericalValue, unitDBBean.getAfterUnit()};
                     }
-                } else if (preUnit.equals("deg.F")) {//华氏度
+                } else if (preUnit.equals("deg.F")) {
                     try {
                         return new String[]{String.valueOf(getResult((Double.parseDouble(numericalValue) - 32) / 1.8)), "°C"};
                     } catch (Exception e) {
@@ -93,18 +93,18 @@ public class UnitUtils {
                     }
                 }
                 return new String[]{String.valueOf(getResult(Double.parseDouble(numericalValue) * Double.parseDouble(unitDBBean.getCalcFactor()))), unitDBBean.getAfterUnit()};
-            } else {//当前英制
+            } else {
                 if (preUnit.equalsIgnoreCase(unitDBBean.getAfterUnit())) {
                     return new String[]{numericalValue, unitDBBean.getAfterUnit()};
                 }
-                if (preUnit.equalsIgnoreCase("K")) {//开氏度
+                if (preUnit.equalsIgnoreCase("K")) {
                     try {
                         return new String[]{String.valueOf(getResult(32 + (Double.parseDouble(numericalValue) - 273.15) * 1.8)), unitDBBean.getAfterUnit()};
                     } catch (Exception e) {
                         e.printStackTrace();
                         return new String[]{numericalValue, unitDBBean.getAfterUnit()};
                     }
-                } else if (preUnit.equalsIgnoreCase("deg.C")) {//华氏度
+                } else if (preUnit.equalsIgnoreCase("deg.C")) {
                     try {
                         return new String[]{String.valueOf(getResult(32 + Double.parseDouble(numericalValue) * 1.8)), "°F"};
                     } catch (Exception e) {

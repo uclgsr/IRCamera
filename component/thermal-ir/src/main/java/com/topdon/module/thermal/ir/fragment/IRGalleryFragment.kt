@@ -319,7 +319,7 @@ class IRGalleryFragment : BaseFragment() {
                             }
                         }
                     }
-                if (successCount == downloadMap.size) { // 全都下载成功
+                if (successCount == downloadMap.size) { 
                     dismissLoadingDialog()
                     if (isShare) {
                         shareImage(downloadList)

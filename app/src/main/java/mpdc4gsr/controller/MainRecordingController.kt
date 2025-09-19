@@ -12,9 +12,7 @@ import java.io.File
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean
 
-/**
- * Main Recording Controller for MVP
- */
+
 class MainRecordingController(
     private val context: Context,
     private val lifecycleOwner: LifecycleOwner
@@ -27,35 +25,31 @@ class MainRecordingController(
         private const val SHIMMER_STORAGE_MB_PER_MIN = 1.0
     }
 
-    // Recording state
+    
     private val _isRecording = AtomicBoolean(false)
     val isRecording: Boolean get() = _isRecording.get()
 
-    // Sensor management
+    
     private val sensorRecorders = ConcurrentHashMap<String, SensorRecorder>()
     private val activeRecorders = ConcurrentHashMap<String, Boolean>()
 
-    // Session management
+    
     private val sessionDirectoryManager = SessionDirectoryManager(context)
     private var sessionMetadata: SessionMetadata? = null
 
-    // Flows for status updates
+    
     private val _recordingStateFlow = MutableStateFlow(MainRecordingState.IDLE)
     val recordingStateFlow: StateFlow<MainRecordingState> = _recordingStateFlow.asStateFlow()
 
     private val recordingScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
-    /**
-     * Add a sensor recorder
-     */
+    
     fun addSensorRecorder(name: String, recorder: SensorRecorder) {
         sensorRecorders[name] = recorder
         Log.d(TAG, "Added sensor recorder: $name")
     }
 
-    /**
-     * Simple start recording - MVP version
-     */
+    
     suspend fun startRecording(
         sessionId: String? = null,
         enabledSensors: List<String> = listOf("RGB", "Thermal", "Shimmer")
@@ -70,19 +64,19 @@ class MainRecordingController(
                 Log.i(TAG, "Starting simple recording")
                 _recordingStateFlow.value = MainRecordingState.STARTING
 
-                // Simple storage check
+                
                 if (getAvailableSpaceGB() < 1.0) {
                     Log.e(TAG, "Insufficient storage space")
                     _recordingStateFlow.value = MainRecordingState.ERROR
                     return@withContext false
                 }
 
-                // Create session
+                
                 val finalSessionId = sessionId ?: sessionDirectoryManager.generateSessionId()
                 val sessionDir = sessionDirectoryManager.createSessionDirectory(finalSessionId)
                 sessionMetadata = SessionMetadata.createSessionStart(finalSessionId)
 
-                // Start sensors
+                
                 var sensorsStarted = 0
                 for (sensorName in enabledSensors) {
                     val sensor = sensorRecorders[sensorName]
@@ -124,9 +118,7 @@ class MainRecordingController(
         }
     }
 
-    /**
-     * Simple stop recording - MVP version
-     */
+    
     suspend fun stopRecording(): Boolean {
         return withContext(Dispatchers.IO) {
             try {
@@ -138,7 +130,7 @@ class MainRecordingController(
                 _recordingStateFlow.value = MainRecordingState.STOPPING
                 _isRecording.set(false)
 
-                // Stop all active sensors
+                
                 for ((sensorName, isActive) in activeRecorders) {
                     if (isActive) {
                         try {
@@ -164,9 +156,7 @@ class MainRecordingController(
         }
     }
 
-    /**
-     * Get simple recording status
-     */
+    
     fun getRecordingStatus(): SimpleRecordingStatus {
         val activeSensors = activeRecorders.count { it.value }
         return SimpleRecordingStatus(
@@ -182,14 +172,12 @@ class MainRecordingController(
             val sessionDir = File(context.filesDir, "sessions")
             sessionDir.freeSpace / (1024.0 * 1024.0 * 1024.0)
         } catch (e: Exception) {
-            FALLBACK_AVAILABLE_SPACE_GB // Assume 10GB available on error
+            FALLBACK_AVAILABLE_SPACE_GB 
         }
     }
 }
 
-/**
- * Simple recording status for MVP
- */
+
 data class SimpleRecordingStatus(
     val isRecording: Boolean,
     val activeSensors: Int,
@@ -197,9 +185,7 @@ data class SimpleRecordingStatus(
     val state: MainRecordingState
 )
 
-/**
- * Simple recording states for MainRecordingController
- */
+
 enum class MainRecordingState {
     IDLE, STARTING, RECORDING, STOPPING, ERROR
 }

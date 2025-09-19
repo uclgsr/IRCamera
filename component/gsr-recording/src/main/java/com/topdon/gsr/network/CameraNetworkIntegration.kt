@@ -26,7 +26,7 @@ class CameraNetworkIntegration(
         private const val RGB_STREAM_ID = "rgb_camera"
         private const val THERMAL_STREAM_ID = "thermal_camera"
         private const val MAX_FRAME_QUEUE_SIZE = 30
-        private const val FRAME_DROP_THRESHOLD = 0.8f // Drop frames when queue is 80% full
+        private const val FRAME_DROP_THRESHOLD = 0.8f 
         private const val JPEG_QUALITY_HIGH = 85
         private const val JPEG_QUALITY_MEDIUM = 65
         private const val JPEG_QUALITY_LOW = 45
@@ -87,7 +87,7 @@ class CameraNetworkIntegration(
 
             Log.d(TAG, "Initialized camera streaming for session: $sessionId")
 
-            // Send stream initialization message to PC Controller
+            
             val initMessage =
                 JSONObject().apply {
                     put("type", "camera_stream_init")
@@ -118,11 +118,11 @@ class CameraNetworkIntegration(
                 streamingScope.launch {
                     while (isRgbStreamingActive.get()) {
                         processRgbFrameQueue()
-                        delay(16L) // ~60 FPS processing
+                        delay(16L) 
                     }
                 }
 
-            // Notify PC Controller that RGB streaming started
+            
             val startMessage =
                 JSONObject().apply {
                     put("type", "stream_started")
@@ -147,11 +147,11 @@ class CameraNetworkIntegration(
                 streamingScope.launch {
                     while (isThermalStreamingActive.get()) {
                         processThermalFrameQueue()
-                        delay(33L) // ~30 FPS processing for thermal
+                        delay(33L) 
                     }
                 }
 
-            // Notify PC Controller that thermal streaming started
+            
             val startMessage =
                 JSONObject().apply {
                     put("type", "stream_started")
@@ -175,16 +175,16 @@ class CameraNetworkIntegration(
         val timestamp = System.currentTimeMillis()
 
         try {
-            // Check if queue is getting full
+            
             if (rgbFrameQueue.size >= MAX_FRAME_QUEUE_SIZE * FRAME_DROP_THRESHOLD) {
-                // Drop oldest frame to prevent memory issues
+                
                 rgbFrameQueue.poll()?.let {
                     droppedFrameCount.incrementAndGet()
                     Log.v(TAG, "Dropped RGB frame due to queue overflow")
                 }
             }
 
-            // Create RGB frame
+            
             val rgbFrame =
                 RgbFrame(
                     frameId = frameId,
@@ -216,9 +216,9 @@ class CameraNetworkIntegration(
         val timestamp = System.currentTimeMillis()
 
         try {
-            // Check if queue is getting full
+            
             if (thermalFrameQueue.size >= MAX_FRAME_QUEUE_SIZE * FRAME_DROP_THRESHOLD) {
-                // Drop oldest frame
+                
                 thermalFrameQueue.poll()?.let {
                     droppedFrameCount.incrementAndGet()
                     Log.v(TAG, "Dropped thermal frame due to queue overflow")
@@ -259,7 +259,7 @@ class CameraNetworkIntegration(
         val frame = rgbFrameQueue.poll() ?: return
 
         try {
-            // Create frame message
+            
             val frameMessage =
                 JSONObject().apply {
                     put("type", "rgb_frame")
@@ -274,7 +274,7 @@ class CameraNetworkIntegration(
                     put("session_id", frame.sessionId)
                 }
 
-            // Queue frame data with high priority for real-time streaming
+            
             qosManager.queueData(
                 data = frame.imageData,
                 dataType = QualityOfServiceManager.DataType.VIDEO_METADATA,
@@ -288,7 +288,7 @@ class CameraNetworkIntegration(
                     ),
             )
 
-            // Send frame metadata
+            
             networkClient.sendMessage(frameMessage)
         } catch (e: Exception) {
             Log.e(TAG, "Error sending RGB frame", e)
@@ -297,21 +297,21 @@ class CameraNetworkIntegration(
 
     private fun compressThermalData(thermalData: FloatArray): ByteArray {
         return try {
-            // Convert float array to byte array for transmission
+            
             val byteBuffer = ByteBuffer.allocate(thermalData.size * 4)
             for (value in thermalData) {
                 byteBuffer.putFloat(value)
             }
             val thermalBytes = byteBuffer.array()
 
-            // Apply simple run-length encoding for similar adjacent values
+            
             val compressed = ByteArrayOutputStream()
             var i = 0
             while (i < thermalBytes.size) {
                 val currentByte = thermalBytes[i]
                 var count = 1
 
-                // Count consecutive identical bytes (up to 255)
+                
                 while (i + count < thermalBytes.size &&
                     thermalBytes[i + count] == currentByte &&
                     count < 255
@@ -320,16 +320,16 @@ class CameraNetworkIntegration(
                 }
 
                 if (count > 3) {
-                    // Use run-length encoding for sequences > 3
-                    compressed.write(0xFF) // Escape byte
+                    
+                    compressed.write(0xFF) 
                     compressed.write(count)
                     compressed.write(currentByte.toInt())
                     i += count
                 } else {
-                    // Write bytes directly
+                    
                     for (j in 0 until count) {
                         if (currentByte.toInt() == 0xFF) {
-                            // Escape the escape byte
+                            
                             compressed.write(0xFF)
                             compressed.write(0x00)
                         } else {
@@ -342,7 +342,7 @@ class CameraNetworkIntegration(
             compressed.toByteArray()
         } catch (e: Exception) {
             Log.w(TAG, "Failed to compress thermal data, using float-to-byte conversion", e)
-            // Fallback: simple float to byte conversion
+            
             val byteBuffer = ByteBuffer.allocate(thermalData.size * 4)
             for (value in thermalData) {
                 byteBuffer.putFloat(value)
@@ -355,10 +355,10 @@ class CameraNetworkIntegration(
         val frame = thermalFrameQueue.poll() ?: return
 
         try {
-            // Compress thermal data for transmission
+            
             val compressedThermalData = compressThermalData(frame.thermalData)
 
-            // Create frame message
+            
             val frameMessage =
                 JSONObject().apply {
                     put("type", "thermal_frame")
@@ -373,7 +373,7 @@ class CameraNetworkIntegration(
                     put("session_id", frame.sessionId)
                 }
 
-            // Queue thermal data with normal priority
+            
             qosManager.queueData(
                 data = compressedThermalData,
                 dataType = QualityOfServiceManager.DataType.THERMAL,
@@ -387,7 +387,7 @@ class CameraNetworkIntegration(
                     ),
             )
 
-            // Send frame metadata
+            
             networkClient.sendMessage(frameMessage)
         } catch (e: Exception) {
             Log.e(TAG, "Error sending thermal frame", e)
@@ -395,7 +395,7 @@ class CameraNetworkIntegration(
     }
 
     private fun serializeThermalData(thermalData: FloatArray): ByteArray {
-        // Convert float array to byte array for transmission
+        
         val byteBuffer = ByteBuffer.allocate(thermalData.size * 4)
         thermalData.forEach { temp ->
             byteBuffer.putFloat(temp)
@@ -416,7 +416,7 @@ class CameraNetworkIntegration(
 
             Log.d(TAG, "RGB streaming stopped")
 
-            // Notify PC Controller
+            
             val stopMessage =
                 JSONObject().apply {
                     put("type", "stream_stopped")
@@ -440,7 +440,7 @@ class CameraNetworkIntegration(
 
             Log.d(TAG, "Thermal streaming stopped")
 
-            // Notify PC Controller
+            
             val stopMessage =
                 JSONObject().apply {
                     put("type", "stream_stopped")
@@ -455,7 +455,7 @@ class CameraNetworkIntegration(
     fun getStreamingMetrics(): List<StreamMetrics> {
         val metrics = mutableListOf<StreamMetrics>()
 
-        // RGB stream metrics
+        
         metrics.add(
             StreamMetrics(
                 streamId = RGB_STREAM_ID,
@@ -464,11 +464,11 @@ class CameraNetworkIntegration(
                 totalFrames = rgbFrameCount.get(),
                 droppedFrames = droppedFrameCount.get(),
                 queueSize = rgbFrameQueue.size,
-                avgLatency = 0L, // Would be calculated from timestamps
+                avgLatency = 0L, 
             ),
         )
 
-        // Thermal stream metrics
+        
         metrics.add(
             StreamMetrics(
                 streamId = THERMAL_STREAM_ID,
@@ -477,7 +477,7 @@ class CameraNetworkIntegration(
                 totalFrames = thermalFrameCount.get(),
                 droppedFrames = droppedFrameCount.get(),
                 queueSize = thermalFrameQueue.size,
-                avgLatency = 0L, // Would be calculated from timestamps
+                avgLatency = 0L, 
             ),
         )
 
@@ -485,7 +485,7 @@ class CameraNetworkIntegration(
     }
 
     private fun calculateFrameRate(frameCount: Long): Float {
-        // This would track timing over a window
+        
         // For now, return a placeholder value
         return if (frameCount > 0) 30.0f else 0.0f
     }

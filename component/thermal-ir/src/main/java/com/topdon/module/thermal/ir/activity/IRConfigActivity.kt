@@ -37,19 +37,11 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import com.topdon.lib.core.R as LibR
 
-/**
 
- *
-
-
- */
 
 
 class IRConfigActivity : BaseActivity(), View.OnClickListener {
-    /**
-
-
-     */
+    
     private var isTC007 = false
 
     private val viewModel: IRConfigViewModel by viewModels()
@@ -161,7 +153,7 @@ class IRConfigActivity : BaseActivity(), View.OnClickListener {
         val ivDefaultSelector = findViewById<android.widget.ImageView>(R.id.iv_default_selector)
         val llRoot = findViewById<android.widget.LinearLayout>(R.id.ll_root)
 
-        if (SharedManager.configGuideStep == 0) { // 已看过或不再提示
+        if (SharedManager.configGuideStep == 0) { 
             ivDefaultSelector.isSelected = modelBean.defaultModel.use
             adapter.refresh(modelBean.myselfModel)
             return
@@ -200,11 +192,11 @@ class IRConfigActivity : BaseActivity(), View.OnClickListener {
         val tvDefaultEmValue = findViewById<android.widget.TextView>(R.id.tv_default_em_value)
 
         when (v) {
-            ivDefaultSelector -> { // 默认模式-选中
+            ivDefaultSelector -> { 
                 viewModel.checkConfig(isTC007, 0)
             }
 
-            viewDefaultTempBg -> { // 默认模式-环境温度
+            viewDefaultTempBg -> { 
                 IRConfigInputDialog(this, IRConfigInputDialog.Type.TEMP, isTC007)
                     .setInput(UnitTools.showUnitValue(viewModel.configLiveData.value?.defaultModel?.environment!!))
                     .setConfirmListener {
@@ -213,7 +205,7 @@ class IRConfigActivity : BaseActivity(), View.OnClickListener {
                     .show()
             }
 
-            viewDefaultDisBg -> { // 默认模式-测温距离
+            viewDefaultDisBg -> { 
                 IRConfigInputDialog(this, IRConfigInputDialog.Type.DIS, isTC007)
                     .setInput(viewModel.configLiveData.value?.defaultModel?.distance)
                     .setConfirmListener {
@@ -222,7 +214,7 @@ class IRConfigActivity : BaseActivity(), View.OnClickListener {
                     .show()
             }
 
-            tvDefaultEmValue -> { // 默认模式-发射率
+            tvDefaultEmValue -> { 
                 IRConfigInputDialog(this, IRConfigInputDialog.Type.EM, isTC007)
                     .setInput(viewModel.configLiveData.value?.defaultModel?.radiation)
                     .setConfirmListener {
