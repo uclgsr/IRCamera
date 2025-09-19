@@ -67,7 +67,7 @@ public class BluetoothManager implements EventObserver {
             Request request = builder.setCallback(new MtuChangeCallback() {
                 @Override
                 public void onMtuChanged(@NonNull Request request, int mtu) {
-                    Log.d("wangchen", "MTUModifySuccess，[CHINESE_TEXT]：" + mtu);
+                    Log.d("wangchen", "MTU changed successfully, new value: " + mtu);
                     setReadCallback();
                 }
 
