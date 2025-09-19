@@ -3,7 +3,7 @@ package mpdc4gsr.network
 import android.content.Context
 import android.graphics.Bitmap
 import android.util.Log
-import mpdc4gsr.core.RecordingService
+import mpdc4gsr.service.RecordingService
 
 /**
  * PreviewIntegration provides easy integration points for camera and sensor components

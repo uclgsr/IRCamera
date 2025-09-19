@@ -5,9 +5,9 @@ import android.util.Log
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import mpdc4gsr.sensors.SensorRecorder
-import mpdc4gsr.utils.SessionDirectoryManager
+import mpdc4gsr.util.SessionDirectoryManager
 import mpdc4gsr.data.SessionMetadata
-import mpdc4gsr.utils.TimestampManager
+import mpdc4gsr.sensors.TimestampManager
 import mpdc4gsr.permissions.PermissionManager
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*

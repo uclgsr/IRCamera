@@ -26,7 +26,7 @@ import mpdc4gsr.network.NetworkClient
 import mpdc4gsr.network.NetworkServer
 import mpdc4gsr.network.PreviewStreamer
 import mpdc4gsr.network.PreviewDataAdapter
-import mpdc4gsr.core.CrashSafeSupervisor
+import mpdc4gsr.supervisor.CrashSafeSupervisor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job

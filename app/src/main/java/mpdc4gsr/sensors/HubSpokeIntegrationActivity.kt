@@ -17,7 +17,7 @@ import com.topdon.lib.core.ktbase.BaseBindingActivity
 import mpdc4gsr.controller.RecordingController
 import mpdc4gsr.controller.RecordingState
 import mpdc4gsr.network.NetworkServer
-import mpdc4gsr.core.RecordingService
+import mpdc4gsr.service.RecordingService
 import mpdc4gsr.utils.TimeManager
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach

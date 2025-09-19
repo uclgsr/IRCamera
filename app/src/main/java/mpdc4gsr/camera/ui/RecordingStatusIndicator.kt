@@ -97,7 +97,7 @@ constructor(
         updateDisplay()
     }
 
-    fun updateWithSensorSummary(summary: com.topdon.tc001.controller.SensorStatusSummary) {
+    fun updateWithSensorSummary(summary: mpdc4gsr.controller.RecordingController.SensorStatusSummary) {
 
         if (summary.isSessionActive) {
             statusIcon.setBackgroundColor(Color.RED)

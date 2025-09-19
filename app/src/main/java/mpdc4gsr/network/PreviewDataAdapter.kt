@@ -4,7 +4,7 @@ import android.graphics.Bitmap
 import android.util.Log
 import com.example.thermal_lite.camera.CameraPreviewManager
 import mpdc4gsr.sensors.gsr.GSRSensorRecorder
-import mpdc4gsr.core.RecordingService
+import mpdc4gsr.service.RecordingService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job

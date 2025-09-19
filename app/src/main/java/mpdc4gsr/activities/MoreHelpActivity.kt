@@ -15,6 +15,7 @@ import com.csl.irCamera.databinding.ActivityMoreHelpBinding
 import com.topdon.lib.core.dialog.TipDialog
 import com.topdon.lib.core.ktbase.BaseBindingActivity
 import com.topdon.lib.core.utils.Constants
+import mpdc4gsr.ui_components.ConnectionGuideView
 
 class MoreHelpActivity : BaseBindingActivity<ActivityMoreHelpBinding>() {
     private var connectionType: Int = 0
