@@ -274,39 +274,34 @@ class MainWindow(QMainWindow):
                     self.bluetooth_manager.connect_device(addr)
                 )
             )
-        self.bluetooth_control_widget.disconnect_requested.connect(
-        lambda addr: asyncio.create_task(
-            self.bluetooth_manager.disconnect_device(addr)
-        )
+            self.bluetooth_control_widget.disconnect_requested.connect(
+                lambda addr: asyncio.create_task(
+                    self.bluetooth_manager.disconnect_device(addr)
+                )
+            )
 
-    )
+            self.bluetooth_manager.device_discovered.connect(
+                lambda device: self._update_bluetooth_devices()
+            )
+            self.bluetooth_manager.device_connected.connect(
+                lambda addr, name: self.bluetooth_control_widget.set_connection_status(
+                    addr, True
+                )
+            )
+            self.bluetooth_manager.device_disconnected.connect(
+                lambda addr, reason: self.bluetooth_control_widget.set_connection_status(
+                    addr, False
+                )
+            )
+            self.bluetooth_manager.error_occurred.connect(
+                lambda op, err: self.bluetooth_control_widget.set_error_status(err)
+            )
 
-    self.bluetooth_manager.device_discovered.connect(
-    lambda device: self._update_bluetooth_devices()
-
-)
-self.bluetooth_manager.device_connected.connect(
-lambda addr, name: self.bluetooth_control_widget.set_connection_status(
-    addr, True
-)
-)
-self.bluetooth_manager.device_disconnected.connect(
-lambda addr,
-       reason: self.bluetooth_control_widget.set_connection_status(
-    addr, False
-)
-)
-self.bluetooth_manager.error_occurred.connect(
-lambda op, err: self.bluetooth_control_widget.set_error_status(err)
-)
-
-
-if self.wifi_manager and self.wifi_control_widget:
-
-    self.wifi_control_widget.scan_requested.connect(
-lambda: self.wifi_manager.start_scanning(continuous=False)
-)
-self.wifi_control_widget.connect_requested.connect(
+        if self.wifi_manager and self.wifi_control_widget:
+            self.wifi_control_widget.scan_requested.connect(
+                lambda: self.wifi_manager.start_scanning(continuous=False)
+            )
+            self.wifi_control_widget.connect_requested.connect(
 lambda ssid, pwd: asyncio.create_task(
     self.wifi_manager.connect_to_network(ssid, pwd)
 )

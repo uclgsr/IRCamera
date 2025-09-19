@@ -1038,7 +1038,7 @@ class GSRAnalyticsWidget(QWidget):
         logger.info("Cleared GSR analytics history")
 
 
-class GSRMainWidget(QTabWidget):
+class GSRMainTabWidget(QTabWidget):
 
     def __init__(self, gsr_receiver=None, parent=None):
         super().__init__(parent)
@@ -1050,18 +1050,18 @@ class GSRMainWidget(QTabWidget):
         self.device_widget = GSRDeviceStatusWidget()
         self.addTab(self.device_widget, "Device Status")
 
-        self.monitor_widget = GSRMonitorWidget(self.gsr_receiver)
-        self.addTab(self.monitor_widget, "Real-time Monitor")
+        # self.monitor_widget = GSRMonitorWidget(self.gsr_receiver)
+        # self.addTab(self.monitor_widget, "Real-time Monitor")
 
         self.analytics_widget = GSRAnalyticsWidget(self.gsr_receiver)
         self.addTab(self.analytics_widget, "Analytics & Stress")
 
-        self.export_widget = GSRDataExportWidget(self.gsr_receiver)
-        self.addTab(self.export_widget, "Data Export")
+        # self.export_widget = GSRDataExportWidget(self.gsr_receiver)
+        # self.addTab(self.export_widget, "Data Export")
 
     def set_gsr_receiver(self, gsr_receiver) -> None:
 
         self.gsr_receiver = gsr_receiver
-        self.monitor_widget.gsr_receiver = gsr_receiver
+        # self.monitor_widget.gsr_receiver = gsr_receiver
         self.analytics_widget.gsr_receiver = gsr_receiver
-        self.export_widget.gsr_receiver = gsr_receiver
+        # self.export_widget.gsr_receiver = gsr_receiver

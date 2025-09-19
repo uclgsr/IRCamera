@@ -40,7 +40,6 @@ except ImportError:
 
 
 try:
-    import sys
     import os
 
     native_backend_path = os.path.join(os.path.dirname(__file__), 'native_backend', 'build')
