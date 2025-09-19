@@ -4,7 +4,7 @@ import android.annotation.SuppressLint
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.topdon.lib.core.R
-import com.topdon.menu.R as MenuR
+import com.topdon.lib.core.R as MenuR
 
 @SuppressLint("NotifyDataSetChanged")
 internal class TempSourceAdapter : BaseMenuAdapter() {

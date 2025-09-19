@@ -21,7 +21,7 @@ import com.topdon.lib.ui.bean.ColorBean
 import com.topdon.lib.ui.config.CameraHelp
 import com.topdon.lib.ui.listener.SingleClickListener
 import com.topdon.lib.ui.R as UiR
-import com.topdon.menu.R as MenuR
+import com.topdon.lib.core.R as MenuR
 
 @Deprecated("旧的settingsmenu，已重构过了")
 @SuppressLint("NotifyDataSetChanged")

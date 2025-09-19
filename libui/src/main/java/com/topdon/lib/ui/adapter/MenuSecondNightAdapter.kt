@@ -12,7 +12,7 @@ import com.topdon.lib.core.R
 import com.topdon.lib.ui.bean.ColorBean
 import com.topdon.lib.ui.config.CameraHelp
 import com.topdon.lib.ui.R as UiR
-import com.topdon.menu.R as MenuR
+import com.topdon.lib.core.R as MenuR
 
 @Deprecated("旧的high/low temperature点menu，已重构过了")
 class MenuSecondNightAdapter(val context: Context) :

@@ -4,9 +4,9 @@ import android.annotation.SuppressLint
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.topdon.lib.core.R
-import com.topdon.menu.constant.MenuType
-import com.topdon.menu.constant.TwoLightType
-import com.topdon.menu.R as MenuR
+import com.topdon.lib.core.menu.constant.MenuType
+import com.topdon.lib.core.menu.constant.TwoLightType
+import com.topdon.lib.core.R as MenuR
 
 @SuppressLint("NotifyDataSetChanged")
 internal class TwoLightAdapter(private val menuType: MenuType) : BaseMenuAdapter() {

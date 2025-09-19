@@ -104,9 +104,9 @@ import com.topdon.lib.core.comm.AlarmHelp
 import com.topdon.lib.core.comm.dialog.ColorPickDialog
 import com.topdon.lib.core.comm.dialog.TempAlarmSetDialog
 import com.topdon.lms.sdk.LMS.mContext
-import com.topdon.menu.constant.FenceType
-import com.topdon.menu.constant.SettingType
-import com.topdon.menu.constant.TwoLightType
+import com.topdon.lib.core.menu.constant.FenceType
+import com.topdon.lib.core.menu.constant.SettingType
+import com.topdon.lib.core.menu.constant.TwoLightType
 import com.topdon.module.thermal.ir.activity.BaseIRActivity
 import com.topdon.module.thermal.ir.adapter.CameraItemAdapter
 import com.topdon.module.thermal.ir.bean.DataBean

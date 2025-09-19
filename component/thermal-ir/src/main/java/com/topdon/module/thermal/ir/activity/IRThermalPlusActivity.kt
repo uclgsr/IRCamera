@@ -17,7 +17,7 @@ import com.topdon.lib.core.bean.CameraItemBean
 import com.topdon.lib.core.common.ProductType.PRODUCT_NAME_TCP
 import com.topdon.lib.core.common.SaveSettingUtil
 import com.topdon.lib.core.tools.ToastTools
-import com.topdon.menu.constant.TwoLightType
+import com.topdon.lib.core.menu.constant.TwoLightType
 import com.topdon.module.thermal.ir.R
 import com.topdon.module.thermal.ir.event.GalleryAddEvent
 import com.topdon.module.thermal.ir.video.VideoRecordFFmpeg

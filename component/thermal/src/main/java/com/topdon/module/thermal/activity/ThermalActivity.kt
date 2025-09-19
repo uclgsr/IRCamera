@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.BarUtils
 import com.topdon.lib.core.ktbase.BaseActivity
-import com.topdon.menu.MenuFirstTabView
+import com.topdon.lib.core.menu.MenuFirstTabView
 import com.topdon.module.thermal.R
 import com.topdon.module.thermal.adapter.MenuTabAdapter
 import com.topdon.module.thermal.fragment.event.ThermalActionEvent

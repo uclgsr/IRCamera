@@ -10,7 +10,7 @@ import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.topdon.module.thermal.ir.R
-import com.topdon.menu.R as MenuR
+import com.topdon.lib.core.R as MenuR
 
 @Deprecated("旧的2D编辑一级菜单，已重构过了")
 class GalleryEditMenuAdapter(val context: Context) :

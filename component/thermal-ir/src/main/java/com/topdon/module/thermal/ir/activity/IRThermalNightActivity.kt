@@ -119,11 +119,11 @@ import com.topdon.lib.ui.widget.seekbar.RangeSeekBar
 import com.topdon.lib.core.comm.AlarmHelp
 import com.topdon.lib.core.comm.dialog.ColorPickDialog
 import com.topdon.lib.core.comm.dialog.TempAlarmSetDialog
-import com.topdon.menu.constant.FenceType
-import com.topdon.menu.constant.SettingType
-import com.topdon.menu.constant.TargetType
-import com.topdon.menu.constant.TempPointType
-import com.topdon.menu.constant.TwoLightType
+import com.topdon.lib.core.menu.constant.FenceType
+import com.topdon.lib.core.menu.constant.SettingType
+import com.topdon.lib.core.menu.constant.TargetType
+import com.topdon.lib.core.menu.constant.TempPointType
+import com.topdon.lib.core.menu.constant.TwoLightType
 import com.topdon.module.thermal.ir.R
 import com.topdon.module.thermal.ir.adapter.CameraItemAdapter
 import com.topdon.module.thermal.ir.adapter.MeasureItemAdapter

@@ -15,7 +15,7 @@ import com.topdon.lib.core.common.SharedManager
 import com.topdon.lib.core.tools.DeviceTools
 import com.topdon.lib.ui.bean.TemperatureBean
 import com.topdon.lib.ui.R as UiR
-import com.topdon.menu.R as MenuR
+import com.topdon.lib.core.R as MenuR
 
 @Deprecated("旧的temperature levelmenu，已重构过了")
 
