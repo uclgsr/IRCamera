@@ -98,12 +98,12 @@ object NavigationManager {
         val activityClass =
             when (route) {
 
-                RouterConfig.MAIN -> getClassByName("com.topdon.tc001.MainActivity")
-                RouterConfig.CLAUSE -> getClassByName("com.topdon.tc001.ClauseActivity")
-                RouterConfig.POLICY -> getClassByName("com.topdon.tc001.PolicyActivity")
-                RouterConfig.VERSION -> getClassByName("com.topdon.tc001.VersionActivity")
-                RouterConfig.IR_GALLERY_EDIT -> getClassByName("com.topdon.tc001.IRGalleryEditActivity")
-                RouterConfig.WEB_VIEW -> getClassByName("com.topdon.tc001.WebViewActivity")
+                RouterConfig.MAIN -> getClassByName("mpdc4gsr.MainActivity")
+                RouterConfig.CLAUSE -> getClassByName("mpdc4gsr.ClauseActivity")
+                RouterConfig.POLICY -> getClassByName("mpdc4gsr.PolicyActivity")
+                RouterConfig.VERSION -> getClassByName("mpdc4gsr.VersionActivity")
+                RouterConfig.IR_GALLERY_EDIT -> getClassByName("mpdc4gsr.IRGalleryEditActivity")
+                RouterConfig.WEB_VIEW -> getClassByName("mpdc4gsr.WebViewActivity")
 
                 RouterConfig.IR_MAIN -> getClassByName("com.topdon.module.thermal.ir.activity.IRMainActivity")
                 RouterConfig.IR_SETTING -> getClassByName("com.topdon.module.thermal.ir.activity.IRConfigActivity")
@@ -153,7 +153,7 @@ object NavigationManager {
                 RouterConfig.STORAGE_SPACE -> getClassByName("com.topdon.module.user.activity.StorageSpaceActivity")
                 RouterConfig.TC_MORE -> getClassByName("com.topdon.module.user.activity.MoreActivity")
 
-                RouterConfig.GSR_MULTI_MODAL -> getClassByName("com.topdon.tc001.gsr.MultiModalRecordingActivity")
+                RouterConfig.GSR_MULTI_MODAL -> getClassByName("mpdc4gsr.gsr.MultiModalRecordingActivity")
                 RouterConfig.GSR_DEMO -> getClassByName("com.topdon.component.gsr.activity.GSRDemoActivity")
 
                 RouterConfig.IR_GALLERY_HOME -> getClassByName("com.topdon.module.thermal.ir.activity.IRGalleryActivity")
