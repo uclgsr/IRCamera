@@ -44,6 +44,13 @@ class Camera2SystemValidator(private val context: Context) {
                 allPassed = false
             }
 
+            if (validateStage3Level3Support()) {
+                results.add("✅ Samsung Stage3/Level3 DNG support validated")
+            } else {
+                results.add("❌ Samsung Stage3/Level3 DNG support failed")
+                allPassed = false
+            }
+
             Log.i(TAG, "Validation completed. Success: $allPassed")
         } catch (e: Exception) {
             Log.e(TAG, "Validation failed with exception", e)
@@ -120,6 +127,35 @@ class Camera2SystemValidator(private val context: Context) {
             hasSupportsRaw && hasRawSize && hasSupports4k60 && hasSensorOrientation
         } catch (e: Exception) {
             Log.e(TAG, "Samsung compatibility validation failed", e)
+            false
+        }
+    }
+
+    private fun validateStage3Level3Support(): Boolean {
+        return try {
+            // Validate RawEngine has Stage3/Level3 functionality
+            val rawEngineClass = Class.forName("mpdc4gsr.camera.core.RawEngine")
+            val hasStage3Method = rawEngineClass.declaredMethods.any { 
+                it.name == "setStage3ProcessingEnabled" 
+            }
+            val hasStage3CheckMethod = rawEngineClass.declaredMethods.any { 
+                it.name == "isStage3ProcessingEnabled" 
+            }
+            
+            // Validate Camera2System has Stage3/Level3 configuration
+            val camera2SystemClass = Class.forName("mpdc4gsr.camera.Camera2System")
+            val hasConfigMethod = camera2SystemClass.declaredMethods.any {
+                it.name == "configureStage3Processing"
+            }
+            
+            // Check if DngCreator is available (Android API requirement)
+            val dngCreatorClass = Class.forName("android.hardware.camera2.DngCreator")
+            
+            Log.i(TAG, "Stage3/Level3 validation - RawEngine methods: $hasStage3Method && $hasStage3CheckMethod, Camera2System: $hasConfigMethod, DngCreator: ${dngCreatorClass != null}")
+            
+            hasStage3Method && hasStage3CheckMethod && hasConfigMethod && dngCreatorClass != null
+        } catch (e: Exception) {
+            Log.e(TAG, "Stage3/Level3 validation failed", e)
             false
         }
     }

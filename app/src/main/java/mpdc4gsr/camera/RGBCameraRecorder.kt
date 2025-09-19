@@ -150,6 +150,21 @@ class RGBCameraRecorder(
     suspend fun stopRecording(): Boolean {
         return camera2System.stopRecording()
     }
+    
+    /**
+     * Configure Samsung Stage3/Level3 processing for RAW DNG recording
+     */
+    fun configureStage3Processing(enabled: Boolean) {
+        camera2System.configureStage3Processing(enabled)
+        Log.i(TAG, "Samsung Stage3/Level3 processing ${if (enabled) "enabled" else "disabled"}")
+    }
+    
+    /**
+     * Check if Samsung Stage3/Level3 processing is currently enabled
+     */
+    fun isStage3ProcessingEnabled(): Boolean {
+        return camera2System.isStage3ProcessingEnabled()
+    }
 
     private fun checkCameraPermission(): Boolean {
         return XXPermissions.isGranted(context, Permission.CAMERA)

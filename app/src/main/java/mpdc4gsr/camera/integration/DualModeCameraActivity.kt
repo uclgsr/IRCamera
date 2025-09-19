@@ -46,7 +46,7 @@ class DualModeCameraActivity : AppCompatActivity() {
         val enableSamsungOptimizations =
             intent.getBooleanExtra("ENABLE_SAMSUNG_OPTIMIZATIONS", true)
 
-        setupModeSelector(initialMode)
+        setupModeSelector(initialMode, enableSamsungOptimizations)
 
         checkCameraPermission()
     }
@@ -91,7 +91,7 @@ class DualModeCameraActivity : AppCompatActivity() {
         }
     }
 
-    private fun setupModeSelector(initialMode: String) {
+    private fun setupModeSelector(initialMode: String, enableSamsungOptimizations: Boolean = true) {
 
         val mode =
             when (initialMode) {
@@ -102,19 +102,31 @@ class DualModeCameraActivity : AppCompatActivity() {
 
         cameraModeSelector.setOnModeChangeListener { newMode ->
             lifecycleScope.launch {
-                switchCameraMode(newMode)
+                switchCameraMode(newMode, enableSamsungOptimizations)
             }
         }
 
         cameraModeSelector.setMode(mode)
     }
 
-    private suspend fun switchCameraMode(newMode: RGBCameraRecorder.CameraMode) {
+    private suspend fun switchCameraMode(newMode: RGBCameraRecorder.CameraMode, enableSamsungOptimizations: Boolean = true) {
         try {
             val success = rgbCameraRecorder?.switchMode(newMode) ?: false
             if (success) {
-                Toast.makeText(this, "Switched to ${newMode.displayName}", Toast.LENGTH_SHORT)
-                    .show()
+                // Configure Stage3/Level3 processing for RAW mode on Samsung devices
+                if (newMode == RGBCameraRecorder.CameraMode.RAW_50MP && enableSamsungOptimizations) {
+                    val deviceModel = android.os.Build.MODEL
+                    val isSamsungDevice = deviceModel.contains("SM-S9") || deviceModel.contains("SM-S22")
+                    
+                    if (isSamsungDevice) {
+                        rgbCameraRecorder?.configureStage3Processing(true)
+                        Toast.makeText(this, "RAW Mode: Samsung Stage3/Level3 DNG Enabled", Toast.LENGTH_LONG).show()
+                    } else {
+                        Toast.makeText(this, "RAW Mode: Standard DNG (Non-Samsung device)", Toast.LENGTH_SHORT).show()
+                    }
+                } else {
+                    Toast.makeText(this, "Switched to ${newMode.displayName}", Toast.LENGTH_SHORT).show()
+                }
             } else {
                 Toast.makeText(
                     this,
