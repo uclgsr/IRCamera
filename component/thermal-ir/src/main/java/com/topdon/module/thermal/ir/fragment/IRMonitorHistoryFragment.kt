@@ -18,7 +18,7 @@ import com.topdon.lib.core.config.ExtraKeyConfig
 import com.topdon.lib.core.db.dao.ThermalDao
 import com.topdon.lib.core.dialog.TipDialog
 import com.topdon.lib.core.tools.TimeTool
-import com.topdon.libcom.view.CommLoadMoreView
+import com.topdon.lib.core.comm.view.CommLoadMoreView
 import com.topdon.module.thermal.ir.R
 import com.topdon.module.thermal.ir.activity.IRLogMPChartActivity
 import com.topdon.module.thermal.ir.event.MonitorCreateEvent

@@ -24,7 +24,7 @@ import com.topdon.lib.core.tools.FileTools
 import com.topdon.lib.core.tools.GlideLoader
 import com.topdon.lib.core.utils.NetWorkUtils
 import com.topdon.lib.core.view.TitleView
-import com.topdon.libcom.PDFHelp
+import com.topdon.lib.core.comm.PDFHelp
 import com.topdon.lms.sdk.LMS
 import com.topdon.lms.sdk.utils.StringUtils
 import com.topdon.lms.sdk.weiget.TToast

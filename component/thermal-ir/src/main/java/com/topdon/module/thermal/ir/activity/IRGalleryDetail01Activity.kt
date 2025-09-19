@@ -29,7 +29,7 @@ import com.topdon.lib.core.utils.ByteUtils.bytesToInt
 import com.topdon.lib.core.utils.Constants.IS_REPORT_FIRST
 import com.topdon.lib.core.view.TitleView
 import com.topdon.lib.ui.dialog.ProgressDialog
-import com.topdon.libcom.ExcelUtil
+import com.topdon.lib.core.comm.ExcelUtil
 import com.topdon.module.thermal.ir.R
 import com.topdon.module.thermal.ir.event.ImageGalleryEvent
 import com.topdon.module.thermal.ir.fragment.GalleryFragment

@@ -13,7 +13,7 @@ import com.topdon.lib.core.ktbase.BaseActivity
 import com.topdon.lib.core.tools.FileTools
 import com.topdon.lib.core.tools.GlideLoader
 import com.topdon.lib.core.view.TitleView
-import com.topdon.libcom.PDFHelp
+import com.topdon.lib.core.comm.PDFHelp
 import com.topdon.module.thermal.ir.R
 import com.topdon.module.thermal.ir.report.bean.ReportBean
 import com.topdon.module.thermal.ir.report.view.ReportIRShowView

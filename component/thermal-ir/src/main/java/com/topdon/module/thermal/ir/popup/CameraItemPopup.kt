@@ -13,7 +13,7 @@ import com.topdon.lib.core.common.SharedManager
 import com.topdon.lib.core.config.RouterConfig
 import com.topdon.lib.core.dialog.TipShutterDialog
 import com.topdon.lib.core.navigation.NavigationManager
-import com.topdon.libcom.bean.SaveSettingBean
+import com.topdon.lib.core.comm.bean.SaveSettingBean
 import com.topdon.module.thermal.ir.R
 import com.topdon.module.thermal.ir.databinding.PopCameraItemBinding
 

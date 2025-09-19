@@ -24,7 +24,7 @@ import com.topdon.lib.core.navigation.NavigationManager
 import com.topdon.lib.core.socket.WebSocketProxy
 import com.topdon.lib.core.utils.NetWorkUtils
 import com.topdon.lib.core.view.TitleView
-import com.topdon.libcom.view.CommLoadMoreView
+import com.topdon.lib.core.comm.view.CommLoadMoreView
 import com.topdon.lms.sdk.Config
 import com.topdon.lms.sdk.LMS
 import com.topdon.lms.sdk.UrlConstant

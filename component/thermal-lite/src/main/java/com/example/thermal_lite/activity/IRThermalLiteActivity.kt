@@ -100,9 +100,9 @@ import com.topdon.lib.core.utils.ScreenUtil
 import com.topdon.lib.ui.dialog.TipPreviewDialog
 import com.topdon.lib.ui.widget.seekbar.OnRangeChangedListener
 import com.topdon.lib.ui.widget.seekbar.RangeSeekBar
-import com.topdon.libcom.AlarmHelp
-import com.topdon.libcom.dialog.ColorPickDialog
-import com.topdon.libcom.dialog.TempAlarmSetDialog
+import com.topdon.lib.core.comm.AlarmHelp
+import com.topdon.lib.core.comm.dialog.ColorPickDialog
+import com.topdon.lib.core.comm.dialog.TempAlarmSetDialog
 import com.topdon.lms.sdk.LMS.mContext
 import com.topdon.menu.constant.FenceType
 import com.topdon.menu.constant.SettingType

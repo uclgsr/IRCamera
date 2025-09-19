@@ -1,7 +1,7 @@
 package com.topdon.module.thermal.ir.activity
 
 import com.topdon.lib.core.ktbase.BaseActivity
-import com.topdon.libcom.bean.SaveSettingBean
+import com.topdon.lib.core.comm.bean.SaveSettingBean
 
 
 

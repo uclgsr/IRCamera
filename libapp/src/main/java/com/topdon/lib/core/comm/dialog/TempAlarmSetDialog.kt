@@ -19,7 +19,7 @@ import com.bumptech.glide.Glide
 import com.topdon.lib.core.bean.AlarmBean
 import com.topdon.lib.core.tools.ToastTools
 import com.topdon.lib.core.tools.UnitTools
-import com.topdon.libcom.R
+import com.topdon.lib.core.R
 
 class TempAlarmSetDialog(
     context: Context,

@@ -5,7 +5,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.topdon.lib.core.config.RouterConfig
 import com.topdon.lib.ui.dialog.MonitorSelectDialog
-import com.topdon.libcom.navigation.NavigationManager
+import com.topdon.lib.core.comm.navigation.NavigationManager
 import com.topdon.module.thermal.ir.bean.SelectPositionBean
 import com.topdon.module.thermal.ir.databinding.ActivityIrMonitorBinding
 import com.topdon.module.thermal.ir.event.ThermalActionEvent
