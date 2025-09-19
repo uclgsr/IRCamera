@@ -91,7 +91,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <com.mpdc4gsr.menu.MenuSecondView
+        <com.mpdc4gsr.lib.core.menu.MenuSecondView
             android:id="@+id/thermal_recycler_night"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
