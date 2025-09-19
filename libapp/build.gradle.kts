@@ -126,6 +126,7 @@ dependencies {
     implementation(libs.kotlin.stdlib)
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.coroutines.android)
+    implementation(project(":RangeSeekBar"))
 
     coreLibraryDesugaring(libs.desugar.jdk.libs)
     api(fileTree(mapOf("include" to listOf("*.jar"), "dir" to "libs")))
