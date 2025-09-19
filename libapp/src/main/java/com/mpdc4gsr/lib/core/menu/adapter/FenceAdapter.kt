@@ -6,7 +6,6 @@ import androidx.annotation.StringRes
 import com.mpdc4gsr.lib.core.R
 import com.mpdc4gsr.lib.core.menu.constant.FenceType
 import com.mpdc4gsr.lib.core.menu.constant.MenuType
-import com.mpdc4gsr.lib.core.menu.R as MenuR
 
 @SuppressLint("NotifyDataSetChanged")
 internal class FenceAdapter(menuType: MenuType) : BaseMenuAdapter() {
@@ -16,7 +15,7 @@ internal class FenceAdapter(menuType: MenuType) : BaseMenuAdapter() {
             when (value) {
                 FenceType.FULL -> isFullSelect = true
                 FenceType.DEL -> isFullSelect = false
-                else -> { // 点、线、面、趋势图，不会影响全图state
+                else -> {
                 }
             }
             field = value

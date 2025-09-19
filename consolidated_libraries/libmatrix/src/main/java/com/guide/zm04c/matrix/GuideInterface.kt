@@ -6,7 +6,7 @@ import android.os.Build
 import android.text.TextUtils
 import android.util.Log
 import androidx.annotation.RequiresApi
-import com.guide.zm04c.matrix.Logger.d
+import com.mpdc4gsr.lib.core.matrix.Logger.d
 import com.guide.zm04c.matrix.utils.FileUtils.Companion.saveFile
 import com.guide.zm04c.matrix.utils.HexDump
 import java.io.BufferedInputStream

@@ -6,7 +6,6 @@ import androidx.annotation.StringRes
 import com.mpdc4gsr.lib.core.R
 import com.mpdc4gsr.lib.core.menu.constant.MenuType
 import com.mpdc4gsr.lib.core.menu.constant.SettingType
-import com.mpdc4gsr.lib.core.menu.R as MenuR
 
 @SuppressLint("NotifyDataSetChanged")
 internal class SettingAdapter(
