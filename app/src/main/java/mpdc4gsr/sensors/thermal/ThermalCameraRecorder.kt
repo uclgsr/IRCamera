@@ -531,7 +531,7 @@ class ThermalCameraRecorder(
                 var permissionResult = false
                 val resultReceived = kotlinx.coroutines.CompletableDeferred<Boolean>()
 
-                
+                // Setup temporary broadcast receiver for USB permission result
                 val permissionReceiver = object : android.content.BroadcastReceiver() {
                     override fun onReceive(
                         context: android.content.Context?,
@@ -2904,9 +2904,9 @@ class ThermalCameraRecorder(
                 frameProcessingTimeMs = avgProcessingTime,
                 memoryUsageMB = usedMemory.toDouble(),
                 cpuUsagePercent = cpuUsage,
-                thermalDrift = 0.1, 
-                calibrationAccuracy = 95.0, 
-                networkLatencyMs = 50.0 
+                thermalDrift = 0.1, // Placeholder
+                calibrationAccuracy = 95.0, // Placeholder
+                networkLatencyMs = 50.0 // Placeholder
             )
 
             performanceMetrics

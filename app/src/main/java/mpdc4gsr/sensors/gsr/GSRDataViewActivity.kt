@@ -825,7 +825,7 @@ class GSRDataViewActivity : BaseBindingActivity<ActivityGsrDataViewBinding>() {
             try {
 
                 val timestampNs =
-                    System.nanoTime() 
+                    System.nanoTime() // Placeholder - real implementation would parse timestamp
                 val gsrDataPoint =
                     GSRDataPoint(
                         timestamp = timestampNs,
@@ -833,7 +833,7 @@ class GSRDataViewActivity : BaseBindingActivity<ActivityGsrDataViewBinding>() {
                         gsrRaw = (row.gsrValue * 100).toInt()
                             .coerceIn(0, 4095), 
                         resistance = row.resistance,
-                        ppgValue = (Math.random() * 1000 + 1000).toInt(), 
+                        ppgValue = (Math.random() * 1000 + 1000).toInt(), // Placeholder PPG value
                         syncMarker = false,
                     )
                 gsrDataPoints.add(gsrDataPoint)

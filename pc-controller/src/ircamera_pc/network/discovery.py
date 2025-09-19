@@ -261,7 +261,7 @@ class NetworkDiscoveryService:
         
         logger.info("Starting fallback subnet discovery...")
 
-        
+        # This would implement subnet scanning as a fallback
         
         logger.warning(
             "Fallback discovery not fully implemented - install zeroconf for full functionality"
@@ -273,7 +273,7 @@ class NetworkDiscoveryService:
     def _get_local_ip(self) -> str:
         
         try:
-            
+            # Connect to a dummy address to determine local IP
             with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
                 s.connect(("8.8.8.8", 80))
                 return s.getsockname()[0]

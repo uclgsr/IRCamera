@@ -270,7 +270,7 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
     override fun initContentView(): Int {
         binding = ActivityIrThermalLiteBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        return 0 
+        return 0 // Return dummy value since setContentView is already called
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

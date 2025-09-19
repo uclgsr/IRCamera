@@ -773,7 +773,7 @@ class WiFiManager(BaseManager):
             if password and security != NetworkSecurityType.OPEN:
                 profile_xml = self._create_wifi_profile_xml(ssid, password, security)
 
-                
+                # Write profile to temporary file
                 import tempfile
 
                 with tempfile.NamedTemporaryFile(
@@ -799,7 +799,7 @@ class WiFiManager(BaseManager):
                         logger.error(f"Failed to add WiFi profile: {stderr.decode()}")
                         return False
                 finally:
-                    
+                    # Clean up temporary profile file
                     try:
                         os.unlink(profile_path)
                     except OSError:

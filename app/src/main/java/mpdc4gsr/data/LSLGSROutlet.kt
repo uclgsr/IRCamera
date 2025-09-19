@@ -34,7 +34,9 @@ class LSLGSROutlet {
         private const val MIN_QUALITY_THRESHOLD = 0.7
     }
     
-    
+    /**
+     * LSL Stream Information (Mock implementation - replace with actual LSL library)
+     */
     data class LSLStreamInfo(
         val name: String,
         val type: String,
@@ -46,7 +48,9 @@ class LSLGSROutlet {
         val sessionId: String? = null
     )
     
-    
+    /**
+     * LSL Stream Outlet (Mock implementation - replace with actual LSL library)
+     */
     class LSLStreamOutlet(private val streamInfo: LSLStreamInfo) {
         private val isActive = AtomicBoolean(false)
         private var startTime = 0L
@@ -70,10 +74,10 @@ class LSLGSROutlet {
             }
             
             return try {
-                
+                // Mock LSL push_sample implementation
                 val actualTimestamp = timestamp ?: (System.nanoTime() / 1_000_000_000.0)
                 
-                
+                // Simulate LSL streaming (replace with actual LSL library call)
                 simulateLSLPush(data, actualTimestamp)
                 
                 sampleCount.incrementAndGet()
@@ -92,7 +96,7 @@ class LSLGSROutlet {
             }
             
             return try {
-                
+                // Mock LSL push_chunk implementation
                 for (i in dataMatrix.indices) {
                     val timestamp = timestamps?.getOrNull(i) ?: (System.nanoTime() / 1_000_000_000.0)
                     simulateLSLPush(dataMatrix[i], timestamp)
@@ -473,22 +477,26 @@ class LSLGSROutlet {
         )
     }
     
-    
+    /**
+     * Check if LSL is available (mock implementation)
+     */
     fun isLSLAvailable(): Boolean {
-        
+        // Mock LSL availability check - replace with actual LSL library detection
         return try {
             
             Log.d(TAG, "Checking LSL availability...")
-            true 
+            true // Always available in mock implementation
         } catch (e: Exception) {
             Log.w(TAG, "LSL not available: ${e.message}")
             false
         }
     }
     
-    
+    /**
+     * Get LSL library version (mock implementation)
+     */
     fun getLSLVersion(): String {
-        
+        // Mock version - replace with actual LSL library version
         return "1.16.2-mock"
     }
     

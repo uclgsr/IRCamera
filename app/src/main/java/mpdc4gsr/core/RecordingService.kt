@@ -1520,7 +1520,7 @@ class RecordingService : LifecycleService() {
     }
 
     fun performSyncFlash(durationMs: Int) {
-        
+        // This is a placeholder for the actual flash logic.
         
         this.addSyncMarker("pc_sync_flash", System.nanoTime())
     }

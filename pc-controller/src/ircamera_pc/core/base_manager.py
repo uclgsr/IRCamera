@@ -44,7 +44,7 @@ except ImportError:
 
 
     def pyqtSignal(*args, **kwargs) -> Any:
-        
+        """Mock pyqtSignal decorator"""
 
         def decorator(func) -> Any:
             return func
@@ -55,7 +55,7 @@ except ImportError:
     class BaseManager(ABC):
         
 
-        
+        # Mock signals
         status_changed = None
         error_occurred = None
         operation_completed = None

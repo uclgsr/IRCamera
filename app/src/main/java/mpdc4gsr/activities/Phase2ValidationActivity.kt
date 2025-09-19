@@ -430,10 +430,10 @@ class Phase2ValidationActivity : AppCompatActivity() {
 
 private fun PermissionController.hasAudioPermission(): Boolean {
 
-    return true 
+    return true // Placeholder
 }
 
 private fun PermissionController.hasLocationPermission(): Boolean {
 
-    return true 
+    return true // Placeholder
 }

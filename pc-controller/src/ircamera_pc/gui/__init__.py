@@ -18,7 +18,7 @@ except ImportError:
     GUI_AVAILABLE = False
 
 
-    
+    # Create dummy main function for headless mode
     def main(args=None):
         import sys
         import logging
@@ -42,7 +42,7 @@ except ImportError:
         return 0
 
 
-    
+    # Create dummy app class
     class IRCameraApp:
         def __init__(self, *args, **kwargs):
             pass

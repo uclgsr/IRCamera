@@ -127,7 +127,7 @@ class CommonComponentTest {
     @Test
     fun testDataValidation() =
         runTest {
-            
+            // Test data validation utilities
             val validStrings = listOf("valid", "test", "data")
             val invalidStrings = listOf("", " ", null)
 

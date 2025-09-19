@@ -90,7 +90,7 @@ public class CrossModalIntegrationExample {
                     "usb_thermal_001",
                     "USB Thermal Camera TC001",
                     CrossModalSyncManager.DeviceCategory.USB_CAMERA,
-                    new Object(), 
+                    new Object(), // Placeholder device reference
                     thermalCapabilities
             );
 
@@ -106,7 +106,7 @@ public class CrossModalIntegrationExample {
                     "rgb_camera_001",
                     "Android RGB Camera",
                     CrossModalSyncManager.DeviceCategory.RGB_CAMERA,
-                    new Object(), 
+                    new Object(), // Placeholder device reference
                     rgbCapabilities
             );
 
@@ -122,7 +122,7 @@ public class CrossModalIntegrationExample {
                     "pc_controller_001",
                     "PC Controller Hub",
                     CrossModalSyncManager.DeviceCategory.NETWORK_DEVICE,
-                    new Object(), 
+                    new Object(), // Placeholder device reference
                     networkCapabilities
             );
 

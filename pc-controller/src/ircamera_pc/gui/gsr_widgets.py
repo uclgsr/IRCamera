@@ -558,14 +558,14 @@ class GSRMainWidget(QWidget):
             self.stats_widget.update_statistics(session_stats)
 
             
-            
+            # In real implementation, this would come from the GSR receiver
             self.update_real_time_plots()
 
         except Exception as e:
             logger.error(f"Error updating GSR data: {e}")
 
     def update_real_time_plots(self) -> None:
-        
+        """Update real-time plots (placeholder for real data)"""
         
         import random
         import time
@@ -596,8 +596,8 @@ class GSRMainWidget(QWidget):
             exported_files = []
 
             for device_id in device_ids:
-                
-                session_id = "current_session"  
+                # This would need session_id in real implementation
+                session_id = "current_session"  # Placeholder
 
                 export_path = asyncio.run(
                     self.network_server.export_gsr_session_data(

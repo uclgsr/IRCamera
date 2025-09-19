@@ -207,7 +207,7 @@ class RgbCameraInstrumentationTest {
         
         Log.d(TAG, "Simulating $resolution recording at ${frameRate}fps for ${durationMs}ms")
         
-        
+        // Create mock video file
         val videoFile = File(sessionDir, "test_video_${resolution}.mp4")
         val csvFile = File(sessionDir, "rgb.csv")
         

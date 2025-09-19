@@ -406,7 +406,7 @@ class MultiDeviceCoordination(
 
     private fun isDeviceRecording(): Boolean {
         
-        return false 
+        return false // Placeholder
     }
 
     private suspend fun requestTimeResync() {

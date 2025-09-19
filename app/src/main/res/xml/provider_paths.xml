@@ -10,7 +10,7 @@
         name="Pictures"
         path="Pictures" />
 
-    
+    <!-- External cache directory for temporary files -->
     <external-cache-path
         name="external_cache"
         path="." />

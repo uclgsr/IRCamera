@@ -38,13 +38,13 @@ class SessionDirectoryManagerTest {
     fun setup() {
         MockitoAnnotations.openMocks(this)
 
-        
+        // Create temporary directory for testing
         tempDir = File.createTempFile("test", "sessions").apply {
             delete()
             mkdirs()
         }
 
-        
+        // Mock context behavior
         `when`(mockContext.getExternalFilesDir(null)).thenReturn(tempDir)
         `when`(mockContext.packageName).thenReturn("com.topdon.tc001.test")
         `when`(mockContext.packageManager).thenReturn(mockPackageManager)
@@ -191,7 +191,7 @@ class SessionDirectoryManagerTest {
         )
         sessionDirectoryManager.createSessionMetadata(successSessionDir, metadata)
 
-        
+        // Add some dummy data to successful session
         File(
             successSessionDir.rgbDir,
             "test_data.txt"

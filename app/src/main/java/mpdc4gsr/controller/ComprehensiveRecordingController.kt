@@ -428,7 +428,7 @@ class ComprehensiveRecordingController(
 
     private fun checkSensorHealth(sensorName: String) {
         
-        
+        // This is a placeholder - in production you'd check sensor-specific metrics
         val sensor = sensorRecorders[sensorName]
         val isHealthy = sensor?.isRecording == true
         updateSensorHealth(sensorName, isHealthy)

@@ -22,7 +22,7 @@ interface SensorRecorder {
         sessionDirectory: String,
         sessionMetadata: SessionMetadata
     ): Boolean {
-        
+        // Default implementation delegates to original method for backward compatibility
         return startRecording(sessionDirectory)
     }
 

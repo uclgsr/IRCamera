@@ -127,7 +127,7 @@ class HardwareValidationController(
                 return
             }
 
-            
+            // Create a dummy TextureView for validation purposes
             val dummyTextureView = TextureView(context)
             val cameraRecorder = RGBCameraRecorder(context, dummyTextureView)
             val initTime = measureTimeMillis {
@@ -282,7 +282,7 @@ class HardwareValidationController(
                 mapOf(
                     "recording_duration_ms" to recordingDuration,
                     "sensors_active" to getSensorCount(),
-                    "data_sync_accuracy_ms" to 2L 
+                    "data_sync_accuracy_ms" to 2L // Mock sync accuracy
                 )
             )
 

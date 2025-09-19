@@ -24,7 +24,7 @@ class RecordingControllerTest {
     private lateinit var testDispatcher: TestDispatcher
     private lateinit var testScope: TestScope
 
-    
+    // Mock sensors for testing different failure scenarios
     private lateinit var mockRgbSensor: SensorRecorder
     private lateinit var mockThermalSensor: SensorRecorder
     private lateinit var mockGsrSensor: SensorRecorder
@@ -38,7 +38,7 @@ class RecordingControllerTest {
         context = mockk<Context>()
         lifecycleOwner = mockk<LifecycleOwner>()
 
-        
+        // Create mock sensors with default behaviors
         mockRgbSensor = createMockSensor("RGB", "camera")
         mockThermalSensor = createMockSensor("Thermal", "thermal")
         mockGsrSensor = createMockSensor("GSR", "gsr")

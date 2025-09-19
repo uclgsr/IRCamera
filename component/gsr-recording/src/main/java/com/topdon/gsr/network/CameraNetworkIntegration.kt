@@ -486,7 +486,7 @@ class CameraNetworkIntegration(
 
     private fun calculateFrameRate(frameCount: Long): Float {
         
-        
+        // For now, return a placeholder value
         return if (frameCount > 0) 30.0f else 0.0f
     }
 

@@ -17,7 +17,7 @@ except ImportError:
     OPENCV_AVAILABLE = False
 
 
-    
+    # Mock numpy and cv2 for environments without OpenCV
     class MockOpenCV:
         def findChessboardCorners(self, *args, **kwargs) -> Any:
             return False, None
@@ -281,7 +281,7 @@ class CameraCalibrator:
             session_data = self.active_sessions[calibration_id]
 
             
-            
+            # This is a placeholder - implement actual image decoding based on format
             image = self._decode_image(image_data)
 
             if image is None:

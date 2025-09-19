@@ -594,7 +594,7 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
         
         
         val latestResultPath =
-            "/tmp/YapBitmapToMp4_${System.currentTimeMillis()}.mp4" 
+            "/tmp/YapBitmapToMp4_${System.currentTimeMillis()}.mp4" // Temporary fallback
         Log.w("123", "latestResultPath:$latestResultPath")
         YapVideoEncoder(this, File(latestResultPath)).start()
     }

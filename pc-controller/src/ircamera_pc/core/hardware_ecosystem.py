@@ -356,7 +356,7 @@ class SamsungS22Driver(DeviceDriver):
     async def _configure_camera_sensor(self, config: SensorConfiguration) -> bool:
         
         
-        
+        # Would use Android CameraX API
         logger.info(f"Configured RGB camera at {config.sampling_rate}fps")
         return True
 
@@ -1083,7 +1083,7 @@ class HardwareEcosystemManager:
 
             for device_id in device_ids:
                 driver = self.devices[device_id]
-                
+                # In real implementation, would send precise timestamp
                 await self._send_sync_start_command(driver, start_timestamp)
 
             logger.info(f"Started synchronized recording on {len(device_ids)} devices")
@@ -1100,7 +1100,7 @@ class HardwareEcosystemManager:
 
     async def _send_sync_start_command(self, driver: DeviceDriver, timestamp: float) -> None:
         
-        
+        # In real implementation, would send precise timestamp for synchronized start
         spec = driver.device_spec
         await driver.start_streaming(spec.supported_sensors[:3])  
 

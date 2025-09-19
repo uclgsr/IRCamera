@@ -33,7 +33,7 @@ try:
 except ImportError:
     GUI_AVAILABLE = False
     logger.info("💻 Running in CLI mode (PyQt6 not available)")
-    
+    # Define dummy classes to avoid errors
     class QThread:
         pass
     class QMainWindow:
@@ -75,8 +75,8 @@ class GSRProcessor:
         
         try:
             if self.use_native:
-                
-                return float(gsr_value)  
+                # Use native C++ processing (placeholder for actual native processing)
+                return float(gsr_value)  # In actual implementation, would use native_shimmer methods
             else:
                 
                 return float(gsr_value)  

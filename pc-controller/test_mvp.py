@@ -75,7 +75,7 @@ async def test_session_manager():
     
     print("\n=== Testing Session Manager ===")
 
-    
+    # Create temporary directory for sessions
     with tempfile.TemporaryDirectory() as temp_dir:
         session_dir = Path(temp_dir) / "sessions"
 
@@ -83,7 +83,7 @@ async def test_session_manager():
         device_manager = DeviceManager()
         await device_manager.start()
 
-        
+        # Add mock devices
         device_id1 = device_manager.add_device_manually("192.168.1.100", 8080, "TestDevice1")
         device_id2 = device_manager.add_device_manually("192.168.1.101", 8080, "TestDevice2")
 
@@ -202,7 +202,7 @@ def test_discovery_service():
         
         test_attributes = {"capabilities": "rgb_camera,gsr_sensor", "device_type": "ANDROID_NODE"}
 
-        
+        # Create mock discovered device
         mock_device = DiscoveredDevice(
             service_name="TestDevice",
             service_type="_ircamera._tcp.local.",

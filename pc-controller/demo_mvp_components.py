@@ -41,7 +41,7 @@ def demonstrate_session_management():
     try:
         from ircamera_pc.core.session import SessionManager, SessionState
 
-        
+        # Create session manager with temporary directory
         with tempfile.TemporaryDirectory() as temp_dir:
             session_manager = SessionManager()
             print("✓ Session manager initialized")

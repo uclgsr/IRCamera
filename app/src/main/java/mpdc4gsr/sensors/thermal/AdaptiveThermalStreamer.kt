@@ -198,7 +198,9 @@ class AdaptiveThermalStreamer {
         Log.w(TAG, "Dropped $droppedCount frames due to buffer overflow")
     }
     
-    
+    /**
+     * Stream individual frame (placeholder for actual streaming logic)
+     */
     private fun streamFrame(frame: ThermalFrameData): Boolean {
         return try {
             
@@ -224,7 +226,9 @@ class AdaptiveThermalStreamer {
         }
     }
     
-    
+    /**
+     * Simulate network streaming (replace with actual implementation)
+     */
     private fun simulateNetworkSend(frame: ThermalFrameData) {
         
         val simulatedLatency = (50..200).random()

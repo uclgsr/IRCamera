@@ -23,7 +23,7 @@ except ImportError:
     PYQT_AVAILABLE = False
 
 
-    
+    # Mock classes for when PyQt6 is not available
     class QMessageBox:
         StandardButton = type(
             "StandardButton",

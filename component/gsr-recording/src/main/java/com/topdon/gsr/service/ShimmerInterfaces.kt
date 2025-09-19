@@ -27,12 +27,16 @@ interface ShimmerDeviceFactory {
     fun createShimmerDevice(): ShimmerDeviceInterface
 }
 
-
+/**
+ * Temporary mock implementation for compilation - will be replaced by main app module implementation
+ */
 class MockShimmerDeviceFactory : ShimmerDeviceFactory {
     override fun createShimmerDevice(): ShimmerDeviceInterface = MockShimmerDevice()
 }
 
-
+/**
+ * Temporary mock implementation for compilation
+ */
 class MockShimmerDevice : ShimmerDeviceInterface {
     private var connected = false
     private var streaming = false
@@ -76,7 +80,9 @@ class MockShimmerDevice : ShimmerDeviceInterface {
     }
 }
 
-
+/**
+ * Temporary mock data cluster for compilation
+ */
 class MockShimmerDataCluster : ShimmerDataCluster {
     override fun getGSRRawValue(): Double = 2048.0
     override fun getGSRCalibratedValue(): Double = 1.5

@@ -507,7 +507,7 @@ class ShimmerGSRRecorder(
     
     private fun startShimmerLogging() {
         try {
-            
+            // Shimmer internal logging is not implemented in this wrapper
             Log.i(TAG, "Shimmer internal logging not supported in this implementation")
         } catch (e: Exception) {
             Log.w(TAG, "Failed to start Shimmer logging: ${e.message}")
@@ -516,7 +516,7 @@ class ShimmerGSRRecorder(
 
     private fun stopShimmerLogging() {
         try {
-            
+            // Shimmer internal logging is not implemented in this wrapper
             Log.i(TAG, "Shimmer internal logging not supported in this implementation")
         } catch (e: Exception) {
             Log.w(TAG, "Failed to stop Shimmer logging: ${e.message}")

@@ -70,7 +70,7 @@ class ThermalRecorderTest {
         val height = 192
         val frameData = ByteArray(width * height)
 
-        
+        // Fill with test data (simulate temperature range 20-30°C)
         for (i in frameData.indices) {
             frameData[i] = (20 + (i % 10)).toByte() 
         }

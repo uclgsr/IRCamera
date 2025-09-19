@@ -22,7 +22,7 @@ except ImportError as e:
     GUI_AVAILABLE = False
 
 
-    
+    # Mock classes for headless mode
     class QApplication:
         def __init__(self, *args):
             pass

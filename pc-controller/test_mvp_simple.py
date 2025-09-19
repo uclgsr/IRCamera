@@ -51,7 +51,7 @@ async def test_basic_discovery():
         discovery = NetworkDiscoveryService()
         print("✓ Discovery service created")
 
-        
+        # Test mock device creation
         mock_device = DiscoveredDevice(
             service_name="TestDevice",
             service_type="_ircamera._tcp.local.",
@@ -79,7 +79,7 @@ async def test_basic_session():
     try:
         from ircamera_pc.core.session import SessionManager, SessionState
 
-        
+        # Create temporary directory
         with tempfile.TemporaryDirectory() as temp_dir:
             session_dir = Path(temp_dir) / "sessions"
             session_dir.mkdir(parents=True)

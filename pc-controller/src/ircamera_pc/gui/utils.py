@@ -14,7 +14,7 @@ except ImportError:
 try:
     from ..core.config import config
 except ImportError:
-    
+    # Mock config for headless mode
     class MockConfig:
         def __getattr__(self, name):
             return "default"
@@ -30,7 +30,7 @@ except ImportError:
     GUI_AVAILABLE = False
 
 
-    
+    # Mock classes for headless mode
     class QObject:
         pass
 

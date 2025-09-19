@@ -233,7 +233,7 @@ class UnifiedGSRRecorder(
                 }
             }
             
-            
+            // Don't add dummy devices - require actual hardware detection
             Log.i(TAG, "BLE scan completed without finding real Shimmer devices")
             
             if (discoveredDevices.isNotEmpty()) {
@@ -496,7 +496,7 @@ class UnifiedGSRRecorder(
                 
                 val shimmer = connectedShimmer
                 if (shimmer != null && shimmer.isStreaming()) {
-                    
+                    // Create a mock ObjectCluster for simulation
                     
                     val objectCluster = createMockObjectCluster()
                     processGSRData(shimmer, objectCluster)
@@ -517,7 +517,7 @@ class UnifiedGSRRecorder(
     }
 
     private fun createMockObjectCluster(): ObjectCluster {
-        
+        // Create a mock ObjectCluster for testing purposes
         
         return ObjectCluster()
     }

@@ -35,7 +35,7 @@ class ThermalCameraUSBPermissionTest {
     fun setup() {
         `when`(mockContext.getSystemService(Context.USB_SERVICE)).thenReturn(mockUsbManager)
 
-        
+        // Mock Topdon TC001 device
         `when`(mockUsbDevice.vendorId).thenReturn(0x4206)
         `when`(mockUsbDevice.productId).thenReturn(0x3702)
         `when`(mockUsbDevice.productName).thenReturn("TC001")
