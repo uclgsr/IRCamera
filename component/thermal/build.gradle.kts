@@ -95,13 +95,13 @@ dependencies {
     implementation(libs.bundles.ui.common)
     implementation(libs.utilcode)
     implementation(libs.mn.image.browser)
-    compileOnly(files("../../libir/libs/suplib-release.aar")) // Required for SupHelp class
-    compileOnly(files("../../libir/libs/ai-upscale-release.aar")) // AI upscale functionality
-    compileOnly(files("../../libir/libs/texturegesture-release.aar")) // Texture gesture functionality
-    compileOnly(files("../../libir/libs/libusbdualsdk_1.3.4_2406271906_standard.aar")) // Required for IRCMD classes
-    compileOnly(files("../../libir/libs/libAC020sdk_USB_IR_1.1.1_2408291439.aar")) // AC020 SDK
-    compileOnly(files("../../libir/libs/libirutils_1.2.0_2409241055.aar")) // IR utilities
-    compileOnly(files("../../app/libs/lms_international-3.90.009.0.aar")) // LMS SDK for thermal-ir classes
+    compileOnly(files("../../libir/libs/suplib-release.aar")) 
+    compileOnly(files("../../libir/libs/ai-upscale-release.aar")) 
+    compileOnly(files("../../libir/libs/texturegesture-release.aar")) 
+    compileOnly(files("../../libir/libs/libusbdualsdk_1.3.4_2406271906_standard.aar")) 
+    compileOnly(files("../../libir/libs/libAC020sdk_USB_IR_1.1.1_2408291439.aar")) 
+    compileOnly(files("../../libir/libs/libirutils_1.2.0_2409241055.aar")) 
+    compileOnly(files("../../app/libs/lms_international-3.90.009.0.aar")) 
     testImplementation(libs.junit)
     testImplementation("org.robolectric:robolectric:4.10.3")
     testImplementation("androidx.test:core:1.5.0")
