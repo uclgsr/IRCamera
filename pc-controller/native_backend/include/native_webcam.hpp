@@ -14,13 +14,13 @@ namespace ircamera {
     namespace sensors {
 
         struct WebcamFrame {
-            uint64_t timestamp_ns;  // Nanosecond timestamp
-            int width;              // Frame width
-            int height;             // Frame height
-            int channels;           // Number of channels (typically 3 for BGR)
-            std::vector <uint8_t> data; // Frame data
-            int frame_number;       // Sequential frame number
-            bool valid;             // Frame validity flag
+            uint64_t timestamp_ns;  
+            int width;              
+            int height;             
+            int channels;           
+            std::vector <uint8_t> data; 
+            int frame_number;       
+            bool valid;             
         };
 
         class NativeWebcam {
@@ -134,5 +134,5 @@ namespace ircamera {
             WebcamFrame mat_to_frame(const cv::Mat &mat);
         };
 
-    } // namespace sensors
-} // namespace ircamera
+    } 
+} 

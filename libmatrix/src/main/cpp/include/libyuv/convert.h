@@ -1,23 +1,15 @@
-/*
- *  Copyright 2011 The LibYuv Project Authors. All rights reserved.
- *
- *  Use of this source code is governed by a BSD-style license
- *  that can be found in the LICENSE file in the root of the source
- *  tree. An additional intellectual property rights grant can be found
- *  in the file PATENTS. All contributing project authors may
- *  be found in the AUTHORS file in the root of the source tree.
- */
+
 
 #ifndef INCLUDE_LIBYUV_CONVERT_H_
 #define INCLUDE_LIBYUV_CONVERT_H_
 
 #include "libyuv/basic_types.h"
 
-#include "libyuv/rotate.h"  // For enum RotationMode.
+#include "libyuv/rotate.h"  
 
-#include "libyuv/convert_argb.h"      // For WebRTC I420ToARGB. b/620
-#include "libyuv/convert_from.h"      // For WebRTC ConvertFromI420. b/620
-#include "libyuv/planar_functions.h"  // For WebRTC I420Rect, CopyPlane. b/618
+#include "libyuv/convert_argb.h"      
+#include "libyuv/convert_from.h"      
+#include "libyuv/planar_functions.h"  
 
 #ifdef __cplusplus
 namespace libyuv {
@@ -428,8 +420,8 @@ int ConvertToI420(const uint8_t *sample,
         uint32_t fourcc);
 
 #ifdef __cplusplus
-}  // extern "C"
-}  // namespace libyuv
+}  
+}  
 #endif
 
-#endif  // INCLUDE_LIBYUV_CONVERT_H_
+#endif  

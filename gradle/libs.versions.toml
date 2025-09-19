@@ -1,5 +1,5 @@
 [versions]
-# Android Configuration
+
 compileSdk = "35"
 minSdk = "26"
 targetSdk = "34"
@@ -7,28 +7,28 @@ versionCode = "1100"
 versionName = "1.10.000"
 ndkVersion = "21.3.6528147"
 
-# App Configuration - SoftCode
+
 softcodeTopinfrared = "TC001_DisplaySW_Topinfrared_Adr"
 softcodeTopinfrared10 = "TC001_DisplaySW_TopinfraredAndroid10_Adr"
 softcodeTopinfraredCn = "TC001_DisplaySW_Topinfrared_GB_Adr"
 softcodeTopinfraredCn10 = "TC001_DisplaySW_TopinfraredAndroid10_GB_Adr"
 
-# App Configuration - AppKey
+
 appkeyTopinfrared = "5B2F6F1FD80844FCB6E50BCA19222E76"
 appkeyTopinfrared10 = "AD782A05757B458391BFD695A3967EDD"
 appkeyTopinfraredCn = "19F791D993B042E2B22D42A974DE92E8"
 appkeyTopinfraredCn10 = "058F710E6D3545168F3D19010320F8C3"
 
-# App Configuration - AppSecret
+
 appsecretTopinfrared = "A4A2EE33347A4D7885C26689515567EC"
 appsecretTopinfrared10 = "2870276D969B45C1B4A312B336274079"
 appsecretTopinfraredCn = "9D33C48FD7CE4440B7D922FBF9B6DE2A"
 appsecretTopinfraredCn10 = "F4511AAA6C694E54A3676CF2345A4A8E"
 
-# Kotlin and Core - Updated to latest versions
+
 kotlin = "2.2.0"
 agp = "8.11.0"
-# androidx.core - Updated to latest version compatible with AGP 8.13.0
+
 androidxCore = "1.16.0"
 androidxAppcompat = "1.7.0"
 androidxAppcompatLegacy = "1.6.1"
@@ -37,43 +37,43 @@ androidxPreference = "1.2.1"
 material = "1.13.0"
 multidex = "2.0.1"
 
-# Lifecycle - Updated versions
+
 lifecycle = "2.9.3"
 
-# Room - Compatible with Kotlin 2.2.0 and KSP
+
 room = "2.8.0"
 
-# Work Manager - Latest stable
+
 work = "2.10.4"
 
-# CameraX - Compatible with AGP 8.13.0
+
 camerax = "1.5.0"
 
-# Coroutines - Compatible with Kotlin 2.2.0
+
 coroutines = "1.9.0"
 
-# Serialization - Compatible with Kotlin 1.9.25
+
 kotlinxSerialization = "1.6.3"
 
-# Networking
+
 fastjson2 = "2.0.58"
 jsbridge = "1.0.4"
 retrofit = "2.10.0"
 okhttp = "4.12.0"
 
-# RxJava
+
 rxjava = "2.2.21"
 rxandroid = "2.1.1"
 
-# Navigation - ARouter used by thermal component
+
 arouter = "1.5.2"
 
-# RxLifecycle
+
 rxpermissions = "2.x.v0.9.3"
 rxlifecycle2 = "2.2.2"
 rxlifecycle3 = "3.1.0"
 
-# UI Libraries
+
 ucrop = "2.2.11-native"
 playAppUpdate = "2.1.0"
 immersionbar = "3.2.2"
@@ -86,54 +86,54 @@ colorpickerview = "2.3.0"
 photoview = "2.3.0"
 nifty = "2.4.0"
 
-# Image Loading
+
 glide = "5.0.5"
 mnImageBrowser = "V3.1.2X"
 gsyVideoPlayer = "v8.6.0-release-jitpack"
 gsyVideoPlayerThermal = "v8.6.0-release-jitpack"
 
-# Shimmer GSR Sensor SDK
+
 shimmerAndroidApi = "1.0.0"
 
-# BLE - Latest version compatible with Kotlin 2.2.0
+
 nordicBle = "2.11.0"
 
-# OpenGL
+
 opengl = "2.0.0"
 
-# Utils
+
 utilcode = "1.31.1"
 xxpermissions = "18.5"
 xlog = "1.11.0"
 lottie = "6.0.1"
 eventbus = "3.3.1"
 
-# Compass and sensor libraries - Updated to latest versions from Maven Central
+
 andromeda = "16.0.1"
 
-# JavaCV
+
 javacv = "1.5.7"
 
-# LMS SDK
+
 lmsInternational = "3.90.009.0"
 lmsChina = "3.90.076"
 
-# FFmpeg
+
 ffmpeg = "7.1.1-1.5.12"
 
-# Third-party services
+
 wechatSdk = "6.8.0"
 umengApm = "2.0.6"
 zohoSalesiq = "8.2.3"
 
 
 
-# UMeng - Updated to latest versions from Maven Central
+
 umengCommon = "9.8.8"
 umengAsms = "1.8.7.2"
 umengAnalytics = "9.8.8"
 
-# Testing
+
 junit = "4.13.2"
 junitJupiter = "5.13.4"
 hamcrest = "2.2"
@@ -153,7 +153,7 @@ truth = "1.4.5"
 javafaker = "1.0.2"
 testCore = "1.5.0"
 
-# Additional dependencies found in build files
+
 guava = "31.1-android"
 guavaLegacy = "20.0"
 opencsv = "5.12.0"
@@ -174,19 +174,19 @@ lifecycleService = "2.9.3"
 media3 = "1.3.1"
 refreshLayoutKernelLegacy = "2.1.1"
 
-# Google Services
+
 
 
 huaweiAgcp = "1.6.0.300"
 
-# Build Tools
+
 androidGradlePlugin = "8.11.0"
 kotlinGradlePlugin = "2.2.0"
 ksp = "2.2.20-2.0.3"
 desugarJdkLibs = "2.1.5"
 
 [libraries]
-# AndroidX Core
+
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidxCore" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidxAppcompat" }
 androidx-appcompat-legacy = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidxAppcompatLegacy" }
@@ -195,26 +195,26 @@ androidx-preference = { group = "androidx.preference", name = "preference", vers
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 multidex = { group = "androidx.multidex", name = "multidex", version.ref = "multidex" }
 
-# Lifecycle
+
 lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycle" }
 lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycle" }
 lifecycle-livedata-ktx = { group = "androidx.lifecycle", name = "lifecycle-livedata-ktx", version.ref = "lifecycle" }
 
-# Room
+
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 
-# Work Manager
+
 work-runtime-ktx = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "work" }
 
-# Kotlin
+
 kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.ref = "kotlin" }
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }
 kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
 kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutines" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerialization" }
 
-# Networking
+
 fastjson2 = { group = "com.alibaba.fastjson2", name = "fastjson2", version.ref = "fastjson2" }
 jsbridge = { group = "com.github.lzyzsd", name = "jsbridge", version.ref = "jsbridge" }
 retrofit2 = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
@@ -223,15 +223,15 @@ adapter-rxjava2 = { group = "com.squareup.retrofit2", name = "adapter-rxjava2", 
 okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
 logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp" }
 
-# RxJava
+
 rxjava2 = { group = "io.reactivex.rxjava2", name = "rxjava", version.ref = "rxjava" }
 rxandroid = { group = "io.reactivex.rxjava2", name = "rxandroid", version.ref = "rxandroid" }
 
-# Navigation - ARouter used by thermal component
+
 arouter-api = { group = "com.alibaba", name = "arouter-api", version.ref = "arouter" }
 arouter-compiler = { group = "com.alibaba", name = "arouter-compiler", version.ref = "arouter" }
 
-# RxLifecycle
+
 rxpermissions = { group = "com.github.tbruyelle", name = "rxpermissions", version.ref = "rxpermissions" }
 rxlifecycle = { group = "com.trello.rxlifecycle2", name = "rxlifecycle", version.ref = "rxlifecycle2" }
 rxlifecycle-android = { group = "com.trello.rxlifecycle2", name = "rxlifecycle-android", version.ref = "rxlifecycle2" }
@@ -239,7 +239,7 @@ rxlifecycle-components = { group = "com.trello.rxlifecycle2", name = "rxlifecycl
 rxlifecycle-ktx = { group = "com.trello.rxlifecycle3", name = "rxlifecycle-kotlin", version.ref = "rxlifecycle3" }
 rxlifecycle-android-lifecycle-ktx = { group = "com.trello.rxlifecycle3", name = "rxlifecycle-android-lifecycle-kotlin", version.ref = "rxlifecycle3" }
 
-# UI Libraries
+
 ucrop = { group = "com.github.yalantis", name = "ucrop", version.ref = "ucrop" }
 play-app-update = { group = "com.google.android.play", name = "app-update", version.ref = "playAppUpdate" }
 immersionbar = { group = "com.geyifeng.immersionbar", name = "immersionbar", version.ref = "immersionbar" }
@@ -254,13 +254,13 @@ colorpickerview = { group = "com.github.skydoves", name = "colorpickerview", ver
 photoview = { group = "com.github.chrisbanes", name = "PhotoView", version.ref = "photoview" }
 nifty = { group = "com.nineoldandroids", name = "library", version.ref = "nifty" }
 
-# Image Loading
+
 glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "glide" }
 glide-compiler = { group = "com.github.bumptech.glide", name = "compiler", version.ref = "glide" }
 mn-image-browser = { group = "com.github.maning0303", name = "MNImageBrowser", version.ref = "mnImageBrowser" }
 gsy-video-player = { group = "com.github.CarGuo.GSYVideoPlayer", name = "gsyVideoPlayer-java", version.ref = "gsyVideoPlayer" }
 
-# CameraX - Compatible with AGP 8.5.2
+
 camerax-core = { group = "androidx.camera", name = "camera-core", version.ref = "camerax" }
 camerax-camera2 = { group = "androidx.camera", name = "camera-camera2", version.ref = "camerax" }
 camerax-lifecycle = { group = "androidx.camera", name = "camera-lifecycle", version.ref = "camerax" }
@@ -268,57 +268,57 @@ camerax-video = { group = "androidx.camera", name = "camera-video", version.ref 
 camerax-view = { group = "androidx.camera", name = "camera-view", version.ref = "camerax" }
 camerax-extensions = { group = "androidx.camera", name = "camera-extensions", version.ref = "camerax" }
 
-# Shimmer GSR sensor integration
-# shimmer-android-api = { group = "com.shimmerresearch", name = "shimmer-android-api", version.ref = "shimmerAndroidApi" }
 
-# BLE - Nordic library compatible with Kotlin 2.0.21
+
+
+
 nordic-ble-ktx = { group = "no.nordicsemi.android", name = "ble-ktx", version.ref = "nordicBle" }
 
-# OpenGL
+
 opengl-android = { group = "org.khronos", name = "opengl-api", version.ref = "opengl" }
 
-# Utils
+
 utilcode = { group = "com.blankj", name = "utilcodex", version.ref = "utilcode" }
 xxpermissions = { group = "com.github.getActivity", name = "XXPermissions", version.ref = "xxpermissions" }
 xlog = { group = "com.elvishew", name = "xlog", version.ref = "xlog" }
 lottie = { group = "com.airbnb.android", name = "lottie", version.ref = "lottie" }
 eventbus = { group = "org.greenrobot", name = "eventbus", version.ref = "eventbus" }
 
-# Compass and sensor libraries
+
 andromeda-core = { group = "com.kylecorry.andromeda", name = "core", version.ref = "andromeda" }
 andromeda-sense = { group = "com.kylecorry.andromeda", name = "sense", version.ref = "andromeda" }
 andromeda-views = { group = "com.kylecorry.andromeda", name = "views", version.ref = "andromeda" }
 
-# JavaCV
+
 javacv = { group = "org.bytedeco", name = "javacv", version.ref = "javacv" }
 javacpp = { group = "org.bytedeco", name = "javacpp", version.ref = "javacv" }
 
-# IR-specific libraries
+
 ir-layout = { group = "com.github.CoderCaiSL", name = "jitpackMvn", version = "+" }
 
-# LMS SDK
+
 lms2-user = { group = "com.topdon.lms.sdk3", name = "lms_international", version.ref = "lmsInternational" }
 lms3-user = { group = "com.topdon.lms.sdk3", name = "lms_china", version.ref = "lmsChina" }
 
-# FFmpeg native libraries for IR processing
+
 ffmpeg-android-arm64 = { group = "org.bytedeco", name = "ffmpeg", version.ref = "ffmpeg" }
 ffmpeg-android-arm = { group = "org.bytedeco", name = "ffmpeg", version.ref = "ffmpeg" }
 ffmpeg-android-x86-64 = { group = "org.bytedeco", name = "ffmpeg", version.ref = "ffmpeg" }
 ffmpeg-android-x86 = { group = "org.bytedeco", name = "ffmpeg", version.ref = "ffmpeg" }
 
-# Third-party services
+
 wechat-sdk = { group = "com.tencent.mm.opensdk", name = "wechat-sdk-android", version.ref = "wechatSdk" }
 umeng-apm = { group = "com.umeng.umsdk", name = "apm", version.ref = "umengApm" }
 zoho-salesiq = { group = "com.zoho.salesiq", name = "mobilisten", version.ref = "zohoSalesiq" }
 
 
 
-# UMeng
+
 umeng-common = { group = "com.umeng.umsdk", name = "common", version.ref = "umengCommon" }
 umeng-asms = { group = "com.umeng.umsdk", name = "asms", version.ref = "umengAsms" }
 umeng-analytics = { group = "com.umeng.umsdk", name = "analytics", version.ref = "umengAnalytics" }
 
-# Testing
+
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junitJupiter" }
 hamcrest = { group = "org.hamcrest", name = "hamcrest", version.ref = "hamcrest" }
@@ -339,7 +339,7 @@ truth = { group = "com.google.truth", name = "truth", version.ref = "truth" }
 test-core = { group = "androidx.test", name = "core", version.ref = "testCore" }
 javafaker = { group = "com.github.javafaker", name = "javafaker", version.ref = "javafaker" }
 
-# Additional dependencies
+
 guava = { group = "com.google.guava", name = "guava", version.ref = "guava" }
 guava-legacy = { group = "com.google.guava", name = "guava", version.ref = "guavaLegacy" }
 opencsv = { group = "com.opencsv", name = "opencsv", version.ref = "opencsv" }
@@ -366,7 +366,7 @@ media3-ui = { group = "androidx.media3", name = "media3-ui", version.ref = "medi
 refresh-layout-kernel-legacy = { group = "io.github.scwang90", name = "refresh-layout-kernel", version.ref = "refreshLayoutKernelLegacy" }
 refresh-header-classics-legacy = { group = "io.github.scwang90", name = "refresh-header-classics", version.ref = "refreshLayoutKernelLegacy" }
 
-# Build Tools (for buildscript classpath)
+
 android-gradle-plugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }
 kotlin-gradle-plugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlinGradlePlugin" }
 ksp-gradle-plugin = { group = "com.google.devtools.ksp", name = "com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
@@ -383,11 +383,11 @@ retrofit = ["retrofit2", "converter-gson", "adapter-rxjava2", "logging-intercept
 smart-refresh = ["smart-refresh-layout", "smart-refresh-header"]
 smart-refresh-v2 = ["refresh-layout-kernel", "refresh-header-classics", "refresh-header-material"]
 
-# Common UI dependencies bundle to reduce duplication across modules
+
 ui-common = ["androidx-core-ktx", "androidx-appcompat", "material", "glide"]
-# Thermal camera common dependencies 
+
 thermal-common = ["androidx-core-ktx", "androidx-appcompat", "material", "glide", "xxpermissions", "eventbus"]
-# CameraX bundle for camera functionality
+
 camerax = ["camerax-core", "camerax-camera2", "camerax-lifecycle", "camerax-video", "camerax-view", "camerax-extensions"]
 
 umeng = ["umeng-common", "umeng-asms", "umeng-analytics"]
@@ -395,7 +395,7 @@ andromeda = ["andromeda-core", "andromeda-sense", "andromeda-views"]
 javacv-core = ["javacv", "javacpp"]
 ffmpeg-android = ["ffmpeg-android-arm64", "ffmpeg-android-arm", "ffmpeg-android-x86-64", "ffmpeg-android-x86"]
 
-# Testing bundles
+
 test-unit = ["junit", "junit-jupiter", "hamcrest", "mockk", "kotlinx-coroutines-test", "robolectric", "mockwebserver", "truth", "javafaker"]
 test-android = ["test-ext-junit", "test-espresso-core", "test-runner", "test-rules", "test-ext-junit-ktx", "test-espresso-contrib", "test-espresso-intents", "test-uiautomator", "benchmark-junit4", "truth"]
 

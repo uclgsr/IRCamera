@@ -1,17 +1,9 @@
-/*
- *  Copyright 2011 The LibYuv Project Authors. All rights reserved.
- *
- *  Use of this source code is governed by a BSD-style license
- *  that can be found in the LICENSE file in the root of the source
- *  tree. An additional intellectual property rights grant can be found
- *  in the file PATENTS. All contributing project authors may
- *  be found in the AUTHORS file in the root of the source tree.
- */
+
 
 #ifndef INCLUDE_LIBYUV_ROW_H_
 #define INCLUDE_LIBYUV_ROW_H_
 
-#include <stdlib.h>  // For malloc.
+#include <stdlib.h>  
 
 #include "libyuv/basic_types.h"
 
@@ -38,33 +30,33 @@ extern "C" {
 #if defined(__clang__) && defined(__aarch64__) && !defined(LIBYUV_DISABLE_NEON)
 #if (__clang_major__ < 3) || (__clang_major__ == 3 && (__clang_minor__ < 5))
 #define LIBYUV_DISABLE_NEON
-#endif  // clang >= 3.5
-#endif  // __clang__
+#endif  
+#endif  
 
 #if defined(__GNUC__) && (defined(__x86_64__) || defined(__i386__))
 #if (__GNUC__ > 4) || (__GNUC__ == 4 && (__GNUC_MINOR__ >= 7))
 #define GCC_HAS_AVX2 1
-#endif  // GNUC >= 4.7
-#endif  // __GNUC__
+#endif  
+#endif  
 
 #if defined(__clang__) && (defined(__x86_64__) || defined(__i386__))
                                                                                                                         #if (__clang_major__ > 3) || (__clang_major__ == 3 && (__clang_minor__ >= 4))
 #define CLANG_HAS_AVX2 1
-#endif  // clang >= 3.4
-#endif  // __clang__
+#endif  
+#endif  
 
 #if defined(__clang__) && (defined(__x86_64__) || defined(__i386__))
 
 
                                                                                                                         #if (__clang_major__ >= 7) && !defined(__APPLE__)
 #define CLANG_HAS_AVX512 1
-#endif  // clang >= 7
-#endif  // __clang__
+#endif  
+#endif  
 
 #if defined(_M_IX86) && !defined(__clang__) && defined(_MSC_VER) && \
     _MSC_VER >= 1700
 #define VISUALC_HAS_AVX2 1
-#endif  // VisualStudio >= 2012
+#endif  
 
 #if !defined(LIBYUV_DISABLE_X86) && \
     (defined(_M_IX86) || defined(__x86_64__) || defined(__i386__))
@@ -640,19 +632,19 @@ struct YuvConstants {
 #define KYTORGB 192
 #endif
 
-extern const struct YuvConstants SIMD_ALIGNED(kYuvI601Constants);  // BT.601
-extern const struct YuvConstants SIMD_ALIGNED(kYuvJPEGConstants);  // JPeg
-extern const struct YuvConstants SIMD_ALIGNED(kYuvH709Constants);  // BT.709
+extern const struct YuvConstants SIMD_ALIGNED(kYuvI601Constants);  
+extern const struct YuvConstants SIMD_ALIGNED(kYuvJPEGConstants);  
+extern const struct YuvConstants SIMD_ALIGNED(kYuvH709Constants);  
 
-extern const struct YuvConstants SIMD_ALIGNED(kYvuI601Constants);  // BT.601
-extern const struct YuvConstants SIMD_ALIGNED(kYvuJPEGConstants);  // JPeg
-extern const struct YuvConstants SIMD_ALIGNED(kYvuH709Constants);  // BT.709
+extern const struct YuvConstants SIMD_ALIGNED(kYvuI601Constants);  
+extern const struct YuvConstants SIMD_ALIGNED(kYvuJPEGConstants);  
+extern const struct YuvConstants SIMD_ALIGNED(kYvuH709Constants);  
 
 #define IS_ALIGNED(p, a) (!((uintptr_t)(p) & ((a)-1)))
 
 #define align_buffer_64(var, size)                                           \
-  uint8_t* var##_mem = (uint8_t*)(malloc((size) + 63));         /* NOLINT */ \
-  uint8_t* var = (uint8_t*)(((intptr_t)(var##_mem) + 63) & ~63) /* NOLINT */
+  uint8_t* var##_mem = (uint8_t*)(malloc((size) + 63));          \
+  uint8_t* var = (uint8_t*)(((intptr_t)(var##_mem) + 63) & ~63) 
 
 #define free_aligned_buffer_64(var) \
   free(var##_mem);                  \
@@ -693,7 +685,7 @@ extern const struct YuvConstants SIMD_ALIGNED(kYvuH709Constants);  // BT.709
 
 #define IACA_UD_BYTES __asm__ __volatile__("\n\t .byte 0x0F, 0x0B");
 
-#else /* Visual C */
+#else 
 #define IACA_UD_BYTES \
   { __asm _emit 0x0F __asm _emit 0x0B }
 
@@ -1918,7 +1910,7 @@ void MergeRGBRow_Any_MMI(const uint8_t *src_r,
 void MergeUVRow_16_C(const uint16_t *src_u,
         const uint16_t *src_v,
         uint16_t *dst_uv,
-        int scale, /* 64 for 10 bit */
+        int scale, 
         int width);
 
 void MergeUVRow_16_AVX2(const uint16_t *src_u,
@@ -4827,8 +4819,8 @@ void FloatDivToByteRow_NEON(const float *src_weights,
         int width);
 
 #ifdef __cplusplus
-                                                                                                                        }  // extern "C"
-}  // namespace libyuv
+                                                                                                                        }  
+}  
 #endif
 
-#endif  // INCLUDE_LIBYUV_ROW_H_
+#endif  

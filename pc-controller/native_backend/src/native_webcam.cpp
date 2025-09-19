@@ -135,9 +135,9 @@ namespace ircamera {
 
             if (is_open_) {
                 if (config_.auto_exposure) {
-                    capture_.set(cv::CAP_PROP_AUTO_EXPOSURE, 0.75); // Enable auto exposure
+                    capture_.set(cv::CAP_PROP_AUTO_EXPOSURE, 0.75); 
                 } else {
-                    capture_.set(cv::CAP_PROP_AUTO_EXPOSURE, 0.25); // Disable auto exposure
+                    capture_.set(cv::CAP_PROP_AUTO_EXPOSURE, 0.25); 
                     capture_.set(cv::CAP_PROP_EXPOSURE, exposure);
                 }
             }
@@ -257,7 +257,7 @@ namespace ircamera {
             return true;
         }
 
-        // Public accessor methods
+        
         bool is_open() const { return is_open_.load(); }
         bool is_capturing() const { return is_capturing_.load(); }
         void set_frame_callback(FrameCallback callback) { frame_callback_ = callback; }
@@ -335,7 +335,7 @@ namespace ircamera {
                     latest_frame_ = frame_data;
                     frame_queue_.push(frame_data);
 
-                    if (frame_queue_.size() > 100) {  // Keep last 100 frames
+                    if (frame_queue_.size() > 100) {  
                         frame_queue_.pop();
                     }
                 }
@@ -459,4 +459,4 @@ namespace ircamera {
         return pimpl->test_camera_capture();
     }
 
-} // namespace ircamera
+} 
