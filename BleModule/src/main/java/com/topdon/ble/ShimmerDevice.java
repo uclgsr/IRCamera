@@ -614,13 +614,19 @@ public class ShimmerDevice implements UnifiedDevice {
     private void cleanup() {
         try {
             if (bluetoothGatt != null) {
-                bluetoothGatt.close();
+                if (BluetoothPermissionUtils.hasBluetoothConnectPermission(context)) {
+                    bluetoothGatt.close();
+                } else {
+                    Log.w(TAG, "Missing BLUETOOTH_CONNECT permission for cleanup operation");
+                }
                 bluetoothGatt = null;
             }
             
             dataCharacteristic = null;
             commandCharacteristic = null;
             
+        } catch (SecurityException e) {
+            Log.e(TAG, "Permission denied during cleanup", e);
         } catch (Exception e) {
             Log.e(TAG, "Error during cleanup", e);
         }
