@@ -7,7 +7,7 @@ import androidx.lifecycle.lifecycleScope
 import com.topdon.tc001.sensors.SensorRecorder
 import com.topdon.tc001.util.SessionDirectoryManager
 import com.topdon.tc001.data.SessionMetadata
-import com.topdon.tc001.util.TimestampManager
+import com.topdon.tc001.sensors.TimestampManager
 import com.topdon.tc001.permissions.PermissionManager
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
@@ -52,7 +52,7 @@ class ComprehensiveRecordingController(
     private val sessionStartTime = AtomicLong(0)
 
     // Advanced flow management for status updates
-    private val _recordingStateFlow = MutableStateFlow(RecordingState.IDLE)
+    private val _recordingStateFlow = MutableStateFlow(RecordingState.STOPPED)
     val recordingStateFlow: StateFlow<RecordingState> = _recordingStateFlow.asStateFlow()
 
     private val _sensorStatusFlow = MutableStateFlow(emptyMap<String, SensorStatus>())
@@ -102,7 +102,7 @@ class ComprehensiveRecordingController(
                 // Comprehensive prerequisite validation
                 val validationResult = validateRecordingPrerequisites(enabledSensors, estimatedDurationMinutes)
                 if (!validationResult.isValid) {
-                    Log.e(TAG, "Prerequisites validation failed: ${validationResult.failureReason}")
+                    Log.e(TAG, "Prerequisites validation failed: ${validationResult.errorMessage}")
                     _recordingStateFlow.value = RecordingState.ERROR
                     return@withContext false
                 }
@@ -118,10 +118,7 @@ class ComprehensiveRecordingController(
                 val finalSessionId = sessionId ?: sessionDirectoryManager.generateSessionId()
                 val sessionDir = sessionDirectoryManager.createSessionDirectory(finalSessionId)
                 
-                sessionMetadata = SessionMetadata.createSessionStart(finalSessionId).apply {
-                    estimatedDurationMinutes = estimatedDurationMinutes
-                    enabledSensorsList = enabledSensors
-                }
+                sessionMetadata = SessionMetadata.createSessionStart(finalSessionId)
                 
                 currentSessionId = finalSessionId
                 sessionStartTime.set(System.currentTimeMillis())
@@ -209,6 +206,7 @@ class ComprehensiveRecordingController(
             if (availableSpaceGB < estimatedSpaceGB + MIN_STORAGE_SPACE_GB) {
                 return ValidationResult(
                     false,
+                    false,
                     "Insufficient storage: ${String.format("%.1f", availableSpaceGB)}GB available, " +
                     "${String.format("%.1f", estimatedSpaceGB + MIN_STORAGE_SPACE_GB)}GB required"
                 )
@@ -218,6 +216,7 @@ class ComprehensiveRecordingController(
             val unavailableSensors = enabledSensors.filter { sensorRecorders[it] == null }
             if (unavailableSensors.isNotEmpty()) {
                 return ValidationResult(
+                    false,
                     false,
                     "Sensors not available: ${unavailableSensors.joinToString()}"
                 )
@@ -232,11 +231,11 @@ class ComprehensiveRecordingController(
                 // Don't fail validation, but warn - attempt recovery during recording
             }
 
-            return ValidationResult(true, "All prerequisites validated successfully")
+            return ValidationResult(true, true, "All prerequisites validated successfully")
 
         } catch (e: Exception) {
             Log.e(TAG, "Error during prerequisite validation", e)
-            return ValidationResult(false, "Validation error: ${e.message}")
+            return ValidationResult(false, false, "Validation error: ${e.message}")
         }
     }
 
@@ -349,13 +348,12 @@ class ComprehensiveRecordingController(
                 
                 // Finalize session metadata
                 sessionMetadata?.let { metadata ->
-                    metadata.sessionEndTimestamp = TimestampManager.createTimestampRecord()
-                    metadata.totalDurationMs = System.currentTimeMillis() - sessionStartTime.get()
+                    sessionMetadata = metadata.markSessionEnd()
                 }
 
                 sessionMetadata = null
                 currentSessionId = null
-                _recordingStateFlow.value = RecordingState.IDLE
+                _recordingStateFlow.value = RecordingState.STOPPED
 
                 Log.i(TAG, "🏁 Recording stopped successfully")
                 Log.i(TAG, "📊 Stop results: ${stopResults.entries.joinToString { "${it.key}=${if(it.value) "✅" else "❌"}" }}")
@@ -472,9 +470,7 @@ class ComprehensiveRecordingController(
     }
 }
 
-// Data classes for comprehensive functionality
-data class ValidationResult(val isValid: Boolean, val failureReason: String)
-
+// Data classes for comprehensive functionality  
 data class SensorHealthInfo(
     val name: String,
     val isHealthy: Boolean,
@@ -500,11 +496,7 @@ data class RecordingStats(
 ) {
     companion object {
         fun empty() = RecordingStats(
-            false, null, 0, 0, 0, 0, RecordingState.IDLE
+            false, null, 0, 0, 0, 0, RecordingState.STOPPED
         )
     }
-}
-
-enum class RecordingState {
-    IDLE, STARTING, RECORDING, STOPPING, ERROR
 }
