@@ -1233,58 +1233,6 @@ class ThermalCameraRecorder(
     /**
      * Advanced thermal camera configuration options
      */
-    data class ThermalCameraConfig(
-        val emissivity: Double = 0.95,
-        val reflectedTemperature: Double = 25.0,
-        val atmosphericTemperature: Double = 25.0,
-        val relativeHumidity: Double = 50.0,
-        val distance: Double = 1.0,
-        val temperatureRange: Pair<Float, Float> = Pair(-20.0f, 400.0f),
-        val pseudoColorPalette: String = "IRON",
-        val enableNoiseReduction: Boolean = true,
-        val enableImageEnhancement: Boolean = true,
-        val enableAutoGainControl: Boolean = true,
-        val frameRate: Int = 10,
-        val resolution: Pair<Int, Int> = Pair(256, 192)
-    )
-
-    /**
-     * Performance monitoring data
-     */
-    data class ThermalPerformanceMetrics(
-        val averageFrameRate: Double,
-        val frameProcessingTimeMs: Double,
-        val memoryUsageMB: Double,
-        val cpuUsagePercent: Double,
-        val thermalDrift: Double,
-        val calibrationAccuracy: Double,
-        val networkLatencyMs: Double
-    )
-
-    /**
-     * Data class representing thermal frame information - made public for interface usage
-     */
-    data class ThermalFrameData(
-        val temperatureMatrix: Array<FloatArray>,
-        val minTemperature: Float,
-        val maxTemperature: Float,
-        val avgTemperature: Float,
-        val centerTemperature: Float,
-        val ambientTemperature: Float,
-        val emissivity: Float,
-        val reflectedTemperature: Float
-    )
-
-    data class ThermalFrameData(
-        val temperatureMatrix: Array<FloatArray>,
-        val minTemperature: Float,
-        val maxTemperature: Float,
-        val avgTemperature: Float,
-        val centerTemperature: Float,
-        val ambientTemperature: Float,
-        val emissivity: Float,
-        val reflectedTemperature: Float
-    )
 
     private fun generateThermalPreviewBitmap(
         thermalData: ThermalFrameData,
