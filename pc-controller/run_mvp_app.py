@@ -11,7 +11,6 @@ sys.path.insert(0, str(src_dir))
 
 
 def main():
-    
 
     print("=" * 70)
     print("IRCamera PC Controller Hub - MVP Application")
@@ -19,29 +18,24 @@ def main():
     print("Starting Hub-and-Spoke Architecture Implementation...")
     print()
 
-    
     print("Environment Check:")
     try:
-        import PyQt6
         print("✓ PyQt6 GUI framework available")
     except ImportError:
         print("✗ PyQt6 not available - GUI will run in headless mode")
 
     try:
-        from zeroconf import Zeroconf
         print("✓ Zeroconf service discovery available")
     except ImportError:
         print("⚠ Zeroconf not available - using fallback discovery")
 
     print()
 
-    
     if "DISPLAY" not in os.environ and "QT_QPA_PLATFORM" not in os.environ:
         os.environ["QT_QPA_PLATFORM"] = "offscreen"
         print("ℹ Running in headless mode (no display detected)")
         print()
 
-    
     try:
         from ircamera_pc.gui.app_mvp import main as app_main
 

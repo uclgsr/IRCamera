@@ -5,25 +5,20 @@ import os
 
 GUI_AVAILABLE = True
 try:
-    
+
     if "DISPLAY" not in os.environ and "QT_QPA_PLATFORM" not in os.environ:
         os.environ["QT_QPA_PLATFORM"] = "offscreen"
 
-    
-    from PyQt6.QtCore import Qt
 
-    
     from .app import IRCameraApp, main
 except ImportError:
     GUI_AVAILABLE = False
-
 
     # Create dummy main function for headless mode
     def main(args=None):
         import sys
         import logging
 
-        
         try:
             from loguru import logger
             logger.remove()
@@ -32,7 +27,7 @@ except ImportError:
             logger.info("IRCamera Application initialized")
             logger.info("Running in headless mode - GUI not available")
         except ImportError:
-            
+
             logging.basicConfig(level=logging.INFO,
                                 format="%(asctime)s | %(levelname)s | %(message)s")
             logger = logging.getLogger(__name__)
@@ -40,7 +35,6 @@ except ImportError:
             logger.info("Running in headless mode - GUI not available")
 
         return 0
-
 
     # Create dummy app class
     class IRCameraApp:
@@ -59,12 +53,7 @@ from .utils import (
 
 if GUI_AVAILABLE:
     try:
-        from .main_window import MainWindow
-        from .widgets import (
-            DeviceListWidget,
-            SessionControlWidget,
-            StatusDisplayWidget,
-        )
+        pass
 
         __all__ = [
             "IRCameraApp",

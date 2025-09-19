@@ -15,7 +15,6 @@ class ValidationError(Exception):
 
 
 class MessageDirection(Enum):
-    
 
     PC_TO_DEVICE = "pc_to_device"
     DEVICE_TO_PC = "device_to_pc"
@@ -24,7 +23,6 @@ class MessageDirection(Enum):
 
 @dataclass
 class MessageDefinition:
-    
 
     name: str
     direction: MessageDirection
@@ -35,10 +33,9 @@ class MessageDefinition:
 
 
 class ProtocolManager:
-    
 
     def __init__(self, protocol_file: Optional[Path] = None):
-        
+
         self._protocol_file = protocol_file
         self._protocol_def: Optional[Dict[str, Any]] = None
         self._message_definitions: Dict[str, MessageDefinition] = {}
@@ -47,9 +44,9 @@ class ProtocolManager:
         self._load_protocol()
 
     def _load_protocol(self) -> None:
-        
+
         if self._protocol_file is None:
-            
+
             current_dir = Path(__file__).parent
             config_dir = current_dir.parent.parent.parent / "config"
             self._protocol_file = config_dir / "protocol.json"
@@ -72,7 +69,7 @@ class ProtocolManager:
             raise
 
     def _parse_message_definitions(self) -> None:
-        
+
         if not self._protocol_def:
             return
 
@@ -96,7 +93,7 @@ class ProtocolManager:
         logger.info(f"Loaded {len(self._message_definitions)}" "message definitions")
 
     def get_protocol_info(self) -> Dict[str, Any]:
-        
+
         if not self._protocol_def:
             return {}
 
@@ -109,17 +106,17 @@ class ProtocolManager:
         }
 
     def get_message_types(self) -> List[str]:
-        
+
         return list(self._message_definitions.keys())
 
     def get_message_definition(self, message_type: str) -> Optional[MessageDefinition]:
-        
+
         return self._message_definitions.get(message_type)
 
     def validate_message(self, message: Dict[str, Any], strict: bool = True) -> bool:
-        
+
         try:
-            
+
             if not isinstance(message, dict):
                 raise ValidationError("Message must be a dictionary")
 
@@ -127,16 +124,13 @@ class ProtocolManager:
             if not message_type:
                 raise ValidationError("Message must have 'message_type' field")
 
-            
             msg_def = self._message_definitions.get(message_type)
             if not msg_def:
                 raise ValidationError(f"Unknown message type: {message_type}")
 
-            
             validator = self._get_validator(message_type, msg_def.schema)
             validator.validate(message)
 
-            
             self._validate_timestamp(message)
 
             return True
@@ -159,9 +153,9 @@ class ProtocolManager:
     def _get_validator(
             self, message_type: str, schema: Dict[str, Any]
     ) -> jsonschema.protocols.Validator:
-        
+
         if message_type not in self._validator_cache:
-            
+
             complete_schema = self._add_common_fields(schema)
             validator = jsonschema.Draft7Validator(complete_schema)
             self._validator_cache[message_type] = validator
@@ -169,16 +163,14 @@ class ProtocolManager:
         return self._validator_cache[message_type]
 
     def _add_common_fields(self, schema: Dict[str, Any]) -> Dict[str, Any]:
-        
+
         if self._protocol_def is None:
             return schema
 
         common_fields = self._protocol_def.get("common_fields", {})
 
-        
         complete_schema = json.loads(json.dumps(schema))
 
-        
         if "properties" not in complete_schema:
             complete_schema["properties"] = {}
 
@@ -189,13 +181,11 @@ class ProtocolManager:
                     "description": field_def.get("description", ""),
                 }
 
-                
                 if "format" in field_def:
                     complete_schema["properties"][field_name]["format"] = field_def[
                         "format"
                     ]
 
-        
         if "required" not in complete_schema:
             complete_schema["required"] = []
 
@@ -209,16 +199,15 @@ class ProtocolManager:
         return complete_schema
 
     def _validate_timestamp(self, message: Dict[str, Any]) -> None:
-        
+
         timestamp_str = message.get("timestamp")
         if not timestamp_str:
-            return  
+            return
 
         try:
-            
+
             timestamp = datetime.fromisoformat(timestamp_str.replace("Z", "+00:00"))
 
-            
             now = datetime.now(timezone.utc)
             if self._protocol_def is None:
                 tolerance_ms = 5000
@@ -235,47 +224,43 @@ class ProtocolManager:
             raise ValidationError(f"Invalid timestamp format: {e}")
 
     def create_message(self, message_type: str, **kwargs) -> Dict[str, Any]:
-        
+
         msg_def = self._message_definitions.get(message_type)
         if not msg_def:
             raise ValidationError(f"Unknown message type: {message_type}")
 
-        
         message = {
             "message_type": message_type,
             "timestamp": datetime.now(timezone.utc).isoformat(),
         }
 
-        
         message.update(kwargs)
 
-        
         self.validate_message(message, strict=True)
 
         return message
 
     def get_transport_config(self) -> Dict[str, Any]:
-        
+
         return self._protocol_def.get("transport", {})
 
     def get_validation_config(self) -> Dict[str, Any]:
-        
+
         return self._protocol_def.get("validation", {})
 
     def reload_protocol(self) -> None:
-        
+
         self._message_definitions.clear()
         self._validator_cache.clear()
         self._load_protocol()
         logger.info("Protocol definition reloaded")
 
 
-
 _protocol_manager: Optional[ProtocolManager] = None
 
 
 def get_protocol_manager() -> ProtocolManager:
-    
+
     global _protocol_manager
     if _protocol_manager is None:
         _protocol_manager = ProtocolManager()
@@ -283,10 +268,10 @@ def get_protocol_manager() -> ProtocolManager:
 
 
 def validate_message(message: Dict[str, Any], strict: bool = True) -> bool:
-    
+
     return get_protocol_manager().validate_message(message, strict)
 
 
 def create_message(message_type: str, **kwargs) -> Dict[str, Any]:
-    
+
     return get_protocol_manager().create_message(message_type, **kwargs)

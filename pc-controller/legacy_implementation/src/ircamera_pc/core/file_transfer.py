@@ -13,7 +13,6 @@ from typing import Any, Callable, Dict, List, Optional
 
 
 class TransferStatus(Enum):
-    
 
     PENDING = "pending"
     IN_PROGRESS = "in_progress"
@@ -24,7 +23,6 @@ class TransferStatus(Enum):
 
 
 class FileType(Enum):
-    
 
     THERMAL_VIDEO = "thermal_video"
     VISUAL_VIDEO = "visual_video"
@@ -37,20 +35,19 @@ class FileType(Enum):
 
 @dataclass
 class FileManifest:
-    
 
     file_id: str
     filename: str
     file_type: FileType
     size_bytes: int
-    checksum: str  
+    checksum: str
     device_id: str
     session_id: str
     timestamp: float
-    compression: Optional[str] = None  
+    compression: Optional[str] = None
 
     def to_dict(self) -> Dict[str, Any]:
-        
+
         data = asdict(self)
         data["file_type"] = self.file_type.value
         return data
@@ -58,7 +55,6 @@ class FileManifest:
 
 @dataclass
 class TransferJob:
-    
 
     job_id: str
     manifest: FileManifest
@@ -70,18 +66,18 @@ class TransferJob:
     resume_offset: int
     retry_count: int
     error_message: Optional[str]
-    device_connection: Optional[Any] = None  
+    device_connection: Optional[Any] = None
 
     @property
     def progress_percent(self) -> float:
-        
+
         if self.manifest.size_bytes == 0:
             return 100.0
         return (self.bytes_transferred / self.manifest.size_bytes) * 100.0
 
     @property
     def transfer_rate(self) -> float:
-        
+
         if self.status != TransferStatus.IN_PROGRESS or self.start_time == 0:
             return 0.0
         elapsed = time.time() - self.start_time
@@ -90,7 +86,7 @@ class TransferJob:
         return self.bytes_transferred / elapsed
 
     def to_dict(self) -> Dict[str, Any]:
-        
+
         data = asdict(self)
         data["status"] = self.status.value
         data["manifest"] = self.manifest.to_dict()
@@ -99,28 +95,24 @@ class TransferJob:
 
 
 class FileTransferManager:
-    
 
     def __init__(self, config: Dict[str, Any]):
-        
+
         self.config = config.get("file_transfer", {})
         self.data_dir = Path(self.config.get("data_dir", "data/transfers"))
         self.data_dir.mkdir(parents=True, exist_ok=True)
 
-        
-        self.chunk_size = self.config.get("chunk_size", 1024 * 1024)  
+        self.chunk_size = self.config.get("chunk_size", 1024 * 1024)
         self.max_concurrent = self.config.get("max_concurrent_transfers", 4)
         self.retry_limit = self.config.get("retry_limit", 3)
-        self.timeout = self.config.get("timeout_seconds", 300)  
+        self.timeout = self.config.get("timeout_seconds", 300)
         self.verify_checksums = self.config.get("verify_checksums", True)
 
-        
         self.active_jobs: Dict[str, TransferJob] = {}
         self.completed_jobs: Dict[str, TransferJob] = {}
         self.transfer_queue: List[str] = []
         self.concurrent_transfers = 0
 
-        
         self.progress_callbacks: List[Callable[[str, float, float], None]] = []
 
         logger.info(
@@ -133,29 +125,26 @@ class FileTransferManager:
     def add_progress_callback(
             self, callback: None = Callable[[str, float, float], None]
     ) -> None:
-        
+
         self.progress_callbacks.append(callback)
 
     async def queue_transfer(self, manifest: FileManifest, device_conn: Any) -> str:
-        
+
         try:
-            
+
             job_id = f"transfer_{manifest.device_id}_{manifest.session_id}_{int(time.time())}"
 
-            
             session_dir = self.data_dir / manifest.session_id
             device_dir = session_dir / manifest.device_id
             device_dir.mkdir(parents=True, exist_ok=True)
 
             local_path = device_dir / manifest.filename
 
-            
             if local_path.exists():
                 if await self._verify_existing_file(local_path, manifest):
                     logger.info(f"File already exists and verified:{manifest.filename}")
-                    return job_id  
+                    return job_id
 
-            
             job = TransferJob(
                 job_id=job_id,
                 manifest=manifest,
@@ -168,10 +157,9 @@ class FileTransferManager:
                 retry_count=0,
                 error_message=None,
                 device_connection=device_conn,
-                
+
             )
 
-            
             if local_path.exists():
                 job.resume_offset = local_path.stat().st_size
                 job.bytes_transferred = job.resume_offset
@@ -186,7 +174,6 @@ class FileTransferManager:
                 f"Queued transfer: {manifest.filename}({manifest.size_bytes} bytes)"
             )
 
-            
             if self.concurrent_transfers < self.max_concurrent:
                 await self._start_next_transfer()
 
@@ -197,14 +184,13 @@ class FileTransferManager:
             raise
 
     async def cancel_transfer(self, job_id: str) -> bool:
-        
+
         try:
             if job_id in self.active_jobs:
                 job = self.active_jobs[job_id]
                 job.status = TransferStatus.CANCELLED
                 job.end_time = time.time()
 
-                
                 if job_id in self.transfer_queue:
                     self.transfer_queue.remove(job_id)
 
@@ -218,7 +204,7 @@ class FileTransferManager:
             return False
 
     async def pause_transfer(self, job_id: str) -> bool:
-        
+
         try:
             if job_id in self.active_jobs:
                 job = self.active_jobs[job_id]
@@ -232,7 +218,7 @@ class FileTransferManager:
             return False
 
     async def resume_transfer(self, job_id: str) -> bool:
-        
+
         try:
             if job_id in self.active_jobs:
                 job = self.active_jobs[job_id]
@@ -241,7 +227,6 @@ class FileTransferManager:
                     if job_id not in self.transfer_queue:
                         self.transfer_queue.append(job_id)
 
-                    
                     if self.concurrent_transfers < self.max_concurrent:
                         await self._start_next_transfer()
 
@@ -253,7 +238,7 @@ class FileTransferManager:
             return False
 
     async def _start_next_transfer(self):
-        
+
         if not self.transfer_queue or self.concurrent_transfers >= self.max_concurrent:
             return
 
@@ -265,32 +250,27 @@ class FileTransferManager:
         if job.status != TransferStatus.PENDING:
             return
 
-        
         self.concurrent_transfers += 1
         asyncio.create_task(self._execute_transfer(job))
 
     async def _execute_transfer(self, job: TransferJob):
-        
+
         try:
             job.status = TransferStatus.IN_PROGRESS
             job.start_time = time.time()
 
             logger.info(f"Starting transfer: {job.manifest.filename}")
 
-            
             await self._transfer_file_chunks(job)
 
-            
             if self.verify_checksums:
                 if not await self._verify_file_integrity(job):
                     raise Exception("File integrity verification failed")
 
-            
             job.status = TransferStatus.COMPLETED
             job.end_time = time.time()
             job.bytes_transferred = job.manifest.size_bytes
 
-            
             self.completed_jobs[job.job_id] = job
             del self.active_jobs[job.job_id]
 
@@ -312,7 +292,6 @@ class FileTransferManager:
 
             logger.error(f"Transfer failed: {job.manifest.filename} - {e}")
 
-            
             if job.retry_count <= self.retry_limit:
                 logger.info(
                     f"Retrying transfer (attempt {job.retry_count}/{self.retry_limit})"
@@ -327,14 +306,14 @@ class FileTransferManager:
 
         finally:
             self.concurrent_transfers -= 1
-            
+
             if self.transfer_queue:
                 await self._start_next_transfer()
 
     async def _transfer_file_chunks(self, job: TransferJob):
-        
+
         try:
-            
+
             mode = "ab" if job.resume_offset > 0 else "wb"
 
             with open(job.local_path, mode) as f:
@@ -343,17 +322,14 @@ class FileTransferManager:
 
                 while bytes_remaining > 0:
                     if job.status != TransferStatus.IN_PROGRESS:
-                        break  
+                        break
 
-                    
                     chunk_size = min(self.chunk_size, bytes_remaining)
 
-                    
                     chunk_data = await self._read_chunk_from_device(
                         job, bytes_transferred, chunk_size
                     )
 
-                    
                     f.write(chunk_data)
                     f.flush()
 
@@ -361,10 +337,8 @@ class FileTransferManager:
                     bytes_remaining -= len(chunk_data)
                     job.bytes_transferred = bytes_transferred
 
-                    
                     await self._update_progress(job)
 
-                    
                     await asyncio.sleep(0.001)
 
         except (OSError, ValueError, RuntimeError) as e:
@@ -374,18 +348,18 @@ class FileTransferManager:
     async def _read_chunk_from_device(
             self, job: TransferJob, offset: int, size: int
     ) -> bytes:
-        
+
         try:
-            
+
             device_conn = job.device_connection
 
             if hasattr(device_conn, "read_file_chunk"):
-                
+
                 return await device_conn.read_file_chunk(
                     job.manifest.file_path, offset, size
                 )
             elif hasattr(device_conn, "websocket"):
-                
+
                 request_data = {
                     "type": "file_chunk_request",
                     "job_id": job.job_id,
@@ -395,12 +369,11 @@ class FileTransferManager:
                     "session_id": job.manifest.session_id,
                 }
 
-                
                 response = await device_conn.send_and_wait(request_data, timeout=30.0)
 
                 if response and response.get("type") == "file_chunk_response":
                     if response.get("status") == "success":
-                        
+
                         chunk_data = response.get("chunk_data", "")
                         if isinstance(chunk_data, str):
                             import base64
@@ -415,7 +388,7 @@ class FileTransferManager:
                 else:
                     raise Exception("Invalid or timeout response from device")
             else:
-                
+
                 request_data = {
                     "type": "read_file_chunk",
                     "file_path": job.manifest.file_path,
@@ -443,27 +416,24 @@ class FileTransferManager:
             raise
 
     async def _send_device_request(self, device_conn: Any, request_data: dict) -> dict:
-        
+
         try:
             import json
 
-            
             request_json = json.dumps(request_data)
 
-            
             if hasattr(device_conn, "send_json"):
                 return await device_conn.send_json(request_data)
             elif hasattr(device_conn, "writer"):
-                
+
                 device_conn.writer.write(request_json.encode("utf-8"))
                 await device_conn.writer.drain()
 
-                
                 response_data = await device_conn.reader.read(65536)
                 response_json = response_data.decode("utf-8")
                 return json.loads(response_json)
             else:
-                
+
                 raise Exception("No valid device communication method available")
 
         except Exception as e:
@@ -471,11 +441,10 @@ class FileTransferManager:
             return {"status": "error", "error": str(e)}
 
     async def _update_progress(self, job: TransferJob):
-        
+
         progress = job.progress_percent
         rate = job.transfer_rate
 
-        
         for callback in self.progress_callbacks:
             try:
                 callback(job.job_id, progress, rate)
@@ -483,11 +452,10 @@ class FileTransferManager:
                 logger.error(f"Error in progress callback: {e}")
 
     async def _verify_file_integrity(self, job: TransferJob) -> bool:
-        
+
         try:
             logger.info(f"Verifying file integrity: {job.manifest.filename}")
 
-            
             hash_sha256 = hashlib.sha256()
             with open(job.local_path, "rb") as f:
                 for chunk in iter(lambda: f.read(self.chunk_size), b""):
@@ -512,17 +480,15 @@ class FileTransferManager:
     async def _verify_existing_file(
             self, filepath: Path, manifest: FileManifest
     ) -> bool:
-        
+
         try:
             if not filepath.exists():
                 return False
 
-            
             file_size = filepath.stat().st_size
             if file_size != manifest.size_bytes:
                 return False
 
-            
             if self.verify_checksums:
                 hash_sha256 = hashlib.sha256()
                 with open(filepath, "rb") as f:
@@ -539,7 +505,7 @@ class FileTransferManager:
             return False
 
     def get_transfer_status(self, job_id: str) -> Optional[Dict[str, Any]]:
-        
+
         if job_id in self.active_jobs:
             job = self.active_jobs[job_id]
             return {
@@ -569,11 +535,11 @@ class FileTransferManager:
             return None
 
     def get_active_transfers(self) -> List[Dict[str, Any]]:
-        
+
         return [self.get_transfer_status(job_id) for job_id in self.active_jobs.keys()]
 
     def get_transfer_summary(self) -> Dict[str, Any]:
-        
+
         return {
             "active_transfers": len(self.active_jobs),
             "queued_transfers": len(self.transfer_queue),
@@ -583,7 +549,7 @@ class FileTransferManager:
         }
 
     async def save_job_state(self) -> Any:
-        
+
         try:
             state_file = self.data_dir / "transfer_state.json"
 
@@ -606,7 +572,7 @@ class FileTransferManager:
             logger.error(f"Failed to save transfer state: {e}")
 
     async def load_job_state(self) -> Any:
-        
+
         try:
             state_file = self.data_dir / "transfer_state.json"
 
@@ -617,11 +583,10 @@ class FileTransferManager:
             with open(state_file, "r") as f:
                 state_data = json.load(f)
 
-            
             reconstructed_jobs = 0
             for job_id, job_data in state_data.get("active_jobs", {}).items():
                 try:
-                    
+
                     manifest_data = job_data.get("manifest", {})
                     manifest = FileManifest(
                         file_id=manifest_data.get("file_id", ""),
@@ -633,7 +598,6 @@ class FileTransferManager:
                         timestamp=manifest_data.get("timestamp", 0.0),
                     )
 
-                    
                     job = TransferJob(
                         job_id=job_id,
                         manifest=manifest,
@@ -647,33 +611,31 @@ class FileTransferManager:
                         error_message=job_data.get("error_message"),
                     )
 
-                    
                     if job.status in [
                         TransferStatus.PENDING,
                         TransferStatus.IN_PROGRESS,
                         TransferStatus.PAUSED,
                     ]:
-                        
+
                         if job.local_path.exists():
                             actual_size = job.local_path.stat().st_size
                             job.bytes_transferred = actual_size
                             job.resume_offset = actual_size
 
-                            
                             if actual_size >= job.manifest.size_bytes:
                                 job.status = TransferStatus.COMPLETED
                                 logger.info(
                                     f"Restored completed transfer: {job.manifest.filename}"
                                 )
                             else:
-                                job.status = TransferStatus.PAUSED  
+                                job.status = TransferStatus.PAUSED
                                 self.transfer_queue.append(job_id)
                                 logger.info(
                                     f"Restored paused transfer: {job.manifest.filename} "
                                     f"({actual_size}/{job.manifest.size_bytes} bytes)"
                                 )
                         else:
-                            
+
                             job.bytes_transferred = 0
                             job.resume_offset = 0
                             job.status = TransferStatus.PENDING
@@ -689,7 +651,6 @@ class FileTransferManager:
                     logger.warning(f"Failed to restore transfer job {job_id}: {e}")
                     continue
 
-            
             saved_queue = state_data.get("transfer_queue", [])
             for job_id in saved_queue:
                 if job_id in self.active_jobs and job_id not in self.transfer_queue:

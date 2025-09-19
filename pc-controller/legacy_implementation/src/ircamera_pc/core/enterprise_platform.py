@@ -1,26 +1,22 @@
 
 
-import asyncio
-import hashlib
 import json
 import logging
-import numpy as np
 import os
 import pandas as pd
 import shutil
 import tempfile
-import zipfile
 from dataclasses import dataclass, asdict
-from datetime import datetime, timedelta
+from datetime import datetime
 from enum import Enum
 from pathlib import Path
-from typing import Dict, List, Optional, Any, Tuple
+from typing import Dict, List, Any
 
 logger = logging.getLogger(__name__)
 
 
 class DeploymentEnvironment(Enum):
-    
+
     AWS = "aws"
     AZURE = "azure"
     GCP = "gcp"
@@ -29,7 +25,7 @@ class DeploymentEnvironment(Enum):
 
 
 class AuthenticationMethod(Enum):
-    
+
     SAML_SSO = "saml_sso"
     OAUTH2 = "oauth2"
     LDAP = "ldap"
@@ -38,40 +34,36 @@ class AuthenticationMethod(Enum):
 
 
 class ComplianceFramework(Enum):
-    
-    BIDS = "bids"  
-    GDPR = "gdpr"  
-    HIPAA = "hipaa"  
-    FDA_21CFR11 = "fda_21cfr11"  
-    ISO27001 = "iso27001"  
-    IRB = "irb"  
+
+    BIDS = "bids"
+    GDPR = "gdpr"
+    HIPAA = "hipaa"
+    FDA_21CFR11 = "fda_21cfr11"
+    ISO27001 = "iso27001"
+    IRB = "irb"
 
 
 @dataclass
 class InstitutionalConfig:
-    
+
     institution_id: str
     institution_name: str
     deployment_environment: DeploymentEnvironment
     authentication_method: AuthenticationMethod
     compliance_frameworks: List[ComplianceFramework]
 
-    
     server_endpoint: str
     api_base_url: str
     websocket_endpoint: str
 
-    
     encryption_key_id: str
     certificate_path: str
     ssl_verify: bool
 
-    
     data_retention_days: int
     backup_frequency_hours: int
     archival_storage_url: str
 
-    
     ethics_approval_number: str
     principal_investigator: str
     study_protocol_version: str
@@ -79,25 +71,21 @@ class InstitutionalConfig:
 
 @dataclass
 class StudyConfiguration:
-    
+
     study_id: str
     study_title: str
     protocol_version: str
 
-    
     expected_participants: int
     participant_id_prefix: str
 
-    
     session_duration_minutes: int
     sensors_required: List[str]
     sampling_rates: Dict[str, float]
 
-    
     minimum_data_quality: float
     maximum_artifact_percentage: float
 
-    
     irb_approval_number: str
     consent_form_version: str
     data_retention_policy: str
@@ -105,46 +93,38 @@ class StudyConfiguration:
 
 @dataclass
 class MultiSiteCoordinator:
-    
+
     coordinator_id: str
     primary_site_id: str
     participating_sites: List[str]
 
-    
     sync_frequency_minutes: int
     central_database_url: str
 
-    
     cross_site_validation: bool
     inter_rater_reliability: bool
 
-    
     notification_endpoints: List[str]
     status_reporting_interval: int
 
 
 class EnterpriseResearchPlatform:
-    
 
     def __init__(self, config: InstitutionalConfig):
-        
+
         self.config = config
         self.temp_dir = tempfile.mkdtemp(prefix="ircamera_enterprise_")
 
-        
         self.active_studies: Dict[str, StudyConfiguration] = {}
         self.participant_registry: Dict[str, Dict] = {}
         self.session_metadata: Dict[str, Dict] = {}
 
-        
         self.site_coordinators: Dict[str, MultiSiteCoordinator] = {}
         self.cross_site_data: Dict[str, Any] = {}
 
-        
         self.audit_trail: List[Dict] = []
         self.compliance_status: Dict[ComplianceFramework, bool] = {}
 
-        
         self.cloud_storage = None
         self.auth_provider = None
         self.notification_service = None
@@ -152,7 +132,7 @@ class EnterpriseResearchPlatform:
         logger.info(f"Enterprise Research Platform initialized for {config.institution_name}")
 
     def initialize_cloud_services(self) -> bool:
-        
+
         try:
             env = self.config.deployment_environment
 
@@ -172,16 +152,11 @@ class EnterpriseResearchPlatform:
             return False
 
     def _initialize_aws_services(self) -> bool:
-        
+
         logger.info("Initializing AWS cloud services...")
 
         # Placeholder for AWS integration
         # In production, would use boto3 for:
-        
-        
-        
-        
-        
 
         aws_config = {
             "s3_bucket": f"ircamera-{self.config.institution_id}",
@@ -198,16 +173,11 @@ class EnterpriseResearchPlatform:
         return True
 
     def _initialize_azure_services(self) -> bool:
-        
+
         logger.info("Initializing Azure cloud services...")
 
         # Placeholder for Azure integration
         # In production, would use Azure SDK for:
-        
-        
-        
-        
-        
 
         azure_config = {
             "storage_account": f"ircamera{self.config.institution_id}",
@@ -224,7 +194,7 @@ class EnterpriseResearchPlatform:
         return True
 
     def _initialize_gcp_services(self) -> bool:
-        
+
         logger.info("Initializing GCP services...")
 
         gcp_config = {
@@ -242,7 +212,7 @@ class EnterpriseResearchPlatform:
         return True
 
     def _initialize_institutional_services(self) -> bool:
-        
+
         logger.info("Initializing institutional services...")
 
         institutional_config = {
@@ -260,7 +230,7 @@ class EnterpriseResearchPlatform:
         return True
 
     def _initialize_local_services(self) -> bool:
-        
+
         logger.info("Initializing local services...")
 
         local_config = {
@@ -270,7 +240,6 @@ class EnterpriseResearchPlatform:
             "audit_log": os.path.join(self.temp_dir, "audit.log")
         }
 
-        
         for directory in [local_config["data_directory"], local_config["backup_directory"]]:
             os.makedirs(directory, exist_ok=True)
 
@@ -282,23 +251,19 @@ class EnterpriseResearchPlatform:
         return True
 
     def register_study(self, study_config: StudyConfiguration) -> bool:
-        
+
         try:
-            
+
             if not self._validate_study_config(study_config):
                 return False
 
-            
             if not self._check_study_compliance(study_config):
                 return False
 
-            
             study_path = self._create_study_workspace(study_config)
 
-            
             self.active_studies[study_config.study_id] = study_config
 
-            
             self._add_audit_entry(
                 action="STUDY_REGISTERED",
                 study_id=study_config.study_id,
@@ -306,7 +271,6 @@ class EnterpriseResearchPlatform:
                          "protocol": study_config.protocol_version}
             )
 
-            
             if ComplianceFramework.BIDS in self.config.compliance_frameworks:
                 self._initialize_bids_structure(study_config.study_id, study_path)
 
@@ -318,22 +282,19 @@ class EnterpriseResearchPlatform:
             return False
 
     def register_participant(self, study_id: str, participant_data: Dict[str, Any]) -> str:
-        
+
         try:
             if study_id not in self.active_studies:
                 raise ValueError(f"Study not found: {study_id}")
 
             study_config = self.active_studies[study_id]
 
-            
             participant_count = len(
                 [p for p in self.participant_registry.keys() if p.startswith(study_id)])
             participant_id = f"{study_config.participant_id_prefix}{participant_count + 1:04d}"
 
-            
             anonymized_data = self._anonymize_participant_data(participant_data)
 
-            
             self.participant_registry[participant_id] = {
                 "study_id": study_id,
                 "registration_date": datetime.utcnow().isoformat(),
@@ -342,10 +303,8 @@ class EnterpriseResearchPlatform:
                 "status": "active"
             }
 
-            
             self._create_participant_workspace(study_id, participant_id)
 
-            
             self._add_audit_entry(
                 action="PARTICIPANT_REGISTERED",
                 study_id=study_id,
@@ -362,7 +321,7 @@ class EnterpriseResearchPlatform:
 
     def start_data_collection(self, study_id: str, participant_id: str,
                               session_metadata: Dict[str, Any]) -> str:
-        
+
         try:
             if study_id not in self.active_studies:
                 raise ValueError(f"Study not found: {study_id}")
@@ -370,13 +329,10 @@ class EnterpriseResearchPlatform:
             if participant_id not in self.participant_registry:
                 raise ValueError(f"Participant not found: {participant_id}")
 
-            
             session_id = f"{study_id}_{participant_id}_{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}"
 
-            
             validated_metadata = self._validate_session_metadata(study_id, session_metadata)
 
-            
             self.session_metadata[session_id] = {
                 "study_id": study_id,
                 "participant_id": participant_id,
@@ -387,13 +343,10 @@ class EnterpriseResearchPlatform:
                 "compliance_status": {}
             }
 
-            
-            session_path = self._create_session_workspace(session_id)
+            self._create_session_workspace(session_id)
 
-            
             self._start_session_monitoring(session_id)
 
-            
             self._add_audit_entry(
                 action="SESSION_STARTED",
                 study_id=study_id,
@@ -410,7 +363,7 @@ class EnterpriseResearchPlatform:
             return None
 
     def process_sensor_data(self, session_id: str, sensor_data: Dict[str, Any]) -> bool:
-        
+
         try:
             if session_id not in self.session_metadata:
                 raise ValueError(f"Session not found: {session_id}")
@@ -419,27 +372,22 @@ class EnterpriseResearchPlatform:
             study_id = session_info["study_id"]
             study_config = self.active_studies[study_id]
 
-            
             quality_score = self._assess_data_quality(sensor_data, study_config)
 
-            
             processed_data = self._apply_compliance_processing(sensor_data, study_config)
 
-            
             storage_success = self._store_sensor_data(session_id, processed_data, quality_score)
 
             if not storage_success:
                 logger.error(f"Data storage failed for session {session_id}")
                 return False
 
-            
             session_info["data_quality_checks"].append({
                 "timestamp": datetime.utcnow().isoformat(),
                 "quality_score": quality_score,
                 "data_type": sensor_data.get("modality", "unknown")
             })
 
-            
             if quality_score < study_config.minimum_data_quality:
                 self._send_quality_alert(session_id, quality_score)
 
@@ -450,7 +398,7 @@ class EnterpriseResearchPlatform:
             return False
 
     def end_data_collection(self, session_id: str) -> bool:
-        
+
         try:
             if session_id not in self.session_metadata:
                 raise ValueError(f"Session not found: {session_id}")
@@ -459,36 +407,28 @@ class EnterpriseResearchPlatform:
             study_id = session_info["study_id"]
             participant_id = session_info["participant_id"]
 
-            
             session_info["status"] = "completed"
             session_info["end_time"] = datetime.utcnow().isoformat()
 
-            
-            session_report = self._generate_session_report(session_id)
+            self._generate_session_report(session_id)
 
-            
             completeness_score = self._validate_data_completeness(session_id)
             session_info["data_completeness"] = completeness_score
 
-            
             compliance_results = self._perform_final_compliance_check(session_id)
             session_info["compliance_status"] = compliance_results
 
-            
             export_success = self._export_session_data(session_id)
 
             if not export_success:
                 logger.error(f"Data export failed for session {session_id}")
                 return False
 
-            
-            archive_success = self._archive_session_data(session_id)
+            self._archive_session_data(session_id)
 
-            
             if all(compliance_results.values()):
                 self._generate_compliance_certificate(session_id)
 
-            
             self._add_audit_entry(
                 action="SESSION_COMPLETED",
                 study_id=study_id,
@@ -509,18 +449,16 @@ class EnterpriseResearchPlatform:
             return False
 
     def generate_bids_dataset(self, study_id: str, output_path: str) -> bool:
-        
+
         try:
             if study_id not in self.active_studies:
                 raise ValueError(f"Study not found: {study_id}")
 
             study_config = self.active_studies[study_id]
 
-            
             bids_root = Path(output_path)
             bids_root.mkdir(parents=True, exist_ok=True)
 
-            
             dataset_description = {
                 "Name": study_config.study_title,
                 "BIDSVersion": "1.8.0",
@@ -537,7 +475,6 @@ class EnterpriseResearchPlatform:
             with open(bids_root / "dataset_description.json", 'w') as f:
                 json.dump(dataset_description, f, indent=2)
 
-            
             participants_data = []
             for participant_id, info in self.participant_registry.items():
                 if info["study_id"] == study_id:
@@ -552,7 +489,6 @@ class EnterpriseResearchPlatform:
                 participants_df = pd.DataFrame(participants_data)
                 participants_df.to_csv(bids_root / "participants.tsv", sep='\t', index=False)
 
-            
             for participant_id in [p for p in self.participant_registry.keys()
                                    if self.participant_registry[p]["study_id"] == study_id]:
 
@@ -564,12 +500,10 @@ class EnterpriseResearchPlatform:
                     self._generate_bids_participant_data(bids_root, participant_id,
                                                          participant_sessions)
 
-            
             readme_content = self._generate_bids_readme(study_config)
             with open(bids_root / "README", 'w') as f:
                 f.write(readme_content)
 
-            
             changes_content = f"""1.0.0 {datetime.now().strftime('%Y-%m-%d')}
   - Initial release of {study_config.study_title} dataset
   - Data collected using IRCamera Multi-Modal Physiological Sensing Platform
@@ -587,19 +521,16 @@ class EnterpriseResearchPlatform:
             return False
 
     def setup_multi_site_coordination(self, coordinator_config: MultiSiteCoordinator) -> bool:
-        
+
         try:
             self.site_coordinators[coordinator_config.coordinator_id] = coordinator_config
 
-            
             for site_id in coordinator_config.participating_sites:
                 self._setup_site_communication(site_id, coordinator_config)
 
-            
             if coordinator_config.central_database_url:
                 self._setup_central_database_sync(coordinator_config)
 
-            
             if coordinator_config.cross_site_validation:
                 self._setup_cross_site_validation(coordinator_config)
 
@@ -611,7 +542,7 @@ class EnterpriseResearchPlatform:
             return False
 
     def get_compliance_status(self, study_id: str = None) -> Dict[str, Any]:
-        
+
         try:
             compliance_report = {
                 "institution": self.config.institution_name,
@@ -619,18 +550,15 @@ class EnterpriseResearchPlatform:
                 "frameworks": {}
             }
 
-            
             for framework in self.config.compliance_frameworks:
                 compliance_report["frameworks"][framework.value] = self._check_framework_compliance(
                     framework, study_id)
 
-            
             framework_scores = [status["score"] for status in
                                 compliance_report["frameworks"].values()]
             compliance_report["overall_score"] = sum(framework_scores) / len(
                 framework_scores) if framework_scores else 0
 
-            
             if study_id:
                 if study_id in self.active_studies:
                     compliance_report["study_status"] = self._get_study_compliance_status(study_id)
@@ -648,9 +576,9 @@ class EnterpriseResearchPlatform:
 
     def export_audit_trail(self, output_file: str, start_date: datetime = None,
                            end_date: datetime = None) -> bool:
-        
+
         try:
-            
+
             filtered_entries = self.audit_trail
 
             if start_date or end_date:
@@ -665,7 +593,6 @@ class EnterpriseResearchPlatform:
 
                     filtered_entries.append(entry)
 
-            
             audit_report = {
                 "institution": self.config.institution_name,
                 "export_timestamp": datetime.utcnow().isoformat(),
@@ -678,7 +605,6 @@ class EnterpriseResearchPlatform:
                 "summary": self._generate_audit_summary(filtered_entries)
             }
 
-            
             with open(output_file, 'w') as f:
                 json.dump(audit_report, f, indent=2)
 
@@ -689,9 +615,8 @@ class EnterpriseResearchPlatform:
             logger.error(f"Audit trail export failed: {e}")
             return False
 
-    
     def _validate_study_config(self, study_config: StudyConfiguration) -> bool:
-        
+
         required_fields = ["study_id", "study_title", "protocol_version", "irb_approval_number"]
 
         for field in required_fields:
@@ -702,7 +627,7 @@ class EnterpriseResearchPlatform:
         return True
 
     def _check_study_compliance(self, study_config: StudyConfiguration) -> bool:
-        
+
         for framework in self.config.compliance_frameworks:
             if not self._validate_framework_requirements(framework, study_config):
                 logger.error(f"Study does not meet {framework.value} requirements")
@@ -712,28 +637,27 @@ class EnterpriseResearchPlatform:
 
     def _validate_framework_requirements(self, framework: ComplianceFramework,
                                          study_config: StudyConfiguration) -> bool:
-        
+
         if framework == ComplianceFramework.BIDS:
-            
+
             return bool(study_config.study_id and study_config.study_title)
 
         elif framework == ComplianceFramework.GDPR:
-            
+
             return bool(study_config.consent_form_version and study_config.data_retention_policy)
 
         elif framework == ComplianceFramework.HIPAA:
-            
+
             return bool(study_config.irb_approval_number)
 
         elif framework == ComplianceFramework.IRB:
-            
+
             return bool(study_config.irb_approval_number)
 
-        
         return True
 
     def _create_study_workspace(self, study_config: StudyConfiguration) -> str:
-        
+
         study_path = os.path.join(self.temp_dir, "studies", study_config.study_id)
 
         directories = [
@@ -747,7 +671,6 @@ class EnterpriseResearchPlatform:
         for directory in directories:
             os.makedirs(os.path.join(study_path, directory), exist_ok=True)
 
-        
         study_metadata = {
             "study_id": study_config.study_id,
             "title": study_config.study_title,
@@ -762,10 +685,9 @@ class EnterpriseResearchPlatform:
         return study_path
 
     def _initialize_bids_structure(self, study_id: str, study_path: str) -> None:
-        
+
         bids_path = os.path.join(study_path, "bids")
 
-        
         directories = [
             "code",
             "derivatives",
@@ -779,32 +701,30 @@ class EnterpriseResearchPlatform:
         logger.info(f"BIDS structure initialized for study {study_id}")
 
     def _anonymize_participant_data(self, participant_data: Dict[str, Any]) -> Dict[str, Any]:
-        
+
         anonymized = participant_data.copy()
 
-        
         identifiers_to_remove = ["name", "email", "phone", "address", "ssn", "id_number"]
 
         for identifier in identifiers_to_remove:
             if identifier in anonymized:
                 del anonymized[identifier]
 
-        
         if "date_of_birth" in anonymized:
-            
+
             try:
                 from datetime import datetime
                 dob = datetime.strptime(anonymized["date_of_birth"], "%Y-%m-%d")
                 age = (datetime.now() - dob).days // 365
                 anonymized["age_range"] = f"{(age // 10) * 10}-{((age // 10) + 1) * 10}"
                 del anonymized["date_of_birth"]
-            except:
+            except Exception:
                 pass
 
         return anonymized
 
     def _create_participant_workspace(self, study_id: str, participant_id: str) -> None:
-        
+
         participant_path = os.path.join(self.temp_dir, "studies", study_id, "data", participant_id)
 
         directories = [
@@ -818,7 +738,7 @@ class EnterpriseResearchPlatform:
             os.makedirs(os.path.join(participant_path, directory), exist_ok=True)
 
     def _validate_session_metadata(self, study_id: str, metadata: Dict[str, Any]) -> Dict[str, Any]:
-        
+
         study_config = self.active_studies[study_id]
 
         validated = {
@@ -834,7 +754,7 @@ class EnterpriseResearchPlatform:
         return validated
 
     def _create_session_workspace(self, session_id: str) -> str:
-        
+
         session_info = self.session_metadata[session_id]
         study_id = session_info["study_id"]
         participant_id = session_info["participant_id"]
@@ -848,27 +768,24 @@ class EnterpriseResearchPlatform:
         return session_path
 
     def _start_session_monitoring(self, session_id: str) -> None:
-        
+
         # Placeholder for real-time monitoring setup
         logger.info(f"Started monitoring for session {session_id}")
 
     def _assess_data_quality(self, sensor_data: Dict[str, Any],
                              study_config: StudyConfiguration) -> float:
-        
+
         quality_score = 100.0
 
-        
         expected_rate = study_config.sampling_rates.get(sensor_data.get("modality"), 1.0)
         actual_rate = sensor_data.get("sampling_rate", 0)
 
-        if actual_rate < expected_rate * 0.9:  
+        if actual_rate < expected_rate * 0.9:
             quality_score -= 20
 
-        
         if sensor_data.get("data_completeness", 100) < 95:
             quality_score -= 15
 
-        
         artifact_percentage = sensor_data.get("artifact_percentage", 0)
         if artifact_percentage > study_config.maximum_artifact_percentage:
             quality_score -= artifact_percentage * 0.5
@@ -877,10 +794,9 @@ class EnterpriseResearchPlatform:
 
     def _apply_compliance_processing(self, sensor_data: Dict[str, Any],
                                      study_config: StudyConfiguration) -> Dict[str, Any]:
-        
+
         processed_data = sensor_data.copy()
 
-        
         processed_data["compliance"] = {
             "processed_timestamp": datetime.utcnow().isoformat(),
             "framework_version": "IRCamera-Enterprise-1.0",
@@ -888,22 +804,18 @@ class EnterpriseResearchPlatform:
             "anonymization_level": "high"
         }
 
-        
         if ComplianceFramework.GDPR in self.config.compliance_frameworks:
             processed_data = self._apply_gdpr_processing(processed_data)
 
-        
         if ComplianceFramework.HIPAA in self.config.compliance_frameworks:
             processed_data = self._apply_hipaa_processing(processed_data)
 
         return processed_data
 
     def _apply_gdpr_processing(self, data: Dict[str, Any]) -> Dict[str, Any]:
-        
-        
+
         gdpr_processed = data.copy()
 
-        
         gdpr_processed["gdpr"] = {
             "processed": True,
             "anonymization_method": "hash_based",
@@ -914,11 +826,9 @@ class EnterpriseResearchPlatform:
         return gdpr_processed
 
     def _apply_hipaa_processing(self, data: Dict[str, Any]) -> Dict[str, Any]:
-        
-        
+
         hipaa_processed = data.copy()
 
-        
         hipaa_processed["hipaa"] = {
             "processed": True,
             "encryption_applied": True,
@@ -930,16 +840,16 @@ class EnterpriseResearchPlatform:
 
     def _store_sensor_data(self, session_id: str, data: Dict[str, Any],
                            quality_score: float) -> bool:
-        
+
         try:
-            
+
             return self.cloud_storage.store_data(session_id, data, quality_score)
         except Exception as e:
             logger.error(f"Data storage failed: {e}")
             return False
 
     def _send_quality_alert(self, session_id: str, quality_score: float) -> None:
-        
+
         try:
             alert_message = f"Data quality alert for session {session_id}: Score {quality_score:.1f}"
             self.notification_service.send_alert(alert_message, "quality", session_id)
@@ -947,7 +857,7 @@ class EnterpriseResearchPlatform:
             logger.error(f"Failed to send quality alert: {e}")
 
     def _generate_session_report(self, session_id: str) -> Dict[str, Any]:
-        
+
         session_info = self.session_metadata[session_id]
 
         report = {
@@ -965,7 +875,7 @@ class EnterpriseResearchPlatform:
         return report
 
     def _calculate_session_duration(self, session_id: str) -> float:
-        
+
         session_info = self.session_metadata[session_id]
 
         start_time = datetime.fromisoformat(session_info["start_time"])
@@ -976,13 +886,13 @@ class EnterpriseResearchPlatform:
         return duration
 
     def _validate_data_completeness(self, session_id: str) -> float:
-        
+
         # Placeholder for data completeness validation
-        
+
         return 95.0
 
     def _perform_final_compliance_check(self, session_id: str) -> Dict[str, bool]:
-        
+
         results = {}
 
         for framework in self.config.compliance_frameworks:
@@ -991,25 +901,22 @@ class EnterpriseResearchPlatform:
         return results
 
     def _check_session_compliance(self, session_id: str, framework: ComplianceFramework) -> bool:
-        
+
         # Placeholder for framework-specific compliance checks
-        
+
         return True
 
     def _export_session_data(self, session_id: str) -> bool:
-        
+
         try:
             session_info = self.session_metadata[session_id]
-            study_id = session_info["study_id"]
+            session_info["study_id"]
 
-            
             if ComplianceFramework.BIDS in self.config.compliance_frameworks:
                 self._export_session_bids_format(session_id)
 
-            
             self._export_session_raw_data(session_id)
 
-            
             self._export_session_analytics(session_id)
 
             return True
@@ -1019,22 +926,22 @@ class EnterpriseResearchPlatform:
             return False
 
     def _export_session_bids_format(self, session_id: str) -> None:
-        
+
         # Placeholder for BIDS export implementation
         logger.info(f"Exporting session {session_id} in BIDS format")
 
     def _export_session_raw_data(self, session_id: str) -> None:
-        
+
         # Placeholder for raw data export
         logger.info(f"Exporting raw data for session {session_id}")
 
     def _export_session_analytics(self, session_id: str) -> None:
-        
+
         # Placeholder for analytics export
         logger.info(f"Exporting analytics for session {session_id}")
 
     def _archive_session_data(self, session_id: str) -> bool:
-        
+
         try:
             return self.cloud_storage.archive_data(session_id)
         except Exception as e:
@@ -1042,7 +949,7 @@ class EnterpriseResearchPlatform:
             return False
 
     def _generate_compliance_certificate(self, session_id: str) -> None:
-        
+
         session_info = self.session_metadata[session_id]
 
         certificate = {
@@ -1055,7 +962,6 @@ class EnterpriseResearchPlatform:
             "compliance_score": 100.0
         }
 
-        
         certificate_path = os.path.join(self.temp_dir, f"compliance_certificate_{session_id}.json")
         with open(certificate_path, 'w') as f:
             json.dump(certificate, f, indent=2)
@@ -1063,7 +969,7 @@ class EnterpriseResearchPlatform:
         logger.info(f"Compliance certificate generated for {session_id}")
 
     def _add_audit_entry(self, action: str, **kwargs) -> None:
-        
+
         entry = {
             "timestamp": datetime.utcnow().isoformat(),
             "action": action,
@@ -1076,7 +982,7 @@ class EnterpriseResearchPlatform:
 
     def _check_framework_compliance(self, framework: ComplianceFramework,
                                     study_id: str = None) -> Dict[str, Any]:
-        
+
         # Placeholder for comprehensive framework compliance checking
         return {
             "framework": framework.value,
@@ -1087,7 +993,7 @@ class EnterpriseResearchPlatform:
         }
 
     def _get_study_compliance_status(self, study_id: str) -> Dict[str, Any]:
-        
+
         return {
             "study_id": study_id,
             "compliant": True,
@@ -1097,7 +1003,7 @@ class EnterpriseResearchPlatform:
         }
 
     def _generate_audit_summary(self, entries: List[Dict]) -> Dict[str, Any]:
-        
+
         if not entries:
             return {}
 
@@ -1117,29 +1023,25 @@ class EnterpriseResearchPlatform:
 
     def _generate_bids_participant_data(self, bids_root: Path, participant_id: str,
                                         session_ids: List[str]) -> None:
-        
-        
+
         participant_dir = bids_root / f"sub-{participant_id}"
         participant_dir.mkdir(exist_ok=True)
 
-        
         for session_id in session_ids:
-            session_info = self.session_metadata[session_id]
-            session_num = len(session_ids)  
+            self.session_metadata[session_id]
+            session_num = len(session_ids)
 
-            
             session_dir = participant_dir / f"ses-{session_num:02d}"
             session_dir.mkdir(exist_ok=True)
 
-            
-            modalities = ["func", "anat", "dwi", "fmap", "beh"]  
+            modalities = ["func", "anat", "dwi", "fmap", "beh"]
 
             for modality in modalities:
                 modality_dir = session_dir / modality
                 modality_dir.mkdir(exist_ok=True)
 
     def _generate_bids_readme(self, study_config: StudyConfiguration) -> str:
-        
+
         return f"""# {study_config.study_title}
 
 ## Dataset Description
@@ -1203,7 +1105,7 @@ class AWSStorageAdapter:
         return True
 
     def archive_data(self, session_id: str) -> bool:
-        
+
         return True
 
     def cleanup(self) -> None:
@@ -1219,7 +1121,7 @@ class AzureStorageAdapter:
         return True
 
     def archive_data(self, session_id: str) -> bool:
-        
+
         return True
 
     def cleanup(self) -> None:
@@ -1235,7 +1137,7 @@ class GCPStorageAdapter:
         return True
 
     def archive_data(self, session_id: str) -> bool:
-        
+
         return True
 
     def cleanup(self) -> None:
@@ -1247,11 +1149,11 @@ class InstitutionalStorageAdapter:
         self.config = config
 
     def store_data(self, session_id: str, data: Dict, quality_score: float) -> bool:
-        
+
         return True
 
     def archive_data(self, session_id: str) -> bool:
-        
+
         return True
 
     def cleanup(self) -> None:
@@ -1263,11 +1165,11 @@ class LocalStorageAdapter:
         self.config = config
 
     def store_data(self, session_id: str, data: Dict, quality_score: float) -> bool:
-        
+
         return True
 
     def archive_data(self, session_id: str) -> bool:
-        
+
         return True
 
     def cleanup(self) -> None:
