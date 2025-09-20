@@ -13,7 +13,7 @@ import com.mpdc4gsr.lib.core.R
 import com.mpdc4gsr.lib.core.common.SaveSettingUtil
 import com.mpdc4gsr.lib.core.config.DeviceConfig
 import com.mpdc4gsr.lib.core.utils.Constants.IR_OBSERVE_MODE
-import com.mpdc4gsr.lib.core.utils.Constants.IR_TC007_MODE
+
 import com.mpdc4gsr.lib.core.utils.Constants.IR_TCPLUS_MODE
 import com.mpdc4gsr.lib.core.utils.Constants.IR_TEMPERATURE_LITE
 import com.mpdc4gsr.lib.core.utils.Constants.IR_TEMPERATURE_MODE
@@ -229,50 +229,50 @@ class MenuFourNightAdapter(val context: Context) : RecyclerView.Adapter<Recycler
                 )
             }
 
-            IR_TC007_MODE -> {
-                fourBean.add(
-                    ColorBean(
-                        MenuR.drawable.selector_menu2_setting_1,
-                        context.getString(R.string.thermal_pseudo),
-                        CameraHelp.TYPE_SET_PSEUDOCOLOR,
-                    ),
-                )
-                fourBean.add(
-                    ColorBean(
-                        MenuR.drawable.selector_menu2_setting_2,
-                        context.getString(R.string.thermal_contrast),
-                        CameraHelp.TYPE_SET_ParamLevelContrast,
-                    ),
-                )
-                fourBean.add(
-                    ColorBean(
-                        MenuR.drawable.selector_menu2_setting_3,
-                        context.getString(R.string.thermal_sharpen),
-                        CameraHelp.TYPE_SET_ParamLevelDde,
-                    ),
-                )
-                fourBean.add(
-                    ColorBean(
-                        MenuR.drawable.selector_menu2_setting_6,
-                        context.getString(R.string.temp_alarm_alarm),
-                        CameraHelp.TYPE_SET_ALARM,
-                    ),
-                )
-                fourBean.add(
-                    ColorBean(
-                        MenuR.drawable.selector_menu2_setting_7,
-                        context.getString(R.string.menu_thermal_font),
-                        CameraHelp.TYPE_SET_COLOR,
-                    ),
-                )
-                fourBean.add(
-                    ColorBean(
-                        MenuR.drawable.selector_menu2_setting_5,
-                        context.getString(R.string.mirror),
-                        CameraHelp.TYPE_SET_MIRROR
-                    ),
-                )
-            }
+            // IR_TC007_MODE -> { // TC007 functionality removed
+            //     fourBean.add(
+            //         ColorBean(
+            //             MenuR.drawable.selector_menu2_setting_1,
+            //             context.getString(R.string.thermal_pseudo),
+            //             CameraHelp.TYPE_SET_PSEUDOCOLOR,
+            //         ),
+            //     )
+            //     fourBean.add(
+            //         ColorBean(
+            //             MenuR.drawable.selector_menu2_setting_2,
+            //             context.getString(R.string.thermal_contrast),
+            //             CameraHelp.TYPE_SET_ParamLevelContrast,
+            //         ),
+            //     )
+            //     fourBean.add(
+            //         ColorBean(
+            //             MenuR.drawable.selector_menu2_setting_3,
+            //             context.getString(R.string.thermal_sharpen),
+            //             CameraHelp.TYPE_SET_ParamLevelDde,
+            //         ),
+            //     )
+            //     fourBean.add(
+            //         ColorBean(
+            //             MenuR.drawable.selector_menu2_setting_6,
+            //             context.getString(R.string.temp_alarm_alarm),
+            //             CameraHelp.TYPE_SET_ALARM,
+            //         ),
+            //     )
+            //     fourBean.add(
+            //         ColorBean(
+            //             MenuR.drawable.selector_menu2_setting_7,
+            //             context.getString(R.string.menu_thermal_font),
+            //             CameraHelp.TYPE_SET_COLOR,
+            //         ),
+            //     )
+            //     fourBean.add(
+            //         ColorBean(
+            //             MenuR.drawable.selector_menu2_setting_5,
+            //             context.getString(R.string.mirror),
+            //             CameraHelp.TYPE_SET_MIRROR
+            //         ),
+            //     )
+            // }
 
             IR_OBSERVE_MODE -> {
                 fourBean.add(
