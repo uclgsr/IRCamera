@@ -35,7 +35,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="未连接"
+        tools:text="[CAMERA_STATE]Connection"
         tools:visibility="gone" />
 
     <androidx.constraintlayout.widget.Barrier

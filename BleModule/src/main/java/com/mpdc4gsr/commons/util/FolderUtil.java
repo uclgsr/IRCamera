@@ -52,10 +52,10 @@ public class FolderUtil {
     public static void initFilePath() {
         String basePath = Topdon.getApp().getExternalFilesDir("").getAbsolutePath() + fileName;
         String downPath = basePath + "Download/";
-        Log.e("bcf", fileName + "--下载路径初始化--" + downPath);
+        Log.e("bcf", fileName + "--Download[CHINESE_TEXT]--" + downPath);
         File file = new File(downPath);
         if (!file.exists()) {
-            Log.e("bcf", fileName + "---下载路径初始化创建 ");
+            Log.e("bcf", fileName + "---Download[CHINESE_TEXT]Create ");
             file.mkdirs();
         }
     }

@@ -110,7 +110,7 @@ If Copilot suggestions seem generic:
 If Copilot suggests incorrect build commands:
 
 1. Refer to the known working commands in `copilot-instructions.md`
-2. Use the VS Code tasks (Ctrl+Shift+P → "Tasks: Run Task")
+2. Use the VS Code tasks (Ctrl+Shift+P -> "Tasks: Run Task")
 3. Follow the documented workarounds for build issues
 
 ### Getting Help

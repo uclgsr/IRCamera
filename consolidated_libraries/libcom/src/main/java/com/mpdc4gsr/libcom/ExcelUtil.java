@@ -92,7 +92,7 @@ public class ExcelUtil {
                         bos.flush();
                         bos.close();
                     }
-                    Log.w("导出", UriUtils.uri2File(uri).getAbsolutePath());
+                    Log.w("[TEXT]", UriUtils.uri2File(uri).getAbsolutePath());
                     return UriUtils.uri2File(uri).getAbsolutePath();
                 } else {
                     return null;
@@ -206,7 +206,7 @@ public class ExcelUtil {
                         bos.flush();
                         bos.close();
                     }
-                    Log.w("导出", UriUtils.uri2File(uri).getAbsolutePath());
+                    Log.w("[TEXT]", UriUtils.uri2File(uri).getAbsolutePath());
                     return UriUtils.uri2File(uri).getAbsolutePath();
                 } else {
                     return null;

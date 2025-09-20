@@ -232,7 +232,7 @@ public class ImageThreadTC extends Thread {
                                 imageDst = grayData;
                                 firstTime++;
                             } catch (Throwable e) {
-                                Log.e("静态闯入异常：", e.getMessage());
+                                Log.e("Static Intrusion Error：", e.getMessage());
                             }
                         } else {
 
@@ -272,7 +272,7 @@ public class ImageThreadTC extends Thread {
             try {
                 SystemClock.sleep(20);
             } catch (Exception e) {
-                XLog.e("Image Threadrefresh异常: " + e.getMessage());
+                XLog.e("Image ThreadrefreshException: " + e.getMessage());
             }
         }
         Log.i(TAG, "ImageThread exit");

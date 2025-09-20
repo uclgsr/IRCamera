@@ -12,10 +12,10 @@ import java.util.List;
 
 public class CarPlateProvider implements LinkageProvider {
     private static final String[] ABBREVIATIONS = {
-            "京", "津", "冀", "晋", "蒙", "辽", "吉", "黑", "沪",
-            "苏", "浙", "皖", "闽", "赣", "鲁", "豫", "鄂", "湘",
-            "粤", "桂", "琼", "渝", "川", "贵", "云", "藏", "陕",
-            "甘", "青", "宁", "新"};
+            "[CHINESE_TEXT]", "[CHINESE_TEXT]", "[CHINESE_TEXT]", "[CHINESE_TEXT]", "[CHINESE_TEXT]", "[CHINESE_TEXT]", "[CHINESE_TEXT]", "[CHINESE_TEXT]", "[CHINESE_TEXT]",
+            "[CHINESE_TEXT]", "[CHINESE_TEXT]", "[CHINESE_TEXT]", "[CHINESE_TEXT]", "[CHINESE_TEXT]", "[CHINESE_TEXT]", "[CHINESE_TEXT]", "[CHINESE_TEXT]", "[CHINESE_TEXT]",
+            "[CHINESE_TEXT]", "[CHINESE_TEXT]", "[CHINESE_TEXT]", "[CHINESE_TEXT]", "[CHINESE_TEXT]", "[CHINESE_TEXT]", "[CHINESE_TEXT]", "[CHINESE_TEXT]", "[CHINESE_TEXT]",
+            "[CHINESE_TEXT]", "[CHINESE_TEXT]", "[CHINESE_TEXT]", "[CHINESE_TEXT]"};
 
     @Override
     public boolean firstLevelVisible() {
@@ -44,20 +44,20 @@ public class CarPlateProvider implements LinkageProvider {
         }
         String province = provideFirstData().get(firstIndex);
         switch (province) {
-            case "京":
+            case "[CHINESE_TEXT]":
                 for (char i = 'A'; i <= 'M'; i++) {
                     letters.add(String.valueOf(i));
                 }
                 letters.remove("I");
                 letters.add("Y");
                 break;
-            case "津":
-            case "青":
+            case "[CHINESE_TEXT]":
+            case "[CHINESE_TEXT]":
                 for (char i = 'A'; i <= 'H'; i++) {
                     letters.add(String.valueOf(i));
                 }
                 break;
-            case "冀":
+            case "[CHINESE_TEXT]":
                 for (char i = 'A'; i <= 'H'; i++) {
                     letters.add(String.valueOf(i));
                 }
@@ -66,70 +66,70 @@ public class CarPlateProvider implements LinkageProvider {
                 letters.add("S");
                 letters.add("T");
                 break;
-            case "晋":
+            case "[CHINESE_TEXT]":
                 for (char i = 'A'; i <= 'M'; i++) {
                     letters.add(String.valueOf(i));
                 }
                 letters.remove("G");
                 letters.remove("I");
                 break;
-            case "蒙":
-            case "赣":
+            case "[CHINESE_TEXT]":
+            case "[CHINESE_TEXT]":
                 for (char i = 'A'; i <= 'M'; i++) {
                     letters.add(String.valueOf(i));
                 }
                 letters.remove("I");
                 break;
-            case "辽":
-            case "甘":
+            case "[CHINESE_TEXT]":
+            case "[CHINESE_TEXT]":
                 for (char i = 'A'; i <= 'P'; i++) {
                     letters.add(String.valueOf(i));
                 }
                 letters.remove("I");
                 letters.remove("O");
                 break;
-            case "吉":
-            case "闽":
+            case "[CHINESE_TEXT]":
+            case "[CHINESE_TEXT]":
                 for (char i = 'A'; i <= 'K'; i++) {
                     letters.add(String.valueOf(i));
                 }
                 letters.remove("I");
                 break;
-            case "黑":
-            case "新":
+            case "[CHINESE_TEXT]":
+            case "[CHINESE_TEXT]":
                 for (char i = 'A'; i <= 'R'; i++) {
                     letters.add(String.valueOf(i));
                 }
                 letters.remove("I");
                 letters.remove("O");
                 break;
-            case "沪":
+            case "[CHINESE_TEXT]":
                 for (char i = 'A'; i <= 'D'; i++) {
                     letters.add(String.valueOf(i));
                 }
                 letters.add("R");
                 break;
-            case "苏":
+            case "[CHINESE_TEXT]":
                 for (char i = 'A'; i <= 'N'; i++) {
                     letters.add(String.valueOf(i));
                 }
                 letters.remove("I");
                 break;
-            case "浙":
+            case "[CHINESE_TEXT]":
                 for (char i = 'A'; i <= 'L'; i++) {
                     letters.add(String.valueOf(i));
                 }
                 letters.remove("I");
                 break;
-            case "皖":
-            case "鄂":
+            case "[CHINESE_TEXT]":
+            case "[CHINESE_TEXT]":
                 for (char i = 'A'; i <= 'S'; i++) {
                     letters.add(String.valueOf(i));
                 }
                 letters.remove("I");
                 letters.remove("O");
                 break;
-            case "鲁":
+            case "[CHINESE_TEXT]":
                 for (char i = 'A'; i <= 'V'; i++) {
                     letters.add(String.valueOf(i));
                 }
@@ -137,14 +137,14 @@ public class CarPlateProvider implements LinkageProvider {
                 letters.remove("O");
                 letters.add("Y");
                 break;
-            case "豫":
+            case "[CHINESE_TEXT]":
                 for (char i = 'A'; i <= 'U'; i++) {
                     letters.add(String.valueOf(i));
                 }
                 letters.remove("I");
                 letters.remove("O");
                 break;
-            case "湘":
+            case "[CHINESE_TEXT]":
                 for (char i = 'A'; i <= 'N'; i++) {
                     letters.add(String.valueOf(i));
                 }
@@ -152,14 +152,14 @@ public class CarPlateProvider implements LinkageProvider {
                 letters.remove("O");
                 letters.add("U");
                 break;
-            case "粤":
+            case "[CHINESE_TEXT]":
                 for (char i = 'A'; i <= 'Z'; i++) {
                     letters.add(String.valueOf(i));
                 }
                 letters.remove("I");
                 letters.remove("O");
                 break;
-            case "桂":
+            case "[CHINESE_TEXT]":
                 for (char i = 'A'; i <= 'P'; i++) {
                     letters.add(String.valueOf(i));
                 }
@@ -167,20 +167,20 @@ public class CarPlateProvider implements LinkageProvider {
                 letters.remove("O");
                 letters.add("R");
                 break;
-            case "琼":
-            case "宁":
+            case "[CHINESE_TEXT]":
+            case "[CHINESE_TEXT]":
                 for (char i = 'A'; i <= 'E'; i++) {
                     letters.add(String.valueOf(i));
                 }
                 break;
-            case "渝":
+            case "[CHINESE_TEXT]":
                 for (char i = 'A'; i <= 'D'; i++) {
                     letters.add(String.valueOf(i));
                 }
                 letters.remove("D");
                 letters.remove("E");
                 break;
-            case "川":
+            case "[CHINESE_TEXT]":
                 for (char i = 'A'; i <= 'Z'; i++) {
                     letters.add(String.valueOf(i));
                 }
@@ -188,14 +188,14 @@ public class CarPlateProvider implements LinkageProvider {
                 letters.remove("I");
                 letters.remove("O");
                 break;
-            case "贵":
-            case "藏":
+            case "[CHINESE_TEXT]":
+            case "[CHINESE_TEXT]":
                 for (char i = 'A'; i <= 'J'; i++) {
                     letters.add(String.valueOf(i));
                 }
                 letters.remove("I");
                 break;
-            case "云":
+            case "[CHINESE_TEXT]":
 
                 letters.add("A-V");
                 for (char i = 'A'; i <= 'S'; i++) {
@@ -205,7 +205,7 @@ public class CarPlateProvider implements LinkageProvider {
                 letters.remove("I");
                 letters.remove("O");
                 break;
-            case "陕":
+            case "[CHINESE_TEXT]":
                 for (char i = 'A'; i <= 'K'; i++) {
                     letters.add(String.valueOf(i));
                 }

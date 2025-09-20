@@ -36,7 +36,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/iv_icon"
         app:layout_goneMarginTop="45dp"
-        tools:text="是否删除此图片" />
+        tools:text="[TEXT]Delete[TEXT]Image" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/rl_message"
@@ -76,7 +76,7 @@
             app:layout_constraintStart_toEndOf="@id/iv_select"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_goneMarginStart="0dp"
-            tools:text="同时从手机相册中删除" />
+            tools:text="[TEXT]Hour[TEXT]Delete" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <View
