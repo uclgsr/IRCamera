@@ -16,7 +16,7 @@ import com.mpdc4gsr.lib.core.db.AppDatabase
 import com.mpdc4gsr.lib.core.db.entity.HouseReport
 import com.mpdc4gsr.lib.core.ktbase.BaseActivity
 import com.mpdc4gsr.lib.core.tools.TimeTool
-import com.mpdc4gsr.lms.sdk.weiget.TToast
+import com.mpdc4gsr.lib.core.lms.weiget.TToast
 import com.mpdc4gsr.module.thermal.ir.R
 import com.mpdc4gsr.module.thermal.ir.adapter.ReportPreviewAdapter
 import kotlinx.coroutines.Dispatchers

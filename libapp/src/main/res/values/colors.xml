@@ -29,16 +29,6 @@
     <color name="color_B3FFFFFF">#B3FFFFFF</color>
     <color name="grey">#FF808080</color>
     <color name="toastTextColor">#FFFFFFFF</color>
-    
-    <!-- Thermal module colors -->
-    <color name="black">#FF000000</color>
-    <color name="chart_bg">#FF2B2B2B</color>
-    <color name="chart_line_max">#FFFF0000</color>
-    <color name="chart_line_min">#FF0066FF</color>
-    <color name="chart_line_center">#FFFF6600</color>
-    <color name="chart_text">#FFFFFFFF</color>
-    <color name="circle_white">#FFFFFFFF</color>
-    <color name="font_third_color">#FF666666</color>
 
     <!-- Chart colors for thermal components -->
     <color name="black">#FF000000</color>

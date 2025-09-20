@@ -1,7 +1,6 @@
 package mpdc4gsr
 
 
-import android.Manifest
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -50,9 +49,8 @@ import com.mpdc4gsr.lib.core.socket.WebSocketProxy
 import com.mpdc4gsr.lib.core.tools.ConstantLanguages
 import com.mpdc4gsr.lib.core.tools.DeviceTools
 import com.mpdc4gsr.lib.core.utils.CommUtils
-import com.mpdc4gsr.lib.core.utils.PermissionUtils
 import com.mpdc4gsr.lib.core.viewmodel.VersionViewModel
-import com.mpdc4gsr.lms.sdk.LMS
+import com.mpdc4gsr.lib.core.lms.LMS
 import com.mpdc4gsr.module.thermal.ir.activity.IRThermalNightActivity
 import com.mpdc4gsr.module.thermal.ir.activity.IRThermalPlusActivity
 import com.mpdc4gsr.module.thermal.ir.fragment.IRGalleryTabFragment
@@ -67,7 +65,6 @@ import mpdc4gsr.network.NetworkClient
 import mpdc4gsr.network.WebSocketClient
 import mpdc4gsr.sensors.gsr.GSRSensorRecorder
 import mpdc4gsr.service.RecordingService
-import mpdc4gsr.controller.RecordingController
 import mpdc4gsr.supervisor.CrashSafeSupervisor
 import mpdc4gsr.utils.AppVersionUtil
 import mpdc4gsr.permissions.PermissionController

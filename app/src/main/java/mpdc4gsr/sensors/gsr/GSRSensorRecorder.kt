@@ -1012,7 +1012,7 @@ class GSRSensorRecorder(
 
 
                     connectedDevices.forEach { device ->
-                        deviceList.add("${device.getName()} (${device.getAddress()}) - Connected")
+                        deviceList.add("${device.name} (${device.address}) - Connected")
                     }
 
 
@@ -1025,7 +1025,7 @@ class GSRSensorRecorder(
                                 val deviceAddress = device.getAddress()
 
                                 val isAlreadyConnected =
-                                    connectedDevices.any { it.getAddress() == deviceAddress }
+                                    connectedDevices.any { it.address == deviceAddress }
                                 if (!isAlreadyConnected) {
                                     val deviceEntry =
                                         "${device.getName()} (${deviceAddress}) - Available"
@@ -1086,7 +1086,7 @@ class GSRSensorRecorder(
 
                     val connectedShimmerDevices = unifiedBle.getConnectedShimmerDevices()
                     val alreadyConnected =
-                        connectedShimmerDevices.any { it.getAddress() == deviceAddress }
+                        connectedShimmerDevices.any { it.address == deviceAddress }
 
                     if (alreadyConnected) {
                         Log.i(TAG, "Device $deviceAddress is already connected")

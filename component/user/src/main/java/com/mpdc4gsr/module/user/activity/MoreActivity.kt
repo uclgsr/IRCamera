@@ -23,13 +23,12 @@ import com.mpdc4gsr.lib.core.navigation.NavigationManager
 // import com.mpdc4gsr.lib.core.repository.TS004Repository
 import com.mpdc4gsr.lib.core.utils.Constants
 import com.mpdc4gsr.lib.core.viewmodel.FirmwareViewModel
-import com.mpdc4gsr.lms.sdk.weiget.TToast
+import com.mpdc4gsr.lib.core.lms.weiget.TToast
 import com.mpdc4gsr.module.user.R
 import com.mpdc4gsr.module.user.dialog.DownloadProDialog
 import com.mpdc4gsr.module.user.dialog.FirmwareInstallDialog
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import org.greenrobot.eventbus.EventBus
 import java.io.File
 import java.text.DecimalFormat
 import com.mpdc4gsr.lib.core.R as RCore

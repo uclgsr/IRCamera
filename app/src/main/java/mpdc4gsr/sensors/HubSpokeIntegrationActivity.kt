@@ -198,7 +198,7 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
 
                             runOnUiThread {
                                 binding.statusTextView.text = "GSR sensor found: ${device.name}"
-                                updateDiscoveredDevicesUI(device, device.getRssi())
+                                updateDiscoveredDevicesUI(device, device.rssi)
                             }
                         }
                     }

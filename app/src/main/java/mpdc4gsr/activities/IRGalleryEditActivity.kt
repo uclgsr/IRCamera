@@ -51,7 +51,7 @@ import com.mpdc4gsr.lib.ui.widget.seekbar.OnRangeChangedListener
 import com.mpdc4gsr.lib.ui.widget.seekbar.RangeSeekBar
 import com.mpdc4gsr.lib.core.comm.dialog.ColorPickDialog
 import com.mpdc4gsr.lib.core.comm.dialog.TempAlarmSetDialog
-import com.mpdc4gsr.lms.sdk.LMS.mContext
+import com.mpdc4gsr.lib.core.lms.LMS.mContext
 import com.mpdc4gsr.lib.core.menu.constant.FenceType
 import com.mpdc4gsr.lib.core.menu.constant.SettingType
 import com.mpdc4gsr.module.thermal.ir.event.GalleryAddEvent

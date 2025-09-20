@@ -1,11 +1,11 @@
 package com.mpdc4gsr.lib.core.utils
 
 import com.blankj.utilcode.util.Utils
-import com.mpdc4gsr.lms.sdk.UrlConstant
-import com.mpdc4gsr.lms.sdk.network.HttpProxy.Companion.instant
-import com.mpdc4gsr.lms.sdk.network.IResponseCallback
-import com.mpdc4gsr.lms.sdk.utils.LanguageUtil
-import com.mpdc4gsr.lms.sdk.xutils.http.RequestParams
+import com.mpdc4gsr.lib.core.lms.UrlConstant
+import com.mpdc4gsr.lib.core.lms.network.HttpProxy.Companion.instant
+import com.mpdc4gsr.lib.core.lms.network.IResponseCallback
+import com.mpdc4gsr.lib.core.lms.utils.LanguageUtil
+import com.mpdc4gsr.lib.core.lms.xutils.http.RequestParams
 
 object HttpHelp {
 

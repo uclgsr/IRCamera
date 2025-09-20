@@ -24,7 +24,7 @@ import com.mpdc4gsr.lib.core.socket.WebSocketProxy
 import com.mpdc4gsr.lib.core.tools.NumberTools
 import com.mpdc4gsr.lib.core.tools.UnitTools
 import com.mpdc4gsr.lib.ui.widget.MyItemDecoration
-import com.mpdc4gsr.lms.sdk.weiget.TToast
+import com.mpdc4gsr.lib.core.lms.weiget.TToast
 import com.mpdc4gsr.module.thermal.ir.R
 import com.mpdc4gsr.module.thermal.ir.adapter.ConfigEmAdapter
 import com.mpdc4gsr.module.thermal.ir.bean.DataBean

@@ -35,12 +35,11 @@ import com.mpdc4gsr.lib.core.socket.WebSocketProxy
 import com.mpdc4gsr.lib.core.tools.GlideLoader
 import com.mpdc4gsr.lib.core.utils.Constants
 import com.mpdc4gsr.lib.core.utils.NetWorkUtils
-import com.mpdc4gsr.lms.sdk.LMS
-import com.mpdc4gsr.lms.sdk.UrlConstant
-import com.mpdc4gsr.lms.sdk.bean.CommonBean
-import com.mpdc4gsr.lms.sdk.bean.FeedBackBean
-import com.mpdc4gsr.lms.sdk.feedback.activity.FeedbackActivity
-import com.mpdc4gsr.commons.util.FolderUtil
+import com.mpdc4gsr.lib.core.lms.LMS
+import com.mpdc4gsr.lib.core.lms.UrlConstant
+import com.mpdc4gsr.lib.core.lms.bean.CommonBean
+import com.mpdc4gsr.lib.core.lms.bean.FeedBackBean
+import com.mpdc4gsr.lib.core.lms.feedback.activity.FeedbackActivity
 import com.mpdc4gsr.module.user.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay

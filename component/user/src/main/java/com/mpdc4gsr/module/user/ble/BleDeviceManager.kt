@@ -104,7 +104,7 @@ class BleDeviceManager(private val context: Context) : CoroutineScope {
                         BleDeviceInfo(
                             address = device.address,
                             name = device.name,
-                            rssi = device.getRssi(),
+                            rssi = device.rssi,
                             isGsrSensor = isGsrSensorDevice(device),
                             isPaired = isConnectedBySys,
                         )

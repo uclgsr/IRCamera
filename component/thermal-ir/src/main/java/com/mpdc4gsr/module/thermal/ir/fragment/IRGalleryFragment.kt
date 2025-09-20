@@ -27,7 +27,7 @@ import com.mpdc4gsr.lib.core.repository.GalleryRepository.DirType
 import com.mpdc4gsr.lib.core.repository.TS004Repository
 import com.mpdc4gsr.lib.core.tools.FileTools.getUri
 import com.mpdc4gsr.lib.core.tools.ToastTools
-import com.mpdc4gsr.lms.sdk.weiget.TToast
+import com.mpdc4gsr.lib.core.lms.weiget.TToast
 import com.mpdc4gsr.module.thermal.ir.R
 import com.mpdc4gsr.module.thermal.ir.adapter.GalleryAdapter
 import com.mpdc4gsr.module.thermal.ir.event.GalleryAddEvent

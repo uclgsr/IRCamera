@@ -15,7 +15,7 @@ import com.blankj.utilcode.util.CollectionUtils
 
 
 import com.mpdc4gsr.lib.core.bean.HouseRepPreviewItemBean
-import com.mpdc4gsr.lms.sdk.weiget.TToast
+import com.mpdc4gsr.lib.core.lms.weiget.TToast
 import com.mpdc4gsr.module.thermal.ir.R
 
 @SuppressLint("NotifyDataSetChanged")

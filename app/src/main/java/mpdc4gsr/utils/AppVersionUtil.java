@@ -1,7 +1,7 @@
 package mpdc4gsr.utils;
 
 import static android.content.Context.DOWNLOAD_SERVICE;
-import static com.mpdc4gsr.lms.sdk.LMS.SUCCESS;
+import static com.mpdc4gsr.lib.core.lms.LMS.SUCCESS;
 
 import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
@@ -19,17 +19,16 @@ import com.elvishew.xlog.XLog;
 import com.mpdc4gsr.lib.core.common.SharedManager;
 import com.mpdc4gsr.lib.core.config.HttpConfig;
 import com.mpdc4gsr.lib.core.dialog.TipDialog;
+import com.mpdc4gsr.lib.core.lms.xutils.x;
 import com.mpdc4gsr.lib.core.utils.AppUtil;
-import com.mpdc4gsr.lms.sdk.LMS;
-import com.mpdc4gsr.lms.sdk.activity.LmsUpdateDialog;
-import com.mpdc4gsr.lms.sdk.bean.AppInfoBean;
-import com.mpdc4gsr.lms.sdk.utils.NetworkUtil;
-import com.mpdc4gsr.lms.sdk.weiget.TToast;
-import com.mpdc4gsr.lms.sdk.xutils.common.Callback;
-import com.mpdc4gsr.lms.sdk.xutils.common.task.PriorityExecutor;
-import com.mpdc4gsr.lms.sdk.xutils.http.RequestParams;
-
-import mpdc4gsr.utils.VersionTools;
+import com.mpdc4gsr.lib.core.lms.LMS;
+import com.mpdc4gsr.lib.core.lms.activity.LmsUpdateDialog;
+import com.mpdc4gsr.lib.core.lms.bean.AppInfoBean;
+import com.mpdc4gsr.lib.core.lms.utils.NetworkUtil;
+import com.mpdc4gsr.lib.core.lms.weiget.TToast;
+import com.mpdc4gsr.lib.core.lms.xutils.common.Callback;
+import com.mpdc4gsr.lib.core.lms.xutils.common.task.PriorityExecutor;
+import com.mpdc4gsr.lib.core.lms.xutils.http.RequestParams;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -240,7 +239,7 @@ public class AppVersionUtil {
         params.setExecutor(new PriorityExecutor(3, true));
         params.setUri(url);
 
-        com.mpdc4gsr.lms.sdk.xutils.x.http().get(params, new Callback.ProgressCallback<File>() {
+        x.http().get(params, new Callback.ProgressCallback<File>() {
             @Override
             public void onWaiting() {
                 XLog.e("bcf", "onWaiting");

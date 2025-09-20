@@ -25,9 +25,9 @@ import com.mpdc4gsr.lib.core.tools.GlideLoader
 import com.mpdc4gsr.lib.core.utils.NetWorkUtils
 import com.mpdc4gsr.lib.core.view.TitleView
 import com.mpdc4gsr.lib.core.comm.PDFHelp
-import com.mpdc4gsr.lms.sdk.LMS
-import com.mpdc4gsr.lms.sdk.utils.StringUtils
-import com.mpdc4gsr.lms.sdk.weiget.TToast
+import com.mpdc4gsr.lib.core.lms.LMS
+import com.mpdc4gsr.lib.core.lms.utils.StringUtils
+import com.mpdc4gsr.lib.core.lms.weiget.TToast
 import com.mpdc4gsr.module.thermal.ir.R
 import com.mpdc4gsr.module.thermal.ir.report.bean.ReportBean
 import com.mpdc4gsr.module.thermal.ir.report.view.ReportIRShowView

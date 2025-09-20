@@ -7,11 +7,11 @@ import com.google.gson.reflect.TypeToken
 import com.mpdc4gsr.lib.core.bean.base.Resp
 import com.mpdc4gsr.lib.core.bean.json.CheckVersionJson
 import com.mpdc4gsr.lib.core.bean.json.StatementJson
-import com.mpdc4gsr.lms.sdk.LMS
-import com.mpdc4gsr.lms.sdk.network.IResponseCallback
-import com.mpdc4gsr.lms.sdk.network.ResponseBean
-import com.mpdc4gsr.lms.sdk.utils.StringUtils
-import com.mpdc4gsr.lms.sdk.weiget.TToast
+import com.mpdc4gsr.lib.core.lms.LMS
+import com.mpdc4gsr.lib.core.lms.network.IResponseCallback
+import com.mpdc4gsr.lib.core.lms.network.ResponseBean
+import com.mpdc4gsr.lib.core.lms.utils.StringUtils
+import com.mpdc4gsr.lib.core.lms.weiget.TToast
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.util.concurrent.CountDownLatch

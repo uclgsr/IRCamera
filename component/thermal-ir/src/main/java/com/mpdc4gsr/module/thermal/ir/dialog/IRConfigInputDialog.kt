@@ -11,7 +11,7 @@ import android.widget.TextView
 import androidx.core.view.isVisible
 import com.mpdc4gsr.lib.core.tools.UnitTools
 import com.mpdc4gsr.lib.core.utils.ScreenUtil
-import com.mpdc4gsr.lms.sdk.weiget.TToast
+import com.mpdc4gsr.lib.core.lms.weiget.TToast
 import com.mpdc4gsr.module.thermal.ir.R
 
 
