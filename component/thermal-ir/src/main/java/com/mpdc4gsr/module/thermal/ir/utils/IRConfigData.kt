@@ -4,7 +4,6 @@ import android.content.Context
 import com.mpdc4gsr.lib.core.R as LibcoreR
 
 
-
 data class IRConfigData(val name: String, val value: String) {
     companion object {
         fun irConfigData(context: Context): ArrayList<IRConfigData> =

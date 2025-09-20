@@ -20,7 +20,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
     private static CrashHandler crashHandler = new CrashHandler();
     private Thread.UncaughtExceptionHandler mDefaultHandler;
     private Context mContext;
-    
+
     private File logFile;
 
     private CrashHandler() {
@@ -123,7 +123,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
         pw.print("versionName : ");
         pw.println(pi.versionName);
         try {
-            
+
             Field[] Fields = Build.class.getDeclaredFields();
             for (Field field : Fields) {
                 field.setAccessible(true);

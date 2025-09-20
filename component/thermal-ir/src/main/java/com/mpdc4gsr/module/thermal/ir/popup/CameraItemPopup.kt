@@ -18,7 +18,6 @@ import com.mpdc4gsr.module.thermal.ir.R
 import com.mpdc4gsr.module.thermal.ir.databinding.PopCameraItemBinding
 
 
-
 @SuppressLint("SetTextI18n")
 class CameraItemPopup(val context: Context, private val saveSetBean: SaveSettingBean) :
     PopupWindow(), View.OnClickListener {
@@ -97,7 +96,7 @@ class CameraItemPopup(val context: Context, private val saveSetBean: SaveSetting
                     binding.ivDelay.setImageLevel(saveSetBean.delayCaptureSecond)
                 }
 
-            binding.clAuto -> { 
+            binding.clAuto -> {
                 saveSetBean.isAutoShutter = !saveSetBean.isAutoShutter
                 binding.ivAuto.isSelected = saveSetBean.isAutoShutter
                 if (SharedManager.isTipShutter && !saveSetBean.isAutoShutter) {

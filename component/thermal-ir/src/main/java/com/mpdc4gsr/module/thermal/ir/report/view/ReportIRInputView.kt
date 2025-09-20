@@ -18,10 +18,10 @@ import com.mpdc4gsr.lib.core.R as LibR
 
 class ReportIRInputView : LinearLayout {
     companion object {
-        private const val TYPE_FULL = 0 
-        private const val TYPE_POINT = 1 
-        private const val TYPE_LINE = 2 
-        private const val TYPE_RECT = 3 
+        private const val TYPE_FULL = 0
+        private const val TYPE_POINT = 1
+        private const val TYPE_LINE = 2
+        private const val TYPE_RECT = 3
     }
 
     private lateinit var clTitle: View

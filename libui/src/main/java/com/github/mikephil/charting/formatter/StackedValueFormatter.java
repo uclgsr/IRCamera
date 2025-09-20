@@ -38,7 +38,7 @@ public class StackedValueFormatter extends ValueFormatter {
 
                     return mFormat.format(entry.getY()) + mSuffix;
                 } else {
-                    return ""; 
+                    return "";
                 }
             }
         }

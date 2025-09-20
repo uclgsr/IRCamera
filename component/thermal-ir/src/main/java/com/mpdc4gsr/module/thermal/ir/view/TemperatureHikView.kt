@@ -22,7 +22,6 @@ import com.infisense.usbir.utils.TempDrawHelper.Companion.correct
 import com.infisense.usbir.utils.TempUtil
 
 
-
 class TemperatureHikView : TemperatureBaseView {
 
     @Volatile
@@ -56,7 +55,7 @@ class TemperatureHikView : TemperatureBaseView {
     fun addSourcePoint(point: Point) {
         if (xScale > 0 && yScale > 0) {
             synchronized(this) {
-                if (pointList.size == maxCount) { 
+                if (pointList.size == maxCount) {
                     pointList.removeAt(0)
                 }
                 pointList.add(Point((point.x * xScale).toInt(), (point.y * yScale).toInt()))
@@ -72,7 +71,7 @@ class TemperatureHikView : TemperatureBaseView {
             val start = Point((line.start.x * xScale).toInt(), (line.start.y * yScale).toInt())
             val end = Point((line.end.x * xScale).toInt(), (line.end.y * yScale).toInt())
             synchronized(this) {
-                if (lineList.size == maxCount) { 
+                if (lineList.size == maxCount) {
                     lineList.removeAt(0)
                 }
                 lineList.add(Line(start, end))
@@ -90,7 +89,7 @@ class TemperatureHikView : TemperatureBaseView {
             val top = (rect.top * yScale).toInt()
             val bottom = (rect.bottom * yScale).toInt()
             synchronized(this) {
-                if (rectList.size == maxCount) { 
+                if (rectList.size == maxCount) {
                     rectList.removeAt(0)
                 }
                 rectList.add(Rect(left, top, right, bottom))

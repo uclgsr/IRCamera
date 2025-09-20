@@ -1,5 +1,3 @@
-
-
 import sys
 import logging
 from typing import Any
@@ -19,6 +17,7 @@ except ImportError:
         def __getattr__(self, name):
             return "default"
 
+
     config = MockConfig()
 
 try:
@@ -28,24 +27,23 @@ try:
 except ImportError:
     GUI_AVAILABLE = False
 
+
     # Mock classes for headless mode
     class QObject:
         pass
+
 
     def pyqtSignal(*args, **kwargs):
         return None
 
 
 class LogHandler(QObject):
-
     log_message = pyqtSignal(str, str, str)
 
     def __init__(self):
-
         super().__init__()
 
     def write(self, record) -> Any:
-
         level = record["level"].name
         message = record["message"]
         timestamp = record["time"].strftime("%Y-%m-%d %H:%M:%S")
@@ -54,7 +52,6 @@ class LogHandler(QObject):
 
 
 def setup_logging() -> LogHandler:
-
     logger.remove()
 
     log_level = config.get("logging.level", "INFO")
@@ -129,14 +126,11 @@ def setup_logging() -> LogHandler:
 
 
 def get_app_icon() -> Any:
-
     return None
 
 
 def apply_theme(app: Any, theme_name: str = "default") -> Any:
-
     if theme_name == "dark":
-
         dark_style = """
         QMainWindow {
             background-color: #2d2d2d;
@@ -257,7 +251,6 @@ def apply_theme(app: Any, theme_name: str = "default") -> Any:
 
 
 def format_file_size(size_bytes: int) -> str:
-
     if size_bytes == 0:
         return "0 B"
 
@@ -270,7 +263,6 @@ def format_file_size(size_bytes: int) -> str:
 
 
 def format_duration(seconds: float) -> str:
-
     total_seconds = int(seconds)
     hours = total_seconds // 3600
     minutes = (total_seconds % 3600) // 60
@@ -283,7 +275,6 @@ def format_duration(seconds: float) -> str:
 
 
 def get_status_color(status: str) -> str:
-
     status = status.lower()
 
     if status in ["connected", "ok", "active", "recording"]:
@@ -297,7 +288,6 @@ def get_status_color(status: str) -> str:
 
 
 def validate_session_name(name: str) -> tuple[bool, str]:
-
     if not name or not name.strip():
         return True, ""
 
@@ -315,7 +305,6 @@ def validate_session_name(name: str) -> tuple[bool, str]:
 
 
 def confirm_action(parent, title: str, message: str) -> bool:
-
     from PyQt6.QtWidgets import QMessageBox
 
     reply = QMessageBox.question(

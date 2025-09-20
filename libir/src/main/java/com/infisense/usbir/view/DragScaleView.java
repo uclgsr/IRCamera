@@ -88,34 +88,34 @@ public class DragScaleView extends FrameLayout implements View.OnTouchListener {
                 int dx = (int) event.getRawX() - lastX;
                 int dy = (int) event.getRawY() - lastY;
                 switch (dragDirection) {
-                    case LEFT: 
+                    case LEFT:
                         left(v, dx);
                         break;
-                    case RIGHT: 
+                    case RIGHT:
                         right(v, dx);
                         break;
-                    case BOTTOM: 
+                    case BOTTOM:
                         bottom(v, dy);
                         break;
-                    case TOP: 
+                    case TOP:
                         top(v, dy);
                         break;
-                    case CENTER: 
+                    case CENTER:
                         center(v, dx, dy);
                         break;
-                    case LEFT_BOTTOM: 
+                    case LEFT_BOTTOM:
                         left(v, dx);
                         bottom(v, dy);
                         break;
-                    case LEFT_TOP: 
+                    case LEFT_TOP:
                         left(v, dx);
                         top(v, dy);
                         break;
-                    case RIGHT_BOTTOM: 
+                    case RIGHT_BOTTOM:
                         right(v, dx);
                         bottom(v, dy);
                         break;
-                    case RIGHT_TOP: 
+                    case RIGHT_TOP:
                         right(v, dx);
                         top(v, dy);
                         break;

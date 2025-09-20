@@ -79,8 +79,6 @@ class IRImageHelp {
                     if (temperature0 >= customMinTemp && temperature0 <= customMaxTemp) {
 
 
-                        
-
                         val intensity =
                             ((temperature0 - customMinTemp) / (customMaxTemp - customMinTemp) * 255).toInt()
                                 .coerceIn(0, 255)
@@ -127,7 +125,7 @@ class IRImageHelp {
             var j = 0
             val imageDstLength: Int = imageWidth * imageHeight * 4
             val biaochiMax: Float = max
-            val biaochiMin: Float = min 
+            val biaochiMin: Float = min
             val startTimeAll = System.currentTimeMillis()
 
             var index = 0

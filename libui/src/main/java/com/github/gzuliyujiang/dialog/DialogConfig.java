@@ -1,5 +1,3 @@
-
-
 package com.github.gzuliyujiang.dialog;
 
 public final class DialogConfig {

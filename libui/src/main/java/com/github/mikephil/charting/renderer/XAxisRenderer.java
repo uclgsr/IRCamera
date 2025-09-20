@@ -138,7 +138,7 @@ public class XAxisRenderer extends AxisRenderer {
             pointF.y = 0.0f;
             drawLabels(c, mViewPortHandler.contentBottom() - yoffset - mXAxis.mLabelRotatedHeight, pointF);
 
-        } else { 
+        } else {
             pointF.x = 0.5f;
             pointF.y = 1.0f;
             drawLabels(c, mViewPortHandler.contentTop() - yoffset, pointF);

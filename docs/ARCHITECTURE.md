@@ -2,7 +2,9 @@
 
 ## System Overview
 
-The IRCamera Multi-Modal Thermal Sensing Platform implements a sophisticated **Hub-and-Spoke architecture** designed for distributed multi-modal physiological sensing. This document provides comprehensive technical details about the system design, component interactions, and architectural decisions.
+The IRCamera Multi-Modal Thermal Sensing Platform implements a sophisticated **Hub-and-Spoke architecture** designed for
+distributed multi-modal physiological sensing. This document provides comprehensive technical details about the system
+design, component interactions, and architectural decisions.
 
 ## High-Level Architecture
 
@@ -127,28 +129,31 @@ graph TB
 ### Key Components
 
 #### Device Manager
+
 - **Purpose**: Central registry for all discovered and connected devices
-- **Responsibilities**: 
-  - Device discovery coordination
-  - Status monitoring and health checks
-  - Capability tracking and validation
-  - Connection lifecycle management
+- **Responsibilities**:
+    - Device discovery coordination
+    - Status monitoring and health checks
+    - Capability tracking and validation
+    - Connection lifecycle management
 
 #### Session Manager
+
 - **Purpose**: Complete session lifecycle control from creation to finalization
 - **Responsibilities**:
-  - Session creation and metadata management
-  - Synchronized recording start/stop coordination
-  - Device acknowledgment and error handling
-  - Session finalization and data validation
+    - Session creation and metadata management
+    - Synchronized recording start/stop coordination
+    - Device acknowledgment and error handling
+    - Session finalization and data validation
 
 #### Communication Service
+
 - **Purpose**: Reliable message exchange with Android sensor nodes
 - **Responsibilities**:
-  - TCP server management
-  - JSON message serialization/deserialization
-  - Command routing and response handling
-  - Connection health monitoring
+    - TCP server management
+    - JSON message serialization/deserialization
+    - Command routing and response handling
+    - Connection health monitoring
 
 ## Android Sensor Node Architecture
 
@@ -216,13 +221,15 @@ graph TB
 ### Sensor Integration Details
 
 #### Thermal Camera Integration
+
 - **Hardware**: Topdon TC001 USB thermal camera
 - **Interface**: USB OTG connection with custom driver
 - **Capabilities**: 256x192 resolution, 10 FPS capture rate
 - **Processing**: Real-time temperature matrix generation
 - **Fallback**: Simulation mode when hardware unavailable
 
-#### GSR Sensor Integration  
+#### GSR Sensor Integration
+
 - **Hardware**: Shimmer3 GSR+ device via Bluetooth Low Energy
 - **Protocol**: Custom BLE communication protocol
 - **Sampling**: 128 Hz continuous data streaming
@@ -230,6 +237,7 @@ graph TB
 - **Fallback**: Simulation mode with synthetic data
 
 #### RGB Camera Integration
+
 - **Framework**: Android CameraX API for modern camera handling
 - **Capabilities**: 4K@60fps recording with concurrent frame capture
 - **Dual Output**: Video files (.mp4) + individual frames for analysis
@@ -288,6 +296,7 @@ graph TB
 ### Message Flow Examples
 
 #### Session Start Sequence
+
 ```mermaid
 sequenceDiagram
     participant Hub as PC Hub
@@ -375,6 +384,7 @@ graph TB
 ### Data Format Specifications
 
 #### Session Directory Structure
+
 ```
 sessions/
 +-- session_YYYY-MM-DD_HH-MM-SS/           # Session timestamp
@@ -396,6 +406,7 @@ sessions/
 #### Data Format Examples
 
 **Thermal Data CSV**:
+
 ```csv
 timestamp,frame_id,width,height,min_temp,max_temp,avg_temp,temperature_matrix
 1641234567123,1,256,192,18.5,37.2,24.8,"[[18.5,18.7,...],[19.2,19.4,...]]"
@@ -403,6 +414,7 @@ timestamp,frame_id,width,height,min_temp,max_temp,avg_temp,temperature_matrix
 ```
 
 **GSR Data CSV**:
+
 ```csv
 timestamp,conductance,resistance,ppg_value,signal_quality
 1641234567123,2.45,0.408,1024.3,good
@@ -471,30 +483,35 @@ graph TB
 #### Core Libraries
 
 **libir - Infrared Processing Library**
+
 - Thermal camera hardware abstraction
 - Temperature data processing and calibration
 - Image format conversion and enhancement
 - Native code integration for performance
 
 **libcom - Communication Library** (`consolidated_libraries/libcom/`)
+
 - Cross-platform networking implementation
 - JSON protocol handling
 - mDNS service discovery
 - TCP connection management
 
 **libapp - Application Framework**
+
 - Android application lifecycle management
 - Configuration and settings persistence
 - Resource management and optimization
 - Cross-component integration
 
 **libui - User Interface Library**
+
 - Custom Android UI components
 - Material Design implementation
 - Real-time data visualization widgets
 - Responsive layout management
 
 **libmatrix - Matrix Operations Library** (`consolidated_libraries/libmatrix/`)
+
 - High-performance matrix operations
 - Image processing algorithms
 - Mathematical computation utilities
@@ -555,6 +572,7 @@ graph TB
 ### Performance Optimization Strategy
 
 #### Multi-threading Model
+
 ```mermaid
 graph TB
     subgraph "PC Controller Threading"
@@ -582,12 +600,14 @@ graph TB
 ```
 
 #### Memory Management
+
 - **Object Pooling**: Reuse of frequently allocated objects
 - **Streaming Processing**: Process data in chunks to minimize memory footprint
 - **Garbage Collection Optimization**: Minimize allocation in performance-critical paths
 - **Native Code Integration**: Use native code for computationally intensive operations
 
 #### Network Optimization
+
 - **Connection Pooling**: Reuse TCP connections for multiple messages
 - **Message Batching**: Combine multiple small messages into larger packets
 - **Compression**: Optional data compression for large transfers
@@ -688,18 +708,21 @@ graph TB
 ## Future Architecture Considerations
 
 ### Scalability Enhancements
+
 - **Cloud Integration**: AWS/Azure integration for large-scale data processing
 - **Container Deployment**: Docker containerization for easy deployment
 - **Microservices**: Breaking monolithic components into microservices
 - **Load Balancing**: Support for multiple PC Controller hubs
 
 ### Technology Evolution
+
 - **5G Connectivity**: Enhanced mobile connectivity for real-time streaming
 - **Edge Computing**: On-device AI processing for real-time analysis
 - **WebRTC**: Browser-based device connectivity
 - **GraphQL**: More flexible API layer for data queries
 
 ### Security Enhancements
+
 - **Zero Trust Architecture**: Comprehensive security model
 - **End-to-End Encryption**: Full data encryption pipeline
 - **Identity Management**: Centralized authentication system

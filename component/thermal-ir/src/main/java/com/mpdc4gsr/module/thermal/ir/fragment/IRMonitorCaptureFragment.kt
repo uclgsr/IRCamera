@@ -17,7 +17,7 @@ import com.mpdc4gsr.module.thermal.ir.R
 import com.mpdc4gsr.module.thermal.ir.activity.IRMonitorActivity
 
 class IRMonitorCaptureFragment : BaseFragment() {
-    
+
     private var isTC007 = false
 
     private lateinit var animationView: LottieAnimationView

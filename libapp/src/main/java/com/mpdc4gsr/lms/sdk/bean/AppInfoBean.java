@@ -10,6 +10,7 @@ public class AppInfoBean {
     public String downloadUrl = "";
     public String description = "";
     public boolean forceUpdate = false;
-    
-    public AppInfoBean() {}
+
+    public AppInfoBean() {
+    }
 }

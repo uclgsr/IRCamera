@@ -30,8 +30,6 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
 
-
-
 class ReportCreateSecondActivity : BaseActivity(), View.OnClickListener {
 
     private val tvAddImage: TextView by lazy { findViewById(R.id.tv_add_image) }
@@ -174,7 +172,7 @@ class ReportCreateSecondActivity : BaseActivity(), View.OnClickListener {
 
     override fun onClick(v: View?) {
         when (v) {
-            tvAddImage -> { 
+            tvAddImage -> {
                 if (reportIRList.size >= 9) {
                     ToastUtils.showShort(R.string.album_report_max_image_tips)
                     return
@@ -199,7 +197,7 @@ class ReportCreateSecondActivity : BaseActivity(), View.OnClickListener {
                 }
             }
 
-            tvPreview -> { 
+            tvPreview -> {
                 val appLanguage = ConstantLanguages.ENGLISH
                 val sdkVersion = "1.2.8_23050619"
                 val reportInfoBean: ReportInfoBean? =
@@ -256,7 +254,7 @@ class ReportCreateSecondActivity : BaseActivity(), View.OnClickListener {
         return ReportIRBean("", filePath, full, pointList, lienList, rectList)
     }
 
-    
+
     private fun buildReportTempBeanList(type: Int): ArrayList<ReportTempBean> {
         val size =
             when (type) {
@@ -268,7 +266,7 @@ class ReportCreateSecondActivity : BaseActivity(), View.OnClickListener {
         for (i in 0 until size) {
             val reportTempView =
                 when (type) {
-                    1 -> { 
+                    1 -> {
                         when (i) {
                             0 -> reportTempViewPoint1
                             1 -> reportTempViewPoint2
@@ -278,7 +276,7 @@ class ReportCreateSecondActivity : BaseActivity(), View.OnClickListener {
                         }
                     }
 
-                    2 -> { 
+                    2 -> {
                         when (i) {
                             0 -> reportTempViewLine1
                             1 -> reportTempViewLine2
@@ -288,7 +286,7 @@ class ReportCreateSecondActivity : BaseActivity(), View.OnClickListener {
                         }
                     }
 
-                    else -> { 
+                    else -> {
                         when (i) {
                             0 -> reportTempViewRect1
                             1 -> reportTempViewRect2
@@ -297,7 +295,7 @@ class ReportCreateSecondActivity : BaseActivity(), View.OnClickListener {
                     }
                 }
             val reportTempBean =
-                if (type == 1) { 
+                if (type == 1) {
                     ReportTempBean(
                         if ((reportTempView as? ReportIRInputView)?.getMaxInput()
                                 ?.isNotEmpty() == true

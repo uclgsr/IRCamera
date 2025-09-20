@@ -19,7 +19,7 @@ class NetworkDiscoveryService(private val context: Context) {
         private const val SERVICE_TYPE_PC_CONTROLLER = "_topdon-pc._tcp"
         private const val SERVICE_TYPE_THERMAL_CAMERA = "_topdon-thermal._tcp"
         private const val SERVICE_NAME_PREFIX = "TOPDON-"
-        private const val DISCOVERY_TIMEOUT_MS = 30000L 
+        private const val DISCOVERY_TIMEOUT_MS = 30000L
     }
 
     private val nsdManager: NsdManager by lazy {

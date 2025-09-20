@@ -59,7 +59,7 @@ public class IRUVCDual {
     private CommonParams.GainMode gainMode = CommonParams.GainMode.GAIN_MODE_HIGH_LOW;
     private short[] nuc_table_high = new short[8192];
     private short[] nuc_table_low = new short[8192];
-    private boolean isGetNucFromFlash; 
+    private boolean isGetNucFromFlash;
     private byte[] priv_high = new byte[1201];
     private byte[] priv_low = new byte[1201];
     private short[] kt_high = new short[1201];
@@ -138,15 +138,15 @@ public class IRUVCDual {
             }
         });
 
-        gain_switch_param.above_pixel_prop = 0.1f;    
-        gain_switch_param.above_temp_data = (int) ((130 + 273.15) * 16 * 4); 
-        gain_switch_param.below_pixel_prop = 0.95f;   
+        gain_switch_param.above_pixel_prop = 0.1f;
+        gain_switch_param.above_temp_data = (int) ((130 + 273.15) * 16 * 4);
+        gain_switch_param.below_pixel_prop = 0.95f;
         gain_switch_param.below_temp_data = (int) ((110 + 273.15) * 16 * 4);
-        auto_gain_switch_info.switch_frame_cnt = 5 * 15; 
+        auto_gain_switch_info.switch_frame_cnt = 5 * 15;
         auto_gain_switch_info.waiting_frame_cnt = 7 * 15;
 
-        int low_gain_over_temp_data = (int) ((550 + 273.15) * 16 * 4); 
-        int high_gain_over_temp_data = (int) ((100 + 273.15) * 16 * 4); 
+        int low_gain_over_temp_data = (int) ((550 + 273.15) * 16 * 4);
+        int high_gain_over_temp_data = (int) ((100 + 273.15) * 16 * 4);
         float pixel_above_prop = 0.02f;
         int switch_frame_cnt = 7 * 15;
         int close_frame_cnt = 10 * 15;
@@ -594,7 +594,7 @@ public class IRUVCDual {
         if (mPid == 0x5830 || mPid == 0x5840) {
             initIRCMD(previewList);
 
-            uvcCamera.setDefaultBandwidth(1.0f);       
+            uvcCamera.setDefaultBandwidth(1.0f);
             uvcCamera.setDefaultPreviewMinFps(1);
             uvcCamera.setDefaultPreviewMaxFps(mFps);
         } else {
@@ -602,7 +602,7 @@ public class IRUVCDual {
 
             uvcCamera.setDefaultPreviewMode(CommonParams.FRAMEFORMATType.FRAME_FORMAT_MJPEG);
 
-            uvcCamera.setDefaultBandwidth(0.6f);       
+            uvcCamera.setDefaultBandwidth(0.6f);
             uvcCamera.setDefaultPreviewMinFps(1);
             uvcCamera.setDefaultPreviewMaxFps(mFps);
         }

@@ -2,7 +2,8 @@
 
 # IRCamera Multi-Modal Thermal Sensing Platform
 
-A Hub-and-Spoke architecture platform for multi-modal physiological sensing with thermal imaging, GSR, and RGB data collection.
+A Hub-and-Spoke architecture platform for multi-modal physiological sensing with thermal imaging, GSR, and RGB data
+collection.
 
 ## GitHub Copilot Support
 
@@ -13,6 +14,7 @@ This repository is fully configured for GitHub Copilot development assistance:
 - **Ready-to-use Configurations**: VS Code settings, debug configurations, and development tasks included
 
 **Quick Start with Copilot:**
+
 ```bash
 git clone https://github.com/uclgsr/IRCamera.git
 cd IRCamera
@@ -24,15 +26,16 @@ For detailed setup instructions, see [COPILOT_SETUP.md](COPILOT_SETUP.md).
 ## Architecture
 
 - **Hub (PC Controller)**: Python-based central coordinator with PyQt6 GUI
-- **Spoke (Android Sensor Node)**: Kotlin-based mobile sensor nodes  
+- **Spoke (Android Sensor Node)**: Kotlin-based mobile sensor nodes
 - **Communication**: JSON-based TCP with mDNS discovery
 - **Purpose**: Scientific data acquisition and machine learning analysis
 
 ### Simplified Structure (Updated 2024)
 
 This project has been significantly simplified for better maintainability:
+
 - **PC Controller**: Reduced from 2000+ lines to 250 lines (87% reduction)
-- **Library Modules**: Consolidated from 6 to 3 libraries (50% reduction)  
+- **Library Modules**: Consolidated from 6 to 3 libraries (50% reduction)
 - **Build System**: Reduced from 18 to 11 gradle files (39% reduction)
 
 See [SIMPLIFIED_ARCHITECTURE.md](SIMPLIFIED_ARCHITECTURE.md) for complete details.
@@ -50,12 +53,15 @@ See [SIMPLIFIED_ARCHITECTURE.md](SIMPLIFIED_ARCHITECTURE.md) for complete detail
 ## Key Features
 
 ### Advanced Camera Capabilities
-- **Samsung Stage3/Level3 RAW DNG Recording**: Direct access to Samsung's image processing pipeline for maximum raw data preservation
+
+- **Samsung Stage3/Level3 RAW DNG Recording**: Direct access to Samsung's image processing pipeline for maximum raw data
+  preservation
 - **Multi-Modal Synchronization**: Synchronized RGB, thermal, and GSR data collection
 - **Scientific Data Quality**: 12-bit RAW sensor data with minimal processing interference
 - **Flexible Processing**: Toggle between Standard and Samsung Stage3/Level3 processing modes
 
-### Hub-and-Spoke Architecture  
+### Hub-and-Spoke Architecture
+
 - **PC Controller Hub**: Central coordination and data aggregation
 - **Android Sensor Nodes**: Mobile data collection points
 - **TCP/mDNS Communication**: Automatic discovery and reliable data streaming

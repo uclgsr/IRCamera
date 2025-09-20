@@ -74,7 +74,7 @@ class CameraPreView :
         mCameraHandler?.removeCallbacksAndMessages(null)
     }
 
-    private var startX = 0f 
+    private var startX = 0f
     private var startY = 0f
     private var moveX = 0f
     private var moveY = 0f
@@ -82,7 +82,7 @@ class CameraPreView :
     private var parentViewH = 0f
     private var isScale = false
     private var scale = 1f
-    private var scaleW = 0f 
+    private var scaleW = 0f
     private var scaleH = 0f
 
     private lateinit var lis: ScaleGestureDetector
@@ -129,7 +129,7 @@ class CameraPreView :
             }
 
             MotionEvent.ACTION_UP -> {
-                isScale = false 
+                isScale = false
                 val startX = viewX
                 val startY = viewY
 
@@ -190,40 +190,39 @@ class CameraPreView :
     }
 
 
-    
     private val REQUEST_CAMERA_CODE = 0x100
 
-    
+
     private var mImageView: ImageView? = null
 
-    
+
     private lateinit var mCameraId: String
 
-    
+
     private var mCaptureSize: Size? = null
 
-    
+
     private var mImageReader: ImageReader? = null
 
-    
+
     private var mCameraHandler: Handler? = null
 
-    
+
     private var mCameraDevice: CameraDevice? = null
 
-    
+
     private var mPreviewSize: Size? = null
 
-    
+
     private lateinit var mCaptureBuilder: CaptureRequest.Builder
 
-    
+
     private var mCameraCaptureSession: CameraCaptureSession? = null
 
-    
+
     private var mCameraManager: CameraManager? = null
 
-    
+
     private val mStateCallback: CameraDevice.StateCallback =
         object : CameraDevice.StateCallback() {
             override fun onOpened(

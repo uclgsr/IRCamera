@@ -15,10 +15,10 @@ import java.util.concurrent.TimeUnit
 object DownloadTool {
     private fun getOKHttpClient(): OkHttpClient =
         OkHttpClient.Builder()
-            .retryOnConnectionFailure(false) 
-            .connectTimeout(10, TimeUnit.SECONDS) 
-            .readTimeout(10, TimeUnit.SECONDS) 
-            .writeTimeout(10, TimeUnit.SECONDS) 
+            .retryOnConnectionFailure(false)
+            .connectTimeout(10, TimeUnit.SECONDS)
+            .readTimeout(10, TimeUnit.SECONDS)
+            .writeTimeout(10, TimeUnit.SECONDS)
             .build()
 
     private fun getService(): DownloadApiService =

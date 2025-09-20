@@ -3,7 +3,7 @@ package com.mpdc4gsr.module.thermal.viewmodel
 import com.mpdc4gsr.lib.core.ktbase.BaseViewModel
 
 class ThermalViewModel : BaseViewModel() {
-    
+
     fun yuvArea(
         yuv: ByteArray,
         temp: FloatArray,

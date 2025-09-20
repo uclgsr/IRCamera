@@ -26,7 +26,7 @@ data class CustomPseudoBean(
     var customRecommendIndex: Int = 0,
     var isUseGray: Boolean = true,
 ) : Parcelable {
-    
+
     companion object {
         fun loadFromShared(isTC007: Boolean = false): CustomPseudoBean {
             val json = if (isTC007) SharedManager.getTC0007CustomPseudo() else SharedManager.getCustomPseudo()

@@ -1,5 +1,3 @@
-
-
 import h5py
 import json
 import numpy as np
@@ -16,7 +14,6 @@ from typing import Any, Dict, List, Optional, Tuple
 
 @dataclass
 class DataStream:
-
     device_id: str
     stream_type: str
     sample_rate: float
@@ -30,7 +27,6 @@ class DataStream:
 
 @dataclass
 class SyncEvent:
-
     timestamp_ns: int
     event_type: str
     source_device: str
@@ -39,7 +35,6 @@ class SyncEvent:
 
 @dataclass
 class AggregationStats:
-
     total_devices: int = 0
     active_streams: int = 0
     data_rate_mbps: float = 0.0
@@ -355,7 +350,6 @@ class DataAggregationEngine:
         total_samples = sum(stream.total_samples for stream in self.streams.values())
         duration = current_time - self.start_time
         if duration > 0:
-
             total_bytes = total_samples * 1024
             self.stats.data_rate_mbps = (total_bytes / duration) / (1024 * 1024)
 
@@ -483,7 +477,6 @@ class DataAggregationEngine:
                         export_data.append(row)
 
                 if export_data:
-
                     current_size = dataset.shape[0]
                     new_size = current_size + len(export_data)
                     dataset.resize((new_size, 4))
@@ -564,7 +557,6 @@ class DataAggregationEngine:
 def calculate_temporal_alignment(
         sync_events: List[SyncEvent], tolerance_ms: float = 5.0
 ) -> Dict[str, float]:
-
     device_offsets = {}
 
     if not sync_events:
@@ -599,7 +591,6 @@ def calculate_temporal_alignment(
 def validate_data_synchronization(
         streams: Dict[str, DataStream], tolerance_ms: float = 5.0
 ) -> Dict[str, Any]:
-
     report = {
         "total_streams": len(streams),
         "synchronized_streams": 0,

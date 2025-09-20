@@ -22,7 +22,7 @@ public class XAxis extends AxisBase {
     public XAxis() {
         super();
 
-        mYOffset = Utils.convertDpToPixel(4.f); 
+        mYOffset = Utils.convertDpToPixel(4.f);
     }
 
     public XAxisPosition getPosition() {

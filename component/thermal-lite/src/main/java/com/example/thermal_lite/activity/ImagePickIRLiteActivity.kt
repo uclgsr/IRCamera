@@ -6,7 +6,6 @@ import com.mpdc4gsr.lib.core.ktbase.BasePickImgActivity
 import com.mpdc4gsr.module.thermal.ir.R
 
 
-
 class ImagePickIRLiteActivity : BasePickImgActivity() {
     var irFragment: IRMonitorLiteFragment? = null
 

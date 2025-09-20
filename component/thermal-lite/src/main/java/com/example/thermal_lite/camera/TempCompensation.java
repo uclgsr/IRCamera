@@ -81,7 +81,7 @@ public class TempCompensation {
         }
     }
 
-    
+
     private void readFlashData(CommonParams.SdFilePath sdFilePath, String localFilePath,
                                IFileHandleCallback iFileHandleCallback) {
         IrcamEngine ircamEngine = CameraPreviewManager.getInstance().getIrcamEngine();
@@ -183,7 +183,7 @@ public class TempCompensation {
         handler.sendEmptyMessageDelayed(HANDLER_KEY_AFTER, 4000);
     }
 
-    
+
     public float compensateTemp(float temp) {
         if (!isCompensation) {
             return temp;
@@ -191,7 +191,7 @@ public class TempCompensation {
         return getNewTempValue(temp);
     }
 
-    
+
     public void getDeltaNucAndVTemp() {
         if (!isCompensation) {
             return;
@@ -216,7 +216,7 @@ public class TempCompensation {
         }
     }
 
-    
+
     private float getNewTempValue(float temp, long deltaTime, short[] nucT, int deltaNUC) {
         if (nucT == null) {
             return temp;
@@ -250,7 +250,6 @@ public class TempCompensation {
     }
 
 
-    
     private float getNewTempValue(float temp) {
         if (nucT == null) {
             return temp;

@@ -30,7 +30,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 
-
 class ConfigGuideDialog(context: Context, val isTC007: Boolean, val dataBean: DataBean) :
     Dialog(context, R.style.TransparentDialog) {
 

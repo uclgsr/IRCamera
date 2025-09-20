@@ -28,16 +28,16 @@ import com.mpdc4gsr.lib.core.R as MenuR
 class MenuFourNightAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     var listener: ((index: Int, code: Int) -> Unit)? = null
 
-    private var colorEnable = false 
-    private var contrastEnable = false 
-    private var ddeEnable = false 
-    private var alarmEnable = false 
-    private var textColorEnable = false 
-    private var mirrorEnable = false 
-    private var waterMarkEnable = false 
-    private var compassEnable = false 
+    private var colorEnable = false
+    private var contrastEnable = false
+    private var ddeEnable = false
+    private var alarmEnable = false
+    private var textColorEnable = false
+    private var mirrorEnable = false
+    private var waterMarkEnable = false
+    private var compassEnable = false
 
-    private var rotateAngle = DeviceConfig.S_ROTATE_ANGLE 
+    private var rotateAngle = DeviceConfig.S_ROTATE_ANGLE
 
     fun selectRotate(rotateAngle: Int) {
         this.rotateAngle = rotateAngle

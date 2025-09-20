@@ -5,7 +5,7 @@ import java.util.Locale
 plugins {
     id("com.android.application")
     kotlin("android")
-    id("com.google.devtools.ksp") 
+    id("com.google.devtools.ksp")
 }
 
 val buildDayStr = SimpleDateFormat("yyMMdd", Locale.getDefault()).format(Date())
@@ -101,7 +101,7 @@ android {
 
     androidComponents {
         beforeVariants { variant ->
-            
+
             variant.enable = variant.buildType == "release" || variant.buildType == "debug"
         }
     }
@@ -115,7 +115,7 @@ android {
     kotlin {
         compilerOptions {
             jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
-            
+
             apiVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_0)
             languageVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_0)
             freeCompilerArgs.addAll(
@@ -210,12 +210,12 @@ android {
 
             keepDebugSymbols +=
                 listOf(
-                    "**/*.so", 
+                    "**/*.so",
                 )
 
             excludes +=
                 listOf(
-                    "**/libSRImage.so", 
+                    "**/libSRImage.so",
                 )
         }
         jniLibs {
@@ -266,7 +266,7 @@ dependencies {
     implementation(project(":component:thermal-ir"))
     implementation(project(":component:thermal-lite"))
     implementation(project(":component:gsr-recording"))
-    implementation(project(":component:user")) 
+    implementation(project(":component:user"))
     implementation(project(":libapp"))
     implementation(project(":libir"))
     implementation(project(":libui"))
@@ -286,9 +286,9 @@ dependencies {
                 "dir" to "libir/libs"
             )
         )
-    ) 
+    )
 
-    implementation(files("../libir/libs/libusbdualsdk_1.3.4_2406271906_standard.aar")) 
+    implementation(files("../libir/libs/libusbdualsdk_1.3.4_2406271906_standard.aar"))
 
     implementation(libs.jsbridge)
     implementation(libs.fastjson2)
@@ -315,7 +315,7 @@ dependencies {
     implementation(files("libs/shimmerbluetoothmanager-0.11.5_beta.jar"))
 
 
-    
+
     implementation(libs.bundles.camerax)
     testImplementation(libs.junit)
     testImplementation(libs.junit.jupiter)

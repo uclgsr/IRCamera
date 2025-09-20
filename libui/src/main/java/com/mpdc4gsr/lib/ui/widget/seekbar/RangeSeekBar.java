@@ -259,7 +259,7 @@ public class RangeSeekBar extends View {
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int heightSize = MeasureSpec.getSize(heightMeasureSpec);
         int heightMode = MeasureSpec.getMode(heightMeasureSpec);
-        
+
 
         if (heightMode == MeasureSpec.EXACTLY) {
             heightSize = MeasureSpec.makeMeasureSpec(heightSize, MeasureSpec.EXACTLY);
@@ -325,10 +325,10 @@ public class RangeSeekBar extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        onDrawTickMark(canvas, paint); 
-        onDrawProgressBar(canvas, paint); 
+        onDrawTickMark(canvas, paint);
+        onDrawProgressBar(canvas, paint);
         onDrawSteps(canvas, paint);
-        onDrawSeekBar(canvas); 
+        onDrawSeekBar(canvas);
     }
 
     protected void onDrawTickMark(Canvas canvas, Paint paint) {

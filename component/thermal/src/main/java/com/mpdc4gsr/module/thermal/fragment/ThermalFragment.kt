@@ -77,7 +77,7 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
 
     override fun initView() {
         requireActivity().window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-        rotateType = 3 
+        rotateType = 3
         mCenterTextView = requireView().findViewById(R.id.temp_display)
         mMaxTextView = requireView().findViewById(R.id.max_temp_display)
         mMinTextView = requireView().findViewById(R.id.min_temp_display)
@@ -223,7 +223,7 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
                         if (upValue > downValue) {
                             viewModel.yuvArea(yuv, temp, upValue, downValue)
                         }
-                        mGuideInterface!!.yuv2Bitmap(mIrBitmap, yuv) 
+                        mGuideInterface!!.yuv2Bitmap(mIrBitmap, yuv)
 
                         try {
                             mIrSurfaceView!!.doDraw(mIrBitmap, mGuideInterface!!.getImageStatus())
@@ -465,7 +465,7 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
         }
     }
 
-    
+
     private fun clearFence() {
         clearFenceUI()
 
@@ -490,7 +490,7 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
         if (type < 0 || type > 10) {
             type = 0
         }
-        updatePalette(type) 
+        updatePalette(type)
     }
 
     private fun updatePalette(index: Int) {
@@ -515,10 +515,10 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
         showFence(3)
     }
 
-    
+
     private fun showFence(index: Int) {
         if (fenceFlag.getIndex(index) == 0) {
-            fenceFlag = 1.shl(4 * (index - 1)) 
+            fenceFlag = 1.shl(4 * (index - 1))
             mFenceLayout!!.visibility = View.VISIBLE
             requireView().findViewById<com.topdon.lib.ui.fence.FencePointView>(R.id.fence_point_view).visibility =
                 if (fenceFlag.getIndex(1) > 0) View.VISIBLE else View.GONE
@@ -580,8 +580,7 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
 
     private fun picture() {
 
-        
-        
+
     }
 
     var isVideoRunning = false
@@ -591,37 +590,37 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
             Log.w("123", "正在录制")
             return
         }
-        
-        
+
+
         val latestResultPath =
             "/tmp/YapBitmapToMp4_${System.currentTimeMillis()}.mp4" // Temporary fallback
         Log.w("123", "latestResultPath:$latestResultPath")
         YapVideoEncoder(this, File(latestResultPath)).start()
     }
 
-    
+
     private fun rotate() {
         rotateType = if (rotateType >= 3) 0 else rotateType + 1
         mIrSurfaceView!!.setMatrix(ThermalTool.getRotate(rotateType), 256f, 192f)
         ToastTools.showShort("旋转:${ThermalTool.getRotate(rotateType)}度")
     }
 
-    
+
     private fun enhance() {
         mIrSurfaceView!!.setOpenLut()
         val saturation = mIrSurfaceView?.getSaturationValue() ?: 0
-        
-        
+
+
     }
 
     var isRunCamera = false
 
     private fun checkCameraPermission() {
-        
+
         if (requireContext().checkSelfPermission(android.Manifest.permission.CAMERA) == android.content.pm.PackageManager.PERMISSION_GRANTED) {
             camera()
         } else {
-            
+
             requestPermissions(arrayOf(android.Manifest.permission.CAMERA), 100)
         }
     }
@@ -639,9 +638,8 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
 
     @SuppressLint("CheckResult")
     private fun camera() {
-        
-        
-        
+
+
         if (isRunCamera) {
 
             requireView().findViewById<FrameLayout>(R.id.temp_camera_layout).visibility = View.GONE
@@ -657,7 +655,7 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
                 isRunCamera = true
             }
         }
-        
+
     }
 
     override fun size(): Int = 5 * 60

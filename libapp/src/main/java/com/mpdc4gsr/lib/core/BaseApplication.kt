@@ -55,7 +55,7 @@ abstract class BaseApplication : Application() {
     var tau_data_L: ByteArray? = null
 
     var activitys = arrayListOf<Activity>()
-    var hasOtgShow = false 
+    var hasOtgShow = false
 
     abstract fun getSoftWareCode(): String
 
@@ -140,17 +140,17 @@ abstract class BaseApplication : Application() {
         if (TextUtils.isEmpty(msgJson)) return
         EventBus.getDefault().post(SocketMsgEvent(msgJson))
 
-        if (SharedManager.is04AutoSync) { 
+        if (SharedManager.is04AutoSync) {
             when (SocketCmdUtil.getCmdResponse(msgJson)) {
-                WsCmdConstants.AR_COMMAND_SNAPSHOT -> { 
+                WsCmdConstants.AR_COMMAND_SNAPSHOT -> {
                     autoSaveNewest(false)
                 }
 
-                WsCmdConstants.AR_COMMAND_VRECORD -> { 
+                WsCmdConstants.AR_COMMAND_VRECORD -> {
                     try {
                         val data: JSONObject = JSONObject(msgJson).getJSONObject("data")
                         val enable: Boolean = data.getBoolean("enable")
-                        if (!enable) { 
+                        if (!enable) {
                             autoSaveNewest(true)
                         }
                     } catch (_: Exception) {
@@ -214,7 +214,7 @@ abstract class BaseApplication : Application() {
     open fun webviewSetPath(context: Context?) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             val processName = getProcessName(context)
-            if (!applicationContext.packageName.equals(processName)) { 
+            if (!applicationContext.packageName.equals(processName)) {
                 WebView.setDataDirectorySuffix(processName!!)
             }
         }

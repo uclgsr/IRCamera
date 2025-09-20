@@ -203,11 +203,11 @@ data class CustomColor(
 )
 
 data class Param(
-    var brightness: Int = 50, 
-    var contrast: Int = 50, 
-    var saturation: Int = 50, 
-    var sharpness: Int = 50, 
-    var flipMode: Int = 0, 
+    var brightness: Int = 50,
+    var contrast: Int = 50,
+    var saturation: Int = 50,
+    var sharpness: Int = 50,
+    var flipMode: Int = 0,
 )
 
 data class Isotherm(
@@ -222,7 +222,7 @@ data class IsothermColor(
 )
 
 data class IsothermC(
-    val mode: Int, 
+    val mode: Int,
     val highThreshold: Int,
     val lowThreshold: Int,
     var greaterThreshold: Int = 0,

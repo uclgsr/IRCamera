@@ -2,7 +2,7 @@
 <resources>
     <color name="font_gray">#999999</color>
     <color name="backgroundColor">#FF16131E</color>
-    
+
     <!-- Chart background colors for thermal module -->
     <color name="chart_bg_bottom_max">#FF3F51B5</color>
     <color name="chart_bg_top_max">#FF9C27B0</color>

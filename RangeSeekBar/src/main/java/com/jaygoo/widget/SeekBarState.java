@@ -2,7 +2,7 @@ package com.jaygoo.widget;
 
 public class SeekBarState {
     public String indicatorText;
-    public float value; 
+    public float value;
     public boolean isMin;
     public boolean isMax;
 

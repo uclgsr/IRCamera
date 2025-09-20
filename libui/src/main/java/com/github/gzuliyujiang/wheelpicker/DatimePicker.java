@@ -1,5 +1,3 @@
-
-
 package com.github.gzuliyujiang.wheelpicker;
 
 import android.app.Activity;
@@ -38,9 +36,9 @@ public class DatimePicker extends ModalDialog {
         wheelLayout.setDateLabel("/", "/", "");
         wheelLayout.setTimeLabel(":", ":", "");
         wheelLayout.setCurtainEnabled(true);
-        wheelLayout.setCurtainColor(ContextCompat.getColor(getContext(), R.color.wheel_select_bg)); 
-        wheelLayout.setSelectedTextColor(ContextCompat.getColor(getContext(), R.color.wheel_select_text)); 
-        wheelLayout.setTextColor(ContextCompat.getColor(getContext(), R.color.wheel_unselect_text)); 
+        wheelLayout.setCurtainColor(ContextCompat.getColor(getContext(), R.color.wheel_select_bg));
+        wheelLayout.setSelectedTextColor(ContextCompat.getColor(getContext(), R.color.wheel_select_text));
+        wheelLayout.setTextColor(ContextCompat.getColor(getContext(), R.color.wheel_unselect_text));
         wheelLayout.setResetWhenLinkage(false, false);
         return wheelLayout;
     }

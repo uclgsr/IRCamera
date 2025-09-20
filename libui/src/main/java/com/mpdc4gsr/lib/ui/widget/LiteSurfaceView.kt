@@ -7,8 +7,6 @@ import android.view.SurfaceView
 import java.nio.ByteBuffer
 
 
-
-
 class LiteSurfaceView
 @JvmOverloads
 constructor(

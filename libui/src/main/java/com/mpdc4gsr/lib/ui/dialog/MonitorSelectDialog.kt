@@ -9,8 +9,6 @@ import com.mpdc4gsr.lib.core.utils.ScreenUtil
 import com.mpdc4gsr.lib.ui.databinding.DialogMonitorSelectBinding
 
 
-
-
 class MonitorSelectDialog(context: Context) : Dialog(context, R.style.InfoDialog) {
 
 
@@ -36,12 +34,12 @@ class MonitorSelectDialog(context: Context) : Dialog(context, R.style.InfoDialog
 
             val lp = dialog.window!!.attributes
             lp.width =
-                (ScreenUtil.getScreenWidth(context) * if (ScreenUtil.isPortrait(context)) 0.85 else 0.35).toInt() 
+                (ScreenUtil.getScreenWidth(context) * if (ScreenUtil.isPortrait(context)) 0.85 else 0.35).toInt()
             dialog.window!!.attributes = lp
 
             binding.btnConfirmOrBack.setOnClickListener {
-                if (isFirstStep) { 
-                    if (monitorType == 0) { 
+                if (isFirstStep) {
+                    if (monitorType == 0) {
                         return@setOnClickListener
                     }
                     isFirstStep = false
@@ -51,7 +49,7 @@ class MonitorSelectDialog(context: Context) : Dialog(context, R.style.InfoDialog
                     binding.tvTitle.text = context.getString(R.string.select_monitor_type_step2)
                     binding.btnConfirmOrBack.text =
                         context.getString(R.string.select_monitor_return)
-                } else { 
+                } else {
                     isFirstStep = true
                     binding.btnCancel.visibility = View.GONE
                     binding.clFirstStep.visibility = View.VISIBLE

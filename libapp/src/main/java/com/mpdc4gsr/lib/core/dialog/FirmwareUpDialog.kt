@@ -70,12 +70,12 @@ class FirmwareUpDialog(context: Context) : Dialog(context, R.style.InfoDialog),
 
     override fun onClick(v: View?) {
         when (v) {
-            binding.tvCancel -> { 
+            binding.tvCancel -> {
                 dismiss()
                 onCancelClickListener?.invoke()
             }
 
-            binding.tvConfirm -> { 
+            binding.tvConfirm -> {
                 dismiss()
                 onConfirmClickListener?.invoke()
             }

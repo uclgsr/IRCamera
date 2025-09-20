@@ -11,7 +11,6 @@ import android.view.View
 import com.blankj.utilcode.util.SizeUtils
 
 
-
 class EmissivityView : View {
     companion object {
 
@@ -72,7 +71,7 @@ class EmissivityView : View {
         heightMeasureSpec: Int,
     ) {
         val widthSize: Int = MeasureSpec.getSize(widthMeasureSpec) - paddingStart - paddingEnd
-        val firstWidth: Int = (widthSize * 135 / 335f).toInt() 
+        val firstWidth: Int = (widthSize * 135 / 335f).toInt()
         val elseWidth: Int = (widthSize - firstWidth) / 2
         val contentWidth: Int = firstWidth + elseWidth * 2
 
@@ -80,9 +79,9 @@ class EmissivityView : View {
         for (i in textList.indices) {
             val textWidth: Int =
                 if (textList.size == 1) {
-                    contentWidth - SizeUtils.dp2px(24f) 
+                    contentWidth - SizeUtils.dp2px(24f)
                 } else {
-                    (if (i == 0) firstWidth else elseWidth) - SizeUtils.dp2px(24f) 
+                    (if (i == 0) firstWidth else elseWidth) - SizeUtils.dp2px(24f)
                 }
             layoutList.add(
                 StaticLayout.Builder.obtain(
@@ -101,10 +100,10 @@ class EmissivityView : View {
         for (layout in layoutList) {
             maxHeight = maxHeight.coerceAtLeast(layout.height)
         }
-        if (maxHeight == 0) { 
+        if (maxHeight == 0) {
             maxHeight = textPaint.fontMetricsInt.bottom - textPaint.fontMetricsInt.top
         }
-        maxHeight += SizeUtils.dp2px(12f) 
+        maxHeight += SizeUtils.dp2px(12f)
 
         setMeasuredDimension(contentWidth + paddingStart + paddingEnd, maxHeight)
     }

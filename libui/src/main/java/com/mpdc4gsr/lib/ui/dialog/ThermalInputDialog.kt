@@ -32,10 +32,8 @@ import com.mpdc4gsr.lib.ui.databinding.DialogThermalInputBinding
 import java.math.BigDecimal
 
 
-
-
 class ThermalInputDialog : Dialog {
-    private var action = 100 
+    private var action = 100
 
     constructor(context: Context) : super(context)
 

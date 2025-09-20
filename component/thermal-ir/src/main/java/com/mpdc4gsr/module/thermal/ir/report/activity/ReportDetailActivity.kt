@@ -26,8 +26,6 @@ import com.mpdc4gsr.lib.core.R as LibCoreR
 import com.mpdc4gsr.lib.ui.R as UiR
 
 
-
-
 class ReportDetailActivity : BaseActivity() {
 
     private lateinit var titleView: TitleView
@@ -131,7 +129,7 @@ class ReportDetailActivity : BaseActivity() {
         startActivity(Intent.createChooser(shareIntent, getString(LibCoreR.string.battery_share)))
     }
 
-    
+
     private fun getPrintViewList(): ArrayList<View> {
         val result = ArrayList<View>()
         result.add(reportInfoView)

@@ -83,9 +83,9 @@ class IRGalleryTabFragment : BaseFragment() {
         titleView.setTitleText(if (canSwitchDir) "" else getString(R.string.app_gallery))
         titleView.setLeftDrawable(if (hasBackIcon) R.drawable.ic_back_white_svg else 0)
         titleView.setLeftClickListener {
-            if (viewModel.isEditModeLD.value == true) { 
+            if (viewModel.isEditModeLD.value == true) {
                 viewModel.isEditModeLD.value = false
-            } else { 
+            } else {
                 if (hasBackIcon) {
                     requireActivity().finish()
                 }
@@ -93,9 +93,9 @@ class IRGalleryTabFragment : BaseFragment() {
         }
         titleView.setRightDrawable(UiR.drawable.ic_toolbar_check_svg)
         titleView.setRightClickListener {
-            if (viewModel.isEditModeLD.value == true) { 
+            if (viewModel.isEditModeLD.value == true) {
                 viewModel.selectAllIndex.value = viewPager2.currentItem
-            } else { 
+            } else {
                 viewModel.isEditModeLD.value = true
             }
         }

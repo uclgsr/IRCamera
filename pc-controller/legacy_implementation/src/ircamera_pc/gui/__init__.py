@@ -1,7 +1,4 @@
-
-
 import os
-
 
 GUI_AVAILABLE = True
 try:
@@ -9,10 +6,10 @@ try:
     if "DISPLAY" not in os.environ and "QT_QPA_PLATFORM" not in os.environ:
         os.environ["QT_QPA_PLATFORM"] = "offscreen"
 
-
     from .app import IRCameraApp, main
 except ImportError:
     GUI_AVAILABLE = False
+
 
     # Create dummy main function for headless mode
     def main(args=None):
@@ -36,6 +33,7 @@ except ImportError:
 
         return 0
 
+
     # Create dummy app class
     class IRCameraApp:
         def __init__(self, *args, **kwargs):
@@ -49,7 +47,6 @@ from .utils import (
     format_file_size,
     setup_logging,
 )
-
 
 if GUI_AVAILABLE:
     try:

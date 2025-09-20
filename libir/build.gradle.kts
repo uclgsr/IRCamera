@@ -1,7 +1,7 @@
 plugins {
     id("com.android.library")
-    kotlin("android") 
-    id("kotlin-parcelize") 
+    kotlin("android")
+    id("kotlin-parcelize")
 }
 
 android {
@@ -49,7 +49,7 @@ android {
 
     packaging {
         jniLibs {
-            
+
             excludes += listOf("**/libc++_shared.so")
         }
     }
@@ -67,10 +67,10 @@ android {
 
             excludes +=
                 listOf(
-                    "**/libSRImage.so", 
-                    "**/liblog.so", 
-                    "**/libopen3d.so", 
-                    "**/libopencv_java4.so", 
+                    "**/libSRImage.so",
+                    "**/liblog.so",
+                    "**/libopen3d.so",
+                    "**/libopencv_java4.so",
                 )
             keepDebugSymbols += listOf("**/*.so")
         }
@@ -90,21 +90,21 @@ android {
 dependencies {
     coreLibraryDesugaring(libs.desugar.jdk.libs)
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
-    compileOnly(files("libs/libusbdualsdk_1.3.4_2406271906_standard.aar")) 
-    compileOnly(files("libs/libAC020sdk_USB_IR_1.1.1_2408291439.aar")) 
-    compileOnly(files("libs/libirutils_1.2.0_2409241055.aar")) 
-    compileOnly(files("libs/opengl_1.3.2_standard.aar")) 
-    compileOnly(files("libs/suplib-release.aar")) 
-    compileOnly(files("libs/ai-upscale-release.aar")) 
-    compileOnly(files("libs/texturegesture-release.aar")) 
-    compileOnly(files("libs/jetified-tas_api-1.0.4.0.aar")) 
-    compileOnly(files("libs/library_1.0.aar")) 
+    compileOnly(files("libs/libusbdualsdk_1.3.4_2406271906_standard.aar"))
+    compileOnly(files("libs/libAC020sdk_USB_IR_1.1.1_2408291439.aar"))
+    compileOnly(files("libs/libirutils_1.2.0_2409241055.aar"))
+    compileOnly(files("libs/opengl_1.3.2_standard.aar"))
+    compileOnly(files("libs/suplib-release.aar"))
+    compileOnly(files("libs/ai-upscale-release.aar"))
+    compileOnly(files("libs/texturegesture-release.aar"))
+    compileOnly(files("libs/jetified-tas_api-1.0.4.0.aar"))
+    compileOnly(files("libs/library_1.0.aar"))
     api("com.conghuahuadan:superlayout:1.1.0")
-    api(libs.ir.layout) 
-    api(libs.andromeda.core) 
-    api(libs.andromeda.sense) 
-    api(libs.javacv) 
-    api(libs.javacpp) 
+    api(libs.ir.layout)
+    api(libs.andromeda.core)
+    api(libs.andromeda.sense)
+    api(libs.javacv)
+    api(libs.javacpp)
     implementation(project(":libapp"))
     implementation(project(":BleModule"))
     compileOnly(files("../app/libs/libcommon_1.2.0_24052117.aar"))

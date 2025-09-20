@@ -1,5 +1,3 @@
-
-
 import asyncio
 import signal
 import sys
@@ -358,7 +356,6 @@ class IRCameraHubApplication:
 
 
 def main() -> int:
-
     logger.remove()
     logger.add(
         sys.stderr,

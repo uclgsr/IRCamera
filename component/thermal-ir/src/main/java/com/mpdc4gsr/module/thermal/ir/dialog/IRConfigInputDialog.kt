@@ -15,7 +15,6 @@ import com.mpdc4gsr.lms.sdk.weiget.TToast
 import com.mpdc4gsr.module.thermal.ir.R
 
 
-
 class IRConfigInputDialog(context: Context, val type: Type, val isTC007: Boolean) :
     Dialog(context, R.style.TextInputDialog) {
     private var value: Float? = null

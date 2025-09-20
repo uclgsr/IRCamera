@@ -7,7 +7,6 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 
 
-
 class Temperature07View : TemperatureBaseView {
     constructor(context: Context) : this(context, null)
 

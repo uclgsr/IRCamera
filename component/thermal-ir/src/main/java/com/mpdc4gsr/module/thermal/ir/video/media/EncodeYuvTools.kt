@@ -249,7 +249,7 @@ object EncodeYuvTools {
                 val y = (66 * r + 129 * g + 25 * b + 128 shr 8) + 16
                 val u = (112 * r - 94 * g - 18 * b + 128 shr 8) + 128
                 val v = (-38 * r - 74 * g + 112 * b + 128 shr 8) + 128
-                if (j % 2 == 0 && index % 2 == 0) { 
+                if (j % 2 == 0 && index % 2 == 0) {
                     yuv420sp[yIndex++] =
                         (
                                 if (y < 0) {
@@ -281,7 +281,7 @@ object EncodeYuvTools {
                                 }
                                 ).toByte()
                     yIndex++
-                } else if (j % 2 == 0 && index % 2 == 1) { 
+                } else if (j % 2 == 0 && index % 2 == 1) {
                     yuv420sp[yIndex++] =
                         (
                                 if (y < 0) {
@@ -292,7 +292,7 @@ object EncodeYuvTools {
                                     y
                                 }
                                 ).toByte()
-                } else if (j % 2 == 1 && index % 2 == 0) { 
+                } else if (j % 2 == 1 && index % 2 == 0) {
                     yuv420sp[vIndex++] =
                         (
                                 if (y < 0) {
@@ -304,7 +304,7 @@ object EncodeYuvTools {
                                 }
                                 ).toByte()
                     vIndex++
-                } else if (j % 2 == 1 && index % 2 == 1) { 
+                } else if (j % 2 == 1 && index % 2 == 1) {
                     yuv420sp[vIndex++] =
                         (
                                 if (y < 0) {

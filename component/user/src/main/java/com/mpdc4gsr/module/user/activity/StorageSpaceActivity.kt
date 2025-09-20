@@ -144,7 +144,7 @@ class StorageSpaceActivity : BaseActivity(), View.OnClickListener {
 
     override fun onClick(v: View?) {
         when (v) {
-            tvFormatStorage -> { 
+            tvFormatStorage -> {
                 TipDialog.Builder(this@StorageSpaceActivity)
                     .setTitleMessage(getString(RCore.string.more_storage_reset))
                     .setMessage(getString(RCore.string.more_storage_reset1))

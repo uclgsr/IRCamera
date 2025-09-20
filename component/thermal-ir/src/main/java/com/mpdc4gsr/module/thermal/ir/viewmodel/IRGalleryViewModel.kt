@@ -33,7 +33,7 @@ class IRGalleryViewModel : BaseViewModel() {
             var beforeTime = 0L
             for (galleryBean in sourceList) {
                 val currentTime = TimeTool.timeToMinute(galleryBean.timeMillis, 4)
-                if (beforeTime != currentTime) { 
+                if (beforeTime != currentTime) {
                     showList.add(GalleryTitle(galleryBean.timeMillis))
                     beforeTime = currentTime
                 }
@@ -45,7 +45,7 @@ class IRGalleryViewModel : BaseViewModel() {
 
     var hasLoadPage = 0
 
-    
+
     val pageListLD: MutableLiveData<ArrayList<GalleryBean>?> = MutableLiveData()
 
     fun queryGalleryByPage(
@@ -73,7 +73,7 @@ class IRGalleryViewModel : BaseViewModel() {
                 )
                 for (galleryBean in pageList) {
                     val currentTime = TimeTool.timeToMinute(galleryBean.timeMillis, 4)
-                    if (beforeTime != currentTime) { 
+                    if (beforeTime != currentTime) {
                         showList.add(GalleryTitle(galleryBean.timeMillis))
                         beforeTime = currentTime
                     }

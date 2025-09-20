@@ -319,7 +319,7 @@ class IRGalleryFragment : BaseFragment() {
                             }
                         }
                     }
-                if (successCount == downloadMap.size) { 
+                if (successCount == downloadMap.size) {
                     dismissLoadingDialog()
                     if (isShare) {
                         shareImage(downloadList)

@@ -20,7 +20,7 @@ import java.lang.reflect.Method;
 public class ScreenUtils {
 
     private ScreenUtils() {
-        
+
         throw new UnsupportedOperationException("cannot be instantiated");
     }
 

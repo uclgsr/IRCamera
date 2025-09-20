@@ -15,7 +15,6 @@ import com.mpdc4gsr.lib.core.view.MyTextView
 import com.mpdc4gsr.module.thermal.ir.R
 
 
-
 class OptionPickPopup(
     private val context: Context,
     private val strArray: Array<String>,
@@ -69,14 +68,14 @@ class OptionPickPopup(
         if (context.resources.displayMetrics.heightPixels - locationArray[1] - anchor.height > height - SizeUtils.dp2px(
                 5f
             )
-        ) { 
+        ) {
             showAtLocation(
                 anchor,
                 Gravity.NO_GRAVITY,
                 x,
                 locationArray[1] + anchor.height - SizeUtils.dp2px(5f)
             )
-        } else { 
+        } else {
             showAtLocation(
                 anchor,
                 Gravity.NO_GRAVITY,

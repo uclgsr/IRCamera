@@ -29,42 +29,42 @@ class ChartTrendView : LineChart {
         val axisChartColors: Int = ContextCompat.getColor(context, LibR.color.chart_axis)
 
         this.isDragEnabled = false
-        this.isScaleYEnabled = false 
-        this.isScaleXEnabled = false 
-        this.isDoubleTapToZoomEnabled = false 
-        this.setScaleEnabled(false) 
-        this.setPinchZoom(false) 
+        this.isScaleYEnabled = false
+        this.isScaleXEnabled = false
+        this.isDoubleTapToZoomEnabled = false
+        this.setScaleEnabled(false)
+        this.setPinchZoom(false)
         this.setTouchEnabled(true)
         this.setDrawGridBackground(false)
-        this.description = null 
-        this.axisRight.isEnabled = false 
+        this.description = null
+        this.axisRight.isEnabled = false
         this.setExtraOffsets(
             0f,
             0f,
             SizeUtils.dp2px(8f).toFloat(),
             SizeUtils.dp2px(4f).toFloat(),
-        ) 
+        )
 
         setNoDataText(context.getString(ThermalR.string.lms_http_code998))
         setNoDataTextColor(ContextCompat.getColor(context, LibR.color.chart_text))
 
         val mv = MyMarkerView(context, R.layout.marker_lay)
         mv.chartView = this
-        marker = mv 
+        marker = mv
 
         legend.form = Legend.LegendForm.CIRCLE
         legend.textColor = textColor
-        legend.isEnabled = false 
+        legend.isEnabled = false
 
         val xAxis = this.xAxis
         xAxis.textColor = textColor
-        xAxis.setDrawGridLines(false) 
-        xAxis.axisLineColor = 0x00000000 
+        xAxis.setDrawGridLines(false)
+        xAxis.axisLineColor = 0x00000000
         xAxis.setAvoidFirstLastClipping(true)
         xAxis.isEnabled = true
         xAxis.position = XAxis.XAxisPosition.BOTTOM
         xAxis.granularity = 1f
-        xAxis.isGranularityEnabled = true 
+        xAxis.isGranularityEnabled = true
         xAxis.textSize = 11f
         xAxis.isJumpFirstLabel = false
         xAxis.axisMinimum = 0f
@@ -84,10 +84,10 @@ class ChartTrendView : LineChart {
             }
 
         val leftAxis = this.axisLeft
-        leftAxis.textColor = textColor 
-        leftAxis.axisLineColor = 0x00000000 
-        leftAxis.setDrawGridLines(true) 
-        leftAxis.gridColor = axisChartColors 
+        leftAxis.textColor = textColor
+        leftAxis.axisLineColor = 0x00000000
+        leftAxis.setDrawGridLines(true)
+        leftAxis.gridColor = axisChartColors
         leftAxis.gridLineWidth = 1.5f
         leftAxis.setLabelCount(6, true)
         leftAxis.valueFormatter =
@@ -110,7 +110,7 @@ class ChartTrendView : LineChart {
         invalidate()
     }
 
-    
+
     fun refresh(tempList: List<Float>) {
         if (tempList.isEmpty()) {
             setToEmpty()
@@ -154,15 +154,15 @@ class ChartTrendView : LineChart {
 
         val lineDataSet = LineDataSet(entryList, "point temp")
         lineDataSet.mode = LineDataSet.Mode.CUBIC_BEZIER
-        lineDataSet.color = 0xffffffff.toInt() 
-        lineDataSet.circleHoleColor = 0xffffffff.toInt() 
-        lineDataSet.setCircleColor(0xffffffff.toInt()) 
+        lineDataSet.color = 0xffffffff.toInt()
+        lineDataSet.circleHoleColor = 0xffffffff.toInt()
+        lineDataSet.setCircleColor(0xffffffff.toInt())
         lineDataSet.valueTextColor = Color.WHITE
         lineDataSet.lineWidth = 2f
-        lineDataSet.circleRadius = 1f 
+        lineDataSet.circleRadius = 1f
         lineDataSet.fillAlpha = 200
         lineDataSet.valueTextSize = 10f
-        lineDataSet.setDrawValues(false) 
+        lineDataSet.setDrawValues(false)
 
         data = LineData(lineDataSet)
         invalidate()

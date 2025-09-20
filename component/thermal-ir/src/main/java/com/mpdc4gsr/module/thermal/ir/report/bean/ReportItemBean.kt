@@ -7,9 +7,9 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class ReportItemBean(
     val testReportId: String?,
-    val testInfo: String?, 
+    val testInfo: String?,
     val testTime: String?,
-    val uploadTime: String?, 
+    val uploadTime: String?,
     val sn: String?,
     val url: String?,
     val status: Int?,

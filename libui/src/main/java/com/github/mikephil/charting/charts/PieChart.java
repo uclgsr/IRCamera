@@ -122,7 +122,7 @@ public class PieChart extends PieRadarChartBase<PieData> {
             off = (r - (r / 100f * getHoleRadius())) / 2f;
         }
 
-        r -= off; 
+        r -= off;
 
         float rotationAngle = getRotationAngle();
 
@@ -255,7 +255,7 @@ public class PieChart extends PieRadarChartBase<PieData> {
                 return i;
         }
 
-        return -1; 
+        return -1;
     }
 
     public int getDataSetIndexForIndex(int xIndex) {

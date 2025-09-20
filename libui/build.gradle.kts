@@ -1,8 +1,8 @@
 plugins {
     id("com.android.library")
-    kotlin("android") 
-    id("com.google.devtools.ksp") 
-    id("kotlin-parcelize") 
+    kotlin("android")
+    id("com.google.devtools.ksp")
+    id("kotlin-parcelize")
 }
 
 ksp {

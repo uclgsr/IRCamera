@@ -219,7 +219,7 @@ public class DefRangeSeekBar extends View {
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int heightSize = MeasureSpec.getSize(heightMeasureSpec);
         int heightMode = MeasureSpec.getMode(heightMeasureSpec);
-        
+
 
         if (heightMode == MeasureSpec.EXACTLY) {
             heightSize = MeasureSpec.makeMeasureSpec(heightSize, MeasureSpec.EXACTLY);

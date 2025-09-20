@@ -1,5 +1,3 @@
-
-
 import json
 import uuid
 from dataclasses import asdict, dataclass
@@ -17,7 +15,6 @@ from .config import config
 
 
 class SessionState(Enum):
-
     IDLE = "idle"
     ACTIVE = "active"
     RECORDING = "recording"
@@ -28,7 +25,6 @@ class SessionState(Enum):
 
 @dataclass
 class SessionMetadata:
-
     session_id: str
     name: str
     state: str

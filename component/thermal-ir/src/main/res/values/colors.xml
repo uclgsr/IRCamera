@@ -11,7 +11,7 @@
     <color name="white">#FFFFFF</color>
     <color name="font_third_color">#666666</color>
     <color name="lms_red">#FF0000</color>
-    
+
     <!-- Chart colors -->
     <color name="chart_bg_bottom_max">#FF3F51B5</color>
     <color name="chart_bg_top_max">#FF9C27B0</color>

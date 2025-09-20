@@ -40,9 +40,8 @@ import java.text.DecimalFormat
 import com.mpdc4gsr.lib.core.R as RCore
 
 
-
 class MoreFragment : BaseFragment(), View.OnClickListener {
-    
+
     private var isTC007 = false
 
     private val firmwareViewModel: FirmwareViewModel by viewModels()
@@ -76,13 +75,13 @@ class MoreFragment : BaseFragment(), View.OnClickListener {
         itemSettingBottomText = requireView().findViewById(R.id.item_setting_bottom_text)
         tvRightText = requireView().findViewById(R.id.tv_right_text)
 
-        settingItemModel.setOnClickListener(this) 
-        settingItemCorrection.setOnClickListener(this) 
-        settingItemDual.setOnClickListener(this) 
-        settingItemUnit.setOnClickListener(this) 
-        settingVersion.setOnClickListener(this) 
-        settingDeviceInformation.setOnClickListener(this) 
-        settingReset.setOnClickListener(this) 
+        settingItemModel.setOnClickListener(this)
+        settingItemCorrection.setOnClickListener(this)
+        settingItemDual.setOnClickListener(this)
+        settingItemUnit.setOnClickListener(this)
+        settingVersion.setOnClickListener(this)
+        settingDeviceInformation.setOnClickListener(this)
+        settingReset.setOnClickListener(this)
 
         settingReset.isVisible = false
 
@@ -138,7 +137,7 @@ class MoreFragment : BaseFragment(), View.OnClickListener {
         firmwareViewModel.firmwareDataLD.observe(this) {
             tvUpgradePoint.isVisible = it != null
             dismissLoadingDialog()
-            if (it == null) { 
+            if (it == null) {
                 ToastUtils.showShort(RCore.string.setting_firmware_update_latest_version)
             } else {
                 showFirmwareUpDialog(it)
@@ -179,7 +178,7 @@ class MoreFragment : BaseFragment(), View.OnClickListener {
 
     override fun onClick(v: View?) {
         when (v) {
-            settingItemModel -> { 
+            settingItemModel -> {
                 NavigationManager.getInstance().build(
                     RouterConfig.IR_SETTING,
                 ).withBoolean(ExtraKeyConfig.IS_TC007, isTC007).navigation(requireContext())
@@ -190,18 +189,18 @@ class MoreFragment : BaseFragment(), View.OnClickListener {
                     .navigation(requireContext())
             }
 
-            settingItemUnit -> { 
+            settingItemUnit -> {
                 NavigationManager.getInstance().build(RouterConfig.UNIT)
                     .navigation(requireContext())
             }
 
-            settingItemCorrection -> { 
+            settingItemCorrection -> {
                 NavigationManager.getInstance().build(
                     RouterConfig.IR_CORRECTION,
                 ).withBoolean(ExtraKeyConfig.IS_TC007, isTC007).navigation(requireContext())
             }
 
-            settingVersion -> { 
+            settingVersion -> {
 
 
                 val firmwareData = firmwareViewModel.firmwareDataLD.value
@@ -216,7 +215,7 @@ class MoreFragment : BaseFragment(), View.OnClickListener {
 
             }
 
-            settingDeviceInformation -> { 
+            settingDeviceInformation -> {
                 if (WebSocketProxy.getInstance().isTC007Connect()) {
                     NavigationManager.getInstance()
                         .build(RouterConfig.DEVICE_INFORMATION)
@@ -225,7 +224,7 @@ class MoreFragment : BaseFragment(), View.OnClickListener {
                 }
             }
 
-            settingReset -> { 
+            settingReset -> {
                 if (WebSocketProxy.getInstance().isTC007Connect()) {
                     restoreFactory()
                 }

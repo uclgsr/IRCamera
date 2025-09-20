@@ -18,7 +18,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    
+
     <ImageView
         android:id="@+id/iv_winter"
         android:layout_width="0dp"
@@ -30,7 +30,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_title" />
-    
+
     <View
         android:id="@+id/space_winter_right"
         android:layout_width="0dp"
@@ -39,7 +39,7 @@
         app:layout_constraintDimensionRatio="W,128:130"
         app:layout_constraintEnd_toEndOf="@id/iv_winter"
         app:layout_constraintTop_toTopOf="@id/iv_winter" />
-    
+
     <TextView
         android:id="@+id/tv_winter_title"
         android:layout_width="0dp"
@@ -57,7 +57,7 @@
         app:layout_constraintStart_toStartOf="@id/iv_winter"
         app:layout_constraintTop_toTopOf="@id/iv_winter"
         app:layout_constraintVertical_chainStyle="packed" />
-    
+
     <TextView
         android:id="@+id/tv_winter_sub_title"
         android:layout_width="0dp"
@@ -74,7 +74,6 @@
         app:layout_constraintTop_toBottomOf="@id/tv_winter_title" />
 
 
-    
     <ImageView
         android:id="@+id/iv_monitory"
         android:layout_width="0dp"
@@ -138,7 +137,7 @@
         app:layout_constraintStart_toStartOf="@id/tv_monitory_title"
         app:layout_constraintTop_toBottomOf="@id/iv_monitory" />
 
-    
+
     <ImageView
         android:id="@+id/iv_house"
         android:layout_width="0dp"
@@ -202,7 +201,7 @@
         app:layout_constraintStart_toStartOf="@id/tv_house_title"
         app:layout_constraintTop_toBottomOf="@id/iv_house" />
 
-    
+
     <ImageView
         android:id="@+id/iv_car"
         android:layout_width="0dp"

@@ -8,8 +8,8 @@ data class ModelBean(
 data class DataBean(
     var id: Int = 1,
     var name: String = "1",
-    var environment: Float = 30.0f, 
-    var distance: Float = 0.25f, 
-    var radiation: Float = 0.95f, 
+    var environment: Float = 30.0f,
+    var distance: Float = 0.25f,
+    var radiation: Float = 0.95f,
     var use: Boolean = false,
 )

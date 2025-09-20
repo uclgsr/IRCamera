@@ -1,5 +1,3 @@
-
-
 package com.github.gzuliyujiang.wheelpicker;
 
 import android.app.Activity;
@@ -34,9 +32,9 @@ public class YearPicker extends ModalDialog {
         wheelLayout.setRange(startTimeEntity, DatimeEntity.now(), defaultEntity);
 
         wheelLayout.setCurtainEnabled(true);
-        wheelLayout.setCurtainColor(ContextCompat.getColor(getContext(), R.color.wheel_select_bg));       
+        wheelLayout.setCurtainColor(ContextCompat.getColor(getContext(), R.color.wheel_select_bg));
         wheelLayout.setSelectedTextColor(ContextCompat.getColor(getContext(), R.color.wheel_select_text));
-        wheelLayout.setTextColor(ContextCompat.getColor(getContext(), R.color.wheel_unselect_text));      
+        wheelLayout.setTextColor(ContextCompat.getColor(getContext(), R.color.wheel_unselect_text));
 
         wheelLayout.setResetWhenLinkage(false, false);
 

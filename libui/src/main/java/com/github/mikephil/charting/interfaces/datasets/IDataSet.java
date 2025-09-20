@@ -15,7 +15,6 @@ import java.util.List;
 
 public interface IDataSet<T extends Entry> {
 
-    
 
     float getYMin();
 
@@ -63,7 +62,6 @@ public interface IDataSet<T extends Entry> {
 
     void clear();
 
-    
 
     String getLabel();
 

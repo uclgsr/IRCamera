@@ -64,8 +64,8 @@ class GalleryPictureFragment : BaseViewModelFragment<GalleryViewModel>() {
     fun share(path: String) {
         val file = File(path)
         var intent = Intent()
-        intent.action = Intent.ACTION_SEND 
-        intent.type = "image/*" 
+        intent.action = Intent.ACTION_SEND
+        intent.type = "image/*"
         val uri: Uri =
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 val authority = "${requireContext().packageName}.fileprovider"
@@ -81,6 +81,6 @@ class GalleryPictureFragment : BaseViewModelFragment<GalleryViewModel>() {
     fun previewPicture(path: String) {
         val imageEngine = GlideImageEngine()
 
-        
+
     }
 }

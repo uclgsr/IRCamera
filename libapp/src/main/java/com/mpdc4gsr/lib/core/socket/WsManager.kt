@@ -27,7 +27,7 @@ class WsManager(
     }
 
     private var mWebSocket: WebSocket? = null
-    private var status: State = State.DISCONNECTED 
+    private var status: State = State.DISCONNECTED
     private var heartBeatTimer: HeartBeatTimer? = null
 
     private val mWebSocketListener: WebSocketListener =
@@ -123,7 +123,7 @@ class WsManager(
 
     @Synchronized
     fun startConnect() {
-        if (status == State.CONNECTING || status == State.CONNECTED) { 
+        if (status == State.CONNECTING || status == State.CONNECTED) {
             Log.w(
                 "WebSocket",
                 "${if (status == State.CONNECTING) "连接中" else "已连接"} startConnect() 重复调用"
@@ -220,7 +220,7 @@ class WsManager(
                         if (lastHeartBeatTime == 0L) {
                             lastHeartBeatTime = currentTime
                         }
-                        if (currentTime - lastHeartBeatTime > 15 * 1000) { 
+                        if (currentTime - lastHeartBeatTime > 15 * 1000) {
                             Log.d("WebSocket", "连续5个心跳包无响应，视为连接断开")
                             timeoutListener?.invoke()
                             lastHeartBeatTime = currentTime

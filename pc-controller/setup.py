@@ -1,5 +1,3 @@
-
-
 import os
 import platform
 
@@ -7,9 +5,7 @@ import pybind11
 from pybind11.setup_helpers import ParallelCompile, Pybind11Extension, build_ext
 from setuptools import find_packages, setup
 
-
 ParallelCompile("NPY_NUM_BUILD_JOBS").install()
-
 
 extra_compile_args = []
 extra_link_args = []
@@ -18,7 +14,6 @@ if platform.system() == "Windows":
     extra_compile_args = ["/std:c++17", "/O2"]
 elif platform.system() in ["Linux", "Darwin"]:
     extra_compile_args = ["-std=c++17", "-O3", "-ffast-math"]
-
 
 try:
     import cv2
@@ -29,7 +24,6 @@ except ImportError:
     opencv_include_dirs = []
     opencv_libs = []
 
-
 ext_modules = [
     Pybind11Extension(
         "native_backend",
@@ -39,10 +33,10 @@ ext_modules = [
             "native_backend/src/pybind_module.cpp",
         ],
         include_dirs=[
-            "native_backend/include",
-            pybind11.get_cmake_dir() + "/../../../include",
-        ]
-        + opencv_include_dirs,
+                         "native_backend/include",
+                         pybind11.get_cmake_dir() + "/../../../include",
+                     ]
+                     + opencv_include_dirs,
         libraries=opencv_libs,
         extra_compile_args=extra_compile_args,
         extra_link_args=extra_link_args,

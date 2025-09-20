@@ -27,8 +27,8 @@ open class BaseThermalFragment : BaseFragment() {
     var mMinTemp = 0f
     var maxImg: ImageView? = null
     var minImg: ImageView? = null
-    var maxIndex = 0 
-    var minIndex = 0 
+    var maxIndex = 0
+    var minIndex = 0
 
     var mCenterTextView: TextView? = null
     var mMaxTextView: TextView? = null
@@ -57,7 +57,7 @@ open class BaseThermalFragment : BaseFragment() {
     var rawHeight = 0
     var highCrossWidth = 40
     var highCrossHeight = 40
-    var rotateType = 0 
+    var rotateType = 0
     var irSurfaceViewWidth = 0
     var irSurfaceViewHeight = 0
 

@@ -50,7 +50,7 @@ public class DualViewWithExternalCameraCommonApi extends BaseDualView {
     public Bitmap supIROlyBitmap;
     public byte[] frameData = new byte[FRAME_LEN];
     public byte[] frameIrAndTempData = new byte[192 * 256 * 4];
-    public int rotate = 180; 
+    public int rotate = 180;
     private DualUVCCamera dualUVCCamera;
     private long timestart = 0;
     private double fps = 0;
@@ -139,15 +139,15 @@ public class DualViewWithExternalCameraCommonApi extends BaseDualView {
         dualUVCCamera.addIrUVCCamera(irUVCCamera);
         mSurfaceNativeWindow = new SurfaceNativeWindow();
 
-        gain_switch_param.above_pixel_prop = 0.1f;    
-        gain_switch_param.above_temp_data = (int) ((130 + 273.15) * 16 * 4); 
-        gain_switch_param.below_pixel_prop = 0.95f;   
+        gain_switch_param.above_pixel_prop = 0.1f;
+        gain_switch_param.above_temp_data = (int) ((130 + 273.15) * 16 * 4);
+        gain_switch_param.below_pixel_prop = 0.95f;
         gain_switch_param.below_temp_data = (int) ((110 + 273.15) * 16 * 4);
-        auto_gain_switch_info.switch_frame_cnt = 5 * 15; 
+        auto_gain_switch_info.switch_frame_cnt = 5 * 15;
         auto_gain_switch_info.waiting_frame_cnt = 7 * 15;
 
-        int low_gain_over_temp_data = (int) ((550 + 273.15) * 16 * 4); 
-        int high_gain_over_temp_data = (int) ((110 + 273.15) * 16 * 4); 
+        int low_gain_over_temp_data = (int) ((550 + 273.15) * 16 * 4);
+        int high_gain_over_temp_data = (int) ((110 + 273.15) * 16 * 4);
         float pixel_above_prop = 0.02f;
         int switch_frame_cnt = 7 * 15;
         int close_frame_cnt = 10 * 15;
@@ -195,7 +195,7 @@ public class DualViewWithExternalCameraCommonApi extends BaseDualView {
 
                 System.arraycopy(frame, fusionLength + irSize * 4 + Const.DUAL_WIDTH * Const.DUAL_HEIGHT * 2, vlData,
                         0, vlSize);
-                System.arraycopy(frame, 0, frameData, 0, FRAME_LEN); 
+                System.arraycopy(frame, 0, frameData, 0, FRAME_LEN);
 
                 System.arraycopy(frame, dualCameraWidth * dualCameraHeight * 4, frameIrAndTempData, 0, frameIrAndTempData.length);
 

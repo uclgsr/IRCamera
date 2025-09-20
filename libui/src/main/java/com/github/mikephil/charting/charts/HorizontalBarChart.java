@@ -181,7 +181,7 @@ public class HorizontalBarChart extends BarChart {
                 Log.e(LOG_TAG, "Can't select by touch. No data set.");
             return null;
         } else
-            return getHighlighter().getHighlight(y, x); 
+            return getHighlighter().getHighlight(y, x);
     }
 
     @Override

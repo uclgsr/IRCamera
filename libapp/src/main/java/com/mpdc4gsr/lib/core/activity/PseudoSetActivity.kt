@@ -14,11 +14,11 @@ class PseudoSetActivity : Activity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
+
         // Get the input CustomPseudoBean
         val customPseudoBean = intent.getParcelableExtra<CustomPseudoBean>(ExtraKeyConfig.CUSTOM_PSEUDO_BEAN)
             ?: CustomPseudoBean()
-        
+
         // Immediately return the same bean (no modification)
         val resultIntent = Intent()
         resultIntent.putExtra(ExtraKeyConfig.CUSTOM_PSEUDO_BEAN, customPseudoBean)

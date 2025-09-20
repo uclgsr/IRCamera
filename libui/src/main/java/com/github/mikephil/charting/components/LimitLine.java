@@ -8,25 +8,25 @@ import com.github.mikephil.charting.utils.Utils;
 
 public class LimitLine extends ComponentBase {
 
-    
+
     private float mLimit = 0f;
 
-    
+
     private float mLineWidth = 2f;
 
-    
+
     private int mLineColor = Color.rgb(237, 91, 91);
 
-    
+
     private Paint.Style mTextStyle = Paint.Style.FILL_AND_STROKE;
 
-    
+
     private String mLabel = "";
 
-    
+
     private DashPathEffect mDashPathEffect = null;
 
-    
+
     private LimitLabelPosition mLabelPosition = LimitLabelPosition.RIGHT_TOP;
 
     public LimitLine(float limit) {
@@ -105,7 +105,7 @@ public class LimitLine extends ComponentBase {
         mLabel = label;
     }
 
-    
+
     public enum LimitLabelPosition {
         LEFT_TOP, LEFT_BOTTOM, RIGHT_TOP, RIGHT_BOTTOM
     }

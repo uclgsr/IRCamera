@@ -1,8 +1,8 @@
 plugins {
     id("com.android.library")
-    kotlin("android") 
-    id("kotlin-parcelize") 
-    id("com.google.devtools.ksp") 
+    kotlin("android")
+    id("kotlin-parcelize")
+    id("com.google.devtools.ksp")
 }
 
 ksp {
@@ -85,7 +85,7 @@ android {
             pickFirsts += listOf("**/libc++_shared.so")
             excludes +=
                 listOf(
-                    "**/libavcodec.so", 
+                    "**/libavcodec.so",
                     "**/libavdevice.so",
                     "**/libavfilter.so",
                     "**/libavformat.so",

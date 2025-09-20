@@ -111,7 +111,7 @@ class FrameStruct() {
     var textColor = 0xffffffff.toInt()
     var watermarkBean = WatermarkBean()
     var alarmBean = AlarmBean()
-    var gainStatus: Int = 1 
+    var gainStatus: Int = 1
     var textSize: Int = SizeUtils.sp2px(14f)
     var environment: Float = 0f
     var distance: Float = 0f

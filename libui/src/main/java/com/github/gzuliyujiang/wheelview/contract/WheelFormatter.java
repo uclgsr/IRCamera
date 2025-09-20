@@ -1,5 +1,3 @@
-
-
 package com.github.gzuliyujiang.wheelview.contract;
 
 import androidx.annotation.NonNull;

@@ -2,34 +2,37 @@
 
 ## Overview
 
-This document provides comprehensive API reference documentation for all major components and modules of the IRCamera Multi-Modal Thermal Sensing Platform. The API is organized by component type and provides detailed information about classes, methods, and interfaces.
+This document provides comprehensive API reference documentation for all major components and modules of the IRCamera
+Multi-Modal Thermal Sensing Platform. The API is organized by component type and provides detailed information about
+classes, methods, and interfaces.
 
 ## Architecture Components
 
 ### Core Components
 
-| Component | Purpose | Technology | Status |
-|-----------|---------|------------|--------|
-| **PC Controller Hub** | Central coordination and device management | Python + PyQt6 | [DONE] MVP Complete |
+| Component               | Purpose                                          | Technology       | Status                 |
+|-------------------------|--------------------------------------------------|------------------|------------------------|
+| **PC Controller Hub**   | Central coordination and device management       | Python + PyQt6   | [DONE] MVP Complete    |
 | **Android Sensor Node** | Mobile sensor node with multi-modal capabilities | Kotlin + Android | [WARNING] Build Issues |
-| **Communication Layer** | JSON-based TCP protocol with mDNS discovery | Cross-platform | [DONE] Working |
-| **Sensor Integration** | Hardware abstraction for multiple sensor types | Multi-platform | [DONE] Working |
+| **Communication Layer** | JSON-based TCP protocol with mDNS discovery      | Cross-platform   | [DONE] Working         |
+| **Sensor Integration**  | Hardware abstraction for multiple sensor types   | Multi-platform   | [DONE] Working         |
 
 ### Library Components
 
-| Library | Purpose | Dependencies | Status |
-|---------|---------|--------------|--------|
-| **libir** | Core infrared camera processing | OpenCV, native code | ✅ Working |
-| **libcom** | Communication and networking | TCP, JSON, mDNS | ✅ Working |
-| **libapp** | Application framework | Android SDK | ✅ Working |
-| **libui** | User interface components | Android UI, Material Design | ✅ Working |
-| **libmatrix** | Matrix operations for image processing | Native math libraries | ✅ Working |
+| Library       | Purpose                                | Dependencies                | Status    |
+|---------------|----------------------------------------|-----------------------------|-----------|
+| **libir**     | Core infrared camera processing        | OpenCV, native code         | ✅ Working |
+| **libcom**    | Communication and networking           | TCP, JSON, mDNS             | ✅ Working |
+| **libapp**    | Application framework                  | Android SDK                 | ✅ Working |
+| **libui**     | User interface components              | Android UI, Material Design | ✅ Working |
+| **libmatrix** | Matrix operations for image processing | Native math libraries       | ✅ Working |
 
 ## PC Controller Hub API
 
 ### Core Classes
 
 #### DeviceManager
+
 **Location**: `pc-controller/src/ircamera_pc/core/device_manager.py`
 
 ```python
@@ -53,6 +56,7 @@ class DeviceManager:
 ```
 
 #### SessionManager
+
 **Location**: `pc-controller/src/ircamera_pc/core/session_manager.py`
 
 ```python
@@ -78,6 +82,7 @@ class SessionManager:
 ### Network Communication
 
 #### DeviceDiscoveryService
+
 **Location**: `pc-controller/src/ircamera_pc/network/discovery.py`
 
 ```python
@@ -98,6 +103,7 @@ class DeviceDiscoveryService:
 ```
 
 #### TCPServer
+
 **Location**: `pc-controller/src/ircamera_pc/network/server.py`
 
 ```python
@@ -120,6 +126,7 @@ class TCPServer:
 ### Data Structures
 
 #### SessionConfiguration
+
 ```python
 @dataclass
 class SessionConfiguration:
@@ -136,6 +143,7 @@ class SessionConfiguration:
 ```
 
 #### DeviceInfo
+
 ```python
 @dataclass
 class DeviceInfo:
@@ -156,6 +164,7 @@ class DeviceInfo:
 ### Core Activities
 
 #### MainActivity
+
 **Location**: `app/src/main/java/mpdc4gsr/MainActivity.kt`
 
 ```kotlin
@@ -188,6 +197,7 @@ class MainActivity : AppCompatActivity() {
 ### Sensor Modules
 
 #### Thermal Camera Integration
+
 **Location**: `component/thermal-ir/`
 
 ```kotlin
@@ -223,7 +233,8 @@ class ThermalCameraController {
 }
 ```
 
-#### GSR Sensor Integration  
+#### GSR Sensor Integration
+
 **Location**: `component/gsr-recording/`
 
 ```kotlin
@@ -260,6 +271,7 @@ class GSRRecordingController {
 ```
 
 #### RGB Camera Integration
+
 **Location**: Uses CameraX API integration
 
 ```kotlin
@@ -293,6 +305,7 @@ class RGBCameraController {
 ### Data Models
 
 #### ThermalFrame
+
 ```kotlin
 data class ThermalFrame(
     val timestamp: Long,
@@ -304,6 +317,7 @@ data class ThermalFrame(
 ```
 
 #### GSRDataPoint
+
 ```kotlin
 data class GSRDataPoint(
     val timestamp: Long,
@@ -317,9 +331,11 @@ data class GSRDataPoint(
 ## Core Libraries API
 
 ### libir - Infrared Processing Library
+
 **Location**: `libir/`
 
 #### ThermalProcessor
+
 ```kotlin
 class ThermalProcessor {
     /**
@@ -353,9 +369,11 @@ class ThermalProcessor {
 ```
 
 ### libcom - Communication Library
+
 **Location**: `consolidated_libraries/libcom/`
 
-#### NetworkManager  
+#### NetworkManager
+
 ```kotlin
 class NetworkManager {
     /**
@@ -391,9 +409,11 @@ class NetworkManager {
 ```
 
 ### libui - UI Components Library
+
 **Location**: `libui/`
 
 #### StatusIndicator
+
 ```kotlin
 class StatusIndicator @JvmOverloads constructor(
     context: Context,
@@ -422,6 +442,7 @@ class StatusIndicator @JvmOverloads constructor(
 ### Message Format Specification
 
 #### Command Messages (Hub -> Spoke)
+
 ```json
 {
   "message_id": "uuid-string",
@@ -441,6 +462,7 @@ class StatusIndicator @JvmOverloads constructor(
 ```
 
 #### Response Messages (Spoke → Hub)
+
 ```json
 {
   "message_id": "uuid-string",
@@ -459,6 +481,7 @@ class StatusIndicator @JvmOverloads constructor(
 ### Protocol Methods
 
 #### MessageHandler Interface
+
 ```python
 class MessageHandler:
     """Base interface for protocol message handling."""
@@ -478,6 +501,7 @@ class MessageHandler:
 ### Exception Classes
 
 #### IRCameraException
+
 ```python
 class IRCameraException(Exception):
     """Base exception for IRCamera platform errors."""
@@ -489,6 +513,7 @@ class IRCameraException(Exception):
 ```
 
 #### DeviceConnectionException
+
 ```python
 class DeviceConnectionException(IRCameraException):
     """Exception raised for device connection issues."""
@@ -499,6 +524,7 @@ class DeviceConnectionException(IRCameraException):
 ```
 
 #### SessionManagementException
+
 ```python
 class SessionManagementException(IRCameraException):
     """Exception raised for session management issues."""
@@ -514,6 +540,7 @@ class SessionManagementException(IRCameraException):
 ### Data Pipeline Components
 
 #### DataProcessor Interface
+
 ```python
 class DataProcessor:
     """Base interface for sensor data processing."""
@@ -529,6 +556,7 @@ class DataProcessor:
 ```
 
 #### SynchronizationEngine
+
 ```python
 class SynchronizationEngine:
     """Multi-modal data synchronization."""
@@ -548,6 +576,7 @@ class SynchronizationEngine:
 ### Test Utilities
 
 #### MockDevice
+
 ```python
 class MockDevice:
     """Mock device for testing device communication."""
@@ -564,6 +593,7 @@ class MockDevice:
 ```
 
 #### TestSession
+
 ```python
 class TestSession:
     """Test session management utilities."""
@@ -583,6 +613,7 @@ class TestSession:
 ### Configuration Management
 
 #### ConfigurationManager
+
 ```python
 class ConfigurationManager:
     """System configuration management."""
@@ -605,6 +636,7 @@ class ConfigurationManager:
 ### Build Tools
 
 #### BuildHelper (dev.sh interface)
+
 ```bash
 # Available build and validation commands
 ./dev.sh help              # Show all available commands
@@ -618,6 +650,7 @@ class ConfigurationManager:
 ### Deployment Utilities
 
 #### PackageManager
+
 ```python
 class PackageManager:
     """Application packaging and distribution."""

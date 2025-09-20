@@ -16,7 +16,7 @@ object ByteUtils {
         }
         return result.toString()
     }
-    
+
     @JvmStatic
     fun toHexString(byte: Byte): String {
         return toHexString(byteArrayOf(byte))

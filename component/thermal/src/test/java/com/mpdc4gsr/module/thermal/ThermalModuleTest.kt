@@ -68,7 +68,7 @@ class ThermalModuleTest {
     @Test
     fun testThermalImageDimensions() =
         runTest {
-            
+
             val mockImageWidth = 320
             val mockImageHeight = 240
             val expectedPixelCount = mockImageWidth * mockImageHeight
@@ -77,7 +77,7 @@ class ThermalModuleTest {
             assertTrue("Image height should be positive", mockImageHeight > 0)
             assertEquals("Pixel count should match dimensions", expectedPixelCount, 320 * 240)
 
-            
+
             val aspectRatio = mockImageWidth.toFloat() / mockImageHeight.toFloat()
             assertTrue("Aspect ratio should be positive", aspectRatio > 0)
             assertEquals("Aspect ratio should be 4:3", 4f / 3f, aspectRatio, 0.01f)
@@ -86,24 +86,24 @@ class ThermalModuleTest {
     @Test
     fun testThermalColorMapping() =
         runTest {
-            
+
             val testTemperatures = listOf(-10f, 0f, 25f, 50f, 100f)
             val minTemp = -10f
             val maxTemp = 100f
 
             testTemperatures.forEach { temp ->
-                
+
                 val normalized = ((temp - minTemp) / (maxTemp - minTemp)).coerceIn(0f, 1f)
                 assertTrue(
                     "Normalized temperature should be 0-1",
                     normalized >= 0f && normalized <= 1f
                 )
 
-                
-                val hue = (1f - normalized) * 240f 
+
+                val hue = (1f - normalized) * 240f
                 assertTrue("Hue should be valid HSV range", hue >= 0f && hue <= 240f)
 
-                
+
                 val saturation = 1f
                 val value = 1f
                 assertTrue("Saturation should be valid", saturation >= 0f && saturation <= 1f)
@@ -114,19 +114,19 @@ class ThermalModuleTest {
     @Test
     fun testThermalCalibration() =
         runTest {
-            
+
             val rawThermalValue = 12345
             val calibrationOffset = 100f
             val calibrationGain = 0.04f
 
-            
+
             val calibratedTemp = (rawThermalValue - calibrationOffset) * calibrationGain
 
             assertTrue("Raw thermal value should be positive", rawThermalValue > 0)
             assertTrue("Calibration gain should be positive", calibrationGain > 0)
             assertNotEquals("Calibrated temperature should be calculated", 0f, calibratedTemp)
 
-            
+
             val expectedMinTemp = -40f
             val expectedMaxTemp = 300f
             val clampedTemp = calibratedTemp.coerceIn(expectedMinTemp, expectedMaxTemp)
@@ -140,12 +140,12 @@ class ThermalModuleTest {
     @Test
     fun testThermalRegionAnalysis() =
         runTest {
-            
+
             val thermalGrid =
                 arrayOf(
                     floatArrayOf(20f, 21f, 22f, 23f),
-                    floatArrayOf(21f, 35f, 36f, 24f), 
-                    floatArrayOf(22f, 37f, 38f, 25f), 
+                    floatArrayOf(21f, 35f, 36f, 24f),
+                    floatArrayOf(22f, 37f, 38f, 25f),
                     floatArrayOf(23f, 24f, 25f, 26f),
                 )
 
@@ -155,7 +155,7 @@ class ThermalModuleTest {
             assertTrue("Grid width should be positive", width > 0)
             assertTrue("Grid height should be positive", height > 0)
 
-            
+
             var minTemp = Float.MAX_VALUE
             var maxTemp = Float.MIN_VALUE
 
@@ -170,7 +170,7 @@ class ThermalModuleTest {
             assertTrue("Should detect hot spot", maxTemp > 35f)
             assertTrue("Should detect normal temperatures", minTemp < 30f)
 
-            
+
             val hotThreshold = 35f
             val coldThreshold = 22f
 
@@ -190,7 +190,7 @@ class ThermalModuleTest {
 
     @Test
     fun testSystemServiceAccess() {
-        
+
         val cameraService = context.getSystemService(Context.CAMERA_SERVICE)
         assertNotNull("Camera service should be available", cameraService)
 
@@ -214,10 +214,10 @@ class ThermalModuleTest {
     @Test
     fun testAsyncOperations() =
         runTest {
-            
+
             val result =
                 kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
-                    
+
                     context.packageName
                 }
 

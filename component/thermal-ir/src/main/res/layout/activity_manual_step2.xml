@@ -15,7 +15,6 @@
         app:titleText="@string/dual_light_correction" />
 
 
-    
     <TextView
         android:id="@+id/tv_tips"
         android:layout_width="0dp"
@@ -30,7 +29,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/title_view" />
 
-    
+
     <ImageView
         android:id="@+id/iv_tips"
         android:layout_width="0dp"
@@ -45,7 +44,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_tips" />
 
-    
+
     <TextView
         android:id="@+id/tv_photo_or_confirm"
         android:layout_width="0dp"
@@ -122,7 +121,6 @@
         app:layout_goneMarginTop="16dp">
 
 
-        
         <SurfaceView
             android:id="@+id/dualTextureView"
             android:layout_width="match_parent"

@@ -40,10 +40,10 @@ object ViewBindingAdapter {
                     drawableList.add(effectDrawable)
                 }
             } else {
-                if (drawableList.size == layerCount) { 
+                if (drawableList.size == layerCount) {
                     return
                 }
-                if (drawableList.isEmpty()) { 
+                if (drawableList.isEmpty()) {
                     view.background = null
                     return
                 }

@@ -5,7 +5,7 @@ package com.guide.zm04c.matrix
  * Contains only the methods referenced by GuideUsbManager
  */
 class NativeGuideCore {
-    
+
     /**
      * Calculate CRC for the given data
      * Minimal implementation - returns a simple checksum

@@ -5,8 +5,10 @@ package com.mpdc4gsr.lms.sdk.network;
  */
 public interface IResponseCallback {
     void onResponse(String response);
-    
-    default void onFail(Exception e) {}
-    
-    default void onFail(String failMsg, String errorCode) {}
+
+    default void onFail(Exception e) {
+    }
+
+    default void onFail(String failMsg, String errorCode) {
+    }
 }

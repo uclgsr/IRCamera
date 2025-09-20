@@ -48,14 +48,14 @@ public class CameraJpegView extends TextureView {
                             if (canvas == null)
                                 continue;
 
-                            
+
                             Bitmap mScaledBitmap = Bitmap.createScaledBitmap(bitmap, getWidth(), getHeight(), true);
                             canvas.drawBitmap(mScaledBitmap, 0, 0, null);
 
-                            Paint paint = new Paint();  
-                            paint.setStrokeWidth(2);  
-                            paint.setAntiAlias(true); 
-                            paint.setColor(Color.WHITE);  
+                            Paint paint = new Paint();
+                            paint.setStrokeWidth(2);
+                            paint.setAntiAlias(true);
+                            paint.setColor(Color.WHITE);
 
                             int cross_len = 20;
                             canvas.drawLine(getWidth() / 2f - cross_len, getHeight() / 2f,

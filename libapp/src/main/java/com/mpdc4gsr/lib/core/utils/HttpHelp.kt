@@ -19,7 +19,7 @@ object HttpHelp {
         params.addBodyParameter(
             "modelId",
             if (isTC007) 1783 else 950
-        ) 
+        )
         params.addBodyParameter("status", 1)
         params.addBodyParameter("reportType", 2)
         params.addBodyParameter("languageId", LanguageUtil.getLanguageId(Utils.getApp()))

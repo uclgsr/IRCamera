@@ -46,7 +46,7 @@ public class TimeDownView : AppCompatTextView {
         init()
     }
 
-    
+
     fun downSecond(seconds: Int) {
         downSecond(seconds, true)
     }
@@ -67,7 +67,7 @@ public class TimeDownView : AppCompatTextView {
         }
     }
 
-    
+
     fun downTime(
         downCount: Int,
         lastDown: Int,
@@ -108,7 +108,7 @@ public class TimeDownView : AppCompatTextView {
         downTimerTask?.cancel()
         timer?.cancel()
         drawTextFlag = DRAW_TEXT_NO
-        invalidate() 
+        invalidate()
         visibility = GONE
         downTimerTask = null
         timer = null
@@ -139,7 +139,7 @@ public class TimeDownView : AppCompatTextView {
 
     var downTimeWatcher: DownTimeWatcher? = null
 
-    
+
     fun setOnTimeDownListener(downTimeWatcher: DownTimeWatcher?) {
         this.downTimeWatcher = downTimeWatcher
     }
@@ -156,7 +156,7 @@ public class TimeDownView : AppCompatTextView {
                 onTimeListener?.invoke(downCount)
 
                 if (downCount >= lastDown - 1) {
-                    drawTextFlag = DRAW_TEXT_YES 
+                    drawTextFlag = DRAW_TEXT_YES
 
                     if (downCount >= lastDown) {
                         text = downCount.toString() + ""
@@ -164,13 +164,13 @@ public class TimeDownView : AppCompatTextView {
                         if (downCount == lastDown && downTimeWatcher != null) {
                             downTimeWatcher!!.onLastTime(downCount)
                         }
-                    } else if (downCount == lastDown - 1) { 
+                    } else if (downCount == lastDown - 1) {
 
 
                         if (afterDownDimissFlag == AFTER_LAST_TIME_DIMISS) {
                             drawTextFlag = DRAW_TEXT_NO
                         }
-                        invalidate() 
+                        invalidate()
                         isRunning = false
                         downTimerTask == null
                         timer?.cancel()

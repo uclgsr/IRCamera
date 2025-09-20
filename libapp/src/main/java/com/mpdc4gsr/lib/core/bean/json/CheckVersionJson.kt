@@ -3,7 +3,7 @@ package com.mpdc4gsr.lib.core.bean.json
 data class CheckVersionJson(
     val downloadPackageUrl: String,
     val downloadPageUrl: String,
-    val forcedUpgradeFlag: String?, 
+    val forcedUpgradeFlag: String?,
     val googleVerCode: Int,
     val softConfigOtherTypeVOList: List<SoftConfigOtherTypeVO>,
     val versionCode: Int,

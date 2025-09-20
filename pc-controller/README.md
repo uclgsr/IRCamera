@@ -1,25 +1,29 @@
 # IRCamera PC Controller Hub
 
-The PC Controller serves as the central **Hub** in the IRCamera Multi-Modal Thermal Sensing Platform's Hub-and-Spoke architecture, coordinating distributed Android sensor nodes for scientific data collection.
+The PC Controller serves as the central **Hub** in the IRCamera Multi-Modal Thermal Sensing Platform's Hub-and-Spoke
+architecture, coordinating distributed Android sensor nodes for scientific data collection.
 
 ## Overview
 
-This directory contains both a simplified MVP implementation and a comprehensive full-featured application for multi-modal physiological sensing research. The PC Controller manages device discovery, session coordination, and data collection across multiple Android sensor nodes.
+This directory contains both a simplified MVP implementation and a comprehensive full-featured application for
+multi-modal physiological sensing research. The PC Controller manages device discovery, session coordination, and data
+collection across multiple Android sensor nodes.
 
 ## Architecture
 
 The PC Controller implements a **Hub-and-Spoke Model** where:
 
 - **Hub (PC Controller)**: Central coordinator with PyQt6 GUI
-- **Spokes (Android Nodes)**: Mobile sensor nodes with thermal, GSR, and RGB capabilities  
+- **Spokes (Android Nodes)**: Mobile sensor nodes with thermal, GSR, and RGB capabilities
 - **Communication**: JSON-based TCP protocol with mDNS device discovery
 - **Purpose**: Scientific data acquisition and machine learning analysis
 
 ## Key Features
 
 ### Core Functionality
+
 - **Device Management**: Automatic mDNS discovery and manual device addition
-- **Session Lifecycle**: Complete recording session coordination  
+- **Session Lifecycle**: Complete recording session coordination
 - **Multi-Modal Synchronization**: Precise temporal alignment across sensors
 - **Real-Time Communication**: TCP/JSON protocol with command acknowledgments
 - **Professional GUI**: Comprehensive PyQt6 interface for researchers
@@ -27,20 +31,26 @@ The PC Controller implements a **Hub-and-Spoke Model** where:
 ### Implementation Options
 
 #### 1. MVP Simple (Recommended for Testing)
+
 **File**: `mvp_simple.py` (~250 lines)
+
 - Single-file implementation focused on core functionality
 - Minimal dependencies, easy to understand and modify
 - Perfect for initial testing and development
 
 #### 2. Full GUI Application (Production Ready)
+
 **File**: `run_mvp_app.py` + supporting modules
+
 - Complete PyQt6 interface with advanced features
 - Device dashboard with real-time status monitoring
 - Session controls and metadata management
 - Comprehensive logging and error handling
 
 #### 3. Component Demonstration
+
 **File**: `demo_mvp_components.py`
+
 - Demonstrates Hub-and-Spoke architecture components
 - Validates 83% complete framework functionality
 - Useful for understanding system capabilities
@@ -60,6 +70,7 @@ pip install scipy opencv-python bleak psutil
 ### Usage Options
 
 #### Simple MVP Server (Basic Testing)
+
 ```bash
 # Run single-file MVP implementation
 python mvp_simple.py
@@ -69,6 +80,7 @@ python mvp_simple.py --duration 60
 ```
 
 #### Full GUI Application (Recommended)
+
 ```bash
 # Launch complete application with GUI
 python run_mvp_app.py
@@ -78,6 +90,7 @@ QT_QPA_PLATFORM=offscreen python run_mvp_app.py
 ```
 
 #### Development and Testing
+
 ```bash
 # Component demonstration
 python demo_mvp_components.py
@@ -120,6 +133,7 @@ pc-controller/
 ## Device Communication Protocol
 
 ### Command Message Format (Hub -> Spoke)
+
 ```json
 {
     "command": "start_recording",
@@ -131,7 +145,8 @@ pc-controller/
 }
 ```
 
-### Response Format (Spoke -> Hub)  
+### Response Format (Spoke -> Hub)
+
 ```json
 {
     "status": "success",
@@ -154,7 +169,7 @@ pc-controller/
 ## Performance Status
 
 - **Configuration System**: 100% functional
-- **Device Discovery Framework**: 100% functional  
+- **Device Discovery Framework**: 100% functional
 - **Communication Protocol**: 100% functional
 - **GUI Architecture**: 100% functional
 - **Hub-and-Spoke Integration**: 100% functional
@@ -163,6 +178,7 @@ pc-controller/
 ## Integration with Android Spokes
 
 ### Expected Android Device Configuration
+
 - **Network**: Same WiFi network as PC Controller
 - **Services**: mDNS service advertised as `_ircamera._tcp.local.`
 - **Protocol**: TCP communication on configurable port
@@ -170,6 +186,7 @@ pc-controller/
 - **Sensors**: Thermal camera, GSR sensor, RGB camera support
 
 ### Android App Requirements
+
 - IRCamera Android application installed and running
 - Proper network permissions configured
 - Sensor hardware validation completed
@@ -178,11 +195,13 @@ pc-controller/
 ## Development
 
 ### Adding New Features
+
 - Follow the simple MVP pattern in `mvp_simple.py` for core functionality
 - Use the GUI framework in `run_mvp_app.py` for interface enhancements
 - Maintain compatibility with the JSON communication protocol
 
 ### Code Organization
+
 - **Core Logic**: Keep business logic separate from GUI code
 - **Configuration**: Use YAML configuration for flexibility
 - **Error Handling**: Implement graceful failure recovery
@@ -193,24 +212,28 @@ pc-controller/
 ### Common Issues
 
 **Device Discovery Problems**
+
 - Verify devices are on same network
 - Check firewall settings (port 8080 default)
 - Try manual device addition if mDNS fails
 - Confirm Android app is advertising mDNS service
 
 **Connection Issues**
+
 - Check network connectivity between PC and Android devices
 - Verify Android app permissions (network, sensors)
 - Restart both PC Controller and Android applications
 - Review connection logs for specific error messages
 
 **Session Management Problems**
+
 - Ensure adequate disk space for session data
 - Verify device capabilities match session requirements
 - Check device battery levels before long sessions
 - Monitor device heartbeat status during recording
 
 ### Debug Mode
+
 ```bash
 # Enable verbose logging
 python run_mvp_app.py --debug
@@ -226,4 +249,5 @@ python demo_mvp_components.py --verbose
 **Research Ready**: SCIENTIFIC GRADE
 **Production Status**: DEPLOYMENT READY
 
-The PC Controller Hub is fully functional and ready for scientific research applications with multi-modal physiological sensing capabilities.
+The PC Controller Hub is fully functional and ready for scientific research applications with multi-modal physiological
+sensing capabilities.

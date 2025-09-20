@@ -58,7 +58,7 @@ class LogMPChartActivity : BaseActivity(), OnChartValueSelectedListener {
                     time: Int,
                 ) {
 
-                    chart.highlightValue(null) 
+                    chart.highlightValue(null)
                     selectType = index + 1
                     queryLog()
                 }
@@ -94,7 +94,7 @@ class LogMPChartActivity : BaseActivity(), OnChartValueSelectedListener {
 
         lifecycleScope.launch(Dispatchers.IO) {
             viewModel.queryLogVolsByStartTime(
-                type = 1, 
+                type = 1,
                 selectTimeType = selectType,
             )
         }
@@ -106,30 +106,30 @@ class LogMPChartActivity : BaseActivity(), OnChartValueSelectedListener {
         chart.setTouchEnabled(true)
         chart.isDragEnabled = true
         chart.setDrawGridBackground(false)
-        chart.description = null 
+        chart.description = null
         chart.setBackgroundResource(com.mpdc4gsr.lib.core.R.color.chart_bg)
-        chart.setScaleEnabled(true) 
-        chart.setPinchZoom(false) 
-        chart.isDoubleTapToZoomEnabled = false 
-        chart.isScaleYEnabled = false 
+        chart.setScaleEnabled(true)
+        chart.setPinchZoom(false)
+        chart.isDoubleTapToZoomEnabled = false
+        chart.isScaleYEnabled = false
         chart.setExtraOffsets(
             0f,
             0f,
             SizeUtils.dp2px(8f).toFloat(),
             SizeUtils.dp2px(4f).toFloat(),
-        ) 
+        )
         chart.setNoDataText(getString(R.string.lms_http_code998))
         chart.setNoDataTextColor(textColor)
         val mv = MyMarkerView(this, R.layout.marker_lay)
         mv.chartView = chart
-        chart.marker = mv 
+        chart.marker = mv
         val data = LineData()
         data.setValueTextColor(textColor)
         chart.data = data
         val l = chart.legend
         l.form = Legend.LegendForm.CIRCLE
         l.textColor = textColor
-        l.isEnabled = false 
+        l.isEnabled = false
         val xAxis = chart.xAxis
         xAxis.textColor = textColor
         xAxis.setDrawGridLines(true)
@@ -138,13 +138,13 @@ class LogMPChartActivity : BaseActivity(), OnChartValueSelectedListener {
         xAxis.position = XAxis.XAxisPosition.BOTTOM
         xAxis.axisLineColor = textColor
         xAxis.granularity = 1f
-        xAxis.isGranularityEnabled = true 
+        xAxis.isGranularityEnabled = true
         xAxis.textSize = 9f
         val leftAxis = chart.axisLeft
         leftAxis.textSize = 9f
         leftAxis.textColor = textColor
         leftAxis.setDrawGridLines(true)
-        leftAxis.setLabelCount(6, false) 
+        leftAxis.setLabelCount(6, false)
         val rightAxis = chart.axisRight
         rightAxis.isEnabled = false
 
@@ -177,20 +177,20 @@ class LogMPChartActivity : BaseActivity(), OnChartValueSelectedListener {
 
         set.mode = LineDataSet.Mode.LINEAR
         set.setDrawFilled(false)
-        set.fillDrawable = ContextCompat.getDrawable(this, bgChartColors[index]) 
+        set.fillDrawable = ContextCompat.getDrawable(this, bgChartColors[index])
         set.axisDependency = YAxis.AxisDependency.LEFT
-        set.color = ContextCompat.getColor(this, lineChartColors[index]) 
-        set.setCircleColor(ContextCompat.getColor(this, com.mpdc4gsr.lib.core.R.color.white)) 
+        set.color = ContextCompat.getColor(this, lineChartColors[index])
+        set.setCircleColor(ContextCompat.getColor(this, com.mpdc4gsr.lib.core.R.color.white))
 
 
         set.valueTextColor = Color.WHITE
         set.lineWidth = 2f
-        set.circleRadius = 1f 
-        set.setCircleColor(ContextCompat.getColor(this, lineChartColors[index])) 
+        set.circleRadius = 1f
+        set.setCircleColor(ContextCompat.getColor(this, lineChartColors[index]))
 
         set.fillAlpha = 200
         set.valueTextSize = 10f
-        set.setDrawValues(false) 
+        set.setDrawValues(false)
         return set
     }
 
@@ -216,7 +216,7 @@ class LogMPChartActivity : BaseActivity(), OnChartValueSelectedListener {
                     data[0].type = "default"
                     when (data[0].type) {
                         "point" -> {
-                            var set = lineData.getDataSetByIndex(0) 
+                            var set = lineData.getDataSetByIndex(0)
                             if (set == null) {
                                 set = createSet(2, "temp")
                                 lineData.addDataSet(set)
@@ -231,13 +231,13 @@ class LogMPChartActivity : BaseActivity(), OnChartValueSelectedListener {
                         }
 
                         "line" -> {
-                            var maxDataSet = lineData.getDataSetByIndex(0) 
+                            var maxDataSet = lineData.getDataSetByIndex(0)
                             if (maxDataSet == null) {
                                 maxDataSet = createSet(0, "line maxTemp")
                                 lineData.addDataSet(maxDataSet)
                             }
 
-                            var minDataSet = lineData.getDataSetByIndex(1) 
+                            var minDataSet = lineData.getDataSetByIndex(1)
                             if (minDataSet == null) {
                                 minDataSet = createSet(1, "line minTemp")
                                 lineData.addDataSet(minDataSet)
@@ -259,13 +259,13 @@ class LogMPChartActivity : BaseActivity(), OnChartValueSelectedListener {
 
                         else -> {
 
-                            var maxTempDataSet = lineData.getDataSetByIndex(0) 
+                            var maxTempDataSet = lineData.getDataSetByIndex(0)
                             if (maxTempDataSet == null) {
                                 maxTempDataSet = createSet(0, "fence maxTemp")
                                 lineData.addDataSet(maxTempDataSet)
                             }
 
-                            var centerTempDataSet = lineData.getDataSetByIndex(1) 
+                            var centerTempDataSet = lineData.getDataSetByIndex(1)
                             if (centerTempDataSet == null) {
                                 centerTempDataSet = createSet(1, "fence minTemp")
                                 lineData.addDataSet(centerTempDataSet)
@@ -286,11 +286,11 @@ class LogMPChartActivity : BaseActivity(), OnChartValueSelectedListener {
                     }
                     lineData.notifyDataChanged()
                     chart.notifyDataSetChanged()
-                    chart.setVisibleXRangeMinimum(getMinimum()) 
-                    chart.setVisibleXRangeMaximum(getMaximum()) 
-                    chart.xAxis.setLabelCount(5, false) 
-                    chart.moveViewToX(chart.xChartMax) 
-                    chart.zoom(1f, 1f, chart.xChartMax, 0f) 
+                    chart.setVisibleXRangeMinimum(getMinimum())
+                    chart.setVisibleXRangeMaximum(getMaximum())
+                    chart.xAxis.setLabelCount(5, false)
+                    chart.moveViewToX(chart.xChartMax)
+                    chart.zoom(1f, 1f, chart.xChartMax, 0f)
                 }
                 Log.w("chart", "update chart finish")
             }
@@ -319,11 +319,11 @@ class LogMPChartActivity : BaseActivity(), OnChartValueSelectedListener {
     private fun getMinimum(): Float {
         val min =
             when (selectType) {
-                1 -> 1 * 10 * 1000f 
-                2 -> 10 * 60 * 1000f 
-                3 -> 10 * 60 * 60 * 1000f 
-                4 -> 10 * 24 * 60 * 60 * 1000f 
-                else -> 1 * 10 * 1000f 
+                1 -> 1 * 10 * 1000f
+                2 -> 10 * 60 * 1000f
+                3 -> 10 * 60 * 60 * 1000f
+                4 -> 10 * 24 * 60 * 60 * 1000f
+                else -> 1 * 10 * 1000f
             }
         return min
     }

@@ -6,7 +6,6 @@ import sys
 import tempfile
 from pathlib import Path
 
-
 sys.path.insert(0, str(Path(__file__).parent / "src"))
 
 from loguru import logger
@@ -17,7 +16,6 @@ from ircamera_pc.network.discovery import DeviceType, DiscoveredDevice
 
 
 async def test_device_manager():
-
     print("\n=== Testing Device Manager ===")
 
     device_manager = DeviceManager()
@@ -66,7 +64,6 @@ async def test_device_manager():
 
 
 async def test_session_manager():
-
     print("\n=== Testing Session Manager ===")
 
     # Create temporary directory for sessions
@@ -170,7 +167,6 @@ async def test_session_manager():
 
 
 def test_discovery_service():
-
     print("\n=== Testing Discovery Service ===")
 
     try:
@@ -203,7 +199,6 @@ def test_discovery_service():
 
 
 async def run_all_tests():
-
     print("IRCamera PC Controller Hub - MVP Test Suite")
     print("=" * 50)
 

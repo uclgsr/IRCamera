@@ -21,8 +21,8 @@ class MonitorActivity : BaseActivity(), View.OnClickListener {
 
     var MONITOR_ACTION = STATS_START
 
-    private var selectType = 1 
-    private var selectIndex: ArrayList<Int> = arrayListOf() 
+    private var selectType = 1
+    private var selectIndex: ArrayList<Int> = arrayListOf()
 
     override fun initContentView() = R.layout.activity_monitor
 

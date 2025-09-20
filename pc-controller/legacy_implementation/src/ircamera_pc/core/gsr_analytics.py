@@ -1,5 +1,3 @@
-
-
 import asyncio
 import logging
 import numpy as np
@@ -13,14 +11,12 @@ from scipy import signal, stats
 from scipy.ndimage import uniform_filter1d
 from typing import Any, Dict, List, Optional, Tuple
 
-
 warnings.filterwarnings("ignore", category=RuntimeWarning)
 
 logger = logging.getLogger(__name__)
 
 
 class StressLevel(Enum):
-
     VERY_LOW = "very_low"
     LOW = "low"
     MODERATE = "moderate"
@@ -30,7 +26,6 @@ class StressLevel(Enum):
 
 @dataclass
 class GSRFeatures:
-
     timestamp: float
     device_id: str
     session_id: str
@@ -64,7 +59,6 @@ class GSRFeatures:
 
 @dataclass
 class GSRAnalysisReport:
-
     session_id: str
     device_id: str
     start_time: datetime
@@ -146,8 +140,8 @@ class GSRAnalytics:
             excess = len(self.device_buffers[device_key]) - max_samples
             self.device_buffers[device_key] = self.device_buffers[device_key][excess:]
             self.device_timestamps[device_key] = self.device_timestamps[device_key][
-                                                 excess:
-                                                 ]
+                excess:
+            ]
 
         current_time = timestamps[-1] if timestamps else 0
         time_since_last = current_time - self.last_analysis[device_key]
@@ -210,8 +204,8 @@ class GSRAnalytics:
 
                 if len(self.feature_history[device_key]) > 100:
                     self.feature_history[device_key] = self.feature_history[device_key][
-                                                       -100:
-                                                       ]
+                        -100:
+                    ]
 
                 self.last_analysis[device_key] = current_time
 

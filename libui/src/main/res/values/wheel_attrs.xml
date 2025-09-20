@@ -1,5 +1,3 @@
-
-
 <resources>
 
     <attr name="WheelStyle" format="reference" />
@@ -62,8 +60,6 @@
         <attr name="wheel_curvedMaxAngle" />
         <attr name="wheel_curvedIndicatorSpace" />
     </declare-styleable>
-
-    
 
 
     <attr name="wheel_label" format="string|reference" />

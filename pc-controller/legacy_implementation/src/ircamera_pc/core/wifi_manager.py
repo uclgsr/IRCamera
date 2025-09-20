@@ -1,5 +1,3 @@
-
-
 import asyncio
 import os
 import platform
@@ -25,11 +23,13 @@ try:
 
     PYQT_AVAILABLE = True
 
+
     class BaseThread(QThread):
         pass
 
 except ImportError:
     PYQT_AVAILABLE = False
+
 
     class pyqtSignal:
         def __init__(self, *args):
@@ -42,18 +42,19 @@ except ImportError:
         def connect(self, callback) -> Any:
             self._callbacks.append(callback)
 
+
     def pyqtSlot(*args, **kwargs) -> Any:
         def decorator(func) -> Any:
             return func
 
         return decorator
 
+
     class BaseThread:
         def __init__(self):
             pass
 
         def start(self) -> Any:
-
             self.run()
 
         def run(self) -> Any:
@@ -81,7 +82,6 @@ except ImportError:
 
 
 class NetworkSecurityType(Enum):
-
     OPEN = "open"
     WEP = "wep"
     WPA = "wpa"
@@ -91,7 +91,6 @@ class NetworkSecurityType(Enum):
 
 
 class ConnectionState(Enum):
-
     DISCONNECTED = "disconnected"
     CONNECTING = "connecting"
     CONNECTED = "connected"
@@ -100,7 +99,6 @@ class ConnectionState(Enum):
 
 
 class HotspotState(Enum):
-
     STOPPED = "stopped"
     STARTING = "starting"
     RUNNING = "running"
@@ -110,7 +108,6 @@ class HotspotState(Enum):
 
 @dataclass
 class WiFiNetwork:
-
     ssid: str
     bssid: str
     signal_strength: int
@@ -127,7 +124,6 @@ class WiFiNetwork:
 
 @dataclass
 class NetworkInterface:
-
     name: str
     description: str
     is_wifi: bool
@@ -138,7 +134,6 @@ class NetworkInterface:
 
 
 class WiFiScanWorker(BaseThread):
-
     networks_found = pyqtSignal(list)
     scan_completed = pyqtSignal(int)
     error_occurred = pyqtSignal(str)
@@ -254,7 +249,6 @@ class WiFiScanWorker(BaseThread):
             elif "Signal" in line:
                 signal_match = re.search(r"(\d+)%", line)
                 if signal_match:
-
                     percentage = int(signal_match.group(1))
                     current_network["signal"] = -100 + (percentage * 70 // 100)
             elif "BSSID" in line and ":" in line:
@@ -428,7 +422,6 @@ class WiFiScanWorker(BaseThread):
 
 
 class WiFiManager(BaseManager):
-
     networks_discovered = pyqtSignal(list)
     network_connected = pyqtSignal(str, str)
     network_disconnected = pyqtSignal(str, str)
@@ -1106,7 +1099,6 @@ class WiFiManager(BaseManager):
             stdout, stderr = await result.communicate()
 
             if result.returncode == 0:
-
                 result = await asyncio.create_subprocess_exec(
                     nmcli_path,
                     "connection",

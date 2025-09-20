@@ -49,7 +49,7 @@ class PDFListFragment : BaseViewModelFragment<PdfViewModel>() {
     private val fragmentPdfRecyclerLay: SmartRefreshLayout by lazy { requireView().findViewById(R.id.fragment_pdf_recycler_lay) }
     private val fragmentPdfRecycler: RecyclerView by lazy { requireView().findViewById(R.id.fragment_pdf_recycler) }
 
-    
+
     private var isTC007 = false
 
     private var page = 1
@@ -178,7 +178,7 @@ class PDFListFragment : BaseViewModelFragment<PdfViewModel>() {
                             params.addBodyParameter(
                                 "modelId",
                                 if (isTC007) 1783 else 950
-                            ) 
+                            )
                             params.addBodyParameter("testReportIds", arrayOf(item.testReportId))
                             params.addBodyParameter("status", 1)
                             params.addBodyParameter(

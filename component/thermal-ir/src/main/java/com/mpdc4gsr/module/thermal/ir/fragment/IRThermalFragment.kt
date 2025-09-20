@@ -27,7 +27,7 @@ import com.mpdc4gsr.module.thermal.ir.activity.IRThermalNightActivity
 import com.mpdc4gsr.module.thermal.ir.activity.IRThermalPlusActivity
 
 class IRThermalFragment : BaseFragment(), View.OnClickListener {
-    
+
     private var isTC007 = false
 
     private lateinit var titleView: com.mpdc4gsr.lib.core.view.TitleView
@@ -130,7 +130,7 @@ class IRThermalFragment : BaseFragment(), View.OnClickListener {
             connected()
         } else {
             disConnected()
-            if (DeviceTools.findUsbDevice() != null) { 
+            if (DeviceTools.findUsbDevice() != null) {
                 showConnectTip()
             }
         }
@@ -221,13 +221,13 @@ class IRThermalFragment : BaseFragment(), View.OnClickListener {
                 }
             }
 
-            cl07ConnectTips -> { 
+            cl07ConnectTips -> {
                 NavigationManager.getInstance().build(RouterConfig.IR_CONNECT_TIPS)
                     .withBoolean(ExtraKeyConfig.IS_TC007, true)
                     .navigation(requireContext())
             }
 
-            tv07Connect -> { 
+            tv07Connect -> {
                 NavigationManager.getInstance()
                     .build(RouterConfig.IR_DEVICE_ADD)
                     .withBoolean("isTS004", false)

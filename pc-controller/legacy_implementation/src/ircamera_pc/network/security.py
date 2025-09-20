@@ -1,5 +1,3 @@
-
-
 import hashlib
 import ipaddress
 import secrets
@@ -33,6 +31,7 @@ except ImportError:
             def error(self, msg) -> Any:
                 print(f"ERROR: {msg}")
 
+
         logger = FallbackLogger()
 
 try:
@@ -45,6 +44,7 @@ except ImportError:
                 "security.cert_directory": "certificates",
             }
             return config_map.get(key, default)
+
 
     config = FallbackConfig()
 
@@ -211,7 +211,6 @@ class SecurityManager:
 
         try:
             if self.ca_cert_path.exists() and self.ca_key_path.exists():
-
                 with open(self.ca_cert_path, "rb") as f:
                     x509.load_pem_x509_certificate(f.read())
                 logger.debug("Loaded existing CA certificate")
@@ -224,7 +223,6 @@ class SecurityManager:
 
         try:
             if self.server_cert_path.exists() and self.server_key_path.exists():
-
                 with open(self.server_cert_path, "rb") as f:
                     x509.load_pem_x509_certificate(f.read())
                 logger.debug("Loaded existing server certificate")

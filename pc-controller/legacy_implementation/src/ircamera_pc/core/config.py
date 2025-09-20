@@ -1,5 +1,3 @@
-
-
 import yaml
 from pathlib import Path
 from typing import Any, Dict, Optional
@@ -15,7 +13,6 @@ class ConfigManager:
     def __init__(self, config_path: Optional[str] = None):
 
         if config_path is None:
-
             project_root = Path(__file__).parent.parent.parent.parent
             config_path = project_root / "config" / "config.yaml"
 

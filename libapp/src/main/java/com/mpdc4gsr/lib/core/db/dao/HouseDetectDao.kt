@@ -73,7 +73,7 @@ abstract class HouseDetectDao {
         for (i in houseDetect.dirList.indices) {
             val dir = houseDetect.dirList[i]
             dir.position = i
-            if (dir.id == 0L) { 
+            if (dir.id == 0L) {
                 dir.id = insertDir(dir)
                 for (item in dir.itemList) {
                     item.parentId = dir.id
@@ -91,15 +91,15 @@ abstract class HouseDetectDao {
     }
 
     open fun refreshDir(dirDetect: DirDetect) {
-        if (dirDetect.itemList.isEmpty()) { 
+        if (dirDetect.itemList.isEmpty()) {
             deleteDir(dirDetect)
         } else {
-            updateDir(dirDetect) 
+            updateDir(dirDetect)
             val oldItemList: ArrayList<ItemDetect> = ArrayList(queryItemList(dirDetect.id))
             for (i in dirDetect.itemList.indices) {
                 val item = dirDetect.itemList[i]
                 item.position = i
-                if (item.id == 0L) { 
+                if (item.id == 0L) {
                     item.id = insertItem(item)
                 } else {
                     updateItem(item)

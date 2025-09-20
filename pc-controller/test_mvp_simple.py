@@ -6,12 +6,10 @@ import sys
 import tempfile
 from pathlib import Path
 
-
 sys.path.insert(0, str(Path(__file__).parent / "src"))
 
 
 def test_imports():
-
     print("\n=== Testing Core Imports ===")
 
     try:
@@ -35,7 +33,6 @@ def test_imports():
 
 
 async def test_basic_discovery():
-
     print("\n=== Testing Basic Discovery ===")
 
     try:
@@ -67,7 +64,6 @@ async def test_basic_discovery():
 
 
 async def test_basic_session():
-
     print("\n=== Testing Basic Session ===")
 
     try:
@@ -103,7 +99,6 @@ async def test_basic_session():
 
 
 def test_configuration():
-
     print("\n=== Testing Configuration ===")
 
     try:
@@ -123,7 +118,6 @@ def test_configuration():
 
 
 async def run_simple_tests():
-
     print("IRCamera PC Controller Hub - Simplified MVP Test")
     print("=" * 60)
 

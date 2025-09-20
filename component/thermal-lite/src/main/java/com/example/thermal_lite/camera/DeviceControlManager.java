@@ -38,14 +38,14 @@ public class DeviceControlManager implements IDeviceConnectListener {
         mIDeviceConnectListeners = new HashMap<>();
     }
 
-    
+
     public void addDeviceConnectListener(String key, IDeviceConnectListener iDeviceConnectListener) {
         if (mIDeviceConnectListeners != null) {
             mIDeviceConnectListeners.put(key, iDeviceConnectListener);
         }
     }
 
-    
+
     public void removeDeviceConnectListener(String key) {
         if (mIDeviceConnectListeners != null) {
             mIDeviceConnectListeners.remove(key);
@@ -63,7 +63,7 @@ public class DeviceControlManager implements IDeviceConnectListener {
         }
     }
 
-    
+
     public void handleStartPreview(USBMonitor.UsbControlBlock ctrlBlock) {
         if (mDeviceControlWorker != null) {
             Log.d(TAG, "handleStartPreview");
