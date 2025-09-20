@@ -478,10 +478,10 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
         mFenceLayout!!.visibility = View.GONE
         fenceFlag = 0x000
         selectIndex.clear()
-        requireView().findViewById<com.topdon.lib.ui.fence.FenceView>(R.id.fence_view).clear()
-        requireView().findViewById<com.topdon.lib.ui.fence.FenceLineView>(R.id.fence_line_view)
+        requireView().findViewById<com.mpdc4gsr.lib.ui.fence.FenceView>(R.id.fence_view).clear()
+        requireView().findViewById<com.mpdc4gsr.lib.ui.fence.FenceLineView>(R.id.fence_line_view)
             .clear()
-        requireView().findViewById<com.topdon.lib.ui.fence.FencePointView>(R.id.fence_point_view)
+        requireView().findViewById<com.mpdc4gsr.lib.ui.fence.FencePointView>(R.id.fence_point_view)
             .clear()
     }
 
@@ -520,11 +520,11 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
         if (fenceFlag.getIndex(index) == 0) {
             fenceFlag = 1.shl(4 * (index - 1))
             mFenceLayout!!.visibility = View.VISIBLE
-            requireView().findViewById<com.topdon.lib.ui.fence.FencePointView>(R.id.fence_point_view).visibility =
+            requireView().findViewById<com.mpdc4gsr.lib.ui.fence.FencePointView>(R.id.fence_point_view).visibility =
                 if (fenceFlag.getIndex(1) > 0) View.VISIBLE else View.GONE
-            requireView().findViewById<com.topdon.lib.ui.fence.FenceLineView>(R.id.fence_line_view).visibility =
+            requireView().findViewById<com.mpdc4gsr.lib.ui.fence.FenceLineView>(R.id.fence_line_view).visibility =
                 if (fenceFlag.getIndex(2) > 0) View.VISIBLE else View.GONE
-            requireView().findViewById<com.topdon.lib.ui.fence.FenceView>(R.id.fence_view).visibility =
+            requireView().findViewById<com.mpdc4gsr.lib.ui.fence.FenceView>(R.id.fence_view).visibility =
                 if (fenceFlag.getIndex(3) > 0) View.VISIBLE else View.GONE
         } else {
             fenceFlag = 0x000
@@ -536,7 +536,7 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
     private var selectIndex: ArrayList<Int> = arrayListOf()
 
     private fun initFence() {
-        requireView().findViewById<com.topdon.lib.ui.fence.FencePointView>(R.id.fence_point_view).listener =
+        requireView().findViewById<com.mpdc4gsr.lib.ui.fence.FencePointView>(R.id.fence_point_view).listener =
             object : FencePointView.CallBack {
                 override fun callback(
                     startPoint: IntArray,
@@ -548,7 +548,7 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
                         Fence(srcRect = srcRect, rotateType = rotateType).getPointIndex(startPoint)
                 }
             }
-        requireView().findViewById<com.topdon.lib.ui.fence.FenceLineView>(R.id.fence_line_view).listener =
+        requireView().findViewById<com.mpdc4gsr.lib.ui.fence.FenceLineView>(R.id.fence_line_view).listener =
             object : FenceLineView.CallBack {
                 override fun callback(
                     startPoint: IntArray,
@@ -562,7 +562,7 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
                             .getLineIndex(startPoint, endPoint)
                 }
             }
-        requireView().findViewById<com.topdon.lib.ui.fence.FenceView>(R.id.fence_view).listener =
+        requireView().findViewById<com.mpdc4gsr.lib.ui.fence.FenceView>(R.id.fence_view).listener =
             object : FenceView.CallBack {
                 override fun callback(
                     startPoint: IntArray,
@@ -649,7 +649,7 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
             requireView().findViewById<FrameLayout>(R.id.temp_camera_layout).visibility =
                 View.VISIBLE
             val tempCameraView =
-                requireView().findViewById<com.topdon.lib.ui.camera.CameraView>(R.id.temp_camera_view)
+                requireView().findViewById<com.mpdc4gsr.lib.ui.camera.CameraView>(R.id.temp_camera_view)
             tempCameraView.post {
                 tempCameraView.openCamera()
                 isRunCamera = true
