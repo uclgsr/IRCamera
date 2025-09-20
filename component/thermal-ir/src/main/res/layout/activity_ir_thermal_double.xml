@@ -81,7 +81,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <com.mpdc4gsr.menu.MenuFirstTabView
+        <com.mpdc4gsr.lib.core.menu.MenuFirstTabView
             android:id="@+id/view_menu_first"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
