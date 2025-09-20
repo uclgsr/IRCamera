@@ -85,3 +85,42 @@ tasks.register("buildAll") {
     dependsOn("cleanAll")
     finalizedBy("buildRelease", "buildDebug")
 }
+
+// Create safer wrapper tasks for common build operations
+tasks.register("compileDebugSafe") {
+    group = "build"
+    description = "Safe debug compilation (clean + compile)"
+    dependsOn("cleanAll")
+    finalizedBy(
+        ":app:compileDebugSources",
+        ":BleModule:compileDebugSources", 
+        ":libapp:compileDebugSources",
+        ":libir:compileDebugSources",
+        ":libui:compileDebugSources",
+        ":RangeSeekBar:compileDebugSources",
+        ":component:gsr-recording:compileDebugSources",
+        ":component:thermal:compileDebugSources",
+        ":component:thermal-ir:compileDebugSources",
+        ":component:thermal-lite:compileDebugSources",
+        ":component:user:compileDebugSources"
+    )
+}
+
+tasks.register("compileReleaseSafe") {
+    group = "build"  
+    description = "Safe release compilation (clean + compile)"
+    dependsOn("cleanAll")
+    finalizedBy(
+        ":app:compileReleaseSources",
+        ":BleModule:compileReleaseSources",
+        ":libapp:compileReleaseSources", 
+        ":libir:compileReleaseSources",
+        ":libui:compileReleaseSources",
+        ":RangeSeekBar:compileReleaseSources",
+        ":component:gsr-recording:compileReleaseSources",
+        ":component:thermal:compileReleaseSources",
+        ":component:thermal-ir:compileReleaseSources",
+        ":component:thermal-lite:compileReleaseSources",
+        ":component:user:compileReleaseSources"
+    )
+}
