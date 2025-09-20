@@ -16,10 +16,17 @@
         <item name="android:textSize">14sp</item>
     </style>
 
-    <!-- Toolbar theme style -->
     <style name="ToolbarTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
         <item name="android:textColorPrimary">@color/white</item>
         <item name="android:textColorSecondary">@color/white</item>
+    </style>
+
+    <!-- Base dialog style -->
+    <style name="base_dialog" parent="Theme.AppCompat.Dialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:windowNoTitle">true</item>
     </style>
 
     <!-- Dialog styles for dialog fragments and dialogs -->
