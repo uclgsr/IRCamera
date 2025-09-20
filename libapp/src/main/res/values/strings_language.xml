@@ -119,8 +119,10 @@
     <string name="app_close">Close</string>
     <string name="app_record">Record</string>
     <string name="tip_least_select">Select at least one item</string>
-    <string name="chosen_item">%d items selected</string>
-    <string name="tip_delete_chosen">Do you want to delete the %d items currently selected?</string>
+    <!-- Deprecated: Use chosen_item_plural instead -->
+    <!-- <string name="chosen_item">%d items selected</string> -->
+    <!-- Deprecated: Use tip_delete_chosen_plural instead -->
+    <!-- <string name="tip_delete_chosen">Do you want to delete the %d items currently selected?</string> -->
     <string name="app_video">Video</string>
     <string name="my_message">My message</string>
     <string name="warranty">Service</string>
@@ -479,7 +481,7 @@
     <string name="dual_light_correction_tips_2">1. Let a heat source (such as your palm) stay in the image with a distance of about 0.5 meter from the camera. \n2. Tap to take a photo.</string>
     <string name="dual_light_correction_tips_3">1. Drag the images to align them. \n2. Scroll the progress bar to adjust the angle for alignment. \n3. Press the OK button to complete correction.</string>
 
-    <string name="dual_menu_1">Dual Light1</string>
+    <string name="dual_menu_1">Dual Light</string>
     <string name="dual_menu_2">Dual Light2</string>
 
     <string name="menu_thermal_visible_light">Visible Light</string>
@@ -697,7 +699,8 @@
     <string name="house_item_state1">Good</string>
     <string name="house_item_state2">Repair</string>
     <string name="house_item_state3">Replace</string>
-    <string name="upload_image_count_tips">%d images can be uploaded.</string>
+    <!-- Deprecated: Use upload_image_count_tips_plural instead -->
+    <!-- <string name="upload_image_count_tips">%d images can be uploaded.</string> -->
     <string name="detect_item1">General</string>
     <string name="detect_dir1_root">Exterior</string>
     <string name="detect_dir1_item2">Siding, Flashing &amp; Trim</string>
@@ -756,7 +759,7 @@
     <string name="detect_dir9_item5">Exhaust Systems</string>
     <string name="detect_dir10_root">Fireplaces and Fuel-Burning Appliances</string>
     <string name="detect_dir10_item2">Fireplaces, Stoves &amp; Inserts</string>
-    <string name="detect_dir10_item3">Fuel-buring Accessories</string>
+    <string name="detect_dir10_item3">Fuel-burning Accessories</string>
     <string name="detect_dir10_item4">Chimney &amp; Vent Systems</string>
     <string name="detect_dir11_root">Laundry</string>
     <string name="app_rename">Rename</string>
@@ -974,5 +977,19 @@
     <string name="unlock_professional_perspectives">Unlock professional perspectives</string>
     <string name="app_error_reload">Reload</string>
     <string name="loading_failed_hint">Loading failed. Please try to reload.</string>
+
+    <!-- Plurals for proper localization -->
+    <plurals name="chosen_item_plural">
+        <item quantity="one">%d item selected</item>
+        <item quantity="other">%d items selected</item>
+    </plurals>
+    <plurals name="tip_delete_chosen_plural">
+        <item quantity="one">Do you want to delete the %d item currently selected?</item>
+        <item quantity="other">Do you want to delete the %d items currently selected?</item>
+    </plurals>
+    <plurals name="upload_image_count_tips_plural">
+        <item quantity="one">%d image can be uploaded.</item>
+        <item quantity="other">%d images can be uploaded.</item>
+    </plurals>
 
 </resources>

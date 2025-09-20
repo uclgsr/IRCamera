@@ -46,7 +46,7 @@
             android:src="@drawable/ic_watermark" />
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="6dp"
             android:layout_weight="1"
@@ -127,7 +127,7 @@
 
             <EditText
                 android:id="@+id/ed_address"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:layout_weight="1"

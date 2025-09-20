@@ -118,7 +118,7 @@
         android:layout_marginStart="20dp"
         android:layout_marginTop="28dp"
         android:layout_marginEnd="20dp"
-        android:drawableStart="@drawable/svg_warn_info"
+        app:drawableStartCompat="@drawable/svg_warn_info"
         android:drawablePadding="6dp"
         android:text="@string/fireware_restart_tips"
         android:textColor="@color/white"
