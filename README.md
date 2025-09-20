@@ -41,7 +41,7 @@ See [SIMPLIFIED_ARCHITECTURE.md](SIMPLIFIED_ARCHITECTURE.md) for complete detail
 
 - [Simplified Architecture](SIMPLIFIED_ARCHITECTURE.md) - Current simplified project structure
 - [Copilot Setup Guide](COPILOT_SETUP.md) - GitHub Copilot configuration and usage
-- [PC Controller MVP](pc-controller/README_SIMPLIFIED.md) - Simplified Hub implementation
+- [PC Controller Hub](pc-controller/) - Complete Hub implementation with MVP and GUI options
 - [Samsung Stage3/Level3 RAW DNG](docs/SAMSUNG_STAGE3_RAW_DNG.md) - Advanced RAW capture documentation
 - [Stage3 Integration Guide](docs/INTEGRATION_GUIDE_STAGE3.md) - Developer integration guide
 - [Development Tools](dev.sh) - Use `./dev.sh help` for available commands

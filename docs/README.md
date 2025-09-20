@@ -45,7 +45,6 @@ This is the central documentation hub for the IRCamera Multi-Modal Thermal Sensi
 |----------|---------|----------|
 | **[Samsung Stage3 RAW DNG](SAMSUNG_STAGE3_RAW_DNG.md)** | Advanced RAW capture documentation | Camera Developers |
 | **[Stage3 Integration Guide](INTEGRATION_GUIDE_STAGE3.md)** | Developer integration guide | System Integrators |
-| **[Consolidation Summary](CONSOLIDATION_SUMMARY.md)** | Documentation consolidation overview | Maintainers |
 
 ## Quick Start
 
