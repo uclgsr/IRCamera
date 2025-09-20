@@ -235,7 +235,7 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
     private lateinit var spaceChart: View
     private lateinit var clTrendOpen: ConstraintLayout
     private lateinit var llTrendClose: LinearLayout
-    private lateinit var viewMenuFirst: com.topdon.menu.MenuFirstTabView
+    private lateinit var viewMenuFirst: com.mpdc4gsr.lib.core.menu.MenuFirstTabView
     private lateinit var tvTempContent: TextView
 
     private var hasCompass = true
@@ -277,17 +277,17 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
     private val popTimeLay by lazy { findViewById<View>(R.id.pop_time_lay) }
     private val popTimeText by lazy { findViewById<TextView>(R.id.pop_time_text) }
     protected val layCarDetectPrompt by lazy { findViewById<View>(R.id.lay_car_detect_prompt) }
-    protected val temp_bg by lazy { findViewById<com.topdon.lib.core.comm.view.TempLayout>(R.id.temp_bg) }
+    protected val temp_bg by lazy { findViewById<com.mpdc4gsr.lib.core.comm.view.TempLayout>(R.id.temp_bg) }
     protected val cl_seek_bar by lazy {
-        findViewById<com.topdon.lib.ui.widget.BitmapConstraintLayout>(
+        findViewById<com.mpdc4gsr.lib.ui.widget.BitmapConstraintLayout>(
             R.id.cl_seek_bar
         )
     }
-    protected val cameraPreview by lazy { findViewById<com.topdon.lib.ui.camera.CameraPreView>(R.id.cameraPreview) }
+    protected val cameraPreview by lazy { findViewById<com.mpdc4gsr.lib.ui.camera.CameraPreView>(R.id.cameraPreview) }
     private val distance_measure_view by lazy { findViewById<View>(R.id.distance_measure_view) }
     private val zoomView by lazy { findViewById<com.infisense.usbir.view.ZoomCaliperView>(R.id.zoomView) }
     protected val temperatureSeekbar by lazy {
-        findViewById<com.topdon.lib.ui.widget.seekbar.RangeSeekBar>(
+        findViewById<com.mpdc4gsr.lib.ui.widget.seekbar.RangeSeekBar>(
             R.id.temperature_seekbar
         )
     }
@@ -297,7 +297,7 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
     private val tvTitleObserve by lazy { findViewById<TextView>(R.id.tv_title_observe) }
 
 
-    protected var compassView: com.topdon.module.thermal.ir.view.compass.LinearCompassView? = null
+    protected var compassView: com.mpdc4gsr.module.thermal.ir.view.compass.LinearCompassView? = null
 
 
     private val bitmapWidth: Int

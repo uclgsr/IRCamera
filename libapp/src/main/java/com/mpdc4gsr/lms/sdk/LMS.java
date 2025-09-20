@@ -100,6 +100,12 @@ public class LMS {
     public void activityLogin(Object param) {
     }
 
+    public void activityLogin(Object param, LoginCallback callback) {
+        if (callback != null) {
+            callback.onResult(true); // Stub: always success
+        }
+    }
+
     public void activityLogin(Object param1, Object param2, boolean param3, Object param4, Object param5) {
     }
 
@@ -158,5 +164,9 @@ public class LMS {
 
     public interface UserInfoCallback {
         void onResult(CommonBean userinfo);
+    }
+
+    public interface LoginCallback {
+        void onResult(boolean success);
     }
 }
