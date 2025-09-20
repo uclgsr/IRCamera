@@ -44,7 +44,7 @@ class SettingCheckAdapter(val context: Context) :
                 holder.btn.setTextColor(
                     ContextCompat.getColor(
                         context,
-                        com.mpdc4gsr.lib.core.R.color.white
+                        LibR.color.white
                     )
                 )
             } else {
@@ -52,7 +52,7 @@ class SettingCheckAdapter(val context: Context) :
                 holder.btn.setTextColor(
                     ContextCompat.getColor(
                         context,
-                        com.mpdc4gsr.lib.core.R.color.font_third_color
+                        LibR.color.font_third_color
                     )
                 )
             }

@@ -173,7 +173,7 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
         lifecycleScope.launch {
             try {
 
-                enhancedBLE.addScanListener(object : com.topdon.ble.callback.ScanListener {
+                enhancedBLE.addScanListener(object : com.mpdc4gsr.ble.callback.ScanListener {
                     override fun onScanStart() {
                         Log.d(TAG, "Hub-spoke GSR sensor discovery started")
                         runOnUiThread {

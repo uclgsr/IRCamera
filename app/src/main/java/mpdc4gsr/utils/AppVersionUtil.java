@@ -58,7 +58,7 @@ public class AppVersionUtil {
         }
 
         if (!NetworkUtil.isConnected(mContext)) {
-            TToast.shortToast(mContext, com.topdon.lms.sdk.R.string.lms_setting_http_error);
+            TToast.shortToast(mContext, R.string.lms_setting_http_error);
             return;
         }
         LMS.getInstance().checkAppUpdate(commonBean -> {
@@ -240,7 +240,7 @@ public class AppVersionUtil {
         params.setExecutor(new PriorityExecutor(3, true));
         params.setUri(url);
 
-        com.topdon.lms.sdk.xutils.x.http().get(params, new Callback.ProgressCallback<File>() {
+        com.mpdc4gsr.lms.sdk.xutils.x.http().get(params, new Callback.ProgressCallback<File>() {
             @Override
             public void onWaiting() {
                 XLog.e("bcf", "onWaiting");
