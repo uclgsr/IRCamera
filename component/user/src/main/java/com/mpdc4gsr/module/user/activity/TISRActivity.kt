@@ -49,8 +49,7 @@ class TISRActivity : BaseActivity() {
 
     private fun updateTISR(state: Int) {
         lifecycleScope.launch {
-            // TS004Repository functionality removed
-            val isSuccess = false // TS004Repository.setTISR(state)
+            val isSuccess = false
             if (isSuccess) {
             } else {
                 TToast.shortToast(this@TISRActivity, RCore.string.operation_failed_tips)
