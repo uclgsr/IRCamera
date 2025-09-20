@@ -21,14 +21,9 @@ include(":component:thermal")
 include(":component:gsr-recording")
 include(":component:thermal-ir")
 include(":component:thermal-lite")
-// include(":component:pseudo") // REMOVED - pseudo module safely removed, functionality moved to libapp stubs
 include(":component:user")
-// include(":component:CommonComponent") // CONSOLIDATED into thermal-lite
 include(":libapp")
-// include(":libcom") // CONSOLIDATED into :libapp
 include(":libir")
-// include(":libmatrix") // CONSOLIDATED into :libapp
 include(":libui")
-// include(":libmenu") // CONSOLIDATED into :libapp
 include(":BleModule")
 include(":RangeSeekBar")

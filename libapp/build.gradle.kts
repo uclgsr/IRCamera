@@ -122,7 +122,7 @@ configurations.all {
 }
 
 dependencies {
-    
+
     implementation(libs.kotlin.stdlib)
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.coroutines.android)
@@ -137,7 +137,7 @@ dependencies {
     api(libs.lifecycle.runtime.ktx)
     api(libs.lifecycle.viewmodel.ktx)
     api(libs.lifecycle.livedata.ktx)
-    ksp(libs.room.compiler) 
+    ksp(libs.room.compiler)
     api(libs.room.ktx)
     api(libs.work.runtime.ktx)
     api(libs.retrofit2)
@@ -145,7 +145,7 @@ dependencies {
     api(libs.adapter.rxjava2)
     api(libs.eventbus)
     api(libs.glide)
-    ksp(libs.glide.compiler) 
+    ksp(libs.glide.compiler)
     api(libs.rxjava2)
     api(libs.rxandroid)
     api(libs.utilcode)
@@ -160,24 +160,9 @@ dependencies {
     api(libs.javacv)
     api(libs.javacpp)
     api(project(":BleModule"))
-    
-    // Apache POI dependencies for Excel export functionality
+
     api(libs.apache.poi.ooxml)
     api(libs.xmlbeans)
     api(libs.stax.api)
     api(libs.aalto.xml)
-
-    // LMS AAR dependency removed - replaced with stub implementations
-    // val lmsAarCandidates = listOf(
-    //     file("libs/lms_international-3.90.009.0.aar"),
-    //     file("../app/libs/lms_international-3.90.009.0.aar"),
-    //     file("../shared/libs/lms_international-3.90.009.0.aar")
-    // )
-    // val lmsAar = lmsAarCandidates.firstOrNull { it.exists() && it.length() > 0L }
-    // if (lmsAar != null) {
-    //     compileOnly(files(lmsAar))
-    //     logger.lifecycle("libapp: Using LMS AAR from ${lmsAar.absolutePath}")
-    // } else {
-    //     logger.warn("libapp: Skipping lms_international AAR because no valid file found in libapp/app/shared libs")
-    // }
 }

@@ -29,15 +29,10 @@ tasks.register("buildRelease") {
         ":app:assembleRelease",
         ":BleModule:assembleRelease",
         ":libapp:assembleRelease",
-        // ":libcom:assembleRelease", // CONSOLIDATED into :libapp
         ":libir:assembleRelease",
-        // ":libmatrix:assembleRelease", // CONSOLIDATED into :libapp
-        // ":libmenu:assembleRelease", // CONSOLIDATED into :libapp
         ":libui:assembleRelease",
         ":RangeSeekBar:assembleRelease",
-        // ":component:CommonComponent:assembleRelease", // CONSOLIDATED into thermal-lite
         ":component:gsr-recording:assembleRelease",
-        // ":component:pseudo:assembleRelease", // REMOVED - pseudo module safely removed, functionality moved to libapp stubs
         ":component:thermal:assembleRelease",
         ":component:thermal-ir:assembleRelease",
         ":component:thermal-lite:assembleRelease",
