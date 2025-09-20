@@ -57,7 +57,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed"
-        tools:text="发现新版本 V3.50" />
+        tools:text="[TEXT]Version V3.50" />
 
     
     <TextView
@@ -73,7 +73,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_title"
-        tools:text="大小: 239.6MB" />
+        tools:text="Size: 239.6MB" />
 
 
     <TextView
@@ -108,7 +108,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/white"
             android:textSize="14sp"
-            tools:text="1. 这是详情，优化体验，修复若干问题。\n2. 四五千二修复若干问题四五千二修复若干问题四五千二修复若干问题。" />
+            tools:text="1. [TEXT]Details，[TEXT]，[TEXT]。\n2. [TEXT]。" />
     </ScrollView>
 
     <TextView

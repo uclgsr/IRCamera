@@ -81,7 +81,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
             public void run() {
                 Looper.prepare();
 
-                Toast.makeText(mContext, "程序发生异常，即将重启", Toast.LENGTH_LONG)
+                Toast.makeText(mContext, "Program Exception Occurred，About to Restart", Toast.LENGTH_LONG)
                         .show();
                 Looper.loop();
             }

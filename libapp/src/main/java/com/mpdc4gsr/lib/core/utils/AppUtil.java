@@ -74,7 +74,7 @@ public class AppUtil {
             return false;
         }
         for (ActivityManager.RunningServiceInfo serviceInfo : runningServiceInfos) {
-            XLog.w("bcf", "进程名=" + serviceInfo.service.getClassName());
+            XLog.w("bcf", "[TEXT]=" + serviceInfo.service.getClassName());
             if (serviceInfo.process.equals(serviceName)) {
                 return true;
             }
@@ -89,7 +89,7 @@ public class AppUtil {
             return false;
         }
         for (ActivityManager.RunningServiceInfo serviceInfo : runningServiceInfos) {
-            XLog.w("bcf", "类名=" + serviceInfo.service.getClassName());
+            XLog.w("bcf", "[TEXT]=" + serviceInfo.service.getClassName());
             if (serviceInfo.service.getClassName().equals(serviceName)) {
                 return true;
             }

@@ -18,7 +18,7 @@
         app:layout_constraintEnd_toStartOf="@+id/switch_item"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="这是一个item条目名" />
+        tools:text="This is aitemItem Name" />
 
     <androidx.appcompat.widget.SwitchCompat
         android:id="@+id/switch_item"

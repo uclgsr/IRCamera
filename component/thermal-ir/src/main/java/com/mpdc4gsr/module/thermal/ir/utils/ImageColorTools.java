@@ -187,7 +187,7 @@ public class ImageColorTools {
                 }
             }
         }
-        Log.e("执行耗时：", System.currentTimeMillis() - time + "//");
+        Log.e("Execution Time：", System.currentTimeMillis() - time + "//");
 
 
         Bitmap outputBitmap = Bitmap.createBitmap(imageColor.cols(), imageColor.rows(), Bitmap.Config.ARGB_8888);
@@ -241,7 +241,7 @@ public class ImageColorTools {
         long time = System.currentTimeMillis();
 
 
-        Log.e("执行耗时：", System.currentTimeMillis() - time + "//");
+        Log.e("Execution Time：", System.currentTimeMillis() - time + "//");
 
 
         Bitmap outputBitmap = Bitmap.createBitmap(imageMat.cols(), imageMat.rows(), Bitmap.Config.ARGB_8888);

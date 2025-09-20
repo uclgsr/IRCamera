@@ -53,7 +53,7 @@
             android:textSize="14sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_content_1"
-            tools:text="1.clickobservation类型，选择observation的目标。" />
+            tools:text="1.clickobservation[TEXT]，Selectobservation[TEXT]。" />
 
         <TextView
             android:id="@+id/tv_content_3"

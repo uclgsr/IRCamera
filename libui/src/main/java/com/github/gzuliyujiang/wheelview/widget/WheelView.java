@@ -213,12 +213,12 @@ public class WheelView extends View implements Runnable {
 
     protected List<?> generatePreviewData() {
         List<String> data = new ArrayList<>();
-        data.add("贵州穿青human");
-        data.add("大定府羡民");
-        data.add("不在五十六个民族之内");
-        data.add("已识别待定民族");
-        data.add("穿青山魈human马");
-        data.add("李裕江");
+        data.add("[CHINESE_TEXT]human");
+        data.add("[CHINESE_TEXT]");
+        data.add("[CHINESE_TEXT]");
+        data.add("[CHINESE_TEXT]");
+        data.add("[CHINESE_TEXT]human[CHINESE_TEXT]");
+        data.add("[CHINESE_TEXT]");
         return data;
     }
 

@@ -71,7 +71,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/iv_report_place"
             app:layout_constraintTop_toBottomOf="@id/tv_report_date"
-            tools:text="深圳市南山区前海" />
+            tools:text="[TEXT]" />
 
         <androidx.constraintlayout.widget.Group
             android:id="@+id/group_report_place"

@@ -76,7 +76,7 @@
                     app:layout_constraintEnd_toStartOf="@+id/view_default_temp_bg"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/view_line_default1"
-                    tools:text="环境温度 (-10~55°C)" />
+                    tools:text="[TEXT] (-10~55°C)" />
 
                 <TextView
                     android:id="@+id/space_default_temp_title"
@@ -136,7 +136,7 @@
                     app:layout_constraintEnd_toStartOf="@+id/view_default_dis_bg"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_default_temp_title"
-                    tools:text="测温距离 (0.2m~5m)" />
+                    tools:text="[TEXT] (0.2m~5m)" />
 
                 <TextView
                     android:id="@+id/space_default_dis_title"
@@ -196,7 +196,7 @@
                     app:layout_constraintEnd_toStartOf="@+id/tv_default_em_value"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_default_dis_title"
-                    tools:text="发射率 (0.01~1.00)" />
+                    tools:text="[TEXT] (0.01~1.00)" />
 
                 <TextView
                     android:id="@+id/space_default_em_title"

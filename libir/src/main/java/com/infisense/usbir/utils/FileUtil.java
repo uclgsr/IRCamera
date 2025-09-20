@@ -106,9 +106,9 @@ public class FileUtil {
             FileOutputStream fos = new FileOutputStream(file);
             fos.write(toByteArray(bytes));
             fos.close();
-            Log.i(TAG, fileTitle + " saved成功");
+            Log.i(TAG, fileTitle + " savedSuccess");
         } catch (IOException e) {
-            Log.e(TAG, fileTitle + " saved失败：" + e.getMessage());
+            Log.e(TAG, fileTitle + " savedFailed：" + e.getMessage());
         }
     }
 
@@ -415,7 +415,7 @@ public class FileUtil {
             }
 
             if (!file.createNewFile()) {
-                Log.e(TAG, "创建文件 " + srcFileName + " 失败");
+                Log.e(TAG, "Create File " + srcFileName + " Failed");
                 return;
             }
 
