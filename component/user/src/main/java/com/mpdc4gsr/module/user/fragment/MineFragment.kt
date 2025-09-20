@@ -192,7 +192,7 @@ class MineFragment : BaseFragment(), View.OnClickListener {
                 if (LMS.getInstance().isLogin) {
                     val devSn = SharedManager.getDeviceSn()
                     FeedBackBean().apply {
-                        logPath = logPath
+                        logPath = "" // Default empty log path
                         sn = devSn
                         lastConnectSn = devSn
                         XLog.e("bcf", "sn $sn  logPath $logPath")

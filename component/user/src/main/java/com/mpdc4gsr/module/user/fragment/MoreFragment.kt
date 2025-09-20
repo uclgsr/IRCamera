@@ -9,7 +9,8 @@ import androidx.lifecycle.lifecycleScope
 import com.blankj.utilcode.util.ToastUtils
 import com.elvishew.xlog.XLog
 import com.mpdc4gsr.lib.core.BaseApplication
-import com.mpdc4gsr.lib.core.bean.event.TS004ResetEvent
+// TS004ResetEvent removed
+// import com.mpdc4gsr.lib.core.bean.event.TS004ResetEvent
 import com.mpdc4gsr.lib.core.common.SaveSettingUtil
 import com.mpdc4gsr.lib.core.common.SharedManager
 import com.mpdc4gsr.lib.core.common.WifiSaveSettingUtil
@@ -22,7 +23,8 @@ import com.mpdc4gsr.lib.core.dialog.TipDialog
 import com.mpdc4gsr.lib.core.http.tool.DownloadTool
 import com.mpdc4gsr.lib.core.ktbase.BaseFragment
 import com.mpdc4gsr.lib.core.navigation.NavigationManager
-import com.mpdc4gsr.lib.core.repository.ProductBean
+// ProductBean functionality removed
+// import com.mpdc4gsr.lib.core.repository.ProductBean
 
 import com.mpdc4gsr.lib.core.socket.WebSocketProxy
 import com.mpdc4gsr.lib.core.tools.DeviceTools

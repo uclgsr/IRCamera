@@ -10,7 +10,8 @@ import com.mpdc4gsr.lib.core.config.ExtraKeyConfig
 import com.mpdc4gsr.lib.core.ktbase.BaseActivity
 import com.mpdc4gsr.lib.core.repository.ProductBean
 
-import com.mpdc4gsr.lib.core.repository.TS004Repository
+// TS004Repository functionality removed
+// import com.mpdc4gsr.lib.core.repository.TS004Repository
 import com.mpdc4gsr.lms.sdk.utils.TLog
 import com.mpdc4gsr.lms.sdk.weiget.TToast
 import com.mpdc4gsr.module.user.R

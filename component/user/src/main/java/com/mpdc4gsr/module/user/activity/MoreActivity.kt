@@ -8,7 +8,8 @@ import androidx.lifecycle.lifecycleScope
 import com.blankj.utilcode.util.ToastUtils
 import com.elvishew.xlog.XLog
 import com.mpdc4gsr.lib.core.BaseApplication
-import com.mpdc4gsr.lib.core.bean.event.TS004ResetEvent
+// TS004ResetEvent removed
+// import com.mpdc4gsr.lib.core.bean.event.TS004ResetEvent
 import com.mpdc4gsr.lib.core.config.ExtraKeyConfig
 import com.mpdc4gsr.lib.core.config.FileConfig
 import com.mpdc4gsr.lib.core.config.RouterConfig
@@ -18,7 +19,8 @@ import com.mpdc4gsr.lib.core.dialog.TipDialog
 import com.mpdc4gsr.lib.core.http.tool.DownloadTool
 import com.mpdc4gsr.lib.core.ktbase.BaseActivity
 import com.mpdc4gsr.lib.core.navigation.NavigationManager
-import com.mpdc4gsr.lib.core.repository.TS004Repository
+// TS004Repository functionality removed
+// import com.mpdc4gsr.lib.core.repository.TS004Repository
 import com.mpdc4gsr.lib.core.utils.Constants
 import com.mpdc4gsr.lib.core.viewmodel.FirmwareViewModel
 import com.mpdc4gsr.lms.sdk.weiget.TToast
@@ -199,7 +201,8 @@ class MoreActivity : BaseActivity(), View.OnClickListener {
             val installDialog = FirmwareInstallDialog(this@MoreActivity)
             installDialog.show()
 
-            val isSuccess = TS004Repository.updateFirmware(file)
+            // TS004Repository functionality removed
+            val isSuccess = false // TS004Repository.updateFirmware(file)
             installDialog.dismiss()
             if (isSuccess) {
                 XLog.d("TS004 固件升级 - 固件升级包发送往 TS004 成功，即将断开连接")
@@ -240,7 +243,8 @@ class MoreActivity : BaseActivity(), View.OnClickListener {
 
     private fun updateVersion() {
         lifecycleScope.launch {
-            val versionBean = TS004Repository.getVersion()
+            // TS004Repository functionality removed
+            val versionBean = null // TS004Repository.getVersion()
             if (versionBean?.isSuccess() == true) {
                 itemSettingBottomText.text =
                     getString(RCore.string.setting_firmware_update_version) + "V" + versionBean.data?.firmware
@@ -267,12 +271,13 @@ class MoreActivity : BaseActivity(), View.OnClickListener {
         showLoadingDialog(RCore.string.ts004_reset_tip3)
         lifecycleScope.launch {
             XLog.i("准备调用恢复出厂设置接口")
-            val isSuccess = TS004Repository.getResetAll()
+            // TS004Repository functionality removed
+            val isSuccess = false // TS004Repository.getResetAll()
             XLog.i("恢复出厂设置接口调用 ${if (isSuccess) "成功" else "失败"}")
             if (isSuccess) {
                 TToast.shortToast(this@MoreActivity, RCore.string.ts004_reset_tip4)
                 (application as BaseApplication).disconnectWebSocket()
-                EventBus.getDefault().post(TS004ResetEvent())
+                // EventBus.getDefault().post(TS004ResetEvent()) // Event removed
                 NavigationManager.getInstance().build(RouterConfig.MAIN)
                     .navigation(this@MoreActivity)
                 finish()

@@ -21,6 +21,8 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
         val tipsStr: String?,
         val fileName: String,
         val size: Long = 0,
+        val updateStr: String = "",
+        val downUrl: String = "",
     )
 
     fun queryFirmware(isTS004: Boolean = false) {
