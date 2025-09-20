@@ -40,6 +40,7 @@ import com.mpdc4gsr.lms.sdk.UrlConstant
 import com.mpdc4gsr.lms.sdk.bean.CommonBean
 import com.mpdc4gsr.lms.sdk.bean.FeedBackBean
 import com.mpdc4gsr.lms.sdk.feedback.activity.FeedbackActivity
+import com.mpdc4gsr.commons.util.FolderUtil
 import com.mpdc4gsr.module.user.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -192,7 +193,7 @@ class MineFragment : BaseFragment(), View.OnClickListener {
                 if (LMS.getInstance().isLogin) {
                     val devSn = SharedManager.getDeviceSn()
                     FeedBackBean().apply {
-                        logPath = logPath
+                        logPath = FolderUtil.getLogPath()
                         sn = devSn
                         lastConnectSn = devSn
                         XLog.e("bcf", "sn $sn  logPath $logPath")

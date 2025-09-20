@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.BarUtils
 import com.mpdc4gsr.lib.core.ktbase.BaseActivity
-import com.mpdc4gsr.menu.MenuFirstTabView
+import com.mpdc4gsr.lib.core.menu.MenuFirstTabView
 import com.mpdc4gsr.module.thermal.R
 import com.mpdc4gsr.module.thermal.adapter.MenuTabAdapter
 import com.mpdc4gsr.module.thermal.fragment.event.ThermalActionEvent
