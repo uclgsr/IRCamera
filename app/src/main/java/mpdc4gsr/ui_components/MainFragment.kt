@@ -141,15 +141,6 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerView.adapter = adapter
 
-        if (WebSocketProxy.getInstance().isTC007Connect()) {
-            // TC007Repository functionality removed
-            // lifecycleScope.launch {
-            //     val batteryInfo: BatteryInfo? = TC007Repository.getBatteryInfo()
-            //     if (batteryInfo != null) {
-            //         adapter.tc007Battery = batteryInfo
-            //     }
-            // }
-        }
         viewLifecycleOwner.lifecycle.addObserver(
             object : DefaultLifecycleObserver {
                 override fun onResume(owner: LifecycleOwner) {
@@ -325,7 +316,7 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
             private val tvDeviceState: TextView = rootView.findViewById(R.id.tv_device_state)
             private val tvBattery: TextView = rootView.findViewById(R.id.tv_battery)
             private val ivImage: ImageView = rootView.findViewById(R.id.iv_image)
-            private val batteryView: com.topdon.lib.ui.widget.BatteryView =
+            private val batteryView: com.mpdc4gsr.lib.ui.widget.BatteryView =
                 rootView.findViewById(R.id.battery_view)
             private val viewDeviceState: View = rootView.findViewById(R.id.view_device_state)
 
@@ -465,7 +456,7 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
                 try {
                     val intent = Intent(
                         requireContext(),
-                        Class.forName("com.topdon.tc001.gsr.GSRQuickRecordingActivity")
+                        Class.forName("mpdc4gsr.sensors.gsr.GSRQuickRecordingActivity")
                     )
                     startActivity(intent)
                 } catch (e: ClassNotFoundException) {
@@ -499,7 +490,7 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
         try {
             val intent = Intent(
                 requireContext(),
-                com.topdon.tc001.camera.integration.DualModeCameraActivity::class.java
+                mpdc4gsr.camera.integration.DualModeCameraActivity::class.java
             )
             intent.putExtra("INITIAL_MODE", initialMode)
             intent.putExtra("ENABLE_SAMSUNG_OPTIMIZATIONS", true)

@@ -277,13 +277,6 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         if (DeviceTools.isConnect()) {
             SharedManager.hasTcLine = true
         }
-        // TS004/TC007 functionality removed
-        // if (WebSocketProxy.getInstance().isTS004Connect()) {
-        //     SharedManager.hasTS004 = true
-        // }
-        // if (WebSocketProxy.getInstance().isTC007Connect()) {
-        //     SharedManager.hasTC007 = true
-        // }
 
     }
 

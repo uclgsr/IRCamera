@@ -19,6 +19,7 @@ import com.blankj.utilcode.util.SizeUtils
 import com.bumptech.glide.request.RequestOptions
 import com.elvishew.xlog.XLog
 import com.google.gson.Gson
+import com.mpdc4gsr.lib.core.BaseApplication
 import com.mpdc4gsr.lib.core.bean.event.PDFEvent
 import com.mpdc4gsr.lib.core.bean.event.WinterClickEvent
 import com.mpdc4gsr.lib.core.bean.response.ResponseUserInfo
@@ -39,6 +40,7 @@ import com.mpdc4gsr.lms.sdk.UrlConstant
 import com.mpdc4gsr.lms.sdk.bean.CommonBean
 import com.mpdc4gsr.lms.sdk.bean.FeedBackBean
 import com.mpdc4gsr.lms.sdk.feedback.activity.FeedbackActivity
+import com.mpdc4gsr.commons.util.FolderUtil
 import com.mpdc4gsr.module.user.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -99,6 +101,10 @@ class MineFragment : BaseFragment(), View.OnClickListener {
 
         viewWinterPoint.isVisible = !SharedManager.hasClickWinter
 
+        if (BaseApplication.instance.isDomestic()) {
+
+        }
+
         viewLifecycleOwner.lifecycle.addObserver(
             object : DefaultLifecycleObserver {
                 override fun onResume(owner: LifecycleOwner) {
@@ -112,7 +118,6 @@ class MineFragment : BaseFragment(), View.OnClickListener {
     }
 
     override fun initData() {
-        // TODO: Implement data initialization if needed.
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -158,7 +163,7 @@ class MineFragment : BaseFragment(), View.OnClickListener {
             settingUserLay, settingUserImgNight -> {
                 if (UserInfoManager.getInstance().isLogin()) {
                     isNeedRefreshLogin = true
-                    LMS.getInstance().activityUserInfo(requireContext())
+                    LMS.getInstance().activityUserInfo()
                 } else {
                     loginAction()
                 }
@@ -186,7 +191,12 @@ class MineFragment : BaseFragment(), View.OnClickListener {
 
             settingFeedback -> {
                 if (LMS.getInstance().isLogin) {
+                    val devSn = SharedManager.getDeviceSn()
                     FeedBackBean().apply {
+                        logPath = ""
+                        sn = devSn
+                        lastConnectSn = devSn
+                        XLog.e("bcf", "sn $sn  logPath $logPath")
                     }.let { feedBackBean ->
                         val intent = Intent(requireContext(), FeedbackActivity::class.java)
                         intent.putExtra(FeedbackActivity.FEEDBACKBEAN, feedBackBean)
