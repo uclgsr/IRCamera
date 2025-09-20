@@ -9,6 +9,8 @@ import android.widget.Button
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.mpdc4gsr.module.thermal.R
+import com.mpdc4gsr.lib.ui.R as LibUiR
+import com.mpdc4gsr.lib.core.R as LibR
 
 class SettingCheckAdapter(val context: Context) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -39,19 +41,19 @@ class SettingCheckAdapter(val context: Context) :
         if (holder is ItemView) {
             holder.btn.text = datas[position]
             if (position == selectTime) {
-                holder.btn.setBackgroundResource(com.topdon.lib.ui.R.drawable.ic_menu_thermal7001_svg)
+                holder.btn.setBackgroundResource(LibUiR.drawable.ic_menu_thermal7001_svg)
                 holder.btn.setTextColor(
                     ContextCompat.getColor(
                         context,
-                        com.mpdc4gsr.lib.core.R.color.white
+                        LibR.color.white
                     )
                 )
             } else {
-                holder.btn.setBackgroundResource(com.topdon.lib.ui.R.drawable.ic_menu_thermal7002_svg)
+                holder.btn.setBackgroundResource(LibUiR.drawable.ic_menu_thermal7002_svg)
                 holder.btn.setTextColor(
                     ContextCompat.getColor(
                         context,
-                        com.mpdc4gsr.lib.core.R.color.font_third_color
+                        LibR.color.font_third_color
                     )
                 )
             }

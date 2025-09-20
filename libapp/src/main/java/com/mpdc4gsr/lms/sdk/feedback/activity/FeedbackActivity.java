@@ -7,6 +7,8 @@ import android.os.Bundle;
  * Feedback Activity stub for LMS SDK
  */
 public class FeedbackActivity extends Activity {
+    public static final String FEEDBACKBEAN = "FEEDBACKBEAN";
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
