@@ -8,6 +8,9 @@ maintainability.
 ### Support Libraries in this Directory
 
 - **CommonComponent** (4 files) - Shared component utilities and common functionality
+- **SharedUtilities** (NEW) - Consolidated utility classes including:
+  - `HexDump` - Consolidated hex dump functionality from 4 duplicate implementations
+  - Future consolidated utilities from across the codebase
 
 ### Planned Libraries (Future Organization)
 
@@ -38,6 +41,7 @@ Components reference these libraries using project dependencies:
 ```kotlin
 // Currently available
 implementation(project(":consolidated_libraries:CommonComponent"))
+implementation(project(":consolidated_libraries:SharedUtilities"))
 
 // Planned for future consolidation
 // implementation(project(":consolidated_libraries:libcom"))
