@@ -8,4 +8,6 @@
     <color name="chart_bg_top_max">#FF9C27B0</color>
     <color name="chart_bg_bottom_min">#FF4CAF50</color>
     <color name="chart_bg_top_min">#FFFF9800</color>
+    <color name="chart_bg_bottom_center">#FF607D8B</color>
+    <color name="chart_bg_top_center">#FFFF5722</color>
 </resources>
