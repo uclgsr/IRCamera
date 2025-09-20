@@ -21,7 +21,7 @@ object SaveSettingUtil {
 
     const val FusionTypeVLOnly = 0
 
-    const val FusionTypeTC007Fusion = 7
+    // FusionTypeTC007Fusion constant removed - TC007 device support discontinued
 
     const val FusionTypeHSLFusion = 3
     const val FusionTypeScreenFusion = 5

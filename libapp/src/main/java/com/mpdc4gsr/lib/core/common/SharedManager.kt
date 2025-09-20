@@ -40,23 +40,11 @@ object SharedManager {
             SPUtils.getInstance().put("hasConnectTcLine", value)
         }
 
-    var hasTS004: Boolean
-        get() = SPUtils.getInstance().getBoolean("hasConnectTS004", false)
-        set(value) {
-            SPUtils.getInstance().put("hasConnectTS004", value)
-        }
+    // hasTS004 and hasTC007 properties removed - TS004/TC007 device support discontinued
 
-    var hasTC007: Boolean
-        get() = SPUtils.getInstance().getBoolean("hasConnectTC007", false)
-        set(value) {
-            SPUtils.getInstance().put("hasConnectTC007", value)
-        }
+    // hasTC007 property removed - TC007 device support discontinued
 
-    var irConfigJsonTC007: String
-        get() = SPUtils.getInstance().getString("irConfigJsonTC007")
-        set(value) {
-            SPUtils.getInstance().put("irConfigJsonTC007", value)
-        }
+    // irConfigJsonTC007 property removed - TC007 device support discontinued
 
     var homeGuideStep: Int
         get() {
@@ -411,13 +399,7 @@ object SharedManager {
         return SPUtils.getInstance().getString(SP_CUSTOM_PSEUDO, "")
     }
 
-    fun saveTC007CustomPseudo(json: String) {
-        SPUtils.getInstance().put(SP_TC007_CUSTOM_PSEUDO, json)
-    }
-
-    fun getTC0007CustomPseudo(): String {
-        return SPUtils.getInstance().getString(SP_TC007_CUSTOM_PSEUDO, "")
-    }
+    // saveTC007CustomPseudo and getTC0007CustomPseudo methods removed - TC007 device support discontinued
 
     fun getTargetPop(): Boolean {
         return SPUtils.getInstance().getBoolean(SP_TARGET_POP, false)

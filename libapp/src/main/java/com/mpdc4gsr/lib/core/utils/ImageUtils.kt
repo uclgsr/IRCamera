@@ -23,10 +23,10 @@ object ImageUtils {
 
     fun save(
         bitmap: Bitmap,
-        isTC007: Boolean = false,
+        // isTC007 parameter removed - TC007 functionality disabled
     ): String {
 
-        val dicName = if (isTC007) "TC007" else CommUtils.getAppName()
+        val dicName = CommUtils.getAppName() // Always use app name, TC007 functionality removed
         val fileName = "${dicName}_${System.currentTimeMillis()}.jpg"
         val saveFile = ImageUtils.save2Album(bitmap, dicName, Bitmap.CompressFormat.JPEG)
         return if (saveFile != null) {

@@ -10,7 +10,8 @@ import com.mpdc4gsr.lib.core.config.RouterConfig
 import com.mpdc4gsr.lib.core.dialog.TipDialog
 import com.mpdc4gsr.lib.core.ktbase.BaseActivity
 import com.mpdc4gsr.lib.core.navigation.NavigationManager
-import com.mpdc4gsr.lib.core.repository.TS004Repository
+// TS004Repository functionality removed
+// import com.mpdc4gsr.lib.core.repository.TS004Repository
 import com.mpdc4gsr.lms.sdk.utils.TLog
 import com.mpdc4gsr.lms.sdk.weiget.TToast
 import com.mpdc4gsr.module.user.R
@@ -82,63 +83,19 @@ class StorageSpaceActivity : BaseActivity(), View.OnClickListener {
     @SuppressLint("SetTextI18n")
     override fun initData() {
         lifecycleScope.launch {
-            val freeSpaceBean = TS004Repository.getFreeSpace()
-            if (freeSpaceBean == null) {
-                TToast.shortToast(this@StorageSpaceActivity, RCore.string.operation_failed_tips)
-            } else {
-                TLog.d("ts004", "║ response :$freeSpaceBean")
+            TToast.shortToast(this@StorageSpaceActivity, RCore.string.operation_failed_tips)
+            tvProgressValue.text = "0%"
+            tvUsedValue.text = formatFileSize(0L)
+            tvUsed.text = getUnit(0L)
+            tvTotalValue.text = " / " + formatFileSize(0L)
+            tvTotal.text = getUnit(0L)
 
-                tvProgressValue.text = "${
-                    (freeSpaceBean.hasUseSize() * 100.0 / freeSpaceBean.total).toInt()
-                        .coerceAtLeast(1)
-                }"
+            listStoragePhoto.setRightText(formatFileSize(0L) + getUnit(0L))
+            listStorageVideo.setRightText(formatFileSize(0L) + getUnit(0L))
+            listStorageSystem.setRightText(formatFileSize(0L) + getUnit(0L))
 
-                tvUsedValue.text = formatFileSize(freeSpaceBean.hasUseSize())
-                tvUsed.text = getUnit(freeSpaceBean.hasUseSize())
-                tvTotalValue.text = " / " + formatFileSize(freeSpaceBean.total)
-                tvTotal.text = getUnit(freeSpaceBean.total)
-
-                listStoragePhoto.setRightText(
-                    formatFileSize(freeSpaceBean.image_size) + getUnit(
-                        freeSpaceBean.image_size
-                    )
-                )
-                listStorageVideo.setRightText(
-                    formatFileSize(freeSpaceBean.video_size) + getUnit(
-                        freeSpaceBean.video_size
-                    )
-                )
-                listStorageSystem.setRightText(
-                    formatFileSize(freeSpaceBean.system) + getUnit(
-                        freeSpaceBean.system
-                    )
-                )
-
-                val systemPercent =
-                    (freeSpaceBean.system * 100.0 / freeSpaceBean.total).toInt().coerceAtLeast(1)
-                        .coerceAtMost(98)
-                val imagePercent = (freeSpaceBean.image_size * 100.0 / freeSpaceBean.total).toInt()
-                    .coerceAtLeast(1).coerceAtMost(98)
-                val videoPercent = (freeSpaceBean.video_size * 100.0 / freeSpaceBean.total).toInt()
-                    .coerceAtLeast(1).coerceAtMost(98)
-                val colorList = arrayListOf<ColorsBean>()
-                colorList.add(ColorsBean(0, systemPercent, 0xff8d98a9.toInt()))
-                colorList.add(
-                    ColorsBean(
-                        systemPercent,
-                        systemPercent + imagePercent,
-                        0xff019dff.toInt()
-                    )
-                )
-                colorList.add(
-                    ColorsBean(
-                        systemPercent + imagePercent,
-                        systemPercent + imagePercent + videoPercent,
-                        0xff70e297.toInt()
-                    )
-                )
-                customViewProgress.setSegmentPart(colorList)
-            }
+            val colorList = arrayListOf<ColorsBean>()
+            colorList.add(ColorsBean(0, 1, 0xff8d98a9.toInt()))
         }
     }
 
@@ -152,7 +109,7 @@ class StorageSpaceActivity : BaseActivity(), View.OnClickListener {
                     .setPositiveListener(RCore.string.app_ok) {
                         showLoadingDialog()
                         lifecycleScope.launch {
-                            val isSuccess = TS004Repository.getFormatStorage()
+                            val isSuccess = false // TS004Repository.getFormatStorage()
                             if (isSuccess) {
                                 XLog.d("TS004 格式化存储成功，即将断开连接")
                                 (application as BaseApplication).disconnectWebSocket()

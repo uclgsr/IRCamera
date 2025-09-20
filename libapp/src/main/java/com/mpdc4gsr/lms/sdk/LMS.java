@@ -6,6 +6,8 @@ import com.mpdc4gsr.lms.sdk.bean.AppInfoBean;
 import com.mpdc4gsr.lms.sdk.bean.CommonBean;
 import com.mpdc4gsr.lms.sdk.network.IResponseCallback;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.File;
 
 /**
@@ -109,7 +111,7 @@ public class LMS {
     public void activityLogin(Object param1, Object param2, boolean param3, Object param4, Object param5) {
     }
 
-    public void activityUserInfo() {
+    public void activityUserInfo(@NotNull Context requireContext) {
     }
 
     public void activityEnv() {

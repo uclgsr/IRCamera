@@ -18,7 +18,7 @@ import com.mpdc4gsr.lib.core.config.ExtraKeyConfig
 import com.mpdc4gsr.lib.core.db.dao.ThermalDao
 import com.mpdc4gsr.lib.core.dialog.TipDialog
 import com.mpdc4gsr.lib.core.tools.TimeTool
-import com.mpdc4gsr.libcom.view.CommLoadMoreView
+import com.mpdc4gsr.lib.core.comm.view.CommLoadMoreView
 import com.mpdc4gsr.module.thermal.ir.R
 import com.mpdc4gsr.module.thermal.ir.activity.IRLogMPChartActivity
 import com.mpdc4gsr.module.thermal.ir.event.MonitorCreateEvent

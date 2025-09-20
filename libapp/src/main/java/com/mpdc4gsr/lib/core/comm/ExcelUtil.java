@@ -12,6 +12,7 @@ import androidx.annotation.Nullable;
 import com.blankj.utilcode.util.TimeUtils;
 import com.blankj.utilcode.util.UriUtils;
 import com.blankj.utilcode.util.Utils;
+import com.mpdc4gsr.lib.core.R;
 import com.mpdc4gsr.lib.core.common.SharedManager;
 import com.mpdc4gsr.lib.core.config.FileConfig;
 import com.mpdc4gsr.lib.core.db.entity.ThermalEntity;

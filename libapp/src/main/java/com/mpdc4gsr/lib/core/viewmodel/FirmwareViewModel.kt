@@ -3,16 +3,12 @@ package com.mpdc4gsr.lib.core.viewmodel
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
 import com.blankj.utilcode.util.FileUtils
 import com.blankj.utilcode.util.Utils
 import com.elvishew.xlog.XLog
 import com.google.gson.Gson
 import com.mpdc4gsr.lib.core.R
 import com.mpdc4gsr.lib.core.config.FileConfig
-import com.mpdc4gsr.lib.core.repository.ProductBean
-import com.mpdc4gsr.lib.core.repository.TC007Repository
-import com.mpdc4gsr.lib.core.repository.TS004Repository
 import com.mpdc4gsr.lms.sdk.LMS
 import com.mpdc4gsr.lms.sdk.UrlConstant
 import com.mpdc4gsr.lms.sdk.bean.CommonBean
@@ -23,12 +19,10 @@ import com.mpdc4gsr.lms.sdk.utils.DateUtils
 import com.mpdc4gsr.lms.sdk.utils.LanguageUtil
 import com.mpdc4gsr.lms.sdk.xutils.http.RequestParams
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.OutputStream
-import java.util.TimeZone
 import java.util.concurrent.CountDownLatch
 
 class FirmwareViewModel(application: Application) : AndroidViewModel(application) {
@@ -70,35 +64,6 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
     fun queryFirmware(isTS004: Boolean) {
         if (isRequest) {
             return
-        }
-        isRequest = true
-
-        viewModelScope.launch(Dispatchers.IO) {
-
-
-            if (isTS004) {
-
-                val firmware: String? = TS004Repository.getVersion()?.data?.firmware
-                if (firmware == null) {
-                    XLog.w("TS004 固件升级 - 从设备查询 固件版本 失败!")
-                    failLD.postValue(false)
-                    isRequest = false
-                    return@launch
-                }
-
-                getInfoFromAssets(true, firmware)
-            } else {
-
-                val productInfo: ProductBean? = TC007Repository.getProductInfo()
-                if (productInfo == null) {
-                    XLog.w("TC007 固件升级 - 从设备查询 SN、激活码 失败!")
-                    failLD.postValue(false)
-                    isRequest = false
-                    return@launch
-                }
-
-                getInfoFromAssets(false, "V${productInfo.getVersionStr()}")
-            }
         }
     }
 

@@ -107,12 +107,8 @@ object GalleryRepository {
         return withContext(Dispatchers.IO) {
             val resultList: ArrayList<GalleryBean> = ArrayList()
             if (dirType == DirType.TS004_REMOTE) {
-                val pageList =
-                    TS004Repository.getFileByPage(if (isVideo) 1 else 0, pageNum, pageCount)
-                        ?: return@withContext null
-                pageList.forEach {
-                    resultList.add(GalleryBean(isVideo, it))
-                }
+                // TS004Repository functionality removed
+                return@withContext null
             } else {
                 try {
                     val allFileList = loadAllLocale(isVideo, dirType)

@@ -46,8 +46,8 @@ class NetworkDiscoveryService(private val context: Context) {
 
     enum class DeviceType {
         PC_CONTROLLER,
-        THERMAL_CAMERA_TS004,
-        THERMAL_CAMERA_TC007,
+        // THERMAL_CAMERA_TS004 removed - TS004 functionality disabled
+        // THERMAL_CAMERA_TC007 removed - TC007 functionality disabled
         UNKNOWN,
     }
 
@@ -142,10 +142,7 @@ class NetworkDiscoveryService(private val context: Context) {
             val serviceType =
                 when (deviceType) {
                     DeviceType.PC_CONTROLLER -> SERVICE_TYPE_PC_CONTROLLER
-                    DeviceType.THERMAL_CAMERA_TS004,
-                    DeviceType.THERMAL_CAMERA_TC007,
-                        -> SERVICE_TYPE_THERMAL_CAMERA
-
+                    // TS004/TC007 device types removed
                     else -> SERVICE_TYPE_THERMAL_CAMERA
                 }
 
@@ -341,12 +338,9 @@ class NetworkDiscoveryService(private val context: Context) {
 
         return when {
             deviceTypeAttr == "PC_CONTROLLER" -> DeviceType.PC_CONTROLLER
-            deviceTypeAttr == "THERMAL_CAMERA_TS004" -> DeviceType.THERMAL_CAMERA_TS004
-            deviceTypeAttr == "THERMAL_CAMERA_TC007" -> DeviceType.THERMAL_CAMERA_TC007
+            // TS004/TC007 device type detection removed
             serviceInfo.serviceType.contains("pc") -> DeviceType.PC_CONTROLLER
-            serviceInfo.serviceType.contains("thermal") -> DeviceType.THERMAL_CAMERA_TS004
-            serviceInfo.serviceName.contains("TS004") -> DeviceType.THERMAL_CAMERA_TS004
-            serviceInfo.serviceName.contains("TC007") -> DeviceType.THERMAL_CAMERA_TC007
+            // All thermal devices now return UNKNOWN since TS004/TC007 support removed
             else -> DeviceType.UNKNOWN
         }
     }

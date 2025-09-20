@@ -181,12 +181,12 @@ object NavigationManager {
 
     fun jumpImagePick(
         activity: Activity,
-        isTC007: Boolean,
+        // isTC007 parameter removed - TC007 functionality disabled
         imgPath: String,
     ) {
         val route =
             when {
-                isTC007 -> RouterConfig.IR_IMG_PICK_07
+                // TC007 functionality removed
                 DeviceTools.isTC001PlusConnect() -> RouterConfig.IR_IMG_PICK_PLUS
                 DeviceTools.isTC001LiteConnect() -> RouterConfig.IR_IMG_PICK_LITE
                 DeviceTools.isHikConnect() -> RouterConfig.IR_HIK_IMG_PICK

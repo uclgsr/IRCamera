@@ -24,7 +24,7 @@ import com.mpdc4gsr.lib.core.tools.FileTools
 import com.mpdc4gsr.lib.core.tools.GlideLoader
 import com.mpdc4gsr.lib.core.utils.NetWorkUtils
 import com.mpdc4gsr.lib.core.view.TitleView
-import com.mpdc4gsr.libcom.PDFHelp
+import com.mpdc4gsr.lib.core.comm.PDFHelp
 import com.mpdc4gsr.lms.sdk.LMS
 import com.mpdc4gsr.lms.sdk.utils.StringUtils
 import com.mpdc4gsr.lms.sdk.weiget.TToast

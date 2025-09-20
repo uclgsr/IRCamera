@@ -8,8 +8,9 @@ import com.mpdc4gsr.module.thermal.ir.bean.ModelBean
 object ConfigRepository {
     fun read(isTC007: Boolean): ModelBean =
         try {
+            // TC007 functionality removed
             Gson().fromJson(
-                if (isTC007) SharedManager.irConfigJsonTC007 else SharedManager.getIRConfig(),
+                if (isTC007) "{}" else SharedManager.getIRConfig(), // Use empty JSON for TC007
                 ModelBean::class.java
             )
         } catch (_: Exception) {
@@ -22,7 +23,7 @@ object ConfigRepository {
         bean: ModelBean,
     ) {
         if (isTC007) {
-            SharedManager.irConfigJsonTC007 = Gson().toJson(bean)
+            // TC007 functionality removed - do nothing
         } else {
             SharedManager.setIRConfig(Gson().toJson(bean))
         }

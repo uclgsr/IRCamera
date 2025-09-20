@@ -163,7 +163,7 @@ class MineFragment : BaseFragment(), View.OnClickListener {
             settingUserLay, settingUserImgNight -> {
                 if (UserInfoManager.getInstance().isLogin()) {
                     isNeedRefreshLogin = true
-                    LMS.getInstance().activityUserInfo()
+                    LMS.getInstance().activityUserInfo(requireContext())
                 } else {
                     loginAction()
                 }
@@ -193,7 +193,7 @@ class MineFragment : BaseFragment(), View.OnClickListener {
                 if (LMS.getInstance().isLogin) {
                     val devSn = SharedManager.getDeviceSn()
                     FeedBackBean().apply {
-                        logPath = FolderUtil.getLogPath()
+                        logPath = ""
                         sn = devSn
                         lastConnectSn = devSn
                         XLog.e("bcf", "sn $sn  logPath $logPath")

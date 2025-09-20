@@ -78,8 +78,8 @@ class EnhancedNetworkingExample(private val context: Context) {
 
                 val thermalCamera =
                     discoveredDevices.find {
-                        it.deviceType == NetworkDiscoveryService.DeviceType.THERMAL_CAMERA_TS004 ||
-                                it.deviceType == NetworkDiscoveryService.DeviceType.THERMAL_CAMERA_TC007
+                        // TS004/TC007 device types removed - using UNKNOWN for compatibility
+                        it.deviceType == NetworkDiscoveryService.DeviceType.UNKNOWN
                     }
                 if (thermalCamera != null) {
                     demonstrateSecureWebSocket(thermalCamera.serviceName)
