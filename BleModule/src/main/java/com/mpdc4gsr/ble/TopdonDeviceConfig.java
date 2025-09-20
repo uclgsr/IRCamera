@@ -194,10 +194,10 @@ public class TopdonDeviceConfig {
         private int environmentalSensors = 0;
         private boolean enableTimestamp = true;
         private boolean enableAutoReconnect = true;
-        private int connectionTimeout = 10000; 
+        private int connectionTimeout = 10000;
         private String sessionId = null;
         private boolean enableCalibration = true;
-        private int dataOutputFormat = 0; 
+        private int dataOutputFormat = 0;
 
         public Builder setDeviceType(UnifiedBleManager.DeviceType deviceType) {
             this.deviceType = deviceType;

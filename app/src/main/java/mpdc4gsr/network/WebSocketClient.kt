@@ -47,17 +47,17 @@ class WebSocketClient(private val context: Context) {
     companion object {
         private const val TAG = "WebSocketClient"
 
-        private const val DEFAULT_PC_PORT = 8443 
+        private const val DEFAULT_PC_PORT = 8443
         private const val CONNECTION_TIMEOUT_MS = 10000L
         private const val READ_TIMEOUT_MS = 30000L
         private const val WRITE_TIMEOUT_MS = 10000L
 
-        private const val HEARTBEAT_INTERVAL_MS = 5000L 
-        private const val HEARTBEAT_TIMEOUT_MS = 15000L 
+        private const val HEARTBEAT_INTERVAL_MS = 5000L
+        private const val HEARTBEAT_TIMEOUT_MS = 15000L
 
-        private const val RECONNECT_BASE_DELAY_MS = 1000L 
-        private const val RECONNECT_MAX_DELAY_MS = 8000L 
-        private const val RECONNECT_JITTER_MS = 500L 
+        private const val RECONNECT_BASE_DELAY_MS = 1000L
+        private const val RECONNECT_MAX_DELAY_MS = 8000L
+        private const val RECONNECT_JITTER_MS = 500L
 
         private const val SERVICE_TYPE = "_irhub._tcp."
         private const val DISCOVERY_TIMEOUT_MS = 10000L
@@ -184,7 +184,7 @@ class WebSocketClient(private val context: Context) {
             sslContext.init(null, trustAllCerts, java.security.SecureRandom())
 
             builder.sslSocketFactory(sslContext.socketFactory, trustAllCerts[0] as X509TrustManager)
-            builder.hostnameVerifier { _, _ -> true } 
+            builder.hostnameVerifier { _, _ -> true }
         }
 
         return builder.build()
@@ -390,7 +390,7 @@ class WebSocketClient(private val context: Context) {
                 Log.i(TAG, "Trying manual connection to $address:$DEFAULT_PC_PORT")
                 connectToServer(serverInfo)
 
-                delay(2000) 
+                delay(2000)
             }
         }
     }

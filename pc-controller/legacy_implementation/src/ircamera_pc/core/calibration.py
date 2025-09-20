@@ -15,6 +15,7 @@ try:
 except ImportError:
     OPENCV_AVAILABLE = False
 
+
     # Mock numpy and cv2 for environments without OpenCV
     class MockOpenCV:
         def findChessboardCorners(self, *args, **kwargs) -> Any:
@@ -28,6 +29,7 @@ except ImportError:
 
         TERM_CRITERIA_EPS = 1
         TERM_CRITERIA_MAX_ITER = 2
+
 
     cv2 = MockOpenCV()
     try:
@@ -44,20 +46,19 @@ except ImportError:
             float32 = float
             ndarray = type([])
 
+
         np = MockNumPy()
 
 from loguru import logger
 
 
 class CameraType(Enum):
-
     THERMAL = "thermal"
     VISUAL = "visual"
     DEPTH = "depth"
 
 
 class CalibrationStatus(Enum):
-
     NOT_STARTED = "not_started"
     IN_PROGRESS = "in_progress"
     COMPLETED = "completed"
@@ -66,7 +67,6 @@ class CalibrationStatus(Enum):
 
 @dataclass
 class CameraIntrinsics:
-
     fx: float
     fy: float
     cx: float
@@ -79,22 +79,18 @@ class CameraIntrinsics:
 
     @property
     def camera_matrix(self) -> np.ndarray:
-
         return np.array([[self.fx, 0, self.cx], [0, self.fy, self.cy], [0, 0, 1]])
 
     @property
     def distortion_coeffs(self) -> np.ndarray:
-
         return np.array([self.k1, self.k2, self.p1, self.p2, self.k3])
 
     def to_dict(self) -> Dict[str, float]:
-
         return asdict(self)
 
 
 @dataclass
 class StereoCalibration:
-
     rotation_matrix: List[List[float]]
     translation_vector: List[float]
     essential_matrix: List[List[float]]
@@ -106,13 +102,11 @@ class StereoCalibration:
     baseline_mm: float
 
     def to_dict(self) -> Dict[str, Any]:
-
         return asdict(self)
 
 
 @dataclass
 class CalibrationResult:
-
     device_id: str
     session_id: str
     camera_type: CameraType
@@ -149,8 +143,8 @@ class ChessboardDetector:
             (pattern_size[0] * pattern_size[1], 3), np.float32
         )
         self.object_points_3d[:, :2] = np.mgrid[
-                                       0: pattern_size[0], 0: pattern_size[1]
-                                       ].T.reshape(-1, 2)
+            0: pattern_size[0], 0: pattern_size[1]
+        ].T.reshape(-1, 2)
         self.object_points_3d *= square_size
 
     def detect_corners(self, image: np.ndarray) -> Tuple[bool, Optional[np.ndarray]]:
@@ -505,7 +499,6 @@ class CameraCalibrator:
             )
 
             for i in range(num_stereo_pairs):
-
                 object_points_stereo.append(objp)
 
                 base_corners_left = self._generate_realistic_corners(
@@ -609,7 +602,6 @@ class CameraCalibrator:
         corners = []
         for j in range(pattern_size[1]):
             for i in range(pattern_size[0]):
-
                 x = start_x + i * grid_width
                 y = start_y + j * grid_height
 
@@ -627,7 +619,6 @@ class CameraCalibrator:
         right_corners = left_corners.copy()
 
         for i in range(len(right_corners)):
-
             depth_factor = 0.8 + 0.4 * np.random.random()
             disparity = baseline_offset / depth_factor
 

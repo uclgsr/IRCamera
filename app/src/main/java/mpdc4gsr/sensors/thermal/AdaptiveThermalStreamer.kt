@@ -8,56 +8,56 @@ import kotlin.math.max
 
 /**
  * Adaptive Thermal Frame Streaming Optimization
- * 
+ *
  * Implements dynamic frame interval adjustment based on network conditions
  * to balance bandwidth usage and latency for thermal camera streaming.
- * 
+ *
  * Addresses TODO: "Optimize thermal frame streaming by making frame interval
  * adaptive or configurable to balance bandwidth and latency"
  */
 class AdaptiveThermalStreamer {
     companion object {
         private const val TAG = "AdaptiveThermalStreamer"
-        
-        
-        private const val MIN_INTERVAL = 1  
-        private const val MAX_INTERVAL = 5  
-        
-        
+
+
+        private const val MIN_INTERVAL = 1
+        private const val MAX_INTERVAL = 5
+
+
         private const val EXCELLENT_LATENCY = 50
         private const val GOOD_LATENCY = 100
         private const val FAIR_LATENCY = 200
-        
-        
+
+
         private const val MAX_BUFFER_SIZE = 10
         private const val OVERFLOW_DROP_COUNT = 3
-        
-        
+
+
         private const val ADAPTATION_INTERVAL_MS = 5000L
         private const val NETWORK_SAMPLE_SIZE = 10
     }
-    
-    private var streamingFrameInterval = 2 
+
+    private var streamingFrameInterval = 2
     private var currentFrameCount = 0
     private var isStreamingEnabled = false
-    
-    
+
+
     private val latencyMeasurements = LinkedList<Long>()
     private val packetLossMeasurements = LinkedList<Double>()
     private var averageLatency = 100L
     private var packetLossRate = 0.0
-    
-    
+
+
     private val frameBuffer = LinkedList<ThermalFrameData>()
     private var totalFramesGenerated = 0L
     private var framesStreamed = 0L
     private var framesDropped = 0L
-    
-    
+
+
     private var adaptationJob: Job? = null
     private val streamingScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
-    
-    
+
+
     data class ThermalFrameData(
         val frameIndex: Long,
         val timestamp: Long,
@@ -69,8 +69,8 @@ class AdaptiveThermalStreamer {
             LOW, NORMAL, HIGH, CRITICAL
         }
     }
-    
-    
+
+
     data class NetworkPerformance(
         val latency: Long,
         val packetLoss: Double,
@@ -81,194 +81,195 @@ class AdaptiveThermalStreamer {
             EXCELLENT, GOOD, FAIR, POOR
         }
     }
-    
-    
+
+
     fun initialize() {
         Log.i(TAG, "Initializing adaptive thermal streamer")
-        
-        
+
+
         startNetworkMonitoring()
-        
+
         Log.i(TAG, "Adaptive thermal streamer initialized with interval: $streamingFrameInterval")
     }
-    
-    
+
+
     fun startStreaming() {
         if (isStreamingEnabled) {
             Log.w(TAG, "Streaming already enabled")
             return
         }
-        
+
         isStreamingEnabled = true
         currentFrameCount = 0
-        
+
         Log.i(TAG, "Started adaptive thermal streaming")
     }
-    
-    
+
+
     fun stopStreaming() {
         if (!isStreamingEnabled) {
             return
         }
-        
+
         isStreamingEnabled = false
         adaptationJob?.cancel()
         frameBuffer.clear()
-        
+
         logFinalStatistics()
         Log.i(TAG, "Stopped adaptive thermal streaming")
     }
-    
-    
+
+
     fun processFrame(frameData: ThermalFrameData): Boolean {
         if (!isStreamingEnabled) {
             return false
         }
-        
+
         totalFramesGenerated++
         currentFrameCount++
-        
-        
+
+
         val shouldStream = (currentFrameCount % streamingFrameInterval == 0)
-        
+
         if (shouldStream) {
             return attemptFrameStreaming(frameData)
         } else {
-            
+
             Log.v(TAG, "Frame ${frameData.frameIndex} skipped (interval: $streamingFrameInterval)")
             return false
         }
     }
-    
-    
+
+
     private fun attemptFrameStreaming(frameData: ThermalFrameData): Boolean {
-        
+
         if (frameBuffer.size >= MAX_BUFFER_SIZE) {
             handleBufferOverflow()
         }
-        
-        
+
+
         frameBuffer.offer(frameData)
-        
-        
+
+
         return processBufferedFrames()
     }
-    
-    
+
+
     private fun processBufferedFrames(): Boolean {
         var streamed = false
-        
+
         while (frameBuffer.isNotEmpty()) {
             val frame = frameBuffer.poll()
             if (frame != null) {
                 if (streamFrame(frame)) {
                     framesStreamed++
                     streamed = true
-                    
+
                     Log.v(TAG, "Streamed frame ${frame.frameIndex} (buffer size: ${frameBuffer.size})")
                 } else {
-                    
+
                     frameBuffer.offerFirst(frame)
                     break
                 }
             }
         }
-        
+
         return streamed
     }
-    
-    
+
+
     private fun handleBufferOverflow() {
         Log.w(TAG, "Frame buffer overflow, dropping frames")
-        
+
         var droppedCount = 0
         val iterator = frameBuffer.iterator()
-        
-        
+
+
         while (iterator.hasNext() && droppedCount < OVERFLOW_DROP_COUNT) {
             val frame = iterator.next()
-            if (frame.priority == ThermalFrameData.FramePriority.LOW || 
-                frame.priority == ThermalFrameData.FramePriority.NORMAL) {
+            if (frame.priority == ThermalFrameData.FramePriority.LOW ||
+                frame.priority == ThermalFrameData.FramePriority.NORMAL
+            ) {
                 iterator.remove()
                 droppedCount++
                 framesDropped++
             }
         }
-        
+
         Log.w(TAG, "Dropped $droppedCount frames due to buffer overflow")
     }
-    
+
     /**
      * Stream individual frame (placeholder for actual streaming logic)
      */
     private fun streamFrame(frame: ThermalFrameData): Boolean {
         return try {
-            
+
             val startTime = System.currentTimeMillis()
-            
+
             // TODO: Replace with actual network streaming implementation
-            
+
             simulateNetworkSend(frame)
-            
+
             val endTime = System.currentTimeMillis()
             val latency = endTime - startTime
-            
-            
+
+
             recordNetworkPerformance(latency, isPacketLost = false)
-            
+
             Log.v(TAG, "Frame ${frame.frameIndex} streamed successfully (latency: ${latency}ms)")
             true
-            
+
         } catch (e: Exception) {
             Log.e(TAG, "Failed to stream frame ${frame.frameIndex}: ${e.message}")
             recordNetworkPerformance(1000L, isPacketLost = true)
             false
         }
     }
-    
+
     /**
      * Simulate network streaming (replace with actual implementation)
      */
     private fun simulateNetworkSend(frame: ThermalFrameData) {
-        
+
         val simulatedLatency = (50..200).random()
         Thread.sleep(simulatedLatency.toLong())
-        
-        
-        if (Math.random() < 0.02) { 
+
+
+        if (Math.random() < 0.02) {
             throw RuntimeException("Simulated packet loss")
         }
     }
-    
-    
+
+
     private fun recordNetworkPerformance(latency: Long, isPacketLost: Boolean) {
-        
+
         latencyMeasurements.offer(latency)
         if (latencyMeasurements.size > NETWORK_SAMPLE_SIZE) {
             latencyMeasurements.poll()
         }
-        
-        
+
+
         packetLossMeasurements.offer(if (isPacketLost) 1.0 else 0.0)
         if (packetLossMeasurements.size > NETWORK_SAMPLE_SIZE) {
             packetLossMeasurements.poll()
         }
-        
-        
+
+
         averageLatency = if (latencyMeasurements.isNotEmpty()) {
             latencyMeasurements.average().toLong()
         } else {
             100L
         }
-        
+
         packetLossRate = if (packetLossMeasurements.isNotEmpty()) {
             packetLossMeasurements.average()
         } else {
             0.0
         }
     }
-    
-    
+
+
     private fun startNetworkMonitoring() {
         adaptationJob = streamingScope.launch {
             while (isActive && isStreamingEnabled) {
@@ -281,52 +282,60 @@ class AdaptiveThermalStreamer {
             }
         }
     }
-    
-    
+
+
     private fun updateStreamingInterval() {
         val oldInterval = streamingFrameInterval
-        
-        
+
+
         val newInterval = when {
             averageLatency <= EXCELLENT_LATENCY && packetLossRate < 0.01 -> {
-                MIN_INTERVAL 
+                MIN_INTERVAL
             }
+
             averageLatency <= GOOD_LATENCY && packetLossRate < 0.02 -> {
-                2 
+                2
             }
+
             averageLatency <= FAIR_LATENCY && packetLossRate < 0.05 -> {
-                3 
+                3
             }
+
             else -> {
-                MAX_INTERVAL 
+                MAX_INTERVAL
             }
         }
-        
-        
+
+
         streamingFrameInterval = max(MIN_INTERVAL, min(MAX_INTERVAL, newInterval))
-        
+
         if (oldInterval != streamingFrameInterval) {
-            Log.i(TAG, "Streaming interval updated: $oldInterval -> $streamingFrameInterval " +
-                    "(latency: ${averageLatency}ms, loss: ${String.format("%.1f", packetLossRate * 100)}%)")
+            Log.i(
+                TAG, "Streaming interval updated: $oldInterval -> $streamingFrameInterval " +
+                        "(latency: ${averageLatency}ms, loss: ${String.format("%.1f", packetLossRate * 100)}%)"
+            )
         }
-        
-        
+
+
         logPerformanceStatistics()
     }
-    
-    
+
+
     fun getNetworkPerformance(): NetworkPerformance {
         val quality = when {
-            averageLatency <= EXCELLENT_LATENCY && packetLossRate < 0.01 -> 
+            averageLatency <= EXCELLENT_LATENCY && packetLossRate < 0.01 ->
                 NetworkPerformance.NetworkQuality.EXCELLENT
-            averageLatency <= GOOD_LATENCY && packetLossRate < 0.02 -> 
+
+            averageLatency <= GOOD_LATENCY && packetLossRate < 0.02 ->
                 NetworkPerformance.NetworkQuality.GOOD
-            averageLatency <= FAIR_LATENCY && packetLossRate < 0.05 -> 
+
+            averageLatency <= FAIR_LATENCY && packetLossRate < 0.05 ->
                 NetworkPerformance.NetworkQuality.FAIR
-            else -> 
+
+            else ->
                 NetworkPerformance.NetworkQuality.POOR
         }
-        
+
         return NetworkPerformance(
             latency = averageLatency,
             packetLoss = packetLossRate,
@@ -334,28 +343,28 @@ class AdaptiveThermalStreamer {
             quality = quality
         )
     }
-    
-    
+
+
     private fun calculateEstimatedBandwidth(): Long {
-        
-        val averageFrameSize = 50 * 1024L 
+
+        val averageFrameSize = 50 * 1024L
         val streamingRate = if (streamingFrameInterval > 0) {
-            (25.0 / streamingFrameInterval) 
+            (25.0 / streamingFrameInterval)
         } else {
             0.0
         }
-        
+
         return (streamingRate * averageFrameSize).toLong()
     }
-    
-    
+
+
     fun getStreamingStatistics(): Map<String, Any> {
         val efficiency = if (totalFramesGenerated > 0) {
             (framesStreamed.toDouble() / totalFramesGenerated.toDouble()) * 100.0
         } else {
             0.0
         }
-        
+
         return mapOf(
             "streaming_interval" to streamingFrameInterval,
             "total_frames_generated" to totalFramesGenerated,
@@ -368,21 +377,23 @@ class AdaptiveThermalStreamer {
             "network_quality" to getNetworkPerformance().quality.name
         )
     }
-    
-    
+
+
     private fun logPerformanceStatistics() {
         val stats = getStreamingStatistics()
-        
-        Log.d(TAG, "Streaming Performance - Interval: ${stats["streaming_interval"]}, " +
-                "Efficiency: ${String.format("%.1f", stats["streaming_efficiency"])}%, " +
-                "Latency: ${stats["average_latency_ms"]}ms, " +
-                "Quality: ${stats["network_quality"]}")
+
+        Log.d(
+            TAG, "Streaming Performance - Interval: ${stats["streaming_interval"]}, " +
+                    "Efficiency: ${String.format("%.1f", stats["streaming_efficiency"])}%, " +
+                    "Latency: ${stats["average_latency_ms"]}ms, " +
+                    "Quality: ${stats["network_quality"]}"
+        )
     }
-    
-    
+
+
     private fun logFinalStatistics() {
         val stats = getStreamingStatistics()
-        
+
         Log.i(TAG, "Final Streaming Statistics:")
         Log.i(TAG, "  Total frames generated: ${stats["total_frames_generated"]}")
         Log.i(TAG, "  Frames streamed: ${stats["frames_streamed"]}")
@@ -392,8 +403,8 @@ class AdaptiveThermalStreamer {
         Log.i(TAG, "  Packet loss rate: ${String.format("%.2f", stats["packet_loss_rate"] as Double * 100)}%")
         Log.i(TAG, "  Final network quality: ${stats["network_quality"]}")
     }
-    
-    
+
+
     fun cleanup() {
         stopStreaming()
         streamingScope.cancel()

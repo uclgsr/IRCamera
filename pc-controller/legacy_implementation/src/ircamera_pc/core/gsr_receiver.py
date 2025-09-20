@@ -17,7 +17,6 @@ from .gsr_analytics import GSRAnalytics
 
 @dataclass
 class GSRSample:
-
     timestamp: float
     gsr_value: float
     raw_value: int
@@ -28,7 +27,6 @@ class GSRSample:
 
 @dataclass
 class DeviceSession:
-
     device_id: str
     session_id: str
     start_time: float
@@ -343,7 +341,6 @@ class GSRReceiver:
                 device_id, session_id
             )
             if analysis_report:
-
                 report_filename = (
                     f"gsr_analysis_{device_id}_{session_id}_{int(end_time)}.json"
                 )

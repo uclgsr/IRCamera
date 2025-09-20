@@ -39,7 +39,7 @@ class LogViewModel : BaseViewModel() {
                         Log.w("123", "查询秒")
 
                         endTime = Date().time
-                        startTime = endTime - 7200 * 1000L 
+                        startTime = endTime - 7200 * 1000L
                         Log.w("123", "query startTime:$startTime, endTime:$endTime")
                         dataList =
                             AppDatabase.getInstance().thermalDao()
@@ -94,7 +94,7 @@ class LogViewModel : BaseViewModel() {
             }
     }
 
-    
+
     suspend fun queryLogThermals(
         selectTimeType: Int,
         endLogTime: Long = System.currentTimeMillis(),
@@ -106,14 +106,14 @@ class LogViewModel : BaseViewModel() {
 
             val job = async { syncVol(selectTimeType) }
             job.await()
-            syncRun = false 
+            syncRun = false
             val startLogTime =
                 when (selectTimeType) {
-                    
-                    1 -> endLogTime - 7200 * 1000L 
-                    2 -> endLogTime - 7200 * 60 * 1000L 
-                    3 -> endLogTime - 7200 * 60 * 60 * 1000L 
-                    4 -> endLogTime - 1 * 365 * 24 * 60 * 60 * 1000L 
+
+                    1 -> endLogTime - 7200 * 1000L
+                    2 -> endLogTime - 7200 * 60 * 1000L
+                    3 -> endLogTime - 7200 * 60 * 60 * 1000L
+                    4 -> endLogTime - 1 * 365 * 24 * 60 * 60 * 1000L
                     else -> endLogTime - 7200 * 1000L
                 }
             when (selectTimeType) {
@@ -267,7 +267,7 @@ class LogViewModel : BaseViewModel() {
         }
     }
 
-    
+
     suspend fun queryLogVolsByStartTime(
         type: Int = 3,
         selectTimeType: Int,
@@ -286,25 +286,15 @@ class LogViewModel : BaseViewModel() {
 
                 val job = async { syncVol(selectTimeType) }
                 job.await()
-                syncRun = false 
+                syncRun = false
                 val startLogTime =
                     when (selectTimeType) {
-                        
 
 
-
-
-
-
-
-
-
-
-
-                        1 -> endLogTime - 7200 * 1000L 
-                        2 -> endLogTime - 7200 * 60 * 1000L 
-                        3 -> endLogTime - 7200 * 60 * 60 * 1000L 
-                        4 -> endLogTime - 10 * 365 * 24 * 60 * 60 * 1000L 
+                        1 -> endLogTime - 7200 * 1000L
+                        2 -> endLogTime - 7200 * 60 * 1000L
+                        3 -> endLogTime - 7200 * 60 * 60 * 1000L
+                        4 -> endLogTime - 10 * 365 * 24 * 60 * 60 * 1000L
                         else -> endLogTime - 7200 * 1000L
                     }
                 when (selectTimeType) {
@@ -471,7 +461,7 @@ class LogViewModel : BaseViewModel() {
                     addData(data, newData, 0, endIndex)
                 }
             } else {
-                
+
                 val currencyTime = TimeTool.showDateType(data[i].createTime, type)
                 val previewTime = TimeTool.showDateType(data[i - 1].createTime, type)
                 if (i == data.size - 1) {
@@ -509,7 +499,7 @@ class LogViewModel : BaseViewModel() {
         return newData
     }
 
-    
+
     private fun addData(
         data: List<ThermalEntity>,
         newData: ArrayList<ThermalEntity>,
@@ -526,16 +516,16 @@ class LogViewModel : BaseViewModel() {
             tempMin += data[x].thermalMin
         }
 
-        tempVolEntity.thermal = temp / (endIndex - startIndex + 1) 
-        tempVolEntity.thermalMax = tempMax / (endIndex - startIndex + 1) 
-        tempVolEntity.thermalMin = tempMin / (endIndex - startIndex + 1) 
+        tempVolEntity.thermal = temp / (endIndex - startIndex + 1)
+        tempVolEntity.thermalMax = tempMax / (endIndex - startIndex + 1)
+        tempVolEntity.thermalMin = tempMin / (endIndex - startIndex + 1)
         newData.add(tempVolEntity)
     }
 
     @Volatile
     private var syncRun = false
 
-    
+
     private suspend fun syncVol(selectTimeType: Int) {
         Log.i("chart", "syncVol: $syncRun")
         if (syncRun) {
@@ -600,7 +590,7 @@ class LogViewModel : BaseViewModel() {
                         bean.thermalMin = it.thermalMin
                         bean.info = it.info
                         bean.type = it.type
-                        bean.createTime = TimeTool.timeToMinute(it.createTime, 2) 
+                        bean.createTime = TimeTool.timeToMinute(it.createTime, 2)
                         bean.updateTime = System.currentTimeMillis()
                         AppDatabase.getInstance().thermalMinDao().insert(bean)
                     } catch (e: Exception) {
@@ -613,7 +603,7 @@ class LogViewModel : BaseViewModel() {
                     bean.thermal = 0f
                     bean.thermalMax = 0f
                     bean.thermalMin = 0f
-                    bean.createTime = TimeTool.timeToMinute(System.currentTimeMillis(), 2) 
+                    bean.createTime = TimeTool.timeToMinute(System.currentTimeMillis(), 2)
                     bean.updateTime = System.currentTimeMillis()
                     AppDatabase.getInstance().thermalMinDao().insert(bean)
                 } catch (e: Exception) {
@@ -671,7 +661,7 @@ class LogViewModel : BaseViewModel() {
                     bean.thermalMin = it.thermalMin
                     bean.info = it.info
                     bean.type = it.type
-                    bean.createTime = TimeTool.timeToMinute(it.createTime, 3) 
+                    bean.createTime = TimeTool.timeToMinute(it.createTime, 3)
                     bean.updateTime = System.currentTimeMillis()
                     AppDatabase.getInstance().thermalHourDao().insert(bean)
                 }
@@ -680,7 +670,7 @@ class LogViewModel : BaseViewModel() {
                 bean.thermal = 0f
                 bean.thermalMax = 0f
                 bean.thermalMin = 0f
-                bean.createTime = TimeTool.timeToMinute(System.currentTimeMillis(), 3) 
+                bean.createTime = TimeTool.timeToMinute(System.currentTimeMillis(), 3)
                 bean.updateTime = System.currentTimeMillis()
                 AppDatabase.getInstance().thermalHourDao().insert(bean)
 
@@ -689,7 +679,7 @@ class LogViewModel : BaseViewModel() {
 
             4 -> {
                 val todayStartTime =
-                    TimeTool.timeToMinute(System.currentTimeMillis(), 4) 
+                    TimeTool.timeToMinute(System.currentTimeMillis(), 4)
 
                 val todayVolLatestList =
                     AppDatabase.getInstance().thermalDayDao()
@@ -736,7 +726,7 @@ class LogViewModel : BaseViewModel() {
                     bean.thermalMin = it.thermalMin
                     bean.info = it.info
                     bean.type = it.type
-                    bean.createTime = TimeTool.timeToMinute(it.createTime, 4) 
+                    bean.createTime = TimeTool.timeToMinute(it.createTime, 4)
                     bean.updateTime = System.currentTimeMillis()
                     AppDatabase.getInstance().thermalDayDao().insert(bean)
 
@@ -747,7 +737,7 @@ class LogViewModel : BaseViewModel() {
                 bean.thermal = 0f
                 bean.thermalMax = 0f
                 bean.thermalMin = 0f
-                bean.createTime = TimeTool.timeToMinute(System.currentTimeMillis(), 4) 
+                bean.createTime = TimeTool.timeToMinute(System.currentTimeMillis(), 4)
                 bean.updateTime = System.currentTimeMillis()
                 AppDatabase.getInstance().thermalDayDao().insert(bean)
 

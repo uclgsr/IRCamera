@@ -102,10 +102,10 @@ class ResearchTemplateActivity : BaseBindingActivity<ActivityResearchTemplateBin
         filteredTemplates.clear()
 
         if (categoryIndex == 0) {
-            
+
             filteredTemplates.addAll(allTemplates)
         } else {
-            
+
             val category = ResearchTemplate.TemplateCategory.values()[categoryIndex - 1]
             filteredTemplates.addAll(ResearchTemplate.getTemplatesByCategory(category))
         }
@@ -113,7 +113,7 @@ class ResearchTemplateActivity : BaseBindingActivity<ActivityResearchTemplateBin
         templateAdapter.notifyDataSetChanged()
         updateEmptyView()
 
-        
+
         if (selectedTemplate != null && !filteredTemplates.contains(selectedTemplate)) {
             clearSelection()
         }
@@ -123,7 +123,7 @@ class ResearchTemplateActivity : BaseBindingActivity<ActivityResearchTemplateBin
         selectedTemplate = template
         updateSelectedTemplateView()
 
-        
+
         templateAdapter.notifyDataSetChanged()
     }
 
@@ -134,7 +134,7 @@ class ResearchTemplateActivity : BaseBindingActivity<ActivityResearchTemplateBin
             binding.selectedTemplateTitle.text = "${template.icon ?: "📊"} ${template.name}"
             binding.selectedTemplateDescription.text = template.description
 
-            
+
             val details =
                 buildString {
                     append(
@@ -191,7 +191,7 @@ class ResearchTemplateActivity : BaseBindingActivity<ActivityResearchTemplateBin
     }
 
     private fun startRecordingWithTemplate(template: ResearchTemplate) {
-        
+
         val intent =
             Intent(this, MultiModalRecordingActivity::class.java).apply {
                 putExtra("template_id", template.id)
@@ -248,13 +248,13 @@ class TemplateAdapter(
         val template = templates[position]
         val isSelected = template == selectedTemplate
 
-        
+
         holder.iconText.text = template.icon ?: "📊"
         holder.nameText.text = template.name
         holder.categoryText.text =
             template.category.name.replace("_", " ").lowercase().replaceFirstChar { it.uppercase() }
 
-        
+
         val sensorIcons =
             template.sensors.map { sensor ->
                 when (sensor) {
@@ -265,7 +265,7 @@ class TemplateAdapter(
             }.joinToString(" ")
         holder.sensorsText.text = sensorIcons
 
-        
+
         holder.durationText.text =
             if (template.duration != null) {
                 val durationMs = template.duration!!
@@ -274,11 +274,11 @@ class TemplateAdapter(
                 "∞"
             }
 
-        
+
         holder.selectionIndicator.visibility = if (isSelected) View.VISIBLE else View.GONE
         holder.cardView.alpha = if (isSelected) 1.0f else 0.8f
 
-        
+
         holder.cardView.setOnClickListener {
             selectedTemplate = if (isSelected) null else template
             onTemplateSelected(template)

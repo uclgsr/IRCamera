@@ -25,7 +25,7 @@ class HardwareValidationController(
         private const val TAG = "HardwareValidationController"
         private const val VALIDATION_TIMEOUT_MS = 30000L
         private const val SYNC_ACCURACY_THRESHOLD_MS = 5L
-        private const val MIN_RECORDING_DURATION_MS = 60000L  
+        private const val MIN_RECORDING_DURATION_MS = 60000L
         private const val BATTERY_OPTIMIZATION_CHECK_INTERVAL_MS = 5000L
     }
 
@@ -185,7 +185,7 @@ class HardwareValidationController(
 
             sensorCapabilities["thermal_camera"] = SensorCapability(
                 sensorType = "Topdon TC001 Thermal Camera",
-                isAvailable = true, 
+                isAvailable = true,
                 capabilities = mapOf(
                     "resolution" to "256x192",
                     "temperature_range" to "-40°C to 550°C",
@@ -240,7 +240,7 @@ class HardwareValidationController(
 
             sensorCapabilities["gsr_sensor"] = SensorCapability(
                 sensorType = "Shimmer3 GSR+ Sensor",
-                isAvailable = true, 
+                isAvailable = true,
                 capabilities = mapOf(
                     "sampling_rate" to "100 Hz",
                     "adc_resolution" to "12-bit (0-4095)",
@@ -274,7 +274,7 @@ class HardwareValidationController(
 
             val recordingDuration = measureTimeMillis {
 
-                delay(MIN_RECORDING_DURATION_MS) 
+                delay(MIN_RECORDING_DURATION_MS)
             }
 
             validationResults["multi_sensor_recording"] = HardwareValidationResult(
@@ -438,7 +438,7 @@ class HardwareValidationController(
             model = android.os.Build.MODEL,
             androidVersion = android.os.Build.VERSION.RELEASE,
             sdkInt = android.os.Build.VERSION.SDK_INT,
-            appVersion = "1.0.0" 
+            appVersion = "1.0.0"
         )
     }
 }

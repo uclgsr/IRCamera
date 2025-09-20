@@ -84,12 +84,12 @@ abstract class BasePickImgActivity : BaseActivity(), View.OnClickListener {
             MeasureSpec.makeMeasureSpec(heightPixels, MeasureSpec.AT_MOST),
         )
 
-        val ivPickHeight = SizeUtils.dp2px(60f + 20 + 20) 
+        val ivPickHeight = SizeUtils.dp2px(60f + 20 + 20)
         val menuHeight = (widthPixels * 75f / 384).toInt()
         val bottomHeight = ivPickHeight.coerceAtLeast(menuHeight)
         val canUseHeight = heightPixels - binding.titleView.measuredHeight - bottomHeight
         val wantHeight = (widthPixels * 256f / 192).toInt()
-        if (wantHeight <= canUseHeight) { 
+        if (wantHeight <= canUseHeight) {
             binding.fragmentContainerView.layoutParams =
                 binding.fragmentContainerView.layoutParams.apply {
                     this.width = widthPixels

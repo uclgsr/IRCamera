@@ -37,7 +37,7 @@ import java.util.Collections
 import kotlin.concurrent.thread
 
 class CameraView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener {
-    
+
     lateinit var mTextureView: TextureView
     private lateinit var binding: CameraLayBinding
 
@@ -99,7 +99,7 @@ class CameraView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener {
             }
 
             MotionEvent.ACTION_UP -> {
-                isScale = false 
+                isScale = false
             }
         }
         return lis.onTouchEvent(event)
@@ -125,7 +125,7 @@ class CameraView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener {
     override fun onScaleEnd(detector: ScaleGestureDetector) {
     }
 
-    private var startX = 0f 
+    private var startX = 0f
     private var startY = 0f
     private var moveX = 0f
     private var moveY = 0f
@@ -133,48 +133,48 @@ class CameraView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener {
     private var parentViewH = 0f
     private var isScale = false
     private var scale = 1f
-    private var scaleW = 0f 
+    private var scaleW = 0f
     private var scaleH = 0f
 
     private lateinit var lis: ScaleGestureDetector
 
-    
+
     private val REQUEST_CAMERA_CODE = 0x100
 
-    
+
     private var mBtnTake: Button? = null
 
-    
+
     private var mImageView: ImageView? = null
 
-    
+
     private lateinit var mCameraId: String
 
-    
+
     private var mCaptureSize: Size? = null
 
-    
+
     private lateinit var mImageReader: ImageReader
 
-    
+
     private lateinit var mCameraHandler: Handler
 
-    
+
     private var mCameraDevice: CameraDevice? = null
 
-    
+
     private var mPreviewSize: Size? = null
 
-    
+
     private lateinit var mCameraCaptureBuilder: CaptureRequest.Builder
 
-    
+
     private var mCameraCaptureSession: CameraCaptureSession? = null
 
-    
+
     private var mCameraManager: CameraManager? = null
 
-    
+
     private val mStateCallback: CameraDevice.StateCallback =
         object : CameraDevice.StateCallback() {
             override fun onOpened(
@@ -405,7 +405,7 @@ class CameraView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener {
 
             mCameraHandler.post(ImageSaver(image))
 
-            runOnUiThread { 
+            runOnUiThread {
                 val buffer: ByteBuffer = image.planes[0].buffer
 
                 buffer.rewind()
@@ -440,7 +440,7 @@ class CameraView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener {
     }
 
     private inner class ImageSaver(image: Image) : Runnable {
-        
+
         private val mImage: Image = image
 
         override fun run() {

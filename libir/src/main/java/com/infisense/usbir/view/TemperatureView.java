@@ -108,7 +108,7 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
     private int downY = 0;
     private Line movingLine;
     private LineMoveType lineMoveType = LineMoveType.ALL;
-    
+
     private Rect movingRect;
     private RectMoveType rectMoveType = RectMoveType.ALL;
     private RectMoveEdge rectMoveEdge = RectMoveEdge.LEFT;
@@ -559,11 +559,6 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
     }
 
 
-
-
-
-    
-
     public void stop() {
         runflag = false;
         isShow = getVisibility() == View.VISIBLE;
@@ -631,7 +626,6 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
         lineList.add(line);
     }
 
-    
 
     public void addScaleRectangle(Rect r) {
         float sx = getMeasuredWidth() / (float) temperatureWidth;
@@ -659,8 +653,6 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
         return new Point((int) (pointList.get(0).x / xScale), (int) (pointList.get(0).y / yScale));
     }
 
-
-    
 
     public Line getLine() {
         if (!lineList.isEmpty()) {
@@ -843,7 +835,7 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
                     }
                     if (isTrend) {
                         synchronized (regionLock) {
-                            trendLine = null; 
+                            trendLine = null;
                         }
                         if (onTrendRemoveListener != null) {
                             onTrendRemoveListener.run();
@@ -1235,10 +1227,6 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
         helper.drawPoint(canvas, x, y);
     }
 
-
-
-
-    
 
     private void drawLine(Canvas canvas, int x1, int y1, int x2, int y2, boolean isTrend) {
 

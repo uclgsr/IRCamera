@@ -29,13 +29,13 @@ class ShimmerGSRRecorder(
     private val context: Context,
     private val shimmerDeviceFactory: ShimmerDeviceFactory,
     private val samplingRateHz: Int = 128,
-    private val recordingMode: RecordingMode = RecordingMode.STREAMING, 
+    private val recordingMode: RecordingMode = RecordingMode.STREAMING,
 ) {
-    
+
     enum class RecordingMode {
-        STREAMING,      
-        LOGGING,        
-        LOG_AND_STREAM  
+        STREAMING,
+        LOGGING,
+        LOG_AND_STREAM
     }
 
     companion object {
@@ -45,15 +45,15 @@ class ShimmerGSRRecorder(
         private const val SYNC_MARKS_FILENAME = "sync_marks.csv"
         private const val SESSION_METADATA_FILENAME = "session_metadata.json"
 
-        
+
         private const val ADC_12BIT_MAX = 4095
 
-        
+
         private const val GSR_SENSOR_BIT = 0x08.toByte()
         private const val GSR_RANGE_AUTO = 0x00.toByte()
         private const val TIMESTAMP_CHANNEL_BIT = 0x01.toByte()
 
-        
+
         private const val SENSOR_GSR_BIT = 0x10L
         private const val SENSOR_TIMESTAMP_BIT = 0x08L
 
@@ -371,7 +371,7 @@ class ShimmerGSRRecorder(
                     )
 
                 signalsWriter?.writeNext(sample.toCsvRow())
-                if (currentIndex % 10 == 0L) { 
+                if (currentIndex % 10 == 0L) {
                     signalsWriter?.flush()
                 }
 
@@ -385,7 +385,7 @@ class ShimmerGSRRecorder(
 
     private fun createGSRConfiguration(): ByteArray {
         try {
-            val config = ByteArray(12) 
+            val config = ByteArray(12)
 
             val samplingRateConfig =
                 when (samplingRateHz) {
@@ -393,11 +393,11 @@ class ShimmerGSRRecorder(
                     256 -> 0x03.toByte()
                     512 -> 0x02.toByte()
                     1024 -> 0x01.toByte()
-                    else -> 0x04.toByte() 
+                    else -> 0x04.toByte()
                 }
 
             config[0] = samplingRateConfig
-            config[1] = 0x08.toByte() 
+            config[1] = 0x08.toByte()
             config[3] = TIMESTAMP_CHANNEL_BIT
 
             Log.d(
@@ -504,7 +504,6 @@ class ShimmerGSRRecorder(
     fun isDeviceConnected(): Boolean = isDeviceConnected.get()
 
 
-    
     private fun startShimmerLogging() {
         try {
             // Shimmer internal logging is not implemented in this wrapper
@@ -523,6 +522,6 @@ class ShimmerGSRRecorder(
         }
     }
 
-    
+
     fun getRecordingMode(): RecordingMode = recordingMode
 }

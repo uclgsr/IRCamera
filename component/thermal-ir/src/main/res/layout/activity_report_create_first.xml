@@ -25,7 +25,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        
+
         <TextView
             android:id="@+id/tv_preview"
             android:layout_width="0dp"
@@ -42,7 +42,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        
+
         <TextView
             android:id="@+id/tv_next"
             android:layout_width="0dp"
@@ -75,7 +75,7 @@
             android:paddingTop="20dp"
             android:paddingBottom="20dp">
 
-            
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/cl_report_info"
                 android:layout_width="0dp"
@@ -88,7 +88,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
-                
+
                 <TextView
                     android:id="@+id/tv_report_info_title"
                     android:layout_width="0dp"
@@ -105,7 +105,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                
+
                 <TextView
                     android:id="@+id/tv_report_name"
                     android:layout_width="wrap_content"
@@ -138,7 +138,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_report_name" />
 
-                
+
                 <TextView
                     android:id="@+id/tv_report_author"
                     android:layout_width="wrap_content"
@@ -182,7 +182,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_report_author" />
 
-                
+
                 <TextView
                     android:id="@+id/tv_report_date_title"
                     android:layout_width="wrap_content"
@@ -224,7 +224,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_report_date_title" />
 
-                
+
                 <TextView
                     android:id="@+id/tv_report_place"
                     android:layout_width="wrap_content"
@@ -280,7 +280,7 @@
                     app:layout_constraintRight_toRightOf="@id/et_report_place"
                     app:layout_constraintTop_toTopOf="@id/et_report_place" />
 
-                
+
                 <TextView
                     android:id="@+id/tv_report_watermark"
                     android:layout_width="wrap_content"
@@ -325,7 +325,7 @@
                     app:layout_constraintTop_toBottomOf="@id/tv_report_watermark" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -338,7 +338,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/cl_report_info">
 
-                
+
                 <TextView
                     android:id="@+id/tv_detection_condition_title"
                     android:layout_width="0dp"
@@ -355,7 +355,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                
+
                 <TextView
                     android:id="@+id/tv_ambient_humidity"
                     android:layout_width="wrap_content"
@@ -396,7 +396,7 @@
                     app:seekPercent="70%"
                     app:tipsPercent="12%" />
 
-                
+
                 <TextView
                     android:id="@+id/tv_ambient_temperature"
                     android:layout_width="0dp"
@@ -441,7 +441,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_ambient_temperature" />
 
-                
+
                 <TextView
                     android:id="@+id/tv_emissivity"
                     android:layout_width="wrap_content"
@@ -481,7 +481,7 @@
                     app:seekPercent="70%"
                     app:tipsPercent="12%" />
 
-                
+
                 <TextView
                     android:id="@+id/tv_test_distance"
                     android:layout_width="wrap_content"

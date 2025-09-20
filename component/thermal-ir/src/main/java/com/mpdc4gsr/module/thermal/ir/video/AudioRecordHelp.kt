@@ -11,7 +11,6 @@ import java.lang.ref.WeakReference
 import java.nio.ShortBuffer
 
 
-
 class AudioRecordHelp private constructor() {
     private var audioRecord: AudioRecord? = null
     private var audioRecordRunnable: AudioRecordRunnable? = null

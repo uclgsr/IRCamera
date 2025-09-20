@@ -24,7 +24,6 @@ import kotlin.math.pow
 import kotlin.math.sqrt
 
 
-
 abstract class TemperatureBaseView : View {
     companion object {
 
@@ -58,7 +57,7 @@ abstract class TemperatureBaseView : View {
     open var mode = Mode.FULL
         set(value) {
             field = value
-            if (value == Mode.FULL) { 
+            if (value == Mode.FULL) {
                 isShowFull = true
                 invalidate()
             } else if (value == Mode.CLEAR) {
@@ -95,7 +94,7 @@ abstract class TemperatureBaseView : View {
 
     var onRectListener: ((rectList: List<Rect>) -> Unit)? = null
 
-    
+
     var onTrendOperateListener: ((isAdd: Boolean) -> Unit)? = null
 
     protected val pointList = ArrayList<Point>()
@@ -201,7 +200,6 @@ abstract class TemperatureBaseView : View {
     }
 
 
-    
     protected fun drawPoint(
         canvas: Canvas,
         point: Point,
@@ -233,7 +231,7 @@ abstract class TemperatureBaseView : View {
         helper.drawRect(canvas, left, top, right, bottom)
     }
 
-    
+
     protected fun drawCircle(
         canvas: Canvas,
         x: Int,
@@ -243,7 +241,7 @@ abstract class TemperatureBaseView : View {
         helper.drawCircle(canvas, x, y, isMax)
     }
 
-    
+
     protected fun drawTempText(
         canvas: Canvas,
         x: Int,
@@ -253,7 +251,7 @@ abstract class TemperatureBaseView : View {
         helper.drawTempText(canvas, UnitTools.showC(temp), width, x, y)
     }
 
-    
+
     protected fun drawTrendText(
         canvas: Canvas,
         line: Line,
@@ -269,7 +267,7 @@ abstract class TemperatureBaseView : View {
         )
     }
 
-    
+
     protected fun drawPointName(
         canvas: Canvas,
         name: String,
@@ -282,7 +280,7 @@ abstract class TemperatureBaseView : View {
         helper.drawPointName(canvas, name, width, height, x, y)
     }
 
-    
+
     protected fun drawLineName(
         canvas: Canvas,
         name: String,
@@ -295,7 +293,7 @@ abstract class TemperatureBaseView : View {
         helper.drawPointRectName(canvas, name, width, height, startX, startY, stopX, stopY)
     }
 
-    
+
     protected fun drawRectName(
         canvas: Canvas,
         name: String,
@@ -312,7 +310,7 @@ abstract class TemperatureBaseView : View {
     private var downX = 0
     private var downY = 0
 
-    
+
     private var isAddAction = true
 
     @SuppressLint("ClickableViewAccessibility")
@@ -340,7 +338,7 @@ abstract class TemperatureBaseView : View {
                 val point: Point? = pollPoint(downX, downY)
                 isAddAction = point == null
                 operatePoint = point ?: Point(downX, downY)
-                if (point == null && pointList.size == maxCount) { 
+                if (point == null && pointList.size == maxCount) {
                     synchronized(this) {
                         pointList.removeAt(0)
                     }
@@ -460,7 +458,7 @@ abstract class TemperatureBaseView : View {
                     (if (isTrend) operateTrend else operateLine)?.end?.y = y
                 } else {
                     when (lineMoveType) {
-                        LineMoveType.ALL -> { 
+                        LineMoveType.ALL -> {
                             val rect: Rect = TempDrawHelper.getRect(width, height)
                             val minX: Int = min(downLine.start.x, downLine.end.x)
                             val maxX: Int = max(downLine.start.x, downLine.end.x)
@@ -598,7 +596,7 @@ abstract class TemperatureBaseView : View {
                 downX = event.x.correct(width)
                 downY = event.y.correct(height)
                 val rect: Rect? = pollRect(downX, downY)
-                if (rect == null) { 
+                if (rect == null) {
                     isAddAction = true
                     operateRect = Rect(downX, downY, downX, downY)
                     if (rectList.size == maxCount) {
@@ -606,19 +604,19 @@ abstract class TemperatureBaseView : View {
                             rectList.removeAt(0)
                         }
                     }
-                } else { 
+                } else {
                     isAddAction = false
                     operateRect = rect
                     downRect.set(rect)
                     when (downX) {
-                        in rect.left - TOUCH_TOLERANCE..rect.left + TOUCH_TOLERANCE -> { 
+                        in rect.left - TOUCH_TOLERANCE..rect.left + TOUCH_TOLERANCE -> {
                             when (downY) {
-                                in rect.top - TOUCH_TOLERANCE..rect.top + TOUCH_TOLERANCE -> { 
+                                in rect.top - TOUCH_TOLERANCE..rect.top + TOUCH_TOLERANCE -> {
                                     rectMoveType = RectMoveType.CORNER
                                     rectMoveCorner = RectMoveCorner.LT
                                 }
 
-                                in rect.bottom - TOUCH_TOLERANCE..rect.bottom + TOUCH_TOLERANCE -> { 
+                                in rect.bottom - TOUCH_TOLERANCE..rect.bottom + TOUCH_TOLERANCE -> {
                                     rectMoveType = RectMoveType.CORNER
                                     rectMoveCorner = RectMoveCorner.LB
                                 }
@@ -630,14 +628,14 @@ abstract class TemperatureBaseView : View {
                             }
                         }
 
-                        in rect.right - TOUCH_TOLERANCE..rect.right + TOUCH_TOLERANCE -> { 
+                        in rect.right - TOUCH_TOLERANCE..rect.right + TOUCH_TOLERANCE -> {
                             when (downY) {
-                                in rect.top - TOUCH_TOLERANCE..rect.top + TOUCH_TOLERANCE -> { 
+                                in rect.top - TOUCH_TOLERANCE..rect.top + TOUCH_TOLERANCE -> {
                                     rectMoveType = RectMoveType.CORNER
                                     rectMoveCorner = RectMoveCorner.RT
                                 }
 
-                                in rect.bottom - TOUCH_TOLERANCE..rect.bottom + TOUCH_TOLERANCE -> { 
+                                in rect.bottom - TOUCH_TOLERANCE..rect.bottom + TOUCH_TOLERANCE -> {
                                     rectMoveType = RectMoveType.CORNER
                                     rectMoveCorner = RectMoveCorner.RB
                                 }
@@ -649,14 +647,14 @@ abstract class TemperatureBaseView : View {
                             }
                         }
 
-                        else -> { 
+                        else -> {
                             when (downY) {
-                                in rect.top - TOUCH_TOLERANCE..rect.top + TOUCH_TOLERANCE -> { 
+                                in rect.top - TOUCH_TOLERANCE..rect.top + TOUCH_TOLERANCE -> {
                                     rectMoveType = RectMoveType.EDGE
                                     rectMoveEdge = RectMoveEdge.TOP
                                 }
 
-                                in rect.bottom - TOUCH_TOLERANCE..rect.bottom + TOUCH_TOLERANCE -> { 
+                                in rect.bottom - TOUCH_TOLERANCE..rect.bottom + TOUCH_TOLERANCE -> {
                                     rectMoveType = RectMoveType.EDGE
                                     rectMoveEdge = RectMoveEdge.BOTTOM
                                 }
@@ -678,7 +676,7 @@ abstract class TemperatureBaseView : View {
                     operateRect?.set(min(downX, x), min(downY, y), max(downX, x), max(downY, y))
                 } else {
                     when (rectMoveType) {
-                        RectMoveType.ALL -> { 
+                        RectMoveType.ALL -> {
                             val rect: Rect = TempDrawHelper.getRect(width, height)
                             val biasX: Int =
                                 if (x < downX) {
@@ -708,22 +706,22 @@ abstract class TemperatureBaseView : View {
 
                         RectMoveType.EDGE ->
                             when (rectMoveEdge) {
-                                RectMoveEdge.LEFT -> { 
+                                RectMoveEdge.LEFT -> {
                                     operateRect?.left = min(x, downRect.right)
                                     operateRect?.right = max(x, downRect.right)
                                 }
 
-                                RectMoveEdge.TOP -> { 
+                                RectMoveEdge.TOP -> {
                                     operateRect?.top = min(y, downRect.bottom)
                                     operateRect?.bottom = max(y, downRect.bottom)
                                 }
 
-                                RectMoveEdge.RIGHT -> { 
+                                RectMoveEdge.RIGHT -> {
                                     operateRect?.right = max(x, downRect.left)
                                     operateRect?.left = min(x, downRect.left)
                                 }
 
-                                RectMoveEdge.BOTTOM -> { 
+                                RectMoveEdge.BOTTOM -> {
                                     operateRect?.bottom = max(y, downRect.top)
                                     operateRect?.top = min(y, downRect.top)
                                 }
@@ -731,28 +729,28 @@ abstract class TemperatureBaseView : View {
 
                         RectMoveType.CORNER ->
                             when (rectMoveCorner) {
-                                RectMoveCorner.LT -> { 
+                                RectMoveCorner.LT -> {
                                     operateRect?.left = min(x, downRect.right)
                                     operateRect?.right = max(x, downRect.right)
                                     operateRect?.top = min(y, downRect.bottom)
                                     operateRect?.bottom = max(y, downRect.bottom)
                                 }
 
-                                RectMoveCorner.RT -> { 
+                                RectMoveCorner.RT -> {
                                     operateRect?.right = max(x, downRect.left)
                                     operateRect?.left = min(x, downRect.left)
                                     operateRect?.top = min(y, downRect.bottom)
                                     operateRect?.bottom = max(y, downRect.bottom)
                                 }
 
-                                RectMoveCorner.RB -> { 
+                                RectMoveCorner.RB -> {
                                     operateRect?.right = max(x, downRect.left)
                                     operateRect?.left = min(x, downRect.left)
                                     operateRect?.bottom = max(y, downRect.top)
                                     operateRect?.top = min(y, downRect.top)
                                 }
 
-                                RectMoveCorner.LB -> { 
+                                RectMoveCorner.LB -> {
                                     operateRect?.left = min(x, downRect.right)
                                     operateRect?.right = max(x, downRect.right)
                                     operateRect?.bottom = max(y, downRect.top)

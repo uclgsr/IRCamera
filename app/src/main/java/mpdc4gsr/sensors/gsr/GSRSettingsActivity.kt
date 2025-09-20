@@ -360,8 +360,8 @@ class GSRSettingsActivity : BaseBindingActivity<ActivityGsrSettingsBinding>() {
                 "gsr_sampling_rate",
                 2
             )
-        ) 
-        binding.gsrRangeSpinner.setSelection(prefs.getInt("gsr_range", 0)) 
+        )
+        binding.gsrRangeSpinner.setSelection(prefs.getInt("gsr_range", 0))
         binding.gsrCalibrationSwitch.isChecked = prefs.getBoolean("gsr_calibration", true)
 
         binding.videoResolutionSpinner.setSelection(
@@ -369,13 +369,13 @@ class GSRSettingsActivity : BaseBindingActivity<ActivityGsrSettingsBinding>() {
                 "video_resolution",
                 0
             )
-        ) 
+        )
         binding.videoFrameRateSpinner.setSelection(
             prefs.getInt(
                 "video_frame_rate",
                 0
             )
-        ) 
+        )
         binding.enableVideoSwitch.isChecked = prefs.getBoolean("enable_video", true)
         binding.enableStabilizationSwitch.isChecked = prefs.getBoolean("enable_stabilization", true)
 
@@ -385,8 +385,8 @@ class GSRSettingsActivity : BaseBindingActivity<ActivityGsrSettingsBinding>() {
                 "raw_frame_rate",
                 0
             )
-        ) 
-        binding.rawQualitySpinner.setSelection(prefs.getInt("raw_quality", 0)) 
+        )
+        binding.rawQualitySpinner.setSelection(prefs.getInt("raw_quality", 0))
 
         binding.autoExportSwitch.isChecked = prefs.getBoolean("auto_export", false)
         binding.dataRetentionSpinner.setSelection(
@@ -394,7 +394,7 @@ class GSRSettingsActivity : BaseBindingActivity<ActivityGsrSettingsBinding>() {
                 "data_retention",
                 0
             )
-        ) 
+        )
         binding.sessionPrefixEdit.setText(prefs.getString("session_prefix", "GSR_Session"))
 
         binding.enableTimeSyncSwitch.isChecked = prefs.getBoolean("enable_time_sync", true)
@@ -403,7 +403,7 @@ class GSRSettingsActivity : BaseBindingActivity<ActivityGsrSettingsBinding>() {
                 "sync_tolerance",
                 1
             )
-        ) 
+        )
     }
 
     private fun setupListeners() {
@@ -457,7 +457,7 @@ class GSRSettingsActivity : BaseBindingActivity<ActivityGsrSettingsBinding>() {
             }
         }
 
-        
+
         checkAndRequestPermissions()
     }
 
@@ -560,7 +560,7 @@ class GSRSettingsActivity : BaseBindingActivity<ActivityGsrSettingsBinding>() {
                     if (selectedDevice.contains("(") && selectedDevice.contains(")")) {
                         selectedDevice.substringAfter("(").substringBefore(")")
                     } else {
-                        selectedDevice 
+                        selectedDevice
                     }
 
                 Log.i(
@@ -611,19 +611,22 @@ class GSRSettingsActivity : BaseBindingActivity<ActivityGsrSettingsBinding>() {
                 status.contains(
                     "Connected",
                     ignoreCase = true
-                ) -> android.graphics.Color.parseColor("#4caf50") 
+                ) -> android.graphics.Color.parseColor("#4caf50")
+
                 status.contains(
                     "Connecting",
                     ignoreCase = true
-                ) -> android.graphics.Color.parseColor("#ff9800") 
+                ) -> android.graphics.Color.parseColor("#ff9800")
+
                 status.contains("Failed", ignoreCase = true) || status.contains(
                     "Error",
                     ignoreCase = true
                 ) ->
                     android.graphics.Color.parseColor(
                         "#f44336",
-                    ) 
-                else -> android.graphics.Color.parseColor("#ffcc00") 
+                    )
+
+                else -> android.graphics.Color.parseColor("#ffcc00")
             }
         binding.deviceStatusText.setTextColor(color)
     }
@@ -663,14 +666,14 @@ class GSRSettingsActivity : BaseBindingActivity<ActivityGsrSettingsBinding>() {
 
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
-        
+
         super.onBackPressed()
     }
 
     override fun onDestroy() {
         super.onDestroy()
 
-        
+
         lifecycleScope.launch {
             try {
                 gsrSensorRecorder?.cleanup()

@@ -28,8 +28,6 @@ import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 
 
-
-
 class IRThermalPlusActivity : BaseIRPlushActivity() {
     private val irImageHelp by lazy {
         IRImageHelp()
@@ -66,25 +64,25 @@ class IRThermalPlusActivity : BaseIRPlushActivity() {
 
 
         when (SaveSettingUtil.fusionType) {
-            SaveSettingUtil.FusionTypeLPYFusion -> { 
+            SaveSettingUtil.FusionTypeLPYFusion -> {
                 thermalRecyclerNight?.twoLightType = TwoLightType.TWO_LIGHT_1
             }
 
-            SaveSettingUtil.FusionTypeMeanFusion -> { 
+            SaveSettingUtil.FusionTypeMeanFusion -> {
                 thermalRecyclerNight?.twoLightType = TwoLightType.TWO_LIGHT_2
             }
 
-            SaveSettingUtil.FusionTypeIROnly -> { 
+            SaveSettingUtil.FusionTypeIROnly -> {
                 thermalRecyclerNight?.twoLightType = TwoLightType.IR
             }
 
-            SaveSettingUtil.FusionTypeVLOnly -> { 
+            SaveSettingUtil.FusionTypeVLOnly -> {
                 thermalRecyclerNight?.twoLightType = TwoLightType.LIGHT
             }
         }
     }
 
-    
+
     private fun setDisp(
         action: Int,
         data: Int,
@@ -119,19 +117,19 @@ class IRThermalPlusActivity : BaseIRPlushActivity() {
         isSelected: Boolean,
     ) {
         when (twoLightType) {
-            TwoLightType.TWO_LIGHT_1 -> { 
+            TwoLightType.TWO_LIGHT_1 -> {
                 mCurrentFusionType = DualCameraParams.FusionType.LPYFusion
                 SaveSettingUtil.fusionType = SaveSettingUtil.FusionTypeLPYFusion
                 setFusion(mCurrentFusionType)
             }
 
-            TwoLightType.TWO_LIGHT_2 -> { 
+            TwoLightType.TWO_LIGHT_2 -> {
                 mCurrentFusionType = DualCameraParams.FusionType.MeanFusion
                 SaveSettingUtil.fusionType = SaveSettingUtil.FusionTypeMeanFusion
                 setFusion(mCurrentFusionType)
             }
 
-            TwoLightType.IR -> { 
+            TwoLightType.IR -> {
                 mCurrentFusionType = DualCameraParams.FusionType.IROnly
                 SaveSettingUtil.fusionType = SaveSettingUtil.FusionTypeIROnly
                 setFusion(mCurrentFusionType)
@@ -139,7 +137,7 @@ class IRThermalPlusActivity : BaseIRPlushActivity() {
 
             }
 
-            TwoLightType.LIGHT -> { 
+            TwoLightType.LIGHT -> {
                 mCurrentFusionType = DualCameraParams.FusionType.VLOnly
                 SaveSettingUtil.fusionType = SaveSettingUtil.FusionTypeVLOnly
                 setFusion(mCurrentFusionType)
@@ -147,7 +145,7 @@ class IRThermalPlusActivity : BaseIRPlushActivity() {
                 thermalRecyclerNight.setTwoLightSelected(TwoLightType.CORRECT, false)
             }
 
-            TwoLightType.CORRECT -> { 
+            TwoLightType.CORRECT -> {
                 if (isSelected) {
 
                     if (mCurrentFusionType != DualCameraParams.FusionType.LPYFusion && mCurrentFusionType != DualCameraParams.FusionType.MeanFusion) {
@@ -190,7 +188,7 @@ class IRThermalPlusActivity : BaseIRPlushActivity() {
     override fun setPColor(code: Int) {
         pseudoColorMode = code
         temperatureSeekbar.setPseudocode(pseudoColorMode)
-        
+
 
         SaveSettingUtil.pseudoColorMode = pseudoColorMode
         thermalRecyclerNight.setPseudoColor(code)

@@ -95,12 +95,12 @@ class MineFragment : BaseFragment(), View.OnClickListener {
         settingElectronicManual.setOnClickListener(this)
         settingFaq.setOnClickListener(this)
         settingFeedback.setOnClickListener(this)
-        settingItemUnit.setOnClickListener(this) 
+        settingItemUnit.setOnClickListener(this)
         dragCustomerView.setOnClickListener(this)
 
         viewWinterPoint.isVisible = !SharedManager.hasClickWinter
 
-        if (BaseApplication.instance.isDomestic()) { 
+        if (BaseApplication.instance.isDomestic()) {
 
         }
 
@@ -141,7 +141,7 @@ class MineFragment : BaseFragment(), View.OnClickListener {
 
     override fun onClick(v: View?) {
         when (v) {
-            ivWinter -> { 
+            ivWinter -> {
                 viewWinterPoint.isVisible = false
                 SharedManager.hasClickWinter = true
                 EventBus.getDefault().post(WinterClickEvent())
@@ -149,7 +149,7 @@ class MineFragment : BaseFragment(), View.OnClickListener {
                 val url =
                     if (UrlConstant.BASE_URL == "https://api.topdon.com/") {
                         "https://app.topdon.com/h5/share/#/detectionGuidanceIndex?showHeader=1&" +
-                                "languageId=1" 
+                                "languageId=1"
                     } else {
                         "http://172.16.66.77:8081/#/detectionGuidanceIndex?languageId=1&showHeader=1"
                     }
@@ -174,21 +174,21 @@ class MineFragment : BaseFragment(), View.OnClickListener {
                 }
             }
 
-            settingElectronicManual -> { 
+            settingElectronicManual -> {
                 NavigationManager.getInstance().build(
                     RouterConfig.ELECTRONIC_MANUAL,
                 ).withInt(Constants.SETTING_TYPE, Constants.SETTING_BOOK)
                     .navigation(requireContext())
             }
 
-            settingFaq -> { 
+            settingFaq -> {
                 NavigationManager.getInstance().build(
                     RouterConfig.ELECTRONIC_MANUAL,
                 ).withInt(Constants.SETTING_TYPE, Constants.SETTING_FAQ)
                     .navigation(requireContext())
             }
 
-            settingFeedback -> { 
+            settingFeedback -> {
                 if (LMS.getInstance().isLogin) {
                     val devSn = SharedManager.getDeviceSn()
                     FeedBackBean().apply {
@@ -206,21 +206,21 @@ class MineFragment : BaseFragment(), View.OnClickListener {
                 }
             }
 
-            settingItemUnit -> { 
+            settingItemUnit -> {
                 NavigationManager.getInstance().build(RouterConfig.UNIT)
                     .navigation(requireContext())
             }
 
-            settingItemVersion -> { 
+            settingItemVersion -> {
                 NavigationManager.getInstance().build(RouterConfig.VERSION)
                     .navigation(requireContext())
             }
 
-            settingItemClear -> { 
+            settingItemClear -> {
                 clearCache()
             }
 
-            dragCustomerView -> { 
+            dragCustomerView -> {
 
                 val sn = SharedManager.getDeviceSn()
 
@@ -239,7 +239,7 @@ class MineFragment : BaseFragment(), View.OnClickListener {
         val bgBitmap = BitmapFactory.decodeResource(
             resources,
             LibAppR.mipmap.ic_default_user_head
-        ) 
+        )
         LMS.getInstance().activityLogin(null, null, false, null, bgBitmap)
     }
 
@@ -268,7 +268,7 @@ class MineFragment : BaseFragment(), View.OnClickListener {
 
             XLog.e(" 登录失败")
             changeLoginStyle()
-            settingUserImgNight.setImageResource(LibAppR.mipmap.ic_default_user_head) 
+            settingUserImgNight.setImageResource(LibAppR.mipmap.ic_default_user_head)
         }
     }
 
@@ -328,7 +328,7 @@ class MineFragment : BaseFragment(), View.OnClickListener {
             settingUserLay.visibility = View.GONE
             val tvEmail = requireView().findViewById<TextView>(R.id.tv_email)
             tvEmail.text = ""
-            settingUserImgNight.setImageResource(LibAppR.mipmap.ic_default_user_head) 
+            settingUserImgNight.setImageResource(LibAppR.mipmap.ic_default_user_head)
         }
     }
 

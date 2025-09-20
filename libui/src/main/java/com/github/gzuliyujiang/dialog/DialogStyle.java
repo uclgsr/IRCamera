@@ -1,5 +1,3 @@
-
-
 package com.github.gzuliyujiang.dialog;
 
 import java.lang.annotation.Retention;

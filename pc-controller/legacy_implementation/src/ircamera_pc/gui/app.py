@@ -1,5 +1,3 @@
-
-
 import asyncio
 import os
 import signal
@@ -7,7 +5,6 @@ import sys
 from typing import Optional, Any
 
 from loguru import logger
-
 
 GUI_AVAILABLE = True
 try:
@@ -20,6 +17,7 @@ try:
 except ImportError as e:
     logger.warning(f"GUI libraries not available, running in headless mode: {e}")
     GUI_AVAILABLE = False
+
 
     # Mock classes for headless mode
     class QApplication:
@@ -37,6 +35,7 @@ except ImportError as e:
 
         def exec(self) -> Any:
             return 0
+
 
     class QTimer:
         def __init__(self):
@@ -64,7 +63,6 @@ from ..core.timesync import TimeSyncService
 from ..core.wifi_manager import WiFiManager
 from ..network.websocket_server import WebSocketServer
 from .utils import setup_logging
-
 
 if GUI_AVAILABLE:
     from .main_window import MainWindow
@@ -250,7 +248,6 @@ class IRCameraApp:
                 try:
                     while True:
                         if self._loop:
-
                             self._process_async_events()
                         import time
 
@@ -285,7 +282,6 @@ class IRCameraApp:
 
 
 def main() -> int:
-
     import argparse
 
     parser = argparse.ArgumentParser(

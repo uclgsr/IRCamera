@@ -7,7 +7,7 @@ import android.content.Context;
  */
 public class SPUtils {
     private static volatile SPUtils instance;
-    
+
     public static SPUtils getInstance(Context context) {
         // The context parameter is unused in this stub implementation.
         if (instance == null) {
@@ -19,11 +19,11 @@ public class SPUtils {
         }
         return instance;
     }
-    
+
     public String get(String key) {
         return "";
     }
-    
+
     public String get(String key, String defaultValue) {
         return defaultValue;
     }

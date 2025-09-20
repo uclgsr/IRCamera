@@ -45,7 +45,7 @@ abstract class BaseFragment : Fragment() {
         super.onHiddenChanged(hidden)
         if (hidden) {
 
-        } else { 
+        } else {
 
             initData()
         }

@@ -155,7 +155,7 @@ constructor(
                 sensorsText.text = "Check sensor connections"
             }
 
-            visibility = VISIBLE 
+            visibility = VISIBLE
         }
     }
 

@@ -19,11 +19,11 @@ import java.util.concurrent.atomic.AtomicLong
 class ReliableMessageService(private val context: Context? = null) {
     companion object {
         private const val TAG = "ReliableMessage"
-        private const val DEFAULT_TIMEOUT_MS = 10000L 
+        private const val DEFAULT_TIMEOUT_MS = 10000L
         private const val MAX_RETRY_ATTEMPTS = 3
         private const val RETRY_DELAY_MS = 2000L
-        private const val CLEANUP_INTERVAL_MS = 60000L 
-        private const val MESSAGE_EXPIRY_MS = 300000L 
+        private const val CLEANUP_INTERVAL_MS = 60000L
+        private const val MESSAGE_EXPIRY_MS = 300000L
     }
 
     private val messageScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
@@ -51,10 +51,10 @@ class ReliableMessageService(private val context: Context? = null) {
     )
 
     enum class MessagePriority {
-        LOW, 
-        NORMAL, 
-        HIGH, 
-        CRITICAL, 
+        LOW,
+        NORMAL,
+        HIGH,
+        CRITICAL,
     }
 
     interface MessageCallback {
@@ -74,7 +74,7 @@ class ReliableMessageService(private val context: Context? = null) {
 
     interface MessageHandler {
 
-        fun handleMessage(message: JSONObject): JSONObject? 
+        fun handleMessage(message: JSONObject): JSONObject?
     }
 
     interface MessageTransport {
@@ -278,7 +278,7 @@ class ReliableMessageService(private val context: Context? = null) {
                     val ackReceived = waitForAcknowledgment(pendingMessage)
 
                     if (ackReceived) {
-                        return 
+                        return
                     }
                 }
 
@@ -335,7 +335,7 @@ class ReliableMessageService(private val context: Context? = null) {
 
                 return true
             }
-            delay(100) 
+            delay(100)
         }
 
         return false

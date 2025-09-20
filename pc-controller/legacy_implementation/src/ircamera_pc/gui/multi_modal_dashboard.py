@@ -1,5 +1,3 @@
-
-
 import numpy as np
 import pyqtgraph as pg
 import time
@@ -22,13 +20,11 @@ from ..data.aggregator import DataAggregator
 from ..data.hdf5_exporter import MultiModalHDF5Exporter
 from ..network.websocket_server import WebSocketServer
 
-
 pg.setConfigOptions(antialias=True, useOpenGL=True)
 
 
 @dataclass
 class DeviceStatus:
-
     device_id: str
     device_name: str
     android_version: str
@@ -52,7 +48,6 @@ class DeviceStatus:
 
 @dataclass
 class SensorData:
-
     timestamp: float
     device_id: str
     sensor_type: str
@@ -95,7 +90,6 @@ class GSRPlotWidget(PlotWidget):
     def add_device(self, device_id: str, device_name: str):
 
         if device_id not in self.device_buffers:
-
             time_buffer = np.zeros(self.buffer_size)
             gsr_buffer = np.zeros(self.buffer_size)
             self.device_buffers[device_id] = (time_buffer, gsr_buffer)
@@ -211,7 +205,6 @@ class RGBVideoWidget(QLabel):
     def update_rgb_frame(self, rgb_data: np.ndarray):
 
         if rgb_data is not None:
-
             height, width, channels = rgb_data.shape
             bytes_per_line = channels * width
 
@@ -377,13 +370,11 @@ class DeviceStatusWidget(QGroupBox):
 
         device_id = device_status.device_id
         if device_id in self.device_status_widgets:
-
             self.remove_device(device_id)
             self.add_device(device_status)
 
 
 class SessionControlPanel(QGroupBox):
-
     start_recording_signal = pyqtSignal(str)
     stop_recording_signal = pyqtSignal()
     inject_sync_marker_signal = pyqtSignal(str)
@@ -848,7 +839,6 @@ class MultiModalDashboard(QMainWindow):
 
 
 def main():
-
     import sys
     from PyQt6.QtWidgets import QApplication
 

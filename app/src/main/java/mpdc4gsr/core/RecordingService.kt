@@ -225,11 +225,11 @@ class RecordingService : LifecycleService() {
                 try {
                     Log.i(TAG, "Initializing RecordingService with enhanced fault tolerance")
 
-                    
+
                     val sensorsSuccess = recordingController.initializeSensors()
                     val networkSuccess = initializeNetworkClient()
 
-                    
+
                     isInitialized = sensorsSuccess
                     isNetworkInitialized = networkSuccess
 
@@ -367,11 +367,11 @@ class RecordingService : LifecycleService() {
             if (isNetworkInitialized) {
                 networkClient.disconnect()
             }
-            
+
             if (::previewStreamer.isInitialized) {
                 previewStreamer.cleanup()
             }
-            
+
             if (::previewDataAdapter.isInitialized) {
                 previewDataAdapter.cleanup()
             }
@@ -443,7 +443,7 @@ class RecordingService : LifecycleService() {
                     createRecordingNotification("Starting recording session...")
                 )
 
-                
+
                 val success = recordingController.startSession(sessionDirectory)
 
                 if (success) {
@@ -495,7 +495,7 @@ class RecordingService : LifecycleService() {
                 updateNotification("Stopping recording session...")
                 Log.i(TAG, "Stopping recording session")
 
-                
+
                 val success = recordingController.stopSession()
 
                 if (success) {
@@ -541,7 +541,7 @@ class RecordingService : LifecycleService() {
                 currentSessionDirectory = null
                 recordingStartTime = 0
 
-                
+
                 if (!isServerRunning.get()) {
                     stopSelf()
                 }
@@ -565,7 +565,7 @@ class RecordingService : LifecycleService() {
                 Log.i(TAG, "Sync marker added: $markerType")
 
                 if (recordingController.isRecording) {
-                    val originalText = "Recording in progress" 
+                    val originalText = "Recording in progress"
                     updateNotification("Sync marker: $markerType")
                     delay(1000)
                     updateNotification(originalText)
@@ -648,12 +648,12 @@ class RecordingService : LifecycleService() {
 
     private fun updateNotification(contentText: String) {
         try {
-            
+
             if (isServiceForeground()) {
                 val notification = when {
                     recordingController.isRecording -> createRecordingNotification(contentText)
                     isServerRunning.get() -> createServerNotification(contentText)
-                    else -> null 
+                    else -> null
                 }
                 notification?.let { notificationManager.notify(NOTIFICATION_ID, it) }
             }
@@ -856,7 +856,7 @@ class RecordingService : LifecycleService() {
 
     private suspend fun handleNewClientConnection(clientSocket: Socket, clientId: String) {
         try {
-            clientSocket.soTimeout = 30000 
+            clientSocket.soTimeout = 30000
             val inputStream = DataInputStream(clientSocket.getInputStream())
             val outputStream = DataOutputStream(clientSocket.getOutputStream())
 
@@ -904,7 +904,7 @@ class RecordingService : LifecycleService() {
         while (isServerRunning.get() && currentCoroutineContext().isActive) {
             try {
                 val messageLength = inputStream.readInt()
-                if (messageLength > 1024 * 1024) { 
+                if (messageLength > 1024 * 1024) {
                     Log.w(TAG, "Message too large from $clientId: $messageLength bytes")
                     break
                 }
@@ -987,13 +987,13 @@ class RecordingService : LifecycleService() {
                 if (connected) {
                     Log.i(TAG, "PC Controller connected to network server")
                     updateNotification("PC Controller connected")
-                    
+
                     previewStreamer.startStreaming()
                     previewDataAdapter.startDataPolling()
                 } else {
                     Log.i(TAG, "PC Controller disconnected, still listening on port 8080")
                     updateNotification("Listening for PC Controller on port 8080")
-                    
+
                     previewDataAdapter.stopDataPolling()
                     previewStreamer.stopStreaming()
                 }
@@ -1447,7 +1447,7 @@ class RecordingService : LifecycleService() {
     }
 
     private fun isServiceForeground(): Boolean {
-        
+
         return recordingController.isRecording || isServerRunning.get()
     }
 
@@ -1522,7 +1522,7 @@ class RecordingService : LifecycleService() {
 
     fun performSyncFlash(durationMs: Int) {
         // This is a placeholder for the actual flash logic.
-        
+
         this.addSyncMarker("pc_sync_flash", System.nanoTime())
     }
 
@@ -1699,7 +1699,7 @@ class RecordingService : LifecycleService() {
             Log.d(TAG, "Handling stop recording command")
             lifecycleScope.launch {
                 if (recordingController.isRecording) {
-                    stopRecordingSession() 
+                    stopRecordingSession()
                     sendResponseToPC("stop_recording_response", JSONObject().apply {
                         put("status", "stopped")
                         put("session_directory", currentSessionDirectory ?: "")

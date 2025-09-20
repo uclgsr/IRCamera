@@ -45,13 +45,13 @@ public class CameraView extends TextureView {
     public CameraView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
-        paint = new Paint();  
+        paint = new Paint();
         paint = new Paint(Paint.FILTER_BITMAP_FLAG);
 
-        paint.setStrokeWidth(2);  
-        paint.setAntiAlias(true); 
-        paint.setDither(true);    
-        paint.setColor(Color.WHITE);  
+        paint.setStrokeWidth(2);
+        paint.setAntiAlias(true);
+        paint.setDither(true);
+        paint.setColor(Color.WHITE);
 
         greenPaint = new Paint();
         greenPaint.setStrokeWidth(6);
@@ -79,10 +79,10 @@ public class CameraView extends TextureView {
                                 continue;
                             }
 
-                            paint.setStrokeWidth(2);  
-                            paint.setAntiAlias(true); 
-                            paint.setDither(true);    
-                            paint.setColor(Color.WHITE);  
+                            paint.setStrokeWidth(2);
+                            paint.setAntiAlias(true);
+                            paint.setDither(true);
+                            paint.setColor(Color.WHITE);
 
                             Bitmap mScaledBitmap = Bitmap.createScaledBitmap(bitmap, getWidth(), getHeight(), true);
                             canvas.drawBitmap(mScaledBitmap, 0, 0, null);

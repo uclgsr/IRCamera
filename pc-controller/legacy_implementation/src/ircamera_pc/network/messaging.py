@@ -1,5 +1,3 @@
-
-
 import asyncio
 import time
 import uuid
@@ -28,6 +26,7 @@ except ImportError:
             def error(self, msg) -> Any:
                 print(f"ERROR: {msg}")
 
+
         logger = FallbackLogger()
 
 try:
@@ -44,11 +43,11 @@ except ImportError:
             }
             return config_map.get(key, default)
 
+
     config = FallbackConfig()
 
 
 class MessagePriority(Enum):
-
     LOW = 1
     NORMAL = 2
     HIGH = 3
@@ -56,7 +55,6 @@ class MessagePriority(Enum):
 
 
 class MessageStatus(Enum):
-
     PENDING = "pending"
     SENT = "sent"
     ACKNOWLEDGED = "acknowledged"
@@ -66,7 +64,6 @@ class MessageStatus(Enum):
 
 @dataclass
 class ReliableMessage:
-
     message_id: str
     target_host: str
     target_port: int
@@ -84,7 +81,6 @@ class ReliableMessage:
 
 @dataclass
 class MessageCallback:
-
     on_acknowledged: Optional[Callable[[str], None]] = None
     on_failed: Optional[Callable[[str, str], None]] = None
     on_retrying: Optional[Callable[[str, int], None]] = None
@@ -327,7 +323,6 @@ class ReliableMessageService:
                             break
 
                 if not message_processed:
-
                     await asyncio.sleep(0.1)
 
             except Exception as e:
@@ -356,7 +351,6 @@ class ReliableMessageService:
             )
 
             if current_time - message.last_attempt < retry_delay:
-
                 self.priority_queues[message.priority].append(message_id)
                 return
 

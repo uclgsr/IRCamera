@@ -43,7 +43,7 @@ public class Legend extends ComponentBase {
 
         this.mTextSize = Utils.convertDpToPixel(10f);
         this.mXOffset = Utils.convertDpToPixel(5f);
-        this.mYOffset = Utils.convertDpToPixel(3f); 
+        this.mYOffset = Utils.convertDpToPixel(3f);
     }
 
     public Legend(LegendEntry[] entries) {
@@ -418,7 +418,7 @@ public class Legend extends ComponentBase {
 
                         float requiredSpacing = currentLineWidth == 0.f ? 0.f : xEntrySpace;
 
-                        if (!wordWrapEnabled 
+                        if (!wordWrapEnabled
 
                                 || currentLineWidth == 0.f
 
@@ -426,7 +426,7 @@ public class Legend extends ComponentBase {
                                 requiredSpacing + requiredWidth)) {
 
                             currentLineWidth += requiredSpacing + requiredWidth;
-                        } else { 
+                        } else {
 
                             mCalculatedLineSizes.add(FSize.getInstance(currentLineWidth, labelLineHeight));
                             maxLineWidth = Math.max(maxLineWidth, currentLineWidth);

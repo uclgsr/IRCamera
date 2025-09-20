@@ -6,7 +6,7 @@ import android.graphics.drawable.Drawable;
 @SuppressLint("ParcelCreator")
 public class BubbleEntry extends Entry {
 
-    
+
     private float mSize = 0f;
 
     public BubbleEntry(float x, float y, float size) {

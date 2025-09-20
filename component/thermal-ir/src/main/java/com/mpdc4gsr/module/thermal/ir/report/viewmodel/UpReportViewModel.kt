@@ -76,7 +76,7 @@ class UpReportViewModel : BaseViewModel() {
             params.addBodyParameter(
                 "modelId",
                 if (isTC007) 1783 else 950
-            ) 
+            )
             params.addBodyParameter("testTime", TimeUtils.getNowString())
             params.addBodyParameter("testInfo", GsonUtils.toJson(reportBean))
             params.addBodyParameter("sn", "")

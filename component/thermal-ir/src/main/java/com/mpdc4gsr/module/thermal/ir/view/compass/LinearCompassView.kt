@@ -42,10 +42,10 @@ class LinearCompassView : View {
     private var markerSize = SizeUtils.sp2px(2f).toFloat()
     private var backgroundColor = Color.BLACK
 
-    private var lastDrawTime = 0L 
-    private var step = 1000 / 10 
+    private var lastDrawTime = 0L
+    private var step = 1000 / 10
     private val scope = CoroutineScope(EmptyCoroutineContext)
-    var curBitmap: Bitmap? = null 
+    var curBitmap: Bitmap? = null
 
     constructor(context: Context) : this(context, null) {
         initView()

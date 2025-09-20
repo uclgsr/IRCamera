@@ -27,9 +27,9 @@ class GSRRecorder(
     private val shimmerDeviceFactory: ShimmerDeviceFactory,
     private val samplingRateHz: Int = 128,
 ) {
-    
+
     private val shimmerRecorder = ShimmerGSRRecorder(context, shimmerDeviceFactory, samplingRateHz)
-    private val useShimmerDevice = true 
+    private val useShimmerDevice = true
 
     companion object {
         private const val TAG = "GSRRecorder"
@@ -153,10 +153,10 @@ class GSRRecorder(
         }
 
         return if (useShimmerDevice) {
-            
+
             shimmerRecorder.startRecording(sessionId)
         } else {
-            
+
             startSimulatedRecording(sessionId, participantId, studyName)
         }
     }
@@ -167,20 +167,20 @@ class GSRRecorder(
         studyName: String?,
     ): Boolean {
         try {
-            
+
             sessionDirectory = createSessionDirectory(sessionId)
             if (sessionDirectory == null) {
                 notifyError("Failed to create session directory")
                 return false
             }
 
-            
+
             if (!initializeCsvWriters()) {
                 notifyError("Failed to initialize CSV writers")
                 return false
             }
 
-            
+
             currentSession =
                 SessionInfo(
                     sessionId = sessionId,
@@ -189,11 +189,11 @@ class GSRRecorder(
                     studyName = studyName ?: "GSR_Study",
                 )
 
-            
+
             sampleIndex.set(0)
             isRecording.set(true)
 
-            
+
             recordingJob =
                 CoroutineScope(Dispatchers.IO).launch {
                     generateSimulatedGSRData()
@@ -225,27 +225,27 @@ class GSRRecorder(
                 val utcTime = TimeUtil.getUtcTimestamp()
                 val currentIndex = sampleIndex.getAndIncrement()
 
-                
+
                 val elapsedMs = currentTime - baseTime
 
                 currentSession?.let { session ->
-                    
-                    val timeOffset = currentIndex * sampleIntervalMs
-                    val baseFreq = timeOffset / 10000.0 
-                    val breathingFreq = timeOffset / 2000.0 
-                    val noiseFreq = timeOffset / 500.0 
 
-                    
+                    val timeOffset = currentIndex * sampleIntervalMs
+                    val baseFreq = timeOffset / 10000.0
+                    val breathingFreq = timeOffset / 2000.0
+                    val noiseFreq = timeOffset / 500.0
+
+
                     val conductance =
                         20.0 +
-                                Math.sin(baseFreq) * 10.0 + 
-                                Math.sin(breathingFreq) * 3.0 + 
-                                Math.sin(noiseFreq) * 1.0 + 
-                                Math.random() * 2.0 
+                                Math.sin(baseFreq) * 10.0 +
+                                Math.sin(breathingFreq) * 3.0 +
+                                Math.sin(noiseFreq) * 1.0 +
+                                Math.random() * 2.0
 
-                    
+
                     val finalConductance = Math.max(5.0, Math.min(50.0, conductance))
-                    val resistance = 1.0 / (finalConductance / 1000000.0) 
+                    val resistance = 1.0 / (finalConductance / 1000000.0)
 
                     val sample =
                         GSRSample(
@@ -257,13 +257,13 @@ class GSRRecorder(
                             sessionId = session.sessionId,
                         )
 
-                    
+
                     signalsWriter?.writeNext(sample.toCsvRow())
-                    if (currentIndex % 10 == 0L) { 
+                    if (currentIndex % 10 == 0L) {
                         signalsWriter?.flush()
                     }
 
-                    
+
                     listeners.forEach { it.onSampleRecorded(sample) }
                 }
 
@@ -300,7 +300,7 @@ class GSRRecorder(
             session.endTime = System.currentTimeMillis()
             session.sampleCount = sampleIndex.get()
 
-            
+
             saveSessionMetadata(session)
 
             listeners.forEach { it.onRecordingStopped(session) }
@@ -344,11 +344,11 @@ class GSRRecorder(
                         metadata = if (metadata.isNotEmpty()) mapOf("data" to metadata) else emptyMap(),
                     )
 
-                
+
                 syncMarksWriter?.writeNext(syncMark.toCsvRow())
                 syncMarksWriter?.flush()
 
-                
+
                 listeners.forEach { it.onSyncMarkAdded(syncMark) }
 
                 Log.d(TAG, "Sync event recorded: $eventType")
@@ -384,7 +384,7 @@ class GSRRecorder(
     private fun initializeCsvWriters(): Boolean {
         return try {
             sessionDirectory?.let { dir ->
-                
+
                 val signalsFile = File(dir, SIGNALS_FILENAME)
                 signalsWriter =
                     CSVWriter(FileWriter(signalsFile)).apply {
@@ -392,7 +392,7 @@ class GSRRecorder(
                         flush()
                     }
 
-                
+
                 val syncMarksFile = File(dir, SYNC_MARKS_FILENAME)
                 syncMarksWriter =
                     CSVWriter(FileWriter(syncMarksFile)).apply {
@@ -454,7 +454,7 @@ class GSRRecorder(
         return if (useShimmerDevice) {
             shimmerRecorder.isDeviceConnected()
         } else {
-            true 
+            true
         }
     }
 

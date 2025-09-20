@@ -48,10 +48,10 @@ class CommonComponentTest {
     @Test
     fun testCommonUtilities() =
         runTest {
-            
+
             val testData = listOf(1, 2, 3, 4, 5)
 
-            
+
             assertTrue("Test data should not be empty", testData.isNotEmpty())
             assertEquals("Test data size should be 5", 5, testData.size)
 
@@ -71,7 +71,7 @@ class CommonComponentTest {
     @Test
     fun testMathOperations() =
         runTest {
-            
+
             val angles = listOf(0.0, 90.0, 180.0, 270.0, 360.0)
 
             angles.forEach { angle ->
@@ -80,7 +80,7 @@ class CommonComponentTest {
 
                 assertEquals("Angle conversion should be consistent", angle, backToDegrees, 0.001)
 
-                
+
                 val normalizedAngle = angle % 360.0
                 assertTrue(
                     "Normalized angle should be 0-360",
@@ -92,33 +92,33 @@ class CommonComponentTest {
     @Test
     fun testCoordinateTransformations() =
         runTest {
-            
+
             val testPoints =
                 listOf(
-                    Pair(0.0, 0.0), 
-                    Pair(1.0, 0.0), 
-                    Pair(0.0, 1.0), 
-                    Pair(1.0, 1.0), 
-                    Pair(-1.0, -1.0), 
+                    Pair(0.0, 0.0),
+                    Pair(1.0, 0.0),
+                    Pair(0.0, 1.0),
+                    Pair(1.0, 1.0),
+                    Pair(-1.0, -1.0),
                 )
 
             testPoints.forEach { (x, y) ->
-                
+
                 val distance = kotlin.math.sqrt(x * x + y * y)
                 assertTrue("Distance should be non-negative", distance >= 0.0)
 
-                
+
                 val angle = kotlin.math.atan2(y, x)
                 assertTrue(
                     "Angle should be in valid range",
                     angle >= -kotlin.math.PI && angle <= kotlin.math.PI
                 )
 
-                
+
                 val rotatedX = -y
                 val rotatedY = x
 
-                
+
                 val rotatedDistance = kotlin.math.sqrt(rotatedX * rotatedX + rotatedY * rotatedY)
                 assertEquals("Rotation should preserve distance", distance, rotatedDistance, 0.001)
             }
@@ -149,31 +149,31 @@ class CommonComponentTest {
     @Test
     fun testCollectionOperations() =
         runTest {
-            
+
             val testList = mutableListOf(3, 1, 4, 1, 5, 9, 2, 6, 5)
 
-            
+
             val sortedList = testList.sorted()
             assertTrue(
                 "Sorted list should be in ascending order",
                 sortedList.zipWithNext().all { (a, b) -> a <= b },
             )
 
-            
+
             val uniqueList = testList.distinct()
             assertTrue(
                 "Unique list should have no duplicates",
                 uniqueList.size <= testList.size,
             )
 
-            
+
             val evenNumbers = testList.filter { it % 2 == 0 }
             assertTrue(
                 "All filtered numbers should be even",
                 evenNumbers.all { it % 2 == 0 },
             )
 
-            
+
             val doubled = testList.map { it * 2 }
             assertEquals("Mapped list should have same size", testList.size, doubled.size)
             assertTrue(
@@ -185,7 +185,7 @@ class CommonComponentTest {
     @Test
     fun testStringOperations() =
         runTest {
-            
+
             val testStrings =
                 listOf(
                     "Hello",
@@ -196,18 +196,18 @@ class CommonComponentTest {
                 )
 
             testStrings.forEach { str ->
-                
+
                 val lowercase = str.lowercase()
                 val uppercase = str.uppercase()
 
                 assertNotNull("Lowercase should not be null", lowercase)
                 assertNotNull("Uppercase should not be null", uppercase)
 
-                
+
                 val trimmed = str.trim()
                 assertTrue("Trimmed length should be <= original", trimmed.length <= str.length)
 
-                
+
                 val replaced = str.replace(" ", "_")
                 assertNotNull("Replaced string should not be null", replaced)
             }
@@ -215,7 +215,7 @@ class CommonComponentTest {
 
     @Test
     fun testSystemServiceAccess() {
-        
+
         val packageManager = context.packageManager
         assertNotNull("Package manager should be available", packageManager)
 
@@ -229,7 +229,7 @@ class CommonComponentTest {
     @Test
     fun testFileOperations() =
         runTest {
-            
+
             val filesDir = context.filesDir
             assertNotNull("Files directory should be accessible", filesDir)
             assertTrue("Files directory should exist", filesDir.exists())
@@ -238,7 +238,7 @@ class CommonComponentTest {
             assertNotNull("Cache directory should be accessible", cacheDir)
             assertTrue("Cache directory should exist", cacheDir.exists())
 
-            
+
             assertTrue("Files directory should be a directory", filesDir.isDirectory)
             assertTrue("Cache directory should be a directory", cacheDir.isDirectory)
             assertTrue("Files directory should be readable", filesDir.canRead())
@@ -248,10 +248,10 @@ class CommonComponentTest {
     @Test
     fun testAsyncOperations() =
         runTest {
-            
+
             val result =
                 kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
-                    
+
                     context.packageName
                 }
 

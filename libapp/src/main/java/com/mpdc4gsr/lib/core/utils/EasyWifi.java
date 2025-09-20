@@ -94,8 +94,8 @@ public class EasyWifi {
                 .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
                 .addCapability(NetworkCapabilities.NET_CAPABILITY_NOT_METERED)
                 .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
-                .setNetworkSpecifier(build).build(), new ConnectivityManager.NetworkCallback() { 
-            @Override 
+                .setNetworkSpecifier(build).build(), new ConnectivityManager.NetworkCallback() {
+            @Override
             public void onAvailable(Network network) {
                 super.onAvailable(network);
                 if (EasyWifi.this.wifiConnectCallback != null) {
@@ -103,7 +103,7 @@ public class EasyWifi {
                 }
             }
 
-            @Override 
+            @Override
             public void onUnavailable() {
                 super.onUnavailable();
                 if (EasyWifi.this.wifiConnectCallback != null) {
@@ -188,8 +188,8 @@ public class EasyWifi {
         } else {
             builder.addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR);
         }
-        getConnectivityManager().requestNetwork(builder.build(), new ConnectivityManager.NetworkCallback() { 
-            @Override 
+        getConnectivityManager().requestNetwork(builder.build(), new ConnectivityManager.NetworkCallback() {
+            @Override
             public void onAvailable(Network network) {
                 try {
                     Log.d(EasyWifi.this.TAG, "settingsNetwork[CHINESE_TEXT]HouronAvailable: ");
@@ -205,7 +205,7 @@ public class EasyWifi {
         return this.wifiManager.getConnectionInfo().getSSID();
     }
 
-    
+
     public enum WiFiEncryptionStandard {
         WEP,
         WPA_EAP,
@@ -214,14 +214,14 @@ public class EasyWifi {
         WPA3
     }
 
-    
+
     public enum WifiCapability {
         WIFI_CIPHER_WEP,
         WIFI_CIPHER_WPA,
         WIFI_CIPHER_NO_PASS
     }
 
-    
+
     public interface WifiConnectCallback {
         void onFailure();
 

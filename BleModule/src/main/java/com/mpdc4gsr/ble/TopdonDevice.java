@@ -184,9 +184,9 @@ public class TopdonDevice implements UnifiedDevice {
                 deviceName != null && !deviceName.isEmpty() ? deviceName : "Topdon Device",
                 deviceAddress,
                 config.getDeviceType(),
-                "1.0", 
-                "1.0", 
-                deviceAddress 
+                "1.0",
+                "1.0",
+                deviceAddress
         );
 
         Log.i(TAG, "Created TopdonDevice: " + deviceAddress);

@@ -116,8 +116,8 @@ class MyItemDecoration(context: Context) : RecyclerView.ItemDecoration() {
         spanCount: Int,
     ) {
         val totalRow = itemCount / spanCount + if (itemCount % spanCount == 0) 0 else 1
-        val rowPosition = position / spanCount 
-        val columnPosition = position % spanCount 
+        val rowPosition = position / spanCount
+        val columnPosition = position % spanCount
 
         val left: Int = dp2px(
             if (columnPosition == 0) wholeLeft ?: ((itemLeft ?: 0f) * 2) else (itemLeft ?: 0f)
@@ -143,7 +143,7 @@ class MyItemDecoration(context: Context) : RecyclerView.ItemDecoration() {
         spanIndex: Int,
     ) {
         val totalRow = itemCount / spanCount + if (itemCount % spanCount == 0) 0 else 1
-        val rowPosition = position / spanCount 
+        val rowPosition = position / spanCount
 
         val left: Int =
             dp2px(if (spanIndex == 0) wholeLeft ?: ((itemLeft ?: 0f) * 2) else (itemLeft ?: 0f))

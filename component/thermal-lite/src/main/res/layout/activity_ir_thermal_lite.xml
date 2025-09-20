@@ -85,7 +85,7 @@
             android:visibility="gone" />
     </RelativeLayout>
 
-    
+
     <Space
         android:id="@+id/space_chart"
         android:layout_width="0dp"
@@ -158,7 +158,7 @@
             app:layout_constraintTop_toTopOf="parent" />
     </LinearLayout>
 
-    
+
     <com.mpdc4gsr.lib.ui.widget.BitmapConstraintLayout
         android:id="@+id/cl_seek_bar"
         android:layout_width="wrap_content"
@@ -277,7 +277,7 @@
         app:layout_constraintStart_toStartOf="@id/thermal_lay"
         app:layout_constraintTop_toTopOf="@id/thermal_lay" />
 
-    
+
     <ViewStub
         android:id="@+id/view_stub_camera"
         android:layout_width="0dp"

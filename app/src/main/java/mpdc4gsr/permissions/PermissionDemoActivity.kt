@@ -37,10 +37,10 @@ class PermissionDemoActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        
+
         setContentView(createDemoLayout())
 
-        
+
         permissionController = PermissionController(this)
         permissionController.initialize()
 
@@ -93,7 +93,7 @@ class PermissionDemoActivity : AppCompatActivity() {
         }
 
         requestCameraBtn.setOnClickListener {
-            
+
             if (!permissionController.hasCameraPermission()) {
                 showToast("Requesting camera permission...")
                 permissionController.ensureAll { granted, denied ->
@@ -175,7 +175,7 @@ class PermissionDemoActivity : AppCompatActivity() {
             return
         }
 
-        
+
         val device = devices.first()
 
         showToast("Requesting USB permission for: ${device.productName}")
@@ -199,13 +199,13 @@ class PermissionDemoActivity : AppCompatActivity() {
 
             !permissionController.canShowNotifications() -> {
                 showToast("Recording can start but notifications may not work")
-                
+
                 showToast("Starting recording with limited notification support...")
             }
 
             else -> {
                 showToast("All permissions ready - starting multi-sensor recording!")
-                
+
                 Log.i(TAG, "Recording would start now with all permissions granted")
             }
         }
@@ -215,7 +215,7 @@ class PermissionDemoActivity : AppCompatActivity() {
         val statusMessage = permissionController.getPermissionStatusMessage()
         statusText.text = "Permission Status:\n$statusMessage"
 
-        
+
         val canRecord = permissionController.canStartRecording()
         startRecordingBtn.isEnabled = canRecord
         startRecordingBtn.text = if (canRecord) {
@@ -234,26 +234,26 @@ class PermissionDemoActivity : AppCompatActivity() {
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
-        
+
         permissionController.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
-        
+
         updatePermissionStatus()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        
+
         permissionController.onActivityResult(requestCode, resultCode)
 
-        
+
         updatePermissionStatus()
     }
 
     override fun onResume() {
         super.onResume()
-        
+
         updatePermissionStatus()
     }
 

@@ -238,17 +238,17 @@ class ColorSelectView : View {
         invalidate()
     }
 
-    private var currentRow: Int = -1 
-    private var currentColumn: Int = -1 
+    private var currentRow: Int = -1
+    private var currentColumn: Int = -1
 
-    private val widthPixels: Int 
-    private val density: Float 
-    private val strokeWidth: Int 
+    private val widthPixels: Int
+    private val density: Float
+    private val strokeWidth: Int
 
     private val path = Path()
-    private val itemPaint = Paint() 
-    private val itemSelectPaint = Paint() 
-    private val strokePaint = Paint() 
+    private val itemPaint = Paint()
+    private val itemSelectPaint = Paint()
+    private val strokePaint = Paint()
 
     constructor(context: Context) : this(context, null)
 

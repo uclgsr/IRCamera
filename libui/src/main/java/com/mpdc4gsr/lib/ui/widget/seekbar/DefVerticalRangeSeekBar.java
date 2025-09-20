@@ -63,7 +63,7 @@ public class DefVerticalRangeSeekBar extends RangeSeekBar {
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int widthSize = MeasureSpec.getSize(widthMeasureSpec);
         int widthMode = MeasureSpec.getMode(widthMeasureSpec);
-        
+
 
         if (widthMode == MeasureSpec.EXACTLY) {
             widthSize = MeasureSpec.makeMeasureSpec(widthSize, MeasureSpec.EXACTLY);

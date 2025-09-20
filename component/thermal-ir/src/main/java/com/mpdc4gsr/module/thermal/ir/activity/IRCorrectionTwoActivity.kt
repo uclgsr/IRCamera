@@ -15,9 +15,8 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
 
-
 class IRCorrectionTwoActivity : BaseActivity() {
-    
+
     private var isTC007 = false
 
     private lateinit var tvCorrection: TextView
@@ -35,9 +34,9 @@ class IRCorrectionTwoActivity : BaseActivity() {
         if (if (isTC007) WebSocketProxy.getInstance()
                 .isTC007Connect() else DeviceTools.isConnect()
         ) {
-            tvCorrection.setBackgroundResource(com.topdon.lib.core.R.drawable.bg_corners05_solid_theme)
+            tvCorrection.setBackgroundResource(com.mpdc4gsr.lib.core.R.drawable.bg_corners05_solid_theme)
         } else {
-            tvCorrection.setBackgroundResource(com.topdon.lib.core.R.drawable.bg_corners05_solid_50_theme)
+            tvCorrection.setBackgroundResource(com.mpdc4gsr.lib.core.R.drawable.bg_corners05_solid_50_theme)
         }
 
         tvCorrection.setOnClickListener {
@@ -64,25 +63,25 @@ class IRCorrectionTwoActivity : BaseActivity() {
 
     override fun connected() {
         if (!isTC007) {
-            tvCorrection.setBackgroundResource(com.topdon.lib.core.R.drawable.bg_corners05_solid_theme)
+            tvCorrection.setBackgroundResource(com.mpdc4gsr.lib.core.R.drawable.bg_corners05_solid_theme)
         }
     }
 
     override fun disConnected() {
         if (!isTC007) {
-            tvCorrection.setBackgroundResource(com.topdon.lib.core.R.drawable.bg_corners05_solid_50_theme)
+            tvCorrection.setBackgroundResource(com.mpdc4gsr.lib.core.R.drawable.bg_corners05_solid_50_theme)
         }
     }
 
     override fun onSocketConnected(isTS004: Boolean) {
         if (isTC007 && !isTS004) {
-            tvCorrection.setBackgroundResource(com.topdon.lib.core.R.drawable.bg_corners05_solid_theme)
+            tvCorrection.setBackgroundResource(com.mpdc4gsr.lib.core.R.drawable.bg_corners05_solid_theme)
         }
     }
 
     override fun onSocketDisConnected(isTS004: Boolean) {
         if (isTC007 && !isTS004) {
-            tvCorrection.setBackgroundResource(com.topdon.lib.core.R.drawable.bg_corners05_solid_50_theme)
+            tvCorrection.setBackgroundResource(com.mpdc4gsr.lib.core.R.drawable.bg_corners05_solid_50_theme)
         }
     }
 

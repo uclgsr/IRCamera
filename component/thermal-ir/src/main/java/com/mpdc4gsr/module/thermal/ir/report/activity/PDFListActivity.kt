@@ -34,15 +34,13 @@ import kotlinx.coroutines.withContext
 import java.io.File
 
 
-
-
 class PDFListActivity : BaseViewModelActivity<PdfViewModel>() {
 
     private val titleView: TitleView by lazy { findViewById(R.id.title_view) }
     private val fragmentPdfRecyclerLay: SmartRefreshLayout by lazy { findViewById(R.id.fragment_pdf_recycler_lay) }
     private val fragmentPdfRecycler: RecyclerView by lazy { findViewById(R.id.fragment_pdf_recycler) }
 
-    
+
     private var isTC007 = false
 
     var page = 1
@@ -147,7 +145,7 @@ class PDFListActivity : BaseViewModelActivity<PdfViewModel>() {
                             params.addBodyParameter(
                                 "modelId",
                                 if (isTC007) 1783 else 950
-                            ) 
+                            )
                             params.addBodyParameter("testReportIds", arrayOf(item.testReportId))
                             params.addBodyParameter("status", 1)
                             params.addBodyParameter(

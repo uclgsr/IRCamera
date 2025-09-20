@@ -42,11 +42,9 @@ import com.mpdc4gsr.lib.core.R as LibCoreR
 import com.mpdc4gsr.lib.ui.R as UiR
 
 
-
-
 class ReportPreviewSecondActivity : BaseViewModelActivity<UpReportViewModel>(),
     View.OnClickListener {
-    
+
     private var isTC007 = false
 
     private var reportBean: ReportBean? = null
@@ -159,11 +157,11 @@ class ReportPreviewSecondActivity : BaseViewModelActivity<UpReportViewModel>(),
 
     override fun onClick(v: View?) {
         when (v) {
-            tvToPdf -> { 
+            tvToPdf -> {
                 saveWithPDF()
             }
 
-            tvComplete -> { 
+            tvComplete -> {
 
                 if (LMS.getInstance().isLogin) {
                     if (!NetworkUtils.isConnected()) {
@@ -220,7 +218,7 @@ class ReportPreviewSecondActivity : BaseViewModelActivity<UpReportViewModel>(),
         startActivity(Intent.createChooser(shareIntent, getString(LibCoreR.string.battery_share)))
     }
 
-    
+
     private fun getPrintViewList(): ArrayList<View> {
         val result = ArrayList<View>()
         result.add(reportInfoView)

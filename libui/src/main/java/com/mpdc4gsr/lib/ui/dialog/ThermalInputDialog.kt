@@ -32,10 +32,8 @@ import com.mpdc4gsr.lib.ui.databinding.DialogThermalInputBinding
 import java.math.BigDecimal
 
 
-
-
 class ThermalInputDialog : Dialog {
-    private var action = 100 
+    private var action = 100
 
     constructor(context: Context) : super(context)
 
@@ -284,7 +282,7 @@ class ThermalInputDialog : Dialog {
                     return@setOnClickListener
                 }
                 if (upEdit.text.isNullOrEmpty() || downEdit.text.isNullOrEmpty()) {
-                    ToastTools.showShort(R.string.ui_fill_in_the_complete)
+                    ToastTools.showShort(com.mpdc4gsr.lib.core.R.string.ui_fill_in_the_complete)
                     return@setOnClickListener
                 }
 
@@ -292,15 +290,15 @@ class ThermalInputDialog : Dialog {
                 val downValue = downEdit.text.trim().toString()
                 try {
                     if (upValue.toFloat() < downValue.toFloat()) {
-                        ToastTools.showShort(R.string.tip_input_format)
+                        ToastTools.showShort(com.mpdc4gsr.lib.core.R.string.tip_input_format)
                         return@setOnClickListener
                     }
                 } catch (e: Exception) {
-                    ToastTools.showShort(R.string.tip_input_format)
+                    ToastTools.showShort(com.mpdc4gsr.lib.core.R.string.tip_input_format)
                     return@setOnClickListener
                 }
                 if (sub(upValue, downValue) < 0.1f) {
-                    ToastTools.showShort(R.string.tip_input_format)
+                    ToastTools.showShort(com.mpdc4gsr.lib.core.R.string.tip_input_format)
                     return@setOnClickListener
                 }
 

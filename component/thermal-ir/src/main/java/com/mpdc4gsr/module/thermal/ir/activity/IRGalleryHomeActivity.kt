@@ -11,7 +11,6 @@ import com.mpdc4gsr.module.thermal.ir.fragment.IRGalleryTabFragment
 import com.mpdc4gsr.module.thermal.ir.viewmodel.IRGalleryTabViewModel
 
 
-
 class IRGalleryHomeActivity : BaseActivity() {
     private var isTS004Remote = false
 

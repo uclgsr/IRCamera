@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:padding="10dp">
 
-    
+
     <View
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -53,20 +53,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_title" />
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
 
 </androidx.constraintlayout.widget.ConstraintLayout>

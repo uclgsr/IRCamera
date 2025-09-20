@@ -49,13 +49,13 @@ class AbilityFragment : BaseFragment(), View.OnClickListener {
 
     override fun onClick(v: View?) {
         when (v) {
-            ivWinter -> { 
+            ivWinter -> {
                 SharedManager.hasClickWinter = true
                 EventBus.getDefault().post(WinterClickEvent())
                 val url =
                     if (UrlConstant.BASE_URL == "https://api.topdon.com/") {
                         "https://app.topdon.com/h5/share/#/detectionGuidanceIndex?showHeader=1&" +
-                                "languageId=1" 
+                                "languageId=1"
                     } else {
                         "http://172.16.66.77:8081/#/detectionGuidanceIndex?languageId=1&showHeader=1"
                     }
@@ -64,18 +64,18 @@ class AbilityFragment : BaseFragment(), View.OnClickListener {
                     .navigation(requireContext())
             }
 
-            viewMonitory -> { 
+            viewMonitory -> {
                 val intent = Intent(requireContext(), MonitoryHomeActivity::class.java)
                 intent.putExtra(ExtraKeyConfig.IS_TC007, mIsTC007)
                 startActivity(intent)
             }
 
-            viewHouse -> { 
+            viewHouse -> {
 
 
             }
 
-            viewCar -> { 
+            viewCar -> {
                 if (mIsTC007) {
                     if (WebSocketProxy.getInstance().isConnected()) {
                         NavigationManager.getInstance().build(RouterConfig.IR_THERMAL_07)

@@ -44,7 +44,7 @@ import java.math.RoundingMode
 
 open class IRMonitorLiteActivity : BaseActivity(), View.OnClickListener, ITsTempListener {
     private lateinit var binding: ActivityIrMonitorLiteBinding
-    private var selectIndex: SelectPositionBean? = null 
+    private var selectIndex: SelectPositionBean? = null
     val irMonitorLiteFragment = IRMonitorLiteFragment()
     private val bean = ThermalBean()
     private var selectBean: SelectPositionBean = SelectPositionBean()
@@ -141,7 +141,7 @@ open class IRMonitorLiteActivity : BaseActivity(), View.OnClickListener, ITsTemp
                             bean.maxTemp = maxBigDecimal.setScale(1, RoundingMode.HALF_UP).toFloat()
                             bean.minTemp = minBigDecimal.setScale(1, RoundingMode.HALF_UP).toFloat()
                             bean.createTime = System.currentTimeMillis()
-                            canUpdate = true 
+                            canUpdate = true
                         }
                     }
                 }
@@ -151,13 +151,13 @@ open class IRMonitorLiteActivity : BaseActivity(), View.OnClickListener, ITsTemp
             getString(if (selectIndex!!.type == 1) R.string.chart_temperature else R.string.chart_temperature_high)
         binding.monitorRealVol.visibility = if (selectIndex!!.type == 1) View.GONE else View.VISIBLE
         binding.monitorRealImg.visibility = if (selectIndex!!.type == 1) View.GONE else View.VISIBLE
-        recordThermal() 
+        recordThermal()
     }
 
     private var showTask: Job? = null
 
     private var isRecord = false
-    private var timeMillis = 1000L 
+    private var timeMillis = 1000L
     private var canUpdate = false
 
     private var recordJob: Job? = null

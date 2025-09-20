@@ -12,10 +12,10 @@ public abstract class LineScatterCandleRadarDataSet<T extends Entry> extends Bar
     protected boolean mDrawVerticalHighlightIndicator = true;
     protected boolean mDrawHorizontalHighlightIndicator = true;
 
-    
+
     protected float mHighlightLineWidth = 0.5f;
 
-    
+
     protected DashPathEffect mHighlightDashPathEffect = null;
 
     public LineScatterCandleRadarDataSet(List<T> yVals, String label) {

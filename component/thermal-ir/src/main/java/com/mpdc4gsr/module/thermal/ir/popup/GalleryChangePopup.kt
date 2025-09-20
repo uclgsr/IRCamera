@@ -11,7 +11,6 @@ import com.blankj.utilcode.util.SizeUtils
 import com.mpdc4gsr.module.thermal.ir.R
 
 
-
 class GalleryChangePopup(private val context: Context) : PopupWindow() {
 
     private val tvLine: TextView by lazy { contentView.findViewById(R.id.tv_line) }

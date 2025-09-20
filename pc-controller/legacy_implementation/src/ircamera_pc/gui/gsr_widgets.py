@@ -6,7 +6,6 @@ import sys
 from datetime import datetime, timedelta
 from typing import Dict, List, Optional, Any
 
-
 try:
 
     from PyQt6.QtCore import Qt, QTimer
@@ -250,7 +249,6 @@ class GSRPlotWidget(QWidget):
 
         for device_id, (timestamps, values) in self.data_buffers.items():
             if timestamps and device_id in self.plot_items:
-
                 relative_times = [current_time - ts for ts in timestamps]
                 relative_times.reverse()
                 values_copy = list(reversed(values))
@@ -795,11 +793,11 @@ class GSRAnalyticsWidget(QWidget):
 
             if len(self.stress_history[device_id]["times"]) > 100:
                 self.stress_history[device_id]["times"] = self.stress_history[
-                                                              device_id
-                                                          ]["times"][-100:]
+                    device_id
+                ]["times"][-100:]
                 self.stress_history[device_id]["scores"] = self.stress_history[
-                                                               device_id
-                                                           ]["scores"][-100:]
+                    device_id
+                ]["scores"][-100:]
 
             if device_id in self.stress_curves:
                 times = self.stress_history[device_id]["times"]
@@ -1046,7 +1044,6 @@ class GSRMainTabWidget(QTabWidget):
         self.init_ui()
 
     def init_ui(self) -> Any:
-
         self.device_widget = GSRDeviceStatusWidget()
         self.addTab(self.device_widget, "Device Status")
 
@@ -1060,7 +1057,6 @@ class GSRMainTabWidget(QTabWidget):
         # self.addTab(self.export_widget, "Data Export")
 
     def set_gsr_receiver(self, gsr_receiver) -> None:
-
         self.gsr_receiver = gsr_receiver
         # self.monitor_widget.gsr_receiver = gsr_receiver
         self.analytics_widget.gsr_receiver = gsr_receiver

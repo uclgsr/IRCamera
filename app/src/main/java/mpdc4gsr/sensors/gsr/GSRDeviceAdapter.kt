@@ -97,11 +97,11 @@ class GSRDeviceAdapter(
 
         private fun calculateSignalStrengthPercent(rssi: Int): Int {
             return when {
-                rssi >= -30 -> 100 
-                rssi >= -50 -> 80 
-                rssi >= -70 -> 60 
-                rssi >= -85 -> 40 
-                else -> 20 
+                rssi >= -30 -> 100
+                rssi >= -50 -> 80
+                rssi >= -70 -> 60
+                rssi >= -85 -> 40
+                else -> 20
             }.coerceIn(0, 100)
         }
     }

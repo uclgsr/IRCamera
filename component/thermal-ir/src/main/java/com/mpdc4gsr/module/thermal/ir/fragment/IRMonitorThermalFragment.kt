@@ -60,7 +60,7 @@ class IRMonitorThermalFragment : BaseFragment(), ITsTempListener {
 
     override fun initContentView() = R.layout.fragment_ir_monitor_thermal
 
-    private var rotateAngle = 270 
+    private var rotateAngle = 270
     private var ts_data_H: ByteArray? = null
     private var ts_data_L: ByteArray? = null
     private var isPick = false
@@ -169,7 +169,7 @@ class IRMonitorThermalFragment : BaseFragment(), ITsTempListener {
         setViewLay()
 
         if (Usbcontorl.isload) {
-            Usbcontorl.usb3803_mode_setting(1) 
+            Usbcontorl.usb3803_mode_setting(1)
             Log.w("123", "打开5V")
         }
 
@@ -224,7 +224,7 @@ class IRMonitorThermalFragment : BaseFragment(), ITsTempListener {
                         ircmd?.getDeviceInfo(
                             CommonParams.DeviceInfoType.DEV_INFO_FW_BUILD_VERSION_INFO,
                             fwBuildVersionInfoBytes,
-                        ) 
+                        )
                         val value = IntArray(1)
                         val arm = String(fwBuildVersionInfoBytes.copyOfRange(0, 8))
                         isTS001 = arm.contains("Mini256", true)
@@ -446,14 +446,14 @@ class IRMonitorThermalFragment : BaseFragment(), ITsTempListener {
 
     private fun configParam() {
         lifecycleScope.launch {
-            imageThread?.pseudocolorMode = pseudocolorMode 
+            imageThread?.pseudocolorMode = pseudocolorMode
             isConfigWait = true
             while (isConfigWait) {
                 delay(100)
             }
             val config = ConfigRepository.readConfig(false)
-            val disChar = (config.distance * 128).toInt() 
-            val emsChar = (config.radiation * 128).toInt() 
+            val disChar = (config.distance * 128).toInt()
+            val emsChar = (config.radiation * 128).toInt()
 
             XLog.w("设置TPD_PROP DISTANCE:${disChar.toInt()}, EMS:${emsChar.toInt()}}")
             val timeMillis = 250L

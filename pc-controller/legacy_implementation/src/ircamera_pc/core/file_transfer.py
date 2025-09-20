@@ -13,7 +13,6 @@ from typing import Any, Callable, Dict, List, Optional
 
 
 class TransferStatus(Enum):
-
     PENDING = "pending"
     IN_PROGRESS = "in_progress"
     PAUSED = "paused"
@@ -23,7 +22,6 @@ class TransferStatus(Enum):
 
 
 class FileType(Enum):
-
     THERMAL_VIDEO = "thermal_video"
     VISUAL_VIDEO = "visual_video"
     GSR_DATA = "gsr_data"
@@ -35,7 +33,6 @@ class FileType(Enum):
 
 @dataclass
 class FileManifest:
-
     file_id: str
     filename: str
     file_type: FileType
@@ -47,7 +44,6 @@ class FileManifest:
     compression: Optional[str] = None
 
     def to_dict(self) -> Dict[str, Any]:
-
         data = asdict(self)
         data["file_type"] = self.file_type.value
         return data
@@ -55,7 +51,6 @@ class FileManifest:
 
 @dataclass
 class TransferJob:
-
     job_id: str
     manifest: FileManifest
     local_path: Path

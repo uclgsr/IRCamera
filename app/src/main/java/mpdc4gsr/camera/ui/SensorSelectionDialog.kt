@@ -189,9 +189,9 @@ class SensorSelectionDialog(
 
                 isChecked =
                     when (sensorType) {
-                        SensorType.THERMAL -> availableSensors.contains(sensorType) 
-                        SensorType.RGB -> false 
-                        SensorType.GSR -> false 
+                        SensorType.THERMAL -> availableSensors.contains(sensorType)
+                        SensorType.RGB -> false
+                        SensorType.GSR -> false
                     }
 
                 if (!isEnabled) {

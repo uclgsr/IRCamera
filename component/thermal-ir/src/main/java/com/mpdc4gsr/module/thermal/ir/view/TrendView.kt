@@ -12,7 +12,6 @@ import com.mpdc4gsr.module.thermal.ir.databinding.ViewTrendBinding
 import kotlin.math.min
 
 
-
 class TrendView : FrameLayout {
 
     fun expand() {
@@ -25,7 +24,7 @@ class TrendView : FrameLayout {
         binding.llClose.isVisible = true
     }
 
-    
+
     fun refreshChart(tempList: List<Float>) {
         if (isVisible && binding.clOpen.isVisible) {
             binding.viewChartTrend.refresh(tempList)

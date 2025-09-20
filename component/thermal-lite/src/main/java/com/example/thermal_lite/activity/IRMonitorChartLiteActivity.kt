@@ -83,7 +83,7 @@ class IRMonitorChartLiteActivity : BaseActivity(), ITsTempListener {
             supportFragmentManager.beginTransaction().add(R.id.thermal_lay, irMonitorLiteFragment!!)
                 .commit()
             delay(1000)
-            recordThermal() 
+            recordThermal()
         }
     }
 
@@ -164,7 +164,7 @@ class IRMonitorChartLiteActivity : BaseActivity(), ITsTempListener {
                             bean.maxTemp = maxBigDecimal.setScale(1, RoundingMode.HALF_UP).toFloat()
                             bean.minTemp = minBigDecimal.setScale(1, RoundingMode.HALF_UP).toFloat()
                             bean.createTime = System.currentTimeMillis()
-                            canUpdate = true 
+                            canUpdate = true
                         }
                     }
                 }
@@ -178,7 +178,7 @@ class IRMonitorChartLiteActivity : BaseActivity(), ITsTempListener {
     override fun onResume() {
         super.onResume()
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-        binding.mpChartView.highlightValue(null) 
+        binding.mpChartView.highlightValue(null)
     }
 
     override fun onPause() {
@@ -197,7 +197,7 @@ class IRMonitorChartLiteActivity : BaseActivity(), ITsTempListener {
     }
 
     private var isRecord = false
-    private var timeMillis = 1000L 
+    private var timeMillis = 1000L
     private var canUpdate = false
 
     private var recordJob: Job? = null

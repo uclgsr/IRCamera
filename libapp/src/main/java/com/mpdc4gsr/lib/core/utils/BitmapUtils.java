@@ -106,7 +106,7 @@ public class BitmapUtils {
                 width * newBitmap.getHeight() / newBitmap.getWidth());
     }
 
-    
+
     public static Bitmap scaleWithWH(Bitmap bitmap, double w, double h) {
         if (w == 0 || h == 0 || bitmap == null) {
             return bitmap;
@@ -255,16 +255,16 @@ public class BitmapUtils {
         Bitmap newBmp = Bitmap.createBitmap(bmp.getWidth(), bmp.getHeight(), Bitmap.Config.ARGB_8888);
 
         Canvas canvas = new Canvas(newBmp);
-        canvas.drawBitmap(bmp, 0, 0, null);  
+        canvas.drawBitmap(bmp, 0, 0, null);
         canvas.save();
         TextPaint paint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
-        paint.setColor(Color.WHITE); 
+        paint.setColor(Color.WHITE);
         paint.setTextSize(SizeUtils.sp2px(12));
         paint.setDither(true);
         paint.setFilterBitmap(true);
-        Rect rectText = new Rect();  
+        Rect rectText = new Rect();
         paint.getTextBounds("Placeholder Height Text", 0, "Placeholder Height Text".length(), rectText);
-        double beginX = SizeUtils.dp2px(10);  
+        double beginX = SizeUtils.dp2px(10);
         double beginY = bmp.getHeight() - SizeUtils.dp2px(10);
         if (!TextUtils.isEmpty(time)) {
             beginY = beginY - (rectText.bottom - rectText.top);

@@ -24,10 +24,10 @@ class SecurityMonitor(
         private const val MAX_FAILED_LOGINS_PER_HOUR = 10
         private const val MAX_CONNECTIONS_PER_DEVICE = 5
         private const val SUSPICIOUS_ACTIVITY_THRESHOLD = 5
-        private const val SESSION_TIMEOUT_WARNING_MS = 5 * 60 * 1000L 
+        private const val SESSION_TIMEOUT_WARNING_MS = 5 * 60 * 1000L
 
-        private const val MONITORING_INTERVAL_MS = 30 * 1000L 
-        private const val CLEANUP_INTERVAL_MS = 60 * 60 * 1000L 
+        private const val MONITORING_INTERVAL_MS = 30 * 1000L
+        private const val CLEANUP_INTERVAL_MS = 60 * 60 * 1000L
 
         const val ALERT_BRUTE_FORCE = "brute_force_attack"
         const val ALERT_SUSPICIOUS_CONNECTION = "suspicious_connection"
@@ -312,7 +312,7 @@ class SecurityMonitor(
     }
 
     private fun checkBruteForceAttack(deviceId: String) {
-        val recentFailures = getRecentFailedLogins(deviceId, 60 * 60 * 1000L) 
+        val recentFailures = getRecentFailedLogins(deviceId, 60 * 60 * 1000L)
 
         if (recentFailures.size >= MAX_FAILED_LOGINS_PER_HOUR) {
             generateSecurityAlert(
@@ -331,7 +331,7 @@ class SecurityMonitor(
         connectionAttempts.forEach { (deviceId, attempts) ->
             val recentAttempts =
                 attempts.filter {
-                    System.currentTimeMillis() - it < 60 * 1000L 
+                    System.currentTimeMillis() - it < 60 * 1000L
                 }
 
             if (recentAttempts.size > MAX_CONNECTIONS_PER_DEVICE) {
@@ -354,7 +354,7 @@ class SecurityMonitor(
     }
 
     private fun analyzeThreatPatterns() {
-        val recentAlerts = getRecentAlerts(60 * 60 * 1000L) 
+        val recentAlerts = getRecentAlerts(60 * 60 * 1000L)
 
         val alertsByDevice = recentAlerts.groupBy { it.deviceId }
 
@@ -532,7 +532,7 @@ class SecurityMonitor(
 
     private fun performCleanup() {
         val currentTime = System.currentTimeMillis()
-        val cleanupCutoff = currentTime - (24 * 60 * 60 * 1000L) 
+        val cleanupCutoff = currentTime - (24 * 60 * 60 * 1000L)
 
         connectionAttempts.values.forEach { attempts ->
             attempts.removeAll { it < cleanupCutoff }
@@ -544,7 +544,7 @@ class SecurityMonitor(
 
         val inactiveSessions =
             sessionActivities.filterValues {
-                currentTime - it.lastActivity > (60 * 60 * 1000L) 
+                currentTime - it.lastActivity > (60 * 60 * 1000L)
             }.keys
 
         inactiveSessions.forEach { deviceId ->

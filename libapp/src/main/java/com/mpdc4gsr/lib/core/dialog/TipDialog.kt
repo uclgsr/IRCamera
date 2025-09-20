@@ -112,7 +112,7 @@ class TipDialog : Dialog {
                 context.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT
             val widthPixels = context.resources.displayMetrics.widthPixels
             val lp = dialog!!.window!!.attributes
-            lp.width = (widthPixels * if (isPortrait) 0.85 else 0.35).toInt() 
+            lp.width = (widthPixels * if (isPortrait) 0.85 else 0.35).toInt()
             dialog!!.window!!.attributes = lp
 
             dialog!!.setCanceledOnTouchOutside(canceled)

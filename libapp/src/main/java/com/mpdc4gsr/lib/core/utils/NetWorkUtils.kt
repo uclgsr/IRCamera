@@ -49,11 +49,11 @@ object NetWorkUtils {
         listener: ((network: Network?) -> Unit)? = null,
     ) {
         netWorkListener = listener
-        if (Build.VERSION.SDK_INT < 29) { 
+        if (Build.VERSION.SDK_INT < 29) {
             val request =
                 NetworkRequest.Builder()
                     .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
-                    .removeCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) 
+                    .removeCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
                     .build()
             val callback =
                 object : ConnectivityManager.NetworkCallback() {
@@ -166,7 +166,7 @@ object NetWorkUtils {
         isWifi: Boolean,
         listener: ((network: Network?) -> Unit)? = null,
     ) {
-        if (Build.VERSION.SDK_INT < 29) { 
+        if (Build.VERSION.SDK_INT < 29) {
             return
         }
         if (isWifi) {

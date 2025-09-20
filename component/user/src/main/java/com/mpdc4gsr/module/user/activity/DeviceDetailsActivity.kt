@@ -19,7 +19,6 @@ import kotlinx.coroutines.launch
 import com.mpdc4gsr.lib.core.R as RCore
 
 
-
 class DeviceDetailsActivity : BaseActivity(), View.OnClickListener {
 
     private lateinit var clLayoutCopy: ConstraintLayout
@@ -28,7 +27,7 @@ class DeviceDetailsActivity : BaseActivity(), View.OnClickListener {
     private lateinit var tvSn: TextView
     private lateinit var tvDeviceModel: TextView
 
-    
+
     private var isTC007 = false
 
     override fun initContentView() = R.layout.activity_device_details
@@ -69,7 +68,7 @@ class DeviceDetailsActivity : BaseActivity(), View.OnClickListener {
 
     override fun onClick(v: View?) {
         when (v) {
-            clLayoutCopy -> { 
+            clLayoutCopy -> {
                 val text =
                     "${tvSn.text}:${tvSnValue.text}  ${tvDeviceModel.text}:${tvDeviceModelValue.text}"
                 val cm = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager?

@@ -1,5 +1,3 @@
-
-
 import asyncio
 import time
 from datetime import datetime
@@ -35,7 +33,6 @@ from .widgets import (
 
 
 class MainWindow(QMainWindow):
-
     session_started = pyqtSignal(str)
     session_stopped = pyqtSignal(str)
     sync_flash_triggered = pyqtSignal()
@@ -265,7 +262,6 @@ class MainWindow(QMainWindow):
     def _setup_system_integration_callbacks(self) -> None:
 
         if self.bluetooth_manager and self.bluetooth_control_widget:
-
             self.bluetooth_control_widget.scan_requested.connect(
                 lambda: self.bluetooth_manager.start_scanning(continuous=False)
             )
@@ -302,85 +298,82 @@ class MainWindow(QMainWindow):
                 lambda: self.wifi_manager.start_scanning(continuous=False)
             )
             self.wifi_control_widget.connect_requested.connect(
-lambda ssid, pwd: asyncio.create_task(
-    self.wifi_manager.connect_to_network(ssid, pwd)
-)
-)
+                lambda ssid, pwd: asyncio.create_task(
+                    self.wifi_manager.connect_to_network(ssid, pwd)
+                )
+            )
+
+
 self.wifi_control_widget.disconnect_requested.connect(
-lambda: asyncio.create_task(self.wifi_manager.disconnect_from_network())
+    lambda: asyncio.create_task(self.wifi_manager.disconnect_from_network())
 )
 self.wifi_control_widget.hotspot_start_requested.connect(
-lambda ssid, pwd, ch: asyncio.create_task(
-    self.wifi_manager.start_hotspot(ssid, pwd, ch)
-)
+    lambda ssid, pwd, ch: asyncio.create_task(
+        self.wifi_manager.start_hotspot(ssid, pwd, ch)
+    )
 )
 self.wifi_control_widget.hotspot_stop_requested.connect(
-lambda: asyncio.create_task(self.wifi_manager.stop_hotspot())
+    lambda: asyncio.create_task(self.wifi_manager.stop_hotspot())
 )
-
 
 self.wifi_manager.networks_discovered.connect(
-lambda networks: self.wifi_control_widget.update_networks(networks)
+    lambda networks: self.wifi_control_widget.update_networks(networks)
 )
 self.wifi_manager.network_connected.connect(
-lambda ssid, ip: self.wifi_control_widget.set_connection_status(
-    ssid, True, ip
-)
+    lambda ssid, ip: self.wifi_control_widget.set_connection_status(
+        ssid, True, ip
+    )
 )
 self.wifi_manager.network_disconnected.connect(
-lambda ssid, reason: self.wifi_control_widget.set_connection_status(
-    ssid, False
-)
+    lambda ssid, reason: self.wifi_control_widget.set_connection_status(
+        ssid, False
+    )
 )
 self.wifi_manager.hotspot_state_changed.connect(
-lambda state, msg: self.wifi_control_widget.set_hotspot_status(
-    state.value, msg
-)
+    lambda state, msg: self.wifi_control_widget.set_hotspot_status(
+        state.value, msg
+    )
 )
 self.wifi_manager.error_occurred.connect(
-lambda op, err: self.wifi_control_widget.set_error_status(err)
+    lambda op, err: self.wifi_control_widget.set_error_status(err)
 )
-
 
 if self.admin_privileges_manager and self.system_integration_widget:
-
     self.system_integration_widget.elevation_requested.connect(
-lambda reason: self.admin_privileges_manager.request_elevation(reason)
-)
-
+        lambda reason: self.admin_privileges_manager.request_elevation(reason)
+    )
 
 self.admin_privileges_manager.privilege_changed.connect(
-lambda level: self.system_integration_widget.update_privilege_level(
-    level.value
-)
+    lambda level: self.system_integration_widget.update_privilege_level(
+        level.value
+    )
 )
 self.admin_privileges_manager.system_ready.connect(
-lambda perms: self.system_integration_widget.update_permissions(
-    {
-        "network_config": perms.network_config,
-        "bluetooth_control": perms.bluetooth_control,
-        "service_management": perms.service_management,
-        "registry_access": perms.registry_access,
-        "hardware_access": perms.hardware_access,
-        "firewall_control": perms.firewall_control,
-    }
-)
+    lambda perms: self.system_integration_widget.update_permissions(
+        {
+            "network_config": perms.network_config,
+            "bluetooth_control": perms.bluetooth_control,
+            "service_management": perms.service_management,
+            "registry_access": perms.registry_access,
+            "hardware_access": perms.hardware_access,
+            "firewall_control": perms.firewall_control,
+        }
+    )
 )
 self.admin_privileges_manager.elevation_completed.connect(
-lambda result, msg: self.system_integration_widget.set_status_message(
-    msg, result.value == "failed"
+    lambda result, msg: self.system_integration_widget.set_status_message(
+        msg, result.value == "failed"
+    )
 )
-)
+
 
 def _start_ui_updates(self) -> None:
-
     self._update_timer = QTimer()
     self._update_timer.timeout.connect(self._update_displays)
     self._update_timer.start(1000)
 
 
 def _update_displays(self) -> None:
-
     try:
 
         connected_clients = (
@@ -435,7 +428,6 @@ def _update_displays(self) -> None:
 
 
 def _update_ui_state(self) -> None:
-
     current_session = self.session_manager.get_current_session()
     has_devices = (
         len(self.websocket_server.clients) > 0 if self.websocket_server else False
@@ -458,7 +450,6 @@ def _update_ui_state(self) -> None:
 
 
 def _on_start_session_requested(self) -> None:
-
     try:
         current_session = self.session_manager.get_current_session()
         if not current_session:
@@ -507,7 +498,6 @@ def _on_start_session_requested(self) -> None:
 
 
 def _on_stop_session_requested(self) -> None:
-
     try:
         current_session = self.session_manager.get_current_session()
         if not current_session:
@@ -547,7 +537,6 @@ def _on_stop_session_requested(self) -> None:
 
 
 def _on_new_session_requested(self) -> None:
-
     try:
 
         name, ok = QInputDialog.getText(
@@ -572,7 +561,6 @@ def _on_new_session_requested(self) -> None:
 
 
 def _on_sync_flash_clicked(self) -> None:
-
     try:
 
         if self.websocket_server:
@@ -603,7 +591,6 @@ def _on_sync_flash_clicked(self) -> None:
 
 
 def _on_sync_mark_clicked(self) -> None:
-
     try:
 
         description, ok = QInputDialog.getText(
@@ -646,7 +633,6 @@ def _on_sync_mark_clicked(self) -> None:
 
 
 def _on_device_selected(self, device_id: str) -> None:
-
     if self.websocket_server and device_id in self.websocket_server.clients:
         client = self.websocket_server.clients[device_id]
         logger.debug(
@@ -655,7 +641,6 @@ def _on_device_selected(self, device_id: str) -> None:
 
 
 def _on_device_connected(self, device_info: DeviceInfo) -> None:
-
     logger.info(f"Device connected: {device_info.device_id}")
     self._add_log_message(
         f"Device connected: {device_info.device_id}"
@@ -669,7 +654,6 @@ def _on_device_connected(self, device_info: DeviceInfo) -> None:
 
 
 def _on_device_disconnected(self, device_info: DeviceInfo) -> None:
-
     logger.warning(f"Device disconnected: {device_info.device_id}")
     self._add_log_message(f"Device disconnected: {device_info.device_id}")
 
@@ -682,12 +666,10 @@ def _on_device_disconnected(self, device_info: DeviceInfo) -> None:
 
 
 def _on_device_status_updated(self, device_info: DeviceInfo) -> None:
-
     logger.debug(f"Device status updated: {device_info.device_id}")
 
 
 def _add_log_message(self, message: str) -> None:
-
     if self.log_display:
         timestamp = datetime.now().strftime("%H:%M:%S")
         formatted_message = f"[{timestamp}] {message}"
@@ -695,36 +677,30 @@ def _add_log_message(self, message: str) -> None:
 
 
 def _show_error(self, title: str, message: str) -> None:
-
     QMessageBox.critical(self, title, message)
 
 
 def _show_warning(self, title: str, message: str) -> None:
-
     QMessageBox.warning(self, title, message)
 
 
 def _show_info(self, title: str, message: str) -> None:
-
     QMessageBox.information(self, title, message)
 
 
 def _update_bluetooth_devices(self) -> None:
-
     if self.bluetooth_manager and self.bluetooth_control_widget:
         devices = self.bluetooth_manager.discovered_devices
         self.bluetooth_control_widget.update_devices(devices)
 
 
 def _update_wifi_networks(self) -> None:
-
     if self.wifi_manager and self.wifi_control_widget:
         networks = self.wifi_manager.available_networks
         self.wifi_control_widget.update_networks(networks)
 
 
 def closeEvent(self, event) -> None:
-
     current_session = self.session_manager.get_current_session()
     if current_session and current_session.state in [
         SessionState.ACTIVE.value,

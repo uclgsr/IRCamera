@@ -268,7 +268,7 @@ public class UnifiedBleManager {
     public List<UnifiedDevice> getConnectedShimmerDevices() {
         List<UnifiedDevice> shimmerDevices = new ArrayList<>();
 
-        
+
         if (shimmerController != null) {
             try {
                 shimmerDevices.addAll(shimmerController.getConnectedDevices());
@@ -281,7 +281,7 @@ public class UnifiedBleManager {
         return shimmerDevices;
     }
 
-    
+
     public void scanForShimmerDevices(long scanDurationMs, ShimmerScanCallback callback) {
         if (shimmerController != null) {
             shimmerController.scanForDevices(scanDurationMs, callback);
@@ -297,7 +297,7 @@ public class UnifiedBleManager {
     public List<UnifiedDevice> getConnectedTopdonDevices() {
         List<UnifiedDevice> topdonDevices = new ArrayList<>();
 
-        
+
         if (topdonController != null) {
             try {
                 topdonDevices.addAll(topdonController.getConnectedDevices());
@@ -314,8 +314,8 @@ public class UnifiedBleManager {
     public SystemBleStatus getSystemBleStatus() {
         return new SystemBleStatus(
                 activeConnections.get(),
-                true, 
-                true, 
+                true,
+                true,
                 connectedDevices.size()
         );
     }
@@ -350,10 +350,10 @@ public class UnifiedBleManager {
             for (UnifiedDevice device : shimmerDevices) {
                 CrossModalSyncManager.DeviceCapabilities capabilities =
                         new CrossModalSyncManager.DeviceCapabilities(
-                                true,  
-                                true,  
-                                128,   
-                                1000   
+                                true,
+                                true,
+                                128,
+                                1000
                         );
 
                 syncManager.registerDevice(
@@ -369,10 +369,10 @@ public class UnifiedBleManager {
             for (UnifiedDevice device : topdonDevices) {
                 CrossModalSyncManager.DeviceCapabilities capabilities =
                         new CrossModalSyncManager.DeviceCapabilities(
-                                true,  
-                                true,  
-                                30,    
-                                5000   
+                                true,
+                                true,
+                                30,
+                                5000
                         );
 
                 syncManager.registerDevice(
@@ -425,16 +425,16 @@ public class UnifiedBleManager {
     }
 
     public enum DeviceType {
-        SHIMMER_GSR,        
-        SHIMMER_PPG,        
-        SHIMMER_IMU,        
-        MPDC4GSR_THERMAL,     
-        MPDC4GSR_ENV,         
-        MPDC4GSR_MULTI,       
-        UNKNOWN             
+        SHIMMER_GSR,
+        SHIMMER_PPG,
+        SHIMMER_IMU,
+        MPDC4GSR_THERMAL,
+        MPDC4GSR_ENV,
+        MPDC4GSR_MULTI,
+        UNKNOWN
     }
 
-    
+
     public interface ShimmerScanCallback {
         void onDeviceFound(UnifiedDevice device);
 

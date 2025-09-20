@@ -28,6 +28,7 @@ import com.mpdc4gsr.lms.sdk.weiget.TToast;
 import com.mpdc4gsr.lms.sdk.xutils.common.Callback;
 import com.mpdc4gsr.lms.sdk.xutils.common.task.PriorityExecutor;
 import com.mpdc4gsr.lms.sdk.xutils.http.RequestParams;
+
 import mpdc4gsr.utils.VersionTools;
 
 import java.io.File;
@@ -40,7 +41,7 @@ import kotlin.jvm.functions.Function0;
 
 public class AppVersionUtil {
     private Context mContext;
-    private DownloadCompleteReceiver completeReceiver; 
+    private DownloadCompleteReceiver completeReceiver;
     private DownloadManager dowanloadmanager = null;
     private DotIsShowListener dotIsShowListener = null;
     private String fileName = "";
@@ -166,10 +167,10 @@ public class AppVersionUtil {
             mContext.registerReceiver(completeReceiver, intentFilter, Context.RECEIVER_NOT_EXPORTED);
         }
 
-        Uri uri = Uri.parse(url); 
-        DownloadManager.Request down = new DownloadManager.Request(uri); 
-        down.setTitle(mContext.getString(R.string.tips_download_information)); 
-        down.setDescription(mContext.getString(R.string.installation_package_download_progress)); 
+        Uri uri = Uri.parse(url);
+        DownloadManager.Request down = new DownloadManager.Request(uri);
+        down.setTitle(mContext.getString(R.string.tips_download_information));
+        down.setDescription(mContext.getString(R.string.installation_package_download_progress));
 
         down.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_MOBILE | DownloadManager.Request.NETWORK_WIFI);
 
@@ -179,7 +180,7 @@ public class AppVersionUtil {
         down.setDestinationInExternalFilesDir(mContext, Environment.DIRECTORY_DOWNLOADS, fileName);
         DownloadManager downloadManager = (DownloadManager) mContext.getSystemService(DOWNLOAD_SERVICE);
 
-        mDownloadId = downloadManager.enqueue(down); 
+        mDownloadId = downloadManager.enqueue(down);
         VersionTools.INSTANCE.setMDownloadId(mDownloadId);
     }
 
@@ -308,8 +309,7 @@ public class AppVersionUtil {
         @Override
         public void onReceive(Context context, Intent intent) {
 
-            if (intent.getAction().equals(DownloadManager.ACTION_DOWNLOAD_COMPLETE))   
-            {
+            if (intent.getAction().equals(DownloadManager.ACTION_DOWNLOAD_COMPLETE)) {
 
                 installApk();
             }

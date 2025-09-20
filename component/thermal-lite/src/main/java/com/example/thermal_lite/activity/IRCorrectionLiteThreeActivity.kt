@@ -11,7 +11,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
-
 class IRCorrectionLiteThreeActivity : BaseActivity() {
     private lateinit var binding: ActivityIrCorrectionLiteThreeBinding
 

@@ -6,7 +6,7 @@
     android:orientation="vertical"
     android:padding="32dp">
 
-    
+
     <TextView
         android:id="@+id/tvTitle"
         android:layout_width="match_parent"
@@ -17,7 +17,7 @@
         android:textSize="18sp"
         android:textStyle="bold" />
 
-    
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -41,7 +41,7 @@
 
     </LinearLayout>
 
-    
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -59,7 +59,7 @@
             android:textSize="16sp"
             android:textStyle="bold" />
 
-        
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -84,7 +84,7 @@
 
         </LinearLayout>
 
-        
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -109,7 +109,7 @@
 
         </LinearLayout>
 
-        
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -136,7 +136,7 @@
 
         </LinearLayout>
 
-        
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -162,7 +162,7 @@
 
     </LinearLayout>
 
-    
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -180,7 +180,7 @@
 
     </LinearLayout>
 
-    
+
     <Button
         android:id="@+id/startStopButton"
         android:layout_width="match_parent"
@@ -193,7 +193,7 @@
         android:textSize="16sp"
         android:textStyle="bold" />
 
-    
+
     <TextView
         android:id="@+id/statusText"
         android:layout_width="match_parent"
@@ -203,7 +203,7 @@
         android:textColor="#1976D2"
         android:textSize="14sp" />
 
-    
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

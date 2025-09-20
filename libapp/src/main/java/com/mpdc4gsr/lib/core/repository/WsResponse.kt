@@ -7,23 +7,23 @@ data class WsResponse<T>(
 )
 
 data class WsPseudoColor(
-    val enable: Boolean?, 
+    val enable: Boolean?,
     val mode: Int?,
 )
 
 data class WsRange(
-    val state: Int?, 
+    val state: Int?,
 )
 
 data class WsLight(
-    val brightness: Int?, 
+    val brightness: Int?,
 )
 
 data class WsPip(
-    val enable: Int?, 
+    val enable: Int?,
 )
 
 data class WsZoom(
-    val enable: Boolean?, 
-    val factor: Int?, 
+    val enable: Boolean?,
+    val factor: Int?,
 )

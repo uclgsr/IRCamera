@@ -82,11 +82,11 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
     protected IHighlighter mHighlighter;
     protected ViewPortHandler mViewPortHandler = new ViewPortHandler();
     protected ChartAnimator mAnimator;
-    
+
 
     protected Highlight[] mIndicesToHighlight;
     protected float mMaxHighlightDistance = 0f;
-    
+
 
     protected boolean mDrawMarkers = true;
     protected IMarker mMarker;
@@ -144,7 +144,7 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
         mDescPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
         mInfoPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mInfoPaint.setColor(Color.rgb(247, 189, 51)); 
+        mInfoPaint.setColor(Color.rgb(247, 189, 51));
         mInfoPaint.setTextAlign(Align.CENTER);
         mInfoPaint.setTextSize(Utils.convertDpToPixel(12f));
 
@@ -410,7 +410,6 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
         return new float[]{high.getDrawX(), high.getDrawY()};
     }
 
-    
 
     public ChartAnimator getAnimator() {
         return mAnimator;
@@ -420,7 +419,6 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
         return mDragDecelerationEnabled;
     }
 
-    
 
     public void setDragDecelerationEnabled(boolean enabled) {
         mDragDecelerationEnabled = enabled;
@@ -441,7 +439,6 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
         mDragDecelerationFrictionCoef = newValue;
     }
 
-    
 
     @RequiresApi(11)
     public void animateXY(int durationMillisX, int durationMillisY, EasingFunction easingX,
@@ -464,7 +461,6 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
         mAnimator.animateY(durationMillis, easing);
     }
 
-    
 
     @RequiresApi(11)
     public void animateX(int durationMillis) {
@@ -481,7 +477,6 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
         mAnimator.animateXY(durationMillisX, durationMillisY);
     }
 
-    
 
     public XAxis getXAxis() {
         return mXAxis;
@@ -773,7 +768,7 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
                     + pathOnSD + "/" + title
                     + ".png");
 
-            
+
             b.compress(CompressFormat.PNG, 40, stream);
 
             stream.close();

@@ -16,7 +16,7 @@
         android:orientation="horizontal"
         android:padding="16dp">
 
-        
+
         <ImageView
             android:id="@+id/imageGsrCapable"
             android:layout_width="48dp"
@@ -26,7 +26,7 @@
             android:scaleType="centerInside"
             android:src="@drawable/ic_device_type_shimmer_gsr" />
 
-        
+
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -62,7 +62,7 @@
 
         </LinearLayout>
 
-        
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

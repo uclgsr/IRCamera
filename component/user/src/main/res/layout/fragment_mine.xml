@@ -84,7 +84,7 @@
                 app:layout_constraintTop_toTopOf="@id/setting_user_img_night"
                 tools:visibility="visible" />
 
-            
+
             <ImageView
                 android:id="@+id/iv_winter"
                 android:layout_width="0dp"
@@ -98,7 +98,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/setting_user_img_night" />
-            
+
             <View
                 android:id="@+id/space_winter_right"
                 android:layout_width="0dp"
@@ -107,7 +107,7 @@
                 app:layout_constraintDimensionRatio="W,116:103"
                 app:layout_constraintEnd_toEndOf="@id/iv_winter"
                 app:layout_constraintTop_toTopOf="@id/iv_winter" />
-            
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/cl_winter_title"
                 android:layout_width="0dp"
@@ -152,7 +152,7 @@
                     tools:ignore="SmallSp"
                     tools:visibility="visible" />
             </androidx.constraintlayout.widget.ConstraintLayout>
-            
+
             <TextView
                 android:id="@+id/tv_winter_sub_title"
                 android:layout_width="0dp"
@@ -227,7 +227,7 @@
                     app:setting_more_night="true"
                     app:setting_text_night="@string/setting_unit" />
 
-                
+
                 <com.mpdc4gsr.lib.ui.SettingNightView
                     android:id="@+id/setting_item_clear"
                     android:layout_width="match_parent"

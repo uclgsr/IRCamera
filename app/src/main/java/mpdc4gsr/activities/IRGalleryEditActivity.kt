@@ -62,8 +62,8 @@ import com.mpdc4gsr.module.thermal.ir.frame.ImageParams
 import com.mpdc4gsr.module.thermal.ir.report.bean.ImageTempBean
 import com.mpdc4gsr.module.thermal.ir.view.TemperatureBaseView.Mode
 import com.mpdc4gsr.module.thermal.ir.viewmodel.IRGalleryEditViewModel
-import com.mpdc4gsr.pseudo.activity.PseudoSetActivity
-import com.mpdc4gsr.pseudo.bean.CustomPseudoBean
+import com.mpdc4gsr.lib.core.activity.PseudoSetActivity
+import com.mpdc4gsr.lib.core.bean.CustomPseudoBean
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -96,7 +96,7 @@ class IRGalleryEditActivity : BaseBindingActivity<ActivityIrGalleryEditBinding>(
     private var max = 10000f
     private var min = 0f
     private var rotate = ImageParams.ROTATE_270
-    private var struct: FrameStruct = FrameStruct() 
+    private var struct: FrameStruct = FrameStruct()
     private var ts_data_H: ByteArray? = null
     private var ts_data_L: ByteArray? = null
 
@@ -235,7 +235,7 @@ class IRGalleryEditActivity : BaseBindingActivity<ActivityIrGalleryEditBinding>(
             temperatureView.textColor = struct.textColor
             temperatureView.tempTextSize = struct.textSize
             temperatureView.setData(frameTool.getTempBytes(rotate = rotate))
-            updateTemperatureSeekBar(false, ThermalLiteR.drawable.svg_pseudo_bar_lock, "lock") 
+            updateTemperatureSeekBar(false, ThermalLiteR.drawable.svg_pseudo_bar_lock, "lock")
             temperatureSeekbar.setPseudocode(pseudocodeMode)
             temperatureSeekbar.setOnRangeChangedListener(
                 object : OnRangeChangedListener {
@@ -314,8 +314,8 @@ class IRGalleryEditActivity : BaseBindingActivity<ActivityIrGalleryEditBinding>(
                 temperatureIvInput.setImageResource(ThermalIrR.drawable.ic_color_edit)
                 temperatureIvLock.visibility = View.VISIBLE
             }
-            temperatureSeekbar.setRange(leftValue, rightValue, 0.1f) 
-            temperatureSeekbar.setProgress(leftValue, rightValue) 
+            temperatureSeekbar.setRange(leftValue, rightValue, 0.1f)
+            temperatureSeekbar.setProgress(leftValue, rightValue)
             if (ScreenTool.isIPad(this@IRGalleryEditActivity)) {
                 colorBarView.setPadding(0, SizeUtils.dp2px(40f), 0, SizeUtils.dp2px(40f))
             }
@@ -354,9 +354,9 @@ class IRGalleryEditActivity : BaseBindingActivity<ActivityIrGalleryEditBinding>(
     private fun initRecycler() {
         editRecyclerFirst.onTabClickListener = {
             when (it) {
-                0 -> editRecyclerSecond.selectPosition(1) 
-                1 -> editRecyclerSecond.selectPosition(3) 
-                2 -> editRecyclerSecond.selectPosition(4) 
+                0 -> editRecyclerSecond.selectPosition(1)
+                1 -> editRecyclerSecond.selectPosition(3)
+                2 -> editRecyclerSecond.selectPosition(4)
             }
         }
         editRecyclerFirst.onBarClickListener = {
@@ -401,8 +401,8 @@ class IRGalleryEditActivity : BaseBindingActivity<ActivityIrGalleryEditBinding>(
         val tempResult = frameTool.getSrcTemp()
         rightValue = showUnitValue(tempCorrect(tempResult.maxTemperature), isShowC)
         leftValue = showUnitValue(tempCorrect(tempResult.minTemperature), isShowC)
-        temperatureSeekbar.setRange(leftValue, rightValue, 0.1f) 
-        temperatureSeekbar.setProgress(leftValue, rightValue) 
+        temperatureSeekbar.setRange(leftValue, rightValue, 0.1f)
+        temperatureSeekbar.setProgress(leftValue, rightValue)
     }
 
     private fun setPColor(code: Int) {
@@ -460,7 +460,7 @@ class IRGalleryEditActivity : BaseBindingActivity<ActivityIrGalleryEditBinding>(
                 tempAlarmSetDialog?.show()
             }
 
-            SettingType.FONT -> { 
+            SettingType.FONT -> {
                 val colorPickDialog =
                     ColorPickDialog(this, temperatureView.textColor, temperatureView.tempTextSize)
                 colorPickDialog.onPickListener = { it: Int, textSize: Int ->
@@ -475,7 +475,7 @@ class IRGalleryEditActivity : BaseBindingActivity<ActivityIrGalleryEditBinding>(
                 colorPickDialog.show()
             }
 
-            SettingType.WATERMARK -> { 
+            SettingType.WATERMARK -> {
                 TipWaterMarkDialog.Builder(this, struct.watermarkBean)
                     .setCancelListener {
                         struct.watermarkBean = it
@@ -528,14 +528,14 @@ class IRGalleryEditActivity : BaseBindingActivity<ActivityIrGalleryEditBinding>(
                         true,
                         ThermalLiteR.drawable.svg_pseudo_bar_unlock,
                         "unlock",
-                    ) 
+                    )
                 } else {
                     setDefLimit()
                     updateTemperatureSeekBar(
                         false,
                         ThermalLiteR.drawable.svg_pseudo_bar_lock,
                         "lock"
-                    ) 
+                    )
                 }
             }
 
@@ -582,7 +582,7 @@ class IRGalleryEditActivity : BaseBindingActivity<ActivityIrGalleryEditBinding>(
                     false,
                     ThermalLiteR.drawable.svg_pseudo_bar_lock,
                     "lock"
-                ) 
+                )
                 temperatureSeekbar.setRangeAndPro(
                     UnitTools.showUnitValue(it.minTemp, isShowC),
                     UnitTools.showUnitValue(it.maxTemp, isShowC),
@@ -794,7 +794,7 @@ class IRGalleryEditActivity : BaseBindingActivity<ActivityIrGalleryEditBinding>(
     }
 
     private fun getCapital(): ByteArray {
-        val capital: ByteArray? 
+        val capital: ByteArray?
         capital =
             FrameStruct.toCode(
                 name = struct.name,

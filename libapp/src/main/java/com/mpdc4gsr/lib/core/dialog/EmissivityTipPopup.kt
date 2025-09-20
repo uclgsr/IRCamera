@@ -100,7 +100,7 @@ class EmissivityTipPopup(val context: Context, val isTC007: Boolean) {
                 isFocusable = true
                 isOutsideTouchable = true
                 isTouchable = true
-                setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT)) 
+                setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             }
             binding.dialogTipSuccessBtn.setOnClickListener {
                 NavigationManager.build(RouterConfig.IR_SETTING)

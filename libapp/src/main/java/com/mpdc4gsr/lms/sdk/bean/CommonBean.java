@@ -10,6 +10,7 @@ public class CommonBean {
     public String avatar = "";
     public String code = "2000";
     public String data = "";
-    
-    public CommonBean() {}
+
+    public CommonBean() {
+    }
 }

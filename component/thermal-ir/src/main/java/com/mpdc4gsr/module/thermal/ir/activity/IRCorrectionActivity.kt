@@ -10,7 +10,6 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
 
-
 class IRCorrectionActivity : BaseActivity() {
     override fun initContentView(): Int = R.layout.activity_ir_correction
 

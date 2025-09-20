@@ -8,8 +8,6 @@ import com.mpdc4gsr.module.thermal.ir.R
 import com.mpdc4gsr.module.thermal.ir.fragment.IRCorrectionFragment
 
 
-
-
 class IRCorrectionThreeActivity : BaseActivity() {
     override fun initContentView(): Int = R.layout.activity_ir_correction_three
 

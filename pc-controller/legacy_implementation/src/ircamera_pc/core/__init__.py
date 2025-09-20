@@ -1,5 +1,3 @@
-
-
 from .admin_privileges import (
     AdminPrivilegesManager,
     ElevationResult,

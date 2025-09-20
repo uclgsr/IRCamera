@@ -25,7 +25,7 @@ object TimeUtil {
         detectSamsungS22Processor()
 
         try {
-            bootTimeReference = System.nanoTime() / 1_000_000L 
+            bootTimeReference = System.nanoTime() / 1_000_000L
         } catch (e: Exception) {
             bootTimeReference = 0L
         }
@@ -84,7 +84,7 @@ object TimeUtil {
                         soc.contains("samsung", ignoreCase = true) -> {
                     detectedProcessor = "Exynos_2200"
                 }
-                
+
                 deviceBrand.contains("samsung", ignoreCase = true) &&
                         deviceModel.contains("SM-S90", ignoreCase = true) -> {
                     detectedProcessor = "Samsung_S22_Generic"
@@ -102,7 +102,7 @@ object TimeUtil {
 
     fun setPcTimeOffset(offset: Long) {
         pcTimeOffset = offset
-        
+
         try {
             android.util.Log.d(
                 TAG,
@@ -113,7 +113,7 @@ object TimeUtil {
                 "Samsung S22 ($detectedProcessor) maintains authoritative timing with ${offset}ms PC coordination"
             )
         } catch (e: Exception) {
-            
+
         }
     }
 
@@ -136,11 +136,11 @@ object TimeUtil {
 
     fun getHighPrecisionTimestamp(): Long {
         return try {
-            
+
             val nanoOffset = (System.nanoTime() / 1_000_000L) - bootTimeReference
             deviceGroundTruthBase + nanoOffset + pcTimeOffset
         } catch (e: Exception) {
-            
+
             getSynchronizedTimestamp()
         }
     }
@@ -150,7 +150,7 @@ object TimeUtil {
             java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", java.util.Locale.US)
                 .format(java.util.Date(timestamp))
         } catch (e: Exception) {
-            
+
             timestamp.toString()
         }
     }
@@ -162,7 +162,7 @@ object TimeUtil {
                     .format(java.util.Date(getSynchronizedTimestamp()))
             "${prefix}_$timestamp"
         } catch (e: Exception) {
-            
+
             "${prefix}_${getSynchronizedTimestamp()}"
         }
     }
@@ -181,27 +181,27 @@ object TimeUtil {
         )
     }
 
-    
+
     fun getMonotonicTimestampNs(): Long {
         return try {
             android.os.SystemClock.elapsedRealtimeNanos()
         } catch (e: Exception) {
-            
+
             System.nanoTime()
         }
     }
 
-    
+
     fun getMonotonicTimestampMs(): Long {
         return getMonotonicTimestampNs() / 1_000_000L
     }
 
-    
+
     fun getElapsedTimeMs(startMonotonicNs: Long): Long {
         return (getMonotonicTimestampNs() - startMonotonicNs) / 1_000_000L
     }
 
-    
+
     fun createSessionTimingMetadata(sessionId: String): Map<String, Any> {
         val wallClockMs = getSynchronizedTimestamp()
         val monotonicNs = getMonotonicTimestampNs()
@@ -226,7 +226,7 @@ object TimeUtil {
             try {
                 val nano1 = System.nanoTime()
                 val nano2 = System.nanoTime()
-                (nano2 - nano1) / 1_000_000.0 
+                (nano2 - nano1) / 1_000_000.0
             } catch (e: Exception) {
                 -1.0
             }

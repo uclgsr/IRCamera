@@ -1,5 +1,3 @@
-
-
 import time
 from collections import deque
 from typing import Any, Dict, List, Optional
@@ -13,7 +11,6 @@ from PyQt6.QtWidgets import QGridLayout, QLabel, QVBoxLayout, QWidget
 
 
 class GSRPlotWidget(pg.PlotWidget):
-
     data_updated = pyqtSignal(float, float)
 
     def __init__(self, max_points: int = 10000, time_window: float = 30.0):
@@ -161,7 +158,6 @@ class GSRPlotWidget(pg.PlotWidget):
 
 
 class VideoPreviewWidget(QLabel):
-
     frame_updated = pyqtSignal(int, int)
 
     def __init__(self, device_id: str, device_type: str = "RGB"):

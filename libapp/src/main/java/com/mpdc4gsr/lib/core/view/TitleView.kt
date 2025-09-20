@@ -163,7 +163,7 @@ open class TitleView : ViewGroup {
             }
         }
 
-        if (isTitleCenter) { 
+        if (isTitleCenter) {
             val leftSize =
                 if (tvLeft!!.isVisible) tvLeft?.measuredWidth else SizeUtils.dp2px(ICON_SIZE)
             var rightSize = 0
@@ -176,14 +176,14 @@ open class TitleView : ViewGroup {
             if (tvRight3!!.isVisible) {
                 rightSize += tvRight3!!.measuredWidth
             }
-            if (rightSize == 0) { 
+            if (rightSize == 0) {
                 rightSize = SizeUtils.dp2px(ICON_SIZE)
             }
             val titleWidth = measuredWidth - leftSize!!.coerceAtLeast(rightSize) * 2
             val widthSpec =
                 MeasureSpec.makeMeasureSpec(titleWidth.coerceAtLeast(0), MeasureSpec.EXACTLY)
             tvTitle?.measure(widthSpec, MeasureSpec.makeMeasureSpec(maxHeight, MeasureSpec.EXACTLY))
-        } else { 
+        } else {
             var titleWidth = measuredWidth
             titleWidth -= if (tvLeft!!.isVisible) tvLeft!!.measuredWidth else SizeUtils.dp2px(
                 ICON_SIZE

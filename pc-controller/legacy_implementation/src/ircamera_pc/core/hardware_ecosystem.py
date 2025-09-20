@@ -1,5 +1,3 @@
-
-
 import asyncio
 import logging
 import numpy as np
@@ -14,7 +12,6 @@ logger = logging.getLogger(__name__)
 
 
 class DeviceType(Enum):
-
     SAMSUNG_S22 = "samsung_s22"
     GOOGLE_PIXEL_7 = "google_pixel_7"
     ONEPLUS_11 = "oneplus_11"
@@ -25,7 +22,6 @@ class DeviceType(Enum):
 
 
 class SensorType(Enum):
-
     GSR_SHIMMER = "gsr_shimmer"
     THERMAL_TOPDON = "thermal_topdon"
     RGB_CAMERA = "rgb_camera"
@@ -57,7 +53,6 @@ class SensorType(Enum):
 
 
 class DeviceCapability(Enum):
-
     REAL_TIME_STREAMING = "real_time_streaming"
     LOCAL_STORAGE = "local_storage"
     EDGE_PROCESSING = "edge_processing"
@@ -70,7 +65,6 @@ class DeviceCapability(Enum):
 
 @dataclass
 class DeviceSpecification:
-
     device_id: str
     device_type: DeviceType
     manufacturer: str
@@ -101,7 +95,6 @@ class DeviceSpecification:
 
 @dataclass
 class SensorConfiguration:
-
     sensor_type: SensorType
     sampling_rate: float
     resolution: int
@@ -119,7 +112,6 @@ class SensorConfiguration:
 
 @dataclass
 class DeviceStatus:
-
     device_id: str
     timestamp: float
 
@@ -175,46 +167,37 @@ class DeviceDriver(ABC):
 
     @abstractmethod
     async def connect(self) -> bool:
-
         pass
 
     @abstractmethod
     async def disconnect(self) -> bool:
-
         pass
 
     @abstractmethod
     async def configure_sensor(self, sensor_config: SensorConfiguration) -> bool:
-
         pass
 
     @abstractmethod
     async def start_streaming(self, sensors: List[SensorType]) -> bool:
-
         pass
 
     @abstractmethod
     async def stop_streaming(self) -> bool:
-
         pass
 
     @abstractmethod
     async def get_status(self) -> DeviceStatus:
-
         pass
 
     @abstractmethod
     async def calibrate_sensor(self, sensor_type: SensorType,
                                calibration_data: Dict[str, Any]) -> bool:
-
         pass
 
     def set_data_callback(self, callback):
-
         self.data_callback = callback
 
     def set_status_callback(self, callback):
-
         self.status_callback = callback
 
 
@@ -343,7 +326,6 @@ class SamsungS22Driver(DeviceDriver):
             self.status.active_sensors = sensors
 
             for sensor in sensors:
-
                 await asyncio.sleep(0.1)
                 self.status.sensor_quality[sensor.value] = 95.0
 
@@ -1178,7 +1160,6 @@ class HardwareEcosystemManager:
                 device_result = True
 
                 for sensor_type in driver.device_spec.supported_sensors:
-
                     calibration_data = {"method": "auto", "timestamp": time.time()}
 
                     sensor_success = await driver.calibrate_sensor(sensor_type, calibration_data)

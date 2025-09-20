@@ -32,23 +32,23 @@ class ComprehensiveRecordingController(
         private const val SESSION_TIMEOUT_MS = 30000L
     }
 
-    
+
     private val _isRecording = AtomicBoolean(false)
     val isRecording: Boolean get() = _isRecording.get()
 
-    
+
     private val sensorRecorders = ConcurrentHashMap<String, SensorRecorder>()
     private val activeRecorders = ConcurrentHashMap<String, Boolean>()
     private val sensorHealthStatus = ConcurrentHashMap<String, SensorHealthInfo>()
     private val reconnectionAttempts = ConcurrentHashMap<String, Int>()
 
-    
+
     private val sessionDirectoryManager = SessionDirectoryManager(context)
     private var sessionMetadata: SessionMetadata? = null
     private var currentSessionId: String? = null
     private val sessionStartTime = AtomicLong(0)
 
-    
+
     private val _recordingStateFlow = MutableStateFlow(RecordingState.IDLE)
     val recordingStateFlow: StateFlow<RecordingState> = _recordingStateFlow.asStateFlow()
 
@@ -60,10 +60,10 @@ class ComprehensiveRecordingController(
 
     private val recordingScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
-    
+
     private var crashRecoveryMarker: File? = null
 
-    
+
     fun addSensorRecorder(name: String, recorder: SensorRecorder) {
         sensorRecorders[name] = recorder
         sensorHealthStatus[name] = SensorHealthInfo(
@@ -76,7 +76,7 @@ class ComprehensiveRecordingController(
         updateSensorStatusFlow()
     }
 
-    
+
     suspend fun startRecording(
         sessionId: String? = null,
         enabledSensors: List<String> = listOf("RGB", "Thermal", "Shimmer"),
@@ -92,7 +92,7 @@ class ComprehensiveRecordingController(
                 Log.i(TAG, "Starting comprehensive recording with validation")
                 _recordingStateFlow.value = RecordingState.STARTING
 
-                
+
                 val validationResult = validateRecordingPrerequisites(enabledSensors, estimatedDurationMinutes)
                 if (!validationResult.isValid) {
                     Log.e(TAG, "Prerequisites validation failed: ${validationResult.failureReason}")
@@ -100,45 +100,45 @@ class ComprehensiveRecordingController(
                     return@withContext false
                 }
 
-                
+
                 if (!requestRequiredPermissions(enabledSensors)) {
                     Log.e(TAG, "Failed to obtain required permissions")
                     _recordingStateFlow.value = RecordingState.ERROR
                     return@withContext false
                 }
 
-                
+
                 val finalSessionId = sessionId ?: sessionDirectoryManager.generateSessionId()
                 val sessionDir = sessionDirectoryManager.createSessionDirectory(finalSessionId)
-                
+
                 sessionMetadata = SessionMetadata.createSessionStart(finalSessionId).copy(
                     experimentalConditions = mapOf(
                         "estimatedDurationMinutes" to estimatedDurationMinutes,
                         "enabledSensors" to enabledSensors
                     )
                 )
-                
+
                 currentSessionId = finalSessionId
                 sessionStartTime.set(System.currentTimeMillis())
 
-                
+
                 createCrashRecoveryMarker(finalSessionId)
 
-                
+
                 var sensorsStarted = 0
                 val sensorResults = mutableMapOf<String, Boolean>()
-                
+
                 for (sensorName in enabledSensors) {
                     val sensor = sensorRecorders[sensorName]
                     if (sensor != null) {
                         try {
                             val sensorDir = File(sessionDir.rootDir, sensorName.lowercase())
                             sensorDir.mkdirs()
-                            
+
                             sessionMetadata?.let { meta ->
                                 val success = sensor.startRecording(sensorDir.absolutePath, meta)
                                 sensorResults[sensorName] = success
-                                
+
                                 if (success) {
                                     activeRecorders[sensorName] = true
                                     sensorsStarted++
@@ -160,18 +160,21 @@ class ComprehensiveRecordingController(
                     }
                 }
 
-                
+
                 if (sensorsStarted > 0) {
                     _isRecording.set(true)
                     _recordingStateFlow.value = RecordingState.RECORDING
-                    
-                    
+
+
                     startHealthMonitoring()
                     startStatisticsUpdates()
-                    
+
                     Log.i(TAG, "🚀 Recording started successfully with $sensorsStarted/$enabledSensors.size sensors")
-                    Log.i(TAG, "📊 Sensor status: ${sensorResults.entries.joinToString { "${it.key}=${if(it.value) "✅" else "❌"}" }}")
-                    
+                    Log.i(
+                        TAG,
+                        "📊 Sensor status: ${sensorResults.entries.joinToString { "${it.key}=${if (it.value) "✅" else "❌"}" }}"
+                    )
+
                     return@withContext true
                 } else {
                     Log.e(TAG, "❌ No sensors started successfully - aborting recording")
@@ -189,25 +192,25 @@ class ComprehensiveRecordingController(
         }
     }
 
-    
+
     private suspend fun validateRecordingPrerequisites(
         enabledSensors: List<String>,
         estimatedDurationMinutes: Int
     ): ValidationResult {
         try {
-            
+
             val availableSpaceGB = getAvailableSpaceGB()
             val estimatedSpaceGB = estimateSessionSize(enabledSensors, estimatedDurationMinutes) / 1024.0
-            
+
             if (availableSpaceGB < estimatedSpaceGB + MIN_STORAGE_SPACE_GB) {
                 return ValidationResult(
                     false,
                     "Insufficient storage: ${String.format("%.1f", availableSpaceGB)}GB available, " +
-                    "${String.format("%.1f", estimatedSpaceGB + MIN_STORAGE_SPACE_GB)}GB required"
+                            "${String.format("%.1f", estimatedSpaceGB + MIN_STORAGE_SPACE_GB)}GB required"
                 )
             }
 
-            
+
             val unavailableSensors = enabledSensors.filter { sensorRecorders[it] == null }
             if (unavailableSensors.isNotEmpty()) {
                 return ValidationResult(
@@ -216,13 +219,13 @@ class ComprehensiveRecordingController(
                 )
             }
 
-            
-            val unhealthySensors = enabledSensors.filter { 
-                sensorHealthStatus[it]?.isHealthy == false 
+
+            val unhealthySensors = enabledSensors.filter {
+                sensorHealthStatus[it]?.isHealthy == false
             }
             if (unhealthySensors.isNotEmpty()) {
                 Log.w(TAG, "⚠️ Sensors with health issues: ${unhealthySensors.joinToString()}")
-                
+
             }
 
             return ValidationResult(true, "All prerequisites validated successfully")
@@ -233,12 +236,12 @@ class ComprehensiveRecordingController(
         }
     }
 
-    
+
     private suspend fun requestRequiredPermissions(enabledSensors: List<String>): Boolean {
         return try {
             var allPermissionsGranted = true
 
-            
+
             if (enabledSensors.contains("RGB")) {
                 if (!permissionManager.requestCameraPermissions()) {
                     Log.w(TAG, "Camera permissions not granted")
@@ -246,7 +249,7 @@ class ComprehensiveRecordingController(
                 }
             }
 
-            
+
             if (enabledSensors.contains("Shimmer")) {
                 if (!permissionManager.requestBluetoothPermissions()) {
                     Log.w(TAG, "Bluetooth permissions not granted")
@@ -254,10 +257,10 @@ class ComprehensiveRecordingController(
                 }
             }
 
-            
+
             if (!permissionManager.requestStoragePermissions()) {
                 Log.w(TAG, "Storage permissions not granted")
-                
+
             }
 
             allPermissionsGranted
@@ -267,10 +270,10 @@ class ComprehensiveRecordingController(
         }
     }
 
-    
+
     private fun estimateSessionSize(enabledSensors: List<String>, durationMinutes: Int): Double {
         var estimatedMB = 0.0
-        
+
         for (sensor in enabledSensors) {
             when (sensor.uppercase()) {
                 "RGB" -> estimatedMB += durationMinutes * RGB_STORAGE_MB_PER_MIN
@@ -278,11 +281,11 @@ class ComprehensiveRecordingController(
                 "SHIMMER" -> estimatedMB += durationMinutes * SHIMMER_STORAGE_MB_PER_MIN
             }
         }
-        
+
         return estimatedMB
     }
 
-    
+
     private fun createCrashRecoveryMarker(sessionId: String) {
         try {
             crashRecoveryMarker = File(context.filesDir, "crash_recovery_$sessionId.marker")
@@ -293,7 +296,7 @@ class ComprehensiveRecordingController(
         }
     }
 
-    
+
     suspend fun stopRecording(): Boolean {
         return withContext(Dispatchers.IO) {
             try {
@@ -305,7 +308,7 @@ class ComprehensiveRecordingController(
                 _recordingStateFlow.value = RecordingState.STOPPING
                 _isRecording.set(false)
 
-                
+
                 val stopResults = mutableMapOf<String, Boolean>()
                 for ((sensorName, isActive) in activeRecorders) {
                     if (isActive) {
@@ -320,19 +323,19 @@ class ComprehensiveRecordingController(
                     }
                 }
 
-                
+
                 activeRecorders.clear()
                 reconnectionAttempts.clear()
-                
-                
+
+
                 crashRecoveryMarker?.let {
                     if (it.exists()) {
                         it.delete()
                         Log.d(TAG, "Removed crash recovery marker")
                     }
                 }
-                
-                
+
+
                 sessionMetadata?.let { metadata ->
                     // Note: SessionMetadata is immutable, so we can't update end timestamp here
                     // This would need to be handled when creating the final session metadata
@@ -343,8 +346,11 @@ class ComprehensiveRecordingController(
                 _recordingStateFlow.value = RecordingState.IDLE
 
                 Log.i(TAG, "🏁 Recording stopped successfully")
-                Log.i(TAG, "📊 Stop results: ${stopResults.entries.joinToString { "${it.key}=${if(it.value) "✅" else "❌"}" }}")
-                
+                Log.i(
+                    TAG,
+                    "📊 Stop results: ${stopResults.entries.joinToString { "${it.key}=${if (it.value) "✅" else "❌"}" }}"
+                )
+
                 return@withContext true
 
             } catch (e: Exception) {
@@ -354,7 +360,7 @@ class ComprehensiveRecordingController(
         }
     }
 
-    
+
     private fun startHealthMonitoring() {
         recordingScope.launch {
             while (_isRecording.get()) {
@@ -365,22 +371,22 @@ class ComprehensiveRecordingController(
                         }
                     }
                     updateSensorStatusFlow()
-                    delay(5000) 
+                    delay(5000)
                 } catch (e: Exception) {
                     Log.w(TAG, "Error during health monitoring", e)
-                    delay(10000) 
+                    delay(10000)
                 }
             }
         }
     }
 
-    
+
     private fun startStatisticsUpdates() {
         recordingScope.launch {
             while (_isRecording.get()) {
                 try {
                     updateRecordingStats()
-                    delay(2000) 
+                    delay(2000)
                 } catch (e: Exception) {
                     Log.w(TAG, "Error updating statistics", e)
                     delay(5000)
@@ -414,7 +420,7 @@ class ComprehensiveRecordingController(
     private fun updateRecordingStats() {
         val currentTime = System.currentTimeMillis()
         val duration = if (sessionStartTime.get() > 0) currentTime - sessionStartTime.get() else 0
-        
+
         val stats = RecordingStats(
             isRecording = _isRecording.get(),
             sessionId = currentSessionId,
@@ -424,12 +430,12 @@ class ComprehensiveRecordingController(
             healthySensors = sensorHealthStatus.count { it.value.isHealthy },
             recordingState = _recordingStateFlow.value
         )
-        
+
         _recordingStatsFlow.value = stats
     }
 
     private fun checkSensorHealth(sensorName: String) {
-        
+
         // This is a placeholder - in production you'd check sensor-specific metrics
         val sensor = sensorRecorders[sensorName]
         val isHealthy = sensor?.isRecording == true

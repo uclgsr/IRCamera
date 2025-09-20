@@ -1,5 +1,3 @@
-
-
 import logging
 from typing import Any, Dict, List, Optional
 
@@ -25,10 +23,12 @@ except ImportError:
 
     logging.warning("Plotting widgets not available - using placeholder classes")
 
+
     class MultiModalDashboard(QWidget):
         def __init__(self):
             super().__init__()
             self.setMinimumSize(400, 300)
+
 
     class DataAggregationWidget(QWidget):
         def __init__(self):
@@ -40,7 +40,6 @@ except ImportError:
 
 
 class DeviceListWidget(QWidget):
-
     device_selected = pyqtSignal(str)
 
     def __init__(self):
@@ -94,7 +93,6 @@ class DeviceListWidget(QWidget):
 
 
 class SessionControlWidget(QWidget):
-
     start_session_requested = pyqtSignal()
     stop_session_requested = pyqtSignal()
     new_session_requested = pyqtSignal()
@@ -212,7 +210,6 @@ class StatusDisplayWidget(QWidget):
 
 
 class SystemIntegrationWidget(QWidget):
-
     elevation_requested = pyqtSignal(str)
 
     def __init__(self):
@@ -220,7 +217,6 @@ class SystemIntegrationWidget(QWidget):
         self._setup_ui()
 
     def _setup_ui(self):
-
         layout = QVBoxLayout(self)
 
         self.privilege_label = QLabel("Privilege Level: User")
@@ -236,25 +232,21 @@ class SystemIntegrationWidget(QWidget):
         layout.addWidget(self.status_label)
 
     def update_privilege_level(self, level: str) -> None:
-
         self.privilege_label.setText(f"Privilege Level: {level}")
 
     def update_permissions(self, permissions: None = Dict) -> None:
-
         perm_text = "\n".join(
             [f"{k}: {'✓' if v else '✗'}" for k, v in permissions.items()]
         )
         self.setToolTip(f"Permissions:\n{perm_text}")
 
     def set_status_message(self, message: str, is_error: bool = False) -> None:
-
         self.status_label.setText(message)
         color = "red" if is_error else "green"
         self.status_label.setStyleSheet(f"color: {color};")
 
 
 class BluetoothControlWidget(QWidget):
-
     scan_requested = pyqtSignal()
     connect_requested = pyqtSignal(str)
     disconnect_requested = pyqtSignal(str)
@@ -324,7 +316,6 @@ class BluetoothControlWidget(QWidget):
 
 
 class IntegrationManagementWidget(QWidget):
-
     integration_status_changed = pyqtSignal(str, bool)
     hub_connection_requested = pyqtSignal()
     spoke_discovery_requested = pyqtSignal()
@@ -494,7 +485,6 @@ class IntegrationManagementWidget(QWidget):
 
 
 class WiFiControlWidget(QWidget):
-
     scan_requested = pyqtSignal()
     connect_requested = pyqtSignal(str, str)
     disconnect_requested = pyqtSignal()

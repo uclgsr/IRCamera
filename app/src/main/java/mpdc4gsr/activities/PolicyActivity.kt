@@ -19,7 +19,7 @@ class PolicyActivity : BaseBindingActivity<ActivityPolicyBinding>() {
 
     companion object {
         const val KEY_THEME_TYPE = "key_theme_type"
-        const val KEY_USE_TYPE = "key_use_type" 
+        const val KEY_USE_TYPE = "key_use_type"
     }
 
     private var themeType = 1
@@ -99,7 +99,7 @@ class PolicyActivity : BaseBindingActivity<ActivityPolicyBinding>() {
     private fun initWeb(url: String) {
         binding.policyWeb.visibility = android.view.View.INVISIBLE
         val webSettings: android.webkit.WebSettings = binding.policyWeb.settings
-        webSettings.javaScriptEnabled = true 
+        webSettings.javaScriptEnabled = true
 
         binding.policyWeb.webViewClient =
             object : android.webkit.WebViewClient() {

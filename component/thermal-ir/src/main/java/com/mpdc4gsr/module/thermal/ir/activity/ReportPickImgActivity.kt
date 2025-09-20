@@ -35,16 +35,15 @@ import com.mpdc4gsr.lib.core.R as LibR
 import com.mpdc4gsr.lib.ui.R as UiR
 
 
-
 class ReportPickImgActivity : BaseActivity(), View.OnClickListener {
-    
+
     private var isTC007 = false
 
     private val viewModel: IRGalleryViewModel by viewModels()
 
     private val adapter = GalleryAdapter()
 
-    private lateinit var titleView: com.topdon.lib.core.view.TitleView
+    private lateinit var titleView: com.mpdc4gsr.lib.core.view.TitleView
     private lateinit var clShare: androidx.constraintlayout.widget.ConstraintLayout
     private lateinit var clDelete: androidx.constraintlayout.widget.ConstraintLayout
     private lateinit var groupBottom: androidx.constraintlayout.widget.Group
@@ -122,7 +121,7 @@ class ReportPickImgActivity : BaseActivity(), View.OnClickListener {
                 R.string.app_gallery
             ),
         )
-        titleView.setLeftDrawable(if (isEditMode) 0 else 0) 
+        titleView.setLeftDrawable(if (isEditMode) 0 else 0)
         titleView.setLeftClickListener {
             if (isEditMode) {
                 setEditMode(false)
@@ -170,7 +169,7 @@ class ReportPickImgActivity : BaseActivity(), View.OnClickListener {
 
             groupBottom.isVisible = true
             titleView.setTitleText(getString(R.string.chosen_item, adapter.selectList.size))
-            titleView.setLeftDrawable(0) 
+            titleView.setLeftDrawable(0)
             titleView.setLeftClickListener {
                 setEditMode(false)
             }

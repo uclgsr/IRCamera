@@ -10,26 +10,26 @@ import com.mpdc4gsr.lib.ui.R as UiR
 
 class RoundImageView : AppCompatImageView {
     companion object {
-        
+
         const val LEFT_TOP = 1
 
-        
+
         const val RIGHT_TOP = 2
 
-        
+
         const val LEFT_BOTTOM = 4
 
-        
+
         const val RIGHT_BOTTOM = 8
 
-        
+
         private const val DEFAULT_RADIUS = 10f
 
-        
+
         private const val DEFAULT_POSITION = 15
     }
 
-    var position = 0 
+    var position = 0
         set(value) {
             if (field != value) {
                 field = value
@@ -37,9 +37,9 @@ class RoundImageView : AppCompatImageView {
             }
         }
 
-    private var radius = 0 
-    private val path = Path() 
-    private var density = 0f 
+    private var radius = 0
+    private val path = Path()
+    private var density = 0f
 
     constructor(context: Context) : this(context, null)
 

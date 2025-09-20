@@ -1,5 +1,3 @@
-
-
 import asyncio
 import base64
 import json
@@ -25,7 +23,6 @@ from .security import SecurityManager
 
 @dataclass
 class ClientConnection:
-
     websocket: websockets.WebSocketServerProtocol
     device_id: str
     device_type: str
@@ -1007,7 +1004,6 @@ class WebSocketServer:
 
 
 def create_websocket_server(host: str = "0.0.0.0", port: int = 8443) -> WebSocketServer:
-
     return WebSocketServer(host, port)
 
 
@@ -1333,7 +1329,6 @@ class WebSocketServerPhase4Extension:
 
 
 def extend_websocket_server_with_phase4(server: Any = WebSocketServer) -> Any:
-
     extension = WebSocketServerPhase4Extension(server)
 
     server._handle_enhanced_auth = extension._handle_enhanced_auth

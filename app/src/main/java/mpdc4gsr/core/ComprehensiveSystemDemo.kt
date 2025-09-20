@@ -26,7 +26,7 @@ class ComprehensiveSystemDemo : AppCompatActivity() {
         private const val TAG = "SystemDemo"
     }
 
-    
+
     private lateinit var statusText: TextView
     private lateinit var logText: TextView
     private lateinit var initButton: Button
@@ -36,7 +36,7 @@ class ComprehensiveSystemDemo : AppCompatActivity() {
     private lateinit var clearLogsButton: Button
     private lateinit var progressBar: ProgressBar
 
-    
+
     private lateinit var recordingController: RecordingController
     private lateinit var permissionManager: PermissionManager
     private lateinit var permissionController: PermissionController
@@ -44,23 +44,23 @@ class ComprehensiveSystemDemo : AppCompatActivity() {
     private var thermalRecorder: ThermalCameraRecorder? = null
     private var rgbRecorder: RgbCameraRecorder? = null
     private var dataStreamingService: DataStreamingService? = null
-    
-    
+
+
     private var isSystemInitialized = false
     private var isRecording = false
     private var currentSessionId: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
+
         Log.i(TAG, "=== Starting Comprehensive System Demo ===")
-        
+
         setupUI()
         initializeSystemComponents()
-        
-        
+
+
         permissionController.initialize()
-        
+
         addLog("Comprehensive Multi-Modal Physiological Sensing Platform Demo")
         addLog("Demonstrates: Shimmer GSR + Thermal Camera + RGB Camera + Time Sync + Network Streaming")
         addLog("")
@@ -159,7 +159,7 @@ class ComprehensiveSystemDemo : AppCompatActivity() {
             recordingController = RecordingController(this, this)
             permissionController = PermissionController(this)
             permissionManager = PermissionManager(this, permissionController)
-            
+
             addLog("System components created successfully")
         } catch (e: Exception) {
             addLog("ERROR: Failed to create system components: ${e.message}")
@@ -174,7 +174,7 @@ class ComprehensiveSystemDemo : AppCompatActivity() {
                 updateProgress(10)
                 updateStatus("Checking permissions...")
 
-                
+
                 if (!checkAllPermissions()) {
                     addLog("Requesting required permissions...")
                     requestPermissions()
@@ -182,23 +182,29 @@ class ComprehensiveSystemDemo : AppCompatActivity() {
                 }
                 updateProgress(25)
 
-                
+
                 updateStatus("Initializing sensors...")
                 addLog("Initializing GSR Sensor Recorder...")
                 gsrRecorder = GSRSensorRecorder(this@ComprehensiveSystemDemo, "gsr_shimmer_1", 128, recordingController)
                 recordingController.registerSensor("GSR", gsrRecorder!!)
 
-                addLog("Initializing Thermal Camera Recorder...")  
+                addLog("Initializing Thermal Camera Recorder...")
                 thermalRecorder = ThermalCameraRecorder(this@ComprehensiveSystemDemo, "thermal_camera_1")
                 recordingController.registerSensor("Thermal", thermalRecorder!!)
 
                 addLog("Initializing RGB Camera Recorder...")
-                rgbRecorder = RgbCameraRecorder(this@ComprehensiveSystemDemo, this@ComprehensiveSystemDemo, null, false, permissionManager)
+                rgbRecorder = RgbCameraRecorder(
+                    this@ComprehensiveSystemDemo,
+                    this@ComprehensiveSystemDemo,
+                    null,
+                    false,
+                    permissionManager
+                )
                 recordingController.registerSensor("RGB", rgbRecorder!!)
 
                 updateProgress(50)
 
-                
+
                 updateStatus("Setting up network streaming...")
                 addLog("Initializing network streaming service...")
                 val networkClient = NetworkClient(this@ComprehensiveSystemDemo)
@@ -206,7 +212,7 @@ class ComprehensiveSystemDemo : AppCompatActivity() {
 
                 updateProgress(75)
 
-                
+
                 updateStatus("Testing device discovery...")
                 addLog("Testing Shimmer device discovery...")
                 testShimmerDiscovery()
@@ -216,12 +222,12 @@ class ComprehensiveSystemDemo : AppCompatActivity() {
 
                 updateProgress(100)
 
-                
+
                 isSystemInitialized = true
                 updateStatus("System Initialized - Ready for Recording")
                 addLog("✅ System initialization complete!")
                 addLog("All sensors initialized and ready for multi-modal recording")
-                
+
                 startRecordingButton.isEnabled = true
                 networkTestButton.isEnabled = true
                 initButton.isEnabled = false
@@ -284,13 +290,13 @@ class ComprehensiveSystemDemo : AppCompatActivity() {
                 addLog("=== Starting Multi-Modal Recording Session ===")
                 updateStatus("Starting recording session...")
 
-                
+
                 val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
                 currentSessionId = "demo_session_$timestamp"
 
                 addLog("Session ID: $currentSessionId")
 
-                
+
                 val enabledSensors = listOf("GSR", "Thermal", "RGB")
                 val success = recordingController.startRecording(
                     sessionId = currentSessionId,
@@ -304,18 +310,20 @@ class ComprehensiveSystemDemo : AppCompatActivity() {
                     updateStatus("Recording in progress...")
                     addLog("✅ Multi-modal recording started successfully")
                     addLog("Recording GSR, Thermal, and RGB data with unified timestamps")
-                    
+
                     startRecordingButton.isEnabled = false
                     stopRecordingButton.isEnabled = true
 
-                    
-                    addLog("Emitting synchronization events...")
-                    recordingController.emitSyncEvent("demo_sync_start", mapOf(
-                        "event_type" to "demo_session_start",
-                        "participant" to "demo_participant"
-                    ))
 
-                    
+                    addLog("Emitting synchronization events...")
+                    recordingController.emitSyncEvent(
+                        "demo_sync_start", mapOf(
+                            "event_type" to "demo_session_start",
+                            "participant" to "demo_participant"
+                        )
+                    )
+
+
                     startStatusMonitoring()
 
                 } else {
@@ -337,11 +345,13 @@ class ComprehensiveSystemDemo : AppCompatActivity() {
                 addLog("=== Stopping Multi-Modal Recording Session ===")
                 updateStatus("Stopping recording...")
 
-                
-                recordingController.emitSyncEvent("demo_sync_end", mapOf(
-                    "event_type" to "demo_session_end",
-                    "session_id" to (currentSessionId ?: "unknown")
-                ))
+
+                recordingController.emitSyncEvent(
+                    "demo_sync_end", mapOf(
+                        "event_type" to "demo_session_end",
+                        "session_id" to (currentSessionId ?: "unknown")
+                    )
+                )
 
                 val success = recordingController.stopRecording()
 
@@ -350,10 +360,10 @@ class ComprehensiveSystemDemo : AppCompatActivity() {
                     updateStatus("Recording stopped - Data saved")
                     addLog("✅ Recording session stopped successfully")
                     addLog("Session data saved with unified timestamps for post-processing alignment")
-                    
-                    
+
+
                     showSessionSummary()
-                    
+
                     startRecordingButton.isEnabled = true
                     stopRecordingButton.isEnabled = false
 
@@ -374,15 +384,15 @@ class ComprehensiveSystemDemo : AppCompatActivity() {
         lifecycleScope.launch {
             try {
                 addLog("=== Testing Network Streaming Capabilities ===")
-                
+
                 dataStreamingService?.let { streaming ->
                     addLog("Testing network connectivity...")
-                    
+
                     addLog("✅ Network streaming service ready")
                     addLog("Stream endpoints available for real-time data transmission")
                 } ?: addLog("⚠️ Network streaming service not initialized")
 
-                
+
                 addLog("Testing timestamp consistency across sensors...")
                 val timestamps = recordingController.validateTimestampConsistency()
                 addLog("Timestamp validation results:")
@@ -393,9 +403,9 @@ class ComprehensiveSystemDemo : AppCompatActivity() {
                 if (timestamps.size >= 2) {
                     val maxTime = timestamps.values.maxOrNull() ?: 0L
                     val minTime = timestamps.values.minOrNull() ?: 0L
-                    val drift = (maxTime - minTime) / 1_000_000.0 
+                    val drift = (maxTime - minTime) / 1_000_000.0
                     addLog("  Max time drift: ${String.format("%.2f", drift)} ms")
-                    
+
                     if (drift < 5.0) {
                         addLog("✅ Timestamp synchronization within acceptable range")
                     } else {
@@ -414,13 +424,15 @@ class ComprehensiveSystemDemo : AppCompatActivity() {
         lifecycleScope.launch {
             while (isRecording) {
                 try {
-                    
+
                     val stats = recordingController.getRecordingStatistics()
-                    
-                    addLog("📊 Recording status: ${stats.activeSensors} sensors active, " +
-                           "${String.format("%.1f", stats.sessionDurationSeconds)}s elapsed")
-                    
-                    delay(10000) 
+
+                    addLog(
+                        "📊 Recording status: ${stats.activeSensors} sensors active, " +
+                                "${String.format("%.1f", stats.sessionDurationSeconds)}s elapsed"
+                    )
+
+                    delay(10000)
                 } catch (e: Exception) {
                     Log.w(TAG, "Status monitoring error", e)
                     break
@@ -432,23 +444,23 @@ class ComprehensiveSystemDemo : AppCompatActivity() {
     private fun showSessionSummary() {
         try {
             val sessionRef = recordingController.getSessionTimestampReference()
-            
+
             addLog("📋 Session Summary:")
             addLog("  Session ID: ${currentSessionId ?: "Unknown"}")
-            
+
             sessionRef?.let { ref ->
                 addLog("  Start time: ${Date(ref.sessionStartSystemMs)}")
                 addLog("  Unified timing reference established")
                 addLog("  CSV files contain synchronized timestamps for alignment")
             }
-            
+
             val sessionDir = recordingController.getCurrentSessionDirectory()
             sessionDir?.let { dir ->
                 addLog("  Data saved to: ${dir.rootDir.absolutePath}")
             }
-            
+
             addLog("✅ Multi-modal data ready for analysis with unified timestamps")
-            
+
         } catch (e: Exception) {
             addLog("⚠️ Error generating session summary: ${e.message}")
         }
@@ -480,7 +492,7 @@ class ComprehensiveSystemDemo : AppCompatActivity() {
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        
+
         permissionController.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
@@ -499,9 +511,9 @@ class ComprehensiveSystemDemo : AppCompatActivity() {
     private fun addLog(message: String) {
         val timestamp = SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(Date())
         val logMessage = "[$timestamp] $message"
-        
+
         Log.i(TAG, message)
-        
+
         runOnUiThread {
             val currentText = logText.text.toString()
             logText.text = if (currentText.isEmpty()) {
@@ -509,8 +521,8 @@ class ComprehensiveSystemDemo : AppCompatActivity() {
             } else {
                 "$currentText\n$logMessage"
             }
-            
-            
+
+
             (logText.parent as? ScrollView)?.post {
                 (logText.parent as ScrollView).fullScroll(ScrollView.FOCUS_DOWN)
             }
@@ -524,7 +536,7 @@ class ComprehensiveSystemDemo : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        
+
         lifecycleScope.launch {
             try {
                 if (isRecording) {
@@ -534,7 +546,7 @@ class ComprehensiveSystemDemo : AppCompatActivity() {
                 Log.w(TAG, "Error stopping recording on destroy", e)
             }
         }
-        
+
         Log.i(TAG, "=== Comprehensive System Demo Destroyed ===")
     }
 }

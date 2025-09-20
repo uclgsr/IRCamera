@@ -12,12 +12,12 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
-        
+
         <com.mpdc4gsr.lib.ui.widget.LiteSurfaceView
             android:id="@+id/cameraView"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
-        
+
         <com.infisense.usbir.view.TemperatureView
             android:id="@+id/temperatureView"
             android:layout_width="match_parent"

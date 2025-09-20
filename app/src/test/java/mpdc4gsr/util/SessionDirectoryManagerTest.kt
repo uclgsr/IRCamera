@@ -61,26 +61,26 @@ class SessionDirectoryManagerTest {
     fun testGenerateSessionId() {
         val sessionId = sessionDirectoryManager.generateSessionId()
 
-        
+
         val parts = sessionId.split("_")
         assertEquals(5, parts.size, "Session ID should have 5 parts separated by underscores")
 
-        
+
         assertTrue(parts[0].matches(Regex("\\d{8}")), "First part should be 8-digit date")
 
-        
+
         assertTrue(parts[1].matches(Regex("\\d{6}")), "Second part should be 6-digit time")
 
-        
+
         assertTrue(parts[2].matches(Regex("\\d{3}")), "Third part should be 3-digit milliseconds")
 
-        
+
         assertTrue(
             parts[3].matches(Regex("[a-zA-Z0-9]+")),
             "Fourth part should be alphanumeric device model"
         )
 
-        
+
         assertEquals(8, parts[4].length, "Fifth part should be 8-character UUID")
     }
 
@@ -89,14 +89,14 @@ class SessionDirectoryManagerTest {
         val sessionId = "20231201_120000_123_TestDevice_abcd1234"
         val sessionDir = sessionDirectoryManager.createSessionDirectory(sessionId)
 
-        
+
         assertEquals(sessionId, sessionDir.sessionId)
         assertTrue(sessionDir.rootDir.exists(), "Root directory should exist")
         assertTrue(sessionDir.rgbDir.exists(), "RGB directory should exist")
         assertTrue(sessionDir.thermalDir.exists(), "Thermal directory should exist")
         assertTrue(sessionDir.shimmerDir.exists(), "Shimmer directory should exist")
 
-        
+
         assertEquals("RGB", sessionDir.rgbDir.name)
         assertEquals("Thermal", sessionDir.thermalDir.name)
         assertEquals("Shimmer", sessionDir.shimmerDir.name)
@@ -120,7 +120,7 @@ class SessionDirectoryManagerTest {
         assertTrue(metadataFile.exists(), "Metadata file should exist")
         assertEquals(SessionDirectoryManager.SESSION_METADATA_FILE, metadataFile.name)
 
-        
+
         val jsonContent = JSONObject(metadataFile.readText())
         assertEquals(sessionId, jsonContent.getString("session_id"))
         assertEquals("TEST001", jsonContent.getString("participant_id"))
@@ -146,18 +146,18 @@ class SessionDirectoryManagerTest {
 
         sessionDirectoryManager.createSessionMetadata(sessionDir, initialMetadata)
 
-        
+
         val endTime = 5000L
         val errors = mapOf("sensor1" to "Connection failed")
         sessionDirectoryManager.updateSessionMetadata(sessionDir, endTime, "COMPLETED", errors)
 
-        
+
         val metadataFile = File(sessionDir.rootDir, SessionDirectoryManager.SESSION_METADATA_FILE)
         val jsonContent = JSONObject(metadataFile.readText())
 
         assertEquals(endTime, jsonContent.getLong("end_time"))
         assertEquals("COMPLETED", jsonContent.getString("status"))
-        assertEquals(4000L, jsonContent.getLong("duration_ms")) 
+        assertEquals(4000L, jsonContent.getLong("duration_ms"))
 
         val errorsJson = jsonContent.getJSONObject("errors")
         assertEquals("Connection failed", errorsJson.getString("sensor1"))
@@ -178,11 +178,11 @@ class SessionDirectoryManagerTest {
 
     @Test
     fun testCleanupFailedSessions() {
-        
+
         val failedSessionId = "20231201_120000_123_TestDevice_failed01"
         val failedSessionDir = sessionDirectoryManager.createSessionDirectory(failedSessionId)
 
-        
+
         val successSessionId = "20231201_120000_123_TestDevice_success"
         val successSessionDir = sessionDirectoryManager.createSessionDirectory(successSessionId)
         val metadata = SessionMetadata(
@@ -197,10 +197,10 @@ class SessionDirectoryManagerTest {
             "test_data.txt"
         ).writeText("Some test data that makes this session valid")
 
-        
+
         val cleanedSessions = sessionDirectoryManager.cleanupFailedSessions()
 
-        
+
         assertFalse(failedSessionDir.rootDir.exists(), "Failed session should be cleaned up")
         assertTrue(successSessionDir.rootDir.exists(), "Successful session should remain")
 
@@ -219,25 +219,25 @@ class SessionDirectoryManagerTest {
         val sessionId = "20231201_120000_123_TestDevice_abcd1234"
         val sessionDir = sessionDirectoryManager.createSessionDirectory(sessionId)
 
-        
+
         val rgbFile =
             sessionDirectoryManager.getStandardFilePath(sessionDir, "RGB", "test_video.mp4")
         assertEquals(sessionDir.rgbDir, rgbFile.parentFile)
         assertEquals("test_video.mp4", rgbFile.name)
 
-        
+
         val thermalFile =
             sessionDirectoryManager.getStandardFilePath(sessionDir, "thermal", "thermal_data.csv")
         assertEquals(sessionDir.thermalDir, thermalFile.parentFile)
         assertEquals("thermal_data.csv", thermalFile.name)
 
-        
+
         val shimmerFile =
             sessionDirectoryManager.getStandardFilePath(sessionDir, "Shimmer3", "gsr_data.csv")
         assertEquals(sessionDir.shimmerDir, shimmerFile.parentFile)
         assertEquals("gsr_data.csv", shimmerFile.name)
 
-        
+
         val unknownFile =
             sessionDirectoryManager.getStandardFilePath(sessionDir, "unknown", "test.txt")
         assertEquals(sessionDir.rootDir, unknownFile.parentFile)
@@ -247,14 +247,14 @@ class SessionDirectoryManagerTest {
     @Test
     fun testStorageStatusFormatting() {
         val storageStatus = StorageStatus(
-            availableMB = 1536L, 
-            totalMB = 2048L,     
+            availableMB = 1536L,
+            totalMB = 2048L,
             isLowStorage = false,
             shouldWarn = false
         )
 
         assertEquals("1.5 GB", storageStatus.formattedAvailable)
-        assertEquals(25, storageStatus.usagePercentage) 
+        assertEquals(25, storageStatus.usagePercentage)
 
         val smallStorage = StorageStatus(
             availableMB = 512L,

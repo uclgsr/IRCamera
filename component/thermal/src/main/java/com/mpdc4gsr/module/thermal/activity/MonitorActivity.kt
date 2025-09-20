@@ -21,18 +21,18 @@ class MonitorActivity : BaseActivity(), View.OnClickListener {
 
     var MONITOR_ACTION = STATS_START
 
-    private var selectType = 1 
-    private var selectIndex: ArrayList<Int> = arrayListOf() 
+    private var selectType = 1
+    private var selectIndex: ArrayList<Int> = arrayListOf()
 
     override fun initContentView() = R.layout.activity_monitor
 
     override fun initView() {
 
         val toolbar =
-            findViewById<androidx.appcompat.widget.Toolbar>(com.mpdc4gsr.lib.ui.R.id.toolbar_lay)
+            findViewById<androidx.appcompat.widget.Toolbar>(com.mpdc4gsr.lib.core.R.id.toolbar_lay)
         toolbar?.title = getString(R.string.main_thermal_motion)
 
-        val blackColor = ContextCompat.getColor(this, com.mpdc4gsr.lib.ui.R.color.black)
+        val blackColor = ContextCompat.getColor(this, com.mpdc4gsr.lib.core.R.color.black)
         toolbar?.setBackgroundColor(blackColor)
         BarUtils.setStatusBarColor(this, blackColor)
         BarUtils.setNavBarColor(window, blackColor)

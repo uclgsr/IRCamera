@@ -613,11 +613,11 @@ public class EasyBLE {
             String action = intent.getAction();
             if (action != null) {
                 switch (action) {
-                    case BluetoothAdapter.ACTION_STATE_CHANGED: 
+                    case BluetoothAdapter.ACTION_STATE_CHANGED:
                         if (bluetoothAdapter != null) {
 
                             observable.notifyObservers(MethodInfoGenerator.onBluetoothAdapterStateChanged(bluetoothAdapter.getState()));
-                            if (bluetoothAdapter.getState() == BluetoothAdapter.STATE_OFF) { 
+                            if (bluetoothAdapter.getState() == BluetoothAdapter.STATE_OFF) {
                                 logger.log(Log.DEBUG, Logger.TYPE_GENERAL, "[CHINESE_TEXT]Close[CHINESE_TEXT]");
 
                                 if (scanner != null) {
@@ -661,11 +661,11 @@ public class EasyBLE {
                         break;
                 }
             }
-            if (BluetoothAdapter.ACTION_STATE_CHANGED.equals(intent.getAction())) { 
+            if (BluetoothAdapter.ACTION_STATE_CHANGED.equals(intent.getAction())) {
                 if (bluetoothAdapter != null) {
 
                     observable.notifyObservers(MethodInfoGenerator.onBluetoothAdapterStateChanged(bluetoothAdapter.getState()));
-                    if (bluetoothAdapter.getState() == BluetoothAdapter.STATE_OFF) { 
+                    if (bluetoothAdapter.getState() == BluetoothAdapter.STATE_OFF) {
                         logger.log(Log.DEBUG, Logger.TYPE_GENERAL, "[CHINESE_TEXT]Close[CHINESE_TEXT]");
 
                         if (scanner != null) {

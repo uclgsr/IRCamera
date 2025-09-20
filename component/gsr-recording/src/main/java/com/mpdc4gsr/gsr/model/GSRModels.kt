@@ -1,13 +1,13 @@
 package com.mpdc4gsr.gsr.model
 
 data class GSRSample(
-    val timestamp: Long, 
-    val utcTimestamp: Long = timestamp, 
-    val conductance: Double, 
-    val resistance: Double, 
-    val rawValue: Int = 0, 
-    val sampleIndex: Long = 0, 
-    val sessionId: String, 
+    val timestamp: Long,
+    val utcTimestamp: Long = timestamp,
+    val conductance: Double,
+    val resistance: Double,
+    val rawValue: Int = 0,
+    val sampleIndex: Long = 0,
+    val sessionId: String,
 ) {
     companion object {
 
@@ -18,11 +18,11 @@ data class GSRSample(
             sessionId: String,
         ): GSRSample {
 
-            val baseConductance = 10.0 
+            val baseConductance = 10.0
             val variation = Math.sin(sampleIndex * 0.1) * 2.0 + Math.random() * 1.0
             val conductance = baseConductance + variation
-            val resistance = 1000.0 / conductance 
-            val rawValue = (2048 + variation * 100).toInt() 
+            val resistance = 1000.0 / conductance
+            val rawValue = (2048 + variation * 100).toInt()
 
             return GSRSample(
                 timestamp = timestamp,
@@ -52,7 +52,7 @@ data class GSRSample(
 data class SyncMark(
     val timestamp: Long,
     val utcTimestamp: Long,
-    val eventType: String, 
+    val eventType: String,
     val sessionId: String,
     val metadata: Map<String, String> = emptyMap(),
 ) {

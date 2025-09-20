@@ -1,17 +1,18 @@
 # IRCamera Developer Guide
 
-## [LIST] Overview
+## Overview
 
-This guide provides comprehensive development instructions for the IRCamera Multi-Modal Thermal Sensing Platform. It consolidates setup procedures, development workflows, and troubleshooting information for contributors and maintainers.
+This guide provides comprehensive development instructions for the IRCamera Multi-Modal Thermal Sensing Platform. It
+consolidates setup procedures, development workflows, and troubleshooting information for contributors and maintainers.
 
-## [BUILD] System Architecture
+## System Architecture
 
 ### Hub-and-Spoke Model
 
 **IRCamera** implements a distributed sensing architecture:
 
 - **Hub (PC Controller)**: Python-based central coordinator
-- **Spokes (Android Sensor Nodes)**: Kotlin-based mobile sensor nodes  
+- **Spokes (Android Sensor Nodes)**: Kotlin-based mobile sensor nodes
 - **Communication**: JSON over TCP with mDNS device discovery
 - **Synchronization**: Precise temporal alignment across sensor modalities
 
@@ -19,40 +20,45 @@ This guide provides comprehensive development instructions for the IRCamera Mult
 
 ```
 IRCamera/
-|---- app/                           # Main Android application
-|   `---- src/main/java/mpdc4gsr/   # Android application code
-|---- pc-controller/                 # Python PC Hub implementation
-|   |---- src/ircamera_pc/          # Main application package
-|   |---- demo_mvp_components.py    # Component demonstration
-|   |---- run_mvp_app.py            # Application launcher
-|   `---- requirements.txt          # Python dependencies
-|---- component/                     # Feature components
-|   |---- thermal-ir/               # Thermal imaging component
-|   |---- gsr-recording/            # GSR sensor component
-|   |---- pseudo/                   # Simulation components
-|   `---- ...                       # Other sensor components
-|---- libir/                        # Core IR processing library
-|---- lib*/                         # Support libraries
-|   |---- libapp/                   # Application framework
-|   |---- libcom/                   # Communication library
-|   |---- libui/                    # User interface components
-|   `---- ...                       # Other libraries
-|---- docs/                         # **Consolidated Documentation**
-|---- scripts/                      # Build and utility scripts
-`---- .github/                      # CI/CD and GitHub configurations
++-- app/                           # Main Android application
+    +-- src/main/java/mpdc4gsr/   # Android application code
++-- pc-controller/                 # Python PC Hub implementation
+    +-- src/ircamera_pc/          # Main application package
+    +-- demo_mvp_components.py    # Component demonstration
+    +-- run_mvp_app.py            # Application launcher
+    +-- requirements.txt          # Python dependencies
++-- component/                     # Feature components
+    +-- thermal-ir/               # Thermal imaging component
+    +-- gsr-recording/            # GSR sensor component
+    +-- pseudo/                   # Simulation components
+    +-- ...                       # Other sensor components
++-- consolidated_libraries/        # Consolidated support libraries
+    +-- libcom/                   # Communication library
+    +-- libmatrix/               # Matrix operations library
+    +-- libmenu/                 # Menu components library
++-- libapp/                       # Application framework library
++-- libir/                        # Core IR processing library  
++-- libui/                        # User interface components library
++-- BleModule/                    # Bluetooth Low Energy module
++-- RangeSeekBar/                 # UI range selector component
++-- docs/                         # **Consolidated Documentation**
++-- scripts/                      # Build and utility scripts
++-- .github/                      # CI/CD and GitHub configurations
 ```
 
-## [LAUNCH] Development Environment Setup
+## Development Environment Setup
 
 ### Prerequisites
 
 #### Required Software
+
 - **Java**: OpenJDK 8, 11, or 21 (auto-detected by Gradle)
 - **Android SDK**: Android development environment
 - **Python**: 3.12+ for PC Controller development
 - **Git**: Version control system
 
 #### Optional Tools
+
 - **Android Studio**: Recommended for Android development
 - **VS Code**: Optimized configuration included for multi-language development
 - **PyCharm**: Python IDE alternative
@@ -60,6 +66,7 @@ IRCamera/
 ### Quick Setup
 
 #### 1. Repository Setup
+
 ```bash
 # Clone repository
 git clone https://github.com/uclgsr/IRCamera.git
@@ -70,6 +77,7 @@ code .
 ```
 
 #### 2. Android Development Setup
+
 ```bash
 # Verify Gradle wrapper permissions
 chmod +x ./gradlew
@@ -82,6 +90,7 @@ chmod +x ./gradlew
 ```
 
 #### 3. PC Controller Setup
+
 ```bash
 # Navigate to PC Controller
 cd pc-controller
@@ -99,7 +108,7 @@ python demo_mvp_components.py
 python test_mvp_simple.py
 ```
 
-## [TOOLS] Development Workflow
+## Development Workflow
 
 ### Using Development Tools
 
@@ -122,16 +131,17 @@ The repository includes comprehensive development tools via `dev.sh`:
 ./dev.sh validate                # Comprehensive validation (3+ minutes)
 ```
 
-**[WARNING] Important Timing Notes:**
+**⚠️ Important Timing Notes:**
+
 - `./gradlew clean`: Takes 80-90 seconds, **NEVER CANCEL**
-- Build attempts: 45-120 seconds, **NEVER CANCEL**  
+- Build attempts: 45-120 seconds, **NEVER CANCEL**
 - Always use timeout of 180+ seconds for Gradle operations
 
 ### Build System
 
 #### Android Build (Currently Non-Functional)
 
-**[ALERT] CRITICAL**: Android build currently **FAILS** due to missing ShimmerDevice class.
+**🚨 CRITICAL**: Android build currently **FAILS** due to missing ShimmerDevice class.
 
 ```bash
 # Standard build attempts (will fail)
@@ -144,6 +154,7 @@ The repository includes comprehensive development tools via `dev.sh`:
 ```
 
 **Known Issue**: Build fails with "ShimmerDevice class not found" in:
+
 - `BleModule/src/main/java/com/topdon/ble/ShimmerBleController.java`
 
 #### PC Controller Build (Fully Functional)
@@ -166,6 +177,7 @@ QT_QPA_PLATFORM=offscreen python run_mvp_app.py
 The repository is fully optimized for GitHub Copilot development assistance:
 
 #### Core Copilot Configuration
+
 - **`.github/copilot-instructions.md`**: Comprehensive project context
 - **`.vscode/settings.json`**: Optimized VS Code settings
 - **`.vscode/extensions.json`**: Recommended extensions including Copilot
@@ -196,16 +208,18 @@ class DeviceManager:
 ```
 
 #### Best Practices with Copilot
+
 1. **Use Descriptive Comments**: Help Copilot understand your intent
 2. **Reference Existing Patterns**: Copilot learns from the codebase
 3. **Follow Project Conventions**: Leverage established architecture
 4. **Context-Aware Naming**: Use descriptive variable and method names
 
-## [TEST] Testing & Validation
+## Testing & Validation
 
 ### Automated Testing
 
 #### PC Controller Validation
+
 ```bash
 cd pc-controller
 
@@ -220,13 +234,15 @@ python run_mvp_app.py             # Complete MVP functionality
 ```
 
 **Test Results Status**:
-- [DONE] Configuration System (100%)
-- [DONE] Device Discovery Framework (100%)  
-- [DONE] Communication Protocol (100%)
-- [DONE] GUI Architecture (100%)
-- [WARNING] Session Management (some missing methods)
+
+- ✅ Configuration System (100%)
+- ✅ Device Discovery Framework (100%)
+- ✅ Communication Protocol (100%)
+- ✅ GUI Architecture (100%)
+- ⚠️ Session Management (some missing methods)
 
 #### Android Testing
+
 **Current Status**: Cannot perform end-to-end Android testing until build issues are resolved.
 
 ```bash
@@ -240,23 +256,25 @@ adb logcat | grep IRCamera
 ### Manual Testing
 
 #### PC Controller Integration Testing
+
 ```bash
 # Test device discovery framework
 python -c "
 from src.ircamera_pc.network.discovery import DeviceDiscoveryService
 service = DeviceDiscoveryService()
-print('[DONE] Device discovery service loads successfully')
+print('✅ Device discovery service loads successfully')
 "
 
 # Test session management
 python -c "
 from src.ircamera_pc.core.session_manager import SessionManager
 manager = SessionManager()
-print('[DONE] Session manager initialized')
+print('✅ Session manager initialized')
 "
 ```
 
 #### Build Environment Validation
+
 ```bash
 # Check Java version
 java -version
@@ -269,11 +287,12 @@ python3 --version
 pip list | grep PyQt6
 ```
 
-## [DATA] Code Quality & Standards
+## Code Quality & Standards
 
 ### Linting Configuration
 
 #### Kotlin/Java (Android)
+
 - **ktlint**: Kotlin code style enforcement
 - **checkstyle**: Java code quality checks (currently not configured)
 
@@ -285,7 +304,8 @@ pip list | grep PyQt6
 ./gradlew ktlintFormat
 ```
 
-#### Python (PC Controller)  
+#### Python (PC Controller)
+
 - **flake8**: Python code style and quality (install required)
 
 ```bash
@@ -299,18 +319,20 @@ flake8 pc-controller/src/
 ### Code Organization Standards
 
 #### Android Development
+
 - **Module Structure**: Separate libraries for different functionalities
 - **Component Architecture**: Feature-based component organization
 - **Kotlin Guidelines**: Follow official Kotlin style guide
 - **Resource Organization**: Structured resource management
 
 #### Python Development
+
 - **Package Structure**: Clean hierarchical package organization
 - **Type Hints**: Use type annotations where beneficial
 - **Documentation**: Comprehensive docstrings for public APIs
 - **Error Handling**: Robust exception handling and logging
 
-## [WRENCH] Advanced Development Topics
+## Advanced Development Topics
 
 ### Native Backend Integration (PC Controller)
 
@@ -328,13 +350,14 @@ cd ..
 python -c "
 try:
     import native_gsr_processor
-    print('[DONE] Native backend loaded successfully')
+    print('✅ Native backend loaded successfully')
 except ImportError:
     print('ℹ️ Falling back to Python implementation')
 "
 ```
 
 **Features**:
+
 - High-performance GSR data processing
 - Native Shimmer device support
 - Automatic Python fallback if unavailable
@@ -342,9 +365,11 @@ except ImportError:
 ### Communication Protocol Development
 
 #### Protocol Specification
+
 The system uses JSON messages over TCP for Hub-Spoke communication:
 
 **Command Message Format**:
+
 ```json
 {
   "message_id": "unique-identifier",
@@ -360,6 +385,7 @@ The system uses JSON messages over TCP for Hub-Spoke communication:
 ```
 
 #### Extending the Protocol
+
 To add new command types:
 
 1. **Define Message Type**: Add to `MessageType` enum
@@ -370,36 +396,44 @@ To add new command types:
 ### Performance Optimization
 
 #### Android Performance
+
 - **Memory Management**: Efficient resource cleanup
 - **Threading**: Proper background processing for sensors
 - **Battery Optimization**: Minimize battery drain during recording
 - **Storage Efficiency**: Optimized data storage formats
 
-#### PC Controller Performance  
+#### PC Controller Performance
+
 - **Multi-threading**: Background network operations
 - **GUI Responsiveness**: Non-blocking UI updates
 - **Memory Efficiency**: Efficient data structure usage
 - **Network Optimization**: Optimized TCP communication
 
-## [BUG] Known Issues & Workarounds
+## Known Issues & Workarounds
 
 ### Critical Issues
 
 #### 1. Android Build Failure (BLOCKING)
+
 **Issue**: ShimmerDevice class not found in BleModule
+
 - **Status**: BLOCKING - no APK can be generated
-- **Impact**: Cannot test Android functionality  
+- **Impact**: Cannot test Android functionality
 - **Location**: `BleModule/src/main/java/com/topdon/ble/ShimmerBleController.java`
 - **Resolution**: Need to implement or import ShimmerDevice class
 
 #### 2. PC Controller GUI (Headless Systems)
+
 **Issue**: GUI requires display server
+
 - **Status**: WORKING with workaround
 - **Workaround**: Use `QT_QPA_PLATFORM=offscreen` for headless operation
 - **Testing**: Use demo scripts for validation
 
 #### 3. Session Management (Partial Implementation)
+
 **Issue**: Some methods missing in SessionManager
+
 - **Status**: PARTIAL - core functionality works
 - **Impact**: Some PC controller tests fail
 - **Usage**: Use working components, avoid missing methods
@@ -407,12 +441,14 @@ To add new command types:
 ### Build Environment Issues
 
 #### Gradle Configuration Cache
+
 ```bash
 # If configuration cache issues occur:
 ./gradlew clean --no-configuration-cache --no-build-cache
 ```
 
 #### Dependency Resolution
+
 ```bash
 # If dependency issues occur:
 ./gradlew --refresh-dependencies
@@ -420,6 +456,7 @@ To add new command types:
 ```
 
 #### Java Version Compatibility
+
 ```bash
 # Check Java version compatibility:
 java -version
@@ -432,6 +469,7 @@ export JAVA_HOME=/path/to/compatible/jdk
 ### Validation Workarounds
 
 #### Build Validation Without Full Build
+
 ```bash
 # Use development tools instead of full build:
 ./dev.sh lint                    # Code style validation
@@ -440,6 +478,7 @@ export JAVA_HOME=/path/to/compatible/jdk
 ```
 
 #### PC Controller Testing Without GUI
+
 ```bash
 # Test components without GUI dependencies:
 cd pc-controller
@@ -447,13 +486,14 @@ python -c "
 import sys
 sys.path.append('src')
 from ircamera_pc.core.config import ConfigurationManager
-print('[DONE] Core modules load successfully')
+print('✅ Core modules load successfully')
 "
 ```
 
-## [LAUNCH] Deployment & Distribution
+## Deployment & Distribution
 
 ### Android APK Generation
+
 **Current Status**: Not available due to build issues
 
 ```bash
@@ -467,6 +507,7 @@ print('[DONE] Core modules load successfully')
 ```
 
 ### PC Controller Distribution
+
 ```bash
 cd pc-controller
 
@@ -479,6 +520,7 @@ zip -r ircamera-pc-controller.zip src/ requirements.txt run_mvp_app.py
 ```
 
 ### Docker Deployment (Future)
+
 ```dockerfile
 # Potential Docker setup for PC Controller
 FROM python:3.12-slim
@@ -489,9 +531,10 @@ COPY pc-controller/ .
 CMD ["python", "run_mvp_app.py"]
 ```
 
-## [CHART] Performance Monitoring
+## Performance Monitoring
 
 ### Build Performance Tracking
+
 ```bash
 # Monitor build times:
 time ./gradlew clean             # Expect: 80-90 seconds
@@ -502,6 +545,7 @@ export GRADLE_OPTS="-Xmx4g -XX:MaxMetaspaceSize=512m"
 ```
 
 ### Runtime Performance Monitoring
+
 ```bash
 # PC Controller performance:
 python -c "
@@ -516,9 +560,10 @@ print(f'CPU: {process.cpu_percent()}%')
 adb shell top -p $(adb shell pidof com.topdon.ircamera)
 ```
 
-## [HANDSHAKE] Contributing Guidelines
+## Contributing Guidelines
 
 ### Code Contribution Workflow
+
 1. **Fork Repository**: Create personal fork on GitHub
 2. **Create Branch**: Use descriptive branch names
 3. **Follow Standards**: Adhere to existing code style
@@ -526,12 +571,14 @@ adb shell top -p $(adb shell pidof com.topdon.ircamera)
 5. **Submit PR**: Provide clear description of changes
 
 ### Development Best Practices
+
 1. **Minimal Changes**: Make surgical, precise modifications
 2. **Preserve Functionality**: Don't break existing working code
 3. **Test Early**: Use `./dev.sh validate` frequently
 4. **Document Changes**: Update documentation for significant changes
 
 ### GitHub Copilot Best Practices
+
 1. **Context Awareness**: Reference existing patterns in comments
 2. **Architecture Alignment**: Maintain Hub-and-Spoke design principles
 3. **Build Constraints**: Respect known build limitations and timeouts
@@ -539,7 +586,7 @@ adb shell top -p $(adb shell pidof com.topdon.ircamera)
 
 ---
 
-**Status**: [DONE] Complete Developer Documentation  
+**Status**: ✅ Complete Developer Documentation  
 **Last Updated**: Documentation Consolidation v1.0  
 **Build Status**: Android (FAILING), PC Controller (WORKING)  
 **Next Steps**: Resolve ShimmerDevice build issue for full functionality

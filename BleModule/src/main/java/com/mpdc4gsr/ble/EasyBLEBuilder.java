@@ -18,7 +18,7 @@ public class EasyBLEBuilder {
     Logger logger;
     boolean isObserveAnnotationRequired = false;
     ScannerType scannerType;
-    boolean useNordicBleBackend = true; 
+    boolean useNordicBleBackend = true;
 
     EasyBLEBuilder() {
     }

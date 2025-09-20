@@ -1,5 +1,3 @@
-
-
 package com.github.gzuliyujiang.wheelview.widget;
 
 import android.animation.Animator;

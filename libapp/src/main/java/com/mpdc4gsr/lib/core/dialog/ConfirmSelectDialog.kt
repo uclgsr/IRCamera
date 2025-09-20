@@ -79,15 +79,15 @@ class ConfirmSelectDialog(context: Context) : Dialog(context, R.style.InfoDialog
 
     override fun onClick(v: View?) {
         when (v) {
-            binding.rlMessage -> { 
+            binding.rlMessage -> {
                 binding.ivSelect.isSelected = !binding.ivSelect.isSelected
             }
 
-            binding.tvCancel -> { 
+            binding.tvCancel -> {
                 dismiss()
             }
 
-            binding.tvConfirm -> { 
+            binding.tvConfirm -> {
                 dismiss()
                 onConfirmClickListener?.invoke(binding.ivSelect.isSelected)
             }

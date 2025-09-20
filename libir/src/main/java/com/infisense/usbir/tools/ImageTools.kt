@@ -20,7 +20,7 @@ object ImageTools {
         }
         val selectBean = getTempIndex(tempBytes, max, min)
 
-        bitmapFromRgbaGrey(bytes = imageBytes, bean = selectBean) 
+        bitmapFromRgbaGrey(bytes = imageBytes, bean = selectBean)
     }
 
     fun readFrame(
@@ -40,7 +40,7 @@ object ImageTools {
             bean = selectBean,
             maxColor = maxColor,
             minColor = minColor,
-        ) 
+        )
     }
 
     private fun bitmapFromRgba(
@@ -71,10 +71,10 @@ object ImageTools {
         val minB = ((minColor shr 0) and 0xff).toByte()
         for (i in 0 until len) {
             if (maxQueue.peek() == i) {
-                bytes[i * 4] = maxR 
-                bytes[i * 4 + 1] = maxG 
-                bytes[i * 4 + 2] = maxB 
-                bytes[i * 4 + 3] = maxA 
+                bytes[i * 4] = maxR
+                bytes[i * 4 + 1] = maxG
+                bytes[i * 4 + 2] = maxB
+                bytes[i * 4 + 3] = maxA
                 maxQueue.poll()
             }
             if (minQueue.peek() == i) {
@@ -212,10 +212,10 @@ object ImageTools {
                     value = readTempValue(data)
                     if (value > max) {
 
-                        imageBytes[i * 4] = maxR 
-                        imageBytes[i * 4 + 1] = maxG 
-                        imageBytes[i * 4 + 2] = maxB 
-                        imageBytes[i * 4 + 3] = maxA 
+                        imageBytes[i * 4] = maxR
+                        imageBytes[i * 4 + 1] = maxG
+                        imageBytes[i * 4 + 2] = maxB
+                        imageBytes[i * 4 + 3] = maxA
                     }
                     if (value < min) {
 

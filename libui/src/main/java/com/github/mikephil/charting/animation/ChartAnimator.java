@@ -9,13 +9,13 @@ import com.github.mikephil.charting.animation.Easing.EasingFunction;
 
 public class ChartAnimator {
 
-    
+
     @SuppressWarnings("WeakerAccess")
     protected float mPhaseY = 1f;
-    
+
     @SuppressWarnings("WeakerAccess")
     protected float mPhaseX = 1f;
-    
+
     private AnimatorUpdateListener mListener;
 
     public ChartAnimator() {

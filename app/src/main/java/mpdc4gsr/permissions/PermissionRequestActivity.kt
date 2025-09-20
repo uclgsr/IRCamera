@@ -17,7 +17,7 @@ class PermissionRequestActivity : AppCompatActivity() {
 
     companion object {
         private const val TAG = "PermissionRequestActivity"
-        
+
         fun start(context: Context) {
             val intent = Intent(context, PermissionRequestActivity::class.java)
             context.startActivity(intent)
@@ -26,26 +26,26 @@ class PermissionRequestActivity : AppCompatActivity() {
 
     private lateinit var permissionController: PermissionController
     private lateinit var enhancedPermissionManager: EnhancedPermissionManager
-    
-    
+
+
     private lateinit var statusText: TextView
     private lateinit var logText: TextView
-    
-    
+
+
     private lateinit var cameraStatusIcon: TextView
     private lateinit var bluetoothStatusIcon: TextView
     private lateinit var locationStatusIcon: TextView
     private lateinit var storageStatusIcon: TextView
     private lateinit var usbStatusIcon: TextView
-    
-    
+
+
     private lateinit var requestCameraBtn: Button
     private lateinit var requestBluetoothBtn: Button
     private lateinit var requestAllBtn: Button
     private lateinit var startRecordingBtn: Button
     private lateinit var clearLogsBtn: Button
 
-    
+
     private val requestMultiplePermissions = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
     ) { permissions ->
@@ -54,7 +54,7 @@ class PermissionRequestActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
+
         setupUI()
         initializePermissionSystem()
         updatePermissionStatus()
@@ -66,7 +66,7 @@ class PermissionRequestActivity : AppCompatActivity() {
             setPadding(16, 16, 16, 16)
         }
 
-        
+
         val title = TextView(this).apply {
             text = "Enhanced Permission Request System"
             textSize = 20f
@@ -74,7 +74,7 @@ class PermissionRequestActivity : AppCompatActivity() {
         }
         layout.addView(title)
 
-        
+
         statusText = TextView(this).apply {
             text = "Checking permissions..."
             textSize = 16f
@@ -82,11 +82,11 @@ class PermissionRequestActivity : AppCompatActivity() {
         }
         layout.addView(statusText)
 
-        
+
         val permissionGrid = createPermissionStatusGrid()
         layout.addView(permissionGrid)
 
-        
+
         val buttonLayout = LinearLayout(this).apply {
             orientation = LinearLayout.HORIZONTAL
         }
@@ -111,7 +111,7 @@ class PermissionRequestActivity : AppCompatActivity() {
 
         layout.addView(buttonLayout)
 
-        
+
         val secondaryLayout = LinearLayout(this).apply {
             orientation = LinearLayout.HORIZONTAL
         }
@@ -131,7 +131,7 @@ class PermissionRequestActivity : AppCompatActivity() {
 
         layout.addView(secondaryLayout)
 
-        
+
         logText = TextView(this).apply {
             text = "Permission request logs will appear here...\n"
             textSize = 12f
@@ -153,7 +153,7 @@ class PermissionRequestActivity : AppCompatActivity() {
             setPadding(0, 8, 0, 16)
         }
 
-        
+
         val cameraRow = LinearLayout(this).apply {
             orientation = LinearLayout.HORIZONTAL
         }
@@ -169,7 +169,7 @@ class PermissionRequestActivity : AppCompatActivity() {
         cameraRow.addView(cameraStatusIcon)
         grid.addView(cameraRow)
 
-        
+
         val bluetoothRow = LinearLayout(this).apply {
             orientation = LinearLayout.HORIZONTAL
         }
@@ -185,7 +185,7 @@ class PermissionRequestActivity : AppCompatActivity() {
         bluetoothRow.addView(bluetoothStatusIcon)
         grid.addView(bluetoothRow)
 
-        
+
         val locationRow = LinearLayout(this).apply {
             orientation = LinearLayout.HORIZONTAL
         }
@@ -201,7 +201,7 @@ class PermissionRequestActivity : AppCompatActivity() {
         locationRow.addView(locationStatusIcon)
         grid.addView(locationRow)
 
-        
+
         val storageRow = LinearLayout(this).apply {
             orientation = LinearLayout.HORIZONTAL
         }
@@ -217,7 +217,7 @@ class PermissionRequestActivity : AppCompatActivity() {
         storageRow.addView(storageStatusIcon)
         grid.addView(storageRow)
 
-        
+
         val usbRow = LinearLayout(this).apply {
             orientation = LinearLayout.HORIZONTAL
         }
@@ -239,38 +239,45 @@ class PermissionRequestActivity : AppCompatActivity() {
     private fun initializePermissionSystem() {
         permissionController = PermissionController(this)
         permissionController.initialize()
-        
+
         enhancedPermissionManager = EnhancedPermissionManager(this, permissionController)
-        
+
         addLog("Enhanced Permission System initialized")
         addLog("This system addresses permission request gaps mentioned in the issue")
     }
 
     private fun updatePermissionStatus() {
-        
-        val hasCameraPermission = ContextCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
-        val hasAudioPermission = ContextCompat.checkSelfPermission(this, android.Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED
+
+        val hasCameraPermission = ContextCompat.checkSelfPermission(
+            this,
+            android.Manifest.permission.CAMERA
+        ) == PackageManager.PERMISSION_GRANTED
+        val hasAudioPermission = ContextCompat.checkSelfPermission(
+            this,
+            android.Manifest.permission.RECORD_AUDIO
+        ) == PackageManager.PERMISSION_GRANTED
         cameraStatusIcon.text = if (hasCameraPermission && hasAudioPermission) "✅" else "❌"
 
-        
+
         val hasBluetoothPermissions = permissionController.hasBluetoothPermissions()
         bluetoothStatusIcon.text = if (hasBluetoothPermissions) "✅" else "❌"
 
-        
+
         val hasLocationPermissions = permissionController.hasLocationPermission()
         locationStatusIcon.text = if (hasLocationPermissions) "✅" else "❌"
 
-        
+
         val hasStoragePermissions = permissionController.hasStoragePermissions()
         storageStatusIcon.text = if (hasStoragePermissions) "✅" else "❌"
 
-        
+
         val hasUsbPermissions = permissionController.hasUsbPermissions()
         usbStatusIcon.text = if (hasUsbPermissions) "✅" else "⚠️"
 
-        
-        val allCriticalGranted = (hasCameraPermission && hasAudioPermission) && hasBluetoothPermissions && hasLocationPermissions
-        
+
+        val allCriticalGranted =
+            (hasCameraPermission && hasAudioPermission) && hasBluetoothPermissions && hasLocationPermissions
+
         statusText.text = if (allCriticalGranted) {
             "✅ All critical permissions granted - Ready for recording"
         } else {
@@ -278,15 +285,17 @@ class PermissionRequestActivity : AppCompatActivity() {
         }
 
         startRecordingBtn.isEnabled = allCriticalGranted
-        
-        addLog("Permission status updated: Camera=${if (hasCameraPermission && hasAudioPermission) "OK" else "Missing"}, " +
-               "Bluetooth=${if (hasBluetoothPermissions) "OK" else "Missing"}, " +
-               "Location=${if (hasLocationPermissions) "OK" else "Missing"}")
+
+        addLog(
+            "Permission status updated: Camera=${if (hasCameraPermission && hasAudioPermission) "OK" else "Missing"}, " +
+                    "Bluetooth=${if (hasBluetoothPermissions) "OK" else "Missing"}, " +
+                    "Location=${if (hasLocationPermissions) "OK" else "Missing"}"
+        )
     }
 
     private fun requestCameraPermissions() {
         addLog("🎥 Requesting camera permissions with enhanced UI guidance...")
-        
+
         lifecycleScope.launch {
             try {
                 val granted = enhancedPermissionManager.requestCameraPermissions()
@@ -305,7 +314,7 @@ class PermissionRequestActivity : AppCompatActivity() {
 
     private fun requestBluetoothPermissions() {
         addLog("📡 Requesting Bluetooth permissions with enhanced UI guidance...")
-        
+
         lifecycleScope.launch {
             try {
                 val granted = enhancedPermissionManager.requestBluetoothPermissions()
@@ -324,7 +333,7 @@ class PermissionRequestActivity : AppCompatActivity() {
 
     private fun requestAllPermissions() {
         addLog("🔄 Starting comprehensive permission request sequence...")
-        
+
         lifecycleScope.launch {
             try {
                 val granted = enhancedPermissionManager.requestAllCriticalPermissions()
@@ -343,32 +352,35 @@ class PermissionRequestActivity : AppCompatActivity() {
 
     private fun testRecordingCapabilities() {
         addLog("🧪 Testing recording capabilities with current permissions...")
-        
-        val hasCameraPermission = ContextCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
+
+        val hasCameraPermission = ContextCompat.checkSelfPermission(
+            this,
+            android.Manifest.permission.CAMERA
+        ) == PackageManager.PERMISSION_GRANTED
         val hasBluetoothPermissions = permissionController.hasBluetoothPermissions()
-        
+
         val capabilities = mutableListOf<String>()
-        
+
         if (hasCameraPermission) {
             capabilities.add("✅ RGB Camera Recording (4K@60fps)")
         } else {
             capabilities.add("❌ RGB Camera Recording - Permission denied")
         }
-        
+
         if (hasBluetoothPermissions) {
             capabilities.add("✅ Shimmer GSR Sensor connectivity")
         } else {
             capabilities.add("❌ GSR Sensor connectivity - Permission denied")
         }
-        
-        
+
+
         capabilities.add("⚠️ Thermal Camera - USB permission required when device connected")
-        
+
         addLog("📊 Current Recording Capabilities:")
         capabilities.forEach { capability ->
             addLog("  $capability")
         }
-        
+
         if (hasCameraPermission || hasBluetoothPermissions) {
             addLog("✅ Sufficient permissions for basic recording functionality")
         } else {
@@ -382,27 +394,28 @@ class PermissionRequestActivity : AppCompatActivity() {
 
     private fun addLog(message: String) {
         runOnUiThread {
-            val timestamp = java.text.SimpleDateFormat("HH:mm:ss", java.util.Locale.getDefault()).format(java.util.Date())
+            val timestamp =
+                java.text.SimpleDateFormat("HH:mm:ss", java.util.Locale.getDefault()).format(java.util.Date())
             logText.append("[$timestamp] $message\n")
-            
-            
+
+
             (logText.parent as? ScrollView)?.post {
                 (logText.parent as ScrollView).fullScroll(ScrollView.FOCUS_DOWN)
             }
         }
-        
+
         Log.i(TAG, message)
     }
 
     private fun handlePermissionResults(permissions: Map<String, Boolean>) {
         addLog("📋 Permission results received:")
-        
+
         permissions.forEach { (permission, granted) ->
             val permissionName = permission.substringAfterLast(".")
             val status = if (granted) "✅ Granted" else "❌ Denied"
             addLog("  $permissionName: $status")
         }
-        
+
         updatePermissionStatus()
     }
 
@@ -412,17 +425,17 @@ class PermissionRequestActivity : AppCompatActivity() {
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        
-        
+
+
         permissionController.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        
-        
+
+
         updatePermissionStatus()
     }
 
     override fun onResume() {
         super.onResume()
-        
+
         updatePermissionStatus()
     }
 }

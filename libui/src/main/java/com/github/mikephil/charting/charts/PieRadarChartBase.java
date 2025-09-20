@@ -346,7 +346,6 @@ public abstract class PieRadarChartBase<T extends ChartData<? extends IDataSet<?
         return 0;
     }
 
-    
 
     @SuppressLint("NewApi")
     public void spin(int durationmillis, float fromangle, float toangle, EasingFunction easing) {

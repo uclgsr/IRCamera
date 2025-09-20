@@ -1,5 +1,3 @@
-
-
 package com.github.gzuliyujiang.wheelpicker.annotation;
 
 import java.lang.annotation.Retention;

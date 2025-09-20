@@ -69,7 +69,7 @@ class MoreActivity : BaseActivity(), View.OnClickListener {
         settingDisconnect.setOnClickListener(this)
         settingAutoSave.setOnClickListener(this)
 
-        
+
 
         settingVersion.isVisible = false
     }
@@ -80,7 +80,7 @@ class MoreActivity : BaseActivity(), View.OnClickListener {
         firmwareViewModel.firmwareDataLD.observe(this) {
             tvUpgradePoint.isVisible = it != null
             dismissCameraLoading()
-            if (it == null) { 
+            if (it == null) {
                 ToastUtils.showShort(RCore.string.setting_firmware_update_latest_version)
             } else {
                 showFirmwareUpDialog(it)
@@ -98,29 +98,29 @@ class MoreActivity : BaseActivity(), View.OnClickListener {
 
     override fun onClick(v: View?) {
         when (v) {
-            settingDeviceInformation -> { 
+            settingDeviceInformation -> {
                 NavigationManager.getInstance()
                     .build(RouterConfig.DEVICE_INFORMATION)
                     .withBoolean(ExtraKeyConfig.IS_TC007, false)
                     .navigation(this@MoreActivity)
             }
 
-            settingTisr -> { 
+            settingTisr -> {
                 NavigationManager.getInstance().build(RouterConfig.TISR)
                     .navigation(this@MoreActivity)
             }
 
-            settingAutoSave -> { 
+            settingAutoSave -> {
                 NavigationManager.getInstance().build(RouterConfig.AUTO_SAVE)
                     .navigation(this@MoreActivity)
             }
 
-            settingStorageSpace -> { 
+            settingStorageSpace -> {
                 NavigationManager.getInstance().build(RouterConfig.STORAGE_SPACE)
                     .navigation(this@MoreActivity)
             }
 
-            settingVersion -> { 
+            settingVersion -> {
 
 
                 val firmwareData = firmwareViewModel.firmwareDataLD.value
@@ -135,11 +135,11 @@ class MoreActivity : BaseActivity(), View.OnClickListener {
 
             }
 
-            settingReset -> { 
+            settingReset -> {
                 restoreFactory()
             }
 
-            settingDisconnect -> { 
+            settingDisconnect -> {
                 NavigationManager.getInstance().build(RouterConfig.IR_MORE_HELP)
                     .withInt(Constants.SETTING_CONNECTION_TYPE, Constants.SETTING_DISCONNECTION)
                     .navigation(this@MoreActivity)

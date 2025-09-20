@@ -25,7 +25,7 @@ class SeekBarPopup(context: Context, hasTitle: Boolean = false) : PopupWindow() 
             binding.seekBar.max = value
         }
 
-    
+
     var isRealTimeTrigger = false
 
     var onValuePickListener: ((progress: Int) -> Unit)? = null

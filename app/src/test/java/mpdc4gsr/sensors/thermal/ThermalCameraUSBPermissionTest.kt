@@ -45,54 +45,54 @@ class ThermalCameraUSBPermissionTest {
 
     @Test
     fun `test USB device filter matches Topdon TC001`() {
-        
+
         assertEquals("Vendor ID should match Topdon", 0x4206, mockUsbDevice.vendorId)
         assertEquals("Product ID should match TC001", 0x3702, mockUsbDevice.productId)
     }
 
     @Test
     fun `test thermal recorder initialization with no devices`() = runTest {
-        
+
         `when`(mockUsbManager.deviceList).thenReturn(hashMapOf())
 
-        
+
         val result = thermalRecorder.initialize()
 
-        
+
         assertTrue("Should initialize successfully in simulation mode", result)
     }
 
     @Test
     fun `test USB permission request flow`() = runTest {
-        
+
         val deviceList = hashMapOf("device1" to mockUsbDevice)
         `when`(mockUsbManager.deviceList).thenReturn(deviceList)
         `when`(mockUsbManager.hasPermission(mockUsbDevice)).thenReturn(false)
 
-        
+
         val result = thermalRecorder.initialize()
 
-        
+
         assertTrue("Should complete initialization even without permission", result)
-        
+
     }
 
     @Test
     fun `test thermal data recording in simulation mode`() = runTest {
-        
+
         `when`(mockUsbManager.deviceList).thenReturn(hashMapOf())
         thermalRecorder.initialize()
         val tempDir = java.nio.file.Files.createTempDirectory("thermal_test").toFile()
 
         try {
-            
+
             val recordingStarted = thermalRecorder.startRecording(tempDir.absolutePath)
 
-            
+
             assertTrue("Recording should start in simulation mode", recordingStarted)
             assertTrue("Should be recording", thermalRecorder.isRecording)
 
-            
+
             val recordingStopped = thermalRecorder.stopRecording()
             assertTrue("Recording should stop successfully", recordingStopped)
             assertFalse("Should not be recording after stop", thermalRecorder.isRecording)
@@ -103,7 +103,7 @@ class ThermalCameraUSBPermissionTest {
 
     @Test
     fun `test thermal camera sensor properties`() {
-        
+
         assertEquals(
             "Sensor ID should be thermal_camera_1",
             "thermal_camera_1",

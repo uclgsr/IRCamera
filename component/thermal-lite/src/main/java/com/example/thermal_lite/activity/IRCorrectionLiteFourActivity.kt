@@ -17,7 +17,6 @@ import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 
 
-
 class IRCorrectionLiteFourActivity : BaseActivity() {
     private lateinit var binding: ActivityIrCorrectionLiteFourBinding
     val time = 60
@@ -28,7 +27,7 @@ class IRCorrectionLiteFourActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        
+
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 TipDialog.Builder(this@IRCorrectionLiteFourActivity)

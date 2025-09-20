@@ -214,7 +214,7 @@ public class BluetoothManager implements EventObserver {
 
         try {
             writeCharact = connection.getCharacteristic(UUID.fromString(UUIDManager.SERVICE_UUID), UUID.fromString(UUIDManager.WRITE_UUID));
-            connection.getGatt().setCharacteristicNotification(writeCharact, true); 
+            connection.getGatt().setCharacteristicNotification(writeCharact, true);
 
             writeCharact.setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE);
             writeCharact.setValue(data);
@@ -230,7 +230,7 @@ public class BluetoothManager implements EventObserver {
     @Override
     public void onCharacteristicRead(Request request, byte[] value) {
 
-        String data = StringUtils.toHex(value); 
+        String data = StringUtils.toHex(value);
 
     }
 

@@ -12,27 +12,23 @@ from typing import Any, Dict, List, Optional
 
 
 class GSRMode(Enum):
-
     LOCAL = "local"
     BRIDGED = "bridged"
 
 
 @dataclass
 class GSRSample:
-
     timestamp: float
     value: float
     quality: int
     device_id: str
 
     def to_dict(self) -> Dict[str, Any]:
-
         return asdict(self)
 
 
 @dataclass
 class GSRDataSet:
-
     session_id: str
     device_id: str
     mode: GSRMode
@@ -43,7 +39,6 @@ class GSRDataSet:
     quality_stats: Dict[str, float]
 
     def to_dict(self) -> Dict[str, Any]:
-
         return {
             "session_id": self.session_id,
             "device_id": self.device_id,

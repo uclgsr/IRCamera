@@ -96,7 +96,7 @@ public class Transformer {
 
     public float[] generateTransformedValuesBubble(IBubbleDataSet data, float phaseY, int from, int to) {
 
-        final int count = (to - from + 1) * 2; 
+        final int count = (to - from + 1) * 2;
 
         if (valuePointsForGenerateTransformedValuesBubble.length != count) {
             valuePointsForGenerateTransformedValuesBubble = new float[count];

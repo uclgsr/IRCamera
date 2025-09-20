@@ -66,18 +66,13 @@ android {
 dependencies {
     coreLibraryDesugaring(libs.desugar.jdk.libs)
     implementation(project(":libapp"))
-    // implementation(project(":libcom")) // CONSOLIDATED into libapp - already included via libapp
     implementation(project(":libir"))
     implementation(project(":libui"))
-    // implementation(project(":libmenu")) // CONSOLIDATED into libapp - already included via libapp
-    // implementation(project(":component:CommonComponent")) // CONSOLIDATED into thermal-lite
-    implementation(project(":component:pseudo"))
     implementation(project(":component:thermal-ir"))
     implementation(project(":BleModule"))
-    compileOnly(files("../../libir/libs/libAC020sdk_USB_IR_1.1.1_2408291439.aar")) 
-    compileOnly(files("../../libir/libs/libirutils_1.2.0_2409241055.aar")) 
-    compileOnly(files("../../libir/libs/libusbdualsdk_1.3.4_2406271906_standard.aar")) 
-    // compileOnly(files("../../app/libs/lms_international-3.90.009.0.aar")) // REMOVED - using stub implementation from libapp 
+    compileOnly(files("../../libir/libs/libAC020sdk_USB_IR_1.1.1_2408291439.aar"))
+    compileOnly(files("../../libir/libs/libirutils_1.2.0_2409241055.aar"))
+    compileOnly(files("../../libir/libs/libusbdualsdk_1.3.4_2406271906_standard.aar"))
     compileOnly(files("../../app/libs/libcommon_1.2.0_24052117.aar"))
     implementation(libs.bundles.ui.common)
     implementation(libs.utilcode)

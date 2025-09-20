@@ -195,7 +195,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
     }
 
     private fun initView() {
-        
+
         permissionController = PermissionController(this)
         permissionController.initialize()
 
@@ -236,7 +236,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             handleNetworkStatusClick()
         }
 
-        
+
         binding.thermalQuickAccess.setOnClickListener {
             launchThermalCamera()
         }
@@ -292,7 +292,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
 
         versionViewModel.updateLiveData.observe(this) {
             FirmwareUpDialog(this).apply {
-                titleStr = getString(com.topdon.lib.core.R.string.update_new_version)
+                titleStr = getString(com.mpdc4gsr.lib.core.R.string.update_new_version)
                 sizeStr = it.versionNo
                 contentStr = it.description
                 isShowCancel = !it.isForcedUpgrade
@@ -300,7 +300,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                     updateApk(it.downPageUrl)
                 }
                 onCancelClickListener = {
-                    SharedManager.setVersionCheckDate(System.currentTimeMillis()) 
+                    SharedManager.setVersionCheckDate(System.currentTimeMillis())
                 }
             }.show()
         }
@@ -371,7 +371,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         filename: String,
         targetFile: File,
     ) {
-        if (targetFile.exists()) { 
+        if (targetFile.exists()) {
             return
         }
         try {
@@ -389,7 +389,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         }
     }
 
-    
+
     private fun launchThermalCamera() {
         try {
             Log.i(TAG, "Launching thermal camera interface")
@@ -402,7 +402,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
     }
 
     private fun initData() {
-        
+
         requestAllPermissions()
 
         Log.i(
@@ -415,27 +415,27 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         permissionController.ensureAll { allGranted, deniedPermissions ->
             if (allGranted) {
                 Log.i(TAG, "All permissions granted - full functionality enabled")
-                
+
                 onAllPermissionsGranted()
             } else {
                 Log.w(TAG, "Some permissions denied: ${deniedPermissions.joinToString(", ")}")
-                
+
                 onPartialPermissions(deniedPermissions)
             }
         }
     }
 
     private fun onAllPermissionsGranted() {
-        
+
         Log.i(TAG, "Full multi-sensor recording functionality available")
-        
+
     }
 
     private fun onPartialPermissions(deniedPermissions: List<String>) {
-        
+
         val permissionNames = permissionController.getPermissionNames(deniedPermissions)
 
-        
+
         val message = "Some features may be limited due to missing permissions: ${
             permissionNames.joinToString(", ")
         }"
@@ -461,29 +461,29 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
-        
+
         permissionController.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        
+
         permissionController.onActivityResult(requestCode, resultCode)
     }
 
     override fun onClick(v: View?) {
         when (v) {
-            binding.clIconGallery -> { 
-                
+            binding.clIconGallery -> {
+
                 binding.viewPage.setCurrentItem(0, false)
             }
 
-            binding.viewMain -> { 
+            binding.viewMain -> {
                 binding.viewPage.setCurrentItem(1, false)
             }
 
-            binding.clIconMine -> { 
+            binding.clIconMine -> {
                 binding.viewPage.setCurrentItem(2, false)
             }
         }
@@ -525,7 +525,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         binding.ivBottomMainBg.setImageResource(R.drawable.ic_main_bg_not_select)
 
         when (index) {
-            0 -> { 
+            0 -> {
                 binding.ivIconGallery.isSelected = true
                 binding.tvIconGallery.isSelected = true
             }
@@ -534,7 +534,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                 binding.ivBottomMainBg.setImageResource(R.drawable.ic_main_bg_select)
             }
 
-            2 -> { 
+            2 -> {
                 binding.ivIconMine.isSelected = true
                 binding.tvIconMine.isSelected = true
             }
@@ -543,13 +543,13 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
 
     override fun connected() {
         if (SharedManager.isConnectAutoOpen) {
-            
+
             if (permissionController.canStartRecording()) {
                 Log.i(
                     TAG,
                     "Camera permissions available - device connected and ready for recording"
                 )
-                
+
             } else {
                 Log.w(TAG, "Camera permissions missing - requesting permissions")
                 permissionController.ensureAll { granted, _ ->
@@ -594,7 +594,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
     }
 
     override fun onSocketDisConnected(isTS004: Boolean) {
-        if (lifecycle.currentState.isAtLeast(Lifecycle.State.CREATED) && isTS004) { 
+        if (lifecycle.currentState.isAtLeast(Lifecycle.State.CREATED) && isTS004) {
             dialogDisconnect()
         }
     }
@@ -626,10 +626,10 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
 
 
     fun jumpIRActivity() {
-        
-        
+
+
         if (permissionController.canStartRecording()) {
-            
+
             when {
                 DeviceTools.isTC001PlusConnect() -> {
                     NavigationManager.build(RouterConfig.IR_MAIN).navigation(this@MainActivity)
@@ -652,7 +652,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                 }
             }
         } else {
-            
+
             Toast.makeText(
                 this,
                 "Camera permission required for thermal imaging",
@@ -660,7 +660,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             ).show()
             permissionController.ensureAll { granted, _ ->
                 if (granted && permissionController.canStartRecording()) {
-                    jumpIRActivity() 
+                    jumpIRActivity()
                 }
             }
         }
@@ -1260,8 +1260,8 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
 
     private fun enableAutoReconnection() {
         lifecycleScope.launch {
-            var reconnectDelay = 5000L 
-            val maxDelay = 60000L 
+            var reconnectDelay = 5000L
+            val maxDelay = 60000L
 
             while (!isFinishing) {
                 if (connectionStatus == ConnectionStatus.ERROR ||
@@ -1274,14 +1274,14 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                     val success = tryReconnection()
                     if (success) {
                         Log.i(TAG, "Auto-reconnection successful")
-                        reconnectDelay = 5000L 
+                        reconnectDelay = 5000L
                     } else {
                         Log.w(TAG, "Auto-reconnection failed, retrying in ${reconnectDelay}ms")
                         kotlinx.coroutines.delay(reconnectDelay)
-                        reconnectDelay = minOf(reconnectDelay * 2, maxDelay) 
+                        reconnectDelay = minOf(reconnectDelay * 2, maxDelay)
                     }
                 } else {
-                    kotlinx.coroutines.delay(10000L) 
+                    kotlinx.coroutines.delay(10000L)
                 }
             }
         }
@@ -1350,7 +1350,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                     }
                 }
 
-                kotlinx.coroutines.delay(30000L) 
+                kotlinx.coroutines.delay(30000L)
             }
         }
     }
@@ -1557,7 +1557,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             "192.168.1.100", "192.168.1.101", "192.168.1.102",
             "192.168.0.100", "192.168.0.101", "192.168.0.102",
             "10.0.0.100", "10.0.0.101", "10.0.0.102",
-            "127.0.0.1" 
+            "127.0.0.1"
         )
 
         Toast.makeText(this, "Trying common IP addresses...", Toast.LENGTH_SHORT).show()
@@ -1566,7 +1566,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             var connected = false
 
             for (ip in commonIPs) {
-                if (connected) break 
+                if (connected) break
 
                 Log.i(TAG, "Trying to connect to $ip")
                 updateConnectionStatus(ConnectionStatus.CONNECTING)
@@ -1675,7 +1675,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                         }
 
                         1 -> {
-                            
+
                             Toast.makeText(
                                 this,
                                 "GSR functionality available in GSR Settings",

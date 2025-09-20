@@ -1,5 +1,3 @@
-
-
 package com.mpdc4gsr.module.thermal.ir.utils;
 
 
@@ -152,7 +150,7 @@ public class HexDump {
         return value;
     }
 
-    
+
     public static byte[] intToBytes(int value) {
         byte[] src = new byte[4];
         src[3] = (byte) ((value >> 24) & 0xFF);
@@ -175,7 +173,7 @@ public class HexDump {
         int fbit = Float.floatToIntBits(num);
 
         for (int i = 0; i < 4; i++) {
-            numbyte[i] = (byte) (fbit >> (i * 8)); 
+            numbyte[i] = (byte) (fbit >> (i * 8));
         }
     }
 }

@@ -6,14 +6,12 @@ import time
 
 from ..core.hub_coordinator import HubCoordinator, SyncMarkerType
 
-
 import logging
 
 logging.basicConfig(level=logging.INFO)
 
 
 async def main():
-
     print("=== Enhanced Hub-Spoke Architecture Demo ===")
     print("PC Controller (Hub) with Android Sensor Nodes (Spokes)")
     print("Features: NTP-like time sync, session coordination, device management\n")
@@ -149,7 +147,6 @@ async def main():
 
 
 def run_demo():
-
     try:
         asyncio.run(main())
     except KeyboardInterrupt:

@@ -70,11 +70,11 @@ class ConnectionImpl implements Connection, ScanListener {
     private BluetoothGatt bluetoothGatt;
     private GenericRequest currentRequest;
     private boolean isReleased;
-    private long connStartTime; 
+    private long connStartTime;
     private int refreshCount;
     private int tryReconnectCount;
     private ConnectionState lastConnectionState;
-    private int reconnectImmediatelyCount = 0; 
+    private int reconnectImmediatelyCount = 0;
     private boolean refreshing;
     private boolean isActiveDisconnect;
     private long lastScanStopTime;
@@ -133,8 +133,8 @@ class ConnectionImpl implements Connection, ScanListener {
         posterDispatcher = easyBle.getPosterDispatcher();
         connHandler = new ConnHandler(this);
         connStartTime = System.currentTimeMillis();
-        connHandler.sendEmptyMessageDelayed(MSG_CONNECT, connectDelay); 
-        connHandler.sendEmptyMessageDelayed(MSG_TIMER, connectDelay); 
+        connHandler.sendEmptyMessageDelayed(MSG_CONNECT, connectDelay);
+        connHandler.sendEmptyMessageDelayed(MSG_TIMER, connectDelay);
         easyBle.addScanListener(this);
     }
 
@@ -717,7 +717,7 @@ class ConnectionImpl implements Connection, ScanListener {
             }
             if (value.length > options.packageSize) {
                 List<byte[]> list = MathUtils.splitPackage(value, options.packageSize);
-                if (!options.isWaitWriteResult) { 
+                if (!options.isWaitWriteResult) {
                     int delay = options.packageWriteDelayMillis;
                     for (int i = 0; i < list.size(); i++) {
                         byte[] bytes = list.get(i);
@@ -737,7 +737,7 @@ class ConnectionImpl implements Connection, ScanListener {
                         }
                     }
                     printWriteLog(request, list.size(), list.size(), list.get(list.size() - 1));
-                } else { 
+                } else {
                     request.remainQueue = new ConcurrentLinkedQueue<>();
                     request.remainQueue.addAll(list);
                     request.sendingBytes = request.remainQueue.remove();
@@ -970,7 +970,7 @@ class ConnectionImpl implements Connection, ScanListener {
     private void release(boolean noEvent) {
         if (!isReleased) {
             isReleased = true;
-            configuration.setAutoReconnect(false); 
+            configuration.setAutoReconnect(false);
             connHandler.removeCallbacksAndMessages(null);
             easyBle.removeScanListener(this);
             clearRequestQueueAndNotify();

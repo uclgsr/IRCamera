@@ -135,10 +135,10 @@ class SessionManagerActivity : BaseBindingActivity<ActivitySessionManagerBinding
 
         scope.launch {
             try {
-                
+
                 displayStorageInfo()
 
-                
+
                 val cleanedSessions = withContext(Dispatchers.IO) {
                     sessionDirectoryManager.cleanupFailedSessions()
                 }
@@ -290,12 +290,12 @@ class SessionManagerActivity : BaseBindingActivity<ActivitySessionManagerBinding
 
         val filtered =
             when (filterIndex) {
-                0 -> baseList 
-                1 -> baseList.filter { it.isActive() } 
-                2 -> baseList.filter { !it.isActive() } 
-                3 -> baseList.filter { it.hasGSRData } 
-                4 -> baseList.filter { it.hasRGBData } 
-                5 -> baseList.filter { it.hasThermalData } 
+                0 -> baseList
+                1 -> baseList.filter { it.isActive() }
+                2 -> baseList.filter { !it.isActive() }
+                3 -> baseList.filter { it.hasGSRData }
+                4 -> baseList.filter { it.hasRGBData }
+                5 -> baseList.filter { it.hasThermalData }
                 else -> baseList
             }
 

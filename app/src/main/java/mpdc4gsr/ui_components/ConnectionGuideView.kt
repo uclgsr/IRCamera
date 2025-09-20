@@ -72,7 +72,7 @@ class ConnectionGuideView : LinearLayout {
     }
 
     fun getCompoundDrawables(content: String) {
-        var mContent = "$content  " 
+        var mContent = "$content  "
         val spannableString = SpannableString(mContent)
         val drawable = context.getDrawable(UiR.drawable.ic_connection_press_tip)
         drawable!!.setBounds(0, 0, drawable.minimumWidth, drawable.minimumHeight)

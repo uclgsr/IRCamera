@@ -15,9 +15,8 @@ import com.infisense.usbir.utils.OpencvTools
 import com.infisense.usbir.utils.PseudocodeUtils
 import com.mpdc4gsr.lib.core.bean.AlarmBean
 
-import com.mpdc4gsr.module.thermal.ir.bean.DataBean 
+import com.mpdc4gsr.module.thermal.ir.bean.DataBean
 import java.nio.ByteBuffer
-
 
 
 class HikSurfaceView : SurfaceView {
@@ -61,7 +60,7 @@ class HikSurfaceView : SurfaceView {
     @Volatile
     private var pseudoType: PseudoColorType = PseudoColorType.PSEUDO_3
 
-    
+
     fun setPseudoCode(code: Int) {
         pseudoType = PseudocodeUtils.changePseudocodeModeByOld(code)
     }

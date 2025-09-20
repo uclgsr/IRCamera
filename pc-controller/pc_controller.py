@@ -10,11 +10,10 @@ import argparse
 from datetime import datetime, timezone
 from typing import Dict, List
 
-
 import logging
+
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
-
 
 try:
     from PyQt6.QtWidgets import (QApplication, QMainWindow, QVBoxLayout, QHBoxLayout,
@@ -22,8 +21,10 @@ try:
                                  QStatusBar, QFileDialog, QMessageBox, QTabWidget, QGroupBox)
     from PyQt6.QtCore import QTimer, QThread, Qt
     from PyQt6.QtGui import QAction
+
     try:
         import pyqtgraph as pg
+
         PYQTGRAPH_AVAILABLE = True
     except ImportError:
         PYQTGRAPH_AVAILABLE = False
@@ -32,12 +33,15 @@ try:
 except ImportError:
     GUI_AVAILABLE = False
     logger.info("💻 Running in CLI mode (PyQt6 not available)")
+
+
     # Define dummy classes to avoid errors
     class QThread:
         pass
+
+
     class QMainWindow:
         pass
-
 
 try:
     import os
@@ -46,6 +50,7 @@ try:
     if os.path.exists(native_backend_path):
         sys.path.insert(0, native_backend_path)
     import native_backend
+
     NATIVE_BACKEND_AVAILABLE = True
     logger.info("🚀 Native C++ backend available for high-performance processing")
 except ImportError:
@@ -585,7 +590,6 @@ class MVPPCController:
 
 
 def main():
-
     parser = argparse.ArgumentParser(description='IRCamera PC Controller - Complete Implementation')
     parser.add_argument('--duration', type=int, default=30, help='Demo duration in seconds')
     parser.add_argument('--gui', action='store_true', help='Force GUI mode')
@@ -630,7 +634,6 @@ def main():
             use_gui = False
 
     if not use_gui:
-
         controller = MVPPCController()
         controller.run_demo(duration=args.duration)
 

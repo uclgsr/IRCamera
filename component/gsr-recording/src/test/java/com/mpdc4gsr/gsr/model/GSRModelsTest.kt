@@ -39,14 +39,14 @@ class GSRModelsTest {
 
         val csvRow = sample.toCsvRow()
 
-        assertEquals(7, csvRow.size) 
+        assertEquals(7, csvRow.size)
         assertEquals("1234567890", csvRow[0])
         assertEquals("1234567891", csvRow[1])
         assertEquals("12.345678", csvRow[2])
         assertEquals("80.987654", csvRow[3])
-        assertEquals("2048", csvRow[4]) 
-        assertEquals("100", csvRow[5]) 
-        assertEquals("test_session", csvRow[6]) 
+        assertEquals("2048", csvRow[4])
+        assertEquals("100", csvRow[5])
+        assertEquals("test_session", csvRow[6])
     }
 
     @Test
@@ -59,7 +59,7 @@ class GSRModelsTest {
         assertEquals(startTime, session.startTime)
         assertNull(session.endTime)
         assertTrue(session.isActive())
-        assertTrue(session.getDurationMs() >= 0) 
+        assertTrue(session.getDurationMs() >= 0)
 
         session.endTime = startTime + 5000
         assertFalse(session.isActive())
@@ -110,6 +110,6 @@ class GSRModelsTest {
             )
 
         val csvRow = syncMark.toCsvRow()
-        assertEquals("", csvRow[4]) 
+        assertEquals("", csvRow[4])
     }
 }

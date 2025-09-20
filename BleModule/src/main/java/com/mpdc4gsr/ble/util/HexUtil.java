@@ -97,7 +97,7 @@ public class HexUtil {
 
     public static byte[] hexToByte(String hex) {
         int m = 0, n = 0;
-        int byteLen = hex.length() / 2; 
+        int byteLen = hex.length() / 2;
         byte[] ret = new byte[byteLen];
         for (int i = 0; i < byteLen; i++) {
             m = i * 2 + 1;
@@ -133,7 +133,7 @@ public class HexUtil {
             }
 
             byte[] buffer = new byte[in.available()];
-            in.read(buffer);  
+            in.read(buffer);
             return buffer;
         } catch (FileNotFoundException e) {
             e.printStackTrace();

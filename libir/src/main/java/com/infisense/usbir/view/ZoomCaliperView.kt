@@ -27,7 +27,7 @@ class ZoomCaliperView : LinearLayout, ScaleGestureDetector.OnScaleGestureListene
     private var isReverse: Boolean = false
     private lateinit var mTextureView: View
     private var canScale = false
-    private var def_caliper = 180f 
+    private var def_caliper = 180f
     var magnifier: Magnifier? = null
     var textureMagnifier: Magnifier? = null
     var m: Float = 0.0f
@@ -55,7 +55,7 @@ class ZoomCaliperView : LinearLayout, ScaleGestureDetector.OnScaleGestureListene
             context,
             R.drawable.svg_ic_target_horizontal_person_green
         ) as? BitmapDrawable)?.bitmap
-            ?: return 
+            ?: return
 
         originalBitmapWidth = originalBitmap.width.toFloat()
         originalBitmapHeight = originalBitmap.height.toFloat()
@@ -104,7 +104,7 @@ class ZoomCaliperView : LinearLayout, ScaleGestureDetector.OnScaleGestureListene
         super.onDetachedFromWindow()
     }
 
-    private var startX = 0f 
+    private var startX = 0f
     private var startY = 0f
     private var moveX = 0f
     private var moveY = 0f
@@ -112,7 +112,7 @@ class ZoomCaliperView : LinearLayout, ScaleGestureDetector.OnScaleGestureListene
     private var parentViewH = 0f
     private var isScale = false
     private var scale = 1f
-    private var scaleW = 0f 
+    private var scaleW = 0f
     private var scaleH = 0f
 
     private lateinit var originalBitmap: Bitmap
@@ -279,7 +279,7 @@ class ZoomCaliperView : LinearLayout, ScaleGestureDetector.OnScaleGestureListene
     override fun onScaleEnd(detector: ScaleGestureDetector) {
     }
 
-    
+
     private var mPreviewSize: Size? = null
 
     fun setRotation(isReverse: Boolean) {

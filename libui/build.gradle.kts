@@ -1,8 +1,8 @@
 plugins {
     id("com.android.library")
-    kotlin("android") 
-    id("com.google.devtools.ksp") 
-    id("kotlin-parcelize") 
+    kotlin("android")
+    id("com.google.devtools.ksp")
+    id("kotlin-parcelize")
 }
 
 ksp {
@@ -73,7 +73,6 @@ android {
 dependencies {
     coreLibraryDesugaring(libs.desugar.jdk.libs)
     implementation(project(":libapp"))
-    // implementation(project(":libmenu")) // CONSOLIDATED into :libapp
     implementation(project(":BleModule"))
     implementation(libs.bundles.ui.common)
 }

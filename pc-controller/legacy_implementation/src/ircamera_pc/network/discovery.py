@@ -1,5 +1,3 @@
-
-
 import asyncio
 import socket
 from dataclasses import dataclass
@@ -37,6 +35,7 @@ except ImportError:
             def error(self, msg) -> Any:
                 print(f"ERROR: {e}")
 
+
         logger = FallbackLogger()
 
 try:
@@ -51,11 +50,11 @@ except ImportError:
             }
             return config_map.get(key, default)
 
+
     config = FallbackConfig()
 
 
 class DeviceType(Enum):
-
     PC_CONTROLLER = "PC_CONTROLLER"
     # THERMAL_CAMERA_TS004 removed
     # THERMAL_CAMERA_TC007 removed
@@ -66,7 +65,6 @@ class DeviceType(Enum):
 
 @dataclass
 class DiscoveredDevice:
-
     service_name: str
     service_type: str
     ip_address: str
@@ -85,7 +83,6 @@ class DiscoveredDevice:
 
 
 class NetworkDiscoveryService:
-
     SERVICE_TYPE_PC_CONTROLLER = "_topdon-pc._tcp.local."
     SERVICE_TYPE_THERMAL_CAMERA = "_topdon-thermal._tcp.local."
     SERVICE_TYPE_ANDROID_NODE = "_topdon-android._tcp.local."

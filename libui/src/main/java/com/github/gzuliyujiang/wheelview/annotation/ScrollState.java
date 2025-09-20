@@ -1,5 +1,3 @@
-
-
 package com.github.gzuliyujiang.wheelview.annotation;
 
 import java.lang.annotation.Retention;

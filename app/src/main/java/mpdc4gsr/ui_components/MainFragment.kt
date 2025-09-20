@@ -216,7 +216,7 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
 
     override fun onClick(v: View?) {
         when (v) {
-            binding.tvConnectDevice, binding.ivAdd -> { 
+            binding.tvConnectDevice, binding.ivAdd -> {
                 startActivity(Intent(requireContext(), DeviceTypeActivity::class.java))
 
 
@@ -226,8 +226,8 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onSocketMsgEvent(event: SocketMsgEvent) {
-        if (SocketCmdUtil.getCmdResponse(event.text) == WsCmdConstants.APP_EVENT_HEART_BEATS) { 
-            if (!adapter.hasConnectTC007) { 
+        if (SocketCmdUtil.getCmdResponse(event.text) == WsCmdConstants.APP_EVENT_HEART_BEATS) {
+            if (!adapter.hasConnectTC007) {
                 return
             }
             try {
@@ -457,11 +457,11 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
             .setTitleMessage("GSR Multi-modal Recording")
             .setMessage("Choose recording option:")
             .setPositiveListener("Dual-Mode Camera") {
-                
+
                 showDualModeCameraOptions()
             }
             .setCancelListener("Quick Recording") {
-                
+
                 try {
                     val intent = Intent(
                         requireContext(),
@@ -469,19 +469,14 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
                     )
                     startActivity(intent)
                 } catch (e: ClassNotFoundException) {
-                    
+
                     NavigationManager.getInstance()
                         .build(RouterConfig.GSR_MULTI_MODAL)
                         .navigation(requireContext())
                 }
             }
-            
-            
-            
-            
-            
-            
-            
+
+
             .create().show()
     }
 

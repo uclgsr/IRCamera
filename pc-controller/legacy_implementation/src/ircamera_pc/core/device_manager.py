@@ -1,5 +1,3 @@
-
-
 import asyncio
 from dataclasses import asdict, dataclass, field
 from datetime import datetime, timezone
@@ -15,7 +13,6 @@ from ..network.discovery import DeviceType, DiscoveredDevice, NetworkDiscoverySe
 
 
 class DeviceConnectionState(Enum):
-
     DISCOVERED = "discovered"
     ONLINE = "online"
     RECORDING = "recording"
@@ -24,7 +21,6 @@ class DeviceConnectionState(Enum):
 
 
 class ConnectionQuality(Enum):
-
     EXCELLENT = "excellent"
     GOOD = "good"
     POOR = "poor"
@@ -33,7 +29,6 @@ class ConnectionQuality(Enum):
 
 @dataclass
 class DeviceCapabilities:
-
     supports_rgb_camera: bool = False
     supports_thermal_camera: bool = False
     supports_gsr_sensor: bool = False
@@ -46,7 +41,6 @@ class DeviceCapabilities:
 
 @dataclass
 class DeviceInfo:
-
     device_id: str
     device_name: str
     device_type: DeviceType

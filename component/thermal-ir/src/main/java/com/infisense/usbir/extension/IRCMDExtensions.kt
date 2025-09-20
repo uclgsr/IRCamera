@@ -41,7 +41,7 @@ fun IRCMD.setAutoShutter(enabled: Boolean) {
 fun IRCMD.setPropDdeLevel(level: Int) {
     try {
 
-        val clampedLevel = level.coerceIn(0, 255) 
+        val clampedLevel = level.coerceIn(0, 255)
         val result = nativeSetProperty("dde_level", clampedLevel)
         Log.d(TAG, "DDE level set to $clampedLevel, result: $result")
     } catch (e: Exception) {
@@ -52,7 +52,7 @@ fun IRCMD.setPropDdeLevel(level: Int) {
 fun IRCMD.setContrast(level: Int) {
     try {
 
-        val clampedLevel = level.coerceIn(0, 255) 
+        val clampedLevel = level.coerceIn(0, 255)
         val result = nativeSetProperty("contrast", clampedLevel)
         Log.d(TAG, "Contrast set to $clampedLevel, result: $result")
     } catch (e: Exception) {
@@ -70,7 +70,7 @@ private fun IRCMD.nativeSetProperty(
 
 
         Log.d(TAG, "Setting $property to $value via native IRCMD interface")
-        true 
+        true
     } catch (e: Exception) {
         Log.e(TAG, "Native property set failed for $property: ${e.message}")
         false

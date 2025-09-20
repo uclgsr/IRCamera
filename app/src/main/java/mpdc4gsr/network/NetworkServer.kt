@@ -30,7 +30,7 @@ class NetworkServer(
 ) {
     companion object {
         private const val TAG = "NetworkServer"
-        private const val MAX_MESSAGE_SIZE = 10 * 1024 * 1024 
+        private const val MAX_MESSAGE_SIZE = 10 * 1024 * 1024
     }
 
     private var serverSocket: ServerSocket? = null
@@ -166,7 +166,7 @@ class NetworkServer(
                 break
             } catch (e: Exception) {
                 Log.e(TAG, "Error accepting connection", e)
-                delay(1000) 
+                delay(1000)
             }
         }
     }

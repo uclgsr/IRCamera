@@ -7,7 +7,7 @@
     android:background="@drawable/rounded_background"
     android:padding="16dp">
 
-    
+
     <TextView
         android:id="@+id/mode_title"
         android:layout_width="0dp"
@@ -20,7 +20,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    
+
     <RadioGroup
         android:id="@+id/mode_segmented_control"
         android:layout_width="0dp"
@@ -75,7 +75,7 @@
 
     </RadioGroup>
 
-    
+
     <ProgressBar
         android:id="@+id/switching_progress_bar"
         android:layout_width="24dp"
@@ -87,7 +87,7 @@
         app:layout_constraintStart_toStartOf="@id/mode_segmented_control"
         app:layout_constraintTop_toTopOf="@id/mode_segmented_control" />
 
-    
+
     <TextView
         android:id="@+id/mode_info_text"
         android:layout_width="0dp"
@@ -101,7 +101,7 @@
         app:layout_constraintTop_toBottomOf="@id/mode_segmented_control"
         tools:text="Preview mode only\nLow power consumption" />
 
-    
+
     <TextView
         android:id="@+id/performance_warning"
         android:layout_width="0dp"
@@ -120,7 +120,7 @@
         tools:text="RAW mode uses significant memory and storage"
         tools:visibility="visible" />
 
-    
+
     <TextView
         android:id="@+id/device_compatibility_info"
         android:layout_width="0dp"

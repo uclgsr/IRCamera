@@ -1,54 +1,54 @@
 {
-    "github.copilot.enable": {
-        "*": true,
-        "plaintext": true,
-        "markdown": true,
-        "scminput": false,
-        "yaml": true,
-        "json": true,
-        "kotlin": true,
-        "java": true,
-        "python": true,
-        "shell": true,
-        "gradle": true
-    },
-    "github.copilot.advanced": {
-        "config_key": "github.copilot.enable",
-        "length": 500,
-        "temperature": "",
-        "top_p": "",
-        "stop_sequences": [],
-        "inlineSuggestEnable": true,
-        "listCount": 10,
-        "debug.showScores": false
-    },
-    "python.defaultInterpreterPath": "./pc-controller/venv/bin/python",
-    "python.analysis.extraPaths": [
-        "./pc-controller/src"
-    ],
-    "files.associations": {
-        "*.gradle": "gradle",
-        "*.gradle.kts": "kotlin",
-        "dev.sh": "shellscript"
-    },
-    "files.exclude": {
-        "**/build/": true,
-        "**/.gradle/": true,
-        "**/node_modules/": true,
-        "**/.git/": true,
-        "**/.svn": true,
-        "**/.hg": true,
-        "**/CVS": true,
-        "**/.DS_Store": true,
-        "**/Thumbs.db": true,
-        "**/__pycache__/": true,
-        "**/*.pyc": true
-    },
-    "java.configuration.updateBuildConfiguration": "automatic",
-    "kotlin.languageServer.enabled": true,
-    "editor.suggestSelection": "first",
-    "editor.inlineSuggest.enabled": true,
-    "editor.tabCompletion": "on",
-    "workbench.colorTheme": "Default Dark+",
-    "terminal.integrated.defaultProfile.linux": "bash"
+  "github.copilot.enable": {
+    "*": true,
+    "plaintext": true,
+    "markdown": true,
+    "scminput": false,
+    "yaml": true,
+    "json": true,
+    "kotlin": true,
+    "java": true,
+    "python": true,
+    "shell": true,
+    "gradle": true
+  },
+  "github.copilot.advanced": {
+    "config_key": "github.copilot.enable",
+    "length": 500,
+    "temperature": "",
+    "top_p": "",
+    "stop_sequences": [],
+    "inlineSuggestEnable": true,
+    "listCount": 10,
+    "debug.showScores": false
+  },
+  "python.defaultInterpreterPath": "./pc-controller/venv/bin/python",
+  "python.analysis.extraPaths": [
+    "./pc-controller/src"
+  ],
+  "files.associations": {
+    "*.gradle": "gradle",
+    "*.gradle.kts": "kotlin",
+    "dev.sh": "shellscript"
+  },
+  "files.exclude": {
+    "**/build/": true,
+    "**/.gradle/": true,
+    "**/node_modules/": true,
+    "**/.git/": true,
+    "**/.svn": true,
+    "**/.hg": true,
+    "**/CVS": true,
+    "**/.DS_Store": true,
+    "**/Thumbs.db": true,
+    "**/__pycache__/": true,
+    "**/*.pyc": true
+  },
+  "java.configuration.updateBuildConfiguration": "automatic",
+  "kotlin.languageServer.enabled": true,
+  "editor.suggestSelection": "first",
+  "editor.inlineSuggest.enabled": true,
+  "editor.tabCompletion": "on",
+  "workbench.colorTheme": "Default Dark+",
+  "terminal.integrated.defaultProfile.linux": "bash"
 }

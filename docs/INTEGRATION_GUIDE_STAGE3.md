@@ -1,6 +1,7 @@
 # Integration Guide: Samsung Stage3/Level3 RAW DNG Recording
 
-This guide provides step-by-step instructions for integrating the Samsung Stage3/Level3 RAW DNG recording functionality into camera applications.
+This guide provides step-by-step instructions for integrating the Samsung Stage3/Level3 RAW DNG recording functionality
+into camera applications.
 
 ## Quick Start
 
@@ -203,6 +204,7 @@ fun optimizeForStage3Battery() {
 ## Troubleshooting Common Issues
 
 ### Issue: DNG Files Not Created
+
 ```kotlin
 // Check if camera characteristics are available
 val characteristics = cameraController.getCameraCharacteristics()
@@ -213,6 +215,7 @@ if (characteristics == null) {
 ```
 
 ### Issue: Stage3/Level3 Toggle Not Visible
+
 ```kotlin
 // Ensure the toggle is made visible for compatible devices
 val isCompatible = checkStage3Compatibility()
@@ -224,6 +227,7 @@ if (!isCompatible) {
 ```
 
 ### Issue: High Storage Usage
+
 ```kotlin
 // Monitor storage during recording
 fun monitorStage3Storage() {
@@ -299,4 +303,5 @@ class CameraActivity : AppCompatActivity() {
 }
 ```
 
-This integration guide provides the essential patterns for implementing Stage3/Level3 RAW DNG recording in camera applications.
+This integration guide provides the essential patterns for implementing Stage3/Level3 RAW DNG recording in camera
+applications.

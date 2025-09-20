@@ -1,5 +1,3 @@
-
-
 import asyncio
 from datetime import datetime
 from typing import Dict, Optional
@@ -32,7 +30,6 @@ from ..core.session_manager import AdvancedSessionManager, SessionConfiguration,
 
 
 class DeviceDashboardWidget(QWidget):
-
     device_connect_requested = pyqtSignal(str)
     device_disconnect_requested = pyqtSignal(str)
     device_refresh_requested = pyqtSignal()
@@ -198,7 +195,6 @@ class DeviceDashboardWidget(QWidget):
 
 
 class SessionControlWidget(QWidget):
-
     create_session_requested = pyqtSignal(str, dict)
     start_recording_requested = pyqtSignal()
     stop_recording_requested = pyqtSignal()
@@ -306,7 +302,6 @@ class SessionControlWidget(QWidget):
         )
 
         if ok and session_name.strip():
-
             config = {
                 "modalities": ["rgb", "thermal", "gsr"],
                 "auto_start": False

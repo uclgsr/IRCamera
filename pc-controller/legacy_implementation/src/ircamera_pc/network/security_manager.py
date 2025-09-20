@@ -1,5 +1,3 @@
-
-
 import asyncio
 import hashlib
 import hmac
@@ -18,7 +16,6 @@ try:
 except ImportError:
     logger = logging.getLogger(__name__)
 
-
 CERTIFICATE_VALIDITY_DAYS = 365
 TOKEN_VALIDITY_HOURS = 24
 MAX_FAILED_ATTEMPTS = 5
@@ -27,7 +24,6 @@ MONITORING_INTERVAL_SECONDS = 30
 
 
 class AuthLevel(Enum):
-
     NONE = 0
     BASIC = 1
     CERTIFICATE = 2
@@ -36,7 +32,6 @@ class AuthLevel(Enum):
 
 
 class DeviceRole(Enum):
-
     GUEST = (0, {"view_status"})
     OBSERVER = (1, {"view_status", "view_sessions", "download_data"})
     OPERATOR = (
@@ -72,7 +67,6 @@ class DeviceRole(Enum):
 
 
 class AlertSeverity(Enum):
-
     LOW = 1
     MEDIUM = 2
     HIGH = 3
@@ -81,7 +75,6 @@ class AlertSeverity(Enum):
 
 @dataclass
 class AuthenticationContext:
-
     device_id: str
     auth_level: AuthLevel
     role: DeviceRole
@@ -111,7 +104,6 @@ class AuthenticationContext:
 
 @dataclass
 class SecurityAlert:
-
     id: str
     alert_type: str
     severity: AlertSeverity
@@ -583,19 +575,16 @@ class EnhancedSecurityManager:
         logger.info("Enhanced security manager initialized")
 
     async def initialize(self) -> Any:
-
         await self.security_monitor.start_monitoring()
         logger.info("Enhanced security system fully initialized")
 
     def shutdown(self) -> Any:
-
         self.security_monitor.stop_monitoring()
         logger.info("Enhanced security system shutdown complete")
 
     async def authenticate_device(
             self, device_id: str, auth_level: AuthLevel, credentials: Dict[str, Any]
     ) -> Tuple[bool, Optional[AuthenticationContext], str]:
-
         success, context, reason = await self.auth_manager.authenticate(
             device_id, auth_level, credentials
         )
@@ -607,15 +596,12 @@ class EnhancedSecurityManager:
         return success, context, reason
 
     def validate_session(self, token: str) -> Optional[AuthenticationContext]:
-
         return self.auth_manager.validate_session_token(token)
 
     def check_permission(self, token: str, permission: str) -> bool:
-
         return self.auth_manager.has_permission(token, permission)
 
     def get_comprehensive_diagnostics(self) -> Dict[str, Any]:
-
         return {
             "authentication": self.auth_manager.get_diagnostics(),
             "monitoring": self.security_monitor.get_monitoring_statistics(),

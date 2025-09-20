@@ -4,7 +4,7 @@ import com.blankj.utilcode.util.GsonUtils
 
 
 class ReportData {
-    
+
     var code = 0
     var data: DataBean? = null
     var msg: String? = null

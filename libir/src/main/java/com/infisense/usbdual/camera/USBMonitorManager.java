@@ -44,7 +44,7 @@ public class USBMonitorManager {
     private short[] kt_low = new short[1201];
     private short[] bt_high = new short[1201];
     private short[] bt_low = new short[1201];
-    private boolean isGetNucFromFlash; 
+    private boolean isGetNucFromFlash;
     private CommonParams.GainStatus gainStatus = CommonParams.GainStatus.HIGH_GAIN;
     private int[] curVtemp = new int[1];
     private List<OnUSBConnectListener> mOnUSBConnectListeners = new ArrayList<>();
@@ -84,8 +84,8 @@ public class USBMonitorManager {
         this.mDefaultDataFlowMode = defaultDataFlowMode;
         if (defaultDataFlowMode == CommonParams.DataFlowMode.IMAGE_AND_TEMP_OUTPUT) {
 
-            cameraWidth = 256; 
-            cameraHeight = 384; 
+            cameraWidth = 256;
+            cameraHeight = 384;
         } else {
 
             cameraWidth = 256;

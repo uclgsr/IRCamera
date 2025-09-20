@@ -39,7 +39,7 @@ object IRTool {
         )
     }
 
-    
+
     fun basicGainSet(gainType: Int) {
         if (gainType == CameraItemBean.TYPE_TMP_ZD) {
             CameraPreviewManager.getInstance().setAutoSwitchGainEnable(true)
@@ -87,7 +87,7 @@ object IRTool {
         Log.d(TAG, "basicGlobalContrastLevelSet=$basicMirrorAndFlipStatusSet")
     }
 
-    
+
     fun onceAuto(): Boolean {
 
         DeviceIrcmdControlManager.getInstance().getIrcmdEngine()
@@ -135,19 +135,19 @@ object IRTool {
             )
     }
 
-    
+
     fun advEnvCorrectEMSSet(value: Int) {
         DeviceIrcmdControlManager.getInstance().getIrcmdEngine()
             .advEnvCorrectEMSSet(value)
     }
 
-    
+
     fun advEnvCorrectTUSet(value: Int) {
         DeviceIrcmdControlManager.getInstance().getIrcmdEngine()
             ?.advEnvCorrectTUSet(value)
     }
 
-    
+
     fun temperatureCorrection(
         temp: Float,
         params_array: FloatArray,

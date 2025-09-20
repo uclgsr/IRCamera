@@ -30,14 +30,14 @@ class SessionManager(
     companion object {
         private const val TAG = "SessionManager"
 
-        
-        private const val SESSION_HEARTBEAT_INTERVAL_MS = 10000L 
-        private const val SESSION_TIMEOUT_MS = 60000L 
+
+        private const val SESSION_HEARTBEAT_INTERVAL_MS = 10000L
+        private const val SESSION_TIMEOUT_MS = 60000L
         private const val MAX_DEVICES_PER_SESSION = 10
-        private const val STATE_SYNC_INTERVAL_MS = 5000L 
+        private const val STATE_SYNC_INTERVAL_MS = 5000L
     }
 
-    
+
     private val currentSession = AtomicReference<SessionInfo?>(null)
     private val connectedDevices = ConcurrentHashMap<String, DeviceInfo>()
     private val sessionHistory = ConcurrentHashMap<String, SessionInfo>()
@@ -46,14 +46,14 @@ class SessionManager(
     private val sessionId = AtomicReference<String?>(null)
     private val sessionStartTime = AtomicLong(0L)
 
-    
+
     private val _sessionWorkflowState = MutableStateFlow(SessionWorkflowState.IDLE)
     val sessionWorkflowState: StateFlow<SessionWorkflowState> = _sessionWorkflowState.asStateFlow()
 
     private val workflowSteps = mutableListOf<WorkflowStep>()
     private var currentStepIndex = 0
 
-    
+
     private val sessionScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
     enum class SessionWorkflowState {
@@ -73,7 +73,7 @@ class SessionManager(
     data class WorkflowStep(
         val name: String,
         val action: suspend () -> Boolean,
-        val timeout: Long = 30000L, 
+        val timeout: Long = 30000L,
         val required: Boolean = true
     )
 
@@ -101,29 +101,29 @@ class SessionManager(
         val joinTime: Long,
         val lastSeen: Long,
         val capabilities: Set<String>,
-        val syncOffset: Long, 
+        val syncOffset: Long,
         val connectionQuality: ConnectionQuality,
         val isRecording: Boolean = false,
     )
 
     enum class SessionState {
-        IDLE, 
-        INITIALIZING, 
-        ACTIVE, 
-        SYNCING, 
-        RECORDING, 
-        PAUSED, 
-        ENDING, 
-        ENDED, 
-        ERROR, 
+        IDLE,
+        INITIALIZING,
+        ACTIVE,
+        SYNCING,
+        RECORDING,
+        PAUSED,
+        ENDING,
+        ENDED,
+        ERROR,
     }
 
     enum class ConnectionQuality {
-        EXCELLENT, 
-        GOOD, 
-        ACCEPTABLE, 
-        POOR, 
-        UNSTABLE, 
+        EXCELLENT,
+        GOOD,
+        ACCEPTABLE,
+        POOR,
+        UNSTABLE,
     }
 
     fun start(
@@ -154,7 +154,7 @@ class SessionManager(
                 )
 
                 try {
-                    
+
                     while (isRunning.get()) {
                         updateSessionState()
                         checkDeviceHeartbeats()
@@ -184,7 +184,7 @@ class SessionManager(
     fun stop() {
         if (!isRunning.get()) return
 
-        
+
         val session = currentSession.get()
         if (session != null && session.state != SessionState.ENDED) {
             endSession(session.id, "Service stopping")
@@ -256,7 +256,7 @@ class SessionManager(
 
         connectedDevices[deviceId] = deviceInfo
 
-        
+
         updateSessionParticipants()
 
         onDeviceJoined?.invoke(deviceInfo)
@@ -308,7 +308,7 @@ class SessionManager(
             return false
         }
 
-        
+
         val recordingCapableDevices = devices.filter { "recording" in it.capabilities }
         if (recordingCapableDevices.isEmpty()) {
             Log.w(TAG, "No recording-capable devices in session")
@@ -317,17 +317,17 @@ class SessionManager(
 
         updateSessionState(SessionState.SYNCING)
 
-        
+
         onSyncRequired?.invoke(recordingCapableDevices)
 
-        
+
         GlobalScope.launch {
-            delay(2000) 
+            delay(2000)
 
             if (currentSession.get()?.state == SessionState.SYNCING) {
                 updateSessionState(SessionState.RECORDING)
 
-                
+
                 recordingCapableDevices.forEach { device ->
                     connectedDevices[device.deviceId] = device.copy(isRecording = true)
                 }
@@ -350,7 +350,7 @@ class SessionManager(
     fun stopSyncRecording() {
         val session = currentSession.get() ?: return
 
-        
+
         connectedDevices.keys.forEach { deviceId ->
             val device = connectedDevices[deviceId]
             if (device != null && device.isRecording) {
@@ -379,15 +379,15 @@ class SessionManager(
 
         updateSessionState(SessionState.ENDING)
 
-        
+
         if (session.state == SessionState.RECORDING) {
             stopSyncRecording()
         }
 
-        
+
         connectedDevices.clear()
 
-        
+
         val endedSession =
             session.copy(
                 endTime = System.currentTimeMillis(),
@@ -452,7 +452,6 @@ class SessionManager(
         }
     }
 
-    
 
     private fun generateSessionId(): String {
         return "session_${System.currentTimeMillis()}_${(Math.random() * 1000).toInt()}"
@@ -510,7 +509,7 @@ class SessionManager(
             }
         }
 
-        
+
         staleDevices.forEach { deviceId ->
             removeDevice(deviceId, "Heartbeat timeout")
         }
@@ -522,12 +521,12 @@ class SessionManager(
 
         if (devices.isEmpty()) return
 
-        
+
         val needsSync =
             devices.any { device ->
                 device.connectionQuality == ConnectionQuality.POOR ||
                         device.connectionQuality == ConnectionQuality.UNSTABLE ||
-                        kotlin.math.abs(device.syncOffset) > 5_000_000L 
+                        kotlin.math.abs(device.syncOffset) > 5_000_000L
             }
 
         if (needsSync && session.state == SessionState.ACTIVE) {
@@ -545,7 +544,7 @@ class SessionManager(
         }
     }
 
-    
+
     suspend fun initializeSessionWithWorkflow(
         sessionConfig: SessionConfig,
         permissionController: mpdc4gsr.permissions.PermissionController? = null
@@ -559,10 +558,10 @@ class SessionManager(
             )
             _sessionWorkflowState.value = SessionWorkflowState.INITIALIZING
 
-            
+
             setupWorkflowSteps(sessionConfig, permissionController)
 
-            
+
             executeWorkflow()
 
         } catch (e: Exception) {
@@ -584,7 +583,7 @@ class SessionManager(
         workflowSteps.clear()
         currentStepIndex = 0
 
-        
+
         workflowSteps.add(
             WorkflowStep(
                 name = "Permission Check",
@@ -596,7 +595,7 @@ class SessionManager(
             )
         )
 
-        
+
         workflowSteps.add(
             WorkflowStep(
                 name = "Device Discovery",
@@ -608,7 +607,7 @@ class SessionManager(
             )
         )
 
-        
+
         workflowSteps.add(
             WorkflowStep(
                 name = "Device Connection",
@@ -620,7 +619,7 @@ class SessionManager(
             )
         )
 
-        
+
         workflowSteps.add(
             WorkflowStep(
                 name = "Time Synchronization",
@@ -632,7 +631,7 @@ class SessionManager(
             )
         )
 
-        
+
         workflowSteps.add(
             WorkflowStep(
                 name = "Recording Setup",
@@ -739,8 +738,8 @@ class SessionManager(
     }
 
     private suspend fun discoverDevices(expectedDevices: List<String>): Boolean {
-        
-        delay(2000) 
+
+        delay(2000)
         logger.log(
             StructuredLogger.LogLevel.INFO,
             "SessionManager",
@@ -751,8 +750,8 @@ class SessionManager(
     }
 
     private suspend fun connectToDevices(): Boolean {
-        
-        delay(3000) 
+
+        delay(3000)
         logger.log(
             StructuredLogger.LogLevel.INFO,
             "SessionManager",
@@ -763,8 +762,8 @@ class SessionManager(
     }
 
     private suspend fun performTimeSynchronization(): Boolean {
-        
-        delay(1000) 
+
+        delay(1000)
         logger.log(
             StructuredLogger.LogLevel.INFO,
             "SessionManager",
@@ -775,8 +774,8 @@ class SessionManager(
     }
 
     private suspend fun setupRecording(config: SessionConfig): Boolean {
-        
-        delay(1000) 
+
+        delay(1000)
         logger.log(
             StructuredLogger.LogLevel.INFO,
             "SessionManager",
@@ -786,12 +785,12 @@ class SessionManager(
         return true
     }
 
-    
+
     fun setWorkflowStateChangeCallback(callback: (SessionWorkflowState) -> Unit) {
         onWorkflowStateChanged = callback
     }
 
-    
+
     fun setWorkflowStepCallback(callback: (String, Boolean) -> Unit) {
         onWorkflowStepCompleted = callback
     }

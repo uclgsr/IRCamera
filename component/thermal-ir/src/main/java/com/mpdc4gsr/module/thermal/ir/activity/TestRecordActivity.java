@@ -39,9 +39,9 @@ public class TestRecordActivity extends Activity {
 
     private final static String CLASS_LABEL = "RecordActivity";
     private final static String LOG_TAG = CLASS_LABEL;
-    
+
     final int RECORD_LENGTH = 60 * 60;
-    
+
     private final int bg_screen_bx = 232;
     private final int bg_screen_by = 128;
     private final int bg_screen_width = 700;
@@ -65,11 +65,11 @@ public class TestRecordActivity extends Activity {
     private int imageWidth = 320;
     private int imageHeight = 240;
     private int frameRate = 30;
-    
+
     private AudioRecord audioRecord;
     private AudioRecordRunnable audioRecordRunnable;
     private Thread audioThread;
-    
+
     private Camera cameraDevice;
     private CameraView cameraView;
     private Frame yuvImage = null;
@@ -137,7 +137,7 @@ public class TestRecordActivity extends Activity {
 
     private void initLayout() {
 
-        
+
         Display display = ((WindowManager) getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
         screenWidth = display.getWidth();
         screenHeight = display.getHeight();
@@ -150,7 +150,7 @@ public class TestRecordActivity extends Activity {
         layoutParam = new RelativeLayout.LayoutParams(screenWidth, screenHeight);
         topLayout.addView(preViewLayout, layoutParam);
 
-        
+
         btnRecorderControl = (Button) findViewById(R.id.recorder_control);
         btnRecorderControl.setText("Start");
         btnRecorderControl.setOnClickListener(new View.OnClickListener() {
@@ -169,7 +169,7 @@ public class TestRecordActivity extends Activity {
             }
         });
 
-        
+
         int display_width_d = (int) (1.0 * bg_screen_width * screenWidth / bg_width);
         int display_height_d = (int) (1.0 * bg_screen_height * screenHeight / bg_height);
         int prev_rw, prev_rh;
@@ -351,7 +351,7 @@ public class TestRecordActivity extends Activity {
             Log.d(LOG_TAG, "audioRecord.startRecording()");
             audioRecord.startRecording();
 
-            
+
             while (runAudioThread) {
                 if (RECORD_LENGTH > 0) {
                     audioData = samples[samplesIndex++ % samples.length];
@@ -377,7 +377,7 @@ public class TestRecordActivity extends Activity {
             }
             Log.v(LOG_TAG, "AudioThread Finished, release audioRecord");
 
-            
+
             if (audioRecord != null) {
                 audioRecord.stop();
                 audioRecord.release();
@@ -480,7 +480,7 @@ public class TestRecordActivity extends Activity {
                 yuvImage = images[i];
                 timestamps[i] = 1000 * (System.currentTimeMillis() - startTime);
             }
-            
+
             if (yuvImage != null && recording) {
                 ((ByteBuffer) yuvImage.image[0].position(0)).put(data);
 

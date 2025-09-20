@@ -1,5 +1,3 @@
-
-
 import asyncio
 import struct
 import time
@@ -17,7 +15,6 @@ from .config import config
 
 @dataclass
 class TimeSyncStats:
-
     device_id: str
     last_sync: Optional[datetime] = None
     offset_ms: float = 0.0

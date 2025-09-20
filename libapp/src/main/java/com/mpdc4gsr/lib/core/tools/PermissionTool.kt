@@ -61,11 +61,11 @@ object PermissionTool {
                     )
 
                 Type.FILE ->
-                    if (context.applicationInfo.targetSdkVersion < 30) { 
+                    if (context.applicationInfo.targetSdkVersion < 30) {
                         listOf(Permission.READ_EXTERNAL_STORAGE, Permission.WRITE_EXTERNAL_STORAGE)
-                    } else if (context.applicationInfo.targetSdkVersion < 33) { 
+                    } else if (context.applicationInfo.targetSdkVersion < 33) {
                         listOf(Permission.READ_EXTERNAL_STORAGE)
-                    } else { 
+                    } else {
                         listOf(Permission.READ_MEDIA_VIDEO, Permission.READ_MEDIA_IMAGES)
                     }
             }
@@ -98,7 +98,7 @@ object PermissionTool {
                                     Type.IMAGE -> R.string.app_album_content
                                     Type.FILE -> R.string.app_storage_content
                                 }
-                            if (BaseApplication.instance.isDomestic()) { 
+                            if (BaseApplication.instance.isDomestic()) {
                                 TToast.shortToast(context, tipsResId)
                             } else {
                                 TipDialog.Builder(context)
@@ -121,7 +121,7 @@ object PermissionTool {
     }
 
     fun hasBtPermission(context: Context): Boolean {
-        return if (Build.VERSION.SDK_INT < 31) { 
+        return if (Build.VERSION.SDK_INT < 31) {
             XXPermissions.isGranted(context, Permission.ACCESS_FINE_LOCATION)
         } else {
             XXPermissions.isGranted(
@@ -139,7 +139,7 @@ object PermissionTool {
         callback: Callback,
     ) {
         val permissionList: List<String> =
-            if (Build.VERSION.SDK_INT < 31) { 
+            if (Build.VERSION.SDK_INT < 31) {
                 arrayListOf(Permission.ACCESS_FINE_LOCATION, Permission.ACCESS_COARSE_LOCATION)
             } else {
                 arrayListOf(

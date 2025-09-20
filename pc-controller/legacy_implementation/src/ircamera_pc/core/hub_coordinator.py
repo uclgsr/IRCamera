@@ -1,5 +1,3 @@
-
-
 import asyncio
 import time
 import uuid
@@ -17,7 +15,6 @@ from ..network.server import NetworkServer, DeviceInfo
 
 
 class SessionState(Enum):
-
     IDLE = "idle"
     PREPARING = "preparing"
     RECORDING = "recording"
@@ -27,7 +24,6 @@ class SessionState(Enum):
 
 
 class SyncMarkerType(Enum):
-
     SESSION_START = "session_start"
     SESSION_END = "session_end"
     FLASH_SYNC = "flash_sync"
@@ -38,7 +34,6 @@ class SyncMarkerType(Enum):
 
 @dataclass
 class RecordingSession:
-
     session_id: str
     session_name: str
     start_time: float

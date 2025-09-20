@@ -118,7 +118,7 @@ public class OpencvTools {
         long startTime = System.currentTimeMillis();
         ByteBuffer dataIn = ByteBuffer.wrap(imgByte);
 
-        ByteBuffer dataOut = ByteBuffer.allocateDirect(imgByte.length * 4); 
+        ByteBuffer dataOut = ByteBuffer.allocateDirect(imgByte.length * 4);
 
         SupHelp.getInstance().imgUpScalerFour(BaseApplication.instance, dataIn, dataOut);
         Log.e("AI_UPSCALE 4[CHINESE_TEXT]Minute[CHINESE_TEXT]2：", String.valueOf((System.currentTimeMillis() - startTime)));
@@ -136,7 +136,7 @@ public class OpencvTools {
         ByteBuffer dataIn = ByteBuffer.allocateDirect(dstArgbBytes.length);
         dataIn.put(dstArgbBytes);
 
-        ByteBuffer dataOut = ByteBuffer.allocateDirect(dstArgbBytes.length * 4); 
+        ByteBuffer dataOut = ByteBuffer.allocateDirect(dstArgbBytes.length * 4);
 
         SupHelp.getInstance().imgUpScalerFour(BaseApplication.instance, dataIn, dataOut);
         Log.e("AI_UPSCALE 4[CHINESE_TEXT]Minute[CHINESE_TEXT]2：", String.valueOf((System.currentTimeMillis() - startTime)) + "////" + dstArgbBytes.length);
@@ -172,7 +172,7 @@ public class OpencvTools {
         ByteBuffer dataIn = ByteBuffer.allocateDirect(rawData.length);
         dataIn.put(rawData);
 
-        ByteBuffer dataOut = ByteBuffer.allocateDirect(256 * 192 * 4 * 4); 
+        ByteBuffer dataOut = ByteBuffer.allocateDirect(256 * 192 * 4 * 4);
 
         SupHelp.getInstance().imgUpScalerFour(BaseApplication.instance, dataIn, dataOut);
         Log.e("AI_UPSCALE 4[CHINESE_TEXT]Minute[CHINESE_TEXT]2：", String.valueOf((System.currentTimeMillis() - startTime)) + "////" + rawData.length);
@@ -200,18 +200,18 @@ public class OpencvTools {
 
     public static byte[] supImage(byte[] imageARGB, int width, int height, byte[] resulARGB) {
 
-        Mat argbMat = new Mat(width, height, CvType.CV_8UC4); 
+        Mat argbMat = new Mat(width, height, CvType.CV_8UC4);
         argbMat.put(0, 0, imageARGB);
 
         Mat bgrMat = new Mat();
-        Imgproc.cvtColor(argbMat, bgrMat, Imgproc.COLOR_RGBA2BGR); 
+        Imgproc.cvtColor(argbMat, bgrMat, Imgproc.COLOR_RGBA2BGR);
         try {
             SupHelp.getInstance().runImage(bgrMat, resultMat);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
         Mat resulArgbMat = new Mat();
-        Imgproc.cvtColor(resultMat, resulArgbMat, Imgproc.COLOR_BGR2RGBA); 
+        Imgproc.cvtColor(resultMat, resulArgbMat, Imgproc.COLOR_BGR2RGBA);
 
         Bitmap dstBitmap = Bitmap.createBitmap(resulArgbMat.width(), resulArgbMat.height(), Bitmap.Config.ARGB_8888);
         Utils.matToBitmap(resulArgbMat, dstBitmap);
@@ -859,7 +859,7 @@ public class OpencvTools {
         float minGrey = minTemp < customMinTemp ? (customMinTemp - minTemp) / (maxTemp - minTemp) : -1;
         int[] colors = new int[3];
         for (int i = 0; i < 256; i++) {
-            double ratio = (double) i / 255.0; 
+            double ratio = (double) i / 255.0;
             int r = 0;
             int g = 0;
             int b = 0;
@@ -1138,7 +1138,7 @@ public class OpencvTools {
         float maxGrayRatio = (maxTemp - customMaxTemp) / tempValue;
         float minGrayRatio = (maxTemp - customMinTemp) / tempValue;
         for (int i = 0; i < 256; i++) {
-            double ratio = (double) i / 255.0; 
+            double ratio = (double) i / 255.0;
             int r = 0;
             int g = 0;
             int b = 0;
@@ -1279,7 +1279,7 @@ public class OpencvTools {
 
         float tempRange = customMaxTemp - customMinTemp;
         float ratio = (nowTemp - customMinTemp) / tempRange;
-        ratio = Math.min(Math.max(ratio, 0), 1); 
+        ratio = Math.min(Math.max(ratio, 0), 1);
 
         int[] result = new int[3];
         int colorCount = colorList.length;

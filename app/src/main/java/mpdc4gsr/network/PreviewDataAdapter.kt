@@ -22,18 +22,18 @@ class PreviewDataAdapter(
 ) {
     companion object {
         private const val TAG = "PreviewDataAdapter"
-        private const val POLLING_INTERVAL_MS = 500L 
+        private const val POLLING_INTERVAL_MS = 500L
     }
 
     private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     private var pollingJob: Job? = null
     private var isRunning = false
 
-    
+
     private val thermalCameraManager = AtomicReference<CameraPreviewManager?>()
     private val gsrRecorder = AtomicReference<GSRSensorRecorder?>()
 
-    
+
     fun startDataPolling() {
         if (isRunning) {
             Log.w(TAG, "Data polling already running")
@@ -50,13 +50,13 @@ class PreviewDataAdapter(
                     delay(POLLING_INTERVAL_MS)
                 } catch (e: Exception) {
                     Log.e(TAG, "Error in sensor data polling", e)
-                    delay(1000) 
+                    delay(1000)
                 }
             }
         }
     }
 
-    
+
     fun stopDataPolling() {
         if (!isRunning) {
             return
@@ -68,26 +68,26 @@ class PreviewDataAdapter(
         pollingJob = null
     }
 
-    
+
     fun setThermalCameraManager(manager: CameraPreviewManager?) {
         thermalCameraManager.set(manager)
         Log.d(TAG, "Thermal camera manager ${if (manager != null) "set" else "cleared"}")
     }
 
-    
+
     fun setGsrRecorder(recorder: GSRSensorRecorder?) {
         gsrRecorder.set(recorder)
         Log.d(TAG, "GSR recorder ${if (recorder != null) "set" else "cleared"}")
     }
 
     private suspend fun pollSensorData() {
-        
+
         pollThermalFrame()
 
-        
+
         pollGsrData()
 
-        
+
         updateRecordingStatus()
     }
 
@@ -95,7 +95,7 @@ class PreviewDataAdapter(
         try {
             val manager = thermalCameraManager.get()
             if (manager != null) {
-                
+
                 val thermalBitmap = manager.scaledBitmap()
                 if (thermalBitmap != null && !thermalBitmap.isRecycled) {
                     previewStreamer.updateThermalFrame(thermalBitmap)
@@ -114,8 +114,8 @@ class PreviewDataAdapter(
         try {
             val recorder = gsrRecorder.get()
             if (recorder != null && recorder.isRecording) {
-                
-                
+
+
                 val stats = recorder.getRecordingStats()
 
                 // Use a mock GSR value based on recording activity
@@ -150,7 +150,7 @@ class PreviewDataAdapter(
         }
     }
 
-    
+
     fun updateRgbFrame(bitmap: Bitmap) {
         previewStreamer.updateRgbFrame(bitmap)
     }
@@ -163,7 +163,7 @@ class PreviewDataAdapter(
         previewStreamer.updateGsrValue(gsrValue)
     }
 
-    
+
     fun cleanup() {
         stopDataPolling()
         scope.cancel()

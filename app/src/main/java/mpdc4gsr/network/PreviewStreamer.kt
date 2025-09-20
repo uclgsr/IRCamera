@@ -22,8 +22,8 @@ class PreviewStreamer(
 ) {
     companion object {
         private const val TAG = "PreviewStreamer"
-        private const val DEFAULT_FRAME_INTERVAL_MS = 1000L 
-        private const val DEFAULT_SENSOR_INTERVAL_MS = 1000L 
+        private const val DEFAULT_FRAME_INTERVAL_MS = 1000L
+        private const val DEFAULT_SENSOR_INTERVAL_MS = 1000L
         private const val DEFAULT_PREVIEW_WIDTH = 320
         private const val DEFAULT_PREVIEW_HEIGHT = 240
         private const val DEFAULT_JPEG_QUALITY = 70
@@ -35,20 +35,20 @@ class PreviewStreamer(
     private var frameStreamingJob: Job? = null
     private var sensorStreamingJob: Job? = null
 
-    
+
     private var frameIntervalMs = DEFAULT_FRAME_INTERVAL_MS
     private var sensorIntervalMs = DEFAULT_SENSOR_INTERVAL_MS
     private var previewWidth = DEFAULT_PREVIEW_WIDTH
     private var previewHeight = DEFAULT_PREVIEW_HEIGHT
     private var jpegQuality = DEFAULT_JPEG_QUALITY
 
-    
+
     private val currentRgbFrame = AtomicReference<Bitmap?>()
     private val currentThermalFrame = AtomicReference<Bitmap?>()
     private val currentGsrValue = AtomicReference<Float?>()
     private val currentRecordingStatus = AtomicReference<String>("IDLE")
 
-    
+
     suspend fun startStreaming(): Boolean {
         if (isStreaming.get()) {
             Log.w(TAG, "Preview streaming already active")
@@ -63,12 +63,12 @@ class PreviewStreamer(
         Log.i(TAG, "Starting preview streaming to PC")
         isStreaming.set(true)
 
-        
+
         frameStreamingJob = scope.launch {
             streamFrames()
         }
 
-        
+
         sensorStreamingJob = scope.launch {
             streamSensorData()
         }
@@ -76,7 +76,7 @@ class PreviewStreamer(
         return true
     }
 
-    
+
     suspend fun stopStreaming() {
         if (!isStreaming.get()) {
             return
@@ -92,27 +92,27 @@ class PreviewStreamer(
         sensorStreamingJob = null
     }
 
-    
+
     fun updateRgbFrame(bitmap: Bitmap?) {
         currentRgbFrame.set(bitmap)
     }
 
-    
+
     fun updateThermalFrame(bitmap: Bitmap?) {
         currentThermalFrame.set(bitmap)
     }
 
-    
+
     fun updateGsrValue(gsrValue: Float) {
         currentGsrValue.set(gsrValue)
     }
 
-    
+
     fun updateRecordingStatus(status: String) {
         currentRecordingStatus.set(status)
     }
 
-    
+
     fun configure(
         frameIntervalMs: Long = DEFAULT_FRAME_INTERVAL_MS,
         sensorIntervalMs: Long = DEFAULT_SENSOR_INTERVAL_MS,
@@ -137,12 +137,12 @@ class PreviewStreamer(
 
         while (isActive && isStreaming.get()) {
             try {
-                
+
                 currentRgbFrame.get()?.let { rgbBitmap ->
                     streamFrame("rgb", rgbBitmap)
                 }
 
-                
+
                 currentThermalFrame.get()?.let { thermalBitmap ->
                     streamFrame("thermal", thermalBitmap)
                 }
@@ -150,7 +150,7 @@ class PreviewStreamer(
                 delay(frameIntervalMs)
             } catch (e: Exception) {
                 Log.e(TAG, "Error in frame streaming", e)
-                if (isActive) delay(1000) 
+                if (isActive) delay(1000)
             }
         }
 
@@ -182,7 +182,7 @@ class PreviewStreamer(
                 delay(sensorIntervalMs)
             } catch (e: Exception) {
                 Log.e(TAG, "Error in sensor data streaming", e)
-                if (isActive) delay(1000) 
+                if (isActive) delay(1000)
             }
         }
 
@@ -191,21 +191,21 @@ class PreviewStreamer(
 
     private suspend fun streamFrame(frameType: String, bitmap: Bitmap) {
         try {
-            
+
             val scaledBitmap = BitmapUtils.scaleWithWH(
                 bitmap,
                 previewWidth.toDouble(),
                 previewHeight.toDouble()
             )
 
-            
+
             val jpegBytes = BitmapUtils.bitmapToBytes(scaledBitmap, jpegQuality)
             if (jpegBytes == null) {
                 Log.w(TAG, "Failed to convert $frameType frame to JPEG")
                 return
             }
 
-            
+
             val base64Data = Base64.encodeToString(jpegBytes, Base64.NO_WRAP)
 
             val frameMessage = JSONObject().apply {
@@ -227,7 +227,7 @@ class PreviewStreamer(
                 "Streamed $frameType frame: ${scaledBitmap.width}x${scaledBitmap.height}, ${jpegBytes.size} bytes"
             )
 
-            
+
             if (scaledBitmap != bitmap && !scaledBitmap.isRecycled) {
                 scaledBitmap.recycle()
             }
@@ -237,10 +237,10 @@ class PreviewStreamer(
         }
     }
 
-    
+
     fun isStreaming(): Boolean = isStreaming.get()
 
-    
+
     fun cleanup() {
         scope.launch {
             stopStreaming()

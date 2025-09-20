@@ -10,8 +10,6 @@ import com.mpdc4gsr.module.thermal.ir.report.view.WatermarkView
 import com.mpdc4gsr.lib.ui.R as UiR
 
 
-
-
 class ReportPreviewFirstActivity : BaseActivity() {
 
     private lateinit var titleView: TitleView

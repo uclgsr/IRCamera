@@ -588,7 +588,7 @@ public class FileUtil {
                 file.createNewFile();
             }
             byte[] contentInBytes = str.getBytes();
-            stream.write(contentInBytes); 
+            stream.write(contentInBytes);
             stream.flush();
             stream.close();
         } catch (IOException e) {
@@ -626,7 +626,7 @@ public class FileUtil {
     public static void float2Byte(float num, byte[] numbyte) {
         int fbit = Float.floatToIntBits(num);
         for (int i = 0; i < 4; i++) {
-            numbyte[i] = (byte) (fbit >> (i * 8)); 
+            numbyte[i] = (byte) (fbit >> (i * 8));
             Log.i(TAG, "numbyte[=" + i + "]=" + numbyte[i]);
         }
     }

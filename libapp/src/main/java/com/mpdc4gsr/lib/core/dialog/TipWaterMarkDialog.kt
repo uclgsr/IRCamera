@@ -113,7 +113,7 @@ class TipWaterMarkDialog : Dialog {
 
                     0.35
                 }
-            lp.width = (ScreenUtil.getScreenWidth(context) * wRatio).toInt() 
+            lp.width = (ScreenUtil.getScreenWidth(context) * wRatio).toInt()
             dialog!!.window!!.attributes = lp
 
             dialog!!.setCanceledOnTouchOutside(canceled)

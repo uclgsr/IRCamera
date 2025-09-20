@@ -69,9 +69,9 @@ class IRMonitorLiteFragment : BaseFragment(), ITsTempListener {
 
     private var configJob: Job? = null
     protected var isConfigWait = true
-    protected var temperatureBytes = ByteArray(192 * 256 * 2) 
+    protected var temperatureBytes = ByteArray(192 * 256 * 2)
     var rotateAngle = 270
-    private val imageRes = LibIRProcess.ImageRes_t() 
+    private val imageRes = LibIRProcess.ImageRes_t()
     val dstTempBytes = ByteArray(192 * 256 * 2)
 
     @Suppress("DEPRECATION")
@@ -152,7 +152,7 @@ class IRMonitorLiteFragment : BaseFragment(), ITsTempListener {
                     CameraPreviewManager.getInstance()?.setLimit(
                         Float.MAX_VALUE, Float.MIN_VALUE,
                         0, 0,
-                    ) 
+                    )
                     shutterHandler = Handler(Looper.getMainLooper())
 
                     fun takePicture() {
@@ -166,8 +166,8 @@ class IRMonitorLiteFragment : BaseFragment(), ITsTempListener {
                     shutterRunnable =
                         object : Runnable {
                             override fun run() {
-                                if (shutterCount < 4) { 
-                                    shutterHandler?.postDelayed(this, 5000L) 
+                                if (shutterCount < 4) {
+                                    shutterHandler?.postDelayed(this, 5000L)
                                     takePicture()
                                 }
                             }
@@ -175,7 +175,7 @@ class IRMonitorLiteFragment : BaseFragment(), ITsTempListener {
 
                     shutterHandler?.postDelayed(shutterRunnable!!, 300)
 
-                    delay(2000) 
+                    delay(2000)
                     withContext(Dispatchers.IO) {
                         IRTool.basicGainSet(SaveSettingUtil.temperatureMode)
                     }
@@ -439,7 +439,7 @@ class IRMonitorLiteFragment : BaseFragment(), ITsTempListener {
                         this@IRMonitorLiteFragment
                     )
                     temperatureView.temperatureRegionMode =
-                        TemperatureView.REGION_MODE_CLEAN 
+                        TemperatureView.REGION_MODE_CLEAN
                 }
             }
         }

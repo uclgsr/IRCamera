@@ -5,12 +5,10 @@ import sys
 import tempfile
 from pathlib import Path
 
-
 sys.path.insert(0, str(Path(__file__).parent / "src"))
 
 
 def demonstrate_configuration():
-
     print("=" * 60)
     print("CONFIGURATION SYSTEM")
     print("=" * 60)
@@ -32,7 +30,6 @@ def demonstrate_configuration():
 
 
 def demonstrate_session_management():
-
     print("\n" + "=" * 60)
     print("SESSION MANAGEMENT")
     print("=" * 60)
@@ -76,7 +73,6 @@ def demonstrate_session_management():
 
 
 def demonstrate_device_discovery():
-
     print("\n" + "=" * 60)
     print("DEVICE DISCOVERY & MANAGEMENT")
     print("=" * 60)
@@ -115,7 +111,6 @@ def demonstrate_device_discovery():
 
 
 def demonstrate_communication_protocol():
-
     print("\n" + "=" * 60)
     print("COMMUNICATION PROTOCOL")
     print("=" * 60)
@@ -177,7 +172,6 @@ def demonstrate_communication_protocol():
 
 
 def demonstrate_gui_architecture():
-
     print("\n" + "=" * 60)
     print("GUI ARCHITECTURE")
     print("=" * 60)
@@ -213,7 +207,6 @@ def demonstrate_gui_architecture():
 
 
 def demonstrate_integration_architecture():
-
     print("\n" + "=" * 60)
     print("HUB-AND-SPOKE INTEGRATION ARCHITECTURE")
     print("=" * 60)
@@ -262,7 +255,6 @@ def demonstrate_integration_architecture():
 
 
 def main():
-
     print("IRCamera PC Controller Hub - MVP Implementation Demo")
     print("=" * 80)
     print("This demonstration shows the implemented components of the")

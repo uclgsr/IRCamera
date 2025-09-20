@@ -27,15 +27,15 @@ class TimeManager(
         private const val SYNC_TIMEOUT_MS = 5000L
         private const val SYNC_RETRY_COUNT = 3
         private const val SYNC_QUALITY_THRESHOLD_MS = 5.0
-        private const val DRIFT_MONITORING_INTERVAL_MS = 30000L 
-        
-        
+        private const val DRIFT_MONITORING_INTERVAL_MS = 30000L
+
+
         private const val HIGH_LATENCY_THRESHOLD_MS = 50.0
         private const val POOR_NETWORK_RETRY_COUNT = 5
-        private const val AUTO_RESYNC_THRESHOLD_MS = 300_000L 
-        private const val CRITICAL_DRIFT_THRESHOLD_MS = 100.0 
+        private const val AUTO_RESYNC_THRESHOLD_MS = 300_000L
+        private const val CRITICAL_DRIFT_THRESHOLD_MS = 100.0
 
-        
+
         @Volatile
         private var INSTANCE: TimeManager? = null
 
@@ -46,17 +46,17 @@ class TimeManager(
         }
     }
 
-    
-    private var clockOffsetNs = AtomicLong(0) 
+
+    private var clockOffsetNs = AtomicLong(0)
     private var lastSyncTimestamp = AtomicLong(0)
     private var syncQualityMs = AtomicLong(Long.MAX_VALUE)
     private var isTimeSynced = false
 
-    
+
     private val connectivityManager =
         context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
-    
+
     private val syncScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     private var driftMonitoringJob: Job? = null
 
@@ -78,7 +78,7 @@ class TimeManager(
             try {
                 Log.i(TAG, "Starting enhanced time synchronization with PC Controller: $pcControllerAddress:$port")
 
-                
+
                 setPCConnectionInfo(pcControllerAddress, port)
 
                 if (!isNetworkAvailable()) {
@@ -86,30 +86,30 @@ class TimeManager(
                     return@withContext false
                 }
 
-                
+
                 val success = performEnhancedTimeSync(pcControllerAddress, port, SYNC_RETRY_COUNT)
-                
+
                 if (success) {
                     isTimeSynced = true
-                    
+
                     startDriftMonitoring()
                     Log.i(TAG, "Enhanced time synchronization successful with automatic drift monitoring")
                 }
-                
+
                 return@withContext success
 
                 var bestOffset: Long? = null
                 var bestRtt = Long.MAX_VALUE
                 var successCount = 0
 
-                
+
                 repeat(SYNC_RETRY_COUNT) { attempt ->
                     try {
                         val syncResult = performTimeSyncRound(pcControllerAddress, port)
                         if (syncResult != null) {
                             successCount++
 
-                            
+
                             if (syncResult.roundTripTimeNs < bestRtt) {
                                 bestRtt = syncResult.roundTripTimeNs
                                 bestOffset = syncResult.clockOffsetNs
@@ -121,7 +121,7 @@ class TimeManager(
                             )
                         }
 
-                        
+
                         delay(100)
                     } catch (e: Exception) {
                         Log.w(TAG, "Sync round ${attempt + 1} failed", e)
@@ -129,13 +129,13 @@ class TimeManager(
                 }
 
                 if (bestOffset != null && successCount > 0) {
-                    
+
                     clockOffsetNs.set(bestOffset!!)
                     lastSyncTimestamp.set(getCurrentTimestampNs())
                     syncQualityMs.set(bestRtt / 1_000_000)
                     isTimeSynced = true
 
-                    
+
                     startDriftMonitoring()
 
                     Log.i(
@@ -163,17 +163,17 @@ class TimeManager(
     ): TimeSyncResult? {
         return withTimeoutOrNull(SYNC_TIMEOUT_MS) {
             try {
-                
+
                 val t1 = SystemClock.elapsedRealtimeNanos()
 
-                
+
                 val syncResponse = sendTimeSyncRequest(pcAddress, port, t1)
 
-                
+
                 val t4 = SystemClock.elapsedRealtimeNanos()
 
                 if (syncResponse != null) {
-                    
+
                     val t2 = syncResponse.pcReceiveTime
                     val t3 = syncResponse.pcSendTime
 
@@ -201,10 +201,10 @@ class TimeManager(
         port: Int,
         localTime: Long,
     ): TimeSyncResponse? {
-        
+
         return try {
             withContext(Dispatchers.IO) {
-                
+
                 val socket = java.net.Socket()
                 socket.connect(java.net.InetSocketAddress(pcAddress, port), SYNC_TIMEOUT_MS.toInt())
 
@@ -212,7 +212,7 @@ class TimeManager(
                     val outputStream = socket.getOutputStream()
                     val inputStream = socket.getInputStream()
 
-                    
+
                     val requestJson =
                         """
                         {
@@ -223,7 +223,7 @@ class TimeManager(
                         }
                         """.trimIndent()
 
-                    
+
                     val requestBytes = requestJson.toByteArray(Charsets.UTF_8)
                     val lengthBytes =
                         java.nio.ByteBuffer.allocate(4).putInt(requestBytes.size).array()
@@ -232,19 +232,18 @@ class TimeManager(
                     outputStream.write(requestBytes)
                     outputStream.flush()
 
-                    
-                    
+
                     val lengthBuffer = ByteArray(4)
                     inputStream.read(lengthBuffer, 0, 4)
 
                     val responseLength = java.nio.ByteBuffer.wrap(lengthBuffer).getInt()
 
-                    
+
                     val responseBuffer = ByteArray(responseLength)
                     inputStream.read(responseBuffer, 0, responseLength)
                     val responseStr = String(responseBuffer, Charsets.UTF_8)
 
-                    
+
                     val response = parseTimeSyncResponse(responseStr)
 
                     Log.d(TAG, "Real time sync response received from PC Controller")
@@ -261,10 +260,8 @@ class TimeManager(
 
     private fun parseTimeSyncResponse(responseJson: String): TimeSyncResponse? {
         return try {
-            
-            
 
-            
+
             var serverReceiveTime: Long? = null
             var serverSendTime: Long? = null
 
@@ -283,7 +280,7 @@ class TimeManager(
                 Log.w(TAG, "Could not parse as JSON, will attempt legacy parsing: $e")
             }
 
-            
+
             val lines = responseJson.split(",")
             var pcReceiveTime: Long? = null
             var pcSendTime: Long? = null
@@ -299,14 +296,14 @@ class TimeManager(
                         pcSendTime =
                             line.substringAfter(":").trim().removeSuffix("}").toLongOrNull()
                     }
-                    
+
                     line.contains("server_timestamp") && pcReceiveTime == null -> {
                         pcReceiveTime = line.substringAfter(":").trim()
                             .removeSuffix("}")
                             .removeSuffix(",")
                             .toLongOrNull()
-                        
-                        
+
+
                     }
                 }
             }
@@ -334,23 +331,28 @@ class TimeManager(
                     delay(DRIFT_MONITORING_INTERVAL_MS)
 
                     try {
-                        
+
                         val timeSinceSync =
                             (getCurrentTimestampNs() - lastSyncTimestamp.get()) / 1_000_000
                         val currentQuality = syncQualityMs.get()
 
-                        
+
                         when {
                             timeSinceSync > AUTO_RESYNC_THRESHOLD_MS -> {
                                 Log.i(TAG, "Auto-resync triggered: ${timeSinceSync}ms since last sync")
                                 attemptAutoResync("time_threshold")
                             }
+
                             currentQuality > CRITICAL_DRIFT_THRESHOLD_MS -> {
                                 Log.w(TAG, "Auto-resync triggered: quality degraded to ${currentQuality}ms")
                                 attemptAutoResync("quality_degradation")
                             }
-                            timeSinceSync > 120_000L -> { 
-                                Log.d(TAG, "Drift monitoring: ${timeSinceSync}ms since sync, quality: ${currentQuality}ms")
+
+                            timeSinceSync > 120_000L -> {
+                                Log.d(
+                                    TAG,
+                                    "Drift monitoring: ${timeSinceSync}ms since sync, quality: ${currentQuality}ms"
+                                )
                             }
                         }
                     } catch (e: Exception) {
@@ -360,48 +362,48 @@ class TimeManager(
             }
     }
 
-    
+
     private fun attemptAutoResync(reason: String) {
         syncScope.launch {
             try {
                 Log.i(TAG, "Attempting auto-resync (reason: $reason)")
-                
-                
+
+
                 val retryCount = if (syncQualityMs.get() > HIGH_LATENCY_THRESHOLD_MS) {
                     POOR_NETWORK_RETRY_COUNT
                 } else {
                     SYNC_RETRY_COUNT
                 }
 
-                
+
                 val originalRetryCount = SYNC_RETRY_COUNT
-                
-                
+
+
                 val success = performEnhancedTimeSync(getCurrentPCAddress(), getCurrentPCPort(), retryCount)
-                
+
                 if (success) {
                     Log.i(TAG, "Auto-resync successful (reason: $reason)")
                 } else {
                     Log.w(TAG, "Auto-resync failed (reason: $reason) - will retry at next interval")
                 }
-                
+
             } catch (e: Exception) {
                 Log.e(TAG, "Auto-resync error (reason: $reason)", e)
             }
         }
     }
 
-    
+
     private suspend fun performEnhancedTimeSync(pcAddress: String?, pcPort: Int?, retryCount: Int): Boolean {
         if (pcAddress == null || pcPort == null) return false
-        
+
         return withContext(Dispatchers.IO) {
             var bestOffset: Long? = null
             var bestRtt = Long.MAX_VALUE
             var successCount = 0
             val measurements = mutableListOf<Long>()
 
-            
+
             repeat(retryCount) { attempt ->
                 try {
                     val syncResult = performTimeSyncRound(pcAddress, pcPort)
@@ -409,19 +411,22 @@ class TimeManager(
                         successCount++
                         measurements.add(syncResult.roundTripTimeNs / 1_000_000)
 
-                        
+
                         if (syncResult.roundTripTimeNs < bestRtt) {
                             bestRtt = syncResult.roundTripTimeNs
                             bestOffset = syncResult.clockOffsetNs
                         }
 
-                        Log.d(TAG, "Enhanced sync round ${attempt + 1}: offset=${syncResult.clockOffsetNs}ns, RTT=${syncResult.roundTripTimeNs / 1_000_000}ms")
+                        Log.d(
+                            TAG,
+                            "Enhanced sync round ${attempt + 1}: offset=${syncResult.clockOffsetNs}ns, RTT=${syncResult.roundTripTimeNs / 1_000_000}ms"
+                        )
                     }
 
-                    
+
                     val avgLatency = if (measurements.isNotEmpty()) measurements.average() else 0.0
                     val delayMs = if (avgLatency > HIGH_LATENCY_THRESHOLD_MS) 500 else 100
-                    
+
                     delay(delayMs)
                 } catch (e: Exception) {
                     Log.w(TAG, "Enhanced sync round ${attempt + 1} failed", e)
@@ -429,20 +434,23 @@ class TimeManager(
             }
 
             if (bestOffset != null && successCount > 0) {
-                
+
                 clockOffsetNs.set(bestOffset!!)
                 lastSyncTimestamp.set(getCurrentTimestampNs())
                 syncQualityMs.set(bestRtt / 1_000_000)
-                
-                
+
+
                 if (measurements.isNotEmpty()) {
                     val avgLatency = measurements.average()
                     val minLatency = measurements.minOrNull() ?: 0L
                     val maxLatency = measurements.maxOrNull() ?: 0L
-                    
-                    Log.i(TAG, "Enhanced sync completed: offset=${bestOffset}ns, latency: avg=${avgLatency.toInt()}ms, range=${minLatency}-${maxLatency}ms")
+
+                    Log.i(
+                        TAG,
+                        "Enhanced sync completed: offset=${bestOffset}ns, latency: avg=${avgLatency.toInt()}ms, range=${minLatency}-${maxLatency}ms"
+                    )
                 }
-                
+
                 true
             } else {
                 Log.e(TAG, "Enhanced time sync failed: $successCount/$retryCount rounds succeeded")
@@ -451,13 +459,13 @@ class TimeManager(
         }
     }
 
-    
+
     private var cachedPCAddress: String? = null
     private var cachedPCPort: Int? = null
-    
+
     private fun getCurrentPCAddress(): String? = cachedPCAddress
     private fun getCurrentPCPort(): Int? = cachedPCPort
-    
+
     fun setPCConnectionInfo(address: String, port: Int) {
         cachedPCAddress = address
         cachedPCPort = port
@@ -547,10 +555,10 @@ private data class TimeSyncResponse(
 
 enum class SyncQualityLevel {
     NOT_SYNCED,
-    EXCELLENT, 
-    GOOD, 
-    FAIR, 
-    POOR, 
+    EXCELLENT,
+    GOOD,
+    FAIR,
+    POOR,
 }
 
 data class SyncQuality(

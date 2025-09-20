@@ -13,7 +13,7 @@ class ZeroconfDiscoveryService(private val context: Context) {
         private const val TAG = "ZeroconfDiscovery"
         private const val SERVICE_TYPE = "_ircamera._tcp."
         private const val SERVICE_NAME = "IRCamera-Device"
-        private const val DISCOVERY_TIMEOUT = 30000L 
+        private const val DISCOVERY_TIMEOUT = 30000L
     }
 
     private val nsdManager: NsdManager by lazy {
@@ -98,8 +98,8 @@ class ZeroconfDiscoveryService(private val context: Context) {
                         serviceName = "$SERVICE_NAME-$deviceId"
                         serviceType = SERVICE_TYPE
                         setPort(port)
-                        
-                        
+
+
                     }
 
                 registrationListener = createRegistrationListener()
@@ -135,7 +135,7 @@ class ZeroconfDiscoveryService(private val context: Context) {
                 val host = serviceInfo.host?.hostAddress ?: return@mapNotNull null
                 val port = serviceInfo.port
                 val deviceName = serviceInfo.serviceName
-                val capabilities = emptyList<String>() 
+                val capabilities = emptyList<String>()
 
                 NetworkClient.ControllerInfo(
                     ipAddress = host,
@@ -159,12 +159,12 @@ class ZeroconfDiscoveryService(private val context: Context) {
             override fun onServiceFound(service: NsdServiceInfo) {
                 Log.d(TAG, "Service discovery success: ${service.serviceName}")
 
-                
+
                 if (service.serviceName.startsWith(SERVICE_NAME)) {
                     return
                 }
 
-                
+
                 @Suppress("DEPRECATION")
                 nsdManager.resolveService(service, createResolveListener())
             }
@@ -217,13 +217,13 @@ class ZeroconfDiscoveryService(private val context: Context) {
 
                 discoveredServices[serviceInfo.serviceName] = serviceInfo
 
-                
+
                 try {
                     val host = serviceInfo.host?.hostAddress ?: return
                     val port = serviceInfo.port
                     val deviceName = serviceInfo.serviceName
                     val capabilities =
-                        emptyList<String>() 
+                        emptyList<String>()
 
                     val controllerInfo =
                         NetworkClient.ControllerInfo(

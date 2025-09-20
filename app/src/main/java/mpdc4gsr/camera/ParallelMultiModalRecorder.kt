@@ -129,7 +129,7 @@ class ParallelMultiModalRecorder(
                                         thermalRecorder.startRecording(unifiedSessionId, null, true)
                                     if (success) {
 
-                                        delay(50) 
+                                        delay(50)
                                         thermalRecorder.triggerSyncEvent(
                                             "PARALLEL_THERMAL_START",
                                             mapOf(
@@ -317,7 +317,7 @@ class ParallelMultiModalRecorder(
                             thermalVideoFile =
                                 if (selectedSensors.contains(SensorSelectionDialog.SensorType.THERMAL)) {
 
-                                    null 
+                                    null
                                 } else {
                                     null
                                 },

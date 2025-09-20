@@ -9,7 +9,6 @@ import com.mpdc4gsr.module.thermal.ir.R
 import com.mpdc4gsr.module.thermal.ir.activity.BaseIRPlushFragment
 
 
-
 class IRPlushFragment : BaseIRPlushFragment() {
 
     private lateinit var dualTextureViewNativeCamera: SurfaceView

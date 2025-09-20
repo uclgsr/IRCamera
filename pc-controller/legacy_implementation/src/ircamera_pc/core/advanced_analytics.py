@@ -1,5 +1,3 @@
-
-
 import json
 import logging
 import numpy as np
@@ -16,7 +14,6 @@ logger = logging.getLogger(__name__)
 
 
 class BiometricPattern(Enum):
-
     BASELINE = "baseline"
     ACUTE_STRESS = "acute_stress"
     CHRONIC_STRESS = "chronic_stress"
@@ -29,7 +26,6 @@ class BiometricPattern(Enum):
 
 
 class SensorModality(Enum):
-
     GSR = "gsr"
     THERMAL = "thermal"
     RGB_FACIAL = "rgb_facial"
@@ -41,7 +37,6 @@ class SensorModality(Enum):
 
 @dataclass
 class SensorReading:
-
     timestamp: float
     device_id: str
     session_id: str
@@ -55,7 +50,6 @@ class SensorReading:
 
 @dataclass
 class MultiModalFeatures:
-
     timestamp: float
     device_id: str
     session_id: str
@@ -84,7 +78,6 @@ class MultiModalFeatures:
 
 @dataclass
 class BehavioralInsight:
-
     timestamp: float
     insight_type: str
     severity: str
@@ -96,7 +89,6 @@ class BehavioralInsight:
 
 @dataclass
 class ResearchMetrics:
-
     session_id: str
     participant_id: str
 
@@ -177,7 +169,6 @@ class AdvancedAnalyticsEngine:
                     features = self._extract_multimodal_features(session_key, timestamp)
 
                     if features:
-
                         self.feature_history[session_key].append(features)
 
                         insights = self._generate_behavioral_insights(session_key, features)
@@ -994,7 +985,6 @@ class AdvancedAnalyticsEngine:
 
 def create_gsr_reading(device_id: str, session_id: str, timestamp: float,
                        gsr_value: float, quality: float = 95.0) -> SensorReading:
-
     return SensorReading(
         timestamp=timestamp,
         device_id=device_id,
@@ -1010,7 +1000,6 @@ def create_gsr_reading(device_id: str, session_id: str, timestamp: float,
 
 def create_thermal_reading(device_id: str, session_id: str, timestamp: float,
                            temperature: float, quality: float = 90.0) -> SensorReading:
-
     return SensorReading(
         timestamp=timestamp,
         device_id=device_id,

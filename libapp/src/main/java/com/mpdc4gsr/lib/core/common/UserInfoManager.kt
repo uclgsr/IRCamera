@@ -3,7 +3,6 @@ package com.mpdc4gsr.lib.core.common
 import android.text.TextUtils
 
 
-
 class UserInfoManager {
     companion object {
         @Volatile

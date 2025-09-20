@@ -79,8 +79,8 @@ class ReportPreviewAdapter(private val cxt: Context, var dataList: List<HouseRep
                 false
             }
 
-            
-        } 
+
+        }
     }
 
     override fun getItemCount(): Int {

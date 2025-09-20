@@ -10,7 +10,7 @@ import com.example.suplib.wrapper.SupHelp
 import com.infisense.usbir.tools.ImageTools
 import com.infisense.usbir.utils.IRImageHelp
 import com.infisense.usbir.utils.OpencvTools
-import com.mpdc4gsr.pseudo.bean.CustomPseudoBean
+import com.mpdc4gsr.lib.core.bean.CustomPseudoBean
 import java.io.IOException
 import java.nio.ByteBuffer
 
@@ -21,8 +21,8 @@ class FrameTool {
     private val srcTemperatureLen = imageWidth * imageHeight * 2
     private val imageBytes = ByteArray(scrImageLen)
     val temperatureBytes = ByteArray(srcTemperatureLen)
-    private val imageRes = LibIRProcess.ImageRes_t() 
-    private var struct: FrameStruct = FrameStruct() 
+    private val imageRes = LibIRProcess.ImageRes_t()
+    private var struct: FrameStruct = FrameStruct()
 
     private var maxLimit = -273f
     private var minLimit = -273f
@@ -36,14 +36,14 @@ class FrameTool {
             val frame = ByteArray(bytes.size)
             System.arraycopy(bytes, 0, frame, 0, frame.size)
             println("bs len: ${frame.size}")
-            System.arraycopy(frame, 0, imageBytes, 0, scrImageLen) 
+            System.arraycopy(frame, 0, imageBytes, 0, scrImageLen)
             System.arraycopy(
                 frame,
                 scrImageLen,
                 temperatureBytes,
                 0,
                 srcTemperatureLen
-            ) 
+            )
             println("imageBytes len: ${imageBytes.size}")
             println("temperatureBytes len: ${temperatureBytes.size}")
         } catch (e: Exception) {
@@ -219,7 +219,7 @@ class FrameTool {
                     temperatureBytes,
                     maxLimit,
                     minLimit
-                ) 
+                )
             }
         }
 
@@ -238,7 +238,7 @@ class FrameTool {
             }
         }
 
-        argbBytesRotate(argbBytes, dstArgbBytes!!, rotate) 
+        argbBytesRotate(argbBytes, dstArgbBytes!!, rotate)
         val dstImageRes = getDstImageRes(rotate)
         var scrBitmap: Bitmap? = null
         if (isAmplify) {
@@ -292,7 +292,7 @@ class FrameTool {
     }
 
     private fun getDstImageRes(rotate: ImageParams): LibIRProcess.ImageRes_t {
-        val dstImageRes = LibIRProcess.ImageRes_t() 
+        val dstImageRes = LibIRProcess.ImageRes_t()
         if (rotate == ImageParams.ROTATE_270 || rotate == ImageParams.ROTATE_90) {
             dstImageRes.width = imageRes.height
             dstImageRes.height = imageRes.width

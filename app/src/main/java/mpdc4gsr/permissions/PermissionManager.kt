@@ -22,35 +22,35 @@ class PermissionManager(
         private const val REQUEST_ALL_PERMISSIONS = 200
     }
 
-    
+
     suspend fun requestCameraPermissions(): Boolean = suspendCancellableCoroutine { continuation ->
         val cameraPermissions = arrayOf(
             Manifest.permission.CAMERA,
             Manifest.permission.RECORD_AUDIO
         )
-        
+
         val missingPermissions = cameraPermissions.filter { permission ->
             ActivityCompat.checkSelfPermission(activity, permission) != PackageManager.PERMISSION_GRANTED
         }
-        
+
         if (missingPermissions.isEmpty()) {
             Log.i(TAG, "Camera permissions already granted")
             continuation.resume(true)
             return@suspendCancellableCoroutine
         }
-        
+
         Log.i(TAG, "Requesting camera permissions")
-        
-        
+
+
         permissionController.setPermissionCallback(REQUEST_CAMERA_PERMISSIONS) { granted ->
             Log.i(TAG, "Camera permissions result: $granted")
             continuation.resume(granted)
         }
-        
+
         ActivityCompat.requestPermissions(activity, missingPermissions.toTypedArray(), REQUEST_CAMERA_PERMISSIONS)
     }
 
-    
+
     suspend fun requestBluetoothPermissions(): Boolean = suspendCancellableCoroutine { continuation ->
         val bluetoothPermissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             arrayOf(
@@ -65,31 +65,31 @@ class PermissionManager(
                 Manifest.permission.ACCESS_FINE_LOCATION
             )
         }
-        
+
         val missingPermissions = bluetoothPermissions.filter { permission ->
             ActivityCompat.checkSelfPermission(activity, permission) != PackageManager.PERMISSION_GRANTED
         }
-        
+
         if (missingPermissions.isEmpty()) {
             Log.i(TAG, "Bluetooth permissions already granted")
             continuation.resume(true)
             return@suspendCancellableCoroutine
         }
-        
+
         Log.i(TAG, "Requesting bluetooth permissions")
-        
-        
+
+
         permissionController.setPermissionCallback(REQUEST_BLUETOOTH_PERMISSIONS) { granted ->
             Log.i(TAG, "Bluetooth permissions result: $granted")
             continuation.resume(granted)
         }
-        
+
         ActivityCompat.requestPermissions(activity, missingPermissions.toTypedArray(), REQUEST_BLUETOOTH_PERMISSIONS)
     }
 
-    
+
     suspend fun requestStoragePermissions(): Boolean {
-        
+
         return true
     }
 }

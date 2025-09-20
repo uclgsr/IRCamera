@@ -41,7 +41,7 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
 
     override fun initContentLayoutId() = R.layout.activity_gsr_quick_recording
 
-    
+
     private lateinit var recordingController: RecordingController
     private var currentSessionDirectory: String? = null
     private var isRecording = false
@@ -54,10 +54,10 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
     }
 
     private fun initRecordingController() {
-        
+
         recordingController = RecordingController(this, this)
 
-        
+
         lifecycleScope.launch {
             val success = recordingController.initializeSensors()
             runOnUiThread {
@@ -92,7 +92,7 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
             }
         }
 
-        
+
         lifecycleScope.launch {
             recordingController.recordingStateFlow.collect { state ->
                 runOnUiThread {
@@ -129,7 +129,7 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
             }
         }
 
-        
+
         lifecycleScope.launch {
             recordingController.sensorStatusFlow.collect { statusList ->
                 runOnUiThread {
@@ -163,24 +163,24 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
         }
 
         binding.viewSessionsButton.setOnClickListener {
-            
+
             try {
                 val intent = Intent(this, SessionManagerActivity::class.java)
                 startActivity(intent)
             } catch (e: Exception) {
-                
+
                 val intent = Intent(this, GSRDemoActivity::class.java)
                 startActivity(intent)
             }
         }
 
         binding.gsrSettingsButton.setOnClickListener {
-            
+
             try {
                 val intent = Intent(this, GSRSettingsActivity::class.java)
                 startActivity(intent)
             } catch (e: Exception) {
-                
+
                 val intent = Intent(this, MultiModalRecordingActivity::class.java)
                 startActivity(intent)
             }
@@ -188,7 +188,7 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
     }
 
     private fun checkPermissions() {
-        
+
         val missingPermissions =
             REQUIRED_PERMISSIONS.filter {
                 ContextCompat.checkSelfPermission(
@@ -205,7 +205,7 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
     private fun startRecording() {
         lifecycleScope.launch {
             try {
-                
+
                 val storageStatus = recordingController.getStorageStatus()
                 if (storageStatus.isLowStorage) {
                     runOnUiThread {
@@ -230,7 +230,7 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
 
                 Log.i(TAG, "Starting recording with improved session management")
 
-                
+
                 val success = recordingController.startRecording(
                     participantId = "QuickRecording",
                     studyName = "GSR Quick Test"
@@ -247,7 +247,7 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
                             Toast.LENGTH_SHORT
                         ).show()
 
-                        
+
                         currentSessionDirectory?.let { sessionDirPath ->
                             binding.sessionInfoText.text = "Session saved to:\n$sessionDirPath"
                         }
@@ -285,7 +285,7 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
                             Toast.LENGTH_SHORT
                         ).show()
 
-                        
+
                         currentSessionDirectory?.let { sessionDir ->
                             binding.sessionInfoText.text = "Session saved to:\n$sessionDir"
                         }
@@ -356,7 +356,7 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
     override fun onDestroy() {
         super.onDestroy()
 
-        
+
         lifecycleScope.launch {
             recordingController.cleanup()
         }

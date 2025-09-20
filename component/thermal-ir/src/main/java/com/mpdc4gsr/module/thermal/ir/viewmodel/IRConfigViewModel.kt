@@ -72,7 +72,7 @@ class IRConfigViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
-    
+
     fun checkConfig(
         isTC007: Boolean,
         id: Int,
@@ -88,7 +88,7 @@ class IRConfigViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
-    
+
     fun deleteConfig(
         isTC007: Boolean,
         id: Int,
@@ -99,7 +99,7 @@ class IRConfigViewModel(application: Application) : AndroidViewModel(application
             for (i in modelBean.myselfModel.indices) {
                 val dataBean = modelBean.myselfModel[i]
                 if (dataBean.id == id) {
-                    if (dataBean.use) { 
+                    if (dataBean.use) {
                         modelBean.defaultModel.use = true
                     }
                     modelBean.myselfModel.removeAt(i)

@@ -128,7 +128,7 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    
+
     <FrameLayout
         android:id="@+id/thermal_lay"
         android:layout_width="0dp"

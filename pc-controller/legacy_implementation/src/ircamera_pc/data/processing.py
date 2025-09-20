@@ -26,7 +26,6 @@ except ImportError:
 
 @dataclass
 class GSRDataPoint:
-
     timestamp: float
     gsr_value: float
     raw_value: int
@@ -37,7 +36,6 @@ class GSRDataPoint:
 
 @dataclass
 class ThermalDataPoint:
-
     timestamp: float
     temperature_data: List[List[float]]
     min_temp: float
@@ -50,7 +48,6 @@ class ThermalDataPoint:
 
 @dataclass
 class RGBDataPoint:
-
     timestamp: float
     image_path: str
     frame_number: int
@@ -82,7 +79,6 @@ class GSRIngestor:
 
             processed_points = []
             for data_point in gsr_data:
-
                 raw_value = data_point.get("raw_value", 0)
 
                 gsr_value = self._convert_raw_to_gsr(raw_value)

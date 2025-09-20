@@ -139,7 +139,7 @@ public class CameraPreviewManager {
 
         mSurfaceNativeWindow = new SurfaceNativeWindow();
         mIIrFrameCallback = new IIrFrameCallback() {
-            
+
             @Override
             public void onFrame(byte[] frame, int length) {
                 try {
@@ -211,7 +211,7 @@ public class CameraPreviewManager {
                                             PseudocodeUtils.INSTANCE.changePseudocodeModeByOld(1), mIrARGBData);
                                 }
                                 irImageHelp.customPseudoColor(mIrARGBData, mTempData, mPreviewWidth, mPreviewHeight);
-                                
+
                                 irImageHelp.setPseudoColorMaxMin(mIrARGBData, mTempData, max, min, mPreviewWidth, mPreviewHeight);
                                 mIrARGBData = irImageHelp.contourDetection(alarmBean,
                                         mIrARGBData, mTempData, mPreviewWidth, mPreviewHeight);
@@ -328,7 +328,7 @@ public class CameraPreviewManager {
                 mTempRotateData = new byte[mIrARGBLength];
                 break;
             case NV12_IMAGE_OUTPUT:
-                
+
                 mFrameFormatType = UvcParams.FrameFormatType.FRAME_FORMAT_NV12;
 
                 mPreviewWidth = 640;
@@ -344,7 +344,7 @@ public class CameraPreviewManager {
 
                 break;
             case NV12_AND_TEMP_OUTPUT:
-                
+
                 mFrameFormatType = UvcParams.FrameFormatType.FRAME_FORMAT_NV12;
 
                 mPreviewWidth = 640;
@@ -373,11 +373,11 @@ public class CameraPreviewManager {
         mAutoGainImageRes.width = 256;
         mAutoGainImageRes.height = 192;
 
-        mGainSwitchParam.above_pixel_prop = 0.1f;    
-        mGainSwitchParam.above_temp_data = (int) ((130 + 273.15) * 16 * 4); 
-        mGainSwitchParam.below_pixel_prop = 0.95f;   
+        mGainSwitchParam.above_pixel_prop = 0.1f;
+        mGainSwitchParam.above_temp_data = (int) ((130 + 273.15) * 16 * 4);
+        mGainSwitchParam.below_pixel_prop = 0.95f;
         mGainSwitchParam.below_temp_data = (int) ((150 + 273.15) * 16 * 4);
-        mAutoGainSwitchInfo.switch_frame_cnt = 5 * 15; 
+        mAutoGainSwitchInfo.switch_frame_cnt = 5 * 15;
         mAutoGainSwitchInfo.waiting_frame_cnt = 7 * 15;
 
     }
@@ -426,7 +426,7 @@ public class CameraPreviewManager {
         return mPhotoBitmap;
     }
 
-    
+
     public List<CameraSize> getAllSupportedSize() {
         return mIrcamEngine.getUsbSupportInfo();
     }
@@ -443,7 +443,7 @@ public class CameraPreviewManager {
         float bandwidth = SPUtils.getInstance().getFloat(
                 IrConst.KEY_DEFAULT_STREAM_BANDWIDTH, IrConst.DEFAULT_STREAM_BANDWIDTH);
 
-        
+
         uvcHandleParam.setBandwidth(bandwidth);
 
         Log.d(TAG, "initHandleEngine UvcHandleParam = " + uvcHandleParam.toString());

@@ -25,15 +25,15 @@ class AdvancedAuthenticationManager(private val context: Context) {
         private const val TAG = "AdvancedAuth"
 
         const val AUTH_LEVEL_NONE = 0
-        const val AUTH_LEVEL_BASIC = 1 
-        const val AUTH_LEVEL_CERTIFICATE = 2 
-        const val AUTH_LEVEL_TOKEN = 3 
-        const val AUTH_LEVEL_BIOMETRIC = 4 
+        const val AUTH_LEVEL_BASIC = 1
+        const val AUTH_LEVEL_CERTIFICATE = 2
+        const val AUTH_LEVEL_TOKEN = 3
+        const val AUTH_LEVEL_BIOMETRIC = 4
 
-        private const val TOKEN_VALIDITY_MS = 24 * 60 * 60 * 1000L 
+        private const val TOKEN_VALIDITY_MS = 24 * 60 * 60 * 1000L
         private const val CERTIFICATE_ROTATION_DAYS = 30
         private const val MAX_AUTH_ATTEMPTS = 5
-        private const val LOCKOUT_DURATION_MS = 15 * 60 * 1000L 
+        private const val LOCKOUT_DURATION_MS = 15 * 60 * 1000L
 
         private const val KEYSTORE_ALIAS_DEVICE = "ircamera_device_key"
         private const val KEYSTORE_ALIAS_SESSION = "ircamera_session_key"
@@ -82,7 +82,7 @@ class AdvancedAuthenticationManager(private val context: Context) {
                 "export_data"
             ),
         ),
-        ADMINISTRATOR(4, setOf("*")), 
+        ADMINISTRATOR(4, setOf("*")),
     }
 
     enum class AuthenticationResult {
@@ -534,7 +534,7 @@ class AdvancedAuthenticationManager(private val context: Context) {
             )
                 .setBlockModes(KeyProperties.BLOCK_MODE_GCM)
                 .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)
-                .setUserAuthenticationRequired(false) 
+                .setUserAuthenticationRequired(false)
                 .build()
 
         keyGenerator.init(keyGenParameterSpec)
@@ -578,7 +578,7 @@ class AdvancedAuthenticationManager(private val context: Context) {
     ) {
         scope.launch {
             while (System.currentTimeMillis() < expiryTime && currentAuthLevel.get()) {
-                delay(60000) 
+                delay(60000)
 
                 securityMonitor?.checkSessionActivity(deviceId)
             }

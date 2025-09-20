@@ -276,7 +276,7 @@ class CertificateManager(
         GlobalScope.launch {
             while (true) {
                 try {
-                    delay(24 * 60 * 60 * 1000L) 
+                    delay(24 * 60 * 60 * 1000L)
 
                     deviceCertificate?.let { cert ->
                         val expiryTime = cert.notAfter.time

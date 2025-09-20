@@ -19,7 +19,7 @@ class SynchronizationTestActivity : ComponentActivity() {
     companion object {
         private const val TAG = "SynchronizationTest"
         private const val FLASH_DURATION_MS = 500L
-        private const val TEST_RECORDING_DURATION_MS = 10000L 
+        private const val TEST_RECORDING_DURATION_MS = 10000L
     }
 
     private lateinit var recordingController: RecordingController
@@ -88,12 +88,12 @@ class SynchronizationTestActivity : ComponentActivity() {
 
                 updateStatus("Starting synchronization test...")
 
-                
+
                 val testSessionDir =
                     File(getExternalFilesDir(null), "sync_test_${System.currentTimeMillis()}")
                 testSessionDir.mkdirs()
 
-                
+
                 val sessionId = "SYNC_TEST_${System.currentTimeMillis()}"
                 val success =
                     recordingController.startRecording(testSessionDir.absolutePath, sessionId)
@@ -101,10 +101,10 @@ class SynchronizationTestActivity : ComponentActivity() {
                 if (success) {
                     updateStatus("Recording started. You can now trigger flash sync events.")
 
-                    
+
                     scheduleAutomaticSyncEvents()
 
-                    
+
                     lifecycleScope.launch {
                         delay(TEST_RECORDING_DURATION_MS)
                         if (isTestRunning) {
@@ -128,8 +128,8 @@ class SynchronizationTestActivity : ComponentActivity() {
 
     private fun scheduleAutomaticSyncEvents() {
         lifecycleScope.launch {
-            
-            val eventTimes = listOf(2000L, 4000L, 6000L, 8000L) 
+
+            val eventTimes = listOf(2000L, 4000L, 6000L, 8000L)
 
             for (eventTime in eventTimes) {
                 delay(eventTime)
@@ -147,10 +147,10 @@ class SynchronizationTestActivity : ComponentActivity() {
             try {
                 Log.i(TAG, "Triggering manual flash sync event")
 
-                
+
                 flashScreen()
 
-                
+
                 recordingController.addSyncMarker(
                     "MANUAL_FLASH_SYNC",
                     android.os.SystemClock.elapsedRealtimeNanos(),
@@ -175,10 +175,10 @@ class SynchronizationTestActivity : ComponentActivity() {
             try {
                 Log.i(TAG, "Triggering automatic sync event: $eventName")
 
-                
+
                 flashScreen(duration = 200L)
 
-                
+
                 recordingController.addSyncMarker(
                     eventName,
                     android.os.SystemClock.elapsedRealtimeNanos(),
@@ -199,12 +199,12 @@ class SynchronizationTestActivity : ComponentActivity() {
 
     private fun flashScreen(duration: Long = FLASH_DURATION_MS) {
         lifecycleScope.launch {
-            
+
             window.decorView.setBackgroundColor(android.graphics.Color.WHITE)
 
             delay(duration)
 
-            
+
             window.decorView.setBackgroundColor(android.graphics.Color.BLACK)
         }
     }
@@ -219,7 +219,7 @@ class SynchronizationTestActivity : ComponentActivity() {
                 if (success) {
                     updateStatus("Test completed. Check recorded data for sync event alignment.")
 
-                    
+
                     generateSyncTestReport()
                 } else {
                     updateStatus("Warning: Some sensors may not have stopped cleanly")

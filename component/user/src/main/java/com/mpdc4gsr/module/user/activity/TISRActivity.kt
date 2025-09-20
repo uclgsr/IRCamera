@@ -61,7 +61,7 @@ class TISRActivity : BaseActivity() {
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onSocketMsgEvent(event: SocketMsgEvent) {
         when (SocketCmdUtil.getCmdResponse(event.text)) {
-            WsCmdConstants.AR_COMMAND_TISR_GET -> { 
+            WsCmdConstants.AR_COMMAND_TISR_GET -> {
                 try {
                     val webSocketIp = SocketCmdUtil.getIpResponse(event.text)
                     if (webSocketIp == WsCmdConstants.AR_COMMAND_IP) {

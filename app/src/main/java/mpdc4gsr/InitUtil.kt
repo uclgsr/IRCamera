@@ -31,8 +31,8 @@ object InitUtil {
         val fileDir = BaseApplication.instance.getExternalFilesDir("log")!!.absolutePath
         val tag = "MPDC4GSR_LOG"
         val pattern = "{d}, {L}, {t}, {m}"
-        val backupStrategy = FileSizeBackupStrategy2(5 * 1024 * 1024L, 10) 
-        val cleanStrategy = FileLastModifiedCleanStrategy(30 * 24 * 60 * 60) 
+        val backupStrategy = FileSizeBackupStrategy2(5 * 1024 * 1024L, 10)
+        val cleanStrategy = FileLastModifiedCleanStrategy(30 * 24 * 60 * 60)
 
         val config =
             LogConfiguration.Builder()
@@ -41,11 +41,11 @@ object InitUtil {
                 .build()
         val androidPrinter = AndroidPrinter(true)
         val filePrinter =
-            FilePrinter.Builder(fileDir) 
-                .fileNameGenerator(ChangelessFileNameGenerator(fileName)) 
-                .backupStrategy(backupStrategy) 
-                .cleanStrategy(cleanStrategy) 
-                .flattener(PatternFlattener(pattern)) 
+            FilePrinter.Builder(fileDir)
+                .fileNameGenerator(ChangelessFileNameGenerator(fileName))
+                .backupStrategy(backupStrategy)
+                .cleanStrategy(cleanStrategy)
+                .flattener(PatternFlattener(pattern))
                 .build()
         if (BuildConfig.DEBUG) {
             XLog.init(config, androidPrinter, filePrinter)
@@ -102,7 +102,7 @@ object InitUtil {
         try {
             BaseApplication.instance.unregisterReceiver(BaseApplication.usbObserver)
         } catch (e: Exception) {
-            
+
         }
 
         val filter = IntentFilter()
@@ -110,7 +110,7 @@ object InitUtil {
         filter.addAction(UsbManager.ACTION_USB_DEVICE_DETACHED)
         filter.addAction(UsbManager.ACTION_USB_ACCESSORY_ATTACHED)
         filter.addAction(UsbManager.ACTION_USB_ACCESSORY_DETACHED)
-        filter.addAction(DeviceBroadcastReceiver.ACTION_USB_PERMISSION) 
+        filter.addAction(DeviceBroadcastReceiver.ACTION_USB_PERMISSION)
         if (Build.VERSION.SDK_INT < 33) {
             BaseApplication.instance.registerReceiver(BaseApplication.usbObserver, filter)
         } else {

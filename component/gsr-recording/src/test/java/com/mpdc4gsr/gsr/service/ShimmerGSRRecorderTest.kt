@@ -182,7 +182,7 @@ class ShimmerGSRRecorderTest {
 
     @Test
     fun testRecordingModeConfiguration() {
-        
+
         val streamingRecorder = ShimmerGSRRecorder(
             context,
             MockShimmerDeviceFactory(),
@@ -204,7 +204,7 @@ class ShimmerGSRRecorderTest {
             recordingMode = ShimmerGSRRecorder.RecordingMode.LOG_AND_STREAM
         )
 
-        
+
         assertEquals(
             "Should be streaming mode",
             ShimmerGSRRecorder.RecordingMode.STREAMING,
@@ -226,10 +226,10 @@ class ShimmerGSRRecorderTest {
 
     @Test
     fun testGSRDataProcessingAccuracy() {
-        
+
         val apisBridge = ShimmerAPIBridge.getInstance()
 
-        
+
         val testValues = arrayOf(0.0, 1024.0, 2048.0, 3072.0, 4095.0)
 
         for (rawValue in testValues) {
@@ -239,7 +239,7 @@ class ShimmerGSRRecorderTest {
                 sessionId = "test_session"
             )
 
-            
+
             assertTrue(
                 "Raw value should be preserved: $rawValue",
                 sample.rawValue.toDouble() == rawValue

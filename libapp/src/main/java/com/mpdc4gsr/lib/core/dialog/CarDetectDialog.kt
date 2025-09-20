@@ -40,7 +40,7 @@ class CarDetectDialog(context: Context, val listener: ((bean: CarDetectChildBean
             LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         binding.rcyDetect.adapter = CarDetectAdapter(context, getDetectList())
 
-        
+
     }
 
     companion object {

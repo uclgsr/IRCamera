@@ -12,7 +12,7 @@ class RAWCaptureTestActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityRawCaptureTestBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        
+
         setupSpinner()
         setupSwitchListeners()
     }
@@ -26,7 +26,7 @@ class RAWCaptureTestActivity : AppCompatActivity() {
             ).apply {
                 setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             }
-        binding.rawFrameRateSpinner.setSelection(0) 
+        binding.rawFrameRateSpinner.setSelection(0)
     }
 
     private fun setupSwitchListeners() {

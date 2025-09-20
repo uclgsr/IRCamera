@@ -20,7 +20,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/network_status_bar" />
 
-        
+
         <LinearLayout
             android:id="@+id/network_status_bar"
             android:layout_width="match_parent"
@@ -33,7 +33,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            
+
             <ImageButton
                 android:id="@+id/thermal_quick_access"
                 android:layout_width="24dp"
@@ -98,7 +98,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintWidth_percent="0.28" />
 
-            
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/cl_icon_gallery"
                 android:layout_width="0dp"
@@ -140,7 +140,7 @@
                     app:layout_constraintTop_toBottomOf="@id/iv_icon_gallery" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/cl_icon_mine"
                 android:layout_width="0dp"

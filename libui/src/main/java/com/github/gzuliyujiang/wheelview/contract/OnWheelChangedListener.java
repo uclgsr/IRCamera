@@ -1,5 +1,3 @@
-
-
 package com.github.gzuliyujiang.wheelview.contract;
 
 import com.github.gzuliyujiang.wheelview.annotation.ScrollState;

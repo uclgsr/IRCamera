@@ -16,7 +16,7 @@ public abstract class ChartTouchListener<T extends Chart<?>> extends GestureDete
     protected static final int PINCH_ZOOM = 4;
     protected static final int POST_ZOOM = 5;
     protected static final int ROTATE = 6;
-    
+
     protected ChartGesture mLastGesture = ChartGesture.NONE;
     protected int mTouchMode = NONE;
     protected Highlight mLastHighlighted;

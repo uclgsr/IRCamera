@@ -78,8 +78,8 @@ class TempDrawHelper {
         val top: Float = y - POINT_SIZE / 2f
         val right: Float = x + POINT_SIZE / 2f
         val bottom: Float = y + POINT_SIZE / 2f
-        canvas.drawLine(left, y.toFloat(), right, y.toFloat(), linePaint) 
-        canvas.drawLine(x.toFloat(), top, x.toFloat(), bottom, linePaint) 
+        canvas.drawLine(left, y.toFloat(), right, y.toFloat(), linePaint)
+        canvas.drawLine(x.toFloat(), top, x.toFloat(), bottom, linePaint)
     }
 
     fun drawLine(
@@ -156,12 +156,12 @@ class TempDrawHelper {
         var textY: Float = (y - TEMP_TEXT_OFFSET).toFloat()
 
         val textWidth: Float = textPaint.measureText(text)
-        if (x > width - textWidth - TEMP_TEXT_OFFSET) { 
+        if (x > width - textWidth - TEMP_TEXT_OFFSET) {
             textX = x - TEMP_TEXT_OFFSET - textWidth
         }
 
         val textFontTop: Float = -textPaint.getFontMetrics().top
-        if (y < textFontTop + TEMP_TEXT_OFFSET / 2) { 
+        if (y < textFontTop + TEMP_TEXT_OFFSET / 2) {
             textY = y + TEMP_TEXT_OFFSET / 2 + textFontTop
         }
 
@@ -210,13 +210,13 @@ class TempDrawHelper {
         var textX = x - textWidth / 2
         var textY = y + POINT_SIZE / 2 + textHeight
 
-        if (textX < 0) { 
+        if (textX < 0) {
             textX = 0f
         }
-        if (textX + textWidth > width) { 
+        if (textX + textWidth > width) {
             textX = width - textWidth
         }
-        if (textY > height) { 
+        if (textY > height) {
             textY = y - POINT_SIZE / 2 - textPaint.fontMetrics.bottom
         }
         canvas.drawText(name, textX, textY, textPaint)
@@ -242,16 +242,16 @@ class TempDrawHelper {
         var textX: Float = centerX - textWidth / 2
         var textY: Float = centerY + offset
 
-        if (textX < 0) { 
+        if (textX < 0) {
             textX = 0f
         }
-        if (textX + textWidth > width) { 
+        if (textX + textWidth > width) {
             textX = width - textWidth
         }
-        if (textY < textHeight) { 
+        if (textY < textHeight) {
             textY = textHeight
         }
-        if (textY > height) { 
+        if (textY > height) {
             textY = height.toFloat()
         }
         canvas.drawText(name, textX, textY, textPaint)

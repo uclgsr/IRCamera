@@ -63,13 +63,13 @@ class UnifiedGSRRecorder(
 
         private val SHIMMER_MAC_PREFIXES = listOf("00:06:66", "d0:39:72")
 
-        private const val GSR_RANGE_AUTO = 4  
-        private const val ADC_RESOLUTION_12BIT = 4095.0  
-        private const val DEFAULT_SAMPLING_RATE = 128.0  
+        private const val GSR_RANGE_AUTO = 4
+        private const val ADC_RESOLUTION_12BIT = 4095.0
+        private const val DEFAULT_SAMPLING_RATE = 128.0
 
-        private const val MIN_CONNECTION_STRENGTH = -70  
-        private const val MAX_DATA_GAP_MS = 50  
-        private const val MIN_QUALITY_SCORE = 0.8  
+        private const val MIN_CONNECTION_STRENGTH = -70
+        private const val MAX_DATA_GAP_MS = 50
+        private const val MIN_QUALITY_SCORE = 0.8
 
         fun hasRequiredPermissions(context: Context): Boolean {
             val bluetoothScan = ActivityCompat.checkSelfPermission(
@@ -106,15 +106,15 @@ class UnifiedGSRRecorder(
     private var bluetoothAdapter: BluetoothAdapter? = null
     private var shimmerManager: ShimmerBluetoothManagerAndroid? = null
     private var connectedShimmer: Shimmer? = null
-    
-    
+
+
     private var shimmerDeviceManager: ShimmerDeviceManager? = null
 
     private val discoveredDevices = mutableListOf<DeviceInfo>()
     private var selectedDevice: DeviceInfo? = null
 
     private val gsrDataFlow = MutableSharedFlow<GSRSample>(
-        replay = 1000,  
+        replay = 1000,
         onBufferOverflow = BufferOverflow.DROP_OLDEST
     )
 
@@ -124,14 +124,15 @@ class UnifiedGSRRecorder(
     private var sessionMetadata: SessionMetadata? = null
     private val recordedSamples = AtomicLong(0)
     private var recordingStartTime: Long = 0
-    
-    
+
+
     private val droppedSamples = AtomicLong(0)
     private var lastExpectedSampleTime: Long = 0
-    private val sampleInterval = (1000.0 / samplingRateHz).toLong() 
-    
-    
+    private val sampleInterval = (1000.0 / samplingRateHz).toLong()
+
+
     private val syncMarkers = mutableListOf<SyncMarker>()
+
     private data class SyncMarker(
         val timestampNs: Long,
         val markerType: String,
@@ -144,7 +145,7 @@ class UnifiedGSRRecorder(
     private val _deviceStatus = MutableStateFlow("Disconnected")
     val deviceStatus: StateFlow<String> = _deviceStatus.asStateFlow()
 
-    
+
     private val _statusFlow = MutableSharedFlow<RecordingStatus>(replay = 1)
     private val _errorFlow = MutableSharedFlow<SensorError>(replay = 1)
 
@@ -172,11 +173,11 @@ class UnifiedGSRRecorder(
             }
 
             shimmerManager = ShimmerBluetoothManagerAndroid(context, mainHandler)
-            
-            
+
+
             shimmerDeviceManager = ShimmerDeviceManager(context, lifecycleOwner)
             val deviceManagerInitialized = shimmerDeviceManager?.initialize() ?: false
-            
+
             if (!deviceManagerInitialized) {
                 Log.w(TAG, "Enhanced device manager initialization failed, using basic mode")
             } else {
@@ -206,36 +207,36 @@ class UnifiedGSRRecorder(
             _deviceStatus.value = "Discovering..."
             discoveredDevices.clear()
 
-            
+
             val deviceManager = shimmerDeviceManager
             if (deviceManager != null) {
                 Log.i(TAG, "Using enhanced BLE scanning for device discovery")
-                
+
                 val scanSuccess = deviceManager.startDeviceScanning()
                 if (scanSuccess) {
-                    delay(10000) 
-                    
+                    delay(10000)
+
                     val scanResults = withTimeoutOrNull(1000) {
                         deviceManager.scanResults.first()
                     } ?: emptyList()
-                    
+
                     discoveredDevices.clear()
                     discoveredDevices.addAll(scanResults)
-                    
+
                     deviceManager.stopDeviceScanning()
-                    
+
                     Log.i(TAG, "Enhanced BLE scan completed: found ${discoveredDevices.size} devices")
-                    
+
                     if (discoveredDevices.isNotEmpty()) {
                         _deviceStatus.value = "Found ${discoveredDevices.size} Shimmer devices"
                         return@withContext true
                     }
                 }
             }
-            
+
             // Don't add dummy devices - require actual hardware detection
             Log.i(TAG, "BLE scan completed without finding real Shimmer devices")
-            
+
             if (discoveredDevices.isNotEmpty()) {
                 _deviceStatus.value = "Found ${discoveredDevices.size} real Shimmer devices"
                 return@withContext true
@@ -266,7 +267,7 @@ class UnifiedGSRRecorder(
             shimmerManager?.connectShimmerThroughBTAddress(deviceInfo.address)
 
             var attempts = 0
-            while (connectedShimmer == null && attempts < 30) { 
+            while (connectedShimmer == null && attempts < 30) {
                 delay(1000)
                 attempts++
             }
@@ -295,8 +296,7 @@ class UnifiedGSRRecorder(
         val shimmer = connectedShimmer ?: return@withContext
 
         try {
-            
-            
+
 
             Log.i(
                 TAG,
@@ -309,7 +309,7 @@ class UnifiedGSRRecorder(
         }
     }
 
-    
+
     override suspend fun startRecording(
         sessionDirectory: String,
         sessionMetadata: SessionMetadata
@@ -339,7 +339,7 @@ class UnifiedGSRRecorder(
                 )
                 csvWriter = FileWriter(csvFile)
 
-                
+
                 csvWriter?.write(sessionMetadata.createTimingHeader())
                 csvWriter?.write("# GSR Recording Session with Synchronized Timing\n")
                 csvWriter?.write("# Device: ${selectedDevice?.name} (${selectedDevice?.address})\n")
@@ -493,23 +493,23 @@ class UnifiedGSRRecorder(
 
         while (_isRecording.get()) {
             try {
-                
+
                 val shimmer = connectedShimmer
                 if (shimmer != null && shimmer.isStreaming()) {
                     // Create a mock ObjectCluster for simulation
-                    
+
                     val objectCluster = createMockObjectCluster()
                     processGSRData(shimmer, objectCluster)
                 }
 
-                
+
                 updateConnectionQuality()
 
-                
+
                 delay(100)
             } catch (e: Exception) {
                 Log.e(TAG, "Error in GSR data processing loop", e)
-                delay(100) 
+                delay(100)
             }
         }
 
@@ -518,7 +518,7 @@ class UnifiedGSRRecorder(
 
     private fun createMockObjectCluster(): ObjectCluster {
         // Create a mock ObjectCluster for testing purposes
-        
+
         return ObjectCluster()
     }
 
@@ -532,7 +532,7 @@ class UnifiedGSRRecorder(
             val quality = when {
                 !isStreaming -> 0.0
                 isStreaming -> {
-                    
+
                     val baseQuality = 0.9
                     val sampleRate = recordedSamples.get() / maxOf(
                         1.0,
@@ -542,7 +542,7 @@ class UnifiedGSRRecorder(
                     baseQuality * rateQuality
                 }
 
-                else -> 0.5 
+                else -> 0.5
             }
 
             _connectionQuality.value = quality
@@ -559,23 +559,23 @@ class UnifiedGSRRecorder(
         metadata: Map<String, String>
     ) {
         try {
-            
+
             val syncMarker = SyncMarker(timestampNs, markerType, metadata)
             syncMarkers.add(syncMarker)
-            
+
             if (_isRecording.get() && csvWriter != null) {
                 val iso = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.getDefault()).format(
                     Date(timestampNs / 1_000_000)
                 )
-                
-                
+
+
                 csvWriter?.write("# SYNC_MARKER: $markerType at $timestampNs ($iso)")
                 if (metadata.isNotEmpty()) {
                     csvWriter?.write(" metadata: ${metadata.entries.joinToString(", ") { "${it.key}=${it.value}" }}")
                 }
                 csvWriter?.write("\n")
                 csvWriter?.flush()
-                
+
                 Log.i(TAG, "Added sync marker: $markerType at $timestampNs with ${metadata.size} metadata entries")
             } else {
                 Log.i(TAG, "Sync marker added to tracking: $markerType (recording not active)")
@@ -601,11 +601,11 @@ class UnifiedGSRRecorder(
             averageDataRate = if (sessionDuration > 0) {
                 recordedSamples.get().toDouble() / (sessionDuration / 1000.0)
             } else 0.0,
-            droppedSamples = droppedSamples.get(), 
+            droppedSamples = droppedSamples.get(),
             storageUsedMB = sessionDirectory?.let { dir ->
                 dir.walkTopDown().filter { it.isFile }.sumOf { it.length() } / (1024.0 * 1024.0)
             } ?: 0.0,
-            syncMarkersCount = syncMarkers.size.toLong(), 
+            syncMarkersCount = syncMarkers.size.toLong(),
             lastSampleTimestampNs = System.nanoTime()
         )
     }
@@ -663,7 +663,7 @@ class UnifiedGSRRecorder(
 
             disconnectDevice()
 
-            
+
             shimmerDeviceManager?.release()
             shimmerDeviceManager = null
 
@@ -678,8 +678,6 @@ class UnifiedGSRRecorder(
         }
     }
 
-    
-    
 
     private suspend fun processGSRData(shimmer: Shimmer, objectCluster: ObjectCluster) {
         if (!_isRecording.get()) return
@@ -691,41 +689,44 @@ class UnifiedGSRRecorder(
                 Date(wallClockMs)
             )
 
-            
+
             if (lastExpectedSampleTime > 0) {
                 val expectedInterval = sampleInterval
                 val actualInterval = wallClockMs - lastExpectedSampleTime
-                
-                if (actualInterval > expectedInterval * 1.5) { 
+
+                if (actualInterval > expectedInterval * 1.5) {
                     val estimatedDroppedSamples = ((actualInterval - expectedInterval) / expectedInterval).toLong()
                     droppedSamples.addAndGet(estimatedDroppedSamples)
-                    
-                    Log.w(TAG, "Detected $estimatedDroppedSamples dropped samples (gap: ${actualInterval}ms, expected: ${expectedInterval}ms)")
+
+                    Log.w(
+                        TAG,
+                        "Detected $estimatedDroppedSamples dropped samples (gap: ${actualInterval}ms, expected: ${expectedInterval}ms)"
+                    )
                 }
             }
             lastExpectedSampleTime = wallClockMs
 
-            
+
             val relativeMs = sessionMetadata?.let { metadata ->
                 (monotonicNs - metadata.sessionStartMonotonicNs) / 1_000_000L
             } ?: 0L
 
-            
+
             val time = System.currentTimeMillis()
-            val baseGSR = 15.0 
+            val baseGSR = 15.0
             val variation = Math.sin(time / 5000.0) * 3.0 + Math.random() * 2.0 - 1.0
             val gsrMicrosiemens = baseGSR + variation
 
-            
+
             val gsrRaw = (gsrMicrosiemens * 4095.0 / 100.0).coerceIn(0.0, 4095.0)
 
-            
+
             val ppgRaw = (2048 + Math.sin(time / 1000.0) * 500 + Math.random() * 200 - 100)
 
             val gsrRawInt = gsrRaw.toInt()
             val qualityScore = when {
-                gsrRawInt < 0 || gsrRawInt > ADC_RESOLUTION_12BIT.toInt() -> 0.0  
-                gsrMicrosiemens <= 0 -> 0.5  
+                gsrRawInt < 0 || gsrRawInt > ADC_RESOLUTION_12BIT.toInt() -> 0.0
+                gsrMicrosiemens <= 0 -> 0.5
                 else -> _connectionQuality.value
             }
 
@@ -736,22 +737,22 @@ class UnifiedGSRRecorder(
                 gsrRaw = gsrRawInt,
                 ppgRaw = ppgRaw.toInt(),
                 qualityScore = qualityScore,
-                connectionRssi = -50  
+                connectionRssi = -50
             )
 
             gsrDataFlow.tryEmit(gsrSample)
 
-            
+
             if (sessionMetadata != null) {
-                
+
                 csvWriter?.write("${wallClockMs},${relativeMs},${monotonicNs},${gsrMicrosiemens},${gsrRawInt},${ppgRaw.toInt()},${qualityScore},-50\n")
             } else {
-                
+
                 csvWriter?.write("${monotonicNs},${iso},${gsrMicrosiemens},${gsrRawInt},${ppgRaw.toInt()},${qualityScore},-50\n")
             }
 
             if (recordedSamples.incrementAndGet() % 100 == 0L) {
-                csvWriter?.flush()  
+                csvWriter?.flush()
             }
 
         } catch (e: Exception) {

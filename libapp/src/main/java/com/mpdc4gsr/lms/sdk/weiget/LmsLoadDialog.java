@@ -10,8 +10,10 @@ public class LmsLoadDialog extends Dialog {
     public LmsLoadDialog(Context context) {
         super(context);
     }
-    
-    public void setMessage(String message) {}
-    
-    public void setCancelable(boolean cancelable) {}
+
+    public void setMessage(String message) {
+    }
+
+    public void setCancelable(boolean cancelable) {
+    }
 }

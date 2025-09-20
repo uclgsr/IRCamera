@@ -41,15 +41,15 @@ import kotlinx.coroutines.launch
 class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueSelectedListener {
     private val viewModel: LogViewModel by viewModels()
 
-    private val timeAdapter: SettingTimeAdapter by lazy { SettingTimeAdapter(this) } 
-    private val adapter: SettingCheckAdapter by lazy { SettingCheckAdapter(this) } 
+    private val timeAdapter: SettingTimeAdapter by lazy { SettingTimeAdapter(this) }
+    private val adapter: SettingCheckAdapter by lazy { SettingCheckAdapter(this) }
 
     private var selectDuration = 1
-    private var selectType = 1 
-    private var selectIndex: ArrayList<Int> = arrayListOf() 
+    private var selectType = 1
+    private var selectIndex: ArrayList<Int> = arrayListOf()
     private val bean = ThermalBean()
     private var selectTimeType = 1
-    private var latestTime = 0L 
+    private var latestTime = 0L
     private var startMonitor = false
 
     private lateinit var chart: LineChart
@@ -59,7 +59,7 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
     override fun initView() {
 
         val toolbar =
-            findViewById<androidx.appcompat.widget.Toolbar>(com.mpdc4gsr.lib.ui.R.id.toolbar_lay)
+            findViewById<androidx.appcompat.widget.Toolbar>(com.mpdc4gsr.lib.core.R.id.toolbar_lay)
         toolbar?.title = getString(R.string.main_thermal_motion)
 
         selectType = intent.getIntExtra("type", 3)
@@ -128,7 +128,7 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
                     timeType: Int,
                 ) {
                     selectTimeType = timeType
-                    chart.highlightValue(null) 
+                    chart.highlightValue(null)
                     latestTime = 0L
                     showLoadingDialog()
                     lifecycleScope.launch {
@@ -153,12 +153,12 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
                     adapter.setCheck(index)
                     timeMillis = time * 1000L
                     pointIndex = startIndex - defaultCount
-                    recordThermal() 
+                    recordThermal()
                 }
             }
     }
 
-    val defaultCount = 20 
+    val defaultCount = 20
     val startIndex = 0f
     var pointIndex = startIndex - defaultCount
 
@@ -168,17 +168,17 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
 
     private fun onIrVideoStart() {
 
-        
+
     }
 
     private fun onIrVideoStop() {
 
-        
+
     }
 
     var isRecord = false
     var type = ""
-    var timeMillis = 1000L 
+    var timeMillis = 1000L
     var canUpdate = false
     var recordTask: Job? = null
     var thermalId = TimeTool.showDateSecond()
@@ -221,30 +221,30 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
         chart.setTouchEnabled(true)
         chart.isDragEnabled = true
         chart.setDrawGridBackground(false)
-        chart.description = null 
-        chart.setBackgroundResource(com.mpdc4gsr.lib.ui.R.color.chart_bg)
-        chart.setScaleEnabled(true) 
-        chart.setPinchZoom(false) 
-        chart.isDoubleTapToZoomEnabled = false 
-        chart.isScaleYEnabled = false 
+        chart.description = null
+        chart.setBackgroundResource(com.mpdc4gsr.lib.core.R.color.chart_bg)
+        chart.setScaleEnabled(true)
+        chart.setPinchZoom(false)
+        chart.isDoubleTapToZoomEnabled = false
+        chart.isScaleYEnabled = false
         chart.setExtraOffsets(
             0f,
             0f,
             SizeUtils.dp2px(8f).toFloat(),
             SizeUtils.dp2px(4f).toFloat(),
-        ) 
+        )
         chart.setNoDataText(getString(R.string.lms_http_code998))
         chart.setNoDataTextColor(textColor)
         val mv = MyMarkerView(this, R.layout.marker_lay)
         mv.chartView = chart
-        chart.marker = mv 
+        chart.marker = mv
         val data = LineData()
         data.setValueTextColor(textColor)
         chart.data = data
         val l = chart.legend
         l.form = Legend.LegendForm.CIRCLE
         l.textColor = textColor
-        l.isEnabled = false 
+        l.isEnabled = false
         val xAxis = chart.xAxis
         xAxis.textColor = textColor
         xAxis.setDrawGridLines(true)
@@ -253,10 +253,10 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
         xAxis.position = XAxis.XAxisPosition.BOTTOM
         xAxis.axisLineColor = textColor
         xAxis.granularity = 1f
-        xAxis.isGranularityEnabled = true 
+        xAxis.isGranularityEnabled = true
         xAxis.textSize = 9f
 
-        xAxis.setLabelCount(6, false) 
+        xAxis.setLabelCount(6, false)
         val leftAxis = chart.axisLeft
         leftAxis.textSize = 9f
         leftAxis.textColor = textColor
@@ -267,7 +267,7 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
         chart.zoom(100f, 1f, chart.xChartMax, 0f)
         selectDuration = adapter.selectTime
         startTime = System.currentTimeMillis()
-        canUpdate = true 
+        canUpdate = true
     }
 
     private fun updateChart() {
@@ -317,7 +317,7 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
                 data.thermal = bean.centerTemp
                 data.createTime = bean.createTime
                 val lineData: LineData = chart.data
-                var volDataSet = lineData.getDataSetByIndex(0) 
+                var volDataSet = lineData.getDataSetByIndex(0)
                 if (volDataSet == null) {
                     startTime = data.createTime
                     Log.w("123", "设置初始时间startTime:$startTime")
@@ -348,7 +348,7 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
                         entity.data = data
                         volDataSet.addEntry(entity)
 
-                        var secondDataSet = lineData.getDataSetByIndex(1) 
+                        var secondDataSet = lineData.getDataSetByIndex(1)
                         if (secondDataSet == null) {
                             secondDataSet = createSet("blue")
                             lineData.addDataSet(secondDataSet)
@@ -368,7 +368,7 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
                         entity.data = data
                         volDataSet.addEntry(entity)
 
-                        var secondDataSet = lineData.getDataSetByIndex(1) 
+                        var secondDataSet = lineData.getDataSetByIndex(1)
                         if (secondDataSet == null) {
                             secondDataSet = createSet("blue")
                             lineData.addDataSet(secondDataSet)
@@ -381,13 +381,13 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
 
                 lineData.notifyDataChanged()
                 chart.notifyDataSetChanged()
-                chart.setVisibleXRangeMinimum(getMinimum()) 
-                chart.setVisibleXRangeMaximum(getMaximum()) 
+                chart.setVisibleXRangeMinimum(getMinimum())
+                chart.setVisibleXRangeMaximum(getMaximum())
                 chart.xAxis.setLabelCount(
                     getLabCount(volDataSet.entryCount),
                     false
-                ) 
-                chart.moveViewToX(chart.xChartMax) 
+                )
+                chart.moveViewToX(chart.xChartMax)
                 if (volDataSet.entryCount == 20) {
                     chart.zoom(100f, 1f, chart.xChartMax, 0f)
                 }
@@ -403,31 +403,31 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
     private val lineRed by lazy {
         ContextCompat.getColor(
             this,
-            com.mpdc4gsr.lib.ui.R.color.chart_line_max
+            com.mpdc4gsr.lib.core.R.color.chart_line_max
         )
     }
     private val lineBlue by lazy {
         ContextCompat.getColor(
             this,
-            com.mpdc4gsr.lib.ui.R.color.chart_line_min
+            com.mpdc4gsr.lib.core.R.color.chart_line_min
         )
     }
     private val lineGreen by lazy {
         ContextCompat.getColor(
             this,
-            com.mpdc4gsr.lib.ui.R.color.chart_line_center
+            com.mpdc4gsr.lib.core.R.color.chart_line_center
         )
     }
     private val whiteColors by lazy {
         ContextCompat.getColor(
             this,
-            com.mpdc4gsr.lib.ui.R.color.circle_white
+            com.mpdc4gsr.lib.core.R.color.circle_white
         )
     }
     private val textColor by lazy {
         ContextCompat.getColor(
             this,
-            com.mpdc4gsr.lib.ui.R.color.chart_text
+            com.mpdc4gsr.lib.core.R.color.chart_text
         )
     }
 
@@ -441,36 +441,36 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
 
         when (label) {
             "red" -> {
-                set.color = lineRed 
-                set.circleHoleColor = lineRed 
+                set.color = lineRed
+                set.circleHoleColor = lineRed
             }
 
             "blue" -> {
-                set.color = lineBlue 
-                set.circleHoleColor = lineBlue 
+                set.color = lineBlue
+                set.circleHoleColor = lineBlue
             }
 
             else -> {
-                set.color = lineGreen 
-                set.circleHoleColor = lineGreen 
+                set.color = lineGreen
+                set.circleHoleColor = lineGreen
             }
         }
 
-        set.setCircleColor(whiteColors) 
-        set.circleHoleRadius = 4f 
-        set.circleRadius = 5f 
+        set.setCircleColor(whiteColors)
+        set.circleHoleRadius = 4f
+        set.circleRadius = 5f
         set.valueTextColor = Color.WHITE
         set.lineWidth = 2f
         set.fillAlpha = 200
         set.valueTextSize = 10f
-        set.setDrawValues(false) 
-        set.isHighlightEnabled = true 
-        set.setDrawHorizontalHighlightIndicator(false) 
-        set.enableDashedHighlightLine(8f, 8f, 0f) 
+        set.setDrawValues(false)
+        set.isHighlightEnabled = true
+        set.setDrawHorizontalHighlightIndicator(false)
+        set.enableDashedHighlightLine(8f, 8f, 0f)
         return set
     }
 
-    
+
     private fun queryLog(action: Int) {
         startMonitor = false
         lifecycleScope.launch(Dispatchers.IO) {
@@ -509,7 +509,7 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
         startTime = data[0].createTime
         chart.xAxis.valueFormatter = MyValueFormatter(startTime = startTime)
         val lineData: LineData = chart.data
-        var volDataSet = lineData.getDataSetByIndex(0) 
+        var volDataSet = lineData.getDataSetByIndex(0)
         if (volDataSet == null) {
             volDataSet = createSet("vol")
             lineData.addDataSet(volDataSet)
@@ -517,7 +517,7 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
         chart.xAxis.valueFormatter = MyValueFormatter(startTime = startTime, type = selectTimeType)
         val mv = MyMarkerView(this, R.layout.marker_lay)
         mv.chartView = chart
-        chart.marker = mv 
+        chart.marker = mv
         data.forEach {
             val x = (it.createTime - startTime).toFloat()
             when (type) {
@@ -544,7 +544,7 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
                     entity.data = it
                     volDataSet.addEntry(entity)
 
-                    var secondDataSet = lineData.getDataSetByIndex(1) 
+                    var secondDataSet = lineData.getDataSetByIndex(1)
                     if (secondDataSet == null) {
                         secondDataSet = createSet("blue")
                         lineData.addDataSet(secondDataSet)
@@ -564,7 +564,7 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
                     entity.data = it
                     volDataSet.addEntry(entity)
 
-                    var secondDataSet = lineData.getDataSetByIndex(1) 
+                    var secondDataSet = lineData.getDataSetByIndex(1)
                     if (secondDataSet == null) {
                         secondDataSet = createSet("blue")
                         lineData.addDataSet(secondDataSet)
@@ -578,14 +578,14 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
         Log.w("123", "曲线数据:${volDataSet.entryCount}个")
         lineData.notifyDataChanged()
         chart.notifyDataSetChanged()
-        chart.setVisibleXRangeMinimum(getMinimum()) 
-        chart.setVisibleXRangeMaximum(getMaximum()) 
+        chart.setVisibleXRangeMinimum(getMinimum())
+        chart.setVisibleXRangeMaximum(getMaximum())
         Log.i(
             "123",
             "list moveViewToX:${chart.xChartMax}, chart.highestVisibleX:${chart.highestVisibleX}",
         )
-        chart.moveViewToX(chart.xChartMax) 
-        chart.xAxis.setLabelCount(getLabCount(volDataSet.entryCount), false) 
+        chart.moveViewToX(chart.xChartMax)
+        chart.xAxis.setLabelCount(getLabCount(volDataSet.entryCount), false)
         chart.zoom(100f, 1f, chart.xChartMax, 0f)
         startMonitor = true
     }
@@ -621,11 +621,11 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
     private fun getMinimum(): Float {
         val min =
             when (selectTimeType) {
-                1 -> 1 * 10 * 1000f 
-                2 -> 10 * 60 * 1000f 
-                3 -> 10 * 60 * 60 * 1000f 
-                4 -> 10 * 24 * 60 * 60 * 1000f 
-                else -> 1 * 10 * 1000f 
+                1 -> 1 * 10 * 1000f
+                2 -> 10 * 60 * 1000f
+                3 -> 10 * 60 * 60 * 1000f
+                4 -> 10 * 24 * 60 * 60 * 1000f
+                else -> 1 * 10 * 1000f
             }
         return min
     }

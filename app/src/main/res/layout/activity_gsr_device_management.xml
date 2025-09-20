@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-    
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -35,7 +35,7 @@
             android:textSize="14sp" />
     </LinearLayout>
 
-    
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -71,7 +71,7 @@
             android:textStyle="bold" />
     </LinearLayout>
 
-    
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -114,7 +114,7 @@
             android:textColor="@android:color/white" />
     </LinearLayout>
 
-    
+
     <LinearLayout
         android:id="@+id/scanningIndicator"
         android:layout_width="match_parent"
@@ -142,7 +142,7 @@
             android:textSize="14sp" />
     </LinearLayout>
 
-    
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -173,7 +173,7 @@
             android:textSize="12sp" />
     </LinearLayout>
 
-    
+
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -187,7 +187,7 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -211,7 +211,7 @@
                     android:textStyle="bold" />
             </LinearLayout>
 
-            
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/deviceRecyclerView"
                 android:layout_width="match_parent"
@@ -220,7 +220,7 @@
                 android:clipToPadding="false"
                 android:padding="8dp" />
 
-            
+
             <TextView
                 android:id="@+id/emptyStateText"
                 android:layout_width="match_parent"
@@ -234,7 +234,7 @@
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
-    
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

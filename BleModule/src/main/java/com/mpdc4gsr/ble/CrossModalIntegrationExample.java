@@ -80,10 +80,10 @@ public class CrossModalIntegrationExample {
 
             CrossModalSyncManager.DeviceCapabilities thermalCapabilities =
                     new CrossModalSyncManager.DeviceCapabilities(
-                            false, 
-                            true,  
-                            30,    
-                            10000  
+                            false,
+                            true,
+                            30,
+                            10000
                     );
 
             boolean thermalRegistered = syncManager.registerDevice(
@@ -96,10 +96,10 @@ public class CrossModalIntegrationExample {
 
             CrossModalSyncManager.DeviceCapabilities rgbCapabilities =
                     new CrossModalSyncManager.DeviceCapabilities(
-                            false, 
-                            true,  
-                            60,    
-                            16667  
+                            false,
+                            true,
+                            60,
+                            16667
                     );
 
             boolean rgbRegistered = syncManager.registerDevice(
@@ -112,10 +112,10 @@ public class CrossModalIntegrationExample {
 
             CrossModalSyncManager.DeviceCapabilities networkCapabilities =
                     new CrossModalSyncManager.DeviceCapabilities(
-                            true,  
-                            true,  
-                            1000,  
-                            1000   
+                            true,
+                            true,
+                            1000,
+                            1000
                     );
 
             boolean networkRegistered = syncManager.registerDevice(
@@ -244,10 +244,10 @@ public class CrossModalIntegrationExample {
             try {
                 CrossModalSyncManager.DeviceCapabilities capabilities =
                         new CrossModalSyncManager.DeviceCapabilities(
-                                true,  
-                                true,  
-                                128,   
-                                1000   
+                                true,
+                                true,
+                                128,
+                                1000
                         );
 
                 syncManager.registerDevice(
@@ -274,10 +274,10 @@ public class CrossModalIntegrationExample {
             try {
                 CrossModalSyncManager.DeviceCapabilities capabilities =
                         new CrossModalSyncManager.DeviceCapabilities(
-                                true,  
-                                true,  
-                                30,    
-                                5000   
+                                true,
+                                true,
+                                30,
+                                5000
                         );
 
                 syncManager.registerDevice(

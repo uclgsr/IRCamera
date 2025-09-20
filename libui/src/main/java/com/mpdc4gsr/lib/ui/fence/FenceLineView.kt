@@ -16,8 +16,8 @@ class FenceLineView : View {
     var listener: CallBack? = null
 
     private val mPaint by lazy { Paint() }
-    private val rect: Rect = Rect(0, 0, 0, 0) 
-    private val strokeWidth by lazy { SizeUtils.dp2px(2f).toFloat() } 
+    private val rect: Rect = Rect(0, 0, 0, 0)
+    private val strokeWidth by lazy { SizeUtils.dp2px(2f).toFloat() }
 
     constructor (context: Context) : super(context)
 
@@ -62,7 +62,7 @@ class FenceLineView : View {
             MotionEvent.ACTION_DOWN -> {
                 rect.right += strokeWidth.toInt()
                 rect.bottom += strokeWidth.toInt()
-                invalidate() 
+                invalidate()
                 rect.left = mX.toInt()
                 rect.top = mY.toInt()
                 rect.right = rect.left
@@ -109,7 +109,7 @@ class FenceLineView : View {
                 rect.right = x
                 rect.bottom = y
                 old.union(x, y)
-                invalidate() 
+                invalidate()
                 result()
             }
 
@@ -126,7 +126,7 @@ class FenceLineView : View {
                 endPoint[0] = mX.toInt()
                 endPoint[1] = mY.toInt()
                 old.union(mX.toInt(), mY.toInt())
-                invalidate() 
+                invalidate()
             }
         }
         return true

@@ -70,13 +70,13 @@ class PermissionController(
                 emptyArray()
             }
 
-        
+
         private val USB_PERMISSIONS = arrayOf(
             "android.permission.USB_PERMISSION",
             "android.permission.ACCESS_USB_ACCESSORY"
         )
 
-        
+
         private const val TOPDON_VENDOR_ID = 16902
         private const val TC001_PRODUCT_ID = 14082
     }
@@ -85,7 +85,7 @@ class PermissionController(
     private var permissionCallback: ((Boolean, List<String>) -> Unit)? = null
     private var usbPermissionCallback: ((Boolean, UsbDevice?) -> Unit)? = null
 
-    
+
     private var remainingPermissionGroups: MutableList<List<String>> = mutableListOf()
     private var allRequestedPermissions: List<String> = emptyList()
 
@@ -107,7 +107,7 @@ class PermissionController(
                 hasUsbPermissions()
     }
 
-    
+
     fun hasUsbPermissions(): Boolean {
         return usbManager?.deviceList?.values?.any { device ->
             device.vendorId == TOPDON_VENDOR_ID && device.productId == TC001_PRODUCT_ID
@@ -115,11 +115,11 @@ class PermissionController(
     }
 
     private fun hasManualUsbPermissions(): Boolean {
-        
+
         return activity.packageManager.hasSystemFeature(PackageManager.FEATURE_USB_HOST)
     }
 
-    
+
     fun requestUsbPermission(device: UsbDevice, callback: (Boolean, UsbDevice?) -> Unit) {
         usbPermissionCallback = callback
 
@@ -154,7 +154,7 @@ class PermissionController(
         usbManager?.requestPermission(device, pendingIntent)
     }
 
-    
+
     fun checkAndRequestThermalCameraPermissions(callback: (Boolean, List<UsbDevice>) -> Unit) {
         val thermalDevices = usbManager?.deviceList?.values?.filter { device ->
             device.vendorId == TOPDON_VENDOR_ID && device.productId == TC001_PRODUCT_ID
@@ -183,7 +183,7 @@ class PermissionController(
             return
         }
 
-        
+
         requestUsbPermission(devicesNeedingPermission.first()) { granted, device ->
             if (granted && device != null) {
                 devicesWithPermission.add(device)
@@ -192,7 +192,7 @@ class PermissionController(
         }
     }
 
-    
+
     fun ensureAll(callback: (Boolean, List<String>) -> Unit) {
         permissionCallback = callback
 
@@ -210,7 +210,7 @@ class PermissionController(
             }"
         )
 
-        
+
         showPermissionRationaleDialog(missingPermissions) { userAccepted ->
             if (userAccepted) {
                 requestPermissionsSequentially(missingPermissions)
@@ -226,7 +226,7 @@ class PermissionController(
         ReplaceWith("ensureAll(callback)")
     )
     fun requestAllPermissions(callback: (Boolean, List<String>) -> Unit) {
-        
+
         ensureAll(callback)
     }
 
@@ -250,7 +250,7 @@ class PermissionController(
                     "Permission result: granted=${permissions.size - deniedPermissions.size}, denied=${deniedPermissions.size}"
                 )
 
-                
+
                 if (remainingPermissionGroups.isNotEmpty()) {
                     Log.i(
                         TAG,
@@ -258,7 +258,7 @@ class PermissionController(
                     )
                     requestNextPermissionGroup()
                 } else {
-                    
+
                     val stillMissingPermissions =
                         allRequestedPermissions.filter { !isPermissionGranted(it) }
                     if (stillMissingPermissions.isEmpty()) {
@@ -280,13 +280,11 @@ class PermissionController(
     fun onActivityResult(requestCode: Int, resultCode: Int) {
         when (requestCode) {
             REQUEST_BATTERY_OPTIMIZATION -> {
-                
+
                 val isBatteryOptimizationDisabled = isBatteryOptimizationDisabled()
                 Log.i(TAG, "Battery optimization result: disabled=$isBatteryOptimizationDisabled")
 
-                
-                
-                
+
             }
         }
     }
@@ -314,7 +312,7 @@ class PermissionController(
             }, PID=${device.productId.toString(16)})"
         )
 
-        
+
         showUsbPermissionRationaleDialog(device) { userAccepted ->
             if (userAccepted) {
                 try {
@@ -386,12 +384,12 @@ class PermissionController(
                             activity.startActivityForResult(intent, REQUEST_BATTERY_OPTIMIZATION)
                         } catch (e: Exception) {
                             Log.e(TAG, "Failed to open battery optimization settings", e)
-                            
+
                             try {
                                 val fallbackIntent =
                                     Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS)
                                 activity.startActivity(fallbackIntent)
-                                
+
                                 Log.w(
                                     TAG,
                                     "Fallback battery optimization settings opened - treating as not granted"
@@ -416,7 +414,7 @@ class PermissionController(
                 callback(true)
             }
         } else {
-            
+
             callback(true)
         }
     }
@@ -451,14 +449,14 @@ class PermissionController(
             .show()
     }
 
-    
+
     fun isBatteryOptimizationDisabled(): Boolean {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             val powerManager =
                 activity.getSystemService(Context.POWER_SERVICE) as android.os.PowerManager
             powerManager.isIgnoringBatteryOptimizations(activity.packageName)
         } else {
-            true 
+            true
         }
     }
 
@@ -555,22 +553,22 @@ class PermissionController(
                 isPermissionGranted(Manifest.permission.ACCESS_COARSE_LOCATION)
     }
 
-    
+
     fun canStartRecording(): Boolean {
         return hasCameraPermission() && hasStoragePermissions()
     }
 
-    
+
     fun canConnectToShimmer(): Boolean {
         return hasBluetoothPermissions() && hasLocationPermission()
     }
 
-    
+
     fun canShowNotifications(): Boolean {
         return hasNotificationPermissions()
     }
 
-    
+
     fun getPermissionStatusMessage(): String {
         val status = mutableListOf<String>()
 
@@ -631,7 +629,7 @@ class PermissionController(
     }
 
     private fun requestPermissionsSequentially(missingPermissions: List<String>) {
-        
+
         val permissionGroups = groupPermissionsLogically(missingPermissions)
 
         if (permissionGroups.isEmpty()) {
@@ -639,17 +637,17 @@ class PermissionController(
             return
         }
 
-        
+
         remainingPermissionGroups = permissionGroups.toMutableList()
         allRequestedPermissions = missingPermissions
 
-        
+
         requestNextPermissionGroup()
     }
 
     private fun requestNextPermissionGroup() {
         if (remainingPermissionGroups.isEmpty()) {
-            
+
             val stillMissingPermissions =
                 allRequestedPermissions.filter { !isPermissionGranted(it) }
             if (stillMissingPermissions.isEmpty()) {
@@ -676,13 +674,13 @@ class PermissionController(
     private fun groupPermissionsLogically(permissions: List<String>): List<List<String>> {
         val groups = mutableListOf<List<String>>()
 
-        
+
         val cameraGroup = permissions.filter { it in CAMERA_PERMISSIONS }
         if (cameraGroup.isNotEmpty()) {
             groups.add(cameraGroup)
         }
 
-        
+
         val bluetoothPermissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             BLUETOOTH_PERMISSIONS_ANDROID_12
         } else {
@@ -694,7 +692,7 @@ class PermissionController(
             groups.add(bluetoothGroup)
         }
 
-        
+
         val storagePermissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             STORAGE_PERMISSIONS_ANDROID_13
         } else {
@@ -706,7 +704,7 @@ class PermissionController(
             groups.add(storageGroup)
         }
 
-        
+
         val notificationGroup = permissions.filter {
             it in NOTIFICATION_PERMISSIONS || it in FOREGROUND_SERVICE_PERMISSIONS
         }
@@ -795,7 +793,7 @@ class PermissionController(
     }
 
     private fun handleDeniedPermissions(deniedPermissions: List<String>) {
-        
+
         val permanentlyDeniedPermissions = deniedPermissions.filter { permission ->
             !activity.shouldShowRequestPermissionRationale(permission)
         }
@@ -848,7 +846,7 @@ class PermissionController(
             }
             .setNegativeButton(if (criticalPermissions.isEmpty()) "Continue Limited" else "Exit") { _, _ ->
                 if (criticalPermissions.isNotEmpty()) {
-                    
+
                     activity.finish()
                 }
             }
@@ -880,12 +878,12 @@ class PermissionController(
             .setMessage(message)
             .setPositiveButton(if (criticalPermissions.isNotEmpty()) "Try Again" else "OK") { _, _ ->
                 if (criticalPermissions.isNotEmpty()) {
-                    
+
                     ensureAll(permissionCallback ?: { _, _ -> })
                 }
             }
             .setNegativeButton(if (criticalPermissions.isNotEmpty()) "Continue Limited" else null) { _, _ ->
-                
+
             }
             .show()
     }

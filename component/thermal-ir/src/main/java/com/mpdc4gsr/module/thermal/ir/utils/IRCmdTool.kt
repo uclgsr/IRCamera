@@ -26,7 +26,7 @@ object IRCmdTool {
 
         val oemInfo = ByteArray(512)
         val snData = ByteArray(256)
-        val dispData = ByteArray(5) 
+        val dispData = ByteArray(5)
         irCmd?.oemRead(CommonParams.ProductType.P2, oemInfo)
         XLog.w("机芯数据加载成功", "数据读取完成:")
         val calibrationData = ByteArray(calibrationDataSize)
@@ -109,7 +109,7 @@ object IRCmdTool {
         }
     }
 
-    
+
     fun setTpdEms(
         irCmd: IRCMD?,
         value: Int,
@@ -118,7 +118,7 @@ object IRCmdTool {
         setTpdParams(irCmd = irCmd, params = CommonParams.PropTPDParams.TPD_PROP_EMS, value = data)
     }
 
-    
+
     fun setTpdDis(
         irCmd: IRCMD?,
         value: Int,
@@ -131,7 +131,7 @@ object IRCmdTool {
         )
     }
 
-    
+
     fun setLevelContrast(
         irCmd: IRCMD?,
         value: Int,
@@ -144,7 +144,7 @@ object IRCmdTool {
         )
     }
 
-    
+
     fun setLevelDdd(
         irCmd: IRCMD?,
         value: Int,
@@ -182,7 +182,7 @@ object IRCmdTool {
         )
     }
 
-    
+
     fun getTpdGainSel(irCmd: IRCMD?): Int {
         val result =
             queryTpdParam(irCmd = irCmd, params = CommonParams.PropTPDParams.TPD_PROP_GAIN_SEL)
@@ -193,7 +193,7 @@ object IRCmdTool {
         }
     }
 
-    
+
     fun setTpdGainSel(
         irCmd: IRCMD?,
         value: Int,
@@ -255,7 +255,7 @@ object IRCmdTool {
         }
     }
 
-    
+
     fun setDisp(
         dualView: BaseDualView?,
         value: Int,
@@ -263,9 +263,9 @@ object IRCmdTool {
         return try {
             if (dualView != null) {
                 dualView?.dualUVCCamera!!.setDisp(value)
-                0 
+                0
             } else {
-                -1 
+                -1
             }
         } catch (e: Exception) {
             XLog.w("设置配准异常[$value]: ${e.message}")
@@ -315,17 +315,17 @@ object IRCmdTool {
         )
     }
 
-    
+
     fun setIsoColorOpen(
         dualUVCCamera: DualUVCCamera?,
         highC: Float,
         lowC: Float,
     ) {
         dualUVCCamera?.setIsothermal(DualCameraParams.IsothermalState.ON)
-        val normalHighTemp = (highC + 273).toDouble() 
-        val normalLowTemp = (lowC + 273).toDouble() 
-        val highTemp = ceil(normalHighTemp * 16 * 4).toInt() 
-        val lowTemp = floor(normalLowTemp * 16 * 4).toInt() 
+        val normalHighTemp = (highC + 273).toDouble()
+        val normalLowTemp = (lowC + 273).toDouble()
+        val highTemp = ceil(normalHighTemp * 16 * 4).toInt()
+        val lowTemp = floor(normalLowTemp * 16 * 4).toInt()
         val highData = ByteArray(2)
         highData[0] = highTemp.toByte()
         highData[1] = (highTemp shr 8).toByte()
@@ -334,15 +334,15 @@ object IRCmdTool {
         lowData[1] = (lowTemp shr 8).toByte()
         val tempHFin = (highData[0].toInt() and 0x00ff) + (highData[1].toInt() and 0x00ff shl 8)
         val tempLFin = (lowData[0].toInt() and 0x00ff) + (lowData[1].toInt() and 0x00ff shl 8)
-        dualUVCCamera?.setTempL(tempLFin) 
-        dualUVCCamera?.setTempH(tempHFin) 
+        dualUVCCamera?.setTempL(tempLFin)
+        dualUVCCamera?.setTempH(tempHFin)
     }
 
     fun setIsoColorClose(dualUVCCamera: DualUVCCamera?) {
         dualUVCCamera?.setIsothermal(DualCameraParams.IsothermalState.OFF)
     }
 
-    
+
     fun setZoomUp(irCmd: IRCMD?) {
         irCmd?.zoomCenterUp(
             CommonParams.PreviewPathChannel.PREVIEW_PATH0,

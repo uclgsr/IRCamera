@@ -23,9 +23,9 @@ class FileTransferProtocol(
 ) {
     companion object {
         private const val TAG = "FileTransferProtocol"
-        private const val CHUNK_SIZE = 64 * 1024 
+        private const val CHUNK_SIZE = 64 * 1024
         private const val MAX_CONCURRENT_TRANSFERS = 3
-        private const val INTEGRITY_CHECK_INTERVAL = 1024 * 1024 
+        private const val INTEGRITY_CHECK_INTERVAL = 1024 * 1024
         private const val TRANSFER_TIMEOUT_MS = 30000L
         private const val RESUME_RETRY_ATTEMPTS = 3
     }
@@ -36,7 +36,7 @@ class FileTransferProtocol(
     private val activeTransfers = ConcurrentHashMap<String, TransferSession>()
     private val transferQueue = mutableListOf<TransferRequest>()
     private val totalBytesTransferred = AtomicLong(0)
-    private val currentTransferSpeed = AtomicLong(0) 
+    private val currentTransferSpeed = AtomicLong(0)
 
     data class TransferRequest(
         val transferId: String,
@@ -57,18 +57,18 @@ class FileTransferProtocol(
     )
 
     enum class TransferPriority(val weight: Int) {
-        CRITICAL(100), 
-        HIGH(75), 
-        NORMAL(50), 
-        LOW(25), 
+        CRITICAL(100),
+        HIGH(75),
+        NORMAL(50),
+        LOW(25),
     }
 
     data class TransferProgress(
         val transferId: String,
         val bytesTransferred: Long,
         val totalBytes: Long,
-        val transferSpeed: Long, 
-        val estimatedTimeRemaining: Long, 
+        val transferSpeed: Long,
+        val estimatedTimeRemaining: Long,
         val status: TransferStatus,
     )
 
@@ -126,7 +126,7 @@ class FileTransferProtocol(
                 val request =
                     synchronized(transferQueue) {
                         if (transferQueue.isEmpty()) return@synchronized null
-                        transferQueue.removeAt(0) 
+                        transferQueue.removeAt(0)
                     } ?: break
 
                 startFileTransfer(request)
@@ -182,7 +182,7 @@ class FileTransferProtocol(
 
         networkClient.sendMessage(initMessage)
 
-        
+
         val response = networkClient.waitForResponse("file_transfer_ack", TRANSFER_TIMEOUT_MS)
         if (response.optString("status") != "ready") {
             throw IOException("PC Controller not ready for transfer")
@@ -195,7 +195,7 @@ class FileTransferProtocol(
             val buffer = ByteArray(CHUNK_SIZE)
 
             FileInputStream(file).use { inputStream ->
-                
+
                 if (session.resumeOffset > 0) {
                     inputStream.skip(session.resumeOffset)
                     session.bytesTransferred.set(session.resumeOffset)
@@ -213,15 +213,15 @@ class FileTransferProtocol(
                             buffer
                         }
 
-                    
+
                     sendFileChunk(session, chunkIndex, chunkData)
 
-                    
+
                     session.bytesTransferred.addAndGet(bytesRead.toLong())
                     session.checksumAccumulator.update(chunkData, 0, bytesRead)
                     totalBytesTransferred.addAndGet(bytesRead.toLong())
 
-                    
+
                     val elapsedTime = System.currentTimeMillis() - startTime
                     if (elapsedTime > 0) {
                         val speed = (session.bytesTransferred.get() * 1000L) / elapsedTime
@@ -230,12 +230,12 @@ class FileTransferProtocol(
 
                     chunkIndex++
 
-                    
+
                     if (session.bytesTransferred.get() % INTEGRITY_CHECK_INTERVAL == 0L) {
                         verifyPartialIntegrity(session)
                     }
 
-                    
+
                     yield()
                 }
             }
@@ -254,11 +254,11 @@ class FileTransferProtocol(
                 put("chunk_size", data.size)
             }
 
-        
+
         networkClient.sendMessage(chunkMessage)
         networkClient.sendBinaryData(data)
 
-        
+
         val ack = networkClient.waitForResponse("chunk_ack", 5000L)
         if (ack.optString("transfer_id") != session.request.transferId ||
             ack.optInt("chunk_index") != chunkIndex
@@ -306,7 +306,7 @@ class FileTransferProtocol(
     }
 
     private suspend fun verifyPartialIntegrity(session: TransferSession) {
-        
+
         Log.d(TAG, "Partial integrity check at ${session.bytesTransferred.get()} bytes")
     }
 
@@ -316,11 +316,11 @@ class FileTransferProtocol(
     ) {
         Log.e(TAG, "Transfer error for ${session.request.transferId}", error)
 
-        
+
         if (error is IOException && session.resumeOffset < session.request.fileSize) {
-            
+
             synchronized(transferQueue) {
-                transferQueue.add(0, session.request) 
+                transferQueue.add(0, session.request)
             }
         }
     }

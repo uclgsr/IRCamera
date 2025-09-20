@@ -7,7 +7,7 @@ import com.mpdc4gsr.lib.core.bean.WatermarkBean
 import com.mpdc4gsr.lib.core.common.ProductType.PRODUCT_NAME_TC007
 import com.mpdc4gsr.lib.core.utils.ByteUtils
 import com.mpdc4gsr.lib.core.utils.ByteUtils.toBytes
-import com.mpdc4gsr.pseudo.bean.CustomPseudoBean
+import com.mpdc4gsr.lib.core.bean.CustomPseudoBean
 
 
 class FrameStruct() {
@@ -111,7 +111,7 @@ class FrameStruct() {
     var textColor = 0xffffffff.toInt()
     var watermarkBean = WatermarkBean()
     var alarmBean = AlarmBean()
-    var gainStatus: Int = 1 
+    var gainStatus: Int = 1
     var textSize: Int = SizeUtils.sp2px(14f)
     var environment: Float = 0f
     var distance: Float = 0f

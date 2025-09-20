@@ -10,7 +10,7 @@ import com.mpdc4gsr.lms.sdk.xutils.http.RequestParams
 object HttpHelp {
 
     fun getFirstReportData(
-        // isTC007 parameter removed - TC007 functionality disabled
+        isTC007: Boolean,
         pageNumber: Int,
         iResponseCallback: IResponseCallback,
     ) {
@@ -18,8 +18,8 @@ object HttpHelp {
         val params = RequestParams()
         params.addBodyParameter(
             "modelId",
-            950 // Always use default model, TC007 functionality removed
-        ) 
+            if (isTC007) 1783 else 950
+        )
         params.addBodyParameter("status", 1)
         params.addBodyParameter("reportType", 2)
         params.addBodyParameter("languageId", LanguageUtil.getLanguageId(Utils.getApp()))

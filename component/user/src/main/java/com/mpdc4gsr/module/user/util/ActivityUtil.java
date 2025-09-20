@@ -10,14 +10,14 @@ import com.mpdc4gsr.lms.sdk.weiget.TToast;
 import com.mpdc4gsr.module.user.R;
 
 public class ActivityUtil {
-    
+
     public static void goSystemCustomer(Context mContext) {
         Log.w("bcf", "[TEXT]Event");
         String url = "https://www.topdon.cc/tc-chat";
         goSystemBrowser(mContext, url);
     }
 
-    
+
     public static void goSystemBrowser(Context mContext, String url) {
         Log.w("bcf", "goSystemBrowser");
         if (!NetworkUtil.isConnected(mContext)) {

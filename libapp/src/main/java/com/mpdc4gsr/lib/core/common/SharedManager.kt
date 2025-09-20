@@ -40,7 +40,23 @@ object SharedManager {
             SPUtils.getInstance().put("hasConnectTcLine", value)
         }
 
-    // TS004 and TC007 properties removed
+    var hasTS004: Boolean
+        get() = SPUtils.getInstance().getBoolean("hasConnectTS004", false)
+        set(value) {
+            SPUtils.getInstance().put("hasConnectTS004", value)
+        }
+
+    var hasTC007: Boolean
+        get() = SPUtils.getInstance().getBoolean("hasConnectTC007", false)
+        set(value) {
+            SPUtils.getInstance().put("hasConnectTC007", value)
+        }
+
+    var irConfigJsonTC007: String
+        get() = SPUtils.getInstance().getString("irConfigJsonTC007")
+        set(value) {
+            SPUtils.getInstance().put("irConfigJsonTC007", value)
+        }
 
     var homeGuideStep: Int
         get() {
@@ -256,28 +272,28 @@ object SharedManager {
     private const val HEAD_ICON: String = "head_icon"
 
     private const val BASE_HOST: String = "base_host"
-    private const val LANGUAGE = "language" 
+    private const val LANGUAGE = "language"
 
-    private const val HAS_SHOW_CLAUSE = "hasShowClause" 
-    private const val TEMPERATURE_UNIT = "temperature" 
-    private const val VERSION_CHECK_DATE = "version_check_date" 
+    private const val HAS_SHOW_CLAUSE = "hasShowClause"
+    private const val TEMPERATURE_UNIT = "temperature"
+    private const val VERSION_CHECK_DATE = "version_check_date"
 
-    private const val DEVICE_SN = "deviceSn" 
-    private const val DEVICE_VERSION = "deviceVersion" 
+    private const val DEVICE_SN = "deviceSn"
+    private const val DEVICE_VERSION = "deviceVersion"
 
-    private const val IR_CONFIG = "ir_config" 
-    private const val SP_CUSTOM_PSEUDO = "sp_custom_pseudo" 
-    private const val SP_TARGET_POP = "sp_target_pop" 
+    private const val IR_CONFIG = "ir_config"
+    private const val SP_CUSTOM_PSEUDO = "sp_custom_pseudo"
+    private const val SP_TARGET_POP = "sp_target_pop"
 
-    private const val SP_SETTING_IS_PUSH = "sp_setting_is_push" 
+    private const val SP_SETTING_IS_PUSH = "sp_setting_is_push"
     private const val SP_SETTING_IS_RECOMMEND = "sp_setting_is_recommend"
 
-    
-    private const val SP_HOT_MODE = "sp_hot_mode" 
-    private const val SP_CHANGE_DEVICE = "sp_change_device" 
-    // SP_TC007_CUSTOM_PSEUDO removed
 
-    private const val SP_CAR_DETECT = "sp_car_detect" 
+    private const val SP_HOT_MODE = "sp_hot_mode"
+    private const val SP_CHANGE_DEVICE = "sp_change_device"
+    private const val SP_TC007_CUSTOM_PSEUDO = "sp_tc007_custom_pseudo"
+
+    private const val SP_CAR_DETECT = "sp_car_detect"
 
     fun setToken(token: String) {
         SPUtils.getInstance().put(TOKEN, token)
@@ -395,7 +411,13 @@ object SharedManager {
         return SPUtils.getInstance().getString(SP_CUSTOM_PSEUDO, "")
     }
 
-    // TC007 custom pseudo functions removed
+    fun saveTC007CustomPseudo(json: String) {
+        SPUtils.getInstance().put(SP_TC007_CUSTOM_PSEUDO, json)
+    }
+
+    fun getTC0007CustomPseudo(): String {
+        return SPUtils.getInstance().getString(SP_TC007_CUSTOM_PSEUDO, "")
+    }
 
     fun getTargetPop(): Boolean {
         return SPUtils.getInstance().getBoolean(SP_TARGET_POP, false)
@@ -405,8 +427,8 @@ object SharedManager {
         SPUtils.getInstance().put(SP_TARGET_POP, targetPop)
     }
 
-    private const val IR_DUAL_DISP = "ir_dual_disp" 
-    private const val IR_DUAL_DISP_V = "ir_dual_disp_v" 
+    private const val IR_DUAL_DISP = "ir_dual_disp"
+    private const val IR_DUAL_DISP_V = "ir_dual_disp_v"
 
     fun saveSettingIsPush(isPush: Boolean) {
         SPUtils.getInstance().put(SP_SETTING_IS_PUSH, isPush)
@@ -440,7 +462,6 @@ object SharedManager {
         return SPUtils.getInstance().put("storage_permissions_state", value)
     }
 
-    
 
     fun getHotMode(): Int {
         return SPUtils.getInstance().getInt(SP_HOT_MODE, 1)
