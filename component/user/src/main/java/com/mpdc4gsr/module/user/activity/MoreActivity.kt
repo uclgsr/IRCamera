@@ -202,7 +202,7 @@ class MoreActivity : BaseActivity(), View.OnClickListener {
             installDialog.show()
 
             // TS004Repository functionality removed
-            val isSuccess = false // TS004Repository.updateFirmware(file)
+            val isSuccess = false
             installDialog.dismiss()
             if (isSuccess) {
                 XLog.d("TS004 固件升级 - 固件升级包发送往 TS004 成功，即将断开连接")
