@@ -10,10 +10,10 @@ This document provides comprehensive API reference documentation for all major c
 
 | Component | Purpose | Technology | Status |
 |-----------|---------|------------|--------|
-| **PC Controller Hub** | Central coordination and device management | Python + PyQt6 | ✅ MVP Complete |
-| **Android Sensor Node** | Mobile sensor node with multi-modal capabilities | Kotlin + Android | ⚠️ Build Issues |
-| **Communication Layer** | JSON-based TCP protocol with mDNS discovery | Cross-platform | ✅ Working |
-| **Sensor Integration** | Hardware abstraction for multiple sensor types | Multi-platform | ✅ Working |
+| **PC Controller Hub** | Central coordination and device management | Python + PyQt6 | [DONE] MVP Complete |
+| **Android Sensor Node** | Mobile sensor node with multi-modal capabilities | Kotlin + Android | [WARNING] Build Issues |
+| **Communication Layer** | JSON-based TCP protocol with mDNS discovery | Cross-platform | [DONE] Working |
+| **Sensor Integration** | Hardware abstraction for multiple sensor types | Multi-platform | [DONE] Working |
 
 ### Library Components
 
