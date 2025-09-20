@@ -37,7 +37,7 @@ tasks.register("buildRelease") {
         ":RangeSeekBar:assembleRelease",
         // ":component:CommonComponent:assembleRelease", // CONSOLIDATED into thermal-lite
         ":component:gsr-recording:assembleRelease",
-        ":component:pseudo:assembleRelease",
+        // ":component:pseudo:assembleRelease", // REMOVED - pseudo module safely removed, functionality moved to libapp stubs
         ":component:thermal:assembleRelease",
         ":component:thermal-ir:assembleRelease",
         ":component:thermal-lite:assembleRelease",
