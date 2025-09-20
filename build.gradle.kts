@@ -21,11 +21,31 @@ tasks.register<Delete>("clean") {
     delete(rootProject.layout.buildDirectory.get().asFile)
 }
 
+// Enhanced clean task that also cleans all subprojects  
+tasks.register("cleanAll") {
+    group = "build"
+    description = "Clean all modules including build cache and gradle cache"
+    dependsOn("clean")
+    doLast {
+        // Clean gradle build cache
+        delete(file("${rootProject.projectDir}/.gradle"))
+        delete(file("${rootProject.projectDir}/build"))
+        
+        // Clean all subproject build directories
+        subprojects.forEach { subproject ->
+            delete(file("${subproject.projectDir}/build"))
+        }
+        
+        println("All modules and caches cleaned successfully")
+    }
+}
+
 
 tasks.register("buildRelease") {
     group = "build"
-    description = "Builds all modules using only release variants"
+    description = "Builds all modules using only release variants (starts with clean)"
     dependsOn(
+        "cleanAll",
         ":app:assembleRelease",
         ":BleModule:assembleRelease",
         ":libapp:assembleRelease",
@@ -38,4 +58,30 @@ tasks.register("buildRelease") {
         ":component:thermal-lite:assembleRelease",
         ":component:user:assembleRelease"
     )
+}
+
+tasks.register("buildDebug") {
+    group = "build"
+    description = "Builds all modules using only debug variants (starts with clean)"
+    dependsOn(
+        "cleanAll",
+        ":app:assembleDebug",
+        ":BleModule:assembleDebug",
+        ":libapp:assembleDebug",
+        ":libir:assembleDebug",
+        ":libui:assembleDebug",
+        ":RangeSeekBar:assembleDebug",
+        ":component:gsr-recording:assembleDebug",
+        ":component:thermal:assembleDebug",
+        ":component:thermal-ir:assembleDebug",
+        ":component:thermal-lite:assembleDebug",
+        ":component:user:assembleDebug"
+    )
+}
+
+tasks.register("buildAll") {
+    group = "build"
+    description = "Builds all modules with all variants (starts with clean)"
+    dependsOn("cleanAll")
+    finalizedBy("buildRelease", "buildDebug")
 }
