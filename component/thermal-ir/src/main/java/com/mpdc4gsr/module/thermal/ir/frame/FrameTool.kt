@@ -10,7 +10,7 @@ import com.example.suplib.wrapper.SupHelp
 import com.infisense.usbir.tools.ImageTools
 import com.infisense.usbir.utils.IRImageHelp
 import com.infisense.usbir.utils.OpencvTools
-import com.mpdc4gsr.pseudo.bean.CustomPseudoBean
+import com.mpdc4gsr.lib.core.bean.CustomPseudoBean
 import java.io.IOException
 import java.nio.ByteBuffer
 

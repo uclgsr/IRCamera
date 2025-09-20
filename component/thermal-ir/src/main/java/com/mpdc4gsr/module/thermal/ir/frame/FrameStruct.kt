@@ -7,7 +7,7 @@ import com.mpdc4gsr.lib.core.bean.WatermarkBean
 import com.mpdc4gsr.lib.core.common.ProductType.PRODUCT_NAME_TC007
 import com.mpdc4gsr.lib.core.utils.ByteUtils
 import com.mpdc4gsr.lib.core.utils.ByteUtils.toBytes
-import com.mpdc4gsr.pseudo.bean.CustomPseudoBean
+import com.mpdc4gsr.lib.core.bean.CustomPseudoBean
 
 
 class FrameStruct() {

@@ -268,7 +268,7 @@ dependencies {
     implementation(project(":component:thermal")) 
     implementation(project(":component:thermal-ir")) 
     implementation(project(":component:thermal-lite")) 
-    implementation(project(":component:pseudo")) 
+    // implementation(project(":component:pseudo")) // REMOVED - pseudo module functionality moved to libapp stubs 
     implementation(project(":component:gsr-recording"))
     implementation(project(":component:user")) 
     implementation(project(":libapp"))

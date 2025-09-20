@@ -117,8 +117,8 @@ import com.mpdc4gsr.module.thermal.ir.repository.ConfigRepository
 import com.mpdc4gsr.module.thermal.ir.utils.IRConfigData
 import com.mpdc4gsr.module.thermal.ir.video.VideoRecordFFmpeg
 import com.mpdc4gsr.module.thermal.ir.view.TimeDownView
-import com.mpdc4gsr.pseudo.activity.PseudoSetActivity
-import com.mpdc4gsr.pseudo.bean.CustomPseudoBean
+import com.mpdc4gsr.lib.core.activity.PseudoSetActivity
+import com.mpdc4gsr.lib.core.bean.CustomPseudoBean
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job

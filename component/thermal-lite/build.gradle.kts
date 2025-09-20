@@ -71,7 +71,7 @@ dependencies {
     implementation(project(":libui"))
     // implementation(project(":libmenu")) // CONSOLIDATED into libapp - already included via libapp
     // implementation(project(":component:CommonComponent")) // CONSOLIDATED into thermal-lite
-    implementation(project(":component:pseudo"))
+    // implementation(project(":component:pseudo")) // REMOVED - pseudo module functionality moved to libapp stubs
     implementation(project(":component:thermal-ir"))
     implementation(project(":BleModule"))
     compileOnly(files("../../libir/libs/libAC020sdk_USB_IR_1.1.1_2408291439.aar")) 

@@ -75,7 +75,7 @@ dependencies {
     implementation(project(":libir"))
     implementation(project(":libui"))
     // implementation(project(":libmenu")) // CONSOLIDATED into libapp - already included via libapp
-    implementation(project(":component:pseudo"))
+    // implementation(project(":component:pseudo")) // REMOVED - pseudo module functionality moved to libapp stubs
     implementation(project(":component:thermal"))
     implementation(project(":component:user"))
     compileOnly(files("../../libir/libs/suplib-release.aar")) 

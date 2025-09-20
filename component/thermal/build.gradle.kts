@@ -90,7 +90,7 @@ dependencies {
     implementation(project(":libui"))
     // implementation(project(":libmenu")) // CONSOLIDATED into libapp - already included via libapp
     // implementation(project(":libmatrix")) // CONSOLIDATED into libapp - already included via libapp
-    implementation(project(":component:pseudo"))
+    // implementation(project(":component:pseudo")) // REMOVED - pseudo module functionality moved to libapp stubs
     implementation(project(":BleModule"))
     implementation(libs.bundles.ui.common)
     implementation(libs.utilcode)

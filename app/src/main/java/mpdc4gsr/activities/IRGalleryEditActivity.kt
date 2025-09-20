@@ -62,8 +62,8 @@ import com.mpdc4gsr.module.thermal.ir.frame.ImageParams
 import com.mpdc4gsr.module.thermal.ir.report.bean.ImageTempBean
 import com.mpdc4gsr.module.thermal.ir.view.TemperatureBaseView.Mode
 import com.mpdc4gsr.module.thermal.ir.viewmodel.IRGalleryEditViewModel
-import com.mpdc4gsr.pseudo.activity.PseudoSetActivity
-import com.mpdc4gsr.pseudo.bean.CustomPseudoBean
+import com.mpdc4gsr.lib.core.activity.PseudoSetActivity
+import com.mpdc4gsr.lib.core.bean.CustomPseudoBean
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
