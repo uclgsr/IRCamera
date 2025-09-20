@@ -42,7 +42,13 @@ See [SIMPLIFIED_ARCHITECTURE.md](SIMPLIFIED_ARCHITECTURE.md) for complete detail
 
 ## Documentation
 
+### Architecture & Design
+- **[Comprehensive Architecture Diagrams](docs/COMPREHENSIVE_ARCHITECTURE_DIAGRAMS.md)** - Complete system architecture with precise Mermaid diagrams
+- **[Interactive Architecture Viewer](docs/architecture-interactive-viewer.html)** - Web-based interactive diagram browser  
 - [Simplified Architecture](SIMPLIFIED_ARCHITECTURE.md) - Current simplified project structure
+- [Complete Architecture Guide](docs/ARCHITECTURE.md) - Detailed technical architecture documentation
+
+### Development & Setup
 - [Copilot Setup Guide](COPILOT_SETUP.md) - GitHub Copilot configuration and usage
 - [PC Controller Hub](pc-controller/) - Complete Hub implementation with MVP and GUI options
 - [Samsung Stage3/Level3 RAW DNG](docs/SAMSUNG_STAGE3_RAW_DNG.md) - Advanced RAW capture documentation

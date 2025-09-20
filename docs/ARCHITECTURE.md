@@ -6,6 +6,22 @@ The IRCamera Multi-Modal Thermal Sensing Platform implements a sophisticated **H
 distributed multi-modal physiological sensing. This document provides comprehensive technical details about the system
 design, component interactions, and architectural decisions.
 
+> **📊 NEW: Comprehensive Architecture Diagrams**
+> 
+> For detailed visual architecture documentation with precise Mermaid diagrams for each feature and module, see:
+> - **[Comprehensive Architecture Diagrams](COMPREHENSIVE_ARCHITECTURE_DIAGRAMS.md)** - Complete technical documentation
+> - **[Interactive Viewer](architecture-interactive-viewer.html)** - Interactive web-based diagram browser
+> 
+> These resources provide precise diagrams for:
+> - Complete system overview with all layers
+> - Hub-and-Spoke distributed architecture  
+> - Android module dependencies and relationships
+> - PC Controller hub architecture with all services
+> - Feature-specific diagrams (thermal processing, GSR/BLE integration)
+> - Data flow and synchronization pipelines
+> - Build system and CI/CD architecture
+> - Integration and deployment flows
+
 ## High-Level Architecture
 
 ### Hub-and-Spoke Model
