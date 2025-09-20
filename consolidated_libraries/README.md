@@ -7,10 +7,14 @@ maintainability.
 
 ### Support Libraries in this Directory
 
-- **libcom** (16 files) - Communication utilities, dialogs, and helper functions
-- **libmatrix** (23 files) - Matrix operations and mathematical computations
-- **libmenu** (16 files) - Menu components and UI widget utilities
-- **CommonComponent** (4 files) - Shared component utilities
+- **CommonComponent** (4 files) - Shared component utilities and common functionality
+
+### Planned Libraries (Future Organization)
+
+The following libraries are mentioned in documentation but not yet implemented in this consolidated structure:
+- **libcom** - Communication utilities, dialogs, and helper functions (currently distributed)
+- **libmatrix** - Matrix operations and mathematical computations (currently distributed) 
+- **libmenu** - Menu components and UI widget utilities (currently distributed)
 
 ### Core Libraries (in root)
 
@@ -32,18 +36,27 @@ This organizational structure:
 Components reference these libraries using project dependencies:
 
 ```kotlin
-implementation(project(":consolidated_libraries:libcom"))
-implementation(project(":consolidated_libraries:libmatrix"))
-implementation(project(":consolidated_libraries:libmenu"))
+// Currently available
+implementation(project(":consolidated_libraries:CommonComponent"))
+
+// Planned for future consolidation
+// implementation(project(":consolidated_libraries:libcom"))
+// implementation(project(":consolidated_libraries:libmatrix"))
+// implementation(project(":consolidated_libraries:libmenu"))
 ```
 
 ## Development Notes
 
 These libraries provide specialized functionality:
 
-- **libcom**: Network communication, file operations, utility dialogs
-- **libmatrix**: Mathematical operations for sensor data processing
-- **libmenu**: Reusable menu and UI components
-- **CommonComponent**: Shared utilities used across multiple components
+- **CommonComponent**: Shared utilities and common components used across multiple modules
+
+### Future Consolidation Plans
+
+The following functionality is currently distributed across modules and planned for future consolidation:
+
+- **Communication utilities**: Network communication, file operations, utility dialogs
+- **Mathematical operations**: Matrix operations for sensor data processing  
+- **Menu components**: Reusable menu and UI components
 
 The libraries maintain their original API interfaces to ensure compatibility with existing components.
