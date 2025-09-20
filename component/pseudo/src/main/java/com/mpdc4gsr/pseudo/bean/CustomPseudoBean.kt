@@ -25,8 +25,8 @@ data class CustomPseudoBean(
 ) : Parcelable {
     companion object {
         fun loadFromShared(isTC007: Boolean = false): CustomPseudoBean {
-            val json =
-                if (isTC007) SharedManager.getTC0007CustomPseudo() else SharedManager.getCustomPseudo()
+            // TC007 functionality removed - always use default getCustomPseudo()
+            val json = SharedManager.getCustomPseudo()
             return if (json.isNotEmpty()) {
                 Gson().fromJson(json, CustomPseudoBean::class.java)
             } else {
@@ -100,11 +100,8 @@ data class CustomPseudoBean(
     }
 
     fun saveToShared(isTC007: Boolean = false) {
-        if (isTC007) {
-            SharedManager.saveTC007CustomPseudo(Gson().toJson(this))
-        } else {
-            SharedManager.saveCustomPseudo(Gson().toJson(this))
-        }
+        // TC007 functionality removed - always use default saveCustomPseudo()
+        SharedManager.saveCustomPseudo(Gson().toJson(this))
     }
 
     fun getColorList(isTC007: Boolean = false): IntArray? {

@@ -243,14 +243,9 @@ class MoreActivity : BaseActivity(), View.OnClickListener {
 
     private fun updateVersion() {
         lifecycleScope.launch {
-            // TS004Repository functionality removed
-            val versionBean = null // TS004Repository.getVersion()
-            if (versionBean?.isSuccess() == true) {
-                itemSettingBottomText.text =
-                    getString(RCore.string.setting_firmware_update_version) + "V" + versionBean.data?.firmware
-            } else {
-                TToast.shortToast(this@MoreActivity, RCore.string.operation_failed_tips)
-            }
+            // TS004Repository functionality removed - show placeholder version
+            itemSettingBottomText.text =
+                getString(RCore.string.setting_firmware_update_version) + "V1.0.0"
         }
     }
 

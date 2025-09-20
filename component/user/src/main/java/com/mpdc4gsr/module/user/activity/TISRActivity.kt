@@ -40,15 +40,10 @@ class TISRActivity : BaseActivity() {
 
     override fun initData() {
         lifecycleScope.launch {
-            // TS004Repository functionality removed  
-            val tisrBean = null // TS004Repository.getTISR()
-            if (tisrBean?.isSuccess() == true) {
-                val isTISR = tisrBean.data?.enable!! == 1
-                settingItemTisrSelect.isChecked = isTISR
-                SharedManager.is04TISR = isTISR
-            } else {
-                TToast.shortToast(this@TISRActivity, RCore.string.operation_failed_tips)
-            }
+            // TS004Repository functionality removed - set default TISR state
+            settingItemTisrSelect.isChecked = false
+            SharedManager.is04TISR = false
+            TToast.shortToast(this@TISRActivity, RCore.string.operation_failed_tips)
         }
     }
 

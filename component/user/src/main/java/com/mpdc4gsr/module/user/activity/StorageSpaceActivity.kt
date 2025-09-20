@@ -87,6 +87,20 @@ class StorageSpaceActivity : BaseActivity(), View.OnClickListener {
             val freeSpaceBean = null // TS004Repository.getFreeSpace()
             if (freeSpaceBean == null) {
                 TToast.shortToast(this@StorageSpaceActivity, RCore.string.operation_failed_tips)
+                // Set default values since TS004Repository functionality is removed
+                tvProgressValue.text = "0%"
+                tvUsedValue.text = formatFileSize(0L)
+                tvUsed.text = getUnit(0L)
+                tvTotalValue.text = " / " + formatFileSize(0L)
+                tvTotal.text = getUnit(0L)
+                
+                listStoragePhoto.setRightText(formatFileSize(0L) + getUnit(0L))
+                listStorageVideo.setRightText(formatFileSize(0L) + getUnit(0L))
+                listStorageSystem.setRightText(formatFileSize(0L) + getUnit(0L))
+                
+                val colorList = arrayListOf<ColorsBean>()
+                colorList.add(ColorsBean(0, 1, 0xff8d98a9.toInt()))
+                progressBarView.setData(colorList)
             } else {
                 TLog.d("ts004", "║ response :$freeSpaceBean")
 
