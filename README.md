@@ -66,3 +66,14 @@ See [SIMPLIFIED_ARCHITECTURE.md](SIMPLIFIED_ARCHITECTURE.md) for complete detail
 - **Android Sensor Nodes**: Mobile data collection points
 - **TCP/mDNS Communication**: Automatic discovery and reliable data streaming
 - **Session Management**: Comprehensive recording session control
+
+## Changelog
+
+### 2024-01-XX - TS004Repository Import Fix
+- Fixed missing TS004Repository import compilation errors
+- Removed TS004Repository dependencies from thermal-ir module files:
+  - IRVideoGSYActivity.kt
+  - IRGalleryFragment.kt
+  - IRGalleryViewModel.kt
+- Added appropriate fallback behavior for removed functionality
+- All TS004Repository functionality has been systematically removed from the codebase

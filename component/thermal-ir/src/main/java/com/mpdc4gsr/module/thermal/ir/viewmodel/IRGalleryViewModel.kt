@@ -7,7 +7,8 @@ import com.mpdc4gsr.lib.core.bean.GalleryTitle
 import com.mpdc4gsr.lib.core.config.FileConfig
 import com.mpdc4gsr.lib.core.ktbase.BaseViewModel
 import com.mpdc4gsr.lib.core.repository.GalleryRepository
-import com.mpdc4gsr.lib.core.repository.TS004Repository
+// TS004Repository functionality removed  
+// import com.mpdc4gsr.lib.core.repository.TS004Repository
 import com.mpdc4gsr.lib.core.tools.TimeTool
 import com.mpdc4gsr.module.thermal.ir.utils.WriteTools
 import kotlinx.coroutines.Dispatchers
@@ -96,12 +97,8 @@ class IRGalleryViewModel : BaseViewModel() {
     ) {
         viewModelScope.launch(Dispatchers.IO) {
             if (dirType == GalleryRepository.DirType.TS004_REMOTE) {
-                val isSuccess =
-                    TS004Repository.deleteFiles(
-                        Array(deleteList.size) {
-                            deleteList[it].id
-                        },
-                    )
+                // TS004Repository functionality removed
+                val isSuccess = false
                 if (isSuccess) {
                     if (isDelLocal) {
                         deleteList.forEach {

@@ -14,7 +14,8 @@ import com.mpdc4gsr.lib.core.config.FileConfig
 import com.mpdc4gsr.lib.core.dialog.ConfirmSelectDialog
 import com.mpdc4gsr.lib.core.dialog.TipDialog
 import com.mpdc4gsr.lib.core.ktbase.BaseActivity
-import com.mpdc4gsr.lib.core.repository.TS004Repository
+// TS004Repository functionality removed
+// import com.mpdc4gsr.lib.core.repository.TS004Repository
 import com.mpdc4gsr.lib.core.tools.FileTools
 import com.mpdc4gsr.lib.core.tools.TimeTool
 import com.mpdc4gsr.lib.core.tools.ToastTools
@@ -109,8 +110,8 @@ class IRVideoGSYActivity : BaseActivity() {
         lifecycleScope.launch {
             window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
             showCameraLoading()
-            val isSuccess =
-                TS004Repository.download(data.path, File(FileConfig.ts004GalleryDir, data.name))
+            // TS004Repository functionality removed
+            val isSuccess = false
             MediaScannerConnection.scanFile(
                 this@IRVideoGSYActivity,
                 arrayOf(FileConfig.ts004GalleryDir),
@@ -173,7 +174,8 @@ class IRVideoGSYActivity : BaseActivity() {
         if (isRemote) {
             lifecycleScope.launch {
                 showCameraLoading()
-                val isSuccess = TS004Repository.deleteFiles(arrayOf(data.id))
+                // TS004Repository functionality removed
+                val isSuccess = false
                 if (isSuccess) {
                     if (isDelLocal) {
                         File(FileConfig.ts004GalleryDir, data.name).delete()

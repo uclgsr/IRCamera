@@ -24,7 +24,8 @@ import com.mpdc4gsr.lib.core.dialog.ConfirmSelectDialog
 import com.mpdc4gsr.lib.core.ktbase.BaseFragment
 import com.mpdc4gsr.lib.core.navigation.NavigationManager
 import com.mpdc4gsr.lib.core.repository.GalleryRepository.DirType
-import com.mpdc4gsr.lib.core.repository.TS004Repository
+// TS004Repository functionality removed
+// import com.mpdc4gsr.lib.core.repository.TS004Repository
 import com.mpdc4gsr.lib.core.tools.FileTools.getUri
 import com.mpdc4gsr.lib.core.tools.ToastTools
 import com.mpdc4gsr.lms.sdk.weiget.TToast
@@ -307,18 +308,8 @@ class IRGalleryFragment : BaseFragment() {
             lifecycleScope.launch {
                 (context as? Activity)?.window?.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
                 showLoadingDialog()
-                val successCount =
-                    TS004Repository.downloadList(downloadMap) { path, isSuccess ->
-                        if (isSuccess) {
-                            for (galleryBean in downloadList) {
-                                if (galleryBean.path == path) {
-                                    galleryBean.hasDownload = true
-                                    adapter.notifyDataSetChanged()
-                                    break
-                                }
-                            }
-                        }
-                    }
+                // TS004Repository functionality removed
+                val successCount = 0
                 if (successCount == downloadMap.size) {
                     dismissLoadingDialog()
                     if (isShare) {
