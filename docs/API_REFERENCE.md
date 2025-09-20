@@ -421,7 +421,7 @@ class StatusIndicator @JvmOverloads constructor(
 
 ### Message Format Specification
 
-#### Command Messages (Hub → Spoke)
+#### Command Messages (Hub -> Spoke)
 ```json
 {
   "message_id": "uuid-string",
