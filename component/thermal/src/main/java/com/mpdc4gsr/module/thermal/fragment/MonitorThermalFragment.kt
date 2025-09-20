@@ -47,6 +47,11 @@ class MonitorThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> 
     override fun initContentView() = R.layout.fragment_monitor_thermal
 
     private val msgLiveData by lazy { MutableLiveData<Int>() }
+    
+    // Cached fence views to avoid repeated findViewById calls
+    private val fencePointView by lazy { requireView().findViewById<com.mpdc4gsr.lib.ui.fence.FencePointView>(R.id.fence_point_view) }
+    private val fenceLineView by lazy { requireView().findViewById<com.mpdc4gsr.lib.ui.fence.FenceLineView>(R.id.fence_line_view) }
+    private val fenceView by lazy { requireView().findViewById<com.mpdc4gsr.lib.ui.fence.FenceView>(R.id.fence_view) }
 
     private fun setViewPosition(
         imageView: ImageView,
@@ -450,11 +455,11 @@ class MonitorThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> 
         if (fenceFlag.getIndex(index) == 0) {
             fenceFlag = 1.shl(4 * (index - 1))
             mFenceLayout!!.visibility = View.VISIBLE
-            requireView().findViewById<com.mpdc4gsr.lib.ui.fence.FencePointView>(R.id.fence_point_view).visibility =
+            fencePointView.visibility =
                 if (fenceFlag.getIndex(1) > 0) View.VISIBLE else View.GONE
-            requireView().findViewById<com.mpdc4gsr.lib.ui.fence.FenceLineView>(R.id.fence_line_view).visibility =
+            fenceLineView.visibility =
                 if (fenceFlag.getIndex(2) > 0) View.VISIBLE else View.GONE
-            requireView().findViewById<com.mpdc4gsr.lib.ui.fence.FenceView>(R.id.fence_view).visibility =
+            fenceView.visibility =
                 if (fenceFlag.getIndex(3) > 0) View.VISIBLE else View.GONE
         } else {
             fenceFlag = 0x000
@@ -465,7 +470,7 @@ class MonitorThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> 
     var selectIndex: ArrayList<Int> = arrayListOf()
 
     private fun initFence() {
-        requireView().findViewById<com.mpdc4gsr.lib.ui.fence.FencePointView>(R.id.fence_point_view).listener =
+        fencePointView.listener =
             object : FencePointView.CallBack {
                 override fun callback(
                     startPoint: IntArray,
@@ -479,7 +484,7 @@ class MonitorThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> 
                     activity.select(1, selectIndex)
                 }
             }
-        requireView().findViewById<com.mpdc4gsr.lib.ui.fence.FenceLineView>(R.id.fence_line_view).listener =
+        fenceLineView.listener =
             object : FenceLineView.CallBack {
                 override fun callback(
                     startPoint: IntArray,
@@ -494,7 +499,7 @@ class MonitorThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> 
                     activity.select(2, selectIndex)
                 }
             }
-        requireView().findViewById<com.mpdc4gsr.lib.ui.fence.FenceView>(R.id.fence_view).listener =
+        fenceView.listener =
             object : FenceView.CallBack {
                 override fun callback(
                     startPoint: IntArray,

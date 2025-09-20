@@ -21,7 +21,7 @@ import com.mpdc4gsr.lib.core.dialog.TipDialog
 import com.mpdc4gsr.lib.core.ktbase.BaseActivity
 import com.mpdc4gsr.lib.core.tools.FileTools
 import com.mpdc4gsr.lib.core.tools.ToastTools
-import com.mpdc4gsr.libcom.ExcelUtil
+import com.mpdc4gsr.lib.core.comm.ExcelUtil
 import com.mpdc4gsr.module.thermal.ir.R
 import com.mpdc4gsr.module.thermal.ir.viewmodel.IRMonitorViewModel
 import kotlinx.coroutines.Dispatchers
@@ -67,7 +67,7 @@ class IRLogMPChartActivity : BaseActivity() {
 
             try {
                 val chartView =
-                    findViewById<com.topdon.module.thermal.ir.view.ChartLogView>(R.id.log_chart_time_chart)
+                    findViewById<com.mpdc4gsr.module.thermal.ir.view.ChartLogView>(R.id.log_chart_time_chart)
                 chartView.initEntry(it as ArrayList<ThermalEntity>)
             } catch (e: Exception) {
                 XLog.e("刷新图表异常:${e.message}")

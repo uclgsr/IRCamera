@@ -10,7 +10,6 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.mpdc4gsr.module.thermal.R
 import com.mpdc4gsr.lib.ui.R as LibUiR
-import com.mpdc4gsr.lib.core.R as LibR
 
 class SettingCheckAdapter(val context: Context) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {

@@ -49,6 +49,12 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
     protected var mIrSurfaceView: IrSurfaceView? = null
 
     private val msgLiveData by lazy { MutableLiveData<Int>() }
+    
+    // Cached fence and camera views to avoid repeated findViewById calls
+    private val fencePointView by lazy { requireView().findViewById<com.mpdc4gsr.lib.ui.fence.FencePointView>(R.id.fence_point_view) }
+    private val fenceLineView by lazy { requireView().findViewById<com.mpdc4gsr.lib.ui.fence.FenceLineView>(R.id.fence_line_view) }
+    private val fenceView by lazy { requireView().findViewById<com.mpdc4gsr.lib.ui.fence.FenceView>(R.id.fence_view) }
+    private val tempCameraView by lazy { requireView().findViewById<com.mpdc4gsr.lib.ui.camera.CameraView>(R.id.temp_camera_view) }
 
     override fun initContentView() = R.layout.fragment_thermal
 
@@ -478,11 +484,9 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
         mFenceLayout!!.visibility = View.GONE
         fenceFlag = 0x000
         selectIndex.clear()
-        requireView().findViewById<com.mpdc4gsr.lib.ui.fence.FenceView>(R.id.fence_view).clear()
-        requireView().findViewById<com.mpdc4gsr.lib.ui.fence.FenceLineView>(R.id.fence_line_view)
-            .clear()
-        requireView().findViewById<com.mpdc4gsr.lib.ui.fence.FencePointView>(R.id.fence_point_view)
-            .clear()
+        fenceView.clear()
+        fenceLineView.clear()
+        fencePointView.clear()
     }
 
     private fun setColor(action: Int) {
@@ -520,11 +524,11 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
         if (fenceFlag.getIndex(index) == 0) {
             fenceFlag = 1.shl(4 * (index - 1))
             mFenceLayout!!.visibility = View.VISIBLE
-            requireView().findViewById<com.mpdc4gsr.lib.ui.fence.FencePointView>(R.id.fence_point_view).visibility =
+            fencePointView.visibility =
                 if (fenceFlag.getIndex(1) > 0) View.VISIBLE else View.GONE
-            requireView().findViewById<com.mpdc4gsr.lib.ui.fence.FenceLineView>(R.id.fence_line_view).visibility =
+            fenceLineView.visibility =
                 if (fenceFlag.getIndex(2) > 0) View.VISIBLE else View.GONE
-            requireView().findViewById<com.mpdc4gsr.lib.ui.fence.FenceView>(R.id.fence_view).visibility =
+            fenceView.visibility =
                 if (fenceFlag.getIndex(3) > 0) View.VISIBLE else View.GONE
         } else {
             fenceFlag = 0x000
