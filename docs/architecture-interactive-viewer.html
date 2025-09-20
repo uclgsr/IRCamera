@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IRCamera Comprehensive Architecture Diagrams</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10.6.0/dist/mermaid.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            font-weight: 300;
+        }
+        
+        .header p {
+            margin: 10px 0 0 0;
+            opacity: 0.9;
+            font-size: 1.2em;
+        }
+        
+        .navigation {
+            background: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
+            padding: 15px 30px;
+        }
+        
+        .nav-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .nav-button {
+            padding: 8px 16px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-button:hover {
+            background: #0056b3;
+            transform: translateY(-1px);
+        }
+        
+        .nav-button.active {
+            background: #28a745;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .diagram-section {
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        .diagram-section.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .section-header {
+            border-bottom: 3px solid #007bff;
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .section-header h2 {
+            margin: 0;
+            color: #333;
+            font-size: 2em;
+        }
+        
+        .section-header p {
+            margin: 10px 0 0 0;
+            color: #666;
+            font-size: 1.1em;
+        }
+        
+        .diagram-container {
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .diagram-title {
+            font-size: 1.3em;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #495057;
+        }
+        
+        .diagram-description {
+            color: #6c757d;
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+        
+        .mermaid-diagram {
+            text-align: center;
+            margin: 20px 0;
+            background: #fafafa;
+            border-radius: 6px;
+            padding: 15px;
+        }
+        
+        .controls {
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .control-button {
+            padding: 8px 16px;
+            margin: 0 5px;
+            background: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        
+        .control-button:hover {
+            background: #545b62;
+        }
+        
+        .info-box {
+            background: #e7f3ff;
+            border-left: 4px solid #007bff;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        
+        .info-box h4 {
+            margin: 0 0 10px 0;
+            color: #0056b3;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .stat-card {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            text-align: center;
+            border: 1px solid #dee2e6;
+        }
+        
+        .stat-card h5 {
+            margin: 0 0 5px 0;
+            color: #495057;
+        }
+        
+        .stat-card .value {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #007bff;
+        }
+        
+        @media (max-width: 768px) {
+            .nav-buttons {
+                justify-content: center;
+            }
+            
+            .nav-button {
+                font-size: 12px;
+                padding: 6px 12px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>IRCamera Architecture Diagrams</h1>
+            <p>Comprehensive Mermaid diagrams for each feature, module, and architectural aspect</p>
+        </div>
+        
+        <div class="navigation">
+            <div class="nav-buttons">
+                <button class="nav-button active" onclick="showSection('overview')">System Overview</button>
+                <button class="nav-button" onclick="showSection('hub-spoke')">Hub-and-Spoke</button>
+                <button class="nav-button" onclick="showSection('android')">Android Modules</button>
+                <button class="nav-button" onclick="showSection('pc-hub')">PC Controller</button>
+                <button class="nav-button" onclick="showSection('thermal')">Thermal Features</button>
+                <button class="nav-button" onclick="showSection('gsr')">GSR & BLE</button>
+                <button class="nav-button" onclick="showSection('data-flow')">Data Flow</button>
+                <button class="nav-button" onclick="showSection('build')">Build System</button>
+                <button class="nav-button" onclick="showSection('integration')">Integration</button>
+            </div>
+        </div>
+        
+        <div class="content">
+            <!-- System Overview Section -->
+            <div class="diagram-section active" id="overview">
+                <div class="section-header">
+                    <h2>System Overview</h2>
+                    <p>Complete system architecture showing all layers and connections</p>
+                </div>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h5>Total Modules</h5>
+                        <div class="value">17</div>
+                    </div>
+                    <div class="stat-card">
+                        <h5>Core Libraries</h5>
+                        <div class="value">6</div>
+                    </div>
+                    <div class="stat-card">
+                        <h5>Feature Components</h5>
+                        <div class="value">7</div>
+                    </div>
+                    <div class="stat-card">
+                        <h5>External Modules</h5>
+                        <div class="value">2</div>
+                    </div>
+                </div>
+                
+                <div class="diagram-container">
+                    <div class="diagram-title">Complete System Architecture</div>
+                    <div class="diagram-description">Shows the complete IRCamera system with physical hardware, Android sensor nodes, PC controller hub, and build infrastructure</div>
+                    <div class="controls">
+                        <button class="control-button" onclick="zoomDiagram('overview-diagram', 1.2)">Zoom In</button>
+                        <button class="control-button" onclick="zoomDiagram('overview-diagram', 0.8)">Zoom Out</button>
+                        <button class="control-button" onclick="resetZoom('overview-diagram')">Reset</button>
+                    </div>
+                    <div class="mermaid-diagram" id="overview-diagram">
+graph TB
+    subgraph "Physical Layer"
+        ThermalHW[Topdon TC001<br/>Thermal Camera]
+        GSRHW[Shimmer3<br/>GSR Sensor]
+        RGBHW[Android Camera<br/>RGB Sensor]
+        BLEHW[BLE Hardware<br/>Bluetooth Radio]
+    end
+    
+    subgraph "Android Sensor Nodes (Spoke)"
+        subgraph "Android App Layer"
+            MainActivity[MainActivity.kt<br/>Entry Point]
+            ThermalActivity[ThermalActivity<br/>Thermal Interface]
+            GSRActivity[GSRActivity<br/>GSR Interface]
+        end
+        
+        subgraph "Feature Components"
+            ThermalIRComp[thermal-ir<br/>Advanced Thermal Processing]
+            ThermalComp[thermal<br/>Basic Thermal]
+            ThermalLiteComp[thermal-lite<br/>Lite Thermal]
+            GSRComp[gsr-recording<br/>GSR Data Collection]
+            UserComp[user<br/>User Management]
+        end
+        
+        subgraph "Core Libraries"
+            LibApp[libapp<br/>Application Framework]
+            LibIR[libir<br/>IR Processing Engine]
+            LibUI[libui<br/>UI Components]
+            LibCom[libcom<br/>Communication]
+            LibMatrix[libmatrix<br/>Matrix Operations]
+            LibMenu[libmenu<br/>Menu System]
+        end
+        
+        subgraph "External Modules"
+            BleModule[BleModule<br/>Shimmer Integration]
+            RangeSeekBar[RangeSeekBar<br/>UI Controls]
+        end
+    end
+    
+    subgraph "PC Controller Hub"
+        subgraph "MVP Components"
+            SimpleMVP[mvp_simple.py<br/>Single-file MVP]
+            FullMVP[run_mvp_app.py<br/>Complete GUI App]
+            DemoMVP[demo_mvp_components.py<br/>Component Demo]
+        end
+        
+        subgraph "Core Hub Services"
+            DeviceManager[Device Manager<br/>mDNS Discovery]
+            SessionManager[Session Manager<br/>Lifecycle Control]
+            DataAggregator[Data Aggregator<br/>Multi-modal Sync]
+            NetworkHub[Network Hub<br/>TCP/JSON Protocol]
+        end
+        
+        subgraph "Data Processing"
+            ThermalProcessor[Thermal Processor<br/>Image Processing]
+            GSRProcessor[GSR Processor<br/>Signal Processing]
+            SyncProcessor[Sync Processor<br/>Time Synchronization]
+        end
+    end
+    
+    subgraph "Build & CI/CD"
+        GradleBuild[Gradle Build System<br/>Multi-module]
+        DevTools[dev.sh<br/>Development Tools]
+        CIWorkflows[GitHub Actions<br/>CI/CD Pipeline]
+        StaticAnalysis[Static Analysis<br/>Quality Assurance]
+    end
+    
+    %% Hardware to Android connections
+    ThermalHW --> LibIR
+    GSRHW --> BleModule
+    RGBHW --> LibApp
+    BLEHW --> BleModule
+    
+    %% Android app connections
+    MainActivity --> ThermalActivity
+    MainActivity --> GSRActivity
+    ThermalActivity --> ThermalIRComp
+    GSRActivity --> GSRComp
+    
+    %% Component to library connections
+    ThermalIRComp --> LibIR
+    ThermalComp --> LibIR
+    ThermalLiteComp --> LibIR
+    GSRComp --> BleModule
+    GSRComp --> LibCom
+    UserComp --> LibApp
+    
+    %% Library dependencies
+    LibApp --> LibCom
+    LibIR --> LibMatrix
+    LibUI --> LibMatrix
+    
+    %% Network communication
+    LibCom <--> NetworkHub
+    
+    %% PC Hub internal connections
+    NetworkHub --> DeviceManager
+    NetworkHub --> SessionManager
+    NetworkHub --> DataAggregator
+    DataAggregator --> ThermalProcessor
+    DataAggregator --> GSRProcessor
+    DataAggregator --> SyncProcessor
+    
+    %% Build system connections
+    GradleBuild --> DevTools
+    DevTools --> CIWorkflows
+    CIWorkflows --> StaticAnalysis
+                    </div>
+                </div>
+                
+                <div class="info-box">
+                    <h4>Architecture Highlights</h4>
+                    <ul>
+                        <li><strong>Physical Layer:</strong> Hardware sensors (Topdon TC001 thermal camera, Shimmer3 GSR, Android cameras)</li>
+                        <li><strong>Android Sensor Nodes:</strong> Complete mobile application with modular components</li>
+                        <li><strong>PC Controller Hub:</strong> Python-based central coordinator with multiple implementation options</li>
+                        <li><strong>Build & CI/CD:</strong> Comprehensive build system with quality assurance</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Other sections would be added here in a real implementation -->
+            <!-- For brevity, I'll add placeholders for the other sections -->
+            
+            <div class="diagram-section" id="hub-spoke">
+                <div class="section-header">
+                    <h2>Hub-and-Spoke Architecture</h2>
+                    <p>Distributed system communication and coordination</p>
+                </div>
+                <div class="info-box">
+                    <h4>Coming Soon</h4>
+                    <p>This section will contain detailed Hub-and-Spoke architecture diagrams showing the distributed communication between PC Controller Hub and multiple Android sensor nodes.</p>
+                </div>
+            </div>
+            
+            <div class="diagram-section" id="android">
+                <div class="section-header">
+                    <h2>Android Module Architecture</h2>
+                    <p>Complete Android module dependencies and relationships</p>
+                </div>
+                <div class="info-box">
+                    <h4>Coming Soon</h4>
+                    <p>This section will contain detailed Android module architecture diagrams showing precise dependencies between all modules and components.</p>
+                </div>
+            </div>
+            
+            <div class="diagram-section" id="pc-hub">
+                <div class="section-header">
+                    <h2>PC Controller Hub Architecture</h2>
+                    <p>PC Controller component structure and services</p>
+                </div>
+                <div class="info-box">
+                    <h4>Coming Soon</h4>
+                    <p>This section will contain detailed PC Controller Hub architecture diagrams showing the complete Python-based hub infrastructure.</p>
+                </div>
+            </div>
+            
+            <div class="diagram-section" id="thermal">
+                <div class="section-header">
+                    <h2>Thermal Processing Features</h2>
+                    <p>Thermal components and IR processing pipeline</p>
+                </div>
+                <div class="info-box">
+                    <h4>Coming Soon</h4>
+                    <p>This section will contain detailed thermal processing diagrams showing the complete IR processing pipeline from hardware to application.</p>
+                </div>
+            </div>
+            
+            <div class="diagram-section" id="gsr">
+                <div class="section-header">
+                    <h2>GSR Recording and BLE Integration</h2>
+                    <p>GSR data collection and Shimmer3 integration</p>
+                </div>
+                <div class="info-box">
+                    <h4>Coming Soon</h4>
+                    <p>This section will contain detailed GSR and BLE architecture diagrams showing the complete Shimmer3 integration and data collection pipeline.</p>
+                </div>
+            </div>
+            
+            <div class="diagram-section" id="data-flow">
+                <div class="section-header">
+                    <h2>Data Flow Architecture</h2>
+                    <p>Multi-modal data synchronization and processing</p>
+                </div>
+                <div class="info-box">
+                    <h4>Coming Soon</h4>
+                    <p>This section will contain detailed data flow diagrams showing multi-modal synchronization and processing pipelines.</p>
+                </div>
+            </div>
+            
+            <div class="diagram-section" id="build">
+                <div class="section-header">
+                    <h2>Build System Architecture</h2>
+                    <p>Gradle multi-module build system</p>
+                </div>
+                <div class="info-box">
+                    <h4>Coming Soon</h4>
+                    <p>This section will contain detailed build system diagrams showing the complete Gradle multi-module architecture.</p>
+                </div>
+            </div>
+            
+            <div class="diagram-section" id="integration">
+                <div class="section-header">
+                    <h2>Integration Architecture</h2>
+                    <p>Complete integration flow from development to production</p>
+                </div>
+                <div class="info-box">
+                    <h4>Coming Soon</h4>
+                    <p>This section will contain detailed integration architecture diagrams showing the complete development to production flow.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Mermaid
+        mermaid.initialize({ 
+            startOnLoad: true, 
+            theme: 'base',
+            themeVariables: {
+                primaryColor: '#f9f9f9',
+                primaryTextColor: '#333',
+                primaryBorderColor: '#ddd',
+                lineColor: '#666',
+                secondaryColor: '#e8f4f8',
+                tertiaryColor: '#f4f4f4'
+            },
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true,
+                curve: 'basis'
+            }
+        });
+        
+        // Navigation function
+        function showSection(sectionId) {
+            // Hide all sections
+            const sections = document.querySelectorAll('.diagram-section');
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Show selected section
+            document.getElementById(sectionId).classList.add('active');
+            
+            // Update navigation buttons
+            const buttons = document.querySelectorAll('.nav-button');
+            buttons.forEach(button => {
+                button.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+        
+        // Zoom functions
+        function zoomDiagram(diagramId, factor) {
+            const diagram = document.querySelector('#' + diagramId + ' svg');
+            if (diagram) {
+                const currentScale = diagram.style.transform.match(/scale\\((.*?)\\)/);
+                const scale = currentScale ? parseFloat(currentScale[1]) * factor : factor;
+                diagram.style.transform = `scale(${scale})`;
+                diagram.style.transformOrigin = 'center';
+            }
+        }
+        
+        function resetZoom(diagramId) {
+            const diagram = document.querySelector('#' + diagramId + ' svg');
+            if (diagram) {
+                diagram.style.transform = 'scale(1)';
+            }
+        }
+        
+        // Auto-render Mermaid diagrams after page load
+        window.addEventListener('load', function() {
+            mermaid.init(undefined, '.mermaid-diagram');
+        });
+    </script>
+</body>
+</html>
