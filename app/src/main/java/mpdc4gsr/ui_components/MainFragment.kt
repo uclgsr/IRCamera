@@ -141,15 +141,6 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerView.adapter = adapter
 
-        if (WebSocketProxy.getInstance().isTC007Connect()) {
-            // TC007Repository functionality removed
-            // lifecycleScope.launch {
-            //     val batteryInfo: BatteryInfo? = TC007Repository.getBatteryInfo()
-            //     if (batteryInfo != null) {
-            //         adapter.tc007Battery = batteryInfo
-            //     }
-            // }
-        }
         viewLifecycleOwner.lifecycle.addObserver(
             object : DefaultLifecycleObserver {
                 override fun onResume(owner: LifecycleOwner) {
