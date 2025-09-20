@@ -18,7 +18,7 @@ The repository includes automated Copilot configuration:
 
 ```bash
 # Clone the repository
-git clone https://github.com/buccancs/IRCamera.git
+git clone https://github.com/uclgsr/IRCamera.git
 cd IRCamera
 
 # VS Code will automatically prompt to install recommended extensions

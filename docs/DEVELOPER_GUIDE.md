@@ -1,10 +1,10 @@
 # IRCamera Developer Guide
 
-## [LIST] Overview
+## Overview
 
 This guide provides comprehensive development instructions for the IRCamera Multi-Modal Thermal Sensing Platform. It consolidates setup procedures, development workflows, and troubleshooting information for contributors and maintainers.
 
-## [BUILD] System Architecture
+## System Architecture
 
 ### Hub-and-Spoke Model
 
@@ -19,30 +19,33 @@ This guide provides comprehensive development instructions for the IRCamera Mult
 
 ```
 IRCamera/
-|---- app/                           # Main Android application
-|   `---- src/main/java/mpdc4gsr/   # Android application code
-|---- pc-controller/                 # Python PC Hub implementation
-|   |---- src/ircamera_pc/          # Main application package
-|   |---- demo_mvp_components.py    # Component demonstration
-|   |---- run_mvp_app.py            # Application launcher
-|   `---- requirements.txt          # Python dependencies
-|---- component/                     # Feature components
-|   |---- thermal-ir/               # Thermal imaging component
-|   |---- gsr-recording/            # GSR sensor component
-|   |---- pseudo/                   # Simulation components
-|   `---- ...                       # Other sensor components
-|---- libir/                        # Core IR processing library
-|---- lib*/                         # Support libraries
-|   |---- libapp/                   # Application framework
-|   |---- libcom/                   # Communication library
-|   |---- libui/                    # User interface components
-|   `---- ...                       # Other libraries
-|---- docs/                         # **Consolidated Documentation**
-|---- scripts/                      # Build and utility scripts
-`---- .github/                      # CI/CD and GitHub configurations
++-- app/                           # Main Android application
+    +-- src/main/java/mpdc4gsr/   # Android application code
++-- pc-controller/                 # Python PC Hub implementation
+    +-- src/ircamera_pc/          # Main application package
+    +-- demo_mvp_components.py    # Component demonstration
+    +-- run_mvp_app.py            # Application launcher
+    +-- requirements.txt          # Python dependencies
++-- component/                     # Feature components
+    +-- thermal-ir/               # Thermal imaging component
+    +-- gsr-recording/            # GSR sensor component
+    +-- pseudo/                   # Simulation components
+    +-- ...                       # Other sensor components
++-- consolidated_libraries/        # Consolidated support libraries
+    +-- libcom/                   # Communication library
+    +-- libmatrix/               # Matrix operations library
+    +-- libmenu/                 # Menu components library
++-- libapp/                       # Application framework library
++-- libir/                        # Core IR processing library  
++-- libui/                        # User interface components library
++-- BleModule/                    # Bluetooth Low Energy module
++-- RangeSeekBar/                 # UI range selector component
++-- docs/                         # **Consolidated Documentation**
++-- scripts/                      # Build and utility scripts
++-- .github/                      # CI/CD and GitHub configurations
 ```
 
-## [LAUNCH] Development Environment Setup
+## Development Environment Setup
 
 ### Prerequisites
 
@@ -99,7 +102,7 @@ python demo_mvp_components.py
 python test_mvp_simple.py
 ```
 
-## [TOOLS] Development Workflow
+## Development Workflow
 
 ### Using Development Tools
 
@@ -122,7 +125,7 @@ The repository includes comprehensive development tools via `dev.sh`:
 ./dev.sh validate                # Comprehensive validation (3+ minutes)
 ```
 
-**[WARNING] Important Timing Notes:**
+**⚠️ Important Timing Notes:**
 - `./gradlew clean`: Takes 80-90 seconds, **NEVER CANCEL**
 - Build attempts: 45-120 seconds, **NEVER CANCEL**  
 - Always use timeout of 180+ seconds for Gradle operations
@@ -131,7 +134,7 @@ The repository includes comprehensive development tools via `dev.sh`:
 
 #### Android Build (Currently Non-Functional)
 
-**[ALERT] CRITICAL**: Android build currently **FAILS** due to missing ShimmerDevice class.
+**🚨 CRITICAL**: Android build currently **FAILS** due to missing ShimmerDevice class.
 
 ```bash
 # Standard build attempts (will fail)
@@ -201,7 +204,7 @@ class DeviceManager:
 3. **Follow Project Conventions**: Leverage established architecture
 4. **Context-Aware Naming**: Use descriptive variable and method names
 
-## [TEST] Testing & Validation
+## Testing & Validation
 
 ### Automated Testing
 
@@ -220,11 +223,11 @@ python run_mvp_app.py             # Complete MVP functionality
 ```
 
 **Test Results Status**:
-- [DONE] Configuration System (100%)
-- [DONE] Device Discovery Framework (100%)  
-- [DONE] Communication Protocol (100%)
-- [DONE] GUI Architecture (100%)
-- [WARNING] Session Management (some missing methods)
+- ✅ Configuration System (100%)
+- ✅ Device Discovery Framework (100%)  
+- ✅ Communication Protocol (100%)
+- ✅ GUI Architecture (100%)
+- ⚠️ Session Management (some missing methods)
 
 #### Android Testing
 **Current Status**: Cannot perform end-to-end Android testing until build issues are resolved.
@@ -245,14 +248,14 @@ adb logcat | grep IRCamera
 python -c "
 from src.ircamera_pc.network.discovery import DeviceDiscoveryService
 service = DeviceDiscoveryService()
-print('[DONE] Device discovery service loads successfully')
+print('✅ Device discovery service loads successfully')
 "
 
 # Test session management
 python -c "
 from src.ircamera_pc.core.session_manager import SessionManager
 manager = SessionManager()
-print('[DONE] Session manager initialized')
+print('✅ Session manager initialized')
 "
 ```
 
@@ -269,7 +272,7 @@ python3 --version
 pip list | grep PyQt6
 ```
 
-## [DATA] Code Quality & Standards
+## Code Quality & Standards
 
 ### Linting Configuration
 
@@ -310,7 +313,7 @@ flake8 pc-controller/src/
 - **Documentation**: Comprehensive docstrings for public APIs
 - **Error Handling**: Robust exception handling and logging
 
-## [WRENCH] Advanced Development Topics
+## Advanced Development Topics
 
 ### Native Backend Integration (PC Controller)
 
@@ -328,7 +331,7 @@ cd ..
 python -c "
 try:
     import native_gsr_processor
-    print('[DONE] Native backend loaded successfully')
+    print('✅ Native backend loaded successfully')
 except ImportError:
     print('ℹ️ Falling back to Python implementation')
 "
@@ -381,7 +384,7 @@ To add new command types:
 - **Memory Efficiency**: Efficient data structure usage
 - **Network Optimization**: Optimized TCP communication
 
-## [BUG] Known Issues & Workarounds
+## Known Issues & Workarounds
 
 ### Critical Issues
 
@@ -447,11 +450,11 @@ python -c "
 import sys
 sys.path.append('src')
 from ircamera_pc.core.config import ConfigurationManager
-print('[DONE] Core modules load successfully')
+print('✅ Core modules load successfully')
 "
 ```
 
-## [LAUNCH] Deployment & Distribution
+## Deployment & Distribution
 
 ### Android APK Generation
 **Current Status**: Not available due to build issues
@@ -489,7 +492,7 @@ COPY pc-controller/ .
 CMD ["python", "run_mvp_app.py"]
 ```
 
-## [CHART] Performance Monitoring
+## Performance Monitoring
 
 ### Build Performance Tracking
 ```bash
@@ -516,7 +519,7 @@ print(f'CPU: {process.cpu_percent()}%')
 adb shell top -p $(adb shell pidof com.topdon.ircamera)
 ```
 
-## [HANDSHAKE] Contributing Guidelines
+## Contributing Guidelines
 
 ### Code Contribution Workflow
 1. **Fork Repository**: Create personal fork on GitHub
@@ -539,7 +542,7 @@ adb shell top -p $(adb shell pidof com.topdon.ircamera)
 
 ---
 
-**Status**: [DONE] Complete Developer Documentation  
+**Status**: ✅ Complete Developer Documentation  
 **Last Updated**: Documentation Consolidation v1.0  
 **Build Status**: Android (FAILING), PC Controller (WORKING)  
 **Next Steps**: Resolve ShimmerDevice build issue for full functionality

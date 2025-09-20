@@ -1,10 +1,10 @@
 # IRCamera Architecture Guide
 
-## [LIST] System Overview
+## System Overview
 
 The IRCamera Multi-Modal Thermal Sensing Platform implements a sophisticated **Hub-and-Spoke architecture** designed for distributed multi-modal physiological sensing. This document provides comprehensive technical details about the system design, component interactions, and architectural decisions.
 
-## [BUILD] High-Level Architecture
+## High-Level Architecture
 
 ### Hub-and-Spoke Model
 
@@ -70,7 +70,7 @@ graph TB
 5. **Modularity**: Clear separation of concerns across components
 6. **Real-time Communication**: Low-latency command/response protocol
 
-## [SCREEN] PC Controller Hub Architecture
+## PC Controller Hub Architecture
 
 ### Component Structure
 
@@ -150,7 +150,7 @@ graph TB
   - Command routing and response handling
   - Connection health monitoring
 
-## [MOBILE] Android Sensor Node Architecture
+## Android Sensor Node Architecture
 
 ### Application Structure
 
@@ -235,7 +235,7 @@ graph TB
 - **Dual Output**: Video files (.mp4) + individual frames for analysis
 - **Quality**: High-quality encoding optimized for analysis
 
-## 🌐 Communication Protocol Architecture
+## Communication Protocol Architecture
 
 ### Protocol Stack
 
@@ -316,7 +316,7 @@ sequenceDiagram
     Note over Hub,Node2: Recording starts synchronously
 ```
 
-## [DATA] Data Architecture
+## Data Architecture
 
 ### Data Flow Pipeline
 
@@ -377,20 +377,20 @@ graph TB
 #### Session Directory Structure
 ```
 sessions/
-|---- session_YYYY-MM-DD_HH-MM-SS/           # Session timestamp
-|   |---- metadata.json                       # Session configuration
-|   |---- session_summary.json                # Session statistics
-|   |---- device_001/                         # First Android device
-|   |   |---- thermal_data.csv               # Temperature matrices
-|   |   |---- gsr_data.csv                   # GSR measurements
-|   |   |---- rgb_video.mp4                  # RGB video recording
-|   |   |---- rgb_frames/                     # Individual video frames
-|   |   |   |---- frame_000001.jpg
-|   |   |   `---- ...
-|   |   `---- device_metadata.json           # Device-specific info
-|   |---- device_002/                         # Second Android device
-|   |   `---- ...                             # Same structure
-|   `---- synchronization.json                # Cross-device sync data
++-- session_YYYY-MM-DD_HH-MM-SS/           # Session timestamp
+    +-- metadata.json                       # Session configuration
+    +-- session_summary.json                # Session statistics
+    +-- device_001/                         # First Android device
+        +-- thermal_data.csv               # Temperature matrices
+        +-- gsr_data.csv                   # GSR measurements
+        +-- rgb_video.mp4                  # RGB video recording
+        +-- rgb_frames/                     # Individual video frames
+            +-- frame_000001.jpg
+            +-- ...
+        +-- device_metadata.json           # Device-specific info
+    +-- device_002/                         # Second Android device
+        +-- ...                             # Same structure
+    +-- synchronization.json                # Cross-device sync data
 ```
 
 #### Data Format Examples
@@ -409,7 +409,7 @@ timestamp,conductance,resistance,ppg_value,signal_quality
 1641234567131,2.47,0.405,1026.1,good
 ```
 
-## [WRENCH] Component Library Architecture
+## Component Library Architecture
 
 ### Library Dependency Graph
 
@@ -476,7 +476,7 @@ graph TB
 - Image format conversion and enhancement
 - Native code integration for performance
 
-**libcom - Communication Library**
+**libcom - Communication Library** (`consolidated_libraries/libcom/`)
 - Cross-platform networking implementation
 - JSON protocol handling
 - mDNS service discovery
@@ -494,13 +494,13 @@ graph TB
 - Real-time data visualization widgets
 - Responsive layout management
 
-**libmatrix - Matrix Operations Library**
+**libmatrix - Matrix Operations Library** (`consolidated_libraries/libmatrix/`)
 - High-performance matrix operations
 - Image processing algorithms
 - Mathematical computation utilities
 - Memory-optimized data structures
 
-## 🔐 Security Architecture
+## Security Architecture
 
 ### Security Layers
 
@@ -550,7 +550,7 @@ graph TB
     SecureDeletion --> TamperDetection
 ```
 
-## [LAUNCH] Performance Architecture
+## Performance Architecture
 
 ### Performance Optimization Strategy
 
@@ -593,7 +593,7 @@ graph TB
 - **Compression**: Optional data compression for large transfers
 - **Priority Queues**: Prioritize time-critical messages
 
-## [REFRESH] Build System Architecture
+## Build System Architecture
 
 ### Gradle Build Structure
 
@@ -645,7 +645,7 @@ graph TB
 5. **APK Assembly**: Final APK generation and signing
 6. **Validation Phase**: Quality checks and testing
 
-## [CHART] Monitoring and Observability
+## Monitoring and Observability
 
 ### System Monitoring Architecture
 
@@ -685,7 +685,7 @@ graph TB
     SensorQuality --> ReportGeneration
 ```
 
-## 🔮 Future Architecture Considerations
+## Future Architecture Considerations
 
 ### Scalability Enhancements
 - **Cloud Integration**: AWS/Azure integration for large-scale data processing
