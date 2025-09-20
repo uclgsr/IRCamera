@@ -112,8 +112,7 @@ class ColorPickDialog(
             )
             findViewById<DefRangeSeekBar>(R.id.nifty_slider_view).setProgress(
                 textSizeToNifyValue(
-                    textSize,
-                    textSizeIsDP
+                    textSize
                 )
             )
         } else {

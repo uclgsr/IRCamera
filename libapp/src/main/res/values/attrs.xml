@@ -48,6 +48,9 @@
         <attr name="lms_dot_move_rate" format="float" />
     </declare-styleable>
 
+
+
+
     
     <declare-styleable name="MenuSecondView">
         <attr name="deviceType" format="enum">
@@ -58,6 +61,5 @@
             <enum name="gallery_edit" value="4" /> 
         </attr>
     </declare-styleable>
-
 
 </resources>
