@@ -276,44 +276,44 @@ graph TB
     
     subgraph "Feature Components"
         subgraph "Thermal Components"
-            ThermalIR[thermal-ir<br/>Advanced IR Processing<br/>• Multi-spectral analysis<br/>• Temperature mapping<br/>• Object detection]
+            ThermalIR[thermal-ir<br/>Advanced IR Processing<br/>- Multi-spectral analysis<br/>- Temperature mapping<br/>- Object detection]
             
-            Thermal[thermal<br/>Basic Thermal Processing<br/>• Simple temperature display<br/>• Basic color mapping<br/>• Raw data export]
+            Thermal[thermal<br/>Basic Thermal Processing<br/>- Simple temperature display<br/>- Basic color mapping<br/>- Raw data export]
             
-            ThermalLite[thermal-lite<br/>Lightweight Thermal<br/>• Minimal processing<br/>• Low memory usage<br/>• Fast rendering]
+            ThermalLite[thermal-lite<br/>Lightweight Thermal<br/>- Minimal processing<br/>- Low memory usage<br/>- Fast rendering]
         end
         
         subgraph "Data Collection"
-            GSRRecording[gsr-recording<br/>GSR Data Collection<br/>• Shimmer3 integration<br/>• Real-time streaming<br/>• Quality validation]
+            GSRRecording[gsr-recording<br/>GSR Data Collection<br/>- Shimmer3 integration<br/>- Real-time streaming<br/>- Quality validation]
         end
         
         subgraph "System Components"
-            UserMgmt[user<br/>User Management<br/>• Profile management<br/>• Session tracking<br/>• Preferences]
+            UserMgmt[user<br/>User Management<br/>- Profile management<br/>- Session tracking<br/>- Preferences]
         end
     end
     
     subgraph "Core Libraries"
-        LibApp[libapp<br/>Application Framework<br/>• Base activities<br/>• Common utilities<br/>• Configuration management]
+        LibApp[libapp<br/>Application Framework<br/>- Base activities<br/>- Common utilities<br/>- Configuration management]
         
-        LibIR[libir<br/>IR Processing Engine<br/>• Topdon TC001 SDK<br/>• Image processing<br/>• Temperature calculation]
+        LibIR[libir<br/>IR Processing Engine<br/>- Topdon TC001 SDK<br/>- Image processing<br/>- Temperature calculation]
         
-        LibUI[libui<br/>UI Components<br/>• Custom views<br/>• Chart components<br/>• Material design]
+        LibUI[libui<br/>UI Components<br/>- Custom views<br/>- Chart components<br/>- Material design]
         
-        LibCom[libcom<br/>Communication Library<br/>• Network protocols<br/>• JSON messaging<br/>• mDNS discovery]
+        LibCom[libcom<br/>Communication Library<br/>- Network protocols<br/>- JSON messaging<br/>- mDNS discovery]
         
-        LibMatrix[libmatrix<br/>Matrix Operations<br/>• Mathematical operations<br/>• Image transformations<br/>• Signal processing]
+        LibMatrix[libmatrix<br/>Matrix Operations<br/>- Mathematical operations<br/>- Image transformations<br/>- Signal processing]
         
-        LibMenu[libmenu<br/>Menu System<br/>• Navigation<br/>• Context menus<br/>• Action bars]
+        LibMenu[libmenu<br/>Menu System<br/>- Navigation<br/>- Context menus<br/>- Action bars]
     end
     
     subgraph "External Modules"
-        BleModule[BleModule<br/>Bluetooth Low Energy<br/>• Shimmer3 protocol<br/>• Device management<br/>• Data streaming]
+        BleModule[BleModule<br/>Bluetooth Low Energy<br/>- Shimmer3 protocol<br/>- Device management<br/>- Data streaming]
         
-        RangeSeekBar[RangeSeekBar<br/>UI Range Controls<br/>• Temperature ranges<br/>• Slider controls<br/>• Value selection]
+        RangeSeekBar[RangeSeekBar<br/>UI Range Controls<br/>- Temperature ranges<br/>- Slider controls<br/>- Value selection]
     end
     
     subgraph "Consolidated Libraries"
-        CommonComponent[CommonComponent<br/>Shared Components<br/>• Common interfaces<br/>• Utility classes<br/>• Constants]
+        CommonComponent[CommonComponent<br/>Shared Components<br/>- Common interfaces<br/>- Utility classes<br/>- Constants]
     end
     
     %% App to Activity connections
@@ -532,9 +532,9 @@ graph TB
 ```mermaid
 graph TB
     subgraph "Hardware Layer"
-        TopdonTC001[Topdon TC001<br/>Thermal Camera<br/>• 384x288 resolution<br/>• USB-C interface<br/>• Temperature range: -20°C to 400°C]
+        TopdonTC001[Topdon TC001<br/>Thermal Camera<br/>- 384x288 resolution<br/>- USB-C interface<br/>- Temperature range: -20degC to 400degC]
         
-        AndroidCamera[Android Camera<br/>RGB Sensor<br/>• CameraX API<br/>• Various resolutions<br/>• Auto-focus & exposure]
+        AndroidCamera[Android Camera<br/>RGB Sensor<br/>- CameraX API<br/>- Various resolutions<br/>- Auto-focus & exposure]
     end
     
     subgraph "libir: IR Processing Engine"
@@ -641,9 +641,9 @@ graph TB
 ```mermaid
 graph TB
     subgraph "Hardware Layer"
-        Shimmer3[Shimmer3 GSR+<br/>Galvanic Skin Response<br/>• Wireless GSR sensor<br/>• Bluetooth Low Energy<br/>• Real-time streaming]
+        Shimmer3[Shimmer3 GSR+<br/>Galvanic Skin Response<br/>- Wireless GSR sensor<br/>- Bluetooth Low Energy<br/>- Real-time streaming]
         
-        AndroidBLE[Android BLE<br/>Bluetooth Hardware<br/>• BLE 4.0+ support<br/>• Multiple connections<br/>• Low power mode]
+        AndroidBLE[Android BLE<br/>Bluetooth Hardware<br/>- BLE 4.0+ support<br/>- Multiple connections<br/>- Low power mode]
     end
     
     subgraph "BleModule: Shimmer Integration"
@@ -862,41 +862,41 @@ graph LR
     end
     
     subgraph "Acquisition Layer"
-        ThermalAcq[Thermal Acquisition<br/>• Frame capture<br/>• Temperature conversion<br/>• Quality check]
+        ThermalAcq[Thermal Acquisition<br/>- Frame capture<br/>- Temperature conversion<br/>- Quality check]
         
-        GSRAcq[GSR Acquisition<br/>• BLE streaming<br/>• Packet parsing<br/>• Signal validation]
+        GSRAcq[GSR Acquisition<br/>- BLE streaming<br/>- Packet parsing<br/>- Signal validation]
         
-        RGBAcq[RGB Acquisition<br/>• CameraX capture<br/>• Image processing<br/>• Compression]
+        RGBAcq[RGB Acquisition<br/>- CameraX capture<br/>- Image processing<br/>- Compression]
     end
     
     subgraph "Processing Layer"
-        ThermalProc[Thermal Processing<br/>• Calibration<br/>• Filtering<br/>• Enhancement]
+        ThermalProc[Thermal Processing<br/>- Calibration<br/>- Filtering<br/>- Enhancement]
         
-        GSRProc[GSR Processing<br/>• Artifact removal<br/>• Filtering<br/>• Feature extraction]
+        GSRProc[GSR Processing<br/>- Artifact removal<br/>- Filtering<br/>- Feature extraction]
         
-        RGBProc[RGB Processing<br/>• Color correction<br/>• Alignment<br/>• Compression]
+        RGBProc[RGB Processing<br/>- Color correction<br/>- Alignment<br/>- Compression]
     end
     
     subgraph "Synchronization Layer"
-        TimeAlign[Time Alignment<br/>• Clock synchronization<br/>• Timestamp correction<br/>• Drift compensation]
+        TimeAlign[Time Alignment<br/>- Clock synchronization<br/>- Timestamp correction<br/>- Drift compensation]
         
-        DataFusion[Data Fusion<br/>• Multi-modal alignment<br/>• Interpolation<br/>• Gap filling]
+        DataFusion[Data Fusion<br/>- Multi-modal alignment<br/>- Interpolation<br/>- Gap filling]
         
-        QualityCtrl[Quality Control<br/>• Signal quality<br/>• Missing data<br/>• Outlier detection]
+        QualityCtrl[Quality Control<br/>- Signal quality<br/>- Missing data<br/>- Outlier detection]
     end
     
     subgraph "Storage Layer"
-        BufferMgr[Buffer Manager<br/>• Circular buffers<br/>• Memory management<br/>• Overflow handling]
+        BufferMgr[Buffer Manager<br/>- Circular buffers<br/>- Memory management<br/>- Overflow handling]
         
-        HDF5Store[HDF5 Storage<br/>• Hierarchical structure<br/>• Metadata preservation<br/>• Compression]
+        HDF5Store[HDF5 Storage<br/>- Hierarchical structure<br/>- Metadata preservation<br/>- Compression]
         
-        ExportMgr[Export Manager<br/>• Multiple formats<br/>• Batch processing<br/>• Validation]
+        ExportMgr[Export Manager<br/>- Multiple formats<br/>- Batch processing<br/>- Validation]
     end
     
     subgraph "Network Layer"
-        StreamMgr[Stream Manager<br/>• Real-time streaming<br/>• Flow control<br/>• Error recovery]
+        StreamMgr[Stream Manager<br/>- Real-time streaming<br/>- Flow control<br/>- Error recovery]
         
-        NetworkProto[Network Protocol<br/>• JSON messaging<br/>• Command routing<br/>• Status reporting]
+        NetworkProto[Network Protocol<br/>- JSON messaging<br/>- Command routing<br/>- Status reporting]
     end
     
     %% Data source to acquisition
@@ -941,64 +941,64 @@ graph LR
 ```mermaid
 graph TB
     subgraph "Root Project Configuration"
-        RootBuild[build.gradle.kts<br/>• Global configuration<br/>• Plugin management<br/>• Common dependencies]
+        RootBuild[build.gradle.kts<br/>- Global configuration<br/>- Plugin management<br/>- Common dependencies]
         
-        Settings[settings.gradle.kts<br/>• Module inclusion<br/>• Project structure<br/>• Repository configuration]
+        Settings[settings.gradle.kts<br/>- Module inclusion<br/>- Project structure<br/>- Repository configuration]
         
-        VersionCatalog[gradle/libs.versions.toml<br/>• Dependency versions<br/>• Library definitions<br/>• Plugin versions]
+        VersionCatalog[gradle/libs.versions.toml<br/>- Dependency versions<br/>- Library definitions<br/>- Plugin versions]
         
-        GradleProps[gradle.properties<br/>• Build properties<br/>• JVM settings<br/>• Android SDK config]
+        GradleProps[gradle.properties<br/>- Build properties<br/>- JVM settings<br/>- Android SDK config]
     end
     
     subgraph "Application Module"
-        AppBuild[app/build.gradle.kts<br/>• Application plugin<br/>• APK configuration<br/>• Signing & optimization]
+        AppBuild[app/build.gradle.kts<br/>- Application plugin<br/>- APK configuration<br/>- Signing & optimization]
     end
     
     subgraph "Core Library Modules"
-        LibAppBuild[libapp/build.gradle.kts<br/>• Android library<br/>• Framework components<br/>• Common utilities]
+        LibAppBuild[libapp/build.gradle.kts<br/>- Android library<br/>- Framework components<br/>- Common utilities]
         
-        LibIRBuild[libir/build.gradle.kts<br/>• Native libraries<br/>• JNI integration<br/>• Topdon SDK]
+        LibIRBuild[libir/build.gradle.kts<br/>- Native libraries<br/>- JNI integration<br/>- Topdon SDK]
         
-        LibUIBuild[libui/build.gradle.kts<br/>• UI components<br/>• Custom views<br/>• Material design]
+        LibUIBuild[libui/build.gradle.kts<br/>- UI components<br/>- Custom views<br/>- Material design]
     end
     
     subgraph "Feature Component Modules"
-        ThermalIRBuild[thermal-ir/build.gradle.kts<br/>• Advanced thermal<br/>• Image processing<br/>• Computer vision]
+        ThermalIRBuild[thermal-ir/build.gradle.kts<br/>- Advanced thermal<br/>- Image processing<br/>- Computer vision]
         
-        GSRBuild[gsr-recording/build.gradle.kts<br/>• GSR processing<br/>• BLE integration<br/>• Data streaming]
+        GSRBuild[gsr-recording/build.gradle.kts<br/>- GSR processing<br/>- BLE integration<br/>- Data streaming]
         
-        UserBuild[user/build.gradle.kts<br/>• User management<br/>• Profile handling<br/>• Preferences]
+        UserBuild[user/build.gradle.kts<br/>- User management<br/>- Profile handling<br/>- Preferences]
     end
     
     subgraph "External Module Builds"
-        BleBuild[BleModule/build.gradle.kts<br/>• Shimmer integration<br/>• BLE protocols<br/>• Device management]
+        BleBuild[BleModule/build.gradle.kts<br/>- Shimmer integration<br/>- BLE protocols<br/>- Device management]
         
-        RangeSeekBarBuild[RangeSeekBar/build.gradle.kts<br/>• Custom UI controls<br/>• Range selection<br/>• Touch handling]
+        RangeSeekBarBuild[RangeSeekBar/build.gradle.kts<br/>- Custom UI controls<br/>- Range selection<br/>- Touch handling]
     end
     
     subgraph "Consolidated Libraries"
-        CommonBuild[CommonComponent/build.gradle.kts<br/>• Shared components<br/>• Interfaces<br/>• Utilities]
+        CommonBuild[CommonComponent/build.gradle.kts<br/>- Shared components<br/>- Interfaces<br/>- Utilities]
         
-        ConsolidatedBuild[consolidated_libraries/<br/>• Shared configuration<br/>• Common scripts<br/>• Build utilities]
+        ConsolidatedBuild[consolidated_libraries/<br/>- Shared configuration<br/>- Common scripts<br/>- Build utilities]
     end
     
     subgraph "Build Tools & Scripts"
-        DevScript[dev.sh<br/>• Development tools<br/>• Linting & validation<br/>• Build automation]
+        DevScript[dev.sh<br/>- Development tools<br/>- Linting & validation<br/>- Build automation]
         
-        BuildScripts[scripts/<br/>• Production builds<br/>• APK generation<br/>• Release automation]
+        BuildScripts[scripts/<br/>- Production builds<br/>- APK generation<br/>- Release automation]
         
-        CIWorkflows[.github/workflows/<br/>• GitHub Actions<br/>• CI/CD pipeline<br/>• Quality gates]
+        CIWorkflows[.github/workflows/<br/>- GitHub Actions<br/>- CI/CD pipeline<br/>- Quality gates]
     end
     
     subgraph "Dependency Management"
         subgraph "Version Catalog Dependencies"
-            AndroidDeps[Android Dependencies<br/>• AndroidX libraries<br/>• Material Design<br/>• CameraX]
+            AndroidDeps[Android Dependencies<br/>- AndroidX libraries<br/>- Material Design<br/>- CameraX]
             
-            KotlinDeps[Kotlin Dependencies<br/>• Kotlin stdlib<br/>• Coroutines<br/>• Serialization]
+            KotlinDeps[Kotlin Dependencies<br/>- Kotlin stdlib<br/>- Coroutines<br/>- Serialization]
             
-            NetworkDeps[Network Dependencies<br/>• OkHttp<br/>• Retrofit<br/>• WebSocket]
+            NetworkDeps[Network Dependencies<br/>- OkHttp<br/>- Retrofit<br/>- WebSocket]
             
-            BLEDeps[BLE Dependencies<br/>• Shimmer SDK<br/>• Bluetooth libraries<br/>• Protocol handlers]
+            BLEDeps[BLE Dependencies<br/>- Shimmer SDK<br/>- Bluetooth libraries<br/>- Protocol handlers]
         end
     end
     
@@ -1073,69 +1073,69 @@ graph TB
 ```mermaid
 graph TB
     subgraph "Development Environment"
-        DevMachine[Developer Machine<br/>• Android Studio<br/>• Python environment<br/>• Git repository]
+        DevMachine[Developer Machine<br/>- Android Studio<br/>- Python environment<br/>- Git repository]
         
-        AndroidDevice[Android Test Device<br/>• Debug build<br/>• USB debugging<br/>• Network access]
+        AndroidDevice[Android Test Device<br/>- Debug build<br/>- USB debugging<br/>- Network access]
         
-        PCController[PC Controller<br/>• Python environment<br/>• GUI application<br/>• Data storage]
+        PCController[PC Controller<br/>- Python environment<br/>- GUI application<br/>- Data storage]
     end
     
     subgraph "Hardware Integration"
-        ThermalCamera[Topdon TC001<br/>• USB-C connection<br/>• Native SDK<br/>• Temperature sensor]
+        ThermalCamera[Topdon TC001<br/>- USB-C connection<br/>- Native SDK<br/>- Temperature sensor]
         
-        ShimmerGSR[Shimmer3 GSR+<br/>• Bluetooth LE<br/>• Wireless sensor<br/>• Real-time streaming]
+        ShimmerGSR[Shimmer3 GSR+<br/>- Bluetooth LE<br/>- Wireless sensor<br/>- Real-time streaming]
         
-        AndroidSensors[Android Sensors<br/>• RGB camera<br/>• Accelerometer<br/>• Network interfaces]
+        AndroidSensors[Android Sensors<br/>- RGB camera<br/>- Accelerometer<br/>- Network interfaces]
     end
     
     subgraph "Network Infrastructure"
-        WiFiNetwork[WiFi Network<br/>• Local network<br/>• mDNS support<br/>• TCP/IP connectivity]
+        WiFiNetwork[WiFi Network<br/>- Local network<br/>- mDNS support<br/>- TCP/IP connectivity]
         
-        InternetAccess[Internet Access<br/>• Cloud services<br/>• Time synchronization<br/>• Software updates]
+        InternetAccess[Internet Access<br/>- Cloud services<br/>- Time synchronization<br/>- Software updates]
     end
     
     subgraph "Data Flow Integration"
         subgraph "Real-time Streaming"
-            ThermalStream[Thermal Stream<br/>• 30 FPS<br/>• Temperature data<br/>• Image frames]
+            ThermalStream[Thermal Stream<br/>- 30 FPS<br/>- Temperature data<br/>- Image frames]
             
-            GSRStream[GSR Stream<br/>• 51.2 Hz<br/>• Conductance data<br/>• Quality metrics]
+            GSRStream[GSR Stream<br/>- 51.2 Hz<br/>- Conductance data<br/>- Quality metrics]
             
-            ControlStream[Control Stream<br/>• Commands<br/>• Status updates<br/>• Configuration]
+            ControlStream[Control Stream<br/>- Commands<br/>- Status updates<br/>- Configuration]
         end
         
         subgraph "Data Synchronization"
-            TimestampSync[Timestamp Sync<br/>• Clock alignment<br/>• Drift correction<br/>• Latency compensation]
+            TimestampSync[Timestamp Sync<br/>- Clock alignment<br/>- Drift correction<br/>- Latency compensation]
             
-            DataAlignment[Data Alignment<br/>• Multi-modal sync<br/>• Interpolation<br/>• Quality control]
+            DataAlignment[Data Alignment<br/>- Multi-modal sync<br/>- Interpolation<br/>- Quality control]
             
-            BufferManagement[Buffer Management<br/>• Memory efficiency<br/>• Overflow handling<br/>• Flow control]
+            BufferManagement[Buffer Management<br/>- Memory efficiency<br/>- Overflow handling<br/>- Flow control]
         end
     end
     
     subgraph "Quality Assurance Integration"
         subgraph "Testing Infrastructure"
-            UnitTests[Unit Tests<br/>• Component testing<br/>• Mock devices<br/>• Error scenarios]
+            UnitTests[Unit Tests<br/>- Component testing<br/>- Mock devices<br/>- Error scenarios]
             
-            IntegrationTests[Integration Tests<br/>• End-to-end testing<br/>• Multi-device<br/>• Network protocols]
+            IntegrationTests[Integration Tests<br/>- End-to-end testing<br/>- Multi-device<br/>- Network protocols]
             
-            PerformanceTests[Performance Tests<br/>• Load testing<br/>• Memory usage<br/>• Network bandwidth]
+            PerformanceTests[Performance Tests<br/>- Load testing<br/>- Memory usage<br/>- Network bandwidth]
         end
         
         subgraph "CI/CD Pipeline"
-            BuildValidation[Build Validation<br/>• Gradle builds<br/>• Python tests<br/>• Code quality]
+            BuildValidation[Build Validation<br/>- Gradle builds<br/>- Python tests<br/>- Code quality]
             
-            DeploymentTests[Deployment Tests<br/>• APK generation<br/>• Installation<br/>• Functionality]
+            DeploymentTests[Deployment Tests<br/>- APK generation<br/>- Installation<br/>- Functionality]
             
-            QualityGates[Quality Gates<br/>• Code coverage<br/>• Static analysis<br/>• Performance metrics]
+            QualityGates[Quality Gates<br/>- Code coverage<br/>- Static analysis<br/>- Performance metrics]
         end
     end
     
     subgraph "Production Deployment"
-        ProductionAPK[Production APK<br/>• Release build<br/>• Code signing<br/>• Optimization]
+        ProductionAPK[Production APK<br/>- Release build<br/>- Code signing<br/>- Optimization]
         
-        PCDistribution[PC Application<br/>• Python package<br/>• Dependencies<br/>• Installation]
+        PCDistribution[PC Application<br/>- Python package<br/>- Dependencies<br/>- Installation]
         
-        Documentation[Documentation<br/>• User guides<br/>• API reference<br/>• Troubleshooting]
+        Documentation[Documentation<br/>- User guides<br/>- API reference<br/>- Troubleshooting]
     end
     
     %% Development connections
@@ -1561,7 +1561,7 @@ graph TB
         
         subgraph "Processing Pipeline"
             FrameProc[Frame Processor<br/>384x288 Resolution]
-            TempMap[Temperature Mapping<br/>-20°C to 400°C]
+            TempMap[Temperature Mapping<br/>-20degC to 400degC]
             ColorMap[Color Palette Mapping<br/>Rainbow/Iron/Gray]
         end
     end
@@ -1880,7 +1880,7 @@ flowchart TB
     subgraph "App Launch & Permissions"
         AppStart([App Launch<br/>IRCamera])
         PermissionCheck{Permissions<br/>Granted?}
-        PermissionRequest[Request Permissions<br/>• Camera<br/>• Bluetooth<br/>• Storage<br/>• Location]
+        PermissionRequest[Request Permissions<br/>- Camera<br/>- Bluetooth<br/>- Storage<br/>- Location]
         PermissionDenied[Permission Denied<br/>Show Rationale]
     end
     
@@ -1902,26 +1902,26 @@ flowchart TB
         CameraMgmt[CameraManagementFragment<br/>RGB Camera Control]
         
         subgraph "Sensor Configurations"
-            ThermalConfig[ThermalConfigDialog<br/>• Frame Rate<br/>• Temperature Range<br/>• Color Palette]
-            GSRConfig[GSRConfigDialog<br/>• Sampling Rate<br/>• GSR Range<br/>• Calibration]
-            CameraConfig[CameraConfigDialog<br/>• Resolution<br/>• Focus Mode<br/>• Exposure]
+            ThermalConfig[ThermalConfigDialog<br/>- Frame Rate<br/>- Temperature Range<br/>- Color Palette]
+            GSRConfig[GSRConfigDialog<br/>- Sampling Rate<br/>- GSR Range<br/>- Calibration]
+            CameraConfig[CameraConfigDialog<br/>- Resolution<br/>- Focus Mode<br/>- Exposure]
         end
     end
     
     subgraph "Session Control"
         SessionControl[SessionControlFragment<br/>Recording Interface]
-        SessionMetadata[SessionMetadataDialog<br/>• Participant Info<br/>• Study Details<br/>• Notes]
+        SessionMetadata[SessionMetadataDialog<br/>- Participant Info<br/>- Study Details<br/>- Notes]
         LivePreview[LivePreviewFragment<br/>Real-time Data Display]
         
         subgraph "Recording States"
-            RecordingActive[Recording Active<br/>• Live Data Streams<br/>• Quality Indicators<br/>• Duration Timer]
-            RecordingPaused[Recording Paused<br/>• Resume/Stop Options<br/>• Current Statistics]
+            RecordingActive[Recording Active<br/>- Live Data Streams<br/>- Quality Indicators<br/>- Duration Timer]
+            RecordingPaused[Recording Paused<br/>- Resume/Stop Options<br/>- Current Statistics]
         end
     end
     
     subgraph "Data Export & Review"
         ExportManager[ExportManagerFragment<br/>Session List]
-        ExportConfig[ExportConfigDialog<br/>• Format Selection<br/>• Quality Settings<br/>• Metadata Options]
+        ExportConfig[ExportConfigDialog<br/>- Format Selection<br/>- Quality Settings<br/>- Metadata Options]
         ExportProgress[ExportProgressDialog<br/>HDF5 Generation]
         ExportComplete[ExportCompleteDialog<br/>File Location & Share]
     end
@@ -2041,7 +2041,7 @@ graph TB
         end
         
         subgraph "Permission Management"
-            RuntimePerms[Runtime Permissions<br/>• Camera<br/>• Bluetooth<br/>• Storage]
+            RuntimePerms[Runtime Permissions<br/>- Camera<br/>- Bluetooth<br/>- Storage]
             PermissionCheck[Permission Validation<br/>Dynamic Checking]
             PrivacyPolicy[Privacy Policy Compliance<br/>GDPR/CCPA]
         end
@@ -2127,7 +2127,7 @@ graph TB
         subgraph "Root Configuration"
             RootBuild[build.gradle.kts<br/>Root Project Configuration]
             SettingsGradle[settings.gradle.kts<br/>Project Structure Definition]
-            GradleProps[gradle.properties<br/>• JVM Memory: -Xmx4g<br/>• Parallel Builds: true<br/>• Daemon: true<br/>• Configuration Cache: true]
+            GradleProps[gradle.properties<br/>- JVM Memory: -Xmx4g<br/>- Parallel Builds: true<br/>- Daemon: true<br/>- Configuration Cache: true]
             VersionCatalog[libs.versions.toml<br/>Centralized Version Management]
         end
         
@@ -2140,9 +2140,9 @@ graph TB
         end
         
         subgraph "Hardware Build Flavors"
-            FullFlavor[full<br/>• All Sensors<br/>• Complete Feature Set<br/>• Production Build]
-            LiteFlavor[lite<br/>• Essential Sensors<br/>• Reduced Features<br/>• Demo Build]
-            DebugFlavor[debug<br/>• Debug Symbols<br/>• Logging Enabled<br/>• Development Build]
+            FullFlavor[full<br/>- All Sensors<br/>- Complete Feature Set<br/>- Production Build]
+            LiteFlavor[lite<br/>- Essential Sensors<br/>- Reduced Features<br/>- Demo Build]
+            DebugFlavor[debug<br/>- Debug Symbols<br/>- Logging Enabled<br/>- Development Build]
         end
         
         subgraph "JVM Memory Management"
@@ -2282,13 +2282,13 @@ graph TB
         subgraph "Shimmer SDK Integration"
             ShimmerSDK[Shimmer Android SDK<br/>v3.0.0]
             ShimmerAPI[Shimmer API<br/>BLE Communication]
-            ShimmerConfig[Shimmer Configuration<br/>• GSR Range: 40kOhm<br/>• Sampling: 51.2 Hz<br/>• Calibration: Auto]
+            ShimmerConfig[Shimmer Configuration<br/>- GSR Range: 40kOhm<br/>- Sampling: 51.2 Hz<br/>- Calibration: Auto]
         end
         
         subgraph "Topdon SDK Integration" 
             TopdonSDK[Topdon TC001 SDK<br/>Native Library]
             TopdonAPI[Topdon API<br/>USB Communication]
-            TopdonConfig[Topdon Configuration<br/>• Resolution: 384x288<br/>• Frame Rate: 30 FPS<br/>• Temperature Range: -20°C to 400°C]
+            TopdonConfig[Topdon Configuration<br/>- Resolution: 384x288<br/>- Frame Rate: 30 FPS<br/>- Temperature Range: -20degC to 400degC]
         end
     end
     
@@ -2418,32 +2418,32 @@ graph TB
 graph LR
     subgraph "Raw Sensor Data Sources"
         ThermalRaw[Thermal Raw Data<br/>384x288x30fps<br/>16-bit Temperature Values]
-        GSRRaw[GSR Raw Data<br/>51.2 Hz<br/>Conductance μS]
+        GSRRaw[GSR Raw Data<br/>51.2 Hz<br/>Conductance uS]
         RGBRaw[RGB Raw Data<br/>1920x1080x30fps<br/>8-bit RGB Values]
         MetadataRaw[Metadata<br/>Timestamps<br/>Device Info<br/>Session Params]
     end
     
     subgraph "Quality Validation & Preprocessing"
-        ThermalQuality[Thermal Quality Check<br/>• Frame Completeness<br/>• Temperature Range Validation<br/>• Dead Pixel Detection]
-        GSRQuality[GSR Quality Check<br/>• Signal Range Validation<br/>• Artifact Detection<br/>• Saturation Check]
-        RGBQuality[RGB Quality Check<br/>• Frame Integrity<br/>• Color Balance<br/>• Exposure Validation]
+        ThermalQuality[Thermal Quality Check<br/>- Frame Completeness<br/>- Temperature Range Validation<br/>- Dead Pixel Detection]
+        GSRQuality[GSR Quality Check<br/>- Signal Range Validation<br/>- Artifact Detection<br/>- Saturation Check]
+        RGBQuality[RGB Quality Check<br/>- Frame Integrity<br/>- Color Balance<br/>- Exposure Validation]
         
-        ThermalPreproc[Thermal Preprocessing<br/>• Bad Pixel Interpolation<br/>• Calibration Application<br/>• Noise Reduction]
-        GSRPreproc[GSR Preprocessing<br/>• Drift Correction<br/>• Baseline Removal<br/>• Outlier Handling]
-        RGBPreproc[RGB Preprocessing<br/>• Color Correction<br/>• Brightness Normalization<br/>• Compression Artifacts Removal]
+        ThermalPreproc[Thermal Preprocessing<br/>- Bad Pixel Interpolation<br/>- Calibration Application<br/>- Noise Reduction]
+        GSRPreproc[GSR Preprocessing<br/>- Drift Correction<br/>- Baseline Removal<br/>- Outlier Handling]
+        RGBPreproc[RGB Preprocessing<br/>- Color Correction<br/>- Brightness Normalization<br/>- Compression Artifacts Removal]
     end
     
     subgraph "Data Synchronization & Alignment"
-        TimestampAlign[Timestamp Alignment<br/>• Clock Offset Correction<br/>• Drift Compensation<br/>• Inter-sensor Synchronization]
+        TimestampAlign[Timestamp Alignment<br/>- Clock Offset Correction<br/>- Drift Compensation<br/>- Inter-sensor Synchronization]
         
-        ResamplingEngine[Resampling Engine<br/>• Common Time Base<br/>• Interpolation Algorithms<br/>• Gap Handling]
+        ResamplingEngine[Resampling Engine<br/>- Common Time Base<br/>- Interpolation Algorithms<br/>- Gap Handling]
         
-        QualityMetrics[Quality Metrics Generation<br/>• Sync Accuracy<br/>• Data Completeness<br/>• Signal Quality Scores]
+        QualityMetrics[Quality Metrics Generation<br/>- Sync Accuracy<br/>- Data Completeness<br/>- Signal Quality Scores]
     end
     
     subgraph "Export Format Generation"
         subgraph "HDF5 Export Path"
-            HDF5Structure[HDF5 Structure Creation<br/>• Hierarchical Groups<br/>• Dataset Organization<br/>• Compression Settings]
+            HDF5Structure[HDF5 Structure Creation<br/>- Hierarchical Groups<br/>- Dataset Organization<br/>- Compression Settings]
             HDF5Thermal[Thermal Group<br/>/thermal/data<br/>/thermal/timestamps<br/>/thermal/metadata]
             HDF5GSR[GSR Group<br/>/gsr/data<br/>/gsr/timestamps<br/>/gsr/quality]
             HDF5RGB[RGB Group<br/>/rgb/frames<br/>/rgb/timestamps<br/>/rgb/info]
@@ -2451,24 +2451,24 @@ graph LR
         end
         
         subgraph "CSV Export Path"
-            CSVGeneration[CSV Generation<br/>• Flattened Data Structure<br/>• Time-series Format<br/>• Column Headers]
+            CSVGeneration[CSV Generation<br/>- Flattened Data Structure<br/>- Time-series Format<br/>- Column Headers]
             ThermalCSV[thermal_data.csv<br/>timestamp,temp_matrix_flat,avg_temp,max_temp,min_temp]
             GSRCSV[gsr_data.csv<br/>timestamp,conductance,quality_flag,artifact_flag]
             SyncCSV[sync_data.csv<br/>timestamp,thermal_frame_id,gsr_sample_id,sync_quality]
         end
         
         subgraph "MATLAB Export Path"
-            MATLABGeneration[MATLAB Structure<br/>• Nested Struct Arrays<br/>• Native Data Types<br/>• Function Compatibility]
-            MATFile[data.mat<br/>• thermal_data struct<br/>• gsr_data struct<br/>• session_info struct]
+            MATLABGeneration[MATLAB Structure<br/>- Nested Struct Arrays<br/>- Native Data Types<br/>- Function Compatibility]
+            MATFile[data.mat<br/>- thermal_data struct<br/>- gsr_data struct<br/>- session_info struct]
         end
     end
     
     subgraph "Validation & Archival"
-        ExportValidation[Export Validation<br/>• File Integrity Check<br/>• Data Completeness Verification<br/>• Format Compliance Test]
+        ExportValidation[Export Validation<br/>- File Integrity Check<br/>- Data Completeness Verification<br/>- Format Compliance Test]
         
-        ArchivalProcess[Archival Process<br/>• Backup Creation<br/>• Checksums Generation<br/>• Metadata Preservation]
+        ArchivalProcess[Archival Process<br/>- Backup Creation<br/>- Checksums Generation<br/>- Metadata Preservation]
         
-        QualityReport[Quality Report Generation<br/>• Data Statistics<br/>• Quality Scores<br/>• Processing Logs]
+        QualityReport[Quality Report Generation<br/>- Data Statistics<br/>- Quality Scores<br/>- Processing Logs]
     end
     
     %% Raw data to quality validation
@@ -2525,62 +2525,62 @@ graph LR
 graph TB
     subgraph "System Performance Monitoring"
         subgraph "Resource Monitoring"
-            CPUMonitor[CPU Usage Monitor<br/>• Per-core Utilization<br/>• Process-level Tracking<br/>• Real-time Alerts]
-            MemoryMonitor[Memory Usage Monitor<br/>• Heap Utilization<br/>• GC Performance<br/>• Memory Leaks Detection]
-            NetworkMonitor[Network Performance<br/>• Bandwidth Utilization<br/>• Latency Measurements<br/>• Packet Loss Detection]
-            DiskMonitor[Disk I/O Monitor<br/>• Read/Write Rates<br/>• Queue Depth<br/>• Storage Capacity]
+            CPUMonitor[CPU Usage Monitor<br/>- Per-core Utilization<br/>- Process-level Tracking<br/>- Real-time Alerts]
+            MemoryMonitor[Memory Usage Monitor<br/>- Heap Utilization<br/>- GC Performance<br/>- Memory Leaks Detection]
+            NetworkMonitor[Network Performance<br/>- Bandwidth Utilization<br/>- Latency Measurements<br/>- Packet Loss Detection]
+            DiskMonitor[Disk I/O Monitor<br/>- Read/Write Rates<br/>- Queue Depth<br/>- Storage Capacity]
         end
         
         subgraph "Application Performance Metrics"
-            FrameRateMonitor[Frame Rate Monitor<br/>• Thermal: Target 30 FPS<br/>• RGB: Target 30 FPS<br/>• Frame Drop Detection]
-            SampleRateMonitor[Sample Rate Monitor<br/>• GSR: Target 51.2 Hz<br/>• Actual vs Target<br/>• Jitter Measurement]
-            LatencyMonitor[Latency Monitor<br/>• Sensor to Display<br/>• Network Round-trip<br/>• Processing Delays]
+            FrameRateMonitor[Frame Rate Monitor<br/>- Thermal: Target 30 FPS<br/>- RGB: Target 30 FPS<br/>- Frame Drop Detection]
+            SampleRateMonitor[Sample Rate Monitor<br/>- GSR: Target 51.2 Hz<br/>- Actual vs Target<br/>- Jitter Measurement]
+            LatencyMonitor[Latency Monitor<br/>- Sensor to Display<br/>- Network Round-trip<br/>- Processing Delays]
         end
         
         subgraph "Data Quality Metrics"
-            SignalQuality[Signal Quality Monitor<br/>• GSR Signal Integrity<br/>• Thermal Calibration Status<br/>• RGB Exposure Quality]
-            SyncQuality[Synchronization Quality<br/>• Clock Drift Tracking<br/>• Inter-sensor Alignment<br/>• Timestamp Accuracy]
-            DataIntegrity[Data Integrity Monitor<br/>• Packet Loss Detection<br/>• Checksum Validation<br/>• Corruption Detection]
+            SignalQuality[Signal Quality Monitor<br/>- GSR Signal Integrity<br/>- Thermal Calibration Status<br/>- RGB Exposure Quality]
+            SyncQuality[Synchronization Quality<br/>- Clock Drift Tracking<br/>- Inter-sensor Alignment<br/>- Timestamp Accuracy]
+            DataIntegrity[Data Integrity Monitor<br/>- Packet Loss Detection<br/>- Checksum Validation<br/>- Corruption Detection]
         end
     end
     
     subgraph "Performance Optimization Strategies"
         subgraph "CPU Optimization"
-            ThreadPoolOpt[Thread Pool Optimization<br/>• Core Count Adaptation<br/>• Work Stealing Queues<br/>• Priority Scheduling]
-            SIMDOptimization[SIMD Optimization<br/>• Vector Operations<br/>• Parallel Processing<br/>• Hardware Acceleration]
-            CacheOptimization[Cache Optimization<br/>• Data Locality<br/>• Cache-friendly Algorithms<br/>• Memory Access Patterns]
+            ThreadPoolOpt[Thread Pool Optimization<br/>- Core Count Adaptation<br/>- Work Stealing Queues<br/>- Priority Scheduling]
+            SIMDOptimization[SIMD Optimization<br/>- Vector Operations<br/>- Parallel Processing<br/>- Hardware Acceleration]
+            CacheOptimization[Cache Optimization<br/>- Data Locality<br/>- Cache-friendly Algorithms<br/>- Memory Access Patterns]
         end
         
         subgraph "Memory Optimization"
-            MemoryPooling[Memory Pooling<br/>• Object Reuse<br/>• Buffer Recycling<br/>• Allocation Reduction]
-            GCTuning[Garbage Collection Tuning<br/>• G1GC Configuration<br/>• Heap Size Optimization<br/>• Pause Time Minimization]
-            DataStructureOpt[Data Structure Optimization<br/>• Efficient Collections<br/>• Primitive Arrays<br/>• Memory-mapped Files]
+            MemoryPooling[Memory Pooling<br/>- Object Reuse<br/>- Buffer Recycling<br/>- Allocation Reduction]
+            GCTuning[Garbage Collection Tuning<br/>- G1GC Configuration<br/>- Heap Size Optimization<br/>- Pause Time Minimization]
+            DataStructureOpt[Data Structure Optimization<br/>- Efficient Collections<br/>- Primitive Arrays<br/>- Memory-mapped Files]
         end
         
         subgraph "Network Optimization"
-            CompressionOpt[Compression Optimization<br/>• Adaptive Compression<br/>• Quality-based Scaling<br/>• Bandwidth Management]
-            BufferingStrategy[Buffering Strategy<br/>• Adaptive Buffer Sizes<br/>• Predictive Buffering<br/>• Flow Control]
-            ConnectionPooling[Connection Pooling<br/>• Persistent Connections<br/>• Load Balancing<br/>• Failover Mechanisms]
+            CompressionOpt[Compression Optimization<br/>- Adaptive Compression<br/>- Quality-based Scaling<br/>- Bandwidth Management]
+            BufferingStrategy[Buffering Strategy<br/>- Adaptive Buffer Sizes<br/>- Predictive Buffering<br/>- Flow Control]
+            ConnectionPooling[Connection Pooling<br/>- Persistent Connections<br/>- Load Balancing<br/>- Failover Mechanisms]
         end
     end
     
     subgraph "Benchmarking Architecture"
         subgraph "Performance Benchmarks"
-            ThermalBenchmark[Thermal Processing Benchmark<br/>• Frame Processing Time<br/>• Temperature Calculation Speed<br/>• Color Mapping Performance]
-            GSRBenchmark[GSR Processing Benchmark<br/>• Signal Processing Time<br/>• Quality Analysis Speed<br/>• Artifact Detection Rate]
-            NetworkBenchmark[Network Benchmark<br/>• Throughput Measurement<br/>• Latency Distribution<br/>• Connection Reliability]
+            ThermalBenchmark[Thermal Processing Benchmark<br/>- Frame Processing Time<br/>- Temperature Calculation Speed<br/>- Color Mapping Performance]
+            GSRBenchmark[GSR Processing Benchmark<br/>- Signal Processing Time<br/>- Quality Analysis Speed<br/>- Artifact Detection Rate]
+            NetworkBenchmark[Network Benchmark<br/>- Throughput Measurement<br/>- Latency Distribution<br/>- Connection Reliability]
         end
         
         subgraph "Regression Testing"
-            PerformanceRegression[Performance Regression Tests<br/>• Automated Benchmarking<br/>• Historical Comparison<br/>• Performance Alerts]
-            MemoryRegression[Memory Regression Tests<br/>• Memory Usage Tracking<br/>• Leak Detection<br/>• Allocation Patterns]
-            LoadTesting[Load Testing<br/>• Stress Testing<br/>• Scalability Testing<br/>• Breaking Point Analysis]
+            PerformanceRegression[Performance Regression Tests<br/>- Automated Benchmarking<br/>- Historical Comparison<br/>- Performance Alerts]
+            MemoryRegression[Memory Regression Tests<br/>- Memory Usage Tracking<br/>- Leak Detection<br/>- Allocation Patterns]
+            LoadTesting[Load Testing<br/>- Stress Testing<br/>- Scalability Testing<br/>- Breaking Point Analysis]
         end
         
         subgraph "Profiling Integration"
-            AndroidProfiler[Android Profiler<br/>• CPU/Memory/Network<br/>• Method Tracing<br/>• GPU Rendering]
-            JVMProfiler[JVM Profiler<br/>• JProfiler Integration<br/>• Method Hotspots<br/>• Memory Analysis]
-            CustomProfiler[Custom Profiler<br/>• Domain-specific Metrics<br/>• Real-time Monitoring<br/>• Performance Dashboards]
+            AndroidProfiler[Android Profiler<br/>- CPU/Memory/Network<br/>- Method Tracing<br/>- GPU Rendering]
+            JVMProfiler[JVM Profiler<br/>- JProfiler Integration<br/>- Method Hotspots<br/>- Memory Analysis]
+            CustomProfiler[Custom Profiler<br/>- Domain-specific Metrics<br/>- Real-time Monitoring<br/>- Performance Dashboards]
         end
     end
     
@@ -2593,9 +2593,9 @@ graph TB
         end
         
         subgraph "Response Actions"
-            AutoOptimization[Automatic Optimization<br/>• Buffer Size Adjustment<br/>• Compression Level Change<br/>• Thread Count Adaptation]
-            UserNotification[User Notification<br/>• Performance Warnings<br/>• Quality Degradation<br/>• System Recommendations]
-            SystemRecovery[System Recovery<br/>• Graceful Degradation<br/>• Service Restart<br/>• Error Recovery]
+            AutoOptimization[Automatic Optimization<br/>- Buffer Size Adjustment<br/>- Compression Level Change<br/>- Thread Count Adaptation]
+            UserNotification[User Notification<br/>- Performance Warnings<br/>- Quality Degradation<br/>- System Recommendations]
+            SystemRecovery[System Recovery<br/>- Graceful Degradation<br/>- Service Restart<br/>- Error Recovery]
         end
     end
     
@@ -2641,35 +2641,35 @@ graph TB
 
 This comprehensive architecture documentation now includes **18 detailed architectural diagrams** organized across **12 specialized categories**, providing complete coverage of the IRCamera Multi-Modal Thermal Sensing Platform:
 
-### 🏗️ Architecture Diagrams (5 diagrams)
+### [ARCH] Architecture Diagrams (5 diagrams)
 1. **PC Controller Detailed Architecture** - Maps actual Python modules with real file relationships
 2. **Android Class Diagram** - Complete Kotlin class structure with precise relationships  
 3. **Repository Module Dependencies** - Multi-project Gradle build system with real dependencies
 4. **System Overview** - Complete system architecture (original)
 5. **Hub-and-Spoke Architecture** - Distributed communication architecture (original)
 
-### 🔧 Feature Implementation Charts (3 diagrams)
+### [FEAT] Feature Implementation Charts (3 diagrams)
 6. **Sensor Integration Features** - Detailed hardware integration with BLE commands and SDK specifics
 7. **Communication Protocol Sequence** - Complete TLS handshake and data transfer protocols
 8. **Data Synchronization Architecture** - NTP-like algorithm and HDF5 export pipeline
 
-### 🔄 Workflow Diagrams (2 diagrams)
+### [FLOW] Workflow Diagrams (2 diagrams)
 9. **Session Lifecycle State Machine** - Complete workflow with error handling
 10. **Android UI Navigation Flow** - Complete user experience through all fragments
 
-### 🚀 Infrastructure Charts (3 diagrams)
+### [INFRA] Infrastructure Charts (3 diagrams)
 11. **Security Architecture** - End-to-end TLS, AES256-GCM, Android Keystore integration
 12. **Build System Architecture** - Multi-project Gradle with performance optimizations
 13. **Performance Monitoring System** - Real-time metrics and optimization strategies
 
-### 📊 Data Pipeline Details (2 diagrams)
+### [DATA] Data Pipeline Details (2 diagrams)
 14. **Data Export Pipeline** - Complete processing from sensors to analysis tools
 15. **Data Flow Architecture** - Multi-modal synchronization (original)
 
-### 🔗 External Integrations (1 diagram)
+### [INTEG] External Integrations (1 diagram)
 16. **External Integrations** - LSL streaming, hardware APIs, cloud storage, research platforms
 
-### 🎯 Integration & Testing (2 diagrams)
+### [TEST] Integration & Testing (2 diagrams)
 17. **Integration Architecture** - Development to production flow (original)
 18. **Build System Architecture** - Complete Gradle system (original)
 
