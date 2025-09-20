@@ -87,7 +87,7 @@ class BleDeviceManager(private val context: Context) : CoroutineScope {
 
     private fun setupDeviceDiscovery() {
         easyBLE?.addScanListener(
-            object : com.topdon.ble.callback.ScanListener {
+            object : com.mpdc4gsr.ble.callback.ScanListener {
                 override fun onScanStart() {
                     Log.d(TAG, "Enhanced BLE scan started")
                 }

@@ -1,5 +1,5 @@
 package com.mpdc4gsr.module.thermal.stubs
 
-typealias GuideInterface = com.guide.zm04c.matrix.GuideInterface
+typealias GuideInterface = com.mpdc4gsr.lib.core.matrix.GuideInterface
 
-typealias IrSurfaceView = com.guide.zm04c.matrix.IrSurfaceView
+typealias IrSurfaceView = com.mpdc4gsr.lib.core.matrix.IrSurfaceView
