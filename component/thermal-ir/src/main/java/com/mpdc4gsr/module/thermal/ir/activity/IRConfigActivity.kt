@@ -376,7 +376,7 @@ class IRConfigActivity : BaseActivity(), View.OnClickListener {
                             onAddListener?.onClick(it)
                         }
                     } else {
-                        TToast.shortToast(context, com.topdon.lib.core.R.string.config_add_tip)
+                        TToast.shortToast(context, com.mpdc4gsr.lib.core.R.string.config_add_tip)
                     }
                 }
                 rootView.findViewById<TextView>(R.id.tv_all_emissivity).setOnClickListener {

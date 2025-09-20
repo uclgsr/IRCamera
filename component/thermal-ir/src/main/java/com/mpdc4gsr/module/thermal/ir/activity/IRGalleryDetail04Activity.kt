@@ -57,7 +57,7 @@ class IRGalleryDetail04Activity : BaseActivity() {
         position = intent.getIntExtra("position", 0)
         dataList = intent.getParcelableArrayListExtra("list")!!
 
-        val titleView = findViewById<com.topdon.lib.core.view.TitleView>(R.id.title_view)
+        val titleView = findViewById<com.mpdc4gsr.lib.core.view.TitleView>(R.id.title_view)
         titleView.setTitleText("${position + 1}/${dataList.size}")
 
         findViewById<ConstraintLayout>(R.id.cl_bottom).isVisible = isRemote 
@@ -100,7 +100,7 @@ class IRGalleryDetail04Activity : BaseActivity() {
                 override fun onPageSelected(position: Int) {
                     super.onPageSelected(position)
                     this@IRGalleryDetail04Activity.position = position
-                    findViewById<com.topdon.lib.core.view.TitleView>(R.id.title_view).setTitleText("${position + 1}/${dataList.size}")
+                    findViewById<com.mpdc4gsr.lib.core.view.TitleView>(R.id.title_view).setTitleText("${position + 1}/${dataList.size}")
                     findViewById<ImageView>(R.id.iv_download).isSelected =
                         dataList[position].hasDownload
                 }

@@ -363,7 +363,7 @@ class ReportPreviewActivity : BaseActivity(), View.OnClickListener {
                     this,
                     it.itemBeans?.map { itemBean ->
 
-                        com.topdon.lib.core.bean.HouseRepPreviewItemBean().apply {
+                        com.mpdc4gsr.lib.core.bean.HouseRepPreviewItemBean().apply {
 
                         }
                     } ?: emptyList(),

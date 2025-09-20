@@ -26,7 +26,7 @@ import androidx.annotation.IntDef;
 import androidx.annotation.Nullable;
 
 import com.mpdc4gsr.lib.ui.R;
-import com.mpdc4gsr.menu.util.PseudoColorConfig;
+import com.mpdc4gsr.lib.core.menu.util.PseudoColorConfig;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

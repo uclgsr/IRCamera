@@ -17,9 +17,12 @@ android {
 
     defaultConfig {
         minSdk = libs.versions.minSdk.get().toInt()
-
+        ndkVersion = libs.versions.ndkVersion.get()
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
+        ndk {
+            abiFilters += listOf("armeabi-v7a", "x86", "arm64-v8a", "x86_64")
+        }
     }
 
     buildTypes {
@@ -63,6 +66,8 @@ android {
             languageVersion.set(JavaLanguageVersion.of(17))
         }
     }
+
+    ndkVersion = libs.versions.ndkVersion.get()
     buildFeatures {
         buildConfig = true
         dataBinding = true

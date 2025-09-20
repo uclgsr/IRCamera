@@ -9,7 +9,7 @@ dependencyResolutionManagement {
         maven { url = uri("https://maven.aliyun.com/repository/google") }
 
         flatDir {
-            dirs("libir/libs", "libapp/libs", "app/libs", "libmatrix/libs", "BleModule/libs")
+            dirs("libir/libs", "libapp/libs", "app/libs", "BleModule/libs")
         }
     }
 }

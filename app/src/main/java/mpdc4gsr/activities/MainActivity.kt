@@ -291,7 +291,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
 
         versionViewModel.updateLiveData.observe(this) {
             FirmwareUpDialog(this).apply {
-                titleStr = getString(com.topdon.lib.core.R.string.update_new_version)
+                titleStr = getString(com.mpdc4gsr.lib.core.R.string.update_new_version)
                 sizeStr = it.versionNo
                 contentStr = it.description
                 isShowCancel = !it.isForcedUpgrade

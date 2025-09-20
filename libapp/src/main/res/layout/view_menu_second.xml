@@ -26,7 +26,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        
+        <!-- Temperature measurement mode - Menu 2 - Point/Line/Area measurement -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_fence"
             android:layout_width="0dp"
@@ -36,7 +36,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/space" />
-        
+        <!-- Temperature measurement mode - Menu 3 - Dual light -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_two_light"
             android:layout_width="0dp"
@@ -46,7 +46,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/space" />
-        
+        <!-- Temperature measurement mode - Menu 4 - False color / Observation mode - Menu 3 - False color -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_color"
             android:layout_width="0dp"
@@ -56,7 +56,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/space" />
-        
+        <!-- Temperature measurement mode - Menu 5 - Settings -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_setting_te"
             android:layout_width="0dp"
@@ -66,7 +66,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/space" />
-        
+        <!-- Temperature measurement mode - Menu 6 - Temperature range level -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_temp_level"
             android:layout_width="0dp"
@@ -78,7 +78,7 @@
             app:layout_constraintTop_toTopOf="@id/space" />
 
 
-        
+        <!-- Observation mode - Menu 2 - High/Low temperature source -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_temp_source"
             android:layout_width="0dp"
@@ -88,7 +88,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/space" />
-        
+        <!-- Observation mode - Menu 4 - Target marker -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_target"
             android:layout_width="0dp"
@@ -98,7 +98,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/space" />
-        
+        <!-- Observation mode - Menu 5 - High/Low temperature point -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_temp_point"
             android:layout_width="0dp"
@@ -108,7 +108,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/space" />
-        
+        <!-- Observation mode - Menu 6 - Settings -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_setting_ob"
             android:layout_width="0dp"
