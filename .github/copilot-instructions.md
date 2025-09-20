@@ -1,5 +1,7 @@
 # IRCamera Multi-Modal Thermal Sensing Platform
 
+NEVER USE EMOJIS. ONLY ASCI SAFE
+
 Always reference these instructions first and fallback to search or bash commands only when you encounter unexpected
 information that does not match the info here.
 
