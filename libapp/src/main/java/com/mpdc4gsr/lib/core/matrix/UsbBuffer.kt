@@ -26,9 +26,7 @@ class UsbBuffer {
         offset: Int,
         length: Int,
     ) {
-        if (mRingBuffer != null) {
-            mRingBuffer.write(buffer, offset, length)
-        }
+        mRingBuffer.write(buffer, offset, length)
     }
 
     private var findHeadFrame = false
@@ -71,10 +69,6 @@ class UsbBuffer {
     }
 
     fun readFrame(frame: ByteArray): Boolean {
-        if (mRingBuffer == null) {
-            return false
-        }
-
         if (mRingBuffer.getUnReadLength() < mFrameSize * 4) {
 
             return false
@@ -82,7 +76,7 @@ class UsbBuffer {
         while (findHeadFramePos == -1 && mRingBuffer.getUnReadLength() > mFrameSize * 2) {
             mRingBuffer.read(mPakagebuffer, 0, mPakagebuffer.size)
             findHeadFramePos =
-                if (mPakagebuffer != null && mPacketSize == mPakagebuffer.size) {
+                if (mPacketSize == mPakagebuffer.size) {
 
                     isValidFrameInt(mPakagebuffer)
                 } else {
@@ -99,7 +93,7 @@ class UsbBuffer {
             mRingBuffer.read(mPakagebuffer, 0, mPacketSize)
 
             findHeadFrame =
-                if (mPakagebuffer != null && mPacketSize == mPakagebuffer.size) {
+                if (mPacketSize == mPakagebuffer.size) {
                     isValidFrame(mPakagebuffer)
                 } else {
                     false

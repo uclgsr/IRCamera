@@ -382,7 +382,7 @@ class GuideInterface {
         if (TextUtils.isEmpty(path)) {
             return FirmwareUpgradeResultCode.FILE_ERROR
         }
-        val file = File(path)
+        val file = File(path!!)
         if (!file.exists()) {
             return FirmwareUpgradeResultCode.FILE_NOT_EXISTS
         }
