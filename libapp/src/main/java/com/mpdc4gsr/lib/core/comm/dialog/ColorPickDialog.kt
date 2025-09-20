@@ -131,15 +131,9 @@ class ColorPickDialog(
 
     private fun textSizeToNifyValue(
         size: Int,
-        isTC007: Boolean,
+        // isTC007 parameter removed - TC007 functionality disabled
     ): Float {
-        if (isTC007) {
-            return when (size) {
-                14 -> 0f
-                16 -> 50f
-                else -> 100f
-            }
-        }
+        // Always use default behavior, TC007 functionality removed
         return when (size) {
             SizeUtils.sp2px(14f) -> 0f
             SizeUtils.sp2px(16f) -> 50f

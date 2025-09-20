@@ -8,9 +8,9 @@ object ARouterUtil {
 
     fun jumpImagePick(
         activity: Activity,
-        isTC007: Boolean,
+        // isTC007 parameter removed - TC007 functionality disabled
         imgPath: String,
     ) {
-        NavigationManager.jumpImagePick(activity, isTC007, imgPath)
+        NavigationManager.jumpImagePick(activity, imgPath)
     }
 }

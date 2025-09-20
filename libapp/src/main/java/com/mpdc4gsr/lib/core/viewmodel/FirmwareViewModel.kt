@@ -33,23 +33,20 @@ import java.util.concurrent.CountDownLatch
 class FirmwareViewModel(application: Application) : AndroidViewModel(application) {
     companion object {
 
-        private const val TS004_SOFT_CODE = "TS004_FirmwareSW_Scope"
-
-        private const val TC007_SOFT_CODE = "TC007_FirmwareSW_Wireless"
-
-        private const val TS004_FIRMWARE_VERSION = "V1.70"
-
-        private const val TS004_FIRMWARE_NAME = "TS004V1.70.zip"
-
-        private const val TC007_FIRMWARE_VERSION = "V4.06"
-
-        private const val TC007_FIRMWARE_NAME = "TC007V4.06.zip"
+        // TS004/TC007 constants removed - functionality disabled
+        // private const val TS004_SOFT_CODE = "TS004_FirmwareSW_Scope"
+        // private const val TC007_SOFT_CODE = "TC007_FirmwareSW_Wireless"
+        // private const val TS004_FIRMWARE_VERSION = "V1.70"
+        // private const val TS004_FIRMWARE_NAME = "TS004V1.70.zip"
+        // private const val TC007_FIRMWARE_VERSION = "V4.06"
+        // private const val TC007_FIRMWARE_NAME = "TC007V4.06.zip"
 
         private const val USE_DEBUG_SN = false
-        private const val TS004_DEBUG_SN = "1D003655A10016"
-        private const val TS004_DEBUG_RANDOM_NUM = "8D2N01"
-        private const val TC007_DEBUG_SN = "1D004714E10002"
-        private const val TC007_DEBUG_RANDOM_NUM = "EN6L6Q"
+        // Debug constants removed for TS004/TC007
+        // private const val TS004_DEBUG_SN = "1D003655A10016"
+        // private const val TS004_DEBUG_RANDOM_NUM = "8D2N01"
+        // private const val TC007_DEBUG_SN = "1D004714E10002"
+        // private const val TC007_DEBUG_RANDOM_NUM = "EN6L6Q"
     }
 
     @Volatile
@@ -66,7 +63,7 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
         val size: Long,
     )
 
-    fun queryFirmware(isTS004: Boolean) {
+    fun queryFirmware(isTS004: Boolean = false) { // Parameter kept for compatibility but unused
         if (isRequest) { 
             return
         }
@@ -74,132 +71,32 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
 
         viewModelScope.launch(Dispatchers.IO) {
 
-            
-
-            if (isTS004) {
-                // TS004Repository functionality removed
-                XLog.w("TS004 功能已移除")
-                failLD.postValue(false)
-                isRequest = false
-                return@launch
-            } else {
-                // TC007Repository functionality removed  
-                XLog.w("TC007 功能已移除")
-                failLD.postValue(false)
-                isRequest = false
-                return@launch
-            }
-            }
-        }
-    }
-
-    private fun getInfoFromAssets(
-        isTS004: Boolean,
-        firmware: String,
-    ) {
-        val apkVersionStr = if (isTS004) TS004_FIRMWARE_VERSION else TC007_FIRMWARE_VERSION
-        val apkFirmwareName = if (isTS004) TS004_FIRMWARE_NAME else TC007_FIRMWARE_NAME
-
-        val newVersion: Double = getVersionFromStr(apkVersionStr)
-        val currentVersion: Double = getVersionFromStr(firmware)
-        XLog.d("${if (isTS004) "TS004" else "TC007"} 固件升级 - current版本：$currentVersion apk内置版本：$newVersion")
-        if (newVersion <= currentVersion) { 
-            firmwareDataLD.postValue(null)
-            isRequest = false
-            return
-        }
-
-        val firmwareFile = FileConfig.getFirmwareFile(apkFirmwareName)
-        try {
-            val application: Application = getApplication()
-            val inputStream = application.assets.open(apkFirmwareName)
-            val outputStream: OutputStream = FileOutputStream(firmwareFile)
-            val buffer = ByteArray(1024)
-            var length: Int
-            while (inputStream.read(buffer).also { length = it } > 0) {
-                outputStream.write(buffer, 0, length)
-            }
-            inputStream.close()
-            outputStream.close()
-        } catch (e: IOException) {
-            XLog.e("${if (isTS004) "TS004" else "TC007"} 固件升级 - 导出内置固件升级包失败! ${e.message}")
-            FileUtils.delete(firmwareFile)
-            firmwareDataLD.postValue(null)
-            isRequest = false
-            return
-        }
-
-        val tipsStr = getApplication<Application>().getString(R.string.fireware_update_tips)
-
-        firmwareDataLD.postValue(
-            FirmwareData(
-                apkVersionStr,
-                tipsStr,
-                apkFirmwareName,
-                firmwareFile.length()
-            )
-        )
-        isRequest = false
-    }
-
-    private suspend fun getInfoFromNetwork(
-        isTS004: Boolean,
-        sn: String,
-        randomNum: String,
-        firmware: String,
-    ) {
-
-        val bindCode = bindDevice(sn, randomNum)
-        if (bindCode != LMS.SUCCESS.toInt() && bindCode != 15109) {
-            XLog.w("${if (isTS004) "TS004" else "TC007"} 固件升级 - 绑定设备失败! sn: $sn")
-            failLD.postValue(bindCode == 15162)
-            isRequest = false
-            return
-        }
-
-        val packageData: PackageData? =
-            querySoftPackage(sn, if (isTS004) TS004_SOFT_CODE else TC007_SOFT_CODE)
-        if (packageData == null) {
-            XLog.w("${if (isTS004) "TS004" else "TC007"} 固件升级 - 获取固件升级包信息失败!")
+            // TS004/TC007 functionality removed
+            XLog.w("TS004/TC007 功能已移除")
             failLD.postValue(false)
             isRequest = false
-            return
+            return@launch
+            }
         }
-
-        val record: PackageData.Record? = packageData.getFirstRecord()
-        val newVersionStr: String? = record?.maxUpdateVersion
-        if (record == null || newVersionStr == null) { 
-            XLog.d("${if (isTS004) "TS004" else "TC007"} 固件升级 - 没有固件升级包，即current固件已是最新")
-            firmwareDataLD.postValue(null)
-            isRequest = false
-            return
-        }
-
-        val newVersion: Double = getVersionFromStr(newVersionStr)
-        val currentVersion: Double = getVersionFromStr(firmware)
-        XLog.d("${if (isTS004) "TS004" else "TC007"} 固件升级 - current版本：$currentVersion 服务器版本：$newVersion")
-        if (newVersion <= currentVersion) { 
-            firmwareDataLD.postValue(null)
-            isRequest = false
-            return
-        }
-
-        val downloadData = queryDownloadUrl(sn, record.maxUpdateVersionSoftId)
-        if (downloadData?.responseCode == LMS.SUCCESS.toInt()) {
-            firmwareDataLD.postValue(
-                FirmwareData(
-                    newVersionStr,
-                    record.getUpdateStr(),
-                    downloadData.downUrl ?: "",
-                    downloadData.size ?: 0,
-                ),
-            )
-        } else {
-            XLog.w("${if (isTS004) "TS004" else "TC007"} 固件升级 - 获取固件包下载地址失败!")
-            failLD.postValue(downloadData?.responseCode == 60312)
-        }
-        isRequest = false
     }
+
+    // TS004/TC007 functionality removed - method disabled
+    // private fun getInfoFromAssets(
+    //     isTS004: Boolean,
+    //     firmware: String,
+    // ) {
+    //     // Implementation removed due to TS004/TC007 support removal
+    // }
+
+    // TS004/TC007 functionality removed - method disabled
+    // private suspend fun getInfoFromNetwork(
+    //     isTS004: Boolean,
+    //     sn: String,
+    //     randomNum: String,
+    //     firmware: String,
+    // ) {
+    //     // Implementation removed due to TS004/TC007 support removal
+    // }
 
     private suspend fun bindDevice(
         sn: String,
