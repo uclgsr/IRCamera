@@ -17,6 +17,7 @@ import com.mpdc4gsr.lib.core.config.FileConfig;
 import com.mpdc4gsr.lib.core.db.entity.ThermalEntity;
 import com.mpdc4gsr.lib.core.tools.TimeTool;
 import com.mpdc4gsr.lib.core.tools.UnitTools;
+import com.mpdc4gsr.lib.core.R;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;

@@ -2,4 +2,7 @@
 <resources>
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
+    
+    <!-- Chart colors for thermal-lite -->
+    <color name="chart_line_center">#FF607D8B</color>
 </resources>

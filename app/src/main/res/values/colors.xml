@@ -47,4 +47,8 @@
     
     <color name="colorPrimary">#FF1976D2</color>
     <color name="colorAccent">#FF03DAC5</color>
+    
+    <!-- Additional missing colors -->
+    <color name="color_img_calibration_right">#FF4CAF50</color>
+    <color name="chart_line_min">#FF00C853</color>
 </resources>
