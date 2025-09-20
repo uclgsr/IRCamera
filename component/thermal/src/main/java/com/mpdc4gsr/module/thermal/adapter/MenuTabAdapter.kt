@@ -9,6 +9,7 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.mpdc4gsr.module.thermal.R
+import com.mpdc4gsr.lib.ui.R as LibUiR
 
 class MenuTabAdapter(val context: Context) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -30,18 +31,18 @@ class MenuTabAdapter(val context: Context) :
 
     private val firstMenus =
         arrayListOf<Int>(
-            com.topdon.lib.ui.R.drawable.ic_menu_thermal7001_svg,
-            com.topdon.lib.ui.R.drawable.ic_menu_thermal7002_svg,
+            LibUiR.drawable.ic_menu_thermal7001_svg,
+            LibUiR.drawable.ic_menu_thermal7002_svg,
         )
 
     private val secondMenus =
         arrayListOf<Int>(
-            com.topdon.lib.ui.R.drawable.ic_menu_thermal6001,
-            com.topdon.lib.ui.R.drawable.ic_menu_thermal6003,
-            com.topdon.lib.ui.R.drawable.ic_menu_thermal7001,
-            com.topdon.lib.ui.R.drawable.ic_menu_thermal7002,
-            com.topdon.lib.ui.R.drawable.ic_menu_thermal7003,
-            com.topdon.lib.ui.R.drawable.ic_menu_thermal7004,
+            LibUiR.drawable.ic_menu_thermal6001,
+            LibUiR.drawable.ic_menu_thermal6003,
+            LibUiR.drawable.ic_menu_thermal7001,
+            LibUiR.drawable.ic_menu_thermal7002,
+            LibUiR.drawable.ic_menu_thermal7003,
+            LibUiR.drawable.ic_menu_thermal7004,
         )
 
     private val secondMenusStr =
@@ -64,24 +65,24 @@ class MenuTabAdapter(val context: Context) :
 
     private val thirdMenus =
         arrayListOf<Int>(
-            com.topdon.lib.ui.R.drawable.ic_menu_thermal5003,
-            com.topdon.lib.ui.R.drawable.ic_menu_thermal6001,
-            com.topdon.lib.ui.R.drawable.ic_menu_thermal6002,
-            com.topdon.lib.ui.R.drawable.ic_menu_thermal6003,
-            com.topdon.lib.ui.R.drawable.ic_menu_thermal7001,
-            com.topdon.lib.ui.R.drawable.ic_menu_thermal7002,
-            com.topdon.lib.ui.R.drawable.ic_menu_thermal7003,
-            com.topdon.lib.ui.R.drawable.ic_menu_thermal7004,
-            com.topdon.lib.ui.R.drawable.ic_menu_thermal5003_selected_svg,
-            com.topdon.lib.ui.R.drawable.ic_menu_thermal6003_svg,
+            LibUiR.drawable.ic_menu_thermal5003,
+            LibUiR.drawable.ic_menu_thermal6001,
+            LibUiR.drawable.ic_menu_thermal6002,
+            LibUiR.drawable.ic_menu_thermal6003,
+            LibUiR.drawable.ic_menu_thermal7001,
+            LibUiR.drawable.ic_menu_thermal7002,
+            LibUiR.drawable.ic_menu_thermal7003,
+            LibUiR.drawable.ic_menu_thermal7004,
+            LibUiR.drawable.ic_menu_thermal5003_selected_svg,
+            LibUiR.drawable.ic_menu_thermal6003_svg,
         )
 
     private val fourthMenus =
         arrayListOf<Int>(
-            com.topdon.lib.ui.R.drawable.ic_menu_thermal7001_svg,
-            com.topdon.lib.ui.R.drawable.ic_menu_thermal7002_svg,
-            com.topdon.lib.ui.R.drawable.ic_menu_thermal7003_svg,
-            com.topdon.lib.ui.R.drawable.ic_menu_thermal7004_svg,
+            LibUiR.drawable.ic_menu_thermal7001_svg,
+            LibUiR.drawable.ic_menu_thermal7002_svg,
+            LibUiR.drawable.ic_menu_thermal7003_svg,
+            LibUiR.drawable.ic_menu_thermal7004_svg,
         )
 
     fun initType(type: Int) {
