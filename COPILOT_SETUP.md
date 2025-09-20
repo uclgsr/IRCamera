@@ -2,7 +2,9 @@
 
 ## Overview
 
-This document describes the GitHub Copilot configuration for the IRCamera Multi-Modal Thermal Sensing Platform. The setup is optimized for the project's multi-language architecture including Kotlin/Java for Android development and Python for the PC controller.
+This document describes the GitHub Copilot configuration for the IRCamera Multi-Modal Thermal Sensing Platform. The
+setup is optimized for the project's multi-language architecture including Kotlin/Java for Android development and
+Python for the PC controller.
 
 ## Quick Setup
 

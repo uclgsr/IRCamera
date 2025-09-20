@@ -30,12 +30,12 @@ tasks.register("cleanAll") {
         // Clean gradle build cache
         delete(file("${rootProject.projectDir}/.gradle"))
         delete(file("${rootProject.projectDir}/build"))
-        
+
         // Clean all subproject build directories
         subprojects.forEach { subproject ->
             delete(file("${subproject.projectDir}/build"))
         }
-        
+
         println("All modules and caches cleaned successfully")
     }
 }
@@ -93,7 +93,7 @@ tasks.register("compileDebugSafe") {
     dependsOn("cleanAll")
     finalizedBy(
         ":app:compileDebugSources",
-        ":BleModule:compileDebugSources", 
+        ":BleModule:compileDebugSources",
         ":libapp:compileDebugSources",
         ":libir:compileDebugSources",
         ":libui:compileDebugSources",
@@ -107,13 +107,13 @@ tasks.register("compileDebugSafe") {
 }
 
 tasks.register("compileReleaseSafe") {
-    group = "build"  
+    group = "build"
     description = "Safe release compilation (clean + compile)"
     dependsOn("cleanAll")
     finalizedBy(
         ":app:compileReleaseSources",
         ":BleModule:compileReleaseSources",
-        ":libapp:compileReleaseSources", 
+        ":libapp:compileReleaseSources",
         ":libir:compileReleaseSources",
         ":libui:compileReleaseSources",
         ":RangeSeekBar:compileReleaseSources",

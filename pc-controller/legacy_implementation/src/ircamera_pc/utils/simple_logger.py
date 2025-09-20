@@ -1,8 +1,5 @@
-
-
 import logging
 import sys
-
 
 logging.basicConfig(
     level=logging.INFO,
@@ -66,5 +63,4 @@ def critical(message: str, *args, **kwargs) -> None:
 
 
 def get_logger(name: str = "ircamera_pc") -> SimpleLogger:
-
     return SimpleLogger(name)

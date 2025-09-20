@@ -15,7 +15,6 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class SyncTestResult:
-
     device_id: str
     sync_accuracy_ms: float
     latency_ms: float
@@ -27,7 +26,6 @@ class SyncTestResult:
 
 @dataclass
 class DeviceCoordinationStatus:
-
     device_id: str
     device_type: str
     connection_status: str

@@ -5,16 +5,13 @@ import os
 import sys
 from pathlib import Path
 
-
 os.environ["QT_QPA_PLATFORM"] = "offscreen"
-
 
 src_dir = Path(__file__).parent / "src"
 sys.path.insert(0, str(src_dir))
 
 
 def test_core_continued_features():
-
     print("Testing continued core features...")
 
     try:
@@ -62,7 +59,6 @@ def test_core_continued_features():
 
 
 def test_network_components():
-
     print("\nTesting network component creation...")
 
     try:
@@ -100,7 +96,6 @@ def test_network_components():
 
 
 def test_device_type_mappings():
-
     print("\nTesting device type mappings...")
 
     try:
@@ -134,7 +129,6 @@ def test_device_type_mappings():
 
 
 def main():
-
     print("=" * 70)
     print("IRCamera PC Controller MVP - Continued Implementation Validation")
     print("=" * 70)

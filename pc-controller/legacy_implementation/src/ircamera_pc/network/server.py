@@ -1,5 +1,3 @@
-
-
 import asyncio
 import json
 import time
@@ -29,7 +27,6 @@ from .security import SecurityManager
 
 
 class DeviceState(Enum):
-
     DISCONNECTED = "disconnected"
     CONNECTING = "connecting"
     CONNECTED = "connected"
@@ -38,7 +35,6 @@ class DeviceState(Enum):
 
 
 class MessageType(Enum):
-
     DEVICE_REGISTER = "device_register"
     DEVICE_HEARTBEAT = "device_heartbeat"
     DEVICE_STATUS = "device_status"
@@ -66,7 +62,6 @@ class MessageType(Enum):
 
 @dataclass
 class DeviceInfo:
-
     device_id: str
     device_type: str
     capabilities: List[str]
@@ -79,7 +74,6 @@ class DeviceInfo:
     gsr_mode: str = "local"
 
     def to_dict(self) -> Dict[str, Any]:
-
         return asdict(self)
 
 
@@ -1076,7 +1070,6 @@ class NetworkServer:
         if device and hasattr(device, "last_heartbeat"):
             current_time = datetime.now()
             if device.last_heartbeat:
-
                 latency_ms = (
                                      current_time - device.last_heartbeat
                              ).total_seconds() * 500
@@ -1130,8 +1123,8 @@ class NetworkServer:
         max_buffer_size = 10000
         if len(self._gsr_data_buffer[device_id]) > max_buffer_size:
             self._gsr_data_buffer[device_id] = self._gsr_data_buffer[device_id][
-                                               -max_buffer_size:
-                                               ]
+                -max_buffer_size:
+            ]
 
         logger.debug(
             f"Buffered {len(data_points)} GSR points from {device_id}, "

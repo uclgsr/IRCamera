@@ -1,5 +1,3 @@
-
-
 import json
 import logging
 import os
@@ -16,7 +14,6 @@ logger = logging.getLogger(__name__)
 
 
 class DeploymentEnvironment(Enum):
-
     AWS = "aws"
     AZURE = "azure"
     GCP = "gcp"
@@ -25,7 +22,6 @@ class DeploymentEnvironment(Enum):
 
 
 class AuthenticationMethod(Enum):
-
     SAML_SSO = "saml_sso"
     OAUTH2 = "oauth2"
     LDAP = "ldap"
@@ -34,7 +30,6 @@ class AuthenticationMethod(Enum):
 
 
 class ComplianceFramework(Enum):
-
     BIDS = "bids"
     GDPR = "gdpr"
     HIPAA = "hipaa"
@@ -45,7 +40,6 @@ class ComplianceFramework(Enum):
 
 @dataclass
 class InstitutionalConfig:
-
     institution_id: str
     institution_name: str
     deployment_environment: DeploymentEnvironment
@@ -71,7 +65,6 @@ class InstitutionalConfig:
 
 @dataclass
 class StudyConfiguration:
-
     study_id: str
     study_title: str
     protocol_version: str
@@ -93,7 +86,6 @@ class StudyConfiguration:
 
 @dataclass
 class MultiSiteCoordinator:
-
     coordinator_id: str
     primary_site_id: str
     participating_sites: List[str]
@@ -1105,7 +1097,6 @@ class AWSStorageAdapter:
         return True
 
     def archive_data(self, session_id: str) -> bool:
-
         return True
 
     def cleanup(self) -> None:
@@ -1121,7 +1112,6 @@ class AzureStorageAdapter:
         return True
 
     def archive_data(self, session_id: str) -> bool:
-
         return True
 
     def cleanup(self) -> None:
@@ -1137,7 +1127,6 @@ class GCPStorageAdapter:
         return True
 
     def archive_data(self, session_id: str) -> bool:
-
         return True
 
     def cleanup(self) -> None:
@@ -1149,11 +1138,9 @@ class InstitutionalStorageAdapter:
         self.config = config
 
     def store_data(self, session_id: str, data: Dict, quality_score: float) -> bool:
-
         return True
 
     def archive_data(self, session_id: str) -> bool:
-
         return True
 
     def cleanup(self) -> None:
@@ -1165,11 +1152,9 @@ class LocalStorageAdapter:
         self.config = config
 
     def store_data(self, session_id: str, data: Dict, quality_score: float) -> bool:
-
         return True
 
     def archive_data(self, session_id: str) -> bool:
-
         return True
 
     def cleanup(self) -> None:

@@ -1,5 +1,3 @@
-
-
 import ctypes
 import os
 import platform
@@ -22,6 +20,7 @@ except ImportError:
 
     PYQT_AVAILABLE = False
 
+
     # Mock classes for when PyQt6 is not available
     class QMessageBox:
         StandardButton = type(
@@ -37,6 +36,7 @@ except ImportError:
         @staticmethod
         def warning(*args, **kwargs) -> Any:
             pass
+
 
     class QApplication:
         @staticmethod
@@ -66,7 +66,6 @@ except ImportError:
 
 
 class PrivilegeLevel(Enum):
-
     USER = "user"
     ELEVATED = "elevated"
     ADMIN = "admin"
@@ -75,7 +74,6 @@ class PrivilegeLevel(Enum):
 
 
 class ElevationResult(Enum):
-
     SUCCESS = "success"
     CANCELLED = "cancelled"
     FAILED = "failed"
@@ -85,7 +83,6 @@ class ElevationResult(Enum):
 
 @dataclass
 class SystemPermissions:
-
     network_config: bool = False
     bluetooth_control: bool = False
     service_management: bool = False
@@ -95,7 +92,6 @@ class SystemPermissions:
 
 
 class AdminPrivilegesManager(BaseManager):
-
     if PYQT_AVAILABLE:
         privilege_changed = pyqtSignal(PrivilegeLevel)
         elevation_requested = pyqtSignal(str)
@@ -518,7 +514,6 @@ class AdminPrivilegesManager(BaseManager):
 
         try:
             if platform.system() == "Windows":
-
                 result = subprocess.run(
                     [
                         "C:\\Windows\\System32\\netsh.exe",
@@ -545,7 +540,6 @@ class AdminPrivilegesManager(BaseManager):
 
         try:
             if platform.system() == "Windows":
-
                 result = subprocess.run(
                     ["C:\\Windows\\System32\\sc.exe", "query", "type=service"],
                     capture_output=True,

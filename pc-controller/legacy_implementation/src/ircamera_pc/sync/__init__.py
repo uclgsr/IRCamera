@@ -1,4 +1,3 @@
-
 try:
     from ..core.timesync import TimeSyncService, TimeSyncStats, TimeSyncProtocol
 except ImportError:

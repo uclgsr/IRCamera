@@ -1,5 +1,3 @@
-
-
 import asyncio
 import platform
 from dataclasses import dataclass
@@ -54,14 +52,12 @@ except ImportError:
 
 
 class BluetoothDeviceType(Enum):
-
     BLE = "ble"
     CLASSIC = "classic"
     UNKNOWN = "unknown"
 
 
 class ConnectionState(Enum):
-
     DISCONNECTED = "disconnected"
     CONNECTING = "connecting"
     CONNECTED = "connected"
@@ -70,7 +66,6 @@ class ConnectionState(Enum):
 
 @dataclass
 class BluetoothDevice:
-
     address: str
     name: str
     device_type: BluetoothDeviceType
@@ -82,7 +77,6 @@ class BluetoothDevice:
 
 
 class BluetoothManager(BaseManager):
-
     if PYQT_AVAILABLE:
         device_discovered = pyqtSignal(BluetoothDevice)
         device_connected = pyqtSignal(str, str)

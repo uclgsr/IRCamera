@@ -1,5 +1,3 @@
-
-
 import asyncio
 import json
 import uuid
@@ -18,7 +16,6 @@ from .device_manager import DeviceConnectionState, DeviceInfo, DeviceManager
 
 
 class SessionState(Enum):
-
     IDLE = "idle"
     INITIALIZING = "initializing"
     ACTIVE = "active"
@@ -31,7 +28,6 @@ class SessionState(Enum):
 
 @dataclass
 class SessionConfiguration:
-
     session_name: str
     participant_id: Optional[str] = None
     recording_duration: Optional[int] = None
@@ -44,7 +40,6 @@ class SessionConfiguration:
 
 @dataclass
 class SessionMetadata:
-
     session_id: str
     session_name: str
     state: SessionState
@@ -87,7 +82,6 @@ class SessionMetadata:
 
 
 class AdvancedSessionManager:
-
     MIN_SUCCESS_RATE_FOR_START = 0.5
     MIN_SUCCESS_RATE_FOR_STOP = 0.5
 
@@ -255,7 +249,7 @@ class AdvancedSessionManager:
 
         if self.current_session.started_at:
             duration = (
-                        self.current_session.stopped_at - self.current_session.started_at).total_seconds()
+                    self.current_session.stopped_at - self.current_session.started_at).total_seconds()
             self.current_session.duration_seconds = duration
 
         self._update_session_state(SessionState.STOPPED)

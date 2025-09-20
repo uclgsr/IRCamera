@@ -1,5 +1,3 @@
-
-
 import json
 import jsonschema
 from dataclasses import dataclass
@@ -15,7 +13,6 @@ class ValidationError(Exception):
 
 
 class MessageDirection(Enum):
-
     PC_TO_DEVICE = "pc_to_device"
     DEVICE_TO_PC = "device_to_pc"
     BIDIRECTIONAL = "bidirectional"
@@ -23,7 +20,6 @@ class MessageDirection(Enum):
 
 @dataclass
 class MessageDefinition:
-
     name: str
     direction: MessageDirection
     description: str
@@ -46,7 +42,6 @@ class ProtocolManager:
     def _load_protocol(self) -> None:
 
         if self._protocol_file is None:
-
             current_dir = Path(__file__).parent
             config_dir = current_dir.parent.parent.parent / "config"
             self._protocol_file = config_dir / "protocol.json"
@@ -155,7 +150,6 @@ class ProtocolManager:
     ) -> jsonschema.protocols.Validator:
 
         if message_type not in self._validator_cache:
-
             complete_schema = self._add_common_fields(schema)
             validator = jsonschema.Draft7Validator(complete_schema)
             self._validator_cache[message_type] = validator
@@ -260,7 +254,6 @@ _protocol_manager: Optional[ProtocolManager] = None
 
 
 def get_protocol_manager() -> ProtocolManager:
-
     global _protocol_manager
     if _protocol_manager is None:
         _protocol_manager = ProtocolManager()
@@ -268,10 +261,8 @@ def get_protocol_manager() -> ProtocolManager:
 
 
 def validate_message(message: Dict[str, Any], strict: bool = True) -> bool:
-
     return get_protocol_manager().validate_message(message, strict)
 
 
 def create_message(message_type: str, **kwargs) -> Dict[str, Any]:
-
     return get_protocol_manager().create_message(message_type, **kwargs)

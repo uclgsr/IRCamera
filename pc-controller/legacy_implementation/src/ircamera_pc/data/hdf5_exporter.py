@@ -1,5 +1,3 @@
-
-
 import h5py
 import json
 import numpy as np
@@ -13,7 +11,6 @@ from typing import Dict, List, Optional, Tuple
 
 @dataclass
 class DataStreamInfo:
-
     stream_id: str
     device_id: str
     sensor_type: str
@@ -29,7 +26,6 @@ class DataStreamInfo:
 
 @dataclass
 class SyncMarkerInfo:
-
     timestamp: float
     marker_type: str
     description: str
@@ -39,7 +35,6 @@ class SyncMarkerInfo:
 
 @dataclass
 class SessionMetadata:
-
     session_id: str
     participant_id: str
     start_time: datetime
@@ -400,7 +395,6 @@ class MultiModalHDF5Exporter:
         markers_group = self.h5_file["sync_markers"]
 
         if 'markers' not in markers_group:
-
             marker_dtype = np.dtype([
                 ('timestamp', 'f8'),
                 ('marker_type', 'S50'),
@@ -674,7 +668,6 @@ class MultiModalHDF5Exporter:
 
 def create_session_exporter(participant_id: str, experiment_name: str = "",
                             output_dir: Optional[Path] = None) -> MultiModalHDF5Exporter:
-
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     session_id = f"{participant_id}_{timestamp}"
 

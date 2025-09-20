@@ -1,5 +1,3 @@
-
-
 import asyncio
 import time
 from dataclasses import dataclass, field
@@ -15,7 +13,6 @@ except ImportError:
 
 @dataclass
 class TimeSyncMeasurement:
-
     t1_client_send: float
     t2_server_receive: float
     t3_server_send: float
@@ -41,7 +38,6 @@ class TimeSyncMeasurement:
 
 @dataclass
 class DeviceTimeSyncStats:
-
     device_id: str
     last_sync_time: Optional[float] = None
     sync_count: int = 0

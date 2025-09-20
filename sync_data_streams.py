@@ -150,7 +150,7 @@ class MultiModalSynchronizer:
         gsr_df['common_time_ms'].values
 
         for thermal_time in thermal_times[
-                            ::10]:
+            ::10]:
 
             gsr_matches = gsr_df[
                 (gsr_df['common_time_ms'] >= thermal_time - window_ms) &
