@@ -53,8 +53,6 @@ android {
             keyAlias = "Artibox"
             storePassword = "artibox2017"
             keyPassword = "artibox2017"
-
-
             enableV1Signing = true
             enableV2Signing = true
         }
@@ -240,7 +238,6 @@ android {
 configurations.all {
     resolutionStrategy {
         force("com.google.guava:guava:31.1-android")
-        
         force("androidx.core:core:1.13.1")
         force("androidx.core:core-ktx:1.13.1")
 
@@ -265,35 +262,22 @@ dependencies {
 
     implementation(libs.guava)
 
-    implementation(project(":component:thermal")) 
-    implementation(project(":component:thermal-ir")) 
-    implementation(project(":component:thermal-lite")) 
-    implementation(project(":component:pseudo")) 
+    implementation(project(":component:thermal"))
+    implementation(project(":component:thermal-ir"))
+    implementation(project(":component:thermal-lite"))
     implementation(project(":component:gsr-recording"))
     implementation(project(":component:user")) 
     implementation(project(":libapp"))
-    // implementation(project(":libcom")) // CONSOLIDATED into :libapp
     implementation(project(":libir"))
     implementation(project(":libui"))
-    // implementation(project(":libmenu")) // CONSOLIDATED into :libapp 
-
     implementation(project(":BleModule"))
-
-    
-    
-    
-
     implementation(files("libs/libAC020sdk_USB_IR_1.1.1_2408291439.aar"))
     implementation(files("libs/libirutils_1.2.0_2409241055.aar"))
     implementation(files("libs/libcommon_1.2.0_24052117.aar"))
-
-    // implementation(files("libs/lms_international-3.90.009.0.aar")) // REMOVED - replaced with stub implementation in libapp 
     implementation(files("libs/abtest-1.0.1.aar"))
     implementation(files("libs/auth-number-2.13.2.1.aar"))
     implementation(files("libs/logger-2.2.1-release.aar"))
     implementation(files("libs/main-2.2.1-release.aar"))
-
-
 
     implementation(
         fileTree(
@@ -312,29 +296,19 @@ dependencies {
     implementation(libs.play.app.update)
     implementation(libs.immersionbar)
     implementation(libs.xpopup)
-
     implementation(libs.wechat.sdk)
     implementation(libs.umeng.apm)
-
-
     implementation(libs.umeng.common)
-
     implementation(libs.opencsv)
     implementation(libs.gson)
-
-    
     implementation(libs.jmdns)
-
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.okhttp)
     implementation(libs.logging.interceptor)
-
     implementation(libs.nordic.ble)
     implementation(libs.nordic.ble.ktx)
 
-
-    
     implementation(files("libs/shimmerandroidinstrumentdriver-3.2.4_beta.aar"))
     implementation(files("libs/shimmerdriver-0.11.5_beta.jar"))
     implementation(files("libs/shimmerdriverpc-0.11.5_beta.jar"))
@@ -343,36 +317,25 @@ dependencies {
 
     
     implementation(libs.bundles.camerax)
-
-
     testImplementation(libs.junit)
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.hamcrest)
-
     testImplementation(libs.mockk)
     testImplementation(libs.mockk.android)
-
     testImplementation(libs.kotlinx.coroutines.test)
-
     androidTestImplementation(libs.test.ext.junit)
     androidTestImplementation(libs.test.espresso.core)
     androidTestImplementation(libs.test.runner)
     androidTestImplementation(libs.test.rules)
-
     androidTestImplementation(libs.test.ext.junit.ktx)
     androidTestImplementation(libs.test.espresso.contrib)
     androidTestImplementation(libs.test.espresso.intents)
     androidTestImplementation(libs.test.uiautomator)
-
     testImplementation(libs.robolectric)
-
     testImplementation(libs.mockwebserver)
-
     androidTestImplementation(libs.benchmark.junit4)
-
     testImplementation(libs.truth)
     androidTestImplementation(libs.truth)
-
     testImplementation(libs.javafaker)
 }
 
