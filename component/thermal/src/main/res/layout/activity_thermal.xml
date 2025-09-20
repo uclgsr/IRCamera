@@ -10,7 +10,7 @@
 
     <include layout="@layout/toolbar_lay" />
 
-    <com.mpdc4gsr.menu.MenuFirstTabView
+    <com.mpdc4gsr.lib.core.menu.MenuFirstTabView
         android:id="@+id/thermal_tab"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
