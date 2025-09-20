@@ -57,7 +57,7 @@ public class BluetoothManager implements EventObserver {
     private void setMTUValue() {
         if (mDevice.isConnected()) {
 
-            Log.e("bcf_ble", "连接设备名称：" + mDevice.getName() + "");
+            Log.e("bcf_ble", "Connect[CHINESE_TEXT]：" + mDevice.getName() + "");
             RequestBuilder<MtuChangeCallback> builder = null;
             if (mDevice.getName().contains("T-darts") || mDevice.getName().contains("TD")) {
                 builder = new RequestBuilderFactory().getChangeMtuBuilder(240);
@@ -67,13 +67,13 @@ public class BluetoothManager implements EventObserver {
             Request request = builder.setCallback(new MtuChangeCallback() {
                 @Override
                 public void onMtuChanged(@NonNull Request request, int mtu) {
-                    Log.d("wangchen", "MTU修改成功，新值：" + mtu);
+                    Log.d("wangchen", "MTU changed successfully, new value: " + mtu);
                     setReadCallback();
                 }
 
                 @Override
                 public void onRequestFailed(@NonNull Request request, int failType, @Nullable Object value) {
-                    Log.d("bcf", "MTU修改失败");
+                    Log.d("bcf", "MTUModifyFailed");
                 }
 
             }).build();
@@ -86,7 +86,7 @@ public class BluetoothManager implements EventObserver {
             isSending = false;
 
             boolean isEnabled = connection.isNotificationOrIndicationEnabled(UUID.fromString(UUIDManager.SERVICE_UUID), UUID.fromString(UUIDManager.NOTIFY_UUID));
-            LLog.w("bcf_ble", "是否打开了Notifycation: " + isEnabled);
+            LLog.w("bcf_ble", "[CHINESE_TEXT]Open[CHINESE_TEXT]Notifycation: " + isEnabled);
             RequestBuilder<NotificationChangeCallback> builder = new RequestBuilderFactory().getSetNotificationBuilder(UUID.fromString(UUIDManager.SERVICE_UUID), UUID.fromString(UUIDManager.NOTIFY_UUID), true);
             RequestBuilder<ReadCharacteristicCallback> builder1 = new RequestBuilderFactory().getReadCharacteristicBuilder(UUID.fromString(UUIDManager.SERVICE_UUID), UUID.fromString(UUIDManager.READ_UUID));
 
@@ -113,8 +113,8 @@ public class BluetoothManager implements EventObserver {
         connection.setBluetoothGattCallback(new BluetoothGattCallback() {
             @Override
             public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
-                Log.d("ble_bcf_data", "原始写入数据状态：status: " + status + "  内容：" + StringUtils.toHex(characteristic.getValue()));
-                setBleData("原始写入数据状态：status: " + status + "  内容：" + StringUtils.toHex(characteristic.getValue()));
+                Log.d("ble_bcf_data", "[CHINESE_TEXT]Data[CHINESE_TEXT]：status: " + status + "  Content：" + StringUtils.toHex(characteristic.getValue()));
+                setBleData("[CHINESE_TEXT]Data[CHINESE_TEXT]：status: " + status + "  Content：" + StringUtils.toHex(characteristic.getValue()));
             }
         });
         return connection;
@@ -133,7 +133,7 @@ public class BluetoothManager implements EventObserver {
     }
 
     public void release() {
-        Log.d("bcf", "释放所有BLE连接");
+        Log.d("bcf", "[CHINESE_TEXT]BLEConnect");
         EasyBLE.getInstance().disconnectConnection(mDevice);
         EasyBLE.getInstance().release();
         EasyBLE.getInstance().releaseConnection(mDevice);
@@ -152,9 +152,9 @@ public class BluetoothManager implements EventObserver {
     public void onConnectionStateChanged(@NonNull Device device) {
         if (device.getConnectionState() != ConnectionState.SERVICE_DISCOVERED || device.getConnectionState() != ConnectionState.DISCONNECTED) {
             EventBus.getDefault().post(device.getConnectionState());
-            Log.e("wangchen", "发送广播--" + device.getConnectionState());
+            Log.e("wangchen", "Send[CHINESE_TEXT]--" + device.getConnectionState());
         }
-        Log.d("ywq", "MyObserver 连接状态：" + device.getConnectionState() + " 是否已连接： " + device.isConnected() + "-----名称：" + device.getName() + "-------mac: " + device.getAddress());
+        Log.d("ywq", "MyObserver Connection state: " + device.getConnectionState() + " Is connected: " + device.isConnected() + "-----Name: " + device.getName() + "-------mac: " + device.getAddress());
         switch (device.getConnectionState()) {
             case SCANNING_FOR_RECONNECTION:
                 break;
@@ -180,13 +180,13 @@ public class BluetoothManager implements EventObserver {
 
     @Override
     public void onConnectFailed(Device device, int failType) {
-        Log.e("bcf_ble", "连接失败" + device.getName());
+        Log.e("bcf_ble", "ConnectFailed" + device.getName());
         EventBus.getDefault().post(device.getConnectionState());
     }
 
     @Override
     public void onConnectTimeout(Device device, int type) {
-        Log.e("bcf_ble", "连接超时");
+        Log.e("bcf_ble", "Connection timeout");
     }
 
     @Observe
@@ -194,12 +194,12 @@ public class BluetoothManager implements EventObserver {
     public void onNotificationChanged(@NonNull Request request, boolean isEnabled) {
         String typeTag = "";
         if (request.getType() == RequestType.SET_NOTIFICATION) {
-            typeTag = "通知";
+            typeTag = "Notification";
             EventBus.getDefault().post(ConnectionState.MTU_SUCCESS);
         } else {
             typeTag = "Indication";
         }
-        Log.d("bcf_ble", "onNotificationChanged ：" + typeTag + "：" + (isEnabled ? "开启" : "关闭"));
+        Log.d("bcf_ble", "onNotificationChanged ：" + typeTag + "：" + (isEnabled ? "[CHINESE_TEXT]" : "Close"));
     }
 
     public boolean writeBuletoothData(byte[] data) {
@@ -237,7 +237,7 @@ public class BluetoothManager implements EventObserver {
     @Observe
     @Override
     public void onCharacteristicChanged(Device device, UUID service, UUID characteristic, byte[] value) {
-        Log.e("ble_bcf_data", "接收蓝牙数据：" + StringUtils.toHex(value));
+        Log.e("ble_bcf_data", "Receive[CHINESE_TEXT]Data：" + StringUtils.toHex(value));
         EventBus.getDefault().post(value);
     }
 

@@ -12,7 +12,6 @@ from typing import Any, Dict, List, Optional
 
 
 class GSRMode(Enum):
-    
 
     LOCAL = "local"
     BRIDGED = "bridged"
@@ -20,21 +19,19 @@ class GSRMode(Enum):
 
 @dataclass
 class GSRSample:
-    
 
-    timestamp: float  
-    value: float  
-    quality: int  
-    device_id: str  
+    timestamp: float
+    value: float
+    quality: int
+    device_id: str
 
     def to_dict(self) -> Dict[str, Any]:
-        
+
         return asdict(self)
 
 
 @dataclass
 class GSRDataSet:
-    
 
     session_id: str
     device_id: str
@@ -42,11 +39,11 @@ class GSRDataSet:
     start_time: float
     end_time: float
     samples: List[GSRSample]
-    sample_rate: float  
-    quality_stats: Dict[str, float]  
+    sample_rate: float
+    quality_stats: Dict[str, float]
 
     def to_dict(self) -> Dict[str, Any]:
-        
+
         return {
             "session_id": self.session_id,
             "device_id": self.device_id,
@@ -60,21 +57,18 @@ class GSRDataSet:
 
 
 class GSRIngestor:
-    
 
     def __init__(self, config: Dict[str, Any]):
-        
+
         self.config = config.get("gsr", {})
         self.data_dir = Path(self.config.get("data_dir", "data/gsr"))
         self.data_dir.mkdir(parents=True, exist_ok=True)
 
-        
-        self.min_sample_rate = self.config.get("min_sample_rate", 10.0)  
-        self.max_sample_rate = self.config.get("max_sample_rate", 1000.0)  
-        self.quality_threshold = self.config.get("quality_threshold", 50)  
-        self.max_gap_duration = self.config.get("max_gap_duration", 5.0)  
+        self.min_sample_rate = self.config.get("min_sample_rate", 10.0)
+        self.max_sample_rate = self.config.get("max_sample_rate", 1000.0)
+        self.quality_threshold = self.config.get("quality_threshold", 50)
+        self.max_gap_duration = self.config.get("max_gap_duration", 5.0)
 
-        
         self.active_sessions: Dict[str, GSRDataSet] = {}
         self.completed_sessions: Dict[str, GSRDataSet] = {}
 
@@ -83,7 +77,7 @@ class GSRIngestor:
     async def start_session(
             self, session_id: str, device_id: str, mode: GSRMode
     ) -> bool:
-        
+
         try:
             if session_id in self.active_sessions:
                 logger.warning(f"GSR session {session_id} already active")
@@ -112,7 +106,7 @@ class GSRIngestor:
             return False
 
     async def ingest_sample(self, session_id: str, sample_data: bytes) -> bool:
-        
+
         try:
             if session_id not in self.active_sessions:
                 logger.warning(
@@ -122,7 +116,6 @@ class GSRIngestor:
 
             dataset = self.active_sessions[session_id]
 
-            
             if len(sample_data) < 16:
                 logger.warning(f"Invalid GSR sample data length: {len(sample_data)}")
                 return False
@@ -136,7 +129,6 @@ class GSRIngestor:
                 device_id=dataset.device_id,
             )
 
-            
             if not self._validate_sample(sample, dataset):
                 return False
 
@@ -150,7 +142,7 @@ class GSRIngestor:
             return False
 
     async def end_session(self, session_id: str) -> Optional[GSRDataSet]:
-        
+
         try:
             if session_id not in self.active_sessions:
                 logger.warning(f"Cannot end inactive GSR session: {session_id}")
@@ -159,14 +151,12 @@ class GSRIngestor:
             dataset = self.active_sessions[session_id]
             dataset.end_time = time.time()
 
-            
             if len(dataset.samples) > 1:
                 duration = dataset.end_time - dataset.start_time
                 dataset.sample_rate = (
                     len(dataset.samples) / duration if duration > 0 else 0.0
                 )
 
-            
             if dataset.samples:
                 qualities = [sample.quality for sample in dataset.samples]
                 dataset.quality_stats = {
@@ -175,11 +165,9 @@ class GSRIngestor:
                     "mean": sum(qualities) / len(qualities),
                 }
 
-            
             self.completed_sessions[session_id] = dataset
             del self.active_sessions[session_id]
 
-            
             await self._save_dataset(dataset)
 
             logger.info(
@@ -197,8 +185,7 @@ class GSRIngestor:
             return None
 
     def _validate_sample(self, sample: GSRSample, dataset: GSRDataSet) -> bool:
-        
-        
+
         if sample.quality < self.quality_threshold:
             logger.debug(
                 f"GSR sample below quality threshold: {sample.quality}"
@@ -206,32 +193,27 @@ class GSRIngestor:
             )
             return False
 
-        
         if not (10.0 <= sample.value <= 1000000.0):
             logger.warning(f"GSR value out of range: {sample.value} ohms")
             return False
 
-        
         if dataset.samples and sample.timestamp <= dataset.samples[-1].timestamp:
             logger.warning(f"GSR sample timestamp not monotonic: {sample.timestamp}")
             return False
 
-        
         if dataset.samples:
             gap = sample.timestamp - dataset.samples[-1].timestamp
             if gap > self.max_gap_duration:
                 logger.warning(f"Large gap in GSR data: {gap:.2f}s")
-                
 
         return True
 
     def _update_quality_stats(self, dataset: GSRDataSet, sample: GSRSample):
-        
+
         stats = dataset.quality_stats
         stats["min"] = min(stats["min"], sample.quality)
         stats["max"] = max(stats["max"], sample.quality)
 
-        
         n = len(dataset.samples)
         if n == 1:
             stats["mean"] = sample.quality
@@ -239,7 +221,7 @@ class GSRIngestor:
             stats["mean"] = ((stats["mean"] * (n - 1)) + sample.quality) / n
 
     async def _save_dataset(self, dataset: GSRDataSet):
-        
+
         try:
             filename = f"gsr_{dataset.session_id}_{dataset.device_id}.json"
             filepath = self.data_dir / filename
@@ -255,7 +237,7 @@ class GSRIngestor:
     async def load_dataset(
             self, session_id: str, device_id: str
     ) -> Optional[GSRDataSet]:
-        
+
         try:
             filename = f"gsr_{session_id}_{device_id}.json"
             filepath = self.data_dir / filename
@@ -267,7 +249,6 @@ class GSRIngestor:
             with open(filepath, "r") as f:
                 data = json.load(f)
 
-            
             samples = [GSRSample(**sample_data) for sample_data in data["samples"]]
 
             dataset = GSRDataSet(
@@ -289,7 +270,7 @@ class GSRIngestor:
             return None
 
     def get_session_status(self, session_id: str) -> Optional[Dict[str, Any]]:
-        
+
         if session_id in self.active_sessions:
             dataset = self.active_sessions[session_id]
             return {
@@ -315,9 +296,9 @@ class GSRIngestor:
             return None
 
     def get_active_sessions(self) -> List[str]:
-        
+
         return list(self.active_sessions.keys())
 
     def get_completed_sessions(self) -> List[str]:
-        
+
         return list(self.completed_sessions.keys())

@@ -11,7 +11,7 @@ from loguru import logger
 
 GUI_AVAILABLE = True
 try:
-    
+
     if "DISPLAY" not in os.environ and "QT_QPA_PLATFORM" not in os.environ:
         os.environ["QT_QPA_PLATFORM"] = "offscreen"
 
@@ -20,7 +20,6 @@ try:
 except ImportError as e:
     logger.warning(f"GUI libraries not available, running in headless mode: {e}")
     GUI_AVAILABLE = False
-
 
     # Mock classes for headless mode
     class QApplication:
@@ -38,7 +37,6 @@ except ImportError as e:
 
         def exec(self) -> Any:
             return 0
-
 
     class QTimer:
         def __init__(self):
@@ -84,33 +82,26 @@ else:
 
 
 class IRCameraApp:
-    
 
     def __init__(self):
-        
-        
+
         self.config = config
 
-        
         self.session_manager = SessionManager()
         self.time_sync_service = TimeSyncService()
         self.websocket_server = WebSocketServer()
 
-        
         self.gsr_ingestor = GSRIngestor(self.config)
         self.file_transfer_manager = FileTransferManager(self.config)
         self.camera_calibrator = CameraCalibrator(self.config)
 
-        
         self.admin_privileges_manager = AdminPrivilegesManager()
         self.bluetooth_manager = BluetoothManager()
         self.wifi_manager = WiFiManager()
 
-        
         self.qt_app: Optional[QApplication] = None
         self.main_window: Optional[MainWindow] = None
 
-        
         self._loop: Optional[asyncio.AbstractEventLoop] = None
         self._timer: Optional[QTimer] = None
 
@@ -131,7 +122,7 @@ class IRCameraApp:
         logger.info(f"Components: {', '.join(components)}")
 
     def setup_qt_app(self) -> None:
-        
+
         if not GUI_AVAILABLE:
             logger.info("Running in headless mode - GUI not available")
             self.qt_app = QApplication(sys.argv)
@@ -142,12 +133,10 @@ class IRCameraApp:
             self.qt_app.setApplicationName("IRCamera PC Controller")
             self.qt_app.setApplicationVersion("0.1.0")
 
-            
             self.qt_app.setStyleSheet(
-                
+
             )
 
-        
         if GUI_AVAILABLE:
             self.main_window = MainWindow(
                 session_manager=self.session_manager,
@@ -161,7 +150,6 @@ class IRCameraApp:
                 admin_privileges_manager=self.admin_privileges_manager,
             )
 
-            
             window_size = config.get("gui.window_size", [1400, 900])
             self.main_window.resize(window_size[0], window_size[1])
         else:
@@ -170,29 +158,26 @@ class IRCameraApp:
         logger.info("Qt application set up")
 
     def setup_event_loop_integration(self) -> None:
-        
-        
+
         try:
             self._loop = asyncio.get_event_loop()
         except RuntimeError:
             self._loop = asyncio.new_event_loop()
             asyncio.set_event_loop(self._loop)
 
-        
         self._timer = QTimer()
         self._timer.timeout.connect(self._process_async_events)
 
-        
         update_interval = config.get("gui.update_interval_ms", 100)
         self._timer.start(update_interval)
 
         logger.debug("Event loop integration set up")
 
     def _process_async_events(self) -> None:
-        
+
         if self._loop:
             try:
-                
+
                 for _ in range(10):
                     if self._loop._ready:
                         handle = self._loop._ready.popleft()
@@ -204,12 +189,11 @@ class IRCameraApp:
                 logger.error(f"Error processing async events: {e}")
 
     async def start_services(self) -> None:
-        
+
         try:
-            
+
             await self.time_sync_service.start()
 
-            
             await self.websocket_server.start()
 
             logger.info("All services started successfully")
@@ -219,16 +203,15 @@ class IRCameraApp:
             raise
 
     async def stop_services(self) -> None:
-        
+
         try:
-            
+
             if self.wifi_manager:
                 await self.wifi_manager.cleanup()
 
             if self.bluetooth_manager:
                 await self.bluetooth_manager.cleanup()
 
-            
             await self.websocket_server.stop()
             await self.time_sync_service.stop()
 
@@ -238,25 +221,20 @@ class IRCameraApp:
             logger.error(f"Error stopping services: {e}")
 
     def run(self) -> int:
-        
+
         try:
-            
+
             setup_logging()
 
-            
             self.setup_qt_app()
 
-            
             self.setup_event_loop_integration()
 
-            
             signal.signal(signal.SIGINT, self._handle_signal)
             signal.signal(signal.SIGTERM, self._handle_signal)
 
-            
             asyncio.run_coroutine_threadsafe(self.start_services(), self._loop)
 
-            
             if GUI_AVAILABLE and self.main_window:
                 self.main_window.show()
             else:
@@ -264,16 +242,15 @@ class IRCameraApp:
 
             logger.info("IRCamera PC Controller started")
 
-            
             if GUI_AVAILABLE:
                 return self.qt_app.exec_()
             else:
-                
+
                 logger.info("Headless mode - press Ctrl+C to stop")
                 try:
                     while True:
                         if self._loop:
-                            
+
                             self._process_async_events()
                         import time
 
@@ -286,22 +263,21 @@ class IRCameraApp:
             logger.error(f"Application error: {e}")
             return 1
         finally:
-            
+
             if self._timer:
                 self._timer.stop()
 
-            
             if self._loop and not self._loop.is_closed():
                 try:
                     future = asyncio.run_coroutine_threadsafe(
                         self.stop_services(), self._loop
                     )
-                    future.result(timeout=5)  
+                    future.result(timeout=5)
                 except (OSError, ValueError, RuntimeError) as e:
                     logger.error(f"Error during cleanup: {e}")
 
     def _handle_signal(self, signum: int, frame) -> None:
-        
+
         logger.info(f"Received signal {signum}, shutting down...")
 
         if self.qt_app:
@@ -309,7 +285,7 @@ class IRCameraApp:
 
 
 def main() -> int:
-    
+
     import argparse
 
     parser = argparse.ArgumentParser(
@@ -331,11 +307,9 @@ def main() -> int:
 
     app = IRCameraApp()
 
-    
     if args.headless:
         logger.info("Running in headless mode - network services only")
-        
-        
+
         parser.print_help()
         return 0
 

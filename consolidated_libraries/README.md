@@ -1,29 +1,43 @@
-# Consolidated Libraries and Components
+# Consolidated Libraries Directory
 
-These small libraries and components have been consolidated to simplify the project structure:
+This directory contains support libraries that have been organized together for better project structure and maintainability.
 
-## ✅ Phase 3: Library Consolidation (COMPLETED)
+## Current Library Organization
 
-- **libcom** (16 files) ✅ CONSOLIDATED → libapp/src/main/java/com/topdon/lib/core/comm/
-- **libmenu** (23 files) ✅ CONSOLIDATED → libapp/src/main/java/com/topdon/lib/core/menu/
-- **libmatrix** (16 files) ✅ CONSOLIDATED → libapp/src/main/java/com/topdon/lib/core/matrix/
+### Support Libraries in this Directory
+- **libcom** (16 files) - Communication utilities, dialogs, and helper functions
+- **libmatrix** (23 files) - Matrix operations and mathematical computations  
+- **libmenu** (16 files) - Menu components and UI widget utilities
+- **CommonComponent** (4 files) - Shared component utilities
 
-This reduces the module count from 6 libraries to 3 libraries and simplifies the build system.
+### Core Libraries (in root)
+- **libapp/** - Main application framework library
+- **libir/** - Infrared processing and thermal camera library
+- **libui/** - User interface components library
 
-## Phase 4: Component Consolidation  
+## Purpose and Organization
 
-- **CommonComponent** (4 files) → component/thermal-lite/ (consolidated since only used by thermal-lite)
+This organizational structure:
+- **Groups related libraries** for easier maintenance
+- **Separates core from support** functionality for cleaner dependencies
+- **Maintains clear boundaries** between different functional areas
+- **Simplifies navigation** by grouping similar components
 
-This reduces the component count from 7 to 6 components.
+## Usage in Build System
 
-## Package Name Changes (COMPLETED)
-- com.mpdc4gsr.libcom.* → com.topdon.lib.core.comm.*
-- com.mpdc4gsr.menu.* → com.topdon.lib.core.menu.*
-- com.guide.zm04c.matrix.* → com.topdon.lib.core.matrix.*
-- com.energy.commoncomponent.* → (integrated into thermal-lite)
+Components reference these libraries using project dependencies:
+```kotlin
+implementation(project(":consolidated_libraries:libcom"))
+implementation(project(":consolidated_libraries:libmatrix"))
+implementation(project(":consolidated_libraries:libmenu"))
+```
 
-## Consolidation Status
-✅ **Library consolidation complete**: All 3 small libraries moved and integrated into libapp
-✅ **Package updates complete**: All package names and imports updated across the project  
-✅ **Build system updated**: Gradle dependencies updated, old modules removed from settings
-✅ **Resources merged**: Layouts, assets, and native code successfully integrated
+## Development Notes
+
+These libraries provide specialized functionality:
+- **libcom**: Network communication, file operations, utility dialogs
+- **libmatrix**: Mathematical operations for sensor data processing
+- **libmenu**: Reusable menu and UI components
+- **CommonComponent**: Shared utilities used across multiple components
+
+The libraries maintain their original API interfaces to ensure compatibility with existing components.

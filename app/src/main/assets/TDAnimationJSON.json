@@ -5,7 +5,7 @@
   "op": 300,
   "w": 750,
   "h": 1624,
-  "nm": "设备未连接",
+  "nm": "Device Disconnected",
   "ddd": 0,
   "assets": [
     {
@@ -15,7 +15,7 @@
           "ddd": 0,
           "ind": 1,
           "ty": 4,
-          "nm": "矩形备份 11",
+          "nm": "Rectangle Backup 11",
           "sr": 1,
           "ks": {
             "o": {
@@ -85,7 +85,7 @@
                     "k": 0,
                     "ix": 4
                   },
-                  "nm": "矩形路径 1",
+                  "nm": "Rectangle Path 1",
                   "mn": "ADBE Vector Shape - Rect",
                   "hd": false
                 },
@@ -115,7 +115,7 @@
                   "lj": 1,
                   "ml": 4,
                   "bm": 0,
-                  "nm": "描边 1",
+                  "nm": "Stroke 1",
                   "mn": "ADBE Vector Graphic - Stroke",
                   "hd": false
                 },
@@ -165,10 +165,10 @@
                     "k": 0,
                     "ix": 5
                   },
-                  "nm": "变换"
+                  "nm": "Transform"
                 }
               ],
-              "nm": "矩形备份 11",
+              "nm": "Rectangle Backup 11",
               "np": 2,
               "cix": 2,
               "bm": 0,
@@ -186,7 +186,7 @@
           "ddd": 0,
           "ind": 2,
           "ty": 4,
-          "nm": "矩形备份 12",
+          "nm": "Rectangle Backup 12",
           "sr": 1,
           "ks": {
             "o": {
@@ -256,7 +256,7 @@
                     "k": 0,
                     "ix": 4
                   },
-                  "nm": "矩形路径 1",
+                  "nm": "Rectangle Path 1",
                   "mn": "ADBE Vector Shape - Rect",
                   "hd": false
                 },
@@ -286,7 +286,7 @@
                   "lj": 1,
                   "ml": 4,
                   "bm": 0,
-                  "nm": "描边 1",
+                  "nm": "Stroke 1",
                   "mn": "ADBE Vector Graphic - Stroke",
                   "hd": false
                 },
@@ -336,10 +336,10 @@
                     "k": 0,
                     "ix": 5
                   },
-                  "nm": "变换"
+                  "nm": "Transform"
                 }
               ],
-              "nm": "矩形备份 12",
+              "nm": "Rectangle Backup 12",
               "np": 2,
               "cix": 2,
               "bm": 0,
@@ -357,7 +357,7 @@
           "ddd": 0,
           "ind": 3,
           "ty": 4,
-          "nm": "矩形备份 10",
+          "nm": "Rectangle Backup 10",
           "sr": 1,
           "ks": {
             "o": {
@@ -427,7 +427,7 @@
                     "k": 0,
                     "ix": 4
                   },
-                  "nm": "矩形路径 1",
+                  "nm": "Rectangle Path 1",
                   "mn": "ADBE Vector Shape - Rect",
                   "hd": false
                 },
@@ -457,7 +457,7 @@
                   "lj": 1,
                   "ml": 4,
                   "bm": 0,
-                  "nm": "描边 1",
+                  "nm": "Stroke 1",
                   "mn": "ADBE Vector Graphic - Stroke",
                   "hd": false
                 },
@@ -507,10 +507,10 @@
                     "k": 0,
                     "ix": 5
                   },
-                  "nm": "变换"
+                  "nm": "Transform"
                 }
               ],
-              "nm": "矩形备份 10",
+              "nm": "Rectangle Backup 10",
               "np": 2,
               "cix": 2,
               "bm": 0,
@@ -528,7 +528,7 @@
           "ddd": 0,
           "ind": 4,
           "ty": 4,
-          "nm": "矩形",
+          "nm": "[ANIMATION_ELEMENT]",
           "sr": 1,
           "ks": {
             "o": {
@@ -598,7 +598,7 @@
                     "k": 0,
                     "ix": 4
                   },
-                  "nm": "矩形路径 1",
+                  "nm": "Rectangle Path 1",
                   "mn": "ADBE Vector Shape - Rect",
                   "hd": false
                 },
@@ -628,7 +628,7 @@
                   "lj": 1,
                   "ml": 4,
                   "bm": 0,
-                  "nm": "描边 1",
+                  "nm": "Stroke 1",
                   "mn": "ADBE Vector Graphic - Stroke",
                   "hd": false
                 },
@@ -678,10 +678,10 @@
                     "k": 0,
                     "ix": 5
                   },
-                  "nm": "变换"
+                  "nm": "Transform"
                 }
               ],
-              "nm": "矩形",
+              "nm": "[ANIMATION_ELEMENT]",
               "np": 2,
               "cix": 2,
               "bm": 0,
@@ -699,7 +699,7 @@
           "ddd": 0,
           "ind": 6,
           "ty": 4,
-          "nm": "矩形备份 37",
+          "nm": "Rectangle Backup 37",
           "sr": 1,
           "ks": {
             "o": {
@@ -769,7 +769,7 @@
                     "k": 43.39,
                     "ix": 4
                   },
-                  "nm": "矩形路径 1",
+                  "nm": "Rectangle Path 1",
                   "mn": "ADBE Vector Shape - Rect",
                   "hd": false
                 },
@@ -799,7 +799,7 @@
                   "lj": 1,
                   "ml": 4,
                   "bm": 0,
-                  "nm": "描边 1",
+                  "nm": "Stroke 1",
                   "mn": "ADBE Vector Graphic - Stroke",
                   "hd": false
                 },
@@ -849,10 +849,10 @@
                     "k": 0,
                     "ix": 5
                   },
-                  "nm": "变换"
+                  "nm": "Transform"
                 }
               ],
-              "nm": "矩形备份 37",
+              "nm": "Rectangle Backup 37",
               "np": 2,
               "cix": 2,
               "bm": 0,
@@ -870,7 +870,7 @@
           "ddd": 0,
           "ind": 7,
           "ty": 4,
-          "nm": "矩形",
+          "nm": "[ANIMATION_ELEMENT]",
           "sr": 1,
           "ks": {
             "o": {
@@ -940,7 +940,7 @@
                     "k": 50.621,
                     "ix": 4
                   },
-                  "nm": "矩形路径 1",
+                  "nm": "Rectangle Path 1",
                   "mn": "ADBE Vector Shape - Rect",
                   "hd": false
                 },
@@ -970,7 +970,7 @@
                   "lj": 1,
                   "ml": 4,
                   "bm": 0,
-                  "nm": "描边 1",
+                  "nm": "Stroke 1",
                   "mn": "ADBE Vector Graphic - Stroke",
                   "hd": false
                 },
@@ -993,7 +993,7 @@
                   },
                   "r": 1,
                   "bm": 0,
-                  "nm": "填充 1",
+                  "nm": "Fill 1",
                   "mn": "ADBE Vector Graphic - Fill",
                   "hd": false
                 },
@@ -1043,10 +1043,10 @@
                     "k": 0,
                     "ix": 5
                   },
-                  "nm": "变换"
+                  "nm": "Transform"
                 }
               ],
-              "nm": "矩形",
+              "nm": "[ANIMATION_ELEMENT]",
               "np": 3,
               "cix": 2,
               "bm": 0,
@@ -1068,7 +1068,7 @@
       "ddd": 0,
       "ind": 1,
       "ty": 4,
-      "nm": "矩形",
+      "nm": "[ANIMATION_ELEMENT]",
       "sr": 1,
       "ks": {
         "o": {
@@ -1179,7 +1179,7 @@
                 },
                 "ix": 2
               },
-              "nm": "路径 1",
+              "nm": "Path 1",
               "mn": "ADBE Vector Shape - Group",
               "hd": false
             },
@@ -1209,7 +1209,7 @@
               "lj": 1,
               "ml": 4,
               "bm": 0,
-              "nm": "描边 1",
+              "nm": "Stroke 1",
               "mn": "ADBE Vector Graphic - Stroke",
               "hd": false
             },
@@ -1259,10 +1259,10 @@
                 "k": 0,
                 "ix": 5
               },
-              "nm": "变换"
+              "nm": "Transform"
             }
           ],
-          "nm": "矩形",
+          "nm": "[ANIMATION_ELEMENT]",
           "np": 2,
           "cix": 2,
           "bm": 0,
@@ -1280,7 +1280,7 @@
       "ddd": 0,
       "ind": 2,
       "ty": 4,
-      "nm": "形状图层 2",
+      "nm": "[ANIMATION_ELEMENT] 2",
       "sr": 1,
       "ks": {
         "o": {
@@ -1379,7 +1379,7 @@
                 "k": 40,
                 "ix": 4
               },
-              "nm": "矩形路径 1",
+              "nm": "Rectangle Path 1",
               "mn": "ADBE Vector Shape - Rect",
               "hd": false
             },
@@ -1480,10 +1480,10 @@
                 "k": 0,
                 "ix": 5
               },
-              "nm": "变换"
+              "nm": "Transform"
             }
           ],
-          "nm": "矩形 1",
+          "nm": "[ANIMATION_ELEMENT] 1",
           "np": 3,
           "cix": 2,
           "bm": 0,
@@ -1501,7 +1501,7 @@
       "ddd": 0,
       "ind": 4,
       "ty": 4,
-      "nm": "形状图层 1",
+      "nm": "[ANIMATION_ELEMENT] 1",
       "sr": 1,
       "ks": {
         "o": {
@@ -1641,7 +1641,7 @@
       "ef": [
         {
           "ty": 29,
-          "nm": "高斯模糊",
+          "nm": "[ANIMATION_ELEMENT]",
           "np": 5,
           "mn": "ADBE Gaussian Blur 2",
           "ix": 1,
@@ -1649,7 +1649,7 @@
           "ef": [
             {
               "ty": 0,
-              "nm": "模糊度",
+              "nm": "[ANIMATION_ELEMENT]",
               "mn": "ADBE Gaussian Blur 2-0001",
               "ix": 1,
               "v": {
@@ -1660,7 +1660,7 @@
             },
             {
               "ty": 7,
-              "nm": "模糊方向",
+              "nm": "[ANIMATION_ELEMENT]",
               "mn": "ADBE Gaussian Blur 2-0002",
               "ix": 2,
               "v": {
@@ -1671,7 +1671,7 @@
             },
             {
               "ty": 7,
-              "nm": "重复边缘像素",
+              "nm": "[ANIMATION_ELEMENT]",
               "mn": "ADBE Gaussian Blur 2-0003",
               "ix": 3,
               "v": {
@@ -1749,7 +1749,7 @@
             },
             "ix": 2
           },
-          "nm": "路径 1",
+          "nm": "Path 1",
           "mn": "ADBE Vector Shape - Group",
           "hd": false
         },
@@ -1814,7 +1814,7 @@
       "ddd": 0,
       "ind": 5,
       "ty": 0,
-      "nm": "手机",
+      "nm": "[ANIMATION_ELEMENT]",
       "refId": "comp_0",
       "sr": 1,
       "ks": {
@@ -1868,7 +1868,7 @@
       "ddd": 0,
       "ind": 6,
       "ty": 4,
-      "nm": "形状结合",
+      "nm": "[ANIMATION_ELEMENT]",
       "sr": 1,
       "ks": {
         "o": {
@@ -2050,13 +2050,13 @@
                 },
                 "ix": 2
               },
-              "nm": "路径 1",
+              "nm": "Path 1",
               "mn": "ADBE Vector Shape - Group",
               "hd": false
             },
             {
               "ty": "rd",
-              "nm": "圆角 1",
+              "nm": "[ANIMATION_ELEMENT] 1",
               "r": {
                 "a": 0,
                 "k": 5,
@@ -2092,7 +2092,7 @@
               "lj": 1,
               "ml": 4,
               "bm": 0,
-              "nm": "描边 1",
+              "nm": "Stroke 1",
               "mn": "ADBE Vector Graphic - Stroke",
               "hd": false
             },
@@ -2142,10 +2142,10 @@
                 "k": 0,
                 "ix": 5
               },
-              "nm": "变换"
+              "nm": "Transform"
             }
           ],
-          "nm": "形状 2",
+          "nm": "[ANIMATION_ELEMENT] 2",
           "np": 4,
           "cix": 2,
           "bm": 0,
@@ -2209,13 +2209,13 @@
                 },
                 "ix": 2
               },
-              "nm": "路径 1",
+              "nm": "Path 1",
               "mn": "ADBE Vector Shape - Group",
               "hd": false
             },
             {
               "ty": "rd",
-              "nm": "圆角 1",
+              "nm": "[ANIMATION_ELEMENT] 1",
               "r": {
                 "a": 0,
                 "k": 5,
@@ -2251,7 +2251,7 @@
               "lj": 1,
               "ml": 4,
               "bm": 0,
-              "nm": "描边 1",
+              "nm": "Stroke 1",
               "mn": "ADBE Vector Graphic - Stroke",
               "hd": false
             },
@@ -2301,10 +2301,10 @@
                 "k": 0,
                 "ix": 5
               },
-              "nm": "变换"
+              "nm": "Transform"
             }
           ],
-          "nm": "形状 1",
+          "nm": "[ANIMATION_ELEMENT] 1",
           "np": 4,
           "cix": 2,
           "bm": 0,
@@ -2824,7 +2824,7 @@
                 },
                 "ix": 2
               },
-              "nm": "路径 2",
+              "nm": "Path 2",
               "mn": "ADBE Vector Shape - Group",
               "hd": false
             },
@@ -3049,7 +3049,7 @@
                 },
                 "ix": 2
               },
-              "nm": "路径 3",
+              "nm": "Path 3",
               "mn": "ADBE Vector Shape - Group",
               "hd": false
             },
@@ -3262,7 +3262,7 @@
                 },
                 "ix": 2
               },
-              "nm": "路径 5",
+              "nm": "Path 5",
               "mn": "ADBE Vector Shape - Group",
               "hd": false
             },
@@ -3487,7 +3487,7 @@
                 },
                 "ix": 2
               },
-              "nm": "路径 6",
+              "nm": "Path 6",
               "mn": "ADBE Vector Shape - Group",
               "hd": false
             },
@@ -3592,7 +3592,7 @@
                 },
                 "ix": 2
               },
-              "nm": "路径 7",
+              "nm": "Path 7",
               "mn": "ADBE Vector Shape - Group",
               "hd": false
             },
@@ -3721,14 +3721,14 @@
                 },
                 "ix": 2
               },
-              "nm": "路径 8",
+              "nm": "Path 8",
               "mn": "ADBE Vector Shape - Group",
               "hd": false
             },
             {
               "ty": "mm",
               "mm": 1,
-              "nm": "合并路径 2",
+              "nm": "[ANIMATION_ELEMENT]Path 2",
               "mn": "ADBE Vector Filter - Merge",
               "hd": false
             },
@@ -3857,14 +3857,14 @@
                 },
                 "ix": 2
               },
-              "nm": "路径 1",
+              "nm": "Path 1",
               "mn": "ADBE Vector Shape - Group",
               "hd": false
             },
             {
               "ty": "mm",
               "mm": 3,
-              "nm": "合并路径 1",
+              "nm": "[ANIMATION_ELEMENT]Path 1",
               "mn": "ADBE Vector Filter - Merge",
               "hd": false
             },
@@ -3887,7 +3887,7 @@
               },
               "r": 1,
               "bm": 0,
-              "nm": "填充 1",
+              "nm": "Fill 1",
               "mn": "ADBE Vector Graphic - Fill",
               "hd": false
             },
@@ -3937,10 +3937,10 @@
                 "k": 0,
                 "ix": 5
               },
-              "nm": "变换"
+              "nm": "Transform"
             }
           ],
-          "nm": "形状结合",
+          "nm": "[ANIMATION_ELEMENT]",
           "np": 11,
           "cix": 2,
           "bm": 0,
@@ -3958,7 +3958,7 @@
       "ddd": 0,
       "ind": 7,
       "ty": 4,
-      "nm": "箭头",
+      "nm": "[ANIMATION_ELEMENT]",
       "sr": 1,
       "ks": {
         "o": {
@@ -4373,7 +4373,7 @@
                 },
                 "ix": 2
               },
-              "nm": "路径 1",
+              "nm": "Path 1",
               "mn": "ADBE Vector Shape - Group",
               "hd": false
             },
@@ -4403,7 +4403,7 @@
               "lj": 1,
               "ml": 4,
               "bm": 0,
-              "nm": "描边 1",
+              "nm": "Stroke 1",
               "mn": "ADBE Vector Graphic - Stroke",
               "hd": false
             },
@@ -4453,10 +4453,10 @@
                 "k": 0,
                 "ix": 5
               },
-              "nm": "变换"
+              "nm": "Transform"
             }
           ],
-          "nm": "矩形",
+          "nm": "[ANIMATION_ELEMENT]",
           "np": 2,
           "cix": 2,
           "bm": 0,

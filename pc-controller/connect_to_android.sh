@@ -7,7 +7,7 @@ PORT=8080
 DURATION=30
 
 
-while [[ $
+while [[ $# -gt 0 ]]; do
     case $1 in
         -h|--help)
             echo "Usage: $0 <android_ip> [--port PORT] [--duration SECONDS]"

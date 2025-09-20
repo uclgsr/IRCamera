@@ -1,10 +1,10 @@
 # IRCamera Developer Guide
 
-## 📋 Overview
+## Overview
 
 This guide provides comprehensive development instructions for the IRCamera Multi-Modal Thermal Sensing Platform. It consolidates setup procedures, development workflows, and troubleshooting information for contributors and maintainers.
 
-## 🏗️ System Architecture
+## System Architecture
 
 ### Hub-and-Spoke Model
 
@@ -19,30 +19,33 @@ This guide provides comprehensive development instructions for the IRCamera Mult
 
 ```
 IRCamera/
-├── app/                           # Main Android application
-│   └── src/main/java/mpdc4gsr/   # Android application code
-├── pc-controller/                 # Python PC Hub implementation
-│   ├── src/ircamera_pc/          # Main application package
-│   ├── demo_mvp_components.py    # Component demonstration
-│   ├── run_mvp_app.py            # Application launcher
-│   └── requirements.txt          # Python dependencies
-├── component/                     # Feature components
-│   ├── thermal-ir/               # Thermal imaging component
-│   ├── gsr-recording/            # GSR sensor component
-│   ├── pseudo/                   # Simulation components
-│   └── ...                       # Other sensor components
-├── libir/                        # Core IR processing library
-├── lib*/                         # Support libraries
-│   ├── libapp/                   # Application framework
-│   ├── libcom/                   # Communication library
-│   ├── libui/                    # User interface components
-│   └── ...                       # Other libraries
-├── docs/                         # **Consolidated Documentation**
-├── scripts/                      # Build and utility scripts
-└── .github/                      # CI/CD and GitHub configurations
++-- app/                           # Main Android application
+    +-- src/main/java/mpdc4gsr/   # Android application code
++-- pc-controller/                 # Python PC Hub implementation
+    +-- src/ircamera_pc/          # Main application package
+    +-- demo_mvp_components.py    # Component demonstration
+    +-- run_mvp_app.py            # Application launcher
+    +-- requirements.txt          # Python dependencies
++-- component/                     # Feature components
+    +-- thermal-ir/               # Thermal imaging component
+    +-- gsr-recording/            # GSR sensor component
+    +-- pseudo/                   # Simulation components
+    +-- ...                       # Other sensor components
++-- consolidated_libraries/        # Consolidated support libraries
+    +-- libcom/                   # Communication library
+    +-- libmatrix/               # Matrix operations library
+    +-- libmenu/                 # Menu components library
++-- libapp/                       # Application framework library
++-- libir/                        # Core IR processing library  
++-- libui/                        # User interface components library
++-- BleModule/                    # Bluetooth Low Energy module
++-- RangeSeekBar/                 # UI range selector component
++-- docs/                         # **Consolidated Documentation**
++-- scripts/                      # Build and utility scripts
++-- .github/                      # CI/CD and GitHub configurations
 ```
 
-## 🚀 Development Environment Setup
+## Development Environment Setup
 
 ### Prerequisites
 
@@ -99,7 +102,7 @@ python demo_mvp_components.py
 python test_mvp_simple.py
 ```
 
-## 🛠️ Development Workflow
+## Development Workflow
 
 ### Using Development Tools
 
@@ -201,7 +204,7 @@ class DeviceManager:
 3. **Follow Project Conventions**: Leverage established architecture
 4. **Context-Aware Naming**: Use descriptive variable and method names
 
-## 🧪 Testing & Validation
+## Testing & Validation
 
 ### Automated Testing
 
@@ -269,7 +272,7 @@ python3 --version
 pip list | grep PyQt6
 ```
 
-## 📊 Code Quality & Standards
+## Code Quality & Standards
 
 ### Linting Configuration
 
@@ -310,7 +313,7 @@ flake8 pc-controller/src/
 - **Documentation**: Comprehensive docstrings for public APIs
 - **Error Handling**: Robust exception handling and logging
 
-## 🔧 Advanced Development Topics
+## Advanced Development Topics
 
 ### Native Backend Integration (PC Controller)
 
@@ -381,7 +384,7 @@ To add new command types:
 - **Memory Efficiency**: Efficient data structure usage
 - **Network Optimization**: Optimized TCP communication
 
-## 🐛 Known Issues & Workarounds
+## Known Issues & Workarounds
 
 ### Critical Issues
 
@@ -451,7 +454,7 @@ print('✅ Core modules load successfully')
 "
 ```
 
-## 🚀 Deployment & Distribution
+## Deployment & Distribution
 
 ### Android APK Generation
 **Current Status**: Not available due to build issues
@@ -489,7 +492,7 @@ COPY pc-controller/ .
 CMD ["python", "run_mvp_app.py"]
 ```
 
-## 📈 Performance Monitoring
+## Performance Monitoring
 
 ### Build Performance Tracking
 ```bash
@@ -516,7 +519,7 @@ print(f'CPU: {process.cpu_percent()}%')
 adb shell top -p $(adb shell pidof com.topdon.ircamera)
 ```
 
-## 🤝 Contributing Guidelines
+## Contributing Guidelines
 
 ### Code Contribution Workflow
 1. **Fork Repository**: Create personal fork on GitHub

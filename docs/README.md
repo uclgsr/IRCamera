@@ -1,12 +1,12 @@
 # IRCamera Multi-Modal Thermal Sensing Platform - Documentation Hub
 
-[![Copilot](https://github.com/buccancs/IRCamera/actions/workflows/copilot.yml/badge.svg?branch=dev)](https://github.com/buccancs/IRCamera/actions/workflows/copilot.yml)
+[![Copilot](https://github.com/uclgsr/IRCamera/actions/workflows/copilot.yml/badge.svg?branch=dev)](https://github.com/uclgsr/IRCamera/actions/workflows/copilot.yml)
 
-## 📋 Documentation Overview
+## Documentation Overview
 
 This is the central documentation hub for the IRCamera Multi-Modal Thermal Sensing Platform. All documentation has been consolidated and organized for easy navigation and maintenance.
 
-## 🏗️ System Architecture
+## System Architecture
 
 **IRCamera** implements a **Hub-and-Spoke architecture** for distributed multi-modal physiological sensing:
 
@@ -23,7 +23,7 @@ This is the central documentation hub for the IRCamera Multi-Modal Thermal Sensi
 - **Real-Time Communication**: TCP/JSON protocol with automatic device discovery
 - **Professional GUI**: Comprehensive PyQt6 interface for researchers
 
-## 📚 Documentation Structure
+## Documentation Structure
 
 ### Quick Start Guides
 
@@ -31,7 +31,6 @@ This is the central documentation hub for the IRCamera Multi-Modal Thermal Sensi
 |----------|---------|----------|
 | **[User Guide](USER_GUIDE.md)** | End-user instructions for operating the system | Researchers, Operators |
 | **[Developer Guide](DEVELOPER_GUIDE.md)** | Development setup and procedures | Developers, Contributors |
-| **[Installation Guide](INSTALLATION_GUIDE.md)** | System setup and configuration | All Users |
 
 ### Technical Documentation
 
@@ -39,17 +38,15 @@ This is the central documentation hub for the IRCamera Multi-Modal Thermal Sensi
 |----------|---------|----------|
 | **[API Reference](API_REFERENCE.md)** | Complete module and API documentation | Developers |
 | **[Architecture Guide](ARCHITECTURE.md)** | System architecture and design decisions | Technical Users |
-| **[Build Guide](BUILD_GUIDE.md)** | Build system and CI/CD documentation | Developers |
 
 ### Specialized Topics
 
 | Document | Purpose | Audience |
 |----------|---------|----------|
-| **[Hardware Integration](HARDWARE_INTEGRATION.md)** | Device integration and testing | Hardware Engineers |
-| **[Network Protocol](NETWORK_PROTOCOL.md)** | Communication protocol specification | Integration Developers |
-| **[Data Management](DATA_MANAGEMENT.md)** | Data formats and processing pipelines | Data Scientists |
+| **[Samsung Stage3 RAW DNG](SAMSUNG_STAGE3_RAW_DNG.md)** | Advanced RAW capture documentation | Camera Developers |
+| **[Stage3 Integration Guide](INTEGRATION_GUIDE_STAGE3.md)** | Developer integration guide | System Integrators |
 
-## 🚀 Quick Start
+## Quick Start
 
 ### For End Users (Researchers)
 1. Read the **[User Guide](USER_GUIDE.md)** for operating instructions
@@ -67,7 +64,7 @@ This is the central documentation hub for the IRCamera Multi-Modal Thermal Sensi
 - See the **[Developer Guide](DEVELOPER_GUIDE.md)** for Copilot-specific setup instructions
 - Project-aware context helps Copilot understand the Hub-and-Spoke architecture
 
-## 🔧 Development Tools
+## Development Tools
 
 The repository includes comprehensive development tools accessible via:
 
@@ -82,25 +79,29 @@ The repository includes comprehensive development tools accessible via:
 ./dev.sh diagram        # Generate architecture diagrams
 ```
 
-## 📁 Repository Structure
+## Repository Structure
 
 ```
 IRCamera/
-├── app/                    # Main Android application
-├── pc-controller/          # Python PC Hub application  
-├── component/             # Feature components (thermal, GSR, etc.)
-├── libir/                 # Core IR processing library
-├── lib*/                  # Support libraries (libapp, libcom, libui, etc.)
-├── docs/                  # **THIS DOCUMENTATION HUB**
-├── scripts/               # Build and utility scripts
-├── .github/               # CI/CD workflows and configurations
-└── README.md              # Project overview and quick start
++-- app/                    # Main Android application
++-- pc-controller/          # Python PC Hub application  
++-- component/             # Feature components (thermal, GSR, etc.)
++-- consolidated_libraries/ # Consolidated support libraries (libcom, libmatrix, libmenu)
++-- libapp/                # Application framework library
++-- libir/                 # Core IR processing library
++-- libui/                 # User interface components library
++-- BleModule/             # Bluetooth Low Energy module
++-- RangeSeekBar/          # UI range selector component
++-- docs/                  # **THIS DOCUMENTATION HUB**
++-- scripts/               # Build and utility scripts
++-- .github/               # CI/CD workflows and configurations
++-- README.md              # Project overview and quick start
 ```
 
-## 🆘 Support & Troubleshooting
+## Support & Troubleshooting
 
 ### Common Issues
-- **Build Failures**: See [Build Guide](BUILD_GUIDE.md#troubleshooting)
+- **Build Failures**: See [Developer Guide - Known Issues & Workarounds](DEVELOPER_GUIDE.md#known-issues-workarounds)
 - **Device Connection**: See [Hardware Integration](HARDWARE_INTEGRATION.md#troubleshooting)  
 - **PC Controller Issues**: See [User Guide](USER_GUIDE.md#troubleshooting)
 
@@ -110,14 +111,14 @@ IRCamera/
 3. Use the development tools: `./dev.sh help`
 4. For new issues, provide detailed error logs and system information
 
-## 📄 Project Status
+## Project Status
 
 - **Android Build**: Currently fails due to missing ShimmerDevice class - see [Developer Guide](DEVELOPER_GUIDE.md#known-issues)
 - **PC Controller**: Fully functional MVP implementation - see [User Guide](USER_GUIDE.md)
 - **Integration**: Hub-and-Spoke testing requires working Android APK
-- **Documentation**: ✅ **Fully Consolidated** (this effort)
+- **Documentation**: [DONE] **Fully Consolidated** (this effort)
 
-## 🤝 Contributing
+## Contributing
 
 Please refer to the **[Developer Guide](DEVELOPER_GUIDE.md)** for:
 - Development environment setup

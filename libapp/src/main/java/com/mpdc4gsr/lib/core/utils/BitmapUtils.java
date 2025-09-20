@@ -263,7 +263,7 @@ public class BitmapUtils {
         paint.setDither(true);
         paint.setFilterBitmap(true);
         Rect rectText = new Rect();  
-        paint.getTextBounds("占位高度文本", 0, "占位高度文本".length(), rectText);
+        paint.getTextBounds("Placeholder Height Text", 0, "Placeholder Height Text".length(), rectText);
         double beginX = SizeUtils.dp2px(10);  
         double beginY = bmp.getHeight() - SizeUtils.dp2px(10);
         if (!TextUtils.isEmpty(time)) {

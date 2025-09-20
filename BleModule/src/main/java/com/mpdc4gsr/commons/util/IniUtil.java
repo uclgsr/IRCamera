@@ -89,7 +89,7 @@ public class IniUtil {
     public static String getVersion(String path, String name) {
         File file = new File(path + "/Diag.ini");
         if (!file.exists()) {
-            LLog.e("bcf", name + "  ini不存在：" + file.getPath());
+            LLog.e("bcf", name + "  iniDoes Not Exist：" + file.getPath());
             return "INI_LOST";
         }
         Config cfg = new Config();
@@ -136,7 +136,7 @@ public class IniUtil {
         HashMap<String, String> hashMap = new HashMap<>();
         File file = new File(path + "/Diag.ini");
         if (!file.exists()) {
-            LLog.e("bcf", name + "  ini不存在：" + file.getPath());
+            LLog.e("bcf", name + "  iniDoes Not Exist：" + file.getPath());
             return hashMap;
         }
         Config cfg = new Config();
@@ -288,7 +288,7 @@ public class IniUtil {
         HashMap<String, String> hashMap = new HashMap<>();
         File file = new File(path + "/Diag.ini");
         if (!file.exists()) {
-            LLog.e("bcf", name + "  ini不存在：" + file.getPath());
+            LLog.e("bcf", name + "  iniDoes Not Exist：" + file.getPath());
             return hashMap;
         }
         Config cfg = new Config();

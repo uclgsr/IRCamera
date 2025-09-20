@@ -32,7 +32,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/lms_load_view"
-        tools:text="这是提示文字"
+        tools:text="This is prompt text"
         tools:visibility="visible" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

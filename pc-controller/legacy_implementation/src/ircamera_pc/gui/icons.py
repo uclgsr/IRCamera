@@ -6,9 +6,7 @@ from typing import Any, Dict, List
 
 
 class IconRegistry:
-    
 
-    
     ICONS = {
         "settings": {
             "name": "Settings Gear",
@@ -46,37 +44,36 @@ class IconRegistry:
 
     @classmethod
     def get_icon_info(cls, icon_name: str) -> Dict[str, Any]:
-        
+
         return cls.ICONS.get(icon_name, {})
 
     @classmethod
     def list_available_icons(cls) -> Dict[str, str]:
-        
+
         return {name: str(info["description"]) for name, info in cls.ICONS.items()}
 
     @classmethod
     def get_android_resource_path(cls, icon_name: str) -> str:
-        
+
         icon_info = cls.ICONS.get(icon_name, {})
         return str(icon_info.get("android_path", ""))
 
     @classmethod
     def get_icon_use_cases(cls, icon_name: str) -> List[str]:
-        
+
         icon_info = cls.ICONS.get(icon_name, {})
         use_cases = icon_info.get("use_cases", [])
         return [str(case) for case in use_cases] if use_cases else []
 
 
 def get_project_icon_path(icon_name: str) -> Path:
-    
+
     android_path = IconRegistry.get_android_resource_path(icon_name)
     if android_path:
-        
+
         project_root = Path(__file__).parent.parent.parent.parent
         return project_root / android_path
     return Path()
-
 
 
 ICON_USAGE_GUIDE = """
@@ -116,7 +113,7 @@ compatibility, based on the visual design of the Android SVG resources.
 """
 
 if __name__ == "__main__":
-    
+
     print("IRCamera Icon Registry")
     print("====================")
 

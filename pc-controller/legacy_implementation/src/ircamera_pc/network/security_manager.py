@@ -3,16 +3,12 @@
 import asyncio
 import hashlib
 import hmac
-import json
 import logging
 import secrets
-import ssl
 import time
 from cryptography import x509
-from cryptography.hazmat.primitives import hashes, serialization
-from cryptography.hazmat.primitives.asymmetric import rsa
-from dataclasses import asdict, dataclass
-from datetime import datetime, timedelta
+from dataclasses import dataclass
+from datetime import datetime
 from enum import Enum
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Set, Tuple
@@ -31,7 +27,6 @@ MONITORING_INTERVAL_SECONDS = 30
 
 
 class AuthLevel(Enum):
-    
 
     NONE = 0
     BASIC = 1
@@ -41,7 +36,6 @@ class AuthLevel(Enum):
 
 
 class DeviceRole(Enum):
-    
 
     GUEST = (0, {"view_status"})
     OBSERVER = (1, {"view_status", "view_sessions", "download_data"})
@@ -78,7 +72,6 @@ class DeviceRole(Enum):
 
 
 class AlertSeverity(Enum):
-    
 
     LOW = 1
     MEDIUM = 2
@@ -88,7 +81,6 @@ class AlertSeverity(Enum):
 
 @dataclass
 class AuthenticationContext:
-    
 
     device_id: str
     auth_level: AuthLevel
@@ -119,7 +111,6 @@ class AuthenticationContext:
 
 @dataclass
 class SecurityAlert:
-    
 
     id: str
     alert_type: str
@@ -144,18 +135,15 @@ class SecurityAlert:
 
 
 class AdvancedAuthenticationManager:
-    
 
     def __init__(self, cert_dir: Optional[Path] = None):
         self.cert_dir = cert_dir or Path("certificates")
         self.cert_dir.mkdir(exist_ok=True)
 
-        
         self.authenticated_devices: Dict[str, AuthenticationContext] = {}
         self.failed_attempts: Dict[str, List[float]] = {}
-        self.locked_devices: Dict[str, float] = {}  
+        self.locked_devices: Dict[str, float] = {}
 
-        
         self.advanced_credentials = {
             "admin": "admin",
             "researcher": "research2024!",
@@ -163,7 +151,6 @@ class AdvancedAuthenticationManager:
             "observer": "view_only_123",
         }
 
-        
         self.session_tokens: Dict[str, AuthenticationContext] = {}
 
         logger.info("Advanced authentication manager initialized")
@@ -171,14 +158,12 @@ class AdvancedAuthenticationManager:
     async def authenticate(
             self, device_id: str, auth_level: AuthLevel, credentials: Dict[str, Any]
     ) -> Tuple[bool, Optional[AuthenticationContext], str]:
-        
 
-        
         if self._is_device_locked(device_id):
             return False, None, "device_locked"
 
         try:
-            
+
             if auth_level == AuthLevel.BASIC:
                 success = await self._authenticate_basic(credentials)
             elif auth_level == AuthLevel.CERTIFICATE:
@@ -191,14 +176,13 @@ class AdvancedAuthenticationManager:
                 success = False
 
             if success:
-                
+
                 context = await self._create_auth_context(
                     device_id, auth_level, credentials
                 )
                 self.authenticated_devices[device_id] = context
                 self.session_tokens[context.session_token] = context
 
-                
                 self.failed_attempts.pop(device_id, None)
                 self.locked_devices.pop(device_id, None)
 
@@ -207,7 +191,7 @@ class AdvancedAuthenticationManager:
                 )
                 return True, context, "success"
             else:
-                
+
                 await self._handle_auth_failure(device_id)
                 return False, None, "invalid_credentials"
 
@@ -216,7 +200,7 @@ class AdvancedAuthenticationManager:
             return False, None, "authentication_error"
 
     async def _authenticate_basic(self, credentials: Dict[str, Any]) -> bool:
-        
+
         username = credentials.get("username", "")
         password = credentials.get("password", "")
 
@@ -228,7 +212,7 @@ class AdvancedAuthenticationManager:
     async def _authenticate_certificate(
             self, device_id: str, credentials: Dict[str, Any]
     ) -> bool:
-        
+
         cert_data = credentials.get("certificate")
         signature = credentials.get("signature")
         challenge = credentials.get("challenge")
@@ -237,15 +221,13 @@ class AdvancedAuthenticationManager:
             return False
 
         try:
-            
+
             certificate = x509.load_pem_x509_certificate(cert_data.encode())
 
-            
             now = datetime.utcnow()
             if now < certificate.not_valid_before or now > certificate.not_valid_after:
                 return False
 
-            
             return True  # Placeholder for certificate validation
 
         except Exception as e:
@@ -255,7 +237,7 @@ class AdvancedAuthenticationManager:
     async def _authenticate_token(
             self, device_id: str, credentials: Dict[str, Any]
     ) -> bool:
-        
+
         token = credentials.get("token")
         timestamp = credentials.get("timestamp")
         hmac_signature = credentials.get("hmac")
@@ -263,18 +245,16 @@ class AdvancedAuthenticationManager:
         if not all([token, timestamp, hmac_signature]):
             return False
 
-        
         if time.time() - timestamp > TOKEN_VALIDITY_HOURS * 3600:
             return False
 
-        
         expected_hmac = self._generate_hmac(device_id, token, timestamp)
         return hmac.compare_digest(expected_hmac, hmac_signature)
 
     async def _authenticate_biometric(
             self, device_id: str, credentials: Dict[str, Any]
     ) -> bool:
-        
+
         hardware_key = credentials.get("hardware_key")
         biometric_signature = credentials.get("biometric_signature")
 
@@ -282,22 +262,18 @@ class AdvancedAuthenticationManager:
             return False
 
         # Placeholder for hardware key verification
-        
+
         return True
 
     async def _create_auth_context(
             self, device_id: str, auth_level: AuthLevel, credentials: Dict[str, Any]
     ) -> AuthenticationContext:
-        
 
-        
         device_type = credentials.get("device_type", "unknown")
         role = self._determine_role(device_type, auth_level, credentials)
 
-        
         session_token = self._generate_session_token(device_id, role)
 
-        
         expiry_time = time.time() + (TOKEN_VALIDITY_HOURS * 3600)
 
         return AuthenticationContext(
@@ -312,9 +288,7 @@ class AdvancedAuthenticationManager:
     def _determine_role(
             self, device_type: str, auth_level: AuthLevel, credentials: Dict[str, Any]
     ) -> DeviceRole:
-        
 
-        
         if device_type == "PC_CONTROLLER":
             return DeviceRole.ADMINISTRATOR
         elif device_type == "ANDROID_PHONE":
@@ -330,27 +304,25 @@ class AdvancedAuthenticationManager:
             return DeviceRole.GUEST
 
     def _generate_session_token(self, device_id: str, role: DeviceRole) -> str:
-        
+
         token_data = f"{device_id}:{role.name}:{time.time()}:{secrets.token_hex(16)}"
         return hashlib.sha256(token_data.encode()).hexdigest()
 
     def _generate_hmac(self, device_id: str, token: str, timestamp: float) -> str:
-        
+
         key = f"hmac_key_{device_id}".encode()
         message = f"{device_id}:{token}:{timestamp}".encode()
         return hmac.new(key, message, hashlib.sha256).hexdigest()
 
     async def _handle_auth_failure(self, device_id: str):
-        
+
         current_time = time.time()
 
-        
         if device_id not in self.failed_attempts:
             self.failed_attempts[device_id] = []
 
         self.failed_attempts[device_id].append(current_time)
 
-        
         cutoff_time = current_time - 3600
         self.failed_attempts[device_id] = [
             attempt
@@ -358,7 +330,6 @@ class AdvancedAuthenticationManager:
             if attempt > cutoff_time
         ]
 
-        
         if len(self.failed_attempts[device_id]) >= MAX_FAILED_ATTEMPTS:
             self.locked_devices[device_id] = current_time + (
                     LOCKOUT_DURATION_MINUTES * 60
@@ -368,33 +339,33 @@ class AdvancedAuthenticationManager:
             )
 
     def _is_device_locked(self, device_id: str) -> bool:
-        
+
         if device_id in self.locked_devices:
             if time.time() < self.locked_devices[device_id]:
                 return True
             else:
-                
+
                 del self.locked_devices[device_id]
         return False
 
     def validate_session_token(self, token: str) -> Optional[AuthenticationContext]:
-        
+
         context = self.session_tokens.get(token)
         if context and context.is_valid():
             return context
         elif context:
-            
+
             self.session_tokens.pop(token, None)
             self.authenticated_devices.pop(context.device_id, None)
         return None
 
     def has_permission(self, token: str, permission: str) -> bool:
-        
+
         context = self.validate_session_token(token)
         return context and context.role.has_permission(permission)
 
     def logout_device(self, device_id: str) -> bool:
-        
+
         context = self.authenticated_devices.pop(device_id, None)
         if context:
             self.session_tokens.pop(context.session_token, None)
@@ -403,22 +374,22 @@ class AdvancedAuthenticationManager:
         return False
 
     def get_active_sessions(self) -> List[AuthenticationContext]:
-        
-        current_time = time.time()
+
+        time.time()
         active_sessions = []
 
         for context in list(self.authenticated_devices.values()):
             if context.is_valid():
                 active_sessions.append(context)
             else:
-                
+
                 self.authenticated_devices.pop(context.device_id, None)
                 self.session_tokens.pop(context.session_token, None)
 
         return active_sessions
 
     def get_diagnostics(self) -> Dict[str, Any]:
-        
+
         return {
             "active_sessions": len(self.get_active_sessions()),
             "locked_devices": len(
@@ -431,7 +402,6 @@ class AdvancedAuthenticationManager:
 
 
 class AdvancedSecurityMonitor:
-    
 
     def __init__(self):
         self.is_monitoring = False
@@ -439,7 +409,6 @@ class AdvancedSecurityMonitor:
         self.connection_attempts: Dict[str, List[float]] = {}
         self.suspicious_activities: Dict[str, int] = {}
 
-        
         self.total_connections = 0
         self.total_failed_logins = 0
         self.total_alerts = 0
@@ -447,24 +416,23 @@ class AdvancedSecurityMonitor:
         logger.info("Advanced security monitor initialized")
 
     async def start_monitoring(self) -> Any:
-        
+
         if self.is_monitoring:
             return
 
         self.is_monitoring = True
 
-        
         asyncio.create_task(self._monitoring_loop())
 
         logger.info("Security monitoring started")
 
     def stop_monitoring(self) -> Any:
-        
+
         self.is_monitoring = False
         logger.info("Security monitoring stopped")
 
     async def _monitoring_loop(self):
-        
+
         while self.is_monitoring:
             try:
                 await self._perform_security_check()
@@ -473,27 +441,24 @@ class AdvancedSecurityMonitor:
                 logger.error(f"Error in security monitoring loop: {e}")
 
     async def _perform_security_check(self):
-        
+
         current_time = time.time()
 
-        
         await self._check_brute_force_attacks()
 
-        
         await self._check_connection_patterns()
 
-        
         await self._cleanup_old_data(current_time)
 
     async def _check_brute_force_attacks(self):
-        
+
         current_time = time.time()
-        cutoff_time = current_time - 3600  
+        cutoff_time = current_time - 3600
 
         for device_id, attempts in self.connection_attempts.items():
             recent_attempts = [a for a in attempts if a > cutoff_time]
 
-            if len(recent_attempts) >= 10:  
+            if len(recent_attempts) >= 10:
                 await self._generate_alert(
                     "brute_force_attack",
                     AlertSeverity.HIGH,
@@ -503,14 +468,14 @@ class AdvancedSecurityMonitor:
                 )
 
     async def _check_connection_patterns(self):
-        
+
         current_time = time.time()
-        cutoff_time = current_time - 60  
+        cutoff_time = current_time - 60
 
         for device_id, attempts in self.connection_attempts.items():
             recent_attempts = [a for a in attempts if a > cutoff_time]
 
-            if len(recent_attempts) > 10:  
+            if len(recent_attempts) > 10:
                 await self._generate_alert(
                     "suspicious_connection",
                     AlertSeverity.MEDIUM,
@@ -520,10 +485,9 @@ class AdvancedSecurityMonitor:
                 )
 
     async def _cleanup_old_data(self, current_time: float):
-        
-        cutoff_time = current_time - (24 * 3600)  
 
-        
+        cutoff_time = current_time - (24 * 3600)
+
         for device_id in list(self.connection_attempts.keys()):
             self.connection_attempts[device_id] = [
                 a for a in self.connection_attempts[device_id] if a > cutoff_time
@@ -531,7 +495,6 @@ class AdvancedSecurityMonitor:
             if not self.connection_attempts[device_id]:
                 del self.connection_attempts[device_id]
 
-        
         self.security_alerts = [
             alert for alert in self.security_alerts if alert.timestamp > cutoff_time
         ]
@@ -539,7 +502,7 @@ class AdvancedSecurityMonitor:
     def report_connection_attempt(
             self, device_id: str, successful: bool, details: Optional[Dict[str, Any]] = None
     ) -> None:
-        
+
         current_time = time.time()
 
         if device_id not in self.connection_attempts:
@@ -563,7 +526,7 @@ class AdvancedSecurityMonitor:
             description: str,
             details: Dict[str, Any],
     ):
-        
+
         alert = SecurityAlert(
             id=f"ALERT_{int(time.time())}_{secrets.randbelow(1000)}",
             alert_type=alert_type,
@@ -577,7 +540,6 @@ class AdvancedSecurityMonitor:
         self.security_alerts.append(alert)
         self.total_alerts += 1
 
-        
         if len(self.security_alerts) > 1000:
             self.security_alerts = self.security_alerts[-1000:]
 
@@ -586,11 +548,11 @@ class AdvancedSecurityMonitor:
         )
 
     def get_security_alerts(self, limit: int = 100) -> List[Dict[str, Any]]:
-        
+
         return [alert.to_dict() for alert in self.security_alerts[-limit:]]
 
     def acknowledge_alert(self, alert_id: str) -> bool:
-        
+
         for alert in self.security_alerts:
             if alert.id == alert_id:
                 alert.acknowledged = True
@@ -599,7 +561,7 @@ class AdvancedSecurityMonitor:
         return False
 
     def get_monitoring_statistics(self) -> Dict[str, Any]:
-        
+
         return {
             "monitoring_active": self.is_monitoring,
             "total_connections": self.total_connections,
@@ -613,7 +575,6 @@ class AdvancedSecurityMonitor:
 
 
 class EnhancedSecurityManager:
-    
 
     def __init__(self, cert_dir: Optional[Path] = None):
         self.auth_manager = AdvancedAuthenticationManager(cert_dir)
@@ -622,21 +583,19 @@ class EnhancedSecurityManager:
         logger.info("Enhanced security manager initialized")
 
     async def initialize(self) -> Any:
-        
+
         await self.security_monitor.start_monitoring()
         logger.info("Enhanced security system fully initialized")
 
     def shutdown(self) -> Any:
-        
+
         self.security_monitor.stop_monitoring()
         logger.info("Enhanced security system shutdown complete")
 
     async def authenticate_device(
             self, device_id: str, auth_level: AuthLevel, credentials: Dict[str, Any]
     ) -> Tuple[bool, Optional[AuthenticationContext], str]:
-        
 
-        
         success, context, reason = await self.auth_manager.authenticate(
             device_id, auth_level, credentials
         )
@@ -648,15 +607,15 @@ class EnhancedSecurityManager:
         return success, context, reason
 
     def validate_session(self, token: str) -> Optional[AuthenticationContext]:
-        
+
         return self.auth_manager.validate_session_token(token)
 
     def check_permission(self, token: str, permission: str) -> bool:
-        
+
         return self.auth_manager.has_permission(token, permission)
 
     def get_comprehensive_diagnostics(self) -> Dict[str, Any]:
-        
+
         return {
             "authentication": self.auth_manager.get_diagnostics(),
             "monitoring": self.security_monitor.get_monitoring_statistics(),

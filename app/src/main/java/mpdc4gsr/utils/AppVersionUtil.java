@@ -63,7 +63,7 @@ public class AppVersionUtil {
         LMS.getInstance().checkAppUpdate(commonBean -> {
             if (commonBean.code == SUCCESS) {
                 AppInfoBean appInfoBean = LMS.getInstance().getUpdateAppInfoBean();
-                XLog.w("bcf", "app更新信息:" + GsonUtils.toJson(appInfoBean));
+                XLog.w("bcf", "appUpdate Information:" + GsonUtils.toJson(appInfoBean));
                 if (appInfoBean != null) {
                     if (appInfoBean.getVersionCode() > getDealVersionCode()) {
                         if (isShowDialog) {
@@ -228,7 +228,7 @@ public class AppVersionUtil {
             params.addBodyParameter(params2[0], params2[1]);
             params.addBodyParameter(params3[0], params3[1]);
         } catch (Exception e) {
-            XLog.e("bcf", "升级接口解析异常");
+            XLog.e("bcf", "Upgrade Interface Parse Error");
         }
         fileName = "mpdc4gsr" + System.currentTimeMillis() + ".zip";
         String path = mContext.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath() + File.separator + fileName;

@@ -42,13 +42,13 @@ public class MyMarkerView extends MarkerView {
             String thermalMaxStr = NumberTools.INSTANCE.to02(data.getThermalMax());
             String thermalMinStr = NumberTools.INSTANCE.to02(data.getThermalMin());
             if (index == 0) {
-                str.append("温度:").append(thermalStr);
+                str.append("[CHINESE_TEXT]:").append(thermalStr);
             } else if (index == 1) {
-                str.append("最高温度:").append(thermalMaxStr);
-                str.append(System.getProperty("line.separator")).append("最低温度:").append(thermalMinStr);
+                str.append("[CHINESE_TEXT]:").append(thermalMaxStr);
+                str.append(System.getProperty("line.separator")).append("[CHINESE_TEXT]:").append(thermalMinStr);
             } else {
-                str.append("最高温度:").append(thermalMaxStr);
-                str.append(System.getProperty("line.separator")).append("最低温度:").append(thermalMinStr);
+                str.append("[CHINESE_TEXT]:").append(thermalMaxStr);
+                str.append(System.getProperty("line.separator")).append("[CHINESE_TEXT]:").append(thermalMinStr);
             }
             tvContent.setText(str.toString());
             timeText.setText(TimeTool.INSTANCE.showTimeSecond(data.getCreateTime()));

@@ -35,9 +35,7 @@ from .widgets import (
 
 
 class MainWindow(QMainWindow):
-    
 
-    
     session_started = pyqtSignal(str)
     session_stopped = pyqtSignal(str)
     sync_flash_triggered = pyqtSignal()
@@ -54,15 +52,13 @@ class MainWindow(QMainWindow):
             wifi_manager=None,
             admin_privileges_manager=None,
     ):
-        
+
         super().__init__()
 
-        
         self.session_manager = session_manager
         self.websocket_server = websocket_server
         self.time_sync_service = time_sync_service
 
-        
         self.gsr_ingestor = gsr_ingestor
         self.file_transfer_manager = file_transfer_manager
         self.camera_calibrator = camera_calibrator
@@ -70,22 +66,18 @@ class MainWindow(QMainWindow):
         self.wifi_manager = wifi_manager
         self.admin_privileges_manager = admin_privileges_manager
 
-        
         self.device_list_widget: Optional[DeviceListWidget] = None
         self.session_control_widget: Optional[SessionControlWidget] = None
         self.status_display_widget: Optional[StatusDisplayWidget] = None
         self.log_display: Optional[QTextEdit] = None
 
-        
         self.sync_flash_btn: Optional[QPushButton] = None
         self.sync_mark_btn: Optional[QPushButton] = None
 
-        
         self.bluetooth_control_widget = None
         self.wifi_control_widget = None
         self.system_integration_widget = None
 
-        
         self._current_session_id: Optional[str] = None
         self._session_start_time: Optional[datetime] = None
         self._update_timer: Optional[QTimer] = None
@@ -99,50 +91,38 @@ class MainWindow(QMainWindow):
         logger.info("Main window initialized with system integration features")
 
     def _setup_ui(self) -> None:
-        
-        self.setWindowTitle("IRCamera PC Controller - System Integration")
-        self.setMinimumSize(1200, 800)  
 
-        
+        self.setWindowTitle("IRCamera PC Controller - System Integration")
+        self.setMinimumSize(1200, 800)
+
         central_widget = QWidget()
         self.setCentralWidget(central_widget)
 
-        
         main_layout = QHBoxLayout(central_widget)
 
-        
         splitter = QSplitter(Qt.Orientation.Horizontal)
         main_layout.addWidget(splitter)
 
-        
         left_pane = self._create_left_pane()
         splitter.addWidget(left_pane)
 
-        
         center_pane = self._create_center_pane()
         splitter.addWidget(center_pane)
 
-        
         right_pane = self._create_right_pane()
         splitter.addWidget(right_pane)
 
-        
-        splitter.setStretchFactor(0, 1)  
-        splitter.setStretchFactor(1, 1)  
-        splitter.setStretchFactor(2, 1)  
+        splitter.setStretchFactor(0, 1)
+        splitter.setStretchFactor(1, 1)
+        splitter.setStretchFactor(2, 1)
 
-        
         self._setup_status_bar()
 
-        
-        
-
     def _create_left_pane(self) -> QWidget:
-        
+
         pane = QWidget()
         layout = QVBoxLayout(pane)
 
-        
         device_group = QGroupBox("Connected Devices")
         device_layout = QVBoxLayout(device_group)
 
@@ -151,7 +131,6 @@ class MainWindow(QMainWindow):
 
         layout.addWidget(device_group)
 
-        
         session_group = QGroupBox("Session Control")
         session_layout = QVBoxLayout(session_group)
 
@@ -160,7 +139,6 @@ class MainWindow(QMainWindow):
 
         layout.addWidget(session_group)
 
-        
         sync_group = QGroupBox("Synchronization")
         sync_layout = QVBoxLayout(sync_group)
 
@@ -176,36 +154,31 @@ class MainWindow(QMainWindow):
 
         layout.addWidget(sync_group)
 
-        
         layout.addStretch()
 
         return pane
 
     def _create_center_pane(self) -> QWidget:
-        
+
         pane = QWidget()
         layout = QVBoxLayout(pane)
 
-        
         if self.admin_privileges_manager:
             self.system_integration_widget = SystemIntegrationWidget()
             layout.addWidget(self.system_integration_widget)
 
-        
         if self.bluetooth_manager:
             from .widgets import BluetoothControlWidget
 
             self.bluetooth_control_widget = BluetoothControlWidget()
             layout.addWidget(self.bluetooth_control_widget)
 
-        
         if self.wifi_manager:
             from .widgets import WiFiControlWidget
 
             self.wifi_control_widget = WiFiControlWidget()
             layout.addWidget(self.wifi_control_widget)
 
-        
         if not any(
                 [
                     self.admin_privileges_manager,
@@ -220,17 +193,15 @@ class MainWindow(QMainWindow):
             )
             layout.addWidget(placeholder)
 
-        
         layout.addStretch()
 
         return pane
 
     def _create_right_pane(self) -> QWidget:
-        
+
         pane = QWidget()
         layout = QVBoxLayout(pane)
 
-        
         status_group = QGroupBox("System Status")
         status_layout = QVBoxLayout(status_group)
 
@@ -239,13 +210,12 @@ class MainWindow(QMainWindow):
 
         layout.addWidget(status_group)
 
-        
         log_group = QGroupBox("System Log")
         log_layout = QVBoxLayout(log_group)
 
         self.log_display = QTextEdit()
         self.log_display.setReadOnly(True)
-        
+
         doc = self.log_display.document()
         doc.setMaximumBlockCount(1000)
         self.log_display.setFont(QFont("Consolas", 9))
@@ -256,11 +226,10 @@ class MainWindow(QMainWindow):
         return pane
 
     def _setup_status_bar(self) -> None:
-        
+
         self.status_bar = QStatusBar()
         self.setStatusBar(self.status_bar)
 
-        
         self.devices_label = QLabel("Devices: 0")
         self.session_label = QLabel("No active session")
         self.sync_label = QLabel("Time sync: OK")
@@ -270,8 +239,7 @@ class MainWindow(QMainWindow):
         self.status_bar.addPermanentWidget(self.session_label)
 
     def _setup_connections(self) -> None:
-        
-        
+
         if self.session_control_widget:
             self.session_control_widget.start_session_requested.connect(
                 self._on_start_session_requested
@@ -283,16 +251,11 @@ class MainWindow(QMainWindow):
                 self._on_new_session_requested
             )
 
-        
         if self.device_list_widget:
             self.device_list_widget.device_selected.connect(self._on_device_selected)
 
     def _setup_network_callbacks(self) -> None:
-        
-        
-        
 
-        
         logger.info("Enhanced networking callbacks configured:")
         logger.info("- WebSocket server for real-time communication")
         logger.info("- TCP server for Android device connections")
@@ -300,10 +263,9 @@ class MainWindow(QMainWindow):
         logger.info("- mDNS device discovery active")
 
     def _setup_system_integration_callbacks(self) -> None:
-        
-        
+
         if self.bluetooth_manager and self.bluetooth_control_widget:
-            
+
             self.bluetooth_control_widget.scan_requested.connect(
                 lambda: self.bluetooth_manager.start_scanning(continuous=False)
             )
@@ -312,41 +274,34 @@ class MainWindow(QMainWindow):
                     self.bluetooth_manager.connect_device(addr)
                 )
             )
-        )
-        self.bluetooth_control_widget.disconnect_requested.connect(
-        lambda addr: asyncio.create_task(
-            self.bluetooth_manager.disconnect_device(addr)
-        )
+            self.bluetooth_control_widget.disconnect_requested.connect(
+                lambda addr: asyncio.create_task(
+                    self.bluetooth_manager.disconnect_device(addr)
+                )
+            )
 
-    )
+            self.bluetooth_manager.device_discovered.connect(
+                lambda device: self._update_bluetooth_devices()
+            )
+            self.bluetooth_manager.device_connected.connect(
+                lambda addr, name: self.bluetooth_control_widget.set_connection_status(
+                    addr, True
+                )
+            )
+            self.bluetooth_manager.device_disconnected.connect(
+                lambda addr, reason: self.bluetooth_control_widget.set_connection_status(
+                    addr, False
+                )
+            )
+            self.bluetooth_manager.error_occurred.connect(
+                lambda op, err: self.bluetooth_control_widget.set_error_status(err)
+            )
 
-    
-    self.bluetooth_manager.device_discovered.connect(
-    lambda device: self._update_bluetooth_devices()
-
-)
-self.bluetooth_manager.device_connected.connect(
-lambda addr, name: self.bluetooth_control_widget.set_connection_status(
-    addr, True
-)
-)
-self.bluetooth_manager.device_disconnected.connect(
-lambda addr,
-       reason: self.bluetooth_control_widget.set_connection_status(
-    addr, False
-)
-)
-self.bluetooth_manager.error_occurred.connect(
-lambda op, err: self.bluetooth_control_widget.set_error_status(err)
-)
-
-
-if self.wifi_manager and self.wifi_control_widget:
-
-    self.wifi_control_widget.scan_requested.connect(
-lambda: self.wifi_manager.start_scanning(continuous=False)
-)
-self.wifi_control_widget.connect_requested.connect(
+        if self.wifi_manager and self.wifi_control_widget:
+            self.wifi_control_widget.scan_requested.connect(
+                lambda: self.wifi_manager.start_scanning(continuous=False)
+            )
+            self.wifi_control_widget.connect_requested.connect(
 lambda ssid, pwd: asyncio.create_task(
     self.wifi_manager.connect_to_network(ssid, pwd)
 )
@@ -418,26 +373,24 @@ lambda result, msg: self.system_integration_widget.set_status_message(
 )
 
 def _start_ui_updates(self) -> None:
-    
+
     self._update_timer = QTimer()
     self._update_timer.timeout.connect(self._update_displays)
-    self._update_timer.start(1000)  
+    self._update_timer.start(1000)
 
 
 def _update_displays(self) -> None:
-    
+
     try:
-        
+
         connected_clients = (
             len(self.websocket_server.clients) if self.websocket_server else 0
         )
         self.devices_label.setText(f"Devices: {connected_clients}")
 
-        
         if self.device_list_widget:
             self.device_list_widget.update_devices(connected_devices)
 
-        
         if self.status_display_widget:
             self.status_display_widget.update_time_sync_stats(
                 self.time_sync_service.get_synchronization_quality()
@@ -447,13 +400,12 @@ def _update_displays(self) -> None:
             if current_session:
                 self.status_display_widget.update_session_info(current_session)
 
-        
         current_session = self.session_manager.get_current_session()
         if current_session:
             if current_session.state == SessionState.RECORDING.value:
                 if self._session_start_time:
                     elapsed = datetime.now() - self._session_start_time
-                    elapsed_str = str(elapsed).split(".")[0]  
+                    elapsed_str = str(elapsed).split(".")[0]
                     self.session_label.setText(f"Recording: {elapsed_str}")
                 else:
                     self.session_label.setText("Recording: --:--:--")
@@ -464,7 +416,6 @@ def _update_displays(self) -> None:
         else:
             self.session_label.setText("No active session")
 
-        
         sync_quality = self.time_sync_service.get_synchronization_quality()
         if sync_quality["total_devices"] > 0:
             sync_rate = sync_quality["synchronization_rate"] * 100
@@ -477,7 +428,6 @@ def _update_displays(self) -> None:
         else:
             self.sync_label.setText("Time sync: No devices")
 
-        
         self._update_ui_state()
 
     except (OSError, ValueError, RuntimeError) as e:
@@ -485,17 +435,15 @@ def _update_displays(self) -> None:
 
 
 def _update_ui_state(self) -> None:
-    
+
     current_session = self.session_manager.get_current_session()
     has_devices = (
         len(self.websocket_server.clients) > 0 if self.websocket_server else False
     )
 
-    
     if self.session_control_widget:
         self.session_control_widget.update_state(current_session, has_devices)
 
-    
     can_sync = (
             current_session
             and current_session.state
@@ -503,16 +451,14 @@ def _update_ui_state(self) -> None:
             and has_devices
     )
 
-    
     if hasattr(self, "sync_flash_btn") and self.sync_flash_btn is not None:
         self.sync_flash_btn.setEnabled(can_sync)
     if hasattr(self, "sync_mark_btn") and self.sync_mark_btn is not None:
         self.sync_mark_btn.setEnabled(can_sync)
 
 
-
 def _on_start_session_requested(self) -> None:
-    
+
     try:
         current_session = self.session_manager.get_current_session()
         if not current_session:
@@ -528,13 +474,10 @@ def _on_start_session_requested(self) -> None:
             )
             return
 
-        
         self.session_manager.start_session()
         self.session_manager.begin_recording()
         self._session_start_time = datetime.now()
 
-        
-        
         if self.websocket_server:
             import asyncio
 
@@ -564,14 +507,12 @@ def _on_start_session_requested(self) -> None:
 
 
 def _on_stop_session_requested(self) -> None:
-    
+
     try:
         current_session = self.session_manager.get_current_session()
         if not current_session:
             return
 
-        
-        
         if self.websocket_server:
             import asyncio
 
@@ -589,7 +530,6 @@ def _on_stop_session_requested(self) -> None:
                 self.websocket_server._broadcast_message(session_message)
             )
 
-        
         ended_session = self.session_manager.end_session()
         self._session_start_time = None
 
@@ -607,9 +547,9 @@ def _on_stop_session_requested(self) -> None:
 
 
 def _on_new_session_requested(self) -> None:
-    
+
     try:
-        
+
         name, ok = QInputDialog.getText(
             self,
             "New Session",
@@ -621,7 +561,6 @@ def _on_new_session_requested(self) -> None:
 
         session_name = name.strip() if name.strip() else None
 
-        
         session = self.session_manager.create_session(session_name)
 
         logger.info(f"New session created: {session.name}")
@@ -633,9 +572,9 @@ def _on_new_session_requested(self) -> None:
 
 
 def _on_sync_flash_clicked(self) -> None:
-    
+
     try:
-        
+
         if self.websocket_server:
             import asyncio
 
@@ -649,7 +588,6 @@ def _on_sync_flash_clicked(self) -> None:
                 self.websocket_server._broadcast_message(sync_message)
             )
 
-            
             current_session = self.session_manager.get_current_session()
             if current_session:
                 self.session_manager.add_sync_event("flash")
@@ -665,9 +603,9 @@ def _on_sync_flash_clicked(self) -> None:
 
 
 def _on_sync_mark_clicked(self) -> None:
-    
+
     try:
-        
+
         description, ok = QInputDialog.getText(
             self, "Sync Mark", "Enter sync mark description:"
         )
@@ -675,7 +613,6 @@ def _on_sync_mark_clicked(self) -> None:
         if not ok or not description.strip():
             return
 
-        
         if self.websocket_server:
             import asyncio
 
@@ -694,7 +631,6 @@ def _on_sync_mark_clicked(self) -> None:
                 self.websocket_server._broadcast_message(mark_message)
             )
 
-            
             current_session = self.session_manager.get_current_session()
             if current_session:
                 self.session_manager.add_sync_event(
@@ -710,7 +646,7 @@ def _on_sync_mark_clicked(self) -> None:
 
 
 def _on_device_selected(self, device_id: str) -> None:
-    
+
     if self.websocket_server and device_id in self.websocket_server.clients:
         client = self.websocket_server.clients[device_id]
         logger.debug(
@@ -718,9 +654,8 @@ def _on_device_selected(self, device_id: str) -> None:
         )
 
 
-
 def _on_device_connected(self, device_info: DeviceInfo) -> None:
-    
+
     logger.info(f"Device connected: {device_info.device_id}")
     self._add_log_message(
         f"Device connected: {device_info.device_id}"
@@ -728,18 +663,16 @@ def _on_device_connected(self, device_info: DeviceInfo) -> None:
         f"({device_info.device_type})"
     )
 
-    
     current_session = self.session_manager.get_current_session()
     if current_session:
         self.session_manager.add_device(device_info.to_dict())
 
 
 def _on_device_disconnected(self, device_info: DeviceInfo) -> None:
-    
+
     logger.warning(f"Device disconnected: {device_info.device_id}")
     self._add_log_message(f"Device disconnected: {device_info.device_id}")
 
-    
     if device_info.is_gsr_leader:
         self._show_warning(
             "GSR Leader Disconnected",
@@ -749,13 +682,12 @@ def _on_device_disconnected(self, device_info: DeviceInfo) -> None:
 
 
 def _on_device_status_updated(self, device_info: DeviceInfo) -> None:
-    
+
     logger.debug(f"Device status updated: {device_info.device_id}")
 
 
-
 def _add_log_message(self, message: str) -> None:
-    
+
     if self.log_display:
         timestamp = datetime.now().strftime("%H:%M:%S")
         formatted_message = f"[{timestamp}] {message}"
@@ -763,37 +695,36 @@ def _add_log_message(self, message: str) -> None:
 
 
 def _show_error(self, title: str, message: str) -> None:
-    
+
     QMessageBox.critical(self, title, message)
 
 
 def _show_warning(self, title: str, message: str) -> None:
-    
+
     QMessageBox.warning(self, title, message)
 
 
 def _show_info(self, title: str, message: str) -> None:
-    
+
     QMessageBox.information(self, title, message)
 
 
 def _update_bluetooth_devices(self) -> None:
-    
+
     if self.bluetooth_manager and self.bluetooth_control_widget:
         devices = self.bluetooth_manager.discovered_devices
         self.bluetooth_control_widget.update_devices(devices)
 
 
 def _update_wifi_networks(self) -> None:
-    
+
     if self.wifi_manager and self.wifi_control_widget:
         networks = self.wifi_manager.available_networks
         self.wifi_control_widget.update_networks(networks)
 
 
 def closeEvent(self, event) -> None:
-    
-    
+
     current_session = self.session_manager.get_current_session()
     if current_session and current_session.state in [
         SessionState.ACTIVE.value,
@@ -812,7 +743,6 @@ def closeEvent(self, event) -> None:
         elif reply == QMessageBox.Yes:
             self._on_stop_session_requested()
 
-    
     if self._update_timer:
         self._update_timer.stop()
 

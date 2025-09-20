@@ -2,13 +2,9 @@
 
 
 import asyncio
-import json
 import time
-from datetime import datetime
-from typing import Any, Dict
 
 from ..core.hub_coordinator import HubCoordinator, SyncMarkerType
-from ..core.config import config
 
 
 import logging
@@ -17,16 +13,15 @@ logging.basicConfig(level=logging.INFO)
 
 
 async def main():
-    
+
     print("=== Enhanced Hub-Spoke Architecture Demo ===")
     print("PC Controller (Hub) with Android Sensor Nodes (Spokes)")
     print("Features: NTP-like time sync, session coordination, device management\n")
 
-    
     hub = HubCoordinator()
 
     try:
-        
+
         print("Starting Hub Coordinator...")
         if not await hub.start():
             print("Failed to start hub coordinator")
@@ -37,11 +32,9 @@ async def main():
         print(f"✓ Enhanced time synchronization service active")
         print(f"✓ Device discovery and management ready\n")
 
-        
         print("Waiting for Android devices to connect...")
         print("(Start Android app and ensure it's on same network)")
 
-        
         def on_session_started(session):
             print(
                 f"📱 Session Started: '{session.session_name}' with {len(session.participating_devices)} devices")
@@ -52,25 +45,21 @@ async def main():
         def on_sync_marker_created(marker):
             print(f"🔄 Sync marker '{marker['marker_type']}' created at {marker['timestamp_ns']}")
 
-        
         hub.add_session_callback("session_started", on_session_started)
         hub.add_session_callback("device_sync_lost", on_device_sync_lost)
         hub.add_session_callback("sync_marker_created", on_sync_marker_created)
 
-        
         start_time = time.time()
         session_id = None
 
-        while time.time() - start_time < 300:  
+        while time.time() - start_time < 300:
             await asyncio.sleep(5)
 
-            
             devices = hub.get_connected_devices()
 
             if devices:
                 print(f"\n📱 Connected devices: {len(devices)}")
 
-                
                 for device_id, device_info in devices.items():
                     sync_stats = hub.get_device_sync_stats(device_id)
                     if sync_stats:
@@ -78,7 +67,6 @@ async def main():
                         offset = sync_stats.get("median_offset_ms", 0)
                         print(f"  • {device_id}: {quality} (offset: {offset:.1f}ms)")
 
-                
                 if not session_id:
                     sync_ready = [
                         device_id for device_id in devices
@@ -98,7 +86,6 @@ async def main():
                         if session_id:
                             print(f"✓ Session started: {session_id}")
 
-                            
                             await asyncio.sleep(2)
                             await hub.create_sync_marker(session_id, SyncMarkerType.CUSTOM_EVENT, {
                                 "event": "demo_marker_1",
@@ -117,7 +104,6 @@ async def main():
                         else:
                             print("❌ Failed to start demo session")
 
-                
                 if session_id:
                     session = hub.get_session(session_id)
                     if session:
@@ -125,7 +111,6 @@ async def main():
                         print(
                             f"📊 Active session: {duration:.1f}s elapsed, {len(session.sync_markers)} sync markers")
 
-                        
                         if duration > 30 and session.state.value == "recording":
                             print("\n🛑 Stopping demo session...")
                             if await hub.stop_recording_session(session_id):
@@ -137,7 +122,6 @@ async def main():
             else:
                 print("⏳ No devices connected yet...")
 
-        
         print("\n=== Final Hub Statistics ===")
         sync_summary = hub.get_sync_quality_summary()
         print(f"Total devices handled: {sync_summary.get('total_devices', 0)}")
@@ -146,7 +130,6 @@ async def main():
         print(f"Overall median offset: {sync_summary.get('overall_median_offset_ms', 0):.1f}ms")
         print(f"Target compliance: {sync_summary.get('target_compliance', False)}")
 
-        
         quality_dist = sync_summary.get('quality_distribution', {})
         if quality_dist:
             print("\nSync Quality Distribution:")
@@ -159,14 +142,14 @@ async def main():
     except Exception as e:
         print(f"❌ Demo error: {e}")
     finally:
-        
+
         print("\nShutting down hub coordinator...")
         await hub.stop()
         print("✓ Hub stopped successfully")
 
 
 def run_demo():
-    
+
     try:
         asyncio.run(main())
     except KeyboardInterrupt:

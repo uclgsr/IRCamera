@@ -1,19 +1,19 @@
 # IRCamera API Reference
 
-## 📋 Overview
+## Overview
 
 This document provides comprehensive API reference documentation for all major components and modules of the IRCamera Multi-Modal Thermal Sensing Platform. The API is organized by component type and provides detailed information about classes, methods, and interfaces.
 
-## 🏗️ Architecture Components
+## Architecture Components
 
 ### Core Components
 
 | Component | Purpose | Technology | Status |
 |-----------|---------|------------|--------|
-| **PC Controller Hub** | Central coordination and device management | Python + PyQt6 | ✅ MVP Complete |
-| **Android Sensor Node** | Mobile sensor node with multi-modal capabilities | Kotlin + Android | ⚠️ Build Issues |
-| **Communication Layer** | JSON-based TCP protocol with mDNS discovery | Cross-platform | ✅ Working |
-| **Sensor Integration** | Hardware abstraction for multiple sensor types | Multi-platform | ✅ Working |
+| **PC Controller Hub** | Central coordination and device management | Python + PyQt6 | [DONE] MVP Complete |
+| **Android Sensor Node** | Mobile sensor node with multi-modal capabilities | Kotlin + Android | [WARNING] Build Issues |
+| **Communication Layer** | JSON-based TCP protocol with mDNS discovery | Cross-platform | [DONE] Working |
+| **Sensor Integration** | Hardware abstraction for multiple sensor types | Multi-platform | [DONE] Working |
 
 ### Library Components
 
@@ -25,7 +25,7 @@ This document provides comprehensive API reference documentation for all major c
 | **libui** | User interface components | Android UI, Material Design | ✅ Working |
 | **libmatrix** | Matrix operations for image processing | Native math libraries | ✅ Working |
 
-## 🖥️ PC Controller Hub API
+## PC Controller Hub API
 
 ### Core Classes
 
@@ -151,7 +151,7 @@ class DeviceInfo:
     status: DeviceStatus
 ```
 
-## 📱 Android Sensor Node API
+## Android Sensor Node API
 
 ### Core Activities
 
@@ -314,7 +314,7 @@ data class GSRDataPoint(
 )
 ```
 
-## 🔧 Core Libraries API
+## Core Libraries API
 
 ### libir - Infrared Processing Library
 **Location**: `libir/`
@@ -353,7 +353,7 @@ class ThermalProcessor {
 ```
 
 ### libcom - Communication Library
-**Location**: `libcom/`
+**Location**: `consolidated_libraries/libcom/`
 
 #### NetworkManager  
 ```kotlin
@@ -417,11 +417,11 @@ class StatusIndicator @JvmOverloads constructor(
 }
 ```
 
-## 🌐 Communication Protocol API
+## Communication Protocol API
 
 ### Message Format Specification
 
-#### Command Messages (Hub → Spoke)
+#### Command Messages (Hub -> Spoke)
 ```json
 {
   "message_id": "uuid-string",
@@ -473,7 +473,7 @@ class MessageHandler:
         """Send response message to sender."""
 ```
 
-## 🔍 Error Handling API
+## Error Handling API
 
 ### Exception Classes
 
@@ -509,7 +509,7 @@ class SessionManagementException(IRCameraException):
         super().__init__(f"Session {session_id} {operation} failed: {reason}")
 ```
 
-## 📊 Data Processing API
+## Data Processing API
 
 ### Data Pipeline Components
 
@@ -543,7 +543,7 @@ class SynchronizationEngine:
         """Validate synchronization quality metrics."""
 ```
 
-## 🧪 Testing API
+## Testing API
 
 ### Test Utilities
 
@@ -578,7 +578,7 @@ class TestSession:
         """Clean up test session data."""
 ```
 
-## 📋 Configuration API
+## Configuration API
 
 ### Configuration Management
 
@@ -600,7 +600,7 @@ class ConfigurationManager:
         """Validate configuration and return errors."""
 ```
 
-## 🔧 Build and Deployment API
+## Build and Deployment API
 
 ### Build Tools
 

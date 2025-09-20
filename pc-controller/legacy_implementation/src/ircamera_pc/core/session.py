@@ -17,7 +17,6 @@ from .config import config
 
 
 class SessionState(Enum):
-    
 
     IDLE = "idle"
     ACTIVE = "active"
@@ -29,7 +28,6 @@ class SessionState(Enum):
 
 @dataclass
 class SessionMetadata:
-    
 
     session_id: str
     name: str
@@ -56,10 +54,9 @@ class SessionMetadata:
 
 
 class SessionManager:
-    
 
     def __init__(self):
-        
+
         self._current_session: Optional[SessionMetadata] = None
         self._session_history: List[str] = []
         self._data_root = Path(config.get("session.data_root", "./sessions"))
@@ -68,25 +65,23 @@ class SessionManager:
         logger.info("Session Manager initialized")
 
     def _ensure_data_root(self) -> None:
-        
+
         self._data_root.mkdir(parents=True, exist_ok=True)
         logger.debug(f"Session data root: {self._data_root}")
 
     def create_session(self, name: Optional[str] = None) -> SessionMetadata:
-        
+
         if self._current_session and self._current_session.state in [
             SessionState.ACTIVE.value,
             SessionState.RECORDING.value,
         ]:
             raise ValueError("Cannot create new session:" "another session is active")
 
-        
         session_id = str(uuid.uuid4())
         if name is None:
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
             name = f"session_{timestamp}"
 
-        
         self._current_session = SessionMetadata(
             session_id=session_id,
             name=name,
@@ -95,21 +90,18 @@ class SessionManager:
             gsr_mode=config.get("gsr.default_mode", "local"),
         )
 
-        
         session_dir = self._get_session_directory(session_id)
         session_dir.mkdir(parents=True, exist_ok=True)
 
-        
         self._save_metadata()
 
-        
         self._session_history.append(session_id)
 
         logger.info(f"Session created: {name} [{session_id}]")
         return self._current_session
 
     def start_session(self) -> None:
-        
+
         if not self._current_session:
             raise ValueError("No session to start")
 
@@ -126,7 +118,7 @@ class SessionManager:
         logger.info(f"Session started: {self._current_session.name}")
 
     def begin_recording(self) -> None:
-        
+
         if not self._current_session:
             raise ValueError("No active session")
 
@@ -141,11 +133,10 @@ class SessionManager:
         logger.info(f"Recording started for session: {self._current_session.name}")
 
     def end_session(self) -> SessionMetadata:
-        
+
         if not self._current_session:
             raise ValueError("No session to end")
 
-        
         if self._current_session.started_at:
             start_time = datetime.fromisoformat(
                 self._current_session.started_at.replace("Z", "+00:00")
@@ -157,7 +148,6 @@ class SessionManager:
         self._current_session.state = SessionState.COMPLETED.value
         self._current_session.ended_at = datetime.now(timezone.utc).isoformat()
 
-        
         self._save_metadata()
 
         logger.info(
@@ -171,7 +161,7 @@ class SessionManager:
         return completed_session
 
     def add_device(self, device_info: Dict[str, Any]) -> None:
-        
+
         if not self._current_session:
             raise ValueError("No active session")
 
@@ -185,7 +175,7 @@ class SessionManager:
         )
 
     def add_file(self, file_info: Dict[str, Any]) -> None:
-        
+
         if not self._current_session:
             raise ValueError("No active session")
 
@@ -199,7 +189,7 @@ class SessionManager:
     def add_sync_event(
             self, event_type: str, event_data: Dict[str, Any] = None
     ) -> None:
-        
+
         if not self._current_session:
             raise ValueError("No active session")
 
@@ -215,26 +205,24 @@ class SessionManager:
         logger.info(f"Sync event added: {event_type}")
 
     def get_current_session(self) -> Optional[SessionMetadata]:
-        
+
         return self._current_session
 
     def get_session_state(self) -> Optional[str]:
-        
+
         if self._current_session:
             return self._current_session.state
         return None
 
     def get_session(self, session_id: str) -> Optional[SessionMetadata]:
-        
-        
+
         if self._current_session and self._current_session.session_id == session_id:
             return self._current_session
-            
-        
+
         return self.load_session(session_id)
 
     def get_session_directory(self, session_id: Optional[str] = None) -> Path:
-        
+
         if session_id is None:
             if not self._current_session:
                 raise ValueError("No current session")
@@ -243,11 +231,11 @@ class SessionManager:
         return self._get_session_directory(session_id)
 
     def _get_session_directory(self, session_id: str) -> Path:
-        
+
         return self._data_root / session_id
 
     def _save_metadata(self) -> None:
-        
+
         if not self._current_session:
             return
 
@@ -271,7 +259,7 @@ class SessionManager:
             logger.error(f"Failed to save session metadata: {e}")
 
     def load_session(self, session_id: str) -> Optional[SessionMetadata]:
-        
+
         metadata_file = self._get_session_directory(session_id) / "metadata.json"
 
         try:
@@ -289,7 +277,7 @@ class SessionManager:
             return None
 
     def list_sessions(self) -> List[str]:
-        
+
         sessions = []
 
         try:

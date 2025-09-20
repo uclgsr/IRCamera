@@ -92,7 +92,7 @@ public class ExcelUtil {
                         bos.flush();
                         bos.close();
                     }
-                    Log.w("导出", UriUtils.uri2File(uri).getAbsolutePath());
+                    Log.w("Export", UriUtils.uri2File(uri).getAbsolutePath());
                     return UriUtils.uri2File(uri).getAbsolutePath();
                 } else {
                     return null;
@@ -121,17 +121,17 @@ public class ExcelUtil {
             CellStyle titleStyle = wb.createCellStyle();
             titleStyle.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
             titleStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-            titleStyle.setAlignment(HorizontalAlignment.CENTER); // 居中
+            titleStyle.setAlignment(HorizontalAlignment.CENTER); // [CHINESE_TEXT]
             titleStyle.setVerticalAlignment(VerticalAlignment.CENTER);
             Font font = wb.createFont();
-            font.setBold(true);//粗体显示
+            font.setBold(true);//[CHINESE_TEXT]Show
             titleStyle.setFont(font);
             CellStyle contentStyle = wb.createCellStyle();
-            contentStyle.setAlignment(HorizontalAlignment.CENTER); // 居中
+            contentStyle.setAlignment(HorizontalAlignment.CENTER); // [CHINESE_TEXT]
             contentStyle.setVerticalAlignment(VerticalAlignment.CENTER);
 
             for (int i = 0; i < colNum; i++) {
-                sheet.setColumnWidth(i, 20 * 256);  // 显示20个字符的宽度
+                sheet.setColumnWidth(i, 20 * 256);  // Show20[CHINESE_TEXT]Width
                 Cell cell1 = row.createCell(i);
                 cell1.setCellStyle(titleStyle);
 
@@ -206,7 +206,7 @@ public class ExcelUtil {
                         bos.flush();
                         bos.close();
                     }
-                    Log.w("导出", UriUtils.uri2File(uri).getAbsolutePath());
+                    Log.w("Export", UriUtils.uri2File(uri).getAbsolutePath());
                     return UriUtils.uri2File(uri).getAbsolutePath();
                 } else {
                     return null;
