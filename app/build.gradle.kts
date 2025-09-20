@@ -53,8 +53,6 @@ android {
             keyAlias = "Artibox"
             storePassword = "artibox2017"
             keyPassword = "artibox2017"
-
-
             enableV1Signing = true
             enableV2Signing = true
         }
