@@ -95,7 +95,6 @@ IRCamera/
 +-- libir/                 # Core IR processing library
 +-- libui/                 # User interface components library
 +-- BleModule/             # Bluetooth Low Energy module
-+-- RangeSeekBar/          # UI range selector component
 +-- docs/                  # **THIS DOCUMENTATION HUB**
 +-- scripts/               # Build and utility scripts
 +-- .github/               # CI/CD workflows and configurations
