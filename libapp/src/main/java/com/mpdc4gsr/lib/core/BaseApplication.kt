@@ -127,9 +127,9 @@ abstract class BaseApplication : Application() {
         // } else if (ssid.startsWith(DeviceConfig.TC007_NAME_START)) {
         //     SharedManager.hasTC007 = true
         //     WebSocketProxy.getInstance().startWebSocket(ssid)
-        } else {
+        // } else {
             NetWorkUtils.switchNetwork(true)
-        }
+        // }
     }
 
     fun disconnectWebSocket() {
