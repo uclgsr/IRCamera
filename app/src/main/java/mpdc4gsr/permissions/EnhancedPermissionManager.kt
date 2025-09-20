@@ -12,17 +12,17 @@ class EnhancedPermissionManager(
         private const val TAG = "EnhancedPermissionManager"
     }
 
-    
+
     suspend fun requestCameraPermissions(): Boolean {
         Log.d(TAG, "Enhanced camera permission request")
-        
+
         return permissionController.hasCameraPermissions()
     }
 
-    
+
     suspend fun requestBluetoothPermissions(): Boolean {
         Log.d(TAG, "Enhanced Bluetooth permission request")
-        
+
         return permissionController.hasBluetoothPermissions()
     }
 }

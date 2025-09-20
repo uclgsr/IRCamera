@@ -10,7 +10,6 @@ import java.io.IOException
 import java.io.OutputStream
 
 
-
 class PdfActivity : BaseBindingActivity<ActivityPdfBinding>() {
 
     private val pdfView get() = binding.pdfView
@@ -29,7 +28,7 @@ class PdfActivity : BaseBindingActivity<ActivityPdfBinding>() {
         pdfView.text =
             "PDF functionality temporarily unavailable - $pdfFileName will be displayed here when PDF library is available"
 
-        
+
     }
 
     private fun initData() {

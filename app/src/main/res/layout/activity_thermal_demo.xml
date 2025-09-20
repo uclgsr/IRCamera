@@ -9,7 +9,7 @@
     android:padding="16dp"
     tools:context=".thermal.ThermalCameraDemo">
 
-    
+
     <TextView
         android:id="@+id/statusText"
         android:layout_width="match_parent"
@@ -21,7 +21,7 @@
         android:textColor="@android:color/white"
         android:textSize="16sp" />
 
-    
+
     <ImageView
         android:id="@+id/thermalPreview"
         android:layout_width="match_parent"
@@ -32,7 +32,7 @@
         android:contentDescription="Thermal camera preview"
         android:scaleType="centerInside" />
 
-    
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -70,7 +70,7 @@
 
     </LinearLayout>
 
-    
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -98,7 +98,7 @@
 
     </LinearLayout>
 
-    
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -146,7 +146,7 @@
 
     </LinearLayout>
 
-    
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

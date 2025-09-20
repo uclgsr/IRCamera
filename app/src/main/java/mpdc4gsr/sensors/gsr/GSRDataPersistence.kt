@@ -26,7 +26,7 @@ class GSRDataPersistence(
     companion object {
         private const val TAG = "GSRDataPersistence"
         private const val BATCH_SIZE = 100
-        private const val FLUSH_INTERVAL_MS = 500L 
+        private const val FLUSH_INTERVAL_MS = 500L
     }
 
     private val dataQueue = ConcurrentLinkedQueue<GSRDataRecord>()
@@ -45,14 +45,14 @@ class GSRDataPersistence(
             val sessionDir = createSessionDirectory()
             csvFile = createCsvFile(sessionDir)
 
-            
+
             val headers = createCsvHeaders()
 
-            
+
             csvBufferedWriter = CSVBufferedWriter(
                 outputFile = csvFile!!,
                 headers = headers,
-                bufferSize = 4096,  
+                bufferSize = 4096,
                 flushIntervalMs = FLUSH_INTERVAL_MS
             )
 
@@ -71,7 +71,7 @@ class GSRDataPersistence(
     }
 
     private fun createSessionDirectory(): File {
-        
+
         val baseDir = File(context.getExternalFilesDir(null), "sessions")
         val sessionDir = File(baseDir, sessionId)
         val shimmerDir = File(sessionDir, "Shimmer")
@@ -84,27 +84,27 @@ class GSRDataPersistence(
     }
 
     private fun createCsvFile(sessionDir: File): File {
-        
+
         return File(sessionDir, SessionDirectoryManager.SHIMMER_DATA_FILE)
     }
 
     private fun createCsvHeaders(): List<String> {
         return listOf(
-            
+
             "system_nanos", "elapsed_realtime_ms", "device_timestamp_ms",
             "session_relative_ms", "synchronized_timestamp_ms",
 
-            
+
             "gsr_raw_value", "gsr_microsiemens", "gsr_resistance_kohm",
 
-            
+
             "ppg_raw_value", "ppg_filtered", "heart_rate_bpm",
 
-            
+
             "device_id", "battery_level", "signal_quality",
             "sampling_rate_hz", "packet_sequence",
 
-            
+
             "session_id", "participant_id", "recording_mode"
         )
     }
@@ -158,7 +158,7 @@ class GSRDataPersistence(
 
         writeMutex.withLock {
             try {
-                
+
                 batch.forEach { record ->
                     val csvRow = record.toCsvRow()
                     csvBufferedWriter?.writeRow(csvRow)
@@ -185,7 +185,7 @@ class GSRDataPersistence(
     suspend fun stopPersistence() {
         isWriting.set(false)
 
-        
+
         while (dataQueue.isNotEmpty()) {
             writeBatch()
         }
@@ -200,7 +200,7 @@ class GSRDataPersistence(
 
         writeMutex.withLock {
             try {
-                
+
                 csvBufferedWriter?.stop()
                 csvBufferedWriter = null
                 Log.i(TAG, "GSR data persistence cleanup completed")
@@ -240,44 +240,44 @@ data class GSRDataRecord(
     val participantId: String,
     val recordingMode: String,
 ) {
-    
+
     fun toCsvRow(): List<Any> {
         return listOf(
-            
+
             timestamp.systemNanos,
             timestamp.elapsedRealtimeMs,
             timestamp.deviceTimestampMs,
             timestamp.sessionRelativeMs,
             timestamp.synchronizedTimestampMs,
 
-            
+
             gsrRawValue,
             gsrMicrosiemens,
             gsrResistanceKohm,
 
-            
+
             ppgRawValue,
             ppgFiltered,
             heartRateBpm,
 
-            
+
             deviceId,
             batteryLevel,
             signalQuality,
             samplingRateHz,
             packetSequence,
 
-            
+
             sessionId,
             participantId,
             recordingMode
         )
     }
 
-    
+
     fun toCsvLine(): String {
         return buildString {
-            
+
             append(timestamp.toCsvFormat())
             append(",")
 
@@ -315,7 +315,7 @@ data class GSRPersistenceStats(
     val csvFilePath: String,
     val sessionId: String,
     val isActive: Boolean,
-    val bufferStats: com.topdon.tc001.util.WriteStats? = null, 
+    val bufferStats: com.topdon.tc001.util.WriteStats? = null,
 ) {
     val totalDataSizeBytes: Long
         get() = bufferStats?.bytesWritten ?: 0L

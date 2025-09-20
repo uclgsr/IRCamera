@@ -9,8 +9,6 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
 
-
-
 class ManualStep1Activity : BaseActivity() {
 
     private lateinit var tvManual: TextView

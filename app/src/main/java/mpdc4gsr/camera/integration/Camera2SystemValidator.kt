@@ -135,7 +135,7 @@ class Camera2SystemValidator(private val context: Context) {
         return try {
             // Instead of using brittle reflection, test actual functionality
             // by trying to instantiate the classes and checking their public APIs
-            
+
             // Test RawEngine Stage3/Level3 functionality
             val rawEngineWorks = try {
                 val rawEngine = mpdc4gsr.camera.core.RawEngine(context)
@@ -147,13 +147,13 @@ class Camera2SystemValidator(private val context: Context) {
                 Log.e(TAG, "RawEngine Stage3/Level3 methods not available", e)
                 false
             }
-            
+
             // Test Camera2System Stage3/Level3 functionality  
             val camera2SystemWorks = try {
                 // Use a mock TextureView for testing
                 val textureView = android.view.TextureView(context)
                 val camera2System = mpdc4gsr.camera.Camera2System(context, textureView)
-                
+
                 // Test that the methods exist
                 camera2System.isStage3ProcessingEnabled() // This should not throw
                 camera2System.configureStage3Processing(false) // This should not throw
@@ -162,7 +162,7 @@ class Camera2SystemValidator(private val context: Context) {
                 Log.e(TAG, "Camera2System Stage3/Level3 methods not available", e)
                 false
             }
-            
+
             // Test DngCreator API availability (this is a standard Android API)
             val dngCreatorAvailable = try {
                 // Check if DngCreator class is available (API level 21+)
@@ -171,7 +171,7 @@ class Camera2SystemValidator(private val context: Context) {
                 Log.e(TAG, "DngCreator API not available", e)
                 false
             }
-            
+
             // Test SamsungDeviceCompatibility utility
             val deviceCompatibilityWorks = try {
                 mpdc4gsr.camera.core.SamsungDeviceCompatibility.isStage3Compatible()
@@ -181,11 +181,14 @@ class Camera2SystemValidator(private val context: Context) {
                 Log.e(TAG, "SamsungDeviceCompatibility utility not working", e)
                 false
             }
-            
+
             val allWorking = rawEngineWorks && camera2SystemWorks && dngCreatorAvailable && deviceCompatibilityWorks
-            
-            Log.i(TAG, "Stage3/Level3 validation - RawEngine: $rawEngineWorks, Camera2System: $camera2SystemWorks, DngCreator: $dngCreatorAvailable, DeviceCompatibility: $deviceCompatibilityWorks")
-            
+
+            Log.i(
+                TAG,
+                "Stage3/Level3 validation - RawEngine: $rawEngineWorks, Camera2System: $camera2SystemWorks, DngCreator: $dngCreatorAvailable, DeviceCompatibility: $deviceCompatibilityWorks"
+            )
+
             allWorking
         } catch (e: Exception) {
             Log.e(TAG, "Stage3/Level3 validation failed", e)

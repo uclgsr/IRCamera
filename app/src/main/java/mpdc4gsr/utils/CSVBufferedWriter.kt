@@ -18,7 +18,7 @@ class CSVBufferedWriter(
 
     private val headerWritten = AtomicBoolean(false)
 
-    
+
     suspend fun startWithHeaders(): Boolean {
         val started = start()
         if (started && !headerWritten.get()) {
@@ -27,7 +27,7 @@ class CSVBufferedWriter(
         return started
     }
 
-    
+
     private suspend fun writeHeaders() {
         if (headerWritten.compareAndSet(false, true)) {
             val headerLine = headers.joinToString(",")
@@ -36,7 +36,7 @@ class CSVBufferedWriter(
         }
     }
 
-    
+
     fun writeRow(values: List<Any>): Boolean {
         val csvLine = values.joinToString(",") { value ->
             when (value) {
@@ -47,7 +47,7 @@ class CSVBufferedWriter(
         return writeLine(csvLine)
     }
 
-    
+
     private fun escapeCSVValue(value: String): String {
         return if (value.contains(",") || value.contains("\"") || value.contains("\n")) {
             "\"${value.replace("\"", "\"\"")}\""
@@ -56,7 +56,7 @@ class CSVBufferedWriter(
         }
     }
 
-    
+
     fun getCSVStats(): CSVWriteStats {
         val stats = getWriteStats()
         return CSVWriteStats(

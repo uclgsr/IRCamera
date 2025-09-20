@@ -27,13 +27,13 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">
-            
+
             <com.mpdc4gsr.lib.core.menu.MenuSecondView
                 android:id="@+id/edit_recycler_second"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:deviceType="gallery_edit" />
-            
+
             <com.mpdc4gsr.lib.core.menu.MenuEditView
                 android:id="@+id/edit_recycler_first"
                 android:layout_width="match_parent"

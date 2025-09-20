@@ -16,7 +16,7 @@ import java.net.Socket
 import java.util.concurrent.atomic.AtomicBoolean
 
 class ShimmerNetworkClient(
-    private val serverHost: String = "192.168.1.100", 
+    private val serverHost: String = "192.168.1.100",
     private val serverPort: Int = 8888
 ) {
     companion object {
@@ -200,7 +200,7 @@ class ShimmerNetworkClient(
                             processServerMessage(line)
                         } else {
                             Log.w(TAG, "Server closed connection")
-                            return@launch 
+                            return@launch
                         }
                     } else {
                         return@launch
@@ -217,7 +217,7 @@ class ShimmerNetworkClient(
         heartbeatJob = networkScope.launch {
             while (isRunning.get() && isConnected.get()) {
                 try {
-                    delay(30000) 
+                    delay(30000)
 
                     val heartbeat = JSONObject().apply {
                         put("type", "heartbeat")

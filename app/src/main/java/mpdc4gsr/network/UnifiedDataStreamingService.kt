@@ -33,17 +33,17 @@ class UnifiedDataStreamingService(
     private val isStreaming = AtomicBoolean(false)
     private val connectedClients = mutableListOf<ClientHandler>()
     private val dataQueue = ConcurrentLinkedQueue<StreamingDataPacket>()
-    
+
     private var serverSocket: ServerSocket? = null
     private var currentSessionId: String? = null
     private var sessionStartReference: TimestampRecord? = null
-    
-    
+
+
     private val packetsSent = AtomicLong(0)
     private val clientsConnected = AtomicLong(0)
     private val streamStartTime = AtomicLong(0)
 
-    
+
     suspend fun startStreaming(sessionId: String, port: Int = DEFAULT_PORT): Boolean {
         return withContext(Dispatchers.IO) {
             try {
@@ -53,40 +53,42 @@ class UnifiedDataStreamingService(
                 }
 
                 Log.i(TAG, "Starting unified data streaming service on port $port")
-                
+
                 currentSessionId = sessionId
                 sessionStartReference = TimestampManager.createTimestampRecord()
                 streamStartTime.set(System.currentTimeMillis())
-                
-                
+
+
                 serverSocket = ServerSocket(port)
                 isStreaming.set(true)
-                
-                
+
+
                 streamingScope.launch {
                     acceptClients()
                 }
-                
-                
+
+
                 streamingScope.launch {
                     processStreamingData()
                 }
-                
-                
+
+
                 streamingScope.launch {
                     distributeHeartbeats()
                 }
-                
+
                 Log.i(TAG, "✅ Unified streaming service started on port $port")
-                
-                
-                broadcastSessionSyncEvent("session_start", mapOf(
-                    "session_id" to sessionId,
-                    "timestamp_reference" to sessionStartReference!!.toCsvFormat()
-                ))
-                
+
+
+                broadcastSessionSyncEvent(
+                    "session_start", mapOf(
+                        "session_id" to sessionId,
+                        "timestamp_reference" to sessionStartReference!!.toCsvFormat()
+                    )
+                )
+
                 true
-                
+
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to start streaming service", e)
                 stopStreaming()
@@ -95,50 +97,52 @@ class UnifiedDataStreamingService(
         }
     }
 
-    
+
     suspend fun stopStreaming() {
         withContext(Dispatchers.IO) {
             try {
                 Log.i(TAG, "Stopping unified streaming service")
-                
-                
+
+
                 currentSessionId?.let { sessionId ->
-                    broadcastSessionSyncEvent("session_end", mapOf(
-                        "session_id" to sessionId,
-                        "duration_ms" to (System.currentTimeMillis() - streamStartTime.get()).toString(),
-                        "packets_sent" to packetsSent.get().toString()
-                    ))
+                    broadcastSessionSyncEvent(
+                        "session_end", mapOf(
+                            "session_id" to sessionId,
+                            "duration_ms" to (System.currentTimeMillis() - streamStartTime.get()).toString(),
+                            "packets_sent" to packetsSent.get().toString()
+                        )
+                    )
                 }
-                
+
                 isStreaming.set(false)
-                
-                
+
+
                 synchronized(connectedClients) {
                     connectedClients.forEach { client ->
                         client.disconnect()
                     }
                     connectedClients.clear()
                 }
-                
-                
+
+
                 serverSocket?.close()
                 serverSocket = null
-                
-                
+
+
                 dataQueue.clear()
-                
+
                 Log.i(TAG, "Unified streaming service stopped")
-                
+
             } catch (e: Exception) {
                 Log.e(TAG, "Error stopping streaming service", e)
             }
         }
     }
 
-    
+
     fun streamGSRData(gsrSample: GSRSample, timestampRecord: TimestampRecord) {
         if (!isStreaming.get()) return
-        
+
         val packet = StreamingDataPacket(
             dataType = "GSR",
             timestamp = timestampRecord,
@@ -149,11 +153,11 @@ class UnifiedDataStreamingService(
                 put("device_id", gsrSample.deviceId)
             }
         )
-        
+
         dataQueue.offer(packet)
     }
 
-    
+
     fun streamThermalData(
         frameNumber: Long,
         timestampRecord: TimestampRecord,
@@ -163,7 +167,7 @@ class UnifiedDataStreamingService(
         centerTemp: Float
     ) {
         if (!isStreaming.get()) return
-        
+
         val packet = StreamingDataPacket(
             dataType = "THERMAL",
             timestamp = timestampRecord,
@@ -175,11 +179,11 @@ class UnifiedDataStreamingService(
                 put("center_temp_c", centerTemp)
             }
         )
-        
+
         dataQueue.offer(packet)
     }
 
-    
+
     fun streamRGBMetadata(
         frameNumber: Long,
         timestampRecord: TimestampRecord,
@@ -187,7 +191,7 @@ class UnifiedDataStreamingService(
         fileSize: Long
     ) {
         if (!isStreaming.get()) return
-        
+
         val packet = StreamingDataPacket(
             dataType = "RGB",
             timestamp = timestampRecord,
@@ -197,14 +201,18 @@ class UnifiedDataStreamingService(
                 put("file_size", fileSize)
             }
         )
-        
+
         dataQueue.offer(packet)
     }
 
-    
-    fun broadcastSyncMarker(markerType: String, timestampRecord: TimestampRecord, metadata: Map<String, String> = emptyMap()) {
+
+    fun broadcastSyncMarker(
+        markerType: String,
+        timestampRecord: TimestampRecord,
+        metadata: Map<String, String> = emptyMap()
+    ) {
         if (!isStreaming.get()) return
-        
+
         val syncPacket = JSONObject().apply {
             put("type", "SYNC_MARKER")
             put("marker_type", markerType)
@@ -212,17 +220,17 @@ class UnifiedDataStreamingService(
             put("session_id", currentSessionId)
             put("metadata", JSONObject(metadata))
         }
-        
+
         broadcastToClients(syncPacket.toString())
         Log.d(TAG, "Broadcasted sync marker: $markerType")
     }
 
-    
+
     fun getStreamingStats(): StreamingStats {
         val uptime = if (streamStartTime.get() > 0) {
             (System.currentTimeMillis() - streamStartTime.get()) / 1000.0
         } else 0.0
-        
+
         return StreamingStats(
             isActive = isStreaming.get(),
             connectedClients = synchronized(connectedClients) { connectedClients.size },
@@ -239,17 +247,20 @@ class UnifiedDataStreamingService(
                 val socket = serverSocket?.accept()
                 if (socket != null) {
                     val clientHandler = ClientHandler(socket)
-                    
+
                     synchronized(connectedClients) {
                         if (connectedClients.size < MAX_CLIENTS) {
                             connectedClients.add(clientHandler)
                             clientsConnected.incrementAndGet()
-                            
-                            Log.i(TAG, "Client connected: ${socket.remoteSocketAddress} (${connectedClients.size} total)")
-                            
-                            
+
+                            Log.i(
+                                TAG,
+                                "Client connected: ${socket.remoteSocketAddress} (${connectedClients.size} total)"
+                            )
+
+
                             clientHandler.sendSessionInfo()
-                            
+
                         } else {
                             Log.w(TAG, "Max clients reached, rejecting connection")
                             socket.close()
@@ -266,15 +277,16 @@ class UnifiedDataStreamingService(
 
     private suspend fun processStreamingData() {
         val batch = mutableListOf<StreamingDataPacket>()
-        
+
         while (isStreaming.get()) {
             try {
-                
+
                 val startTime = System.currentTimeMillis()
-                
-                while (batch.size < BATCH_SIZE && 
-                       (System.currentTimeMillis() - startTime) < BATCH_TIMEOUT_MS) {
-                    
+
+                while (batch.size < BATCH_SIZE &&
+                    (System.currentTimeMillis() - startTime) < BATCH_TIMEOUT_MS
+                ) {
+
                     val packet = dataQueue.poll()
                     if (packet != null) {
                         batch.add(packet)
@@ -282,9 +294,9 @@ class UnifiedDataStreamingService(
                         delay(1)
                     }
                 }
-                
+
                 if (batch.isNotEmpty()) {
-                    
+
                     val batchMessage = JSONObject().apply {
                         put("type", "DATA_BATCH")
                         put("session_id", currentSessionId)
@@ -299,14 +311,14 @@ class UnifiedDataStreamingService(
                             }
                         })
                     }
-                    
+
                     broadcastToClients(batchMessage.toString())
                     packetsSent.addAndGet(batch.size.toLong())
                     batch.clear()
                 }
-                
+
                 delay(1)
-                
+
             } catch (e: Exception) {
                 Log.e(TAG, "Error processing streaming data", e)
                 delay(100)
@@ -328,10 +340,10 @@ class UnifiedDataStreamingService(
                         put("uptime_seconds", stats.uptimeSeconds)
                     })
                 }
-                
+
                 broadcastToClients(heartbeat.toString())
                 delay(HEARTBEAT_INTERVAL_MS)
-                
+
             } catch (e: Exception) {
                 Log.e(TAG, "Error sending heartbeat", e)
                 delay(HEARTBEAT_INTERVAL_MS)
@@ -347,21 +359,21 @@ class UnifiedDataStreamingService(
             put("session_id", currentSessionId)
             put("metadata", JSONObject(metadata))
         }
-        
+
         broadcastToClients(syncEvent.toString())
     }
 
     private fun broadcastToClients(message: String) {
         synchronized(connectedClients) {
             val disconnectedClients = mutableListOf<ClientHandler>()
-            
+
             connectedClients.forEach { client ->
                 if (!client.sendMessage(message)) {
                     disconnectedClients.add(client)
                 }
             }
-            
-            
+
+
             disconnectedClients.forEach { client ->
                 connectedClients.remove(client)
                 client.disconnect()
@@ -395,7 +407,7 @@ class UnifiedDataStreamingService(
                 put("timestamp_reference", sessionStartReference?.toCsvFormat())
                 put("streaming_started", streamStartTime.get())
             }
-            
+
             sendMessage(sessionInfo.toString())
         }
 

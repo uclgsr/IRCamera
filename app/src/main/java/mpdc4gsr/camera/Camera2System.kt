@@ -31,7 +31,7 @@ class Camera2System(
 ) {
     companion object {
         private const val TAG = "Camera2System"
-        private const val DEFAULT_BITRATE = 20_000_000 
+        private const val DEFAULT_BITRATE = 20_000_000
     }
 
     private val cameraController = CameraController(context)
@@ -173,7 +173,7 @@ class Camera2System(
                 when (modeManager.getCurrentMode()) {
                     ModeManager.CameraMode.RAW_50MP -> rawEngine.stopCapture()
                     ModeManager.CameraMode.VIDEO_4K -> videoEngine.stop()
-                    ModeManager.CameraMode.PREVIEW_ONLY -> { 
+                    ModeManager.CameraMode.PREVIEW_ONLY -> {
                     }
                 }
 
@@ -297,7 +297,7 @@ class Camera2System(
                 val caps = cameraController.getDeviceCaps() ?: return@withContext false
                 val previewSurface = uiBridge.getPreviewSurface() ?: return@withContext false
 
-                val videoSize = Size(3840, 2160) 
+                val videoSize = Size(3840, 2160)
                 val frameRate = if (caps.supports4k60) 60 else 30
 
                 val surfaces = listOf(previewSurface)
@@ -406,7 +406,7 @@ class Camera2System(
                 val videoSize = Size(3840, 2160)
                 val frameRate = if (caps.supports4k60) 60 else 30
 
-                
+
                 val orientationHint = calculateOrientationHint(caps.sensorOrientation)
 
                 val recorderSurface =
@@ -468,7 +468,7 @@ class Camera2System(
 
     private fun startPeriodicRawCapture() {
 
-        val captureInterval = 1000L / 15 
+        val captureInterval = 1000L / 15
 
         CoroutineScope(Dispatchers.IO).launch {
             while (isRecording && modeManager.getCurrentMode() == ModeManager.CameraMode.RAW_50MP) {
@@ -493,11 +493,20 @@ class Camera2System(
                     requestBuilder?.apply {
                         // Samsung Stage3/Level3 specific settings for maximum raw data preservation
                         set(CaptureRequest.CONTROL_MODE, android.hardware.camera2.CameraMetadata.CONTROL_MODE_OFF)
-                        set(CaptureRequest.NOISE_REDUCTION_MODE, android.hardware.camera2.CameraMetadata.NOISE_REDUCTION_MODE_OFF)
+                        set(
+                            CaptureRequest.NOISE_REDUCTION_MODE,
+                            android.hardware.camera2.CameraMetadata.NOISE_REDUCTION_MODE_OFF
+                        )
                         set(CaptureRequest.EDGE_MODE, android.hardware.camera2.CameraMetadata.EDGE_MODE_OFF)
-                        set(CaptureRequest.COLOR_CORRECTION_MODE, android.hardware.camera2.CameraMetadata.COLOR_CORRECTION_MODE_TRANSFORM_MATRIX)
-                        set(CaptureRequest.TONEMAP_MODE, android.hardware.camera2.CameraMetadata.TONEMAP_MODE_CONTRAST_CURVE)
-                        
+                        set(
+                            CaptureRequest.COLOR_CORRECTION_MODE,
+                            android.hardware.camera2.CameraMetadata.COLOR_CORRECTION_MODE_TRANSFORM_MATRIX
+                        )
+                        set(
+                            CaptureRequest.TONEMAP_MODE,
+                            android.hardware.camera2.CameraMetadata.TONEMAP_MODE_CONTRAST_CURVE
+                        )
+
                         // Set highest quality capture settings for Stage3/Level3
                         set(CaptureRequest.JPEG_QUALITY, 100.toByte())
                         set(CaptureRequest.HOT_PIXEL_MODE, android.hardware.camera2.CameraMetadata.HOT_PIXEL_MODE_OFF)
@@ -545,7 +554,7 @@ class Camera2System(
         return File(outputDirectory, filename)
     }
 
-    
+
     private fun calculateOrientationHint(sensorOrientation: Int): Int {
         return try {
             val windowManager =
@@ -558,7 +567,7 @@ class Camera2System(
                 else -> 0
             }
 
-            
+
             val orientationHint = (sensorOrientation - deviceRotation + 360) % 360
             Log.d(
                 TAG,
@@ -567,7 +576,7 @@ class Camera2System(
             orientationHint
         } catch (e: Exception) {
             Log.w(TAG, "Failed to calculate orientation hint", e)
-            90 
+            90
         }
     }
 }

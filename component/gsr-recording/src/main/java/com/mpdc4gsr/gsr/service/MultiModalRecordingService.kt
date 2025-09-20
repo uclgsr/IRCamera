@@ -94,7 +94,7 @@ class MultiModalRecordingService : Service() {
 
             override fun onSampleRecorded(sample: GSRSample) {
 
-                if (sample.sampleIndex % 1280 == 0L) { 
+                if (sample.sampleIndex % 1280 == 0L) {
                     updateNotification("Recording... ${sample.sampleIndex} samples")
                 }
             }
@@ -217,7 +217,7 @@ class MultiModalRecordingService : Service() {
         return NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle("Multi-Modal Recording")
             .setContentText(content)
-            .setSmallIcon(android.R.drawable.ic_media_ff) 
+            .setSmallIcon(android.R.drawable.ic_media_ff)
             .setOngoing(true)
             .setSilent(true)
             .build()

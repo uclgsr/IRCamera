@@ -76,12 +76,12 @@ class RecordingControllerTest {
 
     @Test
     fun `test sensor registration works correctly`() = testScope.runTest {
-        
+
         recordingController.registerSensor("RGB", mockRgbSensor)
         recordingController.registerSensor("Thermal", mockThermalSensor)
         recordingController.registerSensor("GSR", mockGsrSensor)
 
-        
+
         val availableSensors = recordingController.getAvailableSensors()
         assertEquals("Should have 3 registered sensors", 3, availableSensors.size)
         assertTrue("RGB should be registered", availableSensors.any { it.sensorId == "RGB" })
@@ -93,14 +93,14 @@ class RecordingControllerTest {
 
     @Test
     fun `test unregister sensor removes sensor correctly`() = testScope.runTest {
-        
+
         recordingController.registerSensor("RGB", mockRgbSensor)
         recordingController.registerSensor("Thermal", mockThermalSensor)
 
-        
+
         recordingController.unregisterSensor("Thermal")
 
-        
+
         val availableSensors = recordingController.getAvailableSensors()
         assertEquals("Should have 1 sensor after unregistering", 1, availableSensors.size)
         assertEquals("Remaining sensor should be RGB", "RGB", availableSensors[0].sensorId)
@@ -108,38 +108,38 @@ class RecordingControllerTest {
 
     @Test
     fun `test partial session start succeeds with some sensors failing`() = testScope.runTest {
-        
-        
+
+
         coEvery { mockRgbSensor.startRecording(any()) } returns true
-        coEvery { mockThermalSensor.startRecording(any()) } returns false  
+        coEvery { mockThermalSensor.startRecording(any()) } returns false
         coEvery { mockGsrSensor.startRecording(any()) } returns true
 
-        
+
         recordingController.registerSensor("RGB", mockRgbSensor)
         recordingController.registerSensor("Thermal", mockThermalSensor)
         recordingController.registerSensor("GSR", mockGsrSensor)
 
-        
+
         val sessionDir = createTempDirectory()
 
-        
+
         val result = recordingController.startSession(sessionDir.absolutePath)
 
         assertTrue("Session should start successfully with partial sensors", result)
         assertTrue("Recording should be active", recordingController.isRecording)
 
-        
+
         coVerify { mockRgbSensor.startRecording(any()) }
         coVerify { mockThermalSensor.startRecording(any()) }
         coVerify { mockGsrSensor.startRecording(any()) }
 
-        
+
         sessionDir.deleteRecursively()
     }
 
     @Test
     fun `test session fails if all sensors fail to start`() = testScope.runTest {
-        
+
         coEvery { mockRgbSensor.startRecording(any()) } returns false
         coEvery { mockThermalSensor.startRecording(any()) } returns false
         coEvery { mockGsrSensor.startRecording(any()) } returns false
@@ -150,7 +150,7 @@ class RecordingControllerTest {
 
         val sessionDir = createTempDirectory()
 
-        
+
         val result = recordingController.startSession(sessionDir.absolutePath)
 
         assertFalse("Session should fail when all sensors fail", result)
@@ -161,14 +161,14 @@ class RecordingControllerTest {
 
     @Test
     fun `test session succeeds with single working sensor`() = testScope.runTest {
-        
+
         coEvery { mockRgbSensor.startRecording(any()) } returns true
 
         recordingController.registerSensor("RGB", mockRgbSensor)
 
         val sessionDir = createTempDirectory()
 
-        
+
         val result = recordingController.startSession(sessionDir.absolutePath)
 
         assertTrue("Session should start with single sensor", result)
@@ -179,21 +179,21 @@ class RecordingControllerTest {
 
     @Test
     fun `test session metadata files are created`() = testScope.runTest {
-        
+
         coEvery { mockRgbSensor.startRecording(any()) } returns true
 
         recordingController.registerSensor("RGB", mockRgbSensor)
 
         val sessionDir = createTempDirectory()
 
-        
+
         recordingController.startSession(sessionDir.absolutePath)
 
-        
+
         val metadataFile = File(sessionDir, "session_metadata.json")
         assertTrue("Session metadata file should be created", metadataFile.exists())
 
-        
+
         val metadataContent = metadataFile.readText()
         assertTrue("Metadata should contain session_id", metadataContent.contains("session_id"))
         assertTrue(
@@ -210,7 +210,7 @@ class RecordingControllerTest {
 
     @Test
     fun `test backward compatibility with legacy methods`() = testScope.runTest {
-        
+
         coEvery { mockRgbSensor.startRecording(any()) } returns true
         coEvery { mockRgbSensor.stopRecording() } returns true
 
@@ -218,7 +218,7 @@ class RecordingControllerTest {
 
         val sessionDir = createTempDirectory()
 
-        
+
         val startResult = recordingController.startRecording(sessionDir.absolutePath)
         assertTrue("Legacy startRecording should work", startResult)
 
@@ -230,7 +230,7 @@ class RecordingControllerTest {
 
     @Test
     fun `test sensor subdirectory creation`() = testScope.runTest {
-        
+
         coEvery { mockRgbSensor.startRecording(any()) } returns true
         coEvery { mockGsrSensor.startRecording(any()) } returns true
 
@@ -241,7 +241,7 @@ class RecordingControllerTest {
 
         recordingController.startSession(sessionDir.absolutePath)
 
-        
+
         assertTrue("RGB subdirectory should exist", File(sessionDir, "rgb").exists())
         assertTrue("GSR subdirectory should exist", File(sessionDir, "gsr").exists())
 
@@ -250,7 +250,7 @@ class RecordingControllerTest {
 
     @Test
     fun `test clean session restart capability`() = testScope.runTest {
-        
+
         coEvery { mockRgbSensor.startRecording(any()) } returns true
         coEvery { mockRgbSensor.stopRecording() } returns true
 
@@ -259,14 +259,14 @@ class RecordingControllerTest {
         val sessionDir1 = createTempDirectory()
         val sessionDir2 = createTempDirectory()
 
-        
+
         assertTrue(
             "First session should start",
             recordingController.startSession(sessionDir1.absolutePath)
         )
         assertTrue("First session should stop", recordingController.stopSession())
 
-        
+
         assertTrue(
             "Second session should start after first completed",
             recordingController.startSession(sessionDir2.absolutePath)

@@ -38,15 +38,15 @@ class GSRDeviceManagementActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var deviceAdapter: GSRDeviceAdapter
     private val discoveredDevices = mutableListOf<GSRDeviceInfo>()
 
-    
+
     private var bluetoothAdapter: BluetoothAdapter? = null
     private var bluetoothManager: BluetoothManager? = null
 
-    
+
     private lateinit var permissionLauncher: ActivityResultLauncher<Array<String>>
     private var pendingOperation: (() -> Unit)? = null
 
-    
+
     private var isScanning = false
     private var isConnecting = false
 
@@ -56,7 +56,7 @@ class GSRDeviceManagementActivity : AppCompatActivity(), View.OnClickListener {
 
         prefs = getSharedPreferences("gsr_device_prefs", Context.MODE_PRIVATE)
 
-        
+
         bluetoothManager = getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager?
         bluetoothAdapter = bluetoothManager?.adapter
 
@@ -83,19 +83,19 @@ class GSRDeviceManagementActivity : AppCompatActivity(), View.OnClickListener {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = "GSR Device Management"
 
-        
+
         findViewById<View>(R.id.scanDevicesButton)?.setOnClickListener(this)
         findViewById<View>(R.id.stopScanButton)?.setOnClickListener(this)
         findViewById<View>(R.id.refreshButton)?.setOnClickListener(this)
         findViewById<View>(R.id.settingsButton)?.setOnClickListener(this)
 
-        
+
         updateConnectionStatus("Not Connected")
 
-        
+
         findViewById<View>(R.id.scanningIndicator)?.visibility = View.GONE
 
-        
+
         updateDeviceListState()
     }
 
@@ -150,7 +150,7 @@ class GSRDeviceManagementActivity : AppCompatActivity(), View.OnClickListener {
     private fun setupDeviceListRecycler() {
         deviceAdapter =
             GSRDeviceAdapter(discoveredDevices) { device ->
-                
+
                 connectToDevice(device)
             }
 
@@ -163,7 +163,7 @@ class GSRDeviceManagementActivity : AppCompatActivity(), View.OnClickListener {
     private fun loadSavedDevices() {
         try {
             val savedDevicesJson = prefs.getString("saved_devices", "[]")
-            
+
             Log.i(TAG, "Loaded saved devices configuration")
         } catch (e: Exception) {
             Log.w(TAG, "Failed to load saved devices", e)
@@ -199,25 +199,25 @@ class GSRDeviceManagementActivity : AppCompatActivity(), View.OnClickListener {
 
                 Log.i(TAG, "Starting GSR device scan")
 
-                
+
                 discoveredDevices.clear()
                 deviceAdapter.notifyDataSetChanged()
                 updateDeviceListState()
 
-                
+
                 val devices = gsrSensorRecorder?.getAvailableShimmerDevices() ?: emptyList()
 
-                
+
                 devices.forEach { deviceName ->
-                    delay(500) 
+                    delay(500)
 
                     val deviceInfo =
                         GSRDeviceInfo(
                             name = deviceName,
                             address = extractMacAddress(deviceName),
-                            rssi = -50, 
+                            rssi = -50,
                             isConnected = false,
-                            batteryLevel = 85, 
+                            batteryLevel = 85,
                             firmwareVersion = "1.0.0",
                         )
 
@@ -252,15 +252,15 @@ class GSRDeviceManagementActivity : AppCompatActivity(), View.OnClickListener {
     private fun refreshDeviceList() {
         lifecycleScope.launch {
             try {
-                
+
                 discoveredDevices.forEach { device ->
-                    
+
                     device.isConnected = checkDeviceConnection(device.address)
                 }
 
                 deviceAdapter.notifyDataSetChanged()
 
-                
+
                 val connectedDevice = discoveredDevices.find { it.isConnected }
                 if (connectedDevice != null) {
                     updateConnectionStatus("Connected to ${connectedDevice.name}")
@@ -288,7 +288,7 @@ class GSRDeviceManagementActivity : AppCompatActivity(), View.OnClickListener {
             return
         }
 
-        
+
         checkDevicePairingStatus(device)
     }
 
@@ -373,7 +373,7 @@ class GSRDeviceManagementActivity : AppCompatActivity(), View.OnClickListener {
             if (!isPaired) {
                 showPairingDialog(device, bluetoothDevice)
             } else {
-                
+
                 proceedWithConnection(device)
             }
 
@@ -415,9 +415,9 @@ class GSRDeviceManagementActivity : AppCompatActivity(), View.OnClickListener {
                 showToast("Pairing request sent. Please confirm on the device.")
                 Log.i(TAG, "Pairing request sent for ${deviceInfo.name}")
 
-                
+
                 lifecycleScope.launch {
-                    delay(5000) 
+                    delay(5000)
                     if (bluetoothDevice.bondState == BluetoothDevice.BOND_BONDED) {
                         showToast("Device paired successfully!")
                         proceedWithConnection(deviceInfo)
@@ -440,7 +440,7 @@ class GSRDeviceManagementActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun proceedWithConnection(device: GSRDeviceInfo) {
-        
+
         performActualConnection(device)
     }
 
@@ -521,21 +521,21 @@ class GSRDeviceManagementActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun extractMacAddress(deviceName: String): String {
-        
+
         return if (deviceName.contains("(") && deviceName.contains(")")) {
             deviceName.substringAfter("(").substringBefore(")")
         } else {
-            "00:00:00:00:00:00" 
+            "00:00:00:00:00:00"
         }
     }
 
     private suspend fun checkDeviceConnection(address: String): Boolean {
-        
+
         return gsrSensorRecorder?.getShimmerConnectionStatus()?.contains("Connected") == true
     }
 
     private fun saveDeviceConnection(device: GSRDeviceInfo) {
-        
+
         prefs.edit().apply {
             putString("last_connected_device", device.address)
             putString("last_connected_name", device.name)
@@ -554,7 +554,7 @@ class GSRDeviceManagementActivity : AppCompatActivity(), View.OnClickListener {
     override fun onDestroy() {
         super.onDestroy()
 
-        
+
         lifecycleScope.launch {
             try {
                 gsrSensorRecorder?.cleanup()

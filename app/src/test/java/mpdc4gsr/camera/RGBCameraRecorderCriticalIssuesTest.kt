@@ -126,7 +126,7 @@ class RGBCameraRecorderCriticalIssuesTest {
         every { backCameraCharacteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP) } returns mockStreamConfigMap
         every { mockStreamConfigMap.getOutputSizes(android.media.MediaRecorder::class.java) } returns
                 arrayOf(
-                    android.util.Size(3840, 2160), 
+                    android.util.Size(3840, 2160),
                     android.util.Size(1920, 1080),
                 )
 
@@ -263,7 +263,7 @@ class RGBCameraRecorderCriticalIssuesTest {
         every { limitedCameraCharacteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP) } returns mockStreamConfigMap
         every { mockStreamConfigMap.getOutputSizes(android.media.MediaRecorder::class.java) } returns
                 arrayOf(
-                    android.util.Size(1920, 1080), 
+                    android.util.Size(1920, 1080),
                 )
 
         every { mockCameraManager.getCameraCharacteristics("0") } returns limitedCameraCharacteristics
@@ -337,7 +337,7 @@ class RGBCameraRecorderCriticalIssuesTest {
         assertTrue(
             "Should have camera information structure",
             cameraInfo.isNotEmpty() || cameraInfo.isEmpty()
-        ) 
+        )
 
         cameraInfo.forEach { info ->
             assertNotNull("Camera ID should not be null", info.cameraId)

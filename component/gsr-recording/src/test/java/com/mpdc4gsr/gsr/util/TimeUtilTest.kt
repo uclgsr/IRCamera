@@ -64,7 +64,7 @@ class TimeUtilTest {
 
     @Test
     fun testFormatTimestamp() {
-        val timestamp = 1640995200000L 
+        val timestamp = 1640995200000L
         val formatted = TimeUtil.formatTimestamp(timestamp)
 
         assertTrue(

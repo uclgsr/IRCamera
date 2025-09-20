@@ -57,7 +57,7 @@ class IRVideoGSYActivity : BaseActivity() {
         isRemote = intent.getBooleanExtra("isRemote", false)
         data = intent.getParcelableExtra("data") ?: throw NullPointerException("传递 data")
 
-        clBottom.isVisible = isRemote 
+        clBottom.isVisible = isRemote
 
         if (!isRemote) {
             titleView.setRightDrawable(UiR.drawable.ic_toolbar_info_svg)
@@ -97,13 +97,10 @@ class IRVideoGSYActivity : BaseActivity() {
     ) {
 
 
-        
-
-
     }
 
     private fun actionDownload(isToShare: Boolean) {
-        if (data.hasDownload) { 
+        if (data.hasDownload) {
             if (isToShare) {
                 actionShare()
             }
@@ -217,5 +214,5 @@ class IRVideoGSYActivity : BaseActivity() {
         super.onPause()
     }
 
-    
+
 }

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <paths>
-    
+
     <external-files-path
         name="MPDC4GSR_files"
         path="." />
 
-    
+
     <external-files-path
         name="Pictures"
         path="Pictures" />
@@ -15,7 +15,7 @@
         name="external_cache"
         path="." />
 
-    
+
     <external-path
         name="MPDC4GSR"
         path="." />
@@ -23,7 +23,7 @@
         name="Pictures_legacy"
         path="Pictures/MPDC4GSR" />
 
-    
+
     <root-path
         name="MPDC4GSR_root"
         path="" />

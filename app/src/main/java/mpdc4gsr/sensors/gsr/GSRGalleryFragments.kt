@@ -108,12 +108,12 @@ class GSRDataFragment : Fragment() {
 
         val sampleCount =
             try {
-                file.readLines().size - 1L 
+                file.readLines().size - 1L
             } catch (e: Exception) {
                 0L
             }
 
-        val duration = sampleCount / 128 
+        val duration = sampleCount / 128
 
         val createdDate =
             java.text.SimpleDateFormat(
@@ -395,7 +395,7 @@ class GSRSessionFragment : Fragment() {
             gsrDataFile?.let { file: File ->
                 try {
                     val sampleCount = file.readLines().size - 1L
-                    sampleCount / 128 
+                    sampleCount / 128
                 } catch (e: Exception) {
                     0L
                 }

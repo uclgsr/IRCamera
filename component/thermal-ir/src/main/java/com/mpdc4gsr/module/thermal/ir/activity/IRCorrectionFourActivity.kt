@@ -13,8 +13,6 @@ import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 
 
-
-
 class IRCorrectionFourActivity : BaseActivity() {
     val time = 60
 

@@ -16,13 +16,13 @@ class SessionDirectoryManager(private val context: Context) {
     companion object {
         private const val TAG = "SessionDirectoryManager"
 
-        
+
         private const val SESSIONS_ROOT_DIR = "sessions"
         private const val RGB_SUBDIR = "RGB"
         private const val THERMAL_SUBDIR = "Thermal"
         private const val SHIMMER_SUBDIR = "Shimmer"
 
-        
+
         const val RGB_VIDEO_FILE = "rgb_video.mp4"
         const val SHIMMER_DATA_FILE = "shimmer_data.csv"
         const val THERMAL_FRAMES_FILE = "thermal_frames.csv"
@@ -30,11 +30,11 @@ class SessionDirectoryManager(private val context: Context) {
         const val SESSION_METADATA_FILE = "session_metadata.json"
         const val SYNC_MARKERS_FILE = "sync_markers.csv"
 
-        
-        private const val MIN_FREE_SPACE_MB = 500L 
-        private const val WARNING_FREE_SPACE_MB = 1000L 
 
-        
+        private const val MIN_FREE_SPACE_MB = 500L
+        private const val WARNING_FREE_SPACE_MB = 1000L
+
+
         private val SESSION_ID_FORMAT = SimpleDateFormat("yyyyMMdd_HHmmss_SSS", Locale.getDefault())
     }
 
@@ -44,7 +44,7 @@ class SessionDirectoryManager(private val context: Context) {
         }
     }
 
-    
+
     fun generateSessionId(): String {
         val timestamp = SESSION_ID_FORMAT.format(Date())
         val deviceModel = Build.MODEL.replace(Regex("[^a-zA-Z0-9]"), "")
@@ -52,16 +52,16 @@ class SessionDirectoryManager(private val context: Context) {
         return "${timestamp}_${deviceModel}_${uuid}"
     }
 
-    
+
     fun createSessionDirectory(sessionId: String): SessionDirectory {
         val sessionDir = File(baseDirectory, sessionId)
 
-        
+
         if (!sessionDir.mkdirs() && !sessionDir.exists()) {
             throw IllegalStateException("Failed to create session directory: ${sessionDir.absolutePath}")
         }
 
-        
+
         val rgbDir = File(sessionDir, RGB_SUBDIR).also { it.mkdirs() }
         val thermalDir = File(sessionDir, THERMAL_SUBDIR).also { it.mkdirs() }
         val shimmerDir = File(sessionDir, SHIMMER_SUBDIR).also { it.mkdirs() }
@@ -77,7 +77,7 @@ class SessionDirectoryManager(private val context: Context) {
         )
     }
 
-    
+
     fun createSessionMetadata(sessionDir: SessionDirectory, metadata: SessionMetadata): File {
         val metadataFile = File(sessionDir.rootDir, SESSION_METADATA_FILE)
 
@@ -100,7 +100,7 @@ class SessionDirectoryManager(private val context: Context) {
         return metadataFile
     }
 
-    
+
     fun updateSessionMetadata(
         sessionDir: SessionDirectory,
         endTime: Long,
@@ -120,7 +120,7 @@ class SessionDirectoryManager(private val context: Context) {
                     jsonMetadata.put("errors", JSONObject(errors))
                 }
 
-                
+
                 val filesInfo = getSessionFilesInfo(sessionDir)
                 jsonMetadata.put("files", JSONObject(filesInfo))
 
@@ -133,7 +133,7 @@ class SessionDirectoryManager(private val context: Context) {
         }
     }
 
-    
+
     fun checkStorageSpace(): StorageStatus {
         val stat = StatFs(baseDirectory.absolutePath)
         val availableBytes = stat.availableBytes
@@ -148,7 +148,7 @@ class SessionDirectoryManager(private val context: Context) {
         )
     }
 
-    
+
     fun cleanupFailedSessions(): List<String> {
         val cleanedSessions = mutableListOf<String>()
 
@@ -167,11 +167,11 @@ class SessionDirectoryManager(private val context: Context) {
         return cleanedSessions
     }
 
-    
+
     private fun getSessionFilesInfo(sessionDir: SessionDirectory): Map<String, Any> {
         val filesInfo = mutableMapOf<String, Any>()
 
-        
+
         val rgbVideo = File(sessionDir.rgbDir, RGB_VIDEO_FILE)
         val shimmerData = File(sessionDir.shimmerDir, SHIMMER_DATA_FILE)
         val thermalFrames = File(sessionDir.thermalDir, THERMAL_FRAMES_FILE)
@@ -204,26 +204,26 @@ class SessionDirectoryManager(private val context: Context) {
         return filesInfo
     }
 
-    
+
     private fun isFailedSession(sessionDir: File): Boolean {
         val metadataFile = File(sessionDir, SESSION_METADATA_FILE)
 
-        
+
         if (!metadataFile.exists()) {
-            
+
             val totalSize = sessionDir.walkTopDown().filter { it.isFile }.map { it.length() }.sum()
-            return totalSize < 1024 
+            return totalSize < 1024
         }
 
         try {
             val metadata = JSONObject(metadataFile.readText())
             val status = metadata.optString("status", "")
 
-            
+
             if (status == "FAILED" || status == "ERROR") {
                 val hasDataFiles = sessionDir.walkTopDown()
                     .filter { it.isFile && it.name != SESSION_METADATA_FILE }
-                    .any { it.length() > 10240 } 
+                    .any { it.length() > 10240 }
 
                 return !hasDataFiles
             }
@@ -244,7 +244,7 @@ class SessionDirectoryManager(private val context: Context) {
         }
     }
 
-    
+
     fun getStandardFilePath(sessionDir: SessionDirectory, sensor: String, fileName: String): File {
         val sensorDir = when (sensor.lowercase()) {
             "rgb", "camera", "rgbcamera" -> sessionDir.rgbDir

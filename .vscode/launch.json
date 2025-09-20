@@ -1,54 +1,54 @@
 {
-    "version": "0.2.0",
-    "configurations": [
-        {
-            "name": "PC Controller - MVP Demo",
-            "type": "python",
-            "request": "launch",
-            "program": "${workspaceFolder}/pc-controller/demo_mvp_components.py",
-            "console": "integratedTerminal",
-            "justMyCode": false,
-            "cwd": "${workspaceFolder}/pc-controller",
-            "env": {
-                "PYTHONPATH": "${workspaceFolder}/pc-controller/src",
-                "QT_QPA_PLATFORM": "offscreen"
-            }
-        },
-        {
-            "name": "PC Controller - MVP App",
-            "type": "python",
-            "request": "launch",
-            "program": "${workspaceFolder}/pc-controller/run_mvp_app.py",
-            "console": "integratedTerminal",
-            "justMyCode": false,
-            "cwd": "${workspaceFolder}/pc-controller",
-            "env": {
-                "PYTHONPATH": "${workspaceFolder}/pc-controller/src",
-                "QT_QPA_PLATFORM": "offscreen"
-            }
-        },
-        {
-            "name": "PC Controller - Tests",
-            "type": "python",
-            "request": "launch",
-            "program": "${workspaceFolder}/pc-controller/test_mvp_simple.py",
-            "console": "integratedTerminal",
-            "justMyCode": false,
-            "cwd": "${workspaceFolder}/pc-controller",
-            "env": {
-                "PYTHONPATH": "${workspaceFolder}/pc-controller/src"
-            }
-        },
-        {
-            "name": "Python: Current File",
-            "type": "python",
-            "request": "launch",
-            "program": "${file}",
-            "console": "integratedTerminal",
-            "justMyCode": false,
-            "env": {
-                "PYTHONPATH": "${workspaceFolder}/pc-controller/src"
-            }
-        }
-    ]
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "PC Controller - MVP Demo",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}/pc-controller/demo_mvp_components.py",
+      "console": "integratedTerminal",
+      "justMyCode": false,
+      "cwd": "${workspaceFolder}/pc-controller",
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}/pc-controller/src",
+        "QT_QPA_PLATFORM": "offscreen"
+      }
+    },
+    {
+      "name": "PC Controller - MVP App",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}/pc-controller/run_mvp_app.py",
+      "console": "integratedTerminal",
+      "justMyCode": false,
+      "cwd": "${workspaceFolder}/pc-controller",
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}/pc-controller/src",
+        "QT_QPA_PLATFORM": "offscreen"
+      }
+    },
+    {
+      "name": "PC Controller - Tests",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}/pc-controller/test_mvp_simple.py",
+      "console": "integratedTerminal",
+      "justMyCode": false,
+      "cwd": "${workspaceFolder}/pc-controller",
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}/pc-controller/src"
+      }
+    },
+    {
+      "name": "Python: Current File",
+      "type": "python",
+      "request": "launch",
+      "program": "${file}",
+      "console": "integratedTerminal",
+      "justMyCode": false,
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}/pc-controller/src"
+      }
+    }
+  ]
 }

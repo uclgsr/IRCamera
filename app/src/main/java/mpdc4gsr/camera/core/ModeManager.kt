@@ -99,8 +99,8 @@ class ModeManager {
 
         return when (mode) {
             CameraMode.RAW_50MP -> caps.supportsRaw && caps.rawSize.width > 0
-            CameraMode.VIDEO_4K -> true 
-            CameraMode.PREVIEW_ONLY -> true 
+            CameraMode.VIDEO_4K -> true
+            CameraMode.PREVIEW_ONLY -> true
         }
     }
 
@@ -124,7 +124,7 @@ class ModeManager {
         val caps = deviceCaps ?: return 30
 
         return when (currentMode) {
-            CameraMode.RAW_50MP -> 15 
+            CameraMode.RAW_50MP -> 15
             CameraMode.VIDEO_4K -> if (caps.supports4k60) 60 else 30
             CameraMode.PREVIEW_ONLY -> 30
         }

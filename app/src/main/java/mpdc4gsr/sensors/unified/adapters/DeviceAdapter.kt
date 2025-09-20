@@ -77,7 +77,7 @@ class DeviceAdapter(
                     DeviceInfo.SignalStrength.EXCELLENT -> Color.GREEN
                     DeviceInfo.SignalStrength.GOOD -> Color.BLUE
                     DeviceInfo.SignalStrength.FAIR -> Color.YELLOW
-                    DeviceInfo.SignalStrength.POOR -> 0xFFFF8800.toInt() 
+                    DeviceInfo.SignalStrength.POOR -> 0xFFFF8800.toInt()
                     DeviceInfo.SignalStrength.VERY_POOR -> Color.RED
                 }
             )

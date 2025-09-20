@@ -183,7 +183,7 @@ class GSRRawImageAdapter(
         holder.fileSize.text = formatFileSize(rawImageFile.length())
 
         val filename = rawImageFile.nameWithoutExtension
-        holder.resolution.text = "4032×3024 (12MP)" 
+        holder.resolution.text = "4032×3024 (12MP)"
         holder.captureInfo.text = "DNG RAW • Level 3"
 
         holder.createdDate.text =

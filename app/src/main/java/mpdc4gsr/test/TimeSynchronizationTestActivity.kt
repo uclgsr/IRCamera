@@ -31,7 +31,7 @@ class TimeSynchronizationTestActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        
+
         val layout = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
             setPadding(32, 32, 32, 32)
@@ -83,7 +83,7 @@ class TimeSynchronizationTestActivity : AppCompatActivity() {
 
         setContentView(layout)
 
-        
+
         timeSyncService = TimeSynchronizationService()
         recordingController = RecordingController(this, this)
 
@@ -94,49 +94,49 @@ class TimeSynchronizationTestActivity : AppCompatActivity() {
         lifecycleScope.launch {
             try {
                 addLog("=== Testing Unified Timestamp System ===")
-                
-                
+
+
                 addLog("1. Testing TimestampManager basic functionality...")
                 val timestamp1 = TimestampManager.createTimestampRecord()
                 delay(100)
                 val timestamp2 = TimestampManager.createTimestampRecord()
-                
+
                 addLog("Timestamp 1: system_nanos=${timestamp1.systemNanos}")
                 addLog("Timestamp 1: system_time_ms=${timestamp1.systemTimeMs}")
                 addLog("Timestamp 1: session_relative_ms=${timestamp1.sessionRelativeMs}")
-                
+
                 addLog("Timestamp 2: system_nanos=${timestamp2.systemNanos}")
                 val timeDiff = (timestamp2.systemNanos - timestamp1.systemNanos) / 1_000_000
                 addLog("Time difference: ${timeDiff}ms (should be ~100ms)")
-                
-                
+
+
                 addLog("\n2. Testing session initialization...")
                 val testSessionDir = "/tmp/test_session"
                 val sessionRef = timeSyncService.initializeSession(testSessionDir)
-                
+
                 addLog("Session reference initialized:")
                 addLog("  - session_start_system_ms: ${sessionRef.sessionStartSystemMs}")
                 addLog("  - session_start_monotonic_ns: ${sessionRef.sessionStartMonotonicNs}")
                 addLog("  - boot_time_reference_ms: ${sessionRef.bootTimeReferenceMs}")
-                
-                
+
+
                 addLog("\n3. Testing synchronized timestamps...")
                 val syncTimestamp1 = timeSyncService.createSynchronizedTimestamp()
                 delay(50)
                 val syncTimestamp2 = timeSyncService.createSynchronizedTimestamp()
-                
+
                 addLog("Sync timestamp 1: ${syncTimestamp1.toCsvFormat()}")
                 addLog("Sync timestamp 2: ${syncTimestamp2.toCsvFormat()}")
-                
+
                 val syncDiff = (syncTimestamp2.systemNanos - syncTimestamp1.systemNanos) / 1_000_000
                 addLog("Sync time difference: ${syncDiff}ms (should be ~50ms)")
-                
-                
+
+
                 addLog("\n4. Testing CSV header format...")
                 addLog("CSV Header: ${TimestampRecord.getCsvHeader()}")
-                
+
                 statusText.text = "Unified Timestamp System Test Completed ✓"
-                
+
             } catch (e: Exception) {
                 addLog("ERROR during timestamp test: ${e.message}")
                 statusText.text = "Timestamp Test Failed ✗"
@@ -148,34 +148,38 @@ class TimeSynchronizationTestActivity : AppCompatActivity() {
         lifecycleScope.launch {
             try {
                 addLog("=== Testing Cross-Sensor Sync Events ===")
-                
-                
+
+
                 addLog("1. Testing sync event emission...")
-                timeSyncService.emitSyncEvent("test_sync_event", mapOf(
-                    "test_type" to "integration_test",
-                    "sensor_count" to "3"
-                ))
-                
+                timeSyncService.emitSyncEvent(
+                    "test_sync_event", mapOf(
+                        "test_type" to "integration_test",
+                        "sensor_count" to "3"
+                    )
+                )
+
                 delay(100)
-                
-                
+
+
                 addLog("2. Testing multiple sync events...")
                 val syncEvents = listOf("session_start", "flash_sync", "manual_marker", "session_end")
-                
+
                 syncEvents.forEach { eventType ->
-                    timeSyncService.emitSyncEvent(eventType, mapOf(
-                        "sequence" to eventType,
-                        "timestamp_test" to "true"
-                    ))
-                    delay(25) 
+                    timeSyncService.emitSyncEvent(
+                        eventType, mapOf(
+                            "sequence" to eventType,
+                            "timestamp_test" to "true"
+                        )
+                    )
+                    delay(25)
                 }
-                
-                
+
+
                 addLog("3. Testing RecordingController integration...")
                 recordingController?.let { controller ->
                     val syncTimestamp = controller.createSynchronizedTimestamp()
                     addLog("RecordingController sync timestamp: ${syncTimestamp.systemTimeMs}ms")
-                    
+
                     val sessionRef = controller.getSessionTimestampReference()
                     if (sessionRef != null) {
                         addLog("RecordingController has session reference: ✓")
@@ -183,7 +187,7 @@ class TimeSynchronizationTestActivity : AppCompatActivity() {
                         addLog("RecordingController session reference: null (no active session)")
                     }
                 }
-                
+
                 addLog("4. Testing timestamp consistency validation...")
                 recordingController?.let { controller ->
                     val timestamps = controller.validateTimestampConsistency()
@@ -192,9 +196,9 @@ class TimeSynchronizationTestActivity : AppCompatActivity() {
                         addLog("  $sensor: $timestamp")
                     }
                 }
-                
+
                 statusText.text = "Cross-Sensor Sync Event Test Completed ✓"
-                
+
             } catch (e: Exception) {
                 addLog("ERROR during sync event test: ${e.message}")
                 statusText.text = "Sync Event Test Failed ✗"
@@ -211,8 +215,8 @@ class TimeSynchronizationTestActivity : AppCompatActivity() {
             } else {
                 "$currentText\n$message"
             }
-            
-            
+
+
             (logText.parent as? ScrollView)?.post {
                 (logText.parent as ScrollView).fullScroll(ScrollView.FOCUS_DOWN)
             }
@@ -226,7 +230,7 @@ class TimeSynchronizationTestActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        
+
         try {
             timeSyncService.finalizeSession()
         } catch (e: Exception) {

@@ -27,19 +27,19 @@ class ThermalRecorderTest {
         context = ApplicationProvider.getApplicationContext()
         thermalRecorder = ThermalRecorder(context)
 
-        
+
         testSessionDir = "${context.cacheDir}/test_session_${System.currentTimeMillis()}"
         File(testSessionDir).mkdirs()
     }
 
     @Test
     fun testStartStopRecording() = runTest {
-        
+
         val started = thermalRecorder.startRecording(testSessionDir, saveImages = false)
         assertTrue("Recording should start successfully", started)
         assertTrue("Should be recording", thermalRecorder.isRecording())
 
-        
+
         val stopped = thermalRecorder.stopRecording()
         assertTrue("Recording should stop successfully", stopped)
         assertFalse("Should not be recording", thermalRecorder.isRecording())
@@ -50,7 +50,7 @@ class ThermalRecorderTest {
         val latch = CountDownLatch(1)
         var processedStats: ThermalRecorder.ThermalFrameStats? = null
 
-        
+
         thermalRecorder.setFrameListener(object : ThermalRecorder.ThermalFrameListener {
             override fun onFrameProcessed(stats: ThermalRecorder.ThermalFrameStats) {
                 processedStats = stats
@@ -62,17 +62,17 @@ class ThermalRecorderTest {
             }
         })
 
-        
+
         thermalRecorder.startRecording(testSessionDir, saveImages = false)
 
-        
+
         val width = 256
         val height = 192
         val frameData = ByteArray(width * height)
 
         // Fill with test data (simulate temperature range 20-30°C)
         for (i in frameData.indices) {
-            frameData[i] = (20 + (i % 10)).toByte() 
+            frameData[i] = (20 + (i % 10)).toByte()
         }
 
         thermalRecorder.processFrameFromIntensity(
@@ -80,10 +80,10 @@ class ThermalRecorderTest {
             minTempRange = 20f, maxTempRange = 30f
         )
 
-        
+
         assertTrue("Should process frame", latch.await(2, TimeUnit.SECONDS))
 
-        
+
         assertNotNull("Should have processed stats", processedStats)
         processedStats?.let { stats ->
             assertEquals("Should be first frame", 1L, stats.frameSequence)
@@ -96,13 +96,13 @@ class ThermalRecorderTest {
 
     @Test
     fun testCsvOutput() = runTest {
-        
+
         thermalRecorder.startRecording(testSessionDir, saveImages = false)
 
-        
-        val frameData = ByteArray(100) 
+
+        val frameData = ByteArray(100)
         for (i in frameData.indices) {
-            frameData[i] = 25.toByte() 
+            frameData[i] = 25.toByte()
         }
 
         thermalRecorder.processFrameFromIntensity(
@@ -110,10 +110,10 @@ class ThermalRecorderTest {
             minTempRange = 20f, maxTempRange = 30f
         )
 
-        
+
         thermalRecorder.stopRecording()
 
-        
+
         val sessionDir = File(testSessionDir)
         val csvFiles =
             sessionDir.listFiles { _, name -> name.startsWith("thermal_stats_") && name.endsWith(".csv") }
@@ -121,7 +121,7 @@ class ThermalRecorderTest {
         assertNotNull("Should have CSV files", csvFiles)
         assertTrue("Should have at least one CSV file", csvFiles.isNotEmpty())
 
-        
+
         val csvFile = csvFiles.first()
         val lines = csvFile.readLines()
 
@@ -137,7 +137,7 @@ class ThermalRecorderTest {
         val parts = dataLine.split(",")
         assertTrue("Data line should have required columns", parts.size >= 5)
 
-        
+
         val timestamp = parts[0].toLongOrNull()
         assertNotNull("Timestamp should be valid long", timestamp)
 
@@ -150,10 +150,10 @@ class ThermalRecorderTest {
 
     @Test
     fun testImageSaving() = runTest {
-        
+
         thermalRecorder.startRecording(testSessionDir, saveImages = true)
 
-        
+
         val frameData = ByteArray(100)
         for (i in frameData.indices) {
             frameData[i] = (i % 256).toByte()
@@ -164,12 +164,12 @@ class ThermalRecorderTest {
             minTempRange = 0f, maxTempRange = 255f
         )
 
-        
+
         Thread.sleep(500)
 
         thermalRecorder.stopRecording()
 
-        
+
         val sessionDir = File(testSessionDir)
         val imageFiles = sessionDir.listFiles { _, name ->
             name.startsWith("thermal_frame_") && name.endsWith(".png")
@@ -178,7 +178,7 @@ class ThermalRecorderTest {
         assertNotNull("Should have image files", imageFiles)
         assertTrue("Should have at least one image file", imageFiles.isNotEmpty())
 
-        
+
         val imageFile = imageFiles.first()
         assertTrue("Image file should not be empty", imageFile.length() > 0)
     }
@@ -189,7 +189,7 @@ class ThermalRecorderTest {
 
         assertEquals("Initial frame count should be 0", 0L, thermalRecorder.getFrameCount())
 
-        
+
         val frameData = ByteArray(100)
         repeat(5) { i ->
             frameData[0] = i.toByte()
@@ -199,7 +199,7 @@ class ThermalRecorderTest {
             )
         }
 
-        
+
         Thread.sleep(100)
 
         assertEquals("Frame count should be 5", 5L, thermalRecorder.getFrameCount())
@@ -221,15 +221,15 @@ class ThermalRecorderTest {
             }
         })
 
-        
+
         val frameData = ByteArray(100)
         thermalRecorder.processFrameFromIntensity(
             frameData, 10, 10,
             minTempRange = 0f, maxTempRange = 100f
         )
 
-        
-        
+
+
         assertFalse("Should not be recording", thermalRecorder.isRecording())
     }
 }

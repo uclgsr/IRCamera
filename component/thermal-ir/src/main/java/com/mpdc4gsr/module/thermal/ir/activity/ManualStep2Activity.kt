@@ -56,13 +56,13 @@ class ManualStep2Activity :
 
     private val mIrPid = 0x5830
     private val mIrFps = 25
-    private var mIrCameraWidth = 0 
-    private var mIrCameraHeight = 0 
-    private var mImageWidth = 0 
-    private var mImageHeight = 0 
+    private var mIrCameraWidth = 0
+    private var mIrCameraHeight = 0
+    private var mImageWidth = 0
+    private var mImageHeight = 0
 
     private val mVlPid = 12337
-    private val mVlFps = 30 
+    private val mVlFps = 30
     private val mVlCameraWidth = 1280
     private val mVlCameraHeight = 720
 
@@ -73,9 +73,9 @@ class ManualStep2Activity :
     private var sId: String = ""
 
     private val INIT_ALIGN_DATA = floatArrayOf(1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f)
-    private var alignScaleX = 0f 
-    private var alignScaleY = 0f 
-    private var canOperate = false 
+    private var alignScaleX = 0f
+    private var alignScaleY = 0f
+    private var canOperate = false
     private val mIrDualHandler: Handler =
         object : Handler(Looper.myLooper()!!) {
             override fun handleMessage(msg: Message) {
@@ -185,8 +185,8 @@ class ManualStep2Activity :
     private fun initDataFlowMode(dataFlowMode: CommonParams.DataFlowMode) {
         if (dataFlowMode == CommonParams.DataFlowMode.IMAGE_AND_TEMP_OUTPUT) {
 
-            mIrCameraWidth = Const.SENSOR_WIDTH 
-            mIrCameraHeight = Const.SENSOR_HEIGHT 
+            mIrCameraWidth = Const.SENSOR_WIDTH
+            mIrCameraHeight = Const.SENSOR_HEIGHT
             mImageWidth = mIrCameraHeight / 2
             mImageHeight = mIrCameraWidth
         }
@@ -280,7 +280,7 @@ class ManualStep2Activity :
         }
     }
 
-    
+
     open fun initDefIntegralArgsDISP_VALUE(typeLoadParameters: DualCameraParams.TypeLoadParameters) {
         lifecycleScope.launch {
             val parameters = IRCmdTool.getDualBytes(USBMonitorDualManager.getInstance().ircmd)
@@ -490,7 +490,7 @@ class ManualStep2Activity :
     fun updateSaveButton() {
         if (ivTakePhoto!!.visibility == View.INVISIBLE) {
             ivTakePhoto!!.visibility = View.VISIBLE
-            ivTakePhoto!!.setOnClickListener { 
+            ivTakePhoto!!.setOnClickListener {
                 val message = Message.obtain()
                 message.what = SHOW_LOADING
                 message.obj = ""

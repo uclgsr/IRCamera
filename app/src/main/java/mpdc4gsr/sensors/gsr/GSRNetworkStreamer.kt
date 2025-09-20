@@ -43,9 +43,9 @@ class GSRNetworkStreamer(
     private val networkErrors = AtomicLong(0)
     private var startTime: Long = 0
 
-    private var clockOffset: Long = 0 
+    private var clockOffset: Long = 0
     private var lastSyncTime: Long = 0
-    private val syncInterval = 30000L 
+    private val syncInterval = 30000L
 
     suspend fun initialize(): Boolean {
         return withContext(Dispatchers.IO) {
@@ -146,7 +146,7 @@ class GSRNetworkStreamer(
             sampleBuffer.offer(syncedSample)
 
             if (sampleBuffer.size > BUFFER_SIZE) {
-                sampleBuffer.poll() 
+                sampleBuffer.poll()
                 Log.w(TAG, "GSR sample buffer overflow, dropping oldest sample")
             }
         } catch (e: Exception) {
@@ -169,7 +169,7 @@ class GSRNetworkStreamer(
             } catch (e: Exception) {
                 Log.e(TAG, "Error in GSR streaming loop", e)
                 networkErrors.incrementAndGet()
-                delay(1000) 
+                delay(1000)
             }
         }
     }
@@ -190,7 +190,7 @@ class GSRNetworkStreamer(
             // TODO: Implement proper message sending when EnhancedNetworkClient exposes public messaging API
             Log.d(TAG, "Would send GSR batch: ${batchMessage.toString().take(100)}...")
 
-            
+
             samplesSent.addAndGet(batch.size.toLong())
             bytesTransmitted.addAndGet(batchMessage.toString().length.toLong())
             Log.d(TAG, "Simulated sending GSR batch of ${batch.size} samples")
@@ -215,7 +215,7 @@ class GSRNetworkStreamer(
                                 put("timestamp", sample.timestamp)
                                 put("gsr_value", sample.conductance)
                                 put("raw_value", sample.rawValue)
-                                put("quality", 1.0) 
+                                put("quality", 1.0)
                                 put(
                                     "device_id", android.provider.Settings.Secure.getString(
                                         context.contentResolver,
@@ -243,9 +243,9 @@ class GSRNetworkStreamer(
             // TODO: Implement proper time sync when EnhancedNetworkClient exposes messaging API
             Log.d(TAG, "Would send time sync request: ${syncRequest}")
 
-            
+
             val clientSent = System.nanoTime()
-            val serverTime = clientSent 
+            val serverTime = clientSent
             val clientReceived = System.nanoTime()
 
             val roundTripTime = clientReceived - clientSent
@@ -322,7 +322,7 @@ class GSRNetworkStreamer(
                             android.provider.Settings.Secure.ANDROID_ID,
                         ),
                     )
-                    put("sampling_rate", 128) 
+                    put("sampling_rate", 128)
                     put("timestamp", System.currentTimeMillis())
                 }
 

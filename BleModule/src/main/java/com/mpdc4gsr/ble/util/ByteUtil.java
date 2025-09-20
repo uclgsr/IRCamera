@@ -98,8 +98,8 @@ public class ByteUtil {
     public static byte[] short2byte(short s) {
         byte[] b = new byte[2];
         for (int i = 0; i < 2; i++) {
-            int offset = 16 - (i + 1) * 8; 
-            b[i] = (byte) ((s >> offset) & 0xff); 
+            int offset = 16 - (i + 1) * 8;
+            b[i] = (byte) ((s >> offset) & 0xff);
         }
         return b;
     }

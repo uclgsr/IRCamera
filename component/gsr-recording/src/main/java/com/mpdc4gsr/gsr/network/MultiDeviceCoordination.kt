@@ -23,7 +23,7 @@ class MultiDeviceCoordination(
         private const val SYNC_INTERVAL_MS = 1000L
         private const val LEADER_ELECTION_TIMEOUT = 5000L
         private const val HEARTBEAT_TIMEOUT = 3000L
-        private const val MAX_SYNC_DRIFT_MS = 50L 
+        private const val MAX_SYNC_DRIFT_MS = 50L
     }
 
     private val coordinationJob = SupervisorJob()
@@ -166,7 +166,7 @@ class MultiDeviceCoordination(
 
         priority += getBatteryLevel()
 
-        priority += 50 
+        priority += 50
 
         if (networkClient.isConnected()) priority += 25
 
@@ -204,7 +204,7 @@ class MultiDeviceCoordination(
 
                 checkDeviceHealth()
 
-                
+
                 processScheduledEvents()
 
                 delay(SYNC_INTERVAL_MS)
@@ -242,13 +242,13 @@ class MultiDeviceCoordination(
 
         if (drift > MAX_SYNC_DRIFT_MS) {
             Log.w(TAG, "Time drift detected: ${drift}ms")
-            
+
             coordinationScope.launch {
                 requestTimeResync()
             }
         }
 
-        
+
         sendHeartbeat()
     }
 
@@ -284,7 +284,7 @@ class MultiDeviceCoordination(
 
             syncEvents[eventId] = syncEvent
 
-            
+
             val eventMessage =
                 JSONObject().apply {
                     put("type", "coordination_event")
@@ -305,7 +305,7 @@ class MultiDeviceCoordination(
         val eventType = message.optString("event_type")
         val scheduledTime = message.optLong("scheduled_time")
 
-        
+
         coordinationScope.launch {
             val delay = scheduledTime - System.currentTimeMillis()
             if (delay > 0) {
@@ -353,11 +353,11 @@ class MultiDeviceCoordination(
     }
 
     private suspend fun handleSyncFlash() {
-        
-        
+
+
         Log.d(TAG, "Executing sync flash at ${System.currentTimeMillis()}")
 
-        
+
         val flashIntent = android.content.Intent("com.topdon.gsr.SYNC_FLASH")
         flashIntent.putExtra("timestamp", System.currentTimeMillis())
         context.sendBroadcast(flashIntent)
@@ -383,7 +383,7 @@ class MultiDeviceCoordination(
         val currentSessionId: String?,
     )
 
-    
+
     private fun jsonArrayToList(jsonArray: JSONArray?): List<String> {
         val list = mutableListOf<String>()
         jsonArray?.let {
@@ -405,12 +405,12 @@ class MultiDeviceCoordination(
     }
 
     private fun isDeviceRecording(): Boolean {
-        
+
         return false // Placeholder
     }
 
     private suspend fun requestTimeResync() {
-        
+
         Log.d(TAG, "Requesting time resynchronization")
     }
 
@@ -450,7 +450,7 @@ class MultiDeviceCoordination(
     }
 
     private fun processScheduledEvents() {
-        
+
         syncEvents.entries.removeAll { (_, event) ->
             event.isCompleted
         }

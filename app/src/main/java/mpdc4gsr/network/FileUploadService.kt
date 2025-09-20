@@ -43,10 +43,10 @@ class FileUploadService(private val context: Context) {
     companion object {
         private const val TAG = "FileUploadService"
 
-        private const val DEFAULT_CHUNK_SIZE = 1024 * 1024 
+        private const val DEFAULT_CHUNK_SIZE = 1024 * 1024
         private const val MAX_CONCURRENT_UPLOADS = 3
         private const val RETRY_LIMIT = 3
-        private const val TRANSFER_TIMEOUT_MS = 30000L 
+        private const val TRANSFER_TIMEOUT_MS = 30000L
     }
 
     private val logger = StructuredLogger.getInstance(context)
@@ -308,7 +308,7 @@ class FileUploadService(private val context: Context) {
                         "upload_processor_error",
                         details = mapOf("error" to (e.message ?: "Unknown error")),
                     )
-                    delay(5000) 
+                    delay(5000)
                 }
             }
         }
@@ -386,7 +386,7 @@ class FileUploadService(private val context: Context) {
             )
 
             if (job.retryCount <= retryLimit) {
-                delay(5000L * job.retryCount) 
+                delay(5000L * job.retryCount)
                 job.status = UploadStatus.PENDING
                 uploadQueue.send(job.jobId)
 

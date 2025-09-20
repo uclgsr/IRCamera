@@ -15,9 +15,8 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
 
-
 class IRCorrectionTwoActivity : BaseActivity() {
-    
+
     private var isTC007 = false
 
     private lateinit var tvCorrection: TextView

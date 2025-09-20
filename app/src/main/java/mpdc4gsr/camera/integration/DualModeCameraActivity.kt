@@ -79,7 +79,7 @@ class DualModeCameraActivity : AppCompatActivity() {
                     frameRate = 30,
                     bitRate = 10_000_000,
                     enableStabilization = true,
-                    enableHighSpeedVideo = false, 
+                    enableHighSpeedVideo = false,
                 )
 
             rgbCameraRecorder?.updateRecordingSettings(settings)
@@ -110,7 +110,10 @@ class DualModeCameraActivity : AppCompatActivity() {
         cameraModeSelector.setMode(mode)
     }
 
-    private suspend fun switchCameraMode(newMode: RGBCameraRecorder.CameraMode, enableSamsungOptimizations: Boolean = true) {
+    private suspend fun switchCameraMode(
+        newMode: RGBCameraRecorder.CameraMode,
+        enableSamsungOptimizations: Boolean = true
+    ) {
         try {
             val success = rgbCameraRecorder?.switchMode(newMode) ?: false
             if (success) {
@@ -120,26 +123,31 @@ class DualModeCameraActivity : AppCompatActivity() {
                         rgbCameraRecorder?.configureStage3Processing(true)
                         Toast.makeText(this, "RAW Mode: Samsung Stage3/Level3 DNG Enabled", Toast.LENGTH_LONG).show()
                     } else {
-                        Toast.makeText(this, "RAW Mode: Standard DNG (${SamsungDeviceCompatibility.getDeviceInfo()})", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            this,
+                            "RAW Mode: Standard DNG (${SamsungDeviceCompatibility.getDeviceInfo()})",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
-                    }
-                } else {
-                    Toast.makeText(this, "Switched to ${newMode.displayName}", Toast.LENGTH_SHORT).show()
                 }
             } else {
-                Toast.makeText(
-                    this,
-                    "Failed to switch to ${newMode.displayName}",
-                    Toast.LENGTH_SHORT
-                ).show()
+                Toast.makeText(this, "Switched to ${newMode.displayName}", Toast.LENGTH_SHORT).show()
             }
-        } catch (e: Exception) {
-            Toast.makeText(this, "Mode switch error: ${e.message}", Toast.LENGTH_LONG).show()
+        } else {
+            Toast.makeText(
+                this,
+                "Failed to switch to ${newMode.displayName}",
+                Toast.LENGTH_SHORT
+            ).show()
         }
+    } catch (e: Exception)
+    {
+        Toast.makeText(this, "Mode switch error: ${e.message}", Toast.LENGTH_LONG).show()
     }
+}
 
-    override fun onDestroy() {
-        super.onDestroy()
-        rgbCameraRecorder?.cleanup()
-    }
+override fun onDestroy() {
+    super.onDestroy()
+    rgbCameraRecorder?.cleanup()
+}
 }

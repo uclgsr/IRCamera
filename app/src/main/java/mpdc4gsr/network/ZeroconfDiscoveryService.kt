@@ -13,7 +13,7 @@ class ZeroconfDiscoveryService(private val context: Context) {
         private const val TAG = "ZeroconfDiscovery"
         private const val SERVICE_TYPE = "_ircamera._tcp."
         private const val SERVICE_NAME = "IRCamera-Device"
-        private const val DISCOVERY_TIMEOUT = 30000L 
+        private const val DISCOVERY_TIMEOUT = 30000L
     }
 
     private val nsdManager: NsdManager by lazy {

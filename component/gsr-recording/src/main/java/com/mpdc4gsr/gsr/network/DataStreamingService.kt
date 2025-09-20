@@ -22,9 +22,9 @@ class DataStreamingService(
 ) {
     companion object {
         private const val TAG = "DataStreamingService"
-        private const val BATCH_SIZE = 50 
-        private const val BATCH_TIMEOUT_MS = 100L 
-        private const val MAX_QUEUE_SIZE = 5000 
+        private const val BATCH_SIZE = 50
+        private const val BATCH_TIMEOUT_MS = 100L
+        private const val MAX_QUEUE_SIZE = 5000
         private const val RETRY_ATTEMPTS = 3
         private const val RETRY_DELAY_MS = 500L
     }
@@ -56,7 +56,7 @@ class DataStreamingService(
         val frameIndex: Long,
         val frameSize: Int,
         val sessionId: String,
-        val cameraType: String, 
+        val cameraType: String,
     )
 
     interface StreamingEventListener {
@@ -210,13 +210,13 @@ class DataStreamingService(
                             sendVideoMetadataBatch()
                         }
 
-                        
+
                         delay(BATCH_TIMEOUT_MS)
                     } catch (e: Exception) {
                         if (isActive) {
                             Log.e(TAG, "Error in batching process", e)
                             eventListener?.onStreamingError("Batching error: ${e.message}")
-                            delay(1000) 
+                            delay(1000)
                         }
                     }
                 }
@@ -362,17 +362,17 @@ class DataStreamingService(
     }
 
     private suspend fun sendRemainingData() {
-        
+
         while (gsrQueue.isNotEmpty()) {
             sendGSRBatch()
         }
 
-        
+
         while (thermalQueue.isNotEmpty()) {
             sendThermalBatch()
         }
 
-        
+
         while (videoMetadataQueue.isNotEmpty()) {
             sendVideoMetadataBatch()
         }
@@ -395,10 +395,10 @@ class DataStreamingService(
     fun isStreamingActive(): Boolean = isStreaming.get()
 
     suspend fun cleanup() {
-        
+
         stopStreaming()
 
-        
+
         streamingJob.cancel()
         clearQueues()
         eventListener = null

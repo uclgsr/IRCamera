@@ -47,7 +47,7 @@ class GalleryAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     var onLongEditListener: (() -> Unit)? = null
 
-    
+
     var selectCallback: ((data: ArrayList<Int>) -> Unit)? = null
 
     var itemClickCallback: ((position: Int) -> Unit)? = null

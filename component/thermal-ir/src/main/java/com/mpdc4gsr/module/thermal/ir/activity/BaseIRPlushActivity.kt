@@ -44,29 +44,28 @@ import java.io.IOException
 import java.io.InputStream
 
 
-
 abstract class BaseIRPlushActivity : IRThermalNightActivity(), OnUSBConnectListener,
     IIRFrameCallback {
 
     private var snStr = ""
 
-    
+
     protected var dualView: DualViewWithExternalCameraCommonApi? = null
 
     private var irPid = 0x5830
 
-    private var imageWidth = 0 
-    private var imageHeight = 0 
+    private var imageWidth = 0
+    private var imageHeight = 0
     private var syncimage = SynchronizedBitmap()
 
     protected var mCurrentFusionType = DualParamsUtil.fusionTypeToParams(SaveSettingUtil.fusionType)
 
     private var vlPid = 12337
-    private var vlFps = 30 
+    private var vlFps = 30
 
     protected var vlCameraWidth = 1280
     protected var vlCameraHeight = 720
-    private var vlData = ByteArray(vlCameraWidth * vlCameraHeight * 3) 
+    private var vlData = ByteArray(vlCameraWidth * vlCameraHeight * 3)
 
     private var dualCameraWidth = 480
     private var dualCameraHeight = 640
@@ -122,7 +121,7 @@ abstract class BaseIRPlushActivity : IRThermalNightActivity(), OnUSBConnectListe
         if (!isDualIR()) {
             return
         }
-        
+
         USBMonitorManager.getInstance().registerUSB()
 
         getTemperatureDualView().setUseIRISP(isUseIRISP)
@@ -145,7 +144,7 @@ abstract class BaseIRPlushActivity : IRThermalNightActivity(), OnUSBConnectListe
                     restartDualCamera()
                 } else if (msg.what == Const.HANDLE_CONNECT) {
 
-                    
+
                     lifecycleScope.launch(Dispatchers.Main) {
                         startVLCamera(vlPid, vlFps, vlCameraWidth, vlCameraHeight)
                         initDualCamera()
@@ -263,7 +262,7 @@ abstract class BaseIRPlushActivity : IRThermalNightActivity(), OnUSBConnectListe
         }
     }
 
-    
+
     private fun startVLCamera(
         pid: Int,
         fps: Int,
@@ -388,7 +387,7 @@ abstract class BaseIRPlushActivity : IRThermalNightActivity(), OnUSBConnectListe
     protected val preTempData = ByteArray(256 * 192 * 2)
 
     override fun onIrFrame(irFrame: ByteArray?): ByteArray {
-        
+
         System.arraycopy(irFrame, 0, preIrData, 0, preIrData.size)
         LibIRProcess.convertYuyvMapToARGBPseudocolor(
             preIrData,

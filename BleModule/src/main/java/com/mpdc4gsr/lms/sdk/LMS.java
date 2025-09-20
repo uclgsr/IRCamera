@@ -5,7 +5,7 @@ package com.mpdc4gsr.lms.sdk;
  */
 public class LMS {
     private static volatile LMS instance;
-    
+
     public static LMS getInstance() {
         if (instance == null) {
             synchronized (LMS.class) {
@@ -16,7 +16,7 @@ public class LMS {
         }
         return instance;
     }
-    
+
     public String getLoginName() {
         return "";
     }

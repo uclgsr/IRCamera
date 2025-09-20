@@ -6,8 +6,6 @@ import com.mpdc4gsr.module.thermal.ir.R
 import com.mpdc4gsr.module.thermal.ir.fragment.IRPlushFragment
 
 
-
-
 class ImagePickIRPlushActivity : BasePickImgActivity() {
     var irFragment: IRPlushFragment? = null
 

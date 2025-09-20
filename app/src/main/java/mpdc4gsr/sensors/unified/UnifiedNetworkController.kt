@@ -33,7 +33,7 @@ class UnifiedNetworkController(
         private const val RECONNECTION_DELAY_MS = 5000L
         private const val MAX_RECONNECTION_DELAY_MS = 60000L
 
-        private const val MIN_SIGNAL_STRENGTH = -70  
+        private const val MIN_SIGNAL_STRENGTH = -70
         private const val MAX_LATENCY_MS = 100
         private const val MIN_BANDWIDTH_KBPS = 1000
 
@@ -241,9 +241,8 @@ class UnifiedNetworkController(
                     setEventListener(createWebSocketEventListener(controllerInfo))
                 }
 
-                
-                
-                val connected = true 
+
+                val connected = true
 
                 if (connected) {
                     activeConnections[controllerInfo.name] = webSocketClient
@@ -272,7 +271,7 @@ class UnifiedNetworkController(
 
             try {
                 val webSocketClient = activeConnections.remove(controllerName)
-                
+
 
                 if (activeConnections.isEmpty()) {
                     _networkStatus.value = NetworkStatus.READY
@@ -447,7 +446,7 @@ class UnifiedNetworkController(
             while (isInitialized.get()) {
                 updateWifiSignalStrength()
                 updateConnectionQuality()
-                delay(5000)  
+                delay(5000)
             }
         }
     }
@@ -554,7 +553,7 @@ class UnifiedNetworkController(
         lifecycleOwner.lifecycleScope.launch {
             while (activeConnections.containsKey(controllerName)) {
                 try {
-                    
+
                     delay(HEARTBEAT_INTERVAL_MS)
                 } catch (e: Exception) {
                     Log.w(TAG, "Heartbeat error for $controllerName", e)
@@ -566,7 +565,7 @@ class UnifiedNetworkController(
 
     private fun startAutomaticReconnection() {
         if (reconnectionJob?.isActive == true) {
-            return  
+            return
         }
 
         reconnectionJob = lifecycleOwner.lifecycleScope.launch {

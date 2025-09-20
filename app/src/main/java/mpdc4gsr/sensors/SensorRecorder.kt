@@ -17,7 +17,7 @@ interface SensorRecorder {
 
     suspend fun startRecording(sessionDirectory: String): Boolean
 
-    
+
     suspend fun startRecording(
         sessionDirectory: String,
         sessionMetadata: SessionMetadata

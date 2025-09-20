@@ -19,8 +19,8 @@ public class UTF8StringUtils {
                 read = new InputStreamReader(in);
                 BufferedReader bf = new BufferedReader(read);
                 String txt;
-                while ((txt = bf.readLine()) != null) { 
-                    
+                while ((txt = bf.readLine()) != null) {
+
                     txt = txt.trim();
                     String flag = txt.substring(txt.lastIndexOf("|") + 1);
                     if (flag.equals("1")) {
@@ -44,8 +44,8 @@ public class UTF8StringUtils {
                 in = new FileInputStream(file);
                 BufferedReader bf = new BufferedReader(new UnicodeReader(in, "utf-8"));
                 String txt = "";
-                while ((txt = bf.readLine()) != null) { 
-                    
+                while ((txt = bf.readLine()) != null) {
+
                     txt = txt.trim();
                     String flag = txt.substring(txt.lastIndexOf("|") + 1);
                     if (flag.equals("1")) {

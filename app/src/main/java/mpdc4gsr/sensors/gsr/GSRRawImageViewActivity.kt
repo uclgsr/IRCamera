@@ -137,7 +137,7 @@ class GSRRawImageViewActivity : BaseBindingActivity<ActivityGsrRawImageViewBindi
 
         val filename = imageFile.nameWithoutExtension
         val captureNumber = filename.substringAfterLast("_", "Unknown")
-        
+
         // Detect Samsung Stage3/Level3 processing from filename
         val isStage3Processing = filename.contains("stage3", ignoreCase = true)
         val processingLevel = if (isStage3Processing) "Samsung Stage3/Level3" else "Standard Level 3"

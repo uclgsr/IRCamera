@@ -173,7 +173,7 @@ class IRMonitorChartActivity : BaseActivity(), ITsTempListener {
                         bean.maxTemp = maxBigDecimal.setScale(1, RoundingMode.HALF_UP).toFloat()
                         bean.minTemp = minBigDecimal.setScale(1, RoundingMode.HALF_UP).toFloat()
                         bean.createTime = System.currentTimeMillis()
-                        canUpdate = true 
+                        canUpdate = true
                     }
                 }
             }
@@ -195,7 +195,7 @@ class IRMonitorChartActivity : BaseActivity(), ITsTempListener {
                         cameraView.start()
                         isrun = true
                         if (!isRecord) {
-                            recordThermal() 
+                            recordThermal()
                         }
                     }
                 } catch (e: Exception) {
@@ -208,7 +208,7 @@ class IRMonitorChartActivity : BaseActivity(), ITsTempListener {
     override fun onResume() {
         super.onResume()
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-        mpChartView.highlightValue(null) 
+        mpChartView.highlightValue(null)
     }
 
     override fun onPause() {
@@ -248,7 +248,7 @@ class IRMonitorChartActivity : BaseActivity(), ITsTempListener {
     }
 
     private var isRecord = false
-    private var timeMillis = 1000L 
+    private var timeMillis = 1000L
     private var canUpdate = false
 
     private var recordJob: Job? = null
@@ -301,7 +301,7 @@ class IRMonitorChartActivity : BaseActivity(), ITsTempListener {
     }
 
     private var imageThread: ImageThreadTC? = null
-    private var bitmap: Bitmap? = null 
+    private var bitmap: Bitmap? = null
     private var iruvc: IRUVCTC? = null
     private val cameraWidth = 256
     private val cameraHeight = 384
@@ -323,7 +323,7 @@ class IRMonitorChartActivity : BaseActivity(), ITsTempListener {
 
     private var rotateAngle = 270
 
-    
+
     private fun initDataIR() {
         imageWidth = cameraHeight - tempHeight
         imageHeight = cameraWidth
@@ -343,7 +343,7 @@ class IRMonitorChartActivity : BaseActivity(), ITsTempListener {
         setViewLay()
 
         if (Usbcontorl.isload) {
-            Usbcontorl.usb3803_mode_setting(1) 
+            Usbcontorl.usb3803_mode_setting(1)
             Log.w("123", "打开5V")
         }
     }
@@ -396,7 +396,7 @@ class IRMonitorChartActivity : BaseActivity(), ITsTempListener {
                         ircmd?.getDeviceInfo(
                             CommonParams.DeviceInfoType.DEV_INFO_FW_BUILD_VERSION_INFO,
                             fwBuildVersionInfoBytes,
-                        ) 
+                        )
                         val value = IntArray(1)
                         val arm = String(fwBuildVersionInfoBytes.copyOfRange(0, 8))
                         isTS001 = arm.contains("Mini256", true)
@@ -458,8 +458,8 @@ class IRMonitorChartActivity : BaseActivity(), ITsTempListener {
                 delay(100)
             }
             val config = ConfigRepository.readConfig(false)
-            val disChar = (config.distance * 128).toInt() 
-            val emsChar = (config.radiation * 128).toInt() 
+            val disChar = (config.distance * 128).toInt()
+            val emsChar = (config.radiation * 128).toInt()
             XLog.w("设置TPD_PROP DISTANCE:$disChar, EMS:$emsChar}")
             val timeMillis = 250L
             delay(timeMillis)

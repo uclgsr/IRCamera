@@ -56,8 +56,6 @@ data class HouseRepPreviewAlbumItemBean(
 )
 
 
-
-
 class ReportPreviewActivity : BaseActivity(), View.OnClickListener {
 
 
@@ -199,7 +197,7 @@ class ReportPreviewActivity : BaseActivity(), View.OnClickListener {
             }
 
             tvSave -> {
-                if (isReport) { 
+                if (isReport) {
                     lifecycleScope.launch {
                         showLoadingDialog()
 
@@ -214,7 +212,7 @@ class ReportPreviewActivity : BaseActivity(), View.OnClickListener {
 
 
                     }
-                } else { 
+                } else {
                     if (houseReport.inspectorWhitePath.isEmpty() || houseReport.houseOwnerWhitePath.isEmpty()) {
                         if (clSign.bottom + layAppbar.height > llSave.top) {
                             layAppbar.setExpanded(false, true)

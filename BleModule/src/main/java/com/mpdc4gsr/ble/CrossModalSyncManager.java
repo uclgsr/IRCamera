@@ -419,7 +419,7 @@ public class CrossModalSyncManager {
         private final String deviceId;
         private final String deviceName;
         private final DeviceCategory category;
-        private final Object deviceRef; 
+        private final Object deviceRef;
         private final DeviceCapabilities capabilities;
         private volatile boolean isActive = false;
         private volatile long lastSyncTimestamp = 0;

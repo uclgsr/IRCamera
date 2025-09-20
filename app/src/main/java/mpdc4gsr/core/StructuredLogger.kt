@@ -264,7 +264,7 @@ class StructuredLogger private constructor(private val context: Context) {
             while (true) {
                 try {
                     processLogQueue()
-                    Thread.sleep(100) 
+                    Thread.sleep(100)
                 } catch (e: InterruptedException) {
                     Thread.currentThread().interrupt()
                     break

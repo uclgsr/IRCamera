@@ -46,7 +46,7 @@ import com.mpdc4gsr.lib.core.R as LibR
 
 
 class IRGalleryDetail01Activity : BaseActivity(), View.OnClickListener {
-    
+
     private var isTC007 = false
 
     private var position = 0

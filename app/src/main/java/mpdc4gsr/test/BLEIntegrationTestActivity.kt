@@ -29,7 +29,7 @@ class BLEIntegrationTestActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        
+
         val layout = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
             setPadding(32, 32, 32, 32)
@@ -70,7 +70,7 @@ class BLEIntegrationTestActivity : AppCompatActivity() {
         setContentView(layout)
 
         permissionController = PermissionController(this)
-        
+
         addLog("BLE Integration Test Activity started")
         addLog("Enhanced Shimmer BLE scanning validation ready")
     }
@@ -82,12 +82,12 @@ class BLEIntegrationTestActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             try {
-                
+
                 addLog("Test 1: Initializing UnifiedGSRRecorder with enhanced BLE scanning...")
-                
+
                 gsrRecorder = UnifiedGSRRecorder(this@BLEIntegrationTestActivity, this@BLEIntegrationTestActivity)
                 val initSuccess = gsrRecorder?.initialize() ?: false
-                
+
                 if (initSuccess) {
                     addLog("✅ UnifiedGSRRecorder initialized successfully")
                 } else {
@@ -95,15 +95,15 @@ class BLEIntegrationTestActivity : AppCompatActivity() {
                     return@launch
                 }
 
-                
+
                 addLog("Test 2: Testing enhanced BLE device discovery...")
-                
+
                 val discoverySuccess = gsrRecorder?.startDeviceDiscovery() ?: false
-                
+
                 if (discoverySuccess) {
                     val discoveredDevices = gsrRecorder?.getDiscoveredDevices() ?: emptyList()
                     addLog("✅ Device discovery completed: found ${discoveredDevices.size} devices")
-                    
+
                     discoveredDevices.forEach { device ->
                         addLog("  - ${device.name} (${device.address}) RSSI: ${device.rssi}dBm")
                     }
@@ -111,25 +111,25 @@ class BLEIntegrationTestActivity : AppCompatActivity() {
                     addLog("❌ Device discovery failed")
                 }
 
-                
+
                 addLog("Test 3: Testing ShimmerDeviceManager directly...")
-                
+
                 deviceManager = ShimmerDeviceManager(this@BLEIntegrationTestActivity, this@BLEIntegrationTestActivity)
                 val dmInitSuccess = deviceManager?.initialize() ?: false
-                
+
                 if (dmInitSuccess) {
                     addLog("✅ ShimmerDeviceManager initialized successfully")
-                    
+
                     val scanSuccess = deviceManager?.startDeviceScanning() ?: false
                     if (scanSuccess) {
                         addLog("✅ Enhanced BLE scanning started successfully")
-                        
-                        
+
+
                         kotlinx.coroutines.delay(5000)
-                        
+
                         val scanResults = deviceManager?.scanResults?.value ?: emptyList()
                         addLog("✅ BLE scan results: ${scanResults.size} devices found")
-                        
+
                         deviceManager?.stopDeviceScanning()
                         addLog("✅ BLE scanning stopped")
                     } else {
@@ -139,9 +139,9 @@ class BLEIntegrationTestActivity : AppCompatActivity() {
                     addLog("❌ ShimmerDeviceManager initialization failed")
                 }
 
-                
+
                 addLog("Test 4: Validating BLE permissions...")
-                
+
                 val hasPermissions = UnifiedGSRRecorder.hasRequiredPermissions(this@BLEIntegrationTestActivity)
                 if (hasPermissions) {
                     addLog("✅ All required BLE permissions are granted")
@@ -160,8 +160,8 @@ class BLEIntegrationTestActivity : AppCompatActivity() {
                 statusText.text = "Test Failed - Check logs"
             } finally {
                 testButton.isEnabled = true
-                
-                
+
+
                 try {
                     gsrRecorder?.cleanup()
                     deviceManager?.release()
@@ -174,16 +174,17 @@ class BLEIntegrationTestActivity : AppCompatActivity() {
 
     private fun addLog(message: String) {
         runOnUiThread {
-            val timestamp = java.text.SimpleDateFormat("HH:mm:ss", java.util.Locale.getDefault()).format(java.util.Date())
+            val timestamp =
+                java.text.SimpleDateFormat("HH:mm:ss", java.util.Locale.getDefault()).format(java.util.Date())
             logText.append("[$timestamp] $message\n")
-            
-            
+
+
             (logText.parent as? ScrollView)?.post {
                 (logText.parent as ScrollView).fullScroll(ScrollView.FOCUS_DOWN)
             }
         }
-        
-        
+
+
         Log.i(TAG, message)
     }
 
@@ -194,8 +195,8 @@ class BLEIntegrationTestActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        
-        
+
+
         lifecycleScope.launch {
             try {
                 gsrRecorder?.cleanup()

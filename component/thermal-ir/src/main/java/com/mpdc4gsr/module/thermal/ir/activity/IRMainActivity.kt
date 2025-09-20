@@ -45,11 +45,10 @@ import org.greenrobot.eventbus.EventBus
 import com.mpdc4gsr.lib.core.R as LibR
 
 
-
 class IRMainActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var binding: ActivityIrMainBinding
 
-    
+
     private var isTC007 = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -143,16 +142,16 @@ class IRMainActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(v: View?) {
         when (v) {
-            binding.clIconMonitor -> { 
+            binding.clIconMonitor -> {
                 binding.viewPage.setCurrentItem(0, false)
             }
 
-            binding.clIconGallery -> { 
+            binding.clIconGallery -> {
                 checkStoragePermission()
             }
 
 
-            binding.clIconReport -> { 
+            binding.clIconReport -> {
                 if (LMS.getInstance().isLogin) {
                     binding.viewPage.setCurrentItem(3, false)
                 } else {
@@ -165,13 +164,13 @@ class IRMainActivity : AppCompatActivity(), View.OnClickListener {
                 }
             }
 
-            binding.clIconMine -> { 
+            binding.clIconMine -> {
                 binding.viewPage.setCurrentItem(4, false)
             }
         }
     }
 
-    
+
     private fun refreshTabSelect(index: Int) {
         binding.ivIconMonitor.isSelected = false
         binding.tvIconMonitor.isSelected = false
@@ -205,7 +204,7 @@ class IRMainActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun showGuideDialog() {
-        if (SharedManager.homeGuideStep == 0) { 
+        if (SharedManager.homeGuideStep == 0) {
             return
         }
 
@@ -364,7 +363,7 @@ class IRMainActivity : AppCompatActivity(), View.OnClickListener {
         override fun getItemCount() = 5
 
         override fun createFragment(position: Int): Fragment {
-            if (position == 1) { 
+            if (position == 1) {
                 return IRGalleryTabFragment().apply {
                     arguments =
                         Bundle().also {

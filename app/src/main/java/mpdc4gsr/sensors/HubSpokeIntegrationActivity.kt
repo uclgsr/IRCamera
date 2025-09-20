@@ -109,7 +109,7 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
         timeManager = TimeManager.getInstance(this)
 
         enhancedBLE = EasyBLE.getBuilder()
-            .setUseNordicBleBackend(true) 
+            .setUseNordicBleBackend(true)
             .build()
 
         Log.i(TAG, "Enhanced BLE Module initialized with Nordic BLE backend")
@@ -153,7 +153,7 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
 
                             Log.d(TAG, "BLE System Status: $systemStatus")
 
-                            kotlinx.coroutines.delay(2000) 
+                            kotlinx.coroutines.delay(2000)
                         } catch (e: Exception) {
                             Log.e(TAG, "Error monitoring BLE status", e)
                             break
@@ -404,7 +404,7 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
                         this@HubSpokeIntegrationActivity,
                         sessionDirectory
                     )
-                    true 
+                    true
                 } else {
 
                     recordingController.startRecording(sessionDirectory)
@@ -450,7 +450,7 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
                 val success = if (recordingServiceBinder?.isConnectedToPC() == true) {
 
                     RecordingService.stopRecording(this@HubSpokeIntegrationActivity)
-                    true 
+                    true
                 } else {
 
                     recordingController.stopRecording()
@@ -590,7 +590,7 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
                         }
                     }
 
-                    kotlinx.coroutines.delay(2000) 
+                    kotlinx.coroutines.delay(2000)
                 } catch (e: Exception) {
                     Log.e(TAG, "Error in network monitoring", e)
                     break

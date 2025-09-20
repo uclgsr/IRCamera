@@ -84,7 +84,7 @@ class RGBCameraRecorder(
         camera2System.onProgress = { message -> Log.d(TAG, "Progress: $message") }
         camera2System.onModeChanged = { mode -> Log.i(TAG, "Mode changed to: $mode") }
         camera2System.onRecordingStarted = { onVideoRecordingStarted?.invoke() }
-        camera2System.onRecordingStopped = {  }
+        camera2System.onRecordingStopped = { }
     }
 
     suspend fun initializeCamera(cameraId: String = "0"): Boolean =
@@ -114,7 +114,7 @@ class RGBCameraRecorder(
         return camera2System.switchMode(systemMode)
     }
 
-    
+
     suspend fun startRecording(
         outputDir: File,
         sessionMetadata: SessionMetadata,
@@ -126,12 +126,12 @@ class RGBCameraRecorder(
         Log.i(TAG, "Session: ${sessionMetadata.sessionId}")
         Log.i(TAG, "Start time: ${sessionMetadata.sessionStartIso}")
 
-        
+
         val videoFileName = "rgb_video_${sessionMetadata.sessionId}.mp4"
         sessionMetadata.addModalityFile("rgb_video", videoFileName)
 
         // TODO: Pass session timing metadata to Camera2System for embedding in video metadata
-        
+
 
         return camera2System.startRecording(sessionMetadata.sessionId)
     }
@@ -150,7 +150,7 @@ class RGBCameraRecorder(
     suspend fun stopRecording(): Boolean {
         return camera2System.stopRecording()
     }
-    
+
     /**
      * Configure Samsung Stage3/Level3 processing for RAW DNG recording
      */
@@ -158,7 +158,7 @@ class RGBCameraRecorder(
         camera2System.configureStage3Processing(enabled)
         Log.i(TAG, "Samsung Stage3/Level3 processing ${if (enabled) "enabled" else "disabled"}")
     }
-    
+
     /**
      * Check if Samsung Stage3/Level3 processing is currently enabled
      */
@@ -222,7 +222,7 @@ class RGBCameraRecorder(
 
     fun getAvailableCameras(): List<CameraInfo> {
 
-        return emptyList() 
+        return emptyList()
     }
 
     fun getCurrentMode(): CameraMode {
@@ -264,14 +264,14 @@ class RGBCameraRecorder(
         val caps = getDeviceCaps()
         return when (mode) {
             CameraMode.RAW_50MP -> caps?.supportsRaw ?: false
-            CameraMode.VIDEO_4K -> caps?.supports4k60 ?: true 
-            CameraMode.PREVIEW_ONLY -> true 
+            CameraMode.VIDEO_4K -> caps?.supports4k60 ?: true
+            CameraMode.PREVIEW_ONLY -> true
         }
     }
 
     fun getAvailableModes(): List<CameraMode> {
         val modes = mutableListOf<CameraMode>()
-        modes.add(CameraMode.PREVIEW_ONLY) 
+        modes.add(CameraMode.PREVIEW_ONLY)
         if (isModeSupported(CameraMode.VIDEO_4K)) modes.add(CameraMode.VIDEO_4K)
         if (isModeSupported(CameraMode.RAW_50MP)) modes.add(CameraMode.RAW_50MP)
         return modes
@@ -285,7 +285,7 @@ class RGBCameraRecorder(
 
     fun getMaxRawResolution(): VideoResolution? {
 
-        return VideoResolution.UHD_4K 
+        return VideoResolution.UHD_4K
     }
 
     fun getCurrentVideoResolution(): VideoResolution = recordingSettings.resolution
@@ -330,9 +330,9 @@ class RGBCameraRecorder(
 
     fun getRawCaptureCount(): Int = camera2System.getDeviceCaps()?.let { 0 } ?: 0
 
-    fun getCurrentVideoFile(): File? = null 
+    fun getCurrentVideoFile(): File? = null
 
-    fun getRawImagesDirectory(): File? = null 
+    fun getRawImagesDirectory(): File? = null
 
-    fun isSessionSwitching(): Boolean = false 
+    fun isSessionSwitching(): Boolean = false
 }

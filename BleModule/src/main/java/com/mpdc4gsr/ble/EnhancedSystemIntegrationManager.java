@@ -86,7 +86,7 @@ public class EnhancedSystemIntegrationManager {
 
                 new Thread(() -> {
                     try {
-                        Thread.sleep(5000); 
+                        Thread.sleep(5000);
                         Log.i(TAG, "Device discovery scan completed");
                         isDiscoveryActive.set(false);
                     } catch (InterruptedException e) {
@@ -116,8 +116,8 @@ public class EnhancedSystemIntegrationManager {
     public SystemHealthMetrics getSystemHealthMetrics() {
 
         int deviceCount = syncManager.getRegisteredDevices().size();
-        double avgQuality = 0.85; 
-        long syncAccuracy = 3; 
+        double avgQuality = 0.85;
+        long syncAccuracy = 3;
         boolean isOptimal = deviceCount > 0 && avgQuality > 0.8 && syncAccuracy < 5;
         String status = isOptimal ? "Optimal Performance" : "Functional";
 

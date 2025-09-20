@@ -9,7 +9,7 @@ import mpdc4gsr.service.RecordingService
 object PreviewIntegration {
     private const val TAG = "PreviewIntegration"
 
-    
+
     fun updateRgbFrame(context: Context, rgbFrame: Bitmap) {
         try {
             val adapter = getPreviewDataAdapter(context)
@@ -20,7 +20,7 @@ object PreviewIntegration {
         }
     }
 
-    
+
     fun updateThermalFrame(context: Context, thermalFrame: Bitmap) {
         try {
             val adapter = getPreviewDataAdapter(context)
@@ -34,7 +34,7 @@ object PreviewIntegration {
         }
     }
 
-    
+
     fun updateGsrValue(context: Context, gsrValue: Float) {
         try {
             val adapter = getPreviewDataAdapter(context)
@@ -45,7 +45,7 @@ object PreviewIntegration {
         }
     }
 
-    
+
     fun isPreviewStreamingActive(context: Context): Boolean {
         return try {
             val streamer = getPreviewStreamer(context)
@@ -56,11 +56,11 @@ object PreviewIntegration {
         }
     }
 
-    
+
     fun getStreamingConfig(context: Context): Map<String, Any> {
         return try {
-            
-            
+
+
             emptyMap()
         } catch (e: Exception) {
             Log.w(TAG, "Failed to get streaming configuration", e)
@@ -68,7 +68,7 @@ object PreviewIntegration {
         }
     }
 
-    
+
     fun configureStreaming(
         context: Context,
         frameIntervalMs: Long = 1000L,
@@ -95,7 +95,6 @@ object PreviewIntegration {
         }
     }
 
-    
 
     private fun getPreviewDataAdapter(context: Context): PreviewDataAdapter? {
         val service = getRecordingService(context)
@@ -108,18 +107,12 @@ object PreviewIntegration {
     }
 
     private fun getRecordingService(context: Context): RecordingService? {
-        
-        
-        
-        
-        
-        
+
+
         Log.d(TAG, "Note: RecordingService access needs proper implementation via service binding")
         return null
     }
 }
-
-
 
 
 fun com.example.thermal_lite.camera.CameraPreviewManager.updatePreview(context: Context) {

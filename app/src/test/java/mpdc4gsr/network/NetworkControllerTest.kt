@@ -37,12 +37,12 @@ class NetworkControllerTest {
 
     @Test
     fun testNetworkControllerStartStop() = runTest {
-        
-        val started = networkController.start(8081) 
+
+        val started = networkController.start(8081)
         assertTrue(started, "NetworkController should start successfully")
         assertTrue(networkController.isRunning(), "NetworkController should be running")
 
-        
+
         networkController.stop()
         assertFalse(networkController.isRunning(), "NetworkController should be stopped")
     }
@@ -54,7 +54,7 @@ class NetworkControllerTest {
         var receivedSessionId: String? = null
         var receivedModalities: List<String>? = null
 
-        
+
         networkController.setEventListener(object : NetworkController.NetworkControllerListener {
             override fun onStartRecordingCommand(
                 sessionId: String,
@@ -72,14 +72,14 @@ class NetworkControllerTest {
             override fun onError(operation: String, error: String) {}
         })
 
-        
+
         val started = networkController.start(port)
         assertTrue(started, "Server should start")
 
-        
+
         Thread.sleep(100)
 
-        
+
         val socket = Socket("localhost", port)
         val output = PrintWriter(socket.getOutputStream(), true)
         val input = BufferedReader(InputStreamReader(socket.getInputStream()))
@@ -88,7 +88,7 @@ class NetworkControllerTest {
             """{"command": "start_recording", "session_id": "TEST123", "modalities": ["thermal", "GSR"]}"""
         output.println(command)
 
-        
+
         val response = input.readLine()
         assertNotNull(response, "Should receive response")
         assertTrue(
@@ -96,7 +96,7 @@ class NetworkControllerTest {
             "Response should indicate recording started"
         )
 
-        
+
         assertTrue(latch.await(1, TimeUnit.SECONDS), "Should receive command callback")
         assertEquals("TEST123", receivedSessionId)
         assertEquals(listOf("thermal", "GSR"), receivedModalities)
@@ -108,13 +108,13 @@ class NetworkControllerTest {
     fun testPingCommand() = runTest {
         val port = 8083
 
-        
+
         val started = networkController.start(port)
         assertTrue(started, "Server should start")
 
-        Thread.sleep(100) 
+        Thread.sleep(100)
 
-        
+
         val socket = Socket("localhost", port)
         val output = PrintWriter(socket.getOutputStream(), true)
         val input = BufferedReader(InputStreamReader(socket.getInputStream()))
@@ -132,13 +132,13 @@ class NetworkControllerTest {
     fun testInvalidCommand() = runTest {
         val port = 8084
 
-        
+
         val started = networkController.start(port)
         assertTrue(started, "Server should start")
 
         Thread.sleep(100)
 
-        
+
         val socket = Socket("localhost", port)
         val output = PrintWriter(socket.getOutputStream(), true)
         val input = BufferedReader(InputStreamReader(socket.getInputStream()))
@@ -158,7 +158,7 @@ class NetworkControllerTest {
         val latch = CountDownLatch(1)
         var stopCommandReceived = false
 
-        
+
         networkController.setEventListener(object : NetworkController.NetworkControllerListener {
             override fun onStartRecordingCommand(
                 sessionId: String,
@@ -177,13 +177,13 @@ class NetworkControllerTest {
             override fun onError(operation: String, error: String) {}
         })
 
-        
+
         val started = networkController.start(port)
         assertTrue(started, "Server should start")
 
         Thread.sleep(100)
 
-        
+
         val socket = Socket("localhost", port)
         val output = PrintWriter(socket.getOutputStream(), true)
         val input = BufferedReader(InputStreamReader(socket.getInputStream()))
@@ -197,7 +197,7 @@ class NetworkControllerTest {
             "Response should indicate recording stopped"
         )
 
-        
+
         assertTrue(latch.await(1, TimeUnit.SECONDS), "Should receive stop command callback")
         assertTrue(stopCommandReceived, "Stop command should be received")
 

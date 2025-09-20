@@ -21,7 +21,7 @@ class FaultTolerantSessionDemoActivity : ComponentActivity() {
     private lateinit var diagnosticsText: TextView
     private lateinit var scrollView: ScrollView
 
-    
+
     private lateinit var initButton: Button
     private lateinit var startSessionButton: Button
     private lateinit var stopSessionButton: Button
@@ -61,7 +61,7 @@ class FaultTolerantSessionDemoActivity : ComponentActivity() {
             setPadding(16, 16, 16, 16)
         }
 
-        
+
         initButton = Button(this).apply { text = "Initialize Sensors" }
         startSessionButton = Button(this).apply {
             text = "Start Session (Fault Tolerant)"
@@ -80,7 +80,7 @@ class FaultTolerantSessionDemoActivity : ComponentActivity() {
         }
         startServiceButton = Button(this).apply { text = "Start Recording Service" }
 
-        
+
         diagnosticsText = TextView(this).apply {
             text = "Diagnostics will appear here..."
             textSize = 12f
@@ -377,7 +377,7 @@ class FaultTolerantSessionDemoActivity : ComponentActivity() {
     }
 
     private fun updateUI() {
-        
+
         startSessionButton.isEnabled = false
         stopSessionButton.isEnabled = false
         simulateFailureButton.isEnabled = false

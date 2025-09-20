@@ -22,7 +22,7 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:text="WiredConnection" />
 
-    
+
     <View
         android:id="@+id/view_space"
         android:layout_width="15dp"

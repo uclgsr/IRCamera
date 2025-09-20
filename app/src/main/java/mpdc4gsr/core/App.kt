@@ -44,7 +44,7 @@ class App : BaseApplication() {
     override fun getSoftWareCode(): String = BuildConfig.SOFT_CODE
 
     override fun isDomestic(): Boolean =
-        false 
+        false
 
     val activityNameList: MutableList<String> = mutableListOf()
 
@@ -66,7 +66,7 @@ class App : BaseApplication() {
         if (!isDomestic()) {
 
             UrlConstant.setBaseUrl("${HttpConfig.HOST}/", false)
-            SharedManager.setBaseHost(UrlConstant.BASE_URL) 
+            SharedManager.setBaseHost(UrlConstant.BASE_URL)
         }
 
         CoroutineScope(Dispatchers.IO).launch {
@@ -114,6 +114,6 @@ class App : BaseApplication() {
 
     private fun initZoho() {
 
-        
+
     }
 }

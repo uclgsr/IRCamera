@@ -58,7 +58,7 @@ class ThermalCameraDemo : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_thermal_demo)
 
-        
+
         statusText = findViewById(R.id.statusText)
         thermalPreview = findViewById(R.id.thermalPreview)
         startButton = findViewById(R.id.startButton)
@@ -67,7 +67,7 @@ class ThermalCameraDemo : AppCompatActivity() {
         configButton = findViewById(R.id.configButton)
         exportButton = findViewById(R.id.exportButton)
 
-        
+
         setupButtonListeners()
 
         requestPermissions()
@@ -124,13 +124,13 @@ class ThermalCameraDemo : AppCompatActivity() {
             try {
                 updateStatus("Initializing thermal camera and network server...")
 
-                
+
                 networkServer = NetworkServer(this@ThermalCameraDemo, NETWORK_PORT)
 
-                
+
                 thermalRecorder = ThermalCameraRecorder(this@ThermalCameraDemo)
 
-                
+
                 thermalRecorder.setThermalPreviewCallback(object :
                     ThermalCameraRecorder.ThermalPreviewCallback {
                     override fun onThermalFrame(
@@ -138,20 +138,20 @@ class ThermalCameraDemo : AppCompatActivity() {
                         temperatureData: ThermalCameraRecorder.ThermalFrameData?
                     ) {
                         runOnUiThread {
-                            
+
                             bitmap?.let {
                                 Log.d(TAG, "Thermal frame received: ${it.width}x${it.height}")
                                 thermalPreview.setImageBitmap(it)
                             }
 
-                            
+
                             temperatureData?.let { data ->
                                 findViewById<TextView>(R.id.minTempText)?.text =
                                     String.format("%.1f°C", data.minTemperature)
                                 findViewById<TextView>(R.id.maxTempText)?.text =
                                     String.format("%.1f°C", data.maxTemperature)
 
-                                
+
                                 val metrics = thermalRecorder.getPerformanceMetrics()
                                 findViewById<TextView>(R.id.fpsText)?.text =
                                     String.format("%.1f", metrics.averageFrameRate)
@@ -167,7 +167,7 @@ class ThermalCameraDemo : AppCompatActivity() {
                 if (success) {
                     updateStatus("✅ Thermal camera ready. Plug in TC001 for hardware mode or use simulation.")
 
-                    
+
                     runOnUiThread {
                         startButton.isEnabled = true
                         networkButton.isEnabled = true
@@ -175,11 +175,11 @@ class ThermalCameraDemo : AppCompatActivity() {
                         exportButton.isEnabled = true
                     }
 
-                    
+
                     networkServer.start()
                     updateStatus("✅ Network server started on port $NETWORK_PORT")
 
-                    
+
                     lifecycleScope.launch {
                         thermalRecorder.getStatusFlow().collect { status ->
                             updateStatus("${status.sensorType}: ${if (status.isRecording) "🔴 Recording" else "⚪ Idle"} - Frames: ${status.samplesRecorded}")
@@ -197,7 +197,7 @@ class ThermalCameraDemo : AppCompatActivity() {
                         }
                     }
 
-                    
+
                     lifecycleScope.launch {
                         networkServer.connectionStateFlow.collect { connected ->
                             if (connected) {

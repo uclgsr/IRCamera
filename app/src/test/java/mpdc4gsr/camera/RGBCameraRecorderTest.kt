@@ -78,9 +78,9 @@ class RGBCameraRecorderTest {
         val samsungSettings =
             RecordingSettings(
                 mode = CameraMode.RAW_50MP,
-                rawCaptureFrameRate = 15, 
-                enableHighSpeedVideo = false, 
-                bitRate = 10_000_000, 
+                rawCaptureFrameRate = 15,
+                enableHighSpeedVideo = false,
+                bitRate = 10_000_000,
             )
 
         assertEquals(15, samsungSettings.rawCaptureFrameRate)
@@ -103,10 +103,10 @@ class RGBCameraRecorderTest {
     fun `test samsung device detection`() {
 
 
-        val testDeviceNames = listOf("SM-S901U", "SM-S906U", "SM-S908U") 
+        val testDeviceNames = listOf("SM-S901U", "SM-S906U", "SM-S908U")
 
         testDeviceNames.forEach { deviceName ->
-            val isSamsung = deviceName.startsWith("SM-S9") 
+            val isSamsung = deviceName.startsWith("SM-S9")
             assertTrue("Samsung S22 devices should be detected", isSamsung)
         }
     }
@@ -117,8 +117,8 @@ class RGBCameraRecorderTest {
         val invalidSettings =
             RecordingSettings(
                 mode = CameraMode.RAW_50MP,
-                resolution = VideoResolution.UHD_4K, 
-                frameRate = 120, 
+                resolution = VideoResolution.UHD_4K,
+                frameRate = 120,
             )
 
         assertNotNull("Settings object should be created", invalidSettings)
@@ -128,7 +128,7 @@ class RGBCameraRecorderTest {
     @Test
     fun `test session switching performance requirements`() {
 
-        val switchDelay = 200L 
+        val switchDelay = 200L
 
         assertTrue("Session switch should be under 200ms target", switchDelay <= 200)
     }
@@ -136,7 +136,7 @@ class RGBCameraRecorderTest {
     @Test
     fun `test raw capture buffer management`() {
 
-        val maxRawImages = 2 
+        val maxRawImages = 2
 
         assertTrue("RAW buffer should be limited for memory efficiency", maxRawImages <= 2)
     }
@@ -161,8 +161,8 @@ class RGBCameraRecorderTest {
         val conservativeSettings =
             RecordingSettings(
                 mode = CameraMode.VIDEO_4K,
-                frameRate = 30, 
-                enableHighSpeedVideo = false, 
+                frameRate = 30,
+                enableHighSpeedVideo = false,
             )
 
         assertEquals(30, conservativeSettings.frameRate)

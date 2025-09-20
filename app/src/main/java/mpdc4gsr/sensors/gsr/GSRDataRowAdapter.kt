@@ -44,5 +44,5 @@ class GSRDataRowAdapter(
     }
 
     override fun getItemCount() =
-        minOf(dataRows.size, 100) 
+        minOf(dataRows.size, 100)
 }

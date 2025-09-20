@@ -9,7 +9,7 @@ public class LanguageUtil {
     public static String getLanguageId() {
         return "en";
     }
-    
+
     public static Locale getSystemLocal() {
         return Locale.getDefault();
     }

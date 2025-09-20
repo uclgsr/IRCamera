@@ -41,8 +41,6 @@ import java.util.Locale
 import com.mpdc4gsr.lib.core.R as LibR
 
 
-
-
 class IRCameraSettingActivity : BaseActivity() {
     companion object {
         const val KEY_PRODUCT_TYPE = "key_product_type"
@@ -69,7 +67,7 @@ class IRCameraSettingActivity : BaseActivity() {
     override fun initView() {
         productName = intent.getStringExtra(KEY_PRODUCT_TYPE) ?: ""
         if (isTC007()) {
-            watermarkBean = SharedManager.wifiWatermarkBean 
+            watermarkBean = SharedManager.wifiWatermarkBean
             continuousBean = SharedManager.continuousBean
         } else {
             watermarkBean = SharedManager.watermarkBean
