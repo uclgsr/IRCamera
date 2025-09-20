@@ -85,12 +85,8 @@ android {
 dependencies {
     coreLibraryDesugaring(libs.desugar.jdk.libs)
     implementation(project(":libapp"))
-    // implementation(project(":libcom")) // CONSOLIDATED into libapp - already included via libapp
     implementation(project(":libir"))
     implementation(project(":libui"))
-    // implementation(project(":libmenu")) // CONSOLIDATED into libapp - already included via libapp
-    // implementation(project(":libmatrix")) // CONSOLIDATED into libapp - already included via libapp
-    // implementation(project(":component:pseudo")) // REMOVED - pseudo module functionality moved to libapp stubs
     implementation(project(":BleModule"))
     implementation(libs.bundles.ui.common)
     implementation(libs.utilcode)
@@ -101,7 +97,6 @@ dependencies {
     compileOnly(files("../../libir/libs/libusbdualsdk_1.3.4_2406271906_standard.aar")) 
     compileOnly(files("../../libir/libs/libAC020sdk_USB_IR_1.1.1_2408291439.aar")) 
     compileOnly(files("../../libir/libs/libirutils_1.2.0_2409241055.aar")) 
-    // compileOnly(files("../../app/libs/lms_international-3.90.009.0.aar")) // REMOVED - using stub implementation from libapp 
     testImplementation(libs.junit)
     testImplementation("org.robolectric:robolectric:4.10.3")
     testImplementation("androidx.test:core:1.5.0")
