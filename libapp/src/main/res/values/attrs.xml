@@ -24,28 +24,28 @@
 
     <!-- MyTextView custom attributes -->
     <declare-styleable name="MyTextView">
-        <attr name="MyTextView_drawable_height" format="dimension" />
-        <attr name="MyTextView_top_height" format="dimension" />
-        <attr name="MyTextView_bottom_height" format="dimension" />
-        <attr name="MyTextView_start_height" format="dimension" />
-        <attr name="MyTextView_end_height" format="dimension" />
-        <attr name="MyTextView_left_height" format="dimension" />
-        <attr name="MyTextView_right_height" format="dimension" />
+        <attr name="drawable_height" format="dimension" />
+        <attr name="top_height" format="dimension" />
+        <attr name="bottom_height" format="dimension" />
+        <attr name="start_height" />
+        <attr name="end_height" format="dimension" />
+        <attr name="left_height" format="dimension" />
+        <attr name="right_height" format="dimension" />
     </declare-styleable>
 
     <!-- TitleView custom attributes -->
     <declare-styleable name="TitleView">
-        <attr name="TitleView_leftText" format="string" />
-        <attr name="TitleView_leftDrawable" format="reference" />
-        <attr name="TitleView_leftTextColor" format="color" />
-        <attr name="TitleView_isInitLeft" format="boolean" />
-        <attr name="TitleView_rightText" format="string" />
-        <attr name="TitleView_rightDrawable" format="reference" />
-        <attr name="TitleView_rightTextColor" format="color" />
-        <attr name="TitleView_right2Drawable" format="reference" />
-        <attr name="TitleView_right3Drawable" format="reference" />
-        <attr name="TitleView_isTitleCenter" format="boolean" />
-        <attr name="TitleView_titleText" format="string" />
+        <attr name="leftText" format="string" />
+        <attr name="leftDrawable" format="reference" />
+        <attr name="leftTextColor" format="color" />
+        <attr name="isInitLeft" format="boolean" />
+        <attr name="rightText" format="string" />
+        <attr name="rightDrawable" format="reference" />
+        <attr name="rightTextColor" format="color" />
+        <attr name="right2Drawable" format="reference" />
+        <attr name="right3Drawable" format="reference" />
+        <attr name="isTitleCenter" format="boolean" />
+        <attr name="titleText" />
     </declare-styleable>
 
 </resources>
