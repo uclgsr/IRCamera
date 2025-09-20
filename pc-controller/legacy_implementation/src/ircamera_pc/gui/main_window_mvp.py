@@ -558,7 +558,7 @@ class MVPMainWindow(QMainWindow):
         add_device_layout.addWidget(QLabel("Type:"))
         self.manual_type_combo = QComboBox()
         self.manual_type_combo.addItems(
-            ["ANDROID_SENSOR_NODE", "THERMAL_CAMERA_TS004", "THERMAL_CAMERA_TC007"])
+            ["ANDROID_SENSOR_NODE"]) # TS004/TC007 device support removed
         add_device_layout.addWidget(self.manual_type_combo)
 
         self.add_manual_device_btn = QPushButton("Add Device")
@@ -697,8 +697,7 @@ class MVPMainWindow(QMainWindow):
 
             device_type_mapping = {
                 "ANDROID_SENSOR_NODE": DeviceType.ANDROID_SENSOR_NODE,
-                "THERMAL_CAMERA_TS004": DeviceType.THERMAL_CAMERA_TS004,
-                "THERMAL_CAMERA_TC007": DeviceType.THERMAL_CAMERA_TC007
+                # TS004/TC007 device support removed
             }
             device_type_enum = device_type_mapping.get(device_type, DeviceType.ANDROID_SENSOR_NODE)
 
@@ -754,7 +753,7 @@ class MVPMainWindow(QMainWindow):
         layout.addRow("Device Name:", name_input)
 
         type_combo = QComboBox()
-        type_combo.addItems(["ANDROID_SENSOR_NODE", "THERMAL_CAMERA_TS004", "THERMAL_CAMERA_TC007"])
+        type_combo.addItems(["ANDROID_SENSOR_NODE"]) # TS004/TC007 device support removed
         layout.addRow("Device Type:", type_combo)
 
         buttons = QDialogButtonBox(
@@ -780,8 +779,7 @@ class MVPMainWindow(QMainWindow):
 
                 device_type_mapping = {
                     "ANDROID_SENSOR_NODE": DeviceType.ANDROID_SENSOR_NODE,
-                    "THERMAL_CAMERA_TS004": DeviceType.THERMAL_CAMERA_TS004,
-                    "THERMAL_CAMERA_TC007": DeviceType.THERMAL_CAMERA_TC007
+                    # TS004/TC007 device support removed
                 }
                 device_type_enum = device_type_mapping.get(device_type,
                                                            DeviceType.ANDROID_SENSOR_NODE)

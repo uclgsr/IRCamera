@@ -24,7 +24,7 @@ import com.mpdc4gsr.lib.core.config.RouterConfig
 import com.mpdc4gsr.lib.core.dialog.TipDialog
 import com.mpdc4gsr.lib.core.navigation.NavigationManager
 import com.mpdc4gsr.lib.core.repository.GalleryRepository.DirType
-import com.mpdc4gsr.lib.core.repository.TC007Repository
+
 import com.mpdc4gsr.lib.core.socket.WebSocketProxy
 import com.mpdc4gsr.lib.core.tools.DeviceTools
 import com.mpdc4gsr.lib.core.utils.CommUtils
@@ -96,7 +96,7 @@ class IRMainActivity : AppCompatActivity(), View.OnClickListener {
                 NetWorkUtils.switchNetwork(false)
                 binding.ivMainBg.setImageResource(R.drawable.ic_ir_main_bg_connect)
                 lifecycleScope.launch {
-                    TC007Repository.syncTime()
+                    // TC007Repository.syncTime() // TC007Repository functionality removed
                 }
                 if (SharedManager.isConnect07AutoOpen) {
                     NavigationManager.getInstance().build(RouterConfig.IR_THERMAL_07)

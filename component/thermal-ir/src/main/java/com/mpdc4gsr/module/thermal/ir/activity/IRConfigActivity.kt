@@ -19,7 +19,7 @@ import com.mpdc4gsr.lib.core.common.SharedManager
 import com.mpdc4gsr.lib.core.config.ExtraKeyConfig
 import com.mpdc4gsr.lib.core.dialog.TipDialog
 import com.mpdc4gsr.lib.core.ktbase.BaseActivity
-import com.mpdc4gsr.lib.core.repository.TC007Repository
+
 import com.mpdc4gsr.lib.core.socket.WebSocketProxy
 import com.mpdc4gsr.lib.core.tools.NumberTools
 import com.mpdc4gsr.lib.core.tools.UnitTools
@@ -135,11 +135,7 @@ class IRConfigActivity : BaseActivity(), View.OnClickListener {
             if (isTC007 && WebSocketProxy.getInstance().isTC007Connect()) {
                 lifecycleScope.launch {
                     val config = ConfigRepository.readConfig(true)
-                    TC007Repository.setIRConfig(
-                        config.environment,
-                        config.distance,
-                        config.radiation
-                    )
+                    // TC007Repository.setIRConfig() functionality removed
                 }
             }
         }

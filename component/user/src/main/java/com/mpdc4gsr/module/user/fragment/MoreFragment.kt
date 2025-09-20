@@ -23,7 +23,7 @@ import com.mpdc4gsr.lib.core.http.tool.DownloadTool
 import com.mpdc4gsr.lib.core.ktbase.BaseFragment
 import com.mpdc4gsr.lib.core.navigation.NavigationManager
 import com.mpdc4gsr.lib.core.repository.ProductBean
-import com.mpdc4gsr.lib.core.repository.TC007Repository
+
 import com.mpdc4gsr.lib.core.socket.WebSocketProxy
 import com.mpdc4gsr.lib.core.tools.DeviceTools
 import com.mpdc4gsr.lib.core.viewmodel.FirmwareViewModel
@@ -242,13 +242,8 @@ class MoreFragment : BaseFragment(), View.OnClickListener {
 
         if (isConnect) {
             lifecycleScope.launch {
-                val productBean: ProductBean? = TC007Repository.getProductInfo()
-                if (productBean == null) {
-                    TToast.shortToast(requireContext(), RCore.string.operation_failed_tips)
-                } else {
-                    itemSettingBottomText.text =
-                        getString(RCore.string.setting_firmware_update_version) + "V" + productBean.getVersionStr()
-                }
+                // TC007Repository functionality removed
+                TToast.shortToast(requireContext(), RCore.string.operation_failed_tips)
             }
         } else {
             itemSettingBottomText.setText(RCore.string.setting_firmware_update_version)
@@ -309,7 +304,8 @@ class MoreFragment : BaseFragment(), View.OnClickListener {
             val installDialog = FirmwareInstallDialog(requireContext())
             installDialog.show()
 
-            val isSuccess = TC007Repository.updateFirmware(file)
+            // TC007Repository functionality removed
+            val isSuccess = false
             installDialog.dismiss()
             if (isSuccess) {
                 XLog.d("TC007 固件升级 - 固件升级包发送往 TC007 成功，即将断开连接")
@@ -372,12 +368,13 @@ class MoreFragment : BaseFragment(), View.OnClickListener {
     private fun resetAll() {
         showLoadingDialog(RCore.string.ts004_reset_tip3)
         lifecycleScope.launch {
-            val isSuccess = TC007Repository.resetToFactory()
+            // TC007Repository functionality removed
+            val isSuccess = false
             if (isSuccess) {
                 XLog.d("TC007 恢复出厂设置成功，即将断开连接")
                 TToast.shortToast(requireContext(), RCore.string.ts004_reset_tip4)
                 (requireActivity().application as BaseApplication).disconnectWebSocket()
-                EventBus.getDefault().post(TS004ResetEvent())
+                // EventBus.getDefault().post(TS004ResetEvent()) // TS004ResetEvent removed
                 NavigationManager.getInstance().build(RouterConfig.MAIN)
                     .navigation(requireContext())
                 requireActivity().finish()

@@ -108,8 +108,8 @@ def test_device_type_mappings():
 
         device_types = [
             DeviceType.ANDROID_SENSOR_NODE,
-            DeviceType.THERMAL_CAMERA_TS004,
-            DeviceType.THERMAL_CAMERA_TC007,
+            # DeviceType.THERMAL_CAMERA_TS004 removed
+            # DeviceType.THERMAL_CAMERA_TC007 removed
             DeviceType.PC_CONTROLLER,
             DeviceType.UNKNOWN
         ]
@@ -119,8 +119,7 @@ def test_device_type_mappings():
 
         device_type_mapping = {
             "ANDROID_SENSOR_NODE": DeviceType.ANDROID_SENSOR_NODE,
-            "THERMAL_CAMERA_TS004": DeviceType.THERMAL_CAMERA_TS004,
-            "THERMAL_CAMERA_TC007": DeviceType.THERMAL_CAMERA_TC007
+            # TS004/TC007 device support removed
         }
 
         for key, value in device_type_mapping.items():

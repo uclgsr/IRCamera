@@ -57,8 +57,8 @@ except ImportError:
 class DeviceType(Enum):
 
     PC_CONTROLLER = "PC_CONTROLLER"
-    THERMAL_CAMERA_TS004 = "THERMAL_CAMERA_TS004"
-    THERMAL_CAMERA_TC007 = "THERMAL_CAMERA_TC007"
+    # THERMAL_CAMERA_TS004 removed
+    # THERMAL_CAMERA_TC007 removed
     ANDROID_SENSOR_NODE = "ANDROID_SENSOR_NODE"
     ANDROID_NODE = "ANDROID_NODE"
     UNKNOWN = "UNKNOWN"
@@ -285,14 +285,8 @@ class NetworkDiscoveryService:
             if self.SERVICE_TYPE_PC_CONTROLLER in service_type:
                 return DeviceType.PC_CONTROLLER
             elif self.SERVICE_TYPE_THERMAL_CAMERA in service_type:
-
-                if b"model" in properties:
-                    model = properties[b"model"].decode("utf-8").upper()
-                    if "TS004" in model:
-                        return DeviceType.THERMAL_CAMERA_TS004
-                    elif "TC007" in model:
-                        return DeviceType.THERMAL_CAMERA_TC007
-                return DeviceType.THERMAL_CAMERA_TS004
+                # TS004/TC007 device support removed
+                return DeviceType.UNKNOWN
             elif self.SERVICE_TYPE_ANDROID_NODE in service_type:
                 return DeviceType.ANDROID_SENSOR_NODE
 
