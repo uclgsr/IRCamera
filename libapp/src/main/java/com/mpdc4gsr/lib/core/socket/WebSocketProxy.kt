@@ -13,7 +13,6 @@ import com.blankj.utilcode.util.Utils
 import com.elvishew.xlog.XLog
 import com.hjq.permissions.XXPermissions
 import com.mpdc4gsr.lib.core.bean.event.SocketStateEvent
-import com.mpdc4gsr.lib.core.config.DeviceConfig
 import com.mpdc4gsr.lib.core.security.CertificateManager
 import com.mpdc4gsr.lib.core.utils.WifiUtil
 import com.mpdc4gsr.lib.core.utils.WsCmdConstants
@@ -250,18 +249,7 @@ class WebSocketProxy {
             webSocket: WebSocket,
             bytes: ByteString,
         ) {
-            // TC007 functionality removed
-            // if (ssid.startsWith(DeviceConfig.TC007_NAME_START) && bytes.size == 254) {
-            //     val frameBean = SocketFrameBean(bytes.toByteArray())
-            //     onFrameListener.invoke(frameBean)
-            //     needPrint = !needPrint
-            //     if (needPrint) {
-            //         Log.v("WebSocket", "--------- $ssid 打印一帧数据 ---------")
-            //         Log.v("WebSocket", frameBean.toString())
-            //     }
-            // } else {
-                XLog.tag("WebSocket").w("设备功能已移除，未知的 bytes 消息，长度 ${bytes.size}")
-            // }
+            XLog.tag("WebSocket").w("设备功能已移除，未知的 bytes 消息，长度 ${bytes.size}")
         }
 
         override fun onClosing(

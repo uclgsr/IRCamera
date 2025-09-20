@@ -2,7 +2,6 @@ package mpdc4gsr.permissions
 
 import android.content.Context
 import android.content.Intent
-import android.hardware.usb.UsbDevice
 import android.hardware.usb.UsbManager
 import android.os.Bundle
 import android.util.Log
@@ -10,7 +9,6 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.csl.irCamera.R
 
 
 class PermissionDemoActivity : AppCompatActivity() {

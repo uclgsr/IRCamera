@@ -2,9 +2,7 @@ package com.mpdc4gsr.lib.core.lms.weiget;
 
 import android.content.Context;
 
-/**
- * TToast stub for LMS SDK
- */
+
 public class TToast {
     public static void shortToast(Context context, String message) {
         // Do nothing - stub implementation

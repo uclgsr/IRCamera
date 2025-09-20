@@ -1,7 +1,7 @@
 package mpdc4gsr.sensors
 
-import mpdc4gsr.data.SessionMetadata
 import kotlinx.coroutines.flow.Flow
+import mpdc4gsr.data.SessionMetadata
 
 interface SensorRecorder {
 

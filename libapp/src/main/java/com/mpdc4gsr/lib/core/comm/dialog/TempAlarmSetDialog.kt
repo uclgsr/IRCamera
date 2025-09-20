@@ -1,7 +1,5 @@
 package com.mpdc4gsr.lib.core.comm.dialog
 
-import com.mpdc4gsr.lib.core.R
-
 import android.app.Dialog
 import android.content.Context
 import android.graphics.drawable.ColorDrawable
@@ -18,6 +16,7 @@ import androidx.appcompat.widget.SwitchCompat
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
+import com.mpdc4gsr.lib.core.R
 import com.mpdc4gsr.lib.core.bean.AlarmBean
 import com.mpdc4gsr.lib.core.tools.ToastTools
 import com.mpdc4gsr.lib.core.tools.UnitTools
@@ -285,22 +284,22 @@ class TempAlarmSetDialog(
         isChecked: Boolean,
     ) {
         when (buttonView?.id) {
-            R.id.switch_alarm_high -> { // 高温报警
+            R.id.switch_alarm_high -> {
                 etAlarmHigh.isEnabled = isChecked
                 alarmBean.isHighOpen = isChecked
             }
 
-            R.id.switch_alarm_low -> { // 低温报警
+            R.id.switch_alarm_low -> {
                 etAlarmLow.isEnabled = isChecked
                 alarmBean.isLowOpen = isChecked
             }
 
-            R.id.switch_alarm_mark -> { // 区域标记
+            R.id.switch_alarm_mark -> {
                 clAlarmMark.isVisible = isChecked
                 alarmBean.isMarkOpen = isChecked
             }
 
-            R.id.switch_alarm_ringtone -> { // 报警铃声
+            R.id.switch_alarm_ringtone -> {
                 clRingtoneSelect.isVisible = isChecked
                 if (isChecked) {
                     selectRingtone(alarmBean.ringtoneType)

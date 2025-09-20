@@ -2,9 +2,7 @@ package com.mpdc4gsr.lib.core.lms.utils;
 
 import android.content.Context;
 
-/**
- * SPUtils stub for LMS SDK
- */
+
 public class SPUtils {
     private static volatile SPUtils instance;
 

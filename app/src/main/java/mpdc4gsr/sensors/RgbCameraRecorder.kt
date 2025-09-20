@@ -12,15 +12,14 @@ import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import com.opencsv.CSVWriter
-import mpdc4gsr.data.SessionMetadata
-import mpdc4gsr.sensors.*
-import mpdc4gsr.sensors.RecordingStats
-import mpdc4gsr.sensors.ErrorType
-import mpdc4gsr.utils.CSVBufferedWriter
-import mpdc4gsr.utils.SessionDirectoryManager
-import mpdc4gsr.camera.core.SamsungDeviceCompatibility
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
+import mpdc4gsr.camera.core.SamsungDeviceCompatibility
+import mpdc4gsr.data.SessionMetadata
+import mpdc4gsr.permissions.PermissionManager
+import mpdc4gsr.sensors.*
+import mpdc4gsr.utils.CSVBufferedWriter
+import mpdc4gsr.utils.SessionDirectoryManager
 import java.io.File
 import java.io.FileWriter
 import java.util.concurrent.ExecutorService
@@ -28,7 +27,6 @@ import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
-import mpdc4gsr.permissions.PermissionManager
 
 class RgbCameraRecorder(
     private val context: Context,

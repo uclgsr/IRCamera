@@ -1,5 +1,10 @@
 package com.mpdc4gsr.module.user.fragment
 
+// TS004ResetEvent removed
+// import com.mpdc4gsr.lib.core.bean.event.TS004ResetEvent
+// ProductBean functionality removed
+// import com.mpdc4gsr.lib.core.repository.ProductBean
+
 import android.os.Build
 import android.view.View
 import android.widget.TextView
@@ -9,8 +14,6 @@ import androidx.lifecycle.lifecycleScope
 import com.blankj.utilcode.util.ToastUtils
 import com.elvishew.xlog.XLog
 import com.mpdc4gsr.lib.core.BaseApplication
-// TS004ResetEvent removed
-// import com.mpdc4gsr.lib.core.bean.event.TS004ResetEvent
 import com.mpdc4gsr.lib.core.common.SaveSettingUtil
 import com.mpdc4gsr.lib.core.common.SharedManager
 import com.mpdc4gsr.lib.core.common.WifiSaveSettingUtil
@@ -22,15 +25,12 @@ import com.mpdc4gsr.lib.core.dialog.FirmwareUpDialog
 import com.mpdc4gsr.lib.core.dialog.TipDialog
 import com.mpdc4gsr.lib.core.http.tool.DownloadTool
 import com.mpdc4gsr.lib.core.ktbase.BaseFragment
+import com.mpdc4gsr.lib.core.lms.weiget.TToast
 import com.mpdc4gsr.lib.core.navigation.NavigationManager
-// ProductBean functionality removed
-// import com.mpdc4gsr.lib.core.repository.ProductBean
-
 import com.mpdc4gsr.lib.core.socket.WebSocketProxy
 import com.mpdc4gsr.lib.core.tools.DeviceTools
 import com.mpdc4gsr.lib.core.viewmodel.FirmwareViewModel
 import com.mpdc4gsr.lib.ui.SettingNightView
-import com.mpdc4gsr.lib.core.lms.weiget.TToast
 import com.mpdc4gsr.module.user.R
 import com.mpdc4gsr.module.user.dialog.DownloadProDialog
 import com.mpdc4gsr.module.user.dialog.FirmwareInstallDialog

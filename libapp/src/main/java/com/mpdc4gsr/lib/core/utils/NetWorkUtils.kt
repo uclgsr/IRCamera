@@ -14,7 +14,6 @@ import com.elvishew.xlog.XLog
 import com.mpdc4gsr.lib.core.BaseApplication
 
 
-
 object NetWorkUtils {
     private var mNetworkCallback: ConnectivityManager.NetworkCallback? = null
     private var netWorkListener: ((network: Network?) -> Unit)? = null

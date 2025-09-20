@@ -10,15 +10,15 @@ import java.io.File
 import java.util.TimeZone
 
 open class FileBean(
-    val id: Int, //仅TS004远端时，id
+    val id: Int,
     val path: String,
     val thumb: String,
     val name: String,
-    val duration: Long,//仅当为视频时，持续毫秒数
+    val duration: Long,
     val timeMillis: Long,
     var hasDownload: Boolean,
 ) : Parcelable {
-    constructor(file: File): this(
+    constructor(file: File) : this(
         id = 0,
         path = file.absolutePath,
         thumb = file.absolutePath,
@@ -28,7 +28,7 @@ open class FileBean(
         hasDownload = true,
     )
 
-    constructor(isVideo: Boolean, fileBean: FileBean): this(
+    constructor(isVideo: Boolean, fileBean: FileBean) : this(
         id = fileBean.id,
         path = "http://192.168.40.1:8080/DCIM/${fileBean.name}",
         thumb = if (isVideo) "http://192.168.40.1:8080/DCIM/${fileBean.thumb}" else "http://192.168.40.1:8080/DCIM/${fileBean.name}",

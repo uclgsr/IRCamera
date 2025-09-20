@@ -5,12 +5,12 @@ import android.util.Log
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import mpdc4gsr.controller.RecordingController
 import mpdc4gsr.sensors.TimeSynchronizationService
 import mpdc4gsr.sensors.TimestampManager
 import mpdc4gsr.sensors.TimestampManager.TimestampRecord
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 
 class TimeSynchronizationTestActivity : AppCompatActivity() {

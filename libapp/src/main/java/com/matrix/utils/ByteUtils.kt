@@ -1,6 +1,7 @@
 package com.matrix.utils
 
-import java.util.*
+import java.util.Locale
+import java.util.UUID
 
 object ByteUtils {
 

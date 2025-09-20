@@ -9,13 +9,12 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
-import androidx.constraintlayout.widget.ConstraintLayout
 import com.csl.irCamera.R
+import kotlinx.coroutines.launch
 import mpdc4gsr.camera.Camera2System
-import mpdc4gsr.camera.ui.CameraSettingsView
 import mpdc4gsr.camera.core.ModeManager
 import mpdc4gsr.camera.core.SamsungDeviceCompatibility
-import kotlinx.coroutines.launch
+import mpdc4gsr.camera.ui.CameraSettingsView
 
 /**
  * Activity that demonstrates Samsung Stage3/Level3 RAW DNG recording

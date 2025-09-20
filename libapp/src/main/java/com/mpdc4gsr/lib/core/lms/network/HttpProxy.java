@@ -1,8 +1,6 @@
 package com.mpdc4gsr.lib.core.lms.network;
 
-/**
- * Http Proxy stub for LMS SDK
- */
+
 public class HttpProxy {
     private static volatile HttpProxy instance;
 

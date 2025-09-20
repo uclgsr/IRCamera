@@ -72,7 +72,7 @@ class GSRDataProcessor {
 ```python
 # Copilot knows about the Hub-and-Spoke architecture
 class DeviceManager:
-    # Suggestions will align with existing patterns
+# Suggestions will align with existing patterns
 ```
 
 #### Build and Testing

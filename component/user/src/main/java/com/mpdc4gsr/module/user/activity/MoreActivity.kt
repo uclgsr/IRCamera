@@ -1,5 +1,9 @@
 package com.mpdc4gsr.module.user.activity
 
+// TS004ResetEvent removed
+// import com.mpdc4gsr.lib.core.bean.event.TS004ResetEvent
+// TS004Repository functionality removed
+// import com.mpdc4gsr.lib.core.repository.TS004Repository
 import android.view.View
 import android.widget.TextView
 import androidx.activity.viewModels
@@ -8,8 +12,6 @@ import androidx.lifecycle.lifecycleScope
 import com.blankj.utilcode.util.ToastUtils
 import com.elvishew.xlog.XLog
 import com.mpdc4gsr.lib.core.BaseApplication
-// TS004ResetEvent removed
-// import com.mpdc4gsr.lib.core.bean.event.TS004ResetEvent
 import com.mpdc4gsr.lib.core.config.ExtraKeyConfig
 import com.mpdc4gsr.lib.core.config.FileConfig
 import com.mpdc4gsr.lib.core.config.RouterConfig
@@ -18,12 +20,10 @@ import com.mpdc4gsr.lib.core.dialog.FirmwareUpDialog
 import com.mpdc4gsr.lib.core.dialog.TipDialog
 import com.mpdc4gsr.lib.core.http.tool.DownloadTool
 import com.mpdc4gsr.lib.core.ktbase.BaseActivity
+import com.mpdc4gsr.lib.core.lms.weiget.TToast
 import com.mpdc4gsr.lib.core.navigation.NavigationManager
-// TS004Repository functionality removed
-// import com.mpdc4gsr.lib.core.repository.TS004Repository
 import com.mpdc4gsr.lib.core.utils.Constants
 import com.mpdc4gsr.lib.core.viewmodel.FirmwareViewModel
-import com.mpdc4gsr.lib.core.lms.weiget.TToast
 import com.mpdc4gsr.module.user.R
 import com.mpdc4gsr.module.user.dialog.DownloadProDialog
 import com.mpdc4gsr.module.user.dialog.FirmwareInstallDialog

@@ -18,9 +18,6 @@ import androidx.core.text.HtmlCompat
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.skydoves.colorpickerview.ColorEnvelope
-import com.skydoves.colorpickerview.ColorPickerView
-import com.skydoves.colorpickerview.listeners.ColorEnvelopeListener
 import com.mpdc4gsr.lib.core.R
 import com.mpdc4gsr.lib.core.common.SharedManager
 import com.mpdc4gsr.lib.core.tools.NumberTools
@@ -29,6 +26,9 @@ import com.mpdc4gsr.lib.core.tools.UnitTools
 import com.mpdc4gsr.lib.core.utils.ScreenUtil
 import com.mpdc4gsr.lib.ui.adapter.ColorSelectAdapter
 import com.mpdc4gsr.lib.ui.databinding.DialogThermalInputBinding
+import com.skydoves.colorpickerview.ColorEnvelope
+import com.skydoves.colorpickerview.ColorPickerView
+import com.skydoves.colorpickerview.listeners.ColorEnvelopeListener
 import java.math.BigDecimal
 
 

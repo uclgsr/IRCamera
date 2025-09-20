@@ -1,16 +1,15 @@
 #!/usr/bin/env python3
 
 
+import argparse
 import json
+import logging
 import socket
+import sys
 import threading
 import time
-import sys
-import argparse
 from datetime import datetime, timezone
 from typing import Dict, List
-
-import logging
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)

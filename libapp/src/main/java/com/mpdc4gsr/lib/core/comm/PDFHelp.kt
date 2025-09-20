@@ -1,7 +1,5 @@
 package com.mpdc4gsr.lib.core.comm
 
-import com.mpdc4gsr.lib.core.R
-
 import android.content.ContentValues
 import android.graphics.Canvas
 import android.graphics.Paint
@@ -17,6 +15,7 @@ import android.widget.ScrollView
 import androidx.core.content.ContextCompat
 import com.blankj.utilcode.util.UriUtils
 import com.blankj.utilcode.util.Utils
+import com.mpdc4gsr.lib.core.R
 import com.mpdc4gsr.lib.core.config.FileConfig
 import java.io.BufferedOutputStream
 import java.io.File
@@ -29,7 +28,7 @@ object PDFHelp {
         viewList: MutableList<View>,
         watermarkView: View,
     ): String {
-        val onePageHeight: Int = (view.width * 297f / 210f).toInt() // A4纸宽高比210:297
+        val onePageHeight: Int = (view.width * 297f / 210f).toInt()
 
         var onePageContentHeight = 0f
 
@@ -42,7 +41,7 @@ object PDFHelp {
 
         for (index in 0 until viewList.size) {
             val contentHeight = viewList[index].measuredHeight
-            if (onePageContentHeight + contentHeight > onePageHeight) { // 超出内容，另起一页
+            if (onePageContentHeight + contentHeight > onePageHeight) {
                 onePageContentHeight = 0f
                 pdfDocument.finishPage(page)
                 page = null

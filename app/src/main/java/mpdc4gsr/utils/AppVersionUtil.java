@@ -19,8 +19,6 @@ import com.elvishew.xlog.XLog;
 import com.mpdc4gsr.lib.core.common.SharedManager;
 import com.mpdc4gsr.lib.core.config.HttpConfig;
 import com.mpdc4gsr.lib.core.dialog.TipDialog;
-import com.mpdc4gsr.lib.core.lms.xutils.x;
-import com.mpdc4gsr.lib.core.utils.AppUtil;
 import com.mpdc4gsr.lib.core.lms.LMS;
 import com.mpdc4gsr.lib.core.lms.activity.LmsUpdateDialog;
 import com.mpdc4gsr.lib.core.lms.bean.AppInfoBean;
@@ -29,6 +27,8 @@ import com.mpdc4gsr.lib.core.lms.weiget.TToast;
 import com.mpdc4gsr.lib.core.lms.xutils.common.Callback;
 import com.mpdc4gsr.lib.core.lms.xutils.common.task.PriorityExecutor;
 import com.mpdc4gsr.lib.core.lms.xutils.http.RequestParams;
+import com.mpdc4gsr.lib.core.lms.xutils.x;
+import com.mpdc4gsr.lib.core.utils.AppUtil;
 
 import java.io.File;
 import java.io.FileNotFoundException;

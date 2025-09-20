@@ -46,6 +46,7 @@ class NetworkDiscoveryService(private val context: Context) {
 
     enum class DeviceType {
         PC_CONTROLLER,
+
         // THERMAL_CAMERA_TS004 removed - TS004 functionality disabled
         // THERMAL_CAMERA_TC007 removed - TC007 functionality disabled
         UNKNOWN,

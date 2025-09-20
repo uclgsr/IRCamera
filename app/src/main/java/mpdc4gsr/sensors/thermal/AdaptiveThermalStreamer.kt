@@ -1,10 +1,17 @@
 package mpdc4gsr.sensors.thermal
 
 import android.util.Log
-import kotlinx.coroutines.*
-import java.util.*
-import kotlin.math.min
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
+import java.util.LinkedList
 import kotlin.math.max
+import kotlin.math.min
 
 /**
  * Adaptive Thermal Frame Streaming Optimization

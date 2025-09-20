@@ -12,7 +12,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.scwang.smart.refresh.layout.SmartRefreshLayout
 import com.mpdc4gsr.lib.core.bean.GalleryBean
 import com.mpdc4gsr.lib.core.bean.GalleryTitle
 import com.mpdc4gsr.lib.core.bean.event.GalleryDelEvent
@@ -22,12 +21,12 @@ import com.mpdc4gsr.lib.core.config.FileConfig.getGalleryDirByType
 import com.mpdc4gsr.lib.core.config.RouterConfig
 import com.mpdc4gsr.lib.core.dialog.ConfirmSelectDialog
 import com.mpdc4gsr.lib.core.ktbase.BaseFragment
+import com.mpdc4gsr.lib.core.lms.weiget.TToast
 import com.mpdc4gsr.lib.core.navigation.NavigationManager
 import com.mpdc4gsr.lib.core.repository.GalleryRepository.DirType
 import com.mpdc4gsr.lib.core.repository.TS004Repository
 import com.mpdc4gsr.lib.core.tools.FileTools.getUri
 import com.mpdc4gsr.lib.core.tools.ToastTools
-import com.mpdc4gsr.lib.core.lms.weiget.TToast
 import com.mpdc4gsr.module.thermal.ir.R
 import com.mpdc4gsr.module.thermal.ir.adapter.GalleryAdapter
 import com.mpdc4gsr.module.thermal.ir.event.GalleryAddEvent
@@ -35,6 +34,7 @@ import com.mpdc4gsr.module.thermal.ir.event.GalleryDirChangeEvent
 import com.mpdc4gsr.module.thermal.ir.event.GalleryDownloadEvent
 import com.mpdc4gsr.module.thermal.ir.viewmodel.IRGalleryTabViewModel
 import com.mpdc4gsr.module.thermal.ir.viewmodel.IRGalleryViewModel
+import com.scwang.smart.refresh.layout.SmartRefreshLayout
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe

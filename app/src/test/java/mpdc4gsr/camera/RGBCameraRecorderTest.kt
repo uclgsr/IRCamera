@@ -2,14 +2,14 @@ package mpdc4gsr.camera
 
 import android.content.Context
 import android.view.TextureView
-import mpdc4gsr.camera.RGBCameraRecorder.CameraMode
-import mpdc4gsr.camera.RGBCameraRecorder.RecordingSettings
-import mpdc4gsr.camera.RGBCameraRecorder.VideoResolution
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
+import mpdc4gsr.camera.RGBCameraRecorder.CameraMode
+import mpdc4gsr.camera.RGBCameraRecorder.RecordingSettings
+import mpdc4gsr.camera.RGBCameraRecorder.VideoResolution
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test

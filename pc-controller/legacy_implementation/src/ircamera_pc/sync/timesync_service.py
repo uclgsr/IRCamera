@@ -1,9 +1,9 @@
 import asyncio
+import statistics
 import time
+from collections import deque, defaultdict
 from dataclasses import dataclass, field
 from typing import Dict, Optional, Set
-from collections import deque, defaultdict
-import statistics
 
 try:
     from loguru import logger

@@ -1,8 +1,6 @@
 package com.mpdc4gsr.lib.core.lms.xutils.http;
 
-/**
- * Request Params stub for LMS SDK
- */
+
 public class RequestParams {
     public String uri;
     public boolean isAsJsonContent = false;

@@ -2,11 +2,10 @@
 
 
 import asyncio
+import logging
 import time
 
 from ..core.hub_coordinator import HubCoordinator, SyncMarkerType
-
-import logging
 
 logging.basicConfig(level=logging.INFO)
 

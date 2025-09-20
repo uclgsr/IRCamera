@@ -6,12 +6,11 @@ import android.graphics.BitmapFactory
 import android.graphics.Matrix
 import android.media.ExifInterface
 import com.matrix.Logger
+import com.mpdc4gsr.lib.core.matrix.utils.StringUtils
 import java.io.*
 
 
-/**
- * created by liuhongwei gd02527 on 2018年08月29日
- */
+
 class FileUtils {
 
     companion object {
@@ -28,15 +27,11 @@ class FileUtils {
         }
 
 
-        /**
-         * 删除文件夹以及目录下的文件
-         * @param   filePath 被删除目录的文件路径
-         * @return  目录删除成功返回true，否则返回false
-         */
+
         fun deleteDirectory(filePath: String): Boolean {
             var filePath = filePath
             var flag = false
-            //如果filePath不以文件分隔符结尾，自动添加文件分隔符
+
             if (!filePath.endsWith(File.separator)) {
                 filePath = filePath + File.separator
             }
@@ -46,20 +41,20 @@ class FileUtils {
             }
             flag = true
             val files = dirFile.listFiles()
-            //遍历删除文件夹下的所有文件(包括子目录)
+
             for (i in files.indices) {
                 if (files[i].isFile) {
-                    //删除子文件
+
                     flag = deleteFile(files[i].absolutePath)
                     if (!flag) break
                 } else {
-                    //删除子目录
+
                     flag = deleteDirectory(files[i].absolutePath)
                     if (!flag) break
                 }
             }
             return if (!flag) false else dirFile.delete()
-            //删除当前空目录
+
         }
 
         fun deleteFile(path: String): Boolean {
@@ -89,11 +84,11 @@ class FileUtils {
 
 
         fun appFile(data: ByteArray, filePath: String) {
-            // 打开一个随机访问文件流，按读写方式
+
             var randomFile = RandomAccessFile(filePath, "rw")
-            // 文件长度，字节数
+
             var fileLength = randomFile.length()
-            //将写文件指针移到文件尾。
+
             randomFile.seek(fileLength);
             randomFile.write(data);
 
@@ -129,13 +124,7 @@ class FileUtils {
             saveFile(BaseDataTypeConvertUtils.convertShortArr2LittleEndianByteArr(data), filePath, isAppend)
         }
 
-        /**
-         * 保存Bitmap为JPG文件
-         *
-         * @param bmp
-         * @param filePath
-         * @return
-         */
+
         fun saveBitmap2JpegFile(bmp: Bitmap, filePath: String): Boolean {
 
             val format = CompressFormat.JPEG
@@ -167,13 +156,7 @@ class FileUtils {
             return false
         }
 
-        /**
-         * 旋转Bitmap
-         *
-         * @param srcBitmap    源Bitmap
-         * @param rotateDegree 旋转角度
-         * @return
-         */
+
         fun rotateBitmap(srcBitmap: Bitmap, rotateDegree: Float): Bitmap? {
             var dstBitmap: Bitmap? = null
             val matrix = Matrix()
@@ -235,8 +218,9 @@ class FileUtils {
                         if (imagePath.contains(".jpg")) {
                             var rotate = 0
                             val exif = ExifInterface(imagePath)
-                            //获取方向信息
-                            val orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED)
+
+                            val orientation =
+                                exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED)
 
                             when (orientation) {
                                 ExifInterface.ORIENTATION_ROTATE_90 -> rotate = 90
@@ -267,7 +251,7 @@ class FileUtils {
         }
 
         fun readFile2ByteArr(filePath: String, fileNotFoundErrAction: () -> Unit, ioErrAction: () -> Unit): ByteArray? {
-            // 从文件读取
+
             var fis: FileInputStream? = null
             val inFile = File(filePath)
             val buffer: ByteArray?
@@ -308,7 +292,7 @@ class FileUtils {
                 }
             } catch (e1: Exception) {
                 e1.printStackTrace()
-                // 捕获异常后尝试读取下一遍
+
                 try {
                     if (null != inputStream) {
                         byteArr = ByteArray(inputStream.available())

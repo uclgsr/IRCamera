@@ -1,16 +1,16 @@
 package com.mpdc4gsr.module.user.activity
 
+// TS004Repository functionality removed
+// import com.mpdc4gsr.lib.core.repository.TS004Repository
 import androidx.appcompat.widget.SwitchCompat
 import androidx.lifecycle.lifecycleScope
 import com.mpdc4gsr.lib.core.bean.event.SocketMsgEvent
 import com.mpdc4gsr.lib.core.common.SharedManager
 import com.mpdc4gsr.lib.core.ktbase.BaseActivity
-// TS004Repository functionality removed
-// import com.mpdc4gsr.lib.core.repository.TS004Repository
+import com.mpdc4gsr.lib.core.lms.weiget.TToast
 import com.mpdc4gsr.lib.core.socket.SocketCmdUtil
 import com.mpdc4gsr.lib.core.utils.WsCmdConstants
 import com.mpdc4gsr.lib.core.view.TitleView
-import com.mpdc4gsr.lib.core.lms.weiget.TToast
 import com.mpdc4gsr.module.user.R
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.Subscribe

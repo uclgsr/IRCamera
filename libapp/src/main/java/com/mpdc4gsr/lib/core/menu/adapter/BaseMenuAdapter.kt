@@ -26,7 +26,7 @@ internal abstract class BaseMenuAdapter : RecyclerView.Adapter<BaseMenuAdapter.V
         val binding = ItemMenuBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         val widthPixels: Int = parent.context.resources.displayMetrics.widthPixels
 
-        val iconSize: Int = (widthPixels * 62 / 375f).toInt() // 62、375 是按 UI 图比例
+        val iconSize: Int = (widthPixels * 62 / 375f).toInt()
         val iconParams: ViewGroup.LayoutParams = binding.ivIcon.layoutParams
         iconParams.width = iconSize
         iconParams.height = iconSize
@@ -34,8 +34,8 @@ internal abstract class BaseMenuAdapter : RecyclerView.Adapter<BaseMenuAdapter.V
         if (itemCount <= 4) {
             binding.root.layoutParams.width = (widthPixels / itemCount.toFloat()).toInt()
         } else {
-            val bigMargin: Int = (widthPixels * 24 / 375f).toInt() // 按 UI 图最左最右间距为 24
-            val smallMargin: Int = (widthPixels * 8 / 375f).toInt() // 按 UI 图每个 item 间距为 16
+            val bigMargin: Int = (widthPixels * 24 / 375f).toInt()
+            val smallMargin: Int = (widthPixels * 8 / 375f).toInt()
             when (viewType) {
                 VIEW_TYPE_FIRST -> binding.root.setPadding(bigMargin, 0, smallMargin, 0)
                 VIEW_TYPE_LAST -> binding.root.setPadding(smallMargin, 0, bigMargin, 0)

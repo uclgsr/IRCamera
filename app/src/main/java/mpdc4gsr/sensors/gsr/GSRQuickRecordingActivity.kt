@@ -11,12 +11,8 @@ import androidx.lifecycle.lifecycleScope
 import com.csl.irCamera.R
 import com.csl.irCamera.databinding.ActivityGsrQuickRecordingBinding
 import com.mpdc4gsr.lib.core.ktbase.BaseBindingActivity
-import mpdc4gsr.controller.RecordingController
 import kotlinx.coroutines.launch
-import java.io.File
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
+import mpdc4gsr.controller.RecordingController
 
 class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingBinding>() {
     companion object {

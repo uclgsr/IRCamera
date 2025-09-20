@@ -1,6 +1,4 @@
 import logging
-from typing import Any, Dict, List, Optional
-
 from PyQt6.QtCore import QTimer, pyqtSignal, pyqtSlot
 from PyQt6.QtGui import QFont
 from PyQt6.QtWidgets import (
@@ -16,6 +14,7 @@ from PyQt6.QtWidgets import (
     QVBoxLayout,
     QWidget,
 )
+from typing import Any, Dict, List, Optional
 
 try:
     from .plotting_widgets import DataAggregationWidget, MultiModalDashboard

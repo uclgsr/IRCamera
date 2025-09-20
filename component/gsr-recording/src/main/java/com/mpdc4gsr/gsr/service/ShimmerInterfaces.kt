@@ -81,7 +81,7 @@ class MockShimmerDevice : ShimmerDeviceInterface {
 }
 
 /**
- * Temporary mock data cluster for compilation
+ * TODO FIX Temporary mock data cluster for compilation
  */
 class MockShimmerDataCluster : ShimmerDataCluster {
     override fun getGSRRawValue(): Double = 2048.0

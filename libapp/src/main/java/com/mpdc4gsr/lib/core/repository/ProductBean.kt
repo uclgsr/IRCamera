@@ -8,7 +8,7 @@ data class ProductBean(
     val Code: String = "",
     val SoftwareVersion: Version07Bean? = null
 ) {
-    fun getVersionStr(): String = 
+    fun getVersionStr(): String =
         "${SoftwareVersion?.Major ?: "-"}.${SoftwareVersion?.Minor ?: "-"}${SoftwareVersion?.Build ?: "-"}"
 }
 

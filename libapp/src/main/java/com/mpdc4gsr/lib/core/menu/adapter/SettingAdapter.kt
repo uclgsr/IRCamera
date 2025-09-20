@@ -69,7 +69,7 @@ internal class SettingAdapter(
                 )
             )
         } else {
-            if (menuType == MenuType.GALLERY_EDIT) { // 2D编辑
+            if (menuType == MenuType.GALLERY_EDIT) {
                 dataList.add(
                     Data(
                         R.string.temp_alarm_alarm,
@@ -106,7 +106,7 @@ internal class SettingAdapter(
                         SettingType.CONTRAST
                     )
                 )
-                if (menuType != MenuType.Lite) { // Lite 没有细节(锐度)
+                if (menuType != MenuType.Lite) {
                     dataList.add(
                         Data(
                             R.string.thermal_sharpen,
@@ -122,7 +122,7 @@ internal class SettingAdapter(
                         SettingType.ALARM
                     )
                 )
-                if (menuType != MenuType.TC007) { // TC007 没有旋转
+                if (menuType != MenuType.TC007) {
                     dataList.add(
                         Data(
                             R.string.thermal_rotate,
@@ -138,7 +138,7 @@ internal class SettingAdapter(
                         SettingType.FONT
                     )
                 )
-                if (menuType != MenuType.DOUBLE_LIGHT) { // TC001 Plus 没有镜像
+                if (menuType != MenuType.DOUBLE_LIGHT) {
                     dataList.add(
                         Data(
                             R.string.mirror,

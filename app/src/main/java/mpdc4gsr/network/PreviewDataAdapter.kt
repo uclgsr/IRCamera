@@ -3,8 +3,6 @@ package mpdc4gsr.network
 import android.graphics.Bitmap
 import android.util.Log
 import com.example.thermal_lite.camera.CameraPreviewManager
-import mpdc4gsr.sensors.gsr.GSRSensorRecorder
-import mpdc4gsr.service.RecordingService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -13,6 +11,8 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import mpdc4gsr.sensors.gsr.GSRSensorRecorder
+import mpdc4gsr.service.RecordingService
 import java.util.concurrent.atomic.AtomicReference
 
 

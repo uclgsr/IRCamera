@@ -8,10 +8,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
 
-/**
- * LmsLoadView - A simple custom loading view with animated dots
- * This is a minimal implementation to replace the missing LmsLoadView widget
- */
+
 public class LmsLoadView extends View {
     private static final int DEFAULT_DOT_COUNT = 3;
     private static final int DEFAULT_DOT_RADIUS = 5;

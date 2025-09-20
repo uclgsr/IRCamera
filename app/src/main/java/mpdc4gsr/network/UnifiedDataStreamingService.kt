@@ -2,16 +2,16 @@ package mpdc4gsr.network
 
 import android.content.Context
 import android.util.Log
-import mpdc4gsr.sensors.TimestampManager
-import mpdc4gsr.sensors.TimestampRecord
 import com.mpdc4gsr.gsr.model.GSRSample
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
+import mpdc4gsr.sensors.TimestampManager
+import mpdc4gsr.sensors.TimestampRecord
 import org.json.JSONArray
 import org.json.JSONObject
+import java.io.PrintWriter
 import java.net.ServerSocket
 import java.net.Socket
-import java.io.PrintWriter
 import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong

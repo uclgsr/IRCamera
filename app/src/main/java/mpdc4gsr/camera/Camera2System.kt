@@ -7,15 +7,7 @@ import android.hardware.camera2.CaptureRequest
 import android.hardware.camera2.TotalCaptureResult
 import android.util.Log
 import android.util.Size
-import android.view.Surface
 import android.view.TextureView
-import android.view.WindowManager
-import mpdc4gsr.camera.core.CameraController
-import mpdc4gsr.camera.core.DeviceCaps
-import mpdc4gsr.camera.core.ModeManager
-import mpdc4gsr.camera.core.RawEngine
-import mpdc4gsr.camera.core.UiBridge
-import mpdc4gsr.camera.core.VideoEngine
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -23,6 +15,12 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
+import mpdc4gsr.camera.core.CameraController
+import mpdc4gsr.camera.core.DeviceCaps
+import mpdc4gsr.camera.core.ModeManager
+import mpdc4gsr.camera.core.RawEngine
+import mpdc4gsr.camera.core.UiBridge
+import mpdc4gsr.camera.core.VideoEngine
 import java.io.File
 
 class Camera2System(

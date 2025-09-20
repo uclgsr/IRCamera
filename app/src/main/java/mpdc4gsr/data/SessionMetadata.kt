@@ -1,12 +1,13 @@
 package mpdc4gsr.data
 
 import android.os.SystemClock
-import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import mpdc4gsr.sensors.RecordingStats
 import java.io.File
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
 
 
 data class SessionMetadata(

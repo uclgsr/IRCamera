@@ -1,7 +1,5 @@
 package com.mpdc4gsr.lib.core.menu
 
-import com.mpdc4gsr.lib.core.R
-
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.TypedArray
@@ -11,7 +9,8 @@ import android.widget.FrameLayout
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.mpdc4gsr.lib.core.repository.GalleryRepository
+import com.mpdc4gsr.lib.core.R
+import com.mpdc4gsr.lib.core.databinding.ViewMenuSecondBinding
 import com.mpdc4gsr.lib.core.menu.adapter.ColorAdapter
 import com.mpdc4gsr.lib.core.menu.adapter.FenceAdapter
 import com.mpdc4gsr.lib.core.menu.adapter.SettingAdapter
@@ -26,7 +25,7 @@ import com.mpdc4gsr.lib.core.menu.constant.SettingType
 import com.mpdc4gsr.lib.core.menu.constant.TargetType
 import com.mpdc4gsr.lib.core.menu.constant.TempPointType
 import com.mpdc4gsr.lib.core.menu.constant.TwoLightType
-import com.mpdc4gsr.lib.core.databinding.ViewMenuSecondBinding
+import com.mpdc4gsr.lib.core.repository.GalleryRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

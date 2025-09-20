@@ -36,6 +36,7 @@ import com.elvishew.xlog.XLog
 import com.infisense.usbdual.camera.DualViewWithExternalCameraCommonApi
 import com.infisense.usbir.view.CameraView
 import com.infisense.usbir.view.TemperatureView
+import com.mpdc4gsr.lib.core.comm.view.TempLayout
 import com.mpdc4gsr.lib.core.common.SharedManager
 import com.mpdc4gsr.lib.core.config.FileConfig
 import com.mpdc4gsr.lib.core.dialog.TipDialog
@@ -44,7 +45,6 @@ import com.mpdc4gsr.lib.core.utils.BitmapUtils
 import com.mpdc4gsr.lib.ui.camera.CameraPreView
 import com.mpdc4gsr.lib.ui.widget.BitmapConstraintLayout
 import com.mpdc4gsr.lib.ui.widget.LiteSurfaceView
-import com.mpdc4gsr.lib.core.comm.view.TempLayout
 import com.mpdc4gsr.module.thermal.ir.view.HikSurfaceView
 import com.mpdc4gsr.module.thermal.ir.view.TemperatureHikView
 import com.mpdc4gsr.module.thermal.ir.view.compass.LinearCompassView

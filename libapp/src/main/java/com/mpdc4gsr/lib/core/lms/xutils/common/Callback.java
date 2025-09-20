@@ -1,8 +1,6 @@
 package com.mpdc4gsr.lib.core.lms.xutils.common;
 
-/**
- * Callback stub for LMS SDK
- */
+
 public interface Callback<T> {
     void onSuccess(T result);
 

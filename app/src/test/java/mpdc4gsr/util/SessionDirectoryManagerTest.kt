@@ -3,8 +3,6 @@ package mpdc4gsr.util
 import android.content.Context
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
-import android.os.Build
-import android.os.StatFs
 import org.json.JSONObject
 import org.junit.Before
 import org.junit.Test

@@ -4,7 +4,6 @@ import android.os.Parcelable
 import com.google.gson.Gson
 import com.mpdc4gsr.lib.core.common.SharedManager
 import kotlinx.parcelize.Parcelize
-import java.nio.ByteBuffer
 
 /**
  * Stub implementation of CustomPseudoBean to replace the removed pseudo module.

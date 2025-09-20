@@ -10,7 +10,7 @@ public class NetworkUtil {
     public static boolean isWifiConnected() {
         return false;
     }
-    
+
     public static boolean isConnected(Context context) {
         return true;
     }

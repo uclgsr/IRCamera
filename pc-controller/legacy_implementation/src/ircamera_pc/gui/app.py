@@ -2,9 +2,8 @@ import asyncio
 import os
 import signal
 import sys
-from typing import Optional, Any
-
 from loguru import logger
+from typing import Optional, Any
 
 GUI_AVAILABLE = True
 try:

@@ -1,16 +1,16 @@
 package mpdc4gsr.sensors.gsr
 
-import android.content.Context
-import android.content.Intent
-import android.content.SharedPreferences
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
+import android.content.Context
+import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.TextView
 import android.widget.Button
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -20,7 +20,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.csl.irCamera.R
 import com.mpdc4gsr.ble.util.BluetoothPermissionUtils
-import mpdc4gsr.sensors.gsr.GSRSensorRecorder
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 

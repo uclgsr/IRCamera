@@ -10,10 +10,6 @@ import android.provider.Settings
 import android.util.Log
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.Button
-import android.widget.EditText
-import android.widget.LinearLayout
-import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -24,7 +20,6 @@ import com.csl.irCamera.R
 import com.csl.irCamera.databinding.ActivityGsrSettingsBinding
 import com.mpdc4gsr.ble.util.BluetoothPermissionUtils
 import com.mpdc4gsr.lib.core.ktbase.BaseBindingActivity
-import mpdc4gsr.sensors.gsr.GSRSensorRecorder
 import kotlinx.coroutines.launch
 
 class GSRSettingsActivity : BaseBindingActivity<ActivityGsrSettingsBinding>() {

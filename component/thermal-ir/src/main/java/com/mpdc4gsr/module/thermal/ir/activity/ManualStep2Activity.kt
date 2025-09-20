@@ -27,8 +27,8 @@ import com.infisense.usbdual.inf.OnUSBConnectListener
 import com.infisense.usbir.utils.HexDump
 import com.mpdc4gsr.lib.core.common.SharedManager
 import com.mpdc4gsr.lib.core.ktbase.BaseActivity
-import com.mpdc4gsr.lib.core.utils.ByteUtils.toLittleBytes
 import com.mpdc4gsr.lib.core.lms.weiget.LmsLoadDialog
+import com.mpdc4gsr.lib.core.utils.ByteUtils.toLittleBytes
 import com.mpdc4gsr.module.thermal.ir.R
 import com.mpdc4gsr.module.thermal.ir.event.ManualFinishBean
 import com.mpdc4gsr.module.thermal.ir.utils.IRCmdTool

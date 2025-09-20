@@ -2,22 +2,27 @@ package mpdc4gsr.core
 
 import android.os.Bundle
 import android.util.Log
-import android.widget.*
+import android.widget.Button
+import android.widget.LinearLayout
+import android.widget.ProgressBar
+import android.widget.ScrollView
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
-import mpdc4gsr.controller.RecordingController
-import mpdc4gsr.sensors.gsr.GSRSensorRecorder
-import mpdc4gsr.sensors.thermal.ThermalCameraRecorder
-import mpdc4gsr.sensors.RgbCameraRecorder
-import mpdc4gsr.network.DataStreamingService
-import mpdc4gsr.network.NetworkClient
-import mpdc4gsr.permissions.PermissionManager
-import mpdc4gsr.permissions.PermissionController
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import mpdc4gsr.controller.RecordingController
+import mpdc4gsr.network.DataStreamingService
+import mpdc4gsr.network.NetworkClient
+import mpdc4gsr.permissions.PermissionController
+import mpdc4gsr.permissions.PermissionManager
+import mpdc4gsr.sensors.RgbCameraRecorder
+import mpdc4gsr.sensors.gsr.GSRSensorRecorder
+import mpdc4gsr.sensors.thermal.ThermalCameraRecorder
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
 
 
 class ComprehensiveSystemDemo : AppCompatActivity() {

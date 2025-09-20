@@ -49,7 +49,7 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
     protected var mIrSurfaceView: IrSurfaceView? = null
 
     private val msgLiveData by lazy { MutableLiveData<Int>() }
-    
+
     // Cached fence and camera views to avoid repeated findViewById calls
     private val fencePointView by lazy { requireView().findViewById<com.mpdc4gsr.lib.ui.fence.FencePointView>(R.id.fence_point_view) }
     private val fenceLineView by lazy { requireView().findViewById<com.mpdc4gsr.lib.ui.fence.FenceLineView>(R.id.fence_line_view) }

@@ -2,14 +2,14 @@ package mpdc4gsr.sensors.gsr
 
 import android.content.Context
 import android.util.Log
-import mpdc4gsr.sensors.thermal.ThermalCameraRecorder
-import mpdc4gsr.data.SessionMetadata
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
+import mpdc4gsr.data.SessionMetadata
+import mpdc4gsr.sensors.RecordingStats
 import mpdc4gsr.sensors.RecordingStatus
 import mpdc4gsr.sensors.SensorError
-import mpdc4gsr.sensors.RecordingStats
+import mpdc4gsr.sensors.thermal.ThermalCameraRecorder
 import java.io.File
 import java.io.FileWriter
 

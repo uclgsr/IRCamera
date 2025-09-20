@@ -12,13 +12,12 @@ import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
-import com.shimmerresearch.android.manager.ShimmerBluetoothManagerAndroid
 import com.shimmerresearch.android.Shimmer
-import com.shimmerresearch.driver.ObjectCluster
+import com.shimmerresearch.android.manager.ShimmerBluetoothManagerAndroid
 import com.shimmerresearch.bluetooth.ShimmerBluetooth.BT_STATE
-import mpdc4gsr.sensors.unified.model.DeviceInfo
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
+import mpdc4gsr.sensors.unified.model.DeviceInfo
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean
 

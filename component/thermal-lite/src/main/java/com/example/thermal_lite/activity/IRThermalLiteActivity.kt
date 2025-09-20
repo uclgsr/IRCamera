@@ -72,8 +72,13 @@ import com.infisense.usbir.view.TemperatureView.REGION_MODE_RECTANGLE
 import com.infisense.usbir.view.TemperatureView.REGION_NODE_TREND
 import com.infisense.usbir.view.TemperatureView.VISIBLE
 import com.mpdc4gsr.lib.core.BaseApplication
+import com.mpdc4gsr.lib.core.activity.PseudoSetActivity
 import com.mpdc4gsr.lib.core.bean.CameraItemBean
+import com.mpdc4gsr.lib.core.bean.CustomPseudoBean
+import com.mpdc4gsr.lib.core.comm.AlarmHelp
 import com.mpdc4gsr.lib.core.comm.IrParam
+import com.mpdc4gsr.lib.core.comm.dialog.ColorPickDialog
+import com.mpdc4gsr.lib.core.comm.dialog.TempAlarmSetDialog
 import com.mpdc4gsr.lib.core.common.ProductType
 import com.mpdc4gsr.lib.core.common.SaveSettingUtil
 import com.mpdc4gsr.lib.core.common.SharedManager
@@ -85,6 +90,10 @@ import com.mpdc4gsr.lib.core.dialog.NotTipsSelectDialog
 import com.mpdc4gsr.lib.core.dialog.TipDialog
 import com.mpdc4gsr.lib.core.dialog.TipEmissivityDialog
 import com.mpdc4gsr.lib.core.dialog.TipShutterDialog
+import com.mpdc4gsr.lib.core.lms.LMS.mContext
+import com.mpdc4gsr.lib.core.menu.constant.FenceType
+import com.mpdc4gsr.lib.core.menu.constant.SettingType
+import com.mpdc4gsr.lib.core.menu.constant.TwoLightType
 import com.mpdc4gsr.lib.core.navigation.NavigationManager
 import com.mpdc4gsr.lib.core.repository.GalleryRepository
 import com.mpdc4gsr.lib.core.tools.CheckDoubleClick
@@ -100,13 +109,6 @@ import com.mpdc4gsr.lib.core.utils.ScreenUtil
 import com.mpdc4gsr.lib.ui.dialog.TipPreviewDialog
 import com.mpdc4gsr.lib.ui.widget.seekbar.OnRangeChangedListener
 import com.mpdc4gsr.lib.ui.widget.seekbar.RangeSeekBar
-import com.mpdc4gsr.lib.core.comm.AlarmHelp
-import com.mpdc4gsr.lib.core.comm.dialog.ColorPickDialog
-import com.mpdc4gsr.lib.core.comm.dialog.TempAlarmSetDialog
-import com.mpdc4gsr.lib.core.lms.LMS.mContext
-import com.mpdc4gsr.lib.core.menu.constant.FenceType
-import com.mpdc4gsr.lib.core.menu.constant.SettingType
-import com.mpdc4gsr.lib.core.menu.constant.TwoLightType
 import com.mpdc4gsr.module.thermal.ir.activity.BaseIRActivity
 import com.mpdc4gsr.module.thermal.ir.adapter.CameraItemAdapter
 import com.mpdc4gsr.module.thermal.ir.bean.DataBean
@@ -117,8 +119,6 @@ import com.mpdc4gsr.module.thermal.ir.repository.ConfigRepository
 import com.mpdc4gsr.module.thermal.ir.utils.IRConfigData
 import com.mpdc4gsr.module.thermal.ir.video.VideoRecordFFmpeg
 import com.mpdc4gsr.module.thermal.ir.view.TimeDownView
-import com.mpdc4gsr.lib.core.activity.PseudoSetActivity
-import com.mpdc4gsr.lib.core.bean.CustomPseudoBean
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job

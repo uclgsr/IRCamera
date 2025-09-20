@@ -16,8 +16,8 @@ import com.infisense.usbir.view.TemperatureView
 import com.mpdc4gsr.lib.core.bean.CameraItemBean
 import com.mpdc4gsr.lib.core.common.ProductType.PRODUCT_NAME_TCP
 import com.mpdc4gsr.lib.core.common.SaveSettingUtil
-import com.mpdc4gsr.lib.core.tools.ToastTools 
 import com.mpdc4gsr.lib.core.menu.constant.TwoLightType
+import com.mpdc4gsr.lib.core.tools.ToastTools
 import com.mpdc4gsr.module.thermal.ir.R
 import com.mpdc4gsr.module.thermal.ir.event.GalleryAddEvent
 import com.mpdc4gsr.module.thermal.ir.video.VideoRecordFFmpeg

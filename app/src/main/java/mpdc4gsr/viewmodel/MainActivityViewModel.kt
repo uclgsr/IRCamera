@@ -6,17 +6,17 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import mpdc4gsr.sensors.gsr.GSRSensorRecorder
-import mpdc4gsr.sensors.unified.UnifiedGSRRecorder
-import mpdc4gsr.sensors.thermal.ThermalRecorder
-import mpdc4gsr.network.NetworkClient
-import mpdc4gsr.network.NetworkController
-import mpdc4gsr.core.SessionManager
-import com.mpdc4gsr.gsr.service.SessionManager as GSRSessionManager
 import com.mpdc4gsr.gsr.model.SessionInfo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import mpdc4gsr.core.SessionManager
+import mpdc4gsr.network.NetworkClient
+import mpdc4gsr.network.NetworkController
+import mpdc4gsr.sensors.gsr.GSRSensorRecorder
+import mpdc4gsr.sensors.thermal.ThermalRecorder
+import mpdc4gsr.sensors.unified.UnifiedGSRRecorder
+import com.mpdc4gsr.gsr.service.SessionManager as GSRSessionManager
 
 
 class MainActivityViewModel(application: Application) : AndroidViewModel(application) {

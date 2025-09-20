@@ -2,12 +2,16 @@ package mpdc4gsr.test
 
 import android.os.Bundle
 import android.util.Log
-import android.widget.*
+import android.widget.Button
+import android.widget.LinearLayout
+import android.widget.ScrollView
+import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
 import mpdc4gsr.controller.RecordingController
 import mpdc4gsr.service.RecordingService
-import kotlinx.coroutines.launch
 import java.io.File
 
 

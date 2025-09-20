@@ -1,6 +1,5 @@
 package com.mpdc4gsr.lib.core.comm.dialog
 
-import com.mpdc4gsr.lib.core.R
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
@@ -13,9 +12,10 @@ import androidx.core.content.ContextCompat
 import com.blankj.utilcode.util.SizeUtils
 import com.jaygoo.widget.DefRangeSeekBar
 import com.jaygoo.widget.OnRangeChangedListener
+import com.mpdc4gsr.lib.core.R
+import com.mpdc4gsr.lib.core.comm.util.ColorUtils
 import com.mpdc4gsr.lib.core.utils.ScreenUtil
 import com.mpdc4gsr.lib.core.view.ColorSelectView
-import com.mpdc4gsr.lib.core.comm.util.ColorUtils
 
 class ColorPickDialog(
     context: Context,
@@ -144,7 +144,7 @@ class ColorPickDialog(
         when (v) {
             rootView.findViewById<View>(R.id.rl_close) -> dismiss()
 
-            rootView.findViewById<View>(R.id.tv_save) -> { // 保存
+            rootView.findViewById<View>(R.id.tv_save) -> {
                 dismiss()
                 onPickListener?.invoke(color, textSize)
             }

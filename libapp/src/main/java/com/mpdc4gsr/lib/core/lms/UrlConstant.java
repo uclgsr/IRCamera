@@ -1,8 +1,6 @@
 package com.mpdc4gsr.lib.core.lms;
 
-/**
- * URL Constant stub for LMS SDK
- */
+
 public class UrlConstant {
     public static volatile String BASE_URL = "https://example.com/";
 

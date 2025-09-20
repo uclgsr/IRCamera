@@ -21,12 +21,12 @@ import com.csl.irCamera.databinding.ActivitySessionManagerBinding
 import com.mpdc4gsr.gsr.model.SessionInfo
 import com.mpdc4gsr.gsr.service.SessionManager
 import com.mpdc4gsr.lib.core.ktbase.BaseBindingActivity
-import mpdc4gsr.utils.SessionDirectoryManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import mpdc4gsr.utils.SessionDirectoryManager
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date

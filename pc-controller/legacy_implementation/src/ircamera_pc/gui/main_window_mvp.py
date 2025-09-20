@@ -1,8 +1,4 @@
 import asyncio
-from datetime import datetime
-from typing import Dict, Optional
-
-from loguru import logger
 from PyQt6.QtCore import Qt, QTimer, pyqtSignal, pyqtSlot
 from PyQt6.QtGui import QFont
 from PyQt6.QtWidgets import (
@@ -24,6 +20,9 @@ from PyQt6.QtWidgets import (
     QVBoxLayout,
     QWidget,
 )
+from datetime import datetime
+from loguru import logger
+from typing import Dict, Optional
 
 from ..core.device_manager import DeviceConnectionState, DeviceInfo, DeviceManager, DeviceType
 from ..core.session_manager import AdvancedSessionManager, SessionConfiguration, SessionState
@@ -553,7 +552,7 @@ class MVPMainWindow(QMainWindow):
         add_device_layout.addWidget(QLabel("Type:"))
         self.manual_type_combo = QComboBox()
         self.manual_type_combo.addItems(
-            ["ANDROID_SENSOR_NODE"]) # TS004/TC007 device support removed
+            ["ANDROID_SENSOR_NODE"])  # TS004/TC007 device support removed
         add_device_layout.addWidget(self.manual_type_combo)
 
         self.add_manual_device_btn = QPushButton("Add Device")
@@ -748,7 +747,7 @@ class MVPMainWindow(QMainWindow):
         layout.addRow("Device Name:", name_input)
 
         type_combo = QComboBox()
-        type_combo.addItems(["ANDROID_SENSOR_NODE"]) # TS004/TC007 device support removed
+        type_combo.addItems(["ANDROID_SENSOR_NODE"])  # TS004/TC007 device support removed
         layout.addRow("Device Type:", type_combo)
 
         buttons = QDialogButtonBox(

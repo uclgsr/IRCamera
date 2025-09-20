@@ -11,12 +11,12 @@ import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import com.csl.irCamera.R
-import mpdc4gsr.camera.RGBCameraRecorder
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
+import mpdc4gsr.camera.RGBCameraRecorder
 
 class CameraModeSelector
 @JvmOverloads

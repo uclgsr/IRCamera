@@ -10,10 +10,10 @@ import com.mpdc4gsr.lib.core.config.ExtraKeyConfig
 import com.mpdc4gsr.lib.core.config.RouterConfig
 import com.mpdc4gsr.lib.core.dialog.TipDialog
 import com.mpdc4gsr.lib.core.ktbase.BaseFragment
+import com.mpdc4gsr.lib.core.lms.UrlConstant
 import com.mpdc4gsr.lib.core.navigation.NavigationManager
 import com.mpdc4gsr.lib.core.socket.WebSocketProxy
 import com.mpdc4gsr.lib.core.tools.DeviceTools
-import com.mpdc4gsr.lib.core.lms.UrlConstant
 import com.mpdc4gsr.module.thermal.ir.R
 import com.mpdc4gsr.module.thermal.ir.activity.IRThermalNightActivity
 import com.mpdc4gsr.module.thermal.ir.activity.IRThermalPlusActivity

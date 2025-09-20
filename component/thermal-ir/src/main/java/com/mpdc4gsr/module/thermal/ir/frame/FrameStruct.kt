@@ -3,11 +3,11 @@ package com.mpdc4gsr.module.thermal.ir.frame
 import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.mpdc4gsr.lib.core.bean.AlarmBean
+import com.mpdc4gsr.lib.core.bean.CustomPseudoBean
 import com.mpdc4gsr.lib.core.bean.WatermarkBean
 import com.mpdc4gsr.lib.core.common.ProductType.PRODUCT_NAME_TC007
 import com.mpdc4gsr.lib.core.utils.ByteUtils
 import com.mpdc4gsr.lib.core.utils.ByteUtils.toBytes
-import com.mpdc4gsr.lib.core.bean.CustomPseudoBean
 
 
 class FrameStruct() {

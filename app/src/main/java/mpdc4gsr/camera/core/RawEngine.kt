@@ -2,10 +2,10 @@ package mpdc4gsr.camera.core
 
 import android.content.Context
 import android.graphics.ImageFormat
-import android.hardware.camera2.CaptureResult
-import android.hardware.camera2.TotalCaptureResult
 import android.hardware.camera2.CameraCharacteristics
+import android.hardware.camera2.CaptureResult
 import android.hardware.camera2.DngCreator
+import android.hardware.camera2.TotalCaptureResult
 import android.media.Image
 import android.media.ImageReader
 import android.util.Log
@@ -97,7 +97,7 @@ class RawEngine(private val context: Context) {
     fun getCaptureCount(): Int = rawCaptureCount
 
     /**
-     * Enable or disable Samsung Stage3/Level3 processing for RAW DNG capture
+     * TODO: Enable or disable Samsung Stage3/Level3 processing for RAW DNG capture
      */
     fun setStage3ProcessingEnabled(enabled: Boolean) {
         enableStage3Processing = enabled
@@ -106,7 +106,7 @@ class RawEngine(private val context: Context) {
     }
 
     /**
-     * Check if Stage3/Level3 processing is enabled
+     * TODO: Check if Stage3/Level3 processing is enabled
      */
     fun isStage3ProcessingEnabled(): Boolean = enableStage3Processing
 

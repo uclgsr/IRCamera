@@ -16,15 +16,15 @@ import com.mpdc4gsr.lib.core.lms.Config
 import com.mpdc4gsr.lib.core.lms.LMS.mContext
 import com.mpdc4gsr.lib.core.lms.UrlConstant
 import com.mpdc4gsr.lib.core.lms.utils.SPUtils
+import io.reactivex.plugins.RxJavaPlugins
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import mpdc4gsr.InitUtil.initJPush
 import mpdc4gsr.InitUtil.initLms
 import mpdc4gsr.InitUtil.initLog
 import mpdc4gsr.InitUtil.initReceiver
 import mpdc4gsr.InitUtil.initUM
-import io.reactivex.plugins.RxJavaPlugins
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 class App : BaseApplication() {
 

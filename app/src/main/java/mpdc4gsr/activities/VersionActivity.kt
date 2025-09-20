@@ -9,11 +9,11 @@ import com.mpdc4gsr.lib.core.BaseApplication
 import com.mpdc4gsr.lib.core.common.SharedManager
 import com.mpdc4gsr.lib.core.config.RouterConfig
 import com.mpdc4gsr.lib.core.ktbase.BaseBindingActivity
+import com.mpdc4gsr.lib.core.lms.LMS
+import com.mpdc4gsr.lib.core.lms.UrlConstant
 import com.mpdc4gsr.lib.core.navigation.NavigationManager
 import com.mpdc4gsr.lib.core.tools.CheckDoubleClick
 import com.mpdc4gsr.lib.core.utils.CommUtils
-import com.mpdc4gsr.lib.core.lms.LMS
-import com.mpdc4gsr.lib.core.lms.UrlConstant
 import mpdc4gsr.utils.AppVersionUtil
 import mpdc4gsr.utils.VersionUtils
 import java.util.Calendar

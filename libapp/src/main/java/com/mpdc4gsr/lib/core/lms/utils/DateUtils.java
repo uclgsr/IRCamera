@@ -1,8 +1,6 @@
 package com.mpdc4gsr.lib.core.lms.utils;
 
-/**
- * Date Utils stub for LMS SDK
- */
+
 public class DateUtils {
     public static String formatDate(long timestamp) {
         return "";

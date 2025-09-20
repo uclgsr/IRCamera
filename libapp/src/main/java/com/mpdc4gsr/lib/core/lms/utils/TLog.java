@@ -1,8 +1,6 @@
 package com.mpdc4gsr.lib.core.lms.utils;
 
-/**
- * TLog stub for LMS SDK
- */
+
 public class TLog {
     public static void d(String tag, String message) {
     }

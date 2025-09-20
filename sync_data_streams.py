@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 
 
-import json
-import pandas as pd
-import numpy as np
 import argparse
+import glob
+import json
+import numpy as np
+import pandas as pd
 from pathlib import Path
 from typing import Dict, List
-import glob
 
 
 class MultiModalSynchronizer:

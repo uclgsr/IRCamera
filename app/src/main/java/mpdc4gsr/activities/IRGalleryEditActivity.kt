@@ -26,7 +26,11 @@ import com.infisense.usbir.utils.OpencvTools
 import com.infisense.usbir.utils.PseudocodeUtils.changePseudocodeModeByOld
 import com.infisense.usbir.view.ITsTempListener
 import com.mpdc4gsr.lib.core.BaseApplication
+import com.mpdc4gsr.lib.core.activity.PseudoSetActivity
+import com.mpdc4gsr.lib.core.bean.CustomPseudoBean
 import com.mpdc4gsr.lib.core.bean.event.ReportCreateEvent
+import com.mpdc4gsr.lib.core.comm.dialog.ColorPickDialog
+import com.mpdc4gsr.lib.core.comm.dialog.TempAlarmSetDialog
 import com.mpdc4gsr.lib.core.common.ProductType.PRODUCT_NAME_TC001LITE
 import com.mpdc4gsr.lib.core.common.ProductType.PRODUCT_NAME_TS
 import com.mpdc4gsr.lib.core.common.SharedManager
@@ -36,6 +40,9 @@ import com.mpdc4gsr.lib.core.config.RouterConfig
 import com.mpdc4gsr.lib.core.dialog.TipDialog
 import com.mpdc4gsr.lib.core.dialog.TipWaterMarkDialog
 import com.mpdc4gsr.lib.core.ktbase.BaseBindingActivity
+import com.mpdc4gsr.lib.core.lms.LMS.mContext
+import com.mpdc4gsr.lib.core.menu.constant.FenceType
+import com.mpdc4gsr.lib.core.menu.constant.SettingType
 import com.mpdc4gsr.lib.core.navigation.NavigationManager
 import com.mpdc4gsr.lib.core.tools.ScreenTool
 import com.mpdc4gsr.lib.core.tools.TimeTool
@@ -49,11 +56,6 @@ import com.mpdc4gsr.lib.core.utils.ImageUtils
 import com.mpdc4gsr.lib.core.utils.ScreenUtil
 import com.mpdc4gsr.lib.ui.widget.seekbar.OnRangeChangedListener
 import com.mpdc4gsr.lib.ui.widget.seekbar.RangeSeekBar
-import com.mpdc4gsr.lib.core.comm.dialog.ColorPickDialog
-import com.mpdc4gsr.lib.core.comm.dialog.TempAlarmSetDialog
-import com.mpdc4gsr.lib.core.lms.LMS.mContext
-import com.mpdc4gsr.lib.core.menu.constant.FenceType
-import com.mpdc4gsr.lib.core.menu.constant.SettingType
 import com.mpdc4gsr.module.thermal.ir.event.GalleryAddEvent
 import com.mpdc4gsr.module.thermal.ir.event.ImageGalleryEvent
 import com.mpdc4gsr.module.thermal.ir.frame.FrameStruct
@@ -62,8 +64,6 @@ import com.mpdc4gsr.module.thermal.ir.frame.ImageParams
 import com.mpdc4gsr.module.thermal.ir.report.bean.ImageTempBean
 import com.mpdc4gsr.module.thermal.ir.view.TemperatureBaseView.Mode
 import com.mpdc4gsr.module.thermal.ir.viewmodel.IRGalleryEditViewModel
-import com.mpdc4gsr.lib.core.activity.PseudoSetActivity
-import com.mpdc4gsr.lib.core.bean.CustomPseudoBean
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch

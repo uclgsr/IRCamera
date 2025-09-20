@@ -11,16 +11,16 @@ import com.mpdc4gsr.lib.core.config.RouterConfig
 import com.mpdc4gsr.lib.core.dialog.TipDialog
 import com.mpdc4gsr.lib.core.dialog.TipProgressDialog
 import com.mpdc4gsr.lib.core.ktbase.BaseBindingActivity
-import com.mpdc4gsr.lib.core.navigation.NavigationManager
-import com.mpdc4gsr.lib.core.utils.CommUtils
 import com.mpdc4gsr.lib.core.lms.utils.NetworkUtil
 import com.mpdc4gsr.lib.core.lms.weiget.TToast
-import mpdc4gsr.app.App
-import mpdc4gsr.utils.VersionUtils
+import com.mpdc4gsr.lib.core.navigation.NavigationManager
+import com.mpdc4gsr.lib.core.utils.CommUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import mpdc4gsr.app.App
+import mpdc4gsr.utils.VersionUtils
 import java.util.Calendar
 import com.mpdc4gsr.lib.core.R as LibCoreR
 

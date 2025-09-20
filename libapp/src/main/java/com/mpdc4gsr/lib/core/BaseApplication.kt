@@ -7,7 +7,6 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.media.MediaScannerConnection
 import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkCapabilities
@@ -22,11 +21,7 @@ import com.elvishew.xlog.XLog
 import com.mpdc4gsr.lib.core.bean.event.SocketMsgEvent
 import com.mpdc4gsr.lib.core.broadcast.DeviceBroadcastReceiver
 import com.mpdc4gsr.lib.core.common.SharedManager
-import com.mpdc4gsr.lib.core.config.DeviceConfig
-import com.mpdc4gsr.lib.core.config.FileConfig
 import com.mpdc4gsr.lib.core.db.AppDatabase
-import com.mpdc4gsr.lib.core.repository.FileBean
-
 import com.mpdc4gsr.lib.core.socket.SocketCmdUtil
 import com.mpdc4gsr.lib.core.socket.WebSocketProxy
 import com.mpdc4gsr.lib.core.tools.AppLanguageUtils
@@ -40,7 +35,6 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.json.JSONObject
-import java.io.File
 
 abstract class BaseApplication : Application() {
     companion object {
@@ -128,7 +122,7 @@ abstract class BaseApplication : Application() {
         //     SharedManager.hasTC007 = true
         //     WebSocketProxy.getInstance().startWebSocket(ssid)
         // } else {
-            NetWorkUtils.switchNetwork(true)
+        NetWorkUtils.switchNetwork(true)
         // }
     }
 

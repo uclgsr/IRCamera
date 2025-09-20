@@ -4,8 +4,6 @@ import android.content.Context
 import android.util.Log
 import android.view.TextureView
 import com.mpdc4gsr.gsr.util.TimeUtil
-import mpdc4gsr.camera.ui.SensorSelectionDialog
-import mpdc4gsr.sensors.gsr.EnhancedThermalRecorder
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
@@ -17,6 +15,8 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
+import mpdc4gsr.camera.ui.SensorSelectionDialog
+import mpdc4gsr.sensors.gsr.EnhancedThermalRecorder
 import java.io.File
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong

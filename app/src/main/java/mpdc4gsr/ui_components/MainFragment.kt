@@ -1,12 +1,49 @@
 package mpdc4gsr.ui_components
 
+import android.annotation.SuppressLint
+import android.content.Intent
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
+import android.widget.Toast
+import androidx.core.view.isVisible
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.csl.irCamera.R
+import com.csl.irCamera.databinding.FragmentMainBinding
+import com.mpdc4gsr.lib.core.bean.event.SocketMsgEvent
+import com.mpdc4gsr.lib.core.comm.navigation.NavigationManager
+import com.mpdc4gsr.lib.core.common.SharedManager
+import com.mpdc4gsr.lib.core.config.ExtraKeyConfig
+import com.mpdc4gsr.lib.core.config.RouterConfig
+import com.mpdc4gsr.lib.core.dialog.TipDialog
+import com.mpdc4gsr.lib.core.ktbase.BaseBindingFragment
+import com.mpdc4gsr.lib.core.lms.weiget.TToast
+import com.mpdc4gsr.lib.core.socket.SocketCmdUtil
+import com.mpdc4gsr.lib.core.socket.WebSocketProxy
+import com.mpdc4gsr.lib.core.tools.AppLanguageUtils
+import com.mpdc4gsr.lib.core.tools.ConstantLanguages
+import com.mpdc4gsr.lib.core.tools.DeviceTools
+import com.mpdc4gsr.lib.core.utils.NetWorkUtils
+import com.mpdc4gsr.lib.core.utils.WsCmdConstants
+import mpdc4gsr.activities.DeviceTypeActivity
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
+import org.json.JSONObject
+
+
 // Local data class to replace removed TC007 BatteryInfo
 data class BatteryInfo(
     val status: String?,
     val remaining: String?
 ) {
     fun isCharging(): Boolean = status == "Charging"
-    
+
     fun getBattery(): Int? =
         try {
             remaining?.toInt()
@@ -123,8 +160,11 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
                         when (type) {
                             ConnectType.LINE -> SharedManager.hasTcLine = false
                             // TS004/TC007 functionality removed
-                            ConnectType.TS004 -> { /* TS004 removed */ }
-                            ConnectType.TC007 -> { /* TC007 removed */ }
+                            ConnectType.TS004 -> { /* TS004 removed */
+                            }
+
+                            ConnectType.TC007 -> { /* TC007 removed */
+                            }
                         }
                         refresh()
                         TToast.shortToast(requireContext(), R.string.test_results_delete_success)

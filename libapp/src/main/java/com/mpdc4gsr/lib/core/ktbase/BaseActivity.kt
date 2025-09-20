@@ -22,10 +22,10 @@ import com.mpdc4gsr.lib.core.common.SharedManager
 import com.mpdc4gsr.lib.core.common.UserInfoManager
 import com.mpdc4gsr.lib.core.dialog.LoadingDialog
 import com.mpdc4gsr.lib.core.dialog.TipCameraProgressDialog
-import com.mpdc4gsr.lib.core.tools.AppLanguageUtils
-import com.mpdc4gsr.lib.core.tools.ConstantLanguages
 import com.mpdc4gsr.lib.core.lms.LMS
 import com.mpdc4gsr.lib.core.lms.bean.CommonBean
+import com.mpdc4gsr.lib.core.tools.AppLanguageUtils
+import com.mpdc4gsr.lib.core.tools.ConstantLanguages
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode

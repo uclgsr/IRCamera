@@ -2,9 +2,7 @@ package com.mpdc4gsr.gsr.network
 
 import android.content.Context
 import android.net.ConnectivityManager
-import android.net.Network
 import android.net.NetworkCapabilities
-import android.net.wifi.WifiManager
 import android.util.Log
 import com.mpdc4gsr.gsr.model.SessionInfo
 import kotlinx.coroutines.CoroutineScope

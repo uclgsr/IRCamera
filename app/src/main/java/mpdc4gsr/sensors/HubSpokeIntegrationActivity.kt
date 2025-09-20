@@ -14,14 +14,14 @@ import com.csl.irCamera.databinding.ActivityHubSpokeIntegrationBinding
 import com.mpdc4gsr.ble.Device
 import com.mpdc4gsr.ble.EasyBLE
 import com.mpdc4gsr.lib.core.ktbase.BaseBindingActivity
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import mpdc4gsr.controller.RecordingController
 import mpdc4gsr.controller.RecordingState
 import mpdc4gsr.network.NetworkServer
 import mpdc4gsr.service.RecordingService
 import mpdc4gsr.utils.TimeManager
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*

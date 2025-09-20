@@ -1,8 +1,6 @@
 package com.mpdc4gsr.lib.core.lms.bean;
 
-/**
- * App Info Bean stub for LMS SDK
- */
+
 public class AppInfoBean {
     public boolean hasNewVersion = false;
     public String versionName = "";

@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 
 
-import socket
-import json
 import base64
 import cv2
-import numpy as np
-from PIL import Image
 import io
+import json
+import numpy as np
+import socket
 import threading
 import time
+from PIL import Image
 
 
 class ThermalViewer:

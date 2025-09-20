@@ -12,14 +12,7 @@ import kotlin.ByteArray
 import kotlin.Int
 import kotlin.String
 import kotlin.byteArrayOf
-import kotlin.text.String
-import kotlin.text.indexOf
-import kotlin.text.replace
-import kotlin.text.substring
-import kotlin.text.toByteArray
 import kotlin.text.toInt
-import kotlin.text.toRegex
-import kotlin.text.uppercase
 
 object HexUtil {
     private var `in`: FileInputStream? = null

@@ -22,6 +22,7 @@ import com.mpdc4gsr.lib.core.common.SharedManager
 import com.mpdc4gsr.lib.core.config.ExtraKeyConfig
 import com.mpdc4gsr.lib.core.config.RouterConfig
 import com.mpdc4gsr.lib.core.dialog.TipDialog
+import com.mpdc4gsr.lib.core.lms.LMS
 import com.mpdc4gsr.lib.core.navigation.NavigationManager
 import com.mpdc4gsr.lib.core.repository.GalleryRepository.DirType
 import com.mpdc4gsr.lib.core.socket.WebSocketProxy
@@ -29,7 +30,6 @@ import com.mpdc4gsr.lib.core.tools.DeviceTools
 import com.mpdc4gsr.lib.core.utils.CommUtils
 import com.mpdc4gsr.lib.core.utils.NetWorkUtils
 import com.mpdc4gsr.lib.core.utils.PermissionUtils
-import com.mpdc4gsr.lib.core.lms.LMS
 import com.mpdc4gsr.module.thermal.ir.R
 import com.mpdc4gsr.module.thermal.ir.databinding.ActivityIrMainBinding
 import com.mpdc4gsr.module.thermal.ir.dialog.HomeGuideDialog

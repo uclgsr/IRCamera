@@ -3,7 +3,11 @@ package mpdc4gsr
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
-import android.widget.*
+import android.widget.Button
+import android.widget.EditText
+import android.widget.ProgressBar
+import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -12,22 +16,19 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.csl.irCamera.R
+import kotlinx.coroutines.launch
 import mpdc4gsr.controller.RecordingController
 import mpdc4gsr.sensors.unified.UnifiedGSRRecorder
 import mpdc4gsr.sensors.unified.UnifiedNetworkController
 import mpdc4gsr.sensors.unified.UnifiedSessionManager
-import mpdc4gsr.sensors.unified.ShimmerDeviceManager
-import mpdc4gsr.sensors.unified.Shimmer3GSRRecorder
 import mpdc4gsr.sensors.unified.adapters.DeviceAdapter
 import mpdc4gsr.sensors.unified.adapters.PCControllerAdapter
 import mpdc4gsr.sensors.unified.model.DeviceInfo
-import mpdc4gsr.sensors.unified.model.GSRSample
 import mpdc4gsr.sensors.unified.model.PCControllerInfo
 import mpdc4gsr.sensors.unified.model.SessionConfig
-import mpdc4gsr.sensors.unified.model.SessionStatus
 import mpdc4gsr.sensors.unified.model.SessionQuality
+import mpdc4gsr.sensors.unified.model.SessionStatus
 import mpdc4gsr.sensors.unified.model.SessionType
-import kotlinx.coroutines.launch
 
 class UnifiedSensorActivity : AppCompatActivity() {
 

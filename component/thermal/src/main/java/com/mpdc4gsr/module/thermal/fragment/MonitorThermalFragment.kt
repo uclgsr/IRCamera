@@ -14,11 +14,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.ToastUtils
-import com.mpdc4gsr.lib.core.matrix.GuideInterface
-import com.mpdc4gsr.lib.core.matrix.IrSurfaceView
 import com.mpdc4gsr.lib.core.common.SharedManager
 import com.mpdc4gsr.lib.core.db.AppDatabase
 import com.mpdc4gsr.lib.core.db.entity.ThermalEntity
+import com.mpdc4gsr.lib.core.matrix.GuideInterface
+import com.mpdc4gsr.lib.core.matrix.IrSurfaceView
 import com.mpdc4gsr.lib.core.tools.TimeTool
 import com.mpdc4gsr.lib.core.utils.ByteUtils.getIndex
 import com.mpdc4gsr.lib.ui.fence.FenceLineView
@@ -47,7 +47,7 @@ class MonitorThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> 
     override fun initContentView() = R.layout.fragment_monitor_thermal
 
     private val msgLiveData by lazy { MutableLiveData<Int>() }
-    
+
     // Cached fence views to avoid repeated findViewById calls
     private val fencePointView by lazy { requireView().findViewById<com.mpdc4gsr.lib.ui.fence.FencePointView>(R.id.fence_point_view) }
     private val fenceLineView by lazy { requireView().findViewById<com.mpdc4gsr.lib.ui.fence.FenceLineView>(R.id.fence_line_view) }

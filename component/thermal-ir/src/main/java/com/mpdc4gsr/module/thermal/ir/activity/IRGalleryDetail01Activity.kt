@@ -16,6 +16,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.elvishew.xlog.XLog
 import com.mpdc4gsr.lib.core.bean.GalleryBean
 import com.mpdc4gsr.lib.core.bean.event.GalleryDelEvent
+import com.mpdc4gsr.lib.core.comm.ExcelUtil
 import com.mpdc4gsr.lib.core.config.ExtraKeyConfig
 import com.mpdc4gsr.lib.core.config.FileConfig
 import com.mpdc4gsr.lib.core.config.RouterConfig
@@ -29,7 +30,6 @@ import com.mpdc4gsr.lib.core.utils.ByteUtils.bytesToInt
 import com.mpdc4gsr.lib.core.utils.Constants.IS_REPORT_FIRST
 import com.mpdc4gsr.lib.core.view.TitleView
 import com.mpdc4gsr.lib.ui.dialog.ProgressDialog
-import com.mpdc4gsr.lib.core.comm.ExcelUtil
 import com.mpdc4gsr.module.thermal.ir.R
 import com.mpdc4gsr.module.thermal.ir.event.ImageGalleryEvent
 import com.mpdc4gsr.module.thermal.ir.fragment.GalleryFragment

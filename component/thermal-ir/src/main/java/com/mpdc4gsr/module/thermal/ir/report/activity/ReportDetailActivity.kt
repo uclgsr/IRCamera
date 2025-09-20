@@ -7,13 +7,13 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import androidx.lifecycle.lifecycleScope
+import com.mpdc4gsr.lib.core.comm.PDFHelp
 import com.mpdc4gsr.lib.core.config.ExtraKeyConfig
 import com.mpdc4gsr.lib.core.config.FileConfig
 import com.mpdc4gsr.lib.core.ktbase.BaseActivity
 import com.mpdc4gsr.lib.core.tools.FileTools
 import com.mpdc4gsr.lib.core.tools.GlideLoader
 import com.mpdc4gsr.lib.core.view.TitleView
-import com.mpdc4gsr.lib.core.comm.PDFHelp
 import com.mpdc4gsr.module.thermal.ir.R
 import com.mpdc4gsr.module.thermal.ir.report.bean.ReportBean
 import com.mpdc4gsr.module.thermal.ir.report.view.ReportIRShowView

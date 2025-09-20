@@ -10,10 +10,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 
-/**
- * LMS SDK Stub Implementation
- * This is a minimal stub to replace the proprietary lms_international AAR
- */
+
 public class LMS {
     public static final String SUCCESS = "2000";
     public static Context mContext;

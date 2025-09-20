@@ -6,22 +6,26 @@ import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
 import android.view.View
-import android.widget.*
+import android.widget.Button
+import android.widget.LinearLayout
+import android.widget.ProgressBar
+import android.widget.ScrollView
+import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.csl.irCamera.R
+import kotlinx.coroutines.launch
 import mpdc4gsr.controller.HardwareValidationController
 import mpdc4gsr.controller.RecordingController
 import mpdc4gsr.controller.ValidationReport
-import mpdc4gsr.controller.HardwareValidationResult
-import mpdc4gsr.controller.ValidationSummary
 import mpdc4gsr.permissions.PermissionController
-import kotlinx.coroutines.launch
 import org.json.JSONObject
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
 
 class Phase2ValidationActivity : AppCompatActivity() {
 

@@ -57,7 +57,7 @@ internal class FenceAdapter(menuType: MenuType) : BaseMenuAdapter() {
                 FenceType.FULL
             )
         )
-        if (menuType != MenuType.GALLERY_EDIT) { // 2D编辑的menu没有趋势图
+        if (menuType != MenuType.GALLERY_EDIT) {
             dataList.add(
                 Data(
                     R.string.thermal_trend,
