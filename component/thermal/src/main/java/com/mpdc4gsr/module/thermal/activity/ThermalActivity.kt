@@ -23,7 +23,7 @@ class ThermalActivity : BaseActivity() {
     override fun initView() {
 
         val toolbar =
-            findViewById<androidx.appcompat.widget.Toolbar>(com.topdon.lib.core.R.id.toolbar_lay)
+            findViewById<androidx.appcompat.widget.Toolbar>(com.mpdc4gsr.lib.ui.R.id.toolbar_lay)
         toolbar?.title = getString(R.string.main_thermal)
 
         val blackColor = ContextCompat.getColor(this, LibR.color.black)

@@ -26,7 +26,7 @@ class VideoActivity : BaseActivity() {
     override fun initView() {
 
         val toolbar =
-            findViewById<androidx.appcompat.widget.Toolbar>(com.topdon.lib.core.R.id.toolbar_lay)
+            findViewById<androidx.appcompat.widget.Toolbar>(com.mpdc4gsr.lib.ui.R.id.toolbar_lay)
         toolbar?.title = getString(R.string.video)
 
         BarUtils.setNavBarColor(this, ContextCompat.getColor(this, LibR.color.black))

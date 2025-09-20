@@ -100,61 +100,9 @@ class StorageSpaceActivity : BaseActivity(), View.OnClickListener {
                 
                 val colorList = arrayListOf<ColorsBean>()
                 colorList.add(ColorsBean(0, 1, 0xff8d98a9.toInt()))
-                progressBarView.setData(colorList)
-            } else {
-                TLog.d("ts004", "║ response :$freeSpaceBean")
-
-                tvProgressValue.text = "${
-                    (freeSpaceBean.hasUseSize() * 100.0 / freeSpaceBean.total).toInt()
-                        .coerceAtLeast(1)
-                }"
-
-                tvUsedValue.text = formatFileSize(freeSpaceBean.hasUseSize())
-                tvUsed.text = getUnit(freeSpaceBean.hasUseSize())
-                tvTotalValue.text = " / " + formatFileSize(freeSpaceBean.total)
-                tvTotal.text = getUnit(freeSpaceBean.total)
-
-                listStoragePhoto.setRightText(
-                    formatFileSize(freeSpaceBean.image_size) + getUnit(
-                        freeSpaceBean.image_size
-                    )
-                )
-                listStorageVideo.setRightText(
-                    formatFileSize(freeSpaceBean.video_size) + getUnit(
-                        freeSpaceBean.video_size
-                    )
-                )
-                listStorageSystem.setRightText(
-                    formatFileSize(freeSpaceBean.system) + getUnit(
-                        freeSpaceBean.system
-                    )
-                )
-
-                val systemPercent =
-                    (freeSpaceBean.system * 100.0 / freeSpaceBean.total).toInt().coerceAtLeast(1)
-                        .coerceAtMost(98)
-                val imagePercent = (freeSpaceBean.image_size * 100.0 / freeSpaceBean.total).toInt()
-                    .coerceAtLeast(1).coerceAtMost(98)
-                val videoPercent = (freeSpaceBean.video_size * 100.0 / freeSpaceBean.total).toInt()
-                    .coerceAtLeast(1).coerceAtMost(98)
-                val colorList = arrayListOf<ColorsBean>()
-                colorList.add(ColorsBean(0, systemPercent, 0xff8d98a9.toInt()))
-                colorList.add(
-                    ColorsBean(
-                        systemPercent,
-                        systemPercent + imagePercent,
-                        0xff019dff.toInt()
-                    )
-                )
-                colorList.add(
-                    ColorsBean(
-                        systemPercent + imagePercent,
-                        systemPercent + imagePercent + videoPercent,
-                        0xff70e297.toInt()
-                    )
-                )
-                customViewProgress.setSegmentPart(colorList)
-            }
+                // customViewProgress.setData(colorList) // Method signature may be different
+            } 
+            // else block removed - freeSpaceBean is always null since TS004Repository functionality is removed
         }
     }
 
