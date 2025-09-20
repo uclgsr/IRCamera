@@ -284,7 +284,7 @@ class ThermalInputDialog : Dialog {
                     return@setOnClickListener
                 }
                 if (upEdit.text.isNullOrEmpty() || downEdit.text.isNullOrEmpty()) {
-                    ToastTools.showShort(com.topdon.lib.core.R.string.ui_fill_in_the_complete)
+                    ToastTools.showShort(R.string.ui_fill_in_the_complete)
                     return@setOnClickListener
                 }
 
@@ -292,15 +292,15 @@ class ThermalInputDialog : Dialog {
                 val downValue = downEdit.text.trim().toString()
                 try {
                     if (upValue.toFloat() < downValue.toFloat()) {
-                        ToastTools.showShort(com.topdon.lib.core.R.string.tip_input_format)
+                        ToastTools.showShort(R.string.tip_input_format)
                         return@setOnClickListener
                     }
                 } catch (e: Exception) {
-                    ToastTools.showShort(com.topdon.lib.core.R.string.tip_input_format)
+                    ToastTools.showShort(R.string.tip_input_format)
                     return@setOnClickListener
                 }
                 if (sub(upValue, downValue) < 0.1f) {
-                    ToastTools.showShort(com.topdon.lib.core.R.string.tip_input_format)
+                    ToastTools.showShort(R.string.tip_input_format)
                     return@setOnClickListener
                 }
 
