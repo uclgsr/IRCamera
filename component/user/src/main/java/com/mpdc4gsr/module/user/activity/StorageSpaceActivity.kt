@@ -83,26 +83,19 @@ class StorageSpaceActivity : BaseActivity(), View.OnClickListener {
     @SuppressLint("SetTextI18n")
     override fun initData() {
         lifecycleScope.launch {
-            // TS004Repository functionality removed
-            val freeSpaceBean = null // TS004Repository.getFreeSpace()
-            if (freeSpaceBean == null) {
-                TToast.shortToast(this@StorageSpaceActivity, RCore.string.operation_failed_tips)
-                // Set default values since TS004Repository functionality is removed
-                tvProgressValue.text = "0%"
-                tvUsedValue.text = formatFileSize(0L)
-                tvUsed.text = getUnit(0L)
-                tvTotalValue.text = " / " + formatFileSize(0L)
-                tvTotal.text = getUnit(0L)
-                
-                listStoragePhoto.setRightText(formatFileSize(0L) + getUnit(0L))
-                listStorageVideo.setRightText(formatFileSize(0L) + getUnit(0L))
-                listStorageSystem.setRightText(formatFileSize(0L) + getUnit(0L))
-                
-                val colorList = arrayListOf<ColorsBean>()
-                colorList.add(ColorsBean(0, 1, 0xff8d98a9.toInt()))
-                // customViewProgress.setData(colorList) // Method signature may be different
-            } 
-            // else block removed - freeSpaceBean is always null since TS004Repository functionality is removed
+            TToast.shortToast(this@StorageSpaceActivity, RCore.string.operation_failed_tips)
+            tvProgressValue.text = "0%"
+            tvUsedValue.text = formatFileSize(0L)
+            tvUsed.text = getUnit(0L)
+            tvTotalValue.text = " / " + formatFileSize(0L)
+            tvTotal.text = getUnit(0L)
+
+            listStoragePhoto.setRightText(formatFileSize(0L) + getUnit(0L))
+            listStorageVideo.setRightText(formatFileSize(0L) + getUnit(0L))
+            listStorageSystem.setRightText(formatFileSize(0L) + getUnit(0L))
+
+            val colorList = arrayListOf<ColorsBean>()
+            colorList.add(ColorsBean(0, 1, 0xff8d98a9.toInt()))
         }
     }
 
@@ -116,7 +109,6 @@ class StorageSpaceActivity : BaseActivity(), View.OnClickListener {
                     .setPositiveListener(RCore.string.app_ok) {
                         showLoadingDialog()
                         lifecycleScope.launch {
-                            // TS004Repository functionality removed
                             val isSuccess = false // TS004Repository.getFormatStorage()
                             if (isSuccess) {
                                 XLog.d("TS004 格式化存储成功，即将断开连接")

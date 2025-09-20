@@ -24,7 +24,7 @@ import com.mpdc4gsr.lib.core.navigation.NavigationManager
 import com.mpdc4gsr.lib.core.socket.WebSocketProxy
 import com.mpdc4gsr.lib.core.utils.NetWorkUtils
 import com.mpdc4gsr.lib.core.view.TitleView
-import com.mpdc4gsr.libcom.view.CommLoadMoreView
+import com.mpdc4gsr.lib.core.comm.view.CommLoadMoreView
 import com.mpdc4gsr.lms.sdk.Config
 import com.mpdc4gsr.lms.sdk.LMS
 import com.mpdc4gsr.lms.sdk.UrlConstant

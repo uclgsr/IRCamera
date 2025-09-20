@@ -163,7 +163,7 @@ class MineFragment : BaseFragment(), View.OnClickListener {
             settingUserLay, settingUserImgNight -> {
                 if (UserInfoManager.getInstance().isLogin()) {
                     isNeedRefreshLogin = true
-                    LMS.getInstance().activityUserInfo()
+                    LMS.getInstance().activityUserInfo(requireContext())
                 } else {
                     loginAction()
                 }
