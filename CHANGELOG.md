@@ -1,5 +1,20 @@
 # Changelog
 
+## [2.2.0] - Kotlin Compilation Error Fixes (2024-12-21)
+
+### Fixed
+- **AppHolder11.kt**: Added missing PackageInfo import, corrected Activity lifecycle callback parameter types, fixed context property return type, and fixed Holder singleton initialization
+- **CheckableItem111.kt**: Fixed isChecked property override issue and return type compatibility
+- **CheckableParcelable111.kt**: Fixed method access patterns using direct property access instead of deprecated getter/setter methods  
+- **PermissionsRequester11.kt**: Fixed collection type mismatch in method parameters
+- **Observable11.kt**: Fixed MethodInfo property access using Kotlin property syntax
+- **ObserverMethodHelper11.kt**: Fixed reflection API calls using Kotlin property access patterns
+- **MethodInfo11.kt**: Updated to use Kotlin reflection property access
+
+### Changed
+- **Reflection API Usage**: Updated all reflection method calls to use Kotlin property syntax (method.name vs method.getName())
+- **Type Safety**: Improved nullable type handling across observer and lifecycle callback patterns
+
 ## [2.1.0] - Gradle Build System Standardization (2024-12-21)
 
 ### Added
