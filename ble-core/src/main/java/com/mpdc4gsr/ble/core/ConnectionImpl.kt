@@ -16,7 +16,7 @@ import android.os.Message
 import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.core.util.Pair
-import com.mpdc4gsr.ble.core.callback.RequestCallback
+import com.mpdc4gsr.ble.core.RequestCallback
 import java.lang.ref.WeakReference
 import java.util.Collections
 import java.util.Locale

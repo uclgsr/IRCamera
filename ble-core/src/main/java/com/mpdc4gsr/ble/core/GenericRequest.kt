@@ -1,10 +1,10 @@
 package com.mpdc4gsr.ble.core
 
-import com.mpdc4gsr.ble.core.callback.RequestCallback
+import com.mpdc4gsr.ble.core.RequestCallback
 import java.util.Queue
 import java.util.UUID
 
-internal class GenericRequest(builder: RequestBuilder<*>) : Request, Comparable<GenericRequest?> {
+internal class GenericRequest(builder: GenericRequestBuilder<*>) : Request, Comparable<GenericRequest?> {
     private val tag: String?
     var device: Device? = null
     var type: RequestType
