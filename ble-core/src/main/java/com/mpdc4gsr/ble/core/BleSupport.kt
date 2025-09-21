@@ -67,6 +67,7 @@ interface Scanner {
     fun setScanning(scanning: Boolean)
     fun release()
     fun getType(): ScannerType
+    fun onBluetoothOff()
 }
 
 /**
@@ -109,6 +110,10 @@ class LegacyScanner() : Scanner {
     override fun getType(): ScannerType {
         return ScannerType.LEGACY
     }
+
+    override fun onBluetoothOff() {
+        isScanning = false
+    }
 }
 
 /**
@@ -150,6 +155,10 @@ class ClassicScanner() : Scanner {
 
     override fun getType(): ScannerType {
         return ScannerType.CLASSIC
+    }
+
+    override fun onBluetoothOff() {
+        isScanning = false
     }
 
     companion object {
@@ -200,6 +209,10 @@ class LeScanner() : Scanner {
 
     override fun getType(): ScannerType {
         return ScannerType.LOLLIPOP
+    }
+
+    override fun onBluetoothOff() {
+        isScanning = false
     }
 }
 
