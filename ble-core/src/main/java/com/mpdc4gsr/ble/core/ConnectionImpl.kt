@@ -195,26 +195,131 @@ internal class ConnectionImpl(
         // Implementation for scan error
     }
 
+    private fun hasBluetoothPermission(): Boolean {
+        val context = easyBle.context ?: return false
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED
+        } else {
+            ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH) == PackageManager.PERMISSION_GRANTED
+        }
+    }
+
+    private fun logD(type: String, message: String, vararg args: Any?) {
+        logger.d("BLE_CONN", String.format(message, *args))
+    }
+    
+    private fun logE(type: String, message: String, vararg args: Any?) {
+        logger.e("BLE_CONN", String.format(message, *args))
+    }
+
+    inner class BleGattCallback : BluetoothGattCallback() {
+        override fun onConnectionStateChange(gatt: BluetoothGatt, status: Int, newState: Int) {
+            super.onConnectionStateChange(gatt, status, newState)
+            doOnConnectionStateChange(status, newState)
+        }
+        
+        override fun onServicesDiscovered(gatt: BluetoothGatt, status: Int) {
+            super.onServicesDiscovered(gatt, status)
+            // Handle service discovery
+        }
+        
+        override fun onCharacteristicRead(gatt: BluetoothGatt, characteristic: android.bluetooth.BluetoothGattCharacteristic, status: Int) {
+            super.onCharacteristicRead(gatt, characteristic, status)
+            // Handle characteristic read
+        }
+    }
+
+    // Connection interface implementations
+    override fun reconnect() {
+        if (isReleased) return
+        device.connectionState = ConnectionState.RECONNECTING
+        connHandler.sendEmptyMessage(MSG_RECONNECT)
+    }
+
+    override fun disconnect() {
+        if (isReleased) return
+        isActiveDisconnect = true
+        bluetoothGatt?.disconnect()
+    }
+
+    override fun refresh() {
+        if (bluetoothGatt != null && !refreshing) {
+            refreshing = true
+            bluetoothGatt!!.refresh()
+        }
+    }
+
+    override fun release() {
+        connHandler.sendEmptyMessage(MSG_RELEASE)
+    }
+
+    override fun releaseNoEvent() {
+        isReleased = true
+        bluetoothGatt?.close()
+        bluetoothGatt = null
+    }
+
+    override fun clearRequestQueue() {
+        requestQueue.clear()
+        currentRequest = null
+    }
+
+    override fun clearRequestQueueByType(type: RequestType?) {
+        // Implementation for clearing specific request types
+    }
+
+    override fun getService(service: java.util.UUID?): android.bluetooth.BluetoothGattService? {
+        return bluetoothGatt?.getService(service)
+    }
+
+    override fun getCharacteristic(service: java.util.UUID?, characteristic: java.util.UUID?): android.bluetooth.BluetoothGattCharacteristic? {
+        return getService(service)?.getCharacteristic(characteristic)
+    }
+
+    override fun getDescriptor(service: java.util.UUID?, characteristic: java.util.UUID?, descriptor: java.util.UUID?): android.bluetooth.BluetoothGattDescriptor? {
+        return getCharacteristic(service, characteristic)?.getDescriptor(descriptor)
+    }
+
+    override fun execute(request: Request?) {
+        if (request != null && !isReleased) {
+            requestQueue.add(GenericRequest())
+        }
+    }
+
+    override fun isNotificationOrIndicationEnabled(characteristic: android.bluetooth.BluetoothGattCharacteristic?): Boolean {
+        return false // Simplified implementation
+    }
+
+    override fun isNotificationOrIndicationEnabled(service: java.util.UUID?, characteristic: java.util.UUID?): Boolean {
+        return isNotificationOrIndicationEnabled(getCharacteristic(service, characteristic))
+    }
+
     override fun setBluetoothGattCallback(callback: BluetoothGattCallback?) {
         originCallback = callback
     }
 
-    override fun hasProperty(service: UUID?, characteristic: UUID?, property: Int): Boolean {
+    override fun hasProperty(service: java.util.UUID?, characteristic: java.util.UUID?, property: Int): Boolean {
         val charac = getCharacteristic(service, characteristic)
-        if (charac == null) {
-            return false
-        }
-        return (charac.getProperties() and property) != 0
+        return charac?.let { (it.properties and property) != 0 } ?: false
     }
 
     private fun doOnConnectionStateChange(status: Int, newState: Int) {
         if (bluetoothGatt != null) {
             if (status == BluetoothGatt.GATT_SUCCESS) {
                 if (newState == BluetoothProfile.STATE_CONNECTED) {
-                    logD(
-                        Logger.Companion.TYPE_CONNECTION_STATE,
-                        "connected! [name: %s, addr: %s]",
-                        device.name,
+                    logD("CONNECTION", "connected! [name: %s, addr: %s]", device.name, device.address)
+                    device.connectionState = ConnectionState.CONNECTED
+                } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
+                    logD("CONNECTION", "disconnected! [name: %s, addr: %s]", device.name, device.address)
+                    device.connectionState = ConnectionState.DISCONNECTED
+                }
+            } else {
+                logE("CONNECTION", "connection failed with status: %d", status)
+                device.connectionState = ConnectionState.DISCONNECTED
+            }
+        }
+    }
+}
                         device.address
                     )
                     device.connectionState = ConnectionState.CONNECTED
