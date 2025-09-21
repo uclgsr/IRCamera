@@ -1,4 +1,4 @@
-package com.mpdc4gsr.module.thermal.fragment
+package com.mpdc4gsr.module.thermal.ir.fragment
 
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView

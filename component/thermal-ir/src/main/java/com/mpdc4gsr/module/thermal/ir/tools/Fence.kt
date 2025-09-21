@@ -1,4 +1,4 @@
-package com.mpdc4gsr.module.thermal.tools
+package com.mpdc4gsr.module.thermal.ir.tools
 
 import android.util.Log
 

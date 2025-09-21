@@ -1,4 +1,4 @@
-package com.mpdc4gsr.module.thermal.activity
+package com.mpdc4gsr.module.thermal.ir.activity
 
 import android.Manifest
 import android.content.Context

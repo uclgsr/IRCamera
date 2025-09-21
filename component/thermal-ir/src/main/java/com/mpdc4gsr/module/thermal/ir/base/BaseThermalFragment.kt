@@ -1,4 +1,4 @@
-package com.mpdc4gsr.module.thermal.base
+package com.mpdc4gsr.module.thermal.ir.base
 
 import android.graphics.Bitmap
 import android.widget.EditText

@@ -1,4 +1,4 @@
-package com.mpdc4gsr.module.thermal.chart
+package com.mpdc4gsr.module.thermal.ir.chart
 
 import android.annotation.SuppressLint
 import com.github.mikephil.charting.components.AxisBase

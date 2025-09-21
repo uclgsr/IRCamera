@@ -1,4 +1,4 @@
-package com.mpdc4gsr.module.thermal.fragment
+package com.mpdc4gsr.module.thermal.ir.fragment
 
 import android.graphics.Bitmap
 import android.graphics.Matrix

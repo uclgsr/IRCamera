@@ -1,4 +1,4 @@
-package com.mpdc4gsr.module.thermal.activity
+package com.mpdc4gsr.module.thermal.ir.activity
 
 import android.widget.TextView
 import com.mpdc4gsr.lib.core.ktbase.BaseActivity

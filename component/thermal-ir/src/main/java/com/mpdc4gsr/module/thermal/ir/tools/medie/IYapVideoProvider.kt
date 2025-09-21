@@ -1,4 +1,4 @@
-package com.mpdc4gsr.module.thermal.tools.medie
+package com.mpdc4gsr.module.thermal.ir.tools.medie
 
 
 interface IYapVideoProvider<Bitmap> {

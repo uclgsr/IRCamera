@@ -1,4 +1,4 @@
-package com.mpdc4gsr.module.thermal.viewmodel
+package com.mpdc4gsr.module.thermal.ir.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData

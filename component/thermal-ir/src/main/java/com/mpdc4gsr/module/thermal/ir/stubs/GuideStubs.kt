@@ -1,4 +1,4 @@
-package com.mpdc4gsr.module.thermal.stubs
+package com.mpdc4gsr.module.thermal.ir.stubs
 
 typealias GuideInterface = com.mpdc4gsr.lib.core.matrix.GuideInterface
 

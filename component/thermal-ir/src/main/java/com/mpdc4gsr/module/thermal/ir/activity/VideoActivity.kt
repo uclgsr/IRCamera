@@ -1,4 +1,4 @@
-package com.mpdc4gsr.module.thermal.activity
+package com.mpdc4gsr.module.thermal.ir.activity
 
 import android.net.Uri
 import android.os.Build

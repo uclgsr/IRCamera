@@ -1,5 +1,5 @@
 // kotlin
-package com.mpdc4gsr.module.thermal.adapter
+package com.mpdc4gsr.module.thermal.ir.adapter
 
 import android.content.Context
 import android.util.Log

@@ -1,4 +1,4 @@
-package com.mpdc4gsr.module.thermal.activity
+package com.mpdc4gsr.module.thermal.ir.activity
 
 import android.util.Log
 import android.view.View
