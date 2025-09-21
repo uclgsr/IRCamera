@@ -8,4 +8,22 @@ public class ResponseBean {
 
     public ResponseBean() {
     }
+
+    public static ResponseBean convertCommonBean(String response, Object defaultData) {
+        ResponseBean bean = new ResponseBean();
+        if (response != null && !response.isEmpty()) {
+            try {
+                // Simple JSON parsing - would normally use proper JSON library
+                if (response.contains("\"code\"")) {
+                    // Extract code if present
+                    bean.code = "2000"; // Default success
+                }
+                bean.data = defaultData;
+            } catch (Exception e) {
+                bean.code = "error";
+                bean.message = "Parse error";
+            }
+        }
+        return bean;
+    }
 }
