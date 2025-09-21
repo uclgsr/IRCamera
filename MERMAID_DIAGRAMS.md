@@ -1,5 +1,50 @@
 # IRCamera Architecture Diagrams
 
+## BLE Core WriteOptions Fix (2024-12-21)
+
+### WriteOptions Class Structure After Fix
+
+```mermaid
+classDiagram
+    class WriteOptions {
+        +val packageWriteDelayMillis: Int
+        +val requestWriteDelayMillis: Int 
+        +val isWaitWriteResult: Boolean
+        +val writeType: Int
+        +val useMtuAsPackageSize: Boolean
+        +var packageSize: Int
+        -WriteOptions(builder: Builder)
+    }
+    
+    class Builder {
+        ~internal var packageWriteDelayMillis: Int
+        ~internal var requestWriteDelayMillis: Int
+        ~internal var packageSize: Int
+        ~internal var isWaitWriteResult: Boolean
+        ~internal var writeType: Int
+        ~internal var useMtuAsPackageSize: Boolean
+        +setPackageWriteDelayMillis(Int): Builder
+        +setRequestWriteDelayMillis(Int): Builder
+        +setPackageSize(Int): Builder
+        +setWaitWriteResult(Boolean): Builder
+        +setWriteType(Int): Builder
+        +setMtuAsPackageSize(): Builder
+        +build(): WriteOptions
+    }
+    
+    WriteOptions *-- Builder : contains
+    
+    note for WriteOptions "Constructor accesses Builder's internal fields\nFixed visibility issue by changing private to internal"
+    note for Builder "Fields changed from private to internal\nAllows outer class access while maintaining module encapsulation"
+```
+
+### Fix Details
+
+- **Issue**: Private Builder fields could not be accessed from WriteOptions constructor
+- **Solution**: Changed field visibility from `private var` to `internal var`
+- **Impact**: Enables compilation while maintaining proper encapsulation within module
+- **Files Changed**: `ble-core/src/main/java/com/mpdc4gsr/ble/core/WriteOptions.kt`
+
 ## Current Standardized Build System (2024-12-21)
 
 ### Gradle Build System Structure
