@@ -28,10 +28,10 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 @SuppressLint("MissingPermission")
 public class BluetoothManager implements EventObserver {
-    public static boolean iSReset = false;
-    public static boolean isSending = false;
-    public static boolean isClickStopCharging = false;
-    public static boolean isReceiveBleData = false;
+    private static boolean isReset = false;
+    private static boolean isSending = false;
+    private static boolean isClickStopCharging = false;
+    private static boolean isReceiveBleData = false;
     private static BluetoothManager instance = null;
     private Device mDevice;
     private Connection connection;
