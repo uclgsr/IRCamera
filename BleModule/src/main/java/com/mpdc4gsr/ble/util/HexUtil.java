@@ -8,7 +8,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-
 public class HexUtil {
     private static FileInputStream in;
 
@@ -39,7 +38,6 @@ public class HexUtil {
         return sb.toString();
     }
 
-    
     public static byte[] toByteArray(String hexStr) {
         String s = hexStr.replaceAll("", "");
         if (s.length() % 2 != 0) {
@@ -97,10 +95,9 @@ public class HexUtil {
         return ret;
     }
 
-    
     public static byte[] hexToByte(String hex) {
         int m = 0, n = 0;
-        int byteLen = hex.length() / 2; 
+        int byteLen = hex.length() / 2;
         byte[] ret = new byte[byteLen];
         for (int i = 0; i < byteLen; i++) {
             m = i * 2 + 1;
@@ -115,7 +112,7 @@ public class HexUtil {
         bytes = bytes.toUpperCase();
         String hexString = "0123456789ABCDEFabcdef";
         ByteArrayOutputStream baos = new ByteArrayOutputStream(bytes.length() / 2);
-        
+
         for (int i = 0; i < bytes.length(); i += 2)
             baos.write((hexString.indexOf(bytes.charAt(i)) << 4 | hexString.indexOf(bytes.charAt(i + 1))));
         return new String(baos.toByteArray());
@@ -136,7 +133,7 @@ public class HexUtil {
             }
 
             byte[] buffer = new byte[in.available()];
-            in.read(buffer);  
+            in.read(buffer);
             return buffer;
         } catch (FileNotFoundException e) {
             e.printStackTrace();

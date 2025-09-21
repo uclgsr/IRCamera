@@ -1,9 +1,6 @@
 package com.mpdc4gsr.ble.util;
 
-/**
- * date: 2019/8/2 23:56
- * author: bichuanfeng
- */
+
 public interface Logger {
 
     int TYPE_GENERAL = 0;
@@ -27,15 +24,11 @@ public interface Logger {
     int TYPE_CHARACTERISTIC_WRITE = 11;
     int TYPE_PHY_CHANGE = 12;
 
-
     void log(int priority, int type, String msg);
 
-
     void log(int priority, int type, String msg, Throwable th);
-    
-
-    void setEnabled(boolean isEnabled);
-
 
     boolean isEnabled();
+
+    void setEnabled(boolean isEnabled);
 }

@@ -4,10 +4,8 @@ import android.content.Context;
 
 import com.mpdc4gsr.ble.callback.ScanListener;
 
-
-
 interface Scanner {
-    
+
     void addScanListener(ScanListener listener);
 
     void removeScanListener(ScanListener listener);

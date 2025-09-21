@@ -1,12 +1,8 @@
 package com.mpdc4gsr.ble;
 
-
 import com.mpdc4gsr.ble.callback.WriteCharacteristicCallback;
 
-/**
- * date: 2019/9/20 18:02
- * author: bichuanfeng
- */
+
 public final class WriteCharacteristicBuilder extends RequestBuilder<WriteCharacteristicCallback> {
     WriteCharacteristicBuilder() {
         super(RequestType.WRITE_CHARACTERISTIC);
@@ -29,7 +25,6 @@ public final class WriteCharacteristicBuilder extends RequestBuilder<WriteCharac
         super.setCallback(callback);
         return this;
     }
-
 
     public WriteCharacteristicBuilder setWriteOptions(WriteOptions writeOptions) {
         this.writeOptions = writeOptions;

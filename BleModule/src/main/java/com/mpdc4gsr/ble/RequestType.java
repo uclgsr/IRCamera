@@ -1,6 +1,5 @@
 package com.mpdc4gsr.ble;
 
-
 public enum RequestType {
 
     SET_NOTIFICATION,

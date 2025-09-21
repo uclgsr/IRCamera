@@ -1,15 +1,10 @@
 package com.mpdc4gsr.ble;
 
-
 import com.mpdc4gsr.commons.poster.MethodInfo;
 
 import java.util.UUID;
 
 
-/**
- * date: 2019/8/4 08:14
- * author: bichuanfeng
- */
 class MethodInfoGenerator {
     static MethodInfo onBluetoothAdapterStateChanged(int state) {
         return new MethodInfo("onBluetoothAdapterStateChanged", new MethodInfo.Parameter(int.class, state));
@@ -31,7 +26,7 @@ class MethodInfoGenerator {
 
     static MethodInfo onCharacteristicChanged(Device device, UUID service, UUID characteristic, byte[] value) {
         return new MethodInfo("onCharacteristicChanged", new MethodInfo.Parameter(Device.class, device),
-                new MethodInfo.Parameter(UUID.class, service), new MethodInfo.Parameter(UUID.class, characteristic), 
+                new MethodInfo.Parameter(UUID.class, service), new MethodInfo.Parameter(UUID.class, characteristic),
                 new MethodInfo.Parameter(byte[].class, value));
     }
 

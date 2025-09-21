@@ -3,10 +3,6 @@ package com.mpdc4gsr.ble.util;
 import android.util.Log;
 
 
-/**
- * date: 2021/8/12 16:24
- * author: bichuanfeng
- */
 public class DefaultLogger implements Logger {
     private final String tag;
     private boolean isEnabled;
@@ -16,13 +12,13 @@ public class DefaultLogger implements Logger {
     }
 
     @Override
-    public void setEnabled(boolean isEnabled) {
-        this.isEnabled = isEnabled;
+    public boolean isEnabled() {
+        return isEnabled;
     }
 
     @Override
-    public boolean isEnabled() {
-        return isEnabled;
+    public void setEnabled(boolean isEnabled) {
+        this.isEnabled = isEnabled;
     }
 
     @Override
@@ -40,6 +36,6 @@ public class DefaultLogger implements Logger {
             } else {
                 log(priority, type, Log.getStackTraceString(th));
             }
-        }        
+        }
     }
 }

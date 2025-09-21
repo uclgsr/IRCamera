@@ -9,13 +9,9 @@ import java.util.Queue;
 import java.util.UUID;
 
 
-/**
- * date: 2021/8/12 13:44
- * author: bichuanfeng
- */
 class GenericRequest implements Request, Comparable<GenericRequest> {
-    Device device;
     private final String tag;
+    Device device;
     RequestType type;
     UUID service;
     UUID characteristic;
@@ -28,7 +24,7 @@ class GenericRequest implements Request, Comparable<GenericRequest> {
 
     Queue<byte[]> remainQueue;
     byte[] sendingBytes;
-    //--------------------------------
+
 
     GenericRequest(RequestBuilder builder) {
         tag = builder.tag;
@@ -47,18 +43,15 @@ class GenericRequest implements Request, Comparable<GenericRequest> {
         return Integer.compare(other.priority, priority);
     }
 
-
     @NonNull
     public Device getDevice() {
         return device;
     }
 
-
     @NonNull
     public RequestType getType() {
         return type;
     }
-
 
     @Nullable
     public String getTag() {

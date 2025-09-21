@@ -26,17 +26,19 @@ import org.greenrobot.eventbus.EventBus;
 import java.util.UUID;
 import java.util.concurrent.LinkedBlockingQueue;
 
-
 @SuppressLint("MissingPermission")
 public class BluetoothManager implements EventObserver {
     public static boolean iSReset = false;
     public static boolean isSending = false;
     public static boolean isClickStopCharging = false;
+    public static boolean isReceiveBleData = false;
     private static BluetoothManager instance = null;
     private Device mDevice;
     private Connection connection;
-    public static boolean isReceiveBleData = false;
     private BluetoothGattCharacteristic writeCharact = null;
+
+    public BluetoothManager() {
+    }
 
     public static BluetoothManager getInstance() {
         if (instance == null)
@@ -44,7 +46,9 @@ public class BluetoothManager implements EventObserver {
         return instance;
     }
 
-    public BluetoothManager() {
+    public static void setBleData(String message) {
+
+
     }
 
     public Device getDevice() {
@@ -53,8 +57,8 @@ public class BluetoothManager implements EventObserver {
 
     private void setMTUValue() {
         if (mDevice.isConnected()) {
-            
-            Log.e("bcf_ble", "[ph][ph][ph][ph][ph][ph]：" + mDevice.getName() + "");
+
+            Log.e("bcf_ble", "：" + mDevice.getName() + "");
             RequestBuilder<MtuChangeCallback> builder = null;
             if (mDevice.getName().contains("T-darts") || mDevice.getName().contains("TD")) {
                 builder = new RequestBuilderFactory().getChangeMtuBuilder(240);
@@ -64,13 +68,13 @@ public class BluetoothManager implements EventObserver {
             Request request = builder.setCallback(new MtuChangeCallback() {
                 @Override
                 public void onMtuChanged(@NonNull Request request, int mtu) {
-                    Log.d("wangchen", "MTU[ph][ph][ph][ph]，[ph][ph]：" + mtu);
+                    Log.d("wangchen", "MTU，：" + mtu);
                     setReadCallback();
                 }
 
                 @Override
                 public void onRequestFailed(@NonNull Request request, int failType, @Nullable Object value) {
-                    Log.d("bcf", "MTU[ph][ph][ph][ph]");
+                    Log.d("bcf", "MTU");
                 }
 
             }).build();
@@ -81,18 +85,17 @@ public class BluetoothManager implements EventObserver {
     private void setReadCallback() {
         if (mDevice.isConnected()) {
             isSending = false;
-            
+
             boolean isEnabled = connection.isNotificationOrIndicationEnabled(UUID.fromString(UUIDManager.SERVICE_UUID), UUID.fromString(UUIDManager.NOTIFY_UUID));
-            LLog.w("bcf_ble", "[ph][ph][ph][ph][ph]Notifycation: " + isEnabled);
+            LLog.w("bcf_ble", "Notifycation: " + isEnabled);
             RequestBuilder<NotificationChangeCallback> builder = new RequestBuilderFactory().getSetNotificationBuilder(UUID.fromString(UUIDManager.SERVICE_UUID), UUID.fromString(UUIDManager.NOTIFY_UUID), true);
             RequestBuilder<ReadCharacteristicCallback> builder1 = new RequestBuilderFactory().getReadCharacteristicBuilder(UUID.fromString(UUIDManager.SERVICE_UUID), UUID.fromString(UUIDManager.READ_UUID));
-            
+
             builder.build().execute(connection);
             builder1.build().execute(connection);
         }
     }
 
-    
     public void setCancelListening() {
         Observable observable = EasyBLE.getInstance().getObservable();
         if (observable != null) {
@@ -111,14 +114,14 @@ public class BluetoothManager implements EventObserver {
         connection.setBluetoothGattCallback(new BluetoothGattCallback() {
             @Override
             public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
-                Log.d("ble_bcf_data", "[ph][ph][ph][ph][ph][ph][ph][ph]：status: " + status + "  [ph][ph]：" + StringUtils.toHex(characteristic.getValue()));
-                setBleData("[ph][ph][ph][ph][ph][ph][ph][ph]：status: " + status + "  [ph][ph]：" + StringUtils.toHex(characteristic.getValue()));
+                Log.d("ble_bcf_data", "：status: " + status + "  ：" + StringUtils.toHex(characteristic.getValue()));
+                setBleData("：status: " + status + "  ：" + StringUtils.toHex(characteristic.getValue()));
             }
         });
         return connection;
     }
 
-    public Connection connect(String mac,String name){
+    public Connection connect(String mac, String name) {
         ConnectionConfiguration configuration = new ConnectionConfiguration();
         configuration.setConnectTimeoutMillis(10000);
         configuration.setRequestTimeoutMillis(7000);
@@ -131,7 +134,7 @@ public class BluetoothManager implements EventObserver {
     }
 
     public void release() {
-        Log.d("bcf", "[ph][ph][ph][ph]BLE[ph][ph]");
+        Log.d("bcf", "BLE");
         EasyBLE.getInstance().disconnectConnection(mDevice);
         EasyBLE.getInstance().release();
         EasyBLE.getInstance().releaseConnection(mDevice);
@@ -143,7 +146,6 @@ public class BluetoothManager implements EventObserver {
         return mDevice.isConnected();
     }
 
-    
     @Tag("onConnectionStateChanged")
     @Observe
     @RunOn(ThreadMode.MAIN)
@@ -151,9 +153,9 @@ public class BluetoothManager implements EventObserver {
     public void onConnectionStateChanged(@NonNull Device device) {
         if (device.getConnectionState() != ConnectionState.SERVICE_DISCOVERED || device.getConnectionState() != ConnectionState.DISCONNECTED) {
             EventBus.getDefault().post(device.getConnectionState());
-            Log.e("wangchen", "[ph][ph][ph][ph]--" + device.getConnectionState());
+            Log.e("wangchen", "--" + device.getConnectionState());
         }
-        Log.d("ywq", "MyObserver [ph][ph][ph][ph]：" + device.getConnectionState() + " [ph][ph][ph][ph][ph]： " + device.isConnected() + "-----[ph][ph]：" + device.getName() + "-------mac: " + device.getAddress());
+        Log.d("ywq", "MyObserver ：" + device.getConnectionState() + " ： " + device.isConnected() + "-----：" + device.getName() + "-------mac: " + device.getAddress());
         switch (device.getConnectionState()) {
             case SCANNING_FOR_RECONNECTION:
                 break;
@@ -169,7 +171,7 @@ public class BluetoothManager implements EventObserver {
                 break;
             case SERVICE_DISCOVERED:
                 setMTUValue();
-//                setReadCallback();
+
                 if (device.isConnected()) {
                     EventBus.getDefault().post(ConnectionState.SERVICE_DISCOVERED.name());
                 }
@@ -179,37 +181,35 @@ public class BluetoothManager implements EventObserver {
 
     @Override
     public void onConnectFailed(Device device, int failType) {
-        Log.e("bcf_ble", "[ph][ph][ph][ph]" + device.getName());
+        Log.e("bcf_ble", "" + device.getName());
         EventBus.getDefault().post(device.getConnectionState());
     }
 
     @Override
     public void onConnectTimeout(Device device, int type) {
-        Log.e("bcf_ble", "[ph][ph][ph][ph]");
+        Log.e("bcf_ble", "");
     }
 
-    
     @Observe
     @Override
     public void onNotificationChanged(@NonNull Request request, boolean isEnabled) {
         String typeTag = "";
         if (request.getType() == RequestType.SET_NOTIFICATION) {
-            typeTag = "[ph][ph]";
+            typeTag = "";
             EventBus.getDefault().post(ConnectionState.MTU_SUCCESS);
         } else {
             typeTag = "Indication";
         }
-        Log.d("bcf_ble", "onNotificationChanged ：" + typeTag + "：" + (isEnabled ? "[ph][ph]" : "[ph][ph]"));
+        Log.d("bcf_ble", "onNotificationChanged ：" + typeTag + "：" + (isEnabled ? "" : ""));
     }
 
-    
     public boolean writeBuletoothData(byte[] data) {
         if (mDevice == null || !mDevice.isConnected()) {
             return false;
         }
         writeCharact = connection.getCharacteristic(UUID.fromString(UUIDManager.SERVICE_UUID), UUID.fromString(UUIDManager.WRITE_UUID));
-        connection.getGatt().setCharacteristicNotification(writeCharact, true); 
-        
+        connection.getGatt().setCharacteristicNotification(writeCharact, true);
+
         writeCharact.setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE);
         writeCharact.setValue(data);
 
@@ -219,30 +219,16 @@ public class BluetoothManager implements EventObserver {
     @Observe
     @Override
     public void onCharacteristicRead(Request request, byte[] value) {
-        
-        String data = StringUtils.toHex(value); 
-//        Log.d("ble_bcf_data", "onCharacteristicRead: " + data);
+
+        String data = StringUtils.toHex(value);
+
     }
 
-    
     @Observe
     @Override
     public void onCharacteristicChanged(Device device, UUID service, UUID characteristic, byte[] value) {
-        Log.e("ble_bcf_data", "[ph][ph][ph][ph][ph][ph]：" + StringUtils.toHex(value));
+        Log.e("ble_bcf_data", "：" + StringUtils.toHex(value));
         EventBus.getDefault().post(value);
-    }
-
-    public static void setBleData(String message) {
-//        String savePath = ActivityUtils.getTopActivity().getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath();
-//        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");// HH:mm:ss
-
-//        Date date = new Date(System.currentTimeMillis());
-//
-//        SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");// HH:mm:ss
-
-//        Date date1 = new Date(System.currentTimeMillis());
-//
-//        FileIOUtils.writeFileFromString(savePath + "/log/" + simpleDateFormat.format(date) + ".txt", simpleDateFormat1.format(date1) + ":" + message + "\n", true);
     }
 
 }

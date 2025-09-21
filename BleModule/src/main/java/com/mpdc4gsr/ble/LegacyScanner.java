@@ -6,12 +6,8 @@ import android.bluetooth.BluetoothDevice;
 import androidx.annotation.NonNull;
 
 
-/**
- * date: 2019/10/1 15:13
- * author: bichuanfeng
- */
 class LegacyScanner extends AbstractScanner implements BluetoothAdapter.LeScanCallback {
-    
+
     LegacyScanner(EasyBLE easyBle, BluetoothAdapter bluetoothAdapter) {
         super(easyBle, bluetoothAdapter);
     }
@@ -32,7 +28,7 @@ class LegacyScanner extends AbstractScanner implements BluetoothAdapter.LeScanCa
     }
 
     @Override
-    public void onLeScan(BluetoothDevice device, int rssi, byte[] scanRecord) {        
+    public void onLeScan(BluetoothDevice device, int rssi, byte[] scanRecord) {
         parseScanResult(device, false, null, rssi, scanRecord);
     }
 

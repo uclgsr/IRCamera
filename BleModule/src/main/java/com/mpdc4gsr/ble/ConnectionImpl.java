@@ -14,7 +14,6 @@ import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.util.Pair;
@@ -41,10 +40,7 @@ import com.mpdc4gsr.commons.poster.PosterDispatcher;
 import com.mpdc4gsr.commons.util.MathUtils;
 import com.mpdc4gsr.commons.util.StringUtils;
 
-/**
- * date: 2021/8/12 19:47
- * author: bichuanfeng
- */
+
 @SuppressLint("MissingPermission")
 class ConnectionImpl implements Connection, ScanListener {
     private static final int MSG_REQUEST_TIMEOUT = 0;
@@ -62,12 +58,17 @@ class ConnectionImpl implements Connection, ScanListener {
     private final BluetoothAdapter bluetoothAdapter;
     private final Device device;
     private final ConnectionConfiguration configuration;
-    private BluetoothGatt bluetoothGatt;
     private final List<GenericRequest> requestQueue = new ArrayList<>();
-    private GenericRequest currentRequest;
     private final EventObserver observer;
-    private boolean isReleased;
     private final Handler connHandler;
+    private final Logger logger;
+    private final Observable observable;
+    private final PosterDispatcher posterDispatcher;
+    private final BluetoothGattCallback gattCallback = new BleGattCallback();
+    private final EasyBLE easyBle;
+    private BluetoothGatt bluetoothGatt;
+    private GenericRequest currentRequest;
+    private boolean isReleased;
     private long connStartTime;
     private int refreshCount;
     private int tryReconnectCount;
@@ -76,13 +77,26 @@ class ConnectionImpl implements Connection, ScanListener {
     private boolean refreshing;
     private boolean isActiveDisconnect;
     private long lastScanStopTime;
-    private final Logger logger;
-    private final Observable observable;
-    private final PosterDispatcher posterDispatcher;
-    private final BluetoothGattCallback gattCallback = new BleGattCallback();
-    private final EasyBLE easyBle;
     private int mtu = 23;
     private BluetoothGattCallback originCallback;
+    private Runnable connectRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if (!isReleased) {
+
+                easyBle.stopScan();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    bluetoothGatt = device.getOriginDevice().connectGatt(easyBle.getContext(), false, gattCallback,
+                            configuration.transport, configuration.phy);
+                } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    bluetoothGatt = device.getOriginDevice().connectGatt(easyBle.getContext(), false, gattCallback,
+                            configuration.transport);
+                } else {
+                    bluetoothGatt = device.getOriginDevice().connectGatt(easyBle.getContext(), false, gattCallback);
+                }
+            }
+        }
+    };
 
     ConnectionImpl(EasyBLE easyBle, BluetoothAdapter bluetoothAdapter, Device device, ConnectionConfiguration configuration,
                    int connectDelay, EventObserver observer) {
@@ -145,203 +159,6 @@ class ConnectionImpl implements Connection, ScanListener {
         return (charac.getProperties() & property) != 0;
     }
 
-    private class BleGattCallback extends BluetoothGattCallback {
-        @Override
-        public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
-            if (originCallback != null) {
-                easyBle.getExecutorService().execute(() -> originCallback.onConnectionStateChange(gatt, status, newState));
-            }
-            if (!isReleased) {
-                Message.obtain(connHandler, MSG_ON_CONNECTION_STATE_CHANGE, status, newState).sendToTarget();
-            } else {
-                closeGatt(gatt);
-            }
-        }
-
-        @Override
-        public void onServicesDiscovered(BluetoothGatt gatt, int status) {
-            if (originCallback != null) {
-                easyBle.getExecutorService().execute(() -> originCallback.onServicesDiscovered(gatt, status));
-            }
-            if (!isReleased) {
-                Message.obtain(connHandler, MSG_ON_SERVICES_DISCOVERED, status, 0).sendToTarget();
-            } else {
-                closeGatt(gatt);
-            }
-        }
-
-        @Override
-        public void onCharacteristicRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
-            Log.e("bcf","onCharacteristicRead  status: "+status+"  value: "+ HexUtil.bytesToHexString(characteristic.getValue()));
-            if (originCallback != null) {
-                easyBle.getExecutorService().execute(() -> originCallback.onCharacteristicRead(gatt, characteristic, status));
-            }
-            if (currentRequest != null) {
-                if (currentRequest.type == RequestType.READ_CHARACTERISTIC) {
-                    if (status == BluetoothGatt.GATT_SUCCESS) {
-                        notifyCharacteristicRead(currentRequest, characteristic.getValue());
-                    } else {
-                        handleGattStatusFailed();
-                    }
-                    executeNextRequest();
-                }
-            }
-        }
-
-        @Override
-        public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
-//            Log.e("bcf","onCharacteristicWrite  status: "+status);
-            if (originCallback != null) {
-                easyBle.getExecutorService().execute(() -> originCallback.onCharacteristicWrite(gatt, characteristic, status));
-            }
-            if (currentRequest != null && currentRequest.type == RequestType.WRITE_CHARACTERISTIC &&
-                    currentRequest.writeOptions.isWaitWriteResult) {
-                if (status == BluetoothGatt.GATT_SUCCESS) {
-                    if (logger.isEnabled()) {
-                        byte[] data = (byte[]) currentRequest.value;
-                        int packageSize = currentRequest.writeOptions.packageSize;
-                        int total = data.length / packageSize + (data.length % packageSize == 0 ? 0 : 1);
-                        int progress;
-                        if (currentRequest.remainQueue == null || currentRequest.remainQueue.isEmpty()) {
-                            progress = total;
-                        } else {
-                            progress = data.length / packageSize - currentRequest.remainQueue.size() + 1;
-                        }
-                        printWriteLog(currentRequest, progress, total, characteristic.getValue());
-                    }
-                    if (currentRequest.remainQueue == null || currentRequest.remainQueue.isEmpty()) {
-                        notifyCharacteristicWrite(currentRequest, (byte[]) currentRequest.value);
-                        executeNextRequest();
-                    } else {
-                        connHandler.removeMessages(MSG_REQUEST_TIMEOUT);
-                        connHandler.sendMessageDelayed(Message.obtain(connHandler, MSG_REQUEST_TIMEOUT, currentRequest),
-                                configuration.requestTimeoutMillis);
-                        GenericRequest req = currentRequest;
-                        int delay = currentRequest.writeOptions.packageWriteDelayMillis;
-                        if (delay > 0) {
-                            try {
-                                Thread.sleep(delay);
-                            } catch (InterruptedException ignore) {
-                            }
-                            if (req != currentRequest) {
-                                return;
-                            }
-                        }
-                        req.sendingBytes = req.remainQueue.remove();
-                        write(req, characteristic, req.sendingBytes);
-                    }
-                } else {
-                    handleFailedCallback(currentRequest, REQUEST_FAIL_TYPE_GATT_STATUS_FAILED, true);
-                }
-            }
-        }
-
-        @Override
-        public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
-            if (originCallback != null) {
-                easyBle.getExecutorService().execute(() -> originCallback.onCharacteristicChanged(gatt, characteristic));
-            }
-            notifyCharacteristicChanged(characteristic);
-        }
-
-        @Override
-        public void onReadRemoteRssi(BluetoothGatt gatt, int rssi, int status) {
-            device.setRssi(rssi);
-            if (originCallback != null) {
-                easyBle.getExecutorService().execute(() -> originCallback.onReadRemoteRssi(gatt, rssi, status));
-            }
-            if (currentRequest != null) {
-                if (currentRequest.type == RequestType.READ_RSSI) {
-                    if (status == BluetoothGatt.GATT_SUCCESS) {
-                        notifyRssiRead(currentRequest, rssi);
-                    } else {
-                        handleGattStatusFailed();
-                    }
-                    executeNextRequest();
-                }
-            }
-        }
-
-        @Override
-        public void onDescriptorRead(BluetoothGatt gatt, BluetoothGattDescriptor descriptor, int status) {
-            if (originCallback != null) {
-                easyBle.getExecutorService().execute(() -> originCallback.onDescriptorRead(gatt, descriptor, status));
-            }
-            if (currentRequest != null) {
-                if (currentRequest.type == RequestType.READ_DESCRIPTOR) {
-                    if (status == BluetoothGatt.GATT_SUCCESS) {
-                        notifyDescriptorRead(currentRequest, descriptor.getValue());
-                    } else {
-                        handleGattStatusFailed();
-                    }
-                    executeNextRequest();
-                }
-            }
-        }
-
-        @Override
-        public void onDescriptorWrite(BluetoothGatt gatt, BluetoothGattDescriptor descriptor, int status) {
-            if (originCallback != null) {
-                easyBle.getExecutorService().execute(() -> originCallback.onDescriptorWrite(gatt, descriptor, status));
-            }
-            if (currentRequest != null) {
-                if (currentRequest.type == RequestType.SET_NOTIFICATION || currentRequest.type == RequestType.SET_INDICATION) {
-                    BluetoothGattDescriptor localDescriptor = getDescriptor(descriptor.getCharacteristic().getService().getUuid(),
-                            descriptor.getCharacteristic().getUuid(), clientCharacteristicConfig);
-                    if (status != BluetoothGatt.GATT_SUCCESS) {
-                        handleGattStatusFailed();
-                        if (localDescriptor != null) {
-                            localDescriptor.setValue(currentRequest.descriptorTemp);
-                        }
-                    } else {
-                        notifyNotificationChanged(currentRequest, ((int) currentRequest.value) == 1);
-                    }
-                    executeNextRequest();
-                }
-            }
-        }
-
-        @Override
-        public void onMtuChanged(BluetoothGatt gatt, int mtu, int status) {
-            if (originCallback != null) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    easyBle.getExecutorService().execute(() -> originCallback.onMtuChanged(gatt, mtu, status));
-                }
-            }
-            if (currentRequest != null) {
-                if (currentRequest.type == RequestType.CHANGE_MTU) {
-                    if (status == BluetoothGatt.GATT_SUCCESS) {
-                        ConnectionImpl.this.mtu = mtu;
-                        notifyMtuChanged(currentRequest, mtu);
-                    } else {
-                        handleGattStatusFailed();
-                    }
-                    executeNextRequest();
-                }
-            }
-        }
-
-        @Override
-        public void onPhyRead(BluetoothGatt gatt, int txPhy, int rxPhy, int status) {
-            if (originCallback != null) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    easyBle.getExecutorService().execute(() -> originCallback.onPhyRead(gatt, txPhy, rxPhy, status));
-                }
-            }
-            handlePhyChange(true, txPhy, rxPhy, status);
-        }
-
-        @Override
-        public void onPhyUpdate(BluetoothGatt gatt, int txPhy, int rxPhy, int status) {
-            if (originCallback != null) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    easyBle.getExecutorService().execute(() -> originCallback.onPhyRead(gatt, txPhy, rxPhy, status));
-                }
-            }
-            handlePhyChange(false, txPhy, rxPhy, status);
-        }
-    }
-
     private void doOnConnectionStateChange(int status, int newState) {
         if (bluetoothGatt != null) {
             if (status == BluetoothGatt.GATT_SUCCESS) {
@@ -392,7 +209,6 @@ class ConnectionImpl implements Connection, ScanListener {
             }
         }
     }
-
 
     private void doDiscoverServices() {
         if (bluetoothGatt != null) {
@@ -450,25 +266,6 @@ class ConnectionImpl implements Connection, ScanListener {
         }
     }
 
-    private Runnable connectRunnable = new Runnable() {
-        @Override
-        public void run() {
-            if (!isReleased) {
-
-                easyBle.stopScan();
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    bluetoothGatt = device.getOriginDevice().connectGatt(easyBle.getContext(), false, gattCallback,
-                            configuration.transport, configuration.phy);
-                } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    bluetoothGatt = device.getOriginDevice().connectGatt(easyBle.getContext(), false, gattCallback,
-                            configuration.transport);
-                } else {
-                    bluetoothGatt = device.getOriginDevice().connectGatt(easyBle.getContext(), false, gattCallback);
-                }
-            }
-        }
-    };
-
     private void doConnect() {
         cancelRefreshState();
         device.connectionState = ConnectionState.CONNECTING;
@@ -476,7 +273,6 @@ class ConnectionImpl implements Connection, ScanListener {
         logD(Logger.TYPE_CONNECTION_STATE, "connecting [name: %s, addr: %s]", device.name, device.address);
         connHandler.postDelayed(connectRunnable, 500);
     }
-
 
     private void doDisconnect(boolean reconnect) {
         clearRequestQueueAndNotify();
@@ -505,7 +301,6 @@ class ConnectionImpl implements Connection, ScanListener {
         clearRequestQueueAndNotify();
         doRefresh(true);
     }
-
 
     private void doRefresh(boolean isAuto) {
         logD(Logger.TYPE_CONNECTION_STATE, "refresh GATT! [name: %s, addr: %s]", device.name, device.address);
@@ -646,8 +441,8 @@ class ConnectionImpl implements Connection, ScanListener {
         } else {
             descriptor.setValue(BluetoothGattDescriptor.DISABLE_NOTIFICATION_VALUE);
         }
-        // There was a bug in Android up to 6.0 where the descriptor was written using parent
-        // characteristic's write type, instead of always Write With Response, as the spec says.
+
+
         int writeType = characteristic.getWriteType();
         characteristic.setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT);
         boolean result = bluetoothGatt.writeDescriptor(descriptor);
@@ -657,62 +452,6 @@ class ConnectionImpl implements Connection, ScanListener {
         }
         characteristic.setWriteType(writeType);
         return !result;
-    }
-
-    private static class ConnHandler extends Handler {
-        private final WeakReference<ConnectionImpl> weakRef;
-
-        ConnHandler(ConnectionImpl connection) {
-            super(Looper.getMainLooper());
-            weakRef = new WeakReference<>(connection);
-        }
-
-        @Override
-        public void handleMessage(Message msg) {
-            ConnectionImpl connection = weakRef.get();
-            if (connection != null) {
-                if (connection.isReleased) {
-                    return;
-                }
-                switch (msg.what) {
-                    case MSG_REQUEST_TIMEOUT:
-                        GenericRequest request = (GenericRequest) msg.obj;
-                        if (connection.currentRequest != null && connection.currentRequest == request) {
-                            connection.handleFailedCallback(request, REQUEST_FAIL_TYPE_REQUEST_TIMEOUT, false);
-                            connection.executeNextRequest();
-                        }
-                        break;
-                    case MSG_CONNECT:
-                        if (connection.bluetoothAdapter.isEnabled()) {
-                            connection.doConnect();
-                        }
-                        break;
-                    case MSG_DISCONNECT:
-                        boolean reconnect = msg.arg1 == MSG_ARG_RECONNECT && connection.bluetoothAdapter.isEnabled();
-                        connection.doDisconnect(reconnect);
-                        break;
-                    case MSG_REFRESH:
-                        connection.doRefresh(false);
-                        break;
-                    case MSG_TIMER:
-                        connection.doTimer();
-                        break;
-                    case MSG_DISCOVER_SERVICES:
-                    case MSG_ON_CONNECTION_STATE_CHANGE:
-                    case MSG_ON_SERVICES_DISCOVERED:
-                        if (connection.bluetoothAdapter.isEnabled()) {
-                            if (msg.what == MSG_DISCOVER_SERVICES) {
-                                connection.doDiscoverServices();
-                            } else if (msg.what == MSG_ON_SERVICES_DISCOVERED) {
-                                connection.doOnServicesDiscovered(msg.arg1);
-                            } else {
-                                connection.doOnConnectionStateChange(msg.arg1, msg.arg2);
-                            }
-                        }
-                        break;
-                }
-            }
-        }
     }
 
     private void enqueue(GenericRequest request) {
@@ -1076,7 +815,6 @@ class ConnectionImpl implements Connection, ScanListener {
         }
     }
 
-
     @SuppressWarnings("all")
     private boolean doRefresh() {
         try {
@@ -1163,7 +901,6 @@ class ConnectionImpl implements Connection, ScanListener {
         }
     }
 
-
     private void clearRequestQueueAndNotify() {
         synchronized (this) {
             for (GenericRequest request : requestQueue) {
@@ -1218,7 +955,6 @@ class ConnectionImpl implements Connection, ScanListener {
         return null;
     }
 
-
     private void checkUuidExistsAndEnqueue(GenericRequest request, int uuidNum) {
         boolean exists = false;
         if (uuidNum > 2) {
@@ -1233,7 +969,6 @@ class ConnectionImpl implements Connection, ScanListener {
         }
     }
 
-
     private boolean checkServiceExists(GenericRequest request, UUID uuid) {
         if (getService(uuid) == null) {
             handleFailedCallback(request, REQUEST_FAIL_TYPE_SERVICE_NOT_EXIST, false);
@@ -1241,7 +976,6 @@ class ConnectionImpl implements Connection, ScanListener {
         }
         return true;
     }
-
 
     private boolean checkCharacteristicExists(GenericRequest request, UUID service, UUID characteristic) {
         if (checkServiceExists(request, service)) {
@@ -1254,7 +988,6 @@ class ConnectionImpl implements Connection, ScanListener {
         return false;
     }
 
-
     private boolean checkDescriptorExists(GenericRequest request, UUID service, UUID characteristic, UUID descriptor) {
         if (checkServiceExists(request, service) && checkCharacteristicExists(request, service, characteristic)) {
             if (getDescriptor(service, characteristic, descriptor) == null) {
@@ -1265,7 +998,6 @@ class ConnectionImpl implements Connection, ScanListener {
         }
         return false;
     }
-
 
     @Override
     public void execute(Request request) {
@@ -1312,5 +1044,258 @@ class ConnectionImpl implements Connection, ScanListener {
             return isNotificationOrIndicationEnabled(c);
         }
         return false;
+    }
+
+    private static class ConnHandler extends Handler {
+        private final WeakReference<ConnectionImpl> weakRef;
+
+        ConnHandler(ConnectionImpl connection) {
+            super(Looper.getMainLooper());
+            weakRef = new WeakReference<>(connection);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            ConnectionImpl connection = weakRef.get();
+            if (connection != null) {
+                if (connection.isReleased) {
+                    return;
+                }
+                switch (msg.what) {
+                    case MSG_REQUEST_TIMEOUT:
+                        GenericRequest request = (GenericRequest) msg.obj;
+                        if (connection.currentRequest != null && connection.currentRequest == request) {
+                            connection.handleFailedCallback(request, REQUEST_FAIL_TYPE_REQUEST_TIMEOUT, false);
+                            connection.executeNextRequest();
+                        }
+                        break;
+                    case MSG_CONNECT:
+                        if (connection.bluetoothAdapter.isEnabled()) {
+                            connection.doConnect();
+                        }
+                        break;
+                    case MSG_DISCONNECT:
+                        boolean reconnect = msg.arg1 == MSG_ARG_RECONNECT && connection.bluetoothAdapter.isEnabled();
+                        connection.doDisconnect(reconnect);
+                        break;
+                    case MSG_REFRESH:
+                        connection.doRefresh(false);
+                        break;
+                    case MSG_TIMER:
+                        connection.doTimer();
+                        break;
+                    case MSG_DISCOVER_SERVICES:
+                    case MSG_ON_CONNECTION_STATE_CHANGE:
+                    case MSG_ON_SERVICES_DISCOVERED:
+                        if (connection.bluetoothAdapter.isEnabled()) {
+                            if (msg.what == MSG_DISCOVER_SERVICES) {
+                                connection.doDiscoverServices();
+                            } else if (msg.what == MSG_ON_SERVICES_DISCOVERED) {
+                                connection.doOnServicesDiscovered(msg.arg1);
+                            } else {
+                                connection.doOnConnectionStateChange(msg.arg1, msg.arg2);
+                            }
+                        }
+                        break;
+                }
+            }
+        }
+    }
+
+    private class BleGattCallback extends BluetoothGattCallback {
+        @Override
+        public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
+            if (originCallback != null) {
+                easyBle.getExecutorService().execute(() -> originCallback.onConnectionStateChange(gatt, status, newState));
+            }
+            if (!isReleased) {
+                Message.obtain(connHandler, MSG_ON_CONNECTION_STATE_CHANGE, status, newState).sendToTarget();
+            } else {
+                closeGatt(gatt);
+            }
+        }
+
+        @Override
+        public void onServicesDiscovered(BluetoothGatt gatt, int status) {
+            if (originCallback != null) {
+                easyBle.getExecutorService().execute(() -> originCallback.onServicesDiscovered(gatt, status));
+            }
+            if (!isReleased) {
+                Message.obtain(connHandler, MSG_ON_SERVICES_DISCOVERED, status, 0).sendToTarget();
+            } else {
+                closeGatt(gatt);
+            }
+        }
+
+        @Override
+        public void onCharacteristicRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
+            Log.e("bcf", "onCharacteristicRead  status: " + status + "  value: " + HexUtil.bytesToHexString(characteristic.getValue()));
+            if (originCallback != null) {
+                easyBle.getExecutorService().execute(() -> originCallback.onCharacteristicRead(gatt, characteristic, status));
+            }
+            if (currentRequest != null) {
+                if (currentRequest.type == RequestType.READ_CHARACTERISTIC) {
+                    if (status == BluetoothGatt.GATT_SUCCESS) {
+                        notifyCharacteristicRead(currentRequest, characteristic.getValue());
+                    } else {
+                        handleGattStatusFailed();
+                    }
+                    executeNextRequest();
+                }
+            }
+        }
+
+        @Override
+        public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
+
+            if (originCallback != null) {
+                easyBle.getExecutorService().execute(() -> originCallback.onCharacteristicWrite(gatt, characteristic, status));
+            }
+            if (currentRequest != null && currentRequest.type == RequestType.WRITE_CHARACTERISTIC &&
+                    currentRequest.writeOptions.isWaitWriteResult) {
+                if (status == BluetoothGatt.GATT_SUCCESS) {
+                    if (logger.isEnabled()) {
+                        byte[] data = (byte[]) currentRequest.value;
+                        int packageSize = currentRequest.writeOptions.packageSize;
+                        int total = data.length / packageSize + (data.length % packageSize == 0 ? 0 : 1);
+                        int progress;
+                        if (currentRequest.remainQueue == null || currentRequest.remainQueue.isEmpty()) {
+                            progress = total;
+                        } else {
+                            progress = data.length / packageSize - currentRequest.remainQueue.size() + 1;
+                        }
+                        printWriteLog(currentRequest, progress, total, characteristic.getValue());
+                    }
+                    if (currentRequest.remainQueue == null || currentRequest.remainQueue.isEmpty()) {
+                        notifyCharacteristicWrite(currentRequest, (byte[]) currentRequest.value);
+                        executeNextRequest();
+                    } else {
+                        connHandler.removeMessages(MSG_REQUEST_TIMEOUT);
+                        connHandler.sendMessageDelayed(Message.obtain(connHandler, MSG_REQUEST_TIMEOUT, currentRequest),
+                                configuration.requestTimeoutMillis);
+                        GenericRequest req = currentRequest;
+                        int delay = currentRequest.writeOptions.packageWriteDelayMillis;
+                        if (delay > 0) {
+                            try {
+                                Thread.sleep(delay);
+                            } catch (InterruptedException ignore) {
+                            }
+                            if (req != currentRequest) {
+                                return;
+                            }
+                        }
+                        req.sendingBytes = req.remainQueue.remove();
+                        write(req, characteristic, req.sendingBytes);
+                    }
+                } else {
+                    handleFailedCallback(currentRequest, REQUEST_FAIL_TYPE_GATT_STATUS_FAILED, true);
+                }
+            }
+        }
+
+        @Override
+        public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
+            if (originCallback != null) {
+                easyBle.getExecutorService().execute(() -> originCallback.onCharacteristicChanged(gatt, characteristic));
+            }
+            notifyCharacteristicChanged(characteristic);
+        }
+
+        @Override
+        public void onReadRemoteRssi(BluetoothGatt gatt, int rssi, int status) {
+            device.setRssi(rssi);
+            if (originCallback != null) {
+                easyBle.getExecutorService().execute(() -> originCallback.onReadRemoteRssi(gatt, rssi, status));
+            }
+            if (currentRequest != null) {
+                if (currentRequest.type == RequestType.READ_RSSI) {
+                    if (status == BluetoothGatt.GATT_SUCCESS) {
+                        notifyRssiRead(currentRequest, rssi);
+                    } else {
+                        handleGattStatusFailed();
+                    }
+                    executeNextRequest();
+                }
+            }
+        }
+
+        @Override
+        public void onDescriptorRead(BluetoothGatt gatt, BluetoothGattDescriptor descriptor, int status) {
+            if (originCallback != null) {
+                easyBle.getExecutorService().execute(() -> originCallback.onDescriptorRead(gatt, descriptor, status));
+            }
+            if (currentRequest != null) {
+                if (currentRequest.type == RequestType.READ_DESCRIPTOR) {
+                    if (status == BluetoothGatt.GATT_SUCCESS) {
+                        notifyDescriptorRead(currentRequest, descriptor.getValue());
+                    } else {
+                        handleGattStatusFailed();
+                    }
+                    executeNextRequest();
+                }
+            }
+        }
+
+        @Override
+        public void onDescriptorWrite(BluetoothGatt gatt, BluetoothGattDescriptor descriptor, int status) {
+            if (originCallback != null) {
+                easyBle.getExecutorService().execute(() -> originCallback.onDescriptorWrite(gatt, descriptor, status));
+            }
+            if (currentRequest != null) {
+                if (currentRequest.type == RequestType.SET_NOTIFICATION || currentRequest.type == RequestType.SET_INDICATION) {
+                    BluetoothGattDescriptor localDescriptor = getDescriptor(descriptor.getCharacteristic().getService().getUuid(),
+                            descriptor.getCharacteristic().getUuid(), clientCharacteristicConfig);
+                    if (status != BluetoothGatt.GATT_SUCCESS) {
+                        handleGattStatusFailed();
+                        if (localDescriptor != null) {
+                            localDescriptor.setValue(currentRequest.descriptorTemp);
+                        }
+                    } else {
+                        notifyNotificationChanged(currentRequest, ((int) currentRequest.value) == 1);
+                    }
+                    executeNextRequest();
+                }
+            }
+        }
+
+        @Override
+        public void onMtuChanged(BluetoothGatt gatt, int mtu, int status) {
+            if (originCallback != null) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    easyBle.getExecutorService().execute(() -> originCallback.onMtuChanged(gatt, mtu, status));
+                }
+            }
+            if (currentRequest != null) {
+                if (currentRequest.type == RequestType.CHANGE_MTU) {
+                    if (status == BluetoothGatt.GATT_SUCCESS) {
+                        ConnectionImpl.this.mtu = mtu;
+                        notifyMtuChanged(currentRequest, mtu);
+                    } else {
+                        handleGattStatusFailed();
+                    }
+                    executeNextRequest();
+                }
+            }
+        }
+
+        @Override
+        public void onPhyRead(BluetoothGatt gatt, int txPhy, int rxPhy, int status) {
+            if (originCallback != null) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    easyBle.getExecutorService().execute(() -> originCallback.onPhyRead(gatt, txPhy, rxPhy, status));
+                }
+            }
+            handlePhyChange(true, txPhy, rxPhy, status);
+        }
+
+        @Override
+        public void onPhyUpdate(BluetoothGatt gatt, int txPhy, int rxPhy, int status) {
+            if (originCallback != null) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    easyBle.getExecutorService().execute(() -> originCallback.onPhyRead(gatt, txPhy, rxPhy, status));
+                }
+            }
+            handlePhyChange(false, txPhy, rxPhy, status);
+        }
     }
 }

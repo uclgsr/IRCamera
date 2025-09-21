@@ -27,6 +27,10 @@ import com.mpdc4gsr.lib.core.lms.utils.LanguageUtil
 import java.util.Date
 
 public var InitUtil.productType: String
+    get() = LMS.getInstance().productType
+    set(value) {
+        LMS.getInstance().productType = value
+    }
 
 object InitUtil {
     fun initLog() {

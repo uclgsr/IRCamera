@@ -2,16 +2,17 @@ package com.mpdc4gsr.ble.util;
 
 import android.util.Log;
 
-
 public class ByteUtil {
     public static byte[] byteMerger(byte[] byte1, int byte2, int byte3, int byte4) {
         return byteMerger(byte1, intToByteArray(byte2), intToByteArray(byte3), intToByteArray2(byte4));
     }
-    public static byte[] byteMerger(byte[] byte1, String byte2,String byte3) {
-        return byteMerger(byte1, byte2.getBytes(),byte3.getBytes());
+
+    public static byte[] byteMerger(byte[] byte1, String byte2, String byte3) {
+        return byteMerger(byte1, byte2.getBytes(), byte3.getBytes());
     }
-    public static byte[] byteMerger(byte[] byte1, String byte2,String byte3,String byte4) {
-        return byteMerger(byte1, byte2.getBytes(),byte3.getBytes(),byte4.getBytes());
+
+    public static byte[] byteMerger(byte[] byte1, String byte2, String byte3, String byte4) {
+        return byteMerger(byte1, byte2.getBytes(), byte3.getBytes(), byte4.getBytes());
     }
 
     public static byte[] byteMerger(String byte1, int byte2) {
@@ -34,12 +35,6 @@ public class ByteUtil {
         return byteMerger(byte1, byte2.getBytes());
     }
 
-//    public static byte[] byteMerger(byte[] byte1, byte[] byte2) {
-//        byte[] result = new byte[byte1.length + byte2.length];
-//        System.arraycopy(byte1, 0, result, 0, byte1.length);
-//        System.arraycopy(byte2, 0, result, byte1.length, byte2.length);
-//        return result;
-//    }
 
     public static byte[] byteMerger(byte[]... bytes) {
         int length = 0;
@@ -54,7 +49,6 @@ public class ByteUtil {
         }
         return result;
     }
-
 
     public static byte[] intToByteArray(int i) {
         byte[] result = new byte[1];
@@ -71,18 +65,15 @@ public class ByteUtil {
         return result;
     }
 
-
     public static byte[] LongToBytes(long values) {
         byte[] buffer = new byte[4];
         for (int i = 0; i < 4; i++) {
-//            int offset = 64 - (i + 1) * 8;
-            int offset = (4 - i - 1)* 8;
+
+            int offset = (4 - i - 1) * 8;
             buffer[i] = (byte) ((values >> offset) & 0xff);
         }
         return buffer;
     }
-
-
 
     public static float bytesToFloat(byte[] bytes) {
         float value = Integer.valueOf(HexUtil.bytesToHexString(bytes), 16);
@@ -104,21 +95,20 @@ public class ByteUtil {
         return b & 0xFF;
     }
 
-    public static byte[] short2byte(short s){
+    public static byte[] short2byte(short s) {
         byte[] b = new byte[2];
-        for(int i = 0; i < 2; i++){
-            int offset = 16 - (i+1)*8;
-            b[i] = (byte)((s >> offset)&0xff);
+        for (int i = 0; i < 2; i++) {
+            int offset = 16 - (i + 1) * 8;
+            b[i] = (byte) ((s >> offset) & 0xff);
         }
         return b;
     }
 
-
     public static int byteArrayToInt(byte[] bytes) {
-        int value=0;
-        for(int i = 0; i < 4; i++) {
-            int shift= (3-i) * 8;
-            value +=(bytes[i] & 0xFF) << shift;
+        int value = 0;
+        for (int i = 0; i < 4; i++) {
+            int shift = (3 - i) * 8;
+            value += (bytes[i] & 0xFF) << shift;
         }
         return value;
     }
@@ -132,7 +122,7 @@ public class ByteUtil {
         return cmd;
     }
 
-    public static String getCmd(byte[] bytes){
+    public static String getCmd(byte[] bytes) {
         String hex = HexUtil.bytesToHexString(bytes);
         String cmd = "";
         if (hex.length() >= 16) {

@@ -36,13 +36,10 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 
 
-/**
- * date: 2021/8/12 11:50
- * author: bichuanfeng
- */
 public class EasyBLE {
-    static volatile EasyBLE instance;
     private static final EasyBLEBuilder DEFAULT_BUILDER = new EasyBLEBuilder();
+    static volatile EasyBLE instance;
+    public final ScanConfiguration scanConfiguration;
     private final ExecutorService executorService;
     private final PosterDispatcher posterDispatcher;
     private final BondController bondController;
@@ -50,16 +47,14 @@ public class EasyBLE {
     private final Observable observable;
     private final Logger logger;
     private final ScannerType scannerType;
-    public final ScanConfiguration scanConfiguration;
+    private final Map<String, Connection> connectionMap = new ConcurrentHashMap<>();
+    private final List<String> addressList = new CopyOnWriteArrayList<>();
+    private final boolean internalObservable;
     private Scanner scanner;
     private Application application;
     private boolean isInitialized;
     private BluetoothAdapter bluetoothAdapter;
     private BroadcastReceiver broadcastReceiver;
-    private final Map<String, Connection> connectionMap = new ConcurrentHashMap<>();
-
-    private final List<String> addressList = new CopyOnWriteArrayList<>();
-    private final boolean internalObservable;
 
     private EasyBLE() {
         this(DEFAULT_BUILDER);
@@ -82,9 +77,8 @@ public class EasyBLE {
             executorService = builder.executorService;
             posterDispatcher = new PosterDispatcher(executorService, builder.methodDefaultThreadMode);
             observable = new Observable(posterDispatcher, builder.isObserveAnnotationRequired);
-        }    
+        }
     }
-
 
     public static EasyBLE getInstance() {
         if (instance == null) {
@@ -140,7 +134,7 @@ public class EasyBLE {
         return deviceCreator;
     }
 
-    Observable getObservable() {        
+    Observable getObservable() {
         return observable;
     }
 
@@ -156,89 +150,8 @@ public class EasyBLE {
         return isInitialized && application != null && instance != null;
     }
 
-
     public boolean isBluetoothOn() {
         return bluetoothAdapter != null && bluetoothAdapter.isEnabled();
-    }
-
-    private class InnerBroadcastReceiver extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            if (action != null) {
-                switch (action) {
-                    case BluetoothAdapter.ACTION_STATE_CHANGED:
-                        if (bluetoothAdapter != null) {
-
-                            observable.notifyObservers(MethodInfoGenerator.onBluetoothAdapterStateChanged(bluetoothAdapter.getState()));
-                            if (bluetoothAdapter.getState() == BluetoothAdapter.STATE_OFF) {
-                                logger.log(Log.DEBUG, Logger.TYPE_GENERAL, "[ph][ph][ph][ph][ph]");
-
-                                if (scanner != null) {
-                                    scanner.onBluetoothOff();
-                                }
-
-                                disconnectAllConnections();
-                            } else if (bluetoothAdapter.getState() == BluetoothAdapter.STATE_ON) {
-                                logger.log(Log.DEBUG, Logger.TYPE_GENERAL, "[ph][ph][ph][ph][ph]");
-
-                                for (Connection connection : connectionMap.values()) {
-                                    if (connection.isAutoReconnectEnabled()) {
-                                        connection.reconnect();
-                                    }
-                                }
-                            }
-                        }
-                        break;
-                    case BluetoothAdapter.ACTION_DISCOVERY_STARTED:
-                        if (scanner instanceof ClassicScanner) {
-                            ClassicScanner scanner = (ClassicScanner) EasyBLE.this.scanner;
-                            scanner.setScanning(true);
-                        }
-                        break;
-                    case BluetoothAdapter.ACTION_DISCOVERY_FINISHED:
-                        if (scanner instanceof ClassicScanner) {
-                            ClassicScanner scanner = (ClassicScanner) EasyBLE.this.scanner;
-                            scanner.setScanning(false);
-                        }
-                        break;
-                    case BluetoothDevice.ACTION_FOUND:
-                        BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                        if (device != null && scanner instanceof ClassicScanner) {
-                            int rssi = -120;
-                            Bundle extras = intent.getExtras();
-                            if (extras != null) {
-                                rssi = extras.getShort(BluetoothDevice.EXTRA_RSSI);
-                            }                            
-                            ((ClassicScanner) scanner).parseScanResult(device, false, null, rssi, null);
-                        }
-                        break;    
-                }
-            }
-            if (BluetoothAdapter.ACTION_STATE_CHANGED.equals(intent.getAction())) {
-                if (bluetoothAdapter != null) {
-
-                    observable.notifyObservers(MethodInfoGenerator.onBluetoothAdapterStateChanged(bluetoothAdapter.getState()));
-                    if (bluetoothAdapter.getState() == BluetoothAdapter.STATE_OFF) {
-                        logger.log(Log.DEBUG, Logger.TYPE_GENERAL, "[ph][ph][ph][ph][ph]");
-
-                        if (scanner != null) {
-                            scanner.onBluetoothOff();
-                        }
-
-                        disconnectAllConnections();
-                    } else if (bluetoothAdapter.getState() == BluetoothAdapter.STATE_ON) {
-                        logger.log(Log.DEBUG, Logger.TYPE_GENERAL, "[ph][ph][ph][ph][ph]");
-
-                        for (Connection connection : connectionMap.values()) {
-                            if (connection.isAutoReconnectEnabled()) {
-                                connection.reconnect();
-                            }
-                        }
-                    }
-                }
-            }
-        }
     }
 
     public synchronized void initialize(Application application) {
@@ -266,7 +179,7 @@ public class EasyBLE {
             filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
             filter.addAction(BluetoothDevice.ACTION_FOUND);
             application.registerReceiver(broadcastReceiver, filter);
-        }        
+        }
         isInitialized = true;
     }
 
@@ -292,11 +205,9 @@ public class EasyBLE {
         return isInitialized();
     }
 
-
     public void setLogEnabled(boolean isEnabled) {
         logger.setEnabled(isEnabled);
     }
-
 
     public synchronized void release() {
         if (broadcastReceiver != null) {
@@ -314,7 +225,6 @@ public class EasyBLE {
         }
     }
 
-
     public void destroy() {
         release();
         synchronized (EasyBLE.class) {
@@ -322,30 +232,25 @@ public class EasyBLE {
         }
     }
 
-
     public void registerObserver(EventObserver observer) {
         if (checkStatus()) {
             observable.registerObserver(observer);
         }
     }
 
-
     public boolean isObserverRegistered(EventObserver observer) {
         return observable.isRegistered(observer);
     }
 
-
     public void unregisterObserver(EventObserver observer) {
         observable.unregisterObserver(observer);
     }
-
 
     public void notifyObservers(MethodInfo info) {
         if (checkStatus()) {
             observable.notifyObservers(info);
         }
     }
-    
 
     private void checkAndInstanceScanner() {
         if (scanner == null) {
@@ -366,9 +271,8 @@ public class EasyBLE {
                     }
                 }
             }
-        }        
+        }
     }
-    
 
     public void addScanListener(ScanListener listener) {
         checkAndInstanceScanner();
@@ -377,18 +281,15 @@ public class EasyBLE {
         }
     }
 
-
     public void removeScanListener(ScanListener listener) {
         if (scanner != null) {
             scanner.removeScanListener(listener);
         }
     }
 
-
     public boolean isScanning() {
         return scanner != null && scanner.isScanning();
     }
-
 
     public void startScan() {
         checkAndInstanceScanner();
@@ -397,13 +298,11 @@ public class EasyBLE {
         }
     }
 
-
     public void stopScan() {
         if (checkStatus() && scanner != null) {
             scanner.stopScan(false);
         }
     }
-
 
     public void stopScanQuietly() {
         if (checkStatus() && scanner != null) {
@@ -411,24 +310,20 @@ public class EasyBLE {
         }
     }
 
-
     @Nullable
     public Connection connect(String address) {
         return connect(address, null, null);
     }
-
 
     @Nullable
     public Connection connect(String address, ConnectionConfiguration configuration) {
         return connect(address, configuration, null);
     }
 
-
     @Nullable
     public Connection connect(String address, EventObserver observer) {
         return connect(address, null, observer);
     }
-
 
     @Nullable
     public Connection connect(String address, ConnectionConfiguration configuration,
@@ -443,24 +338,20 @@ public class EasyBLE {
         return null;
     }
 
-
     @Nullable
     public Connection connect(Device device) {
         return connect(device, null, null);
     }
-
 
     @Nullable
     public Connection connect(Device device, ConnectionConfiguration configuration) {
         return connect(device, configuration, null);
     }
 
-
     @Nullable
     public Connection connect(Device device, EventObserver observer) {
         return connect(device, null, observer);
     }
-
 
     @Nullable
     public synchronized Connection connect(final Device device, ConnectionConfiguration configuration,
@@ -498,12 +389,10 @@ public class EasyBLE {
         return null;
     }
 
-
     @NonNull
     public Collection<Connection> getConnections() {
         return connectionMap.values();
     }
-
 
     @NonNull
     public List<Connection> getOrderedConnections() {
@@ -517,12 +406,10 @@ public class EasyBLE {
         return list;
     }
 
-
     @Nullable
     public Connection getFirstConnection() {
         return addressList.isEmpty() ? null : connectionMap.get(addressList.get(0));
     }
-
 
     @Nullable
     public Connection getLastConnection() {
@@ -539,7 +426,6 @@ public class EasyBLE {
         return address == null ? null : connectionMap.get(address);
     }
 
-
     public void disconnectConnection(Device device) {
         if (checkStatus() && device != null) {
             Connection connection = connectionMap.get(device.getAddress());
@@ -548,7 +434,6 @@ public class EasyBLE {
             }
         }
     }
-
 
     public void disconnectConnection(String address) {
         if (checkStatus() && address != null) {
@@ -559,7 +444,6 @@ public class EasyBLE {
         }
     }
 
-
     public void disconnectAllConnections() {
         if (checkStatus()) {
             for (Connection connection : connectionMap.values()) {
@@ -567,7 +451,6 @@ public class EasyBLE {
             }
         }
     }
-
 
     public void releaseAllConnections() {
         if (checkStatus()) {
@@ -579,7 +462,6 @@ public class EasyBLE {
         }
     }
 
-
     public void releaseConnection(String address) {
         if (checkStatus() && address != null) {
             addressList.remove(address);
@@ -589,7 +471,6 @@ public class EasyBLE {
             }
         }
     }
-
 
     public void releaseConnection(Device device) {
         if (checkStatus() && device != null) {
@@ -601,7 +482,6 @@ public class EasyBLE {
         }
     }
 
-
     public void reconnectAll() {
         if (checkStatus()) {
             for (Connection connection : connectionMap.values()) {
@@ -612,7 +492,6 @@ public class EasyBLE {
         }
     }
 
-
     public void reconnect(Device device) {
         if (checkStatus() && device != null) {
             Connection connection = connectionMap.get(device.getAddress());
@@ -621,7 +500,6 @@ public class EasyBLE {
             }
         }
     }
-
 
     public int getBondState(String address) {
         checkStatus();
@@ -632,7 +510,6 @@ public class EasyBLE {
         }
     }
 
-
     public boolean createBond(String address) {
         checkStatus();
         try {
@@ -642,7 +519,6 @@ public class EasyBLE {
             return false;
         }
     }
-
 
     @SuppressWarnings("all")
     public void clearBondDevices(RemoveBondFilter filter) {
@@ -660,7 +536,6 @@ public class EasyBLE {
         }
     }
 
-
     @SuppressWarnings("all")
     public void removeBond(String address) {
         checkStatus();
@@ -670,6 +545,86 @@ public class EasyBLE {
                 remoteDevice.getClass().getMethod("removeBond").invoke(remoteDevice);
             }
         } catch (Exception ignore) {
+        }
+    }
+
+    private class InnerBroadcastReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (action != null) {
+                switch (action) {
+                    case BluetoothAdapter.ACTION_STATE_CHANGED:
+                        if (bluetoothAdapter != null) {
+
+                            observable.notifyObservers(MethodInfoGenerator.onBluetoothAdapterStateChanged(bluetoothAdapter.getState()));
+                            if (bluetoothAdapter.getState() == BluetoothAdapter.STATE_OFF) {
+                                logger.log(Log.DEBUG, Logger.TYPE_GENERAL, "");
+
+                                if (scanner != null) {
+                                    scanner.onBluetoothOff();
+                                }
+
+                                disconnectAllConnections();
+                            } else if (bluetoothAdapter.getState() == BluetoothAdapter.STATE_ON) {
+                                logger.log(Log.DEBUG, Logger.TYPE_GENERAL, "");
+
+                                for (Connection connection : connectionMap.values()) {
+                                    if (connection.isAutoReconnectEnabled()) {
+                                        connection.reconnect();
+                                    }
+                                }
+                            }
+                        }
+                        break;
+                    case BluetoothAdapter.ACTION_DISCOVERY_STARTED:
+                        if (scanner instanceof ClassicScanner) {
+                            ClassicScanner scanner = (ClassicScanner) EasyBLE.this.scanner;
+                            scanner.setScanning(true);
+                        }
+                        break;
+                    case BluetoothAdapter.ACTION_DISCOVERY_FINISHED:
+                        if (scanner instanceof ClassicScanner) {
+                            ClassicScanner scanner = (ClassicScanner) EasyBLE.this.scanner;
+                            scanner.setScanning(false);
+                        }
+                        break;
+                    case BluetoothDevice.ACTION_FOUND:
+                        BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+                        if (device != null && scanner instanceof ClassicScanner) {
+                            int rssi = -120;
+                            Bundle extras = intent.getExtras();
+                            if (extras != null) {
+                                rssi = extras.getShort(BluetoothDevice.EXTRA_RSSI);
+                            }
+                            ((ClassicScanner) scanner).parseScanResult(device, false, null, rssi, null);
+                        }
+                        break;
+                }
+            }
+            if (BluetoothAdapter.ACTION_STATE_CHANGED.equals(intent.getAction())) {
+                if (bluetoothAdapter != null) {
+
+                    observable.notifyObservers(MethodInfoGenerator.onBluetoothAdapterStateChanged(bluetoothAdapter.getState()));
+                    if (bluetoothAdapter.getState() == BluetoothAdapter.STATE_OFF) {
+                        logger.log(Log.DEBUG, Logger.TYPE_GENERAL, "");
+
+                        if (scanner != null) {
+                            scanner.onBluetoothOff();
+                        }
+
+                        disconnectAllConnections();
+                    } else if (bluetoothAdapter.getState() == BluetoothAdapter.STATE_ON) {
+                        logger.log(Log.DEBUG, Logger.TYPE_GENERAL, "");
+
+                        for (Connection connection : connectionMap.values()) {
+                            if (connection.isAutoReconnectEnabled()) {
+                                connection.reconnect();
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }

@@ -12,22 +12,7 @@ import androidx.annotation.NonNull;
 import com.mpdc4gsr.ble.callback.ScanListener;
 import com.mpdc4gsr.ble.util.Logger;
 
-
 class LeScanner extends AbstractScanner {
-    private BluetoothLeScanner bleScanner;
-
-    LeScanner(EasyBLE easyBle, BluetoothAdapter bluetoothAdapter) {
-        super(easyBle, bluetoothAdapter);       
-    }
-
-    private BluetoothLeScanner getLeScanner() {
-        if (bleScanner == null) {
-
-            bleScanner = bluetoothAdapter.getBluetoothLeScanner();
-        }
-        return bleScanner;
-    }
-
     private final ScanCallback scanCallback = new ScanCallback() {
         @Override
         public void onScanResult(int callbackType, ScanResult result) {
@@ -41,6 +26,19 @@ class LeScanner extends AbstractScanner {
             stopScan(true);
         }
     };
+    private BluetoothLeScanner bleScanner;
+
+    LeScanner(EasyBLE easyBle, BluetoothAdapter bluetoothAdapter) {
+        super(easyBle, bluetoothAdapter);
+    }
+
+    private BluetoothLeScanner getLeScanner() {
+        if (bleScanner == null) {
+
+            bleScanner = bluetoothAdapter.getBluetoothLeScanner();
+        }
+        return bleScanner;
+    }
 
     @Override
     protected boolean isReady() {

@@ -11,17 +11,12 @@ public class FolderUtil {
     public static String mUserId;
     public static String fileName;
     public static String tdartsSn;
-
-
     public static String getFileName() {
         return fileName;
     }
-
-
     public static void setFileName(String mfileName) {
         fileName = mfileName;
     }
-
     public static void setUserId(String userId) {
         mUserId = userId;
     }
@@ -49,17 +44,17 @@ public class FolderUtil {
         }
     }
 
-
     public static void initFilePath() {
         String basePath = Topdon.getApp().getExternalFilesDir("").getAbsolutePath() + fileName;
         String downPath = basePath + "Download/";
-        Log.e("bcf", fileName + "--[ph][ph][ph][ph][ph][ph][ph]--" + downPath);
+        Log.e("bcf", fileName + "----" + downPath);
         File file = new File(downPath);
         if (!file.exists()) {
-            Log.e("bcf", fileName + "---[ph][ph][ph][ph][ph][ph][ph][ph][ph] ");
+            Log.e("bcf", fileName + "--- ");
             file.mkdirs();
         }
     }
+
 
     private static void initPath() {
         if (!TextUtils.isEmpty(mUserId)) {
@@ -196,19 +191,15 @@ public class FolderUtil {
 
             File log6File = new File(mPath + fileName + "666666/");
             if (!log6File.exists()) {
-//                log6File.mkdirs();
             }
             File log7File = new File(mPath + fileName + "777777/");
             if (!log7File.exists()) {
-//                log7File.mkdirs();
             }
             File log8File = new File(mPath + fileName + "888888/");
             if (!log8File.exists()) {
-//                log8File.mkdirs();
             }
             File log9File = new File(mPath + fileName + "999999/");
             if (!log9File.exists()) {
-//                log9File.mkdirs();
             }
 
 
@@ -369,11 +360,6 @@ public class FolderUtil {
         return Topdon.getApp().getExternalFilesDir("").getAbsolutePath() + fileName + "Download/";
     }
 
-    /**
-     * AUTOVINLOG
-     *
-     * @return string
-     */
     public static String getAutoVinLogPath() {
         return Topdon.getApp().getExternalFilesDir("").getAbsolutePath() + fileName + mUserId + "/autovinLog/";
     }

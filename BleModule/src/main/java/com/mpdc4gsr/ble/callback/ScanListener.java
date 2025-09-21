@@ -2,10 +2,7 @@ package com.mpdc4gsr.ble.callback;
 
 import android.Manifest;
 
-
-
 import com.mpdc4gsr.ble.Device;
-
 
 public interface ScanListener {
 
@@ -15,20 +12,15 @@ public interface ScanListener {
 
     int ERROR_SCAN_FAILED = 2;
 
-
     void onScanStart();
 
-
     void onScanStop();
-
 
     @Deprecated
     default void onScanResult(Device device) {
     }
 
-
     void onScanResult(Device device, boolean isConnectedBySys);
-
 
     void onScanError(int errorCode, String errorMsg);
 }
