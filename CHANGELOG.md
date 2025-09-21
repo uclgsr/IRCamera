@@ -1,5 +1,6 @@
 # Changelog
 
+
 ## [2.1.1] - BLE Core Compilation Fixes (2024-12-21)
 
 ### Fixed
@@ -12,6 +13,33 @@
 ### Added
 - RequestCallback interface for BLE request handling
 - BleCallbacks interfaces for connection and characteristic callbacks
+
+## [2.1.1] - BLE Core GenericRequest Fix (2024-12-21)
+
+### Fixed
+- **GenericRequest Compilation**: Fixed all compilation errors in GenericRequest.kt
+- **Interface Implementation**: Properly implemented Request interface with override modifiers
+- **Property Initialization**: Fixed uninitialized properties and added proper defaults
+- **RequestBuilder**: Enhanced RequestBuilder interface with generic type parameter and required properties
+- **ConnectionState/RequestType**: Resolved merge conflict markers in enum classes
+- **Device Property**: Fixed device property handling with custom getter/setter pattern
+- **RequestCallback**: Added missing RequestCallback interface for BLE operations
+
+### Added
+- **RequestCallback Interface**: Created proper callback interface for BLE request handling
+
+## [2.1.2] - BLE Core WriteOptions Fix (2024-12-21)
+
+### Fixed
+- **WriteOptions.Builder**: Fixed private field access issue in WriteOptions constructor by changing Builder field visibility from private to internal
+- Resolved compilation errors: Cannot access packageWriteDelayMillis, requestWriteDelayMillis, packageSize, isWaitWriteResult, writeType, useMtuAsPackageSize
+
+## [2.1.1] - BLE Core Module Compilation Fix (2024-12-21)
+
+### Fixed
+- **BLE Core Interface**: Fixed missing `import java.util.UUID` statement in Request.kt interface
+- **Compilation Errors**: Resolved "Unresolved reference 'UUID'" compilation errors in BLE core module
+- **Code Consistency**: Aligned Request.kt import statements with other BLE core module files
 
 ## [2.1.0] - Gradle Build System Standardization (2024-12-21)
 
