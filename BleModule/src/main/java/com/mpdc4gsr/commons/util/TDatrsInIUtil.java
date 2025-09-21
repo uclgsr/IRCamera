@@ -1,9 +1,7 @@
 package com.mpdc4gsr.commons.util;
 
-import static com.topdon.lms.sdk.LMS.SUCCESS;
-
 import android.text.TextUtils;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
 import com.mpdc4gsr.lib.core.lms.LMS;
 import com.mpdc4gsr.lib.core.lms.network.IResponseCallback;
 import com.mpdc4gsr.lib.core.lms.utils.StringUtils;
