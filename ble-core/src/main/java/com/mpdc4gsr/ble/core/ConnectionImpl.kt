@@ -151,6 +151,7 @@ internal class ConnectionImpl(
         private const val MSG_CONNECT = 1
         private const val MSG_RECONNECT = 2
         private const val MSG_RELEASE = 3
+        private const val MSG_PROCESS_REQUEST = 4
     }
     
     // Required Connection interface properties
@@ -281,8 +282,16 @@ internal class ConnectionImpl(
     }
 
     override fun execute(request: Request?) {
-        if (request != null && !isReleased) {
-            requestQueue.add(GenericRequest())
+        if (request is GenericRequest && !isReleased) {
+            synchronized(requestQueue) {
+                if (requestQueue.contains(request)) {
+                    return
+                }
+                requestQueue.add(request)
+                Collections.sort(requestQueue)
+            }
+            // Process the request through the handler
+            connHandler.sendEmptyMessage(MSG_PROCESS_REQUEST)
         }
     }
 

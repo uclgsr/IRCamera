@@ -89,29 +89,6 @@ graph TB
         CompUser[com.mpdc4gsr.module.user.*]
     end
 ```
-    GSRRecording --> LibUI
-    
-    ThermalComponent --> LibApp
-    ThermalComponent --> LibIR
-    ThermalComponent --> LibUI
-    
-    UserComponent --> LibApp
-    UserComponent --> LibIR
-    UserComponent --> LibUI
-    
-    %% Internal library dependencies
-    LibIR --> LibApp
-    LibUI --> LibApp
-    
-    %% Support library dependencies
-    LibApp --> LibCom
-    LibIR --> LibMatrix
-    
-    %% External dependencies
-    LibApp --> BleModule
-    App --> RangeSeekBar
-    
-    PCController -.->|Network Protocol| LibCom
 ```
 
 ## Proposed Unified Architecture
