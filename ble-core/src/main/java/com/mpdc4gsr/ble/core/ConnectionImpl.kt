@@ -17,15 +17,6 @@ import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.core.util.Pair
 import com.mpdc4gsr.ble.core.callback.RequestCallback
-import com.mpdc4gsr.ble.core.callback.ScanListener
-import com.mpdc4gsr.ble.core.util.BluetoothPermissionUtils
-import com.mpdc4gsr.ble.core.util.HexUtil
-import com.mpdc4gsr.ble.core.util.Logger
-import com.mpdc4gsr.commons.observer.Observable
-import com.mpdc4gsr.commons.poster.MethodInfo
-import com.mpdc4gsr.commons.poster.PosterDispatcher
-import com.mpdc4gsr.commons.util.MathUtils
-import com.mpdc4gsr.commons.util.StringUtils
 import java.lang.ref.WeakReference
 import java.util.Collections
 import java.util.Locale
@@ -35,23 +26,23 @@ import java.util.concurrent.ConcurrentLinkedQueue
 internal class ConnectionImpl(
     private val easyBle: EasyBLE,
     private val bluetoothAdapter: BluetoothAdapter?,
-    private val device: Device,
+    override val device: Device,
     configuration: ConnectionConfiguration?,
     connectDelay: Int,
     observer: EventObserver?
 ) : Connection, ScanListener {
-    private val configuration: ConnectionConfiguration?
+    private val configuration: ConnectionConfiguration? = configuration
     private val requestQueue: MutableList<GenericRequest> = ArrayList<GenericRequest>()
-    private val observer: EventObserver?
-    private val connHandler: Handler
-    private val logger: Logger
-    private val observable: Observable
-    private val posterDispatcher: PosterDispatcher
-    private val gattCallback: BluetoothGattCallback = ConnectionImpl.BleGattCallback()
+    private val observer: EventObserver? = observer
+    private val connHandler: Handler = Handler(Looper.getMainLooper())
+    private val logger: Logger = DefaultLogger()
+    private val observable: Observable = DefaultObservable()
+    private val posterDispatcher: PosterDispatcher = DefaultPosterDispatcher()
+    private val gattCallback: BluetoothGattCallback = BleGattCallback()
     private var bluetoothGatt: BluetoothGatt? = null
     private var currentRequest: GenericRequest? = null
     private var isReleased = false
-    private var connStartTime: Long
+    private var connStartTime: Long = 0L
     private var refreshCount = 0
     private var tryReconnectCount = 0
     private var lastConnectionState: ConnectionState? = null
@@ -59,7 +50,7 @@ internal class ConnectionImpl(
     private var refreshing = false
     private var isActiveDisconnect = false
     private var lastScanStopTime: Long = 0
-    private var mtu = 23
+    override var mtu = 23
     private var originCallback: BluetoothGattCallback? = null
     private val connectRunnable: Runnable = object : Runnable {
         override fun run() {
@@ -68,17 +59,17 @@ internal class ConnectionImpl(
 
                 try {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        bluetoothGatt = device.getOriginDevice().connectGatt(
-                            easyBle.getContext(), false, gattCallback,
+                        bluetoothGatt = device.originDevice.connectGatt(
+                            easyBle.context, false, gattCallback,
                             configuration!!.transport, configuration.phy
                         )
                     } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        bluetoothGatt = device.getOriginDevice().connectGatt(
-                            easyBle.getContext(), false, gattCallback,
+                        bluetoothGatt = device.originDevice.connectGatt(
+                            easyBle.context, false, gattCallback,
                             configuration!!.transport
                         )
                     } else {
-                        bluetoothGatt = device.getOriginDevice().connectGatt(easyBle.getContext(), false, gattCallback)
+                        bluetoothGatt = device.originDevice.connectGatt(easyBle.context, false, gattCallback)
                     }
                 } catch (e: SecurityException) {
                     logE(
@@ -156,15 +147,52 @@ internal class ConnectionImpl(
         }
     }
 
-    override fun onScanResult(device: Device?, isConnectedBySys: Boolean) {
+    companion object {
+        private const val MSG_CONNECT = 1
+        private const val MSG_RECONNECT = 2
+        private const val MSG_RELEASE = 3
+    }
+    
+    // Required Connection interface properties
+    override val connectionState: ConnectionState
+        get() = device.connectionState
+    
+    override val isAutoReconnectEnabled: Boolean
+        get() = configuration?.isAutoReconnectEnabled ?: false
+        
+    override val gatt: BluetoothGatt?
+        get() = bluetoothGatt
+        
+    override val connectionConfiguration: ConnectionConfiguration
+        get() = configuration ?: ConnectionConfiguration()
+
+    // Required ScanListener interface methods
+    override fun onScanStart() {
+        // Implementation for scan start
+    }
+    
+    override fun onScanStop() {
+        // Implementation for scan stop
+    }
+    
+    override fun onScanResult(device: Device, rssi: Int, data: ByteArray) {
         synchronized(this) {
             if (!isReleased && this.device == device && this.device.connectionState == ConnectionState.SCANNING_FOR_RECONNECTION) {
                 connHandler.sendEmptyMessage(MSG_CONNECT)
             }
         }
     }
-
-    override fun onScanError(errorCode: Int, errorMsg: String?) {
+    
+    override fun onScanFailed(reason: Int) {
+        // Implementation for scan failed
+    }
+    
+    override fun onScanComplete() {
+        // Implementation for scan complete
+    }
+    
+    override fun onScanError(errorCode: Int, errorMessage: String) {
+        // Implementation for scan error
     }
 
     override fun setBluetoothGattCallback(callback: BluetoothGattCallback?) {
