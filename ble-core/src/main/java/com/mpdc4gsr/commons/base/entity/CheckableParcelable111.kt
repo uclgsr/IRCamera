@@ -14,9 +14,9 @@ class CheckableParcelable<T : Parcelable?> : CheckableItem<T?>, Parcelable {
     protected constructor(`in`: Parcel) {
         val bundle = `in`.readBundle(javaClass.getClassLoader())
         if (bundle != null) {
-            setData(bundle.getParcelable<Parcelable?>("items") as T?)
+            data = bundle.getParcelable<Parcelable?>("items") as T?
         }
-        setChecked(`in`.readByte().toInt() != 0)
+        _isChecked = `in`.readByte().toInt() != 0
     }
 
     override fun describeContents(): Int {
@@ -25,16 +25,16 @@ class CheckableParcelable<T : Parcelable?> : CheckableItem<T?>, Parcelable {
 
     override fun writeToParcel(dest: Parcel, flags: Int) {
         val bundle = Bundle()
-        bundle.putParcelable("items", getData())
+        bundle.putParcelable("items", data)
         dest.writeBundle(bundle)
-        dest.writeByte(if (isChecked()) 1.toByte() else 0.toByte())
+        dest.writeByte(if (isChecked) 1.toByte() else 0.toByte())
     }
 
     companion object {
         val CREATOR: Parcelable.Creator<CheckableParcelable<*>?> =
             object : Parcelable.Creator<CheckableParcelable<*>?> {
                 override fun createFromParcel(source: Parcel): CheckableParcelable<*> {
-                    return CheckableParcelable<Any?>(source)
+                    return CheckableParcelable<Parcelable?>(source)
                 }
 
                 override fun newArray(size: Int): Array<CheckableParcelable<*>?> {

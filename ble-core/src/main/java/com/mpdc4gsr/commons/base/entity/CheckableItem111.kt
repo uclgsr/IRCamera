@@ -4,7 +4,7 @@ import com.mpdc4gsr.commons.base.interfaces.Checkable
 
 open class CheckableItem<T> : Checkable<CheckableItem<T?>?> {
     var data: T? = null
-    private var isChecked = false
+    private var _isChecked = false
 
     constructor()
 
@@ -14,15 +14,14 @@ open class CheckableItem<T> : Checkable<CheckableItem<T?>?> {
 
     constructor(data: T?, isChecked: Boolean) {
         this.data = data
-        this.isChecked = isChecked
+        this._isChecked = isChecked
     }
 
-    override fun isChecked(): Boolean {
-        return isChecked
-    }
+    override val isChecked: Boolean
+        get() = _isChecked
 
-    override fun setChecked(isChecked: Boolean): CheckableItem<T?> {
-        this.isChecked = isChecked
+    override fun setChecked(isChecked: Boolean): CheckableItem<T?>? {
+        this._isChecked = isChecked
         return this
     }
 }

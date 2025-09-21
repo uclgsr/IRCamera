@@ -31,7 +31,7 @@ class PermissionsRequester {
         this.callback = callback
     }
 
-    fun checkAndRequest(permissions: MutableList<String?>) {
+    fun checkAndRequest(permissions: MutableList<String>) {
         if (checking) {
             return
         }

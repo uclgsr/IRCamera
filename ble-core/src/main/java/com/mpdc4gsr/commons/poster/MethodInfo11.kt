@@ -50,8 +50,8 @@ class MethodInfo(var name: String, var tag: String, vararg parameters: Parameter
         fun valueOf(method: Method): MethodInfo {
             val annotation = method.getAnnotation<Tag?>(Tag::class.java)
             return MethodInfo(
-                method.getName(), if (annotation == null) method.getName() else annotation.value,
-                method.getParameterTypes()
+                method.name, if (annotation == null) method.name else annotation.value,
+                method.parameterTypes
             )
         }
 
