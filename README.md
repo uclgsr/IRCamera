@@ -120,7 +120,7 @@ cd IRCamera
 ./dev.sh validate
 
 # Test library unification (experimental)
-./gradlew :libcore:assembleDebug
+./gradlew :libunified:assembleDebug
 ```
 
 ## Contributing
