@@ -1,5 +1,25 @@
 # Project Backlog
 
+## Current Priority - BLE Core Module Development
+
+### EPIC: BLE Core Module Stabilization - IN PROGRESS
+
+**Status**: IN PROGRESS ⚠️
+
+#### BLE Core Compilation Fixes (COMPLETED)
+- [x] Fix GenericRequest.kt compilation errors
+- [x] Resolve RequestBuilder interface issues
+- [x] Fix Request interface implementation
+- [x] Add missing RequestCallback interface
+- [x] Handle device property initialization correctly
+- [x] Fix enum class merge conflicts (RequestType, ConnectionState)
+
+#### BLE Core Next Steps (PENDING)
+- [ ] Fix remaining ConnectionImpl compilation issues
+- [ ] Add proper test coverage for GenericRequest
+- [ ] Validate BLE operations end-to-end
+- [ ] Review and clean up unused/legacy BLE code
+
 ## High Priority - Build System Maintenance ✅ COMPLETED
 
 ### EPIC: Gradle Build System Standardization - COMPLETED

@@ -1,5 +1,72 @@
 # IRCamera Architecture Diagrams
 
+## BLE Core Module Interface Structure (2024-12-21)
+
+### GenericRequest Class Hierarchy
+
+```mermaid
+classDiagram
+    class Request {
+        <<interface>>
+        +val device: Device
+        +val type: RequestType
+        +val tag: String?
+        +val service: UUID?
+        +val characteristic: UUID?
+        +val descriptor: UUID?
+        +execute(connection: Connection?)
+    }
+    
+    class RequestBuilder {
+        <<interface>>
+        +val tag: String?
+        +val type: RequestType
+        +val service: UUID?
+        +val characteristic: UUID?
+        +val descriptor: UUID?
+        +val priority: Int
+        +val value: Any?
+        +val callback: RequestCallback?
+        +val writeOptions: WriteOptions?
+        +build(): Request
+        +setCallback(callback: Any): T
+        +setTimeout(timeoutMillis: Long): T
+    }
+    
+    class GenericRequest {
+        +override val tag: String?
+        +override val device: Device
+        -_device: Device?
+        +override val type: RequestType
+        +override val service: UUID?
+        +override val characteristic: UUID?
+        +override val descriptor: UUID?
+        +var value: Any?
+        +var priority: Int
+        +var callback: RequestCallback?
+        +var writeOptions: WriteOptions?
+        +compareTo(other: GenericRequest): Int
+        +setDevice(device: Device): void
+        +execute(connection: Connection?)
+    }
+    
+    class RequestCallback {
+        <<interface>>
+        +onResult(success: Boolean, message: String?)
+        +onProgress(progress: Int)
+    }
+    
+    class Comparable {
+        <<interface>>
+        +compareTo(T): Int
+    }
+    
+    Request <|.. GenericRequest
+    Comparable <|.. GenericRequest
+    RequestBuilder ..> Request : builds
+    GenericRequest --> RequestCallback : uses
+```
+
 ## Current Standardized Build System (2024-12-21)
 
 ### Gradle Build System Structure
