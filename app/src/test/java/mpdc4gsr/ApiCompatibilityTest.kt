@@ -26,7 +26,7 @@ class ApiCompatibilityTest {
 
         try {
 
-            val className = "com.topdon.tc001.network.NetworkClient"
+            val className = "com.mpdc4gsr.network.NetworkClient"
             val clazz = Class.forName(className)
             assertNotNull(clazz)
         } catch (e: ClassNotFoundException) {

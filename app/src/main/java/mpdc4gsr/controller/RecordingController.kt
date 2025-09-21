@@ -273,7 +273,7 @@ class RecordingController(
                 createCrashRecoveryMarker(finalSessionId, enabledSensors)
 
 
-                val utilMetadata = com.topdon.tc001.util.SessionMetadata(
+                val utilMetadata = com.mpdc4gsr.util.SessionMetadata(
                     startTime = sessionMetadata!!.sessionStartTimestampMs,
                     enabledSensors = enabledSensors,
                     participantId = participantId,

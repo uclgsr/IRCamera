@@ -1,23 +1,17 @@
 # Changelog
 
-All notable changes to this project will be documented in this file.
-
 ## [Unreleased]
 
-### Fixed
-- Fixed all Kotlin compilation warnings in libapp module
-  - Resolved String? to String type mismatch in GuideInterface.kt
-  - Added null safety checks for ByteArray? parameters in RingBuffer.kt
-  - Removed redundant null checks on non-null properties in UsbBuffer.kt
-  - Added @OptIn annotation for ExperimentalUnsignedTypes in ByteUtils.kt
-  - Fixed unsafe calls on nullable Array<File> receiver in FileUtils.kt
-  - Applied fixes to duplicate files in com.mpdc4gsr package
+### Removed
+- **BREAKING**: Removed redundant RangeSeekBar standalone module
+  - The standalone RangeSeekBar module was redundant with libui seekbar implementation
+  - ColorPickDialog now uses a simplified local RangeSeekBar implementation in libapp
+  - Removed external dependency and simplified project structure
+  - Updated all documentation to reflect module removal
 
 ### Changed
-- Improved type safety across matrix processing components
-- Enhanced null safety handling for file operations
+- Updated project architecture diagrams and documentation
+- Simplified build system by removing unnecessary module dependencies
 
-### Technical Details
-- No breaking changes to existing functionality
-- All fixes maintain backward compatibility
-- Compilation now produces zero warnings for libapp module
+## Previous Changes
+- See git history for detailed changes prior to this changelog

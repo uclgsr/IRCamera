@@ -1,14 +1,16 @@
 package com.mpdc4gsr.lib.core.bean
 
+import android.annotation.SuppressLint
 import android.os.Parcel
 import android.os.Parcelable
 import com.mpdc4gsr.lib.core.config.FileConfig
 import com.mpdc4gsr.lib.core.repository.FileBean
 import com.mpdc4gsr.lib.core.tools.TimeTool
 import com.mpdc4gsr.lib.core.tools.VideoTools
-import kotlinx.parcelize.Parcelize
+import kotlinx.android.parcel.Parcelize
 import java.io.File
 import java.util.TimeZone
+import java.util.Timer
 
 @Parcelize
 open class GalleryBean(
@@ -41,6 +43,7 @@ open class GalleryBean(
     )
 }
 
+@SuppressLint("ParcelCreator")
 class GalleryTitle(timeMillis: Long) : GalleryBean(
     id = 0,
     path = "",
@@ -49,14 +52,4 @@ class GalleryTitle(timeMillis: Long) : GalleryBean(
     duration = 0L,
     timeMillis = timeMillis,
     hasDownload = true,
-) {
-    companion object CREATOR : Parcelable.Creator<GalleryTitle> {
-        override fun createFromParcel(parcel: Parcel): GalleryTitle {
-            return GalleryTitle(parcel.readLong())
-        }
-
-        override fun newArray(size: Int): Array<GalleryTitle?> {
-            return arrayOfNulls(size)
-        }
-    }
-}
+)

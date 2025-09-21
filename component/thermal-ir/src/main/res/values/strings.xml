@@ -119,9 +119,9 @@
     <string name="thermal_false_color">False Color</string>
     <string name="app_setting">Settings</string>
     <string name="func_temper_ruler">Temperature Ruler</string>
-    <string name="thermal_point">点</string>
-    <string name="thermal_line">线</string>
-    <string name="thermal_rect">矩形</string>
+    <string name="thermal_point">[ph]</string>
+    <string name="thermal_line">[ph]</string>
+    <string name="thermal_rect">[ph][ph]</string>
     <string name="pdf_project_item">Project Item</string>
     <string name="report_remark">Remark</string>
     <string name="currency">Currency</string>

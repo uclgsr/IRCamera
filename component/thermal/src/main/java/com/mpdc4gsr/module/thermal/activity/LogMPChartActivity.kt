@@ -68,8 +68,8 @@ class LogMPChartActivity : BaseActivity(), OnChartValueSelectedListener {
             try {
                 initEntry(it.dataList)
             } catch (e: Exception) {
-                XLog.e("刷新图表异常:${e.message}")
-                ToastTools.showShort("图表异常，请重新加载")
+                XLog.e("[ph][ph][ph][ph][ph][ph]:${e.message}")
+                ToastTools.showShort("[ph][ph][ph][ph]，[ph][ph][ph][ph][ph]")
             }
         }
         clearEntity(true)
@@ -206,10 +206,10 @@ class LogMPChartActivity : BaseActivity(), OnChartValueSelectedListener {
                 if (lineData != null) {
                     Log.w(
                         "123",
-                        "时间区间:${(data.last().createTime - data.first().createTime) / 1000}",
+                        "[ph][ph][ph][ph]:${(data.last().createTime - data.first().createTime) / 1000}",
                     )
                     val startTime = data[0].createTime
-                    Log.w("123", "设置初始时间startTime:$startTime")
+                    Log.w("123", "[ph][ph][ph][ph][ph][ph]startTime:$startTime")
                     chart.xAxis.valueFormatter =
                         MyValueFormatter(startTime = startTime, type = selectType)
                     XLog.w("chart init startTime:$startTime")
@@ -242,7 +242,7 @@ class LogMPChartActivity : BaseActivity(), OnChartValueSelectedListener {
                                 minDataSet = createSet(1, "line minTemp")
                                 lineData.addDataSet(minDataSet)
                             }
-                            Log.w("123", "两条曲线")
+                            Log.w("123", "[ph][ph][ph][ph]")
                             data.forEach {
                                 val x = (it.createTime - startTime).toFloat()
 

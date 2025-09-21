@@ -103,7 +103,7 @@ opengl = "2.0.0"
 
 
 utilcode = "1.31.1"
-xxpermissions = "18.5"
+xxpermissions = "20.0"
 xlog = "1.11.0"
 lottie = "6.0.1"
 eventbus = "3.3.1"
@@ -297,8 +297,8 @@ javacpp = { group = "org.bytedeco", name = "javacpp", version.ref = "javacv" }
 ir-layout = { group = "com.github.CoderCaiSL", name = "jitpackMvn", version = "+" }
 
 
-lms2-user = { group = "com.topdon.lms.sdk3", name = "lms_international", version.ref = "lmsInternational" }
-lms3-user = { group = "com.topdon.lms.sdk3", name = "lms_china", version.ref = "lmsChina" }
+lms2-user = { group = "com.mpdc4gsr.lms.sdk3", name = "lms_international", version.ref = "lmsInternational" }
+lms3-user = { group = "com.mpdc4gsr.lms.sdk3", name = "lms_china", version.ref = "lmsChina" }
 
 
 ffmpeg-android-arm64 = { group = "org.bytedeco", name = "ffmpeg", version.ref = "ffmpeg" }

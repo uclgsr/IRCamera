@@ -47,20 +47,20 @@ class MenuTabAdapter(val context: Context) :
 
     private val secondMenusStr =
         arrayListOf(
-            "点",
-            "线",
-            "面",
-            "添加",
-            "全图",
-            "删除",
+            "[ph]",
+            "[ph]",
+            "[ph]",
+            "[ph][ph]",
+            "[ph][ph]",
+            "[ph][ph]",
         )
 
     private val fourthMenusStr =
         arrayListOf(
-            "旋转",
+            "[ph][ph]",
             "Enhance",
-            "画中画",
-            "色带",
+            "[ph][ph][ph]",
+            "[ph][ph]",
         )
 
     private val thirdMenus =

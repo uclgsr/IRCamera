@@ -31,7 +31,7 @@
         app:layout_constraintEnd_toStartOf="@+id/view_line_right"
         app:layout_constraintStart_toEndOf="@id/view_line_left"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="金属" />
+        tools:text="[ph][ph]" />
 
     <View
         android:id="@+id/view_line_right"

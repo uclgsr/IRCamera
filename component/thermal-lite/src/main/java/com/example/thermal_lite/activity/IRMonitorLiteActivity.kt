@@ -118,9 +118,9 @@ open class IRMonitorLiteActivity : BaseActivity(), View.OnClickListener, ITsTemp
                         if (isFirstRead) {
                             if (result.maxTemperature > 200f || result.minTemperature < -200f) {
                                 errorReadCount++
-                                XLog.w("第 $errorReadCount 次读取到异常数据，max = ${result.maxTemperature} min = ${result.minTemperature}")
+                                XLog.w("[ph] $errorReadCount [ph][ph][ph][ph][ph][ph][ph][ph]，max = ${result.maxTemperature} min = ${result.minTemperature}")
                                 if (errorReadCount > 10) {
-                                    XLog.i("连续10次获取到异常数据，认为温度区域稳定")
+                                    XLog.i("[ph][ph]10[ph][ph][ph][ph][ph][ph][ph][ph]，[ph][ph][ph][ph][ph][ph][ph][ph]")
                                     isFirstRead = false
                                 }
                                 continue
@@ -203,7 +203,7 @@ open class IRMonitorLiteActivity : BaseActivity(), View.OnClickListener, ITsTemp
                             TimeTool.showVideoLongTime(System.currentTimeMillis() - startTime)
                     }
                 }
-                XLog.w("停止记录, 数据量:$time")
+                XLog.w("[ph][ph][ph][ph], [ph][ph][ph]:$time")
             }
     }
 
@@ -268,7 +268,7 @@ open class IRMonitorLiteActivity : BaseActivity(), View.OnClickListener, ITsTemp
 
     fun select(selectIndex: SelectPositionBean?) {
         this.selectIndex = selectIndex
-        XLog.i("绘制的点线面：${Gson().toJson(selectIndex)}")
+        XLog.i("[ph][ph][ph][ph][ph][ph]：${Gson().toJson(selectIndex)}")
     }
 
     private fun updateUI() {
@@ -305,7 +305,7 @@ open class IRMonitorLiteActivity : BaseActivity(), View.OnClickListener, ITsTemp
                         DeviceIrcmdControlManager.getInstance().getIrcmdEngine()
                             ?.basicGainGet(basicGainGetValue)
                 } catch (e: Exception) {
-                    XLog.e("增益获取失败")
+                    XLog.e("[ph][ph][ph][ph][ph][ph]")
                 }
                 basicGainGetTime = System.currentTimeMillis()
             }
@@ -338,7 +338,7 @@ open class IRMonitorLiteActivity : BaseActivity(), View.OnClickListener, ITsTemp
                         "distance = " + params_array[4] + " hum = " + params_array[5],
             )
         } catch (e: Exception) {
-            XLog.e("$TAG--温度修正异常：${e.message}")
+            XLog.e("$TAG--[ph][ph][ph][ph][ph][ph]：${e.message}")
         } finally {
             return tempNew ?: 0f
         }

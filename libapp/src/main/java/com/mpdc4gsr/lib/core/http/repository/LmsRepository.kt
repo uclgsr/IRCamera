@@ -28,7 +28,7 @@ object LmsRepository {
                     result = Gson().fromJson(responseBean.data.toString(), CheckVersionJson::class.java)
                 }
             } catch (e: Exception) {
-                XLog.e("version json解析异常: ${e.message}")
+                XLog.e("version json[ph][ph][ph][ph]: ${e.message}")
             }
             downLatch.countDown()
         }
@@ -52,7 +52,7 @@ object LmsRepository {
                             result = json.data
                         }
                     } catch (e: Exception) {
-                        XLog.e("json解析异常: ${e.message}")
+                        XLog.e("json[ph][ph][ph][ph]: ${e.message}")
                     }
                     downLatch.countDown()
                 }

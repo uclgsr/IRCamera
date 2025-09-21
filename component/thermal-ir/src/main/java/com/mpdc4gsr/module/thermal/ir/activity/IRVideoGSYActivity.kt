@@ -55,7 +55,7 @@ class IRVideoGSYActivity : BaseActivity() {
         BarUtils.setNavBarColor(this, ContextCompat.getColor(this, UiR.color.black))
 
         isRemote = intent.getBooleanExtra("isRemote", false)
-        data = intent.getParcelableExtra("data") ?: throw NullPointerException("传递 data")
+        data = intent.getParcelableExtra("data") ?: throw NullPointerException("[ph][ph] data")
 
         clBottom.isVisible = isRemote
 

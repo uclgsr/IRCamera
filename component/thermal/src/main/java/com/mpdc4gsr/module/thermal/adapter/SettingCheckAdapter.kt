@@ -59,7 +59,7 @@ class SettingCheckAdapter(val context: Context) :
                 )
             }
             holder.btn.setOnClickListener {
-                Log.w("123", "文件: ${datas[position]}")
+                Log.w("123", "[ph][ph]: ${datas[position]}")
                 listener?.onClick(position, dataTimes[position])
             }
         }

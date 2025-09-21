@@ -18,7 +18,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="环境温度 (-10~55°C)" />
+        tools:text="[ph][ph][ph][ph] (-10~55°C)" />
 
     <TextView
         android:id="@+id/view_input_bg"

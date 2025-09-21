@@ -1,4 +1,4 @@
-package mpdc4gsr
+package mpdc4gsr.activities
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -834,7 +834,7 @@ class IRGalleryEditActivity : BaseBindingActivity<ActivityIrGalleryEditBinding>(
         try {
             tmp = tempCorrect(temp!!)
         } catch (e: Exception) {
-            XLog.i("温度校正失败: ${e.message}")
+            XLog.i("[ph][ph][ph][ph][ph][ph]: ${e.message}")
         }
         return tmp!!
     }

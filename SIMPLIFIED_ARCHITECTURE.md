@@ -30,7 +30,6 @@ IRCamera/
         +-- gsr-recording/      # GSR data recording
         +-- user/               # User management
         +-- pseudo/             # Pseudo-color mapping
-    +-- RangeSeekBar/          # UI range selector
 
 +-- Library Organization
     +-- consolidated_libraries/ # Consolidated support libraries

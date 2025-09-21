@@ -151,9 +151,9 @@ class IRMonitorChartActivity : BaseActivity(), ITsTempListener {
                     if (isFirstRead) {
                         if (result.maxTemperature > 200f || result.minTemperature < -200f) {
                             errorReadCount++
-                            XLog.w("第 $errorReadCount 次读取到异常数据，max = ${result.maxTemperature} min = ${result.minTemperature}")
+                            XLog.w("[ph] $errorReadCount [ph][ph][ph][ph][ph][ph][ph][ph]，max = ${result.maxTemperature} min = ${result.minTemperature}")
                             if (errorReadCount > 10) {
-                                XLog.i("连续10次获取到异常数据，认为温度区域稳定")
+                                XLog.i("[ph][ph]10[ph][ph][ph][ph][ph][ph][ph][ph]，[ph][ph][ph][ph][ph][ph][ph][ph]")
                                 isFirstRead = false
                             }
                             continue
@@ -199,7 +199,7 @@ class IRMonitorChartActivity : BaseActivity(), ITsTempListener {
                         }
                     }
                 } catch (e: Exception) {
-                    Log.e("测试", "//" + e.message)
+                    Log.e("[ph][ph]", "//" + e.message)
                 }
             }, 1500)
         }
@@ -296,7 +296,7 @@ class IRMonitorChartActivity : BaseActivity(), ITsTempListener {
                         }
                     }
                 }
-                XLog.w("停止记录, 数据量:$time")
+                XLog.w("[ph][ph][ph][ph], [ph][ph][ph]:$time")
             }
     }
 
@@ -344,7 +344,7 @@ class IRMonitorChartActivity : BaseActivity(), ITsTempListener {
 
         if (Usbcontorl.isload) {
             Usbcontorl.usb3803_mode_setting(1)
-            Log.w("123", "打开5V")
+            Log.w("123", "[ph][ph]5V")
         }
     }
 
@@ -371,7 +371,7 @@ class IRMonitorChartActivity : BaseActivity(), ITsTempListener {
             imageThread!!.setRotate(rotateAngle)
             imageThread!!.start()
         } catch (e: Exception) {
-            Log.e("图像线程重复启动", e.message.toString())
+            Log.e("[ph][ph][ph][ph][ph][ph][ph][ph]", e.message.toString())
         }
     }
 
@@ -460,7 +460,7 @@ class IRMonitorChartActivity : BaseActivity(), ITsTempListener {
             val config = ConfigRepository.readConfig(false)
             val disChar = (config.distance * 128).toInt()
             val emsChar = (config.radiation * 128).toInt()
-            XLog.w("设置TPD_PROP DISTANCE:$disChar, EMS:$emsChar}")
+            XLog.w("[ph][ph]TPD_PROP DISTANCE:$disChar, EMS:$emsChar}")
             val timeMillis = 250L
             delay(timeMillis)
 
@@ -589,7 +589,7 @@ class IRMonitorChartActivity : BaseActivity(), ITsTempListener {
         try {
             tmp = tempCorrect(temp!!, gainStatus, 0)
         } catch (e: Exception) {
-            XLog.i("温度校正失败: ${e.message}")
+            XLog.i("[ph][ph][ph][ph][ph][ph]: ${e.message}")
         }
         return tmp!!
     }

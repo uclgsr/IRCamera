@@ -314,7 +314,7 @@ data class GSRPersistenceStats(
     val csvFilePath: String,
     val sessionId: String,
     val isActive: Boolean,
-    val bufferStats: com.topdon.tc001.util.WriteStats? = null,
+    val bufferStats: com.mpdc4gsr.util.WriteStats? = null,
 ) {
     val totalDataSizeBytes: Long
         get() = bufferStats?.bytesWritten ?: 0L

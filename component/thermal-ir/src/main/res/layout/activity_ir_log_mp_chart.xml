@@ -126,5 +126,5 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/btn_ex"
-        tools:text="导出路径：Android/tc00/excel" />
+        tools:text="[ph][ph][ph][ph]：Android/tc00/excel" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -71,7 +71,7 @@ class PDFListActivity : BaseViewModelActivity<PdfViewModel>() {
             it?.let { data ->
                 if (page == 1) {
 
-                    if (data.code == LMS.SUCCESS) {
+                    if (data.code.toString() == LMS.SUCCESS) {
                         reportAdapter.loadMoreModule.isEnableLoadMore =
                             !data.data?.records.isNullOrEmpty()
                         fragmentPdfRecyclerLay.finishRefresh()
@@ -81,7 +81,7 @@ class PDFListActivity : BaseViewModelActivity<PdfViewModel>() {
                     reportAdapter.setNewInstance(data.data?.records)
                 } else {
                     data.data?.records?.let { it1 -> reportAdapter.addData(it1) }
-                    if (data.code == LMS.SUCCESS) {
+                    if (data.code.toString() == LMS.SUCCESS) {
                         if (data.data?.records.isNullOrEmpty()) {
                             reportAdapter.loadMoreModule.loadMoreEnd()
                         } else {
@@ -153,7 +153,7 @@ class PDFListActivity : BaseViewModelActivity<PdfViewModel>() {
                                 LanguageUtil.getLanguageId(Utils.getApp())
                             )
                             params.addBodyParameter("reportType", 2)
-                            HttpProxy.instant.post(
+                            HttpProxy.getInstant().post(
                                 url, params,
                                 object :
                                     IResponseCallback {
@@ -165,7 +165,7 @@ class PDFListActivity : BaseViewModelActivity<PdfViewModel>() {
                                         if (file.exists()) {
                                             file.delete()
                                         }
-                                        Log.w("删除成功", response.toString())
+                                        Log.w("[ph][ph][ph][ph]", response.toString())
                                     }
 
                                     override fun onFail(exception: Exception?) {

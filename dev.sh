@@ -157,7 +157,6 @@ graph TB
     %% External Module Layer
     subgraph "External Modules"
         BleModule[📡 BleModule<br/>Bluetooth Low Energy]
-        RangeSeekBar[🎚️ RangeSeekBar<br/>UI Range Selector]
     end
     
     %% CI/CD Pipeline
@@ -218,7 +217,7 @@ graph TB
     class App,MainActivity appLayer
     class LibApp,LibCom,LibIR,LibMatrix,LibMenu,LibUI libLayer
     class ThermalIR,Thermal,ThermalLite,GSRRecording,UserComp,PseudoComp,CommonComp componentLayer
-    class BleModule,RangeSeekBar externalLayer
+    class BleModule externalLayer
     class DevScript,CIWorkflow,GradleBuild,StaticAnalysis cicdLayer
     class GradleBuild2,VersionCatalog,Settings buildLayer
 ```
@@ -333,7 +332,6 @@ EOF
             %% External Module Layer
             subgraph "External Modules"
                 BleModule[📡 BleModule<br/>Bluetooth Low Energy]
-                RangeSeekBar[🎚️ RangeSeekBar<br/>UI Range Selector]
             end
             
             %% CI/CD Pipeline

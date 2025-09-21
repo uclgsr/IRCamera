@@ -19,7 +19,7 @@ class OKLogInterceptor(val isTC007: Boolean) : Interceptor {
             if (requestBody != null && (contentType == null || contentType == "application/json")) {
                 val buffer = Buffer()
                 requestBody.writeTo(buffer)
-                XLog.tag("RetrofitLog").v("请求：${buffer.readString(StandardCharsets.UTF_8)}")
+                XLog.tag("RetrofitLog").v("[ph][ph]：${buffer.readString(StandardCharsets.UTF_8)}")
             }
         }
 
@@ -46,9 +46,9 @@ class OKLogInterceptor(val isTC007: Boolean) : Interceptor {
                 val responseStr = source.buffer.clone().readString(StandardCharsets.UTF_8)
                 if (responseStr.length > 1024) {
                     XLog.tag("RetrofitLog")
-                        .v("响应：${responseStr.substring(0, 1024)} ...太长了后面省略")
+                        .v("[ph][ph]：${responseStr.substring(0, 1024)} ...[ph][ph][ph][ph][ph][ph][ph]")
                 } else {
-                    XLog.tag("RetrofitLog").v("响应：$responseStr")
+                    XLog.tag("RetrofitLog").v("[ph][ph]：$responseStr")
                 }
             }
         }

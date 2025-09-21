@@ -1,4 +1,4 @@
-package mpdc4gsr.service
+package mpdc4gsr.core
 
 import android.app.Notification
 import android.app.NotificationChannel
@@ -29,7 +29,7 @@ import mpdc4gsr.config.FeatureFlags
 import mpdc4gsr.config.ProtocolVersion
 import mpdc4gsr.controller.RecordingController
 import mpdc4gsr.controller.RecordingState
-import mpdc4gsr.core.StructuredLogger
+import mpdc4gsr.lib.core.StructuredLogger
 import mpdc4gsr.network.NetworkClient
 import mpdc4gsr.network.NetworkServer
 import mpdc4gsr.network.PreviewDataAdapter

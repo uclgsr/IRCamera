@@ -233,7 +233,7 @@
             app:layout_constraintEnd_toStartOf="@+id/tv_default_em_value"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="发射率 (0.01~1.00)" />
+            tools:text="[ph][ph][ph] (0.01~1.00)" />
 
         <TextView
             android:id="@+id/space_default_em_title"

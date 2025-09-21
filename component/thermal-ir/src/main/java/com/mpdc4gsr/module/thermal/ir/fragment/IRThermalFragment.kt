@@ -236,6 +236,7 @@ class IRThermalFragment : BaseFragment(), View.OnClickListener {
         }
     }
 
+
     private var tipConnectDialog: TipDialog? = null
 
     private var isCancelUpdateVersion = false

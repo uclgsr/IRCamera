@@ -77,7 +77,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintWidth_percent="0.8"
-            tools:text="Copyright %s2023-2024 %s公司名 Technology Co.,Ltd.\nAll Rights Reserved." />
+            tools:text="Copyright %s2023-2024 %s[ph][ph][ph] Technology Co.,Ltd.\nAll Rights Reserved." />
 
         <View
             android:id="@+id/version_line"

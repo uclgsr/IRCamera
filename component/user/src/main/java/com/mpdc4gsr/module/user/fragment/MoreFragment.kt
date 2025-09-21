@@ -208,7 +208,7 @@ class MoreFragment : BaseFragment(), View.OnClickListener {
                 if (firmwareData != null) {
                     showFirmwareUpDialog(firmwareData)
                 } else {
-                    XLog.i("TC007 固件升级 - 点击查询")
+                    XLog.i("TC007 [ph][ph][ph][ph] - [ph][ph][ph][ph]")
                     showLoadingDialog()
                     firmwareViewModel.queryFirmware(false)
                 }
@@ -300,7 +300,7 @@ class MoreFragment : BaseFragment(), View.OnClickListener {
 
     private fun installFirmware(file: File) {
         lifecycleScope.launch {
-            XLog.d("TC007 固件升级 - 开始安装固件升级包")
+            XLog.d("TC007 [ph][ph][ph][ph] - [ph][ph][ph][ph][ph][ph][ph][ph][ph]")
             val installDialog = FirmwareInstallDialog(requireContext())
             installDialog.show()
 
@@ -308,7 +308,7 @@ class MoreFragment : BaseFragment(), View.OnClickListener {
             val isSuccess = false
             installDialog.dismiss()
             if (isSuccess) {
-                XLog.d("TC007 固件升级 - 固件升级包发送往 TC007 成功，即将断开连接")
+                XLog.d("TC007 [ph][ph][ph][ph] - [ph][ph][ph][ph][ph][ph][ph][ph] TC007 [ph][ph]，[ph][ph][ph][ph][ph][ph]")
                 (requireActivity().application as BaseApplication).disconnectWebSocket()
                 TipDialog.Builder(requireContext())
                     .setTitleMessage(getString(RCore.string.app_tip))
@@ -322,7 +322,7 @@ class MoreFragment : BaseFragment(), View.OnClickListener {
                     }
                     .create().show()
             } else {
-                XLog.w("TC007 固件升级 - 固件升级包发送往 TC007 失败!")
+                XLog.w("TC007 [ph][ph][ph][ph] - [ph][ph][ph][ph][ph][ph][ph][ph] TC007 [ph][ph]!")
                 showReInstallDialog(file)
             }
         }
@@ -371,7 +371,7 @@ class MoreFragment : BaseFragment(), View.OnClickListener {
             // TC007Repository functionality removed
             val isSuccess = false
             if (isSuccess) {
-                XLog.d("TC007 恢复出厂设置成功，即将断开连接")
+                XLog.d("TC007 [ph][ph][ph][ph][ph][ph][ph][ph]，[ph][ph][ph][ph][ph][ph]")
                 TToast.shortToast(requireContext(), RCore.string.ts004_reset_tip4)
                 (requireActivity().application as BaseApplication).disconnectWebSocket()
                 // EventBus.getDefault().post(TS004ResetEvent()) // TS004ResetEvent removed

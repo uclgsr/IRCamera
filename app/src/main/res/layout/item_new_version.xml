@@ -43,7 +43,7 @@
 
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="版本2.00.003" />
+            tools:text="[ph][ph]2.00.003" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
