@@ -156,7 +156,7 @@ public class BluetoothManager implements EventObserver {
     @RunOn(ThreadMode.MAIN)
     @Override
     public void onConnectionStateChanged(@NonNull Device device) {
-        if (device.getConnectionState() != ConnectionState.SERVICE_DISCOVERED || device.getConnectionState() != ConnectionState.DISCONNECTED) {
+        if (device.getConnectionState() != ConnectionState.SERVICE_DISCOVERED && device.getConnectionState() != ConnectionState.DISCONNECTED) {
             EventBus.getDefault().post(device.getConnectionState());
             Log.e("wangchen", "--" + device.getConnectionState());
         }
