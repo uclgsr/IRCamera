@@ -13,8 +13,8 @@ internal class ObserverMethodHelper(private val isObserveAnnotationRequired: Boo
     }
 
     fun generateRunnable(observer: Observer?, method: Method, info: MethodInfo): Runnable {
-        val parameters = info.getParameters()
-        if (parameters == null || parameters.size == 0) {
+        val parameters = info.parameters
+        if (parameters == null || parameters.isEmpty()) {
             return Runnable {
                 try {
                     method.invoke(observer)
@@ -28,7 +28,7 @@ internal class ObserverMethodHelper(private val isObserveAnnotationRequired: Boo
             val params = arrayOfNulls<Any>(parameters.size)
             for (i in parameters.indices) {
                 val parameter = parameters[i]
-                params[i] = parameter.getValue()
+                params[i] = parameter?.value
             }
             return Runnable {
                 try {
@@ -42,15 +42,17 @@ internal class ObserverMethodHelper(private val isObserveAnnotationRequired: Boo
         }
     }
 
-    fun generateKey(tag: String, name: String?, paramTypes: Array<Class<*>?>): String {
+    fun generateKey(tag: String, name: String?, paramTypes: Array<Class<*>?>?): String {
         val sb = StringBuilder()
         if (tag.isEmpty()) {
             sb.append(name)
         } else {
             sb.append(tag)
         }
-        for (type in paramTypes) {
-            sb.append(",").append(type)
+        if (paramTypes != null) {
+            for (type in paramTypes) {
+                sb.append(",").append(type)
+            }
         }
         return sb.toString()
     }
@@ -66,13 +68,13 @@ internal class ObserverMethodHelper(private val isObserveAnnotationRequired: Boo
         while (cls != null && !cls.isInterface() && Observer::class.java.isAssignableFrom(cls)) {
             var ms: Array<Method>? = null
             try {
-                ms = cls.getDeclaredMethods()
+                ms = cls.declaredMethods
             } catch (ignore: Throwable) {
             }
             if (ms != null) {
                 for (m in ms) {
                     val ignore = Modifier.ABSTRACT or Modifier.STATIC or 0x40 or 0x1000
-                    if ((m.getModifiers() and Modifier.PUBLIC) != 0 && (m.getModifiers() and ignore) == 0 && !contains(
+                    if ((m.modifiers and Modifier.PUBLIC) != 0 && (m.modifiers and ignore) == 0 && !contains(
                             methods,
                             m
                         )
@@ -81,14 +83,14 @@ internal class ObserverMethodHelper(private val isObserveAnnotationRequired: Boo
                     }
                 }
             }
-            cls = cls.getSuperclass()
+            cls = cls.superclass
         }
         for (method in methods) {
             val anno = method.getAnnotation<Observe?>(Observe::class.java)
             if (anno != null || !isObserveAnnotationRequired) {
                 val tagAnno = method.getAnnotation<Tag?>(Tag::class.java)
                 val tag = if (tagAnno == null) "" else tagAnno.value
-                val key = generateKey(tag, method.getName(), method.getParameterTypes())
+                val key = generateKey(tag, method.name, method.parameterTypes)
                 map.put(key, method)
             }
         }
@@ -104,8 +106,8 @@ internal class ObserverMethodHelper(private val isObserveAnnotationRequired: Boo
 
         private fun contains(methods: MutableList<Method>, method: Method): Boolean {
             for (m in methods) {
-                if (m.getName() == method.getName() && m.getReturnType() == method.getReturnType() &&
-                    equalParamTypes(m.getParameterTypes(), method.getParameterTypes())
+                if (m.name == method.name && m.returnType == method.returnType &&
+                    equalParamTypes(m.parameterTypes, method.parameterTypes)
                 ) {
                     return true
                 }
