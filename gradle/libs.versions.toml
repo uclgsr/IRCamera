@@ -33,6 +33,7 @@ androidxCore = "1.16.0"
 androidxAppcompat = "1.7.0"
 
 fragmentKtx = "1.8.9"
+androidxActivity = "1.9.3"
 androidxPreference = "1.2.1"
 material = "1.13.0"
 multidex = "2.0.1"
@@ -69,7 +70,7 @@ rxandroid = "2.1.1"
 arouter = "1.5.2"
 
 
-rxpermissions = "2.x.v0.9.3"
+rxpermissions = "3.0.0"
 rxlifecycle2 = "2.2.2"
 rxlifecycle3 = "3.1.0"
 
@@ -78,9 +79,9 @@ ucrop = "2.2.11-native"
 playAppUpdate = "2.1.0"
 immersionbar = "3.2.2"
 xpopup = "2.10.0"
-smartRefreshLayout = "2.1.0"
-smartRefreshLayoutV2 = "2.1.0"
-smartRefreshHeaderV2 = "2.1.0"
+smartRefreshLayout = "2.1.1"
+smartRefreshLayoutV2 = "2.1.1"
+smartRefreshHeaderV2 = "2.1.1"
 brvah = "3.0.11"
 colorpickerview = "2.3.0"
 photoview = "2.3.0"
@@ -103,7 +104,7 @@ opengl = "2.0.0"
 
 
 utilcode = "1.31.1"
-xxpermissions = "18.5"
+xxpermissions = "20.0"
 xlog = "1.11.0"
 lottie = "6.0.1"
 eventbus = "3.3.1"
@@ -191,6 +192,7 @@ androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = 
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidxAppcompat" }
 
 fragment-ktx = { group = "androidx.fragment", name = "fragment-ktx", version.ref = "fragmentKtx" }
+androidx-activity-ktx = { group = "androidx.activity", name = "activity-ktx", version.ref = "androidxActivity" }
 androidx-preference = { group = "androidx.preference", name = "preference", version.ref = "androidxPreference" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 multidex = { group = "androidx.multidex", name = "multidex", version.ref = "multidex" }
@@ -386,7 +388,7 @@ smart-refresh-v2 = ["refresh-layout-kernel", "refresh-header-classics", "refresh
 
 ui-common = ["androidx-core-ktx", "androidx-appcompat", "material", "glide"]
 
-thermal-common = ["androidx-core-ktx", "androidx-appcompat", "material", "glide", "xxpermissions", "eventbus"]
+thermal-common = ["androidx-core-ktx", "androidx-appcompat", "material", "glide", "xxpermissions", "eventbus"] # TODO: Migrate xxpermissions to androidx-activity-ktx
 
 camerax = ["camerax-core", "camerax-camera2", "camerax-lifecycle", "camerax-video", "camerax-view", "camerax-extensions"]
 

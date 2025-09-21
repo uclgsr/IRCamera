@@ -154,7 +154,7 @@ dependencies {
     api(libs.rxjava2)
     api(libs.rxandroid)
     api(libs.utilcode)
-    api(libs.xxpermissions)
+    api(libs.xxpermissions) // TODO: Migrate to androidx.activity-ktx permissions API
     api(libs.xlog)
     api(libs.photoview)
     api(libs.lottie)
