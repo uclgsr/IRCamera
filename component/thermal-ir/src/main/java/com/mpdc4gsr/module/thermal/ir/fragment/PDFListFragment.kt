@@ -88,11 +88,11 @@ class PDFListFragment : BaseViewModelFragment<PdfViewModel>() {
             }
             it?.let { data ->
                 val tvEmpty: TextView? = reportAdapter.emptyLayout?.findViewById(R.id.tv_empty)
-                tvEmpty?.setText(if (page == 1 && data.code != LMS.SUCCESS) R.string.request_fail else R.string.tip_no_more_data)
+                tvEmpty?.setText(if (page == 1 && data.code.toString() != LMS.SUCCESS) R.string.request_fail else R.string.tip_no_more_data)
 
                 if (page == 1) {
 
-                    if (data.code == LMS.SUCCESS) {
+                    if (data.code.toString() == LMS.SUCCESS) {
                         reportAdapter.loadMoreModule.isEnableLoadMore =
                             !data.data?.records.isNullOrEmpty()
                         fragmentPdfRecyclerLay.finishRefresh()
@@ -102,7 +102,7 @@ class PDFListFragment : BaseViewModelFragment<PdfViewModel>() {
                     reportAdapter.setNewInstance(data.data?.records)
                 } else {
                     data.data?.records?.let { it1 -> reportAdapter.addData(it1) }
-                    if (data.code == LMS.SUCCESS) {
+                    if (data.code.toString() == LMS.SUCCESS) {
                         if (data.data?.records.isNullOrEmpty()) {
                             reportAdapter.loadMoreModule.loadMoreEnd()
                         } else {
@@ -186,7 +186,7 @@ class PDFListFragment : BaseViewModelFragment<PdfViewModel>() {
                                 LanguageUtil.getLanguageId(Utils.getApp())
                             )
                             params.addBodyParameter("reportType", 2)
-                            HttpProxy.instant.post(
+                            HttpProxy.getInstant().post(
                                 url, params,
                                 object :
                                     IResponseCallback {

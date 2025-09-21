@@ -64,10 +64,10 @@ class ReportCreateFirstActivity : BaseActivity(), View.OnClickListener {
     private val etReportWatermark: android.widget.EditText by lazy { findViewById(R.id.et_report_watermark) }
     private val switchReportWatermark: android.widget.Switch by lazy { findViewById(R.id.switch_report_watermark) }
     private val etAmbientTemperature: android.widget.EditText by lazy { findViewById(R.id.et_ambient_temperature) }
-    private val tipSeekHumidity: com.topdon.lib.ui.widget.TipsSeekBar by lazy { findViewById(R.id.tip_seek_humidity) }
+    private val tipSeekHumidity: com.mpdc4gsr.lib.ui.widget.TipsSeekBar by lazy { findViewById(R.id.tip_seek_humidity) }
     private val switchAmbientHumidity: android.widget.Switch by lazy { findViewById(R.id.switch_ambient_humidity) }
     private val switchAmbientTemperature: android.widget.Switch by lazy { findViewById(R.id.switch_ambient_temperature) }
-    private val tipSeekEmissivity: com.topdon.lib.ui.widget.TipsSeekBar by lazy { findViewById(R.id.tip_seek_emissivity) }
+    private val tipSeekEmissivity: com.mpdc4gsr.lib.ui.widget.TipsSeekBar by lazy { findViewById(R.id.tip_seek_emissivity) }
     private val switchEmissivity: android.widget.Switch by lazy { findViewById(R.id.switch_emissivity) }
     private val etTestDistance: android.widget.EditText by lazy { findViewById(R.id.et_test_distance) }
     private val switchTestDistance: android.widget.Switch by lazy { findViewById(R.id.switch_test_distance) }
