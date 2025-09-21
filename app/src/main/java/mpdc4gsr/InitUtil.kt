@@ -16,13 +16,13 @@ import com.elvishew.xlog.printer.file.FilePrinter
 import com.elvishew.xlog.printer.file.backup.FileSizeBackupStrategy2
 import com.elvishew.xlog.printer.file.clean.FileLastModifiedCleanStrategy
 import com.elvishew.xlog.printer.file.naming.ChangelessFileNameGenerator
-import com.mpdc4gsr.lib.core.BaseApplication
-import com.mpdc4gsr.lib.core.broadcast.DeviceBroadcastReceiver
-import com.mpdc4gsr.lib.core.common.SharedManager
-import com.mpdc4gsr.lib.core.config.HttpConfig
-import com.mpdc4gsr.lib.core.lms.LMS
-import com.mpdc4gsr.lib.core.lms.utils.ConstantUtil
-import com.mpdc4gsr.lib.core.lms.utils.LanguageUtil
+import com.mpdc4gsr.libunified.app.BaseApplication
+import com.mpdc4gsr.libunified.app.broadcast.DeviceBroadcastReceiver
+import com.mpdc4gsr.libunified.app.common.SharedManager
+import com.mpdc4gsr.libunified.app.config.HttpConfig
+import com.mpdc4gsr.libunified.app.lms.LMS
+import com.mpdc4gsr.libunified.app.lms.utils.ConstantUtil
+import com.mpdc4gsr.libunified.app.lms.utils.LanguageUtil
 import java.util.Date
 
 object InitUtil {

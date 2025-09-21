@@ -8,8 +8,8 @@ import androidx.lifecycle.lifecycleScope
 import com.csl.irCamera.R
 import com.csl.irCamera.databinding.ActivityPolicyBinding
 import com.elvishew.xlog.XLog
-import com.mpdc4gsr.lib.core.BaseApplication
-import com.mpdc4gsr.lib.core.ktbase.BaseBindingActivity
+import com.mpdc4gsr.libunified.app.BaseApplication
+import com.mpdc4gsr.libunified.app.ktbase.BaseBindingActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch

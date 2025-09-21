@@ -23,14 +23,14 @@ import com.blankj.utilcode.util.ToastUtils
 import com.hjq.permissions.OnPermissionCallback
 import com.hjq.permissions.Permission
 import com.hjq.permissions.XXPermissions
-import com.mpdc4gsr.lib.core.BaseApplication
-import com.mpdc4gsr.lib.core.bean.ContinuousBean
-import com.mpdc4gsr.lib.core.bean.WatermarkBean
-import com.mpdc4gsr.lib.core.common.SharedManager
-import com.mpdc4gsr.lib.core.dialog.TipDialog
-import com.mpdc4gsr.lib.core.ktbase.BaseActivity
-import com.mpdc4gsr.lib.core.tools.TimeTool
-import com.mpdc4gsr.lib.core.utils.CommUtils
+import com.mpdc4gsr.libunified.app.BaseApplication
+import com.mpdc4gsr.libunified.app.bean.ContinuousBean
+import com.mpdc4gsr.libunified.app.bean.WatermarkBean
+import com.mpdc4gsr.libunified.app.common.SharedManager
+import com.mpdc4gsr.libunified.app.dialog.TipDialog
+import com.mpdc4gsr.libunified.app.ktbase.BaseActivity
+import com.mpdc4gsr.libunified.app.tools.TimeTool
+import com.mpdc4gsr.libunified.app.utils.CommUtils
 import com.mpdc4gsr.lib.ui.listener.SingleClickListener
 import com.mpdc4gsr.lib.ui.widget.BarPickView
 import com.mpdc4gsr.module.thermal.ir.R
@@ -38,7 +38,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.Locale
-import com.mpdc4gsr.lib.core.R as LibR
+import com.mpdc4gsr.libunified.app.R as LibR
 
 
 class IRCameraSettingActivity : BaseActivity() {

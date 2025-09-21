@@ -7,8 +7,8 @@ import androidx.core.content.FileProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.ScreenUtils
-import com.mpdc4gsr.lib.core.dialog.TipDialog
-import com.mpdc4gsr.lib.core.ktbase.BaseViewModelFragment
+import com.mpdc4gsr.libunified.app.dialog.TipDialog
+import com.mpdc4gsr.libunified.app.ktbase.BaseViewModelFragment
 import com.mpdc4gsr.module.thermal.R
 import com.mpdc4gsr.module.thermal.adapter.GalleryAdapter
 import com.mpdc4gsr.module.thermal.tools.GlideImageEngine

@@ -7,8 +7,8 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
-import com.mpdc4gsr.lib.core.ktbase.BaseActivity
-import com.mpdc4gsr.lib.core.tools.PermissionTool
+import com.mpdc4gsr.libunified.app.ktbase.BaseActivity
+import com.mpdc4gsr.libunified.app.tools.PermissionTool
 import com.mpdc4gsr.module.thermal.R
 import com.mpdc4gsr.module.thermal.fragment.GalleryPictureFragment
 import com.mpdc4gsr.module.thermal.fragment.GalleryVideoFragment

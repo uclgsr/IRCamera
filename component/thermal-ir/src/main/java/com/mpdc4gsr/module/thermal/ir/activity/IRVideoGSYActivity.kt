@@ -8,23 +8,23 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import com.blankj.utilcode.util.BarUtils
-import com.mpdc4gsr.lib.core.bean.GalleryBean
-import com.mpdc4gsr.lib.core.bean.event.GalleryDelEvent
-import com.mpdc4gsr.lib.core.config.FileConfig
-import com.mpdc4gsr.lib.core.dialog.ConfirmSelectDialog
-import com.mpdc4gsr.lib.core.dialog.TipDialog
-import com.mpdc4gsr.lib.core.ktbase.BaseActivity
-import com.mpdc4gsr.lib.core.lms.weiget.TToast
-import com.mpdc4gsr.lib.core.repository.TS004Repository
-import com.mpdc4gsr.lib.core.tools.FileTools
-import com.mpdc4gsr.lib.core.tools.TimeTool
-import com.mpdc4gsr.lib.core.tools.ToastTools
+import com.mpdc4gsr.libunified.app.bean.GalleryBean
+import com.mpdc4gsr.libunified.app.bean.event.GalleryDelEvent
+import com.mpdc4gsr.libunified.app.config.FileConfig
+import com.mpdc4gsr.libunified.app.dialog.ConfirmSelectDialog
+import com.mpdc4gsr.libunified.app.dialog.TipDialog
+import com.mpdc4gsr.libunified.app.ktbase.BaseActivity
+import com.mpdc4gsr.libunified.app.lms.weiget.TToast
+import com.mpdc4gsr.libunified.app.repository.TS004Repository
+import com.mpdc4gsr.libunified.app.tools.FileTools
+import com.mpdc4gsr.libunified.app.tools.TimeTool
+import com.mpdc4gsr.libunified.app.tools.ToastTools
 import com.mpdc4gsr.module.thermal.ir.R
 import com.mpdc4gsr.module.thermal.ir.event.GalleryDownloadEvent
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import java.io.File
-import com.mpdc4gsr.lib.core.R as LibR
+import com.mpdc4gsr.libunified.app.R as LibR
 import com.mpdc4gsr.lib.ui.R as UiR
 
 

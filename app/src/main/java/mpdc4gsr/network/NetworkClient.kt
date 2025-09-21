@@ -4,10 +4,10 @@ import android.content.Context
 import android.net.wifi.WifiManager
 import android.util.Log
 import com.mpdc4gsr.gsr.model.SessionInfo
-import com.mpdc4gsr.lib.core.discovery.NetworkDiscoveryService
-import com.mpdc4gsr.lib.core.messaging.ReliableMessageService
-import com.mpdc4gsr.lib.core.security.CertificateManager
-import com.mpdc4gsr.lib.core.sync.TimeSyncService
+import com.mpdc4gsr.libunified.app.discovery.NetworkDiscoveryService
+import com.mpdc4gsr.libunified.app.messaging.ReliableMessageService
+import com.mpdc4gsr.libunified.app.security.CertificateManager
+import com.mpdc4gsr.libunified.app.sync.TimeSyncService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob

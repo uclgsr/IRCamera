@@ -1,10 +1,10 @@
 package com.mpdc4gsr.module.thermal.ir.video
 
 import android.graphics.Bitmap
-import com.infisense.usbir.view.CameraView
-import com.infisense.usbir.view.TemperatureView
-import com.mpdc4gsr.lib.core.config.FileConfig
-import com.mpdc4gsr.lib.core.utils.BitmapUtils
+import com.mpdc4gsr.libunified.ir.view.CameraView
+import com.mpdc4gsr.libunified.ir.view.TemperatureView
+import com.mpdc4gsr.libunified.app.config.FileConfig
+import com.mpdc4gsr.libunified.app.utils.BitmapUtils
 import com.mpdc4gsr.module.thermal.ir.video.media.Encoder
 import com.mpdc4gsr.module.thermal.ir.video.media.MP4Encoder
 import io.reactivex.Observable

@@ -1,18 +1,18 @@
 package com.mpdc4gsr.module.user.activity
 
 // TS004Repository functionality removed
-// import com.mpdc4gsr.lib.core.repository.TS004Repository
+// import com.mpdc4gsr.libunified.app.repository.TS004Repository
 import android.annotation.SuppressLint
 import android.view.View
 import android.widget.TextView
 import androidx.lifecycle.lifecycleScope
 import com.elvishew.xlog.XLog
-import com.mpdc4gsr.lib.core.BaseApplication
-import com.mpdc4gsr.lib.core.config.RouterConfig
-import com.mpdc4gsr.lib.core.dialog.TipDialog
-import com.mpdc4gsr.lib.core.ktbase.BaseActivity
-import com.mpdc4gsr.lib.core.lms.weiget.TToast
-import com.mpdc4gsr.lib.core.navigation.NavigationManager
+import com.mpdc4gsr.libunified.app.BaseApplication
+import com.mpdc4gsr.libunified.app.config.RouterConfig
+import com.mpdc4gsr.libunified.app.dialog.TipDialog
+import com.mpdc4gsr.libunified.app.ktbase.BaseActivity
+import com.mpdc4gsr.libunified.app.lms.weiget.TToast
+import com.mpdc4gsr.libunified.app.navigation.NavigationManager
 import com.mpdc4gsr.module.user.R
 import com.mpdc4gsr.module.user.bean.ColorsBean
 import com.mpdc4gsr.module.user.view.ListItemView
@@ -20,7 +20,7 @@ import com.mpdc4gsr.module.user.view.ProgressBarView
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.text.DecimalFormat
-import com.mpdc4gsr.lib.core.R as RCore
+import com.mpdc4gsr.libunified.app.R as RCore
 
 class StorageSpaceActivity : BaseActivity(), View.OnClickListener {
 

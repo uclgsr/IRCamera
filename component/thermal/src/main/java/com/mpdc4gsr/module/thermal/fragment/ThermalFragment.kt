@@ -16,10 +16,10 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import com.blankj.utilcode.util.ScreenUtils
-import com.mpdc4gsr.lib.core.matrix.GuideInterface
-import com.mpdc4gsr.lib.core.matrix.IrSurfaceView
-import com.mpdc4gsr.lib.core.tools.ToastTools
-import com.mpdc4gsr.lib.core.utils.ByteUtils.getIndex
+import com.mpdc4gsr.libunified.app.matrix.GuideInterface
+import com.mpdc4gsr.libunified.app.matrix.IrSurfaceView
+import com.mpdc4gsr.libunified.app.tools.ToastTools
+import com.mpdc4gsr.libunified.app.utils.ByteUtils.getIndex
 import com.mpdc4gsr.lib.ui.dialog.ThermalInputDialog
 import com.mpdc4gsr.lib.ui.fence.FenceLineView
 import com.mpdc4gsr.lib.ui.fence.FencePointView

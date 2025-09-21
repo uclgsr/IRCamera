@@ -6,8 +6,8 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-import com.mpdc4gsr.lib.core.config.ExtraKeyConfig
-import com.mpdc4gsr.lib.core.ktbase.BaseActivity
+import com.mpdc4gsr.libunified.app.config.ExtraKeyConfig
+import com.mpdc4gsr.libunified.app.ktbase.BaseActivity
 import com.mpdc4gsr.module.thermal.ir.R
 import com.mpdc4gsr.module.thermal.ir.event.MonitorSaveEvent
 import com.mpdc4gsr.module.thermal.ir.fragment.IRMonitorCaptureFragment

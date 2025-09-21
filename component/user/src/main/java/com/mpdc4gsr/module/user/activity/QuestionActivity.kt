@@ -7,9 +7,9 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.mpdc4gsr.lib.core.config.RouterConfig
-import com.mpdc4gsr.lib.core.ktbase.BaseActivity
-import com.mpdc4gsr.lib.core.navigation.NavigationManager
+import com.mpdc4gsr.libunified.app.config.RouterConfig
+import com.mpdc4gsr.libunified.app.ktbase.BaseActivity
+import com.mpdc4gsr.libunified.app.navigation.NavigationManager
 import com.mpdc4gsr.module.user.R
 import com.mpdc4gsr.module.user.model.FaqRepository
 import com.mpdc4gsr.module.user.model.QuestionData

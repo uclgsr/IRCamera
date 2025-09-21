@@ -1,6 +1,6 @@
 package com.mpdc4gsr.module.thermal.viewmodel
 
-import com.mpdc4gsr.lib.core.ktbase.BaseViewModel
+import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 
 class ThermalViewModel : BaseViewModel() {
 

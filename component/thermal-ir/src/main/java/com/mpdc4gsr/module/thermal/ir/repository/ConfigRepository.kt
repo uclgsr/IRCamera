@@ -1,7 +1,7 @@
 package com.mpdc4gsr.module.thermal.ir.repository
 
 import com.google.gson.Gson
-import com.mpdc4gsr.lib.core.common.SharedManager
+import com.mpdc4gsr.libunified.app.common.SharedManager
 import com.mpdc4gsr.module.thermal.ir.bean.DataBean
 import com.mpdc4gsr.module.thermal.ir.bean.ModelBean
 

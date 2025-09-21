@@ -40,9 +40,9 @@ import com.energy.iruvccamera.usb.USBMonitor;
 import com.example.thermal_lite.IrConst;
 import com.example.thermal_lite.ui.activity.IrDisplayActivity;
 import com.example.thermal_lite.util.CommonUtil;
-import com.infisense.usbir.utils.IRImageHelp;
-import com.infisense.usbir.utils.PseudocodeUtils;
-import com.mpdc4gsr.lib.core.bean.AlarmBean;
+import com.mpdc4gsr.libunified.ir.utils.IRImageHelp;
+import com.mpdc4gsr.libunified.ir.utils.PseudocodeUtils;
+import com.mpdc4gsr.libunified.app.bean.AlarmBean;
 import com.mpdc4gsr.lib.ui.widget.LiteSurfaceView;
 
 import java.nio.ByteBuffer;

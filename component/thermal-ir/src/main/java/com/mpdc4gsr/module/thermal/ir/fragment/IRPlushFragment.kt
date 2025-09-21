@@ -2,9 +2,9 @@ package com.mpdc4gsr.module.thermal.ir.fragment
 
 import android.graphics.Bitmap
 import android.view.SurfaceView
-import com.infisense.usbdual.Const
-import com.infisense.usbdual.camera.DualViewWithExternalCameraCommonApi
-import com.infisense.usbir.view.TemperatureView
+import com.mpdc4gsr.libunified.ir.usbdual.Const
+import com.mpdc4gsr.libunified.ir.usbdual.camera.DualViewWithExternalCameraCommonApi
+import com.mpdc4gsr.libunified.ir.view.TemperatureView
 import com.mpdc4gsr.module.thermal.ir.R
 import com.mpdc4gsr.module.thermal.ir.activity.BaseIRPlushFragment
 

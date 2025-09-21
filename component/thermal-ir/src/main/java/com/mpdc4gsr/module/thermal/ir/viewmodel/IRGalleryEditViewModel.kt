@@ -2,9 +2,9 @@ package com.mpdc4gsr.module.thermal.ir.viewmodel
 
 import androidx.lifecycle.viewModelScope
 import com.elvishew.xlog.XLog
-import com.mpdc4gsr.lib.core.ktbase.BaseViewModel
-import com.mpdc4gsr.lib.core.utils.ByteUtils.bytesToInt
-import com.mpdc4gsr.lib.core.utils.SingleLiveEvent
+import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
+import com.mpdc4gsr.libunified.app.utils.ByteUtils.bytesToInt
+import com.mpdc4gsr.libunified.app.utils.SingleLiveEvent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.File

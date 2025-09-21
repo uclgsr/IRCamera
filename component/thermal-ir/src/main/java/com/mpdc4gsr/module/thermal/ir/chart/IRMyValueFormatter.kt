@@ -1,7 +1,7 @@
 package com.mpdc4gsr.module.thermal.ir.chart
 
 import android.annotation.SuppressLint
-import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
+import com.mpdc4gsr.libunified.ui.charting.formatter.IndexAxisValueFormatter
 import com.mpdc4gsr.module.thermal.ir.utils.ChartTools
 import java.text.SimpleDateFormat
 import java.util.Date

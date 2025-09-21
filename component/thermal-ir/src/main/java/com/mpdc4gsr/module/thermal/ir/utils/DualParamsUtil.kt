@@ -1,7 +1,7 @@
 package com.mpdc4gsr.module.thermal.ir.utils
 
 import com.energy.iruvc.utils.DualCameraParams
-import com.mpdc4gsr.lib.core.common.SaveSettingUtil
+import com.mpdc4gsr.libunified.app.common.SaveSettingUtil
 
 object DualParamsUtil {
     fun wifiFusionTypeToParams(fusionType: Int): Int {

@@ -2,7 +2,7 @@ package com.mpdc4gsr.module.thermal.ir.utils
 
 import android.graphics.Point
 import android.util.Log
-import com.github.mikephil.charting.charts.LineChart
+import com.mpdc4gsr.libunified.ui.charting.charts.LineChart
 import kotlin.math.abs
 
 object ChartTools {

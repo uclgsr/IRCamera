@@ -22,17 +22,17 @@ import com.energy.iruvc.utils.SynchronizedBitmap
 import com.energy.iruvc.uvc.ConnectCallback
 import com.energy.iruvc.uvc.UVCCamera
 import com.example.suplib.wrapper.SupHelp
-import com.infisense.usbdual.Const
+import com.mpdc4gsr.libunified.ir.usbdual.Const
 
 
-import com.infisense.usbdual.camera.DualViewWithExternalCameraCommonApi
-import com.infisense.usbdual.camera.IRUVCDual
-import com.infisense.usbdual.camera.USBMonitorManager
-import com.infisense.usbdual.inf.OnUSBConnectListener
-import com.infisense.usbir.utils.PseudocodeUtils
-import com.infisense.usbir.view.TemperatureView
-import com.mpdc4gsr.lib.core.common.SaveSettingUtil
-import com.mpdc4gsr.lib.core.dialog.TipDialog
+import com.mpdc4gsr.libunified.ir.usbdual.camera.DualViewWithExternalCameraCommonApi
+import com.mpdc4gsr.libunified.ir.usbdual.camera.IRUVCDual
+import com.mpdc4gsr.libunified.ir.usbdual.camera.USBMonitorManager
+import com.mpdc4gsr.libunified.ir.usbdual.inf.OnUSBConnectListener
+import com.mpdc4gsr.libunified.ir.utils.PseudocodeUtils
+import com.mpdc4gsr.libunified.ir.view.TemperatureView
+import com.mpdc4gsr.libunified.app.common.SaveSettingUtil
+import com.mpdc4gsr.libunified.app.dialog.TipDialog
 import com.mpdc4gsr.module.thermal.ir.R
 import com.mpdc4gsr.module.thermal.ir.utils.DualParamsUtil
 import com.mpdc4gsr.module.thermal.ir.utils.IRCmdTool
@@ -421,7 +421,7 @@ abstract class BaseIRPlushActivity : IRThermalNightActivity(), OnUSBConnectListe
             dualView?.isOpenAmplify = isOpenAmplify
 
             val titleView =
-                findViewById<com.mpdc4gsr.lib.core.view.TitleView>(com.mpdc4gsr.lib.core.R.id.title_view)
+                findViewById<com.mpdc4gsr.lib.core.view.TitleView>(com.mpdc4gsr.libunified.R.id.title_view)
             titleView?.setRight2Drawable(if (isOpenAmplify) R.drawable.svg_tisr_on else R.drawable.svg_tisr_off)
             SaveSettingUtil.isOpenAmplify = isOpenAmplify
             if (isOpenAmplify) {
@@ -435,7 +435,7 @@ abstract class BaseIRPlushActivity : IRThermalNightActivity(), OnUSBConnectListe
     override fun initAmplify(show: Boolean) {
         lifecycleScope.launch {
             val titleView =
-                findViewById<com.mpdc4gsr.lib.core.view.TitleView>(com.mpdc4gsr.lib.core.R.id.title_view)
+                findViewById<com.mpdc4gsr.lib.core.view.TitleView>(com.mpdc4gsr.libunified.R.id.title_view)
             titleView?.setRight2Drawable(if (isOpenAmplify) R.drawable.svg_tisr_on else R.drawable.svg_tisr_off)
             withContext(Dispatchers.IO) {
                 if (isOpenAmplify) {

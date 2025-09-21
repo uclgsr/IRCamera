@@ -4,7 +4,7 @@ import android.view.View
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.module.LoadMoreModule
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
-import com.mpdc4gsr.lib.core.tools.GlideLoader
+import com.mpdc4gsr.libunified.app.tools.GlideLoader
 import com.mpdc4gsr.module.thermal.ir.R
 import com.mpdc4gsr.module.thermal.ir.report.bean.ReportData
 

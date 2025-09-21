@@ -16,20 +16,20 @@ import com.blankj.utilcode.util.AppUtils
 import com.hjq.permissions.OnPermissionCallback
 import com.hjq.permissions.Permission
 import com.hjq.permissions.XXPermissions
-import com.mpdc4gsr.lib.core.BaseApplication
-import com.mpdc4gsr.lib.core.bean.event.PDFEvent
-import com.mpdc4gsr.lib.core.common.SharedManager
-import com.mpdc4gsr.lib.core.config.ExtraKeyConfig
-import com.mpdc4gsr.lib.core.config.RouterConfig
-import com.mpdc4gsr.lib.core.dialog.TipDialog
-import com.mpdc4gsr.lib.core.lms.LMS
-import com.mpdc4gsr.lib.core.navigation.NavigationManager
-import com.mpdc4gsr.lib.core.repository.GalleryRepository.DirType
-import com.mpdc4gsr.lib.core.socket.WebSocketProxy
-import com.mpdc4gsr.lib.core.tools.DeviceTools
-import com.mpdc4gsr.lib.core.utils.CommUtils
-import com.mpdc4gsr.lib.core.utils.NetWorkUtils
-import com.mpdc4gsr.lib.core.utils.PermissionUtils
+import com.mpdc4gsr.libunified.app.BaseApplication
+import com.mpdc4gsr.libunified.app.bean.event.PDFEvent
+import com.mpdc4gsr.libunified.app.common.SharedManager
+import com.mpdc4gsr.libunified.app.config.ExtraKeyConfig
+import com.mpdc4gsr.libunified.app.config.RouterConfig
+import com.mpdc4gsr.libunified.app.dialog.TipDialog
+import com.mpdc4gsr.libunified.app.lms.LMS
+import com.mpdc4gsr.libunified.app.navigation.NavigationManager
+import com.mpdc4gsr.libunified.app.repository.GalleryRepository.DirType
+import com.mpdc4gsr.libunified.app.socket.WebSocketProxy
+import com.mpdc4gsr.libunified.app.tools.DeviceTools
+import com.mpdc4gsr.libunified.app.utils.CommUtils
+import com.mpdc4gsr.libunified.app.utils.NetWorkUtils
+import com.mpdc4gsr.libunified.app.utils.PermissionUtils
 import com.mpdc4gsr.module.thermal.ir.R
 import com.mpdc4gsr.module.thermal.ir.databinding.ActivityIrMainBinding
 import com.mpdc4gsr.module.thermal.ir.dialog.HomeGuideDialog
@@ -41,7 +41,7 @@ import com.mpdc4gsr.module.user.fragment.MoreFragment
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
-import com.mpdc4gsr.lib.core.R as LibR
+import com.mpdc4gsr.libunified.app.R as LibR
 
 
 class IRMainActivity : AppCompatActivity(), View.OnClickListener {

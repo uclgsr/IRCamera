@@ -6,8 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.mpdc4gsr.lib.core.db.entity.ThermalEntity
-import com.mpdc4gsr.lib.core.tools.TimeTool
+import com.mpdc4gsr.libunified.app.db.entity.ThermalEntity
+import com.mpdc4gsr.libunified.app.tools.TimeTool
 import com.mpdc4gsr.module.thermal.R
 
 class MonitorLogAdapter(val context: Context) :

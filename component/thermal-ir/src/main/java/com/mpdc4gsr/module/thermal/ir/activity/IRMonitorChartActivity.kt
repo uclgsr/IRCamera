@@ -7,7 +7,7 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.TextView
-import android.yt.jni.Usbcontorl
+import com.mpdc4gsr.libunified.ir.android.yt.jni.Usbcontorl
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import com.elvishew.xlog.XLog
@@ -21,30 +21,30 @@ import com.energy.iruvc.utils.Line
 import com.energy.iruvc.utils.SynchronizedBitmap
 import com.energy.iruvc.uvc.ConnectCallback
 import com.energy.iruvc.uvc.UVCCamera
-import com.infisense.usbir.camera.IRUVCTC
-import com.infisense.usbir.config.MsgCode
-import com.infisense.usbir.event.IRMsgEvent
-import com.infisense.usbir.event.PreviewComplete
-import com.infisense.usbir.thread.ImageThreadTC
-import com.infisense.usbir.utils.USBMonitorCallback
-import com.infisense.usbir.view.CameraView
-import com.infisense.usbir.view.ITsTempListener
-import com.infisense.usbir.view.TemperatureView
-import com.infisense.usbir.view.TemperatureView.REGION_MODE_LINE
-import com.infisense.usbir.view.TemperatureView.REGION_MODE_POINT
-import com.infisense.usbir.view.TemperatureView.REGION_MODE_RECTANGLE
-import com.mpdc4gsr.lib.core.bean.event.device.DeviceCameraEvent
-import com.mpdc4gsr.lib.core.bean.tools.ThermalBean
-import com.mpdc4gsr.lib.core.common.SaveSettingUtil
-import com.mpdc4gsr.lib.core.common.SharedManager
-import com.mpdc4gsr.lib.core.config.DeviceConfig
-import com.mpdc4gsr.lib.core.db.AppDatabase
-import com.mpdc4gsr.lib.core.db.entity.ThermalEntity
-import com.mpdc4gsr.lib.core.ktbase.BaseActivity
-import com.mpdc4gsr.lib.core.tools.NumberTools
-import com.mpdc4gsr.lib.core.tools.TimeTool
-import com.mpdc4gsr.lib.core.utils.ScreenUtil
-import com.mpdc4gsr.lib.core.view.TitleView
+import com.mpdc4gsr.libunified.ir.camera.IRUVCTC
+import com.mpdc4gsr.libunified.ir.config.MsgCode
+import com.mpdc4gsr.libunified.ir.event.IRMsgEvent
+import com.mpdc4gsr.libunified.ir.event.PreviewComplete
+import com.mpdc4gsr.libunified.ir.thread.ImageThreadTC
+import com.mpdc4gsr.libunified.ir.utils.USBMonitorCallback
+import com.mpdc4gsr.libunified.ir.view.CameraView
+import com.mpdc4gsr.libunified.ir.view.ITsTempListener
+import com.mpdc4gsr.libunified.ir.view.TemperatureView
+import com.mpdc4gsr.libunified.ir.view.TemperatureView.REGION_MODE_LINE
+import com.mpdc4gsr.libunified.ir.view.TemperatureView.REGION_MODE_POINT
+import com.mpdc4gsr.libunified.ir.view.TemperatureView.REGION_MODE_RECTANGLE
+import com.mpdc4gsr.libunified.app.bean.event.device.DeviceCameraEvent
+import com.mpdc4gsr.libunified.app.bean.tools.ThermalBean
+import com.mpdc4gsr.libunified.app.common.SaveSettingUtil
+import com.mpdc4gsr.libunified.app.common.SharedManager
+import com.mpdc4gsr.libunified.app.config.DeviceConfig
+import com.mpdc4gsr.libunified.app.db.AppDatabase
+import com.mpdc4gsr.libunified.app.db.entity.ThermalEntity
+import com.mpdc4gsr.libunified.app.ktbase.BaseActivity
+import com.mpdc4gsr.libunified.app.tools.NumberTools
+import com.mpdc4gsr.libunified.app.tools.TimeTool
+import com.mpdc4gsr.libunified.app.utils.ScreenUtil
+import com.mpdc4gsr.libunified.app.view.TitleView
 import com.mpdc4gsr.module.thermal.ir.R
 import com.mpdc4gsr.module.thermal.ir.bean.SelectPositionBean
 import com.mpdc4gsr.module.thermal.ir.event.MonitorSaveEvent
@@ -60,7 +60,7 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.math.BigDecimal
 import java.math.RoundingMode
-import com.mpdc4gsr.lib.core.R as LibR
+import com.mpdc4gsr.libunified.app.R as LibR
 
 
 class IRMonitorChartActivity : BaseActivity(), ITsTempListener {

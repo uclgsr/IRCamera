@@ -9,14 +9,14 @@ import android.util.Log
 import androidx.core.content.ContextCompat
 import com.blankj.utilcode.util.SizeUtils
 import com.elvishew.xlog.XLog
-import com.github.mikephil.charting.charts.LineChart
-import com.github.mikephil.charting.components.Legend
-import com.github.mikephil.charting.components.XAxis
-import com.github.mikephil.charting.components.YAxis
-import com.github.mikephil.charting.data.Entry
-import com.github.mikephil.charting.data.LineData
-import com.github.mikephil.charting.data.LineDataSet
-import com.mpdc4gsr.lib.core.db.entity.ThermalEntity
+import com.mpdc4gsr.libunified.ui.charting.charts.LineChart
+import com.mpdc4gsr.libunified.ui.charting.components.Legend
+import com.mpdc4gsr.libunified.ui.charting.components.XAxis
+import com.mpdc4gsr.libunified.ui.charting.components.YAxis
+import com.mpdc4gsr.libunified.ui.charting.data.Entry
+import com.mpdc4gsr.libunified.ui.charting.data.LineData
+import com.mpdc4gsr.libunified.ui.charting.data.LineDataSet
+import com.mpdc4gsr.libunified.app.db.entity.ThermalEntity
 import com.mpdc4gsr.module.thermal.ir.R
 import com.mpdc4gsr.module.thermal.ir.chart.IRMyValueFormatter
 import com.mpdc4gsr.module.thermal.ir.chart.YValueFormatter
@@ -24,8 +24,8 @@ import com.mpdc4gsr.module.thermal.ir.utils.ChartTools
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import com.mpdc4gsr.lib.core.R as LibR
-import com.mpdc4gsr.lib.core.R as LibcoreR
+import com.mpdc4gsr.libunified.app.R as LibR
+import com.mpdc4gsr.libunified.app.R as LibcoreR
 import com.mpdc4gsr.module.thermal.R as ThermalR
 
 class ChartLogView : LineChart {

@@ -8,10 +8,10 @@ import android.widget.VideoView
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import com.blankj.utilcode.util.BarUtils
-import com.mpdc4gsr.lib.core.ktbase.BaseActivity
+import com.mpdc4gsr.libunified.app.ktbase.BaseActivity
 import com.mpdc4gsr.module.thermal.R
 import java.io.File
-import com.mpdc4gsr.lib.core.R as LibR
+import com.mpdc4gsr.libunified.app.R as LibR
 
 
 class VideoActivity : BaseActivity() {
@@ -26,7 +26,7 @@ class VideoActivity : BaseActivity() {
     override fun initView() {
 
         val toolbar =
-            findViewById<androidx.appcompat.widget.Toolbar>(com.mpdc4gsr.lib.core.R.id.toolbar_lay)
+            findViewById<androidx.appcompat.widget.Toolbar>(com.mpdc4gsr.libunified.R.id.toolbar_lay)
         toolbar?.title = getString(R.string.video)
 
         BarUtils.setNavBarColor(this, ContextCompat.getColor(this, LibR.color.black))

@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 
 
-import com.mpdc4gsr.lib.core.bean.HouseRepPreviewAlbumItemBean
+import com.mpdc4gsr.libunified.app.bean.HouseRepPreviewAlbumItemBean
 import com.mpdc4gsr.module.thermal.ir.R
 
 @SuppressLint("NotifyDataSetChanged")

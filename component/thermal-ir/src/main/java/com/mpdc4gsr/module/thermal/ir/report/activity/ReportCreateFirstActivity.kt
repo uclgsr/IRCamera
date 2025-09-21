@@ -13,24 +13,24 @@ import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.lifecycleScope
 import com.blankj.utilcode.util.TimeUtils
 import com.blankj.utilcode.util.ToastUtils
-import com.github.gzuliyujiang.wheelpicker.DatimePicker
-import com.github.gzuliyujiang.wheelpicker.entity.DateEntity
-import com.github.gzuliyujiang.wheelpicker.entity.DatimeEntity
-import com.github.gzuliyujiang.wheelpicker.entity.TimeEntity
+import com.mpdc4gsr.libunified.ui.gzuliyujiang.wheelpicker.DatimePicker
+import com.mpdc4gsr.libunified.ui.gzuliyujiang.wheelpicker.entity.DateEntity
+import com.mpdc4gsr.libunified.ui.gzuliyujiang.wheelpicker.entity.DatimeEntity
+import com.mpdc4gsr.libunified.ui.gzuliyujiang.wheelpicker.entity.TimeEntity
 import com.hjq.permissions.OnPermissionCallback
 import com.hjq.permissions.Permission
 import com.hjq.permissions.XXPermissions
-import com.mpdc4gsr.lib.core.BaseApplication
-import com.mpdc4gsr.lib.core.bean.event.ReportCreateEvent
-import com.mpdc4gsr.lib.core.common.SaveSettingUtil
-import com.mpdc4gsr.lib.core.config.ExtraKeyConfig
-import com.mpdc4gsr.lib.core.config.RouterConfig
-import com.mpdc4gsr.lib.core.dialog.TipDialog
-import com.mpdc4gsr.lib.core.ktbase.BaseActivity
-import com.mpdc4gsr.lib.core.navigation.NavigationManager
-import com.mpdc4gsr.lib.core.tools.NumberTools
-import com.mpdc4gsr.lib.core.tools.UnitTools
-import com.mpdc4gsr.lib.core.utils.CommUtils
+import com.mpdc4gsr.libunified.app.BaseApplication
+import com.mpdc4gsr.libunified.app.bean.event.ReportCreateEvent
+import com.mpdc4gsr.libunified.app.common.SaveSettingUtil
+import com.mpdc4gsr.libunified.app.config.ExtraKeyConfig
+import com.mpdc4gsr.libunified.app.config.RouterConfig
+import com.mpdc4gsr.libunified.app.dialog.TipDialog
+import com.mpdc4gsr.libunified.app.ktbase.BaseActivity
+import com.mpdc4gsr.libunified.app.navigation.NavigationManager
+import com.mpdc4gsr.libunified.app.tools.NumberTools
+import com.mpdc4gsr.libunified.app.tools.UnitTools
+import com.mpdc4gsr.libunified.app.utils.CommUtils
 import com.mpdc4gsr.module.thermal.ir.R
 import com.mpdc4gsr.module.thermal.ir.report.bean.ImageTempBean
 import com.mpdc4gsr.module.thermal.ir.report.bean.ReportConditionBean
@@ -45,7 +45,7 @@ import java.text.ParsePosition
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
-import com.mpdc4gsr.lib.core.R as LibR
+import com.mpdc4gsr.libunified.app.R as LibR
 
 
 class ReportCreateFirstActivity : BaseActivity(), View.OnClickListener {

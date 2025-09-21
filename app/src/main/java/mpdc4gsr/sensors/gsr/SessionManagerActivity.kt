@@ -20,7 +20,7 @@ import com.csl.irCamera.R
 import com.csl.irCamera.databinding.ActivitySessionManagerBinding
 import com.mpdc4gsr.gsr.model.SessionInfo
 import com.mpdc4gsr.gsr.service.SessionManager
-import com.mpdc4gsr.lib.core.ktbase.BaseBindingActivity
+import com.mpdc4gsr.libunified.app.ktbase.BaseBindingActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob

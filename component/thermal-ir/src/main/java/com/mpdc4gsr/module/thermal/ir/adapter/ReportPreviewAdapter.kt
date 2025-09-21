@@ -14,8 +14,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.CollectionUtils
 
 
-import com.mpdc4gsr.lib.core.bean.HouseRepPreviewItemBean
-import com.mpdc4gsr.lib.core.lms.weiget.TToast
+import com.mpdc4gsr.libunified.app.bean.HouseRepPreviewItemBean
+import com.mpdc4gsr.libunified.app.lms.weiget.TToast
 import com.mpdc4gsr.module.thermal.ir.R
 
 @SuppressLint("NotifyDataSetChanged")

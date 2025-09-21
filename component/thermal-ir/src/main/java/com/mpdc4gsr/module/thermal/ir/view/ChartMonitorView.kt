@@ -9,21 +9,21 @@ import android.util.Log
 import android.view.MotionEvent
 import androidx.core.content.ContextCompat
 import com.blankj.utilcode.util.SizeUtils
-import com.github.mikephil.charting.charts.LineChart
-import com.github.mikephil.charting.components.Legend
-import com.github.mikephil.charting.components.XAxis
-import com.github.mikephil.charting.components.YAxis
-import com.github.mikephil.charting.data.Entry
-import com.github.mikephil.charting.data.LineData
-import com.github.mikephil.charting.data.LineDataSet
-import com.github.mikephil.charting.listener.ChartTouchListener
-import com.github.mikephil.charting.listener.OnChartGestureListener
-import com.mpdc4gsr.lib.core.db.entity.ThermalEntity
+import com.mpdc4gsr.libunified.ui.charting.charts.LineChart
+import com.mpdc4gsr.libunified.ui.charting.components.Legend
+import com.mpdc4gsr.libunified.ui.charting.components.XAxis
+import com.mpdc4gsr.libunified.ui.charting.components.YAxis
+import com.mpdc4gsr.libunified.ui.charting.data.Entry
+import com.mpdc4gsr.libunified.ui.charting.data.LineData
+import com.mpdc4gsr.libunified.ui.charting.data.LineDataSet
+import com.mpdc4gsr.libunified.ui.charting.listener.ChartTouchListener
+import com.mpdc4gsr.libunified.ui.charting.listener.OnChartGestureListener
+import com.mpdc4gsr.libunified.app.db.entity.ThermalEntity
 import com.mpdc4gsr.module.thermal.ir.R
 import com.mpdc4gsr.module.thermal.ir.chart.IRMyValueFormatter
 import com.mpdc4gsr.module.thermal.ir.chart.YValueFormatter
 import com.mpdc4gsr.module.thermal.ir.utils.ChartTools
-import com.mpdc4gsr.lib.core.R as LibR
+import com.mpdc4gsr.libunified.app.R as LibR
 import com.mpdc4gsr.module.thermal.R as ThermalR
 
 class ChartMonitorView : LineChart, OnChartGestureListener {

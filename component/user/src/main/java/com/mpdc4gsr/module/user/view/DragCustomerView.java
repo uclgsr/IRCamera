@@ -6,7 +6,7 @@ import android.view.MotionEvent;
 
 import com.blankj.utilcode.util.BarUtils;
 import com.blankj.utilcode.util.SizeUtils;
-import com.mpdc4gsr.lib.core.utils.ScreenUtil;
+import com.mpdc4gsr.libunified.app.utils.ScreenUtil;
 
 public class DragCustomerView extends androidx.appcompat.widget.AppCompatImageView {
     float mDownX;

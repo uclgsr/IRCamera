@@ -19,27 +19,27 @@ import com.blankj.utilcode.util.SizeUtils
 import com.bumptech.glide.request.RequestOptions
 import com.elvishew.xlog.XLog
 import com.google.gson.Gson
-import com.mpdc4gsr.lib.core.BaseApplication
-import com.mpdc4gsr.lib.core.bean.event.PDFEvent
-import com.mpdc4gsr.lib.core.bean.event.WinterClickEvent
-import com.mpdc4gsr.lib.core.bean.response.ResponseUserInfo
-import com.mpdc4gsr.lib.core.common.SharedManager
-import com.mpdc4gsr.lib.core.common.UserInfoManager
-import com.mpdc4gsr.lib.core.config.ExtraKeyConfig
-import com.mpdc4gsr.lib.core.config.RouterConfig
-import com.mpdc4gsr.lib.core.db.AppDatabase
-import com.mpdc4gsr.lib.core.dialog.TipDialog
-import com.mpdc4gsr.lib.core.ktbase.BaseFragment
-import com.mpdc4gsr.lib.core.lms.LMS
-import com.mpdc4gsr.lib.core.lms.UrlConstant
-import com.mpdc4gsr.lib.core.lms.bean.CommonBean
-import com.mpdc4gsr.lib.core.lms.bean.FeedBackBean
-import com.mpdc4gsr.lib.core.lms.feedback.activity.FeedbackActivity
-import com.mpdc4gsr.lib.core.navigation.NavigationManager
-import com.mpdc4gsr.lib.core.socket.WebSocketProxy
-import com.mpdc4gsr.lib.core.tools.GlideLoader
-import com.mpdc4gsr.lib.core.utils.Constants
-import com.mpdc4gsr.lib.core.utils.NetWorkUtils
+import com.mpdc4gsr.libunified.app.BaseApplication
+import com.mpdc4gsr.libunified.app.bean.event.PDFEvent
+import com.mpdc4gsr.libunified.app.bean.event.WinterClickEvent
+import com.mpdc4gsr.libunified.app.bean.response.ResponseUserInfo
+import com.mpdc4gsr.libunified.app.common.SharedManager
+import com.mpdc4gsr.libunified.app.common.UserInfoManager
+import com.mpdc4gsr.libunified.app.config.ExtraKeyConfig
+import com.mpdc4gsr.libunified.app.config.RouterConfig
+import com.mpdc4gsr.libunified.app.db.AppDatabase
+import com.mpdc4gsr.libunified.app.dialog.TipDialog
+import com.mpdc4gsr.libunified.app.ktbase.BaseFragment
+import com.mpdc4gsr.libunified.app.lms.LMS
+import com.mpdc4gsr.libunified.app.lms.UrlConstant
+import com.mpdc4gsr.libunified.app.lms.bean.CommonBean
+import com.mpdc4gsr.libunified.app.lms.bean.FeedBackBean
+import com.mpdc4gsr.libunified.app.lms.feedback.activity.FeedbackActivity
+import com.mpdc4gsr.libunified.app.navigation.NavigationManager
+import com.mpdc4gsr.libunified.app.socket.WebSocketProxy
+import com.mpdc4gsr.libunified.app.tools.GlideLoader
+import com.mpdc4gsr.libunified.app.utils.Constants
+import com.mpdc4gsr.libunified.app.utils.NetWorkUtils
 import com.mpdc4gsr.module.user.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -48,8 +48,8 @@ import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import com.mpdc4gsr.lib.core.R as LibAppR
-import com.mpdc4gsr.lib.core.R as RCore
+import com.mpdc4gsr.libunified.app.R as LibAppR
+import com.mpdc4gsr.libunified.app.R as RCore
 
 
 class MineFragment : BaseFragment(), View.OnClickListener {

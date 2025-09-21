@@ -10,22 +10,22 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import com.blankj.utilcode.util.SizeUtils
-import com.github.mikephil.charting.charts.LineChart
-import com.github.mikephil.charting.components.Legend
-import com.github.mikephil.charting.components.XAxis
-import com.github.mikephil.charting.components.YAxis
-import com.github.mikephil.charting.data.Entry
-import com.github.mikephil.charting.data.LineData
-import com.github.mikephil.charting.data.LineDataSet
-import com.github.mikephil.charting.highlight.Highlight
-import com.github.mikephil.charting.listener.OnChartValueSelectedListener
-import com.mpdc4gsr.lib.core.bean.tools.ThermalBean
-import com.mpdc4gsr.lib.core.common.SharedManager
-import com.mpdc4gsr.lib.core.db.AppDatabase
-import com.mpdc4gsr.lib.core.db.entity.ThermalEntity
-import com.mpdc4gsr.lib.core.ktbase.BaseActivity
-import com.mpdc4gsr.lib.core.tools.NumberTools
-import com.mpdc4gsr.lib.core.tools.TimeTool
+import com.mpdc4gsr.libunified.ui.charting.charts.LineChart
+import com.mpdc4gsr.libunified.ui.charting.components.Legend
+import com.mpdc4gsr.libunified.ui.charting.components.XAxis
+import com.mpdc4gsr.libunified.ui.charting.components.YAxis
+import com.mpdc4gsr.libunified.ui.charting.data.Entry
+import com.mpdc4gsr.libunified.ui.charting.data.LineData
+import com.mpdc4gsr.libunified.ui.charting.data.LineDataSet
+import com.mpdc4gsr.libunified.ui.charting.highlight.Highlight
+import com.mpdc4gsr.libunified.ui.charting.listener.OnChartValueSelectedListener
+import com.mpdc4gsr.libunified.app.bean.tools.ThermalBean
+import com.mpdc4gsr.libunified.app.common.SharedManager
+import com.mpdc4gsr.libunified.app.db.AppDatabase
+import com.mpdc4gsr.libunified.app.db.entity.ThermalEntity
+import com.mpdc4gsr.libunified.app.ktbase.BaseActivity
+import com.mpdc4gsr.libunified.app.tools.NumberTools
+import com.mpdc4gsr.libunified.app.tools.TimeTool
 import com.mpdc4gsr.module.thermal.R
 import com.mpdc4gsr.module.thermal.adapter.SettingCheckAdapter
 import com.mpdc4gsr.module.thermal.adapter.SettingTimeAdapter
@@ -59,7 +59,7 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
     override fun initView() {
 
         val toolbar =
-            findViewById<androidx.appcompat.widget.Toolbar>(com.mpdc4gsr.lib.core.R.id.toolbar_lay)
+            findViewById<androidx.appcompat.widget.Toolbar>(com.mpdc4gsr.libunified.R.id.toolbar_lay)
         toolbar?.title = getString(R.string.main_thermal_motion)
 
         selectType = intent.getIntExtra("type", 3)
@@ -222,7 +222,7 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
         chart.isDragEnabled = true
         chart.setDrawGridBackground(false)
         chart.description = null
-        chart.setBackgroundResource(com.mpdc4gsr.lib.core.R.color.chart_bg)
+        chart.setBackgroundResource(com.mpdc4gsr.libunified.R.color.chart_bg)
         chart.setScaleEnabled(true)
         chart.setPinchZoom(false)
         chart.isDoubleTapToZoomEnabled = false
@@ -403,31 +403,31 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
     private val lineRed by lazy {
         ContextCompat.getColor(
             this,
-            com.mpdc4gsr.lib.core.R.color.chart_line_max
+            com.mpdc4gsr.libunified.R.color.chart_line_max
         )
     }
     private val lineBlue by lazy {
         ContextCompat.getColor(
             this,
-            com.mpdc4gsr.lib.core.R.color.chart_line_min
+            com.mpdc4gsr.libunified.R.color.chart_line_min
         )
     }
     private val lineGreen by lazy {
         ContextCompat.getColor(
             this,
-            com.mpdc4gsr.lib.core.R.color.chart_line_center
+            com.mpdc4gsr.libunified.R.color.chart_line_center
         )
     }
     private val whiteColors by lazy {
         ContextCompat.getColor(
             this,
-            com.mpdc4gsr.lib.core.R.color.circle_white
+            com.mpdc4gsr.libunified.R.color.circle_white
         )
     }
     private val textColor by lazy {
         ContextCompat.getColor(
             this,
-            com.mpdc4gsr.lib.core.R.color.chart_text
+            com.mpdc4gsr.libunified.R.color.chart_text
         )
     }
 

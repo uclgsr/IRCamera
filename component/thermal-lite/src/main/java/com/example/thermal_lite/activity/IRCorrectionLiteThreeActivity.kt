@@ -6,7 +6,7 @@ import androidx.lifecycle.lifecycleScope
 import com.example.thermal_lite.R
 import com.example.thermal_lite.databinding.ActivityIrCorrectionLiteThreeBinding
 import com.example.thermal_lite.fragment.IRMonitorLiteFragment
-import com.mpdc4gsr.lib.core.ktbase.BaseActivity
+import com.mpdc4gsr.libunified.app.ktbase.BaseActivity
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 

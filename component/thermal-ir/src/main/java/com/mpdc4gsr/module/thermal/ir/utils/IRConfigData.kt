@@ -1,7 +1,7 @@
 package com.mpdc4gsr.module.thermal.ir.utils
 
 import android.content.Context
-import com.mpdc4gsr.lib.core.R as LibcoreR
+import com.mpdc4gsr.libunified.app.R as LibcoreR
 
 
 data class IRConfigData(val name: String, val value: String) {

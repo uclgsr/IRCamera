@@ -6,9 +6,9 @@ import android.content.Intent
 import android.hardware.usb.UsbDevice
 import android.hardware.usb.UsbManager
 import android.util.Log
-import com.mpdc4gsr.lib.core.bean.event.device.DeviceConnectEvent
-import com.mpdc4gsr.lib.core.bean.event.device.DevicePermissionEvent
-import com.mpdc4gsr.lib.core.config.DeviceConfig.isTcTsDevice
+import com.mpdc4gsr.libunified.app.bean.event.device.DeviceConnectEvent
+import com.mpdc4gsr.libunified.app.bean.event.device.DevicePermissionEvent
+import com.mpdc4gsr.libunified.app.config.DeviceConfig.isTcTsDevice
 import org.greenrobot.eventbus.EventBus
 
 

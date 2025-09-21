@@ -1,8 +1,8 @@
 package com.mpdc4gsr.module.thermal.ir.report.activity
 
-import com.mpdc4gsr.lib.core.config.ExtraKeyConfig
-import com.mpdc4gsr.lib.core.ktbase.BaseActivity
-import com.mpdc4gsr.lib.core.view.TitleView
+import com.mpdc4gsr.libunified.app.config.ExtraKeyConfig
+import com.mpdc4gsr.libunified.app.ktbase.BaseActivity
+import com.mpdc4gsr.libunified.app.view.TitleView
 import com.mpdc4gsr.module.thermal.ir.R
 import com.mpdc4gsr.module.thermal.ir.report.bean.ReportInfoBean
 import com.mpdc4gsr.module.thermal.ir.report.view.ReportInfoView

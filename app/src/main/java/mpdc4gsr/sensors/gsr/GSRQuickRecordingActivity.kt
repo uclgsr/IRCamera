@@ -10,7 +10,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.csl.irCamera.R
 import com.csl.irCamera.databinding.ActivityGsrQuickRecordingBinding
-import com.mpdc4gsr.lib.core.ktbase.BaseBindingActivity
+import com.mpdc4gsr.libunified.app.ktbase.BaseBindingActivity
 import kotlinx.coroutines.launch
 import mpdc4gsr.controller.RecordingController
 

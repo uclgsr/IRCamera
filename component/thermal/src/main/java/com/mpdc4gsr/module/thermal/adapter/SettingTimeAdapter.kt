@@ -42,7 +42,7 @@ class SettingTimeAdapter(val context: Context) :
                 holder.btn.setTextColor(
                     ContextCompat.getColor(
                         context,
-                        com.mpdc4gsr.lib.core.R.color.white
+                        com.mpdc4gsr.libunified.R.color.white
                     )
                 )
             } else {
@@ -50,7 +50,7 @@ class SettingTimeAdapter(val context: Context) :
                 holder.btn.setTextColor(
                     ContextCompat.getColor(
                         context,
-                        com.mpdc4gsr.lib.core.R.color.font_third_color
+                        com.mpdc4gsr.libunified.R.color.font_third_color
                     )
                 )
             }
