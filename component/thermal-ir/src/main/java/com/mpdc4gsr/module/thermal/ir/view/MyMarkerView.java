@@ -1,11 +1,9 @@
-package com.mpdc4gsr.module.thermal.ir.view;
+package com.mpdc4gsr.module.thermal.view;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.view.View;
 import android.widget.TextView;
 
-import com.elvishew.xlog.XLog;
 import com.github.mikephil.charting.components.MarkerView;
 import com.github.mikephil.charting.data.CandleEntry;
 import com.github.mikephil.charting.data.Entry;
@@ -13,11 +11,9 @@ import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.utils.MPPointF;
 import com.github.mikephil.charting.utils.Utils;
 import com.mpdc4gsr.lib.core.db.entity.ThermalEntity;
+import com.mpdc4gsr.lib.core.tools.NumberTools;
 import com.mpdc4gsr.lib.core.tools.TimeTool;
-import com.mpdc4gsr.lib.core.tools.UnitTools;
 import com.mpdc4gsr.module.thermal.ir.R;
-
-import java.util.Locale;
 
 @SuppressLint("ViewConstructor")
 public class MyMarkerView extends MarkerView {
@@ -32,36 +28,30 @@ public class MyMarkerView extends MarkerView {
     }
 
 
-    @SuppressLint({"DefaultLocale", "SetTextI18n"})
+    @SuppressLint("DefaultLocale")
     @Override
     public void refreshContent(Entry e, Highlight highlight) {
-        try {
-            if (e instanceof CandleEntry) {
-                CandleEntry ce = (CandleEntry) e;
-                tvContent.setText(Utils.formatNumber(ce.getHigh(), 0, true));
+        int index = highlight.getDataIndex();
+        ThermalEntity data = (ThermalEntity) e.getData();
+        if (e instanceof CandleEntry) {
+            CandleEntry ce = (CandleEntry) e;
+            tvContent.setText(Utils.formatNumber(ce.getHigh(), 0, true));
+        } else {
+            StringBuilder str = new StringBuilder();
+            String thermalStr = NumberTools.INSTANCE.to02(data.getThermal());
+            String thermalMaxStr = NumberTools.INSTANCE.to02(data.getThermalMax());
+            String thermalMinStr = NumberTools.INSTANCE.to02(data.getThermalMin());
+            if (index == 0) {
+                str.append("[CHINESE_TEXT]:").append(thermalStr);
+            } else if (index == 1) {
+                str.append("[CHINESE_TEXT]:").append(thermalMaxStr);
+                str.append(System.getProperty("line.separator")).append("[CHINESE_TEXT]:").append(thermalMinStr);
             } else {
-                if (e.getData() instanceof ThermalEntity) {
-                    ThermalEntity data = (ThermalEntity) e.getData();
-                    int index = highlight.getDataIndex();
-                    StringBuilder str = new StringBuilder();
-                    if (index == 0) {
-                        str.append(com.blankj.utilcode.util.Utils.getApp().getString(R.string.chart_temperature) + ": ").append(UnitTools.showC(data.getThermal()));
-                    } else if (index == 1) {
-                        str.append(com.blankj.utilcode.util.Utils.getApp().getString(R.string.chart_temperature_high) + ": ").append(UnitTools.showC(data.getThermalMax()));
-                        str.append(System.getProperty("line.separator")).append(com.blankj.utilcode.util.Utils.getApp().getString(R.string.chart_temperature_low) + ": ").append(UnitTools.showC(data.getThermalMin()));
-                    } else {
-                        str.append(com.blankj.utilcode.util.Utils.getApp().getString(R.string.chart_temperature_high) + ": ").append(UnitTools.showC(data.getThermalMax()));
-                        str.append(System.getProperty("line.separator")).append(com.blankj.utilcode.util.Utils.getApp().getString(R.string.chart_temperature_low) + ": ").append(UnitTools.showC(data.getThermalMin()));
-                    }
-                    tvContent.setText(str.toString());
-                    timeText.setText(TimeTool.INSTANCE.showTimeSecond(data.getCreateTime()));
-                } else {
-                    tvContent.setText(com.blankj.utilcode.util.Utils.getApp().getString(R.string.chart_temperature) + ": " + String.format(Locale.ENGLISH, "%.1f", e.getY()) + UnitTools.showUnit());
-                    timeText.setVisibility(View.GONE);
-                }
+                str.append("[CHINESE_TEXT]:").append(thermalMaxStr);
+                str.append(System.getProperty("line.separator")).append("[CHINESE_TEXT]:").append(thermalMinStr);
             }
-        } catch (Exception ex) {
-            XLog.e("MarkerView error: " + ex.getMessage());
+            tvContent.setText(str.toString());
+            timeText.setText(TimeTool.INSTANCE.showTimeSecond(data.getCreateTime()));
         }
         super.refreshContent(e, highlight);
     }

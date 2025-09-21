@@ -73,7 +73,6 @@ dependencies {
     implementation(project(":libapp"))
     implementation(project(":libir"))
     implementation(project(":libui"))
-    implementation(project(":component:thermal"))
     implementation(project(":component:user"))
     compileOnly(files("../../libir/libs/suplib-release.aar"))
     compileOnly(files("../../libir/libs/ai-upscale-release.aar"))
@@ -81,6 +80,7 @@ dependencies {
     compileOnly(files("../../libir/libs/libusbdualsdk_1.3.4_2406271906_standard.aar"))
     compileOnly(files("../../libir/libs/libAC020sdk_USB_IR_1.1.1_2408291439.aar"))
     compileOnly(files("../../libir/libs/libirutils_1.2.0_2409241055.aar"))
+    compileOnly(files("../../app/libs/libcommon_1.2.0_24052117.aar"))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.localbroadcastmanager)
@@ -90,6 +90,7 @@ dependencies {
     implementation(libs.lottie)
     implementation(libs.easyswipemenulayout)
     implementation(libs.mn.image.browser)
+    implementation(libs.bundles.ui.common)
 
 
 
@@ -103,4 +104,11 @@ dependencies {
     implementation(libs.media3.ui)
     implementation(libs.refresh.layout.kernel.legacy)
     implementation(libs.refresh.header.classics.legacy)
+    testImplementation(libs.junit)
+    testImplementation("org.robolectric:robolectric:4.10.3")
+    testImplementation("androidx.test:core:1.5.0")
+    testImplementation("androidx.test.ext:junit:1.1.5")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
+    androidTestImplementation(libs.test.ext.junit)
+    androidTestImplementation(libs.test.espresso.core)
 }

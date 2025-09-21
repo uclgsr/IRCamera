@@ -15,7 +15,7 @@ import com.github.mikephil.charting.formatter.ValueFormatter
 import com.mpdc4gsr.lib.core.tools.UnitTools
 import com.mpdc4gsr.module.thermal.ir.R
 import com.mpdc4gsr.lib.core.R as LibR
-import com.mpdc4gsr.module.thermal.R as ThermalR
+import com.mpdc4gsr.module.thermal.ir.R as ThermalR
 
 class ChartTrendView : LineChart {
     constructor(context: Context) : this(context, null)

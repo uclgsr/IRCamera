@@ -26,7 +26,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import com.mpdc4gsr.lib.core.R as LibR
 import com.mpdc4gsr.lib.core.R as LibcoreR
-import com.mpdc4gsr.module.thermal.R as ThermalR
+import com.mpdc4gsr.module.thermal.ir.R as ThermalR
 
 class ChartLogView : LineChart {
     private val mHandler by lazy { Handler(Looper.getMainLooper()) }

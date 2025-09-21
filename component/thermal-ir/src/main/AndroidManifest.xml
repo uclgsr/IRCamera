@@ -130,6 +130,47 @@
         <activity
             android:name=".activity.ImagePickIRActivity"
             android:screenOrientation="userPortrait" />
+
+        <!-- Activities from thermal module -->
+        <activity
+            android:name=".activity.ThermalActivity"
+            android:screenOrientation="behind" />
+        <activity
+            android:name=".activity.MonitorActivity"
+            android:screenOrientation="behind" />
+        <activity
+            android:name=".activity.ConnectActivity"
+            android:screenOrientation="behind" />
+        <activity
+            android:name=".activity.GalleryActivity"
+            android:screenOrientation="behind" />
+        <activity
+            android:name=".activity.VideoActivity"
+            android:screenOrientation="behind" />
+        <activity
+            android:name=".activity.MonitorChartActivity"
+            android:screenOrientation="behind" />
+        <activity
+            android:name=".activity.LogMPChartActivity"
+            android:screenOrientation="behind" />
+
+        <!-- Activities from thermal-lite module -->
+        <activity android:name=".lite.activity.IRMonitorLiteActivity" />
+        <activity android:name=".lite.activity.IRMonitorChartLiteActivity" />
+        <activity android:name=".lite.activity.IRCorrectionLiteThreeActivity" />
+        <activity android:name=".lite.activity.IRCorrectionLiteFourActivity" />
+        <activity
+            android:name=".lite.activity.ImagePickIRLiteActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".lite.activity.IRThermalLiteActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:maxAspectRatio="2.4"
+            android:requestLegacyExternalStorage="true"
+            android:screenOrientation="userPortrait"
+            android:windowSoftInputMode="adjustPan" />
     </application>
 
 </manifest>

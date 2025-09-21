@@ -28,7 +28,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="123"
-            android:textColor="#ffffff"
+            android:textColor="#FFC2D7FF"
             android:textSize="@dimen/app_smaller_font" />
 
         <TextView
@@ -37,7 +37,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="1dp"
             android:text="2021-10-27 17:52:10"
-            android:textColor="#bbbbbb"
+            android:textColor="#FF8192B4"
             android:textSize="@dimen/app_font_10" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

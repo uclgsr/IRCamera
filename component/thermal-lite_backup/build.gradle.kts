@@ -68,7 +68,6 @@ dependencies {
     implementation(project(":libapp"))
     implementation(project(":libir"))
     implementation(project(":libui"))
-    implementation(project(":component:thermal-ir"))
     implementation(project(":BleModule"))
     compileOnly(files("../../libir/libs/libAC020sdk_USB_IR_1.1.1_2408291439.aar"))
     compileOnly(files("../../libir/libs/libirutils_1.2.0_2409241055.aar"))

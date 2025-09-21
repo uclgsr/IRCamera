@@ -7,8 +7,8 @@
 
     <ImageView
         android:id="@+id/item_menu_tab_img"
-        android:layout_width="62dp"
-        android:layout_height="62dp"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
         android:padding="6dp"
         app:layout_constraintBottom_toTopOf="@id/item_menu_tab_text"
         app:layout_constraintEnd_toEndOf="parent"
@@ -20,7 +20,7 @@
         android:id="@+id/item_menu_tab_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/white"
+        android:textColor="@color/font_third_color"
         android:textSize="@dimen/app_font_10"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

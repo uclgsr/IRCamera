@@ -1,4 +1,4 @@
-package com.mpdc4gsr.module.thermal.ir.utils
+package com.mpdc4gsr.module.thermal.utils
 
 object ArrayUtils {
 
