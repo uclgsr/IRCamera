@@ -106,7 +106,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/temperature_seekbar" />
 
-            <com.mpdc4gsr.libunified.app.widget.seekbar.RangeSeekBar
+            <com.topdon.lib.ui.widget.seekbar.RangeSeekBar
                 android:id="@+id/temperature_seekbar"
                 android:layout_width="80dp"
                 android:layout_height="0dp"

@@ -107,8 +107,8 @@ import com.mpdc4gsr.libunified.app.utils.CommUtils
 import com.mpdc4gsr.libunified.app.utils.ImageUtils
 import com.mpdc4gsr.libunified.app.utils.ScreenUtil
 import com.mpdc4gsr.lib.ui.dialog.TipPreviewDialog
-import com.mpdc4gsr.libunified.app.widget.seekbar.OnRangeChangedListener
-import com.mpdc4gsr.libunified.app.widget.seekbar.RangeSeekBar
+import com.topdon.lib.ui.widget.seekbar.OnRangeChangedListener
+import com.topdon.lib.ui.widget.seekbar.RangeSeekBar
 import com.mpdc4gsr.module.thermalunified.activity.BaseIRActivity
 import com.mpdc4gsr.module.thermalunified.adapter.CameraItemAdapter
 import com.mpdc4gsr.module.thermalunified.bean.DataBean
