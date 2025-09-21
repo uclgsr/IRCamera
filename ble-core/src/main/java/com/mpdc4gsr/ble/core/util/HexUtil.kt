@@ -1,4 +1,4 @@
-package com.mpdc4gsr.ble.util
+package com.mpdc4gsr.ble.core.util
 
 import android.util.Log
 import java.io.ByteArrayOutputStream

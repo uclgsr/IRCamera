@@ -1,4 +1,4 @@
-package com.mpdc4gsr.ble.util
+package com.mpdc4gsr.ble.core.util
 
 interface Logger {
     fun log(priority: Int, type: Int, msg: String?)
