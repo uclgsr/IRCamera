@@ -46,7 +46,7 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
         isCoreLibraryDesugaringEnabled = true
     }
-    
+
     kotlin {
         compilerOptions {
             jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
@@ -144,10 +144,10 @@ dependencies {
     implementation(project(":ble-core"))
 
     coreLibraryDesugaring(libs.desugar.jdk.libs)
-    
+
     // Combined dependencies from all three libraries
     api(fileTree(mapOf("include" to listOf("*.jar"), "dir" to "libs")))
-    
+
     // IR-specific AAR files that need to be compiled
     compileOnly(files("libs/libusbdualsdk_1.3.4_2406271906_standard.aar"))
     compileOnly(files("libs/libAC020sdk_USB_IR_1.1.1_2408291439.aar"))
@@ -159,7 +159,7 @@ dependencies {
     compileOnly(files("libs/jetified-tas_api-1.0.4.0.aar"))
     compileOnly(files("libs/library_1.0.aar"))
     compileOnly(files("../app/libs/libcommon_1.2.0_24052117.aar"))
-    
+
     api(libs.androidx.appcompat)
     api(libs.androidx.preference)
     api(libs.fragment.ktx)
@@ -193,16 +193,16 @@ dependencies {
     api(libs.xmlbeans)
     api(libs.stax.api)
     api(libs.aalto.xml)
-    
+
     // IR-specific dependencies
     api("com.conghuahuadan:superlayout:1.1.0")
     api(libs.ir.layout)
     api(libs.andromeda.core)
     api(libs.andromeda.sense)
-    
+
     // UI-specific dependencies
     api(libs.bundles.ui.common)
-    
+
     testImplementation("org.robolectric:robolectric:4.10.3")
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.1")

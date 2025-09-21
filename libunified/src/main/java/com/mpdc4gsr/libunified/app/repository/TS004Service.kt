@@ -91,7 +91,6 @@ interface TS004Service {
     suspend fun deleteFile(@Body requestBody: RequestBody): TS004Response<Boolean>
 
 
-
     @POST("/api/v1/system/remoteUpgrade")
     suspend fun firmwareUpdateStart(): TS004Response<Boolean>
 
@@ -111,7 +110,6 @@ interface TS004Service {
 
     @POST("/api/v1/system/getUpgradeStatus")
     suspend fun getUpgradeStatus(): TS004Response<UpgradeStatus>
-
 
 
     @POST("/api/v1/system/getFreeSpace")

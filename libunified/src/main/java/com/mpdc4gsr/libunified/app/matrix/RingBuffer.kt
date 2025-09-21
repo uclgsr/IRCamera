@@ -89,7 +89,7 @@ class RingBuffer {
      */
     fun read(buffer: ByteArray?, offset: Int, length: Int): Int {
         if (buffer == null) return 0
-        
+
         var toEnd: Int
         var toRead: Int
         synchronized(this) {
@@ -114,7 +114,6 @@ class RingBuffer {
         }
         return toRead
     }
-
 
 
     fun moveForward(length: Int): Int {

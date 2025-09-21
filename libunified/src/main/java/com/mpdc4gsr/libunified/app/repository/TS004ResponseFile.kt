@@ -1,8 +1,6 @@
 package com.mpdc4gsr.libunified.app.repository
 
 
-
-
 data class TS004Response<T>(
     val command: Int,
     val data: T?,

@@ -1,5 +1,3 @@
-
-
 package com.mpdc4gsr.libunified.app.matrix.utils;
 
 import java.security.InvalidParameterException;

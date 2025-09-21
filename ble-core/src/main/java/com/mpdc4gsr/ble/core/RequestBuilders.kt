@@ -22,7 +22,7 @@ interface RequestBuilderFactory {
  * Write characteristic builder
  */
 interface WriteCharacteristicBuilder {
-    fun setData(data: ByteArray): WriteCharacteristicBuilder  
+    fun setData(data: ByteArray): WriteCharacteristicBuilder
     fun setWriteOptions(options: WriteOptions): WriteCharacteristicBuilder
     fun build(): Request
 }

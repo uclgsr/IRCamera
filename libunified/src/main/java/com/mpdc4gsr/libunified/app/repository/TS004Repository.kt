@@ -49,7 +49,6 @@ object TS004Repository {
         .create(TS004Service::class.java)
 
 
-
     suspend fun downloadList(dataMap: Map<String, File>, listener: ((path: String, isSuccess: Boolean) -> Unit)): Int {
         return withContext(Dispatchers.IO) {
             var successCount = 0
@@ -143,7 +142,6 @@ object TS004Repository {
     }
 
 
-
     suspend fun getFileCount(fileType: Int): Int? = withContext(Dispatchers.IO) {
         try {
             val paramMap: HashMap<String, Any> = HashMap()
@@ -215,7 +213,6 @@ object TS004Repository {
             false
         }
     }
-
 
 
     suspend fun updateFirmware(file: File): Boolean = withContext(Dispatchers.IO) {
@@ -387,7 +384,6 @@ object TS004Repository {
             null
         }
     }
-
 
 
     suspend fun setZoom(factor: Int): Boolean = withContext(Dispatchers.IO) {

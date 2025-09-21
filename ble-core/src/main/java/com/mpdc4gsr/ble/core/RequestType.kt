@@ -4,7 +4,7 @@ package com.mpdc4gsr.ble.core
 package com.mpdc4gsr.ble;
 
 public enum RequestType {
->>>>>>>> dev:ble-core/src/main/java/com/mpdc4gsr/ble/core/RequestType.java
+    >>>>>>>> dev:ble-core/src/main/java/com/mpdc4gsr/ble/core/RequestType.java
 
     SET_NOTIFICATION,
 

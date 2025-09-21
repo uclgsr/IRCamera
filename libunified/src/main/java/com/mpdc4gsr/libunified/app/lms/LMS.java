@@ -158,25 +158,25 @@ public class LMS {
     public void uploadFile(File file, int param1, int param2, int param3, IResponseCallback callback) {
         uploadFileInternal(file, callback);
     }
-    
+
     public void uploadFile(File file, IResponseCallback callback) {
         uploadFileInternal(file, callback);
     }
-    
+
     private void uploadFileInternal(File file, IResponseCallback callback) {
         if (callback != null) {
             if (file == null || !file.exists()) {
                 callback.onFail(new Exception("File not found or invalid"));
                 return;
             }
-            
+
             // Simulate file upload with more realistic response including file data
             String fileName = file.getName();
             String fileId = "file_" + System.currentTimeMillis() + "_" + fileName.hashCode();
             String response = String.format(
-                "{\"code\":\"2000\",\"message\":\"success\",\"data\":{\"fileSecret\":\"%s\",\"url\":\"https://example.com/uploads/%s\"}}",
-                fileId,
-                fileName
+                    "{\"code\":\"2000\",\"message\":\"success\",\"data\":{\"fileSecret\":\"%s\",\"url\":\"https://example.com/uploads/%s\"}}",
+                    fileId,
+                    fileName
             );
             callback.onResponse(response);
         }

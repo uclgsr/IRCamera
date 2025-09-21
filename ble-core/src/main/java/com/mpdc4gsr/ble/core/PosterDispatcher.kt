@@ -16,11 +16,11 @@ interface PosterDispatcher {
  */
 class DefaultPosterDispatcher : PosterDispatcher {
     private val handler = Handler(Looper.getMainLooper())
-    
+
     override fun post(event: Runnable) {
         handler.post(event)
     }
-    
+
     override fun postDelayed(event: Runnable, delayMillis: Long) {
         handler.postDelayed(event, delayMillis)
     }

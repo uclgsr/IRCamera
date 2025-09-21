@@ -91,14 +91,6 @@ dependencies {
     implementation(libs.easyswipemenulayout)
     implementation(libs.mn.image.browser)
     implementation(libs.bundles.ui.common)
-
-
-
-
-
-
-
-
     implementation(libs.media3.exoplayer)
     implementation(libs.media3.exoplayer.dash)
     implementation(libs.media3.ui)

@@ -23,7 +23,6 @@ object ResultCode {
     val SUCC_USB_SEND_CMD = 6
 
 
-
     val ERROR_FIND_DEVICE_NOT_MATCH = -100
 
 

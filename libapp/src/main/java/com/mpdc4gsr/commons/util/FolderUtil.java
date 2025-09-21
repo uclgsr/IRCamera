@@ -8,7 +8,6 @@ import com.mpdc4gsr.libunified.app.lms.LMS;
 import java.io.File;
 
 
-
 public class FolderUtil {
     public static String mPath = "/data/user/0/com.mpdc4gsr.diag.artidiag/files";
     public static String mUserId;

@@ -4,7 +4,7 @@ package com.mpdc4gsr.ble.core
 package com.mpdc4gsr.ble;
 
 public enum ConnectionState {
->>>>>>>> dev:ble-core/src/main/java/com/mpdc4gsr/ble/core/ConnectionState.java
+    >>>>>>>> dev:ble-core/src/main/java/com/mpdc4gsr/ble/core/ConnectionState.java
 
     DISCONNECTED,
 

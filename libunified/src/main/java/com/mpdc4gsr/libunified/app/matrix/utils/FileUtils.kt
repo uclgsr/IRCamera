@@ -10,7 +10,6 @@ import com.mpdc4gsr.libunified.app.matrix.utils.StringUtils
 import java.io.*
 
 
-
 class FileUtils {
 
     companion object {
@@ -27,7 +26,6 @@ class FileUtils {
         }
 
 
-
         fun deleteDirectory(filePath: String): Boolean {
             var filePath = filePath
             var flag = false
@@ -41,7 +39,7 @@ class FileUtils {
             }
             flag = true
             val files = dirFile.listFiles()
-            
+
             if (files != null) {
                 for (file in files) {
                     flag = if (file.isFile) {
