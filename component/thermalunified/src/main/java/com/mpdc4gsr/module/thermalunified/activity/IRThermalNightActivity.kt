@@ -124,8 +124,8 @@ import com.mpdc4gsr.libunified.app.view.MainTitleView
 import com.mpdc4gsr.lib.ui.dialog.ThermalInputDialog
 import com.mpdc4gsr.lib.ui.dialog.TipGuideDialog
 import com.mpdc4gsr.lib.ui.dialog.TipPreviewDialog
-import com.jaygoo.widget.OnRangeChangedListener
-import com.jaygoo.widget.DefRangeSeekBar
+import com.mpdc4gsr.libunified.app.widget.seekbar.OnRangeChangedListener
+import com.mpdc4gsr.libunified.app.widget.seekbar.RangeSeekBar
 import com.mpdc4gsr.module.thermalunified.R
 import com.mpdc4gsr.module.thermalunified.adapter.CameraItemAdapter
 import com.mpdc4gsr.module.thermalunified.adapter.MeasureItemAdapter
@@ -287,7 +287,7 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
     private val distance_measure_view by lazy { findViewById<View>(R.id.distance_measure_view) }
     private val zoomView by lazy { findViewById<com.infisense.usbir.view.ZoomCaliperView>(R.id.zoomView) }
     protected val temperatureSeekbar by lazy {
-        findViewById<com.jaygoo.widget.DefRangeSeekBar>(
+        findViewById<com.mpdc4gsr.libunified.app.widget.seekbar.RangeSeekBar>(
             R.id.temperature_seekbar
         )
     }
