@@ -1,4 +1,4 @@
-package mpdc4gsr
+package mpdc4gsr.activities
 
 import android.annotation.SuppressLint
 import android.os.Handler

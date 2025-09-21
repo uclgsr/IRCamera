@@ -1,4 +1,4 @@
-package com.mpdc4gsr.lib.core.bean
+package com.mpdc4gsr.lib.core.repository
 
 import android.os.Parcel
 import android.os.Parcelable

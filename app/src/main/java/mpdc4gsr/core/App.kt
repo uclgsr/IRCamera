@@ -1,4 +1,4 @@
-package mpdc4gsr.app
+package mpdc4gsr.core
 
 
 import android.app.Activity

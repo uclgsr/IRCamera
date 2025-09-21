@@ -1,4 +1,4 @@
-package mpdc4gsr.service
+package mpdc4gsr.core
 
 import android.app.Notification
 import android.app.NotificationChannel
