@@ -82,6 +82,7 @@ xpopup = "2.10.0"
 smartRefreshLayout = "2.1.1"
 smartRefreshLayoutV2 = "2.1.0"
 smartRefreshHeaderV2 = "2.1.0"
+# NOTE: V3.0.0-alpha available but using stable 2.x versions for production reliability
 brvah = "3.0.11"
 colorpickerview = "2.3.0"
 photoview = "2.3.0"
