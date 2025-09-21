@@ -174,7 +174,6 @@ flowchart TD
 ```
 
 ## Component Dependency Flow
-# Mermaid Diagrams
 
 ## Code Quality Improvements Flow
 
@@ -262,8 +261,7 @@ graph TD
     TC --> LU
 ```
 
-## Architecture Overview
-## Risk Assessment Matrix
+## Architecture Overview & Risk Assessment Matrix
 
 ```mermaid
 graph LR
