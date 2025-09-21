@@ -1,5 +1,7 @@
 package com.mpdc4gsr.ble.core
 
+import java.util.UUID
+
 interface Request {
     val device: Device
 
