@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.1.2] - BLE Core WriteOptions Fix (2024-12-21)
+
+### Fixed
+- **WriteOptions.Builder**: Fixed private field access issue in WriteOptions constructor by changing Builder field visibility from private to internal
+- Resolved compilation errors: Cannot access packageWriteDelayMillis, requestWriteDelayMillis, packageSize, isWaitWriteResult, writeType, useMtuAsPackageSize
+
 ## [2.1.1] - BLE Core Module Compilation Fix (2024-12-21)
 
 ### Fixed

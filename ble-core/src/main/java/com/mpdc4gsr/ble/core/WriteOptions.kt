@@ -20,12 +20,12 @@ class WriteOptions private constructor(builder: Builder) {
     }
 
     class Builder {
-        private var packageWriteDelayMillis = 0
-        private var requestWriteDelayMillis = -1
-        private var packageSize = 20
-        private var isWaitWriteResult = true
-        private var writeType = -1
-        private var useMtuAsPackageSize = false
+        internal var packageWriteDelayMillis = 0
+        internal var requestWriteDelayMillis = -1
+        internal var packageSize = 20
+        internal var isWaitWriteResult = true
+        internal var writeType = -1
+        internal var useMtuAsPackageSize = false
 
         fun setPackageWriteDelayMillis(packageWriteDelayMillis: Int): Builder {
             this.packageWriteDelayMillis = packageWriteDelayMillis
