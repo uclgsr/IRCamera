@@ -1,7 +1,5 @@
 # Changelog
 
-All notable changes to the IRCamera project will be documented in this file.
-
 ## [Unreleased]
 
 ### Removed

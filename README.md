@@ -49,6 +49,18 @@ See [SIMPLIFIED_ARCHITECTURE.md](SIMPLIFIED_ARCHITECTURE.md) for complete detail
 - [Stage3 Integration Guide](docs/INTEGRATION_GUIDE_STAGE3.md) - Developer integration guide
 - [Development Tools](dev.sh) - Use `./dev.sh help` for available commands
 - [Project Documentation](docs/) - Comprehensive technical documentation
+- [Changelog](CHANGELOG.md) - Project changes and fixes
+- [Development Backlog](BACKLOG.md) - Current and planned work items
+- [Architecture Diagrams](MERMAID_DIAGRAMS.md) - Visual project structure and flows
+
+## Code Quality
+
+This project maintains high code quality standards:
+
+- **Zero Kotlin Compilation Warnings**: All type safety and null safety issues resolved
+- **Type-Safe Operations**: Proper null handling throughout the codebase  
+- **Modern Kotlin Practices**: Uses @OptIn for experimental APIs and proper nullable handling
+- **Continuous Integration**: Automated builds and quality checks
 
 ## Key Features
 

@@ -380,7 +380,7 @@ class GuideInterface {
         if (mGuideUsbManager == null) {
             return FirmwareUpgradeResultCode.USB_DEVICE_ERROR
         }
-        if (TextUtils.isEmpty(path)) {
+        if (path.isNullOrEmpty()) {
             return FirmwareUpgradeResultCode.FILE_ERROR
         }
         val file = File(path)

@@ -23,9 +23,7 @@ class UsbBuffer {
     }
 
     fun write(buffer: ByteArray?, offset: Int, length: Int) {
-        if (mRingBuffer != null) {
-            mRingBuffer.write(buffer, offset, length)
-        }
+        mRingBuffer.write(buffer, offset, length)
     }
 
 
@@ -64,17 +62,13 @@ class UsbBuffer {
     }
 
     fun readFrame(frame: ByteArray): Boolean {
-        if (mRingBuffer == null) {
-            return false
-        }
-
         if (mRingBuffer.getUnReadLength() < mFrameSize * 4) {
 //            Logger.d(TAG, "RingBuffer <4");
             return false
         }
         while (findHeadFramePos == -1 && mRingBuffer.getUnReadLength() > mFrameSize * 2) {
             mRingBuffer.read(mPakagebuffer, 0, mPakagebuffer.size)
-            findHeadFramePos = if (mPakagebuffer != null && mPacketSize == mPakagebuffer.size) {
+            findHeadFramePos = if (mPacketSize == mPakagebuffer.size) {
                 //findHeadFrame = isValidFrame(mPakagebuffer);
                 isValidFrameInt(mPakagebuffer)
             } else {
@@ -91,7 +85,7 @@ class UsbBuffer {
             mRingBuffer.moveForward(mFrameSize)
             mRingBuffer.read(mPakagebuffer, 0, mPacketSize)
             //Log.d(TAG, "2: " + BaseDataTypeConvertUtils.Companion.byteArr2HexString(mPakagebuffer));
-            findHeadFrame = if (mPakagebuffer != null && mPacketSize == mPakagebuffer.size) {
+            findHeadFrame = if (mPacketSize == mPakagebuffer.size) {
                 isValidFrame(mPakagebuffer)
             } else {
                 false
