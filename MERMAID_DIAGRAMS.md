@@ -42,6 +42,165 @@ graph LR
     AppHolder --> LifecycleCallbacks
 ```
 
+## BLE Core Module Structure (2024-12-21)
+
+### BLE Core Callback Architecture
+
+## BLE Core Module Interface Structure (2024-12-21)
+
+### GenericRequest Class Hierarchy
+
+```mermaid
+classDiagram
+    class Request {
+        <<interface>>
+        +val device: Device
+        +val type: RequestType
+        +val tag: String?
+        +val service: UUID?
+        +val characteristic: UUID?
+        +val descriptor: UUID?
+        +execute(connection: Connection?)
+    }
+    
+    class RequestBuilder {
+        <<interface>>
+        +val tag: String?
+        +val type: RequestType
+        +val service: UUID?
+        +val characteristic: UUID?
+        +val descriptor: UUID?
+        +val priority: Int
+        +val value: Any?
+        +val callback: RequestCallback?
+        +val writeOptions: WriteOptions?
+        +build(): Request
+        +setCallback(callback: Any): T
+        +setTimeout(timeoutMillis: Long): T
+    }
+    
+    class GenericRequest {
+        +override val tag: String?
+        +override val device: Device
+        -_device: Device?
+        +override val type: RequestType
+        +override val service: UUID?
+        +override val characteristic: UUID?
+        +override val descriptor: UUID?
+        +var value: Any?
+        +var priority: Int
+        +var callback: RequestCallback?
+        +var writeOptions: WriteOptions?
+        +compareTo(other: GenericRequest): Int
+        +setDevice(device: Device): void
+        +execute(connection: Connection?)
+    }
+    
+    class RequestCallback {
+        <<interface>>
+        +onResult(success: Boolean, message: String?)
+        +onProgress(progress: Int)
+    }
+    
+    class Comparable {
+        <<interface>>
+        +compareTo(T): Int
+    }
+    
+    Request <|.. GenericRequest
+    Comparable <|.. GenericRequest
+    RequestBuilder ..> Request : builds
+    GenericRequest --> RequestCallback : uses
+```
+
+## BLE Core WriteOptions Fix (2024-12-21)
+
+### WriteOptions Class Structure After Fix
+
+```mermaid
+classDiagram
+    class WriteOptions {
+        +val packageWriteDelayMillis: Int
+        +val requestWriteDelayMillis: Int 
+        +val isWaitWriteResult: Boolean
+        +val writeType: Int
+        +val useMtuAsPackageSize: Boolean
+        +var packageSize: Int
+        -WriteOptions(builder: Builder)
+    }
+    
+    class Builder {
+        ~internal var packageWriteDelayMillis: Int
+        ~internal var requestWriteDelayMillis: Int
+        ~internal var packageSize: Int
+        ~internal var isWaitWriteResult: Boolean
+        ~internal var writeType: Int
+        ~internal var useMtuAsPackageSize: Boolean
+        +setPackageWriteDelayMillis(Int): Builder
+        +setRequestWriteDelayMillis(Int): Builder
+        +setPackageSize(Int): Builder
+        +setWaitWriteResult(Boolean): Builder
+        +setWriteType(Int): Builder
+        +setMtuAsPackageSize(): Builder
+        +build(): WriteOptions
+    }
+    
+    WriteOptions *-- Builder : contains
+    
+    note for WriteOptions "Constructor accesses Builder's internal fields\nFixed visibility issue by changing private to internal"
+    note for Builder "Fields changed from private to internal\nAllows outer class access while maintaining module encapsulation"
+```
+
+### Fix Details
+
+- **Issue**: Private Builder fields could not be accessed from WriteOptions constructor
+- **Solution**: Changed field visibility from `private var` to `internal var`
+- **Impact**: Enables compilation while maintaining proper encapsulation within module
+- **Files Changed**: `ble-core/src/main/java/com/mpdc4gsr/ble/core/WriteOptions.kt`
+
+## BLE Core Module Structure (Updated 2024-12-21)
+
+### BLE Core Module Class Dependencies
+
+```mermaid
+graph TB
+    subgraph "BLE Core Module"
+        subgraph "Callback Package"
+            RequestCallback[RequestCallback<br/>onRequestSuccess<br/>onRequestFailed]
+            BleConnectionCallback[BleConnectionCallback<br/>onConnectionStateChanged<br/>onServicesDiscovered]
+            BleCharacteristicCallback[BleCharacteristicCallback<br/>onCharacteristicRead<br/>onCharacteristicWrite<br/>onCharacteristicChanged]
+        end
+        
+        subgraph "Util Package"
+            ByteUtil[ByteUtil<br/>bytesToFloat - Fixed<br/>byteToFloat - Fixed]
+            DefaultLogger[DefaultLogger<br/>Logger Implementation - Fixed]
+            HexUtil[HexUtil<br/>uniteBytes - Fixed<br/>Byte Type Conflicts Resolved]
+        end
+        
+        subgraph "Core Classes"
+            GenericRequest[GenericRequest<br/>Uses RequestCallback]
+            ConnectionImpl[ConnectionImpl<br/>Uses Callbacks]
+        end
+    end
+    
+    RequestCallback --> GenericRequest
+    BleConnectionCallback --> ConnectionImpl
+    BleCharacteristicCallback --> ConnectionImpl
+```
+
+
+        Request[Request.kt<br/>Interface with UUID properties<br/>✅ import java.util.UUID]
+        GenericRequest[GenericRequest.kt<br/>Implements Request<br/>✅ import java.util.UUID]
+        Connection[Connection.kt<br/>BLE Connection Management<br/>✅ import java.util.UUID]
+        ConnectionImpl[ConnectionImpl.kt<br/>Connection Implementation<br/>✅ import java.util.UUID]
+        ConnectionConfig[ConnectionConfiguration.kt<br/>BLE Configuration<br/>✅ import java.util.UUID]
+    end
+    
+    Request --> GenericRequest
+    Connection --> ConnectionImpl
+    GenericRequest --> Connection
+    ConnectionConfig --> Connection
+```
 ## Current Standardized Build System (2024-12-21)
 
 ### Gradle Build System Structure
