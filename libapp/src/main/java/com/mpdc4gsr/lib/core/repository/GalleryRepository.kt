@@ -7,8 +7,9 @@ import com.blankj.utilcode.util.FileUtils
 import com.blankj.utilcode.util.Utils
 import com.elvishew.xlog.XLog
 import com.mpdc4gsr.lib.core.bean.GalleryBean
-import com.mpdc4gsr.lib.core.config.FileConfig
+import com.mpdc4gsr.lib.core.repository.TS004Repository
 import com.mpdc4gsr.lib.core.utils.CommUtils
+import com.mpdc4gsr.lib.core.config.FileConfig
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -18,6 +19,7 @@ import java.io.InputStream
 import java.io.OutputStream
 
 object GalleryRepository {
+
     enum class DirType {
         LINE,
         TC007,
@@ -25,10 +27,7 @@ object GalleryRepository {
         TS004_REMOTE,
     }
 
-    private fun copySourDir(
-        sourceDir: File,
-        targetDir: File,
-    ): Boolean {
+    private fun copySourDir(sourceDir: File, targetDir: File): Boolean {
         return try {
             if (!sourceDir.exists()) {
                 return false
@@ -54,10 +53,7 @@ object GalleryRepository {
         }
     }
 
-    private fun copyPictureFile(
-        oldPath: String,
-        newPath: String,
-    ): Boolean {
+    private fun copyPictureFile(oldPath: String, newPath: String): Boolean {
         return try {
             val streamFrom: InputStream = FileInputStream(oldPath)
             val streamTo: OutputStream = FileOutputStream(newPath)
@@ -77,8 +73,7 @@ object GalleryRepository {
     fun readLatest(dirType: DirType): String {
         var firstPath = ""
         try {
-            val path =
-                if (dirType == DirType.LINE) FileConfig.lineGalleryDir else FileConfig.tc007GalleryDir
+            val path = if (dirType == DirType.LINE) FileConfig.lineGalleryDir else FileConfig.tc007GalleryDir
             val dirFile = File(path)
             if (dirFile.isDirectory) {
                 val files = dirFile.listFiles()!!
@@ -92,23 +87,21 @@ object GalleryRepository {
             }
         } catch (e: Exception) {
             e.printStackTrace()
-            XLog.e("[ph][ph][ph][ph][ph][ph]: ${e.message}")
+            XLog.e(": ${e.message}")
             return ""
         }
         return firstPath
     }
 
-    suspend fun loadByPage(
-        isVideo: Boolean,
-        dirType: DirType,
-        pageNum: Int,
-        pageCount: Int,
-    ): ArrayList<GalleryBean>? {
+    suspend fun loadByPage(isVideo: Boolean, dirType: DirType, pageNum: Int, pageCount: Int): ArrayList<GalleryBean>? {
         return withContext(Dispatchers.IO) {
             val resultList: ArrayList<GalleryBean> = ArrayList()
             if (dirType == DirType.TS004_REMOTE) {
-                // TS004Repository functionality removed
-                return@withContext null
+                val pageList =
+                    TS004Repository.getFileByPage(if (isVideo) 1 else 0, pageNum, pageCount) ?: return@withContext null
+                pageList.forEach {
+                    resultList.add(GalleryBean(isVideo, it))
+                }
             } else {
                 try {
                     val allFileList = loadAllLocale(isVideo, dirType)
@@ -126,7 +119,7 @@ object GalleryRepository {
                         }
                     }
                 } catch (e: Exception) {
-                    XLog.e("[ph][ph][ph][ph][ph][ph]: ${e.message}")
+                    XLog.e(": ${e.message}")
                 }
             }
 
@@ -134,50 +127,40 @@ object GalleryRepository {
         }
     }
 
-    suspend fun loadAllReportImg(dirType: DirType): ArrayList<GalleryBean> =
-        withContext(Dispatchers.IO) {
-            val resultList: ArrayList<GalleryBean> = ArrayList()
-            try {
-                val allFileList = loadAllLocale(false, dirType)
-                allFileList.forEach {
-                    resultList.add(GalleryBean(it))
-                }
-                if (resultList.isNotEmpty()) {
-                    resultList.sortByDescending {
-                        it.timeMillis
-                    }
-                }
-            } catch (e: Exception) {
-                XLog.e("[ph][ph][ph][ph][ph][ph]: ${e.message}")
+    suspend fun loadAllReportImg(dirType: DirType): ArrayList<GalleryBean> = withContext(Dispatchers.IO) {
+        val resultList: ArrayList<GalleryBean> = ArrayList()
+        try {
+            val allFileList = loadAllLocale(false, dirType)
+            allFileList.forEach {
+                resultList.add(GalleryBean(it))
             }
-            return@withContext resultList
+            if (resultList.isNotEmpty()) {
+                resultList.sortByDescending {
+                    it.timeMillis
+                }
+            }
+        } catch (e: Exception) {
+            XLog.e(": ${e.message}")
         }
+        return@withContext resultList
+    }
 
-    private fun loadAllLocale(
-        isVideo: Boolean,
-        dirType: DirType,
-    ): ArrayList<File> {
+    private fun loadAllLocale(isVideo: Boolean, dirType: DirType): ArrayList<File> {
         if (dirType == DirType.LINE) {
             val sourFile = File(FileConfig.gallerySourDir)
             if (sourFile.exists()) {
                 val isSuccess = copySourDir(sourFile, File(FileConfig.lineGalleryDir))
                 if (isSuccess) {
                     FileUtils.delete(sourFile)
-                    MediaScannerConnection.scanFile(
-                        Utils.getApp(),
-                        arrayOf(FileConfig.lineGalleryDir),
-                        null,
-                        null
-                    )
+                    MediaScannerConnection.scanFile(Utils.getApp(), arrayOf(FileConfig.lineGalleryDir), null, null)
                 }
             }
         }
-        val dirFile =
-            when (dirType) {
-                DirType.LINE -> File(FileConfig.lineGalleryDir)
-                DirType.TC007 -> File(FileConfig.tc007GalleryDir)
-                else -> File(FileConfig.ts004GalleryDir)
-            }
+        val dirFile = when (dirType) {
+            DirType.LINE -> File(FileConfig.lineGalleryDir)
+            DirType.TC007 -> File(FileConfig.tc007GalleryDir)
+            else -> File(FileConfig.ts004GalleryDir)
+        }
         var files = dirFile.listFiles { pathname -> pathname?.isFile == true }
         if (files.isNullOrEmpty()) {
             files = loadAllLocaleByMediaStore(dirType)
@@ -199,31 +182,28 @@ object GalleryRepository {
     private fun loadAllLocaleByMediaStore(dirType: DirType): Array<out File> {
         val tc001Files: MutableList<File> = ArrayList()
 
-        val projection =
-            arrayOf(
-                MediaStore.Images.Media.DATA,
-            )
+        val projection = arrayOf(
+            MediaStore.Images.Media.DATA
+        )
 
         val selection = MediaStore.Images.Media.DATA + " LIKE ?"
-        val path =
-            when (dirType) {
-                DirType.LINE -> "%DCIM/${CommUtils.getAppName()}%"
-                DirType.TC007 -> "%DCIM/TC007%"
-                else -> "%DCIM/TS004%"
-            }
+        val path = when (dirType) {
+            DirType.LINE -> "%DCIM/${CommUtils.getAppName()}%"
+            DirType.TC007 -> "%DCIM/TC007%"
+            else -> "%DCIM/TS004%"
+        }
         val selectionArgs = arrayOf(path)
 
         val contentResolver: ContentResolver = Utils.getApp().contentResolver
 
         val queryUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-        val cursor =
-            contentResolver.query(
-                queryUri,
-                projection,
-                selection,
-                selectionArgs,
-                null,
-            )
+        val cursor = contentResolver.query(
+            queryUri,
+            projection,
+            selection,
+            selectionArgs,
+            null
+        )
         cursor?.use {
             while (it.moveToNext()) {
                 val filePath = it.getString(it.getColumnIndexOrThrow(MediaStore.Images.Media.DATA))

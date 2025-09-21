@@ -103,7 +103,7 @@ opengl = "2.0.0"
 
 
 utilcode = "1.31.1"
-xxpermissions = "18.5"
+xxpermissions = "20.0"
 xlog = "1.11.0"
 lottie = "6.0.1"
 eventbus = "3.3.1"

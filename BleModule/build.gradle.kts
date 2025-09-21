@@ -1,5 +1,6 @@
 plugins {
     id("com.android.library")
+    kotlin("android")
 }
 
 android {
@@ -35,8 +36,6 @@ android {
 dependencies {
 
     coreLibraryDesugaring(libs.desugar.jdk.libs)
-    // Removed libapp dependency to avoid circular dependency
-    // implementation(project(":libapp"))
     api("androidx.appcompat:appcompat:1.2.0")
     api("org.greenrobot:eventbus:3.2.0")
     api("com.blankj:utilcodex:1.31.1")
@@ -44,8 +43,5 @@ dependencies {
     api("com.elvishew:xlog:1.10.1")
     api("no.nordicsemi.android:ble:2.11.0")
     api(libs.nordic.ble.ktx)
-    // Umeng analytics not available, stubbing out usage
-    // api(libs.umeng.analytics)
-    api(libs.fastjson2)
     implementation(files("libs/ini4j-0.5.5.jar"))
 }

@@ -31,7 +31,7 @@ public class FolderUtil {
 
 
     public static void init() {
-        mUserId = PreUtil.getInstance(Topdon.getApp()).get("VCI_" + LMS.getInstance().getLoginName());
+        mUserId = "mUserId";
         setUserId(mUserId);
         Log.e("bcf", "FolderUtil mUserId: " + mUserId);
         mPath = Topdon.getApp().getExternalFilesDir("").getAbsolutePath();
@@ -51,7 +51,6 @@ public class FolderUtil {
             }
         }
     }
-
 
     public static void initFilePath() {
         String basePath = Topdon.getApp().getExternalFilesDir("").getAbsolutePath() + fileName;

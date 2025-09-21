@@ -2,9 +2,6 @@ package com.mpdc4gsr.commons.util;
 
 import android.text.TextUtils;
 import android.util.Log;
-
-import com.mpdc4gsr.lib.core.lms.LMS;
-
 import java.io.File;
 
 
@@ -31,7 +28,7 @@ public class FolderUtil {
 
 
     public static void init() {
-        mUserId = PreUtil.getInstance(Topdon.getApp()).get("VCI_" + LMS.getInstance().getLoginName());
+        mUserId = "mUserId";
         setUserId(mUserId);
         Log.e("bcf", "FolderUtil mUserId: " + mUserId);
         mPath = Topdon.getApp().getExternalFilesDir("").getAbsolutePath();

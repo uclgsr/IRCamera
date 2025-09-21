@@ -3,7 +3,7 @@ package com.mpdc4gsr.commons.util;
 import android.annotation.SuppressLint;
 import android.text.TextUtils;
 
-import com.mpdc4gsr.lib.core.lms.utils.LanguageUtil;
+import com.mpdc4gsr.lms.utils.LanguageUtil;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -12,10 +12,7 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 
-
 public class TimeGMTUtils {
-
-
 
     private static boolean isDaylight(TimeZone zone, String time) {
         try {
@@ -27,24 +24,6 @@ public class TimeGMTUtils {
             e.printStackTrace();
         }
         return false;
-    }
-
-
-    public static String getGMTConvertTime(String time, String format) {
-        try {
-//            LLog.w("bcf", "GMT--time--" + time);
-            if (TextUtils.isEmpty(time)) {
-                return "";
-            }
-            long longTime = getStringToDate(time, "GMT+00:00", "yyyy-MM-dd HH:mm:ss");
-            Locale curLocale = LanguageUtil.getSystemLocal();
-            String gmt = TimeZone.getDefault().getDisplayName(isDaylight(TimeZone.getDefault(), time), TimeZone.SHORT, curLocale);
-//            LLog.w("bcf", "GMT--" + gmt);
-            return getDateToString(longTime, gmt, format);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return "";
     }
 
     public static String getDateToString(long milSecond, String gmt, String pattern) {
