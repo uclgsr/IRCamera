@@ -32,7 +32,7 @@ public class BluetoothManager implements EventObserver {
     private static boolean isSending = false;
     private static boolean isClickStopCharging = false;
     private static boolean isReceiveBleData = false;
-    private static BluetoothManager instance = null;
+    private static volatile BluetoothManager instance = null;
     private Device mDevice;
     private Connection connection;
     private BluetoothGattCharacteristic writeCharact = null;
@@ -41,8 +41,13 @@ public class BluetoothManager implements EventObserver {
     }
 
     public static BluetoothManager getInstance() {
-        if (instance == null)
-            instance = new BluetoothManager();
+        if (instance == null) {
+            synchronized (BluetoothManager.class) {
+                if (instance == null) {
+                    instance = new BluetoothManager();
+                }
+            }
+        }
         return instance;
     }
 
