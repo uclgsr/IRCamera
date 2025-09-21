@@ -20,7 +20,7 @@ public class PreUtil {
     private final String SHARED_PREFS = "/shared_prefs";
     private static String SHARE_NAME = "ad900_data";
 
-    private static PreUtil instance;
+    private static volatile PreUtil instance;
 
 
     private PreUtil(Context context) {
