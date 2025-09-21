@@ -9,7 +9,7 @@ import com.mpdc4gsr.lib.core.ktbase.BaseActivity
 import com.mpdc4gsr.lib.core.navigation.NavigationManager
 import com.mpdc4gsr.lib.ui.dialog.MonitorSelectDialog
 import com.mpdc4gsr.module.thermal.ir.R
-import com.mpdc4gsr.module.thermal.ir.fragment.event.ThermalActionEvent
+import com.mpdc4gsr.module.thermal.ir.event.ThermalActionEvent
 import org.greenrobot.eventbus.EventBus
 
 class MonitorActivity : BaseActivity(), View.OnClickListener {

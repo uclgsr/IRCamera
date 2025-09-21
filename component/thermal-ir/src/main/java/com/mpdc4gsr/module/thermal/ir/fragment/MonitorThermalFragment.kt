@@ -27,7 +27,7 @@ import com.mpdc4gsr.lib.ui.fence.FenceView
 import com.mpdc4gsr.module.thermal.ir.R
 import com.mpdc4gsr.module.thermal.ir.activity.MonitorActivity
 import com.mpdc4gsr.module.thermal.ir.base.BaseThermalFragment
-import com.mpdc4gsr.module.thermal.ir.fragment.event.ThermalActionEvent
+import com.mpdc4gsr.module.thermal.ir.event.ThermalActionEvent
 import com.mpdc4gsr.module.thermal.ir.tools.Fence
 import com.mpdc4gsr.module.thermal.ir.tools.ThermalTool
 import com.mpdc4gsr.module.thermal.ir.tools.medie.IYapVideoProvider

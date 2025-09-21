@@ -10,7 +10,7 @@ import com.mpdc4gsr.lib.core.ktbase.BaseActivity
 import com.mpdc4gsr.lib.core.menu.MenuFirstTabView
 import com.mpdc4gsr.module.thermal.ir.R
 import com.mpdc4gsr.module.thermal.ir.adapter.MenuTabAdapter
-import com.mpdc4gsr.module.thermal.ir.fragment.event.ThermalActionEvent
+import com.mpdc4gsr.module.thermal.ir.event.ThermalActionEvent
 import org.greenrobot.eventbus.EventBus
 import com.mpdc4gsr.lib.core.R as LibR
 
