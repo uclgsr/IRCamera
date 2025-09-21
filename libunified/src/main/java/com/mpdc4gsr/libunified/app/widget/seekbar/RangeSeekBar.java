@@ -2,13 +2,13 @@ package com.mpdc4gsr.libunified.app.widget.seekbar;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import com.jaygoo.widget.DefRangeSeekBar;
+import android.widget.SeekBar;
 
 /**
- * Thermal imaging specific RangeSeekBar that extends DefRangeSeekBar 
- * with temperature-specific functionality.
+ * Thermal imaging specific RangeSeekBar that provides temperature-specific functionality.
+ * This is a simplified implementation for backward compatibility.
  */
-public class RangeSeekBar extends DefRangeSeekBar {
+public class RangeSeekBar extends androidx.appcompat.widget.AppCompatSeekBar implements SeekBar.OnSeekBarChangeListener {
 
     // Temperature mode constants for backward compatibility
     public static final int TEMP_MODE_CLOSE = 0;
@@ -35,29 +35,8 @@ public class RangeSeekBar extends DefRangeSeekBar {
     }
 
     private void initThermalSeekBar() {
-        // Bridge the DefRangeSeekBar listener to our thermal-specific listener
-        super.setOnRangeChangedListener(new com.jaygoo.widget.OnRangeChangedListener() {
-            @Override
-            public void onRangeChanged(DefRangeSeekBar view, float leftValue, float rightValue, boolean isFromUser) {
-                if (thermalRangeChangedListener != null) {
-                    thermalRangeChangedListener.onRangeChanged(RangeSeekBar.this, leftValue, rightValue, isFromUser, tempMode);
-                }
-            }
-
-            @Override
-            public void onStartTrackingTouch(DefRangeSeekBar view, boolean isLeft) {
-                if (thermalRangeChangedListener != null) {
-                    thermalRangeChangedListener.onStartTrackingTouch(RangeSeekBar.this, isLeft);
-                }
-            }
-
-            @Override
-            public void onStopTrackingTouch(DefRangeSeekBar view, boolean isLeft) {
-                if (thermalRangeChangedListener != null) {
-                    thermalRangeChangedListener.onStopTrackingTouch(RangeSeekBar.this, isLeft);
-                }
-            }
-        });
+        // Set up the seekbar change listener
+        super.setOnSeekBarChangeListener(this);
     }
 
     // Override to use our thermal-specific listener
@@ -72,6 +51,30 @@ public class RangeSeekBar extends DefRangeSeekBar {
 
     public void setTempMode(int tempMode) {
         this.tempMode = tempMode;
+    }
+
+    // SeekBar.OnSeekBarChangeListener implementation
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+        if (thermalRangeChangedListener != null) {
+            float progressValue = (float) progress;
+            // For backward compatibility, treat as both left and right values
+            thermalRangeChangedListener.onRangeChanged(this, progressValue, progressValue, fromUser, tempMode);
+        }
+    }
+
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {
+        if (thermalRangeChangedListener != null) {
+            thermalRangeChangedListener.onStartTrackingTouch(this, true);
+        }
+    }
+
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
+        if (thermalRangeChangedListener != null) {
+            thermalRangeChangedListener.onStopTrackingTouch(this, true);
+        }
     }
 
     // Thermal-specific methods (stubs for now to maintain compatibility)
@@ -91,14 +94,13 @@ public class RangeSeekBar extends DefRangeSeekBar {
     }
 
     public void setRangeAndPro(float min, float max, float leftValue, float rightValue) {
-        // Set range and progress values
-        setMinProgress(min);
-        setMaxProgress(max);
-        setProgress(leftValue, rightValue);
+        // For a single seekbar, use the left value as progress
+        setMax((int) max);
+        setProgress((int) leftValue);
     }
 
     public void setIndicatorTextDecimalFormat(String format) {
-        // Indicator text format - use DefRangeSeekBar's built-in formatting
+        // Indicator text format would be implemented here
         // This is a simplified implementation
     }
 
