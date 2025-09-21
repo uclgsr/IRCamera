@@ -107,7 +107,7 @@ class IRImageHelp {
 
             }
         } catch (exception: Exception) {
-            Log.e("上色异常", exception.message!!)
+            Log.e("[ph][ph][ph][ph]", exception.message!!)
         } finally {
             return imageDst
         }

@@ -36,7 +36,7 @@
             android:layout_height="wrap_content"
             android:paddingBottom="24dp">
 
-            <!-- 关闭 -->
+            <!-- [ph][ph] -->
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/cl_close"
                 android:layout_width="0dp"

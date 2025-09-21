@@ -40,7 +40,7 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
     private lateinit var timeManager: TimeManager
 
     private lateinit var enhancedBLE: EasyBLE
-    private lateinit var unifiedBleManager: com.topdon.ble.UnifiedBleManager
+    private lateinit var unifiedBleManager: com.mpdc4gsr.ble.UnifiedBleManager
     private var connectedBLEDevices = mutableListOf<Device>()
 
     private var recordingService: RecordingService? = null
@@ -125,7 +125,7 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
             try {
 
                 unifiedBleManager =
-                    com.topdon.ble.UnifiedBleManager.getInstance(this@HubSpokeIntegrationActivity)
+                    com.mpdc4gsr.ble.UnifiedBleManager.getInstance(this@HubSpokeIntegrationActivity)
                 unifiedBleManager.initialize(this@HubSpokeIntegrationActivity, true)
                 unifiedBleManager.enableMultiDeviceMode(true)
 
@@ -225,7 +225,7 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
         }
     }
 
-    private fun updateBleStatusUI(systemStatus: com.topdon.ble.UnifiedBleManager.SystemBleStatus?) {
+    private fun updateBleStatusUI(systemStatus: com.mpdc4gsr.ble.UnifiedBleManager.SystemBleStatus?) {
         runOnUiThread {
             try {
                 if (systemStatus != null) {

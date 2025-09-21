@@ -12,7 +12,7 @@ public class ConstellationEntity implements TextProvider, Serializable {
     private static final boolean IS_CHINESE;
 
     static {
-        IS_CHINESE = Locale.getDefault().getDisplayLanguage().contains("中文");
+        IS_CHINESE = Locale.getDefault().getDisplayLanguage().contains("[ph][ph]");
     }
 
     private String id;

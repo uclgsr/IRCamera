@@ -162,7 +162,7 @@ public class CameraView extends TextureView {
             canvas.drawLine(getWidth() / 2f, getHeight() / 2f - cross_len,
                     getWidth() / 2f, getHeight() / 2f + cross_len, paint);
         } catch (Exception e) {
-            Log.e(TAG, "点异常:" + e.getMessage());
+            Log.e(TAG, "[ph][ph][ph]:" + e.getMessage());
         }
     }
 

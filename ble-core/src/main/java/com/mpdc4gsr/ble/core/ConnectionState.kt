@@ -1,6 +1,11 @@
+<<<<<<<< HEAD:ble-core/src/main/java/com/mpdc4gsr/ble/core/ConnectionState.kt
 package com.mpdc4gsr.ble.core
+========
+package com.mpdc4gsr.ble;
 
-enum class ConnectionState {
+public enum ConnectionState {
+>>>>>>>> dev:ble-core/src/main/java/com/mpdc4gsr/ble/core/ConnectionState.java
+
     DISCONNECTED,
 
     CONNECTING,

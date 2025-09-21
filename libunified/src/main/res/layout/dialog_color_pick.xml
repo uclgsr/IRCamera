@@ -47,7 +47,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/rl_close" />
 
-    <!-- 目前原型UI为6个预设值，更改的概率不大，此处直接写死，就不用 RecyclerView、自定义View 之Class的去复杂化了 -->
+    <!-- [ph][ph][ph][ph]UI[ph]6[ph][ph][ph][ph]，[ph][ph][ph][ph][ph][ph][ph]，[ph][ph][ph][ph][ph][ph]，[ph][ph][ph] RecyclerView、[ph][ph][ph]View [ph]Class[ph][ph][ph][ph][ph][ph] -->
     <View
         android:id="@+id/view_color1"
         android:layout_width="0dp"
@@ -150,7 +150,7 @@
         app:layout_constraintTop_toBottomOf="@id/tv_size_title"
         tools:visibility="visible" />
 
-    <com.jaygoo.widget.DefRangeSeekBar
+    <com.mpdc4gsr.lib.core.widget.seekbar.RangeSeekBar
         android:id="@+id/nifty_slider_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -158,26 +158,7 @@
         android:layout_marginEnd="16dp"
         app:layout_constraintEnd_toStartOf="@id/tv_nifty_right"
         app:layout_constraintStart_toEndOf="@id/tv_nifty_left"
-        app:layout_constraintTop_toBottomOf="@id/tv_size_value"
-        app:rsb_gravity="bottom"
-        app:rsb_mode="single"
-        app:rsb_progress_color="#FFE9F1F9"
-        app:rsb_progress_default_color="#FFE9F1F9"
-        app:rsb_progress_height="20dp"
-        app:rsb_progress_radius="18dp"
-        app:rsb_step_auto_bonding="true"
-        app:rsb_step_drawable="@drawable/step_gray_svg"
-        app:rsb_step_height="10dp"
-        app:rsb_step_padding_left="8dp"
-        app:rsb_step_padding_right="8dp"
-        app:rsb_step_radius="10dp"
-        app:rsb_step_width="10dp"
-        app:rsb_steps="2"
-        app:rsb_thumb_drawable="@drawable/step_blue_svg"
-        app:rsb_thumb_height="26dp"
-        app:rsb_thumb_width="26dp"
-        app:rsb_tick_mark_layout_gravity="top"
-        app:rsb_tick_mark_mode="other" />
+        app:layout_constraintTop_toBottomOf="@id/tv_size_value" />
 
     <TextView
         android:id="@+id/tv_nifty_left"

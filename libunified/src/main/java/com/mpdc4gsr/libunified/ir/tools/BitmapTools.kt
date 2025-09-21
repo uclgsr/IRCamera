@@ -81,7 +81,7 @@ object BitmapTools {
                 }
             }
         } catch (e: Exception) {
-            XLog.w("color替换失败: ${e.message}")
+            XLog.w("color[ph][ph][ph][ph]: ${e.message}")
         }
     }
 }

@@ -6,17 +6,17 @@ public class UnitDateFormatter implements DateFormatter {
 
     @Override
     public String formatYear(int year) {
-        return year + "年";
+        return year + "[ph]";
     }
 
     @Override
     public String formatMonth(int month) {
-        return month + "月";
+        return month + "[ph]";
     }
 
     @Override
     public String formatDay(int day) {
-        return day + "日";
+        return day + "[ph]";
     }
 
 }

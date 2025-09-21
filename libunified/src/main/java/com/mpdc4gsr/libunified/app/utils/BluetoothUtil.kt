@@ -72,7 +72,7 @@ object BluetoothUtil {
         XLog.i("startLeScan()")
 
         if (!PermissionTool.hasBtPermission(context)) {
-            XLog.e("开始蓝牙扫描-没有相应定位或蓝牙权限!")
+            XLog.e("[ph][ph][ph][ph][ph][ph]-[ph][ph][ph][ph][ph][ph][ph][ph][ph][ph][ph]!")
             return false
         }
 
@@ -80,7 +80,7 @@ object BluetoothUtil {
             (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager).adapter
         val btLeScanner: BluetoothLeScanner? = btAdapter.bluetoothLeScanner
         if (btLeScanner == null) {
-            XLog.e("开始蓝牙扫描-蓝牙未开启")
+            XLog.e("[ph][ph][ph][ph][ph][ph]-[ph][ph][ph][ph][ph]")
             return false
         }
 
@@ -99,7 +99,7 @@ object BluetoothUtil {
         XLog.i("stopBtScan()")
 
         if (!PermissionTool.hasBtPermission(context)) {
-            XLog.w("停止蓝牙扫描-没有相应定位或蓝牙权限!")
+            XLog.w("[ph][ph][ph][ph][ph][ph]-[ph][ph][ph][ph][ph][ph][ph][ph][ph][ph][ph]!")
             return false
         }
 
@@ -107,7 +107,7 @@ object BluetoothUtil {
             (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager).adapter
         val btLeScanner: BluetoothLeScanner? = btAdapter.bluetoothLeScanner
         if (btLeScanner == null) {
-            XLog.w("停止蓝牙扫描-蓝牙未开启")
+            XLog.w("[ph][ph][ph][ph][ph][ph]-[ph][ph][ph][ph][ph]")
             return false
         }
 
@@ -126,11 +126,11 @@ object BluetoothUtil {
         ) {
             val name: String = result?.device?.name ?: return
             // TS004/TC007 device scanning functionality removed
-            XLog.v("蓝牙扫描功能已移除：$name")
+            XLog.v("[ph][ph][ph][ph][ph][ph][ph][ph][ph]：$name")
         }
 
         override fun onScanFailed(errorCode: Int) {
-            XLog.e("蓝牙扫描失败！$errorCode")
+            XLog.e("[ph][ph][ph][ph][ph][ph]！$errorCode")
         }
     }
 }

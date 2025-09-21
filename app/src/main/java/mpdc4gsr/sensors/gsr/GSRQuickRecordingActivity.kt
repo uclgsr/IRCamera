@@ -93,7 +93,7 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
             recordingController.recordingStateFlow.collect { state ->
                 runOnUiThread {
                     when (state) {
-                        com.topdon.tc001.controller.RecordingState.RECORDING -> {
+                        com.mpdc4gsr.controller.RecordingState.RECORDING -> {
                             isRecording = true
                             binding.startRecordingButton.text = "Stop Recording"
                             binding.statusText.text = "Recording in progress..."
@@ -105,7 +105,7 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
                             )
                         }
 
-                        com.topdon.tc001.controller.RecordingState.STOPPED -> {
+                        com.mpdc4gsr.controller.RecordingState.STOPPED -> {
                             isRecording = false
                             binding.startRecordingButton.text = "Start Recording"
                             binding.statusText.text = "Recording stopped"

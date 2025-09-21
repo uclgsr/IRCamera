@@ -358,7 +358,7 @@ class MultiDeviceCoordination(
         Log.d(TAG, "Executing sync flash at ${System.currentTimeMillis()}")
 
 
-        val flashIntent = android.content.Intent("com.topdon.gsr.SYNC_FLASH")
+        val flashIntent = android.content.Intent("com.mpdc4gsr.gsr.SYNC_FLASH")
         flashIntent.putExtra("timestamp", System.currentTimeMillis())
         context.sendBroadcast(flashIntent)
     }

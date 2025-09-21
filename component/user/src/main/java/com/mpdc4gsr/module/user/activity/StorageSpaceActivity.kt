@@ -110,7 +110,7 @@ class StorageSpaceActivity : BaseActivity(), View.OnClickListener {
                         lifecycleScope.launch {
                             val isSuccess = false // TS004Repository.getFormatStorage()
                             if (isSuccess) {
-                                XLog.d("TS004 格式化存储成功，即将断开连接")
+                                XLog.d("TS004 [ph][ph][ph][ph][ph][ph][ph]，[ph][ph][ph][ph][ph][ph]")
                                 (application as BaseApplication).disconnectWebSocket()
                                 NavigationManager.getInstance().build(RouterConfig.MAIN)
                                     .navigation(this@StorageSpaceActivity)

@@ -174,7 +174,7 @@ object NetWorkUtils {
             if (networkCapabilities != null &&
                 networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
             ) {
-                XLog.i("已经是wifi,跳过")
+                XLog.i("[ph][ph][ph]wifi,[ph][ph]")
                 return
             }
         }
@@ -187,7 +187,7 @@ object NetWorkUtils {
             object : ConnectivityManager.NetworkCallback() {
                 override fun onAvailable(network: Network) {
                     super.onAvailable(network)
-                    XLog.i("switch到 ${if (isWifi) "WIFI" else "流量"} onAvailable()")
+                    XLog.i("switch[ph] ${if (isWifi) "WIFI" else "[ph][ph]"} onAvailable()")
                     if (isWifi) {
                         // TS004Repository removed
                     }
@@ -199,7 +199,7 @@ object NetWorkUtils {
                 override fun onUnavailable() {
                     super.onUnavailable()
                     connectivityManager.unregisterNetworkCallback(this)
-                    XLog.w("switch到 ${if (isWifi) "WIFI" else "流量"} onUnavailable()")
+                    XLog.w("switch[ph] ${if (isWifi) "WIFI" else "[ph][ph]"} onUnavailable()")
                     listener?.invoke(null)
                 }
             },

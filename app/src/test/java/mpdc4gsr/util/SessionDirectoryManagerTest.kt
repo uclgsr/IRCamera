@@ -1,4 +1,4 @@
-package mpdc4gsr.util
+package mpdc4gsr.utils
 
 import android.content.Context
 import android.content.pm.PackageInfo
@@ -44,11 +44,11 @@ class SessionDirectoryManagerTest {
 
         // Mock context behavior
         `when`(mockContext.getExternalFilesDir(null)).thenReturn(tempDir)
-        `when`(mockContext.packageName).thenReturn("com.topdon.tc001.test")
+        `when`(mockContext.packageName).thenReturn("com.mpdc4gsr.test")
         `when`(mockContext.packageManager).thenReturn(mockPackageManager)
 
         mockPackageInfo.versionName = "1.0.0-test"
-        `when`(mockPackageManager.getPackageInfo("com.topdon.tc001.test", 0)).thenReturn(
+        `when`(mockPackageManager.getPackageInfo("com.mpdc4gsr.test", 0)).thenReturn(
             mockPackageInfo
         )
 

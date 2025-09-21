@@ -76,7 +76,7 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
 
         val newVersion: Double = getVersionFromStr(apkVersionStr)
         val currentVersion: Double = getVersionFromStr(firmware)
-        XLog.d("${if (isTS004) "TS004" else "TC007"} 固件升级 - current版本：$currentVersion apk内置版本：$newVersion")
+        XLog.d("${if (isTS004) "TS004" else "TC007"} [ph][ph][ph][ph] - current[ph][ph]：$currentVersion apk[ph][ph][ph][ph]：$newVersion")
         if (newVersion <= currentVersion) {
             firmwareDataLD.postValue(null)
             isRequest = false
@@ -96,7 +96,7 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
             inputStream.close()
             outputStream.close()
         } catch (e: IOException) {
-            XLog.e("${if (isTS004) "TS004" else "TC007"} 固件升级 - 导出内置固件升级包失败! ${e.message}")
+            XLog.e("${if (isTS004) "TS004" else "TC007"} [ph][ph][ph][ph] - [ph][ph][ph][ph][ph][ph][ph][ph][ph][ph][ph]! ${e.message}")
             FileUtils.delete(firmwareFile)
             firmwareDataLD.postValue(null)
             isRequest = false
@@ -125,7 +125,7 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
 
         val bindCode = bindDevice(sn, randomNum)
         if (bindCode != LMS.SUCCESS.toInt() && bindCode != 15109) {
-            XLog.w("${if (isTS004) "TS004" else "TC007"} 固件升级 - 绑定设备失败! sn: $sn")
+            XLog.w("${if (isTS004) "TS004" else "TC007"} [ph][ph][ph][ph] - [ph][ph][ph][ph][ph][ph]! sn: $sn")
             failLD.postValue(bindCode == 15162)
             isRequest = false
             return
@@ -134,7 +134,7 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
         val packageData: PackageData? =
             querySoftPackage(sn, if (isTS004) TS004_SOFT_CODE else TC007_SOFT_CODE)
         if (packageData == null) {
-            XLog.w("${if (isTS004) "TS004" else "TC007"} 固件升级 - 获取固件升级包信息失败!")
+            XLog.w("${if (isTS004) "TS004" else "TC007"} [ph][ph][ph][ph] - [ph][ph][ph][ph][ph][ph][ph][ph][ph][ph][ph]!")
             failLD.postValue(false)
             isRequest = false
             return
@@ -143,7 +143,7 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
         val record: PackageData.Record? = packageData.getFirstRecord()
         val newVersionStr: String? = record?.maxUpdateVersion
         if (record == null || newVersionStr == null) {
-            XLog.d("${if (isTS004) "TS004" else "TC007"} 固件升级 - 没有固件升级包，即current固件已是最新")
+            XLog.d("${if (isTS004) "TS004" else "TC007"} [ph][ph][ph][ph] - [ph][ph][ph][ph][ph][ph][ph]，[ph]current[ph][ph][ph][ph][ph][ph]")
             firmwareDataLD.postValue(null)
             isRequest = false
             return
@@ -151,7 +151,7 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
 
         val newVersion: Double = getVersionFromStr(newVersionStr)
         val currentVersion: Double = getVersionFromStr(firmware)
-        XLog.d("${if (isTS004) "TS004" else "TC007"} 固件升级 - current版本：$currentVersion 服务器版本：$newVersion")
+        XLog.d("${if (isTS004) "TS004" else "TC007"} [ph][ph][ph][ph] - current[ph][ph]：$currentVersion [ph][ph][ph][ph][ph]：$newVersion")
         if (newVersion <= currentVersion) {
             firmwareDataLD.postValue(null)
             isRequest = false
@@ -169,7 +169,7 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
                 ),
             )
         } else {
-            XLog.w("${if (isTS004) "TS004" else "TC007"} 固件升级 - 获取固件包下载地址失败!")
+            XLog.w("${if (isTS004) "TS004" else "TC007"} [ph][ph][ph][ph] - [ph][ph][ph][ph][ph][ph][ph][ph][ph][ph][ph]!")
             failLD.postValue(downloadData?.responseCode == 60312)
         }
         isRequest = false

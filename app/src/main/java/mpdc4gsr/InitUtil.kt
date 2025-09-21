@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.IntentFilter
 import android.hardware.usb.UsbManager
 import android.os.Build
+import androidx.core.content.ContextCompat
 import com.blankj.utilcode.util.TimeUtils
 import com.blankj.utilcode.util.Utils
 import com.csl.irCamera.BuildConfig
@@ -24,6 +25,12 @@ import com.mpdc4gsr.libunified.app.lms.LMS
 import com.mpdc4gsr.libunified.app.lms.utils.ConstantUtil
 import com.mpdc4gsr.libunified.app.lms.utils.LanguageUtil
 import java.util.Date
+
+public var InitUtil.productType: String
+    get() = LMS.getInstance().productType
+    set(value) {
+        LMS.getInstance().productType = value
+    }
 
 object InitUtil {
     fun initLog() {
@@ -112,7 +119,12 @@ object InitUtil {
         filter.addAction(UsbManager.ACTION_USB_ACCESSORY_DETACHED)
         filter.addAction(DeviceBroadcastReceiver.ACTION_USB_PERMISSION)
         if (Build.VERSION.SDK_INT < 33) {
-            BaseApplication.instance.registerReceiver(BaseApplication.usbObserver, filter)
+            ContextCompat.registerReceiver(
+                BaseApplication.instance,
+                BaseApplication.usbObserver,
+                filter,
+                ContextCompat.RECEIVER_NOT_EXPORTED
+            )
         } else {
             BaseApplication.instance.registerReceiver(
                 BaseApplication.usbObserver,

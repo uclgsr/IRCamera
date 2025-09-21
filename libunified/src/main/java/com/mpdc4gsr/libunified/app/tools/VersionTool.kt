@@ -33,7 +33,7 @@ object VersionTool {
             return serverV.toFloat() > localV.toFloat()
 
         } catch (e: Exception) {
-            XLog.e("对比固件版本异常: ${e.message}")
+            XLog.e("[ph][ph][ph][ph][ph][ph][ph][ph]: ${e.message}")
             return false
         }
     }
@@ -58,7 +58,7 @@ object VersionTool {
             }
             return result
         } catch (e: Exception) {
-            XLog.e("版本比较出错: ${e.message}, remoteStr: $remoteStr, localStr: $localStr")
+            XLog.e("[ph][ph][ph][ph][ph][ph]: ${e.message}, remoteStr: $remoteStr, localStr: $localStr")
             return false
         }
     }

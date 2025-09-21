@@ -21,7 +21,7 @@ class VersionViewModel : BaseViewModel() {
         val downPageUrl = result.downloadPageUrl
         val sizeStr = "${result.notUnZipSize}MB"
 
-        XLog.i("有版本升级,升级信息: $description, 是否强制升级: $isForcedUpgrade")
+        XLog.i("[ph][ph][ph][ph][ph],[ph][ph][ph][ph]: $description, [ph][ph][ph][ph][ph][ph]: $isForcedUpgrade")
 
         val versionUpData =
             VersionUpData(

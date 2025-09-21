@@ -54,7 +54,7 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
     private lateinit var gsrRecorder: GSRRecorder
     private lateinit var sessionManager: SessionManager
     private var rgbCameraRecorder: RgbCameraRecorder? = null
-    private var networkClient: com.topdon.gsr.network.NetworkClient? = null
+    private var networkClient: com.mpdc4gsr.gsr.network.NetworkClient? = null
     private var isRecording = false
     private var isStartingRecording = false
     private var currentSession: SessionInfo? = null
@@ -74,10 +74,10 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
     private var connectedBleDevices = mutableListOf<UnifiedDevice>()
 
 
-    private var enhancedRecordingService: com.topdon.gsr.service.EnhancedRecordingService? = null
+    private var enhancedRecordingService: com.mpdc4gsr.gsr.service.EnhancedRecordingService? = null
     private var isServiceBound = false
     private var discoveredDevices =
-        mutableListOf<com.topdon.gsr.network.NetworkClient.ControllerInfo>()
+        mutableListOf<com.mpdc4gsr.gsr.network.NetworkClient.ControllerInfo>()
 
 
     private var uiUpdateJob: kotlinx.coroutines.Job? = null
@@ -92,7 +92,7 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
                 service: IBinder?,
             ) {
                 val binder =
-                    service as? com.topdon.gsr.service.EnhancedRecordingService.EnhancedRecordingBinder
+                    service as? com.mpdc4gsr.gsr.service.EnhancedRecordingService.EnhancedRecordingBinder
                 enhancedRecordingService = binder?.getService()
                 isServiceBound = true
                 Log.i(TAG, "Enhanced recording service connected")
@@ -258,10 +258,10 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
 
 
         networkClient =
-            com.topdon.gsr.network.NetworkClient(this).apply {
+            com.mpdc4gsr.gsr.network.NetworkClient(this).apply {
                 setEventListener(
-                    object : com.topdon.gsr.network.NetworkClient.NetworkEventListener {
-                        override fun onControllerDiscovered(controller: com.topdon.gsr.network.NetworkClient.ControllerInfo) {
+                    object : com.mpdc4gsr.gsr.network.NetworkClient.NetworkEventListener {
+                        override fun onControllerDiscovered(controller: com.mpdc4gsr.gsr.network.NetworkClient.ControllerInfo) {
                             runOnUiThread {
                                 discoveredDevices.add(controller)
                                 updateNetworkStatusUI()
@@ -274,7 +274,7 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
                             }
                         }
 
-                        override fun onConnected(controller: com.topdon.gsr.network.NetworkClient.ControllerInfo) {
+                        override fun onConnected(controller: com.mpdc4gsr.gsr.network.NetworkClient.ControllerInfo) {
                             runOnUiThread {
                                 updateNetworkStatusUI()
                                 Toast.makeText(
@@ -615,7 +615,7 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
 
 
                     try {
-                        com.topdon.gsr.service.EnhancedRecordingService.startRecording(
+                        com.mpdc4gsr.gsr.service.EnhancedRecordingService.startRecording(
                             this@MultiModalRecordingActivity,
                             sessionId,
                             participantId,
@@ -679,7 +679,7 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
 
 
                     try {
-                        com.topdon.gsr.service.EnhancedRecordingService.startRecording(
+                        com.mpdc4gsr.gsr.service.EnhancedRecordingService.startRecording(
                             this@MultiModalRecordingActivity,
                             sessionId,
                             participantId,
@@ -755,7 +755,7 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
         lifecycleScope.launch {
 
             try {
-                com.topdon.gsr.service.EnhancedRecordingService.stopRecording(this@MultiModalRecordingActivity)
+                com.mpdc4gsr.gsr.service.EnhancedRecordingService.stopRecording(this@MultiModalRecordingActivity)
                 Log.i(TAG, "Enhanced recording service stopped")
             } catch (e: Exception) {
                 Log.w(TAG, "Failed to stop enhanced recording service", e)
@@ -890,7 +890,7 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
     }
 
     private fun openSynchronizationTest() {
-        val intent = Intent(this, com.topdon.tc001.test.SynchronizationTestActivity::class.java)
+        val intent = Intent(this, com.mpdc4gsr.test.SynchronizationTestActivity::class.java)
         startActivity(intent)
     }
 
@@ -991,7 +991,7 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
 
     private fun bindEnhancedRecordingService() {
         try {
-            val intent = Intent(this, com.topdon.gsr.service.EnhancedRecordingService::class.java)
+            val intent = Intent(this, com.mpdc4gsr.gsr.service.EnhancedRecordingService::class.java)
             bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
         } catch (e: Exception) {
             Log.e(TAG, "Failed to bind enhanced recording service", e)

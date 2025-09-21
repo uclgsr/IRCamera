@@ -6,7 +6,7 @@ import com.mpdc4gsr.gsr.model.GSRSample
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import mpdc4gsr.controller.RecordingController
-import mpdc4gsr.network.EnhancedNetworkClient
+import mpdc4gsr.network.NetworkClient
 import org.json.JSONObject
 import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.atomic.AtomicBoolean
@@ -27,7 +27,7 @@ class GSRNetworkStreamer(
         private const val QUALITY_REPORTING_INTERVAL_MS = 10000L
     }
 
-    private var networkClient: EnhancedNetworkClient? = null
+    private var networkClient: NetworkClient? = null
     private val sampleBuffer = ConcurrentLinkedQueue<GSRSample>()
     private val _isStreaming = AtomicBoolean(false)
     val isStreaming: Boolean get() = _isStreaming.get()
@@ -52,7 +52,7 @@ class GSRNetworkStreamer(
             try {
                 Log.i(TAG, "Initializing GSR network streamer for session: $sessionId")
 
-                networkClient = EnhancedNetworkClient(context, recordingController)
+                networkClient = NetworkClient(context, recordingController)
 
                 val connected = networkClient?.connectToController("192.168.1.100") ?: false
                 if (!connected) {
@@ -187,7 +187,7 @@ class GSRNetworkStreamer(
 
         try {
             val batchMessage = createBatchMessage(batch)
-            // TODO: Implement proper message sending when EnhancedNetworkClient exposes public messaging API
+            // TODO: Implement proper message sending when NetworkClient exposes public messaging API
             Log.d(TAG, "Would send GSR batch: ${batchMessage.toString().take(100)}...")
 
 
@@ -240,7 +240,7 @@ class GSRNetworkStreamer(
                     put("client_timestamp", System.nanoTime())
                 }
 
-            // TODO: Implement proper time sync when EnhancedNetworkClient exposes messaging API
+            // TODO: Implement proper time sync when NetworkClient exposes messaging API
             Log.d(TAG, "Would send time sync request: ${syncRequest}")
 
 
@@ -272,7 +272,7 @@ class GSRNetworkStreamer(
                         put("buffer_size", sampleBuffer.size)
                     }
 
-                // TODO: Implement proper heartbeat sending when EnhancedNetworkClient exposes messaging API
+                // TODO: Implement proper heartbeat sending when NetworkClient exposes messaging API
                 Log.d(TAG, "Would send heartbeat: ${heartbeat}")
             } catch (e: Exception) {
                 Log.w(TAG, "Failed to send heartbeat", e)
@@ -298,7 +298,7 @@ class GSRNetworkStreamer(
                         put("uptime_ms", System.currentTimeMillis() - startTime)
                     }
 
-                // TODO: Implement proper metrics sending when EnhancedNetworkClient exposes messaging API
+                // TODO: Implement proper metrics sending when NetworkClient exposes messaging API
                 Log.d(TAG, "Would send quality metrics: ${metrics}")
             } catch (e: Exception) {
                 Log.w(TAG, "Failed to send quality metrics", e)
@@ -326,7 +326,7 @@ class GSRNetworkStreamer(
                     put("timestamp", System.currentTimeMillis())
                 }
 
-            // TODO: Implement proper stream registration when EnhancedNetworkClient exposes messaging API
+            // TODO: Implement proper stream registration when NetworkClient exposes messaging API
             Log.d(TAG, "Would send stream registration: ${registration}")
             Log.i(TAG, "GSR stream registration simulated")
         } catch (e: Exception) {
@@ -346,7 +346,7 @@ class GSRNetworkStreamer(
                     put("timestamp", System.currentTimeMillis())
                 }
 
-            // TODO: Implement proper stream end notification when EnhancedNetworkClient exposes messaging API
+            // TODO: Implement proper stream end notification when NetworkClient exposes messaging API
             Log.d(TAG, "Would send stream end notification: ${endNotification}")
             Log.i(TAG, "GSR stream end notification simulated")
         } catch (e: Exception) {

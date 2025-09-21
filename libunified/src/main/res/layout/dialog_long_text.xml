@@ -18,7 +18,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="散热器" />
+        tools:text="[ph][ph][ph]" />
 
     <ScrollView
         android:id="@+id/scroll_view"

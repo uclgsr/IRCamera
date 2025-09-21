@@ -1,6 +1,11 @@
+<<<<<<<< HEAD:ble-core/src/main/java/com/mpdc4gsr/ble/core/RequestType.kt
 package com.mpdc4gsr.ble.core
+========
+package com.mpdc4gsr.ble;
 
-enum class RequestType {
+public enum RequestType {
+>>>>>>>> dev:ble-core/src/main/java/com/mpdc4gsr/ble/core/RequestType.java
+
     SET_NOTIFICATION,
 
     SET_INDICATION,

@@ -53,9 +53,7 @@ tasks.register("buildRelease") {
         ":libunified:assembleRelease",
         ":RangeSeekBar:assembleRelease",
         ":component:gsr-recording:assembleRelease",
-        ":component:thermal:assembleRelease",
-        ":component:thermal-ir:assembleRelease",
-        ":component:thermal-lite:assembleRelease",
+        ":component:thermalunified:assembleRelease",
         ":component:user:assembleRelease"
     )
 }
@@ -72,9 +70,7 @@ tasks.register("buildDebug") {
         ":libunified:assembleDebug",
         ":RangeSeekBar:assembleDebug",
         ":component:gsr-recording:assembleDebug",
-        ":component:thermal:assembleDebug",
-        ":component:thermal-ir:assembleDebug",
-        ":component:thermal-lite:assembleDebug",
+        ":component:thermalunified:assembleDebug",
         ":component:user:assembleDebug"
     )
 }
@@ -99,9 +95,7 @@ tasks.register("compileDebugSafe") {
         ":libunified:compileDebugSources",
         ":RangeSeekBar:compileDebugSources",
         ":component:gsr-recording:compileDebugSources",
-        ":component:thermal:compileDebugSources",
-        ":component:thermal-ir:compileDebugSources",
-        ":component:thermal-lite:compileDebugSources",
+        ":component:thermalunified:compileDebugSources",
         ":component:user:compileDebugSources"
     )
 }
@@ -118,9 +112,7 @@ tasks.register("compileReleaseSafe") {
         ":libunified:compileReleaseSources",
         ":RangeSeekBar:compileReleaseSources",
         ":component:gsr-recording:compileReleaseSources",
-        ":component:thermal:compileReleaseSources",
-        ":component:thermal-ir:compileReleaseSources",
-        ":component:thermal-lite:compileReleaseSources",
+        ":component:thermalunified:compileReleaseSources",
         ":component:user:compileReleaseSources"
     )
 }
