@@ -84,15 +84,13 @@ android {
 
 dependencies {
     coreLibraryDesugaring(libs.desugar.jdk.libs)
-    implementation(project(":libapp"))
-    implementation(project(":libir"))
-    implementation(project(":libui"))
+    implementation(project(":libunified"))
     implementation(project(":BleModule"))
     implementation(libs.bundles.ui.common)
     implementation(libs.utilcode)
     implementation(libs.mn.image.browser)
-    compileOnly(files("../../libir/libs/suplib-release.aar"))
-    compileOnly(files("../../libir/libs/ai-upscale-release.aar"))
+    compileOnly(files("../../libunified/libs/suplib-release.aar"))
+    compileOnly(files("../../libunified/libs/ai-upscale-release.aar"))
     compileOnly(files("../../libir/libs/texturegesture-release.aar"))
     compileOnly(files("../../libir/libs/libusbdualsdk_1.3.4_2406271906_standard.aar"))
     compileOnly(files("../../libir/libs/libAC020sdk_USB_IR_1.1.1_2408291439.aar"))

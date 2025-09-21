@@ -9,7 +9,7 @@ dependencyResolutionManagement {
         maven { url = uri("https://maven.aliyun.com/repository/google") }
 
         flatDir {
-            dirs("libir/libs", "libapp/libs", "app/libs", "BleModule/libs")
+            dirs("libunified/libs", "app/libs", "BleModule/libs")
         }
     }
 }
@@ -22,9 +22,6 @@ include(":component:gsr-recording")
 include(":component:thermal-ir")
 include(":component:thermal-lite")
 include(":component:user")
-include(":libapp")
-include(":libir")
-include(":libui")
-include(":libcore")
+include(":libunified")
 include(":BleModule")
 include(":RangeSeekBar")

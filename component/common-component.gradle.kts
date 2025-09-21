@@ -42,8 +42,7 @@ android {
 
 // Common dependencies
 dependencies {
-    implementation(project(":libapp"))
-    implementation(project(":libui"))
+    implementation(project(":libunified"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
