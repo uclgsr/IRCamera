@@ -45,6 +45,25 @@ classDiagram
 - **Impact**: Enables compilation while maintaining proper encapsulation within module
 - **Files Changed**: `ble-core/src/main/java/com/mpdc4gsr/ble/core/WriteOptions.kt`
 
+## BLE Core Module Structure (Updated 2024-12-21)
+
+### BLE Core Module Class Dependencies
+
+```mermaid
+graph TB
+    subgraph "BLE Core Module"
+        Request[Request.kt<br/>Interface with UUID properties<br/>✅ import java.util.UUID]
+        GenericRequest[GenericRequest.kt<br/>Implements Request<br/>✅ import java.util.UUID]
+        Connection[Connection.kt<br/>BLE Connection Management<br/>✅ import java.util.UUID]
+        ConnectionImpl[ConnectionImpl.kt<br/>Connection Implementation<br/>✅ import java.util.UUID]
+        ConnectionConfig[ConnectionConfiguration.kt<br/>BLE Configuration<br/>✅ import java.util.UUID]
+    end
+    
+    Request --> GenericRequest
+    Connection --> ConnectionImpl
+    GenericRequest --> Connection
+    ConnectionConfig --> Connection
+```
 ## Current Standardized Build System (2024-12-21)
 
 ### Gradle Build System Structure
