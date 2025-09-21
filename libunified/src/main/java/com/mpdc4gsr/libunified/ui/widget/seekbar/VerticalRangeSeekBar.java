@@ -1,4 +1,4 @@
-package com.topdon.lib.ui.widget.seekbar;
+package com.mpdc4gsr.libunified.ui.widget.seekbar;
 
 import android.content.Context;
 import android.content.res.TypedArray;

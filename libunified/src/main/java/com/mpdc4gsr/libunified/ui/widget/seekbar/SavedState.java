@@ -1,4 +1,4 @@
-package com.topdon.lib.ui.widget.seekbar;
+package com.mpdc4gsr.libunified.ui.widget.seekbar;
 
 import android.os.Parcel;
 import android.os.Parcelable;

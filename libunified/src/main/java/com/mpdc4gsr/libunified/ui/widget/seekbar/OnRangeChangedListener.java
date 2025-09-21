@@ -1,4 +1,4 @@
-package com.topdon.lib.ui.widget.seekbar;
+package com.mpdc4gsr.libunified.ui.widget.seekbar;
 
 public interface OnRangeChangedListener {
     void onRangeChanged(RangeSeekBar view, float leftValue, float rightValue, boolean isFromUser, int tempMode);

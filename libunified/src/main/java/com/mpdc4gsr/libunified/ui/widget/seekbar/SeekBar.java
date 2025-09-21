@@ -1,4 +1,4 @@
-package com.topdon.lib.ui.widget.seekbar;
+package com.mpdc4gsr.libunified.ui.widget.seekbar;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
