@@ -76,7 +76,7 @@ class BleDeviceManager(private val context: Context) : CoroutineScope {
                 EasyBLE.getBuilder()
                     .setUseNordicBleBackend(enableNordicBackend)
                     .build()
-            
+
             easyBLE?.initialize(context.applicationContext as android.app.Application)
 
             setupDeviceDiscovery()
