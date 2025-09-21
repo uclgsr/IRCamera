@@ -141,7 +141,7 @@ dependencies {
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.coroutines.android)
     implementation(project(":RangeSeekBar"))
-    implementation(project(":BleModule"))
+    implementation(project(":ble-core"))
 
     coreLibraryDesugaring(libs.desugar.jdk.libs)
     

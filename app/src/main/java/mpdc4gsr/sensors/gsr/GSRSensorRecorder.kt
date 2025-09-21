@@ -4,8 +4,8 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.util.Log
 import androidx.core.content.ContextCompat
-import com.mpdc4gsr.ble.ShimmerBleController
-import com.mpdc4gsr.ble.UnifiedBleManager
+import com.mpdc4gsr.ble.shimmer.ShimmerBleController
+import com.mpdc4gsr.ble.core.UnifiedBleManager
 import com.mpdc4gsr.ble.util.BluetoothPermissionUtils
 import com.mpdc4gsr.gsr.model.GSRSample
 import com.mpdc4gsr.gsr.model.SessionInfo

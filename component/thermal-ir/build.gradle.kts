@@ -69,7 +69,7 @@ android {
 
 dependencies {
     coreLibraryDesugaring(libs.desugar.jdk.libs)
-    implementation(project(":BleModule"))
+    implementation(project(":ble-topdon"))
     implementation(project(":libunified"))
     implementation(project(":component:thermal"))
     implementation(project(":component:user"))

@@ -85,7 +85,7 @@ android {
 dependencies {
     coreLibraryDesugaring(libs.desugar.jdk.libs)
     implementation(project(":libunified"))
-    implementation(project(":BleModule"))
+    implementation(project(":ble-topdon"))
     implementation(libs.bundles.ui.common)
     implementation(libs.utilcode)
     implementation(libs.mn.image.browser)
