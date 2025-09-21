@@ -82,7 +82,7 @@ class ColorPickDialog(
                         rightValue: Float,
                         isFromUser: Boolean,
                     ) {
-                        var text = "标准"
+                        var text = "[ph][ph]"
                         text =
                             if (leftValue <= 0) {
                                 textSize = 14

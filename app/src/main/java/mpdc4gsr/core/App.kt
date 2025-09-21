@@ -60,7 +60,7 @@ class App : BaseApplication() {
 
         RxJavaPlugins.setErrorHandler {
             if (SharedManager.getHasShowClause()) {
-                XLog.w("未知异常： ${it.message}")
+                XLog.w("[ph][ph][ph][ph]： ${it.message}")
             }
         }
         if (!isDomestic()) {

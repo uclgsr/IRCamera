@@ -124,11 +124,11 @@ chcp 65001
 
 call gradlew clean
 
-echo "开始编译[variant]版本"
+echo "[ph][ph][ph][ph][variant][ph][ph]"
 call gradlew :app:assembleRelease
 
-echo "编译打包完成，apk文件在根目录outputs/"
-echo "[variant]版本APK已完成"
+echo "[ph][ph][ph][ph][ph][ph]，apk[ph][ph][ph][ph][ph][ph]outputs/"
+echo "[variant][ph][ph]APK[ph][ph][ph]"
 
 pause
 ```

@@ -525,7 +525,7 @@ class IRMonitorLiteFragment : BaseFragment(), ITsTempListener {
             DeviceControlManager.getInstance().release()
             CameraPreviewManager.getInstance().releaseSource()
         } catch (e: Exception) {
-            XLog.e("$TAG:lite销毁异常--${e.message}")
+            XLog.e("$TAG:lite[ph][ph][ph][ph]--${e.message}")
         }
     }
 
@@ -547,7 +547,7 @@ class IRMonitorLiteFragment : BaseFragment(), ITsTempListener {
                 CameraPreviewManager.getInstance().releaseSource()
             }
         } catch (e: Exception) {
-            XLog.e("$TAG:lite销毁异常--${e.message}")
+            XLog.e("$TAG:lite[ph][ph][ph][ph]--${e.message}")
         }
     }
 
@@ -578,7 +578,7 @@ class IRMonitorLiteFragment : BaseFragment(), ITsTempListener {
                         DeviceIrcmdControlManager.getInstance().getIrcmdEngine()
                             ?.basicGainGet(basicGainGetValue)
                 } catch (e: Exception) {
-                    XLog.e("增益获取失败")
+                    XLog.e("[ph][ph][ph][ph][ph][ph]")
                 }
                 basicGainGetTime = System.currentTimeMillis()
             }
@@ -611,7 +611,7 @@ class IRMonitorLiteFragment : BaseFragment(), ITsTempListener {
                         "distance = " + params_array[4] + " hum = " + params_array[5] + " basicGain = " + basicGainGetValue[0],
             )
         } catch (e: Exception) {
-            XLog.e("$TAG--温度修正异常：${e.message}")
+            XLog.e("$TAG--[ph][ph][ph][ph][ph][ph]：${e.message}")
         } finally {
             return tempNew ?: 0f
         }

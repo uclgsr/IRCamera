@@ -165,7 +165,7 @@ class PolicyActivity : BaseBindingActivity<ActivityPolicyBinding>() {
         text: String,
         requestUrl: String,
     ) {
-        XLog.w("声明接口异常,打开默认链接")
+        XLog.w("[ph][ph][ph][ph][ph][ph],[ph][ph][ph][ph][ph][ph]")
         loadHttp(binding.policyWeb)
         delayShowWebView()
     }

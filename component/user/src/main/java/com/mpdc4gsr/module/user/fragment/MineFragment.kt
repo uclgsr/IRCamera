@@ -261,12 +261,12 @@ class MineFragment : BaseFragment(), View.OnClickListener {
 
                     changeLoginStyle()
                 } catch (e: Exception) {
-                    XLog.e(" 登录异常: ${e.message}")
+                    XLog.e(" [ph][ph][ph][ph]: ${e.message}")
                 }
             }
         } else {
 
-            XLog.e(" 登录失败")
+            XLog.e(" [ph][ph][ph][ph]")
             changeLoginStyle()
             settingUserImgNight.setImageResource(LibAppR.mipmap.ic_default_user_head)
         }
@@ -340,7 +340,7 @@ class MineFragment : BaseFragment(), View.OnClickListener {
                     AppDatabase.getInstance().thermalDao().deleteByUserId(SharedManager.getUserId())
                     CleanUtils.cleanExternalCache()
                 } catch (e: Exception) {
-                    XLog.w("清除缓存异常: ${e.message}")
+                    XLog.w("[ph][ph][ph][ph][ph][ph]: ${e.message}")
                 }
                 delay(1000)
             }

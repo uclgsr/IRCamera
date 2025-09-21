@@ -29,13 +29,13 @@ object DeviceTools {
         for (usbDevice in deviceList.values) {
             if (usbDevice.isTcTsDevice()) {
                 return if (usbManager.hasPermission(usbDevice)) {
-                    XLog.i("设备已连接且有权限")
+                    XLog.i("[ph][ph][ph][ph][ph][ph][ph][ph][ph]")
                     if (isSendConnectEvent) {
                         EventBus.getDefault().post(DeviceConnectEvent(true, usbDevice))
                     }
                     true
                 } else {
-                    XLog.w("设备已连接但无权限")
+                    XLog.w("[ph][ph][ph][ph][ph][ph][ph][ph][ph]")
                     if (isAutoRequest) {
                         EventBus.getDefault().post(DevicePermissionEvent(usbDevice))
                     }
@@ -53,11 +53,11 @@ object DeviceTools {
             if (usbDevice.isTcTsDevice()) {
                 val productID = usbDevice.productId.toBytes(2).toHexString()
                 val vendorID = usbDevice.vendorId.toBytes(2).toHexString()
-                XLog.i("找到一个usb设备 productId:$productID, vendorId:$vendorID, deviceName:${usbDevice.deviceName}")
+                XLog.i("[ph][ph][ph][ph]usb[ph][ph] productId:$productID, vendorId:$vendorID, deviceName:${usbDevice.deviceName}")
                 return usbDevice
             }
         }
-        XLog.i("检索到${deviceList.size}个设备, 没有符合定制usb设备")
+        XLog.i("[ph][ph][ph]${deviceList.size}[ph][ph][ph], [ph][ph][ph][ph][ph][ph]usb[ph][ph]")
         return null
     }
 
@@ -109,6 +109,6 @@ object DeviceTools {
         val flag = PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         val pendingIntent = PendingIntent.getBroadcast(activity, requestCode, intent, flag)
         usbManager.requestPermission(device, pendingIntent)
-        XLog.i("申请usb权限")
+        XLog.i("[ph][ph]usb[ph][ph]")
     }
 }

@@ -172,7 +172,7 @@ public class EasyBLE {
 
                             observable.notifyObservers(MethodInfoGenerator.onBluetoothAdapterStateChanged(bluetoothAdapter.getState()));
                             if (bluetoothAdapter.getState() == BluetoothAdapter.STATE_OFF) {
-                                logger.log(Log.DEBUG, Logger.TYPE_GENERAL, "蓝牙关闭了");
+                                logger.log(Log.DEBUG, Logger.TYPE_GENERAL, "[ph][ph][ph][ph][ph]");
 
                                 if (scanner != null) {
                                     scanner.onBluetoothOff();
@@ -180,7 +180,7 @@ public class EasyBLE {
 
                                 disconnectAllConnections();
                             } else if (bluetoothAdapter.getState() == BluetoothAdapter.STATE_ON) {
-                                logger.log(Log.DEBUG, Logger.TYPE_GENERAL, "蓝牙开启了");
+                                logger.log(Log.DEBUG, Logger.TYPE_GENERAL, "[ph][ph][ph][ph][ph]");
 
                                 for (Connection connection : connectionMap.values()) {
                                     if (connection.isAutoReconnectEnabled()) {
@@ -220,7 +220,7 @@ public class EasyBLE {
 
                     observable.notifyObservers(MethodInfoGenerator.onBluetoothAdapterStateChanged(bluetoothAdapter.getState()));
                     if (bluetoothAdapter.getState() == BluetoothAdapter.STATE_OFF) {
-                        logger.log(Log.DEBUG, Logger.TYPE_GENERAL, "蓝牙关闭了");
+                        logger.log(Log.DEBUG, Logger.TYPE_GENERAL, "[ph][ph][ph][ph][ph]");
 
                         if (scanner != null) {
                             scanner.onBluetoothOff();
@@ -228,7 +228,7 @@ public class EasyBLE {
 
                         disconnectAllConnections();
                     } else if (bluetoothAdapter.getState() == BluetoothAdapter.STATE_ON) {
-                        logger.log(Log.DEBUG, Logger.TYPE_GENERAL, "蓝牙开启了");
+                        logger.log(Log.DEBUG, Logger.TYPE_GENERAL, "[ph][ph][ph][ph][ph]");
 
                         for (Connection connection : connectionMap.values()) {
                             if (connection.isAutoReconnectEnabled()) {

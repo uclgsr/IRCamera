@@ -411,7 +411,7 @@ abstract class BaseIRPlushActivity : IRThermalNightActivity(), OnUSBConnectListe
                             .setPositiveListener(R.string.app_got_it) { }
                             .create().show()
                     }
-                    XLog.e("超分初始化失败")
+                    XLog.e("[ph][ph][ph][ph][ph][ph][ph]")
                 }
             }
             if (!SupHelp.getInstance().loadOpenclSuccess) {

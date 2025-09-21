@@ -11,7 +11,7 @@ import com.mpdc4gsr.module.thermal.R
 
 class SettingTimeAdapter(val context: Context) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    private var datas = arrayOf("秒", "分", "时", "天")
+    private var datas = arrayOf("[ph]", "[ph]", "[ph]", "[ph]")
     private var dataTimes = arrayOf(1, 2, 3, 4)
 
     var listener: OnItemClickListener? = null

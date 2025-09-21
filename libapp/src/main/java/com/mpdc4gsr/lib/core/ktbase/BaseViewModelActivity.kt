@@ -34,7 +34,7 @@ abstract class BaseViewModelActivity<VM : BaseViewModel> : BaseActivity() {
                     ""
                 )
 
-                is CancellationException -> Log.d("$TAG--->接口请求取消", it.message.toString())
+                is CancellationException -> Log.d("$TAG--->[ph][ph][ph][ph][ph][ph]", it.message.toString())
                 else -> httpErrorTip(getString(R.string.http_code_z5004), "")
             }
         }

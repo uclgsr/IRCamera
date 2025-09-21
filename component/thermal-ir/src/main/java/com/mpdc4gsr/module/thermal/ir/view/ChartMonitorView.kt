@@ -143,7 +143,7 @@ class ChartMonitorView : LineChart, OnChartGestureListener {
                         val entity = Entry(x, bean.thermal)
                         entity.data = bean
                         volDataSet.addEntry(entity)
-                        Log.w("123", "添加一个数据:$entity")
+                        Log.w("123", "[ph][ph][ph][ph][ph][ph]:$entity")
                     }
 
                     2 -> {
@@ -203,7 +203,7 @@ class ChartMonitorView : LineChart, OnChartGestureListener {
                 }
                 return@synchronized
             } catch (e: Exception) {
-                Log.e("123", "添加数据时异常:${e.message}")
+                Log.e("123", "[ph][ph][ph][ph][ph][ph][ph]:${e.message}")
                 return@synchronized
             }
         }

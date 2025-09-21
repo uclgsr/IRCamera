@@ -36,7 +36,7 @@ class LogViewModel : BaseViewModel() {
                 var endTime = 0L
                 when (selectType) {
                     1 -> {
-                        Log.w("123", "查询秒")
+                        Log.w("123", "[ph][ph][ph]")
 
                         endTime = Date().time
                         startTime = endTime - 7200 * 1000L
@@ -139,8 +139,8 @@ class LogViewModel : BaseViewModel() {
                                 startTime = startLogTime,
                                 endTime = endLogTime,
                             )
-                    Log.w("chart", "电压数据:${bean.dataList.size}")
-                    Log.w("chart", "电压数据max vol:${bean.maxVol},min vol:${bean.minVol}")
+                    Log.w("chart", "[ph][ph][ph][ph]:${bean.dataList.size}")
+                    Log.w("chart", "[ph][ph][ph][ph]max vol:${bean.maxVol},min vol:${bean.minVol}")
                 }
 
                 2 -> {
@@ -177,8 +177,8 @@ class LogViewModel : BaseViewModel() {
                                 startTime = startLogTime,
                                 endTime = endLogTime,
                             )
-                    Log.w("chart", "电压数据:${bean.dataList.size}")
-                    Log.w("chart", "电压数据max vol:${bean.maxVol},min vol:${bean.minVol}")
+                    Log.w("chart", "[ph][ph][ph][ph]:${bean.dataList.size}")
+                    Log.w("chart", "[ph][ph][ph][ph]max vol:${bean.maxVol},min vol:${bean.minVol}")
                 }
 
                 3 -> {
@@ -215,8 +215,8 @@ class LogViewModel : BaseViewModel() {
                                 startTime = startLogTime,
                                 endTime = endLogTime,
                             )
-                    Log.w("chart", "电压数据:${bean.dataList.size}")
-                    Log.w("chart", "电压数据max vol:${bean.maxVol},min vol:${bean.minVol}")
+                    Log.w("chart", "[ph][ph][ph][ph]:${bean.dataList.size}")
+                    Log.w("chart", "[ph][ph][ph][ph]max vol:${bean.maxVol},min vol:${bean.minVol}")
                 }
 
                 4 -> {
@@ -253,8 +253,8 @@ class LogViewModel : BaseViewModel() {
                                 startTime = startLogTime,
                                 endTime = endLogTime,
                             )
-                    Log.w("chart", "电压数据:${bean.dataList.size}")
-                    Log.w("chart", "电压数据max vol:${bean.maxVol},min vol:${bean.minVol}")
+                    Log.w("chart", "[ph][ph][ph][ph]:${bean.dataList.size}")
+                    Log.w("chart", "[ph][ph][ph][ph]max vol:${bean.maxVol},min vol:${bean.minVol}")
                 }
             }
             bean.action = action
@@ -321,7 +321,7 @@ class LogViewModel : BaseViewModel() {
                                     startTime = startLogTime,
                                     endTime = endLogTime,
                                 )
-                        Log.w("chart", "电压数据:${bean.dataList.size}")
+                        Log.w("chart", "[ph][ph][ph][ph]:${bean.dataList.size}")
                     }
 
                     2 -> {
@@ -359,7 +359,7 @@ class LogViewModel : BaseViewModel() {
                                     startTime = startLogTime,
                                     endTime = endLogTime,
                                 )
-                        Log.w("chart", "电压数据:${bean.dataList.size}")
+                        Log.w("chart", "[ph][ph][ph][ph]:${bean.dataList.size}")
                     }
 
                     3 -> {
@@ -397,7 +397,7 @@ class LogViewModel : BaseViewModel() {
                                     startTime = startLogTime,
                                     endTime = endLogTime,
                                 )
-                        Log.w("chart", "电压数据:${bean.dataList.size}")
+                        Log.w("chart", "[ph][ph][ph][ph]:${bean.dataList.size}")
                     }
 
                     4 -> {
@@ -435,13 +435,13 @@ class LogViewModel : BaseViewModel() {
                                     startTime = startLogTime,
                                     endTime = endLogTime,
                                 )
-                        Log.w("chart", "电压数据:${bean.dataList.size}")
+                        Log.w("chart", "[ph][ph][ph][ph]:${bean.dataList.size}")
                     }
                 }
                 delay(500)
                 resultLiveData.postValue(bean)
             } catch (e: Exception) {
-                XLog.e("数据查询异常:${e.message}")
+                XLog.e("[ph][ph][ph][ph][ph][ph]:${e.message}")
                 resultLiveData.postValue(ChartList())
             }
         }
@@ -552,7 +552,7 @@ class LogViewModel : BaseViewModel() {
                             endTime = System.currentTimeMillis(),
                         )
                 if (minuteVolLatestList.isNotEmpty()) {
-                    Log.w("chart", "最新时间段已经有记录，不需要同步更新")
+                    Log.w("chart", "[ph][ph][ph][ph][ph][ph][ph][ph][ph][ph]，[ph][ph][ph][ph][ph][ph][ph]")
                     return
                 }
                 val maxTime =
@@ -572,10 +572,10 @@ class LogViewModel : BaseViewModel() {
                     val endTime = TimeTool.showDateType(secondVolList.last().createTime)
                     Log.w(
                         "chart",
-                        "要处理${secondVolList.size}个数据, start:$startTime, end:$endTime"
+                        "[ph][ph][ph]${secondVolList.size}[ph][ph][ph], start:$startTime, end:$endTime"
                     )
                 } else {
-                    Log.w("chart", "无数据处理")
+                    Log.w("chart", "[ph][ph][ph][ph][ph]")
                 }
 
                 val minVolList = getNewVolData(secondVolList, 2)
@@ -625,7 +625,7 @@ class LogViewModel : BaseViewModel() {
                             endTime = System.currentTimeMillis(),
                         )
                 if (hourVolLatestList.isNotEmpty()) {
-                    Log.w("chart", "最新时间段已经有记录，不需要同步更新")
+                    Log.w("chart", "[ph][ph][ph][ph][ph][ph][ph][ph][ph][ph]，[ph][ph][ph][ph][ph][ph][ph]")
                     return
                 }
                 val maxTime =
@@ -644,10 +644,10 @@ class LogViewModel : BaseViewModel() {
                     val endTime = TimeTool.showDateType(secondVolList.last().createTime)
                     Log.w(
                         "chart",
-                        "要处理${secondVolList.size}个数据, start:$startTime, end:$endTime"
+                        "[ph][ph][ph]${secondVolList.size}[ph][ph][ph], start:$startTime, end:$endTime"
                     )
                 } else {
-                    Log.w("chart", "无数据处理")
+                    Log.w("chart", "[ph][ph][ph][ph][ph]")
                 }
 
                 val hourVolList = getNewVolData(secondVolList, 3)
@@ -690,7 +690,7 @@ class LogViewModel : BaseViewModel() {
                         )
                 if (todayVolLatestList.isNotEmpty()) {
 
-                    Log.w("chart", "今天已经有记录，不需要同步更新")
+                    Log.w("chart", "[ph][ph][ph][ph][ph][ph][ph]，[ph][ph][ph][ph][ph][ph][ph]")
                     return
                 }
                 val maxTime =
@@ -710,10 +710,10 @@ class LogViewModel : BaseViewModel() {
                     val endTime = TimeTool.showDateType(secondVolList.last().createTime)
                     Log.w(
                         "chart",
-                        "要处理${secondVolList.size}个数据, start:$startTime, end:$endTime"
+                        "[ph][ph][ph]${secondVolList.size}[ph][ph][ph], start:$startTime, end:$endTime"
                     )
                 } else {
-                    Log.w("chart", "无数据处理")
+                    Log.w("chart", "[ph][ph][ph][ph][ph]")
                 }
                 val dayVolList = getNewVolData(secondVolList, 4)
 

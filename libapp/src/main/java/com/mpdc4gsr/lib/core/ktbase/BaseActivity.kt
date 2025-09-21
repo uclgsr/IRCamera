@@ -165,7 +165,7 @@ abstract class BaseActivity : AppCompatActivity() {
             }
         } catch (e: Exception) {
 
-            Log.e("临时处理方案", e.message.toString())
+            Log.e("[ph][ph][ph][ph][ph][ph]", e.message.toString())
         }
     }
 

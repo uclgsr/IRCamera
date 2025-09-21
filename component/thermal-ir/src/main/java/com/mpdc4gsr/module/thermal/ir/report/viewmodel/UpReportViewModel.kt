@@ -61,7 +61,7 @@ class UpReportViewModel : BaseViewModel() {
                             } catch (e: Exception) {
                                 XLog.e("Upload response parse error", e)
                             }
-                            XLog.i("Upload完一张图")
+                            XLog.i("Upload[ph][ph][ph][ph]")
                             downLatch.countDown()
                         }
                         
@@ -72,7 +72,7 @@ class UpReportViewModel : BaseViewModel() {
                     })
                 }
                 downLatch.await()
-                XLog.i("${irList.size} 张图Upload完毕")
+                XLog.i("${irList.size} [ph][ph]Upload[ph][ph]")
             }
         }
     }
@@ -96,7 +96,7 @@ class UpReportViewModel : BaseViewModel() {
                 url,
                 params,
                 object : IResponseCallback {
-                    override fun onResponse(response: String?) {
+                    fun onResponse(response: String?) {
                         commonBeanLD.postValue(ResponseBean.convertCommonBean(response, null))
                     }
 

@@ -28,7 +28,7 @@ object IRCmdTool {
         val snData = ByteArray(256)
         val dispData = ByteArray(5)
         irCmd?.oemRead(CommonParams.ProductType.P2, oemInfo)
-        XLog.w("机芯数据加载成功", "数据读取完成:")
+        XLog.w("[ph][ph][ph][ph][ph][ph][ph][ph]", "[ph][ph][ph][ph][ph][ph]:")
         val calibrationData = ByteArray(calibrationDataSize)
         val productTypeData = ByteArray(2)
         System.arraycopy(oemInfo, 0, calibrationData, 0, calibrationData.size)
@@ -51,9 +51,9 @@ object IRCmdTool {
             if (dispNumber < -20) {
                 dispNumber = -20
             }
-            XLog.w("配准信息:", "" + dispNumber)
+            XLog.w("[ph][ph][ph][ph]:", "" + dispNumber)
         } catch (e: Exception) {
-            XLog.w("配准数据异常")
+            XLog.w("[ph][ph][ph][ph][ph][ph]")
         }
         val snList = String(snData).split(";")
         val snStr =
@@ -82,7 +82,7 @@ object IRCmdTool {
 
                 val alignByte = SharedManager.getManualData(snStr)
                 System.arraycopy(alignByte, 0, parameters, calibrationDataSize + 1, alignByte.size)
-                XLog.w("机芯没存在校正数据，请联系厂商确认")
+                XLog.w("[ph][ph][ph][ph][ph][ph][ph][ph][ph]，[ph][ph][ph][ph][ph][ph][ph]")
             } catch (e: IOException) {
                 e.printStackTrace()
             } finally {
@@ -237,7 +237,7 @@ object IRCmdTool {
         return try {
             irCmd?.setPropTPDParams(params, value) ?: 0
         } catch (e: Exception) {
-            XLog.w("设置参数异常[${params.name}]: ${e.message}")
+            XLog.w("[ph][ph][ph][ph][ph][ph][${params.name}]: ${e.message}")
             0
         }
     }
@@ -250,7 +250,7 @@ object IRCmdTool {
         return try {
             irCmd?.setPropImageParams(params, value) ?: 0
         } catch (e: Exception) {
-            XLog.w("设置参数异常[${params.name}]: ${e.message}")
+            XLog.w("[ph][ph][ph][ph][ph][ph][${params.name}]: ${e.message}")
             0
         }
     }
@@ -268,7 +268,7 @@ object IRCmdTool {
                 -1
             }
         } catch (e: Exception) {
-            XLog.w("设置配准异常[$value]: ${e.message}")
+            XLog.w("[ph][ph][ph][ph][ph][ph][$value]: ${e.message}")
             0
         }
     }

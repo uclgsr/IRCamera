@@ -165,7 +165,7 @@ class PDFListActivity : BaseViewModelActivity<PdfViewModel>() {
                                         if (file.exists()) {
                                             file.delete()
                                         }
-                                        Log.w("删除成功", response.toString())
+                                        Log.w("[ph][ph][ph][ph]", response.toString())
                                     }
 
                                     override fun onFail(exception: Exception?) {

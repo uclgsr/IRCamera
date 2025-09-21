@@ -289,7 +289,7 @@ class ManualStep2Activity :
 
             mDualView?.dualUVCCamera?.setDisp(dualDisp)
             mDualView?.startPreview()
-            Log.e("机芯数据加载成功", "初始化完成:")
+            Log.e("[ph][ph][ph][ph][ph][ph][ph][ph]", "[ph][ph][ph][ph][ph]:")
         }
     }
 

@@ -29,7 +29,7 @@ public class FileSizeUtil {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Log.e("bcf获取文件大小", "getFileOrFilesSize-1-获取失败!");
+            Log.e("bcf[ph][ph][ph][ph][ph][ph]", "getFileOrFilesSize-1-[ph][ph][ph][ph]!");
         }
         return FormetFileSize(blockSize, sizeType);
     }
@@ -61,7 +61,7 @@ public class FileSizeUtil {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("bcf获取文件大小--getFilesSize-2-获取失败!");
+            System.out.println("bcf[ph][ph][ph][ph][ph][ph]--getFilesSize-2-[ph][ph][ph][ph]!");
 
         }
         return blockSize;
@@ -79,7 +79,7 @@ public class FileSizeUtil {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Log.e("bcf获取文件大小", "getAutoFileOrFilesSize-3-获取失败!");
+            Log.e("bcf[ph][ph][ph][ph][ph][ph]", "getAutoFileOrFilesSize-3-[ph][ph][ph][ph]!");
         }
         return FormetFileSize(blockSize, sizeType) + getUnit(sizeType);
     }
@@ -97,7 +97,7 @@ public class FileSizeUtil {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Log.e("bcf获取文件大小", "getAutoFileOrFilesSize-4-获取失败!");
+            Log.e("bcf[ph][ph][ph][ph][ph][ph]", "getAutoFileOrFilesSize-4-[ph][ph][ph][ph]!");
         }
         return FormetFileSize(blockSize);
     }
@@ -114,7 +114,7 @@ public class FileSizeUtil {
                 }
             }
         } catch (Exception e) {
-            System.out.println("bcf获取文件大小--getFilesSize-5-获取失败!");
+            System.out.println("bcf[ph][ph][ph][ph][ph][ph]--getFilesSize-5-[ph][ph][ph][ph]!");
 
             e.printStackTrace();
         } finally {
@@ -190,13 +190,13 @@ public class FileSizeUtil {
         try {
             File file = new File(filename);
             if (!file.exists() || !file.isFile()) {
-                System.out.println("bcf--getFileSize文件大小不存在");
+                System.out.println("bcf--getFileSize[ph][ph][ph][ph][ph][ph][ph]");
                 return -1;
             }
             return file.length();
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("bcf--getFileSize获取文件大小--getFilesSize-5-获取失败!");
+            System.out.println("bcf--getFileSize[ph][ph][ph][ph][ph][ph]--getFilesSize-5-[ph][ph][ph][ph]!");
         }
         return 0;
     }

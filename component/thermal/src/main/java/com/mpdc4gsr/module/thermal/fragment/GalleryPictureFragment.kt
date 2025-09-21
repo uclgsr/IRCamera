@@ -44,8 +44,8 @@ class GalleryPictureFragment : BaseViewModelFragment<GalleryViewModel>() {
                     index: Int,
                     path: String,
                 ) {
-                    TipDialog.Builder(requireContext()).setMessage("导出图片")
-                        .setPositiveListener("分享") {
+                    TipDialog.Builder(requireContext()).setMessage("[ph][ph][ph][ph]")
+                        .setPositiveListener("[ph][ph]") {
                             share(path)
                         }
                         .create().show()
@@ -74,7 +74,7 @@ class GalleryPictureFragment : BaseViewModelFragment<GalleryViewModel>() {
                 Uri.fromFile(file)
             }
         intent.putExtra(Intent.EXTRA_STREAM, uri)
-        intent = Intent.createChooser(intent, "分享图片")
+        intent = Intent.createChooser(intent, "[ph][ph][ph][ph]")
         startActivity(intent)
     }
 

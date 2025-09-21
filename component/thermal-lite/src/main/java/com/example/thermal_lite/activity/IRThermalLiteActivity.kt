@@ -215,18 +215,18 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
     private val cameraItemBeanList by lazy {
         mutableListOf(
             CameraItemBean(
-                "延迟",
+                "[ph][ph]",
                 CameraItemBean.TYPE_DELAY,
                 time = SaveSettingUtil.delayCaptureSecond,
             ),
             CameraItemBean(
-                "自动快门",
+                "[ph][ph][ph][ph]",
                 CameraItemBean.TYPE_ZDKM,
                 isSel = SaveSettingUtil.isAutoShutter,
             ),
-            CameraItemBean("手动快门", CameraItemBean.TYPE_SDKM),
+            CameraItemBean("[ph][ph][ph][ph]", CameraItemBean.TYPE_SDKM),
             CameraItemBean(
-                "声音",
+                "[ph][ph]",
                 CameraItemBean.TYPE_AUDIO,
                 isSel =
                     SaveSettingUtil.isRecordAudio &&
@@ -236,7 +236,7 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
                             )
                             == PackageManager.PERMISSION_GRANTED,
             ),
-            CameraItemBean("设置", CameraItemBean.TYPE_SETTING),
+            CameraItemBean("[ph][ph]", CameraItemBean.TYPE_SETTING),
         )
     }
     private var cameraItemAdapter: CameraItemAdapter? = null
@@ -463,7 +463,7 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
                                 )
                             }
                         } catch (e: Exception) {
-                            Log.e("温度图层更新失败", e.message.toString())
+                            Log.e("[ph][ph][ph][ph][ph][ph][ph][ph]", e.message.toString())
                         }
                         try {
                             binding.tvTempContent.text =
@@ -474,7 +474,7 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
                                     )
                                 }"
                         } catch (e: Exception) {
-                            Log.e("温度图层更新失败", e.message.toString())
+                            Log.e("[ph][ph][ph][ph][ph][ph][ph][ph]", e.message.toString())
                         }
                     } else {
 
@@ -487,7 +487,7 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
                                     )
                                 }"
                         } catch (e: Exception) {
-                            Log.e("温度图层更新失败", e.message.toString())
+                            Log.e("[ph][ph][ph][ph][ph][ph][ph][ph]", e.message.toString())
                         }
                     }
                     try {
@@ -496,12 +496,12 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
                             binding.clSeekBar.updateBitmap()
                         }
                     } catch (e: Exception) {
-                        Log.w("伪彩条更新异常:", "${e.message}")
+                        Log.w("[ph][ph][ph][ph][ph][ph][ph]:", "${e.message}")
                     }
                     try {
                         AlarmHelp.getInstance(application).alarmData(max, min, binding.tempBg)
                     } catch (e: Exception) {
-                        Log.e("温度图层更新失败", e.message.toString())
+                        Log.e("[ph][ph][ph][ph][ph][ph][ph][ph]", e.message.toString())
                     }
                 }
             }
@@ -1037,7 +1037,7 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
                                 ToastUtils.showShort(R.string.scan_ble_tip_authorize)
                             }
                         } catch (e: Exception) {
-                            XLog.e("画中画" + e.message)
+                            XLog.e("[ph][ph][ph]" + e.message)
                         }
                     }
 
@@ -1625,7 +1625,7 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
                 }
             }
         } catch (e: Exception) {
-            Log.e("线程", e.message.toString())
+            Log.e("[ph][ph]", e.message.toString())
         }
     }
 
@@ -1688,7 +1688,7 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
                                 ToastUtils.showShort(com.topdon.module.thermal.ir.R.string.scan_ble_tip_authorize)
                             }
                         } catch (e: Exception) {
-                            Log.e("录音启动失败", "" + e.message)
+                            Log.e("[ph][ph][ph][ph][ph][ph]", "" + e.message)
                         }
                     }
 
@@ -1730,7 +1730,7 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
                 }
             }
         } catch (e: Exception) {
-            Log.e("线程", e.message.toString())
+            Log.e("[ph][ph]", e.message.toString())
         }
     }
 
@@ -2093,7 +2093,7 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
 
                 delay(30 * 1000)
                 IRTool.setAutoShutter(isAutoShutter)
-                XLog.i("模组配置恢复成功")
+                XLog.i("[ph][ph][ph][ph][ph][ph][ph][ph]")
             }
     }
 
@@ -2230,7 +2230,7 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
             DeviceControlManager.getInstance().release()
             CameraPreviewManager.getInstance().releaseSource()
         } catch (e: Exception) {
-            XLog.e("$TAG:lite销毁异常-${e.message}")
+            XLog.e("$TAG:lite[ph][ph][ph][ph]-${e.message}")
         }
         SystemClock.sleep(100)
     }
@@ -2271,7 +2271,7 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
                         DeviceIrcmdControlManager.getInstance().getIrcmdEngine()
                             ?.basicGainGet(basicGainGetValue)
                 } catch (e: Exception) {
-                    XLog.e("增益获取失败")
+                    XLog.e("[ph][ph][ph][ph][ph][ph]")
                 }
                 basicGainGetTime = System.currentTimeMillis()
             }
@@ -2304,7 +2304,7 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
                         "distance = " + params_array[4] + " hum = " + params_array[5] + " basicGain = " + basicGainGetValue[0],
             )
         } catch (e: Exception) {
-            XLog.e("$TAG--温度修正异常：${e.message}")
+            XLog.e("$TAG--[ph][ph][ph][ph][ph][ph]：${e.message}")
         } finally {
             return tempNew ?: 0f
         }

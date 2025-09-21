@@ -55,9 +55,9 @@ object ImageUtils {
             val fileName = "$name.ir"
             val file = File(galleryPath, fileName)
             file.writeBytes(capital.plus(bs))
-            Log.w("saved帧数据:", file.absolutePath)
+            Log.w("saved[ph][ph][ph]:", file.absolutePath)
         } catch (e: Exception) {
-            XLog.e("一帧图像saved异常: ${e.message}")
+            XLog.e("[ph][ph][ph][ph]saved[ph][ph]: ${e.message}")
         }
     }
 
@@ -72,9 +72,9 @@ object ImageUtils {
             val fileName = "$name.ir"
             val file = File(galleryPath, fileName)
             file.writeBytes(capital.plus(bs))
-            Log.w("saved帧数据:", file.absolutePath)
+            Log.w("saved[ph][ph][ph]:", file.absolutePath)
         } catch (e: Exception) {
-            XLog.e("一帧图像saved异常: ${e.message}")
+            XLog.e("[ph][ph][ph][ph]saved[ph][ph]: ${e.message}")
         }
     }
 
@@ -89,7 +89,7 @@ object ImageUtils {
             val file = File(galleryPath, fileName)
             file.writeBytes(bs)
         } catch (e: Exception) {
-            XLog.e("一帧图像saved异常: ${e.message}")
+            XLog.e("[ph][ph][ph][ph]saved[ph][ph]: ${e.message}")
         }
     }
 }

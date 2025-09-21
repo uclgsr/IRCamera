@@ -141,7 +141,7 @@ class ChartLogView : LineChart {
                                 set = createSet(0, "point temp")
                                 lineData.addDataSet(set)
                             }
-                            Log.w("123", "一条曲线")
+                            Log.w("123", "[ph][ph][ph][ph]")
                             data.forEach {
                                 val x =
                                     ChartTools.getChartX(
@@ -166,7 +166,7 @@ class ChartLogView : LineChart {
                             if (minDataSet == null) {
                                 minDataSet = createSet(1, "line min temp")
                             }
-                            Log.w("123", "两条曲线")
+                            Log.w("123", "[ph][ph][ph][ph]")
                             data.forEach {
                                 val x =
                                     ChartTools.getChartX(
@@ -202,7 +202,7 @@ class ChartLogView : LineChart {
                                 centerTempDataSet = createSet(1, "fence min temp")
                                 lineData.addDataSet(centerTempDataSet)
                             }
-                            Log.w("123", "三条曲线")
+                            Log.w("123", "[ph][ph][ph][ph]")
                             data.forEach {
                                 val x =
                                     ChartTools.getChartX(
