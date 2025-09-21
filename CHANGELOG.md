@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.1] - BLE Core Module Compilation Fix (2024-12-21)
+
+### Fixed
+- **BLE Core Interface**: Fixed missing `import java.util.UUID` statement in Request.kt interface
+- **Compilation Errors**: Resolved "Unresolved reference 'UUID'" compilation errors in BLE core module
+- **Code Consistency**: Aligned Request.kt import statements with other BLE core module files
+
 ## [2.1.0] - Gradle Build System Standardization (2024-12-21)
 
 ### Added
