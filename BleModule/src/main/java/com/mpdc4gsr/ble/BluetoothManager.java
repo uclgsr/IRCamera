@@ -225,7 +225,7 @@ public class BluetoothManager implements EventObserver {
     @Override
     public void onCharacteristicRead(Request request, byte[] value) {
 
-        String data = StringUtils.toHex(value);
+        // String data = StringUtils.toHex(value);
 
     }
 
