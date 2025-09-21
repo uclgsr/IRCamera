@@ -1,4 +1,4 @@
-package com.mpdc4gsr.module.thermalunified.activity
+package com.mpdc4gsr.module.thermal.ir.activity
 
 
 import android.content.Intent
@@ -10,14 +10,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.blankj.utilcode.util.CollectionUtils
 import com.bumptech.glide.Glide
 import com.google.android.material.appbar.AppBarLayout
-import com.mpdc4gsr.lib.core.config.ExtraKeyConfig
-import com.mpdc4gsr.lib.core.db.AppDatabase
-import com.mpdc4gsr.lib.core.db.entity.HouseReport
-import com.mpdc4gsr.lib.core.ktbase.BaseActivity
-import com.mpdc4gsr.lib.core.lms.weiget.TToast
-import com.mpdc4gsr.lib.core.tools.TimeTool
-import com.mpdc4gsr.module.thermalunified.R
-import com.mpdc4gsr.module.thermalunified.adapter.ReportPreviewAdapter
+import com.mpdc4gsr.libunified.app.config.ExtraKeyConfig
+import com.mpdc4gsr.libunified.app.db.AppDatabase
+import com.mpdc4gsr.libunified.app.db.entity.HouseReport
+import com.mpdc4gsr.libunified.app.ktbase.BaseActivity
+import com.mpdc4gsr.libunified.app.lms.weiget.TToast
+import com.mpdc4gsr.libunified.app.tools.TimeTool
+import com.mpdc4gsr.module.thermal.ir.R
+import com.mpdc4gsr.module.thermal.ir.adapter.ReportPreviewAdapter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlin.math.abs
@@ -360,7 +360,7 @@ class ReportPreviewActivity : BaseActivity(), View.OnClickListener {
                     this,
                     it.itemBeans?.map { itemBean ->
 
-                        com.mpdc4gsr.lib.core.bean.HouseRepPreviewItemBean().apply {
+                        com.mpdc4gsr.libunified.app.bean.HouseRepPreviewItemBean().apply {
 
                         }
                     } ?: emptyList(),

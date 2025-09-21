@@ -1,7 +1,7 @@
 package com.mpdc4gsr.module.thermalunified.chart
 
-import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
-import com.mpdc4gsr.lib.core.tools.UnitTools
+import com.mpdc4gsr.libunified.ui.charting.formatter.IndexAxisValueFormatter
+import com.mpdc4gsr.libunified.app.tools.UnitTools
 
 class YValueFormatter : IndexAxisValueFormatter() {
     override fun getFormattedValue(value: Float): String {

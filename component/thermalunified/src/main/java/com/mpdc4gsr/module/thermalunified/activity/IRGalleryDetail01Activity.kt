@@ -14,21 +14,21 @@ import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.elvishew.xlog.XLog
-import com.mpdc4gsr.lib.core.bean.GalleryBean
-import com.mpdc4gsr.lib.core.bean.event.GalleryDelEvent
-import com.mpdc4gsr.lib.core.comm.ExcelUtil
-import com.mpdc4gsr.lib.core.config.ExtraKeyConfig
-import com.mpdc4gsr.lib.core.config.FileConfig
-import com.mpdc4gsr.lib.core.config.RouterConfig
-import com.mpdc4gsr.lib.core.dialog.TipDialog
-import com.mpdc4gsr.lib.core.ktbase.BaseActivity
-import com.mpdc4gsr.lib.core.navigation.NavigationManager
-import com.mpdc4gsr.lib.core.tools.FileTools
-import com.mpdc4gsr.lib.core.tools.TimeTool
-import com.mpdc4gsr.lib.core.tools.ToastTools
-import com.mpdc4gsr.lib.core.utils.ByteUtils.bytesToInt
-import com.mpdc4gsr.lib.core.utils.Constants.IS_REPORT_FIRST
-import com.mpdc4gsr.lib.core.view.TitleView
+import com.mpdc4gsr.libunified.app.bean.GalleryBean
+import com.mpdc4gsr.libunified.app.bean.event.GalleryDelEvent
+import com.mpdc4gsr.libunified.app.comm.ExcelUtil
+import com.mpdc4gsr.libunified.app.config.ExtraKeyConfig
+import com.mpdc4gsr.libunified.app.config.FileConfig
+import com.mpdc4gsr.libunified.app.config.RouterConfig
+import com.mpdc4gsr.libunified.app.dialog.TipDialog
+import com.mpdc4gsr.libunified.app.ktbase.BaseActivity
+import com.mpdc4gsr.libunified.app.navigation.NavigationManager
+import com.mpdc4gsr.libunified.app.tools.FileTools
+import com.mpdc4gsr.libunified.app.tools.TimeTool
+import com.mpdc4gsr.libunified.app.tools.ToastTools
+import com.mpdc4gsr.libunified.app.utils.ByteUtils.bytesToInt
+import com.mpdc4gsr.libunified.app.utils.Constants.IS_REPORT_FIRST
+import com.mpdc4gsr.libunified.app.view.TitleView
 import com.mpdc4gsr.lib.ui.dialog.ProgressDialog
 import com.mpdc4gsr.module.thermalunified.R
 import com.mpdc4gsr.module.thermalunified.event.ImageGalleryEvent
@@ -42,7 +42,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.io.File
-import com.mpdc4gsr.lib.core.R as LibR
+import com.mpdc4gsr.libunified.app.R as LibR
 
 
 class IRGalleryDetail01Activity : BaseActivity(), View.OnClickListener {

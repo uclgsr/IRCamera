@@ -1,16 +1,16 @@
-package com.mpdc4gsr.module.thermalunified.activity
+package com.mpdc4gsr.module.thermal.ir.activity
 
 import android.content.Intent
 import android.widget.ImageView
 import android.widget.TextView
-import com.mpdc4gsr.lib.core.config.ExtraKeyConfig
-import com.mpdc4gsr.lib.core.config.RouterConfig
-import com.mpdc4gsr.lib.core.ktbase.BaseActivity
-import com.mpdc4gsr.lib.core.navigation.NavigationManager
-import com.mpdc4gsr.lib.core.socket.WebSocketProxy
-import com.mpdc4gsr.lib.core.tools.DeviceTools
-import com.mpdc4gsr.module.thermalunified.R
-import com.mpdc4gsr.module.thermalunified.event.CorrectionFinishEvent
+import com.mpdc4gsr.libunified.app.config.ExtraKeyConfig
+import com.mpdc4gsr.libunified.app.config.RouterConfig
+import com.mpdc4gsr.libunified.app.ktbase.BaseActivity
+import com.mpdc4gsr.libunified.app.navigation.NavigationManager
+import com.mpdc4gsr.libunified.app.socket.WebSocketProxy
+import com.mpdc4gsr.libunified.app.tools.DeviceTools
+import com.mpdc4gsr.module.thermal.ir.R
+import com.mpdc4gsr.module.thermal.ir.event.CorrectionFinishEvent
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
@@ -34,9 +34,9 @@ class IRCorrectionTwoActivity : BaseActivity() {
         if (if (isTC007) WebSocketProxy.getInstance()
                 .isTC007Connect() else DeviceTools.isConnect()
         ) {
-            tvCorrection.setBackgroundResource(com.mpdc4gsr.lib.core.R.drawable.bg_corners05_solid_theme)
+            tvCorrection.setBackgroundResource(com.mpdc4gsr.libunified.R.drawable.bg_corners05_solid_theme)
         } else {
-            tvCorrection.setBackgroundResource(com.mpdc4gsr.lib.core.R.drawable.bg_corners05_solid_50_theme)
+            tvCorrection.setBackgroundResource(com.mpdc4gsr.libunified.R.drawable.bg_corners05_solid_50_theme)
         }
 
         tvCorrection.setOnClickListener {
@@ -63,25 +63,25 @@ class IRCorrectionTwoActivity : BaseActivity() {
 
     override fun connected() {
         if (!isTC007) {
-            tvCorrection.setBackgroundResource(com.mpdc4gsr.lib.core.R.drawable.bg_corners05_solid_theme)
+            tvCorrection.setBackgroundResource(com.mpdc4gsr.libunified.R.drawable.bg_corners05_solid_theme)
         }
     }
 
     override fun disConnected() {
         if (!isTC007) {
-            tvCorrection.setBackgroundResource(com.mpdc4gsr.lib.core.R.drawable.bg_corners05_solid_50_theme)
+            tvCorrection.setBackgroundResource(com.mpdc4gsr.libunified.R.drawable.bg_corners05_solid_50_theme)
         }
     }
 
     override fun onSocketConnected(isTS004: Boolean) {
         if (isTC007 && !isTS004) {
-            tvCorrection.setBackgroundResource(com.mpdc4gsr.lib.core.R.drawable.bg_corners05_solid_theme)
+            tvCorrection.setBackgroundResource(com.mpdc4gsr.libunified.R.drawable.bg_corners05_solid_theme)
         }
     }
 
     override fun onSocketDisConnected(isTS004: Boolean) {
         if (isTC007 && !isTS004) {
-            tvCorrection.setBackgroundResource(com.mpdc4gsr.lib.core.R.drawable.bg_corners05_solid_50_theme)
+            tvCorrection.setBackgroundResource(com.mpdc4gsr.libunified.R.drawable.bg_corners05_solid_50_theme)
         }
     }
 

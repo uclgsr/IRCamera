@@ -1,4 +1,4 @@
-package com.mpdc4gsr.module.thermalunified.report.activity
+package com.mpdc4gsr.module.thermal.ir.report.activity
 
 import android.annotation.SuppressLint
 import android.location.Address
@@ -13,29 +13,29 @@ import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.lifecycleScope
 import com.blankj.utilcode.util.TimeUtils
 import com.blankj.utilcode.util.ToastUtils
-import com.github.gzuliyujiang.wheelpicker.DatimePicker
-import com.github.gzuliyujiang.wheelpicker.entity.DateEntity
-import com.github.gzuliyujiang.wheelpicker.entity.DatimeEntity
-import com.github.gzuliyujiang.wheelpicker.entity.TimeEntity
+import com.mpdc4gsr.libunified.ui.gzuliyujiang.wheelpicker.DatimePicker
+import com.mpdc4gsr.libunified.ui.gzuliyujiang.wheelpicker.entity.DateEntity
+import com.mpdc4gsr.libunified.ui.gzuliyujiang.wheelpicker.entity.DatimeEntity
+import com.mpdc4gsr.libunified.ui.gzuliyujiang.wheelpicker.entity.TimeEntity
 import com.hjq.permissions.OnPermissionCallback
 import com.hjq.permissions.Permission
 import com.hjq.permissions.XXPermissions
-import com.mpdc4gsr.lib.core.BaseApplication
-import com.mpdc4gsr.lib.core.bean.event.ReportCreateEvent
-import com.mpdc4gsr.lib.core.common.SaveSettingUtil
-import com.mpdc4gsr.lib.core.config.ExtraKeyConfig
-import com.mpdc4gsr.lib.core.config.RouterConfig
-import com.mpdc4gsr.lib.core.dialog.TipDialog
-import com.mpdc4gsr.lib.core.ktbase.BaseActivity
-import com.mpdc4gsr.lib.core.navigation.NavigationManager
-import com.mpdc4gsr.lib.core.tools.NumberTools
-import com.mpdc4gsr.lib.core.tools.UnitTools
-import com.mpdc4gsr.lib.core.utils.CommUtils
-import com.mpdc4gsr.module.thermalunified.R
-import com.mpdc4gsr.module.thermalunified.report.bean.ImageTempBean
-import com.mpdc4gsr.module.thermalunified.report.bean.ReportConditionBean
-import com.mpdc4gsr.module.thermalunified.report.bean.ReportInfoBean
-import com.mpdc4gsr.module.thermalunified.repository.ConfigRepository
+import com.mpdc4gsr.libunified.app.BaseApplication
+import com.mpdc4gsr.libunified.app.bean.event.ReportCreateEvent
+import com.mpdc4gsr.libunified.app.common.SaveSettingUtil
+import com.mpdc4gsr.libunified.app.config.ExtraKeyConfig
+import com.mpdc4gsr.libunified.app.config.RouterConfig
+import com.mpdc4gsr.libunified.app.dialog.TipDialog
+import com.mpdc4gsr.libunified.app.ktbase.BaseActivity
+import com.mpdc4gsr.libunified.app.navigation.NavigationManager
+import com.mpdc4gsr.libunified.app.tools.NumberTools
+import com.mpdc4gsr.libunified.app.tools.UnitTools
+import com.mpdc4gsr.libunified.app.utils.CommUtils
+import com.mpdc4gsr.module.thermal.ir.R
+import com.mpdc4gsr.module.thermal.ir.report.bean.ImageTempBean
+import com.mpdc4gsr.module.thermal.ir.report.bean.ReportConditionBean
+import com.mpdc4gsr.module.thermal.ir.report.bean.ReportInfoBean
+import com.mpdc4gsr.module.thermal.ir.repository.ConfigRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -45,7 +45,7 @@ import java.text.ParsePosition
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
-import com.mpdc4gsr.lib.core.R as LibR
+import com.mpdc4gsr.libunified.app.R as LibR
 
 
 class ReportCreateFirstActivity : BaseActivity(), View.OnClickListener {
@@ -64,10 +64,10 @@ class ReportCreateFirstActivity : BaseActivity(), View.OnClickListener {
     private val etReportWatermark: android.widget.EditText by lazy { findViewById(R.id.et_report_watermark) }
     private val switchReportWatermark: android.widget.Switch by lazy { findViewById(R.id.switch_report_watermark) }
     private val etAmbientTemperature: android.widget.EditText by lazy { findViewById(R.id.et_ambient_temperature) }
-    private val tipSeekHumidity: com.mpdc4gsr.lib.ui.widget.TipsSeekBar by lazy { findViewById(R.id.tip_seek_humidity) }
+    private val tipSeekHumidity: com.topdon.lib.ui.widget.TipsSeekBar by lazy { findViewById(R.id.tip_seek_humidity) }
     private val switchAmbientHumidity: android.widget.Switch by lazy { findViewById(R.id.switch_ambient_humidity) }
     private val switchAmbientTemperature: android.widget.Switch by lazy { findViewById(R.id.switch_ambient_temperature) }
-    private val tipSeekEmissivity: com.mpdc4gsr.lib.ui.widget.TipsSeekBar by lazy { findViewById(R.id.tip_seek_emissivity) }
+    private val tipSeekEmissivity: com.topdon.lib.ui.widget.TipsSeekBar by lazy { findViewById(R.id.tip_seek_emissivity) }
     private val switchEmissivity: android.widget.Switch by lazy { findViewById(R.id.switch_emissivity) }
     private val etTestDistance: android.widget.EditText by lazy { findViewById(R.id.et_test_distance) }
     private val switchTestDistance: android.widget.Switch by lazy { findViewById(R.id.switch_test_distance) }
@@ -254,7 +254,7 @@ class ReportCreateFirstActivity : BaseActivity(), View.OnClickListener {
                         location.latitude,
                         location.longitude, 1,
                     )
-                Log.v("TAG", "[ph][ph][ph][ph][ph][ph]：$result")
+                Log.v("TAG", "获取地址信息：$result")
             }
         } catch (e: Exception) {
             e.printStackTrace()

@@ -1,4 +1,4 @@
-package com.mpdc4gsr.module.thermalunified.activity
+package com.mpdc4gsr.module.thermal.ir.activity
 
 
 import android.content.Intent
@@ -8,23 +8,23 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import com.blankj.utilcode.util.BarUtils
-import com.mpdc4gsr.lib.core.bean.GalleryBean
-import com.mpdc4gsr.lib.core.bean.event.GalleryDelEvent
-import com.mpdc4gsr.lib.core.config.FileConfig
-import com.mpdc4gsr.lib.core.dialog.ConfirmSelectDialog
-import com.mpdc4gsr.lib.core.dialog.TipDialog
-import com.mpdc4gsr.lib.core.ktbase.BaseActivity
-import com.mpdc4gsr.lib.core.lms.weiget.TToast
-import com.mpdc4gsr.lib.core.repository.TS004Repository
-import com.mpdc4gsr.lib.core.tools.FileTools
-import com.mpdc4gsr.lib.core.tools.TimeTool
-import com.mpdc4gsr.lib.core.tools.ToastTools
-import com.mpdc4gsr.module.thermalunified.R
-import com.mpdc4gsr.module.thermalunified.event.GalleryDownloadEvent
+import com.mpdc4gsr.libunified.app.bean.GalleryBean
+import com.mpdc4gsr.libunified.app.bean.event.GalleryDelEvent
+import com.mpdc4gsr.libunified.app.config.FileConfig
+import com.mpdc4gsr.libunified.app.dialog.ConfirmSelectDialog
+import com.mpdc4gsr.libunified.app.dialog.TipDialog
+import com.mpdc4gsr.libunified.app.ktbase.BaseActivity
+import com.mpdc4gsr.libunified.app.lms.weiget.TToast
+import com.mpdc4gsr.libunified.app.repository.TS004Repository
+import com.mpdc4gsr.libunified.app.tools.FileTools
+import com.mpdc4gsr.libunified.app.tools.TimeTool
+import com.mpdc4gsr.libunified.app.tools.ToastTools
+import com.mpdc4gsr.module.thermal.ir.R
+import com.mpdc4gsr.module.thermal.ir.event.GalleryDownloadEvent
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import java.io.File
-import com.mpdc4gsr.lib.core.R as LibR
+import com.mpdc4gsr.libunified.app.R as LibR
 import com.mpdc4gsr.lib.ui.R as UiR
 
 
@@ -32,7 +32,7 @@ class IRVideoGSYActivity : BaseActivity() {
     private var isRemote = false
     private lateinit var data: GalleryBean
 
-    private lateinit var titleView: com.mpdc4gsr.lib.core.view.TitleView
+    private lateinit var titleView: com.mpdc4gsr.libunified.app.view.TitleView
     private lateinit var clBottom: androidx.constraintlayout.widget.ConstraintLayout
     private lateinit var clDownload: androidx.constraintlayout.widget.ConstraintLayout
     private lateinit var clShare: androidx.constraintlayout.widget.ConstraintLayout
@@ -55,7 +55,7 @@ class IRVideoGSYActivity : BaseActivity() {
         BarUtils.setNavBarColor(this, ContextCompat.getColor(this, UiR.color.black))
 
         isRemote = intent.getBooleanExtra("isRemote", false)
-        data = intent.getParcelableExtra("data") ?: throw NullPointerException("[ph][ph] data")
+        data = intent.getParcelableExtra("data") ?: throw NullPointerException("传递 data")
 
         clBottom.isVisible = isRemote
 

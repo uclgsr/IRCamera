@@ -1,7 +1,7 @@
 package com.mpdc4gsr.module.thermalunified.report.bean
 
 import android.os.Parcelable
-import com.mpdc4gsr.lib.core.utils.CommUtils
+import com.mpdc4gsr.libunified.app.utils.CommUtils
 import kotlinx.android.parcel.Parcelize
 
 

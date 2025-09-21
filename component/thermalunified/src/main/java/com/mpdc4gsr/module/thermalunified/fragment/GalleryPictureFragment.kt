@@ -1,4 +1,4 @@
-package com.mpdc4gsr.module.thermalunified.fragment
+package com.mpdc4gsr.module.thermal.fragment
 
 import android.content.Intent
 import android.net.Uri
@@ -7,12 +7,12 @@ import androidx.core.content.FileProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.ScreenUtils
-import com.mpdc4gsr.lib.core.dialog.TipDialog
-import com.mpdc4gsr.lib.core.ktbase.BaseViewModelFragment
-import com.mpdc4gsr.module.thermalunified.R
-import com.mpdc4gsr.module.thermalunified.adapter.GalleryAdapter
-import com.mpdc4gsr.module.thermalunified.tools.GlideImageEngine
-import com.mpdc4gsr.module.thermalunified.viewmodel.GalleryViewModel
+import com.mpdc4gsr.libunified.app.dialog.TipDialog
+import com.mpdc4gsr.libunified.app.ktbase.BaseViewModelFragment
+import com.mpdc4gsr.module.thermal.R
+import com.mpdc4gsr.module.thermal.adapter.GalleryAdapter
+import com.mpdc4gsr.module.thermal.tools.GlideImageEngine
+import com.mpdc4gsr.module.thermal.viewmodel.GalleryViewModel
 import java.io.File
 
 class GalleryPictureFragment : BaseViewModelFragment<GalleryViewModel>() {
@@ -44,8 +44,8 @@ class GalleryPictureFragment : BaseViewModelFragment<GalleryViewModel>() {
                     index: Int,
                     path: String,
                 ) {
-                    TipDialog.Builder(requireContext()).setMessage("[ph][ph][ph][ph]")
-                        .setPositiveListener("[ph][ph]") {
+                    TipDialog.Builder(requireContext()).setMessage("导出图片")
+                        .setPositiveListener("分享") {
                             share(path)
                         }
                         .create().show()
@@ -74,7 +74,7 @@ class GalleryPictureFragment : BaseViewModelFragment<GalleryViewModel>() {
                 Uri.fromFile(file)
             }
         intent.putExtra(Intent.EXTRA_STREAM, uri)
-        intent = Intent.createChooser(intent, "[ph][ph][ph][ph]")
+        intent = Intent.createChooser(intent, "分享图片")
         startActivity(intent)
     }
 

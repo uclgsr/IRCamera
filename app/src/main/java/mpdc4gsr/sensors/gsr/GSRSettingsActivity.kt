@@ -19,7 +19,7 @@ import androidx.lifecycle.lifecycleScope
 import com.csl.irCamera.R
 import com.csl.irCamera.databinding.ActivityGsrSettingsBinding
 import com.mpdc4gsr.ble.util.BluetoothPermissionUtils
-import com.mpdc4gsr.lib.core.ktbase.BaseBindingActivity
+import com.mpdc4gsr.libunified.app.ktbase.BaseBindingActivity
 import kotlinx.coroutines.launch
 
 class GSRSettingsActivity : BaseBindingActivity<ActivityGsrSettingsBinding>() {

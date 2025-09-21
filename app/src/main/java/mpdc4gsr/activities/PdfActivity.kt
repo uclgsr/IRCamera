@@ -3,7 +3,7 @@ package mpdc4gsr.activities
 import android.view.WindowManager
 import com.csl.irCamera.R
 import com.csl.irCamera.databinding.ActivityPdfBinding
-import com.mpdc4gsr.lib.core.ktbase.BaseBindingActivity
+import com.mpdc4gsr.libunified.app.ktbase.BaseBindingActivity
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException

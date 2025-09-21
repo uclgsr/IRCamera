@@ -14,8 +14,8 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import mpdc4gsr.config.FeatureFlags
 import mpdc4gsr.config.ProtocolVersion
-import mpdc4gsr.lib.core.SessionManager
-import mpdc4gsr.lib.core.StructuredLogger
+import mpdc4gsr.libunified.app.SessionManager
+import mpdc4gsr.libunified.app.StructuredLogger
 import mpdc4gsr.security.AdvancedAuthenticationManager
 import mpdc4gsr.sync.EnhancedTimeSyncService
 import okhttp3.OkHttpClient

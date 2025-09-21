@@ -1,4 +1,4 @@
-package com.mpdc4gsr.module.thermalunified.popup
+package com.mpdc4gsr.module.thermal.ir.popup
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -9,13 +9,13 @@ import android.widget.PopupWindow
 import com.blankj.utilcode.util.ToastUtils
 import com.hjq.permissions.Permission
 import com.hjq.permissions.XXPermissions
-import com.mpdc4gsr.lib.core.comm.bean.SaveSettingBean
-import com.mpdc4gsr.lib.core.common.SharedManager
-import com.mpdc4gsr.lib.core.config.RouterConfig
-import com.mpdc4gsr.lib.core.dialog.TipShutterDialog
-import com.mpdc4gsr.lib.core.navigation.NavigationManager
-import com.mpdc4gsr.module.thermalunified.R
-import com.mpdc4gsr.module.thermalunified.databinding.PopCameraItemBinding
+import com.mpdc4gsr.libunified.app.comm.bean.SaveSettingBean
+import com.mpdc4gsr.libunified.app.common.SharedManager
+import com.mpdc4gsr.libunified.app.config.RouterConfig
+import com.mpdc4gsr.libunified.app.dialog.TipShutterDialog
+import com.mpdc4gsr.libunified.app.navigation.NavigationManager
+import com.mpdc4gsr.module.thermal.ir.R
+import com.mpdc4gsr.module.thermal.ir.databinding.PopCameraItemBinding
 
 
 @SuppressLint("SetTextI18n")

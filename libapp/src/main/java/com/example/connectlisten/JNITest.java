@@ -1,7 +1,7 @@
 package com.example.connectlisten;
 
 
-import com.mpdc4gsr.lib.core.so.algorithm;
+import com.mpdc4gsr.libunified.app.so.algorithm;
 
 public class JNITest {
     static {
@@ -10,10 +10,11 @@ public class JNITest {
 //        System.loadLibrary("minMaxTemperatureDetect");
     }
 
-    public static byte[] maxTempL(byte[] imgBytes,byte[] tempByte,int width,int height) {
-        return  algorithm.maxTempL(imgBytes, tempByte,width,height);
+    public static byte[] maxTempL(byte[] imgBytes, byte[] tempByte, int width, int height) {
+        return algorithm.maxTempL(imgBytes, tempByte, width, height);
     }
-    public static byte[] lowTemTrack(byte[] imgBytes,byte[] tempByte,int width,int height) {
-        return  algorithm.lowTemTrack(imgBytes, tempByte,width,height);
+
+    public static byte[] lowTemTrack(byte[] imgBytes, byte[] tempByte, int width, int height) {
+        return algorithm.lowTemTrack(imgBytes, tempByte, width, height);
     }
 }

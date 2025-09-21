@@ -1,4 +1,4 @@
-package com.mpdc4gsr.module.thermalunified.fragment
+package com.mpdc4gsr.module.thermal.ir.fragment
 
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -14,28 +14,28 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.Utils
-import com.mpdc4gsr.lib.core.comm.view.CommLoadMoreView
-import com.mpdc4gsr.lib.core.config.ExtraKeyConfig
-import com.mpdc4gsr.lib.core.config.FileConfig
-import com.mpdc4gsr.lib.core.config.RouterConfig
-import com.mpdc4gsr.lib.core.dialog.TipDialog
-import com.mpdc4gsr.lib.core.ktbase.BaseViewModelFragment
-import com.mpdc4gsr.lib.core.lms.Config
-import com.mpdc4gsr.lib.core.lms.LMS
-import com.mpdc4gsr.lib.core.lms.UrlConstant
-import com.mpdc4gsr.lib.core.lms.network.HttpProxy
-import com.mpdc4gsr.lib.core.lms.network.IResponseCallback
-import com.mpdc4gsr.lib.core.lms.utils.LanguageUtil
-import com.mpdc4gsr.lib.core.lms.utils.StringUtils
-import com.mpdc4gsr.lib.core.lms.weiget.TToast
-import com.mpdc4gsr.lib.core.lms.xutils.http.RequestParams
-import com.mpdc4gsr.lib.core.navigation.NavigationManager
-import com.mpdc4gsr.lib.core.socket.WebSocketProxy
-import com.mpdc4gsr.lib.core.utils.NetWorkUtils
-import com.mpdc4gsr.lib.core.view.TitleView
-import com.mpdc4gsr.module.thermalunified.R
-import com.mpdc4gsr.module.thermalunified.adapter.PDFAdapter
-import com.mpdc4gsr.module.thermalunified.report.viewmodel.PdfViewModel
+import com.mpdc4gsr.libunified.app.comm.view.CommLoadMoreView
+import com.mpdc4gsr.libunified.app.config.ExtraKeyConfig
+import com.mpdc4gsr.libunified.app.config.FileConfig
+import com.mpdc4gsr.libunified.app.config.RouterConfig
+import com.mpdc4gsr.libunified.app.dialog.TipDialog
+import com.mpdc4gsr.libunified.app.ktbase.BaseViewModelFragment
+import com.mpdc4gsr.libunified.app.lms.Config
+import com.mpdc4gsr.libunified.app.lms.LMS
+import com.mpdc4gsr.libunified.app.lms.UrlConstant
+import com.mpdc4gsr.libunified.app.lms.network.HttpProxy
+import com.mpdc4gsr.libunified.app.lms.network.IResponseCallback
+import com.mpdc4gsr.libunified.app.lms.utils.LanguageUtil
+import com.mpdc4gsr.libunified.app.lms.utils.StringUtils
+import com.mpdc4gsr.libunified.app.lms.weiget.TToast
+import com.mpdc4gsr.libunified.app.lms.xutils.http.RequestParams
+import com.mpdc4gsr.libunified.app.navigation.NavigationManager
+import com.mpdc4gsr.libunified.app.socket.WebSocketProxy
+import com.mpdc4gsr.libunified.app.utils.NetWorkUtils
+import com.mpdc4gsr.libunified.app.view.TitleView
+import com.mpdc4gsr.module.thermal.ir.R
+import com.mpdc4gsr.module.thermal.ir.adapter.PDFAdapter
+import com.mpdc4gsr.module.thermal.ir.report.viewmodel.PdfViewModel
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -88,11 +88,11 @@ class PDFListFragment : BaseViewModelFragment<PdfViewModel>() {
             }
             it?.let { data ->
                 val tvEmpty: TextView? = reportAdapter.emptyLayout?.findViewById(R.id.tv_empty)
-                tvEmpty?.setText(if (page == 1 && data.code.toString() != LMS.SUCCESS) R.string.request_fail else R.string.tip_no_more_data)
+                tvEmpty?.setText(if (page == 1 && data.code != LMS.SUCCESS) R.string.request_fail else R.string.tip_no_more_data)
 
                 if (page == 1) {
 
-                    if (data.code.toString() == LMS.SUCCESS) {
+                    if (data.code == LMS.SUCCESS) {
                         reportAdapter.loadMoreModule.isEnableLoadMore =
                             !data.data?.records.isNullOrEmpty()
                         fragmentPdfRecyclerLay.finishRefresh()
@@ -102,7 +102,7 @@ class PDFListFragment : BaseViewModelFragment<PdfViewModel>() {
                     reportAdapter.setNewInstance(data.data?.records)
                 } else {
                     data.data?.records?.let { it1 -> reportAdapter.addData(it1) }
-                    if (data.code.toString() == LMS.SUCCESS) {
+                    if (data.code == LMS.SUCCESS) {
                         if (data.data?.records.isNullOrEmpty()) {
                             reportAdapter.loadMoreModule.loadMoreEnd()
                         } else {
@@ -186,7 +186,7 @@ class PDFListFragment : BaseViewModelFragment<PdfViewModel>() {
                                 LanguageUtil.getLanguageId(Utils.getApp())
                             )
                             params.addBodyParameter("reportType", 2)
-                            HttpProxy.getInstant().post(
+                            HttpProxy.instant.post(
                                 url, params,
                                 object :
                                     IResponseCallback {
@@ -198,7 +198,7 @@ class PDFListFragment : BaseViewModelFragment<PdfViewModel>() {
                                         if (file.exists()) {
                                             file.delete()
                                         }
-                                        Log.w("[ph][ph][ph][ph]", response.toString())
+                                        Log.w("删除成功", response.toString())
                                     }
 
                                     override fun onFail(exception: Exception?) {

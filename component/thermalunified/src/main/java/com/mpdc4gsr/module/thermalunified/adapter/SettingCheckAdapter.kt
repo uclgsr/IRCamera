@@ -1,5 +1,5 @@
 // kotlin
-package com.mpdc4gsr.module.thermalunified.adapter
+package com.mpdc4gsr.module.thermal.adapter
 
 import android.content.Context
 import android.util.Log
@@ -9,8 +9,8 @@ import android.view.ViewGroup
 import android.widget.Button
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.mpdc4gsr.module.thermalunified.R
-import com.mpdc4gsr.lib.core.R as LibR
+import com.mpdc4gsr.module.thermal.R
+import com.mpdc4gsr.libunified.app.R as LibR
 import com.mpdc4gsr.lib.ui.R as LibUiR
 
 class SettingCheckAdapter(val context: Context) :
@@ -59,7 +59,7 @@ class SettingCheckAdapter(val context: Context) :
                 )
             }
             holder.btn.setOnClickListener {
-                Log.w("123", "[ph][ph]: ${datas[position]}")
+                Log.w("123", "文件: ${datas[position]}")
                 listener?.onClick(position, dataTimes[position])
             }
         }

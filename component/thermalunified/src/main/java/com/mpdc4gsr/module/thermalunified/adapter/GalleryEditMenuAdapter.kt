@@ -1,4 +1,4 @@
-package com.mpdc4gsr.module.thermalunified.adapter
+package com.mpdc4gsr.module.thermal.ir.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -9,10 +9,10 @@ import android.widget.TextView
 import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.mpdc4gsr.module.thermalunified.R
-import com.mpdc4gsr.lib.core.R as MenuR
+import com.mpdc4gsr.module.thermal.ir.R
+import com.mpdc4gsr.libunified.app.R as MenuR
 
-@Deprecated("[ph][ph]2D[ph][ph][ph][ph][ph][ph]，[ph][ph][ph][ph][ph]")
+@Deprecated("旧的2D编辑一级菜单，已重构过了")
 class GalleryEditMenuAdapter(val context: Context) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     var listener: ((code: Int) -> Unit)? = null

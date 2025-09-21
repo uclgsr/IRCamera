@@ -1,9 +1,9 @@
 package com.mpdc4gsr.module.user.activity
 
 // TS004ResetEvent removed
-// import com.mpdc4gsr.lib.core.bean.event.TS004ResetEvent
+// import com.mpdc4gsr.libunified.app.bean.event.TS004ResetEvent
 // TS004Repository functionality removed
-// import com.mpdc4gsr.lib.core.repository.TS004Repository
+// import com.mpdc4gsr.libunified.app.repository.TS004Repository
 import android.view.View
 import android.widget.TextView
 import androidx.activity.viewModels
@@ -11,19 +11,19 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import com.blankj.utilcode.util.ToastUtils
 import com.elvishew.xlog.XLog
-import com.mpdc4gsr.lib.core.BaseApplication
-import com.mpdc4gsr.lib.core.config.ExtraKeyConfig
-import com.mpdc4gsr.lib.core.config.FileConfig
-import com.mpdc4gsr.lib.core.config.RouterConfig
-import com.mpdc4gsr.lib.core.dialog.ConfirmSelectDialog
-import com.mpdc4gsr.lib.core.dialog.FirmwareUpDialog
-import com.mpdc4gsr.lib.core.dialog.TipDialog
-import com.mpdc4gsr.lib.core.http.tool.DownloadTool
-import com.mpdc4gsr.lib.core.ktbase.BaseActivity
-import com.mpdc4gsr.lib.core.lms.weiget.TToast
-import com.mpdc4gsr.lib.core.navigation.NavigationManager
-import com.mpdc4gsr.lib.core.utils.Constants
-import com.mpdc4gsr.lib.core.viewmodel.FirmwareViewModel
+import com.mpdc4gsr.libunified.app.BaseApplication
+import com.mpdc4gsr.libunified.app.config.ExtraKeyConfig
+import com.mpdc4gsr.libunified.app.config.FileConfig
+import com.mpdc4gsr.libunified.app.config.RouterConfig
+import com.mpdc4gsr.libunified.app.dialog.ConfirmSelectDialog
+import com.mpdc4gsr.libunified.app.dialog.FirmwareUpDialog
+import com.mpdc4gsr.libunified.app.dialog.TipDialog
+import com.mpdc4gsr.libunified.app.http.tool.DownloadTool
+import com.mpdc4gsr.libunified.app.ktbase.BaseActivity
+import com.mpdc4gsr.libunified.app.lms.weiget.TToast
+import com.mpdc4gsr.libunified.app.navigation.NavigationManager
+import com.mpdc4gsr.libunified.app.utils.Constants
+import com.mpdc4gsr.libunified.app.viewmodel.FirmwareViewModel
 import com.mpdc4gsr.module.user.R
 import com.mpdc4gsr.module.user.dialog.DownloadProDialog
 import com.mpdc4gsr.module.user.dialog.FirmwareInstallDialog
@@ -31,7 +31,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.io.File
 import java.text.DecimalFormat
-import com.mpdc4gsr.lib.core.R as RCore
+import com.mpdc4gsr.libunified.app.R as RCore
 
 class MoreActivity : BaseActivity(), View.OnClickListener {
     private val firmwareViewModel: FirmwareViewModel by viewModels()

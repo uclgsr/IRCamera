@@ -3,7 +3,7 @@ package com.mpdc4gsr.module.user.activity
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import com.mpdc4gsr.lib.core.common.SharedManager
+import com.mpdc4gsr.libunified.app.common.SharedManager
 import com.mpdc4gsr.module.user.databinding.ActivityUnitBinding
 
 class UnitActivity : AppCompatActivity() {

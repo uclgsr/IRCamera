@@ -1,8 +1,8 @@
 package com.mpdc4gsr.module.thermalunified.chart
 
 import android.annotation.SuppressLint
-import com.github.mikephil.charting.components.AxisBase
-import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
+import com.mpdc4gsr.libunified.ui.charting.components.AxisBase
+import com.mpdc4gsr.libunified.ui.charting.formatter.IndexAxisValueFormatter
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.TimeZone

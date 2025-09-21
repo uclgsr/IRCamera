@@ -1,4 +1,4 @@
-package com.mpdc4gsr.module.thermalunified.fragment
+package com.mpdc4gsr.module.thermal.ir.fragment
 
 import android.os.Bundle
 import androidx.core.view.isVisible
@@ -8,17 +8,17 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-import com.mpdc4gsr.lib.core.config.ExtraKeyConfig
-import com.mpdc4gsr.lib.core.ktbase.BaseFragment
-import com.mpdc4gsr.lib.core.repository.GalleryRepository.DirType
-import com.mpdc4gsr.lib.core.view.MyTextView
-import com.mpdc4gsr.lib.core.view.TitleView
-import com.mpdc4gsr.module.thermalunified.R
-import com.mpdc4gsr.module.thermalunified.event.GalleryDirChangeEvent
-import com.mpdc4gsr.module.thermalunified.popup.GalleryChangePopup
-import com.mpdc4gsr.module.thermalunified.viewmodel.IRGalleryTabViewModel
+import com.mpdc4gsr.libunified.app.config.ExtraKeyConfig
+import com.mpdc4gsr.libunified.app.ktbase.BaseFragment
+import com.mpdc4gsr.libunified.app.repository.GalleryRepository.DirType
+import com.mpdc4gsr.libunified.app.view.MyTextView
+import com.mpdc4gsr.libunified.app.view.TitleView
+import com.mpdc4gsr.module.thermal.ir.R
+import com.mpdc4gsr.module.thermal.ir.event.GalleryDirChangeEvent
+import com.mpdc4gsr.module.thermal.ir.popup.GalleryChangePopup
+import com.mpdc4gsr.module.thermal.ir.viewmodel.IRGalleryTabViewModel
 import org.greenrobot.eventbus.EventBus
-import com.mpdc4gsr.lib.core.R as LibCoreR
+import com.mpdc4gsr.libunified.app.R as LibCoreR
 import com.mpdc4gsr.lib.ui.R as UiR
 
 

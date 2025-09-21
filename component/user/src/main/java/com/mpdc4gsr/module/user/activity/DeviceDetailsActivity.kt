@@ -6,15 +6,15 @@ import android.view.View
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.lifecycleScope
-import com.mpdc4gsr.lib.core.config.ExtraKeyConfig
-import com.mpdc4gsr.lib.core.ktbase.BaseActivity
+import com.mpdc4gsr.libunified.app.config.ExtraKeyConfig
+import com.mpdc4gsr.libunified.app.ktbase.BaseActivity
 
 // TS004Repository functionality removed
-// import com.mpdc4gsr.lib.core.repository.TS004Repository
-import com.mpdc4gsr.lib.core.lms.weiget.TToast
+// import com.mpdc4gsr.libunified.app.repository.TS004Repository
+import com.mpdc4gsr.libunified.app.lms.weiget.TToast
 import com.mpdc4gsr.module.user.R
 import kotlinx.coroutines.launch
-import com.mpdc4gsr.lib.core.R as RCore
+import com.mpdc4gsr.libunified.app.R as RCore
 
 
 class DeviceDetailsActivity : BaseActivity(), View.OnClickListener {

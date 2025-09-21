@@ -1,4 +1,4 @@
-package com.mpdc4gsr.module.thermalunified.view
+package com.mpdc4gsr.module.thermal.ir.view
 
 import android.content.Context
 import android.graphics.Color
@@ -9,24 +9,24 @@ import android.util.Log
 import androidx.core.content.ContextCompat
 import com.blankj.utilcode.util.SizeUtils
 import com.elvishew.xlog.XLog
-import com.github.mikephil.charting.charts.LineChart
-import com.github.mikephil.charting.components.Legend
-import com.github.mikephil.charting.components.XAxis
-import com.github.mikephil.charting.components.YAxis
-import com.github.mikephil.charting.data.Entry
-import com.github.mikephil.charting.data.LineData
-import com.github.mikephil.charting.data.LineDataSet
-import com.mpdc4gsr.lib.core.db.entity.ThermalEntity
-import com.mpdc4gsr.module.thermalunified.R
-import com.mpdc4gsr.module.thermalunified.chart.IRMyValueFormatter
-import com.mpdc4gsr.module.thermalunified.chart.YValueFormatter
-import com.mpdc4gsr.module.thermalunified.utils.ChartTools
+import com.mpdc4gsr.libunified.ui.charting.charts.LineChart
+import com.mpdc4gsr.libunified.ui.charting.components.Legend
+import com.mpdc4gsr.libunified.ui.charting.components.XAxis
+import com.mpdc4gsr.libunified.ui.charting.components.YAxis
+import com.mpdc4gsr.libunified.ui.charting.data.Entry
+import com.mpdc4gsr.libunified.ui.charting.data.LineData
+import com.mpdc4gsr.libunified.ui.charting.data.LineDataSet
+import com.mpdc4gsr.libunified.app.db.entity.ThermalEntity
+import com.mpdc4gsr.module.thermal.ir.R
+import com.mpdc4gsr.module.thermal.ir.chart.IRMyValueFormatter
+import com.mpdc4gsr.module.thermal.ir.chart.YValueFormatter
+import com.mpdc4gsr.module.thermal.ir.utils.ChartTools
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import com.mpdc4gsr.lib.core.R as LibR
-import com.mpdc4gsr.lib.core.R as LibcoreR
-import com.mpdc4gsr.module.thermalunified.R as ThermalR
+import com.mpdc4gsr.libunified.app.R as LibR
+import com.mpdc4gsr.libunified.app.R as LibcoreR
+import com.mpdc4gsr.module.thermal.R as ThermalR
 
 class ChartLogView : LineChart {
     private val mHandler by lazy { Handler(Looper.getMainLooper()) }
@@ -141,7 +141,7 @@ class ChartLogView : LineChart {
                                 set = createSet(0, "point temp")
                                 lineData.addDataSet(set)
                             }
-                            Log.w("123", "[ph][ph][ph][ph]")
+                            Log.w("123", "一条曲线")
                             data.forEach {
                                 val x =
                                     ChartTools.getChartX(
@@ -166,7 +166,7 @@ class ChartLogView : LineChart {
                             if (minDataSet == null) {
                                 minDataSet = createSet(1, "line min temp")
                             }
-                            Log.w("123", "[ph][ph][ph][ph]")
+                            Log.w("123", "两条曲线")
                             data.forEach {
                                 val x =
                                     ChartTools.getChartX(
@@ -202,7 +202,7 @@ class ChartLogView : LineChart {
                                 centerTempDataSet = createSet(1, "fence min temp")
                                 lineData.addDataSet(centerTempDataSet)
                             }
-                            Log.w("123", "[ph][ph][ph][ph]")
+                            Log.w("123", "三条曲线")
                             data.forEach {
                                 val x =
                                     ChartTools.getChartX(

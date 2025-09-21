@@ -10,10 +10,10 @@ import com.energy.iruvc.sdkisp.LibIRProcess
 import com.energy.iruvc.sdkisp.LibIRProcess.ImageRes_t
 import com.energy.iruvc.utils.CommonParams.IRPROCSRCFMTType
 import com.energy.iruvc.utils.CommonParams.PseudoColorType
-import com.infisense.usbir.utils.IRImageHelp
-import com.infisense.usbir.utils.OpencvTools
-import com.infisense.usbir.utils.PseudocodeUtils
-import com.mpdc4gsr.lib.core.bean.AlarmBean
+import com.mpdc4gsr.libunified.ir.utils.IRImageHelp
+import com.mpdc4gsr.libunified.ir.utils.OpencvTools
+import com.mpdc4gsr.libunified.ir.utils.PseudocodeUtils
+import com.mpdc4gsr.libunified.app.bean.AlarmBean
 
 import com.mpdc4gsr.module.thermalunified.bean.DataBean
 import java.nio.ByteBuffer

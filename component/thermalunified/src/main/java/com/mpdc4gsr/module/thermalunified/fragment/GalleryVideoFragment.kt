@@ -1,15 +1,15 @@
-package com.mpdc4gsr.module.thermalunified.fragment
+package com.mpdc4gsr.module.thermal.fragment
 
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.ScreenUtils
-import com.mpdc4gsr.lib.core.config.RouterConfig
-import com.mpdc4gsr.lib.core.dialog.TipDialog
-import com.mpdc4gsr.lib.core.ktbase.BaseViewModelFragment
-import com.mpdc4gsr.lib.core.navigation.NavigationManager
-import com.mpdc4gsr.module.thermalunified.R
-import com.mpdc4gsr.module.thermalunified.adapter.GalleryAdapter
-import com.mpdc4gsr.module.thermalunified.viewmodel.GalleryViewModel
+import com.mpdc4gsr.libunified.app.config.RouterConfig
+import com.mpdc4gsr.libunified.app.dialog.TipDialog
+import com.mpdc4gsr.libunified.app.ktbase.BaseViewModelFragment
+import com.mpdc4gsr.libunified.app.navigation.NavigationManager
+import com.mpdc4gsr.module.thermal.R
+import com.mpdc4gsr.module.thermal.adapter.GalleryAdapter
+import com.mpdc4gsr.module.thermal.viewmodel.GalleryViewModel
 
 class GalleryVideoFragment : BaseViewModelFragment<GalleryViewModel>() {
     private val adapter by lazy { GalleryAdapter(requireContext()) }
@@ -41,8 +41,8 @@ class GalleryVideoFragment : BaseViewModelFragment<GalleryViewModel>() {
                     index: Int,
                     path: String,
                 ) {
-                    TipDialog.Builder(requireContext()).setMessage("[ph][ph][ph][ph]")
-                        .setPositiveListener("[ph][ph]") {
+                    TipDialog.Builder(requireContext()).setMessage("导出图片")
+                        .setPositiveListener("分享") {
 
                         }
                         .create().show()

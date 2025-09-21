@@ -1,12 +1,12 @@
-package com.mpdc4gsr.module.thermalunified.report.activity
+package com.mpdc4gsr.module.thermal.ir.report.activity
 
-import com.mpdc4gsr.lib.core.config.ExtraKeyConfig
-import com.mpdc4gsr.lib.core.ktbase.BaseActivity
-import com.mpdc4gsr.lib.core.view.TitleView
-import com.mpdc4gsr.module.thermalunified.R
-import com.mpdc4gsr.module.thermalunified.report.bean.ReportInfoBean
-import com.mpdc4gsr.module.thermalunified.report.view.ReportInfoView
-import com.mpdc4gsr.module.thermalunified.report.view.WatermarkView
+import com.mpdc4gsr.libunified.app.config.ExtraKeyConfig
+import com.mpdc4gsr.libunified.app.ktbase.BaseActivity
+import com.mpdc4gsr.libunified.app.view.TitleView
+import com.mpdc4gsr.module.thermal.ir.R
+import com.mpdc4gsr.module.thermal.ir.report.bean.ReportInfoBean
+import com.mpdc4gsr.module.thermal.ir.report.view.ReportInfoView
+import com.mpdc4gsr.module.thermal.ir.report.view.WatermarkView
 import com.mpdc4gsr.lib.ui.R as UiR
 
 

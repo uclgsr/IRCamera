@@ -1,4 +1,4 @@
-package com.mpdc4gsr.module.thermalunified.activity
+package com.mpdc4gsr.module.thermal.ir.activity
 
 
 import android.graphics.ImageFormat
@@ -25,25 +25,25 @@ import com.energy.iruvc.utils.IIRFrameCallback
 import com.energy.iruvc.utils.SynchronizedBitmap
 import com.energy.iruvc.uvc.ConnectCallback
 import com.energy.iruvc.uvc.UVCCamera
-import com.infisense.usbdual.Const
-import com.infisense.usbdual.camera.DualViewWithExternalCameraCommonApi
-import com.infisense.usbdual.camera.IRUVCDual
-import com.infisense.usbdual.camera.USBMonitorManager
-import com.infisense.usbdual.inf.OnUSBConnectListener
-import com.infisense.usbir.extension.setAutoShutter
-import com.infisense.usbir.extension.setContrast
-import com.infisense.usbir.extension.setMirror
-import com.infisense.usbir.extension.setPropDdeLevel
-import com.infisense.usbir.utils.PseudocodeUtils
-import com.infisense.usbir.utils.ScreenUtils
-import com.infisense.usbir.view.ITsTempListener
-import com.infisense.usbir.view.TemperatureView
-import com.mpdc4gsr.lib.core.common.SaveSettingUtil
-import com.mpdc4gsr.lib.core.ktbase.BaseFragment
-import com.mpdc4gsr.module.thermalunified.repository.ConfigRepository
-import com.mpdc4gsr.module.thermalunified.utils.DualParamsUtil
-import com.mpdc4gsr.module.thermalunified.utils.IRCmdTool
-import com.mpdc4gsr.module.thermalunified.utils.IRCmdTool.getSNStr
+import com.mpdc4gsr.libunified.ir.usbdual.Const
+import com.mpdc4gsr.libunified.ir.usbdual.camera.DualViewWithExternalCameraCommonApi
+import com.mpdc4gsr.libunified.ir.usbdual.camera.IRUVCDual
+import com.mpdc4gsr.libunified.ir.usbdual.camera.USBMonitorManager
+import com.mpdc4gsr.libunified.ir.usbdual.inf.OnUSBConnectListener
+import com.mpdc4gsr.libunified.ir.extension.setAutoShutter
+import com.mpdc4gsr.libunified.ir.extension.setContrast
+import com.mpdc4gsr.libunified.ir.extension.setMirror
+import com.mpdc4gsr.libunified.ir.extension.setPropDdeLevel
+import com.mpdc4gsr.libunified.ir.utils.PseudocodeUtils
+import com.mpdc4gsr.libunified.ir.utils.ScreenUtils
+import com.mpdc4gsr.libunified.ir.view.ITsTempListener
+import com.mpdc4gsr.libunified.ir.view.TemperatureView
+import com.mpdc4gsr.libunified.app.common.SaveSettingUtil
+import com.mpdc4gsr.libunified.app.ktbase.BaseFragment
+import com.mpdc4gsr.module.thermal.ir.repository.ConfigRepository
+import com.mpdc4gsr.module.thermal.ir.utils.DualParamsUtil
+import com.mpdc4gsr.module.thermal.ir.utils.IRCmdTool
+import com.mpdc4gsr.module.thermal.ir.utils.IRCmdTool.getSNStr
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -330,7 +330,7 @@ abstract class BaseIRPlushFragment :
                 super.handleMessage(msg)
                 Log.d(
                     TAG,
-                    "USBMonitorManager [ph][ph][ph][ph]${msg.what}",
+                    "USBMonitorManager 收到消息${msg.what}",
                 )
                 if (!isDualIR()) {
                     return
@@ -498,7 +498,7 @@ abstract class BaseIRPlushFragment :
                 val config = ConfigRepository.readConfig(false)
                 val disChar = (config.distance * 128).toInt()
                 val emsChar = (config.radiation * 128).toInt()
-                XLog.w("[ph][ph]TPD_PROP DISTANCE:$disChar, EMS:$emsChar}")
+                XLog.w("设置TPD_PROP DISTANCE:$disChar, EMS:$emsChar}")
                 delay(timeMillis)
 
 
@@ -514,7 +514,7 @@ abstract class BaseIRPlushFragment :
                 )
 
                 delay(timeMillis)
-                XLog.w("[ph][ph]TPD_PROP DISTANCE:$disChar, EMS:$emsChar}")
+                XLog.w("设置TPD_PROP DISTANCE:$disChar, EMS:$emsChar}")
                 if (isFirst && isrun) {
 
                     ircmd?.setMirror(false)
@@ -540,7 +540,7 @@ abstract class BaseIRPlushFragment :
                 } else {
                     ircmd?.updateOOCOrB(CommonParams.UpdateOOCOrBType.B_UPDATE)
                 }
-                XLog.w("[ph][ph]TPD_PROP DISTANCE2:$disChar, EMS:$emsChar}")
+                XLog.w("设置TPD_PROP DISTANCE2:$disChar, EMS:$emsChar}")
             }
     }
 
@@ -576,7 +576,7 @@ abstract class BaseIRPlushFragment :
             dualView = null
             Log.d(
                 TAG,
-                "[ph][ph][ph][ph][ph][ph] dualStop",
+                "正常回收完毕 dualStop",
             )
         }
     }
@@ -612,7 +612,7 @@ abstract class BaseIRPlushFragment :
     ) {
         Log.d(
             TAG,
-            "USBMonitorManager onConnect[ph][ph]",
+            "USBMonitorManager onConnect测试",
         )
         mIrHandler.sendEmptyMessage(Const.HANDLE_CONNECT)
     }

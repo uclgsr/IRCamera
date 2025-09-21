@@ -1,4 +1,4 @@
-package com.mpdc4gsr.module.thermalunified.activity
+package com.mpdc4gsr.module.thermal.ir.activity
 
 import android.content.Intent
 import android.view.View
@@ -13,22 +13,22 @@ import com.elvishew.xlog.XLog
 import com.hjq.permissions.OnPermissionCallback
 import com.hjq.permissions.Permission
 import com.hjq.permissions.XXPermissions
-import com.mpdc4gsr.lib.core.BaseApplication
-import com.mpdc4gsr.lib.core.comm.ExcelUtil
-import com.mpdc4gsr.lib.core.config.ExtraKeyConfig
-import com.mpdc4gsr.lib.core.config.FileConfig
-import com.mpdc4gsr.lib.core.db.entity.ThermalEntity
-import com.mpdc4gsr.lib.core.dialog.TipDialog
-import com.mpdc4gsr.lib.core.ktbase.BaseActivity
-import com.mpdc4gsr.lib.core.tools.FileTools
-import com.mpdc4gsr.lib.core.tools.ToastTools
-import com.mpdc4gsr.module.thermalunified.R
-import com.mpdc4gsr.module.thermalunified.viewmodel.IRMonitorViewModel
+import com.mpdc4gsr.libunified.app.BaseApplication
+import com.mpdc4gsr.libunified.app.comm.ExcelUtil
+import com.mpdc4gsr.libunified.app.config.ExtraKeyConfig
+import com.mpdc4gsr.libunified.app.config.FileConfig
+import com.mpdc4gsr.libunified.app.db.entity.ThermalEntity
+import com.mpdc4gsr.libunified.app.dialog.TipDialog
+import com.mpdc4gsr.libunified.app.ktbase.BaseActivity
+import com.mpdc4gsr.libunified.app.tools.FileTools
+import com.mpdc4gsr.libunified.app.tools.ToastTools
+import com.mpdc4gsr.module.thermal.ir.R
+import com.mpdc4gsr.module.thermal.ir.viewmodel.IRMonitorViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
-import com.mpdc4gsr.lib.core.R as LibR
+import com.mpdc4gsr.libunified.app.R as LibR
 
 
 class IRLogMPChartActivity : BaseActivity() {
@@ -70,7 +70,7 @@ class IRLogMPChartActivity : BaseActivity() {
                     findViewById<com.mpdc4gsr.module.thermal.ir.view.ChartLogView>(R.id.log_chart_time_chart)
                 chartView.initEntry(it as ArrayList<ThermalEntity>)
             } catch (e: Exception) {
-                XLog.e("[ph][ph][ph][ph][ph][ph]:${e.message}")
+                XLog.e("刷新图表异常:${e.message}")
             }
         }
 

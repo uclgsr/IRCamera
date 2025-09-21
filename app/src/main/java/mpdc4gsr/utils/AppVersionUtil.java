@@ -1,7 +1,7 @@
 package mpdc4gsr.utils;
 
 import static android.content.Context.DOWNLOAD_SERVICE;
-import static com.mpdc4gsr.lib.core.lms.LMS.SUCCESS;
+import static com.mpdc4gsr.libunified.app.lms.LMS.SUCCESS;
 
 import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
@@ -16,19 +16,19 @@ import com.blankj.utilcode.util.GsonUtils;
 import com.blankj.utilcode.util.ZipUtils;
 import com.csl.irCamera.R;
 import com.elvishew.xlog.XLog;
-import com.mpdc4gsr.lib.core.common.SharedManager;
-import com.mpdc4gsr.lib.core.config.HttpConfig;
-import com.mpdc4gsr.lib.core.dialog.TipDialog;
-import com.mpdc4gsr.lib.core.lms.LMS;
-import com.mpdc4gsr.lib.core.lms.activity.LmsUpdateDialog;
-import com.mpdc4gsr.lib.core.lms.bean.AppInfoBean;
-import com.mpdc4gsr.lib.core.lms.utils.NetworkUtil;
-import com.mpdc4gsr.lib.core.lms.weiget.TToast;
-import com.mpdc4gsr.lib.core.lms.xutils.common.Callback;
-import com.mpdc4gsr.lib.core.lms.xutils.common.task.PriorityExecutor;
-import com.mpdc4gsr.lib.core.lms.xutils.http.RequestParams;
-import com.mpdc4gsr.lib.core.lms.xutils.x;
-import com.mpdc4gsr.lib.core.utils.AppUtil;
+import com.mpdc4gsr.libunified.app.common.SharedManager;
+import com.mpdc4gsr.libunified.app.config.HttpConfig;
+import com.mpdc4gsr.libunified.app.dialog.TipDialog;
+import com.mpdc4gsr.libunified.app.lms.LMS;
+import com.mpdc4gsr.libunified.app.lms.activity.LmsUpdateDialog;
+import com.mpdc4gsr.libunified.app.lms.bean.AppInfoBean;
+import com.mpdc4gsr.libunified.app.lms.utils.NetworkUtil;
+import com.mpdc4gsr.libunified.app.lms.weiget.TToast;
+import com.mpdc4gsr.libunified.app.lms.xutils.common.Callback;
+import com.mpdc4gsr.libunified.app.lms.xutils.common.task.PriorityExecutor;
+import com.mpdc4gsr.libunified.app.lms.xutils.http.RequestParams;
+import com.mpdc4gsr.libunified.app.lms.xutils.x;
+import com.mpdc4gsr.libunified.app.utils.AppUtil;
 
 import java.io.File;
 import java.io.FileNotFoundException;

@@ -18,9 +18,9 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.mpdc4gsr.lib.core.common.SharedManager
-import com.mpdc4gsr.lib.core.tools.NumberTools
-import com.mpdc4gsr.lib.core.tools.UnitTools
+import com.mpdc4gsr.libunified.app.common.SharedManager
+import com.mpdc4gsr.libunified.app.tools.NumberTools
+import com.mpdc4gsr.libunified.app.tools.UnitTools
 import com.mpdc4gsr.lib.ui.widget.MyItemDecoration
 import com.mpdc4gsr.module.thermalunified.R
 import com.mpdc4gsr.module.thermalunified.adapter.ConfigEmAdapter

@@ -1,10 +1,10 @@
-package com.mpdc4gsr.module.thermalunified.fragment
+package com.mpdc4gsr.module.thermal.ir.fragment
 
 import android.graphics.Bitmap
 import android.util.Log
 import android.view.ViewGroup
 import android.view.WindowManager
-import android.yt.jni.Usbcontorl
+import com.mpdc4gsr.libunified.ir.android.yt.jni.Usbcontorl
 import androidx.lifecycle.lifecycleScope
 import com.elvishew.xlog.XLog
 import com.energy.iruvc.ircmd.IRCMD
@@ -12,24 +12,24 @@ import com.energy.iruvc.utils.CommonParams
 import com.energy.iruvc.utils.SynchronizedBitmap
 import com.energy.iruvc.uvc.ConnectCallback
 import com.energy.iruvc.uvc.UVCCamera
-import com.infisense.usbir.camera.IRUVCTC
-import com.infisense.usbir.config.MsgCode
-import com.infisense.usbir.event.IRMsgEvent
-import com.infisense.usbir.event.PreviewComplete
-import com.infisense.usbir.thread.ImageThreadTC
-import com.infisense.usbir.utils.USBMonitorCallback
-import com.infisense.usbir.view.CameraView
-import com.infisense.usbir.view.ITsTempListener
-import com.infisense.usbir.view.TemperatureView
-import com.infisense.usbir.view.TemperatureView.REGION_MODE_CLEAN
-import com.mpdc4gsr.lib.core.bean.event.device.DeviceCameraEvent
-import com.mpdc4gsr.lib.core.common.SaveSettingUtil
-import com.mpdc4gsr.lib.core.config.DeviceConfig
-import com.mpdc4gsr.lib.core.ktbase.BaseFragment
-import com.mpdc4gsr.lib.core.utils.ScreenUtil
-import com.mpdc4gsr.module.thermalunified.R
-import com.mpdc4gsr.module.thermalunified.repository.ConfigRepository
-import com.mpdc4gsr.module.thermalunified.utils.CalibrationTools
+import com.mpdc4gsr.libunified.ir.camera.IRUVCTC
+import com.mpdc4gsr.libunified.ir.config.MsgCode
+import com.mpdc4gsr.libunified.ir.event.IRMsgEvent
+import com.mpdc4gsr.libunified.ir.event.PreviewComplete
+import com.mpdc4gsr.libunified.ir.thread.ImageThreadTC
+import com.mpdc4gsr.libunified.ir.utils.USBMonitorCallback
+import com.mpdc4gsr.libunified.ir.view.CameraView
+import com.mpdc4gsr.libunified.ir.view.ITsTempListener
+import com.mpdc4gsr.libunified.ir.view.TemperatureView
+import com.mpdc4gsr.libunified.ir.view.TemperatureView.REGION_MODE_CLEAN
+import com.mpdc4gsr.libunified.app.bean.event.device.DeviceCameraEvent
+import com.mpdc4gsr.libunified.app.common.SaveSettingUtil
+import com.mpdc4gsr.libunified.app.config.DeviceConfig
+import com.mpdc4gsr.libunified.app.ktbase.BaseFragment
+import com.mpdc4gsr.libunified.app.utils.ScreenUtil
+import com.mpdc4gsr.module.thermal.ir.R
+import com.mpdc4gsr.module.thermal.ir.repository.ConfigRepository
+import com.mpdc4gsr.module.thermal.ir.utils.CalibrationTools
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -110,7 +110,7 @@ class IRCorrectionFragment : BaseFragment(), ITsTempListener {
 
         if (Usbcontorl.isload) {
             Usbcontorl.usb3803_mode_setting(1)
-            Log.w("123", "[ph][ph]5V")
+            Log.w("123", "打开5V")
         }
         temperatureView.clear()
         temperatureView.temperatureRegionMode = REGION_MODE_CLEAN
@@ -128,7 +128,7 @@ class IRCorrectionFragment : BaseFragment(), ITsTempListener {
             imageThread!!.setRotate(true)
             imageThread!!.start()
         } catch (e: Exception) {
-            Log.e("[ph][ph][ph][ph][ph][ph][ph][ph]", e.message.toString())
+            Log.e("图像线程重复启动", e.message.toString())
         }
     }
 
@@ -289,7 +289,7 @@ class IRCorrectionFragment : BaseFragment(), ITsTempListener {
             val config = ConfigRepository.readConfig(false)
             val disChar = (config.distance * 128).toInt()
             val emsChar = (config.radiation * 128).toInt()
-            XLog.w("[ph][ph]TPD_PROP DISTANCE:$disChar, EMS:$emsChar}")
+            XLog.w("设置TPD_PROP DISTANCE:$disChar, EMS:$emsChar}")
             val timeMillis = 250L
             delay(timeMillis)
 
@@ -364,24 +364,24 @@ class IRCorrectionFragment : BaseFragment(), ITsTempListener {
 
 
             CalibrationTools.autoShutter(irCmd = ircmd, false)
-            XLog.w("[ph][ph][ph][ph]：" + "[ph][ph][ph][ph][ph][ph]")
+            XLog.w("锅盖矫正：" + "锅盖标定开始")
 
 
 
 
 
             delay(2000)
-            XLog.w("[ph][ph][ph][ph]：" + "[ph][ph][ph][ph][ph][ph]")
+            XLog.w("锅盖矫正：" + "关闭锅盖校正")
             CalibrationTools.stsSwitch(irCmd = ircmd, false)
 
             CalibrationTools.pot(irCmd = ircmd!!, 1)
-            XLog.w("[ph][ph][ph][ph]：" + "[ph][ph][ph][ph][ph]")
+            XLog.w("锅盖矫正：" + "发送锅盖标")
 
             delay(5000)
-            XLog.w("[ph][ph][ph][ph]：" + "[ph][ph][ph][ph][ph][ph]")
+            XLog.w("锅盖矫正：" + "打开锅盖校正")
             CalibrationTools.stsSwitch(irCmd = ircmd, true)
             delay(20000)
-            XLog.w("[ph][ph][ph][ph]：" + "20000")
+            XLog.w("锅盖矫正：" + "20000")
 
 
 
@@ -389,17 +389,17 @@ class IRCorrectionFragment : BaseFragment(), ITsTempListener {
 
             delay(2000)
             CalibrationTools.stsSwitch(irCmd = ircmd, false)
-            XLog.w("[ph][ph][ph][ph]：" + "[ph][ph][ph][ph][ph][ph]")
+            XLog.w("锅盖矫正：" + "关闭锅盖校正")
 
             CalibrationTools.pot(irCmd = ircmd!!, 1)
 
             delay(5000)
-            XLog.w("[ph][ph][ph][ph]：" + "[ph][ph][ph][ph][ph][ph]")
+            XLog.w("锅盖矫正：" + "打开锅盖校正")
             CalibrationTools.stsSwitch(irCmd = ircmd, true)
 
             CalibrationTools.autoShutter(irCmd = ircmd, true)
 
-            XLog.w("[ph][ph][ph][ph]：" + "[ph][ph][ph][ph]")
+            XLog.w("锅盖矫正：" + "锅盖结束")
         }
     }
 }

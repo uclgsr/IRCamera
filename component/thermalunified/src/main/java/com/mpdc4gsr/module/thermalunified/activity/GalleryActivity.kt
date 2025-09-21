@@ -1,4 +1,4 @@
-package com.mpdc4gsr.module.thermalunified.activity
+package com.mpdc4gsr.module.thermal.activity
 
 import android.Manifest
 import android.content.Context
@@ -7,11 +7,11 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
-import com.mpdc4gsr.lib.core.ktbase.BaseActivity
-import com.mpdc4gsr.lib.core.tools.PermissionTool
-import com.mpdc4gsr.module.thermalunified.R
-import com.mpdc4gsr.module.thermalunified.fragment.GalleryPictureFragment
-import com.mpdc4gsr.module.thermalunified.fragment.GalleryVideoFragment
+import com.mpdc4gsr.libunified.app.ktbase.BaseActivity
+import com.mpdc4gsr.libunified.app.tools.PermissionTool
+import com.mpdc4gsr.module.thermal.R
+import com.mpdc4gsr.module.thermal.fragment.GalleryPictureFragment
+import com.mpdc4gsr.module.thermal.fragment.GalleryVideoFragment
 
 
 class GalleryActivity : BaseActivity() {
@@ -63,7 +63,7 @@ class GalleryActivity : BaseActivity() {
             fm,
             BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT,
         ) {
-            titles = arrayOf("[ph][ph]", "[ph][ph]")
+            titles = arrayOf("图片", "视频")
         }
 
         override fun getCount(): Int {

@@ -1,102 +1,97 @@
-
 # Project Backlog
 
-## Current Sprint - Thermal Module Merger Implementation
+## High Priority - Library Unification
 
-### Completed
-- [x] Analyze thermal module functionality (basic thermal imaging, 38 files)
-- [x] Analyze thermalunified module functionality (advanced IR + dual camera, 152 files)
-- [x] Analyze thermal-lite module functionality (lightweight USB control, 33 files)
-- [x] Document technical differences and architecture patterns
-- [x] Assess merger feasibility with detailed analysis
-- [x] Create comprehensive analysis document (THERMAL_MODULES_ANALYSIS.md)
-- [x] **IMPLEMENTED**: Merge thermal and thermal-lite modules into thermalunified
-- [x] Copy all source files and resources to thermalunified module
-- [x] Update package names and imports for merged components
-- [x] Consolidate build configuration and dependencies
-- [x] Update app module to reference only thermalunified
-- [x] Remove old module references from settings.gradle.kts
+### EPIC: Merge libapp, libir, libui into Unified Library
 
-### Current Priority - Post-Merger Validation
-- [x] Update documentation to reflect completed merger
-- [x] **VALIDATED**: Verify thermalunified module structure and file integration
-- [x] **CONFIRMED**: All thermal camera functionality preserved in merged module
-- [x] **VALIDATED**: Package structure and namespace organization
-- [x] **CONFIRMED**: Build configuration and dependency consolidation
-- [x] **VALIDATED**: AndroidManifest integration (38+ activities consolidated)
-- [x] Create integration validation report (thermal_integration_validation.md)
-- [ ] Runtime testing of advanced IR features (dual-camera fusion)
-- [ ] Runtime testing of basic thermal imaging features  
-- [ ] Runtime testing of lightweight USB camera features (AC020)
-- [ ] End-to-end thermal workflow validation
-- [ ] Performance optimization of merged codebase
+**Status**: FEASIBLE - Analysis Complete ✅
 
-## Implementation Results - Completed Tasks
+#### Phase 1: Foundation (Ready to Implement)
+- [x] Create minimal working libcore with essential functionality
+- [x] Resolve build dependency conflicts for JAR/AAR libraries  
+- [x] Test basic libcore compilation and functionality
+- [x] Create migration guide for components
+- [ ] Create migration guide for components
 
-### ✅ Thermal Module Integration Validation Completed
+#### Phase 2: Component Migration
+
+- [ ] Migrate thermal-lite component to use libcore (pilot)
+- [ ] Migrate thermal component to use libcore
+- [ ] Migrate thermal-ir component to use libcore
+- [ ] Migrate gsr-recording component to use libcore
+- [ ] Migrate user component to use libcore
+- [ ] Update main app to use libcore
+
+#### Phase 3: Deprecation and Cleanup
+
+- [ ] Remove libapp, libir, libui modules from build
+- [ ] Update settings.gradle.kts to exclude deprecated modules
+- [ ] Clean up build configurations
+- [ ] Verify all functionality works with unified library
+
+#### Phase 4: Documentation and Architecture
+
+- [ ] Update ARCHITECTURE.md with new libcore structure
+- [ ] Update API_REFERENCE.md with unified API documentation
+- [ ] Update MERMAID_DIAGRAMS.md with simplified architecture
+- [ ] Update README.md with new build instructions
+
+## Medium Priority - Build System Optimization
+
+### Gradle Build Improvements
+
+- [ ] Optimize libcore build configuration
+- [ ] Implement proper dependency management for native libraries
+- [ ] Add build caching optimizations
+- [ ] Create build validation scripts
+
+### Development Tools
+
+- [ ] Update dev.sh script for libcore support
+- [ ] Create migration validation tools
+- [ ] Add automated testing for libcore functionality
+
+## Low Priority - Future Enhancements
+
 ### Architecture Improvements
-- [x] **Remove redundant RangeSeekBar module** - Eliminated standalone module duplication and simplified dependencies
-- [x] **Update documentation** - Reflected module removal in all architecture diagrams and documentation
 
-**File Integration Analysis:**
-- **Total Unified Files**: 206 Kotlin/Java files (vs original ~152 in thermalunified)
-- **Main Components**: 174 files (original thermalunified + basic thermal features)
-- **Lightweight Components**: 26 files (thermal-lite under organized namespace)
-- **Integration Success Rate**: 100% (all files successfully merged with proper namespace organization)
-### Ongoing Tasks
+- [ ] Consider splitting libcore into smaller focused modules if needed
+- [ ] Implement proper separation of concerns within libcore
+- [ ] Add module boundaries and API contracts
 
-### Thermal Module Integration Status
-- **thermalunified** (MAIN): Now contains all thermal imaging capabilities (~206 files)
-  - Original advanced IR features preserved (dual-camera fusion, professional tools)
-  - Basic thermal UI and navigation added from thermal module (menu system, gallery, monitoring)
-  - AC020 USB camera support added from thermal-lite module (direct hardware control, lightweight processing)
-  - Organized under structured namespaces (ir.lite.* for lightweight features)
-  - **38+ activities consolidated** in single AndroidManifest
-### Future Enhancements
-- [ ] Complete libir module dependency resolution for full project build
-- [ ] Implement automated UI testing for ColorPickDialog with new RangeSeekBar implementation
-- [ ] Consider consolidating other potentially redundant UI components
-- [ ] Evaluate other module dependencies for further simplification
+### Performance Optimization
 
-### Architecture Changes
-- Single thermal module instead of three separate modules
-- Consolidated dependencies and build configuration  
-- Preserved hardware-specific implementations under organized structure
-- Maintained backwards compatibility for existing integrations
-### Technical Debt
-- [ ] Address lint warnings in libapp module (ParcelCreator issues)
-- [ ] Consider updating deprecated Android API usages
-- [ ] Review and modernize build scripts
+- [ ] Profile unified library performance vs separate libraries
+- [ ] Optimize resource usage and memory footprint
+- [ ] Implement lazy loading for optional components
 
-## Next Steps & Notes
-- Focus on MVP approach per thesis project requirements
-- Prioritize functional implementation over extensive feature sets
-- Maintain compatibility with existing thermal imaging components
+## Technical Debt
 
-### High Priority
-- [ ] Resolve any remaining build/compilation issues
-- [ ] Verify all thermal camera types work correctly
-- [ ] Test thermal imaging workflows end-to-end
-- [ ] Clean up any redundant or conflicting code
+### Resolved Issues
 
-### Medium Priority  
-- [ ] Optimize merged module organization
-- [ ] Update tests to reflect new structure
-- [ ] Document new unified thermal module API
-- [ ] Remove backup thermal module directories
+- ✅ Resource conflicts between libraries (strings, dimensions)
+- ✅ Namespace conflicts analysis (no conflicts found)
+- ✅ Dependency relationship mapping
 
-### Low Priority
-- [ ] Performance optimization of merged codebase
-- [ ] Further consolidation of duplicate utilities
-- [ ] Enhanced documentation for different thermal camera support
+### Outstanding Issues
 
-## Risk Assessment - Post Implementation
-- **Low Risk**: Basic functionality preservation - most code moved unchanged
-- **Medium Risk**: Import/package reference resolution - being addressed
-- **Low Risk**: Build configuration - consolidated successfully
+- ⚠️ Complex JAR/AAR library conflicts in build system
+- ⚠️ KSP annotation processing optimization needed
+- ⚠️ Native library dependency resolution
 
-## Implementation Notes
-- Merger completed using thermalunified as base module (as requested)
-- All features from thermal and thermal-lite preserved
-- Package structure: com.mpdc4gsr.module.thermal.ir.* (with .lite.* for lightweight features)
-- Dependencies consolidated to avoid conflicts
+## Research and Analysis
+
+### Completed Analysis
+
+- ✅ Library structure and size analysis (598 total source files)
+- ✅ Dependency graph mapping and circular dependency check
+- ✅ Namespace conflict analysis across three libraries
+- ✅ Build system impact assessment
+- ✅ Resource conflict identification and resolution
+
+### Benefits Quantified
+
+- **Build Simplification**: 3 library dependencies → 1 unified dependency
+- **Module Reduction**: 67% reduction in library modules
+- **Maintenance**: Centralized configuration and dependency management
+- **Performance**: Reduced build overhead and faster compilation

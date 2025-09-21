@@ -18,8 +18,8 @@ import com.energy.iruvc.sdkisp.LibIRTemp
 import com.energy.iruvc.sdkisp.LibIRTemp.TemperatureSampleResult
 import com.energy.iruvc.utils.CommonParams.IRPROCSRCFMTType
 import com.energy.iruvc.utils.Line
-import com.infisense.usbir.utils.TempDrawHelper.Companion.correct
-import com.infisense.usbir.utils.TempUtil
+import com.mpdc4gsr.libunified.ir.utils.TempDrawHelper.Companion.correct
+import com.mpdc4gsr.libunified.ir.utils.TempUtil
 
 
 class TemperatureHikView : TemperatureBaseView {

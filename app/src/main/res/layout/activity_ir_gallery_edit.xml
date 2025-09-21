@@ -11,7 +11,7 @@
         android:background="#16131e"
         tools:context=".IRGalleryEditActivity">
 
-        <com.mpdc4gsr.lib.core.view.TitleView
+        <com.mpdc4gsr.libunified.app.view.TitleView
             android:id="@+id/title_view"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -28,13 +28,13 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">
 
-            <com.mpdc4gsr.lib.core.menu.MenuSecondView
+            <com.mpdc4gsr.libunified.app.menu.MenuSecondView
                 android:id="@+id/edit_recycler_second"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:deviceType="gallery_edit" />
 
-            <com.mpdc4gsr.lib.core.menu.MenuEditView
+            <com.mpdc4gsr.libunified.app.menu.MenuEditView
                 android:id="@+id/edit_recycler_first"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />

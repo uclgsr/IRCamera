@@ -3,8 +3,8 @@ package com.mpdc4gsr.module.thermalunified.activity
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import com.mpdc4gsr.lib.core.comm.navigation.NavigationManager
-import com.mpdc4gsr.lib.core.config.RouterConfig
+import com.mpdc4gsr.libunified.app.comm.navigation.NavigationManager
+import com.mpdc4gsr.libunified.app.config.RouterConfig
 import com.mpdc4gsr.lib.ui.dialog.MonitorSelectDialog
 import com.mpdc4gsr.module.thermalunified.bean.SelectPositionBean
 import com.mpdc4gsr.module.thermalunified.databinding.ActivityIrMonitorBinding

@@ -1,4 +1,4 @@
-package com.mpdc4gsr.module.thermalunified.activity
+package com.mpdc4gsr.module.thermal.activity
 
 import android.util.Log
 import android.view.View
@@ -6,13 +6,13 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.BarUtils
-import com.mpdc4gsr.lib.core.ktbase.BaseActivity
-import com.mpdc4gsr.lib.core.menu.MenuFirstTabView
-import com.mpdc4gsr.module.thermalunified.R
-import com.mpdc4gsr.module.thermalunified.adapter.MenuTabAdapter
-import com.mpdc4gsr.module.thermalunified.event.ThermalActionEvent
+import com.mpdc4gsr.libunified.app.ktbase.BaseActivity
+import com.mpdc4gsr.libunified.app.menu.MenuFirstTabView
+import com.mpdc4gsr.module.thermal.R
+import com.mpdc4gsr.module.thermal.adapter.MenuTabAdapter
+import com.mpdc4gsr.module.thermal.fragment.event.ThermalActionEvent
 import org.greenrobot.eventbus.EventBus
-import com.mpdc4gsr.lib.core.R as LibR
+import com.mpdc4gsr.libunified.app.R as LibR
 
 class ThermalActivity : BaseActivity() {
     private val menuAdapter by lazy { MenuTabAdapter(this) }
@@ -22,7 +22,7 @@ class ThermalActivity : BaseActivity() {
     override fun initView() {
 
         val toolbar =
-            findViewById<androidx.appcompat.widget.Toolbar>(com.mpdc4gsr.lib.core.R.id.toolbar_lay)
+            findViewById<androidx.appcompat.widget.Toolbar>(com.mpdc4gsr.libunified.R.id.toolbar_lay)
         toolbar?.title = getString(R.string.main_thermal)
 
         val blackColor = ContextCompat.getColor(this, LibR.color.black)

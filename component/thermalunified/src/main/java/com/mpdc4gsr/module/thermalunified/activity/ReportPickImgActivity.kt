@@ -1,4 +1,4 @@
-package com.mpdc4gsr.module.thermalunified.activity
+package com.mpdc4gsr.module.thermal.ir.activity
 
 import android.content.Intent
 import android.media.MediaScannerConnection
@@ -7,31 +7,31 @@ import android.view.View
 import androidx.activity.viewModels
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.GridLayoutManager
-import com.mpdc4gsr.lib.core.bean.GalleryTitle
-import com.mpdc4gsr.lib.core.bean.event.GalleryDelEvent
-import com.mpdc4gsr.lib.core.bean.event.ReportCreateEvent
-import com.mpdc4gsr.lib.core.config.ExtraKeyConfig
-import com.mpdc4gsr.lib.core.config.FileConfig
-import com.mpdc4gsr.lib.core.config.RouterConfig
-import com.mpdc4gsr.lib.core.dialog.TipDialog
-import com.mpdc4gsr.lib.core.ktbase.BaseActivity
-import com.mpdc4gsr.lib.core.lms.weiget.TToast
-import com.mpdc4gsr.lib.core.navigation.NavigationManager
-import com.mpdc4gsr.lib.core.repository.GalleryRepository.DirType
-import com.mpdc4gsr.lib.core.tools.FileTools.getUri
-import com.mpdc4gsr.lib.core.tools.ToastTools
-import com.mpdc4gsr.lib.core.utils.Constants.IS_REPORT_FIRST
-import com.mpdc4gsr.module.thermalunified.R
-import com.mpdc4gsr.module.thermalunified.adapter.GalleryAdapter
-import com.mpdc4gsr.module.thermalunified.report.bean.ReportConditionBean
-import com.mpdc4gsr.module.thermalunified.report.bean.ReportIRBean
-import com.mpdc4gsr.module.thermalunified.report.bean.ReportInfoBean
-import com.mpdc4gsr.module.thermalunified.viewmodel.IRGalleryViewModel
+import com.mpdc4gsr.libunified.app.bean.GalleryTitle
+import com.mpdc4gsr.libunified.app.bean.event.GalleryDelEvent
+import com.mpdc4gsr.libunified.app.bean.event.ReportCreateEvent
+import com.mpdc4gsr.libunified.app.config.ExtraKeyConfig
+import com.mpdc4gsr.libunified.app.config.FileConfig
+import com.mpdc4gsr.libunified.app.config.RouterConfig
+import com.mpdc4gsr.libunified.app.dialog.TipDialog
+import com.mpdc4gsr.libunified.app.ktbase.BaseActivity
+import com.mpdc4gsr.libunified.app.lms.weiget.TToast
+import com.mpdc4gsr.libunified.app.navigation.NavigationManager
+import com.mpdc4gsr.libunified.app.repository.GalleryRepository.DirType
+import com.mpdc4gsr.libunified.app.tools.FileTools.getUri
+import com.mpdc4gsr.libunified.app.tools.ToastTools
+import com.mpdc4gsr.libunified.app.utils.Constants.IS_REPORT_FIRST
+import com.mpdc4gsr.module.thermal.ir.R
+import com.mpdc4gsr.module.thermal.ir.adapter.GalleryAdapter
+import com.mpdc4gsr.module.thermal.ir.report.bean.ReportConditionBean
+import com.mpdc4gsr.module.thermal.ir.report.bean.ReportIRBean
+import com.mpdc4gsr.module.thermal.ir.report.bean.ReportInfoBean
+import com.mpdc4gsr.module.thermal.ir.viewmodel.IRGalleryViewModel
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.io.File
-import com.mpdc4gsr.lib.core.R as LibR
+import com.mpdc4gsr.libunified.app.R as LibR
 import com.mpdc4gsr.lib.ui.R as UiR
 
 
@@ -43,7 +43,7 @@ class ReportPickImgActivity : BaseActivity(), View.OnClickListener {
 
     private val adapter = GalleryAdapter()
 
-    private lateinit var titleView: com.mpdc4gsr.lib.core.view.TitleView
+    private lateinit var titleView: com.mpdc4gsr.libunified.app.view.TitleView
     private lateinit var clShare: androidx.constraintlayout.widget.ConstraintLayout
     private lateinit var clDelete: androidx.constraintlayout.widget.ConstraintLayout
     private lateinit var groupBottom: androidx.constraintlayout.widget.Group

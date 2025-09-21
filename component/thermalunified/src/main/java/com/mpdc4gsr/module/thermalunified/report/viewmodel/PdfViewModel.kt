@@ -1,24 +1,24 @@
-package com.mpdc4gsr.module.thermalunified.report.viewmodel
+package com.mpdc4gsr.module.thermal.ir.report.viewmodel
 
 import android.text.TextUtils
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.blankj.utilcode.util.Utils
 import com.google.gson.Gson
-import com.mpdc4gsr.lib.core.ktbase.BaseViewModel
-import com.mpdc4gsr.lib.core.lms.LMS
-import com.mpdc4gsr.lib.core.lms.network.IResponseCallback
-import com.mpdc4gsr.lib.core.lms.utils.NetworkUtil
-import com.mpdc4gsr.lib.core.lms.utils.StringUtils
-import com.mpdc4gsr.lib.core.lms.utils.TLog
-import com.mpdc4gsr.lib.core.lms.weiget.TToast
-import com.mpdc4gsr.lib.core.utils.HttpHelp
-import com.mpdc4gsr.module.thermalunified.report.bean.ReportData
+import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
+import com.mpdc4gsr.libunified.app.lms.LMS
+import com.mpdc4gsr.libunified.app.lms.network.IResponseCallback
+import com.mpdc4gsr.libunified.app.lms.utils.NetworkUtil
+import com.mpdc4gsr.libunified.app.lms.utils.StringUtils
+import com.mpdc4gsr.libunified.app.lms.utils.TLog
+import com.mpdc4gsr.libunified.app.lms.weiget.TToast
+import com.mpdc4gsr.libunified.app.utils.HttpHelp
+import com.mpdc4gsr.module.thermal.ir.report.bean.ReportData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.concurrent.CountDownLatch
-import com.mpdc4gsr.lib.core.R as LibR
+import com.mpdc4gsr.libunified.app.R as LibR
 
 
 class PdfViewModel : BaseViewModel() {
@@ -73,7 +73,7 @@ class PdfViewModel : BaseViewModel() {
                     result?.msg = p0?.message
                     result?.code = -1
                     downLatch.countDown()
-                    TLog.e("bcf", "[ph][ph][ph][ph][ph][ph][ph][ph]：" + p0?.message)
+                    TLog.e("bcf", "获取报告列表失败：" + p0?.message)
                 }
 
                 override fun onFail(

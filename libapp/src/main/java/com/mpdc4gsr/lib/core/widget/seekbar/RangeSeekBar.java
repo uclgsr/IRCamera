@@ -1,4 +1,4 @@
-package com.mpdc4gsr.lib.core.widget.seekbar;
+package com.mpdc4gsr.libunified.app.widget.seekbar;
 
 import android.content.Context;
 import android.util.AttributeSet;

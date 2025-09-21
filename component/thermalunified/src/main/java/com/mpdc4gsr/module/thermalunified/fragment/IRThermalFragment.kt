@@ -1,4 +1,4 @@
-package com.mpdc4gsr.module.thermalunified.fragment
+package com.mpdc4gsr.module.thermal.ir.fragment
 
 import android.content.Intent
 import android.net.Uri
@@ -11,26 +11,26 @@ import com.blankj.utilcode.util.AppUtils
 import com.hjq.permissions.OnPermissionCallback
 import com.hjq.permissions.Permission
 import com.hjq.permissions.XXPermissions
-import com.mpdc4gsr.lib.core.BaseApplication
-import com.mpdc4gsr.lib.core.common.SharedManager
-import com.mpdc4gsr.lib.core.config.ExtraKeyConfig
-import com.mpdc4gsr.lib.core.config.RouterConfig
-import com.mpdc4gsr.lib.core.dialog.TipDialog
-import com.mpdc4gsr.lib.core.ktbase.BaseFragment
-import com.mpdc4gsr.lib.core.navigation.NavigationManager
-import com.mpdc4gsr.lib.core.socket.WebSocketProxy
-import com.mpdc4gsr.lib.core.tools.DeviceTools
-import com.mpdc4gsr.lib.core.utils.CommUtils
-import com.mpdc4gsr.lib.core.utils.NetWorkUtils
-import com.mpdc4gsr.module.thermalunified.R
-import com.mpdc4gsr.module.thermalunified.activity.IRThermalNightActivity
-import com.mpdc4gsr.module.thermalunified.activity.IRThermalPlusActivity
+import com.mpdc4gsr.libunified.app.BaseApplication
+import com.mpdc4gsr.libunified.app.common.SharedManager
+import com.mpdc4gsr.libunified.app.config.ExtraKeyConfig
+import com.mpdc4gsr.libunified.app.config.RouterConfig
+import com.mpdc4gsr.libunified.app.dialog.TipDialog
+import com.mpdc4gsr.libunified.app.ktbase.BaseFragment
+import com.mpdc4gsr.libunified.app.navigation.NavigationManager
+import com.mpdc4gsr.libunified.app.socket.WebSocketProxy
+import com.mpdc4gsr.libunified.app.tools.DeviceTools
+import com.mpdc4gsr.libunified.app.utils.CommUtils
+import com.mpdc4gsr.libunified.app.utils.NetWorkUtils
+import com.mpdc4gsr.module.thermal.ir.R
+import com.mpdc4gsr.module.thermal.ir.activity.IRThermalNightActivity
+import com.mpdc4gsr.module.thermal.ir.activity.IRThermalPlusActivity
 
 class IRThermalFragment : BaseFragment(), View.OnClickListener {
 
     private var isTC007 = false
 
-    private lateinit var titleView: com.mpdc4gsr.lib.core.view.TitleView
+    private lateinit var titleView: com.mpdc4gsr.libunified.app.view.TitleView
     private lateinit var clOpenThermal: androidx.constraintlayout.widget.ConstraintLayout
     private lateinit var tvMainEnter: android.widget.TextView
     private lateinit var cl07ConnectTips: androidx.constraintlayout.widget.ConstraintLayout
@@ -235,7 +235,6 @@ class IRThermalFragment : BaseFragment(), View.OnClickListener {
             }
         }
     }
-
 
     private var tipConnectDialog: TipDialog? = null
 

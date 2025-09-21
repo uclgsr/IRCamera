@@ -1,4 +1,4 @@
-package com.mpdc4gsr.module.thermalunified.view
+package com.mpdc4gsr.module.thermal.ir.view
 
 import android.content.Context
 import android.graphics.Color
@@ -9,22 +9,22 @@ import android.util.Log
 import android.view.MotionEvent
 import androidx.core.content.ContextCompat
 import com.blankj.utilcode.util.SizeUtils
-import com.github.mikephil.charting.charts.LineChart
-import com.github.mikephil.charting.components.Legend
-import com.github.mikephil.charting.components.XAxis
-import com.github.mikephil.charting.components.YAxis
-import com.github.mikephil.charting.data.Entry
-import com.github.mikephil.charting.data.LineData
-import com.github.mikephil.charting.data.LineDataSet
-import com.github.mikephil.charting.listener.ChartTouchListener
-import com.github.mikephil.charting.listener.OnChartGestureListener
-import com.mpdc4gsr.lib.core.db.entity.ThermalEntity
-import com.mpdc4gsr.module.thermalunified.R
-import com.mpdc4gsr.module.thermalunified.chart.IRMyValueFormatter
-import com.mpdc4gsr.module.thermalunified.chart.YValueFormatter
-import com.mpdc4gsr.module.thermalunified.utils.ChartTools
-import com.mpdc4gsr.lib.core.R as LibR
-import com.mpdc4gsr.module.thermalunified.R as ThermalR
+import com.mpdc4gsr.libunified.ui.charting.charts.LineChart
+import com.mpdc4gsr.libunified.ui.charting.components.Legend
+import com.mpdc4gsr.libunified.ui.charting.components.XAxis
+import com.mpdc4gsr.libunified.ui.charting.components.YAxis
+import com.mpdc4gsr.libunified.ui.charting.data.Entry
+import com.mpdc4gsr.libunified.ui.charting.data.LineData
+import com.mpdc4gsr.libunified.ui.charting.data.LineDataSet
+import com.mpdc4gsr.libunified.ui.charting.listener.ChartTouchListener
+import com.mpdc4gsr.libunified.ui.charting.listener.OnChartGestureListener
+import com.mpdc4gsr.libunified.app.db.entity.ThermalEntity
+import com.mpdc4gsr.module.thermal.ir.R
+import com.mpdc4gsr.module.thermal.ir.chart.IRMyValueFormatter
+import com.mpdc4gsr.module.thermal.ir.chart.YValueFormatter
+import com.mpdc4gsr.module.thermal.ir.utils.ChartTools
+import com.mpdc4gsr.libunified.app.R as LibR
+import com.mpdc4gsr.module.thermal.R as ThermalR
 
 class ChartMonitorView : LineChart, OnChartGestureListener {
     private val mHandler by lazy { Handler(Looper.getMainLooper()) }
@@ -143,7 +143,7 @@ class ChartMonitorView : LineChart, OnChartGestureListener {
                         val entity = Entry(x, bean.thermal)
                         entity.data = bean
                         volDataSet.addEntry(entity)
-                        Log.w("123", "[ph][ph][ph][ph][ph][ph]:$entity")
+                        Log.w("123", "添加一个数据:$entity")
                     }
 
                     2 -> {
@@ -203,7 +203,7 @@ class ChartMonitorView : LineChart, OnChartGestureListener {
                 }
                 return@synchronized
             } catch (e: Exception) {
-                Log.e("123", "[ph][ph][ph][ph][ph][ph][ph]:${e.message}")
+                Log.e("123", "添加数据时异常:${e.message}")
                 return@synchronized
             }
         }

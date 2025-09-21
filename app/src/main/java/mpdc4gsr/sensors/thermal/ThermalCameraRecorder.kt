@@ -10,11 +10,11 @@ import com.energy.ac020library.IrcamEngineBuilder
 import com.energy.ac020library.bean.IIrFrameCallback
 import com.energy.ac020library.bean.UvcHandleParam
 import com.energy.iruvc.uvc.UVCCamera
-import com.infisense.usbir.camera.IRUVCTC
-import com.mpdc4gsr.lib.core.bean.event.device.DeviceConnectEvent
-import com.mpdc4gsr.lib.core.bean.event.device.DevicePermissionEvent
-import com.mpdc4gsr.lib.core.config.DeviceConfig.isTcTsDevice
-import com.mpdc4gsr.lib.core.tools.DeviceTools
+import com.mpdc4gsr.libunified.ir.camera.IRUVCTC
+import com.mpdc4gsr.libunified.app.bean.event.device.DeviceConnectEvent
+import com.mpdc4gsr.libunified.app.bean.event.device.DevicePermissionEvent
+import com.mpdc4gsr.libunified.app.config.DeviceConfig.isTcTsDevice
+import com.mpdc4gsr.libunified.app.tools.DeviceTools
 import com.opencsv.CSVWriter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

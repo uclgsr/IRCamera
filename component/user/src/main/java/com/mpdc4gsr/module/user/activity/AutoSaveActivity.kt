@@ -1,8 +1,8 @@
 package com.mpdc4gsr.module.user.activity
 
 import androidx.appcompat.widget.SwitchCompat
-import com.mpdc4gsr.lib.core.common.SharedManager
-import com.mpdc4gsr.lib.core.ktbase.BaseActivity
+import com.mpdc4gsr.libunified.app.common.SharedManager
+import com.mpdc4gsr.libunified.app.ktbase.BaseActivity
 import com.mpdc4gsr.module.user.R
 
 class AutoSaveActivity : BaseActivity() {

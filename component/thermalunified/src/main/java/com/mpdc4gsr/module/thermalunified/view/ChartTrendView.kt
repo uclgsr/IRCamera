@@ -1,21 +1,21 @@
-package com.mpdc4gsr.module.thermalunified.view
+package com.mpdc4gsr.module.thermal.ir.view
 
 import android.content.Context
 import android.graphics.Color
 import android.util.AttributeSet
 import androidx.core.content.ContextCompat
 import com.blankj.utilcode.util.SizeUtils
-import com.github.mikephil.charting.charts.LineChart
-import com.github.mikephil.charting.components.Legend
-import com.github.mikephil.charting.components.XAxis
-import com.github.mikephil.charting.data.Entry
-import com.github.mikephil.charting.data.LineData
-import com.github.mikephil.charting.data.LineDataSet
-import com.github.mikephil.charting.formatter.ValueFormatter
-import com.mpdc4gsr.lib.core.tools.UnitTools
-import com.mpdc4gsr.module.thermalunified.R
-import com.mpdc4gsr.lib.core.R as LibR
-import com.mpdc4gsr.module.thermalunified.R as ThermalR
+import com.mpdc4gsr.libunified.ui.charting.charts.LineChart
+import com.mpdc4gsr.libunified.ui.charting.components.Legend
+import com.mpdc4gsr.libunified.ui.charting.components.XAxis
+import com.mpdc4gsr.libunified.ui.charting.data.Entry
+import com.mpdc4gsr.libunified.ui.charting.data.LineData
+import com.mpdc4gsr.libunified.ui.charting.data.LineDataSet
+import com.mpdc4gsr.libunified.ui.charting.formatter.ValueFormatter
+import com.mpdc4gsr.libunified.app.tools.UnitTools
+import com.mpdc4gsr.module.thermal.ir.R
+import com.mpdc4gsr.libunified.app.R as LibR
+import com.mpdc4gsr.module.thermal.R as ThermalR
 
 class ChartTrendView : LineChart {
     constructor(context: Context) : this(context, null)

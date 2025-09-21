@@ -8,8 +8,8 @@ import android.graphics.Rect
 import android.util.AttributeSet
 import com.energy.iruvc.sdkisp.LibIRTemp
 import com.energy.iruvc.utils.Line
-import com.infisense.usbir.utils.TempDrawHelper.Companion.correct
-import com.infisense.usbir.view.ITsTempListener
+import com.mpdc4gsr.libunified.ir.utils.TempDrawHelper.Companion.correct
+import com.mpdc4gsr.libunified.ir.view.ITsTempListener
 import java.lang.ref.WeakReference
 
 class TemperatureEditView : TemperatureBaseView {

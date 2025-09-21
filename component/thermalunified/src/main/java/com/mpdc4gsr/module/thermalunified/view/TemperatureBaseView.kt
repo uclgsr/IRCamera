@@ -1,4 +1,4 @@
-package com.mpdc4gsr.module.thermalunified.view
+package com.mpdc4gsr.module.thermal.ir.view
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -12,11 +12,11 @@ import androidx.annotation.CallSuper
 import androidx.annotation.ColorInt
 import com.blankj.utilcode.util.SizeUtils
 import com.energy.iruvc.utils.Line
-import com.infisense.usbir.utils.TempDrawHelper
-import com.infisense.usbir.utils.TempDrawHelper.Companion.correct
-import com.infisense.usbir.utils.TempDrawHelper.Companion.correctPoint
-import com.mpdc4gsr.lib.core.tools.UnitTools
-import com.mpdc4gsr.module.thermalunified.R
+import com.mpdc4gsr.libunified.ir.utils.TempDrawHelper
+import com.mpdc4gsr.libunified.ir.utils.TempDrawHelper.Companion.correct
+import com.mpdc4gsr.libunified.ir.utils.TempDrawHelper.Companion.correctPoint
+import com.mpdc4gsr.libunified.app.tools.UnitTools
+import com.mpdc4gsr.module.thermal.ir.R
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min

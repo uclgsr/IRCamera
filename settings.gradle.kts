@@ -9,7 +9,7 @@ dependencyResolutionManagement {
         maven { url = uri("https://maven.aliyun.com/repository/google") }
 
         flatDir {
-            dirs("libir/libs", "libapp/libs", "app/libs", "BleModule/libs")
+            dirs("libunified/libs", "app/libs", "ble-core/libs")
         }
     }
 }
@@ -17,10 +17,13 @@ dependencyResolutionManagement {
 rootProject.name = "MPDC4GSR"
 
 include(":app")
+include(":component:thermal")
 include(":component:gsr-recording")
-include(":component:thermalunified")
+include(":component:thermal-ir")
+include(":component:thermal-lite")
 include(":component:user")
-include(":libapp")
-include(":libir")
-include(":libui")
-include(":BleModule")
+include(":libunified")
+include(":ble-core")
+include(":ble-shimmer")
+include(":ble-topdon")
+include(":RangeSeekBar")

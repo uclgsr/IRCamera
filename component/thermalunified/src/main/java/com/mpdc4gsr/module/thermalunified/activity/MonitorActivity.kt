@@ -4,9 +4,9 @@ import android.view.View
 import android.widget.Button
 import androidx.core.content.ContextCompat
 import com.blankj.utilcode.util.BarUtils
-import com.mpdc4gsr.lib.core.config.RouterConfig
-import com.mpdc4gsr.lib.core.ktbase.BaseActivity
-import com.mpdc4gsr.lib.core.navigation.NavigationManager
+import com.mpdc4gsr.libunified.app.config.RouterConfig
+import com.mpdc4gsr.libunified.app.ktbase.BaseActivity
+import com.mpdc4gsr.libunified.app.navigation.NavigationManager
 import com.mpdc4gsr.lib.ui.dialog.MonitorSelectDialog
 import com.mpdc4gsr.module.thermalunified.R
 import com.mpdc4gsr.module.thermalunified.event.ThermalActionEvent
@@ -29,10 +29,10 @@ class MonitorActivity : BaseActivity(), View.OnClickListener {
     override fun initView() {
 
         val toolbar =
-            findViewById<androidx.appcompat.widget.Toolbar>(com.mpdc4gsr.lib.core.R.id.toolbar_lay)
+            findViewById<androidx.appcompat.widget.Toolbar>(com.mpdc4gsr.libunified.R.id.toolbar_lay)
         toolbar?.title = getString(R.string.main_thermal_motion)
 
-        val blackColor = ContextCompat.getColor(this, com.mpdc4gsr.lib.core.R.color.black)
+        val blackColor = ContextCompat.getColor(this, com.mpdc4gsr.libunified.R.color.black)
         toolbar?.setBackgroundColor(blackColor)
         BarUtils.setStatusBarColor(this, blackColor)
         BarUtils.setNavBarColor(window, blackColor)

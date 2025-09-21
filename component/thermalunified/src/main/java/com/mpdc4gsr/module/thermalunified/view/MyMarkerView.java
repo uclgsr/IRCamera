@@ -1,19 +1,19 @@
-package com.mpdc4gsr.module.thermalunified.view;
+package com.mpdc4gsr.module.thermal.view;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.widget.TextView;
 
-import com.github.mikephil.charting.components.MarkerView;
-import com.github.mikephil.charting.data.CandleEntry;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.highlight.Highlight;
-import com.github.mikephil.charting.utils.MPPointF;
-import com.github.mikephil.charting.utils.Utils;
-import com.mpdc4gsr.lib.core.db.entity.ThermalEntity;
-import com.mpdc4gsr.lib.core.tools.NumberTools;
-import com.mpdc4gsr.lib.core.tools.TimeTool;
-import com.mpdc4gsr.module.thermalunified.R;
+import com.mpdc4gsr.libunified.ui.charting.components.MarkerView;
+import com.mpdc4gsr.libunified.ui.charting.data.CandleEntry;
+import com.mpdc4gsr.libunified.ui.charting.data.Entry;
+import com.mpdc4gsr.libunified.ui.charting.highlight.Highlight;
+import com.mpdc4gsr.libunified.ui.charting.utils.MPPointF;
+import com.mpdc4gsr.libunified.ui.charting.utils.Utils;
+import com.mpdc4gsr.libunified.app.db.entity.ThermalEntity;
+import com.mpdc4gsr.libunified.app.tools.NumberTools;
+import com.mpdc4gsr.libunified.app.tools.TimeTool;
+import com.mpdc4gsr.module.thermal.R;
 
 @SuppressLint("ViewConstructor")
 public class MyMarkerView extends MarkerView {

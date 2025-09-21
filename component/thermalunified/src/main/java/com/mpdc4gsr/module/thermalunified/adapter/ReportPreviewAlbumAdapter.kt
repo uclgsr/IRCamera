@@ -1,4 +1,4 @@
-package com.mpdc4gsr.module.thermalunified.adapter
+package com.mpdc4gsr.module.thermal.ir.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -11,8 +11,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 
 
-import com.mpdc4gsr.lib.core.bean.HouseRepPreviewAlbumItemBean
-import com.mpdc4gsr.module.thermalunified.R
+import com.mpdc4gsr.libunified.app.bean.HouseRepPreviewAlbumItemBean
+import com.mpdc4gsr.module.thermal.ir.R
 
 @SuppressLint("NotifyDataSetChanged")
 class ReportPreviewAlbumAdapter(

@@ -5,7 +5,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import mpdc4gsr.lib.core.StructuredLogger
+import mpdc4gsr.libunified.app.StructuredLogger
 import org.json.JSONObject
 import java.io.File
 import java.io.FileInputStream

@@ -1,312 +1,313 @@
-# Mermaid Diagrams - IRCamera Architecture
+# IRCamera Architecture Diagrams
 
-## Current Thermal Module Architecture
+## Implemented Unified Architecture (Current State)
 
-```mermaid
-graph TB
-    subgraph "IRCamera Project"
-        subgraph "Core Libraries"
-            LA[libapp]
-            LI[libir] 
-            LU[libui]
-        end
-        
-        subgraph "Thermal Modules"
-            T[thermal<br/>38 files<br/>Basic Interface]
-            TIR[thermal-ir<br/>152 files<br/>Advanced Features]
-            TL[thermal-lite<br/>33 files<br/>Lightweight]
-        end
-        
-        subgraph "Hardware Support"
-            GEN[Generic Thermal<br/>Cameras]
-            TC001[Topdon TC001<br/>Dual Camera]
-            AC020[AC020 USB<br/>IR Camera]
-        end
-        
-        T --> LA
-        T --> LI
-        T --> LU
-        TIR --> LA
-        TIR --> LI
-        TIR --> LU
-        TIR --> T
-        TL --> LA
-        TL --> LI
-        TL --> LU
-        TL --> TIR
-        
-        T -.-> GEN
-        TIR -.-> TC001
-        TL -.-> AC020
-    end
-```
-
-## Proposed Thermal Module Consolidation
+### Unified Library Structure + Device-Specific BLE Modules
 
 ```mermaid
 graph TB
-    subgraph "Recommended Architecture"
-        subgraph "Core Libraries" 
-            LA[libapp]
-            LI[libir]
-            LU[libui]
-        end
-        
-        subgraph "Thermal Framework"
-            TC[thermal-common<br/>Shared Components]
-            
-            subgraph "Specialized Modules"
-                T[thermal<br/>Basic Interface]
-                TIR[thermal-ir<br/>Advanced Features]
-                TL[thermal-lite<br/>Direct Hardware]
-            end
-        end
-        
-        subgraph "Hardware Abstraction"
-            HAL[Hardware Abstraction Layer]
-            
-            subgraph "Camera Adapters"
-                GA[Generic Adapter]
-                TCA[TC001 Adapter]  
-                ACA[AC020 Adapter]
-            end
-        end
-        
-        TC --> LA
-        TC --> LI
-        TC --> LU
-        
-        T --> TC
-        TIR --> TC
-        TL --> TC
-        
-        T --> HAL
-        TIR --> HAL
-        TL --> HAL
-        
-        HAL --> GA
-        HAL --> TCA
-        HAL --> ACA
-    end
-```
-
-## Thermal Module Functionality Comparison
-
-```mermaid
-graph LR
-    subgraph "thermal (Basic)"
-        T1[Menu Interface]
-        T2[Gallery View]
-        T3[Basic Monitoring]
-        T4[Chart Display]
-    end
-    
-    subgraph "thermal-ir (Advanced)"
-        IR1[Dual Camera Fusion]
-        IR2[Advanced Processing]
-        IR3[Report Generation]
-        IR4[Database Integration]
-        IR5[Video Recording]
-        IR6[Algorithm Processing]
-        IR7[WebSocket Support]
-    end
-    
-    subgraph "thermal-lite (Hardware)"
-        L1[USB Camera Control]
-        L2[Direct Hardware Access]
-        L3[Real-time Processing]
-        L4[Sensor Management]
-    end
-    
-    subgraph "Common Features"
-        C1[Temperature Reading]
-        C2[Image Capture]
-        C3[Color Mapping]
-        C4[Image Processing]
-    end
-    
-    T1 --> C1
-    T2 --> C2
-    T3 --> C1
-    T4 --> C4
-    
-    IR1 --> C2
-    IR2 --> C4
-    IR3 --> C2
-    IR4 --> C1
-    IR5 --> C2
-    IR6 --> C4
-    
-    L1 --> C2
-    L2 --> C1
-    L3 --> C4
-    L4 --> C1
-```
-
-## Merger Feasibility Assessment
-
-```mermaid
-flowchart TD
-    A[Thermal Module Analysis] --> B{Merger Feasible?}
-    
-    B -->|Partial| C[Recommended Approach]
-    B -->|No| D[Keep Separate]
-    
-    C --> E[Extract Common Components]
-    C --> F[Create Hardware Abstraction]
-    C --> G[Maintain Specialized Modules]
-    
-    E --> E1[Shared Utilities]
-    E --> E2[Common UI Components]
-    E --> E3[Temperature Processing]
-    
-    F --> F1[Camera Interface]
-    F --> F2[Hardware Adapters]
-    F --> F3[Sensor Abstraction]
-    
-    G --> G1[thermal: Basic Interface]
-    G --> G2[thermal-ir: Advanced Features]
-    G --> G3[thermal-lite: Direct Hardware]
-    
-    D --> D1[Maintain Current Structure]
-    D --> D2[Address Code Duplication]
-    D --> D3[Improve Documentation]
-```
-
-## Component Dependency Flow
-
-## Code Quality Improvements Flow
-
-```mermaid
-graph TD
-    A[Kotlin Compilation Warnings] --> B[Type Safety Issues]
-    A --> C[Null Safety Issues] 
-    A --> D[Experimental API Usage]
     subgraph "Application Layer"
-        APP[Main Application]
+        App[Android Application<br/>Main APK]
+        PCController[PC Controller<br/>Python Application]
     end
     
-    subgraph "Module Layer"
-        T[thermal]
-        TIR[thermal-ir]  
-        TL[thermal-lite]
+    subgraph "Feature Components"
+        ThermalIR[Thermal-IR Component<br/>thermal-ir module]
+        GSRRecording[GSR Recording Component<br/>gsr-recording module]
+        ThermalComponent[Thermal Component<br/>thermal module]
+        ThermalLite[Thermal-Lite Component<br/>thermal-lite module]
+        UserComponent[User Component<br/>user module]
     end
     
-    subgraph "Common Layer" 
-        TC[thermal-common<br/>Proposed]
-        
-        subgraph "Shared Components"
-            AU[ArrayUtils]
-            TP[Temperature Processing]  
-            CM[Color Mapping]
-            IP[Image Processing]
-        end
+    subgraph "Unified Core Libraries"
+        LibUnified[libunified<br/>598 files<br/>Unified Core Library<br/>app + ir + ui functionality]
     end
     
-    subgraph "Hardware Layer"
-        HAL[Hardware Abstraction Layer<br/>Proposed]
-        
-        subgraph "Device Drivers"
-            GD[Generic Driver]
-            TD[TC001 Driver]
-            AD[AC020 Driver]
-        end
+    subgraph "Device-Specific BLE Modules"
+        BLECore[ble-core<br/>~3,500 lines<br/>Core BLE + Commons]
+        BLEShimmer[ble-shimmer<br/>1,131 lines<br/>GSR/Shimmer Devices]
+        BLETopdon[ble-topdon<br/>881 lines<br/>Thermal/Topdon Devices]
     end
     
-    subgraph "Core Infrastructure"
-        LA[libapp]
-        LI[libir]
-        LU[libui]
+    subgraph "Support Libraries"
+        RangeSeekBar[RangeSeekBar<br/>Custom UI Control]
+        ConsolidatedLibs[consolidated_libraries<br/>Shared Utilities]
     end
     
-    APP --> T
-    APP --> TIR
-    APP --> TL
+    %% Application Dependencies
+    App --> LibUnified
+    App --> BLECore
+    App --> BLEShimmer
+    App --> BLETopdon
     
-    B --> E[GuideInterface.kt<br/>String? -> String]
-    C --> F[RingBuffer.kt<br/>ByteArray? null checks]
-    C --> G[UsbBuffer.kt<br/>Remove redundant checks]
-    C --> H[FileUtils.kt<br/>Array<File>? safety]
-    D --> I[ByteUtils.kt<br/>@OptIn annotation]
-    T --> TC
-    TIR --> TC
-    TL --> TC
+    %% Thermal Components -> Topdon BLE
+    ThermalIR --> LibUnified
+    ThermalIR --> BLETopdon
     
-    E --> J[Fixed with !!]
-    F --> K[Added null guard]
-    G --> L[Removed always true/false]
-    H --> M[Added null check]
-    I --> N[Added @OptIn]
-    TC --> AU
-    TC --> TP
-    TC --> CM
-    TC --> IP
+    ThermalComponent --> LibUnified  
+    ThermalComponent --> BLETopdon
     
-    J --> O[Zero Warnings]
-    K --> O
-    L --> O
-    M --> O
-    N --> O
-    T --> HAL
-    TIR --> HAL
-    TL --> HAL
+    ThermalLite --> LibUnified
+    ThermalLite --> BLETopdon
     
-    O --> P[Successful Build]
-    HAL --> GD
-    HAL --> TD
-    HAL --> AD
+    %% GSR/User Components -> Shimmer BLE
+    GSRRecording --> LibUnified
+    GSRRecording --> BLEShimmer
     
-    TC --> LA
-    TC --> LI
-    TC --> LU
+    UserComponent --> LibUnified
+    UserComponent --> BLEShimmer
+    
+    %% BLE Module Dependencies
+    BLEShimmer --> BLECore
+    BLETopdon --> BLECore
+    
+    %% Support Dependencies
+    LibUnified --> RangeSeekBar
+    
+    PCController -.->|Network Protocol| App
 ```
 
-## Architecture Overview & Risk Assessment Matrix
+### Namespace Structure (Implemented)
+
+```mermaid
+graph TB
+    subgraph "com.mpdc4gsr.libunified.*"
+        AppNS[app.*<br/>Application Framework<br/>Database, Config, Utils]
+        IRNs[ir.*<br/>IR Processing<br/>Camera, Hardware, Processing]
+        UINs[ui.*<br/>UI Components<br/>Charting, Widgets, Controls]
+    end
+    
+    subgraph "com.mpdc4gsr.ble.*"
+        BLECoreNS[ble.core.*<br/>Core BLE Functionality<br/>Connection, Device, Utils]
+        BLEShimmerNS[ble.shimmer.*<br/>Shimmer Device Classes<br/>GSR-specific Logic]
+        BLETopdonNS[ble.topdon.*<br/>Topdon Device Classes<br/>Thermal-specific Logic]
+    end
+    
+    subgraph "Component Namespaces (Unchanged)"
+        CompThermal[com.mpdc4gsr.module.thermal.*]
+        CompGSR[com.mpdc4gsr.gsr.*]
+        CompUser[com.mpdc4gsr.module.user.*]
+    end
+```
+
+```
+
+## Proposed Unified Architecture
+
+### Single Unified Library Structure
+
+```mermaid
+graph TB
+    subgraph "Application Layer"
+        App[Android Application<br/>Main APK]
+        PCController[PC Controller<br/>Python Application]
+    end
+    
+    subgraph "Feature Components"
+        ThermalIR[Thermal-IR Component<br/>thermal-ir module]
+        GSRRecording[GSR Recording Component<br/>gsr-recording module]
+        PseudoComponent[Pseudo Component<br/>pseudo module]
+        ThermalComponent[Thermal Component<br/>thermal module]
+        UserComponent[User Component<br/>user module]
+    end
+    
+    subgraph "Unified Core Library"
+        LibCore[libcore<br/>598 files<br/>📦 All Core Functionality<br/>• Application Framework<br/>• IR Processing<br/>• UI Components]
+    end
+    
+    subgraph "Support Libraries"
+        LibCom[libcom<br/>Communication]
+        LibMatrix[libmatrix<br/>Matrix Operations]
+        LibMenu[libmenu<br/>Menu System]
+    end
+    
+    subgraph "External Dependencies"
+        BleModule[BLE Module<br/>Bluetooth Integration]
+        RangeSeekBar[Range Seek Bar<br/>Custom UI Control]
+        AndroidSDK[Android SDK<br/>Platform APIs]
+    end
+    
+    %% Simplified Dependencies - Single unified dependency
+    App --> LibCore
+    
+    ThermalIR --> LibCore
+    GSRRecording --> LibCore
+    ThermalComponent --> LibCore
+    UserComponent --> LibCore
+    
+    %% Support library dependencies
+    LibCore --> LibCom
+    LibCore --> LibMatrix
+    
+    %% External dependencies
+    LibCore --> BleModule
+    App --> RangeSeekBar
+    
+    PCController -.->|Network Protocol| LibCom
+    
+    %% Visual styling
+    classDef unified fill:#e1f5fe,stroke:#01579b,stroke-width:3px
+    classDef current fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
+    classDef support fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px
+    
+    class LibCore unified
+    class LibCom,LibMatrix,LibMenu support
+```
+
+## Library Unification Benefits Diagram
+
+```mermaid
+flowchart LR
+    subgraph "Current State"
+        A[Components depend on<br/>3 separate libraries]
+        B[libapp + libir + libui]
+        C[Complex dependencies<br/>3 build configs]
+        A --> B --> C
+    end
+    
+    subgraph "Proposed State"
+        D[Components depend on<br/>1 unified library]
+        E[libcore<br/>All functionality]
+        F[Simple dependencies<br/>1 build config]
+        D --> E --> F
+    end
+    
+    Current --> |"MERGE"| Proposed
+    
+    subgraph "Benefits"
+        G[✅ 67% fewer library modules]
+        H[✅ Simplified build system]
+        I[✅ Faster compilation]
+        J[✅ Easier maintenance]
+        K[✅ No namespace conflicts]
+    end
+    
+    Proposed --> G
+    Proposed --> H
+    Proposed --> I
+    Proposed --> J
+    Proposed --> K
+```
+
+## Migration Phases Diagram
+
+```mermaid
+gantt
+    title Library Unification Migration Plan
+    dateFormat X
+    axisFormat %s
+    
+    section Phase 1: Foundation
+    Create working libcore           :p1, 0, 2
+    Resolve build conflicts          :p2, 1, 2
+    Test basic functionality         :p3, 2, 1
+    
+    section Phase 2: Component Migration
+    Migrate thermal-lite (pilot)     :p4, 3, 2
+    Migrate thermal component        :p5, 4, 2
+    Migrate thermal-ir component     :p6, 5, 2
+    Migrate gsr-recording            :p7, 6, 2
+    Migrate user component           :p8, 7, 2
+    Update main app                  :p9, 8, 2
+    
+    section Phase 3: Cleanup
+    Remove old libraries             :p10, 9, 1
+    Update build configs             :p11, 10, 1
+    Verify functionality             :p12, 11, 1
+    
+    section Phase 4: Documentation
+    Update architecture docs         :p13, 12, 1
+    Update API reference             :p14, 12, 1
+    Update diagrams                  :p15, 12, 1
+```
+
+## Namespace Organization Diagram
+
+```mermaid
+graph TB
+    subgraph "libcore Unified Namespaces"
+        subgraph "com.mpdc4gsr.libunified.app.*"
+            AppFramework[Application Framework<br/>• Database<br/>• Configuration<br/>• Common utilities]
+        end
+        
+        subgraph "com.infisense.usbir.*"
+            IRProcessing[IR Processing<br/>• Camera hardware<br/>• Temperature processing<br/>• Image conversion]
+        end
+        
+        subgraph "com.github.mikephil.charting.*"
+            UIComponents[UI Components<br/>• Charts and graphs<br/>• Custom UI widgets<br/>• Data visualization]
+        end
+    end
+    
+    subgraph "No Conflicts"
+        NoConflicts[✅ Different root packages<br/>✅ No namespace overlap<br/>✅ Direct merge possible]
+    end
+    
+    AppFramework -.-> NoConflicts
+    IRProcessing -.-> NoConflicts
+    UIComponents -.-> NoConflicts
+```
+
+## Build System Comparison
 
 ```mermaid
 graph LR
-    A[IRCamera Platform] --> B[libapp Module]
-    B --> C[com.matrix Package]
-    B --> D[com.mpdc4gsr Package]
-    
-    C --> E[GuideInterface]
-    C --> F[RingBuffer] 
-    C --> G[UsbBuffer]
-    C --> H[ByteUtils]
-    C --> I[FileUtils]
-    
-    D --> J[GuideInterface Copy]
-    D --> K[RingBuffer Copy]
-    D --> L[UsbBuffer Copy]
-    D --> M[ByteUtils Copy]
-    D --> N[FileUtils Copy]
-    
-    style E fill:#90EE90
-    style F fill:#90EE90
-    style G fill:#90EE90
-    style H fill:#90EE90
-    style I fill:#90EE90
-    style J fill:#90EE90
-    style K fill:#90EE90
-    style L fill:#90EE90
-    style M fill:#90EE90
-    style N fill:#90EE90
-    subgraph "Risk vs Impact Assessment"
-        A[Low Risk<br/>High Impact] --> A1[Extract Common Utils]
-        A[Low Risk<br/>High Impact] --> A2[Shared UI Components]
+    subgraph "Current Build Complexity"
+        C1[Component A] --> L1[libapp]
+        C1 --> L2[libir] 
+        C1 --> L3[libui]
         
-        B[Medium Risk<br/>Medium Impact] --> B1[Hardware Abstraction]
-        B[Medium Risk<br/>Medium Impact] --> B2[Interface Standardization]
+        C2[Component B] --> L1
+        C2 --> L2
+        C2 --> L3
         
-        C[High Risk<br/>Low Impact] --> C1[Complete Merger]
-        C[High Risk<br/>Low Impact] --> C2[Architecture Unification]
+        C3[Component C] --> L1
+        C3 --> L2
+        C3 --> L3
         
-        D[Low Risk<br/>Low Impact] --> D1[Documentation Updates]
-        D[Low Risk<br/>Low Impact] --> D2[Code Formatting]
+        L1 --> B1[3 build.gradle files]
+        L2 --> B1
+        L3 --> B1
     end
     
-    style A fill:#90EE90
-    style B fill:#FFD700
-    style C fill:#FFB6C1
-    style D fill:#E6E6FA
+    subgraph "Proposed Unified Build"
+        C4[Component A] --> LC[libcore]
+        C5[Component B] --> LC
+        C6[Component C] --> LC
+        
+        LC --> B2[1 build.gradle file]
+    end
+    
+    B1 -.->|"SIMPLIFY"| B2
+    
+    classDef current fill:#ffebee,stroke:#c62828
+    classDef proposed fill:#e8f5e8,stroke:#2e7d32
+    
+    class C1,C2,C3,L1,L2,L3,B1 current
+    class C4,C5,C6,LC,B2 proposed
 ```
+
+## Implementation Status
+
+### Feasibility Analysis Results
+
+```mermaid
+pie title Library Merge Feasibility
+    "✅ Namespace Compatible" : 598
+    "⚠️ Build Conflicts" : 45  
+    "❌ Incompatible" : 0
+```
+
+### File Distribution in Unified Library
+
+```mermaid
+pie title libcore File Distribution (598 total)
+    "libapp Framework" : 247
+    "libui Components" : 287
+    "libir Processing" : 64
+```
+
+## Current Status: READY FOR IMPLEMENTATION
+
+The analysis confirms that merging libapp, libir, and libui into a unified libcore is **technically feasible** and *
+*highly beneficial** for the project architecture.

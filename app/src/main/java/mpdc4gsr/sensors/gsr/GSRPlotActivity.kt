@@ -5,13 +5,13 @@ import android.os.Bundle
 import android.view.MenuItem
 import com.csl.irCamera.R
 import com.csl.irCamera.databinding.ActivityGsrPlotBinding
-import com.github.mikephil.charting.components.Description
-import com.github.mikephil.charting.components.XAxis
-import com.github.mikephil.charting.data.Entry
-import com.github.mikephil.charting.data.LineData
-import com.github.mikephil.charting.data.LineDataSet
-import com.github.mikephil.charting.formatter.ValueFormatter
-import com.mpdc4gsr.lib.core.ktbase.BaseBindingActivity
+import com.mpdc4gsr.libunified.ui.charting.components.Description
+import com.mpdc4gsr.libunified.ui.charting.components.XAxis
+import com.mpdc4gsr.libunified.ui.charting.data.Entry
+import com.mpdc4gsr.libunified.ui.charting.data.LineData
+import com.mpdc4gsr.libunified.ui.charting.data.LineDataSet
+import com.mpdc4gsr.libunified.ui.charting.formatter.ValueFormatter
+import com.mpdc4gsr.libunified.app.ktbase.BaseBindingActivity
 
 class GSRPlotActivity : BaseBindingActivity<ActivityGsrPlotBinding>() {
     private lateinit var plotData: GSRDataViewActivity.GSRPlotData

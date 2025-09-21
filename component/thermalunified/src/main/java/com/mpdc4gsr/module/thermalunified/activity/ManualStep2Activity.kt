@@ -1,4 +1,4 @@
-package com.mpdc4gsr.module.thermalunified.activity
+package com.mpdc4gsr.module.thermal.ir.activity
 
 import android.app.Activity
 import android.graphics.ImageFormat
@@ -20,19 +20,19 @@ import com.energy.iruvc.ircmd.IRCMD
 import com.energy.iruvc.usb.USBMonitor
 import com.energy.iruvc.utils.CommonParams
 import com.energy.iruvc.utils.DualCameraParams
-import com.infisense.usbdual.Const
-import com.infisense.usbdual.camera.DualViewWithManualAlignExternalCamera
-import com.infisense.usbdual.camera.USBMonitorDualManager
-import com.infisense.usbdual.inf.OnUSBConnectListener
-import com.infisense.usbir.utils.HexDump
-import com.mpdc4gsr.lib.core.common.SharedManager
-import com.mpdc4gsr.lib.core.ktbase.BaseActivity
-import com.mpdc4gsr.lib.core.lms.weiget.LmsLoadDialog
-import com.mpdc4gsr.lib.core.utils.ByteUtils.toLittleBytes
-import com.mpdc4gsr.module.thermalunified.R
-import com.mpdc4gsr.module.thermalunified.event.ManualFinishBean
-import com.mpdc4gsr.module.thermalunified.utils.IRCmdTool
-import com.mpdc4gsr.module.thermalunified.view.MoveImageView
+import com.mpdc4gsr.libunified.ir.usbdual.Const
+import com.mpdc4gsr.libunified.ir.usbdual.camera.DualViewWithManualAlignExternalCamera
+import com.mpdc4gsr.libunified.ir.usbdual.camera.USBMonitorDualManager
+import com.mpdc4gsr.libunified.ir.usbdual.inf.OnUSBConnectListener
+import com.mpdc4gsr.libunified.ir.utils.HexDump
+import com.mpdc4gsr.libunified.app.common.SharedManager
+import com.mpdc4gsr.libunified.app.ktbase.BaseActivity
+import com.mpdc4gsr.libunified.app.lms.weiget.LmsLoadDialog
+import com.mpdc4gsr.libunified.app.utils.ByteUtils.toLittleBytes
+import com.mpdc4gsr.module.thermal.ir.R
+import com.mpdc4gsr.module.thermal.ir.event.ManualFinishBean
+import com.mpdc4gsr.module.thermal.ir.utils.IRCmdTool
+import com.mpdc4gsr.module.thermal.ir.view.MoveImageView
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import java.io.IOException
@@ -289,7 +289,7 @@ class ManualStep2Activity :
 
             mDualView?.dualUVCCamera?.setDisp(dualDisp)
             mDualView?.startPreview()
-            Log.e("[ph][ph][ph][ph][ph][ph][ph][ph]", "[ph][ph][ph][ph][ph]:")
+            Log.e("机芯数据加载成功", "初始化完成:")
         }
     }
 

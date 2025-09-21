@@ -11,9 +11,9 @@ import android.view.View
 import androidx.lifecycle.lifecycleScope
 import com.csl.irCamera.R
 import com.csl.irCamera.databinding.ActivityHubSpokeIntegrationBinding
-import com.mpdc4gsr.ble.Device
-import com.mpdc4gsr.ble.EasyBLE
-import com.mpdc4gsr.lib.core.ktbase.BaseBindingActivity
+import com.mpdc4gsr.ble.core.Device
+import com.mpdc4gsr.ble.core.EasyBLE
+import com.mpdc4gsr.libunified.app.ktbase.BaseBindingActivity
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch

@@ -8,7 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.mpdc4gsr.lib.core.bean.ObserveBean
+import com.mpdc4gsr.libunified.app.bean.ObserveBean
 import com.mpdc4gsr.lib.ui.bean.ColorBean
 import com.mpdc4gsr.module.thermalunified.R
 import com.mpdc4gsr.lib.ui.R as UiR

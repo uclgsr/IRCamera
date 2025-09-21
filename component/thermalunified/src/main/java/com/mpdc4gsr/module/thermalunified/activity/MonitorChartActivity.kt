@@ -1,4 +1,4 @@
-package com.mpdc4gsr.module.thermalunified.activity
+package com.mpdc4gsr.module.thermal.activity
 
 import android.graphics.Color
 import android.text.TextUtils
@@ -10,28 +10,28 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import com.blankj.utilcode.util.SizeUtils
-import com.github.mikephil.charting.charts.LineChart
-import com.github.mikephil.charting.components.Legend
-import com.github.mikephil.charting.components.XAxis
-import com.github.mikephil.charting.components.YAxis
-import com.github.mikephil.charting.data.Entry
-import com.github.mikephil.charting.data.LineData
-import com.github.mikephil.charting.data.LineDataSet
-import com.github.mikephil.charting.highlight.Highlight
-import com.github.mikephil.charting.listener.OnChartValueSelectedListener
-import com.mpdc4gsr.lib.core.bean.tools.ThermalBean
-import com.mpdc4gsr.lib.core.common.SharedManager
-import com.mpdc4gsr.lib.core.db.AppDatabase
-import com.mpdc4gsr.lib.core.db.entity.ThermalEntity
-import com.mpdc4gsr.lib.core.ktbase.BaseActivity
-import com.mpdc4gsr.lib.core.tools.NumberTools
-import com.mpdc4gsr.lib.core.tools.TimeTool
-import com.mpdc4gsr.module.thermalunified.R
-import com.mpdc4gsr.module.thermalunified.adapter.SettingCheckAdapter
-import com.mpdc4gsr.module.thermalunified.adapter.SettingTimeAdapter
-import com.mpdc4gsr.module.thermalunified.chart.MyValueFormatter
-import com.mpdc4gsr.module.thermalunified.view.MyMarkerView
-import com.mpdc4gsr.module.thermalunified.viewmodel.LogViewModel
+import com.mpdc4gsr.libunified.ui.charting.charts.LineChart
+import com.mpdc4gsr.libunified.ui.charting.components.Legend
+import com.mpdc4gsr.libunified.ui.charting.components.XAxis
+import com.mpdc4gsr.libunified.ui.charting.components.YAxis
+import com.mpdc4gsr.libunified.ui.charting.data.Entry
+import com.mpdc4gsr.libunified.ui.charting.data.LineData
+import com.mpdc4gsr.libunified.ui.charting.data.LineDataSet
+import com.mpdc4gsr.libunified.ui.charting.highlight.Highlight
+import com.mpdc4gsr.libunified.ui.charting.listener.OnChartValueSelectedListener
+import com.mpdc4gsr.libunified.app.bean.tools.ThermalBean
+import com.mpdc4gsr.libunified.app.common.SharedManager
+import com.mpdc4gsr.libunified.app.db.AppDatabase
+import com.mpdc4gsr.libunified.app.db.entity.ThermalEntity
+import com.mpdc4gsr.libunified.app.ktbase.BaseActivity
+import com.mpdc4gsr.libunified.app.tools.NumberTools
+import com.mpdc4gsr.libunified.app.tools.TimeTool
+import com.mpdc4gsr.module.thermal.R
+import com.mpdc4gsr.module.thermal.adapter.SettingCheckAdapter
+import com.mpdc4gsr.module.thermal.adapter.SettingTimeAdapter
+import com.mpdc4gsr.module.thermal.chart.MyValueFormatter
+import com.mpdc4gsr.module.thermal.view.MyMarkerView
+import com.mpdc4gsr.module.thermal.viewmodel.LogViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -59,7 +59,7 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
     override fun initView() {
 
         val toolbar =
-            findViewById<androidx.appcompat.widget.Toolbar>(com.mpdc4gsr.lib.core.R.id.toolbar_lay)
+            findViewById<androidx.appcompat.widget.Toolbar>(com.mpdc4gsr.libunified.R.id.toolbar_lay)
         toolbar?.title = getString(R.string.main_thermal_motion)
 
         selectType = intent.getIntExtra("type", 3)
@@ -78,7 +78,7 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
         initRecycler()
         viewModel.resultLiveData.observe(this) {
 
-            Log.w("123", "[ph][ph][ph][ph][ph][ph][ph]:${it.dataList.size}")
+            Log.w("123", "查询到历史数据:${it.dataList.size}")
             resultVol(it)
         }
         lifecycleScope.launch {
@@ -208,10 +208,10 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
                         }
                         delay(timeMillis)
                     } else {
-                        Log.w("123", "[ph][ph][ph][ph][ph][ph]")
+                        Log.w("123", "当前不可更新")
                     }
                 }
-                Log.w("123", "[ph][ph][ph][ph], [ph][ph][ph]:$time")
+                Log.w("123", "停止记录, 数据量:$time")
             }
     }
 
@@ -222,7 +222,7 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
         chart.isDragEnabled = true
         chart.setDrawGridBackground(false)
         chart.description = null
-        chart.setBackgroundResource(com.mpdc4gsr.lib.core.R.color.chart_bg)
+        chart.setBackgroundResource(com.mpdc4gsr.libunified.R.color.chart_bg)
         chart.setScaleEnabled(true)
         chart.setPinchZoom(false)
         chart.isDoubleTapToZoomEnabled = false
@@ -320,7 +320,7 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
                 var volDataSet = lineData.getDataSetByIndex(0)
                 if (volDataSet == null) {
                     startTime = data.createTime
-                    Log.w("123", "[ph][ph][ph][ph][ph][ph]startTime:$startTime")
+                    Log.w("123", "设置初始时间startTime:$startTime")
                     chart.xAxis.valueFormatter = MyValueFormatter(startTime = startTime)
                 }
                 val x = (data.createTime - startTime).toFloat()
@@ -334,7 +334,7 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
                         val entity = Entry(x, data.thermal)
                         entity.data = data
                         volDataSet.addEntry(entity)
-                        Log.w("123", "[ph][ph][ph][ph][ph][ph]:$entity")
+                        Log.w("123", "添加一个数据:$entity")
                     }
 
                     "line" -> {
@@ -393,7 +393,7 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
                 }
                 return@synchronized
             } catch (e: Exception) {
-                Log.e("123", "[ph][ph][ph][ph][ph][ph][ph]:${e.message}")
+                Log.e("123", "添加数据时异常:${e.message}")
                 return@synchronized
             }
         }
@@ -403,31 +403,31 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
     private val lineRed by lazy {
         ContextCompat.getColor(
             this,
-            com.mpdc4gsr.lib.core.R.color.chart_line_max
+            com.mpdc4gsr.libunified.R.color.chart_line_max
         )
     }
     private val lineBlue by lazy {
         ContextCompat.getColor(
             this,
-            com.mpdc4gsr.lib.core.R.color.chart_line_min
+            com.mpdc4gsr.libunified.R.color.chart_line_min
         )
     }
     private val lineGreen by lazy {
         ContextCompat.getColor(
             this,
-            com.mpdc4gsr.lib.core.R.color.chart_line_center
+            com.mpdc4gsr.libunified.R.color.chart_line_center
         )
     }
     private val whiteColors by lazy {
         ContextCompat.getColor(
             this,
-            com.mpdc4gsr.lib.core.R.color.circle_white
+            com.mpdc4gsr.libunified.R.color.circle_white
         )
     }
     private val textColor by lazy {
         ContextCompat.getColor(
             this,
-            com.mpdc4gsr.lib.core.R.color.chart_text
+            com.mpdc4gsr.libunified.R.color.chart_text
         )
     }
 
@@ -530,7 +530,7 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
                     val entity = Entry(x, it.thermal)
                     entity.data = it
                     volDataSet.addEntry(entity)
-                    Log.w("123", "[ph][ph][ph][ph][ph][ph]:$entity")
+                    Log.w("123", "添加一个数据:$entity")
                 }
 
                 "line" -> {
@@ -575,7 +575,7 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
                 }
             }
         }
-        Log.w("123", "[ph][ph][ph][ph]:${volDataSet.entryCount}[ph]")
+        Log.w("123", "曲线数据:${volDataSet.entryCount}个")
         lineData.notifyDataChanged()
         chart.notifyDataSetChanged()
         chart.setVisibleXRangeMinimum(getMinimum())

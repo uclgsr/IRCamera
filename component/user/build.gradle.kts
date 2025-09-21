@@ -86,10 +86,8 @@ android {
 
 dependencies {
     coreLibraryDesugaring(libs.desugar.jdk.libs)
-    implementation(project(":libapp"))
-    implementation(project(":libir"))
-    implementation(project(":libui"))
-    implementation(project(":BleModule"))
+    implementation(project(":libunified"))
+    implementation(project(":ble-shimmer"))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)

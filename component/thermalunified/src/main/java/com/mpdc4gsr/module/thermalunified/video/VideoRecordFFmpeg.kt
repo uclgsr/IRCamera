@@ -33,15 +33,15 @@ import com.blankj.utilcode.util.StringUtils.getString
 import com.blankj.utilcode.util.ThreadUtils
 import com.blankj.utilcode.util.Utils
 import com.elvishew.xlog.XLog
-import com.infisense.usbdual.camera.DualViewWithExternalCameraCommonApi
-import com.infisense.usbir.view.CameraView
-import com.infisense.usbir.view.TemperatureView
-import com.mpdc4gsr.lib.core.comm.view.TempLayout
-import com.mpdc4gsr.lib.core.common.SharedManager
-import com.mpdc4gsr.lib.core.config.FileConfig
-import com.mpdc4gsr.lib.core.dialog.TipDialog
-import com.mpdc4gsr.lib.core.tools.TimeTool
-import com.mpdc4gsr.lib.core.utils.BitmapUtils
+import com.mpdc4gsr.libunified.ir.usbdual.camera.DualViewWithExternalCameraCommonApi
+import com.mpdc4gsr.libunified.ir.view.CameraView
+import com.mpdc4gsr.libunified.ir.view.TemperatureView
+import com.mpdc4gsr.libunified.app.comm.view.TempLayout
+import com.mpdc4gsr.libunified.app.common.SharedManager
+import com.mpdc4gsr.libunified.app.config.FileConfig
+import com.mpdc4gsr.libunified.app.dialog.TipDialog
+import com.mpdc4gsr.libunified.app.tools.TimeTool
+import com.mpdc4gsr.libunified.app.utils.BitmapUtils
 import com.mpdc4gsr.lib.ui.camera.CameraPreView
 import com.mpdc4gsr.lib.ui.widget.BitmapConstraintLayout
 import com.mpdc4gsr.lib.ui.widget.LiteSurfaceView
@@ -68,7 +68,7 @@ import java.util.Date
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicReference
-import com.mpdc4gsr.lib.core.R as LibcoreR
+import com.mpdc4gsr.libunified.app.R as LibcoreR
 
 
 @SuppressLint("MissingPermission")

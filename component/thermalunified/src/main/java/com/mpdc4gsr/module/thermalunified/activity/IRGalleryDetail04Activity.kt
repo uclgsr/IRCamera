@@ -1,4 +1,4 @@
-package com.mpdc4gsr.module.thermalunified.activity
+package com.mpdc4gsr.module.thermal.ir.activity
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -20,23 +20,23 @@ import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
-import com.mpdc4gsr.lib.core.bean.GalleryBean
-import com.mpdc4gsr.lib.core.bean.event.GalleryDelEvent
-import com.mpdc4gsr.lib.core.config.FileConfig
-import com.mpdc4gsr.lib.core.dialog.ConfirmSelectDialog
-import com.mpdc4gsr.lib.core.dialog.TipDialog
-import com.mpdc4gsr.lib.core.ktbase.BaseActivity
-import com.mpdc4gsr.lib.core.lms.weiget.TToast
-import com.mpdc4gsr.lib.core.tools.FileTools
-import com.mpdc4gsr.lib.core.tools.TimeTool
-import com.mpdc4gsr.lib.core.tools.ToastTools
-import com.mpdc4gsr.module.thermalunified.R
-import com.mpdc4gsr.module.thermalunified.event.GalleryDownloadEvent
-import com.mpdc4gsr.module.thermalunified.fragment.GalleryFragment
+import com.mpdc4gsr.libunified.app.bean.GalleryBean
+import com.mpdc4gsr.libunified.app.bean.event.GalleryDelEvent
+import com.mpdc4gsr.libunified.app.config.FileConfig
+import com.mpdc4gsr.libunified.app.dialog.ConfirmSelectDialog
+import com.mpdc4gsr.libunified.app.dialog.TipDialog
+import com.mpdc4gsr.libunified.app.ktbase.BaseActivity
+import com.mpdc4gsr.libunified.app.lms.weiget.TToast
+import com.mpdc4gsr.libunified.app.tools.FileTools
+import com.mpdc4gsr.libunified.app.tools.TimeTool
+import com.mpdc4gsr.libunified.app.tools.ToastTools
+import com.mpdc4gsr.module.thermal.ir.R
+import com.mpdc4gsr.module.thermal.ir.event.GalleryDownloadEvent
+import com.mpdc4gsr.module.thermal.ir.fragment.GalleryFragment
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import java.io.File
-import com.mpdc4gsr.lib.core.R as LibR
+import com.mpdc4gsr.libunified.app.R as LibR
 import com.mpdc4gsr.lib.ui.R as UiR
 
 
@@ -56,7 +56,7 @@ class IRGalleryDetail04Activity : BaseActivity() {
         position = intent.getIntExtra("position", 0)
         dataList = intent.getParcelableArrayListExtra("list")!!
 
-        val titleView = findViewById<com.mpdc4gsr.lib.core.view.TitleView>(R.id.title_view)
+        val titleView = findViewById<com.mpdc4gsr.libunified.app.view.TitleView>(R.id.title_view)
         titleView.setTitleText("${position + 1}/${dataList.size}")
 
         findViewById<ConstraintLayout>(R.id.cl_bottom).isVisible = isRemote
@@ -99,7 +99,7 @@ class IRGalleryDetail04Activity : BaseActivity() {
                 override fun onPageSelected(position: Int) {
                     super.onPageSelected(position)
                     this@IRGalleryDetail04Activity.position = position
-                    findViewById<com.mpdc4gsr.lib.core.view.TitleView>(R.id.title_view).setTitleText("${position + 1}/${dataList.size}")
+                    findViewById<com.mpdc4gsr.libunified.app.view.TitleView>(R.id.title_view).setTitleText("${position + 1}/${dataList.size}")
                     findViewById<ImageView>(R.id.iv_download).isSelected =
                         dataList[position].hasDownload
                 }

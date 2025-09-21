@@ -7,10 +7,10 @@ import com.energy.iruvc.sdkisp.LibIRProcess
 import com.energy.iruvc.sdkisp.LibIRTemp
 import com.energy.iruvc.utils.CommonParams
 import com.example.suplib.wrapper.SupHelp
-import com.infisense.usbir.tools.ImageTools
-import com.infisense.usbir.utils.IRImageHelp
-import com.infisense.usbir.utils.OpencvTools
-import com.mpdc4gsr.lib.core.bean.CustomPseudoBean
+import com.mpdc4gsr.libunified.ir.tools.ImageTools
+import com.mpdc4gsr.libunified.ir.utils.IRImageHelp
+import com.mpdc4gsr.libunified.ir.utils.OpencvTools
+import com.mpdc4gsr.libunified.app.bean.CustomPseudoBean
 import java.io.IOException
 import java.nio.ByteBuffer
 

@@ -1,4 +1,4 @@
-package com.mpdc4gsr.module.thermalunified.lite.activity
+package com.example.thermal_lite.activity
 
 import android.os.Bundle
 import android.util.Log
@@ -12,26 +12,26 @@ import com.energy.irutilslibrary.LibIRTempAC020
 import com.energy.irutilslibrary.bean.GainStatus
 import com.energy.iruvc.sdkisp.LibIRTemp
 import com.energy.iruvc.utils.Line
-import com.mpdc4gsr.module.thermalunified.lite.IrConst
-import com.mpdc4gsr.module.thermalunified.lite.R
-import com.mpdc4gsr.module.thermalunified.lite.camera.DeviceIrcmdControlManager
-import com.mpdc4gsr.module.thermalunified.lite.databinding.ActivityIrMonitorChartLiteBinding
-import com.mpdc4gsr.module.thermalunified.lite.fragment.IRMonitorLiteFragment
-import com.mpdc4gsr.module.thermalunified.lite.util.CommonUtil
-import com.infisense.usbir.view.ITsTempListener
-import com.mpdc4gsr.lib.core.BaseApplication
-import com.mpdc4gsr.lib.core.bean.tools.ThermalBean
-import com.mpdc4gsr.lib.core.common.SharedManager
-import com.mpdc4gsr.lib.core.db.AppDatabase
-import com.mpdc4gsr.lib.core.db.entity.ThermalEntity
-import com.mpdc4gsr.lib.core.ktbase.BaseActivity
-import com.mpdc4gsr.lib.core.lms.LMS.mContext
-import com.mpdc4gsr.lib.core.tools.NumberTools
-import com.mpdc4gsr.lib.core.tools.TimeTool
-import com.mpdc4gsr.module.thermalunified.bean.DataBean
-import com.mpdc4gsr.module.thermalunified.bean.SelectPositionBean
-import com.mpdc4gsr.module.thermalunified.event.MonitorSaveEvent
-import com.mpdc4gsr.module.thermalunified.repository.ConfigRepository
+import com.example.thermal_lite.IrConst
+import com.example.thermal_lite.R
+import com.example.thermal_lite.camera.DeviceIrcmdControlManager
+import com.example.thermal_lite.databinding.ActivityIrMonitorChartLiteBinding
+import com.example.thermal_lite.fragment.IRMonitorLiteFragment
+import com.example.thermal_lite.util.CommonUtil
+import com.mpdc4gsr.libunified.ir.view.ITsTempListener
+import com.mpdc4gsr.libunified.app.BaseApplication
+import com.mpdc4gsr.libunified.app.bean.tools.ThermalBean
+import com.mpdc4gsr.libunified.app.common.SharedManager
+import com.mpdc4gsr.libunified.app.db.AppDatabase
+import com.mpdc4gsr.libunified.app.db.entity.ThermalEntity
+import com.mpdc4gsr.libunified.app.ktbase.BaseActivity
+import com.mpdc4gsr.libunified.app.lms.LMS.mContext
+import com.mpdc4gsr.libunified.app.tools.NumberTools
+import com.mpdc4gsr.libunified.app.tools.TimeTool
+import com.mpdc4gsr.module.thermal.ir.bean.DataBean
+import com.mpdc4gsr.module.thermal.ir.bean.SelectPositionBean
+import com.mpdc4gsr.module.thermal.ir.event.MonitorSaveEvent
+import com.mpdc4gsr.module.thermal.ir.repository.ConfigRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -139,9 +139,9 @@ class IRMonitorChartLiteActivity : BaseActivity(), ITsTempListener {
                         if (isFirstRead) {
                             if (result.maxTemperature > 200f || result.minTemperature < -200f) {
                                 errorReadCount++
-                                XLog.w("[ph] $errorReadCount [ph][ph][ph][ph][ph][ph][ph][ph]，max = ${result.maxTemperature} min = ${result.minTemperature}")
+                                XLog.w("第 $errorReadCount 次读取到异常数据，max = ${result.maxTemperature} min = ${result.minTemperature}")
                                 if (errorReadCount > 10) {
-                                    XLog.i("[ph][ph]10[ph][ph][ph][ph][ph][ph][ph][ph]，[ph][ph][ph][ph][ph][ph][ph][ph]")
+                                    XLog.i("连续10次获取到异常数据，认为温度区域稳定")
                                     isFirstRead = false
                                 }
                                 continue
@@ -241,7 +241,7 @@ class IRMonitorChartLiteActivity : BaseActivity(), ITsTempListener {
                             TimeTool.showVideoLongTime(System.currentTimeMillis() - startTime)
                     }
                 }
-                XLog.w("[ph][ph][ph][ph], [ph][ph][ph]:$time")
+                XLog.w("停止记录, 数据量:$time")
             }
     }
 
@@ -270,7 +270,7 @@ class IRMonitorChartLiteActivity : BaseActivity(), ITsTempListener {
                         DeviceIrcmdControlManager.getInstance().getIrcmdEngine()
                             ?.basicGainGet(basicGainGetValue)
                 } catch (e: Exception) {
-                    XLog.e("[ph][ph][ph][ph][ph][ph]")
+                    XLog.e("增益获取失败")
                 }
                 basicGainGetTime = System.currentTimeMillis()
             }
@@ -303,7 +303,7 @@ class IRMonitorChartLiteActivity : BaseActivity(), ITsTempListener {
                         "distance = " + params_array[4] + " hum = " + params_array[5],
             )
         } catch (e: Exception) {
-            XLog.e("$TAG--[ph][ph][ph][ph][ph][ph]：${e.message}")
+            XLog.e("$TAG--温度修正异常：${e.message}")
         } finally {
             return tempNew ?: 0f
         }

@@ -10,7 +10,7 @@
         tools:context="com.mpdc4gsr.tc001.network.DevicePairingActivity">
 
 
-        <com.mpdc4gsr.lib.core.view.TitleView
+        <com.mpdc4gsr.libunified.app.view.TitleView
             android:id="@+id/title_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

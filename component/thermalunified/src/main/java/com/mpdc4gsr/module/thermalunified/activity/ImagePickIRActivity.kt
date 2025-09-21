@@ -1,9 +1,9 @@
-package com.mpdc4gsr.module.thermalunified.activity
+package com.mpdc4gsr.module.thermal.ir.activity
 
 import android.graphics.Bitmap
-import com.mpdc4gsr.lib.core.ktbase.BasePickImgActivity
-import com.mpdc4gsr.module.thermalunified.R
-import com.mpdc4gsr.module.thermalunified.fragment.IRMonitorThermalFragment
+import com.mpdc4gsr.libunified.app.ktbase.BasePickImgActivity
+import com.mpdc4gsr.module.thermal.ir.R
+import com.mpdc4gsr.module.thermal.ir.fragment.IRMonitorThermalFragment
 
 
 class ImagePickIRActivity : BasePickImgActivity() {

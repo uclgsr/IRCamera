@@ -265,10 +265,10 @@ dependencies {
     implementation(project(":component:thermalunified"))
     implementation(project(":component:gsr-recording"))
     implementation(project(":component:user"))
-    implementation(project(":libapp"))
-    implementation(project(":libir"))
-    implementation(project(":libui"))
-    implementation(project(":BleModule"))
+    implementation(project(":libunified"))
+    implementation(project(":ble-shimmer"))
+    implementation(project(":ble-topdon"))
+    implementation(project(":ble-core"))
     implementation(files("libs/libAC020sdk_USB_IR_1.1.1_2408291439.aar"))
     implementation(files("libs/libirutils_1.2.0_2409241055.aar"))
     implementation(files("libs/libcommon_1.2.0_24052117.aar"))
@@ -286,7 +286,7 @@ dependencies {
         )
     )
 
-    implementation(files("../libir/libs/libusbdualsdk_1.3.4_2406271906_standard.aar"))
+    implementation(files("../libunified/libs/libusbdualsdk_1.3.4_2406271906_standard.aar"))
 
     implementation(libs.jsbridge)
     implementation(libs.fastjson2)

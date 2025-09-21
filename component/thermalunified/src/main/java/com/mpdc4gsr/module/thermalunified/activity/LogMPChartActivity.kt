@@ -1,4 +1,4 @@
-package com.mpdc4gsr.module.thermalunified.activity
+package com.mpdc4gsr.module.thermal.activity
 
 import android.graphics.Color
 import android.util.Log
@@ -9,23 +9,23 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import com.blankj.utilcode.util.SizeUtils
 import com.elvishew.xlog.XLog
-import com.github.mikephil.charting.charts.LineChart
-import com.github.mikephil.charting.components.Legend
-import com.github.mikephil.charting.components.XAxis
-import com.github.mikephil.charting.components.YAxis
-import com.github.mikephil.charting.data.Entry
-import com.github.mikephil.charting.data.LineData
-import com.github.mikephil.charting.data.LineDataSet
-import com.github.mikephil.charting.highlight.Highlight
-import com.github.mikephil.charting.listener.OnChartValueSelectedListener
-import com.mpdc4gsr.lib.core.db.entity.ThermalEntity
-import com.mpdc4gsr.lib.core.ktbase.BaseActivity
-import com.mpdc4gsr.lib.core.tools.ToastTools
-import com.mpdc4gsr.module.thermalunified.R
-import com.mpdc4gsr.module.thermalunified.adapter.SettingTimeAdapter
-import com.mpdc4gsr.module.thermalunified.chart.MyValueFormatter
-import com.mpdc4gsr.module.thermalunified.view.MyMarkerView
-import com.mpdc4gsr.module.thermalunified.viewmodel.LogViewModel
+import com.mpdc4gsr.libunified.ui.charting.charts.LineChart
+import com.mpdc4gsr.libunified.ui.charting.components.Legend
+import com.mpdc4gsr.libunified.ui.charting.components.XAxis
+import com.mpdc4gsr.libunified.ui.charting.components.YAxis
+import com.mpdc4gsr.libunified.ui.charting.data.Entry
+import com.mpdc4gsr.libunified.ui.charting.data.LineData
+import com.mpdc4gsr.libunified.ui.charting.data.LineDataSet
+import com.mpdc4gsr.libunified.ui.charting.highlight.Highlight
+import com.mpdc4gsr.libunified.ui.charting.listener.OnChartValueSelectedListener
+import com.mpdc4gsr.libunified.app.db.entity.ThermalEntity
+import com.mpdc4gsr.libunified.app.ktbase.BaseActivity
+import com.mpdc4gsr.libunified.app.tools.ToastTools
+import com.mpdc4gsr.module.thermal.R
+import com.mpdc4gsr.module.thermal.adapter.SettingTimeAdapter
+import com.mpdc4gsr.module.thermal.chart.MyValueFormatter
+import com.mpdc4gsr.module.thermal.view.MyMarkerView
+import com.mpdc4gsr.module.thermal.viewmodel.LogViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -43,7 +43,7 @@ class LogMPChartActivity : BaseActivity(), OnChartValueSelectedListener {
     override fun initView() {
 
         val toolbar =
-            findViewById<androidx.appcompat.widget.Toolbar>(com.mpdc4gsr.lib.core.R.id.toolbar_lay)
+            findViewById<androidx.appcompat.widget.Toolbar>(com.mpdc4gsr.libunified.R.id.toolbar_lay)
         toolbar?.title = getString(R.string.app_record)
 
         chart = findViewById(R.id.log_chart_time_chart)
@@ -68,8 +68,8 @@ class LogMPChartActivity : BaseActivity(), OnChartValueSelectedListener {
             try {
                 initEntry(it.dataList)
             } catch (e: Exception) {
-                XLog.e("[ph][ph][ph][ph][ph][ph]:${e.message}")
-                ToastTools.showShort("[ph][ph][ph][ph]，[ph][ph][ph][ph][ph]")
+                XLog.e("刷新图表异常:${e.message}")
+                ToastTools.showShort("图表异常，请重新加载")
             }
         }
         clearEntity(true)
@@ -107,7 +107,7 @@ class LogMPChartActivity : BaseActivity(), OnChartValueSelectedListener {
         chart.isDragEnabled = true
         chart.setDrawGridBackground(false)
         chart.description = null
-        chart.setBackgroundResource(com.mpdc4gsr.lib.core.R.color.chart_bg)
+        chart.setBackgroundResource(com.mpdc4gsr.libunified.R.color.chart_bg)
         chart.setScaleEnabled(true)
         chart.setPinchZoom(false)
         chart.isDoubleTapToZoomEnabled = false
@@ -158,14 +158,14 @@ class LogMPChartActivity : BaseActivity(), OnChartValueSelectedListener {
         )
     private val lineChartColors =
         intArrayOf(
-            com.mpdc4gsr.lib.core.R.color.chart_line_max,
-            com.mpdc4gsr.lib.core.R.color.chart_line_min,
-            com.mpdc4gsr.lib.core.R.color.chart_line_center,
+            com.mpdc4gsr.libunified.R.color.chart_line_max,
+            com.mpdc4gsr.libunified.R.color.chart_line_min,
+            com.mpdc4gsr.libunified.R.color.chart_line_center,
         )
     private val textColor by lazy {
         ContextCompat.getColor(
             this,
-            com.mpdc4gsr.lib.core.R.color.chart_text
+            com.mpdc4gsr.libunified.R.color.chart_text
         )
     }
 
@@ -180,7 +180,7 @@ class LogMPChartActivity : BaseActivity(), OnChartValueSelectedListener {
         set.fillDrawable = ContextCompat.getDrawable(this, bgChartColors[index])
         set.axisDependency = YAxis.AxisDependency.LEFT
         set.color = ContextCompat.getColor(this, lineChartColors[index])
-        set.setCircleColor(ContextCompat.getColor(this, com.mpdc4gsr.lib.core.R.color.white))
+        set.setCircleColor(ContextCompat.getColor(this, com.mpdc4gsr.libunified.R.color.white))
 
 
         set.valueTextColor = Color.WHITE
@@ -206,10 +206,10 @@ class LogMPChartActivity : BaseActivity(), OnChartValueSelectedListener {
                 if (lineData != null) {
                     Log.w(
                         "123",
-                        "[ph][ph][ph][ph]:${(data.last().createTime - data.first().createTime) / 1000}",
+                        "时间区间:${(data.last().createTime - data.first().createTime) / 1000}",
                     )
                     val startTime = data[0].createTime
-                    Log.w("123", "[ph][ph][ph][ph][ph][ph]startTime:$startTime")
+                    Log.w("123", "设置初始时间startTime:$startTime")
                     chart.xAxis.valueFormatter =
                         MyValueFormatter(startTime = startTime, type = selectType)
                     XLog.w("chart init startTime:$startTime")
@@ -242,7 +242,7 @@ class LogMPChartActivity : BaseActivity(), OnChartValueSelectedListener {
                                 minDataSet = createSet(1, "line minTemp")
                                 lineData.addDataSet(minDataSet)
                             }
-                            Log.w("123", "[ph][ph][ph][ph]")
+                            Log.w("123", "两条曲线")
                             data.forEach {
                                 val x = (it.createTime - startTime).toFloat()
 

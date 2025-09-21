@@ -1,13 +1,13 @@
-package com.mpdc4gsr.module.thermalunified.activity
+package com.mpdc4gsr.module.thermal.ir.activity
 
 import android.os.Bundle
 import androidx.lifecycle.lifecycleScope
-import com.mpdc4gsr.lib.core.dialog.TipDialog
-import com.mpdc4gsr.lib.core.ktbase.BaseActivity
-import com.mpdc4gsr.module.thermalunified.R
-import com.mpdc4gsr.module.thermalunified.event.CorrectionFinishEvent
-import com.mpdc4gsr.module.thermalunified.fragment.IRCorrectionFragment
-import com.mpdc4gsr.module.thermalunified.view.TimeDownView
+import com.mpdc4gsr.libunified.app.dialog.TipDialog
+import com.mpdc4gsr.libunified.app.ktbase.BaseActivity
+import com.mpdc4gsr.module.thermal.ir.R
+import com.mpdc4gsr.module.thermal.ir.event.CorrectionFinishEvent
+import com.mpdc4gsr.module.thermal.ir.fragment.IRCorrectionFragment
+import com.mpdc4gsr.module.thermal.ir.view.TimeDownView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
@@ -20,14 +20,14 @@ class IRCorrectionFourActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        findViewById<com.mpdc4gsr.lib.core.view.TitleView>(R.id.title_view).setLeftClickListener {
+        findViewById<com.mpdc4gsr.libunified.app.view.TitleView>(R.id.title_view).setLeftClickListener {
             TipDialog.Builder(this)
-                .setTitleMessage(getString(com.mpdc4gsr.lib.core.R.string.app_tip))
-                .setMessage(com.mpdc4gsr.lib.core.R.string.tips_cancel_correction)
-                .setPositiveListener(com.mpdc4gsr.lib.core.R.string.app_yes) {
+                .setTitleMessage(getString(com.mpdc4gsr.libunified.R.string.app_tip))
+                .setMessage(com.mpdc4gsr.libunified.R.string.tips_cancel_correction)
+                .setPositiveListener(com.mpdc4gsr.libunified.R.string.app_yes) {
                     EventBus.getDefault().post(CorrectionFinishEvent())
                     finish()
-                }.setCancelListener(com.mpdc4gsr.lib.core.R.string.app_no) {
+                }.setCancelListener(com.mpdc4gsr.libunified.R.string.app_no) {
                 }
                 .create().show()
         }
@@ -66,8 +66,8 @@ class IRCorrectionFourActivity : BaseActivity() {
                             try {
                                 if (!this@IRCorrectionFourActivity.isFinishing) {
                                     TipDialog.Builder(this@IRCorrectionFourActivity)
-                                        .setMessage(com.mpdc4gsr.lib.core.R.string.correction_complete)
-                                        .setPositiveListener(com.mpdc4gsr.lib.core.R.string.app_confirm) {
+                                        .setMessage(com.mpdc4gsr.libunified.R.string.correction_complete)
+                                        .setPositiveListener(com.mpdc4gsr.libunified.R.string.app_confirm) {
                                             EventBus.getDefault().post(CorrectionFinishEvent())
                                             finish()
                                         }
@@ -88,12 +88,12 @@ class IRCorrectionFourActivity : BaseActivity() {
 
     override fun onBackPressed() {
         TipDialog.Builder(this)
-            .setTitleMessage(getString(com.mpdc4gsr.lib.core.R.string.app_tip))
-            .setMessage(com.mpdc4gsr.lib.core.R.string.tips_cancel_correction)
-            .setPositiveListener(com.mpdc4gsr.lib.core.R.string.app_yes) {
+            .setTitleMessage(getString(com.mpdc4gsr.libunified.R.string.app_tip))
+            .setMessage(com.mpdc4gsr.libunified.R.string.tips_cancel_correction)
+            .setPositiveListener(com.mpdc4gsr.libunified.R.string.app_yes) {
                 EventBus.getDefault().post(CorrectionFinishEvent())
                 super.onBackPressed()
-            }.setCancelListener(com.mpdc4gsr.lib.core.R.string.app_no) {
+            }.setCancelListener(com.mpdc4gsr.libunified.R.string.app_no) {
             }
             .create().show()
     }

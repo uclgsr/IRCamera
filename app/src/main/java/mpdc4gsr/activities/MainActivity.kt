@@ -1,4 +1,4 @@
-package mpdc4gsr.activities
+package mpdc4gsr
 
 
 import android.content.ComponentName
@@ -31,29 +31,29 @@ import com.csl.irCamera.databinding.ActivityMainBinding
 import com.elvishew.xlog.XLog
 import com.example.thermal_lite.activity.IRThermalLiteActivity
 import com.mpdc4gsr.gsr.model.SessionInfo
-import com.mpdc4gsr.lib.core.BaseApplication
-import com.mpdc4gsr.lib.core.bean.event.TS004ResetEvent
-import com.mpdc4gsr.lib.core.bean.event.WinterClickEvent
-import com.mpdc4gsr.lib.core.bean.event.device.DevicePermissionEvent
-import com.mpdc4gsr.lib.core.common.SharedManager
-import com.mpdc4gsr.lib.core.config.AppConfig
-import com.mpdc4gsr.lib.core.config.ExtraKeyConfig
-import com.mpdc4gsr.lib.core.config.RouterConfig
-import com.mpdc4gsr.lib.core.dialog.FirmwareUpDialog
-import com.mpdc4gsr.lib.core.dialog.TipDialog
-import com.mpdc4gsr.lib.core.dialog.TipOtgDialog
-import com.mpdc4gsr.lib.core.ktbase.BaseBindingActivity
-import com.mpdc4gsr.lib.core.lms.LMS
-import com.mpdc4gsr.lib.core.navigation.NavigationManager
-import com.mpdc4gsr.lib.core.repository.GalleryRepository
-import com.mpdc4gsr.lib.core.socket.WebSocketProxy
-import com.mpdc4gsr.lib.core.tools.ConstantLanguages
-import com.mpdc4gsr.lib.core.tools.DeviceTools
-import com.mpdc4gsr.lib.core.utils.CommUtils
-import com.mpdc4gsr.lib.core.viewmodel.VersionViewModel
-import com.mpdc4gsr.module.thermalunified.activity.IRThermalNightActivity
-import com.mpdc4gsr.module.thermalunified.activity.IRThermalPlusActivity
-import com.mpdc4gsr.module.thermalunified.fragment.IRGalleryTabFragment
+import com.mpdc4gsr.libunified.app.BaseApplication
+import com.mpdc4gsr.libunified.app.bean.event.TS004ResetEvent
+import com.mpdc4gsr.libunified.app.bean.event.WinterClickEvent
+import com.mpdc4gsr.libunified.app.bean.event.device.DevicePermissionEvent
+import com.mpdc4gsr.libunified.app.common.SharedManager
+import com.mpdc4gsr.libunified.app.config.AppConfig
+import com.mpdc4gsr.libunified.app.config.ExtraKeyConfig
+import com.mpdc4gsr.libunified.app.config.RouterConfig
+import com.mpdc4gsr.libunified.app.dialog.FirmwareUpDialog
+import com.mpdc4gsr.libunified.app.dialog.TipDialog
+import com.mpdc4gsr.libunified.app.dialog.TipOtgDialog
+import com.mpdc4gsr.libunified.app.ktbase.BaseBindingActivity
+import com.mpdc4gsr.libunified.app.lms.LMS
+import com.mpdc4gsr.libunified.app.navigation.NavigationManager
+import com.mpdc4gsr.libunified.app.repository.GalleryRepository
+import com.mpdc4gsr.libunified.app.socket.WebSocketProxy
+import com.mpdc4gsr.libunified.app.tools.ConstantLanguages
+import com.mpdc4gsr.libunified.app.tools.DeviceTools
+import com.mpdc4gsr.libunified.app.utils.CommUtils
+import com.mpdc4gsr.libunified.app.viewmodel.VersionViewModel
+import com.mpdc4gsr.module.thermal.ir.activity.IRThermalNightActivity
+import com.mpdc4gsr.module.thermal.ir.activity.IRThermalPlusActivity
+import com.mpdc4gsr.module.thermal.ir.fragment.IRGalleryTabFragment
 import com.mpdc4gsr.module.user.fragment.MineFragment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -61,7 +61,7 @@ import kotlinx.coroutines.withContext
 import mpdc4gsr.app.App
 import mpdc4gsr.config.FeatureFlags
 import mpdc4gsr.config.ProtocolVersion
-import mpdc4gsr.lib.core.StructuredLogger
+import mpdc4gsr.core.StructuredLogger
 import mpdc4gsr.network.NetworkClient
 import mpdc4gsr.network.WebSocketClient
 import mpdc4gsr.permissions.PermissionController
@@ -282,7 +282,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
 
         versionViewModel.updateLiveData.observe(this) {
             FirmwareUpDialog(this).apply {
-                titleStr = getString(com.mpdc4gsr.lib.core.R.string.update_new_version)
+                titleStr = getString(com.mpdc4gsr.libunified.R.string.update_new_version)
                 sizeStr = it.versionNo
                 contentStr = it.description
                 isShowCancel = !it.isForcedUpgrade

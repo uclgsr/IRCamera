@@ -1,4 +1,4 @@
-package com.mpdc4gsr.module.thermalunified.activity
+package com.mpdc4gsr.module.thermal.activity
 
 import android.net.Uri
 import android.os.Build
@@ -8,10 +8,10 @@ import android.widget.VideoView
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import com.blankj.utilcode.util.BarUtils
-import com.mpdc4gsr.lib.core.ktbase.BaseActivity
-import com.mpdc4gsr.module.thermalunified.R
+import com.mpdc4gsr.libunified.app.ktbase.BaseActivity
+import com.mpdc4gsr.module.thermal.R
 import java.io.File
-import com.mpdc4gsr.lib.core.R as LibR
+import com.mpdc4gsr.libunified.app.R as LibR
 
 
 class VideoActivity : BaseActivity() {
@@ -26,7 +26,7 @@ class VideoActivity : BaseActivity() {
     override fun initView() {
 
         val toolbar =
-            findViewById<androidx.appcompat.widget.Toolbar>(com.mpdc4gsr.lib.core.R.id.toolbar_lay)
+            findViewById<androidx.appcompat.widget.Toolbar>(com.mpdc4gsr.libunified.R.id.toolbar_lay)
         toolbar?.title = getString(R.string.video)
 
         BarUtils.setNavBarColor(this, ContextCompat.getColor(this, LibR.color.black))
@@ -40,9 +40,9 @@ class VideoActivity : BaseActivity() {
     }
 
     private fun previewVideo(path: String) {
-        Log.w("123", "[ph][ph][ph][ph]:$path")
+        Log.w("123", "打开文件:$path")
         val file = File(path.replace("//", "/"))
-        Log.i("123", "[ph][ph][ph][ph]file:$file")
+        Log.i("123", "打开文件file:$file")
         val uri: Uri =
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 val authority = "$packageName.fileprovider"
@@ -50,7 +50,7 @@ class VideoActivity : BaseActivity() {
             } else {
                 Uri.fromFile(file)
             }
-        Log.w("123", "[ph][ph][ph][ph]uri:$uri")
+        Log.w("123", "打开文件uri:$uri")
         val videoView = findViewById<VideoView>(R.id.video_play)
         videoView.setVideoURI(uri)
         videoView.setMediaController(MediaController(this))

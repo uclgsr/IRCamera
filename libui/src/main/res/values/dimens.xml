@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <dimen name="_65dp">65dp</dimen>
-    <dimen name="app_font_13">13sp</dimen>
-    <dimen name="app_font_15">15sp</dimen>
-    <dimen name="app_small_font">12sp</dimen>
-    <dimen name="app_btn_big_height">48dp</dimen>
-</resources>

@@ -1,4 +1,4 @@
-package com.mpdc4gsr.module.thermalunified.report.activity
+package com.mpdc4gsr.module.thermal.ir.report.activity
 
 import android.content.Intent
 import android.text.TextUtils
@@ -12,33 +12,33 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import com.blankj.utilcode.util.NetworkUtils
 import com.blankj.utilcode.util.ToastUtils
-import com.mpdc4gsr.lib.core.bean.event.ReportCreateEvent
-import com.mpdc4gsr.lib.core.comm.PDFHelp
-import com.mpdc4gsr.lib.core.config.ExtraKeyConfig
-import com.mpdc4gsr.lib.core.config.FileConfig
-import com.mpdc4gsr.lib.core.config.RouterConfig
-import com.mpdc4gsr.lib.core.dialog.TipDialog
-import com.mpdc4gsr.lib.core.ktbase.BaseViewModelActivity
-import com.mpdc4gsr.lib.core.lms.LMS
-import com.mpdc4gsr.lib.core.lms.utils.StringUtils
-import com.mpdc4gsr.lib.core.lms.weiget.TToast
-import com.mpdc4gsr.lib.core.navigation.NavigationManager
-import com.mpdc4gsr.lib.core.socket.WebSocketProxy
-import com.mpdc4gsr.lib.core.tools.FileTools
-import com.mpdc4gsr.lib.core.tools.GlideLoader
-import com.mpdc4gsr.lib.core.utils.NetWorkUtils
-import com.mpdc4gsr.lib.core.view.TitleView
-import com.mpdc4gsr.module.thermalunified.R
-import com.mpdc4gsr.module.thermalunified.report.bean.ReportBean
-import com.mpdc4gsr.module.thermalunified.report.view.ReportIRShowView
-import com.mpdc4gsr.module.thermalunified.report.view.ReportInfoView
-import com.mpdc4gsr.module.thermalunified.report.view.WatermarkView
-import com.mpdc4gsr.module.thermalunified.report.viewmodel.UpReportViewModel
+import com.mpdc4gsr.libunified.app.bean.event.ReportCreateEvent
+import com.mpdc4gsr.libunified.app.comm.PDFHelp
+import com.mpdc4gsr.libunified.app.config.ExtraKeyConfig
+import com.mpdc4gsr.libunified.app.config.FileConfig
+import com.mpdc4gsr.libunified.app.config.RouterConfig
+import com.mpdc4gsr.libunified.app.dialog.TipDialog
+import com.mpdc4gsr.libunified.app.ktbase.BaseViewModelActivity
+import com.mpdc4gsr.libunified.app.lms.LMS
+import com.mpdc4gsr.libunified.app.lms.utils.StringUtils
+import com.mpdc4gsr.libunified.app.lms.weiget.TToast
+import com.mpdc4gsr.libunified.app.navigation.NavigationManager
+import com.mpdc4gsr.libunified.app.socket.WebSocketProxy
+import com.mpdc4gsr.libunified.app.tools.FileTools
+import com.mpdc4gsr.libunified.app.tools.GlideLoader
+import com.mpdc4gsr.libunified.app.utils.NetWorkUtils
+import com.mpdc4gsr.libunified.app.view.TitleView
+import com.mpdc4gsr.module.thermal.ir.R
+import com.mpdc4gsr.module.thermal.ir.report.bean.ReportBean
+import com.mpdc4gsr.module.thermal.ir.report.view.ReportIRShowView
+import com.mpdc4gsr.module.thermal.ir.report.view.ReportInfoView
+import com.mpdc4gsr.module.thermal.ir.report.view.WatermarkView
+import com.mpdc4gsr.module.thermal.ir.report.viewmodel.UpReportViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import java.io.File
-import com.mpdc4gsr.lib.core.R as LibCoreR
+import com.mpdc4gsr.libunified.app.R as LibCoreR
 import com.mpdc4gsr.lib.ui.R as UiR
 
 
@@ -146,7 +146,7 @@ class ReportPreviewSecondActivity : BaseViewModelActivity<UpReportViewModel>(),
                     .navigation(this)
                 finish()
             } else {
-                ToastUtils.showShort("Error: " + it.code.toString())
+                ToastUtils.showShort(StringUtils.getResString(this, it.code.toString()))
             }
         }
         viewModel.exceptionLD.observe(this) {

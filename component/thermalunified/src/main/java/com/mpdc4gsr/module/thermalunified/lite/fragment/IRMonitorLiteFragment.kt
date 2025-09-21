@@ -1,4 +1,4 @@
-package com.mpdc4gsr.module.thermalunified.lite.fragment
+package com.example.thermal_lite.fragment
 
 import android.app.ProgressDialog
 import android.graphics.Bitmap
@@ -25,33 +25,33 @@ import com.energy.iruvc.utils.CommonParams
 import com.energy.iruvc.utils.Line
 import com.energy.iruvc.utils.SynchronizedBitmap
 import com.energy.iruvccamera.usb.USBMonitor
-import com.mpdc4gsr.module.thermalunified.lite.R
-import com.mpdc4gsr.module.thermalunified.lite.activity.IRMonitorLiteActivity
-import com.mpdc4gsr.module.thermalunified.lite.camera.CameraPreviewManager
-import com.mpdc4gsr.module.thermalunified.lite.camera.DeviceControlManager
-import com.mpdc4gsr.module.thermalunified.lite.camera.DeviceIrcmdControlManager
-import com.mpdc4gsr.module.thermalunified.lite.camera.OnUSBConnectListener
-import com.mpdc4gsr.module.thermalunified.lite.camera.USBMonitorManager
-import com.mpdc4gsr.module.thermalunified.lite.ui.activity.IrDisplayActivity.HANDLE_INIT_FAIL
-import com.mpdc4gsr.module.thermalunified.lite.ui.activity.IrDisplayActivity.HANDLE_SHOW_FPS
-import com.mpdc4gsr.module.thermalunified.lite.ui.activity.IrDisplayActivity.HANDLE_SHOW_SUN_PROTECT_FLAG
-import com.mpdc4gsr.module.thermalunified.lite.ui.activity.IrDisplayActivity.HANDLE_SHOW_TOAST
-import com.mpdc4gsr.module.thermalunified.lite.ui.activity.IrDisplayActivity.HIDE_LOADING
-import com.mpdc4gsr.module.thermalunified.lite.ui.activity.IrDisplayActivity.PREVIEW_FAIL
-import com.mpdc4gsr.module.thermalunified.lite.ui.activity.IrDisplayActivity.SHOW_LOADING
-import com.mpdc4gsr.module.thermalunified.lite.util.IRTool
-import com.infisense.usbir.view.ITsTempListener
-import com.infisense.usbir.view.TemperatureView
-import com.infisense.usbir.view.TemperatureView.REGION_MODE_LINE
-import com.infisense.usbir.view.TemperatureView.REGION_MODE_POINT
-import com.infisense.usbir.view.TemperatureView.REGION_MODE_RECTANGLE
-import com.mpdc4gsr.lib.core.BaseApplication
-import com.mpdc4gsr.lib.core.common.SaveSettingUtil
-import com.mpdc4gsr.lib.core.ktbase.BaseFragment
-import com.mpdc4gsr.module.thermalunified.bean.DataBean
-import com.mpdc4gsr.module.thermalunified.bean.SelectPositionBean
-import com.mpdc4gsr.module.thermalunified.event.ThermalActionEvent
-import com.mpdc4gsr.module.thermalunified.repository.ConfigRepository
+import com.example.thermal_lite.R
+import com.example.thermal_lite.activity.IRMonitorLiteActivity
+import com.example.thermal_lite.camera.CameraPreviewManager
+import com.example.thermal_lite.camera.DeviceControlManager
+import com.example.thermal_lite.camera.DeviceIrcmdControlManager
+import com.example.thermal_lite.camera.OnUSBConnectListener
+import com.example.thermal_lite.camera.USBMonitorManager
+import com.example.thermal_lite.ui.activity.IrDisplayActivity.HANDLE_INIT_FAIL
+import com.example.thermal_lite.ui.activity.IrDisplayActivity.HANDLE_SHOW_FPS
+import com.example.thermal_lite.ui.activity.IrDisplayActivity.HANDLE_SHOW_SUN_PROTECT_FLAG
+import com.example.thermal_lite.ui.activity.IrDisplayActivity.HANDLE_SHOW_TOAST
+import com.example.thermal_lite.ui.activity.IrDisplayActivity.HIDE_LOADING
+import com.example.thermal_lite.ui.activity.IrDisplayActivity.PREVIEW_FAIL
+import com.example.thermal_lite.ui.activity.IrDisplayActivity.SHOW_LOADING
+import com.example.thermal_lite.util.IRTool
+import com.mpdc4gsr.libunified.ir.view.ITsTempListener
+import com.mpdc4gsr.libunified.ir.view.TemperatureView
+import com.mpdc4gsr.libunified.ir.view.TemperatureView.REGION_MODE_LINE
+import com.mpdc4gsr.libunified.ir.view.TemperatureView.REGION_MODE_POINT
+import com.mpdc4gsr.libunified.ir.view.TemperatureView.REGION_MODE_RECTANGLE
+import com.mpdc4gsr.libunified.app.BaseApplication
+import com.mpdc4gsr.libunified.app.common.SaveSettingUtil
+import com.mpdc4gsr.libunified.app.ktbase.BaseFragment
+import com.mpdc4gsr.module.thermal.ir.bean.DataBean
+import com.mpdc4gsr.module.thermal.ir.bean.SelectPositionBean
+import com.mpdc4gsr.module.thermal.ir.event.ThermalActionEvent
+import com.mpdc4gsr.module.thermal.ir.repository.ConfigRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -65,7 +65,7 @@ import org.greenrobot.eventbus.ThreadMode
 class IRMonitorLiteFragment : BaseFragment(), ITsTempListener {
 
     lateinit var temperatureView: com.infisense.usbir.view.TemperatureView
-    protected lateinit var cameraView: com.mpdc4gsr.lib.ui.widget.LiteSurfaceView
+    protected lateinit var cameraView: com.topdon.lib.ui.widget.LiteSurfaceView
 
     private var configJob: Job? = null
     protected var isConfigWait = true
@@ -525,7 +525,7 @@ class IRMonitorLiteFragment : BaseFragment(), ITsTempListener {
             DeviceControlManager.getInstance().release()
             CameraPreviewManager.getInstance().releaseSource()
         } catch (e: Exception) {
-            XLog.e("$TAG:lite[ph][ph][ph][ph]--${e.message}")
+            XLog.e("$TAG:lite销毁异常--${e.message}")
         }
     }
 
@@ -547,7 +547,7 @@ class IRMonitorLiteFragment : BaseFragment(), ITsTempListener {
                 CameraPreviewManager.getInstance().releaseSource()
             }
         } catch (e: Exception) {
-            XLog.e("$TAG:lite[ph][ph][ph][ph]--${e.message}")
+            XLog.e("$TAG:lite销毁异常--${e.message}")
         }
     }
 
@@ -578,7 +578,7 @@ class IRMonitorLiteFragment : BaseFragment(), ITsTempListener {
                         DeviceIrcmdControlManager.getInstance().getIrcmdEngine()
                             ?.basicGainGet(basicGainGetValue)
                 } catch (e: Exception) {
-                    XLog.e("[ph][ph][ph][ph][ph][ph]")
+                    XLog.e("增益获取失败")
                 }
                 basicGainGetTime = System.currentTimeMillis()
             }
@@ -611,7 +611,7 @@ class IRMonitorLiteFragment : BaseFragment(), ITsTempListener {
                         "distance = " + params_array[4] + " hum = " + params_array[5] + " basicGain = " + basicGainGetValue[0],
             )
         } catch (e: Exception) {
-            XLog.e("$TAG--[ph][ph][ph][ph][ph][ph]：${e.message}")
+            XLog.e("$TAG--温度修正异常：${e.message}")
         } finally {
             return tempNew ?: 0f
         }

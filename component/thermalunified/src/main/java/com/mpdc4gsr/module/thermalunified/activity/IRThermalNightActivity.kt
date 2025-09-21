@@ -49,78 +49,78 @@ import com.example.suplib.wrapper.SupHelp
 import com.hjq.permissions.OnPermissionCallback
 import com.hjq.permissions.Permission
 import com.hjq.permissions.XXPermissions
-import com.infisense.usbir.camera.IRUVCTC
-import com.infisense.usbir.config.MsgCode
-import com.infisense.usbir.event.IRMsgEvent
-import com.infisense.usbir.event.PreviewComplete
-import com.infisense.usbir.extension.setAutoShutter
-import com.infisense.usbir.extension.setContrast
-import com.infisense.usbir.extension.setMirror
-import com.infisense.usbir.extension.setPropDdeLevel
-import com.infisense.usbir.thread.ImageThreadTC
-import com.infisense.usbir.utils.OpencvTools
-import com.infisense.usbir.utils.USBMonitorCallback
-import com.infisense.usbir.view.DragViewUtil
-import com.infisense.usbir.view.ITsTempListener
-import com.infisense.usbir.view.TemperatureView.GONE
-import com.infisense.usbir.view.TemperatureView.REGION_MODE_CENTER
-import com.infisense.usbir.view.TemperatureView.REGION_MODE_CLEAN
-import com.infisense.usbir.view.TemperatureView.REGION_MODE_LINE
-import com.infisense.usbir.view.TemperatureView.REGION_MODE_POINT
-import com.infisense.usbir.view.TemperatureView.REGION_MODE_RECTANGLE
-import com.infisense.usbir.view.TemperatureView.REGION_MODE_RESET
-import com.infisense.usbir.view.TemperatureView.REGION_NODE_TREND
-import com.infisense.usbir.view.TemperatureView.TempListener
-import com.infisense.usbir.view.TemperatureView.VISIBLE
+import com.mpdc4gsr.libunified.ir.camera.IRUVCTC
+import com.mpdc4gsr.libunified.ir.config.MsgCode
+import com.mpdc4gsr.libunified.ir.event.IRMsgEvent
+import com.mpdc4gsr.libunified.ir.event.PreviewComplete
+import com.mpdc4gsr.libunified.ir.extension.setAutoShutter
+import com.mpdc4gsr.libunified.ir.extension.setContrast
+import com.mpdc4gsr.libunified.ir.extension.setMirror
+import com.mpdc4gsr.libunified.ir.extension.setPropDdeLevel
+import com.mpdc4gsr.libunified.ir.thread.ImageThreadTC
+import com.mpdc4gsr.libunified.ir.utils.OpencvTools
+import com.mpdc4gsr.libunified.ir.utils.USBMonitorCallback
+import com.mpdc4gsr.libunified.ir.view.DragViewUtil
+import com.mpdc4gsr.libunified.ir.view.ITsTempListener
+import com.mpdc4gsr.libunified.ir.view.TemperatureView.GONE
+import com.mpdc4gsr.libunified.ir.view.TemperatureView.REGION_MODE_CENTER
+import com.mpdc4gsr.libunified.ir.view.TemperatureView.REGION_MODE_CLEAN
+import com.mpdc4gsr.libunified.ir.view.TemperatureView.REGION_MODE_LINE
+import com.mpdc4gsr.libunified.ir.view.TemperatureView.REGION_MODE_POINT
+import com.mpdc4gsr.libunified.ir.view.TemperatureView.REGION_MODE_RECTANGLE
+import com.mpdc4gsr.libunified.ir.view.TemperatureView.REGION_MODE_RESET
+import com.mpdc4gsr.libunified.ir.view.TemperatureView.REGION_NODE_TREND
+import com.mpdc4gsr.libunified.ir.view.TemperatureView.TempListener
+import com.mpdc4gsr.libunified.ir.view.TemperatureView.VISIBLE
 import com.kylecorry.andromeda.core.math.DecimalFormatter
 import com.kylecorry.andromeda.sense.compass.ICompass
-import com.mpdc4gsr.lib.core.BaseApplication
-import com.mpdc4gsr.lib.core.activity.PseudoSetActivity
-import com.mpdc4gsr.lib.core.bean.AlarmBean
-import com.mpdc4gsr.lib.core.bean.CameraItemBean
-import com.mpdc4gsr.lib.core.bean.CameraItemBean.Companion.DELAY_TIME_0
-import com.mpdc4gsr.lib.core.bean.CustomPseudoBean
-import com.mpdc4gsr.lib.core.bean.ObserveBean
-import com.mpdc4gsr.lib.core.bean.event.device.DeviceCameraEvent
-import com.mpdc4gsr.lib.core.comm.AlarmHelp
-import com.mpdc4gsr.lib.core.comm.dialog.ColorPickDialog
-import com.mpdc4gsr.lib.core.comm.dialog.TempAlarmSetDialog
-import com.mpdc4gsr.lib.core.common.ProductType.PRODUCT_NAME_TC
-import com.mpdc4gsr.lib.core.common.ProductType.PRODUCT_NAME_TCP
-import com.mpdc4gsr.lib.core.common.ProductType.PRODUCT_NAME_TS
-import com.mpdc4gsr.lib.core.common.SaveSettingUtil
-import com.mpdc4gsr.lib.core.common.SharedManager
-import com.mpdc4gsr.lib.core.common.SharedManager.getTemperature
-import com.mpdc4gsr.lib.core.config.DeviceConfig
-import com.mpdc4gsr.lib.core.config.ExtraKeyConfig
-import com.mpdc4gsr.lib.core.config.RouterConfig
-import com.mpdc4gsr.lib.core.dialog.EmissivityTipPopup
-import com.mpdc4gsr.lib.core.dialog.NotTipsSelectDialog
-import com.mpdc4gsr.lib.core.dialog.TipDialog
-import com.mpdc4gsr.lib.core.dialog.TipEmissivityDialog
-import com.mpdc4gsr.lib.core.dialog.TipObserveDialog
-import com.mpdc4gsr.lib.core.dialog.TipShutterDialog
-import com.mpdc4gsr.lib.core.dialog.TipTargetColorDialog
-import com.mpdc4gsr.lib.core.menu.constant.FenceType
-import com.mpdc4gsr.lib.core.menu.constant.SettingType
-import com.mpdc4gsr.lib.core.menu.constant.TargetType
-import com.mpdc4gsr.lib.core.menu.constant.TempPointType
-import com.mpdc4gsr.lib.core.menu.constant.TwoLightType
-import com.mpdc4gsr.lib.core.navigation.NavigationManager
-import com.mpdc4gsr.lib.core.repository.GalleryRepository
-import com.mpdc4gsr.lib.core.tools.CheckDoubleClick
-import com.mpdc4gsr.lib.core.tools.DeviceTools
-import com.mpdc4gsr.lib.core.tools.NumberTools
-import com.mpdc4gsr.lib.core.tools.ScreenTool
-import com.mpdc4gsr.lib.core.tools.SpanBuilder
-import com.mpdc4gsr.lib.core.tools.TimeTool
-import com.mpdc4gsr.lib.core.tools.ToastTools
-import com.mpdc4gsr.lib.core.tools.UnitTools
-import com.mpdc4gsr.lib.core.utils.CommUtils
-import com.mpdc4gsr.lib.core.utils.Constants
-import com.mpdc4gsr.lib.core.utils.ImageUtils
-import com.mpdc4gsr.lib.core.utils.ScreenUtil
-import com.mpdc4gsr.lib.core.view.MainTitleView
+import com.mpdc4gsr.libunified.app.BaseApplication
+import com.mpdc4gsr.libunified.app.activity.PseudoSetActivity
+import com.mpdc4gsr.libunified.app.bean.AlarmBean
+import com.mpdc4gsr.libunified.app.bean.CameraItemBean
+import com.mpdc4gsr.libunified.app.bean.CameraItemBean.Companion.DELAY_TIME_0
+import com.mpdc4gsr.libunified.app.bean.CustomPseudoBean
+import com.mpdc4gsr.libunified.app.bean.ObserveBean
+import com.mpdc4gsr.libunified.app.bean.event.device.DeviceCameraEvent
+import com.mpdc4gsr.libunified.app.comm.AlarmHelp
+import com.mpdc4gsr.libunified.app.comm.dialog.ColorPickDialog
+import com.mpdc4gsr.libunified.app.comm.dialog.TempAlarmSetDialog
+import com.mpdc4gsr.libunified.app.common.ProductType.PRODUCT_NAME_TC
+import com.mpdc4gsr.libunified.app.common.ProductType.PRODUCT_NAME_TCP
+import com.mpdc4gsr.libunified.app.common.ProductType.PRODUCT_NAME_TS
+import com.mpdc4gsr.libunified.app.common.SaveSettingUtil
+import com.mpdc4gsr.libunified.app.common.SharedManager
+import com.mpdc4gsr.libunified.app.common.SharedManager.getTemperature
+import com.mpdc4gsr.libunified.app.config.DeviceConfig
+import com.mpdc4gsr.libunified.app.config.ExtraKeyConfig
+import com.mpdc4gsr.libunified.app.config.RouterConfig
+import com.mpdc4gsr.libunified.app.dialog.EmissivityTipPopup
+import com.mpdc4gsr.libunified.app.dialog.NotTipsSelectDialog
+import com.mpdc4gsr.libunified.app.dialog.TipDialog
+import com.mpdc4gsr.libunified.app.dialog.TipEmissivityDialog
+import com.mpdc4gsr.libunified.app.dialog.TipObserveDialog
+import com.mpdc4gsr.libunified.app.dialog.TipShutterDialog
+import com.mpdc4gsr.libunified.app.dialog.TipTargetColorDialog
+import com.mpdc4gsr.libunified.app.menu.constant.FenceType
+import com.mpdc4gsr.libunified.app.menu.constant.SettingType
+import com.mpdc4gsr.libunified.app.menu.constant.TargetType
+import com.mpdc4gsr.libunified.app.menu.constant.TempPointType
+import com.mpdc4gsr.libunified.app.menu.constant.TwoLightType
+import com.mpdc4gsr.libunified.app.navigation.NavigationManager
+import com.mpdc4gsr.libunified.app.repository.GalleryRepository
+import com.mpdc4gsr.libunified.app.tools.CheckDoubleClick
+import com.mpdc4gsr.libunified.app.tools.DeviceTools
+import com.mpdc4gsr.libunified.app.tools.NumberTools
+import com.mpdc4gsr.libunified.app.tools.ScreenTool
+import com.mpdc4gsr.libunified.app.tools.SpanBuilder
+import com.mpdc4gsr.libunified.app.tools.TimeTool
+import com.mpdc4gsr.libunified.app.tools.ToastTools
+import com.mpdc4gsr.libunified.app.tools.UnitTools
+import com.mpdc4gsr.libunified.app.utils.CommUtils
+import com.mpdc4gsr.libunified.app.utils.Constants
+import com.mpdc4gsr.libunified.app.utils.ImageUtils
+import com.mpdc4gsr.libunified.app.utils.ScreenUtil
+import com.mpdc4gsr.libunified.app.view.MainTitleView
 import com.mpdc4gsr.lib.ui.dialog.ThermalInputDialog
 import com.mpdc4gsr.lib.ui.dialog.TipGuideDialog
 import com.mpdc4gsr.lib.ui.dialog.TipPreviewDialog
@@ -155,7 +155,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import kotlin.math.roundToInt
-import com.mpdc4gsr.lib.core.R as LibcoreR
+import com.mpdc4gsr.libunified.app.R as LibcoreR
 
 
 open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
@@ -235,7 +235,7 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
     private lateinit var spaceChart: View
     private lateinit var clTrendOpen: ConstraintLayout
     private lateinit var llTrendClose: LinearLayout
-    private lateinit var viewMenuFirst: com.mpdc4gsr.lib.core.menu.MenuFirstTabView
+    private lateinit var viewMenuFirst: com.mpdc4gsr.libunified.app.menu.MenuFirstTabView
     private lateinit var tvTempContent: TextView
 
     private var hasCompass = true
@@ -267,7 +267,7 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
     protected var isOpenAmplify = SaveSettingUtil.isOpenAmplify
 
     private val titleView by lazy { findViewById<MainTitleView>(R.id.title_view) }
-    protected val thermalRecyclerNight by lazy { findViewById<com.mpdc4gsr.lib.core.menu.MenuSecondView>(R.id.thermal_recycler_night) }
+    protected val thermalRecyclerNight by lazy { findViewById<com.mpdc4gsr.libunified.app.menu.MenuSecondView>(R.id.thermal_recycler_night) }
     private val thermalLay by lazy { findViewById<ConstraintLayout>(R.id.thermal_lay) }
     protected val tvTypeInd by lazy { findViewById<TextView>(R.id.tv_type_ind) }
 
@@ -277,7 +277,7 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
     private val popTimeLay by lazy { findViewById<View>(R.id.pop_time_lay) }
     private val popTimeText by lazy { findViewById<TextView>(R.id.pop_time_text) }
     protected val layCarDetectPrompt by lazy { findViewById<View>(R.id.lay_car_detect_prompt) }
-    protected val temp_bg by lazy { findViewById<com.mpdc4gsr.lib.core.comm.view.TempLayout>(R.id.temp_bg) }
+    protected val temp_bg by lazy { findViewById<com.mpdc4gsr.libunified.app.comm.view.TempLayout>(R.id.temp_bg) }
     protected val cl_seek_bar by lazy {
         findViewById<com.mpdc4gsr.lib.ui.widget.BitmapConstraintLayout>(
             R.id.cl_seek_bar

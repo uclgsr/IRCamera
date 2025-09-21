@@ -10,7 +10,7 @@ public class MobclickAgent {
     public static void onEvent(Context context, String eventId) {
         // Stub implementation - does nothing
     }
-    
+
     public static void onEvent(Context context, String eventId, String label) {
         // Stub implementation - does nothing
     }

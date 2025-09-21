@@ -1,15 +1,15 @@
-package com.mpdc4gsr.module.thermalunified.viewmodel
+package com.mpdc4gsr.module.thermal.ir.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.mpdc4gsr.lib.core.bean.GalleryBean
-import com.mpdc4gsr.lib.core.bean.GalleryTitle
-import com.mpdc4gsr.lib.core.config.FileConfig
-import com.mpdc4gsr.lib.core.ktbase.BaseViewModel
-import com.mpdc4gsr.lib.core.repository.GalleryRepository
-import com.mpdc4gsr.lib.core.repository.TS004Repository
-import com.mpdc4gsr.lib.core.tools.TimeTool
-import com.mpdc4gsr.module.thermalunified.utils.WriteTools
+import com.mpdc4gsr.libunified.app.bean.GalleryBean
+import com.mpdc4gsr.libunified.app.bean.GalleryTitle
+import com.mpdc4gsr.libunified.app.config.FileConfig
+import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
+import com.mpdc4gsr.libunified.app.repository.GalleryRepository
+import com.mpdc4gsr.libunified.app.repository.TS004Repository
+import com.mpdc4gsr.libunified.app.tools.TimeTool
+import com.mpdc4gsr.module.thermal.ir.utils.WriteTools
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.File

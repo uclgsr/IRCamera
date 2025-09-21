@@ -1,4 +1,4 @@
-package com.mpdc4gsr.module.thermalunified.lite.util
+package com.example.thermal_lite.util
 
 import android.util.Log
 import com.elvishew.xlog.XLog
@@ -6,9 +6,9 @@ import com.energy.ac020library.bean.CommonParams
 import com.energy.ac020library.bean.IrcmdError
 import com.energy.irutilslibrary.LibIRTempAC020
 import com.energy.irutilslibrary.bean.GainStatus
-import com.mpdc4gsr.module.thermalunified.lite.camera.CameraPreviewManager
-import com.mpdc4gsr.module.thermalunified.lite.camera.DeviceIrcmdControlManager
-import com.mpdc4gsr.lib.core.bean.CameraItemBean
+import com.example.thermal_lite.camera.CameraPreviewManager
+import com.example.thermal_lite.camera.DeviceIrcmdControlManager
+import com.mpdc4gsr.libunified.app.bean.CameraItemBean
 import kotlinx.coroutines.delay
 
 
