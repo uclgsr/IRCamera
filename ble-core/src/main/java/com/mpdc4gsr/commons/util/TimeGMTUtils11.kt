@@ -1,6 +1,6 @@
 package com.mpdc4gsr.commons.util
 
-import com.mpdc4gsr.lib.core.sdk.utils.LanguageUtil
+import com.mpdc4gsr.libunified.app.sdk.utils.LanguageUtil
 
 object TimeGMTUtils {
     private fun isDaylight(zone: java.util.TimeZone, time: kotlin.String): kotlin.Boolean {

@@ -1,7 +1,7 @@
 package com.example.connectlisten;
 
 
-import com.mpdc4gsr.lib.core.so.algorithm;
+import com.mpdc4gsr.libunified.app.so.algorithm;
 
 public class JNITest {
     static {

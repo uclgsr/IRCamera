@@ -235,7 +235,7 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
     private lateinit var spaceChart: View
     private lateinit var clTrendOpen: ConstraintLayout
     private lateinit var llTrendClose: LinearLayout
-    private lateinit var viewMenuFirst: com.mpdc4gsr.lib.core.menu.MenuFirstTabView
+    private lateinit var viewMenuFirst: com.mpdc4gsr.libunified.app.menu.MenuFirstTabView
     private lateinit var tvTempContent: TextView
 
     private var hasCompass = true
@@ -267,7 +267,7 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
     protected var isOpenAmplify = SaveSettingUtil.isOpenAmplify
 
     private val titleView by lazy { findViewById<MainTitleView>(R.id.title_view) }
-    protected val thermalRecyclerNight by lazy { findViewById<com.mpdc4gsr.lib.core.menu.MenuSecondView>(R.id.thermal_recycler_night) }
+    protected val thermalRecyclerNight by lazy { findViewById<com.mpdc4gsr.libunified.app.menu.MenuSecondView>(R.id.thermal_recycler_night) }
     private val thermalLay by lazy { findViewById<ConstraintLayout>(R.id.thermal_lay) }
     protected val tvTypeInd by lazy { findViewById<TextView>(R.id.tv_type_ind) }
 
@@ -277,7 +277,7 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
     private val popTimeLay by lazy { findViewById<View>(R.id.pop_time_lay) }
     private val popTimeText by lazy { findViewById<TextView>(R.id.pop_time_text) }
     protected val layCarDetectPrompt by lazy { findViewById<View>(R.id.lay_car_detect_prompt) }
-    protected val temp_bg by lazy { findViewById<com.mpdc4gsr.lib.core.comm.view.TempLayout>(R.id.temp_bg) }
+    protected val temp_bg by lazy { findViewById<com.mpdc4gsr.libunified.app.comm.view.TempLayout>(R.id.temp_bg) }
     protected val cl_seek_bar by lazy {
         findViewById<com.mpdc4gsr.lib.ui.widget.BitmapConstraintLayout>(
             R.id.cl_seek_bar

@@ -20,7 +20,7 @@ class IRCorrectionFourActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        findViewById<com.mpdc4gsr.lib.core.view.TitleView>(R.id.title_view).setLeftClickListener {
+        findViewById<com.mpdc4gsr.libunified.app.view.TitleView>(R.id.title_view).setLeftClickListener {
             TipDialog.Builder(this)
                 .setTitleMessage(getString(com.mpdc4gsr.libunified.R.string.app_tip))
                 .setMessage(com.mpdc4gsr.libunified.R.string.tips_cancel_correction)

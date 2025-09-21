@@ -421,7 +421,7 @@ abstract class BaseIRPlushActivity : IRThermalNightActivity(), OnUSBConnectListe
             dualView?.isOpenAmplify = isOpenAmplify
 
             val titleView =
-                findViewById<com.mpdc4gsr.lib.core.view.TitleView>(com.mpdc4gsr.libunified.R.id.title_view)
+                findViewById<com.mpdc4gsr.libunified.app.view.TitleView>(com.mpdc4gsr.libunified.R.id.title_view)
             titleView?.setRight2Drawable(if (isOpenAmplify) R.drawable.svg_tisr_on else R.drawable.svg_tisr_off)
             SaveSettingUtil.isOpenAmplify = isOpenAmplify
             if (isOpenAmplify) {
@@ -435,7 +435,7 @@ abstract class BaseIRPlushActivity : IRThermalNightActivity(), OnUSBConnectListe
     override fun initAmplify(show: Boolean) {
         lifecycleScope.launch {
             val titleView =
-                findViewById<com.mpdc4gsr.lib.core.view.TitleView>(com.mpdc4gsr.libunified.R.id.title_view)
+                findViewById<com.mpdc4gsr.libunified.app.view.TitleView>(com.mpdc4gsr.libunified.R.id.title_view)
             titleView?.setRight2Drawable(if (isOpenAmplify) R.drawable.svg_tisr_on else R.drawable.svg_tisr_off)
             withContext(Dispatchers.IO) {
                 if (isOpenAmplify) {

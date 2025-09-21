@@ -43,7 +43,7 @@ class ReportPickImgActivity : BaseActivity(), View.OnClickListener {
 
     private val adapter = GalleryAdapter()
 
-    private lateinit var titleView: com.mpdc4gsr.lib.core.view.TitleView
+    private lateinit var titleView: com.mpdc4gsr.libunified.app.view.TitleView
     private lateinit var clShare: androidx.constraintlayout.widget.ConstraintLayout
     private lateinit var clDelete: androidx.constraintlayout.widget.ConstraintLayout
     private lateinit var groupBottom: androidx.constraintlayout.widget.Group

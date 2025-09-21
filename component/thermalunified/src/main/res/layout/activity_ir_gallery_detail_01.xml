@@ -6,7 +6,7 @@
     android:background="#16131e"
     android:fitsSystemWindows="true">
 
-    <com.mpdc4gsr.lib.core.view.TitleView
+    <com.mpdc4gsr.libunified.app.view.TitleView
         android:id="@+id/title_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

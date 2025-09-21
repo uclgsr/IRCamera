@@ -2,7 +2,7 @@ package com.mpdc4gsr.commons.util
 
 import android.text.TextUtils
 import com.google.gson.reflect.TypeToken
-import com.mpdc4gsr.lib.core.lms.utils.SPUtils
+import com.mpdc4gsr.libunified.app.lms.utils.SPUtils
 import java.math.BigDecimal
 import java.math.RoundingMode
 import java.text.DecimalFormat

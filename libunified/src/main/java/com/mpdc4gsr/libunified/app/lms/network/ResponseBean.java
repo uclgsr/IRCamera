@@ -1,6 +1,6 @@
 package com.mpdc4gsr.libunified.app.lms.network;
 
-import com.mpdc4gsr.lib.core.lms.bean.CommonBean;
+import com.mpdc4gsr.libunified.app.lms.bean.CommonBean;
 
 
 public class ResponseBean {

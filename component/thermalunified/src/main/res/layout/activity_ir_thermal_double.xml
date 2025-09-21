@@ -8,7 +8,7 @@
     android:fitsSystemWindows="true"
     tools:context=".activity.IRThermalPlusActivity">
 
-    <com.mpdc4gsr.lib.core.view.MainTitleView
+    <com.mpdc4gsr.libunified.app.view.MainTitleView
         android:id="@+id/title_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -20,7 +20,7 @@
         app:right2Drawable="@drawable/svg_tisr_off"
         app:rightDrawable="@drawable/ic_info_svg" />
 
-    <com.mpdc4gsr.lib.core.view.MyTextView
+    <com.mpdc4gsr.libunified.app.view.MyTextView
         android:id="@+id/tv_title_temp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -47,7 +47,7 @@
         tools:textColor="#ffffff"
         tools:visibility="visible" />
 
-    <com.mpdc4gsr.lib.core.view.MyTextView
+    <com.mpdc4gsr.libunified.app.view.MyTextView
         android:id="@+id/tv_title_observe"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -81,7 +81,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <com.mpdc4gsr.lib.core.menu.MenuFirstTabView
+        <com.mpdc4gsr.libunified.app.menu.MenuFirstTabView
             android:id="@+id/view_menu_first"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -91,7 +91,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <com.mpdc4gsr.lib.core.menu.MenuSecondView
+        <com.mpdc4gsr.libunified.app.menu.MenuSecondView
             android:id="@+id/thermal_recycler_night"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -155,7 +155,7 @@
             android:textColor="@color/white"
             android:textSize="12sp" />
 
-        <com.mpdc4gsr.lib.core.comm.view.TempLayout
+        <com.mpdc4gsr.libunified.app.comm.view.TempLayout
             android:id="@+id/temp_bg"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />

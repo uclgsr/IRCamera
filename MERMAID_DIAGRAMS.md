@@ -225,7 +225,7 @@ gantt
 ```mermaid
 graph TB
     subgraph "libcore Unified Namespaces"
-        subgraph "com.mpdc4gsr.lib.core.*"
+        subgraph "com.mpdc4gsr.libunified.app.*"
             AppFramework[Application Framework<br/>• Database<br/>• Configuration<br/>• Common utilities]
         end
         

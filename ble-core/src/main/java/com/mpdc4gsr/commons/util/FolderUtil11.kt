@@ -2,7 +2,7 @@ package com.mpdc4gsr.commons.util
 
 import android.text.TextUtils
 import android.util.Log
-import com.mpdc4gsr.lib.core.lms.LMS
+import com.mpdc4gsr.libunified.app.lms.LMS
 import java.io.File
 
 object FolderUtil {

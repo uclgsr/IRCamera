@@ -10,7 +10,7 @@
         android:background="#16131e"
         android:orientation="vertical">
 
-        <com.mpdc4gsr.lib.core.view.TitleView
+        <com.mpdc4gsr.libunified.app.view.TitleView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:titleText="@string/tc_connect_device" />

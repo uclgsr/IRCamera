@@ -6,7 +6,7 @@
     android:background="@drawable/bg_corners10_solid_3b3e44"
     android:paddingBottom="21dp">
 
-    <com.mpdc4gsr.lib.core.view.ColorSelectView
+    <com.mpdc4gsr.libunified.app.view.ColorSelectView
         android:id="@+id/color_select_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

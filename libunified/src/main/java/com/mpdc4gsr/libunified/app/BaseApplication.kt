@@ -1,4 +1,4 @@
-package com.mpdc4gsr.lib.core
+package com.mpdc4gsr.libunified.app
 
 import android.app.Activity
 import android.app.ActivityManager

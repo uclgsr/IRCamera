@@ -37,7 +37,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/rl_close" />
 
-    <com.mpdc4gsr.lib.core.view.ColorSelectView
+    <com.mpdc4gsr.libunified.app.view.ColorSelectView
         android:id="@+id/color_select_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -150,7 +150,7 @@
         app:layout_constraintTop_toBottomOf="@id/tv_size_title"
         tools:visibility="visible" />
 
-    <com.mpdc4gsr.lib.core.widget.seekbar.RangeSeekBar
+    <com.mpdc4gsr.libunified.app.widget.seekbar.RangeSeekBar
         android:id="@+id/nifty_slider_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

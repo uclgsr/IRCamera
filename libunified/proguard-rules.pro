@@ -20,7 +20,7 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
--keep class com.mpdc4gsr.lib.core.** { *; }
+-keep class com.mpdc4gsr.libunified.app.** { *; }
 -keep class com.infisense.usbir.** { *; }
 -keep class com.infisense.usbdual.** { *; }
 -keep class com.github.mikephil.charting.** { *; }

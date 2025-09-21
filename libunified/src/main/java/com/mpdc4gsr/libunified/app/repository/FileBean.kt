@@ -1,4 +1,4 @@
-package com.topdon.lib.core.bean
+package com.topdon.libunified.app.bean
 
 import android.os.Parcel
 import android.os.Parcelable

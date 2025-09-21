@@ -2,7 +2,7 @@ package mpdc4gsr.security
 
 import android.content.Context
 import android.util.Log
-import mpdc4gsr.lib.core.StructuredLogger
+import mpdc4gsr.libunified.app.StructuredLogger
 import org.json.JSONObject
 import java.util.concurrent.ConcurrentHashMap
 

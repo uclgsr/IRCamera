@@ -360,7 +360,7 @@ class ReportPreviewActivity : BaseActivity(), View.OnClickListener {
                     this,
                     it.itemBeans?.map { itemBean ->
 
-                        com.mpdc4gsr.lib.core.bean.HouseRepPreviewItemBean().apply {
+                        com.mpdc4gsr.libunified.app.bean.HouseRepPreviewItemBean().apply {
 
                         }
                     } ?: emptyList(),

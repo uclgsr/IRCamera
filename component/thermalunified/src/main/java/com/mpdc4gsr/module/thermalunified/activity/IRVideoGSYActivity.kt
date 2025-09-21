@@ -32,7 +32,7 @@ class IRVideoGSYActivity : BaseActivity() {
     private var isRemote = false
     private lateinit var data: GalleryBean
 
-    private lateinit var titleView: com.mpdc4gsr.lib.core.view.TitleView
+    private lateinit var titleView: com.mpdc4gsr.libunified.app.view.TitleView
     private lateinit var clBottom: androidx.constraintlayout.widget.ConstraintLayout
     private lateinit var clDownload: androidx.constraintlayout.widget.ConstraintLayout
     private lateinit var clShare: androidx.constraintlayout.widget.ConstraintLayout
