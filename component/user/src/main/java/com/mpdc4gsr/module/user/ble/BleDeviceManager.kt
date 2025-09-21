@@ -9,8 +9,8 @@ import com.mpdc4gsr.ble.core.ConnectionConfiguration
 import com.mpdc4gsr.ble.core.ConnectionState
 import com.mpdc4gsr.ble.core.Device
 import com.mpdc4gsr.ble.core.EasyBLE
-import com.mpdc4gsr.ble.EventObserver
-import com.mpdc4gsr.ble.Request
+import com.mpdc4gsr.ble.core.EventObserver
+import com.mpdc4gsr.ble.core.Request
 import com.mpdc4gsr.ble.core.UnifiedBleManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

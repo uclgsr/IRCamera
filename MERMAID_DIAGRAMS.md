@@ -1,8 +1,8 @@
 # IRCamera Architecture Diagrams
 
-## Current Library Architecture
+## Implemented Unified Architecture (Current State)
 
-### Current Three-Library Structure
+### Unified Library Structure + Device-Specific BLE Modules
 
 ```mermaid
 graph TB
@@ -14,40 +14,81 @@ graph TB
     subgraph "Feature Components"
         ThermalIR[Thermal-IR Component<br/>thermal-ir module]
         GSRRecording[GSR Recording Component<br/>gsr-recording module]
-        PseudoComponent[Pseudo Component<br/>pseudo module]
         ThermalComponent[Thermal Component<br/>thermal module]
+        ThermalLite[Thermal-Lite Component<br/>thermal-lite module]
         UserComponent[User Component<br/>user module]
     end
     
-    subgraph "Current Core Libraries"
-        LibApp[libapp<br/>247 files<br/>Application Framework]
-        LibIR[libir<br/>64 files<br/>IR Processing]
-        LibUI[libui<br/>287 files<br/>UI Components]
+    subgraph "Unified Core Libraries"
+        LibUnified[libunified<br/>598 files<br/>Unified Core Library<br/>app + ir + ui functionality]
+    end
+    
+    subgraph "Device-Specific BLE Modules"
+        BLECore[ble-core<br/>~3,500 lines<br/>Core BLE + Commons]
+        BLEShimmer[ble-shimmer<br/>1,131 lines<br/>GSR/Shimmer Devices]
+        BLETopdon[ble-topdon<br/>881 lines<br/>Thermal/Topdon Devices]
     end
     
     subgraph "Support Libraries"
-        LibCom[libcom<br/>Communication]
-        LibMatrix[libmatrix<br/>Matrix Operations]
-        LibMenu[libmenu<br/>Menu System]
+        RangeSeekBar[RangeSeekBar<br/>Custom UI Control]
+        ConsolidatedLibs[consolidated_libraries<br/>Shared Utilities]
     end
     
-    subgraph "External Dependencies"
-        BleModule[BLE Module<br/>Bluetooth Integration]
-        RangeSeekBar[Range Seek Bar<br/>Custom UI Control]
-        AndroidSDK[Android SDK<br/>Platform APIs]
+    %% Application Dependencies
+    App --> LibUnified
+    App --> BLECore
+    App --> BLEShimmer
+    App --> BLETopdon
+    
+    %% Thermal Components -> Topdon BLE
+    ThermalIR --> LibUnified
+    ThermalIR --> BLETopdon
+    
+    ThermalComponent --> LibUnified  
+    ThermalComponent --> BLETopdon
+    
+    ThermalLite --> LibUnified
+    ThermalLite --> BLETopdon
+    
+    %% GSR/User Components -> Shimmer BLE
+    GSRRecording --> LibUnified
+    GSRRecording --> BLEShimmer
+    
+    UserComponent --> LibUnified
+    UserComponent --> BLEShimmer
+    
+    %% BLE Module Dependencies
+    BLEShimmer --> BLECore
+    BLETopdon --> BLECore
+    
+    %% Support Dependencies
+    LibUnified --> RangeSeekBar
+    
+    PCController -.->|Network Protocol| App
+```
+
+### Namespace Structure (Implemented)
+
+```mermaid
+graph TB
+    subgraph "com.mpdc4gsr.libunified.*"
+        AppNS[app.*<br/>Application Framework<br/>Database, Config, Utils]
+        IRNs[ir.*<br/>IR Processing<br/>Camera, Hardware, Processing]
+        UINs[ui.*<br/>UI Components<br/>Charting, Widgets, Controls]
     end
     
-    %% Current Dependencies - ALL components need ALL three libraries
-    App --> LibApp
-    App --> LibIR
-    App --> LibUI
+    subgraph "com.mpdc4gsr.ble.*"
+        BLECoreNS[ble.core.*<br/>Core BLE Functionality<br/>Connection, Device, Utils]
+        BLEShimmerNS[ble.shimmer.*<br/>Shimmer Device Classes<br/>GSR-specific Logic]
+        BLETopdonNS[ble.topdon.*<br/>Topdon Device Classes<br/>Thermal-specific Logic]
+    end
     
-    ThermalIR --> LibApp
-    ThermalIR --> LibIR
-    ThermalIR --> LibUI
-    
-    GSRRecording --> LibApp
-    GSRRecording --> LibIR
+    subgraph "Component Namespaces (Unchanged)"
+        CompThermal[com.mpdc4gsr.module.thermal.*]
+        CompGSR[com.mpdc4gsr.gsr.*]
+        CompUser[com.mpdc4gsr.module.user.*]
+    end
+```
     GSRRecording --> LibUI
     
     ThermalComponent --> LibApp

@@ -288,7 +288,7 @@ dependencies {
         )
     )
 
-    implementation(files("../libir/libs/libusbdualsdk_1.3.4_2406271906_standard.aar"))
+    implementation(files("../libunified/libs/libusbdualsdk_1.3.4_2406271906_standard.aar"))
 
     implementation(libs.jsbridge)
     implementation(libs.fastjson2)

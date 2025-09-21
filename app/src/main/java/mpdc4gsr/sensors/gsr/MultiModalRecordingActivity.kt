@@ -15,7 +15,7 @@ import androidx.lifecycle.lifecycleScope
 import com.csl.irCamera.R
 import com.csl.irCamera.databinding.ActivityMultiModalRecordingBinding
 import com.mpdc4gsr.ble.core.UnifiedBleManager
-import com.mpdc4gsr.ble.UnifiedDevice
+import com.mpdc4gsr.ble.core.UnifiedDevice
 import com.mpdc4gsr.gsr.model.GSRSample
 import com.mpdc4gsr.gsr.model.SessionInfo
 import com.mpdc4gsr.gsr.model.SyncMark
