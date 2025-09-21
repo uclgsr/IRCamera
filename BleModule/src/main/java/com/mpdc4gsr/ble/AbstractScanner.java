@@ -119,7 +119,8 @@ abstract class AbstractScanner implements Scanner {
                     }
                 }
             }
-        } catch (Exception ignore) {
+        } catch (Exception e) {
+            logger.log(Log.WARN, Logger.TYPE_SCAN_STATE, "Failed to get system connected devices via reflection", e);
         }
 
         for (int i = 1; i <= 21; i++) {
