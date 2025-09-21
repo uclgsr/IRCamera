@@ -89,7 +89,7 @@ class AudioRecordHelp private constructor() {
                     if (recordingAudio) {
                         if (bufferReadResult > 0) {
                             audioData?.limit(bufferReadResult)
-                            Log.w("音频采集", bufferReadResult.toString() + "//" + bufferReadResult)
+                            Log.w("[ph][ph][ph][ph]", bufferReadResult.toString() + "//" + bufferReadResult)
                             recorder?.get()?.recordSamples(
                                 VideoRecordFFmpeg.SAMPLE_AUDIO_RETE_INHZ,
                                 VideoRecordFFmpeg.AUDIO_CHANNELS,
@@ -111,7 +111,7 @@ class AudioRecordHelp private constructor() {
                 }
 
             } catch (e: Exception) {
-                XLog.e("采集容器异常")
+                XLog.e("[ph][ph][ph][ph][ph][ph]")
             }
         }
     }

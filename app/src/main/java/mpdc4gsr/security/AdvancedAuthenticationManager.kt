@@ -10,7 +10,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import mpdc4gsr.core.StructuredLogger
+import mpdc4gsr.lib.core.StructuredLogger
 import org.json.JSONObject
 import java.security.KeyStore
 import java.security.SecureRandom

@@ -146,7 +146,7 @@ class ReportPreviewSecondActivity : BaseViewModelActivity<UpReportViewModel>(),
                     .navigation(this)
                 finish()
             } else {
-                ToastUtils.showShort(StringUtils.getResString(this, it.code.toString()))
+                ToastUtils.showShort("Error: " + it.code.toString())
             }
         }
         viewModel.exceptionLD.observe(this) {

@@ -1,4 +1,4 @@
-package mpdc4gsr
+package mpdc4gsr.activities
 
 import android.content.pm.PackageManager
 import android.os.Bundle

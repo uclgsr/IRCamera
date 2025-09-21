@@ -36,7 +36,7 @@ class CommonComponentTest {
     fun testRotateDegreeCreation() {
 
         try {
-            val rotateDegreeClass = Class.forName("com.topdon.component.common.RotateDegree")
+            val rotateDegreeClass = Class.forName("com.mpdc4gsr.component.common.RotateDegree")
             assertNotNull("RotateDegree class should be accessible", rotateDegreeClass)
             assertTrue("RotateDegree should be an enum", rotateDegreeClass.isEnum)
         } catch (e: ClassNotFoundException) {

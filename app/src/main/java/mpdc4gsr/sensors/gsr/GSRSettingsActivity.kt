@@ -52,7 +52,7 @@ class GSRSettingsActivity : BaseBindingActivity<ActivityGsrSettingsBinding>() {
             this,
             "gsr_settings_1",
             128,
-            com.topdon.tc001.controller.RecordingController(this, this)
+            com.mpdc4gsr.controller.RecordingController(this, this)
         )
 
         setupUI()

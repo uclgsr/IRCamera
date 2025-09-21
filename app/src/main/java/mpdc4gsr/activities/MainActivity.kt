@@ -1,4 +1,4 @@
-package mpdc4gsr
+package mpdc4gsr.activities
 
 
 import android.content.ComponentName
@@ -61,7 +61,7 @@ import kotlinx.coroutines.withContext
 import mpdc4gsr.app.App
 import mpdc4gsr.config.FeatureFlags
 import mpdc4gsr.config.ProtocolVersion
-import mpdc4gsr.core.StructuredLogger
+import mpdc4gsr.lib.core.StructuredLogger
 import mpdc4gsr.network.NetworkClient
 import mpdc4gsr.network.WebSocketClient
 import mpdc4gsr.permissions.PermissionController

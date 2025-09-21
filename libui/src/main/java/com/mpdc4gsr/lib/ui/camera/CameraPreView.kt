@@ -229,7 +229,7 @@ class CameraPreView :
                 @NonNull camera: CameraDevice,
             ) {
 
-                XLog.i("开启预览")
+                XLog.i("[ph][ph][ph][ph]")
                 mCameraDevice = camera
                 takePreview()
             }
@@ -238,7 +238,7 @@ class CameraPreView :
                 @NonNull camera: CameraDevice,
             ) {
 
-                XLog.i("close预览")
+                XLog.i("close[ph][ph]")
                 isPreviewing = false
 
 
@@ -252,7 +252,7 @@ class CameraPreView :
                 isPreviewing = false
                 camera.close()
                 mCameraDevice = null
-                XLog.e("预览异常 error: $error")
+                XLog.e("[ph][ph][ph][ph] error: $error")
             }
         }
 
@@ -305,7 +305,7 @@ class CameraPreView :
                                 mCameraHandler,
                             )
                         } catch (e: CameraAccessException) {
-                            XLog.e("相机异常：${e.printStackTrace()}")
+                            XLog.e("[ph][ph][ph][ph]：${e.printStackTrace()}")
                         }
                     }
 
@@ -313,7 +313,7 @@ class CameraPreView :
                         @NonNull session: CameraCaptureSession,
                     ) {
 
-                        XLog.e("configuration失败")
+                        XLog.e("configuration[ph][ph]")
                     }
                 },
                 mCameraHandler,
@@ -397,8 +397,8 @@ class CameraPreView :
                 val w = 1000
                 val h = w * sizes[0].height / sizes[0].width
 
-                XLog.w("选取比例 w:${sizes[0].width}, h:${sizes[0].height}")
-                XLog.w("调整后 w: $w, h:$h")
+                XLog.w("[ph][ph][ph][ph] w:${sizes[0].width}, h:${sizes[0].height}")
+                XLog.w("[ph][ph][ph] w: $w, h:$h")
 
 
 
@@ -407,7 +407,7 @@ class CameraPreView :
             }
         } catch (e: CameraAccessException) {
             e.printStackTrace()
-            Log.e("123", "settings相机参数:${e.message}")
+            Log.e("123", "settings[ph][ph][ph][ph]:${e.message}")
         }
     }
 
@@ -449,8 +449,8 @@ class CameraPreView :
             mCameraManager!!.openCamera(mCameraId, mStateCallback, mCameraHandler)
         } catch (e: Exception) {
             isPreviewing = false
-            XLog.e("打开相机失败:${e.message}")
-            ToastUtils.showShort("打开相机失败")
+            XLog.e("[ph][ph][ph][ph][ph][ph]:${e.message}")
+            ToastUtils.showShort("[ph][ph][ph][ph][ph][ph]")
         }
     }
 
@@ -467,8 +467,8 @@ class CameraPreView :
             scale = 1f
 
         } catch (e: Exception) {
-            XLog.e("close相机失败:${e.message}")
-            ToastUtils.showShort("close相机失败")
+            XLog.e("close[ph][ph][ph][ph]:${e.message}")
+            ToastUtils.showShort("close[ph][ph][ph][ph]")
         }
     }
 

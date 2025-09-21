@@ -110,7 +110,7 @@ class IRCorrectionFragment : BaseFragment(), ITsTempListener {
 
         if (Usbcontorl.isload) {
             Usbcontorl.usb3803_mode_setting(1)
-            Log.w("123", "打开5V")
+            Log.w("123", "[ph][ph]5V")
         }
         temperatureView.clear()
         temperatureView.temperatureRegionMode = REGION_MODE_CLEAN
@@ -128,7 +128,7 @@ class IRCorrectionFragment : BaseFragment(), ITsTempListener {
             imageThread!!.setRotate(true)
             imageThread!!.start()
         } catch (e: Exception) {
-            Log.e("图像线程重复启动", e.message.toString())
+            Log.e("[ph][ph][ph][ph][ph][ph][ph][ph]", e.message.toString())
         }
     }
 
@@ -289,7 +289,7 @@ class IRCorrectionFragment : BaseFragment(), ITsTempListener {
             val config = ConfigRepository.readConfig(false)
             val disChar = (config.distance * 128).toInt()
             val emsChar = (config.radiation * 128).toInt()
-            XLog.w("设置TPD_PROP DISTANCE:$disChar, EMS:$emsChar}")
+            XLog.w("[ph][ph]TPD_PROP DISTANCE:$disChar, EMS:$emsChar}")
             val timeMillis = 250L
             delay(timeMillis)
 
@@ -364,24 +364,24 @@ class IRCorrectionFragment : BaseFragment(), ITsTempListener {
 
 
             CalibrationTools.autoShutter(irCmd = ircmd, false)
-            XLog.w("锅盖矫正：" + "锅盖标定开始")
+            XLog.w("[ph][ph][ph][ph]：" + "[ph][ph][ph][ph][ph][ph]")
 
 
 
 
 
             delay(2000)
-            XLog.w("锅盖矫正：" + "关闭锅盖校正")
+            XLog.w("[ph][ph][ph][ph]：" + "[ph][ph][ph][ph][ph][ph]")
             CalibrationTools.stsSwitch(irCmd = ircmd, false)
 
             CalibrationTools.pot(irCmd = ircmd!!, 1)
-            XLog.w("锅盖矫正：" + "发送锅盖标")
+            XLog.w("[ph][ph][ph][ph]：" + "[ph][ph][ph][ph][ph]")
 
             delay(5000)
-            XLog.w("锅盖矫正：" + "打开锅盖校正")
+            XLog.w("[ph][ph][ph][ph]：" + "[ph][ph][ph][ph][ph][ph]")
             CalibrationTools.stsSwitch(irCmd = ircmd, true)
             delay(20000)
-            XLog.w("锅盖矫正：" + "20000")
+            XLog.w("[ph][ph][ph][ph]：" + "20000")
 
 
 
@@ -389,17 +389,17 @@ class IRCorrectionFragment : BaseFragment(), ITsTempListener {
 
             delay(2000)
             CalibrationTools.stsSwitch(irCmd = ircmd, false)
-            XLog.w("锅盖矫正：" + "关闭锅盖校正")
+            XLog.w("[ph][ph][ph][ph]：" + "[ph][ph][ph][ph][ph][ph]")
 
             CalibrationTools.pot(irCmd = ircmd!!, 1)
 
             delay(5000)
-            XLog.w("锅盖矫正：" + "打开锅盖校正")
+            XLog.w("[ph][ph][ph][ph]：" + "[ph][ph][ph][ph][ph][ph]")
             CalibrationTools.stsSwitch(irCmd = ircmd, true)
 
             CalibrationTools.autoShutter(irCmd = ircmd, true)
 
-            XLog.w("锅盖矫正：" + "锅盖结束")
+            XLog.w("[ph][ph][ph][ph]：" + "[ph][ph][ph][ph]")
         }
     }
 }

@@ -6,17 +6,17 @@ public class UnitTimeFormatter implements TimeFormatter {
 
     @Override
     public String formatHour(int hour) {
-        return hour + "点";
+        return hour + "[ph]";
     }
 
     @Override
     public String formatMinute(int minute) {
-        return minute + "分";
+        return minute + "[ph]";
     }
 
     @Override
     public String formatSecond(int second) {
-        return second + "秒";
+        return second + "[ph]";
     }
 
 }

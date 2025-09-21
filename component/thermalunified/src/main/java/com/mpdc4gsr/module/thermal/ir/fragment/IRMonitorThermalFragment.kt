@@ -170,7 +170,7 @@ class IRMonitorThermalFragment : BaseFragment(), ITsTempListener {
 
         if (Usbcontorl.isload) {
             Usbcontorl.usb3803_mode_setting(1)
-            Log.w("123", "打开5V")
+            Log.w("123", "[ph][ph]5V")
         }
 
         temperatureView.post {
@@ -194,7 +194,7 @@ class IRMonitorThermalFragment : BaseFragment(), ITsTempListener {
             imageThread!!.setRotate(true)
             imageThread!!.start()
         } catch (e: Exception) {
-            Log.e("图像线程重复启动", e.message.toString())
+            Log.e("[ph][ph][ph][ph][ph][ph][ph][ph]", e.message.toString())
         }
     }
 
@@ -455,7 +455,7 @@ class IRMonitorThermalFragment : BaseFragment(), ITsTempListener {
             val disChar = (config.distance * 128).toInt()
             val emsChar = (config.radiation * 128).toInt()
 
-            XLog.w("设置TPD_PROP DISTANCE:${disChar.toInt()}, EMS:${emsChar.toInt()}}")
+            XLog.w("[ph][ph]TPD_PROP DISTANCE:${disChar.toInt()}, EMS:${emsChar.toInt()}}")
             val timeMillis = 250L
             delay(timeMillis)
 
@@ -526,7 +526,7 @@ class IRMonitorThermalFragment : BaseFragment(), ITsTempListener {
         try {
             tmp = tempCorrect(temp!!, gainStatus, 0)
         } catch (e: Exception) {
-            XLog.i("温度校正失败: ${e.message}")
+            XLog.i("[ph][ph][ph][ph][ph][ph]: ${e.message}")
         }
         return tmp!!
     }

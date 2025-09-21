@@ -215,18 +215,18 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
     private val cameraItemBeanList by lazy {
         mutableListOf(
             CameraItemBean(
-                "延迟",
+                "[ph][ph]",
                 CameraItemBean.TYPE_DELAY,
                 time = SaveSettingUtil.delayCaptureSecond,
             ),
             CameraItemBean(
-                "自动快门",
+                "[ph][ph][ph][ph]",
                 CameraItemBean.TYPE_ZDKM,
                 isSel = SaveSettingUtil.isAutoShutter,
             ),
-            CameraItemBean("手动快门", CameraItemBean.TYPE_SDKM),
+            CameraItemBean("[ph][ph][ph][ph]", CameraItemBean.TYPE_SDKM),
             CameraItemBean(
-                "声音",
+                "[ph][ph]",
                 CameraItemBean.TYPE_AUDIO,
                 isSel =
                     SaveSettingUtil.isRecordAudio &&
@@ -236,7 +236,7 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
                             )
                             == PackageManager.PERMISSION_GRANTED,
             ),
-            CameraItemBean("设置", CameraItemBean.TYPE_SETTING),
+            CameraItemBean("[ph][ph]", CameraItemBean.TYPE_SETTING),
         )
     }
     private var cameraItemAdapter: CameraItemAdapter? = null
@@ -323,7 +323,7 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
                 if (config.radiation.toString() == tmp.value) {
                     if (text.isEmpty()) {
                         text =
-                            "${resources.getString(com.topdon.module.thermal.ir.R.string.tc_temp_test_materials)} : "
+                            "${resources.getString(com.mpdc4gsr.module.thermal.ir.R.string.tc_temp_test_materials)} : "
                     }
                     text += "${tmp.name}/"
                 }
@@ -377,16 +377,16 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
         binding.thermalRecyclerNight.onColorListener = { _, it, _ ->
             if (customPseudoBean.isUseCustomPseudo) {
                 TipDialog.Builder(this)
-                    .setTitleMessage(getString(com.topdon.module.thermal.ir.R.string.app_tip))
-                    .setMessage(com.topdon.module.thermal.ir.R.string.tip_change_pseudo_mode)
-                    .setPositiveListener(com.topdon.module.thermal.ir.R.string.app_yes) {
+                    .setTitleMessage(getString(com.mpdc4gsr.module.thermal.ir.R.string.app_tip))
+                    .setMessage(com.mpdc4gsr.module.thermal.ir.R.string.tip_change_pseudo_mode)
+                    .setPositiveListener(com.mpdc4gsr.module.thermal.ir.R.string.app_yes) {
                         customPseudoBean.isUseCustomPseudo = false
                         customPseudoBean.saveToShared()
                         setPColor(it)
                         setDefLimit()
                         updateImageAndSeekbarColorList(customPseudoBean)
                         binding.thermalRecyclerNight.setPseudoColor(pseudoColorMode)
-                    }.setCancelListener(com.topdon.module.thermal.ir.R.string.app_no) {
+                    }.setCancelListener(com.mpdc4gsr.module.thermal.ir.R.string.app_no) {
                     }
                     .create().show()
             } else {
@@ -402,15 +402,15 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
             if (it == CameraItemBean.TYPE_TMP_H && SharedManager.isTipHighTemp) {
 
                 val message =
-                    SpanBuilder(getString(com.topdon.module.thermal.ir.R.string.tc_high_temp_test_tips1))
+                    SpanBuilder(getString(com.mpdc4gsr.module.thermal.ir.R.string.tc_high_temp_test_tips1))
                         .appendDrawable(
                             this@IRThermalLiteActivity,
-                            com.topdon.module.thermal.ir.R.drawable.svg_title_temp,
+                            com.mpdc4gsr.module.thermal.ir.R.drawable.svg_title_temp,
                             SizeUtils.sp2px(24f)
                         )
-                        .append(getString(com.topdon.module.thermal.ir.R.string.tc_high_temp_test_tips2))
+                        .append(getString(com.mpdc4gsr.module.thermal.ir.R.string.tc_high_temp_test_tips2))
                 TipShutterDialog.Builder(this)
-                    .setTitle(com.topdon.module.thermal.ir.R.string.tc_high_temp_test)
+                    .setTitle(com.mpdc4gsr.module.thermal.ir.R.string.tc_high_temp_test)
                     .setMessage(message)
                     .setCancelListener { isCheck ->
                         SharedManager.isTipHighTemp = !isCheck
@@ -463,7 +463,7 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
                                 )
                             }
                         } catch (e: Exception) {
-                            Log.e("温度图层更新失败", e.message.toString())
+                            Log.e("[ph][ph][ph][ph][ph][ph][ph][ph]", e.message.toString())
                         }
                         try {
                             binding.tvTempContent.text =
@@ -474,7 +474,7 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
                                     )
                                 }"
                         } catch (e: Exception) {
-                            Log.e("温度图层更新失败", e.message.toString())
+                            Log.e("[ph][ph][ph][ph][ph][ph][ph][ph]", e.message.toString())
                         }
                     } else {
 
@@ -487,7 +487,7 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
                                     )
                                 }"
                         } catch (e: Exception) {
-                            Log.e("温度图层更新失败", e.message.toString())
+                            Log.e("[ph][ph][ph][ph][ph][ph][ph][ph]", e.message.toString())
                         }
                     }
                     try {
@@ -496,12 +496,12 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
                             binding.clSeekBar.updateBitmap()
                         }
                     } catch (e: Exception) {
-                        Log.w("伪彩条更新异常:", "${e.message}")
+                        Log.w("[ph][ph][ph][ph][ph][ph][ph]:", "${e.message}")
                     }
                     try {
                         AlarmHelp.getInstance(application).alarmData(max, min, binding.tempBg)
                     } catch (e: Exception) {
-                        Log.e("温度图层更新失败", e.message.toString())
+                        Log.e("[ph][ph][ph][ph][ph][ph][ph][ph]", e.message.toString())
                     }
                 }
             }
@@ -613,7 +613,7 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
             if (config.radiation.toString() == tmp.value) {
                 if (text.isEmpty()) {
                     text =
-                        "${resources.getString(com.topdon.module.thermal.ir.R.string.tc_temp_test_materials)} : "
+                        "${resources.getString(com.mpdc4gsr.module.thermal.ir.R.string.tc_temp_test_materials)} : "
                 }
                 text += "${tmp.name}/"
             }
@@ -755,7 +755,7 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
                     UnitTools.showUnitValue(it.maxTemp),
                 )
                 binding.thermalRecyclerNight.setPseudoColor(-1)
-                binding.temperatureIvInput.setImageResource(com.topdon.module.thermal.ir.R.drawable.ir_model)
+                binding.temperatureIvInput.setImageResource(com.mpdc4gsr.module.thermal.ir.R.drawable.ir_model)
             } else {
                 binding.temperatureIvLock.visibility = View.VISIBLE
                 binding.thermalRecyclerNight.setPseudoColor(pseudoColorMode)
@@ -763,7 +763,7 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
                     setDefLimit()
                 }
                 binding.tvTempContent.visibility = View.GONE
-                binding.temperatureIvInput.setImageResource(com.topdon.module.thermal.ir.R.drawable.ic_color_edit)
+                binding.temperatureIvInput.setImageResource(com.mpdc4gsr.module.thermal.ir.R.drawable.ic_color_edit)
             }
             this.customPseudoBean = it
         }
@@ -930,7 +930,7 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
                     if (temperatureMode == CameraItemBean.TYPE_TMP_ZD &&
                         SaveSettingUtil.temperatureMode != temperatureMode
                     ) {
-                        ToastTools.showShort(com.topdon.module.thermal.ir.R.string.auto_open)
+                        ToastTools.showShort(com.mpdc4gsr.module.thermal.ir.R.string.auto_open)
                     }
                     SaveSettingUtil.temperatureMode = temperatureMode
                 }
@@ -982,12 +982,12 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
                 TipDialog.Builder(this)
                     .setMessage(
                         getString(
-                            com.topdon.module.thermal.ir.R.string.permission_request_camera_app,
+                            com.mpdc4gsr.module.thermal.ir.R.string.permission_request_camera_app,
                             CommUtils.getAppName()
                         )
                     )
-                    .setCancelListener(com.topdon.module.thermal.ir.R.string.app_cancel)
-                    .setPositiveListener(com.topdon.module.thermal.ir.R.string.app_confirm) {
+                    .setCancelListener(com.mpdc4gsr.module.thermal.ir.R.string.app_cancel)
+                    .setPositiveListener(com.mpdc4gsr.module.thermal.ir.R.string.app_confirm) {
                         initCameraPermission(needShowTip)
                     }
                     .create().show()
@@ -1037,7 +1037,7 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
                                 ToastUtils.showShort(R.string.scan_ble_tip_authorize)
                             }
                         } catch (e: Exception) {
-                            XLog.e("画中画" + e.message)
+                            XLog.e("[ph][ph][ph]" + e.message)
                         }
                     }
 
@@ -1048,16 +1048,16 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
                         if (doNotAskAgain) {
 
                             if (BaseApplication.instance.isDomestic()) {
-                                ToastUtils.showShort(getString(com.topdon.module.thermal.ir.R.string.app_camera_content))
+                                ToastUtils.showShort(getString(com.mpdc4gsr.module.thermal.ir.R.string.app_camera_content))
                                 return
                             }
                             TipDialog.Builder(this@IRThermalLiteActivity)
-                                .setTitleMessage(getString(com.topdon.module.thermal.ir.R.string.app_tip))
-                                .setMessage(getString(com.topdon.module.thermal.ir.R.string.app_camera_content))
-                                .setPositiveListener(com.topdon.module.thermal.ir.R.string.app_open) {
+                                .setTitleMessage(getString(com.mpdc4gsr.module.thermal.ir.R.string.app_tip))
+                                .setMessage(getString(com.mpdc4gsr.module.thermal.ir.R.string.app_camera_content))
+                                .setPositiveListener(com.mpdc4gsr.module.thermal.ir.R.string.app_open) {
                                     AppUtils.launchAppDetailsSettings()
                                 }
-                                .setCancelListener(com.topdon.module.thermal.ir.R.string.app_cancel) {
+                                .setCancelListener(com.mpdc4gsr.module.thermal.ir.R.string.app_cancel) {
                                 }
                                 .setCanceled(true)
                                 .create().show()
@@ -1511,7 +1511,7 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
             ViewStubUtils.showViewStub(binding.viewStubCamera, true, callback = { view: View? ->
                 view?.let {
                     val recyclerView =
-                        it.findViewById<RecyclerView>(com.topdon.module.thermal.ir.R.id.recycler_view)
+                        it.findViewById<RecyclerView>(com.mpdc4gsr.module.thermal.ir.R.id.recycler_view)
                     if (ScreenUtil.isPortrait(this)) {
                         recyclerView.layoutManager =
                             GridLayoutManager(this, cameraItemBeanList.size)
@@ -1539,15 +1539,15 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
                                 cameraItemAdapter!!.notifyItemChanged(position)
                                 when (cameraItemAdapter!!.data[position].time) {
                                     CameraItemBean.DELAY_TIME_0 -> {
-                                        ToastUtils.showShort(com.topdon.module.thermal.ir.R.string.off_photography)
+                                        ToastUtils.showShort(com.mpdc4gsr.module.thermal.ir.R.string.off_photography)
                                     }
 
                                     CameraItemBean.DELAY_TIME_3 -> {
-                                        ToastUtils.showShort(com.topdon.module.thermal.ir.R.string.seconds_dalay_3)
+                                        ToastUtils.showShort(com.mpdc4gsr.module.thermal.ir.R.string.seconds_dalay_3)
                                     }
 
                                     CameraItemBean.DELAY_TIME_6 -> {
-                                        ToastUtils.showShort(com.topdon.module.thermal.ir.R.string.seconds_dalay_6)
+                                        ToastUtils.showShort(com.mpdc4gsr.module.thermal.ir.R.string.seconds_dalay_6)
                                     }
                                 }
                                 cameraDelaySecond = cameraItemAdapter!!.data[position].time
@@ -1580,7 +1580,7 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
                                 }
 
                                 IRTool.setOneShutter()
-                                ToastUtils.showShort(com.topdon.module.thermal.ir.R.string.app_Manual_Shutter)
+                                ToastUtils.showShort(com.mpdc4gsr.module.thermal.ir.R.string.app_Manual_Shutter)
                                 return@listener
                             }
 
@@ -1594,7 +1594,7 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
                                 if (SharedManager.isTipShutter && !isAutoShutter) {
                                     val dialog =
                                         TipShutterDialog.Builder(this)
-                                            .setMessage(com.topdon.module.thermal.ir.R.string.shutter_tips)
+                                            .setMessage(com.mpdc4gsr.module.thermal.ir.R.string.shutter_tips)
                                             .setCancelListener { isCheck ->
                                                 SharedManager.isTipShutter = !isCheck
                                             }
@@ -1625,7 +1625,7 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
                 }
             }
         } catch (e: Exception) {
-            Log.e("线程", e.message.toString())
+            Log.e("[ph][ph]", e.message.toString())
         }
     }
 
@@ -1685,10 +1685,10 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
                                     !(cameraItemAdapter?.data?.get(audioPosition)?.isSel ?: false)
                                 cameraItemAdapter?.notifyItemChanged(audioPosition)
                             } else {
-                                ToastUtils.showShort(com.topdon.module.thermal.ir.R.string.scan_ble_tip_authorize)
+                                ToastUtils.showShort(com.mpdc4gsr.module.thermal.ir.R.string.scan_ble_tip_authorize)
                             }
                         } catch (e: Exception) {
-                            Log.e("录音启动失败", "" + e.message)
+                            Log.e("[ph][ph][ph][ph][ph][ph]", "" + e.message)
                         }
                     }
 
@@ -1699,16 +1699,16 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
                         if (doNotAskAgain) {
 
                             if (BaseApplication.instance.isDomestic()) {
-                                ToastUtils.showShort(getString(com.topdon.module.thermal.ir.R.string.app_microphone_content))
+                                ToastUtils.showShort(getString(com.mpdc4gsr.module.thermal.ir.R.string.app_microphone_content))
                                 return
                             }
                             TipDialog.Builder(this@IRThermalLiteActivity)
-                                .setTitleMessage(getString(com.topdon.module.thermal.ir.R.string.app_tip))
-                                .setMessage(getString(com.topdon.module.thermal.ir.R.string.app_microphone_content))
-                                .setPositiveListener(com.topdon.module.thermal.ir.R.string.app_open) {
+                                .setTitleMessage(getString(com.mpdc4gsr.module.thermal.ir.R.string.app_tip))
+                                .setMessage(getString(com.mpdc4gsr.module.thermal.ir.R.string.app_microphone_content))
+                                .setPositiveListener(com.mpdc4gsr.module.thermal.ir.R.string.app_open) {
                                     AppUtils.launchAppDetailsSettings()
                                 }
-                                .setCancelListener(com.topdon.module.thermal.ir.R.string.app_cancel) {
+                                .setCancelListener(com.mpdc4gsr.module.thermal.ir.R.string.app_cancel) {
                                 }
                                 .setCanceled(true)
                                 .create().show()
@@ -1730,7 +1730,7 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
                 }
             }
         } catch (e: Exception) {
-            Log.e("线程", e.message.toString())
+            Log.e("[ph][ph]", e.message.toString())
         }
     }
 
@@ -1978,7 +1978,7 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
                         try {
                             val dialog =
                                 TipDialog.Builder(this@IRThermalLiteActivity)
-                                    .setMessage(com.topdon.module.thermal.ir.R.string.tip_video_record)
+                                    .setMessage(com.mpdc4gsr.module.thermal.ir.R.string.tip_video_record)
                                     .create()
                             dialog.show()
                         } catch (_: Exception) {
@@ -2050,7 +2050,7 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
             binding.temperatureSeekbar.progressColor
             binding.temperatureIvLock.visibility = View.VISIBLE
             binding.tvTempContent.visibility = View.GONE
-            binding.temperatureIvInput.setImageResource(com.topdon.module.thermal.ir.R.drawable.ic_color_edit)
+            binding.temperatureIvInput.setImageResource(com.mpdc4gsr.module.thermal.ir.R.drawable.ic_color_edit)
             binding.thermalRecyclerNight.setPseudoColor(pseudoColorMode)
         }
         binding.thermalRecyclerNight.setSettingSelected(
@@ -2093,7 +2093,7 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
 
                 delay(30 * 1000)
                 IRTool.setAutoShutter(isAutoShutter)
-                XLog.i("模组配置恢复成功")
+                XLog.i("[ph][ph][ph][ph][ph][ph][ph][ph]")
             }
     }
 
@@ -2116,7 +2116,7 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
         )
         binding.tvTempContent.visibility = View.VISIBLE
         binding.thermalRecyclerNight.setPseudoColor(-1)
-        binding.temperatureIvInput.setImageResource(com.topdon.module.thermal.ir.R.drawable.ir_model)
+        binding.temperatureIvInput.setImageResource(com.mpdc4gsr.module.thermal.ir.R.drawable.ir_model)
     }
 
     private fun videoTimeShow() {
@@ -2230,7 +2230,7 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
             DeviceControlManager.getInstance().release()
             CameraPreviewManager.getInstance().releaseSource()
         } catch (e: Exception) {
-            XLog.e("$TAG:lite销毁异常-${e.message}")
+            XLog.e("$TAG:lite[ph][ph][ph][ph]-${e.message}")
         }
         SystemClock.sleep(100)
     }
@@ -2271,7 +2271,7 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
                         DeviceIrcmdControlManager.getInstance().getIrcmdEngine()
                             ?.basicGainGet(basicGainGetValue)
                 } catch (e: Exception) {
-                    XLog.e("增益获取失败")
+                    XLog.e("[ph][ph][ph][ph][ph][ph]")
                 }
                 basicGainGetTime = System.currentTimeMillis()
             }
@@ -2304,7 +2304,7 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
                         "distance = " + params_array[4] + " hum = " + params_array[5] + " basicGain = " + basicGainGetValue[0],
             )
         } catch (e: Exception) {
-            XLog.e("$TAG--温度修正异常：${e.message}")
+            XLog.e("$TAG--[ph][ph][ph][ph][ph][ph]：${e.message}")
         } finally {
             return tempNew ?: 0f
         }

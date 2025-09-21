@@ -125,7 +125,7 @@ class GSRDeviceManagementActivity : AppCompatActivity(), View.OnClickListener {
                     this@GSRDeviceManagementActivity,
                     "gsr_management_1",
                     128,
-                    com.topdon.tc001.controller.RecordingController(
+                    com.mpdc4gsr.controller.RecordingController(
                         this@GSRDeviceManagementActivity,
                         this@GSRDeviceManagementActivity
                     )

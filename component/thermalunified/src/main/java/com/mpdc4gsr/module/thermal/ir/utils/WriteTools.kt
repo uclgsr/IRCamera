@@ -11,14 +11,14 @@ import java.io.File
 object WriteTools {
     fun delete(file: File): Int {
         val uri: Uri = FileTools.getUri(file)
-        XLog.w("删除文件 uri:$uri")
+        XLog.w("[ph][ph][ph][ph] uri:$uri")
         val mediaId = queryId(uri)
         val resolver = Utils.getApp().applicationContext.contentResolver
         val selection = "${MediaStore.Images.Media._ID} = ?"
 
         val selectionArgs = arrayOf(mediaId.toString())
         val result = resolver.delete(uri, selection, selectionArgs)
-        XLog.w("删除结果文件: $result")
+        XLog.w("[ph][ph][ph][ph][ph][ph]: $result")
         return result
     }
 
@@ -43,7 +43,7 @@ object WriteTools {
                 }
             }
         } catch (e: Exception) {
-            XLog.e("查询异常: ${e.message}")
+            XLog.e("[ph][ph][ph][ph]: ${e.message}")
         } finally {
             cursor?.close()
         }

@@ -33,7 +33,7 @@ class PermissionControllerTest {
         mockUsbManager = mockk(relaxed = true)
 
         every { mockActivity.getSystemService(Context.USB_SERVICE) } returns mockUsbManager
-        every { mockActivity.packageName } returns "com.topdon.tc001"
+        every { mockActivity.packageName } returns "com.mpdc4gsr.tc001"
 
         permissionController = PermissionController(mockActivity)
         permissionController.initialize()

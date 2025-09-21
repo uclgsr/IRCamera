@@ -40,7 +40,6 @@ IRCamera/
 +-- libir/                        # Core IR processing library  
 +-- libui/                        # User interface components library
 +-- BleModule/                    # Bluetooth Low Energy module
-+-- RangeSeekBar/                 # UI range selector component
 +-- docs/                         # **Consolidated Documentation**
 +-- scripts/                      # Build and utility scripts
 +-- .github/                      # CI/CD and GitHub configurations
@@ -557,7 +556,7 @@ print(f'CPU: {process.cpu_percent()}%')
 "
 
 # Android performance monitoring:
-adb shell top -p $(adb shell pidof com.topdon.ircamera)
+adb shell top -p $(adb shell pidof com.mpdc4gsr.ircamera)
 ```
 
 ## Contributing Guidelines

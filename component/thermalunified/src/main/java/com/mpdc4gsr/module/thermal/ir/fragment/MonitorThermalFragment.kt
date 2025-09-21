@@ -103,8 +103,8 @@ class MonitorThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> 
 
         val screenWidth = ScreenUtils.getScreenWidth()
         val screenHeight = screenWidth * 270 / 360
-        Log.w("123", "screenWidth比例:$screenWidth / $screenHeight")
-        Log.w("123", "screenWidth比例:${screenWidth.toFloat() / screenHeight}")
+        Log.w("123", "screenWidth[ph][ph]:$screenWidth / $screenHeight")
+        Log.w("123", "screenWidth[ph][ph]:${screenWidth.toFloat() / screenHeight}")
         width = screenWidth
         height = screenHeight
         highCrossWidth = resources.getDimension(R.dimen.high_cross_width).toInt()
@@ -152,9 +152,9 @@ class MonitorThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> 
 
         msgLiveData.observe(this) { msg ->
             if (msg == 0) {
-                mCenterTextView!!.text = "中心温 $mCenter"
-                mMaxTextView!!.text = "最高温 $mMaxTemp"
-                mMinTextView!!.text = "最低温 $mMinTemp"
+                mCenterTextView!!.text = "[ph][ph][ph] $mCenter"
+                mMaxTextView!!.text = "[ph][ph][ph] $mMaxTemp"
+                mMinTextView!!.text = "[ph][ph][ph] $mMinTemp"
                 maxImg?.let { setViewPosition(it, maxIndex) }
                 minImg?.let { setViewPosition(it, minIndex) }
             }
@@ -173,7 +173,7 @@ class MonitorThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> 
     fun onIrVideoStart() {
         mIsIrVideoStart =
             if (mIsIrVideoStart) {
-                ToastUtils.showShort("视频流已开启")
+                ToastUtils.showShort("[ph][ph][ph][ph][ph][ph]")
                 return
             } else {
                 true
@@ -226,17 +226,17 @@ class MonitorThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> 
                                 minBigDecimal.setScale(1, java.math.RoundingMode.HALF_UP).toFloat()
                         } catch (e: Exception) {
                             e.printStackTrace()
-                            Log.e(TAG, "提取温度异常:${e.message}")
+                            Log.e(TAG, "[ph][ph][ph][ph][ph][ph]:${e.message}")
                         }
                     }
                 },
             )
 
         if (ret == 5) {
-            Log.w("123", "视频流开启完成")
+            Log.w("123", "[ph][ph][ph][ph][ph][ph][ph]")
         } else {
 
-            Log.w("123", "视频流开启失败")
+            Log.w("123", "[ph][ph][ph][ph][ph][ph][ph]")
             mGuideInterface = null
             mIsIrVideoStart = false
         }
@@ -269,37 +269,37 @@ class MonitorThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> 
     fun onIrVideoStop() {
         mIsIrVideoStart =
             if (!mIsIrVideoStart) {
-                Log.w("123", "视频流已停止")
+                Log.w("123", "[ph][ph][ph][ph][ph][ph]")
                 return
             } else {
                 false
             }
         mGuideInterface!!.exit()
         mGuideInterface = null
-        Log.w("123", "视频流停止完成")
+        Log.w("123", "[ph][ph][ph][ph][ph][ph][ph]")
     }
 
     fun onLowRangeBtnClick(view: View?) {
         if (mGuideInterface == null) {
-            ToastUtils.showShort("请先开启视频流")
+            ToastUtils.showShort("[ph][ph][ph][ph][ph][ph][ph]")
             return
         }
         mGuideInterface!!.setRange(1)
-        ToastUtils.showShort("切换到常温档成功")
+        ToastUtils.showShort("[ph][ph][ph][ph][ph][ph][ph][ph]")
     }
 
     fun onHighRangeBtnClick(view: View?) {
         if (mGuideInterface == null) {
-            ToastUtils.showShort("请先开启视频流")
+            ToastUtils.showShort("[ph][ph][ph][ph][ph][ph][ph]")
             return
         }
         mGuideInterface!!.setRange(2)
-        ToastUtils.showShort("切换到高温档成功")
+        ToastUtils.showShort("[ph][ph][ph][ph][ph][ph][ph][ph]")
     }
 
     fun onTempBtnClick() {
         if (mGuideInterface == null) {
-            ToastUtils.showShort("请先开启视频流")
+            ToastUtils.showShort("[ph][ph][ph][ph][ph][ph][ph]")
             return
         }
         isDispLayTemp = !isDispLayTemp
@@ -337,7 +337,7 @@ class MonitorThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> 
 
     fun onNucShutterClick(view: View?) {
         if (mGuideInterface == null) {
-            ToastUtils.showShort("请先开启视频流")
+            ToastUtils.showShort("[ph][ph][ph][ph][ph][ph][ph]")
             return
         }
         mGuideInterface!!.nuc()
@@ -354,13 +354,13 @@ class MonitorThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> 
         when (event.action) {
             1001 -> {
 
-                ToastUtils.showShort("拍照")
+                ToastUtils.showShort("[ph][ph]")
                 picture()
             }
 
             1002 -> {
 
-                ToastUtils.showShort("录制")
+                ToastUtils.showShort("[ph][ph]")
                 video()
             }
 
@@ -427,7 +427,7 @@ class MonitorThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> 
 
     private fun updatePalette(index: Int) {
         if (mGuideInterface == null) {
-            ToastUtils.showShort("请先开启视频流")
+            ToastUtils.showShort("[ph][ph][ph][ph][ph][ph][ph]")
             return
         }
         mGuideInterface!!.changePalette(index)
@@ -525,7 +525,7 @@ class MonitorThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> 
 
     private fun video() {
         if (isVideoRunning) {
-            Log.w("123", "正在录制")
+            Log.w("123", "[ph][ph][ph][ph]")
             return
         }
 
@@ -539,7 +539,7 @@ class MonitorThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> 
     private fun full() {
         rotateType =
             if (rotateType == 0) {
-                Log.w("123", "横屏显示")
+                Log.w("123", "[ph][ph][ph][ph]")
                 1
             } else {
                 0
@@ -586,7 +586,7 @@ class MonitorThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> 
                 delay(timeMillis)
                 time++
             }
-            Log.w("123", "停止记录, 数据量:$time")
+            Log.w("123", "[ph][ph][ph][ph], [ph][ph][ph]:$time")
         }
     }
 }

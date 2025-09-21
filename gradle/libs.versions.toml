@@ -299,8 +299,8 @@ javacpp = { group = "org.bytedeco", name = "javacpp", version.ref = "javacv" }
 ir-layout = { group = "com.github.CoderCaiSL", name = "jitpackMvn", version = "+" }
 
 
-lms2-user = { group = "com.topdon.lms.sdk3", name = "lms_international", version.ref = "lmsInternational" }
-lms3-user = { group = "com.topdon.lms.sdk3", name = "lms_china", version.ref = "lmsChina" }
+lms2-user = { group = "com.mpdc4gsr.lms.sdk3", name = "lms_international", version.ref = "lmsInternational" }
+lms3-user = { group = "com.mpdc4gsr.lms.sdk3", name = "lms_china", version.ref = "lmsChina" }
 
 
 ffmpeg-android-arm64 = { group = "org.bytedeco", name = "ffmpeg", version.ref = "ffmpeg" }

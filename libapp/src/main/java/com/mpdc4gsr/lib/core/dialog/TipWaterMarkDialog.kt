@@ -266,7 +266,7 @@ class TipWaterMarkDialog : Dialog {
                             location.latitude,
                             location.longitude, 1,
                         )
-                    Log.v("TAG", "获取地址信息：$result")
+                    Log.v("TAG", "[ph][ph][ph][ph][ph][ph]：$result")
                 }
             } catch (e: Exception) {
                 e.printStackTrace()

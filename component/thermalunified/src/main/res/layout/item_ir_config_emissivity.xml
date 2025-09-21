@@ -16,7 +16,7 @@
         android:padding="8dp"
         android:textColor="#99ffffff"
         android:textSize="11sp"
-        tools:text="湿土" />
+        tools:text="[ph][ph]" />
 
     <TextView
         android:id="@+id/tv_em_num"

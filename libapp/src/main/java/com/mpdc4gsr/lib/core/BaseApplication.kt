@@ -113,7 +113,7 @@ abstract class BaseApplication : Application() {
 
     private fun connectWebSocket() {
         val ssid = WifiUtil.getCurrentWifiSSID(this) ?: return
-        Log.i("WebSocket", "current连接 Wifi SSID: $ssid")
+        Log.i("WebSocket", "current[ph][ph] Wifi SSID: $ssid")
         // TS004/TC007 device functionality removed
         // if (ssid.startsWith(DeviceConfig.TS004_NAME_START)) {
         //     SharedManager.hasTS004 = true

@@ -174,9 +174,15 @@ flowchart TD
 ```
 
 ## Component Dependency Flow
+# Mermaid Diagrams
+
+## Code Quality Improvements Flow
 
 ```mermaid
 graph TD
+    A[Kotlin Compilation Warnings] --> B[Type Safety Issues]
+    A --> C[Null Safety Issues] 
+    A --> D[Experimental API Usage]
     subgraph "Application Layer"
         APP[Main Application]
     end
@@ -218,19 +224,35 @@ graph TD
     APP --> TIR
     APP --> TL
     
+    B --> E[GuideInterface.kt<br/>String? -> String]
+    C --> F[RingBuffer.kt<br/>ByteArray? null checks]
+    C --> G[UsbBuffer.kt<br/>Remove redundant checks]
+    C --> H[FileUtils.kt<br/>Array<File>? safety]
+    D --> I[ByteUtils.kt<br/>@OptIn annotation]
     T --> TC
     TIR --> TC
     TL --> TC
     
+    E --> J[Fixed with !!]
+    F --> K[Added null guard]
+    G --> L[Removed always true/false]
+    H --> M[Added null check]
+    I --> N[Added @OptIn]
     TC --> AU
     TC --> TP
     TC --> CM
     TC --> IP
     
+    J --> O[Zero Warnings]
+    K --> O
+    L --> O
+    M --> O
+    N --> O
     T --> HAL
     TIR --> HAL
     TL --> HAL
     
+    O --> P[Successful Build]
     HAL --> GD
     HAL --> TD
     HAL --> AD
@@ -240,10 +262,37 @@ graph TD
     TC --> LU
 ```
 
+## Architecture Overview
 ## Risk Assessment Matrix
 
 ```mermaid
 graph LR
+    A[IRCamera Platform] --> B[libapp Module]
+    B --> C[com.matrix Package]
+    B --> D[com.mpdc4gsr Package]
+    
+    C --> E[GuideInterface]
+    C --> F[RingBuffer] 
+    C --> G[UsbBuffer]
+    C --> H[ByteUtils]
+    C --> I[FileUtils]
+    
+    D --> J[GuideInterface Copy]
+    D --> K[RingBuffer Copy]
+    D --> L[UsbBuffer Copy]
+    D --> M[ByteUtils Copy]
+    D --> N[FileUtils Copy]
+    
+    style E fill:#90EE90
+    style F fill:#90EE90
+    style G fill:#90EE90
+    style H fill:#90EE90
+    style I fill:#90EE90
+    style J fill:#90EE90
+    style K fill:#90EE90
+    style L fill:#90EE90
+    style M fill:#90EE90
+    style N fill:#90EE90
     subgraph "Risk vs Impact Assessment"
         A[Low Risk<br/>High Impact] --> A1[Extract Common Utils]
         A[Low Risk<br/>High Impact] --> A2[Shared UI Components]

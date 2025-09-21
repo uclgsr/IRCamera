@@ -35,14 +35,13 @@ class FileUtils {
             flag = true
             val files = dirFile.listFiles()
 
-            for (i in files.indices) {
-                if (files[i].isFile) {
-
-                    flag = deleteFile(files[i].absolutePath)
-                    if (!flag) break
-                } else {
-
-                    flag = deleteDirectory(files[i].absolutePath)
+            if (files != null) {
+                for (file in files) {
+                    flag = if (file.isFile) {
+                        deleteFile(file.absolutePath)
+                    } else {
+                        deleteDirectory(file.absolutePath)
+                    }
                     if (!flag) break
                 }
             }

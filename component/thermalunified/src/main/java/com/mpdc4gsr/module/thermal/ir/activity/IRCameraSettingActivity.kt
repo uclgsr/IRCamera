@@ -270,7 +270,7 @@ class IRCameraSettingActivity : BaseActivity() {
             override fun onProviderEnabled(provider: String) {
                 Toast.makeText(
                     this@IRCameraSettingActivity,
-                    "GPS打开",
+                    "GPS[ph][ph]",
                     Toast.LENGTH_SHORT,
                 ).show()
                 getLocation()
@@ -279,7 +279,7 @@ class IRCameraSettingActivity : BaseActivity() {
             override fun onProviderDisabled(provider: String) {
                 Toast.makeText(
                     this@IRCameraSettingActivity,
-                    "GPS关闭",
+                    "GPS[ph][ph]",
                     Toast.LENGTH_SHORT,
                 ).show()
             }
@@ -322,7 +322,7 @@ class IRCameraSettingActivity : BaseActivity() {
                         location.latitude,
                         location.longitude, 1,
                     )
-                Log.v("TAG", "获取地址信息：$result")
+                Log.v("TAG", "[ph][ph][ph][ph][ph][ph]：$result")
             }
         } catch (e: Exception) {
             e.printStackTrace()

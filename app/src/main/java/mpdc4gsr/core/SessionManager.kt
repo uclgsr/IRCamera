@@ -1,4 +1,4 @@
-package mpdc4gsr.sync
+package mpdc4gsr.core
 
 import android.content.Context
 import android.util.Log

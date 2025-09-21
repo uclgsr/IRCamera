@@ -330,7 +330,7 @@ abstract class BaseIRPlushFragment :
                 super.handleMessage(msg)
                 Log.d(
                     TAG,
-                    "USBMonitorManager 收到消息${msg.what}",
+                    "USBMonitorManager [ph][ph][ph][ph]${msg.what}",
                 )
                 if (!isDualIR()) {
                     return
@@ -498,7 +498,7 @@ abstract class BaseIRPlushFragment :
                 val config = ConfigRepository.readConfig(false)
                 val disChar = (config.distance * 128).toInt()
                 val emsChar = (config.radiation * 128).toInt()
-                XLog.w("设置TPD_PROP DISTANCE:$disChar, EMS:$emsChar}")
+                XLog.w("[ph][ph]TPD_PROP DISTANCE:$disChar, EMS:$emsChar}")
                 delay(timeMillis)
 
 
@@ -514,7 +514,7 @@ abstract class BaseIRPlushFragment :
                 )
 
                 delay(timeMillis)
-                XLog.w("设置TPD_PROP DISTANCE:$disChar, EMS:$emsChar}")
+                XLog.w("[ph][ph]TPD_PROP DISTANCE:$disChar, EMS:$emsChar}")
                 if (isFirst && isrun) {
 
                     ircmd?.setMirror(false)
@@ -540,7 +540,7 @@ abstract class BaseIRPlushFragment :
                 } else {
                     ircmd?.updateOOCOrB(CommonParams.UpdateOOCOrBType.B_UPDATE)
                 }
-                XLog.w("设置TPD_PROP DISTANCE2:$disChar, EMS:$emsChar}")
+                XLog.w("[ph][ph]TPD_PROP DISTANCE2:$disChar, EMS:$emsChar}")
             }
     }
 
@@ -576,7 +576,7 @@ abstract class BaseIRPlushFragment :
             dualView = null
             Log.d(
                 TAG,
-                "正常回收完毕 dualStop",
+                "[ph][ph][ph][ph][ph][ph] dualStop",
             )
         }
     }
@@ -612,7 +612,7 @@ abstract class BaseIRPlushFragment :
     ) {
         Log.d(
             TAG,
-            "USBMonitorManager onConnect测试",
+            "USBMonitorManager onConnect[ph][ph]",
         )
         mIrHandler.sendEmptyMessage(Const.HANDLE_CONNECT)
     }

@@ -113,7 +113,7 @@
         app:layout_constraintStart_toStartOf="@id/view_content_bg"
         app:layout_constraintTop_toTopOf="@id/view_content_bg"
         app:layout_constraintVertical_chainStyle="packed"
-        tools:text="点" />
+        tools:text="[ph]" />
 
     <TextView
         android:id="@+id/tv_time"

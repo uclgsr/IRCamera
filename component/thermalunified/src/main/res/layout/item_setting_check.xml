@@ -15,7 +15,7 @@
         android:layout_height="@dimen/app_btn_height"
         android:background="@drawable/ui_radio_active_btn"
         android:padding="4dp"
-        android:text="1秒"
+        android:text="1[ph]"
         android:textAllCaps="false"
         android:textColor="@color/white"
         android:textSize="@dimen/app_small_font"

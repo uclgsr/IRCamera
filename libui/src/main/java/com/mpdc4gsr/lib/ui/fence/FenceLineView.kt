@@ -135,7 +135,7 @@ class FenceLineView : View {
     private fun result() {
         val point1 = intArrayOf(startPoint[0], startPoint[1])
         val point2 = intArrayOf(endPoint[0], endPoint[1])
-        Log.w("123", "修正坐标 start:${point1.contentToString()}, end:${point2.contentToString()}")
+        Log.w("123", "[ph][ph][ph][ph] start:${point1.contentToString()}, end:${point2.contentToString()}")
         if (listener != null) {
             listener!!.callback(point1, point2, intArrayOf(width, height))
         }

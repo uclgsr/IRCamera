@@ -301,8 +301,8 @@ class CameraView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener {
             mCameraManager = context.getSystemService(Context.CAMERA_SERVICE) as CameraManager?
             mCameraManager!!.openCamera(mCameraId, mStateCallback, mCameraHandler)
         } catch (e: Exception) {
-            Log.e("123", "打开相机失败:${e.message}")
-            ToastUtils.showShort("打开相机失败")
+            Log.e("123", "[ph][ph][ph][ph][ph][ph]:${e.message}")
+            ToastUtils.showShort("[ph][ph][ph][ph][ph][ph]")
         }
     }
 
@@ -339,7 +339,7 @@ class CameraView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener {
                 val h = w * sizes[0].height / sizes[0].width
                 mCaptureSize = Size(w, h)
                 Log.w("123", "w:${sizes[0].width}, h:${sizes[0].height}")
-                Log.w("123", "调整后w:$w, h:$h")
+                Log.w("123", "[ph][ph][ph]w:$w, h:$h")
 
 
 

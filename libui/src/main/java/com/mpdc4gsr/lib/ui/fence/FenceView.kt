@@ -132,9 +132,9 @@ class FenceView : View {
         }
         Log.i(
             "123",
-            "原始坐标 start:${startPoint.contentToString()}, end:${endPoint.contentToString()}",
+            "[ph][ph][ph][ph] start:${startPoint.contentToString()}, end:${endPoint.contentToString()}",
         )
-        Log.w("123", "修正坐标 start:${point1.contentToString()}, end:${point2.contentToString()}")
+        Log.w("123", "[ph][ph][ph][ph] start:${point1.contentToString()}, end:${point2.contentToString()}")
         if (listener != null) {
             listener!!.callback(point1, point2, intArrayOf(width, height))
         }

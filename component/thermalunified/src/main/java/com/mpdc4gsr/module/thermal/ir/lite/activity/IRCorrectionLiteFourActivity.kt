@@ -89,7 +89,7 @@ class IRCorrectionLiteFourActivity : BaseActivity() {
                         override fun onLastTimeFinish(num: Int) {
                             try {
                                 if (!result) {
-                                    ToastUtils.showShort("标定保存失败，请重新标定")
+                                    ToastUtils.showShort("[ph][ph][ph][ph][ph][ph]，[ph][ph][ph][ph][ph]")
                                     return
                                 }
                                 if (!this@IRCorrectionLiteFourActivity.isFinishing) {

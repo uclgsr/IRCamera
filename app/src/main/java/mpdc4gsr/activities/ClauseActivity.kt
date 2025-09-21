@@ -1,4 +1,4 @@
-package mpdc4gsr
+package mpdc4gsr.activities
 
 import android.os.Bundle
 import android.text.method.ScrollingMovementMethod

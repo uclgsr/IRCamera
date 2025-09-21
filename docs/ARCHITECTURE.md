@@ -451,7 +451,6 @@ graph TB
     
     subgraph "External Dependencies"
         BleModule[BLE Module<br/>Bluetooth Integration]
-        RangeSeekBar[Range Seek Bar<br/>Custom UI Control]
         AndroidSDK[Android SDK<br/>Platform APIs]
         OpenCV[OpenCV<br/>Computer Vision]
     end
@@ -632,7 +631,7 @@ graph TB
     
     subgraph "Library Modules"
         CoreLibraries[Core Libraries<br/>libir, libcom, libapp, etc.]
-        ExternalModules[External Modules<br/>BLE, RangeSeekBar]
+        ExternalModules[External Modules<br/>BLE]
     end
     
     subgraph "Build Tools"

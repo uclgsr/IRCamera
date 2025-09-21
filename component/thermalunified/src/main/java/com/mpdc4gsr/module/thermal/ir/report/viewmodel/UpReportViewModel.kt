@@ -47,20 +47,32 @@ class UpReportViewModel : BaseViewModel() {
                         continue
                     }
                     val file = File(reportIrBean.picture_url)
-                    LMS.getInstance().uploadFile(file, 0, 13, 20) {
-                        XLog.i(it?.data)
-                        if (it?.code == LMS.SUCCESS) {
-                            file.delete()
-                            val jsonObject = JSONObject(it.data)
-                            reportIrBean.picture_id = jsonObject.getString("fileSecret")
-                            reportIrBean.picture_url = jsonObject.getString("url")
+                    LMS.getInstance().uploadFile(file, 0, 13, 20, object : IResponseCallback {
+                        override fun onResponse(response: String?) {
+                            try {
+                                val responseObj = if (response != null) JSONObject(response) else JSONObject()
+                                XLog.i(responseObj.toString())
+                                if (responseObj.optString("code", "2000") == LMS.SUCCESS) {
+                                    file.delete()
+                                    val dataObj = responseObj.optJSONObject("data") ?: JSONObject()
+                                    reportIrBean.picture_id = dataObj.optString("fileSecret", "")
+                                    reportIrBean.picture_url = dataObj.optString("url", "")
+                                }
+                            } catch (e: Exception) {
+                                XLog.e("Upload response parse error", e)
+                            }
+                            XLog.i("Upload[ph][ph][ph][ph]")
+                            downLatch.countDown()
                         }
-                        XLog.i("Upload完一张图")
-                        downLatch.countDown()
-                    }
+                        
+                        override fun onFail(exception: Exception?) {
+                            XLog.e("Upload failed", exception)
+                            downLatch.countDown()
+                        }
+                    })
                 }
                 downLatch.await()
-                XLog.i("${irList.size} 张图Upload完毕")
+                XLog.i("${irList.size} [ph][ph]Upload[ph][ph]")
             }
         }
     }
@@ -80,7 +92,7 @@ class UpReportViewModel : BaseViewModel() {
             params.addBodyParameter("testTime", TimeUtils.getNowString())
             params.addBodyParameter("testInfo", GsonUtils.toJson(reportBean))
             params.addBodyParameter("sn", "")
-            HttpProxy.instant.post(
+            HttpProxy.getInstant().post(
                 url,
                 params,
                 object : IResponseCallback {

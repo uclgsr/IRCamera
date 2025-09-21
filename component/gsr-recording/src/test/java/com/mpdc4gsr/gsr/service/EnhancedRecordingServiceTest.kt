@@ -40,7 +40,7 @@ class EnhancedRecordingServiceTest {
 
         try {
             val binderClass =
-                Class.forName("com.topdon.gsr.service.EnhancedRecordingService\$EnhancedRecordingBinder")
+                Class.forName("com.mpdc4gsr.gsr.service.EnhancedRecordingService\$EnhancedRecordingBinder")
             assertNotNull("EnhancedRecordingBinder class should exist", binderClass)
         } catch (e: ClassNotFoundException) {
 

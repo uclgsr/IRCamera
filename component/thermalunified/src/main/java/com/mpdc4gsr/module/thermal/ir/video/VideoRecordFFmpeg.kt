@@ -173,11 +173,11 @@ class VideoRecordFFmpeg(
 
     private fun getVideoCodec(): Int {
         return if (Build.BRAND == "motorola" && Build.MODEL == "XT2201-2") {
-            XLog.i("使用视频编码AV_CODEC_ID_H264")
+            XLog.i("[ph][ph][ph][ph][ph][ph]AV_CODEC_ID_H264")
             avcodec.AV_CODEC_ID_H264
         } else {
 
-            XLog.i("使用视频编码AV_CODEC_ID_MPEG4")
+            XLog.i("[ph][ph][ph][ph][ph][ph]AV_CODEC_ID_MPEG4")
             avcodec.AV_CODEC_ID_MPEG4
         }
     }
@@ -213,7 +213,7 @@ class VideoRecordFFmpeg(
         paint.textSize = SizeUtils.sp2px(6f).toFloat()
         paint.isDither = true
         paint.isFilterBitmap = true
-        paint.getTextBounds("占位高度文本", 0, "占位高度文本".length, rectText)
+        paint.getTextBounds("[ph][ph][ph][ph][ph][ph]", 0, "[ph][ph][ph][ph][ph][ph]".length, rectText)
     }
 
     var startTime: Long = 0L
@@ -278,7 +278,7 @@ class VideoRecordFFmpeg(
                             }
                         },
                         Consumer {
-                            Log.e("图像对象录制异常", "${it.message}")
+                            Log.e("[ph][ph][ph][ph][ph][ph][ph][ph]", "${it.message}")
                         },
                     )
             if (audioRecord == null) {
@@ -362,18 +362,18 @@ class VideoRecordFFmpeg(
 
 
                             } catch (e: Exception) {
-                                Log.e("图像录制", "Caught an exception: " + e.message)
+                                Log.e("[ph][ph][ph][ph]", "Caught an exception: " + e.message)
                             }
                         },
                         Consumer {
-                            Log.e("图像对象录制异常", "${it.message}")
+                            Log.e("[ph][ph][ph][ph][ph][ph][ph][ph]", "${it.message}")
                         },
                     )
         } catch (e: Exception) {
 
             exportDisposable?.dispose()
             stopVideoRecordListener?.invoke(false)
-            XLog.e("录制异常")
+            XLog.e("[ph][ph][ph][ph]")
             e.printStackTrace()
         }
     }
@@ -436,7 +436,7 @@ class VideoRecordFFmpeg(
                     )
             }
         } catch (e: Exception) {
-            Log.e("图像对象处理异常", "${e.message}")
+            Log.e("[ph][ph][ph][ph][ph][ph][ph][ph]", "${e.message}")
         }
     }
 
@@ -501,7 +501,7 @@ class VideoRecordFFmpeg(
                     delay(300)
                     refreshAlbum()
                 } catch (e: Exception) {
-                    XLog.e("捕获停止录制视频" + e.message)
+                    XLog.e("[ph][ph][ph][ph][ph][ph][ph][ph]" + e.message)
                 }
             }
             isRunning = false
@@ -639,7 +639,7 @@ class VideoRecordFFmpeg(
                             SizeUtils.dp2px(20f),
                         )
                 } catch (e: Exception) {
-                    Log.e(TAG, "图像对象处理异常 exception:${e.message}")
+                    Log.e(TAG, "[ph][ph][ph][ph][ph][ph][ph][ph] exception:${e.message}")
                 }
 
             }
@@ -701,7 +701,7 @@ class VideoRecordFFmpeg(
         canvas.save()
         val beginX = pix10.toDouble()
         var beginY = (bmp.height - pix10).toDouble()
-        paint.getTextBounds("占位高度文本", 0, "占位高度文本".length, rectText)
+        paint.getTextBounds("[ph][ph][ph][ph][ph][ph]", 0, "[ph][ph][ph][ph][ph][ph]".length, rectText)
         if (!TextUtils.isEmpty(time)) {
             beginY = beginY - (rectText.bottom - rectText.top)
             canvas.drawText(time!!, beginX.toInt().toFloat(), beginY.toInt().toFloat(), paint)

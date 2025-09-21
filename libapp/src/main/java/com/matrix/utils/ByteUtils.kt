@@ -22,7 +22,7 @@ object ByteUtils {
      * byte[] => string
      * [0x01, 0x02] => 01 02
      */
-//    @ExperimentalUnsignedTypes // just to make it clear that the experimental unsigned types are used
+    @OptIn(ExperimentalUnsignedTypes::class)
     fun ByteArray.toHexString() = asUByteArray().joinToString(" ") {
         it.toString(16).padStart(2, '0').uppercase(Locale.getDefault())
     }

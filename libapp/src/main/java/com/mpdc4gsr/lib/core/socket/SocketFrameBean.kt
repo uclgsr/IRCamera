@@ -262,7 +262,7 @@ data class SocketFrameBean(
     )
 
     companion object {
-        private fun Boolean.openText(): String = if (this) "开启" else "关闭"
+        private fun Boolean.openText(): String = if (this) "[ph][ph]" else "[ph][ph]"
 
         private fun Int.toCStr(): String =
             "${this / 10}${if (this % 10 == 0) "" else ".${this % 10}"}°C"
@@ -272,55 +272,55 @@ data class SocketFrameBean(
         val stringBuilder = StringBuilder()
 
         if (isMaxShow) {
-            stringBuilder.append("高温点 ($maxX, $maxY) 温度${maxValue.toCStr()} 报警${isMaxWarn.openText()}\n")
+            stringBuilder.append("[ph][ph][ph] ($maxX, $maxY) [ph][ph]${maxValue.toCStr()} [ph][ph]${isMaxWarn.openText()}\n")
         }
         if (isMinShow) {
-            stringBuilder.append("低温点 ($minX, $minY) 温度${minValue.toCStr()} 报警${isMinWarn.openText()}\n")
+            stringBuilder.append("[ph][ph][ph] ($minX, $minY) [ph][ph]${minValue.toCStr()} [ph][ph]${isMinWarn.openText()}\n")
         }
         if (isCenterShow) {
-            stringBuilder.append("中心点 ($centerX, $centerY) 温度${centerValue.toCStr()} 报警${isCenterWarn.openText()}\n")
+            stringBuilder.append("[ph][ph][ph] ($centerX, $centerY) [ph][ph]${centerValue.toCStr()} [ph][ph]${isCenterWarn.openText()}\n")
         }
 
         if (isP1Show) {
-            stringBuilder.append("点1 ($p1X, $p1Y) 温度${p1Value.toCStr()}\n")
+            stringBuilder.append("[ph]1 ($p1X, $p1Y) [ph][ph]${p1Value.toCStr()}\n")
         }
         if (isP2Show) {
-            stringBuilder.append("点2 ($p2X, $p2Y) 温度${p2Value.toCStr()}\n")
+            stringBuilder.append("[ph]2 ($p2X, $p2Y) [ph][ph]${p2Value.toCStr()}\n")
         }
         if (isP3Show) {
-            stringBuilder.append("点3 ($p3X, $p3Y) 温度${p3Value.toCStr()}\n")
+            stringBuilder.append("[ph]3 ($p3X, $p3Y) [ph][ph]${p3Value.toCStr()}\n")
         }
 
         if (isL1Show) {
-            stringBuilder.append("线1 ($l1StartX, $l1StartY)-($l1EndX, $l1EndY) ")
-            stringBuilder.append("最低温${l1MinValue.toCStr()}($l1MinX, $l1MinY) 最高温${l1MaxValue.toCStr()}($l1MaxX, $l1MaxY) ")
-            stringBuilder.append("平均温${l1AveValue.toCStr()}\n")
+            stringBuilder.append("[ph]1 ($l1StartX, $l1StartY)-($l1EndX, $l1EndY) ")
+            stringBuilder.append("[ph][ph][ph]${l1MinValue.toCStr()}($l1MinX, $l1MinY) [ph][ph][ph]${l1MaxValue.toCStr()}($l1MaxX, $l1MaxY) ")
+            stringBuilder.append("[ph][ph][ph]${l1AveValue.toCStr()}\n")
         }
         if (isL2Show) {
-            stringBuilder.append("线2 ($l2StartX, $l2StartY)-($l2EndX, $l2EndY) ")
-            stringBuilder.append("最低温${l2MinValue.toCStr()}($l2MinX, $l2MinY) 最高温${l2MaxValue.toCStr()}($l2MaxX, $l2MaxY) ")
-            stringBuilder.append("平均温${l2AveValue.toCStr()}\n")
+            stringBuilder.append("[ph]2 ($l2StartX, $l2StartY)-($l2EndX, $l2EndY) ")
+            stringBuilder.append("[ph][ph][ph]${l2MinValue.toCStr()}($l2MinX, $l2MinY) [ph][ph][ph]${l2MaxValue.toCStr()}($l2MaxX, $l2MaxY) ")
+            stringBuilder.append("[ph][ph][ph]${l2AveValue.toCStr()}\n")
         }
         if (isL3Show) {
-            stringBuilder.append("线3 ($l3StartX, $l3StartY)-($l3EndX, $l3EndY) ")
-            stringBuilder.append("最低温${l3MinValue.toCStr()}($l3MinX, $l3MinY) 最高温${l3MaxValue.toCStr()}($l3MaxX, $l3MaxY) ")
-            stringBuilder.append("平均温${l3AveValue.toCStr()}\n")
+            stringBuilder.append("[ph]3 ($l3StartX, $l3StartY)-($l3EndX, $l3EndY) ")
+            stringBuilder.append("[ph][ph][ph]${l3MinValue.toCStr()}($l3MinX, $l3MinY) [ph][ph][ph]${l3MaxValue.toCStr()}($l3MaxX, $l3MaxY) ")
+            stringBuilder.append("[ph][ph][ph]${l3AveValue.toCStr()}\n")
         }
 
         if (isR1Show) {
-            stringBuilder.append("面1 ($r1StartX, $r1StartY)-($r1EndX, $r1EndY) ")
-            stringBuilder.append("最低温${r1MinValue.toCStr()}($r1MinX, $r1MinY) 最高温${r1MaxValue.toCStr()}($r1MaxX, $r1MaxY) ")
-            stringBuilder.append("平均温${r1AveValue.toCStr()}\n")
+            stringBuilder.append("[ph]1 ($r1StartX, $r1StartY)-($r1EndX, $r1EndY) ")
+            stringBuilder.append("[ph][ph][ph]${r1MinValue.toCStr()}($r1MinX, $r1MinY) [ph][ph][ph]${r1MaxValue.toCStr()}($r1MaxX, $r1MaxY) ")
+            stringBuilder.append("[ph][ph][ph]${r1AveValue.toCStr()}\n")
         }
         if (isR2Show) {
-            stringBuilder.append("面2 ($r2StartX, $r2StartY)-($r2EndX, $r2EndY) ")
-            stringBuilder.append("最低温${r2MinValue.toCStr()}($r2MinX, $r2MinY) 最高温${r2MaxValue.toCStr()}($r2MaxX, $r2MaxY) ")
-            stringBuilder.append("平均温${l2AveValue.toCStr()}\n")
+            stringBuilder.append("[ph]2 ($r2StartX, $r2StartY)-($r2EndX, $r2EndY) ")
+            stringBuilder.append("[ph][ph][ph]${r2MinValue.toCStr()}($r2MinX, $r2MinY) [ph][ph][ph]${r2MaxValue.toCStr()}($r2MaxX, $r2MaxY) ")
+            stringBuilder.append("[ph][ph][ph]${l2AveValue.toCStr()}\n")
         }
         if (isR3Show) {
-            stringBuilder.append("面3 ($r3StartX, $r3StartY)-($r3EndX, $r3EndY) ")
-            stringBuilder.append("最低温${r3MinValue.toCStr()}($r3MinX, $r3MinY) 最高温${r3MaxValue.toCStr()}($r3MaxX, $r3MaxY) ")
-            stringBuilder.append("平均温${r3AveValue.toCStr()}\n")
+            stringBuilder.append("[ph]3 ($r3StartX, $r3StartY)-($r3EndX, $r3EndY) ")
+            stringBuilder.append("[ph][ph][ph]${r3MinValue.toCStr()}($r3MinX, $r3MinY) [ph][ph][ph]${r3MaxValue.toCStr()}($r3MaxX, $r3MaxY) ")
+            stringBuilder.append("[ph][ph][ph]${r3AveValue.toCStr()}\n")
         }
         return stringBuilder.toString()
     }

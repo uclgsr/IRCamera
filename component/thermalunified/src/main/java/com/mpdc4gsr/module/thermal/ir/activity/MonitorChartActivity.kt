@@ -78,7 +78,7 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
         initRecycler()
         viewModel.resultLiveData.observe(this) {
 
-            Log.w("123", "查询到历史数据:${it.dataList.size}")
+            Log.w("123", "[ph][ph][ph][ph][ph][ph][ph]:${it.dataList.size}")
             resultVol(it)
         }
         lifecycleScope.launch {
@@ -208,10 +208,10 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
                         }
                         delay(timeMillis)
                     } else {
-                        Log.w("123", "当前不可更新")
+                        Log.w("123", "[ph][ph][ph][ph][ph][ph]")
                     }
                 }
-                Log.w("123", "停止记录, 数据量:$time")
+                Log.w("123", "[ph][ph][ph][ph], [ph][ph][ph]:$time")
             }
     }
 
@@ -320,7 +320,7 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
                 var volDataSet = lineData.getDataSetByIndex(0)
                 if (volDataSet == null) {
                     startTime = data.createTime
-                    Log.w("123", "设置初始时间startTime:$startTime")
+                    Log.w("123", "[ph][ph][ph][ph][ph][ph]startTime:$startTime")
                     chart.xAxis.valueFormatter = MyValueFormatter(startTime = startTime)
                 }
                 val x = (data.createTime - startTime).toFloat()
@@ -334,7 +334,7 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
                         val entity = Entry(x, data.thermal)
                         entity.data = data
                         volDataSet.addEntry(entity)
-                        Log.w("123", "添加一个数据:$entity")
+                        Log.w("123", "[ph][ph][ph][ph][ph][ph]:$entity")
                     }
 
                     "line" -> {
@@ -393,7 +393,7 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
                 }
                 return@synchronized
             } catch (e: Exception) {
-                Log.e("123", "添加数据时异常:${e.message}")
+                Log.e("123", "[ph][ph][ph][ph][ph][ph][ph]:${e.message}")
                 return@synchronized
             }
         }
@@ -530,7 +530,7 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
                     val entity = Entry(x, it.thermal)
                     entity.data = it
                     volDataSet.addEntry(entity)
-                    Log.w("123", "添加一个数据:$entity")
+                    Log.w("123", "[ph][ph][ph][ph][ph][ph]:$entity")
                 }
 
                 "line" -> {
@@ -575,7 +575,7 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
                 }
             }
         }
-        Log.w("123", "曲线数据:${volDataSet.entryCount}个")
+        Log.w("123", "[ph][ph][ph][ph]:${volDataSet.entryCount}[ph]")
         lineData.notifyDataChanged()
         chart.notifyDataSetChanged()
         chart.setVisibleXRangeMinimum(getMinimum())

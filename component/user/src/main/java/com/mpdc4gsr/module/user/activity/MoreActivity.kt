@@ -126,7 +126,7 @@ class MoreActivity : BaseActivity(), View.OnClickListener {
                 if (firmwareData != null) {
                     showFirmwareUpDialog(firmwareData)
                 } else {
-                    XLog.i("TS004 固件升级 - 点击查询")
+                    XLog.i("TS004 [ph][ph][ph][ph] - [ph][ph][ph][ph]")
                     showCameraLoading()
                     firmwareViewModel.queryFirmware(true)
                 }
@@ -174,7 +174,7 @@ class MoreActivity : BaseActivity(), View.OnClickListener {
 
     private fun downloadFirmware(firmwareData: FirmwareViewModel.FirmwareData) {
         lifecycleScope.launch {
-            XLog.d("TS004 固件升级 - 开始下载固件升级包")
+            XLog.d("TS004 [ph][ph][ph][ph] - [ph][ph][ph][ph][ph][ph][ph][ph][ph]")
             val progressDialog = DownloadProDialog(this@MoreActivity)
             progressDialog.show()
 
@@ -185,10 +185,10 @@ class MoreActivity : BaseActivity(), View.OnClickListener {
                 }
             progressDialog.dismiss()
             if (isSuccess) {
-                XLog.d("TS004 固件升级 - 固件升级包下载成功，即将开始安装")
+                XLog.d("TS004 [ph][ph][ph][ph] - [ph][ph][ph][ph][ph][ph][ph][ph][ph]，[ph][ph][ph][ph][ph][ph]")
                 installFirmware(file)
             } else {
-                XLog.w("TS004 固件升级 - 固件升级包下载失败!")
+                XLog.w("TS004 [ph][ph][ph][ph] - [ph][ph][ph][ph][ph][ph][ph][ph][ph]!")
                 showReDownloadDialog(firmwareData)
             }
         }
@@ -196,7 +196,7 @@ class MoreActivity : BaseActivity(), View.OnClickListener {
 
     private fun installFirmware(file: File) {
         lifecycleScope.launch {
-            XLog.d("TS004 固件升级 - 开始安装固件升级包")
+            XLog.d("TS004 [ph][ph][ph][ph] - [ph][ph][ph][ph][ph][ph][ph][ph][ph]")
             val installDialog = FirmwareInstallDialog(this@MoreActivity)
             installDialog.show()
 
@@ -204,13 +204,13 @@ class MoreActivity : BaseActivity(), View.OnClickListener {
             val isSuccess = false
             installDialog.dismiss()
             if (isSuccess) {
-                XLog.d("TS004 固件升级 - 固件升级包发送往 TS004 成功，即将断开连接")
+                XLog.d("TS004 [ph][ph][ph][ph] - [ph][ph][ph][ph][ph][ph][ph][ph] TS004 [ph][ph]，[ph][ph][ph][ph][ph][ph]")
                 (application as BaseApplication).disconnectWebSocket()
                 NavigationManager.getInstance().build(RouterConfig.MAIN)
                     .navigation(this@MoreActivity)
                 finish()
             } else {
-                XLog.w("TS004 固件升级 - 固件升级包发送往 TS004 失败!")
+                XLog.w("TS004 [ph][ph][ph][ph] - [ph][ph][ph][ph][ph][ph][ph][ph] TS004 [ph][ph]!")
                 showReInstallDialog(file)
             }
         }
@@ -264,10 +264,10 @@ class MoreActivity : BaseActivity(), View.OnClickListener {
     private fun resetAll() {
         showLoadingDialog(RCore.string.ts004_reset_tip3)
         lifecycleScope.launch {
-            XLog.i("准备调用恢复出厂设置接口")
+            XLog.i("[ph][ph][ph][ph][ph][ph][ph][ph][ph][ph][ph][ph]")
             // TS004Repository functionality removed
             val isSuccess = false // TS004Repository.getResetAll()
-            XLog.i("恢复出厂设置接口调用 ${if (isSuccess) "成功" else "失败"}")
+            XLog.i("[ph][ph][ph][ph][ph][ph][ph][ph][ph][ph] ${if (isSuccess) "[ph][ph]" else "[ph][ph]"}")
             if (isSuccess) {
                 TToast.shortToast(this@MoreActivity, RCore.string.ts004_reset_tip4)
                 (application as BaseApplication).disconnectWebSocket()
