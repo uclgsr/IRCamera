@@ -1,5 +1,8 @@
 package com.mpdc4gsr.ble.core
 
+import android.bluetooth.BluetoothAdapter
+import com.mpdc4gsr.ble.core.ScanListener
+
 /**
  * Scan configuration for BLE operations
  */
@@ -61,14 +64,18 @@ interface Scanner {
     fun addScanListener(listener: ScanListener)
     fun removeScanListener(listener: ScanListener)
     fun setScanning(scanning: Boolean)
+    fun release()
+    fun getType(): ScannerType
 }
 
 /**
  * Legacy scanner implementation
  */
-class LegacyScanner : Scanner {
+class LegacyScanner() : Scanner {
     private var isScanning = false
     private val listeners = mutableListOf<ScanListener>()
+
+    constructor(easyBLE: EasyBLE, bluetoothAdapter: BluetoothAdapter) : this()
 
     override fun startScan(scanListener: ScanListener) {
         isScanning = true
@@ -93,15 +100,24 @@ class LegacyScanner : Scanner {
 
     override fun setScanning(scanning: Boolean) {
         isScanning = scanning
+    }
+
+    override fun release() {
+    }
+
+    override fun getType(): ScannerType {
+        return ScannerType.LEGACY
     }
 }
 
 /**
  * Classic scanner implementation
  */
-class ClassicScanner : Scanner {
+class ClassicScanner() : Scanner {
     private var isScanning = false
     private val listeners = mutableListOf<ScanListener>()
+
+    constructor(easyBLE: EasyBLE, bluetoothAdapter: BluetoothAdapter) : this()
 
     override fun startScan(scanListener: ScanListener) {
         isScanning = true
@@ -126,6 +142,13 @@ class ClassicScanner : Scanner {
 
     override fun setScanning(scanning: Boolean) {
         isScanning = scanning
+    }
+
+    override fun release() {
+    }
+
+    override fun getType(): ScannerType {
+        return ScannerType.AUTO
     }
 
     companion object {
@@ -140,9 +163,11 @@ class ClassicScanner : Scanner {
 /**
  * LE scanner implementation
  */
-class LeScanner : Scanner {
+class LeScanner() : Scanner {
     private var isScanning = false
     private val listeners = mutableListOf<ScanListener>()
+
+    constructor(easyBLE: EasyBLE, bluetoothAdapter: BluetoothAdapter) : this()
 
     override fun startScan(scanListener: ScanListener) {
         isScanning = true
@@ -167,6 +192,13 @@ class LeScanner : Scanner {
 
     override fun setScanning(scanning: Boolean) {
         isScanning = scanning
+    }
+
+    override fun release() {
+    }
+
+    override fun getType(): ScannerType {
+        return ScannerType.LOLLIPOP
     }
 }
 
