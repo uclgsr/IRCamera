@@ -1,5 +1,103 @@
 # IRCamera Architecture Diagrams
 
+## Current Standardized Build System (2024-12-21)
+
+### Gradle Build System Structure
+
+```mermaid
+graph TB
+    subgraph "Root Project"
+        RootBuild[build.gradle.kts<br/>Unified Build Tasks]
+        Settings[settings.gradle.kts<br/>Module Configuration]
+        VersionCatalog[gradle/libs.versions.toml<br/>Dependency Management]
+    end
+    
+    subgraph "Application Module"
+        AppModule[app<br/>Main Android Application<br/>namespace: com.csl.irCamera]
+    end
+    
+    subgraph "Library Module"  
+        LibUnified[libunified<br/>Unified Core Library<br/>namespace: com.mpdc4gsr.libunified]
+    end
+    
+    subgraph "BLE Modules"
+        BLECore[ble-core<br/>Core BLE Functionality<br/>namespace: com.mpdc4gsr.ble.core]
+        BLEShimmer[ble-shimmer<br/>GSR/Shimmer Devices<br/>namespace: com.mpdc4gsr.ble.shimmer]
+        BLETopdon[ble-topdon<br/>Thermal/Topdon Devices<br/>namespace: com.mpdc4gsr.ble.topdon]
+    end
+    
+    subgraph "Component Modules"
+        GSRRecording[component/gsr-recording<br/>GSR Data Recording<br/>namespace: com.mpdc4gsr.gsr]
+        ThermalUnified[component/thermalunified<br/>Unified Thermal Component<br/>namespace: com.mpdc4gsr.module.thermalunified]
+        UserModule[component/user<br/>User Management<br/>namespace: com.mpdc4gsr.module.user]
+    end
+    
+    %% Build System Dependencies
+    RootBuild --> Settings
+    RootBuild --> VersionCatalog
+    Settings --> AppModule
+    Settings --> LibUnified
+    Settings --> BLECore
+    Settings --> BLEShimmer  
+    Settings --> BLETopdon
+    Settings --> GSRRecording
+    Settings --> ThermalUnified
+    Settings --> UserModule
+    
+    %% Module Dependencies
+    AppModule --> LibUnified
+    AppModule --> BLECore
+    
+    ThermalUnified --> LibUnified
+    ThermalUnified --> BLECore
+    ThermalUnified --> UserModule
+    
+    GSRRecording --> BLEShimmer
+    UserModule --> LibUnified
+    UserModule --> BLEShimmer
+    
+    BLEShimmer --> BLECore
+    BLETopdon --> BLECore
+    
+    classDef appLayer fill:#e1f5fe
+    classDef libLayer fill:#f3e5f5  
+    classDef bleLayer fill:#e8f5e8
+    classDef componentLayer fill:#fff3e0
+    classDef buildLayer fill:#fce4ec
+    
+    class AppModule appLayer
+    class LibUnified libLayer
+    class BLECore,BLEShimmer,BLETopdon bleLayer
+    class GSRRecording,ThermalUnified,UserModule componentLayer
+    class RootBuild,Settings,VersionCatalog buildLayer
+```
+
+### Build Task Structure
+
+```mermaid
+graph LR
+    subgraph "Simplified Build Tasks"
+        Clean[clean<br/>Clean all modules]
+        Build[build<br/>Clean + Build Release]
+        BuildAll[buildAll<br/>Build all variants]
+        BuildRelease[buildRelease<br/>Release builds only]
+        BuildDebug[buildDebug<br/>Debug builds only]
+    end
+    
+    subgraph "Advanced Tasks"
+        CleanAll[cleanAll<br/>Clean + caches]
+        CompileDebug[compileDebugSafe<br/>Safe debug compile]
+        CompileRelease[compileReleaseSafe<br/>Safe release compile]
+    end
+    
+    Clean --> CleanAll
+    Build --> CleanAll
+    Build --> BuildRelease
+    BuildAll --> CleanAll
+    BuildAll --> BuildRelease
+    BuildAll --> BuildDebug
+```
+
 ## Implemented Unified Architecture (Current State)
 
 ### Unified Library Structure + Device-Specific BLE Modules
@@ -12,10 +110,8 @@ graph TB
     end
     
     subgraph "Feature Components"
-        ThermalIR[Thermal-IR Component<br/>thermal-ir module]
+        ThermalUnified[Thermal Unified Component<br/>thermalunified module]
         GSRRecording[GSR Recording Component<br/>gsr-recording module]
-        ThermalComponent[Thermal Component<br/>thermal module]
-        ThermalLite[Thermal-Lite Component<br/>thermal-lite module]
         UserComponent[User Component<br/>user module]
     end
     
@@ -29,25 +125,22 @@ graph TB
         BLETopdon[ble-topdon<br/>881 lines<br/>Thermal/Topdon Devices]
     end
     
-    subgraph "Support Libraries"
-        RangeSeekBar[RangeSeekBar<br/>Custom UI Control]
-        ConsolidatedLibs[consolidated_libraries<br/>Shared Utilities]
-    end
-    
     %% Application Dependencies
     App --> LibUnified
     App --> BLECore
-    App --> BLEShimmer
-    App --> BLETopdon
     
-    %% Thermal Components -> Topdon BLE
-    ThermalIR --> LibUnified
-    ThermalIR --> BLETopdon
+    %% Component Dependencies
+    ThermalUnified --> LibUnified
+    ThermalUnified --> BLECore
+    ThermalUnified --> UserComponent
     
-    ThermalComponent --> LibUnified  
-    ThermalComponent --> BLETopdon
+    GSRRecording --> BLEShimmer
+    UserComponent --> LibUnified
+    UserComponent --> BLEShimmer
     
-    ThermalLite --> LibUnified
+    %% BLE Module Dependencies
+    BLEShimmer --> BLECore
+    BLETopdon --> BLECore
     ThermalLite --> BLETopdon
     
     %% GSR/User Components -> Shimmer BLE

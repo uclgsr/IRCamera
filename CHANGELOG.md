@@ -1,5 +1,28 @@
 # Changelog
 
+## [2.1.0] - Gradle Build System Standardization (2024-12-21)
+
+### Added
+- **Unified Build Tasks**: Simplified build system with clean+build for all modules
+- **Standardized Build Configuration**: All modules now use consistent structure and dependencies
+- **Version Catalog Integration**: Replaced hardcoded versions with centralized version management
+
+### Changed
+- **Module Structure**: Removed non-existent module references (thermal, thermal-ir, thermal-lite, RangeSeekBar)
+- **BLE Dependencies**: Standardized BLE modules to use version catalog consistently
+- **Build Features**: Added missing build features (viewBinding, testInstrumentationRunner) across all modules
+- **Android Configuration**: Unified compileSdk, buildTypes, and compileOptions across modules
+
+### Fixed
+- **Gradle Settings**: Corrected settings.gradle.kts to only include existing modules
+- **Dependency Paths**: Fixed AAR file references in thermalunified module
+- **Module Dependencies**: Replaced obsolete BleModule with ble-core, removed defunct lib* modules
+
+### Technical Details
+- **8 modules standardized**: app, libunified, ble-core, ble-shimmer, ble-topdon, component modules
+- **Build tasks simplified**: `clean`, `build`, `buildAll`, `buildRelease`, `buildDebug`
+- **XML namespaces verified**: All XML files using correct Android standard namespaces
+
 ## [2.0.0] - Complete Implementation (2024-12-19)
 
 ### ✅ MAJOR IMPLEMENTATION COMPLETE
