@@ -22,7 +22,7 @@ import kotlinx.coroutines.launch
 import mpdc4gsr.app.App
 import mpdc4gsr.utils.VersionUtils
 import java.util.Calendar
-import com.mpdc4gsr.libunified.app.R as LibCoreR
+import com.mpdc4gsr.libunified.R as LibCoreR
 
 class ClauseActivity : BaseBindingActivity<ActivityClauseBinding>() {
     private lateinit var dialog: TipProgressDialog
