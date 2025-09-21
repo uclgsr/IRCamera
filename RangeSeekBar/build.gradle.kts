@@ -42,7 +42,7 @@ dependencies {
 
     coreLibraryDesugaring(libs.desugar.jdk.libs)
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
-    implementation(libs.androidx.appcompat.legacy)
+    implementation(libs.androidx.appcompat)
 
     testImplementation(libs.junit)
     testImplementation(libs.robolectric)
