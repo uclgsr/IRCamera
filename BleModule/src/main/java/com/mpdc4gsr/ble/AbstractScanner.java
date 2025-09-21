@@ -280,7 +280,9 @@ abstract class AbstractScanner implements Scanner {
             }
         }
         return false;
-    }    private final Runnable stopScanRunnable = () -> stopScan(false);
+    }
+
+    private final Runnable stopScanRunnable = () -> stopScan(false);
 
     @Override
     public void onBluetoothOff() {
