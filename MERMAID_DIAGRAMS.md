@@ -67,6 +67,70 @@ classDiagram
     GenericRequest --> RequestCallback : uses
 ```
 
+## BLE Core WriteOptions Fix (2024-12-21)
+
+### WriteOptions Class Structure After Fix
+
+```mermaid
+classDiagram
+    class WriteOptions {
+        +val packageWriteDelayMillis: Int
+        +val requestWriteDelayMillis: Int 
+        +val isWaitWriteResult: Boolean
+        +val writeType: Int
+        +val useMtuAsPackageSize: Boolean
+        +var packageSize: Int
+        -WriteOptions(builder: Builder)
+    }
+    
+    class Builder {
+        ~internal var packageWriteDelayMillis: Int
+        ~internal var requestWriteDelayMillis: Int
+        ~internal var packageSize: Int
+        ~internal var isWaitWriteResult: Boolean
+        ~internal var writeType: Int
+        ~internal var useMtuAsPackageSize: Boolean
+        +setPackageWriteDelayMillis(Int): Builder
+        +setRequestWriteDelayMillis(Int): Builder
+        +setPackageSize(Int): Builder
+        +setWaitWriteResult(Boolean): Builder
+        +setWriteType(Int): Builder
+        +setMtuAsPackageSize(): Builder
+        +build(): WriteOptions
+    }
+    
+    WriteOptions *-- Builder : contains
+    
+    note for WriteOptions "Constructor accesses Builder's internal fields\nFixed visibility issue by changing private to internal"
+    note for Builder "Fields changed from private to internal\nAllows outer class access while maintaining module encapsulation"
+```
+
+### Fix Details
+
+- **Issue**: Private Builder fields could not be accessed from WriteOptions constructor
+- **Solution**: Changed field visibility from `private var` to `internal var`
+- **Impact**: Enables compilation while maintaining proper encapsulation within module
+- **Files Changed**: `ble-core/src/main/java/com/mpdc4gsr/ble/core/WriteOptions.kt`
+
+## BLE Core Module Structure (Updated 2024-12-21)
+
+### BLE Core Module Class Dependencies
+
+```mermaid
+graph TB
+    subgraph "BLE Core Module"
+        Request[Request.kt<br/>Interface with UUID properties<br/>✅ import java.util.UUID]
+        GenericRequest[GenericRequest.kt<br/>Implements Request<br/>✅ import java.util.UUID]
+        Connection[Connection.kt<br/>BLE Connection Management<br/>✅ import java.util.UUID]
+        ConnectionImpl[ConnectionImpl.kt<br/>Connection Implementation<br/>✅ import java.util.UUID]
+        ConnectionConfig[ConnectionConfiguration.kt<br/>BLE Configuration<br/>✅ import java.util.UUID]
+    end
+    
+    Request --> GenericRequest
+    Connection --> ConnectionImpl
+    GenericRequest --> Connection
+    ConnectionConfig --> Connection
+```
 ## Current Standardized Build System (2024-12-21)
 
 ### Gradle Build System Structure
