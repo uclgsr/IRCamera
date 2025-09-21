@@ -8,8 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
-- **MAJOR**: Merged thermal, thermal-lite modules into thermal-ir as main thermal module
-- thermal-ir now contains all thermal imaging functionality:
+- **MAJOR**: Merged thermal, thermal-lite modules into thermalunified as main thermal module
+- thermalunified now contains all thermal imaging functionality:
   - Basic thermal imaging (from thermal module)
   - Advanced IR with dual-camera fusion (existing thermal-ir features)  
   - Lightweight USB camera control (from thermal-lite module)
@@ -21,7 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Comprehensive feasibility analysis for thermal modules merger
 - THERMAL_MODULES_ANALYSIS.md documenting merger strategy
 - Documentation for thermal, thermal-ir, and thermal-lite functionality comparison
-- Enhanced thermal-ir module with combined capabilities
+- Enhanced thermalunified module with combined capabilities
 
 ### Analysis
 - thermal module: Basic thermal imaging (38 files, simple menu interface) - MERGED

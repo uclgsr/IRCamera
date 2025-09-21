@@ -5,12 +5,12 @@ echo "=== PACKAGE HEADER VALIDATION REPORT ==="
 echo "Generated on: $(date)"
 echo
 
-# Check thermal-ir module packages
-echo "1. THERMAL-IR MODULE PACKAGES:"
-echo "   Expected: com.mpdc4gsr.module.thermal.ir.*"
-find component/thermal-ir -name "*.java" -o -name "*.kt" | while read file; do
+# Check thermalunified module packages
+echo "1. THERMALUNIFIED MODULE PACKAGES:"
+echo "   Expected: com.mpdc4gsr.module.thermalunified.*"
+find component/thermalunified -name "*.java" -o -name "*.kt" | while read file; do
     package=$(grep "^package " "$file" 2>/dev/null | head -1)
-    if [[ "$package" == *"com.mpdc4gsr.module.thermal.ir"* ]]; then
+    if [[ "$package" == *"com.mpdc4gsr.module.thermalunified"* ]]; then
         echo "   ✓ $file: $package"
     elif [[ "$package" == *"com.shuyu"* || "$package" == *"com.infisense"* ]]; then
         echo "   ○ $file: $package (external library)"
@@ -60,11 +60,11 @@ echo
 # Summary statistics
 echo "5. SUMMARY STATISTICS:"
 total_files=$(find . -name "*.java" -o -name "*.kt" | wc -l)
-thermal_ir_files=$(find component/thermal-ir -name "*.java" -o -name "*.kt" | wc -l)
+thermalunified_files=$(find component/thermalunified -name "*.java" -o -name "*.kt" | wc -l)
 app_files=$(find app/src -name "*.java" -o -name "*.kt" | wc -l)
 
 echo "   Total Java/Kotlin files: $total_files"
-echo "   Thermal-IR module files: $thermal_ir_files" 
+echo "   Thermalunified module files: $thermalunified_files" 
 echo "   App module files: $app_files"
 echo
 

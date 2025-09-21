@@ -262,7 +262,7 @@ dependencies {
 
     implementation(libs.guava)
 
-    implementation(project(":component:thermal-ir"))
+    implementation(project(":component:thermalunified"))
     implementation(project(":component:gsr-recording"))
     implementation(project(":component:user"))
     implementation(project(":libapp"))
