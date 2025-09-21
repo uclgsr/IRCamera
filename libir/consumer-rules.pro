@@ -3,7 +3,7 @@
 
 # Keep IR-related classes and methods
 -keep class com.infisense.usbir.** { *; }
--keep class com.topdon.libir.** { *; }
+-keep class com.mpdc4gsr.libir.** { *; }
 
 # Keep native methods
 -keepclasseswithmembernames class * {

@@ -28,7 +28,7 @@ class RGBCameraRecorderTest {
     fun setup() {
         MockKAnnotations.init(this)
 
-        every { mockContext.packageName } returns "com.topdon.tc001.test"
+        every { mockContext.packageName } returns "com.mpdc4gsr.test"
         every { mockTextureView.isAvailable } returns true
 
         cameraRecorder = RGBCameraRecorder(mockContext, mockTextureView)

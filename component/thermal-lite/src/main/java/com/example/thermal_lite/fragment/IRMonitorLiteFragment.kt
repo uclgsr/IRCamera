@@ -65,7 +65,7 @@ import org.greenrobot.eventbus.ThreadMode
 class IRMonitorLiteFragment : BaseFragment(), ITsTempListener {
 
     lateinit var temperatureView: com.infisense.usbir.view.TemperatureView
-    protected lateinit var cameraView: com.topdon.lib.ui.widget.LiteSurfaceView
+    protected lateinit var cameraView: com.mpdc4gsr.lib.ui.widget.LiteSurfaceView
 
     private var configJob: Job? = null
     protected var isConfigWait = true

@@ -556,7 +556,7 @@ print(f'CPU: {process.cpu_percent()}%')
 "
 
 # Android performance monitoring:
-adb shell top -p $(adb shell pidof com.topdon.ircamera)
+adb shell top -p $(adb shell pidof com.mpdc4gsr.ircamera)
 ```
 
 ## Contributing Guidelines

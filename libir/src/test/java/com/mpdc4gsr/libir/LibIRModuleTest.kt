@@ -123,7 +123,7 @@ class LibIRModuleTest {
     fun testIRActivityCreation() {
 
         try {
-            val irActivityClass = Class.forName("com.topdon.libir.activity.IRActivity")
+            val irActivityClass = Class.forName("com.mpdc4gsr.libir.activity.IRActivity")
             assertNotNull("IRActivity should be accessible", irActivityClass)
         } catch (e: ClassNotFoundException) {
 
@@ -136,10 +136,10 @@ class LibIRModuleTest {
     fun testIRViewCreation() {
 
         try {
-            val irViewClass = Class.forName("com.topdon.libir.view.IRView")
+            val irViewClass = Class.forName("com.mpdc4gsr.libir.view.IRView")
             assertNotNull("IRView should be accessible", irViewClass)
 
-            val zoomBBClass = Class.forName("com.topdon.libir.view.ZoomBB")
+            val zoomBBClass = Class.forName("com.mpdc4gsr.libir.view.ZoomBB")
             assertNotNull("ZoomBB should be accessible", zoomBBClass)
         } catch (e: ClassNotFoundException) {
 

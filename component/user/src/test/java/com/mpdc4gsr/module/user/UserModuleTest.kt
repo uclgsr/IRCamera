@@ -48,18 +48,18 @@ class UserModuleTest {
     fun testUserActivityCreation() {
 
         try {
-            val questionActivity = Class.forName("com.topdon.module.user.activity.QuestionActivity")
+            val questionActivity = Class.forName("com.mpdc4gsr.module.user.activity.QuestionActivity")
             assertNotNull("QuestionActivity should be accessible", questionActivity)
 
-            val unitActivity = Class.forName("com.topdon.module.user.activity.UnitActivity")
+            val unitActivity = Class.forName("com.mpdc4gsr.module.user.activity.UnitActivity")
             assertNotNull("UnitActivity should be accessible", unitActivity)
 
             val storageSpaceActivity =
-                Class.forName("com.topdon.module.user.activity.StorageSpaceActivity")
+                Class.forName("com.mpdc4gsr.module.user.activity.StorageSpaceActivity")
             assertNotNull("StorageSpaceActivity should be accessible", storageSpaceActivity)
 
             val deviceDetailsActivity =
-                Class.forName("com.topdon.module.user.activity.DeviceDetailsActivity")
+                Class.forName("com.mpdc4gsr.module.user.activity.DeviceDetailsActivity")
             assertNotNull("DeviceDetailsActivity should be accessible", deviceDetailsActivity)
         } catch (e: ClassNotFoundException) {
 
