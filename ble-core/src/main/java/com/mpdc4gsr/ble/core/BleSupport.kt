@@ -19,6 +19,7 @@ data class ScanConfiguration(
 enum class ScannerType {
     LEGACY,
     LOLLIPOP,
+    CLASSIC,
     AUTO
 }
 
@@ -148,7 +149,7 @@ class ClassicScanner() : Scanner {
     }
 
     override fun getType(): ScannerType {
-        return ScannerType.AUTO
+        return ScannerType.CLASSIC
     }
 
     companion object {

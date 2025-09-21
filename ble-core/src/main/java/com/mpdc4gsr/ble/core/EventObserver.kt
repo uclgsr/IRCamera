@@ -7,4 +7,7 @@ interface EventObserver : Observer {
     fun onCharacteristicChanged(device: Device, characteristic: String, data: ByteArray)
     fun onServiceDiscovered(device: Device)
     fun onMtuChanged(device: Device, mtu: Int, status: Int)
+    fun onConnectFailed(device: Device, reason: Int)
+    fun onBluetoothAdapterStateChanged(state: Int)
+    fun onBluetoothOff()
 }

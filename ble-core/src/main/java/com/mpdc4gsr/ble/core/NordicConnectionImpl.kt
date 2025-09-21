@@ -10,7 +10,14 @@ import java.util.UUID
 /**
  * Nordic BLE connection implementation
  */
-class NordicConnectionImpl(override val device: Device) : Connection {
+class NordicConnectionImpl(
+    override val device: Device,
+    private val easyBLE: EasyBLE? = null,
+    private val bluetoothAdapter: android.bluetooth.BluetoothAdapter? = null,
+    private val configuration: Any? = null,
+    private val connectDelay: Int = 0,
+    private val observer: Any? = null
+) : Connection {
     override val mtu: Int = 23
     override val connectionState: ConnectionState = ConnectionState.DISCONNECTED
     override val isAutoReconnectEnabled: Boolean = false

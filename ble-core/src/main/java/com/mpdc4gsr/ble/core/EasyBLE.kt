@@ -34,7 +34,7 @@ class EasyBLE internal constructor(builder: EasyBLEBuilder) {
     val observable: Observable
     val logger: Logger
     private val scannerType: ScannerType?
-    private val connectionMap: MutableMap<String?, Connection> = ConcurrentHashMap<String?, Connection>()
+    private val connectionMap: MutableMap<String?, Connection?> = ConcurrentHashMap<String?, Connection?>()
     private val addressList: MutableList<String?> = CopyOnWriteArrayList<String?>()
     private val useNordicBleBackend: Boolean
     private val internalObservable: Boolean
@@ -248,13 +248,13 @@ class EasyBLE internal constructor(builder: EasyBLEBuilder) {
 
     fun addScanListener(listener: ScanListener?) {
         checkAndInstanceScanner()
-        if (checkStatus() && scanner != null) {
+        if (checkStatus() && scanner != null && listener != null) {
             scanner!!.addScanListener(listener)
         }
     }
 
     fun removeScanListener(listener: ScanListener?) {
-        if (scanner != null) {
+        if (scanner != null && listener != null) {
             scanner!!.removeScanListener(listener)
         }
     }
@@ -265,19 +265,28 @@ class EasyBLE internal constructor(builder: EasyBLEBuilder) {
     fun startScan() {
         checkAndInstanceScanner()
         if (checkStatus() && scanner != null) {
-            scanner!!.startScan(application)
+            // Create a default scan listener for internal use
+            val defaultListener = object : ScanListener {
+                override fun onScanStart() {}
+                override fun onScanStop() {}
+                override fun onScanResult(device: Device, rssi: Int, data: ByteArray) {}
+                override fun onScanFailed(reason: Int) {}
+                override fun onScanComplete() {}
+                override fun onScanError(errorCode: Int, errorMessage: String) {}
+            }
+            scanner!!.startScan(defaultListener)
         }
     }
 
     fun stopScan() {
         if (checkStatus() && scanner != null) {
-            scanner!!.stopScan(false)
+            scanner!!.stopScan()
         }
     }
 
     fun stopScanQuietly() {
         if (checkStatus() && scanner != null) {
-            scanner!!.stopScan(true)
+            scanner!!.stopScan()
         }
     }
 
@@ -354,7 +363,7 @@ class EasyBLE internal constructor(builder: EasyBLEBuilder) {
                         "Creating Nordic BLE-enhanced connection for improved reliability: " + device.getAddress()
                     )
                     connection =
-                        NordicConnectionImpl(this, bluetoothAdapter, device, configuration, connectDelay, observer)
+                        NordicConnectionImpl(device, this, bluetoothAdapter, configuration, connectDelay, observer)
                 } else {
                     logger.log(
                         Log.DEBUG, Logger.Companion.TYPE_CONNECTION_STATE,
