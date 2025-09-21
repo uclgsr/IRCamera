@@ -43,6 +43,7 @@ See [SIMPLIFIED_ARCHITECTURE.md](SIMPLIFIED_ARCHITECTURE.md) for complete detail
 ## Documentation
 
 - [Simplified Architecture](SIMPLIFIED_ARCHITECTURE.md) - Current simplified project structure
+- [Thermal Modules Analysis](THERMAL_MODULES_ANALYSIS.md) - Feasibility assessment for merging thermal modules
 - [Copilot Setup Guide](COPILOT_SETUP.md) - GitHub Copilot configuration and usage
 - [PC Controller Hub](pc-controller/) - Complete Hub implementation with MVP and GUI options
 - [Samsung Stage3/Level3 RAW DNG](docs/SAMSUNG_STAGE3_RAW_DNG.md) - Advanced RAW capture documentation

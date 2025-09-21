@@ -51,9 +51,9 @@ import com.mpdc4gsr.lib.core.tools.ConstantLanguages
 import com.mpdc4gsr.lib.core.tools.DeviceTools
 import com.mpdc4gsr.lib.core.utils.CommUtils
 import com.mpdc4gsr.lib.core.viewmodel.VersionViewModel
-import com.mpdc4gsr.module.thermal.ir.activity.IRThermalNightActivity
-import com.mpdc4gsr.module.thermal.ir.activity.IRThermalPlusActivity
-import com.mpdc4gsr.module.thermal.ir.fragment.IRGalleryTabFragment
+import com.mpdc4gsr.module.thermalunified.activity.IRThermalNightActivity
+import com.mpdc4gsr.module.thermalunified.activity.IRThermalPlusActivity
+import com.mpdc4gsr.module.thermalunified.fragment.IRGalleryTabFragment
 import com.mpdc4gsr.module.user.fragment.MineFragment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

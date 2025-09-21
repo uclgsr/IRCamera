@@ -56,14 +56,14 @@ import com.mpdc4gsr.lib.core.utils.ImageUtils
 import com.mpdc4gsr.lib.core.utils.ScreenUtil
 import com.mpdc4gsr.lib.ui.widget.seekbar.OnRangeChangedListener
 import com.mpdc4gsr.lib.ui.widget.seekbar.RangeSeekBar
-import com.mpdc4gsr.module.thermal.ir.event.GalleryAddEvent
-import com.mpdc4gsr.module.thermal.ir.event.ImageGalleryEvent
-import com.mpdc4gsr.module.thermal.ir.frame.FrameStruct
-import com.mpdc4gsr.module.thermal.ir.frame.FrameTool
-import com.mpdc4gsr.module.thermal.ir.frame.ImageParams
-import com.mpdc4gsr.module.thermal.ir.report.bean.ImageTempBean
-import com.mpdc4gsr.module.thermal.ir.view.TemperatureBaseView.Mode
-import com.mpdc4gsr.module.thermal.ir.viewmodel.IRGalleryEditViewModel
+import com.mpdc4gsr.module.thermalunified.event.GalleryAddEvent
+import com.mpdc4gsr.module.thermalunified.event.ImageGalleryEvent
+import com.mpdc4gsr.module.thermalunified.frame.FrameStruct
+import com.mpdc4gsr.module.thermalunified.frame.FrameTool
+import com.mpdc4gsr.module.thermalunified.frame.ImageParams
+import com.mpdc4gsr.module.thermalunified.report.bean.ImageTempBean
+import com.mpdc4gsr.module.thermalunified.view.TemperatureBaseView.Mode
+import com.mpdc4gsr.module.thermalunified.viewmodel.IRGalleryEditViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -72,7 +72,7 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.util.Locale
 import com.example.thermal_lite.R as ThermalLiteR
-import com.mpdc4gsr.module.thermal.ir.R as ThermalIrR
+import com.mpdc4gsr.module.thermalunified.R as ThermalIrR
 
 class IRGalleryEditActivity : BaseBindingActivity<ActivityIrGalleryEditBinding>(),
     View.OnClickListener, ITsTempListener {

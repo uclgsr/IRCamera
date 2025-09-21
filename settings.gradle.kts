@@ -17,10 +17,8 @@ dependencyResolutionManagement {
 rootProject.name = "MPDC4GSR"
 
 include(":app")
-include(":component:thermal")
 include(":component:gsr-recording")
-include(":component:thermal-ir")
-include(":component:thermal-lite")
+include(":component:thermalunified")
 include(":component:user")
 include(":libapp")
 include(":libir")

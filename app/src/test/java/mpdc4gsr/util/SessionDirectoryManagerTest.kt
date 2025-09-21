@@ -1,4 +1,4 @@
-package mpdc4gsr.util
+package mpdc4gsr.utils
 
 import android.content.Context
 import android.content.pm.PackageInfo
