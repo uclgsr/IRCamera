@@ -67,4 +67,9 @@ public class UnifiedBleManager {
             return SystemBleStatus.UNKNOWN;
         }
     }
+
+    public void markAsGsrSensor(String deviceAddress) {
+        Log.i(TAG, "Marking device as GSR sensor: " + deviceAddress);
+        // Stub implementation - would normally mark device as GSR sensor for special handling
+    }
 }
