@@ -33,7 +33,7 @@ class BleDeviceManager(private val context: Context) : CoroutineScope {
 
     override val coroutineContext: CoroutineContext = Dispatchers.Main + Job()
 
-    private val unifiedBleManager = UnifiedBleManager.getInstance(context)
+    private val unifiedBleManager: UnifiedBleManager = UnifiedBleManager.getInstance(context)
     private var easyBLE: EasyBLE? = null
 
     private val _discoveredDevices = MutableLiveData<List<BleDeviceInfo>>()
@@ -75,9 +75,9 @@ class BleDeviceManager(private val context: Context) : CoroutineScope {
             easyBLE =
                 EasyBLE.getBuilder()
                     .setUseNordicBleBackend(enableNordicBackend)
-                    .build().apply {
-                        initialize(context.applicationContext as android.app.Application)
-                    }
+                    .build()
+            
+            easyBLE?.initialize(context.applicationContext as android.app.Application)
 
             setupDeviceDiscovery()
 
@@ -163,10 +163,10 @@ class BleDeviceManager(private val context: Context) : CoroutineScope {
                 return false
             }
 
-            val connection = unifiedBleManager.connectWithEnhancements(deviceAddress)
+            val connection: Connection? = unifiedBleManager.connectWithEnhancements(deviceAddress)
 
             if (connection != null) {
-                deviceConnections[deviceAddress] = connection
+                deviceConnections[deviceAddress] = connection as Connection
                 updateDeviceStatus()
                 Log.i(TAG, "Enhanced connection successful for device: $deviceAddress")
                 true

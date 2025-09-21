@@ -23,6 +23,7 @@ public class EasyBLEBuilder {
     Logger logger;
     boolean isObserveAnnotationRequired = false;
     ScannerType scannerType;
+    boolean useNordicBleBackend = false;
 
     EasyBLEBuilder() {
     }
@@ -80,6 +81,12 @@ public class EasyBLEBuilder {
     public EasyBLEBuilder setObservable(Observable observable) {
         Inspector.requireNonNull(observable, "observable can't be null");
         this.observable = observable;
+        return this;
+    }
+
+    
+    public EasyBLEBuilder setUseNordicBleBackend(boolean useNordicBleBackend) {
+        this.useNordicBleBackend = useNordicBleBackend;
         return this;
     }
 
