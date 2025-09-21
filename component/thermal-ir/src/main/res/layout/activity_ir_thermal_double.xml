@@ -155,7 +155,7 @@
             android:textColor="@color/white"
             android:textSize="12sp" />
 
-        <com.mpdc4gsr.libcom.view.TempLayout
+        <com.mpdc4gsr.lib.core.comm.view.TempLayout
             android:id="@+id/temp_bg"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
