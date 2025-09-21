@@ -96,7 +96,7 @@ class UpReportViewModel : BaseViewModel() {
                 url,
                 params,
                 object : IResponseCallback {
-                    fun onResponse(response: String?) {
+                    override fun onResponse(response: String?) {
                         commonBeanLD.postValue(ResponseBean.convertCommonBean(response, null))
                     }
 
