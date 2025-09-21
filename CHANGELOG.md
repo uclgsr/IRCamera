@@ -1,5 +1,19 @@
 # Changelog
 
+
+## [2.1.1] - BLE Core Compilation Fixes (2024-12-21)
+
+### Fixed
+- **RequestCallback Interface**: Fixed redeclaration error by creating separate callback interfaces in ble-core/callback package
+- **ByteUtil Type Mismatches**: Fixed Int to Float conversion errors in bytesToFloat functions (lines 78, 87)  
+- **DefaultLogger Override Issues**: Fixed Logger interface implementation with proper property overrides
+- **HexUtil Byte Type Conflicts**: Fixed java.lang.Byte vs kotlin.Byte type mismatches in uniteBytes function
+- **Missing Callback Package**: Created missing ble-core/src/main/java/com/mpdc4gsr/ble/core/callback/ directory structure
+
+### Added
+- RequestCallback interface for BLE request handling
+- BleCallbacks interfaces for connection and characteristic callbacks
+
 ## [2.1.1] - BLE Core GenericRequest Fix (2024-12-21)
 
 ### Fixed

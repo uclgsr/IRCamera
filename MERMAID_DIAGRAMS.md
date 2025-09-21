@@ -1,5 +1,9 @@
 # IRCamera Architecture Diagrams
 
+## BLE Core Module Structure (2024-12-21)
+
+### BLE Core Callback Architecture
+
 ## BLE Core Module Interface Structure (2024-12-21)
 
 ### GenericRequest Class Hierarchy
@@ -119,6 +123,30 @@ classDiagram
 ```mermaid
 graph TB
     subgraph "BLE Core Module"
+        subgraph "Callback Package"
+            RequestCallback[RequestCallback<br/>onRequestSuccess<br/>onRequestFailed]
+            BleConnectionCallback[BleConnectionCallback<br/>onConnectionStateChanged<br/>onServicesDiscovered]
+            BleCharacteristicCallback[BleCharacteristicCallback<br/>onCharacteristicRead<br/>onCharacteristicWrite<br/>onCharacteristicChanged]
+        end
+        
+        subgraph "Util Package"
+            ByteUtil[ByteUtil<br/>bytesToFloat - Fixed<br/>byteToFloat - Fixed]
+            DefaultLogger[DefaultLogger<br/>Logger Implementation - Fixed]
+            HexUtil[HexUtil<br/>uniteBytes - Fixed<br/>Byte Type Conflicts Resolved]
+        end
+        
+        subgraph "Core Classes"
+            GenericRequest[GenericRequest<br/>Uses RequestCallback]
+            ConnectionImpl[ConnectionImpl<br/>Uses Callbacks]
+        end
+    end
+    
+    RequestCallback --> GenericRequest
+    BleConnectionCallback --> ConnectionImpl
+    BleCharacteristicCallback --> ConnectionImpl
+```
+
+
         Request[Request.kt<br/>Interface with UUID properties<br/>✅ import java.util.UUID]
         GenericRequest[GenericRequest.kt<br/>Implements Request<br/>✅ import java.util.UUID]
         Connection[Connection.kt<br/>BLE Connection Management<br/>✅ import java.util.UUID]
