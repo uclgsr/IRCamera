@@ -75,7 +75,7 @@ object ByteUtil {
     }
 
     fun bytesToFloat(bytes: ByteArray?): Float {
-        val value: Float = HexUtil.bytesToHexString(bytes).toInt(16)
+        val value: Float = HexUtil.bytesToHexString(bytes).toInt(16).toFloat()
         return value
     }
 
@@ -84,7 +84,7 @@ object ByteUtil {
         for (i in bytes.indices) {
             resultByte[i] = bytes[i]
         }
-        val value: Float = HexUtil.bytesToHexString(resultByte).toInt(16)
+        val value: Float = HexUtil.bytesToHexString(resultByte).toInt(16).toFloat()
         Log.e("bcf", "bytesToFloat bytes: " + HexUtil.bytesToHexString(resultByte) + "   float:" + value)
         return value
     }

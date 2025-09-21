@@ -91,11 +91,11 @@ object HexUtil {
     }
 
     fun uniteBytes(src0: Byte, src1: Byte): Byte {
-        var _b0 = Byte.decode("0x" + String(byteArrayOf(src0)))
-        _b0 = (_b0.toInt() shl 4).toByte()
-        val _b1 = Byte.decode("0x" + String(byteArrayOf(src1)))
-        val ret = (_b0.toInt() xor _b1.toInt()).toByte()
-        return ret
+        val char0 = src0.toInt().toChar()
+        val char1 = src1.toInt().toChar()
+        val hexChar0 = Character.getNumericValue(char0)
+        val hexChar1 = Character.getNumericValue(char1)
+        return ((hexChar0 shl 4) or hexChar1).toByte()
     }
 
     fun hexToByte(hex: String): ByteArray {
