@@ -51,7 +51,6 @@ tasks.register("buildRelease") {
         ":ble-shimmer:assembleRelease",
         ":ble-topdon:assembleRelease",
         ":libunified:assembleRelease",
-        ":RangeSeekBar:assembleRelease",
         ":component:gsr-recording:assembleRelease",
         ":component:thermalunified:assembleRelease",
         ":component:user:assembleRelease"
@@ -68,11 +67,17 @@ tasks.register("buildDebug") {
         ":ble-shimmer:assembleDebug",
         ":ble-topdon:assembleDebug",
         ":libunified:assembleDebug",
-        ":RangeSeekBar:assembleDebug",
         ":component:gsr-recording:assembleDebug",
         ":component:thermalunified:assembleDebug",
         ":component:user:assembleDebug"
     )
+}
+
+// Simplified unified build task for clean + build
+tasks.register("build") {
+    group = "build"
+    description = "Clean and build all modules (release)"
+    dependsOn("cleanAll", "buildRelease")
 }
 
 tasks.register("buildAll") {
@@ -93,7 +98,6 @@ tasks.register("compileDebugSafe") {
         ":ble-shimmer:compileDebugSources",
         ":ble-topdon:compileDebugSources",
         ":libunified:compileDebugSources",
-        ":RangeSeekBar:compileDebugSources",
         ":component:gsr-recording:compileDebugSources",
         ":component:thermalunified:compileDebugSources",
         ":component:user:compileDebugSources"
@@ -110,7 +114,6 @@ tasks.register("compileReleaseSafe") {
         ":ble-shimmer:compileReleaseSources",
         ":ble-topdon:compileReleaseSources",
         ":libunified:compileReleaseSources",
-        ":RangeSeekBar:compileReleaseSources",
         ":component:gsr-recording:compileReleaseSources",
         ":component:thermalunified:compileReleaseSources",
         ":component:user:compileReleaseSources"
