@@ -195,7 +195,7 @@ public class Device implements Comparable<Device>, Cloneable, Parcelable {
         }
         String inName = in.readString();
         this.name = inName == null ? "" : inName;
-        this.address = Objects.requireNonNull(in.readString());
+        this.address = Objects.toString(in.readString(), "");
         this.rssi = in.readInt();
         this.connectionState = ConnectionState.valueOf(in.readString());
     }
