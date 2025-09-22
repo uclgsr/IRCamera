@@ -53,6 +53,11 @@ class GSRSensorRecorder(
         private const val SHIMMER_DEFAULT_SAMPLING_RATE = 128.0
         private const val GSR_CHANNEL_ID = 0x01
         private const val GSR_RANGE_AUTO = 0x00
+        
+        // Enhanced batch writing configuration for improved performance
+        private const val CSV_BATCH_SIZE = 50 // Write every 50 samples for better performance
+        private const val CSV_FLUSH_INTERVAL_MS = 5000L // Flush every 5 seconds
+        private const val CONNECTION_HEALTH_CHECK_INTERVAL = 10 // Check connection every 10 samples
 
         fun hasRequiredPermissions(context: Context): Boolean {
             return hasBleScanningPermissions(context)
@@ -129,6 +134,12 @@ class GSRSensorRecorder(
     private var sampleCount = AtomicLong(0)
     private var recordingStartTime: Long = 0
     private var syncMarkerCount = AtomicLong(0)
+
+    // Enhanced batch writing and connection monitoring
+    private var batchSampleBuffer = mutableListOf<GSRSampleData>()
+    private var lastFlushTime = System.currentTimeMillis()
+    private var connectionHealthScore = 100.0
+    private var lastConnectionCheck = System.currentTimeMillis()
 
 
     private var shimmerBluetoothManager: ShimmerBluetoothManagerAndroid? = null
@@ -596,6 +607,10 @@ class GSRSensorRecorder(
                 return true
             }
 
+            // Flush any remaining batch samples before stopping
+            flushBatchSamples()
+            Log.i(TAG, "Final batch of samples flushed before recording stop")
+
             val shimmerRecorder = realShimmerGSRRecorder
             if (shimmerRecorder != null && shimmerRecorder.isRecording()) {
                 Log.i(TAG, "Stopping Enhanced Shimmer GSR recording with merged BLE backend")
@@ -755,7 +770,7 @@ class GSRSensorRecorder(
 
     private fun onGSRSampleReceived(sample: GSRSample) {
         try {
-
+            // Increment counters
             val currentCount = sampleCount.incrementAndGet()
             val currentSequence = sampleSequence.incrementAndGet()
 
@@ -778,7 +793,21 @@ class GSRSensorRecorder(
                     recordingMode = determineRecordingMode(),
                 )
 
-            gsrDataPersistence?.queueDataRecord(gsrSampleData)
+            // Enhanced batch writing - collect samples in buffer
+            batchSampleBuffer.add(gsrSampleData)
+            
+            // Check if we should flush the batch
+            val shouldFlush = batchSampleBuffer.size >= CSV_BATCH_SIZE || 
+                            (System.currentTimeMillis() - lastFlushTime) > CSV_FLUSH_INTERVAL_MS
+            
+            if (shouldFlush) {
+                flushBatchSamples()
+            }
+
+            // Enhanced connection monitoring
+            if (currentCount % CONNECTION_HEALTH_CHECK_INTERVAL == 0L) {
+                updateConnectionHealth(sample)
+            }
 
             gsrNetworkStreamer?.let { streamer ->
                 if (streamer.isStreaming) {
@@ -789,18 +818,75 @@ class GSRSensorRecorder(
             if (currentCount % 100 == 0L) {
                 Log.d(
                     TAG,
-                    "GSR sample processed: ${sample.conductance} µS, Resistance: ${gsrSampleData.resistanceKohm} kΩ ($currentCount total)",
+                    "Enhanced GSR sample processed: ${sample.conductance} µS, Resistance: ${gsrSampleData.resistanceKohm} kΩ ($currentCount total), Health: ${connectionHealthScore.toInt()}%",
                 )
 
                 gsrDataPersistence?.getStatistics()?.let { stats ->
                     Log.d(
                         TAG,
-                        "Persistence stats - Written: ${stats.samplesWritten}, Pending: ${stats.pendingSamples}"
+                        "Persistence stats - Written: ${stats.samplesWritten}, Pending: ${stats.pendingSamples}, Batch queued: ${batchSampleBuffer.size}"
                     )
                 }
             }
         } catch (e: Exception) {
             Log.w(TAG, "Error processing GSR sample", e)
+        }
+    }
+
+    private fun flushBatchSamples() {
+        if (batchSampleBuffer.isNotEmpty()) {
+            try {
+                // Flush batch to persistence layer
+                batchSampleBuffer.forEach { sampleData ->
+                    gsrDataPersistence?.queueDataRecord(sampleData)
+                }
+                
+                Log.v(TAG, "Flushed batch of ${batchSampleBuffer.size} GSR samples")
+                batchSampleBuffer.clear()
+                lastFlushTime = System.currentTimeMillis()
+            } catch (e: Exception) {
+                Log.e(TAG, "Error flushing batch samples", e)
+            }
+        }
+    }
+
+    private fun updateConnectionHealth(sample: GSRSample) {
+        try {
+            val now = System.currentTimeMillis()
+            val timeSinceLastCheck = now - lastConnectionCheck
+            
+            // Calculate health based on sample quality and timing
+            val sampleQuality = when {
+                sample.rawValue == 0 -> 0.0
+                sample.rawValue !in 100..4000 -> 30.0
+                sample.conductance !in 0.1..100.0 -> 40.0
+                sample.conductance > 50.0 -> 60.0
+                sample.conductance < 0.5 -> 70.0
+                else -> 95.0
+            }
+            
+            val timingHealth = when {
+                timeSinceLastCheck > 2000 -> 20.0 // Too long between samples
+                timeSinceLastCheck > 1000 -> 70.0 // Acceptable timing
+                else -> 100.0 // Good timing
+            }
+            
+            // Update connection health score with weighted average
+            connectionHealthScore = (connectionHealthScore * 0.8) + (sampleQuality * 0.15) + (timingHealth * 0.05)
+            connectionHealthScore = connectionHealthScore.coerceIn(0.0, 100.0)
+            
+            lastConnectionCheck = now
+            
+            if (connectionHealthScore < 50) {
+                Log.w(TAG, "Poor connection health detected: ${connectionHealthScore.toInt()}%")
+                emitError(
+                    ErrorType.CONNECTION_POOR,
+                    "Poor connection quality detected - check sensor contact",
+                    isRecoverable = true
+                )
+            }
+        } catch (e: Exception) {
+            Log.w(TAG, "Error updating connection health", e)
         }
     }
 

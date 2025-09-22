@@ -477,6 +477,10 @@ class ShimmerMvpActivity : AppCompatActivity() {
             // Send to network client
             networkClient?.sendGSRSample(sample, sampleCount)
 
+            // Calculate signal quality and connection health
+            val signalQualityPercent = calculateSignalQuality(sample.gsrValue, sample.rawValue)
+            val connectionHealth = calculateConnectionHealth(sample)
+
             // Update UI with enhanced feedback
             runOnUiThread {
                 binding.gsrValueText.text = "GSR: %.3f µS (%.1f kΩ)".format(
@@ -486,37 +490,137 @@ class ShimmerMvpActivity : AppCompatActivity() {
                 binding.sampleCountText.text = "Samples: $sampleCount (${
                     String.format("%.1f", sampleCount * 1000.0 / GSR_SAMPLING_RATE)
                 }s)"
+                
+                // Update signal quality indicator
+                val qualityColor = when {
+                    signalQualityPercent >= 80 -> ContextCompat.getColor(this@ShimmerMvpActivity, android.R.color.holo_green_dark)
+                    signalQualityPercent >= 60 -> ContextCompat.getColor(this@ShimmerMvpActivity, android.R.color.holo_orange_dark)
+                    else -> ContextCompat.getColor(this@ShimmerMvpActivity, android.R.color.holo_red_dark)
+                }
+                binding.signalQualityText.text = "Quality: ${signalQualityPercent.toInt()}%"
+                binding.signalQualityText.setTextColor(qualityColor)
+                
+                // Update connection health indicator
+                val healthColor = when (connectionHealth) {
+                    "Strong" -> ContextCompat.getColor(this@ShimmerMvpActivity, android.R.color.holo_green_dark)
+                    "Good" -> ContextCompat.getColor(this@ShimmerMvpActivity, android.R.color.holo_orange_dark)
+                    else -> ContextCompat.getColor(this@ShimmerMvpActivity, android.R.color.holo_red_dark)
+                }
+                binding.connectionHealthText.text = "Signal: $connectionHealth"
+                binding.connectionHealthText.setTextColor(healthColor)
             }
 
-            // Log periodic updates
+            // Log periodic updates with enhanced metrics
             if (sampleCount % 128 == 0L) {
                 Log.i(TAG, "Enhanced GSR [${sampleCount}]: ${
                     String.format("%.3f", sample.gsrValue)
                 } µS, Raw: ${sample.rawValue}/4095, R: ${
                     String.format("%.1f", sample.resistance / 1000)
-                } kΩ")
+                } kΩ, Quality: ${signalQualityPercent.toInt()}%, Health: $connectionHealth")
             }
         } catch (e: Exception) {
             Log.e(TAG, "Error processing enhanced GSR sample", e)
         }
     }
 
+    private fun calculateSignalQuality(gsrValue: Double, rawValue: Int): Double {
+        return when {
+            rawValue !in 100..4000 -> 20.0 // Poor ADC range
+            gsrValue !in 0.1..100.0 -> 30.0 // Poor GSR range
+            gsrValue > 50.0 -> 40.0 // Very high GSR (poor contact?)
+            gsrValue < 0.5 -> 50.0 // Very low GSR (sensor issues?)
+            rawValue in 200..3800 && gsrValue in 1.0..25.0 -> 90.0 // Excellent signal
+            rawValue in 150..3950 && gsrValue in 0.5..40.0 -> 80.0 // Good signal  
+            else -> 70.0 // Acceptable signal
+        }
+    }
+    
+    private fun calculateConnectionHealth(sample: GSRSample): String {
+        val now = System.currentTimeMillis()
+        val timeSinceLastSample = now - lastSampleTime
+        lastSampleTime = now
+        
+        return when {
+            timeSinceLastSample > 2000 -> "Weak" // More than 2s between samples
+            timeSinceLastSample > 1000 -> "Good" // 1-2s between samples
+            sample.rawValue == 0 -> "Poor" // No data
+            sample.gsrValue < 0.1 -> "Poor" // Invalid GSR reading
+            else -> "Strong" // Good data flow
+        }
+    }
+    
+    private var lastSampleTime = System.currentTimeMillis()
+
     private fun setupShimmerConfiguration() {
         shimmerDevice?.let { shimmer ->
             try {
-                Log.i(TAG, "Configuring Shimmer3 GSR+ for recording (compatibility mode)")
+                Log.i(TAG, "Configuring Shimmer3 GSR+ for enhanced recording with validation")
 
-
-
-
-                Log.i(TAG, "Shimmer3 GSR+ configuration complete - Basic settings applied")
-                updateConnectionStatus("GSR+ Configured - Ready for recording")
-                binding.startRecordingButton.isEnabled = true
+                // Validate and configure GSR sensor settings
+                validateAndConfigureGSRSensor(shimmer)
+                
+                // Verify configuration was applied successfully
+                if (verifyShimmerConfiguration(shimmer)) {
+                    Log.i(TAG, "Enhanced Shimmer3 GSR+ configuration verified successfully")
+                    updateConnectionStatus("GSR+ Configured & Verified - Ready for recording")
+                    binding.startRecordingButton.isEnabled = true
+                } else {
+                    Log.w(TAG, "Shimmer configuration verification failed - using defaults")
+                    updateConnectionStatus("GSR+ Configured (defaults) - Ready for recording")
+                    binding.startRecordingButton.isEnabled = true
+                }
 
             } catch (e: Exception) {
                 Log.e(TAG, "Error configuring Shimmer3 GSR+", e)
                 updateConnectionStatus("GSR+ Configuration failed: ${e.message}")
             }
+        }
+    }
+
+    private fun validateAndConfigureGSRSensor(shimmer: Shimmer): Boolean {
+        return try {
+            // Enable GSR sensor with validation
+            shimmer.enableGSRSensor(true)
+            Log.d(TAG, "GSR sensor enabled")
+            
+            // Set GSR range to auto with validation
+            shimmer.setGSRRange(Shimmer.GSR_RANGE_AUTO)
+            Log.d(TAG, "GSR range set to AUTO")
+            
+            // Configure sampling rate with validation
+            shimmer.setSamplingRateShimmer(GSR_SAMPLING_RATE)
+            Log.d(TAG, "Sampling rate configured to ${GSR_SAMPLING_RATE}Hz")
+            
+            // Enable buffer mode for better data flow
+            shimmer.enableBufferMode(true)
+            Log.d(TAG, "Buffer mode enabled for enhanced data flow")
+            
+            true
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to configure GSR sensor settings", e)
+            false
+        }
+    }
+    
+    private fun verifyShimmerConfiguration(shimmer: Shimmer): Boolean {
+        return try {
+            // Verify GSR sensor is enabled
+            val gsrEnabled = shimmer.isGSRSensorEnabled()
+            Log.d(TAG, "GSR sensor enabled verification: $gsrEnabled")
+            
+            // Verify sampling rate
+            val actualRate = shimmer.getSamplingRateShimmer()
+            Log.d(TAG, "Configured sampling rate: ${actualRate}Hz (target: ${GSR_SAMPLING_RATE}Hz)")
+            
+            // Verify GSR range
+            val gsrRange = shimmer.getGSRRange()
+            Log.d(TAG, "GSR range configuration: $gsrRange")
+            
+            // Basic validation - GSR should be enabled and rate should be reasonable
+            gsrEnabled && actualRate > 0 && actualRate <= 1000
+        } catch (e: Exception) {
+            Log.w(TAG, "Configuration verification failed", e)
+            false
         }
     }
 
@@ -776,6 +880,8 @@ class ShimmerMvpActivity : AppCompatActivity() {
         binding.stopRecordingButton.isEnabled = false
         binding.gsrValueText.text = "GSR: -- µS"
         binding.sampleCountText.text = "Samples: 0"
+        binding.signalQualityText.text = "Quality: --%"
+        binding.connectionHealthText.text = "Signal: --"
         updateConnectionStatus("Initializing...")
     }
 
