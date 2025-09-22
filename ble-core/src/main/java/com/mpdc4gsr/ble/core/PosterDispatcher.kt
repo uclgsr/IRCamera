@@ -9,6 +9,7 @@ import android.os.Looper
 interface PosterDispatcher {
     fun post(event: Runnable)
     fun postDelayed(event: Runnable, delayMillis: Long)
+    fun post(observer: EventObserver, methodInfo: com.mpdc4gsr.commons.poster.MethodInfo)
 }
 
 /**
@@ -23,5 +24,25 @@ class DefaultPosterDispatcher : PosterDispatcher {
 
     override fun postDelayed(event: Runnable, delayMillis: Long) {
         handler.postDelayed(event, delayMillis)
+    }
+    
+    override fun post(observer: EventObserver, methodInfo: com.mpdc4gsr.commons.poster.MethodInfo) {
+        handler.post {
+            // Handle the method info call to observer
+            when (methodInfo.method) {
+                "onConnectFailed" -> {
+                    val device = methodInfo.params[0].value as Device
+                    val reason = methodInfo.params[1].value as Int
+                    observer.onConnectFailed(device, reason)
+                }
+                "onBluetoothAdapterStateChanged" -> {
+                    val state = methodInfo.params[0].value as Int
+                    observer.onBluetoothAdapterStateChanged(state)
+                }
+                "onBluetoothOff" -> {
+                    observer.onBluetoothOff()
+                }
+            }
+        }
     }
 }

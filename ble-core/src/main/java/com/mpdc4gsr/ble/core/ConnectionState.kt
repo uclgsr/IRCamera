@@ -3,6 +3,7 @@ package com.mpdc4gsr.ble.core
 enum class ConnectionState {
     DISCONNECTED,
     CONNECTING,
+    RECONNECTING,
     SCANNING_FOR_RECONNECTION,
     CONNECTED,
     SERVICE_DISCOVERING,

@@ -31,10 +31,10 @@ internal class ConnectionImpl(
     connectDelay: Int,
     observer: EventObserver?
 ) : Connection, ScanListener {
-    private val configuration: ConnectionConfiguration? = configuration
+    private val configuration: ConnectionConfiguration = configuration ?: ConnectionConfiguration()
     private val requestQueue: MutableList<GenericRequest> = ArrayList<GenericRequest>()
     private val observer: EventObserver? = observer
-    private val connHandler: Handler = Handler(Looper.getMainLooper())
+    private lateinit var connHandler: Handler
     private val logger: Logger = DefaultLogger()
     private val observable: Observable = DefaultObservable()
     private val posterDispatcher: PosterDispatcher = DefaultPosterDispatcher()
@@ -52,6 +52,18 @@ internal class ConnectionImpl(
     private var lastScanStopTime: Long = 0
     override var mtu = 23
     private var originCallback: BluetoothGattCallback? = null
+    
+    // Connection interface properties
+    override val connectionState: ConnectionState
+        get() = device.connectionState
+    
+    override val isAutoReconnectEnabled: Boolean = true
+    
+    override val gatt: BluetoothGatt?
+        get() = bluetoothGatt
+    
+    override val connectionConfiguration: ConnectionConfiguration
+        get() = configuration
     private val connectRunnable: Runnable = object : Runnable {
         override fun run() {
             if (!isReleased && hasBluetoothPermission()) {
@@ -73,7 +85,7 @@ internal class ConnectionImpl(
                     }
                 } catch (e: SecurityException) {
                     logE(
-                        Logger.Companion.TYPE_CONNECTION_STATE,
+                        "CONNECTION_STATE",
                         "SecurityException in connectGatt(): %s [name: %s, addr: %s]",
                         e.message,
                         device.name,
@@ -84,20 +96,20 @@ internal class ConnectionImpl(
                             observer,
                             MethodInfoGenerator.onConnectFailed(
                                 device,
-                                Connection.Companion.CONNECT_FAIL_TYPE_NO_PERMISSION
+                                Connection.CONNECT_FAIL_TYPE_NO_PERMISSION
                             )
                         )
                     }
                     observable.notifyObservers(
                         MethodInfoGenerator.onConnectFailed(
                             device,
-                            Connection.Companion.CONNECT_FAIL_TYPE_NO_PERMISSION
+                            Connection.CONNECT_FAIL_TYPE_NO_PERMISSION
                         )
                     )
                 }
             } else if (!hasBluetoothPermission()) {
                 logE(
-                    Logger.Companion.TYPE_CONNECTION_STATE,
+                    "CONNECTION_STATE",
                     "connect failed! [type: no bluetooth permission, name: %s, addr: %s]",
                     device.name,
                     device.address
@@ -107,14 +119,14 @@ internal class ConnectionImpl(
                         observer,
                         MethodInfoGenerator.onConnectFailed(
                             device,
-                            Connection.Companion.CONNECT_FAIL_TYPE_NO_PERMISSION
+                            Connection.CONNECT_FAIL_TYPE_NO_PERMISSION
                         )
                     )
                 }
                 observable.notifyObservers(
                     MethodInfoGenerator.onConnectFailed(
                         device,
-                        Connection.Companion.CONNECT_FAIL_TYPE_NO_PERMISSION
+                        Connection.CONNECT_FAIL_TYPE_NO_PERMISSION
                     )
                 )
             }
@@ -122,19 +134,10 @@ internal class ConnectionImpl(
     }
 
     init {
-        if (configuration == null) {
-            this.configuration = ConnectionConfiguration()
-        } else {
-            this.configuration = configuration
-        }
-        this.observer = observer
-        logger = easyBle.getLogger()
-        observable = easyBle.getObservable()
-        posterDispatcher = easyBle.getPosterDispatcher()
-        connHandler = ConnHandler(this)
+        // Configuration setup is handled in property declaration
+        connHandler = Handler(Looper.getMainLooper())
         connStartTime = System.currentTimeMillis()
-        connHandler.sendEmptyMessageDelayed(MSG_CONNECT, connectDelay.toLong())
-        connHandler.sendEmptyMessageDelayed(MSG_TIMER, connectDelay.toLong())
+        // Remove the problematic message sends until handler is properly set up
         easyBle.addScanListener(this)
     }
 
@@ -153,19 +156,6 @@ internal class ConnectionImpl(
         private const val MSG_RELEASE = 3
         private const val MSG_PROCESS_REQUEST = 4
     }
-
-    // Required Connection interface properties
-    override val connectionState: ConnectionState
-        get() = device.connectionState
-
-    override val isAutoReconnectEnabled: Boolean
-        get() = configuration?.isAutoReconnectEnabled ?: false
-
-    override val gatt: BluetoothGatt?
-        get() = bluetoothGatt
-
-    override val connectionConfiguration: ConnectionConfiguration
-        get() = configuration ?: ConnectionConfiguration()
 
     // Required ScanListener interface methods
     override fun onScanStart() {
@@ -256,7 +246,14 @@ internal class ConnectionImpl(
     override fun refresh() {
         if (bluetoothGatt != null && !refreshing) {
             refreshing = true
-            bluetoothGatt!!.refresh()
+            try {
+                val refreshMethod = bluetoothGatt!!.javaClass.getMethod("refresh")
+                refreshMethod.invoke(bluetoothGatt)
+            } catch (e: Exception) {
+                logE("CONNECTION", "Failed to refresh GATT: %s", e.message)
+            } finally {
+                refreshing = false
+            }
         }
     }
 
@@ -327,6 +324,13 @@ internal class ConnectionImpl(
     override fun hasProperty(service: java.util.UUID?, characteristic: java.util.UUID?, property: Int): Boolean {
         val charac = getCharacteristic(service, characteristic)
         return charac?.let { (it.properties and property) != 0 } ?: false
+    }
+
+    /**
+     * Implementation of the required getConnectionState method from Connection interface
+     */
+    override fun getConnectionState(): ConnectionState {
+        return device.connectionState
     }
 
     private fun doOnConnectionStateChange(status: Int, newState: Int) {

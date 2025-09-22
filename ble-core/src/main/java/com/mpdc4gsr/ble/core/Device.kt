@@ -10,23 +10,28 @@ import androidx.annotation.RequiresApi
 import com.mpdc4gsr.ble.core.util.BluetoothPermissionUtils
 import java.util.Objects
 
-class Device : Comparable<Device?>, Cloneable, Parcelable {
+class Device : Comparable<Device>, Cloneable, Parcelable {
     val originDevice: BluetoothDevice
     var connectionState: ConnectionState = ConnectionState.DISCONNECTED
 
     @get:RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     var scanResult: ScanResult? = null
-    var scanRecord: ByteArray?
+    var scanRecord: ByteArray? = null
     var name: String = ""
     var address: String = ""
     var rssi: Int = -120
 
     constructor(originDevice: BluetoothDevice) {
         this.originDevice = originDevice
-        val context: Context? = EasyBLE.Companion.getInstance().getContext()
-        this.name = BluetoothPermissionUtils.getDeviceName(context, originDevice)
-        this.address = BluetoothPermissionUtils.getDeviceAddress(context, originDevice)
+        val context: Context? = EasyBLE.getInstance()?.context
+        if (context != null) {
+            this.name = BluetoothPermissionUtils.getDeviceName(context, originDevice) ?: ""
+            this.address = BluetoothPermissionUtils.getDeviceAddress(context, originDevice) ?: ""
+        } else {
+            this.name = originDevice.name ?: "Unknown Device"
+            this.address = originDevice.address ?: ""
+        }
     }
 
     protected constructor(`in`: Parcel) {
@@ -35,7 +40,7 @@ class Device : Comparable<Device?>, Cloneable, Parcelable {
     }
 
     fun getConnectionState(): ConnectionState {
-        val connection: Connection? = EasyBLE.Companion.getInstance().getConnection(this)
+        val connection: Connection? = EasyBLE.getInstance()?.getConnection(this)
         return if (connection == null) connectionState else connection.getConnectionState()
     }
 
