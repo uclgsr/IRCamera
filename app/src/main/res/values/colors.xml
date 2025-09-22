@@ -75,4 +75,25 @@
     
     <!-- More missing colors -->
     <color name="color_font">#FFFFFFFF</color>
+    
+    <!-- Semi-transparent colors used across modules -->
+    <color name="color_B3FFFFFF">#B3FFFFFF</color>
+    <color name="color_66FFFFFF">#66FFFFFF</color>
+    <color name="color_80FFFFFF">#80FFFFFF</color>
+    
+    <!-- Additional thermal-related colors -->
+    <color name="we_read_theme_color">#2B79D8</color>
+    <color name="wheel_unselect_text">#B2FFFFFF</color>
+    <color name="ui_main_custom_color">#8A898E</color>
+    <color name="color_green_point">#0CEB82</color>
+    <color name="color_23202E">#23202E</color>
+    
+    <!-- More missing colors for components -->
+    <color name="grey">#FF808080</color>
+    <color name="white_80">#CCFFFFFF</color>
+    
+    <!-- Additional missing colors from error messages -->
+    <color name="color_bg_min">#FF4CAF50</color>
+    <color name="lms_red">#FFFF0000</color>
+    <color name="toastTextColor">#FFFFFFFF</color>
 </resources>

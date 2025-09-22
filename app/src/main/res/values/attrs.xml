@@ -13,4 +13,9 @@
     <attr name="drawable_height" format="dimension" />
     <attr name="type" format="string" />
     <attr name="index" format="integer" />
+    
+    <!-- Additional missing attributes from build errors -->
+    <attr name="rightTextColor" format="color" />
+    <attr name="start_height" format="dimension" />
+    <attr name="isTitleCenter" format="boolean" />
 </resources>
