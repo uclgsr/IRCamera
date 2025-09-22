@@ -12,7 +12,7 @@ import androidx.core.content.ContextCompat
 import com.blankj.utilcode.util.SizeUtils
 import com.jaygoo.widget.DefRangeSeekBar
 import com.jaygoo.widget.OnRangeChangedListener
-import com.mpdc4gsr.libunified.app.R
+import com.mpdc4gsr.libunified.R
 import com.mpdc4gsr.libunified.app.comm.util.ColorUtils
 import com.mpdc4gsr.libunified.app.utils.ScreenUtil
 import com.mpdc4gsr.libunified.app.view.ColorSelectView

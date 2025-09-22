@@ -18,6 +18,10 @@
 
     <color name="wheel_select_bg">#1A2B79D7</color>
     <color name="wheel_select_text">#FFFFFF</color>
+    
+    <!-- Missing colors for libunified functionality -->
+    <color name="we_read_theme_color">#2B79D8</color>
+    <color name="toolbar_16131E">#16131E</color>
     <color name="wheel_unselect_text">#B2FFFFFF</color>
     <color name="ui_main_custom_color">#8A898E</color>
     <color name="color_green_point">#0CEB82</color>

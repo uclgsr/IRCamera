@@ -11,10 +11,10 @@ import android.widget.CheckBox
 import android.widget.PopupWindow
 import android.widget.TextView
 import com.blankj.utilcode.util.SizeUtils
-import com.mpdc4gsr.libunified.app.R
+import com.mpdc4gsr.libunified.R
 import com.mpdc4gsr.libunified.app.config.ExtraKeyConfig
 import com.mpdc4gsr.libunified.app.config.RouterConfig
-import com.mpdc4gsr.libunified.app.databinding.LayoutPopupTipEmissivityBinding
+import com.mpdc4gsr.libunified.databinding.LayoutPopupTipEmissivityBinding
 import com.mpdc4gsr.libunified.app.navigation.NavigationManager
 import com.mpdc4gsr.libunified.app.tools.NumberTools
 import com.mpdc4gsr.libunified.app.tools.UnitTools

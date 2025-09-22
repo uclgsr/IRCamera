@@ -9,10 +9,10 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.mpdc4gsr.libunified.app.R
+import com.mpdc4gsr.libunified.R
 import com.mpdc4gsr.libunified.app.adapter.TargetColorAdapter
 import com.mpdc4gsr.libunified.app.bean.ObserveBean
-import com.mpdc4gsr.libunified.app.databinding.DialogTipTargetColorBinding
+import com.mpdc4gsr.libunified.databinding.DialogTipTargetColorBinding
 import com.mpdc4gsr.libunified.app.utils.ScreenUtil
 
 class TipTargetColorDialog : Dialog {

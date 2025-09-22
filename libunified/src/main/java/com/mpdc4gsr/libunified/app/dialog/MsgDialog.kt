@@ -11,8 +11,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import com.mpdc4gsr.libunified.app.R
-import com.mpdc4gsr.libunified.app.databinding.DialogMsgBinding
+import com.mpdc4gsr.libunified.R
+import com.mpdc4gsr.libunified.databinding.DialogMsgBinding
 import com.mpdc4gsr.libunified.app.utils.ScreenUtil
 
 

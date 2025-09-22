@@ -8,7 +8,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatImageView
-import com.mpdc4gsr.libunified.ir.R
+import com.mpdc4gsr.libunified.R
 
 
 class CaliperImageView : AppCompatImageView {

@@ -3,7 +3,7 @@ package com.mpdc4gsr.libunified.app.menu.adapter
 import android.annotation.SuppressLint
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import com.mpdc4gsr.libunified.app.R
+import com.mpdc4gsr.libunified.R
 import com.mpdc4gsr.libunified.app.menu.constant.MenuType
 import com.mpdc4gsr.libunified.app.menu.constant.TwoLightType
 

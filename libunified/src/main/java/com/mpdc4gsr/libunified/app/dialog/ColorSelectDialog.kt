@@ -7,8 +7,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.ColorInt
 import com.blankj.utilcode.util.SizeUtils
-import com.mpdc4gsr.libunified.app.R
-import com.mpdc4gsr.libunified.app.databinding.DialogColorSelectBinding
+import com.mpdc4gsr.libunified.R
+import com.mpdc4gsr.libunified.databinding.DialogColorSelectBinding
 import com.mpdc4gsr.libunified.app.utils.ScreenUtil
 
 

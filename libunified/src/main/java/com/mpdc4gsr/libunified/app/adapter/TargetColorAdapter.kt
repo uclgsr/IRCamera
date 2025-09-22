@@ -6,10 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
-import com.mpdc4gsr.libunified.app.R
+import com.mpdc4gsr.libunified.R
 import com.mpdc4gsr.libunified.app.bean.ObserveBean
 import com.mpdc4gsr.libunified.app.bean.TargetColorBean
-import com.mpdc4gsr.libunified.app.databinding.ItmeTargetColorBinding
+import com.mpdc4gsr.libunified.databinding.ItmeTargetColorBinding
 import com.mpdc4gsr.libunified.app.utils.ScreenUtil
 
 class TargetColorAdapter(val context: Context, var targetColor: Int) :

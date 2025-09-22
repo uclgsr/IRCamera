@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import com.chad.library.adapter.base.loadmore.BaseLoadMoreView
 import com.chad.library.adapter.base.util.getItemView
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
-import com.mpdc4gsr.libunified.app.R
+import com.mpdc4gsr.libunified.R
 
 class CommLoadMoreView : BaseLoadMoreView() {
     override fun getRootView(parent: ViewGroup): View =

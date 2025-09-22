@@ -13,7 +13,7 @@ import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.FragmentActivity
-import com.mpdc4gsr.libunified.app.R
+import com.mpdc4gsr.libunified.R
 
 abstract class BaseDialogFragment<B : ViewDataBinding> : AppCompatDialogFragment() {
 

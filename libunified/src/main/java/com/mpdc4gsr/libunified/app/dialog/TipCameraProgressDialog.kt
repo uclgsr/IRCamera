@@ -6,7 +6,7 @@ import android.content.DialogInterface
 import android.content.res.Configuration
 import android.view.LayoutInflater
 import android.view.ViewGroup.LayoutParams
-import com.mpdc4gsr.libunified.app.R
+import com.mpdc4gsr.libunified.R
 import com.mpdc4gsr.libunified.app.utils.ScreenUtil
 
 
