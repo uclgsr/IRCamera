@@ -49,7 +49,6 @@ object TimestampManager {
         val date = java.util.Date(timestampMillis)
         return iso8601Format.format(date)
     }
-    }
 
 
     fun getCurrentSystemTimeMs(): Long {
