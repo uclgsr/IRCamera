@@ -3,6 +3,7 @@ package com.mpdc4gsr.libunified.ir.utils
 import android.util.Log
 import com.mpdc4gsr.libunified.open3d.JNITool
 import com.mpdc4gsr.libunified.app.bean.AlarmBean
+import org.opencv.android.Utils
 import org.opencv.core.CvType
 import org.opencv.core.Mat
 import org.opencv.imgproc.Imgproc
@@ -171,8 +172,8 @@ class IRImageHelp {
                         )
             ) {
                 try {
-                    val matByteArray =
-                        JNITool.draw_edge_from_temp_reigon_bitmap_argb_psd(
+                    val resultBitmap =
+                        OpencvTools.draw_edge_from_temp_reigon_bitmap_argb_psd(
                             imageDst,
                             temperatureSrc,
                             imageHeight,
@@ -183,17 +184,26 @@ class IRImageHelp {
                             alarmBean.lowColor,
                             alarmBean.markType,
                         )
+                    
+                    // Convert Bitmap to byte array
+                    val mat = Mat(resultBitmap.height, resultBitmap.width, CvType.CV_8UC4)
+                    Utils.bitmapToMat(resultBitmap, mat)
+                    Imgproc.cvtColor(mat, mat, Imgproc.COLOR_RGBA2BGR)
+                    val grayData = ByteArray(mat.cols() * mat.rows() * 3)
+                    mat[0, 0, grayData]
+                    
+                    // Now convert to RGBA for return
                     val diffMat =
                         Mat(
                             imageHeight,
                             imageWidth,
                             CvType.CV_8UC3,
                         )
-                    diffMat.put(0, 0, matByteArray)
+                    diffMat.put(0, 0, grayData)
                     Imgproc.cvtColor(diffMat, diffMat, Imgproc.COLOR_BGR2RGBA)
-                    val grayData = ByteArray(diffMat.cols() * diffMat.rows() * 4)
-                    diffMat[0, 0, grayData]
-                    return grayData
+                    val finalData = ByteArray(diffMat.cols() * diffMat.rows() * 4)
+                    diffMat[0, 0, finalData]
+                    return finalData
                 } catch (e: IOException) {
                     throw RuntimeException(e)
                 }
