@@ -173,7 +173,7 @@ class TC001IntegrationTest {
                 // Stop after capturing enough frames for analysis
                 if (frameTimestamps.size >= maxFramesToCapture) {
                     // Stop recording asynchronously
-                    kotlinx.coroutines.GlobalScope.launch {
+                    launch {
                         thermalRecorder.stopRecording()
                     }
                 }
