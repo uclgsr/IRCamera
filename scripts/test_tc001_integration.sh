@@ -28,17 +28,19 @@ check_device() {
 
 # Function to check if TC001 is connected
 check_tc001() {
-    echo "🔍 Checking for TC001 device..."
+    echo "🔍 Checking for TC001 device (VID: 2744, PID: 0001)..."
     
-    # List USB devices on Android device
-    usb_devices=$(adb shell "ls /dev/bus/usb/*/001 2>/dev/null || echo 'no_usb'")
-    if [ "$usb_devices" = "no_usb" ]; then
+    # Iterate through sysfs to find the device by VID/PID for better reliability
+    local device_ids=$(adb shell "for dev in /sys/bus/usb/devices/*; do if [ -f \"\$dev/idVendor\" ] && [ -f \"\$dev/idProduct\" ]; then echo \"\$(cat \$dev/idVendor):\$(cat \$dev/idProduct)\"; fi; done 2>/dev/null")
+    
+    if echo "$device_ids" | grep -q "2744:0001"; then
+        echo "✅ TC001 device detected."
+        return 0
+    else
         echo "⚠️  TC001 device not detected. Tests will run in simulation mode."
         return 1
-    else
-        echo "✅ USB devices detected. TC001 may be connected."
-        return 0
     fi
+}
 }
 
 # Function to run unit tests
