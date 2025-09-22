@@ -259,7 +259,7 @@ class GSRSensorRecorder(
                 val realSampleCount = sampleCount.get()
 
                 val expectedSamples =
-                    ((System.nanoTime() - recordingStartTime) / 1_000_000_000.0 * samplingRate).toLong()
+                    ((TimestampManager.getCurrentTimestampNanos() - recordingStartTime) / 1_000_000_000.0 * samplingRate).toLong()
                 val actualSamples = realSampleCount
 
                 if (expectedSamples > actualSamples + samplingRate) {
@@ -344,7 +344,7 @@ class GSRSensorRecorder(
                 }
 
                 this@GSRSensorRecorder.sessionDirectory = sessionDirectory
-                recordingStartTime = System.nanoTime()
+                recordingStartTime = TimestampManager.getCurrentTimestampNanos()
 
                 var shimmerRecordingStarted = false
                 var recordingSuccessful = false
@@ -912,7 +912,7 @@ class GSRSensorRecorder(
     override fun getErrorFlow(): Flow<SensorError> = _errorFlow.asSharedFlow()
 
     override fun getRecordingStats(): RecordingStats {
-        val currentTime = System.nanoTime()
+        val currentTime = TimestampManager.getCurrentTimestampNanos()
         val sessionDuration =
             if (recordingStartTime > 0) (currentTime - recordingStartTime) / 1_000_000 else 0L
 

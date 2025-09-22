@@ -27,10 +27,24 @@ class TimeSynchronizationService {
 
         Log.i(TAG, "Session initialized with unified timestamp reference")
 
-
         writeSessionSyncMetadata()
+        
+        logSessionStartSyncEvent()
 
         return sessionReference!!
+    }
+
+    private suspend fun logSessionStartSyncEvent() {
+        try {
+            logSyncEvent("SessionStart", mapOf(
+                "session_start_source" to "TimeSynchronizationService",
+                "unified_timestamp_system" to "enabled", 
+                "cross_device_sync" to "available"
+            ))
+            Log.i(TAG, "SessionStart sync event logged for cross-sensor alignment verification")
+        } catch (e: Exception) {
+            Log.w(TAG, "Failed to log SessionStart sync event", e)
+        }
     }
 
 
