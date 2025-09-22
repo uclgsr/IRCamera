@@ -1,5 +1,55 @@
 # IRCamera Architecture Diagrams
 
+## Build System and Compilation Flow (2024-12-22)
+
+### Kotlin Compilation Error Resolution - Commit 2329a34
+
+```mermaid
+flowchart TB
+    subgraph "Kotlin Compilation Fix Flow"
+        A[Compilation Errors] --> B{Error Type Analysis}
+        B -->|R.styleable unresolved| C[Check attrs.xml definitions]
+        B -->|Interface implementation| D[Check Java-Kotlin interop]
+        B -->|Method not found| E[Check method signatures]
+        
+        C --> C1[MenuSecondView deviceType]
+        C1 --> C2[Format: string → integer]
+        C2 --> C3[✅ getInt() now matches]
+        
+        D --> D1[OnRangeChangedListener]
+        D1 --> D2[Add @NonNull annotations]
+        D2 --> D3[✅ Kotlin nullability fixed]
+        
+        E --> E1[IRImageHelp method calls]
+        E1 --> E2[Verify OpencvTools signatures]
+        E2 --> E3[✅ Float parameter version exists]
+        
+        C3 --> F[Build Success]
+        D3 --> F
+        E3 --> F
+    end
+    
+    subgraph "Affected Files"
+        G[MenuSecondView.kt<br/>- R.styleable.MenuSecondView_deviceType]
+        H[TitleView.kt<br/>- R.styleable.TitleView_*]
+        I[MyTextView.kt<br/>- R.styleable.MyTextView_*]
+        J[ColorPickDialog.kt<br/>- OnRangeChangedListener impl]
+        K[IRImageHelp.kt<br/>- OpencvTools method calls]
+    end
+    
+    F --> G
+    F --> H  
+    F --> I
+    F --> J
+    F --> K
+```
+
+## Code Quality Fixes (2024-12-22)
+
+### Test Warning Resolution - Commit 56beb31
+Fixed Kotlin compiler warning in ZeroconfDiscoveryService testing by removing redundant type check that was always true.
+
+
 ## Session Lifecycle and Recording Coordination (2024-12-22)
 
 ### Enhanced Recording Orchestration Flow
