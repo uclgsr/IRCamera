@@ -94,14 +94,13 @@ class RAWCaptureTestActivity : AppCompatActivity() {
 
     private fun initializeCamera() {
         try {
-            // Get PreviewView from the layout - camera preview is at cameraPreview TextureView
-            // For now, we'll initialize without preview since the layout uses TextureView
-            // In a production implementation, the layout should be updated to use PreviewView
+            // Initialize camera with PreviewView for live camera preview
+            val previewView = binding.previewView
             
             rgbCameraRecorder = RgbCameraRecorder(
                 context = this,
                 lifecycleOwner = this,
-                previewView = null, // TODO: Update layout to use PreviewView for live preview
+                previewView = previewView,
                 useFrontCamera = false
             )
             
@@ -109,6 +108,7 @@ class RAWCaptureTestActivity : AppCompatActivity() {
                 val initialized = rgbCameraRecorder?.initialize() ?: false
                 if (initialized) {
                     Log.i(TAG, "RGB camera initialized for Stage 3 DNG testing")
+                    observeCameraStatus()
                     runOnUiThread {
                         binding.statusText.text = binding.statusText.text.toString() + " - Camera Ready"
                     }
@@ -125,7 +125,15 @@ class RAWCaptureTestActivity : AppCompatActivity() {
         }
     }
     
-    private fun updateDeviceCompatibilityInfo() {
+    private fun observeCameraStatus() {
+        lifecycleScope.launch {
+            rgbCameraRecorder?.statusFlow?.collect { status ->
+                runOnUiThread {
+                    binding.cameraStatusText.text = "Camera: ${status.displayText}"
+                }
+            }
+        }
+    }
         val isStage3Compatible = SamsungDeviceCompatibility.isStage3Compatible()
         val deviceInfo = SamsungDeviceCompatibility.getDeviceInfo()
         

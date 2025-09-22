@@ -5,21 +5,45 @@ import android.os.Build
 import android.util.Log
 import android.util.Range
 import android.util.Size
-import androidx.camera.core.*
+import androidx.camera.core.Camera
+import androidx.camera.core.CameraSelector
+import androidx.camera.core.ImageCapture
+import androidx.camera.core.Preview
+import androidx.camera.core.UseCase
 import androidx.camera.lifecycle.ProcessCameraProvider
-import androidx.camera.video.*
+import androidx.camera.video.Quality
+import androidx.camera.video.QualitySelector
+import androidx.camera.video.Recorder
+import androidx.camera.video.Recording
+import androidx.camera.video.VideoCapture
 import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import com.google.gson.Gson
 import com.opencsv.CSVWriter
-import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import mpdc4gsr.camera.core.RawEngine
 import mpdc4gsr.camera.core.SamsungDeviceCompatibility
 import mpdc4gsr.data.SessionMetadata
 import mpdc4gsr.permissions.PermissionManager
-import mpdc4gsr.sensors.*
+import mpdc4gsr.sensors.ErrorType
+import mpdc4gsr.sensors.SensorError
+import mpdc4gsr.sensors.SensorRecorder
+import mpdc4gsr.sensors.SensorStatus
 import mpdc4gsr.utils.CSVBufferedWriter
 import mpdc4gsr.utils.SessionDirectoryManager
 import java.io.File
@@ -1116,9 +1140,9 @@ class RgbCameraRecorder(
                                 logFrameCapture(timestampRecord, frameNumber, stage3File, isRaw = true)
                                 Log.i(TAG, "✅ Stage 3/Level 3 DNG captured: ${stage3File.name} (${stage3File.length()} bytes)")
                             } else {
-                                // If DNG file doesn't exist yet, create a placeholder with metadata
-                                stage3File.writeText("Stage 3 DNG placeholder - frame $frameNumber")
-                                Log.d(TAG, "Stage 3/Level 3 DNG metadata prepared for frame $frameNumber")
+                                // Create metadata tracking for this frame even if DNG file creation is pending
+                                enhanceStage3DngMetadata(stage3File, timestampRecord, frameNumber, null)
+                                Log.d(TAG, "Stage 3/Level 3 DNG frame $frameNumber processed - awaiting RawEngine file creation")
                             }
                             
                         } catch (e: Exception) {
