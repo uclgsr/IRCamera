@@ -19,7 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StyleRes;
 
-import com.mpdc4gsr.lib.ui.R;
+import com.mpdc4gsr.libunified.R;
 
 @SuppressWarnings("unused")
 public abstract class ModalDialog extends BottomDialog implements View.OnClickListener {

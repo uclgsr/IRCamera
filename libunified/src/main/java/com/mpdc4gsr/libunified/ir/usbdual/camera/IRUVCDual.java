@@ -23,7 +23,7 @@ import com.energy.iruvc.uvc.ConnectCallback;
 import com.energy.iruvc.uvc.UVCCamera;
 import com.energy.iruvc.uvc.UVCType;
 import com.mpdc4gsr.libunified.ir.usbdual.Const;
-import com.mpdc4gsr.libunified.ir.R;
+import com.mpdc4gsr.libunified.R;
 
 import java.util.ArrayList;
 import java.util.List;

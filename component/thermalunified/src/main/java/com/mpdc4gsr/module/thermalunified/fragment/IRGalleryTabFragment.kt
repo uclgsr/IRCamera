@@ -18,7 +18,7 @@ import com.mpdc4gsr.module.thermal.ir.event.GalleryDirChangeEvent
 import com.mpdc4gsr.module.thermal.ir.popup.GalleryChangePopup
 import com.mpdc4gsr.module.thermal.ir.viewmodel.IRGalleryTabViewModel
 import org.greenrobot.eventbus.EventBus
-import com.mpdc4gsr.libunified.app.R as LibCoreR
+import com.mpdc4gsr.libunified.R as LibCoreR
 import com.mpdc4gsr.lib.ui.R as UiR
 
 

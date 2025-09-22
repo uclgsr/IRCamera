@@ -23,7 +23,7 @@ import com.mpdc4gsr.module.thermal.ir.R
 import com.mpdc4gsr.module.thermal.ir.chart.IRMyValueFormatter
 import com.mpdc4gsr.module.thermal.ir.chart.YValueFormatter
 import com.mpdc4gsr.module.thermal.ir.utils.ChartTools
-import com.mpdc4gsr.libunified.app.R as LibR
+import com.mpdc4gsr.libunified.R as LibR
 import com.mpdc4gsr.module.thermal.R as ThermalR
 
 class ChartMonitorView : LineChart, OnChartGestureListener {

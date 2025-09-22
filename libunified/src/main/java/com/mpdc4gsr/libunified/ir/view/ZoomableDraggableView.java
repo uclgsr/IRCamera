@@ -14,7 +14,7 @@ import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.mpdc4gsr.libunified.ir.R;
+import com.mpdc4gsr.libunified.R;
 import com.mpdc4gsr.libunified.app.utils.BitmapUtils;
 
 public class ZoomableDraggableView extends View {

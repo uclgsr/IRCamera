@@ -1,4 +1,4 @@
-package com.infisense.usbir;
+package com.mpdc4gsr.libunified.ir;
 
 import android.content.Context;
 import android.content.pm.PackageInfo;

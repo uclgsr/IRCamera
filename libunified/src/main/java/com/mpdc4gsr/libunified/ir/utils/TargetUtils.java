@@ -1,6 +1,6 @@
 package com.mpdc4gsr.libunified.ir.utils;
 
-import com.mpdc4gsr.libunified.ir.R;
+import com.mpdc4gsr.libunified.R;
 import com.mpdc4gsr.libunified.app.bean.ObserveBean;
 
 public class TargetUtils {

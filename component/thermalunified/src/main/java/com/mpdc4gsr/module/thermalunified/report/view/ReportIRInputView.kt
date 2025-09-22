@@ -14,7 +14,7 @@ import androidx.core.view.isVisible
 import com.mpdc4gsr.libunified.app.tools.UnitTools
 import com.mpdc4gsr.module.thermal.ir.R
 import com.mpdc4gsr.module.thermal.ir.report.bean.ImageTempBean
-import com.mpdc4gsr.libunified.app.R as LibR
+import com.mpdc4gsr.libunified.R as LibR
 
 class ReportIRInputView : LinearLayout {
     companion object {

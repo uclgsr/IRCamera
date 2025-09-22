@@ -24,8 +24,8 @@ import com.mpdc4gsr.module.thermal.ir.utils.ChartTools
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import com.mpdc4gsr.libunified.app.R as LibR
-import com.mpdc4gsr.libunified.app.R as LibcoreR
+import com.mpdc4gsr.libunified.R as LibR
+import com.mpdc4gsr.libunified.R as LibcoreR
 import com.mpdc4gsr.module.thermal.R as ThermalR
 
 class ChartLogView : LineChart {

@@ -155,7 +155,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import kotlin.math.roundToInt
-import com.mpdc4gsr.libunified.app.R as LibcoreR
+import com.mpdc4gsr.libunified.R as LibcoreR
 
 
 open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {

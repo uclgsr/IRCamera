@@ -14,7 +14,7 @@ import com.mpdc4gsr.libunified.app.ktbase.BaseActivity
 import com.mpdc4gsr.libunified.app.lms.weiget.TToast
 import com.mpdc4gsr.module.user.R
 import kotlinx.coroutines.launch
-import com.mpdc4gsr.libunified.app.R as RCore
+import com.mpdc4gsr.libunified.R as RCore
 
 
 class DeviceDetailsActivity : BaseActivity(), View.OnClickListener {

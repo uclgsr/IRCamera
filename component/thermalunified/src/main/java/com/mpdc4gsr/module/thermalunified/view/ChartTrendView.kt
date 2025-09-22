@@ -14,7 +14,7 @@ import com.mpdc4gsr.libunified.ui.charting.data.LineDataSet
 import com.mpdc4gsr.libunified.ui.charting.formatter.ValueFormatter
 import com.mpdc4gsr.libunified.app.tools.UnitTools
 import com.mpdc4gsr.module.thermal.ir.R
-import com.mpdc4gsr.libunified.app.R as LibR
+import com.mpdc4gsr.libunified.R as LibR
 import com.mpdc4gsr.module.thermal.R as ThermalR
 
 class ChartTrendView : LineChart {

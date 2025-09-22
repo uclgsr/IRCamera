@@ -12,7 +12,7 @@ import com.mpdc4gsr.libunified.ui.gzuliyujiang.wheelpicker.annotation.DateMode;
 import com.mpdc4gsr.libunified.ui.gzuliyujiang.wheelpicker.annotation.TimeMode;
 import com.mpdc4gsr.libunified.ui.gzuliyujiang.wheelpicker.contract.OnDatimePickedListener;
 import com.mpdc4gsr.libunified.ui.gzuliyujiang.wheelpicker.widget.DatimeWheelLayout;
-import com.mpdc4gsr.lib.ui.R;
+import com.mpdc4gsr.libunified.R;
 
 @SuppressWarnings({"unused", "WeakerAccess"})
 public class DatimePicker extends ModalDialog {

@@ -10,7 +10,7 @@ import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.mpdc4gsr.module.thermal.ir.R
-import com.mpdc4gsr.libunified.app.R as MenuR
+import com.mpdc4gsr.libunified.R as MenuR
 
 @Deprecated("旧的2D编辑一级菜单，已重构过了")
 class GalleryEditMenuAdapter(val context: Context) :

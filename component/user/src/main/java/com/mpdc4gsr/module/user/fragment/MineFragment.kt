@@ -48,8 +48,8 @@ import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import com.mpdc4gsr.libunified.app.R as LibAppR
-import com.mpdc4gsr.libunified.app.R as RCore
+import com.mpdc4gsr.libunified.R as LibAppR
+import com.mpdc4gsr.libunified.R as RCore
 
 
 class MineFragment : BaseFragment(), View.OnClickListener {

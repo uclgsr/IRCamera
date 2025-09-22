@@ -38,7 +38,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import java.io.File
-import com.mpdc4gsr.libunified.app.R as LibCoreR
+import com.mpdc4gsr.libunified.R as LibCoreR
 import com.mpdc4gsr.lib.ui.R as UiR
 
 

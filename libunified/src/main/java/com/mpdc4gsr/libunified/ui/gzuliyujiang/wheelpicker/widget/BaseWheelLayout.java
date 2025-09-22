@@ -20,7 +20,7 @@ import com.mpdc4gsr.libunified.ui.gzuliyujiang.wheelview.annotation.ItemTextAlig
 import com.mpdc4gsr.libunified.ui.gzuliyujiang.wheelview.annotation.ScrollState;
 import com.mpdc4gsr.libunified.ui.gzuliyujiang.wheelview.contract.OnWheelChangedListener;
 import com.mpdc4gsr.libunified.ui.gzuliyujiang.wheelview.widget.WheelView;
-import com.mpdc4gsr.lib.ui.R;
+import com.mpdc4gsr.libunified.R;
 
 import java.util.ArrayList;
 import java.util.List;

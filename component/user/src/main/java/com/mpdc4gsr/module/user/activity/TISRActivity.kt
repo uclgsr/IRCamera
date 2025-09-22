@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.json.JSONObject
-import com.mpdc4gsr.libunified.app.R as RCore
+import com.mpdc4gsr.libunified.R as RCore
 
 class TISRActivity : BaseActivity() {
 
