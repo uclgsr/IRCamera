@@ -1,5 +1,120 @@
 # IRCamera Architecture Diagrams
 
+## Latest Update: Enhanced Shimmer3 GSR BLE Support (2024-12-21)
+**Commit ID**: 64fdf6b
+
+### Enhanced BLE Scanning and Device Selection Architecture
+
+```mermaid
+graph TB
+    subgraph "Enhanced Shimmer3 GSR BLE Support"
+        subgraph "BLE Scanning Enhancement"
+            ScanFilters[ScanFilter Implementation<br/>✅ Shimmer Service UUID<br/>✅ Device Name Patterns<br/>✅ MAC Address Prefixes]
+            
+            DeviceDiscovery[Enhanced Device Discovery<br/>✅ Paired + Unpaired Devices<br/>✅ Comprehensive Filtering<br/>✅ Real-time Results]
+            
+            PermissionHandling[Enhanced Permissions<br/>✅ BLUETOOTH_SCAN<br/>✅ BLUETOOTH_CONNECT<br/>✅ ACCESS_FINE_LOCATION]
+        end
+        
+        subgraph "Device Selection & UI"
+            DeviceSelectionDialog[Multi-Device Selection<br/>✅ Device Name + Address<br/>✅ Paired Status Indicator<br/>✅ User Choice Interface]
+            
+            StatusIndicators[Visual Status Feedback<br/>✅ Color-coded Icons<br/>✅ Connection State Display<br/>✅ Real-time Updates]
+            
+            UserFeedback[Enhanced User Feedback<br/>✅ Detailed Error Messages<br/>✅ Troubleshooting Guidance<br/>✅ Connection Progress]
+        end
+        
+        subgraph "Data Processing Enhancement"
+            ObjectClusterConversion[ObjectCluster Processing<br/>✅ Calibrated GSR Values<br/>✅ PPG Data Extraction<br/>✅ Accelerometer Data<br/>✅ Signal Quality Assessment]
+            
+            UnifiedTimestamps[Timestamp Management<br/>✅ TimestampManager Integration<br/>✅ Unified Time Source<br/>✅ ISO Format Support]
+            
+            DataQuality[Data Quality & Validation<br/>✅ Signal Quality Scoring<br/>✅ Range Validation<br/>✅ Error Recovery]
+        end
+        
+        subgraph "Connection Management"
+            EnhancedReconnection[Robust Reconnection<br/>✅ 3-Attempt Logic<br/>✅ Exponential Backoff<br/>✅ Graceful Failure Handling]
+            
+            ConnectionStates[Connection State Management<br/>✅ Real-time Monitoring<br/>✅ Visual Feedback<br/>✅ Error Recovery]
+        end
+    end
+    
+    ScanFilters --> DeviceDiscovery
+    PermissionHandling --> DeviceDiscovery
+    DeviceDiscovery --> DeviceSelectionDialog
+    DeviceSelectionDialog --> StatusIndicators
+    StatusIndicators --> UserFeedback
+    
+    DeviceSelectionDialog --> ConnectionStates
+    ConnectionStates --> ObjectClusterConversion
+    ObjectClusterConversion --> UnifiedTimestamps
+    UnifiedTimestamps --> DataQuality
+    
+    ConnectionStates --> EnhancedReconnection
+    
+    classDef enhanced fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
+    classDef ui fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+    classDef data fill:#fff3e0,stroke:#ef6c00,stroke-width:2px
+    classDef connection fill:#fce4ec,stroke:#c2185b,stroke-width:2px
+    
+    class ScanFilters,DeviceDiscovery,PermissionHandling enhanced
+    class DeviceSelectionDialog,StatusIndicators,UserFeedback ui
+    class ObjectClusterConversion,UnifiedTimestamps,DataQuality data
+    class EnhancedReconnection,ConnectionStates connection
+```
+
+### Implementation Details Flow
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant ShimmerMvpActivity
+    participant ShimmerDeviceManager
+    participant BluetoothLeScanner
+    participant GSRSensorRecorder
+    participant TimestampManager
+    
+    User->>ShimmerMvpActivity: Tap Connect Button
+    ShimmerMvpActivity->>ShimmerDeviceManager: startDeviceScanning()
+    
+    ShimmerDeviceManager->>BluetoothLeScanner: startScan(filters, settings, callback)
+    Note over BluetoothLeScanner: ScanFilter with Shimmer UUID<br/>Device name patterns<br/>MAC address prefixes
+    
+    BluetoothLeScanner-->>ShimmerDeviceManager: onScanResult(device, rssi)
+    ShimmerDeviceManager-->>ShimmerMvpActivity: Device found
+    
+    alt Multiple Devices Found
+        ShimmerMvpActivity->>User: Show Device Selection Dialog
+        User->>ShimmerMvpActivity: Select Device
+    else Single Device Found
+        ShimmerMvpActivity->>ShimmerMvpActivity: Auto-connect to device
+    end
+    
+    ShimmerMvpActivity->>ShimmerDeviceManager: connectToDevice(selectedDevice)
+    ShimmerDeviceManager-->>ShimmerMvpActivity: Connection Status Updates
+    
+    loop Data Streaming
+        ShimmerDeviceManager->>GSRSensorRecorder: ObjectCluster data
+        GSRSensorRecorder->>TimestampManager: getCurrentTimestampNanos()
+        TimestampManager-->>GSRSensorRecorder: Unified timestamp
+        GSRSensorRecorder->>GSRSensorRecorder: convertObjectClusterToSensorSample()
+        GSRSensorRecorder-->>ShimmerMvpActivity: GSR Sample with quality score
+    end
+    
+    alt Connection Lost
+        ShimmerDeviceManager->>ShimmerDeviceManager: Detect disconnection
+        loop Reconnection Attempts (max 3)
+            ShimmerDeviceManager->>ShimmerDeviceManager: Attempt reconnection
+            ShimmerDeviceManager-->>ShimmerMvpActivity: Reconnection attempt #N
+        end
+        
+        alt Reconnection Failed
+            ShimmerDeviceManager-->>ShimmerMvpActivity: Connection failed - stop recording
+        else Reconnection Successful  
+            ShimmerDeviceManager-->>ShimmerMvpActivity: Reconnected - resume data
+        end
+    end
+=======
 ## Recent Update: TC001 Thermal Camera Integration Enhancement (2024-12-22)
 
 ### TC001 Hardware Integration Flow - Commit 4b1c7a9
@@ -206,6 +321,7 @@ sequenceDiagram
     Thermal->>TM: getCurrentTimestampNanos()
     
     Note over App,PC: Verify timestamps within 5ms tolerance
+
 ```
 
 ## Previous Update: Kotlin Compilation Status (2024-12-21)

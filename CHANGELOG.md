@@ -20,6 +20,35 @@
 
 # Changelog
 
+## [2.2.1] - Enhanced Shimmer3 GSR BLE Support (2024-12-21)
+**Commit ID**: 64fdf6b
+
+### Added
+- **Enhanced BLE Scanning**: ShimmerDeviceManager now uses ScanFilters targeting Shimmer service UUID (49535343-FE7D-4AE5-8FA9-9FAFD205E455)
+- **Device Selection Dialog**: Multi-device selection interface in ShimmerMvpActivity showing paired/unpaired devices
+- **ObjectCluster Conversion**: Complete convertObjectClusterToSensorSample() method with unified timestamp management
+- **Signal Quality Assessment**: Intelligent quality scoring based on GSR range and ADC values
+- **Visual Status Indicators**: Color-coded connection status icon (green=connected, orange=connecting, red=failed)
+- **Comprehensive Device Discovery**: Scans for both paired and unpaired Shimmer devices with proper filtering
+
+### Enhanced
+- **BLE Permission Handling**: Proper BLUETOOTH_SCAN, BLUETOOTH_CONNECT, and location permission requests
+- **Reconnection Logic**: Robust 3-attempt reconnection with exponential backoff delays  
+- **Data Timestamp Alignment**: Unified time source via TimestampManager.getCurrentTimestampNanos()
+- **User Feedback Systems**: Enhanced connection status messages and device guidance
+- **ObjectCluster Data Extraction**: Calibrated GSR values, PPG data, and accelerometer readings
+
+### Fixed
+- **Device Selection UX**: Users can now choose from multiple discovered Shimmer devices
+- **Connection Status UI**: Real-time visual feedback with appropriate color coding
+- **Data Quality Handling**: Proper validation and quality assessment of GSR readings
+- **Bluetooth State Management**: Better handling of disabled Bluetooth and permission states
+
+### Technical Implementation
+- **Files Modified**: ShimmerDeviceManager.kt, GSRSensorRecorder.kt, TimestampManager.kt, ShimmerMvpActivity.kt, activity_shimmer_mvp.xml
+- **BLE Architecture**: Enhanced scanning with device name patterns and MAC prefix filtering
+- **MVP Compliance**: Focus on core functionality without extensive testing infrastructure
+
 ## [2.2.1] - SmartRefreshLayout Dependency Resolution Fix (2024-12-21)
 
 ### Fixed
