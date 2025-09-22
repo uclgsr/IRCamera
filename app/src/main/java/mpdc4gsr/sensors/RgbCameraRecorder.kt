@@ -50,7 +50,12 @@ class RgbCameraRecorder(
         private const val VIDEO_BITRATE_1080P = 20_000_000
         private const val AUDIO_BITRATE = 256_000
         private const val JPEG_QUALITY = 100
-        private const val CAPTURE_FPS = 30
+        // Throttled frame capture at 10-15fps for optimized I/O performance 
+        private const val CAPTURE_FPS = 12 // Reduced from 30 to optimize I/O performance
+        
+        // Frame capture throttling configuration
+        private const val FRAME_CAPTURE_EVERY_N_FRAMES = 2 // Capture every 2nd frame at 24fps = ~12fps output
+        private const val MAX_PENDING_CAPTURES = 2 // Reduced for better I/O handling
 
 
         private const val ENABLE_RAW_CAPTURE = true
@@ -154,38 +159,68 @@ class RgbCameraRecorder(
 
     override suspend fun initialize(): Boolean = withContext(Dispatchers.Main) {
         try {
-            Log.d(TAG, "Initializing ${if (useFrontCamera) "front" else "back"} camera")
+            Log.d(TAG, "Initializing CameraX with ${if (useFrontCamera) "front" else "back"} camera")
 
-            if (!checkAndRequestPermissions()) return@withContext false
-
-            _cameraStatus.value = "Initializing..."
-            cameraProvider = ProcessCameraProvider.getInstance(context).get()
-
-            if (!cameraProvider!!.hasCamera(currentCameraSelector)) {
-                val cameraType = if (isUsingFrontCamera) "Front" else "Back"
-                _cameraStatus.value = "$cameraType Camera Not Available"
-                emitError(ErrorType.INITIALIZATION_FAILED, "$cameraType camera not available")
-
+            if (!checkAndRequestPermissions()) {
+                _cameraStatus.value = "Camera Permission Denied"
+                emitError(ErrorType.PERMISSION_DENIED, "Camera permission is required for recording")
                 return@withContext false
             }
 
+            _cameraStatus.value = "Initializing..."
+            
+            // Wrap CameraProvider initialization in try-catch for robust error handling
+            cameraProvider = try {
+                ProcessCameraProvider.getInstance(context).get()
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to get CameraProvider instance", e)
+                _cameraStatus.value = "Camera Service Unavailable"
+                emitError(ErrorType.INITIALIZATION_FAILED, "Camera service unavailable: ${e.message}")
+                return@withContext false
+            }
 
+            if (!cameraProvider!!.hasCamera(currentCameraSelector)) {
+                val cameraType = if (isUsingFrontCamera) "Front" else "Back"
+                Log.w(TAG, "$cameraType camera not available on this device")
+                _cameraStatus.value = "$cameraType Camera Not Available"
+                emitError(ErrorType.INITIALIZATION_FAILED, "$cameraType camera not available on this device")
+                return@withContext false
+            }
+
+            // Detect device capabilities and configure camera
             detectDeviceCapabilities()
             detectAvailableCameras()
             optimizeVideoConfiguration()
 
+            // Setup and bind camera use cases with error handling
             setupCameraUseCases()
-            bindUseCases()
+            val bindSuccess = bindUseCases()
+            
+            if (!bindSuccess) {
+                _cameraStatus.value = "Camera Binding Failed"
+                emitError(ErrorType.INITIALIZATION_FAILED, "Failed to bind camera use cases")
+                return@withContext false
+            }
 
             _cameraStatus.value = "Ready"
             Log.i(
                 TAG,
-                "CameraX initialized successfully with ${selectedVideoWidth}x${selectedVideoHeight}@${selectedVideoFps}fps"
+                "✅ CameraX initialized successfully: ${selectedVideoWidth}x${selectedVideoHeight}@${selectedVideoFps}fps, Preview: ${previewView != null}"
             )
             return@withContext true
 
+        } catch (e: SecurityException) {
+            Log.e(TAG, "Camera security exception - permission issue", e)
+            _cameraStatus.value = "Permission Error"
+            emitError(ErrorType.PERMISSION_DENIED, "Camera permission required: ${e.message}")
+            return@withContext false
+        } catch (e: IllegalStateException) {
+            Log.e(TAG, "Camera in use by another application", e)
+            _cameraStatus.value = "Camera In Use"
+            emitError(ErrorType.INITIALIZATION_FAILED, "Camera is being used by another application")
+            return@withContext false
         } catch (e: Exception) {
-            Log.e(TAG, "Camera initialization failed", e)
+            Log.e(TAG, "Unexpected camera initialization error", e)
             _cameraStatus.value = "Initialization Failed"
             emitError(ErrorType.INITIALIZATION_FAILED, "Camera initialization failed: ${e.message}")
             return@withContext false
@@ -594,31 +629,35 @@ class RgbCameraRecorder(
 
     private fun createOptimizedRecorder(): Recorder {
         return try {
+            // Use QualitySelector to attempt UHD and fall back to lower quality if unsupported
             val qualitySelector = if (deviceSupports4K) {
-                Log.i(TAG, "Creating 4K quality selector for capable device")
+                Log.i(TAG, "Creating 4K UHD quality selector with fallback strategy")
                 QualitySelector.from(
                     Quality.UHD,
-                    FallbackStrategy.lowerQualityOrHigherThan(Quality.FHD)
+                    FallbackStrategy.lowerQualityThan(Quality.UHD)
                 )
             } else {
-                Log.i(TAG, "Creating 1080p quality selector with fallback")
+                Log.i(TAG, "Creating FHD quality selector with fallback strategy")
                 QualitySelector.from(
                     Quality.FHD,
-                    FallbackStrategy.lowerQualityOrHigherThan(Quality.HD)
+                    FallbackStrategy.lowerQualityThan(Quality.FHD)
                 )
             }
 
-            Recorder.Builder()
+            val recorder = Recorder.Builder()
                 .setQualitySelector(qualitySelector)
                 .build()
+                
+            Log.i(TAG, "Optimized recorder created with quality selector configuration")
+            recorder
 
         } catch (e: Exception) {
-            Log.e(TAG, "Error creating optimized recorder, using default", e)
+            Log.e(TAG, "Error creating optimized recorder, using conservative fallback", e)
             Recorder.Builder()
                 .setQualitySelector(
                     QualitySelector.from(
                         Quality.FHD,
-                        FallbackStrategy.lowerQualityOrHigherThan(Quality.HD)
+                        FallbackStrategy.lowerQualityThan(Quality.FHD)
                     )
                 )
                 .build()
@@ -867,9 +906,9 @@ class RgbCameraRecorder(
             }
 
             val captureInterval = 1000L / CAPTURE_FPS
+            var frameSkipCounter = 0 // Counter for frame throttling
 
 
-            val maxPendingCaptures = 3
             var pendingCaptureCount = 0
 
 
@@ -877,12 +916,18 @@ class RgbCameraRecorder(
             lastFrameRateCheck.set(System.currentTimeMillis())
             actualFrameRateAchieved = 0.0
 
-            Log.i(TAG, "🎬 Starting enhanced frame capture with backpressure handling at ${CAPTURE_FPS} FPS")
+            Log.i(TAG, "🎬 Starting optimized frame capture at ${CAPTURE_FPS} FPS with throttling (every ${FRAME_CAPTURE_EVERY_N_FRAMES} frames)")
 
             while (_isRecording.get() && isActive) {
                 try {
+                    // Implement frame throttling - only capture every Nth frame
+                    frameSkipCounter++
+                    if (frameSkipCounter % FRAME_CAPTURE_EVERY_N_FRAMES != 0) {
+                        delay(captureInterval)
+                        continue
+                    }
 
-                    if (pendingCaptureCount >= maxPendingCaptures) {
+                    if (pendingCaptureCount >= MAX_PENDING_CAPTURES) {
                         droppedFrames.incrementAndGet()
                         Log.d(TAG, "Frame dropped due to backpressure (pending: $pendingCaptureCount)")
                         delay(captureInterval)

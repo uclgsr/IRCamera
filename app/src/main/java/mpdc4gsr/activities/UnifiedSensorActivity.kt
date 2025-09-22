@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.csl.irCamera.R
 import kotlinx.coroutines.launch
 import mpdc4gsr.controller.RecordingController
+import mpdc4gsr.sensors.RgbCameraRecorder
 import mpdc4gsr.sensors.unified.UnifiedGSRRecorder
 import mpdc4gsr.sensors.unified.UnifiedNetworkController
 import mpdc4gsr.sensors.unified.UnifiedSessionManager
@@ -43,11 +45,15 @@ class UnifiedSensorActivity : AppCompatActivity() {
     private lateinit var networkController: UnifiedNetworkController
     private lateinit var sessionManager: UnifiedSessionManager
     private lateinit var recordingController: RecordingController
+    private lateinit var rgbCameraRecorder: RgbCameraRecorder
 
     private lateinit var statusText: TextView
     private lateinit var qualityIndicator: ProgressBar
     private lateinit var gsrStatusText: TextView
     private lateinit var networkStatusText: TextView
+    private lateinit var sessionStatusText: TextView
+    private lateinit var cameraStatusText: TextView
+    private lateinit var previewView: PreviewView
     private lateinit var sessionStatusText: TextView
 
     private lateinit var deviceRecyclerView: RecyclerView
@@ -95,6 +101,8 @@ class UnifiedSensorActivity : AppCompatActivity() {
         gsrStatusText = findViewById(R.id.gsrStatusText)
         networkStatusText = findViewById(R.id.networkStatusText)
         sessionStatusText = findViewById(R.id.sessionStatusText)
+        cameraStatusText = findViewById(R.id.cameraStatusText)
+        previewView = findViewById(R.id.previewView)
 
         deviceRecyclerView = findViewById(R.id.deviceRecyclerView)
         deviceAdapter = DeviceAdapter { device -> connectToDevice(device) }
@@ -156,6 +164,14 @@ class UnifiedSensorActivity : AppCompatActivity() {
 
             networkController = UnifiedNetworkController(this, this)
 
+            // Initialize RGB Camera Recorder with PreviewView
+            rgbCameraRecorder = RgbCameraRecorder(
+                context = this,
+                lifecycleOwner = this,
+                previewView = previewView,
+                useFrontCamera = false
+            )
+
             sessionManager = UnifiedSessionManager(
                 context = this,
                 lifecycleOwner = this,
@@ -167,15 +183,17 @@ class UnifiedSensorActivity : AppCompatActivity() {
             lifecycleScope.launch {
                 val gsrInitialized = gsrRecorder.initialize()
                 val networkInitialized = networkController.initialize()
+                val cameraInitialized = rgbCameraRecorder.initialize()
 
-                if (gsrInitialized && networkInitialized) {
-                    statusText.text = "Components initialized successfully"
+                if (gsrInitialized && networkInitialized && cameraInitialized) {
+                    statusText.text = "All components initialized successfully"
                     updateUIState(true, false, false)
                     observeComponentStates()
                 } else {
                     statusText.text = "Component initialization failed"
-                    showInitializationError(gsrInitialized, networkInitialized)
+                    showInitializationError(gsrInitialized, networkInitialized, cameraInitialized)
                 }
+            }
             }
 
         } catch (e: Exception) {
@@ -196,6 +214,12 @@ class UnifiedSensorActivity : AppCompatActivity() {
         lifecycleScope.launch {
             networkController.networkStatus.collect { status ->
                 networkStatusText.text = "Network: ${status.displayName}"
+            }
+        }
+
+        lifecycleScope.launch {
+            rgbCameraRecorder.statusFlow.collect { status ->
+                cameraStatusText.text = "Camera: ${status.displayText}"
             }
         }
 
@@ -509,12 +533,13 @@ class UnifiedSensorActivity : AppCompatActivity() {
             .show()
     }
 
-    private fun showInitializationError(gsrInitialized: Boolean, networkInitialized: Boolean) {
+    private fun showInitializationError(gsrInitialized: Boolean, networkInitialized: Boolean, cameraInitialized: Boolean = true) {
         val message = buildString {
             append("Component initialization failed:\n\n")
             if (!gsrInitialized) append("• GSR Recorder: Failed\n")
             if (!networkInitialized) append("• Network Controller: Failed\n")
-            append("\nPlease check Bluetooth and Wi-Fi settings.")
+            if (!cameraInitialized) append("• RGB Camera: Failed\n")
+            append("\nPlease check Bluetooth, Wi-Fi, and Camera permissions.")
         }
 
         AlertDialog.Builder(this)
@@ -538,6 +563,7 @@ class UnifiedSensorActivity : AppCompatActivity() {
                 sessionManager.cleanup()
                 gsrRecorder.cleanup()
                 networkController.cleanup()
+                rgbCameraRecorder.cleanup()
             } catch (e: Exception) {
                 Log.e(TAG, "Error during cleanup", e)
             }
