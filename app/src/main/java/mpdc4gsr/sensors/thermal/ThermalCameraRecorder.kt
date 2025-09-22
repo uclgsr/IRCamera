@@ -1379,10 +1379,11 @@ class ThermalCameraRecorder(
                 initializeSessionTiming()
                 
                 // Create thermal_images directory for frame captures
-                thermalImagesDirectory = File(sessionDirectory, "thermal_images")
-                if (!thermalImagesDirectory!!.exists()) {
-                    thermalImagesDirectory!!.mkdirs()
-                    Log.i(TAG, "Created thermal images directory: ${thermalImagesDirectory!!.absolutePath}")
+                val dir = File(sessionDirectory, "thermal_images")
+                thermalImagesDirectory = dir
+                if (!dir.exists()) {
+                    dir.mkdirs()
+                    Log.i(TAG, "Created thermal images directory: ${dir.absolutePath}")
                 }
                 
                 // Enable frame image saving for TC001
