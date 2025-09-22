@@ -131,6 +131,7 @@ object TimestampManager {
         return sessionStartSys + offsetMs
     }
 
+    @Deprecated("Use convertMonotonicToWallClock for clarity.", ReplaceWith("convertMonotonicToWallClock(monotonicNs)"))
     fun convertMonotonicToSystemTime(monotonicNs: Long): Long {
         return convertMonotonicToWallClock(monotonicNs)
     }
