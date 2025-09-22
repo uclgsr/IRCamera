@@ -244,7 +244,7 @@ def test_socket_communication():
     # Start mock Android server
     def mock_android_server():
         device = MockAndroidDevice("socket_test_device")
-        server_socket = socket.socket(socket.AF_INET, socket.AF_SOCK_STREAM)
+        server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         
         try:
@@ -295,7 +295,7 @@ def test_socket_communication():
     
     # Connect as PC client
     try:
-        client_socket = socket.socket(socket.AF_INET, socket.AF_SOCK_STREAM)
+        client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         client_socket.connect(('127.0.0.1', 8888))
         client_file = client_socket.makefile('rw', encoding='utf-8')
         

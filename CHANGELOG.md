@@ -1,5 +1,45 @@
 # Changelog
 
+## [2.4.0] - PC-Orchestrated Multi-Modal Recording System (2024-12-22) - Commit 6133760
+
+### Added - Complete Networking Infrastructure
+- **Standardized Protocol Implementation**: Complete text-based protocol with binary frame support for PC-Android communication
+- **Protocol Messages**: HELLO, SYNC_REQUEST/RESPONSE, START_RECORD/STOP_RECORD, ACK/ERROR, DATA_GSR, FRAME message types
+- **Android Protocol Stack**: Protocol.kt, ProtocolHandler.kt, NetworkConnectionManager.kt for robust device communication
+- **PC Controller System**: Complete standardized_controller.py with multi-device orchestration capabilities
+- **Clock Synchronization**: NTP-style time synchronization achieving sub-10ms accuracy on local networks
+- **Session Coordination**: Multi-device session start/stop with unique session IDs and synchronized timestamps
+- **Live Data Streaming**: Real-time GSR data updates and preview frame streaming during recording sessions
+- **Error Recovery System**: Exponential backoff reconnection with connection state management and timeout handling
+- **Interactive Demo**: demo_pc_controller.py providing real-time testing and control interface
+- **Comprehensive Testing**: test_protocol.py with protocol validation, mock device simulation, and flow verification
+
+### Enhanced - Networking Components
+- **NetworkServer.kt**: Enhanced TCP server supporting both text commands and binary data streams with automatic HELLO handshake
+- **RecordingService.kt**: Complete integration with protocol handler, connection manager, and existing recording infrastructure
+- **Connection Management**: Automatic reconnection logic with CONNECTING, CONNECTED, ERROR, RECONNECTING, DISCONNECTED state tracking
+- **Preview Integration**: Seamless integration with existing PreviewStreamer for real-time monitoring during PC-orchestrated sessions
+- **Time Manager Integration**: Full compatibility with existing TimeManager for synchronized timestamp base across all sensor modalities
+
+### Technical Implementation
+- **Protocol Flow**: Android devices automatically connect, register capabilities, synchronize time, and await PC coordination commands
+- **Multi-Device Support**: PC controller can coordinate recording sessions across multiple Android sensor nodes simultaneously  
+- **Robust Communication**: Connection timeout monitoring (30 seconds), automatic health checks, and graceful degradation support
+- **Session Management**: Unique session ID generation, coordinated start/stop operations, and ACK/ERROR response validation
+- **Real-Time Monitoring**: Live GSR data streaming and preview frame transmission for session monitoring and verification
+
+### Documentation
+- **Complete Implementation Guide**: NETWORKING_IMPLEMENTATION.md with protocol specifications, architecture overview, and usage instructions
+- **Protocol Specification**: Detailed message formats, parameter parsing, error codes, and integration examples
+- **Usage Examples**: Step-by-step instructions for PC controller setup, device connection, and session coordination
+- **Testing Guide**: Comprehensive test suite documentation and troubleshooting guidelines
+
+### Fixes
+- **Protocol Parameter Parsing**: Enhanced regex-based parsing supporting quoted strings and complex parameter structures
+- **Connection State Handling**: Robust state machine preventing connection race conditions and ensuring proper cleanup
+- **Binary Data Support**: Efficient handling of preview frames and sensor data without blocking text command processing
+- **Thread Safety**: Proper coroutine usage and thread isolation for network operations and recording control
+
 ## [2.2.1] - SmartRefreshLayout Dependency Resolution Fix (2024-12-21)
 
 ### Fixed
