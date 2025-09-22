@@ -167,7 +167,7 @@ class RAWCaptureTestActivity : AppCompatActivity() {
             try {
                 isRecording = true
                 binding.startStopButton.text = "⏹️ Stop Recording"
-                binding.startStopButton.setBackgroundColor(resources.getColor(android.R.color.holo_red_dark))
+                binding.startStopButton.setBackgroundColor(androidx.core.content.ContextCompat.getColor(this, android.R.color.holo_red_dark))
                 
                 val sessionId = "stage3_test_${System.currentTimeMillis()}"
                 val sessionDir = "stage3_dng_test"
