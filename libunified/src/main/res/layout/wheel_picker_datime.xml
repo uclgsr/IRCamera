@@ -17,14 +17,14 @@
         android:paddingTop="36dp"
         android:paddingBottom="36dp">
 
-        <com.github.gzuliyujiang.wheelpicker.widget.DateWheelLayout
+        <com.mpdc4gsr.libunified.ui.gzuliyujiang.wheelpicker.widget.DateWheelLayout
             android:id="@+id/wheel_picker_date_wheel"
             style="@style/WheelDefault"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1.33" />
 
-        <com.github.gzuliyujiang.wheelpicker.widget.TimeWheelLayout
+        <com.mpdc4gsr.libunified.ui.gzuliyujiang.wheelpicker.widget.TimeWheelLayout
             android:id="@+id/wheel_picker_time_wheel"
             style="@style/WheelDefault"
             android:layout_width="0dp"

@@ -30,7 +30,7 @@ import com.energy.iruvc.utils.Line;
 import com.energy.iruvc.utils.SynchronizedBitmap;
 import com.mpdc4gsr.libunified.ir.usbdual.Const;
 import com.mpdc4gsr.libunified.ir.usbdual.camera.BaseDualView;
-import com.mpdc4gsr.libunified.ir.R;
+import com.mpdc4gsr.libunified.R;
 import com.mpdc4gsr.libunified.ir.inf.ILiteListener;
 import com.mpdc4gsr.libunified.ir.utils.TempDrawHelper;
 import com.mpdc4gsr.libunified.ir.utils.TempUtil;

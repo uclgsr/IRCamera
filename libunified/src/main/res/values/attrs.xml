@@ -249,4 +249,9 @@
         <attr name="deviceType" format="string" />
     </declare-styleable>
 
+    <!-- TemperatureView styleable -->
+    <declare-styleable name="TemperatureView">
+        <attr name="temperature_count" format="integer" />
+    </declare-styleable>
+
 </resources>

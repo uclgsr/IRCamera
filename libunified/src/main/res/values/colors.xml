@@ -58,4 +58,17 @@
     <color name="transparent">#00000000</color>
     <color name="color_font">#FFFFFFFF</color>
 
+    <!-- Missing colors for cross-module compatibility -->
+    <color name="color_E74380">#FFE74380</color>
+    <color name="temp_font_color">#FFFFFFFF</color>
+    <color name="temp_font_second_color">#FFCCCCCC</color>
+    <color name="temp_font_title_item_color">#FFFFFFFF</color>
+    <color name="tx_333">#FF333333</color>
+    <color name="ir_bg_color">#FF16131E</color>
+    <color name="color_img_calibration_normal">#FFCCCCCC</color>
+    <color name="color_img_calibration_left">#FF4CAF50</color>
+    <color name="color_img_calibration_right">#FF4CAF50</color>
+    <color name="color_img_calibration_button">#FF2196F3</color>
+    <color name="chart_line_min">#FF00C853</color>
+
 </resources>

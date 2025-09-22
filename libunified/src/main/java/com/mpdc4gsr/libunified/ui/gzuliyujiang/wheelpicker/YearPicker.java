@@ -12,7 +12,7 @@ import com.mpdc4gsr.libunified.ui.gzuliyujiang.wheelpicker.contract.OnYearPicked
 import com.mpdc4gsr.libunified.ui.gzuliyujiang.wheelpicker.entity.DateEntity;
 import com.mpdc4gsr.libunified.ui.gzuliyujiang.wheelpicker.entity.DatimeEntity;
 import com.mpdc4gsr.libunified.ui.gzuliyujiang.wheelpicker.widget.YearWheelLayout;
-import com.mpdc4gsr.lib.ui.R;
+import com.mpdc4gsr.libunified.R;
 
 import java.util.Calendar;
 

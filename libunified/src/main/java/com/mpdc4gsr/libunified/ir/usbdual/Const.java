@@ -1,4 +1,4 @@
-package com.infisense.usbdual;
+package com.mpdc4gsr.libunified.ir.usbdual;
 
 import android.os.Environment;
 
