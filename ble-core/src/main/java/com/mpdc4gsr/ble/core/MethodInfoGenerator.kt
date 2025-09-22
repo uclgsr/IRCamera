@@ -22,4 +22,32 @@ object MethodInfoGenerator {
         val paramStr = params.entries.joinToString(", ") { "${it.key}=${it.value}" }
         return "BLE Request: $requestType [$paramStr]"
     }
+
+    /**
+     * Generate method info for connect failed events
+     */
+    fun onConnectFailed(device: Device, reason: Int): com.mpdc4gsr.commons.poster.MethodInfo {
+        return com.mpdc4gsr.commons.poster.MethodInfo(
+            "onConnectFailed",
+            com.mpdc4gsr.commons.poster.MethodInfo.Parameter(Device::class.java, device),
+            com.mpdc4gsr.commons.poster.MethodInfo.Parameter(Int::class.java, reason)
+        )
+    }
+
+    /**
+     * Generate method info for bluetooth adapter state changed events
+     */
+    fun onBluetoothAdapterStateChanged(state: Int): com.mpdc4gsr.commons.poster.MethodInfo {
+        return com.mpdc4gsr.commons.poster.MethodInfo(
+            "onBluetoothAdapterStateChanged",
+            com.mpdc4gsr.commons.poster.MethodInfo.Parameter(Int::class.java, state)
+        )
+    }
+
+    /**
+     * Generate method info for bluetooth off events
+     */
+    fun onBluetoothOff(): com.mpdc4gsr.commons.poster.MethodInfo {
+        return com.mpdc4gsr.commons.poster.MethodInfo("onBluetoothOff")
+    }
 }

@@ -98,4 +98,18 @@ class Observable(val posterDispatcher: PosterDispatcher, isObserveAnnotationRequ
             }
         }
     }
+
+    /**
+     * Get the poster dispatcher instance
+     */
+    fun getPosterDispatcher(): PosterDispatcher {
+        return posterDispatcher
+    }
+
+    /**
+     * Get the executor service from the poster dispatcher
+     */
+    fun getExecutorService(): java.util.concurrent.ExecutorService {
+        return posterDispatcher.executorService
+    }
 }

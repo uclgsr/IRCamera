@@ -1,18 +1,15 @@
 package com.mpdc4gsr.ble.core
 
-import com.mpdc4gsr.ble.core.callback.RequestCallback
+import com.mpdc4gsr.ble.core.RequestCallback
 import java.util.Queue
 import java.util.UUID
-
-internal class GenericRequest(builder: RequestBuilder<*>) : Request, Comparable<GenericRequest> {
-    override val tag: String?
-    override val device: Device
-        get() = _device ?: throw IllegalStateException("Device not set")
-    private var _device: Device? = null
-    override var type: RequestType
-    override var service: UUID?
-    override var characteristic: UUID?
-    override var descriptor: UUID?
+internal class GenericRequest(builder: GenericRequestBuilder<*>) : Request, Comparable<GenericRequest?> {
+    private val tag: String?
+    var device: Device? = null
+    var type: RequestType
+    var service: UUID?
+    var characteristic: UUID?
+    var descriptor: UUID?
     var value: Any?
     var priority: Int
     var callback: RequestCallback?

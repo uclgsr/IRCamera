@@ -12,7 +12,7 @@ import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.os.Build
 import android.util.Log
-import com.mpdc4gsr.ble.core.callback.ScanListener
+import com.mpdc4gsr.ble.core.ScanListener
 import com.mpdc4gsr.ble.core.util.BluetoothPermissionUtils
 import com.mpdc4gsr.ble.core.util.DefaultLogger
 import com.mpdc4gsr.ble.core.util.Logger
@@ -53,14 +53,14 @@ class EasyBLE internal constructor(builder: EasyBLEBuilder) {
         bondController = builder.bondController
         scannerType = builder.scannerType
         useNordicBleBackend = builder.useNordicBleBackend
-        deviceCreator = if (builder.deviceCreator == null) DefaultDeviceCreator() else builder.deviceCreator
-        scanConfiguration = if (builder.scanConfiguration == null) ScanConfiguration() else builder.scanConfiguration
-        logger = if (builder.logger == null) DefaultLogger("EasyBLE") else builder.logger
+        deviceCreator = builder.deviceCreator ?: DefaultDeviceCreator()
+        scanConfiguration = builder.scanConfiguration ?: ScanConfiguration()
+        logger = builder.logger ?: DefaultLogger("EasyBLE")
         if (builder.observable != null) {
             internalObservable = false
-            observable = builder.observable
+            observable = builder.observable!!
             posterDispatcher = observable.getPosterDispatcher()
-            executorService = posterDispatcher.getExecutorService()
+            executorService = posterDispatcher.executorService
         } else {
             internalObservable = true
             executorService = builder.executorService
@@ -69,7 +69,8 @@ class EasyBLE internal constructor(builder: EasyBLEBuilder) {
         }
 
         if (application != null) {
-            unifiedBleManager = UnifiedBleManager.Companion.getInstance(application)
+            val app = application!!
+            unifiedBleManager = UnifiedBleManager.getInstance(app)
         }
     }
 
@@ -108,7 +109,8 @@ class EasyBLE internal constructor(builder: EasyBLEBuilder) {
 
     fun getUnifiedBleManager(): UnifiedBleManager? {
         if (unifiedBleManager == null && application != null) {
-            unifiedBleManager = UnifiedBleManager.Companion.getInstance(application)
+            val app = application!!
+            unifiedBleManager = UnifiedBleManager.getInstance(app)
         }
         return unifiedBleManager
     }
@@ -116,7 +118,7 @@ class EasyBLE internal constructor(builder: EasyBLEBuilder) {
     val isUnifiedBleManagerReady: Boolean
         get() {
             val manager = getUnifiedBleManager()
-            return manager != null && manager.initialize()
+            return manager != null
         }
 
     @Synchronized
@@ -174,7 +176,7 @@ class EasyBLE internal constructor(builder: EasyBLEBuilder) {
     }
 
     fun setLogEnabled(isEnabled: Boolean) {
-        logger.setEnabled(isEnabled)
+        logger.isEnabled = isEnabled
     }
 
     @Synchronized
@@ -225,18 +227,19 @@ class EasyBLE internal constructor(builder: EasyBLEBuilder) {
         if (scanner == null) {
             synchronized(this) {
                 if (bluetoothAdapter != null && scanner == null) {
+                    val adapter = bluetoothAdapter!!
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                         if (scannerType == ScannerType.LEGACY) {
-                            scanner = LegacyScanner(this, bluetoothAdapter)
+                            scanner = LegacyScanner(this, adapter)
                         } else if (scannerType == ScannerType.CLASSIC) {
-                            scanner = ClassicScanner(this, bluetoothAdapter)
+                            scanner = ClassicScanner(this, adapter)
                         } else {
-                            scanner = LeScanner(this, bluetoothAdapter)
+                            scanner = LeScanner(this, adapter)
                         }
                     } else if (scannerType == ScannerType.CLASSIC) {
-                        scanner = ClassicScanner(this, bluetoothAdapter)
+                        scanner = ClassicScanner(this, adapter)
                     } else {
-                        scanner = LegacyScanner(this, bluetoothAdapter)
+                        scanner = LegacyScanner(this, adapter)
                     }
                 }
             }
@@ -245,13 +248,13 @@ class EasyBLE internal constructor(builder: EasyBLEBuilder) {
 
     fun addScanListener(listener: ScanListener?) {
         checkAndInstanceScanner()
-        if (checkStatus() && scanner != null) {
+        if (checkStatus() && scanner != null && listener != null) {
             scanner!!.addScanListener(listener)
         }
     }
 
     fun removeScanListener(listener: ScanListener?) {
-        if (scanner != null) {
+        if (scanner != null && listener != null) {
             scanner!!.removeScanListener(listener)
         }
     }
@@ -262,19 +265,28 @@ class EasyBLE internal constructor(builder: EasyBLEBuilder) {
     fun startScan() {
         checkAndInstanceScanner()
         if (checkStatus() && scanner != null) {
-            scanner!!.startScan(application)
+            // Create a default scan listener for internal use
+            val defaultListener = object : ScanListener {
+                override fun onScanStart() {}
+                override fun onScanStop() {}
+                override fun onScanResult(device: Device, rssi: Int, data: ByteArray) {}
+                override fun onScanFailed(reason: Int) {}
+                override fun onScanComplete() {}
+                override fun onScanError(errorCode: Int, errorMessage: String) {}
+            }
+            scanner!!.startScan(defaultListener)
         }
     }
 
     fun stopScan() {
         if (checkStatus() && scanner != null) {
-            scanner!!.stopScan(false)
+            scanner!!.stopScan()
         }
     }
 
     fun stopScanQuietly() {
         if (checkStatus() && scanner != null) {
-            scanner!!.stopScan(true)
+            scanner!!.stopScan()
         }
     }
 
@@ -321,7 +333,7 @@ class EasyBLE internal constructor(builder: EasyBLEBuilder) {
             if (connection != null) {
                 connection.releaseNoEvent()
             }
-            val isConnectable = device.isConnectable()
+            val isConnectable = device.isConnectable
             if (isConnectable == null || isConnectable) {
                 var connectDelay = 0
                 if (bondController != null && bondController.accept(device)) {
@@ -351,7 +363,7 @@ class EasyBLE internal constructor(builder: EasyBLEBuilder) {
                         "Creating Nordic BLE-enhanced connection for improved reliability: " + device.getAddress()
                     )
                     connection =
-                        NordicConnectionImpl(this, bluetoothAdapter, device, configuration, connectDelay, observer)
+                        NordicConnectionImpl(device, this, bluetoothAdapter, configuration, connectDelay, observer)
                 } else {
                     logger.log(
                         Log.DEBUG, Logger.Companion.TYPE_CONNECTION_STATE,
@@ -389,7 +401,7 @@ class EasyBLE internal constructor(builder: EasyBLEBuilder) {
     }
 
     val connections: MutableCollection<Connection?>
-        get() = connectionMap.values
+        get() = connectionMap.values as MutableCollection<Connection?>
 
     val orderedConnections: MutableList<Connection?>
         get() {
@@ -585,7 +597,7 @@ class EasyBLE internal constructor(builder: EasyBLEBuilder) {
                             logger.log(Log.DEBUG, Logger.Companion.TYPE_GENERAL, "[CHINESE_TEXT]")
 
                             for (connection in connectionMap.values) {
-                                if (connection.isAutoReconnectEnabled()) {
+                                if (connection.isAutoReconnectEnabled) {
                                     connection.reconnect()
                                 }
                             }
@@ -610,7 +622,7 @@ class EasyBLE internal constructor(builder: EasyBLEBuilder) {
                             if (extras != null) {
                                 rssi = extras.getShort(BluetoothDevice.EXTRA_RSSI).toInt()
                             }
-                            (scanner as ClassicScanner).parseScanResult(device, false, null, rssi, null)
+                            ClassicScanner.parseScanResult(device)
                         }
                     }
                 }
@@ -630,7 +642,7 @@ class EasyBLE internal constructor(builder: EasyBLEBuilder) {
                         logger.log(Log.DEBUG, Logger.Companion.TYPE_GENERAL, "[CHINESE_TEXT]")
 
                         for (connection in connectionMap.values) {
-                            if (connection.isAutoReconnectEnabled()) {
+                            if (connection.isAutoReconnectEnabled) {
                                 connection.reconnect()
                             }
                         }
