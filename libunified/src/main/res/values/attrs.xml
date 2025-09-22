@@ -246,7 +246,7 @@
 
     <!-- MenuSecondView styleable -->
     <declare-styleable name="MenuSecondView">
-        <attr name="deviceType" format="string" />
+        <attr name="deviceType" format="integer" />
     </declare-styleable>
 
 </resources>
