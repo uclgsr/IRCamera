@@ -50,6 +50,31 @@ class GSRSensorRecorder(
     companion object {
         private const val TAG = "GSRSensorRecorder"
 
+        // GSR calculation constants
+        private const val ADC_MAX_VALUE = 4095.0
+        private const val REFERENCE_VOLTAGE = 3.0
+        private const val REFERENCE_RESISTANCE_OHMS = 40200.0
+        private const val VOLTAGE_DIVIDER = 1000.0
+        private const val MICROSIEMENS_CONVERSION = 1000000.0
+
+        // Signal quality thresholds
+        private const val GSR_RAW_LOWER_BOUND = 100
+        private const val GSR_RAW_UPPER_BOUND = 4000
+        private const val GSR_MICROSIEMENS_LOWER_BOUND = 0.1
+        private const val GSR_MICROSIEMENS_UPPER_BOUND = 100.0
+        private const val GSR_HIGH_THRESHOLD = 50.0
+        private const val GSR_LOW_THRESHOLD = 0.5
+
+        // Connection health thresholds
+        private const val TIMING_HEALTH_POOR_MS = 2000L
+        private const val TIMING_HEALTH_ACCEPTABLE_MS = 1000L
+        
+        // Health score weights
+        private const val HEALTH_SCORE_WEIGHT_HISTORICAL = 0.8
+        private const val HEALTH_SCORE_WEIGHT_SAMPLE = 0.15
+        private const val HEALTH_SCORE_WEIGHT_TIMING = 0.05
+        private const val POOR_CONNECTION_THRESHOLD = 50.0
+
         private const val SHIMMER_DEFAULT_SAMPLING_RATE = 128.0
         private const val GSR_CHANNEL_ID = 0x01
         private const val GSR_RANGE_AUTO = 0x00
@@ -855,29 +880,31 @@ class GSRSensorRecorder(
             val now = System.currentTimeMillis()
             val timeSinceLastCheck = now - lastConnectionCheck
             
-            // Calculate health based on sample quality and timing
+            // Calculate health based on sample quality and timing using constants
             val sampleQuality = when {
                 sample.rawValue == 0 -> 0.0
-                sample.rawValue !in 100..4000 -> 30.0
-                sample.conductance !in 0.1..100.0 -> 40.0
-                sample.conductance > 50.0 -> 60.0
-                sample.conductance < 0.5 -> 70.0
+                sample.rawValue !in GSR_RAW_LOWER_BOUND..GSR_RAW_UPPER_BOUND -> 30.0
+                sample.conductance !in GSR_MICROSIEMENS_LOWER_BOUND..GSR_MICROSIEMENS_UPPER_BOUND -> 40.0
+                sample.conductance > GSR_HIGH_THRESHOLD -> 60.0
+                sample.conductance < GSR_LOW_THRESHOLD -> 70.0
                 else -> 95.0
             }
             
             val timingHealth = when {
-                timeSinceLastCheck > 2000 -> 20.0 // Too long between samples
-                timeSinceLastCheck > 1000 -> 70.0 // Acceptable timing
-                else -> 100.0 // Good timing
+                timeSinceLastCheck > TIMING_HEALTH_POOR_MS -> 20.0
+                timeSinceLastCheck > TIMING_HEALTH_ACCEPTABLE_MS -> 70.0
+                else -> 100.0
             }
             
-            // Update connection health score with weighted average
-            connectionHealthScore = (connectionHealthScore * 0.8) + (sampleQuality * 0.15) + (timingHealth * 0.05)
+            // Update connection health score with weighted average using constants
+            connectionHealthScore = (connectionHealthScore * HEALTH_SCORE_WEIGHT_HISTORICAL) + 
+                                  (sampleQuality * HEALTH_SCORE_WEIGHT_SAMPLE) + 
+                                  (timingHealth * HEALTH_SCORE_WEIGHT_TIMING)
             connectionHealthScore = connectionHealthScore.coerceIn(0.0, 100.0)
             
             lastConnectionCheck = now
             
-            if (connectionHealthScore < 50) {
+            if (connectionHealthScore < POOR_CONNECTION_THRESHOLD) {
                 Log.w(TAG, "Poor connection health detected: ${connectionHealthScore.toInt()}%")
                 emitError(
                     ErrorType.CONNECTION_LOST,
@@ -996,27 +1023,26 @@ class GSRSensorRecorder(
     }
 
     private fun calculateGSRFromRaw(rawValue: Int): Double {
-        // Standard Shimmer GSR calculation from raw ADC value
-        // This is a simplified version - actual conversion depends on hardware configuration
+        // Standard Shimmer GSR calculation from raw ADC value using constants
         return if (rawValue > 0) {
-            val voltage = (rawValue / 4095.0) * 3.0 // Assuming 12-bit ADC, 3V reference
-            val resistance = (3.0 * 40200.0) / (voltage * 1000.0) - 40200.0
-            if (resistance > 0) 1000000.0 / resistance else 0.0
+            val voltage = (rawValue / ADC_MAX_VALUE) * REFERENCE_VOLTAGE
+            val resistance = (REFERENCE_VOLTAGE * REFERENCE_RESISTANCE_OHMS) / (voltage * VOLTAGE_DIVIDER) - REFERENCE_RESISTANCE_OHMS
+            if (resistance > 0) MICROSIEMENS_CONVERSION / resistance else 0.0
         } else {
             0.0
         }
     }
 
     private fun calculateSignalQuality(gsrMicrosiemens: Double, rawValue: Int): Double {
-        // Calculate signal quality based on various factors
-        val validRange = gsrMicrosiemens in 0.1..100.0 // Typical GSR range
-        val rawValueValid = rawValue in 100..4000 // Reasonable ADC range
+        // Calculate signal quality based on various factors using defined constants
+        val validRange = gsrMicrosiemens in GSR_MICROSIEMENS_LOWER_BOUND..GSR_MICROSIEMENS_UPPER_BOUND
+        val rawValueValid = rawValue in GSR_RAW_LOWER_BOUND..GSR_RAW_UPPER_BOUND
         val noiseLevel = if (rawValue > 0) 1.0 - (rawValue % 10) / 10.0 else 0.0
-        
+
         return when {
             !validRange || !rawValueValid -> 0.0
-            gsrMicrosiemens > 50.0 -> 0.3 // Very high GSR might indicate poor contact
-            gsrMicrosiemens < 0.5 -> 0.4 // Very low GSR might indicate sensor issues
+            gsrMicrosiemens > GSR_HIGH_THRESHOLD -> 0.3 // Very high GSR might indicate poor contact
+            gsrMicrosiemens < GSR_LOW_THRESHOLD -> 0.4 // Very low GSR might indicate sensor issues
             else -> 0.8 + (noiseLevel * 0.2) // Good signal with noise factor
         }.coerceIn(0.0, 1.0)
     }
