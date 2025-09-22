@@ -25,6 +25,7 @@ import com.mpdc4gsr.gsr.service.SessionManager
 import com.mpdc4gsr.gsr.util.TimeUtil
 import com.mpdc4gsr.libunified.app.ktbase.BaseBindingActivity
 import kotlinx.coroutines.launch
+import mpdc4gsr.data.SessionMetadata
 import mpdc4gsr.permissions.PermissionController
 import mpdc4gsr.sensors.RgbCameraRecorder
 
@@ -202,13 +203,31 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-
         permissionController = PermissionController(this)
         permissionController.initialize()
 
-
         gsrRecorder = GSRRecorder(this, MockShimmerDeviceFactory())
         sessionManager = SessionManager.getInstance(this)
+
+        // Initialize RGB Camera Recorder with PreviewView
+        val previewView = binding.previewView
+        rgbCameraRecorder = RgbCameraRecorder(
+            context = this,
+            lifecycleOwner = this,
+            previewView = previewView,
+            useFrontCamera = false
+        )
+
+        // Initialize camera
+        lifecycleScope.launch {
+            val cameraInitialized = rgbCameraRecorder?.initialize() ?: false
+            if (cameraInitialized) {
+                Log.i(TAG, "RGB Camera initialized successfully")
+                observeCameraStatus()
+            } else {
+                Log.w(TAG, "RGB Camera initialization failed")
+            }
+        }
 
 
         with(binding) {
@@ -409,19 +428,17 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
                 )
             }
 
-
-
-        rgbCameraRecorder = RgbCameraRecorder(this, this, null)
-        Log.i(TAG, "RgbCameraRecorder initialized with CameraX (no preview)")
-
-
-        lifecycleScope.launch {
-            rgbCameraRecorder?.initialize()
-        }
         gsrRecorder.addListener(gsrListener)
 
-
         checkAndRequestPermissions()
+    }
+
+    private fun observeCameraStatus() {
+        lifecycleScope.launch {
+            rgbCameraRecorder?.statusFlow?.collect { status ->
+                Log.d(TAG, "Camera status: ${status.displayText}")
+            }
+        }
     }
 
     private fun checkAndRequestPermissions() {
@@ -669,10 +686,33 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
                 val success = gsrRecorder.startRecording(sessionId, participantId, null)
 
                 if (success) {
+                    // Start RGB camera recording if enabled
+                    var cameraStarted = true
+                    if (binding.enableVideoSwitch.isChecked) {
+                        cameraStarted = rgbCameraRecorder?.let { camera ->
+                            try {
+                                // Create session directory and metadata for camera
+                                val sessionDir = "multimodal_$sessionId"
+                                val metadata = mpdc4gsr.data.SessionMetadata(
+                                    sessionId = sessionId,
+                                    participantId = participantId ?: "",
+                                    startTime = System.currentTimeMillis(),
+                                    deviceInfo = android.os.Build.MODEL
+                                )
+                                lifecycleScope.launch {
+                                    camera.startRecording(sessionDir, metadata)
+                                }
+                                Log.i(TAG, "Camera recording started")
+                                true
+                            } catch (e: Exception) {
+                                Log.e(TAG, "Failed to start camera recording", e)
+                                false
+                            }
+                        } ?: false
+                    }
 
                     sampleCount = 0
                     syncMarkCount = 0
-
 
                     isRecording = true
                     isStartingRecording = false

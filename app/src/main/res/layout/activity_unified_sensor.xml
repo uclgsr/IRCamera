@@ -58,6 +58,36 @@
                     android:text="Camera: Initializing..."
                     android:textSize="14sp" />
 
+                <!-- Camera Controls -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center">
+
+                    <Button
+                        android:id="@+id/switchCameraButton"
+                        android:layout_width="0dp"
+                        android:layout_height="36dp"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="4dp"
+                        android:text="Switch Camera"
+                        android:textSize="12sp"
+                        android:backgroundTint="#2196F3" />
+
+                    <TextView
+                        android:id="@+id/cameraTypeText"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Back Camera"
+                        android:textSize="12sp"
+                        android:gravity="center"
+                        android:layout_marginStart="4dp" />
+
+                </LinearLayout>
+
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 

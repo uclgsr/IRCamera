@@ -54,7 +54,8 @@ class UnifiedSensorActivity : AppCompatActivity() {
     private lateinit var sessionStatusText: TextView
     private lateinit var cameraStatusText: TextView
     private lateinit var previewView: PreviewView
-    private lateinit var sessionStatusText: TextView
+    private lateinit var switchCameraButton: Button
+    private lateinit var cameraTypeText: TextView
 
     private lateinit var deviceRecyclerView: RecyclerView
     private lateinit var deviceAdapter: DeviceAdapter
@@ -103,6 +104,11 @@ class UnifiedSensorActivity : AppCompatActivity() {
         sessionStatusText = findViewById(R.id.sessionStatusText)
         cameraStatusText = findViewById(R.id.cameraStatusText)
         previewView = findViewById(R.id.previewView)
+        switchCameraButton = findViewById(R.id.switchCameraButton)
+        cameraTypeText = findViewById(R.id.cameraTypeText)
+
+        // Setup camera switching
+        switchCameraButton.setOnClickListener { switchCamera() }
 
         deviceRecyclerView = findViewById(R.id.deviceRecyclerView)
         deviceAdapter = DeviceAdapter { device -> connectToDevice(device) }
@@ -185,7 +191,16 @@ class UnifiedSensorActivity : AppCompatActivity() {
                 val networkInitialized = networkController.initialize()
                 val cameraInitialized = rgbCameraRecorder.initialize()
 
-                if (gsrInitialized && networkInitialized && cameraInitialized) {
+                // Register camera with RecordingController for unified session management
+                if (cameraInitialized) {
+                    recordingController.registerRgbCameraWithPreview(rgbCameraRecorder)
+                    Log.i(TAG, "RGB camera registered with RecordingController")
+                }
+
+                // Initialize other sensors (thermal, GSR) in RecordingController
+                val sensorsInitialized = recordingController.initializeSensors(skipRgbCamera = true)
+
+                if (gsrInitialized && networkInitialized && cameraInitialized && sensorsInitialized) {
                     statusText.text = "All components initialized successfully"
                     updateUIState(true, false, false)
                     observeComponentStates()
@@ -220,6 +235,15 @@ class UnifiedSensorActivity : AppCompatActivity() {
         lifecycleScope.launch {
             rgbCameraRecorder.statusFlow.collect { status ->
                 cameraStatusText.text = "Camera: ${status.displayText}"
+                
+                // Update camera type display
+                try {
+                    val cameraInfo = rgbCameraRecorder.getCurrentCameraInfo()
+                    cameraTypeText.text = if (cameraInfo.isUsingFrontCamera) "Front Camera" else "Back Camera"
+                    switchCameraButton.isEnabled = cameraInfo.canSwitch
+                } catch (e: Exception) {
+                    Log.w(TAG, "Could not get camera info", e)
+                }
             }
         }
 
@@ -517,6 +541,42 @@ class UnifiedSensorActivity : AppCompatActivity() {
         }
 
         qualityIndicator.progressTintList = android.content.res.ColorStateList.valueOf(color)
+    }
+
+    private fun switchCamera() {
+        lifecycleScope.launch {
+            try {
+                val currentInfo = rgbCameraRecorder.getCurrentCameraInfo()
+                if (!currentInfo.canSwitch) {
+                    cameraStatusText.text = "Camera: Cannot switch during recording"
+                    return@launch
+                }
+
+                switchCameraButton.isEnabled = false
+                switchCameraButton.text = "Switching..."
+                
+                val success = if (currentInfo.isUsingFrontCamera) {
+                    rgbCameraRecorder.switchToBackCamera()
+                } else {
+                    rgbCameraRecorder.switchToFrontCamera()
+                }
+
+                if (success) {
+                    val newInfo = rgbCameraRecorder.getCurrentCameraInfo()
+                    cameraTypeText.text = if (newInfo.isUsingFrontCamera) "Front Camera" else "Back Camera"
+                    cameraStatusText.text = "Camera: Switched successfully"
+                } else {
+                    cameraStatusText.text = "Camera: Switch failed"
+                }
+                
+            } catch (e: Exception) {
+                Log.e(TAG, "Error switching camera", e)
+                cameraStatusText.text = "Camera: Switch error"
+            } finally {
+                switchCameraButton.isEnabled = true
+                switchCameraButton.text = "Switch Camera"
+            }
+        }
     }
 
     private fun showPermissionError() {
