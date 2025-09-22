@@ -23,6 +23,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import mpdc4gsr.sensors.unified.model.GSRSample
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -61,13 +62,6 @@ class ShimmerMvpActivity : AppCompatActivity() {
 
     private var networkClient: ShimmerNetworkClient? = null
     private var currentSessionId: String? = null
-
-    data class GSRSample(
-        val timestamp: Long,
-        val gsrValue: Double,
-        val rawValue: Int,
-        val resistance: Double
-    )
 
     private val permissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
@@ -454,13 +448,16 @@ class ShimmerMvpActivity : AppCompatActivity() {
                 else -> 0.9 // Good quality data
             }
             
-            val resistance = if (gsrMicrosiemens > 0) 1000000.0 / gsrMicrosiemens else Double.MAX_VALUE
-            
-            GSRSample(timestamp, gsrMicrosiemens, gsrRaw, resistance).apply {
-                // Add quality score if GSRSample supports it
-                // Note: This assumes GSRSample has been extended, otherwise this is just documentation
-                Log.d(TAG, "Enhanced GSR sample: ${gsrMicrosiemens}µS, raw: $gsrRaw, quality: $qualityScore")
-            }
+            // Create GSRSample using the unified model
+            GSRSample(
+                timestamp = timestamp,
+                timestampIso = java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", java.util.Locale.getDefault()).format(java.util.Date(timestamp)),
+                gsrMicrosiemens = gsrMicrosiemens,
+                gsrRaw = gsrRaw,
+                ppgRaw = ppgRaw,
+                qualityScore = qualityScore,
+                connectionRssi = -50 // Default RSSI
+            )
             
         } catch (e: Exception) {
             Log.e(TAG, "Failed to convert ObjectCluster to enhanced GSRSample", e)
@@ -478,14 +475,14 @@ class ShimmerMvpActivity : AppCompatActivity() {
             networkClient?.sendGSRSample(sample, sampleCount)
 
             // Calculate signal quality and connection health
-            val signalQualityPercent = calculateSignalQuality(sample.gsrValue, sample.rawValue)
+            val signalQualityPercent = calculateSignalQuality(sample.gsrMicrosiemens, sample.gsrRaw)
             val connectionHealth = calculateConnectionHealth(sample)
 
             // Update UI with enhanced feedback
             runOnUiThread {
                 binding.gsrValueText.text = "GSR: %.3f µS (%.1f kΩ)".format(
-                    sample.gsrValue, 
-                    sample.resistance / 1000
+                    sample.gsrMicrosiemens, 
+                    sample.resistanceOhms / 1000
                 )
                 binding.sampleCountText.text = "Samples: $sampleCount (${
                     String.format("%.1f", sampleCount * 1000.0 / GSR_SAMPLING_RATE)
@@ -513,9 +510,9 @@ class ShimmerMvpActivity : AppCompatActivity() {
             // Log periodic updates with enhanced metrics
             if (sampleCount % 128 == 0L) {
                 Log.i(TAG, "Enhanced GSR [${sampleCount}]: ${
-                    String.format("%.3f", sample.gsrValue)
-                } µS, Raw: ${sample.rawValue}/4095, R: ${
-                    String.format("%.1f", sample.resistance / 1000)
+                    String.format("%.3f", sample.gsrMicrosiemens)
+                } µS, Raw: ${sample.gsrRaw}/4095, R: ${
+                    String.format("%.1f", sample.resistanceOhms / 1000)
                 } kΩ, Quality: ${signalQualityPercent.toInt()}%, Health: $connectionHealth")
             }
         } catch (e: Exception) {
@@ -543,8 +540,8 @@ class ShimmerMvpActivity : AppCompatActivity() {
         return when {
             timeSinceLastSample > 2000 -> "Weak" // More than 2s between samples
             timeSinceLastSample > 1000 -> "Good" // 1-2s between samples
-            sample.rawValue == 0 -> "Poor" // No data
-            sample.gsrValue < 0.1 -> "Poor" // Invalid GSR reading
+            sample.gsrRaw == 0 -> "Poor" // No data
+            sample.gsrMicrosiemens < 0.1 -> "Poor" // Invalid GSR reading
             else -> "Strong" // Good data flow
         }
     }
@@ -705,7 +702,15 @@ class ShimmerMvpActivity : AppCompatActivity() {
             val resistance = 1000000.0 / gsrValue
 
             if (rawValue in 0..4095 && gsrValue > 0.1 && gsrValue < 100.0) {
-                val sample = GSRSample(timestamp, gsrValue, rawValue, resistance)
+                val sample = GSRSample(
+                    timestamp = timestamp,
+                    timestampIso = java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", java.util.Locale.getDefault()).format(java.util.Date(timestamp)),
+                    gsrMicrosiemens = gsrValue,
+                    gsrRaw = rawValue,
+                    ppgRaw = 0,
+                    qualityScore = if (rawValue in 0..4095 && gsrValue > 0.1 && gsrValue < 100.0) 0.8 else 0.3,
+                    connectionRssi = -50
+                )
                 gsrDataBuffer.add(sample)
                 sampleCount++
 
@@ -791,12 +796,12 @@ class ShimmerMvpActivity : AppCompatActivity() {
                         "${sample.timestamp},${
                             String.format(
                                 "%.6f",
-                                sample.gsrValue
+                                sample.gsrMicrosiemens
                             )
-                        },${sample.rawValue},${
+                        },${sample.gsrRaw},${
                             String.format(
                                 "%.2f",
-                                sample.resistance
+                                sample.resistanceOhms
                             )
                         },${index + 1},${String.format("%.6f", elapsedSeconds)}\n"
                     )
@@ -805,9 +810,9 @@ class ShimmerMvpActivity : AppCompatActivity() {
                 val file = java.io.File(getExternalFilesDir(null), filename)
                 file.writeText(csvContent.toString())
 
-                val avgGsr = gsrDataBuffer.map { it.gsrValue }.average()
-                val minGsr = gsrDataBuffer.minOfOrNull { it.gsrValue } ?: 0.0
-                val maxGsr = gsrDataBuffer.maxOfOrNull { it.gsrValue } ?: 0.0
+                val avgGsr = gsrDataBuffer.map { it.gsrMicrosiemens }.average()
+                val minGsr = gsrDataBuffer.minOfOrNull { it.gsrMicrosiemens } ?: 0.0
+                val maxGsr = gsrDataBuffer.maxOfOrNull { it.gsrMicrosiemens } ?: 0.0
 
                 withContext(Dispatchers.Main) {
                     showToast(
