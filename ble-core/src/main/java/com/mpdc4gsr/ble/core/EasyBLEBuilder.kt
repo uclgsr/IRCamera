@@ -1,7 +1,6 @@
 package com.mpdc4gsr.ble.core
 
 import com.mpdc4gsr.ble.core.util.Logger
-import com.mpdc4gsr.commons.observer.Observable
 import com.mpdc4gsr.commons.poster.ThreadMode
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
@@ -34,7 +33,7 @@ class EasyBLEBuilder {
     var executorService: ExecutorService = Executors.newCachedThreadPool()
         private set
     
-    var methodDefaultThreadMode: ThreadMode = ThreadMode.POSTING
+    var methodDefaultThreadMode: ThreadMode = ThreadMode.MAIN
         private set
     
     var isObserveAnnotationRequired: Boolean = false

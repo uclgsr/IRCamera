@@ -50,11 +50,6 @@ interface Connection {
 
     fun hasProperty(service: UUID?, characteristic: UUID?, property: Int): Boolean
 
-    /**
-     * Get connection state
-     */
-    fun getConnectionState(): ConnectionState
-
     companion object {
         val clientCharacteristicConfig: UUID? = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb")
 

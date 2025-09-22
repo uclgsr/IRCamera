@@ -316,13 +316,6 @@ internal class ConnectionImpl(
         return charac?.let { (it.properties and property) != 0 } ?: false
     }
 
-    /**
-     * Implementation of the required getConnectionState method from Connection interface
-     */
-    override fun getConnectionState(): ConnectionState {
-        return device.connectionState
-    }
-
     private fun doOnConnectionStateChange(status: Int, newState: Int) {
         if (bluetoothGatt != null) {
             if (status == BluetoothGatt.GATT_SUCCESS) {

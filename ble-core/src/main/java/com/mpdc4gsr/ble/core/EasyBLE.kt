@@ -57,11 +57,11 @@ class EasyBLE internal constructor(builder: EasyBLEBuilder) {
         if (builder.observable != null) {
             internalObservable = false
             observable = builder.observable!!
-            posterDispatcher = observable.getPosterDispatcher()
-            executorService = posterDispatcher.executorService
+            posterDispatcher = DefaultPosterDispatcher()  // Simplified
+            executorService = builder.executorService ?: java.util.concurrent.Executors.newCachedThreadPool()
         } else {
             internalObservable = true
-            executorService = builder.executorService
+            executorService = builder.executorService ?: java.util.concurrent.Executors.newCachedThreadPool()
             posterDispatcher = DefaultPosterDispatcher()
             observable = DefaultObservable()
         }
@@ -326,7 +326,7 @@ class EasyBLE internal constructor(builder: EasyBLEBuilder) {
     ): Connection? {
         if (checkStatus()) {
             Inspector.requireNonNull<Device?>(device, "device can't be null")
-            var connection = connectionMap.remove(device!!.getAddress())
+            var connection = connectionMap.remove(device!!.address)
 
             if (connection != null) {
                 connection.releaseNoEvent()
@@ -335,11 +335,11 @@ class EasyBLE internal constructor(builder: EasyBLEBuilder) {
             if (isConnectable == null || isConnectable) {
                 var connectDelay = 0
                 if (bondController != null && bondController.accept(device)) {
-                    val remoteDevice = bluetoothAdapter!!.getRemoteDevice(device.getAddress())
+                    val remoteDevice = bluetoothAdapter!!.getRemoteDevice(device.address)
                     if (BluetoothPermissionUtils.hasBluetoothConnectPermission(this.context)) {
                         try {
                             if (remoteDevice.getBondState() != BluetoothDevice.BOND_BONDED) {
-                                connectDelay = if (createBond(device.getAddress())) 1500 else 0
+                                connectDelay = if (createBond(device.address)) 1500 else 0
                             }
                         } catch (e: SecurityException) {
                             logger.log(
@@ -358,14 +358,14 @@ class EasyBLE internal constructor(builder: EasyBLEBuilder) {
                 if (useNordicBleBackend) {
                     logger.log(
                         Log.INFO, Logger.Companion.TYPE_CONNECTION_STATE,
-                        "Creating Nordic BLE-enhanced connection for improved reliability: " + device.getAddress()
+                        "Creating Nordic BLE-enhanced connection for improved reliability: " + device.address
                     )
                     connection =
                         NordicConnectionImpl(device, this, bluetoothAdapter, configuration, connectDelay, observer)
                 } else {
                     logger.log(
                         Log.DEBUG, Logger.Companion.TYPE_CONNECTION_STATE,
-                        "Creating standard EasyBLE connection: " + device.getAddress()
+                        "Creating standard EasyBLE connection: " + device.address
                     )
                     connection = ConnectionImpl(this, bluetoothAdapter, device, configuration, connectDelay, observer)
                 }
@@ -375,7 +375,7 @@ class EasyBLE internal constructor(builder: EasyBLEBuilder) {
             } else {
                 val message = String.format(
                     Locale.US, "connect failed! [type: unconnectable, name: %s, addr: %s]",
-                    device.getName(), device.getAddress()
+                    device.name, device.address
                 )
                 logger.log(Log.ERROR, Logger.Companion.TYPE_CONNECTION_STATE, message)
                 if (observer != null) {
@@ -421,7 +421,7 @@ class EasyBLE internal constructor(builder: EasyBLEBuilder) {
         get() = if (addressList.isEmpty()) null else connectionMap.get(addressList.get(addressList.size - 1))
 
     fun getConnection(device: Device?): Connection? {
-        return if (device == null) null else connectionMap.get(device.getAddress())
+        return if (device == null) null else connectionMap.get(device.address)
     }
 
     fun getConnection(address: String?): Connection? {
@@ -430,7 +430,7 @@ class EasyBLE internal constructor(builder: EasyBLEBuilder) {
 
     fun disconnectConnection(device: Device?) {
         if (checkStatus() && device != null) {
-            val connection = connectionMap.get(device.getAddress())
+            val connection = connectionMap.get(device.address)
             if (connection != null) {
                 connection.disconnect()
             }
@@ -476,8 +476,8 @@ class EasyBLE internal constructor(builder: EasyBLEBuilder) {
 
     fun releaseConnection(device: Device?) {
         if (checkStatus() && device != null) {
-            addressList.remove(device.getAddress())
-            val connection = connectionMap.remove(device.getAddress())
+            addressList.remove(device.address)
+            val connection = connectionMap.remove(device.address)
             if (connection != null) {
                 connection.release()
             }
@@ -487,7 +487,7 @@ class EasyBLE internal constructor(builder: EasyBLEBuilder) {
     fun reconnectAll() {
         if (checkStatus()) {
             for (connection in connectionMap.values) {
-                if (connection.getConnectionState() != ConnectionState.SERVICE_DISCOVERED) {
+                if (connection.connectionState != ConnectionState.SERVICE_DISCOVERED) {
                     connection.reconnect()
                 }
             }
@@ -496,8 +496,8 @@ class EasyBLE internal constructor(builder: EasyBLEBuilder) {
 
     fun reconnect(device: Device?) {
         if (checkStatus() && device != null) {
-            val connection = connectionMap.get(device.getAddress())
-            if (connection != null && connection.getConnectionState() != ConnectionState.SERVICE_DISCOVERED) {
+            val connection = connectionMap.get(device.address)
+            if (connection != null && connection.connectionState != ConnectionState.SERVICE_DISCOVERED) {
                 connection.reconnect()
             }
         }
@@ -654,7 +654,7 @@ class EasyBLE internal constructor(builder: EasyBLEBuilder) {
         private val DEFAULT_BUILDER = EasyBLEBuilder()
 
         @Volatile
-        var instance: EasyBLE? = null
+        private var instance: EasyBLE? = null
         fun getInstance(): EasyBLE? {
             if (instance == null) {
                 synchronized(EasyBLE::class.java) {

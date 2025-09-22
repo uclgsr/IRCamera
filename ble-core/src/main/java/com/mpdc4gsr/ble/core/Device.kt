@@ -39,10 +39,11 @@ class Device : Comparable<Device>, Cloneable, Parcelable {
         readFromParcel(`in`)
     }
 
-    fun getConnectionState(): ConnectionState {
-        val connection: Connection? = EasyBLE.getInstance()?.getConnection(this)
-        return if (connection == null) connectionState else connection.getConnectionState()
-    }
+    val currentConnectionState: ConnectionState
+        get() {
+            val connection: Connection? = EasyBLE.getInstance()?.getConnection(this)
+            return if (connection == null) connectionState else connection.connectionState
+        }
 
     val isConnectable: Boolean?
         get() {
@@ -57,17 +58,17 @@ class Device : Comparable<Device>, Cloneable, Parcelable {
         }
 
     val isConnected: Boolean
-        get() = getConnectionState() == ConnectionState.SERVICE_DISCOVERED
+        get() = currentConnectionState == ConnectionState.SERVICE_DISCOVERED
 
     val isDisconnected: Boolean
         get() {
-            val state = getConnectionState()
+            val state = currentConnectionState
             return state == ConnectionState.DISCONNECTED || state == ConnectionState.RELEASED
         }
 
     val isConnecting: Boolean
         get() {
-            val state = getConnectionState()
+            val state = currentConnectionState
             return state != ConnectionState.DISCONNECTED && state != ConnectionState.SERVICE_DISCOVERED && state != ConnectionState.RELEASED
         }
 
@@ -145,20 +146,6 @@ class Device : Comparable<Device>, Cloneable, Parcelable {
         this.address = Objects.requireNonNull<String>(`in`.readString())
         this.rssi = `in`.readInt()
         this.connectionState = ConnectionState.valueOf(`in`.readString()!!)
-    }
-
-    /**
-     * Get device address
-     */
-    fun getAddress(): String {
-        return address
-    }
-
-    /**
-     * Get device name
-     */
-    fun getName(): String {
-        return name
     }
 
     /**

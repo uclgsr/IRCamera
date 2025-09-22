@@ -74,11 +74,4 @@ class NordicConnectionImpl(
     override fun hasProperty(service: UUID?, characteristic: UUID?, property: Int): Boolean {
         return false
     }
-
-    /**
-     * Get connection state
-     */
-    override fun getConnectionState(): ConnectionState {
-        return connectionState
-    }
 }

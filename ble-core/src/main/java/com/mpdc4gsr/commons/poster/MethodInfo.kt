@@ -50,49 +50,43 @@ class MethodInfo(var name: String, var tag: String, vararg parameters: Parameter
     /**
      * Get the method name
      */
-    fun getName(): String {
-        return name
-    }
+    val methodName: String
+        get() = name
 
     /**
      * Get the tag
      */
-    fun getTag(): String {
-        return tag
-    }
+    val methodTag: String  
+        get() = tag
 
     /**
      * Get the parameters array
      */
-    fun getParameters(): Array<Parameter?>? {
-        return parameters
-    }
+    val methodParameters: Array<Parameter?>?
+        get() = parameters
 
     /**
      * Get parameter types
      */
-    fun getParameterTypes(): Array<Class<*>?>? {
-        return parameterTypes
-    }
+    val methodParameterTypes: Array<Class<*>?>?
+        get() = parameterTypes
 
     class Parameter(var type: Class<*>, var value: Any?) {
         /**
          * Get the parameter type
          */
-        fun getType(): Class<*> {
-            return type
-        }
+        val parameterType: Class<*>
+            get() = type
 
         /**
          * Get the parameter value
          */
-        fun getValue(): Any? {
-            return value
-        }
+        val parameterValue: Any?
+            get() = value
     }
     companion object {
         fun valueOf(method: Method): MethodInfo {
-            val annotation = method.getAnnotation<Tag?>(Tag::class.java)
+            val annotation = method.getAnnotation(Tag::class.java)
             return MethodInfo(
                 method.name, if (annotation == null) method.name else annotation.value,
                 method.parameterTypes
