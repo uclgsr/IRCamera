@@ -85,7 +85,6 @@ class ZeroconfDiscoveryServiceTest {
 
         val initialServices = discoveryService.getDiscoveredControllers()
         assertNotNull("Discovered services should not be null", initialServices)
-        assertTrue("Discovered services should be a list", initialServices is List<*>)
         assertTrue("Initial services should be empty", initialServices.isEmpty())
     }
 
