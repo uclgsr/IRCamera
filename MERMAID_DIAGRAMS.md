@@ -1,5 +1,252 @@
 # IRCamera Architecture Diagrams
 
+## Session Lifecycle and Recording Coordination (2024-12-22)
+
+### Enhanced Recording Orchestration Flow
+
+```mermaid
+flowchart TB
+    subgraph "Recording Start Orchestration"
+        A[User Initiates Recording] --> B[Phase 1: Prerequisites Validation]
+        B --> C{Storage & Permissions OK?}
+        C -->|No| D[Report Error & Abort]
+        C -->|Yes| E[Phase 2: Session Setup]
+        E --> F[Create Session Directory]
+        F --> G[Initialize Metadata]
+        G --> H[Phase 3: Start Foreground Service]
+        H --> I[Launch Recording Notification]
+        I --> J[Phase 4: Start Sensors with Isolation]
+        
+        J --> K[Start RGB Sensor]
+        J --> L[Start Thermal Sensor] 
+        J --> M[Start GSR Sensor]
+        
+        K --> K1{RGB Success?}
+        L --> L1{Thermal Success?}
+        M --> M1{GSR Success?}
+        
+        K1 -->|Exception| K2[Log Error, Continue]
+        L1 -->|Exception| L2[Log Error, Continue]
+        M1 -->|Exception| M2[Log Error, Continue]
+        
+        K1 -->|Success| N[Phase 5: Evaluate Results]
+        L1 -->|Success| N
+        M1 -->|Success| N
+        K2 --> N
+        L2 --> N
+        M2 --> N
+        
+        N --> O{Any Sensors Active?}
+        O -->|No| P[Cleanup & Report Failure]
+        O -->|Yes| Q[Start Health Monitoring]
+        Q --> R[Start Statistics Updates]
+        R --> S[Recording Active]
+    end
+    
+    style B fill:#e3f2fd
+    style H fill:#f3e5f5
+    style J fill:#fff3e0
+    style N fill:#e8f5e8
+```
+
+### Fault Tolerance and Sensor Isolation
+
+```mermaid
+flowchart LR
+    subgraph "Sensor Isolation Architecture"
+        A[Recording Controller] --> B[Individual Sensor Try-Catch Blocks]
+        
+        B --> C[RGB Sensor]
+        B --> D[Thermal Sensor]
+        B --> E[GSR Sensor]
+        
+        C --> C1{Success?}
+        D --> D1{Success?}
+        E --> E1{Success?}
+        
+        C1 -->|Exception| C2[Log Error<br/>Continue Session]
+        D1 -->|Exception| D2[Log Error<br/>Continue Session]
+        E1 -->|Exception| E2[Log Error<br/>Continue Session]
+        
+        C1 -->|Success| F[Add to Active Recorders]
+        D1 -->|Success| F
+        E1 -->|Success| F
+        
+        C2 --> G[Update Health Status]
+        D2 --> G
+        E2 --> G
+        
+        F --> H[Session Continues with Available Sensors]
+        G --> H
+    end
+    
+    style A fill:#e1f5fe
+    style B fill:#fff3e0
+    style H fill:#e8f5e8
+```
+
+### Mid-Session Health Monitoring and Reconnection
+
+```mermaid
+sequenceDiagram
+    participant RC as Recording Controller
+    participant HM as Health Monitor
+    participant S1 as RGB Sensor
+    participant S2 as Thermal Sensor
+    participant S3 as GSR Sensor
+    participant FS as Foreground Service
+    
+    RC->>HM: Start Health Monitoring
+    
+    loop Every 5 seconds
+        HM->>S1: Check Health Status
+        HM->>S2: Check Health Status
+        HM->>S3: Check Health Status
+        
+        alt Sensor Healthy
+            S1->>HM: Status: OK
+            HM->>RC: Update Health Info
+        else Sensor Failed (3+ consecutive failures)
+            S2->>HM: Status: FAILED
+            HM->>S2: Attempt Reconnection
+            
+            alt Reconnection Success
+                S2->>HM: Status: RECONNECTED
+                HM->>RC: Reset Failure Count
+                HM->>FS: Update Notification
+            else Max Attempts Reached
+                HM->>RC: Mark Sensor Inactive
+                HM->>FS: Update Notification (Partial Recording)
+                Note right of HM: Session continues with remaining sensors
+            end
+        end
+    end
+```
+
+### Graceful Recording Teardown
+
+```mermaid
+flowchart TB
+    subgraph "Recording Stop Orchestration"
+        A[User Stops Recording] --> B[Phase 1: Stop Sensors Individually]
+        
+        B --> C[Stop RGB Sensor]
+        B --> D[Stop Thermal Sensor] 
+        B --> E[Stop GSR Sensor]
+        
+        C --> C1{RGB Stop Success?}
+        D --> D1{Thermal Stop Success?}
+        E --> E1{GSR Stop Success?}
+        
+        C1 -->|Exception| C2[Log Error, Continue Teardown]
+        D1 -->|Exception| D2[Log Error, Continue Teardown]
+        E1 -->|Exception| E2[Log Error, Continue Teardown]
+        
+        C1 -->|Success| F[Phase 2: Session Finalization]
+        D1 -->|Success| F
+        E1 -->|Success| F
+        C2 --> F
+        D2 --> F
+        E2 --> F
+        
+        F --> G[Calculate Duration & Status]
+        G --> H[Write session_info.json]
+        H --> I[Phase 3: Resource Cleanup]
+        I --> J[Clear Active Recorders]
+        J --> K[Clear Reconnection Attempts]
+        K --> L[Phase 4: Crash Recovery Cleanup]
+        L --> M[Delete File Markers]
+        M --> N[Clear SharedPreferences State]
+        N --> O[Phase 5: Stop Foreground Service]
+        O --> P[Remove Notification]
+        P --> Q[Phase 6: Update Controller State]
+        Q --> R[Set State to IDLE]
+    end
+    
+    style B fill:#fff3e0
+    style F fill:#e3f2fd
+    style I fill:#f3e5f5
+    style L fill:#ffebee
+    style O fill:#e8f5e8
+```
+
+### Crash Recovery Mechanism
+
+```mermaid
+flowchart TB
+    subgraph "Crash Recovery Architecture"
+        A[App Startup] --> B[Check SharedPreferences]
+        B --> C{Active Session Flag?}
+        C -->|No| D[Normal Startup]
+        C -->|Yes| E[Crashed Session Detected]
+        
+        E --> F[Analyze Session Directory]
+        F --> G[Check Partial Data]
+        G --> H[Generate Recovery Report]
+        H --> I[Preserve Partial Data]
+        I --> J[Clear Recovery State]
+        J --> K[Notify User of Recovery]
+        
+        subgraph "Session Tracking"
+            L[Recording Start] --> M[Mark Session Active]
+            M --> N[Store Session ID]
+            N --> O[Store Directory Path]
+            O --> P[Store Active Sensors]
+            P --> Q[Store Start Time]
+        end
+        
+        subgraph "Normal Session End"
+            R[Recording Stop] --> S[Mark Session Completed]
+            S --> T[Clear All Tracking State]
+        end
+    end
+    
+    style A fill:#e3f2fd
+    style E fill:#ffebee
+    style L fill:#e8f5e8
+    style R fill:#f3e5f5
+```
+
+### Session Metadata and Finalization
+
+```mermaid
+classDiagram
+    class SessionInfo {
+        +session_id: String
+        +start_time: Long
+        +end_time: Long
+        +duration_ms: Long
+        +recording_status: String
+        +active_sensors: Array
+        +sensor_stop_results: Object
+        +errors?: Array
+        +finalized_at: Long
+    }
+    
+    class SensorStopResults {
+        +RGB: Boolean
+        +Thermal: Boolean
+        +GSR: Boolean
+    }
+    
+    class RecordingController {
+        +finalizeSession()
+        +stopRecording()
+        +writeSessionMetadata()
+    }
+    
+    class CrashRecoveryManager {
+        +markSessionActive()
+        +markSessionCompleted()
+        +checkForCrashedSessions()
+    }
+    
+    RecordingController --> SessionInfo : creates
+    SessionInfo *-- SensorStopResults : contains
+    RecordingController --> CrashRecoveryManager : uses
+    
+    note for SessionInfo "Written as session_info.json\nContains complete session metadata\nIncludes error information for debugging"
+
 ## PC-Orchestrated Multi-Modal Recording System (2024-12-22) - Commit 6133760
 
 ### Complete Networking Architecture

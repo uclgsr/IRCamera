@@ -238,6 +238,10 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             launchThermalCamera()
         }
 
+        binding.faultTolerantRecordingAccess.setOnClickListener {
+            launchFaultTolerantRecording()
+        }
+
         binding.viewMain.setOnLongClickListener {
             launchShimmerMvp()
             true
@@ -388,6 +392,17 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         } catch (e: Exception) {
             Log.e(TAG, "Failed to launch thermal camera", e)
             Toast.makeText(this, "Thermal camera not available", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun launchFaultTolerantRecording() {
+        try {
+            Log.i(TAG, "Launching enhanced fault-tolerant recording interface")
+            val intent = Intent(this, mpdc4gsr.activities.FaultTolerantRecordingActivity::class.java)
+            startActivity(intent)
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to launch fault-tolerant recording", e)
+            Toast.makeText(this, "Enhanced recording not available", Toast.LENGTH_SHORT).show()
         }
     }
 
