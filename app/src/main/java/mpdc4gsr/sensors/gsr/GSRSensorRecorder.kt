@@ -37,6 +37,7 @@ import mpdc4gsr.sensors.RecordingStatus
 import mpdc4gsr.sensors.SensorError
 import mpdc4gsr.sensors.SensorRecorder
 import mpdc4gsr.sensors.TimestampManager
+import mpdc4gsr.sensors.TimeSynchronizationService
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
 import com.mpdc4gsr.gsr.service.GSRRecorder as LegacyGSRRecorder
@@ -129,6 +130,8 @@ class GSRSensorRecorder(
     private var sampleCount = AtomicLong(0)
     private var recordingStartTime: Long = 0
     private var syncMarkerCount = AtomicLong(0)
+
+    private var timeSyncService: TimeSynchronizationService? = null
 
 
     private var shimmerBluetoothManager: ShimmerBluetoothManagerAndroid? = null
@@ -345,6 +348,10 @@ class GSRSensorRecorder(
 
                 this@GSRSensorRecorder.sessionDirectory = sessionDirectory
                 recordingStartTime = TimestampManager.getCurrentTimestampNanos()
+
+                timeSyncService = TimeSynchronizationService().apply {
+                    initializeSession(sessionDirectory)
+                }
 
                 var shimmerRecordingStarted = false
                 var recordingSuccessful = false
@@ -1326,6 +1333,16 @@ class GSRSensorRecorder(
 
             if (_isRecording.get()) {
                 logGSRSampleToCSV(gsrSample, timestampRecord, deviceTimestamp)
+                
+                timeSyncService?.let { syncService ->
+                    recordingScope.launch {
+                        syncService.logTimestampWithDriftAnalysis(
+                            sensorId = sensorId,
+                            deviceTimestamp = if (deviceTimestamp > 0) deviceTimestamp * 1_000_000 else null,
+                            phoneTimestamp = timestampRecord.systemNanos
+                        )
+                    }
+                }
             }
 
             Log.v(
