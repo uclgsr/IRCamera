@@ -1801,8 +1801,8 @@ class ThermalCameraRecorder(
             
             while (_isRecording.get() && !isSimulationMode && isIRCameraConnected) {
                 try {
-                    val captureSuccess = captureThermalFrame()
-                    if (captureSuccess) {
+                    val cameraHealthy = isThermalCameraHealthy()
+                    if (cameraHealthy) {
                         consecutiveErrors = 0
                     } else {
                         consecutiveErrors++
@@ -1840,21 +1840,21 @@ class ThermalCameraRecorder(
         }
     }
     
-    // Individual frame capture method with error handling  
-    private suspend fun captureThermalFrame(): Boolean = withContext(Dispatchers.IO) {
+    // Health check method to verify TC001 camera prerequisites for capture loop
+    private suspend fun isThermalCameraHealthy(): Boolean = withContext(Dispatchers.IO) {
         return@withContext try {
             if (ircamEngine != null && isTopdonSdkInitialized && isIRCameraConnected) {
                 // TC001 frame capture is handled by IFrameCallback
-                // This method provides a backup polling mechanism
-                Log.v(TAG, "TC001 frame capture active via SDK callback")
+                // This method provides a health check for the capture loop
+                Log.v(TAG, "TC001 camera is healthy and ready for capture")
                 true
             } else {
-                Log.d(TAG, "TC001 SDK not ready for frame capture")
+                Log.d(TAG, "TC001 camera not healthy - SDK not ready")
                 false
             }
         } catch (e: Exception) {
-            Log.e(TAG, "Error during TC001 frame capture", e)
-            // Don't crash on individual frame errors
+            Log.e(TAG, "Error during TC001 camera health check", e)
+            // Don't crash on health check errors
             false
         }
     }
