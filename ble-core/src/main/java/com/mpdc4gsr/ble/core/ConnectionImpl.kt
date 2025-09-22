@@ -346,41 +346,6 @@ internal class ConnectionImpl(
         }
     }
 }
-device.address
-)
-device.connectionState = ConnectionState.CONNECTED
-sendConnectionCallback()
-
-connHandler.sendEmptyMessageDelayed(
-MSG_DISCOVER_SERVICES,
-configuration!!.discoverServicesDelayMillis.toLong()
-)
-} else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
-    logD(
-        Logger.Companion.TYPE_CONNECTION_STATE,
-        "disconnected! [name: %s, addr: %s, autoReconnEnable: %s]",
-        device.name,
-        device.address,
-        configuration!!.isAutoReconnect
-    )
-    clearRequestQueueAndNotify()
-    notifyDisconnected()
-}
-} else {
-    logE(
-        Logger.Companion.TYPE_CONNECTION_STATE, "GATT error! [status: %d, name: %s, addr: %s]",
-        status, device.name, device.address
-    )
-    if (status == 133) {
-        doClearTaskAndRefresh()
-    } else {
-        clearRequestQueueAndNotify()
-        notifyDisconnected()
-    }
-}
-}
-}
-
 private fun doOnServicesDiscovered(status: Int) {
     if (bluetoothGatt != null) {
         val services = bluetoothGatt!!.getServices()
@@ -1727,19 +1692,18 @@ private inner class BleGattCallback : BluetoothGattCallback() {
         }
         handlePhyChange(false, txPhy, rxPhy, status)
     }
-}
 
-companion object {
-    private const val MSG_REQUEST_TIMEOUT = 0
-    private const val MSG_CONNECT = 1
-    private const val MSG_DISCONNECT = 2
-    private const val MSG_REFRESH = 3
-    private const val MSG_TIMER = 4
-    private const val MSG_DISCOVER_SERVICES = 6
-    private const val MSG_ON_CONNECTION_STATE_CHANGE = 7
-    private const val MSG_ON_SERVICES_DISCOVERED = 8
+    companion object {
+        private const val MSG_REQUEST_TIMEOUT = 0
+        private const val MSG_CONNECT = 1
+        private const val MSG_DISCONNECT = 2
+        private const val MSG_REFRESH = 3
+        private const val MSG_TIMER = 4
+        private const val MSG_DISCOVER_SERVICES = 6
+        private const val MSG_ON_CONNECTION_STATE_CHANGE = 7
+        private const val MSG_ON_SERVICES_DISCOVERED = 8
 
-    private const val MSG_ARG_NONE = 0
-    private const val MSG_ARG_RECONNECT = 1
-}
+        private const val MSG_ARG_NONE = 0
+        private const val MSG_ARG_RECONNECT = 1
+    }
 }
