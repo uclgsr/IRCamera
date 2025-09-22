@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.hardware.usb.UsbDevice
 import android.hardware.usb.UsbManager
 import android.util.Log
+import android.widget.Toast
 import com.energy.ac020library.IrcamEngine
 import com.energy.ac020library.IrcamEngineBuilder
 import com.energy.ac020library.bean.IIrFrameCallback
@@ -18,7 +19,6 @@ import com.mpdc4gsr.libunified.app.tools.DeviceTools
 import com.opencsv.CSVWriter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
@@ -905,7 +905,10 @@ class ThermalCameraRecorder(
 
                                         // Convert thermal data and save frame
                                         val thermalData = processRealThermalData(tempData, width, height)
-                                        processRealThermalFrameData(thermalData, frameNumber, timestamp)
+                                        
+                                        // Create proper timestamp record for processing
+                                        val timestampRecord = TimestampManager.createTimestampRecord()
+                                        processRealThermalFrameData(thermalData, frameNumber, timestampRecord)
                                         
                                         // Save frame image if configured
                                         if (saveFrameImages) {
@@ -1095,7 +1098,7 @@ class ThermalCameraRecorder(
         } catch (e: Exception) {
             Log.e(TAG, "Failed to process real IR thermal frame", e)
 
-            GlobalScope.launch {
+            recordingScope.launch {
                 emitError(
                     ErrorType.DATA_CORRUPTION,
                     "IR thermal frame processing failed: ${e.message}"
@@ -1156,7 +1159,8 @@ class ThermalCameraRecorder(
     ) {
         withContext(Dispatchers.IO) {
             try {
-
+                // Extract timestamp from TimestampRecord
+                val timestamp = timestampRecord.timestampNanos
                 val alignedNs = alignedTimestampNs(timestamp)
                 val relativeMs = sessionRelativeMs(timestamp)
                 val wallMs = wallClockMs(timestamp)
@@ -1202,7 +1206,7 @@ class ThermalCameraRecorder(
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to save real IR thermal data", e)
 
-                GlobalScope.launch {
+                recordingScope.launch {
                     emitError(
                         ErrorType.STORAGE_ERROR,
                         "IR thermal data saving failed: ${e.message}"
@@ -1342,7 +1346,9 @@ class ThermalCameraRecorder(
                 // Convert thermal data to bitmap and save as PNG
                 val bitmap = generateThermalPreviewBitmap(thermalData, IR_CAMERA_WIDTH, IR_CAMERA_HEIGHT)
                 if (bitmap != null) {
-                    bitmap.compress(android.graphics.Bitmap.CompressFormat.PNG, 100, imageFile.outputStream())
+                    imageFile.outputStream().use { outputStream ->
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
+                    }
                     
                     Log.d(TAG, "Saved thermal frame PNG: $filename (min: ${thermalData.minTemperature}°C, max: ${thermalData.maxTemperature}°C)")
                 }
@@ -1908,9 +1914,11 @@ class ThermalCameraRecorder(
                                 val timestamp = System.nanoTime()
                                 val frameNumber = frameCount.incrementAndGet()
 
-
                                 val thermalData = processRealThermalData(tempData, width, height)
-                                processRealThermalFrameData(thermalData, frameNumber, timestamp)
+                                
+                                // Create proper timestamp record for processing
+                                val timestampRecord = TimestampManager.createTimestampRecord()
+                                processRealThermalFrameData(thermalData, frameNumber, timestampRecord)
 
                             } catch (e: Exception) {
                                 Log.w(TAG, "Error processing thermal frame", e)
@@ -2004,7 +2012,7 @@ class ThermalCameraRecorder(
                         errorType.contains("SDK") -> "TC001 camera initialization failed"
                         else -> "TC001 camera error"
                     }
-                    android.widget.Toast.makeText(context, toastMessage, android.widget.Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, toastMessage, Toast.LENGTH_SHORT).show()
                 }
             } catch (e: Exception) {
                 Log.w(TAG, "Could not show thermal error toast: ${e.message}")
