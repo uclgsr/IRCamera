@@ -164,6 +164,7 @@ class TC001HardwareIntegrationTest {
         // Record for a period to establish baseline
         delay(2000)
         assertTrue("Recording should be active", thermalRecorder.isRecording)
+        recordingContinued.set(false) // Reset flag before disconnect/reconnect
 
         println("Manual Test Step: Please disconnect and reconnect the TC001 camera")
         println("Test will continue monitoring for 5 seconds...")
