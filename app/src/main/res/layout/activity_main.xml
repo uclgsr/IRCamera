@@ -50,9 +50,9 @@
                 android:layout_height="24dp"
                 android:layout_marginEnd="8dp"
                 android:background="?android:attr/selectableItemBackgroundBorderless"
-                android:contentDescription="Fault-Tolerant Recording"
+                android:contentDescription="@string/fault_tolerant_recording_description"
                 android:src="@android:drawable/ic_media_play"
-                android:tint="#4CAF50" />
+                android:tint="@color/fault_tolerant_recording_button" />
 
             <View
                 android:layout_width="0dp"

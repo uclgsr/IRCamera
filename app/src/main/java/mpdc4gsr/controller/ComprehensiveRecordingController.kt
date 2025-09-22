@@ -158,7 +158,7 @@ class ComprehensiveRecordingController(
                 sessionStartTime.set(System.currentTimeMillis())
 
 
-                createCrashRecoveryMarker(finalSessionId)
+                createCrashRecoveryMarker(finalSessionId, enabledSensors)
 
                 // Phase 3: Start foreground service immediately after session setup
                 startForegroundService()
@@ -338,7 +338,7 @@ class ComprehensiveRecordingController(
     }
 
 
-    private fun createCrashRecoveryMarker(sessionId: String) {
+    private fun createCrashRecoveryMarker(sessionId: String, enabledSensors: List<String>) {
         try {
             // Create file marker (existing functionality)
             crashRecoveryMarker = File(context.filesDir, "crash_recovery_$sessionId.marker")
@@ -346,8 +346,7 @@ class ComprehensiveRecordingController(
             
             // Mark session active in CrashRecoveryManager with SharedPreferences
             val sessionDirectory = sessionDirectoryManager.getCurrentSessionDirectory()?.rootDir?.absolutePath ?: ""
-            val activeSensors = sensorRecorders.keys.toList()
-            crashRecoveryManager.markSessionActive(sessionId, sessionDirectory, activeSensors)
+            crashRecoveryManager.markSessionActive(sessionId, sessionDirectory, enabledSensors)
             
             Log.d(TAG, "Created crash recovery markers for session: $sessionId")
         } catch (e: Exception) {
@@ -637,33 +636,22 @@ class ComprehensiveRecordingController(
                 val sessionDir = sessionDirectoryManager.getCurrentSessionDirectory()?.rootDir
                 if (sessionDir != null) {
                     // Create comprehensive session_info.json with all metadata
-                    val sessionInfo = org.json.JSONObject().apply {
-                        put("session_id", sessionId)
-                        put("start_time", sessionStartTime.get())
-                        put("end_time", sessionEndTime)
-                        put("duration_ms", sessionDuration)
-                        put("duration_seconds", sessionDuration / 1000.0)
-                        put("recording_status", if (sensorErrors.isEmpty()) "COMPLETED" else "COMPLETED_WITH_ERRORS")
-                        put("active_sensors", org.json.JSONArray(activeRecorders.keys.toList()))
-                        
-                        // Sensor stop results
-                        val sensorResults = org.json.JSONObject()
-                        stopResults.forEach { (sensor, success) ->
-                            sensorResults.put(sensor, success)
-                        }
-                        put("sensor_stop_results", sensorResults)
-                        
-                        // Any errors encountered
-                        if (sensorErrors.isNotEmpty()) {
-                            put("errors", org.json.JSONArray(sensorErrors))
-                        }
-                        
-                        put("finalized_at", System.currentTimeMillis())
-                    }
+                    val sessionInfo = SessionInfoData(
+                        sessionId = sessionId,
+                        startTime = sessionStartTime.get(),
+                        endTime = sessionEndTime,
+                        durationMs = sessionDuration,
+                        durationSeconds = sessionDuration / 1000.0,
+                        recordingStatus = if (sensorErrors.isEmpty()) "COMPLETED" else "COMPLETED_WITH_ERRORS",
+                        activeSensors = activeRecorders.keys.toList(),
+                        sensorStopResults = stopResults,
+                        errors = sensorErrors.takeIf { it.isNotEmpty() },
+                        finalizedAt = System.currentTimeMillis()
+                    )
 
-                    // Write session_info.json
+                    // Write session_info.json using Gson serialization
                     val sessionInfoFile = File(sessionDir, "session_info.json")
-                    sessionInfoFile.writeText(sessionInfo.toString(2))
+                    sessionInfoFile.writeText(createSessionInfoJson(sessionInfo))
                     
                     Log.i(TAG, "Session finalized with metadata: ${sessionInfoFile.absolutePath}")
                 } else {
@@ -674,10 +662,39 @@ class ComprehensiveRecordingController(
             Log.w(TAG, "Error finalizing session metadata", e)
         }
     }
+
+    private fun createSessionInfoJson(sessionInfo: SessionInfoData): String {
+        // Simple JSON serialization without external dependencies
+        return JSONObject().apply {
+            put("session_id", sessionInfo.sessionId)
+            put("start_time", sessionInfo.startTime)
+            put("end_time", sessionInfo.endTime)
+            put("duration_ms", sessionInfo.durationMs)
+            put("duration_seconds", sessionInfo.durationSeconds)
+            put("recording_status", sessionInfo.recordingStatus)
+            put("active_sensors", JSONArray(sessionInfo.activeSensors))
+            put("sensor_stop_results", JSONObject(sessionInfo.sensorStopResults as Map<String, Any>))
+            sessionInfo.errors?.let { put("errors", JSONArray(it)) }
+            put("finalized_at", sessionInfo.finalizedAt)
+        }.toString(2)
+    }
 }
 
 
 data class ValidationResult(val isValid: Boolean, val failureReason: String)
+
+data class SessionInfoData(
+    val sessionId: String,
+    val startTime: Long,
+    val endTime: Long,
+    val durationMs: Long,
+    val durationSeconds: Double,
+    val recordingStatus: String,
+    val activeSensors: List<String>,
+    val sensorStopResults: Map<String, Boolean>,
+    val errors: List<String>?,
+    val finalizedAt: Long
+)
 
 data class SensorHealthInfo(
     val name: String,

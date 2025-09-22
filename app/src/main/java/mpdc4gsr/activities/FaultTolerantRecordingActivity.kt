@@ -29,72 +29,27 @@ class FaultTolerantRecordingActivity : AppCompatActivity() {
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_fault_tolerant_recording)
         
         Log.i(TAG, "Starting Enhanced Fault-Tolerant Recording Activity")
         
-        // Create simple UI programmatically for production use
-        createUI()
+        // Initialize views
+        initializeViews()
         
         // Initialize the enhanced recording system
         initializeRecordingSystem()
     }
     
-    private fun createUI() {
-        val layout = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-            setPadding(32, 32, 32, 32)
-        }
+    private fun initializeViews() {
+        statusText = findViewById(R.id.status_text)
+        startButton = findViewById(R.id.start_button)
+        stopButton = findViewById(R.id.stop_button)
+        progressBar = findViewById(R.id.progress_bar)
+        sensorStatusText = findViewById(R.id.sensor_status_text)
         
-        // Title
-        layout.addView(TextView(this).apply {
-            text = "Enhanced Fault-Tolerant Recording"
-            textSize = 20f
-            setPadding(0, 0, 0, 32)
-        })
-        
-        // Status text
-        statusText = TextView(this).apply {
-            text = "Initializing enhanced recording system..."
-            setPadding(0, 0, 0, 16)
-        }
-        layout.addView(statusText)
-        
-        // Progress bar
-        progressBar = ProgressBar(this, null, android.R.attr.progressBarStyleHorizontal).apply {
-            visibility = View.GONE
-        }
-        layout.addView(progressBar)
-        
-        // Sensor status
-        sensorStatusText = TextView(this).apply {
-            text = "Sensor Status: Initializing..."
-            setPadding(0, 16, 0, 16)
-        }
-        layout.addView(sensorStatusText)
-        
-        // Start button
-        startButton = Button(this).apply {
-            text = "Start Enhanced Recording"
-            isEnabled = false
-            setOnClickListener { startRecording() }
-        }
-        layout.addView(startButton)
-        
-        // Stop button  
-        stopButton = Button(this).apply {
-            text = "Stop Recording"
-            isEnabled = false
-            setOnClickListener { stopRecording() }
-        }
-        layout.addView(stopButton)
-        
-        // Back button
-        layout.addView(Button(this).apply {
-            text = "Back"
-            setOnClickListener { finish() }
-        })
-        
-        setContentView(layout)
+        startButton.setOnClickListener { startRecording() }
+        stopButton.setOnClickListener { stopRecording() }
+        findViewById<Button>(R.id.back_button).setOnClickListener { finish() }
     }
     
     private fun initializeRecordingSystem() {
