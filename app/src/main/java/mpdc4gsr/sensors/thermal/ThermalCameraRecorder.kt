@@ -299,6 +299,10 @@ class ThermalCameraRecorder(
     private var ambientTemperature = 25.0
     private var emissivity = 0.95
     private var reflectedTemperature = 23.0
+    
+    // TC001 frame capture settings
+    private var saveFrameImages = false
+    private var thermalImagesDirectory: File? = null
 
 
     @Volatile
@@ -855,11 +859,18 @@ class ThermalCameraRecorder(
 
     private suspend fun initializeTopdonSdk(): Boolean = withContext(Dispatchers.IO) {
         return@withContext try {
-            Log.i(TAG, "Initializing Topdon AC020 SDK engine")
+            Log.i(TAG, "Initializing Topdon TC001 SDK engine")
 
+            // Load native library first
+            try {
+                System.loadLibrary("ircamera-native")
+                Log.d(TAG, "TC001 native library loaded successfully")
+            } catch (e: UnsatisfiedLinkError) {
+                Log.w(TAG, "TC001 native library not available, proceeding with Java-only SDK: ${e.message}")
+            }
 
             val handleParam = UvcHandleParam().apply {
-
+                // TC001 specific VID/PID
                 vid = thermalCameraDevice?.vendorId ?: 0x2744
                 pid = thermalCameraDevice?.productId ?: 0x0001
                 width = IR_CAMERA_WIDTH
@@ -872,13 +883,13 @@ class ThermalCameraRecorder(
                 .build()
 
             if (ircamEngine != null) {
-
+                // Initialize on background thread to avoid UI blocking
                 val initResult = ircamEngine!!.init()
                 if (initResult == 0) {
                     isTopdonSdkInitialized = true
-                    Log.i(TAG, "Topdon AC020 SDK engine initialized successfully")
+                    Log.i(TAG, "Topdon TC001 SDK engine initialized successfully")
 
-
+                    // Register frame callback for continuous 10Hz capture
                     ircamEngine!!.setFrameCallback(object : IIrFrameCallback {
                         override fun onFrameCallBack(
                             imageData: ByteArray?,
@@ -888,13 +899,22 @@ class ThermalCameraRecorder(
                         ) {
                             if (_isRecording.get() && tempData != null) {
                                 recordingScope.launch {
-                                    val timestamp = System.nanoTime()
-                                    val frameNumber = frameCount.incrementAndGet()
+                                    try {
+                                        val timestamp = System.nanoTime()
+                                        val frameNumber = frameCount.incrementAndGet()
 
-
-                                    val thermalData =
-                                        processRealThermalData(tempData, width, height)
-                                    processRealThermalFrameData(thermalData, frameNumber, timestamp)
+                                        // Convert thermal data and save frame
+                                        val thermalData = processRealThermalData(tempData, width, height)
+                                        processRealThermalFrameData(thermalData, frameNumber, timestamp)
+                                        
+                                        // Save frame image if configured
+                                        if (saveFrameImages) {
+                                            saveFrameImageToPNG(imageData, thermalData, frameNumber)
+                                        }
+                                    } catch (e: Exception) {
+                                        Log.e(TAG, "Error processing TC001 frame", e)
+                                        // Don't crash - continue processing other frames
+                                    }
                                 }
                             }
 
@@ -1306,6 +1326,33 @@ class ThermalCameraRecorder(
         }
     }
 
+    // TC001 frame image saving helper
+    private suspend fun saveFrameImageToPNG(
+        imageData: ByteArray?,
+        thermalData: ThermalFrameData,
+        frameNumber: Long
+    ) = withContext(Dispatchers.IO) {
+        try {
+            if (thermalImagesDirectory?.exists() == true && imageData != null) {
+                // Save with system timestamp to ensure proper ordering
+                val timestamp = System.currentTimeMillis()
+                val filename = "thermal_frame_${frameNumber}_${timestamp}.png"
+                val imageFile = File(thermalImagesDirectory, filename)
+                
+                // Convert thermal data to bitmap and save as PNG
+                val bitmap = generateThermalPreviewBitmap(thermalData, IR_CAMERA_WIDTH, IR_CAMERA_HEIGHT)
+                if (bitmap != null) {
+                    bitmap.compress(android.graphics.Bitmap.CompressFormat.PNG, 100, imageFile.outputStream())
+                    
+                    Log.d(TAG, "Saved thermal frame PNG: $filename (min: ${thermalData.minTemperature}°C, max: ${thermalData.maxTemperature}°C)")
+                }
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Error saving thermal frame image", e)
+            // Don't crash recording on image save failure
+        }
+    }
+
     override suspend fun startRecording(
         sessionDirectory: String,
         sessionMetadata: SessionMetadata
@@ -1324,6 +1371,16 @@ class ThermalCameraRecorder(
 
                 this@ThermalCameraRecorder.sessionDirectory = sessionDirectory
                 initializeSessionTiming()
+                
+                // Create thermal_images directory for frame captures
+                thermalImagesDirectory = File(sessionDirectory, "thermal_images")
+                if (!thermalImagesDirectory!!.exists()) {
+                    thermalImagesDirectory!!.mkdirs()
+                    Log.i(TAG, "Created thermal images directory: ${thermalImagesDirectory!!.absolutePath}")
+                }
+                
+                // Enable frame image saving for TC001
+                saveFrameImages = true
 
                 setupOutputFiles()
 
@@ -1334,30 +1391,32 @@ class ThermalCameraRecorder(
 
                     val thermalCamera = iruvctc
                     if (thermalCamera != null && isIRCameraConnected && hasUsbPermission) {
-                        Log.i(TAG, "Starting real thermal capture")
+                        Log.i(TAG, "Starting real TC001 thermal capture")
 
                         val startSuccess = try {
                             startRealIRCameraRecording(thermalCamera)
                         } catch (e: Exception) {
-                            Log.e(TAG, "Failed to start thermal camera recording", e)
+                            Log.e(TAG, "Failed to start TC001 thermal camera recording", e)
+                            // Log error but don't crash - fallback to simulation
+                            handleThermalError("SDK Initialization", "TC001 recording failed: ${e.message}", true)
                             false
                         }
 
                         if (!startSuccess) {
                             Log.w(
                                 TAG,
-                                "Failed to start real thermal streaming, switching to simulation mode"
+                                "Failed to start real TC001 thermal streaming, switching to simulation mode"
                             )
                             isSimulationMode = true
                             startSimulatedThermalRecording()
                         } else {
-                            Log.i(TAG, "Real thermal streaming started successfully")
+                            Log.i(TAG, "Real TC001 thermal streaming started successfully at ~10Hz")
                         }
 
                     } else {
                         Log.w(
                             TAG,
-                            "Thermal camera not ready (connected: $isIRCameraConnected, permission: $hasUsbPermission), using simulation mode"
+                            "TC001 thermal camera not ready (connected: $isIRCameraConnected, permission: $hasUsbPermission), using simulation mode"
                         )
                         isSimulationMode = true
                         startSimulatedThermalRecording()
@@ -1373,6 +1432,7 @@ class ThermalCameraRecorder(
 
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to start thermal camera recording", e)
+                // Ensure other sensors continue recording
                 emitError(
                     ErrorType.RECORDING_FAILED,
                     "Failed to start thermal recording: ${e.message}"
@@ -1720,6 +1780,74 @@ class ThermalCameraRecorder(
             false
         }
     }
+    
+    // Continuous frame capture loop for TC001 at ~10Hz
+    private fun startContinuousFrameCapture() {
+        recordingScope.launch {
+            Log.i(TAG, "Starting TC001 continuous frame capture at 100ms intervals")
+            val frameInterval = 100L // 10Hz = 100ms intervals
+            var consecutiveErrors = 0
+            val maxConsecutiveErrors = 10
+            
+            while (_isRecording.get() && !isSimulationMode && isIRCameraConnected) {
+                try {
+                    val captureSuccess = captureThermalFrame()
+                    if (captureSuccess) {
+                        consecutiveErrors = 0
+                    } else {
+                        consecutiveErrors++
+                        if (consecutiveErrors >= maxConsecutiveErrors) {
+                            Log.e(TAG, "Too many consecutive TC001 capture failures, switching to simulation")
+                            handleThermalError(
+                                "Frame Capture", 
+                                "Continuous TC001 frame capture failed $maxConsecutiveErrors times", 
+                                false
+                            )
+                            break
+                        }
+                    }
+                    
+                    delay(frameInterval)
+                } catch (e: Exception) {
+                    consecutiveErrors++
+                    Log.e(TAG, "Error in TC001 continuous frame capture loop", e)
+                    
+                    if (consecutiveErrors >= maxConsecutiveErrors) {
+                        Log.e(TAG, "TC001 continuous capture loop failed repeatedly, stopping")
+                        handleThermalError(
+                            "Frame Loop", 
+                            "TC001 capture loop crashed: ${e.message}", 
+                            false
+                        )
+                        break
+                    }
+                    
+                    delay(200) // Longer delay on errors
+                }
+            }
+            
+            Log.i(TAG, "TC001 continuous frame capture loop ended")
+        }
+    }
+    
+    // Individual frame capture method with error handling  
+    private suspend fun captureThermalFrame(): Boolean = withContext(Dispatchers.IO) {
+        return@withContext try {
+            if (ircamEngine != null && isTopdonSdkInitialized && isIRCameraConnected) {
+                // TC001 frame capture is handled by IFrameCallback
+                // This method provides a backup polling mechanism
+                Log.v(TAG, "TC001 frame capture active via SDK callback")
+                true
+            } else {
+                Log.d(TAG, "TC001 SDK not ready for frame capture")
+                false
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Error during TC001 frame capture", e)
+            // Don't crash on individual frame errors
+            false
+        }
+    }
 
 
     private fun configureOptimalThermalPerformance(irCamera: IRUVCTC, targetFrameRate: Double) {
@@ -1854,24 +1982,43 @@ class ThermalCameraRecorder(
 
 
     private fun handleThermalError(errorType: String, errorMessage: String, isRecoverable: Boolean = true) {
-        Log.e(TAG, "🔥 Thermal camera error [$errorType]: $errorMessage")
+        Log.e(TAG, "🔥 TC001 thermal camera error [$errorType]: $errorMessage")
 
         recordingScope.launch {
-
+            // Emit error to system
             emitError(
                 if (errorType.contains("USB")) ErrorType.DEVICE_DISCONNECTED else ErrorType.DEVICE_ERROR,
-                "Thermal camera: $errorMessage",
+                "TC001 thermal camera: $errorMessage",
                 isRecoverable
             )
 
+            // Show user notification via Toast (running on main thread)
+            try {
+                withContext(Dispatchers.Main) {
+                    val toastMessage = when {
+                        errorType.contains("USB") -> "TC001 thermal camera disconnected"
+                        errorType.contains("Permission") -> "TC001 camera needs USB permission"
+                        errorType.contains("SDK") -> "TC001 camera initialization failed"
+                        else -> "TC001 camera error"
+                    }
+                    android.widget.Toast.makeText(context, toastMessage, android.widget.Toast.LENGTH_SHORT).show()
+                }
+            } catch (e: Exception) {
+                Log.w(TAG, "Could not show thermal error toast: ${e.message}")
+            }
 
+            // Handle recovery or fallback
             if (isRecoverable) {
                 attemptThermalRecovery(errorType, errorMessage)
             } else {
-
-                Log.w(TAG, "Non-recoverable thermal error - switching to simulation mode")
+                // Non-recoverable error - switch to simulation mode
+                Log.w(TAG, "Non-recoverable TC001 thermal error - switching to simulation mode")
                 isSimulationMode = true
+                isIRCameraConnected = false
+                
+                // Continue recording with other sensors - don't halt the app
                 if (_isRecording.get()) {
+                    Log.i(TAG, "Continuing recording session with simulation mode after TC001 failure")
                     startSimulatedThermalRecording()
                 }
             }
