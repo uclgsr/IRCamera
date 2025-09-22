@@ -2,6 +2,35 @@
 
 ## Build System and Compilation Flow (2024-12-22)
 
+### Android Resource deviceType Attribute Fix - Commit 572ab30
+
+```mermaid
+flowchart TB
+    subgraph "Android Resource Linking Fix - deviceType Attribute"
+        A[AAPT Errors] --> B{deviceType Compatibility}
+        B -->|String values in XML| C[Layout Files Analysis]
+        B -->|getInt() in MenuSecondView| D[Code Analysis]
+        
+        C --> C1[activity_ir_thermal_double.xml]
+        C --> C2[activity_ir_thermal_lite.xml]  
+        C --> C3[activity_thermal_ir_night.xml]
+        C --> C4[activity_ir_gallery_edit.xml]
+        
+        C1 --> E1["double_light" → "1"]
+        C2 --> E2["lite" → "2"] 
+        C3 --> E3["single_light" → "0"]
+        C4 --> E4["gallery_edit" → "4"]
+        
+        D --> D1[MenuSecondView.getInt call]
+        D1 --> D2[MenuType mapping: 0,1,2,4]
+        
+        E1 & E2 & E3 & E4 --> F[Attribute Format Fix]
+        D2 --> F
+        F --> F1[app/attrs.xml: format="integer"]
+        F1 --> G[✅ All AAPT errors resolved]
+    end
+```
+
 ### Kotlin Compilation Error Resolution - Commit 2329a34
 
 ```mermaid
