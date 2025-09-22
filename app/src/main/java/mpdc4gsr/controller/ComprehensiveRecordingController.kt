@@ -577,6 +577,19 @@ class ComprehensiveRecordingController(
         updateSensorHealth(sensorName, isHealthy)
     }
 
+    /**
+     * Get the current session directory path
+     * @return Current session directory path or null if no session is active
+     */
+    fun getCurrentSessionDirectory(): String? {
+        return try {
+            sessionDirectoryManager.getCurrentSessionDirectory()?.rootDir?.absolutePath
+        } catch (e: Exception) {
+            Log.w(TAG, "Error getting current session directory", e)
+            null
+        }
+    }
+
     private fun cleanupFailedRecording() {
         activeRecorders.clear()
         sessionMetadata = null

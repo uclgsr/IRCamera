@@ -200,12 +200,25 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
 
                 runOnUiThread {
                     if (success) {
+                        // Get the current session directory from the recording controller
+                        currentSessionDirectory = try {
+                            recordingController.getCurrentSessionDirectory()
+                        } catch (e: Exception) {
+                            Log.w(TAG, "Could not get session directory", e)
+                            null
+                        }
+                        
                         Toast.makeText(
                             this@GSRQuickRecordingActivity,
                             "Enhanced fault-tolerant recording started",
                             Toast.LENGTH_SHORT
                         ).show()
-                        binding.sessionInfoText.text = "Recording in progress with advanced fault tolerance..."
+                        
+                        currentSessionDirectory?.let { sessionDir ->
+                            binding.sessionInfoText.text = "Recording: ${sessionDir.substringAfterLast("/")}"
+                        } ?: run {
+                            binding.sessionInfoText.text = "Recording in progress with advanced fault tolerance..."
+                        }
                     } else {
                         Toast.makeText(
                             this@GSRQuickRecordingActivity,
