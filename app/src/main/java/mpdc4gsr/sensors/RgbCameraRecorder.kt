@@ -8,6 +8,7 @@ import android.util.Size
 import androidx.camera.core.Camera
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
+import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.Preview
 import androidx.camera.core.UseCase
 import androidx.camera.lifecycle.ProcessCameraProvider
@@ -36,7 +37,6 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
-import mpdc4gsr.camera.core.RawEngine
 import mpdc4gsr.camera.core.SamsungDeviceCompatibility
 import mpdc4gsr.data.SessionMetadata
 import mpdc4gsr.permissions.PermissionManager
@@ -46,6 +46,7 @@ import mpdc4gsr.sensors.SensorRecorder
 import mpdc4gsr.sensors.SensorStatus
 import mpdc4gsr.utils.CSVBufferedWriter
 import mpdc4gsr.utils.SessionDirectoryManager
+import android.graphics.ImageFormat
 import java.io.File
 import java.io.FileWriter
 import java.util.concurrent.ExecutorService
@@ -133,7 +134,7 @@ class RgbCameraRecorder(
     private var preview: Preview? = null
     private var videoCapture: VideoCapture<Recorder>? = null
     private var imageCapture: ImageCapture? = null
-    private var rawEngine: RawEngine? = null // For Stage 3 RAW DNG capture using proper Camera2 API
+    private var rawImageCapture: ImageCapture? = null // For Stage 3 RAW DNG capture using ImageFormat.RAW_SENSOR
     private var camera: Camera? = null
     private var activeRecording: Recording? = null
 
@@ -535,23 +536,35 @@ class RgbCameraRecorder(
                 }
             }.build()
 
-            // Initialize RawEngine for Stage 3 DNG capture using proper Camera2 API
+            // Initialize RAW ImageCapture for Stage 3 DNG capture using ImageFormat.RAW_SENSOR
             if (deviceSupportsRAW && ENABLE_RAW_CAPTURE && SamsungDeviceCompatibility.isStage3Compatible()) {
                 try {
-                    rawEngine = RawEngine(context).apply {
-                        // Will be setup during recording with proper camera characteristics
-                        Log.i(TAG, "RawEngine initialized for Stage 3/Level 3 DNG capture")
+                    // Create ImageCapture configured for RAW format
+                    val rawImageCapture = ImageCapture.Builder().apply {
+                        // Set buffer format to RAW_SENSOR for actual RAW data
+                        setBufferFormat(ImageFormat.RAW_SENSOR)
+                        setTargetResolution(Size(selectedVideoWidth, selectedVideoHeight))
+                        setCaptureMode(ImageCapture.CAPTURE_MODE_MAXIMIZE_QUALITY)
                         
-                        onRawImageSaved = { file ->
-                            Log.i(TAG, "✅ Stage 3/Level 3 DNG saved: ${file.name} (${file.length()} bytes)")
-                        }
+                        // Configure Camera2 interop for Stage 3 RAW capture
+                        val extender = androidx.camera.camera2.interop.Camera2Interop.Extender(this)
+                        extender.setCaptureRequestOption(
+                            android.hardware.camera2.CaptureRequest.COLOR_CORRECTION_MODE,
+                            android.hardware.camera2.CameraMetadata.COLOR_CORRECTION_MODE_HIGH_QUALITY
+                        )
+                        extender.setCaptureRequestOption(
+                            android.hardware.camera2.CaptureRequest.NOISE_REDUCTION_MODE,
+                            android.hardware.camera2.CameraMetadata.NOISE_REDUCTION_MODE_HIGH_QUALITY
+                        )
                         
-                        onError = { error ->
-                            Log.e(TAG, "RawEngine error: $error")
-                        }
-                    }
+                        Log.i(TAG, "RAW ImageCapture configured for Stage 3/Level 3 DNG capture")
+                    }.build()
+                    
+                    // Store the RAW ImageCapture for use in capture operations
+                    this.rawImageCapture = rawImageCapture
+                    
                 } catch (e: Exception) {
-                    Log.w(TAG, "Could not initialize RawEngine for Stage 3 capture: ${e.message}")
+                    Log.w(TAG, "Could not configure RAW ImageCapture for Stage 3: ${e.message}")
                 }
             }
 
@@ -578,6 +591,10 @@ class RgbCameraRecorder(
 
             videoCapture?.let { useCases.add(it) }
             imageCapture?.let { useCases.add(it) }
+            rawImageCapture?.let { 
+                useCases.add(it)
+                Log.i(TAG, "✅ RAW ImageCapture added for Stage 3/Level 3 DNG capture")
+            }
 
 
             preview?.let { preview ->
@@ -756,39 +773,6 @@ class RgbCameraRecorder(
                     if (!startVideoRecording()) {
                         _isRecording.set(false)
                         return@withContext false
-                    }
-                }
-
-                // Setup RawEngine for Stage 3 DNG capture after camera is bound
-                if (deviceSupportsRAW && ENABLE_RAW_CAPTURE && rawEngine != null) {
-                    try {
-                        val framesDir = File(sessionDirectory, "frames")
-                        if (!framesDir.exists()) framesDir.mkdirs()
-                        
-                        // Get camera characteristics from bound camera
-                        val camera2Info = androidx.camera.camera2.interop.Camera2CameraInfo.from(camera?.cameraInfo)
-                        val characteristics = camera2Info?.getCameraCharacteristic(
-                            android.hardware.camera2.CameraCharacteristics.SENSOR_INFO_ACTIVE_ARRAY_SIZE
-                        )?.let { arraySize ->
-                            camera2Info.getCameraCharacteristics()
-                        }
-                        
-                        val rawSize = android.util.Size(selectedVideoWidth, selectedVideoHeight)
-                        val sessionId = sessionMetadata?.sessionId ?: "stage3_${System.currentTimeMillis()}"
-                        
-                        rawEngine?.setup(
-                            rawSize = rawSize,
-                            outputDirectory = framesDir,
-                            sessionId = sessionId,
-                            characteristics = characteristics,
-                            enableStage3 = SamsungDeviceCompatibility.isStage3Compatible()
-                        )
-                        
-                        rawEngine?.startCapture()
-                        Log.i(TAG, "✅ RawEngine started for Stage 3/Level 3 DNG capture")
-                        
-                    } catch (e: Exception) {
-                        Log.w(TAG, "Could not start RawEngine: ${e.message}")
                     }
                 }
 
@@ -1113,7 +1097,7 @@ class RgbCameraRecorder(
 
     /**
      * Capture RAW DNG frame asynchronously with Stage 3/Level 3 processing
-     * Uses RawEngine to manually trigger DNG capture for specific frames
+     * Uses RAW ImageCapture with ImageFormat.RAW_SENSOR for proper DNG creation
      */
     private fun captureRawFrameAsync(rawFile: File, timestampRecord: TimestampRecord, frameNumber: Long) {
         try {
@@ -1122,39 +1106,64 @@ class RgbCameraRecorder(
             val useStage3 = deviceSupportsRAW && ENABLE_RAW_CAPTURE &&
                     SamsungDeviceCompatibility.isStage3Compatible()
 
-            if (useStage3 && rawEngine != null && rawEngine!!.isCapturing()) {
-                // Trigger a specific RAW capture using the RawEngine
-                // Since RawEngine is designed for continuous capture, we need to work with its existing mechanism
-                try {
-                    // Create Stage 3/Level 3 DNG file name
-                    val stage3File = File(rawFile.parent, rawFile.nameWithoutExtension + "_stage3.dng")
-                    
+            if (useStage3 && rawImageCapture != null) {
+                // Create Stage 3/Level 3 DNG file name
+                val stage3File = File(rawFile.parent, rawFile.nameWithoutExtension + "_stage3.dng")
+
+                // Use RAW ImageCapture for proper DNG capture with ImageFormat.RAW_SENSOR
+                val rawOutputOptions = ImageCapture.OutputFileOptions.Builder(stage3File)
+                    .setMetadata(ImageCapture.Metadata().apply {
+                        // Add Stage 3 specific metadata
+                        isReversedHorizontal = false
+                        isReversedVertical = false
+                        location = null
+                    })
+                    .build()
+
+                rawImageCapture?.let { rawCapture ->
                     recordingScope.launch(Dispatchers.IO) {
                         try {
-                            // For this implementation, we'll create enhanced metadata
-                            // The actual DNG files are being created by the RawEngine's ImageReader
-                            enhanceStage3DngMetadata(stage3File, timestampRecord, frameNumber, null)
-                            
-                            // Log this frame capture for CSV tracking
-                            if (stage3File.exists() && stage3File.length() > 0) {
-                                logFrameCapture(timestampRecord, frameNumber, stage3File, isRaw = true)
-                                Log.i(TAG, "✅ Stage 3/Level 3 DNG captured: ${stage3File.name} (${stage3File.length()} bytes)")
-                            } else {
-                                // Create metadata tracking for this frame even if DNG file creation is pending
-                                enhanceStage3DngMetadata(stage3File, timestampRecord, frameNumber, null)
-                                Log.d(TAG, "Stage 3/Level 3 DNG frame $frameNumber processed - awaiting RawEngine file creation")
+                            Log.i(TAG, "Stage 3/Level 3 RAW DNG capture initiated for frame $frameNumber")
+
+                            // Perform actual RAW capture using ImageCapture with RAW_SENSOR format
+                            withContext(Dispatchers.Main) {
+                                rawCapture.takePicture(
+                                    rawOutputOptions,
+                                    cameraExecutor,
+                                    object : ImageCapture.OnImageSavedCallback {
+                                        override fun onImageSaved(output: ImageCapture.OutputFileResults) {
+                                            recordingScope.launch(Dispatchers.IO) {
+                                                try {
+                                                    // Post-process the DNG file with Stage 3 metadata
+                                                    enhanceStage3DngMetadata(stage3File, timestampRecord, frameNumber, null)
+                                                    logFrameCapture(timestampRecord, frameNumber, stage3File, isRaw = true)
+                                                    
+                                                    Log.i(TAG, "✅ Stage 3/Level 3 DNG saved: ${stage3File.name} (${stage3File.length()} bytes)")
+                                                } catch (e: Exception) {
+                                                    Log.e(TAG, "Error post-processing Stage 3 DNG", e)
+                                                }
+                                            }
+                                        }
+
+                                        override fun onError(exception: ImageCaptureException) {
+                                            Log.e(TAG, "Stage 3/Level 3 DNG capture failed for frame $frameNumber", exception)
+                                            // Fallback to standard processing
+                                            recordingScope.launch(Dispatchers.IO) {
+                                                rawFile.writeText("RAW capture fallback frame $frameNumber - ${timestampRecord.systemNanos}")
+                                                Log.w(TAG, "Fallback RAW metadata saved for frame $frameNumber")
+                                            }
+                                        }
+                                    }
+                                )
                             }
-                            
                         } catch (e: Exception) {
-                            Log.w(TAG, "Could not process Stage 3 DNG for frame $frameNumber: ${e.message}")
-                            // Fallback
+                            Log.w(TAG, "Stage 3/Level 3 capture setup failed for frame $frameNumber: ${e.message}")
+                            // Fallback to standard processing
                             rawFile.writeText("RAW capture frame $frameNumber - ${timestampRecord.systemNanos}")
                         }
                     }
-                    
-                } catch (e: Exception) {
-                    Log.w(TAG, "Stage 3/Level 3 capture processing failed for frame $frameNumber: ${e.message}")
-                    // Fallback to standard processing
+                } ?: run {
+                    Log.w(TAG, "RAW ImageCapture not available, using fallback")
                     rawFile.writeText("RAW capture frame $frameNumber - ${timestampRecord.systemNanos}")
                 }
             } else {
@@ -1506,15 +1515,7 @@ class RgbCameraRecorder(
                 activeRecording = null
             }
 
-            // Stop RawEngine if it was capturing
-            rawEngine?.let { engine ->
-                try {
-                    engine.stopCapture()
-                    Log.d(TAG, "✅ RawEngine stopped successfully - captured ${engine.getCaptureCount()} DNG frames")
-                } catch (e: Exception) {
-                    Log.w(TAG, "Error stopping RawEngine", e)
-                }
-            }
+
 
 
             try {
@@ -1676,8 +1677,7 @@ class RgbCameraRecorder(
             preview = null
             videoCapture = null
             imageCapture = null
-            rawEngine?.release()
-            rawEngine = null
+            rawImageCapture = null
             cameraProvider = null
 
             try {

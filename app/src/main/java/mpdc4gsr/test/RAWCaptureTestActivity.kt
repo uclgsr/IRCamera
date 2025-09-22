@@ -134,6 +134,8 @@ class RAWCaptureTestActivity : AppCompatActivity() {
             }
         }
     }
+    
+    private fun updateDeviceCompatibilityInfo() {
         val isStage3Compatible = SamsungDeviceCompatibility.isStage3Compatible()
         val deviceInfo = SamsungDeviceCompatibility.getDeviceInfo()
         
