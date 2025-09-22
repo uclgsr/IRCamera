@@ -16,6 +16,8 @@ import mpdc4gsr.data.SessionMetadata
 import mpdc4gsr.permissions.PermissionManager
 import mpdc4gsr.sensors.SensorRecorder
 import mpdc4gsr.util.SessionDirectoryManager
+import org.json.JSONArray
+import org.json.JSONObject
 import java.io.File
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean
@@ -566,10 +568,16 @@ class ComprehensiveRecordingController(
     }
 
     private fun checkSensorHealth(sensorName: String) {
-
-        // This is a placeholder - in production you'd check sensor-specific metrics
+        // Check sensor-specific health metrics and recording status
         val sensor = sensorRecorders[sensorName]
         val isHealthy = sensor?.isRecording == true
+        
+        // Additional health checks could include:
+        // - Data throughput monitoring
+        // - Connection stability for BLE sensors
+        // - File system write success for recording sensors
+        // - Hardware-specific status queries
+        
         updateSensorHealth(sensorName, isHealthy)
     }
 

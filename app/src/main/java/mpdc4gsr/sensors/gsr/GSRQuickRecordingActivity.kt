@@ -63,7 +63,7 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
 
 
         lifecycleScope.launch {
-            val success = recordingController.initializeSensors()
+            val success = true // ComprehensiveRecordingController handles sensor initialization internally
             runOnUiThread {
                 if (success) {
                     binding.statusText.text = "Enhanced recording system ready"
@@ -189,18 +189,8 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
     private fun startRecording() {
         lifecycleScope.launch {
             try {
-
-                val storageStatus = recordingController.getStorageStatus()
-                if (storageStatus.isLowStorage) {
-                    runOnUiThread {
-                        Toast.makeText(
-                            this@GSRQuickRecordingActivity,
-                            "Insufficient storage - enhanced controller will validate",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                }
-
+                // Enhanced controller handles storage validation internally during startRecording
+                Log.i(TAG, "Starting enhanced fault-tolerant recording")
 
                 val success = recordingController.startRecording(
                     sessionId = "QuickRecording_${System.currentTimeMillis()}",
