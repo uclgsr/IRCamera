@@ -312,7 +312,7 @@ data class SessionMetadata(
     fun monotonicToWallClock(monotonicNs: Long): Long {
         return try {
             TimestampManager.convertMonotonicToWallClock(monotonicNs)
-        } catch (e: Exception) {
+        } catch (e: IllegalStateException) {
             val offsetFromStartNs = monotonicNs - sessionStartMonotonicNs
             sessionStartTimestampMs + (offsetFromStartNs / 1_000_000L)
         }
