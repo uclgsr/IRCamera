@@ -7,8 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
-import com.mpdc4gsr.libunified.app.R
-import com.mpdc4gsr.libunified.app.databinding.DialogFirmwareUpBinding
+import com.mpdc4gsr.libunified.R
+import com.mpdc4gsr.libunified.databinding.DialogFirmwareUpBinding
 import com.mpdc4gsr.libunified.app.utils.ScreenUtil
 
 class FirmwareUpDialog(context: Context) : Dialog(context, R.style.InfoDialog),

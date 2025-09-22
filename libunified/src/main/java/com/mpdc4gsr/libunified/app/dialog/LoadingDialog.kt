@@ -7,8 +7,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.StringRes
 import androidx.core.view.isVisible
-import com.mpdc4gsr.libunified.app.R
-import com.mpdc4gsr.libunified.app.databinding.DialogLoadingBinding
+import com.mpdc4gsr.libunified.R
+import com.mpdc4gsr.libunified.databinding.DialogLoadingBinding
 import com.mpdc4gsr.libunified.app.utils.ScreenUtil
 
 class LoadingDialog(context: Context) : Dialog(context, R.style.TransparentDialog) {

@@ -6,7 +6,7 @@ import androidx.room.ForeignKey
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import com.blankj.utilcode.util.Utils
-import com.mpdc4gsr.libunified.app.R
+import com.mpdc4gsr.libunified.R
 
 open class DirBase {
     @PrimaryKey(autoGenerate = true)

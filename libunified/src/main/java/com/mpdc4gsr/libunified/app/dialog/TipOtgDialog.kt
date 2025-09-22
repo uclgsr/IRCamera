@@ -11,8 +11,8 @@ import android.widget.Button
 import android.widget.CheckBox
 import android.widget.TextView
 import androidx.annotation.StringRes
-import com.mpdc4gsr.libunified.app.R
-import com.mpdc4gsr.libunified.app.databinding.DialogTipOtgBinding
+import com.mpdc4gsr.libunified.R
+import com.mpdc4gsr.libunified.databinding.DialogTipOtgBinding
 import com.mpdc4gsr.libunified.app.utils.ScreenUtil
 
 

@@ -1,7 +1,7 @@
 package com.mpdc4gsr.libunified.ir.utils
 
 import android.util.Log
-import com.example.open3d.JNITool
+import com.mpdc4gsr.libunified.open3d.JNITool
 import com.mpdc4gsr.libunified.app.bean.AlarmBean
 import org.opencv.core.CvType
 import org.opencv.core.Mat

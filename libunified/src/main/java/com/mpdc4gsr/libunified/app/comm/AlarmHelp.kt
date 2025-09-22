@@ -2,7 +2,7 @@ package com.mpdc4gsr.libunified.app.comm
 
 import android.content.Context
 import android.media.MediaPlayer
-import com.mpdc4gsr.libunified.app.R
+import com.mpdc4gsr.libunified.R
 import com.mpdc4gsr.libunified.app.bean.AlarmBean
 import com.mpdc4gsr.libunified.app.comm.util.SingletonHolder
 import com.mpdc4gsr.libunified.app.comm.view.TempLayout

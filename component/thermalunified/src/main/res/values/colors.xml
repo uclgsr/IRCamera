@@ -19,4 +19,23 @@
     <color name="chart_text">#FFFFFFFF</color>
     <color name="black">#FF000000</color>
     <color name="circle_white">#FFFFFFFF</color>
+
+    <!-- Missing thermal font colors causing build failures -->
+    <color name="temp_font_color">#FFFFFFFF</color>
+    <color name="temp_font_second_color">#FFCCCCCC</color>
+    
+    <!-- Semi-transparent white colors -->
+    <color name="color_B3FFFFFF">#B3FFFFFF</color>
+    <color name="color_66FFFFFF">#66FFFFFF</color>
+    <color name="color_80FFFFFF">#80FFFFFF</color>
+    <color name="color_CCFFFFFF">#CCFFFFFF</color>
+    
+    <!-- Additional missing colors -->
+    <color name="grey">#FF808080</color>
+    <color name="white_80">#CCFFFFFF</color>
+    
+    <!-- More missing colors from error messages -->
+    <color name="color_bg_min">#FF4CAF50</color>
+    <color name="lms_red">#FFFF0000</color>
+    <color name="toastTextColor">#FFFFFFFF</color>
 </resources>

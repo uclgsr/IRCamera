@@ -47,9 +47,7 @@ tasks.register("buildRelease") {
     dependsOn(
         "cleanAll",
         ":app:assembleRelease",
-        ":ble-core:assembleRelease",
-        ":ble-shimmer:assembleRelease",
-        ":ble-topdon:assembleRelease",
+        ":BleModule:assembleRelease",
         ":libunified:assembleRelease",
         ":component:gsr-recording:assembleRelease",
         ":component:thermalunified:assembleRelease",
@@ -63,9 +61,7 @@ tasks.register("buildDebug") {
     dependsOn(
         "cleanAll",
         ":app:assembleDebug",
-        ":ble-core:assembleDebug",
-        ":ble-shimmer:assembleDebug",
-        ":ble-topdon:assembleDebug",
+        ":BleModule:assembleDebug",
         ":libunified:assembleDebug",
         ":component:gsr-recording:assembleDebug",
         ":component:thermalunified:assembleDebug",
@@ -94,9 +90,7 @@ tasks.register("compileDebugSafe") {
     dependsOn("cleanAll")
     finalizedBy(
         ":app:compileDebugSources",
-        ":ble-core:compileDebugSources",
-        ":ble-shimmer:compileDebugSources",
-        ":ble-topdon:compileDebugSources",
+        ":BleModule:compileDebugSources",
         ":libunified:compileDebugSources",
         ":component:gsr-recording:compileDebugSources",
         ":component:thermalunified:compileDebugSources",
@@ -110,9 +104,7 @@ tasks.register("compileReleaseSafe") {
     dependsOn("cleanAll")
     finalizedBy(
         ":app:compileReleaseSources",
-        ":ble-core:compileReleaseSources",
-        ":ble-shimmer:compileReleaseSources",
-        ":ble-topdon:compileReleaseSources",
+        ":BleModule:compileReleaseSources",
         ":libunified:compileReleaseSources",
         ":component:gsr-recording:compileReleaseSources",
         ":component:thermalunified:compileReleaseSources",

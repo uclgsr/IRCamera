@@ -194,22 +194,22 @@ abstract class HouseDetectDao {
     abstract fun insertItem(itemDetect: ItemDetect): Long
 
     @Delete
-    abstract fun deleteDetect(vararg houseDetect: HouseDetect)
+    abstract fun deleteDetect(houseDetect: HouseDetect)
 
     @Delete
-    abstract fun deleteDir(vararg dirDetect: DirDetect)
+    abstract fun deleteDir(dirDetect: DirDetect)
 
     @Delete
-    abstract fun deleteItem(vararg itemDetect: ItemDetect)
+    abstract fun deleteItem(itemDetect: ItemDetect)
 
     @Update
-    abstract fun updateDetect(vararg houseDetect: HouseDetect)
+    abstract fun updateDetect(houseDetect: HouseDetect)
 
     @Update
-    abstract fun updateDir(vararg dirDetect: DirDetect)
+    abstract fun updateDir(dirDetect: DirDetect)
 
     @Update
-    abstract fun updateItem(vararg itemDetect: ItemDetect)
+    abstract fun updateItem(itemDetect: ItemDetect)
 
     @Query("SELECT * FROM HouseDetect ORDER BY createTime DESC")
     abstract fun queryAll(): List<HouseDetect>

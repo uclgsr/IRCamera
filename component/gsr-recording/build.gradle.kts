@@ -66,7 +66,7 @@ dependencies {
     implementation(libs.lifecycle.service)
     implementation(libs.work.runtime.ktx)
     implementation(libs.gson)
-    implementation(project(":ble-shimmer"))
+    implementation(project(":BleModule"))
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.bundles.camerax)

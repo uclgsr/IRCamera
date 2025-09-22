@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Missing attributes causing build failures -->
+    <attr name="titleText" format="string" />
+    <attr name="leftDrawable" format="reference" />
+    <attr name="isInitLeft" format="boolean" />
+    <attr name="right2Drawable" format="reference" />
+    <attr name="rightDrawable" format="reference" />
+    <attr name="right3Drawable" format="reference" />
+    <attr name="deviceType" format="string" />
+    <attr name="rightText" format="string" />
+    <attr name="temperature_count" format="integer" />
+    <attr name="drawable_height" format="dimension" />
+    <attr name="type" format="string" />
+    <attr name="index" format="integer" />
+    
+    <!-- Additional missing attributes from build errors -->
+    <attr name="rightTextColor" format="color" />
+    <attr name="start_height" format="dimension" />
+    <attr name="isTitleCenter" format="boolean" />
+</resources>
