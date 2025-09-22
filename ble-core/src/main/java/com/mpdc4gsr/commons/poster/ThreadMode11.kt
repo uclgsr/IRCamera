@@ -1,15 +1,9 @@
-package com.mpdc4gsr.commons.poster;
+package com.mpdc4gsr.commons.poster
 
-
-public enum ThreadMode {
-
+enum class ThreadMode {
     POSTING,
-
     MAIN,
-
     BACKGROUND,
-
     ASYNC,
-
     UNSPECIFIED
 }

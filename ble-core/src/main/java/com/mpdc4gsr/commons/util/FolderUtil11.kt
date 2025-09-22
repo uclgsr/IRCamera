@@ -2,7 +2,6 @@ package com.mpdc4gsr.commons.util
 
 import android.text.TextUtils
 import android.util.Log
-import com.mpdc4gsr.libunified.app.lms.LMS
 import java.io.File
 
 object FolderUtil {
@@ -25,17 +24,18 @@ object FolderUtil {
 
 
     fun init() {
-        mUserId = PreUtil.Companion.getInstance(MPDC4GSR.getApp()).get("VCI_" + LMS.getInstance().getLoginName())
+        // Simplified init without LMS dependency
+        mUserId = PreUtil.getInstance(MPDC4GSR.getApp()).get("VCI_default_user")
         setUserId(mUserId)
         Log.e("bcf", "FolderUtil mUserId: " + mUserId)
-        mPath = MPDC4GSR.getApp().getExternalFilesDir("")!!.getAbsolutePath()
+        mPath = MPDC4GSR.getApp().getExternalFilesDir("")!!.absolutePath
         Log.e("bcf", "FolderUtil init: " + mPath)
         initPath()
     }
 
     fun initTDarts(tdSn: String?) {
         tdartsSn = tdSn
-        val mPath = MPDC4GSR.getApp().getExternalFilesDir("")!!.getAbsolutePath()
+        val mPath = MPDC4GSR.getApp().getExternalFilesDir("")!!.absolutePath
         Log.e("bcf", fileName + "---FolderUtil initTDarts: " + mPath)
         if (!TextUtils.isEmpty(tdSn)) {
             val rfidFile = File(mPath + fileName + tdSn + "/RFID/")
@@ -47,12 +47,12 @@ object FolderUtil {
     }
 
     fun initFilePath() {
-        val basePath = MPDC4GSR.getApp().getExternalFilesDir("")!!.getAbsolutePath() + fileName
+        val basePath = MPDC4GSR.getApp().getExternalFilesDir("")!!.absolutePath + fileName
         val downPath = basePath + "Download/"
-        Log.e("bcf", fileName + "--Download[CHINESE_TEXT]--" + downPath)
+        Log.e("bcf", fileName + "--Download Path--" + downPath)
         val file = File(downPath)
         if (!file.exists()) {
-            Log.e("bcf", fileName + "---Download[CHINESE_TEXT]Create ")
+            Log.e("bcf", fileName + "---Download Path Create ")
             file.mkdirs()
         }
     }
@@ -216,133 +216,133 @@ object FolderUtil {
     }
 
     val otaPath: String
-        get() = MPDC4GSR.getApp().getExternalFilesDir("")!!.getAbsolutePath() + "/s/"
+        get() = MPDC4GSR.getApp().getExternalFilesDir("")!!.absolutePath + "/s/"
 
 
     val dataBasePath: String
-        get() = MPDC4GSR.getApp().getExternalFilesDir("")!!.getAbsolutePath() + fileName
+        get() = MPDC4GSR.getApp().getExternalFilesDir("")!!.absolutePath + fileName
 
     val tDartsRootPath: String
         get() = MPDC4GSR.getApp().getExternalFilesDir("")!!
-            .getAbsolutePath() + fileName + tdartsSn + "/"
+            .absolutePath + fileName + tdartsSn + "/"
 
     val rootPath: String
         get() = MPDC4GSR.getApp().getExternalFilesDir("")!!
-            .getAbsolutePath() + fileName + mUserId + "/"
+            .absolutePath + fileName + mUserId + "/"
 
     val vehiclesPath: String
         get() = MPDC4GSR.getApp().getExternalFilesDir("")!!
-            .getAbsolutePath() + fileName + mUserId + "/Diagnosis/"
+            .absolutePath + fileName + mUserId + "/Diagnosis/"
 
     val immoPath: String
         get() = MPDC4GSR.getApp().getExternalFilesDir("")!!
-            .getAbsolutePath() + fileName + mUserId + "/Immo/"
+            .absolutePath + fileName + mUserId + "/Immo/"
 
     val rfidTopScanPath: String
         get() = MPDC4GSR.getApp().getExternalFilesDir("")!!
-            .getAbsolutePath() + fileName + tdartsSn + "/RFID/"
+            .absolutePath + fileName + tdartsSn + "/RFID/"
 
     val rfidPath: String
         get() = MPDC4GSR.getApp().getExternalFilesDir("")!!
-            .getAbsolutePath() + fileName + mUserId + "/RFID/"
+            .absolutePath + fileName + mUserId + "/RFID/"
 
     val asiaPath: String
         get() = MPDC4GSR.getApp().getExternalFilesDir("")!!
-            .getAbsolutePath() + fileName + mUserId + "/Diagnosis/Asia/"
+            .absolutePath + fileName + mUserId + "/Diagnosis/Asia/"
 
     val americaPath: String
         get() = MPDC4GSR.getApp().getExternalFilesDir("")!!
-            .getAbsolutePath() + fileName + mUserId + "/Diagnosis/America/"
+            .absolutePath + fileName + mUserId + "/Diagnosis/America/"
 
     val europePath: String
         get() = MPDC4GSR.getApp().getExternalFilesDir("")!!
-            .getAbsolutePath() + fileName + mUserId + "/Diagnosis/Europe/"
+            .absolutePath + fileName + mUserId + "/Diagnosis/Europe/"
 
     val vehiclePublicPath: String
         get() = MPDC4GSR.getApp().getExternalFilesDir("")!!
-            .getAbsolutePath() + fileName + mUserId + "/Diagnosis/Public/"
+            .absolutePath + fileName + mUserId + "/Diagnosis/Public/"
 
     val vehicleTopScanPublicPath: String
-        get() = MPDC4GSR.getApp().getExternalFilesDir("")!!.getAbsolutePath() + fileName
+        get() = MPDC4GSR.getApp().getExternalFilesDir("")!!.absolutePath + fileName
 
 
     val shotPath: String
         get() = MPDC4GSR.getApp().getExternalFilesDir("")!!
-            .getAbsolutePath() + fileName + mUserId + "/Shot/"
+            .absolutePath + fileName + mUserId + "/Shot/"
 
     val dataStreamPath: String
         get() = MPDC4GSR.getApp().getExternalFilesDir("")!!
-            .getAbsolutePath() + fileName + mUserId + "/Datastream/"
+            .absolutePath + fileName + mUserId + "/Datastream/"
 
     val pdfPath: String
         get() = MPDC4GSR.getApp().getExternalFilesDir("")!!
-            .getAbsolutePath() + fileName + mUserId + "/Pdf/"
+            .absolutePath + fileName + mUserId + "/Pdf/"
 
     val appPath: String
-        get() = MPDC4GSR.getApp().getExternalFilesDir("")!!.getAbsolutePath() + fileName + "App/"
+        get() = MPDC4GSR.getApp().getExternalFilesDir("")!!.absolutePath + fileName + "App/"
 
     val firmwarePath: String
-        get() = MPDC4GSR.getApp().getExternalFilesDir("")!!.getAbsolutePath() + fileName + "Firmware/"
+        get() = MPDC4GSR.getApp().getExternalFilesDir("")!!.absolutePath + fileName + "Firmware/"
 
     val tdartsUpgradePath: String
-        get() = MPDC4GSR.getApp().getExternalFilesDir("")!!.getAbsolutePath() + fileName + "T-darts/"
+        get() = MPDC4GSR.getApp().getExternalFilesDir("")!!.absolutePath + fileName + "T-darts/"
 
     val downloadPath: String
         get() = MPDC4GSR.getApp().getExternalFilesDir("")!!
-            .getAbsolutePath() + fileName + mUserId + "/Download/"
+            .absolutePath + fileName + mUserId + "/Download/"
 
     val diagHistoryPath: String
         get() = MPDC4GSR.getApp().getExternalFilesDir("")!!
-            .getAbsolutePath() + fileName + mUserId + "/History/Diagnose/"
+            .absolutePath + fileName + mUserId + "/History/Diagnose/"
 
     val serviceHistoryPath: String
         get() = MPDC4GSR.getApp().getExternalFilesDir("")!!
-            .getAbsolutePath() + fileName + mUserId + "/History/Service/"
+            .absolutePath + fileName + mUserId + "/History/Service/"
 
     val logPath: String
-        get() = MPDC4GSR.getApp().getExternalFilesDir("")!!.getAbsolutePath() + fileName + "Log/"
+        get() = MPDC4GSR.getApp().getExternalFilesDir("")!!.absolutePath + fileName + "Log/"
 
     val soLogPath: String
-        get() = MPDC4GSR.getApp().getExternalFilesDir("")!!.getAbsolutePath() + fileName + "Log/SoLog/"
+        get() = MPDC4GSR.getApp().getExternalFilesDir("")!!.absolutePath + fileName + "Log/SoLog/"
 
     val galleryPath: String
         get() = MPDC4GSR.getApp().getExternalFilesDir("")!!
-            .getAbsolutePath() + fileName + mUserId + "/Gallery/"
+            .absolutePath + fileName + mUserId + "/Gallery/"
 
     val dataLogPath: String
         get() = MPDC4GSR.getApp().getExternalFilesDir("")!!
-            .getAbsolutePath() + fileName + mUserId + "/DataLog/"
+            .absolutePath + fileName + mUserId + "/DataLog/"
 
     val diagDataLogPath: String
         get() = MPDC4GSR.getApp().getExternalFilesDir("")!!
-            .getAbsolutePath() + fileName + mUserId + "/DataLog/DIAG/"
+            .absolutePath + fileName + mUserId + "/DataLog/DIAG/"
 
 
     val immoDataLogPath: String
         get() = MPDC4GSR.getApp().getExternalFilesDir("")!!
-            .getAbsolutePath() + fileName + mUserId + "/DataLog/IMMO/"
+            .absolutePath + fileName + mUserId + "/DataLog/IMMO/"
 
     val feedbackLogPath: String
         get() = MPDC4GSR.getApp().getExternalFilesDir("")!!
-            .getAbsolutePath() + fileName + mUserId + "/FeedbackLog/"
+            .absolutePath + fileName + mUserId + "/FeedbackLog/"
 
     val userDataDiag: String
-        get() = MPDC4GSR.getApp().getExternalFilesDir("")!!.getAbsolutePath() + fileName + "UserData/Diagnose/"
+        get() = MPDC4GSR.getApp().getExternalFilesDir("")!!.absolutePath + fileName + "UserData/Diagnose/"
 
     val userDataImmo: String
-        get() = MPDC4GSR.getApp().getExternalFilesDir("")!!.getAbsolutePath() + fileName + "UserData/Immo/"
+        get() = MPDC4GSR.getApp().getExternalFilesDir("")!!.absolutePath + fileName + "UserData/Immo/"
 
     val userDataNewEnergy: String
         get() = MPDC4GSR.getApp().getExternalFilesDir("")!!
-            .getAbsolutePath() + fileName + "UserData/NewEnergy/"
+            .absolutePath + fileName + "UserData/NewEnergy/"
 
     val userDataRFID: String
-        get() = MPDC4GSR.getApp().getExternalFilesDir("")!!.getAbsolutePath() + fileName + "UserData/RFID/"
+        get() = MPDC4GSR.getApp().getExternalFilesDir("")!!.absolutePath + fileName + "UserData/RFID/"
 
     val softDownPath: String
-        get() = MPDC4GSR.getApp().getExternalFilesDir("")!!.getAbsolutePath() + fileName + "Download/"
+        get() = MPDC4GSR.getApp().getExternalFilesDir("")!!.absolutePath + fileName + "Download/"
 
     val autoVinLogPath: String
         get() = MPDC4GSR.getApp().getExternalFilesDir("")!!
-            .getAbsolutePath() + fileName + mUserId + "/autovinLog/"
+            .absolutePath + fileName + mUserId + "/autovinLog/"
 }

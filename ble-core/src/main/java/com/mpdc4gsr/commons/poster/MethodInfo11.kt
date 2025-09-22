@@ -25,8 +25,9 @@ class MethodInfo(var name: String, var tag: String, vararg parameters: Parameter
                 return null
             } else {
                 val types = arrayOfNulls<Class<*>>(parameters!!.size)
-                for (i in parameters.indices) {
-                    types[i] = parameters!![i]!!.type
+                val params = parameters!! // Capture in local variable for safe access
+                for (i in params.indices) {
+                    types[i] = params[i]!!.type
                 }
                 return types
             }
@@ -37,9 +38,10 @@ class MethodInfo(var name: String, var tag: String, vararg parameters: Parameter
             if (parameters == null) {
                 return null
             } else {
-                val values: Array<Any?> = arrayOfNulls<Class<*>>(parameters!!.size)
-                for (i in parameters.indices) {
-                    values[i] = parameters!![i]!!.value
+                val values: Array<Any?> = arrayOfNulls<Any>(parameters!!.size)
+                val params = parameters!! // Capture in local variable for safe access
+                for (i in params.indices) {
+                    values[i] = params[i]!!.value
                 }
                 return values
             }
