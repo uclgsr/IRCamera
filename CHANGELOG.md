@@ -18,6 +18,35 @@
 - **Backwards Compatibility**: Package names in code remain unchanged (`com.scwang.smart.refresh.layout.*`)
 - **Affected Modules**: `component:thermalunified` (primary usage)
 
+## [2.3.0] - Sensor Timestamp Synchronization Unification (2024-12-23)
+
+### Added
+- **Unified Timestamp System**: All sensors now use consistent TimestampManager instead of mixed System.nanoTime()/SystemClock approaches
+- **SessionSync Markers**: Added automatic SessionSync event logging at session start for cross-sensor alignment verification
+- **Drift Analysis Logging**: Enhanced TimeSynchronizationService with device timestamp drift monitoring capabilities
+- **Cross-Device Sync Documentation**: Enhanced NTP-like handshake with better logging and sync quality reporting
+- **Timestamp Verification Activity**: Added TimestampSyncVerificationActivity for manual testing of multi-modal timestamp alignment
+- **Wall-Clock Conversion**: Added convertMonotonicToWallClock method for consistent epoch time conversion
+
+### Changed
+- **RGB Camera Recorder**: Replaced all System.nanoTime() calls with TimestampManager.getCurrentTimestampNanos()
+- **Thermal Recorder**: Unified timestamp usage to TimestampManager for consistent time base
+- **GSR Sensor Recorder**: Updated to use unified timestamp system for synchronization compatibility
+- **Enhanced NTP Protocol**: Improved PC-Phone synchronization with better quality metrics and drift monitoring
+- **Session Metadata**: Enhanced with automatic sync event creation for all recording modalities
+
+### Fixed
+- **Timestamp Inconsistency**: Resolved mixed timestamp sources across sensors (System.nanoTime vs SystemClock.elapsedRealtimeNanos)
+- **Cross-Sensor Alignment**: All modalities now share the same time base for post-processing alignment verification
+- **Sync Quality Reporting**: Added detailed logging of network latency and clock offset for troubleshooting
+
+### Technical Details
+- **Unified Time Base**: All sensors use System.currentTimeMillis() epoch time with TimestampManager for consistency
+- **SessionSync Events**: Every sensor logs start event with timestamp for post-hoc verification within millisecond tolerance
+- **NTP Enhancement**: PC-Phone handshake includes quality metrics and automatic drift detection
+- **Verification Tests**: Manual test activity simulates sharp multi-modal events (e.g., hand clap) for alignment validation
+
+
 ## [2.2.0] - Kotlin Compilation Error Fixes (2024-12-21)
 
 ### Fixed

@@ -1,6 +1,118 @@
 # IRCamera Architecture Diagrams
 
-## Current Kotlin Compilation Status (2024-12-21)
+## Current Timestamp Synchronization System (2024-12-23)
+
+### Unified Timestamp Architecture
+
+```mermaid
+graph TB
+    subgraph "Unified Timestamp System"
+        subgraph "Core Timestamp Management"
+            TimestampManager[TimestampManager<br/>✅ getCurrentTimestampNanos()<br/>✅ convertMonotonicToWallClock()<br/>✅ startSession()]
+            
+            TimeSyncService[TimeSynchronizationService<br/>✅ logSyncEvent()<br/>✅ logTimestampWithDriftAnalysis()<br/>✅ SessionStart events]
+        end
+        
+        subgraph "Sensor Timestamp Sources - UNIFIED"
+            RGBCamera[RGB Camera Recorder<br/>✅ TimestampManager.getCurrentTimestampNanos()<br/>✅ SessionSync marker logged<br/>⚠️ Previously: System.nanoTime()]
+            
+            ThermalRecorder[Thermal Recorder<br/>✅ TimestampManager.getCurrentTimestampNanos()<br/>✅ SessionSync marker logged<br/>⚠️ Previously: System.nanoTime()]
+            
+            GSRRecorder[GSR Sensor Recorder<br/>✅ TimestampManager.getCurrentTimestampNanos()<br/>✅ Unified timestamp system<br/>⚠️ Previously: System.nanoTime()]
+        end
+        
+        subgraph "Cross-Device Synchronization"
+            PCSync[PC-Phone NTP Handshake<br/>✅ Enhanced quality reporting<br/>✅ Drift monitoring<br/>✅ Network latency logging]
+            
+            TimeManager[TimeManager<br/>✅ synchronizeWithPC()<br/>✅ logSyncQualityInfo()<br/>✅ Drift analysis]
+        end
+    end
+    
+    subgraph "SessionSync Event Flow"
+        SessionStart[Session Start] --> SessionSyncEvents[SessionSync Events Generated]
+        SessionSyncEvents --> RGBSync[RGB_RECORDING_START]
+        SessionSyncEvents --> ThermalSync[THERMAL_RECORDING_START] 
+        SessionSyncEvents --> GSRSync[GSR_RECORDING_START]
+        
+        RGBSync --> AlignmentVerification[Post-hoc Alignment Verification<br/>Within 5ms tolerance]
+        ThermalSync --> AlignmentVerification
+        GSRSync --> AlignmentVerification
+    end
+    
+    subgraph "Verification Tools"
+        TestActivity[TimestampSyncVerificationActivity<br/>✅ Sharp event simulation (hand clap)<br/>✅ Multi-modal alignment testing<br/>✅ 5ms tolerance validation]
+    end
+    
+    TimestampManager --> RGBCamera
+    TimestampManager --> ThermalRecorder
+    TimestampManager --> GSRRecorder
+    
+    TimeSyncService --> SessionSyncEvents
+    TimeManager --> PCSync
+    
+    TestActivity --> AlignmentVerification
+    
+    classDef unified fill:#e8f5e8,stroke:#2e7d32,stroke-width:3px
+    classDef fixed fill:#e1f5fe,stroke:#01579b,stroke-width:2px
+    classDef warning fill:#fff3e0,stroke:#ef6c00,stroke-width:2px
+    classDef verification fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    
+    class TimestampManager,TimeSyncService unified
+    class RGBCamera,ThermalRecorder,GSRRecorder,PCSync,TimeManager fixed
+    class TestActivity,AlignmentVerification verification
+```
+
+### Timestamp Synchronization Flow
+
+```mermaid
+sequenceDiagram
+    participant App as Application
+    participant TSS as TimeSynchronizationService
+    participant TM as TimestampManager
+    participant RGB as RGB Camera
+    participant GSR as GSR Sensor
+    participant Thermal as Thermal Recorder
+    participant PC as PC Controller
+    
+    App->>TSS: initializeSession()
+    TSS->>TM: startSession()
+    TM->>TM: Create unified timestamp reference
+    TSS->>TSS: logSessionStartSyncEvent()
+    
+    Note over App,PC: SessionSync Markers Creation
+    
+    App->>RGB: startRecording()
+    RGB->>TM: getCurrentTimestampNanos()
+    RGB->>RGB: addSyncEvent("RGB_RECORDING_START")
+    
+    App->>GSR: startRecording()
+    GSR->>TM: getCurrentTimestampNanos()
+    Note over GSR: Uses unified timestamp system
+    
+    App->>Thermal: startRecording()
+    Thermal->>TM: getCurrentTimestampNanos()
+    Thermal->>Thermal: addSyncEvent("THERMAL_RECORDING_START")
+    
+    Note over App,PC: Cross-Device Synchronization
+    
+    App->>PC: synchronizeWithPC()
+    PC->>App: NTP handshake (t1, t2, t3, t4)
+    App->>App: Calculate clock offset & network delay
+    App->>App: Start drift monitoring
+    
+    Note over App,PC: Sharp Event Testing
+    
+    App->>RGB: Capture frame (hand clap event)
+    RGB->>TM: getCurrentTimestampNanos()
+    App->>GSR: Record sample (hand clap event)
+    GSR->>TM: getCurrentTimestampNanos()
+    App->>Thermal: Process frame (hand clap event)
+    Thermal->>TM: getCurrentTimestampNanos()
+    
+    Note over App,PC: Verify timestamps within 5ms tolerance
+```
+
+## Previous Update: Kotlin Compilation Status (2024-12-21)
 
 ### BLE Core Module Compilation Error Resolution
 
