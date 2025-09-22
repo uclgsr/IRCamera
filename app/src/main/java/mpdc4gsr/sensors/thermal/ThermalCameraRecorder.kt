@@ -900,7 +900,6 @@ class ThermalCameraRecorder(
                             if (_isRecording.get() && tempData != null) {
                                 recordingScope.launch {
                                     try {
-                                        val timestamp = System.nanoTime()
                                         val frameNumber = frameCount.incrementAndGet()
 
                                         // Convert thermal data and save frame
