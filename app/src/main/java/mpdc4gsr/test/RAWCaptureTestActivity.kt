@@ -174,11 +174,8 @@ class RAWCaptureTestActivity : AppCompatActivity() {
                 val sessionId = "stage3_test_${System.currentTimeMillis()}"
                 val sessionDir = "stage3_dng_test"
                 
-                val metadata = SessionMetadata(
-                    sessionId = sessionId,
-                    participantId = "stage3_test_user",
-                    startTime = System.currentTimeMillis(),
-                    deviceInfo = SamsungDeviceCompatibility.getDeviceInfo()
+                val metadata = SessionMetadata.createSessionStart(sessionId).copy(
+                    participantId = "stage3_test_user"
                 )
                 
                 val success = rgbCameraRecorder?.startRecording(sessionDir, metadata) ?: false

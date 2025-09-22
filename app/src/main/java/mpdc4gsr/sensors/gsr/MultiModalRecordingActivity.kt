@@ -693,11 +693,8 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
                             try {
                                 // Create session directory and metadata for camera
                                 val sessionDir = "multimodal_$sessionId"
-                                val metadata = mpdc4gsr.data.SessionMetadata(
-                                    sessionId = sessionId,
-                                    participantId = participantId ?: "",
-                                    startTime = System.currentTimeMillis(),
-                                    deviceInfo = android.os.Build.MODEL
+                                val metadata = mpdc4gsr.data.SessionMetadata.createSessionStart(sessionId).copy(
+                                    participantId = participantId ?: ""
                                 )
                                 lifecycleScope.launch {
                                     camera.startRecording(sessionDir, metadata)
