@@ -1,5 +1,149 @@
 # IRCamera Architecture Diagrams
 
+## PC-Orchestrated Multi-Modal Recording System (2024-12-22) - Commit 6133760
+
+### Complete Networking Architecture
+
+```mermaid
+graph TB
+    subgraph "PC Controller Hub"
+        PCController[PC Controller<br/>standardized_controller.py<br/>✅ Multi-device orchestration<br/>✅ Session management<br/>✅ Time synchronization]
+        
+        DeviceRegistry[Device Registry<br/>✅ Capability tracking<br/>✅ Connection status<br/>✅ Clock offset storage]
+        
+        SessionManager[Session Manager<br/>✅ Unique session IDs<br/>✅ Coordinated start/stop<br/>✅ Multi-device sync]
+        
+        TimeSyncManager[Time Sync Manager<br/>✅ NTP-style handshake<br/>✅ Sub-10ms accuracy<br/>✅ Offset calculation]
+        
+        PCController --> DeviceRegistry
+        PCController --> SessionManager
+        PCController --> TimeSyncManager
+    end
+    
+    subgraph "Android Device 1"
+        NetworkServer1[NetworkServer.kt<br/>✅ TCP server port 8080<br/>✅ Text + binary support<br/>✅ Auto HELLO handshake]
+        
+        ProtocolHandler1[ProtocolHandler.kt<br/>✅ Command processing<br/>✅ Callback interface<br/>✅ Response generation]
+        
+        ConnectionManager1[NetworkConnectionManager.kt<br/>✅ State tracking<br/>✅ Auto reconnection<br/>✅ Timeout handling]
+        
+        RecordingService1[RecordingService.kt<br/>✅ Recording control<br/>✅ TimeManager integration<br/>✅ Preview streaming]
+        
+        NetworkServer1 --> ProtocolHandler1
+        ProtocolHandler1 --> ConnectionManager1
+        ConnectionManager1 --> RecordingService1
+    end
+    
+    subgraph "Android Device N"
+        NetworkServerN[NetworkServer.kt<br/>Multiple devices supported]
+        ProtocolHandlerN[ProtocolHandler.kt]
+        ConnectionManagerN[NetworkConnectionManager.kt]
+        RecordingServiceN[RecordingService.kt]
+        
+        NetworkServerN --> ProtocolHandlerN
+        ProtocolHandlerN --> ConnectionManagerN
+        ConnectionManagerN --> RecordingServiceN
+    end
+    
+    subgraph "Protocol Flow"
+        PCController -.->|SYNC_REQUEST| NetworkServer1
+        NetworkServer1 -.->|SYNC_RESPONSE| PCController
+        PCController -.->|START_RECORD| NetworkServer1
+        NetworkServer1 -.->|ACK| PCController
+        NetworkServer1 -.->|DATA_GSR/FRAME| PCController
+        PCController -.->|STOP_RECORD| NetworkServer1
+        NetworkServer1 -.->|ACK| PCController
+        
+        PCController -.->|Commands| NetworkServerN
+        NetworkServerN -.->|Responses| PCController
+    end
+    
+    subgraph "Connection States"
+        State1[CONNECTING<br/>Initial connection setup]
+        State2[CONNECTED<br/>Active communication]
+        State3[ERROR<br/>Connection issues]
+        State4[RECONNECTING<br/>Recovery attempts]
+        State5[DISCONNECTED<br/>No active connection]
+        
+        State1 --> State2
+        State2 --> State3
+        State3 --> State4
+        State4 --> State2
+        State2 --> State5
+    end
+```
+
+### Protocol Message Specification
+
+```mermaid
+sequenceDiagram
+    participant PC as PC Controller
+    participant A1 as Android Device 1
+    participant A2 as Android Device N
+    
+    Note over PC,A2: Device Discovery & Registration
+    A1->>PC: HELLO device_name=device1 sensors=[RGB,THERMAL,GSR]
+    A2->>PC: HELLO device_name=deviceN sensors=[RGB,THERMAL,GSR]
+    
+    Note over PC,A2: Time Synchronization
+    PC->>A1: SYNC_REQUEST t_pc=1640995200000
+    A1->>PC: SYNC_RESPONSE t_pc=1640995200000 t_ph=1640995199950
+    PC->>A2: SYNC_REQUEST t_pc=1640995200000
+    A2->>PC: SYNC_RESPONSE t_pc=1640995200000 t_ph=1640995199945
+    
+    Note over PC,A2: Coordinated Session Start
+    PC->>A1: START_RECORD session_id=session_20240115_143022
+    PC->>A2: START_RECORD session_id=session_20240115_143022
+    A1->>PC: ACK cmd=START_RECORD session_id=session_20240115_143022
+    A2->>PC: ACK cmd=START_RECORD session_id=session_20240115_143022
+    
+    Note over PC,A2: Live Data Streaming
+    loop Recording Session
+        A1->>PC: DATA_GSR ts=1640995201000 value=2.5
+        A1->>PC: FRAME type=rgb ts=1640995201000 size=65536
+        A2->>PC: DATA_GSR ts=1640995201000 value=3.1
+        A2->>PC: FRAME type=thermal ts=1640995201000 size=32768
+    end
+    
+    Note over PC,A2: Coordinated Session Stop
+    PC->>A1: STOP_RECORD session_id=session_20240115_143022
+    PC->>A2: STOP_RECORD session_id=session_20240115_143022
+    A1->>PC: ACK cmd=STOP_RECORD session_id=session_20240115_143022
+    A2->>PC: ACK cmd=STOP_RECORD session_id=session_20240115_143022
+```
+
+### Error Recovery Architecture
+
+```mermaid
+stateDiagram-v2
+    [*] --> DISCONNECTED
+    DISCONNECTED --> CONNECTING: startServer()
+    CONNECTING --> CONNECTED: PC connection established
+    CONNECTING --> ERROR: Connection failed
+    CONNECTED --> ERROR: Connection lost
+    ERROR --> RECONNECTING: Auto retry (attempts < 5)
+    RECONNECTING --> CONNECTED: Reconnection successful  
+    RECONNECTING --> ERROR: Reconnection failed
+    ERROR --> DISCONNECTED: Max attempts reached
+    CONNECTED --> DISCONNECTED: Normal shutdown
+    
+    state CONNECTED {
+        [*] --> Active
+        Active --> Timeout: No activity (30s)
+        Timeout --> HealthCheck: Connection monitoring
+        HealthCheck --> Active: Connection healthy
+        HealthCheck --> ERROR: Connection failed
+    }
+    
+    state RECONNECTING {
+        [*] --> Attempt1
+        Attempt1 --> Attempt2: Wait 2s
+        Attempt2 --> Attempt3: Wait 4s  
+        Attempt3 --> Attempt4: Wait 8s
+        Attempt4 --> Attempt5: Wait 16s
+        Attempt5 --> [*]: Max attempts
+    }
+```
 ## Latest Update: Enhanced Shimmer3 GSR BLE Support (2024-12-21)
 **Commit ID**: 64fdf6b
 
@@ -114,7 +258,7 @@ sequenceDiagram
             ShimmerDeviceManager-->>ShimmerMvpActivity: Reconnected - resume data
         end
     end
-=======
+
 ## Recent Update: TC001 Thermal Camera Integration Enhancement (2024-12-22)
 
 ### TC001 Hardware Integration Flow - Commit 4b1c7a9
