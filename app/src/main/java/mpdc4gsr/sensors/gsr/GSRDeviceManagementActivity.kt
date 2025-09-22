@@ -19,7 +19,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.csl.irCamera.R
-import com.mpdc4gsr.ble.util.BluetoothPermissionUtils
+import com.topdon.ble.util.BluetoothPermissionUtils
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
