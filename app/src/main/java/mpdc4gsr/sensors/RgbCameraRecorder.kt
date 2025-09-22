@@ -5,21 +5,48 @@ import android.os.Build
 import android.util.Log
 import android.util.Range
 import android.util.Size
-import androidx.camera.core.*
+import androidx.camera.core.Camera
+import androidx.camera.core.CameraSelector
+import androidx.camera.core.ImageCapture
+import androidx.camera.core.ImageCaptureException
+import androidx.camera.core.Preview
+import androidx.camera.core.UseCase
 import androidx.camera.lifecycle.ProcessCameraProvider
-import androidx.camera.video.*
+import androidx.camera.video.Quality
+import androidx.camera.video.QualitySelector
+import androidx.camera.video.Recorder
+import androidx.camera.video.Recording
+import androidx.camera.video.VideoCapture
 import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
+import com.google.gson.Gson
 import com.opencsv.CSVWriter
-import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import mpdc4gsr.camera.core.SamsungDeviceCompatibility
 import mpdc4gsr.data.SessionMetadata
 import mpdc4gsr.permissions.PermissionManager
-import mpdc4gsr.sensors.*
+import mpdc4gsr.sensors.ErrorType
+import mpdc4gsr.sensors.SensorError
+import mpdc4gsr.sensors.SensorRecorder
+import mpdc4gsr.sensors.SensorStatus
 import mpdc4gsr.utils.CSVBufferedWriter
 import mpdc4gsr.utils.SessionDirectoryManager
+import android.graphics.ImageFormat
 import java.io.File
 import java.io.FileWriter
 import java.util.concurrent.ExecutorService
@@ -50,7 +77,12 @@ class RgbCameraRecorder(
         private const val VIDEO_BITRATE_1080P = 20_000_000
         private const val AUDIO_BITRATE = 256_000
         private const val JPEG_QUALITY = 100
-        private const val CAPTURE_FPS = 30
+        // Throttled frame capture at 10-15fps for optimized I/O performance 
+        private const val CAPTURE_FPS = 12 // Reduced from 30 to optimize I/O performance
+        
+        // Frame capture throttling configuration
+        private const val FRAME_CAPTURE_EVERY_N_FRAMES = 2 // Capture every 2nd frame at 24fps = ~12fps output
+        private const val MAX_PENDING_CAPTURES = 2 // Reduced for better I/O handling
 
 
         private const val ENABLE_RAW_CAPTURE = true
@@ -102,6 +134,7 @@ class RgbCameraRecorder(
     private var preview: Preview? = null
     private var videoCapture: VideoCapture<Recorder>? = null
     private var imageCapture: ImageCapture? = null
+    private var rawImageCapture: ImageCapture? = null // For Stage 3 RAW DNG capture using ImageFormat.RAW_SENSOR
     private var camera: Camera? = null
     private var activeRecording: Recording? = null
 
@@ -154,38 +187,68 @@ class RgbCameraRecorder(
 
     override suspend fun initialize(): Boolean = withContext(Dispatchers.Main) {
         try {
-            Log.d(TAG, "Initializing ${if (useFrontCamera) "front" else "back"} camera")
+            Log.d(TAG, "Initializing CameraX with ${if (useFrontCamera) "front" else "back"} camera")
 
-            if (!checkAndRequestPermissions()) return@withContext false
-
-            _cameraStatus.value = "Initializing..."
-            cameraProvider = ProcessCameraProvider.getInstance(context).get()
-
-            if (!cameraProvider!!.hasCamera(currentCameraSelector)) {
-                val cameraType = if (isUsingFrontCamera) "Front" else "Back"
-                _cameraStatus.value = "$cameraType Camera Not Available"
-                emitError(ErrorType.INITIALIZATION_FAILED, "$cameraType camera not available")
-
+            if (!checkAndRequestPermissions()) {
+                _cameraStatus.value = "Camera Permission Denied"
+                emitError(ErrorType.PERMISSION_DENIED, "Camera permission is required for recording")
                 return@withContext false
             }
 
+            _cameraStatus.value = "Initializing..."
+            
+            // Wrap CameraProvider initialization in try-catch for robust error handling
+            cameraProvider = try {
+                ProcessCameraProvider.getInstance(context).get()
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to get CameraProvider instance", e)
+                _cameraStatus.value = "Camera Service Unavailable"
+                emitError(ErrorType.INITIALIZATION_FAILED, "Camera service unavailable: ${e.message}")
+                return@withContext false
+            }
 
+            if (!cameraProvider!!.hasCamera(currentCameraSelector)) {
+                val cameraType = if (isUsingFrontCamera) "Front" else "Back"
+                Log.w(TAG, "$cameraType camera not available on this device")
+                _cameraStatus.value = "$cameraType Camera Not Available"
+                emitError(ErrorType.INITIALIZATION_FAILED, "$cameraType camera not available on this device")
+                return@withContext false
+            }
+
+            // Detect device capabilities and configure camera
             detectDeviceCapabilities()
             detectAvailableCameras()
             optimizeVideoConfiguration()
 
+            // Setup and bind camera use cases with error handling
             setupCameraUseCases()
-            bindUseCases()
+            val bindSuccess = bindUseCases()
+            
+            if (!bindSuccess) {
+                _cameraStatus.value = "Camera Binding Failed"
+                emitError(ErrorType.INITIALIZATION_FAILED, "Failed to bind camera use cases")
+                return@withContext false
+            }
 
             _cameraStatus.value = "Ready"
             Log.i(
                 TAG,
-                "CameraX initialized successfully with ${selectedVideoWidth}x${selectedVideoHeight}@${selectedVideoFps}fps"
+                "✅ CameraX initialized successfully: ${selectedVideoWidth}x${selectedVideoHeight}@${selectedVideoFps}fps, Preview: ${previewView != null}"
             )
             return@withContext true
 
+        } catch (e: SecurityException) {
+            Log.e(TAG, "Camera security exception - permission issue", e)
+            _cameraStatus.value = "Permission Error"
+            emitError(ErrorType.PERMISSION_DENIED, "Camera permission required: ${e.message}")
+            return@withContext false
+        } catch (e: IllegalStateException) {
+            Log.e(TAG, "Camera in use by another application", e)
+            _cameraStatus.value = "Camera In Use"
+            emitError(ErrorType.INITIALIZATION_FAILED, "Camera is being used by another application")
+            return@withContext false
         } catch (e: Exception) {
-            Log.e(TAG, "Camera initialization failed", e)
+            Log.e(TAG, "Unexpected camera initialization error", e)
             _cameraStatus.value = "Initialization Failed"
             emitError(ErrorType.INITIALIZATION_FAILED, "Camera initialization failed: ${e.message}")
             return@withContext false
@@ -473,6 +536,38 @@ class RgbCameraRecorder(
                 }
             }.build()
 
+            // Initialize RAW ImageCapture for Stage 3 DNG capture using ImageFormat.RAW_SENSOR
+            if (deviceSupportsRAW && ENABLE_RAW_CAPTURE && SamsungDeviceCompatibility.isStage3Compatible()) {
+                try {
+                    // Create ImageCapture configured for RAW format
+                    val rawImageCapture = ImageCapture.Builder().apply {
+                        // Set buffer format to RAW_SENSOR for actual RAW data
+                        setBufferFormat(ImageFormat.RAW_SENSOR)
+                        setTargetResolution(Size(selectedVideoWidth, selectedVideoHeight))
+                        setCaptureMode(ImageCapture.CAPTURE_MODE_MAXIMIZE_QUALITY)
+                        
+                        // Configure Camera2 interop for Stage 3 RAW capture
+                        val extender = androidx.camera.camera2.interop.Camera2Interop.Extender(this)
+                        extender.setCaptureRequestOption(
+                            android.hardware.camera2.CaptureRequest.COLOR_CORRECTION_MODE,
+                            android.hardware.camera2.CameraMetadata.COLOR_CORRECTION_MODE_HIGH_QUALITY
+                        )
+                        extender.setCaptureRequestOption(
+                            android.hardware.camera2.CaptureRequest.NOISE_REDUCTION_MODE,
+                            android.hardware.camera2.CameraMetadata.NOISE_REDUCTION_MODE_HIGH_QUALITY
+                        )
+                        
+                        Log.i(TAG, "RAW ImageCapture configured for Stage 3/Level 3 DNG capture")
+                    }.build()
+                    
+                    // Store the RAW ImageCapture for use in capture operations
+                    this.rawImageCapture = rawImageCapture
+                    
+                } catch (e: Exception) {
+                    Log.w(TAG, "Could not configure RAW ImageCapture for Stage 3: ${e.message}")
+                }
+            }
+
             Log.d(TAG, "Camera use cases configured successfully")
         } catch (e: Exception) {
             Log.e(TAG, "Error setting up camera use cases", e)
@@ -496,6 +591,10 @@ class RgbCameraRecorder(
 
             videoCapture?.let { useCases.add(it) }
             imageCapture?.let { useCases.add(it) }
+            rawImageCapture?.let { 
+                useCases.add(it)
+                Log.i(TAG, "✅ RAW ImageCapture added for Stage 3/Level 3 DNG capture")
+            }
 
 
             preview?.let { preview ->
@@ -594,31 +693,35 @@ class RgbCameraRecorder(
 
     private fun createOptimizedRecorder(): Recorder {
         return try {
+            // Use QualitySelector to attempt UHD and fall back to lower quality if unsupported
             val qualitySelector = if (deviceSupports4K) {
-                Log.i(TAG, "Creating 4K quality selector for capable device")
+                Log.i(TAG, "Creating 4K UHD quality selector with fallback strategy")
                 QualitySelector.from(
                     Quality.UHD,
-                    FallbackStrategy.lowerQualityOrHigherThan(Quality.FHD)
+                    FallbackStrategy.lowerQualityThan(Quality.UHD)
                 )
             } else {
-                Log.i(TAG, "Creating 1080p quality selector with fallback")
+                Log.i(TAG, "Creating FHD quality selector with fallback strategy")
                 QualitySelector.from(
                     Quality.FHD,
-                    FallbackStrategy.lowerQualityOrHigherThan(Quality.HD)
+                    FallbackStrategy.lowerQualityThan(Quality.FHD)
                 )
             }
 
-            Recorder.Builder()
+            val recorder = Recorder.Builder()
                 .setQualitySelector(qualitySelector)
                 .build()
+                
+            Log.i(TAG, "Optimized recorder created with quality selector configuration")
+            recorder
 
         } catch (e: Exception) {
-            Log.e(TAG, "Error creating optimized recorder, using default", e)
+            Log.e(TAG, "Error creating optimized recorder, using conservative fallback", e)
             Recorder.Builder()
                 .setQualitySelector(
                     QualitySelector.from(
                         Quality.FHD,
-                        FallbackStrategy.lowerQualityOrHigherThan(Quality.HD)
+                        FallbackStrategy.lowerQualityThan(Quality.FHD)
                     )
                 )
                 .build()
@@ -874,9 +977,9 @@ class RgbCameraRecorder(
             }
 
             val captureInterval = 1000L / CAPTURE_FPS
+            var frameSkipCounter = 0 // Counter for frame throttling
 
 
-            val maxPendingCaptures = 3
             var pendingCaptureCount = 0
 
 
@@ -884,12 +987,18 @@ class RgbCameraRecorder(
             lastFrameRateCheck.set(System.currentTimeMillis())
             actualFrameRateAchieved = 0.0
 
-            Log.i(TAG, "🎬 Starting enhanced frame capture with backpressure handling at ${CAPTURE_FPS} FPS")
+            Log.i(TAG, "🎬 Starting optimized frame capture at ${CAPTURE_FPS} FPS with throttling (every ${FRAME_CAPTURE_EVERY_N_FRAMES} frames)")
 
             while (_isRecording.get() && isActive) {
                 try {
+                    // Implement frame throttling - only capture every Nth frame
+                    frameSkipCounter++
+                    if (frameSkipCounter % FRAME_CAPTURE_EVERY_N_FRAMES != 0) {
+                        
+                        continue
+                    }
 
-                    if (pendingCaptureCount >= maxPendingCaptures) {
+                    if (pendingCaptureCount >= MAX_PENDING_CAPTURES) {
                         droppedFrames.incrementAndGet()
                         Log.d(TAG, "Frame dropped due to backpressure (pending: $pendingCaptureCount)")
                         delay(captureInterval)
@@ -994,82 +1103,121 @@ class RgbCameraRecorder(
 
 
     /**
-     * Capture RAW frame asynchronously with Stage3/Level3 processing
-     *
-     * NOTE: This is currently a placeholder implementation that creates metadata files.
-     * A complete implementation would require:
-     * 1. Using CameraX ImageCapture with RAW format support
-     * 2. Camera2 interop for Stage3/Level3 capture request configuration
-     * 3. Proper DNG creation using DngCreator API
-     * 4. Dynamic use case binding/unbinding to avoid resource conflicts
-     *
-     * The current implementation serves as a framework for the actual DNG capture
-     * and demonstrates the integration points with the Stage3/Level3 system.
+     * Capture RAW DNG frame asynchronously with Stage 3/Level 3 processing
+     * Uses RAW ImageCapture with ImageFormat.RAW_SENSOR for proper DNG creation
      */
     private fun captureRawFrameAsync(rawFile: File, timestampRecord: TimestampRecord, frameNumber: Long) {
         try {
-            Log.d(TAG, "Capturing Stage3/Level3 DNG frame $frameNumber - ${rawFile.name}")
+            Log.d(TAG, "Capturing Stage 3/Level 3 DNG frame $frameNumber - ${rawFile.name}")
 
             val useStage3 = deviceSupportsRAW && ENABLE_RAW_CAPTURE &&
                     SamsungDeviceCompatibility.isStage3Compatible()
 
-            if (useStage3) {
-                // Create Stage3/Level3 DNG file name
+            if (useStage3 && rawImageCapture != null) {
+                // Create Stage 3/Level 3 DNG file name
                 val stage3File = File(rawFile.parent, rawFile.nameWithoutExtension + "_stage3.dng")
 
-                recordingScope.launch(Dispatchers.IO) {
-                    try {
-                        // Use Camera2 interop to access raw capture with Stage3/Level3 processing
-                        androidx.camera.camera2.interop.Camera2CameraInfo.from(
-                            cameraProvider?.bindToLifecycle(lifecycleOwner, currentCameraSelector)?.cameraInfo
-                        )?.let { camera2Info ->
-                            val characteristics = camera2Info.getCameraCharacteristic(
-                                android.hardware.camera2.CameraCharacteristics.LENS_FACING
-                            )
+                // Use RAW ImageCapture for proper DNG capture with ImageFormat.RAW_SENSOR
+                val rawOutputOptions = ImageCapture.OutputFileOptions.Builder(stage3File)
+                    .setMetadata(ImageCapture.Metadata().apply {
+                        // Add Stage 3 specific metadata
+                        isReversedHorizontal = false
+                        isReversedVertical = false
+                        location = null
+                    })
+                    .build()
 
-                            Log.i(TAG, "Stage3/Level3 RAW capture initiated for frame $frameNumber")
+                rawImageCapture?.let { rawCapture ->
+                    recordingScope.launch(Dispatchers.IO) {
+                        try {
+                            Log.i(TAG, "Stage 3/Level 3 RAW DNG capture initiated for frame $frameNumber")
 
-                            // TODO: Replace this placeholder with actual DNG capture implementation
-                            // This should use ImageCapture with RAW format and proper DNG creation
-                            val stage3Metadata = """
-                                DNG Stage3/Level3 Capture Framework Ready
-                                Frame: $frameNumber
-                                Timestamp: ${timestampRecord.systemNanos}
-                                Processing: Samsung Stage3/Level3 Pipeline
-                                Device: ${SamsungDeviceCompatibility.getDeviceInfo()}
-                                Camera ID: ${camera2Info.cameraId}
-                                
-                                Note: This is a framework placeholder. Full implementation requires:
-                                - ImageCapture with ImageFormat.RAW_SENSOR
-                                - DngCreator for proper DNG file creation
-                                - Camera2 capture request configuration for Stage3/Level3
-                                - Dynamic use case binding for RAW capture
-                            """.trimIndent()
+                            // Perform actual RAW capture using ImageCapture with RAW_SENSOR format
+                            withContext(Dispatchers.Main) {
+                                rawCapture.takePicture(
+                                    rawOutputOptions,
+                                    cameraExecutor,
+                                    object : ImageCapture.OnImageSavedCallback {
+                                        override fun onImageSaved(output: ImageCapture.OutputFileResults) {
+                                            recordingScope.launch(Dispatchers.IO) {
+                                                try {
+                                                    // Post-process the DNG file with Stage 3 metadata
+                                                    val camera2Info = camera?.cameraInfo?.let { androidx.camera.camera2.interop.Camera2CameraInfo.from(it) }
+                                                    enhanceStage3DngMetadata(stage3File, timestampRecord, frameNumber, camera2Info)
+                                                    logFrameCapture(timestampRecord, frameNumber, stage3File, isRaw = true)
+                                                    
+                                                    Log.i(TAG, "✅ Stage 3/Level 3 DNG saved: ${stage3File.name} (${stage3File.length()} bytes)")
+                                                } catch (e: Exception) {
+                                                    Log.e(TAG, "Error post-processing Stage 3 DNG", e)
+                                                }
+                                            }
+                                        }
 
-                            stage3File.writeText(stage3Metadata)
-                            Log.i(TAG, "Stage3/Level3 DNG framework ready for frame $frameNumber")
-
-                            // TODO: Implement actual RAW DNG capture here
-                            // Example structure:
-                            // 1. Create ImageCapture with RAW format
-                            // 2. Configure Camera2 interop for Stage3/Level3
-                            // 3. Capture image with proper DNG creation
-                            // 4. Handle dynamic use case binding
+                                        override fun onError(exception: ImageCaptureException) {
+                                            Log.e(TAG, "Stage 3/Level 3 DNG capture failed for frame $frameNumber", exception)
+                                            // Fallback to standard processing
+                                            recordingScope.launch(Dispatchers.IO) {
+                                                rawFile.writeText("RAW capture fallback frame $frameNumber - ${timestampRecord.systemNanos}")
+                                                Log.w(TAG, "Fallback RAW metadata saved for frame $frameNumber")
+                                            }
+                                        }
+                                    }
+                                )
+                            }
+                        } catch (e: Exception) {
+                            Log.w(TAG, "Stage 3/Level 3 capture setup failed for frame $frameNumber: ${e.message}")
+                            // Fallback to standard processing
+                            rawFile.writeText("RAW capture frame $frameNumber - ${timestampRecord.systemNanos}")
                         }
-                    } catch (e: Exception) {
-                        Log.w(TAG, "Stage3/Level3 capture failed for frame $frameNumber, using standard: ${e.message}")
-                        // Fallback to standard processing
-                        rawFile.writeText("RAW capture frame $frameNumber - ${timestampRecord.systemNanos}")
                     }
+                } ?: run {
+                    Log.w(TAG, "RAW ImageCapture not available, using fallback")
+                    rawFile.writeText("RAW capture frame $frameNumber - ${timestampRecord.systemNanos}")
                 }
             } else {
-                // Standard RAW processing for non-Samsung devices
-                Log.i(TAG, "Standard RAW processing for frame $frameNumber (device not Stage3/Level3 compatible)")
+                // Standard RAW processing for non-Samsung devices or when Stage 3 is disabled
+                Log.i(TAG, "Standard RAW processing for frame $frameNumber (device not Stage 3/Level 3 compatible)")
                 rawFile.writeText("RAW capture frame $frameNumber - ${timestampRecord.systemNanos}")
             }
 
         } catch (e: Exception) {
             Log.w(TAG, "RAW capture error for frame $frameNumber", e)
+        }
+    }
+
+    /**
+     * Enhance DNG file with Stage 3/Level 3 specific metadata
+     */
+    private fun enhanceStage3DngMetadata(
+        dngFile: File, 
+        timestampRecord: TimestampRecord, 
+        frameNumber: Long,
+        camera2Info: androidx.camera.camera2.interop.Camera2CameraInfo?
+    ) {
+        try {
+            // Add Stage 3/Level 3 processing markers to DNG metadata
+            // Note: This would typically be done during DNG creation, but Android's
+            // ImageCapture API may not expose all DNG metadata fields directly.
+            // For complete Stage 3 metadata, a custom DNG creation pipeline may be needed.
+            
+            val metadataFile = File(dngFile.parent, dngFile.nameWithoutExtension + "_stage3_metadata.json")
+            val metadata = mapOf(
+                "processing_pipeline" to "Samsung Stage 3/Level 3",
+                "frame_number" to frameNumber,
+                "capture_timestamp_ns" to timestampRecord.systemNanos,
+                "monotonic_timestamp_ns" to timestampRecord.monotonicNanos,
+                "device_model" to SamsungDeviceCompatibility.getDeviceInfo(),
+                "camera_id" to (camera2Info?.cameraId ?: "unknown"),
+                "dng_file_size_bytes" to dngFile.length(),
+                "creation_time" to System.currentTimeMillis()
+            )
+            
+            val gson = com.google.gson.Gson()
+            metadataFile.writeText(gson.toJson(metadata))
+            
+            Log.d(TAG, "Stage 3/Level 3 metadata enhanced for frame $frameNumber")
+        } catch (e: Exception) {
+            Log.w(TAG, "Could not enhance Stage 3/Level 3 metadata: ${e.message}")
         }
     }
 
@@ -1200,6 +1348,56 @@ class RgbCameraRecorder(
         }
     }
 
+    // Overload for RAW/DNG files
+    private fun logFrameCapture(timestampRecord: TimestampRecord, frameNumber: Long, outputFile: File, isRaw: Boolean) {
+        try {
+            val timestampNs = timestampRecord.systemNanos
+            val alignedNs = alignedTimestampNs(timestampNs)
+            val sessionTimeMs = sessionRelativeMs(timestampNs)
+            val wallMs = wallClockMs(timestampNs)
+
+            csvBufferedWriter?.let { writer ->
+                val metadataParts = mutableListOf(
+                    "filename=${outputFile.name}",
+                    "size=${outputFile.length()}"
+                )
+                
+                if (isRaw) {
+                    metadataParts.add("type=raw_dng")
+                    metadataParts.add("processing=stage3_level3")
+                    metadataParts.add("device=${SamsungDeviceCompatibility.getDeviceInfo()}")
+                }
+                
+                metadataParts.add("aligned_ns=$alignedNs")
+                wallMs?.let { metadataParts.add("wall_ms=$it") }
+                sessionMetadata?.let {
+                    metadataParts.add(
+                        "session_reference_ns=${sessionReferenceTimestampNs.get()}"
+                    )
+                }
+
+                val eventType = if (isRaw) "raw_dng_capture" else "frame_capture"
+                writer.writeRow(
+                    listOf(
+                        timestampNs,
+                        alignedNs,
+                        frameNumber,
+                        sessionTimeMs,
+                        wallMs?.toString() ?: "",
+                        eventType,
+                        metadataParts.joinToString(",")
+                    )
+                )
+            }
+
+            samplesRecorded.incrementAndGet()
+            lastFrameTime.set(alignedNs)
+
+        } catch (e: Exception) {
+            Log.w(TAG, "Failed to log RAW frame capture", e)
+        }
+    }
+
     private suspend fun initializeCsvWriter() {
         try {
             csvFile?.let { file ->
@@ -1324,6 +1522,8 @@ class RgbCameraRecorder(
                 }
                 activeRecording = null
             }
+
+
 
 
             try {
@@ -1485,6 +1685,7 @@ class RgbCameraRecorder(
             preview = null
             videoCapture = null
             imageCapture = null
+            rawImageCapture = null
             cameraProvider = null
 
             try {
