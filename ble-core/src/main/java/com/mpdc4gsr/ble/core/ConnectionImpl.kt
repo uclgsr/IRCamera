@@ -158,6 +158,11 @@ internal class ConnectionImpl(
     override val connectionState: ConnectionState
         get() = device.connectionState
 
+    // Required Connection interface methods
+    override fun getConnectionState(): ConnectionState {
+        return device.connectionState
+    }
+
     override val isAutoReconnectEnabled: Boolean
         get() = configuration?.isAutoReconnectEnabled ?: false
 
