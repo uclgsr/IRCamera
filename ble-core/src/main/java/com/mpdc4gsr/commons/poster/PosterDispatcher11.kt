@@ -42,6 +42,7 @@ class PosterDispatcher(val executorService: ExecutorService, val defaultMode: Th
             ThreadMode.POSTING -> runnable.run()
             ThreadMode.BACKGROUND -> backgroundPoster.enqueue(runnable)
             ThreadMode.ASYNC -> asyncPoster.enqueue(runnable)
+            ThreadMode.UNSPECIFIED -> mainThreadPoster.enqueue(runnable) // Default to main thread
         }
     }
 

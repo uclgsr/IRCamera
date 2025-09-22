@@ -7,6 +7,10 @@ object MPDC4GSR {
         private set
 
     fun init(context: Context) {
-        app = context.getApplicationContext()
+        app = context.applicationContext
+    }
+    
+    fun getApp(): Context {
+        return app ?: throw IllegalStateException("MPDC4GSR not initialized")
     }
 }
