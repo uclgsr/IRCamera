@@ -133,18 +133,23 @@ object TimestampManager {
     }
 
 
-    fun convertMonotonicToSystemTime(monotonicNs: Long): Long {
+    fun convertMonotonicToWallClock(monotonicNs: Long): Long {
         val sessionStartMono = sessionStartMonotonicNs.get()
         val sessionStartSys = sessionStartSystemMs.get()
 
         if (sessionStartMono == 0L) {
-            Log.w(TAG, "No session reference available for timestamp conversion")
+            Log.w(TAG, "No session reference available for monotonic to wall-clock conversion")
             return getCurrentSystemTimeMs()
         }
 
         val offsetNs = monotonicNs - sessionStartMono
         val offsetMs = offsetNs / 1_000_000
         return sessionStartSys + offsetMs
+    }
+
+    @Deprecated("Use convertMonotonicToWallClock for clarity.", ReplaceWith("convertMonotonicToWallClock(monotonicNs)"))
+    fun convertMonotonicToSystemTime(monotonicNs: Long): Long {
+        return convertMonotonicToWallClock(monotonicNs)
     }
 
 

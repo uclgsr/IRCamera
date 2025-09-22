@@ -80,8 +80,8 @@ playAppUpdate = "2.1.0"
 immersionbar = "3.2.2"
 xpopup = "2.10.0"
 smartRefreshLayout = "2.1.1"
-smartRefreshLayoutV2 = "2.1.0"
-smartRefreshHeaderV2 = "2.1.0"
+smartRefreshLayoutV2 = "2.1.1"
+smartRefreshHeaderV2 = "2.1.1"
 # NOTE: V3.0.0-alpha available but using stable 2.x versions for production reliability
 brvah = "3.0.11"
 colorpickerview = "2.3.0"
@@ -249,9 +249,9 @@ immersionbar = { group = "com.geyifeng.immersionbar", name = "immersionbar", ver
 xpopup = { group = "com.github.li-xiaojun", name = "XPopup", version.ref = "xpopup" }
 smart-refresh-layout = { group = "com.scwang.smartrefresh", name = "SmartRefreshLayout", version.ref = "smartRefreshLayout" }
 smart-refresh-header = { group = "com.scwang.smartrefresh", name = "SmartRefreshHeader", version.ref = "smartRefreshLayout" }
-refresh-layout-kernel = { group = "com.scwang.smart", name = "refresh-layout-kernel", version.ref = "smartRefreshLayoutV2" }
-refresh-header-classics = { group = "com.scwang.smart", name = "refresh-header-classics", version.ref = "smartRefreshHeaderV2" }
-refresh-header-material = { group = "com.scwang.smart", name = "refresh-header-material", version.ref = "smartRefreshHeaderV2" }
+refresh-layout-kernel = { group = "io.github.scwang90", name = "refresh-layout-kernel", version.ref = "smartRefreshLayoutV2" }
+refresh-header-classics = { group = "io.github.scwang90", name = "refresh-header-classics", version.ref = "smartRefreshHeaderV2" }
+refresh-header-material = { group = "io.github.scwang90", name = "refresh-header-material", version.ref = "smartRefreshHeaderV2" }
 brvah = { group = "com.github.CymChad", name = "BaseRecyclerViewAdapterHelper", version.ref = "brvah" }
 colorpickerview = { group = "com.github.skydoves", name = "colorpickerview", version.ref = "colorpickerview" }
 photoview = { group = "com.github.chrisbanes", name = "PhotoView", version.ref = "photoview" }

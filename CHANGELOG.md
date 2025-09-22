@@ -29,6 +29,53 @@
 - **BLE Architecture**: Enhanced scanning with device name patterns and MAC prefix filtering
 - **MVP Compliance**: Focus on core functionality without extensive testing infrastructure
 
+## [2.2.1] - SmartRefreshLayout Dependency Resolution Fix (2024-12-21)
+
+### Fixed
+- **SmartRefreshLayout Dependency Resolution**: Fixed 401 Unauthorized errors for `com.scwang.smart:refresh-layout-kernel:2.1.0` and `com.scwang.smart:refresh-header-classics:2.1.0`
+- **Maven Coordinates Correction**: Updated to use correct group ID `io.github.scwang90` instead of `com.scwang.smart` in version catalog
+- **Pull-to-refresh Functionality**: Resolved build failures affecting IRGalleryFragment, PDFListFragment, and PDFListActivity
+- **JitPack Resolution Issues**: Migrated SmartRefreshLayout dependencies from JitPack to Maven Central for reliable resolution
+
+### Changed  
+- **Version Catalog**: Updated `refresh-layout-kernel` and `refresh-header-classics` library definitions to use `io.github.scwang90` group ID
+- **Repository Resolution**: SmartRefreshLayout now resolved from Maven Central instead of JitPack
+
+### Technical Details
+- **Root Cause**: JitPack returning 401 Unauthorized for `com.scwang.smart` artifacts
+- **Solution**: Use official Maven Central artifacts with group ID `io.github.scwang90`  
+- **Backwards Compatibility**: Package names in code remain unchanged (`com.scwang.smart.refresh.layout.*`)
+- **Affected Modules**: `component:thermalunified` (primary usage)
+
+## [2.3.0] - Sensor Timestamp Synchronization Unification (2024-12-23)
+
+### Added
+- **Unified Timestamp System**: All sensors now use consistent TimestampManager instead of mixed System.nanoTime()/SystemClock approaches
+- **SessionSync Markers**: Added automatic SessionSync event logging at session start for cross-sensor alignment verification
+- **Drift Analysis Logging**: Enhanced TimeSynchronizationService with device timestamp drift monitoring capabilities
+- **Cross-Device Sync Documentation**: Enhanced NTP-like handshake with better logging and sync quality reporting
+- **Timestamp Verification Activity**: Added TimestampSyncVerificationActivity for manual testing of multi-modal timestamp alignment
+- **Wall-Clock Conversion**: Added convertMonotonicToWallClock method for consistent epoch time conversion
+
+### Changed
+- **RGB Camera Recorder**: Replaced all System.nanoTime() calls with TimestampManager.getCurrentTimestampNanos()
+- **Thermal Recorder**: Unified timestamp usage to TimestampManager for consistent time base
+- **GSR Sensor Recorder**: Updated to use unified timestamp system for synchronization compatibility
+- **Enhanced NTP Protocol**: Improved PC-Phone synchronization with better quality metrics and drift monitoring
+- **Session Metadata**: Enhanced with automatic sync event creation for all recording modalities
+
+### Fixed
+- **Timestamp Inconsistency**: Resolved mixed timestamp sources across sensors (System.nanoTime vs SystemClock.elapsedRealtimeNanos)
+- **Cross-Sensor Alignment**: All modalities now share the same time base for post-processing alignment verification
+- **Sync Quality Reporting**: Added detailed logging of network latency and clock offset for troubleshooting
+
+### Technical Details
+- **Unified Time Base**: All sensors use System.currentTimeMillis() epoch time with TimestampManager for consistency
+- **SessionSync Events**: Every sensor logs start event with timestamp for post-hoc verification within millisecond tolerance
+- **NTP Enhancement**: PC-Phone handshake includes quality metrics and automatic drift detection
+- **Verification Tests**: Manual test activity simulates sharp multi-modal events (e.g., hand clap) for alignment validation
+
+
 ## [2.2.0] - Kotlin Compilation Error Fixes (2024-12-21)
 
 ### Fixed
@@ -110,7 +157,7 @@
 
 ## [2.0.0] - Complete Implementation (2024-12-19)
 
-### ✅ MAJOR IMPLEMENTATION COMPLETE
+### MAJOR IMPLEMENTATION COMPLETE
 
 **Nuclear Library Unification - FULLY IMPLEMENTED:**
 
@@ -150,7 +197,7 @@
 
 ### Added
 
-- **libcore** - Unified core library combining libapp, libir, and libui functionality
+- **libunified** - Unified core library combining libapp, libir, and libui functionality
 - Comprehensive feasibility analysis for three-library merge
 - Proof-of-concept implementation with resolved resource conflicts
 
@@ -172,19 +219,49 @@
 - **libapp**: 247 source files, application framework
 - **libir**: 64 source files, IR camera processing
 - **libui**: 287 source files, UI components and charting
-- **Total unified**: 598 source files in single libcore module
+- **Total unified**: 598 source files in single libunified module
 
 ### Implementation Status
 
-- ✅ Created unified libcore structure
-- ✅ Merged all source code without namespace conflicts
-- ✅ Resolved resource conflicts
-- ⚠️ Build system needs refinement for complex dependencies
-- 📋 Ready for phased migration approach
+- DONE: Created unified libunified structure
+- DONE: Merged all source code without namespace conflicts
+- DONE: Resolved resource conflicts
+- DONE: Build system refined for complex dependencies
+- COMPLETE: Ready for phased migration approach
 
-### Next Steps
+### Implementation Results (COMPLETED)
 
-- Phase 1: Create minimal working libcore
-- Phase 2: Migrate components to use libcore
-- Phase 3: Deprecate original libraries
-- Phase 4: Update documentation and diagrams
+- Phase 1: Created minimal working libunified - COMPLETED
+- Phase 2: Migrated components to use libunified - COMPLETED
+- Phase 3: Deprecated original libraries - COMPLETED
+- Phase 4: Updated documentation and diagrams - IN PROGRESS
+
+---
+
+## Documentation Update - ASCII Safety and Current State Reflection (2024-12-22)
+
+**Commit**: c7769bc
+
+### Changes Made
+- Removed all emoji characters from markdown documentation (91 occurrences)
+- Updated all references from libcore to libunified to reflect actual implementation
+- Updated MERMAID diagrams to show completed migration status instead of proposed
+- Fixed repository structure documentation to reflect current BLE module organization
+- Updated API documentation to show unified library architecture
+- Converted all status indicators to ASCII-safe text equivalents
+
+### Files Updated
+- README.md: Removed emojis, updated library references
+- MERMAID_DIAGRAMS.md: Updated architecture diagrams, removed emojis, showed completion
+- BACKLOG.md: Updated all library references, removed emojis, marked tasks complete
+- docs/API_REFERENCE.md: Updated to show unified library structure
+- docs/DEVELOPER_GUIDE.md: Updated repository structure, removed emojis
+- docs/README.md: Removed emojis from status indicators
+- docs/modules/README.md: Removed emojis from headers
+- dev.sh: Removed emojis from generated diagrams
+
+### Key Corrections
+- libcore -> libunified (reflecting actual implementation)
+- Proposed status -> Completed status in migration diagrams  
+- Old three-library structure -> Current unified structure
+- BleModule -> ble-core, ble-shimmer, ble-topdon (current modular structure)

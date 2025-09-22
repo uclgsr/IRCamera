@@ -128,30 +128,30 @@ generate_diagram() {
 graph TB
     %% Core Application Layer
     subgraph "Application Layer"
-        App[📱 app<br/>Main Android Application]
+        App[APP: app<br/>Main Android Application]
         MainActivity[MainActivity.kt]
         App --> MainActivity
     end
     
     %% Library Layer
     subgraph "Library Layer"
-        LibApp[📚 libapp<br/>Application Library]
-        LibCom[📚 libcom<br/>Communication Library] 
-        LibIR[📚 libir<br/>Infrared Camera Library]
-        LibMatrix[📚 libmatrix<br/>Matrix Operations]
-        LibMenu[📚 libmenu<br/>Menu Components]
-        LibUI[📚 libui<br/>UI Components Library]
+        LibApp[LIB: libapp<br/>Application Library]
+        LibCom[LIB: libcom<br/>Communication Library] 
+        LibIR[LIB: libir<br/>Infrared Camera Library]
+        LibMatrix[LIB: libmatrix<br/>Matrix Operations]
+        LibMenu[LIB: libmenu<br/>Menu Components]
+        LibUI[LIB: libui<br/>UI Components Library]
     end
     
     %% Component Layer  
     subgraph "Component Layer"
-        ThermalIR[🌡️ thermal-ir<br/>Thermal IR Component]
-        Thermal[🌡️ thermal<br/>Thermal Component]
-        ThermalLite[🌡️ thermal-lite<br/>Thermal Lite Component]
-        GSRRecording[📊 gsr-recording<br/>GSR Data Recording]
-        UserComp[👤 user<br/>User Management Component]
-        PseudoComp[🔧 pseudo<br/>Pseudo Component]
-        CommonComp[🔧 CommonComponent<br/>Shared Components]
+        ThermalIR[THERMAL: thermal-ir<br/>Thermal IR Component]
+        Thermal[THERMAL: thermal<br/>Thermal Component]
+        ThermalLite[THERMAL: thermal-lite<br/>Thermal Lite Component]
+        GSRRecording[GSR: gsr-recording<br/>GSR Data Recording]
+        UserComp[USER: user<br/>User Management Component]
+        PseudoComp[UTIL: pseudo<br/>Pseudo Component]
+        CommonComp[UTIL: CommonComponent<br/>Shared Components]
     end
     
     %% External Module Layer
@@ -303,30 +303,30 @@ EOF
         graph TB
             %% Core Application Layer
             subgraph "Application Layer"
-                App[📱 app<br/>Main Android Application]
+                App[APP: app<br/>Main Android Application]
                 MainActivity[MainActivity.kt]
                 App --> MainActivity
             end
             
             %% Library Layer
             subgraph "Library Layer"
-                LibApp[📚 libapp<br/>Application Library]
-                LibCom[📚 libcom<br/>Communication Library] 
-                LibIR[📚 libir<br/>Infrared Camera Library]
-                LibMatrix[📚 libmatrix<br/>Matrix Operations]
-                LibMenu[📚 libmenu<br/>Menu Components]
-                LibUI[📚 libui<br/>UI Components Library]
+                LibApp[LIB: libapp<br/>Application Library]
+                LibCom[LIB: libcom<br/>Communication Library] 
+                LibIR[LIB: libir<br/>Infrared Camera Library]
+                LibMatrix[LIB: libmatrix<br/>Matrix Operations]
+                LibMenu[LIB: libmenu<br/>Menu Components]
+                LibUI[LIB: libui<br/>UI Components Library]
             end
             
             %% Component Layer  
             subgraph "Component Layer"
-                ThermalIR[🌡️ thermal-ir<br/>Thermal IR Component]
-                Thermal[🌡️ thermal<br/>Thermal Component]
-                ThermalLite[🌡️ thermal-lite<br/>Thermal Lite Component]
-                GSRRecording[📊 gsr-recording<br/>GSR Data Recording]
-                UserComp[👤 user<br/>User Management Component]
-                PseudoComp[🔧 pseudo<br/>Pseudo Component]
-                CommonComp[🔧 CommonComponent<br/>Shared Components]
+                ThermalIR[THERMAL: thermal-ir<br/>Thermal IR Component]
+                Thermal[THERMAL: thermal<br/>Thermal Component]
+                ThermalLite[THERMAL: thermal-lite<br/>Thermal Lite Component]
+                GSRRecording[GSR: gsr-recording<br/>GSR Data Recording]
+                UserComp[USER: user<br/>User Management Component]
+                PseudoComp[UTIL: pseudo<br/>Pseudo Component]
+                CommonComp[UTIL: CommonComponent<br/>Shared Components]
             end
             
             %% External Module Layer

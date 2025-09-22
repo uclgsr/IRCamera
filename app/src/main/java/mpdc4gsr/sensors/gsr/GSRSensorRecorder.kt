@@ -37,6 +37,7 @@ import mpdc4gsr.sensors.RecordingStatus
 import mpdc4gsr.sensors.SensorError
 import mpdc4gsr.sensors.SensorRecorder
 import mpdc4gsr.sensors.TimestampManager
+import mpdc4gsr.sensors.TimeSynchronizationService
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
 import com.mpdc4gsr.gsr.service.GSRRecorder as LegacyGSRRecorder
@@ -165,7 +166,7 @@ class GSRSensorRecorder(
     private var lastFlushTime = System.currentTimeMillis()
     private var connectionHealthScore = 100.0
     private var lastConnectionCheck = System.currentTimeMillis()
-
+    private var timeSyncService: TimeSynchronizationService? = null
 
     private var shimmerBluetoothManager: ShimmerBluetoothManagerAndroid? = null
     private var connectionStateMonitoringJob: Job? = null
@@ -295,7 +296,7 @@ class GSRSensorRecorder(
                 val realSampleCount = sampleCount.get()
 
                 val expectedSamples =
-                    ((System.nanoTime() - recordingStartTime) / 1_000_000_000.0 * samplingRate).toLong()
+                    ((TimestampManager.getCurrentTimestampNanos() - recordingStartTime) / 1_000_000_000.0 * samplingRate).toLong()
                 val actualSamples = realSampleCount
 
                 if (expectedSamples > actualSamples + samplingRate) {
@@ -380,7 +381,9 @@ class GSRSensorRecorder(
                 }
 
                 this@GSRSensorRecorder.sessionDirectory = sessionDirectory
-                recordingStartTime = System.nanoTime()
+                recordingStartTime = TimestampManager.getCurrentTimestampNanos()
+
+                timeSyncService = recordingController.getTimeSynchronizationService()
 
                 var shimmerRecordingStarted = false
                 var recordingSuccessful = false
@@ -1180,7 +1183,7 @@ class GSRSensorRecorder(
     override fun getErrorFlow(): Flow<SensorError> = _errorFlow.asSharedFlow()
 
     override fun getRecordingStats(): RecordingStats {
-        val currentTime = System.nanoTime()
+        val currentTime = TimestampManager.getCurrentTimestampNanos()
         val sessionDuration =
             if (recordingStartTime > 0) (currentTime - recordingStartTime) / 1_000_000 else 0L
 
@@ -1594,6 +1597,16 @@ class GSRSensorRecorder(
 
             if (_isRecording.get()) {
                 logGSRSampleToCSV(gsrSample, timestampRecord, deviceTimestamp)
+                
+                timeSyncService?.let { syncService ->
+                    recordingScope.launch {
+                        syncService.logTimestampWithDriftAnalysis(
+                            sensorId = sensorId,
+                            deviceTimestamp = if (deviceTimestamp > 0) deviceTimestamp * 1_000_000 else null,
+                            phoneTimestamp = timestampRecord.systemNanos
+                        )
+                    }
+                }
             }
 
             Log.v(
