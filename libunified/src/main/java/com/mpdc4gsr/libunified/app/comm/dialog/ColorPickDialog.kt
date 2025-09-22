@@ -10,8 +10,8 @@ import android.widget.TextView
 import androidx.annotation.ColorInt
 import androidx.core.content.ContextCompat
 import com.blankj.utilcode.util.SizeUtils
-import com.jaygoo.widget.DefRangeSeekBar
-import com.jaygoo.widget.OnRangeChangedListener
+import com.mpdc4gsr.libunified.ui.widget.seekbar.RangeSeekBar
+import com.mpdc4gsr.libunified.ui.widget.seekbar.OnRangeChangedListener
 import com.mpdc4gsr.libunified.R
 import com.mpdc4gsr.libunified.app.comm.util.ColorUtils
 import com.mpdc4gsr.libunified.app.utils.ScreenUtil
@@ -73,11 +73,11 @@ class ColorPickDialog(
             findViewById<TextView>(R.id.tv_size_value).visibility = View.VISIBLE
             findViewById<TextView>(R.id.tv_nifty_left).visibility = View.VISIBLE
             findViewById<TextView>(R.id.tv_nifty_right).visibility = View.VISIBLE
-            findViewById<DefRangeSeekBar>(R.id.nifty_slider_view).visibility = View.VISIBLE
-            findViewById<DefRangeSeekBar>(R.id.nifty_slider_view).setOnRangeChangedListener(
+            findViewById<RangeSeekBar>(R.id.nifty_slider_view).visibility = View.VISIBLE
+            findViewById<RangeSeekBar>(R.id.nifty_slider_view).setOnRangeChangedListener(
                 object : OnRangeChangedListener {
                     override fun onRangeChanged(
-                        view: DefRangeSeekBar?,
+                        view: RangeSeekBar?,
                         leftValue: Float,
                         rightValue: Float,
                         isFromUser: Boolean,
@@ -98,25 +98,25 @@ class ColorPickDialog(
                     }
 
                     override fun onStartTrackingTouch(
-                        view: DefRangeSeekBar?,
+                        view: RangeSeekBar?,
                         isLeft: Boolean,
                     ) {
                     }
 
                     override fun onStopTrackingTouch(
-                        view: DefRangeSeekBar?,
+                        view: RangeSeekBar?,
                         isLeft: Boolean,
                     ) {
                     }
                 },
             )
-            findViewById<DefRangeSeekBar>(R.id.nifty_slider_view).setProgress(
+            findViewById<RangeSeekBar>(R.id.nifty_slider_view).setProgress(
                 textSizeToNifyValue(
                     textSize
                 )
             )
         } else {
-            findViewById<DefRangeSeekBar>(R.id.nifty_slider_view).visibility = View.GONE
+            findViewById<RangeSeekBar>(R.id.nifty_slider_view).visibility = View.GONE
         }
         rootView.findViewById<View>(R.id.view_color1).setOnClickListener(this)
         rootView.findViewById<View>(R.id.view_color2).setOnClickListener(this)

@@ -10,6 +10,8 @@ import android.hardware.usb.UsbManager
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
+import com.mpdc4gsr.libunified.app.matrix.Logger
+import com.mpdc4gsr.libunified.app.matrix.ResultCode
 import com.mpdc4gsr.libunified.app.matrix.ResultCode.ERROR_CONNECT_DEVICE_FAILD
 import com.mpdc4gsr.libunified.app.matrix.ResultCode.SUCC_CONNECT_INTERFACE
 import com.mpdc4gsr.libunified.app.matrix.utils.ByteUtils.toHexString

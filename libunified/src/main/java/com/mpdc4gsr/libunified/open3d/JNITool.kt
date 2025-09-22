@@ -1,4 +1,4 @@
-package open3d
+package com.mpdc4gsr.libunified.open3d
 
 /**
  * Stub implementation for JNITool to enable compilation

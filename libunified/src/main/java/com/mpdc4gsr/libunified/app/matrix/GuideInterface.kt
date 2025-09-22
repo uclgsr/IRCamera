@@ -6,7 +6,7 @@ import android.os.Build
 import android.text.TextUtils
 import android.util.Log
 import androidx.annotation.RequiresApi
-import com.mpdc4gsr.libunified.app.matrix.Logger.d
+import com.mpdc4gsr.libunified.app.matrix.Logger
 import com.mpdc4gsr.libunified.app.matrix.utils.FileUtils.Companion.saveFile
 import com.mpdc4gsr.libunified.app.matrix.utils.HexDump
 import java.io.BufferedInputStream

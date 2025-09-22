@@ -1,7 +1,7 @@
 package com.mpdc4gsr.libunified.app.repository
 
 import com.elvishew.xlog.XLog
-import com.mpdc4gsr.libunified.app.BuildConfig
+import com.mpdc4gsr.libunified.BuildConfig
 import okhttp3.Interceptor
 import okhttp3.Response
 import okio.Buffer

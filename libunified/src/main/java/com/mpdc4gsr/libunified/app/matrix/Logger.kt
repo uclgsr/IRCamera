@@ -1,7 +1,7 @@
 package com.mpdc4gsr.libunified.app.matrix
 
 import android.util.Log
-import com.mpdc4gsr.libunified.app.BuildConfig
+import com.mpdc4gsr.libunified.BuildConfig
 import java.io.BufferedWriter
 import java.io.File
 import java.io.FileWriter
