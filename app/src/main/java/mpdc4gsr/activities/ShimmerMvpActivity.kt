@@ -70,12 +70,6 @@ class ShimmerMvpActivity : AppCompatActivity() {
         }
     }
 
-    // Thread-safe ISO8601 formatter
-    private val iso8601Format by lazy {
-        java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", java.util.Locale.US).apply {
-            timeZone = java.util.TimeZone.getTimeZone("UTC")
-        }
-    }
 
     private val permissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
