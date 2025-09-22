@@ -170,7 +170,7 @@ class TC001IntegrationTest {
                 // Stop after capturing enough frames for analysis
                 if (frameCount.get() >= targetFramesToCapture) {
                     // Stop recording asynchronously  
-                    launch {
+                    this@runTest.launch {
                         thermalRecorder.stopRecording()
                     }
                 }
