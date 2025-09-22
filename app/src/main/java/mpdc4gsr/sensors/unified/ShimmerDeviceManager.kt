@@ -4,10 +4,15 @@ import android.Manifest
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
+import android.bluetooth.le.ScanCallback
+import android.bluetooth.le.ScanFilter
+import android.bluetooth.le.ScanResult
+import android.bluetooth.le.ScanSettings
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Handler
 import android.os.Looper
+import android.os.ParcelUuid
 import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.LifecycleOwner
@@ -18,6 +23,7 @@ import com.shimmerresearch.bluetooth.ShimmerBluetooth.BT_STATE
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import mpdc4gsr.sensors.unified.model.DeviceInfo
+import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean
 
@@ -28,10 +34,10 @@ class ShimmerDeviceManager(
     companion object {
         private const val TAG = "ShimmerDeviceManager"
         private const val SCAN_TIMEOUT_MS = 30000L
-        private const val CONNECTION_TIMEOUT_MS = 15000L
+        private const val SHIMMER_SERVICE_UUID = "49535343-FE7D-4AE5-8FA9-9FAFD205E455"
         private const val RECONNECTION_ATTEMPTS = 3
         private const val RECONNECTION_DELAY_MS = 2000L
-
+        private const val CONNECTION_TIMEOUT_MS = 15000L
 
         private const val MAX_CONCURRENT_DEVICES = 3
         private const val DEVICE_SYNC_TIMEOUT_MS = 5000L
@@ -175,28 +181,55 @@ class ShimmerDeviceManager(
             return
         }
 
-
         if (!hasRequiredPermissions()) {
             Log.e(TAG, "Required BLE permissions not granted, cannot start scan")
             return
         }
 
-        Log.d(TAG, "Starting enhanced BLE scan with optimized settings")
+        Log.d(TAG, "Starting enhanced BLE scan with Shimmer service UUID filters")
 
-        val scanSettings = android.bluetooth.le.ScanSettings.Builder()
-            .setScanMode(android.bluetooth.le.ScanSettings.SCAN_MODE_LOW_LATENCY)
-            .setCallbackType(android.bluetooth.le.ScanSettings.CALLBACK_TYPE_ALL_MATCHES)
+        // Create scan filters for Shimmer devices
+        val scanFilters = mutableListOf<ScanFilter>().apply {
+            // Filter by Shimmer service UUID
+            add(
+                ScanFilter.Builder()
+                    .setServiceUuid(ParcelUuid(UUID.fromString(SHIMMER_SERVICE_UUID)))
+                    .build()
+            )
+            
+            // Filter by device name patterns
+            SHIMMER_NAME_PATTERNS.forEach { pattern ->
+                add(
+                    ScanFilter.Builder()
+                        .setDeviceName(pattern)
+                        .build()
+                )
+            }
+            
+            // Filter by MAC address prefixes if needed
+            SHIMMER_MAC_PREFIXES.forEach { prefix ->
+                add(
+                    ScanFilter.Builder()
+                        .setDeviceAddress(prefix)
+                        .build()
+                )
+            }
+        }
+
+        val scanSettings = ScanSettings.Builder()
+            .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY)
+            .setCallbackType(ScanSettings.CALLBACK_TYPE_ALL_MATCHES)
             .setReportDelay(0)
-            .setNumOfMatches(android.bluetooth.le.ScanSettings.MATCH_NUM_MAX_ADVERTISEMENT)
-            .setMatchMode(android.bluetooth.le.ScanSettings.MATCH_MODE_AGGRESSIVE)
+            .setNumOfMatches(ScanSettings.MATCH_NUM_MAX_ADVERTISEMENT)
+            .setMatchMode(ScanSettings.MATCH_MODE_AGGRESSIVE)
             .build()
 
-        val scanCallback = object : android.bluetooth.le.ScanCallback() {
-            override fun onScanResult(callbackType: Int, result: android.bluetooth.le.ScanResult) {
+        val scanCallback = object : ScanCallback() {
+            override fun onScanResult(callbackType: Int, result: ScanResult) {
                 handleScanResult(result)
             }
 
-            override fun onBatchScanResults(results: MutableList<android.bluetooth.le.ScanResult>?) {
+            override fun onBatchScanResults(results: MutableList<ScanResult>?) {
                 super.onBatchScanResults(results)
                 results?.forEach { handleScanResult(it) }
             }
@@ -205,10 +238,10 @@ class ShimmerDeviceManager(
                 super.onScanFailed(errorCode)
                 Log.e(TAG, "BLE scan failed with error code: $errorCode")
                 val errorMessage = when (errorCode) {
-                    SCAN_FAILED_ALREADY_STARTED -> "Scan already started"
-                    SCAN_FAILED_APPLICATION_REGISTRATION_FAILED -> "Application registration failed"
-                    SCAN_FAILED_FEATURE_UNSUPPORTED -> "BLE scanning not supported on this device"
-                    SCAN_FAILED_INTERNAL_ERROR -> "Internal scanning error"
+                    ScanCallback.SCAN_FAILED_ALREADY_STARTED -> "Scan already started"
+                    ScanCallback.SCAN_FAILED_APPLICATION_REGISTRATION_FAILED -> "Application registration failed"
+                    ScanCallback.SCAN_FAILED_FEATURE_UNSUPPORTED -> "BLE scanning not supported on this device"
+                    ScanCallback.SCAN_FAILED_INTERNAL_ERROR -> "Internal scanning error"
                     else -> "Unknown scanning error: $errorCode"
                 }
                 Log.e(TAG, "Scan failure details: $errorMessage")
@@ -217,9 +250,8 @@ class ShimmerDeviceManager(
         }
 
         try {
-            bluetoothLeScanner.startScan(scanCallback)
-            Log.i(TAG, "Enhanced BLE scan started successfully")
-
+            bluetoothLeScanner.startScan(scanFilters, scanSettings, scanCallback)
+            Log.i(TAG, "Enhanced BLE scan started successfully with Shimmer filters")
 
             currentScanCallback = scanCallback
 
@@ -232,7 +264,7 @@ class ShimmerDeviceManager(
         }
     }
 
-    private fun handleScanResult(result: android.bluetooth.le.ScanResult) {
+    private fun handleScanResult(result: ScanResult) {
         val device = result.device
         val rssi = result.rssi
 

@@ -144,6 +144,216 @@ stateDiagram-v2
         Attempt5 --> [*]: Max attempts
     }
 ```
+## Latest Update: Enhanced Shimmer3 GSR BLE Support (2024-12-21)
+**Commit ID**: 64fdf6b
+
+### Enhanced BLE Scanning and Device Selection Architecture
+
+```mermaid
+graph TB
+    subgraph "Enhanced Shimmer3 GSR BLE Support"
+        subgraph "BLE Scanning Enhancement"
+            ScanFilters[ScanFilter Implementation<br/>✅ Shimmer Service UUID<br/>✅ Device Name Patterns<br/>✅ MAC Address Prefixes]
+            
+            DeviceDiscovery[Enhanced Device Discovery<br/>✅ Paired + Unpaired Devices<br/>✅ Comprehensive Filtering<br/>✅ Real-time Results]
+            
+            PermissionHandling[Enhanced Permissions<br/>✅ BLUETOOTH_SCAN<br/>✅ BLUETOOTH_CONNECT<br/>✅ ACCESS_FINE_LOCATION]
+        end
+        
+        subgraph "Device Selection & UI"
+            DeviceSelectionDialog[Multi-Device Selection<br/>✅ Device Name + Address<br/>✅ Paired Status Indicator<br/>✅ User Choice Interface]
+            
+            StatusIndicators[Visual Status Feedback<br/>✅ Color-coded Icons<br/>✅ Connection State Display<br/>✅ Real-time Updates]
+            
+            UserFeedback[Enhanced User Feedback<br/>✅ Detailed Error Messages<br/>✅ Troubleshooting Guidance<br/>✅ Connection Progress]
+        end
+        
+        subgraph "Data Processing Enhancement"
+            ObjectClusterConversion[ObjectCluster Processing<br/>✅ Calibrated GSR Values<br/>✅ PPG Data Extraction<br/>✅ Accelerometer Data<br/>✅ Signal Quality Assessment]
+            
+            UnifiedTimestamps[Timestamp Management<br/>✅ TimestampManager Integration<br/>✅ Unified Time Source<br/>✅ ISO Format Support]
+            
+            DataQuality[Data Quality & Validation<br/>✅ Signal Quality Scoring<br/>✅ Range Validation<br/>✅ Error Recovery]
+        end
+        
+        subgraph "Connection Management"
+            EnhancedReconnection[Robust Reconnection<br/>✅ 3-Attempt Logic<br/>✅ Exponential Backoff<br/>✅ Graceful Failure Handling]
+            
+            ConnectionStates[Connection State Management<br/>✅ Real-time Monitoring<br/>✅ Visual Feedback<br/>✅ Error Recovery]
+        end
+    end
+    
+    ScanFilters --> DeviceDiscovery
+    PermissionHandling --> DeviceDiscovery
+    DeviceDiscovery --> DeviceSelectionDialog
+    DeviceSelectionDialog --> StatusIndicators
+    StatusIndicators --> UserFeedback
+    
+    DeviceSelectionDialog --> ConnectionStates
+    ConnectionStates --> ObjectClusterConversion
+    ObjectClusterConversion --> UnifiedTimestamps
+    UnifiedTimestamps --> DataQuality
+    
+    ConnectionStates --> EnhancedReconnection
+    
+    classDef enhanced fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
+    classDef ui fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+    classDef data fill:#fff3e0,stroke:#ef6c00,stroke-width:2px
+    classDef connection fill:#fce4ec,stroke:#c2185b,stroke-width:2px
+    
+    class ScanFilters,DeviceDiscovery,PermissionHandling enhanced
+    class DeviceSelectionDialog,StatusIndicators,UserFeedback ui
+    class ObjectClusterConversion,UnifiedTimestamps,DataQuality data
+    class EnhancedReconnection,ConnectionStates connection
+```
+
+### Implementation Details Flow
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant ShimmerMvpActivity
+    participant ShimmerDeviceManager
+    participant BluetoothLeScanner
+    participant GSRSensorRecorder
+    participant TimestampManager
+    
+    User->>ShimmerMvpActivity: Tap Connect Button
+    ShimmerMvpActivity->>ShimmerDeviceManager: startDeviceScanning()
+    
+    ShimmerDeviceManager->>BluetoothLeScanner: startScan(filters, settings, callback)
+    Note over BluetoothLeScanner: ScanFilter with Shimmer UUID<br/>Device name patterns<br/>MAC address prefixes
+    
+    BluetoothLeScanner-->>ShimmerDeviceManager: onScanResult(device, rssi)
+    ShimmerDeviceManager-->>ShimmerMvpActivity: Device found
+    
+    alt Multiple Devices Found
+        ShimmerMvpActivity->>User: Show Device Selection Dialog
+        User->>ShimmerMvpActivity: Select Device
+    else Single Device Found
+        ShimmerMvpActivity->>ShimmerMvpActivity: Auto-connect to device
+    end
+    
+    ShimmerMvpActivity->>ShimmerDeviceManager: connectToDevice(selectedDevice)
+    ShimmerDeviceManager-->>ShimmerMvpActivity: Connection Status Updates
+    
+    loop Data Streaming
+        ShimmerDeviceManager->>GSRSensorRecorder: ObjectCluster data
+        GSRSensorRecorder->>TimestampManager: getCurrentTimestampNanos()
+        TimestampManager-->>GSRSensorRecorder: Unified timestamp
+        GSRSensorRecorder->>GSRSensorRecorder: convertObjectClusterToSensorSample()
+        GSRSensorRecorder-->>ShimmerMvpActivity: GSR Sample with quality score
+    end
+    
+    alt Connection Lost
+        ShimmerDeviceManager->>ShimmerDeviceManager: Detect disconnection
+        loop Reconnection Attempts (max 3)
+            ShimmerDeviceManager->>ShimmerDeviceManager: Attempt reconnection
+            ShimmerDeviceManager-->>ShimmerMvpActivity: Reconnection attempt #N
+        end
+        
+        alt Reconnection Failed
+            ShimmerDeviceManager-->>ShimmerMvpActivity: Connection failed - stop recording
+        else Reconnection Successful  
+            ShimmerDeviceManager-->>ShimmerMvpActivity: Reconnected - resume data
+        end
+    end
+
+## Recent Update: TC001 Thermal Camera Integration Enhancement (2024-12-22)
+
+### TC001 Hardware Integration Flow - Commit 4b1c7a9
+
+```mermaid
+graph TB
+    subgraph "TC001 Integration Enhancement"
+        subgraph "SDK Initialization"
+            LoadNative[Load TC001 Native Library<br/>✅ System.loadLibrary with fallback<br/>✅ Graceful error handling]
+            InitSDK[Initialize Topdon SDK<br/>✅ IrcamEngineBuilder<br/>✅ UvcHandleParam VID/PID 0x2744/0x0001<br/>✅ Background thread execution]
+            RegisterCallback[Register IFrameCallback<br/>✅ Real-time frame processing<br/>✅ 10Hz capture rate]
+        end
+        
+        subgraph "Continuous Frame Capture"
+            FrameLoop[Continuous Capture Loop<br/>✅ 100ms intervals (10Hz)<br/>✅ Error resilience max 10 failures<br/>✅ Background coroutine]
+            ProcessFrame[Process Thermal Frame<br/>✅ Temperature data extraction<br/>✅ Min/Max/Avg calculation<br/>✅ System timestamp logging]
+            SavePNG[Save Frame Images<br/>✅ thermal_images/ directory<br/>✅ PNG format with metadata<br/>✅ Timestamped filenames]
+        end
+        
+        subgraph "Error Handling & Recovery"
+            ErrorDetection[Error Detection<br/>✅ Try-catch all SDK calls<br/>✅ Consecutive error counting<br/>✅ Timeout handling]
+            UserNotification[User Notifications<br/>✅ Toast messages<br/>✅ Connection status<br/>✅ Error conditions]
+            GracefulFallback[Graceful Fallback<br/>✅ Switch to simulation mode<br/>✅ Other sensors continue<br/>✅ No app crashes]
+        end
+        
+        subgraph "USB Integration"
+            USBPermission[USB Permission Flow<br/>✅ Enhanced existing flow<br/>✅ Device attach/detach<br/>✅ VID/PID verification]
+            DeviceMonitoring[Device Monitoring<br/>✅ ThermalUsbReceiver<br/>✅ Hot-plug detection<br/>✅ Automatic reconnection]
+        end
+    end
+    
+    LoadNative --> InitSDK
+    InitSDK --> RegisterCallback
+    RegisterCallback --> FrameLoop
+    FrameLoop --> ProcessFrame
+    ProcessFrame --> SavePNG
+    
+    FrameLoop --> ErrorDetection
+    ErrorDetection --> UserNotification
+    ErrorDetection --> GracefulFallback
+    
+    USBPermission --> InitSDK
+    DeviceMonitoring --> ErrorDetection
+    
+    classDef enhanced fill:#e8f5e8,stroke:#2e7d32,stroke-width:3px
+    classDef existing fill:#e3f2fd,stroke:#0277bd,stroke-width:2px
+    
+    class LoadNative,InitSDK,RegisterCallback,FrameLoop,ProcessFrame,SavePNG,ErrorDetection,UserNotification,GracefulFallback enhanced
+    class USBPermission,DeviceMonitoring existing
+```
+
+### TC001 Data Flow Architecture
+
+```mermaid
+sequenceDiagram
+    participant App as Android App
+    participant TC001 as TC001 Camera
+    participant SDK as Topdon SDK
+    participant FS as File System
+    participant User as User Interface
+    
+    Note over App,User: TC001 Integration Enhancement - Commit 4b1c7a9
+    
+    App->>TC001: USB Device Attached
+    TC001->>App: Device Recognition (VID: 0x2744, PID: 0x0001)
+    App->>User: Request USB Permission
+    User->>App: Grant Permission
+    
+    App->>SDK: Initialize TC001 SDK
+    SDK->>App: Load Native Library (with fallback)
+    SDK->>TC001: Open Camera (256x192 mode)
+    TC001->>SDK: Camera Ready
+    
+    loop Continuous 10Hz Capture
+        SDK->>TC001: Request Frame
+        TC001->>SDK: Raw Thermal Data
+        SDK->>App: IFrameCallback(imageData, tempData)
+        App->>App: Process Temperature Matrix
+        App->>FS: Save PNG to thermal_images/
+        App->>FS: Log CSV (min/max/avg temps, timestamp)
+        
+        alt Error Occurs
+            App->>User: Toast Notification
+            App->>App: Error Counter++
+            alt Max Errors Reached
+                App->>App: Switch to Simulation Mode
+                App->>User: Toast: "Using simulation mode"
+            end
+        end
+    end
+    
+    Note over App,User: Other sensors (GSR, RGB) continue unaffected
+```
+
+## Current Kotlin Compilation Status (2024-12-21)
 
 ## Current Timestamp Synchronization System (2024-12-23)
 
@@ -255,9 +465,11 @@ sequenceDiagram
     Thermal->>TM: getCurrentTimestampNanos()
     
     Note over App,PC: Verify timestamps within 5ms tolerance
+
 ```
 
 ## Previous Update: Kotlin Compilation Status (2024-12-21)
+
 
 ### BLE Core Module Compilation Error Resolution
 
