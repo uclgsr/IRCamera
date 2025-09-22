@@ -4,6 +4,28 @@
 
 A Hub-and-Spoke architecture platform for multi-modal physiological sensing with thermal imaging, GSR, and RGB data
 collection.
+## Recent Update: TC001 Thermal Camera Integration Enhancement - Commit 4b1c7a9
+
+**LATEST ACHIEVEMENT**: TC001 Topdon thermal camera integration has been **FULLY ENHANCED** with real SDK integration:
+
+### TC001 Integration Improvements
+
+- **Real SDK Calls**: Replaced stub/reflection approach with actual TC001 SDK calls in ThermalCameraRecorder
+- **Continuous Capture**: Implemented 10Hz thermal frame capture with 100ms intervals 
+- **Image Saving**: Automatic PNG frame saving to thermal_images/ directory with temperature metadata
+- **Error Resilience**: Enhanced error handling with graceful fallbacks to prevent app crashes
+- **User Notifications**: Toast messages for TC001 connection status and error conditions
+- **USB Integration**: Enhanced existing USB permission flow for TC001 attach/detach scenarios
+
+### Technical Enhancement Details
+
+- **Native Library Support**: Added graceful TC001 native library loading with Java-only SDK fallback
+- **Frame Processing**: IFrameCallback registration for continuous thermal data streaming at ~10Hz
+- **Crash Prevention**: Consecutive error counting (max 10) before switching to simulation mode
+- **Temperature Logging**: Min/max temperature telemetry logged to CSV with system timestamps
+- **Other Sensor Protection**: Ensures GSR and RGB sensors continue recording if TC001 fails
+
+## Recent Update: Kotlin Compilation Errors Resolved
 
 ## Recent Update: SmartRefreshLayout Dependency Resolution Fixed
 
@@ -45,6 +67,7 @@ collection.
 
 
 ## Previous Update: Kotlin Compilation Errors Resolved
+
 
 **LATEST ACHIEVEMENT**: All Kotlin compilation errors in BLE Core module have been **FULLY RESOLVED**:
 

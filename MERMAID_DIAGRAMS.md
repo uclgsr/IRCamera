@@ -1,5 +1,101 @@
 # IRCamera Architecture Diagrams
 
+## Recent Update: TC001 Thermal Camera Integration Enhancement (2024-12-22)
+
+### TC001 Hardware Integration Flow - Commit 4b1c7a9
+
+```mermaid
+graph TB
+    subgraph "TC001 Integration Enhancement"
+        subgraph "SDK Initialization"
+            LoadNative[Load TC001 Native Library<br/>✅ System.loadLibrary with fallback<br/>✅ Graceful error handling]
+            InitSDK[Initialize Topdon SDK<br/>✅ IrcamEngineBuilder<br/>✅ UvcHandleParam VID/PID 0x2744/0x0001<br/>✅ Background thread execution]
+            RegisterCallback[Register IFrameCallback<br/>✅ Real-time frame processing<br/>✅ 10Hz capture rate]
+        end
+        
+        subgraph "Continuous Frame Capture"
+            FrameLoop[Continuous Capture Loop<br/>✅ 100ms intervals (10Hz)<br/>✅ Error resilience max 10 failures<br/>✅ Background coroutine]
+            ProcessFrame[Process Thermal Frame<br/>✅ Temperature data extraction<br/>✅ Min/Max/Avg calculation<br/>✅ System timestamp logging]
+            SavePNG[Save Frame Images<br/>✅ thermal_images/ directory<br/>✅ PNG format with metadata<br/>✅ Timestamped filenames]
+        end
+        
+        subgraph "Error Handling & Recovery"
+            ErrorDetection[Error Detection<br/>✅ Try-catch all SDK calls<br/>✅ Consecutive error counting<br/>✅ Timeout handling]
+            UserNotification[User Notifications<br/>✅ Toast messages<br/>✅ Connection status<br/>✅ Error conditions]
+            GracefulFallback[Graceful Fallback<br/>✅ Switch to simulation mode<br/>✅ Other sensors continue<br/>✅ No app crashes]
+        end
+        
+        subgraph "USB Integration"
+            USBPermission[USB Permission Flow<br/>✅ Enhanced existing flow<br/>✅ Device attach/detach<br/>✅ VID/PID verification]
+            DeviceMonitoring[Device Monitoring<br/>✅ ThermalUsbReceiver<br/>✅ Hot-plug detection<br/>✅ Automatic reconnection]
+        end
+    end
+    
+    LoadNative --> InitSDK
+    InitSDK --> RegisterCallback
+    RegisterCallback --> FrameLoop
+    FrameLoop --> ProcessFrame
+    ProcessFrame --> SavePNG
+    
+    FrameLoop --> ErrorDetection
+    ErrorDetection --> UserNotification
+    ErrorDetection --> GracefulFallback
+    
+    USBPermission --> InitSDK
+    DeviceMonitoring --> ErrorDetection
+    
+    classDef enhanced fill:#e8f5e8,stroke:#2e7d32,stroke-width:3px
+    classDef existing fill:#e3f2fd,stroke:#0277bd,stroke-width:2px
+    
+    class LoadNative,InitSDK,RegisterCallback,FrameLoop,ProcessFrame,SavePNG,ErrorDetection,UserNotification,GracefulFallback enhanced
+    class USBPermission,DeviceMonitoring existing
+```
+
+### TC001 Data Flow Architecture
+
+```mermaid
+sequenceDiagram
+    participant App as Android App
+    participant TC001 as TC001 Camera
+    participant SDK as Topdon SDK
+    participant FS as File System
+    participant User as User Interface
+    
+    Note over App,User: TC001 Integration Enhancement - Commit 4b1c7a9
+    
+    App->>TC001: USB Device Attached
+    TC001->>App: Device Recognition (VID: 0x2744, PID: 0x0001)
+    App->>User: Request USB Permission
+    User->>App: Grant Permission
+    
+    App->>SDK: Initialize TC001 SDK
+    SDK->>App: Load Native Library (with fallback)
+    SDK->>TC001: Open Camera (256x192 mode)
+    TC001->>SDK: Camera Ready
+    
+    loop Continuous 10Hz Capture
+        SDK->>TC001: Request Frame
+        TC001->>SDK: Raw Thermal Data
+        SDK->>App: IFrameCallback(imageData, tempData)
+        App->>App: Process Temperature Matrix
+        App->>FS: Save PNG to thermal_images/
+        App->>FS: Log CSV (min/max/avg temps, timestamp)
+        
+        alt Error Occurs
+            App->>User: Toast Notification
+            App->>App: Error Counter++
+            alt Max Errors Reached
+                App->>App: Switch to Simulation Mode
+                App->>User: Toast: "Using simulation mode"
+            end
+        end
+    end
+    
+    Note over App,User: Other sensors (GSR, RGB) continue unaffected
+```
+
+## Current Kotlin Compilation Status (2024-12-21)
+
 ## Current Timestamp Synchronization System (2024-12-23)
 
 ### Unified Timestamp Architecture
@@ -113,6 +209,7 @@ sequenceDiagram
 ```
 
 ## Previous Update: Kotlin Compilation Status (2024-12-21)
+
 
 ### BLE Core Module Compilation Error Resolution
 

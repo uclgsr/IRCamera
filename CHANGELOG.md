@@ -1,3 +1,23 @@
+## [2.2.1] - TC001 Thermal Camera Integration Enhancement (2024-12-22)
+
+### Enhanced - Commit 4b1c7a9
+- **TC001 SDK Integration**: Replaced stub/reflection approach with real Topdon TC001 SDK calls in ThermalCameraRecorder
+- **Native Library Support**: Added graceful TC001 native library loading with fallback to Java-only SDK
+- **Continuous Frame Capture**: Implemented 10Hz thermal frame capture loop with 100ms intervals for TC001 camera
+- **Frame Image Saving**: Added automatic PNG image saving to thermal_images/ directory with temperature metadata
+- **Error Handling Enhancement**: Strengthened error handling with try-catch blocks around all SDK calls
+- **User Notifications**: Added Toast notifications for TC001 camera errors and connection status
+- **Graceful Fallbacks**: Ensured other sensors continue recording when TC001 thermal camera fails
+- **USB Permission Flow**: Enhanced existing USB permission handling for TC001 attach/detach scenarios
+- **Crash Prevention**: Implemented consecutive error counting to prevent app crashes from thermal thread failures
+
+### Technical Implementation
+- **Real SDK Calls**: initializeTopdonSdk() now uses actual TC001 SDK instead of reflection
+- **Frame Processing**: IFrameCallback registration for continuous thermal data streaming
+- **Error Resilience**: Maximum 10 consecutive errors before switching to simulation mode
+- **Temperature Logging**: Min/max temperature telemetry logged to CSV with system timestamps
+- **USB Integration**: TC001 VID/PID (0x2744/0x0001) already configured in AndroidManifest and device filters
+
 # Changelog
 
 ## [2.2.1] - SmartRefreshLayout Dependency Resolution Fix (2024-12-21)
