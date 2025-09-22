@@ -1,13 +1,33 @@
-[![Copilot](https://github.com/uclgsr/IRCamera/actions/workflows/copilot.yml/badge.svg?branch=dev)](https://github.com/uclgsr/IRCamera/actions/workflows/copilot.yml)
-
 # IRCamera Multi-Modal Thermal Sensing Platform
 
 A Hub-and-Spoke architecture platform for multi-modal physiological sensing with thermal imaging, GSR, and RGB data
 collection.
 
-## Recent Update: Kotlin Compilation Errors Resolved
+## Recent Update: Enhanced Shimmer3 GSR BLE Support Complete
+**Commit ID**: 64fdf6b
 
-**LATEST ACHIEVEMENT**: All Kotlin compilation errors in BLE Core module have been **FULLY RESOLVED**:
+**LATEST ACHIEVEMENT**: Enhanced Shimmer3 GSR BLE support has been **FULLY IMPLEMENTED** with comprehensive device selection and improved user experience:
+
+### Shimmer3 GSR Enhancements Delivered
+
+- **Advanced BLE Scanning**: Implemented ScanFilters targeting Shimmer service UUID (49535343-FE7D-4AE5-8FA9-9FAFD205E455) with device name and MAC address filtering
+- **Multi-Device Selection**: Enhanced user interface with device selection dialog showing paired/unpaired status and device details
+- **ObjectCluster Data Processing**: Complete convertObjectClusterToSensorSample() implementation with calibrated GSR values, PPG data, and accelerometer readings
+- **Unified Timestamp Management**: Consistent data alignment using TimestampManager.getCurrentTimestampNanos() for all sensor data
+- **Visual Status Indicators**: Color-coded connection status (green=connected, orange=connecting, red=failed) with real-time user feedback
+- **Robust Reconnection Logic**: Enhanced 3-attempt reconnection with exponential backoff and comprehensive error handling
+
+### Technical Implementation Details
+
+- **Files Enhanced**: ShimmerDeviceManager.kt, GSRSensorRecorder.kt, TimestampManager.kt, ShimmerMvpActivity.kt, activity_shimmer_mvp.xml
+- **BLE Architecture**: Comprehensive scanning with proper ScanSettings, device filtering, and permission handling
+- **Data Quality**: Signal quality assessment and data validation for reliable GSR measurements
+- **User Experience**: Enhanced device discovery, selection interface, and connection status feedback
+- **MVP Focus**: Core functionality implementation prioritizing essential features for research use
+
+## Previous Update: Kotlin Compilation Errors Resolved
+
+**ACHIEVEMENT**: All Kotlin compilation errors in BLE Core module have been **FULLY RESOLVED**:
 
 ### Compilation Fixes Implemented
 
