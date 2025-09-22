@@ -1431,7 +1431,7 @@ private fun checkDescriptorExists(
 override fun execute(request: Request?) {
     if (request is GenericRequest) {
         val req = request
-        req.device = device
+        req.setDevice(device)
         when (req.type) {
             RequestType.SET_NOTIFICATION, RequestType.SET_INDICATION, RequestType.READ_CHARACTERISTIC, RequestType.WRITE_CHARACTERISTIC -> {
                 if (req.type == RequestType.WRITE_CHARACTERISTIC && req.writeOptions == null) {

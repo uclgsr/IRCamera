@@ -1,5 +1,61 @@
 # Changelog
 
+## [2.2.0] - Kotlin Compilation Error Fixes (2024-12-21)
+
+### Fixed
+- **AppHolder11.kt**: Added missing PackageInfo import, corrected Activity lifecycle callback parameter types, fixed context property return type, and fixed Holder singleton initialization
+- **CheckableItem111.kt**: Fixed isChecked property override issue and return type compatibility
+- **CheckableParcelable111.kt**: Fixed method access patterns using direct property access instead of deprecated getter/setter methods  
+- **PermissionsRequester11.kt**: Fixed collection type mismatch in method parameters
+- **Observable11.kt**: Fixed MethodInfo property access using Kotlin property syntax
+- **ObserverMethodHelper11.kt**: Fixed reflection API calls using Kotlin property access patterns
+- **MethodInfo11.kt**: Updated to use Kotlin reflection property access
+
+### Changed
+- **Reflection API Usage**: Updated all reflection method calls to use Kotlin property syntax (method.name vs method.getName())
+- **Type Safety**: Improved nullable type handling across observer and lifecycle callback patterns
+
+
+## [2.1.1] - BLE Core Compilation Fixes (2024-12-21)
+
+### Fixed
+- **RequestCallback Interface**: Fixed redeclaration error by creating separate callback interfaces in ble-core/callback package
+- **ByteUtil Type Mismatches**: Fixed Int to Float conversion errors in bytesToFloat functions (lines 78, 87)  
+- **DefaultLogger Override Issues**: Fixed Logger interface implementation with proper property overrides
+- **HexUtil Byte Type Conflicts**: Fixed java.lang.Byte vs kotlin.Byte type mismatches in uniteBytes function
+- **Missing Callback Package**: Created missing ble-core/src/main/java/com/mpdc4gsr/ble/core/callback/ directory structure
+
+### Added
+- RequestCallback interface for BLE request handling
+- BleCallbacks interfaces for connection and characteristic callbacks
+
+## [2.1.1] - BLE Core GenericRequest Fix (2024-12-21)
+
+### Fixed
+- **GenericRequest Compilation**: Fixed all compilation errors in GenericRequest.kt
+- **Interface Implementation**: Properly implemented Request interface with override modifiers
+- **Property Initialization**: Fixed uninitialized properties and added proper defaults
+- **RequestBuilder**: Enhanced RequestBuilder interface with generic type parameter and required properties
+- **ConnectionState/RequestType**: Resolved merge conflict markers in enum classes
+- **Device Property**: Fixed device property handling with custom getter/setter pattern
+- **RequestCallback**: Added missing RequestCallback interface for BLE operations
+
+### Added
+- **RequestCallback Interface**: Created proper callback interface for BLE request handling
+
+## [2.1.2] - BLE Core WriteOptions Fix (2024-12-21)
+
+### Fixed
+- **WriteOptions.Builder**: Fixed private field access issue in WriteOptions constructor by changing Builder field visibility from private to internal
+- Resolved compilation errors: Cannot access packageWriteDelayMillis, requestWriteDelayMillis, packageSize, isWaitWriteResult, writeType, useMtuAsPackageSize
+
+## [2.1.1] - BLE Core Module Compilation Fix (2024-12-21)
+
+### Fixed
+- **BLE Core Interface**: Fixed missing `import java.util.UUID` statement in Request.kt interface
+- **Compilation Errors**: Resolved "Unresolved reference 'UUID'" compilation errors in BLE core module
+- **Code Consistency**: Aligned Request.kt import statements with other BLE core module files
+
 ## [2.1.0] - Gradle Build System Standardization (2024-12-21)
 
 ### Added

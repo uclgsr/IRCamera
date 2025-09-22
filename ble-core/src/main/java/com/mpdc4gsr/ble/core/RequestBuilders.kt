@@ -5,10 +5,20 @@ import java.util.UUID
 /**
  * Request builder for BLE operations
  */
-interface RequestBuilder {
+interface RequestBuilder<T : RequestBuilder<T>> {
+    val tag: String?
+    val type: RequestType
+    val service: UUID?
+    val characteristic: UUID?
+    val descriptor: UUID?
+    val priority: Int
+    val value: Any?
+    val callback: RequestCallback?
+    val writeOptions: WriteOptions?
+    
     fun build(): Request
-    fun setCallback(callback: Any): RequestBuilder
-    fun setTimeout(timeoutMillis: Long): RequestBuilder
+    fun setCallback(callback: Any): T
+    fun setTimeout(timeoutMillis: Long): T
 }
 
 /**

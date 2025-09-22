@@ -6,6 +6,7 @@ import android.app.ActivityManager
 import android.app.ActivityManager.RunningAppProcessInfo
 import android.app.Application
 import android.content.Context
+import android.content.pm.PackageInfo
 import android.os.Bundle
 import android.os.Looper
 import android.os.Process
@@ -56,23 +57,23 @@ class AppHolder private constructor() : Application.ActivityLifecycleCallbacks {
     }
 
     @CallSuper
-    override fun onActivityStarted(activity: Activity?) {
+    override fun onActivityStarted(activity: Activity) {
     }
 
     @CallSuper
-    override fun onActivityResumed(activity: Activity?) {
+    override fun onActivityResumed(activity: Activity) {
     }
 
     @CallSuper
-    override fun onActivityPaused(activity: Activity?) {
+    override fun onActivityPaused(activity: Activity) {
     }
 
     @CallSuper
-    override fun onActivityStopped(activity: Activity?) {
+    override fun onActivityStopped(activity: Activity) {
     }
 
     @CallSuper
-    override fun onActivitySaveInstanceState(activity: Activity?, outState: Bundle?) {
+    override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {
     }
 
     @CallSuper
@@ -104,7 +105,7 @@ class AppHolder private constructor() : Application.ActivityLifecycleCallbacks {
                 application,
                 "The AppHolder has not been initialized, make sure to call AppHolder.initialize(app) first."
             )
-            return application
+            return application!!
         }
 
     val packageInfo: PackageInfo?
@@ -154,7 +155,7 @@ class AppHolder private constructor() : Application.ActivityLifecycleCallbacks {
             val activity = runningActivity.weakActivity.get()
             if (activity != null) {
                 val name = activity.javaClass.getName()
-                if (name == className || contains(classNames, name)) {
+                if (name == className || contains(classNames.toTypedArray<Any>(), name)) {
                     activity.finish()
                 }
             }
@@ -168,7 +169,7 @@ class AppHolder private constructor() : Application.ActivityLifecycleCallbacks {
             val activity = runningActivity.weakActivity.get()
             if (activity != null) {
                 val name = activity.javaClass.getName()
-                if (name != className && !contains(classNames, name)) {
+                if (name != className && !contains(classNames.toTypedArray<Any>(), name)) {
                     activity.finish()
                 }
             }
@@ -237,7 +238,6 @@ class AppHolder private constructor() : Application.ActivityLifecycleCallbacks {
 
     private object Holder {
         val instance: AppHolder = AppHolder()
-            get() = Holder.field
     }
 
     private class RunningActivity(var name: String, var weakActivity: WeakReference<Activity?>) {

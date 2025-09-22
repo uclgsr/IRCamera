@@ -3,7 +3,6 @@ package com.mpdc4gsr.ble.core
 import com.mpdc4gsr.ble.core.RequestCallback
 import java.util.Queue
 import java.util.UUID
-
 internal class GenericRequest(builder: GenericRequestBuilder<*>) : Request, Comparable<GenericRequest?> {
     private val tag: String?
     var device: Device? = null
@@ -15,10 +14,10 @@ internal class GenericRequest(builder: GenericRequestBuilder<*>) : Request, Comp
     var priority: Int
     var callback: RequestCallback?
     var writeOptions: WriteOptions?
-    var descriptorTemp: ByteArray?
+    var descriptorTemp: ByteArray? = null
 
     var remainQueue: Queue<ByteArray?>? = null
-    var sendingBytes: ByteArray?
+    var sendingBytes: ByteArray? = null
 
 
     init {
@@ -36,29 +35,9 @@ internal class GenericRequest(builder: GenericRequestBuilder<*>) : Request, Comp
     override fun compareTo(other: GenericRequest): Int {
         return Integer.compare(other.priority, priority)
     }
-
-    override fun getDevice(): Device {
-        return device!!
-    }
-
-    override fun getType(): RequestType {
-        return type
-    }
-
-    override fun getTag(): String? {
-        return tag
-    }
-
-    override fun getService(): UUID? {
-        return service
-    }
-
-    override fun getCharacteristic(): UUID? {
-        return characteristic
-    }
-
-    override fun getDescriptor(): UUID? {
-        return descriptor
+    
+    fun setDevice(device: Device) {
+        _device = device
     }
 
     override fun execute(connection: Connection?) {

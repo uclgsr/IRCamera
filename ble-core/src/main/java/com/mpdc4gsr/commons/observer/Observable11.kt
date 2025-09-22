@@ -89,8 +89,8 @@ class Observable(val posterDispatcher: PosterDispatcher, isObserveAnnotationRequ
         for (oi in infos) {
             val observer = oi.weakObserver.get()
             if (observer != null) {
-                val key = helper.generateKey(info.getTag(), info.getName(), info.getParameterTypes())
-                val method = oi.methodMap.get(key)
+                val key = helper.generateKey(info.tag, info.name, info.parameterTypes)
+                val method = oi.methodMap?.get(key)
                 if (method != null) {
                     val runnable = helper.generateRunnable(observer, method, info)
                     posterDispatcher.post(method, runnable)

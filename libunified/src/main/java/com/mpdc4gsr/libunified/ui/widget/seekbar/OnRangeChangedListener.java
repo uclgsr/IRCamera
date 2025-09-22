@@ -1,7 +1,7 @@
-package com.mpdc4gsr.libunified.app.widget.seekbar;
+package com.mpdc4gsr.libunified.ui.widget.seekbar;
 
 public interface OnRangeChangedListener {
-    void onRangeChanged(RangeSeekBar view, float leftValue, float rightValue, boolean isFromUser);
+    void onRangeChanged(RangeSeekBar view, float leftValue, float rightValue, boolean isFromUser, int tempMode);
 
     void onStartTrackingTouch(RangeSeekBar view, boolean isLeft);
 
