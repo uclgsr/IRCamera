@@ -1415,6 +1415,8 @@ class RecordingController(
         timeSynchronizationService.emitSyncEvent(eventType, metadata)
     }
 
+    fun getTimeSynchronizationService(): TimeSynchronizationService = timeSynchronizationService
+
 
     suspend fun validateTimestampConsistency(): Map<String, Long> {
         val timestamps = mutableMapOf<String, Long>()
