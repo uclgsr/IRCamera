@@ -987,7 +987,7 @@ class RgbCameraRecorder(
                     // Implement frame throttling - only capture every Nth frame
                     frameSkipCounter++
                     if (frameSkipCounter % FRAME_CAPTURE_EVERY_N_FRAMES != 0) {
-                        delay(captureInterval)
+                        
                         continue
                     }
 
