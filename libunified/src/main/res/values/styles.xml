@@ -36,4 +36,15 @@
         <item name="android:backgroundDimEnabled">true</item>
     </style>
 
+    <!-- Missing styles from build errors -->
+    <style name="cameraSetSwitch" parent="Widget.AppCompat.CompoundButton.Switch">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+    
+    <style name="ToolbarTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textColorSecondary">@color/white</item>
+    </style>
+
 </resources>

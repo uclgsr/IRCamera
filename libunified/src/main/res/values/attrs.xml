@@ -217,4 +217,36 @@
     <declare-styleable name="IndicateView">
         <attr name="selectColor" format="color" />
     </declare-styleable>
+
+    <!-- TitleView styleable -->
+    <declare-styleable name="TitleView">
+        <attr name="titleText" format="string" />
+        <attr name="leftDrawable" format="reference" />
+        <attr name="leftText" format="string" />
+        <attr name="leftTextColor" format="color" />
+        <attr name="isInitLeft" format="boolean" />
+        <attr name="rightText" format="string" />
+        <attr name="rightDrawable" format="reference" />
+        <attr name="rightTextColor" format="color" />
+        <attr name="right2Drawable" format="reference" />
+        <attr name="right3Drawable" format="reference" />
+        <attr name="isTitleCenter" format="boolean" />
+    </declare-styleable>
+
+    <!-- MyTextView styleable -->
+    <declare-styleable name="MyTextView">
+        <attr name="drawable_height" format="dimension" />
+        <attr name="top_height" format="dimension" />
+        <attr name="bottom_height" format="dimension" />
+        <attr name="start_height" format="dimension" />
+        <attr name="end_height" format="dimension" />
+        <attr name="left_height" format="dimension" />
+        <attr name="right_height" format="dimension" />
+    </declare-styleable>
+
+    <!-- MenuSecondView styleable -->
+    <declare-styleable name="MenuSecondView">
+        <attr name="deviceType" format="string" />
+    </declare-styleable>
+
 </resources>

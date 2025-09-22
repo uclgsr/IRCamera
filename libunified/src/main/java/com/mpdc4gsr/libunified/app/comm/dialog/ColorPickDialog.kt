@@ -77,10 +77,11 @@ class ColorPickDialog(
             findViewById<RangeSeekBar>(R.id.nifty_slider_view).setOnRangeChangedListener(
                 object : OnRangeChangedListener {
                     override fun onRangeChanged(
-                        view: RangeSeekBar?,
+                        view: RangeSeekBar,
                         leftValue: Float,
                         rightValue: Float,
                         isFromUser: Boolean,
+                        tempMode: Int
                     ) {
                         var text = "标准"
                         text =
@@ -98,13 +99,13 @@ class ColorPickDialog(
                     }
 
                     override fun onStartTrackingTouch(
-                        view: RangeSeekBar?,
+                        view: RangeSeekBar,
                         isLeft: Boolean,
                     ) {
                     }
 
                     override fun onStopTrackingTouch(
-                        view: RangeSeekBar?,
+                        view: RangeSeekBar,
                         isLeft: Boolean,
                     ) {
                     }

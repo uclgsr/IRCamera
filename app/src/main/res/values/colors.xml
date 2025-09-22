@@ -66,6 +66,12 @@
     <color name="temp_font_title_item_color">#FFFFFFFF</color>
     <color name="tx_333">#FF333333</color>
     
+    <!-- Missing primary colors -->
+    <color name="colorPrimaryDark">#FF1565C0</color>
+    
+    <!-- Additional missing colors from build -->
+    <color name="fault_tolerant_recording_button">#FF4CAF50</color>
+
     <!-- More missing colors from thermal module -->
     <color name="ir_bg_color">#FF16131E</color>
     <color name="color_img_calibration_normal">#FFCCCCCC</color>
