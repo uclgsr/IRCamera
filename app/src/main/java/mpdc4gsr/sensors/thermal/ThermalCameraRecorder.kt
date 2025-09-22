@@ -1776,7 +1776,7 @@ class ThermalCameraRecorder(
             startPerformanceMonitoring(optimalFrameRate)
             
             // Start continuous frame capture loop for TC001
-            startContinuousFrameCapture()
+            startThermalHealthMonitor()
 
 
 
