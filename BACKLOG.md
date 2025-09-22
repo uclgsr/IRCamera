@@ -1,5 +1,27 @@
 # Project Backlog
 
+## High Priority - SmartRefreshLayout Dependency Resolution ✅ COMPLETED
+
+### EPIC: SmartRefreshLayout JitPack Resolution Issue - COMPLETED
+
+**Status**: COMPLETED ✅
+
+#### Dependency Resolution Fixes (COMPLETED)
+- [x] Diagnose 401 Unauthorized errors for SmartRefreshLayout dependencies from JitPack
+- [x] Identify correct Maven coordinates: `io.github.scwang90` instead of `com.scwang.smart`
+- [x] Update version catalog with correct group ID for `refresh-layout-kernel:2.1.0`
+- [x] Update version catalog with correct group ID for `refresh-header-classics:2.1.0`
+- [x] Verify dependency resolution works from Maven Central
+- [x] Test compilation success for modules using SmartRefreshLayout
+- [x] Validate pull-to-refresh functionality remains intact
+- [x] Update documentation with resolution details
+
+#### Technical Achievement
+- **Root Cause**: JitPack returning 401 Unauthorized for `com.scwang.smart` group ID
+- **Solution**: Migrated to official Maven Central artifacts using `io.github.scwang90` group ID
+- **Impact**: Fixed build failures in `IRGalleryFragment`, `PDFListFragment`, `PDFListActivity`
+- **Backwards Compatibility**: Code imports remain unchanged, only Maven coordinates updated
+
 ## High Priority - Kotlin Compilation Fixes ✅ COMPLETED
 
 ### EPIC: BLE Core Module Compilation Error Resolution - COMPLETED

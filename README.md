@@ -5,7 +5,25 @@
 A Hub-and-Spoke architecture platform for multi-modal physiological sensing with thermal imaging, GSR, and RGB data
 collection.
 
-## Recent Update: Kotlin Compilation Errors Resolved
+## Recent Update: SmartRefreshLayout Dependency Resolution Fixed
+
+**LATEST ACHIEVEMENT**: SmartRefreshLayout dependency resolution issue **FULLY RESOLVED**:
+
+### Dependency Resolution Fixes
+
+- **Maven Coordinates Fixed**: Corrected group ID from `com.scwang.smart` to `io.github.scwang90` for SmartRefreshLayout components
+- **JitPack Issues Resolved**: Migrated from failing JitPack (401 Unauthorized) to reliable Maven Central resolution
+- **Pull-to-refresh Restored**: Fixed build failures in IRGalleryFragment, PDFListFragment, and PDFListActivity  
+- **Version Catalog Updated**: Enhanced dependency management with correct artifact coordinates
+
+### Technical Resolution Delivered
+
+- **Dependencies Fixed**: `refresh-layout-kernel:2.1.0` and `refresh-header-classics:2.1.0` now resolve correctly
+- **Repository Migration**: SmartRefreshLayout now sources from Maven Central instead of problematic JitPack
+- **Backwards Compatibility**: Code imports remain unchanged (`com.scwang.smart.refresh.layout.*`)
+- **Module Impact**: Primarily benefits `component:thermalunified` with pull-to-refresh functionality
+
+## Previous Update: Kotlin Compilation Errors Resolved
 
 **LATEST ACHIEVEMENT**: All Kotlin compilation errors in BLE Core module have been **FULLY RESOLVED**:
 
