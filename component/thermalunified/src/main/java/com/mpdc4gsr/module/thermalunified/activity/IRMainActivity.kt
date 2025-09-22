@@ -41,7 +41,7 @@ import com.mpdc4gsr.module.user.fragment.MoreFragment
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
-import com.mpdc4gsr.libunified.app.R as LibR
+import com.mpdc4gsr.libunified.R as LibR
 
 
 class IRMainActivity : AppCompatActivity(), View.OnClickListener {

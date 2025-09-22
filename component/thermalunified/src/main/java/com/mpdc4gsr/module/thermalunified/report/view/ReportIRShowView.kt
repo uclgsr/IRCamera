@@ -12,7 +12,7 @@ import com.mpdc4gsr.libunified.app.utils.ScreenUtil
 import com.mpdc4gsr.module.thermal.ir.R
 import com.mpdc4gsr.module.thermal.ir.report.bean.ReportIRBean
 import com.mpdc4gsr.module.thermal.ir.report.bean.ReportTempBean
-import com.mpdc4gsr.libunified.app.R as LibR
+import com.mpdc4gsr.libunified.R as LibR
 
 class ReportIRShowView : LinearLayout {
     companion object {

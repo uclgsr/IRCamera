@@ -31,7 +31,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.io.File
 import java.text.DecimalFormat
-import com.mpdc4gsr.libunified.app.R as RCore
+import com.mpdc4gsr.libunified.R as RCore
 
 class MoreActivity : BaseActivity(), View.OnClickListener {
     private val firmwareViewModel: FirmwareViewModel by viewModels()

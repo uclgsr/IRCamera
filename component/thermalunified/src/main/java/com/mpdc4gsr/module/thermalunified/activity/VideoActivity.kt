@@ -11,7 +11,7 @@ import com.blankj.utilcode.util.BarUtils
 import com.mpdc4gsr.libunified.app.ktbase.BaseActivity
 import com.mpdc4gsr.module.thermal.R
 import java.io.File
-import com.mpdc4gsr.libunified.app.R as LibR
+import com.mpdc4gsr.libunified.R as LibR
 
 
 class VideoActivity : BaseActivity() {

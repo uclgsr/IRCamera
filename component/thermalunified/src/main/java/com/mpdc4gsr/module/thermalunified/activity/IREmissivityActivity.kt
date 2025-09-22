@@ -13,7 +13,7 @@ import com.mpdc4gsr.libunified.app.tools.UnitTools
 import com.mpdc4gsr.lib.ui.widget.MyItemDecoration
 import com.mpdc4gsr.module.thermal.ir.R
 import com.mpdc4gsr.module.thermal.ir.view.EmissivityView
-import com.mpdc4gsr.libunified.app.R as LibR
+import com.mpdc4gsr.libunified.R as LibR
 
 
 class IREmissivityActivity : BaseActivity() {

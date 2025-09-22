@@ -1,7 +1,7 @@
 package com.mpdc4gsr.module.user.model
 
 import com.blankj.utilcode.util.Utils
-import com.mpdc4gsr.libunified.app.R as RCore
+import com.mpdc4gsr.libunified.R as RCore
 
 object FaqRepository {
     fun getQuestionList(isTS001: Boolean): ArrayList<QuestionData> =

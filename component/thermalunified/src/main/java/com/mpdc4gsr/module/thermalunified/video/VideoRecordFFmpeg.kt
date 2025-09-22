@@ -68,7 +68,7 @@ import java.util.Date
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicReference
-import com.mpdc4gsr.libunified.app.R as LibcoreR
+import com.mpdc4gsr.libunified.R as LibcoreR
 
 
 @SuppressLint("MissingPermission")

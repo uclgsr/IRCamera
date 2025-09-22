@@ -22,7 +22,7 @@ import com.mpdc4gsr.module.thermal.ir.report.view.WatermarkView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.File
-import com.mpdc4gsr.libunified.app.R as LibCoreR
+import com.mpdc4gsr.libunified.R as LibCoreR
 import com.mpdc4gsr.lib.ui.R as UiR
 
 

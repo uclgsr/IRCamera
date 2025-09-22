@@ -12,7 +12,7 @@ import com.mpdc4gsr.module.thermal.R
 import com.mpdc4gsr.module.thermal.adapter.MenuTabAdapter
 import com.mpdc4gsr.module.thermal.fragment.event.ThermalActionEvent
 import org.greenrobot.eventbus.EventBus
-import com.mpdc4gsr.libunified.app.R as LibR
+import com.mpdc4gsr.libunified.R as LibR
 
 class ThermalActivity : BaseActivity() {
     private val menuAdapter by lazy { MenuTabAdapter(this) }
