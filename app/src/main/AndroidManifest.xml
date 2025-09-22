@@ -237,7 +237,7 @@
         <activity
             android:name="mpdc4gsr.activities.FaultTolerantRecordingActivity"
             android:exported="false"
-            android:label="Enhanced Recording"
+            android:label="@string/enhanced_recording_label"
             android:screenOrientation="userPortrait" />
 
 
