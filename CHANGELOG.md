@@ -1,5 +1,23 @@
 # Changelog
 
+## [2.2.1] - SmartRefreshLayout Dependency Resolution Fix (2024-12-21)
+
+### Fixed
+- **SmartRefreshLayout Dependency Resolution**: Fixed 401 Unauthorized errors for `com.scwang.smart:refresh-layout-kernel:2.1.0` and `com.scwang.smart:refresh-header-classics:2.1.0`
+- **Maven Coordinates Correction**: Updated to use correct group ID `io.github.scwang90` instead of `com.scwang.smart` in version catalog
+- **Pull-to-refresh Functionality**: Resolved build failures affecting IRGalleryFragment, PDFListFragment, and PDFListActivity
+- **JitPack Resolution Issues**: Migrated SmartRefreshLayout dependencies from JitPack to Maven Central for reliable resolution
+
+### Changed  
+- **Version Catalog**: Updated `refresh-layout-kernel` and `refresh-header-classics` library definitions to use `io.github.scwang90` group ID
+- **Repository Resolution**: SmartRefreshLayout now resolved from Maven Central instead of JitPack
+
+### Technical Details
+- **Root Cause**: JitPack returning 401 Unauthorized for `com.scwang.smart` artifacts
+- **Solution**: Use official Maven Central artifacts with group ID `io.github.scwang90`  
+- **Backwards Compatibility**: Package names in code remain unchanged (`com.scwang.smart.refresh.layout.*`)
+- **Affected Modules**: `component:thermalunified` (primary usage)
+
 ## [2.3.0] - Sensor Timestamp Synchronization Unification (2024-12-23)
 
 ### Added
@@ -27,6 +45,7 @@
 - **SessionSync Events**: Every sensor logs start event with timestamp for post-hoc verification within millisecond tolerance
 - **NTP Enhancement**: PC-Phone handshake includes quality metrics and automatic drift detection
 - **Verification Tests**: Manual test activity simulates sharp multi-modal events (e.g., hand clap) for alignment validation
+
 
 ## [2.2.0] - Kotlin Compilation Error Fixes (2024-12-21)
 
