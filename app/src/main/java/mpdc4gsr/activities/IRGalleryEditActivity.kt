@@ -54,8 +54,8 @@ import com.mpdc4gsr.libunified.app.utils.BitmapUtils
 import com.mpdc4gsr.libunified.app.utils.Constants.IS_REPORT_FIRST
 import com.mpdc4gsr.libunified.app.utils.ImageUtils
 import com.mpdc4gsr.libunified.app.utils.ScreenUtil
-import com.mpdc4gsr.lib.ui.widget.seekbar.OnRangeChangedListener
-import com.mpdc4gsr.lib.ui.widget.seekbar.RangeSeekBar
+import com.mpdc4gsr.libunified.ui.widget.seekbar.OnRangeChangedListener
+import com.mpdc4gsr.libunified.ui.widget.seekbar.RangeSeekBar
 import com.mpdc4gsr.module.thermalunified.event.GalleryAddEvent
 import com.mpdc4gsr.module.thermalunified.event.ImageGalleryEvent
 import com.mpdc4gsr.module.thermalunified.frame.FrameStruct
