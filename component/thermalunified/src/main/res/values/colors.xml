@@ -19,4 +19,8 @@
     <color name="chart_text">#FFFFFFFF</color>
     <color name="black">#FF000000</color>
     <color name="circle_white">#FFFFFFFF</color>
+
+    <!-- Missing thermal font colors causing build failures -->
+    <color name="temp_font_color">#FFFFFFFF</color>
+    <color name="temp_font_second_color">#FFCCCCCC</color>
 </resources>

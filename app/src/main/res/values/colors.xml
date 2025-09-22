@@ -51,4 +51,28 @@
     <!-- Additional missing colors -->
     <color name="color_img_calibration_right">#FF4CAF50</color>
     <color name="chart_line_min">#FF00C853</color>
+
+    <!-- Missing colors causing build failures -->
+    <color name="transparent">#00000000</color>
+    <color name="temp_font_color">#FFFFFFFF</color>
+    <color name="temp_font_second_color">#FFCCCCCC</color>
+    
+    <!-- Additional missing colors from error messages -->
+    <color name="color_16131E">#FF16131E</color>
+    <color name="color_E74380">#FFE74380</color>
+    <color name="lms_color_999">#FF999999</color>
+    <color name="lms_color_333">#FF333333</color>
+    <color name="toolbar_5F16131E">#5F16131E</color>
+    <color name="temp_font_title_item_color">#FFFFFFFF</color>
+    <color name="tx_333">#FF333333</color>
+    
+    <!-- More missing colors from thermal module -->
+    <color name="ir_bg_color">#FF16131E</color>
+    <color name="color_img_calibration_normal">#FFCCCCCC</color>
+    <color name="color_img_calibration_left">#FF4CAF50</color>
+    <color name="color_img_calibration_button">#FF2196F3</color>
+    <color name="toolbar_16131E">#FF16131E</color>
+    
+    <!-- More missing colors -->
+    <color name="color_font">#FFFFFFFF</color>
 </resources>
