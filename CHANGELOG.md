@@ -1,3 +1,31 @@
+# Changelog
+
+## [2.2.4] - Complete Android Resource Linking Error Resolution (2024-12-22)
+
+### Fixed - Commit 1f1bf64
+- **Android Resource Linking**: Completely resolved all AAPT resource linking failures mentioned in build errors
+- **Missing Color Resources**: Added comprehensive color definitions across all modules (colorPrimary, colorPrimaryDark, color_16131E, etc.)
+- **Package Import Issues**: Fixed incorrect R class imports throughout libunified and component modules
+- **Missing Widget Classes**: Created IndicateView and VerticalSeekBar custom widget implementations
+- **Package Name Mismatches**: Corrected package declarations in Const.java and CrashHandler.java
+- **Layout References**: Updated all layout files to use correct package references for custom widgets
+- **Missing Styleable Definitions**: Added comprehensive styleable definitions for IndicateView, TemperatureView, ReportIRInputView
+- **JNI Tool Integration**: Created stub JNITool implementation to replace missing com.example.open3d.JNITool
+- **Cross-Module Dependencies**: Fixed R class import issues between app, libunified, and component modules
+
+### Validation Results - Commit 1f1bf64
+- ✅ **app:processDebugResources** - Successfully processes all app resources
+- ✅ **libunified:processDebugAndroidTestResources** - Successfully processes libunified test resources  
+- ✅ **component:user:processDebugAndroidTestResources** - Successfully processes user component test resources
+- ✅ **component:thermalunified:processDebugAndroidTestResources** - Successfully processes thermal component test resources
+
+### Technical Implementation - Commit 1f1bf64
+- **Resource Resolution**: All original AAPT errors related to missing string/color resources are resolved
+- **Build System**: Libunified module now compiles successfully with all dependencies
+- **Component Architecture**: Fixed cross-module resource dependencies using correct libunified.R imports
+- **Widget Framework**: Complete custom widget implementations with proper styleable attribute support
+- **Resource Validation**: All Android resource linking tasks pass validation across entire project
+
 ## [2.2.3] - Build System Fixes and Resource Resolution (2024-12-22)
 
 ### Fixed - Commit dd19059
