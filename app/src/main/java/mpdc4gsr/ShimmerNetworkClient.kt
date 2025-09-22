@@ -8,6 +8,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import mpdc4gsr.sensors.unified.model.GSRSample
 import org.json.JSONObject
 import java.io.BufferedReader
 import java.io.InputStreamReader
@@ -97,7 +98,7 @@ class ShimmerNetworkClient(
         }
     }
 
-    fun sendGSRSample(sample: ShimmerMvpActivity.GSRSample, sequenceNumber: Long) {
+    fun sendGSRSample(sample: GSRSample, sequenceNumber: Long) {
         if (!isConnected.get()) return
 
         networkScope.launch {
@@ -105,9 +106,9 @@ class ShimmerNetworkClient(
                 val message = JSONObject().apply {
                     put("type", "gsr_sample")
                     put("timestamp_ms", sample.timestamp)
-                    put("gsr_microsiemens", sample.gsrValue)
-                    put("raw_value", sample.rawValue)
-                    put("resistance_kohm", sample.resistance / 1000.0)
+                    put("gsr_microsiemens", sample.gsrMicrosiemens)
+                    put("raw_value", sample.gsrRaw)
+                    put("resistance_kohm", sample.resistanceOhms / 1000.0)
                     put("sample_sequence", sequenceNumber)
                 }
 

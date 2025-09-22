@@ -31,9 +31,11 @@ import mpdc4gsr.controller.ComprehensiveRecordingController
 import mpdc4gsr.controller.RecordingState
 import mpdc4gsr.libunified.app.StructuredLogger
 import mpdc4gsr.network.NetworkClient
+import mpdc4gsr.network.NetworkConnectionManager
 import mpdc4gsr.network.NetworkServer
 import mpdc4gsr.network.PreviewDataAdapter
 import mpdc4gsr.network.PreviewStreamer
+import mpdc4gsr.network.ProtocolHandler
 import mpdc4gsr.supervisor.CrashSafeSupervisor
 import org.json.JSONArray
 import org.json.JSONObject
@@ -143,6 +145,8 @@ class RecordingService : LifecycleService() {
 
     private lateinit var networkClient: NetworkClient
     private lateinit var networkServer: NetworkServer
+    private lateinit var protocolHandler: ProtocolHandler
+    private lateinit var connectionManager: NetworkConnectionManager
     private lateinit var previewStreamer: PreviewStreamer
     private lateinit var previewDataAdapter: PreviewDataAdapter
     private var isNetworkInitialized = false
@@ -212,6 +216,8 @@ class RecordingService : LifecycleService() {
         
         networkClient = NetworkClient(this)
         networkServer = NetworkServer(this, 8080)
+        protocolHandler = ProtocolHandler(this, networkServer)
+        connectionManager = NetworkConnectionManager(this, networkServer, protocolHandler)
         previewStreamer = PreviewStreamer(networkServer)
         previewDataAdapter = PreviewDataAdapter(previewStreamer, this)
 
@@ -377,6 +383,11 @@ class RecordingService : LifecycleService() {
             if (::previewDataAdapter.isInitialized) {
                 previewDataAdapter.cleanup()
             }
+            
+            if (::connectionManager.isInitialized) {
+                connectionManager.cleanup()
+            }
+            
             lifecycleScope.launch {
                 recordingController.cleanup()
             }
@@ -969,7 +980,7 @@ class RecordingService : LifecycleService() {
     private fun setupNetworkServer() {
         lifecycleScope.launch {
             try {
-                val serverStarted = networkServer.start()
+                val serverStarted = connectionManager.startServer()
                 if (serverStarted) {
                     Log.i(TAG, "Network server started automatically, listening on port 8080")
                     updateNotification("Listening for PC Controller on port 8080")
@@ -984,46 +995,115 @@ class RecordingService : LifecycleService() {
         }
 
         lifecycleScope.launch {
-            networkServer.connectionStateFlow.collect { connected ->
-                isConnectedToPC = connected
-                if (connected) {
-                    Log.i(TAG, "PC Controller connected to network server")
-                    updateNotification("PC Controller connected")
-
-                    previewStreamer.startStreaming()
-                    previewDataAdapter.startDataPolling()
-                } else {
-                    Log.i(TAG, "PC Controller disconnected, still listening on port 8080")
-                    updateNotification("Listening for PC Controller on port 8080")
-
-                    previewDataAdapter.stopDataPolling()
-                    previewStreamer.stopStreaming()
+            connectionManager.connectionState.collect { state ->
+                when (state) {
+                    NetworkConnectionManager.ConnectionState.CONNECTED -> {
+                        isConnectedToPC = true
+                        Log.i(TAG, "PC Controller connected to network server")
+                        updateNotification("PC Controller connected")
+                        previewStreamer.startStreaming()
+                        previewDataAdapter.startDataPolling()
+                    }
+                    NetworkConnectionManager.ConnectionState.DISCONNECTED -> {
+                        isConnectedToPC = false
+                        Log.i(TAG, "PC Controller disconnected, still listening on port 8080")
+                        updateNotification("Listening for PC Controller on port 8080")
+                        previewDataAdapter.stopDataPolling()
+                        previewStreamer.stopStreaming()
+                    }
+                    NetworkConnectionManager.ConnectionState.ERROR -> {
+                        isConnectedToPC = false
+                        Log.e(TAG, "Network connection error")
+                        updateNotification("Network connection error")
+                    }
+                    NetworkConnectionManager.ConnectionState.RECONNECTING -> {
+                        isConnectedToPC = false
+                        Log.i(TAG, "Attempting to reconnect to PC Controller")
+                        updateNotification("Reconnecting to PC Controller...")
+                    }
+                    NetworkConnectionManager.ConnectionState.CONNECTING -> {
+                        Log.i(TAG, "Connecting to PC Controller...")
+                        updateNotification("Connecting...")
+                    }
                 }
             }
         }
 
         lifecycleScope.launch {
             networkServer.messageFlow.collect { message ->
-                handlePCCommand(message)
+                handleProtocolMessage(message)
             }
         }
+        
+        // Set up protocol handler with command callbacks
+        protocolHandler.setCommandHandler(object : ProtocolHandler.CommandHandler {
+            override suspend fun onStartRecording(sessionId: String): ProtocolHandler.CommandResult {
+                return try {
+                    Log.i(TAG, "Remote start recording command received for session: $sessionId")
+                    startRecordingSession(sessionId)
+                    ProtocolHandler.CommandResult(
+                        success = true,
+                        message = "Recording started",
+                        data = mapOf("start_time" to System.currentTimeMillis().toString())
+                    )
+                } catch (e: Exception) {
+                    Log.e(TAG, "Failed to start recording via PC command", e)
+                    ProtocolHandler.CommandResult(false, "Start recording failed: ${e.message}")
+                }
+            }
+            
+            override suspend fun onStopRecording(sessionId: String): ProtocolHandler.CommandResult {
+                return try {
+                    Log.i(TAG, "Remote stop recording command received for session: $sessionId")
+                    stopRecordingSession()
+                    ProtocolHandler.CommandResult(
+                        success = true,
+                        message = "Recording stopped",
+                        data = mapOf("stop_time" to System.currentTimeMillis().toString())
+                    )
+                } catch (e: Exception) {
+                    Log.e(TAG, "Failed to stop recording via PC command", e)
+                    ProtocolHandler.CommandResult(false, "Stop recording failed: ${e.message}")
+                }
+            }
+            
+            override suspend fun onSyncRequest(pcTimestamp: Long): ProtocolHandler.SyncResult {
+                return try {
+                    val timeManager = mpdc4gsr.utils.TimeManager.getInstance(this@RecordingService)
+                    val phoneTimestamp = timeManager.getCurrentTimestampNs() / 1_000_000 // Convert to ms
+                    
+                    Log.d(TAG, "Time sync request: PC=$pcTimestamp, Phone=$phoneTimestamp")
+                    
+                    // Calculate offset for immediate response (PC time - Phone time)
+                    val offsetNs = (pcTimestamp - phoneTimestamp) * 1_000_000 // Convert to ns
+                    
+                    // Update TimeManager with the calculated offset if needed
+                    // Note: This is a simplified sync. For full sync, TimeManager.synchronizeWithPC should be used
+                    
+                    ProtocolHandler.SyncResult(
+                        success = true,
+                        phoneTimestamp = phoneTimestamp,
+                        offsetNs = offsetNs
+                    )
+                } catch (e: Exception) {
+                    Log.e(TAG, "Time sync failed", e)
+                    ProtocolHandler.SyncResult(false)
+                }
+            }
+        })
     }
 
     private fun connectToPC(ipAddress: String, port: Int) {
         lifecycleScope.launch {
             try {
                 Log.i(TAG, "Attempting connection to PC Controller at $ipAddress:$port")
-                if (!networkServer.isRunning()) {
-                    if (networkServer.start()) {
-                        Log.i(TAG, "Network server started, ready for PC Controller connection")
-                        updateNotification("Ready for PC Controller connection")
-                    } else {
-                        Log.e(TAG, "Failed to start network server")
-                        updateNotification("Failed to start network server")
-                    }
+                val serverStarted = connectionManager.startServer()
+                if (serverStarted) {
+                    Log.i(TAG, "Network server started, ready for PC Controller connection")
+                    updateNotification("Ready for PC Controller connection")
                 } else {
-                    Log.i(TAG, "Network server already running, ready for PC Controller")
-                    updateNotification("Network server ready")
+                    Log.e(TAG, "Failed to start network server")
+                    updateNotification("Failed to start network server")
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "Error during PC connection attempt", e)
@@ -1038,7 +1118,7 @@ class RecordingService : LifecycleService() {
                 if (isNetworkInitialized) {
                     networkClient.disconnect()
                 }
-                networkServer.stop()
+                connectionManager.stopServer()
                 isConnectedToPC = false
                 Log.i(TAG, "Disconnected from PC Controller")
                 updateNotification("Disconnected from PC Controller")
@@ -1307,6 +1387,23 @@ class RecordingService : LifecycleService() {
             } catch (e: Exception) {
                 Log.e(TAG, "Error starting PC discovery", e)
             }
+        }
+    }
+    
+    private suspend fun handleProtocolMessage(message: mpdc4gsr.network.Protocol.ProtocolMessage) {
+        try {
+            val response = protocolHandler.processMessage(message)
+            if (response != null) {
+                networkServer.sendMessage(response)
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Error processing protocol message: ${message.type}", e)
+            val errorResponse = mpdc4gsr.network.Protocol.createErrorMessage(
+                message.type,
+                mpdc4gsr.network.Protocol.ERR_FAIL,
+                "Processing error: ${e.message}"
+            )
+            networkServer.sendMessage(errorResponse)
         }
     }
 

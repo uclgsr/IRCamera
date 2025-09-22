@@ -97,7 +97,7 @@ class RawEngine(private val context: Context) {
     fun getCaptureCount(): Int = rawCaptureCount
 
     /**
-     * TODO: Enable or disable Samsung Stage3/Level3 processing for RAW DNG capture
+     * Enable or disable Samsung Stage 3/Level 3 processing for RAW DNG capture
      */
     fun setStage3ProcessingEnabled(enabled: Boolean) {
         enableStage3Processing = enabled
@@ -106,7 +106,7 @@ class RawEngine(private val context: Context) {
     }
 
     /**
-     * TODO: Check if Stage3/Level3 processing is enabled
+     * Check if Stage 3/Level 3 processing is enabled
      */
     fun isStage3ProcessingEnabled(): Boolean = enableStage3Processing
 

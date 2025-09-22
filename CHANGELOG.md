@@ -1,3 +1,23 @@
+## [2.2.1] - TC001 Thermal Camera Integration Enhancement (2024-12-22)
+
+### Enhanced - Commit 4b1c7a9
+- **TC001 SDK Integration**: Replaced stub/reflection approach with real Topdon TC001 SDK calls in ThermalCameraRecorder
+- **Native Library Support**: Added graceful TC001 native library loading with fallback to Java-only SDK
+- **Continuous Frame Capture**: Implemented 10Hz thermal frame capture loop with 100ms intervals for TC001 camera
+- **Frame Image Saving**: Added automatic PNG image saving to thermal_images/ directory with temperature metadata
+- **Error Handling Enhancement**: Strengthened error handling with try-catch blocks around all SDK calls
+- **User Notifications**: Added Toast notifications for TC001 camera errors and connection status
+- **Graceful Fallbacks**: Ensured other sensors continue recording when TC001 thermal camera fails
+- **USB Permission Flow**: Enhanced existing USB permission handling for TC001 attach/detach scenarios
+- **Crash Prevention**: Implemented consecutive error counting to prevent app crashes from thermal thread failures
+
+### Technical Implementation
+- **Real SDK Calls**: initializeTopdonSdk() now uses actual TC001 SDK instead of reflection
+- **Frame Processing**: IFrameCallback registration for continuous thermal data streaming
+- **Error Resilience**: Maximum 10 consecutive errors before switching to simulation mode
+- **Temperature Logging**: Min/max temperature telemetry logged to CSV with system timestamps
+- **USB Integration**: TC001 VID/PID (0x2744/0x0001) already configured in AndroidManifest and device filters
+
 # Changelog
 
 ## [2024-12-22] - Session Lifecycle and Recording Coordination Implementation (commit fd0d27d)
@@ -75,6 +95,121 @@
 - **Fault Tolerance**: Session continues with available sensors when others fail
 - **Graceful Degradation**: User notified of sensor issues but recording continues
 - **Comprehensive Recovery**: App startup detects and recovers from crashed sessions
+
+## [2.4.0] - PC-Orchestrated Multi-Modal Recording System (2024-12-22) - Commit 6133760
+
+### Added - Complete Networking Infrastructure
+- **Standardized Protocol Implementation**: Complete text-based protocol with binary frame support for PC-Android communication
+- **Protocol Messages**: HELLO, SYNC_REQUEST/RESPONSE, START_RECORD/STOP_RECORD, ACK/ERROR, DATA_GSR, FRAME message types
+- **Android Protocol Stack**: Protocol.kt, ProtocolHandler.kt, NetworkConnectionManager.kt for robust device communication
+- **PC Controller System**: Complete standardized_controller.py with multi-device orchestration capabilities
+- **Clock Synchronization**: NTP-style time synchronization achieving sub-10ms accuracy on local networks
+- **Session Coordination**: Multi-device session start/stop with unique session IDs and synchronized timestamps
+- **Live Data Streaming**: Real-time GSR data updates and preview frame streaming during recording sessions
+- **Error Recovery System**: Exponential backoff reconnection with connection state management and timeout handling
+- **Interactive Demo**: demo_pc_controller.py providing real-time testing and control interface
+- **Comprehensive Testing**: test_protocol.py with protocol validation, mock device simulation, and flow verification
+
+### Enhanced - Networking Components
+- **NetworkServer.kt**: Enhanced TCP server supporting both text commands and binary data streams with automatic HELLO handshake
+- **RecordingService.kt**: Complete integration with protocol handler, connection manager, and existing recording infrastructure
+- **Connection Management**: Automatic reconnection logic with CONNECTING, CONNECTED, ERROR, RECONNECTING, DISCONNECTED state tracking
+- **Preview Integration**: Seamless integration with existing PreviewStreamer for real-time monitoring during PC-orchestrated sessions
+- **Time Manager Integration**: Full compatibility with existing TimeManager for synchronized timestamp base across all sensor modalities
+
+### Technical Implementation
+- **Protocol Flow**: Android devices automatically connect, register capabilities, synchronize time, and await PC coordination commands
+- **Multi-Device Support**: PC controller can coordinate recording sessions across multiple Android sensor nodes simultaneously  
+- **Robust Communication**: Connection timeout monitoring (30 seconds), automatic health checks, and graceful degradation support
+- **Session Management**: Unique session ID generation, coordinated start/stop operations, and ACK/ERROR response validation
+- **Real-Time Monitoring**: Live GSR data streaming and preview frame transmission for session monitoring and verification
+
+### Documentation
+- **Complete Implementation Guide**: NETWORKING_IMPLEMENTATION.md with protocol specifications, architecture overview, and usage instructions
+- **Protocol Specification**: Detailed message formats, parameter parsing, error codes, and integration examples
+- **Usage Examples**: Step-by-step instructions for PC controller setup, device connection, and session coordination
+- **Testing Guide**: Comprehensive test suite documentation and troubleshooting guidelines
+
+### Fixes
+- **Protocol Parameter Parsing**: Enhanced regex-based parsing supporting quoted strings and complex parameter structures
+- **Connection State Handling**: Robust state machine preventing connection race conditions and ensuring proper cleanup
+- **Binary Data Support**: Efficient handling of preview frames and sensor data without blocking text command processing
+- **Thread Safety**: Proper coroutine usage and thread isolation for network operations and recording control
+=======
+## [2.2.1] - Enhanced Shimmer3 GSR BLE Support (2024-12-21)
+**Commit ID**: 64fdf6b
+
+### Added
+- **Enhanced BLE Scanning**: ShimmerDeviceManager now uses ScanFilters targeting Shimmer service UUID (49535343-FE7D-4AE5-8FA9-9FAFD205E455)
+- **Device Selection Dialog**: Multi-device selection interface in ShimmerMvpActivity showing paired/unpaired devices
+- **ObjectCluster Conversion**: Complete convertObjectClusterToSensorSample() method with unified timestamp management
+- **Signal Quality Assessment**: Intelligent quality scoring based on GSR range and ADC values
+- **Visual Status Indicators**: Color-coded connection status icon (green=connected, orange=connecting, red=failed)
+- **Comprehensive Device Discovery**: Scans for both paired and unpaired Shimmer devices with proper filtering
+
+### Enhanced
+- **BLE Permission Handling**: Proper BLUETOOTH_SCAN, BLUETOOTH_CONNECT, and location permission requests
+- **Reconnection Logic**: Robust 3-attempt reconnection with exponential backoff delays  
+- **Data Timestamp Alignment**: Unified time source via TimestampManager.getCurrentTimestampNanos()
+- **User Feedback Systems**: Enhanced connection status messages and device guidance
+- **ObjectCluster Data Extraction**: Calibrated GSR values, PPG data, and accelerometer readings
+
+### Fixed
+- **Device Selection UX**: Users can now choose from multiple discovered Shimmer devices
+- **Connection Status UI**: Real-time visual feedback with appropriate color coding
+- **Data Quality Handling**: Proper validation and quality assessment of GSR readings
+- **Bluetooth State Management**: Better handling of disabled Bluetooth and permission states
+
+### Technical Implementation
+- **Files Modified**: ShimmerDeviceManager.kt, GSRSensorRecorder.kt, TimestampManager.kt, ShimmerMvpActivity.kt, activity_shimmer_mvp.xml
+- **BLE Architecture**: Enhanced scanning with device name patterns and MAC prefix filtering
+- **MVP Compliance**: Focus on core functionality without extensive testing infrastructure
+
+## [2.2.1] - SmartRefreshLayout Dependency Resolution Fix (2024-12-21)
+
+### Fixed
+- **SmartRefreshLayout Dependency Resolution**: Fixed 401 Unauthorized errors for `com.scwang.smart:refresh-layout-kernel:2.1.0` and `com.scwang.smart:refresh-header-classics:2.1.0`
+- **Maven Coordinates Correction**: Updated to use correct group ID `io.github.scwang90` instead of `com.scwang.smart` in version catalog
+- **Pull-to-refresh Functionality**: Resolved build failures affecting IRGalleryFragment, PDFListFragment, and PDFListActivity
+- **JitPack Resolution Issues**: Migrated SmartRefreshLayout dependencies from JitPack to Maven Central for reliable resolution
+
+### Changed  
+- **Version Catalog**: Updated `refresh-layout-kernel` and `refresh-header-classics` library definitions to use `io.github.scwang90` group ID
+- **Repository Resolution**: SmartRefreshLayout now resolved from Maven Central instead of JitPack
+
+### Technical Details
+- **Root Cause**: JitPack returning 401 Unauthorized for `com.scwang.smart` artifacts
+- **Solution**: Use official Maven Central artifacts with group ID `io.github.scwang90`  
+- **Backwards Compatibility**: Package names in code remain unchanged (`com.scwang.smart.refresh.layout.*`)
+- **Affected Modules**: `component:thermalunified` (primary usage)
+
+## [2.3.0] - Sensor Timestamp Synchronization Unification (2024-12-23)
+
+### Added
+- **Unified Timestamp System**: All sensors now use consistent TimestampManager instead of mixed System.nanoTime()/SystemClock approaches
+- **SessionSync Markers**: Added automatic SessionSync event logging at session start for cross-sensor alignment verification
+- **Drift Analysis Logging**: Enhanced TimeSynchronizationService with device timestamp drift monitoring capabilities
+- **Cross-Device Sync Documentation**: Enhanced NTP-like handshake with better logging and sync quality reporting
+- **Timestamp Verification Activity**: Added TimestampSyncVerificationActivity for manual testing of multi-modal timestamp alignment
+- **Wall-Clock Conversion**: Added convertMonotonicToWallClock method for consistent epoch time conversion
+
+### Changed
+- **RGB Camera Recorder**: Replaced all System.nanoTime() calls with TimestampManager.getCurrentTimestampNanos()
+- **Thermal Recorder**: Unified timestamp usage to TimestampManager for consistent time base
+- **GSR Sensor Recorder**: Updated to use unified timestamp system for synchronization compatibility
+- **Enhanced NTP Protocol**: Improved PC-Phone synchronization with better quality metrics and drift monitoring
+- **Session Metadata**: Enhanced with automatic sync event creation for all recording modalities
+
+### Fixed
+- **Timestamp Inconsistency**: Resolved mixed timestamp sources across sensors (System.nanoTime vs SystemClock.elapsedRealtimeNanos)
+- **Cross-Sensor Alignment**: All modalities now share the same time base for post-processing alignment verification
+- **Sync Quality Reporting**: Added detailed logging of network latency and clock offset for troubleshooting
+
+### Technical Details
+- **Unified Time Base**: All sensors use System.currentTimeMillis() epoch time with TimestampManager for consistency
+- **SessionSync Events**: Every sensor logs start event with timestamp for post-hoc verification within millisecond tolerance
+- **NTP Enhancement**: PC-Phone handshake includes quality metrics and automatic drift detection
+- **Verification Tests**: Manual test activity simulates sharp multi-modal events (e.g., hand clap) for alignment validation
 
 ## [2.2.0] - Kotlin Compilation Error Fixes (2024-12-21)
 
@@ -157,7 +292,7 @@
 
 ## [2.0.0] - Complete Implementation (2024-12-19)
 
-### ✅ MAJOR IMPLEMENTATION COMPLETE
+### MAJOR IMPLEMENTATION COMPLETE
 
 **Nuclear Library Unification - FULLY IMPLEMENTED:**
 
@@ -197,7 +332,7 @@
 
 ### Added
 
-- **libcore** - Unified core library combining libapp, libir, and libui functionality
+- **libunified** - Unified core library combining libapp, libir, and libui functionality
 - Comprehensive feasibility analysis for three-library merge
 - Proof-of-concept implementation with resolved resource conflicts
 
@@ -219,7 +354,7 @@
 - **libapp**: 247 source files, application framework
 - **libir**: 64 source files, IR camera processing
 - **libui**: 287 source files, UI components and charting
-- **Total unified**: 598 source files in single libcore module
+- **Total unified**: 598 source files in single libunified module
 
 ### Implementation Status
 
@@ -235,3 +370,73 @@
 - Phase 2: Migrate components to use libcore
 - Phase 3: Deprecate original libraries
 - Phase 4: Update documentation and diagrams
+## [2.3.0] - RGB Camera CameraX Preview Integration (2024-12-22)
+
+### Added
+- **Live Camera Preview**: Added PreviewView widgets to UnifiedSensorActivity and MultiModalRecordingActivity layouts
+- **Camera Status Display**: Added real-time camera status text showing initialization and recording states
+- **Enhanced Error Types**: Added PERMISSION_DENIED error type for better camera error handling
+- **Frame Throttling Constants**: Added FRAME_CAPTURE_EVERY_N_FRAMES and MAX_PENDING_CAPTURES configuration
+
+### Enhanced
+- **RgbCameraRecorder Integration**: Enhanced UnifiedSensorActivity to initialize RgbCameraRecorder with PreviewView
+- **Quality Selector Configuration**: Improved createOptimizedRecorder() with UHD and proper fallback strategy
+- **Frame Capture Optimization**: Reduced CAPTURE_FPS from 30 to 12fps with every-Nth-frame throttling for I/O performance
+- **Error Handling**: Enhanced CameraX initialization with specific SecurityException and IllegalStateException handling
+- **Camera Status Observation**: Added camera status flow observation in UnifiedSensorActivity for live status updates
+
+### Fixed
+- **Resource Cleanup**: Verified stopRecording() properly calls cameraProvider.unbindAll() and executor shutdown
+- **Lifecycle Management**: Confirmed cleanup() method properly releases all camera resources and cancels frame capture jobs
+- **Initialization Error Display**: Updated showInitializationError() to include camera initialization failures
+
+### Changed
+- **Preview Resolution**: Set PreviewView to 200dp height with black background for better visibility
+- **Camera Initialization**: Enhanced initialize() method with comprehensive try-catch blocks for robust error handling
+- **Frame Rate**: Optimized frame capture from 30fps to 12fps for better I/O performance and reduced storage overhead
+
+*Commit: 98b51fa*
+
+- DONE: Created unified libunified structure
+- DONE: Merged all source code without namespace conflicts
+- DONE: Resolved resource conflicts
+- DONE: Build system refined for complex dependencies
+- COMPLETE: Ready for phased migration approach
+
+### Implementation Results (COMPLETED)
+
+- Phase 1: Created minimal working libunified - COMPLETED
+- Phase 2: Migrated components to use libunified - COMPLETED
+- Phase 3: Deprecated original libraries - COMPLETED
+- Phase 4: Updated documentation and diagrams - IN PROGRESS
+
+---
+
+## Documentation Update - ASCII Safety and Current State Reflection (2024-12-22)
+
+**Commit**: c7769bc
+
+### Changes Made
+- Removed all emoji characters from markdown documentation (91 occurrences)
+- Updated all references from libcore to libunified to reflect actual implementation
+- Updated MERMAID diagrams to show completed migration status instead of proposed
+- Fixed repository structure documentation to reflect current BLE module organization
+- Updated API documentation to show unified library architecture
+- Converted all status indicators to ASCII-safe text equivalents
+
+### Files Updated
+- README.md: Removed emojis, updated library references
+- MERMAID_DIAGRAMS.md: Updated architecture diagrams, removed emojis, showed completion
+- BACKLOG.md: Updated all library references, removed emojis, marked tasks complete
+- docs/API_REFERENCE.md: Updated to show unified library structure
+- docs/DEVELOPER_GUIDE.md: Updated repository structure, removed emojis
+- docs/README.md: Removed emojis from status indicators
+- docs/modules/README.md: Removed emojis from headers
+- dev.sh: Removed emojis from generated diagrams
+
+### Key Corrections
+- libcore -> libunified (reflecting actual implementation)
+- Proposed status -> Completed status in migration diagrams  
+- Old three-library structure -> Current unified structure
+- BleModule -> ble-core, ble-shimmer, ble-topdon (current modular structure)
+

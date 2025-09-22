@@ -142,6 +142,34 @@ class Device : Comparable<Device?>, Cloneable, Parcelable {
         this.connectionState = ConnectionState.valueOf(`in`.readString()!!)
     }
 
+    /**
+     * Get device address
+     */
+    fun getAddress(): String {
+        return address
+    }
+
+    /**
+     * Get device name
+     */
+    fun getName(): String {
+        return name
+    }
+
+    /**
+     * Get device type
+     */
+    fun getType(): Int {
+        return BluetoothPermissionUtils.getDeviceType(EasyBLE.getInstance()?.context, originDevice)
+    }
+
+    /**
+     * Get bond state
+     */
+    fun getBondState(): Int {
+        return BluetoothPermissionUtils.getDeviceBondState(EasyBLE.getInstance()?.context, originDevice)
+    }
+
     companion object {
         val CREATOR: Parcelable.Creator<Device?> = object : Parcelable.Creator<Device?> {
             override fun createFromParcel(source: Parcel): Device {

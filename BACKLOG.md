@@ -1,4 +1,128 @@
 # Project Backlog
+## High Priority - PC-Orchestrated Multi-Modal Recording System ✅ COMPLETED - Commit 6133760
+
+### EPIC: Standardized Networking Protocol for Multi-Device Coordination - COMPLETED
+
+**Status**: COMPLETED ✅ (Issue #78)
+
+#### PC-Orchestrated Recording Implementation (COMPLETED)
+- [x] Design and implement standardized text-based protocol for PC-Android communication
+- [x] Create Protocol.kt with message constants, creation utilities, and parsing functions
+- [x] Implement ProtocolHandler.kt for command processing with callback interface architecture
+- [x] Develop NetworkConnectionManager.kt with automatic reconnection and connection state management
+- [x] Enhance NetworkServer.kt to support both text commands and binary frame data streams
+- [x] Build complete PC controller (standardized_controller.py) with multi-device orchestration capabilities
+- [x] Integrate NTP-style time synchronization for sub-10ms accuracy on local networks
+- [x] Implement coordinated session management with unique session IDs across multiple devices
+- [x] Add real-time data streaming for GSR sensor data and preview frame monitoring
+- [x] Create robust error recovery with exponential backoff and timeout handling
+- [x] Develop interactive demo application (demo_pc_controller.py) for testing and validation
+- [x] Build comprehensive test suite (test_protocol.py) with protocol validation and mock device simulation
+- [x] Complete integration with existing RecordingService, TimeManager, and preview streaming infrastructure
+- [x] Create complete documentation (NETWORKING_IMPLEMENTATION.md) with protocol specs and usage guide
+
+#### Technical Achievements
+- **Protocol Design**: Text-based protocol supporting HELLO, SYNC_REQUEST/RESPONSE, START_RECORD/STOP_RECORD, ACK/ERROR, DATA_GSR, FRAME messages
+- **Android Integration**: Seamless integration with existing recording infrastructure without breaking changes
+- **PC Controller**: Complete multi-device orchestration system with device registry, session management, and time synchronization
+- **Connection Resilience**: Robust connection management with state tracking (CONNECTING, CONNECTED, ERROR, RECONNECTING, DISCONNECTED)
+- **Real-Time Monitoring**: Live sensor data streaming and preview frame transmission during coordinated recording sessions
+- **Session Coordination**: Synchronized start/stop operations across multiple Android sensor nodes with proper acknowledgment handling
+- **Time Synchronization**: NTP-style handshake achieving precise temporal alignment between PC and Android devices
+- **Error Recovery**: Exponential backoff reconnection strategy with graceful degradation ensuring local recording continues
+
+#### Validation and Testing
+- **Protocol Testing**: Comprehensive test suite validating message parsing, creation, flow simulation, and socket communication
+- **Mock Device Simulation**: Complete Android device simulation for development and integration testing without physical hardware
+- **Interactive Demo**: Real-time PC controller interface for testing with actual Android devices and session coordination
+- **Integration Verification**: Validation of seamless integration with existing recording, preview, and time management systems
+
+## High Priority - SmartRefreshLayout Dependency Resolution ✅ COMPLETED
+
+
+## Recently Completed - Shimmer3 GSR BLE Enhancement ✅
+**Commit ID**: 64fdf6b
+
+### EPIC: Enhanced Shimmer3 GSR BLE Support Implementation - COMPLETED ✅
+
+**Status**: COMPLETED ✅
+
+#### BLE Scanning Enhancement (COMPLETED)
+- [x] Replaced placeholder device discovery with active BLE scanning using ScanFilters
+- [x] Implemented targeting of Shimmer service UUID (49535343-FE7D-4AE5-8FA9-9FAFD205E455)  
+- [x] Added device name pattern filtering (shimmer, gsr, rn4, shimmer3)
+- [x] Added MAC address prefix filtering for known Shimmer prefixes
+- [x] Enhanced BLUETOOTH_SCAN, BLUETOOTH_CONNECT, and location permission handling
+- [x] Updated UI with comprehensive device discovery showing paired/unpaired status
+
+#### Connection and Streaming Setup (COMPLETED) 
+- [x] Enhanced ShimmerBluetoothManagerAndroid connection management in ShimmerDeviceManager
+- [x] Implemented multi-device selection dialog for user choice
+- [x] Added device prioritization logic (paired devices prioritized)
+- [x] Set up proper ObjectCluster data reception callbacks
+- [x] Implemented convertObjectClusterToSensorSample() method with full data extraction
+
+#### Robust Connection Management (COMPLETED)
+- [x] Enhanced existing 3-attempt reconnection logic with proper delays
+- [x] Added exponential backoff mechanism for reconnection attempts  
+- [x] Implemented graceful recording stop on connection failure
+- [x] Updated UI with real-time connection status and reconnection feedback
+- [x] Added comprehensive error handling for all connection states
+
+#### Data Logging and Timestamp Alignment (COMPLETED)
+- [x] Implemented unified time source via TimestampManager.getCurrentTimestampNanos()
+- [x] Enhanced GSR CSV timestamp alignment with consistent formatting
+- [x] Maintained existing batch-writing approach for optimal performance
+- [x] Extract calibrated GSR values, PPG data, and accelerometer readings from ObjectCluster
+- [x] Added signal quality assessment and data validation
+
+#### UI Feedback Integration (COMPLETED)
+- [x] Added color-coded connection status indicators (green=connected, orange=connecting, red=failed)
+- [x] Implemented comprehensive user feedback for no devices found/Bluetooth off scenarios
+- [x] Added device selection dialog showing device names, addresses, and paired status
+- [x] Enhanced connection status messages with detailed troubleshooting guidance
+- [x] Added real-time visual feedback during scanning and connection processes
+
+### Technical Implementation Details
+- **Files Modified**: ShimmerDeviceManager.kt, GSRSensorRecorder.kt, TimestampManager.kt, ShimmerMvpActivity.kt, activity_shimmer_mvp.xml
+- **BLE Architecture**: Enhanced scanning with proper ScanSettings and comprehensive filtering
+- **Data Processing**: Complete ObjectCluster to GSRSample conversion with unified timestamps
+- **UI/UX**: Enhanced user experience with visual indicators and multi-device selection
+- **Error Handling**: Robust reconnection logic and comprehensive error recovery
+
+## High Priority - TC001 Thermal Camera Integration Enhancement - COMPLETED ✅
+
+### TASK: TC001 Hardware Integration - Commit 4b1c7a9
+**Status**: COMPLETED ✅
+- [x] Replace stub/reflection approach with real Topdon TC001 SDK calls in ThermalCameraRecorder
+- [x] Implement proper SDK initialization in ThermalCameraRecorder.startRecording()
+- [x] Add native library loading for TC001 SDK with graceful fallback
+- [x] Configure USB device opening with correct mode (256×192 IR resolution)
+- [x] Move SDK initialization to background thread (already using withContext(Dispatchers.IO))
+
+### TASK: Continuous Frame Capture Implementation - COMPLETED ✅
+**Status**: COMPLETED ✅
+- [x] Implement 10Hz continuous thermal frame capture loop
+- [x] Register IFrameCallback for SDK frame delivery
+- [x] Create background Handler for captureThermalFrame() calls with 100ms intervals
+- [x] Add frame conversion to Bitmap and PNG saving to thermal_images/ directory
+- [x] Log temperature telemetry (min/max) to thermal CSV with system timestamps
+
+### TASK: USB Permission and Device Management - COMPLETED ✅
+**Status**: COMPLETED ✅
+- [x] Enhance USB permission flow in ThermalCameraRecorder (already implemented)
+- [x] BroadcastReceiver for USB_DEVICE_ATTACHED/DETACHED already exists (ThermalUsbReceiver)
+- [x] Add TC001-specific VID/PID verification (0x2744/0x0001)
+- [x] Handle graceful camera open/close on permission grant/detach
+- [x] AndroidManifest.xml already has TC001 USB device filter configured
+
+### TASK: Error Handling and Robustness - COMPLETED ✅
+**Status**: COMPLETED ✅
+- [x] Add try-catch blocks around all SDK calls
+- [x] Implement graceful fallback when camera fails or disconnects
+- [x] Ensure other sensors continue recording on thermal failure
+- [x] Add user notification via Toast for camera errors
+- [x] Prevent app crashes from thermal thread failures
 
 ## High Priority - Session Lifecycle Implementation ✅ COMPLETED
 
@@ -41,10 +165,69 @@
 
 ## High Priority - Kotlin Compilation Fixes ✅ COMPLETED
 
-### EPIC: BLE Core Module Compilation Error Resolution - COMPLETED
+### EPIC: SmartRefreshLayout JitPack Resolution Issue - COMPLETED
 
 
 **Status**: COMPLETED ✅
+
+#### Dependency Resolution Fixes (COMPLETED)
+- [x] Diagnose 401 Unauthorized errors for SmartRefreshLayout dependencies from JitPack
+- [x] Identify correct Maven coordinates: `io.github.scwang90` instead of `com.scwang.smart`
+- [x] Update version catalog with correct group ID for `refresh-layout-kernel:2.1.0`
+- [x] Update version catalog with correct group ID for `refresh-header-classics:2.1.0`
+- [x] Verify dependency resolution works from Maven Central
+- [x] Test compilation success for modules using SmartRefreshLayout
+- [x] Validate pull-to-refresh functionality remains intact
+- [x] Update documentation with resolution details
+
+#### Technical Achievement
+- **Root Cause**: JitPack returning 401 Unauthorized for `com.scwang.smart` group ID
+- **Solution**: Migrated to official Maven Central artifacts using `io.github.scwang90` group ID
+- **Impact**: Fixed build failures in `IRGalleryFragment`, `PDFListFragment`, `PDFListActivity`
+- **Backwards Compatibility**: Code imports remain unchanged, only Maven coordinates updated
+
+## High Priority - Timestamp Synchronization System ✅ COMPLETED
+
+### EPIC: Sensor Timestamp Synchronization Unification - COMPLETED
+
+**Status**: COMPLETED ✅
+
+#### Timestamp System Unification (COMPLETED)
+- [x] Analyze current timestamp inconsistencies across sensors (System.nanoTime vs SystemClock.elapsedRealtimeNanos)
+- [x] Unify RGB Camera Recorder to use TimestampManager.getCurrentTimestampNanos()
+- [x] Unify Thermal Recorder timestamp usage for consistency 
+- [x] Unify GSR Sensor Recorder timestamp system integration
+- [x] Replace System.nanoTime() with wall-clock epoch time base via TimestampManager
+- [x] Add convertMonotonicToWallClock method for consistent time conversion
+
+#### SessionSync Markers and Verification (COMPLETED)
+- [x] Implement SessionStart sync event logging in TimeSynchronizationService
+- [x] Add SessionSync markers to RGB camera recorder at recording start
+- [x] Add SessionSync markers to thermal recorder with metadata
+- [x] Create TimestampSyncVerificationActivity for manual alignment testing
+- [x] Implement sharp event simulation (hand clap test) for multi-modal verification
+- [x] Add timestamp alignment analysis within millisecond tolerance
+
+#### Cross-Device Synchronization Enhancement (COMPLETED)
+- [x] Enhance TimeManager NTP-like PC-Phone handshake with quality reporting
+- [x] Add drift analysis logging with device vs phone timestamp comparison
+- [x] Document assumption that both devices sync to internet time servers
+- [x] Implement automatic sync quality monitoring and reporting
+- [x] Add network latency and clock offset detailed logging
+
+#### Testing and Verification (COMPLETED)
+- [x] Create verification activity with layout for timestamp alignment testing
+- [x] Implement multi-sensor timestamp comparison within 5ms tolerance
+- [x] Add sync event metadata logging for post-processing analysis
+- [x] Test sessionSync markers across RGB, GSR, and Thermal modalities
+
+
+## High Priority - Kotlin Compilation Fixes - COMPLETED
+
+### EPIC: BLE Core Module Compilation Error Resolution - COMPLETED
+
+
+**Status**: COMPLETED
 
 #### Compilation Error Fixes (COMPLETED)
 - [x] Fix AppHolder11.kt Activity lifecycle callback parameter type mismatches
@@ -66,7 +249,7 @@
 
 ### EPIC: BLE Core Module Stabilization - IN PROGRESS
 
-**Status**: IN PROGRESS ⚠️
+**Status**: IN PROGRESS
 
 #### BLE Core Compilation Fixes (COMPLETED)
 - [x] Fix GenericRequest.kt compilation errors
@@ -82,28 +265,28 @@
 - [ ] Validate BLE operations end-to-end
 - [ ] Review and clean up unused/legacy BLE code
 
-## High Priority - Compilation Fixes ✅ COMPLETED
+## High Priority - Compilation Fixes - COMPLETED
 
-### BLE Core Compilation Issue - COMPLETED ✅
+### BLE Core Compilation Issue - COMPLETED
 - [x] Fix WriteOptions.Builder private field access issue
 - [x] Change Builder fields from private to internal visibility
 - [x] Verify compilation of WriteOptions class works correctly
 - [x] Update documentation
-## Critical Priority - BLE Core Module Issues ✅ COMPLETED
+## Critical Priority - BLE Core Module Issues - COMPLETED
 
 ### TASK: UUID Import Fix - COMPLETED
-**Status**: COMPLETED ✅
+**Status**: COMPLETED
 - [x] Fixed missing `import java.util.UUID` statement in Request.kt interface
 - [x] Resolved "Unresolved reference 'UUID'" compilation errors
 - [x] Verified consistency with other BLE core module files
 - [x] Updated documentation to reflect fix
 
 
-## High Priority - Build System Maintenance ✅ COMPLETED
+## High Priority - Build System Maintenance - COMPLETED
 
 ### EPIC: Gradle Build System Standardization - COMPLETED
 
-**Status**: COMPLETED ✅
+**Status**: COMPLETED
 
 #### Build System Standardization (COMPLETED)
 - [x] Fix settings.gradle.kts to remove non-existent modules (thermal, thermal-ir, thermal-lite, RangeSeekBar)
@@ -120,22 +303,22 @@
 
 ### EPIC: Merge libapp, libir, libui into Unified Library
 
-**Status**: COMPLETED ✅
+**Status**: COMPLETED
 
 #### Phase 1: Foundation (COMPLETED)
-- [x] Create minimal working libcore with essential functionality
+- [x] Create minimal working libunified with essential functionality
 - [x] Resolve build dependency conflicts for JAR/AAR libraries  
-- [x] Test basic libcore compilation and functionality
+- [x] Test basic libunified compilation and functionality
 - [x] Create migration guide for components
 
 #### Phase 2: Component Migration (COMPLETED)
 
-- [x] Migrate thermal-lite component to use libcore (pilot)
-- [x] Migrate thermal component to use libcore
-- [x] Migrate thermal-ir component to use libcore
-- [x] Migrate gsr-recording component to use libcore
-- [x] Migrate user component to use libcore
-- [x] Update main app to use libcore
+- [x] Migrate thermal-lite component to use libunified (pilot)
+- [x] Migrate thermal component to use libunified
+- [x] Migrate thermal-ir component to use libunified
+- [x] Migrate gsr-recording component to use libunified
+- [x] Migrate user component to use libunified
+- [x] Update main app to use libunified
 
 #### Phase 3: Deprecation and Cleanup (COMPLETED)
 
@@ -146,7 +329,7 @@
 
 #### Phase 4: Documentation and Architecture
 
-- [ ] Update ARCHITECTURE.md with new libcore structure
+- [x] Update ARCHITECTURE.md with new libunified structure
 - [ ] Update API_REFERENCE.md with unified API documentation
 - [ ] Update MERMAID_DIAGRAMS.md with simplified architecture
 - [ ] Update README.md with new build instructions
@@ -155,23 +338,23 @@
 
 ### Gradle Build Improvements
 
-- [ ] Optimize libcore build configuration
+- [x] Optimize libunified build configuration
 - [ ] Implement proper dependency management for native libraries
 - [ ] Add build caching optimizations
 - [ ] Create build validation scripts
 
 ### Development Tools
 
-- [ ] Update dev.sh script for libcore support
-- [ ] Create migration validation tools
-- [ ] Add automated testing for libcore functionality
+- [x] Update dev.sh script for libunified support
+- [x] Create migration validation tools
+- [x] Add automated testing for libunified functionality
 
 ## Low Priority - Future Enhancements
 
 ### Architecture Improvements
 
-- [ ] Consider splitting libcore into smaller focused modules if needed
-- [ ] Implement proper separation of concerns within libcore
+- [x] Consider splitting libunified into smaller focused modules if needed
+- [x] Implement proper separation of concerns within libunified
 - [ ] Add module boundaries and API contracts
 
 ### Performance Optimization
@@ -184,25 +367,25 @@
 
 ### Resolved Issues
 
-- ✅ Resource conflicts between libraries (strings, dimensions)
-- ✅ Namespace conflicts analysis (no conflicts found)
-- ✅ Dependency relationship mapping
+- DONE: Resource conflicts between libraries (strings, dimensions)
+- DONE: Namespace conflicts analysis (no conflicts found)
+- DONE: Dependency relationship mapping
 
 ### Outstanding Issues
 
-- ⚠️ Complex JAR/AAR library conflicts in build system
-- ⚠️ KSP annotation processing optimization needed
-- ⚠️ Native library dependency resolution
+- ISSUE: Complex JAR/AAR library conflicts in build system
+- ISSUE: KSP annotation processing optimization needed
+- ISSUE: Native library dependency resolution
 
 ## Research and Analysis
 
 ### Completed Analysis
 
-- ✅ Library structure and size analysis (598 total source files)
-- ✅ Dependency graph mapping and circular dependency check
-- ✅ Namespace conflict analysis across three libraries
-- ✅ Build system impact assessment
-- ✅ Resource conflict identification and resolution
+- DONE: Library structure and size analysis (598 total source files)
+- DONE: Dependency graph mapping and circular dependency check
+- DONE: Namespace conflict analysis across three libraries
+- DONE: Build system impact assessment
+- DONE: Resource conflict identification and resolution
 
 ### Benefits Quantified
 
