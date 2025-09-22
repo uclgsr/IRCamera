@@ -349,9 +349,7 @@ class GSRSensorRecorder(
                 this@GSRSensorRecorder.sessionDirectory = sessionDirectory
                 recordingStartTime = TimestampManager.getCurrentTimestampNanos()
 
-                timeSyncService = TimeSynchronizationService().apply {
-                    initializeSession(sessionDirectory)
-                }
+                timeSyncService = recordingController.getTimeSynchronizationService()
 
                 var shimmerRecordingStarted = false
                 var recordingSuccessful = false
