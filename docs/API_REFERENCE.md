@@ -19,13 +19,12 @@ classes, methods, and interfaces.
 
 ### Library Components
 
-| Library       | Purpose                                | Dependencies                | Status    |
-|---------------|----------------------------------------|-----------------------------|-----------|
-| **libir**     | Core infrared camera processing        | OpenCV, native code         | ✅ Working |
-| **libcom**    | Communication and networking           | TCP, JSON, mDNS             | ✅ Working |
-| **libapp**    | Application framework                  | Android SDK                 | ✅ Working |
-| **libui**     | User interface components              | Android UI, Material Design | ✅ Working |
-| **libmatrix** | Matrix operations for image processing | Native math libraries       | ✅ Working |
+| Library         | Purpose                                | Dependencies                | Status    |
+|-----------------|----------------------------------------|-----------------------------|-----------|
+| **libunified**  | Unified core library (app+ir+ui)      | OpenCV, Android SDK, native | WORKING |
+| **ble-core**    | Core BLE functionality                 | Android BLE APIs            | WORKING |
+| **ble-shimmer** | GSR/Shimmer device-specific BLE       | ble-core                    | WORKING |
+| **ble-topdon**  | Thermal/Topdon device-specific BLE    | ble-core                    | WORKING |
 
 ## PC Controller Hub API
 
@@ -330,11 +329,19 @@ data class GSRDataPoint(
 
 ## Core Libraries API
 
-### libir - Infrared Processing Library
+### libunified - Unified Core Library
 
-**Location**: `libir/`
+**Location**: `libunified/`
 
-#### ThermalProcessor
+The unified library combines application framework, infrared processing, and UI components into a single cohesive module under the `com.mpdc4gsr.libunified` namespace.
+
+#### Application Framework (com.mpdc4gsr.libunified.app.*)
+
+Core application utilities, database management, and configuration handling.
+
+#### Infrared Processing (com.mpdc4gsr.libunified.ir.*)
+
+**ThermalProcessor**
 
 ```kotlin
 class ThermalProcessor {
@@ -408,11 +415,9 @@ class NetworkManager {
 }
 ```
 
-### libui - UI Components Library
+#### UI Components (com.mpdc4gsr.libunified.ui.*)
 
-**Location**: `libui/`
-
-#### StatusIndicator
+**StatusIndicator**
 
 ```kotlin
 class StatusIndicator @JvmOverloads constructor(
@@ -667,7 +672,7 @@ class PackageManager:
 
 ---
 
-**Status**: ✅ Complete API Reference Documentation  
+**Status**: COMPLETE - Complete API Reference Documentation  
 **Last Updated**: Documentation Consolidation v1.0  
 **Coverage**: All major components and interfaces documented  
 **Maintenance**: Update when adding new components or major API changes

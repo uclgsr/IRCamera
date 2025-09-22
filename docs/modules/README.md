@@ -4,7 +4,7 @@
 
 **All module documentation has been consolidated into the unified documentation system.**
 
-## 🔗 Find Module Documentation Here:
+## Find Module Documentation Here:
 
 ### Complete API Reference
 
