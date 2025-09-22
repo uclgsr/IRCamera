@@ -645,7 +645,7 @@ class RgbCameraRecorder(
 
 
                 sessionReferenceTimestampNs.set(sessionMetadata.sessionStartMonotonicNs)
-                val localStartNs = System.nanoTime()
+                val localStartNs = TimestampManager.getCurrentTimestampNanos()
                 sessionStartOffsetNs.set(localStartNs - sessionMetadata.sessionStartMonotonicNs)
 
 
@@ -654,6 +654,13 @@ class RgbCameraRecorder(
 
                 setupOutputFiles()
                 initializeCsvWriter()
+
+                sessionMetadata.addSyncEvent("RGB_RECORDING_START", mapOf(
+                    "sensor_type" to "rgb_camera",
+                    "sensor_id" to sensorId,
+                    "recording_config" to "${selectedVideoWidth}x${selectedVideoHeight}@${selectedVideoFps}fps",
+                    "sync_verification" to "enabled"
+                ))
 
 
                 if (cameraProvider == null) {
@@ -770,7 +777,7 @@ class RgbCameraRecorder(
     }
 
     private fun initializeSessionTiming() {
-        val localStartNs = System.nanoTime()
+        val localStartNs = TimestampManager.getCurrentTimestampNanos()
         sessionStartTime.set(localStartNs)
         val metadata = sessionMetadata
         if (metadata != null) {
@@ -889,7 +896,7 @@ class RgbCameraRecorder(
                         continue
                     }
 
-                    val frameStartTime = System.nanoTime()
+                    val frameStartTime = TimestampManager.getCurrentTimestampNanos()
                     pendingCaptureCount++
 
 
@@ -1510,7 +1517,7 @@ class RgbCameraRecorder(
     override fun getErrorFlow(): Flow<SensorError> = errorFlow.asSharedFlow()
 
     override fun getRecordingStats(): RecordingStats {
-        val currentTime = System.nanoTime()
+        val currentTime = TimestampManager.getCurrentTimestampNanos()
         val sessionDuration = if (sessionStartTime.get() > 0) {
             (currentTime - sessionStartTime.get()) / 1_000_000
         } else 0L
@@ -1564,7 +1571,7 @@ class RgbCameraRecorder(
         samplesRecorded = 0,
         currentDataRate = 0.0,
         storageUsedMB = 0.0,
-        timestampNs = System.nanoTime()
+        timestampNs = TimestampManager.getCurrentTimestampNanos()
     )
 
     private suspend fun updateStatus(
@@ -1579,7 +1586,7 @@ class RgbCameraRecorder(
             samplesRecorded = stats.totalSamplesRecorded,
             currentDataRate = stats.averageDataRate,
             storageUsedMB = stats.storageUsedMB,
-            timestampNs = System.nanoTime()
+            timestampNs = TimestampManager.getCurrentTimestampNanos()
         )
 
         statusFlow.emit(status)
@@ -1591,7 +1598,7 @@ class RgbCameraRecorder(
             sensorType = sensorType,
             errorType = errorType,
             errorMessage = message,
-            timestampNs = System.nanoTime(),
+            timestampNs = TimestampManager.getCurrentTimestampNanos(),
             isRecoverable = errorType != ErrorType.HARDWARE_DISCONNECTED
         )
 
