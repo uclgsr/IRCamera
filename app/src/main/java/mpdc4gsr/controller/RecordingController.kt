@@ -92,25 +92,33 @@ class RecordingController(
         sensorRecorders[sensorName] = sensorRecorder
     }
 
+    fun registerRgbCameraWithPreview(rgbCameraRecorder: RgbCameraRecorder) {
+        Log.i(TAG, "Registering RGB camera with preview integration")
+        registerSensor("RGB", rgbCameraRecorder)
+    }
+
     fun unregisterSensor(sensorName: String) {
         sensorRecorders.remove(sensorName)?.let { sensor ->
             Log.i(TAG, "Unregistered sensor: $sensorName")
         }
     }
 
-    suspend fun initializeSensors(): Boolean {
+    suspend fun initializeSensors(skipRgbCamera: Boolean = false): Boolean {
         return withContext(Dispatchers.IO) {
             try {
                 Log.i(TAG, "Initializing sensor recorders with robust error handling")
 
+                // Only create default RGB camera if not externally provided
+                if (!skipRgbCamera && !sensorRecorders.containsKey("RGB")) {
+                    val rgbCamera = RgbCameraRecorder(context, lifecycleOwner, null)
+                    registerSensor("RGB", rgbCamera)
+                    Log.i(TAG, "Created default RGB camera recorder without preview")
+                }
 
-                val rgbCamera = RgbCameraRecorder(context, lifecycleOwner, null)
                 val thermalCamera = ThermalCameraRecorder(context, "thermal_camera_1")
                 val gsrSensor =
                     GSRSensorRecorder(context, "gsr_shimmer_1", 128, this@RecordingController)
 
-
-                registerSensor("RGB", rgbCamera)
                 registerSensor("Thermal", thermalCamera)
                 registerSensor("Shimmer", gsrSensor)
 
@@ -1406,6 +1414,8 @@ class RecordingController(
     suspend fun emitSyncEvent(eventType: String, metadata: Map<String, String> = emptyMap()) {
         timeSynchronizationService.emitSyncEvent(eventType, metadata)
     }
+
+    fun getTimeSynchronizationService(): TimeSynchronizationService = timeSynchronizationService
 
 
     suspend fun validateTimestampConsistency(): Map<String, Long> {

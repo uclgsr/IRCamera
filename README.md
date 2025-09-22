@@ -4,7 +4,6 @@
 
 A Hub-and-Spoke architecture platform for multi-modal physiological sensing with thermal imaging, GSR, and RGB data
 collection.
-
 ## Recent Update: TC001 Thermal Camera Integration Enhancement - Commit 4b1c7a9
 
 **LATEST ACHIEVEMENT**: TC001 Topdon thermal camera integration has been **FULLY ENHANCED** with real SDK integration:
@@ -27,6 +26,48 @@ collection.
 - **Other Sensor Protection**: Ensures GSR and RGB sensors continue recording if TC001 fails
 
 ## Recent Update: Kotlin Compilation Errors Resolved
+
+## Recent Update: SmartRefreshLayout Dependency Resolution Fixed
+
+**LATEST ACHIEVEMENT**: SmartRefreshLayout dependency resolution issue **FULLY RESOLVED**:
+
+### Dependency Resolution Fixes
+
+- **Maven Coordinates Fixed**: Corrected group ID from `com.scwang.smart` to `io.github.scwang90` for SmartRefreshLayout components
+- **JitPack Issues Resolved**: Migrated from failing JitPack (401 Unauthorized) to reliable Maven Central resolution
+- **Pull-to-refresh Restored**: Fixed build failures in IRGalleryFragment, PDFListFragment, and PDFListActivity  
+- **Version Catalog Updated**: Enhanced dependency management with correct artifact coordinates
+
+### Technical Resolution Delivered
+
+- **Dependencies Fixed**: `refresh-layout-kernel:2.1.0` and `refresh-header-classics:2.1.0` now resolve correctly
+- **Repository Migration**: SmartRefreshLayout now sources from Maven Central instead of problematic JitPack
+- **Backwards Compatibility**: Code imports remain unchanged (`com.scwang.smart.refresh.layout.*`)
+- **Module Impact**: Primarily benefits `component:thermalunified` with pull-to-refresh functionality
+
+## Recent Update: Timestamp Synchronization System Unified
+
+**LATEST ACHIEVEMENT**: Complete timestamp synchronization unification across all sensor modalities has been **FULLY IMPLEMENTED**:
+
+### Timestamp System Unification Delivered
+
+- **Unified Time Base**: All sensors now use TimestampManager.getCurrentTimestampNanos() for consistent wall-clock epoch time
+- **SessionSync Markers**: Automatic sync event logging at session start for cross-sensor alignment verification
+- **Drift Analysis**: Enhanced logging of device vs phone timestamp differences for post-processing analysis
+- **Cross-Device Sync**: Enhanced NTP-like PC-Phone handshake with quality reporting and automatic monitoring
+- **Verification Tools**: TimestampSyncVerificationActivity for manual testing of multi-modal timestamp alignment
+
+### Technical Implementation Completed
+
+- **RGB Camera**: Replaced System.nanoTime() with unified TimestampManager across all recording operations
+- **Thermal Recorder**: Unified timestamp usage for consistent time base with session sync markers
+- **GSR Sensor**: Updated to use TimestampManager for compatibility with unified synchronization system
+- **Sharp Event Testing**: Manual verification tool simulates hand clap events across modalities within 5ms tolerance
+- **Wall-Clock Conversion**: Added convertMonotonicToWallClock for consistent epoch time translation
+
+
+## Previous Update: Kotlin Compilation Errors Resolved
+
 
 **LATEST ACHIEVEMENT**: All Kotlin compilation errors in BLE Core module have been **FULLY RESOLVED**:
 
@@ -64,12 +105,12 @@ collection.
 ## Recent Update: BLE Core Module Fixes Complete
 
 **LATEST ACHIEVEMENT**: The BLE Core module GenericRequest compilation issues have been **FULLY RESOLVED**:
-- ✅ GenericRequest.kt now compiles without errors
-- ✅ Request interface properly implemented with override modifiers
-- ✅ RequestBuilder interface enhanced with generic types and required properties
-- ✅ RequestCallback interface created for proper BLE operation callbacks
-- ✅ Device property handling fixed with custom getter/setter pattern
-- ✅ Enum merge conflicts resolved in RequestType and ConnectionState
+- GenericRequest.kt now compiles without errors
+- Request interface properly implemented with override modifiers
+- RequestBuilder interface enhanced with generic types and required properties
+- RequestCallback interface created for proper BLE operation callbacks
+- Device property handling fixed with custom getter/setter pattern
+- Enum merge conflicts resolved in RequestType and ConnectionState
 
 **Previous Achievement**: The build system has been **FULLY STANDARDIZED** for consistent development experience:
 
@@ -251,7 +292,7 @@ cd IRCamera
 
 This project benefits from the library unification analysis. When contributing:
 
-1. Consider the unified libcore approach for new functionality
+1. Consider the unified libunified approach for new functionality
 2. Test changes against both current and proposed architecture
 3. Update documentation for architectural changes
 4. Use GitHub Copilot for development assistance
@@ -261,6 +302,15 @@ This project benefits from the library unification analysis. When contributing:
 Research project - see individual component licenses for specific terms.
 
 - [Project Documentation](docs/) - Comprehensive technical documentation
+
+## Documentation Update Log
+
+### 2024-12-22 - Commit c7769bc
+- Removed all emoji characters from markdown documentation for ASCII safety
+- Updated library references from libcore to libunified throughout codebase
+- Fixed MERMAID diagrams to reflect completed unified architecture
+- Updated repository structure documentation to match current BLE module organization
+- Ensured documentation accurately reflects true state of repository
 
 ## Key Features
 
@@ -278,3 +328,41 @@ Research project - see individual component licenses for specific terms.
 - **Android Sensor Nodes**: Mobile data collection points
 - **TCP/mDNS Communication**: Automatic discovery and reliable data streaming
 - **Session Management**: Comprehensive recording session control
+
+## RGB Camera Functionality (CameraX) - Implementation Complete
+
+### ✅ Live Preview Setup
+- **Added PreviewView widgets** to `activity_unified_sensor.xml` and `activity_multi_modal_recording.xml` 
+- **Integrated RgbCameraRecorder with PreviewView** in `UnifiedSensorActivity.kt`
+- Preview view is 200dp height with black background for better visibility
+- Camera status text shows real-time camera state
+
+### ✅ High Resolution & Frame Rate Configuration  
+- **Enhanced createOptimizedRecorder()** with proper QualitySelector configuration:
+```kotlin
+QualitySelector.from(Quality.UHD, FallbackStrategy.lowerQualityThan(Quality.UHD))
+```
+- Supports up to 4K resolution with graceful fallback to lower quality
+- Device detection for 4K capability based on known device models
+
+### ✅ Frame Capture Optimisation
+- **Reduced CAPTURE_FPS from 30 to 12fps** for optimized I/O performance
+- **Added FRAME_CAPTURE_EVERY_N_FRAMES throttling** (every 2nd frame)
+- **Implemented MAX_PENDING_CAPTURES = 2** for better backpressure handling
+- Frame capture uses background executor via `imageCapture.takePicture(cameraExecutor, callback)`
+
+### ✅ Error Handling & Camera Selector
+- **Enhanced CameraX initialization** with comprehensive try-catch blocks:
+  - SecurityException for permission issues
+  - IllegalStateException for camera-in-use scenarios  
+  - General Exception handling with user-friendly error messages
+- **Camera switching capability** already implemented (front/back camera)
+- **Robust error notification system** via emitError() with specific ErrorType enum
+
+### ✅ Lifecycle Management on Stop
+- **Verified stopRecording()** properly calls `cameraProvider.unbindAll()`
+- **Confirmed cleanup()** shuts down executors with timeout handling
+- **Frame capture loops are cancelled** before unbinding camera
+- **All resources properly released** (recording, CSV writers, camera provider)
+
+*Implementation Status: All major requirements completed and ready for testing*
