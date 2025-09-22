@@ -14,6 +14,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+
 // UnifiedBleManager - using EasyBLE from com.topdon.ble instead
 
 class SensorSelectionDialog(

@@ -50,7 +50,7 @@ public class MethodInfo {
     public MethodInfo(@NonNull String name, @NonNull String tag, @Nullable Class<?>[] parameterTypes) {
         this(name, tag, toParameters(parameterTypes));
     }
-    
+
     public static MethodInfo valueOf(@NonNull Method method) {
         Tag annotation = method.getAnnotation(Tag.class);
         return new MethodInfo(method.getName(), annotation == null ? method.getName() : annotation.value(),

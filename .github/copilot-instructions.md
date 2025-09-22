@@ -1,7 +1,8 @@
 - THIS IS A MASTER THESIS PROJECT SO FOCUS ON MVP
 - NO COMMENTING, ONLY DEVELOPMENT RELATED COMMENTS
-- GROUNDTRUTH FOR TOPDON TC001 integration is https://github.com/CoderCaiSL/IRCamera/tree/github-main_ircamera 
-- GROUNDTRUTH FOR Shimmer3 GSR is https://github.com/ShimmerEngineering/Shimmer-Java-Android-API.git and https://github.com/ShimmerEngineering/ShimmerAndroidAPI
+- GROUNDTRUTH FOR TOPDON TC001 integration is https://github.com/CoderCaiSL/IRCamera/tree/github-main_ircamera
+- GROUNDTRUTH FOR Shimmer3 GSR is https://github.com/ShimmerEngineering/Shimmer-Java-Android-API.git
+  and https://github.com/ShimmerEngineering/ShimmerAndroidAPI
 - ALWAYS VERIFY WITH GRADLE CLEAN AND BUILD
 - NEVER USE EMOJIS
 - ONLY USE ASCI SAFE CHARACTER

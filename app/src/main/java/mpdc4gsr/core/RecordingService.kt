@@ -209,11 +209,11 @@ class RecordingService : LifecycleService() {
         createNotificationChannel()
 
         nsdManager = getSystemService(Context.NSD_SERVICE) as NsdManager
-        
+
         // Initialize ComprehensiveRecordingController with PermissionManager
         val permissionManager = mpdc4gsr.permissions.PermissionManager(this)
         recordingController = ComprehensiveRecordingController(this, this, permissionManager)
-        
+
         networkClient = NetworkClient(this)
         networkServer = NetworkServer(this, 8080)
         protocolHandler = ProtocolHandler(this, networkServer)
@@ -383,11 +383,11 @@ class RecordingService : LifecycleService() {
             if (::previewDataAdapter.isInitialized) {
                 previewDataAdapter.cleanup()
             }
-            
+
             if (::connectionManager.isInitialized) {
                 connectionManager.cleanup()
             }
-            
+
             lifecycleScope.launch {
                 recordingController.cleanup()
             }
@@ -1004,6 +1004,7 @@ class RecordingService : LifecycleService() {
                         previewStreamer.startStreaming()
                         previewDataAdapter.startDataPolling()
                     }
+
                     NetworkConnectionManager.ConnectionState.DISCONNECTED -> {
                         isConnectedToPC = false
                         Log.i(TAG, "PC Controller disconnected, still listening on port 8080")
@@ -1011,16 +1012,19 @@ class RecordingService : LifecycleService() {
                         previewDataAdapter.stopDataPolling()
                         previewStreamer.stopStreaming()
                     }
+
                     NetworkConnectionManager.ConnectionState.ERROR -> {
                         isConnectedToPC = false
                         Log.e(TAG, "Network connection error")
                         updateNotification("Network connection error")
                     }
+
                     NetworkConnectionManager.ConnectionState.RECONNECTING -> {
                         isConnectedToPC = false
                         Log.i(TAG, "Attempting to reconnect to PC Controller")
                         updateNotification("Reconnecting to PC Controller...")
                     }
+
                     NetworkConnectionManager.ConnectionState.CONNECTING -> {
                         Log.i(TAG, "Connecting to PC Controller...")
                         updateNotification("Connecting...")
@@ -1034,7 +1038,7 @@ class RecordingService : LifecycleService() {
                 handleProtocolMessage(message)
             }
         }
-        
+
         // Set up protocol handler with command callbacks
         protocolHandler.setCommandHandler(object : ProtocolHandler.CommandHandler {
             override suspend fun onStartRecording(sessionId: String): ProtocolHandler.CommandResult {
@@ -1051,7 +1055,7 @@ class RecordingService : LifecycleService() {
                     ProtocolHandler.CommandResult(false, "Start recording failed: ${e.message}")
                 }
             }
-            
+
             override suspend fun onStopRecording(sessionId: String): ProtocolHandler.CommandResult {
                 return try {
                     Log.i(TAG, "Remote stop recording command received for session: $sessionId")
@@ -1066,20 +1070,20 @@ class RecordingService : LifecycleService() {
                     ProtocolHandler.CommandResult(false, "Stop recording failed: ${e.message}")
                 }
             }
-            
+
             override suspend fun onSyncRequest(pcTimestamp: Long): ProtocolHandler.SyncResult {
                 return try {
                     val timeManager = mpdc4gsr.utils.TimeManager.getInstance(this@RecordingService)
                     val phoneTimestamp = timeManager.getCurrentTimestampNs() / 1_000_000 // Convert to ms
-                    
+
                     Log.d(TAG, "Time sync request: PC=$pcTimestamp, Phone=$phoneTimestamp")
-                    
+
                     // Calculate offset for immediate response (PC time - Phone time)
                     val offsetNs = (pcTimestamp - phoneTimestamp) * 1_000_000 // Convert to ns
-                    
+
                     // Update TimeManager with the calculated offset if needed
                     // Note: This is a simplified sync. For full sync, TimeManager.synchronizeWithPC should be used
-                    
+
                     ProtocolHandler.SyncResult(
                         success = true,
                         phoneTimestamp = phoneTimestamp,
@@ -1389,7 +1393,7 @@ class RecordingService : LifecycleService() {
             }
         }
     }
-    
+
     private suspend fun handleProtocolMessage(message: mpdc4gsr.network.Protocol.ProtocolMessage) {
         try {
             val response = protocolHandler.processMessage(message)

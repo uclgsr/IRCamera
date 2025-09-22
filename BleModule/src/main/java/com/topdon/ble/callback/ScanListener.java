@@ -3,7 +3,6 @@ package com.topdon.ble.callback;
 import android.Manifest;
 
 
-
 import com.topdon.ble.Device;
 
 /**

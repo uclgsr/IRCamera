@@ -86,19 +86,19 @@ android {
 
 dependencies {
     coreLibraryDesugaring(libs.desugar.jdk.libs)
-    
+
     implementation(project(":libunified"))
     implementation(project(":BleModule"))
-    
+
     // Core Android dependencies
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
-    
+
     // Utilities
     implementation(libs.utilcode)
     implementation(libs.glide)
-    
+
     // Testing dependencies - use version catalog
     testImplementation(libs.junit)
     testImplementation(libs.robolectric)

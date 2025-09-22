@@ -172,7 +172,7 @@ class ConnectionImpl implements Connection, ScanListener {
 
         @Override
         public void onCharacteristicRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
-            Log.e("bcf","onCharacteristicRead  status: "+status+"  value: "+ HexUtil.bytesToHexString(characteristic.getValue()));
+            Log.e("bcf", "onCharacteristicRead  status: " + status + "  value: " + HexUtil.bytesToHexString(characteristic.getValue()));
             if (originCallback != null) {
                 easyBle.getExecutorService().execute(() -> originCallback.onCharacteristicRead(gatt, characteristic, status));
             }

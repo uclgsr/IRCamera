@@ -19,12 +19,12 @@ classes, methods, and interfaces.
 
 ### Library Components
 
-| Library         | Purpose                                | Dependencies                | Status    |
-|-----------------|----------------------------------------|-----------------------------|-----------|
-| **libunified**  | Unified core library (app+ir+ui)      | OpenCV, Android SDK, native | WORKING |
-| **ble-core**    | Core BLE functionality                 | Android BLE APIs            | WORKING |
-| **ble-shimmer** | GSR/Shimmer device-specific BLE       | ble-core                    | WORKING |
-| **ble-topdon**  | Thermal/Topdon device-specific BLE    | ble-core                    | WORKING |
+| Library         | Purpose                            | Dependencies                | Status  |
+|-----------------|------------------------------------|-----------------------------|---------|
+| **libunified**  | Unified core library (app+ir+ui)   | OpenCV, Android SDK, native | WORKING |
+| **ble-core**    | Core BLE functionality             | Android BLE APIs            | WORKING |
+| **ble-shimmer** | GSR/Shimmer device-specific BLE    | ble-core                    | WORKING |
+| **ble-topdon**  | Thermal/Topdon device-specific BLE | ble-core                    | WORKING |
 
 ## PC Controller Hub API
 
@@ -333,7 +333,8 @@ data class GSRDataPoint(
 
 **Location**: `libunified/`
 
-The unified library combines application framework, infrared processing, and UI components into a single cohesive module under the `com.mpdc4gsr.libunified` namespace.
+The unified library combines application framework, infrared processing, and UI components into a single cohesive module
+under the `com.mpdc4gsr.libunified` namespace.
 
 #### Application Framework (com.mpdc4gsr.libunified.app.*)
 

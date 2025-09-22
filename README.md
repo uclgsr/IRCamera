@@ -3,21 +3,22 @@
 A Hub-and-Spoke architecture platform for multi-modal physiological sensing with thermal imaging, GSR, and RGB data
 collection.
 
-
 ## Critical Update: Android Resource Linking Issues RESOLVED - Commit 1f1bf64
 
 **BUILD STATUS**: All Android resource linking errors have been **COMPLETELY RESOLVED**
 
 ### ✅ Resource Linking Resolution Summary
+
 - **AAPT Errors Fixed**: All failing Android resource processing tasks now succeed
-- **Missing Resources Added**: colorPrimary, colorPrimaryDark, color_16131E, enhanced_recording_label  
+- **Missing Resources Added**: colorPrimary, colorPrimaryDark, color_16131E, enhanced_recording_label
 - **Cross-Module Dependencies**: Fixed R class import issues between app/libunified/components
 - **Custom Widgets Implemented**: IndicateView, VerticalSeekBar with proper styleable definitions
 - **Build Validation**: All processDebugResources tasks across entire project now pass
 
 ### 🏗️ Build System Status - Commit 1f1bf64
+
 - ✅ **app:processDebugResources** - SUCCESS
-- ✅ **libunified:processDebugAndroidTestResources** - SUCCESS  
+- ✅ **libunified:processDebugAndroidTestResources** - SUCCESS
 - ✅ **component:user:processDebugAndroidTestResources** - SUCCESS
 - ✅ **component:thermalunified:processDebugAndroidTestResources** - SUCCESS
 
@@ -26,6 +27,7 @@ collection.
 **BUILD STATUS**: All Kotlin compilation errors fixed for libunified module:
 
 ### ✅ Build Fixes Completed
+
 - **Custom View Compilation**: Fixed R.styleable reference errors in MenuSecondView, TitleView, MyTextView
 - **Java-Kotlin Interop**: Added @NonNull annotations to OnRangeChangedListener interface
 - **Attribute Type Consistency**: Corrected MenuSecondView deviceType format from string to integer
@@ -35,46 +37,47 @@ collection.
 
 ## Recent Update: Code Quality Fix - Commit 56beb31
 
-**Kotlin Compiler Warning Resolution**: Fixed redundant instance check in ZeroconfDiscoveryServiceTest.kt, eliminating compiler warning while maintaining test functionality.
+**Kotlin Compiler Warning Resolution**: Fixed redundant instance check in ZeroconfDiscoveryServiceTest.kt, eliminating
+compiler warning while maintaining test functionality.
 
 ## Recent Update: Core Implementation Plan Completed - Commit aeb8936
-
 
 **PRODUCTION STATUS**: All 5 key implementation plan features have been **VALIDATED AS COMPLETE**:
 
 ### ✅ Complete Implementation Status
 
 1. **Topdon TC001 Thermal Camera Integration** - COMPLETE
-   - Real SDK integration (IrcamEngine, IRCMD) with hardware-calibrated temperature conversion
-   - Continuous 10Hz frame capture with IFrameCallback registration
-   - USB permission handling via ThermalUsbReceiver with proper VID/PID (0x2744/0x0001)
-   - Robust error handling with fallback to simulation mode
+    - Real SDK integration (IrcamEngine, IRCMD) with hardware-calibrated temperature conversion
+    - Continuous 10Hz frame capture with IFrameCallback registration
+    - USB permission handling via ThermalUsbReceiver with proper VID/PID (0x2744/0x0001)
+    - Robust error handling with fallback to simulation mode
 
-2. **Shimmer3 GSR BLE Support** - COMPLETE  
-   - Enhanced BLE scanning with ScanFilter targeting Shimmer service UUID
-   - 3-retry reconnection logic with exponential backoff
-   - Device selection UI with connection status indicators
-   - TimestampManager integration for unified data alignment
+2. **Shimmer3 GSR BLE Support** - COMPLETE
+    - Enhanced BLE scanning with ScanFilter targeting Shimmer service UUID
+    - 3-retry reconnection logic with exponential backoff
+    - Device selection UI with connection status indicators
+    - TimestampManager integration for unified data alignment
 
 3. **RGB Camera Functionality (CameraX)** - COMPLETE
-   - 4K video recording with QualitySelector fallback
-   - Live camera preview via PreviewView in UnifiedSensorActivity  
-   - Optimized frame throttling for sustained I/O performance
-   - Proper camera lifecycle management with error handling
+    - 4K video recording with QualitySelector fallback
+    - Live camera preview via PreviewView in UnifiedSensorActivity
+    - Optimized frame throttling for sustained I/O performance
+    - Proper camera lifecycle management with error handling
 
 4. **Sensor Timestamp Synchronization** - COMPLETE
-   - Unified TimestampManager across all sensor modalities
-   - Session sync markers for cross-sensor alignment verification
-   - NTP-like PC-Phone handshake for cross-device synchronization
-   - Wall-clock epoch time conversion for consistent timestamps
+    - Unified TimestampManager across all sensor modalities
+    - Session sync markers for cross-sensor alignment verification
+    - NTP-like PC-Phone handshake for cross-device synchronization
+    - Wall-clock epoch time conversion for consistent timestamps
 
 5. **Session Lifecycle and Recording Coordination** - COMPLETE
-   - RecordingController orchestration with validation phases
-   - Individual sensor fault isolation prevents cascade failures
-   - CrashRecoveryManager detects incomplete sessions on restart
-   - Foreground service with persistent recording notifications
+    - RecordingController orchestration with validation phases
+    - Individual sensor fault isolation prevents cascade failures
+    - CrashRecoveryManager detects incomplete sessions on restart
+    - Foreground service with persistent recording notifications
 
 ### Technical Excellence Achieved
+
 - **Real Hardware Integration**: Production SDKs (not stubs/reflection)
 - **Enterprise-Grade Architecture**: Modern Android patterns (CameraX, Coroutines, Flows)
 - **Fault-Tolerant Design**: Graceful degradation with sensor isolation
@@ -82,22 +85,31 @@ collection.
 - **Research-Ready**: Comprehensive data logging and synchronization
 
 ## Recent Update: Enhanced Shimmer3 GSR BLE Support Complete
+
 **Commit ID**: 64fdf6b
 
-**LATEST ACHIEVEMENT**: Enhanced Shimmer3 GSR BLE support has been **FULLY IMPLEMENTED** with comprehensive device selection and improved user experience:
+**LATEST ACHIEVEMENT**: Enhanced Shimmer3 GSR BLE support has been **FULLY IMPLEMENTED** with comprehensive device
+selection and improved user experience:
 
 ### Shimmer3 GSR Enhancements Delivered
 
-- **Advanced BLE Scanning**: Implemented ScanFilters targeting Shimmer service UUID (49535343-FE7D-4AE5-8FA9-9FAFD205E455) with device name and MAC address filtering
-- **Multi-Device Selection**: Enhanced user interface with device selection dialog showing paired/unpaired status and device details
-- **ObjectCluster Data Processing**: Complete convertObjectClusterToSensorSample() implementation with calibrated GSR values, PPG data, and accelerometer readings
-- **Unified Timestamp Management**: Consistent data alignment using TimestampManager.getCurrentTimestampNanos() for all sensor data
-- **Visual Status Indicators**: Color-coded connection status (green=connected, orange=connecting, red=failed) with real-time user feedback
-- **Robust Reconnection Logic**: Enhanced 3-attempt reconnection with exponential backoff and comprehensive error handling
+- **Advanced BLE Scanning**: Implemented ScanFilters targeting Shimmer service UUID (
+  49535343-FE7D-4AE5-8FA9-9FAFD205E455) with device name and MAC address filtering
+- **Multi-Device Selection**: Enhanced user interface with device selection dialog showing paired/unpaired status and
+  device details
+- **ObjectCluster Data Processing**: Complete convertObjectClusterToSensorSample() implementation with calibrated GSR
+  values, PPG data, and accelerometer readings
+- **Unified Timestamp Management**: Consistent data alignment using TimestampManager.getCurrentTimestampNanos() for all
+  sensor data
+- **Visual Status Indicators**: Color-coded connection status (green=connected, orange=connecting, red=failed) with
+  real-time user feedback
+- **Robust Reconnection Logic**: Enhanced 3-attempt reconnection with exponential backoff and comprehensive error
+  handling
 
 ### Technical Implementation Details
 
-- **Files Enhanced**: ShimmerDeviceManager.kt, GSRSensorRecorder.kt, TimestampManager.kt, ShimmerMvpActivity.kt, activity_shimmer_mvp.xml
+- **Files Enhanced**: ShimmerDeviceManager.kt, GSRSensorRecorder.kt, TimestampManager.kt, ShimmerMvpActivity.kt,
+  activity_shimmer_mvp.xml
 - **BLE Architecture**: Comprehensive scanning with proper ScanSettings, device filtering, and permission handling
 - **Data Quality**: Signal quality assessment and data validation for reliable GSR measurements
 - **User Experience**: Enhanced device discovery, selection interface, and connection status feedback
@@ -110,7 +122,7 @@ collection.
 ### TC001 Integration Improvements
 
 - **Real SDK Calls**: Replaced stub/reflection approach with actual TC001 SDK calls in ThermalCameraRecorder
-- **Continuous Capture**: Implemented 10Hz thermal frame capture with 100ms intervals 
+- **Continuous Capture**: Implemented 10Hz thermal frame capture with 100ms intervals
 - **Image Saving**: Automatic PNG frame saving to thermal_images/ directory with temperature metadata
 - **Error Resilience**: Enhanced error handling with graceful fallbacks to prevent app crashes
 - **User Notifications**: Toast messages for TC001 connection status and error conditions
@@ -126,33 +138,34 @@ collection.
 
 ## Latest Update: Advanced Session Lifecycle and Recording Coordination Implemented
 
-**MAJOR ACHIEVEMENT**: Complete implementation of fault-tolerant session lifecycle with comprehensive recording coordination:
+**MAJOR ACHIEVEMENT**: Complete implementation of fault-tolerant session lifecycle with comprehensive recording
+coordination:
 
 ### Session Lifecycle Implementation
 
 - **Enhanced Recording Orchestration**: Complete phase-based recording startup sequence
-  - Prerequisites validation (storage, permissions, sensor availability)
-  - Foreground service integration for persistent notifications
-  - Individual sensor fault isolation with try-catch blocks
-  - Partial recording capability when some sensors fail
+    - Prerequisites validation (storage, permissions, sensor availability)
+    - Foreground service integration for persistent notifications
+    - Individual sensor fault isolation with try-catch blocks
+    - Partial recording capability when some sensors fail
 
 - **Advanced Fault Tolerance**: Comprehensive error handling and recovery
-  - Sensor failure isolation prevents single sensor from crashing entire session
-  - Mid-session monitoring with automatic reconnection attempts (max 3 per sensor)
-  - Health monitoring with consecutive failure tracking
-  - Graceful degradation with detailed error reporting
+    - Sensor failure isolation prevents single sensor from crashing entire session
+    - Mid-session monitoring with automatic reconnection attempts (max 3 per sensor)
+    - Health monitoring with consecutive failure tracking
+    - Graceful degradation with detailed error reporting
 
 - **Complete Session Finalization**: Comprehensive metadata and state management
-  - session_info.json creation with start/stop times, active sensors, and errors
-  - Graceful teardown with individual sensor stop isolation
-  - Crash recovery integration using SharedPreferences tracking
-  - Foreground service notification cleanup
+    - session_info.json creation with start/stop times, active sensors, and errors
+    - Graceful teardown with individual sensor stop isolation
+    - Crash recovery integration using SharedPreferences tracking
+    - Foreground service notification cleanup
 
 - **Crash Recovery Mechanism**: Persistent state tracking and recovery
-  - App startup detection of crashed recording sessions
-  - Automatic recovery with partial data preservation
-  - SharedPreferences-based state persistence
-  - Comprehensive recovery reporting and analysis
+    - App startup detection of crashed recording sessions
+    - Automatic recovery with partial data preservation
+    - SharedPreferences-based state persistence
+    - Comprehensive recovery reporting and analysis
 
 ### Technical Implementation Details
 
@@ -177,16 +190,16 @@ collection.
 
 ## Previous Achievement: Kotlin Compilation Errors Resolved
 
-
 ## Recent Update: SmartRefreshLayout Dependency Resolution Fixed
 
 **LATEST ACHIEVEMENT**: SmartRefreshLayout dependency resolution issue **FULLY RESOLVED**:
 
 ### Dependency Resolution Fixes
 
-- **Maven Coordinates Fixed**: Corrected group ID from `com.scwang.smart` to `io.github.scwang90` for SmartRefreshLayout components
+- **Maven Coordinates Fixed**: Corrected group ID from `com.scwang.smart` to `io.github.scwang90` for SmartRefreshLayout
+  components
 - **JitPack Issues Resolved**: Migrated from failing JitPack (401 Unauthorized) to reliable Maven Central resolution
-- **Pull-to-refresh Restored**: Fixed build failures in IRGalleryFragment, PDFListFragment, and PDFListActivity  
+- **Pull-to-refresh Restored**: Fixed build failures in IRGalleryFragment, PDFListFragment, and PDFListActivity
 - **Version Catalog Updated**: Enhanced dependency management with correct artifact coordinates
 
 ### Technical Resolution Delivered
@@ -198,11 +211,13 @@ collection.
 
 ## Recent Update: Timestamp Synchronization System Unified
 
-**LATEST ACHIEVEMENT**: Complete timestamp synchronization unification across all sensor modalities has been **FULLY IMPLEMENTED**:
+**LATEST ACHIEVEMENT**: Complete timestamp synchronization unification across all sensor modalities has been **FULLY
+IMPLEMENTED**:
 
 ### Timestamp System Unification Delivered
 
-- **Unified Time Base**: All sensors now use TimestampManager.getCurrentTimestampNanos() for consistent wall-clock epoch time
+- **Unified Time Base**: All sensors now use TimestampManager.getCurrentTimestampNanos() for consistent wall-clock epoch
+  time
 - **SessionSync Markers**: Automatic sync event logging at session start for cross-sensor alignment verification
 - **Drift Analysis**: Enhanced logging of device vs phone timestamp differences for post-processing analysis
 - **Cross-Device Sync**: Enhanced NTP-like PC-Phone handshake with quality reporting and automatic monitoring
@@ -215,7 +230,6 @@ collection.
 - **GSR Sensor**: Updated to use TimestampManager for compatibility with unified synchronization system
 - **Sharp Event Testing**: Manual verification tool simulates hand clap events across modalities within 5ms tolerance
 - **Wall-Clock Conversion**: Added convertMonotonicToWallClock for consistent epoch time translation
-
 
 ## Previous Update: Kotlin Compilation Errors Resolved
 
@@ -230,7 +244,8 @@ collection.
 
 ### Technical Resolution Delivered
 
-- **7 files fixed**: AppHolder11.kt, CheckableItem111.kt, CheckableParcelable111.kt, PermissionsRequester11.kt, Observable11.kt, ObserverMethodHelper11.kt, MethodInfo11.kt
+- **7 files fixed**: AppHolder11.kt, CheckableItem111.kt, CheckableParcelable111.kt, PermissionsRequester11.kt,
+  Observable11.kt, ObserverMethodHelper11.kt, MethodInfo11.kt
 - **Reflection API modernization**: Migrated from Java reflection methods (getName()) to Kotlin property access (name)
 - **Lifecycle callback compliance**: Fixed Activity lifecycle parameter types to match Android API requirements
 - **Type safety enhancements**: Improved nullable handling and collection type compatibility
@@ -242,17 +257,18 @@ collection.
 **LATEST ACHIEVEMENT**: The BLE core module compilation errors have been **FULLY RESOLVED**:
 
 ### BLE Core Fixes
+
 - **Interface Issues**: Fixed RequestCallback redeclaration by creating proper callback structure
-- **Type Safety**: Resolved ByteUtil Float/Int conversion errors and HexUtil byte type conflicts  
+- **Type Safety**: Resolved ByteUtil Float/Int conversion errors and HexUtil byte type conflicts
 - **Logger Implementation**: Fixed DefaultLogger property override issues with Logger interface
 - **Package Structure**: Created missing callback package in ble-core module
 
 ## Previous Update: Gradle Build System Standardization Complete
 
-
 ## Recent Update: BLE Core Module Fixes Complete
 
 **LATEST ACHIEVEMENT**: The BLE Core module GenericRequest compilation issues have been **FULLY RESOLVED**:
+
 - GenericRequest.kt now compiles without errors
 - Request interface properly implemented with override modifiers
 - RequestBuilder interface enhanced with generic types and required properties
@@ -287,15 +303,14 @@ collection.
 **LATEST FIX**: Resolved critical compilation issue in BLE core module:
 
 ### BLE Core Module Fix
+
 - **UUID Import**: Fixed missing `import java.util.UUID` statement in Request.kt interface
 - **Compilation Errors**: Eliminated "Unresolved reference 'UUID'" errors preventing module compilation
 - **Code Consistency**: Aligned with other BLE core module files that properly import java.util.UUID
 
 ## Recent Update: Gradle Build System Standardization Complete
 
-
 **LATEST ACHIEVEMENT**: The build system has been **FULLY STANDARDIZED** for consistent development experience:
-
 
 ### Build System Improvements
 
@@ -307,7 +322,7 @@ collection.
 ### Technical Standardization Delivered
 
 - **8 modules standardized**: Consistent structure across app, libunified, BLE, and component modules
-- **Version catalog integration**: Replaced hardcoded dependency versions with centralized management  
+- **Version catalog integration**: Replaced hardcoded dependency versions with centralized management
 - **Build feature completeness**: Added missing viewBinding, testInstrumentationRunner to all modules
 - **Dependency path corrections**: Fixed AAR references and module dependencies
 
@@ -454,6 +469,7 @@ Research project - see individual component licenses for specific terms.
 ## Documentation Update Log
 
 ### 2024-12-22 - Commit c7769bc
+
 - Removed all emoji characters from markdown documentation for ASCII safety
 - Updated library references from libcore to libunified throughout codebase
 - Fixed MERMAID diagrams to reflect completed unified architecture
@@ -480,34 +496,41 @@ Research project - see individual component licenses for specific terms.
 ## RGB Camera Functionality (CameraX) - Implementation Complete
 
 ### ✅ Live Preview Setup
-- **Added PreviewView widgets** to `activity_unified_sensor.xml` and `activity_multi_modal_recording.xml` 
+
+- **Added PreviewView widgets** to `activity_unified_sensor.xml` and `activity_multi_modal_recording.xml`
 - **Integrated RgbCameraRecorder with PreviewView** in `UnifiedSensorActivity.kt`
 - Preview view is 200dp height with black background for better visibility
 - Camera status text shows real-time camera state
 
-### ✅ High Resolution & Frame Rate Configuration  
+### ✅ High Resolution & Frame Rate Configuration
+
 - **Enhanced createOptimizedRecorder()** with proper QualitySelector configuration:
+
 ```kotlin
 QualitySelector.from(Quality.UHD, FallbackStrategy.lowerQualityThan(Quality.UHD))
 ```
+
 - Supports up to 4K resolution with graceful fallback to lower quality
 - Device detection for 4K capability based on known device models
 
 ### ✅ Frame Capture Optimisation
+
 - **Reduced CAPTURE_FPS from 30 to 12fps** for optimized I/O performance
 - **Added FRAME_CAPTURE_EVERY_N_FRAMES throttling** (every 2nd frame)
 - **Implemented MAX_PENDING_CAPTURES = 2** for better backpressure handling
 - Frame capture uses background executor via `imageCapture.takePicture(cameraExecutor, callback)`
 
 ### ✅ Error Handling & Camera Selector
+
 - **Enhanced CameraX initialization** with comprehensive try-catch blocks:
-  - SecurityException for permission issues
-  - IllegalStateException for camera-in-use scenarios  
-  - General Exception handling with user-friendly error messages
+    - SecurityException for permission issues
+    - IllegalStateException for camera-in-use scenarios
+    - General Exception handling with user-friendly error messages
 - **Camera switching capability** already implemented (front/back camera)
 - **Robust error notification system** via emitError() with specific ErrorType enum
 
 ### ✅ Lifecycle Management on Stop
+
 - **Verified stopRecording()** properly calls `cameraProvider.unbindAll()`
 - **Confirmed cleanup()** shuts down executors with timeout handling
 - **Frame capture loops are cancelled** before unbinding camera

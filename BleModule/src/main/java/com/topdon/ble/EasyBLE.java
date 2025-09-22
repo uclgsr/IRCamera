@@ -82,7 +82,7 @@ public class EasyBLE {
             executorService = builder.executorService;
             posterDispatcher = new PosterDispatcher(executorService, builder.methodDefaultThreadMode);
             observable = new Observable(posterDispatcher, builder.isObserveAnnotationRequired);
-        }    
+        }
     }
 
     /**
@@ -142,7 +142,7 @@ public class EasyBLE {
         return deviceCreator;
     }
 
-    Observable getObservable() {        
+    Observable getObservable() {
         return observable;
     }
 
@@ -213,10 +213,10 @@ public class EasyBLE {
                             Bundle extras = intent.getExtras();
                             if (extras != null) {
                                 rssi = extras.getShort(BluetoothDevice.EXTRA_RSSI);
-                            }                            
+                            }
                             ((ClassicScanner) scanner).parseScanResult(device, false, null, rssi, null);
                         }
-                        break;    
+                        break;
                 }
             }
             if (BluetoothAdapter.ACTION_STATE_CHANGED.equals(intent.getAction())) { //蓝牙开关状态变化 
@@ -270,7 +270,7 @@ public class EasyBLE {
             filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
             filter.addAction(BluetoothDevice.ACTION_FOUND);
             application.registerReceiver(broadcastReceiver, filter);
-        }        
+        }
         isInitialized = true;
     }
 
@@ -365,7 +365,7 @@ public class EasyBLE {
             observable.notifyObservers(info);
         }
     }
-    
+
     //检查并实例化搜索器
     private void checkAndInstanceScanner() {
         if (scanner == null) {
@@ -386,9 +386,9 @@ public class EasyBLE {
                     }
                 }
             }
-        }        
+        }
     }
-    
+
     /**
      * 添加搜索监听器
      */

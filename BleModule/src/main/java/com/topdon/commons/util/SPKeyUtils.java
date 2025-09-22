@@ -111,7 +111,7 @@ public class SPKeyUtils {
     public static final String BIND_VEHICLE = "bind_vehicle";
 
     /**
-     *CheckQC
+     * CheckQC
      */
     public static final String CHEAKQC = "checkqc";
 }

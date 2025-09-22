@@ -22,7 +22,7 @@ class LeScanner extends AbstractScanner {
     private BluetoothLeScanner bleScanner;
 
     LeScanner(EasyBLE easyBle, BluetoothAdapter bluetoothAdapter) {
-        super(easyBle, bluetoothAdapter);       
+        super(easyBle, bluetoothAdapter);
     }
 
     private BluetoothLeScanner getLeScanner() {

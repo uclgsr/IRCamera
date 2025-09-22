@@ -10,7 +10,7 @@ object JNITool {
         // Stub implementation - returns null for now
         return null
     }
-    
+
     @JvmStatic
     fun saveImage(image: Any?, filename: String): Boolean {
         // Stub implementation - always returns false for now

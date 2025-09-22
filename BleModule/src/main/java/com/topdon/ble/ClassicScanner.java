@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
  */
 class ClassicScanner extends AbstractScanner {
     private boolean stopQuietly = false;
-    
+
     ClassicScanner(EasyBLE easyBle, BluetoothAdapter bluetoothAdapter) {
         super(easyBle, bluetoothAdapter);
     }

@@ -93,7 +93,7 @@ class ObserverMethodHelper {
             if (ms != null) {
                 for (Method m : ms) {
                     int ignore = Modifier.ABSTRACT | Modifier.STATIC | 0x40 | 0x1000;
-                    if ((m.getModifiers() & Modifier.PUBLIC) != 0 && (m.getModifiers() & ignore) == 0 &&  !contains(methods, m)) {
+                    if ((m.getModifiers() & Modifier.PUBLIC) != 0 && (m.getModifiers() & ignore) == 0 && !contains(methods, m)) {
                         methods.add(m);
                     }
                 }
@@ -101,7 +101,7 @@ class ObserverMethodHelper {
             cls = cls.getSuperclass();
         }
         for (Method method : methods) {
-            Observe anno = method.getAnnotation(Observe.class);          
+            Observe anno = method.getAnnotation(Observe.class);
             if (anno != null || !isObserveAnnotationRequired) {
                 Tag tagAnno = method.getAnnotation(Tag.class);
                 String tag = tagAnno == null ? "" : tagAnno.value();

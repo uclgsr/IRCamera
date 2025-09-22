@@ -107,12 +107,14 @@ class ThermalRecorder(private val context: Context) {
 
                 frameSequence.set(0)
 
-                sessionMetadata.addSyncEvent("THERMAL_RECORDING_START", mapOf(
-                    "sensor_type" to "thermal_topdon",
-                    "sensor_id" to "thermal_topdon_tc001",
-                    "save_images" to saveImages.toString(),
-                    "sync_verification" to "enabled"
-                ))
+                sessionMetadata.addSyncEvent(
+                    "THERMAL_RECORDING_START", mapOf(
+                        "sensor_type" to "thermal_topdon",
+                        "sensor_id" to "thermal_topdon_tc001",
+                        "save_images" to saveImages.toString(),
+                        "sync_verification" to "enabled"
+                    )
+                )
 
                 isRecording.set(true)
                 Log.i(TAG, "Thermal recording started with session timing: ${csvFile.absolutePath}")
@@ -427,7 +429,8 @@ class ThermalRecorder(private val context: Context) {
     ) = withContext(Dispatchers.IO) {
         try {
             sessionDirectory?.let { dir ->
-                val imageFile = File(dir, "thermal_frame_${frameSequence}_${TimestampManager.getCurrentTimestampNanos()}.raw")
+                val imageFile =
+                    File(dir, "thermal_frame_${frameSequence}_${TimestampManager.getCurrentTimestampNanos()}.raw")
 
                 FileOutputStream(imageFile).use { output ->
                     output.write(frameData)
@@ -463,7 +466,8 @@ class ThermalRecorder(private val context: Context) {
 
                 bitmap.setPixels(pixels, 0, width, 0, 0, width, height)
 
-                val imageFile = File(dir, "thermal_frame_${frameSequence}_${TimestampManager.getCurrentTimestampNanos()}.png")
+                val imageFile =
+                    File(dir, "thermal_frame_${frameSequence}_${TimestampManager.getCurrentTimestampNanos()}.png")
                 FileOutputStream(imageFile).use { output ->
                     bitmap.compress(Bitmap.CompressFormat.PNG, 100, output)
                 }

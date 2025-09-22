@@ -184,14 +184,14 @@ class IRImageHelp {
                             alarmBean.lowColor,
                             alarmBean.markType,
                         )
-                    
+
                     // Convert Bitmap to byte array
                     val mat = Mat(resultBitmap.height, resultBitmap.width, CvType.CV_8UC4)
                     Utils.bitmapToMat(resultBitmap, mat)
                     Imgproc.cvtColor(mat, mat, Imgproc.COLOR_RGBA2BGR)
                     val grayData = ByteArray(mat.cols() * mat.rows() * 3)
                     mat[0, 0, grayData]
-                    
+
                     // Now convert to RGBA for return
                     val diffMat =
                         Mat(

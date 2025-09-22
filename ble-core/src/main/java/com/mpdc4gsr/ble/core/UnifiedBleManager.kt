@@ -9,10 +9,10 @@ import android.content.Context
  * maintaining the interface contract.
  */
 class UnifiedBleManager private constructor(private val application: Application) {
-    
+
     companion object {
         private var instance: UnifiedBleManager? = null
-        
+
         fun getInstance(application: Application): UnifiedBleManager {
             if (instance == null) {
                 synchronized(UnifiedBleManager::class.java) {
@@ -24,15 +24,15 @@ class UnifiedBleManager private constructor(private val application: Application
             return instance!!
         }
     }
-    
+
     fun initialize() {
         // Stub implementation for initialization
     }
-    
+
     fun isInitialized(): Boolean = true
-    
+
     fun getContext(): Context = application
-    
+
     // Additional stub methods can be added here as needed
     interface ShimmerScanCallback {
         fun onDeviceFound(device: UnifiedDevice)

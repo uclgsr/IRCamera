@@ -8,7 +8,7 @@ import java.util.TimerTask;
 
 /**
  * 简单的定时器
- * 
+ * <p>
  * date: 2019/8/6 13:31
  * author: chuanfeng.bi
  */
@@ -16,7 +16,7 @@ public abstract class AbstractTimer {
     private Timer timer;
     private final Handler handler;
     private final boolean callbackOnMainThread;
-    
+
     public AbstractTimer(boolean callbackOnMainThread) {
         handler = new Handler(Looper.getMainLooper());
         this.callbackOnMainThread = callbackOnMainThread;
@@ -50,14 +50,14 @@ public abstract class AbstractTimer {
             }, delay, period);
         }
     }
-    
+
     public synchronized final void stop() {
         if (timer != null) {
             timer.cancel();
             timer = null;
         }
     }
-    
+
     public boolean isRunning() {
         return timer != null;
     }

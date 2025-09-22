@@ -71,7 +71,7 @@ class GSRSensorRecorder(
         // Connection health thresholds
         private const val TIMING_HEALTH_POOR_MS = 2000L
         private const val TIMING_HEALTH_ACCEPTABLE_MS = 1000L
-        
+
         // Health score weights
         private const val HEALTH_SCORE_WEIGHT_HISTORICAL = 0.8
         private const val HEALTH_SCORE_WEIGHT_SAMPLE = 0.15
@@ -81,7 +81,7 @@ class GSRSensorRecorder(
         private const val SHIMMER_DEFAULT_SAMPLING_RATE = 128.0
         private const val GSR_CHANNEL_ID = 0x01
         private const val GSR_RANGE_AUTO = 0x00
-        
+
         // Enhanced batch writing configuration for improved performance
         private const val CSV_BATCH_SIZE = 50 // Write every 50 samples for better performance
         private const val CSV_FLUSH_INTERVAL_MS = 5000L // Flush every 5 seconds
@@ -825,11 +825,11 @@ class GSRSensorRecorder(
 
             // Enhanced batch writing - collect samples in buffer
             batchSampleBuffer.add(gsrSampleData)
-            
+
             // Check if we should flush the batch
-            val shouldFlush = batchSampleBuffer.size >= CSV_BATCH_SIZE || 
-                            (System.currentTimeMillis() - lastFlushTime) > CSV_FLUSH_INTERVAL_MS
-            
+            val shouldFlush = batchSampleBuffer.size >= CSV_BATCH_SIZE ||
+                    (System.currentTimeMillis() - lastFlushTime) > CSV_FLUSH_INTERVAL_MS
+
             if (shouldFlush) {
                 flushBatchSamples()
             }
@@ -870,7 +870,7 @@ class GSRSensorRecorder(
                 batchSampleBuffer.forEach { sampleData ->
                     gsrDataPersistence?.queueDataRecord(sampleData)
                 }
-                
+
                 Log.v(TAG, "Flushed batch of ${batchSampleBuffer.size} GSR samples")
                 batchSampleBuffer.clear()
                 lastFlushTime = System.currentTimeMillis()
@@ -884,7 +884,7 @@ class GSRSensorRecorder(
         try {
             val now = System.currentTimeMillis()
             val timeSinceLastCheck = now - lastConnectionCheck
-            
+
             // Calculate health based on sample quality and timing using constants
             val sampleQuality = when {
                 sample.rawValue == 0 -> 0.0
@@ -894,21 +894,21 @@ class GSRSensorRecorder(
                 sample.conductance < GSR_LOW_THRESHOLD -> 70.0
                 else -> 95.0
             }
-            
+
             val timingHealth = when {
                 timeSinceLastCheck > TIMING_HEALTH_POOR_MS -> 20.0
                 timeSinceLastCheck > TIMING_HEALTH_ACCEPTABLE_MS -> 70.0
                 else -> 100.0
             }
-            
+
             // Update connection health score with weighted average using constants
-            connectionHealthScore = (connectionHealthScore * HEALTH_SCORE_WEIGHT_HISTORICAL) + 
-                                  (sampleQuality * HEALTH_SCORE_WEIGHT_SAMPLE) + 
-                                  (timingHealth * HEALTH_SCORE_WEIGHT_TIMING)
+            connectionHealthScore = (connectionHealthScore * HEALTH_SCORE_WEIGHT_HISTORICAL) +
+                    (sampleQuality * HEALTH_SCORE_WEIGHT_SAMPLE) +
+                    (timingHealth * HEALTH_SCORE_WEIGHT_TIMING)
             connectionHealthScore = connectionHealthScore.coerceIn(0.0, 100.0)
-            
+
             lastConnectionCheck = now
-            
+
             if (connectionHealthScore < POOR_CONNECTION_THRESHOLD) {
                 Log.w(TAG, "Poor connection health detected: ${connectionHealthScore.toInt()}%")
                 emitError(
@@ -947,15 +947,15 @@ class GSRSensorRecorder(
         return try {
             // Use unified timestamp manager for consistent timing
             val unifiedTimestamp = TimestampManager.getCurrentTimestampNanos()
-            
+
             // Extract calibrated GSR value from ObjectCluster
             val gsrCalibratedValue = extractCalibratedGSRValue(objectCluster)
             val gsrRawValue = extractRawGSRValue(objectCluster)
-            
+
             // Extract additional sensor data if available
             val ppgValue = extractPPGValue(objectCluster)
             val accelerometerData = extractAccelerometerData(objectCluster)
-            
+
             // Calculate GSR in microsiemens from calibrated value
             val gsrMicrosiemens = if (gsrCalibratedValue > 0) {
                 gsrCalibratedValue
@@ -963,10 +963,10 @@ class GSRSensorRecorder(
                 // Fallback calculation from raw value if calibrated not available
                 calculateGSRFromRaw(gsrRawValue)
             }
-            
+
             // Calculate signal quality score based on data integrity
             val qualityScore = calculateSignalQuality(gsrMicrosiemens, gsrRawValue)
-            
+
             GSRSample(
                 timestamp = unifiedTimestamp,
                 timestampIso = TimestampManager.formatTimestampIso(unifiedTimestamp),
@@ -1031,7 +1031,8 @@ class GSRSensorRecorder(
         // Standard Shimmer GSR calculation from raw ADC value using constants
         return if (rawValue > 0) {
             val voltage = (rawValue / ADC_MAX_VALUE) * REFERENCE_VOLTAGE
-            val resistance = (REFERENCE_VOLTAGE * REFERENCE_RESISTANCE_OHMS) / (voltage * VOLTAGE_DIVIDER) - REFERENCE_RESISTANCE_OHMS
+            val resistance =
+                (REFERENCE_VOLTAGE * REFERENCE_RESISTANCE_OHMS) / (voltage * VOLTAGE_DIVIDER) - REFERENCE_RESISTANCE_OHMS
             if (resistance > 0) MICROSIEMENS_CONVERSION / resistance else 0.0
         } else {
             0.0
@@ -1093,7 +1094,7 @@ class GSRSensorRecorder(
     private fun setupObjectClusterDataHandler() {
         try {
             Log.i(TAG, "Setting up enhanced ObjectCluster data handler")
-            
+
             val shimmerManager = shimmerBluetoothManager
             if (shimmerManager != null) {
                 // Set up the multi-shimmer data handler to receive ObjectCluster data
@@ -1102,7 +1103,7 @@ class GSRSensorRecorder(
                         if (_isRecording.get()) {
                             // Use the enhanced convertObjectClusterToSensorSample method
                             val gsrSample = convertObjectClusterToSensorSample(objectCluster)
-                            
+
                             if (gsrSample != null) {
                                 // Process the enhanced GSR sample through the normal pipeline
                                 recordingScope.launch {
@@ -1117,7 +1118,7 @@ class GSRSensorRecorder(
                         Log.e(TAG, "Error processing ObjectCluster through enhanced conversion", e)
                     }
                 }
-                
+
                 Log.i(TAG, "Enhanced ObjectCluster data handler configured successfully")
             } else {
                 Log.w(TAG, "Shimmer Bluetooth manager not available - cannot set up ObjectCluster handler")
@@ -1599,7 +1600,7 @@ class GSRSensorRecorder(
 
             if (_isRecording.get()) {
                 logGSRSampleToCSV(gsrSample, timestampRecord, deviceTimestamp)
-                
+
                 timeSyncService?.let { syncService ->
                     recordingScope.launch {
                         syncService.logTimestampWithDriftAnalysis(

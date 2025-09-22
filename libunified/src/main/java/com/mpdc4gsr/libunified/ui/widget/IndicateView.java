@@ -62,20 +62,20 @@ public class IndicateView extends View {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int width = count * (int)(radius * 2) + (count - 1) * (int)(radius * 2);
-        int height = (int)(radius * 2);
+        int width = count * (int) (radius * 2) + (count - 1) * (int) (radius * 2);
+        int height = (int) (radius * 2);
         setMeasuredDimension(width, height);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        
+
         if (count <= 0) return;
-        
+
         float centerY = getHeight() / 2f;
         float startX = radius;
-        
+
         for (int i = 0; i < count; i++) {
             paint.setColor(i == currentIndex ? selectColor : unSelectColor);
             float centerX = startX + i * (radius * 4);

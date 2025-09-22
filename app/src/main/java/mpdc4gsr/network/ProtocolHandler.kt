@@ -19,38 +19,38 @@ class ProtocolHandler(
     }
 
     private val timeManager = TimeManager.getInstance(context)
-    
+
     // Command callback interfaces
     interface CommandHandler {
         suspend fun onStartRecording(sessionId: String): CommandResult
         suspend fun onStopRecording(sessionId: String): CommandResult
         suspend fun onSyncRequest(pcTimestamp: Long): SyncResult
     }
-    
+
     data class CommandResult(
         val success: Boolean,
         val message: String = "",
         val data: Map<String, String> = emptyMap()
     )
-    
+
     data class SyncResult(
         val success: Boolean,
         val phoneTimestamp: Long = 0L,
         val offsetNs: Long = 0L
     )
-    
+
     private var commandHandler: CommandHandler? = null
-    
+
     fun setCommandHandler(handler: CommandHandler) {
         commandHandler = handler
     }
-    
+
     /**
      * Process incoming protocol messages and return appropriate responses
      */
     suspend fun processMessage(message: Protocol.ProtocolMessage): String? {
         Log.d(TAG, "Processing protocol message: ${message.type}")
-        
+
         return when (message.type) {
             Protocol.MSG_SYNC_REQUEST -> handleSyncRequest(message)
             Protocol.MSG_START_RECORD -> handleStartRecord(message)
@@ -61,7 +61,7 @@ class ProtocolHandler(
             }
         }
     }
-    
+
     private suspend fun handleSyncRequest(message: Protocol.ProtocolMessage): String {
         return try {
             val pcTimestamp = message.parameters["t_pc"]?.toLong()
@@ -87,23 +87,34 @@ class ProtocolHandler(
             Protocol.createErrorMessage(Protocol.MSG_SYNC_REQUEST, Protocol.ERR_FAIL, "Sync error: ${e.message}")
         }
     }
-    
+
     private suspend fun handleStartRecord(message: Protocol.ProtocolMessage): String {
         return try {
             val sessionId = message.parameters["session_id"]
             if (sessionId.isNullOrEmpty()) {
-                Protocol.createErrorMessage(Protocol.MSG_START_RECORD, Protocol.ERR_FAIL, "Missing session_id parameter")
+                Protocol.createErrorMessage(
+                    Protocol.MSG_START_RECORD,
+                    Protocol.ERR_FAIL,
+                    "Missing session_id parameter"
+                )
             } else {
                 val handler = commandHandler
                 if (handler != null) {
                     val result = handler.onStartRecording(sessionId)
                     if (result.success) {
-                        Protocol.createAckMessage(Protocol.MSG_START_RECORD, mapOf("session_id" to sessionId) + result.data)
+                        Protocol.createAckMessage(
+                            Protocol.MSG_START_RECORD,
+                            mapOf("session_id" to sessionId) + result.data
+                        )
                     } else {
                         Protocol.createErrorMessage(Protocol.MSG_START_RECORD, Protocol.ERR_FAIL, result.message)
                     }
                 } else {
-                    Protocol.createErrorMessage(Protocol.MSG_START_RECORD, Protocol.ERR_FAIL, "No command handler registered")
+                    Protocol.createErrorMessage(
+                        Protocol.MSG_START_RECORD,
+                        Protocol.ERR_FAIL,
+                        "No command handler registered"
+                    )
                 }
             }
         } catch (e: Exception) {
@@ -111,7 +122,7 @@ class ProtocolHandler(
             Protocol.createErrorMessage(Protocol.MSG_START_RECORD, Protocol.ERR_FAIL, "Start error: ${e.message}")
         }
     }
-    
+
     private suspend fun handleStopRecord(message: Protocol.ProtocolMessage): String {
         return try {
             val sessionId = message.parameters["session_id"]
@@ -122,12 +133,19 @@ class ProtocolHandler(
                 if (handler != null) {
                     val result = handler.onStopRecording(sessionId)
                     if (result.success) {
-                        Protocol.createAckMessage(Protocol.MSG_STOP_RECORD, mapOf("session_id" to sessionId) + result.data)
+                        Protocol.createAckMessage(
+                            Protocol.MSG_STOP_RECORD,
+                            mapOf("session_id" to sessionId) + result.data
+                        )
                     } else {
                         Protocol.createErrorMessage(Protocol.MSG_STOP_RECORD, Protocol.ERR_FAIL, result.message)
                     }
                 } else {
-                    Protocol.createErrorMessage(Protocol.MSG_STOP_RECORD, Protocol.ERR_FAIL, "No command handler registered")
+                    Protocol.createErrorMessage(
+                        Protocol.MSG_STOP_RECORD,
+                        Protocol.ERR_FAIL,
+                        "No command handler registered"
+                    )
                 }
             }
         } catch (e: Exception) {
@@ -135,7 +153,7 @@ class ProtocolHandler(
             Protocol.createErrorMessage(Protocol.MSG_STOP_RECORD, Protocol.ERR_FAIL, "Stop error: ${e.message}")
         }
     }
-    
+
     /**
      * Send a GSR data update to the PC
      */
@@ -143,7 +161,7 @@ class ProtocolHandler(
         val message = Protocol.createDataGsrMessage(timestamp, value)
         return networkServer.sendMessage(message)
     }
-    
+
     /**
      * Send a thermal/RGB frame to the PC
      */
@@ -151,7 +169,7 @@ class ProtocolHandler(
         val header = "${Protocol.MSG_FRAME} type=$frameType ts=$timestamp size=${frameData.size}"
         return networkServer.sendBinaryData(header, frameData)
     }
-    
+
     /**
      * Start live preview streaming to PC
      * This integrates with the existing PreviewStreamer but sends protocol messages
@@ -161,7 +179,7 @@ class ProtocolHandler(
         // For now, log that protocol-based streaming is enabled
         Log.i(TAG, "Protocol-based preview streaming enabled")
     }
-    
+
     /**
      * Stop live preview streaming
      */

@@ -89,7 +89,7 @@ class ComprehensiveRecordingControllerTest {
         // Assert
         assertTrue("Recording should start successfully", result)
         assertTrue("Recording state should be active", recordingController.isRecording)
-        
+
         // Verify all sensors were started
         coVerify { mockRgbSensor.startRecording(any(), any()) }
         coVerify { mockThermalSensor.startRecording(any(), any()) }
@@ -101,7 +101,7 @@ class ComprehensiveRecordingControllerTest {
         // Setup - thermal sensor fails to start
         every { permissionManager.hasAllPermissions(any()) } returns true
         coEvery { mockThermalSensor.startRecording(any(), any()) } returns false
-        
+
         recordingController.addSensorRecorder("RGB", mockRgbSensor)
         recordingController.addSensorRecorder("Thermal", mockThermalSensor)
         recordingController.addSensorRecorder("GSR", mockGsrSensor)
@@ -124,7 +124,7 @@ class ComprehensiveRecordingControllerTest {
         coEvery { mockRgbSensor.startRecording(any(), any()) } returns false
         coEvery { mockThermalSensor.startRecording(any(), any()) } returns false
         coEvery { mockGsrSensor.startRecording(any(), any()) } returns false
-        
+
         recordingController.addSensorRecorder("RGB", mockRgbSensor)
         recordingController.addSensorRecorder("Thermal", mockThermalSensor)
         recordingController.addSensorRecorder("GSR", mockGsrSensor)
@@ -145,7 +145,7 @@ class ComprehensiveRecordingControllerTest {
         // Setup - GSR sensor throws exception on start
         every { permissionManager.hasAllPermissions(any()) } returns true
         coEvery { mockGsrSensor.startRecording(any(), any()) } throws RuntimeException("GSR sensor connection failed")
-        
+
         recordingController.addSensorRecorder("RGB", mockRgbSensor)
         recordingController.addSensorRecorder("Thermal", mockThermalSensor)
         recordingController.addSensorRecorder("GSR", mockGsrSensor)
@@ -168,7 +168,7 @@ class ComprehensiveRecordingControllerTest {
         recordingController.addSensorRecorder("RGB", mockRgbSensor)
         recordingController.addSensorRecorder("Thermal", mockThermalSensor)
         recordingController.addSensorRecorder("GSR", mockGsrSensor)
-        
+
         // Start recording first
         recordingController.startRecording(sessionId = "test_teardown")
 
@@ -178,7 +178,7 @@ class ComprehensiveRecordingControllerTest {
         // Assert
         assertTrue("Stop recording should succeed", result)
         assertFalse("Recording state should be inactive", recordingController.isRecording)
-        
+
         // Verify all sensors were stopped individually
         coVerify { mockRgbSensor.stopRecording() }
         coVerify { mockThermalSensor.stopRecording() }
@@ -190,11 +190,11 @@ class ComprehensiveRecordingControllerTest {
         // Setup - thermal sensor fails to stop
         every { permissionManager.hasAllPermissions(any()) } returns true
         coEvery { mockThermalSensor.stopRecording() } throws RuntimeException("Thermal sensor stop failed")
-        
+
         recordingController.addSensorRecorder("RGB", mockRgbSensor)
         recordingController.addSensorRecorder("Thermal", mockThermalSensor)
         recordingController.addSensorRecorder("GSR", mockGsrSensor)
-        
+
         recordingController.startRecording(sessionId = "test_stop_failure")
 
         // Act
@@ -211,7 +211,7 @@ class ComprehensiveRecordingControllerTest {
         every { permissionManager.hasAllPermissions(any()) } returns true
         mockkStatic(File::class)
         every { any<File>().freeSpace } returns 100 * 1024 * 1024 // 100MB - insufficient
-        
+
         recordingController.addSensorRecorder("RGB", mockRgbSensor)
 
         // Act
@@ -230,7 +230,7 @@ class ComprehensiveRecordingControllerTest {
     fun `test prerequisites validation catches missing permissions`() = testScope.runTest {
         // Setup - missing permissions
         every { permissionManager.hasAllPermissions(any()) } returns false
-        
+
         recordingController.addSensorRecorder("RGB", mockRgbSensor)
 
         // Act
@@ -266,9 +266,9 @@ class ComprehensiveRecordingControllerTest {
             ),
             recoveryActions = listOf("Mark session as crashed", "Preserve partial data")
         )
-        
-        every { 
-            recordingController.checkForCrashedSessions() 
+
+        every {
+            recordingController.checkForCrashedSessions()
         } returns mockRecoveryResult.hasCrashedSession
 
         // Act

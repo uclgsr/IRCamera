@@ -17,7 +17,7 @@ class RAWCaptureTestActivity : AppCompatActivity() {
     companion object {
         private const val TAG = "RAWCaptureTest"
     }
-    
+
     private lateinit var binding: ActivityRawCaptureTestBinding
     private var rgbCameraRecorder: RgbCameraRecorder? = null
     private var isRecording = false
@@ -36,17 +36,17 @@ class RAWCaptureTestActivity : AppCompatActivity() {
         setupSpinner()
         setupSwitchListeners()
         setupRecordingButton()
-        
+
         // Update status with Stage 3 capability
         val isStage3Compatible = SamsungDeviceCompatibility.isStage3Compatible()
         val deviceInfo = SamsungDeviceCompatibility.getDeviceInfo()
-        
+
         val statusText = if (isStage3Compatible) {
             "Ready: Stage 3/Level 3 DNG capture available on $deviceInfo"
         } else {
             "Device: $deviceInfo (Stage 3/Level 3 not supported - using standard RAW)"
         }
-        
+
         binding.statusText.text = statusText
     }
 
@@ -66,7 +66,7 @@ class RAWCaptureTestActivity : AppCompatActivity() {
         binding.enableRawCaptureSwitch.setOnCheckedChangeListener { _, isChecked ->
             binding.rawFrameRateSpinner.isEnabled = isChecked
             binding.rawFrameRateSpinner.alpha = if (isChecked) 1.0f else 0.5f
-            
+
             val mode = if (isChecked && SamsungDeviceCompatibility.isStage3Compatible()) {
                 "Stage 3/Level 3 DNG"
             } else if (isChecked) {
@@ -74,14 +74,14 @@ class RAWCaptureTestActivity : AppCompatActivity() {
             } else {
                 "Video Only"
             }
-            
+
             Log.i(TAG, "RAW capture mode changed to: $mode")
         }
-        
+
         // Enable RAW capture by default for testing
         binding.enableRawCaptureSwitch.isChecked = true
     }
-    
+
     private fun setupRecordingButton() {
         binding.startStopButton.setOnClickListener {
             if (!isRecording) {
@@ -96,14 +96,14 @@ class RAWCaptureTestActivity : AppCompatActivity() {
         try {
             // Initialize camera with PreviewView for live camera preview
             val previewView = binding.previewView
-            
+
             rgbCameraRecorder = RgbCameraRecorder(
                 context = this,
                 lifecycleOwner = this,
                 previewView = previewView,
                 useFrontCamera = false
             )
-            
+
             lifecycleScope.launch {
                 val initialized = rgbCameraRecorder?.initialize() ?: false
                 if (initialized) {
@@ -115,7 +115,8 @@ class RAWCaptureTestActivity : AppCompatActivity() {
                 } else {
                     Log.w(TAG, "Camera initialization failed")
                     runOnUiThread {
-                        Toast.makeText(this@RAWCaptureTestActivity, "Camera initialization failed", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@RAWCaptureTestActivity, "Camera initialization failed", Toast.LENGTH_SHORT)
+                            .show()
                     }
                 }
             }
@@ -124,7 +125,7 @@ class RAWCaptureTestActivity : AppCompatActivity() {
             Toast.makeText(this, "Camera setup error: ${e.message}", Toast.LENGTH_SHORT).show()
         }
     }
-    
+
     private fun observeCameraStatus() {
         lifecycleScope.launch {
             rgbCameraRecorder?.statusFlow?.collect { status ->
@@ -134,11 +135,11 @@ class RAWCaptureTestActivity : AppCompatActivity() {
             }
         }
     }
-    
+
     private fun updateDeviceCompatibilityInfo() {
         val isStage3Compatible = SamsungDeviceCompatibility.isStage3Compatible()
         val deviceInfo = SamsungDeviceCompatibility.getDeviceInfo()
-        
+
         val features = mutableListOf<String>()
         if (binding.enableVideoSwitch.isChecked) {
             features.add(if (binding.enable4kSwitch.isChecked) "4K Video" else "1080p Video")
@@ -147,10 +148,10 @@ class RAWCaptureTestActivity : AppCompatActivity() {
             val rawType = if (isStage3Compatible) "Stage 3/Level 3 DNG" else "Standard RAW"
             features.add("$rawType (${binding.rawFrameRateSpinner.selectedItem})")
         }
-        
+
         val newFeaturesText = "🎯 Test Mode: ${features.joinToString(" + ")}"
         binding.tvFeaturesTitle.text = newFeaturesText
-        
+
         // Update features list with Stage 3 information
         val featuresList = buildString {
             append("• Stage 3/Level 3 DNG Recording: ${if (isStage3Compatible) "SUPPORTED ✓" else "Not Available (fallback to standard)"}\n")
@@ -160,7 +161,7 @@ class RAWCaptureTestActivity : AppCompatActivity() {
             append("• Camera2 interop for advanced sensor configuration\n")
             append("• Synchronized timestamps across all modalities")
         }
-        
+
         binding.tvFeaturesList.text = featuresList
     }
 
@@ -169,28 +170,33 @@ class RAWCaptureTestActivity : AppCompatActivity() {
             try {
                 isRecording = true
                 binding.startStopButton.text = "⏹️ Stop Recording"
-                binding.startStopButton.setBackgroundColor(androidx.core.content.ContextCompat.getColor(this, android.R.color.holo_red_dark))
-                
+                binding.startStopButton.setBackgroundColor(
+                    androidx.core.content.ContextCompat.getColor(
+                        this,
+                        android.R.color.holo_red_dark
+                    )
+                )
+
                 val sessionId = "stage3_test_${System.currentTimeMillis()}"
                 val sessionDir = "stage3_dng_test"
-                
+
                 val metadata = SessionMetadata.createSessionStart(sessionId).copy(
                     participantId = "stage3_test_user"
                 )
-                
+
                 val success = rgbCameraRecorder?.startRecording(sessionDir, metadata) ?: false
-                
+
                 if (success) {
                     val mode = if (binding.enableRawCaptureSwitch.isChecked) {
                         if (SamsungDeviceCompatibility.isStage3Compatible()) "Stage 3/Level 3 DNG" else "Standard RAW"
                     } else "Video Only"
-                    
+
                     binding.statusText.text = "🎬 Recording: $mode | Session: $sessionId"
                     Log.i(TAG, "Recording started with $mode processing")
                 } else {
                     throw Exception("Failed to start recording")
                 }
-                
+
             } catch (e: Exception) {
                 Log.e(TAG, "Error starting recording", e)
                 isRecording = false
@@ -200,23 +206,24 @@ class RAWCaptureTestActivity : AppCompatActivity() {
             }
         }
     }
-    
+
     private fun stopRecording() {
         lifecycleScope.launch {
             try {
                 val success = rgbCameraRecorder?.stopRecording() ?: false
-                
+
                 isRecording = false
                 binding.startStopButton.text = "▶️ Start Multi-Modal Recording"
                 binding.startStopButton.setBackgroundColor(resources.getColor(android.R.color.holo_green_dark))
-                
+
                 if (success) {
-                    binding.statusText.text = "✅ Recording stopped successfully - check files for Stage 3/Level 3 DNG output"
+                    binding.statusText.text =
+                        "✅ Recording stopped successfully - check files for Stage 3/Level 3 DNG output"
                     Log.i(TAG, "Recording stopped successfully")
                 } else {
                     binding.statusText.text = "⚠️ Recording stopped with warnings"
                 }
-                
+
             } catch (e: Exception) {
                 Log.e(TAG, "Error stopping recording", e)
                 binding.statusText.text = "❌ Error stopping recording: ${e.message}"

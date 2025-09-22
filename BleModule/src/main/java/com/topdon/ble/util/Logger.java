@@ -61,7 +61,7 @@ public interface Logger {
      * @param th       异常
      */
     void log(int priority, int type, String msg, Throwable th);
-    
+
     /**
      * 日志输出控制
      */

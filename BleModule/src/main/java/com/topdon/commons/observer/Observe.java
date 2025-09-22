@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 
 /**
  * 是否开启观察（接收通知）
- * 
+ * <p>
  * date: 2019/8/9 12:46
  * author: chuanfeng.bi
  */

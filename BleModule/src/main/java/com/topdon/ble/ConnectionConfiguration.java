@@ -143,7 +143,7 @@ public class ConnectionConfiguration {
         defaultWriteOptionsMap.put(service + ":" + characteristic, options);
         return this;
     }
-    
+
     @Nullable
     WriteOptions getDefaultWriteOptions(UUID service, UUID characteristic) {
         return defaultWriteOptionsMap.get(service + ":" + characteristic);

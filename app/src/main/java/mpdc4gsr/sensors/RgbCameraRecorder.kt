@@ -77,9 +77,10 @@ class RgbCameraRecorder(
         private const val VIDEO_BITRATE_1080P = 20_000_000
         private const val AUDIO_BITRATE = 256_000
         private const val JPEG_QUALITY = 100
-        // Throttled frame capture at 10-15fps for optimized I/O performance 
+
+        // Throttled frame capture at 10-15fps for optimized I/O performance
         private const val CAPTURE_FPS = 12 // Reduced from 30 to optimize I/O performance
-        
+
         // Frame capture throttling configuration
         private const val FRAME_CAPTURE_EVERY_N_FRAMES = 2 // Capture every 2nd frame at 24fps = ~12fps output
         private const val MAX_PENDING_CAPTURES = 2 // Reduced for better I/O handling
@@ -196,7 +197,7 @@ class RgbCameraRecorder(
             }
 
             _cameraStatus.value = "Initializing..."
-            
+
             // Wrap CameraProvider initialization in try-catch for robust error handling
             cameraProvider = try {
                 ProcessCameraProvider.getInstance(context).get()
@@ -223,7 +224,7 @@ class RgbCameraRecorder(
             // Setup and bind camera use cases with error handling
             setupCameraUseCases()
             val bindSuccess = bindUseCases()
-            
+
             if (!bindSuccess) {
                 _cameraStatus.value = "Camera Binding Failed"
                 emitError(ErrorType.INITIALIZATION_FAILED, "Failed to bind camera use cases")
@@ -545,7 +546,7 @@ class RgbCameraRecorder(
                         setBufferFormat(ImageFormat.RAW_SENSOR)
                         setTargetResolution(Size(selectedVideoWidth, selectedVideoHeight))
                         setCaptureMode(ImageCapture.CAPTURE_MODE_MAXIMIZE_QUALITY)
-                        
+
                         // Configure Camera2 interop for Stage 3 RAW capture
                         val extender = androidx.camera.camera2.interop.Camera2Interop.Extender(this)
                         extender.setCaptureRequestOption(
@@ -556,13 +557,13 @@ class RgbCameraRecorder(
                             android.hardware.camera2.CaptureRequest.NOISE_REDUCTION_MODE,
                             android.hardware.camera2.CameraMetadata.NOISE_REDUCTION_MODE_HIGH_QUALITY
                         )
-                        
+
                         Log.i(TAG, "RAW ImageCapture configured for Stage 3/Level 3 DNG capture")
                     }.build()
-                    
+
                     // Store the RAW ImageCapture for use in capture operations
                     this.rawImageCapture = rawImageCapture
-                    
+
                 } catch (e: Exception) {
                     Log.w(TAG, "Could not configure RAW ImageCapture for Stage 3: ${e.message}")
                 }
@@ -591,7 +592,7 @@ class RgbCameraRecorder(
 
             videoCapture?.let { useCases.add(it) }
             imageCapture?.let { useCases.add(it) }
-            rawImageCapture?.let { 
+            rawImageCapture?.let {
                 useCases.add(it)
                 Log.i(TAG, "✅ RAW ImageCapture added for Stage 3/Level 3 DNG capture")
             }
@@ -711,7 +712,7 @@ class RgbCameraRecorder(
             val recorder = Recorder.Builder()
                 .setQualitySelector(qualitySelector)
                 .build()
-                
+
             Log.i(TAG, "Optimized recorder created with quality selector configuration")
             recorder
 
@@ -758,12 +759,14 @@ class RgbCameraRecorder(
                 setupOutputFiles()
                 initializeCsvWriter()
 
-                sessionMetadata.addSyncEvent("RGB_RECORDING_START", mapOf(
-                    "sensor_type" to "rgb_camera",
-                    "sensor_id" to sensorId,
-                    "recording_config" to "${selectedVideoWidth}x${selectedVideoHeight}@${selectedVideoFps}fps",
-                    "sync_verification" to "enabled"
-                ))
+                sessionMetadata.addSyncEvent(
+                    "RGB_RECORDING_START", mapOf(
+                        "sensor_type" to "rgb_camera",
+                        "sensor_id" to sensorId,
+                        "recording_config" to "${selectedVideoWidth}x${selectedVideoHeight}@${selectedVideoFps}fps",
+                        "sync_verification" to "enabled"
+                    )
+                )
 
 
                 if (cameraProvider == null) {
@@ -987,7 +990,10 @@ class RgbCameraRecorder(
             lastFrameRateCheck.set(System.currentTimeMillis())
             actualFrameRateAchieved = 0.0
 
-            Log.i(TAG, "🎬 Starting optimized frame capture at ${CAPTURE_FPS} FPS with throttling (every ${FRAME_CAPTURE_EVERY_N_FRAMES} frames)")
+            Log.i(
+                TAG,
+                "🎬 Starting optimized frame capture at ${CAPTURE_FPS} FPS with throttling (every ${FRAME_CAPTURE_EVERY_N_FRAMES} frames)"
+            )
 
             while (_isRecording.get() && isActive) {
                 try {
@@ -1143,11 +1149,26 @@ class RgbCameraRecorder(
                                             recordingScope.launch(Dispatchers.IO) {
                                                 try {
                                                     // Post-process the DNG file with Stage 3 metadata
-                                                    val camera2Info = camera?.cameraInfo?.let { androidx.camera.camera2.interop.Camera2CameraInfo.from(it) }
-                                                    enhanceStage3DngMetadata(stage3File, timestampRecord, frameNumber, camera2Info)
-                                                    logFrameCapture(timestampRecord, frameNumber, stage3File, isRaw = true)
-                                                    
-                                                    Log.i(TAG, "✅ Stage 3/Level 3 DNG saved: ${stage3File.name} (${stage3File.length()} bytes)")
+                                                    val camera2Info = camera?.cameraInfo?.let {
+                                                        androidx.camera.camera2.interop.Camera2CameraInfo.from(it)
+                                                    }
+                                                    enhanceStage3DngMetadata(
+                                                        stage3File,
+                                                        timestampRecord,
+                                                        frameNumber,
+                                                        camera2Info
+                                                    )
+                                                    logFrameCapture(
+                                                        timestampRecord,
+                                                        frameNumber,
+                                                        stage3File,
+                                                        isRaw = true
+                                                    )
+
+                                                    Log.i(
+                                                        TAG,
+                                                        "✅ Stage 3/Level 3 DNG saved: ${stage3File.name} (${stage3File.length()} bytes)"
+                                                    )
                                                 } catch (e: Exception) {
                                                     Log.e(TAG, "Error post-processing Stage 3 DNG", e)
                                                 }
@@ -1155,7 +1176,11 @@ class RgbCameraRecorder(
                                         }
 
                                         override fun onError(exception: ImageCaptureException) {
-                                            Log.e(TAG, "Stage 3/Level 3 DNG capture failed for frame $frameNumber", exception)
+                                            Log.e(
+                                                TAG,
+                                                "Stage 3/Level 3 DNG capture failed for frame $frameNumber",
+                                                exception
+                                            )
                                             // Fallback to standard processing
                                             recordingScope.launch(Dispatchers.IO) {
                                                 rawFile.writeText("RAW capture fallback frame $frameNumber - ${timestampRecord.systemNanos}")
@@ -1190,8 +1215,8 @@ class RgbCameraRecorder(
      * Enhance DNG file with Stage 3/Level 3 specific metadata
      */
     private fun enhanceStage3DngMetadata(
-        dngFile: File, 
-        timestampRecord: TimestampRecord, 
+        dngFile: File,
+        timestampRecord: TimestampRecord,
         frameNumber: Long,
         camera2Info: androidx.camera.camera2.interop.Camera2CameraInfo?
     ) {
@@ -1200,7 +1225,7 @@ class RgbCameraRecorder(
             // Note: This would typically be done during DNG creation, but Android's
             // ImageCapture API may not expose all DNG metadata fields directly.
             // For complete Stage 3 metadata, a custom DNG creation pipeline may be needed.
-            
+
             val metadataFile = File(dngFile.parent, dngFile.nameWithoutExtension + "_stage3_metadata.json")
             val metadata = mapOf(
                 "processing_pipeline" to "Samsung Stage 3/Level 3",
@@ -1212,10 +1237,10 @@ class RgbCameraRecorder(
                 "dng_file_size_bytes" to dngFile.length(),
                 "creation_time" to System.currentTimeMillis()
             )
-            
+
             val gson = com.google.gson.Gson()
             metadataFile.writeText(gson.toJson(metadata))
-            
+
             Log.d(TAG, "Stage 3/Level 3 metadata enhanced for frame $frameNumber")
         } catch (e: Exception) {
             Log.w(TAG, "Could not enhance Stage 3/Level 3 metadata: ${e.message}")
@@ -1362,13 +1387,13 @@ class RgbCameraRecorder(
                     "filename=${outputFile.name}",
                     "size=${outputFile.length()}"
                 )
-                
+
                 if (isRaw) {
                     metadataParts.add("type=raw_dng")
                     metadataParts.add("processing=stage3_level3")
                     metadataParts.add("device=${SamsungDeviceCompatibility.getDeviceInfo()}")
                 }
-                
+
                 metadataParts.add("aligned_ns=$alignedNs")
                 wallMs?.let { metadataParts.add("wall_ms=$it") }
                 sessionMetadata?.let {

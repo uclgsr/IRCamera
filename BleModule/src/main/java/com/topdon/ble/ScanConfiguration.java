@@ -7,14 +7,13 @@ import android.bluetooth.le.ScanSettings;
 import android.os.Build;
 
 
-
 import androidx.annotation.RequiresApi;
 
 import java.util.List;
 
 /**
  * 搜索配置
- * 
+ * <p>
  * date: 2021/8/12 15:31
  * author: bichuanfeng
  */

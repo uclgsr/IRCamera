@@ -4,7 +4,7 @@ import android.bluetooth.BluetoothGattCharacteristic;
 
 /**
  * 写特征的配置
- * 
+ * <p>
  * date: 2019/8/9 18:06
  * author: bichuanfeng
  */
@@ -116,7 +116,7 @@ public class WriteOptions {
                     writeType == BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE ||
                     writeType == BluetoothGattCharacteristic.WRITE_TYPE_SIGNED) {
                 this.writeType = writeType;
-            }            
+            }
             return this;
         }
 
@@ -127,7 +127,7 @@ public class WriteOptions {
             useMtuAsPackageSize = true;
             return this;
         }
-        
+
         public WriteOptions build() {
             return new WriteOptions(this);
         }

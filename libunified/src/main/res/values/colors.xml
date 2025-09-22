@@ -18,7 +18,7 @@
 
     <color name="wheel_select_bg">#1A2B79D7</color>
     <color name="wheel_select_text">#FFFFFF</color>
-    
+
     <!-- Missing colors for libunified functionality -->
     <color name="we_read_theme_color">#2B79D8</color>
     <color name="toolbar_16131E">#16131E</color>
@@ -37,11 +37,11 @@
     <color name="color_66FFFFFF">#66FFFFFF</color>
     <color name="color_80FFFFFF">#80FFFFFF</color>
     <color name="color_CCFFFFFF">#CCFFFFFF</color>
-    
+
     <!-- Additional missing colors -->
     <color name="grey">#FF808080</color>
     <color name="white_80">#CCFFFFFF</color>
-    
+
     <!-- More missing colors from error messages -->
     <color name="color_bg_min">#FF4CAF50</color>
     <color name="lms_red">#FFFF0000</color>

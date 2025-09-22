@@ -23,7 +23,7 @@ import java.util.concurrent.atomic.AtomicInteger
 
 /**
  * Comprehensive TC001 Thermal Camera Integration Tests
- * 
+ *
  * Tests the four key areas requested:
  * 1. USB permission flow with real TC001 hardware
  * 2. Verify actual 10Hz frame capture rate
@@ -139,19 +139,21 @@ class TC001IntegrationTest {
 
         // When: Start recording and measure frame rate over virtual time
         thermalRecorder.startRecording(testSessionDir.absolutePath)
-        
+
         // Simulate 2 seconds of recording (virtual time)
         advanceTimeBy(2000L)
         delay(100) // Allow processing
-        
+
         thermalRecorder.stopRecording()
 
         // Then: Should capture approximately 20 frames in 2 seconds (10Hz)
         val actualFrames = frameCount.get()
         val expectedFrames = 20 // 10Hz * 2 seconds
         // Allow some tolerance for timing variations in testing
-        assertTrue("Expected around $expectedFrames frames for a 2-second duration at 10Hz, but got $actualFrames", 
-                  actualFrames in 18..22)
+        assertTrue(
+            "Expected around $expectedFrames frames for a 2-second duration at 10Hz, but got $actualFrames",
+            actualFrames in 18..22
+        )
     }
 
     @Test
@@ -166,7 +168,7 @@ class TC001IntegrationTest {
         thermalRecorder.setFrameListener(object : ThermalRecorder.ThermalFrameListener {
             override fun onFrameProcessed(stats: ThermalRecorder.ThermalFrameStats) {
                 frameCount.incrementAndGet()
-                
+
                 // Stop after capturing enough frames for analysis
                 if (frameCount.get() >= targetFramesToCapture) {
                     // Stop recording asynchronously  
@@ -181,16 +183,18 @@ class TC001IntegrationTest {
 
         // When: Start recording and advance virtual time for frame capture
         thermalRecorder.startRecording(testSessionDir.absolutePath)
-        
+
         // Advance time to allow for frame capture (10Hz = 100ms per frame, so 1000ms for 10 frames)
-        advanceTimeBy(1000L) 
+        advanceTimeBy(1000L)
         delay(100) // Allow processing
-        
+
         // Then: Should have captured the expected number of frames over virtual time
         val actualFrames = frameCount.get()
         // For 1 second at 10Hz, expect ~10 frames (allow some tolerance)
-        assertTrue("Expected around 10 frames in 1 second at 10Hz, got $actualFrames", 
-                  actualFrames in 8..12)
+        assertTrue(
+            "Expected around 10 frames in 1 second at 10Hz, got $actualFrames",
+            actualFrames in 8..12
+        )
     }
 
     /**
@@ -202,10 +206,10 @@ class TC001IntegrationTest {
         val deviceList = hashMapOf("tc001" to mockTC001Device)
         `when`(mockUsbManager.deviceList).thenReturn(deviceList)
         `when`(mockUsbManager.hasPermission(mockTC001Device)).thenReturn(true)
-        
+
         thermalRecorder.initialize()
         thermalRecorder.startRecording(testSessionDir.absolutePath)
-        
+
         assertTrue("Should be recording", thermalRecorder.isRecording)
 
         // When: Simulate camera disconnect event by directly invoking the event handler
@@ -219,7 +223,7 @@ class TC001IntegrationTest {
 
         // Then: Should continue recording in simulation mode
         assertTrue("Should still be recording after disconnect", thermalRecorder.isRecording)
-        
+
         // Recording should complete successfully
         val stopResult = thermalRecorder.stopRecording()
         assertTrue("Should stop recording successfully", stopResult)
@@ -246,7 +250,7 @@ class TC001IntegrationTest {
 
         // Then: Should continue recording and potentially switch to real hardware mode
         assertTrue("Should continue recording", thermalRecorder.isRecording)
-        
+
         // Stop and verify successful completion
         val stopResult = thermalRecorder.stopRecording()
         assertTrue("Should stop successfully after reconnect", stopResult)
@@ -258,7 +262,7 @@ class TC001IntegrationTest {
         var deviceList = hashMapOf("tc001" to mockTC001Device)
         `when`(mockUsbManager.deviceList).thenReturn(deviceList)
         `when`(mockUsbManager.hasPermission(mockTC001Device)).thenReturn(true)
-        
+
         thermalRecorder.initialize()
         thermalRecorder.startRecording(testSessionDir.absolutePath)
 
@@ -267,18 +271,22 @@ class TC001IntegrationTest {
             // Disconnect
             `when`(mockUsbManager.deviceList).thenReturn(hashMapOf())
             delay(100)
-            
+
             // Should still be recording
-            assertTrue("Should be recording during cycle $cycle disconnect", 
-                      thermalRecorder.isRecording)
-            
+            assertTrue(
+                "Should be recording during cycle $cycle disconnect",
+                thermalRecorder.isRecording
+            )
+
             // Reconnect  
             `when`(mockUsbManager.deviceList).thenReturn(hashMapOf("tc001" to mockTC001Device))
             delay(100)
-            
+
             // Should still be recording
-            assertTrue("Should be recording during cycle $cycle reconnect", 
-                      thermalRecorder.isRecording)
+            assertTrue(
+                "Should be recording during cycle $cycle reconnect",
+                thermalRecorder.isRecording
+            )
         }
 
         // Then: Recording should complete successfully
@@ -294,7 +302,7 @@ class TC001IntegrationTest {
         // Given: Multi-sensor recording setup
         `when`(mockGsrRecorder.isRecording).thenReturn(false).thenReturn(true)
         `when`(mockRgbRecorder.isRecording).thenReturn(false).thenReturn(true)
-        
+
         // Mock successful GSR and RGB recording starts
         `when`(mockGsrRecorder.startRecording(anyString())).thenReturn(true)
         `when`(mockRgbRecorder.startRecording(anyString())).thenReturn(true)
@@ -332,19 +340,25 @@ class TC001IntegrationTest {
         // When: Thermal experiences critical failure (simulated)
         // Force thermal into error state by removing devices mid-recording
         `when`(mockUsbManager.deviceList).thenReturn(hashMapOf())
-        
+
         // Simulate thermal error handling
         delay(100) // Allow error processing
 
         // Then: Other sensors should continue unaffected
-        assertTrue("GSR should continue recording despite thermal failure", 
-                  mockGsrRecorder.isRecording)
-        assertTrue("RGB should continue recording despite thermal failure", 
-                  mockRgbRecorder.isRecording)
-        
+        assertTrue(
+            "GSR should continue recording despite thermal failure",
+            mockGsrRecorder.isRecording
+        )
+        assertTrue(
+            "RGB should continue recording despite thermal failure",
+            mockRgbRecorder.isRecording
+        )
+
         // Thermal should gracefully switch to simulation mode
-        assertTrue("Thermal should continue in simulation mode", 
-                  thermalRecorder.isRecording)
+        assertTrue(
+            "Thermal should continue in simulation mode",
+            thermalRecorder.isRecording
+        )
     }
 
     @Test
@@ -371,10 +385,10 @@ class TC001IntegrationTest {
         try {
             // Force error conditions
             `when`(mockUsbManager.deviceList).thenReturn(hashMapOf())
-            
+
             // Wait for error processing
             delay(200)
-            
+
         } catch (e: Exception) {
             crashOccurred.set(true)
         }
@@ -382,7 +396,7 @@ class TC001IntegrationTest {
         // Then: Should handle errors gracefully without crashing
         assertFalse("Thermal errors should not crash the app", crashOccurred.get())
         assertTrue("Should still be recording after errors", thermalRecorder.isRecording)
-        
+
         // Should be able to stop recording normally
         val stopResult = thermalRecorder.stopRecording()
         assertTrue("Should stop recording successfully after errors", stopResult)
@@ -392,7 +406,7 @@ class TC001IntegrationTest {
     fun `test thermal image directory creation and file output`() = runTest {
         // Given: Recording setup
         thermalRecorder.initialize()
-        
+
         // When: Start recording with image saving
         thermalRecorder.startRecording(testSessionDir.absolutePath)
         delay(500) // Allow some frames to be processed

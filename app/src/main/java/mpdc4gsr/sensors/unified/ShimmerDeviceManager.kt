@@ -196,7 +196,7 @@ class ShimmerDeviceManager(
                     .setServiceUuid(ParcelUuid(UUID.fromString(SHIMMER_SERVICE_UUID)))
                     .build()
             )
-            
+
             // Filter by device name patterns
             SHIMMER_NAME_PATTERNS.forEach { pattern ->
                 add(
@@ -205,7 +205,7 @@ class ShimmerDeviceManager(
                         .build()
                 )
             }
-            
+
             // Filter by MAC address prefixes if needed
             SHIMMER_MAC_PREFIXES.forEach { prefix ->
                 add(

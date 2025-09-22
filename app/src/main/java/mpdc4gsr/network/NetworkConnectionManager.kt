@@ -29,16 +29,16 @@ class NetworkConnectionManager(
     }
 
     private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
-    
+
     private val _connectionState = MutableStateFlow(ConnectionState.DISCONNECTED)
     val connectionState: StateFlow<ConnectionState> = _connectionState.asStateFlow()
-    
+
     private val _errorState = MutableStateFlow<String?>(null)
     val errorState: StateFlow<String?> = _errorState.asStateFlow()
-    
+
     private var reconnectAttempts = 0
     private var connectionTimeoutJob: kotlinx.coroutines.Job? = null
-    
+
     enum class ConnectionState {
         DISCONNECTED,
         CONNECTING,
@@ -46,7 +46,7 @@ class NetworkConnectionManager(
         ERROR,
         RECONNECTING
     }
-    
+
     init {
         // Monitor network server connection state
         scope.launch {
@@ -58,7 +58,7 @@ class NetworkConnectionManager(
                 }
             }
         }
-        
+
         // Monitor protocol messages for connection health
         scope.launch {
             networkServer.messageFlow.collect { message ->
@@ -66,12 +66,12 @@ class NetworkConnectionManager(
             }
         }
     }
-    
+
     suspend fun startServer(): Boolean {
         return try {
             _connectionState.value = ConnectionState.CONNECTING
             _errorState.value = null
-            
+
             val started = networkServer.start()
             if (started) {
                 Log.i(TAG, "Network server started successfully")
@@ -91,7 +91,7 @@ class NetworkConnectionManager(
             false
         }
     }
-    
+
     suspend fun stopServer() {
         try {
             connectionTimeoutJob?.cancel()
@@ -104,13 +104,13 @@ class NetworkConnectionManager(
             Log.e(TAG, "Error stopping network server", e)
         }
     }
-    
+
     private fun onConnectionEstablished() {
         Log.i(TAG, "PC Controller connection established")
         _connectionState.value = ConnectionState.CONNECTED
         _errorState.value = null
         reconnectAttempts = 0
-        
+
         // Start connection timeout monitoring
         connectionTimeoutJob = scope.launch {
             delay(CONNECTION_TIMEOUT_MS)
@@ -119,7 +119,7 @@ class NetworkConnectionManager(
                 checkConnectionHealth()
             }
         }
-        
+
         // Enable preview streaming when PC connects
         scope.launch {
             try {
@@ -129,16 +129,16 @@ class NetworkConnectionManager(
             }
         }
     }
-    
+
     private fun onConnectionLost() {
         Log.i(TAG, "PC Controller connection lost")
         connectionTimeoutJob?.cancel()
-        
+
         if (_connectionState.value == ConnectionState.CONNECTED) {
             // Connection was active, this is unexpected
             _connectionState.value = ConnectionState.ERROR
             _errorState.value = "Connection lost unexpectedly"
-            
+
             // Disable preview streaming
             scope.launch {
                 try {
@@ -147,7 +147,7 @@ class NetworkConnectionManager(
                     Log.e(TAG, "Error disabling preview streaming", e)
                 }
             }
-            
+
             // Attempt reconnection if not at max attempts
             if (reconnectAttempts < MAX_RECONNECT_ATTEMPTS) {
                 scheduleReconnect()
@@ -161,29 +161,29 @@ class NetworkConnectionManager(
             _connectionState.value = ConnectionState.DISCONNECTED
         }
     }
-    
+
     private fun scheduleReconnect() {
         _connectionState.value = ConnectionState.RECONNECTING
         reconnectAttempts++
-        
+
         scope.launch {
             Log.i(TAG, "Scheduling reconnection attempt $reconnectAttempts in ${RECONNECT_DELAY_MS}ms")
             delay(RECONNECT_DELAY_MS)
-            
+
             if (isActive && _connectionState.value == ConnectionState.RECONNECTING) {
                 attemptReconnection()
             }
         }
     }
-    
+
     private suspend fun attemptReconnection() {
         try {
             Log.i(TAG, "Attempting reconnection $reconnectAttempts/$MAX_RECONNECT_ATTEMPTS")
-            
+
             // Restart the server to accept new connections
             networkServer.stop()
             delay(1000) // Brief pause before restart
-            
+
             val restarted = networkServer.start()
             if (restarted) {
                 Log.i(TAG, "Server restarted for reconnection")
@@ -207,11 +207,11 @@ class NetworkConnectionManager(
             }
         }
     }
-    
+
     private fun onProtocolMessageReceived(message: Protocol.ProtocolMessage) {
         // Reset connection timeout when we receive messages
         connectionTimeoutJob?.cancel()
-        
+
         if (_connectionState.value == ConnectionState.CONNECTED) {
             // Restart timeout for next message
             connectionTimeoutJob = scope.launch {
@@ -221,31 +221,33 @@ class NetworkConnectionManager(
                 }
             }
         }
-        
+
         // Handle connection-related protocol messages
         when (message.type) {
             Protocol.MSG_HELLO -> {
                 Log.d(TAG, "Received HELLO from PC - connection healthy")
             }
+
             Protocol.MSG_ERROR -> {
                 val errorCode = message.parameters["code"]
                 val errorMsg = message.parameters["msg"]
                 Log.w(TAG, "Received ERROR from PC: $errorCode - $errorMsg")
                 _errorState.value = "PC Error: $errorMsg"
             }
+
             else -> {
                 // Other messages indicate healthy connection
                 Log.d(TAG, "Received ${message.type} - connection active")
             }
         }
     }
-    
+
     private fun checkConnectionHealth() {
         Log.w(TAG, "Checking connection health due to inactivity")
         // In a real implementation, we might send a ping/keepalive message
         // For now, just log the health check
     }
-    
+
     /**
      * Force a reconnection attempt (useful for manual recovery)
      */
@@ -255,7 +257,7 @@ class NetworkConnectionManager(
         _connectionState.value = ConnectionState.RECONNECTING
         attemptReconnection()
     }
-    
+
     /**
      * Get current connection status information
      */
@@ -268,7 +270,7 @@ class NetworkConnectionManager(
             "client_connected" to networkServer.isClientConnected()
         )
     }
-    
+
     /**
      * Cleanup resources
      */

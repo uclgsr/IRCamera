@@ -19,7 +19,7 @@ final class AsyncPoster implements Runnable, Poster {
         this.executorService = executorService;
         queue = new ConcurrentLinkedQueue<>();
     }
-    
+
     @Override
     public void enqueue(@NonNull Runnable runnable) {
         Objects.requireNonNull(runnable, "runnable is null, cannot be enqueued");

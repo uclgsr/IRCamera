@@ -74,7 +74,7 @@ public class RequestBuilderFactory {
      * @param enable         开启或关闭
      */
     public RequestBuilder<NotificationChangeCallback> getSetIndicationBuilder(UUID service, UUID characteristic,
-                                                                               boolean enable) {
+                                                                              boolean enable) {
         RequestBuilder<NotificationChangeCallback> builder = new RequestBuilder<>(RequestType.SET_INDICATION);
         builder.service = service;
         builder.characteristic = characteristic;
@@ -90,7 +90,7 @@ public class RequestBuilderFactory {
      * @param descriptor     描述符UUID
      */
     public RequestBuilder<NotificationChangeCallback> getReadDescriptorBuilder(UUID service, UUID characteristic,
-                                                                                UUID descriptor) {
+                                                                               UUID descriptor) {
         RequestBuilder<NotificationChangeCallback> builder = new RequestBuilder<>(RequestType.READ_DESCRIPTOR);
         builder.service = service;
         builder.characteristic = characteristic;
@@ -106,7 +106,7 @@ public class RequestBuilderFactory {
      * @param value          要写入特征的值
      */
     public WriteCharacteristicBuilder getWriteCharacteristicBuilder(UUID service, UUID characteristic,
-                                                                            byte[] value) {
+                                                                    byte[] value) {
         Inspector.requireNonNull(value, "value can't be null");
         WriteCharacteristicBuilder builder = new WriteCharacteristicBuilder();
         builder.service = service;

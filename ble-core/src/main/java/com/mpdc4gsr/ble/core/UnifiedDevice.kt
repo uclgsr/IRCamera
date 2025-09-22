@@ -13,7 +13,7 @@ data class UnifiedDevice(
         TOPDON,
         UNKNOWN
     }
-    
+
     fun isConnected(): Boolean = false
     fun getSignalStrength(): Int = -50
     fun getBatteryLevel(): Int = 80

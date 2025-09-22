@@ -31,7 +31,7 @@ class MethodInfoGenerator {
 
     static MethodInfo onCharacteristicChanged(Device device, UUID service, UUID characteristic, byte[] value) {
         return new MethodInfo("onCharacteristicChanged", new MethodInfo.Parameter(Device.class, device),
-                new MethodInfo.Parameter(UUID.class, service), new MethodInfo.Parameter(UUID.class, characteristic), 
+                new MethodInfo.Parameter(UUID.class, service), new MethodInfo.Parameter(UUID.class, characteristic),
                 new MethodInfo.Parameter(byte[].class, value));
     }
 

@@ -23,7 +23,7 @@ public class UUIDManager {
     /**
      * 读取数据的UUID
      */
-    public static final String READ_UUID ="00010203-0405-0607-0809-0a0b0c0d2b10";//"00010203-0405-0607-0809-0A0B0C0D2B10";//
+    public static final String READ_UUID = "00010203-0405-0607-0809-0a0b0c0d2b10";//"00010203-0405-0607-0809-0A0B0C0D2B10";//
     /**
      * NOTIFY里面的Descriptor UUID
      */

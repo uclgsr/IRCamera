@@ -299,7 +299,7 @@ class ThermalCameraRecorder(
     private var ambientTemperature = 25.0
     private var emissivity = 0.95
     private var reflectedTemperature = 23.0
-    
+
     // TC001 frame capture settings
     private var saveFrameImages = false
     private var thermalImagesDirectory: File? = null
@@ -904,11 +904,11 @@ class ThermalCameraRecorder(
 
                                         // Convert thermal data and save frame
                                         val thermalData = processRealThermalData(tempData, width, height)
-                                        
+
                                         // Create proper timestamp record for processing
                                         val timestampRecord = TimestampManager.createTimestampRecord()
                                         processRealThermalFrameData(thermalData, frameNumber, timestampRecord)
-                                        
+
                                         // Save frame image if configured
                                         if (saveFrameImages) {
                                             saveFrameImageToPNG(imageData, thermalData, frameNumber)
@@ -1341,15 +1341,18 @@ class ThermalCameraRecorder(
                 val timestamp = System.currentTimeMillis()
                 val filename = "thermal_frame_${frameNumber}_${timestamp}.png"
                 val imageFile = File(thermalImagesDirectory, filename)
-                
+
                 // Convert thermal data to bitmap and save as PNG
                 val bitmap = generateThermalPreviewBitmap(thermalData, IR_CAMERA_WIDTH, IR_CAMERA_HEIGHT)
                 if (bitmap != null) {
                     imageFile.outputStream().use { outputStream ->
                         bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
                     }
-                    
-                    Log.d(TAG, "Saved thermal frame PNG: $filename (min: ${thermalData.minTemperature}°C, max: ${thermalData.maxTemperature}°C)")
+
+                    Log.d(
+                        TAG,
+                        "Saved thermal frame PNG: $filename (min: ${thermalData.minTemperature}°C, max: ${thermalData.maxTemperature}°C)"
+                    )
                 }
             }
         } catch (e: Exception) {
@@ -1376,7 +1379,7 @@ class ThermalCameraRecorder(
 
                 this@ThermalCameraRecorder.sessionDirectory = sessionDirectory
                 initializeSessionTiming()
-                
+
                 // Create thermal_images directory for frame captures
                 val dir = File(sessionDirectory, "thermal_images")
                 thermalImagesDirectory = dir
@@ -1384,7 +1387,7 @@ class ThermalCameraRecorder(
                     dir.mkdirs()
                     Log.i(TAG, "Created thermal images directory: ${dir.absolutePath}")
                 }
-                
+
                 // Enable frame image saving for TC001
                 saveFrameImages = true
 
@@ -1774,7 +1777,7 @@ class ThermalCameraRecorder(
 
 
             startPerformanceMonitoring(optimalFrameRate)
-            
+
             // Start continuous frame capture loop for TC001
             startThermalHealthMonitor()
 
@@ -1789,7 +1792,7 @@ class ThermalCameraRecorder(
             false
         }
     }
-    
+
     // Continuous frame capture loop for TC001 at ~10Hz
     private fun startThermalHealthMonitor() {
         recordingScope.launch {
@@ -1797,7 +1800,7 @@ class ThermalCameraRecorder(
             val frameInterval = 100L // 10Hz = 100ms intervals
             var consecutiveErrors = 0
             val maxConsecutiveErrors = 10
-            
+
             while (_isRecording.get() && !isSimulationMode && isIRCameraConnected) {
                 try {
                     val cameraHealthy = isThermalCameraHealthy()
@@ -1808,37 +1811,37 @@ class ThermalCameraRecorder(
                         if (consecutiveErrors >= maxConsecutiveErrors) {
                             Log.e(TAG, "Too many consecutive TC001 capture failures, switching to simulation")
                             handleThermalError(
-                                "Frame Capture", 
-                                "Continuous TC001 frame capture failed $maxConsecutiveErrors times", 
+                                "Frame Capture",
+                                "Continuous TC001 frame capture failed $maxConsecutiveErrors times",
                                 false
                             )
                             break
                         }
                     }
-                    
+
                     delay(frameInterval)
                 } catch (e: Exception) {
                     consecutiveErrors++
                     Log.e(TAG, "Error in TC001 continuous frame capture loop", e)
-                    
+
                     if (consecutiveErrors >= maxConsecutiveErrors) {
                         Log.e(TAG, "TC001 continuous capture loop failed repeatedly, stopping")
                         handleThermalError(
-                            "Frame Loop", 
-                            "TC001 capture loop crashed: ${e.message}", 
+                            "Frame Loop",
+                            "TC001 capture loop crashed: ${e.message}",
                             false
                         )
                         break
                     }
-                    
+
                     delay(200) // Longer delay on errors
                 }
             }
-            
+
             Log.i(TAG, "TC001 continuous frame capture loop ended")
         }
     }
-    
+
     // Health check method to verify TC001 camera prerequisites for capture loop
     private suspend fun isThermalCameraHealthy(): Boolean = withContext(Dispatchers.IO) {
         return@withContext try {
@@ -1915,7 +1918,7 @@ class ThermalCameraRecorder(
                                 val frameNumber = frameCount.incrementAndGet()
 
                                 val thermalData = processRealThermalData(tempData, width, height)
-                                
+
                                 // Create proper timestamp record for processing
                                 val timestampRecord = TimestampManager.createTimestampRecord()
                                 processRealThermalFrameData(thermalData, frameNumber, timestampRecord)
@@ -2026,7 +2029,7 @@ class ThermalCameraRecorder(
                 Log.w(TAG, "Non-recoverable TC001 thermal error - switching to simulation mode")
                 isSimulationMode = true
                 isIRCameraConnected = false
-                
+
                 // Continue recording with other sensors - don't halt the app
                 if (_isRecording.get()) {
                     Log.i(TAG, "Continuing recording session with simulation mode after TC001 failure")
