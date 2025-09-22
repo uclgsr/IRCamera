@@ -1135,7 +1135,8 @@ class RgbCameraRecorder(
                                             recordingScope.launch(Dispatchers.IO) {
                                                 try {
                                                     // Post-process the DNG file with Stage 3 metadata
-                                                    enhanceStage3DngMetadata(stage3File, timestampRecord, frameNumber, null)
+                                                    val camera2Info = camera?.cameraInfo?.let { androidx.camera.camera2.interop.Camera2CameraInfo.from(it) }
+                                                    enhanceStage3DngMetadata(stage3File, timestampRecord, frameNumber, camera2Info)
                                                     logFrameCapture(timestampRecord, frameNumber, stage3File, isRaw = true)
                                                     
                                                     Log.i(TAG, "✅ Stage 3/Level 3 DNG saved: ${stage3File.name} (${stage3File.length()} bytes)")
