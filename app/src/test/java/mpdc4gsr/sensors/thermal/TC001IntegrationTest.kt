@@ -208,15 +208,14 @@ class TC001IntegrationTest {
         
         assertTrue("Should be recording", thermalRecorder.isRecording)
 
-        // When: Simulate camera disconnect (device removed from USB)
-        `when`(mockUsbManager.deviceList).thenReturn(hashMapOf()) // Empty device list
-        
-        // Simulate disconnect event through USB receiver
-        val disconnectEvent = org.mockito.Mockito.mock(
-            com.mpdc4gsr.libunified.app.bean.event.device.DeviceConnectEvent::class.java
-        )
+        // When: Simulate camera disconnect event by directly invoking the event handler
+        val disconnectEvent = mock(com.mpdc4gsr.libunified.app.bean.event.device.DeviceConnectEvent::class.java)
         `when`(disconnectEvent.isConnected).thenReturn(false)
         `when`(disconnectEvent.device).thenReturn(mockTC001Device)
+        thermalRecorder.onDeviceConnectEvent(disconnectEvent)
+
+        // Allow time for the event to be processed and fallback to simulation
+        delay(100)
 
         // Then: Should continue recording in simulation mode
         assertTrue("Should still be recording after disconnect", thermalRecorder.isRecording)
