@@ -38,10 +38,17 @@ object TimestampManager {
     /**
      * Formats a nanosecond timestamp to ISO 8601 string format
      */
+    private val iso8601Format by lazy {
+        java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", java.util.Locale.US).apply {
+            timeZone = java.util.TimeZone.getTimeZone("UTC")
+        }
+    }
+
     fun formatTimestampIso(timestampNanos: Long): String {
         val timestampMillis = timestampNanos / 1_000_000
         val date = java.util.Date(timestampMillis)
-        return java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", java.util.Locale.getDefault()).format(date)
+        return iso8601Format.format(date)
+    }
     }
 
 
