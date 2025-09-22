@@ -1792,7 +1792,7 @@ class ThermalCameraRecorder(
     }
     
     // Continuous frame capture loop for TC001 at ~10Hz
-    private fun startContinuousFrameCapture() {
+    private fun startThermalHealthMonitor() {
         recordingScope.launch {
             Log.i(TAG, "Starting TC001 continuous frame capture at 100ms intervals")
             val frameInterval = 100L // 10Hz = 100ms intervals
