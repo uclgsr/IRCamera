@@ -465,7 +465,7 @@ class ShimmerMvpActivity : AppCompatActivity() {
             // Create GSRSample using the unified model
             GSRSample(
                 timestamp = timestamp,
-                timestampIso = iso8601Format.format(java.util.Date(timestamp)),
+                timestampIso = iso8601Format.format(java.util.Date(timestamp / 1_000_000)),
                 gsrMicrosiemens = gsrMicrosiemens,
                 gsrRaw = gsrRaw,
                 ppgRaw = ppgRaw,
