@@ -16,9 +16,7 @@ import com.mpdc4gsr.ble.core.ScanListener
 import com.mpdc4gsr.ble.core.util.BluetoothPermissionUtils
 import com.mpdc4gsr.ble.core.util.DefaultLogger
 import com.mpdc4gsr.ble.core.util.Logger
-import com.mpdc4gsr.commons.observer.Observable
 import com.mpdc4gsr.commons.poster.MethodInfo
-import com.mpdc4gsr.commons.poster.PosterDispatcher
 import java.util.Locale
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.CopyOnWriteArrayList
@@ -64,8 +62,8 @@ class EasyBLE internal constructor(builder: EasyBLEBuilder) {
         } else {
             internalObservable = true
             executorService = builder.executorService
-            posterDispatcher = PosterDispatcher(executorService, builder.methodDefaultThreadMode)
-            observable = Observable(posterDispatcher, builder.isObserveAnnotationRequired)
+            posterDispatcher = DefaultPosterDispatcher()
+            observable = DefaultObservable()
         }
 
         if (application != null) {

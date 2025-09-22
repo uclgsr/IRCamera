@@ -10,6 +10,7 @@ interface PosterDispatcher {
     fun post(event: Runnable)
     fun postDelayed(event: Runnable, delayMillis: Long)
     fun post(observer: EventObserver, methodInfo: com.mpdc4gsr.commons.poster.MethodInfo)
+    fun clearTasks()
 }
 
 /**
@@ -44,5 +45,9 @@ class DefaultPosterDispatcher : PosterDispatcher {
                 }
             }
         }
+    }
+    
+    override fun clearTasks() {
+        handler.removeCallbacksAndMessages(null)
     }
 }

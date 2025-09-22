@@ -24,16 +24,16 @@ interface RequestBuilder<T : RequestBuilder<T>> {
 /**
  * Generic request builder implementation
  */
-open class GenericRequestBuilder<T : GenericRequestBuilder<T>> : RequestBuilder {
-    var tag: String? = null
-    var type: RequestType = RequestType.READ_CHARACTERISTIC
-    var service: UUID? = null
-    var characteristic: UUID? = null
-    var descriptor: UUID? = null
-    var priority: Int = 0
-    var value: Any? = null
-    var callback: RequestCallback? = null
-    var writeOptions: WriteOptions? = null
+open class GenericRequestBuilder<T : GenericRequestBuilder<T>> : RequestBuilder<T> {
+    override var tag: String? = null
+    override var type: RequestType = RequestType.READ_CHARACTERISTIC
+    override var service: UUID? = null
+    override var characteristic: UUID? = null
+    override var descriptor: UUID? = null
+    override var priority: Int = 0
+    override var value: Any? = null
+    override var callback: RequestCallback? = null
+    override var writeOptions: WriteOptions? = null
 
     @Suppress("UNCHECKED_CAST")
     fun setTag(tag: String?): T {
@@ -89,15 +89,17 @@ open class GenericRequestBuilder<T : GenericRequestBuilder<T>> : RequestBuilder 
         return this as T
     }
 
-    override fun setCallback(callback: Any): RequestBuilder {
+    @Suppress("UNCHECKED_CAST")
+    override fun setCallback(callback: Any): T {
         if (callback is RequestCallback) {
             this.callback = callback
         }
-        return this
+        return this as T
     }
 
-    override fun setTimeout(timeoutMillis: Long): RequestBuilder {
-        return this
+    @Suppress("UNCHECKED_CAST")
+    override fun setTimeout(timeoutMillis: Long): T {
+        return this as T
     }
 
     override fun build(): Request {
@@ -109,9 +111,9 @@ open class GenericRequestBuilder<T : GenericRequestBuilder<T>> : RequestBuilder 
  * Request builder factory
  */
 interface RequestBuilderFactory {
-    fun createReadCharacteristicBuilder(): RequestBuilder
-    fun createWriteCharacteristicBuilder(): RequestBuilder
-    fun createNotificationBuilder(): RequestBuilder
+    fun createReadCharacteristicBuilder(): RequestBuilder<*>
+    fun createWriteCharacteristicBuilder(): RequestBuilder<*>
+    fun createNotificationBuilder(): RequestBuilder<*>
 }
 
 /**

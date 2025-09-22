@@ -8,7 +8,7 @@ class MethodInfo(var name: String, var tag: String, vararg parameters: Parameter
     constructor(name: String, vararg parameters: Parameter?) : this(name, name, *parameters)
 
     init {
-        this.parameters = parameters
+        this.parameters = arrayOf(*parameters)
     }
 
     constructor(name: String, parameterTypes: Array<Class<*>?>?) : this(name, name, parameterTypes)
@@ -21,12 +21,13 @@ class MethodInfo(var name: String, var tag: String, vararg parameters: Parameter
 
     val parameterTypes: Array<Class<*>?>?
         get() {
-            if (parameters == null) {
+            val params = parameters
+            if (params == null) {
                 return null
             } else {
-                val types = arrayOfNulls<Class<*>>(parameters!!.size)
-                for (i in parameters.indices) {
-                    types[i] = parameters!![i]!!.type
+                val types = arrayOfNulls<Class<*>>(params.size)
+                for (i in params.indices) {
+                    types[i] = params[i]!!.type
                 }
                 return types
             }
@@ -34,12 +35,13 @@ class MethodInfo(var name: String, var tag: String, vararg parameters: Parameter
 
     val parameterValues: Array<Any?>?
         get() {
-            if (parameters == null) {
+            val params = parameters
+            if (params == null) {
                 return null
             } else {
-                val values: Array<Any?> = arrayOfNulls<Class<*>>(parameters!!.size)
-                for (i in parameters.indices) {
-                    values[i] = parameters!![i]!!.value
+                val values: Array<Any?> = arrayOfNulls<Any>(params.size)
+                for (i in params.indices) {
+                    values[i] = params[i]!!.value
                 }
                 return values
             }

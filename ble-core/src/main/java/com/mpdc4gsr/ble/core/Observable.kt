@@ -8,6 +8,10 @@ interface Observable {
     fun notifyObservers(methodInfo: com.mpdc4gsr.commons.poster.MethodInfo)
     fun addObserver(observer: Any)
     fun removeObserver(observer: Any)
+    fun unregisterAll()
+    fun registerObserver(observer: Any)
+    fun isRegistered(observer: Any): Boolean
+    fun unregisterObserver(observer: Any)
 }
 
 /**
@@ -49,5 +53,21 @@ class DefaultObservable : Observable {
 
     override fun removeObserver(observer: Any) {
         observers.remove(observer)
+    }
+    
+    override fun unregisterAll() {
+        observers.clear()
+    }
+    
+    override fun registerObserver(observer: Any) {
+        addObserver(observer)
+    }
+    
+    override fun isRegistered(observer: Any): Boolean {
+        return observers.contains(observer)
+    }
+    
+    override fun unregisterObserver(observer: Any) {
+        removeObserver(observer)
     }
 }
