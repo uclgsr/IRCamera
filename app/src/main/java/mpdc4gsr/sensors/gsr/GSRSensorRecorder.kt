@@ -937,6 +937,8 @@ class GSRSensorRecorder(
 
     private fun setupGSRSampleCallback() {
         try {
+            // Set up the enhanced ObjectCluster data handler first
+            setupObjectClusterDataHandler()
 
             realShimmerGSRRecorder?.addListener(object : ShimmerGSRRecorder.GSRRecordingListener {
                 override fun onSampleRecorded(sample: GSRSample) {
@@ -962,9 +964,49 @@ class GSRSensorRecorder(
                 override fun onError(error: String) {}
             })
 
-            Log.i(TAG, "GSR sample callbacks configured for real-time streaming")
+            Log.i(TAG, "GSR sample callbacks configured for real-time streaming with enhanced ObjectCluster processing")
         } catch (e: Exception) {
             Log.w(TAG, "Failed to setup GSR sample callbacks", e)
+        }
+    }
+
+    /**
+     * Set up ObjectCluster data handler to use the convertObjectClusterToSensorSample method
+     */
+    private fun setupObjectClusterDataHandler() {
+        try {
+            Log.i(TAG, "Setting up enhanced ObjectCluster data handler")
+            
+            val shimmerManager = shimmerBluetoothManager
+            if (shimmerManager != null) {
+                // Set up the multi-shimmer data handler to receive ObjectCluster data
+                shimmerManager.setMultiShimmerDataHandler { shimmer, objectCluster ->
+                    try {
+                        if (_isRecording.get()) {
+                            // Use the enhanced convertObjectClusterToSensorSample method
+                            val gsrSample = convertObjectClusterToSensorSample(objectCluster)
+                            
+                            if (gsrSample != null) {
+                                // Process the enhanced GSR sample through the normal pipeline
+                                recordingScope.launch {
+                                    onGSRSampleReceived(gsrSample)
+                                }
+                                Log.v(TAG, "ObjectCluster converted and processed: ${gsrSample.gsrMicrosiemens}µS")
+                            } else {
+                                Log.w(TAG, "Failed to convert ObjectCluster to GSRSample")
+                            }
+                        }
+                    } catch (e: Exception) {
+                        Log.e(TAG, "Error processing ObjectCluster through enhanced conversion", e)
+                    }
+                }
+                
+                Log.i(TAG, "Enhanced ObjectCluster data handler configured successfully")
+            } else {
+                Log.w(TAG, "Shimmer Bluetooth manager not available - cannot set up ObjectCluster handler")
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to set up enhanced ObjectCluster data handler", e)
         }
     }
 

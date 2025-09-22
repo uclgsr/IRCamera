@@ -321,6 +321,9 @@ class ShimmerMvpActivity : AppCompatActivity() {
                 Log.i(TAG, "Connecting to Shimmer3 GSR+: ${targetDevice.name} (${targetDevice.address})")
                 updateConnectionStatus("Connecting to ${targetDevice.name}...")
 
+                // Set up the data handler BEFORE connecting
+                setupShimmerDataHandler()
+                
                 shimmerBluetoothManager?.connectShimmerThroughBTAddress(targetDevice.address)
 
                 Log.i(TAG, "Target Device Details:")
@@ -382,6 +385,120 @@ class ShimmerMvpActivity : AppCompatActivity() {
         }
 
         return isValid
+    }
+
+    private fun setupShimmerDataHandler() {
+        try {
+            Log.i(TAG, "Setting up enhanced Shimmer data handler with ObjectCluster conversion")
+            
+            // Set up the multi-shimmer data handler to receive ObjectCluster data
+            shimmerBluetoothManager?.setMultiShimmerDataHandler { shimmer, objectCluster ->
+                try {
+                    // Use the enhanced convertObjectClusterToSensorSample method from GSRSensorRecorder
+                    val gsrSample = convertObjectClusterToEnhancedGSRSample(objectCluster)
+                    
+                    if (gsrSample != null && isRecording) {
+                        // Process the enhanced GSR sample
+                        processEnhancedGSRSample(gsrSample)
+                    } else if (gsrSample == null) {
+                        Log.w(TAG, "Failed to convert ObjectCluster to GSRSample")
+                    }
+                } catch (e: Exception) {
+                    Log.e(TAG, "Error processing Shimmer ObjectCluster data", e)
+                }
+            }
+            
+            Log.i(TAG, "Enhanced Shimmer data handler configured successfully")
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to set up Shimmer data handler", e)
+        }
+    }
+
+    /**
+     * Enhanced ObjectCluster conversion using the unified timestamp approach
+     * This integrates the convertObjectClusterToSensorSample method functionality
+     */
+    private fun convertObjectClusterToEnhancedGSRSample(objectCluster: ObjectCluster): GSRSample? {
+        return try {
+            val timestamp = System.currentTimeMillis()
+            
+            // Extract calibrated GSR value using proper field names
+            val gsrCalibratedData = objectCluster.getFormatClusterValue("GSR", "CAL") 
+            val gsrRawData = objectCluster.getFormatClusterValue("GSR", "RAW")
+            
+            val gsrRaw = (gsrRawData as? Number)?.toInt() ?: 0
+            val gsrCalibrated = (gsrCalibratedData as? Number)?.toDouble() ?: 0.0
+            
+            // Calculate GSR in microsiemens with enhanced method
+            val gsrMicrosiemens = if (gsrCalibrated > 0) {
+                gsrCalibrated
+            } else if (gsrRaw > 0 && gsrRaw <= 4095) {
+                // Enhanced GSR calculation with proper resistance conversion
+                val voltage = (gsrRaw / 4095.0) * 3.0 // 12-bit ADC, 3V reference
+                val resistance = (3.0 * 40200.0) / (voltage * 1000.0) - 40200.0
+                if (resistance > 0) 1000000.0 / resistance else 0.0
+            } else {
+                0.0
+            }
+            
+            // Extract additional sensor data
+            val ppgData = objectCluster.getFormatClusterValue("PPG_A13", "CAL")
+            val ppgRaw = (ppgData as? Number)?.toInt() ?: 0
+            
+            // Calculate quality score based on data validity
+            val qualityScore = when {
+                gsrRaw !in 100..4000 -> 0.2 // Poor ADC range
+                gsrMicrosiemens !in 0.1..100.0 -> 0.3 // Poor GSR range
+                gsrMicrosiemens > 50.0 -> 0.4 // Very high GSR (poor contact?)
+                gsrMicrosiemens < 0.5 -> 0.5 // Very low GSR (sensor issues?)
+                else -> 0.9 // Good quality data
+            }
+            
+            val resistance = if (gsrMicrosiemens > 0) 1000000.0 / gsrMicrosiemens else Double.MAX_VALUE
+            
+            GSRSample(timestamp, gsrMicrosiemens, gsrRaw, resistance).apply {
+                // Add quality score if GSRSample supports it
+                // Note: This assumes GSRSample has been extended, otherwise this is just documentation
+                Log.d(TAG, "Enhanced GSR sample: ${gsrMicrosiemens}µS, raw: $gsrRaw, quality: $qualityScore")
+            }
+            
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to convert ObjectCluster to enhanced GSRSample", e)
+            null
+        }
+    }
+    
+    private fun processEnhancedGSRSample(sample: GSRSample) {
+        try {
+            // Add to data buffer
+            gsrDataBuffer.add(sample)
+            sampleCount++
+
+            // Send to network client
+            networkClient?.sendGSRSample(sample, sampleCount)
+
+            // Update UI with enhanced feedback
+            runOnUiThread {
+                binding.gsrValueText.text = "GSR: %.3f µS (%.1f kΩ)".format(
+                    sample.gsrValue, 
+                    sample.resistance / 1000
+                )
+                binding.sampleCountText.text = "Samples: $sampleCount (${
+                    String.format("%.1f", sampleCount * 1000.0 / GSR_SAMPLING_RATE)
+                }s)"
+            }
+
+            // Log periodic updates
+            if (sampleCount % 128 == 0L) {
+                Log.i(TAG, "Enhanced GSR [${sampleCount}]: ${
+                    String.format("%.3f", sample.gsrValue)
+                } µS, Raw: ${sample.rawValue}/4095, R: ${
+                    String.format("%.1f", sample.resistance / 1000)
+                } kΩ")
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Error processing enhanced GSR sample", e)
+        }
     }
 
     private fun setupShimmerConfiguration() {
