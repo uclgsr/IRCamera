@@ -880,7 +880,7 @@ class GSRSensorRecorder(
             if (connectionHealthScore < 50) {
                 Log.w(TAG, "Poor connection health detected: ${connectionHealthScore.toInt()}%")
                 emitError(
-                    ErrorType.CONNECTION_POOR,
+                    ErrorType.CONNECTION_LOST,
                     "Poor connection quality detected - check sensor contact",
                     isRecoverable = true
                 )
