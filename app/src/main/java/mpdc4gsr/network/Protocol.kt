@@ -118,10 +118,12 @@ object Protocol {
     
     private fun parseParameters(paramString: String): Map<String, String> {
         val params = mutableMapOf<String, String>()
-        val regex = Regex("""(\w+)=([^\s]+|"[^"]*")""")
+        // Updated regex to properly handle quoted strings
+        val regex = Regex("""(\w+)=("([^"]*)"|([^\s]+))""")
         regex.findAll(paramString).forEach { match ->
             val key = match.groups[1]?.value ?: return@forEach
-            val value = match.groups[2]?.value?.removeSurrounding("\"") ?: return@forEach
+            // If quoted (group 3 has content), use quoted value, else use unquoted (group 4)
+            val value = match.groups[3]?.value ?: match.groups[4]?.value ?: return@forEach
             params[key] = value
         }
         return params
