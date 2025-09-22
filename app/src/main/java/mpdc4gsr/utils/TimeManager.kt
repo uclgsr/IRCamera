@@ -76,8 +76,8 @@ class TimeManager(
     ): Boolean {
         return withContext(Dispatchers.IO) {
             try {
-                Log.i(TAG, "Starting enhanced time synchronization with PC Controller: $pcControllerAddress:$port")
-
+                Log.i(TAG, "Starting enhanced NTP-like time synchronization with PC Controller: $pcControllerAddress:$port")
+                Log.i(TAG, "Assumption: Both devices are synchronized to internet time servers for baseline accuracy")
 
                 setPCConnectionInfo(pcControllerAddress, port)
 
@@ -86,14 +86,14 @@ class TimeManager(
                     return@withContext false
                 }
 
-
                 val success = performEnhancedTimeSync(pcControllerAddress, port, SYNC_RETRY_COUNT)
 
                 if (success) {
                     isTimeSynced = true
-
+                    logSyncQualityInfo()
                     startDriftMonitoring()
-                    Log.i(TAG, "Enhanced time synchronization successful with automatic drift monitoring")
+                    Log.i(TAG, "Enhanced NTP-like time synchronization successful with automatic drift monitoring")
+                    Log.i(TAG, "Cross-device synchronization established for timestamp alignment")
                 }
 
                 return@withContext success
@@ -539,6 +539,23 @@ class TimeManager(
         syncScope.cancel()
         isTimeSynced = false
         Log.i(TAG, "TimeManager cleaned up")
+    }
+
+    private fun logSyncQualityInfo() {
+        val quality = getSyncQuality()
+        val qualityLevel = when (quality.level) {
+            SyncQualityLevel.EXCELLENT -> "EXCELLENT (<= ${SYNC_QUALITY_THRESHOLD_MS}ms)"
+            SyncQualityLevel.GOOD -> "GOOD (<= ${SYNC_QUALITY_THRESHOLD_MS * 2}ms)"
+            SyncQualityLevel.FAIR -> "FAIR (<= ${SYNC_QUALITY_THRESHOLD_MS * 4}ms)"
+            SyncQualityLevel.POOR -> "POOR (> ${SYNC_QUALITY_THRESHOLD_MS * 4}ms)"
+            SyncQualityLevel.NOT_SYNCED -> "NOT_SYNCED"
+        }
+        
+        Log.i(TAG, "Cross-device sync quality: $qualityLevel")
+        quality.qualityMs?.let { 
+            Log.i(TAG, "Network latency quality: ${it}ms")
+        }
+        Log.i(TAG, "Clock offset: ${quality.offsetNs}ns (${quality.offsetNs / 1_000_000}ms)")
     }
 }
 

@@ -3,6 +3,7 @@ package mpdc4gsr.data
 import android.os.SystemClock
 import com.google.gson.GsonBuilder
 import mpdc4gsr.sensors.RecordingStats
+import mpdc4gsr.sensors.TimestampManager
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -309,8 +310,12 @@ data class SessionMetadata(
 
 
     fun monotonicToWallClock(monotonicNs: Long): Long {
-        val offsetFromStartNs = monotonicNs - sessionStartMonotonicNs
-        return sessionStartTimestampMs + (offsetFromStartNs / 1_000_000L)
+        return try {
+            TimestampManager.convertMonotonicToWallClock(monotonicNs)
+        } catch (e: IllegalStateException) {
+            val offsetFromStartNs = monotonicNs - sessionStartMonotonicNs
+            sessionStartTimestampMs + (offsetFromStartNs / 1_000_000L)
+        }
     }
 
 

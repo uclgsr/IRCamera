@@ -27,10 +27,24 @@ class TimeSynchronizationService {
 
         Log.i(TAG, "Session initialized with unified timestamp reference")
 
-
         writeSessionSyncMetadata()
+        
+        logSessionStartSyncEvent()
 
         return sessionReference!!
+    }
+
+    private suspend fun logSessionStartSyncEvent() {
+        try {
+            logSyncEvent("SessionStart", mapOf(
+                "session_start_source" to "TimeSynchronizationService",
+                "unified_timestamp_system" to "enabled", 
+                "cross_device_sync" to "available"
+            ))
+            Log.i(TAG, "SessionStart sync event logged for cross-sensor alignment verification")
+        } catch (e: java.io.IOException) {
+            Log.w(TAG, "Failed to log SessionStart sync event", e)
+        }
     }
 
 
@@ -116,6 +130,35 @@ class TimeSynchronizationService {
             emitSyncEvent(eventType, metadata)
         } catch (e: Exception) {
             Log.e(TAG, "Failed to log sync event", e)
+        }
+    }
+
+    suspend fun logTimestampWithDriftAnalysis(
+        sensorId: String,
+        deviceTimestamp: Long?,
+        phoneTimestamp: Long = createSynchronizedTimestamp().systemNanos
+    ) {
+        try {
+            val driftMetadata = mutableMapOf<String, String>()
+            driftMetadata["sensor_id"] = sensorId
+            driftMetadata["phone_timestamp_ns"] = phoneTimestamp.toString()
+            
+            deviceTimestamp?.let { deviceTs ->
+                driftMetadata["device_timestamp_ns"] = deviceTs.toString()
+                val driftNs = phoneTimestamp - deviceTs
+                val driftMs = driftNs / 1_000_000.0
+                driftMetadata["drift_ns"] = driftNs.toString()
+                driftMetadata["drift_ms"] = String.format("%.3f", driftMs)
+                
+                Log.v(TAG, "Timestamp drift analysis for $sensorId: ${driftMs}ms")
+            } ?: run {
+                driftMetadata["device_timestamp_ns"] = "unavailable"
+                driftMetadata["drift_analysis"] = "no_device_timestamp"
+            }
+            
+            logSyncEvent("DRIFT_ANALYSIS", driftMetadata)
+        } catch (e: Exception) {
+            Log.w(TAG, "Failed to log drift analysis for $sensorId", e)
         }
     }
 
