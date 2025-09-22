@@ -34,7 +34,7 @@ class EasyBLE internal constructor(builder: EasyBLEBuilder) {
     val observable: Observable
     val logger: Logger
     private val scannerType: ScannerType?
-    private val connectionMap: MutableMap<String?, Connection?> = ConcurrentHashMap<String?, Connection?>()
+    private val connectionMap: MutableMap<String?, Connection> = ConcurrentHashMap<String?, Connection>()
     private val addressList: MutableList<String?> = CopyOnWriteArrayList<String?>()
     private val useNordicBleBackend: Boolean
     private val internalObservable: Boolean
@@ -401,7 +401,7 @@ class EasyBLE internal constructor(builder: EasyBLEBuilder) {
     }
 
     val connections: MutableCollection<Connection?>
-        get() = connectionMap.values
+        get() = connectionMap.values as MutableCollection<Connection?>
 
     val orderedConnections: MutableList<Connection?>
         get() {
@@ -451,7 +451,7 @@ class EasyBLE internal constructor(builder: EasyBLEBuilder) {
     fun disconnectAllConnections() {
         if (checkStatus()) {
             for (connection in connectionMap.values) {
-                connection?.disconnect()
+                connection.disconnect()
             }
         }
     }
@@ -459,7 +459,7 @@ class EasyBLE internal constructor(builder: EasyBLEBuilder) {
     fun releaseAllConnections() {
         if (checkStatus()) {
             for (connection in connectionMap.values) {
-                connection?.release()
+                connection.release()
             }
             connectionMap.clear()
             addressList.clear()
@@ -489,8 +489,8 @@ class EasyBLE internal constructor(builder: EasyBLEBuilder) {
     fun reconnectAll() {
         if (checkStatus()) {
             for (connection in connectionMap.values) {
-                if (connection?.getConnectionState() != ConnectionState.SERVICE_DISCOVERED) {
-                    connection?.reconnect()
+                if (connection.getConnectionState() != ConnectionState.SERVICE_DISCOVERED) {
+                    connection.reconnect()
                 }
             }
         }
@@ -597,7 +597,7 @@ class EasyBLE internal constructor(builder: EasyBLEBuilder) {
                             logger.log(Log.DEBUG, Logger.Companion.TYPE_GENERAL, "[CHINESE_TEXT]")
 
                             for (connection in connectionMap.values) {
-                                if (connection?.isAutoReconnectEnabled == true) {
+                                if (connection.isAutoReconnectEnabled) {
                                     connection.reconnect()
                                 }
                             }
@@ -642,7 +642,7 @@ class EasyBLE internal constructor(builder: EasyBLEBuilder) {
                         logger.log(Log.DEBUG, Logger.Companion.TYPE_GENERAL, "[CHINESE_TEXT]")
 
                         for (connection in connectionMap.values) {
-                            if (connection?.isAutoReconnectEnabled == true) {
+                            if (connection.isAutoReconnectEnabled) {
                                 connection.reconnect()
                             }
                         }
