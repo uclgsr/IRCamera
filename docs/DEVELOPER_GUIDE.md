@@ -136,7 +136,7 @@ The repository includes comprehensive development tools via `dev.sh`:
 
 #### Android Build (Currently Non-Functional)
 
-**🚨 CRITICAL**: Android build currently **FAILS** due to missing ShimmerDevice class.
+**CRITICAL**: Android build currently **FAILS** due to missing ShimmerDevice class.
 
 ```bash
 # Standard build attempts (will fail)

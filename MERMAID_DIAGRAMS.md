@@ -528,7 +528,7 @@ gantt
 
 ```mermaid
 graph TB
-    subgraph "libcore Unified Namespaces"
+    subgraph "libunified Unified Namespaces"
         subgraph "com.mpdc4gsr.libunified.app.*"
             AppFramework[Application Framework<br/>• Database<br/>• Configuration<br/>• Common utilities]
         end
@@ -574,7 +574,7 @@ graph LR
     end
     
     subgraph "Proposed Unified Build"
-        C4[Component A] --> LC[libcore]
+        C4[Component A] --> LC[libunified]
         C5[Component B] --> LC
         C6[Component C] --> LC
         

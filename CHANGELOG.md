@@ -121,7 +121,7 @@
 
 ### Added
 
-- **libcore** - Unified core library combining libapp, libir, and libui functionality
+- **libunified** - Unified core library combining libapp, libir, and libui functionality
 - Comprehensive feasibility analysis for three-library merge
 - Proof-of-concept implementation with resolved resource conflicts
 
@@ -143,7 +143,7 @@
 - **libapp**: 247 source files, application framework
 - **libir**: 64 source files, IR camera processing
 - **libui**: 287 source files, UI components and charting
-- **Total unified**: 598 source files in single libcore module
+- **Total unified**: 598 source files in single libunified module
 
 ### Implementation Status
 
