@@ -434,9 +434,6 @@ class ComprehensiveRecordingController(
             }
         }
     }
-        }
-    }
-
 
     private fun startHealthMonitoring() {
         recordingScope.launch {
