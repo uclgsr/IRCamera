@@ -55,7 +55,7 @@ class GuideUsbManager {
             getUsbDevice()
             findInterface()
             val ret = openDevice()
-            if (ret != SUCC_CONNECT_INTERFACE) {
+            if (ret != ResultCode.SUCC_CONNECT_INTERFACE) {
                 return ret
             }
             assignEndpoint()

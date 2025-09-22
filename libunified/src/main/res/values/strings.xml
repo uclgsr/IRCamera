@@ -974,5 +974,8 @@
     <string name="unlock_professional_perspectives">Unlock professional perspectives</string>
     <string name="app_error_reload">Reload</string>
     <string name="loading_failed_hint">Loading failed. Please try to reload.</string>
+    
+    <!-- Missing resource for BaseViewModelActivity -->
+    <string name="http_code_z5004">Network error. Please try again.</string>
 
 </resources>

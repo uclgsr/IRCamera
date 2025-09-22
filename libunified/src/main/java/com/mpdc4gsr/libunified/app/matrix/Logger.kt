@@ -1,4 +1,4 @@
-package com.matrix
+package com.mpdc4gsr.libunified.app.matrix
 
 import android.util.Log
 import com.mpdc4gsr.libunified.app.BuildConfig
