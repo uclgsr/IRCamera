@@ -35,6 +35,15 @@ object TimestampManager {
         return SystemClock.elapsedRealtimeNanos()
     }
 
+    /**
+     * Formats a nanosecond timestamp to ISO 8601 string format
+     */
+    fun formatTimestampIso(timestampNanos: Long): String {
+        val timestampMillis = timestampNanos / 1_000_000
+        val date = java.util.Date(timestampMillis)
+        return java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", java.util.Locale.getDefault()).format(date)
+    }
+
 
     fun getCurrentSystemTimeMs(): Long {
         return System.currentTimeMillis()

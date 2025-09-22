@@ -221,21 +221,30 @@ class ShimmerMvpActivity : AppCompatActivity() {
                 val pairedDevices: Set<BluetoothDevice>? = bluetoothAdapter.bondedDevices
                 val pairedShimmers = pairedDevices?.filter { isValidShimmerDevice(it) } ?: emptyList()
 
-                if (pairedShimmers.isNotEmpty()) {
-                    Log.i(TAG, "Found ${pairedShimmers.size} paired Shimmer devices")
-                    connectToShimmerDevice(pairedShimmers.first())
-                    return@launch
-                }
+                // Always perform BLE scan to get both paired and unpaired devices
+                Log.i(TAG, "Starting comprehensive Shimmer device discovery...")
+                updateConnectionStatus("Scanning for all available Shimmer devices...")
 
-
-                Log.i(TAG, "No paired Shimmer devices found. Starting BLE discovery...")
-                updateConnectionStatus("Scanning nearby Shimmer devices...")
+                val allDiscoveredDevices = mutableListOf<BluetoothDevice>()
+                allDiscoveredDevices.addAll(pairedShimmers)
 
                 val discoveredShimmers = performBluetoothLeScanning()
-                if (discoveredShimmers.isNotEmpty()) {
-                    Log.i(TAG, "Found ${discoveredShimmers.size} Shimmer devices during scan")
+                // Add newly discovered devices (not already paired)
+                discoveredShimmers.forEach { device ->
+                    if (allDiscoveredDevices.none { it.address == device.address }) {
+                        allDiscoveredDevices.add(device)
+                    }
+                }
 
-                    connectToShimmerDevice(discoveredShimmers.first())
+                if (allDiscoveredDevices.isNotEmpty()) {
+                    Log.i(TAG, "Found ${allDiscoveredDevices.size} total Shimmer devices (${pairedShimmers.size} paired, ${discoveredShimmers.size} discovered)")
+                    
+                    // Show device selection dialog if multiple devices found
+                    if (allDiscoveredDevices.size > 1) {
+                        showDeviceSelectionDialog(allDiscoveredDevices)
+                    } else {
+                        connectToShimmerDevice(allDiscoveredDevices.first())
+                    }
                 } else {
                     updateConnectionStatus("No Shimmer3 GSR+ devices found")
                     showDeviceNotFoundDialog()
@@ -623,6 +632,24 @@ class ShimmerMvpActivity : AppCompatActivity() {
 
     private fun updateConnectionStatus(status: String) {
         binding.connectionStatusText.text = status
+        
+        // Update connection status icon based on status
+        val (iconColor, iconText) = when {
+            status.contains("connected", true) || status.contains("streaming", true) -> 
+                Pair(ContextCompat.getColor(this, android.R.color.holo_green_dark), "●")
+            status.contains("connecting", true) || status.contains("scanning", true) -> 
+                Pair(ContextCompat.getColor(this, android.R.color.holo_orange_dark), "●")
+            status.contains("failed", true) || status.contains("error", true) || status.contains("not found", true) -> 
+                Pair(ContextCompat.getColor(this, android.R.color.holo_red_dark), "●")
+            status.contains("disconnected", true) -> 
+                Pair(ContextCompat.getColor(this, android.R.color.darker_gray), "●")
+            else -> 
+                Pair(ContextCompat.getColor(this, android.R.color.darker_gray), "●")
+        }
+        
+        binding.connectionStatusIcon.setTextColor(iconColor)
+        binding.connectionStatusIcon.text = iconText
+        
         Log.i(TAG, "Status: $status")
     }
 
@@ -735,6 +762,41 @@ class ShimmerMvpActivity : AppCompatActivity() {
             }
             .setNeutralButton("OK") { dialog, _ ->
                 dialog.dismiss()
+            }
+            .show()
+    }
+
+    private fun showDeviceSelectionDialog(devices: List<BluetoothDevice>) {
+        val deviceNames = devices.map { device ->
+            val name = try {
+                device.name ?: "Unknown Device"
+            } catch (e: SecurityException) {
+                "Unknown Device"
+            }
+            val address = device.address
+            val isPaired = device.bondState == BluetoothDevice.BOND_BONDED
+            val pairedStatus = if (isPaired) " (Paired)" else " (Discovered)"
+            
+            "$name$pairedStatus\n$address"
+        }.toTypedArray()
+
+        androidx.appcompat.app.AlertDialog.Builder(this)
+            .setTitle("Select Shimmer Device")
+            .setMessage("Multiple Shimmer devices found. Please select the device you want to connect to:")
+            .setItems(deviceNames) { _, which ->
+                val selectedDevice = devices[which]
+                Log.i(TAG, "User selected device: ${selectedDevice.name} (${selectedDevice.address})")
+                connectToShimmerDevice(selectedDevice)
+            }
+            .setNegativeButton("Cancel") { dialog, _ ->
+                dialog.dismiss()
+                binding.connectButton.isEnabled = true
+                updateConnectionStatus("Device selection cancelled")
+            }
+            .setCancelable(true)
+            .setOnCancelListener {
+                binding.connectButton.isEnabled = true
+                updateConnectionStatus("Device selection cancelled")
             }
             .show()
     }

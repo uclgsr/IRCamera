@@ -821,6 +821,120 @@ class GSRSensorRecorder(
         }
     }
 
+    /**
+     * Converts ObjectCluster from Shimmer SDK to standardized GSRSample
+     * Uses unified timestamp source for consistent data alignment
+     */
+    private fun convertObjectClusterToSensorSample(objectCluster: ObjectCluster): GSRSample? {
+        return try {
+            // Use unified timestamp manager for consistent timing
+            val unifiedTimestamp = TimestampManager.getCurrentTimestampNanos()
+            
+            // Extract calibrated GSR value from ObjectCluster
+            val gsrCalibratedValue = extractCalibratedGSRValue(objectCluster)
+            val gsrRawValue = extractRawGSRValue(objectCluster)
+            
+            // Extract additional sensor data if available
+            val ppgValue = extractPPGValue(objectCluster)
+            val accelerometerData = extractAccelerometerData(objectCluster)
+            
+            // Calculate GSR in microsiemens from calibrated value
+            val gsrMicrosiemens = if (gsrCalibratedValue > 0) {
+                gsrCalibratedValue
+            } else {
+                // Fallback calculation from raw value if calibrated not available
+                calculateGSRFromRaw(gsrRawValue)
+            }
+            
+            // Calculate signal quality score based on data integrity
+            val qualityScore = calculateSignalQuality(gsrMicrosiemens, gsrRawValue)
+            
+            GSRSample(
+                timestamp = unifiedTimestamp,
+                timestampIso = TimestampManager.formatTimestampIso(unifiedTimestamp),
+                gsrRaw = gsrRawValue,
+                gsrMicrosiemens = gsrMicrosiemens,
+                gsrKohms = if (gsrMicrosiemens > 0) 1000.0 / gsrMicrosiemens else Double.MAX_VALUE,
+                ppgRaw = ppgValue,
+                accelerometerX = accelerometerData.first,
+                accelerometerY = accelerometerData.second,
+                accelerometerZ = accelerometerData.third,
+                qualityScore = qualityScore,
+                deviceId = sensorId,
+                sampleSequence = sampleSequence.incrementAndGet()
+            )
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to convert ObjectCluster to GSRSample", e)
+            null
+        }
+    }
+
+    private fun extractCalibratedGSRValue(objectCluster: ObjectCluster): Double {
+        return try {
+            val gsrCalibratedData = objectCluster.getFormatClusterValue("GSR", "CAL")
+            gsrCalibratedData?.toDouble() ?: 0.0
+        } catch (e: Exception) {
+            Log.w(TAG, "Could not extract calibrated GSR value: ${e.message}")
+            0.0
+        }
+    }
+
+    private fun extractRawGSRValue(objectCluster: ObjectCluster): Int {
+        return try {
+            val gsrRawData = objectCluster.getFormatClusterValue("GSR", "RAW")
+            gsrRawData?.toInt() ?: 0
+        } catch (e: Exception) {
+            Log.w(TAG, "Could not extract raw GSR value: ${e.message}")
+            0
+        }
+    }
+
+    private fun extractPPGValue(objectCluster: ObjectCluster): Int {
+        return try {
+            val ppgData = objectCluster.getFormatClusterValue("PPG_A13", "CAL")
+            ppgData?.toInt() ?: 0
+        } catch (e: Exception) {
+            0
+        }
+    }
+
+    private fun extractAccelerometerData(objectCluster: ObjectCluster): Triple<Double, Double, Double> {
+        return try {
+            val accelX = objectCluster.getFormatClusterValue("Accelerometer X", "CAL")?.toDouble() ?: 0.0
+            val accelY = objectCluster.getFormatClusterValue("Accelerometer Y", "CAL")?.toDouble() ?: 0.0
+            val accelZ = objectCluster.getFormatClusterValue("Accelerometer Z", "CAL")?.toDouble() ?: 0.0
+            Triple(accelX, accelY, accelZ)
+        } catch (e: Exception) {
+            Triple(0.0, 0.0, 0.0)
+        }
+    }
+
+    private fun calculateGSRFromRaw(rawValue: Int): Double {
+        // Standard Shimmer GSR calculation from raw ADC value
+        // This is a simplified version - actual conversion depends on hardware configuration
+        return if (rawValue > 0) {
+            val voltage = (rawValue / 4095.0) * 3.0 // Assuming 12-bit ADC, 3V reference
+            val resistance = (3.0 * 40200.0) / (voltage * 1000.0) - 40200.0
+            if (resistance > 0) 1000000.0 / resistance else 0.0
+        } else {
+            0.0
+        }
+    }
+
+    private fun calculateSignalQuality(gsrMicrosiemens: Double, rawValue: Int): Double {
+        // Calculate signal quality based on various factors
+        val validRange = gsrMicrosiemens in 0.1..100.0 // Typical GSR range
+        val rawValueValid = rawValue in 100..4000 // Reasonable ADC range
+        val noiseLevel = if (rawValue > 0) 1.0 - (rawValue % 10) / 10.0 else 0.0
+        
+        return when {
+            !validRange || !rawValueValid -> 0.0
+            gsrMicrosiemens > 50.0 -> 0.3 // Very high GSR might indicate poor contact
+            gsrMicrosiemens < 0.5 -> 0.4 // Very low GSR might indicate sensor issues
+            else -> 0.8 + (noiseLevel * 0.2) // Good signal with noise factor
+        }.coerceIn(0.0, 1.0)
+    }
+
     private fun setupGSRSampleCallback() {
         try {
 
