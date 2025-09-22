@@ -233,6 +233,13 @@
             android:label="@string/gsr_quick_access"
             android:screenOrientation="userPortrait" />
 
+        <!-- Enhanced Fault-Tolerant Recording -->
+        <activity
+            android:name="mpdc4gsr.activities.FaultTolerantRecordingActivity"
+            android:exported="false"
+            android:label="Enhanced Recording"
+            android:screenOrientation="userPortrait" />
+
 
         <activity
             android:name="mpdc4gsr.sensors.gsr.SessionManagerActivity"

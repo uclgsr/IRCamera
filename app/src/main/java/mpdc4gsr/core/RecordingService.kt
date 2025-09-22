@@ -27,7 +27,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import mpdc4gsr.config.FeatureFlags
 import mpdc4gsr.config.ProtocolVersion
-import mpdc4gsr.controller.RecordingController
+import mpdc4gsr.controller.ComprehensiveRecordingController
 import mpdc4gsr.controller.RecordingState
 import mpdc4gsr.libunified.app.StructuredLogger
 import mpdc4gsr.network.NetworkClient
@@ -138,7 +138,7 @@ class RecordingService : LifecycleService() {
 
     private val binder = RecordingServiceBinder()
 
-    private lateinit var recordingController: RecordingController
+    private lateinit var recordingController: ComprehensiveRecordingController
     private var isInitialized = false
 
     private lateinit var networkClient: NetworkClient
@@ -175,7 +175,7 @@ class RecordingService : LifecycleService() {
 
     inner class RecordingServiceBinder : Binder() {
         fun getService(): RecordingService = this@RecordingService
-        fun getRecordingController(): RecordingController = recordingController
+        fun getRecordingController(): ComprehensiveRecordingController = recordingController
         fun getNetworkServer(): NetworkServer = networkServer
         fun getPreviewStreamer(): PreviewStreamer = previewStreamer
         fun getPreviewDataAdapter(): PreviewDataAdapter = previewDataAdapter
@@ -205,7 +205,11 @@ class RecordingService : LifecycleService() {
         createNotificationChannel()
 
         nsdManager = getSystemService(Context.NSD_SERVICE) as NsdManager
-        recordingController = RecordingController(this, this)
+        
+        // Initialize ComprehensiveRecordingController with PermissionManager
+        val permissionManager = mpdc4gsr.permissions.PermissionManager(this)
+        recordingController = ComprehensiveRecordingController(this, this, permissionManager)
+        
         networkClient = NetworkClient(this)
         networkServer = NetworkServer(this, 8080)
         previewStreamer = PreviewStreamer(networkServer)
@@ -221,6 +225,8 @@ class RecordingService : LifecycleService() {
                 try {
                     Log.i(TAG, "Initializing RecordingService with enhanced fault tolerance")
 
+                    // Check for crashed sessions on startup
+                    recordingController.checkForCrashedSessions()
 
                     val sensorsSuccess = recordingController.initializeSensors()
                     val networkSuccess = initializeNetworkClient()
@@ -658,7 +664,7 @@ class RecordingService : LifecycleService() {
         }
     }
 
-    fun getRecordingController(): RecordingController = recordingController
+    fun getRecordingController(): ComprehensiveRecordingController = recordingController
 
     fun isInitialized(): Boolean = isInitialized
 
