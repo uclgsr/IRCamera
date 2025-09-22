@@ -78,7 +78,7 @@ class NordicConnectionImpl(
     /**
      * Get connection state
      */
-    fun getConnectionState(): ConnectionState {
+    override fun getConnectionState(): ConnectionState {
         return connectionState
     }
 }

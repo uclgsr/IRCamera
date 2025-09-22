@@ -156,16 +156,6 @@ internal class ConnectionImpl(
         private const val MSG_RELEASE = 3
         private const val MSG_PROCESS_REQUEST = 4
     }
-
-    // Required ScanListener interface methods
-    override fun onScanStart() {
-        // Implementation for scan start
-    }
-
-    override fun onScanStop() {
-        // Implementation for scan stop
-    }
-
     override fun onScanResult(device: Device, rssi: Int, data: ByteArray) {
         synchronized(this) {
             if (!isReleased && this.device == device && this.device.connectionState == ConnectionState.SCANNING_FOR_RECONNECTION) {
