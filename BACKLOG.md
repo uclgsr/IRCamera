@@ -52,6 +52,40 @@
 - **UI/UX**: Enhanced user experience with visual indicators and multi-device selection
 - **Error Handling**: Robust reconnection logic and comprehensive error recovery
 
+## High Priority - TC001 Thermal Camera Integration Enhancement - COMPLETED ✅
+
+### TASK: TC001 Hardware Integration - Commit 4b1c7a9
+**Status**: COMPLETED ✅
+- [x] Replace stub/reflection approach with real Topdon TC001 SDK calls in ThermalCameraRecorder
+- [x] Implement proper SDK initialization in ThermalCameraRecorder.startRecording()
+- [x] Add native library loading for TC001 SDK with graceful fallback
+- [x] Configure USB device opening with correct mode (256×192 IR resolution)
+- [x] Move SDK initialization to background thread (already using withContext(Dispatchers.IO))
+
+### TASK: Continuous Frame Capture Implementation - COMPLETED ✅
+**Status**: COMPLETED ✅
+- [x] Implement 10Hz continuous thermal frame capture loop
+- [x] Register IFrameCallback for SDK frame delivery
+- [x] Create background Handler for captureThermalFrame() calls with 100ms intervals
+- [x] Add frame conversion to Bitmap and PNG saving to thermal_images/ directory
+- [x] Log temperature telemetry (min/max) to thermal CSV with system timestamps
+
+### TASK: USB Permission and Device Management - COMPLETED ✅
+**Status**: COMPLETED ✅
+- [x] Enhance USB permission flow in ThermalCameraRecorder (already implemented)
+- [x] BroadcastReceiver for USB_DEVICE_ATTACHED/DETACHED already exists (ThermalUsbReceiver)
+- [x] Add TC001-specific VID/PID verification (0x2744/0x0001)
+- [x] Handle graceful camera open/close on permission grant/detach
+- [x] AndroidManifest.xml already has TC001 USB device filter configured
+
+### TASK: Error Handling and Robustness - COMPLETED ✅
+**Status**: COMPLETED ✅
+- [x] Add try-catch blocks around all SDK calls
+- [x] Implement graceful fallback when camera fails or disconnects
+- [x] Ensure other sensors continue recording on thermal failure
+- [x] Add user notification via Toast for camera errors
+- [x] Prevent app crashes from thermal thread failures
+
 ## High Priority - Kotlin Compilation Fixes ✅ COMPLETED
 
 ### EPIC: SmartRefreshLayout JitPack Resolution Issue - COMPLETED

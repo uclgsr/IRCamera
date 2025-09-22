@@ -1,3 +1,23 @@
+## [2.2.1] - TC001 Thermal Camera Integration Enhancement (2024-12-22)
+
+### Enhanced - Commit 4b1c7a9
+- **TC001 SDK Integration**: Replaced stub/reflection approach with real Topdon TC001 SDK calls in ThermalCameraRecorder
+- **Native Library Support**: Added graceful TC001 native library loading with fallback to Java-only SDK
+- **Continuous Frame Capture**: Implemented 10Hz thermal frame capture loop with 100ms intervals for TC001 camera
+- **Frame Image Saving**: Added automatic PNG image saving to thermal_images/ directory with temperature metadata
+- **Error Handling Enhancement**: Strengthened error handling with try-catch blocks around all SDK calls
+- **User Notifications**: Added Toast notifications for TC001 camera errors and connection status
+- **Graceful Fallbacks**: Ensured other sensors continue recording when TC001 thermal camera fails
+- **USB Permission Flow**: Enhanced existing USB permission handling for TC001 attach/detach scenarios
+- **Crash Prevention**: Implemented consecutive error counting to prevent app crashes from thermal thread failures
+
+### Technical Implementation
+- **Real SDK Calls**: initializeTopdonSdk() now uses actual TC001 SDK instead of reflection
+- **Frame Processing**: IFrameCallback registration for continuous thermal data streaming
+- **Error Resilience**: Maximum 10 consecutive errors before switching to simulation mode
+- **Temperature Logging**: Min/max temperature telemetry logged to CSV with system timestamps
+- **USB Integration**: TC001 VID/PID (0x2744/0x0001) already configured in AndroidManifest and device filters
+
 # Changelog
 
 ## [2.2.1] - Enhanced Shimmer3 GSR BLE Support (2024-12-21)
@@ -223,6 +243,45 @@
 
 ### Implementation Status
 
+- ✅ Created unified libcore structure
+- ✅ Merged all source code without namespace conflicts
+- ✅ Resolved resource conflicts
+- ⚠️ Build system needs refinement for complex dependencies
+- 📋 Ready for phased migration approach
+
+### Next Steps
+
+- Phase 1: Create minimal working libcore
+- Phase 2: Migrate components to use libcore
+- Phase 3: Deprecate original libraries
+- Phase 4: Update documentation and diagrams
+## [2.3.0] - RGB Camera CameraX Preview Integration (2024-12-22)
+
+### Added
+- **Live Camera Preview**: Added PreviewView widgets to UnifiedSensorActivity and MultiModalRecordingActivity layouts
+- **Camera Status Display**: Added real-time camera status text showing initialization and recording states
+- **Enhanced Error Types**: Added PERMISSION_DENIED error type for better camera error handling
+- **Frame Throttling Constants**: Added FRAME_CAPTURE_EVERY_N_FRAMES and MAX_PENDING_CAPTURES configuration
+
+### Enhanced
+- **RgbCameraRecorder Integration**: Enhanced UnifiedSensorActivity to initialize RgbCameraRecorder with PreviewView
+- **Quality Selector Configuration**: Improved createOptimizedRecorder() with UHD and proper fallback strategy
+- **Frame Capture Optimization**: Reduced CAPTURE_FPS from 30 to 12fps with every-Nth-frame throttling for I/O performance
+- **Error Handling**: Enhanced CameraX initialization with specific SecurityException and IllegalStateException handling
+- **Camera Status Observation**: Added camera status flow observation in UnifiedSensorActivity for live status updates
+
+### Fixed
+- **Resource Cleanup**: Verified stopRecording() properly calls cameraProvider.unbindAll() and executor shutdown
+- **Lifecycle Management**: Confirmed cleanup() method properly releases all camera resources and cancels frame capture jobs
+- **Initialization Error Display**: Updated showInitializationError() to include camera initialization failures
+
+### Changed
+- **Preview Resolution**: Set PreviewView to 200dp height with black background for better visibility
+- **Camera Initialization**: Enhanced initialize() method with comprehensive try-catch blocks for robust error handling
+- **Frame Rate**: Optimized frame capture from 30fps to 12fps for better I/O performance and reduced storage overhead
+
+*Commit: 98b51fa*
+
 - DONE: Created unified libunified structure
 - DONE: Merged all source code without namespace conflicts
 - DONE: Resolved resource conflicts
@@ -265,3 +324,4 @@
 - Proposed status -> Completed status in migration diagrams  
 - Old three-library structure -> Current unified structure
 - BleModule -> ble-core, ble-shimmer, ble-topdon (current modular structure)
+

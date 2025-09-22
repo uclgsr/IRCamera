@@ -24,6 +24,30 @@ collection.
 - **User Experience**: Enhanced device discovery, selection interface, and connection status feedback
 - **MVP Focus**: Core functionality implementation prioritizing essential features for research use
 
+## Recent Update: TC001 Thermal Camera Integration Enhancement - Commit 4b1c7a9
+
+**LATEST ACHIEVEMENT**: TC001 Topdon thermal camera integration has been **FULLY ENHANCED** with real SDK integration:
+
+### TC001 Integration Improvements
+
+- **Real SDK Calls**: Replaced stub/reflection approach with actual TC001 SDK calls in ThermalCameraRecorder
+- **Continuous Capture**: Implemented 10Hz thermal frame capture with 100ms intervals 
+- **Image Saving**: Automatic PNG frame saving to thermal_images/ directory with temperature metadata
+- **Error Resilience**: Enhanced error handling with graceful fallbacks to prevent app crashes
+- **User Notifications**: Toast messages for TC001 connection status and error conditions
+- **USB Integration**: Enhanced existing USB permission flow for TC001 attach/detach scenarios
+
+### Technical Enhancement Details
+
+- **Native Library Support**: Added graceful TC001 native library loading with Java-only SDK fallback
+- **Frame Processing**: IFrameCallback registration for continuous thermal data streaming at ~10Hz
+- **Crash Prevention**: Consecutive error counting (max 10) before switching to simulation mode
+- **Temperature Logging**: Min/max temperature telemetry logged to CSV with system timestamps
+- **Other Sensor Protection**: Ensures GSR and RGB sensors continue recording if TC001 fails
+
+## Recent Update: Kotlin Compilation Errors Resolved
+
+
 ## Recent Update: SmartRefreshLayout Dependency Resolution Fixed
 
 **LATEST ACHIEVEMENT**: SmartRefreshLayout dependency resolution issue **FULLY RESOLVED**:
@@ -64,8 +88,6 @@ collection.
 
 
 ## Previous Update: Kotlin Compilation Errors Resolved
-
-**ACHIEVEMENT**: All Kotlin compilation errors in BLE Core module have been **FULLY RESOLVED**:
 
 ### Compilation Fixes Implemented
 
@@ -324,3 +346,41 @@ Research project - see individual component licenses for specific terms.
 - **Android Sensor Nodes**: Mobile data collection points
 - **TCP/mDNS Communication**: Automatic discovery and reliable data streaming
 - **Session Management**: Comprehensive recording session control
+
+## RGB Camera Functionality (CameraX) - Implementation Complete
+
+### ✅ Live Preview Setup
+- **Added PreviewView widgets** to `activity_unified_sensor.xml` and `activity_multi_modal_recording.xml` 
+- **Integrated RgbCameraRecorder with PreviewView** in `UnifiedSensorActivity.kt`
+- Preview view is 200dp height with black background for better visibility
+- Camera status text shows real-time camera state
+
+### ✅ High Resolution & Frame Rate Configuration  
+- **Enhanced createOptimizedRecorder()** with proper QualitySelector configuration:
+```kotlin
+QualitySelector.from(Quality.UHD, FallbackStrategy.lowerQualityThan(Quality.UHD))
+```
+- Supports up to 4K resolution with graceful fallback to lower quality
+- Device detection for 4K capability based on known device models
+
+### ✅ Frame Capture Optimisation
+- **Reduced CAPTURE_FPS from 30 to 12fps** for optimized I/O performance
+- **Added FRAME_CAPTURE_EVERY_N_FRAMES throttling** (every 2nd frame)
+- **Implemented MAX_PENDING_CAPTURES = 2** for better backpressure handling
+- Frame capture uses background executor via `imageCapture.takePicture(cameraExecutor, callback)`
+
+### ✅ Error Handling & Camera Selector
+- **Enhanced CameraX initialization** with comprehensive try-catch blocks:
+  - SecurityException for permission issues
+  - IllegalStateException for camera-in-use scenarios  
+  - General Exception handling with user-friendly error messages
+- **Camera switching capability** already implemented (front/back camera)
+- **Robust error notification system** via emitError() with specific ErrorType enum
+
+### ✅ Lifecycle Management on Stop
+- **Verified stopRecording()** properly calls `cameraProvider.unbindAll()`
+- **Confirmed cleanup()** shuts down executors with timeout handling
+- **Frame capture loops are cancelled** before unbinding camera
+- **All resources properly released** (recording, CSV writers, camera provider)
+
+*Implementation Status: All major requirements completed and ready for testing*
