@@ -42,7 +42,7 @@ class TimeSynchronizationService {
                 "cross_device_sync" to "available"
             ))
             Log.i(TAG, "SessionStart sync event logged for cross-sensor alignment verification")
-        } catch (e: Exception) {
+        } catch (e: java.io.IOException) {
             Log.w(TAG, "Failed to log SessionStart sync event", e)
         }
     }
