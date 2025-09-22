@@ -578,6 +578,30 @@ enum class SyncQualityLevel {
     POOR,
 }
 
+    /**
+     * Set clock offset directly from protocol-based time sync
+     * This method allows setting the offset without making a separate connection
+     */
+    fun setClockOffsetFromProtocolSync(offsetNs: Long, estimatedLatencyMs: Long = 0) {
+        clockOffsetNs.set(offsetNs)
+        lastSyncTimestamp.set(getCurrentTimestampNs())
+        syncQualityMs.set(estimatedLatencyMs)
+        isTimeSynced = true
+        
+        Log.i(TAG, "Clock offset set from protocol sync: ${offsetNs}ns (quality: ${estimatedLatencyMs}ms)")
+        
+        // Start drift monitoring if not already active
+        if (driftMonitoringJob?.isActive != true) {
+            startDriftMonitoring()
+        }
+    }
+    
+    /**
+     * Get the current clock offset in nanoseconds
+     */
+    fun getClockOffsetNs(): Long = clockOffsetNs.get()
+}
+
 data class SyncQuality(
     val level: SyncQualityLevel,
     val offsetNs: Long,

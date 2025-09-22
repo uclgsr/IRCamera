@@ -1077,8 +1077,10 @@ class RecordingService : LifecycleService() {
                     // Calculate offset for immediate response (PC time - Phone time)
                     val offsetNs = (pcTimestamp - phoneTimestamp) * 1_000_000 // Convert to ns
                     
-                    // Update TimeManager with the calculated offset if needed
-                    // Note: This is a simplified sync. For full sync, TimeManager.synchronizeWithPC should be used
+                    // Update TimeManager with the calculated offset
+                    timeManager.setClockOffsetFromProtocolSync(offsetNs, 1) // Assume minimal network latency
+                    
+                    Log.i(TAG, "Clock synchronized with PC: offset=${offsetNs}ns")
                     
                     ProtocolHandler.SyncResult(
                         success = true,
