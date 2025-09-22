@@ -414,7 +414,7 @@ class ShimmerMvpActivity : AppCompatActivity() {
      */
     private fun convertObjectClusterToEnhancedGSRSample(objectCluster: ObjectCluster): GSRSample? {
         return try {
-            val timestamp = System.currentTimeMillis()
+            val timestamp = TimestampManager.getCurrentTimestampNanos()
             
             // Extract calibrated GSR value using proper field names
             val gsrCalibratedData = objectCluster.getFormatClusterValue("GSR", "CAL") 
