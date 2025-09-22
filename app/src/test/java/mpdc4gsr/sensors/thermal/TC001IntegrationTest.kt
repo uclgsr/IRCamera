@@ -125,7 +125,6 @@ class TC001IntegrationTest {
         thermalRecorder.initialize()
 
         val frameCount = AtomicInteger(0)
-        val captureStartTime = System.currentTimeMillis()
 
         // Set up frame listener to count frames
         thermalRecorder.setFrameListener(object : ThermalRecorder.ThermalFrameListener {
@@ -138,10 +137,10 @@ class TC001IntegrationTest {
             }
         })
 
-        // When: Start recording and measure frame rate
+        // When: Start recording and measure frame rate over virtual time
         thermalRecorder.startRecording(testSessionDir.absolutePath)
         
-        // Simulate 2 seconds of recording
+        // Simulate 2 seconds of recording (virtual time)
         advanceTimeBy(2000L)
         delay(100) // Allow processing
         
@@ -149,12 +148,10 @@ class TC001IntegrationTest {
 
         // Then: Should capture approximately 20 frames in 2 seconds (10Hz)
         val actualFrames = frameCount.get()
-        val elapsedSeconds = (System.currentTimeMillis() - captureStartTime) / 1000.0
-        val actualFrameRate = actualFrames / elapsedSeconds
-
+        val expectedFrames = 20 // 10Hz * 2 seconds
         // Allow some tolerance for timing variations in testing
-        assertTrue("Frame rate should be close to 10Hz, got $actualFrameRate", 
-                  actualFrameRate >= 8.0 && actualFrameRate <= 12.0)
+        assertTrue("Expected around $expectedFrames frames for a 2-second duration at 10Hz, but got $actualFrames", 
+                  actualFrames in 18..22)
     }
 
     @Test
@@ -163,16 +160,16 @@ class TC001IntegrationTest {
         `when`(mockUsbManager.deviceList).thenReturn(hashMapOf())
         thermalRecorder.initialize()
 
-        val frameTimestamps = mutableListOf<Long>()
-        val maxFramesToCapture = 10
+        val frameCount = AtomicInteger(0)
+        val targetFramesToCapture = 10
 
         thermalRecorder.setFrameListener(object : ThermalRecorder.ThermalFrameListener {
             override fun onFrameProcessed(stats: ThermalRecorder.ThermalFrameStats) {
-                frameTimestamps.add(System.currentTimeMillis())
+                frameCount.incrementAndGet()
                 
                 // Stop after capturing enough frames for analysis
-                if (frameTimestamps.size >= maxFramesToCapture) {
-                    // Stop recording asynchronously
+                if (frameCount.get() >= targetFramesToCapture) {
+                    // Stop recording asynchronously  
                     launch {
                         thermalRecorder.stopRecording()
                     }
@@ -182,24 +179,18 @@ class TC001IntegrationTest {
             override fun onError(error: String) {}
         })
 
-        // When: Start recording and capture frame intervals
+        // When: Start recording and advance virtual time for frame capture
         thermalRecorder.startRecording(testSessionDir.absolutePath)
         
-        // Wait for frames to be captured
-        advanceTimeBy(1500L) // Allow time for frames
+        // Advance time to allow for frame capture (10Hz = 100ms per frame, so 1000ms for 10 frames)
+        advanceTimeBy(1000L) 
+        delay(100) // Allow processing
         
-        // Then: Frame intervals should be approximately 100ms (10Hz)
-        if (frameTimestamps.size >= 2) {
-            val intervals = mutableListOf<Long>()
-            for (i in 1 until frameTimestamps.size) {
-                intervals.add(frameTimestamps[i] - frameTimestamps[i-1])
-            }
-            
-            val averageInterval = intervals.average()
-            // 10Hz = 100ms intervals, allow ±30ms tolerance for test environment
-            assertTrue("Average interval should be ~100ms, got ${averageInterval}ms", 
-                      averageInterval >= 70 && averageInterval <= 130)
-        }
+        // Then: Should have captured the expected number of frames over virtual time
+        val actualFrames = frameCount.get()
+        // For 1 second at 10Hz, expect ~10 frames (allow some tolerance)
+        assertTrue("Expected around 10 frames in 1 second at 10Hz, got $actualFrames", 
+                  actualFrames in 8..12)
     }
 
     /**
