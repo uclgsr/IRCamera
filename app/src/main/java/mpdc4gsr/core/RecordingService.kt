@@ -34,6 +34,7 @@ import mpdc4gsr.network.NetworkClient
 import mpdc4gsr.network.NetworkServer
 import mpdc4gsr.network.PreviewDataAdapter
 import mpdc4gsr.network.PreviewStreamer
+import mpdc4gsr.network.ProtocolHandler
 import mpdc4gsr.supervisor.CrashSafeSupervisor
 import org.json.JSONArray
 import org.json.JSONObject
@@ -143,6 +144,7 @@ class RecordingService : LifecycleService() {
 
     private lateinit var networkClient: NetworkClient
     private lateinit var networkServer: NetworkServer
+    private lateinit var protocolHandler: ProtocolHandler
     private lateinit var previewStreamer: PreviewStreamer
     private lateinit var previewDataAdapter: PreviewDataAdapter
     private var isNetworkInitialized = false
@@ -208,6 +210,7 @@ class RecordingService : LifecycleService() {
         recordingController = RecordingController(this, this)
         networkClient = NetworkClient(this)
         networkServer = NetworkServer(this, 8080)
+        protocolHandler = ProtocolHandler(this, networkServer)
         previewStreamer = PreviewStreamer(networkServer)
         previewDataAdapter = PreviewDataAdapter(previewStreamer, this)
 
@@ -998,9 +1001,60 @@ class RecordingService : LifecycleService() {
 
         lifecycleScope.launch {
             networkServer.messageFlow.collect { message ->
-                handlePCCommand(message)
+                handleProtocolMessage(message)
             }
         }
+        
+        // Set up protocol handler with command callbacks
+        protocolHandler.setCommandHandler(object : ProtocolHandler.CommandHandler {
+            override suspend fun onStartRecording(sessionId: String): ProtocolHandler.CommandResult {
+                return try {
+                    Log.i(TAG, "Remote start recording command received for session: $sessionId")
+                    startRecordingSession(sessionId)
+                    ProtocolHandler.CommandResult(
+                        success = true,
+                        message = "Recording started",
+                        data = mapOf("start_time" to System.currentTimeMillis().toString())
+                    )
+                } catch (e: Exception) {
+                    Log.e(TAG, "Failed to start recording via PC command", e)
+                    ProtocolHandler.CommandResult(false, "Start recording failed: ${e.message}")
+                }
+            }
+            
+            override suspend fun onStopRecording(sessionId: String): ProtocolHandler.CommandResult {
+                return try {
+                    Log.i(TAG, "Remote stop recording command received for session: $sessionId")
+                    stopRecordingSession()
+                    ProtocolHandler.CommandResult(
+                        success = true,
+                        message = "Recording stopped",
+                        data = mapOf("stop_time" to System.currentTimeMillis().toString())
+                    )
+                } catch (e: Exception) {
+                    Log.e(TAG, "Failed to stop recording via PC command", e)
+                    ProtocolHandler.CommandResult(false, "Stop recording failed: ${e.message}")
+                }
+            }
+            
+            override suspend fun onSyncRequest(pcTimestamp: Long): ProtocolHandler.SyncResult {
+                return try {
+                    val timeManager = mpdc4gsr.utils.TimeManager.getInstance(this@RecordingService)
+                    val phoneTimestamp = timeManager.getCurrentTimestampNs() / 1_000_000 // Convert to ms
+                    
+                    Log.d(TAG, "Time sync request: PC=$pcTimestamp, Phone=$phoneTimestamp")
+                    
+                    ProtocolHandler.SyncResult(
+                        success = true,
+                        phoneTimestamp = phoneTimestamp,
+                        offsetNs = (pcTimestamp - phoneTimestamp) * 1_000_000 // Convert to ns
+                    )
+                } catch (e: Exception) {
+                    Log.e(TAG, "Time sync failed", e)
+                    ProtocolHandler.SyncResult(false)
+                }
+            }
+        })
     }
 
     private fun connectToPC(ipAddress: String, port: Int) {
@@ -1301,6 +1355,23 @@ class RecordingService : LifecycleService() {
             } catch (e: Exception) {
                 Log.e(TAG, "Error starting PC discovery", e)
             }
+        }
+    }
+    
+    private suspend fun handleProtocolMessage(message: mpdc4gsr.network.Protocol.ProtocolMessage) {
+        try {
+            val response = protocolHandler.processMessage(message)
+            if (response != null) {
+                networkServer.sendMessage(response)
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Error processing protocol message: ${message.type}", e)
+            val errorResponse = mpdc4gsr.network.Protocol.createErrorMessage(
+                message.type,
+                mpdc4gsr.network.Protocol.ERR_FAIL,
+                "Processing error: ${e.message}"
+            )
+            networkServer.sendMessage(errorResponse)
         }
     }
 
