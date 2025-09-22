@@ -75,9 +75,10 @@ class TimestampUnificationTestActivity : AppCompatActivity() {
                 appendResultText("$result\n")
             }
             
-            val maxDifference = testResults.map { 
-                it.substringAfter("diff=").substringBefore("ms").toLongOrNull() ?: 0L 
-            }.maxOrNull() ?: 0L
+            val differences = testResults.mapNotNull { 
+                it.substringAfter("diff=", "").substringBefore("ms", "").toLongOrNull()
+            }
+            val maxDifference = differences.maxOrNull() ?: 0L
             
             val finalResult = if (maxDifference <= 10) {
                 "✅ PASS: All timestamps consistent within 10ms tolerance"
