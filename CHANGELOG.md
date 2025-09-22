@@ -1,3 +1,18 @@
+## [2.2.4] - Kotlin Compilation Errors Fixed (2024-12-22)
+
+### Fixed - Commit 2329a34
+- **MenuSecondView deviceType**: Changed attribute format from "string" to "integer" in attrs.xml to match getInt() usage
+- **OnRangeChangedListener Interface**: Added @NonNull annotations to Java interface for proper Kotlin nullability interop
+- **R.styleable References**: Verified all TitleView and MyTextView styleable attributes are properly defined and accessible
+- **Method Resolution**: Confirmed IRImageHelp.kt draw_edge_from_temp_reigon_bitmap_argb_psd method exists with correct float parameter signature
+- **Kotlin Compilation**: Fixed all unresolved reference errors for R.styleable constants in custom views
+
+### Technical Implementation
+- **Java-Kotlin Interop**: Added androidx.annotation.NonNull to eliminate platform type mismatches
+- **XML Resource Types**: Ensured attribute format consistency between declaration and usage (integer vs string)
+- **Build System**: Kotlin compilation now succeeds for all previously failing files
+- **Interface Signatures**: Proper nullability annotations prevent abstract member implementation errors
+
 ## [2.2.3] - Build System Fixes and Resource Resolution (2024-12-22)
 
 ### Fixed - Commit dd19059
