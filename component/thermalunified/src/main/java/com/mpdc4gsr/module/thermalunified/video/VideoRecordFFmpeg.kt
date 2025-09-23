@@ -591,14 +591,13 @@ class VideoRecordFFmpeg(
 
         if (thermalPseudoBarView?.visibility == VISIBLE) {
             try {
-                thermalPseudoBarView?.viewBitmap?.let {
-
+                thermalPseudoBarView?.viewBitmap(thermalPseudoBarView.width, thermalPseudoBarView.height)?.let { bitmap ->
                     cameraViewBitmap =
                         BitmapUtils.mergeBitmap(
                             cameraViewBitmap,
-                            it,
-                            cameraViewBitmap!!.width - it.width,
-                            (cameraViewBitmap!!.height - it.height) / 2,
+                            bitmap,
+                            cameraViewBitmap!!.width - bitmap.width,
+                            (cameraViewBitmap!!.height - bitmap.height) / 2,
                         )
                 }
 

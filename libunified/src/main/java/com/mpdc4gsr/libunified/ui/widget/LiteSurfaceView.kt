@@ -17,7 +17,4 @@ class LiteSurfaceView : SurfaceView {
     fun getBitmap(): Bitmap? {
         return null
     }
-    
-    val width: Int get() = super.getWidth()
-    val height: Int get() = super.getHeight()
 }
