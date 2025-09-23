@@ -7,7 +7,7 @@
     <attr name="right2Drawable" format="reference" />
     <attr name="rightDrawable" format="reference" />
     <attr name="right3Drawable" format="reference" />
-    <attr name="deviceType" format="string" />
+    <attr name="deviceType" format="integer" />
     <attr name="rightText" format="string" />
     <attr name="temperature_count" format="integer" />
     <attr name="drawable_height" format="dimension" />

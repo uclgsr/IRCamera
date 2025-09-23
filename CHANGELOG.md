@@ -1,5 +1,27 @@
 # Changelog
 
+## [2.2.5] - Android Resource deviceType Attribute Fix (2024-12-22)
+
+### Fixed - Commit 572ab30
+
+- **Android Resource Linking**: Fixed AAPT resource linking failures in thermalunified component layout files
+- **deviceType Attribute Consistency**: Resolved conflicting deviceType attribute definitions between app and libunified modules
+- **Layout File Corrections**: Updated all layout files to use integer values instead of string values for deviceType attribute:
+  - activity_ir_thermal_double.xml: "double_light" → "1" (DOUBLE_LIGHT)
+  - activity_ir_thermal_lite.xml: "lite" → "2" (Lite)  
+  - activity_thermal_ir_night.xml: "single_light" → "0" (SINGLE_LIGHT)
+  - activity_ir_gallery_edit.xml: "gallery_edit" → "4" (GALLERY_EDIT)
+- **Attribute Definition**: Fixed conflicting format definition in app/attrs.xml from "string" to "integer"
+
+### Technical Implementation - Commit 572ab30
+
+- **Root Cause**: Layout files used string values but MenuSecondView.kt code expected integer values via getInt() call
+- **Mapping Applied**: Based on MenuSecondView constructor mapping: 0=SINGLE_LIGHT, 1=DOUBLE_LIGHT, 2=Lite, 4=GALLERY_EDIT
+- **Validation**: All Android resource processing tasks now pass successfully:
+  - :component:thermalunified:processDebugAndroidTestResources ✅
+  - :app:processDebugResources ✅
+  - No more AAPT errors related to deviceType incompatibility
+
 ## [2.2.5] - Deprecation Warnings Resolution (2024-12-22)
 
 ### Fixed - Commit 96ece6b
@@ -47,6 +69,7 @@
 - ✅ **component:user:build** - Complete user component builds successfully  
 - ✅ **SettingNightView Integration** - All XML layout references and data binding work correctly
 - ✅ **BLE Device Management** - UnifiedBleManager provides required interface without runtime crashes
+
 
 
 ## [2.2.4] - Complete Android Resource Linking Error Resolution (2024-12-22)

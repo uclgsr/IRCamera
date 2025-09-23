@@ -32,7 +32,7 @@
                 android:id="@+id/edit_recycler_second"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:deviceType="gallery_edit" />
+                app:deviceType="4" />
 
             <com.mpdc4gsr.libunified.app.menu.MenuEditView
                 android:id="@+id/edit_recycler_first"
