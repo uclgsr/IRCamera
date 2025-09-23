@@ -17,7 +17,6 @@
     <string name="tips_tisr_off">Imaging Super Resolution has been deactivated.</string>
     <string name="tips_tisr_fail">Your phone does not support OpenCL and cannot enable Imaging Super Resolution.</string>
     
-    <!-- Compass direction strings -->
     <string name="compass_north">N</string>
     <string name="compass_northeast">NE</string>
     <string name="compass_east">E</string>
@@ -27,7 +26,6 @@
     <string name="compass_west">W</string>
     <string name="compass_northwest">NW</string>
 
-    <!-- Monitor dialog strings -->
     <string name="monitor_finish">Finish</string>
     <string name="chart_temperature">Temperature</string>
     <string name="chart_temperature_high">High</string>
@@ -37,7 +35,6 @@
     <string name="monitor_select_title">Select Monitor Type</string>
     <string name="album_edit_report">Edit Report</string>
 
-    <!-- Missing strings referenced in IRVideoGSYActivity.kt -->
     <string name="tip_save_success">Saved successfully</string>
     <string name="detail_date">Date</string>
     <string name="detail_info">Information</string>
@@ -47,4 +44,21 @@
     <string name="tip_delete">Delete</string>
     <string name="also_del_from_phone_album">Also delete from phone album</string>
     <string name="test_results_delete_success">Deletion successful</string>
+    
+    <string name="request_fail">Request failed</string>
+    <string name="tip_no_more_data">No more data</string>
+    <string name="tip_config_delete">Do you want to delete %s?</string>
+    <string name="app_confirm">Confirm</string>
+    <string name="app_cancel">Cancel</string>
+    <string name="device_connect_tip">The device is not connected. Please connect the device.</string>
+    <string name="thermal_config_environment">Ambient Temperature</string>
+    <string name="thermal_config_distance">Distance to Spot</string>
+    <string name="thermal_config_radiation">Emissivity</string>
+    <string name="tip_input_format">Invalid input format</string>
+    <string name="tc_has_line_device">Wired Device</string>
+    <string name="app_tip">Tip</string>
+    <string name="app_camera_content">Camera access permission is required</string>
+    <string name="app_open">Open</string>
+    <string name="tip_target_sdk">The current mobile device cannot be connected, try to update the software version.</string>
+    <string name="permission_request_storage_app">Storage permission is required</string>
 </resources>

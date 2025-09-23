@@ -17,6 +17,10 @@ class FenceView @JvmOverloads constructor(
     
     var listener: CallBack? = null
     
+    fun clear() {
+        // Stub implementation for clear method
+    }
+    
     interface CallBack {
         fun callback(
             startPoint: IntArray,
@@ -34,6 +38,10 @@ class FencePointView @JvmOverloads constructor(
     
     var listener: CallBack? = null
     
+    fun clear() {
+        // Stub implementation for clear method
+    }
+    
     interface CallBack {
         fun callback(
             startPoint: IntArray,
@@ -49,6 +57,10 @@ class FenceLineView @JvmOverloads constructor(
 ) : View(context, attrs, defStyleAttr) {
     
     var listener: CallBack? = null
+    
+    fun clear() {
+        // Stub implementation for clear method
+    }
     
     interface CallBack {
         fun callback(
