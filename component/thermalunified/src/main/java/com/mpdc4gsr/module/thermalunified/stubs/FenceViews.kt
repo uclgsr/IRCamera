@@ -15,10 +15,14 @@ class FenceView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
     
-    var listener: FenceListener? = null
+    var listener: CallBack? = null
     
-    interface FenceListener {
-        fun onFenceChanged()
+    interface CallBack {
+        fun callback(
+            startPoint: IntArray,
+            endPoint: IntArray,
+            srcRect: IntArray,
+        )
     }
 }
 
@@ -28,10 +32,13 @@ class FencePointView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
     
-    var listener: FencePointListener? = null
+    var listener: CallBack? = null
     
-    interface FencePointListener {
-        fun onPointChanged()
+    interface CallBack {
+        fun callback(
+            startPoint: IntArray,
+            srcRect: IntArray,
+        )
     }
 }
 
@@ -41,9 +48,13 @@ class FenceLineView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
     
-    var listener: FenceLineListener? = null
+    var listener: CallBack? = null
     
-    interface FenceLineListener {
-        fun onLineChanged()
+    interface CallBack {
+        fun callback(
+            startPoint: IntArray,
+            endPoint: IntArray,
+            srcRect: IntArray,
+        )
     }
 }

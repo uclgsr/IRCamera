@@ -121,11 +121,11 @@ import com.mpdc4gsr.libunified.app.utils.Constants
 import com.mpdc4gsr.libunified.app.utils.ImageUtils
 import com.mpdc4gsr.libunified.app.utils.ScreenUtil
 import com.mpdc4gsr.libunified.app.view.MainTitleView
-import com.mpdc4gsr.libunified.ui.dialog.ThermalInputDialog
-import com.mpdc4gsr.libunified.ui.dialog.TipGuideDialog
-import com.mpdc4gsr.libunified.ui.dialog.TipPreviewDialog
-import com.mpdc4gsr.libunified.ui.widget.seekbar.OnRangeChangedListener
-import com.mpdc4gsr.libunified.ui.widget.seekbar.RangeSeekBar
+import com.mpdc4gsr.module.thermalunified.stubs.ThermalInputDialog
+import com.mpdc4gsr.module.thermalunified.stubs.TipGuideDialog
+import com.mpdc4gsr.module.thermalunified.stubs.TipPreviewDialog
+import com.mpdc4gsr.module.thermalunified.stubs.OnRangeChangedListener
+import com.mpdc4gsr.module.thermalunified.stubs.RangeSeekBar
 import com.mpdc4gsr.module.thermalunified.R
 import com.mpdc4gsr.module.thermalunified.adapter.CameraItemAdapter
 import com.mpdc4gsr.module.thermalunified.adapter.MeasureItemAdapter
@@ -279,15 +279,15 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
     protected val layCarDetectPrompt by lazy { findViewById<View>(R.id.lay_car_detect_prompt) }
     protected val temp_bg by lazy { findViewById<com.mpdc4gsr.libunified.app.comm.view.TempLayout>(R.id.temp_bg) }
     protected val cl_seek_bar by lazy {
-        findViewById<com.mpdc4gsr.libunified.ui.widget.BitmapConstraintLayout>(
+        findViewById<com.mpdc4gsr.module.thermalunified.stubs.BitmapConstraintLayout>(
             R.id.cl_seek_bar
         )
     }
-    protected val cameraPreview by lazy { findViewById<com.mpdc4gsr.libunified.ui.camera.CameraPreView>(R.id.cameraPreview) }
+    protected val cameraPreview by lazy { findViewById<com.mpdc4gsr.module.thermalunified.stubs.CameraPreView>(R.id.cameraPreview) }
     private val distance_measure_view by lazy { findViewById<View>(R.id.distance_measure_view) }
     private val zoomView by lazy { findViewById<com.infisense.usbir.view.ZoomCaliperView>(R.id.zoomView) }
     protected val temperatureSeekbar by lazy {
-        findViewById<com.mpdc4gsr.libunified.ui.widget.seekbar.RangeSeekBar>(
+        findViewById<com.mpdc4gsr.module.thermalunified.stubs.RangeSeekBar>(
             R.id.temperature_seekbar
         )
     }
