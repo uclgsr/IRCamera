@@ -8,8 +8,7 @@ import android.widget.SeekBar
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.blankj.utilcode.util.SizeUtils
-import com.topdon.lib.core.utils.ScreenUtil
-import com.topdon.lib.ui.R
+import com.mpdc4gsr.libunified.R
 
 class TipsSeekBar: ViewGroup, SeekBar.OnSeekBarChangeListener {
     private val tipsPercent: Float
@@ -110,7 +109,7 @@ class TipsSeekBar: ViewGroup, SeekBar.OnSeekBarChangeListener {
         val widthSize = MeasureSpec.getSize(widthMeasureSpec)
         val heightMode = MeasureSpec.getMode(heightMeasureSpec)
         val heightSize = MeasureSpec.getSize(heightMeasureSpec)
-        val width = if (widthMode == MeasureSpec.UNSPECIFIED) ScreenUtil.getScreenWidth(context) else widthSize
+        val width = if (widthMode == MeasureSpec.UNSPECIFIED) context.resources.displayMetrics.widthPixels else widthSize
 
         for (i in 0 until  childCount) {
             when (val child = getChildAt(i)) {

@@ -12,7 +12,7 @@ import android.view.MotionEvent
 import android.view.View
 import androidx.annotation.ColorInt
 import com.blankj.utilcode.util.SizeUtils
-import com.topdon.lib.ui.R
+import com.mpdc4gsr.libunified.R
 
 /**
  * 3D 编辑使用的，长地像 SeekBar 的那个条条.
@@ -78,7 +78,7 @@ class BarPickView : View {
     /**
      * 条条当前进度.
      */
-    private var progress: Int
+    private var progress: Int = 0
         set(value) {
             if (field != value) {
                 field = value.coerceAtLeast(min).coerceAtMost(max)

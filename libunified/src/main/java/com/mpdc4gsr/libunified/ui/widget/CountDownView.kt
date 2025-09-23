@@ -15,7 +15,7 @@ import android.view.animation.LinearInterpolator
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import com.blankj.utilcode.util.SizeUtils
-import com.topdon.lib.ui.R
+import com.mpdc4gsr.libunified.R
 
 class CountDownView : View {
 
@@ -146,7 +146,7 @@ class CountDownView : View {
         mPaint.style = Paint.Style.FILL
         mPaint.strokeWidth = mRingWidth.toFloat()
         canvas.drawArc(mRectF!!, -90f, mCurrentProgress - 360, false, mPaint)
-        val font = ResourcesCompat.getFont(context, R.font.pingfang_bold)
+        val font = ResourcesCompat.getFont(context, R.font.roboto_regular)
         //绘制文本
         mTextPaint.isAntiAlias = true
         mTextPaint.textAlign = Paint.Align.CENTER

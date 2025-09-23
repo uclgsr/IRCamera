@@ -6,7 +6,7 @@ import android.util.AttributeSet
 import android.util.Log
 import android.view.MotionEvent
 import androidx.appcompat.widget.AppCompatSeekBar
-import com.topdon.lib.ui.R
+import com.mpdc4gsr.libunified.R
 import kotlin.math.roundToInt
 
 /**
