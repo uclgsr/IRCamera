@@ -7,7 +7,7 @@ import com.mpdc4gsr.module.thermalunified.R
 import com.mpdc4gsr.module.thermalunified.report.bean.ReportInfoBean
 import com.mpdc4gsr.module.thermalunified.report.view.ReportInfoView
 import com.mpdc4gsr.module.thermalunified.report.view.WatermarkView
-import com.mpdc4gsr.libunified.ui.R as UiR
+import com.mpdc4gsr.libunified.R as UiR
 
 
 class ReportPreviewFirstActivity : BaseActivity() {
