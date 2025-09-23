@@ -72,7 +72,7 @@ class PDFListActivity : BaseViewModelActivity<PdfViewModel>() {
             it?.let { data ->
                 if (page == 1) {
 
-                    if (data.code == 2000) {
+                    if (data.code == "2000") {
                         reportAdapter.loadMoreModule.isEnableLoadMore =
                             !data.data?.records.isNullOrEmpty()
                         fragmentPdfRecyclerLay.finishRefresh()
@@ -82,7 +82,7 @@ class PDFListActivity : BaseViewModelActivity<PdfViewModel>() {
                     reportAdapter.setNewInstance(data.data?.records)
                 } else {
                     data.data?.records?.let { it1 -> reportAdapter.addData(it1) }
-                    if (data.code == 2000) {
+                    if (data.code == "2000") {
                         if (data.data?.records.isNullOrEmpty()) {
                             reportAdapter.loadMoreModule.loadMoreEnd()
                         } else {
@@ -154,7 +154,7 @@ class PDFListActivity : BaseViewModelActivity<PdfViewModel>() {
                                 LanguageUtil.getLanguageId(Utils.getApp())
                             )
                             params.addBodyParameter("reportType", 2)
-                            HttpProxy.Companion.instant.post(
+                            HttpProxy.Companion.instance.post(
                                 url, params,
                                 object :
                                     IResponseCallback {

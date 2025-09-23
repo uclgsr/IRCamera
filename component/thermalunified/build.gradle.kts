@@ -94,14 +94,9 @@ dependencies {
     implementation(libs.media3.exoplayer)
     implementation(libs.media3.exoplayer.dash)
     implementation(libs.media3.ui)
-    
-    // Try using the old SmartRefreshLayout from version catalog for better compatibility
-    implementation(libs.smart.refresh.layout)
-    implementation(libs.smart.refresh.header)
-    
-    // Add support library for NestedScrollingParent compatibility
-    implementation("androidx.legacy:legacy-support-core-ui:1.0.0")
-    
+    implementation("androidx.recyclerview:recyclerview:1.3.2")
+    implementation(libs.refresh.layout.kernel)
+    implementation(libs.refresh.header.classics)
     testImplementation(libs.junit)
     testImplementation("org.robolectric:robolectric:4.10.3")
     testImplementation("androidx.test:core:1.5.0")

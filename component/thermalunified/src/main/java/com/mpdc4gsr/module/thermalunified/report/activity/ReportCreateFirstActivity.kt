@@ -306,11 +306,11 @@ class ReportCreateFirstActivity : BaseActivity(), View.OnClickListener {
                 null
             }
         return ReportConditionBean(
-            tipSeekHumidity.valueText,
+            tipSeekHumidity.getFormattedValue(),
             if (switchAmbientHumidity.isChecked) 1 else 0,
             temperature,
             if (switchAmbientTemperature.isChecked && temperature != null) 1 else 0,
-            tipSeekEmissivity.valueText,
+            tipSeekEmissivity.getFormattedValue(),
             if (switchEmissivity.isChecked) 1 else 0,
             etTestDistance.text.toString(),
             if (switchTestDistance.isChecked && etTestDistance.text.isNotEmpty()) 1 else 0,
