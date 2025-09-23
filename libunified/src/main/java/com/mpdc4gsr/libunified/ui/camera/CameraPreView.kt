@@ -32,4 +32,13 @@ class CameraPreView : View {
     fun openCamera() {
         // Placeholder implementation
     }
+    
+    fun setRotation(rotation: Boolean) {
+        // Convert boolean to rotation angle
+        this.rotation = if (rotation) 180f else 0f
+    }
+    
+    fun setRotation(rotation: Float) {
+        this.rotation = rotation
+    }
 }

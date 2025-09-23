@@ -27,7 +27,7 @@ import com.energy.ac020library.bean.IrcmdError;
 import com.energy.ac020library.bean.UvcHandleParam;
 import com.energy.commoncomponent.Const;
 import com.energy.commoncomponent.bean.DeviceType;
-import com.energy.commoncomponent.bean.RotateDegree;
+import com.mpdc4gsr.libunified.common.RotateDegree;
 import com.energy.commonlibrary.view.SurfaceNativeWindow;
 import com.energy.irutilslibrary.LibIRParse;
 import com.energy.irutilslibrary.LibIRProcess;

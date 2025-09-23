@@ -107,7 +107,6 @@ import com.mpdc4gsr.libunified.app.utils.BitmapUtils
 import com.mpdc4gsr.libunified.app.utils.CommUtils
 import com.mpdc4gsr.libunified.app.utils.ImageUtils
 import com.mpdc4gsr.libunified.app.utils.ScreenUtil
-import com.mpdc4gsr.libunified.app.dialog.TipDialog
 import com.mpdc4gsr.libunified.ui.widget.seekbar.OnRangeChangedListener
 import com.mpdc4gsr.libunified.ui.widget.seekbar.RangeSeekBar
 import com.mpdc4gsr.module.thermalunified.activity.BaseIRActivity
@@ -652,7 +651,7 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
         binding.temperatureSeekbar.setOnRangeChangedListener(
             object : OnRangeChangedListener {
                 override fun onRangeChanged(
-                    view: RangeSeekBar?,
+                    view: RangeSeekBar,
                     leftValue: Float,
                     rightValue: Float,
                     isFromUser: Boolean,
@@ -681,14 +680,14 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
                 }
 
                 override fun onStartTrackingTouch(
-                    view: RangeSeekBar?,
+                    view: RangeSeekBar,
                     isLeft: Boolean,
                 ) {
                     isTouchSeekBar = true
                 }
 
                 override fun onStopTrackingTouch(
-                    view: RangeSeekBar?,
+                    view: RangeSeekBar,
                     isLeft: Boolean,
                 ) {
                     isTouchSeekBar = false
