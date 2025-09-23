@@ -53,10 +53,10 @@ import com.mpdc4gsr.libunified.ir.camera.IRUVCTC
 import com.mpdc4gsr.libunified.ir.config.MsgCode
 import com.mpdc4gsr.libunified.ir.event.IRMsgEvent
 import com.mpdc4gsr.libunified.ir.event.PreviewComplete
-import com.mpdc4gsr.libunified.ir.extension.setAutoShutter
-import com.mpdc4gsr.libunified.ir.extension.setContrast
-import com.mpdc4gsr.libunified.ir.extension.setMirror
-import com.mpdc4gsr.libunified.ir.extension.setPropDdeLevel
+import com.mpdc4gsr.module.thermalunified.extension.setAutoShutter
+import com.mpdc4gsr.module.thermalunified.extension.setContrast
+import com.mpdc4gsr.module.thermalunified.extension.setMirror
+import com.mpdc4gsr.module.thermalunified.extension.setPropDdeLevel
 import com.mpdc4gsr.libunified.ir.thread.ImageThreadTC
 import com.mpdc4gsr.libunified.ir.utils.OpencvTools
 import com.mpdc4gsr.libunified.ir.utils.USBMonitorCallback
@@ -278,6 +278,7 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
     private val popTimeText by lazy { findViewById<TextView>(R.id.pop_time_text) }
     protected val layCarDetectPrompt by lazy { findViewById<View>(R.id.lay_car_detect_prompt) }
     protected val temp_bg by lazy { findViewById<com.mpdc4gsr.libunified.app.comm.view.TempLayout>(R.id.temp_bg) }
+
     protected open val cl_seek_bar by lazy {
         findViewById<com.mpdc4gsr.libunified.ui.widget.BitmapConstraintLayout>(
             R.id.cl_seek_bar
@@ -2533,7 +2534,7 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
 
 
                     if ((curChooseTabPos == 1 && temperatureView.temperatureRegionMode != REGION_MODE_CLEAN) ||
-                        (curChooseTabPos == 2 && temperatureView.isUserHighTemp() && temperatureView.isUserLowTemp())
+                        (curChooseTabPos == 2 && temperatureView.isUserHighTemp && temperatureView.isUserLowTemp)
                     ) {
                         cameraViewBitmap = BitmapUtils.mergeBitmap(
                             cameraViewBitmap,
