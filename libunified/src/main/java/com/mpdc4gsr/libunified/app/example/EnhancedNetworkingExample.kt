@@ -7,9 +7,9 @@ import com.mpdc4gsr.libunified.app.messaging.ReliableMessageService
 import com.mpdc4gsr.libunified.app.security.CertificateManager
 import com.mpdc4gsr.libunified.app.socket.WebSocketProxy
 import com.mpdc4gsr.libunified.app.sync.TimeSyncService
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import com.kotlinx.coroutines.CoroutineScope
+import com.kotlinx.coroutines.Dispatchers
+import com.kotlinx.coroutines.launch
 import org.json.JSONObject
 
 class EnhancedNetworkingExample(private val context: Context) {

@@ -31,7 +31,7 @@ import com.mpdc4gsr.libunified.app.tools.ConstantLanguages
 import com.mpdc4gsr.libunified.app.tools.DeviceTools
 import com.mpdc4gsr.libunified.app.utils.NetWorkUtils
 import com.mpdc4gsr.libunified.app.utils.WsCmdConstants
-import mpdc4gsr.activities.DeviceTypeActivity
+import com.mpdc4gsr.activities.DeviceTypeActivity
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.json.JSONObject
@@ -85,7 +85,7 @@ import com.mpdc4gsr.libunified.app.utils.NetWorkUtils
 import com.mpdc4gsr.libunified.app.utils.WsCmdConstants
 import com.mpdc4gsr.libunified.app.comm.navigation.NavigationManager
 import com.mpdc4gsr.libunified.app.lms.weiget.TToast
-import mpdc4gsr.activities.DeviceTypeActivity
+import com.mpdc4gsr.activities.DeviceTypeActivity
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.json.JSONObject

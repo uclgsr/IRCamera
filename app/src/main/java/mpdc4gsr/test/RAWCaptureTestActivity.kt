@@ -8,10 +8,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.view.PreviewView
 import androidx.lifecycle.lifecycleScope
 import com.csl.irCamera.databinding.ActivityRawCaptureTestBinding
-import kotlinx.coroutines.launch
-import mpdc4gsr.camera.core.SamsungDeviceCompatibility
-import mpdc4gsr.data.SessionMetadata
-import mpdc4gsr.sensors.RgbCameraRecorder
+import com.kotlinx.coroutines.launch
+import com.mpdc4gsr.camera.core.SamsungDeviceCompatibility
+import com.mpdc4gsr.data.SessionMetadata
+import com.mpdc4gsr.sensors.RgbCameraRecorder
 
 class RAWCaptureTestActivity : AppCompatActivity() {
     companion object {

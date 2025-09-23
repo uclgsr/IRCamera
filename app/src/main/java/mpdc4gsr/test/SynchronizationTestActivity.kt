@@ -7,10 +7,10 @@ import android.widget.TextView
 import androidx.activity.ComponentActivity
 import androidx.lifecycle.lifecycleScope
 import com.csl.irCamera.R
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import mpdc4gsr.controller.RecordingController
-import mpdc4gsr.data.SessionMetadata
+import com.kotlinx.coroutines.delay
+import com.kotlinx.coroutines.launch
+import com.mpdc4gsr.controller.RecordingController
+import com.mpdc4gsr.data.SessionMetadata
 import java.io.File
 
 

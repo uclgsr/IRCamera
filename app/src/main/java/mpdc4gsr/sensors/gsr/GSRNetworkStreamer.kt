@@ -3,10 +3,10 @@ package mpdc4gsr.sensors.gsr
 import android.content.Context
 import android.util.Log
 import com.mpdc4gsr.gsr.model.GSRSample
-import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.*
-import mpdc4gsr.controller.RecordingController
-import mpdc4gsr.network.NetworkClient
+import com.kotlinx.coroutines.*
+import com.kotlinx.coroutines.flow.*
+import com.mpdc4gsr.controller.RecordingController
+import com.mpdc4gsr.network.NetworkClient
 import org.json.JSONObject
 import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.atomic.AtomicBoolean

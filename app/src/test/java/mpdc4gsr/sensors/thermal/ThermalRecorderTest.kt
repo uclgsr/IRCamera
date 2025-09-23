@@ -2,7 +2,7 @@ package mpdc4gsr.sensors.thermal
 
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
-import kotlinx.coroutines.test.runTest
+import com.kotlinx.coroutines.test.runTest
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test

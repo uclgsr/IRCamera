@@ -35,7 +35,7 @@ import com.mpdc4gsr.module.thermalunified.event.GalleryDownloadEvent
 import com.mpdc4gsr.module.thermalunified.viewmodel.IRGalleryTabViewModel
 import com.mpdc4gsr.module.thermalunified.viewmodel.IRGalleryViewModel
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
-import kotlinx.coroutines.launch
+import com.kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode

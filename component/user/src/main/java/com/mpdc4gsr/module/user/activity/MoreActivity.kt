@@ -27,8 +27,8 @@ import com.mpdc4gsr.libunified.app.viewmodel.FirmwareViewModel
 import com.mpdc4gsr.module.user.R
 import com.mpdc4gsr.module.user.dialog.DownloadProDialog
 import com.mpdc4gsr.module.user.dialog.FirmwareInstallDialog
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import com.kotlinx.coroutines.delay
+import com.kotlinx.coroutines.launch
 import java.io.File
 import java.text.DecimalFormat
 import com.mpdc4gsr.libunified.R as RCore

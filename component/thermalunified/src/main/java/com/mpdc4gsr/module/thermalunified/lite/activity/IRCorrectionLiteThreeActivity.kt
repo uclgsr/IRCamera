@@ -7,8 +7,8 @@ import com.mpdc4gsr.module.thermalunified.lite.R
 import com.mpdc4gsr.module.thermalunified.lite.databinding.ActivityIrCorrectionLiteThreeBinding
 import com.mpdc4gsr.module.thermalunified.lite.fragment.IRMonitorLiteFragment
 import com.mpdc4gsr.libunified.app.ktbase.BaseActivity
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import com.kotlinx.coroutines.delay
+import com.kotlinx.coroutines.launch
 
 
 class IRCorrectionLiteThreeActivity : BaseActivity() {

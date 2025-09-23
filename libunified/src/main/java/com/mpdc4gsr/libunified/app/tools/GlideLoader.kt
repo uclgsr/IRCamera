@@ -12,8 +12,8 @@ import com.bumptech.glide.load.resource.bitmap.FitCenter
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.mpdc4gsr.libunified.R
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import com.kotlinx.coroutines.Dispatchers
+import com.kotlinx.coroutines.withContext
 
 object GlideLoader {
 

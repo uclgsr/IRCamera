@@ -14,10 +14,10 @@ import com.topdon.ble.EventObserver
 import com.topdon.ble.Request
 import com.topdon.ble.callback.ScanListener
 // UnifiedBleManager - now properly imported from ble-core
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import com.kotlinx.coroutines.CoroutineScope
+import com.kotlinx.coroutines.Dispatchers
+import com.kotlinx.coroutines.Job
+import com.kotlinx.coroutines.launch
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.coroutines.CoroutineContext
 

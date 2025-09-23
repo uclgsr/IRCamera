@@ -20,9 +20,9 @@ import androidx.lifecycle.lifecycleScope
 import com.shimmerresearch.android.Shimmer
 import com.shimmerresearch.android.manager.ShimmerBluetoothManagerAndroid
 import com.shimmerresearch.bluetooth.ShimmerBluetooth.BT_STATE
-import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.*
-import mpdc4gsr.sensors.unified.model.DeviceInfo
+import com.kotlinx.coroutines.*
+import com.kotlinx.coroutines.flow.*
+import com.mpdc4gsr.sensors.unified.model.DeviceInfo
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean

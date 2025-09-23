@@ -8,9 +8,9 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.csl.irCamera.R
-import kotlinx.coroutines.launch
-import mpdc4gsr.controller.ComprehensiveRecordingController
-import mpdc4gsr.permissions.PermissionManager
+import com.kotlinx.coroutines.launch
+import com.mpdc4gsr.controller.ComprehensiveRecordingController
+import com.mpdc4gsr.permissions.PermissionManager
 
 class FaultTolerantRecordingActivity : AppCompatActivity() {
 

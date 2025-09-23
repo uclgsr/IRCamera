@@ -26,8 +26,8 @@ import com.mpdc4gsr.module.thermalunified.adapter.SettingTimeAdapter
 import com.mpdc4gsr.module.thermalunified.chart.MyValueFormatter
 import com.mpdc4gsr.module.thermalunified.view.MyMarkerView
 import com.mpdc4gsr.module.thermalunified.viewmodel.LogViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import com.kotlinx.coroutines.Dispatchers
+import com.kotlinx.coroutines.launch
 
 
 class LogMPChartActivity : BaseActivity(), OnChartValueSelectedListener {

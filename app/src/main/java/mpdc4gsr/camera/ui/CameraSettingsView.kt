@@ -13,7 +13,7 @@ import android.widget.Spinner
 import android.widget.Switch
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
-import mpdc4gsr.camera.RGBCameraRecorder
+import com.mpdc4gsr.camera.RGBCameraRecorder
 
 class CameraSettingsView
 @JvmOverloads

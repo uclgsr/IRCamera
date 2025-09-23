@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.csl.irCamera.R
-import mpdc4gsr.sensors.unified.model.PCControllerInfo
+import com.mpdc4gsr.sensors.unified.model.PCControllerInfo
 
 class PCControllerAdapter(
     private val onControllerClick: (PCControllerInfo) -> Unit

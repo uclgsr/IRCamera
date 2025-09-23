@@ -15,9 +15,9 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.launch
-import mpdc4gsr.R
-import mpdc4gsr.network.NetworkServer
+import com.kotlinx.coroutines.launch
+import com.mpdc4gsr.R
+import com.mpdc4gsr.network.NetworkServer
 import java.io.File
 
 

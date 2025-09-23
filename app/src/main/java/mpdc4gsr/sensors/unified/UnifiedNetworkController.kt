@@ -9,23 +9,23 @@ import android.net.wifi.WifiManager
 import android.util.Log
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import mpdc4gsr.network.WebSocketClient
-import mpdc4gsr.sensors.unified.model.NetworkStatus
-import mpdc4gsr.sensors.unified.model.PCControllerInfo
+import com.kotlinx.coroutines.Dispatchers
+import com.kotlinx.coroutines.Job
+import com.kotlinx.coroutines.delay
+import com.kotlinx.coroutines.flow.MutableStateFlow
+import com.kotlinx.coroutines.flow.StateFlow
+import com.kotlinx.coroutines.flow.asStateFlow
+import com.kotlinx.coroutines.launch
+import com.kotlinx.coroutines.withContext
+import com.mpdc4gsr.network.WebSocketClient
+import com.mpdc4gsr.sensors.unified.model.NetworkStatus
+import com.mpdc4gsr.sensors.unified.model.PCControllerInfo
 import org.json.JSONObject
 import java.net.InetAddress
 import java.util.concurrent.atomic.AtomicBoolean
-import javax.jmdns.JmDNS
-import javax.jmdns.ServiceEvent
-import javax.jmdns.ServiceListener
+import com.javax.jmdns.JmDNS
+import com.javax.jmdns.ServiceEvent
+import com.javax.jmdns.ServiceListener
 
 class UnifiedNetworkController(
     private val context: Context,

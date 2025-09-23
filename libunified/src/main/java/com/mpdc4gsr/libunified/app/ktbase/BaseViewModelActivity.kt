@@ -5,7 +5,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModelProvider
 import com.mpdc4gsr.libunified.R
 import com.mpdc4gsr.libunified.app.dialog.MsgDialog
-import kotlinx.coroutines.TimeoutCancellationException
+import com.kotlinx.coroutines.TimeoutCancellationException
 import kotlin.coroutines.cancellation.CancellationException
 
 abstract class BaseViewModelActivity<VM : BaseViewModel> : BaseActivity() {

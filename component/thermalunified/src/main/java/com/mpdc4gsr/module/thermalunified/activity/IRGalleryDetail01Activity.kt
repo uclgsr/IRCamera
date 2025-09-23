@@ -35,9 +35,9 @@ import com.mpdc4gsr.module.thermalunified.event.ImageGalleryEvent
 import com.mpdc4gsr.module.thermalunified.fragment.GalleryFragment
 import com.mpdc4gsr.module.thermalunified.frame.FrameTool
 import com.mpdc4gsr.module.thermalunified.viewmodel.IRGalleryEditViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import com.kotlinx.coroutines.Dispatchers
+import com.kotlinx.coroutines.launch
+import com.kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode

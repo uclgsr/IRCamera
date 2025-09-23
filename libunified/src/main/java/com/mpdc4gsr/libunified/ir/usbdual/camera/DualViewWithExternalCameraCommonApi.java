@@ -1,6 +1,6 @@
 package com.mpdc4gsr.libunified.ir.usbdual.camera;
 
-import static com.mpdc4gsr.libunified.ir.usbdual.camera.IFrameData.FRAME_LEN;
+import com.static com.mpdc4gsr.libunified.ir.usbdual.camera.IFrameData.FRAME_LEN;
 
 import android.graphics.Bitmap;
 import android.os.Handler;

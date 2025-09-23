@@ -11,9 +11,9 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import com.kotlinx.coroutines.Job
+import com.kotlinx.coroutines.delay
+import com.kotlinx.coroutines.launch
 
 /**
  * Enhanced Comprehensive Sensor Status Dashboard

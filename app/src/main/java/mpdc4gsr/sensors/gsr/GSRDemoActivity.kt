@@ -15,7 +15,7 @@ import com.mpdc4gsr.gsr.service.GSRRecorder
 import com.mpdc4gsr.gsr.service.MockShimmerDeviceFactory
 import com.mpdc4gsr.gsr.util.TimeUtil
 import com.mpdc4gsr.libunified.app.ktbase.BaseBindingActivity
-import kotlinx.coroutines.launch
+import com.kotlinx.coroutines.launch
 
 class GSRDemoActivity : BaseBindingActivity<ActivityGsrDemoBinding>() {
     companion object {

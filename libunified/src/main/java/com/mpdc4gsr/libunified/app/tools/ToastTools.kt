@@ -10,9 +10,9 @@ import androidx.annotation.StringRes
 import com.blankj.utilcode.util.ScreenUtils
 import com.blankj.utilcode.util.Utils
 import com.mpdc4gsr.libunified.R
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import com.kotlinx.coroutines.Dispatchers
+import com.kotlinx.coroutines.GlobalScope
+import com.kotlinx.coroutines.launch
 
 
 object ToastTools {

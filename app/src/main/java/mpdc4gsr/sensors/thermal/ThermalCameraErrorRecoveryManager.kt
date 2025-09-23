@@ -5,8 +5,8 @@ import android.hardware.usb.UsbDevice
 import android.util.Log
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.*
+import com.kotlinx.coroutines.*
+import com.kotlinx.coroutines.flow.*
 import org.greenrobot.eventbus.EventBus
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger

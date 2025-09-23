@@ -33,7 +33,7 @@ import com.mpdc4gsr.module.thermalunified.R
 import com.mpdc4gsr.module.thermalunified.event.ManualFinishBean
 import com.mpdc4gsr.module.thermalunified.utils.IRCmdTool
 import com.mpdc4gsr.module.thermalunified.view.MoveImageView
-import kotlinx.coroutines.launch
+import com.kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import java.io.IOException
 import java.io.InputStream

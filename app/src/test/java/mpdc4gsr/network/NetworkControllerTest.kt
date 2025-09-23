@@ -2,8 +2,8 @@ package mpdc4gsr.network
 
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.test.runTest
+import com.kotlinx.coroutines.runBlocking
+import com.kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Before
 import org.junit.Test

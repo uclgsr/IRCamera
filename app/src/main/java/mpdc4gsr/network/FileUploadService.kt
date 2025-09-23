@@ -1,11 +1,11 @@
 package mpdc4gsr.network
 
 import android.content.Context
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import mpdc4gsr.libunified.app.StructuredLogger
+import com.kotlinx.coroutines.GlobalScope
+import com.kotlinx.coroutines.channels.Channel
+import com.kotlinx.coroutines.delay
+import com.kotlinx.coroutines.launch
+import com.mpdc4gsr.libunified.app.StructuredLogger
 import org.json.JSONObject
 import java.io.File
 import java.io.FileInputStream

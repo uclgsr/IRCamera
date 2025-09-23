@@ -5,8 +5,8 @@ import com.elvishew.xlog.XLog
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 import com.mpdc4gsr.libunified.app.utils.ByteUtils.bytesToInt
 import com.mpdc4gsr.libunified.app.utils.SingleLiveEvent
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import com.kotlinx.coroutines.Dispatchers
+import com.kotlinx.coroutines.launch
 import java.io.File
 
 class IRGalleryEditViewModel : BaseViewModel() {

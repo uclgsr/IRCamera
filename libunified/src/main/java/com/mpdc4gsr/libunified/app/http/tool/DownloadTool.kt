@@ -1,12 +1,12 @@
 package com.mpdc4gsr.libunified.app.http.tool
 
 import com.mpdc4gsr.libunified.app.http.api.DownloadApiService
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import okhttp3.OkHttpClient
-import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
+import com.kotlinx.coroutines.Dispatchers
+import com.kotlinx.coroutines.launch
+import com.kotlinx.coroutines.withContext
+import com.okhttp3.OkHttpClient
+import com.retrofit2.Retrofit
+import com.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream

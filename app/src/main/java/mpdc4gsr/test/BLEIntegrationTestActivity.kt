@@ -5,10 +5,10 @@ import android.util.Log
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.launch
-import mpdc4gsr.permissions.PermissionController
-import mpdc4gsr.sensors.unified.ShimmerDeviceManager
-import mpdc4gsr.sensors.unified.UnifiedGSRRecorder
+import com.kotlinx.coroutines.launch
+import com.mpdc4gsr.permissions.PermissionController
+import com.mpdc4gsr.sensors.unified.ShimmerDeviceManager
+import com.mpdc4gsr.sensors.unified.UnifiedGSRRecorder
 
 
 class BLEIntegrationTestActivity : AppCompatActivity() {

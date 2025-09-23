@@ -12,11 +12,11 @@ import androidx.core.app.ActivityCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
-import mpdc4gsr.R
-import mpdc4gsr.sensors.unified.ShimmerDeviceManager
-import mpdc4gsr.sensors.unified.model.DeviceInfo
+import com.kotlinx.coroutines.flow.collectLatest
+import com.kotlinx.coroutines.launch
+import com.mpdc4gsr.R
+import com.mpdc4gsr.sensors.unified.ShimmerDeviceManager
+import com.mpdc4gsr.sensors.unified.model.DeviceInfo
 
 
 class ShimmerConfigActivity : AppCompatActivity() {

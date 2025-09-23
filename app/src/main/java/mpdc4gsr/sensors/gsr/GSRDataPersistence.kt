@@ -2,15 +2,15 @@ package mpdc4gsr.sensors.gsr
 
 import android.content.Context
 import android.util.Log
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
-import mpdc4gsr.sensors.TimestampManager
-import mpdc4gsr.sensors.TimestampRecord
-import mpdc4gsr.utils.CSVBufferedWriter
-import mpdc4gsr.utils.SessionDirectoryManager
+import com.kotlinx.coroutines.CoroutineScope
+import com.kotlinx.coroutines.Dispatchers
+import com.kotlinx.coroutines.launch
+import com.kotlinx.coroutines.sync.Mutex
+import com.kotlinx.coroutines.sync.withLock
+import com.mpdc4gsr.sensors.TimestampManager
+import com.mpdc4gsr.sensors.TimestampRecord
+import com.mpdc4gsr.utils.CSVBufferedWriter
+import com.mpdc4gsr.utils.SessionDirectoryManager
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Locale

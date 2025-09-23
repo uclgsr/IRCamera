@@ -5,15 +5,15 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.util.Log
 import com.mpdc4gsr.gsr.model.SessionInfo
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.isActive
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import com.kotlinx.coroutines.CoroutineScope
+import com.kotlinx.coroutines.Dispatchers
+import com.kotlinx.coroutines.SupervisorJob
+import com.kotlinx.coroutines.async
+import com.kotlinx.coroutines.awaitAll
+import com.kotlinx.coroutines.delay
+import com.kotlinx.coroutines.isActive
+import com.kotlinx.coroutines.launch
+import com.kotlinx.coroutines.withContext
 import org.json.JSONObject
 import java.io.DataInputStream
 import java.io.DataOutputStream
@@ -28,9 +28,9 @@ import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.concurrent.ConcurrentHashMap
-import javax.net.ssl.SSLContext
-import javax.net.ssl.SSLSocket
-import javax.net.ssl.X509TrustManager
+import com.javax.net.ssl.SSLContext
+import com.javax.net.ssl.SSLSocket
+import com.javax.net.ssl.X509TrustManager
 
 class NetworkClient(private val context: Context) {
     companion object {

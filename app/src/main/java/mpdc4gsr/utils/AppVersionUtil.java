@@ -1,7 +1,7 @@
 package mpdc4gsr.utils;
 
-import static android.content.Context.DOWNLOAD_SERVICE;
-import static com.mpdc4gsr.libunified.app.lms.LMS.SUCCESS;
+import com.static android.content.Context.DOWNLOAD_SERVICE;
+import com.static com.mpdc4gsr.libunified.app.lms.LMS.SUCCESS;
 
 import android.app.DownloadManager;
 import android.content.BroadcastReceiver;

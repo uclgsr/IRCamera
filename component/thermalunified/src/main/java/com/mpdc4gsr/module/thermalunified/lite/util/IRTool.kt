@@ -9,7 +9,7 @@ import com.energy.irutilslibrary.bean.GainStatus
 import com.mpdc4gsr.module.thermalunified.lite.camera.CameraPreviewManager
 import com.mpdc4gsr.module.thermalunified.lite.camera.DeviceIrcmdControlManager
 import com.mpdc4gsr.libunified.app.bean.CameraItemBean
-import kotlinx.coroutines.delay
+import com.kotlinx.coroutines.delay
 
 
 object IRTool {

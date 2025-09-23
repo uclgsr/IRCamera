@@ -14,8 +14,8 @@ import com.mpdc4gsr.libunified.app.lms.UrlConstant
 import com.mpdc4gsr.libunified.app.navigation.NavigationManager
 import com.mpdc4gsr.libunified.app.tools.CheckDoubleClick
 import com.mpdc4gsr.libunified.app.utils.CommUtils
-import mpdc4gsr.utils.AppVersionUtil
-import mpdc4gsr.utils.VersionUtils
+import com.mpdc4gsr.utils.AppVersionUtil
+import com.mpdc4gsr.utils.VersionUtils
 import java.util.Calendar
 
 class VersionActivity : BaseBindingActivity<ActivityVersionBinding>(), View.OnClickListener {

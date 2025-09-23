@@ -34,8 +34,8 @@ import com.mpdc4gsr.module.thermalunified.report.view.ReportIRShowView
 import com.mpdc4gsr.module.thermalunified.report.view.ReportInfoView
 import com.mpdc4gsr.module.thermalunified.report.view.WatermarkView
 import com.mpdc4gsr.module.thermalunified.report.viewmodel.UpReportViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import com.kotlinx.coroutines.Dispatchers
+import com.kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import java.io.File
 import com.mpdc4gsr.libunified.R as LibCoreR

@@ -7,11 +7,11 @@ import android.view.View
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.launch
-import mpdc4gsr.controller.ComprehensiveRecordingController
-import mpdc4gsr.permissions.PermissionManager
-import mpdc4gsr.sensors.SensorRecorder
-import mpdc4gsr.data.SessionMetadata
+import com.kotlinx.coroutines.launch
+import com.mpdc4gsr.controller.ComprehensiveRecordingController
+import com.mpdc4gsr.permissions.PermissionManager
+import com.mpdc4gsr.sensors.SensorRecorder
+import com.mpdc4gsr.data.SessionMetadata
 import java.io.File
 
 /**

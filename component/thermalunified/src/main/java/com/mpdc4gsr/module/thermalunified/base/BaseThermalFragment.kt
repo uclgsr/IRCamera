@@ -8,7 +8,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.mpdc4gsr.libunified.app.ktbase.BaseFragment
-import kotlinx.coroutines.Job
+import com.kotlinx.coroutines.Job
 
 open class BaseThermalFragment : BaseFragment() {
     var mIrBitmap: Bitmap? = null

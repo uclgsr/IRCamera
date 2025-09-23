@@ -18,8 +18,8 @@ import com.mpdc4gsr.libunified.app.lms.weiget.TToast
 import com.mpdc4gsr.libunified.app.tools.TimeTool
 import com.mpdc4gsr.module.thermalunified.R
 import com.mpdc4gsr.module.thermalunified.adapter.ReportPreviewAdapter
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import com.kotlinx.coroutines.Dispatchers
+import com.kotlinx.coroutines.launch
 import kotlin.math.abs
 
 

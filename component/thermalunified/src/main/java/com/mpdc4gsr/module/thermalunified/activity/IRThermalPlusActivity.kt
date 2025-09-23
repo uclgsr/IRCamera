@@ -21,10 +21,10 @@ import com.mpdc4gsr.libunified.app.tools.ToastTools
 import com.mpdc4gsr.module.thermalunified.R
 import com.mpdc4gsr.module.thermalunified.event.GalleryAddEvent
 import com.mpdc4gsr.module.thermalunified.video.VideoRecordFFmpeg
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import com.kotlinx.coroutines.CoroutineScope
+import com.kotlinx.coroutines.Dispatchers
+import com.kotlinx.coroutines.delay
+import com.kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 
 

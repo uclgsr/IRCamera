@@ -18,10 +18,10 @@ import com.mpdc4gsr.gsr.model.SyncMark
 import com.mpdc4gsr.gsr.network.DataStreamingService
 import com.mpdc4gsr.gsr.network.NetworkClient
 import com.mpdc4gsr.gsr.network.ZeroconfDiscoveryService
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.launch
+import com.kotlinx.coroutines.CoroutineScope
+import com.kotlinx.coroutines.Dispatchers
+import com.kotlinx.coroutines.SupervisorJob
+import com.kotlinx.coroutines.launch
 
 class EnhancedRecordingService : Service() {
     companion object {

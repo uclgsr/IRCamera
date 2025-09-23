@@ -13,8 +13,8 @@ import androidx.annotation.RequiresPermission
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import com.hjq.permissions.Permission
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import com.kotlinx.coroutines.Dispatchers
+import com.kotlinx.coroutines.withContext
 import java.util.Locale
 
 object LocationUtil {

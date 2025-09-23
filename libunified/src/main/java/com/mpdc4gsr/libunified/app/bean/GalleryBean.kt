@@ -6,7 +6,7 @@ import com.mpdc4gsr.libunified.app.config.FileConfig
 import com.mpdc4gsr.libunified.app.repository.FileBean
 import com.mpdc4gsr.libunified.app.tools.TimeTool
 import com.mpdc4gsr.libunified.app.tools.VideoTools
-import kotlinx.parcelize.Parcelize
+import com.kotlinx.parcelize.Parcelize
 import java.io.File
 import java.util.TimeZone
 

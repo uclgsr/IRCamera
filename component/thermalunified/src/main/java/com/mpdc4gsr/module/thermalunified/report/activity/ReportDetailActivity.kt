@@ -19,8 +19,8 @@ import com.mpdc4gsr.module.thermalunified.report.bean.ReportBean
 import com.mpdc4gsr.module.thermalunified.report.view.ReportIRShowView
 import com.mpdc4gsr.module.thermalunified.report.view.ReportInfoView
 import com.mpdc4gsr.module.thermalunified.report.view.WatermarkView
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import com.kotlinx.coroutines.Dispatchers
+import com.kotlinx.coroutines.launch
 import java.io.File
 import com.mpdc4gsr.libunified.R as LibCoreR
 import com.mpdc4gsr.lib.ui.R as UiR

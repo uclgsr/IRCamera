@@ -7,8 +7,8 @@ import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.slot
 import io.mockk.verify
-import mpdc4gsr.camera.RGBCameraRecorder.CameraMode
-import mpdc4gsr.camera.ui.CameraModeSelector
+import com.mpdc4gsr.camera.RGBCameraRecorder.CameraMode
+import com.mpdc4gsr.camera.ui.CameraModeSelector
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test

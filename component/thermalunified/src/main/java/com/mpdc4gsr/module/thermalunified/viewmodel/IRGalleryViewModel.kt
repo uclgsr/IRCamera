@@ -10,8 +10,8 @@ import com.mpdc4gsr.libunified.app.repository.GalleryRepository
 import com.mpdc4gsr.libunified.app.repository.TS004Repository
 import com.mpdc4gsr.libunified.app.tools.TimeTool
 import com.mpdc4gsr.module.thermalunified.utils.WriteTools
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import com.kotlinx.coroutines.Dispatchers
+import com.kotlinx.coroutines.launch
 import java.io.File
 
 class IRGalleryViewModel : BaseViewModel() {

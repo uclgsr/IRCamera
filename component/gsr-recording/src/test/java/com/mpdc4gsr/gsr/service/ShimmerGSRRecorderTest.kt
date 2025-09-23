@@ -7,8 +7,8 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Environment
 import androidx.test.core.app.ApplicationProvider
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runTest
+import com.kotlinx.coroutines.ExperimentalCoroutinesApi
+import com.kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull

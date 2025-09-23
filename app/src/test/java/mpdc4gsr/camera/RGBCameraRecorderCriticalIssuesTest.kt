@@ -10,7 +10,7 @@ import android.view.TextureView
 import androidx.core.content.ContextCompat
 import com.hjq.permissions.XXPermissions
 import io.mockk.*
-import kotlinx.coroutines.test.runTest
+import com.kotlinx.coroutines.test.runTest
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test

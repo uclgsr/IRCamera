@@ -7,12 +7,12 @@ import android.view.TextureView
 import com.hjq.permissions.OnPermissionCallback
 import com.hjq.permissions.Permission
 import com.hjq.permissions.XXPermissions
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
-import mpdc4gsr.camera.core.DeviceCaps
-import mpdc4gsr.camera.core.ModeManager
-import mpdc4gsr.data.SessionMetadata
+import com.kotlinx.coroutines.Dispatchers
+import com.kotlinx.coroutines.runBlocking
+import com.kotlinx.coroutines.withContext
+import com.mpdc4gsr.camera.core.DeviceCaps
+import com.mpdc4gsr.camera.core.ModeManager
+import com.mpdc4gsr.data.SessionMetadata
 import java.io.File
 
 class RGBCameraRecorder(

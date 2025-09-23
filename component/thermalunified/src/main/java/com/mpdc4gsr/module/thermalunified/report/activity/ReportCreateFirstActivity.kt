@@ -36,9 +36,9 @@ import com.mpdc4gsr.module.thermalunified.report.bean.ImageTempBean
 import com.mpdc4gsr.module.thermalunified.report.bean.ReportConditionBean
 import com.mpdc4gsr.module.thermalunified.report.bean.ReportInfoBean
 import com.mpdc4gsr.module.thermalunified.repository.ConfigRepository
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import com.kotlinx.coroutines.Dispatchers
+import com.kotlinx.coroutines.launch
+import com.kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.text.ParsePosition

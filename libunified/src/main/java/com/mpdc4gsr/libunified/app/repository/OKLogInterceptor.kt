@@ -2,9 +2,9 @@ package com.mpdc4gsr.libunified.app.repository
 
 import com.elvishew.xlog.XLog
 import com.mpdc4gsr.libunified.BuildConfig
-import okhttp3.Interceptor
-import okhttp3.Response
-import okio.Buffer
+import com.okhttp3.Interceptor
+import com.okhttp3.Response
+import com.okio.Buffer
 import java.nio.charset.StandardCharsets
 
 

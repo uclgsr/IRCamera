@@ -15,12 +15,12 @@ import com.mpdc4gsr.libunified.app.lms.utils.NetworkUtil
 import com.mpdc4gsr.libunified.app.lms.weiget.TToast
 import com.mpdc4gsr.libunified.app.navigation.NavigationManager
 import com.mpdc4gsr.libunified.app.utils.CommUtils
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import mpdc4gsr.app.App
-import mpdc4gsr.utils.VersionUtils
+import com.kotlinx.coroutines.Dispatchers
+import com.kotlinx.coroutines.async
+import com.kotlinx.coroutines.delay
+import com.kotlinx.coroutines.launch
+import com.mpdc4gsr.app.App
+import com.mpdc4gsr.utils.VersionUtils
 import java.util.Calendar
 import com.mpdc4gsr.libunified.R as LibCoreR
 

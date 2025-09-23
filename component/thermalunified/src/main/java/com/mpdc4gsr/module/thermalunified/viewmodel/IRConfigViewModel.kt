@@ -7,8 +7,8 @@ import com.mpdc4gsr.libunified.app.utils.SingleLiveEvent
 import com.mpdc4gsr.module.thermalunified.bean.DataBean
 import com.mpdc4gsr.module.thermalunified.bean.ModelBean
 import com.mpdc4gsr.module.thermalunified.repository.ConfigRepository
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import com.kotlinx.coroutines.Dispatchers
+import com.kotlinx.coroutines.launch
 
 class IRConfigViewModel(application: Application) : AndroidViewModel(application) {
     val configLiveData = SingleLiveEvent<ModelBean>()

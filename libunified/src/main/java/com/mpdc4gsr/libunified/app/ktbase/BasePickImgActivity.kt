@@ -14,7 +14,7 @@ import com.mpdc4gsr.libunified.databinding.ActivityImagePickIrPlushBinding
 import com.mpdc4gsr.libunified.app.dialog.ColorSelectDialog
 import com.mpdc4gsr.libunified.app.dialog.TipDialog
 import com.mpdc4gsr.libunified.app.view.ImageEditView
-import kotlinx.coroutines.launch
+import com.kotlinx.coroutines.launch
 import java.io.File
 
 

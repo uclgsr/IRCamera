@@ -3,10 +3,10 @@ package mpdc4gsr.controller
 import android.content.Context
 import androidx.lifecycle.LifecycleOwner
 import io.mockk.*
-import kotlinx.coroutines.*
-import kotlinx.coroutines.test.*
-import mpdc4gsr.permissions.PermissionManager
-import mpdc4gsr.sensors.SensorRecorder
+import com.kotlinx.coroutines.*
+import com.kotlinx.coroutines.test.*
+import com.mpdc4gsr.permissions.PermissionManager
+import com.mpdc4gsr.sensors.SensorRecorder
 import org.junit.After
 import org.junit.Assert.*
 import org.junit.Before

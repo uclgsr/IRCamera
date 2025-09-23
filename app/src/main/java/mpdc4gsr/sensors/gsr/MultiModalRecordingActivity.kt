@@ -26,10 +26,10 @@ import com.mpdc4gsr.gsr.service.MockShimmerDeviceFactory
 import com.mpdc4gsr.gsr.service.SessionManager
 import com.mpdc4gsr.gsr.util.TimeUtil
 import com.mpdc4gsr.libunified.app.ktbase.BaseBindingActivity
-import kotlinx.coroutines.launch
-import mpdc4gsr.data.SessionMetadata
-import mpdc4gsr.permissions.PermissionController
-import mpdc4gsr.sensors.RgbCameraRecorder
+import com.kotlinx.coroutines.launch
+import com.mpdc4gsr.data.SessionMetadata
+import com.mpdc4gsr.permissions.PermissionController
+import com.mpdc4gsr.sensors.RgbCameraRecorder
 
 
 class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecordingBinding>() {
