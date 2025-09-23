@@ -13,9 +13,9 @@ import com.energy.irutilslibrary.LibIRTempAC020
 import com.energy.irutilslibrary.bean.GainStatus
 import com.energy.iruvc.sdkisp.LibIRTemp
 import com.energy.iruvc.utils.Line
-import com.mpdc4gsr.module.thermalunified.lite.R
+import com.mpdc4gsr.module.thermalunified.R
 import com.mpdc4gsr.module.thermalunified.lite.camera.DeviceIrcmdControlManager
-import com.mpdc4gsr.module.thermalunified.lite.databinding.ActivityIrMonitorLiteBinding
+import com.mpdc4gsr.module.thermalunified.databinding.ActivityIrMonitorLiteBinding
 import com.mpdc4gsr.module.thermalunified.lite.fragment.IRMonitorLiteFragment
 import com.google.gson.Gson
 import com.mpdc4gsr.libunified.ir.view.ITsTempListener
