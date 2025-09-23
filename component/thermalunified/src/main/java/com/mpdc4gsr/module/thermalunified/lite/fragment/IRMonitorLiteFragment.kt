@@ -376,8 +376,7 @@ class IRMonitorLiteFragment : BaseFragment(), ITsTempListener {
 
         config = ConfigRepository.readConfig(false)
         CameraPreviewManager.getInstance().init(cameraView, mLiteHandler)
-        @Suppress("UNCHECKED_CAST")
-        CameraPreviewManager.getInstance().imageRotate = RotateDegree.DEGREE_270 as Any
+        CameraPreviewManager.getInstance().imageRotate = RotateDegree.DEGREE_270
         CameraPreviewManager.getInstance().setOnTempDataChangeCallback { data ->
             if (data != null) {
                 System.arraycopy(data, 0, temperatureBytes, 0, temperatureBytes.size)

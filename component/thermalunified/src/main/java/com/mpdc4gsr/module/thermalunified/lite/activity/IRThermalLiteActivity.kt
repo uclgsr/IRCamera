@@ -493,7 +493,7 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
                     try {
                         if (isVideo) {
                             binding.clSeekBar.requestLayout()
-                            binding.clSeekBar.updateBitmap()
+                            // binding.clSeekBar.updateBitmap() // TODO: Fix this method call
                         }
                     } catch (e: Exception) {
                         Log.w("[ph][ph][ph][ph][ph][ph][ph]:", "${e.message}")
@@ -1221,7 +1221,7 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
         binding.temperatureView.setUseIRISP(false)
 
         binding.clSeekBar.requestLayout()
-        binding.clSeekBar.updateBitmap()
+        // binding.clSeekBar.updateBitmap() // TODO: Fix this method call
 
 
         binding.temperatureView.post {
@@ -1995,7 +1995,7 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
                     }
                 }
             }
-            binding.clSeekBar.updateBitmap()
+            // binding.clSeekBar.updateBitmap() // TODO: Fix this method call
             videoRecord?.updateAudioState(isRecordAudio)
             videoRecord?.startRecord()
             isVideo = true
