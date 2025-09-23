@@ -16,6 +16,7 @@ import com.mpdc4gsr.libunified.app.dialog.TipShutterDialog
 import com.mpdc4gsr.libunified.app.navigation.NavigationManager
 import com.mpdc4gsr.module.thermalunified.R
 import com.mpdc4gsr.module.thermalunified.databinding.PopCameraItemBinding
+import com.mpdc4gsr.libunified.R as LibR
 
 
 @SuppressLint("SetTextI18n")
