@@ -1,8 +1,8 @@
-package com.shuyu.gsyvideoplayer.video
+package com.mpdc4gsr.module.thermalunified.video
 
 import android.content.Context
 import android.util.AttributeSet
-import com.shuyu.gsyvideoplayer.video.base.GSYVideoPlayer
+import com.mpdc4gsr.module.thermalunified.video.base.GSYVideoPlayer
 
 open class StandardGSYVideoPlayer
 @JvmOverloads
