@@ -83,6 +83,7 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation("androidx.core:core:1.13.1") // For NestedScrollingParent support
     implementation("androidx.recyclerview:recyclerview:1.3.2") // For NestedScrolling support
+    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0") // SwipeRefreshLayout support
     implementation(libs.localbroadcastmanager)
     implementation(libs.material)
     implementation(libs.utilcode)
@@ -94,8 +95,18 @@ dependencies {
     implementation(libs.media3.exoplayer)
     implementation(libs.media3.exoplayer.dash)
     implementation(libs.media3.ui)
-    implementation(libs.refresh.layout.kernel)
-    implementation(libs.refresh.header.classics)
+    // Use new working Maven Central version but exclude problematic dependencies
+    implementation(libs.refresh.layout.kernel) {
+        exclude(group = "androidx.recyclerview", module = "recyclerview")
+        exclude(group = "androidx.core", module = "core")
+    }
+    implementation(libs.refresh.header.classics) {
+        exclude(group = "androidx.recyclerview", module = "recyclerview")
+        exclude(group = "androidx.core", module = "core")
+    }
+    // Force correct NestedScrolling implementation
+    implementation("androidx.core:core:1.9.0")
+    implementation("androidx.recyclerview:recyclerview:1.2.1")
     testImplementation(libs.junit)
     testImplementation("org.robolectric:robolectric:4.10.3")
     testImplementation("androidx.test:core:1.5.0")
