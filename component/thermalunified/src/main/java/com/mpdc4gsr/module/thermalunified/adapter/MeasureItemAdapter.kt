@@ -9,7 +9,7 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.mpdc4gsr.libunified.app.bean.ObserveBean
-import com.mpdc4gsr.libunified.ui.bean.ColorBean
+import com.mpdc4gsr.libunified.app.bean.TargetColorBean
 import com.mpdc4gsr.module.thermalunified.R
 
 class MeasureItemAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -24,10 +24,10 @@ class MeasureItemAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVi
 
     private val secondBean =
         arrayListOf(
-            ColorBean(R.drawable.ic_info_svg, "1.8m", ObserveBean.TYPE_MEASURE_PERSON),
-            ColorBean(R.drawable.ic_info_svg, "1.0m", ObserveBean.TYPE_MEASURE_SHEEP),
-            ColorBean(R.drawable.ic_info_svg, "0.5m", ObserveBean.TYPE_MEASURE_DOG),
-            ColorBean(R.drawable.ic_info_svg, "0.2m", ObserveBean.TYPE_MEASURE_BIRD),
+            TargetColorBean(R.drawable.ic_info_svg, "1.8m", ObserveBean.TYPE_MEASURE_PERSON),
+            TargetColorBean(R.drawable.ic_info_svg, "1.0m", ObserveBean.TYPE_MEASURE_SHEEP),
+            TargetColorBean(R.drawable.ic_info_svg, "0.5m", ObserveBean.TYPE_MEASURE_DOG),
+            TargetColorBean(R.drawable.ic_info_svg, "0.2m", ObserveBean.TYPE_MEASURE_BIRD),
         )
 
     override fun onCreateViewHolder(

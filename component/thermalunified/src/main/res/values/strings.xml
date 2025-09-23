@@ -61,4 +61,20 @@
     <string name="app_open">Open</string>
     <string name="tip_target_sdk">The current mobile device cannot be connected, try to update the software version.</string>
     <string name="permission_request_storage_app">Storage permission is required</string>
+    
+    <!-- Missing strings for GalleryEditMenuAdapter -->
+    <string name="menu_3d_calibrate">3D Calibrate</string>
+    <string name="thermal_false_color">False Color</string>
+    <string name="app_setting">Settings</string>
+    <string name="func_temper_ruler">Temperature Ruler</string>
+    
+    <!-- Missing strings for thermal config dialogs -->
+    <string name="thermal_config_environment">Environment Temperature</string>
+    <string name="thermal_config_distance">Distance</string>
+    <string name="thermal_config_radiation">Radiation</string>
+    <string name="tip_input_format">Input format invalid</string>
+    
+    <!-- Missing strings for ReportPreviewFloorAdapter -->
+    <string name="pdf_project_item">Project Item</string>
+    <string name="report_remark">Report Remark</string>
 </resources>

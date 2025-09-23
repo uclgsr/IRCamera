@@ -9,6 +9,17 @@ import android.view.View
  * These are placeholders to resolve compilation issues
  */
 
+class CountDownView @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
+) : View(context, attrs, defStyleAttr) {
+    
+    fun setCountdownTime(time: Int) {
+        // Stub implementation
+    }
+}
+
 interface OnRangeChangedListener {
     fun onRangeChanged(
         view: RangeSeekBar?, 
