@@ -13,4 +13,9 @@ class BitmapConstraintLayout : ConstraintLayout {
     fun viewBitmap(width: Int, height: Int): Bitmap? {
         return null
     }
+    
+    fun updateBitmap() {
+        // Placeholder implementation
+        invalidate()
+    }
 }
