@@ -83,6 +83,7 @@ class CameraPreView @JvmOverloads constructor(
     fun closeCamera() {}
     fun openCamera() {}
     fun setRotation(enabled: Boolean) {}
+    fun setCameraAlpha(alpha: Float) {}
     
     // Property accessor
     var visibility: Int
