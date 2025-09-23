@@ -16,4 +16,15 @@
     <string name="tips_tisr_on">Imaging Super Resolution has been activated.</string>
     <string name="tips_tisr_off">Imaging Super Resolution has been deactivated.</string>
     <string name="tips_tisr_fail">Your phone does not support OpenCL and cannot enable Imaging Super Resolution.</string>
+    
+    <!-- Missing strings referenced in IRVideoGSYActivity.kt -->
+    <string name="tip_save_success">Saved successfully</string>
+    <string name="detail_date">Date</string>
+    <string name="detail_info">Information</string>
+    <string name="detail_len">Size</string>
+    <string name="detail_path">Path</string>
+    <string name="battery_share">Share</string>
+    <string name="tip_delete">Delete</string>
+    <string name="also_del_from_phone_album">Also delete from phone album</string>
+    <string name="test_results_delete_success">Deletion successful</string>
 </resources>
