@@ -9,9 +9,9 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.mpdc4gsr.libunified.app.bean.ObserveBean
-import com.mpdc4gsr.libunified.ui.bean.ColorBean
+import com.mpdc4gsr.libunified.app.bean.TargetColorBean
 import com.mpdc4gsr.module.thermalunified.R
-import com.mpdc4gsr.libunified.ui.R as UiR
+import com.mpdc4gsr.libunified.R as LibR
 
 class TargetItemAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     var listener: ((index: Int, code: Int) -> Unit)? = null
@@ -29,9 +29,9 @@ class TargetItemAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVie
 
     private val secondBean =
         arrayListOf(
-            ColorBean(UiR.drawable.ic_menu_thermal6002, "", ObserveBean.TYPE_TARGET_HORIZONTAL),
-            ColorBean(UiR.drawable.ic_menu_thermal6001, "", ObserveBean.TYPE_TARGET_VERTICAL),
-            ColorBean(UiR.drawable.ic_menu_thermal6003, "", ObserveBean.TYPE_TARGET_CIRCLE),
+            TargetColorBean(LibR.drawable.ic_menu_thermal6002, "", ObserveBean.TYPE_TARGET_HORIZONTAL),
+            TargetColorBean(LibR.drawable.ic_menu_thermal6001, "", ObserveBean.TYPE_TARGET_VERTICAL),
+            TargetColorBean(LibR.drawable.ic_menu_thermal6003, "", ObserveBean.TYPE_TARGET_CIRCLE),
         )
 
     override fun onCreateViewHolder(

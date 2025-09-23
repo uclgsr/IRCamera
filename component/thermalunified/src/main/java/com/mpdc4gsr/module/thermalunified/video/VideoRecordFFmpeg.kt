@@ -42,7 +42,7 @@ import com.mpdc4gsr.libunified.app.config.FileConfig
 import com.mpdc4gsr.libunified.app.dialog.TipDialog
 import com.mpdc4gsr.libunified.app.tools.TimeTool
 import com.mpdc4gsr.libunified.app.utils.BitmapUtils
-import com.mpdc4gsr.libunified.ui.camera.CameraPreView
+import com.mpdc4gsr.module.thermalunified.stubs.CameraPreView
 import com.mpdc4gsr.libunified.ui.widget.BitmapConstraintLayout
 import com.mpdc4gsr.libunified.ui.widget.LiteSurfaceView
 import com.mpdc4gsr.module.thermalunified.view.HikSurfaceView
@@ -555,7 +555,7 @@ class VideoRecordFFmpeg(
                 cameraView.getBitmap(cameraViewBitmap)
             }
 
-            is LiteSurfaceView -> cameraViewBitmap = cameraView.scaleBitmap() ?: Bitmap.createBitmap(cameraView.width, cameraView.height, Bitmap.Config.ARGB_8888)
+            is LiteSurfaceView -> cameraViewBitmap = cameraView.scaleBitmap(cameraView.getBitmap()) ?: Bitmap.createBitmap(cameraView.width, cameraView.height, Bitmap.Config.ARGB_8888)
             is HikSurfaceView -> cameraViewBitmap = cameraView.getScaleBitmap()
             else -> cameraViewBitmap =
                 Bitmap.createBitmap(cameraView.width, cameraView.height, Bitmap.Config.ARGB_8888)
@@ -644,15 +644,15 @@ class VideoRecordFFmpeg(
             }
         }
 
-        cameraPreview?.let {
-            if (it.isVisible) {
-                val bitmapFromView = it.getBitmap()
+        cameraPreview?.let { preview ->
+            if (preview.isVisible) {
+                val bitmapFromView = preview.getBitmap()
                 bitmapFromView?.let { bitmap ->
-                    val newBitmap: Bitmap? =
+                    val newBitmap =
                         BitmapUtils.mergeBitmapByView(
                             cameraViewBitmap,
                             bitmap,
-                            it,
+                            preview,
                         )
                     if (newBitmap != null) {
                         cameraViewBitmap = newBitmap

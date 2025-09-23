@@ -59,6 +59,12 @@ class RangeSeekBar @JvmOverloads constructor(
         color = Color.BLUE
         isAntiAlias = true
     }
+
+    // FIX: Added separate paint object for the right thumb to prevent colour bug
+    private val rightThumbPaint = Paint().apply {
+        color = Color.RED
+        isAntiAlias = true
+    }
     
     companion object {
         const val TEMP_MODE_MIN = -20
@@ -143,7 +149,8 @@ class RangeSeekBar @JvmOverloads constructor(
         
         // Draw thumbs
         canvas.drawCircle(leftThumbX, y, thumbRadius, thumbPaint)
-        canvas.drawCircle(rightThumbX, y, thumbPaint.apply { color = Color.RED })
+        // FIX: Use the dedicated paint object for the right thumb
+        canvas.drawCircle(rightThumbX, y, thumbRadius, rightThumbPaint)
     }
     
     override fun onTouchEvent(event: MotionEvent): Boolean {
@@ -449,8 +456,9 @@ class TemperatureView @JvmOverloads constructor(
         // Stop temperature monitoring
     }
     
+    // FIX: Changed to super.post() to prevent StackOverflowError
     fun post(action: Runnable) {
-        post(action)
+        super.post(action)
     }
     
     fun clear() {

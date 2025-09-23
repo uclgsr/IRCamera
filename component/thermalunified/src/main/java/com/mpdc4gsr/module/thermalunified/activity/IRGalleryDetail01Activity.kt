@@ -91,9 +91,6 @@ class IRGalleryDetail01Activity : BaseActivity(), View.OnClickListener {
                             frameTool.getRotate90Temp(frameTool.temperatureBytes),
                         ) { current, total ->
                             lifecycleScope.launch(Dispatchers.Main) {
-                                // Progress updates not supported by TipProgressDialog
-                                // progressDialog?.max = total
-                                // progressDialog?.progress = current
                             }
                         }
                 }
@@ -205,10 +202,7 @@ class IRGalleryDetail01Activity : BaseActivity(), View.OnClickListener {
 
     private fun actionExcel() {
         if (progressDialog == null) {
-            progressDialog = TipProgressDialog.Builder(this)
-                .setMessage("Processing...")
-                .setCanceleable(false)
-                .create()
+            progressDialog = TipProgressDialog.Builder(this).setCanceleable(false).create()
         }
         progressDialog?.show()
 
