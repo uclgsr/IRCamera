@@ -1,11 +1,11 @@
-package com.mpdc4gsr.module.thermal.ir.activity
+package com.mpdc4gsr.module.thermalunified.activity
 
 import android.content.Intent
 import android.os.Bundle
 import android.widget.TextView
 import com.mpdc4gsr.libunified.app.ktbase.BaseActivity
-import com.mpdc4gsr.module.thermal.ir.R
-import com.mpdc4gsr.module.thermal.ir.fragment.IRCorrectionFragment
+import com.mpdc4gsr.module.thermalunified.R
+import com.mpdc4gsr.module.thermalunified.fragment.IRCorrectionFragment
 
 
 class IRCorrectionThreeActivity : BaseActivity() {

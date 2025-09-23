@@ -1,4 +1,4 @@
-package com.mpdc4gsr.module.thermal.ir.fragment
+package com.mpdc4gsr.module.thermalunified.fragment
 
 import android.graphics.Bitmap
 import android.util.Log
@@ -27,9 +27,9 @@ import com.mpdc4gsr.libunified.app.common.SaveSettingUtil
 import com.mpdc4gsr.libunified.app.config.DeviceConfig
 import com.mpdc4gsr.libunified.app.ktbase.BaseFragment
 import com.mpdc4gsr.libunified.app.utils.ScreenUtil
-import com.mpdc4gsr.module.thermal.ir.R
-import com.mpdc4gsr.module.thermal.ir.repository.ConfigRepository
-import com.mpdc4gsr.module.thermal.ir.utils.CalibrationTools
+import com.mpdc4gsr.module.thermalunified.R
+import com.mpdc4gsr.module.thermalunified.repository.ConfigRepository
+import com.mpdc4gsr.module.thermalunified.utils.CalibrationTools
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
