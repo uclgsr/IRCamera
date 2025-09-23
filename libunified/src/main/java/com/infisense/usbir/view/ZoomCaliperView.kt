@@ -66,7 +66,7 @@ class ZoomCaliperView @JvmOverloads constructor(
         // Stub implementation
     }
     
-    fun setRotation(rotation: Float) {
+    override fun setRotation(rotation: Float) {
         super.setRotation(rotation)
     }
     

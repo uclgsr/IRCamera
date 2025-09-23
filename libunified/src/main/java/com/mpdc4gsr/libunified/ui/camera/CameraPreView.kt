@@ -22,5 +22,10 @@ class CameraPreView @JvmOverloads constructor(
         // Stub implementation - does nothing for MVP
     }
     
+    fun getBitmap(): android.graphics.Bitmap? {
+        // Stub implementation - returns null for MVP
+        return null
+    }
+    
     var cameraPreViewCloseListener: (() -> Unit)? = null
 }

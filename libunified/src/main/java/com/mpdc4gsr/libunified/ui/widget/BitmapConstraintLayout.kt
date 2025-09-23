@@ -48,7 +48,7 @@ class BitmapConstraintLayout @JvmOverloads constructor(
         return bitmap
     }
     
-    fun getBitmap(): Bitmap? {
+    fun getCurrentBitmap(): Bitmap? {
         return bitmap
     }
 }
