@@ -60,9 +60,7 @@ class BarPickView : View {
         }
 
     private val barSize: Int
-
     private val rotate: Int
-
     private val labelText: String
 
     private val path = Path()
@@ -92,16 +90,19 @@ class BarPickView : View {
         defStyleAttr,
         defStyleRes,
     ) {
-        // Initialize with default values since styleable might not exist
-        max = 100
-        min = 0
-        progress = 0
-        barSize = SizeUtils.dp2px(4f)
-        rotate = 0
-        labelText = ""
+        val typedArray = context.obtainStyledAttributes(attrs, com.mpdc4gsr.libunified.R.styleable.BarPickView, 0, 0)
+        max = typedArray.getInt(com.mpdc4gsr.libunified.R.styleable.BarPickView_android_max, 100)
+        min = typedArray.getInt(com.mpdc4gsr.libunified.R.styleable.BarPickView_barMin, 0)
+        progress = typedArray.getInt(com.mpdc4gsr.libunified.R.styleable.BarPickView_android_progress, min).coerceAtMost(max).coerceAtLeast(min)
+        barSize = typedArray.getInt(com.mpdc4gsr.libunified.R.styleable.BarPickView_barSize, SizeUtils.dp2px(4f))
+        rotate = typedArray.getInt(com.mpdc4gsr.libunified.R.styleable.BarPickView_barOrientation, 0)
+        labelText = typedArray.getString(com.mpdc4gsr.libunified.R.styleable.BarPickView_barLabel) ?: ""
+        val textSize = typedArray.getDimensionPixelSize(com.mpdc4gsr.libunified.R.styleable.BarPickView_android_textSize, SizeUtils.sp2px(13f))
+        typedArray.recycle()
 
-        paint.textSize = SizeUtils.sp2px(14f).toFloat()
         paint.isAntiAlias = true
+        paint.textSize = textSize.toFloat()
+        paint.strokeWidth = SizeUtils.dp2px(THUMB_STROKE_WIDTH).toFloat()
     }
 
     fun setProgressAndRefresh(progress: Int) {

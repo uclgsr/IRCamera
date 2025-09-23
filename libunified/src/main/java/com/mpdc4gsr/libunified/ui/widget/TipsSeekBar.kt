@@ -3,7 +3,10 @@ package com.mpdc4gsr.libunified.ui.widget
 import android.content.Context
 import android.util.AttributeSet
 import android.widget.SeekBar
+import androidx.core.content.ContextCompat
+import com.blankj.utilcode.util.SizeUtils
 import com.mpdc4gsr.libunified.R
+import com.mpdc4gsr.libunified.app.utils.ScreenUtil
 
 class TipsSeekBar @JvmOverloads constructor(
     context: Context,
