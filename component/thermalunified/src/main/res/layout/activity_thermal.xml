@@ -21,7 +21,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintWidth_percent="0.9" />
 
-    <com.mpdc4gsr.module.thermal.adapter.MenuRecyclerView
+    <com.mpdc4gsr.module.thermalunified.adapter.MenuRecyclerView
         android:id="@+id/thermal_recycler"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -35,7 +35,7 @@
 
     <fragment
         android:id="@+id/thermal_fragment"
-        android:name="com.mpdc4gsr.module.thermal.fragment.ThermalFragment"
+        android:name="com.mpdc4gsr.module.thermalunified.fragment.ThermalFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@id/thermal_recycler"

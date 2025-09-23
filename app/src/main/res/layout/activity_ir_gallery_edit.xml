@@ -51,7 +51,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/title_view" />
 
-        <com.mpdc4gsr.module.thermal.ir.view.TemperatureEditView
+        <com.mpdc4gsr.module.thermalunified.view.TemperatureEditView
             android:id="@+id/temperature_view"
             android:layout_width="0dp"
             android:layout_height="0dp"

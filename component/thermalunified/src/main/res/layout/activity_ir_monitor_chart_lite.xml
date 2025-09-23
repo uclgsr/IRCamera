@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/color_16131E"
-    tools:context="com.mpdc4gsr.module.thermal.ir.activity.IRMonitorChartActivity">
+    tools:context="com.mpdc4gsr.module.thermalunified.activity.IRMonitorChartActivity">
 
     <com.mpdc4gsr.libunified.app.view.TitleView
         android:id="@+id/title_view"
@@ -116,7 +116,7 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <com.mpdc4gsr.module.thermal.ir.view.ChartMonitorView
+        <com.mpdc4gsr.module.thermalunified.view.ChartMonitorView
             android:id="@+id/mp_chart_view"
             android:layout_width="0dp"
             android:layout_height="0dp"
