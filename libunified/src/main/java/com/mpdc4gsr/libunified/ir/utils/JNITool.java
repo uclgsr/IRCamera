@@ -24,4 +24,16 @@ public class JNITool {
         // TODO: Implement actual functionality using OpenCV tools  
         return new byte[width * height * 3]; // BGR format
     }
+
+    public static byte[] diff2firstFrameU1(byte[] buffer, byte[] bufferB) {
+        // Stub implementation - returns empty byte array for image difference
+        // TODO: Implement actual functionality using OpenCV tools
+        return new byte[192 * 256 * 3]; // BGR format for 192x256 image
+    }
+
+    public static byte[] diff2firstFrameU4(byte[] baseImage, byte[] nextImage) {
+        // Stub implementation - returns empty byte array for image difference
+        // TODO: Implement actual functionality using OpenCV tools  
+        return new byte[192 * 256 * 3]; // BGR format for 192x256 image
+    }
 }

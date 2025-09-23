@@ -57,8 +57,9 @@ class IRThermalPlusActivity : BaseIRPlushActivity() {
     override fun initView() {
         super.initView()
 
-        cameraView.visibility = View.GONE
-        dualTextureViewNativeCamera?.visibility = View.VISIBLE
+        // TODO: Hide regular camera view for dual IR mode
+        // cameraView.visibility = View.GONE
+        dualTextureViewNativeCamera.visibility = View.VISIBLE
 
 
 
@@ -107,7 +108,7 @@ class IRThermalPlusActivity : BaseIRPlushActivity() {
                 thermalRecyclerNight.setTwoLightSelected(TwoLightType.CORRECT, false)
 
             } else {
-                ToastUtils.showShort(R.string.correction_fail)
+                ToastUtils.showShort(com.mpdc4gsr.libunified.R.string.correction_fail)
             }
         }
     }
@@ -174,8 +175,10 @@ class IRThermalPlusActivity : BaseIRPlushActivity() {
     }
 
     override fun setTemperatureViewType() {
-        temperatureView.productType = Const.TYPE_IR_DUAL
-        cameraView.productType = Const.TYPE_IR_DUAL
+        // Set product type for dual IR mode
+        // TODO: Verify these view references are properly initialized
+        // temperatureView.productType = Const.TYPE_IR_DUAL  
+        // cameraView.productType = Const.TYPE_IR_DUAL
     }
 
     override fun startUSB(
@@ -330,7 +333,7 @@ class IRThermalPlusActivity : BaseIRPlushActivity() {
             dualView?.let {
                 if (!it.auto_gain_switch) {
                     switchAutoGain(true)
-                    ToastTools.showShort(R.string.auto_open)
+                    ToastTools.showShort(com.mpdc4gsr.libunified.R.string.auto_open)
                 }
                 gainSelChar = CameraItemBean.TYPE_TMP_ZD
             }

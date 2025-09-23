@@ -30,10 +30,10 @@ import com.mpdc4gsr.libunified.ir.usbdual.camera.DualViewWithExternalCameraCommo
 import com.mpdc4gsr.libunified.ir.usbdual.camera.IRUVCDual
 import com.mpdc4gsr.libunified.ir.usbdual.camera.USBMonitorManager
 import com.mpdc4gsr.libunified.ir.usbdual.inf.OnUSBConnectListener
-import com.mpdc4gsr.libunified.ir.extension.setAutoShutter
-import com.mpdc4gsr.libunified.ir.extension.setContrast
-import com.mpdc4gsr.libunified.ir.extension.setMirror
-import com.mpdc4gsr.libunified.ir.extension.setPropDdeLevel
+import com.infisense.usbir.extension.setAutoShutter
+import com.infisense.usbir.extension.setContrast
+import com.infisense.usbir.extension.setMirror
+import com.infisense.usbir.extension.setPropDdeLevel
 import com.mpdc4gsr.libunified.ir.utils.PseudocodeUtils
 import com.mpdc4gsr.libunified.ir.utils.ScreenUtils
 import com.mpdc4gsr.libunified.ir.view.ITsTempListener
