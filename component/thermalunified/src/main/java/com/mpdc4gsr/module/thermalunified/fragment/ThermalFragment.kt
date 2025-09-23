@@ -18,6 +18,7 @@ import androidx.lifecycle.lifecycleScope
 import com.blankj.utilcode.util.ScreenUtils
 import com.mpdc4gsr.module.thermalunified.stubs.GuideInterface
 import com.mpdc4gsr.module.thermalunified.stubs.IrSurfaceView
+import com.mpdc4gsr.module.thermalunified.stubs.IrDataCallback
 import com.mpdc4gsr.libunified.app.tools.ToastTools
 import com.mpdc4gsr.libunified.app.utils.ByteUtils.getIndex
 import com.mpdc4gsr.module.thermalunified.stubs.ThermalInputDialog
@@ -217,7 +218,7 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
         val ret =
             mGuideInterface!!.init(
                 requireContext(),
-                object : GuideInterface.IrDataCallback {
+                object : IrDataCallback {
                     override fun processIrData(
                         yuv: ByteArray,
                         temp: FloatArray,
