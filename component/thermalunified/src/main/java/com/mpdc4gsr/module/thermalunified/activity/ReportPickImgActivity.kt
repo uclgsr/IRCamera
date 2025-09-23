@@ -18,6 +18,7 @@ import com.mpdc4gsr.libunified.app.ktbase.BaseActivity
 import com.mpdc4gsr.libunified.app.lms.weiget.TToast
 import com.mpdc4gsr.libunified.app.navigation.NavigationManager
 import com.mpdc4gsr.libunified.app.repository.GalleryRepository.DirType
+import com.mpdc4gsr.libunified.app.bean.GalleryTitle
 import com.mpdc4gsr.libunified.app.tools.FileTools.getUri
 import com.mpdc4gsr.libunified.app.tools.ToastTools
 import com.mpdc4gsr.libunified.app.utils.Constants.IS_REPORT_FIRST
@@ -32,7 +33,6 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.io.File
 import com.mpdc4gsr.libunified.R as LibR
-import com.mpdc4gsr.libunified.ui.R as UiR
 
 
 class ReportPickImgActivity : BaseActivity(), View.OnClickListener {
@@ -41,7 +41,7 @@ class ReportPickImgActivity : BaseActivity(), View.OnClickListener {
 
     private val viewModel: IRGalleryViewModel by viewModels()
 
-    private val adapter = GalleryAdapter()
+    private val adapter = GalleryAdapter(this)
 
     private lateinit var titleView: com.mpdc4gsr.libunified.app.view.TitleView
     private lateinit var clShare: androidx.constraintlayout.widget.ConstraintLayout
@@ -61,7 +61,7 @@ class ReportPickImgActivity : BaseActivity(), View.OnClickListener {
 
         isTC007 = intent.getBooleanExtra(ExtraKeyConfig.IS_TC007, false)
 
-        titleView.setRightDrawable(UiR.drawable.ic_toolbar_check_svg)
+        titleView.setRightDrawable(LibR.drawable.ic_toolbar_check_svg)
         titleView.setRightClickListener { setEditMode(true) }
 
         initRecycler()
@@ -129,7 +129,7 @@ class ReportPickImgActivity : BaseActivity(), View.OnClickListener {
                 finish()
             }
         }
-        titleView.setRightDrawable(if (isEditMode) 0 else UiR.drawable.ic_toolbar_check_svg)
+        titleView.setRightDrawable(if (isEditMode) 0 else LibR.drawable.ic_toolbar_check_svg)
         titleView.setRightText(if (isEditMode) getString(R.string.report_select_all) else "")
         titleView.setRightClickListener {
             if (isEditMode) {
@@ -180,12 +180,12 @@ class ReportPickImgActivity : BaseActivity(), View.OnClickListener {
             }
         }
 
-        adapter.selectCallback = {
-            titleView.setTitleText(getString(R.string.chosen_item, it.size))
+        adapter.selectCallback = { selectList ->
+            titleView.setTitleText(getString(R.string.chosen_item, selectList.size))
         }
         adapter.itemClickCallback = {
-            val data = adapter.dataList[it]
-            val fileName = data.name.substringBeforeLast(".")
+            val data = adapter.dataList[it] as? GalleryBean
+            val fileName = data?.name?.substringBeforeLast(".") ?: ""
             val irPath = "${FileConfig.lineIrGalleryDir}/$fileName.ir"
             if (File(irPath).exists()) {
                 val navigation =

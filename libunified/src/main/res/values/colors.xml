@@ -80,5 +80,8 @@
     <color name="chart_point_max">#FFFF5722</color>
     <color name="chart_point_min">#FF4CAF50</color>
     <color name="chart_point_center">#FF607D8B</color>
+    
+    <!-- Missing chart background color -->
+    <color name="chart_bg">#FF16131E</color>
 
 </resources>
