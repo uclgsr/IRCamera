@@ -190,3 +190,13 @@ GRADLE_*.md
 *.bak*
 docs/latex/*.bak*
 
+# Testing suite artifacts
+testing-suite/__pycache__/
+testing-suite/**/__pycache__/
+testing-suite/testing-suite/results/
+testing-suite/emulators/__pycache__/
+testing-suite/results/
+testing-suite/*.log
+testing-suite/temp/
+testing-suite/.pytest_cache/
+
