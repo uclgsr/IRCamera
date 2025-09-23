@@ -1,11 +1,11 @@
-package com.mpdc4gsr.libunified.ui.charting.charts;
+package com.mpdc4gsr.libunified.ui.charts;
 
 import android.content.Context;
 import android.util.AttributeSet;
 
-import com.mpdc4gsr.libunified.ui.charting.data.LineData;
-import com.mpdc4gsr.libunified.ui.charting.interfaces.dataprovider.LineDataProvider;
-import com.mpdc4gsr.libunified.ui.charting.renderer.LineChartRenderer;
+import com.mpdc4gsr.libunified.ui.data.LineData;
+import com.mpdc4gsr.libunified.ui.interfaces.dataprovider.LineDataProvider;
+import com.mpdc4gsr.libunified.ui.renderer.LineChartRenderer;
 
 public class LineChart extends BarLineChartBase<LineData> implements LineDataProvider {
 

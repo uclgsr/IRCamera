@@ -27,8 +27,8 @@ import com.mpdc4gsr.libunified.app.db.entity.ThermalEntity
 import com.mpdc4gsr.libunified.app.ktbase.BaseActivity
 import com.mpdc4gsr.libunified.app.tools.NumberTools
 import com.mpdc4gsr.libunified.app.tools.TimeTool
-import com.mpdc4gsr.lib.ui.dialog.MonitorSelectDialog
-import com.mpdc4gsr.lib.ui.listener.SingleClickListener
+import com.mpdc4gsr.libunified.ui.dialog.MonitorSelectDialog
+import com.mpdc4gsr.libunified.ui.listener.SingleClickListener
 import com.mpdc4gsr.module.thermalunified.bean.DataBean
 import com.mpdc4gsr.module.thermalunified.bean.SelectPositionBean
 import com.mpdc4gsr.module.thermalunified.event.MonitorSaveEvent

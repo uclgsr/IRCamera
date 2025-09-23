@@ -1,4 +1,4 @@
-package com.mpdc4gsr.libunified.ui.charting.model;
+package com.mpdc4gsr.libunified.ui.model;
 
 public class GradientColor {
 

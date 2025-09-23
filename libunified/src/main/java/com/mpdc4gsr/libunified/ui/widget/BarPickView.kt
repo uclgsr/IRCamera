@@ -1,9 +1,8 @@
-package com.mpdc4gsr.lib.ui.widget
+package com.mpdc4gsr.libunified.ui.widget
 
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
-import android.graphics.Paint
 import android.graphics.Path
 import android.graphics.RectF
 import android.text.TextPaint
@@ -118,17 +117,17 @@ class BarPickView : View {
         val barWidth = width - paddingLeft - paddingRight
         val barHeight = barSize
         val centerY = height / 2f
-        
+
         barRect.set(
             paddingLeft.toFloat(),
             centerY - barHeight / 2f,
             (paddingLeft + barWidth).toFloat(),
             centerY + barHeight / 2f
         )
-        
+
         paint.color = DEFAULT_BG_COLOR
         canvas.drawRect(barRect, paint)
-        
+
         // Draw progress
         val progressWidth = barWidth * (progress - min) / (max - min).toFloat()
         barRect.set(
@@ -137,7 +136,7 @@ class BarPickView : View {
             paddingLeft + progressWidth,
             centerY + barHeight / 2f
         )
-        
+
         paint.color = DEFAULT_PROGRESS_COLOR
         canvas.drawRect(barRect, paint)
     }
@@ -148,6 +147,7 @@ class BarPickView : View {
                 onStartTrackingTouch?.invoke(progress, max)
                 return true
             }
+
             MotionEvent.ACTION_MOVE -> {
                 val x = event.x - paddingLeft
                 val barWidth = width - paddingLeft - paddingRight
@@ -156,6 +156,7 @@ class BarPickView : View {
                 onProgressChanged?.invoke(progress, max)
                 return true
             }
+
             MotionEvent.ACTION_UP -> {
                 onStopTrackingTouch?.invoke(progress, max)
                 return true

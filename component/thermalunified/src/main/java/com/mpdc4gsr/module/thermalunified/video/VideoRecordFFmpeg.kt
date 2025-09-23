@@ -42,9 +42,9 @@ import com.mpdc4gsr.libunified.app.config.FileConfig
 import com.mpdc4gsr.libunified.app.dialog.TipDialog
 import com.mpdc4gsr.libunified.app.tools.TimeTool
 import com.mpdc4gsr.libunified.app.utils.BitmapUtils
-import com.mpdc4gsr.lib.ui.camera.CameraPreView
-import com.mpdc4gsr.lib.ui.widget.BitmapConstraintLayout
-import com.mpdc4gsr.lib.ui.widget.LiteSurfaceView
+import com.mpdc4gsr.libunified.ui.camera.CameraPreView
+import com.mpdc4gsr.libunified.ui.widget.BitmapConstraintLayout
+import com.mpdc4gsr.libunified.ui.widget.LiteSurfaceView
 import com.mpdc4gsr.module.thermalunified.view.HikSurfaceView
 import com.mpdc4gsr.module.thermalunified.view.TemperatureHikView
 import com.mpdc4gsr.module.thermalunified.view.compass.LinearCompassView

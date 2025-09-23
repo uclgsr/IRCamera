@@ -59,12 +59,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/title_view">
 
-        <com.mpdc4gsr.lib.ui.widget.LiteSurfaceView
+        <com.mpdc4gsr.libunified.ui.widget.LiteSurfaceView
             android:id="@+id/cameraView"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-        <com.mpdc4gsr.lib.ui.camera.CameraPreView
+        <com.mpdc4gsr.libunified.ui.camera.CameraPreView
             android:id="@+id/cameraPreview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -159,7 +159,7 @@
     </LinearLayout>
 
 
-    <com.mpdc4gsr.lib.ui.widget.BitmapConstraintLayout
+    <com.mpdc4gsr.libunified.ui.widget.BitmapConstraintLayout
         android:id="@+id/cl_seek_bar"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
@@ -236,7 +236,7 @@
             app:rsb_thumb_height="24dp"
             app:rsb_thumb_width="24dp"
             app:rsb_tick_mark_mode="number" />
-    </com.mpdc4gsr.lib.ui.widget.BitmapConstraintLayout>
+    </com.mpdc4gsr.libunified.ui.widget.BitmapConstraintLayout>
 
     <com.mpdc4gsr.module.thermalunified.view.TimeDownView
         android:id="@+id/time_down_view"
@@ -287,7 +287,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <com.mpdc4gsr.lib.ui.widget.WifiSteeringWheelView
+    <com.mpdc4gsr.libunified.ui.widget.WifiSteeringWheelView
         android:id="@+id/thermal_steering_view"
         android:layout_width="150dp"
         android:layout_height="150dp"

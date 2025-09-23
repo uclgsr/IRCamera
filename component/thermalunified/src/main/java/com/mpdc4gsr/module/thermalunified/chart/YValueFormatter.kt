@@ -1,6 +1,6 @@
 package com.mpdc4gsr.module.thermalunified.chart
 
-import com.mpdc4gsr.libunified.ui.charting.formatter.IndexAxisValueFormatter
+import com.mpdc4gsr.libunified.ui.formatter.IndexAxisValueFormatter
 import com.mpdc4gsr.libunified.app.tools.UnitTools
 
 class YValueFormatter : IndexAxisValueFormatter() {

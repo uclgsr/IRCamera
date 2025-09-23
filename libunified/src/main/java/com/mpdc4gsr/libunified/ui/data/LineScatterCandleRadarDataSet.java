@@ -1,9 +1,9 @@
-package com.mpdc4gsr.libunified.ui.charting.data;
+package com.mpdc4gsr.libunified.ui.data;
 
 import android.graphics.DashPathEffect;
 
-import com.mpdc4gsr.libunified.ui.charting.interfaces.datasets.ILineScatterCandleRadarDataSet;
-import com.mpdc4gsr.libunified.ui.charting.utils.Utils;
+import com.mpdc4gsr.libunified.ui.interfaces.datasets.ILineScatterCandleRadarDataSet;
+import com.mpdc4gsr.libunified.ui.utils.Utils;
 
 import java.util.List;
 

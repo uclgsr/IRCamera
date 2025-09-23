@@ -1,11 +1,11 @@
-package com.mpdc4gsr.libunified.ui.charting.listener;
+package com.mpdc4gsr.libunified.ui.listener;
 
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.mpdc4gsr.libunified.ui.charting.charts.Chart;
-import com.mpdc4gsr.libunified.ui.charting.highlight.Highlight;
+import com.mpdc4gsr.libunified.ui.charts.Chart;
+import com.mpdc4gsr.libunified.ui.highlight.Highlight;
 
 public abstract class ChartTouchListener<T extends Chart<?>> extends GestureDetector.SimpleOnGestureListener implements View.OnTouchListener {
 

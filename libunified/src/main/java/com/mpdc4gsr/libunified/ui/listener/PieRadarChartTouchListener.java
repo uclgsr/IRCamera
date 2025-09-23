@@ -1,14 +1,14 @@
-package com.mpdc4gsr.libunified.ui.charting.listener;
+package com.mpdc4gsr.libunified.ui.listener;
 
 import android.annotation.SuppressLint;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 
-import com.mpdc4gsr.libunified.ui.charting.charts.PieRadarChartBase;
-import com.mpdc4gsr.libunified.ui.charting.highlight.Highlight;
-import com.mpdc4gsr.libunified.ui.charting.utils.MPPointF;
-import com.mpdc4gsr.libunified.ui.charting.utils.Utils;
+import com.mpdc4gsr.libunified.ui.charts.PieRadarChartBase;
+import com.mpdc4gsr.libunified.ui.highlight.Highlight;
+import com.mpdc4gsr.libunified.ui.utils.MPPointF;
+import com.mpdc4gsr.libunified.ui.utils.Utils;
 
 import java.util.ArrayList;
 

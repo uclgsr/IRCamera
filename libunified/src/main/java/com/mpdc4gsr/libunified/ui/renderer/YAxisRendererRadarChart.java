@@ -1,14 +1,14 @@
-package com.mpdc4gsr.libunified.ui.charting.renderer;
+package com.mpdc4gsr.libunified.ui.renderer;
 
 import android.graphics.Canvas;
 import android.graphics.Path;
 
-import com.mpdc4gsr.libunified.ui.charting.charts.RadarChart;
-import com.mpdc4gsr.libunified.ui.charting.components.LimitLine;
-import com.mpdc4gsr.libunified.ui.charting.components.YAxis;
-import com.mpdc4gsr.libunified.ui.charting.utils.MPPointF;
-import com.mpdc4gsr.libunified.ui.charting.utils.Utils;
-import com.mpdc4gsr.libunified.ui.charting.utils.ViewPortHandler;
+import com.mpdc4gsr.libunified.ui.charts.RadarChart;
+import com.mpdc4gsr.libunified.ui.components.LimitLine;
+import com.mpdc4gsr.libunified.ui.components.YAxis;
+import com.mpdc4gsr.libunified.ui.utils.MPPointF;
+import com.mpdc4gsr.libunified.ui.utils.Utils;
+import com.mpdc4gsr.libunified.ui.utils.ViewPortHandler;
 
 import java.util.List;
 

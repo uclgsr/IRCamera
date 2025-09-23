@@ -1,12 +1,12 @@
-package com.mpdc4gsr.libunified.ui.charting.data;
+package com.mpdc4gsr.libunified.ui.data;
 
 import android.graphics.Typeface;
 import android.util.Log;
 
-import com.mpdc4gsr.libunified.ui.charting.components.YAxis.AxisDependency;
-import com.mpdc4gsr.libunified.ui.charting.formatter.ValueFormatter;
-import com.mpdc4gsr.libunified.ui.charting.highlight.Highlight;
-import com.mpdc4gsr.libunified.ui.charting.interfaces.datasets.IDataSet;
+import com.mpdc4gsr.libunified.ui.components.YAxis.AxisDependency;
+import com.mpdc4gsr.libunified.ui.formatter.ValueFormatter;
+import com.mpdc4gsr.libunified.ui.highlight.Highlight;
+import com.mpdc4gsr.libunified.ui.interfaces.datasets.IDataSet;
 
 import java.util.ArrayList;
 import java.util.List;

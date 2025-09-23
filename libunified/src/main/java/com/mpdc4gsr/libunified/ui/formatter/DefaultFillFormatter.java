@@ -1,8 +1,8 @@
-package com.mpdc4gsr.libunified.ui.charting.formatter;
+package com.mpdc4gsr.libunified.ui.formatter;
 
-import com.mpdc4gsr.libunified.ui.charting.data.LineData;
-import com.mpdc4gsr.libunified.ui.charting.interfaces.dataprovider.LineDataProvider;
-import com.mpdc4gsr.libunified.ui.charting.interfaces.datasets.ILineDataSet;
+import com.mpdc4gsr.libunified.ui.data.LineData;
+import com.mpdc4gsr.libunified.ui.interfaces.dataprovider.LineDataProvider;
+import com.mpdc4gsr.libunified.ui.interfaces.datasets.ILineDataSet;
 
 public class DefaultFillFormatter implements IFillFormatter {
 

@@ -1,10 +1,10 @@
-package com.mpdc4gsr.libunified.ui.charting.interfaces.datasets;
+package com.mpdc4gsr.libunified.ui.interfaces.datasets;
 
 import android.graphics.DashPathEffect;
 
-import com.mpdc4gsr.libunified.ui.charting.data.Entry;
-import com.mpdc4gsr.libunified.ui.charting.data.LineDataSet;
-import com.mpdc4gsr.libunified.ui.charting.formatter.IFillFormatter;
+import com.mpdc4gsr.libunified.ui.data.Entry;
+import com.mpdc4gsr.libunified.ui.data.LineDataSet;
+import com.mpdc4gsr.libunified.ui.formatter.IFillFormatter;
 
 public interface ILineDataSet extends ILineRadarDataSet<Entry> {
 

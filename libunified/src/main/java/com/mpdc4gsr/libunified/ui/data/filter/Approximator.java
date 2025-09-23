@@ -1,4 +1,4 @@
-package com.mpdc4gsr.libunified.ui.charting.data.filter;
+package com.mpdc4gsr.libunified.ui.data.filter;
 
 import android.annotation.TargetApi;
 import android.os.Build;

@@ -1,4 +1,4 @@
-package com.mpdc4gsr.libunified.ui.charting.highlight;
+package com.mpdc4gsr.libunified.ui.highlight;
 
 public final class Range {
 

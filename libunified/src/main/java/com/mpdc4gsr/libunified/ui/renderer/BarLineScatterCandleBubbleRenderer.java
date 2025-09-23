@@ -1,12 +1,12 @@
-package com.mpdc4gsr.libunified.ui.charting.renderer;
+package com.mpdc4gsr.libunified.ui.renderer;
 
-import com.mpdc4gsr.libunified.ui.charting.animation.ChartAnimator;
-import com.mpdc4gsr.libunified.ui.charting.data.DataSet;
-import com.mpdc4gsr.libunified.ui.charting.data.Entry;
-import com.mpdc4gsr.libunified.ui.charting.interfaces.dataprovider.BarLineScatterCandleBubbleDataProvider;
-import com.mpdc4gsr.libunified.ui.charting.interfaces.datasets.IBarLineScatterCandleBubbleDataSet;
-import com.mpdc4gsr.libunified.ui.charting.interfaces.datasets.IDataSet;
-import com.mpdc4gsr.libunified.ui.charting.utils.ViewPortHandler;
+import com.mpdc4gsr.libunified.ui.animation.ChartAnimator;
+import com.mpdc4gsr.libunified.ui.data.DataSet;
+import com.mpdc4gsr.libunified.ui.data.Entry;
+import com.mpdc4gsr.libunified.ui.interfaces.dataprovider.BarLineScatterCandleBubbleDataProvider;
+import com.mpdc4gsr.libunified.ui.interfaces.datasets.IBarLineScatterCandleBubbleDataSet;
+import com.mpdc4gsr.libunified.ui.interfaces.datasets.IDataSet;
+import com.mpdc4gsr.libunified.ui.utils.ViewPortHandler;
 
 public abstract class BarLineScatterCandleBubbleRenderer extends DataRenderer {
 

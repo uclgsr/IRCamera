@@ -29,7 +29,7 @@ import com.mpdc4gsr.libunified.app.tools.ToastTools
 import com.mpdc4gsr.libunified.app.utils.ByteUtils.bytesToInt
 import com.mpdc4gsr.libunified.app.utils.Constants.IS_REPORT_FIRST
 import com.mpdc4gsr.libunified.app.view.TitleView
-import com.mpdc4gsr.lib.ui.dialog.ProgressDialog
+import com.mpdc4gsr.libunified.ui.dialog.ProgressDialog
 import com.mpdc4gsr.module.thermalunified.R
 import com.mpdc4gsr.module.thermalunified.event.ImageGalleryEvent
 import com.mpdc4gsr.module.thermalunified.fragment.GalleryFragment

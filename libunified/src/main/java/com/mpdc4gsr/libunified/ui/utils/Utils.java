@@ -1,4 +1,4 @@
-package com.mpdc4gsr.libunified.ui.charting.utils;
+package com.mpdc4gsr.libunified.ui.utils;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -18,8 +18,8 @@ import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewConfiguration;
 
-import com.mpdc4gsr.libunified.ui.charting.formatter.DefaultValueFormatter;
-import com.mpdc4gsr.libunified.ui.charting.formatter.ValueFormatter;
+import com.mpdc4gsr.libunified.ui.formatter.DefaultValueFormatter;
+import com.mpdc4gsr.libunified.ui.formatter.ValueFormatter;
 
 import java.util.List;
 

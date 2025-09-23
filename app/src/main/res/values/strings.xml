@@ -30,6 +30,7 @@
     <!-- Fault Tolerant Recording Strings -->
     <string name="fault_tolerant_recording_description">Fault-Tolerant Recording</string>
     <string name="enhanced_fault_tolerant_recording_title">Enhanced Fault-Tolerant Recording</string>
+    <string name="enhanced_recording_label">Enhanced Recording Service</string>
     <string name="initializing_enhanced_recording_system">Initializing enhanced recording system...</string>
     <string name="sensor_status_initializing">Sensor Status: Initializing...</string>
     <string name="start_enhanced_recording">Start Enhanced Recording</string>

@@ -1,6 +1,6 @@
-package com.mpdc4gsr.libunified.ui.charting.interfaces.datasets;
+package com.mpdc4gsr.libunified.ui.interfaces.datasets;
 
-import com.mpdc4gsr.libunified.ui.charting.data.BubbleEntry;
+import com.mpdc4gsr.libunified.ui.data.BubbleEntry;
 
 public interface IBubbleDataSet extends IBarLineScatterCandleBubbleDataSet<BubbleEntry> {
 

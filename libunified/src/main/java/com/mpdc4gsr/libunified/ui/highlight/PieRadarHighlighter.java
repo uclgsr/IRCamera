@@ -1,7 +1,7 @@
-package com.mpdc4gsr.libunified.ui.charting.highlight;
+package com.mpdc4gsr.libunified.ui.highlight;
 
-import com.mpdc4gsr.libunified.ui.charting.charts.PieChart;
-import com.mpdc4gsr.libunified.ui.charting.charts.PieRadarChartBase;
+import com.mpdc4gsr.libunified.ui.charts.PieChart;
+import com.mpdc4gsr.libunified.ui.charts.PieRadarChartBase;
 
 import java.util.ArrayList;
 import java.util.List;

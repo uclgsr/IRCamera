@@ -1,4 +1,4 @@
-package com.mpdc4gsr.libunified.ui.charting.charts;
+package com.mpdc4gsr.libunified.ui.charts;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -6,14 +6,14 @@ import android.graphics.Color;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 
-import com.mpdc4gsr.libunified.ui.charting.components.YAxis;
-import com.mpdc4gsr.libunified.ui.charting.components.YAxis.AxisDependency;
-import com.mpdc4gsr.libunified.ui.charting.data.RadarData;
-import com.mpdc4gsr.libunified.ui.charting.highlight.RadarHighlighter;
-import com.mpdc4gsr.libunified.ui.charting.renderer.RadarChartRenderer;
-import com.mpdc4gsr.libunified.ui.charting.renderer.XAxisRendererRadarChart;
-import com.mpdc4gsr.libunified.ui.charting.renderer.YAxisRendererRadarChart;
-import com.mpdc4gsr.libunified.ui.charting.utils.Utils;
+import com.mpdc4gsr.libunified.ui.components.YAxis;
+import com.mpdc4gsr.libunified.ui.components.YAxis.AxisDependency;
+import com.mpdc4gsr.libunified.ui.data.RadarData;
+import com.mpdc4gsr.libunified.ui.highlight.RadarHighlighter;
+import com.mpdc4gsr.libunified.ui.renderer.RadarChartRenderer;
+import com.mpdc4gsr.libunified.ui.renderer.XAxisRendererRadarChart;
+import com.mpdc4gsr.libunified.ui.renderer.YAxisRendererRadarChart;
+import com.mpdc4gsr.libunified.ui.utils.Utils;
 
 public class RadarChart extends PieRadarChartBase<RadarData> {
 

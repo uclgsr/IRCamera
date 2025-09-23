@@ -1,8 +1,8 @@
-package com.mpdc4gsr.libunified.ui.charting.interfaces.datasets;
+package com.mpdc4gsr.libunified.ui.interfaces.datasets;
 
 import android.graphics.Paint;
 
-import com.mpdc4gsr.libunified.ui.charting.data.CandleEntry;
+import com.mpdc4gsr.libunified.ui.data.CandleEntry;
 
 public interface ICandleDataSet extends ILineScatterCandleRadarDataSet<CandleEntry> {
 

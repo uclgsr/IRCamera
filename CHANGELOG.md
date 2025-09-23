@@ -5,30 +5,35 @@
 ### Fixed - Commit 572ab30
 
 - **Android Resource Linking**: Fixed AAPT resource linking failures in thermalunified component layout files
-- **deviceType Attribute Consistency**: Resolved conflicting deviceType attribute definitions between app and libunified modules
-- **Layout File Corrections**: Updated all layout files to use integer values instead of string values for deviceType attribute:
-  - activity_ir_thermal_double.xml: "double_light" → "1" (DOUBLE_LIGHT)
-  - activity_ir_thermal_lite.xml: "lite" → "2" (Lite)  
-  - activity_thermal_ir_night.xml: "single_light" → "0" (SINGLE_LIGHT)
-  - activity_ir_gallery_edit.xml: "gallery_edit" → "4" (GALLERY_EDIT)
+- **deviceType Attribute Consistency**: Resolved conflicting deviceType attribute definitions between app and libunified
+  modules
+- **Layout File Corrections**: Updated all layout files to use integer values instead of string values for deviceType
+  attribute:
+    - activity_ir_thermal_double.xml: "double_light" → "1" (DOUBLE_LIGHT)
+    - activity_ir_thermal_lite.xml: "lite" → "2" (Lite)
+    - activity_thermal_ir_night.xml: "single_light" → "0" (SINGLE_LIGHT)
+    - activity_ir_gallery_edit.xml: "gallery_edit" → "4" (GALLERY_EDIT)
 - **Attribute Definition**: Fixed conflicting format definition in app/attrs.xml from "string" to "integer"
 
 ### Technical Implementation - Commit 572ab30
 
 - **Root Cause**: Layout files used string values but MenuSecondView.kt code expected integer values via getInt() call
-- **Mapping Applied**: Based on MenuSecondView constructor mapping: 0=SINGLE_LIGHT, 1=DOUBLE_LIGHT, 2=Lite, 4=GALLERY_EDIT
+- **Mapping Applied**: Based on MenuSecondView constructor mapping: 0=SINGLE_LIGHT, 1=DOUBLE_LIGHT, 2=Lite,
+  4=GALLERY_EDIT
 - **Validation**: All Android resource processing tasks now pass successfully:
-  - :component:thermalunified:processDebugAndroidTestResources ✅
-  - :app:processDebugResources ✅
-  - No more AAPT errors related to deviceType incompatibility
+    - :component:thermalunified:processDebugAndroidTestResources ✅
+    - :app:processDebugResources ✅
+    - No more AAPT errors related to deviceType incompatibility
 
 ## [2.2.5] - Deprecation Warnings Resolution (2024-12-22)
 
 ### Fixed - Commit 96ece6b
 
-- **Android API Deprecations**: Fixed deprecated `getParcelableExtra<T>()` usage in PseudoSetActivity.kt with version-specific API calls
-- **Bitmap Options**: Removed deprecated `inDither` field from BitmapFactory.Options in FileUtils.kt  
-- **Coroutines API**: Added proper `@OptIn(DelicateCoroutinesApi::class)` annotation for GlobalScope usage in ToastTools.kt
+- **Android API Deprecations**: Fixed deprecated `getParcelableExtra<T>()` usage in PseudoSetActivity.kt with
+  version-specific API calls
+- **Bitmap Options**: Removed deprecated `inDither` field from BitmapFactory.Options in FileUtils.kt
+- **Coroutines API**: Added proper `@OptIn(DelicateCoroutinesApi::class)` annotation for GlobalScope usage in
+  ToastTools.kt
 - **WiFi Configuration**: Added `@file:Suppress("DEPRECATION")` for WifiConfiguration import in NetWorkUtils.kt
 - **Compiler Warnings**: Suppressed unavoidable SENSELESS_COMPARISON warnings for null checks in legacy code
 
@@ -40,16 +45,18 @@
 
 ### Technical Implementation - Commit 96ece6b
 
-- **API Level Support**: Added Android 33+ specific API calls while maintaining backward compatibility  
+- **API Level Support**: Added Android 33+ specific API calls while maintaining backward compatibility
 - **Legacy Code Maintenance**: Preserved existing functionality while suppressing unavoidable compiler warnings
-- **Coroutines Best Practices**: Properly marked delicate coroutines API usage for application-scoped toast functionality
+- **Coroutines Best Practices**: Properly marked delicate coroutines API usage for application-scoped toast
+  functionality
 
 ## [2.2.5] - BleDeviceManager and MoreFragment Compilation Fixes (2024-12-22)
 
 ### Fixed - Commit 82b6f42
 
 - **BleDeviceManager Compilation Errors**: Fixed all Kotlin compilation errors in user component BleDeviceManager.kt
-- **Missing SettingNightView Class**: Created complete SettingNightView custom view with all required methods and attributes
+- **Missing SettingNightView Class**: Created complete SettingNightView custom view with all required methods and
+  attributes
 - **UnifiedBleManager Implementation**: Enhanced stub implementation with all missing methods for BLE device management
 - **Module Dependencies**: Added ble-core module to settings.gradle.kts and created proper build configuration
 - **Import Resolution**: Fixed UnifiedBleManager import path and removed non-existent method calls
@@ -57,8 +64,10 @@
 
 ### Technical Implementation - Commit 82b6f42
 
-- **SettingNightView Class**: Created at `libunified/src/main/java/com/mpdc4gsr/lib/ui/SettingNightView.kt` with proper attribute handling
-- **UnifiedBleManager Enhancement**: Added methods for `initialize()`, `enableMultiDeviceMode()`, `connectWithEnhancements()`, `getSystemStatus()`
+- **SettingNightView Class**: Created at `libunified/src/main/java/com/mpdc4gsr/lib/ui/SettingNightView.kt` with proper
+  attribute handling
+- **UnifiedBleManager Enhancement**: Added methods for `initialize()`, `enableMultiDeviceMode()`,
+  `connectWithEnhancements()`, `getSystemStatus()`
 - **Build System**: Created complete `ble-core/build.gradle.kts` with proper Android library configuration
 - **Dependency Management**: Updated user component to use both `ble-core` and `BleModule` for comprehensive BLE support
 - **Code Cleanup**: Removed non-existent `setUseNordicBleBackend()` method call from EasyBLE builder
@@ -66,11 +75,9 @@
 ### Validation Results - Commit 82b6f42
 
 - ✅ **component:user:compileDebugKotlin** - All original compilation errors resolved
-- ✅ **component:user:build** - Complete user component builds successfully  
+- ✅ **component:user:build** - Complete user component builds successfully
 - ✅ **SettingNightView Integration** - All XML layout references and data binding work correctly
 - ✅ **BLE Device Management** - UnifiedBleManager provides required interface without runtime crashes
-
-
 
 ## [2.2.4] - Complete Android Resource Linking Error Resolution (2024-12-22)
 

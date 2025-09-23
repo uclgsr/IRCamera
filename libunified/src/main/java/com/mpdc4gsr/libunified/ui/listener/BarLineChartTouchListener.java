@@ -1,4 +1,4 @@
-package com.mpdc4gsr.libunified.ui.charting.listener;
+package com.mpdc4gsr.libunified.ui.listener;
 
 import android.annotation.SuppressLint;
 import android.graphics.Matrix;
@@ -8,16 +8,16 @@ import android.view.VelocityTracker;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 
-import com.mpdc4gsr.libunified.ui.charting.charts.BarLineChartBase;
-import com.mpdc4gsr.libunified.ui.charting.charts.HorizontalBarChart;
-import com.mpdc4gsr.libunified.ui.charting.data.BarLineScatterCandleBubbleData;
-import com.mpdc4gsr.libunified.ui.charting.data.Entry;
-import com.mpdc4gsr.libunified.ui.charting.highlight.Highlight;
-import com.mpdc4gsr.libunified.ui.charting.interfaces.datasets.IBarLineScatterCandleBubbleDataSet;
-import com.mpdc4gsr.libunified.ui.charting.interfaces.datasets.IDataSet;
-import com.mpdc4gsr.libunified.ui.charting.utils.MPPointF;
-import com.mpdc4gsr.libunified.ui.charting.utils.Utils;
-import com.mpdc4gsr.libunified.ui.charting.utils.ViewPortHandler;
+import com.mpdc4gsr.libunified.ui.charts.BarLineChartBase;
+import com.mpdc4gsr.libunified.ui.charts.HorizontalBarChart;
+import com.mpdc4gsr.libunified.ui.data.BarLineScatterCandleBubbleData;
+import com.mpdc4gsr.libunified.ui.data.Entry;
+import com.mpdc4gsr.libunified.ui.highlight.Highlight;
+import com.mpdc4gsr.libunified.ui.interfaces.datasets.IBarLineScatterCandleBubbleDataSet;
+import com.mpdc4gsr.libunified.ui.interfaces.datasets.IDataSet;
+import com.mpdc4gsr.libunified.ui.utils.MPPointF;
+import com.mpdc4gsr.libunified.ui.utils.Utils;
+import com.mpdc4gsr.libunified.ui.utils.ViewPortHandler;
 
 public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBase<? extends BarLineScatterCandleBubbleData<?
         extends IBarLineScatterCandleBubbleDataSet<? extends Entry>>>> {

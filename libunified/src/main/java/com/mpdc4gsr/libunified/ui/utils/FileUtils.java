@@ -1,11 +1,11 @@
-package com.mpdc4gsr.libunified.ui.charting.utils;
+package com.mpdc4gsr.libunified.ui.utils;
 
 import android.content.res.AssetManager;
 import android.os.Environment;
 import android.util.Log;
 
-import com.mpdc4gsr.libunified.ui.charting.data.BarEntry;
-import com.mpdc4gsr.libunified.ui.charting.data.Entry;
+import com.mpdc4gsr.libunified.ui.data.BarEntry;
+import com.mpdc4gsr.libunified.ui.data.Entry;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

@@ -43,7 +43,7 @@ import com.mpdc4gsr.module.thermalunified.lite.util.CommonUtil;
 import com.mpdc4gsr.libunified.ir.utils.IRImageHelp;
 import com.mpdc4gsr.libunified.ir.utils.PseudocodeUtils;
 import com.mpdc4gsr.libunified.app.bean.AlarmBean;
-import com.mpdc4gsr.lib.ui.widget.LiteSurfaceView;
+import com.mpdc4gsr.libunified.ui.widget.LiteSurfaceView;
 
 import java.nio.ByteBuffer;
 import java.util.List;

@@ -1,9 +1,9 @@
-package com.mpdc4gsr.libunified.ui.charting.data;
+package com.mpdc4gsr.libunified.ui.data;
 
 import android.annotation.SuppressLint;
 import android.graphics.drawable.Drawable;
 
-import com.mpdc4gsr.libunified.ui.charting.highlight.Range;
+import com.mpdc4gsr.libunified.ui.highlight.Range;
 
 @SuppressLint("ParcelCreator")
 public class BarEntry extends Entry {

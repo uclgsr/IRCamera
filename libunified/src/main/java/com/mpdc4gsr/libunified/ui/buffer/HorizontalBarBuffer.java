@@ -1,7 +1,7 @@
-package com.mpdc4gsr.libunified.ui.charting.buffer;
+package com.mpdc4gsr.libunified.ui.buffer;
 
-import com.mpdc4gsr.libunified.ui.charting.data.BarEntry;
-import com.mpdc4gsr.libunified.ui.charting.interfaces.datasets.IBarDataSet;
+import com.mpdc4gsr.libunified.ui.data.BarEntry;
+import com.mpdc4gsr.libunified.ui.interfaces.datasets.IBarDataSet;
 
 public class HorizontalBarBuffer extends BarBuffer {
 

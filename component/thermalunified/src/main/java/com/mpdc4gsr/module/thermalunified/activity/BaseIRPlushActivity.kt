@@ -83,7 +83,7 @@ abstract class BaseIRPlushActivity : IRThermalNightActivity(), OnUSBConnectListe
     abstract fun isDualIR(): Boolean
 
     abstract fun setTemperatureViewType()
-    
+
     abstract override fun getProductName(): String
 
     open fun setDispViewData(dualDisp: Int) {

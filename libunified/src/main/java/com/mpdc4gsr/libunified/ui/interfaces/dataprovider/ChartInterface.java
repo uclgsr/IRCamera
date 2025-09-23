@@ -1,10 +1,10 @@
-package com.mpdc4gsr.libunified.ui.charting.interfaces.dataprovider;
+package com.mpdc4gsr.libunified.ui.interfaces.dataprovider;
 
 import android.graphics.RectF;
 
-import com.mpdc4gsr.libunified.ui.charting.data.ChartData;
-import com.mpdc4gsr.libunified.ui.charting.formatter.ValueFormatter;
-import com.mpdc4gsr.libunified.ui.charting.utils.MPPointF;
+import com.mpdc4gsr.libunified.ui.data.ChartData;
+import com.mpdc4gsr.libunified.ui.formatter.ValueFormatter;
+import com.mpdc4gsr.libunified.ui.utils.MPPointF;
 
 public interface ChartInterface {
 

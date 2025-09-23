@@ -1,4 +1,4 @@
-package com.mpdc4gsr.libunified.ui.charting.charts;
+package com.mpdc4gsr.libunified.ui.charts;
 
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
@@ -10,15 +10,15 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 
-import com.mpdc4gsr.libunified.ui.charting.animation.Easing.EasingFunction;
-import com.mpdc4gsr.libunified.ui.charting.components.Legend;
-import com.mpdc4gsr.libunified.ui.charting.components.XAxis;
-import com.mpdc4gsr.libunified.ui.charting.data.ChartData;
-import com.mpdc4gsr.libunified.ui.charting.data.Entry;
-import com.mpdc4gsr.libunified.ui.charting.interfaces.datasets.IDataSet;
-import com.mpdc4gsr.libunified.ui.charting.listener.PieRadarChartTouchListener;
-import com.mpdc4gsr.libunified.ui.charting.utils.MPPointF;
-import com.mpdc4gsr.libunified.ui.charting.utils.Utils;
+import com.mpdc4gsr.libunified.ui.animation.Easing.EasingFunction;
+import com.mpdc4gsr.libunified.ui.components.Legend;
+import com.mpdc4gsr.libunified.ui.components.XAxis;
+import com.mpdc4gsr.libunified.ui.data.ChartData;
+import com.mpdc4gsr.libunified.ui.data.Entry;
+import com.mpdc4gsr.libunified.ui.interfaces.datasets.IDataSet;
+import com.mpdc4gsr.libunified.ui.listener.PieRadarChartTouchListener;
+import com.mpdc4gsr.libunified.ui.utils.MPPointF;
+import com.mpdc4gsr.libunified.ui.utils.Utils;
 
 public abstract class PieRadarChartBase<T extends ChartData<? extends IDataSet<? extends Entry>>>
         extends Chart<T> {
