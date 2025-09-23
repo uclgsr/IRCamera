@@ -19,6 +19,7 @@ import com.blankj.utilcode.util.ScreenUtils
 import com.mpdc4gsr.module.thermalunified.stubs.GuideInterface
 import com.mpdc4gsr.module.thermalunified.stubs.IrSurfaceView
 import com.mpdc4gsr.libunified.app.tools.ToastTools
+import com.mpdc4gsr.libunified.app.matrix.GuideInterface as LibGuideInterface
 import com.mpdc4gsr.libunified.app.utils.ByteUtils.getIndex
 import com.mpdc4gsr.module.thermalunified.stubs.ThermalInputDialog
 import com.mpdc4gsr.module.thermalunified.stubs.FenceLineView
@@ -217,7 +218,7 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
         val ret =
             mGuideInterface!!.init(
                 requireContext(),
-                object : GuideInterface.IrDataCallback {
+                object : LibGuideInterface.IrDataCallback {
                     override fun processIrData(
                         yuv: ByteArray,
                         temp: FloatArray,
