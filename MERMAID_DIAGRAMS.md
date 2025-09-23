@@ -1,5 +1,85 @@
 # IRCamera Architecture Diagrams
 
+## BleDeviceManager Compilation Fixes (2024-12-22) - Commit 82b6f42
+
+### User Component BLE Architecture Resolution
+
+```mermaid
+flowchart TB
+    subgraph "Compilation Error Resolution Flow"
+        A[BleDeviceManager Errors] --> B{Error Analysis}
+        B -->|UnifiedBleManager missing| C[Import ble-core module]
+        B -->|SettingNightView missing| D[Create custom view class]
+        B -->|EasyBLE method errors| E[Fix builder pattern]
+        B -->|Type casting issues| F[Add proper casting]
+        
+        C --> C1[Add ble-core to settings.gradle.kts]
+        C1 --> C2[Create ble-core/build.gradle.kts]
+        C2 --> C3[Enhanced UnifiedBleManager stub]
+        C3 --> C4[✅ Import resolved]
+        
+        D --> D1[Create SettingNightView.kt]
+        D1 --> D2[Implement XML attributes]
+        D2 --> D3[Add click handling methods]
+        D3 --> D4[✅ Custom view functional]
+        
+        E --> E1[Remove setUseNordicBleBackend()]
+        E1 --> E2[Simplify builder chain]
+        E2 --> E3[✅ Builder pattern fixed]
+        
+        F --> F1[Cast connectWithEnhancements result]
+        F1 --> F2[Fix parameter types]
+        F2 --> F3[✅ Type safety achieved]
+        
+        C4 --> G[✅ Build Success]
+        D4 --> G
+        E3 --> G
+        F3 --> G
+    end
+    
+    subgraph "Fixed Components"
+        H[BleDeviceManager.kt<br/>- UnifiedBleManager import<br/>- EasyBLE builder fix<br/>- Connection casting]
+        I[SettingNightView.kt<br/>- Custom view implementation<br/>- XML attribute support<br/>- Click listener methods]
+        J[user/build.gradle.kts<br/>- ble-core dependency<br/>- BleModule dependency]
+        K[settings.gradle.kts<br/>- ble-core module inclusion]
+    end
+    
+    G --> H
+    G --> I
+    G --> J
+    G --> K
+```
+
+### BLE Module Architecture (Updated)
+
+```mermaid
+graph TB
+    subgraph "User Component BLE Stack"
+        BleDeviceManager[BleDeviceManager.kt<br/>✅ Compilation Fixed<br/>- UnifiedBleManager integration<br/>- EasyBLE device discovery<br/>- GSR sensor detection]
+        MoreFragment[MoreFragment.kt<br/>✅ SettingNightView Fixed<br/>- Settings UI integration<br/>- Click handling restored]
+    end
+    
+    subgraph "BLE Core Module (Enhanced)"
+        UnifiedBleManager[UnifiedBleManager.kt<br/>✅ Enhanced Implementation<br/>- initialize() methods<br/>- connectWithEnhancements()<br/>- SystemBleStatus enum]
+        UnifiedDevice[UnifiedDevice.kt<br/>- Device abstraction<br/>- Connection status]
+    end
+    
+    subgraph "TopDon BLE Module"
+        EasyBLE[EasyBLE<br/>- Device scanning<br/>- Connection management<br/>- Event callbacks]
+        Connection[Connection<br/>- BLE connection interface<br/>- Data transfer]
+    end
+    
+    subgraph "UI Components (Fixed)"
+        SettingNightView[SettingNightView.kt<br/>✅ NEW Implementation<br/>- XML attribute support<br/>- Click handling<br/>- Right arrow visibility]
+    end
+    
+    BleDeviceManager --> UnifiedBleManager
+    BleDeviceManager --> EasyBLE
+    MoreFragment --> SettingNightView
+    UnifiedBleManager --> Connection
+    EasyBLE --> Connection
+```
+
 ## Build System and Compilation Flow (2024-12-22)
 
 ### Deprecation Warning Resolution - Commit 96ece6b
