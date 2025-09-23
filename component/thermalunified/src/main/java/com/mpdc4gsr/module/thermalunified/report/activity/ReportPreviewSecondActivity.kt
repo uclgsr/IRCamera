@@ -39,7 +39,7 @@ import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import java.io.File
 import com.mpdc4gsr.libunified.R as LibCoreR
-import com.mpdc4gsr.libunified.ui.R as UiR
+import com.mpdc4gsr.libunified.R as UiR
 
 
 class ReportPreviewSecondActivity : BaseViewModelActivity<UpReportViewModel>(),
@@ -146,7 +146,7 @@ class ReportPreviewSecondActivity : BaseViewModelActivity<UpReportViewModel>(),
                     .navigation(this)
                 finish()
             } else {
-                ToastUtils.showShort(StringUtils.getResString(this, it.code.toString()))
+                ToastUtils.showShort("Error: ${it.code}")
             }
         }
         viewModel.exceptionLD.observe(this) {

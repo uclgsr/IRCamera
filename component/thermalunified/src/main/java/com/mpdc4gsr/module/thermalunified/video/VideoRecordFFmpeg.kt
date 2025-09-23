@@ -555,7 +555,7 @@ class VideoRecordFFmpeg(
                 cameraView.getBitmap(cameraViewBitmap)
             }
 
-            is LiteSurfaceView -> cameraViewBitmap = cameraView.scaleBitmap()
+            is LiteSurfaceView -> cameraViewBitmap = cameraView.scaleBitmap() ?: Bitmap.createBitmap(cameraView.width, cameraView.height, Bitmap.Config.ARGB_8888)
             is HikSurfaceView -> cameraViewBitmap = cameraView.getScaleBitmap()
             else -> cameraViewBitmap =
                 Bitmap.createBitmap(cameraView.width, cameraView.height, Bitmap.Config.ARGB_8888)
@@ -646,14 +646,17 @@ class VideoRecordFFmpeg(
 
         cameraPreview?.let {
             if (it.isVisible) {
-                val newBitmap: Bitmap? =
-                    BitmapUtils.mergeBitmapByView(
-                        cameraViewBitmap,
-                        it.getBitmap(),
-                        it,
-                    )
-                if (newBitmap != null) {
-                    cameraViewBitmap = newBitmap
+                val bitmapFromView = it.getBitmap()
+                bitmapFromView?.let { bitmap ->
+                    val newBitmap: Bitmap? =
+                        BitmapUtils.mergeBitmapByView(
+                            cameraViewBitmap,
+                            bitmap,
+                            it,
+                        )
+                    if (newBitmap != null) {
+                        cameraViewBitmap = newBitmap
+                    }
                 }
             }
         }

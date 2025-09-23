@@ -29,7 +29,7 @@ import com.mpdc4gsr.libunified.app.tools.ToastTools
 import com.mpdc4gsr.libunified.app.utils.ByteUtils.bytesToInt
 import com.mpdc4gsr.libunified.app.utils.Constants.IS_REPORT_FIRST
 import com.mpdc4gsr.libunified.app.view.TitleView
-import com.mpdc4gsr.libunified.ui.dialog.ProgressDialog
+import com.mpdc4gsr.libunified.app.dialog.TipProgressDialog
 import com.mpdc4gsr.module.thermalunified.R
 import com.mpdc4gsr.module.thermalunified.event.ImageGalleryEvent
 import com.mpdc4gsr.module.thermalunified.fragment.GalleryFragment
@@ -91,8 +91,9 @@ class IRGalleryDetail01Activity : BaseActivity(), View.OnClickListener {
                             frameTool.getRotate90Temp(frameTool.temperatureBytes),
                         ) { current, total ->
                             lifecycleScope.launch(Dispatchers.Main) {
-                                progressDialog?.max = total
-                                progressDialog?.progress = current
+                                // Progress updates not supported by TipProgressDialog
+                                // progressDialog?.max = total
+                                // progressDialog?.progress = current
                             }
                         }
                 }
@@ -199,12 +200,15 @@ class IRGalleryDetail01Activity : BaseActivity(), View.OnClickListener {
             .show()
     }
 
-    private var progressDialog: ProgressDialog? = null
+    private var progressDialog: TipProgressDialog? = null
     private var excelName: String = ""
 
     private fun actionExcel() {
         if (progressDialog == null) {
-            progressDialog = ProgressDialog(this)
+            progressDialog = TipProgressDialog.Builder(this)
+                .setMessage("Processing...")
+                .setCanceleable(false)
+                .create()
         }
         progressDialog?.show()
 

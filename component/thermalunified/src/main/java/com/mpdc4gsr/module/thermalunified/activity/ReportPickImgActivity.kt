@@ -33,6 +33,7 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.io.File
 import com.mpdc4gsr.libunified.R as LibR
+import com.mpdc4gsr.libunified.R as UiR
 
 
 class ReportPickImgActivity : BaseActivity(), View.OnClickListener {
