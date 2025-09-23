@@ -3,6 +3,27 @@
 A Hub-and-Spoke architecture platform for multi-modal physiological sensing with thermal imaging, GSR, and RGB data
 collection.
 
+## Recent Update: Deprecation Warnings Resolved - Commit 96ece6b
+
+**BUILD STATUS**: All Kotlin deprecation warnings eliminated from libunified module
+
+### ✅ Deprecation Fixes Completed
+
+- **Android API 33+ Compatibility**: Fixed deprecated getParcelableExtra with version-specific API calls
+- **BitmapFactory Modernization**: Removed deprecated inDither field usage
+- **Coroutines API Compliance**: Properly annotated GlobalScope usage with @OptIn(DelicateCoroutinesApi::class)
+- **Legacy WiFi Support**: Added file-level suppression for WifiConfiguration deprecation warnings
+- **Clean Compilation**: All compiler warnings eliminated while maintaining backward compatibility
+
+### 🏗️ Build Validation - Commit 96ece6b
+
+- ✅ **:libunified:compileDebugKotlin** - SUCCESS (zero warnings)
+- ✅ **:libunified:build** - SUCCESS
+- ✅ **Backward Compatibility** - Maintained for Android API 26+
+- ✅ **Legacy Functionality** - Preserved with proper warning suppression
+
+## Critical Update: Android Resource Linking Issues RESOLVED - Commit 1f1bf64
+
 ## Critical Update: BleDeviceManager Compilation Issues RESOLVED - Commit 82b6f42
 
 **BUILD STATUS**: All Kotlin compilation errors in user component have been **COMPLETELY RESOLVED**
@@ -23,6 +44,7 @@ collection.
 - ✅ **BLE Architecture** - UnifiedBleManager + EasyBLE integration working
 
 ## Previous Update: Android Resource Linking Issues RESOLVED - Commit 1f1bf64
+
 
 **BUILD STATUS**: All Android resource linking errors have been **COMPLETELY RESOLVED**
 
