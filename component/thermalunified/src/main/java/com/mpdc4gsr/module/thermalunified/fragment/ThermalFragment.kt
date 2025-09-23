@@ -20,10 +20,10 @@ import com.mpdc4gsr.libunified.app.matrix.GuideInterface
 import com.mpdc4gsr.libunified.app.matrix.IrSurfaceView
 import com.mpdc4gsr.libunified.app.tools.ToastTools
 import com.mpdc4gsr.libunified.app.utils.ByteUtils.getIndex
-import com.mpdc4gsr.libunified.ui.dialog.ThermalInputDialog
-import com.mpdc4gsr.libunified.ui.fence.FenceLineView
-import com.mpdc4gsr.libunified.ui.fence.FencePointView
-import com.mpdc4gsr.libunified.ui.fence.FenceView
+import com.mpdc4gsr.module.thermalunified.stubs.ThermalInputDialog
+import com.mpdc4gsr.module.thermalunified.stubs.FenceLineView
+import com.mpdc4gsr.module.thermalunified.stubs.FencePointView
+import com.mpdc4gsr.module.thermalunified.stubs.FenceView
 import com.mpdc4gsr.module.thermalunified.R
 import com.mpdc4gsr.module.thermalunified.base.BaseThermalFragment
 import com.mpdc4gsr.module.thermalunified.event.ThermalActionEvent
