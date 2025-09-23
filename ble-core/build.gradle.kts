@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "com.mpdc4gsr.module.user"
+    namespace = "com.mpdc4gsr.ble.core"
     compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
@@ -20,13 +20,6 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",
             )
-        }
-    }
-
-    androidComponents {
-        beforeVariants { variant ->
-
-            variant.enable = variant.buildType == "release" || variant.buildType == "debug"
         }
     }
 
@@ -51,61 +44,25 @@ android {
         }
     }
 
-    buildFeatures {
-        viewBinding = true
-        dataBinding = true
-    }
-
     lint {
-
         abortOnError = false
         checkReleaseBuilds = false
         ignoreWarnings = true
-
-        disable.addAll(
-            listOf(
-                "MissingClass",
-                "Instantiatable",
-                "UnusedResources",
-                "IconMissingDensityFolder",
-                "TypographyFractions",
-                "TypographyQuotes",
-                "ObsoleteLintCustomCheck",
-                "GradleDependency",
-                "NewerVersionAvailable",
-                "UnusedIds",
-                "ContentDescription",
-                "SmallSp",
-                "SpUsage",
-                "HardcodedText",
-                "RelativeOverlap",
-            ),
-        )
     }
 }
 
 dependencies {
     coreLibraryDesugaring(libs.desugar.jdk.libs)
 
-    implementation(project(":libunified"))
-    implementation(project(":ble-core"))
+    // BleModule dependency for Connection and other BLE classes
     implementation(project(":BleModule"))
 
     // Core Android dependencies
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
-    implementation(libs.material)
 
-    // Utilities
-    implementation(libs.utilcode)
-    implementation(libs.glide)
-
-    // Testing dependencies - use version catalog
+    // Testing dependencies
     testImplementation(libs.junit)
-    testImplementation(libs.robolectric)
-    testImplementation(libs.test.core)
-    testImplementation(libs.test.ext.junit)
-    testImplementation(libs.kotlinx.coroutines.test)
     androidTestImplementation(libs.test.ext.junit)
     androidTestImplementation(libs.test.espresso.core)
 }
