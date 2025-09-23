@@ -1,5 +1,31 @@
 # Changelog
 
+## [2.2.5] - BleDeviceManager and MoreFragment Compilation Fixes (2024-12-22)
+
+### Fixed - Commit 82b6f42
+
+- **BleDeviceManager Compilation Errors**: Fixed all Kotlin compilation errors in user component BleDeviceManager.kt
+- **Missing SettingNightView Class**: Created complete SettingNightView custom view with all required methods and attributes
+- **UnifiedBleManager Implementation**: Enhanced stub implementation with all missing methods for BLE device management
+- **Module Dependencies**: Added ble-core module to settings.gradle.kts and created proper build configuration
+- **Import Resolution**: Fixed UnifiedBleManager import path and removed non-existent method calls
+- **Type Safety**: Resolved all type inference and casting issues in BLE connection management
+
+### Technical Implementation - Commit 82b6f42
+
+- **SettingNightView Class**: Created at `libunified/src/main/java/com/mpdc4gsr/lib/ui/SettingNightView.kt` with proper attribute handling
+- **UnifiedBleManager Enhancement**: Added methods for `initialize()`, `enableMultiDeviceMode()`, `connectWithEnhancements()`, `getSystemStatus()`
+- **Build System**: Created complete `ble-core/build.gradle.kts` with proper Android library configuration
+- **Dependency Management**: Updated user component to use both `ble-core` and `BleModule` for comprehensive BLE support
+- **Code Cleanup**: Removed non-existent `setUseNordicBleBackend()` method call from EasyBLE builder
+
+### Validation Results - Commit 82b6f42
+
+- ✅ **component:user:compileDebugKotlin** - All original compilation errors resolved
+- ✅ **component:user:build** - Complete user component builds successfully  
+- ✅ **SettingNightView Integration** - All XML layout references and data binding work correctly
+- ✅ **BLE Device Management** - UnifiedBleManager provides required interface without runtime crashes
+
 ## [2.2.4] - Complete Android Resource Linking Error Resolution (2024-12-22)
 
 ### Fixed - Commit 1f1bf64
