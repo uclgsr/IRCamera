@@ -69,7 +69,6 @@
     <string name="func_temper_ruler">Temperature Ruler</string>
     
     <!-- Missing strings for thermal config dialogs -->
-    <string name="thermal_config_environment">Environment Temperature</string>
     <string name="thermal_config_distance">Distance</string>
     <string name="thermal_config_radiation">Radiation</string>
     <string name="tip_input_format">Input format invalid</string>
