@@ -1,24 +1,24 @@
-package com.mpdc4gsr.libunified.ui.charting.charts;
+package com.mpdc4gsr.libunified.ui.charts;
 
 import android.content.Context;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.Log;
 
-import com.mpdc4gsr.libunified.ui.charting.components.XAxis.XAxisPosition;
-import com.mpdc4gsr.libunified.ui.charting.components.YAxis.AxisDependency;
-import com.mpdc4gsr.libunified.ui.charting.data.BarEntry;
-import com.mpdc4gsr.libunified.ui.charting.data.Entry;
-import com.mpdc4gsr.libunified.ui.charting.highlight.Highlight;
-import com.mpdc4gsr.libunified.ui.charting.highlight.HorizontalBarHighlighter;
-import com.mpdc4gsr.libunified.ui.charting.interfaces.datasets.IBarDataSet;
-import com.mpdc4gsr.libunified.ui.charting.renderer.HorizontalBarChartRenderer;
-import com.mpdc4gsr.libunified.ui.charting.renderer.XAxisRendererHorizontalBarChart;
-import com.mpdc4gsr.libunified.ui.charting.renderer.YAxisRendererHorizontalBarChart;
-import com.mpdc4gsr.libunified.ui.charting.utils.HorizontalViewPortHandler;
-import com.mpdc4gsr.libunified.ui.charting.utils.MPPointF;
-import com.mpdc4gsr.libunified.ui.charting.utils.TransformerHorizontalBarChart;
-import com.mpdc4gsr.libunified.ui.charting.utils.Utils;
+import com.mpdc4gsr.libunified.ui.components.XAxis.XAxisPosition;
+import com.mpdc4gsr.libunified.ui.components.YAxis.AxisDependency;
+import com.mpdc4gsr.libunified.ui.data.BarEntry;
+import com.mpdc4gsr.libunified.ui.data.Entry;
+import com.mpdc4gsr.libunified.ui.highlight.Highlight;
+import com.mpdc4gsr.libunified.ui.highlight.HorizontalBarHighlighter;
+import com.mpdc4gsr.libunified.ui.interfaces.datasets.IBarDataSet;
+import com.mpdc4gsr.libunified.ui.renderer.HorizontalBarChartRenderer;
+import com.mpdc4gsr.libunified.ui.renderer.XAxisRendererHorizontalBarChart;
+import com.mpdc4gsr.libunified.ui.renderer.YAxisRendererHorizontalBarChart;
+import com.mpdc4gsr.libunified.ui.utils.HorizontalViewPortHandler;
+import com.mpdc4gsr.libunified.ui.utils.MPPointF;
+import com.mpdc4gsr.libunified.ui.utils.TransformerHorizontalBarChart;
+import com.mpdc4gsr.libunified.ui.utils.Utils;
 
 public class HorizontalBarChart extends BarChart {
 

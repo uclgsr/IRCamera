@@ -1,9 +1,8 @@
-package com.mpdc4gsr.lib.ui
+package com.mpdc4gsr.libunified.ui
 
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
-import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import com.mpdc4gsr.libunified.R
@@ -61,12 +60,12 @@ class SettingNightView @JvmOverloads constructor(
 
     fun setRightTextId(textResId: Int) {
         if (textResId == 0) {
-            binding.tvEnd.visibility = View.GONE
-            binding.itemSettingEndImage.visibility = if (isRightArrowVisible) View.VISIBLE else View.GONE
+            binding.tvEnd.visibility = GONE
+            binding.itemSettingEndImage.visibility = if (isRightArrowVisible) VISIBLE else GONE
         } else {
             binding.tvEnd.setText(textResId)
-            binding.tvEnd.visibility = View.VISIBLE
-            binding.itemSettingEndImage.visibility = View.GONE
+            binding.tvEnd.visibility = VISIBLE
+            binding.itemSettingEndImage.visibility = GONE
         }
     }
 

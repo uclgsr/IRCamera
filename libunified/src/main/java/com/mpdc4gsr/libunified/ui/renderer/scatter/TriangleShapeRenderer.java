@@ -1,13 +1,13 @@
-package com.mpdc4gsr.libunified.ui.charting.renderer.scatter;
+package com.mpdc4gsr.libunified.ui.renderer.scatter;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
 
-import com.mpdc4gsr.libunified.ui.charting.interfaces.datasets.IScatterDataSet;
-import com.mpdc4gsr.libunified.ui.charting.utils.ColorTemplate;
-import com.mpdc4gsr.libunified.ui.charting.utils.Utils;
-import com.mpdc4gsr.libunified.ui.charting.utils.ViewPortHandler;
+import com.mpdc4gsr.libunified.ui.interfaces.datasets.IScatterDataSet;
+import com.mpdc4gsr.libunified.ui.utils.ColorTemplate;
+import com.mpdc4gsr.libunified.ui.utils.Utils;
+import com.mpdc4gsr.libunified.ui.utils.ViewPortHandler;
 
 public class TriangleShapeRenderer implements IShapeRenderer {
 

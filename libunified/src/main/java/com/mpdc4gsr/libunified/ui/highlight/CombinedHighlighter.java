@@ -1,12 +1,12 @@
-package com.mpdc4gsr.libunified.ui.charting.highlight;
+package com.mpdc4gsr.libunified.ui.highlight;
 
-import com.mpdc4gsr.libunified.ui.charting.data.BarData;
-import com.mpdc4gsr.libunified.ui.charting.data.BarLineScatterCandleBubbleData;
-import com.mpdc4gsr.libunified.ui.charting.data.ChartData;
-import com.mpdc4gsr.libunified.ui.charting.data.DataSet;
-import com.mpdc4gsr.libunified.ui.charting.interfaces.dataprovider.BarDataProvider;
-import com.mpdc4gsr.libunified.ui.charting.interfaces.dataprovider.CombinedDataProvider;
-import com.mpdc4gsr.libunified.ui.charting.interfaces.datasets.IDataSet;
+import com.mpdc4gsr.libunified.ui.data.BarData;
+import com.mpdc4gsr.libunified.ui.data.BarLineScatterCandleBubbleData;
+import com.mpdc4gsr.libunified.ui.data.ChartData;
+import com.mpdc4gsr.libunified.ui.data.DataSet;
+import com.mpdc4gsr.libunified.ui.interfaces.dataprovider.BarDataProvider;
+import com.mpdc4gsr.libunified.ui.interfaces.dataprovider.CombinedDataProvider;
+import com.mpdc4gsr.libunified.ui.interfaces.datasets.IDataSet;
 
 import java.util.List;
 

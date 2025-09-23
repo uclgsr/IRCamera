@@ -1,24 +1,24 @@
-package com.mpdc4gsr.libunified.ui.charting.renderer;
+package com.mpdc4gsr.libunified.ui.renderer;
 
 import android.graphics.Canvas;
 import android.graphics.Paint.Align;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 
-import com.mpdc4gsr.libunified.ui.charting.animation.ChartAnimator;
-import com.mpdc4gsr.libunified.ui.charting.buffer.BarBuffer;
-import com.mpdc4gsr.libunified.ui.charting.buffer.HorizontalBarBuffer;
-import com.mpdc4gsr.libunified.ui.charting.data.BarData;
-import com.mpdc4gsr.libunified.ui.charting.data.BarEntry;
-import com.mpdc4gsr.libunified.ui.charting.formatter.ValueFormatter;
-import com.mpdc4gsr.libunified.ui.charting.highlight.Highlight;
-import com.mpdc4gsr.libunified.ui.charting.interfaces.dataprovider.BarDataProvider;
-import com.mpdc4gsr.libunified.ui.charting.interfaces.dataprovider.ChartInterface;
-import com.mpdc4gsr.libunified.ui.charting.interfaces.datasets.IBarDataSet;
-import com.mpdc4gsr.libunified.ui.charting.utils.MPPointF;
-import com.mpdc4gsr.libunified.ui.charting.utils.Transformer;
-import com.mpdc4gsr.libunified.ui.charting.utils.Utils;
-import com.mpdc4gsr.libunified.ui.charting.utils.ViewPortHandler;
+import com.mpdc4gsr.libunified.ui.animation.ChartAnimator;
+import com.mpdc4gsr.libunified.ui.buffer.BarBuffer;
+import com.mpdc4gsr.libunified.ui.buffer.HorizontalBarBuffer;
+import com.mpdc4gsr.libunified.ui.data.BarData;
+import com.mpdc4gsr.libunified.ui.data.BarEntry;
+import com.mpdc4gsr.libunified.ui.formatter.ValueFormatter;
+import com.mpdc4gsr.libunified.ui.highlight.Highlight;
+import com.mpdc4gsr.libunified.ui.interfaces.dataprovider.BarDataProvider;
+import com.mpdc4gsr.libunified.ui.interfaces.dataprovider.ChartInterface;
+import com.mpdc4gsr.libunified.ui.interfaces.datasets.IBarDataSet;
+import com.mpdc4gsr.libunified.ui.utils.MPPointF;
+import com.mpdc4gsr.libunified.ui.utils.Transformer;
+import com.mpdc4gsr.libunified.ui.utils.Utils;
+import com.mpdc4gsr.libunified.ui.utils.ViewPortHandler;
 
 import java.util.List;
 

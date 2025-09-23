@@ -1,9 +1,8 @@
-package com.mpdc4gsr.lib.ui.widget
+package com.mpdc4gsr.libunified.ui.widget
 
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
-import android.graphics.Paint
 import android.graphics.Path
 import android.graphics.RectF
 import android.text.TextPaint

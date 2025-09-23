@@ -1,8 +1,8 @@
-package com.mpdc4gsr.libunified.ui.charting.highlight;
+package com.mpdc4gsr.libunified.ui.highlight;
 
-import com.mpdc4gsr.libunified.ui.charting.charts.PieChart;
-import com.mpdc4gsr.libunified.ui.charting.data.Entry;
-import com.mpdc4gsr.libunified.ui.charting.interfaces.datasets.IPieDataSet;
+import com.mpdc4gsr.libunified.ui.charts.PieChart;
+import com.mpdc4gsr.libunified.ui.data.Entry;
+import com.mpdc4gsr.libunified.ui.interfaces.datasets.IPieDataSet;
 
 public class PieHighlighter extends PieRadarHighlighter<PieChart> {
 

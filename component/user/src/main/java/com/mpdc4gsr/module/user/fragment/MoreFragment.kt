@@ -30,7 +30,7 @@ import com.mpdc4gsr.libunified.app.navigation.NavigationManager
 import com.mpdc4gsr.libunified.app.socket.WebSocketProxy
 import com.mpdc4gsr.libunified.app.tools.DeviceTools
 import com.mpdc4gsr.libunified.app.viewmodel.FirmwareViewModel
-import com.mpdc4gsr.lib.ui.SettingNightView
+import com.mpdc4gsr.libunified.ui.SettingNightView
 import com.mpdc4gsr.module.user.R
 import com.mpdc4gsr.module.user.dialog.DownloadProDialog
 import com.mpdc4gsr.module.user.dialog.FirmwareInstallDialog

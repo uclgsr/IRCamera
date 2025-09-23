@@ -353,7 +353,7 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
             private val tvDeviceState: TextView = rootView.findViewById(R.id.tv_device_state)
             private val tvBattery: TextView = rootView.findViewById(R.id.tv_battery)
             private val ivImage: ImageView = rootView.findViewById(R.id.iv_image)
-            private val batteryView: com.mpdc4gsr.lib.ui.widget.BatteryView =
+            private val batteryView: com.mpdc4gsr.libunified.ui.widget.BatteryView =
                 rootView.findViewById(R.id.battery_view)
             private val viewDeviceState: View = rootView.findViewById(R.id.view_device_state)
 

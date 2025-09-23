@@ -1,11 +1,11 @@
-package com.mpdc4gsr.libunified.ui.charting.charts;
+package com.mpdc4gsr.libunified.ui.charts;
 
 import android.content.Context;
 import android.util.AttributeSet;
 
-import com.mpdc4gsr.libunified.ui.charting.data.ScatterData;
-import com.mpdc4gsr.libunified.ui.charting.interfaces.dataprovider.ScatterDataProvider;
-import com.mpdc4gsr.libunified.ui.charting.renderer.ScatterChartRenderer;
+import com.mpdc4gsr.libunified.ui.data.ScatterData;
+import com.mpdc4gsr.libunified.ui.interfaces.dataprovider.ScatterDataProvider;
+import com.mpdc4gsr.libunified.ui.renderer.ScatterChartRenderer;
 
 public class ScatterChart extends BarLineChartBase<ScatterData> implements ScatterDataProvider {
 

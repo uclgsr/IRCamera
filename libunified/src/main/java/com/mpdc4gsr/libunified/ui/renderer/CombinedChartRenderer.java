@@ -1,16 +1,16 @@
-package com.mpdc4gsr.libunified.ui.charting.renderer;
+package com.mpdc4gsr.libunified.ui.renderer;
 
 import android.graphics.Canvas;
 import android.util.Log;
 
-import com.mpdc4gsr.libunified.ui.charting.animation.ChartAnimator;
-import com.mpdc4gsr.libunified.ui.charting.charts.Chart;
-import com.mpdc4gsr.libunified.ui.charting.charts.CombinedChart;
-import com.mpdc4gsr.libunified.ui.charting.charts.CombinedChart.DrawOrder;
-import com.mpdc4gsr.libunified.ui.charting.data.ChartData;
-import com.mpdc4gsr.libunified.ui.charting.data.CombinedData;
-import com.mpdc4gsr.libunified.ui.charting.highlight.Highlight;
-import com.mpdc4gsr.libunified.ui.charting.utils.ViewPortHandler;
+import com.mpdc4gsr.libunified.ui.animation.ChartAnimator;
+import com.mpdc4gsr.libunified.ui.charts.Chart;
+import com.mpdc4gsr.libunified.ui.charts.CombinedChart;
+import com.mpdc4gsr.libunified.ui.charts.CombinedChart.DrawOrder;
+import com.mpdc4gsr.libunified.ui.data.ChartData;
+import com.mpdc4gsr.libunified.ui.data.CombinedData;
+import com.mpdc4gsr.libunified.ui.highlight.Highlight;
+import com.mpdc4gsr.libunified.ui.utils.ViewPortHandler;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;

@@ -1,22 +1,22 @@
-package com.mpdc4gsr.libunified.ui.charting.renderer;
+package com.mpdc4gsr.libunified.ui.renderer;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 
-import com.mpdc4gsr.libunified.ui.charting.animation.ChartAnimator;
-import com.mpdc4gsr.libunified.ui.charting.data.CandleData;
-import com.mpdc4gsr.libunified.ui.charting.data.CandleEntry;
-import com.mpdc4gsr.libunified.ui.charting.formatter.ValueFormatter;
-import com.mpdc4gsr.libunified.ui.charting.highlight.Highlight;
-import com.mpdc4gsr.libunified.ui.charting.interfaces.dataprovider.CandleDataProvider;
-import com.mpdc4gsr.libunified.ui.charting.interfaces.datasets.ICandleDataSet;
-import com.mpdc4gsr.libunified.ui.charting.utils.ColorTemplate;
-import com.mpdc4gsr.libunified.ui.charting.utils.MPPointD;
-import com.mpdc4gsr.libunified.ui.charting.utils.MPPointF;
-import com.mpdc4gsr.libunified.ui.charting.utils.Transformer;
-import com.mpdc4gsr.libunified.ui.charting.utils.Utils;
-import com.mpdc4gsr.libunified.ui.charting.utils.ViewPortHandler;
+import com.mpdc4gsr.libunified.ui.animation.ChartAnimator;
+import com.mpdc4gsr.libunified.ui.data.CandleData;
+import com.mpdc4gsr.libunified.ui.data.CandleEntry;
+import com.mpdc4gsr.libunified.ui.formatter.ValueFormatter;
+import com.mpdc4gsr.libunified.ui.highlight.Highlight;
+import com.mpdc4gsr.libunified.ui.interfaces.dataprovider.CandleDataProvider;
+import com.mpdc4gsr.libunified.ui.interfaces.datasets.ICandleDataSet;
+import com.mpdc4gsr.libunified.ui.utils.ColorTemplate;
+import com.mpdc4gsr.libunified.ui.utils.MPPointD;
+import com.mpdc4gsr.libunified.ui.utils.MPPointF;
+import com.mpdc4gsr.libunified.ui.utils.Transformer;
+import com.mpdc4gsr.libunified.ui.utils.Utils;
+import com.mpdc4gsr.libunified.ui.utils.ViewPortHandler;
 
 import java.util.List;
 

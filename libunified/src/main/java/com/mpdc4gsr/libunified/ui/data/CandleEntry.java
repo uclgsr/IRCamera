@@ -1,4 +1,4 @@
-package com.mpdc4gsr.libunified.ui.charting.data;
+package com.mpdc4gsr.libunified.ui.data;
 
 import android.annotation.SuppressLint;
 import android.graphics.drawable.Drawable;

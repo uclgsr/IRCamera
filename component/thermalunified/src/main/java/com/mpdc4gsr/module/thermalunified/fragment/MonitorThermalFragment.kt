@@ -21,9 +21,9 @@ import com.mpdc4gsr.libunified.app.matrix.GuideInterface
 import com.mpdc4gsr.libunified.app.matrix.IrSurfaceView
 import com.mpdc4gsr.libunified.app.tools.TimeTool
 import com.mpdc4gsr.libunified.app.utils.ByteUtils.getIndex
-import com.mpdc4gsr.lib.ui.fence.FenceLineView
-import com.mpdc4gsr.lib.ui.fence.FencePointView
-import com.mpdc4gsr.lib.ui.fence.FenceView
+import com.mpdc4gsr.libunified.ui.fence.FenceLineView
+import com.mpdc4gsr.libunified.ui.fence.FencePointView
+import com.mpdc4gsr.libunified.ui.fence.FenceView
 import com.mpdc4gsr.module.thermalunified.R
 import com.mpdc4gsr.module.thermalunified.activity.MonitorActivity
 import com.mpdc4gsr.module.thermalunified.base.BaseThermalFragment
@@ -49,9 +49,9 @@ class MonitorThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> 
     private val msgLiveData by lazy { MutableLiveData<Int>() }
 
     // Cached fence views to avoid repeated findViewById calls
-    private val fencePointView by lazy { requireView().findViewById<com.mpdc4gsr.lib.ui.fence.FencePointView>(R.id.fence_point_view) }
-    private val fenceLineView by lazy { requireView().findViewById<com.mpdc4gsr.lib.ui.fence.FenceLineView>(R.id.fence_line_view) }
-    private val fenceView by lazy { requireView().findViewById<com.mpdc4gsr.lib.ui.fence.FenceView>(R.id.fence_view) }
+    private val fencePointView by lazy { requireView().findViewById<com.mpdc4gsr.libunified.ui.fence.FencePointView>(R.id.fence_point_view) }
+    private val fenceLineView by lazy { requireView().findViewById<com.mpdc4gsr.libunified.ui.fence.FenceLineView>(R.id.fence_line_view) }
+    private val fenceView by lazy { requireView().findViewById<com.mpdc4gsr.libunified.ui.fence.FenceView>(R.id.fence_view) }
 
     private fun setViewPosition(
         imageView: ImageView,

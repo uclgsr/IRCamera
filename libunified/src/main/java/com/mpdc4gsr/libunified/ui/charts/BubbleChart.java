@@ -1,11 +1,11 @@
-package com.mpdc4gsr.libunified.ui.charting.charts;
+package com.mpdc4gsr.libunified.ui.charts;
 
 import android.content.Context;
 import android.util.AttributeSet;
 
-import com.mpdc4gsr.libunified.ui.charting.data.BubbleData;
-import com.mpdc4gsr.libunified.ui.charting.interfaces.dataprovider.BubbleDataProvider;
-import com.mpdc4gsr.libunified.ui.charting.renderer.BubbleChartRenderer;
+import com.mpdc4gsr.libunified.ui.data.BubbleData;
+import com.mpdc4gsr.libunified.ui.interfaces.dataprovider.BubbleDataProvider;
+import com.mpdc4gsr.libunified.ui.renderer.BubbleChartRenderer;
 
 public class BubbleChart extends BarLineChartBase<BubbleData> implements BubbleDataProvider {
 

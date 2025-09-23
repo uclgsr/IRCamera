@@ -1,12 +1,12 @@
-package com.mpdc4gsr.libunified.ui.charting.components;
+package com.mpdc4gsr.libunified.ui.components;
 
 import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 
-import com.mpdc4gsr.libunified.ui.charting.utils.ColorTemplate;
-import com.mpdc4gsr.libunified.ui.charting.utils.FSize;
-import com.mpdc4gsr.libunified.ui.charting.utils.Utils;
-import com.mpdc4gsr.libunified.ui.charting.utils.ViewPortHandler;
+import com.mpdc4gsr.libunified.ui.utils.ColorTemplate;
+import com.mpdc4gsr.libunified.ui.utils.FSize;
+import com.mpdc4gsr.libunified.ui.utils.Utils;
+import com.mpdc4gsr.libunified.ui.utils.ViewPortHandler;
 
 import java.util.ArrayList;
 import java.util.List;

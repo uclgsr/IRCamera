@@ -1,4 +1,4 @@
-package com.mpdc4gsr.libunified.ui.charting.jobs;
+package com.mpdc4gsr.libunified.ui.jobs;
 
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
@@ -6,8 +6,8 @@ import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.view.View;
 
-import com.mpdc4gsr.libunified.ui.charting.utils.Transformer;
-import com.mpdc4gsr.libunified.ui.charting.utils.ViewPortHandler;
+import com.mpdc4gsr.libunified.ui.utils.Transformer;
+import com.mpdc4gsr.libunified.ui.utils.ViewPortHandler;
 
 @SuppressLint("NewApi")
 public abstract class AnimatedViewPortJob extends ViewPortJob implements ValueAnimator.AnimatorUpdateListener, Animator.AnimatorListener {

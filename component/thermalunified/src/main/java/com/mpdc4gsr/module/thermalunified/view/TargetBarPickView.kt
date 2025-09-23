@@ -101,20 +101,20 @@ class TargetBarPickView : View {
         defStyleRes,
     ) {
         val typedArray =
-            context.obtainStyledAttributes(attrs, com.mpdc4gsr.lib.ui.R.styleable.BarPickView, 0, 0)
-        max = typedArray.getInt(com.mpdc4gsr.lib.ui.R.styleable.BarPickView_android_max, 100)
-        min = typedArray.getInt(com.mpdc4gsr.lib.ui.R.styleable.BarPickView_barMin, 0)
+            context.obtainStyledAttributes(attrs, com.mpdc4gsr.libunified.ui.R.styleable.BarPickView, 0, 0)
+        max = typedArray.getInt(com.mpdc4gsr.libunified.ui.R.styleable.BarPickView_android_max, 100)
+        min = typedArray.getInt(com.mpdc4gsr.libunified.ui.R.styleable.BarPickView_barMin, 0)
         progress =
-            typedArray.getInt(com.mpdc4gsr.lib.ui.R.styleable.BarPickView_android_progress, min)
+            typedArray.getInt(com.mpdc4gsr.libunified.ui.R.styleable.BarPickView_android_progress, min)
                 .coerceAtMost(max).coerceAtLeast(min)
         barSize = typedArray.getInt(
-            com.mpdc4gsr.lib.ui.R.styleable.BarPickView_barSize,
+            com.mpdc4gsr.libunified.ui.R.styleable.BarPickView_barSize,
             SizeUtils.dp2px(4f)
         )
-        rotate = typedArray.getInt(com.mpdc4gsr.lib.ui.R.styleable.BarPickView_barOrientation, 0)
-        labelText = typedArray.getString(com.mpdc4gsr.lib.ui.R.styleable.BarPickView_barLabel) ?: ""
+        rotate = typedArray.getInt(com.mpdc4gsr.libunified.ui.R.styleable.BarPickView_barOrientation, 0)
+        labelText = typedArray.getString(com.mpdc4gsr.libunified.ui.R.styleable.BarPickView_barLabel) ?: ""
         val textSize = typedArray.getDimensionPixelSize(
-            com.mpdc4gsr.lib.ui.R.styleable.BarPickView_android_textSize,
+            com.mpdc4gsr.libunified.ui.R.styleable.BarPickView_android_textSize,
             SizeUtils.sp2px(13f)
         )
         typedArray.recycle()

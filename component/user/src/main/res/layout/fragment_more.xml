@@ -42,7 +42,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent">
 
-                <com.mpdc4gsr.lib.ui.SettingNightView
+                <com.mpdc4gsr.libunified.ui.SettingNightView
                     android:id="@+id/setting_item_model"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -54,7 +54,7 @@
                     app:setting_more_night="true"
                     app:setting_text_night="@string/setting_model" />
 
-                <com.mpdc4gsr.lib.ui.SettingNightView
+                <com.mpdc4gsr.libunified.ui.SettingNightView
                     android:id="@+id/setting_item_dual"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -66,7 +66,7 @@
                     app:setting_more_night="true"
                     app:setting_text_night="@string/dual_light_title" />
 
-                <com.mpdc4gsr.lib.ui.SettingNightView
+                <com.mpdc4gsr.libunified.ui.SettingNightView
                     android:id="@+id/setting_item_correction"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -78,7 +78,7 @@
                     app:setting_more_night="true"
                     app:setting_text_night="@string/correction_title" />
 
-                <com.mpdc4gsr.lib.ui.SettingNightView
+                <com.mpdc4gsr.libunified.ui.SettingNightView
                     android:id="@+id/setting_item_unit"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -90,7 +90,7 @@
                     app:setting_more_night="true"
                     app:setting_text_night="@string/setting_unit" />
 
-                <com.mpdc4gsr.lib.ui.SettingNightView
+                <com.mpdc4gsr.libunified.ui.SettingNightView
                     android:id="@+id/setting_setting_model"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -112,7 +112,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@id/setting_setting_model" />
 
-                <com.mpdc4gsr.lib.ui.SettingNightView
+                <com.mpdc4gsr.libunified.ui.SettingNightView
                     android:id="@+id/setting_auto_show"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -136,7 +136,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@id/setting_auto_show" />
 
-                <com.mpdc4gsr.lib.ui.SettingNightView
+                <com.mpdc4gsr.libunified.ui.SettingNightView
                     android:id="@+id/setting_device_information"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -159,7 +159,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/setting_device_information" />
 
-                <com.mpdc4gsr.lib.ui.SettingNightView
+                <com.mpdc4gsr.libunified.ui.SettingNightView
                     android:id="@+id/setting_reset"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

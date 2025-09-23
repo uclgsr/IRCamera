@@ -1,13 +1,13 @@
-package com.mpdc4gsr.libunified.ui.charting.renderer;
+package com.mpdc4gsr.libunified.ui.renderer;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.drawable.Drawable;
 
-import com.mpdc4gsr.libunified.ui.charting.animation.ChartAnimator;
-import com.mpdc4gsr.libunified.ui.charting.utils.Utils;
-import com.mpdc4gsr.libunified.ui.charting.utils.ViewPortHandler;
+import com.mpdc4gsr.libunified.ui.animation.ChartAnimator;
+import com.mpdc4gsr.libunified.ui.utils.Utils;
+import com.mpdc4gsr.libunified.ui.utils.ViewPortHandler;
 
 public abstract class LineRadarRenderer extends LineScatterCandleRadarRenderer {
 

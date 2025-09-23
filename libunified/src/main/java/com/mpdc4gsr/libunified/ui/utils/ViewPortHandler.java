@@ -1,4 +1,4 @@
-package com.mpdc4gsr.libunified.ui.charting.utils;
+package com.mpdc4gsr.libunified.ui.utils;
 
 import android.graphics.Matrix;
 import android.graphics.RectF;

@@ -19,7 +19,7 @@ import com.mpdc4gsr.module.thermalunified.popup.GalleryChangePopup
 import com.mpdc4gsr.module.thermalunified.viewmodel.IRGalleryTabViewModel
 import org.greenrobot.eventbus.EventBus
 import com.mpdc4gsr.libunified.R as LibCoreR
-import com.mpdc4gsr.lib.ui.R as UiR
+import com.mpdc4gsr.libunified.ui.R as UiR
 
 
 class IRGalleryTabFragment : BaseFragment() {

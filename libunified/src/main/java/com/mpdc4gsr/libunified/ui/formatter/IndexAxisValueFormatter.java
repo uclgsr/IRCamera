@@ -1,4 +1,4 @@
-package com.mpdc4gsr.libunified.ui.charting.formatter;
+package com.mpdc4gsr.libunified.ui.formatter;
 
 import java.util.Collection;
 

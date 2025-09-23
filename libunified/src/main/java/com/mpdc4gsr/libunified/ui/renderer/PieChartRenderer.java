@@ -1,4 +1,4 @@
-package com.mpdc4gsr.libunified.ui.charting.renderer;
+package com.mpdc4gsr.libunified.ui.renderer;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -14,19 +14,19 @@ import android.text.Layout;
 import android.text.StaticLayout;
 import android.text.TextPaint;
 
-import com.mpdc4gsr.libunified.ui.charting.animation.ChartAnimator;
-import com.mpdc4gsr.libunified.ui.charting.charts.PieChart;
-import com.mpdc4gsr.libunified.ui.charting.data.Entry;
-import com.mpdc4gsr.libunified.ui.charting.data.PieData;
-import com.mpdc4gsr.libunified.ui.charting.data.PieDataSet;
-import com.mpdc4gsr.libunified.ui.charting.data.PieEntry;
-import com.mpdc4gsr.libunified.ui.charting.formatter.ValueFormatter;
-import com.mpdc4gsr.libunified.ui.charting.highlight.Highlight;
-import com.mpdc4gsr.libunified.ui.charting.interfaces.datasets.IPieDataSet;
-import com.mpdc4gsr.libunified.ui.charting.utils.ColorTemplate;
-import com.mpdc4gsr.libunified.ui.charting.utils.MPPointF;
-import com.mpdc4gsr.libunified.ui.charting.utils.Utils;
-import com.mpdc4gsr.libunified.ui.charting.utils.ViewPortHandler;
+import com.mpdc4gsr.libunified.ui.animation.ChartAnimator;
+import com.mpdc4gsr.libunified.ui.charts.PieChart;
+import com.mpdc4gsr.libunified.ui.data.Entry;
+import com.mpdc4gsr.libunified.ui.data.PieData;
+import com.mpdc4gsr.libunified.ui.data.PieDataSet;
+import com.mpdc4gsr.libunified.ui.data.PieEntry;
+import com.mpdc4gsr.libunified.ui.formatter.ValueFormatter;
+import com.mpdc4gsr.libunified.ui.highlight.Highlight;
+import com.mpdc4gsr.libunified.ui.interfaces.datasets.IPieDataSet;
+import com.mpdc4gsr.libunified.ui.utils.ColorTemplate;
+import com.mpdc4gsr.libunified.ui.utils.MPPointF;
+import com.mpdc4gsr.libunified.ui.utils.Utils;
+import com.mpdc4gsr.libunified.ui.utils.ViewPortHandler;
 
 import java.lang.ref.WeakReference;
 import java.util.List;

@@ -37,7 +37,7 @@ import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import java.io.File
 import com.mpdc4gsr.libunified.R as LibR
-import com.mpdc4gsr.lib.ui.R as UiR
+import com.mpdc4gsr.libunified.ui.R as UiR
 
 
 class IRGalleryDetail04Activity : BaseActivity() {

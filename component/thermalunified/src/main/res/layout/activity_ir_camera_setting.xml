@@ -77,7 +77,7 @@
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <com.mpdc4gsr.lib.ui.widget.BarPickView
+                <com.mpdc4gsr.libunified.ui.widget.BarPickView
                     android:id="@+id/bar_pick_view_time"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -111,7 +111,7 @@
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/line_auto" />
 
-                <com.mpdc4gsr.lib.ui.widget.BarPickView
+                <com.mpdc4gsr.libunified.ui.widget.BarPickView
                     android:id="@+id/bar_pick_view_count"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"

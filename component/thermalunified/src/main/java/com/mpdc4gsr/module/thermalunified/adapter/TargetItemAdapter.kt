@@ -9,9 +9,9 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.mpdc4gsr.libunified.app.bean.ObserveBean
-import com.mpdc4gsr.lib.ui.bean.ColorBean
+import com.mpdc4gsr.libunified.ui.bean.ColorBean
 import com.mpdc4gsr.module.thermalunified.R
-import com.mpdc4gsr.lib.ui.R as UiR
+import com.mpdc4gsr.libunified.ui.R as UiR
 
 class TargetItemAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     var listener: ((index: Int, code: Int) -> Unit)? = null

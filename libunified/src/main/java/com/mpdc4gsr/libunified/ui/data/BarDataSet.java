@@ -1,8 +1,8 @@
-package com.mpdc4gsr.libunified.ui.charting.data;
+package com.mpdc4gsr.libunified.ui.data;
 
 import android.graphics.Color;
 
-import com.mpdc4gsr.libunified.ui.charting.interfaces.datasets.IBarDataSet;
+import com.mpdc4gsr.libunified.ui.interfaces.datasets.IBarDataSet;
 
 import java.util.ArrayList;
 import java.util.List;

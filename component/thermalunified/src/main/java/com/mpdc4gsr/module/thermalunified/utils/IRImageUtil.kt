@@ -14,7 +14,7 @@ import org.opencv.core.Scalar
 import org.opencv.core.Size
 import org.opencv.imgproc.Imgproc
 import kotlin.math.pow
-import com.mpdc4gsr.lib.ui.R as UiR
+import com.mpdc4gsr.libunified.ui.R as UiR
 
 
 object IRImageUtil {

@@ -1,22 +1,22 @@
-package com.mpdc4gsr.libunified.ui.charting.charts;
+package com.mpdc4gsr.libunified.ui.charts;
 
 import android.content.Context;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
 import android.util.Log;
 
-import com.mpdc4gsr.libunified.ui.charting.data.BarData;
-import com.mpdc4gsr.libunified.ui.charting.data.BubbleData;
-import com.mpdc4gsr.libunified.ui.charting.data.CandleData;
-import com.mpdc4gsr.libunified.ui.charting.data.CombinedData;
-import com.mpdc4gsr.libunified.ui.charting.data.Entry;
-import com.mpdc4gsr.libunified.ui.charting.data.LineData;
-import com.mpdc4gsr.libunified.ui.charting.data.ScatterData;
-import com.mpdc4gsr.libunified.ui.charting.highlight.CombinedHighlighter;
-import com.mpdc4gsr.libunified.ui.charting.highlight.Highlight;
-import com.mpdc4gsr.libunified.ui.charting.interfaces.dataprovider.CombinedDataProvider;
-import com.mpdc4gsr.libunified.ui.charting.interfaces.datasets.IDataSet;
-import com.mpdc4gsr.libunified.ui.charting.renderer.CombinedChartRenderer;
+import com.mpdc4gsr.libunified.ui.data.BarData;
+import com.mpdc4gsr.libunified.ui.data.BubbleData;
+import com.mpdc4gsr.libunified.ui.data.CandleData;
+import com.mpdc4gsr.libunified.ui.data.CombinedData;
+import com.mpdc4gsr.libunified.ui.data.Entry;
+import com.mpdc4gsr.libunified.ui.data.LineData;
+import com.mpdc4gsr.libunified.ui.data.ScatterData;
+import com.mpdc4gsr.libunified.ui.highlight.CombinedHighlighter;
+import com.mpdc4gsr.libunified.ui.highlight.Highlight;
+import com.mpdc4gsr.libunified.ui.interfaces.dataprovider.CombinedDataProvider;
+import com.mpdc4gsr.libunified.ui.interfaces.datasets.IDataSet;
+import com.mpdc4gsr.libunified.ui.renderer.CombinedChartRenderer;
 
 public class CombinedChart extends BarLineChartBase<CombinedData> implements CombinedDataProvider {
 

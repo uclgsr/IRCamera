@@ -70,7 +70,7 @@
         app:layout_constraintTop_toTopOf="@+id/tv_device_state"
         tools:text="100%" />
 
-    <com.mpdc4gsr.lib.ui.widget.BatteryView
+    <com.mpdc4gsr.libunified.ui.widget.BatteryView
         android:id="@+id/battery_view"
         android:layout_width="wrap_content"
         android:layout_height="12sp"

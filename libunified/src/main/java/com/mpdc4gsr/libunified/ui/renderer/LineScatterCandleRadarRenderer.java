@@ -1,4 +1,4 @@
-package com.mpdc4gsr.libunified.ui.charting.renderer;
+package com.mpdc4gsr.libunified.ui.renderer;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -6,9 +6,9 @@ import android.graphics.Paint;
 import android.graphics.Path;
 
 import com.blankj.utilcode.util.SizeUtils;
-import com.mpdc4gsr.libunified.ui.charting.animation.ChartAnimator;
-import com.mpdc4gsr.libunified.ui.charting.interfaces.datasets.ILineScatterCandleRadarDataSet;
-import com.mpdc4gsr.libunified.ui.charting.utils.ViewPortHandler;
+import com.mpdc4gsr.libunified.ui.animation.ChartAnimator;
+import com.mpdc4gsr.libunified.ui.interfaces.datasets.ILineScatterCandleRadarDataSet;
+import com.mpdc4gsr.libunified.ui.utils.ViewPortHandler;
 
 public abstract class LineScatterCandleRadarRenderer extends BarLineScatterCandleBubbleRenderer {
 

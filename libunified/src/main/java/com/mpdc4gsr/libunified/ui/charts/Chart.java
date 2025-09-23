@@ -1,4 +1,4 @@
-package com.mpdc4gsr.libunified.ui.charting.charts;
+package com.mpdc4gsr.libunified.ui.charts;
 
 import android.animation.ValueAnimator;
 import android.animation.ValueAnimator.AnimatorUpdateListener;
@@ -24,29 +24,29 @@ import android.view.ViewParent;
 
 import androidx.annotation.RequiresApi;
 
-import com.mpdc4gsr.libunified.ui.charting.animation.ChartAnimator;
-import com.mpdc4gsr.libunified.ui.charting.animation.Easing.EasingFunction;
-import com.mpdc4gsr.libunified.ui.charting.components.Description;
-import com.mpdc4gsr.libunified.ui.charting.components.IMarker;
-import com.mpdc4gsr.libunified.ui.charting.components.Legend;
-import com.mpdc4gsr.libunified.ui.charting.components.XAxis;
-import com.mpdc4gsr.libunified.ui.charting.data.ChartData;
-import com.mpdc4gsr.libunified.ui.charting.data.Entry;
-import com.mpdc4gsr.libunified.ui.charting.formatter.DefaultValueFormatter;
-import com.mpdc4gsr.libunified.ui.charting.formatter.ValueFormatter;
-import com.mpdc4gsr.libunified.ui.charting.highlight.ChartHighlighter;
-import com.mpdc4gsr.libunified.ui.charting.highlight.Highlight;
-import com.mpdc4gsr.libunified.ui.charting.highlight.IHighlighter;
-import com.mpdc4gsr.libunified.ui.charting.interfaces.dataprovider.ChartInterface;
-import com.mpdc4gsr.libunified.ui.charting.interfaces.datasets.IDataSet;
-import com.mpdc4gsr.libunified.ui.charting.listener.ChartTouchListener;
-import com.mpdc4gsr.libunified.ui.charting.listener.OnChartGestureListener;
-import com.mpdc4gsr.libunified.ui.charting.listener.OnChartValueSelectedListener;
-import com.mpdc4gsr.libunified.ui.charting.renderer.DataRenderer;
-import com.mpdc4gsr.libunified.ui.charting.renderer.LegendRenderer;
-import com.mpdc4gsr.libunified.ui.charting.utils.MPPointF;
-import com.mpdc4gsr.libunified.ui.charting.utils.Utils;
-import com.mpdc4gsr.libunified.ui.charting.utils.ViewPortHandler;
+import com.mpdc4gsr.libunified.ui.animation.ChartAnimator;
+import com.mpdc4gsr.libunified.ui.animation.Easing.EasingFunction;
+import com.mpdc4gsr.libunified.ui.components.Description;
+import com.mpdc4gsr.libunified.ui.components.IMarker;
+import com.mpdc4gsr.libunified.ui.components.Legend;
+import com.mpdc4gsr.libunified.ui.components.XAxis;
+import com.mpdc4gsr.libunified.ui.data.ChartData;
+import com.mpdc4gsr.libunified.ui.data.Entry;
+import com.mpdc4gsr.libunified.ui.formatter.DefaultValueFormatter;
+import com.mpdc4gsr.libunified.ui.formatter.ValueFormatter;
+import com.mpdc4gsr.libunified.ui.highlight.ChartHighlighter;
+import com.mpdc4gsr.libunified.ui.highlight.Highlight;
+import com.mpdc4gsr.libunified.ui.highlight.IHighlighter;
+import com.mpdc4gsr.libunified.ui.interfaces.dataprovider.ChartInterface;
+import com.mpdc4gsr.libunified.ui.interfaces.datasets.IDataSet;
+import com.mpdc4gsr.libunified.ui.listener.ChartTouchListener;
+import com.mpdc4gsr.libunified.ui.listener.OnChartGestureListener;
+import com.mpdc4gsr.libunified.ui.listener.OnChartValueSelectedListener;
+import com.mpdc4gsr.libunified.ui.renderer.DataRenderer;
+import com.mpdc4gsr.libunified.ui.renderer.LegendRenderer;
+import com.mpdc4gsr.libunified.ui.utils.MPPointF;
+import com.mpdc4gsr.libunified.ui.utils.Utils;
+import com.mpdc4gsr.libunified.ui.utils.ViewPortHandler;
 
 import java.io.File;
 import java.io.FileOutputStream;

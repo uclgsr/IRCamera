@@ -1,4 +1,4 @@
-package com.mpdc4gsr.libunified.ui.charting.charts;
+package com.mpdc4gsr.libunified.ui.charts;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -7,14 +7,14 @@ import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
 
-import com.mpdc4gsr.libunified.ui.charting.components.XAxis;
-import com.mpdc4gsr.libunified.ui.charting.data.PieData;
-import com.mpdc4gsr.libunified.ui.charting.highlight.Highlight;
-import com.mpdc4gsr.libunified.ui.charting.highlight.PieHighlighter;
-import com.mpdc4gsr.libunified.ui.charting.interfaces.datasets.IPieDataSet;
-import com.mpdc4gsr.libunified.ui.charting.renderer.PieChartRenderer;
-import com.mpdc4gsr.libunified.ui.charting.utils.MPPointF;
-import com.mpdc4gsr.libunified.ui.charting.utils.Utils;
+import com.mpdc4gsr.libunified.ui.components.XAxis;
+import com.mpdc4gsr.libunified.ui.data.PieData;
+import com.mpdc4gsr.libunified.ui.highlight.Highlight;
+import com.mpdc4gsr.libunified.ui.highlight.PieHighlighter;
+import com.mpdc4gsr.libunified.ui.interfaces.datasets.IPieDataSet;
+import com.mpdc4gsr.libunified.ui.renderer.PieChartRenderer;
+import com.mpdc4gsr.libunified.ui.utils.MPPointF;
+import com.mpdc4gsr.libunified.ui.utils.Utils;
 
 import java.util.List;
 

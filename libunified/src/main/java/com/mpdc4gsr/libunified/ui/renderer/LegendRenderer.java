@@ -1,4 +1,4 @@
-package com.mpdc4gsr.libunified.ui.charting.renderer;
+package com.mpdc4gsr.libunified.ui.renderer;
 
 import android.graphics.Canvas;
 import android.graphics.DashPathEffect;
@@ -7,17 +7,17 @@ import android.graphics.Paint.Align;
 import android.graphics.Path;
 import android.graphics.Typeface;
 
-import com.mpdc4gsr.libunified.ui.charting.components.Legend;
-import com.mpdc4gsr.libunified.ui.charting.components.LegendEntry;
-import com.mpdc4gsr.libunified.ui.charting.data.ChartData;
-import com.mpdc4gsr.libunified.ui.charting.interfaces.datasets.IBarDataSet;
-import com.mpdc4gsr.libunified.ui.charting.interfaces.datasets.ICandleDataSet;
-import com.mpdc4gsr.libunified.ui.charting.interfaces.datasets.IDataSet;
-import com.mpdc4gsr.libunified.ui.charting.interfaces.datasets.IPieDataSet;
-import com.mpdc4gsr.libunified.ui.charting.utils.ColorTemplate;
-import com.mpdc4gsr.libunified.ui.charting.utils.FSize;
-import com.mpdc4gsr.libunified.ui.charting.utils.Utils;
-import com.mpdc4gsr.libunified.ui.charting.utils.ViewPortHandler;
+import com.mpdc4gsr.libunified.ui.components.Legend;
+import com.mpdc4gsr.libunified.ui.components.LegendEntry;
+import com.mpdc4gsr.libunified.ui.data.ChartData;
+import com.mpdc4gsr.libunified.ui.interfaces.datasets.IBarDataSet;
+import com.mpdc4gsr.libunified.ui.interfaces.datasets.ICandleDataSet;
+import com.mpdc4gsr.libunified.ui.interfaces.datasets.IDataSet;
+import com.mpdc4gsr.libunified.ui.interfaces.datasets.IPieDataSet;
+import com.mpdc4gsr.libunified.ui.utils.ColorTemplate;
+import com.mpdc4gsr.libunified.ui.utils.FSize;
+import com.mpdc4gsr.libunified.ui.utils.Utils;
+import com.mpdc4gsr.libunified.ui.utils.ViewPortHandler;
 
 import java.util.ArrayList;
 import java.util.Collections;

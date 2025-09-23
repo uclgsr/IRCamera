@@ -1,6 +1,6 @@
-package com.mpdc4gsr.libunified.ui.charting.highlight;
+package com.mpdc4gsr.libunified.ui.highlight;
 
-import com.mpdc4gsr.libunified.ui.charting.components.YAxis;
+import com.mpdc4gsr.libunified.ui.components.YAxis;
 
 public class Highlight {
 
