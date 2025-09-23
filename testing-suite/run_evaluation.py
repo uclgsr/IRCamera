@@ -17,6 +17,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 from thesis_test_suite import ThesisTestSuite
 from performance_benchmark import ThesisPerformanceBenchmark
 from integration_tests import ThesisContentIntegrationTest
+from real_integration_tests import RealIntegrationTester
 
 class MasterTestRunner:
     """Master coordinator for all thesis testing components"""
@@ -30,6 +31,7 @@ class MasterTestRunner:
         self.thesis_tests = ThesisTestSuite(str(self.output_dir))
         self.performance_benchmark = ThesisPerformanceBenchmark()
         self.integration_tests = ThesisContentIntegrationTest()
+        self.real_integration = RealIntegrationTester()
         
         self.results = {}
     
@@ -58,13 +60,19 @@ class MasterTestRunner:
         integration_results = self.integration_tests.run_integration_tests()
         self.results['integration_tests'] = integration_results
         
-        # Phase 4: Generate Comprehensive Report
-        print("\n📊 PHASE 4: GENERATING COMPREHENSIVE REPORT")
+        # Phase 4: Real Hardware Integration
+        print("\n🔧 PHASE 4: REAL HARDWARE INTEGRATION")
+        print("-" * 50)
+        real_integration_results = self.real_integration.run_complete_real_integration()
+        self.results['real_integration'] = real_integration_results
+        
+        # Phase 5: Generate Comprehensive Report
+        print("\n📊 PHASE 5: GENERATING COMPREHENSIVE REPORT")
         print("-" * 50)
         final_summary = self.generate_final_report()
         
-        # Phase 5: Create Thesis Visualizations
-        print("\n📈 PHASE 5: CREATING THESIS VISUALIZATIONS")
+        # Phase 6: Create Thesis Visualizations
+        print("\n📈 PHASE 6: CREATING THESIS VISUALIZATIONS")
         print("-" * 50)
         self.create_thesis_visualizations()
         
@@ -101,16 +109,31 @@ class MasterTestRunner:
             total_failed += self.results['integration_tests']['failed']
             total_warnings += self.results['integration_tests']['warnings']
         
+        # Real integration tests
+        real_integration_passed = 0
+        real_integration_total = 0
+        hardware_coverage = 0
+        if 'real_integration' in self.results:
+            real_integration_total = self.results['real_integration']['total_tests']
+            real_integration_passed = self.results['real_integration']['passed_tests']
+            hardware_coverage = self.results['real_integration']['hardware_coverage_percent']
+            
+            total_tests += real_integration_total
+            total_passed += real_integration_passed
+            total_failed += self.results['real_integration']['failed_tests']
+        
         # Calculate overall metrics
         overall_pass_rate = total_passed / total_tests if total_tests > 0 else 0
         benchmark_pass_rate = benchmark_passed / benchmark_metrics if benchmark_metrics > 0 else 0
         
         # Determine overall status
-        if total_failed == 0 and benchmark_passed >= benchmark_metrics * 0.8:
+        if (total_failed == 0 and benchmark_passed >= benchmark_metrics * 0.8 
+            and hardware_coverage >= 50):
             overall_status = "EXCELLENT"
-        elif total_failed <= total_tests * 0.1 and benchmark_passed >= benchmark_metrics * 0.7:
+        elif (total_failed <= total_tests * 0.1 and benchmark_passed >= benchmark_metrics * 0.7
+              and hardware_coverage >= 25):
             overall_status = "GOOD"
-        elif total_failed <= total_tests * 0.2:
+        elif total_failed <= total_tests * 0.2 and hardware_coverage >= 10:
             overall_status = "ACCEPTABLE"
         else:
             overall_status = "NEEDS_IMPROVEMENT"
@@ -126,7 +149,10 @@ class MasterTestRunner:
                 "overall_pass_rate": overall_pass_rate,
                 "benchmark_metrics": benchmark_metrics,
                 "benchmark_passed": benchmark_passed,
-                "benchmark_pass_rate": benchmark_pass_rate
+                "benchmark_pass_rate": benchmark_pass_rate,
+                "real_integration_tests": real_integration_total,
+                "real_integration_passed": real_integration_passed,
+                "hardware_coverage_percent": hardware_coverage
             },
             "phase_results": self.results,
             "timestamp": time.strftime("%Y-%m-%d %H:%M:%S")

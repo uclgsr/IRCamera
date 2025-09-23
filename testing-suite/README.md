@@ -1,22 +1,76 @@
-# IRCamera Thesis Testing and Evaluation Suite
+# IRCamera Real Integration Testing Suite
 
-This directory contains comprehensive testing and evaluation tools for validating the IRCamera thesis content and system performance.
+This directory contains both **simulated validation** and **real hardware integration** testing components for comprehensive thesis evaluation.
 
-## Overview
+## Testing Components
 
-The evaluation suite provides three main components:
+### 1. Simulated Validation (Original)
+- `thesis_test_suite.py` - LaTeX, diagram, and documentation testing 
+- `performance_benchmark.py` - Statistical performance validation using models
+- `integration_tests.py` - Content generation pipeline testing
 
-1. **Automated Test Cases** (`thesis_test_suite.py`) - Validates documentation, diagrams, and table content
-2. **Performance Benchmarking** (`performance_benchmark.py`) - Validates metrics in thesis performance tables
-3. **Integration Testing** (`integration_tests.py`) - Tests thesis content generation pipeline
+### 2. Real Hardware Integration (NEW)
+- `real_integration_tests.py` - **Actual hardware integration testing**
+- `run_real_integration_demo.py` - Complete demonstration script
 
-## Quick Start
+## Key Differences: Real vs Simulated Testing
 
-Run the complete evaluation suite:
+| Component | Simulated | Real Integration |
+|-----------|-----------|------------------|
+| **Android Tests** | Mock test results | Executes `./gradlew test` and `./gradlew connectedAndroidTest` |
+| **Hardware Detection** | Assumes available | USB device detection (TC001), Bluetooth scan (Shimmer3), ADB device listing |
+| **Performance Data** | Statistical models | Analyzes actual session files (`*.h5`, `*.csv`) |
+| **Network Testing** | Generated latency values | Real ping tests and TCP socket measurements |
+| **File I/O** | Simulated throughput | Actual disk write/read performance testing |
+| **Build System** | Assumed working | Executes actual Gradle builds |
 
+## Real Integration Capabilities
+
+### Hardware Integration Testing
+```python
+# TC001 Thermal Camera Detection
+tc001_detected = ('0525:a4a2' in lsusb_output or '0525:a4a5' in lsusb_output)
+
+# Shimmer3 GSR via Bluetooth
+shimmer_detected = 'shimmer' in hcitool_scan_output.lower()
+
+# Android Devices via ADB
+device_count = len([line for line in adb_devices if '\tdevice' in line])
+```
+
+### Real Data Analysis
+```python
+# Analyze actual H5 session files
+with h5py.File('session_test_session_1757650137.h5', 'r') as f:
+    timestamps = f['timestamps'][:]
+    timing_precision = calculate_actual_drift(timestamps)
+
+# CSV performance data analysis
+df = pd.read_csv('performance_metrics.csv')
+actual_throughput = analyze_real_measurements(df)
+```
+
+### Android Test Execution
+```bash
+# Unit tests
+./gradlew test --no-daemon --info
+
+# Instrumentation tests (requires connected device)
+./gradlew connectedAndroidTest --no-daemon
+```
+
+## Usage Examples
+
+### Quick Real Integration Test
 ```bash
 cd testing-suite
-python run_evaluation.py
+python3 real_integration_tests.py
+```
+
+### Complete Evaluation (Simulated + Real)  
+```bash
+cd testing-suite
+python3 run_real_integration_demo.py
 ```
 
 This will execute all test phases and generate comprehensive results in the `results/` directory.

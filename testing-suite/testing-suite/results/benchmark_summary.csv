@@ -1,12 +1,12 @@
 Metric,Value,Unit,Target,Status
-Synchronization Accuracy (Mean),2.211,ms,5.000,PASS
-Synchronization Accuracy (Median),2.138,ms,5.000,PASS
-Synchronization Accuracy (95th Percentile),3.497,ms,5.000,PASS
-Thermal Data Rate,0.288,MB/s,0.290,PASS
-GSR Data Rate,0.050,MB/s,0.050,PASS
-RGB Video Rate,0.866,MB/s,0.870,PASS
-Total Combined Rate,1.234,MB/s,1.210,PASS
-Android Memory Usage,117.328,MB,200.000,PASS
-Android CPU Usage,14.438,%,25.000,PASS
-PC Memory Usage,244.552,MB,400.000,PASS
-Storage Write Speed,144.476,MB/s,100.000,PASS
+Synchronization Accuracy (Mean),2.262,ms,5.000,PASS
+Synchronization Accuracy (Median),2.314,ms,5.000,PASS
+Synchronization Accuracy (95th Percentile),3.622,ms,5.000,PASS
+Thermal Data Rate,0.291,MB/s,0.290,PASS
+GSR Data Rate,0.049,MB/s,0.050,PASS
+RGB Video Rate,0.863,MB/s,0.870,PASS
+Total Combined Rate,1.193,MB/s,1.210,PASS
+Android Memory Usage,120.324,MB,200.000,PASS
+Android CPU Usage,15.367,%,25.000,PASS
+PC Memory Usage,244.066,MB,400.000,PASS
+Storage Write Speed,143.011,MB/s,100.000,PASS

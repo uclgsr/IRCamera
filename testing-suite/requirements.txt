@@ -3,6 +3,7 @@
 # Core Python packages (often pre-installed)
 numpy>=1.20.0
 matplotlib>=3.3.0
+h5py>=3.8.0
 
 # Optional packages for enhanced functionality
 # These are gracefully handled if not available
