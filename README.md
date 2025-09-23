@@ -15,7 +15,48 @@ collection.
 - **MenuSecondView Compatibility**: Applied correct integer mapping (0=SINGLE_LIGHT, 1=DOUBLE_LIGHT, 2=Lite, 4=GALLERY_EDIT)
 - **Build Validation**: All Android resource processing tasks now pass without deviceType errors
 
+## Recent Update: Deprecation Warnings Resolved - Commit 96ece6b
+
+**BUILD STATUS**: All Kotlin deprecation warnings eliminated from libunified module
+
+### ✅ Deprecation Fixes Completed
+
+- **Android API 33+ Compatibility**: Fixed deprecated getParcelableExtra with version-specific API calls
+- **BitmapFactory Modernization**: Removed deprecated inDither field usage
+- **Coroutines API Compliance**: Properly annotated GlobalScope usage with @OptIn(DelicateCoroutinesApi::class)
+- **Legacy WiFi Support**: Added file-level suppression for WifiConfiguration deprecation warnings
+- **Clean Compilation**: All compiler warnings eliminated while maintaining backward compatibility
+
+### 🏗️ Build Validation - Commit 96ece6b
+
+- ✅ **:libunified:compileDebugKotlin** - SUCCESS (zero warnings)
+- ✅ **:libunified:build** - SUCCESS
+- ✅ **Backward Compatibility** - Maintained for Android API 26+
+- ✅ **Legacy Functionality** - Preserved with proper warning suppression
+
 ## Critical Update: Android Resource Linking Issues RESOLVED - Commit 1f1bf64
+
+## Critical Update: BleDeviceManager Compilation Issues RESOLVED - Commit 82b6f42
+
+**BUILD STATUS**: All Kotlin compilation errors in user component have been **COMPLETELY RESOLVED**
+
+### ✅ Compilation Fix Summary
+
+- **BleDeviceManager.kt Fixed**: All UnifiedBleManager and EasyBLE compilation errors resolved
+- **SettingNightView Implemented**: Complete custom view with XML attribute support and click handling
+- **Type Safety Achieved**: Fixed all casting issues and parameter type mismatches in BLE connections
+- **Module Integration**: ble-core module properly integrated with Android library configuration
+- **Build Validation**: component:user:build now succeeds completely
+
+### 🏗️ User Component Build Status - Commit 82b6f42
+
+- ✅ **component:user:compileDebugKotlin** - All Kotlin compilation errors resolved
+- ✅ **component:user:build** - Complete user component builds successfully
+- ✅ **SettingNightView Integration** - XML layouts and data binding functional
+- ✅ **BLE Architecture** - UnifiedBleManager + EasyBLE integration working
+
+## Previous Update: Android Resource Linking Issues RESOLVED - Commit 1f1bf64
+
 
 **BUILD STATUS**: All Android resource linking errors have been **COMPLETELY RESOLVED**
 

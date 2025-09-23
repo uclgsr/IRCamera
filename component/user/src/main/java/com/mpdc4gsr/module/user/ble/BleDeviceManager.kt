@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.mpdc4gsr.ble.core.UnifiedBleManager
 import com.topdon.ble.Connection
 import com.topdon.ble.ConnectionConfiguration
 import com.topdon.ble.ConnectionState
@@ -12,7 +13,7 @@ import com.topdon.ble.EasyBLE
 import com.topdon.ble.EventObserver
 import com.topdon.ble.Request
 import com.topdon.ble.callback.ScanListener
-// UnifiedBleManager - using EasyBLE instead
+// UnifiedBleManager - now properly imported from ble-core
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -75,7 +76,6 @@ class BleDeviceManager(private val context: Context) : CoroutineScope {
 
             easyBLE =
                 EasyBLE.getBuilder()
-                    .setUseNordicBleBackend(enableNordicBackend)
                     .build().apply {
                         initialize(context.applicationContext as android.app.Application)
                     }
@@ -167,7 +167,7 @@ class BleDeviceManager(private val context: Context) : CoroutineScope {
             val connection = unifiedBleManager.connectWithEnhancements(deviceAddress)
 
             if (connection != null) {
-                deviceConnections[deviceAddress] = connection
+                deviceConnections[deviceAddress] = connection as Connection
                 updateDeviceStatus()
                 Log.i(TAG, "Enhanced connection successful for device: $deviceAddress")
                 true

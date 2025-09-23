@@ -28,6 +28,7 @@ object ToastTools {
         showShort(textStr, Toast.LENGTH_SHORT)
     }
 
+    @OptIn(kotlinx.coroutines.DelicateCoroutinesApi::class)
     fun showShort(
         textStr: String,
         duration: Int,
