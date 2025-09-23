@@ -16,7 +16,7 @@ import androidx.appcompat.widget.SwitchCompat
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
-import com.mpdc4gsr.libunified.app.R
+import com.mpdc4gsr.libunified.R
 import com.mpdc4gsr.libunified.app.bean.AlarmBean
 import com.mpdc4gsr.libunified.app.tools.ToastTools
 import com.mpdc4gsr.libunified.app.tools.UnitTools

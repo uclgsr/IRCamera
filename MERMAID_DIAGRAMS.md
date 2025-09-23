@@ -1,5 +1,215 @@
 # IRCamera Architecture Diagrams
 
+## BleDeviceManager Compilation Fixes (2024-12-22) - Commit 82b6f42
+
+### User Component BLE Architecture Resolution
+
+```mermaid
+flowchart TB
+    subgraph "Compilation Error Resolution Flow"
+        A[BleDeviceManager Errors] --> B{Error Analysis}
+        B -->|UnifiedBleManager missing| C[Import ble-core module]
+        B -->|SettingNightView missing| D[Create custom view class]
+        B -->|EasyBLE method errors| E[Fix builder pattern]
+        B -->|Type casting issues| F[Add proper casting]
+        
+        C --> C1[Add ble-core to settings.gradle.kts]
+        C1 --> C2[Create ble-core/build.gradle.kts]
+        C2 --> C3[Enhanced UnifiedBleManager stub]
+        C3 --> C4[✅ Import resolved]
+        
+        D --> D1[Create SettingNightView.kt]
+        D1 --> D2[Implement XML attributes]
+        D2 --> D3[Add click handling methods]
+        D3 --> D4[✅ Custom view functional]
+        
+        E --> E1[Remove setUseNordicBleBackend()]
+        E1 --> E2[Simplify builder chain]
+        E2 --> E3[✅ Builder pattern fixed]
+        
+        F --> F1[Cast connectWithEnhancements result]
+        F1 --> F2[Fix parameter types]
+        F2 --> F3[✅ Type safety achieved]
+        
+        C4 --> G[✅ Build Success]
+        D4 --> G
+        E3 --> G
+        F3 --> G
+    end
+    
+    subgraph "Fixed Components"
+        H[BleDeviceManager.kt<br/>- UnifiedBleManager import<br/>- EasyBLE builder fix<br/>- Connection casting]
+        I[SettingNightView.kt<br/>- Custom view implementation<br/>- XML attribute support<br/>- Click listener methods]
+        J[user/build.gradle.kts<br/>- ble-core dependency<br/>- BleModule dependency]
+        K[settings.gradle.kts<br/>- ble-core module inclusion]
+    end
+    
+    G --> H
+    G --> I
+    G --> J
+    G --> K
+```
+
+### BLE Module Architecture (Updated)
+
+```mermaid
+graph TB
+    subgraph "User Component BLE Stack"
+        BleDeviceManager[BleDeviceManager.kt<br/>✅ Compilation Fixed<br/>- UnifiedBleManager integration<br/>- EasyBLE device discovery<br/>- GSR sensor detection]
+        MoreFragment[MoreFragment.kt<br/>✅ SettingNightView Fixed<br/>- Settings UI integration<br/>- Click handling restored]
+    end
+    
+    subgraph "BLE Core Module (Enhanced)"
+        UnifiedBleManager[UnifiedBleManager.kt<br/>✅ Enhanced Implementation<br/>- initialize() methods<br/>- connectWithEnhancements()<br/>- SystemBleStatus enum]
+        UnifiedDevice[UnifiedDevice.kt<br/>- Device abstraction<br/>- Connection status]
+    end
+    
+    subgraph "TopDon BLE Module"
+        EasyBLE[EasyBLE<br/>- Device scanning<br/>- Connection management<br/>- Event callbacks]
+        Connection[Connection<br/>- BLE connection interface<br/>- Data transfer]
+    end
+    
+    subgraph "UI Components (Fixed)"
+        SettingNightView[SettingNightView.kt<br/>✅ NEW Implementation<br/>- XML attribute support<br/>- Click handling<br/>- Right arrow visibility]
+    end
+    
+    BleDeviceManager --> UnifiedBleManager
+    BleDeviceManager --> EasyBLE
+    MoreFragment --> SettingNightView
+    UnifiedBleManager --> Connection
+    EasyBLE --> Connection
+```
+
+## Build System and Compilation Flow (2024-12-22)
+
+### Android Resource deviceType Attribute Fix - Commit 572ab30
+
+```mermaid
+flowchart TB
+    subgraph "Android Resource Linking Fix - deviceType Attribute"
+        A[AAPT Errors] --> B{deviceType Compatibility}
+        B -->|String values in XML| C[Layout Files Analysis]
+        B -->|getInt() in MenuSecondView| D[Code Analysis]
+        
+        C --> C1[activity_ir_thermal_double.xml]
+        C --> C2[activity_ir_thermal_lite.xml]  
+        C --> C3[activity_thermal_ir_night.xml]
+        C --> C4[activity_ir_gallery_edit.xml]
+        
+        C1 --> E1["double_light" → "1"]
+        C2 --> E2["lite" → "2"] 
+        C3 --> E3["single_light" → "0"]
+        C4 --> E4["gallery_edit" → "4"]
+        
+        D --> D1[MenuSecondView.getInt call]
+        D1 --> D2[MenuType mapping: 0,1,2,4]
+        
+        E1 & E2 & E3 & E4 --> F[Attribute Format Fix]
+        D2 --> F
+        F --> F1[app/attrs.xml: format="integer"]
+        F1 --> G[✅ All AAPT errors resolved]
+    end
+
+### Deprecation Warning Resolution - Commit 96ece6b
+
+```mermaid
+flowchart TB
+    subgraph "Deprecation Warning Fix Flow"
+        A[Deprecation Warnings] --> B{Warning Type Analysis}
+        B -->|getParcelableExtra deprecated| C[API Version Check]
+        B -->|BitmapFactory.Options| D[Remove deprecated fields]
+        B -->|GlobalScope delicate API| E[Add proper annotations]
+        B -->|WifiConfiguration deprecated| F[File-level suppression]
+        B -->|Always true/false conditions| G[Add senseless comparison suppression]
+        
+        C --> C1[Android API 33+ check]
+        C1 --> C2[Use getParcelableExtra(key, class)]
+        C2 --> C3[Fallback to deprecated version]
+        C3 --> C4[✅ Backward compatibility maintained]
+        
+        D --> D1[Remove inDither field]
+        D1 --> D2[✅ Modern BitmapFactory usage]
+        
+        E --> E1[@OptIn(DelicateCoroutinesApi::class)]
+        E1 --> E2[✅ Proper coroutines API usage]
+        
+        F --> F1[@file:Suppress("DEPRECATION")]
+        F1 --> F2[✅ Legacy WiFi support maintained]
+        
+        G --> G1[@Suppress("SENSELESS_COMPARISON")]
+        G1 --> G2[✅ Legacy null checks preserved]
+        
+        C4 --> H[Zero Warnings Build]
+        D2 --> H
+        E2 --> H
+        F2 --> H
+        G2 --> H
+    end
+    
+    subgraph "Fixed Files"
+        I[PseudoSetActivity.kt<br/>- API-aware getParcelableExtra]
+        J[FileUtils.kt<br/>- Modern BitmapFactory options]
+        K[ToastTools.kt<br/>- Proper coroutines annotations]
+        L[NetWorkUtils.kt<br/>- WifiConfiguration suppression]
+        M[FileUtils.kt<br/>- Null check suppressions]
+    end
+    
+    H --> I
+    H --> J  
+    H --> K
+    H --> L
+    H --> M
+
+```
+
+### Kotlin Compilation Error Resolution - Commit 2329a34
+
+```mermaid
+flowchart TB
+    subgraph "Kotlin Compilation Fix Flow"
+        A[Compilation Errors] --> B{Error Type Analysis}
+        B -->|R.styleable unresolved| C[Check attrs.xml definitions]
+        B -->|Interface implementation| D[Check Java-Kotlin interop]
+        B -->|Method not found| E[Check method signatures]
+        
+        C --> C1[MenuSecondView deviceType]
+        C1 --> C2[Format: string → integer]
+        C2 --> C3[✅ getInt() now matches]
+        
+        D --> D1[OnRangeChangedListener]
+        D1 --> D2[Add @NonNull annotations]
+        D2 --> D3[✅ Kotlin nullability fixed]
+        
+        E --> E1[IRImageHelp method calls]
+        E1 --> E2[Verify OpencvTools signatures]
+        E2 --> E3[✅ Float parameter version exists]
+        
+        C3 --> F[Build Success]
+        D3 --> F
+        E3 --> F
+    end
+    
+    subgraph "Affected Files"
+        G[MenuSecondView.kt<br/>- R.styleable.MenuSecondView_deviceType]
+        H[TitleView.kt<br/>- R.styleable.TitleView_*]
+        I[MyTextView.kt<br/>- R.styleable.MyTextView_*]
+        J[ColorPickDialog.kt<br/>- OnRangeChangedListener impl]
+        K[IRImageHelp.kt<br/>- OpencvTools method calls]
+    end
+    
+    F --> G
+    F --> H  
+    F --> I
+    F --> J
+    F --> K
+```
+
+## Code Quality Fixes (2024-12-22)
+
+### Test Warning Resolution - Commit 56beb31
+
+Fixed Kotlin compiler warning in ZeroconfDiscoveryService testing by removing redundant type check that was always true.
+
 ## Session Lifecycle and Recording Coordination (2024-12-22)
 
 ### Enhanced Recording Orchestration Flow
@@ -391,7 +601,9 @@ stateDiagram-v2
         Attempt5 --> [*]: Max attempts
     }
 ```
+
 ## Latest Update: Enhanced Shimmer3 GSR BLE Support (2024-12-21)
+
 **Commit ID**: 64fdf6b
 
 ### Enhanced BLE Scanning and Device Selection Architecture
@@ -717,7 +929,6 @@ sequenceDiagram
 
 ## Previous Update: Kotlin Compilation Status (2024-12-21)
 
-
 ### BLE Core Module Compilation Error Resolution
 
 ```mermaid
@@ -904,7 +1115,6 @@ graph TB
     BleCharacteristicCallback --> ConnectionImpl
 ```
 
-
         Request[Request.kt<br/>Interface with UUID properties<br/>DONE: import java.util.UUID]
         GenericRequest[GenericRequest.kt<br/>Implements Request<br/>DONE: import java.util.UUID]
         Connection[Connection.kt<br/>BLE Connection Management<br/>DONE: import java.util.UUID]
@@ -916,6 +1126,7 @@ graph TB
     Connection --> ConnectionImpl
     GenericRequest --> Connection
     ConnectionConfig --> Connection
+
 ```
 ## Current Standardized Build System (2024-12-21)
 
@@ -1328,13 +1539,15 @@ pie title libunified File Distribution (598 total)
 
 ## Current Status: IMPLEMENTATION COMPLETED
 
-The merging of libapp, libir, and libui into a unified libunified has been **successfully completed** and is **fully operational** in the current architecture.
+The merging of libapp, libir, and libui into a unified libunified has been **successfully completed** and is **fully
+operational** in the current architecture.
 
 ---
 
 ## Documentation Update History
 
 ### 2024-12-22 - Commit c7769bc - ASCII Safety and True State Documentation
+
 - Removed all emoji characters from architecture diagrams and documentation
 - Updated all references from libcore to libunified (actual implementation name)
 - Corrected migration status from "proposed" to "completed" throughout diagrams

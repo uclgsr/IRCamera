@@ -1,4 +1,4 @@
-package com.mpdc4gsr.module.thermal.activity
+package com.mpdc4gsr.module.thermalunified.activity
 
 import android.graphics.Color
 import android.util.Log
@@ -21,11 +21,11 @@ import com.mpdc4gsr.libunified.ui.charting.listener.OnChartValueSelectedListener
 import com.mpdc4gsr.libunified.app.db.entity.ThermalEntity
 import com.mpdc4gsr.libunified.app.ktbase.BaseActivity
 import com.mpdc4gsr.libunified.app.tools.ToastTools
-import com.mpdc4gsr.module.thermal.R
-import com.mpdc4gsr.module.thermal.adapter.SettingTimeAdapter
-import com.mpdc4gsr.module.thermal.chart.MyValueFormatter
-import com.mpdc4gsr.module.thermal.view.MyMarkerView
-import com.mpdc4gsr.module.thermal.viewmodel.LogViewModel
+import com.mpdc4gsr.module.thermalunified.R
+import com.mpdc4gsr.module.thermalunified.adapter.SettingTimeAdapter
+import com.mpdc4gsr.module.thermalunified.chart.MyValueFormatter
+import com.mpdc4gsr.module.thermalunified.view.MyMarkerView
+import com.mpdc4gsr.module.thermalunified.viewmodel.LogViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 

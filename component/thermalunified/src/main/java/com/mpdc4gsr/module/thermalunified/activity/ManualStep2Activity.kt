@@ -1,4 +1,4 @@
-package com.mpdc4gsr.module.thermal.ir.activity
+package com.mpdc4gsr.module.thermalunified.activity
 
 import android.app.Activity
 import android.graphics.ImageFormat
@@ -29,10 +29,10 @@ import com.mpdc4gsr.libunified.app.common.SharedManager
 import com.mpdc4gsr.libunified.app.ktbase.BaseActivity
 import com.mpdc4gsr.libunified.app.lms.weiget.LmsLoadDialog
 import com.mpdc4gsr.libunified.app.utils.ByteUtils.toLittleBytes
-import com.mpdc4gsr.module.thermal.ir.R
-import com.mpdc4gsr.module.thermal.ir.event.ManualFinishBean
-import com.mpdc4gsr.module.thermal.ir.utils.IRCmdTool
-import com.mpdc4gsr.module.thermal.ir.view.MoveImageView
+import com.mpdc4gsr.module.thermalunified.R
+import com.mpdc4gsr.module.thermalunified.event.ManualFinishBean
+import com.mpdc4gsr.module.thermalunified.utils.IRCmdTool
+import com.mpdc4gsr.module.thermalunified.view.MoveImageView
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import java.io.IOException

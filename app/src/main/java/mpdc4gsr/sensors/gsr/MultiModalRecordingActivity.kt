@@ -14,8 +14,10 @@ import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import com.csl.irCamera.R
 import com.csl.irCamera.databinding.ActivityMultiModalRecordingBinding
-import com.mpdc4gsr.ble.core.UnifiedBleManager
-import com.mpdc4gsr.ble.core.UnifiedDevice
+// UnifiedBleManager - replaced with EasyBLE
+import com.topdon.ble.EasyBLE
+// UnifiedDevice - replaced with Device  
+import com.topdon.ble.Device
 import com.mpdc4gsr.gsr.model.GSRSample
 import com.mpdc4gsr.gsr.model.SessionInfo
 import com.mpdc4gsr.gsr.model.SyncMark
@@ -70,9 +72,10 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
     private lateinit var permissionController: PermissionController
 
 
-    private var unifiedBleManager: UnifiedBleManager? = null
-    private var discoveredBleDevices = mutableListOf<UnifiedDevice>()
-    private var connectedBleDevices = mutableListOf<UnifiedDevice>()
+    // Updated to use new BLE module classes
+    private var easyBLE: EasyBLE? = null
+    private var discoveredBleDevices = mutableListOf<Device>()
+    private var connectedBleDevices = mutableListOf<Device>()
 
 
     private var enhancedRecordingService: com.mpdc4gsr.gsr.service.EnhancedRecordingService? = null

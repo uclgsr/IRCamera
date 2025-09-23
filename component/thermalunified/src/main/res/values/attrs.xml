@@ -4,4 +4,11 @@
         <attr name="maxCount" format="integer" />
         <attr name="markerColor" format="color" />
     </declare-styleable>
+
+    <!-- ReportIRInputView styleable -->
+    <declare-styleable name="ReportIRInputView">
+        <attr name="type" format="string" />
+        <attr name="index" format="integer" />
+    </declare-styleable>
+
 </resources>

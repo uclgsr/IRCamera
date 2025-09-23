@@ -12,4 +12,8 @@
     <string name="lms_http_code998">Connection error</string>
     <string name="main_thermal">Thermal</string>
     <string name="video">Video</string>
+    <string name="app_got_it">Got it</string>
+    <string name="tips_tisr_on">Imaging Super Resolution has been activated.</string>
+    <string name="tips_tisr_off">Imaging Super Resolution has been deactivated.</string>
+    <string name="tips_tisr_fail">Your phone does not support OpenCL and cannot enable Imaging Super Resolution.</string>
 </resources>

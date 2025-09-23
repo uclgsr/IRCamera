@@ -6,7 +6,7 @@ import android.os.Build
 import android.text.TextUtils
 import android.util.Log
 import androidx.annotation.RequiresApi
-import com.mpdc4gsr.libunified.app.matrix.Logger.d
+import com.mpdc4gsr.libunified.app.matrix.Logger
 import com.mpdc4gsr.libunified.app.matrix.utils.FileUtils.Companion.saveFile
 import com.mpdc4gsr.libunified.app.matrix.utils.HexDump
 import java.io.BufferedInputStream
@@ -62,7 +62,7 @@ class GuideInterface {
     private fun startUsbBufferWriteThread() {
         mWriteThreadFlag = true
         mUsbBufferWriteThread = Thread {
-            d(TAG, "write thread start")
+            Logger.d(TAG, "write thread start")
             while (mWriteThreadFlag) {
                 val length: Int = mGuideUsbManager!!.read(mUsbReadbuffer)
                 if (length > 0) {
@@ -76,7 +76,7 @@ class GuideInterface {
                     }
                 }
             }
-            d(TAG, "write thread exit")
+            Logger.d(TAG, "write thread exit")
         }
         mUsbBufferWriteThread!!.start()
     }
@@ -87,7 +87,7 @@ class GuideInterface {
     private fun startUsbBufferReadThread() {
         mReadThreadFlag = true
         mUsbBufferReadThread = Thread {
-            d(TAG, "read thread start")
+            Logger.d(TAG, "read thread start")
             while (mReadThreadFlag) {
                 val ret = mUsbBuffer!!.readFrame(mFrame) //mFrame len: 295488
                 if (ret) {
@@ -128,7 +128,7 @@ class GuideInterface {
 //                        Logger.d(TAG, "read Frame failed");
                 }
             }
-            d(TAG, "read thread exit")
+            Logger.d(TAG, "read thread exit")
         }
         mUsbBufferReadThread!!.start()
     }
@@ -178,7 +178,7 @@ class GuideInterface {
         if (ret != 5) {
             return ret
         }
-        d(TAG, "connectUsbDevice ret = $ret")
+        Logger.d(TAG, "connectUsbDevice ret = $ret")
         mUsbBuffer = UsbBuffer(FRAME_SIZE, HEAD_SIZE, 8)
         mUsbBuffer!!.setFrameMark(0xBB66)
         startUsbBufferReadThread()

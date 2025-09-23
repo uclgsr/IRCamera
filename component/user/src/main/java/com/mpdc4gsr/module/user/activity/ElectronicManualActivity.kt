@@ -13,7 +13,7 @@ import com.mpdc4gsr.libunified.app.navigation.NavigationManager
 import com.mpdc4gsr.libunified.app.utils.Constants
 import com.mpdc4gsr.libunified.app.view.TitleView
 import com.mpdc4gsr.module.user.R
-import com.mpdc4gsr.libunified.app.R as RCore
+import com.mpdc4gsr.libunified.R as RCore
 
 class ElectronicManualActivity : BaseActivity() {
 

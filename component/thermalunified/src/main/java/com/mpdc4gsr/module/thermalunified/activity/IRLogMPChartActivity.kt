@@ -1,4 +1,4 @@
-package com.mpdc4gsr.module.thermal.ir.activity
+package com.mpdc4gsr.module.thermalunified.activity
 
 import android.content.Intent
 import android.view.View
@@ -22,13 +22,13 @@ import com.mpdc4gsr.libunified.app.dialog.TipDialog
 import com.mpdc4gsr.libunified.app.ktbase.BaseActivity
 import com.mpdc4gsr.libunified.app.tools.FileTools
 import com.mpdc4gsr.libunified.app.tools.ToastTools
-import com.mpdc4gsr.module.thermal.ir.R
-import com.mpdc4gsr.module.thermal.ir.viewmodel.IRMonitorViewModel
+import com.mpdc4gsr.module.thermalunified.R
+import com.mpdc4gsr.module.thermalunified.viewmodel.IRMonitorViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
-import com.mpdc4gsr.libunified.app.R as LibR
+import com.mpdc4gsr.libunified.R as LibR
 
 
 class IRLogMPChartActivity : BaseActivity() {
@@ -67,7 +67,7 @@ class IRLogMPChartActivity : BaseActivity() {
 
             try {
                 val chartView =
-                    findViewById<com.mpdc4gsr.module.thermal.ir.view.ChartLogView>(R.id.log_chart_time_chart)
+                    findViewById<com.mpdc4gsr.module.thermalunified.view.ChartLogView>(R.id.log_chart_time_chart)
                 chartView.initEntry(it as ArrayList<ThermalEntity>)
             } catch (e: Exception) {
                 XLog.e("刷新图表异常:${e.message}")

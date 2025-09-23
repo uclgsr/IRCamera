@@ -11,7 +11,7 @@ import android.util.AttributeSet
 import android.view.View
 import androidx.core.content.ContextCompat
 import com.blankj.utilcode.util.SizeUtils
-import com.mpdc4gsr.libunified.app.R
+import com.mpdc4gsr.libunified.R
 
 
 class ColorView : View {

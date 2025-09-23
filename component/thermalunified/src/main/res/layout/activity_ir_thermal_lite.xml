@@ -43,7 +43,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="6dp"
-            app:deviceType="lite"
+            app:deviceType="2"
             app:layout_constraintBottom_toTopOf="@id/view_menu_first"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
@@ -116,7 +116,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <com.mpdc4gsr.module.thermal.ir.view.ChartTrendView
+        <com.mpdc4gsr.module.thermalunified.view.ChartTrendView
             android:id="@+id/view_chart_trend"
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -238,7 +238,7 @@
             app:rsb_tick_mark_mode="number" />
     </com.mpdc4gsr.lib.ui.widget.BitmapConstraintLayout>
 
-    <com.mpdc4gsr.module.thermal.ir.view.TimeDownView
+    <com.mpdc4gsr.module.thermalunified.view.TimeDownView
         android:id="@+id/time_down_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

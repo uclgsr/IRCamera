@@ -1,0 +1,1 @@
+# BLE Module consumer proguard rules

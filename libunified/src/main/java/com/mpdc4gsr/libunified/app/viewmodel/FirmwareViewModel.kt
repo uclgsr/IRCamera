@@ -7,7 +7,7 @@ import com.blankj.utilcode.util.FileUtils
 import com.blankj.utilcode.util.Utils
 import com.elvishew.xlog.XLog
 import com.google.gson.Gson
-import com.mpdc4gsr.libunified.app.R
+import com.mpdc4gsr.libunified.R
 import com.mpdc4gsr.libunified.app.config.FileConfig
 import com.mpdc4gsr.libunified.app.lms.LMS
 import com.mpdc4gsr.libunified.app.lms.UrlConstant

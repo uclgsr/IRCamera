@@ -1,4 +1,4 @@
-package com.mpdc4gsr.module.thermal.ir.activity
+package com.mpdc4gsr.module.thermalunified.activity
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -11,9 +11,9 @@ import com.blankj.utilcode.util.SizeUtils
 import com.mpdc4gsr.libunified.app.ktbase.BaseActivity
 import com.mpdc4gsr.libunified.app.tools.UnitTools
 import com.mpdc4gsr.lib.ui.widget.MyItemDecoration
-import com.mpdc4gsr.module.thermal.ir.R
-import com.mpdc4gsr.module.thermal.ir.view.EmissivityView
-import com.mpdc4gsr.libunified.app.R as LibR
+import com.mpdc4gsr.module.thermalunified.R
+import com.mpdc4gsr.module.thermalunified.view.EmissivityView
+import com.mpdc4gsr.libunified.R as LibR
 
 
 class IREmissivityActivity : BaseActivity() {

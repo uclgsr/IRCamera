@@ -1,11 +1,11 @@
-package com.example.thermal_lite.activity
+package com.mpdc4gsr.module.thermalunified.lite.activity
 
 import android.content.Intent
 import android.os.Bundle
 import androidx.lifecycle.lifecycleScope
-import com.example.thermal_lite.R
-import com.example.thermal_lite.databinding.ActivityIrCorrectionLiteThreeBinding
-import com.example.thermal_lite.fragment.IRMonitorLiteFragment
+import com.mpdc4gsr.module.thermalunified.lite.R
+import com.mpdc4gsr.module.thermalunified.lite.databinding.ActivityIrCorrectionLiteThreeBinding
+import com.mpdc4gsr.module.thermalunified.lite.fragment.IRMonitorLiteFragment
 import com.mpdc4gsr.libunified.app.ktbase.BaseActivity
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch

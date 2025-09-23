@@ -24,7 +24,7 @@
         android:layout_marginTop="12dp"
         android:paddingHorizontal="16dp">
 
-        <com.mpdc4gsr.module.thermal.ir.view.DetectHorizontalScrollView
+        <com.mpdc4gsr.module.thermalunified.view.DetectHorizontalScrollView
             android:id="@+id/hsv_report"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -35,7 +35,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 tools:listitem="@layout/item_report_floor_child" />
-        </com.mpdc4gsr.module.thermal.ir.view.DetectHorizontalScrollView>
+        </com.mpdc4gsr.module.thermalunified.view.DetectHorizontalScrollView>
 
         <LinearLayout
             android:layout_width="match_parent"

@@ -1,4 +1,4 @@
-package com.mpdc4gsr.module.thermal.ir.popup
+package com.mpdc4gsr.module.thermalunified.popup
 
 import android.content.Context
 import android.view.Gravity
@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.SizeUtils
 import com.mpdc4gsr.libunified.app.view.MyTextView
-import com.mpdc4gsr.module.thermal.ir.R
+import com.mpdc4gsr.module.thermalunified.R
 
 
 class OptionPickPopup(

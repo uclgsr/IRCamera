@@ -18,7 +18,7 @@ import java.util.concurrent.atomic.AtomicInteger
 
 /**
  * TC001 Hardware Integration Tests - Android Instrumentation Tests
- * 
+ *
  * These tests are designed to run on actual Android devices with TC001 hardware
  * to validate real-world integration scenarios.
  */
@@ -35,7 +35,7 @@ class TC001HardwareIntegrationTest {
         context = ApplicationProvider.getApplicationContext()
         usbManager = context.getSystemService(Context.USB_SERVICE) as UsbManager
         thermalRecorder = ThermalCameraRecorder(context)
-        
+
         // Create test session directory
         testSessionDir = File(context.cacheDir, "tc001_hardware_test_${System.currentTimeMillis()}")
         testSessionDir.mkdirs()
@@ -51,7 +51,7 @@ class TC001HardwareIntegrationTest {
                 // Ignore cleanup errors
             }
         }
-        
+
         // Clean up test directory
         testSessionDir.deleteRecursively()
     }
@@ -63,7 +63,7 @@ class TC001HardwareIntegrationTest {
     fun testRealTC001USBPermissionFlow() = runBlocking {
         // Given: Check for connected TC001 device
         val tc001Device = findTC001Device()
-        
+
         if (tc001Device == null) {
             println("Skipping test: No TC001 device connected")
             return@runBlocking
@@ -116,7 +116,7 @@ class TC001HardwareIntegrationTest {
 
         val testStartTime = System.currentTimeMillis()
         delay(testDurationMs)
-        
+
         thermalRecorder.stopRecording()
 
         // Then: Analyze frame rate
@@ -128,8 +128,10 @@ class TC001HardwareIntegrationTest {
         println("Actual frame rate: $actualFrameRate Hz")
 
         // Verify frame rate is close to 10Hz (allow 8-12Hz range for real hardware)
-        assertTrue("Frame rate should be approximately 10Hz, got $actualFrameRate Hz", 
-                  actualFrameRate >= 8.0 && actualFrameRate <= 12.0)
+        assertTrue(
+            "Frame rate should be approximately 10Hz, got $actualFrameRate Hz",
+            actualFrameRate >= 8.0 && actualFrameRate <= 12.0
+        )
     }
 
     /**
@@ -174,7 +176,7 @@ class TC001HardwareIntegrationTest {
 
         // Then: Recording should have continued
         assertTrue("Recording should continue despite hardware changes", recordingContinued.get())
-        
+
         val stopResult = thermalRecorder.stopRecording()
         assertTrue("Should stop recording successfully", stopResult)
     }
@@ -192,22 +194,22 @@ class TC001HardwareIntegrationTest {
 
         // Given: TC001 recording setup
         thermalRecorder.initialize()
-        
+
         // When: Record thermal data with image saving
         val recordingStarted = thermalRecorder.startRecording(testSessionDir.absolutePath)
         assertTrue("Recording should start", recordingStarted)
 
         // Record for sufficient time to generate frames
         delay(2000)
-        
+
         thermalRecorder.stopRecording()
 
         // Then: Verify file outputs
         val thermalImagesDir = File(testSessionDir, "thermal_images")
         assertTrue("Thermal images directory should exist", thermalImagesDir.exists())
 
-        val csvFiles = testSessionDir.listFiles { _, name -> 
-            name.contains("thermal") && name.endsWith(".csv") 
+        val csvFiles = testSessionDir.listFiles { _, name ->
+            name.contains("thermal") && name.endsWith(".csv")
         }
         assertNotNull("Should have thermal CSV files", csvFiles)
         assertTrue("Should have at least one thermal CSV file", csvFiles!!.isNotEmpty())
@@ -221,7 +223,7 @@ class TC001HardwareIntegrationTest {
         return deviceList.values.find { device ->
             // TC001 VID/PID: 0x2744/0x0001 or other known TC001 identifiers
             (device.vendorId == 0x2744 && device.productId == 0x0001) ||
-            device.productName?.contains("TC001", ignoreCase = true) == true
+                    device.productName?.contains("TC001", ignoreCase = true) == true
         }
     }
 }

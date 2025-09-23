@@ -150,7 +150,7 @@
         app:layout_constraintTop_toBottomOf="@id/tv_size_title"
         tools:visibility="visible" />
 
-    <com.mpdc4gsr.libunified.app.widget.seekbar.RangeSeekBar
+    <com.mpdc4gsr.libunified.ui.widget.seekbar.RangeSeekBar
         android:id="@+id/nifty_slider_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

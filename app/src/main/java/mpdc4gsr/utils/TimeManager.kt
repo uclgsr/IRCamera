@@ -76,7 +76,10 @@ class TimeManager(
     ): Boolean {
         return withContext(Dispatchers.IO) {
             try {
-                Log.i(TAG, "Starting enhanced NTP-like time synchronization with PC Controller: $pcControllerAddress:$port")
+                Log.i(
+                    TAG,
+                    "Starting enhanced NTP-like time synchronization with PC Controller: $pcControllerAddress:$port"
+                )
                 Log.i(TAG, "Assumption: Both devices are synchronized to internet time servers for baseline accuracy")
 
                 setPCConnectionInfo(pcControllerAddress, port)
@@ -550,9 +553,9 @@ class TimeManager(
             SyncQualityLevel.POOR -> "POOR (> ${SYNC_QUALITY_THRESHOLD_MS * 4}ms)"
             SyncQualityLevel.NOT_SYNCED -> "NOT_SYNCED"
         }
-        
+
         Log.i(TAG, "Cross-device sync quality: $qualityLevel")
-        quality.qualityMs?.let { 
+        quality.qualityMs?.let {
             Log.i(TAG, "Network latency quality: ${it}ms")
         }
         Log.i(TAG, "Clock offset: ${quality.offsetNs}ns (${quality.offsetNs / 1_000_000}ms)")

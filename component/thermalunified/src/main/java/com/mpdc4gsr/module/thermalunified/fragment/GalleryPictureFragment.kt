@@ -1,4 +1,4 @@
-package com.mpdc4gsr.module.thermal.fragment
+package com.mpdc4gsr.module.thermalunified.fragment
 
 import android.content.Intent
 import android.net.Uri
@@ -9,10 +9,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.ScreenUtils
 import com.mpdc4gsr.libunified.app.dialog.TipDialog
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModelFragment
-import com.mpdc4gsr.module.thermal.R
-import com.mpdc4gsr.module.thermal.adapter.GalleryAdapter
-import com.mpdc4gsr.module.thermal.tools.GlideImageEngine
-import com.mpdc4gsr.module.thermal.viewmodel.GalleryViewModel
+import com.mpdc4gsr.module.thermalunified.R
+import com.mpdc4gsr.module.thermalunified.adapter.GalleryAdapter
+import com.mpdc4gsr.module.thermalunified.tools.GlideImageEngine
+import com.mpdc4gsr.module.thermalunified.viewmodel.GalleryViewModel
 import java.io.File
 
 class GalleryPictureFragment : BaseViewModelFragment<GalleryViewModel>() {

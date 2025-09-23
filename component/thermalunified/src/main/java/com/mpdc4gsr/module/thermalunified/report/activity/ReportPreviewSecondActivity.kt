@@ -1,4 +1,4 @@
-package com.mpdc4gsr.module.thermal.ir.report.activity
+package com.mpdc4gsr.module.thermalunified.report.activity
 
 import android.content.Intent
 import android.text.TextUtils
@@ -28,17 +28,17 @@ import com.mpdc4gsr.libunified.app.tools.FileTools
 import com.mpdc4gsr.libunified.app.tools.GlideLoader
 import com.mpdc4gsr.libunified.app.utils.NetWorkUtils
 import com.mpdc4gsr.libunified.app.view.TitleView
-import com.mpdc4gsr.module.thermal.ir.R
-import com.mpdc4gsr.module.thermal.ir.report.bean.ReportBean
-import com.mpdc4gsr.module.thermal.ir.report.view.ReportIRShowView
-import com.mpdc4gsr.module.thermal.ir.report.view.ReportInfoView
-import com.mpdc4gsr.module.thermal.ir.report.view.WatermarkView
-import com.mpdc4gsr.module.thermal.ir.report.viewmodel.UpReportViewModel
+import com.mpdc4gsr.module.thermalunified.R
+import com.mpdc4gsr.module.thermalunified.report.bean.ReportBean
+import com.mpdc4gsr.module.thermalunified.report.view.ReportIRShowView
+import com.mpdc4gsr.module.thermalunified.report.view.ReportInfoView
+import com.mpdc4gsr.module.thermalunified.report.view.WatermarkView
+import com.mpdc4gsr.module.thermalunified.report.viewmodel.UpReportViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import java.io.File
-import com.mpdc4gsr.libunified.app.R as LibCoreR
+import com.mpdc4gsr.libunified.R as LibCoreR
 import com.mpdc4gsr.lib.ui.R as UiR
 
 

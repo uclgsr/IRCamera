@@ -15,7 +15,7 @@ import android.widget.ScrollView
 import androidx.core.content.ContextCompat
 import com.blankj.utilcode.util.UriUtils
 import com.blankj.utilcode.util.Utils
-import com.mpdc4gsr.libunified.app.R
+import com.mpdc4gsr.libunified.R
 import com.mpdc4gsr.libunified.app.config.FileConfig
 import java.io.BufferedOutputStream
 import java.io.File

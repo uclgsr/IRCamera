@@ -34,7 +34,7 @@ import com.mpdc4gsr.module.thermalunified.repository.ConfigRepository
 import com.mpdc4gsr.module.thermalunified.viewmodel.IRConfigViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import com.mpdc4gsr.libunified.app.R as LibR
+import com.mpdc4gsr.libunified.R as LibR
 
 
 class IRConfigActivity : BaseActivity(), View.OnClickListener {

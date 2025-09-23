@@ -62,13 +62,13 @@ abstract class HouseReportDao {
     abstract fun insertItem(itemReport: ItemReport): Long
 
     @Delete
-    abstract fun deleteReport(vararg houseReport: HouseReport)
+    abstract fun deleteReport(houseReport: HouseReport)
 
     @Delete
-    abstract fun deleteDir(vararg dirReport: DirReport)
+    abstract fun deleteDir(dirReport: DirReport)
 
     @Delete
-    abstract fun deleteItem(vararg itemReport: ItemReport)
+    abstract fun deleteItem(itemReport: ItemReport)
 
     @Update
     abstract fun updateReport(houseReport: HouseReport)

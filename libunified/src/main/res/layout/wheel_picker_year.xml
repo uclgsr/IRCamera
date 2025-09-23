@@ -17,7 +17,7 @@
         android:paddingTop="16dp"
         android:paddingBottom="16dp">
 
-        <com.github.gzuliyujiang.wheelpicker.widget.DateWheelLayout
+        <com.mpdc4gsr.libunified.ui.gzuliyujiang.wheelpicker.widget.DateWheelLayout
             android:id="@+id/wheel_picker_date_wheel"
             style="@style/WheelDefault"
             android:layout_width="match_parent"

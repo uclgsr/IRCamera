@@ -14,7 +14,7 @@ import androidx.core.content.FileProvider
 import com.elvishew.xlog.XLog
 import com.google.gson.Gson
 import com.mpdc4gsr.libunified.app.BaseApplication
-import com.mpdc4gsr.libunified.app.R
+import com.mpdc4gsr.libunified.R
 import com.mpdc4gsr.libunified.app.bean.event.SocketStateEvent
 import com.mpdc4gsr.libunified.app.bean.event.device.DeviceConnectEvent
 import com.mpdc4gsr.libunified.app.bean.response.ResponseUserInfo

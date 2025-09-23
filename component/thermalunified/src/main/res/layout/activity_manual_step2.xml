@@ -127,7 +127,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="end" />
 
-        <com.mpdc4gsr.module.thermal.ir.view.MoveImageView
+        <com.mpdc4gsr.module.thermalunified.view.MoveImageView
             android:id="@+id/moveImageView"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />

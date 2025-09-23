@@ -69,7 +69,7 @@ android {
 
 dependencies {
     coreLibraryDesugaring(libs.desugar.jdk.libs)
-    implementation(project(":ble-core"))
+    implementation(project(":BleModule"))
     implementation(project(":libunified"))
     implementation(project(":component:user"))
     compileOnly(files("../../libunified/libs/suplib-release.aar"))

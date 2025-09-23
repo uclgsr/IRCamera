@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
-import com.mpdc4gsr.libunified.app.R
+import com.mpdc4gsr.libunified.R
 import com.mpdc4gsr.libunified.app.bean.event.SocketStateEvent
 import com.mpdc4gsr.libunified.app.bean.event.device.DeviceConnectEvent
 import com.mpdc4gsr.libunified.app.dialog.LoadingDialog

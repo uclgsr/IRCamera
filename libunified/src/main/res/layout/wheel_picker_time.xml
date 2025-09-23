@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal">
 
-    <com.github.gzuliyujiang.wheelview.widget.NumberWheelView
+    <com.mpdc4gsr.libunified.ui.gzuliyujiang.wheelview.widget.NumberWheelView
         android:id="@+id/wheel_picker_time_hour_wheel"
         style="@style/WheelDefault"
         android:layout_width="0dp"
@@ -21,7 +21,7 @@
         android:textColor="#FF2B79D7"
         android:textSize="@dimen/app_font" />
 
-    <com.github.gzuliyujiang.wheelview.widget.NumberWheelView
+    <com.mpdc4gsr.libunified.ui.gzuliyujiang.wheelview.widget.NumberWheelView
         android:id="@+id/wheel_picker_time_minute_wheel"
         style="@style/WheelDefault"
         android:layout_width="0dp"
@@ -38,7 +38,7 @@
         android:textColor="#FF2B79D7"
         android:textSize="@dimen/app_font" />
 
-    <com.github.gzuliyujiang.wheelview.widget.NumberWheelView
+    <com.mpdc4gsr.libunified.ui.gzuliyujiang.wheelview.widget.NumberWheelView
         android:id="@+id/wheel_picker_time_second_wheel"
         style="@style/WheelDefault"
         android:layout_width="0dp"
@@ -55,7 +55,7 @@
         android:textColor="#FF2B79D7"
         android:textSize="@dimen/app_font" />
 
-    <com.github.gzuliyujiang.wheelview.widget.WheelView
+    <com.mpdc4gsr.libunified.ui.gzuliyujiang.wheelview.widget.WheelView
         android:id="@+id/wheel_picker_time_meridiem_wheel"
         style="@style/WheelDefault"
         android:layout_width="0dp"

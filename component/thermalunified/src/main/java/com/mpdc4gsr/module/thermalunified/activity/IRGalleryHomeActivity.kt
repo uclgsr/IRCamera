@@ -1,4 +1,4 @@
-package com.mpdc4gsr.module.thermal.ir.activity
+package com.mpdc4gsr.module.thermalunified.activity
 
 import android.os.Bundle
 import androidx.activity.OnBackPressedCallback
@@ -6,9 +6,9 @@ import androidx.activity.viewModels
 import com.mpdc4gsr.libunified.app.config.ExtraKeyConfig
 import com.mpdc4gsr.libunified.app.ktbase.BaseActivity
 import com.mpdc4gsr.libunified.app.repository.GalleryRepository.DirType
-import com.mpdc4gsr.module.thermal.ir.R
-import com.mpdc4gsr.module.thermal.ir.fragment.IRGalleryTabFragment
-import com.mpdc4gsr.module.thermal.ir.viewmodel.IRGalleryTabViewModel
+import com.mpdc4gsr.module.thermalunified.R
+import com.mpdc4gsr.module.thermalunified.fragment.IRGalleryTabFragment
+import com.mpdc4gsr.module.thermalunified.viewmodel.IRGalleryTabViewModel
 
 
 class IRGalleryHomeActivity : BaseActivity() {

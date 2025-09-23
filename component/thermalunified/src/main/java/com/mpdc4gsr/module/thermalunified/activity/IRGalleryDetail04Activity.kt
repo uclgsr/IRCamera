@@ -1,4 +1,4 @@
-package com.mpdc4gsr.module.thermal.ir.activity
+package com.mpdc4gsr.module.thermalunified.activity
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -30,13 +30,13 @@ import com.mpdc4gsr.libunified.app.lms.weiget.TToast
 import com.mpdc4gsr.libunified.app.tools.FileTools
 import com.mpdc4gsr.libunified.app.tools.TimeTool
 import com.mpdc4gsr.libunified.app.tools.ToastTools
-import com.mpdc4gsr.module.thermal.ir.R
-import com.mpdc4gsr.module.thermal.ir.event.GalleryDownloadEvent
-import com.mpdc4gsr.module.thermal.ir.fragment.GalleryFragment
+import com.mpdc4gsr.module.thermalunified.R
+import com.mpdc4gsr.module.thermalunified.event.GalleryDownloadEvent
+import com.mpdc4gsr.module.thermalunified.fragment.GalleryFragment
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import java.io.File
-import com.mpdc4gsr.libunified.app.R as LibR
+import com.mpdc4gsr.libunified.R as LibR
 import com.mpdc4gsr.lib.ui.R as UiR
 
 

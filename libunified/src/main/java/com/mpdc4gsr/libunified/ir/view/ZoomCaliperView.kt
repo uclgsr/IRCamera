@@ -16,7 +16,7 @@ import android.widget.LinearLayout
 import android.widget.Magnifier
 import androidx.core.content.ContextCompat
 import com.blankj.utilcode.util.SizeUtils
-import com.mpdc4gsr.libunified.ir.R
+import com.mpdc4gsr.libunified.R
 import com.mpdc4gsr.libunified.ir.utils.TargetUtils
 import com.mpdc4gsr.libunified.app.bean.ObserveBean
 

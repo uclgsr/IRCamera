@@ -155,7 +155,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import kotlin.math.roundToInt
-import com.mpdc4gsr.libunified.app.R as LibcoreR
+import com.mpdc4gsr.libunified.R as LibcoreR
 
 
 open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
@@ -297,7 +297,7 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
     private val tvTitleObserve by lazy { findViewById<TextView>(R.id.tv_title_observe) }
 
 
-    protected var compassView: com.mpdc4gsr.module.thermal.ir.view.compass.LinearCompassView? = null
+    protected var compassView: com.mpdc4gsr.module.thermalunified.view.compass.LinearCompassView? = null
 
 
     private val bitmapWidth: Int

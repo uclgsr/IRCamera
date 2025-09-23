@@ -18,6 +18,10 @@
 
     <color name="wheel_select_bg">#1A2B79D7</color>
     <color name="wheel_select_text">#FFFFFF</color>
+
+    <!-- Missing colors for libunified functionality -->
+    <color name="we_read_theme_color">#2B79D8</color>
+    <color name="toolbar_16131E">#16131E</color>
     <color name="wheel_unselect_text">#B2FFFFFF</color>
     <color name="ui_main_custom_color">#8A898E</color>
     <color name="color_green_point">#0CEB82</color>
@@ -26,5 +30,45 @@
     <color name="font_color">#FFFFFF</color>
     <color name="font_second_color">#CCFFFFFF</color>
     <color name="color_23202E">#23202E</color>
+    <color name="color_16131E">#16131E</color>
+
+    <!-- Semi-transparent white colors needed by layouts -->
+    <color name="color_B3FFFFFF">#B3FFFFFF</color>
+    <color name="color_66FFFFFF">#66FFFFFF</color>
+    <color name="color_80FFFFFF">#80FFFFFF</color>
+    <color name="color_CCFFFFFF">#CCFFFFFF</color>
+
+    <!-- Additional missing colors -->
+    <color name="grey">#FF808080</color>
+    <color name="white_80">#CCFFFFFF</color>
+
+    <!-- More missing colors from error messages -->
+    <color name="color_bg_min">#FF4CAF50</color>
+    <color name="lms_red">#FFFF0000</color>
+    <color name="toastTextColor">#FFFFFFFF</color>
+
+    <!-- Missing primary colors -->
+    <color name="colorPrimary">#FF1976D2</color>
+    <color name="colorPrimaryDark">#FF1565C0</color>
+
+    <!-- Additional missing colors from latest build errors -->
+    <color name="lms_color_999">#FF999999</color>
+    <color name="lms_color_333">#FF333333</color>
+    <color name="toolbar_5F16131E">#5F16131E</color>
+    <color name="transparent">#00000000</color>
+    <color name="color_font">#FFFFFFFF</color>
+
+    <!-- Missing colors for cross-module compatibility -->
+    <color name="color_E74380">#FFE74380</color>
+    <color name="temp_font_color">#FFFFFFFF</color>
+    <color name="temp_font_second_color">#FFCCCCCC</color>
+    <color name="temp_font_title_item_color">#FFFFFFFF</color>
+    <color name="tx_333">#FF333333</color>
+    <color name="ir_bg_color">#FF16131E</color>
+    <color name="color_img_calibration_normal">#FFCCCCCC</color>
+    <color name="color_img_calibration_left">#FF4CAF50</color>
+    <color name="color_img_calibration_right">#FF4CAF50</color>
+    <color name="color_img_calibration_button">#FF2196F3</color>
+    <color name="chart_line_min">#FF00C853</color>
 
 </resources>

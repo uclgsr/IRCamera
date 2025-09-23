@@ -239,11 +239,11 @@ class NetworkServer(
             try {
                 val reader = inputReader ?: return@withContext null
                 val line = reader.readLine()
-                
+
                 if (line != null) {
                     Log.d(TAG, "Received message from PC: $line")
                 }
-                
+
                 return@withContext line
             } catch (e: Exception) {
                 Log.e(TAG, "Error receiving message", e)

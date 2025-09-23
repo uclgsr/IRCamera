@@ -12,7 +12,7 @@ import com.mpdc4gsr.libunified.ui.gzuliyujiang.wheelpicker.contract.OnOptionSele
 import com.mpdc4gsr.libunified.ui.gzuliyujiang.wheelview.annotation.CurtainCorner;
 import com.mpdc4gsr.libunified.ui.gzuliyujiang.wheelview.annotation.ItemTextAlign;
 import com.mpdc4gsr.libunified.ui.gzuliyujiang.wheelview.widget.WheelView;
-import com.mpdc4gsr.lib.ui.R;
+import com.mpdc4gsr.libunified.R;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.mpdc4gsr.module.thermal.ir.report.activity
+package com.mpdc4gsr.module.thermalunified.report.activity
 
 import android.text.TextUtils
 import android.util.Log
@@ -24,9 +24,9 @@ import com.mpdc4gsr.libunified.app.navigation.NavigationManager
 import com.mpdc4gsr.libunified.app.socket.WebSocketProxy
 import com.mpdc4gsr.libunified.app.utils.NetWorkUtils
 import com.mpdc4gsr.libunified.app.view.TitleView
-import com.mpdc4gsr.module.thermal.ir.R
-import com.mpdc4gsr.module.thermal.ir.adapter.PDFAdapter
-import com.mpdc4gsr.module.thermal.ir.report.viewmodel.PdfViewModel
+import com.mpdc4gsr.module.thermalunified.R
+import com.mpdc4gsr.module.thermalunified.adapter.PDFAdapter
+import com.mpdc4gsr.module.thermalunified.report.viewmodel.PdfViewModel
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

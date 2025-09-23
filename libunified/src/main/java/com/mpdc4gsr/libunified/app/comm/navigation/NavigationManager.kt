@@ -90,45 +90,45 @@ object NavigationManager {
                 RouterConfig.IR_GALLERY_EDIT -> getClassByName("mpdc4gsr.IRGalleryEditActivity")
                 RouterConfig.WEB_VIEW -> getClassByName("mpdc4gsr.WebViewActivity")
 
-                RouterConfig.IR_MAIN -> getClassByName("com.mpdc4gsr.module.thermal.ir.activity.IRMainActivity")
-                RouterConfig.IR_SETTING -> getClassByName("com.mpdc4gsr.module.thermal.ir.activity.IRConfigActivity")
-                RouterConfig.IR_THERMAL_MONITOR -> getClassByName("com.mpdc4gsr.module.thermal.ir.activity.IRMonitorActivity")
-                RouterConfig.IR_MONITOR_CHART -> getClassByName("com.mpdc4gsr.module.thermal.ir.activity.IRMonitorChartActivity")
-                RouterConfig.IR_GALLERY_DETAIL_01 -> getClassByName("com.mpdc4gsr.module.thermal.ir.activity.IRGalleryDetail01Activity")
-                RouterConfig.IR_GALLERY_DETAIL_04 -> getClassByName("com.mpdc4gsr.module.thermal.ir.activity.IRGalleryDetail04Activity")
-                RouterConfig.IR_VIDEO_GSY -> getClassByName("com.mpdc4gsr.module.thermal.ir.activity.IRVideoGSYActivity")
-                RouterConfig.IR_CORRECTION_TWO -> getClassByName("com.mpdc4gsr.module.thermal.ir.activity.IRCorrectionTwoActivity")
-                RouterConfig.IR_CORRECTION_THREE -> getClassByName("com.mpdc4gsr.module.thermal.ir.activity.IRCorrectionThreeActivity")
-                RouterConfig.IR_CORRECTION_FOUR -> getClassByName("com.mpdc4gsr.module.thermal.ir.activity.IRCorrectionFourActivity")
-                RouterConfig.IR_IMG_PICK -> getClassByName("com.mpdc4gsr.module.thermal.ir.activity.ImagePickIRActivity")
-                RouterConfig.IR_IMG_PICK_PLUS -> getClassByName("com.mpdc4gsr.module.thermal.ir.activity.ImagePickIRPlushActivity")
+                RouterConfig.IR_MAIN -> getClassByName("com.mpdc4gsr.module.thermalunified.activity.IRMainActivity")
+                RouterConfig.IR_SETTING -> getClassByName("com.mpdc4gsr.module.thermalunified.activity.IRConfigActivity")
+                RouterConfig.IR_THERMAL_MONITOR -> getClassByName("com.mpdc4gsr.module.thermalunified.activity.IRMonitorActivity")
+                RouterConfig.IR_MONITOR_CHART -> getClassByName("com.mpdc4gsr.module.thermalunified.activity.IRMonitorChartActivity")
+                RouterConfig.IR_GALLERY_DETAIL_01 -> getClassByName("com.mpdc4gsr.module.thermalunified.activity.IRGalleryDetail01Activity")
+                RouterConfig.IR_GALLERY_DETAIL_04 -> getClassByName("com.mpdc4gsr.module.thermalunified.activity.IRGalleryDetail04Activity")
+                RouterConfig.IR_VIDEO_GSY -> getClassByName("com.mpdc4gsr.module.thermalunified.activity.IRVideoGSYActivity")
+                RouterConfig.IR_CORRECTION_TWO -> getClassByName("com.mpdc4gsr.module.thermalunified.activity.IRCorrectionTwoActivity")
+                RouterConfig.IR_CORRECTION_THREE -> getClassByName("com.mpdc4gsr.module.thermalunified.activity.IRCorrectionThreeActivity")
+                RouterConfig.IR_CORRECTION_FOUR -> getClassByName("com.mpdc4gsr.module.thermalunified.activity.IRCorrectionFourActivity")
+                RouterConfig.IR_IMG_PICK -> getClassByName("com.mpdc4gsr.module.thermalunified.activity.ImagePickIRActivity")
+                RouterConfig.IR_IMG_PICK_PLUS -> getClassByName("com.mpdc4gsr.module.thermalunified.activity.ImagePickIRPlushActivity")
 
-                RouterConfig.GALLERY -> getClassByName("com.mpdc4gsr.module.thermal.activity.GalleryActivity")
-                RouterConfig.THERMAL_MONITOR -> getClassByName("com.mpdc4gsr.module.thermal.activity.MonitorActivity")
-                RouterConfig.CONNECT -> getClassByName("com.mpdc4gsr.module.thermal.activity.ConnectActivity")
-                RouterConfig.VIDEO -> getClassByName("com.mpdc4gsr.module.thermal.activity.VideoActivity")
-                RouterConfig.MONITOR_CHART -> getClassByName("com.mpdc4gsr.module.thermal.activity.MonitorChartActivity")
-                RouterConfig.LOG_MP_CHART -> getClassByName("com.mpdc4gsr.module.thermal.activity.LogMpChartActivity")
+                RouterConfig.GALLERY -> getClassByName("com.mpdc4gsr.module.thermalunified.activity.GalleryActivity")
+                RouterConfig.THERMAL_MONITOR -> getClassByName("com.mpdc4gsr.module.thermalunified.activity.MonitorActivity")
+                RouterConfig.CONNECT -> getClassByName("com.mpdc4gsr.module.thermalunified.activity.ConnectActivity")
+                RouterConfig.VIDEO -> getClassByName("com.mpdc4gsr.module.thermalunified.activity.VideoActivity")
+                RouterConfig.MONITOR_CHART -> getClassByName("com.mpdc4gsr.module.thermalunified.activity.MonitorChartActivity")
+                RouterConfig.LOG_MP_CHART -> getClassByName("com.mpdc4gsr.module.thermalunified.activity.LogMpChartActivity")
 
-                RouterConfig.IR_TCLITE -> getClassByName("com.example.thermal_lite.activity.IRThermalLiteActivity")
-                RouterConfig.IR_THERMAL_MONITOR_LITE -> getClassByName("com.example.thermal_lite.activity.IRMonitorLiteActivity")
-                RouterConfig.IR_IMG_PICK_LITE -> getClassByName("com.example.thermal_lite.activity.ImagePickIRLiteActivity")
-                RouterConfig.IR_MONITOR_CHART_LITE -> getClassByName("com.example.thermal_lite.activity.IRMonitorChartLiteActivity")
-                RouterConfig.IR_CORRECTION_THREE_LITE -> getClassByName("com.example.thermal_lite.activity.IRCorrectionLiteThreeActivity")
-                RouterConfig.IR_CORRECTION_FOUR_LITE -> getClassByName("com.example.thermal_lite.activity.IRCorrectionLiteFourActivity")
+                RouterConfig.IR_TCLITE -> getClassByName("com.mpdc4gsr.module.thermalunified.lite.activity.IRThermalLiteActivity")
+                RouterConfig.IR_THERMAL_MONITOR_LITE -> getClassByName("com.mpdc4gsr.module.thermalunified.lite.activity.IRMonitorLiteActivity")
+                RouterConfig.IR_IMG_PICK_LITE -> getClassByName("com.mpdc4gsr.module.thermalunified.lite.activity.ImagePickIRLiteActivity")
+                RouterConfig.IR_MONITOR_CHART_LITE -> getClassByName("com.mpdc4gsr.module.thermalunified.lite.activity.IRMonitorChartLiteActivity")
+                RouterConfig.IR_CORRECTION_THREE_LITE -> getClassByName("com.mpdc4gsr.module.thermalunified.lite.activity.IRCorrectionLiteThreeActivity")
+                RouterConfig.IR_CORRECTION_FOUR_LITE -> getClassByName("com.mpdc4gsr.module.thermalunified.lite.activity.IRCorrectionLiteFourActivity")
 
-                RouterConfig.REPORT_CREATE_FIRST -> getClassByName("com.mpdc4gsr.module.thermal.ir.report.activity.ReportCreateFirstActivity")
+                RouterConfig.REPORT_CREATE_FIRST -> getClassByName("com.mpdc4gsr.module.thermalunified.report.activity.ReportCreateFirstActivity")
                 RouterConfig.REPORT_CREATE_SECOND ->
                     getClassByName(
-                        "com.mpdc4gsr.module.thermal.ir.report.activity.ReportCreateSecondActivity",
+                        "com.mpdc4gsr.module.thermalunified.report.activity.ReportCreateSecondActivity",
                     )
 
                 RouterConfig.REPORT_PREVIEW_SECOND ->
                     getClassByName(
-                        "com.mpdc4gsr.module.thermal.ir.report.activity.ReportPreviewSecondActivity",
+                        "com.mpdc4gsr.module.thermalunified.report.activity.ReportPreviewSecondActivity",
                     )
 
-                RouterConfig.REPORT_PICK_IMG -> getClassByName("com.mpdc4gsr.module.thermal.ir.activity.ReportPickImgActivity")
+                RouterConfig.REPORT_PICK_IMG -> getClassByName("com.mpdc4gsr.module.thermalunified.activity.ReportPickImgActivity")
 
                 RouterConfig.QUESTION -> getClassByName("com.mpdc4gsr.module.user.activity.QuestionActivity")
                 RouterConfig.ELECTRONIC_MANUAL -> getClassByName("com.mpdc4gsr.module.user.activity.ElectronicManualActivity")

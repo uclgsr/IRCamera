@@ -1,4 +1,4 @@
-package com.mpdc4gsr.module.thermal.ir.activity
+package com.mpdc4gsr.module.thermalunified.activity
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -8,10 +8,10 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.mpdc4gsr.libunified.app.config.ExtraKeyConfig
 import com.mpdc4gsr.libunified.app.ktbase.BaseActivity
-import com.mpdc4gsr.module.thermal.ir.R
-import com.mpdc4gsr.module.thermal.ir.event.MonitorSaveEvent
-import com.mpdc4gsr.module.thermal.ir.fragment.IRMonitorCaptureFragment
-import com.mpdc4gsr.module.thermal.ir.fragment.IRMonitorHistoryFragment
+import com.mpdc4gsr.module.thermalunified.R
+import com.mpdc4gsr.module.thermalunified.event.MonitorSaveEvent
+import com.mpdc4gsr.module.thermalunified.fragment.IRMonitorCaptureFragment
+import com.mpdc4gsr.module.thermalunified.fragment.IRMonitorHistoryFragment
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 

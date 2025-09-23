@@ -1,4 +1,4 @@
-package com.mpdc4gsr.module.thermal.ir.adapter
+package com.mpdc4gsr.module.thermalunified.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -10,7 +10,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.mpdc4gsr.libunified.app.bean.HouseRepPreviewProjectItemBean
-import com.mpdc4gsr.module.thermal.ir.R
+import com.mpdc4gsr.module.thermalunified.R
 
 @SuppressLint("NotifyDataSetChanged")
 class ReportPreviewFloorAdapter(

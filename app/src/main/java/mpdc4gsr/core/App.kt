@@ -7,8 +7,8 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatDelegate
 import com.csl.irCamera.BuildConfig
 import com.elvishew.xlog.XLog
-import com.example.thermal_lite.IrConst
-import com.example.thermal_lite.util.CommonUtil
+import com.mpdc4gsr.module.thermalunified.lite.IrConst
+import com.mpdc4gsr.module.thermalunified.lite.util.CommonUtil
 import com.mpdc4gsr.libunified.app.BaseApplication
 import com.mpdc4gsr.libunified.app.common.SharedManager
 import com.mpdc4gsr.libunified.app.config.HttpConfig

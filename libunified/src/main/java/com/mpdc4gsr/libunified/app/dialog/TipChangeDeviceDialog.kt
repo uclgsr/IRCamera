@@ -8,8 +8,8 @@ import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.ImageView
 import androidx.annotation.StringRes
-import com.mpdc4gsr.libunified.app.R
-import com.mpdc4gsr.libunified.app.databinding.DialogTipChangeDeviceBinding
+import com.mpdc4gsr.libunified.R
+import com.mpdc4gsr.libunified.databinding.DialogTipChangeDeviceBinding
 import com.mpdc4gsr.libunified.app.utils.ScreenUtil
 
 @Deprecated("3.80使用新首页设备列表逻辑，不需要设备切换提示弹框了")

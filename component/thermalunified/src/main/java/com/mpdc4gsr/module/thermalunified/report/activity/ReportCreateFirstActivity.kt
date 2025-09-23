@@ -1,4 +1,4 @@
-package com.mpdc4gsr.module.thermal.ir.report.activity
+package com.mpdc4gsr.module.thermalunified.report.activity
 
 import android.annotation.SuppressLint
 import android.location.Address
@@ -31,11 +31,11 @@ import com.mpdc4gsr.libunified.app.navigation.NavigationManager
 import com.mpdc4gsr.libunified.app.tools.NumberTools
 import com.mpdc4gsr.libunified.app.tools.UnitTools
 import com.mpdc4gsr.libunified.app.utils.CommUtils
-import com.mpdc4gsr.module.thermal.ir.R
-import com.mpdc4gsr.module.thermal.ir.report.bean.ImageTempBean
-import com.mpdc4gsr.module.thermal.ir.report.bean.ReportConditionBean
-import com.mpdc4gsr.module.thermal.ir.report.bean.ReportInfoBean
-import com.mpdc4gsr.module.thermal.ir.repository.ConfigRepository
+import com.mpdc4gsr.module.thermalunified.R
+import com.mpdc4gsr.module.thermalunified.report.bean.ImageTempBean
+import com.mpdc4gsr.module.thermalunified.report.bean.ReportConditionBean
+import com.mpdc4gsr.module.thermalunified.report.bean.ReportInfoBean
+import com.mpdc4gsr.module.thermalunified.repository.ConfigRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -45,7 +45,7 @@ import java.text.ParsePosition
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
-import com.mpdc4gsr.libunified.app.R as LibR
+import com.mpdc4gsr.libunified.R as LibR
 
 
 class ReportCreateFirstActivity : BaseActivity(), View.OnClickListener {

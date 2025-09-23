@@ -5,7 +5,7 @@ import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import androidx.annotation.DrawableRes
 import androidx.appcompat.widget.AppCompatTextView
-import com.mpdc4gsr.libunified.app.R
+import com.mpdc4gsr.libunified.R
 
 class MyTextView : AppCompatTextView {
 

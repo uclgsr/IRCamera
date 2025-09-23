@@ -1,4 +1,4 @@
-package com.mpdc4gsr.module.thermal.activity
+package com.mpdc4gsr.module.thermalunified.activity
 
 import android.Manifest
 import android.content.Context
@@ -9,9 +9,9 @@ import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
 import com.mpdc4gsr.libunified.app.ktbase.BaseActivity
 import com.mpdc4gsr.libunified.app.tools.PermissionTool
-import com.mpdc4gsr.module.thermal.R
-import com.mpdc4gsr.module.thermal.fragment.GalleryPictureFragment
-import com.mpdc4gsr.module.thermal.fragment.GalleryVideoFragment
+import com.mpdc4gsr.module.thermalunified.R
+import com.mpdc4gsr.module.thermalunified.fragment.GalleryPictureFragment
+import com.mpdc4gsr.module.thermalunified.fragment.GalleryVideoFragment
 
 
 class GalleryActivity : BaseActivity() {

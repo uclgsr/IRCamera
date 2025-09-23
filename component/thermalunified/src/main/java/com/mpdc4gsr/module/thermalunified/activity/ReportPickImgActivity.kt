@@ -1,4 +1,4 @@
-package com.mpdc4gsr.module.thermal.ir.activity
+package com.mpdc4gsr.module.thermalunified.activity
 
 import android.content.Intent
 import android.media.MediaScannerConnection
@@ -21,17 +21,17 @@ import com.mpdc4gsr.libunified.app.repository.GalleryRepository.DirType
 import com.mpdc4gsr.libunified.app.tools.FileTools.getUri
 import com.mpdc4gsr.libunified.app.tools.ToastTools
 import com.mpdc4gsr.libunified.app.utils.Constants.IS_REPORT_FIRST
-import com.mpdc4gsr.module.thermal.ir.R
-import com.mpdc4gsr.module.thermal.ir.adapter.GalleryAdapter
-import com.mpdc4gsr.module.thermal.ir.report.bean.ReportConditionBean
-import com.mpdc4gsr.module.thermal.ir.report.bean.ReportIRBean
-import com.mpdc4gsr.module.thermal.ir.report.bean.ReportInfoBean
-import com.mpdc4gsr.module.thermal.ir.viewmodel.IRGalleryViewModel
+import com.mpdc4gsr.module.thermalunified.R
+import com.mpdc4gsr.module.thermalunified.adapter.GalleryAdapter
+import com.mpdc4gsr.module.thermalunified.report.bean.ReportConditionBean
+import com.mpdc4gsr.module.thermalunified.report.bean.ReportIRBean
+import com.mpdc4gsr.module.thermalunified.report.bean.ReportInfoBean
+import com.mpdc4gsr.module.thermalunified.viewmodel.IRGalleryViewModel
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.io.File
-import com.mpdc4gsr.libunified.app.R as LibR
+import com.mpdc4gsr.libunified.R as LibR
 import com.mpdc4gsr.lib.ui.R as UiR
 
 

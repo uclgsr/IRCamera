@@ -13,13 +13,13 @@ import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mpdc4gsr.libunified.app.BaseApplication
-import com.mpdc4gsr.libunified.app.R
+import com.mpdc4gsr.libunified.R
 import com.mpdc4gsr.libunified.app.bean.CarDetectBean
 import com.mpdc4gsr.libunified.app.bean.CarDetectChildBean
 import com.mpdc4gsr.libunified.app.common.SharedManager
-import com.mpdc4gsr.libunified.app.databinding.DialogCarDetectBinding
-import com.mpdc4gsr.libunified.app.databinding.ItemCarDetectChildLayoutBinding
-import com.mpdc4gsr.libunified.app.databinding.ItemCarDetectLayoutBinding
+import com.mpdc4gsr.libunified.databinding.DialogCarDetectBinding
+import com.mpdc4gsr.libunified.databinding.ItemCarDetectChildLayoutBinding
+import com.mpdc4gsr.libunified.databinding.ItemCarDetectLayoutBinding
 
 
 class CarDetectDialog(context: Context, val listener: ((bean: CarDetectChildBean) -> Unit)) :

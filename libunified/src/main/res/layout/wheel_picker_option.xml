@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <com.github.gzuliyujiang.wheelview.widget.WheelView
+        <com.mpdc4gsr.libunified.ui.gzuliyujiang.wheelview.widget.WheelView
             android:id="@+id/wheel_picker_option_wheel"
             style="@style/WheelDefault"
             android:layout_width="0dp"

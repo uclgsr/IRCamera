@@ -32,7 +32,7 @@
                 android:id="@+id/edit_recycler_second"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:deviceType="gallery_edit" />
+                app:deviceType="4" />
 
             <com.mpdc4gsr.libunified.app.menu.MenuEditView
                 android:id="@+id/edit_recycler_first"
@@ -51,7 +51,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/title_view" />
 
-        <com.mpdc4gsr.module.thermal.ir.view.TemperatureEditView
+        <com.mpdc4gsr.module.thermalunified.view.TemperatureEditView
             android:id="@+id/temperature_view"
             android:layout_width="0dp"
             android:layout_height="0dp"

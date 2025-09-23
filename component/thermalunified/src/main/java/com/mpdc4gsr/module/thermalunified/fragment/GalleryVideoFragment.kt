@@ -1,4 +1,4 @@
-package com.mpdc4gsr.module.thermal.fragment
+package com.mpdc4gsr.module.thermalunified.fragment
 
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -7,9 +7,9 @@ import com.mpdc4gsr.libunified.app.config.RouterConfig
 import com.mpdc4gsr.libunified.app.dialog.TipDialog
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModelFragment
 import com.mpdc4gsr.libunified.app.navigation.NavigationManager
-import com.mpdc4gsr.module.thermal.R
-import com.mpdc4gsr.module.thermal.adapter.GalleryAdapter
-import com.mpdc4gsr.module.thermal.viewmodel.GalleryViewModel
+import com.mpdc4gsr.module.thermalunified.R
+import com.mpdc4gsr.module.thermalunified.adapter.GalleryAdapter
+import com.mpdc4gsr.module.thermalunified.viewmodel.GalleryViewModel
 
 class GalleryVideoFragment : BaseViewModelFragment<GalleryViewModel>() {
     private val adapter by lazy { GalleryAdapter(requireContext()) }

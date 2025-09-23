@@ -1,4 +1,4 @@
-package com.mpdc4gsr.module.thermal.ir.activity
+package com.mpdc4gsr.module.thermalunified.activity
 
 import android.content.Intent
 import android.graphics.RenderEffect
@@ -30,18 +30,18 @@ import com.mpdc4gsr.libunified.app.tools.DeviceTools
 import com.mpdc4gsr.libunified.app.utils.CommUtils
 import com.mpdc4gsr.libunified.app.utils.NetWorkUtils
 import com.mpdc4gsr.libunified.app.utils.PermissionUtils
-import com.mpdc4gsr.module.thermal.ir.R
-import com.mpdc4gsr.module.thermal.ir.databinding.ActivityIrMainBinding
-import com.mpdc4gsr.module.thermal.ir.dialog.HomeGuideDialog
-import com.mpdc4gsr.module.thermal.ir.fragment.AbilityFragment
-import com.mpdc4gsr.module.thermal.ir.fragment.IRGalleryTabFragment
-import com.mpdc4gsr.module.thermal.ir.fragment.IRThermalFragment
-import com.mpdc4gsr.module.thermal.ir.fragment.PDFListFragment
+import com.mpdc4gsr.module.thermalunified.R
+import com.mpdc4gsr.module.thermalunified.databinding.ActivityIrMainBinding
+import com.mpdc4gsr.module.thermalunified.dialog.HomeGuideDialog
+import com.mpdc4gsr.module.thermalunified.fragment.AbilityFragment
+import com.mpdc4gsr.module.thermalunified.fragment.IRGalleryTabFragment
+import com.mpdc4gsr.module.thermalunified.fragment.IRThermalFragment
+import com.mpdc4gsr.module.thermalunified.fragment.PDFListFragment
 import com.mpdc4gsr.module.user.fragment.MoreFragment
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
-import com.mpdc4gsr.libunified.app.R as LibR
+import com.mpdc4gsr.libunified.R as LibR
 
 
 class IRMainActivity : AppCompatActivity(), View.OnClickListener {

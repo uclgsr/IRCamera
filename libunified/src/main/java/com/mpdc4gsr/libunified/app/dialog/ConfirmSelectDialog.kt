@@ -8,8 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.StringRes
 import androidx.core.view.isVisible
-import com.mpdc4gsr.libunified.app.R
-import com.mpdc4gsr.libunified.app.databinding.DialogConfirmSelectBinding
+import com.mpdc4gsr.libunified.R
+import com.mpdc4gsr.libunified.databinding.DialogConfirmSelectBinding
 import com.mpdc4gsr.libunified.app.utils.ScreenUtil
 
 class ConfirmSelectDialog(context: Context) : Dialog(context, R.style.InfoDialog),

@@ -1,4 +1,4 @@
-package com.mpdc4gsr.module.thermal.ir.view
+package com.mpdc4gsr.module.thermalunified.view
 
 import android.content.Context
 import android.graphics.Color
@@ -19,12 +19,12 @@ import com.mpdc4gsr.libunified.ui.charting.data.LineDataSet
 import com.mpdc4gsr.libunified.ui.charting.listener.ChartTouchListener
 import com.mpdc4gsr.libunified.ui.charting.listener.OnChartGestureListener
 import com.mpdc4gsr.libunified.app.db.entity.ThermalEntity
-import com.mpdc4gsr.module.thermal.ir.R
-import com.mpdc4gsr.module.thermal.ir.chart.IRMyValueFormatter
-import com.mpdc4gsr.module.thermal.ir.chart.YValueFormatter
-import com.mpdc4gsr.module.thermal.ir.utils.ChartTools
-import com.mpdc4gsr.libunified.app.R as LibR
-import com.mpdc4gsr.module.thermal.R as ThermalR
+import com.mpdc4gsr.module.thermalunified.R
+import com.mpdc4gsr.module.thermalunified.chart.IRMyValueFormatter
+import com.mpdc4gsr.module.thermalunified.chart.YValueFormatter
+import com.mpdc4gsr.module.thermalunified.utils.ChartTools
+import com.mpdc4gsr.libunified.R as LibR
+import com.mpdc4gsr.module.thermalunified.R as ThermalR
 
 class ChartMonitorView : LineChart, OnChartGestureListener {
     private val mHandler by lazy { Handler(Looper.getMainLooper()) }

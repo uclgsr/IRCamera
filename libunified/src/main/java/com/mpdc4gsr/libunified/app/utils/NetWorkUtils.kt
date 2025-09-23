@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package com.mpdc4gsr.libunified.app.utils
 
 import android.content.Context

@@ -147,6 +147,7 @@ class FileUtils {
                 Logger.d("FileUtils", "IOException: " + e.message)
             }
 
+            @Suppress("SENSELESS_COMPARISON")
             if (null != bmp && null != stream) {
                 return bmp.compress(format, quality, stream)
             }
@@ -197,7 +198,6 @@ class FileUtils {
                 }
 
                 options.inJustDecodeBounds = false
-                options.inDither = false
                 options.inScaled = true
 
                 var fs: FileInputStream? = null
@@ -232,6 +232,7 @@ class FileUtils {
                     } catch (e: IOException) {
                         e.printStackTrace()
                     } finally {
+                        @Suppress("SENSELESS_COMPARISON")
                         if (fs != null) {
                             try {
                                 fs.close()

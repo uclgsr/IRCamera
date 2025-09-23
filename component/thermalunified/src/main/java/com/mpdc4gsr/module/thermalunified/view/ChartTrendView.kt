@@ -1,4 +1,4 @@
-package com.mpdc4gsr.module.thermal.ir.view
+package com.mpdc4gsr.module.thermalunified.view
 
 import android.content.Context
 import android.graphics.Color
@@ -13,9 +13,9 @@ import com.mpdc4gsr.libunified.ui.charting.data.LineData
 import com.mpdc4gsr.libunified.ui.charting.data.LineDataSet
 import com.mpdc4gsr.libunified.ui.charting.formatter.ValueFormatter
 import com.mpdc4gsr.libunified.app.tools.UnitTools
-import com.mpdc4gsr.module.thermal.ir.R
-import com.mpdc4gsr.libunified.app.R as LibR
-import com.mpdc4gsr.module.thermal.R as ThermalR
+import com.mpdc4gsr.module.thermalunified.R
+import com.mpdc4gsr.libunified.R as LibR
+import com.mpdc4gsr.module.thermalunified.R as ThermalR
 
 class ChartTrendView : LineChart {
     constructor(context: Context) : this(context, null)

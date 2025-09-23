@@ -9,8 +9,8 @@ import android.view.ViewGroup
 import com.mpdc4gsr.libunified.app.utils.ScreenUtil
 import com.mpdc4gsr.module.user.R
 import java.text.DecimalFormat
-import com.mpdc4gsr.libunified.app.R as LibAppR
-import com.mpdc4gsr.libunified.app.R as RCore
+import com.mpdc4gsr.libunified.R as LibAppR
+import com.mpdc4gsr.libunified.R as RCore
 
 
 class DownloadProDialog(context: Context) : Dialog(context, LibAppR.style.InfoDialog) {

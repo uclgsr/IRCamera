@@ -45,7 +45,7 @@
         app:layout_constraintTop_toTopOf="@+id/tv_title"
         app:layout_constraintWidth_percent="0.18" />
 
-    <com.mpdc4gsr.module.thermal.ir.view.EmissivityView
+    <com.mpdc4gsr.module.thermalunified.view.EmissivityView
         android:id="@+id/emissivity_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

@@ -1,4 +1,4 @@
-package com.mpdc4gsr.module.thermal.ir.activity
+package com.mpdc4gsr.module.thermalunified.activity
 
 import android.graphics.ImageFormat
 import android.hardware.usb.UsbDevice
@@ -23,8 +23,6 @@ import com.energy.iruvc.uvc.ConnectCallback
 import com.energy.iruvc.uvc.UVCCamera
 import com.example.suplib.wrapper.SupHelp
 import com.mpdc4gsr.libunified.ir.usbdual.Const
-
-
 import com.mpdc4gsr.libunified.ir.usbdual.camera.DualViewWithExternalCameraCommonApi
 import com.mpdc4gsr.libunified.ir.usbdual.camera.IRUVCDual
 import com.mpdc4gsr.libunified.ir.usbdual.camera.USBMonitorManager
@@ -33,10 +31,10 @@ import com.mpdc4gsr.libunified.ir.utils.PseudocodeUtils
 import com.mpdc4gsr.libunified.ir.view.TemperatureView
 import com.mpdc4gsr.libunified.app.common.SaveSettingUtil
 import com.mpdc4gsr.libunified.app.dialog.TipDialog
-import com.mpdc4gsr.module.thermal.ir.R
-import com.mpdc4gsr.module.thermal.ir.utils.DualParamsUtil
-import com.mpdc4gsr.module.thermal.ir.utils.IRCmdTool
-import com.mpdc4gsr.module.thermal.ir.utils.IRCmdTool.getSNStr
+import com.mpdc4gsr.module.thermalunified.R
+import com.mpdc4gsr.module.thermalunified.utils.DualParamsUtil
+import com.mpdc4gsr.module.thermalunified.utils.IRCmdTool
+import com.mpdc4gsr.module.thermalunified.utils.IRCmdTool.getSNStr
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -85,6 +83,8 @@ abstract class BaseIRPlushActivity : IRThermalNightActivity(), OnUSBConnectListe
     abstract fun isDualIR(): Boolean
 
     abstract fun setTemperatureViewType()
+    
+    abstract override fun getProductName(): String
 
     open fun setDispViewData(dualDisp: Int) {
     }
@@ -161,9 +161,9 @@ abstract class BaseIRPlushActivity : IRThermalNightActivity(), OnUSBConnectListe
                     Toast.makeText(
                         this@BaseIRPlushActivity,
                         "please restart app or reinsert device",
-                        Toast.LENGTH_SHORT,
-                    ).show()
-                    finish()
+                        Toast.LENGTH_SHORT
+                    )?.show()
+                    this@BaseIRPlushActivity.finish()
                 }
             }
         }
@@ -229,9 +229,9 @@ abstract class BaseIRPlushActivity : IRThermalNightActivity(), OnUSBConnectListe
 
             psedocolor = Array(11) { ByteArray(0) }
             inputStream = am.open("pseudocolor/White_Hot.bin")
-            val length = inputStream.available()
+            val length = inputStream?.available() ?: 0
             psedocolor!![0] = ByteArray(length + 1)
-            if (inputStream.read(psedocolor!![0]) != length) {
+            if (inputStream?.read(psedocolor!![0]) != length) {
             }
             psedocolor!![0][length] = 0
             dualView!!.getDualUVCCamera().loadPseudocolor(
@@ -240,7 +240,7 @@ abstract class BaseIRPlushActivity : IRThermalNightActivity(), OnUSBConnectListe
             )
 
             setFusion(mCurrentFusionType)
-            inputStream.close()
+            inputStream?.close()
         } catch (e: IOException) {
             e.printStackTrace()
         } finally {
@@ -405,13 +405,13 @@ abstract class BaseIRPlushActivity : IRThermalNightActivity(), OnUSBConnectListe
                     SupHelp.getInstance().initA4KCPP()
                 } catch (e: UnsatisfiedLinkError) {
                     SupHelp.getInstance().loadOpenclSuccess = false
-                    runOnUiThread {
+                    this@BaseIRPlushActivity.runOnUiThread {
                         TipDialog.Builder(this@BaseIRPlushActivity)
-                            .setMessage(R.string.tips_tisr_fail)
-                            .setPositiveListener(R.string.app_got_it) { }
+                            .setMessage(com.mpdc4gsr.libunified.R.string.tips_tisr_fail)
+                            .setPositiveListener(com.mpdc4gsr.libunified.R.string.app_got_it) { }
                             .create().show()
                     }
-                    XLog.e("超分初始化失败")
+                    XLog.e("Super resolution initialization failed")
                 }
             }
             if (!SupHelp.getInstance().loadOpenclSuccess) {
@@ -421,13 +421,13 @@ abstract class BaseIRPlushActivity : IRThermalNightActivity(), OnUSBConnectListe
             dualView?.isOpenAmplify = isOpenAmplify
 
             val titleView =
-                findViewById<com.mpdc4gsr.libunified.app.view.TitleView>(com.mpdc4gsr.libunified.R.id.title_view)
+                this@BaseIRPlushActivity.findViewById<com.mpdc4gsr.libunified.app.view.TitleView>(com.mpdc4gsr.libunified.R.id.title_view)
             titleView?.setRight2Drawable(if (isOpenAmplify) R.drawable.svg_tisr_on else R.drawable.svg_tisr_off)
             SaveSettingUtil.isOpenAmplify = isOpenAmplify
             if (isOpenAmplify) {
-                ToastUtils.showShort(R.string.tips_tisr_on)
+                ToastUtils.showShort(com.mpdc4gsr.libunified.R.string.tips_tisr_on)
             } else {
-                ToastUtils.showShort(R.string.tips_tisr_off)
+                ToastUtils.showShort(com.mpdc4gsr.libunified.R.string.tips_tisr_off)
             }
         }
     }
@@ -435,7 +435,7 @@ abstract class BaseIRPlushActivity : IRThermalNightActivity(), OnUSBConnectListe
     override fun initAmplify(show: Boolean) {
         lifecycleScope.launch {
             val titleView =
-                findViewById<com.mpdc4gsr.libunified.app.view.TitleView>(com.mpdc4gsr.libunified.R.id.title_view)
+                this@BaseIRPlushActivity.findViewById<com.mpdc4gsr.libunified.app.view.TitleView>(com.mpdc4gsr.libunified.R.id.title_view)
             titleView?.setRight2Drawable(if (isOpenAmplify) R.drawable.svg_tisr_on else R.drawable.svg_tisr_off)
             withContext(Dispatchers.IO) {
                 if (isOpenAmplify) {
