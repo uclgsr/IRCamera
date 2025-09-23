@@ -1,6 +1,7 @@
 package com.infisense.usbir.view
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.util.AttributeSet
 import android.view.View
 
@@ -14,6 +15,10 @@ class CameraView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
     
+    var bitmap: Bitmap? = null
+    var isOpenAmplify: Boolean = false
+    var productType: Int = 0
+    
     fun setTextSize(size: Float) {
         // Stub implementation
     }
@@ -23,6 +28,10 @@ class CameraView @JvmOverloads constructor(
     }
     
     fun setMirror(mirror: Boolean) {
+        // Stub implementation
+    }
+    
+    fun stop() {
         // Stub implementation
     }
 }

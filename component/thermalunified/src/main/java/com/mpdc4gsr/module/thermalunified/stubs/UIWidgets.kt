@@ -28,6 +28,14 @@ interface OnRangeChangedListener {
         isFromUser: Boolean, 
         tempMode: Int
     )
+    
+    fun onStartTrackingTouch(view: RangeSeekBar?, isLeft: Boolean) {
+        // Default implementation
+    }
+    
+    fun onStopTrackingTouch(view: RangeSeekBar?, isLeft: Boolean) {
+        // Default implementation
+    }
 }
 
 class RangeSeekBar @JvmOverloads constructor(
@@ -85,12 +93,6 @@ class SeekBarStub {
     var indicatorBackgroundColor: Int = 0
 }
 
-class BitmapConstraintLayout @JvmOverloads constructor(
-    context: Context,
-    attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
-) : androidx.constraintlayout.widget.ConstraintLayout(context, attrs, defStyleAttr)
-
 class CameraPreView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
@@ -98,4 +100,21 @@ class CameraPreView @JvmOverloads constructor(
 ) : View(context, attrs, defStyleAttr) {
     
     fun getBitmap(): android.graphics.Bitmap? = null
+    
+    fun closeCamera() {
+        // Stub implementation
+    }
+    
+    fun openCamera() {
+        // Stub implementation
+    }
+    
+    fun setCameraAlpha(alpha: Float) {
+        // Stub implementation
+    }
+    
+    fun setRotation(rotation: Boolean) {
+        // Stub implementation - convert Boolean to rotation
+        super.setRotation(if (rotation) 90f else 0f)
+    }
 }

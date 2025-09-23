@@ -231,7 +231,7 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
     private var audioPosition: Int = 0
 
     protected lateinit var cameraView: com.infisense.usbir.view.CameraView
-    protected lateinit var temperatureView: com.infisense.usbir.view.TemperatureView
+    protected lateinit var temperatureView: com.mpdc4gsr.libunified.ir.view.TemperatureView
     private lateinit var spaceChart: View
     private lateinit var clTrendOpen: ConstraintLayout
     private lateinit var llTrendClose: LinearLayout
@@ -279,7 +279,7 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
     protected val layCarDetectPrompt by lazy { findViewById<View>(R.id.lay_car_detect_prompt) }
     protected val temp_bg by lazy { findViewById<com.mpdc4gsr.libunified.app.comm.view.TempLayout>(R.id.temp_bg) }
     protected open val cl_seek_bar by lazy {
-        findViewById<com.mpdc4gsr.module.thermalunified.stubs.BitmapConstraintLayout>(
+        findViewById<com.mpdc4gsr.libunified.ui.widget.BitmapConstraintLayout>(
             R.id.cl_seek_bar
         )
     }
@@ -287,7 +287,7 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
     private val distance_measure_view by lazy { findViewById<View>(R.id.distance_measure_view) }
     private val zoomView by lazy { findViewById<com.infisense.usbir.view.ZoomCaliperView>(R.id.zoomView) }
     protected open val temperatureSeekbar by lazy {
-        findViewById<com.mpdc4gsr.module.thermalunified.stubs.RangeSeekBar>(
+        findViewById<com.mpdc4gsr.libunified.ui.widget.seekbar.RangeSeekBar>(
             R.id.temperature_seekbar
         )
     }
