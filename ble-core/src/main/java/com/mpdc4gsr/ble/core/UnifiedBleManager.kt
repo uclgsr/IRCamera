@@ -2,6 +2,7 @@ package com.mpdc4gsr.ble.core
 
 import android.app.Application
 import android.content.Context
+import com.topdon.ble.Connection
 
 /**
  * Stub implementation of UnifiedBleManager for compilation compatibility
@@ -23,15 +24,44 @@ class UnifiedBleManager private constructor(private val application: Application
             }
             return instance!!
         }
+
+        fun getInstance(context: Context): UnifiedBleManager {
+            return getInstance(context.applicationContext as Application)
+        }
     }
 
     fun initialize() {
         // Stub implementation for initialization
     }
 
+    fun initialize(context: Context, enableNordicBackend: Boolean) {
+        // Stub implementation for initialization with parameters
+    }
+
+    fun enableMultiDeviceMode(enabled: Boolean) {
+        // Stub implementation for multi-device mode
+    }
+
+    fun markAsGsrSensor(deviceAddress: String) {
+        // Stub implementation for marking GSR sensor
+    }
+
+    fun connectWithEnhancements(deviceAddress: String): Connection? {
+        // Stub implementation - returns null to indicate failure
+        return null
+    }
+
+    fun getSystemStatus(): SystemBleStatus {
+        return SystemBleStatus.AVAILABLE
+    }
+
     fun isInitialized(): Boolean = true
 
     fun getContext(): Context = application
+
+    enum class SystemBleStatus {
+        AVAILABLE, UNAVAILABLE, DISABLED
+    }
 
     // Additional stub methods can be added here as needed
     interface ShimmerScanCallback {
