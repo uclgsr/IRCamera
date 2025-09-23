@@ -1,4 +1,4 @@
-package com.mpdc4gsr.module.thermal.ir.report.activity
+package com.mpdc4gsr.module.thermalunified.report.activity
 
 import android.content.Intent
 import android.text.TextUtils
@@ -14,11 +14,11 @@ import com.mpdc4gsr.libunified.app.ktbase.BaseActivity
 import com.mpdc4gsr.libunified.app.tools.FileTools
 import com.mpdc4gsr.libunified.app.tools.GlideLoader
 import com.mpdc4gsr.libunified.app.view.TitleView
-import com.mpdc4gsr.module.thermal.ir.R
-import com.mpdc4gsr.module.thermal.ir.report.bean.ReportBean
-import com.mpdc4gsr.module.thermal.ir.report.view.ReportIRShowView
-import com.mpdc4gsr.module.thermal.ir.report.view.ReportInfoView
-import com.mpdc4gsr.module.thermal.ir.report.view.WatermarkView
+import com.mpdc4gsr.module.thermalunified.R
+import com.mpdc4gsr.module.thermalunified.report.bean.ReportBean
+import com.mpdc4gsr.module.thermalunified.report.view.ReportIRShowView
+import com.mpdc4gsr.module.thermalunified.report.view.ReportInfoView
+import com.mpdc4gsr.module.thermalunified.report.view.WatermarkView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.File

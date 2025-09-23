@@ -1,4 +1,4 @@
-package com.mpdc4gsr.module.thermal.ir.activity
+package com.mpdc4gsr.module.thermalunified.activity
 
 import android.graphics.Bitmap
 import android.view.SurfaceView
@@ -18,9 +18,9 @@ import com.mpdc4gsr.libunified.app.common.ProductType.PRODUCT_NAME_TCP
 import com.mpdc4gsr.libunified.app.common.SaveSettingUtil
 import com.mpdc4gsr.libunified.app.menu.constant.TwoLightType
 import com.mpdc4gsr.libunified.app.tools.ToastTools
-import com.mpdc4gsr.module.thermal.ir.R
-import com.mpdc4gsr.module.thermal.ir.event.GalleryAddEvent
-import com.mpdc4gsr.module.thermal.ir.video.VideoRecordFFmpeg
+import com.mpdc4gsr.module.thermalunified.R
+import com.mpdc4gsr.module.thermalunified.event.GalleryAddEvent
+import com.mpdc4gsr.module.thermalunified.video.VideoRecordFFmpeg
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay

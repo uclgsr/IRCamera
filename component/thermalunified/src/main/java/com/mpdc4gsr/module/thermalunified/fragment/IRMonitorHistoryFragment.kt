@@ -1,4 +1,4 @@
-package com.mpdc4gsr.module.thermal.ir.fragment
+package com.mpdc4gsr.module.thermalunified.fragment
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -19,10 +19,10 @@ import com.mpdc4gsr.libunified.app.config.ExtraKeyConfig
 import com.mpdc4gsr.libunified.app.db.dao.ThermalDao
 import com.mpdc4gsr.libunified.app.dialog.TipDialog
 import com.mpdc4gsr.libunified.app.tools.TimeTool
-import com.mpdc4gsr.module.thermal.ir.R
-import com.mpdc4gsr.module.thermal.ir.activity.IRLogMPChartActivity
-import com.mpdc4gsr.module.thermal.ir.event.MonitorCreateEvent
-import com.mpdc4gsr.module.thermal.ir.viewmodel.IRMonitorViewModel
+import com.mpdc4gsr.module.thermalunified.R
+import com.mpdc4gsr.module.thermalunified.activity.IRLogMPChartActivity
+import com.mpdc4gsr.module.thermalunified.event.MonitorCreateEvent
+import com.mpdc4gsr.module.thermalunified.viewmodel.IRMonitorViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext

@@ -28,10 +28,10 @@ import com.mpdc4gsr.libunified.app.ktbase.BaseActivity
 import com.mpdc4gsr.libunified.app.lms.LMS.mContext
 import com.mpdc4gsr.libunified.app.tools.NumberTools
 import com.mpdc4gsr.libunified.app.tools.TimeTool
-import com.mpdc4gsr.module.thermal.ir.bean.DataBean
-import com.mpdc4gsr.module.thermal.ir.bean.SelectPositionBean
-import com.mpdc4gsr.module.thermal.ir.event.MonitorSaveEvent
-import com.mpdc4gsr.module.thermal.ir.repository.ConfigRepository
+import com.mpdc4gsr.module.thermalunified.bean.DataBean
+import com.mpdc4gsr.module.thermalunified.bean.SelectPositionBean
+import com.mpdc4gsr.module.thermalunified.event.MonitorSaveEvent
+import com.mpdc4gsr.module.thermalunified.repository.ConfigRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay

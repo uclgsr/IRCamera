@@ -1,4 +1,4 @@
-package com.mpdc4gsr.module.thermal.ir.fragment
+package com.mpdc4gsr.module.thermalunified.fragment
 
 import android.graphics.Bitmap
 import android.graphics.Point
@@ -34,11 +34,11 @@ import com.mpdc4gsr.libunified.app.common.SaveSettingUtil
 import com.mpdc4gsr.libunified.app.config.DeviceConfig
 import com.mpdc4gsr.libunified.app.ktbase.BaseFragment
 import com.mpdc4gsr.libunified.app.utils.ScreenUtil
-import com.mpdc4gsr.module.thermal.ir.R
-import com.mpdc4gsr.module.thermal.ir.activity.IRMonitorActivity
-import com.mpdc4gsr.module.thermal.ir.bean.SelectPositionBean
-import com.mpdc4gsr.module.thermal.ir.event.ThermalActionEvent
-import com.mpdc4gsr.module.thermal.ir.repository.ConfigRepository
+import com.mpdc4gsr.module.thermalunified.R
+import com.mpdc4gsr.module.thermalunified.activity.IRMonitorActivity
+import com.mpdc4gsr.module.thermalunified.bean.SelectPositionBean
+import com.mpdc4gsr.module.thermalunified.event.ThermalActionEvent
+import com.mpdc4gsr.module.thermalunified.repository.ConfigRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay

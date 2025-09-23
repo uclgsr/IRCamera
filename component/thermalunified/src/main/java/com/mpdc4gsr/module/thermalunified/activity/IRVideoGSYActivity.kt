@@ -1,4 +1,4 @@
-package com.mpdc4gsr.module.thermal.ir.activity
+package com.mpdc4gsr.module.thermalunified.activity
 
 
 import android.content.Intent
@@ -19,8 +19,8 @@ import com.mpdc4gsr.libunified.app.repository.TS004Repository
 import com.mpdc4gsr.libunified.app.tools.FileTools
 import com.mpdc4gsr.libunified.app.tools.TimeTool
 import com.mpdc4gsr.libunified.app.tools.ToastTools
-import com.mpdc4gsr.module.thermal.ir.R
-import com.mpdc4gsr.module.thermal.ir.event.GalleryDownloadEvent
+import com.mpdc4gsr.module.thermalunified.R
+import com.mpdc4gsr.module.thermalunified.event.GalleryDownloadEvent
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import java.io.File

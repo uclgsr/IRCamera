@@ -1,4 +1,4 @@
-package com.mpdc4gsr.module.thermal.ir.fragment
+package com.mpdc4gsr.module.thermalunified.fragment
 
 import android.content.Intent
 import android.net.Uri
@@ -22,9 +22,9 @@ import com.mpdc4gsr.libunified.app.socket.WebSocketProxy
 import com.mpdc4gsr.libunified.app.tools.DeviceTools
 import com.mpdc4gsr.libunified.app.utils.CommUtils
 import com.mpdc4gsr.libunified.app.utils.NetWorkUtils
-import com.mpdc4gsr.module.thermal.ir.R
-import com.mpdc4gsr.module.thermal.ir.activity.IRThermalNightActivity
-import com.mpdc4gsr.module.thermal.ir.activity.IRThermalPlusActivity
+import com.mpdc4gsr.module.thermalunified.R
+import com.mpdc4gsr.module.thermalunified.activity.IRThermalNightActivity
+import com.mpdc4gsr.module.thermalunified.activity.IRThermalPlusActivity
 
 class IRThermalFragment : BaseFragment(), View.OnClickListener {
 

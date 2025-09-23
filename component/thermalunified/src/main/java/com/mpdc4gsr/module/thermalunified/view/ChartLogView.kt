@@ -1,4 +1,4 @@
-package com.mpdc4gsr.module.thermal.ir.view
+package com.mpdc4gsr.module.thermalunified.view
 
 import android.content.Context
 import android.graphics.Color
@@ -17,16 +17,16 @@ import com.mpdc4gsr.libunified.ui.charting.data.Entry
 import com.mpdc4gsr.libunified.ui.charting.data.LineData
 import com.mpdc4gsr.libunified.ui.charting.data.LineDataSet
 import com.mpdc4gsr.libunified.app.db.entity.ThermalEntity
-import com.mpdc4gsr.module.thermal.ir.R
-import com.mpdc4gsr.module.thermal.ir.chart.IRMyValueFormatter
-import com.mpdc4gsr.module.thermal.ir.chart.YValueFormatter
-import com.mpdc4gsr.module.thermal.ir.utils.ChartTools
+import com.mpdc4gsr.module.thermalunified.R
+import com.mpdc4gsr.module.thermalunified.chart.IRMyValueFormatter
+import com.mpdc4gsr.module.thermalunified.chart.YValueFormatter
+import com.mpdc4gsr.module.thermalunified.utils.ChartTools
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import com.mpdc4gsr.libunified.R as LibR
 import com.mpdc4gsr.libunified.R as LibcoreR
-import com.mpdc4gsr.module.thermal.R as ThermalR
+import com.mpdc4gsr.module.thermalunified.R as ThermalR
 
 class ChartLogView : LineChart {
     private val mHandler by lazy { Handler(Looper.getMainLooper()) }

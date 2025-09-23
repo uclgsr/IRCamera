@@ -1,4 +1,4 @@
-package com.mpdc4gsr.module.thermal.ir.report.view
+package com.mpdc4gsr.module.thermalunified.report.view
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -12,8 +12,8 @@ import android.widget.TextView
 import androidx.appcompat.widget.SwitchCompat
 import androidx.core.view.isVisible
 import com.mpdc4gsr.libunified.app.tools.UnitTools
-import com.mpdc4gsr.module.thermal.ir.R
-import com.mpdc4gsr.module.thermal.ir.report.bean.ImageTempBean
+import com.mpdc4gsr.module.thermalunified.R
+import com.mpdc4gsr.module.thermalunified.report.bean.ImageTempBean
 import com.mpdc4gsr.libunified.R as LibR
 
 class ReportIRInputView : LinearLayout {

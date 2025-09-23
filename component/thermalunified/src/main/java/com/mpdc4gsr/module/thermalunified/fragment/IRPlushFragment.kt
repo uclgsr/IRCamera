@@ -1,12 +1,12 @@
-package com.mpdc4gsr.module.thermal.ir.fragment
+package com.mpdc4gsr.module.thermalunified.fragment
 
 import android.graphics.Bitmap
 import android.view.SurfaceView
 import com.mpdc4gsr.libunified.ir.usbdual.Const
 import com.mpdc4gsr.libunified.ir.usbdual.camera.DualViewWithExternalCameraCommonApi
 import com.mpdc4gsr.libunified.ir.view.TemperatureView
-import com.mpdc4gsr.module.thermal.ir.R
-import com.mpdc4gsr.module.thermal.ir.activity.BaseIRPlushFragment
+import com.mpdc4gsr.module.thermalunified.R
+import com.mpdc4gsr.module.thermalunified.activity.BaseIRPlushFragment
 
 
 class IRPlushFragment : BaseIRPlushFragment() {

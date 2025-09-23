@@ -1,4 +1,4 @@
-package com.mpdc4gsr.module.thermal.ir.report.viewmodel
+package com.mpdc4gsr.module.thermalunified.report.viewmodel
 
 import androidx.lifecycle.viewModelScope
 import com.blankj.utilcode.util.GsonUtils
@@ -13,7 +13,7 @@ import com.mpdc4gsr.libunified.app.lms.network.IResponseCallback
 import com.mpdc4gsr.libunified.app.lms.network.ResponseBean
 import com.mpdc4gsr.libunified.app.lms.xutils.http.RequestParams
 import com.mpdc4gsr.libunified.app.utils.SingleLiveEvent
-import com.mpdc4gsr.module.thermal.ir.report.bean.ReportBean
+import com.mpdc4gsr.module.thermalunified.report.bean.ReportBean
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext

@@ -1,4 +1,4 @@
-package com.mpdc4gsr.module.thermal.ir.activity
+package com.mpdc4gsr.module.thermalunified.activity
 
 
 import android.graphics.ImageFormat
@@ -40,10 +40,10 @@ import com.mpdc4gsr.libunified.ir.view.ITsTempListener
 import com.mpdc4gsr.libunified.ir.view.TemperatureView
 import com.mpdc4gsr.libunified.app.common.SaveSettingUtil
 import com.mpdc4gsr.libunified.app.ktbase.BaseFragment
-import com.mpdc4gsr.module.thermal.ir.repository.ConfigRepository
-import com.mpdc4gsr.module.thermal.ir.utils.DualParamsUtil
-import com.mpdc4gsr.module.thermal.ir.utils.IRCmdTool
-import com.mpdc4gsr.module.thermal.ir.utils.IRCmdTool.getSNStr
+import com.mpdc4gsr.module.thermalunified.repository.ConfigRepository
+import com.mpdc4gsr.module.thermalunified.utils.DualParamsUtil
+import com.mpdc4gsr.module.thermalunified.utils.IRCmdTool
+import com.mpdc4gsr.module.thermalunified.utils.IRCmdTool.getSNStr
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay

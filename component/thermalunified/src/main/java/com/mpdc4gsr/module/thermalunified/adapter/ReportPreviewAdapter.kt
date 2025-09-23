@@ -1,4 +1,4 @@
-package com.mpdc4gsr.module.thermal.ir.adapter
+package com.mpdc4gsr.module.thermalunified.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -16,7 +16,7 @@ import com.blankj.utilcode.util.CollectionUtils
 
 import com.mpdc4gsr.libunified.app.bean.HouseRepPreviewItemBean
 import com.mpdc4gsr.libunified.app.lms.weiget.TToast
-import com.mpdc4gsr.module.thermal.ir.R
+import com.mpdc4gsr.module.thermalunified.R
 
 @SuppressLint("NotifyDataSetChanged")
 class ReportPreviewAdapter(private val cxt: Context, var dataList: List<HouseRepPreviewItemBean>) :

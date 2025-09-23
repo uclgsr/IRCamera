@@ -2,7 +2,7 @@ package mpdc4gsr.network
 
 import android.graphics.Bitmap
 import android.util.Log
-import com.example.thermal_lite.camera.CameraPreviewManager
+import com.mpdc4gsr.module.thermalunified.lite.camera.CameraPreviewManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job

@@ -1,4 +1,4 @@
-package com.mpdc4gsr.module.thermal.activity
+package com.mpdc4gsr.module.thermalunified.activity
 
 import android.net.Uri
 import android.os.Build
@@ -9,7 +9,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import com.blankj.utilcode.util.BarUtils
 import com.mpdc4gsr.libunified.app.ktbase.BaseActivity
-import com.mpdc4gsr.module.thermal.R
+import com.mpdc4gsr.module.thermalunified.R
 import java.io.File
 import com.mpdc4gsr.libunified.R as LibR
 

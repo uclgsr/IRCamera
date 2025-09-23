@@ -1,4 +1,4 @@
-package com.mpdc4gsr.module.thermal.ir.report.activity
+package com.mpdc4gsr.module.thermalunified.report.activity
 
 import android.view.View
 import android.widget.ImageView
@@ -16,15 +16,15 @@ import com.mpdc4gsr.libunified.app.tools.ConstantLanguages
 import com.mpdc4gsr.libunified.app.tools.GlideLoader
 import com.mpdc4gsr.libunified.app.tools.UnitTools
 import com.mpdc4gsr.libunified.app.utils.ScreenUtil
-import com.mpdc4gsr.module.thermal.ir.R
-import com.mpdc4gsr.module.thermal.ir.report.bean.ImageTempBean
-import com.mpdc4gsr.module.thermal.ir.report.bean.ReportBean
-import com.mpdc4gsr.module.thermal.ir.report.bean.ReportConditionBean
-import com.mpdc4gsr.module.thermal.ir.report.bean.ReportIRBean
-import com.mpdc4gsr.module.thermal.ir.report.bean.ReportInfoBean
-import com.mpdc4gsr.module.thermal.ir.report.bean.ReportTempBean
-import com.mpdc4gsr.module.thermal.ir.report.bean.SoftwareInfo
-import com.mpdc4gsr.module.thermal.ir.report.view.ReportIRInputView
+import com.mpdc4gsr.module.thermalunified.R
+import com.mpdc4gsr.module.thermalunified.report.bean.ImageTempBean
+import com.mpdc4gsr.module.thermalunified.report.bean.ReportBean
+import com.mpdc4gsr.module.thermalunified.report.bean.ReportConditionBean
+import com.mpdc4gsr.module.thermalunified.report.bean.ReportIRBean
+import com.mpdc4gsr.module.thermalunified.report.bean.ReportInfoBean
+import com.mpdc4gsr.module.thermalunified.report.bean.ReportTempBean
+import com.mpdc4gsr.module.thermalunified.report.bean.SoftwareInfo
+import com.mpdc4gsr.module.thermalunified.report.view.ReportIRInputView
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode

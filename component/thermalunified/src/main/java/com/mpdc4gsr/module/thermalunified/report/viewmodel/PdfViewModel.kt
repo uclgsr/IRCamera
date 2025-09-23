@@ -1,4 +1,4 @@
-package com.mpdc4gsr.module.thermal.ir.report.viewmodel
+package com.mpdc4gsr.module.thermalunified.report.viewmodel
 
 import android.text.TextUtils
 import androidx.lifecycle.MutableLiveData
@@ -13,7 +13,7 @@ import com.mpdc4gsr.libunified.app.lms.utils.StringUtils
 import com.mpdc4gsr.libunified.app.lms.utils.TLog
 import com.mpdc4gsr.libunified.app.lms.weiget.TToast
 import com.mpdc4gsr.libunified.app.utils.HttpHelp
-import com.mpdc4gsr.module.thermal.ir.report.bean.ReportData
+import com.mpdc4gsr.module.thermalunified.report.bean.ReportData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext

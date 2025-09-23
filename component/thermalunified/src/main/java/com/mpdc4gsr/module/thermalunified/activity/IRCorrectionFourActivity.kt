@@ -1,13 +1,13 @@
-package com.mpdc4gsr.module.thermal.ir.activity
+package com.mpdc4gsr.module.thermalunified.activity
 
 import android.os.Bundle
 import androidx.lifecycle.lifecycleScope
 import com.mpdc4gsr.libunified.app.dialog.TipDialog
 import com.mpdc4gsr.libunified.app.ktbase.BaseActivity
-import com.mpdc4gsr.module.thermal.ir.R
-import com.mpdc4gsr.module.thermal.ir.event.CorrectionFinishEvent
-import com.mpdc4gsr.module.thermal.ir.fragment.IRCorrectionFragment
-import com.mpdc4gsr.module.thermal.ir.view.TimeDownView
+import com.mpdc4gsr.module.thermalunified.R
+import com.mpdc4gsr.module.thermalunified.event.CorrectionFinishEvent
+import com.mpdc4gsr.module.thermalunified.fragment.IRCorrectionFragment
+import com.mpdc4gsr.module.thermalunified.view.TimeDownView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus

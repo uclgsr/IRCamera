@@ -1,4 +1,4 @@
-package com.mpdc4gsr.module.thermal.ir.fragment
+package com.mpdc4gsr.module.thermalunified.fragment
 
 import android.os.Bundle
 import androidx.core.view.isVisible
@@ -13,10 +13,10 @@ import com.mpdc4gsr.libunified.app.ktbase.BaseFragment
 import com.mpdc4gsr.libunified.app.repository.GalleryRepository.DirType
 import com.mpdc4gsr.libunified.app.view.MyTextView
 import com.mpdc4gsr.libunified.app.view.TitleView
-import com.mpdc4gsr.module.thermal.ir.R
-import com.mpdc4gsr.module.thermal.ir.event.GalleryDirChangeEvent
-import com.mpdc4gsr.module.thermal.ir.popup.GalleryChangePopup
-import com.mpdc4gsr.module.thermal.ir.viewmodel.IRGalleryTabViewModel
+import com.mpdc4gsr.module.thermalunified.R
+import com.mpdc4gsr.module.thermalunified.event.GalleryDirChangeEvent
+import com.mpdc4gsr.module.thermalunified.popup.GalleryChangePopup
+import com.mpdc4gsr.module.thermalunified.viewmodel.IRGalleryTabViewModel
 import org.greenrobot.eventbus.EventBus
 import com.mpdc4gsr.libunified.R as LibCoreR
 import com.mpdc4gsr.lib.ui.R as UiR

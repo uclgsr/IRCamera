@@ -1,4 +1,4 @@
-package com.mpdc4gsr.module.thermal.ir.fragment
+package com.mpdc4gsr.module.thermalunified.fragment
 
 import android.app.Activity
 import android.content.Intent
@@ -27,13 +27,13 @@ import com.mpdc4gsr.libunified.app.repository.GalleryRepository.DirType
 import com.mpdc4gsr.libunified.app.repository.TS004Repository
 import com.mpdc4gsr.libunified.app.tools.FileTools.getUri
 import com.mpdc4gsr.libunified.app.tools.ToastTools
-import com.mpdc4gsr.module.thermal.ir.R
-import com.mpdc4gsr.module.thermal.ir.adapter.GalleryAdapter
-import com.mpdc4gsr.module.thermal.ir.event.GalleryAddEvent
-import com.mpdc4gsr.module.thermal.ir.event.GalleryDirChangeEvent
-import com.mpdc4gsr.module.thermal.ir.event.GalleryDownloadEvent
-import com.mpdc4gsr.module.thermal.ir.viewmodel.IRGalleryTabViewModel
-import com.mpdc4gsr.module.thermal.ir.viewmodel.IRGalleryViewModel
+import com.mpdc4gsr.module.thermalunified.R
+import com.mpdc4gsr.module.thermalunified.adapter.GalleryAdapter
+import com.mpdc4gsr.module.thermalunified.event.GalleryAddEvent
+import com.mpdc4gsr.module.thermalunified.event.GalleryDirChangeEvent
+import com.mpdc4gsr.module.thermalunified.event.GalleryDownloadEvent
+import com.mpdc4gsr.module.thermalunified.viewmodel.IRGalleryTabViewModel
+import com.mpdc4gsr.module.thermalunified.viewmodel.IRGalleryViewModel
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus

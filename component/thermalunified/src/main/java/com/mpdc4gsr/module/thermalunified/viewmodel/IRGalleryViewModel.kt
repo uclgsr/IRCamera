@@ -1,4 +1,4 @@
-package com.mpdc4gsr.module.thermal.ir.viewmodel
+package com.mpdc4gsr.module.thermalunified.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -9,7 +9,7 @@ import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 import com.mpdc4gsr.libunified.app.repository.GalleryRepository
 import com.mpdc4gsr.libunified.app.repository.TS004Repository
 import com.mpdc4gsr.libunified.app.tools.TimeTool
-import com.mpdc4gsr.module.thermal.ir.utils.WriteTools
+import com.mpdc4gsr.module.thermalunified.utils.WriteTools
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.File

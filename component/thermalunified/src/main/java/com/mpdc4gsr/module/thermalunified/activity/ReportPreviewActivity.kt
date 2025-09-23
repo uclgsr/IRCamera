@@ -1,4 +1,4 @@
-package com.mpdc4gsr.module.thermal.ir.activity
+package com.mpdc4gsr.module.thermalunified.activity
 
 
 import android.content.Intent
@@ -16,8 +16,8 @@ import com.mpdc4gsr.libunified.app.db.entity.HouseReport
 import com.mpdc4gsr.libunified.app.ktbase.BaseActivity
 import com.mpdc4gsr.libunified.app.lms.weiget.TToast
 import com.mpdc4gsr.libunified.app.tools.TimeTool
-import com.mpdc4gsr.module.thermal.ir.R
-import com.mpdc4gsr.module.thermal.ir.adapter.ReportPreviewAdapter
+import com.mpdc4gsr.module.thermalunified.R
+import com.mpdc4gsr.module.thermalunified.adapter.ReportPreviewAdapter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlin.math.abs

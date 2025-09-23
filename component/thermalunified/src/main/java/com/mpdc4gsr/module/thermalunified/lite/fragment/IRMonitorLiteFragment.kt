@@ -48,10 +48,10 @@ import com.mpdc4gsr.libunified.ir.view.TemperatureView.REGION_MODE_RECTANGLE
 import com.mpdc4gsr.libunified.app.BaseApplication
 import com.mpdc4gsr.libunified.app.common.SaveSettingUtil
 import com.mpdc4gsr.libunified.app.ktbase.BaseFragment
-import com.mpdc4gsr.module.thermal.ir.bean.DataBean
-import com.mpdc4gsr.module.thermal.ir.bean.SelectPositionBean
-import com.mpdc4gsr.module.thermal.ir.event.ThermalActionEvent
-import com.mpdc4gsr.module.thermal.ir.repository.ConfigRepository
+import com.mpdc4gsr.module.thermalunified.bean.DataBean
+import com.mpdc4gsr.module.thermalunified.bean.SelectPositionBean
+import com.mpdc4gsr.module.thermalunified.event.ThermalActionEvent
+import com.mpdc4gsr.module.thermalunified.repository.ConfigRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
