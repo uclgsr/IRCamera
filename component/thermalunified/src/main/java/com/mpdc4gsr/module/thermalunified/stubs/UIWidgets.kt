@@ -58,7 +58,6 @@ class RangeSeekBar @JvmOverloads constructor(
     fun setRangeAndPro(minTemp: Float, maxTemp: Float, interval: Float, mode: Int) {}
     fun setRangeAndPro(range: String) {}
     fun setColorList(colors: IntArray?) {}
-    fun setColorList(colors: Array<Int>?) {}
     fun setPlaces(places: FloatArray?) {}
     fun setPlaces(places: Array<Float>?) {}
     fun setPseudocode(code: Int) {}
@@ -103,17 +102,19 @@ class CameraView @JvmOverloads constructor(
     
     fun setShowCross(show: Boolean) {}
     fun setSyncimage(bitmap: android.graphics.Bitmap?) {}
+    fun setSyncimage(syncBitmap: com.energy.iruvc.utils.SynchronizedBitmap?) {}
     fun setTemperature(temp: Any?) {}
     fun setImageSize(width: Int, height: Int) {}
     fun setImageSize(width: Int, height: Int, context: Any?) {}
     fun updateSelectBitmap() {}
     fun updateTargetBitmap() {}
     fun setCameraAlpha(alpha: Float) {}
-    fun getScaledBitmap(): android.graphics.Bitmap? = null
+    fun getScaledBitmap(): android.graphics.Bitmap = android.graphics.Bitmap.createBitmap(1, 1, android.graphics.Bitmap.Config.ARGB_8888)
     fun closeCamera() {}
     fun openCamera() {}
     fun clear() {}
     fun start() {}
+    fun stop() {}
     
     // Property accessors that are being used
     var visibility: Int
@@ -129,12 +130,13 @@ class TemperatureView @JvmOverloads constructor(
 ) : View(context, attrs, defStyleAttr) {
     
     var temperatureRegionMode: Int = 0
-    var isUserHighTemp: Boolean = false
-    var isUserLowTemp: Boolean = false
     var isEnabled: Boolean = true
     var regionAndValueBitmap: android.graphics.Bitmap? = null
     var isShowFull: Boolean = false
-    var layoutParams: android.view.ViewGroup.LayoutParams? = null
+    var layoutParams: android.view.ViewGroup.LayoutParams = android.view.ViewGroup.LayoutParams(0, 0)
+    
+    var isUserHighTemp: Boolean = false
+    var isUserLowTemp: Boolean = false
     
     fun setIndicatorTextDecimalFormat(format: String) {}
     fun setTextSize(size: Int) {}
@@ -157,6 +159,9 @@ class TemperatureView @JvmOverloads constructor(
     fun stop() {}
     fun post(action: Runnable) {}
     fun clear() {}
+    fun setSyncimage(bitmap: android.graphics.Bitmap?) {}
+    fun setSyncimage(syncBitmap: com.energy.iruvc.utils.SynchronizedBitmap?) {}
+    fun setTemperature(temp: Any?) {}
     
     var listener: Any? = null
     

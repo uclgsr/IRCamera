@@ -231,7 +231,7 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
     private var audioPosition: Int = 0
 
     protected lateinit var cameraView: com.mpdc4gsr.module.thermalunified.stubs.CameraView
-    protected lateinit var temperatureView: com.mpdc4gsr.module.thermalunified.stubs.TemperatureView
+    protected lateinit var temperatureView: com.mpdc4gsr.libunified.ir.view.TemperatureView
     private lateinit var spaceChart: View
     private lateinit var clTrendOpen: ConstraintLayout
     private lateinit var llTrendClose: LinearLayout
@@ -279,11 +279,11 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
     protected val layCarDetectPrompt by lazy { findViewById<View>(R.id.lay_car_detect_prompt) }
     protected val temp_bg by lazy { findViewById<com.mpdc4gsr.libunified.app.comm.view.TempLayout>(R.id.temp_bg) }
     protected val cl_seek_bar by lazy {
-        findViewById<com.mpdc4gsr.module.thermalunified.stubs.BitmapConstraintLayout>(
+        findViewById<com.mpdc4gsr.libunified.ui.widget.BitmapConstraintLayout>(
             R.id.cl_seek_bar
         )
     }
-    protected val cameraPreview by lazy { findViewById<com.mpdc4gsr.module.thermalunified.stubs.CameraPreView>(R.id.cameraPreview) }
+    protected val cameraPreview by lazy { findViewById<com.mpdc4gsr.libunified.ui.camera.CameraPreView>(R.id.cameraPreview) }
     private val distance_measure_view by lazy { findViewById<View>(R.id.distance_measure_view) }
     private val zoomView by lazy { findViewById<com.mpdc4gsr.libunified.ir.view.ZoomCaliperView>(R.id.zoomView) }
     protected val temperatureSeekbar by lazy {
@@ -2533,7 +2533,7 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
 
 
                     if ((curChooseTabPos == 1 && temperatureView.temperatureRegionMode != REGION_MODE_CLEAN) ||
-                        (curChooseTabPos == 2 && temperatureView.isUserHighTemp() && temperatureView.isUserLowTemp())
+                        (curChooseTabPos == 2 && temperatureView.isUserHighTemp && temperatureView.isUserLowTemp)
                     ) {
                         cameraViewBitmap = BitmapUtils.mergeBitmap(
                             cameraViewBitmap,
