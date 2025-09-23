@@ -4,51 +4,28 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.util.AttributeSet
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.drawToBitmap
 
 /**
- * Stub implementation for BitmapConstraintLayout to enable compilation
- * This is a minimal implementation for MVP - replace with actual implementation when available
+ * @author: CaiSongL
+ * @date: 2023/6/21 17:13
  */
-class BitmapConstraintLayout @JvmOverloads constructor(
-    context: Context,
-    attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
-) : ConstraintLayout(context, attrs, defStyleAttr) {
-    
-    var bitmap: Bitmap? = null
-        set(value) {
-            field = value
-            // Stub implementation - could invalidate view here
+open class BitmapConstraintLayout : ConstraintLayout {
+
+    constructor(context: Context) : super(context)
+    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
+
+    @Volatile
+    var viewBitmap: Bitmap? = null
+
+    fun updateBitmap() {
+        if (!isShown) {
+            return
         }
-    
-    var isOpenAmplify: Boolean = false
-    
-    fun setCameraAlpha(alpha: Float) {
-        // Stub implementation - could set view alpha
-        this.alpha = alpha
-    }
-    
-    fun setImageSize(width: Int, height: Int) {
-        // Stub implementation - could set image dimensions
-    }
-    
-    fun setSyncimage(bitmap: Bitmap?) {
-        this.bitmap = bitmap
-    }
-    
-    fun setTemperature(temperature: Float) {
-        // Stub implementation - could display temperature
-    }
-    
-    fun updateMagnifier() {
-        // Stub implementation - could update magnification
-    }
-    
-    fun getScaledBitmap(): Bitmap? {
-        return bitmap
-    }
-    
-    fun getCurrentBitmap(): Bitmap? {
-        return bitmap
+        try {
+            viewBitmap = this.drawToBitmap()
+        } catch (_: Exception) {
+        }
     }
 }
