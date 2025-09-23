@@ -43,4 +43,8 @@
     <color name="colorPrimary">#FF1976D2</color>
     <color name="colorPrimaryDark">#FF1565C0</color>
     <color name="color_16131E">#FF16131E</color>
+    
+    <!-- Missing colors from TargetItemAdapter -->
+    <color name="white">#FFFFFFFF</color>
+    <color name="font_third_color">#FF999999</color>
 </resources>

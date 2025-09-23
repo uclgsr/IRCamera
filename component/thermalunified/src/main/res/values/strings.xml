@@ -47,4 +47,18 @@
     <string name="tip_delete">Delete</string>
     <string name="also_del_from_phone_album">Also delete from phone album</string>
     <string name="test_results_delete_success">Deletion successful</string>
+    
+    <!-- Missing strings from PDFListFragment and other files -->
+    <string name="request_fail">Request failed</string>
+    <string name="tip_no_more_data">No more data</string>
+    <string name="tip_config_delete">Do you want to delete %s?</string>
+    <string name="app_confirm">Confirm</string>
+    <string name="app_cancel">Cancel</string>
+    <string name="device_connect_tip">The device is not connected. Please connect the device.</string>
+    
+    <!-- Missing strings for config dialogs -->
+    <string name="thermal_config_environment">Ambient Temperature</string>
+    <string name="thermal_config_distance">Distance to Spot</string>
+    <string name="thermal_config_radiation">Emissivity</string>
+    <string name="tip_input_format">Invalid input format</string>
 </resources>
