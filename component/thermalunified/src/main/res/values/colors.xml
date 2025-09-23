@@ -43,4 +43,10 @@
     <color name="colorPrimary">#FF1976D2</color>
     <color name="colorPrimaryDark">#FF1565C0</color>
     <color name="color_16131E">#FF16131E</color>
+
+    <!-- Missing chart colors -->
+    <color name="chart_axis">#FF666666</color>
+    <color name="chart_point_max">#FFFF5722</color>
+    <color name="chart_point_min">#FF4CAF50</color>
+    <color name="chart_point_center">#FF607D8B</color>
 </resources>

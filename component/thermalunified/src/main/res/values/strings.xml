@@ -16,4 +16,17 @@
     <string name="tips_tisr_on">Imaging Super Resolution has been activated.</string>
     <string name="tips_tisr_off">Imaging Super Resolution has been deactivated.</string>
     <string name="tips_tisr_fail">Your phone does not support OpenCL and cannot enable Imaging Super Resolution.</string>
+    
+    <!-- Compass direction strings -->
+    <string name="compass_north">N</string>
+    <string name="compass_northeast">NE</string>
+    <string name="compass_east">E</string>
+    <string name="compass_southeast">SE</string>
+    <string name="compass_south">S</string>
+    <string name="compass_southwest">SW</string>
+    <string name="compass_west">W</string>
+    <string name="compass_northwest">NW</string>
+
+    <!-- Missing strings -->
+    <string name="album_edit_report">Edit Report</string>
 </resources>
