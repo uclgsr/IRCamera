@@ -1,4 +1,4 @@
-package com.mpdc4gsr.module.thermal.ir.dialog
+package com.mpdc4gsr.module.thermalunified.dialog
 
 import android.annotation.SuppressLint
 import android.app.Dialog
@@ -12,7 +12,7 @@ import androidx.core.view.isVisible
 import com.mpdc4gsr.libunified.app.lms.weiget.TToast
 import com.mpdc4gsr.libunified.app.tools.UnitTools
 import com.mpdc4gsr.libunified.app.utils.ScreenUtil
-import com.mpdc4gsr.module.thermal.ir.R
+import com.mpdc4gsr.module.thermalunified.R
 
 
 class IRConfigInputDialog(context: Context, val type: Type, val isTC007: Boolean) :
