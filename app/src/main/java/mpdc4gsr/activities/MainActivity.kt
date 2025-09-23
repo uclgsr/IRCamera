@@ -29,7 +29,7 @@ import com.csl.irCamera.BuildConfig
 import com.csl.irCamera.R
 import com.csl.irCamera.databinding.ActivityMainBinding
 import com.elvishew.xlog.XLog
-import com.example.thermal_lite.activity.IRThermalLiteActivity
+import com.mpdc4gsr.module.thermalunified.lite.activity.IRThermalLiteActivity
 import com.mpdc4gsr.gsr.model.SessionInfo
 import com.mpdc4gsr.libunified.app.BaseApplication
 import com.mpdc4gsr.libunified.app.bean.event.TS004ResetEvent
@@ -51,9 +51,9 @@ import com.mpdc4gsr.libunified.app.tools.ConstantLanguages
 import com.mpdc4gsr.libunified.app.tools.DeviceTools
 import com.mpdc4gsr.libunified.app.utils.CommUtils
 import com.mpdc4gsr.libunified.app.viewmodel.VersionViewModel
-import com.mpdc4gsr.module.thermal.ir.activity.IRThermalNightActivity
-import com.mpdc4gsr.module.thermal.ir.activity.IRThermalPlusActivity
-import com.mpdc4gsr.module.thermal.ir.fragment.IRGalleryTabFragment
+import com.mpdc4gsr.module.thermalunified.activity.IRThermalNightActivity
+import com.mpdc4gsr.module.thermalunified.activity.IRThermalPlusActivity
+import com.mpdc4gsr.module.thermalunified.fragment.IRGalleryTabFragment
 import com.mpdc4gsr.module.user.fragment.MineFragment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

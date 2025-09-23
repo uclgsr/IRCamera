@@ -1,4 +1,4 @@
-package com.mpdc4gsr.module.thermal.adapter
+package com.mpdc4gsr.module.thermalunified.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -8,7 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.mpdc4gsr.libunified.app.db.entity.ThermalEntity
 import com.mpdc4gsr.libunified.app.tools.TimeTool
-import com.mpdc4gsr.module.thermal.R
+import com.mpdc4gsr.module.thermalunified.R
 
 class MonitorLogAdapter(val context: Context) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {

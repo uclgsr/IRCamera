@@ -1,4 +1,4 @@
-package com.mpdc4gsr.module.thermal.view;
+package com.mpdc4gsr.module.thermalunified.view;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -13,7 +13,7 @@ import com.mpdc4gsr.libunified.ui.charting.utils.Utils;
 import com.mpdc4gsr.libunified.app.db.entity.ThermalEntity;
 import com.mpdc4gsr.libunified.app.tools.NumberTools;
 import com.mpdc4gsr.libunified.app.tools.TimeTool;
-import com.mpdc4gsr.module.thermal.R;
+import com.mpdc4gsr.module.thermalunified.R;
 
 @SuppressLint("ViewConstructor")
 public class MyMarkerView extends MarkerView {

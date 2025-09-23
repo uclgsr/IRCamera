@@ -297,7 +297,7 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
     private val tvTitleObserve by lazy { findViewById<TextView>(R.id.tv_title_observe) }
 
 
-    protected var compassView: com.mpdc4gsr.module.thermal.ir.view.compass.LinearCompassView? = null
+    protected var compassView: com.mpdc4gsr.module.thermalunified.view.compass.LinearCompassView? = null
 
 
     private val bitmapWidth: Int

@@ -1,4 +1,4 @@
-package com.mpdc4gsr.module.thermal.ir.activity
+package com.mpdc4gsr.module.thermalunified.activity
 
 import android.graphics.Bitmap
 import android.graphics.Rect
@@ -45,11 +45,11 @@ import com.mpdc4gsr.libunified.app.tools.NumberTools
 import com.mpdc4gsr.libunified.app.tools.TimeTool
 import com.mpdc4gsr.libunified.app.utils.ScreenUtil
 import com.mpdc4gsr.libunified.app.view.TitleView
-import com.mpdc4gsr.module.thermal.ir.R
-import com.mpdc4gsr.module.thermal.ir.bean.SelectPositionBean
-import com.mpdc4gsr.module.thermal.ir.event.MonitorSaveEvent
-import com.mpdc4gsr.module.thermal.ir.repository.ConfigRepository
-import com.mpdc4gsr.module.thermal.ir.view.ChartMonitorView
+import com.mpdc4gsr.module.thermalunified.R
+import com.mpdc4gsr.module.thermalunified.bean.SelectPositionBean
+import com.mpdc4gsr.module.thermalunified.event.MonitorSaveEvent
+import com.mpdc4gsr.module.thermalunified.repository.ConfigRepository
+import com.mpdc4gsr.module.thermalunified.view.ChartMonitorView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay

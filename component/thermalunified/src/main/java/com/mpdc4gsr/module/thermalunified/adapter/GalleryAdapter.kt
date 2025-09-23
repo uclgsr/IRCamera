@@ -1,4 +1,4 @@
-package com.mpdc4gsr.module.thermal.adapter
+package com.mpdc4gsr.module.thermalunified.adapter
 
 import android.content.Context
 import android.util.Log
@@ -9,7 +9,7 @@ import android.widget.ImageView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.mpdc4gsr.libunified.app.tools.GlideLoader
-import com.mpdc4gsr.module.thermal.R
+import com.mpdc4gsr.module.thermalunified.R
 
 class GalleryAdapter(val context: Context) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {

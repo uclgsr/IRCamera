@@ -41,7 +41,7 @@
         app:layout_constraintTop_toTopOf="@+id/bar_pick_view_count"
         tools:text="45%" />
 
-    <com.mpdc4gsr.module.thermal.ir.view.TargetBarPickView
+    <com.mpdc4gsr.module.thermalunified.view.TargetBarPickView
         android:id="@+id/bar_pick_view_count"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

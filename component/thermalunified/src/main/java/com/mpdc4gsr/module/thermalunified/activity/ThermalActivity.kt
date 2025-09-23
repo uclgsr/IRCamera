@@ -1,4 +1,4 @@
-package com.mpdc4gsr.module.thermal.activity
+package com.mpdc4gsr.module.thermalunified.activity
 
 import android.util.Log
 import android.view.View
@@ -8,9 +8,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.BarUtils
 import com.mpdc4gsr.libunified.app.ktbase.BaseActivity
 import com.mpdc4gsr.libunified.app.menu.MenuFirstTabView
-import com.mpdc4gsr.module.thermal.R
-import com.mpdc4gsr.module.thermal.adapter.MenuTabAdapter
-import com.mpdc4gsr.module.thermal.fragment.event.ThermalActionEvent
+import com.mpdc4gsr.module.thermalunified.R
+import com.mpdc4gsr.module.thermalunified.adapter.MenuTabAdapter
+import com.mpdc4gsr.module.thermalunified.event.ThermalActionEvent
 import org.greenrobot.eventbus.EventBus
 import com.mpdc4gsr.libunified.R as LibR
 

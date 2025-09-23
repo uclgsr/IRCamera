@@ -1,4 +1,4 @@
-package com.example.thermal_lite.activity
+package com.mpdc4gsr.module.thermalunified.lite.activity
 
 import android.os.Bundle
 import android.util.Log
@@ -12,12 +12,12 @@ import com.energy.irutilslibrary.LibIRTempAC020
 import com.energy.irutilslibrary.bean.GainStatus
 import com.energy.iruvc.sdkisp.LibIRTemp
 import com.energy.iruvc.utils.Line
-import com.example.thermal_lite.IrConst
-import com.example.thermal_lite.R
-import com.example.thermal_lite.camera.DeviceIrcmdControlManager
-import com.example.thermal_lite.databinding.ActivityIrMonitorChartLiteBinding
-import com.example.thermal_lite.fragment.IRMonitorLiteFragment
-import com.example.thermal_lite.util.CommonUtil
+import com.mpdc4gsr.module.thermalunified.lite.IrConst
+import com.mpdc4gsr.module.thermalunified.lite.R
+import com.mpdc4gsr.module.thermalunified.lite.camera.DeviceIrcmdControlManager
+import com.mpdc4gsr.module.thermalunified.lite.databinding.ActivityIrMonitorChartLiteBinding
+import com.mpdc4gsr.module.thermalunified.lite.fragment.IRMonitorLiteFragment
+import com.mpdc4gsr.module.thermalunified.lite.util.CommonUtil
 import com.mpdc4gsr.libunified.ir.view.ITsTempListener
 import com.mpdc4gsr.libunified.app.BaseApplication
 import com.mpdc4gsr.libunified.app.bean.tools.ThermalBean
@@ -28,10 +28,10 @@ import com.mpdc4gsr.libunified.app.ktbase.BaseActivity
 import com.mpdc4gsr.libunified.app.lms.LMS.mContext
 import com.mpdc4gsr.libunified.app.tools.NumberTools
 import com.mpdc4gsr.libunified.app.tools.TimeTool
-import com.mpdc4gsr.module.thermal.ir.bean.DataBean
-import com.mpdc4gsr.module.thermal.ir.bean.SelectPositionBean
-import com.mpdc4gsr.module.thermal.ir.event.MonitorSaveEvent
-import com.mpdc4gsr.module.thermal.ir.repository.ConfigRepository
+import com.mpdc4gsr.module.thermalunified.bean.DataBean
+import com.mpdc4gsr.module.thermalunified.bean.SelectPositionBean
+import com.mpdc4gsr.module.thermalunified.event.MonitorSaveEvent
+import com.mpdc4gsr.module.thermalunified.repository.ConfigRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay

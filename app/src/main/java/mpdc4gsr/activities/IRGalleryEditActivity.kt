@@ -19,9 +19,9 @@ import com.elvishew.xlog.XLog
 import com.energy.iruvc.ircmd.IRCMDType
 import com.energy.iruvc.ircmd.IRUtils
 import com.energy.iruvc.utils.CommonParams
-import com.example.thermal_lite.IrConst
-import com.example.thermal_lite.util.CommonUtil
-import com.example.thermal_lite.util.IRTool
+import com.mpdc4gsr.module.thermalunified.lite.IrConst
+import com.mpdc4gsr.module.thermalunified.lite.util.CommonUtil
+import com.mpdc4gsr.module.thermalunified.lite.util.IRTool
 import com.mpdc4gsr.libunified.ir.utils.OpencvTools
 import com.mpdc4gsr.libunified.ir.utils.PseudocodeUtils.changePseudocodeModeByOld
 import com.mpdc4gsr.libunified.ir.view.ITsTempListener
@@ -71,7 +71,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.util.Locale
-import com.example.thermal_lite.R as ThermalLiteR
+import com.mpdc4gsr.module.thermalunified.R as ThermalLiteR
 import com.mpdc4gsr.module.thermalunified.R as ThermalIrR
 
 class IRGalleryEditActivity : BaseBindingActivity<ActivityIrGalleryEditBinding>(),

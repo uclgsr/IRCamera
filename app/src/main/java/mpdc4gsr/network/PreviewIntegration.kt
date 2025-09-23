@@ -115,7 +115,7 @@ object PreviewIntegration {
 }
 
 
-fun com.example.thermal_lite.camera.CameraPreviewManager.updatePreview(context: Context) {
+fun com.mpdc4gsr.module.thermalunified.lite.camera.CameraPreviewManager.updatePreview(context: Context) {
     try {
         val bitmap = this.scaledBitmap()
         if (bitmap != null && !bitmap.isRecycled) {

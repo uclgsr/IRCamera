@@ -1,4 +1,4 @@
-package com.example.thermal_lite.camera;
+package com.mpdc4gsr.module.thermalunified.lite.camera;
 
 import android.graphics.Bitmap;
 import android.os.Handler;
@@ -37,9 +37,9 @@ import com.energy.irutilslibrary.bean.LogLevel;
 import com.energy.iruvccamera.bean.CameraSize;
 import com.energy.iruvccamera.bean.UvcParams;
 import com.energy.iruvccamera.usb.USBMonitor;
-import com.example.thermal_lite.IrConst;
-import com.example.thermal_lite.ui.activity.IrDisplayActivity;
-import com.example.thermal_lite.util.CommonUtil;
+import com.mpdc4gsr.module.thermalunified.lite.IrConst;
+import com.mpdc4gsr.module.thermalunified.lite.ui.activity.IrDisplayActivity;
+import com.mpdc4gsr.module.thermalunified.lite.util.CommonUtil;
 import com.mpdc4gsr.libunified.ir.utils.IRImageHelp;
 import com.mpdc4gsr.libunified.ir.utils.PseudocodeUtils;
 import com.mpdc4gsr.libunified.app.bean.AlarmBean;
