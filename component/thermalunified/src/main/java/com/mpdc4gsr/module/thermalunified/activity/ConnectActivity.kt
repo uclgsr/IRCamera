@@ -1,9 +1,9 @@
-package com.mpdc4gsr.module.thermal.activity
+package com.mpdc4gsr.module.thermalunified.activity
 
 import android.widget.TextView
 import com.mpdc4gsr.libunified.app.ktbase.BaseActivity
 import com.mpdc4gsr.libunified.app.tools.DeviceTools
-import com.mpdc4gsr.module.thermal.R
+import com.mpdc4gsr.module.thermalunified.R
 
 
 class ConnectActivity : BaseActivity() {
