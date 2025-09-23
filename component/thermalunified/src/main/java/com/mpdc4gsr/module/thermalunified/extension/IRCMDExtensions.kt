@@ -1,4 +1,4 @@
-package com.infisense.usbir.extension
+package com.mpdc4gsr.module.thermalunified.extension
 
 import android.util.Log
 import com.energy.iruvc.ircmd.IRCMD

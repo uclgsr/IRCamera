@@ -1,4 +1,4 @@
-package com.shuyu.gsyvideoplayer.player
+package com.mpdc4gsr.module.thermalunified.player
 
 object PlayerFactory {
     const val SYSTEM_PLAYER = 0

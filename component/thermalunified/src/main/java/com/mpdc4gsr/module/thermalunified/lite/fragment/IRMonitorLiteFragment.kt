@@ -25,7 +25,7 @@ import com.energy.iruvc.utils.CommonParams
 import com.energy.iruvc.utils.Line
 import com.energy.iruvc.utils.SynchronizedBitmap
 import com.energy.iruvccamera.usb.USBMonitor
-import com.mpdc4gsr.module.thermalunified.lite.R
+import com.mpdc4gsr.module.thermalunified.R
 import com.mpdc4gsr.module.thermalunified.lite.activity.IRMonitorLiteActivity
 import com.mpdc4gsr.module.thermalunified.lite.camera.CameraPreviewManager
 import com.mpdc4gsr.module.thermalunified.lite.camera.DeviceControlManager
