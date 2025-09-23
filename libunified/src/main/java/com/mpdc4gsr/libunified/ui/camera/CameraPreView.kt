@@ -23,7 +23,7 @@ class CameraPreView : View, BitmapViewListener {
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
     // Use the modern KTX extension function from the 'dev' branch for conciseness
-    override fun getBitmap(): Bitmap? {
+    fun getBitmap(): Bitmap? {
         return try {
             drawToBitmap()
         } catch (e: Exception) {
