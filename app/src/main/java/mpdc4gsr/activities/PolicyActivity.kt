@@ -10,9 +10,9 @@ import com.csl.irCamera.databinding.ActivityPolicyBinding
 import com.elvishew.xlog.XLog
 import com.mpdc4gsr.libunified.app.BaseApplication
 import com.mpdc4gsr.libunified.app.ktbase.BaseBindingActivity
-import com.kotlinx.coroutines.Dispatchers
-import com.kotlinx.coroutines.delay
-import com.kotlinx.coroutines.launch
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class PolicyActivity : BaseBindingActivity<ActivityPolicyBinding>() {
     private val mHandler = Handler(Looper.getMainLooper())

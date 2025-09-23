@@ -4,8 +4,8 @@ import android.Manifest
 import android.content.Context
 import android.os.Build
 import androidx.test.core.app.ApplicationProvider
-import com.kotlinx.coroutines.ExperimentalCoroutinesApi
-import com.kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.runTest
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test

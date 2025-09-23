@@ -64,9 +64,9 @@ import com.mpdc4gsr.module.thermalunified.frame.ImageParams
 import com.mpdc4gsr.module.thermalunified.report.bean.ImageTempBean
 import com.mpdc4gsr.module.thermalunified.view.TemperatureBaseView.Mode
 import com.mpdc4gsr.module.thermalunified.viewmodel.IRGalleryEditViewModel
-import com.kotlinx.coroutines.Dispatchers
-import com.kotlinx.coroutines.delay
-import com.kotlinx.coroutines.launch
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode

@@ -13,9 +13,9 @@ import androidx.core.app.NotificationCompat
 import com.mpdc4gsr.gsr.model.GSRSample
 import com.mpdc4gsr.gsr.model.SessionInfo
 import com.mpdc4gsr.gsr.model.SyncMark
-import com.kotlinx.coroutines.CoroutineScope
-import com.kotlinx.coroutines.Dispatchers
-import com.kotlinx.coroutines.launch
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class MultiModalRecordingService : Service() {
     companion object {

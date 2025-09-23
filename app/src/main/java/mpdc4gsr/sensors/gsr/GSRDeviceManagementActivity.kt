@@ -20,8 +20,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.csl.irCamera.R
 import com.topdon.ble.util.BluetoothPermissionUtils
-import com.kotlinx.coroutines.delay
-import com.kotlinx.coroutines.launch
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class GSRDeviceManagementActivity : AppCompatActivity(), View.OnClickListener {
     companion object {

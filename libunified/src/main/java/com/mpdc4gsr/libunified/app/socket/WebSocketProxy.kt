@@ -16,12 +16,12 @@ import com.mpdc4gsr.libunified.app.bean.event.SocketStateEvent
 import com.mpdc4gsr.libunified.app.security.CertificateManager
 import com.mpdc4gsr.libunified.app.utils.WifiUtil
 import com.mpdc4gsr.libunified.app.utils.WsCmdConstants
-import com.okhttp3.Interceptor
-import com.okhttp3.OkHttpClient
-import com.okhttp3.Request
-import com.okhttp3.Response
-import com.okhttp3.WebSocket
-import com.okio.ByteString
+import okhttp3.Interceptor
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.Response
+import okhttp3.WebSocket
+import okio.ByteString
 import org.greenrobot.eventbus.EventBus
 
 class WebSocketProxy {

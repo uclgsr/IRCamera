@@ -12,7 +12,7 @@ import com.mpdc4gsr.libunified.app.socket.SocketCmdUtil
 import com.mpdc4gsr.libunified.app.utils.WsCmdConstants
 import com.mpdc4gsr.libunified.app.view.TitleView
 import com.mpdc4gsr.module.user.R
-import com.kotlinx.coroutines.launch
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.json.JSONObject

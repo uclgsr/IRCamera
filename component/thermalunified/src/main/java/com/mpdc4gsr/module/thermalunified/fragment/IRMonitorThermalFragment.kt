@@ -39,11 +39,11 @@ import com.mpdc4gsr.module.thermalunified.activity.IRMonitorActivity
 import com.mpdc4gsr.module.thermalunified.bean.SelectPositionBean
 import com.mpdc4gsr.module.thermalunified.event.ThermalActionEvent
 import com.mpdc4gsr.module.thermalunified.repository.ConfigRepository
-import com.kotlinx.coroutines.Dispatchers
-import com.kotlinx.coroutines.Job
-import com.kotlinx.coroutines.delay
-import com.kotlinx.coroutines.launch
-import com.kotlinx.coroutines.withContext
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 

@@ -17,8 +17,8 @@ import com.mpdc4gsr.module.user.R
 import com.mpdc4gsr.module.user.bean.ColorsBean
 import com.mpdc4gsr.module.user.view.ListItemView
 import com.mpdc4gsr.module.user.view.ProgressBarView
-import com.kotlinx.coroutines.delay
-import com.kotlinx.coroutines.launch
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.text.DecimalFormat
 import com.mpdc4gsr.libunified.R as RCore
 

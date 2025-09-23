@@ -2,10 +2,10 @@ package mpdc4gsr.security
 
 import android.content.Context
 import android.util.Log
-import com.kotlinx.coroutines.GlobalScope
-import com.kotlinx.coroutines.delay
-import com.kotlinx.coroutines.launch
-import com.mpdc4gsr.libunified.app.StructuredLogger
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import mpdc4gsr.libunified.app.StructuredLogger
 import java.io.File
 import java.security.KeyFactory
 import java.security.KeyPair
@@ -19,7 +19,7 @@ import java.security.cert.X509Certificate
 import java.security.spec.PKCS8EncodedKeySpec
 import java.security.spec.X509EncodedKeySpec
 import java.util.concurrent.ConcurrentHashMap
-import com.javax.crypto.Cipher
+import javax.crypto.Cipher
 
 class CertificateManager(
     private val context: Context,

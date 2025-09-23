@@ -4,7 +4,7 @@ import android.os.Build
 import android.os.Parcelable
 import com.mpdc4gsr.libunified.app.BaseApplication
 import com.mpdc4gsr.libunified.app.tools.AppLanguageUtils
-import com.kotlinx.android.parcel.Parcelize
+import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class SoftwareInfo(

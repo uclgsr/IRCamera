@@ -6,8 +6,8 @@ import com.mpdc4gsr.libunified.app.db.AppDatabase
 import com.mpdc4gsr.libunified.app.db.dao.ThermalDao
 import com.mpdc4gsr.libunified.app.db.entity.ThermalEntity
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
-import com.kotlinx.coroutines.Dispatchers
-import com.kotlinx.coroutines.launch
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class IRMonitorViewModel : BaseViewModel() {
     val recordListLD = MutableLiveData<List<ThermalDao.Record>>()

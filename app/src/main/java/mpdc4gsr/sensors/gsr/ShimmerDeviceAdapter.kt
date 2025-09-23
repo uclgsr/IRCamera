@@ -7,8 +7,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.mpdc4gsr.R
-import com.mpdc4gsr.sensors.unified.model.DeviceInfo
+import mpdc4gsr.R
+import mpdc4gsr.sensors.unified.model.DeviceInfo
 
 
 class ShimmerDeviceAdapter(

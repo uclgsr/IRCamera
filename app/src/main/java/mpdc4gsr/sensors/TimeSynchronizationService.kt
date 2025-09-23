@@ -1,9 +1,9 @@
 package mpdc4gsr.sensors
 
 import android.util.Log
-import com.kotlinx.coroutines.flow.MutableSharedFlow
-import com.kotlinx.coroutines.flow.SharedFlow
-import com.kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import java.io.File
 import java.io.FileWriter
 

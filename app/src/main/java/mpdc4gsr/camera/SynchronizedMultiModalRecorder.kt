@@ -4,10 +4,10 @@ import android.content.Context
 import android.util.Log
 import android.view.TextureView
 import com.mpdc4gsr.gsr.util.TimeUtil
-import com.kotlinx.coroutines.GlobalScope
-import com.kotlinx.coroutines.launch
-import com.kotlinx.coroutines.runBlocking
-import com.mpdc4gsr.sensors.gsr.EnhancedThermalRecorder
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import mpdc4gsr.sensors.gsr.EnhancedThermalRecorder
 import java.io.File
 
 class SynchronizedMultiModalRecorder(

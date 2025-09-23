@@ -1,11 +1,11 @@
 package com.mpdc4gsr.libunified.app.http.converter
 
-import com.okhttp3.MediaType.Companion.toMediaTypeOrNull
-import com.okhttp3.RequestBody
-import com.okhttp3.RequestBody.Companion.toRequestBody
-import com.okhttp3.ResponseBody
-import com.retrofit2.Converter
-import com.retrofit2.Retrofit
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
+import okhttp3.ResponseBody
+import retrofit2.Converter
+import retrofit2.Retrofit
 import java.lang.reflect.Type
 
 class StringConverterFactory : Converter.Factory() {

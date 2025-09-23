@@ -1,18 +1,18 @@
 package com.mpdc4gsr.libunified.ir.utils;
 
-import com.static org.opencv.core.Core.BORDER_CONSTANT;
-import com.static org.opencv.core.Core.DFT_SCALE;
-import com.static org.opencv.core.Core.NORM_MINMAX;
-import com.static org.opencv.core.Core.getOptimalDFTSize;
-import com.static org.opencv.core.Core.magnitude;
-import com.static org.opencv.core.Core.normalize;
-import com.static org.opencv.core.CvType.CV_32F;
-import com.static org.opencv.core.CvType.CV_32FC1;
-import com.static org.opencv.core.CvType.CV_32FC2;
-import com.static org.opencv.core.CvType.CV_8UC1;
-import com.static org.opencv.core.CvType.CV_8UC2;
-import com.static org.opencv.imgproc.Imgproc.COLOR_YUV2GRAY_YUYV;
-import com.static org.opencv.imgproc.Imgproc.cvtColor;
+import static org.opencv.core.Core.BORDER_CONSTANT;
+import static org.opencv.core.Core.DFT_SCALE;
+import static org.opencv.core.Core.NORM_MINMAX;
+import static org.opencv.core.Core.getOptimalDFTSize;
+import static org.opencv.core.Core.magnitude;
+import static org.opencv.core.Core.normalize;
+import static org.opencv.core.CvType.CV_32F;
+import static org.opencv.core.CvType.CV_32FC1;
+import static org.opencv.core.CvType.CV_32FC2;
+import static org.opencv.core.CvType.CV_8UC1;
+import static org.opencv.core.CvType.CV_8UC2;
+import static org.opencv.imgproc.Imgproc.COLOR_YUV2GRAY_YUYV;
+import static org.opencv.imgproc.Imgproc.cvtColor;
 
 import org.opencv.core.Core;
 import org.opencv.core.Mat;

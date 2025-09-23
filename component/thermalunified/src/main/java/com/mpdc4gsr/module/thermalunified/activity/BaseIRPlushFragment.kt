@@ -44,12 +44,12 @@ import com.mpdc4gsr.module.thermalunified.repository.ConfigRepository
 import com.mpdc4gsr.module.thermalunified.utils.DualParamsUtil
 import com.mpdc4gsr.module.thermalunified.utils.IRCmdTool
 import com.mpdc4gsr.module.thermalunified.utils.IRCmdTool.getSNStr
-import com.kotlinx.coroutines.Dispatchers
-import com.kotlinx.coroutines.Job
-import com.kotlinx.coroutines.delay
-import com.kotlinx.coroutines.isActive
-import com.kotlinx.coroutines.launch
-import com.kotlinx.coroutines.withContext
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.IOException
 import java.io.InputStream
 

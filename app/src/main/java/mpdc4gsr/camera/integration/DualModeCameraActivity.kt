@@ -10,10 +10,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.csl.irCamera.R
-import com.kotlinx.coroutines.launch
-import com.mpdc4gsr.camera.RGBCameraRecorder
-import com.mpdc4gsr.camera.core.SamsungDeviceCompatibility
-import com.mpdc4gsr.camera.ui.CameraModeSelector
+import kotlinx.coroutines.launch
+import mpdc4gsr.camera.RGBCameraRecorder
+import mpdc4gsr.camera.core.SamsungDeviceCompatibility
+import mpdc4gsr.camera.ui.CameraModeSelector
 
 class DualModeCameraActivity : AppCompatActivity() {
     private lateinit var textureView: TextureView

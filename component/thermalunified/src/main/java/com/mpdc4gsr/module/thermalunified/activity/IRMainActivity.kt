@@ -38,8 +38,8 @@ import com.mpdc4gsr.module.thermalunified.fragment.IRGalleryTabFragment
 import com.mpdc4gsr.module.thermalunified.fragment.IRThermalFragment
 import com.mpdc4gsr.module.thermalunified.fragment.PDFListFragment
 import com.mpdc4gsr.module.user.fragment.MoreFragment
-import com.kotlinx.coroutines.delay
-import com.kotlinx.coroutines.launch
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import com.mpdc4gsr.libunified.R as LibR
 

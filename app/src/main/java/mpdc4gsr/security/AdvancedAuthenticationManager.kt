@@ -4,21 +4,21 @@ import android.content.Context
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
 import android.util.Log
-import com.kotlinx.coroutines.CoroutineScope
-import com.kotlinx.coroutines.Dispatchers
-import com.kotlinx.coroutines.SupervisorJob
-import com.kotlinx.coroutines.cancel
-import com.kotlinx.coroutines.delay
-import com.kotlinx.coroutines.launch
-import com.mpdc4gsr.libunified.app.StructuredLogger
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import mpdc4gsr.libunified.app.StructuredLogger
 import org.json.JSONObject
 import java.security.KeyStore
 import java.security.SecureRandom
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean
-import com.javax.crypto.KeyGenerator
-import com.javax.crypto.Mac
-import com.javax.crypto.spec.SecretKeySpec
+import javax.crypto.KeyGenerator
+import javax.crypto.Mac
+import javax.crypto.spec.SecretKeySpec
 
 class AdvancedAuthenticationManager(private val context: Context) {
     companion object {

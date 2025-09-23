@@ -34,9 +34,9 @@ import com.mpdc4gsr.libunified.app.utils.CommUtils
 import com.mpdc4gsr.lib.ui.listener.SingleClickListener
 import com.mpdc4gsr.lib.ui.widget.BarPickView
 import com.mpdc4gsr.module.thermalunified.R
-import com.kotlinx.coroutines.Dispatchers
-import com.kotlinx.coroutines.launch
-import com.kotlinx.coroutines.withContext
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.Locale
 import com.mpdc4gsr.libunified.R as LibR
 

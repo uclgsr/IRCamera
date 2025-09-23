@@ -17,11 +17,11 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.csl.irCamera.R
-import com.kotlinx.coroutines.launch
-import com.mpdc4gsr.controller.HardwareValidationController
-import com.mpdc4gsr.controller.RecordingController
-import com.mpdc4gsr.controller.ValidationReport
-import com.mpdc4gsr.permissions.PermissionController
+import kotlinx.coroutines.launch
+import mpdc4gsr.controller.HardwareValidationController
+import mpdc4gsr.controller.RecordingController
+import mpdc4gsr.controller.ValidationReport
+import mpdc4gsr.permissions.PermissionController
 import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.Date

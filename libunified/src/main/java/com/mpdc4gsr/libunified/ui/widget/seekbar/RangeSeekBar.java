@@ -1,7 +1,7 @@
 package com.mpdc4gsr.libunified.ui.widget.seekbar;
 
-import com.static com.mpdc4gsr.libunified.ui.widget.seekbar.SeekBar.INDICATOR_ALWAYS_HIDE;
-import com.static com.mpdc4gsr.libunified.ui.widget.seekbar.SeekBar.INDICATOR_ALWAYS_SHOW;
+import static com.mpdc4gsr.libunified.ui.widget.seekbar.SeekBar.INDICATOR_ALWAYS_HIDE;
+import static com.mpdc4gsr.libunified.ui.widget.seekbar.SeekBar.INDICATOR_ALWAYS_SHOW;
 
 import android.content.Context;
 import android.content.res.TypedArray;

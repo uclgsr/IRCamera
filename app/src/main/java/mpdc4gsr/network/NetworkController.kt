@@ -2,14 +2,14 @@ package mpdc4gsr.network
 
 import android.content.Context
 import android.util.Log
-import com.kotlinx.coroutines.CoroutineScope
-import com.kotlinx.coroutines.Dispatchers
-import com.kotlinx.coroutines.SupervisorJob
-import com.kotlinx.coroutines.cancel
-import com.kotlinx.coroutines.delay
-import com.kotlinx.coroutines.launch
-import com.kotlinx.coroutines.runBlocking
-import com.kotlinx.coroutines.withContext
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import java.io.BufferedReader
 import java.io.InputStreamReader

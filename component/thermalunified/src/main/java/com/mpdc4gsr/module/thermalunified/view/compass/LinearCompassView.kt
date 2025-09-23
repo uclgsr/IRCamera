@@ -14,10 +14,10 @@ import com.mpdc4gsr.module.thermalunified.utils.getPixelLinear
 import com.mpdc4gsr.module.thermalunified.utils.getValuesBetween
 import com.mpdc4gsr.module.thermalunified.utils.realX
 import com.mpdc4gsr.module.thermalunified.utils.realY
-import com.kotlinx.coroutines.CoroutineScope
-import com.kotlinx.coroutines.Dispatchers
-import com.kotlinx.coroutines.cancel
-import com.kotlinx.coroutines.launch
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 import kotlin.coroutines.EmptyCoroutineContext
 
 class LinearCompassView : View {

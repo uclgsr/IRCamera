@@ -8,8 +8,8 @@ import com.mpdc4gsr.module.thermalunified.R
 import com.mpdc4gsr.module.thermalunified.event.CorrectionFinishEvent
 import com.mpdc4gsr.module.thermalunified.fragment.IRCorrectionFragment
 import com.mpdc4gsr.module.thermalunified.view.TimeDownView
-import com.kotlinx.coroutines.Dispatchers
-import com.kotlinx.coroutines.launch
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 
 

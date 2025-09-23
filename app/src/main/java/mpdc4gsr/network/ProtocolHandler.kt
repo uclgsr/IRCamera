@@ -2,9 +2,9 @@ package mpdc4gsr.network
 
 import android.content.Context
 import android.util.Log
-import com.kotlinx.coroutines.flow.Flow
-import com.kotlinx.coroutines.flow.map
-import com.mpdc4gsr.utils.TimeManager
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+import mpdc4gsr.utils.TimeManager
 
 /**
  * Handles protocol messages according to the standardized networking specification.

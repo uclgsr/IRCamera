@@ -3,7 +3,7 @@ package com.mpdc4gsr.libunified.app.bean
 import android.os.Parcelable
 import com.google.gson.Gson
 import com.mpdc4gsr.libunified.app.common.SharedManager
-import com.kotlinx.parcelize.Parcelize
+import kotlinx.parcelize.Parcelize
 
 /**
  * Stub implementation of CustomPseudoBean to replace the removed pseudo module.

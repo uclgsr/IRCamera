@@ -2,15 +2,15 @@ package mpdc4gsr.network
 
 import android.content.Context
 import android.util.Log
-import com.kotlinx.coroutines.CoroutineScope
-import com.kotlinx.coroutines.Dispatchers
-import com.kotlinx.coroutines.SupervisorJob
-import com.kotlinx.coroutines.delay
-import com.kotlinx.coroutines.flow.MutableStateFlow
-import com.kotlinx.coroutines.flow.StateFlow
-import com.kotlinx.coroutines.flow.asStateFlow
-import com.kotlinx.coroutines.isActive
-import com.kotlinx.coroutines.launch
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 
 /**
  * Manages network connections with error recovery and reconnection logic

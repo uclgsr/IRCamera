@@ -15,9 +15,9 @@ import com.mpdc4gsr.gsr.model.SessionInfo
 import com.mpdc4gsr.gsr.model.SyncMark
 import com.mpdc4gsr.gsr.util.TimeUtil
 import com.opencsv.CSVWriter
-import com.kotlinx.coroutines.Dispatchers
-import com.kotlinx.coroutines.delay
-import com.kotlinx.coroutines.withContext
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileWriter
 import java.io.IOException

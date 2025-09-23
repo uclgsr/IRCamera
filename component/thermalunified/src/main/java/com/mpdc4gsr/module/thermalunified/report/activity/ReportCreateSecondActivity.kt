@@ -25,7 +25,7 @@ import com.mpdc4gsr.module.thermalunified.report.bean.ReportInfoBean
 import com.mpdc4gsr.module.thermalunified.report.bean.ReportTempBean
 import com.mpdc4gsr.module.thermalunified.report.bean.SoftwareInfo
 import com.mpdc4gsr.module.thermalunified.report.view.ReportIRInputView
-import com.kotlinx.coroutines.launch
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 

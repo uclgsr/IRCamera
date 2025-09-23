@@ -17,14 +17,14 @@ import com.mpdc4gsr.libunified.app.lms.LMS.mContext
 import com.mpdc4gsr.libunified.app.lms.UrlConstant
 import com.mpdc4gsr.libunified.app.lms.utils.SPUtils
 import io.reactivex.plugins.RxJavaPlugins
-import com.kotlinx.coroutines.CoroutineScope
-import com.kotlinx.coroutines.Dispatchers
-import com.kotlinx.coroutines.launch
-import com.mpdc4gsr.InitUtil.initJPush
-import com.mpdc4gsr.InitUtil.initLms
-import com.mpdc4gsr.InitUtil.initLog
-import com.mpdc4gsr.InitUtil.initReceiver
-import com.mpdc4gsr.InitUtil.initUM
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import mpdc4gsr.InitUtil.initJPush
+import mpdc4gsr.InitUtil.initLms
+import mpdc4gsr.InitUtil.initLog
+import mpdc4gsr.InitUtil.initReceiver
+import mpdc4gsr.InitUtil.initUM
 
 class App : BaseApplication() {
 

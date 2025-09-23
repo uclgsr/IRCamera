@@ -35,9 +35,9 @@ import com.mpdc4gsr.module.thermalunified.R
 import com.mpdc4gsr.module.thermalunified.utils.DualParamsUtil
 import com.mpdc4gsr.module.thermalunified.utils.IRCmdTool
 import com.mpdc4gsr.module.thermalunified.utils.IRCmdTool.getSNStr
-import com.kotlinx.coroutines.Dispatchers
-import com.kotlinx.coroutines.launch
-import com.kotlinx.coroutines.withContext
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.IOException
 import java.io.InputStream
 

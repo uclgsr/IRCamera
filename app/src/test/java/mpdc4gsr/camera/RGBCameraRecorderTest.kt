@@ -5,11 +5,11 @@ import android.view.TextureView
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
-import com.kotlinx.coroutines.ExperimentalCoroutinesApi
-import com.kotlinx.coroutines.test.runTest
-import com.mpdc4gsr.camera.RGBCameraRecorder.CameraMode
-import com.mpdc4gsr.camera.RGBCameraRecorder.RecordingSettings
-import com.mpdc4gsr.camera.RGBCameraRecorder.VideoResolution
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.runTest
+import mpdc4gsr.camera.RGBCameraRecorder.CameraMode
+import mpdc4gsr.camera.RGBCameraRecorder.RecordingSettings
+import mpdc4gsr.camera.RGBCameraRecorder.VideoResolution
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test

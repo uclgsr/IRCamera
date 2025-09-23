@@ -20,7 +20,7 @@ import com.csl.irCamera.R
 import com.csl.irCamera.databinding.ActivityGsrSettingsBinding
 import com.topdon.ble.util.BluetoothPermissionUtils
 import com.mpdc4gsr.libunified.app.ktbase.BaseBindingActivity
-import com.kotlinx.coroutines.launch
+import kotlinx.coroutines.launch
 
 class GSRSettingsActivity : BaseBindingActivity<ActivityGsrSettingsBinding>() {
     companion object {

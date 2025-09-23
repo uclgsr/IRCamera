@@ -31,7 +31,7 @@ public class HttpProxy {
 
     // For backward compatibility
     public static class Companion {
-        // Static reference for Kotlin import com.compatibility
+        // Static reference for Kotlin import compatibility
         public static final HttpProxy instant = getInstance();
 
         public static HttpProxy getInstant() {

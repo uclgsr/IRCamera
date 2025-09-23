@@ -33,8 +33,8 @@ import com.mpdc4gsr.module.thermalunified.tools.ThermalTool
 import com.mpdc4gsr.module.thermalunified.tools.medie.IYapVideoProvider
 import com.mpdc4gsr.module.thermalunified.tools.medie.YapVideoEncoder
 import com.mpdc4gsr.module.thermalunified.utils.ArrayUtils
-import com.kotlinx.coroutines.delay
-import com.kotlinx.coroutines.launch
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.io.File

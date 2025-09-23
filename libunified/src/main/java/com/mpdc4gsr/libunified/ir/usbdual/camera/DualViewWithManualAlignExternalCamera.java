@@ -1,6 +1,6 @@
 package com.mpdc4gsr.libunified.ir.usbdual.camera;
 
-import com.static com.mpdc4gsr.libunified.ir.usbdual.Const.HIDE_LOADING;
+import static com.mpdc4gsr.libunified.ir.usbdual.Const.HIDE_LOADING;
 
 import android.os.Handler;
 import android.util.Log;

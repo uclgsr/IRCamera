@@ -14,9 +14,9 @@ import android.view.View
 import android.widget.ImageView
 import androidx.core.view.isVisible
 import com.mpdc4gsr.module.thermalunified.R
-import com.kotlinx.coroutines.CoroutineScope
-import com.kotlinx.coroutines.Dispatchers
-import com.kotlinx.coroutines.launch
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 class HomeGuideDialog(context: Context, private val currentStep: Int) :

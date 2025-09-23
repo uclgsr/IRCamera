@@ -3,8 +3,8 @@ package mpdc4gsr.sensors.thermal
 import android.content.Context
 import android.hardware.usb.UsbDevice
 import android.hardware.usb.UsbManager
-import com.kotlinx.coroutines.ExperimentalCoroutinesApi
-import com.kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.runTest
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule

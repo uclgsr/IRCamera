@@ -12,11 +12,11 @@ import com.mpdc4gsr.libunified.app.db.entity.ThermalHourEntity
 import com.mpdc4gsr.libunified.app.db.entity.ThermalMinuteEntity
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 import com.mpdc4gsr.libunified.app.tools.TimeTool
-import com.kotlinx.coroutines.Dispatchers
-import com.kotlinx.coroutines.Job
-import com.kotlinx.coroutines.async
-import com.kotlinx.coroutines.delay
-import com.kotlinx.coroutines.launch
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.util.Date
 
 class LogViewModel : BaseViewModel() {

@@ -3,7 +3,7 @@ package com.mpdc4gsr.module.thermalunified.bean
 import android.graphics.Point
 import android.graphics.Rect
 import android.os.Parcelable
-import com.kotlinx.android.parcel.Parcelize
+import kotlinx.android.parcel.Parcelize
 
 
 @Parcelize

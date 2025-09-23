@@ -4,8 +4,8 @@ import androidx.lifecycle.viewModelScope
 import com.mpdc4gsr.libunified.app.http.repository.LmsRepository
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 import com.mpdc4gsr.libunified.app.utils.SingleLiveEvent
-import com.kotlinx.coroutines.Dispatchers
-import com.kotlinx.coroutines.launch
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class PolicyViewModel : BaseViewModel() {
     val htmlViewData = SingleLiveEvent<HtmlBean>()

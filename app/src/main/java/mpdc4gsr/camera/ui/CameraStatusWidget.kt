@@ -10,9 +10,9 @@ import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
-import com.kotlinx.coroutines.launch
-import com.mpdc4gsr.permissions.PermissionManager
-import com.mpdc4gsr.sensors.RgbCameraRecorder
+import kotlinx.coroutines.launch
+import mpdc4gsr.permissions.PermissionManager
+import mpdc4gsr.sensors.RgbCameraRecorder
 
 
 class CameraStatusWidget @JvmOverloads constructor(

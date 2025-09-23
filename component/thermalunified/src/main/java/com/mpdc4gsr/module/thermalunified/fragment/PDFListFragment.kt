@@ -37,9 +37,9 @@ import com.mpdc4gsr.module.thermalunified.R
 import com.mpdc4gsr.module.thermalunified.adapter.PDFAdapter
 import com.mpdc4gsr.module.thermalunified.report.viewmodel.PdfViewModel
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
-import com.kotlinx.coroutines.Dispatchers
-import com.kotlinx.coroutines.launch
-import com.kotlinx.coroutines.withContext
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 
 

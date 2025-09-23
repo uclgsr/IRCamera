@@ -7,15 +7,15 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.mpdc4gsr.gsr.model.SessionInfo
-import com.kotlinx.coroutines.Dispatchers
-import com.kotlinx.coroutines.launch
-import com.kotlinx.coroutines.withContext
-import com.mpdc4gsr.core.SessionManager
-import com.mpdc4gsr.network.NetworkClient
-import com.mpdc4gsr.network.NetworkController
-import com.mpdc4gsr.sensors.gsr.GSRSensorRecorder
-import com.mpdc4gsr.sensors.thermal.ThermalRecorder
-import com.mpdc4gsr.sensors.unified.UnifiedGSRRecorder
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import mpdc4gsr.core.SessionManager
+import mpdc4gsr.network.NetworkClient
+import mpdc4gsr.network.NetworkController
+import mpdc4gsr.sensors.gsr.GSRSensorRecorder
+import mpdc4gsr.sensors.thermal.ThermalRecorder
+import mpdc4gsr.sensors.unified.UnifiedGSRRecorder
 import com.mpdc4gsr.gsr.service.SessionManager as GSRSessionManager
 
 

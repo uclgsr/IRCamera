@@ -21,9 +21,9 @@ import com.mpdc4gsr.module.thermalunified.R
 import com.mpdc4gsr.module.thermalunified.chart.IRMyValueFormatter
 import com.mpdc4gsr.module.thermalunified.chart.YValueFormatter
 import com.mpdc4gsr.module.thermalunified.utils.ChartTools
-import com.kotlinx.coroutines.Dispatchers
-import com.kotlinx.coroutines.GlobalScope
-import com.kotlinx.coroutines.launch
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import com.mpdc4gsr.libunified.R as LibR
 import com.mpdc4gsr.libunified.R as LibcoreR
 import com.mpdc4gsr.module.thermalunified.R as ThermalR

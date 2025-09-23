@@ -17,20 +17,20 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.csl.irCamera.R
-import com.kotlinx.coroutines.launch
-import com.mpdc4gsr.controller.RecordingController
-import com.mpdc4gsr.sensors.RgbCameraRecorder
-import com.mpdc4gsr.sensors.unified.UnifiedGSRRecorder
-import com.mpdc4gsr.sensors.unified.UnifiedNetworkController
-import com.mpdc4gsr.sensors.unified.UnifiedSessionManager
-import com.mpdc4gsr.sensors.unified.adapters.DeviceAdapter
-import com.mpdc4gsr.sensors.unified.adapters.PCControllerAdapter
-import com.mpdc4gsr.sensors.unified.model.DeviceInfo
-import com.mpdc4gsr.sensors.unified.model.PCControllerInfo
-import com.mpdc4gsr.sensors.unified.model.SessionConfig
-import com.mpdc4gsr.sensors.unified.model.SessionQuality
-import com.mpdc4gsr.sensors.unified.model.SessionStatus
-import com.mpdc4gsr.sensors.unified.model.SessionType
+import kotlinx.coroutines.launch
+import mpdc4gsr.controller.RecordingController
+import mpdc4gsr.sensors.RgbCameraRecorder
+import mpdc4gsr.sensors.unified.UnifiedGSRRecorder
+import mpdc4gsr.sensors.unified.UnifiedNetworkController
+import mpdc4gsr.sensors.unified.UnifiedSessionManager
+import mpdc4gsr.sensors.unified.adapters.DeviceAdapter
+import mpdc4gsr.sensors.unified.adapters.PCControllerAdapter
+import mpdc4gsr.sensors.unified.model.DeviceInfo
+import mpdc4gsr.sensors.unified.model.PCControllerInfo
+import mpdc4gsr.sensors.unified.model.SessionConfig
+import mpdc4gsr.sensors.unified.model.SessionQuality
+import mpdc4gsr.sensors.unified.model.SessionStatus
+import mpdc4gsr.sensors.unified.model.SessionType
 
 class UnifiedSensorActivity : AppCompatActivity() {
 

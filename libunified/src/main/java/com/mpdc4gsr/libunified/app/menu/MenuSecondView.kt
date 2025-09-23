@@ -26,9 +26,9 @@ import com.mpdc4gsr.libunified.app.menu.constant.TargetType
 import com.mpdc4gsr.libunified.app.menu.constant.TempPointType
 import com.mpdc4gsr.libunified.app.menu.constant.TwoLightType
 import com.mpdc4gsr.libunified.app.repository.GalleryRepository
-import com.kotlinx.coroutines.CoroutineScope
-import com.kotlinx.coroutines.Dispatchers
-import com.kotlinx.coroutines.launch
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @SuppressLint("NotifyDataSetChanged")
 class MenuSecondView : FrameLayout {

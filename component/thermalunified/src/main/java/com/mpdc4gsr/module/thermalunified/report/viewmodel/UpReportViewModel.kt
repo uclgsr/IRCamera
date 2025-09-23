@@ -14,9 +14,9 @@ import com.mpdc4gsr.libunified.app.lms.network.ResponseBean
 import com.mpdc4gsr.libunified.app.lms.xutils.http.RequestParams
 import com.mpdc4gsr.libunified.app.utils.SingleLiveEvent
 import com.mpdc4gsr.module.thermalunified.report.bean.ReportBean
-import com.kotlinx.coroutines.Dispatchers
-import com.kotlinx.coroutines.launch
-import com.kotlinx.coroutines.withContext
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import java.io.File
 import java.util.concurrent.CountDownLatch

@@ -8,7 +8,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
-import com.mpdc4gsr.controller.RecordingController
+import mpdc4gsr.controller.RecordingController
 
 class RecordingStatusIndicator
 @JvmOverloads

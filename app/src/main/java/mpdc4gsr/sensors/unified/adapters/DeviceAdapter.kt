@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.csl.irCamera.R
-import com.mpdc4gsr.sensors.unified.model.DeviceInfo
+import mpdc4gsr.sensors.unified.model.DeviceInfo
 
 class DeviceAdapter(
     private val onDeviceClick: (DeviceInfo) -> Unit

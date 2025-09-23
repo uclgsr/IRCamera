@@ -1,17 +1,17 @@
 package com.mpdc4gsr.module.thermalunified.video.media;
 
-import com.static android.media.MediaCodec.CONFIGURE_FLAG_ENCODE;
-import com.static android.media.MediaCodec.INFO_OUTPUT_FORMAT_CHANGED;
-import com.static android.media.MediaCodec.INFO_TRY_AGAIN_LATER;
-import com.static android.media.MediaCodecInfo.CodecProfileLevel.MPEG2ProfileHigh;
-import com.static android.media.MediaFormat.KEY_AAC_PROFILE;
-import com.static android.media.MediaFormat.KEY_BIT_RATE;
-import com.static android.media.MediaFormat.KEY_COLOR_FORMAT;
-import com.static android.media.MediaFormat.KEY_FRAME_RATE;
-import com.static android.media.MediaFormat.KEY_I_FRAME_INTERVAL;
-import com.static android.media.MediaFormat.MIMETYPE_AUDIO_AAC;
-import com.static android.media.MediaFormat.MIMETYPE_VIDEO_AVC;
-import com.static android.media.MediaMuxer.OutputFormat.MUXER_OUTPUT_MPEG_4;
+import static android.media.MediaCodec.CONFIGURE_FLAG_ENCODE;
+import static android.media.MediaCodec.INFO_OUTPUT_FORMAT_CHANGED;
+import static android.media.MediaCodec.INFO_TRY_AGAIN_LATER;
+import static android.media.MediaCodecInfo.CodecProfileLevel.MPEG2ProfileHigh;
+import static android.media.MediaFormat.KEY_AAC_PROFILE;
+import static android.media.MediaFormat.KEY_BIT_RATE;
+import static android.media.MediaFormat.KEY_COLOR_FORMAT;
+import static android.media.MediaFormat.KEY_FRAME_RATE;
+import static android.media.MediaFormat.KEY_I_FRAME_INTERVAL;
+import static android.media.MediaFormat.MIMETYPE_AUDIO_AAC;
+import static android.media.MediaFormat.MIMETYPE_VIDEO_AVC;
+import static android.media.MediaMuxer.OutputFormat.MUXER_OUTPUT_MPEG_4;
 
 import android.graphics.Bitmap;
 import android.media.MediaCodec;

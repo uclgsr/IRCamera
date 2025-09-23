@@ -11,9 +11,9 @@ import com.mpdc4gsr.libunified.app.dialog.TipDialog
 import com.mpdc4gsr.libunified.app.ktbase.BaseActivity
 import com.mpdc4gsr.module.thermalunified.event.CorrectionFinishEvent
 import com.mpdc4gsr.module.thermalunified.view.TimeDownView
-import com.kotlinx.coroutines.Dispatchers
-import com.kotlinx.coroutines.delay
-import com.kotlinx.coroutines.launch
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 
 

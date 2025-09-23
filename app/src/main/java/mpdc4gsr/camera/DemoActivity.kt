@@ -7,10 +7,10 @@ import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.kotlinx.coroutines.delay
-import com.kotlinx.coroutines.launch
-import com.mpdc4gsr.camera.core.ModeManager
-import com.mpdc4gsr.camera.core.SamsungDeviceCompatibility
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import mpdc4gsr.camera.core.ModeManager
+import mpdc4gsr.camera.core.SamsungDeviceCompatibility
 
 class DemoActivity : AppCompatActivity() {
     companion object {
