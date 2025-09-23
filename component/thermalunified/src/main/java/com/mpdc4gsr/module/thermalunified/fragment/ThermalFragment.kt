@@ -16,8 +16,8 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import com.blankj.utilcode.util.ScreenUtils
-import com.mpdc4gsr.libunified.app.matrix.GuideInterface
-import com.mpdc4gsr.libunified.app.matrix.IrSurfaceView
+import com.mpdc4gsr.module.thermalunified.stubs.GuideInterface
+import com.mpdc4gsr.module.thermalunified.stubs.IrSurfaceView
 import com.mpdc4gsr.libunified.app.tools.ToastTools
 import com.mpdc4gsr.libunified.app.utils.ByteUtils.getIndex
 import com.mpdc4gsr.module.thermalunified.stubs.ThermalInputDialog
