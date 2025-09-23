@@ -118,8 +118,8 @@ object NavigationManager {
                 RouterConfig.IR_IMG_PICK -> getClassByName("com.mpdc4gsr.module.thermalunified.activity.ImagePickIRActivity")
                 RouterConfig.IR_IMG_PICK_PLUS -> getClassByName("com.mpdc4gsr.module.thermalunified.activity.ImagePickIRPlushActivity")
 
-                RouterConfig.IR_MONOCULAR -> getClassByName("com.mpdc4gsr.module.thermalunified.activity.IRMonocularActivity")
-                RouterConfig.IR_DEVICE_ADD -> getClassByName("com.mpdc4gsr.module.thermalunified.activity.DeviceAddActivity")
+                // RouterConfig.IR_MONOCULAR -> getClassByName("com.mpdc4gsr.module.thermalunified.activity.IRMonocularActivity")
+                // RouterConfig.IR_DEVICE_ADD -> getClassByName("com.mpdc4gsr.module.thermalunified.activity.DeviceAddActivity")
 
                 RouterConfig.GALLERY -> getClassByName("com.mpdc4gsr.module.thermalunified.activity.GalleryActivity")
                 RouterConfig.THERMAL_MONITOR -> getClassByName("com.mpdc4gsr.module.thermalunified.activity.MonitorActivity")
