@@ -10,7 +10,7 @@ class ThermalInputDialog {
     
     class Builder(private val context: Context) {
         private var message: String = ""
-        private var positiveListener: ((Float, Float, Float, Float) -> Unit)? = null
+        private var positiveListener: ((Float, Float, Int, Int) -> Unit)? = null
         private var cancelListener: (() -> Unit)? = null
         
         fun setMessage(message: String): Builder {
@@ -18,12 +18,23 @@ class ThermalInputDialog {
             return this
         }
         
-        fun setPositiveListener(textResId: Int, listener: (Float, Float, Float, Float) -> Unit): Builder {
+        fun setNum(max: Float = 0f, min: Float = 0f): Builder {
+            // Store max/min values if needed
+            return this
+        }
+        
+        fun setColor(maxColor: Int = 0, minColor: Int = 0): Builder {
+            // Store color values if needed
+            return this
+        }
+        
+        fun setPositiveListener(textResId: Int, listener: (Float, Float, Int, Int) -> Unit): Builder {
             this.positiveListener = listener
             return this
         }
         
-        fun setCancelListener(textResId: Int): Builder {
+        fun setCancelListener(text: String, listener: () -> Unit): Builder {
+            this.cancelListener = listener
             return this
         }
         

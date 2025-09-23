@@ -58,4 +58,31 @@
     <string name="app_confirm">Confirm</string>
     <string name="tip_target_sdk">The current mobile device cannot be connected, try to update the software version.</string>
     <string name="permission_request_storage_app">Storage permission is required</string>
+    
+    <!-- Additional missing strings from IRThermalNightActivity -->
+    <string name="tips_observe_photo_content">Please observe the photo content carefully.</string>
+    <string name="tc_high_temp_test_tips1">High temperature test tip 1</string>
+    <string name="tc_high_temp_test_tips2">High temperature test tip 2</string>
+    <string name="tc_high_temp_test">High Temperature Test</string>
+    <string name="tips_ai">AI Tips</string>
+    <string name="tips_ai_content">AI functionality content</string>
+    <string name="coordinate_mode">Coordinate Mode</string>
+    <string name="coordinate_tips">Coordinate Tips</string>
+    <string name="thermal_trend_tips">Thermal Trend Tips</string>
+    <string name="tip_change_pseudo_mode">Change pseudo mode tip</string>
+    <string name="app_yes">Yes</string>
+    <string name="app_no">No</string>
+    <string name="off_photography">Off Photography</string>
+    <string name="seconds_dalay_3">3 Second Delay</string>
+    <string name="seconds_dalay_6">6 Second Delay</string>
+    <string name="app_Manual_Shutter">Manual Shutter</string>
+    <string name="shutter_tips">Shutter Tips</string>
+    <string name="auto_open">Auto Open</string>
+    <string name="thermal_threshold_setting">Thermal Threshold Setting</string>
+    <string name="app_close">Close</string>
+    <string name="permission_request_camera_app">Camera permission is required</string>
+    <string name="scan_ble_tip_authorize">BLE scan authorization required</string>
+    <string name="app_microphone_content">Microphone access required</string>
+    <string name="app_storage_content">Storage access required</string>
+    <string name="tip_video_record">Video Record Tip</string>
 </resources>
