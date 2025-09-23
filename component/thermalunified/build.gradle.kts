@@ -95,6 +95,9 @@ dependencies {
     implementation(libs.media3.exoplayer)
     implementation(libs.media3.exoplayer.dash)
     implementation(libs.media3.ui)
+    implementation("androidx.recyclerview:recyclerview:1.3.2")
+    implementation(libs.refresh.layout.kernel)
+    implementation(libs.refresh.header.classics)
     // Use new working Maven Central version but exclude problematic dependencies
     implementation(libs.refresh.layout.kernel) {
         exclude(group = "androidx.recyclerview", module = "recyclerview")
