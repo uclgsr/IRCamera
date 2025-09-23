@@ -2,6 +2,57 @@
 
 ## Build System and Compilation Flow (2024-12-22)
 
+### Deprecation Warning Resolution - Commit 96ece6b
+
+```mermaid
+flowchart TB
+    subgraph "Deprecation Warning Fix Flow"
+        A[Deprecation Warnings] --> B{Warning Type Analysis}
+        B -->|getParcelableExtra deprecated| C[API Version Check]
+        B -->|BitmapFactory.Options| D[Remove deprecated fields]
+        B -->|GlobalScope delicate API| E[Add proper annotations]
+        B -->|WifiConfiguration deprecated| F[File-level suppression]
+        B -->|Always true/false conditions| G[Add senseless comparison suppression]
+        
+        C --> C1[Android API 33+ check]
+        C1 --> C2[Use getParcelableExtra(key, class)]
+        C2 --> C3[Fallback to deprecated version]
+        C3 --> C4[✅ Backward compatibility maintained]
+        
+        D --> D1[Remove inDither field]
+        D1 --> D2[✅ Modern BitmapFactory usage]
+        
+        E --> E1[@OptIn(DelicateCoroutinesApi::class)]
+        E1 --> E2[✅ Proper coroutines API usage]
+        
+        F --> F1[@file:Suppress("DEPRECATION")]
+        F1 --> F2[✅ Legacy WiFi support maintained]
+        
+        G --> G1[@Suppress("SENSELESS_COMPARISON")]
+        G1 --> G2[✅ Legacy null checks preserved]
+        
+        C4 --> H[Zero Warnings Build]
+        D2 --> H
+        E2 --> H
+        F2 --> H
+        G2 --> H
+    end
+    
+    subgraph "Fixed Files"
+        I[PseudoSetActivity.kt<br/>- API-aware getParcelableExtra]
+        J[FileUtils.kt<br/>- Modern BitmapFactory options]
+        K[ToastTools.kt<br/>- Proper coroutines annotations]
+        L[NetWorkUtils.kt<br/>- WifiConfiguration suppression]
+        M[FileUtils.kt<br/>- Null check suppressions]
+    end
+    
+    H --> I
+    H --> J  
+    H --> K
+    H --> L
+    H --> M
+```
+
 ### Kotlin Compilation Error Resolution - Commit 2329a34
 
 ```mermaid

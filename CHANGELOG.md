@@ -1,5 +1,27 @@
 # Changelog
 
+## [2.2.5] - Deprecation Warnings Resolution (2024-12-22)
+
+### Fixed - Commit 96ece6b
+
+- **Android API Deprecations**: Fixed deprecated `getParcelableExtra<T>()` usage in PseudoSetActivity.kt with version-specific API calls
+- **Bitmap Options**: Removed deprecated `inDither` field from BitmapFactory.Options in FileUtils.kt  
+- **Coroutines API**: Added proper `@OptIn(DelicateCoroutinesApi::class)` annotation for GlobalScope usage in ToastTools.kt
+- **WiFi Configuration**: Added `@file:Suppress("DEPRECATION")` for WifiConfiguration import in NetWorkUtils.kt
+- **Compiler Warnings**: Suppressed unavoidable SENSELESS_COMPARISON warnings for null checks in legacy code
+
+### Validation Results - Commit 96ece6b
+
+- ✅ **:libunified:compileDebugKotlin** - All deprecation warnings eliminated
+- ✅ **Backward Compatibility** - Maintained support for older Android API levels using conditional compilation
+- ✅ **Full Module Build** - libunified module builds successfully without warnings
+
+### Technical Implementation - Commit 96ece6b
+
+- **API Level Support**: Added Android 33+ specific API calls while maintaining backward compatibility  
+- **Legacy Code Maintenance**: Preserved existing functionality while suppressing unavoidable compiler warnings
+- **Coroutines Best Practices**: Properly marked delicate coroutines API usage for application-scoped toast functionality
+
 ## [2.2.4] - Complete Android Resource Linking Error Resolution (2024-12-22)
 
 ### Fixed - Commit 1f1bf64
