@@ -15,7 +15,9 @@ import com.mpdc4gsr.libunified.app.config.RouterConfig
 import com.mpdc4gsr.libunified.app.dialog.TipShutterDialog
 import com.mpdc4gsr.libunified.app.navigation.NavigationManager
 import com.mpdc4gsr.module.thermalunified.R
+import com.mpdc4gsr.libunified.R as LibR
 import com.mpdc4gsr.module.thermalunified.databinding.PopCameraItemBinding
+import com.mpdc4gsr.libunified.R as LibR
 
 
 @SuppressLint("SetTextI18n")
@@ -80,17 +82,17 @@ class CameraItemPopup(val context: Context, private val saveSetBean: SaveSetting
                     when (saveSetBean.delayCaptureSecond) {
                         0 -> {
                             saveSetBean.delayCaptureSecond = 3
-                            ToastUtils.showShort(R.string.seconds_dalay_3)
+                            ToastUtils.showShort(LibR.string.seconds_dalay_3)
                         }
 
                         3 -> {
                             saveSetBean.delayCaptureSecond = 6
-                            ToastUtils.showShort(R.string.seconds_dalay_6)
+                            ToastUtils.showShort(LibR.string.seconds_dalay_6)
                         }
 
                         6 -> {
                             saveSetBean.delayCaptureSecond = 0
-                            ToastUtils.showShort(R.string.off_photography)
+                            ToastUtils.showShort(LibR.string.off_photography)
                         }
                     }
                     binding.ivDelay.setImageLevel(saveSetBean.delayCaptureSecond)
@@ -101,7 +103,7 @@ class CameraItemPopup(val context: Context, private val saveSetBean: SaveSetting
                 binding.ivAuto.isSelected = saveSetBean.isAutoShutter
                 if (SharedManager.isTipShutter && !saveSetBean.isAutoShutter) {
                     TipShutterDialog.Builder(context)
-                        .setMessage(R.string.shutter_tips)
+                        .setMessage(LibR.string.shutter_tips)
                         .setCancelListener { isCheck ->
                             SharedManager.isTipShutter = !isCheck
                         }

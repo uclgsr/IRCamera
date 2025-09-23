@@ -9,6 +9,7 @@ import android.widget.PopupWindow
 import android.widget.TextView
 import com.blankj.utilcode.util.SizeUtils
 import com.mpdc4gsr.module.thermalunified.R
+import com.mpdc4gsr.libunified.R as LibR
 
 
 class GalleryChangePopup(private val context: Context) : PopupWindow() {
@@ -39,7 +40,7 @@ class GalleryChangePopup(private val context: Context) : PopupWindow() {
 
         tvLine.setOnClickListener {
             dismiss()
-            onPickListener?.invoke(0, context.getString(R.string.tc_has_line_device))
+            onPickListener?.invoke(0, context.getString(LibR.string.tc_has_line_device))
         }
         tvTs004.setOnClickListener {
             dismiss()

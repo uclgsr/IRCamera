@@ -23,7 +23,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.File
 import com.mpdc4gsr.libunified.R as LibCoreR
-import com.mpdc4gsr.libunified.ui.R as UiR
+import com.mpdc4gsr.libunified.R as UiR
 
 
 class ReportDetailActivity : BaseActivity() {

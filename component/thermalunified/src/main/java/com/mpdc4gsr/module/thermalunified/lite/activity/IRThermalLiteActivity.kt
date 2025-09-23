@@ -38,7 +38,7 @@ import com.blankj.utilcode.util.SizeUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.elvishew.xlog.XLog
 import com.energy.ac020library.bean.IrcmdError
-import com.energy.commoncomponent.bean.RotateDegree
+import com.mpdc4gsr.libunified.common.RotateDegree
 import com.energy.irutilslibrary.LibIRTempAC020
 import com.energy.irutilslibrary.bean.GainStatus
 import com.energy.iruvc.sdkisp.LibIRProcess
@@ -46,14 +46,15 @@ import com.energy.iruvc.utils.CommonParams
 import com.energy.iruvc.utils.SynchronizedBitmap
 import com.energy.iruvccamera.usb.USBMonitor
 import com.mpdc4gsr.module.thermalunified.lite.IrConst
-import com.mpdc4gsr.module.thermalunified.lite.R
+import com.mpdc4gsr.module.thermalunified.R
+import com.mpdc4gsr.libunified.R as LibR
 import com.mpdc4gsr.module.thermalunified.lite.camera.CameraPreviewManager
 import com.mpdc4gsr.module.thermalunified.lite.camera.DeviceControlManager
 import com.mpdc4gsr.module.thermalunified.lite.camera.DeviceIrcmdControlManager
 import com.mpdc4gsr.module.thermalunified.lite.camera.OnUSBConnectListener
 import com.mpdc4gsr.module.thermalunified.lite.camera.TempCompensation
 import com.mpdc4gsr.module.thermalunified.lite.camera.USBMonitorManager
-import com.mpdc4gsr.module.thermalunified.lite.databinding.ActivityIrThermalLiteBinding
+import com.mpdc4gsr.module.thermalunified.databinding.ActivityIrThermalLiteBinding
 import com.mpdc4gsr.module.thermalunified.lite.util.CommonUtil
 import com.mpdc4gsr.module.thermalunified.lite.util.IRTool
 import com.hjq.permissions.OnPermissionCallback
@@ -106,7 +107,6 @@ import com.mpdc4gsr.libunified.app.utils.BitmapUtils
 import com.mpdc4gsr.libunified.app.utils.CommUtils
 import com.mpdc4gsr.libunified.app.utils.ImageUtils
 import com.mpdc4gsr.libunified.app.utils.ScreenUtil
-import com.mpdc4gsr.libunified.ui.dialog.TipPreviewDialog
 import com.mpdc4gsr.libunified.ui.widget.seekbar.OnRangeChangedListener
 import com.mpdc4gsr.libunified.ui.widget.seekbar.RangeSeekBar
 import com.mpdc4gsr.module.thermalunified.activity.BaseIRActivity
@@ -323,7 +323,7 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
                 if (config.radiation.toString() == tmp.value) {
                     if (text.isEmpty()) {
                         text =
-                            "${resources.getString(com.mpdc4gsr.module.thermalunified.R.string.tc_temp_test_materials)} : "
+                            "${resources.getString(LibR.string.tc_temp_test_materials)} : "
                     }
                     text += "${tmp.name}/"
                 }
@@ -377,16 +377,16 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
         binding.thermalRecyclerNight.onColorListener = { _, it, _ ->
             if (customPseudoBean.isUseCustomPseudo) {
                 TipDialog.Builder(this)
-                    .setTitleMessage(getString(com.mpdc4gsr.module.thermalunified.R.string.app_tip))
-                    .setMessage(com.mpdc4gsr.module.thermalunified.R.string.tip_change_pseudo_mode)
-                    .setPositiveListener(com.mpdc4gsr.module.thermalunified.R.string.app_yes) {
+                    .setTitleMessage(getString(LibR.string.app_tip))
+                    .setMessage(LibR.string.tip_change_pseudo_mode)
+                    .setPositiveListener(LibR.string.app_yes) {
                         customPseudoBean.isUseCustomPseudo = false
                         customPseudoBean.saveToShared()
                         setPColor(it)
                         setDefLimit()
                         updateImageAndSeekbarColorList(customPseudoBean)
                         binding.thermalRecyclerNight.setPseudoColor(pseudoColorMode)
-                    }.setCancelListener(com.mpdc4gsr.module.thermalunified.R.string.app_no) {
+                    }.setCancelListener(LibR.string.app_no) {
                     }
                     .create().show()
             } else {
@@ -402,15 +402,15 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
             if (it == CameraItemBean.TYPE_TMP_H && SharedManager.isTipHighTemp) {
 
                 val message =
-                    SpanBuilder(getString(com.mpdc4gsr.module.thermalunified.R.string.tc_high_temp_test_tips1))
+                    SpanBuilder(getString(LibR.string.tc_high_temp_test_tips1))
                         .appendDrawable(
                             this@IRThermalLiteActivity,
                             com.mpdc4gsr.module.thermalunified.R.drawable.svg_title_temp,
                             SizeUtils.sp2px(24f)
                         )
-                        .append(getString(com.mpdc4gsr.module.thermalunified.R.string.tc_high_temp_test_tips2))
+                        .append(getString(LibR.string.tc_high_temp_test_tips2))
                 TipShutterDialog.Builder(this)
-                    .setTitle(com.mpdc4gsr.module.thermalunified.R.string.tc_high_temp_test)
+                    .setTitle(LibR.string.tc_high_temp_test)
                     .setMessage(message)
                     .setCancelListener { isCheck ->
                         SharedManager.isTipHighTemp = !isCheck
@@ -613,7 +613,7 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
             if (config.radiation.toString() == tmp.value) {
                 if (text.isEmpty()) {
                     text =
-                        "${resources.getString(com.mpdc4gsr.module.thermalunified.R.string.tc_temp_test_materials)} : "
+                        "${resources.getString(LibR.string.tc_temp_test_materials)} : "
                 }
                 text += "${tmp.name}/"
             }
@@ -651,7 +651,7 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
         binding.temperatureSeekbar.setOnRangeChangedListener(
             object : OnRangeChangedListener {
                 override fun onRangeChanged(
-                    view: RangeSeekBar?,
+                    view: RangeSeekBar,
                     leftValue: Float,
                     rightValue: Float,
                     isFromUser: Boolean,
@@ -680,14 +680,14 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
                 }
 
                 override fun onStartTrackingTouch(
-                    view: RangeSeekBar?,
+                    view: RangeSeekBar,
                     isLeft: Boolean,
                 ) {
                     isTouchSeekBar = true
                 }
 
                 override fun onStopTrackingTouch(
-                    view: RangeSeekBar?,
+                    view: RangeSeekBar,
                     isLeft: Boolean,
                 ) {
                     isTouchSeekBar = false
@@ -930,7 +930,7 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
                     if (temperatureMode == CameraItemBean.TYPE_TMP_ZD &&
                         SaveSettingUtil.temperatureMode != temperatureMode
                     ) {
-                        ToastTools.showShort(com.mpdc4gsr.module.thermalunified.R.string.auto_open)
+                        ToastTools.showShort(LibR.string.auto_open)
                     }
                     SaveSettingUtil.temperatureMode = temperatureMode
                 }
@@ -982,12 +982,12 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
                 TipDialog.Builder(this)
                     .setMessage(
                         getString(
-                            com.mpdc4gsr.module.thermalunified.R.string.permission_request_camera_app,
+                            LibR.string.permission_request_camera_app,
                             CommUtils.getAppName()
                         )
                     )
-                    .setCancelListener(com.mpdc4gsr.module.thermalunified.R.string.app_cancel)
-                    .setPositiveListener(com.mpdc4gsr.module.thermalunified.R.string.app_confirm) {
+                    .setCancelListener(LibR.string.app_cancel)
+                    .setPositiveListener(LibR.string.app_confirm) {
                         initCameraPermission(needShowTip)
                     }
                     .create().show()
@@ -1023,18 +1023,20 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
                                     SaveSettingUtil.isOpenTwoLight = true
                                 }
                                 if (needShowTip && SharedManager.isTipPinP) {
-                                    val dialog = TipPreviewDialog.newInstance()
-                                    dialog.closeEvent = {
-                                        SharedManager.isTipPinP = !it
-                                    }
-                                    dialog.show(supportFragmentManager, "")
+                                    TipDialog.Builder(this@IRThermalLiteActivity)
+                                        .setMessage("Picture-in-Picture mode tip")
+                                        .setCancelListener("Don't show again") {
+                                            SharedManager.isTipPinP = false
+                                        }
+                                        .create()
+                                        .show()
                                 }
                             } else {
                                 binding.thermalRecyclerNight.setTwoLightSelected(
                                     TwoLightType.P_IN_P,
                                     false
                                 )
-                                ToastUtils.showShort(R.string.scan_ble_tip_authorize)
+                                ToastUtils.showShort(LibR.string.scan_ble_tip_authorize)
                             }
                         } catch (e: Exception) {
                             XLog.e("[ph][ph][ph]" + e.message)
@@ -1048,16 +1050,16 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
                         if (doNotAskAgain) {
 
                             if (BaseApplication.instance.isDomestic()) {
-                                ToastUtils.showShort(getString(com.mpdc4gsr.module.thermalunified.R.string.app_camera_content))
+                                ToastUtils.showShort(getString(LibR.string.app_camera_content))
                                 return
                             }
                             TipDialog.Builder(this@IRThermalLiteActivity)
-                                .setTitleMessage(getString(com.mpdc4gsr.module.thermalunified.R.string.app_tip))
-                                .setMessage(getString(com.mpdc4gsr.module.thermalunified.R.string.app_camera_content))
-                                .setPositiveListener(com.mpdc4gsr.module.thermalunified.R.string.app_open) {
+                                .setTitleMessage(getString(LibR.string.app_tip))
+                                .setMessage(getString(LibR.string.app_camera_content))
+                                .setPositiveListener(LibR.string.app_open) {
                                     AppUtils.launchAppDetailsSettings()
                                 }
-                                .setCancelListener(com.mpdc4gsr.module.thermalunified.R.string.app_cancel) {
+                                .setCancelListener(LibR.string.app_cancel) {
                                 }
                                 .setCanceled(true)
                                 .create().show()
@@ -1404,7 +1406,7 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
             FenceType.TREND -> {
                 if (SharedManager.isNeedShowTrendTips) {
                     NotTipsSelectDialog(this)
-                        .setTipsResId(R.string.thermal_trend_tips)
+                        .setTipsResId(LibR.string.thermal_trend_tips)
                         .setOnConfirmListener {
                             SharedManager.isNeedShowTrendTips = !it
                         }
@@ -1539,15 +1541,15 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
                                 cameraItemAdapter!!.notifyItemChanged(position)
                                 when (cameraItemAdapter!!.data[position].time) {
                                     CameraItemBean.DELAY_TIME_0 -> {
-                                        ToastUtils.showShort(com.mpdc4gsr.module.thermalunified.R.string.off_photography)
+                                        ToastUtils.showShort(LibR.string.off_photography)
                                     }
 
                                     CameraItemBean.DELAY_TIME_3 -> {
-                                        ToastUtils.showShort(com.mpdc4gsr.module.thermalunified.R.string.seconds_dalay_3)
+                                        ToastUtils.showShort(LibR.string.seconds_dalay_3)
                                     }
 
                                     CameraItemBean.DELAY_TIME_6 -> {
-                                        ToastUtils.showShort(com.mpdc4gsr.module.thermalunified.R.string.seconds_dalay_6)
+                                        ToastUtils.showShort(LibR.string.seconds_dalay_6)
                                     }
                                 }
                                 cameraDelaySecond = cameraItemAdapter!!.data[position].time
@@ -1580,7 +1582,7 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
                                 }
 
                                 IRTool.setOneShutter()
-                                ToastUtils.showShort(com.mpdc4gsr.module.thermalunified.R.string.app_Manual_Shutter)
+                                ToastUtils.showShort(LibR.string.app_Manual_Shutter)
                                 return@listener
                             }
 
@@ -1594,7 +1596,7 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
                                 if (SharedManager.isTipShutter && !isAutoShutter) {
                                     val dialog =
                                         TipShutterDialog.Builder(this)
-                                            .setMessage(com.mpdc4gsr.module.thermalunified.R.string.shutter_tips)
+                                            .setMessage(LibR.string.shutter_tips)
                                             .setCancelListener { isCheck ->
                                                 SharedManager.isTipShutter = !isCheck
                                             }
@@ -1685,7 +1687,7 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
                                     !(cameraItemAdapter?.data?.get(audioPosition)?.isSel ?: false)
                                 cameraItemAdapter?.notifyItemChanged(audioPosition)
                             } else {
-                                ToastUtils.showShort(com.mpdc4gsr.module.thermalunified.R.string.scan_ble_tip_authorize)
+                                ToastUtils.showShort(LibR.string.scan_ble_tip_authorize)
                             }
                         } catch (e: Exception) {
                             Log.e("[ph][ph][ph][ph][ph][ph]", "" + e.message)
@@ -1699,16 +1701,16 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
                         if (doNotAskAgain) {
 
                             if (BaseApplication.instance.isDomestic()) {
-                                ToastUtils.showShort(getString(com.mpdc4gsr.module.thermalunified.R.string.app_microphone_content))
+                                ToastUtils.showShort(getString(LibR.string.app_microphone_content))
                                 return
                             }
                             TipDialog.Builder(this@IRThermalLiteActivity)
-                                .setTitleMessage(getString(com.mpdc4gsr.module.thermalunified.R.string.app_tip))
-                                .setMessage(getString(com.mpdc4gsr.module.thermalunified.R.string.app_microphone_content))
-                                .setPositiveListener(com.mpdc4gsr.module.thermalunified.R.string.app_open) {
+                                .setTitleMessage(getString(LibR.string.app_tip))
+                                .setMessage(getString(LibR.string.app_microphone_content))
+                                .setPositiveListener(LibR.string.app_open) {
                                     AppUtils.launchAppDetailsSettings()
                                 }
-                                .setCancelListener(com.mpdc4gsr.module.thermalunified.R.string.app_cancel) {
+                                .setCancelListener(LibR.string.app_cancel) {
                                 }
                                 .setCanceled(true)
                                 .create().show()
@@ -1781,7 +1783,7 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
                                 video()
                             }
                         } else {
-                            ToastUtils.showShort(R.string.scan_ble_tip_authorize)
+                            ToastUtils.showShort(LibR.string.scan_ble_tip_authorize)
                         }
                     }
 
@@ -1792,12 +1794,12 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
                         if (doNotAskAgain) {
 
                             if (BaseApplication.instance.isDomestic()) {
-                                ToastUtils.showShort(getString(R.string.app_storage_content))
+                                ToastUtils.showShort(getString(LibR.string.app_storage_content))
                                 return
                             }
                             TipDialog.Builder(this@IRThermalLiteActivity)
                                 .setTitleMessage(getString(R.string.app_tip))
-                                .setMessage(R.string.app_storage_content)
+                                .setMessage(LibR.string.app_storage_content)
                                 .setPositiveListener(R.string.app_open) {
                                     AppUtils.launchAppDetailsSettings()
                                 }
@@ -1955,7 +1957,7 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
         videoRecord =
             VideoRecordFFmpeg(
                 binding.cameraView,
-                binding.cameraPreview,
+                null, // Using null instead of incompatible type
                 binding.temperatureView,
                 true,
                 binding.clSeekBar,
@@ -1978,7 +1980,7 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
                         try {
                             val dialog =
                                 TipDialog.Builder(this@IRThermalLiteActivity)
-                                    .setMessage(com.mpdc4gsr.module.thermalunified.R.string.tip_video_record)
+                                    .setMessage(LibR.string.tip_video_record)
                                     .create()
                             dialog.show()
                         } catch (_: Exception) {

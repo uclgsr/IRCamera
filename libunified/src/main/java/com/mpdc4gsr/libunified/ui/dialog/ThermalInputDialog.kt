@@ -1,31 +1,36 @@
 package com.mpdc4gsr.libunified.ui.dialog
 
-import android.app.Dialog
 import android.content.Context
+import android.content.DialogInterface
 
-/**
- * Stub implementation for ThermalInputDialog to enable compilation
- * This is a minimal implementation for MVP - replace with actual dialog when available
- */
-class ThermalInputDialog(context: Context) : Dialog(context) {
+class ThermalInputDialog private constructor(private val builder: Builder) {
     
+    fun show() {
+        // Basic implementation for MVP - real implementation would show a dialog
+    }
+
     class Builder(private val context: Context) {
+        private var message: String = ""
         private var positiveListener: ((Float, Float, Float, Float) -> Unit)? = null
-        
-        fun setPositiveListener(listener: (Float, Float, Float, Float) -> Unit): Builder {
+        private var cancelListener: Int? = null
+
+        fun setMessage(message: String): Builder {
+            this.message = message
+            return this
+        }
+
+        fun setPositiveListener(textResId: Int, listener: (Float, Float, Float, Float) -> Unit): Builder {
             this.positiveListener = listener
             return this
         }
-        
+
+        fun setCancelListener(textResId: Int): Builder {
+            this.cancelListener = textResId
+            return this
+        }
+
         fun create(): ThermalInputDialog {
-            val dialog = ThermalInputDialog(context)
-            // Stub implementation - automatically calls listener with default values
-            dialog.setOnShowListener {
-                // For MVP, automatically trigger with default values
-                positiveListener?.invoke(0.0f, 100.0f, 20.0f, 80.0f)
-                dialog.dismiss()
-            }
-            return dialog
+            return ThermalInputDialog(this)
         }
     }
 }

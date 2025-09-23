@@ -1258,7 +1258,7 @@ public class RangeSeekBar extends View {
 
 
     @IntDef({Gravity.TOP, Gravity.CENTER, Gravity.BOTTOM})
-    @Retention(RetentionPolicy.SOURCE)
+        @Retention(RetentionPolicy.SOURCE)
     public @interface GravityDef {
     }
 
@@ -1266,5 +1266,10 @@ public class RangeSeekBar extends View {
         public final static int TOP = 0;
         public final static int BOTTOM = 1;
         public final static int CENTER = 2;
+    }
+    
+    public void drawIndPath(boolean isEnabled) {
+        // Placeholder implementation
+        invalidate();
     }
 }

@@ -91,9 +91,6 @@ class IRGalleryDetail01Activity : BaseActivity(), View.OnClickListener {
                             frameTool.getRotate90Temp(frameTool.temperatureBytes),
                         ) { current, total ->
                             lifecycleScope.launch(Dispatchers.Main) {
-                                // TipProgressDialog doesn't support progress updates
-                                // progressDialog?.max = total
-                                // progressDialog?.progress = current
                             }
                         }
                 }

@@ -119,7 +119,7 @@ class AlgorithmImageActivity : AppCompatActivity() {
             Imgproc.cvtColor(image, image, Imgproc.COLOR_BGR2RGBA)
             val startTime = System.currentTimeMillis()
             val matByteArray =
-                JNITool.diff2firstFrameByTempWH(
+                JNITool.INSTANCE.diff2firstFrameByTempWH(
                     256,
                     192,
                     baseTemperatureBytes,

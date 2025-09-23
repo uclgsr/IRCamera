@@ -16,14 +16,15 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import com.blankj.utilcode.util.ScreenUtils
-import com.mpdc4gsr.libunified.app.matrix.GuideInterface
-import com.mpdc4gsr.libunified.app.matrix.IrSurfaceView
+import com.mpdc4gsr.module.thermalunified.stubs.GuideInterface
+import com.mpdc4gsr.module.thermalunified.stubs.IrSurfaceView
 import com.mpdc4gsr.libunified.app.tools.ToastTools
+import com.mpdc4gsr.libunified.app.matrix.GuideInterface as LibGuideInterface
 import com.mpdc4gsr.libunified.app.utils.ByteUtils.getIndex
-import com.mpdc4gsr.libunified.ui.dialog.ThermalInputDialog
-import com.mpdc4gsr.libunified.ui.fence.FenceLineView
-import com.mpdc4gsr.libunified.ui.fence.FencePointView
-import com.mpdc4gsr.libunified.ui.fence.FenceView
+import com.mpdc4gsr.module.thermalunified.stubs.ThermalInputDialog
+import com.mpdc4gsr.module.thermalunified.stubs.FenceLineView
+import com.mpdc4gsr.module.thermalunified.stubs.FencePointView
+import com.mpdc4gsr.module.thermalunified.stubs.FenceView
 import com.mpdc4gsr.module.thermalunified.R
 import com.mpdc4gsr.module.thermalunified.base.BaseThermalFragment
 import com.mpdc4gsr.module.thermalunified.event.ThermalActionEvent
@@ -40,7 +41,7 @@ import org.greenrobot.eventbus.ThreadMode
 import java.io.File
 import java.math.BigDecimal
 import java.math.RoundingMode
-import com.mpdc4gsr.libunified.ui.R as LibUiR
+import com.mpdc4gsr.libunified.R as LibUiR
 
 class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
     private val viewModel: ThermalViewModel by viewModels()
@@ -51,9 +52,9 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
     private val msgLiveData by lazy { MutableLiveData<Int>() }
 
     // Cached fence and camera views to avoid repeated findViewById calls
-    private val fencePointView by lazy { requireView().findViewById<com.mpdc4gsr.libunified.ui.fence.FencePointView>(R.id.fence_point_view) }
-    private val fenceLineView by lazy { requireView().findViewById<com.mpdc4gsr.libunified.ui.fence.FenceLineView>(R.id.fence_line_view) }
-    private val fenceView by lazy { requireView().findViewById<com.mpdc4gsr.libunified.ui.fence.FenceView>(R.id.fence_view) }
+    private val fencePointView by lazy { requireView().findViewById<com.mpdc4gsr.module.thermalunified.stubs.FencePointView>(R.id.fence_point_view) }
+    private val fenceLineView by lazy { requireView().findViewById<com.mpdc4gsr.module.thermalunified.stubs.FenceLineView>(R.id.fence_line_view) }
+    private val fenceView by lazy { requireView().findViewById<com.mpdc4gsr.module.thermalunified.stubs.FenceView>(R.id.fence_view) }
     private val tempCameraView by lazy { requireView().findViewById<com.mpdc4gsr.libunified.ui.camera.CameraView>(R.id.temp_camera_view) }
 
     override fun initContentView() = R.layout.fragment_thermal
@@ -217,7 +218,7 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
         val ret =
             mGuideInterface!!.init(
                 requireContext(),
-                object : GuideInterface.IrDataCallback {
+                object : LibGuideInterface.IrDataCallback {
                     override fun processIrData(
                         yuv: ByteArray,
                         temp: FloatArray,
@@ -540,7 +541,7 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
     private var selectIndex: ArrayList<Int> = arrayListOf()
 
     private fun initFence() {
-        requireView().findViewById<com.mpdc4gsr.libunified.ui.fence.FencePointView>(R.id.fence_point_view).listener =
+        requireView().findViewById<com.mpdc4gsr.module.thermalunified.stubs.FencePointView>(R.id.fence_point_view).listener =
             object : FencePointView.CallBack {
                 override fun callback(
                     startPoint: IntArray,
@@ -552,7 +553,7 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
                         Fence(srcRect = srcRect, rotateType = rotateType).getPointIndex(startPoint)
                 }
             }
-        requireView().findViewById<com.mpdc4gsr.libunified.ui.fence.FenceLineView>(R.id.fence_line_view).listener =
+        requireView().findViewById<com.mpdc4gsr.module.thermalunified.stubs.FenceLineView>(R.id.fence_line_view).listener =
             object : FenceLineView.CallBack {
                 override fun callback(
                     startPoint: IntArray,
@@ -566,7 +567,7 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
                             .getLineIndex(startPoint, endPoint)
                 }
             }
-        requireView().findViewById<com.mpdc4gsr.libunified.ui.fence.FenceView>(R.id.fence_view).listener =
+        requireView().findViewById<com.mpdc4gsr.module.thermalunified.stubs.FenceView>(R.id.fence_view).listener =
             object : FenceView.CallBack {
                 override fun callback(
                     startPoint: IntArray,

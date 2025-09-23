@@ -1,4 +1,4 @@
-package com.shuyu.gsyvideoplayer.video.base
+package com.mpdc4gsr.module.thermalunified.video.base
 
 import android.content.Context
 import android.util.AttributeSet

@@ -61,7 +61,7 @@ class ChartLogView : LineChart {
             this.isDragEnabled = true
             this.setDrawGridBackground(false)
             this.description = null
-            this.setBackgroundResource(LibcoreR.color.chart_bg)
+            this.setBackgroundResource(ThermalR.color.chart_bg)
             this.setScaleEnabled(false)
             this.setPinchZoom(false)
             this.isDoubleTapToZoomEnabled = false

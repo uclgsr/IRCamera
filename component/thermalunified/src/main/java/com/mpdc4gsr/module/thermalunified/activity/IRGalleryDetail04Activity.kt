@@ -38,7 +38,6 @@ import org.greenrobot.eventbus.EventBus
 import java.io.File
 import com.mpdc4gsr.libunified.R as LibR
 
-
 class IRGalleryDetail04Activity : BaseActivity() {
 
     private var isRemote = false

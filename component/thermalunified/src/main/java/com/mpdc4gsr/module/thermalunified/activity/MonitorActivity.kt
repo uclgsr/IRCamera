@@ -7,7 +7,7 @@ import com.blankj.utilcode.util.BarUtils
 import com.mpdc4gsr.libunified.app.config.RouterConfig
 import com.mpdc4gsr.libunified.app.ktbase.BaseActivity
 import com.mpdc4gsr.libunified.app.navigation.NavigationManager
-import com.mpdc4gsr.libunified.ui.dialog.MonitorSelectDialog
+import com.mpdc4gsr.module.thermalunified.stubs.MonitorSelectDialog
 import com.mpdc4gsr.module.thermalunified.R
 import com.mpdc4gsr.module.thermalunified.event.ThermalActionEvent
 import org.greenrobot.eventbus.EventBus
