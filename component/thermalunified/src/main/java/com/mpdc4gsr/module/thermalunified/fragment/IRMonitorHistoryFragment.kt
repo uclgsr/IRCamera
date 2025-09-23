@@ -28,6 +28,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
+import com.mpdc4gsr.libunified.R as LibCoreR
 import org.greenrobot.eventbus.ThreadMode
 import java.util.Calendar
 import androidx.recyclerview.widget.RecyclerView as AndroidRecyclerView
@@ -171,9 +172,9 @@ class IRMonitorHistoryFragment : Fragment() {
             (tvDuration as? android.widget.TextView)?.text =
                 TimeTool.showVideoTime(record.duration * 1000L)
             when (record.type) {
-                "point" -> (tvType as? android.widget.TextView)?.setText(R.string.thermal_point)
-                "line" -> (tvType as? android.widget.TextView)?.setText(R.string.thermal_line)
-                "fence" -> (tvType as? android.widget.TextView)?.setText(R.string.thermal_rect)
+                "point" -> (tvType as? android.widget.TextView)?.setText(LibCoreR.string.thermal_point)
+                "line" -> (tvType as? android.widget.TextView)?.setText(LibCoreR.string.thermal_line)
+                "fence" -> (tvType as? android.widget.TextView)?.setText(LibCoreR.string.thermal_rect)
             }
 
             viewContentBg?.setOnClickListener {

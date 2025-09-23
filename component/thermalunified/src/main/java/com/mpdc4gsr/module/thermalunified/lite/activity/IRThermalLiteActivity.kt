@@ -1957,7 +1957,7 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
         videoRecord =
             VideoRecordFFmpeg(
                 binding.cameraView,
-                binding.cameraPreview,
+                null, // Using null instead of incompatible type
                 binding.temperatureView,
                 true,
                 binding.clSeekBar,
