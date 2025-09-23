@@ -95,9 +95,9 @@ dependencies {
     implementation(libs.media3.exoplayer.dash)
     implementation(libs.media3.ui)
     
-    // Use the working Maven Central SmartRefreshLayout from version catalog
-    implementation(libs.refresh.layout.kernel)
-    implementation(libs.refresh.header.classics)
+    // Try using the old SmartRefreshLayout from version catalog for better compatibility
+    implementation(libs.smart.refresh.layout)
+    implementation(libs.smart.refresh.header)
     
     // Add support library for NestedScrollingParent compatibility
     implementation("androidx.legacy:legacy-support-core-ui:1.0.0")
