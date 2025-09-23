@@ -1,8 +1,16 @@
-package com.mpdc4gsr.module.thermalunified.report.activity
+package com.mpdc4gsr.module.thermalunified.fragment
 
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.text.TextUtils
 import android.util.Log
+import android.widget.TextView
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.Utils
@@ -11,7 +19,8 @@ import com.mpdc4gsr.libunified.app.config.ExtraKeyConfig
 import com.mpdc4gsr.libunified.app.config.FileConfig
 import com.mpdc4gsr.libunified.app.config.RouterConfig
 import com.mpdc4gsr.libunified.app.dialog.TipDialog
-import com.mpdc4gsr.libunified.app.ktbase.BaseViewModelActivity
+import com.mpdc4gsr.libunified.app.ktbase.BaseViewModelFragment
+import com.mpdc4gsr.libunified.app.lms.Config
 import com.mpdc4gsr.libunified.app.lms.LMS
 import com.mpdc4gsr.libunified.app.lms.UrlConstant
 import com.mpdc4gsr.libunified.app.lms.network.HttpProxy
@@ -28,34 +37,42 @@ import com.mpdc4gsr.module.thermalunified.R
 import com.mpdc4gsr.module.thermalunified.adapter.PDFAdapter
 import com.mpdc4gsr.module.thermalunified.report.viewmodel.PdfViewModel
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
-import com.mpdc4gsr.libunified.R as LibR
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 
 
-class PDFListActivity : BaseViewModelActivity<PdfViewModel>() {
+class PDFListFragment : BaseViewModelFragment<PdfViewModel>() {
 
-    private val titleView: TitleView by lazy { findViewById(R.id.title_view) }
-    private val fragmentPdfRecyclerLay: SmartRefreshLayout by lazy { findViewById(R.id.fragment_pdf_recycler_lay) }
-    private val fragmentPdfRecycler: RecyclerView by lazy { findViewById(R.id.fragment_pdf_recycler) }
+    private val titleView: TitleView by lazy { requireView().findViewById(R.id.title_view) }
+    private val fragmentPdfRecyclerLay: SmartRefreshLayout by lazy { requireView().findViewById(R.id.fragment_pdf_recycler_lay) }
+    private val fragmentPdfRecycler: RecyclerView by lazy { requireView().findViewById(R.id.fragment_pdf_recycler) }
 
 
     private var isTC007 = false
 
-    var page = 1
+    private var page = 1
+    private var reportAdapter = PDFAdapter(R.layout.item_pdf)
+
+    private val loginBroadcastReceiver = LoginBroadcastReceiver()
 
     override fun providerVMClass() = PdfViewModel::class.java
 
-    var reportAdapter = PDFAdapter(R.layout.item_pdf)
-
     override fun initContentView(): Int {
-        return R.layout.activity_pdf_list
+        return R.layout.fragment_pdf_list
     }
 
     override fun initView() {
-        isTC007 = intent.getBooleanExtra(ExtraKeyConfig.IS_TC007, false)
+        isTC007 = arguments?.getBoolean(ExtraKeyConfig.IS_TC007, false) ?: false
+
+        val intentFilter = IntentFilter()
+        intentFilter.addAction(Config.ACTION_BROADCAST_LOGIN)
+        intentFilter.addAction(Config.ACTION_BROADCAST_LOGOFF)
+        LocalBroadcastManager.getInstance(requireContext())
+            .registerReceiver(loginBroadcastReceiver, intentFilter)
+
+        initRecycler()
 
         viewModel.listData.observe(this) {
             dismissLoadingDialog()
@@ -70,9 +87,12 @@ class PDFListActivity : BaseViewModelActivity<PdfViewModel>() {
                 }
             }
             it?.let { data ->
+                val tvEmpty: TextView? = reportAdapter.emptyLayout?.findViewById(R.id.tv_empty)
+                tvEmpty?.setText(if (page == 1 && data.code.toString() != LMS.SUCCESS) R.string.request_fail else R.string.tip_no_more_data)
+
                 if (page == 1) {
 
-                    if (data.code == "2000") {
+                    if (data.code.toString() == LMS.SUCCESS) {
                         reportAdapter.loadMoreModule.isEnableLoadMore =
                             !data.data?.records.isNullOrEmpty()
                         fragmentPdfRecyclerLay.finishRefresh()
@@ -82,7 +102,7 @@ class PDFListActivity : BaseViewModelActivity<PdfViewModel>() {
                     reportAdapter.setNewInstance(data.data?.records)
                 } else {
                     data.data?.records?.let { it1 -> reportAdapter.addData(it1) }
-                    if (data.code == "2000") {
+                    if (data.code.toString() == LMS.SUCCESS) {
                         if (data.data?.records.isNullOrEmpty()) {
                             reportAdapter.loadMoreModule.loadMoreEnd()
                         } else {
@@ -94,49 +114,61 @@ class PDFListActivity : BaseViewModelActivity<PdfViewModel>() {
                 }
             }
         }
-        if (WebSocketProxy.getInstance().isConnected()) {
-            NetWorkUtils.switchNetwork(false)
-        } else {
-            NetWorkUtils.connectivityManager.bindProcessToNetwork(null)
-        }
-        initRecycler()
+        viewLifecycleOwner.lifecycle.addObserver(
+            object : DefaultLifecycleObserver {
+                override fun onResume(owner: LifecycleOwner) {
+                    if (WebSocketProxy.getInstance().isConnected()) {
+                        NetWorkUtils.switchNetwork(false)
+                    } else {
+                        NetWorkUtils.connectivityManager.bindProcessToNetwork(null)
+                    }
+                    if (!hasLoadData) {
+                        hasLoadData = true
+                        fragmentPdfRecyclerLay.autoRefresh()
+                    }
+                }
+            },
+        )
     }
+
+    private var hasLoadData = false
 
     override fun initData() {
     }
 
-    private fun initRecycler() {
-        fragmentPdfRecycler.layoutManager = LinearLayoutManager(this)
-        fragmentPdfRecyclerLay.setOnRefreshListener {
+    override fun onDestroy() {
+        super.onDestroy()
+        LocalBroadcastManager.getInstance(requireContext())
+            .unregisterReceiver(loginBroadcastReceiver)
+    }
 
-            page = 1
-            viewModel.getReportData(isTC007, page)
-        }
-        fragmentPdfRecyclerLay.setEnableLoadMore(false)
-        reportAdapter.loadMoreModule.loadMoreView = CommLoadMoreView()
-        fragmentPdfRecyclerLay.autoRefresh()
-        reportAdapter.loadMoreModule.setOnLoadMoreListener {
-
-            viewModel.getReportData(isTC007, ++page)
-        }
-        reportAdapter.jumpDetailListener = { item, position ->
-            reportAdapter.data[position]?.reportContent?.let { reportContent ->
-                NavigationManager.getInstance().build(RouterConfig.REPORT_DETAIL)
-                    .withParcelable(ExtraKeyConfig.REPORT_BEAN, reportContent)
-                    .navigation(this)
+    private inner class LoginBroadcastReceiver : BroadcastReceiver() {
+        override fun onReceive(
+            context: Context?,
+            intent: Intent?,
+        ) {
+            when (intent?.action) {
+                Config.ACTION_BROADCAST_LOGIN, Config.ACTION_BROADCAST_LOGOFF -> {
+                    hasLoadData = true
+                    page = 1
+                    viewModel.getReportData(isTC007, page)
+                }
             }
         }
+    }
+
+    private fun initRecycler() {
         reportAdapter.isUseEmpty = true
         reportAdapter.delListener = { item, position ->
             val reportBean = item.reportContent
-            TipDialog.Builder(this)
+            TipDialog.Builder(requireContext())
                 .setMessage(
                     getString(
-                        LibR.string.tip_config_delete,
+                        R.string.tip_config_delete,
                         reportBean?.report_info?.report_name ?: ""
                     )
                 )
-                .setPositiveListener(LibR.string.app_confirm) {
+                .setPositiveListener(R.string.app_confirm) {
                     lifecycleScope.launch {
                         showLoadingDialog()
                         withContext(Dispatchers.IO) {
@@ -154,7 +186,7 @@ class PDFListActivity : BaseViewModelActivity<PdfViewModel>() {
                                 LanguageUtil.getLanguageId(Utils.getApp())
                             )
                             params.addBodyParameter("reportType", 2)
-                            HttpProxy.Companion.instance.post(
+                            HttpProxy.getInstance().post(
                                 url, params,
                                 object :
                                     IResponseCallback {
@@ -202,12 +234,31 @@ class PDFListActivity : BaseViewModelActivity<PdfViewModel>() {
                         }
                     }
                 }
-                .setCancelListener(LibR.string.app_cancel) {
+                .setCancelListener(R.string.app_cancel) {
                 }
                 .create().show()
         }
+        reportAdapter.jumpDetailListener = { item, position ->
+            reportAdapter.data[position]?.reportContent?.let { reportBean ->
+                NavigationManager.getInstance().build(RouterConfig.REPORT_DETAIL)
+                    .withParcelable(ExtraKeyConfig.REPORT_BEAN, reportBean)
+                    .navigation(requireContext())
+            }
+        }
+        reportAdapter.loadMoreModule.loadMoreView = CommLoadMoreView()
+        reportAdapter.loadMoreModule.setOnLoadMoreListener {
+
+            viewModel.getReportData(isTC007, ++page)
+        }
 
         fragmentPdfRecycler.adapter = reportAdapter
+        fragmentPdfRecycler.layoutManager = LinearLayoutManager(requireContext())
+        fragmentPdfRecyclerLay.setOnRefreshListener {
 
+            page = 1
+            viewModel.getReportData(isTC007, page)
+        }
+
+        fragmentPdfRecyclerLay.setEnableLoadMore(false)
     }
 }

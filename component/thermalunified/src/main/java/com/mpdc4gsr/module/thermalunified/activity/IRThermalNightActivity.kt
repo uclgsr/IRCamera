@@ -230,7 +230,7 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
     private var isOpenTarget = SaveSettingUtil.isOpenTarget
     private var audioPosition: Int = 0
 
-    protected lateinit var cameraView: com.mpdc4gsr.module.thermalunified.stubs.CameraView
+    protected lateinit var cameraView: com.infisense.usbir.view.CameraView
     protected lateinit var temperatureView: com.mpdc4gsr.libunified.ir.view.TemperatureView
     private lateinit var spaceChart: View
     private lateinit var clTrendOpen: ConstraintLayout
@@ -278,16 +278,17 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
     private val popTimeText by lazy { findViewById<TextView>(R.id.pop_time_text) }
     protected val layCarDetectPrompt by lazy { findViewById<View>(R.id.lay_car_detect_prompt) }
     protected val temp_bg by lazy { findViewById<com.mpdc4gsr.libunified.app.comm.view.TempLayout>(R.id.temp_bg) }
-    protected val cl_seek_bar by lazy {
+
+    protected open val cl_seek_bar by lazy {
         findViewById<com.mpdc4gsr.libunified.ui.widget.BitmapConstraintLayout>(
             R.id.cl_seek_bar
         )
     }
-    protected val cameraPreview by lazy { findViewById<com.mpdc4gsr.libunified.ui.camera.CameraPreView>(R.id.cameraPreview) }
+    protected open val cameraPreview by lazy { findViewById<com.mpdc4gsr.module.thermalunified.stubs.CameraPreView>(R.id.cameraPreview) }
     private val distance_measure_view by lazy { findViewById<View>(R.id.distance_measure_view) }
-    private val zoomView by lazy { findViewById<com.mpdc4gsr.libunified.ir.view.ZoomCaliperView>(R.id.zoomView) }
-    protected val temperatureSeekbar by lazy {
-        findViewById<com.mpdc4gsr.module.thermalunified.stubs.RangeSeekBar>(
+    private val zoomView by lazy { findViewById<com.infisense.usbir.view.ZoomCaliperView>(R.id.zoomView) }
+    protected open val temperatureSeekbar by lazy {
+        findViewById<com.mpdc4gsr.libunified.ui.widget.seekbar.RangeSeekBar>(
             R.id.temperature_seekbar
         )
     }

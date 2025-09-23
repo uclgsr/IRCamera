@@ -36,7 +36,7 @@ class IRThermalPlusActivity : BaseIRPlushActivity() {
     private val dualTextureViewNativeCamera by lazy { findViewById<SurfaceView>(R.id.dualTextureViewNativeCamera) }
     
     override val temperatureSeekbar by lazy {
-        findViewById<com.mpdc4gsr.module.thermalunified.stubs.RangeSeekBar>(
+        findViewById<com.mpdc4gsr.libunified.ui.widget.seekbar.RangeSeekBar>(
             R.id.temperature_seekbar
         )
     }
@@ -46,7 +46,7 @@ class IRThermalPlusActivity : BaseIRPlushActivity() {
     }
     
     override val cl_seek_bar by lazy {
-        findViewById<com.mpdc4gsr.module.thermalunified.stubs.BitmapConstraintLayout>(
+        findViewById<com.mpdc4gsr.libunified.ui.widget.BitmapConstraintLayout>(
             R.id.cl_seek_bar
         )
     }

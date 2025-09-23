@@ -591,7 +591,7 @@ class VideoRecordFFmpeg(
 
         if (thermalPseudoBarView?.visibility == VISIBLE) {
             try {
-                thermalPseudoBarView?.viewBitmap(thermalPseudoBarView.width, thermalPseudoBarView.height)?.let { bitmap ->
+                thermalPseudoBarView.drawToBitmap()?.let { bitmap ->
                     cameraViewBitmap =
                         BitmapUtils.mergeBitmap(
                             cameraViewBitmap,
@@ -648,14 +648,11 @@ class VideoRecordFFmpeg(
             if (preview.isVisible) {
                 val bitmapFromView = preview.getBitmap()
                 bitmapFromView?.let { bitmap ->
-                    val newBitmap =
-                        BitmapUtils.mergeBitmapByView(
-                            cameraViewBitmap,
-                            bitmap,
-                            preview,
-                        )
-                    if (newBitmap != null) {
-                        cameraViewBitmap = newBitmap
+                    // Simple bitmap overlay instead of BitmapUtils.mergeBitmapByView
+                    cameraViewBitmap?.let { baseBitmap ->
+                        val canvas = Canvas(baseBitmap)
+                        canvas.drawBitmap(bitmap, 0f, 0f, null)
+                        cameraViewBitmap = baseBitmap
                     }
                 }
             }
