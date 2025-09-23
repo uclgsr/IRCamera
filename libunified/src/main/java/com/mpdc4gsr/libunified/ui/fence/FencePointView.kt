@@ -11,6 +11,10 @@ class FencePointView : View {
 
     var listener: CallBack? = null
 
+    fun clear() {
+        // Clear fence point view state
+    }
+
     interface CallBack {
         fun callback(startPoint: IntArray, srcRect: IntArray)
     }
