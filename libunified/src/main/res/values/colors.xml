@@ -71,4 +71,14 @@
     <color name="color_img_calibration_button">#FF2196F3</color>
     <color name="chart_line_min">#FF00C853</color>
 
+    <!-- Chart colors for UI library -->
+    <color name="chart_text">#FFFFFFFF</color>
+    <color name="chart_axis">#FF666666</color>
+    <color name="circle_white">#FFFFFFFF</color>
+    <color name="chart_line_center">#FF607D8B</color>
+    <color name="chart_line_max">#FFFF5722</color>
+    <color name="chart_point_max">#FFFF5722</color>
+    <color name="chart_point_min">#FF4CAF50</color>
+    <color name="chart_point_center">#FF607D8B</color>
+
 </resources>
