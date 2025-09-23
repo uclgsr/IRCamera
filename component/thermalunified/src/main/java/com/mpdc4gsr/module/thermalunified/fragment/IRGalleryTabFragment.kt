@@ -80,7 +80,7 @@ class IRGalleryTabFragment : BaseFragment() {
             popup.show(tvTitleDir)
         }
 
-        titleView.setTitleText(if (canSwitchDir) "" else getString(R.string.app_gallery))
+        titleView.setTitleText(if (canSwitchDir) "" else getString(LibCoreR.string.app_gallery))
         titleView.setLeftDrawable(if (hasBackIcon) R.drawable.ic_back_white_svg else 0)
         titleView.setLeftClickListener {
             if (viewModel.isEditModeLD.value == true) {
@@ -103,7 +103,7 @@ class IRGalleryTabFragment : BaseFragment() {
         viewPagerAdapter = ViewPagerAdapter(this)
         viewPager2.adapter = viewPagerAdapter
         TabLayoutMediator(tabLayout, viewPager2) { tab, position ->
-            tab.setText(if (position == 0) R.string.album_menu_Photos else R.string.app_video)
+            tab.setText(if (position == 0) LibCoreR.string.album_menu_Photos else LibCoreR.string.app_video)
         }.attach()
 
         viewModel.isEditModeLD.observe(viewLifecycleOwner) { isEditMode ->
@@ -113,28 +113,28 @@ class IRGalleryTabFragment : BaseFragment() {
                 titleView.setLeftDrawable(if (hasBackIcon) R.drawable.ic_back_white_svg else 0)
             }
             titleView.setRightDrawable(if (isEditMode) 0 else UiR.drawable.ic_toolbar_check_svg)
-            titleView.setRightText(if (isEditMode) getString(R.string.report_select_all) else "")
+            titleView.setRightText(if (isEditMode) getString(LibCoreR.string.report_select_all) else "")
             tabLayout.isVisible = !isEditMode
             viewPager2.isUserInputEnabled = !isEditMode
             if (isEditMode) {
                 titleView.setTitleText(
                     getString(
-                        R.string.chosen_item,
+                        LibCoreR.string.chosen_item,
                         viewModel.selectSizeLD.value
                     )
                 )
                 tvTitleDir.isVisible = false
             } else {
-                titleView.setTitleText(if (canSwitchDir) "" else getString(R.string.app_gallery))
+                titleView.setTitleText(if (canSwitchDir) "" else getString(LibCoreR.string.app_gallery))
                 tvTitleDir.isVisible = canSwitchDir
             }
         }
         viewModel.selectSizeLD.observe(viewLifecycleOwner) {
             if (viewModel.isEditModeLD.value == true) {
-                titleView.setTitleText(getString(R.string.chosen_item, it))
+                titleView.setTitleText(getString(LibCoreR.string.chosen_item, it))
                 tvTitleDir.isVisible = false
             } else {
-                titleView.setTitleText(if (canSwitchDir) "" else getString(R.string.app_gallery))
+                titleView.setTitleText(if (canSwitchDir) "" else getString(LibCoreR.string.app_gallery))
                 tvTitleDir.isVisible = canSwitchDir
             }
         }
