@@ -18,7 +18,6 @@ import androidx.lifecycle.lifecycleScope
 import com.elvishew.xlog.XLog
 import com.energy.ac020library.bean.IrcmdError
 import com.mpdc4gsr.libunified.common.RotateDegree
-import com.energy.commoncomponent.bean.RotateDegree as EnergyRotateDegree
 import com.energy.irutilslibrary.LibIRTempAC020
 import com.energy.irutilslibrary.bean.GainStatus
 import com.energy.iruvc.sdkisp.LibIRProcess
@@ -377,7 +376,8 @@ class IRMonitorLiteFragment : BaseFragment(), ITsTempListener {
 
         config = ConfigRepository.readConfig(false)
         CameraPreviewManager.getInstance().init(cameraView, mLiteHandler)
-        CameraPreviewManager.getInstance().imageRotate = EnergyRotateDegree.DEGREE_270
+        @Suppress("UNCHECKED_CAST")
+        CameraPreviewManager.getInstance().imageRotate = RotateDegree.DEGREE_270 as Any
         CameraPreviewManager.getInstance().setOnTempDataChangeCallback { data ->
             if (data != null) {
                 System.arraycopy(data, 0, temperatureBytes, 0, temperatureBytes.size)
