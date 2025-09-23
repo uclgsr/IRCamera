@@ -1,6 +1,6 @@
-package com.shuyu.gsyvideoplayer.builder
+package com.mpdc4gsr.module.thermalunified.builder
 
-import com.shuyu.gsyvideoplayer.video.base.GSYVideoPlayer
+import com.mpdc4gsr.module.thermalunified.video.base.GSYVideoPlayer
 
 class GSYVideoOptionBuilder {
     fun setVideoAllCallBack(callback: Any?): GSYVideoOptionBuilder = this

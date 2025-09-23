@@ -39,7 +39,7 @@ class GalleryChangePopup(private val context: Context) : PopupWindow() {
 
         tvLine.setOnClickListener {
             dismiss()
-            onPickListener?.invoke(0, context.getString(R.string.tc_has_line_device))
+            onPickListener?.invoke(0, context.getString(LibR.string.tc_has_line_device))
         }
         tvTs004.setOnClickListener {
             dismiss()

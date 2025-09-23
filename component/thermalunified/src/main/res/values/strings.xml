@@ -27,7 +27,14 @@
     <string name="compass_west">W</string>
     <string name="compass_northwest">NW</string>
 
-    <!-- Missing strings -->
+    <!-- Monitor dialog strings -->
+    <string name="monitor_finish">Finish</string>
+    <string name="chart_temperature">Temperature</string>
+    <string name="chart_temperature_high">High</string>
+    <string name="monitor_point_temp">Point Temperature</string>
+    <string name="monitor_line_temp">Line Temperature</string>
+    <string name="monitor_rect_temp">Rectangle Temperature</string>
+    <string name="monitor_select_title">Select Monitor Type</string>
     <string name="album_edit_report">Edit Report</string>
 
     <!-- Missing strings referenced in IRVideoGSYActivity.kt -->

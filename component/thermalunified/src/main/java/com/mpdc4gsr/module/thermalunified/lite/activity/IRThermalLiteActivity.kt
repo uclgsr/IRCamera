@@ -46,14 +46,15 @@ import com.energy.iruvc.utils.CommonParams
 import com.energy.iruvc.utils.SynchronizedBitmap
 import com.energy.iruvccamera.usb.USBMonitor
 import com.mpdc4gsr.module.thermalunified.lite.IrConst
-import com.mpdc4gsr.module.thermalunified.lite.R
+import com.mpdc4gsr.module.thermalunified.R
+import com.mpdc4gsr.libunified.R as LibR
 import com.mpdc4gsr.module.thermalunified.lite.camera.CameraPreviewManager
 import com.mpdc4gsr.module.thermalunified.lite.camera.DeviceControlManager
 import com.mpdc4gsr.module.thermalunified.lite.camera.DeviceIrcmdControlManager
 import com.mpdc4gsr.module.thermalunified.lite.camera.OnUSBConnectListener
 import com.mpdc4gsr.module.thermalunified.lite.camera.TempCompensation
 import com.mpdc4gsr.module.thermalunified.lite.camera.USBMonitorManager
-import com.mpdc4gsr.module.thermalunified.lite.databinding.ActivityIrThermalLiteBinding
+import com.mpdc4gsr.module.thermalunified.databinding.ActivityIrThermalLiteBinding
 import com.mpdc4gsr.module.thermalunified.lite.util.CommonUtil
 import com.mpdc4gsr.module.thermalunified.lite.util.IRTool
 import com.hjq.permissions.OnPermissionCallback
@@ -377,16 +378,16 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
         binding.thermalRecyclerNight.onColorListener = { _, it, _ ->
             if (customPseudoBean.isUseCustomPseudo) {
                 TipDialog.Builder(this)
-                    .setTitleMessage(getString(com.mpdc4gsr.module.thermalunified.R.string.app_tip))
-                    .setMessage(com.mpdc4gsr.module.thermalunified.R.string.tip_change_pseudo_mode)
-                    .setPositiveListener(com.mpdc4gsr.module.thermalunified.R.string.app_yes) {
+                    .setTitleMessage(getString(LibR.string.app_tip))
+                    .setMessage(LibR.string.tip_change_pseudo_mode)
+                    .setPositiveListener(LibR.string.app_yes) {
                         customPseudoBean.isUseCustomPseudo = false
                         customPseudoBean.saveToShared()
                         setPColor(it)
                         setDefLimit()
                         updateImageAndSeekbarColorList(customPseudoBean)
                         binding.thermalRecyclerNight.setPseudoColor(pseudoColorMode)
-                    }.setCancelListener(com.mpdc4gsr.module.thermalunified.R.string.app_no) {
+                    }.setCancelListener(LibR.string.app_no) {
                     }
                     .create().show()
             } else {

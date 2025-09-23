@@ -131,11 +131,11 @@ class PDFListActivity : BaseViewModelActivity<PdfViewModel>() {
             TipDialog.Builder(this)
                 .setMessage(
                     getString(
-                        R.string.tip_config_delete,
+                        LibR.string.tip_config_delete,
                         reportBean?.report_info?.report_name ?: ""
                     )
                 )
-                .setPositiveListener(R.string.app_confirm) {
+                .setPositiveListener(LibR.string.app_confirm) {
                     lifecycleScope.launch {
                         showLoadingDialog()
                         withContext(Dispatchers.IO) {
@@ -201,7 +201,7 @@ class PDFListActivity : BaseViewModelActivity<PdfViewModel>() {
                         }
                     }
                 }
-                .setCancelListener(R.string.app_cancel) {
+                .setCancelListener(LibR.string.app_cancel) {
                 }
                 .create().show()
         }
