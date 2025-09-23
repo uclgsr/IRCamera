@@ -168,17 +168,17 @@ class IRThermalFragment : BaseFragment(), View.OnClickListener {
             }
 
             tvMainEnter -> {
-                if (!DeviceTools.isConnect()) {
+                if (!DeviceTools.isConnect(isAutoRequest = false)) {
 
                     if (DeviceTools.findUsbDevice() == null) {
-                        activity?.let {
-                            TipDialog.Builder(it)
+                        activity?.let { activity ->
+                            TipDialog.Builder(activity)
                                 .setMessage(R.string.device_connect_tip)
                                 .setPositiveListener(R.string.app_confirm)
                                 .create().show()
                         }
                     } else {
-                        XXPermissions.with(this)
+                        XXPermissions.with(requireContext())
                             .permission(
                                 listOf(
                                     Permission.CAMERA,
@@ -201,8 +201,8 @@ class IRThermalFragment : BaseFragment(), View.OnClickListener {
                                     ) {
                                         if (doNotAskAgain) {
 
-                                            context?.let {
-                                                TipDialog.Builder(it)
+                                            context?.let { context ->
+                                                TipDialog.Builder(context)
                                                     .setTitleMessage(getString(R.string.app_tip))
                                                     .setMessage(getString(R.string.app_camera_content))
                                                     .setPositiveListener(R.string.app_open) {
@@ -288,8 +288,8 @@ class IRThermalFragment : BaseFragment(), View.OnClickListener {
 
         if (!XXPermissions.isGranted(requireContext(), permissionList)) {
             if (BaseApplication.instance.isDomestic()) {
-                context?.let {
-                    TipDialog.Builder(it)
+                context?.let { context ->
+                    TipDialog.Builder(context)
                         .setMessage(
                             getString(
                                 R.string.permission_request_storage_app,
