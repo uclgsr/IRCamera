@@ -68,11 +68,6 @@
     <string name="app_setting">Settings</string>
     <string name="func_temper_ruler">Temperature Ruler</string>
     
-    <!-- Missing strings for thermal config dialogs -->
-    <string name="thermal_config_distance">Distance</string>
-    <string name="thermal_config_radiation">Radiation</string>
-    <string name="tip_input_format">Input format invalid</string>
-    
     <!-- Missing strings for ReportPreviewFloorAdapter -->
     <string name="pdf_project_item">Project Item</string>
     <string name="report_remark">Report Remark</string>
