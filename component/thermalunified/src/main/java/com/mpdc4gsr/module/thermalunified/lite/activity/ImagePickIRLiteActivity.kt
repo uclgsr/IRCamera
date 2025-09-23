@@ -1,7 +1,7 @@
-package com.example.thermal_lite.activity
+package com.mpdc4gsr.module.thermalunified.lite.activity
 
 import android.graphics.Bitmap
-import com.example.thermal_lite.fragment.IRMonitorLiteFragment
+import com.mpdc4gsr.module.thermalunified.lite.fragment.IRMonitorLiteFragment
 import com.mpdc4gsr.libunified.app.ktbase.BasePickImgActivity
 import com.mpdc4gsr.module.thermalunified.R
 

@@ -1,12 +1,12 @@
-package com.example.thermal_lite.activity
+package com.mpdc4gsr.module.thermalunified.lite.activity
 
 import android.os.Bundle
 import androidx.activity.OnBackPressedCallback
 import androidx.lifecycle.lifecycleScope
 import com.blankj.utilcode.util.ToastUtils
-import com.example.thermal_lite.R
-import com.example.thermal_lite.databinding.ActivityIrCorrectionLiteFourBinding
-import com.example.thermal_lite.fragment.IRMonitorLiteFragment
+import com.mpdc4gsr.module.thermalunified.lite.R
+import com.mpdc4gsr.module.thermalunified.lite.databinding.ActivityIrCorrectionLiteFourBinding
+import com.mpdc4gsr.module.thermalunified.lite.fragment.IRMonitorLiteFragment
 import com.mpdc4gsr.libunified.app.dialog.TipDialog
 import com.mpdc4gsr.libunified.app.ktbase.BaseActivity
 import com.mpdc4gsr.module.thermalunified.event.CorrectionFinishEvent
