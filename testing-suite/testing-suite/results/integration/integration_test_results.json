@@ -1,0 +1,185 @@
+{
+  "summary": {
+    "total_tests": 14,
+    "passed": 0,
+    "warnings": 0,
+    "failed": 14,
+    "pass_rate": 0.0,
+    "test_types": {
+      "Source Integrity": {
+        "PASS": 0,
+        "WARNING": 0,
+        "FAIL": 5,
+        "total": 5
+      },
+      "Content Consistency": {
+        "PASS": 0,
+        "WARNING": 0,
+        "FAIL": 5,
+        "total": 5
+      },
+      "LaTeX Compilation": {
+        "PASS": 0,
+        "WARNING": 0,
+        "FAIL": 1,
+        "total": 1
+      },
+      "Diagram Integration": {
+        "PASS": 0,
+        "WARNING": 0,
+        "FAIL": 1,
+        "total": 1
+      },
+      "Table Generation": {
+        "PASS": 0,
+        "WARNING": 0,
+        "FAIL": 2,
+        "total": 2
+      }
+    },
+    "overall_status": "FAIL"
+  },
+  "results": [
+    {
+      "component": "File Existence: docs/latex/main.tex",
+      "test_type": "Source Integrity",
+      "status": "FAIL",
+      "details": {
+        "error": "File not found",
+        "path": "docs/latex/main.tex"
+      },
+      "timestamp": "2025-09-23 13:00:09"
+    },
+    {
+      "component": "File Existence: docs/latex/4.tex",
+      "test_type": "Source Integrity",
+      "status": "FAIL",
+      "details": {
+        "error": "File not found",
+        "path": "docs/latex/4.tex"
+      },
+      "timestamp": "2025-09-23 13:00:09"
+    },
+    {
+      "component": "File Existence: docs/latex/5.tex",
+      "test_type": "Source Integrity",
+      "status": "FAIL",
+      "details": {
+        "error": "File not found",
+        "path": "docs/latex/5.tex"
+      },
+      "timestamp": "2025-09-23 13:00:09"
+    },
+    {
+      "component": "File Existence: docs/latex/6.tex",
+      "test_type": "Source Integrity",
+      "status": "FAIL",
+      "details": {
+        "error": "File not found",
+        "path": "docs/latex/6.tex"
+      },
+      "timestamp": "2025-09-23 13:00:09"
+    },
+    {
+      "component": "File Existence: docs/latex/appendix_Z.tex",
+      "test_type": "Source Integrity",
+      "status": "FAIL",
+      "details": {
+        "error": "File not found",
+        "path": "docs/latex/appendix_Z.tex"
+      },
+      "timestamp": "2025-09-23 13:00:09"
+    },
+    {
+      "component": "Term Consistency: TC001",
+      "test_type": "Content Consistency",
+      "status": "FAIL",
+      "details": {
+        "files_containing_term": 0,
+        "context_examples": [],
+        "files": []
+      },
+      "timestamp": "2025-09-23 13:00:09"
+    },
+    {
+      "component": "Term Consistency: Shimmer3",
+      "test_type": "Content Consistency",
+      "status": "FAIL",
+      "details": {
+        "files_containing_term": 0,
+        "context_examples": [],
+        "files": []
+      },
+      "timestamp": "2025-09-23 13:00:09"
+    },
+    {
+      "component": "Term Consistency: 2.1ms",
+      "test_type": "Content Consistency",
+      "status": "FAIL",
+      "details": {
+        "files_containing_term": 0,
+        "context_examples": [],
+        "files": []
+      },
+      "timestamp": "2025-09-23 13:00:09"
+    },
+    {
+      "component": "Term Consistency: 5ms",
+      "test_type": "Content Consistency",
+      "status": "FAIL",
+      "details": {
+        "files_containing_term": 0,
+        "context_examples": [],
+        "files": []
+      },
+      "timestamp": "2025-09-23 13:00:09"
+    },
+    {
+      "component": "Term Consistency: 1.21 MB/s",
+      "test_type": "Content Consistency",
+      "status": "FAIL",
+      "details": {
+        "files_containing_term": 0,
+        "context_examples": [],
+        "files": []
+      },
+      "timestamp": "2025-09-23 13:00:09"
+    },
+    {
+      "component": "LaTeX File Missing: docs/latex/main.tex",
+      "test_type": "LaTeX Compilation",
+      "status": "FAIL",
+      "details": {
+        "error": "Main LaTeX file not found"
+      },
+      "timestamp": "2025-09-23 13:00:09"
+    },
+    {
+      "component": "Diagram Directory Missing",
+      "test_type": "Diagram Integration",
+      "status": "FAIL",
+      "details": {
+        "error": "docs/thesis-diagrams directory not found"
+      },
+      "timestamp": "2025-09-23 13:00:09"
+    },
+    {
+      "component": "Table File Missing: system-configuration-tables.md",
+      "test_type": "Table Generation",
+      "status": "FAIL",
+      "details": {
+        "error": "Table file not found"
+      },
+      "timestamp": "2025-09-23 13:00:09"
+    },
+    {
+      "component": "Table File Missing: performance-test-tables.md",
+      "test_type": "Table Generation",
+      "status": "FAIL",
+      "details": {
+        "error": "Table file not found"
+      },
+      "timestamp": "2025-09-23 13:00:09"
+    }
+  ]
+}

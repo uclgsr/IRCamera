@@ -1,0 +1,192 @@
+[
+  {
+    "metric_name": "Synchronization Accuracy (Mean)",
+    "value": 2.2110240048700533,
+    "unit": "ms",
+    "target": 5.0,
+    "status": "PASS",
+    "timestamp": "2025-09-23T13:02:05.267274",
+    "test_conditions": {
+      "sample_size": 50,
+      "std_dev": 0.8818281744867604
+    }
+  },
+  {
+    "metric_name": "Synchronization Accuracy (Median)",
+    "value": 2.1376581652664632,
+    "unit": "ms",
+    "target": 5.0,
+    "status": "PASS",
+    "timestamp": "2025-09-23T13:02:05.267282",
+    "test_conditions": {
+      "sample_size": 50,
+      "95th_percentile": 3.497215881998071
+    }
+  },
+  {
+    "metric_name": "Synchronization Accuracy (95th Percentile)",
+    "value": 3.497215881998071,
+    "unit": "ms",
+    "target": 5.0,
+    "status": "PASS",
+    "timestamp": "2025-09-23T13:02:05.267286",
+    "test_conditions": {
+      "measurements": [
+        1.5961393221531899,
+        1.8243265468561716,
+        0.18540842191439977,
+        2.024575499321689,
+        2.7051497540761815,
+        2.5091353669632595,
+        2.9971721713939274,
+        2.0768985605922228,
+        3.4873573720760667,
+        2.6971223028539626
+      ]
+    }
+  },
+  {
+    "metric_name": "Thermal Data Rate",
+    "value": 0.28808007034958993,
+    "unit": "MB/s",
+    "target": 0.29,
+    "status": "PASS",
+    "timestamp": "2025-09-23T13:02:05.267468",
+    "test_conditions": {
+      "measurements": [
+        0.27141293062800587,
+        0.26731399646873777,
+        0.28237556487515647,
+        0.28023769189017755,
+        0.30029447652141933
+      ],
+      "tolerance": 0.028999999999999998,
+      "variance": 0.0001358017191947448
+    }
+  },
+  {
+    "metric_name": "GSR Data Rate",
+    "value": 0.050419935501895045,
+    "unit": "MB/s",
+    "target": 0.05,
+    "status": "PASS",
+    "timestamp": "2025-09-23T13:02:05.267580",
+    "test_conditions": {
+      "measurements": [
+        0.046259643635039746,
+        0.050132230639481946,
+        0.04956590043166533,
+        0.053945005193162324,
+        0.048621671296748416
+      ],
+      "tolerance": 0.005000000000000001,
+      "variance": 5.661469589597714e-06
+    }
+  },
+  {
+    "metric_name": "RGB Video Rate",
+    "value": 0.8660430563371391,
+    "unit": "MB/s",
+    "target": 0.87,
+    "status": "PASS",
+    "timestamp": "2025-09-23T13:02:05.267662",
+    "test_conditions": {
+      "measurements": [
+        0.8551598192888211,
+        0.864569555891732,
+        0.9284972028997621,
+        0.8684801799677341,
+        0.8653591345717417
+      ],
+      "tolerance": 0.08700000000000001,
+      "variance": 0.001808710551142487
+    }
+  },
+  {
+    "metric_name": "Total Combined Rate",
+    "value": 1.2341868147397712,
+    "unit": "MB/s",
+    "target": 1.21,
+    "status": "PASS",
+    "timestamp": "2025-09-23T13:02:05.267756",
+    "test_conditions": {
+      "measurements": [
+        1.2243324488132945,
+        1.2323218994448848,
+        1.20280019152068,
+        1.2949844322579223,
+        1.3087654081321074
+      ],
+      "tolerance": 0.121,
+      "variance": 0.0035530361733058474
+    }
+  },
+  {
+    "metric_name": "Android Memory Usage",
+    "value": 117.32845077938144,
+    "unit": "MB",
+    "target": 200,
+    "status": "PASS",
+    "timestamp": "2025-09-23T13:02:05.267849",
+    "test_conditions": {
+      "measurements": [
+        108.38781463689426,
+        109.70518208025622,
+        121.664591884338
+      ],
+      "peak_usage": 141.71620505284488,
+      "min_usage": 100.07617415656429
+    }
+  },
+  {
+    "metric_name": "Android CPU Usage",
+    "value": 14.438139684825275,
+    "unit": "%",
+    "target": 25,
+    "status": "PASS",
+    "timestamp": "2025-09-23T13:02:05.267913",
+    "test_conditions": {
+      "measurements": [
+        14.528080100024374,
+        14.454844218740671,
+        14.369165862574382
+      ],
+      "peak_usage": 16.863757805369254,
+      "min_usage": 12.150804523334802
+    }
+  },
+  {
+    "metric_name": "PC Memory Usage",
+    "value": 244.552220967805,
+    "unit": "MB",
+    "target": 400,
+    "status": "PASS",
+    "timestamp": "2025-09-23T13:02:05.267952",
+    "test_conditions": {
+      "measurements": [
+        227.73969590689936,
+        252.813101824025,
+        235.9882920436426
+      ],
+      "peak_usage": 264.4461933131619,
+      "min_usage": 206.27519503510135
+    }
+  },
+  {
+    "metric_name": "Storage Write Speed",
+    "value": 144.4759101100266,
+    "unit": "MB/s",
+    "target": 100,
+    "status": "PASS",
+    "timestamp": "2025-09-23T13:02:05.267988",
+    "test_conditions": {
+      "measurements": [
+        137.35708593347996,
+        138.97146434854093,
+        120.63749643001769
+      ],
+      "peak_usage": 157.81731430684113,
+      "min_usage": 120.63749643001769
+    }
+  }
+]

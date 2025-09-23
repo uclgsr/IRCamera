@@ -1,0 +1,14 @@
+# IRCamera Thesis Testing Suite Requirements
+
+# Core Python packages (often pre-installed)
+numpy>=1.20.0
+matplotlib>=3.3.0
+
+# Optional packages for enhanced functionality
+# These are gracefully handled if not available
+pandas>=1.2.0
+scipy>=1.6.0
+seaborn>=0.11.0
+
+# Development packages (optional)
+pytest>=6.0.0

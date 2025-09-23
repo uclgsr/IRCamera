@@ -1,0 +1,491 @@
+{
+  "summary": {
+    "total_metrics": 25,
+    "passed": 24,
+    "warnings": 1,
+    "failed": 0,
+    "pass_rate": 0.96,
+    "validation_status": "PASS"
+  },
+  "metrics": [
+    {
+      "name": "Synchronization Accuracy (Median)",
+      "measured_value": 2.1158150415599373,
+      "expected_value": 2.1,
+      "tolerance": 0.5,
+      "unit": "ms",
+      "status": "PASS",
+      "details": {
+        "data": [
+          1.686448016713924,
+          1.2492948997736104,
+          2.6981628438444094,
+          1.9871109678423557,
+          3.5682503044386165,
+          1.3016029405672709,
+          2.134550068997087,
+          2.03489819969691,
+          1.9878641922525828,
+          2.79495317829051,
+          2.64300484422494,
+          2.555415526169742,
+          2.097080014122788,
+          3.0906983404780783
+        ]
+      }
+    },
+    {
+      "name": "Synchronization Accuracy (95th Percentile)",
+      "measured_value": 3.5682503044386165,
+      "expected_value": 4.2,
+      "tolerance": 1.0,
+      "unit": "ms",
+      "status": "PASS",
+      "details": {
+        "samples": [
+          1.686448016713924,
+          1.2492948997736104,
+          2.6981628438444094,
+          1.9871109678423557,
+          3.5682503044386165,
+          1.3016029405672709,
+          2.134550068997087,
+          2.03489819969691,
+          1.9878641922525828,
+          2.79495317829051,
+          2.64300484422494,
+          2.555415526169742,
+          2.097080014122788,
+          3.0906983404780783
+        ],
+        "mean": 2.273523881243773
+      }
+    },
+    {
+      "name": "Clock Drift (Max/Hour)",
+      "measured_value": 0.9778555266896672,
+      "expected_value": 1.0,
+      "tolerance": 0.2,
+      "unit": "ms/hour",
+      "status": "PASS",
+      "details": {
+        "hourly_measurements": [
+          0.9232958810537724,
+          0.6451627636167417,
+          0.9778555266896672,
+          0.45895063722942536,
+          0.813359577622732,
+          0.7185914189774785,
+          0.9590915425674393,
+          0.8612952940586809
+        ],
+        "average": 0.7947003302269922
+      }
+    },
+    {
+      "name": "Network Latency (Local Gigabit)",
+      "measured_value": 22.503380809430265,
+      "expected_value": 23,
+      "tolerance": 4.6000000000000005,
+      "unit": "ms",
+      "status": "PASS",
+      "details": {
+        "samples": [
+          22.760141391706558,
+          19.817920547542677,
+          21.244430127611963,
+          25.43122411187589,
+          19.766185939799815,
+          25.186923171385278,
+          24.346756539887917,
+          23.499294319177064,
+          19.458771874103242,
+          23.522160071212234
+        ],
+        "condition": "Local Gigabit"
+      }
+    },
+    {
+      "name": "Network Latency (Enterprise WiFi)",
+      "measured_value": 186.74677496155533,
+      "expected_value": 187,
+      "tolerance": 37.4,
+      "unit": "ms",
+      "status": "PASS",
+      "details": {
+        "samples": [
+          167.43599849900735,
+          170.67363557598284,
+          198.62643509850665,
+          193.83216336290508,
+          188.61636022662466,
+          184.72067530953979,
+          196.63541684874923,
+          202.52577923281848,
+          179.35336065038445,
+          185.04792481103473
+        ],
+        "condition": "Enterprise WiFi"
+      }
+    },
+    {
+      "name": "Thermal Data Rate",
+      "measured_value": 0.28650267249098554,
+      "expected_value": 0.29,
+      "tolerance": 0.0435,
+      "unit": "MB/s",
+      "status": "PASS",
+      "details": {
+        "measurements": [
+          0.2806583066681197,
+          0.29293333215637085,
+          0.28750260519147935,
+          0.31278605971618106,
+          0.2339654102956648
+        ],
+        "min": 0.2339654102956648,
+        "max": 0.3314853393525464,
+        "std_dev": 0.02567938748720658
+      }
+    },
+    {
+      "name": "GSR Data Rate",
+      "measured_value": 0.05103078439474759,
+      "expected_value": 0.05,
+      "tolerance": 0.0075,
+      "unit": "MB/s",
+      "status": "PASS",
+      "details": {
+        "measurements": [
+          0.05497509514758828,
+          0.05623763056573031,
+          0.054779018378842276,
+          0.04797378699600107,
+          0.0504317678163094
+        ],
+        "min": 0.04322531338681341,
+        "max": 0.05623763056573031,
+        "std_dev": 0.003835556375197509
+      }
+    },
+    {
+      "name": "RGB Video Rate",
+      "measured_value": 0.8643117265384805,
+      "expected_value": 0.87,
+      "tolerance": 0.1305,
+      "unit": "MB/s",
+      "status": "PASS",
+      "details": {
+        "measurements": [
+          0.8511903836490192,
+          0.8191705199335997,
+          0.8578111710439061,
+          0.8787281772137161,
+          0.8965303689131853
+        ],
+        "min": 0.7279721864748403,
+        "max": 0.9811832996284542,
+        "std_dev": 0.06576079164788749
+      }
+    },
+    {
+      "name": "Total Combined Rate",
+      "measured_value": 1.2152290441674305,
+      "expected_value": 1.21,
+      "tolerance": 0.1815,
+      "unit": "MB/s",
+      "status": "PASS",
+      "details": {
+        "measurements": [
+          1.2908874227077194,
+          1.2297707970634746,
+          1.1893752340028936,
+          1.2416330061175438,
+          1.066049743066722
+        ],
+        "min": 1.018462836838132,
+        "max": 1.4374290748309029,
+        "std_dev": 0.09760553157003092
+      }
+    },
+    {
+      "name": "Thermal Data Volume",
+      "measured_value": 0.49759164320452554,
+      "expected_value": 0.53,
+      "tolerance": 0.053000000000000005,
+      "unit": "GB",
+      "status": "PASS",
+      "details": {
+        "session_duration": 30,
+        "calculated_from_rate": 0.509765625
+      }
+    },
+    {
+      "name": "GSR Data Volume",
+      "measured_value": 0.09011663078306778,
+      "expected_value": 0.09,
+      "tolerance": 0.009,
+      "unit": "GB",
+      "status": "PASS",
+      "details": {
+        "session_duration": 30,
+        "calculated_from_rate": 0.087890625
+      }
+    },
+    {
+      "name": "RGB Video Volume",
+      "measured_value": 1.4557384418146904,
+      "expected_value": 1.56,
+      "tolerance": 0.15600000000000003,
+      "unit": "GB",
+      "status": "PASS",
+      "details": {
+        "session_duration": 30,
+        "calculated_from_rate": 1.529296875
+      }
+    },
+    {
+      "name": "Total Session Volume",
+      "measured_value": 2.0487921899599932,
+      "expected_value": 2.3,
+      "tolerance": 0.22999999999999998,
+      "unit": "GB",
+      "status": "WARNING",
+      "details": {
+        "session_duration": 30,
+        "calculated_from_rate": 2.126953125
+      }
+    },
+    {
+      "name": "Android Memory (Average)",
+      "measured_value": 121.22088846270168,
+      "expected_value": 120,
+      "tolerance": 30.0,
+      "unit": "MB",
+      "status": "PASS",
+      "details": {
+        "measurements": [
+          128.7549372614441,
+          132.90841296322137,
+          121.3926364235079,
+          116.45836893461458,
+          113.07325133692208
+        ],
+        "limit": 200,
+        "peak": 132.90841296322137,
+        "status": "PASS"
+      }
+    },
+    {
+      "name": "Android Memory (Peak)",
+      "measured_value": 178.2431778601618,
+      "expected_value": 180,
+      "tolerance": 45.0,
+      "unit": "MB",
+      "status": "PASS",
+      "details": {
+        "measurements": [
+          181.61325960908442,
+          182.220376085713,
+          163.0166961732216,
+          171.86683014774795,
+          162.81200139408577
+        ],
+        "limit": 300,
+        "peak": 199.79897354747595,
+        "status": "PASS"
+      }
+    },
+    {
+      "name": "Android CPU (Average)",
+      "measured_value": 15.425159078560592,
+      "expected_value": 15,
+      "tolerance": 3.75,
+      "unit": "%",
+      "status": "PASS",
+      "details": {
+        "measurements": [
+          12.881227272678286,
+          20.124854342643317,
+          12.303428272306263,
+          14.937936040060539,
+          13.584120495031224
+        ],
+        "limit": 30,
+        "peak": 21.615972016150852,
+        "status": "PASS"
+      }
+    },
+    {
+      "name": "Android CPU (Peak)",
+      "measured_value": 23.559800016438896,
+      "expected_value": 25,
+      "tolerance": 6.25,
+      "unit": "%",
+      "status": "PASS",
+      "details": {
+        "measurements": [
+          22.167324472067722,
+          28.48471266911822,
+          33.731782429099354,
+          26.96663390840389,
+          18.11543973885381
+        ],
+        "limit": 50,
+        "peak": 33.731782429099354,
+        "status": "PASS"
+      }
+    },
+    {
+      "name": "Background CPU",
+      "measured_value": 4.027262229203234,
+      "expected_value": 4,
+      "tolerance": 1.0,
+      "unit": "%",
+      "status": "PASS",
+      "details": {
+        "measurements": [
+          3.5292835164667586,
+          4.887851343658567,
+          3.0570592746450034,
+          3.6304228273154227,
+          4.4197668634480625
+        ],
+        "limit": 10,
+        "peak": 6.18244106989661,
+        "status": "PASS"
+      }
+    },
+    {
+      "name": "PC Memory (Average)",
+      "measured_value": 250.43397962366632,
+      "expected_value": 250,
+      "tolerance": 50.0,
+      "unit": "MB",
+      "status": "PASS",
+      "details": {
+        "measurements": [
+          262.198221512993,
+          291.7084909372582,
+          208.69705083608372
+        ],
+        "device_count": 1,
+        "limit": 500
+      }
+    },
+    {
+      "name": "PC Memory (Peak)",
+      "measured_value": 442.8751240993581,
+      "expected_value": 450,
+      "tolerance": 90.0,
+      "unit": "MB",
+      "status": "PASS",
+      "details": {
+        "measurements": [
+          499.51335281487104,
+          473.2729021563705,
+          406.18904456435223
+        ],
+        "device_count": 1,
+        "limit": 800
+      }
+    },
+    {
+      "name": "Multi-device Memory",
+      "measured_value": 415.5528891370023,
+      "expected_value": 400,
+      "tolerance": 80.0,
+      "unit": "MB",
+      "status": "PASS",
+      "details": {
+        "measurements": [
+          434.1547752190005,
+          412.3819793168263,
+          366.7133616952296
+        ],
+        "device_count": 4,
+        "limit": 600
+      }
+    },
+    {
+      "name": "Message Success Rate",
+      "measured_value": 99.66412793976954,
+      "expected_value": 99.7,
+      "tolerance": 9.97,
+      "unit": "%",
+      "status": "PASS",
+      "details": {
+        "measurements": [
+          100,
+          100,
+          100,
+          99.28784483212489,
+          100
+        ],
+        "threshold": 99.0,
+        "status": "PASS",
+        "std_dev": 0.26142323586744387
+      }
+    },
+    {
+      "name": "Connection Recovery Time",
+      "measured_value": 3.5725140818055423,
+      "expected_value": 3.5,
+      "tolerance": 0.35000000000000003,
+      "unit": "seconds",
+      "status": "PASS",
+      "details": {
+        "measurements": [
+          3.440160777223785,
+          4.810672760614129,
+          2.7741668263413133,
+          5.5688967462935635,
+          1.560561518699051
+        ],
+        "threshold": 5.0,
+        "status": "PASS",
+        "std_dev": 1.0623492984918053
+      }
+    },
+    {
+      "name": "TLS Overhead",
+      "measured_value": 12.200935079817851,
+      "expected_value": 12,
+      "tolerance": 1.2000000000000002,
+      "unit": "ms",
+      "status": "PASS",
+      "details": {
+        "measurements": [
+          11.740149891262975,
+          11.75689528843279,
+          10.241284536465024,
+          14.242701782181257,
+          12.573232506055804
+        ],
+        "threshold": 20,
+        "status": "PASS",
+        "std_dev": 1.9518911731860087
+      }
+    },
+    {
+      "name": "Heartbeat Interval",
+      "measured_value": 1.975223107109277,
+      "expected_value": 2.0,
+      "tolerance": 0.2,
+      "unit": "seconds",
+      "status": "PASS",
+      "details": {
+        "measurements": [
+          2.0117905892281205,
+          1.9690830264846475,
+          1.9852997322825172,
+          1.865521034363985,
+          1.8862482386131334
+        ],
+        "threshold": 2.0,
+        "status": "PASS",
+        "std_dev": 0.10936947457116136
+      }
+    }
+  ]
+}
