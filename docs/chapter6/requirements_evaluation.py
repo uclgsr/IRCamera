@@ -15,11 +15,18 @@ Generated outputs:
 
 import json
 import csv
-import pandas as pd
 from pathlib import Path
 from datetime import datetime
 from typing import Dict, List, Any, Tuple, Optional
 import logging
+
+# Optional pandas import - fallback to basic functionality if not available
+try:
+    import pandas as pd
+    HAS_PANDAS = True
+except ImportError:
+    HAS_PANDAS = False
+    print("Warning: pandas not available - using basic CSV functionality")
 
 logger = logging.getLogger(__name__)
 
@@ -208,8 +215,17 @@ class RequirementsEvaluationFramework:
             })
         
         # Save as CSV
-        df = pd.DataFrame(evaluation_results)
-        df.to_csv(self.output_dir / "requirements_vs_outcomes_table.csv", index=False)
+        if HAS_PANDAS:
+            df = pd.DataFrame(evaluation_results)
+            df.to_csv(self.output_dir / "requirements_vs_outcomes_table.csv", index=False)
+        else:
+            # Fallback CSV writing
+            with open(self.output_dir / "requirements_vs_outcomes_table.csv", 'w', newline='') as f:
+                if evaluation_results:
+                    fieldnames = evaluation_results[0].keys()
+                    writer = csv.DictWriter(f, fieldnames=fieldnames)
+                    writer.writeheader()
+                    writer.writerows(evaluation_results)
         
         # Generate formatted markdown table
         with open(self.output_dir / "requirements_evaluation_table.md", 'w') as f:
@@ -435,8 +451,17 @@ class RequirementsEvaluationFramework:
         ]
         
         # Save performance comparison
-        df = pd.DataFrame(performance_data)
-        df.to_csv(self.output_dir / "performance_comparison.csv", index=False)
+        if HAS_PANDAS:
+            df = pd.DataFrame(performance_data)
+            df.to_csv(self.output_dir / "performance_comparison.csv", index=False)
+        else:
+            # Fallback CSV writing
+            with open(self.output_dir / "performance_comparison.csv", 'w', newline='') as f:
+                if performance_data:
+                    fieldnames = performance_data[0].keys()
+                    writer = csv.DictWriter(f, fieldnames=fieldnames)
+                    writer.writeheader()
+                    writer.writerows(performance_data)
         
         # Generate analysis report
         with open(self.output_dir / "performance_analysis.md", 'w') as f:

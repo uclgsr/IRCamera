@@ -908,19 +908,19 @@ timestamp_ns,sample_number,gsr_kohm,raw_adc
 
 #### Session Metadata (JSON)
 ```json
-{
+{{
   "session_id": "session_20231105_143022",
   "start_timestamp_ns": 1699123456789012345,
   "end_timestamp_ns": 1699123756789012345,
   "devices": ["android_device_1"],
   "sensors": ["thermal", "rgb", "gsr"],
   "sync_quality_ms": 5.2,
-  "performance_stats": {
+  "performance_stats": {{
     "thermal_fps": 24.5,
     "rgb_fps": 30.0,
     "gsr_hz": 127.8
-  }
-}
+  }}
+}}
 ```
 
 ## Time Synchronization Implementation

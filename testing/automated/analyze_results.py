@@ -15,14 +15,21 @@ Generated outputs:
 
 import json
 import csv
-import numpy as np
-import matplotlib.pyplot as plt
-import pandas as pd
 from pathlib import Path
 from datetime import datetime
 import statistics
 from typing import Dict, List, Any, Tuple, Optional
 import logging
+
+# Optional dependencies for advanced analysis
+try:
+    import numpy as np
+    import matplotlib.pyplot as plt
+    import pandas as pd
+    HAS_ANALYSIS_DEPS = True
+except ImportError:
+    HAS_ANALYSIS_DEPS = False
+    print("Warning: numpy, matplotlib, or pandas not available - using basic analysis only")
 
 logger = logging.getLogger(__name__)
 
