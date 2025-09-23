@@ -80,9 +80,8 @@ dependencies {
     compileOnly(files("../../app/libs/libirutils_1.2.0_2409241055.aar"))
     compileOnly(files("../../app/libs/libcommon_1.2.0_24052117.aar"))
     
-    // Core Android libraries with explicit versions to resolve conflicts
-    implementation("androidx.core:core:1.13.1")
-    implementation("androidx.recyclerview:recyclerview:1.3.2")
+    // Core Android libraries
+    implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.localbroadcastmanager)
     implementation(libs.material)
@@ -96,15 +95,12 @@ dependencies {
     implementation(libs.media3.exoplayer.dash)
     implementation(libs.media3.ui)
     
-    // Try alternative approach - Use older working SmartRefreshLayout version
-    implementation("com.scwang.smartrefresh:SmartRefreshLayout:1.1.3") {
-        exclude(group = "com.android.support")
-        exclude(group = "androidx.recyclerview")
-    }
-    implementation("com.scwang.smartrefresh:SmartRefreshHeader:1.1.3") {
-        exclude(group = "com.android.support")
-        exclude(group = "androidx.recyclerview")
-    }
+    // Use the working Maven Central SmartRefreshLayout from version catalog
+    implementation(libs.refresh.layout.kernel)
+    implementation(libs.refresh.header.classics)
+    
+    // Add support library for NestedScrollingParent compatibility
+    implementation("androidx.legacy:legacy-support-core-ui:1.0.0")
     
     testImplementation(libs.junit)
     testImplementation("org.robolectric:robolectric:4.10.3")
