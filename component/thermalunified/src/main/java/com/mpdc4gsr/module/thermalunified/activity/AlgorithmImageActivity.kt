@@ -6,7 +6,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import com.mpdc4gsr.libunified.open3d.JNITool
+import com.mpdc4gsr.libunified.ir.utils.JNITool
 import com.mpdc4gsr.module.thermalunified.R
 import com.mpdc4gsr.module.thermalunified.utils.ImageColorTools
 import org.opencv.core.CvType
