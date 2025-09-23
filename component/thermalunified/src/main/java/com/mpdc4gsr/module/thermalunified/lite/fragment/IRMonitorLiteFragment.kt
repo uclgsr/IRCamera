@@ -17,7 +17,7 @@ import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import com.elvishew.xlog.XLog
 import com.energy.ac020library.bean.IrcmdError
-import com.energy.commoncomponent.bean.RotateDegree
+import com.mpdc4gsr.libunified.common.RotateDegree
 import com.energy.irutilslibrary.LibIRTempAC020
 import com.energy.irutilslibrary.bean.GainStatus
 import com.energy.iruvc.sdkisp.LibIRProcess
@@ -64,7 +64,7 @@ import org.greenrobot.eventbus.ThreadMode
 
 class IRMonitorLiteFragment : BaseFragment(), ITsTempListener {
 
-    lateinit var temperatureView: com.infisense.usbir.view.TemperatureView
+    lateinit var temperatureView: com.mpdc4gsr.libunified.ir.view.TemperatureView
     protected lateinit var cameraView: com.topdon.lib.ui.widget.LiteSurfaceView
 
     private var configJob: Job? = null
