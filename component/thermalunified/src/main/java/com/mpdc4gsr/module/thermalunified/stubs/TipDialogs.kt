@@ -1,12 +1,18 @@
 package com.mpdc4gsr.module.thermalunified.stubs
 
+import android.app.AlertDialog
 import android.content.Context
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.widget.CheckBox
+import android.widget.TextView
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
+import com.mpdc4gsr.module.thermalunified.R
 
 /**
- * Stub implementations for missing dialogs
- * These are placeholders to resolve compilation issues
+ * Functional implementations for missing dialogs
+ * These provide basic working functionality for an MVP
  */
 
 class TipGuideDialog : DialogFragment() {
@@ -17,6 +23,19 @@ class TipGuideDialog : DialogFragment() {
         fun newInstance(): TipGuideDialog {
             return TipGuideDialog()
         }
+    }
+    
+    override fun onCreateDialog(savedInstanceState: Bundle?): android.app.Dialog {
+        return AlertDialog.Builder(requireContext())
+            .setTitle("Guide")
+            .setMessage("This is a guide dialog for thermal camera functionality.")
+            .setPositiveButton("Got it") { _, _ ->
+                closeEvent?.invoke(false)
+            }
+            .setNegativeButton("Don't show again") { _, _ ->
+                closeEvent?.invoke(true)
+            }
+            .create()
     }
     
     fun show(fragmentManager: FragmentManager, tag: String) {
@@ -34,6 +53,19 @@ class TipPreviewDialog : DialogFragment() {
         }
     }
     
+    override fun onCreateDialog(savedInstanceState: Bundle?): android.app.Dialog {
+        return AlertDialog.Builder(requireContext())
+            .setTitle("Preview Tip")
+            .setMessage("This is a preview tip dialog for thermal camera preview.")
+            .setPositiveButton("Continue") { _, _ ->
+                closeEvent?.invoke(false)
+            }
+            .setNegativeButton("Don't show again") { _, _ ->
+                closeEvent?.invoke(true)
+            }
+            .create()
+    }
+    
     fun show(fragmentManager: FragmentManager, tag: String) {
         super.show(fragmentManager, tag)
     }
@@ -41,7 +73,7 @@ class TipPreviewDialog : DialogFragment() {
 
 class TipObserveDialog {
     class Builder(private val context: Context) {
-        private var title: String = ""
+        private var title: String = "Tip"
         private var message: String = ""
         private var cancelListener: ((Boolean) -> Unit)? = null
         
@@ -60,17 +92,38 @@ class TipObserveDialog {
             return this
         }
         
-        fun create(): TipObserveDialog = TipObserveDialog()
+        fun create(): TipObserveDialog = TipObserveDialog().apply {
+            this.context = this@Builder.context
+            this.title = this@Builder.title  
+            this.message = this@Builder.message
+            this.cancelListener = this@Builder.cancelListener
+        }
     }
     
+    private lateinit var context: Context
+    private var title: String = ""
+    private var message: String = ""
+    private var cancelListener: ((Boolean) -> Unit)? = null
+    
     fun show() {
-        // Stub implementation
+        val dialog = AlertDialog.Builder(context)
+            .setTitle(title)
+            .setMessage(message)
+            .setPositiveButton("OK") { _, _ ->
+                cancelListener?.invoke(false)
+            }
+            .setNegativeButton("Don't show again") { _, _ ->
+                cancelListener?.invoke(true) 
+            }
+            .create()
+        
+        dialog.show()
     }
 }
 
 class TipDialog {
     class Builder(private val context: Context) {
-        private var title: String = ""
+        private var title: String = "Tip"
         private var message: String = ""
         private var positiveListener: (() -> Unit)? = null
         private var negativeListener: (() -> Unit)? = null
@@ -95,21 +148,64 @@ class TipDialog {
             return this
         }
         
-        fun create(): TipDialog = TipDialog()
+        fun create(): TipDialog = TipDialog().apply {
+            this.context = this@Builder.context
+            this.title = this@Builder.title
+            this.message = this@Builder.message
+            this.positiveListener = this@Builder.positiveListener
+            this.negativeListener = this@Builder.negativeListener
+        }
     }
     
+    private lateinit var context: Context
+    private var title: String = ""
+    private var message: String = ""
+    private var positiveListener: (() -> Unit)? = null
+    private var negativeListener: (() -> Unit)? = null
+    
     fun show() {
-        // Stub implementation
+        val builder = AlertDialog.Builder(context)
+            .setTitle(title)
+            .setMessage(message)
+            .setPositiveButton("Yes") { _, _ ->
+                positiveListener?.invoke()
+            }
+            
+        negativeListener?.let {
+            builder.setNegativeButton("No") { _, _ ->
+                it.invoke()
+            }
+        }
+        
+        builder.create().show()
     }
 }
 
 class TempAlarmSetDialog {
     class Builder(private val context: Context) {
-        fun setNum(num: String): Builder = this
-        fun create(): TempAlarmSetDialog = TempAlarmSetDialog()
+        private var numText: String = ""
+        
+        fun setNum(num: String): Builder {
+            numText = num
+            return this
+        }
+        
+        fun create(): TempAlarmSetDialog = TempAlarmSetDialog().apply {
+            this.context = this@Builder.context
+            this.numText = this@Builder.numText
+        }
     }
     
+    private lateinit var context: Context
+    private var numText: String = ""
+    
     fun show() {
-        // Stub implementation
+        AlertDialog.Builder(context)
+            .setTitle("Temperature Alarm")
+            .setMessage("Set temperature alarm: $numText")
+            .setPositiveButton("OK") { _, _ -> }
+            .setNegativeButton("Cancel") { _, _ -> }
+            .create()
+            .show()
     }
 }
