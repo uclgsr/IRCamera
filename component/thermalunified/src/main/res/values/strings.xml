@@ -47,4 +47,15 @@
     <string name="tip_delete">Delete</string>
     <string name="also_del_from_phone_album">Also delete from phone album</string>
     <string name="test_results_delete_success">Deletion successful</string>
+    
+    <!-- Missing strings for IRThermalFragment -->
+    <string name="tc_has_line_device">Wired Device</string>
+    <string name="device_connect_tip">The device is not connected with your phone. Please connect.</string>
+    <string name="app_tip">Tip</string>
+    <string name="app_camera_content">Camera access permission is required</string>
+    <string name="app_open">Open</string>
+    <string name="app_cancel">Cancel</string>
+    <string name="app_confirm">Confirm</string>
+    <string name="tip_target_sdk">The current mobile device cannot be connected, try to update the software version.</string>
+    <string name="permission_request_storage_app">Storage permission is required</string>
 </resources>
