@@ -28,6 +28,7 @@ import com.mpdc4gsr.module.thermalunified.R
 import com.mpdc4gsr.module.thermalunified.adapter.PDFAdapter
 import com.mpdc4gsr.module.thermalunified.report.viewmodel.PdfViewModel
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
+import com.mpdc4gsr.libunified.R as LibR
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -71,7 +72,7 @@ class PDFListActivity : BaseViewModelActivity<PdfViewModel>() {
             it?.let { data ->
                 if (page == 1) {
 
-                    if (data.code == LMS.SUCCESS) {
+                    if (data.code == 2000) {
                         reportAdapter.loadMoreModule.isEnableLoadMore =
                             !data.data?.records.isNullOrEmpty()
                         fragmentPdfRecyclerLay.finishRefresh()
@@ -81,7 +82,7 @@ class PDFListActivity : BaseViewModelActivity<PdfViewModel>() {
                     reportAdapter.setNewInstance(data.data?.records)
                 } else {
                     data.data?.records?.let { it1 -> reportAdapter.addData(it1) }
-                    if (data.code == LMS.SUCCESS) {
+                    if (data.code == 2000) {
                         if (data.data?.records.isNullOrEmpty()) {
                             reportAdapter.loadMoreModule.loadMoreEnd()
                         } else {
@@ -153,7 +154,7 @@ class PDFListActivity : BaseViewModelActivity<PdfViewModel>() {
                                 LanguageUtil.getLanguageId(Utils.getApp())
                             )
                             params.addBodyParameter("reportType", 2)
-                            HttpProxy.instant.post(
+                            HttpProxy.Companion.instant.post(
                                 url, params,
                                 object :
                                     IResponseCallback {
