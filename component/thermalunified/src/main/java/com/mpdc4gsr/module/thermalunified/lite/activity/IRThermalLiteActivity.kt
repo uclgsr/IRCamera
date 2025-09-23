@@ -1025,8 +1025,7 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
                                 if (needShowTip && SharedManager.isTipPinP) {
                                     TipDialog.Builder(this@IRThermalLiteActivity)
                                         .setMessage("Picture-in-Picture mode tip")
-                                        .setCancelStr("Don't show again")
-                                        .setCancelEvent {
+                                        .setCancelListener("Don't show again") {
                                             SharedManager.isTipPinP = false
                                         }
                                         .create()
@@ -1407,7 +1406,7 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
             FenceType.TREND -> {
                 if (SharedManager.isNeedShowTrendTips) {
                     NotTipsSelectDialog(this)
-                        .setTipsResId(R.string.thermal_trend_tips)
+                        .setTipsResId(LibR.string.thermal_trend_tips)
                         .setOnConfirmListener {
                             SharedManager.isNeedShowTrendTips = !it
                         }
@@ -1795,12 +1794,12 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
                         if (doNotAskAgain) {
 
                             if (BaseApplication.instance.isDomestic()) {
-                                ToastUtils.showShort(getString(R.string.app_storage_content))
+                                ToastUtils.showShort(getString(LibR.string.app_storage_content))
                                 return
                             }
                             TipDialog.Builder(this@IRThermalLiteActivity)
                                 .setTitleMessage(getString(R.string.app_tip))
-                                .setMessage(R.string.app_storage_content)
+                                .setMessage(LibR.string.app_storage_content)
                                 .setPositiveListener(R.string.app_open) {
                                     AppUtils.launchAppDetailsSettings()
                                 }
