@@ -81,6 +81,8 @@ dependencies {
     compileOnly(files("../../app/libs/libcommon_1.2.0_24052117.aar"))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
+    implementation("androidx.core:core:1.13.1") // For NestedScrollingParent support
+    implementation("androidx.recyclerview:recyclerview:1.3.2") // For NestedScrolling support
     implementation(libs.localbroadcastmanager)
     implementation(libs.material)
     implementation(libs.utilcode)
@@ -92,8 +94,8 @@ dependencies {
     implementation(libs.media3.exoplayer)
     implementation(libs.media3.exoplayer.dash)
     implementation(libs.media3.ui)
-    // implementation(libs.refresh.layout.kernel)
-    // implementation(libs.refresh.header.classics)
+    implementation(libs.refresh.layout.kernel)
+    implementation(libs.refresh.header.classics)
     testImplementation(libs.junit)
     testImplementation("org.robolectric:robolectric:4.10.3")
     testImplementation("androidx.test:core:1.5.0")

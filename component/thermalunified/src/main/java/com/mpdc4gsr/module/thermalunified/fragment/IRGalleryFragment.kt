@@ -50,7 +50,7 @@ class IRGalleryFragment : BaseFragment() {
 
     private val tabViewModel: IRGalleryTabViewModel by activityViewModels()
 
-    private val adapter = GalleryAdapter()
+    private lateinit var adapter: GalleryAdapter
 
     private lateinit var refreshLayout: SmartRefreshLayout
     private lateinit var clDownload: View
@@ -64,6 +64,7 @@ class IRGalleryFragment : BaseFragment() {
     override fun initContentView() = R.layout.fragment_ir_gallery
 
     override fun initView() {
+        adapter = GalleryAdapter(requireContext())
 
         refreshLayout = requireView().findViewById(R.id.refresh_layout)
         clDownload = requireView().findViewById(R.id.cl_download)
@@ -87,11 +88,11 @@ class IRGalleryFragment : BaseFragment() {
         clShare.setOnClickListener {
             val selectList = adapter.buildSelectList()
             if (selectList.size == 0) {
-                ToastTools.showShort(getString(R.string.tip_least_select))
+                ToastTools.showShort(getString(LibR.string.tip_least_select))
                 return@setOnClickListener
             }
             if (selectList.size > 9) {
-                ToastTools.showShort(getString(R.string.Limite_di_9carte))
+                ToastTools.showShort(getString(LibR.string.Limite_di_9carte))
                 return@setOnClickListener
             }
             downloadList(selectList, true)
@@ -102,7 +103,7 @@ class IRGalleryFragment : BaseFragment() {
         clDownload.setOnClickListener {
             val selectList = adapter.buildSelectList()
             if (selectList.size == 0) {
-                ToastTools.showShort(getString(R.string.tip_least_select))
+                ToastTools.showShort(getString(LibR.string.tip_least_select))
                 return@setOnClickListener
             }
             downloadList(selectList, false)
@@ -161,7 +162,7 @@ class IRGalleryFragment : BaseFragment() {
     fun galleryDownload(event: GalleryDownloadEvent) {
         for (i in adapter.dataList.indices) {
             val data = adapter.dataList[i]
-            if (data.name == event.filename) {
+            if (data is GalleryBean && data.name == event.filename) {
                 data.hasDownload = true
                 adapter.notifyItemChanged(i)
                 return
@@ -201,19 +202,19 @@ class IRGalleryFragment : BaseFragment() {
         adapter.selectCallback = {
             tabViewModel.selectSizeLD.value = it.size
         }
-        adapter.itemClickCallback = {
-            val galleryBean: GalleryBean = adapter.dataList[it]
+        adapter.itemClickCallback = { position: Int ->
+            val galleryBean: GalleryBean = adapter.dataList[position] as GalleryBean
             if (galleryBean.name.uppercase().endsWith(".MP4")) {
                 NavigationManager.getInstance().build(RouterConfig.IR_VIDEO_GSY)
                     .withBoolean("isRemote", currentDirType == DirType.TS004_REMOTE)
-                    .withParcelable("data", adapter.dataList[it])
+                    .withParcelable("data", adapter.dataList[position] as GalleryBean)
                     .navigation(requireActivity())
             } else {
                 val sourceList: ArrayList<GalleryBean> = viewModel.sourceListLD.value ?: ArrayList()
-                var position = if (it >= sourceList.size) sourceList.size - 1 else it
-                for (i in position downTo 0) {
+                var navPosition = if (position >= sourceList.size) sourceList.size - 1 else position
+                for (i in navPosition downTo 0) {
                     if (sourceList[i].path == galleryBean.path) {
-                        position = i
+                        navPosition = i
                         break
                     }
                 }
@@ -221,13 +222,13 @@ class IRGalleryFragment : BaseFragment() {
                 if (currentDirType == DirType.LINE || currentDirType == DirType.TC007) {
                     NavigationManager.getInstance().build(RouterConfig.IR_GALLERY_DETAIL_01)
                         .withBoolean(ExtraKeyConfig.IS_TC007, currentDirType == DirType.TC007)
-                        .withInt("position", position)
+                        .withInt("position", navPosition)
                         .withParcelableArrayList("list", sourceList)
                         .navigation(requireActivity())
                 } else {
                     NavigationManager.getInstance().build(RouterConfig.IR_GALLERY_DETAIL_04)
                         .withBoolean("isRemote", currentDirType == DirType.TS004_REMOTE)
-                        .withInt("position", position)
+                        .withInt("position", navPosition)
                         .withParcelableArrayList("list", sourceList)
                         .navigation(requireActivity())
                 }
@@ -268,7 +269,7 @@ class IRGalleryFragment : BaseFragment() {
             ConfirmSelectDialog(requireContext()).run {
                 setTitleStr(
                     getString(
-                        R.string.tip_delete_chosen,
+                        LibR.string.tip_delete_chosen,
                         deleteList.size,
                     ),
                 )
@@ -281,7 +282,7 @@ class IRGalleryFragment : BaseFragment() {
                 show()
             }
         } else {
-            ToastTools.showShort(getString(R.string.tip_least_select))
+            ToastTools.showShort(getString(LibR.string.tip_least_select))
         }
     }
 
@@ -300,7 +301,7 @@ class IRGalleryFragment : BaseFragment() {
             if (isShare) {
                 shareImage(downloadList)
             } else {
-                ToastTools.showShort(R.string.ts004_download_complete)
+                ToastTools.showShort(LibR.string.ts004_download_complete)
             }
             tabViewModel.isEditModeLD.value = false
         } else {
@@ -324,7 +325,7 @@ class IRGalleryFragment : BaseFragment() {
                     if (isShare) {
                         shareImage(downloadList)
                     } else {
-                        ToastTools.showShort(R.string.ts004_download_complete)
+                        ToastTools.showShort(LibR.string.ts004_download_complete)
                     }
                     tabViewModel.isEditModeLD.value = false
                 } else {
