@@ -55,7 +55,7 @@ class ChartMonitorView : LineChart, OnChartGestureListener {
             this.isDragEnabled = true
             this.setDrawGridBackground(false)
             this.description = null
-            this.setBackgroundResource(LibR.color.chart_bg)
+            this.setBackgroundResource(ThermalR.color.chart_bg)
             this.setScaleEnabled(true)
             this.setPinchZoom(false)
             this.isDoubleTapToZoomEnabled = false
