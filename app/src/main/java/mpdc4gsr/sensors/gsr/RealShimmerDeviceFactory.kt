@@ -159,14 +159,18 @@ class RealShimmerDevice(
     
     override fun setDataCallback(callback: (ShimmerDataCluster) -> Unit) {
         this.dataCallback = callback
-        
+
         // Set up data callback on the actual Shimmer device
         connectedDevice?.let { device ->
-            // Note: This is simplified - real implementation would set proper data packet callback
-            // For now, we'll generate sample data to test the interface
+            // Remove any previous listeners if needed (not shown here)
+            // Set up the data packet callback using Shimmer SDK's mechanisms
             if (isStreaming) {
-                // In a real implementation, this would be handled by Shimmer's data packet callback
-                Log.d(TAG, "Data callback set on real Shimmer device")
+                // Register a listener for new data packets
+                device.setDataReceivedListener { objectCluster ->
+                    // Wrap the ObjectCluster in a RealShimmerDataCluster and invoke the callback
+                    dataCallback?.invoke(RealShimmerDataCluster(objectCluster))
+                }
+                Log.d(TAG, "Data callback registered with real Shimmer device")
             }
         }
     }
