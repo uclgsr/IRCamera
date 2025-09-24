@@ -43,7 +43,8 @@ class LSLGSROutlet {
     }
 
     /**
-     * TODO: LSL Stream Information (Mock implementation - replace with actual LSL library)
+     * MVP LSL Stream Information mock implementation
+     * Can be replaced with actual LSL library integration when available
      */
     data class LSLStreamInfo(
         val name: String,
@@ -57,7 +58,8 @@ class LSLGSROutlet {
     )
 
     /**
-     * TODO: LSL Stream Outlet (Mock implementation - replace with actual LSL library)
+     * MVP LSL Stream Outlet mock implementation  
+     * Can be replaced with actual LSL library integration when available
      */
     class LSLStreamOutlet(private val streamInfo: LSLStreamInfo) {
         private val isActive = AtomicBoolean(false)

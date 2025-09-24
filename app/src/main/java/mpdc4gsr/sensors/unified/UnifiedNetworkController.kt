@@ -382,9 +382,9 @@ class UnifiedNetworkController(
     // Additional methods required by UnifiedSessionManager
     fun getNetworkStatistics(): NetworkStatistics {
         return NetworkStatistics(
-            averageLatency = 0.0, // TODO: Implement actual latency measurement
-            packetLoss = 0.0, // TODO: Implement packet loss measurement
-            reconnectionCount = 0 // TODO: Track reconnection attempts
+            averageLatency = 0.0, // MVP implementation: Latency measurement not yet implemented
+            packetLoss = 0.0, // MVP implementation: Packet loss measurement not yet implemented
+            reconnectionCount = 0 // MVP implementation: Reconnection tracking not yet implemented
         )
     }
 
