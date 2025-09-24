@@ -78,6 +78,9 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.OutputStream
+import mpdc4gsr.ui_components.ComprehensiveSensorStatusWidget
+import mpdc4gsr.ui_components.RecordingControlsWidget
+import mpdc4gsr.viewmodel.MainActivityViewModel
 
 class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickListener {
     companion object {
@@ -85,6 +88,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
     }
 
     private val versionViewModel: VersionViewModel by viewModels()
+    private val mainViewModel: mpdc4gsr.viewmodel.MainActivityViewModel by viewModels()
 
     private var webSocketClient: WebSocketClient? = null
     private var networkClient: NetworkClient? = null
@@ -191,10 +195,170 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         initNetworking()
     }
 
-    private fun initView() {
+    private fun initializeEnhancedUIComponents() {
+        try {
+            // Initialize ComprehensiveSensorStatusWidget
+            val sensorStatusWidget = ComprehensiveSensorStatusWidget(this)
+            val sensorStatusContainer = findViewById<android.widget.FrameLayout>(R.id.sensor_status_container)
+            sensorStatusContainer?.addView(sensorStatusWidget)
 
+            // Initialize RecordingControlsWidget
+            val recordingControlsWidget = RecordingControlsWidget(this)
+            val recordingControlsContainer = findViewById<android.widget.FrameLayout>(R.id.recording_controls_container)
+            recordingControlsContainer?.addView(recordingControlsWidget)
+
+            // Setup ViewModel observers
+            setupViewModelObservers(sensorStatusWidget, recordingControlsWidget)
+
+            // Setup recording control callbacks
+            recordingControlsWidget.onLocalStartClicked = {
+                handleLocalRecordingStart()
+            }
+            recordingControlsWidget.onLocalStopClicked = {
+                handleLocalRecordingStop()
+            }
+
+            Log.i(TAG, "Enhanced UI components initialized successfully")
+
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to initialize enhanced UI components", e)
+            Toast.makeText(this, "UI initialization error: ${e.message}", Toast.LENGTH_LONG).show()
+        }
+    }
+
+    private fun setupViewModelObservers(
+        sensorStatusWidget: ComprehensiveSensorStatusWidget,
+        recordingControlsWidget: RecordingControlsWidget
+    ) {
+        // Observe RGB camera state
+        mainViewModel.rgbCameraState.observe(this) { sensorState ->
+            val status = when (sensorState.status) {
+                MainActivityViewModel.SensorStatus.DISCONNECTED -> 
+                    ComprehensiveSensorStatusWidget.SensorStatus.DISCONNECTED
+                MainActivityViewModel.SensorStatus.CONNECTING -> 
+                    ComprehensiveSensorStatusWidget.SensorStatus.CONNECTING
+                MainActivityViewModel.SensorStatus.CONNECTED -> 
+                    ComprehensiveSensorStatusWidget.SensorStatus.CONNECTED
+                MainActivityViewModel.SensorStatus.STREAMING -> 
+                    ComprehensiveSensorStatusWidget.SensorStatus.STREAMING
+                MainActivityViewModel.SensorStatus.ERROR -> 
+                    ComprehensiveSensorStatusWidget.SensorStatus.ERROR
+                MainActivityViewModel.SensorStatus.SIMULATION -> 
+                    ComprehensiveSensorStatusWidget.SensorStatus.SIMULATION
+            }
+            sensorStatusWidget.updateSensorStatus("rgb_camera", status, sensorState.message)
+        }
+
+        // Observe thermal camera state
+        mainViewModel.thermalCameraState.observe(this) { sensorState ->
+            val status = when (sensorState.status) {
+                MainActivityViewModel.SensorStatus.DISCONNECTED -> 
+                    ComprehensiveSensorStatusWidget.SensorStatus.DISCONNECTED
+                MainActivityViewModel.SensorStatus.CONNECTING -> 
+                    ComprehensiveSensorStatusWidget.SensorStatus.CONNECTING
+                MainActivityViewModel.SensorStatus.CONNECTED -> 
+                    ComprehensiveSensorStatusWidget.SensorStatus.CONNECTED
+                MainActivityViewModel.SensorStatus.STREAMING -> 
+                    ComprehensiveSensorStatusWidget.SensorStatus.STREAMING
+                MainActivityViewModel.SensorStatus.ERROR -> 
+                    ComprehensiveSensorStatusWidget.SensorStatus.ERROR
+                MainActivityViewModel.SensorStatus.SIMULATION -> 
+                    ComprehensiveSensorStatusWidget.SensorStatus.SIMULATION
+            }
+            sensorStatusWidget.updateSensorStatus("thermal_camera", status, sensorState.message)
+        }
+
+        // Observe GSR sensor state
+        mainViewModel.gsrSensorState.observe(this) { sensorState ->
+            val status = when (sensorState.status) {
+                MainActivityViewModel.SensorStatus.DISCONNECTED -> 
+                    ComprehensiveSensorStatusWidget.SensorStatus.DISCONNECTED
+                MainActivityViewModel.SensorStatus.CONNECTING -> 
+                    ComprehensiveSensorStatusWidget.SensorStatus.CONNECTING
+                MainActivityViewModel.SensorStatus.CONNECTED -> 
+                    ComprehensiveSensorStatusWidget.SensorStatus.CONNECTED
+                MainActivityViewModel.SensorStatus.STREAMING -> 
+                    ComprehensiveSensorStatusWidget.SensorStatus.STREAMING
+                MainActivityViewModel.SensorStatus.ERROR -> 
+                    ComprehensiveSensorStatusWidget.SensorStatus.ERROR
+                MainActivityViewModel.SensorStatus.SIMULATION -> 
+                    ComprehensiveSensorStatusWidget.SensorStatus.SIMULATION
+            }
+            sensorStatusWidget.updateSensorStatus("shimmer_gsr", status, sensorState.message)
+        }
+
+        // Observe session state
+        mainViewModel.sessionState.observe(this) { sessionState ->
+            val controlsState = when (sessionState) {
+                MainActivityViewModel.SessionState.IDLE -> 
+                    RecordingControlsWidget.SessionState.IDLE
+                MainActivityViewModel.SessionState.STARTING -> 
+                    RecordingControlsWidget.SessionState.STARTING
+                MainActivityViewModel.SessionState.RECORDING -> 
+                    RecordingControlsWidget.SessionState.RECORDING
+                MainActivityViewModel.SessionState.STOPPING -> 
+                    RecordingControlsWidget.SessionState.STOPPING
+                MainActivityViewModel.SessionState.ERROR -> 
+                    RecordingControlsWidget.SessionState.ERROR
+                else -> RecordingControlsWidget.SessionState.IDLE
+            }
+            
+            val isRemoteTriggered = mainViewModel.isRemoteTriggered.value ?: false
+            val sessionId = mainViewModel.currentSession.value?.sessionId
+            recordingControlsWidget.updateSessionState(controlsState, sessionId, isRemoteTriggered)
+        }
+
+        // Observe status messages
+        mainViewModel.statusMessage.observe(this) { statusMessage ->
+            statusMessage?.let {
+                when (it.level) {
+                    MainActivityViewModel.StatusMessage.Level.ERROR -> {
+                        Toast.makeText(this, it.message, Toast.LENGTH_LONG).show()
+                    }
+                    MainActivityViewModel.StatusMessage.Level.WARNING -> {
+                        Toast.makeText(this, it.message, Toast.LENGTH_SHORT).show()
+                    }
+                    MainActivityViewModel.StatusMessage.Level.INFO -> {
+                        Log.i(TAG, "Status: ${it.message}")
+                    }
+                }
+            }
+        }
+    }
+
+    private fun handleLocalRecordingStart() {
+        try {
+            Log.i(TAG, "Local recording start requested")
+            // Use existing session config or create a basic one
+            val config = MainActivityViewModel.SessionConfig(
+                sessionId = "local_${System.currentTimeMillis()}",
+                modalities = listOf("thermal", "GSR", "rgb")
+            )
+            mainViewModel.startRecordingSession(config)
+            mainViewModel.setRemoteTriggered(false) // Mark as local trigger
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to start local recording", e)
+            Toast.makeText(this, "Failed to start recording: ${e.message}", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun handleLocalRecordingStop() {
+        try {
+            Log.i(TAG, "Local recording stop requested")
+            mainViewModel.stopRecordingSession()
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to stop local recording", e)
+            Toast.makeText(this, "Failed to stop recording: ${e.message}", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun initView() {
+        // Initialize permission controller
         permissionController = PermissionController(this)
         permissionController.initialize()
+
+        // Initialize enhanced UI components
+        initializeEnhancedUIComponents()
 
         if (!SharedManager.getHasShowClause()) {
             NavigationManager.build(RouterConfig.CLAUSE).navigation(this)
@@ -407,6 +571,8 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
     }
 
     private fun initData() {
+        // Initialize MainActivityViewModel components
+        mainViewModel.initializeComponents()
 
         requestAllPermissions()
 
