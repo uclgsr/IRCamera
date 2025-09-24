@@ -15,7 +15,6 @@ import android.widget.TextView
 import android.widget.Toast
 import com.topdon.ble.EasyBLE
 import androidx.core.content.ContextCompat
-import com.topdon.ble.EasyBLE
 
 // UnifiedBleManager - using EasyBLE from com.topdon.ble instead
 
@@ -38,17 +37,21 @@ class SensorSelectionDialog(
 
             try {
                 val easyBLE = EasyBLE.getDefault()
+                
+                if (easyBLE != null) {
+                    val hasConnectedShimmerDevices =
+                        easyBLE.connectedDevices.any { device ->
+                            val deviceName = device.getName()
+                            val deviceAddress = device.getAddress()
+                            deviceName?.contains("shimmer", ignoreCase = true) == true ||
+                            deviceAddress.startsWith("00:06:66") ||
+                            deviceAddress.startsWith("d0:39:72")
+                        }
 
-                val hasConnectedShimmerDevices =
-                    easyBLE.connectedDevices.any { device ->
-                        device.getName()?.contains("shimmer", ignoreCase = true) == true ||
-                        device.getAddress().startsWith("00:06:66") ||
-                        device.getAddress().startsWith("d0:39:72")
+                    if (hasConnectedShimmerDevices) {
+                        available.add(SensorType.GSR)
+                        Log.d(TAG, "Connected Shimmer GSR devices found")
                     }
-
-                if (hasConnectedShimmerDevices) {
-                    available.add(SensorType.GSR)
-                    Log.d(TAG, "Connected Shimmer GSR devices found")
                 } else {
                     // GSR sensor available even without hardware (simulation mode)
                     available.add(SensorType.GSR)
