@@ -539,7 +539,7 @@ class ComprehensiveRecordingController(
                 isHealthy = health.isHealthy
             )
         }
-        _sensorStatusFlow.tryEmit(statusList)
+        _sensorStatusFlow.value = statusList
     }
 
     private fun updateRecordingStats() {
