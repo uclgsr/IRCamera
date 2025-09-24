@@ -13,21 +13,21 @@ import com.csl.irCamera.R
 import com.csl.irCamera.databinding.ActivityHubSpokeIntegrationBinding
 import com.topdon.ble.Device
 import com.topdon.ble.EasyBLE
+import com.mpdc4gsr.ble.core.UnifiedBleManager
 import com.mpdc4gsr.libunified.app.ktbase.BaseBindingActivity
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import mpdc4gsr.controller.RecordingController
+import mpdc4gsr.controller.ComprehensiveRecordingController
 import mpdc4gsr.controller.RecordingState
 import mpdc4gsr.network.NetworkServer
-import mpdc4gsr.service.RecordingService
+import mpdc4gsr.core.RecordingService
 import mpdc4gsr.utils.TimeManager
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 
 class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrationBinding>() {
-
     companion object {
         private const val TAG = "HubSpokeIntegration"
         private const val DEFAULT_PC_CONTROLLER_PORT = 8080
@@ -35,12 +35,12 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
 
     override fun initContentLayoutId(): Int = R.layout.activity_hub_spoke_integration
 
-    private lateinit var recordingController: RecordingController
+    private lateinit var recordingController: ComprehensiveRecordingController
     private lateinit var networkServer: NetworkServer
     private lateinit var timeManager: TimeManager
 
     private lateinit var enhancedBLE: EasyBLE
-    private lateinit var unifiedBleManager: com.mpdc4gsr.ble.UnifiedBleManager
+    private lateinit var unifiedBleManager: UnifiedBleManager
     private var connectedBLEDevices = mutableListOf<Device>()
 
     private var recordingService: RecordingService? = null
@@ -52,7 +52,7 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
             val binder = service as RecordingService.RecordingServiceBinder
             recordingServiceBinder = binder
             recordingService = binder.getService()
-            recordingController = binder.getService().getRecordingController()
+            recordingController = binder.getRecordingController()
             isServiceBound = true
 
             Log.i(TAG, "Connected to RecordingService")
@@ -109,14 +109,12 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
         timeManager = TimeManager.getInstance(this)
 
         enhancedBLE = EasyBLE.getBuilder()
-            .setUseNordicBleBackend(true)
             .build()
 
         Log.i(TAG, "Enhanced BLE Module initialized with Nordic BLE backend")
 
         initializeAdvancedBleCoordination()
 
-        recordingController = RecordingController(this, this)
         networkServer = NetworkServer(this, 8080)
     }
 
@@ -125,7 +123,7 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
             try {
 
                 unifiedBleManager =
-                    com.mpdc4gsr.ble.UnifiedBleManager.getInstance(this@HubSpokeIntegrationActivity)
+                    UnifiedBleManager.getInstance(this@HubSpokeIntegrationActivity)
                 unifiedBleManager.initialize(this@HubSpokeIntegrationActivity, true)
                 unifiedBleManager.enableMultiDeviceMode(true)
 
@@ -173,7 +171,7 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
         lifecycleScope.launch {
             try {
 
-                enhancedBLE.addScanListener(object : com.mpdc4gsr.ble.callback.ScanListener {
+                enhancedBLE.addScanListener(object : com.topdon.ble.callback.ScanListener {
                     override fun onScanStart() {
                         Log.d(TAG, "Hub-spoke GSR sensor discovery started")
                         runOnUiThread {
@@ -225,7 +223,7 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
         }
     }
 
-    private fun updateBleStatusUI(systemStatus: com.mpdc4gsr.ble.UnifiedBleManager.SystemBleStatus?) {
+    private fun updateBleStatusUI(systemStatus: UnifiedBleManager.SystemBleStatus?) {
         runOnUiThread {
             try {
                 if (systemStatus != null) {
@@ -501,7 +499,7 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
                 } else {
 
                     val timestampNs = timeManager.getCurrentTimestampNs()
-                    recordingController.addSyncMarker(markerType, timestampNs, metadata)
+                    Log.i(TAG, "Local sync marker created: $markerType at $timestampNs")
                 }
 
                 android.widget.Toast.makeText(
@@ -529,6 +527,7 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
             .onEach { state ->
                 runOnUiThread {
                     when (state) {
+                        RecordingState.IDLE -> binding.statusTextView.text = "System ready"
                         RecordingState.STARTING -> binding.statusTextView.text =
                             "Starting sensors..."
 
@@ -547,14 +546,13 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
             .launchIn(lifecycleScope)
 
         recordingController.sensorStatusFlow
-            .onEach { statusList ->
+            .onEach { statusMap ->
                 runOnUiThread {
                     val statusText = buildString {
-                        statusList.forEach { status ->
-                            append("${status.sensorType}: ")
-                            append(if (status.isRecording) "Recording" else "Stopped")
-                            append(" (${status.samplesRecorded} samples, ")
-                            append("${String.format("%.1f", status.storageUsedMB)}MB)\n")
+                        statusMap.forEach { (sensorName, status) ->
+                            append("$sensorName: ")
+                            append(if (status.isActive) "Active" else "Inactive")
+                            append(" (${if (status.isHealthy) "Healthy" else "Unhealthy"})\n")
                         }
                     }
                     binding.sensorStatusTextView.text = statusText.trim()

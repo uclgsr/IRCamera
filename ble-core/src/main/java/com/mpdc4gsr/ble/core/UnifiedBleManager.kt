@@ -51,17 +51,29 @@ class UnifiedBleManager private constructor(private val application: Application
         return null
     }
 
+    data class SystemBleStatus(
+        val status: BleStatus,
+        val activeConnections: Int = 0,
+        val totalDevicesConnected: Int = 0,
+        val multiDeviceMode: Boolean = false
+    )
+
+    enum class BleStatus {
+        AVAILABLE, UNAVAILABLE, DISABLED
+    }
+
     fun getSystemStatus(): SystemBleStatus {
-        return SystemBleStatus.AVAILABLE
+        return SystemBleStatus(
+            status = BleStatus.AVAILABLE,
+            activeConnections = 0,
+            totalDevicesConnected = 0,
+            multiDeviceMode = false
+        )
     }
 
     fun isInitialized(): Boolean = true
 
     fun getContext(): Context = application
-
-    enum class SystemBleStatus {
-        AVAILABLE, UNAVAILABLE, DISABLED
-    }
 
     // Additional stub methods can be added here as needed
     interface ShimmerScanCallback {
