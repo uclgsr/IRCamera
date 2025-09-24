@@ -629,7 +629,7 @@ class UnifiedGSRRecorder(
 
     fun getAverageDataRate(): Double {
         val sessionDuration = if (recordingStartTime > 0) {
-            (System.currentTimeMillis() - recordingStartTime) / 1000.0
+            (System.nanoTime() - recordingStartTime) / 1_000_000_000.0
         } else 0.0
         return if (sessionDuration > 0) {
             recordedSamples.get().toDouble() / sessionDuration

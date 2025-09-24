@@ -1182,12 +1182,11 @@ class UnifiedSessionManager(
             val networkStats = try {
                 networkController.getNetworkStatistics()
             } catch (e: Exception) {
-
-                object {
-                    val averageLatency = 0.0
-                    val packetLoss = 0.0
-                    val reconnectionCount = 0
-                }
+                NetworkStatistics(
+                    averageLatency = 0.0,
+                    packetLoss = 0.0,
+                    reconnectionCount = 0
+                )
             }
             val syncQuality = try {
                 networkController.getCurrentSyncQuality()

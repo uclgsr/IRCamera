@@ -27,6 +27,12 @@ import javax.jmdns.JmDNS
 import javax.jmdns.ServiceEvent
 import javax.jmdns.ServiceListener
 
+data class NetworkStatistics(
+    val averageLatency: Double,
+    val packetLoss: Double,
+    val reconnectionCount: Int
+)
+
 class UnifiedNetworkController(
     private val context: Context,
     private val lifecycleOwner: LifecycleOwner
@@ -374,12 +380,12 @@ class UnifiedNetworkController(
     }
 
     // Additional methods required by UnifiedSessionManager
-    fun getNetworkStatistics(): Any {
-        return object {
-            val averageLatency = 0.0 // TODO: Implement actual latency measurement
-            val packetLoss = 0.0 // TODO: Implement packet loss measurement
-            val reconnectionCount = 0 // TODO: Track reconnection attempts
-        }
+    fun getNetworkStatistics(): NetworkStatistics {
+        return NetworkStatistics(
+            averageLatency = 0.0, // TODO: Implement actual latency measurement
+            packetLoss = 0.0, // TODO: Implement packet loss measurement
+            reconnectionCount = 0 // TODO: Track reconnection attempts
+        )
     }
 
     fun getCurrentSyncQuality(): Double {
