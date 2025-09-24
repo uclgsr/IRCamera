@@ -22,7 +22,7 @@ import com.mpdc4gsr.gsr.model.GSRSample
 import com.mpdc4gsr.gsr.model.SessionInfo
 import com.mpdc4gsr.gsr.model.SyncMark
 import com.mpdc4gsr.gsr.service.GSRRecorder
-import com.mpdc4gsr.gsr.service.MockShimmerDeviceFactory
+import mpdc4gsr.sensors.gsr.RealShimmerDeviceFactory
 import com.mpdc4gsr.gsr.service.SessionManager
 import com.mpdc4gsr.gsr.util.TimeUtil
 import com.mpdc4gsr.libunified.app.ktbase.BaseBindingActivity
@@ -209,7 +209,7 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
         permissionController = PermissionController(this)
         permissionController.initialize()
 
-        gsrRecorder = GSRRecorder(this, MockShimmerDeviceFactory())
+        gsrRecorder = GSRRecorder(this, RealShimmerDeviceFactory(this))
         sessionManager = SessionManager.getInstance(this)
 
         // Initialize RGB Camera Recorder with PreviewView
