@@ -12,7 +12,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import mpdc4gsr.sensors.gsr.GSRSensorRecorder
-import mpdc4gsr.service.RecordingService
+import mpdc4gsr.core.RecordingService
 import java.util.concurrent.atomic.AtomicReference
 
 
