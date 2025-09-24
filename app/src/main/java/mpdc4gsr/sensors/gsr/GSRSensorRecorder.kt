@@ -15,8 +15,8 @@ import com.topdon.ble.util.BluetoothPermissionUtils
 import com.mpdc4gsr.gsr.model.GSRSample
 import com.mpdc4gsr.gsr.model.SessionInfo
 import com.mpdc4gsr.gsr.model.SyncMark
-import com.mpdc4gsr.gsr.service.MockShimmerDeviceFactory
 import com.mpdc4gsr.gsr.service.ShimmerGSRRecorder
+import mpdc4gsr.sensors.unified.RealShimmerDeviceFactory
 import com.shimmerresearch.android.Shimmer
 import com.shimmerresearch.android.manager.ShimmerBluetoothManagerAndroid
 import com.shimmerresearch.bluetooth.ShimmerBluetooth.BT_STATE
@@ -215,7 +215,7 @@ class GSRSensorRecorder(
                 }
 
                 realShimmerGSRRecorder =
-                    ShimmerGSRRecorder(context, MockShimmerDeviceFactory(), samplingRateHz)
+                    ShimmerGSRRecorder(context, RealShimmerDeviceFactory(context), samplingRateHz)
 
                 val shimmerRecorder = realShimmerGSRRecorder
                 if (shimmerRecorder != null) {
@@ -242,7 +242,7 @@ class GSRSensorRecorder(
                 }
 
                 legacyGSRRecorder =
-                    LegacyGSRRecorder(context, MockShimmerDeviceFactory(), samplingRateHz)
+                    LegacyGSRRecorder(context, RealShimmerDeviceFactory(context), samplingRateHz)
 
                 if (isNetworkStreamingEnabled) {
                     try {

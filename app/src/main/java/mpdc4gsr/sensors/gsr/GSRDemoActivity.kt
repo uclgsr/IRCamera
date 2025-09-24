@@ -12,7 +12,7 @@ import com.mpdc4gsr.gsr.model.GSRSample
 import com.mpdc4gsr.gsr.model.SessionInfo
 import com.mpdc4gsr.gsr.model.SyncMark
 import com.mpdc4gsr.gsr.service.GSRRecorder
-import com.mpdc4gsr.gsr.service.MockShimmerDeviceFactory
+import mpdc4gsr.sensors.unified.RealShimmerDeviceFactory
 import com.mpdc4gsr.gsr.util.TimeUtil
 import com.mpdc4gsr.libunified.app.ktbase.BaseBindingActivity
 import kotlinx.coroutines.launch
@@ -114,7 +114,7 @@ class GSRDemoActivity : BaseBindingActivity<ActivityGsrDemoBinding>() {
         binding.stopButton.setOnClickListener { stopRecording() }
         binding.syncButton.setOnClickListener { triggerSyncEvent() }
 
-        gsrRecorder = GSRRecorder(this, MockShimmerDeviceFactory())
+        gsrRecorder = GSRRecorder(this, RealShimmerDeviceFactory(this))
         gsrRecorder.addListener(gsrListener)
         updateButtonStates()
     }
