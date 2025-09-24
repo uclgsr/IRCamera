@@ -29,7 +29,7 @@ import mpdc4gsr.config.FeatureFlags
 import mpdc4gsr.config.ProtocolVersion
 import mpdc4gsr.controller.ComprehensiveRecordingController
 import mpdc4gsr.controller.RecordingState
-import mpdc4gsr.libunified.app.StructuredLogger
+import mpdc4gsr.core.StructuredLogger
 import mpdc4gsr.network.NetworkClient
 import mpdc4gsr.network.NetworkConnectionManager
 import mpdc4gsr.network.NetworkServer
