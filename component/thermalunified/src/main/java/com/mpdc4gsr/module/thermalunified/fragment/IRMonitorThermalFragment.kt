@@ -29,7 +29,7 @@ import com.mpdc4gsr.libunified.ir.view.TemperatureView
 import com.mpdc4gsr.libunified.ir.view.TemperatureView.REGION_MODE_LINE
 import com.mpdc4gsr.libunified.ir.view.TemperatureView.REGION_MODE_POINT
 import com.mpdc4gsr.libunified.ir.view.TemperatureView.REGION_MODE_RECTANGLE
-import com.mpdc4gsr.libunified.app.bean.event.device.DeviceCameraEvent
+
 import com.mpdc4gsr.libunified.app.common.SaveSettingUtil
 import com.mpdc4gsr.libunified.app.config.DeviceConfig
 import com.mpdc4gsr.libunified.app.ktbase.BaseFragment
@@ -143,8 +143,23 @@ class IRMonitorThermalFragment : BaseFragment(), ITsTempListener {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun irEvent(event: IRMsgEvent) {
-        if (event.code == MsgCode.RESTART_USB) {
-            restartusbcamera()
+        when (event.code) {
+            MsgCode.RESTART_USB -> {
+                restartusbcamera()
+            }
+            
+            100 -> {
+                showLoadingDialog()
+            }
+
+            101 -> {
+                lifecycleScope.launch {
+                    delay(500)
+                    isConfigWait = false
+                    delay(1000)
+                    dismissLoadingDialog()
+                }
+            }
         }
     }
 
@@ -422,25 +437,7 @@ class IRMonitorThermalFragment : BaseFragment(), ITsTempListener {
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun cameraEvent(event: DeviceCameraEvent) {
-        when (event.action) {
-            100 -> {
 
-                showLoadingDialog()
-            }
-
-            101 -> {
-
-                lifecycleScope.launch {
-                    delay(500)
-                    isConfigWait = false
-                    delay(1000)
-                    dismissLoadingDialog()
-                }
-            }
-        }
-    }
 
     private var isConfigWait = true
 

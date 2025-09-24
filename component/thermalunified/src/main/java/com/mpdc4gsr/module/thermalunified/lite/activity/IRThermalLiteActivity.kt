@@ -2,7 +2,7 @@ package com.mpdc4gsr.module.thermalunified.lite.activity
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.app.ProgressDialog
+import com.mpdc4gsr.libunified.ui.dialog.ProgressDialog
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
@@ -1289,7 +1289,7 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
             mProgressDialog?.setMessage("Loading...")
             mProgressDialog?.show()
         } else {
-            if (!mProgressDialog?.isShowing!!) {
+            if (!mProgressDialog?.isShowing()!!) {
                 mProgressDialog?.show()
             }
         }
