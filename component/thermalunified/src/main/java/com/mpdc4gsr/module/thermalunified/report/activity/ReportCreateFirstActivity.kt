@@ -197,8 +197,12 @@ class ReportCreateFirstActivity : BaseActivity(), View.OnClickListener {
             R.id.tv_next -> {
                 val reportInfoBean = buildReportInfo()
                 val reportConditionBean = buildReportCondition()
-                val imageTempBean: ImageTempBean? =
+                val imageTempBean: ImageTempBean? = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+                    intent.getParcelableExtra(ExtraKeyConfig.IMAGE_TEMP_BEAN, ImageTempBean::class.java)
+                } else {
+                    @Suppress("DEPRECATION")
                     intent.getParcelableExtra(ExtraKeyConfig.IMAGE_TEMP_BEAN)
+                }
                 val fileAbsolutePath = intent.getStringExtra(ExtraKeyConfig.FILE_ABSOLUTE_PATH)
                 if (fileAbsolutePath != null && imageTempBean != null) {
                     NavigationManager.getInstance().build(RouterConfig.REPORT_CREATE_SECOND)
@@ -249,6 +253,7 @@ class ReportCreateFirstActivity : BaseActivity(), View.OnClickListener {
         try {
             if (location != null) {
                 val gc = Geocoder(this, Locale.getDefault())
+                @Suppress("DEPRECATION")
                 result =
                     gc.getFromLocation(
                         location.latitude,
@@ -326,7 +331,7 @@ class ReportCreateFirstActivity : BaseActivity(), View.OnClickListener {
             val timeStr = "$year-$month-$day $hour:$minute:$second"
             val pattern = "yyyy-MM-dd HH:mm:ss"
             val time: Long =
-                SimpleDateFormat(pattern, Locale.getDefault()).parse(timeStr, ParsePosition(0)).time
+                SimpleDateFormat(pattern, Locale.getDefault()).parse(timeStr, ParsePosition(0))?.time ?: 0L
             tvReportDate.text = TimeUtils.millis2String(time, "yyyy.MM.dd HH:mm")
             startTime = time
         }
