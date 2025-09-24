@@ -128,9 +128,9 @@ class RAWCaptureTestActivity : AppCompatActivity() {
 
     private fun observeCameraStatus() {
         lifecycleScope.launch {
-            rgbCameraRecorder?.statusFlow?.collect { status ->
+            rgbCameraRecorder?.getStatusFlow()?.collect { status ->
                 runOnUiThread {
-                    binding.cameraStatusText.text = "Camera: ${status.displayText}"
+                    binding.cameraStatusText.text = "Camera: ${if (status.isRecording) "Recording" else "Ready"} - Rate: ${status.currentDataRate}"
                 }
             }
         }
@@ -142,7 +142,7 @@ class RAWCaptureTestActivity : AppCompatActivity() {
 
         val features = mutableListOf<String>()
         if (binding.enableVideoSwitch.isChecked) {
-            features.add(if (binding.enable4kSwitch.isChecked) "4K Video" else "1080p Video")
+            features.add(if (binding.enable4KSwitch.isChecked) "4K Video" else "1080p Video")
         }
         if (binding.enableRawCaptureSwitch.isChecked) {
             val rawType = if (isStage3Compatible) "Stage 3/Level 3 DNG" else "Standard RAW"
