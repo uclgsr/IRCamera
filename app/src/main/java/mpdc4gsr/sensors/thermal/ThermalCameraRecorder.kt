@@ -212,13 +212,13 @@ class ThermalCameraRecorder(
         val thermalProcessingTime: Double,
         val networkStreamingTime: Double,
         val memoryUsage: Double,
-        val averageFrameRate: Double = 0.0,
-        val frameProcessingTimeMs: Double = 0.0,
-        val memoryUsageMB: Double = 0.0,
-        val cpuUsagePercent: Double = 0.0,
-        val thermalDrift: Double = 0.0,
-        val calibrationAccuracy: Double = 0.0,
-        val networkLatencyMs: Double = 0.0
+        val averageFrameRate: Double? = null,
+        val frameProcessingTimeMs: Double? = null,
+        val memoryUsageMB: Double? = null,
+        val cpuUsagePercent: Double? = null,
+        val thermalDrift: Double? = null,
+        val calibrationAccuracy: Double? = null,
+        val networkLatencyMs: Double? = null
     )
 
 
