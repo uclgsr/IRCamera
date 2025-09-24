@@ -375,8 +375,12 @@ class SessionLifecycleTestActivity : FragmentActivity() {
             Log.d(TAG, "MockRgbSensor.cleanup() called")
         }
 
+        private fun mockRecordingStatus(): RecordingStatus {
+            return RecordingStatus(sensorId, sensorType, isRecording, 0, 0.0, 0.0, 0L)
+        }
+
         override fun getStatusFlow(): Flow<RecordingStatus> {
-            return flowOf(RecordingStatus(sensorId, sensorType, isRecording, 0, 0.0, 0.0, 0L))
+            return flowOf(mockRecordingStatus())
         }
 
         override fun getErrorFlow(): Flow<SensorError> {
