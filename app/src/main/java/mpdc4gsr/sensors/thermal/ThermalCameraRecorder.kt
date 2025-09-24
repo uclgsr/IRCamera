@@ -2568,7 +2568,7 @@ class ThermalCameraRecorder(
                 wasNetworkStreamed.toString()
             )
 
-            thermalDataWriter?.writeRow(enhancedFrameData.toList())
+            thermalDataWriter?.writeRow(enhancedFrameData)
 
         } catch (e: Exception) {
             Log.e(TAG, "Error writing enhanced frame data", e)
