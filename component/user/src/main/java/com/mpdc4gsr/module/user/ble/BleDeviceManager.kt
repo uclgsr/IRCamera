@@ -9,7 +9,6 @@ import com.topdon.ble.Connection
 import com.topdon.ble.ConnectionConfiguration
 import com.topdon.ble.ConnectionState
 import com.topdon.ble.Device
-import com.topdon.ble.EasyBLE
 import com.topdon.ble.EventObserver
 import com.topdon.ble.Request
 import com.topdon.ble.callback.ScanListener
