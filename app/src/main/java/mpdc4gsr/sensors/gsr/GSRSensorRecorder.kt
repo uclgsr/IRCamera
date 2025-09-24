@@ -385,6 +385,9 @@ class GSRSensorRecorder(
                 this@GSRSensorRecorder.sessionDirectory = sessionDirectory
                 recordingStartTime = TimestampManager.getCurrentTimestampNanos()
 
+                // Initialize CSV file for data logging as per plan requirements
+                initializeCsvFile(sessionDirectory)
+
                 timeSyncService = recordingController.getTimeSynchronizationService()
 
                 var shimmerRecordingStarted = false
@@ -702,6 +705,9 @@ class GSRSensorRecorder(
             }
 
             _isRecording.set(false)
+
+            // Close CSV file and ensure all data is written as per plan requirements
+            closeCsvFile()
 
             Log.i(TAG, "Real Shimmer GSR sensor recording stopped")
             emitStatus()
@@ -1512,34 +1518,81 @@ class GSRSensorRecorder(
     private suspend fun handleDisconnection(device: Shimmer) {
         if (reconnectionAttempts < maxReconnectionAttempts) {
             reconnectionAttempts++
-            Log.i(TAG, "Attempting reconnection $reconnectionAttempts/$maxReconnectionAttempts")
+            Log.i(TAG, "GSR sensor disconnected - attempting automatic reconnection $reconnectionAttempts/$maxReconnectionAttempts")
 
+            // Emit user-friendly error message as per plan requirements
             emitError(
                 ErrorType.CONNECTION_LOST,
-                "Device disconnected - attempting reconnection ($reconnectionAttempts/$maxReconnectionAttempts)",
+                "GSR sensor disconnected - attempting to reconnect ($reconnectionAttempts/$maxReconnectionAttempts)",
                 isRecoverable = true
             )
 
-            delay(reconnectionDelayMs)
+            // Use progressive delay between attempts (1s, 2s, 3s)
+            val progressiveDelay = reconnectionAttempts * 1000L
+            delay(progressiveDelay)
 
             try {
-
+                Log.i(TAG, "Initiating reconnection attempt $reconnectionAttempts")
                 device.connect()
-                Log.i(TAG, "Reconnection attempt initiated")
+                
+                // Wait briefly to confirm connection
+                delay(1000L)
+                
+                val connectionState = device.getBluetoothRadioState()
+                if (connectionState == BT_STATE.CONNECTED || connectionState == BT_STATE.STREAMING) {
+                    Log.i(TAG, "GSR sensor reconnection successful on attempt $reconnectionAttempts")
+                    reconnectionAttempts = 0 // Reset counter on successful reconnection
+                    
+                    // Log reconnection event for session metadata
+                    recordingController.addSyncMarker(
+                        "gsr_reconnected", 
+                        System.nanoTime(),
+                        mapOf(
+                            "attempt_number" to reconnectionAttempts.toString(),
+                            "reconnection_timestamp" to System.currentTimeMillis().toString()
+                        )
+                    )
+                    
+                    emitError(
+                        ErrorType.CONNECTION_RESTORED,
+                        "GSR sensor reconnected successfully after $reconnectionAttempts attempts",
+                        isRecoverable = true
+                    )
+                } else {
+                    Log.w(TAG, "Reconnection attempt $reconnectionAttempts did not establish stable connection")
+                }
+                
             } catch (e: Exception) {
-                Log.e(TAG, "Reconnection attempt failed", e)
+                Log.e(TAG, "Reconnection attempt $reconnectionAttempts failed: ${e.message}", e)
 
                 if (reconnectionAttempts >= maxReconnectionAttempts) {
-                    Log.e(TAG, "All reconnection attempts failed - switching to simulation mode")
+                    Log.e(TAG, "All GSR sensor reconnection attempts exhausted - gracefully degrading")
+                    
+                    // Graceful fallback as per plan requirements
                     emitError(
                         ErrorType.CONNECTION_LOST,
-                        "All reconnection attempts failed. Switching to simulation mode.",
+                        "GSR sensor permanently unavailable - session will continue without GSR data. Check device pairing and proximity.",
                         isRecoverable = false
                     )
 
+                    // Mark sensor as permanently unavailable for this session
                     currentConnectedDevice = null
+                    _isRecording.set(false)
+                    
+                    // Log permanent failure for session metadata
+                    recordingController.addSyncMarker(
+                        "gsr_connection_failed", 
+                        System.nanoTime(),
+                        mapOf(
+                            "total_attempts" to maxReconnectionAttempts.toString(),
+                            "failure_timestamp" to System.currentTimeMillis().toString(),
+                            "status" to "permanently_unavailable"
+                        )
+                    )
                 }
             }
+        } else {
+            Log.w(TAG, "Maximum reconnection attempts already reached for this session")
         }
     }
 
@@ -1627,25 +1680,111 @@ class GSRSensorRecorder(
     }
 
 
+    // Enhanced CSV buffering for better I/O performance as per plan
+    private val csvBuffer = mutableListOf<String>()
+    private var csvBufferCount = 0
+    private var csvFile: java.io.File? = null
+    private var csvWriter: java.io.FileWriter? = null
+    private var lastCsvFlush = System.currentTimeMillis()
+
     private fun logGSRSampleToCSV(sample: GSRSample, timestampRecord: TimestampRecord, deviceTimestamp: Long) {
         try {
-
+            // Create CSV entry with all required data as per plan requirements
             val csvEntry = buildString {
-                append("${timestampRecord.systemNanos},")
-                append("${timestampRecord.systemTimeMs},")
-                append("${timestampRecord.sessionRelativeMs},")
-                append("${deviceTimestamp},")
-                append("${sample.conductanceMicrosiemens},")
-                append("${sample.rawAdc},")
-                append("${sample.ppgValue}")
+                append("${timestampRecord.systemNanos},")           // Primary timestamp (phone-based)
+                append("${timestampRecord.systemTimeMs},")          // Wall clock time
+                append("${timestampRecord.sessionRelativeMs},")     // Session relative time
+                append("${deviceTimestamp},")                       // Device timestamp for drift analysis
+                append("${sample.conductanceMicrosiemens},")        // GSR in microsiemens
+                append("${sample.rawAdc},")                         // Raw ADC value
+                append("${sample.ppgValue}")                        // PPG if available
             }
 
+            // Add to buffer for batch writing (50 samples as per plan)
+            synchronized(csvBuffer) {
+                csvBuffer.add(csvEntry)
+                csvBufferCount++
 
+                // Write batch when buffer reaches target size or time threshold exceeded
+                val currentTime = System.currentTimeMillis()
+                if (csvBufferCount >= CSV_BATCH_SIZE || 
+                    (currentTime - lastCsvFlush) > CSV_FLUSH_INTERVAL_MS) {
+                    
+                    flushCsvBuffer()
+                }
+            }
 
-            Log.v(TAG, "GSR CSV Entry: $csvEntry")
+            Log.v(TAG, "GSR sample buffered: conductance=${sample.conductanceMicrosiemens}µS, buffer_size=$csvBufferCount")
 
         } catch (e: Exception) {
-            Log.e(TAG, "Error writing GSR data to CSV", e)
+            Log.e(TAG, "Error buffering GSR data for CSV", e)
+            emitError(
+                ErrorType.DATA_PROCESSING_ERROR,
+                "Failed to buffer GSR sample: ${e.message}"
+            )
+        }
+    }
+
+    private fun flushCsvBuffer() {
+        try {
+            if (csvBuffer.isEmpty()) return
+
+            val writer = csvWriter ?: return
+            
+            // Write all buffered entries
+            csvBuffer.forEach { entry ->
+                writer.write("$entry\n")
+            }
+            writer.flush()
+            
+            Log.d(TAG, "Flushed $csvBufferCount GSR samples to CSV file")
+            
+            csvBuffer.clear()
+            csvBufferCount = 0
+            lastCsvFlush = System.currentTimeMillis()
+            
+        } catch (e: Exception) {
+            Log.e(TAG, "Error flushing CSV buffer", e)
+            emitError(
+                ErrorType.STORAGE_ERROR,
+                "Failed to write GSR data to file: ${e.message}"
+            )
+        }
+    }
+
+    private fun initializeCsvFile(sessionDirectory: String) {
+        try {
+            csvFile = java.io.File(sessionDirectory, "gsr.csv")
+            csvWriter = java.io.FileWriter(csvFile!!, false) // false = overwrite existing file
+            
+            // Write header as per plan requirements
+            csvWriter!!.write("${getGSRCsvHeader()}\n")
+            csvWriter!!.flush()
+            
+            Log.i(TAG, "GSR CSV file initialized: ${csvFile!!.absolutePath}")
+            
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to initialize GSR CSV file", e)
+            emitError(
+                ErrorType.STORAGE_ERROR,
+                "Failed to create GSR data file: ${e.message}"
+            )
+        }
+    }
+
+    private fun closeCsvFile() {
+        try {
+            // Flush any remaining buffered data
+            flushCsvBuffer()
+            
+            csvWriter?.close()
+            csvWriter = null
+            csvFile = null
+            
+            Log.i(TAG, "GSR CSV file closed successfully")
+            
+        } catch (e: Exception) {
+            Log.e(TAG, "Error closing GSR CSV file", e)
         }
     }
 
