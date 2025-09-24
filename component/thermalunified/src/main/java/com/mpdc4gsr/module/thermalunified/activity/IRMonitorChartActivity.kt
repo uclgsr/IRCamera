@@ -33,7 +33,6 @@ import com.mpdc4gsr.libunified.ir.view.TemperatureView
 import com.mpdc4gsr.libunified.ir.view.TemperatureView.REGION_MODE_LINE
 import com.mpdc4gsr.libunified.ir.view.TemperatureView.REGION_MODE_POINT
 import com.mpdc4gsr.libunified.ir.view.TemperatureView.REGION_MODE_RECTANGLE
-import com.mpdc4gsr.libunified.app.bean.event.device.DeviceCameraEvent
 import com.mpdc4gsr.libunified.app.bean.tools.ThermalBean
 import com.mpdc4gsr.libunified.app.common.SaveSettingUtil
 import com.mpdc4gsr.libunified.app.common.SharedManager
@@ -647,8 +646,8 @@ class IRMonitorChartActivity : BaseActivity(), ITsTempListener {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun cameraEvent(event: DeviceCameraEvent) {
-        when (event.action) {
+    fun cameraEvent(event: IRMsgEvent) {
+        when (event.code) {
             100 -> {
 
                 showCameraLoading()
