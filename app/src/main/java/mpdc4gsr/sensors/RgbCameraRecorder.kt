@@ -1897,7 +1897,7 @@ class RgbCameraRecorder(
     /**
      * Get the current raw capture count
      */
-    fun getRawCaptureCount(): Int {
-        return framesCaptured.get().toInt()
+    fun getRawCaptureCount(): Long {
+        return framesCaptured.get()
     }
 }
