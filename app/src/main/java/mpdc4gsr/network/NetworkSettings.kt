@@ -102,6 +102,21 @@ class NetworkSettings(private val context: Context) {
         get() = prefs.getLong(KEY_CONNECTION_TIMEOUT, DEFAULT_CONNECTION_TIMEOUT)
         set(value) = prefs.edit().putLong(KEY_CONNECTION_TIMEOUT, value).apply()
     
+    // Keep-alive interval in milliseconds
+    var keepAliveInterval: Long
+        get() = prefs.getLong("keep_alive_interval", 30000L)
+        set(value) = prefs.edit().putLong("keep_alive_interval", value).apply()
+    
+    // Message timeout in milliseconds  
+    var messageTimeout: Long
+        get() = prefs.getLong("message_timeout", 10000L)
+        set(value) = prefs.edit().putLong("message_timeout", value).apply()
+    
+    // Bandwidth monitoring enabled
+    var bandwidthMonitoringEnabled: Boolean
+        get() = prefs.getBoolean("bandwidth_monitoring_enabled", true)
+        set(value) = prefs.edit().putBoolean("bandwidth_monitoring_enabled", value).apply()
+    
     /**
      * Save Bluetooth device configuration - thread-safe
      */

@@ -20,9 +20,19 @@ class ConnectionMetrics {
     private val totalMessagesSent = AtomicLong(0)
     private val totalMessagesReceived = AtomicLong(0)
     private val totalReconnectAttempts = AtomicLong(0)
+    private val totalBytesSent = AtomicLong(0)
+    private val totalBytesReceived = AtomicLong(0)
     
     private val latencyHistory = mutableListOf<Long>()
+    private val bandwidthHistory = mutableListOf<BandwidthSample>()
     private val maxHistorySize = 100
+    
+    data class BandwidthSample(
+        val timestamp: Long,
+        val bytesSent: Long,
+        val bytesReceived: Long,
+        val intervalMs: Long
+    )
     
     /**
      * Record connection establishment
@@ -43,15 +53,21 @@ class ConnectionMetrics {
     /**
      * Record message sent
      */
-    fun recordMessageSent() {
+    fun recordMessageSent(messageSize: Int = 0) {
         totalMessagesSent.incrementAndGet()
+        if (messageSize > 0) {
+            totalBytesSent.addAndGet(messageSize.toLong())
+        }
     }
     
     /**
      * Record message received
      */
-    fun recordMessageReceived() {
+    fun recordMessageReceived(messageSize: Int = 0) {
         totalMessagesReceived.incrementAndGet()
+        if (messageSize > 0) {
+            totalBytesReceived.addAndGet(messageSize.toLong())
+        }
     }
     
     /**
@@ -123,11 +139,16 @@ class ConnectionMetrics {
             "connection_duration_ms" to getConnectionDuration(),
             "messages_sent" to totalMessagesSent.get(),
             "messages_received" to totalMessagesReceived.get(),
+            "bytes_sent" to totalBytesSent.get(),
+            "bytes_received" to totalBytesReceived.get(),
             "reconnect_attempts" to totalReconnectAttempts.get(),
             "average_latency_ms" to getAverageLatency(),
             "latest_latency_ms" to getLatestLatency(),
             "total_pings" to latencyHistory.size,
-            "connection_uptime_hours" to (getConnectionDuration() / (1000.0 * 60.0 * 60.0))
+            "connection_uptime_hours" to (getConnectionDuration() / (1000.0 * 60.0 * 60.0)),
+            "average_send_bandwidth_bps" to getAverageSendBandwidth(),
+            "average_receive_bandwidth_bps" to getAverageReceiveBandwidth(),
+            "total_data_transferred_mb" to ((totalBytesSent.get() + totalBytesReceived.get()) / (1024.0 * 1024.0))
         )
     }
     
@@ -140,8 +161,57 @@ class ConnectionMetrics {
         totalMessagesSent.set(0)
         totalMessagesReceived.set(0)
         totalReconnectAttempts.set(0)
+        totalBytesSent.set(0)
+        totalBytesReceived.set(0)
         latencyHistory.clear()
+        bandwidthHistory.clear()
         Log.d(TAG, "Connection metrics reset")
+    }
+    
+    /**
+     * Get average send bandwidth in bytes per second
+     */
+    private suspend fun getAverageSendBandwidth(): Double = mutex.withLock {
+        val duration = getConnectionDuration()
+        if (duration > 0) {
+            totalBytesSent.get() * 1000.0 / duration
+        } else {
+            0.0
+        }
+    }
+    
+    /**
+     * Get average receive bandwidth in bytes per second
+     */
+    private suspend fun getAverageReceiveBandwidth(): Double = mutex.withLock {
+        val duration = getConnectionDuration()
+        if (duration > 0) {
+            totalBytesReceived.get() * 1000.0 / duration
+        } else {
+            0.0
+        }
+    }
+    
+    /**
+     * Record bandwidth sample for detailed monitoring
+     */
+    suspend fun recordBandwidthSample() = mutex.withLock {
+        val now = System.currentTimeMillis()
+        val sample = BandwidthSample(
+            timestamp = now,
+            bytesSent = totalBytesSent.get(),
+            bytesReceived = totalBytesReceived.get(),
+            intervalMs = if (bandwidthHistory.isNotEmpty()) {
+                now - bandwidthHistory.last().timestamp
+            } else {
+                1000L // Default 1 second interval
+            }
+        )
+        
+        bandwidthHistory.add(sample)
+        if (bandwidthHistory.size > maxHistorySize) {
+            bandwidthHistory.removeAt(0)
+        }
     }
     
     /**

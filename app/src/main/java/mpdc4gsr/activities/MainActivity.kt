@@ -1435,7 +1435,8 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             "Connect with Saved Settings",
             "Configure Wi-Fi Connection", 
             "Configure Bluetooth Connection",
-            "Manual IP Connection",
+            "Discover PC Servers",
+            "Connection Settings",
             "Connection Status Report",
             "Cancel"
         )
@@ -1461,18 +1462,25 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                     Log.i(TAG, "Configuring Bluetooth connection")
                     configureBluetoothConnection()
                 }
-
+                
                 3 -> {
-                    // Manual IP Connection (existing)
-                    showManualConnectionDialog()
+                    // Discover PC Servers
+                    Log.i(TAG, "Discovering PC servers")
+                    showServerDiscoveryDialog()
+                }
+                
+                4 -> {
+                    // Connection Settings
+                    Log.i(TAG, "Opening connection settings")
+                    showConnectionSettingsDialog()
                 }
 
-                4 -> {
+                5 -> {
                     // Status report
                     showStatusReportDialog()
                 }
 
-                5 -> {
+                6 -> {
                     // Cancel
                 }
             }
@@ -1975,5 +1983,125 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                 }
             }
         }
+    }
+    
+    private fun showServerDiscoveryDialog() {
+        val serverDiscovery = mpdc4gsr.network.PcServerDiscovery(this)
+        
+        val progressDialog = androidx.appcompat.app.AlertDialog.Builder(this)
+            .setTitle("Discovering PC Servers")
+            .setMessage("Scanning network for available PC servers...")
+            .setCancelable(false)
+            .create()
+        
+        progressDialog.show()
+        
+        lifecycleScope.launch {
+            try {
+                val servers = serverDiscovery.discoverServers()
+                progressDialog.dismiss()
+                
+                if (servers.isNotEmpty()) {
+                    val serverNames = servers.map { 
+                        "${it.deviceName ?: "PC Server"} (${it.ipAddress}:${it.port}) - ${it.responseTime}ms"
+                    }.toTypedArray()
+                    
+                    androidx.appcompat.app.AlertDialog.Builder(this@MainActivity)
+                        .setTitle("Discovered PC Servers")
+                        .setItems(serverNames) { _, which ->
+                            val server = servers[which]
+                            connectViaWifi(server.ipAddress, server.port)
+                        }
+                        .setNegativeButton("Cancel", null)
+                        .show()
+                } else {
+                    Toast.makeText(this@MainActivity, 
+                        "No PC servers found on the network", 
+                        Toast.LENGTH_LONG).show()
+                }
+            } catch (e: Exception) {
+                progressDialog.dismiss()
+                Log.e(TAG, "Error during server discovery", e)
+                Toast.makeText(this@MainActivity, 
+                    "Server discovery failed: ${e.message}", 
+                    Toast.LENGTH_SHORT).show()
+            } finally {
+                serverDiscovery.cleanup()
+            }
+        }
+    }
+    
+    private fun showConnectionSettingsDialog() {
+        val settings = networkManager?.getNetworkSettings()
+        if (settings == null) {
+            Toast.makeText(this, "Network settings not available", Toast.LENGTH_SHORT).show()
+            return
+        }
+        
+        // Create a simple settings layout
+        val layout = android.widget.LinearLayout(this).apply {
+            orientation = android.widget.LinearLayout.VERTICAL
+            setPadding(32, 32, 32, 32)
+        }
+        
+        // Connection timeout setting
+        val timeoutLabel = android.widget.TextView(this).apply {
+            text = "Connection Timeout (seconds)"
+            textSize = 16f
+        }
+        val timeoutInput = android.widget.EditText(this).apply {
+            setText((settings.connectionTimeout / 1000).toString())
+            inputType = android.text.InputType.TYPE_CLASS_NUMBER
+        }
+        
+        // Keep-alive interval setting
+        val keepAliveLabel = android.widget.TextView(this).apply {
+            text = "Keep-Alive Interval (seconds)"
+            textSize = 16f
+        }
+        val keepAliveInput = android.widget.EditText(this).apply {
+            setText((settings.keepAliveInterval / 1000).toString())
+            inputType = android.text.InputType.TYPE_CLASS_NUMBER
+        }
+        
+        // Auto-reconnect setting
+        val autoReconnectCheck = android.widget.CheckBox(this).apply {
+            text = "Enable Auto-Reconnect"
+            isChecked = settings.autoReconnect
+        }
+        
+        // Bandwidth monitoring setting
+        val bandwidthCheck = android.widget.CheckBox(this).apply {
+            text = "Enable Bandwidth Monitoring"
+            isChecked = settings.bandwidthMonitoringEnabled
+        }
+        
+        layout.addView(timeoutLabel)
+        layout.addView(timeoutInput)
+        layout.addView(keepAliveLabel)
+        layout.addView(keepAliveInput)
+        layout.addView(autoReconnectCheck)
+        layout.addView(bandwidthCheck)
+        
+        androidx.appcompat.app.AlertDialog.Builder(this)
+            .setTitle("Connection Settings")
+            .setView(layout)
+            .setPositiveButton("Save") { _, _ ->
+                try {
+                    val timeout = timeoutInput.text.toString().toLongOrNull()?.times(1000) ?: settings.connectionTimeout
+                    val keepAlive = keepAliveInput.text.toString().toLongOrNull()?.times(1000) ?: settings.keepAliveInterval
+                    
+                    settings.connectionTimeout = timeout
+                    settings.keepAliveInterval = keepAlive
+                    settings.autoReconnect = autoReconnectCheck.isChecked
+                    settings.bandwidthMonitoringEnabled = bandwidthCheck.isChecked
+                    
+                    Toast.makeText(this, "Settings saved", Toast.LENGTH_SHORT).show()
+                } catch (e: Exception) {
+                    Toast.makeText(this, "Error saving settings: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
     }
 }

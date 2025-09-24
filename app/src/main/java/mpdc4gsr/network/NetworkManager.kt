@@ -51,6 +51,9 @@ class NetworkManager(
     private val _lastError = MutableStateFlow<String?>(null)
     val lastError: StateFlow<String?> = _lastError.asStateFlow()
     
+    private val _lastErrorCode = MutableStateFlow<NetworkErrorCodes.NetworkError?>(null)
+    val lastErrorCode: StateFlow<NetworkErrorCodes.NetworkError?> = _lastErrorCode.asStateFlow()
+    
     private val _connectionSummary = MutableStateFlow("Not configured")
     val connectionSummary: StateFlow<String> = _connectionSummary.asStateFlow()
     
@@ -244,17 +247,25 @@ class NetworkManager(
     }
     
     /**
-     * Send response message to PC
+     * Send response message to PC with metrics tracking
      */
     suspend fun sendResponse(message: String): Boolean {
-        return activeConnection?.sendMessage(message) ?: false
+        val result = activeConnection?.sendMessage(message) ?: false
+        if (result) {
+            connectionMetrics.recordMessageSent(message.length)
+        }
+        return result
     }
     
     /**
-     * Send telemetry/status message to PC
+     * Send telemetry/status message to PC with metrics tracking
      */
     suspend fun sendTelemetry(message: String): Boolean {
-        return activeConnection?.sendMessage(message) ?: false
+        val result = activeConnection?.sendMessage(message) ?: false
+        if (result) {
+            connectionMetrics.recordMessageSent(message.length)
+        }
+        return result
     }
     
     /**
@@ -320,7 +331,12 @@ class NetworkManager(
                         Log.i(TAG, "Sent initial handshake: $helloMessage")
                     } else {
                         Log.w(TAG, "Failed to send initial handshake message")
-                        _lastError.value = "Failed to send handshake"
+                        val error = NetworkErrorCodes.NetworkError(
+                            NetworkErrorCodes.ERROR_PROTOCOL_VIOLATION,
+                            details = "Failed to send handshake message"
+                        )
+                        _lastError.value = error.message
+                        _lastErrorCode.value = error
                     }
                 } else {
                     Log.w(TAG, "No active connection for handshake")
