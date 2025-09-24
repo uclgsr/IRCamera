@@ -40,7 +40,8 @@ import mpdc4gsr.network.NetworkServer
 import mpdc4gsr.network.PreviewDataAdapter
 import mpdc4gsr.network.PreviewStreamer
 import mpdc4gsr.network.ProtocolHandler
-import mpdc4gsr.core.CrashSafeSupervisor
+import mpdc4gsr.supervisor.CrashSafeSupervisor
+import mpdc4gsr.sync.TimeSyncManager
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.DataInputStream
@@ -202,6 +203,7 @@ class RecordingService : LifecycleService() {
 
     private lateinit var structuredLogger: StructuredLogger
     private lateinit var crashSafeSupervisor: CrashSafeSupervisor
+    private lateinit var timeSyncManager: TimeSyncManager
 
     private data class ClientConnection(
         val socket: Socket,
@@ -253,6 +255,24 @@ class RecordingService : LifecycleService() {
         networkServer = NetworkServer(this, 8080)
         networkManager = NetworkManager(this, recordingController)
         protocolHandler = ProtocolHandler(this, networkServer)
+        protocolHandler.setTimeSyncManager(timeSyncManager)
+        
+        // Set up sync trigger callback for manual sync requests
+        timeSyncManager.setSyncTriggerCallback(object : TimeSyncManager.SyncTriggerCallback {
+            override suspend fun onManualSyncRequested(): Boolean {
+                return try {
+                    // This would typically trigger a sync request to the PC
+                    // For now, we log that a manual sync was requested
+                    Log.i(TAG, "Manual sync requested - would trigger PC sync")
+                    // In a full implementation, this would send a message to PC or trigger sync
+                    true
+                } catch (e: Exception) {
+                    Log.e(TAG, "Manual sync trigger failed", e)
+                    false
+                }
+            }
+        })
+        
         connectionManager = NetworkConnectionManager(this, networkServer, protocolHandler)
         previewStreamer = PreviewStreamer(networkServer)
         previewDataAdapter = PreviewDataAdapter(previewStreamer, this)
@@ -338,6 +358,9 @@ class RecordingService : LifecycleService() {
             structuredLogger = StructuredLogger.getInstance(this)
             crashSafeSupervisor = CrashSafeSupervisor.getInstance(this)
             crashSafeSupervisor.initialize()
+            
+            // Initialize TimeSyncManager
+            timeSyncManager = TimeSyncManager(this)
 
             structuredLogger.log(
                 StructuredLogger.LogLevel.INFO,
@@ -345,7 +368,8 @@ class RecordingService : LifecycleService() {
                 "phase0_baseline_initialized",
                 mapOf(
                     "feature_flags" to FeatureFlags.getAllFlags(),
-                    "protocol_version" to ProtocolVersion.CURRENT_VERSION
+                    "protocol_version" to ProtocolVersion.CURRENT_VERSION,
+                    "time_sync_manager" to "initialized"
                 )
             )
         } catch (e: Exception) {
@@ -444,6 +468,11 @@ class RecordingService : LifecycleService() {
             if (::connectionManager.isInitialized) {
                 connectionManager.cleanup()
             }
+            
+            // Cleanup TimeSyncManager
+            if (::timeSyncManager.isInitialized) {
+                timeSyncManager.cleanup()
+            }
 
             if (::networkManager.isInitialized) {
                 networkManager.cleanup()
@@ -500,6 +529,12 @@ class RecordingService : LifecycleService() {
                 currentSessionDirectory = sessionDirectory
                 recordingStartTime = System.nanoTime()
 
+                // Initialize TimeSyncManager for this session
+                timeSyncManager.initializeSession(sessionDirectory)
+                
+                // Enable periodic sync for long recording sessions
+                timeSyncManager.setPeriodicSyncEnabled(true)
+
                 Log.i(TAG, "Starting recording session: $sessionDirectory")
                 structuredLogger.log(
                     StructuredLogger.LogLevel.INFO,
@@ -517,6 +552,8 @@ class RecordingService : LifecycleService() {
                     createRecordingNotification("Starting recording session...")
                 )
 
+                // Perform session start sync
+                timeSyncManager.performSessionStartSync()
 
                 val success = recordingController.startSession(sessionDirectory)
 
@@ -614,7 +651,9 @@ class RecordingService : LifecycleService() {
 
                 currentSessionDirectory = null
                 recordingStartTime = 0
-
+                
+                // Finalize TimeSyncManager session
+                timeSyncManager.finalizeSession()
 
                 if (!isServerRunning.get()) {
                     stopSelf()
