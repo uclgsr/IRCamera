@@ -278,7 +278,7 @@ class RecordingController(
                 )
 
 
-                createCrashRecoveryMarker(finalSessionId, enabledSensors)
+                createCrashRecoveryMarker(finalSessionId, enabledSensors, sessionDir)
 
 
                 val utilMetadata = mpdc4gsr.utils.SessionMetadata(
@@ -1547,11 +1547,9 @@ class RecordingController(
     }
 
 
-    private fun createCrashRecoveryMarker(sessionId: String, enabledSensors: List<String>) {
+    private fun createCrashRecoveryMarker(sessionId: String, enabledSensors: List<String>, sessionDir: SessionDirectory) {
         try {
-            val sessionDir = currentSessionDirectory?.rootDir ?: File(context.filesDir, "sessions")
-            sessionDir.mkdirs()
-            val recoveryFile = File(sessionDir, ".recovery_marker")
+            val recoveryFile = File(sessionDir.rootDir, ".recovery_marker")
             val recoveryInfo = mapOf(
                 "session_id" to sessionId,
                 "enabled_sensors" to enabledSensors.joinToString(","),
