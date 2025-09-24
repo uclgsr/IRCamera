@@ -7,7 +7,7 @@ import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import mpdc4gsr.controller.RecordingController
-import mpdc4gsr.libunified.app.StructuredLogger
+import mpdc4gsr.core.StructuredLogger
 import mpdc4gsr.sensors.unified.model.*
 import org.json.JSONObject
 import java.io.File
