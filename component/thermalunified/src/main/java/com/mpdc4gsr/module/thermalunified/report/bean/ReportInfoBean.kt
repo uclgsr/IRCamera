@@ -2,7 +2,8 @@ package com.mpdc4gsr.module.thermalunified.report.bean
 
 import android.os.Parcelable
 import com.mpdc4gsr.libunified.app.utils.CommUtils
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
+import kotlinx.parcelize.IgnoredOnParcel
 
 
 @Parcelize
@@ -17,9 +18,13 @@ data class ReportInfoBean(
     val report_watermark: String?,
     val is_report_watermark: Int,
 ) : Parcelable {
+    @IgnoredOnParcel
     val is_report_name: Int = 1
+    @IgnoredOnParcel
     val report_type: Int = 1
+    @IgnoredOnParcel
     val report_version: String = "V1.00"
+    @IgnoredOnParcel
     val report_number: String =
         "${CommUtils.getAppName()}${System.currentTimeMillis()}"
 }

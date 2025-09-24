@@ -1496,9 +1496,7 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
     }
 
     private fun showCross(boolean: Boolean) {
-        if (cameraView != null) {
-            cameraView.setShowCross(boolean)
-        }
+        cameraView.setShowCross(boolean)
     }
 
     open fun setPColor(code: Int) {
@@ -2108,9 +2106,6 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
 
                         CommonParams.GainStatus.LOW_GAIN
                     }
-                if (nuc_table_low == null) {
-                    return@let
-                }
                 if (ts_data_H == null) {
                     ts_data_H =
                         CommonUtils.getTauData(this@IRThermalNightActivity, "ts/TS001_H.bin")
@@ -2933,6 +2928,7 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
         finish()
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         setResult(200)
         finish()

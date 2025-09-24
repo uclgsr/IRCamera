@@ -106,10 +106,12 @@ class ReportPickImgActivity : BaseActivity(), View.OnClickListener {
     override fun initData() {
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         if (adapter.isEditMode) {
             setEditMode(false)
         } else {
+            @Suppress("DEPRECATION")
             super.onBackPressed()
         }
     }
@@ -196,17 +198,33 @@ class ReportPickImgActivity : BaseActivity(), View.OnClickListener {
                         .withBoolean(IS_REPORT_FIRST, false)
                         .withString(ExtraKeyConfig.FILE_ABSOLUTE_PATH, irPath)
 
-                intent.getParcelableExtra<ReportInfoBean>(ExtraKeyConfig.REPORT_INFO)?.let {
+                val reportInfo = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+                    intent.getParcelableExtra(ExtraKeyConfig.REPORT_INFO, ReportInfoBean::class.java)
+                } else {
+                    @Suppress("DEPRECATION")
+                    intent.getParcelableExtra<ReportInfoBean>(ExtraKeyConfig.REPORT_INFO)
+                }
+                reportInfo?.let {
                     navigation.withParcelable(ExtraKeyConfig.REPORT_INFO, it)
                 }
-                intent.getParcelableExtra<ReportConditionBean>(ExtraKeyConfig.REPORT_CONDITION)
-                    ?.let {
-                        navigation.withParcelable(ExtraKeyConfig.REPORT_CONDITION, it)
-                    }
-                intent.getParcelableArrayListExtra<ReportIRBean>(ExtraKeyConfig.REPORT_IR_LIST)
-                    ?.let {
-                        navigation.withParcelableArrayList(ExtraKeyConfig.REPORT_IR_LIST, it)
-                    }
+                val reportCondition = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+                    intent.getParcelableExtra(ExtraKeyConfig.REPORT_CONDITION, ReportConditionBean::class.java)
+                } else {
+                    @Suppress("DEPRECATION")
+                    intent.getParcelableExtra<ReportConditionBean>(ExtraKeyConfig.REPORT_CONDITION)
+                }
+                reportCondition?.let {
+                    navigation.withParcelable(ExtraKeyConfig.REPORT_CONDITION, it)
+                }
+                val reportIrList = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+                    intent.getParcelableArrayListExtra(ExtraKeyConfig.REPORT_IR_LIST, ReportIRBean::class.java)
+                } else {
+                    @Suppress("DEPRECATION")
+                    intent.getParcelableArrayListExtra<ReportIRBean>(ExtraKeyConfig.REPORT_IR_LIST)
+                }
+                reportIrList?.let {
+                    navigation.withParcelableArrayList(ExtraKeyConfig.REPORT_IR_LIST, it)
+                }
 
                 navigation.navigation(this)
             } else {

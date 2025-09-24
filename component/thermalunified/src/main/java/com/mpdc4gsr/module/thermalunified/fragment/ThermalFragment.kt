@@ -283,9 +283,6 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
         rotate: Float,
     ): Bitmap? {
         try {
-            if (origin == null) {
-                return null
-            }
             val width = origin.width
             val height = origin.height
             val matrix = Matrix()
@@ -626,15 +623,18 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
             camera()
         } else {
 
+            @Suppress("DEPRECATION")
             requestPermissions(arrayOf(android.Manifest.permission.CAMERA), 100)
         }
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
         grantResults: IntArray,
     ) {
+        @Suppress("DEPRECATION")
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == 100 && grantResults.isNotEmpty() && grantResults[0] == android.content.pm.PackageManager.PERMISSION_GRANTED) {
             camera()
