@@ -215,7 +215,7 @@ class NetworkClientTestActivity : AppCompatActivity() {
         
         lifecycleScope.launch {
             try {
-                val success = networkManager!!.connectWifi(ip, port)
+                val success = networkManager?.connectWifi(ip, port) ?: false
                 if (success) {
                     Log.i(TAG, "Successfully connected to PC server via Wi-Fi")
                     
@@ -301,7 +301,7 @@ class NetworkClientTestActivity : AppCompatActivity() {
                 
                 lifecycleScope.launch {
                     try {
-                        val success = networkManager!!.connectBluetooth(testDevice)
+                        val success = networkManager?.connectBluetooth(testDevice) ?: false
                         if (success) {
                             Log.i(TAG, "Successfully connected via Bluetooth")
                             
