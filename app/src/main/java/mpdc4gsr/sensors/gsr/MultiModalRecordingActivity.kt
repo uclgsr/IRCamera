@@ -1079,17 +1079,18 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
     }
 
     override fun onDestroy() {
-        super.onDestroy()
         stopUIUpdates()
         gsrRecorder.removeListener(gsrListener)
         if (isRecording) {
             stopRecording()
         }
         // Launch coroutine for cleanup since it's a suspend function
+        // Do this before super.onDestroy() to ensure lifecycleScope is still active
         lifecycleScope.launch {
             rgbCameraRecorder?.cleanup()
         }
         networkClient?.cleanup()
         unbindEnhancedRecordingService()
+        super.onDestroy()
     }
 }
