@@ -30,6 +30,7 @@ import mpdc4gsr.config.ProtocolVersion
 import mpdc4gsr.controller.ComprehensiveRecordingController
 import mpdc4gsr.controller.RecordingState
 import mpdc4gsr.core.StructuredLogger
+import mpdc4gsr.permissions.PermissionManager
 import mpdc4gsr.network.NetworkClient
 import mpdc4gsr.network.NetworkConnectionManager
 import mpdc4gsr.network.NetworkManager
@@ -170,6 +171,7 @@ class RecordingService : LifecycleService() {
     private val binder = RecordingServiceBinder()
 
     private lateinit var recordingController: ComprehensiveRecordingController
+    private lateinit var permissionManager: PermissionManager
     private var isInitialized = false
 
     private lateinit var networkClient: NetworkClient
@@ -241,8 +243,9 @@ class RecordingService : LifecycleService() {
 
         nsdManager = getSystemService(Context.NSD_SERVICE) as NsdManager
 
-        // Initialize ComprehensiveRecordingController without PermissionManager for service
-        recordingController = ComprehensiveRecordingController(this, this)
+        // Initialize PermissionManager and ComprehensiveRecordingController
+        permissionManager = PermissionManager(this)
+        recordingController = ComprehensiveRecordingController(this, this, permissionManager)
 
         networkClient = NetworkClient(this)
         networkServer = NetworkServer(this, 8080)
