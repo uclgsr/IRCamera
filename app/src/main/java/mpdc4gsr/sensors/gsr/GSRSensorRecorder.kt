@@ -1878,7 +1878,7 @@ class GSRSensorRecorder(
 
     private fun isShimmerDevice(device: android.bluetooth.BluetoothDevice): Boolean {
         return try {
-            val deviceName = device.name
+            val deviceName = BluetoothPermissionUtils.getDeviceName(context, device)
             deviceName?.lowercase()?.contains("shimmer") == true ||
                     device.address.startsWith("00:06:66") ||
                     device.address.startsWith("d0:39:72") ||
