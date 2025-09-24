@@ -109,7 +109,11 @@ class NetworkClientTestActivity : AppCompatActivity() {
             val port = portInput.text.toString().trim().toIntOrNull() ?: DEFAULT_PC_PORT
             
             if (ip.isNotEmpty()) {
-                testWifiConnection(ip, port)
+                if (port in 1..65535) {
+                    testWifiConnection(ip, port)
+                } else {
+                    Toast.makeText(this, "Please enter a valid port (1-65535)", Toast.LENGTH_SHORT).show()
+                }
             } else {
                 Toast.makeText(this, "Please enter a valid IP address", Toast.LENGTH_SHORT).show()
             }
