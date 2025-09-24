@@ -4,7 +4,6 @@ import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.mpdc4gsr.ble.core.SystemBleStatus
 import com.topdon.ble.EasyBLE
 import com.topdon.ble.Connection
 import com.topdon.ble.ConnectionConfiguration
@@ -30,6 +29,12 @@ class BleDeviceManager(private val context: Context) : CoroutineScope {
                 "Shimmer",
                 "GSR_Unit",
             )
+    }
+
+    enum class SystemBleStatus {
+        NOT_SUPPORTED,
+        ENABLED,
+        DISABLED
     }
 
     override val coroutineContext: CoroutineContext = Dispatchers.Main + Job()
