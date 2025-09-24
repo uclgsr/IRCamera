@@ -1308,7 +1308,7 @@ class ThermalCameraRecorder(
 
 
             recordingScope.launch {
-                val success = networkServer?.sendMessage(thermalMessage) ?: false
+                val success = networkServer?.sendMessage(thermalMessage.toString()) ?: false
                 if (success) {
                     Log.d(
                         TAG,
@@ -2518,7 +2518,7 @@ class ThermalCameraRecorder(
                 "network_streamed"
             )
 
-            thermalDataWriter?.writeHeader(thermalDataHeader)
+            // Headers are written automatically by CSVBufferedWriter when started
 
 
             val framesDataHeader = arrayOf(
@@ -2596,7 +2596,7 @@ class ThermalCameraRecorder(
                 wasNetworkStreamed.toString()
             )
 
-            thermalDataWriter?.writeRow(enhancedFrameData)
+            thermalDataWriter?.writeRow(enhancedFrameData.toList())
 
         } catch (e: Exception) {
             Log.e(TAG, "Error writing enhanced frame data", e)
@@ -2606,11 +2606,11 @@ class ThermalCameraRecorder(
 
     fun getThermalRecordingStatistics(): ThermalRecordingStats {
         return ThermalRecordingStats(
-            totalFramesCaptured = frameCount,
+            totalFramesCaptured = frameCount.get(),
             recordingDurationMs = if (recordingStartTime > 0) System.nanoTime() - recordingStartTime else 0,
             averageFrameRate = if (recordingStartTime > 0) {
                 val durationSeconds = (System.nanoTime() - recordingStartTime) / 1_000_000_000.0
-                frameCount / durationSeconds
+                frameCount.get() / durationSeconds
             } else 0.0,
             isSimulationMode = isSimulationMode,
             deviceConnected = isIRCameraConnected,
@@ -2679,7 +2679,9 @@ class ThermalCameraRecorder(
 
             ircamEngine?.let { engine ->
                 try {
-                    engine.release()
+                    engine.closeVideoStream()
+                    engine.releaseVideoStream()
+                    engine.destroyHandle()
                     Log.i(TAG, "IrcamEngine released successfully")
                 } catch (e: Exception) {
                     Log.w(TAG, "Error during IrcamEngine cleanup", e)
@@ -3011,9 +3013,9 @@ class ThermalCameraRecorder(
 
 
             configureThermalDevice(
-                config.emissivity,
+                config.emissivity.toDouble(),
                 config.temperatureRange,
-                config.atmosphericTemperature
+                config.atmosphericTemperature.toDouble()
             )
 
 
@@ -3025,7 +3027,7 @@ class ThermalCameraRecorder(
 
             Log.i(
                 TAG,
-                "Advanced thermal configuration applied: palette=${config.pseudoColorPalette}, frameRate=${config.frameRate}"
+                "Advanced thermal configuration applied: frameRate=${config.frameRate}, emissivity=${config.emissivity}"
             )
             true
         } catch (e: Exception) {
@@ -3060,13 +3062,13 @@ class ThermalCameraRecorder(
             } else 0.0
 
             performanceMetrics = ThermalPerformanceMetrics(
-                averageFrameRate = avgFrameRate,
-                frameProcessingTimeMs = avgProcessingTime,
-                memoryUsageMB = usedMemory.toDouble(),
-                cpuUsagePercent = cpuUsage,
-                thermalDrift = 0.1, // Placeholder
-                calibrationAccuracy = 95.0, // Placeholder
-                networkLatencyMs = 50.0 // Placeholder
+                averageFrameTime = avgProcessingTime,
+                maxFrameTime = if (frameProcessingTimes.isNotEmpty()) frameProcessingTimes.maxOrNull()?.div(1_000_000.0) ?: 0.0 else 0.0,
+                minFrameTime = if (frameProcessingTimes.isNotEmpty()) frameProcessingTimes.minOrNull()?.div(1_000_000.0) ?: 0.0 else 0.0,
+                frameDropRate = 0.0, // Placeholder - would need to track dropped frames
+                thermalProcessingTime = avgProcessingTime,
+                networkStreamingTime = 50.0, // Placeholder
+                memoryUsage = usedMemory.toDouble()
             )
 
             performanceMetrics
@@ -3222,9 +3224,9 @@ class ThermalCameraRecorder(
                 })
                 put("performance_metrics", JSONObject().apply {
                     val metrics = getPerformanceMetrics()
-                    put("average_frame_rate", metrics.averageFrameRate)
-                    put("memory_usage_mb", metrics.memoryUsageMB)
-                    put("cpu_usage_percent", metrics.cpuUsagePercent)
+                    put("average_frame_time_ms", metrics.averageFrameTime)
+                    put("memory_usage_mb", metrics.memoryUsage)
+                    put("thermal_processing_time_ms", metrics.thermalProcessingTime)
                 })
             }
 
