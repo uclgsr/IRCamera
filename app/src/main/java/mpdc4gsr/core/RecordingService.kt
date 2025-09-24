@@ -37,6 +37,7 @@ import mpdc4gsr.network.PreviewDataAdapter
 import mpdc4gsr.network.PreviewStreamer
 import mpdc4gsr.network.ProtocolHandler
 import mpdc4gsr.supervisor.CrashSafeSupervisor
+import mpdc4gsr.sync.TimeSyncManager
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.DataInputStream
@@ -168,6 +169,7 @@ class RecordingService : LifecycleService() {
 
     private lateinit var structuredLogger: StructuredLogger
     private lateinit var crashSafeSupervisor: CrashSafeSupervisor
+    private lateinit var timeSyncManager: TimeSyncManager
 
     private data class ClientConnection(
         val socket: Socket,
@@ -217,6 +219,7 @@ class RecordingService : LifecycleService() {
         networkClient = NetworkClient(this)
         networkServer = NetworkServer(this, 8080)
         protocolHandler = ProtocolHandler(this, networkServer)
+        protocolHandler.setTimeSyncManager(timeSyncManager)
         connectionManager = NetworkConnectionManager(this, networkServer, protocolHandler)
         previewStreamer = PreviewStreamer(networkServer)
         previewDataAdapter = PreviewDataAdapter(previewStreamer, this)
@@ -302,6 +305,9 @@ class RecordingService : LifecycleService() {
             structuredLogger = StructuredLogger.getInstance(this)
             crashSafeSupervisor = CrashSafeSupervisor.getInstance(this)
             crashSafeSupervisor.initialize()
+            
+            // Initialize TimeSyncManager
+            timeSyncManager = TimeSyncManager(this)
 
             structuredLogger.log(
                 StructuredLogger.LogLevel.INFO,
@@ -309,7 +315,8 @@ class RecordingService : LifecycleService() {
                 "phase0_baseline_initialized",
                 mapOf(
                     "feature_flags" to FeatureFlags.getAllFlags(),
-                    "protocol_version" to ProtocolVersion.CURRENT_VERSION
+                    "protocol_version" to ProtocolVersion.CURRENT_VERSION,
+                    "time_sync_manager" to "initialized"
                 )
             )
         } catch (e: Exception) {
@@ -387,6 +394,11 @@ class RecordingService : LifecycleService() {
             if (::connectionManager.isInitialized) {
                 connectionManager.cleanup()
             }
+            
+            // Cleanup TimeSyncManager
+            if (::timeSyncManager.isInitialized) {
+                timeSyncManager.cleanup()
+            }
 
             lifecycleScope.launch {
                 recordingController.cleanup()
@@ -439,6 +451,9 @@ class RecordingService : LifecycleService() {
                 currentSessionDirectory = sessionDirectory
                 recordingStartTime = System.nanoTime()
 
+                // Initialize TimeSyncManager for this session
+                timeSyncManager.initializeSession(sessionDirectory)
+
                 Log.i(TAG, "Starting recording session: $sessionDirectory")
                 structuredLogger.log(
                     StructuredLogger.LogLevel.INFO,
@@ -456,6 +471,8 @@ class RecordingService : LifecycleService() {
                     createRecordingNotification("Starting recording session...")
                 )
 
+                // Perform session start sync
+                timeSyncManager.performSessionStartSync()
 
                 val success = recordingController.startSession(sessionDirectory)
 
@@ -553,7 +570,9 @@ class RecordingService : LifecycleService() {
 
                 currentSessionDirectory = null
                 recordingStartTime = 0
-
+                
+                // Finalize TimeSyncManager session
+                timeSyncManager.finalizeSession()
 
                 if (!isServerRunning.get()) {
                     stopSelf()
