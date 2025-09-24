@@ -3,6 +3,7 @@ package com.infisense.usbir.view
 import android.content.Context
 import android.graphics.Bitmap
 import android.util.AttributeSet
+import android.view.View
 import android.widget.LinearLayout
 
 /**
@@ -76,6 +77,19 @@ class ZoomCaliperView @JvmOverloads constructor(
         parentCameraView: View?
     ) {
         // Stub implementation
+    }
+    
+    fun updateMagnifier() {
+        // Stub implementation
+        invalidate()
+    }
+    
+    fun setImageSize(imageHeight: Int, imageWidth: Int, parentViewWidth: Int, parentViewHeight: Int) {
+        // Stub implementation for 4-parameter version
+        layoutParams = layoutParams?.apply {
+            this.width = imageWidth
+            this.height = imageHeight
+        }
     }
     
     var isShowFull: Boolean = false
