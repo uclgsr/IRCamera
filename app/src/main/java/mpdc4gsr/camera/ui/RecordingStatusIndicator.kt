@@ -104,24 +104,24 @@ constructor(
 
         if (summary.isSessionActive) {
             statusIcon.setBackgroundColor(Color.RED)
-            statusText.text = "🔴 RECORDING"
+            statusText.text = "[REC]"
             statusText.setTextColor(Color.RED)
 
             val sensorDisplay = mutableListOf<String>()
             summary.sensors.forEach { sensorStatus: DetailedSensorStatus ->
                 val icon =
                     when {
-                        sensorStatus.sensorType.contains("RGB", ignoreCase = true) -> "📸"
-                        sensorStatus.sensorType.contains("Thermal", ignoreCase = true) -> "🌡️"
-                        sensorStatus.sensorType.contains("GSR", ignoreCase = true) -> "📊"
-                        else -> "🔘"
+                        sensorStatus.sensorType.contains("RGB", ignoreCase = true) -> "[CAM]"
+                        sensorStatus.sensorType.contains("Thermal", ignoreCase = true) -> "[THM]"
+                        sensorStatus.sensorType.contains("GSR", ignoreCase = true) -> "[GSR]"
+                        else -> "[SEN]"
                     }
 
                 val statusIcon =
                     when {
-                        sensorStatus.isRecording -> "✅"
-                        sensorStatus.isInitialized -> "⏸️"
-                        else -> "❌"
+                        sensorStatus.isRecording -> "[OK]"
+                        sensorStatus.isInitialized -> "[RDY]"
+                        else -> "[ERR]"
                     }
 
                 sensorDisplay.add("$icon$statusIcon")
@@ -133,9 +133,9 @@ constructor(
             statusIcon.setBackgroundColor(Color.GRAY)
             statusText.text =
                 when {
-                    summary.totalSensorsInitialized == 0 -> "❌ NO SENSORS"
-                    summary.totalSensorsInitialized < summary.totalSensorsConfigured -> "⚠️ PARTIAL SETUP"
-                    else -> "⏹️ READY"
+                    summary.totalSensorsInitialized == 0 -> "[ERR] NO SENSORS"
+                    summary.totalSensorsInitialized < summary.totalSensorsConfigured -> "[WARN] PARTIAL SETUP"
+                    else -> "[RDY] READY"
                 }
             statusText.setTextColor(ContextCompat.getColor(context, android.R.color.darker_gray))
             durationText.text = ""
@@ -145,12 +145,12 @@ constructor(
                 summary.sensors.forEach { sensorStatus: DetailedSensorStatus ->
                     val icon =
                         when {
-                            sensorStatus.sensorType.contains("RGB", ignoreCase = true) -> "📸"
-                            sensorStatus.sensorType.contains("Thermal", ignoreCase = true) -> "🌡️"
-                            sensorStatus.sensorType.contains("GSR", ignoreCase = true) -> "📊"
-                            else -> "🔘"
+                            sensorStatus.sensorType.contains("RGB", ignoreCase = true) -> "[CAM]"
+                            sensorStatus.sensorType.contains("Thermal", ignoreCase = true) -> "[THM]"
+                            sensorStatus.sensorType.contains("GSR", ignoreCase = true) -> "[GSR]"
+                            else -> "[SEN]"
                         }
-                    sensorDisplay.add("$icon✅")
+                    sensorDisplay.add("$icon[OK]")
                 }
                 sensorsText.text = sensorDisplay.joinToString(" ") + " ready"
             } else {
@@ -164,22 +164,22 @@ constructor(
     private fun updateDisplay() {
         if (isRecording) {
             statusIcon.setBackgroundColor(Color.RED)
-            statusText.text = "🔴 RECORDING"
+            statusText.text = "[REC]"
             statusText.setTextColor(Color.RED)
 
             sensorsText.text =
                 activeSensors.joinToString(" • ") {
                     when (it) {
-                        SensorSelectionDialog.SensorType.THERMAL -> "🌡️"
-                        SensorSelectionDialog.SensorType.RGB -> "📸"
-                        SensorSelectionDialog.SensorType.GSR -> "📊"
+                        SensorSelectionDialog.SensorType.THERMAL -> "[THM]"
+                        SensorSelectionDialog.SensorType.RGB -> "[CAM]"
+                        SensorSelectionDialog.SensorType.GSR -> "[GSR]"
                     }
                 }
 
             visibility = VISIBLE
         } else {
             statusIcon.setBackgroundColor(Color.GRAY)
-            statusText.text = "⏹️ STOPPED"
+            statusText.text = "[STOP]"
             statusText.setTextColor(ContextCompat.getColor(context, android.R.color.darker_gray))
             durationText.text = ""
             sensorsText.text = ""
