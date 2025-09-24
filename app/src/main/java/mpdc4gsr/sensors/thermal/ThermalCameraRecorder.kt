@@ -723,21 +723,9 @@ class ThermalCameraRecorder(
                     override fun onIRCMDCreate(ircmd: com.energy.iruvc.ircmd.IRCMD?) {
                         Log.d(TAG, "IRCMD created for thermal camera")
                     }
-
-                    override fun onConnectError(errorMessage: String?) {
-                        Log.e(TAG, "Thermal camera connection error: $errorMessage")
-                        isIRCameraConnected = false
-
-
-                        handleThermalError(
-                            "USB Connection",
-                            errorMessage ?: "Unknown connection error",
-                            isRecoverable = true
-                        )
-                    }
                 }
 
-                val usbMonitorCallback = object : com.infisense.usbir.utils.USBMonitorCallback {
+                val usbMonitorCallback = object : com.mpdc4gsr.libunified.ir.utils.USBMonitorCallback {
                     override fun onAttach() {
                         Log.d(TAG, "USB thermal camera attached")
                     }
@@ -778,14 +766,14 @@ class ThermalCameraRecorder(
                     IR_CAMERA_HEIGHT,
                     context,
                     syncBitmap,
-                    com.energy.iruvc.utils.CommonParams.DataFlowMode.IR_TEMP,
+                    com.energy.iruvc.utils.CommonParams.DataFlowMode.TEMP_OUTPUT,
                     connectCallback,
                     usbMonitorCallback
                 )
 
 
                 iruvctc?.setIFrameCallBackListener(object :
-                    com.infisense.usbir.camera.IRUVCTC.IFrameCallBackListener {
+                    com.mpdc4gsr.libunified.ir.camera.IRUVCTC.IFrameCallBackListener {
                     override fun updateData() {
 
                         if (_isRecording.get()) {
