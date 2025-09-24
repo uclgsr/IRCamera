@@ -41,11 +41,25 @@ constructor(
     private var isSettingsPanelVisible = false
     private var isRecording = false
 
+    // Manual camera control elements
+    private lateinit var exposureLockButton: ImageButton
+    private lateinit var focusLockButton: ImageButton
+    private lateinit var exposureCompensationSeekBar: SeekBar
+    private lateinit var exposureCompensationText: TextView
+    private lateinit var resetControlsButton: ImageButton
+    private lateinit var manualControlsPanel: LinearLayout
+
     var onCameraToggle: (() -> Unit)? = null
     var onRecordingToggle: ((Boolean) -> Unit)? = null
     var onSettingsChanged: ((RGBCameraRecorder.RecordingSettings) -> Unit)? = null
     var onFlashToggle: ((Boolean) -> Unit)? = null
     var onStage3ProcessingToggle: ((Boolean) -> Unit)? = null
+    
+    // Manual camera control callbacks
+    var onExposureLockToggle: ((Boolean) -> Unit)? = null
+    var onFocusLockToggle: ((Boolean) -> Unit)? = null  
+    var onExposureCompensationChanged: ((Float) -> Unit)? = null
+    var onResetCameraControls: (() -> Unit)? = null
 
     init {
         initView()
@@ -310,6 +324,122 @@ constructor(
         stage3Layout.addView(stage3ProcessingToggle)
         settingsPanel.addView(stage3Layout)
 
+        // Manual Camera Controls Panel
+        manualControlsPanel = LinearLayout(context).apply {
+            orientation = LinearLayout.VERTICAL
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+            setPadding(8, 16, 8, 8)
+        }
+
+        // Manual controls title
+        val manualControlsTitle = TextView(context).apply {
+            text = "Manual Camera Controls"
+            textSize = 16f
+            setTypeface(null, android.graphics.Typeface.BOLD)
+            setPadding(0, 0, 0, 8)
+        }
+        manualControlsPanel.addView(manualControlsTitle)
+
+        // Exposure Lock
+        val exposureLockLayout = LinearLayout(context).apply {
+            orientation = LinearLayout.HORIZONTAL
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+        }
+
+        val exposureLockLabel = TextView(context).apply {
+            text = "Exposure Lock:"
+            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+        }
+        exposureLockLayout.addView(exposureLockLabel)
+
+        exposureLockButton = ImageButton(context).apply {
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+            setImageResource(android.R.drawable.ic_lock_idle_low_battery) // Using unlocked icon initially
+            contentDescription = "Lock/Unlock Exposure"
+            background = null
+        }
+        exposureLockLayout.addView(exposureLockButton)
+        manualControlsPanel.addView(exposureLockLayout)
+
+        // Focus Lock
+        val focusLockLayout = LinearLayout(context).apply {
+            orientation = LinearLayout.HORIZONTAL
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+        }
+
+        val focusLockLabel = TextView(context).apply {
+            text = "Focus Lock:"
+            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+        }
+        focusLockLayout.addView(focusLockLabel)
+
+        focusLockButton = ImageButton(context).apply {
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+            setImageResource(android.R.drawable.ic_search_category_default) // Using focus icon
+            contentDescription = "Lock/Unlock Focus"
+            background = null
+        }
+        focusLockLayout.addView(focusLockButton)
+        manualControlsPanel.addView(focusLockLayout)
+
+        // Exposure Compensation
+        val exposureCompLayout = LinearLayout(context).apply {
+            orientation = LinearLayout.VERTICAL
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+        }
+
+        exposureCompensationText = TextView(context).apply {
+            text = "Exposure Compensation: 0.0 EV"
+            setPadding(0, 8, 0, 4)
+        }
+        exposureCompLayout.addView(exposureCompensationText)
+
+        exposureCompensationSeekBar = SeekBar(context).apply {
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+            max = 80 // -4.0 to +4.0 EV in 0.1 steps (80 steps total, centered at 40)
+            progress = 40 // 0.0 EV
+        }
+        exposureCompLayout.addView(exposureCompensationSeekBar)
+        manualControlsPanel.addView(exposureCompLayout)
+
+        // Reset Controls Button
+        resetControlsButton = ImageButton(context).apply {
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply {
+                gravity = android.view.Gravity.CENTER_HORIZONTAL
+                topMargin = 8
+            }
+            setImageResource(android.R.drawable.ic_menu_revert)
+            contentDescription = "Reset to Auto Controls"
+            background = null
+        }
+        manualControlsPanel.addView(resetControlsButton)
+
+        settingsPanel.addView(manualControlsPanel)
+
         addView(settingsPanel)
     }
 
@@ -400,6 +530,84 @@ constructor(
         stage3ProcessingToggle.setOnCheckedChangeListener { _, isChecked ->
             onStage3ProcessingToggle?.invoke(isChecked)
         }
+
+        // Manual camera control listeners
+        exposureLockButton.setOnClickListener {
+            val isLocked = exposureLockButton.tag as? Boolean ?: false
+            val newLockState = !isLocked
+            exposureLockButton.tag = newLockState
+            exposureLockButton.setImageResource(
+                if (newLockState) android.R.drawable.ic_lock_lock
+                else android.R.drawable.ic_lock_idle_low_battery
+            )
+            onExposureLockToggle?.invoke(newLockState)
+        }
+
+        focusLockButton.setOnClickListener {
+            val isLocked = focusLockButton.tag as? Boolean ?: false
+            val newLockState = !isLocked
+            focusLockButton.tag = newLockState
+            focusLockButton.setImageResource(
+                if (newLockState) android.R.drawable.ic_menu_mylocation
+                else android.R.drawable.ic_search_category_default
+            )
+            onFocusLockToggle?.invoke(newLockState)
+        }
+
+        exposureCompensationSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                if (fromUser) {
+                    // Convert progress (0-80) to exposure compensation (-4.0 to +4.0 EV)
+                    val exposureComp = (progress - 40) * 0.1f
+                    exposureCompensationText.text = "Exposure Compensation: ${String.format("%.1f", exposureComp)} EV"
+                    onExposureCompensationChanged?.invoke(exposureComp)
+                }
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+        })
+
+        resetControlsButton.setOnClickListener {
+            resetManualControls()
+            onResetCameraControls?.invoke()
+        }
+    }
+
+    private fun resetManualControls() {
+        // Reset exposure lock
+        exposureLockButton.tag = false
+        exposureLockButton.setImageResource(android.R.drawable.ic_lock_idle_low_battery)
+        
+        // Reset focus lock
+        focusLockButton.tag = false
+        focusLockButton.setImageResource(android.R.drawable.ic_search_category_default)
+        
+        // Reset exposure compensation
+        exposureCompensationSeekBar.progress = 40
+        exposureCompensationText.text = "Exposure Compensation: 0.0 EV"
+    }
+
+    fun updateExposureLockState(locked: Boolean) {
+        exposureLockButton.tag = locked
+        exposureLockButton.setImageResource(
+            if (locked) android.R.drawable.ic_lock_lock
+            else android.R.drawable.ic_lock_idle_low_battery
+        )
+    }
+
+    fun updateFocusLockState(locked: Boolean) {
+        focusLockButton.tag = locked
+        focusLockButton.setImageResource(
+            if (locked) android.R.drawable.ic_menu_mylocation
+            else android.R.drawable.ic_search_category_default
+        )
+    }
+
+    fun updateExposureCompensation(compensation: Float) {
+        val progress = ((compensation * 10) + 40).toInt().coerceIn(0, 80)
+        exposureCompensationSeekBar.progress = progress
+        exposureCompensationText.text = "Exposure Compensation: ${String.format("%.1f", compensation)} EV"
     }
 
     private fun updateUI() {
