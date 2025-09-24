@@ -17,4 +17,8 @@ data class UnifiedDevice(
     fun isConnected(): Boolean = false
     fun getSignalStrength(): Int = -50
     fun getBatteryLevel(): Int = 80
+    
+    // Add missing methods
+    fun getAddress(): String = address
+    fun getName(): String = name
 }

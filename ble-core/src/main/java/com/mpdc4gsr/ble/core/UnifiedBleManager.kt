@@ -30,12 +30,14 @@ class UnifiedBleManager private constructor(private val application: Application
         }
     }
 
-    fun initialize() {
+    fun initialize(): Boolean {
         // Stub implementation for initialization
+        return true
     }
 
-    fun initialize(context: Context, enableNordicBackend: Boolean) {
+    fun initialize(context: Context, enableNordicBackend: Boolean): Boolean {
         // Stub implementation for initialization with parameters
+        return true
     }
 
     fun enableMultiDeviceMode(enabled: Boolean) {
@@ -75,10 +77,26 @@ class UnifiedBleManager private constructor(private val application: Application
 
     fun getContext(): Context = application
 
+    // Scanning methods
+    fun scanForShimmerDevices(timeoutMs: Long, callback: ShimmerScanCallback) {
+        // Stub implementation - immediately call onScanComplete with empty list
+        callback.onScanComplete(emptyList())
+    }
+
+    fun getConnectedShimmerDevices(): List<UnifiedDevice> {
+        // Stub implementation - return empty list
+        return emptyList()
+    }
+
+    // Data handler methods
+    fun setMultiShimmerDataHandler(handler: Any, deviceHandler: Any) {
+        // Stub implementation for data handlers
+    }
+
     // Additional stub methods can be added here as needed
     interface ShimmerScanCallback {
         fun onDeviceFound(device: UnifiedDevice)
-        fun onScanComplete()
-        fun onError(error: String)
+        fun onScanComplete(foundDevices: List<UnifiedDevice> = emptyList())
+        fun onScanFailed(error: String)
     }
 }
