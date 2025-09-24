@@ -828,7 +828,7 @@ class UnifiedSessionManager(
             recordSyncEvent(
                 "synchronized_start_error", mapOf(
                     "sensors" to enabledSensors,
-                    "error" to e.message,
+                    "error" to (e.message ?: "Unknown error"),
                     "success" to false
                 )
             )

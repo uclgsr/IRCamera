@@ -373,6 +373,20 @@ class UnifiedNetworkController(
         return activeConnections.containsKey(controllerName)
     }
 
+    // Additional methods required by UnifiedSessionManager
+    fun getNetworkStatistics(): Any {
+        return object {
+            val averageLatency = 0.0 // TODO: Implement actual latency measurement
+            val packetLoss = 0.0 // TODO: Implement packet loss measurement
+            val reconnectionCount = 0 // TODO: Track reconnection attempts
+        }
+    }
+
+    fun getCurrentSyncQuality(): Double {
+        // Return connection quality as sync quality measure
+        return _connectionQuality.value
+    }
+
     suspend fun cleanup(): Boolean = withContext(Dispatchers.IO) {
         Log.i(TAG, "Cleaning up network controller")
 
