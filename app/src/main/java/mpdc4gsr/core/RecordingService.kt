@@ -29,14 +29,19 @@ import mpdc4gsr.config.FeatureFlags
 import mpdc4gsr.config.ProtocolVersion
 import mpdc4gsr.controller.ComprehensiveRecordingController
 import mpdc4gsr.controller.RecordingState
-import mpdc4gsr.libunified.app.StructuredLogger
+import mpdc4gsr.controller.SensorStatusInfo
+import mpdc4gsr.controller.RecordingError
+import mpdc4gsr.core.StructuredLogger
+import mpdc4gsr.permissions.PermissionManager
 import mpdc4gsr.network.NetworkClient
 import mpdc4gsr.network.NetworkConnectionManager
+import mpdc4gsr.network.NetworkManager
 import mpdc4gsr.network.NetworkServer
 import mpdc4gsr.network.PreviewDataAdapter
 import mpdc4gsr.network.PreviewStreamer
 import mpdc4gsr.network.ProtocolHandler
 import mpdc4gsr.supervisor.CrashSafeSupervisor
+import mpdc4gsr.sync.TimeSyncManager
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.DataInputStream
@@ -68,6 +73,9 @@ class RecordingService : LifecycleService() {
         const val ACTION_STOP_SERVER = "${com.csl.irCamera.BuildConfig.APPLICATION_ID}.STOP_SERVER"
         const val ACTION_CONNECT_PC = "${com.csl.irCamera.BuildConfig.APPLICATION_ID}.CONNECT_PC"
         const val ACTION_DISCONNECT_PC = "${com.csl.irCamera.BuildConfig.APPLICATION_ID}.DISCONNECT_PC"
+        const val ACTION_CONNECT_PC_CLIENT = "${com.csl.irCamera.BuildConfig.APPLICATION_ID}.CONNECT_PC_CLIENT"
+        const val ACTION_DISCONNECT_PC_CLIENT = "${com.csl.irCamera.BuildConfig.APPLICATION_ID}.DISCONNECT_PC_CLIENT"
+        const val ACTION_CONNECT_PC_BLUETOOTH = "${com.csl.irCamera.BuildConfig.APPLICATION_ID}.CONNECT_PC_BLUETOOTH"
         const val ACTION_START_DISCOVERY = "${com.csl.irCamera.BuildConfig.APPLICATION_ID}.START_DISCOVERY"
 
         const val EXTRA_SESSION_DIRECTORY = "session_directory"
@@ -75,6 +83,7 @@ class RecordingService : LifecycleService() {
         const val EXTRA_TIMESTAMP_NS = "timestamp_ns"
         const val EXTRA_PC_IP = "pc_ip"
         const val EXTRA_PC_PORT = "pc_port"
+        const val EXTRA_BLUETOOTH_DEVICE = "bluetooth_device"
 
         fun startRecording(context: Context, sessionDirectory: String) {
             val intent = Intent(context, RecordingService::class.java).apply {
@@ -123,9 +132,33 @@ class RecordingService : LifecycleService() {
             context.startService(intent)
         }
 
+        fun connectToPCClient(context: Context, ipAddress: String, port: Int = 8080) {
+            val intent = Intent(context, RecordingService::class.java).apply {
+                action = ACTION_CONNECT_PC_CLIENT
+                putExtra(EXTRA_PC_IP, ipAddress)
+                putExtra(EXTRA_PC_PORT, port)
+            }
+            context.startService(intent)
+        }
+
+        fun connectToPCBluetooth(context: Context, bluetoothDevice: android.bluetooth.BluetoothDevice) {
+            val intent = Intent(context, RecordingService::class.java).apply {
+                action = ACTION_CONNECT_PC_BLUETOOTH
+                putExtra(EXTRA_BLUETOOTH_DEVICE, bluetoothDevice)
+            }
+            context.startService(intent)
+        }
+
         fun disconnectFromPC(context: Context) {
             val intent = Intent(context, RecordingService::class.java).apply {
                 action = ACTION_DISCONNECT_PC
+            }
+            context.startService(intent)
+        }
+
+        fun disconnectFromPCClient(context: Context) {
+            val intent = Intent(context, RecordingService::class.java).apply {
+                action = ACTION_DISCONNECT_PC_CLIENT
             }
             context.startService(intent)
         }
@@ -141,10 +174,12 @@ class RecordingService : LifecycleService() {
     private val binder = RecordingServiceBinder()
 
     private lateinit var recordingController: ComprehensiveRecordingController
+    private lateinit var permissionManager: PermissionManager
     private var isInitialized = false
 
     private lateinit var networkClient: NetworkClient
     private lateinit var networkServer: NetworkServer
+    private lateinit var networkManager: NetworkManager
     private lateinit var protocolHandler: ProtocolHandler
     private lateinit var connectionManager: NetworkConnectionManager
     private lateinit var previewStreamer: PreviewStreamer
@@ -168,6 +203,7 @@ class RecordingService : LifecycleService() {
 
     private lateinit var structuredLogger: StructuredLogger
     private lateinit var crashSafeSupervisor: CrashSafeSupervisor
+    private lateinit var timeSyncManager: TimeSyncManager
 
     private data class ClientConnection(
         val socket: Socket,
@@ -197,6 +233,7 @@ class RecordingService : LifecycleService() {
         }
 
         fun getNetworkClient(): NetworkClient? = if (isNetworkInitialized) networkClient else null
+        fun getNetworkManager(): NetworkManager = networkManager
     }
 
     override fun onCreate() {
@@ -210,13 +247,32 @@ class RecordingService : LifecycleService() {
 
         nsdManager = getSystemService(Context.NSD_SERVICE) as NsdManager
 
-        // Initialize ComprehensiveRecordingController with PermissionManager
-        val permissionManager = mpdc4gsr.permissions.PermissionManager(this)
+        // Initialize PermissionManager and ComprehensiveRecordingController
+        permissionManager = PermissionManager(this)
         recordingController = ComprehensiveRecordingController(this, this, permissionManager)
 
         networkClient = NetworkClient(this)
         networkServer = NetworkServer(this, 8080)
+        networkManager = NetworkManager(this, recordingController)
         protocolHandler = ProtocolHandler(this, networkServer)
+        protocolHandler.setTimeSyncManager(timeSyncManager)
+        
+        // Set up sync trigger callback for manual sync requests
+        timeSyncManager.setSyncTriggerCallback(object : TimeSyncManager.SyncTriggerCallback {
+            override suspend fun onManualSyncRequested(): Boolean {
+                return try {
+                    // This would typically trigger a sync request to the PC
+                    // For now, we log that a manual sync was requested
+                    Log.i(TAG, "Manual sync requested - would trigger PC sync")
+                    // In a full implementation, this would send a message to PC or trigger sync
+                    true
+                } catch (e: Exception) {
+                    Log.e(TAG, "Manual sync trigger failed", e)
+                    false
+                }
+            }
+        })
+        
         connectionManager = NetworkConnectionManager(this, networkServer, protocolHandler)
         previewStreamer = PreviewStreamer(networkServer)
         previewDataAdapter = PreviewDataAdapter(previewStreamer, this)
@@ -302,6 +358,9 @@ class RecordingService : LifecycleService() {
             structuredLogger = StructuredLogger.getInstance(this)
             crashSafeSupervisor = CrashSafeSupervisor.getInstance(this)
             crashSafeSupervisor.initialize()
+            
+            // Initialize TimeSyncManager
+            timeSyncManager = TimeSyncManager(this)
 
             structuredLogger.log(
                 StructuredLogger.LogLevel.INFO,
@@ -309,7 +368,8 @@ class RecordingService : LifecycleService() {
                 "phase0_baseline_initialized",
                 mapOf(
                     "feature_flags" to FeatureFlags.getAllFlags(),
-                    "protocol_version" to ProtocolVersion.CURRENT_VERSION
+                    "protocol_version" to ProtocolVersion.CURRENT_VERSION,
+                    "time_sync_manager" to "initialized"
                 )
             )
         } catch (e: Exception) {
@@ -349,7 +409,28 @@ class RecordingService : LifecycleService() {
                 }
             }
 
+            ACTION_CONNECT_PC_CLIENT -> {
+                val ipAddress = intent.getStringExtra(EXTRA_PC_IP)
+                val port = intent.getIntExtra(EXTRA_PC_PORT, 8080)
+                if (ipAddress != null) {
+                    connectToPCClient(ipAddress, port)
+                }
+            }
+
+            ACTION_CONNECT_PC_BLUETOOTH -> {
+                val bluetoothDevice = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+                    intent.getParcelableExtra(EXTRA_BLUETOOTH_DEVICE, android.bluetooth.BluetoothDevice::class.java)
+                } else {
+                    @Suppress("DEPRECATION")
+                    intent.getParcelableExtra(EXTRA_BLUETOOTH_DEVICE)
+                }
+                if (bluetoothDevice != null) {
+                    connectToPCBluetooth(bluetoothDevice)
+                }
+            }
+
             ACTION_DISCONNECT_PC -> disconnectFromPC()
+            ACTION_DISCONNECT_PC_CLIENT -> disconnectFromPCClient()
             ACTION_START_DISCOVERY -> startPCDiscovery()
         }
         return START_STICKY
@@ -386,6 +467,15 @@ class RecordingService : LifecycleService() {
 
             if (::connectionManager.isInitialized) {
                 connectionManager.cleanup()
+            }
+            
+            // Cleanup TimeSyncManager
+            if (::timeSyncManager.isInitialized) {
+                timeSyncManager.cleanup()
+            }
+
+            if (::networkManager.isInitialized) {
+                networkManager.cleanup()
             }
 
             lifecycleScope.launch {
@@ -439,6 +529,12 @@ class RecordingService : LifecycleService() {
                 currentSessionDirectory = sessionDirectory
                 recordingStartTime = System.nanoTime()
 
+                // Initialize TimeSyncManager for this session
+                timeSyncManager.initializeSession(sessionDirectory)
+                
+                // Enable periodic sync for long recording sessions
+                timeSyncManager.setPeriodicSyncEnabled(true)
+
                 Log.i(TAG, "Starting recording session: $sessionDirectory")
                 structuredLogger.log(
                     StructuredLogger.LogLevel.INFO,
@@ -456,6 +552,8 @@ class RecordingService : LifecycleService() {
                     createRecordingNotification("Starting recording session...")
                 )
 
+                // Perform session start sync
+                timeSyncManager.performSessionStartSync()
 
                 val success = recordingController.startSession(sessionDirectory)
 
@@ -553,7 +651,9 @@ class RecordingService : LifecycleService() {
 
                 currentSessionDirectory = null
                 recordingStartTime = 0
-
+                
+                // Finalize TimeSyncManager session
+                timeSyncManager.finalizeSession()
 
                 if (!isServerRunning.get()) {
                     stopSelf()
@@ -620,15 +720,17 @@ class RecordingService : LifecycleService() {
 
         recordingController.errorFlow
             .onEach { error ->
-                Log.w(TAG, "Recording controller error: ${error.message}")
-                if (!error.isRecoverable) {
-                    updateNotification("Critical error: ${error.message}")
-                    stopRecordingSession()
-                } else {
-                    updateNotification("Warning: ${error.message}")
-                    delay(3000)
-                    if (recordingController.isRecording) {
-                        updateNotification("Recording in progress")
+                error?.let {
+                    Log.w(TAG, "Recording controller error: ${it.message}")
+                    if (!it.isRecoverable) {
+                        updateNotification("Critical error: ${it.message}")
+                        stopRecordingSession()
+                    } else {
+                        updateNotification("Warning: ${it.message}")
+                        delay(3000)
+                        if (recordingController.isRecording) {
+                            updateNotification("Recording in progress")
+                        }
                     }
                 }
             }
@@ -1719,7 +1821,7 @@ class RecordingService : LifecycleService() {
                     put(key, data.get(key))
                 }
             }
-            networkServer.sendMessage(response)
+            networkServer.sendMessage(response.toString())
             Log.d(TAG, "Sent response to PC: $messageType")
         } catch (e: Exception) {
             Log.e(TAG, "Error sending response to PC", e)
@@ -1815,6 +1917,74 @@ class RecordingService : LifecycleService() {
             }
         } catch (e: Exception) {
             Log.e(TAG, "Error handling stop recording command", e)
+        }
+    }
+
+    // New client-side PC connection methods
+    
+    private fun connectToPCClient(ipAddress: String, port: Int) {
+        lifecycleScope.launch {
+            try {
+                Log.i(TAG, "Connecting to PC server as client at $ipAddress:$port")
+                updateNotification("Connecting to PC server...")
+                
+                val success = networkManager.connectWifi(ipAddress, port)
+                if (success) {
+                    Log.i(TAG, "Successfully connected to PC server as client")
+                    updateNotification("Connected to PC server")
+                    isConnectedToPC = true
+                } else {
+                    Log.e(TAG, "Failed to connect to PC server as client")
+                    updateNotification("Failed to connect to PC server")
+                    isConnectedToPC = false
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Error during PC client connection", e)
+                updateNotification("Connection error: ${e.message}")
+                isConnectedToPC = false
+            }
+        }
+    }
+    
+    private fun connectToPCBluetooth(bluetoothDevice: android.bluetooth.BluetoothDevice) {
+        lifecycleScope.launch {
+            try {
+                Log.i(TAG, "Connecting to PC via Bluetooth: ${bluetoothDevice.name}")
+                updateNotification("Connecting to PC via Bluetooth...")
+                
+                val success = networkManager.connectBluetooth(bluetoothDevice)
+                if (success) {
+                    Log.i(TAG, "Successfully connected to PC via Bluetooth")
+                    updateNotification("Connected to PC via Bluetooth")
+                    isConnectedToPC = true
+                } else {
+                    Log.e(TAG, "Failed to connect to PC via Bluetooth")
+                    updateNotification("Failed to connect via Bluetooth")
+                    isConnectedToPC = false
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Error during Bluetooth connection", e)
+                updateNotification("Bluetooth connection error: ${e.message}")
+                isConnectedToPC = false
+            }
+        }
+    }
+    
+    private fun disconnectFromPCClient() {
+        lifecycleScope.launch {
+            try {
+                Log.i(TAG, "Disconnecting from PC server")
+                updateNotification("Disconnecting from PC...")
+                
+                networkManager.disconnect()
+                isConnectedToPC = false
+                
+                Log.i(TAG, "Disconnected from PC server")
+                updateNotification("Disconnected from PC server")
+            } catch (e: Exception) {
+                Log.e(TAG, "Error during disconnect", e)
+                updateNotification("Disconnect error: ${e.message}")
+            }
         }
     }
 }

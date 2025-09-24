@@ -1,0 +1,18 @@
+# PC Session Controller Requirements
+# Core dependencies for the desktop GUI application
+
+# GUI framework (tkinter is built-in to Python)
+# No additional GUI dependencies needed for basic functionality
+
+# Optional: Enhanced plotting capabilities
+matplotlib>=3.5.0
+numpy>=1.21.0
+
+# Optional: Image processing for video preview
+Pillow>=8.0.0
+
+# Optional: Enhanced networking
+requests>=2.25.0
+
+# Development/testing
+pytest>=6.0.0

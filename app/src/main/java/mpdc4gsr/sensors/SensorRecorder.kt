@@ -51,7 +51,14 @@ data class RecordingStatus(
     val currentDataRate: Double,
     val storageUsedMB: Double,
     val timestampNs: Long,
-)
+) {
+    val displayText: String
+        get() = if (isRecording) {
+            "Recording: $samplesRecorded samples @ ${String.format("%.1f", currentDataRate)} Hz"
+        } else {
+            "Ready - ${String.format("%.1f", storageUsedMB)} MB"
+        }
+}
 
 data class SensorError(
     val sensorId: String,
@@ -73,6 +80,7 @@ enum class ErrorType {
     DEVICE_ERROR,
     STORAGE_ERROR,
     CONNECTION_LOST,
+    CONNECTION_RESTORED,  // Added for enhanced reconnection feedback
     PAIRING_REQUIRED,
     DATA_PROCESSING_ERROR,
     UNKNOWN,

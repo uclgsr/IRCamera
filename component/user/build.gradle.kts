@@ -88,7 +88,6 @@ dependencies {
     coreLibraryDesugaring(libs.desugar.jdk.libs)
 
     implementation(project(":libunified"))
-    implementation(project(":ble-core"))
     implementation(project(":BleModule"))
 
     // Core Android dependencies

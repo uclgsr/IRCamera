@@ -209,16 +209,13 @@ class UnifiedSensorActivity : AppCompatActivity() {
                     showInitializationError(gsrInitialized, networkInitialized, cameraInitialized)
                 }
             }
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to initialize components", e)
+            statusText.text = "Initialization error: ${e.message}"
         }
-
-    } catch (e: Exception)
-    {
-        Log.e(TAG, "Failed to initialize components", e)
-        statusText.text = "Initialization error: ${e.message}"
     }
-}
 
-private fun observeComponentStates() {
+    private fun observeComponentStates() {
     Log.d(TAG, "Setting up component state observers")
 
     lifecycleScope.launch {
@@ -234,8 +231,8 @@ private fun observeComponentStates() {
     }
 
     lifecycleScope.launch {
-        rgbCameraRecorder.statusFlow.collect { status ->
-            cameraStatusText.text = "Camera: ${status.displayText}"
+        rgbCameraRecorder.cameraStatus.collect { status ->
+            cameraStatusText.text = "Camera: $status"
 
             // Update camera type display
             try {
@@ -267,9 +264,9 @@ private fun observeComponentStates() {
             pcAdapter.updateControllers(controllers)
         }
     }
-}
+    }
 
-private fun startDeviceDiscovery() {
+    private fun startDeviceDiscovery() {
     Log.i(TAG, "Starting Shimmer device discovery")
 
     discoverButton.isEnabled = false
@@ -298,9 +295,9 @@ private fun startDeviceDiscovery() {
         discoverButton.isEnabled = true
         discoverButton.text = "Discover Devices"
     }
-}
+    }
 
-private fun startPCDiscovery() {
+    private fun startPCDiscovery() {
     Log.i(TAG, "Starting PC controller discovery")
 
     discoverPCButton.isEnabled = false
@@ -326,9 +323,9 @@ private fun startPCDiscovery() {
         discoverPCButton.isEnabled = true
         discoverPCButton.text = "Discover PCs"
     }
-}
+    }
 
-private fun connectToDevice(device: DeviceInfo) {
+    private fun connectToDevice(device: DeviceInfo) {
     Log.i(TAG, "Connecting to Shimmer device: ${device.name}")
 
     lifecycleScope.launch {
@@ -349,9 +346,9 @@ private fun connectToDevice(device: DeviceInfo) {
             ).show()
         }
     }
-}
+    }
 
-private fun connectToPC(controller: PCControllerInfo) {
+    private fun connectToPC(controller: PCControllerInfo) {
     Log.i(TAG, "Connecting to PC controller: ${controller.name}")
 
     lifecycleScope.launch {
@@ -371,9 +368,9 @@ private fun connectToPC(controller: PCControllerInfo) {
             ).show()
         }
     }
-}
+    }
 
-private fun startSession() {
+    private fun startSession() {
     Log.i(TAG, "Starting recording session")
 
     val sessionName = sessionNameEdit.text.toString().trim()
@@ -418,9 +415,9 @@ private fun startSession() {
             }
         }
     }
-}
+    }
 
-private fun stopSession() {
+    private fun stopSession() {
     Log.i(TAG, "Stopping recording session")
 
     lifecycleScope.launch {
@@ -440,9 +437,9 @@ private fun stopSession() {
             ).show()
         }
     }
-}
+    }
 
-private fun addSyncMarker() {
+    private fun addSyncMarker() {
     Log.i(TAG, "Adding sync marker")
 
     lifecycleScope.launch {
@@ -468,27 +465,27 @@ private fun addSyncMarker() {
             ).show()
         }
     }
-}
+    }
 
-private fun connectToSelectedDevice() {
+    private fun connectToSelectedDevice() {
     val selectedDevice = deviceAdapter.getSelectedDevice()
     if (selectedDevice != null) {
         connectToDevice(selectedDevice)
     } else {
         Toast.makeText(this, "Please select a device first", Toast.LENGTH_SHORT).show()
     }
-}
+    }
 
-private fun connectToSelectedPC() {
+    private fun connectToSelectedPC() {
     val selectedPC = pcAdapter.getSelectedController()
     if (selectedPC != null) {
         connectToPC(selectedPC)
     } else {
         Toast.makeText(this, "Please select a PC controller first", Toast.LENGTH_SHORT).show()
     }
-}
+    }
 
-private fun updateUIState(
+    private fun updateUIState(
     initialized: Boolean,
     deviceConnected: Boolean,
     sessionActive: Boolean
@@ -506,9 +503,9 @@ private fun updateUIState(
 
     sessionNameEdit.isEnabled = !sessionActive
     participantIdEdit.isEnabled = !sessionActive
-}
+    }
 
-private fun updateSessionUI(status: SessionStatus) {
+    private fun updateSessionUI(status: SessionStatus) {
     when (status) {
         SessionStatus.RECORDING -> {
             statusText.text = "Recording session active"
@@ -530,9 +527,9 @@ private fun updateSessionUI(status: SessionStatus) {
             qualityIndicator.visibility = ProgressBar.INVISIBLE
         }
     }
-}
+    }
 
-private fun updateQualityIndicator(quality: SessionQuality) {
+    private fun updateQualityIndicator(quality: SessionQuality) {
     val color = when (quality.qualityLevel) {
         SessionQuality.QualityLevel.EXCELLENT -> android.graphics.Color.GREEN
         SessionQuality.QualityLevel.GOOD -> android.graphics.Color.BLUE
@@ -542,9 +539,9 @@ private fun updateQualityIndicator(quality: SessionQuality) {
     }
 
     qualityIndicator.progressTintList = android.content.res.ColorStateList.valueOf(color)
-}
+    }
 
-private fun switchCamera() {
+    private fun switchCamera() {
     lifecycleScope.launch {
         try {
             val currentInfo = rgbCameraRecorder.getCurrentCameraInfo()
@@ -578,9 +575,9 @@ private fun switchCamera() {
             switchCameraButton.text = "Switch Camera"
         }
     }
-}
+    }
 
-private fun showPermissionError() {
+    private fun showPermissionError() {
     AlertDialog.Builder(this)
         .setTitle("Permissions Required")
         .setMessage("This app requires Bluetooth and location permissions to connect to Shimmer devices and discover PC controllers.")
@@ -592,9 +589,9 @@ private fun showPermissionError() {
             finish()
         }
         .show()
-}
+    }
 
-private fun showInitializationError(
+    private fun showInitializationError(
     gsrInitialized: Boolean,
     networkInitialized: Boolean,
     cameraInitialized: Boolean = true
@@ -617,21 +614,21 @@ private fun showInitializationError(
             finish()
         }
         .show()
-}
+    }
 
-override fun onDestroy() {
-    super.onDestroy()
-    Log.i(TAG, "Cleaning up Unified Sensor Activity")
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.i(TAG, "Cleaning up Unified Sensor Activity")
 
-    lifecycleScope.launch {
-        try {
-            sessionManager.cleanup()
-            gsrRecorder.cleanup()
-            networkController.cleanup()
-            rgbCameraRecorder.cleanup()
-        } catch (e: Exception) {
-            Log.e(TAG, "Error during cleanup", e)
+        lifecycleScope.launch {
+            try {
+                sessionManager.cleanup()
+                gsrRecorder.cleanup()
+                networkController.cleanup()
+                rgbCameraRecorder.cleanup()
+                } catch (e: Exception) {
+                Log.e(TAG, "Error during cleanup", e)
+            }
         }
     }
-}
 }

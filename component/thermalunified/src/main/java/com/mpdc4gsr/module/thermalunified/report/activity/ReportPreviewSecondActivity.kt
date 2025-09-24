@@ -73,6 +73,7 @@ class ReportPreviewSecondActivity : BaseViewModelActivity<UpReportViewModel>(),
         tvToPdf = findViewById(R.id.tv_to_pdf)
         tvComplete = findViewById(R.id.tv_complete)
 
+        @Suppress("DEPRECATION")
         reportBean = intent.getParcelableExtra(ExtraKeyConfig.REPORT_BEAN)
         isTC007 = intent.getBooleanExtra(ExtraKeyConfig.IS_TC007, false)
 

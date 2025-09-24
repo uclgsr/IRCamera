@@ -9,7 +9,7 @@
         android:layout_height="match_parent"
         android:layout_centerVertical="true">
 
-        <com.infisense.usbir.view.TemperatureView
+        <com.mpdc4gsr.libunified.ir.view.TemperatureView
             android:id="@+id/temperature_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

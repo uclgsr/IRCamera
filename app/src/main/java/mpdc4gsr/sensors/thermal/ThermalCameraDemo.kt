@@ -16,7 +16,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
-import mpdc4gsr.R
+import com.csl.irCamera.R
 import mpdc4gsr.network.NetworkServer
 import java.io.File
 

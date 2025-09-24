@@ -43,6 +43,10 @@ class ThermalInputDialog {
             return this
         }
         
+        fun setCancelListener(textResId: Int): Builder {
+            return this
+        }
+        
         fun setCancelListener(text: String, listener: () -> Unit): Builder {
             this.cancelListener = listener
             return this

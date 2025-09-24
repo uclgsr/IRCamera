@@ -11,6 +11,7 @@ object Protocol {
     const val MSG_HELLO = "HELLO"
     const val MSG_SYNC_REQUEST = "SYNC_REQUEST"
     const val MSG_SYNC_RESPONSE = "SYNC_RESPONSE"
+    const val MSG_SYNC_RESULT = "SYNC_RESULT"
     const val MSG_START_RECORD = "START_RECORD"
     const val MSG_STOP_RECORD = "STOP_RECORD"
     const val MSG_ACK = "ACK"
@@ -53,6 +54,14 @@ object Protocol {
      */
     fun createSyncResponseMessage(pcTimestamp: Long, phoneTimestamp: Long): String {
         return "$MSG_SYNC_RESPONSE t_pc=$pcTimestamp t_ph=$phoneTimestamp"
+    }
+
+    /**
+     * Create a SYNC_RESULT message sent by PC with calculated offset and RTT
+     * Format: SYNC_RESULT t1=<T1> t2=<T2> t3=<T3> offset=<OFFSET> rtt=<RTT>
+     */
+    fun createSyncResultMessage(t1: Long, t2: Long, t3: Long, offsetMs: Long, rttMs: Long): String {
+        return "$MSG_SYNC_RESULT t1=$t1 t2=$t2 t3=$t3 offset=$offsetMs rtt=$rttMs"
     }
 
     /**

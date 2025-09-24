@@ -48,6 +48,7 @@ class ReportDetailActivity : BaseActivity() {
         llContent = findViewById(R.id.ll_content)
         watermarkView = findViewById(R.id.watermark_view)
 
+        @Suppress("DEPRECATION")
         reportBean = intent.getParcelableExtra(ExtraKeyConfig.REPORT_BEAN)
 
         titleView.setTitleText(R.string.album_edit_report)

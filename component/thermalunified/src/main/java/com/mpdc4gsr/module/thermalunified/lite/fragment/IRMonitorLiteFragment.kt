@@ -1,6 +1,6 @@
 package com.mpdc4gsr.module.thermalunified.lite.fragment
 
-import android.app.ProgressDialog
+import com.mpdc4gsr.libunified.ui.dialog.ProgressDialog
 import android.graphics.Bitmap
 import android.graphics.Point
 import android.graphics.Rect

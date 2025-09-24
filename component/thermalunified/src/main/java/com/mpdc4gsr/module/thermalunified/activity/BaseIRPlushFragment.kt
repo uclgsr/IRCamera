@@ -651,8 +651,9 @@ abstract class BaseIRPlushFragment :
     protected val preTempData = ByteArray(256 * 192 * 2)
 
     override fun onIrFrame(irFrame: ByteArray?): ByteArray {
-
-        System.arraycopy(irFrame, 0, preIrData, 0, preIrData.size)
+        irFrame?.let {
+            System.arraycopy(it, 0, preIrData, 0, preIrData.size)
+        } ?: return preIrARGBData
         LibIRProcess.convertYuyvMapToARGBPseudocolor(
             preIrData,
             (Const.IR_WIDTH * Const.IR_HEIGHT).toLong(),

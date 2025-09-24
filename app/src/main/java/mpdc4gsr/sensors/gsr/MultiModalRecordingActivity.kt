@@ -446,7 +446,7 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
 
     private fun observeCameraStatus() {
         lifecycleScope.launch {
-            rgbCameraRecorder?.statusFlow?.collect { status ->
+            rgbCameraRecorder?.getStatusFlow()?.collect { status ->
                 Log.d(TAG, "Camera status: ${status.displayText}")
             }
         }
@@ -938,7 +938,7 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
     }
 
     private fun openSynchronizationTest() {
-        val intent = Intent(this, com.mpdc4gsr.test.SynchronizationTestActivity::class.java)
+        val intent = Intent(this, mpdc4gsr.test.SynchronizationTestActivity::class.java)
         startActivity(intent)
     }
 
@@ -1138,14 +1138,18 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
     }
 
     override fun onDestroy() {
-        super.onDestroy()
         stopUIUpdates()
         gsrRecorder.removeListener(gsrListener)
         if (isRecording) {
             stopRecording()
         }
-        rgbCameraRecorder?.cleanup()
+        // Launch coroutine for cleanup since it's a suspend function
+        // Do this before super.onDestroy() to ensure lifecycleScope is still active
+        lifecycleScope.launch {
+            rgbCameraRecorder?.cleanup()
+        }
         networkClient?.cleanup()
         unbindEnhancedRecordingService()
+        super.onDestroy()
     }
 }

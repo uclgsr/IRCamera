@@ -33,9 +33,9 @@ import mpdc4gsr.sensors.TimeSynchronizationService
 import mpdc4gsr.sensors.TimestampManager
 import mpdc4gsr.sensors.gsr.GSRSensorRecorder
 import mpdc4gsr.sensors.thermal.ThermalCameraRecorder
-import mpdc4gsr.util.SessionDirectory
-import mpdc4gsr.util.SessionDirectoryManager
-import mpdc4gsr.util.StorageStatus
+import mpdc4gsr.utils.SessionDirectory
+import mpdc4gsr.utils.SessionDirectoryManager
+import mpdc4gsr.utils.StorageStatus
 import java.io.File
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean
@@ -278,10 +278,10 @@ class RecordingController(
                 )
 
 
-                createCrashRecoveryMarker(finalSessionId, enabledSensors)
+                createCrashRecoveryMarker(finalSessionId, enabledSensors, sessionDir)
 
 
-                val utilMetadata = com.mpdc4gsr.util.SessionMetadata(
+                val utilMetadata = mpdc4gsr.utils.SessionMetadata(
                     startTime = sessionMetadata!!.sessionStartTimestampMs,
                     enabledSensors = enabledSensors,
                     participantId = participantId,
@@ -319,7 +319,8 @@ class RecordingController(
                             sensorDir.mkdirs()
 
                             val sensorStartReference = SystemClock.elapsedRealtimeNanos()
-                            if (sessionMetadata == null) {
+                            val currentSessionMetadata = sessionMetadata
+                            if (currentSessionMetadata == null) {
                                 Log.w(TAG, "sessionMetadata is null when starting sensor: $sensorName")
                                 emitError(
                                     RecordingControllerError(
@@ -337,7 +338,7 @@ class RecordingController(
                             }
                             val success = sensor.startRecording(
                                 sensorDir.absolutePath,
-                                sessionMetadata
+                                currentSessionMetadata
                             )
                             if (success) {
                                 activeRecorders[sensorName] = true
@@ -1446,107 +1447,6 @@ class RecordingController(
 
         return timestamps
     }
-}
-
-
-data class RecordingControllerError(
-    val errorType: String,
-    val message: String,
-    val sensorId: String? = null,
-    val isRecoverable: Boolean = true,
-    val timestampNs: Long = System.nanoTime(),
-    val originalError: SensorError? = null,
-    val details: Map<String, String> = emptyMap()
-)
-
-data class SyncEvent(
-    val markerType: String,
-    val timestampNs: Long,
-    val metadata: Map<String, String>,
-    val successfulSensors: Int,
-    val totalSensors: Int
-)
-
-data class RecordingStatistics(
-    val isRecording: Boolean,
-    val sessionDurationSeconds: Double,
-    val activeSensors: Int,
-    val totalSamplesRecorded: Long,
-    val totalStorageUsedMB: Double,
-    val totalDroppedSamples: Long,
-    val sensorStatistics: List<RecordingStats>
-)
-
-data class SensorInfo(
-    val sensorId: String,
-    val sensorType: String,
-    val isRecording: Boolean,
-    val samplingRate: Double
-)
-
-data class DetailedSensorStatus(
-    val sensorId: String,
-    val sensorType: String,
-    val isInitialized: Boolean,
-    val isRecording: Boolean,
-    val samplingRate: Double,
-    val lastError: String?
-)
-
-data class SensorStatusSummary(
-    val totalSensorsConfigured: Int,
-    val totalSensorsInitialized: Int,
-    val totalSensorsRecording: Int,
-    val isSessionActive: Boolean,
-    val sessionState: RecordingState,
-    val sensors: List<DetailedSensorStatus>
-) {
-    val hasFailedSensors: Boolean get() = totalSensorsInitialized < totalSensorsConfigured
-    val hasPartialRecording: Boolean get() = totalSensorsRecording > 0 && totalSensorsRecording < totalSensorsInitialized
-    val statusMessage: String
-        get() = when {
-            totalSensorsRecording == totalSensorsInitialized && totalSensorsInitialized > 0 -> "All sensors recording"
-            totalSensorsRecording > 0 -> "Partial recording: $totalSensorsRecording/$totalSensorsInitialized sensors active"
-            totalSensorsInitialized > 0 -> "Sensors ready but not recording"
-            else -> "No sensors available"
-        }
-}
-
-
-data class SessionDiagnostics(
-    val isRecording: Boolean,
-    val sessionState: RecordingState,
-    val sessionDirectory: String?,
-    val sessionDurationMs: Long,
-    val sessionStartTimestamp: Long,
-    val referenceTimestampNs: Long,
-    val totalSensorsConfigured: Int,
-    val totalSensorsInitialized: Int,
-    val totalSensorsActive: Int,
-    val activeSensorNames: List<String>,
-    val availableSensorNames: List<String>,
-    val faultToleranceEnabled: Boolean,
-    val partialStartCapable: Boolean,
-    val midSessionRecoveryEnabled: Boolean,
-    val smartCleanupEnabled: Boolean,
-    val lastError: String?
-) {
-    val sessionHealthScore: Double
-        get() = when {
-            !isRecording -> 0.0
-            totalSensorsActive == 0 -> 0.0
-            totalSensorsConfigured == 0 -> 1.0
-            else -> totalSensorsActive.toDouble() / totalSensorsConfigured.toDouble()
-        }
-
-    val statusSummary: String
-        get() = when {
-            !isRecording -> "Idle"
-            totalSensorsActive == totalSensorsConfigured -> "Full recording (${totalSensorsActive} sensors)"
-            totalSensorsActive > 0 -> "Partial recording (${totalSensorsActive}/${totalSensorsConfigured} sensors)"
-            else -> "Recording failed (no active sensors)"
-        }
-
 
     private suspend fun validateRecordingPrerequisites(enabledSensors: List<String>): ValidationResult {
         val issues = mutableListOf<String>()
@@ -1647,9 +1547,9 @@ data class SessionDiagnostics(
     }
 
 
-    private fun createCrashRecoveryMarker(sessionId: String, enabledSensors: List<String>) {
+    private fun createCrashRecoveryMarker(sessionId: String, enabledSensors: List<String>, sessionDir: SessionDirectory) {
         try {
-            val recoveryFile = File(sessionDirectoryManager.getSessionDirectory(sessionId), ".recovery_marker")
+            val recoveryFile = File(sessionDir.rootDir, ".recovery_marker")
             val recoveryInfo = mapOf(
                 "session_id" to sessionId,
                 "enabled_sensors" to enabledSensors.joinToString(","),
@@ -1682,21 +1582,122 @@ data class SessionDiagnostics(
         STOPPING,
         ERROR
     }
+
+    data class SessionValidationResult(
+        val isValid: Boolean,
+        val issues: List<String>,
+        val warnings: List<String>,
+        val checkedAt: Long
+    ) {
+        val hasIssues: Boolean get() = issues.isNotEmpty()
+        val hasWarnings: Boolean get() = warnings.isNotEmpty()
+        val summary: String
+            get() = when {
+                isValid && !hasWarnings -> "Session state is valid"
+                isValid && hasWarnings -> "Session state is valid with ${warnings.size} warnings"
+                else -> "Session state has ${issues.size} issues"
+            }
+    }
 }
 
 
-data class SessionValidationResult(
-    val isValid: Boolean,
-    val issues: List<String>,
-    val warnings: List<String>,
-    val checkedAt: Long
+data class RecordingControllerError(
+    val errorType: String,
+    val message: String,
+    val sensorId: String? = null,
+    val isRecoverable: Boolean = true,
+    val timestampNs: Long = System.nanoTime(),
+    val originalError: SensorError? = null,
+    val details: Map<String, String> = emptyMap()
+)
+
+data class SyncEvent(
+    val markerType: String,
+    val timestampNs: Long,
+    val metadata: Map<String, String>,
+    val successfulSensors: Int,
+    val totalSensors: Int
+)
+
+data class RecordingStatistics(
+    val isRecording: Boolean,
+    val sessionDurationSeconds: Double,
+    val activeSensors: Int,
+    val totalSamplesRecorded: Long,
+    val totalStorageUsedMB: Double,
+    val totalDroppedSamples: Long,
+    val sensorStatistics: List<RecordingStats>
+)
+
+data class SensorInfo(
+    val sensorId: String,
+    val sensorType: String,
+    val isRecording: Boolean,
+    val samplingRate: Double
+)
+
+data class DetailedSensorStatus(
+    val sensorId: String,
+    val sensorType: String,
+    val isInitialized: Boolean,
+    val isRecording: Boolean,
+    val samplingRate: Double,
+    val lastError: String?
+)
+
+data class SensorStatusSummary(
+    val totalSensorsConfigured: Int,
+    val totalSensorsInitialized: Int,
+    val totalSensorsRecording: Int,
+    val isSessionActive: Boolean,
+    val sessionState: RecordingController.RecordingState,
+    val sensors: List<DetailedSensorStatus>
 ) {
-    val hasIssues: Boolean get() = issues.isNotEmpty()
-    val hasWarnings: Boolean get() = warnings.isNotEmpty()
-    val summary: String
+    val hasFailedSensors: Boolean get() = totalSensorsInitialized < totalSensorsConfigured
+    val hasPartialRecording: Boolean get() = totalSensorsRecording > 0 && totalSensorsRecording < totalSensorsInitialized
+    val statusMessage: String
         get() = when {
-            isValid && !hasWarnings -> "Session state is valid"
-            isValid && hasWarnings -> "Session state is valid with ${warnings.size} warnings"
-            else -> "Session state has ${issues.size} issues"
+            totalSensorsRecording == totalSensorsInitialized && totalSensorsInitialized > 0 -> "All sensors recording"
+            totalSensorsRecording > 0 -> "Partial recording: $totalSensorsRecording/$totalSensorsInitialized sensors active"
+            totalSensorsInitialized > 0 -> "Sensors ready but not recording"
+            else -> "No sensors available"
         }
 }
+
+
+data class SessionDiagnostics(
+    val isRecording: Boolean,
+    val sessionState: RecordingController.RecordingState,
+    val sessionDirectory: String?,
+    val sessionDurationMs: Long,
+    val sessionStartTimestamp: Long,
+    val referenceTimestampNs: Long,
+    val totalSensorsConfigured: Int,
+    val totalSensorsInitialized: Int,
+    val totalSensorsActive: Int,
+    val activeSensorNames: List<String>,
+    val availableSensorNames: List<String>,
+    val faultToleranceEnabled: Boolean,
+    val partialStartCapable: Boolean,
+    val midSessionRecoveryEnabled: Boolean,
+    val smartCleanupEnabled: Boolean,
+    val lastError: String?
+) {
+    val sessionHealthScore: Double
+        get() = when {
+            !isRecording -> 0.0
+            totalSensorsActive == 0 -> 0.0
+            totalSensorsConfigured == 0 -> 1.0
+            else -> totalSensorsActive.toDouble() / totalSensorsConfigured.toDouble()
+        }
+
+    val statusSummary: String
+        get() = when {
+            !isRecording -> "Idle"
+            totalSensorsActive == totalSensorsConfigured -> "Full recording (${totalSensorsActive} sensors)"
+            totalSensorsActive > 0 -> "Partial recording (${totalSensorsActive}/${totalSensorsConfigured} sensors)"
+            else -> "Recording failed (no active sensors)"
+        }
+}
+
+
