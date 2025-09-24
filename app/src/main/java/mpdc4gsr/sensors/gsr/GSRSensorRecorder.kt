@@ -1308,8 +1308,8 @@ class GSRSensorRecorder(
                                 scanResultDeferred.complete(deviceList.toList())
                             }
 
-                            override fun onScanFailed(error: String) {
-                                Log.e(TAG, "Shimmer device scan failed: $error")
+                            override fun onScanFailed(errorCode: Int) {
+                                Log.e(TAG, "Shimmer device scan failed with error code: $errorCode")
 
                                 scanResultDeferred.complete(deviceList.toList())
                             }
@@ -1389,10 +1389,10 @@ class GSRSensorRecorder(
                                 }
                             }
 
-                            override fun onScanFailed(error: String) {
+                            override fun onScanFailed(errorCode: Int) {
                                 Log.e(
                                     TAG,
-                                    "Scan failed while looking for device $deviceAddress: $error"
+                                    "Scan failed while looking for device $deviceAddress with error code: $errorCode"
                                 )
                                 if (!connectionCompleted.isCompleted) {
                                     connectionCompleted.complete(false)
@@ -1685,9 +1685,10 @@ class GSRSensorRecorder(
                 append("${timestampRecord.systemTimeMs},")          // Wall clock time
                 append("${timestampRecord.sessionRelativeMs},")     // Session relative time
                 append("${deviceTimestamp},")                       // Device timestamp for drift analysis
-                append("${sample.conductanceMicrosiemens},")        // GSR in microsiemens
-                append("${sample.rawAdc},")                         // Raw ADC value
-                append("${sample.ppgValue}")                        // PPG if available
+                append("${sample.conductance},")                    // GSR conductance 
+                append("${sample.rawValue},")                       // Raw ADC value
+                append("0")                                         // PPG placeholder (not available in current GSRSample)
+            }
             }
 
             // Add to buffer for batch writing (50 samples as per plan)
@@ -1704,7 +1705,7 @@ class GSRSensorRecorder(
                 }
             }
 
-            Log.v(TAG, "GSR sample buffered: conductance=${sample.conductanceMicrosiemens}µS, buffer_size=$csvBufferCount")
+            Log.v(TAG, "GSR sample buffered: conductance=${sample.conductance}µS, buffer_size=$csvBufferCount")
 
         } catch (e: Exception) {
             Log.e(TAG, "Error buffering GSR data for CSV", e)
