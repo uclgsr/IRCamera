@@ -1912,13 +1912,25 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                 return
             }
             
-            val pairedDevices = bluetoothAdapter.bondedDevices
+            val pairedDevices = try {
+                bluetoothAdapter.bondedDevices
+            } catch (e: SecurityException) {
+                Log.e(TAG, "Security exception accessing bonded devices", e)
+                Toast.makeText(this, "Permission denied accessing Bluetooth devices", Toast.LENGTH_SHORT).show()
+                return
+            }
+            
             if (pairedDevices.isEmpty()) {
                 Toast.makeText(this, "No paired Bluetooth devices found", Toast.LENGTH_SHORT).show()
                 return
             }
             
-            val deviceNames = pairedDevices.map { "${it.name} (${it.address})" }.toTypedArray()
+            val deviceNames = try {
+                pairedDevices.map { "${it.name ?: "Unknown"} (${it.address})" }.toTypedArray()
+            } catch (e: SecurityException) {
+                Log.e(TAG, "Security exception accessing device names", e)
+                pairedDevices.map { "Device (${it.address})" }.toTypedArray()
+            }
             val devices = pairedDevices.toList()
             
             androidx.appcompat.app.AlertDialog.Builder(this)
@@ -1930,8 +1942,11 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                 .show()
                 
         } catch (e: SecurityException) {
-            Log.e(TAG, "Security exception accessing Bluetooth devices", e)
-            Toast.makeText(this, "Permission denied accessing Bluetooth devices", Toast.LENGTH_SHORT).show()
+            Log.e(TAG, "Security exception in Bluetooth device selection", e)
+            Toast.makeText(this, "Bluetooth permission denied. Please grant permission in settings.", Toast.LENGTH_LONG).show()
+        } catch (e: Exception) {
+            Log.e(TAG, "Unexpected error in Bluetooth device selection", e)
+            Toast.makeText(this, "Error accessing Bluetooth: ${e.message}", Toast.LENGTH_SHORT).show()
         }
     }
     

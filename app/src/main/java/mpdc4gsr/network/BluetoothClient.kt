@@ -134,17 +134,43 @@ class BluetoothClient(
     override suspend fun disconnect() = withContext(Dispatchers.IO) {
         Log.i(TAG, "Disconnecting from PC Bluetooth server")
         
+        // Cancel reader job first to stop any ongoing reads
         readerJob?.cancel()
         readerJob = null
         
+        // Close resources in proper order: writer, reader, then socket
         try {
-            writer?.close()
-            reader?.close()
-            bluetoothSocket?.close()
+            writer?.let { w ->
+                try {
+                    w.flush()
+                    w.close()
+                } catch (e: IOException) {
+                    Log.w(TAG, "Error closing Bluetooth writer", e)
+                }
+            }
         } catch (e: Exception) {
-            Log.w(TAG, "Error during Bluetooth disconnect cleanup", e)
+            Log.w(TAG, "Error flushing/closing Bluetooth writer", e)
         }
         
+        try {
+            reader?.close()
+        } catch (e: IOException) {
+            Log.w(TAG, "Error closing Bluetooth reader", e)
+        }
+        
+        try {
+            bluetoothSocket?.let { socket ->
+                if (socket.isConnected) {
+                    socket.close()
+                }
+            }
+        } catch (e: IOException) {
+            Log.w(TAG, "Error closing Bluetooth socket", e)
+        } catch (e: SecurityException) {
+            Log.w(TAG, "Security exception closing Bluetooth socket", e)
+        }
+        
+        // Clear all references
         writer = null
         reader = null
         bluetoothSocket = null

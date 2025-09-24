@@ -34,6 +34,7 @@ class NetworkManager(
     private var activeConnection: CommandConnection? = null
     private var commandHandler: CommandHandler? = null
     private val networkSettings = NetworkSettings(context)
+    private val connectionMetrics = ConnectionMetrics()
     
     private val managerScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     private var connectionMonitorJob: Job? = null
@@ -88,30 +89,36 @@ class NetworkManager(
                 connectWifi(networkSettings.pcIpAddress, networkSettings.pcPort)
             }
             NetworkSettings.ConnectionType.BLUETOOTH_RFCOMM -> {
-                val (address, _) = networkSettings.getSavedBluetoothDeviceInfo()
-                if (address != null) {
-                    val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
-                    if (bluetoothAdapter?.isEnabled == true) {
-                        try {
-                            val device = bluetoothAdapter.getRemoteDevice(address)
-                            lastConnectionConfig = ConnectionConfig(
-                                NetworkSettings.ConnectionType.BLUETOOTH_RFCOMM,
-                                bluetoothDevice = device
-                            )
-                            connectBluetooth(device)
-                        } catch (e: Exception) {
-                            Log.e(TAG, "Error getting Bluetooth device: $address", e)
-                            _lastError.value = "Bluetooth device not available"
+                try {
+                    val (address, _) = networkSettings.getSavedBluetoothDeviceInfo()
+                    if (address != null) {
+                        val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+                        if (bluetoothAdapter?.isEnabled == true) {
+                            try {
+                                val device = bluetoothAdapter.getRemoteDevice(address)
+                                lastConnectionConfig = ConnectionConfig(
+                                    NetworkSettings.ConnectionType.BLUETOOTH_RFCOMM,
+                                    bluetoothDevice = device
+                                )
+                                connectBluetooth(device)
+                            } catch (e: Exception) {
+                                Log.e(TAG, "Error getting Bluetooth device: $address", e)
+                                _lastError.value = "Bluetooth device not available"
+                                false
+                            }
+                        } else {
+                            Log.e(TAG, "Bluetooth adapter not available or disabled")
+                            _lastError.value = "Bluetooth not available"
                             false
                         }
                     } else {
-                        Log.e(TAG, "Bluetooth adapter not available or disabled")
-                        _lastError.value = "Bluetooth not available"
+                        Log.e(TAG, "No saved Bluetooth device")
+                        _lastError.value = "No Bluetooth device configured"
                         false
                     }
-                } else {
-                    Log.e(TAG, "No saved Bluetooth device")
-                    _lastError.value = "No Bluetooth device configured"
+                } catch (e: Exception) {
+                    Log.e(TAG, "Error getting saved Bluetooth device info", e)
+                    _lastError.value = "Error accessing Bluetooth settings"
                     false
                 }
             }
@@ -161,8 +168,10 @@ class NetworkManager(
         
         Log.i(TAG, "Attempting Bluetooth connection to ${bluetoothDevice.name} (${bluetoothDevice.address})")
         
-        // Save settings
-        networkSettings.saveBluetoothDevice(bluetoothDevice)
+        // Save settings asynchronously
+        managerScope.launch {
+            networkSettings.saveBluetoothDevice(bluetoothDevice)
+        }
         networkSettings.preferredConnectionType = NetworkSettings.ConnectionType.BLUETOOTH_RFCOMM
         _connectionSummary.value = networkSettings.getConnectionSummary()
         
@@ -299,14 +308,27 @@ class NetworkManager(
                 val deviceId = android.provider.Settings.Secure.getString(
                     context.contentResolver,
                     android.provider.Settings.Secure.ANDROID_ID
-                )
+                ) ?: "unknown_device"
+                
                 val sensors = listOf("RGB", "Thermal", "GSR")
                 val helloMessage = Protocol.createHelloMessage(deviceId, sensors)
                 
-                activeConnection?.sendMessage(helloMessage)
-                Log.i(TAG, "Sent initial handshake: $helloMessage")
+                val connection = activeConnection
+                if (connection != null) {
+                    val success = connection.sendMessage(helloMessage)
+                    if (success) {
+                        Log.i(TAG, "Sent initial handshake: $helloMessage")
+                    } else {
+                        Log.w(TAG, "Failed to send initial handshake message")
+                        _lastError.value = "Failed to send handshake"
+                    }
+                } else {
+                    Log.w(TAG, "No active connection for handshake")
+                    _lastError.value = "No connection available"
+                }
             } catch (e: Exception) {
                 Log.e(TAG, "Error sending initial handshake", e)
+                _lastError.value = "Handshake error: ${e.message}"
             }
         }
     }
@@ -342,12 +364,14 @@ class NetworkManager(
                 Log.i(TAG, "$connectionType connection established")
                 _lastError.value = null
                 currentReconnectAttempts = 0
+                connectionMetrics.recordConnectionStart()
                 sendInitialHandshake()
                 startPeriodicUpdates()
                 startTelemetryUpdates()
             }
             CommandConnection.ConnectionState.DISCONNECTED -> {
                 Log.i(TAG, "$connectionType connection closed")
+                connectionMetrics.recordConnectionEnd()
                 stopPeriodicUpdates()
                 stopTelemetryUpdates()
                 
@@ -359,6 +383,7 @@ class NetworkManager(
             CommandConnection.ConnectionState.ERROR -> {
                 Log.w(TAG, "$connectionType connection error")
                 _lastError.value = "$connectionType connection error"
+                connectionMetrics.recordConnectionEnd()
                 stopPeriodicUpdates()
                 stopTelemetryUpdates()
                 
@@ -379,6 +404,7 @@ class NetworkManager(
         }
         
         currentReconnectAttempts++
+        connectionMetrics.recordReconnectAttempt()
         Log.i(TAG, "Scheduling reconnection attempt $currentReconnectAttempts/${networkSettings.reconnectAttempts}")
         
         reconnectionJob?.cancel()
@@ -469,5 +495,32 @@ class NetworkManager(
     /**
      * Get network settings for configuration
      */
-    fun getNetworkSettings(): NetworkSettings = networkSettings}
+    fun getNetworkSettings(): NetworkSettings = networkSettings
+    
+    /**
+     * Get connection metrics for monitoring
+     */
+    fun getConnectionMetrics(): ConnectionMetrics = connectionMetrics
+    
+    /**
+     * Get detailed connection information including metrics
+     */
+    suspend fun getDetailedConnectionInfo(): Map<String, Any> {
+        val baseInfo = mapOf(
+            "connected" to isConnected(),
+            "type" to when (activeConnection) {
+                is TcpClient -> "Wi-Fi TCP"
+                is BluetoothClient -> "Bluetooth RFCOMM"
+                else -> "None"
+            },
+            "state" to _connectionState.value.name,
+            "last_error" to (_lastError.value ?: "None"),
+            "auto_reconnect_enabled" to isAutoReconnectEnabled,
+            "reconnect_attempts" to currentReconnectAttempts,
+            "max_reconnect_attempts" to networkSettings.reconnectAttempts
+        )
+        
+        val metricsInfo = connectionMetrics.getMetricsSummary()
+        return baseInfo + metricsInfo
+    }}
 }

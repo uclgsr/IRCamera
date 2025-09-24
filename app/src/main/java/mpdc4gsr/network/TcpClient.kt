@@ -121,17 +121,41 @@ class TcpClient(
     override suspend fun disconnect() = withContext(Dispatchers.IO) {
         Log.i(TAG, "Disconnecting from PC server")
         
+        // Cancel reader job first to stop any ongoing reads
         readerJob?.cancel()
         readerJob = null
         
+        // Close resources in proper order: writer, reader, then socket
         try {
-            writer?.close()
-            reader?.close()
-            socket?.close()
+            writer?.let { w ->
+                try {
+                    w.flush()
+                    w.close()
+                } catch (e: IOException) {
+                    Log.w(TAG, "Error closing writer", e)
+                }
+            }
         } catch (e: Exception) {
-            Log.w(TAG, "Error during disconnect cleanup", e)
+            Log.w(TAG, "Error flushing/closing writer", e)
         }
         
+        try {
+            reader?.close()
+        } catch (e: IOException) {
+            Log.w(TAG, "Error closing reader", e)
+        }
+        
+        try {
+            socket?.let { s ->
+                if (!s.isClosed) {
+                    s.close()
+                }
+            }
+        } catch (e: IOException) {
+            Log.w(TAG, "Error closing socket", e)
+        }
+        
+        // Clear all references
         writer = null
         reader = null
         socket = null

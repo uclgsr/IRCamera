@@ -4,9 +4,11 @@ import android.bluetooth.BluetoothDevice
 import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 /**
- * Manages network connection settings and persistence
+ * Thread-safe network connection settings and persistence manager
  */
 class NetworkSettings(private val context: Context) {
     companion object {
@@ -43,6 +45,8 @@ class NetworkSettings(private val context: Context) {
     }
     
     private val prefs: SharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+    
+    // Thread-safe property accessors with background thread operations for complex tasks
     
     // Wi-Fi TCP Settings
     var isWifiEnabled: Boolean
@@ -99,31 +103,52 @@ class NetworkSettings(private val context: Context) {
         set(value) = prefs.edit().putLong(KEY_CONNECTION_TIMEOUT, value).apply()
     
     /**
-     * Save Bluetooth device configuration
+     * Save Bluetooth device configuration - thread-safe
      */
-    fun saveBluetoothDevice(device: BluetoothDevice) {
+    suspend fun saveBluetoothDevice(device: BluetoothDevice) = withContext(Dispatchers.IO) {
         try {
-            bluetoothDeviceAddress = device.address
-            bluetoothDeviceName = device.name
-            Log.i(TAG, "Saved Bluetooth device: ${device.name} (${device.address})")
+            val editor = prefs.edit()
+            editor.putString(KEY_BLUETOOTH_DEVICE_ADDRESS, device.address)
+            try {
+                val deviceName = device.name
+                editor.putString(KEY_BLUETOOTH_DEVICE_NAME, deviceName)
+            } catch (e: SecurityException) {
+                Log.w(TAG, "Security exception accessing device name", e)
+                // Save address only
+            }
+            editor.apply()
+            Log.i(TAG, "Saved Bluetooth device: ${device.address}")
         } catch (e: SecurityException) {
             Log.e(TAG, "Security exception saving Bluetooth device", e)
+        } catch (e: Exception) {
+            Log.e(TAG, "Error saving Bluetooth device", e)
         }
     }
     
     /**
-     * Get saved Bluetooth device info
+     * Get saved Bluetooth device info - thread-safe
      */
-    fun getSavedBluetoothDeviceInfo(): Pair<String?, String?> {
-        return Pair(bluetoothDeviceAddress, bluetoothDeviceName)
+    suspend fun getSavedBluetoothDeviceInfo(): Pair<String?, String?> = withContext(Dispatchers.IO) {
+        try {
+            val address = prefs.getString(KEY_BLUETOOTH_DEVICE_ADDRESS, null)
+            val name = prefs.getString(KEY_BLUETOOTH_DEVICE_NAME, null)
+            Pair(address, name)
+        } catch (e: Exception) {
+            Log.e(TAG, "Error getting Bluetooth device info", e)
+            Pair(null, null)
+        }
     }
     
     /**
-     * Clear all saved settings
+     * Clear all saved settings - thread-safe
      */
-    fun clearSettings() {
-        prefs.edit().clear().apply()
-        Log.i(TAG, "Network settings cleared")
+    suspend fun clearSettings() = withContext(Dispatchers.IO) {
+        try {
+            prefs.edit().clear().apply()
+            Log.i(TAG, "Network settings cleared")
+        } catch (e: Exception) {
+            Log.e(TAG, "Error clearing settings", e)
+        }
     }
     
     /**
