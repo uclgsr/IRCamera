@@ -81,7 +81,7 @@ import com.mpdc4gsr.libunified.app.bean.CameraItemBean
 import com.mpdc4gsr.libunified.app.bean.CameraItemBean.Companion.DELAY_TIME_0
 import com.mpdc4gsr.libunified.app.bean.CustomPseudoBean
 import com.mpdc4gsr.libunified.app.bean.ObserveBean
-import com.mpdc4gsr.libunified.app.bean.event.device.DeviceCameraEvent
+
 import com.mpdc4gsr.libunified.app.comm.AlarmHelp
 import com.mpdc4gsr.libunified.app.comm.dialog.ColorPickDialog
 import com.mpdc4gsr.libunified.app.comm.dialog.TempAlarmSetDialog
@@ -124,8 +124,8 @@ import com.mpdc4gsr.libunified.app.view.MainTitleView
 import com.mpdc4gsr.module.thermalunified.stubs.ThermalInputDialog
 import com.mpdc4gsr.module.thermalunified.stubs.TipGuideDialog
 import com.mpdc4gsr.module.thermalunified.stubs.TipPreviewDialog
-import com.mpdc4gsr.module.thermalunified.stubs.OnRangeChangedListener
-import com.mpdc4gsr.module.thermalunified.stubs.RangeSeekBar
+import com.mpdc4gsr.libunified.ui.widget.seekbar.OnRangeChangedListener
+import com.mpdc4gsr.libunified.ui.widget.seekbar.RangeSeekBar
 import com.mpdc4gsr.module.thermalunified.R
 import com.mpdc4gsr.module.thermalunified.adapter.CameraItemAdapter
 import com.mpdc4gsr.module.thermalunified.adapter.MeasureItemAdapter
@@ -836,6 +836,7 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
             if (it.resultCode == RESULT_OK) {
                 lifecycleScope.launch {
                     updateImageAndSeekbarColorList(
+                        @Suppress("DEPRECATION")
                         it.data?.getParcelableExtra(ExtraKeyConfig.CUSTOM_PSEUDO_BEAN)
                             ?: CustomPseudoBean(),
                     )
@@ -901,7 +902,7 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
         temperatureSeekbar.setOnRangeChangedListener(
             object : OnRangeChangedListener {
                 override fun onRangeChanged(
-                    view: RangeSeekBar?,
+                    view: RangeSeekBar,
                     leftValue: Float,
                     rightValue: Float,
                     isFromUser: Boolean,
@@ -930,14 +931,14 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
                 }
 
                 override fun onStartTrackingTouch(
-                    view: RangeSeekBar?,
+                    view: RangeSeekBar,
                     isLeft: Boolean,
                 ) {
                     isTouchSeekBar = true
                 }
 
                 override fun onStopTrackingTouch(
-                    view: RangeSeekBar?,
+                    view: RangeSeekBar,
                     isLeft: Boolean,
                 ) {
                     isTouchSeekBar = false
@@ -1496,9 +1497,7 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
     }
 
     private fun showCross(boolean: Boolean) {
-        if (cameraView != null) {
-            cameraView.setShowCross(boolean)
-        }
+        cameraView.setShowCross(boolean)
     }
 
     open fun setPColor(code: Int) {
@@ -1870,11 +1869,26 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun irEvent(event: IRMsgEvent) {
-        if (event.code == MsgCode.RESTART_USB) {
-            isOnRestart = true
+        when (event.code) {
+            MsgCode.RESTART_USB -> {
+                isOnRestart = true
 
-            startUSB(isRestart = true, true)
-            ToastUtils.showShort("[ph][ph][ph][ph]")
+                startUSB(isRestart = true, true)
+                ToastUtils.showShort("[ph][ph][ph][ph]")
+            }
+            
+            100 -> {
+                showCameraLoading()
+            }
+
+            101 -> {
+                lifecycleScope.launch {
+                    delay(500)
+                    isConfigWait = false
+                    delay(1000)
+                    dismissCameraLoading()
+                }
+            }
         }
     }
 
@@ -2108,9 +2122,6 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
 
                         CommonParams.GainStatus.LOW_GAIN
                     }
-                if (nuc_table_low == null) {
-                    return@let
-                }
                 if (ts_data_H == null) {
                     ts_data_H =
                         CommonUtils.getTauData(this@IRThermalNightActivity, "ts/TS001_H.bin")
@@ -2933,6 +2944,7 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
         finish()
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         setResult(200)
         finish()
@@ -2947,25 +2959,7 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
         iruvc?.setFrameReady(true)
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun cameraEvent(event: DeviceCameraEvent) {
-        when (event.action) {
-            100 -> {
 
-                showCameraLoading()
-            }
-
-            101 -> {
-
-                lifecycleScope.launch {
-                    delay(500)
-                    isConfigWait = false
-                    delay(1000)
-                    dismissCameraLoading()
-                }
-            }
-        }
-    }
 
     private fun printSN() {
         lifecycleScope.launch(Dispatchers.IO) {

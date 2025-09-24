@@ -37,10 +37,6 @@ class TipGuideDialog : DialogFragment() {
             }
             .create()
     }
-    
-    fun show(fragmentManager: FragmentManager, tag: String) {
-        super.show(fragmentManager, tag)
-    }
 }
 
 class TipPreviewDialog : DialogFragment() {
@@ -64,10 +60,6 @@ class TipPreviewDialog : DialogFragment() {
                 closeEvent?.invoke(true)
             }
             .create()
-    }
-    
-    fun show(fragmentManager: FragmentManager, tag: String) {
-        super.show(fragmentManager, tag)
     }
 }
 

@@ -114,6 +114,10 @@ class App : BaseApplication() {
 
     private fun initZoho() {
 
+    }
 
+    fun initWebSocket() {
+        // Initialize WebSocket connection
+        // This method can be implemented when WebSocket functionality is needed
     }
 }

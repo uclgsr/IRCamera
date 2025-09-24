@@ -50,6 +50,30 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
     private val _statusMessage = MutableLiveData<StatusMessage?>()
     val statusMessage: LiveData<StatusMessage?> = _statusMessage
 
+    // Enhanced sensor state tracking
+    private val _rgbCameraState = MutableLiveData<SensorState>()
+    val rgbCameraState: LiveData<SensorState> = _rgbCameraState
+
+    private val _thermalCameraState = MutableLiveData<SensorState>()
+    val thermalCameraState: LiveData<SensorState> = _thermalCameraState
+
+    private val _gsrSensorState = MutableLiveData<SensorState>()
+    val gsrSensorState: LiveData<SensorState> = _gsrSensorState
+
+    // Recording control states
+    private val _isRemoteTriggered = MutableLiveData<Boolean>()
+    val isRemoteTriggered: LiveData<Boolean> = _isRemoteTriggered
+
+    // Camera manual control states
+    private val _exposureLocked = MutableLiveData<Boolean>()
+    val exposureLocked: LiveData<Boolean> = _exposureLocked
+
+    private val _focusLocked = MutableLiveData<Boolean>()
+    val focusLocked: LiveData<Boolean> = _focusLocked
+
+    private val _exposureCompensation = MutableLiveData<Float>()
+    val exposureCompensation: LiveData<Float> = _exposureCompensation
+
 
     private var gsrSensorRecorder: GSRSensorRecorder? = null
     private var unifiedGSRRecorder: UnifiedGSRRecorder? = null
@@ -84,6 +108,23 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
         ERROR
     }
 
+    // Enhanced sensor status tracking
+    enum class SensorStatus {
+        DISCONNECTED,
+        CONNECTING,
+        CONNECTED,
+        STREAMING,
+        ERROR,
+        SIMULATION
+    }
+
+    data class SensorState(
+        val status: SensorStatus = SensorStatus.DISCONNECTED,
+        val message: String? = null,
+        val isRecording: Boolean = false,
+        val lastUpdate: Long = System.currentTimeMillis()
+    )
+
     data class StatusMessage(
         val message: String,
         val level: Level,
@@ -95,12 +136,23 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
     }
 
     init {
-
+        // Initialize connection states
         _gsrConnectionState.value = GSRConnectionState.DISCONNECTED
         _networkConnectionState.value = NetworkConnectionState.DISCONNECTED
         _sessionState.value = SessionState.IDLE
 
-        Log.d(TAG, "MainActivityViewModel initialized")
+        // Initialize sensor states
+        _rgbCameraState.value = SensorState()
+        _thermalCameraState.value = SensorState()
+        _gsrSensorState.value = SensorState()
+
+        // Initialize control states
+        _isRemoteTriggered.value = false
+        _exposureLocked.value = false
+        _focusLocked.value = false
+        _exposureCompensation.value = 0.0f
+
+        Log.d(TAG, "MainActivityViewModel initialized with enhanced sensor tracking")
     }
 
     fun initializeComponents() {
@@ -722,4 +774,63 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
         val modalities: List<String> = listOf("thermal", "GSR"),
         val saveImages: Boolean = false
     )
+
+    // Enhanced sensor state management methods
+    fun updateRGBCameraState(status: SensorStatus, message: String? = null, isRecording: Boolean = false) {
+        _rgbCameraState.postValue(SensorState(status, message, isRecording))
+    }
+
+    fun updateThermalCameraState(status: SensorStatus, message: String? = null, isRecording: Boolean = false) {
+        _thermalCameraState.postValue(SensorState(status, message, isRecording))
+    }
+
+    fun updateGSRSensorState(status: SensorStatus, message: String? = null, isRecording: Boolean = false) {
+        _gsrSensorState.postValue(SensorState(status, message, isRecording))
+    }
+
+    // Manual camera controls
+    fun lockExposure(locked: Boolean) {
+        _exposureLocked.postValue(locked)
+        _statusMessage.postValue(
+            StatusMessage(
+                if (locked) "Exposure locked" else "Exposure auto mode enabled",
+                StatusMessage.Level.INFO
+            )
+        )
+    }
+
+    fun lockFocus(locked: Boolean) {
+        _focusLocked.postValue(locked)
+        _statusMessage.postValue(
+            StatusMessage(
+                if (locked) "Focus locked" else "Focus auto mode enabled",
+                StatusMessage.Level.INFO
+            )
+        )
+    }
+
+    fun setExposureCompensation(compensation: Float) {
+        _exposureCompensation.postValue(compensation)
+        _statusMessage.postValue(
+            StatusMessage(
+                "Exposure compensation: ${if (compensation > 0) "+" else ""}$compensation EV",
+                StatusMessage.Level.INFO
+            )
+        )
+    }
+
+    // Recording trigger indication
+    fun setRemoteTriggered(isRemote: Boolean) {
+        _isRemoteTriggered.postValue(isRemote)
+    }
+
+    // Reset manual controls to auto
+    fun resetCameraControlsToAuto() {
+        _exposureLocked.postValue(false)
+        _focusLocked.postValue(false)
+        _exposureCompensation.postValue(0.0f)
+        _statusMessage.postValue(
+            StatusMessage("Camera controls reset to auto", StatusMessage.Level.INFO)
+        )
+    }
 }

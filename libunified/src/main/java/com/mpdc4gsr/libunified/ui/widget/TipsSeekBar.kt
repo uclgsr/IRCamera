@@ -180,6 +180,10 @@ class TipsSeekBar: ViewGroup, SeekBar.OnSeekBarChangeListener {
     override fun onStopTrackingTouch(seekBar: SeekBar?) {
         onStopTrackingTouch?.invoke(this.seekBar.progress)
     }
+    
+    fun getFormattedValue(): String {
+        return valueFormatListener?.invoke(progress)?.toString() ?: progress.toString()
+    }
 
 
 }

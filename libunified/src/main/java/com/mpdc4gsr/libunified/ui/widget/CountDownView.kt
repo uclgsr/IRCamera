@@ -1,4 +1,4 @@
-package com.topdon.lib.ui.widget
+package com.mpdc4gsr.libunified.ui.widget
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
@@ -87,7 +87,7 @@ class CountDownView : View {
                 R.styleable.CountDownView_progressTextColor -> mProgressTextColor =
                     ta.getColor(
                         R.styleable.CountDownView_progressTextColor,
-                        context.resources.getColor(R.color.colorAccent)
+                        ContextCompat.getColor(context, R.color.colorAccent)
                     )
                 R.styleable.CountDownView_countdownTime -> mCountdownTime =
                     ta.getInteger(

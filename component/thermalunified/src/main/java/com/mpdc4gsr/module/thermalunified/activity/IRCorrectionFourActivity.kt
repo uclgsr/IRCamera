@@ -86,12 +86,14 @@ class IRCorrectionFourActivity : BaseActivity() {
     override fun initView() {
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         TipDialog.Builder(this)
             .setTitleMessage(getString(com.mpdc4gsr.libunified.R.string.app_tip))
             .setMessage(com.mpdc4gsr.libunified.R.string.tips_cancel_correction)
             .setPositiveListener(com.mpdc4gsr.libunified.R.string.app_yes) {
                 EventBus.getDefault().post(CorrectionFinishEvent())
+                @Suppress("DEPRECATION")
                 super.onBackPressed()
             }.setCancelListener(com.mpdc4gsr.libunified.R.string.app_no) {
             }

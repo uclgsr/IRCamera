@@ -197,7 +197,11 @@ class ThermalCameraRecorder(
         val frameRate: Double = 9.0,
         val emissivity: Float = 0.95f,
         val reflectedTemperature: Float = 20.0f,
-        val ambientTemperature: Float = 25.0f
+        val ambientTemperature: Float = 25.0f,
+        val atmosphericTemperature: Float = 25.0f,
+        val relativeHumidity: Float = 50.0f,
+        val distance: Float = 1.0f,
+        val temperatureRange: Pair<Float, Float> = Pair(-20.0f, 400.0f)
     )
 
     data class ThermalPerformanceMetrics(
@@ -723,21 +727,9 @@ class ThermalCameraRecorder(
                     override fun onIRCMDCreate(ircmd: com.energy.iruvc.ircmd.IRCMD?) {
                         Log.d(TAG, "IRCMD created for thermal camera")
                     }
-
-                    override fun onConnectError(errorMessage: String?) {
-                        Log.e(TAG, "Thermal camera connection error: $errorMessage")
-                        isIRCameraConnected = false
-
-
-                        handleThermalError(
-                            "USB Connection",
-                            errorMessage ?: "Unknown connection error",
-                            isRecoverable = true
-                        )
-                    }
                 }
 
-                val usbMonitorCallback = object : com.infisense.usbir.utils.USBMonitorCallback {
+                val usbMonitorCallback = object : com.mpdc4gsr.libunified.ir.utils.USBMonitorCallback {
                     override fun onAttach() {
                         Log.d(TAG, "USB thermal camera attached")
                     }
@@ -778,20 +770,20 @@ class ThermalCameraRecorder(
                     IR_CAMERA_HEIGHT,
                     context,
                     syncBitmap,
-                    com.energy.iruvc.utils.CommonParams.DataFlowMode.IR_TEMP,
+                    com.energy.iruvc.utils.CommonParams.DataFlowMode.TEMP_OUTPUT,
                     connectCallback,
                     usbMonitorCallback
                 )
 
 
                 iruvctc?.setIFrameCallBackListener(object :
-                    com.infisense.usbir.camera.IRUVCTC.IFrameCallBackListener {
+                    com.mpdc4gsr.libunified.ir.camera.IRUVCTC.IFrameCallBackListener {
                     override fun updateData() {
 
                         if (_isRecording.get()) {
                             recordingScope.launch {
 
-                                val currentBitmap = syncBitmap.bitmap
+                                val currentBitmap = syncBitmap.getBitmap()
                                 if (currentBitmap != null && !currentBitmap.isRecycled) {
 
                                     val frameNumber = frameCount.incrementAndGet()
@@ -818,7 +810,7 @@ class ThermalCameraRecorder(
 
                         if (previewCallback != null) {
                             recordingScope.launch {
-                                val currentBitmap = syncBitmap.bitmap
+                                val currentBitmap = syncBitmap.getBitmap()
                                 if (currentBitmap != null && !currentBitmap.isRecycled) {
 
                                     val bitmapCopy = currentBitmap.copy(currentBitmap.config, false)
@@ -871,15 +863,14 @@ class ThermalCameraRecorder(
 
             val handleParam = UvcHandleParam().apply {
                 // TC001 specific VID/PID
-                vid = thermalCameraDevice?.vendorId ?: 0x2744
-                pid = thermalCameraDevice?.productId ?: 0x0001
-                width = IR_CAMERA_WIDTH
-                height = IR_CAMERA_HEIGHT
+                setVid(thermalCameraDevice?.vendorId ?: 0x2744)
+                setPid(thermalCameraDevice?.productId ?: 0x0001)
+                setWidth(IR_CAMERA_WIDTH)
+                setHeight(IR_CAMERA_HEIGHT)
             }
 
-            ircamEngine = IrcamEngineBuilder()
-                .setHandleParam(handleParam)
-                .setContext(context)
+            ircamEngine = IrcamEngine.Builder()
+                .setUvcHandleParam(handleParam)
                 .build()
 
             if (ircamEngine != null) {
@@ -891,19 +882,14 @@ class ThermalCameraRecorder(
 
                     // Register frame callback for continuous 10Hz capture
                     ircamEngine!!.setFrameCallback(object : IIrFrameCallback {
-                        override fun onFrameCallBack(
-                            imageData: ByteArray?,
-                            tempData: ByteArray?,
-                            width: Int,
-                            height: Int
-                        ) {
-                            if (_isRecording.get() && tempData != null) {
+                        override fun onFrame(frame: ByteArray?, length: Int) {
+                            if (_isRecording.get() && frame != null) {
                                 recordingScope.launch {
                                     try {
                                         val frameNumber = frameCount.incrementAndGet()
 
-                                        // Convert thermal data and save frame
-                                        val thermalData = processRealThermalData(tempData, width, height)
+                                        // Convert thermal data and save frame  
+                                        val thermalData = processRealThermalData(frame, IR_CAMERA_WIDTH, IR_CAMERA_HEIGHT)
 
                                         // Create proper timestamp record for processing
                                         val timestampRecord = TimestampManager.createTimestampRecord()
@@ -911,7 +897,7 @@ class ThermalCameraRecorder(
 
                                         // Save frame image if configured
                                         if (saveFrameImages) {
-                                            saveFrameImageToPNG(imageData, thermalData, frameNumber)
+                                            saveFrameImageToPNG(frame, thermalData, frameNumber)
                                         }
                                     } catch (e: Exception) {
                                         Log.e(TAG, "Error processing TC001 frame", e)
@@ -921,12 +907,12 @@ class ThermalCameraRecorder(
                             }
 
 
-                            if (previewCallback != null && tempData != null) {
+                            if (previewCallback != null && frame != null) {
                                 recordingScope.launch {
                                     val thermalData =
-                                        processRealThermalData(tempData, width, height)
+                                        processRealThermalData(frame, IR_CAMERA_WIDTH, IR_CAMERA_HEIGHT)
                                     val previewBitmap =
-                                        generateThermalPreviewBitmap(thermalData, width, height)
+                                        generateThermalPreviewBitmap(thermalData, IR_CAMERA_WIDTH, IR_CAMERA_HEIGHT)
                                     previewCallback?.onThermalFrame(previewBitmap, thermalData)
                                 }
                             }
@@ -1159,7 +1145,7 @@ class ThermalCameraRecorder(
         withContext(Dispatchers.IO) {
             try {
                 // Extract timestamp from TimestampRecord
-                val timestamp = timestampRecord.timestampNanos
+                val timestamp = timestampRecord.systemNanos
                 val alignedNs = alignedTimestampNs(timestamp)
                 val relativeMs = sessionRelativeMs(timestamp)
                 val wallMs = wallClockMs(timestamp)
@@ -1894,12 +1880,7 @@ class ThermalCameraRecorder(
             var droppedFrameCount = 0L
 
             ircamEngine?.setFrameCallback(object : IIrFrameCallback {
-                override fun onFrameCallBack(
-                    imageData: ByteArray?,
-                    tempData: ByteArray?,
-                    width: Int,
-                    height: Int
-                ) {
+                override fun onFrame(frame: ByteArray?, length: Int) {
                     val currentTime = System.currentTimeMillis()
 
 
@@ -1911,13 +1892,13 @@ class ThermalCameraRecorder(
                     lastFrameTime = currentTime
 
 
-                    if (_isRecording.get() && tempData != null) {
+                    if (_isRecording.get() && frame != null) {
                         recordingScope.launch {
                             try {
                                 val timestamp = System.nanoTime()
                                 val frameNumber = frameCount.incrementAndGet()
 
-                                val thermalData = processRealThermalData(tempData, width, height)
+                                val thermalData = processRealThermalData(frame, IR_CAMERA_WIDTH, IR_CAMERA_HEIGHT)
 
                                 // Create proper timestamp record for processing
                                 val timestampRecord = TimestampManager.createTimestampRecord()
@@ -1930,11 +1911,11 @@ class ThermalCameraRecorder(
                     }
 
 
-                    if (previewCallback != null && tempData != null && frameCount.get() % PREVIEW_UPDATE_FRAME_INTERVAL == 0) {
+                    if (previewCallback != null && frame != null && frameCount.get() % PREVIEW_UPDATE_FRAME_INTERVAL.toLong() == 0L) {
                         recordingScope.launch {
                             try {
-                                val thermalData = processRealThermalData(tempData, width, height)
-                                val previewBitmap = generateThermalPreviewBitmap(thermalData, width, height)
+                                val thermalData = processRealThermalData(frame, IR_CAMERA_WIDTH, IR_CAMERA_HEIGHT)
+                                val previewBitmap = generateThermalPreviewBitmap(thermalData, IR_CAMERA_WIDTH, IR_CAMERA_HEIGHT)
                                 previewCallback?.onThermalFrame(previewBitmap, thermalData)
                             } catch (e: Exception) {
                                 Log.w(TAG, "Error generating thermal preview", e)
@@ -2001,7 +1982,7 @@ class ThermalCameraRecorder(
         recordingScope.launch {
             // Emit error to system
             emitError(
-                if (errorType.contains("USB")) ErrorType.DEVICE_DISCONNECTED else ErrorType.DEVICE_ERROR,
+                if (errorType.contains("USB")) ErrorType.HARDWARE_DISCONNECTED else ErrorType.DEVICE_ERROR,
                 "TC001 thermal camera: $errorMessage",
                 isRecoverable
             )
@@ -2544,7 +2525,7 @@ class ThermalCameraRecorder(
                 "frame_quality_score"
             )
 
-            framesWriter?.writeRow(framesDataHeader)
+            thermalFramesWriter?.writeLine(framesDataHeader.joinToString(","))
 
             Log.i(TAG, "Enhanced thermal CSV headers written with comprehensive metadata")
 
@@ -3222,7 +3203,7 @@ class ThermalCameraRecorder(
                 put("export_timestamp", System.currentTimeMillis())
                 put("device_type", "Topdon TC001")
                 put("resolution", "${IR_CAMERA_WIDTH}x${IR_CAMERA_HEIGHT}")
-                put("frame_rate", IR_FRAME_RATE)
+                put("frame_rate", IR_FRAME_RATE_STANDARD)
                 put("configuration", JSONObject().apply {
                     put("emissivity", currentConfig.emissivity)
                     put("atmospheric_temperature", currentConfig.atmosphericTemperature)
@@ -3289,7 +3270,7 @@ class ThermalCameraRecorder(
             matContent.appendLine("thermal_config.emissivity = ${currentConfig.emissivity};")
             matContent.appendLine("thermal_config.atmospheric_temp = ${currentConfig.atmosphericTemperature};")
             matContent.appendLine("thermal_config.resolution = [${IR_CAMERA_WIDTH}, ${IR_CAMERA_HEIGHT}];")
-            matContent.appendLine("thermal_config.frame_rate = ${IR_FRAME_RATE};")
+            matContent.appendLine("thermal_config.frame_rate = ${IR_FRAME_RATE_STANDARD};")
 
             matFile.writeText(matContent.toString())
             Log.i(TAG, "MATLAB export completed")

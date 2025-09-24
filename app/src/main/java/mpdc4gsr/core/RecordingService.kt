@@ -29,7 +29,7 @@ import mpdc4gsr.config.FeatureFlags
 import mpdc4gsr.config.ProtocolVersion
 import mpdc4gsr.controller.ComprehensiveRecordingController
 import mpdc4gsr.controller.RecordingState
-import mpdc4gsr.libunified.app.StructuredLogger
+import mpdc4gsr.core.StructuredLogger
 import mpdc4gsr.network.NetworkClient
 import mpdc4gsr.network.NetworkConnectionManager
 import mpdc4gsr.network.NetworkManager
@@ -37,7 +37,7 @@ import mpdc4gsr.network.NetworkServer
 import mpdc4gsr.network.PreviewDataAdapter
 import mpdc4gsr.network.PreviewStreamer
 import mpdc4gsr.network.ProtocolHandler
-import mpdc4gsr.supervisor.CrashSafeSupervisor
+import mpdc4gsr.core.CrashSafeSupervisor
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.DataInputStream
@@ -241,9 +241,8 @@ class RecordingService : LifecycleService() {
 
         nsdManager = getSystemService(Context.NSD_SERVICE) as NsdManager
 
-        // Initialize ComprehensiveRecordingController with PermissionManager
-        val permissionManager = mpdc4gsr.permissions.PermissionManager(this)
-        recordingController = ComprehensiveRecordingController(this, this, permissionManager)
+        // Initialize ComprehensiveRecordingController without PermissionManager for service
+        recordingController = ComprehensiveRecordingController(this, this)
 
         networkClient = NetworkClient(this)
         networkServer = NetworkServer(this, 8080)
@@ -1776,7 +1775,7 @@ class RecordingService : LifecycleService() {
                     put(key, data.get(key))
                 }
             }
-            networkServer.sendMessage(response)
+            networkServer.sendMessage(response.toString())
             Log.d(TAG, "Sent response to PC: $messageType")
         } catch (e: Exception) {
             Log.e(TAG, "Error sending response to PC", e)

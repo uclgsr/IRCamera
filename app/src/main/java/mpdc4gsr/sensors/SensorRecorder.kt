@@ -73,6 +73,7 @@ enum class ErrorType {
     DEVICE_ERROR,
     STORAGE_ERROR,
     CONNECTION_LOST,
+    CONNECTION_RESTORED,  // Added for enhanced reconnection feedback
     PAIRING_REQUIRED,
     DATA_PROCESSING_ERROR,
     UNKNOWN,
