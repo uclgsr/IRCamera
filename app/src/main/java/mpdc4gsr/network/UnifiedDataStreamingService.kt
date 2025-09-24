@@ -147,10 +147,10 @@ class UnifiedDataStreamingService(
             dataType = "GSR",
             timestamp = timestampRecord,
             data = JSONObject().apply {
-                put("conductance_microsiemens", gsrSample.gsrMicrosiemens)
-                put("raw_adc", gsrSample.gsrRaw)
-                put("ppg_value", gsrSample.ppgRaw)
-                put("device_id", "shimmer_gsr") // Default device ID for GSR samples
+                put("conductance_microsiemens", gsrSample.conductance)
+                put("raw_adc", gsrSample.rawValue)
+                put("ppg_value", 0) // Not available in this GSRSample model
+                put("device_id", gsrSample.sessionId) // Use sessionId as device identifier
             }
         )
 

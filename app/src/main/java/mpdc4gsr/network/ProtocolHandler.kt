@@ -81,11 +81,16 @@ class ProtocolHandler(
                 // Use TimeSyncManager if available for enhanced sync handling
                 val syncManager = timeSyncManager
                 if (syncManager != null) {
-                    val syncResult = syncManager.performSyncResponse(pcTimestamp)
-                    if (syncResult.success) {
-                        Protocol.createSyncResponseMessage(syncResult.t1, syncResult.t2)
-                    } else {
-                        Protocol.createErrorMessage(Protocol.MSG_SYNC_REQUEST, Protocol.ERR_FAIL, "Sync failed")
+                    try {
+                        val syncResult = syncManager.performSyncResponse(pcTimestamp)
+                        if (syncResult.success) {
+                            Protocol.createSyncResponseMessage(syncResult.t1, syncResult.t2)
+                        } else {
+                            Protocol.createErrorMessage(Protocol.MSG_SYNC_REQUEST, Protocol.ERR_FAIL, "Sync failed")
+                        }
+                    } catch (e: Exception) {
+                        Log.w(TAG, "TimeSyncManager performSyncResponse failed", e)
+                        Protocol.createErrorMessage(Protocol.MSG_SYNC_REQUEST, Protocol.ERR_FAIL, "Sync manager error")
                     }
                 } else {
                     // Fallback to command handler or default behavior
@@ -133,9 +138,12 @@ class ProtocolHandler(
             }
             
             // Complete the sync calculation with data from PC
-            syncManager.completeSyncCalculation(t1, t2, t3, offset, rtt, 0)
-            
-            Log.d(TAG, "SYNC_RESULT processed: offset=${offset}ms, rtt=${rtt}ms")
+            try {
+                syncManager.completeSyncCalculation(t1, t2, t3, offset, rtt, 0)
+                Log.d(TAG, "SYNC_RESULT processed: offset=${offset}ms, rtt=${rtt}ms")
+            } catch (e: Exception) {
+                Log.w(TAG, "TimeSyncManager completeSyncCalculation failed", e)
+            }
             
             null // No response needed for SYNC_RESULT
         } catch (e: Exception) {
