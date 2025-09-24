@@ -1718,7 +1718,7 @@ class RecordingService : LifecycleService() {
                     put(key, data.get(key))
                 }
             }
-            networkServer.sendMessage(response)
+            networkServer.sendMessage(response.toString())
             Log.d(TAG, "Sent response to PC: $messageType")
         } catch (e: Exception) {
             Log.e(TAG, "Error sending response to PC", e)
