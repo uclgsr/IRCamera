@@ -1691,7 +1691,7 @@ class GSRSensorRecorder(
                 append("${deviceTimestamp},")                       // Device timestamp for drift analysis
                 append("${sample.conductance},")                   // GSR in microsiemens
                 append("${sample.rawValue},")                       // Raw ADC value
-                append("${sample.conductance}")                     // PPG placeholder (using conductance as fallback)
+                append("N/A")                                      // PPG placeholder (no PPG data available)
             }
 
             // Add to buffer for batch writing (50 samples as per plan)
