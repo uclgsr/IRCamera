@@ -14,9 +14,11 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
-import com.topdon.ble.EasyBLE
+import com.shimmerresearch.android.manager.ShimmerBluetoothManagerAndroid
+import android.os.Handler
+import android.os.Looper
 
-// UnifiedBleManager - using EasyBLE from com.topdon.ble instead
+// Use Shimmer's official Bluetooth API for GSR device detection
 
 class SensorSelectionDialog(
     context: Context,
@@ -36,14 +38,23 @@ class SensorSelectionDialog(
             }
 
             try {
-                val easyBLE = EasyBLE.getDefault()
-
-                val hasConnectedShimmerDevices =
-                    easyBLE.connectedDevices.any { device ->
-                        device.name.contains("shimmer", ignoreCase = true) ||
-                        device.address.startsWith("00:06:66") ||
-                        device.address.startsWith("d0:39:72")
+                // Use Shimmer's official Bluetooth manager to detect GSR devices
+                val shimmerManager = ShimmerBluetoothManagerAndroid(context, Handler(Looper.getMainLooper()))
+                
+                val hasConnectedShimmerDevices = try {
+                    val connectedDevices = shimmerManager.getConnectedDeviceList()
+                    connectedDevices.any { device ->
+                        val deviceName = device.getDeviceName()?.lowercase() ?: ""
+                        val deviceAddress = device.getBluetoothAddress()
+                        deviceName.contains("shimmer") ||
+                        deviceName.contains("gsr") ||
+                        deviceAddress.startsWith("00:06:66") ||
+                        deviceAddress.startsWith("d0:39:72")
                     }
+                } catch (e: Exception) {
+                    Log.w(TAG, "Error checking connected Shimmer devices: ${e.message}")
+                    false
+                }
 
                 if (hasConnectedShimmerDevices) {
                     available.add(SensorType.GSR)
@@ -54,9 +65,9 @@ class SensorSelectionDialog(
                     Log.d(TAG, "GSR sensor available (will use simulation if no hardware found)")
                 }
             } catch (e: Exception) {
-
+                // GSR sensor available even without hardware (simulation mode)
                 available.add(SensorType.GSR)
-                Log.w(TAG, "BLE manager not available, GSR will use simulated data if needed", e)
+                Log.w(TAG, "Shimmer Bluetooth manager not available, GSR will use simulated data if needed", e)
             }
 
             Log.d(TAG, "Detected available sensors: $available")
