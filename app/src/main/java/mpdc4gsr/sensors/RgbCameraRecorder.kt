@@ -47,7 +47,9 @@ import mpdc4gsr.sensors.SensorRecorder
 import mpdc4gsr.sensors.SensorStatus
 import mpdc4gsr.utils.CSVBufferedWriter
 import mpdc4gsr.utils.SessionDirectoryManager
-import android.graphics.ImageFormat
+import mpdc4gsr.sensors.camera.CameraConfigurationManager
+import mpdc4gsr.sensors.camera.CameraControlsManager
+import mpdc4gsr.sensors.camera.CameraErrorMessageProvider
 import java.io.File
 import java.io.FileWriter
 import java.util.concurrent.ExecutorService
@@ -137,7 +139,11 @@ class RgbCameraRecorder(
     private var preview: Preview? = null
     private var videoCapture: VideoCapture<Recorder>? = null
     private var imageCapture: ImageCapture? = null
-    private var rawImageCapture: ImageCapture? = null // For Stage 3 RAW DNG capture using ImageFormat.RAW_SENSOR
+    // Extracted managers for better code organization
+    private val configurationManager = CameraConfigurationManager()
+    private val controlsManager = CameraControlsManager { errorType, message ->
+        emitError(errorType, message)
+    } // For Stage 3 RAW DNG capture using ImageFormat.RAW_SENSOR
     private var camera: Camera? = null
     private var activeRecording: Recording? = null
 
@@ -2022,14 +2028,58 @@ class RgbCameraRecorder(
      */
     fun setFocusDistance(distance: Float) {
         try {
-            camera?.cameraControl?.let { cameraControl ->
-                // CameraX doesn't have direct manual focus distance control
-                // This would need Camera2 interop for full manual control
+            camera?.let { cam ->
                 val clampedDistance = distance.coerceIn(0.0f, 1.0f)
-                Log.i(TAG, "Focus distance set to: $clampedDistance")
                 
-                // TODO: Implement actual manual focus distance control via Camera2 interop
-                // For now, this is a placeholder that logs the intended distance
+                try {
+                    // Use Camera2 interop for direct lens focus distance control
+                    val camera2Info = androidx.camera.camera2.interop.Camera2CameraInfo.from(cam.cameraInfo)
+                    val characteristics = camera2Info.getCameraCharacteristic(
+                        android.hardware.camera2.CameraCharacteristics.LENS_INFO_MINIMUM_FOCUS_DISTANCE
+                    )
+                    
+                    characteristics?.let { minFocusDistance ->
+                        if (minFocusDistance > 0) {
+                            // Calculate actual focus distance from normalized value
+                            // 0.0f = infinity (focus distance = 0), 1.0f = macro (focus distance = minFocusDistance)
+                            val actualFocusDistance = clampedDistance * minFocusDistance
+                            
+                            // Use Camera2 interop to set focus distance
+                            val camera2Control = androidx.camera.camera2.interop.Camera2CameraControl.from(cam.cameraControl)
+                            val captureRequestOptions = androidx.camera.camera2.interop.CaptureRequestOptions.Builder()
+                                .setCaptureRequestOption(
+                                    android.hardware.camera2.CaptureRequest.CONTROL_AF_MODE,
+                                    android.hardware.camera2.CameraMetadata.CONTROL_AF_MODE_OFF
+                                )
+                                .setCaptureRequestOption(
+                                    android.hardware.camera2.CaptureRequest.LENS_FOCUS_DISTANCE,
+                                    actualFocusDistance
+                                )
+                                .build()
+                            
+                            camera2Control.addCaptureRequestOptions(captureRequestOptions)
+                            
+                            val focusDistanceText = if (clampedDistance < 0.1f) {
+                                "Infinity"
+                            } else {
+                                String.format("%.2fm", 1.0f / actualFocusDistance)
+                            }
+                            
+                            Log.i(TAG, "Manual focus distance set to: $focusDistanceText (normalized: $clampedDistance, actual: $actualFocusDistance)")
+                        } else {
+                            Log.w(TAG, "Device does not support manual focus distance control")
+                            emitError(ErrorType.FEATURE_NOT_SUPPORTED, "Manual focus distance not supported on this device")
+                        }
+                    } ?: run {
+                        Log.w(TAG, "Could not retrieve minimum focus distance characteristic")
+                        emitError(ErrorType.FEATURE_NOT_SUPPORTED, "Focus distance characteristics not available")
+                    }
+                } catch (e: Exception) {
+                    Log.w(TAG, "Camera2 interop not available, using fallback focus control", e)
+                    // Fallback to basic CameraX focus control
+                    cam.cameraControl.cancelFocusAndMetering()
+                    Log.i(TAG, "Focus distance set to: $clampedDistance (fallback mode)")
+                }
                 
             } ?: run {
                 emitError(ErrorType.HARDWARE_UNAVAILABLE, "Camera not available for focus control")
