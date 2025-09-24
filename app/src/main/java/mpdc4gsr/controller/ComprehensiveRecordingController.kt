@@ -16,6 +16,7 @@ import mpdc4gsr.data.SessionMetadata
 import mpdc4gsr.sensors.SensorRecorder
 import mpdc4gsr.utils.SessionDirectoryManager
 import mpdc4gsr.utils.SessionDirectory
+import mpdc4gsr.permissions.PermissionManager
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.File
@@ -26,7 +27,8 @@ import java.util.concurrent.atomic.AtomicLong
 
 class ComprehensiveRecordingController(
     private val context: Context,
-    private val lifecycleOwner: LifecycleOwner
+    private val lifecycleOwner: LifecycleOwner,
+    private val permissionManager: PermissionManager
 ) {
     companion object {
         private const val TAG = "ComprehensiveRecordingController"
@@ -334,7 +336,7 @@ class ComprehensiveRecordingController(
             crashRecoveryMarker?.writeText("RECORDING_ACTIVE:$sessionId:${System.currentTimeMillis()}")
 
             // Mark session active in CrashRecoveryManager with SharedPreferences
-            val sessionDirectory = sessionDirectoryManager.getCurrentSessionDirectory()?.rootDir?.absolutePath ?: ""
+            val sessionDirectory = currentSessionDirectory?.rootDir?.absolutePath ?: ""
             crashRecoveryManager.markSessionActive(sessionId, sessionDirectory, enabledSensors)
 
             Log.d(TAG, "Created crash recovery markers for session: $sessionId")
@@ -401,6 +403,7 @@ class ComprehensiveRecordingController(
                 // Phase 6: Update state
                 sessionMetadata = null
                 currentSessionId = null
+                currentSessionDirectory = null
                 _recordingStateFlow.value = RecordingState.IDLE
 
                 Log.i(TAG, "🏁 Recording stopped successfully (duration: ${sessionDuration}ms)")
@@ -576,7 +579,7 @@ class ComprehensiveRecordingController(
      */
     fun getCurrentSessionDirectory(): String? {
         return try {
-            sessionDirectoryManager.getCurrentSessionDirectory()?.rootDir?.absolutePath
+            currentSessionDirectory?.rootDir?.absolutePath
         } catch (e: Exception) {
             Log.w(TAG, "Error getting current session directory", e)
             null
@@ -610,7 +613,7 @@ class ComprehensiveRecordingController(
             // Start RecordingService with foreground notification
             mpdc4gsr.core.RecordingService.startRecording(
                 context,
-                sessionDirectoryManager.getCurrentSessionDirectory()?.rootDir?.absolutePath ?: ""
+                currentSessionDirectory?.rootDir?.absolutePath ?: ""
             )
             Log.i(TAG, "Started foreground recording service")
         } catch (e: Exception) {
