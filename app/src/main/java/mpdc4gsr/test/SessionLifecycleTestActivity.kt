@@ -426,8 +426,12 @@ class SessionLifecycleTestActivity : FragmentActivity() {
             Log.d(TAG, "MockThermalSensor.cleanup() called")
         }
 
+        private fun createMockRecordingStatus(): RecordingStatus {
+            return RecordingStatus(sensorId, sensorType, isRecording, 0, 0.0, 0.0, 0L)
+        }
+
         override fun getStatusFlow(): Flow<RecordingStatus> {
-            return flowOf(RecordingStatus(sensorId, sensorType, isRecording, 0, 0.0, 0.0, 0L))
+            return flowOf(createMockRecordingStatus())
         }
 
         override fun getErrorFlow(): Flow<SensorError> {
