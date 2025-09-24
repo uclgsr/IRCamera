@@ -8,9 +8,14 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 import mpdc4gsr.controller.ComprehensiveRecordingController
 import mpdc4gsr.permissions.PermissionManager
 import mpdc4gsr.sensors.SensorRecorder
+import mpdc4gsr.sensors.RecordingStatus
+import mpdc4gsr.sensors.SensorError
+import mpdc4gsr.sensors.RecordingStats
 import mpdc4gsr.data.SessionMetadata
 import java.io.File
 
@@ -339,7 +344,14 @@ class SessionLifecycleTestActivity : ComponentActivity() {
         override val isRecording: Boolean = shouldSucceed
         override val samplingRate: Double = 30.0
 
-        override suspend fun startRecording(outputPath: String, sessionMetadata: SessionMetadata): Boolean {
+        override suspend fun initialize(): Boolean = shouldSucceed
+
+        override suspend fun startRecording(sessionDirectory: String): Boolean {
+            Log.d(TAG, "MockRgbSensor.startRecording() called - returning $shouldSucceed")
+            return shouldSucceed
+        }
+
+        override suspend fun startRecording(sessionDirectory: String, sessionMetadata: SessionMetadata): Boolean {
             Log.d(TAG, "MockRgbSensor.startRecording() called - returning $shouldSucceed")
             return shouldSucceed
         }
@@ -348,6 +360,24 @@ class SessionLifecycleTestActivity : ComponentActivity() {
             Log.d(TAG, "MockRgbSensor.stopRecording() called")
             return true
         }
+
+        override suspend fun addSyncMarker(markerType: String, timestampNs: Long, metadata: Map<String, String>) {
+            Log.d(TAG, "MockRgbSensor.addSyncMarker() called - $markerType at $timestampNs")
+        }
+
+        override suspend fun cleanup() {
+            Log.d(TAG, "MockRgbSensor.cleanup() called")
+        }
+
+        override fun getStatusFlow(): Flow<RecordingStatus> = flowOf(
+            RecordingStatus(sensorId, sensorType, isRecording, 0, 0.0, 0.0, System.nanoTime())
+        )
+
+        override fun getErrorFlow(): Flow<SensorError> = flowOf()
+
+        override fun getRecordingStats(): RecordingStats = RecordingStats(
+            sensorId, sensorType, 0, 0, 0.0, 0, 0.0, 0, System.nanoTime()
+        )
     }
 
     class MockThermalSensor : SensorRecorder {
@@ -360,7 +390,14 @@ class SessionLifecycleTestActivity : ComponentActivity() {
         override val isRecording: Boolean = shouldSucceed
         override val samplingRate: Double = 10.0
 
-        override suspend fun startRecording(outputPath: String, sessionMetadata: SessionMetadata): Boolean {
+        override suspend fun initialize(): Boolean = shouldSucceed
+
+        override suspend fun startRecording(sessionDirectory: String): Boolean {
+            Log.d(TAG, "MockThermalSensor.startRecording() called - returning $shouldSucceed")
+            return shouldSucceed
+        }
+
+        override suspend fun startRecording(sessionDirectory: String, sessionMetadata: SessionMetadata): Boolean {
             Log.d(TAG, "MockThermalSensor.startRecording() called - returning $shouldSucceed")
             return shouldSucceed
         }
@@ -369,6 +406,24 @@ class SessionLifecycleTestActivity : ComponentActivity() {
             Log.d(TAG, "MockThermalSensor.stopRecording() called")
             return true
         }
+
+        override suspend fun addSyncMarker(markerType: String, timestampNs: Long, metadata: Map<String, String>) {
+            Log.d(TAG, "MockThermalSensor.addSyncMarker() called - $markerType at $timestampNs")
+        }
+
+        override suspend fun cleanup() {
+            Log.d(TAG, "MockThermalSensor.cleanup() called")
+        }
+
+        override fun getStatusFlow(): Flow<RecordingStatus> = flowOf(
+            RecordingStatus(sensorId, sensorType, isRecording, 0, 0.0, 0.0, System.nanoTime())
+        )
+
+        override fun getErrorFlow(): Flow<SensorError> = flowOf()
+
+        override fun getRecordingStats(): RecordingStats = RecordingStats(
+            sensorId, sensorType, 0, 0, 0.0, 0, 0.0, 0, System.nanoTime()
+        )
     }
 
     class MockGSRSensor : SensorRecorder {
@@ -382,7 +437,18 @@ class SessionLifecycleTestActivity : ComponentActivity() {
         override val isRecording: Boolean = shouldSucceed
         override val samplingRate: Double = 128.0
 
-        override suspend fun startRecording(outputPath: String, sessionMetadata: SessionMetadata): Boolean {
+        override suspend fun initialize(): Boolean = shouldSucceed
+
+        override suspend fun startRecording(sessionDirectory: String): Boolean {
+            if (shouldThrowException) {
+                Log.d(TAG, "MockGSRSensor.startRecording() throwing exception")
+                throw RuntimeException("Mock GSR sensor connection failed")
+            }
+            Log.d(TAG, "MockGSRSensor.startRecording() called - returning $shouldSucceed")
+            return shouldSucceed
+        }
+
+        override suspend fun startRecording(sessionDirectory: String, sessionMetadata: SessionMetadata): Boolean {
             if (shouldThrowException) {
                 Log.d(TAG, "MockGSRSensor.startRecording() throwing exception")
                 throw RuntimeException("Mock GSR sensor connection failed")
@@ -395,5 +461,23 @@ class SessionLifecycleTestActivity : ComponentActivity() {
             Log.d(TAG, "MockGSRSensor.stopRecording() called")
             return true
         }
+
+        override suspend fun addSyncMarker(markerType: String, timestampNs: Long, metadata: Map<String, String>) {
+            Log.d(TAG, "MockGSRSensor.addSyncMarker() called - $markerType at $timestampNs")
+        }
+
+        override suspend fun cleanup() {
+            Log.d(TAG, "MockGSRSensor.cleanup() called")
+        }
+
+        override fun getStatusFlow(): Flow<RecordingStatus> = flowOf(
+            RecordingStatus(sensorId, sensorType, isRecording, 0, 0.0, 0.0, System.nanoTime())
+        )
+
+        override fun getErrorFlow(): Flow<SensorError> = flowOf()
+
+        override fun getRecordingStats(): RecordingStats = RecordingStats(
+            sensorId, sensorType, 0, 0, 0.0, 0, 0.0, 0, System.nanoTime()
+        )
     }
 }

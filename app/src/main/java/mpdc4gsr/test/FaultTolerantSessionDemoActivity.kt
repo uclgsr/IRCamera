@@ -11,7 +11,7 @@ import androidx.activity.ComponentActivity
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import mpdc4gsr.controller.RecordingController
-import mpdc4gsr.service.RecordingService
+import mpdc4gsr.core.RecordingService
 import java.io.File
 
 

@@ -51,9 +51,6 @@ class ComprehensiveRecordingController(
     private val reconnectionAttempts = ConcurrentHashMap<String, Int>()
 
 
-    private val _sensorStatusFlow = MutableStateFlow<List<SensorStatusInfo>>(emptyList())
-    val sensorStatusFlow: StateFlow<List<SensorStatusInfo>> = _sensorStatusFlow.asStateFlow()
-
     private val _errorFlow = MutableStateFlow<RecordingError?>(null)
     val errorFlow: StateFlow<RecordingError?> = _errorFlow.asStateFlow()
 
@@ -63,9 +60,11 @@ class ComprehensiveRecordingController(
     private var currentSessionDirectory: SessionDirectory? = null
     private val sessionStartTime = AtomicLong(0)
 
-
     private val _recordingStateFlow = MutableStateFlow(RecordingState.IDLE)
     val recordingStateFlow: StateFlow<RecordingState> = _recordingStateFlow.asStateFlow()
+
+    private val _sensorStatusFlow = MutableStateFlow<List<SensorStatusInfo>>(emptyList())
+    val sensorStatusFlow: StateFlow<List<SensorStatusInfo>> = _sensorStatusFlow.asStateFlow()
 
     private val _recordingStatsFlow = MutableStateFlow(RecordingStats.empty())
     val recordingStatsFlow: StateFlow<RecordingStats> = _recordingStatsFlow.asStateFlow()
@@ -659,6 +658,33 @@ class ComprehensiveRecordingController(
         return activeRecorders.count { it.value }
     }
 
+    // Add sync marker to recording
+    suspend fun addSyncMarker(markerType: String, timestampNs: Long) {
+        try {
+            if (!isRecording) {
+                Log.w(TAG, "Cannot add sync marker: not currently recording")
+                return
+            }
+            
+            Log.i(TAG, "Adding sync marker: $markerType at $timestampNs")
+            
+            // Add marker to each active recorder
+            sensorRecorders.values.forEach { recorder ->
+                try {
+                    // All SensorRecorder implementations should have addSyncMarker method
+                    // but catch any potential runtime issues gracefully
+                    recorder.addSyncMarker(markerType, timestampNs)
+                    Log.d(TAG, "Successfully added sync marker to ${recorder.javaClass.simpleName}")
+                } catch (e: Exception) {
+                    Log.w(TAG, "Failed to add sync marker to ${recorder.javaClass.simpleName}: ${e.message}")
+                    // Continue with other recorders instead of failing entirely
+                }
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Error adding sync marker", e)
+        }
+    }
+
     // Cleanup resources
     suspend fun cleanup() {
         try {
@@ -735,34 +761,7 @@ class ComprehensiveRecordingController(
         }.toString(2)
     }
 
-    /**
-     * Add synchronization marker to current recording session
-     */
-    fun addSyncMarker(markerType: String, timestampNs: Long): Boolean {
-        return try {
-            if (!isRecording) {
-                Log.w(TAG, "Cannot add sync marker: not currently recording")
-                return false
-            }
-            
-            // Add marker to each active recorder
-            var success = true
-            sensorRecorders.values.forEach { recorder ->
-                try {
-                    // Most recorders have an addMarker method or similar
-                    recorder.javaClass.getMethod("addMarker", String::class.java, Long::class.java)
-                        .invoke(recorder, markerType, timestampNs)
-                } catch (e: Exception) {
-                    Log.w(TAG, "Failed to add marker to ${recorder.javaClass.simpleName}: ${e.message}")
-                    success = false
-                }
-            }
-            success
-        } catch (e: Exception) {
-            Log.e(TAG, "Error adding sync marker", e)
-            false
-        }
-    }
+
 
     /**
      * Get current sensor status summary
