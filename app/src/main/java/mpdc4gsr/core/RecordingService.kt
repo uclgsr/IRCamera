@@ -29,7 +29,10 @@ import mpdc4gsr.config.FeatureFlags
 import mpdc4gsr.config.ProtocolVersion
 import mpdc4gsr.controller.ComprehensiveRecordingController
 import mpdc4gsr.controller.RecordingState
+import mpdc4gsr.controller.SensorStatusInfo
+import mpdc4gsr.controller.RecordingError
 import mpdc4gsr.core.StructuredLogger
+import mpdc4gsr.permissions.PermissionManager
 import mpdc4gsr.network.NetworkClient
 import mpdc4gsr.network.NetworkConnectionManager
 import mpdc4gsr.network.NetworkManager
@@ -170,6 +173,7 @@ class RecordingService : LifecycleService() {
     private val binder = RecordingServiceBinder()
 
     private lateinit var recordingController: ComprehensiveRecordingController
+    private lateinit var permissionManager: PermissionManager
     private var isInitialized = false
 
     private lateinit var networkClient: NetworkClient
@@ -241,8 +245,9 @@ class RecordingService : LifecycleService() {
 
         nsdManager = getSystemService(Context.NSD_SERVICE) as NsdManager
 
-        // Initialize ComprehensiveRecordingController without PermissionManager for service
-        recordingController = ComprehensiveRecordingController(this, this)
+        // Initialize PermissionManager and ComprehensiveRecordingController
+        permissionManager = PermissionManager(this)
+        recordingController = ComprehensiveRecordingController(this, this, permissionManager)
 
         networkClient = NetworkClient(this)
         networkServer = NetworkServer(this, 8080)
@@ -676,15 +681,17 @@ class RecordingService : LifecycleService() {
 
         recordingController.errorFlow
             .onEach { error ->
-                Log.w(TAG, "Recording controller error: ${error.message}")
-                if (!error.isRecoverable) {
-                    updateNotification("Critical error: ${error.message}")
-                    stopRecordingSession()
-                } else {
-                    updateNotification("Warning: ${error.message}")
-                    delay(3000)
-                    if (recordingController.isRecording) {
-                        updateNotification("Recording in progress")
+                error?.let {
+                    Log.w(TAG, "Recording controller error: ${it.message}")
+                    if (!it.isRecoverable) {
+                        updateNotification("Critical error: ${it.message}")
+                        stopRecordingSession()
+                    } else {
+                        updateNotification("Warning: ${it.message}")
+                        delay(3000)
+                        if (recordingController.isRecording) {
+                            updateNotification("Recording in progress")
+                        }
                     }
                 }
             }

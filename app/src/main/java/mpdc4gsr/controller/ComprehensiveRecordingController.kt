@@ -15,6 +15,8 @@ import kotlinx.coroutines.withContext
 import mpdc4gsr.data.SessionMetadata
 import mpdc4gsr.sensors.SensorRecorder
 import mpdc4gsr.utils.SessionDirectoryManager
+import mpdc4gsr.utils.SessionDirectory
+import mpdc4gsr.permissions.PermissionManager
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.File
@@ -25,7 +27,8 @@ import java.util.concurrent.atomic.AtomicLong
 
 class ComprehensiveRecordingController(
     private val context: Context,
-    private val lifecycleOwner: LifecycleOwner
+    private val lifecycleOwner: LifecycleOwner,
+    private val permissionManager: PermissionManager
 ) {
     companion object {
         private const val TAG = "ComprehensiveRecordingController"
@@ -48,23 +51,20 @@ class ComprehensiveRecordingController(
     private val reconnectionAttempts = ConcurrentHashMap<String, Int>()
 
 
-    private val _sensorStatusFlow = MutableStateFlow<List<SensorStatusInfo>>(emptyList())
-    val sensorStatusFlow: StateFlow<List<SensorStatusInfo>> = _sensorStatusFlow.asStateFlow()
-
     private val _errorFlow = MutableStateFlow<RecordingError?>(null)
     val errorFlow: StateFlow<RecordingError?> = _errorFlow.asStateFlow()
 
     private val sessionDirectoryManager = SessionDirectoryManager(context)
     private var sessionMetadata: SessionMetadata? = null
     private var currentSessionId: String? = null
+    private var currentSessionDirectory: SessionDirectory? = null
     private val sessionStartTime = AtomicLong(0)
-
 
     private val _recordingStateFlow = MutableStateFlow(RecordingState.IDLE)
     val recordingStateFlow: StateFlow<RecordingState> = _recordingStateFlow.asStateFlow()
 
-    private val _sensorStatusFlow = MutableStateFlow(emptyMap<String, SensorStatus>())
-    val sensorStatusFlow: StateFlow<Map<String, SensorStatus>> = _sensorStatusFlow.asStateFlow()
+    private val _sensorStatusFlow = MutableStateFlow<List<SensorStatusInfo>>(emptyList())
+    val sensorStatusFlow: StateFlow<List<SensorStatusInfo>> = _sensorStatusFlow.asStateFlow()
 
     private val _recordingStatsFlow = MutableStateFlow(RecordingStats.empty())
     val recordingStatsFlow: StateFlow<RecordingStats> = _recordingStatsFlow.asStateFlow()
@@ -153,6 +153,7 @@ class ComprehensiveRecordingController(
 
                 val finalSessionId = sessionId ?: sessionDirectoryManager.generateSessionId()
                 val sessionDir = sessionDirectoryManager.createSessionDirectory(finalSessionId)
+                currentSessionDirectory = sessionDir
 
                 sessionMetadata = SessionMetadata.createSessionStart(finalSessionId).copy(
                     experimentalConditions = mapOf(
@@ -334,7 +335,7 @@ class ComprehensiveRecordingController(
             crashRecoveryMarker?.writeText("RECORDING_ACTIVE:$sessionId:${System.currentTimeMillis()}")
 
             // Mark session active in CrashRecoveryManager with SharedPreferences
-            val sessionDirectory = sessionDirectoryManager.getCurrentSessionDirectory()?.rootDir?.absolutePath ?: ""
+            val sessionDirectory = currentSessionDirectory?.rootDir?.absolutePath ?: ""
             crashRecoveryManager.markSessionActive(sessionId, sessionDirectory, enabledSensors)
 
             Log.d(TAG, "Created crash recovery markers for session: $sessionId")
@@ -401,6 +402,7 @@ class ComprehensiveRecordingController(
                 // Phase 6: Update state
                 sessionMetadata = null
                 currentSessionId = null
+                currentSessionDirectory = null
                 _recordingStateFlow.value = RecordingState.IDLE
 
                 Log.i(TAG, "🏁 Recording stopped successfully (duration: ${sessionDuration}ms)")
@@ -479,7 +481,7 @@ class ComprehensiveRecordingController(
 
                 // Try to restart
                 sessionMetadata?.let { meta ->
-                    val sessionDir = sessionDirectoryManager.getCurrentSessionDirectory()?.rootDir
+                    val sessionDir = currentSessionDirectory?.rootDir
                     if (sessionDir != null) {
                         val sensorDir = File(sessionDir, sensorName.lowercase())
                         val success = sensor.startRecording(sensorDir.absolutePath, meta)
@@ -576,7 +578,7 @@ class ComprehensiveRecordingController(
      */
     fun getCurrentSessionDirectory(): String? {
         return try {
-            sessionDirectoryManager.getCurrentSessionDirectory()?.rootDir?.absolutePath
+            currentSessionDirectory?.rootDir?.absolutePath
         } catch (e: Exception) {
             Log.w(TAG, "Error getting current session directory", e)
             null
@@ -610,7 +612,7 @@ class ComprehensiveRecordingController(
             // Start RecordingService with foreground notification
             mpdc4gsr.core.RecordingService.startRecording(
                 context,
-                sessionDirectoryManager.getCurrentSessionDirectory()?.rootDir?.absolutePath ?: ""
+                currentSessionDirectory?.rootDir?.absolutePath ?: ""
             )
             Log.i(TAG, "Started foreground recording service")
         } catch (e: Exception) {
@@ -631,9 +633,9 @@ class ComprehensiveRecordingController(
     }
 
     // Get list of available sensors
-    fun getAvailableSensors(): List<SensorInfo> {
+    fun getAvailableSensors(): List<SensorHealthSummary> {
         return sensorRecorders.keys.map { sensorName ->
-            SensorInfo(
+            SensorHealthSummary(
                 sensorId = sensorName,
                 name = sensorName,
                 isHealthy = sensorHealthStatus[sensorName]?.isHealthy ?: false
@@ -659,8 +661,25 @@ class ComprehensiveRecordingController(
     // Add sync marker to recording
     suspend fun addSyncMarker(markerType: String, timestampNs: Long) {
         try {
+            if (!isRecording) {
+                Log.w(TAG, "Cannot add sync marker: not currently recording")
+                return
+            }
+            
             Log.i(TAG, "Adding sync marker: $markerType at $timestampNs")
-            // Sync marker logic would go here
+            
+            // Add marker to each active recorder
+            sensorRecorders.values.forEach { recorder ->
+                try {
+                    // All SensorRecorder implementations should have addSyncMarker method
+                    // but catch any potential runtime issues gracefully
+                    recorder.addSyncMarker(markerType, timestampNs)
+                    Log.d(TAG, "Successfully added sync marker to ${recorder.javaClass.simpleName}")
+                } catch (e: Exception) {
+                    Log.w(TAG, "Failed to add sync marker to ${recorder.javaClass.simpleName}: ${e.message}")
+                    // Continue with other recorders instead of failing entirely
+                }
+            }
         } catch (e: Exception) {
             Log.e(TAG, "Error adding sync marker", e)
         }
@@ -696,7 +715,7 @@ class ComprehensiveRecordingController(
     ) {
         try {
             currentSessionId?.let { sessionId ->
-                val sessionDir = sessionDirectoryManager.getCurrentSessionDirectory()?.rootDir
+                val sessionDir = currentSessionDirectory?.rootDir
                 if (sessionDir != null) {
                     // Create comprehensive session_info.json with all metadata
                     val sessionInfo = SessionInfoData(
@@ -742,34 +761,7 @@ class ComprehensiveRecordingController(
         }.toString(2)
     }
 
-    /**
-     * Add synchronization marker to current recording session
-     */
-    fun addSyncMarker(markerType: String, timestampNs: Long): Boolean {
-        return try {
-            if (!isRecording) {
-                Log.w(TAG, "Cannot add sync marker: not currently recording")
-                return false
-            }
-            
-            // Add marker to each active recorder
-            var success = true
-            sensorRecorders.values.forEach { recorder ->
-                try {
-                    // Most recorders have an addMarker method or similar
-                    recorder.javaClass.getMethod("addMarker", String::class.java, Long::class.java)
-                        .invoke(recorder, markerType, timestampNs)
-                } catch (e: Exception) {
-                    Log.w(TAG, "Failed to add marker to ${recorder.javaClass.simpleName}: ${e.message}")
-                    success = false
-                }
-            }
-            success
-        } catch (e: Exception) {
-            Log.e(TAG, "Error adding sync marker", e)
-            false
-        }
-    }
+
 
     /**
      * Get current sensor status summary
@@ -846,7 +838,7 @@ enum class RecordingState {
     IDLE, STARTING, RECORDING, STOPPING, STOPPED, ERROR
 }
 
-data class SensorInfo(
+data class SensorHealthSummary(
     val sensorId: String,
     val name: String,
     val isHealthy: Boolean
