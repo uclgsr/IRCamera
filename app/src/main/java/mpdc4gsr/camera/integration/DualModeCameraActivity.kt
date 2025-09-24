@@ -130,24 +130,21 @@ class DualModeCameraActivity : AppCompatActivity() {
                         ).show()
                     }
                 }
-            } else {
                 Toast.makeText(this, "Switched to ${newMode.displayName}", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(
+                    this,
+                    "Failed to switch to ${newMode.displayName}",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
-        } else {
-            Toast.makeText(
-                this,
-                "Failed to switch to ${newMode.displayName}",
-                Toast.LENGTH_SHORT
-            ).show()
+        } catch (e: Exception) {
+            Toast.makeText(this, "Mode switch error: ${e.message}", Toast.LENGTH_LONG).show()
         }
-    } catch (e: Exception)
-    {
-        Toast.makeText(this, "Mode switch error: ${e.message}", Toast.LENGTH_LONG).show()
     }
-}
 
-override fun onDestroy() {
-    super.onDestroy()
-    rgbCameraRecorder?.cleanup()
-}
+    override fun onDestroy() {
+        super.onDestroy()
+        rgbCameraRecorder?.cleanup()
+    }
 }
