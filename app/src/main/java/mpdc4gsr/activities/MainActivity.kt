@@ -88,10 +88,13 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
 
     private var webSocketClient: WebSocketClient? = null
     private var networkClient: NetworkClient? = null
+    private var networkManager: mpdc4gsr.network.NetworkManager? = null
     private var recordingService: RecordingService? = null
     private var serviceBinder: RecordingService.RecordingServiceBinder? = null
     private var isServiceBound = false
     private var connectionStatus: ConnectionStatus = ConnectionStatus.DISCONNECTED
+    
+    private lateinit var networkSettings: mpdc4gsr.network.NetworkSettings
 
     private var networkStatusIndicator: ImageView? = null
     private var networkStatusText: TextView? = null
@@ -114,10 +117,12 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             serviceBinder = binder
             recordingService = binder.getService()
             networkClient = binder.getNetworkClient()
+            networkManager = binder.getNetworkManager()
             isServiceBound = true
             Log.i(TAG, "Recording service connected")
 
             setupRemoteControl()
+            setupNetworkManagerObservers()
         }
 
         override fun onServiceDisconnected(name: ComponentName?) {
@@ -195,6 +200,9 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
 
         permissionController = PermissionController(this)
         permissionController.initialize()
+        
+        // Initialize network settings
+        networkSettings = mpdc4gsr.network.NetworkSettings(this)
 
         if (!SharedManager.getHasShowClause()) {
             NavigationManager.build(RouterConfig.CLAUSE).navigation(this)
@@ -1424,7 +1432,9 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
 
     private fun showConnectionOptionsDialog() {
         val options = arrayOf(
-            "Retry Discovery",
+            "Connect with Saved Settings",
+            "Configure Wi-Fi Connection", 
+            "Configure Bluetooth Connection",
             "Manual IP Connection",
             "Connection Status Report",
             "Cancel"
@@ -1435,23 +1445,35 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         builder.setItems(options) { _, which ->
             when (which) {
                 0 -> {
-
-                    Log.i(TAG, "Retrying network discovery")
-                    startNetworkDiscovery()
+                    // Connect with saved settings
+                    Log.i(TAG, "Connecting with saved settings")
+                    connectWithSavedSettings()
                 }
-
+                
                 1 -> {
-
-                    showManualConnectionDialog()
+                    // Configure Wi-Fi
+                    Log.i(TAG, "Configuring Wi-Fi connection")
+                    showWifiConfigurationDialog()
                 }
-
+                
                 2 -> {
-
-                    showStatusReportDialog()
+                    // Configure Bluetooth
+                    Log.i(TAG, "Configuring Bluetooth connection")
+                    configureBluetoothConnection()
                 }
 
                 3 -> {
+                    // Manual IP Connection (existing)
+                    showManualConnectionDialog()
+                }
 
+                4 -> {
+                    // Status report
+                    showStatusReportDialog()
+                }
+
+                5 -> {
+                    // Cancel
                 }
             }
         }
@@ -1731,6 +1753,212 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                 }
                 .setCancelListener("Cancel") { }
                 .create().show()
+        }
+    }
+    
+    // Enhanced Network Configuration Methods
+    
+    private fun setupNetworkManagerObservers() {
+        networkManager?.let { manager ->
+            lifecycleScope.launch {
+                manager.connectionState.collect { state ->
+                    runOnUiThread {
+                        updateConnectionStatusFromNetworkManager(state)
+                    }
+                }
+            }
+            
+            lifecycleScope.launch {
+                manager.connectionSummary.collect { summary ->
+                    runOnUiThread {
+                        updateNetworkSummaryDisplay(summary)
+                    }
+                }
+            }
+        }
+    }
+    
+    private fun updateConnectionStatusFromNetworkManager(state: mpdc4gsr.network.CommandConnection.ConnectionState) {
+        val mainActivityStatus = when (state) {
+            mpdc4gsr.network.CommandConnection.ConnectionState.DISCONNECTED -> ConnectionStatus.DISCONNECTED
+            mpdc4gsr.network.CommandConnection.ConnectionState.CONNECTING -> ConnectionStatus.CONNECTING  
+            mpdc4gsr.network.CommandConnection.ConnectionState.CONNECTED -> ConnectionStatus.CONNECTED
+            mpdc4gsr.network.CommandConnection.ConnectionState.ERROR -> ConnectionStatus.ERROR
+        }
+        updateConnectionStatus(mainActivityStatus)
+    }
+    
+    private fun updateNetworkSummaryDisplay(summary: String) {
+        networkStatusText?.text = "PC: $summary"
+    }
+    
+    private fun connectWithSavedSettings() {
+        networkManager?.let { manager ->
+            lifecycleScope.launch {
+                try {
+                    updateConnectionStatus(ConnectionStatus.CONNECTING)
+                    val success = manager.connectUsingSavedSettings()
+                    if (!success) {
+                        Toast.makeText(this@MainActivity, 
+                            "Failed to connect with saved settings. Please configure connection first.", 
+                            Toast.LENGTH_LONG).show()
+                        updateConnectionStatus(ConnectionStatus.ERROR)
+                    }
+                } catch (e: Exception) {
+                    Log.e(TAG, "Error connecting with saved settings", e)
+                    Toast.makeText(this@MainActivity, 
+                        "Connection error: ${e.message}", 
+                        Toast.LENGTH_SHORT).show()
+                    updateConnectionStatus(ConnectionStatus.ERROR)
+                }
+            }
+        } ?: run {
+            Toast.makeText(this, "Network manager not available", Toast.LENGTH_SHORT).show()
+        }
+    }
+    
+    private fun showWifiConfigurationDialog() {
+        val input = android.widget.EditText(this)
+        input.setText("${networkSettings.pcIpAddress}:${networkSettings.pcPort}")
+        input.hint = "IP Address:Port (e.g., 192.168.1.100:8080)"
+        
+        androidx.appcompat.app.AlertDialog.Builder(this)
+            .setTitle("Wi-Fi Connection")
+            .setMessage("Enter PC IP address and port:")
+            .setView(input)
+            .setPositiveButton("Connect") { _, _ ->
+                val inputText = input.text.toString().trim()
+                if (inputText.contains(":")) {
+                    val parts = inputText.split(":")
+                    if (parts.size == 2) {
+                        try {
+                            val ip = parts[0]
+                            val port = parts[1].toInt()
+                            connectViaWifi(ip, port)
+                        } catch (e: NumberFormatException) {
+                            Toast.makeText(this, "Invalid port number", Toast.LENGTH_SHORT).show()
+                        }
+                    } else {
+                        Toast.makeText(this, "Invalid format. Use IP:Port", Toast.LENGTH_SHORT).show()
+                    }
+                } else {
+                    // Assume default port
+                    connectViaWifi(inputText, mpdc4gsr.network.NetworkSettings.DEFAULT_PC_PORT)
+                }
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+    
+    private fun connectViaWifi(ip: String, port: Int) {
+        networkManager?.let { manager ->
+            lifecycleScope.launch {
+                try {
+                    updateConnectionStatus(ConnectionStatus.CONNECTING)
+                    val success = manager.connectWifi(ip, port)
+                    if (success) {
+                        Toast.makeText(this@MainActivity, 
+                            "Connected to PC at $ip:$port", 
+                            Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(this@MainActivity, 
+                            "Failed to connect to PC at $ip:$port", 
+                            Toast.LENGTH_LONG).show()
+                        updateConnectionStatus(ConnectionStatus.ERROR)
+                    }
+                } catch (e: Exception) {
+                    Log.e(TAG, "Error connecting via Wi-Fi", e)
+                    Toast.makeText(this@MainActivity, 
+                        "Wi-Fi connection error: ${e.message}", 
+                        Toast.LENGTH_SHORT).show()
+                    updateConnectionStatus(ConnectionStatus.ERROR)
+                }
+            }
+        }
+    }
+    
+    private fun configureBluetoothConnection() {
+        lifecycleScope.launch {
+            try {
+                val permissionManager = mpdc4gsr.permissions.PermissionManager(this@MainActivity, permissionController)
+                val hasPermission = permissionManager.requestBluetoothPermissions()
+                
+                if (hasPermission) {
+                    showBluetoothDeviceSelection()
+                } else {
+                    Toast.makeText(this@MainActivity, 
+                        "Bluetooth permissions required for device connection", 
+                        Toast.LENGTH_LONG).show()
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Error requesting Bluetooth permissions", e)
+                Toast.makeText(this@MainActivity, 
+                    "Error accessing Bluetooth: ${e.message}", 
+                    Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+    
+    private fun showBluetoothDeviceSelection() {
+        try {
+            val bluetoothAdapter = android.bluetooth.BluetoothAdapter.getDefaultAdapter()
+            if (bluetoothAdapter == null) {
+                Toast.makeText(this, "Bluetooth not supported", Toast.LENGTH_SHORT).show()
+                return
+            }
+            
+            if (!bluetoothAdapter.isEnabled) {
+                Toast.makeText(this, "Please enable Bluetooth first", Toast.LENGTH_SHORT).show()
+                return
+            }
+            
+            val pairedDevices = bluetoothAdapter.bondedDevices
+            if (pairedDevices.isEmpty()) {
+                Toast.makeText(this, "No paired Bluetooth devices found", Toast.LENGTH_SHORT).show()
+                return
+            }
+            
+            val deviceNames = pairedDevices.map { "${it.name} (${it.address})" }.toTypedArray()
+            val devices = pairedDevices.toList()
+            
+            androidx.appcompat.app.AlertDialog.Builder(this)
+                .setTitle("Select PC Bluetooth Device")
+                .setItems(deviceNames) { _, which ->
+                    connectViaBluetooth(devices[which])
+                }
+                .setNegativeButton("Cancel", null)
+                .show()
+                
+        } catch (e: SecurityException) {
+            Log.e(TAG, "Security exception accessing Bluetooth devices", e)
+            Toast.makeText(this, "Permission denied accessing Bluetooth devices", Toast.LENGTH_SHORT).show()
+        }
+    }
+    
+    private fun connectViaBluetooth(device: android.bluetooth.BluetoothDevice) {
+        networkManager?.let { manager ->
+            lifecycleScope.launch {
+                try {
+                    updateConnectionStatus(ConnectionStatus.CONNECTING)
+                    val success = manager.connectBluetooth(device)
+                    if (success) {
+                        Toast.makeText(this@MainActivity, 
+                            "Connected to PC via Bluetooth: ${device.name}", 
+                            Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(this@MainActivity, 
+                            "Failed to connect via Bluetooth to ${device.name}", 
+                            Toast.LENGTH_LONG).show()
+                        updateConnectionStatus(ConnectionStatus.ERROR)
+                    }
+                } catch (e: Exception) {
+                    Log.e(TAG, "Error connecting via Bluetooth", e)
+                    Toast.makeText(this@MainActivity, 
+                        "Bluetooth connection error: ${e.message}", 
+                        Toast.LENGTH_SHORT).show()
+                    updateConnectionStatus(ConnectionStatus.ERROR)
+                }
+            }
         }
     }
 }
