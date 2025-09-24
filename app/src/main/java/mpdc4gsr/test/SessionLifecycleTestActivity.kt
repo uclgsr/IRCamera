@@ -499,7 +499,29 @@ class SessionLifecycleTestActivity : FragmentActivity() {
         }
 
         override fun getRecordingStats(): RecordingStats {
-            return RecordingStats(sensorId, sensorType, 0L, 0L, 0.0, 0L, 0.0, 0, 0L)
+            return createMockRecordingStats()
+        }
+
+        private fun createMockRecordingStats(): RecordingStats {
+            // All mock values are zero/default for testing purposes
+            val mockStartTimeNs = 0L
+            val mockEndTimeNs = 0L
+            val mockDurationSec = 0.0
+            val mockNumSamples = 0L
+            val mockSamplingRate = 0.0
+            val mockNumDropped = 0
+            val mockNumErrors = 0L
+            return RecordingStats(
+                sensorId,
+                sensorType,
+                mockStartTimeNs,
+                mockEndTimeNs,
+                mockDurationSec,
+                mockNumSamples,
+                mockSamplingRate,
+                mockNumDropped,
+                mockNumErrors
+            )
         }
     }
 }
