@@ -1375,8 +1375,11 @@ class GSRSensorRecorder(
 
                                         val shimmerRecorder = realShimmerGSRRecorder
                                         if (shimmerRecorder != null) {
-                                            val success = shimmerRecorder.initializeDevice()
-                                            connectionCompleted.complete(success)
+                                            // Use a coroutine scope to call the suspend function
+                                            recordingScope.launch {
+                                                val success = shimmerRecorder.initializeDevice()
+                                                connectionCompleted.complete(success)
+                                            }
                                         } else {
                                             connectionCompleted.complete(false)
                                         }
@@ -1435,7 +1438,6 @@ class GSRSensorRecorder(
         return try {
             shimmerBluetoothManager =
                 ShimmerBluetoothManagerAndroid(context, android.os.Handler(android.os.Looper.getMainLooper()))
-            shimmerBluetoothManager?.initialize()
             Log.i(TAG, "ShimmerBluetoothManagerAndroid initialized successfully")
             true
         } catch (e: Exception) {
