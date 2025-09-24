@@ -93,17 +93,54 @@ object InitUtil {
     }
 
     fun initUM() {
-        // UM (User Metrics) initialization - MVP implementation: no-op
-        // Can be enhanced later with actual UM SDK integration if required
+        try {
+            // Initialize UMeng analytics and common SDK
+            val context = BaseApplication.instance
+            
+            // Initialize UMeng Common SDK first
+            com.umeng.commonsdk.UMConfigure.setLogEnabled(true)
+            com.umeng.commonsdk.UMConfigure.init(
+                context,
+                BuildConfig.APP_KEY,
+                "Umeng",
+                com.umeng.commonsdk.UMConfigure.DEVICE_TYPE_PHONE,
+                null
+            )
+            
+            // Initialize analytics
+            com.umeng.analytics.MobclickAgent.setPageCollectionMode(
+                com.umeng.analytics.MobclickAgent.PageMode.AUTO
+            )
+            
+            XLog.i("UMeng SDK initialized successfully")
+        } catch (e: Exception) {
+            XLog.e("Failed to initialize UMeng SDK: ${e.message}")
+        }
     }
 
     fun initJPush() {
-        val registrationID = ""
-        // JPush initialization - MVP implementation: no-op
-        // Can be enhanced later with actual JPush SDK integration if required
-
-        if (SharedManager.getHasShowClause()) {
-            XLog.w("registrationID= $registrationID")
+        try {
+            val context = BaseApplication.instance
+            
+            // Initialize JPush
+            cn.jpush.android.api.JPushInterface.setDebugMode(BuildConfig.DEBUG)
+            cn.jpush.android.api.JPushInterface.init(context)
+            
+            // Get registration ID
+            val registrationID = cn.jpush.android.api.JPushInterface.getRegistrationID(context)
+            
+            if (SharedManager.getHasShowClause()) {
+                XLog.w("JPush registrationID= $registrationID")
+            }
+            
+            XLog.i("JPush SDK initialized successfully")
+        } catch (e: Exception) {
+            XLog.e("Failed to initialize JPush SDK: ${e.message}")
+            
+            // Fallback logging for debugging
+            if (SharedManager.getHasShowClause()) {
+                XLog.w("registrationID= unavailable")
+            }
         }
     }
 
