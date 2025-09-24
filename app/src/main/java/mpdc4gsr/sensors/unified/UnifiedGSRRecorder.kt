@@ -620,6 +620,42 @@ class UnifiedGSRRecorder(
 
     fun getDataStream(): Flow<GSRSample> = gsrDataFlow.asSharedFlow()
 
+    // Additional statistics methods required by UnifiedSessionManager
+    fun getSampleCount(): Long = recordedSamples.get()
+
+    fun getOutputFileSize(): Long = sessionDirectory?.let { dir ->
+        dir.walkTopDown().filter { it.isFile }.sumOf { it.length() }
+    } ?: 0L
+
+    fun getAverageDataRate(): Double {
+        val sessionDuration = if (recordingStartTime > 0) {
+            (System.nanoTime() - recordingStartTime) / 1_000_000_000.0
+        } else 0.0
+        return if (sessionDuration > 0) {
+            recordedSamples.get().toDouble() / sessionDuration
+        } else 0.0
+    }
+
+    fun getDroppedSampleCount(): Long = droppedSamples.get()
+
+    fun getAverageSignalQuality(): Double = _connectionQuality.value
+
+    fun getErrorCount(): Long {
+        // Count based on error flow emissions (simplified approach)
+        return 0L // TODO: Could track errors with an AtomicLong if needed
+    }
+
+    suspend fun flushAndCloseFiles() = withContext(Dispatchers.IO) {
+        try {
+            csvWriter?.flush()
+            csvWriter?.close()
+            csvWriter = null
+            Log.i(TAG, "GSR data files flushed and closed")
+        } catch (e: Exception) {
+            Log.e(TAG, "Error flushing and closing GSR files", e)
+        }
+    }
+
     suspend fun disconnectDevice(): Boolean = withContext(Dispatchers.IO) {
         Log.i(TAG, "Disconnecting from Shimmer device")
 

@@ -828,7 +828,7 @@ class UnifiedSessionManager(
             recordSyncEvent(
                 "synchronized_start_error", mapOf(
                     "sensors" to enabledSensors,
-                    "error" to e.message,
+                    "error" to (e.message ?: "Unknown error"),
                     "success" to false
                 )
             )
@@ -1182,12 +1182,11 @@ class UnifiedSessionManager(
             val networkStats = try {
                 networkController.getNetworkStatistics()
             } catch (e: Exception) {
-
-                object {
-                    val averageLatency = 0.0
-                    val packetLoss = 0.0
-                    val reconnectionCount = 0
-                }
+                NetworkStatistics(
+                    averageLatency = 0.0,
+                    packetLoss = 0.0,
+                    reconnectionCount = 0
+                )
             }
             val syncQuality = try {
                 networkController.getCurrentSyncQuality()
