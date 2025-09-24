@@ -17,6 +17,9 @@ import androidx.camera.video.QualitySelector
 import androidx.camera.video.Recorder
 import androidx.camera.video.Recording
 import androidx.camera.video.VideoCapture
+import androidx.camera.video.VideoRecordEvent
+import androidx.camera.video.FallbackStrategy
+import androidx.camera.video.FileOutputOptions
 import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
@@ -31,6 +34,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -43,7 +47,7 @@ import mpdc4gsr.permissions.PermissionManager
 import mpdc4gsr.sensors.ErrorType
 import mpdc4gsr.sensors.SensorError
 import mpdc4gsr.sensors.SensorRecorder
-import mpdc4gsr.sensors.SensorStatus
+import mpdc4gsr.ui_components.ComprehensiveSensorStatusWidget.SensorStatus
 import mpdc4gsr.utils.CSVBufferedWriter
 import mpdc4gsr.utils.SessionDirectoryManager
 import android.graphics.ImageFormat
@@ -114,6 +118,15 @@ class RgbCameraRecorder(
             "SM-S918B"
         )
     }
+
+    // CameraInfo data class for camera information
+    data class CameraInfo(
+        val cameraId: String,
+        val facing: Int, // CameraSelector.LENS_FACING_BACK or CameraSelector.LENS_FACING_FRONT
+        val supportsRaw: Boolean,
+        val supports4K: Boolean,
+        val displayName: String,
+    )
 
     override val sensorId: String = "rgb_camera_${System.currentTimeMillis()}"
     override val sensorType: String = "RGB_Camera_CameraX"
@@ -313,10 +326,9 @@ class RgbCameraRecorder(
     }
 
 
-    private fun checkVideoProfileSupport(cameraInfo: CameraInfo): Boolean {
+    private fun checkVideoProfileSupport(cameraInfo: androidx.camera.core.CameraInfo): Boolean {
         return try {
-
-
+            // Check if camera supports high-quality video recording
             false
         } catch (e: Exception) {
             Log.w(TAG, "Could not check video profile support", e)
@@ -562,7 +574,7 @@ class RgbCameraRecorder(
                     }.build()
 
                     // Store the RAW ImageCapture for use in capture operations
-                    this.rawImageCapture = rawImageCapture
+                    this@RgbCameraRecorder.rawImageCapture = rawImageCapture
 
                 } catch (e: Exception) {
                     Log.w(TAG, "Could not configure RAW ImageCapture for Stage 3: ${e.message}")
@@ -1231,7 +1243,7 @@ class RgbCameraRecorder(
                 "processing_pipeline" to "Samsung Stage 3/Level 3",
                 "frame_number" to frameNumber,
                 "capture_timestamp_ns" to timestampRecord.systemNanos,
-                "monotonic_timestamp_ns" to timestampRecord.monotonicNanos,
+                "monotonic_timestamp_ns" to timestampRecord.systemNanos,
                 "device_model" to SamsungDeviceCompatibility.getDeviceInfo(),
                 "camera_id" to (camera2Info?.cameraId ?: "unknown"),
                 "dng_file_size_bytes" to dngFile.length(),
