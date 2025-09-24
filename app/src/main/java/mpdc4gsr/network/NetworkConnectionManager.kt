@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.job
 
 /**
  * Manages network connections with error recovery and reconnection logic
@@ -275,7 +276,7 @@ class NetworkConnectionManager(
      * Cleanup resources
      */
     fun cleanup() {
-        scope.cancel()
+        scope.coroutineContext.job.cancel()
         connectionTimeoutJob?.cancel()
         Log.i(TAG, "NetworkConnectionManager cleaned up")
     }
