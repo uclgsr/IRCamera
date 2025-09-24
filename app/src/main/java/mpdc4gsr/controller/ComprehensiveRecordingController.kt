@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import mpdc4gsr.data.SessionMetadata
 import mpdc4gsr.sensors.SensorRecorder
-import mpdc4gsr.util.SessionDirectoryManager
+import mpdc4gsr.utils.SessionDirectoryManager
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.File
