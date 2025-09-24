@@ -128,7 +128,7 @@ class RAWCaptureTestActivity : AppCompatActivity() {
 
     private fun observeCameraStatus() {
         lifecycleScope.launch {
-            rgbCameraRecorder?.statusFlow?.collect { status ->
+            rgbCameraRecorder?.getStatusFlow()?.collect { status ->
                 runOnUiThread {
                     binding.cameraStatusText.text = "Camera: ${status.displayText}"
                 }
