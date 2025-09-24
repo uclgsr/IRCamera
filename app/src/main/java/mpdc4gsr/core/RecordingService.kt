@@ -29,6 +29,8 @@ import mpdc4gsr.config.FeatureFlags
 import mpdc4gsr.config.ProtocolVersion
 import mpdc4gsr.controller.ComprehensiveRecordingController
 import mpdc4gsr.controller.RecordingState
+import mpdc4gsr.controller.SensorStatusInfo
+import mpdc4gsr.controller.RecordingError
 import mpdc4gsr.core.StructuredLogger
 import mpdc4gsr.network.NetworkClient
 import mpdc4gsr.network.NetworkConnectionManager
@@ -619,15 +621,17 @@ class RecordingService : LifecycleService() {
 
         recordingController.errorFlow
             .onEach { error ->
-                Log.w(TAG, "Recording controller error: ${error.message}")
-                if (!error.isRecoverable) {
-                    updateNotification("Critical error: ${error.message}")
-                    stopRecordingSession()
-                } else {
-                    updateNotification("Warning: ${error.message}")
-                    delay(3000)
-                    if (recordingController.isRecording) {
-                        updateNotification("Recording in progress")
+                error?.let {
+                    Log.w(TAG, "Recording controller error: ${it.message}")
+                    if (!it.isRecoverable) {
+                        updateNotification("Critical error: ${it.message}")
+                        stopRecordingSession()
+                    } else {
+                        updateNotification("Warning: ${it.message}")
+                        delay(3000)
+                        if (recordingController.isRecording) {
+                            updateNotification("Recording in progress")
+                        }
                     }
                 }
             }
