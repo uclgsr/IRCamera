@@ -14,7 +14,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import mpdc4gsr.data.SessionMetadata
 import mpdc4gsr.sensors.SensorRecorder
-import mpdc4gsr.util.SessionDirectoryManager
+import mpdc4gsr.utils.SessionDirectoryManager
+import mpdc4gsr.utils.SessionDirectory
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.File
@@ -57,14 +58,12 @@ class ComprehensiveRecordingController(
     private val sessionDirectoryManager = SessionDirectoryManager(context)
     private var sessionMetadata: SessionMetadata? = null
     private var currentSessionId: String? = null
+    private var currentSessionDirectory: SessionDirectory? = null
     private val sessionStartTime = AtomicLong(0)
 
 
     private val _recordingStateFlow = MutableStateFlow(RecordingState.IDLE)
     val recordingStateFlow: StateFlow<RecordingState> = _recordingStateFlow.asStateFlow()
-
-    private val _sensorStatusFlow = MutableStateFlow(emptyMap<String, SensorStatus>())
-    val sensorStatusFlow: StateFlow<Map<String, SensorStatus>> = _sensorStatusFlow.asStateFlow()
 
     private val _recordingStatsFlow = MutableStateFlow(RecordingStats.empty())
     val recordingStatsFlow: StateFlow<RecordingStats> = _recordingStatsFlow.asStateFlow()
@@ -153,6 +152,7 @@ class ComprehensiveRecordingController(
 
                 val finalSessionId = sessionId ?: sessionDirectoryManager.generateSessionId()
                 val sessionDir = sessionDirectoryManager.createSessionDirectory(finalSessionId)
+                currentSessionDirectory = sessionDir
 
                 sessionMetadata = SessionMetadata.createSessionStart(finalSessionId).copy(
                     experimentalConditions = mapOf(
@@ -479,7 +479,7 @@ class ComprehensiveRecordingController(
 
                 // Try to restart
                 sessionMetadata?.let { meta ->
-                    val sessionDir = sessionDirectoryManager.getCurrentSessionDirectory()?.rootDir
+                    val sessionDir = currentSessionDirectory?.rootDir
                     if (sessionDir != null) {
                         val sensorDir = File(sessionDir, sensorName.lowercase())
                         val success = sensor.startRecording(sensorDir.absolutePath, meta)
@@ -536,7 +536,7 @@ class ComprehensiveRecordingController(
                 isHealthy = health.isHealthy
             )
         }
-        _sensorStatusFlow.value = statusList
+        _sensorStatusFlow.tryEmit(statusList)
     }
 
     private fun updateRecordingStats() {
@@ -631,9 +631,9 @@ class ComprehensiveRecordingController(
     }
 
     // Get list of available sensors
-    fun getAvailableSensors(): List<SensorInfo> {
+    fun getAvailableSensors(): List<SensorHealthSummary> {
         return sensorRecorders.keys.map { sensorName ->
-            SensorInfo(
+            SensorHealthSummary(
                 sensorId = sensorName,
                 name = sensorName,
                 isHealthy = sensorHealthStatus[sensorName]?.isHealthy ?: false
@@ -654,16 +654,6 @@ class ComprehensiveRecordingController(
     // Get count of active sensors
     fun getActiveSensorCount(): Int {
         return activeRecorders.count { it.value }
-    }
-
-    // Add sync marker to recording
-    suspend fun addSyncMarker(markerType: String, timestampNs: Long) {
-        try {
-            Log.i(TAG, "Adding sync marker: $markerType at $timestampNs")
-            // Sync marker logic would go here
-        } catch (e: Exception) {
-            Log.e(TAG, "Error adding sync marker", e)
-        }
     }
 
     // Cleanup resources
@@ -696,7 +686,7 @@ class ComprehensiveRecordingController(
     ) {
         try {
             currentSessionId?.let { sessionId ->
-                val sessionDir = sessionDirectoryManager.getCurrentSessionDirectory()?.rootDir
+                val sessionDir = currentSessionDirectory?.rootDir
                 if (sessionDir != null) {
                     // Create comprehensive session_info.json with all metadata
                     val sessionInfo = SessionInfoData(
@@ -846,7 +836,7 @@ enum class RecordingState {
     IDLE, STARTING, RECORDING, STOPPING, STOPPED, ERROR
 }
 
-data class SensorInfo(
+data class SensorHealthSummary(
     val sensorId: String,
     val name: String,
     val isHealthy: Boolean
