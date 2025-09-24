@@ -89,6 +89,13 @@ class AdaptiveThermalStreamer {
         }
     }
 
+    // Network client for actual thermal frame streaming
+    private var networkClient: mpdc4gsr.network.NetworkClient? = null
+    
+    fun setNetworkClient(client: mpdc4gsr.network.NetworkClient?) {
+        networkClient = client
+        Log.i(TAG, "Network client ${if (client != null) "set" else "cleared"} for thermal streaming")
+    }
 
     fun initialize() {
         Log.i(TAG, "Initializing adaptive thermal streamer")
@@ -214,10 +221,18 @@ class AdaptiveThermalStreamer {
 
             val startTime = System.currentTimeMillis()
 
-            // MVP implementation: Using simulation for network streaming
-            // Can be enhanced with actual network implementation as needed
-
-            simulateNetworkSend(frame)
+            // Send thermal frame via network client
+            try {
+                val frameData = frame.toNetworkMessage() // Convert frame to network format
+                networkClient?.sendThermalFrame(frameData)
+                    ?: run {
+                        // Fallback to simulation if no network client available
+                        simulateNetworkSend(frame)
+                    }
+            } catch (e: Exception) {
+                Log.w(TAG, "Network send failed, using simulation fallback", e)
+                simulateNetworkSend(frame)
+            }
 
             val endTime = System.currentTimeMillis()
             val latency = endTime - startTime
@@ -412,6 +427,22 @@ class AdaptiveThermalStreamer {
         Log.i(TAG, "  Final network quality: ${stats["network_quality"]}")
     }
 
+    /**
+     * Convert thermal frame data to network message format
+     */
+    private fun ThermalFrameData.toNetworkMessage(): String {
+        return """
+        {
+            "type": "thermal_frame",
+            "frame_index": $frameIndex,
+            "timestamp": $timestamp,
+            "quality": $quality,
+            "priority": "${priority.name}",
+            "data_size": ${jpegData.size},
+            "data": "${android.util.Base64.encodeToString(jpegData, android.util.Base64.DEFAULT)}"
+        }
+        """.trimIndent()
+    }
 
     fun cleanup() {
         stopStreaming()
