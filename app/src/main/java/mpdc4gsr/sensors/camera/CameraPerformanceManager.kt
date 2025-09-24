@@ -256,7 +256,7 @@ class CameraPerformanceManager(private val context: Context) {
     
     private fun getAvailableMemoryMB(): Long {
         val runtime = Runtime.getRuntime()
-        val maxMemory = runtime.maxHeapSize()
+        val maxMemory = runtime.maxMemory()
         val totalMemory = runtime.totalMemory()
         val freeMemory = runtime.freeMemory()
         val availableMemory = maxMemory - (totalMemory - freeMemory)
@@ -306,7 +306,7 @@ class CameraPerformanceManager(private val context: Context) {
         }
         
         // Memory-based optimizations
-        val totalMemoryMB = Runtime.getRuntime().maxHeapSize() / (1024 * 1024)
+        val totalMemoryMB = Runtime.getRuntime().maxMemory() / (1024 * 1024)
         when {
             totalMemoryMB < 512 -> {
                 optimizations["max_resolution"] = "720p"

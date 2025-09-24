@@ -200,11 +200,6 @@ class RgbCameraRecorder(
         try {
             Log.d(TAG, "Initializing CameraX with ${if (useFrontCamera) "front" else "back"} camera")
 
-            // Early device validation
-            if (!validateDeviceRequirements()) {
-                return@withContext false
-            }
-
             if (!checkAndRequestPermissions()) {
                 _cameraStatus.value = "Camera Permission Denied"
                 emitError(ErrorType.PERMISSION_DENIED, "Camera permission is required for recording")
@@ -234,6 +229,12 @@ class RgbCameraRecorder(
             // Detect device capabilities and configure camera
             detectDeviceCapabilities()
             detectAvailableCameras()
+            
+            // Validate device requirements after camera detection
+            if (!validateDeviceRequirements()) {
+                return@withContext false
+            }
+            
             optimizeVideoConfiguration()
 
             // Setup and bind camera use cases with error handling
