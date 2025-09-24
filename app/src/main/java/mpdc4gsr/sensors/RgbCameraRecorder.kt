@@ -50,6 +50,7 @@ import mpdc4gsr.utils.SessionDirectoryManager
 import mpdc4gsr.sensors.camera.CameraConfigurationManager
 import mpdc4gsr.sensors.camera.CameraControlsManager
 import mpdc4gsr.sensors.camera.CameraErrorMessageProvider
+import mpdc4gsr.sensors.camera.CameraPerformanceManager
 import java.io.File
 import java.io.FileWriter
 import java.util.concurrent.ExecutorService
@@ -143,7 +144,8 @@ class RgbCameraRecorder(
     private val configurationManager = CameraConfigurationManager()
     private val controlsManager = CameraControlsManager { errorType, message ->
         emitError(errorType, message)
-    } // For Stage 3 RAW DNG capture using ImageFormat.RAW_SENSOR
+    }
+    private val performanceManager = CameraPerformanceManager(context) // For Stage 3 RAW DNG capture using ImageFormat.RAW_SENSOR
     private var camera: Camera? = null
     private var activeRecording: Recording? = null
 
@@ -1930,24 +1932,7 @@ class RgbCameraRecorder(
      * @param enabled true for manual, false for auto
      */
     fun setManualExposureMode(enabled: Boolean) {
-        try {
-            camera?.cameraControl?.let { cameraControl ->
-                if (enabled) {
-                    // For manual exposure, we'd need to use Camera2 interop 
-                    // This is a simplified implementation that locks exposure
-                    cameraControl.enableTorch(false) // Ensure torch is off for consistent exposure
-                    Log.i(TAG, "Manual exposure mode enabled")
-                } else {
-                    // Return to auto exposure
-                    Log.i(TAG, "Auto exposure mode enabled")
-                }
-            } ?: run {
-                emitError(ErrorType.HARDWARE_UNAVAILABLE, "Camera not available for exposure control")
-            }
-        } catch (e: Exception) {
-            Log.w(TAG, "Failed to set exposure mode: ${e.message}")
-            emitError(ErrorType.OPERATION_FAILED, "Failed to set exposure mode: ${e.message}")
-        }
+        controlsManager.setManualExposureMode(camera, enabled)
     }
     
     /**
@@ -2027,67 +2012,7 @@ class RgbCameraRecorder(
      * @param distance 0.0f = infinity, 1.0f = macro/close focus
      */
     fun setFocusDistance(distance: Float) {
-        try {
-            camera?.let { cam ->
-                val clampedDistance = distance.coerceIn(0.0f, 1.0f)
-                
-                try {
-                    // Use Camera2 interop for direct lens focus distance control
-                    val camera2Info = androidx.camera.camera2.interop.Camera2CameraInfo.from(cam.cameraInfo)
-                    val characteristics = camera2Info.getCameraCharacteristic(
-                        android.hardware.camera2.CameraCharacteristics.LENS_INFO_MINIMUM_FOCUS_DISTANCE
-                    )
-                    
-                    characteristics?.let { minFocusDistance ->
-                        if (minFocusDistance > 0) {
-                            // Calculate actual focus distance from normalized value
-                            // 0.0f = infinity (focus distance = 0), 1.0f = macro (focus distance = minFocusDistance)
-                            val actualFocusDistance = clampedDistance * minFocusDistance
-                            
-                            // Use Camera2 interop to set focus distance
-                            val camera2Control = androidx.camera.camera2.interop.Camera2CameraControl.from(cam.cameraControl)
-                            val captureRequestOptions = androidx.camera.camera2.interop.CaptureRequestOptions.Builder()
-                                .setCaptureRequestOption(
-                                    android.hardware.camera2.CaptureRequest.CONTROL_AF_MODE,
-                                    android.hardware.camera2.CameraMetadata.CONTROL_AF_MODE_OFF
-                                )
-                                .setCaptureRequestOption(
-                                    android.hardware.camera2.CaptureRequest.LENS_FOCUS_DISTANCE,
-                                    actualFocusDistance
-                                )
-                                .build()
-                            
-                            camera2Control.addCaptureRequestOptions(captureRequestOptions)
-                            
-                            val focusDistanceText = if (clampedDistance < 0.1f) {
-                                "Infinity"
-                            } else {
-                                String.format("%.2fm", 1.0f / actualFocusDistance)
-                            }
-                            
-                            Log.i(TAG, "Manual focus distance set to: $focusDistanceText (normalized: $clampedDistance, actual: $actualFocusDistance)")
-                        } else {
-                            Log.w(TAG, "Device does not support manual focus distance control")
-                            emitError(ErrorType.FEATURE_NOT_SUPPORTED, "Manual focus distance not supported on this device")
-                        }
-                    } ?: run {
-                        Log.w(TAG, "Could not retrieve minimum focus distance characteristic")
-                        emitError(ErrorType.FEATURE_NOT_SUPPORTED, "Focus distance characteristics not available")
-                    }
-                } catch (e: Exception) {
-                    Log.w(TAG, "Camera2 interop not available, using fallback focus control", e)
-                    // Fallback to basic CameraX focus control
-                    cam.cameraControl.cancelFocusAndMetering()
-                    Log.i(TAG, "Focus distance set to: $clampedDistance (fallback mode)")
-                }
-                
-            } ?: run {
-                emitError(ErrorType.HARDWARE_UNAVAILABLE, "Camera not available for focus control")
-            }
-        } catch (e: Exception) {
-            Log.w(TAG, "Failed to set focus distance: ${e.message}")
-            emitError(ErrorType.OPERATION_FAILED, "Failed to set focus distance: ${e.message}")
-        }
+        controlsManager.setFocusDistance(camera, distance)
     }
     
     /**
