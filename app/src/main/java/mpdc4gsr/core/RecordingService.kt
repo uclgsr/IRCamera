@@ -40,7 +40,7 @@ import mpdc4gsr.network.NetworkServer
 import mpdc4gsr.network.PreviewDataAdapter
 import mpdc4gsr.network.PreviewStreamer
 import mpdc4gsr.network.ProtocolHandler
-import mpdc4gsr.supervisor.CrashSafeSupervisor
+import mpdc4gsr.core.CrashSafeSupervisor
 import mpdc4gsr.sync.TimeSyncManager
 import org.json.JSONArray
 import org.json.JSONObject
@@ -174,7 +174,7 @@ class RecordingService : LifecycleService() {
     private val binder = RecordingServiceBinder()
 
     private lateinit var recordingController: ComprehensiveRecordingController
-    private lateinit var permissionManager: PermissionManager
+    private var permissionManager: PermissionManager? = null
     private var isInitialized = false
 
     private lateinit var networkClient: NetworkClient
@@ -182,10 +182,10 @@ class RecordingService : LifecycleService() {
     private lateinit var networkManager: NetworkManager
     private lateinit var protocolHandler: ProtocolHandler
     private lateinit var connectionManager: NetworkConnectionManager
-    private lateinit var previewStreamer: PreviewStreamer
-    private lateinit var previewDataAdapter: PreviewDataAdapter
+    internal lateinit var previewStreamer: PreviewStreamer
+    internal lateinit var previewDataAdapter: PreviewDataAdapter
     private var isNetworkInitialized = false
-    private var isConnectedToPC = false
+    internal var isConnectedToPC = false
 
     private var currentSessionDirectory: String? = null
     private var recordingStartTime: Long = 0
@@ -247,9 +247,9 @@ class RecordingService : LifecycleService() {
 
         nsdManager = getSystemService(Context.NSD_SERVICE) as NsdManager
 
-        // Initialize PermissionManager and ComprehensiveRecordingController
-        permissionManager = PermissionManager(this)
-        recordingController = ComprehensiveRecordingController(this, this, permissionManager)
+        // Initialize ComprehensiveRecordingController without PermissionManager for service context
+        // PermissionManager requires FragmentActivity which is not available in service context
+        recordingController = ComprehensiveRecordingController(this, this, null)
 
         networkClient = NetworkClient(this)
         networkServer = NetworkServer(this, 8080)
