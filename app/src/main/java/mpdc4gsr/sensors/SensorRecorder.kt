@@ -51,7 +51,14 @@ data class RecordingStatus(
     val currentDataRate: Double,
     val storageUsedMB: Double,
     val timestampNs: Long,
-)
+) {
+    val displayText: String
+        get() = if (isRecording) {
+            "Recording: $samplesRecorded samples @ ${String.format("%.1f", currentDataRate)} Hz"
+        } else {
+            "Ready - ${String.format("%.1f", storageUsedMB)} MB"
+        }
+}
 
 data class SensorError(
     val sensorId: String,

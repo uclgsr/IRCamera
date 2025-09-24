@@ -1884,4 +1884,20 @@ class RgbCameraRecorder(
             "has_preview" to (previewView != null)
         )
     }
+
+    /**
+     * Get the raw images directory for the current session
+     */
+    fun getRawImagesDirectory(): File? {
+        return if (sessionDirectory.isNotEmpty()) {
+            File(sessionDirectory, "raw")
+        } else null
+    }
+
+    /**
+     * Get the current raw capture count
+     */
+    fun getRawCaptureCount(): Long {
+        return framesCaptured.get()
+    }
 }
