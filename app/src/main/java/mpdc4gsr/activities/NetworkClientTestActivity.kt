@@ -9,6 +9,10 @@ import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
 import android.util.Log
+import android.widget.Button
+import android.widget.EditText
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -34,6 +38,17 @@ class NetworkClientTestActivity : AppCompatActivity() {
     private var networkManager: NetworkManager? = null
     private var isBound = false
     
+    // UI Components
+    private lateinit var connectionStatusIndicator: ImageView
+    private lateinit var connectionStatusText: TextView
+    private lateinit var ipAddressInput: EditText
+    private lateinit var portInput: EditText
+    private lateinit var connectWifiButton: Button
+    private lateinit var testPingButton: Button
+    private lateinit var connectBluetoothButton: Button
+    private lateinit var disconnectButton: Button
+    private lateinit var connectionInfoText: TextView
+    
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             Log.i(TAG, "Service connected")
@@ -55,7 +70,9 @@ class NetworkClientTestActivity : AppCompatActivity() {
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main) // Using existing layout for simplicity
+        setContentView(R.layout.activity_network_client_test)
+        
+        initializeUI()
         
         // Bind to RecordingService
         val serviceIntent = Intent(this, RecordingService::class.java)
@@ -72,17 +89,86 @@ class NetworkClientTestActivity : AppCompatActivity() {
         }
     }
     
+    private fun initializeUI() {
+        connectionStatusIndicator = findViewById(R.id.connection_status_indicator)
+        connectionStatusText = findViewById(R.id.connection_status_text)
+        ipAddressInput = findViewById(R.id.ip_address_input)
+        portInput = findViewById(R.id.port_input)
+        connectWifiButton = findViewById(R.id.connect_wifi_button)
+        testPingButton = findViewById(R.id.test_ping_button)
+        connectBluetoothButton = findViewById(R.id.connect_bluetooth_button)
+        disconnectButton = findViewById(R.id.disconnect_button)
+        connectionInfoText = findViewById(R.id.connection_info_text)
+        
+        setupButtonListeners()
+    }
+    
+    private fun setupButtonListeners() {
+        connectWifiButton.setOnClickListener {
+            val ip = ipAddressInput.text.toString().trim()
+            val port = portInput.text.toString().trim().toIntOrNull() ?: DEFAULT_PC_PORT
+            
+            if (ip.isNotEmpty()) {
+                testWifiConnection(ip, port)
+            } else {
+                Toast.makeText(this, "Please enter a valid IP address", Toast.LENGTH_SHORT).show()
+            }
+        }
+        
+        testPingButton.setOnClickListener {
+            testSendMessage()
+        }
+        
+        connectBluetoothButton.setOnClickListener {
+            testBluetoothConnection()
+        }
+        
+        disconnectButton.setOnClickListener {
+            networkManager?.disconnect()
+            updateConnectionStatus(CommandConnection.ConnectionState.DISCONNECTED)
+        }
+    }
+    
+    private fun updateConnectionStatus(state: CommandConnection.ConnectionState) {
+        if (!::connectionStatusText.isInitialized) {
+            Log.w(TAG, "UI not initialized, skipping status update")
+            return
+        }
+        
+        runOnUiThread {
+            val (statusText, statusIcon, buttonsEnabled) = when (state) {
+                CommandConnection.ConnectionState.CONNECTING -> {
+                    Triple("Connecting...", android.R.drawable.presence_away, false)
+                }
+                CommandConnection.ConnectionState.CONNECTED -> {
+                    Triple("Connected", android.R.drawable.presence_online, true)
+                }
+                CommandConnection.ConnectionState.DISCONNECTED -> {
+                    Triple("Disconnected", android.R.drawable.presence_offline, false)
+                }
+                CommandConnection.ConnectionState.ERROR -> {
+                    Triple("Connection Error", android.R.drawable.presence_busy, false)
+                }
+            }
+            
+            connectionStatusText.text = statusText
+            connectionStatusIndicator.setImageResource(statusIcon)
+            testPingButton.isEnabled = buttonsEnabled
+            disconnectButton.isEnabled = buttonsEnabled
+            
+            // Update connection info
+            connectionInfoText.text = getConnectionInfo()
+        }
+    }
+    
     private fun setupUI() {
-        // Create simple buttons programmatically since we're using existing layout
-        title = "Network Client Test"
-        
         Log.i(TAG, "Network Client Test Activity started")
-        Toast.makeText(this, "Network Client Test - Check logs for functionality", Toast.LENGTH_LONG).show()
+        updateConnectionStatus(CommandConnection.ConnectionState.DISCONNECTED)
         
-        // Simulate Wi-Fi connection test after a delay to ensure service is bound
+        // Auto-test Wi-Fi connection after service binding (delayed)
         lifecycleScope.launch {
             kotlinx.coroutines.delay(2000) // Wait for service binding
-            testWifiConnection()
+            // Don't auto-connect, let user manually test
         }
     }
     
@@ -91,13 +177,15 @@ class NetworkClientTestActivity : AppCompatActivity() {
             lifecycleScope.launch {
                 manager.connectionState.collect { state ->
                     Log.i(TAG, "Connection state changed: $state")
+                    updateConnectionStatus(state)
+                    
+                    val message = when (state) {
+                        CommandConnection.ConnectionState.CONNECTING -> "Connecting to PC..."
+                        CommandConnection.ConnectionState.CONNECTED -> "Connected to PC server!"
+                        CommandConnection.ConnectionState.DISCONNECTED -> "Disconnected from PC"
+                        CommandConnection.ConnectionState.ERROR -> "Connection error occurred"
+                    }
                     runOnUiThread {
-                        val message = when (state) {
-                            CommandConnection.ConnectionState.CONNECTING -> "Connecting to PC..."
-                            CommandConnection.ConnectionState.CONNECTED -> "Connected to PC server!"
-                            CommandConnection.ConnectionState.DISCONNECTED -> "Disconnected from PC"
-                            CommandConnection.ConnectionState.ERROR -> "Connection error occurred"
-                        }
                         Toast.makeText(this@NetworkClientTestActivity, message, Toast.LENGTH_SHORT).show()
                     }
                 }
@@ -105,35 +193,43 @@ class NetworkClientTestActivity : AppCompatActivity() {
         }
     }
     
-    private fun testWifiConnection() {
+    private fun testWifiConnection(ip: String = DEFAULT_PC_IP, port: Int = DEFAULT_PC_PORT) {
         if (!isBound || networkManager == null) {
             Log.w(TAG, "Service not bound, cannot test connection")
+            Toast.makeText(this, "Service not ready, please wait", Toast.LENGTH_SHORT).show()
             return
         }
         
-        Log.i(TAG, "Testing Wi-Fi connection to PC server at $DEFAULT_PC_IP:$DEFAULT_PC_PORT")
+        Log.i(TAG, "Testing Wi-Fi connection to PC server at $ip:$port")
+        updateConnectionStatus(CommandConnection.ConnectionState.CONNECTING)
         
         lifecycleScope.launch {
             try {
-                val success = networkManager!!.connectWifi(DEFAULT_PC_IP, DEFAULT_PC_PORT)
+                val success = networkManager!!.connectWifi(ip, port)
                 if (success) {
                     Log.i(TAG, "Successfully connected to PC server via Wi-Fi")
                     
-                    // Test sending a message
+                    // Test sending a message after connection
                     kotlinx.coroutines.delay(1000)
                     testSendMessage()
                     
-                    // Disconnect after 10 seconds
-                    kotlinx.coroutines.delay(10000)
-                    networkManager!!.disconnect()
                 } else {
                     Log.e(TAG, "Failed to connect to PC server via Wi-Fi")
-                    Toast.makeText(this@NetworkClientTestActivity, 
-                        "Failed to connect to PC at $DEFAULT_PC_IP:$DEFAULT_PC_PORT", 
-                        Toast.LENGTH_LONG).show()
+                    updateConnectionStatus(CommandConnection.ConnectionState.ERROR)
+                    runOnUiThread {
+                        Toast.makeText(this@NetworkClientTestActivity, 
+                            "Failed to connect to PC at $ip:$port", 
+                            Toast.LENGTH_LONG).show()
+                    }
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "Exception during Wi-Fi connection test", e)
+                updateConnectionStatus(CommandConnection.ConnectionState.ERROR)
+                runOnUiThread {
+                    Toast.makeText(this@NetworkClientTestActivity, 
+                        "Connection error: ${e.message}", 
+                        Toast.LENGTH_LONG).show()
+                }
             }
         }
     }
@@ -145,24 +241,41 @@ class NetworkClientTestActivity : AppCompatActivity() {
                 val sent = networkManager?.sendResponse("PING")
                 if (sent == true) {
                     Log.i(TAG, "Successfully sent PING message")
+                    runOnUiThread {
+                        Toast.makeText(this@NetworkClientTestActivity, "PING message sent successfully", Toast.LENGTH_SHORT).show()
+                    }
                 } else {
                     Log.w(TAG, "Failed to send PING message")
+                    runOnUiThread {
+                        Toast.makeText(this@NetworkClientTestActivity, "Failed to send PING message", Toast.LENGTH_SHORT).show()
+                    }
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "Exception during message send test", e)
+                runOnUiThread {
+                    Toast.makeText(this@NetworkClientTestActivity, "Message send error: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }
     
     private fun testBluetoothConnection() {
+        if (!isBound || networkManager == null) {
+            Log.w(TAG, "Service not bound, cannot test connection")
+            Toast.makeText(this, "Service not ready, please wait", Toast.LENGTH_SHORT).show()
+            return
+        }
+        
         val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
         if (bluetoothAdapter == null) {
             Log.w(TAG, "Bluetooth not available on this device")
+            Toast.makeText(this, "Bluetooth not available on this device", Toast.LENGTH_SHORT).show()
             return
         }
         
         if (!bluetoothAdapter.isEnabled) {
             Log.w(TAG, "Bluetooth is not enabled")
+            Toast.makeText(this, "Please enable Bluetooth first", Toast.LENGTH_SHORT).show()
             return
         }
         
@@ -173,31 +286,70 @@ class NetworkClientTestActivity : AppCompatActivity() {
                 val testDevice = pairedDevices.first()
                 Log.i(TAG, "Testing Bluetooth connection to ${testDevice.name} (${testDevice.address})")
                 
+                updateConnectionStatus(CommandConnection.ConnectionState.CONNECTING)
+                Toast.makeText(this, "Connecting to ${testDevice.name}...", Toast.LENGTH_SHORT).show()
+                
                 lifecycleScope.launch {
                     try {
                         val success = networkManager!!.connectBluetooth(testDevice)
                         if (success) {
                             Log.i(TAG, "Successfully connected via Bluetooth")
                             
-                            // Disconnect after 5 seconds
-                            kotlinx.coroutines.delay(5000)
-                            networkManager!!.disconnect()
                         } else {
                             Log.e(TAG, "Failed to connect via Bluetooth")
+                            updateConnectionStatus(CommandConnection.ConnectionState.ERROR)
+                            runOnUiThread {
+                                Toast.makeText(this@NetworkClientTestActivity, 
+                                    "Failed to connect to ${testDevice.name}", 
+                                    Toast.LENGTH_LONG).show()
+                            }
                         }
                     } catch (e: Exception) {
                         Log.e(TAG, "Exception during Bluetooth connection test", e)
+                        updateConnectionStatus(CommandConnection.ConnectionState.ERROR)
+                        runOnUiThread {
+                            Toast.makeText(this@NetworkClientTestActivity, 
+                                "Bluetooth connection error: ${e.message}", 
+                                Toast.LENGTH_LONG).show()
+                        }
                     }
                 }
             } else {
                 Log.w(TAG, "No paired Bluetooth devices found")
+                Toast.makeText(this, "No paired Bluetooth devices found. Please pair a device first.", Toast.LENGTH_LONG).show()
             }
         } catch (e: SecurityException) {
             Log.e(TAG, "Bluetooth permission denied", e)
+            Toast.makeText(this, "Bluetooth permission denied", Toast.LENGTH_SHORT).show()
         }
     }
     
     fun getConnectionInfo(): String {
-        return networkManager?.getConnectionInfo()?.toString() ?: "NetworkManager not available"
+        return if (networkManager != null) {
+            val baseInfo = networkManager?.getConnectionInfo()?.toString() ?: "No connection info"
+            val timestamp = java.text.SimpleDateFormat("HH:mm:ss", java.util.Locale.getDefault()).format(java.util.Date())
+            val connectionState = if (::connectionStatusText.isInitialized) {
+                connectionStatusText.text.toString()
+            } else {
+                "Unknown"
+            }
+            
+            """
+Connection Status: $connectionState
+Last Updated: $timestamp
+Service Bound: $isBound
+
+Network Manager Info:
+$baseInfo
+
+Available Actions:
+- Connect via Wi-Fi using IP and port
+- Connect via Bluetooth to paired devices
+- Send test messages when connected
+- Monitor connection state changes
+            """.trimIndent()
+        } else {
+            "NetworkManager not available - Service not bound"
+        }
     }
 }
