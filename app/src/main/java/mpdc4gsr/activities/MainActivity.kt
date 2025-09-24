@@ -61,7 +61,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import mpdc4gsr.app.App
+import mpdc4gsr.core.App
 import mpdc4gsr.config.FeatureFlags
 import mpdc4gsr.config.ProtocolVersion
 import mpdc4gsr.core.StructuredLogger
@@ -71,8 +71,8 @@ import mpdc4gsr.permissions.PermissionController
 import mpdc4gsr.sensors.gsr.GSRQuickRecordingActivity
 import mpdc4gsr.sensors.gsr.GSRSensorRecorder
 import mpdc4gsr.sensors.thermal.ThermalCameraDemo
-import mpdc4gsr.service.RecordingService
-import mpdc4gsr.supervisor.CrashSafeSupervisor
+import mpdc4gsr.core.RecordingService
+import mpdc4gsr.core.CrashSafeSupervisor
 import mpdc4gsr.ui_components.MainFragment
 import mpdc4gsr.utils.AppVersionUtil
 import org.greenrobot.eventbus.Subscribe
