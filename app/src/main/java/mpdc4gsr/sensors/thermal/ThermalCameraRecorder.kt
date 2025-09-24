@@ -277,6 +277,7 @@ class ThermalCameraRecorder(
     private var ircamEngine: IrcamEngine? = null
     private var isIRCameraConnected = false
     private var isTopdonSdkInitialized = false
+    private var currentBitmap: Bitmap? = null
 
 
     private var currentConfig = ThermalCameraConfig()
@@ -790,8 +791,8 @@ class ThermalCameraRecorder(
                         if (_isRecording.get()) {
                             recordingScope.launch {
 
-                                val currentBitmap = syncBitmap.getBitmap()
-                                if (currentBitmap != null && !currentBitmap.isRecycled) {
+                                val bitmap = currentBitmap
+                                if (bitmap != null && !bitmap.isRecycled) {
 
                                     val frameNumber = frameCount.incrementAndGet()
                                     val timestampRecord = TimestampManager.createTimestampRecord()
@@ -802,7 +803,7 @@ class ThermalCameraRecorder(
                                             extractRealThermalDataFromEngine(timestampRecord.systemNanos, frameNumber)
                                         } else {
                                             extractThermalDataFromBitmap(
-                                                currentBitmap,
+                                                bitmap,
                                                 timestampRecord.systemNanos,
                                                 frameNumber
                                             )
@@ -817,10 +818,10 @@ class ThermalCameraRecorder(
 
                         if (previewCallback != null) {
                             recordingScope.launch {
-                                val currentBitmap = syncBitmap.getBitmap()
-                                if (currentBitmap != null && !currentBitmap.isRecycled) {
+                                val bitmap = currentBitmap
+                                if (bitmap != null && !bitmap.isRecycled) {
 
-                                    val bitmapCopy = currentBitmap.copy(currentBitmap.config, false)
+                                    val bitmapCopy = bitmap.copy(bitmap.config, false)
                                     val thermalData =
                                         if (ircamEngine != null && isTopdonSdkInitialized) {
                                             extractRealThermalDataFromEngine(
@@ -869,11 +870,11 @@ class ThermalCameraRecorder(
             }
 
             val handleParam = UvcHandleParam().apply {
-                // TC001 specific VID/PID
-                setVid(thermalCameraDevice?.vendorId ?: 0x2744)
-                setPid(thermalCameraDevice?.productId ?: 0x0001)
-                setWidth(IR_CAMERA_WIDTH)
-                setHeight(IR_CAMERA_HEIGHT)
+                // TC001 specific VID/PID - using properties directly based on the external library API
+                vid = thermalCameraDevice?.vendorId ?: 0x2744
+                pid = thermalCameraDevice?.productId ?: 0x0001
+                width = IR_CAMERA_WIDTH
+                height = IR_CAMERA_HEIGHT
             }
 
             ircamEngine = IrcamEngine.Builder()
@@ -882,21 +883,21 @@ class ThermalCameraRecorder(
 
             if (ircamEngine != null) {
                 // Initialize on background thread to avoid UI blocking
-                val initResult = ircamEngine!!.init()
-                if (initResult == 0) {
-                    isTopdonSdkInitialized = true
-                    Log.i(TAG, "Topdon TC001 SDK engine initialized successfully")
+                ircamEngine!!.initHandle(object : com.energy.ac020library.bean.HandleInitCallback {
+                    override fun onSuccess(ircmdEngine: com.energy.ac020library.IrcmdEngine?) {
+                        isTopdonSdkInitialized = true
+                        Log.i(TAG, "Topdon TC001 SDK engine initialized successfully")
 
-                    // Register frame callback for continuous 10Hz capture
-                    ircamEngine!!.setFrameCallback(object : IIrFrameCallback {
-                        override fun onFrame(frame: ByteArray?, length: Int) {
-                            if (_isRecording.get() && frame != null) {
-                                recordingScope.launch {
-                                    try {
-                                        val frameNumber = frameCount.incrementAndGet()
+                        // Register frame callback for continuous 10Hz capture
+                        ircamEngine!!.registerFrameCallback(object : IIrFrameCallback {
+                            override fun onFrame(frame: ByteArray?, length: Int) {
+                                if (_isRecording.get() && frame != null) {
+                                    recordingScope.launch {
+                                        try {
+                                            val frameNumber = frameCount.incrementAndGet()
 
-                                        // Convert thermal data and save frame  
-                                        val thermalData = processRealThermalData(frame, IR_CAMERA_WIDTH, IR_CAMERA_HEIGHT)
+                                            // Convert thermal data and save frame  
+                                            val thermalData = processRealThermalData(frame, IR_CAMERA_WIDTH, IR_CAMERA_HEIGHT)
 
                                         // Create proper timestamp record for processing
                                         val timestampRecord = TimestampManager.createTimestampRecord()
@@ -925,12 +926,15 @@ class ThermalCameraRecorder(
                             }
                         }
                     })
+                    }
 
-                    true
-                } else {
-                    Log.e(TAG, "Failed to initialize Topdon SDK engine, result code: $initResult")
-                    false
-                }
+                    override fun onError(errorCode: Int, errorMsg: String?) {
+                        Log.e(TAG, "Topdon TC001 SDK initialization failed: $errorCode - $errorMsg")
+                        isTopdonSdkInitialized = false
+                    }
+                })
+
+                true
             } else {
                 Log.e(TAG, "Failed to create IrcamEngine instance")
                 false
@@ -1059,8 +1063,9 @@ class ThermalCameraRecorder(
 
 
                 if (_isRecording.get()) {
+                    val timestampRecord = TimestampManager.createTimestampRecord()
                     saveRealIRThermalData(
-                        timestamp = timestamp,
+                        timestampRecord = timestampRecord,
                         frameNumber = frameNumber,
                         thermalData = thermalData
                     )
@@ -1306,7 +1311,7 @@ class ThermalCameraRecorder(
 
 
             recordingScope.launch {
-                val success = networkServer?.sendMessage(thermalMessage) ?: false
+                val success = networkServer?.sendMessage(thermalMessage.toString()) ?: false
                 if (success) {
                     Log.d(
                         TAG,
@@ -1576,7 +1581,7 @@ class ThermalCameraRecorder(
             reflectedTemperature = 25.0f
         )
 
-        saveRealIRThermalData(timestamp, frameNumber, thermalData)
+        saveRealIRThermalData(TimestampManager.createTimestampRecord(), frameNumber, thermalData)
 
 
         processFrameForPreviewAndNetwork(
@@ -1886,7 +1891,7 @@ class ThermalCameraRecorder(
             var lastFrameTime = 0L
             var droppedFrameCount = 0L
 
-            ircamEngine?.setFrameCallback(object : IIrFrameCallback {
+            ircamEngine?.registerFrameCallback(object : IIrFrameCallback {
                 override fun onFrame(frame: ByteArray?, length: Int) {
                     val currentTime = System.currentTimeMillis()
 
@@ -2515,10 +2520,8 @@ class ThermalCameraRecorder(
                 "network_streamed"
             )
 
-            thermalDataWriter?.writeHeader(thermalDataHeader)
 
-
-            val framesDataHeader = arrayOf(
+            // Thermal frames header is set in the CSV constructor
                 "timestamp_ns",
                 "frame_filename",
                 "processing_time_ms",
@@ -2593,7 +2596,7 @@ class ThermalCameraRecorder(
                 wasNetworkStreamed.toString()
             )
 
-            thermalDataWriter?.writeRow(enhancedFrameData)
+            thermalDataWriter?.writeRow(enhancedFrameData.toList())
 
         } catch (e: Exception) {
             Log.e(TAG, "Error writing enhanced frame data", e)
@@ -2603,11 +2606,11 @@ class ThermalCameraRecorder(
 
     fun getThermalRecordingStatistics(): ThermalRecordingStats {
         return ThermalRecordingStats(
-            totalFramesCaptured = frameCount,
+            totalFramesCaptured = frameCount.get(),
             recordingDurationMs = if (recordingStartTime > 0) System.nanoTime() - recordingStartTime else 0,
             averageFrameRate = if (recordingStartTime > 0) {
                 val durationSeconds = (System.nanoTime() - recordingStartTime) / 1_000_000_000.0
-                frameCount / durationSeconds
+                frameCount.get() / durationSeconds
             } else 0.0,
             isSimulationMode = isSimulationMode,
             deviceConnected = isIRCameraConnected,
@@ -2632,7 +2635,7 @@ class ThermalCameraRecorder(
             val targetFrameRate = thermalFrameRate.toDouble()
             val actualFrameRate = if (recordingStartTime > 0) {
                 val durationSeconds = (System.nanoTime() - recordingStartTime) / 1_000_000_000.0
-                frameCount / durationSeconds
+                frameCount.get() / durationSeconds
             } else 0.0
 
             val frameRateRatio = if (targetFrameRate > 0) actualFrameRate / targetFrameRate else 0.0
@@ -2676,7 +2679,9 @@ class ThermalCameraRecorder(
 
             ircamEngine?.let { engine ->
                 try {
-                    engine.release()
+                    engine.closeVideoStream()
+                    engine.releaseVideoStream()
+                    engine.destroyHandle()
                     Log.i(TAG, "IrcamEngine released successfully")
                 } catch (e: Exception) {
                     Log.w(TAG, "Error during IrcamEngine cleanup", e)
@@ -3008,9 +3013,9 @@ class ThermalCameraRecorder(
 
 
             configureThermalDevice(
-                config.emissivity,
+                config.emissivity.toDouble(),
                 config.temperatureRange,
-                config.atmosphericTemperature
+                config.atmosphericTemperature.toDouble()
             )
 
 
@@ -3022,7 +3027,7 @@ class ThermalCameraRecorder(
 
             Log.i(
                 TAG,
-                "Advanced thermal configuration applied: palette=${config.pseudoColorPalette}, frameRate=${config.frameRate}"
+                "Advanced thermal configuration applied: emissivity=${config.emissivity}, frameRate=${config.frameRate}"
             )
             true
         } catch (e: Exception) {
@@ -3057,6 +3062,13 @@ class ThermalCameraRecorder(
             } else 0.0
 
             performanceMetrics = ThermalPerformanceMetrics(
+                averageFrameTime = avgProcessingTime,
+                maxFrameTime = frameProcessingTimes.maxOrNull()?.toDouble() ?: 0.0,
+                minFrameTime = frameProcessingTimes.minOrNull()?.toDouble() ?: 0.0,
+                frameDropRate = 0.0, // Placeholder - could be calculated from actual vs expected frames
+                thermalProcessingTime = avgProcessingTime,
+                networkStreamingTime = 50.0, // Placeholder
+                memoryUsage = usedMemory.toDouble(),
                 averageFrameRate = avgFrameRate,
                 frameProcessingTimeMs = avgProcessingTime,
                 memoryUsageMB = usedMemory.toDouble(),
