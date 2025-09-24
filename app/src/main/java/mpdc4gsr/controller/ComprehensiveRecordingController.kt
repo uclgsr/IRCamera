@@ -697,6 +697,59 @@ class ComprehensiveRecordingController(
             put("finalized_at", sessionInfo.finalizedAt)
         }.toString(2)
     }
+
+    /**
+     * Add synchronization marker to current recording session
+     */
+    fun addSyncMarker(markerType: String, timestampNs: Long): Boolean {
+        return try {
+            if (!isRecording) {
+                Log.w(TAG, "Cannot add sync marker: not currently recording")
+                return false
+            }
+            
+            // Add marker to each active recorder
+            var success = true
+            sensorRecorders.values.forEach { recorder ->
+                try {
+                    // Most recorders have an addMarker method or similar
+                    recorder.javaClass.getMethod("addMarker", String::class.java, Long::class.java)
+                        .invoke(recorder, markerType, timestampNs)
+                } catch (e: Exception) {
+                    Log.w(TAG, "Failed to add marker to ${recorder.javaClass.simpleName}: ${e.message}")
+                    success = false
+                }
+            }
+            success
+        } catch (e: Exception) {
+            Log.e(TAG, "Error adding sync marker", e)
+            false
+        }
+    }
+
+    /**
+     * Get current sensor status summary
+     */
+    fun getSensorStatusSummary(): String {
+        return try {
+            val activeCount = activeRecorders.values.count { it }
+            val healthyCount = sensorHealthStatus.values.count { it.isHealthy }
+            val totalCount = sensorRecorders.size
+            
+            buildString {
+                append("Active: $activeCount/$totalCount, ")
+                append("Healthy: $healthyCount/$totalCount")
+                if (isRecording) {
+                    append(" [RECORDING]")
+                } else {
+                    append(" [IDLE]")
+                }
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Error getting sensor status summary", e)
+            "Error getting status"
+        }
+    }
 }
 
 
