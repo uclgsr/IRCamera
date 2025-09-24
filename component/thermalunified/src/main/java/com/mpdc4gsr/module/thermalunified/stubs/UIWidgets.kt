@@ -366,8 +366,8 @@ class TemperatureView @JvmOverloads constructor(
     var regionAndValueBitmap: android.graphics.Bitmap? = null
     var isShowFull: Boolean = false
 
-    var isUserHighTemp: Boolean = false
-    var isUserLowTemp: Boolean = false
+    private var userHighTemp: Boolean = false
+    private var userLowTemp: Boolean = false
 
     private var textSize = 12
     private var lineColor = Color.WHITE
@@ -393,11 +393,11 @@ class TemperatureView @JvmOverloads constructor(
     }
 
     fun setUserHighTemp(enabled: Boolean) {
-        isUserHighTemp = enabled
+        userHighTemp = enabled
     }
 
     fun setUserLowTemp(enabled: Boolean) {
-        isUserLowTemp = enabled
+        userLowTemp = enabled
     }
 
     fun setImageSize(width: Int, height: Int) {
@@ -405,6 +405,10 @@ class TemperatureView @JvmOverloads constructor(
             this.width = width
             this.height = height
         }
+    }
+    
+    fun setImageSize(width: Int, height: Int, context: Any?) {
+        setImageSize(width, height)
     }
 
     fun updateMagnifier() {
