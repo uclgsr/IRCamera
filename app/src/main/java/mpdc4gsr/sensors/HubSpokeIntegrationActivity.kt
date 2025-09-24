@@ -19,6 +19,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import mpdc4gsr.controller.ComprehensiveRecordingController
+import mpdc4gsr.controller.SensorStatusInfo
 import mpdc4gsr.controller.RecordingState as ComprehensiveRecordingState
 import mpdc4gsr.network.NetworkServer
 import mpdc4gsr.core.RecordingService
@@ -544,16 +545,24 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
             .launchIn(lifecycleScope)
 
         recordingController.sensorStatusFlow
-            .onEach { statusMap ->
+            .onEach { statusList ->
                 runOnUiThread {
                     val statusText = buildString {
-                        statusMap.forEach { (sensorName, status) ->
-                            append("$sensorName: ")
-                            append(if (status.isActive) "Active" else "Inactive")
-                            append(" (${if (status.isHealthy) "Healthy" else "Unhealthy"})\n")
+                        statusList.forEach { sensorInfo ->
+                            append("${sensorInfo.name}: ")
+                            append(if (sensorInfo.isRecording) "Recording" else "Idle")
+                            append(" (${if (sensorInfo.isHealthy) "Healthy" else "Unhealthy"})")
+                            if (sensorInfo.isRecording) {
+                                append(" - ${sensorInfo.samplesRecorded} samples, ${String.format("%.1f", sensorInfo.storageUsedMB)}MB")
+                            }
+                            append("\n")
                         }
                     }
-                    binding.sensorStatusTextView.text = statusText.trim()
+                    binding.sensorStatusTextView.text = if (statusText.isNotEmpty()) {
+                        statusText.trim()
+                    } else {
+                        "No sensors available"
+                    }
                 }
             }
             .launchIn(lifecycleScope)
