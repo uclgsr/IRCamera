@@ -41,6 +41,7 @@ import mpdc4gsr.sensors.RecordingStatus
 import mpdc4gsr.sensors.SensorError
 import mpdc4gsr.sensors.SensorRecorder
 import mpdc4gsr.sensors.TimestampManager
+import mpdc4gsr.sensors.TimestampRecord
 import mpdc4gsr.sensors.TimeSynchronizationService
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
@@ -1273,7 +1274,7 @@ class GSRSensorRecorder(
 
 
                     connectedDevices.forEach { device ->
-                        deviceList.add("${device.name} (${device.address}) - Connected")
+                        deviceList.add("${device.getName()} (${device.getAddress()}) - Connected")
                     }
 
 
@@ -1286,7 +1287,7 @@ class GSRSensorRecorder(
                                 val deviceAddress = device.getAddress()
 
                                 val isAlreadyConnected =
-                                    connectedDevices.any { it.address == deviceAddress }
+                                    connectedDevices.any { it.getAddress() == deviceAddress }
                                 if (!isAlreadyConnected) {
                                     val deviceEntry =
                                         "${device.getName()} (${deviceAddress}) - Available"
@@ -1347,7 +1348,7 @@ class GSRSensorRecorder(
 
                     val connectedShimmerDevices = unifiedBle.getConnectedShimmerDevices()
                     val alreadyConnected =
-                        connectedShimmerDevices.any { it.address == deviceAddress }
+                        connectedShimmerDevices.any { it.getAddress() == deviceAddress }
 
                     if (alreadyConnected) {
                         Log.i(TAG, "Device $deviceAddress is already connected")
@@ -1361,46 +1362,50 @@ class GSRSensorRecorder(
                     var connectionSuccess = false
                     val connectionCompleted = CompletableDeferred<Boolean>()
 
-                    unifiedBle.scanForShimmerDevices(
-                        5000L,
-                        object : UnifiedBleManager.ShimmerScanCallback {
-                            override fun onDeviceFound(device: UnifiedDevice) {
-                                if (device.getAddress() == deviceAddress) {
-                                    Log.i(
-                                        TAG,
-                                        "Found target device $deviceAddress, attempting connection"
-                                    )
+                    try {
+                        unifiedBle.scanForShimmerDevices(
+                            5000L,
+                            object : UnifiedBleManager.ShimmerScanCallback {
+                                override fun onDeviceFound(device: UnifiedDevice) {
+                                    if (device.getAddress() == deviceAddress) {
+                                        Log.i(
+                                            TAG,
+                                            "Found target device $deviceAddress, attempting connection"
+                                        )
 
+                                        val shimmerRecorder = realShimmerGSRRecorder
+                                        if (shimmerRecorder != null) {
+                                            val success = shimmerRecorder.initializeDevice()
+                                            connectionCompleted.complete(success)
+                                        } else {
+                                            connectionCompleted.complete(false)
+                                        }
+                                    }
+                                }
 
-                                    val shimmerRecorder = realShimmerGSRRecorder
-                                    if (shimmerRecorder != null) {
-                                        val success = shimmerRecorder.initializeDevice()
-                                        connectionCompleted.complete(success)
-                                    } else {
+                                override fun onScanComplete(foundDevices: List<UnifiedDevice>) {
+                                    if (!connectionCompleted.isCompleted) {
+                                        Log.w(TAG, "Device $deviceAddress not found during scan")
                                         connectionCompleted.complete(false)
                                     }
                                 }
-                            }
 
-                            override fun onScanComplete(foundDevices: List<UnifiedDevice>) {
-                                if (!connectionCompleted.isCompleted) {
-                                    Log.w(TAG, "Device $deviceAddress not found during scan")
-                                    connectionCompleted.complete(false)
+                                override fun onScanFailed(errorCode: Int) {
+                                    Log.e(
+                                        TAG,
+                                        "Scan failed while looking for device $deviceAddress with error code: $errorCode"
+                                    )
+                                    if (!connectionCompleted.isCompleted) {
+                                        connectionCompleted.complete(false)
+                                    }
                                 }
-                            }
-
-                            override fun onScanFailed(errorCode: Int) {
-                                Log.e(
-                                    TAG,
-                                    "Scan failed while looking for device $deviceAddress with error code: $errorCode"
-                                )
-                                if (!connectionCompleted.isCompleted) {
-                                    connectionCompleted.complete(false)
-                                }
-                            }
-                        })
-
-                    connectionSuccess = connectionCompleted.await()
+                            })
+                        
+                        connectionSuccess = connectionCompleted.await()
+                    } catch (e: Exception) {
+                        Log.e(TAG, "Error during scanning for device $deviceAddress", e)
+                        connectionSuccess = false
+                    }
 
                     if (connectionSuccess) {
                         Log.i(TAG, "Successfully connected to Shimmer device: $deviceAddress")
@@ -1617,13 +1622,13 @@ class GSRSensorRecorder(
             val timestampRecord = TimestampManager.createTimestampRecord()
 
 
-            val deviceTimestamp = objectCluster.getFormatClusterValue("Timestamp", "CAL")?.data?.toLong() ?: 0L
+            val deviceTimestamp = (objectCluster.getFormatClusterValue("Timestamp", "CAL") as? Number)?.toLong() ?: 0L
 
 
-            val gsrValue = objectCluster.getFormatClusterValue("GSR", "CAL")?.data ?: 0.0
+            val gsrValue = (objectCluster.getFormatClusterValue("GSR", "CAL") as? Number)?.toDouble() ?: 0.0
 
 
-            val ppgValue = objectCluster.getFormatClusterValue("PPG", "CAL")?.data ?: 0.0
+            val ppgValue = (objectCluster.getFormatClusterValue("PPG", "CAL") as? Number)?.toDouble() ?: 0.0
 
 
             val gsrSample = GSRSample(
@@ -1688,7 +1693,6 @@ class GSRSensorRecorder(
                 append("${sample.conductance},")                    // GSR conductance 
                 append("${sample.rawValue},")                       // Raw ADC value
                 append("0")                                         // PPG placeholder (not available in current GSRSample)
-            }
             }
 
             // Add to buffer for batch writing (50 samples as per plan)
@@ -1872,7 +1876,7 @@ class GSRSensorRecorder(
 
     private fun isShimmerDevice(device: android.bluetooth.BluetoothDevice): Boolean {
         return try {
-            val deviceName = BluetoothPermissionUtils.getDeviceName(context, device)
+            val deviceName = device.name
             deviceName?.lowercase()?.contains("shimmer") == true ||
                     device.address.startsWith("00:06:66") ||
                     device.address.startsWith("d0:39:72") ||
