@@ -277,6 +277,14 @@ class ThermalCameraRecorder(
     private var ircamEngine: IrcamEngine? = null
     internal var isIRCameraConnected = false
     private var isTopdonSdkInitialized = false
+    /**
+     * Holds the most recent Bitmap frame from the thermal camera.
+     * This field replaces the previous SynchronizedBitmap.getBitmap() approach,
+     * providing direct access to the latest frame for preview and processing.
+     * It is updated whenever a new frame is received from the camera (typically in the frame callback).
+     * Lifecycle management: currentBitmap is set to null when the camera is disconnected or recording stops,
+     * and updated with each new frame during active recording.
+     */
     private var currentBitmap: Bitmap? = null
 
 
