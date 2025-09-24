@@ -56,7 +56,25 @@ class ZoomCaliperView @JvmOverloads constructor(
         // Stub implementation
     }
     
+    fun updateSelectBitmap(
+        targetMeasureMode: Int,
+        targetType: Int,
+        targetColorType: Int,
+        parentCameraView: View?
+    ) {
+        // Stub implementation
+    }
+    
     fun updateTargetBitmap() {
+        // Stub implementation
+    }
+    
+    fun updateTargetBitmap(
+        targetMeasureMode: Int,
+        targetType: Int,
+        targetColorType: Int,
+        parentCameraView: View?
+    ) {
         // Stub implementation
     }
     

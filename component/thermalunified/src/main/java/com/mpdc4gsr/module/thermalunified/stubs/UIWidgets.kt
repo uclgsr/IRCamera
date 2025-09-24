@@ -406,6 +406,10 @@ class TemperatureView @JvmOverloads constructor(
             this.height = height
         }
     }
+    
+    fun setImageSize(width: Int, height: Int, context: Any?) {
+        setImageSize(width, height)
+    }
 
     fun updateMagnifier() {
         invalidate()

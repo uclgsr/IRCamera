@@ -124,8 +124,8 @@ import com.mpdc4gsr.libunified.app.view.MainTitleView
 import com.mpdc4gsr.module.thermalunified.stubs.ThermalInputDialog
 import com.mpdc4gsr.module.thermalunified.stubs.TipGuideDialog
 import com.mpdc4gsr.module.thermalunified.stubs.TipPreviewDialog
-import com.mpdc4gsr.module.thermalunified.stubs.OnRangeChangedListener
-import com.mpdc4gsr.module.thermalunified.stubs.RangeSeekBar
+import com.mpdc4gsr.libunified.ui.widget.seekbar.OnRangeChangedListener
+import com.mpdc4gsr.libunified.ui.widget.seekbar.RangeSeekBar
 import com.mpdc4gsr.module.thermalunified.R
 import com.mpdc4gsr.module.thermalunified.adapter.CameraItemAdapter
 import com.mpdc4gsr.module.thermalunified.adapter.MeasureItemAdapter
