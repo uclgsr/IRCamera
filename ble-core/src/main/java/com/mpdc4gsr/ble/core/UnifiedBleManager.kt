@@ -97,6 +97,6 @@ class UnifiedBleManager private constructor(private val application: Application
     interface ShimmerScanCallback {
         fun onDeviceFound(device: UnifiedDevice)
         fun onScanComplete(foundDevices: List<UnifiedDevice> = emptyList())
-        fun onScanFailed(error: String)
+        fun onError(error: String)
     }
 }
