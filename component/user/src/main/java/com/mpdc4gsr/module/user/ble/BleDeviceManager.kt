@@ -4,12 +4,12 @@ import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.mpdc4gsr.ble.core.SystemBleStatus
 import com.topdon.ble.EasyBLE
 import com.topdon.ble.Connection
 import com.topdon.ble.ConnectionConfiguration
 import com.topdon.ble.ConnectionState
 import com.topdon.ble.Device
-import com.topdon.ble.EasyBLE
 import com.topdon.ble.EventObserver
 import com.topdon.ble.Request
 import com.topdon.ble.callback.ScanListener

@@ -89,6 +89,7 @@ dependencies {
 
     implementation(project(":libunified"))
     implementation(project(":BleModule"))
+    implementation(project(":ble-core"))
 
     // Core Android dependencies
     implementation(libs.androidx.core.ktx)

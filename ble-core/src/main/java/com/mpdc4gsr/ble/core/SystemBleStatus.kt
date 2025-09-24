@@ -9,5 +9,8 @@ enum class SystemBleStatus {
     SCANNING,
     CONNECTING,
     CONNECTED,
-    ERROR
+    ERROR,
+    NOT_SUPPORTED,
+    ENABLED,
+    DISABLED
 }
