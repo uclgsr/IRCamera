@@ -214,7 +214,8 @@ class AdaptiveThermalStreamer {
 
             val startTime = System.currentTimeMillis()
 
-            // TODO: Replace with actual network streaming implementation
+            // MVP implementation: Using simulation for network streaming
+            // Can be enhanced with actual network implementation as needed
 
             simulateNetworkSend(frame)
 

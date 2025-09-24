@@ -686,14 +686,14 @@ constructor(
     }
 
     /**
-     * TODO:  the state of Samsung Stage3/Level3 processing toggle
+     * Set the state of Samsung Stage3/Level3 processing toggle
      */
     fun setStage3ProcessingEnabled(enabled: Boolean) {
         stage3ProcessingToggle.isChecked = enabled
     }
 
     /**
-     * TODO: Show or hide Stage3/Level3 processing toggle based on device capabilities
+     * Show or hide Stage3/Level3 processing toggle based on device capabilities
      */
     fun setStage3ProcessingVisible(visible: Boolean) {
         stage3Layout.visibility = if (visible) View.VISIBLE else View.GONE

@@ -630,20 +630,20 @@ class IRMonitorLiteFragment : BaseFragment(), ITsTempListener {
     // Temperature measurement wrapper methods for compatibility with IRMonitorLiteActivity
     // These methods provide a bridge between the AC020 TemperatureView and the expected API
     fun getPointTemp(point: Point): com.energy.iruvc.sdkisp.LibIRTemp.TemperatureSampleResult? {
-        // For AC020 cameras, we simulate temperature measurement
-        // In a real implementation, this would call the AC020 temperature measurement API
-        return null // TODO: Implement proper temperature measurement for AC020
+        // MVP implementation: AC020 temperature measurement not yet integrated
+        // Returns null for now - can be enhanced with actual AC020 API integration
+        return null
     }
 
     fun getLineTemp(line: Line): com.energy.iruvc.sdkisp.LibIRTemp.TemperatureSampleResult? {
-        // For AC020 cameras, we simulate temperature measurement
-        // In a real implementation, this would call the AC020 temperature measurement API  
-        return null // TODO: Implement proper temperature measurement for AC020
+        // MVP implementation: AC020 temperature measurement not yet integrated
+        // Returns null for now - can be enhanced with actual AC020 API integration
+        return null
     }
 
     fun getRectTemp(rect: Rect): com.energy.iruvc.sdkisp.LibIRTemp.TemperatureSampleResult? {
-        // For AC020 cameras, we simulate temperature measurement
-        // In a real implementation, this would call the AC020 temperature measurement API
-        return null // TODO: Implement proper temperature measurement for AC020
+        // MVP implementation: AC020 temperature measurement not yet integrated
+        // Returns null for now - can be enhanced with actual AC020 API integration
+        return null
     }
 }

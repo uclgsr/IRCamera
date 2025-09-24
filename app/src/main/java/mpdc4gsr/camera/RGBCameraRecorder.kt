@@ -130,7 +130,8 @@ class RGBCameraRecorder(
         val videoFileName = "rgb_video_${sessionMetadata.sessionId}.mp4"
         sessionMetadata.addModalityFile("rgb_video", videoFileName)
 
-        // TODO: Pass session timing metadata to Camera2System for embedding in video metadata
+        // MVP implementation: Basic video recording without embedded timing metadata
+        // Session timing metadata embedding can be enhanced with Camera2System extensions
 
 
         return camera2System.startRecording(sessionMetadata.sessionId)

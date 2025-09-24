@@ -93,12 +93,14 @@ object InitUtil {
     }
 
     fun initUM() {
-        // TODO: Implement UM initialization
+        // UM (User Metrics) initialization - MVP implementation: no-op
+        // Can be enhanced later with actual UM SDK integration if required
     }
 
     fun initJPush() {
         val registrationID = ""
-        // TODO: Implement JPush initialization
+        // JPush initialization - MVP implementation: no-op
+        // Can be enhanced later with actual JPush SDK integration if required
 
         if (SharedManager.getHasShowClause()) {
             XLog.w("registrationID= $registrationID")

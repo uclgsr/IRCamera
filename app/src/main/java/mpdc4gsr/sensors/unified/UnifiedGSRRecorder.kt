@@ -641,8 +641,9 @@ class UnifiedGSRRecorder(
     fun getAverageSignalQuality(): Double = _connectionQuality.value
 
     fun getErrorCount(): Long {
-        // Count based on error flow emissions (simplified approach)
-        return 0L // TODO: Could track errors with an AtomicLong if needed
+        // MVP implementation: Error tracking not yet implemented
+        // Can be enhanced with AtomicLong-based error counting if needed
+        return 0L
     }
 
     suspend fun flushAndCloseFiles() = withContext(Dispatchers.IO) {

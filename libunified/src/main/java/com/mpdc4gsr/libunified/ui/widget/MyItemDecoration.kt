@@ -158,7 +158,15 @@ class MyItemDecoration(context: Context) : RecyclerView.ItemDecoration() {
      * @param spanCount 总行数(共有多少行)
      */
     private fun setHorizontalMulti(outRect: Rect, position: Int, itemCount: Int, spanCount: Int) {
-        // TODO: 有这样的需求了再来写吧
+        // MVP implementation: Basic horizontal multi-row spacing
+        // Can be enhanced when horizontal multi-row requirements are clarified
+        val column = position % spanCount
+        val row = position / spanCount
+        
+        outRect.left = if (column == 0) 0 else horizontal / 2
+        outRect.right = if (column == spanCount - 1) 0 else horizontal / 2
+        outRect.top = if (row == 0) 0 else vertical / 2
+        outRect.bottom = vertical / 2
     }
 
 
