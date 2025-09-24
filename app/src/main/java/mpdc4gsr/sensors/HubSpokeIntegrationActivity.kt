@@ -11,9 +11,11 @@ import android.view.View
 import androidx.lifecycle.lifecycleScope
 import com.csl.irCamera.R
 import com.csl.irCamera.databinding.ActivityHubSpokeIntegrationBinding
-import com.topdon.ble.Device
-import com.topdon.ble.EasyBLE
-import com.topdon.ble.EasyBLE
+// Use Shimmer's official Bluetooth API for GSR device detection in hub-spoke integration
+import com.shimmerresearch.android.manager.ShimmerBluetoothManagerAndroid
+import com.shimmerresearch.android.Shimmer
+import android.os.Handler
+import android.os.Looper
 import com.mpdc4gsr.libunified.app.ktbase.BaseBindingActivity
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -40,9 +42,8 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
     private lateinit var networkServer: NetworkServer
     private lateinit var timeManager: TimeManager
 
-    private lateinit var enhancedBLE: EasyBLE
-    // private lateinit var unifiedBleManager: UnifiedBleManager // Replaced with EasyBLE
-    private var connectedBLEDevices = mutableListOf<Device>()
+    private lateinit var shimmerBluetoothManager: ShimmerBluetoothManagerAndroid
+    private var connectedShimmerDevices = mutableListOf<Shimmer>()
 
     private var recordingService: RecordingService? = null
     private var recordingServiceBinder: RecordingService.RecordingServiceBinder? = null
@@ -109,10 +110,9 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
     private fun initializeComponents() {
         timeManager = TimeManager.getInstance(this)
 
-        enhancedBLE = EasyBLE.getBuilder()
-            .build()
+        shimmerBluetoothManager = ShimmerBluetoothManagerAndroid(this, Handler(Looper.getMainLooper()))
 
-        Log.i(TAG, "Enhanced BLE Module initialized with Nordic BLE backend")
+        Log.i(TAG, "Shimmer Bluetooth Manager initialized for GSR device coordination")
 
         initializeAdvancedBleCoordination()
 
@@ -170,57 +170,72 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
     private fun discoverGsrSensorsForHubSpoke() {
         lifecycleScope.launch {
             try {
+                Log.d(TAG, "Hub-spoke GSR sensor discovery started using Shimmer API")
+                runOnUiThread {
+                    binding.statusTextView.text = "Scanning for Shimmer GSR sensors..."
+                }
 
-                enhancedBLE.addScanListener(object : com.topdon.ble.callback.ScanListener {
-                    override fun onScanStart() {
-                        Log.d(TAG, "Hub-spoke GSR sensor discovery started")
+                // Use Shimmer's official API to get connected and paired devices
+                val connectedDevices = shimmerBluetoothManager.getConnectedDeviceList()
+                connectedDevices.forEach { shimmerDevice ->
+                    val deviceName = shimmerDevice.getDeviceName()
+                    val deviceAddress = shimmerDevice.getBluetoothAddress()
+                    
+                    Log.i(TAG, "Connected Shimmer GSR device found: $deviceName ($deviceAddress)")
+                    runOnUiThread {
+                        binding.statusTextView.text = "Shimmer GSR device connected: $deviceName"
+                        updateDiscoveredShimmerDevicesUI(shimmerDevice)
+                    }
+                }
+
+                // Also check for paired Shimmer devices
+                val bluetoothAdapter = shimmerBluetoothManager.getBluetoothAdapter()
+                val pairedDevices = bluetoothAdapter?.bondedDevices
+                pairedDevices?.forEach { btDevice ->
+                    val deviceName = btDevice.name ?: "Unknown"
+                    val deviceAddress = btDevice.address
+                    
+                    // Check if this is a Shimmer GSR device
+                    if (isShimmerGSRDevice(deviceName, deviceAddress)) {
+                        Log.i(TAG, "Paired Shimmer GSR device found: $deviceName ($deviceAddress)")
                         runOnUiThread {
-                            binding.statusTextView.text = "Scanning for GSR sensors..."
+                            binding.statusTextView.text = "Shimmer GSR device available: $deviceName"
                         }
                     }
+                }
 
-                    override fun onScanStop() {
-                        Log.d(TAG, "Hub-spoke GSR sensor discovery stopped")
-                    }
-
-                    override fun onScanResult(device: Device, isConnectedBySys: Boolean) {
-
-                        val deviceName = device.name?.uppercase() ?: ""
-                        if (deviceName.contains("SHIMMER") || deviceName.contains("GSR")) {
-                            Log.i(
-                                TAG,
-                                "GSR sensor detected for hub-spoke: ${device.name} (${device.address})"
-                            )
-
-                            unifiedBleManager.markAsGsrSensor(device.address)
-
-                            runOnUiThread {
-                                binding.statusTextView.text = "GSR sensor found: ${device.name}"
-                                updateDiscoveredDevicesUI(device, device.rssi)
-                            }
-                        }
-                    }
-
-                    override fun onScanError(errorCode: Int, errorMsg: String?) {
-                        Log.e(
-                            TAG,
-                            "Hub-spoke GSR sensor discovery failed: $errorCode, message: $errorMsg"
-                        )
-                        runOnUiThread {
-                            binding.statusTextView.text = "GSR sensor discovery failed"
-                        }
-                    }
-                })
-
-                enhancedBLE.startScan()
-
-                kotlinx.coroutines.delay(30000)
-                enhancedBLE.stopScan()
+                kotlinx.coroutines.delay(5000) // Give time for discovery
 
             } catch (e: Exception) {
-                Log.e(TAG, "Error discovering GSR sensors", e)
+                Log.e(TAG, "Error discovering Shimmer GSR sensors", e)
+                runOnUiThread {
+                    binding.statusTextView.text = "Shimmer GSR sensor discovery failed"
+                }
             }
         }
+    }
+
+    private fun isShimmerGSRDevice(deviceName: String, deviceAddress: String): Boolean {
+        val nameLower = deviceName.lowercase()
+        
+        // Check for Shimmer MAC address prefixes
+        val hasShimmerMacPrefix = deviceAddress.startsWith("00:06:66") ||
+                                 deviceAddress.startsWith("d0:39:72") ||
+                                 deviceAddress.startsWith("00:80:98")
+        
+        // Check for GSR-related device names
+        val hasGSRName = nameLower.contains("shimmer") ||
+                        nameLower.contains("gsr") ||
+                        nameLower.contains("rn4") ||
+                        nameLower.contains("shimmer3")
+        
+        return hasShimmerMacPrefix || hasGSRName
+    }
+
+    private fun updateDiscoveredShimmerDevicesUI(shimmerDevice: Shimmer) {
+        // Update UI with discovered Shimmer device
+        // Implementation depends on the specific UI structure
+        Log.d(TAG, "Updating UI for Shimmer device: ${shimmerDevice.getDeviceName()}")
     }
 
     private fun updateBleStatusUI(systemStatus: Any?) { // UnifiedBleManager.SystemBleStatus replaced
