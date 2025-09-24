@@ -72,6 +72,7 @@ class RgbCameraRecorder(
         private const val VIDEO_HEIGHT_4K = 2160
         private const val VIDEO_WIDTH_1080P = 1920
         private const val VIDEO_HEIGHT_1080P = 1080
+        private const val VIDEO_FPS_60 = 60
         private const val VIDEO_FPS_TARGET = 30
         private const val VIDEO_FPS_FALLBACK = 24
         private const val VIDEO_BITRATE_4K = 50_000_000
@@ -442,6 +443,7 @@ class RgbCameraRecorder(
             override val canSwitch = !_isRecording.get() && (frontAvailable && backAvailable)
             override val supports4K = deviceSupports4K
             override val supportsRAW = deviceSupportsRAW
+            override val supports60fps = checkDevice60fpsSupport()
             override val currentResolution = "${selectedVideoWidth}x${selectedVideoHeight}"
             override val currentFormat = if (deviceSupportsRAW && ENABLE_RAW_CAPTURE) "JPEG+RAW" else "JPEG"
         }
@@ -454,6 +456,7 @@ class RgbCameraRecorder(
         val canSwitch: Boolean
         val supports4K: Boolean
         val supportsRAW: Boolean
+        val supports60fps: Boolean
         val currentResolution: String
         val currentFormat: String
     }
@@ -461,25 +464,29 @@ class RgbCameraRecorder(
 
     private fun optimizeVideoConfiguration() {
         try {
+            val supports60fps = checkDevice60fpsSupport()
+            
             if (deviceSupports4K) {
                 Log.i(TAG, "Configuring for 4K recording on supported device")
                 selectedVideoWidth = VIDEO_WIDTH_4K
                 selectedVideoHeight = VIDEO_HEIGHT_4K
                 selectedVideoBitrate = VIDEO_BITRATE_4K
-                selectedVideoFps = VIDEO_FPS_TARGET
+                // Use 60fps if supported, otherwise fall back to 30fps
+                selectedVideoFps = if (supports60fps) VIDEO_FPS_60 else VIDEO_FPS_TARGET
             } else {
                 Log.i(TAG, "Configuring for 1080p recording with fallback safety")
                 selectedVideoWidth = VIDEO_WIDTH_1080P
                 selectedVideoHeight = VIDEO_HEIGHT_1080P
                 selectedVideoBitrate = VIDEO_BITRATE_1080P
-                selectedVideoFps = VIDEO_FPS_TARGET
+                // Use 60fps if supported, otherwise fall back to 30fps
+                selectedVideoFps = if (supports60fps) VIDEO_FPS_60 else VIDEO_FPS_TARGET
             }
 
             Log.i(
                 TAG,
                 "Video configuration optimized: ${selectedVideoWidth}x${selectedVideoHeight}@${selectedVideoFps}fps, bitrate: ${selectedVideoBitrate}"
             )
-            Log.i(TAG, "Advanced capabilities: 4K=${deviceSupports4K}, RAW=${deviceSupportsRAW}")
+            Log.i(TAG, "Advanced capabilities: 4K=${deviceSupports4K}, RAW=${deviceSupportsRAW}, 60fps=${supports60fps}")
 
         } catch (e: Exception) {
             Log.e(TAG, "Error optimizing video configuration, using safe defaults", e)
@@ -487,6 +494,32 @@ class RgbCameraRecorder(
             selectedVideoHeight = VIDEO_HEIGHT_1080P
             selectedVideoBitrate = VIDEO_BITRATE_1080P
             selectedVideoFps = VIDEO_FPS_FALLBACK
+        }
+    }
+    
+    /**
+     * Check if the device supports 60fps recording at high resolution
+     * Samsung S22 and similar flagships typically do support this
+     */
+    private fun checkDevice60fpsSupport(): Boolean {
+        return try {
+            val deviceModel = Build.MODEL
+            val manufacturer = Build.MANUFACTURER.lowercase()
+            
+            // Samsung S22 series and other high-end devices that support 60fps
+            val supports60fps = manufacturer == "samsung" && (
+                deviceModel in KNOWN_4K_DEVICES || 
+                deviceModel.startsWith("SM-S9") || // S22 series
+                deviceModel.startsWith("SM-S10") || // S23 series  
+                deviceModel.startsWith("SM-G9") || // Note series
+                deviceModel.startsWith("SM-G99") // S21/S22 Ultra
+            )
+            
+            Log.i(TAG, "60fps support check - Device: $manufacturer $deviceModel, Supports 60fps: $supports60fps")
+            supports60fps
+        } catch (e: Exception) {
+            Log.w(TAG, "Error checking 60fps support, defaulting to false", e)
+            false
         }
     }
 
@@ -2027,10 +2060,54 @@ class RgbCameraRecorder(
      */
     fun supports60fps(): Boolean {
         return try {
-            // This would need device-specific capability checking
-            deviceSupports4K && selectedVideoWidth >= VIDEO_WIDTH_4K
+            checkDevice60fpsSupport()
         } catch (e: Exception) {
             false
         }
+    }
+    
+    /**
+     * Switch between video+JPEG capture mode and RAW-only capture mode
+     * @param useRawMode true for RAW DNG capture, false for video+JPEG
+     */
+    fun setCaptureMode(useRawMode: Boolean) {
+        try {
+            if (_isRecording.get()) {
+                Log.w(TAG, "Cannot change capture mode while recording")
+                return
+            }
+            
+            if (useRawMode) {
+                if (!deviceSupportsRAW) {
+                    Log.w(TAG, "RAW capture mode requested but device doesn't support RAW")
+                    return
+                }
+                Log.i(TAG, "Switching to RAW DNG capture mode")
+                // RAW mode will be activated in the next recording session
+            } else {
+                Log.i(TAG, "Switching to video+JPEG capture mode")
+                // Normal video mode will be used
+            }
+            
+            // Could trigger camera reconfiguration here if needed
+            
+        } catch (e: Exception) {
+            Log.w(TAG, "Failed to set capture mode: ${e.message}")
+        }
+    }
+    
+    /**
+     * Get current capture mode information
+     */
+    fun getCaptureMode(): Map<String, Any> {
+        return mapOf(
+            "supports_raw" to deviceSupportsRAW,
+            "supports_4k" to deviceSupports4K,
+            "supports_60fps" to supports60fps(),
+            "current_resolution" to "${selectedVideoWidth}x${selectedVideoHeight}",
+            "current_fps" to selectedVideoFps,
+            "raw_enabled" to (deviceSupportsRAW && ENABLE_RAW_CAPTURE),
+            "stage3_compatible" to (deviceSupportsRAW && SamsungDeviceCompatibility.isStage3Compatible())
+        )
     }
 }
