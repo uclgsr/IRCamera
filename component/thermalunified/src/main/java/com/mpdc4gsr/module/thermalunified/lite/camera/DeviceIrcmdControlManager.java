@@ -5,7 +5,7 @@ import android.util.Log;
 import com.energy.ac020library.IrcamEngine;
 import com.energy.ac020library.IrcmdEngine;
 import com.energy.ac020library.bean.IrcmdError;
-import com.energy.commoncomponent.Const;
+import com.mpdc4gsr.libunified.ir.usbdual.Const;
 import com.mpdc4gsr.libunified.ir.utils.FileUtil;
 
 import org.json.JSONArray;

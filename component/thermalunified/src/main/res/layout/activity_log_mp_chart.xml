@@ -33,7 +33,7 @@
             tools:itemCount="1"
             tools:listitem="@layout/item_setting_time" />
 
-        <com.github.mikephil.charting.charts.LineChart
+        <com.mpdc4gsr.libunified.ui.charts.LineChart
             android:id="@+id/log_chart_time_chart"
             android:layout_width="0dp"
             android:layout_height="0dp"
