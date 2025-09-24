@@ -13,6 +13,7 @@ import android.widget.CompoundButton
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import com.mpdc4gsr.ble.core.UnifiedBleManager
 import androidx.core.content.ContextCompat
 
 // UnifiedBleManager - using EasyBLE from com.topdon.ble instead

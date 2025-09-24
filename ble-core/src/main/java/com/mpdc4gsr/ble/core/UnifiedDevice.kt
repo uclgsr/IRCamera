@@ -18,7 +18,5 @@ data class UnifiedDevice(
     fun getSignalStrength(): Int = -50
     fun getBatteryLevel(): Int = 80
     
-    // Add missing methods
-    fun getAddress(): String = address
-    fun getName(): String = name
+    // Note: getAddress() and getName() are automatically provided by data class
 }

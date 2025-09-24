@@ -39,6 +39,7 @@ import mpdc4gsr.sensors.RecordingStatus
 import mpdc4gsr.sensors.SensorError
 import mpdc4gsr.sensors.SensorRecorder
 import mpdc4gsr.sensors.TimestampManager
+import mpdc4gsr.sensors.TimestampRecord
 import mpdc4gsr.sensors.TimeSynchronizationService
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
@@ -1285,19 +1286,19 @@ class GSRSensorRecorder(
                         10000L,
                         object : UnifiedBleManager.ShimmerScanCallback {
                             override fun onDeviceFound(device: UnifiedDevice) {
-                                val deviceAddress = device.getAddress()
+                                val deviceAddress = device.address
 
                                 val isAlreadyConnected =
                                     connectedDevices.any { it.address == deviceAddress }
                                 if (!isAlreadyConnected) {
                                     val deviceEntry =
-                                        "${device.getName()} (${deviceAddress}) - Available"
+                                        "${device.name} (${deviceAddress}) - Available"
                                     if (!deviceList.contains(deviceEntry)) {
                                         deviceList.add(deviceEntry)
                                     }
                                     Log.d(
                                         TAG,
-                                        "Found nearby Shimmer device: ${device.getName()} at $deviceAddress"
+                                        "Found nearby Shimmer device: ${device.name} at $deviceAddress"
                                     )
                                 }
                             }
@@ -1367,7 +1368,7 @@ class GSRSensorRecorder(
                         5000L,
                         object : UnifiedBleManager.ShimmerScanCallback {
                             override fun onDeviceFound(device: UnifiedDevice) {
-                                if (device.getAddress() == deviceAddress) {
+                                if (device.address == deviceAddress) {
                                     Log.i(
                                         TAG,
                                         "Found target device $deviceAddress, attempting connection"
@@ -1376,8 +1377,10 @@ class GSRSensorRecorder(
 
                                     val shimmerRecorder = realShimmerGSRRecorder
                                     if (shimmerRecorder != null) {
-                                        val success = shimmerRecorder.initializeDevice()
-                                        connectionCompleted.complete(success)
+                                        recordingScope.launch {
+                                            val success = shimmerRecorder.initializeDevice()
+                                            connectionCompleted.complete(success)
+                                        }
                                     } else {
                                         connectionCompleted.complete(false)
                                     }
@@ -1613,16 +1616,16 @@ class GSRSensorRecorder(
     private fun handleShimmerData(objectCluster: ObjectCluster) {
         try {
 
-            val timestampRecord = timestampManager?.createTimestampRecord() ?: TimestampManager.createTimestampRecord()
+            val timestampRecord = TimestampManager.createTimestampRecord()
 
 
-            val deviceTimestamp = objectCluster.getFormatClusterValue("Timestamp", "CAL")?.data?.toLong() ?: 0L
+            val deviceTimestamp = (objectCluster.getFormatClusterValue("Timestamp", "CAL") as? Number)?.toLong() ?: 0L
 
 
-            val gsrValue = objectCluster.getFormatClusterValue("GSR", "CAL")?.data ?: 0.0
+            val gsrValue = (objectCluster.getFormatClusterValue("GSR", "CAL") as? Number)?.toDouble() ?: 0.0
 
 
-            val ppgValue = objectCluster.getFormatClusterValue("PPG", "CAL")?.data ?: 0.0
+            val ppgValue = (objectCluster.getFormatClusterValue("PPG", "CAL") as? Number)?.toDouble() ?: 0.0
 
 
             val gsrSample = GSRSample(
@@ -1686,9 +1689,9 @@ class GSRSensorRecorder(
                 append("${timestampRecord.systemTimeMs},")          // Wall clock time
                 append("${timestampRecord.sessionRelativeMs},")     // Session relative time
                 append("${deviceTimestamp},")                       // Device timestamp for drift analysis
-                append("${sample.conductanceMicrosiemens},")        // GSR in microsiemens
-                append("${sample.rawAdc},")                         // Raw ADC value
-                append("${sample.ppgValue}")                        // PPG if available
+                append("${sample.conductance},")                   // GSR in microsiemens
+                append("${sample.rawValue},")                       // Raw ADC value
+                append("${sample.conductance}")                     // PPG placeholder (using conductance as fallback)
             }
 
             // Add to buffer for batch writing (50 samples as per plan)
@@ -1705,7 +1708,7 @@ class GSRSensorRecorder(
                 }
             }
 
-            Log.v(TAG, "GSR sample buffered: conductance=${sample.conductanceMicrosiemens}µS, buffer_size=$csvBufferCount")
+            Log.v(TAG, "GSR sample buffered: conductance=${sample.conductance}µS, buffer_size=$csvBufferCount")
 
         } catch (e: Exception) {
             Log.e(TAG, "Error buffering GSR data for CSV", e)
