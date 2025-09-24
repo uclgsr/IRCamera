@@ -275,7 +275,7 @@ class ThermalCameraRecorder(
     private var iruvctc: IRUVCTC? = null
     private var uvcCamera: UVCCamera? = null
     private var ircamEngine: IrcamEngine? = null
-    private var isIRCameraConnected = false
+    internal var isIRCameraConnected = false
     private var isTopdonSdkInitialized = false
     private var currentBitmap: Bitmap? = null
 
@@ -287,8 +287,8 @@ class ThermalCameraRecorder(
 
     private var usbManager: UsbManager? = null
     private var thermalCameraDevice: UsbDevice? = null
-    private var hasUsbPermission: Boolean = false
-    private var isSimulationMode: Boolean = false
+    internal var hasUsbPermission: Boolean = false
+    internal var isSimulationMode: Boolean = false
 
 
     private val recordingScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
