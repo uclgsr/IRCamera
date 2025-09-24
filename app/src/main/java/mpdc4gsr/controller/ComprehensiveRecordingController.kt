@@ -14,7 +14,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import mpdc4gsr.data.SessionMetadata
 import mpdc4gsr.sensors.SensorRecorder
-import mpdc4gsr.util.SessionDirectoryManager
+import mpdc4gsr.utils.SessionDirectoryManager
+import mpdc4gsr.utils.SessionDirectory
+import mpdc4gsr.permissions.PermissionManager
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.File
@@ -25,7 +27,8 @@ import java.util.concurrent.atomic.AtomicLong
 
 class ComprehensiveRecordingController(
     private val context: Context,
-    private val lifecycleOwner: LifecycleOwner
+    private val lifecycleOwner: LifecycleOwner,
+    private val permissionManager: PermissionManager
 ) {
     companion object {
         private const val TAG = "ComprehensiveRecordingController"
@@ -54,6 +57,7 @@ class ComprehensiveRecordingController(
     private val sessionDirectoryManager = SessionDirectoryManager(context)
     private var sessionMetadata: SessionMetadata? = null
     private var currentSessionId: String? = null
+    private var currentSessionDirectory: SessionDirectory? = null
     private val sessionStartTime = AtomicLong(0)
 
     private val _recordingStateFlow = MutableStateFlow(RecordingState.IDLE)
@@ -149,6 +153,7 @@ class ComprehensiveRecordingController(
 
                 val finalSessionId = sessionId ?: sessionDirectoryManager.generateSessionId()
                 val sessionDir = sessionDirectoryManager.createSessionDirectory(finalSessionId)
+                currentSessionDirectory = sessionDir
 
                 sessionMetadata = SessionMetadata.createSessionStart(finalSessionId).copy(
                     experimentalConditions = mapOf(
@@ -330,7 +335,7 @@ class ComprehensiveRecordingController(
             crashRecoveryMarker?.writeText("RECORDING_ACTIVE:$sessionId:${System.currentTimeMillis()}")
 
             // Mark session active in CrashRecoveryManager with SharedPreferences
-            val sessionDirectory = sessionDirectoryManager.getCurrentSessionDirectory()?.rootDir?.absolutePath ?: ""
+            val sessionDirectory = currentSessionDirectory?.rootDir?.absolutePath ?: ""
             crashRecoveryManager.markSessionActive(sessionId, sessionDirectory, enabledSensors)
 
             Log.d(TAG, "Created crash recovery markers for session: $sessionId")
@@ -397,6 +402,7 @@ class ComprehensiveRecordingController(
                 // Phase 6: Update state
                 sessionMetadata = null
                 currentSessionId = null
+                currentSessionDirectory = null
                 _recordingStateFlow.value = RecordingState.IDLE
 
                 Log.i(TAG, "🏁 Recording stopped successfully (duration: ${sessionDuration}ms)")
@@ -475,7 +481,7 @@ class ComprehensiveRecordingController(
 
                 // Try to restart
                 sessionMetadata?.let { meta ->
-                    val sessionDir = sessionDirectoryManager.getCurrentSessionDirectory()?.rootDir
+                    val sessionDir = currentSessionDirectory?.rootDir
                     if (sessionDir != null) {
                         val sensorDir = File(sessionDir, sensorName.lowercase())
                         val success = sensor.startRecording(sensorDir.absolutePath, meta)
@@ -572,7 +578,7 @@ class ComprehensiveRecordingController(
      */
     fun getCurrentSessionDirectory(): String? {
         return try {
-            sessionDirectoryManager.getCurrentSessionDirectory()?.rootDir?.absolutePath
+            currentSessionDirectory?.rootDir?.absolutePath
         } catch (e: Exception) {
             Log.w(TAG, "Error getting current session directory", e)
             null
@@ -606,7 +612,7 @@ class ComprehensiveRecordingController(
             // Start RecordingService with foreground notification
             mpdc4gsr.core.RecordingService.startRecording(
                 context,
-                sessionDirectoryManager.getCurrentSessionDirectory()?.rootDir?.absolutePath ?: ""
+                currentSessionDirectory?.rootDir?.absolutePath ?: ""
             )
             Log.i(TAG, "Started foreground recording service")
         } catch (e: Exception) {
@@ -627,9 +633,9 @@ class ComprehensiveRecordingController(
     }
 
     // Get list of available sensors
-    fun getAvailableSensors(): List<SensorInfo> {
+    fun getAvailableSensors(): List<SensorHealthSummary> {
         return sensorRecorders.keys.map { sensorName ->
-            SensorInfo(
+            SensorHealthSummary(
                 sensorId = sensorName,
                 name = sensorName,
                 isHealthy = sensorHealthStatus[sensorName]?.isHealthy ?: false
@@ -709,7 +715,7 @@ class ComprehensiveRecordingController(
     ) {
         try {
             currentSessionId?.let { sessionId ->
-                val sessionDir = sessionDirectoryManager.getCurrentSessionDirectory()?.rootDir
+                val sessionDir = currentSessionDirectory?.rootDir
                 if (sessionDir != null) {
                     // Create comprehensive session_info.json with all metadata
                     val sessionInfo = SessionInfoData(
@@ -832,7 +838,7 @@ enum class RecordingState {
     IDLE, STARTING, RECORDING, STOPPING, STOPPED, ERROR
 }
 
-data class SensorInfo(
+data class SensorHealthSummary(
     val sensorId: String,
     val name: String,
     val isHealthy: Boolean

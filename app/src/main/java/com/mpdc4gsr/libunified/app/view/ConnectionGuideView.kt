@@ -1,4 +1,4 @@
-package mpdc4gsr.ui_components
+package com.mpdc4gsr.libunified.app.view
 
 import android.content.Context
 import android.content.res.TypedArray
@@ -12,7 +12,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
 import com.csl.irCamera.databinding.UiMainConnectionGuideBinding
-import com.mpdc4gsr.libunified.ui.R as UiR
+import com.csl.irCamera.R
 
 class ConnectionGuideView : LinearLayout {
     private var iconRes: Int = 0
@@ -24,20 +24,20 @@ class ConnectionGuideView : LinearLayout {
 
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
         val ta: TypedArray =
-            context.obtainStyledAttributes(attrs, UiR.styleable.ConnectionGuideView)
+            context.obtainStyledAttributes(attrs, R.styleable.ConnectionGuideView)
         for (i in 0 until ta.indexCount) {
             when (ta.getIndex(i)) {
-                UiR.styleable.ConnectionGuideView_guide_icon ->
+                R.styleable.ConnectionGuideView_guide_icon ->
                     iconRes =
-                        ta.getResourceId(UiR.styleable.ConnectionGuideView_guide_icon, 0)
+                        ta.getResourceId(R.styleable.ConnectionGuideView_guide_icon, 0)
 
-                UiR.styleable.ConnectionGuideView_guide_text ->
+                R.styleable.ConnectionGuideView_guide_text ->
                     contentStr =
-                        ta.getString(UiR.styleable.ConnectionGuideView_guide_text).toString()
+                        ta.getString(R.styleable.ConnectionGuideView_guide_text).toString()
 
-                UiR.styleable.ConnectionGuideView_guide_icon_show ->
+                R.styleable.ConnectionGuideView_guide_icon_show ->
                     iconShow =
-                        ta.getBoolean(UiR.styleable.ConnectionGuideView_guide_icon_show, false)
+                        ta.getBoolean(R.styleable.ConnectionGuideView_guide_icon_show, false)
             }
         }
         ta.recycle()
@@ -74,7 +74,7 @@ class ConnectionGuideView : LinearLayout {
     fun getCompoundDrawables(content: String) {
         var mContent = "$content  "
         val spannableString = SpannableString(mContent)
-        val drawable = context.getDrawable(UiR.drawable.ic_connection_press_tip)
+        val drawable = context.getDrawable(R.drawable.ic_connection_press_tip)
         drawable!!.setBounds(0, 0, drawable.minimumWidth, drawable.minimumHeight)
         spannableString.setSpan(
             ImageSpan(drawable),
