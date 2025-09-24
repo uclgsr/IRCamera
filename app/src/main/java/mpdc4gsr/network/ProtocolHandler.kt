@@ -50,7 +50,7 @@ class ProtocolHandler(
     /**
      * Set the TimeSyncManager for enhanced sync handling
      */
-    fun setTimeSyncManager(syncManager: TimeSyncManager) {
+    fun setTimeSyncManager(syncManager: TimeSyncManager?) {
         timeSyncManager = syncManager
     }
 

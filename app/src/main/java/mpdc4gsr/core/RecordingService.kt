@@ -539,10 +539,10 @@ class RecordingService : LifecycleService() {
                 recordingStartTime = System.nanoTime()
 
                 // Initialize TimeSyncManager for this session
-                timeSyncManager.initializeSession(sessionDirectory)
+                timeSyncManager?.initializeSession(sessionDirectory)
                 
                 // Enable periodic sync for long recording sessions
-                timeSyncManager.setPeriodicSyncEnabled(true)
+                timeSyncManager?.setPeriodicSyncEnabled(true)
 
                 Log.i(TAG, "Starting recording session: $sessionDirectory")
                 structuredLogger.log(
