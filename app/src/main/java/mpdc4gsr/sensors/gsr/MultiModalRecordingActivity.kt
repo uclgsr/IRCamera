@@ -438,7 +438,7 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
 
     private fun observeCameraStatus() {
         lifecycleScope.launch {
-            rgbCameraRecorder?.statusFlow?.collect { status ->
+            rgbCameraRecorder?.getStatusFlow()?.collect { status ->
                 Log.d(TAG, "Camera status: ${status.displayText}")
             }
         }
@@ -930,7 +930,7 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
     }
 
     private fun openSynchronizationTest() {
-        val intent = Intent(this, com.mpdc4gsr.test.SynchronizationTestActivity::class.java)
+        val intent = Intent(this, mpdc4gsr.test.SynchronizationTestActivity::class.java)
         startActivity(intent)
     }
 
@@ -1085,7 +1085,10 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
         if (isRecording) {
             stopRecording()
         }
-        rgbCameraRecorder?.cleanup()
+        // Launch coroutine for cleanup since it's a suspend function
+        lifecycleScope.launch {
+            rgbCameraRecorder?.cleanup()
+        }
         networkClient?.cleanup()
         unbindEnhancedRecordingService()
     }
