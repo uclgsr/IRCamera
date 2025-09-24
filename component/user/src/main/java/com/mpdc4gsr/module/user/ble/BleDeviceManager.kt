@@ -31,6 +31,12 @@ class BleDeviceManager(private val context: Context) : CoroutineScope {
             )
     }
 
+    enum class SystemBleStatus {
+        NOT_SUPPORTED,
+        ENABLED,
+        DISABLED
+    }
+
     override val coroutineContext: CoroutineContext = Dispatchers.Main + Job()
     private var easyBLE: EasyBLE? = null
     private val gsrSensorAddresses = mutableSetOf<String>()
