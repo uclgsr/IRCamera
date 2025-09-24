@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.topdon.ble.EasyBLE
 import com.topdon.ble.Connection
 import com.topdon.ble.ConnectionConfiguration
 import com.topdon.ble.ConnectionState
@@ -32,7 +33,6 @@ class BleDeviceManager(private val context: Context) : CoroutineScope {
     }
 
     override val coroutineContext: CoroutineContext = Dispatchers.Main + Job()
-
     private var easyBLE: EasyBLE? = null
     private val gsrSensorAddresses = mutableSetOf<String>()
 
@@ -342,11 +342,7 @@ class BleDeviceManager(private val context: Context) : CoroutineScope {
         }
     }
 
-    enum class SystemBleStatus {
-        ENABLED, DISABLED, NOT_SUPPORTED
-    }
-
-    fun getSystemBleStatus(): SystemBleStatus? {
+    fun getSystemBleStatus(): Any? { // UnifiedBleManager.SystemBleStatus replaced
         return try {
             val adapter = easyBLE?.bluetoothAdapter
             when {
