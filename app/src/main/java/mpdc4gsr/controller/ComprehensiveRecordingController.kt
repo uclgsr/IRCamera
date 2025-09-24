@@ -665,9 +665,13 @@ class ComprehensiveRecordingController(
             // Add marker to each active recorder
             sensorRecorders.values.forEach { recorder ->
                 try {
+                    // All SensorRecorder implementations should have addSyncMarker method
+                    // but catch any potential runtime issues gracefully
                     recorder.addSyncMarker(markerType, timestampNs)
+                    Log.d(TAG, "Successfully added sync marker to ${recorder.javaClass.simpleName}")
                 } catch (e: Exception) {
-                    Log.w(TAG, "Failed to add marker to ${recorder.javaClass.simpleName}: ${e.message}")
+                    Log.w(TAG, "Failed to add sync marker to ${recorder.javaClass.simpleName}: ${e.message}")
+                    // Continue with other recorders instead of failing entirely
                 }
             }
         } catch (e: Exception) {
