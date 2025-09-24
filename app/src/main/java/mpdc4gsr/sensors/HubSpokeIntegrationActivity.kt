@@ -19,7 +19,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import mpdc4gsr.controller.ComprehensiveRecordingController
-import mpdc4gsr.controller.RecordingState
+import mpdc4gsr.controller.RecordingState as ComprehensiveRecordingState
 import mpdc4gsr.network.NetworkServer
 import mpdc4gsr.core.RecordingService
 import mpdc4gsr.utils.TimeManager
@@ -527,18 +527,17 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
             .onEach { state ->
                 runOnUiThread {
                     when (state) {
-                        RecordingState.IDLE -> binding.statusTextView.text = "System ready"
-                        RecordingState.STARTING -> binding.statusTextView.text =
+                        ComprehensiveRecordingState.IDLE -> binding.statusTextView.text = "System ready"
+                        ComprehensiveRecordingState.STARTING -> binding.statusTextView.text =
                             "Starting sensors..."
 
-                        RecordingState.RECORDING -> binding.statusTextView.text =
+                        ComprehensiveRecordingState.RECORDING -> binding.statusTextView.text =
                             "Recording in progress"
 
-                        RecordingState.STOPPING -> binding.statusTextView.text =
+                        ComprehensiveRecordingState.STOPPING -> binding.statusTextView.text =
                             "Stopping sensors..."
 
-                        RecordingState.STOPPED -> binding.statusTextView.text = "Recording stopped"
-                        RecordingState.ERROR -> binding.statusTextView.text = "Recording error"
+                        ComprehensiveRecordingState.ERROR -> binding.statusTextView.text = "Recording error"
                     }
                     updateUI()
                 }

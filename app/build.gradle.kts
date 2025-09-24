@@ -267,6 +267,7 @@ dependencies {
     implementation(project(":component:user"))
     implementation(project(":libunified"))
     implementation(project(":BleModule"))
+    implementation(project(":ble-core"))
     implementation(files("libs/libAC020sdk_USB_IR_1.1.1_2408291439.aar"))
     implementation(files("libs/libirutils_1.2.0_2409241055.aar"))
     implementation(files("libs/libcommon_1.2.0_24052117.aar"))
