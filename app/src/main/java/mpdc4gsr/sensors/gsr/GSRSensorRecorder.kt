@@ -1102,16 +1102,34 @@ class GSRSensorRecorder(
             val shimmerManager = shimmerBluetoothManager
             if (shimmerManager != null) {
                 // Set up the multi-shimmer data handler to receive ObjectCluster data
-                // Note: Using ShimmerBluetooth callback instead of setMultiShimmerDataHandler
-                // which may not be available in all Shimmer SDK versions
                 try {
-                    // Setup individual device callback handlers instead
-                    Log.i(TAG, "Setting up ObjectCluster data handlers for connected devices")
-                } catch (e: Exception) {
-                    Log.w(TAG, "Failed to setup multi-shimmer data handler", e)
-                }
+                    // Try to use setMultiShimmerDataHandler if available in this Shimmer SDK version
+                    shimmerManager.setMultiShimmerDataHandler { shimmer, objectCluster ->
+                        try {
+                            if (_isRecording.get()) {
+                                // Use the enhanced convertObjectClusterToSensorSample method
+                                val gsrSample = convertObjectClusterToSensorSample(objectCluster)
 
-                Log.i(TAG, "Enhanced ObjectCluster data handler configured successfully")
+                                if (gsrSample != null) {
+                                    // Process the enhanced GSR sample through the normal pipeline
+                                    recordingScope.launch {
+                                        onGSRSampleReceived(gsrSample)
+                                    }
+                                    Log.v(TAG, "ObjectCluster converted and processed: ${gsrSample.conductance}µS")
+                                } else {
+                                    Log.w(TAG, "Failed to convert ObjectCluster to GSRSample")
+                                }
+                            }
+                        } catch (e: Exception) {
+                            Log.e(TAG, "Error processing ObjectCluster through enhanced conversion", e)
+                        }
+                    }
+                    Log.i(TAG, "Enhanced ObjectCluster data handler configured successfully")
+                } catch (e: Exception) {
+                    Log.w(TAG, "setMultiShimmerDataHandler not available in this Shimmer SDK version: ${e.message}")
+                    // Setup individual device callback handlers as fallback
+                    Log.i(TAG, "Setting up individual ObjectCluster data handlers for connected devices")
+                }
             } else {
                 Log.w(TAG, "Shimmer Bluetooth manager not available - cannot set up ObjectCluster handler")
             }
@@ -1377,9 +1395,19 @@ class GSRSensorRecorder(
 
                                     val shimmerRecorder = realShimmerGSRRecorder
                                     if (shimmerRecorder != null) {
+                                        // Launch coroutine but don't await it - let connection complete independently
                                         recordingScope.launch {
-                                            val success = shimmerRecorder.initializeDevice()
-                                            connectionCompleted.complete(success)
+                                            try {
+                                                val success = shimmerRecorder.initializeDevice()
+                                                if (!connectionCompleted.isCompleted) {
+                                                    connectionCompleted.complete(success)
+                                                }
+                                            } catch (e: Exception) {
+                                                Log.e(TAG, "Error during device initialization", e)
+                                                if (!connectionCompleted.isCompleted) {
+                                                    connectionCompleted.complete(false)
+                                                }
+                                            }
                                         }
                                     } else {
                                         connectionCompleted.complete(false)
@@ -1588,17 +1616,25 @@ class GSRSensorRecorder(
     private suspend fun startShimmerStreaming(device: Shimmer): Boolean {
         return try {
 
-            // Configure GSR sensor - using try-catch for compatibility
+            // Configure GSR sensor - try to enable GSR sensor and set range
             try {
                 // Try to use Shimmer SDK methods if available
+                device.setGSRRange(GSR_RANGE_AUTO)
+                device.enableGSRSensor(true)
                 device.setSamplingRateShimmer(51.2)
-                device.startStreaming()
-                Log.i(TAG, "Shimmer GSR configuration applied successfully")
+                Log.i(TAG, "Shimmer GSR sensor configuration applied successfully")
             } catch (e: Exception) {
                 Log.w(TAG, "Some Shimmer configuration methods not available: ${e.message}")
-                // Try basic streaming start
-                device.startStreaming()
+                // Try basic configuration without specific GSR methods
+                try {
+                    device.setSamplingRateShimmer(51.2)
+                } catch (e2: Exception) {
+                    Log.w(TAG, "Could not set sampling rate: ${e2.message}")
+                }
             }
+            
+            // Start streaming
+            device.startStreaming()
 
             Log.i(TAG, "Shimmer streaming started successfully")
             true
