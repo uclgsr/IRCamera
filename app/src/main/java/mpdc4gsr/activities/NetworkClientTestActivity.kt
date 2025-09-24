@@ -130,8 +130,12 @@ class NetworkClientTestActivity : AppCompatActivity() {
     }
     
     private fun updateConnectionStatus(state: CommandConnection.ConnectionState) {
-        if (!::connectionStatusText.isInitialized) {
-            Log.w(TAG, "UI not initialized, skipping status update")
+        if (!::connectionStatusText.isInitialized ||
+            !::connectionStatusIndicator.isInitialized ||
+            !::testPingButton.isInitialized ||
+            !::disconnectButton.isInitialized ||
+            !::connectionInfoText.isInitialized) {
+            Log.w(TAG, "UI not fully initialized, skipping status update")
             return
         }
         
