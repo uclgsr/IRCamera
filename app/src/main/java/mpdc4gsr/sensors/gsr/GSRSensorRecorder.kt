@@ -1619,7 +1619,7 @@ class GSRSensorRecorder(
             val timestampRecord = TimestampManager.createTimestampRecord()
 
 
-            val deviceTimestamp = (objectCluster.getFormatClusterValue("Timestamp", "CAL") as? Number)?.toLong() ?: 0L
+            val deviceTimestamp = objectCluster.getFormatClusterValue("Timestamp", "CAL")?.let { (it as? Number)?.toLong() } ?: 0L
 
 
             val gsrValue = (objectCluster.getFormatClusterValue("GSR", "CAL") as? Number)?.toDouble() ?: 0.0
