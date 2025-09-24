@@ -4,7 +4,7 @@ import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.mpdc4gsr.ble.core.UnifiedBleManager
+import com.topdon.ble.EasyBLE
 import com.topdon.ble.Connection
 import com.topdon.ble.ConnectionConfiguration
 import com.topdon.ble.ConnectionState
@@ -35,7 +35,7 @@ class BleDeviceManager(private val context: Context) : CoroutineScope {
 
     override val coroutineContext: CoroutineContext = Dispatchers.Main + Job()
 
-    private val unifiedBleManager = UnifiedBleManager.getInstance(context)
+    // private val unifiedBleManager = UnifiedBleManager.getInstance(context) // Replaced with EasyBLE
     private var easyBLE: EasyBLE? = null
 
     private val _discoveredDevices = MutableLiveData<List<BleDeviceInfo>>()
@@ -345,7 +345,7 @@ class BleDeviceManager(private val context: Context) : CoroutineScope {
         }
     }
 
-    fun getSystemBleStatus(): UnifiedBleManager.SystemBleStatus? {
+    fun getSystemBleStatus(): Any? { // UnifiedBleManager.SystemBleStatus replaced
         return try {
             unifiedBleManager.getSystemStatus()
         } catch (e: Exception) {

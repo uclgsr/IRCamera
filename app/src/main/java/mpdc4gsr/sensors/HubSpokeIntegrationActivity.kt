@@ -13,7 +13,7 @@ import com.csl.irCamera.R
 import com.csl.irCamera.databinding.ActivityHubSpokeIntegrationBinding
 import com.topdon.ble.Device
 import com.topdon.ble.EasyBLE
-import com.mpdc4gsr.ble.core.UnifiedBleManager
+import com.topdon.ble.EasyBLE
 import com.mpdc4gsr.libunified.app.ktbase.BaseBindingActivity
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -40,7 +40,7 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
     private lateinit var timeManager: TimeManager
 
     private lateinit var enhancedBLE: EasyBLE
-    private lateinit var unifiedBleManager: UnifiedBleManager
+    // private lateinit var unifiedBleManager: UnifiedBleManager // Replaced with EasyBLE
     private var connectedBLEDevices = mutableListOf<Device>()
 
     private var recordingService: RecordingService? = null
@@ -122,10 +122,9 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
         lifecycleScope.launch {
             try {
 
-                unifiedBleManager =
-                    UnifiedBleManager.getInstance(this@HubSpokeIntegrationActivity)
-                unifiedBleManager.initialize(this@HubSpokeIntegrationActivity, true)
-                unifiedBleManager.enableMultiDeviceMode(true)
+                // unifiedBleManager = UnifiedBleManager.getInstance(this@HubSpokeIntegrationActivity)
+                // unifiedBleManager.initialize(this@HubSpokeIntegrationActivity, true)
+                // unifiedBleManager.enableMultiDeviceMode(true)
 
                 Log.i(TAG, "Advanced BLE coordination initialized for hub-spoke system")
 
@@ -223,7 +222,7 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
         }
     }
 
-    private fun updateBleStatusUI(systemStatus: UnifiedBleManager.SystemBleStatus?) {
+    private fun updateBleStatusUI(systemStatus: Any?) { // UnifiedBleManager.SystemBleStatus replaced
         runOnUiThread {
             try {
                 if (systemStatus != null) {

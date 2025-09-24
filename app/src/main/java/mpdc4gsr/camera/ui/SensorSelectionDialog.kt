@@ -13,8 +13,8 @@ import android.widget.CompoundButton
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
-import com.mpdc4gsr.ble.core.UnifiedBleManager
 import androidx.core.content.ContextCompat
+import com.topdon.ble.EasyBLE
 
 // UnifiedBleManager - using EasyBLE from com.topdon.ble instead
 
@@ -36,16 +36,20 @@ class SensorSelectionDialog(
             }
 
             try {
-                val unifiedBleManager = UnifiedBleManager.getInstance(context)
+                val easyBLE = EasyBLE.getDefault()
 
                 val hasConnectedShimmerDevices =
-                    unifiedBleManager.getConnectedShimmerDevices().isNotEmpty()
+                    easyBLE.connectedDevices.any { device ->
+                        device.name.contains("shimmer", ignoreCase = true) ||
+                        device.address.startsWith("00:06:66") ||
+                        device.address.startsWith("d0:39:72")
+                    }
 
                 if (hasConnectedShimmerDevices) {
                     available.add(SensorType.GSR)
                     Log.d(TAG, "Connected Shimmer GSR devices found")
                 } else {
-
+                    // GSR sensor available even without hardware (simulation mode)
                     available.add(SensorType.GSR)
                     Log.d(TAG, "GSR sensor available (will use simulation if no hardware found)")
                 }

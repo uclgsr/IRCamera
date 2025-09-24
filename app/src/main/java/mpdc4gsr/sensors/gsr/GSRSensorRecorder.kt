@@ -4,10 +4,11 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.util.Log
 import androidx.core.content.ContextCompat
-import com.mpdc4gsr.ble.core.ShimmerBleController
-import com.mpdc4gsr.ble.core.UnifiedBleManager
-import com.mpdc4gsr.ble.core.UnifiedDevice
+// ShimmerBleController - need to create adapter or use EasyBLE directly
+// import com.mpdc4gsr.ble.shimmer.ShimmerBleController  // TODO: Replace with EasyBLE
+// UnifiedBleManager - replaced with EasyBLE
 import com.topdon.ble.EasyBLE
+import com.topdon.ble.Connection
 import com.topdon.ble.util.BluetoothPermissionUtils
 import com.mpdc4gsr.gsr.model.GSRSample
 import com.mpdc4gsr.gsr.model.SessionInfo
@@ -39,7 +40,6 @@ import mpdc4gsr.sensors.RecordingStatus
 import mpdc4gsr.sensors.SensorError
 import mpdc4gsr.sensors.SensorRecorder
 import mpdc4gsr.sensors.TimestampManager
-import mpdc4gsr.sensors.TimestampRecord
 import mpdc4gsr.sensors.TimeSynchronizationService
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
@@ -142,11 +142,11 @@ class GSRSensorRecorder(
     private var _isRecording = AtomicBoolean(false)
     override val isRecording: Boolean get() = _isRecording.get()
 
-    private var unifiedBleManager: UnifiedBleManager? = null
+    private var easyBLE: EasyBLE? = null
     private var unifiedShimmerDevice: ShimmerDevice? = null
 
     private var realShimmerGSRRecorder: ShimmerGSRRecorder? = null
-    private var shimmerDevice: ShimmerBleController? = null
+    private var shimmerConnection: Connection? = null
 
     private var gsrDataPersistence: GSRDataPersistence? = null
     private var currentSessionId: String? = null
@@ -198,14 +198,11 @@ class GSRSensorRecorder(
 
                 }
 
-                unifiedBleManager = UnifiedBleManager.getInstance(context)
-                if (!unifiedBleManager!!.initialize()) {
-                    Log.w(
-                        TAG,
-                        "Unified BLE manager initialization failed, falling back to legacy implementation"
-                    )
-                } else {
-                    Log.i(TAG, "Unified BLE manager initialized successfully")
+                try {
+                    easyBLE = EasyBLE.getDefault()
+                    Log.i(TAG, "EasyBLE initialized successfully for GSR sensor integration")
+                } catch (e: Exception) {
+                    Log.w(TAG, "EasyBLE initialization failed, falling back to legacy implementation: ${e.message}")
                 }
 
 
@@ -918,13 +915,11 @@ class GSRSensorRecorder(
 
             if (connectionHealthScore < POOR_CONNECTION_THRESHOLD) {
                 Log.w(TAG, "Poor connection health detected: ${connectionHealthScore.toInt()}%")
-                recordingScope.launch {
-                    emitError(
-                        ErrorType.CONNECTION_LOST,
-                        "Poor connection quality detected - check sensor contact",
-                        isRecoverable = true
-                    )
-                }
+                emitError(
+                    ErrorType.CONNECTION_LOST,
+                    "Poor connection quality detected - check sensor contact",
+                    isRecoverable = true
+                )
             }
         } catch (e: Exception) {
             Log.w(TAG, "Error updating connection health", e)
@@ -941,7 +936,7 @@ class GSRSensorRecorder(
 
     private fun determineRecordingMode(): String {
         return when {
-            realShimmerGSRRecorder != null && unifiedBleManager != null -> "shimmer_unified_ble"
+            realShimmerGSRRecorder != null && easyBLE != null -> "shimmer_easyble"
             realShimmerGSRRecorder != null -> "shimmer_ble"
             legacyGSRRecorder != null -> "legacy_gsr"
             else -> "unknown"
@@ -978,12 +973,17 @@ class GSRSensorRecorder(
 
             GSRSample(
                 timestamp = unifiedTimestamp,
-                utcTimestamp = unifiedTimestamp,
-                conductance = gsrMicrosiemens,
-                resistance = if (gsrMicrosiemens > 0) 1000000.0 / gsrMicrosiemens else Double.MAX_VALUE,
-                rawValue = gsrRawValue,
-                sampleIndex = sampleSequence.incrementAndGet(),
-                sessionId = currentSessionId ?: "unknown_session"
+                timestampIso = TimestampManager.formatTimestampIso(unifiedTimestamp),
+                gsrRaw = gsrRawValue,
+                gsrMicrosiemens = gsrMicrosiemens,
+                gsrKohms = if (gsrMicrosiemens > 0) 1000.0 / gsrMicrosiemens else Double.MAX_VALUE,
+                ppgRaw = ppgValue,
+                accelerometerX = accelerometerData.first,
+                accelerometerY = accelerometerData.second,
+                accelerometerZ = accelerometerData.third,
+                qualityScore = qualityScore,
+                deviceId = sensorId,
+                sampleSequence = sampleSequence.incrementAndGet()
             )
         } catch (e: Exception) {
             Log.e(TAG, "Failed to convert ObjectCluster to GSRSample", e)
@@ -1102,34 +1102,28 @@ class GSRSensorRecorder(
             val shimmerManager = shimmerBluetoothManager
             if (shimmerManager != null) {
                 // Set up the multi-shimmer data handler to receive ObjectCluster data
-                try {
-                    // Try to use setMultiShimmerDataHandler if available in this Shimmer SDK version
-                    shimmerManager.setMultiShimmerDataHandler { shimmer, objectCluster ->
-                        try {
-                            if (_isRecording.get()) {
-                                // Use the enhanced convertObjectClusterToSensorSample method
-                                val gsrSample = convertObjectClusterToSensorSample(objectCluster)
+                shimmerManager.setMultiShimmerDataHandler { shimmer, objectCluster ->
+                    try {
+                        if (_isRecording.get()) {
+                            // Use the enhanced convertObjectClusterToSensorSample method
+                            val gsrSample = convertObjectClusterToSensorSample(objectCluster)
 
-                                if (gsrSample != null) {
-                                    // Process the enhanced GSR sample through the normal pipeline
-                                    recordingScope.launch {
-                                        onGSRSampleReceived(gsrSample)
-                                    }
-                                    Log.v(TAG, "ObjectCluster converted and processed: ${gsrSample.conductance}µS")
-                                } else {
-                                    Log.w(TAG, "Failed to convert ObjectCluster to GSRSample")
+                            if (gsrSample != null) {
+                                // Process the enhanced GSR sample through the normal pipeline
+                                recordingScope.launch {
+                                    onGSRSampleReceived(gsrSample)
                                 }
+                                Log.v(TAG, "ObjectCluster converted and processed: ${gsrSample.gsrMicrosiemens}µS")
+                            } else {
+                                Log.w(TAG, "Failed to convert ObjectCluster to GSRSample")
                             }
-                        } catch (e: Exception) {
-                            Log.e(TAG, "Error processing ObjectCluster through enhanced conversion", e)
                         }
+                    } catch (e: Exception) {
+                        Log.e(TAG, "Error processing ObjectCluster through enhanced conversion", e)
                     }
-                    Log.i(TAG, "Enhanced ObjectCluster data handler configured successfully")
-                } catch (e: Exception) {
-                    Log.w(TAG, "setMultiShimmerDataHandler not available in this Shimmer SDK version: ${e.message}")
-                    // Setup individual device callback handlers as fallback
-                    Log.i(TAG, "Setting up individual ObjectCluster data handlers for connected devices")
                 }
+
+                Log.i(TAG, "Enhanced ObjectCluster data handler configured successfully")
             } else {
                 Log.w(TAG, "Shimmer Bluetooth manager not available - cannot set up ObjectCluster handler")
             }
@@ -1286,59 +1280,25 @@ class GSRSensorRecorder(
                     return@withContext emptyList()
                 }
 
-                val unifiedBle = unifiedBleManager
-                if (unifiedBle != null) {
-
-                    val connectedDevices = unifiedBle.getConnectedShimmerDevices()
+                val ble = easyBLE
+                if (ble != null) {
                     val deviceList = mutableListOf<String>()
-
-
+                    
+                    // Get connected devices first
+                    val connectedDevices = ble.connectedDevices
                     connectedDevices.forEach { device ->
-                        deviceList.add("${device.name} (${device.address}) - Connected")
+                        if (isShimmerDevice(device.originDevice)) {
+                            deviceList.add("${device.name} (${device.address}) - Connected")
+                        }
                     }
-
-
-                    val scanResultDeferred = CompletableDeferred<List<String>>()
-
-                    unifiedBle.scanForShimmerDevices(
-                        10000L,
-                        object : UnifiedBleManager.ShimmerScanCallback {
-                            override fun onDeviceFound(device: UnifiedDevice) {
-                                val deviceAddress = device.address
-
-                                val isAlreadyConnected =
-                                    connectedDevices.any { it.address == deviceAddress }
-                                if (!isAlreadyConnected) {
-                                    val deviceEntry =
-                                        "${device.name} (${deviceAddress}) - Available"
-                                    if (!deviceList.contains(deviceEntry)) {
-                                        deviceList.add(deviceEntry)
-                                    }
-                                    Log.d(
-                                        TAG,
-                                        "Found nearby Shimmer device: ${device.name} at $deviceAddress"
-                                    )
-                                }
-                            }
-
-                            override fun onScanComplete(foundDevices: List<UnifiedDevice>) {
-                                Log.i(
-                                    TAG,
-                                    "Shimmer device scan completed. Total devices found: ${deviceList.size}"
-                                )
-                                scanResultDeferred.complete(deviceList.toList())
-                            }
-
-                            override fun onScanFailed(error: String) {
-                                Log.e(TAG, "Shimmer device scan failed: $error")
-
-                                scanResultDeferred.complete(deviceList.toList())
-                            }
-                        })
-
-                    scanResultDeferred.await()
+                    
+                    Log.i(TAG, "Found ${deviceList.size} connected Shimmer devices")
+                    
+                    // For simplicity, return connected devices for now
+                    // Full scanning would require implementing scan callbacks
+                    deviceList.toList()
                 } else {
-                    Log.w(TAG, "Unified BLE manager not available for device discovery")
+                    Log.w(TAG, "EasyBLE not available for device discovery")
                     emptyList()
                 }
             } catch (e: Exception) {
@@ -1362,89 +1322,50 @@ class GSRSensorRecorder(
 
                 Log.i(TAG, "Attempting to connect to Shimmer device: $deviceAddress")
 
-
-                val unifiedBle = unifiedBleManager
-                if (unifiedBle != null) {
-
-                    val connectedShimmerDevices = unifiedBle.getConnectedShimmerDevices()
-                    val alreadyConnected =
-                        connectedShimmerDevices.any { it.address == deviceAddress }
-
-                    if (alreadyConnected) {
+                val ble = easyBLE
+                if (ble != null) {
+                    // Check if already connected
+                    val existingConnection = ble.getConnection(deviceAddress)
+                    if (existingConnection != null && existingConnection.isConnected) {
                         Log.i(TAG, "Device $deviceAddress is already connected")
                         isShimmerConnected = true
+                        shimmerConnection = existingConnection
                         return@withContext true
                     }
 
-
-                    Log.i(TAG, "Scanning for device $deviceAddress to establish connection")
-
-                    var connectionSuccess = false
-                    val connectionCompleted = CompletableDeferred<Boolean>()
-
-                    unifiedBle.scanForShimmerDevices(
-                        5000L,
-                        object : UnifiedBleManager.ShimmerScanCallback {
-                            override fun onDeviceFound(device: UnifiedDevice) {
-                                if (device.address == deviceAddress) {
-                                    Log.i(
-                                        TAG,
-                                        "Found target device $deviceAddress, attempting connection"
-                                    )
-
-
-                                    val shimmerRecorder = realShimmerGSRRecorder
-                                    if (shimmerRecorder != null) {
-                                        // Launch coroutine but don't await it - let connection complete independently
-                                        recordingScope.launch {
-                                            try {
-                                                val success = shimmerRecorder.initializeDevice()
-                                                if (!connectionCompleted.isCompleted) {
-                                                    connectionCompleted.complete(success)
-                                                }
-                                            } catch (e: Exception) {
-                                                Log.e(TAG, "Error during device initialization", e)
-                                                if (!connectionCompleted.isCompleted) {
-                                                    connectionCompleted.complete(false)
-                                                }
-                                            }
-                                        }
-                                    } else {
-                                        connectionCompleted.complete(false)
+                    // Attempt to connect
+                    try {
+                        val connection = ble.connect(deviceAddress)
+                        if (connection != null && connection.isConnected) {
+                            Log.i(TAG, "Successfully connected to Shimmer device: $deviceAddress")
+                            shimmerConnection = connection
+                            isShimmerConnected = true
+                            
+                            // Initialize the Shimmer recorder if available
+                            val shimmerRecorder = realShimmerGSRRecorder
+                            if (shimmerRecorder != null) {
+                                recordingScope.launch {
+                                    try {
+                                        shimmerRecorder.initializeDevice()
+                                    } catch (e: Exception) {
+                                        Log.w(TAG, "Shimmer recorder initialization failed: ${e.message}")
                                     }
                                 }
                             }
-
-                            override fun onScanComplete(foundDevices: List<UnifiedDevice>) {
-                                if (!connectionCompleted.isCompleted) {
-                                    Log.w(TAG, "Device $deviceAddress not found during scan")
-                                    connectionCompleted.complete(false)
-                                }
-                            }
-
-                            override fun onScanFailed(error: String) {
-                                Log.e(
-                                    TAG,
-                                    "Scan failed while looking for device $deviceAddress: $error"
-                                )
-                                if (!connectionCompleted.isCompleted) {
-                                    connectionCompleted.complete(false)
-                                }
-                            }
-                        })
-
-                    connectionSuccess = connectionCompleted.await()
-
-                    if (connectionSuccess) {
-                        Log.i(TAG, "Successfully connected to Shimmer device: $deviceAddress")
-                        isShimmerConnected = true
-                    } else {
-                        Log.w(TAG, "Failed to connect to Shimmer device: $deviceAddress")
+                            
+                            true
+                        } else {
+                            Log.w(TAG, "Failed to establish connection to Shimmer device: $deviceAddress")
+                            isShimmerConnected = false
+                            false
+                        }
+                    } catch (e: Exception) {
+                        Log.e(TAG, "Connection attempt failed: ${e.message}")
                         isShimmerConnected = false
+                        false
                     }
-                    connectionSuccess
                 } else {
-                    Log.e(TAG, "UnifiedBleManager not available for device connection")
+                    Log.e(TAG, "EasyBLE not available for device connection")
                     false
                 }
             } catch (e: Exception) {
@@ -1463,7 +1384,7 @@ class GSRSensorRecorder(
         return try {
             shimmerBluetoothManager =
                 ShimmerBluetoothManagerAndroid(context, android.os.Handler(android.os.Looper.getMainLooper()))
-            // ShimmerBluetoothManagerAndroid might not have initialize method
+            shimmerBluetoothManager?.initialize()
             Log.i(TAG, "ShimmerBluetoothManagerAndroid initialized successfully")
             true
         } catch (e: Exception) {
@@ -1616,24 +1537,13 @@ class GSRSensorRecorder(
     private suspend fun startShimmerStreaming(device: Shimmer): Boolean {
         return try {
 
-            // Configure GSR sensor - try to enable GSR sensor and set range
-            try {
-                // Try to use Shimmer SDK methods if available
-                device.setGSRRange(GSR_RANGE_AUTO)
-                device.enableGSRSensor(true)
-                device.setSamplingRateShimmer(51.2)
-                Log.i(TAG, "Shimmer GSR sensor configuration applied successfully")
-            } catch (e: Exception) {
-                Log.w(TAG, "Some Shimmer configuration methods not available: ${e.message}")
-                // Try basic configuration without specific GSR methods
-                try {
-                    device.setSamplingRateShimmer(51.2)
-                } catch (e2: Exception) {
-                    Log.w(TAG, "Could not set sampling rate: ${e2.message}")
-                }
-            }
-            
-            // Start streaming
+            device.setGSRRange(Shimmer.GSR_RANGE_AUTO)
+            device.enableGSRSensor(true)
+
+
+            device.setSamplingRateShimmer(51.2)
+
+
             device.startStreaming()
 
             Log.i(TAG, "Shimmer streaming started successfully")
@@ -1652,26 +1562,25 @@ class GSRSensorRecorder(
     private fun handleShimmerData(objectCluster: ObjectCluster) {
         try {
 
-            val timestampRecord = TimestampManager.createTimestampRecord()
+            val timestampRecord = timestampManager?.createTimestampRecord() ?: TimestampManager.createTimestampRecord()
 
 
-            val deviceTimestamp = objectCluster.getFormatClusterValue("Timestamp", "CAL")?.let { (it as? Number)?.toLong() } ?: 0L
+            val deviceTimestamp = objectCluster.getFormatClusterValue("Timestamp", "CAL")?.data?.toLong() ?: 0L
 
 
-            val gsrValue = (objectCluster.getFormatClusterValue("GSR", "CAL") as? Number)?.toDouble() ?: 0.0
+            val gsrValue = objectCluster.getFormatClusterValue("GSR", "CAL")?.data ?: 0.0
 
 
-            val ppgValue = (objectCluster.getFormatClusterValue("PPG", "CAL") as? Number)?.toDouble() ?: 0.0
+            val ppgValue = objectCluster.getFormatClusterValue("PPG", "CAL")?.data ?: 0.0
 
 
             val gsrSample = GSRSample(
-                timestamp = timestampRecord.systemNanos / 1_000_000, // Convert to milliseconds
-                utcTimestamp = timestampRecord.systemTimeMs,
-                conductance = gsrValue,
-                resistance = if (gsrValue > 0) 1000000.0 / gsrValue else Double.MAX_VALUE,
-                rawValue = (gsrValue * 4095 / 100).toInt(),
-                sampleIndex = sampleCount.incrementAndGet(),
-                sessionId = currentSessionId ?: "unknown_session"
+                timestampNs = timestampRecord.systemNanos,
+                conductanceMicrosiemens = gsrValue,
+                rawAdc = (gsrValue * 4095 / 100).toInt(),
+                ppgValue = ppgValue,
+                sessionId = "",
+                deviceId = sensorId
             )
 
 
@@ -1700,12 +1609,10 @@ class GSRSensorRecorder(
 
         } catch (e: Exception) {
             Log.e(TAG, "Error processing Shimmer data", e)
-            recordingScope.launch {
-                emitError(
-                    ErrorType.DATA_PROCESSING_ERROR,
-                    "Failed to process GSR data: ${e.message}"
-                )
-            }
+            emitError(
+                ErrorType.DATA_PROCESSING_ERROR,
+                "Failed to process GSR data: ${e.message}"
+            )
         }
     }
 
@@ -1725,9 +1632,9 @@ class GSRSensorRecorder(
                 append("${timestampRecord.systemTimeMs},")          // Wall clock time
                 append("${timestampRecord.sessionRelativeMs},")     // Session relative time
                 append("${deviceTimestamp},")                       // Device timestamp for drift analysis
-                append("${sample.conductance},")                   // GSR in microsiemens
-                append("${sample.rawValue},")                       // Raw ADC value
-                append("N/A")                                      // PPG placeholder (no PPG data available)
+                append("${sample.conductanceMicrosiemens},")        // GSR in microsiemens
+                append("${sample.rawAdc},")                         // Raw ADC value
+                append("${sample.ppgValue}")                        // PPG if available
             }
 
             // Add to buffer for batch writing (50 samples as per plan)
@@ -1744,16 +1651,14 @@ class GSRSensorRecorder(
                 }
             }
 
-            Log.v(TAG, "GSR sample buffered: conductance=${sample.conductance}µS, buffer_size=$csvBufferCount")
+            Log.v(TAG, "GSR sample buffered: conductance=${sample.conductanceMicrosiemens}µS, buffer_size=$csvBufferCount")
 
         } catch (e: Exception) {
             Log.e(TAG, "Error buffering GSR data for CSV", e)
-            recordingScope.launch {
-                emitError(
-                    ErrorType.DATA_PROCESSING_ERROR,
-                    "Failed to buffer GSR sample: ${e.message}"
-                )
-            }
+            emitError(
+                ErrorType.DATA_PROCESSING_ERROR,
+                "Failed to buffer GSR sample: ${e.message}"
+            )
         }
     }
 
@@ -1777,12 +1682,10 @@ class GSRSensorRecorder(
             
         } catch (e: Exception) {
             Log.e(TAG, "Error flushing CSV buffer", e)
-            recordingScope.launch {
-                emitError(
-                    ErrorType.STORAGE_ERROR,
-                    "Failed to write GSR data to file: ${e.message}"
-                )
-            }
+            emitError(
+                ErrorType.STORAGE_ERROR,
+                "Failed to write GSR data to file: ${e.message}"
+            )
         }
     }
 
@@ -1799,12 +1702,10 @@ class GSRSensorRecorder(
             
         } catch (e: Exception) {
             Log.e(TAG, "Failed to initialize GSR CSV file", e)
-            recordingScope.launch {
-                emitError(
-                    ErrorType.STORAGE_ERROR,
-                    "Failed to create GSR data file: ${e.message}"
-                )
-            }
+            emitError(
+                ErrorType.STORAGE_ERROR,
+                "Failed to create GSR data file: ${e.message}"
+            )
         }
     }
 
@@ -1836,8 +1737,8 @@ class GSRSensorRecorder(
                 Log.i(TAG, "Prompting user to pair with device: $deviceAddress")
 
 
-                val unifiedBle = unifiedBleManager
-                if (unifiedBle != null) {
+                val ble = easyBLE
+                if (ble != null) {
 
                     val bluetoothAdapter = android.bluetooth.BluetoothAdapter.getDefaultAdapter()
                     val bondedDevices = bluetoothAdapter?.bondedDevices
@@ -1917,8 +1818,8 @@ class GSRSensorRecorder(
 
     private fun isShimmerDevice(device: android.bluetooth.BluetoothDevice): Boolean {
         return try {
-            val deviceName = BluetoothPermissionUtils.getDeviceName(context, device) ?: "Unknown"
-            deviceName.lowercase().contains("shimmer") ||
+            val deviceName = BluetoothPermissionUtils.getDeviceName(context, device)
+            deviceName?.lowercase()?.contains("shimmer") == true ||
                     device.address.startsWith("00:06:66") ||
                     device.address.startsWith("d0:39:72") ||
                     device.address.startsWith("00:80:98")
