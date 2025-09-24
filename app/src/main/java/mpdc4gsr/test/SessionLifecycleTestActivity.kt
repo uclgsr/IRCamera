@@ -5,11 +5,12 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
-import androidx.activity.ComponentActivity
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import mpdc4gsr.controller.ComprehensiveRecordingController
 import mpdc4gsr.permissions.PermissionManager
+import mpdc4gsr.permissions.PermissionController
 import mpdc4gsr.sensors.SensorRecorder
 import mpdc4gsr.sensors.RecordingStats
 import mpdc4gsr.sensors.RecordingStatus
@@ -23,13 +24,14 @@ import java.io.File
  * Comprehensive test activity for session lifecycle and recording coordination
  * Tests all enhanced functionality including fault tolerance, crash recovery, and foreground service
  */
-class SessionLifecycleTestActivity : ComponentActivity() {
+class SessionLifecycleTestActivity : FragmentActivity() {
 
     companion object {
         private const val TAG = "SessionLifecycleTest"
     }
 
     private lateinit var recordingController: ComprehensiveRecordingController
+    private lateinit var permissionController: PermissionController
     private lateinit var permissionManager: PermissionManager
 
     private var testSessionCounter = 1
@@ -40,7 +42,8 @@ class SessionLifecycleTestActivity : ComponentActivity() {
         Log.i(TAG, "Starting Session Lifecycle Test Activity")
 
         // Initialize components
-        permissionManager = PermissionManager(this)
+        permissionController = PermissionController(this)
+        permissionManager = PermissionManager(this, permissionController)
         recordingController = ComprehensiveRecordingController(this, this)
 
         // Add test sensors
@@ -381,7 +384,7 @@ class SessionLifecycleTestActivity : ComponentActivity() {
         }
 
         override fun getRecordingStats(): RecordingStats {
-            return RecordingStats(sensorId, sensorType, 0L, 0L, 0.0, 0L, 0.0, 0L, 0L)
+            return RecordingStats(sensorId, sensorType, 0L, 0L, 0.0, 0L, 0.0, 0, 0L)
         }
     }
 
@@ -432,7 +435,7 @@ class SessionLifecycleTestActivity : ComponentActivity() {
         }
 
         override fun getRecordingStats(): RecordingStats {
-            return RecordingStats(sensorId, sensorType, 0L, 0L, 0.0, 0L, 0.0, 0L, 0L)
+            return RecordingStats(sensorId, sensorType, 0L, 0L, 0.0, 0L, 0.0, 0, 0L)
         }
     }
 
@@ -492,7 +495,7 @@ class SessionLifecycleTestActivity : ComponentActivity() {
         }
 
         override fun getRecordingStats(): RecordingStats {
-            return RecordingStats(sensorId, sensorType, 0L, 0L, 0.0, 0L, 0.0, 0L, 0L)
+            return RecordingStats(sensorId, sensorType, 0L, 0L, 0.0, 0L, 0.0, 0, 0L)
         }
     }
 }

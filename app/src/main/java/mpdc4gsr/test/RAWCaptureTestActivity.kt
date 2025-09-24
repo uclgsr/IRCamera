@@ -172,7 +172,7 @@ class RAWCaptureTestActivity : AppCompatActivity() {
                 binding.startStopButton.text = "⏹️ Stop Recording"
                 binding.startStopButton.setBackgroundColor(
                     androidx.core.content.ContextCompat.getColor(
-                        this,
+                        this@RAWCaptureTestActivity,
                         android.R.color.holo_red_dark
                     )
                 )
