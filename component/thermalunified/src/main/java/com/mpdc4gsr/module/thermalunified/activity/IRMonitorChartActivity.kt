@@ -96,7 +96,12 @@ class IRMonitorChartActivity : BaseActivity(), ITsTempListener {
         }
         ts_data_H = CommonUtils.getTauData(this@IRMonitorChartActivity, "ts/TS001_H.bin")
         ts_data_L = CommonUtils.getTauData(this@IRMonitorChartActivity, "ts/TS001_L.bin")
-        selectBean = intent.getParcelableExtra("select")!!
+        selectBean = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+            intent.getParcelableExtra("select", SelectPositionBean::class.java)!!
+        } else {
+            @Suppress("DEPRECATION")
+            intent.getParcelableExtra<SelectPositionBean>("select")!!
+        }
 
         findViewById<TextView>(R.id.monitor_current_vol).text =
             getString(if (selectBean.type == 1) LibR.string.chart_temperature else LibR.string.chart_temperature_high)
