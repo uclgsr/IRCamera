@@ -19,7 +19,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.csl.irCamera.R
-import com.topdon.ble.util.BluetoothPermissionUtils
+import androidx.core.content.ContextCompat
+import android.content.pm.PackageManager
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -29,6 +30,36 @@ class GSRDeviceManagementActivity : AppCompatActivity(), View.OnClickListener {
 
         fun startActivity(context: Context) {
             context.startActivity(Intent(context, GSRDeviceManagementActivity::class.java))
+        }
+
+        private fun hasBleScanningPermissions(context: Context): Boolean {
+            return if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+                ContextCompat.checkSelfPermission(context, android.Manifest.permission.BLUETOOTH_SCAN) == PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(context, android.Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED
+            } else {
+                ContextCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+            }
+        }
+
+        private fun hasBluetoothPermissions(context: Context): Boolean {
+            return hasBleScanningPermissions(context)
+        }
+
+        private fun getMissingPermissions(context: Context): List<String> {
+            val missing = mutableListOf<String>()
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+                if (ContextCompat.checkSelfPermission(context, android.Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) {
+                    missing.add(android.Manifest.permission.BLUETOOTH_SCAN)
+                }
+                if (ContextCompat.checkSelfPermission(context, android.Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+                    missing.add(android.Manifest.permission.BLUETOOTH_CONNECT)
+                }
+            } else {
+                if (ContextCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    missing.add(android.Manifest.permission.ACCESS_FINE_LOCATION)
+                }
+            }
+            return missing
         }
     }
 
@@ -134,7 +165,7 @@ class GSRDeviceManagementActivity : AppCompatActivity(), View.OnClickListener {
 
                 if (initialized) {
                     Log.i(TAG, "GSR sensor recorder initialized successfully")
-                    enableDeviceOperations(BluetoothPermissionUtils.hasBluetoothPermissions(this@GSRDeviceManagementActivity))
+                    enableDeviceOperations(hasBluetoothPermissions(this@GSRDeviceManagementActivity))
                 } else {
                     Log.w(TAG, "GSR sensor recorder initialization failed")
                     showErrorMessage("Failed to initialize GSR system")
@@ -179,7 +210,7 @@ class GSRDeviceManagementActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun startDeviceScan() {
-        if (!BluetoothPermissionUtils.hasBleScanningPermissions(this)) {
+        if (!hasBleScanningPermissions(this)) {
             requestRequiredPermissions {
                 startDeviceScan()
             }
@@ -280,7 +311,7 @@ class GSRDeviceManagementActivity : AppCompatActivity(), View.OnClickListener {
             return
         }
 
-        if (!BluetoothPermissionUtils.hasBluetoothPermissions(this)) {
+        if (!hasBluetoothPermissions(this)) {
             requestRequiredPermissions {
                 connectToDevice(device)
             }
@@ -352,7 +383,7 @@ class GSRDeviceManagementActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun checkDevicePairingStatus(device: GSRDeviceInfo) {
         try {
-            if (!BluetoothPermissionUtils.hasBluetoothPermissions(this)) {
+            if (!hasBluetoothPermissions(this)) {
                 Log.w(TAG, "Cannot check pairing status without Bluetooth permissions")
                 return
             }
@@ -400,7 +431,7 @@ class GSRDeviceManagementActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun initiateDevicePairing(deviceInfo: GSRDeviceInfo, bluetoothDevice: BluetoothDevice) {
         try {
-            if (!BluetoothPermissionUtils.hasBluetoothPermissions(this)) {
+            if (!hasBluetoothPermissions(this)) {
                 requestRequiredPermissions {
                     initiateDevicePairing(deviceInfo, bluetoothDevice)
                 }
@@ -448,7 +479,7 @@ class GSRDeviceManagementActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun requestRequiredPermissions(onGranted: (() -> Unit)? = null) {
-        val missingPermissions = BluetoothPermissionUtils.getMissingPermissions(this)
+        val missingPermissions = getMissingPermissions(this)
 
         if (missingPermissions.isEmpty()) {
             enableDeviceOperations(true)
