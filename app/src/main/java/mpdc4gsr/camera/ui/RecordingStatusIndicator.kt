@@ -9,6 +9,8 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import mpdc4gsr.controller.RecordingController
+import mpdc4gsr.controller.SensorStatusSummary
+import mpdc4gsr.controller.DetailedSensorStatus
 
 class RecordingStatusIndicator
 @JvmOverloads
@@ -98,7 +100,7 @@ constructor(
         updateDisplay()
     }
 
-    fun updateWithSensorSummary(summary: RecordingController.SensorStatusSummary) {
+    fun updateWithSensorSummary(summary: SensorStatusSummary) {
 
         if (summary.isSessionActive) {
             statusIcon.setBackgroundColor(Color.RED)
@@ -106,7 +108,7 @@ constructor(
             statusText.setTextColor(Color.RED)
 
             val sensorDisplay = mutableListOf<String>()
-            summary.sensors.forEach { sensorStatus ->
+            summary.sensors.forEach { sensorStatus: DetailedSensorStatus ->
                 val icon =
                     when {
                         sensorStatus.sensorType.contains("RGB", ignoreCase = true) -> "📸"
@@ -140,7 +142,7 @@ constructor(
 
             if (summary.totalSensorsInitialized > 0) {
                 val sensorDisplay = mutableListOf<String>()
-                summary.sensors.forEach { sensorStatus ->
+                summary.sensors.forEach { sensorStatus: DetailedSensorStatus ->
                     val icon =
                         when {
                             sensorStatus.sensorType.contains("RGB", ignoreCase = true) -> "📸"
