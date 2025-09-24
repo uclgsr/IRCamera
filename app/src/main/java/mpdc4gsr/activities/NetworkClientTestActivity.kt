@@ -128,8 +128,10 @@ class NetworkClientTestActivity : AppCompatActivity() {
         }
         
         disconnectButton.setOnClickListener {
-            networkManager?.disconnect()
-            updateConnectionStatus(CommandConnection.ConnectionState.DISCONNECTED)
+            lifecycleScope.launch {
+                networkManager?.disconnect()
+                updateConnectionStatus(CommandConnection.ConnectionState.DISCONNECTED)
+            }
         }
     }
     
