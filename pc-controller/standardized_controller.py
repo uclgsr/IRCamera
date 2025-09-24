@@ -36,6 +36,7 @@ class Protocol:
     MSG_HELLO = "HELLO"
     MSG_SYNC_REQUEST = "SYNC_REQUEST"
     MSG_SYNC_RESPONSE = "SYNC_RESPONSE"
+    MSG_SYNC_RESULT = "SYNC_RESULT"
     MSG_START_RECORD = "START_RECORD"
     MSG_STOP_RECORD = "STOP_RECORD"
     MSG_ACK = "ACK"
@@ -51,6 +52,10 @@ class Protocol:
     @staticmethod
     def create_sync_request(pc_timestamp: int) -> str:
         return f"{Protocol.MSG_SYNC_REQUEST} t_pc={pc_timestamp}"
+
+    @staticmethod
+    def create_sync_result(t1: int, t2: int, t3: int, offset_ms: int, rtt_ms: int) -> str:
+        return f"{Protocol.MSG_SYNC_RESULT} t1={t1} t2={t2} t3={t3} offset={offset_ms} rtt={rtt_ms}"
 
     @staticmethod
     def create_start_record(session_id: str) -> str:
@@ -218,9 +223,9 @@ class TimeSyncManager:
 
     @staticmethod
     def perform_sync(connection: DeviceConnection) -> bool:
-        """Perform NTP-style time synchronization"""
+        """Perform complete NTP-style time synchronization with SYNC_RESULT"""
         try:
-            # Get current PC time in milliseconds
+            # Get current PC time in milliseconds (t1)
             t1 = int(time.time() * 1000)
 
             # Send sync request
@@ -233,30 +238,44 @@ class TimeSyncManager:
             if not response:
                 return False
 
+            # Get t3 - PC time when response received
+            t3 = int(time.time() * 1000)
+
             # Parse response
             parsed = Protocol.parse_message(response)
             if not parsed or parsed['type'] != Protocol.MSG_SYNC_RESPONSE:
                 logger.error(f"Invalid sync response from {connection.device_id}: {response}")
                 return False
 
-            # Get timestamps
-            t2 = int(time.time() * 1000)  # PC time when response received
+            # Get timestamps from response
             t_pc_echo = int(parsed['params'].get('t_pc', 0))
-            t_phone = int(parsed['params'].get('t_ph', 0))
+            t2 = int(parsed['params'].get('t_ph', 0))  # Phone timestamp when it received request
 
             # Verify echoed timestamp
             if abs(t_pc_echo - t1) > 1000:  # Allow 1 second tolerance
                 logger.warning(f"Timestamp echo mismatch for {connection.device_id}")
 
-            # Calculate clock offset (simplified NTP calculation)
-            network_delay = t2 - t1
-            clock_offset = t_phone - t1 - (network_delay // 2)
+            # Calculate offset and RTT using NTP-style calculation
+            # RTT = (t3 - t1) - round trip time
+            rtt_ms = t3 - t1
+            
+            # Clock offset: θ = ((t2 - t1) + (t2 - t3)) / 2
+            # This is the standard NTP offset calculation
+            offset_ms = ((t2 - t1) + (t2 - t3)) // 2
 
-            connection.clock_offset_ms = clock_offset
+            # Store in connection
+            connection.clock_offset_ms = offset_ms
             connection.last_sync_time = time.time()
 
-            logger.info(f"Time sync completed for {connection.device_id}: "
-                        f"offset={clock_offset}ms, delay={network_delay}ms")
+            logger.info(f"Time sync calculated for {connection.device_id}: "
+                        f"offset={offset_ms}ms, rtt={rtt_ms}ms")
+
+            # Send SYNC_RESULT back to Android for complete logging
+            sync_result = Protocol.create_sync_result(t1, t2, t3, offset_ms, rtt_ms)
+            if connection.send_message(sync_result):
+                logger.info(f"SYNC_RESULT sent to {connection.device_id}")
+            else:
+                logger.warning(f"Failed to send SYNC_RESULT to {connection.device_id}")
 
             return True
 

@@ -7,6 +7,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -15,6 +17,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import java.util.concurrent.atomic.AtomicLong
+import java.util.concurrent.atomic.AtomicBoolean
 
 /**
  * Dedicated TimeSyncManager for handling NTP-style time synchronization between
@@ -36,6 +39,10 @@ class TimeSyncManager(private val context: Context) {
         
         // Default timeout for sync operations
         private const val SYNC_TIMEOUT_MS = 5000L
+        
+        // Periodic sync configuration
+        private const val PERIODIC_SYNC_INTERVAL_MS = 300_000L // 5 minutes
+        private const val LONG_SESSION_THRESHOLD_MS = 600_000L // 10 minutes
     }
     
     data class SyncResult(
@@ -53,6 +60,101 @@ class TimeSyncManager(private val context: Context) {
     private var sessionStartTime: Long = 0L
     private var currentSessionDirectory: String? = null
     private var syncLogFile: File? = null
+    private val periodicSyncEnabled = AtomicBoolean(false)
+    private var periodicSyncJob: kotlinx.coroutines.Job? = null
+    
+    // Callback interface for manual sync triggers
+    interface SyncTriggerCallback {
+        suspend fun onManualSyncRequested(): Boolean
+    }
+    
+    private var syncTriggerCallback: SyncTriggerCallback? = null
+    
+    /**
+     * Set callback for manual sync triggers (typically called by PC or user action)
+     */
+    fun setSyncTriggerCallback(callback: SyncTriggerCallback) {
+        syncTriggerCallback = callback
+    }
+    
+    /**
+     * Enable or disable periodic sync during recording sessions
+     */
+    fun setPeriodicSyncEnabled(enabled: Boolean) {
+        periodicSyncEnabled.set(enabled)
+        
+        if (enabled && currentSessionDirectory != null) {
+            startPeriodicSync()
+        } else {
+            stopPeriodicSync()
+        }
+        
+        Log.i(TAG, "Periodic sync ${if (enabled) "enabled" else "disabled"}")
+    }
+    
+    /**
+     * Manually trigger a sync operation (can be called during recording)
+     */
+    suspend fun triggerManualSync(): Boolean {
+        return withContext(Dispatchers.IO) {
+            try {
+                Log.i(TAG, "Manual sync trigger requested")
+                
+                val callback = syncTriggerCallback
+                if (callback != null) {
+                    callback.onManualSyncRequested()
+                } else {
+                    Log.w(TAG, "No sync trigger callback registered - cannot perform manual sync")
+                    false
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Manual sync trigger failed", e)
+                false
+            }
+        }
+    }
+    
+    /**
+     * Start periodic sync monitoring for long recording sessions
+     */
+    private fun startPeriodicSync() {
+        if (periodicSyncJob?.isActive == true) {
+            return // Already running
+        }
+        
+        periodicSyncJob = syncScope.launch {
+            Log.i(TAG, "Starting periodic sync monitoring")
+            
+            while (isActive && periodicSyncEnabled.get()) {
+                delay(PERIODIC_SYNC_INTERVAL_MS)
+                
+                if (currentSessionDirectory != null) {
+                    val sessionDuration = System.currentTimeMillis() - sessionStartTime
+                    
+                    if (sessionDuration > LONG_SESSION_THRESHOLD_MS) {
+                        Log.i(TAG, "Triggering periodic sync for long session (${sessionDuration / 1000}s)")
+                        
+                        try {
+                            triggerManualSync()
+                        } catch (e: Exception) {
+                            Log.e(TAG, "Periodic sync failed", e)
+                        }
+                    }
+                }
+            }
+            
+            Log.i(TAG, "Periodic sync monitoring stopped")
+        }
+    }
+    
+    /**
+     * Stop periodic sync monitoring
+     */
+    private fun stopPeriodicSync() {
+        periodicSyncJob?.cancel()
+        periodicSyncJob = null
+        Log.d(TAG, "Periodic sync monitoring stopped")
+    }
     
     /**
      * Initialize sync manager for a new session
@@ -80,6 +182,12 @@ class TimeSyncManager(private val context: Context) {
                 Log.e(TAG, "Failed to initialize sync log file", e)
             }
         }
+        
+        // Start periodic sync if enabled
+        if (periodicSyncEnabled.get()) {
+            startPeriodicSync()
+        }
+    }
     }
     
     /**
@@ -213,6 +321,9 @@ class TimeSyncManager(private val context: Context) {
      */
     fun finalizeSession() {
         try {
+            // Stop periodic sync
+            stopPeriodicSync()
+            
             currentSessionDirectory = null
             syncLogFile = null
             sessionStartTime = 0L
@@ -227,6 +338,7 @@ class TimeSyncManager(private val context: Context) {
      * Cleanup resources
      */
     fun cleanup() {
+        stopPeriodicSync()
         syncScope.cancel()
         finalizeSession()
         Log.i(TAG, "TimeSyncManager cleaned up")

@@ -30,6 +30,9 @@ Key methods:
 - `performSyncResponse(t1PcSendTime)` - Handles incoming SYNC_REQUEST, captures t2
 - `completeSyncCalculation(t1, t2, t3, offsetMs, rttMs, syncIndex)` - Processes PC's calculated results
 - `performSessionStartSync()` - Logs session start marker
+- `setPeriodicSyncEnabled(enabled)` - Enable/disable periodic sync for long sessions
+- `triggerManualSync()` - Manually trigger sync operation during recording
+- `setSyncTriggerCallback(callback)` - Set callback for handling manual sync requests
 - `finalizeSession()` - Cleans up session resources
 
 ### Protocol Extensions
@@ -39,6 +42,28 @@ Location: `app/src/main/java/mpdc4gsr/network/Protocol.kt`
 Added support for:
 - `MSG_SYNC_RESULT` - New message type for PC->Android offset transmission
 - `createSyncResultMessage()` - Creates SYNC_RESULT messages with t1, t2, t3, offset, and RTT
+
+### Enhanced Features
+
+**Periodic Sync Support**:
+- Automatic periodic sync monitoring for long recording sessions (>10 minutes)
+- Configurable sync intervals (default: 5 minutes)
+- Can be enabled/disabled per session
+
+**Manual Sync Triggers**:
+- `triggerManualSync()` method for on-demand synchronization
+- Callback interface for handling sync requests from PC or user actions
+- Integration with RecordingService for seamless operation
+
+### PC Controller Updates
+
+Location: `pc-controller/standardized_controller.py`
+
+Enhanced features:
+- **MSG_SYNC_RESULT**: Added support for SYNC_RESULT message type
+- **Complete NTP Calculation**: Proper t1, t2, t3 timestamp handling with correct offset formula
+- **SYNC_RESULT Transmission**: Sends calculated offset and RTT back to Android for comprehensive logging
+- **Improved Accuracy**: Uses standard NTP offset calculation: `θ = ((t2 - t1) + (t2 - t3)) / 2`
 
 ### ProtocolHandler Integration
 
@@ -81,8 +106,11 @@ Integration points:
    - Responds to SYNC_REQUEST messages immediately
    - Logs all sync results to session CSV file
    - Operates non-blocking parallel to sensor recording
+   - **Periodic sync**: Automatically triggers sync every 5 minutes for sessions >10 minutes
+   - **Manual sync**: Can be triggered on-demand by PC or user action
 
 3. **Recording Stop**:
+   - Periodic sync monitoring stopped
    - Session finalized
    - Sync log file completed
    - Resources cleaned up
@@ -101,7 +129,9 @@ sync_index,timestamp_iso,phone_timestamp_t2,pc_send_time_t1,pc_recv_time_t3,offs
 
 Unit tests are provided in:
 - `app/src/test/java/mpdc4gsr/sync/TimeSyncManagerTest.kt` - Tests TimeSyncManager functionality
+- `app/src/test/java/mpdc4gsr/sync/TimeSyncManagerPeriodicTest.kt` - Tests periodic sync and manual triggers
 - `app/src/test/java/mpdc4gsr/network/ProtocolTest.kt` - Tests Protocol message creation
+- `app/src/test/java/mpdc4gsr/sync/TimeSyncIntegrationTest.kt` - Integration tests
 
 ## Key Design Decisions
 

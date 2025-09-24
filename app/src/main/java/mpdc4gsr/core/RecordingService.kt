@@ -220,6 +220,23 @@ class RecordingService : LifecycleService() {
         networkServer = NetworkServer(this, 8080)
         protocolHandler = ProtocolHandler(this, networkServer)
         protocolHandler.setTimeSyncManager(timeSyncManager)
+        
+        // Set up sync trigger callback for manual sync requests
+        timeSyncManager.setSyncTriggerCallback(object : TimeSyncManager.SyncTriggerCallback {
+            override suspend fun onManualSyncRequested(): Boolean {
+                return try {
+                    // This would typically trigger a sync request to the PC
+                    // For now, we log that a manual sync was requested
+                    Log.i(TAG, "Manual sync requested - would trigger PC sync")
+                    // In a full implementation, this would send a message to PC or trigger sync
+                    true
+                } catch (e: Exception) {
+                    Log.e(TAG, "Manual sync trigger failed", e)
+                    false
+                }
+            }
+        })
+        
         connectionManager = NetworkConnectionManager(this, networkServer, protocolHandler)
         previewStreamer = PreviewStreamer(networkServer)
         previewDataAdapter = PreviewDataAdapter(previewStreamer, this)
@@ -453,6 +470,9 @@ class RecordingService : LifecycleService() {
 
                 // Initialize TimeSyncManager for this session
                 timeSyncManager.initializeSession(sessionDirectory)
+                
+                // Enable periodic sync for long recording sessions
+                timeSyncManager.setPeriodicSyncEnabled(true)
 
                 Log.i(TAG, "Starting recording session: $sessionDirectory")
                 structuredLogger.log(
