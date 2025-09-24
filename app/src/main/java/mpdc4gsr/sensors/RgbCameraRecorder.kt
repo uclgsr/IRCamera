@@ -192,6 +192,11 @@ class RgbCameraRecorder(
         try {
             Log.d(TAG, "Initializing CameraX with ${if (useFrontCamera) "front" else "back"} camera")
 
+            // Early device validation
+            if (!validateDeviceRequirements()) {
+                return@withContext false
+            }
+
             if (!checkAndRequestPermissions()) {
                 _cameraStatus.value = "Camera Permission Denied"
                 emitError(ErrorType.PERMISSION_DENIED, "Camera permission is required for recording")
@@ -238,6 +243,11 @@ class RgbCameraRecorder(
                 TAG,
                 "✅ CameraX initialized successfully: ${selectedVideoWidth}x${selectedVideoHeight}@${selectedVideoFps}fps, Preview: ${previewView != null}"
             )
+            
+            // Log detailed capabilities for debugging and validation
+            val capabilities = getDetailedCameraCapabilities()
+            Log.i(TAG, "Device capabilities validated: 4K=${capabilities["supports_4k"]}, 60fps=${capabilities["supports_60fps"]}, RAW=${capabilities["supports_raw"]}")
+            
             return@withContext true
 
         } catch (e: SecurityException) {
@@ -1925,9 +1935,12 @@ class RgbCameraRecorder(
                     // Return to auto exposure
                     Log.i(TAG, "Auto exposure mode enabled")
                 }
+            } ?: run {
+                emitError(ErrorType.HARDWARE_UNAVAILABLE, "Camera not available for exposure control")
             }
         } catch (e: Exception) {
             Log.w(TAG, "Failed to set exposure mode: ${e.message}")
+            emitError(ErrorType.OPERATION_FAILED, "Failed to set exposure mode: ${e.message}")
         }
     }
     
@@ -1952,10 +1965,16 @@ class RgbCameraRecorder(
                     val index = (evValue / step).toInt().coerceIn(range.lower, range.upper)
                     cameraControl.setExposureCompensationIndex(index)
                     Log.i(TAG, "Exposure compensation set to ${evValue}EV (index: $index)")
+                } ?: run {
+                    Log.w(TAG, "Camera doesn't support exposure compensation")
+                    emitError(ErrorType.FEATURE_NOT_SUPPORTED, "Exposure compensation not supported on this device")
                 }
+            } ?: run {
+                emitError(ErrorType.HARDWARE_UNAVAILABLE, "Camera not available for exposure control")
             }
         } catch (e: Exception) {
             Log.w(TAG, "Failed to set exposure compensation: ${e.message}")
+            emitError(ErrorType.OPERATION_FAILED, "Failed to set exposure compensation: ${e.message}")
         }
     }
     
@@ -1988,9 +2007,12 @@ class RgbCameraRecorder(
                     // Return to continuous autofocus
                     Log.i(TAG, "Auto focus mode enabled")
                 }
+            } ?: run {
+                emitError(ErrorType.HARDWARE_UNAVAILABLE, "Camera not available for focus control")
             }
         } catch (e: Exception) {
             Log.w(TAG, "Failed to set focus mode: ${e.message}")
+            emitError(ErrorType.OPERATION_FAILED, "Failed to set focus mode: ${e.message}")
         }
     }
     
@@ -2005,9 +2027,16 @@ class RgbCameraRecorder(
                 // This would need Camera2 interop for full manual control
                 val clampedDistance = distance.coerceIn(0.0f, 1.0f)
                 Log.i(TAG, "Focus distance set to: $clampedDistance")
+                
+                // TODO: Implement actual manual focus distance control via Camera2 interop
+                // For now, this is a placeholder that logs the intended distance
+                
+            } ?: run {
+                emitError(ErrorType.HARDWARE_UNAVAILABLE, "Camera not available for focus control")
             }
         } catch (e: Exception) {
             Log.w(TAG, "Failed to set focus distance: ${e.message}")
+            emitError(ErrorType.OPERATION_FAILED, "Failed to set focus distance: ${e.message}")
         }
     }
     
@@ -2024,9 +2053,12 @@ class RgbCameraRecorder(
                     // Unlock and resume continuous AF
                     Log.i(TAG, "Auto focus unlocked")
                 }
+            } ?: run {
+                emitError(ErrorType.HARDWARE_UNAVAILABLE, "Camera not available for focus control")
             }
         } catch (e: Exception) {
             Log.w(TAG, "Failed to set AF lock: ${e.message}")
+            emitError(ErrorType.OPERATION_FAILED, "Failed to set AF lock: ${e.message}")
         }
     }
     
@@ -2042,16 +2074,22 @@ class RgbCameraRecorder(
                     val factory = preview.meteringPointFactory
                     val point = factory.createPoint(x * preview.width, y * preview.height)
                     
-                    val action = androidx.camera.core.FocusMeteringAction.Builder(point)
+                    val action = FocusMeteringAction.Builder(point)
                         .disableAutoCancel()
                         .build()
                     
                     cameraControl.startFocusAndMetering(action)
                     Log.i(TAG, "Tap-to-focus triggered at ($x, $y)")
+                } ?: run {
+                    Log.w(TAG, "No preview available for tap-to-focus")
+                    emitError(ErrorType.FEATURE_NOT_SUPPORTED, "Preview required for tap-to-focus")
                 }
+            } ?: run {
+                emitError(ErrorType.HARDWARE_UNAVAILABLE, "Camera not available for focus control")
             }
         } catch (e: Exception) {
             Log.w(TAG, "Failed to trigger tap-to-focus: ${e.message}")
+            emitError(ErrorType.OPERATION_FAILED, "Failed to trigger tap-to-focus: ${e.message}")
         }
     }
     
@@ -2093,6 +2131,130 @@ class RgbCameraRecorder(
             
         } catch (e: Exception) {
             Log.w(TAG, "Failed to set capture mode: ${e.message}")
+        }
+    }
+    
+    /**
+     * Get detailed camera capabilities for the current device
+     */
+    fun getDetailedCameraCapabilities(): Map<String, Any> {
+        return try {
+            val capabilities = mutableMapOf<String, Any>()
+            
+            // Basic device info
+            capabilities["device_manufacturer"] = Build.MANUFACTURER
+            capabilities["device_model"] = Build.MODEL
+            capabilities["android_version"] = Build.VERSION.SDK_INT
+            
+            // Camera capabilities
+            capabilities["supports_4k"] = deviceSupports4K
+            capabilities["supports_raw"] = deviceSupportsRAW
+            capabilities["supports_60fps"] = checkDevice60fpsSupport()
+            capabilities["current_resolution"] = "${selectedVideoWidth}x${selectedVideoHeight}"
+            capabilities["current_fps"] = selectedVideoFps
+            capabilities["current_bitrate"] = selectedVideoBitrate
+            
+            // Stage 3 processing
+            capabilities["stage3_compatible"] = SamsungDeviceCompatibility.isStage3Compatible()
+            capabilities["raw_enabled"] = (deviceSupportsRAW && ENABLE_RAW_CAPTURE)
+            
+            // Camera availability
+            capabilities["front_camera_available"] = supportsFrontCamera
+            capabilities["back_camera_available"] = supportsBackCamera
+            capabilities["camera_permission_granted"] = hasCameraPermission()
+            
+            // Advanced features
+            camera?.let { cam ->
+                val cameraInfo = cam.cameraInfo
+                capabilities["has_flash"] = cameraInfo.hasFlashUnit()
+                capabilities["zoom_ratio"] = cameraInfo.zoomState.value?.zoomRatio ?: 1.0f
+                capabilities["min_zoom"] = cameraInfo.zoomState.value?.minZoomRatio ?: 1.0f
+                capabilities["max_zoom"] = cameraInfo.zoomState.value?.maxZoomRatio ?: 1.0f
+                
+                // Exposure capabilities
+                try {
+                    val camera2Info = androidx.camera.camera2.interop.Camera2CameraInfo.from(cameraInfo)
+                    val exposureRange = camera2Info.getCameraCharacteristic(
+                        android.hardware.camera2.CameraCharacteristics.CONTROL_AE_COMPENSATION_RANGE
+                    )
+                    val exposureStep = camera2Info.getCameraCharacteristic(
+                        android.hardware.camera2.CameraCharacteristics.CONTROL_AE_COMPENSATION_STEP
+                    )
+                    
+                    capabilities["exposure_compensation_min"] = exposureRange?.lower ?: 0
+                    capabilities["exposure_compensation_max"] = exposureRange?.upper ?: 0  
+                    capabilities["exposure_compensation_step"] = exposureStep?.toFloat() ?: 0.0f
+                    
+                    // Focus capabilities
+                    val minFocusDistance = camera2Info.getCameraCharacteristic(
+                        android.hardware.camera2.CameraCharacteristics.LENS_INFO_MINIMUM_FOCUS_DISTANCE
+                    )
+                    capabilities["min_focus_distance"] = minFocusDistance ?: 0.0f
+                    
+                } catch (e: Exception) {
+                    Log.w(TAG, "Could not retrieve Camera2 characteristics: ${e.message}")
+                    capabilities["camera2_interop_available"] = false
+                }
+            } ?: run {
+                capabilities["camera_initialized"] = false
+            }
+            
+            Log.i(TAG, "Camera capabilities: $capabilities")
+            capabilities
+            
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to get camera capabilities: ${e.message}")
+            mapOf(
+                "error" to "Failed to determine camera capabilities: ${e.message}",
+                "supports_4k" to false,
+                "supports_raw" to false,
+                "supports_60fps" to false
+            )
+        }
+    }
+    
+    /**
+     * Validate that the device meets minimum requirements for advanced recording
+     */
+    fun validateDeviceRequirements(): Boolean {
+        return try {
+            val requirements = mutableListOf<String>()
+            var meetsRequirements = true
+            
+            // Check camera permission
+            if (!hasCameraPermission()) {
+                requirements.add("Camera permission required")
+                meetsRequirements = false
+            }
+            
+            // Check camera availability
+            if (!supportsBackCamera) {
+                requirements.add("Back camera not available")
+                meetsRequirements = false
+            }
+            
+            // Check Android version (API 21+ required for Camera2)
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+                requirements.add("Android 5.0+ required for advanced camera features")
+                meetsRequirements = false
+            }
+            
+            // Log requirements status
+            if (meetsRequirements) {
+                Log.i(TAG, "Device meets all requirements for advanced camera recording")
+                val capabilities = getCaptureMode()
+                Log.i(TAG, "Available features: 4K=${capabilities["supports_4k"]}, RAW=${capabilities["supports_raw"]}, 60fps=${capabilities["supports_60fps"]}")
+            } else {
+                Log.w(TAG, "Device requirements not met: ${requirements.joinToString(", ")}")
+                emitError(ErrorType.DEVICE_NOT_SUPPORTED, "Device requirements not met: ${requirements.joinToString(", ")}")
+            }
+            
+            meetsRequirements
+            
+        } catch (e: Exception) {
+            Log.e(TAG, "Error validating device requirements: ${e.message}")
+            emitError(ErrorType.DEVICE_NOT_SUPPORTED, "Could not validate device requirements: ${e.message}")
+            false
         }
     }
     
