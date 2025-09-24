@@ -84,12 +84,12 @@ class UnifiedBleManager private constructor(private val application: Application
 
     fun scanForShimmerDevices(callback: ShimmerScanCallback) {
         // Stub implementation - immediately call scan complete
-        callback.onScanComplete()
+        callback.onScanComplete(emptyList())
     }
 
     fun scanForShimmerDevices(durationMs: Long, callback: ShimmerScanCallback) {
         // Stub implementation - immediately call scan complete with duration parameter
-        callback.onScanComplete()
+        callback.onScanComplete(emptyList())
     }
 
     // Additional stub methods can be added here as needed
