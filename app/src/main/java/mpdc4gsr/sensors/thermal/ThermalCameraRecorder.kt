@@ -821,7 +821,13 @@ class ThermalCameraRecorder(
                                 val bitmap = currentBitmap
                                 if (bitmap != null && !bitmap.isRecycled) {
 
-                                    val bitmapCopy = bitmap.copy(bitmap.config ?: Bitmap.Config.ARGB_8888, false)
+                                    val bitmapCopy = if (bitmap.config != null) {
+                                        bitmap.copy(bitmap.config, false)
+                                    } else {
+                                        // If config is null, log a warning and avoid copying with ARGB_8888
+                                        Log.w("ThermalCameraRecorder", "Bitmap config is null; cannot safely copy thermal bitmap. Passing original bitmap.")
+                                        bitmap
+                                    }
                                     val thermalData =
                                         if (ircamEngine != null && isTopdonSdkInitialized) {
                                             extractRealThermalDataFromEngine(
