@@ -1,4 +1,4 @@
-package com.energy.commoncomponent.bean;
+package com.mpdc4gsr.libunified.ir.usbdual;
 
 public enum DeviceType {
     DEVICE_TYPE_GL1280,
