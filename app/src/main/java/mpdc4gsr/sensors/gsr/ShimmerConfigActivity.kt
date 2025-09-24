@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import mpdc4gsr.R
+import com.csl.irCamera.R
 import mpdc4gsr.sensors.unified.ShimmerDeviceManager
 import mpdc4gsr.sensors.unified.model.DeviceInfo
 
