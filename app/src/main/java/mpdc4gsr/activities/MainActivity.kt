@@ -75,6 +75,8 @@ import mpdc4gsr.core.RecordingService
 import mpdc4gsr.core.CrashSafeSupervisor
 import mpdc4gsr.ui_components.MainFragment
 import mpdc4gsr.utils.AppVersionUtil
+import mpdc4gsr.activities.ShimmerMvpActivity
+import mpdc4gsr.activities.UnifiedSensorActivity
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.io.File
