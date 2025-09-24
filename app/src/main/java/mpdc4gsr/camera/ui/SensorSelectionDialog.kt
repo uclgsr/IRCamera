@@ -13,6 +13,7 @@ import android.widget.CompoundButton
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import com.topdon.ble.EasyBLE
 import androidx.core.content.ContextCompat
 import com.topdon.ble.EasyBLE
 
@@ -40,9 +41,9 @@ class SensorSelectionDialog(
 
                 val hasConnectedShimmerDevices =
                     easyBLE.connectedDevices.any { device ->
-                        device.name.contains("shimmer", ignoreCase = true) ||
-                        device.address.startsWith("00:06:66") ||
-                        device.address.startsWith("d0:39:72")
+                        device.getName()?.contains("shimmer", ignoreCase = true) == true ||
+                        device.getAddress().startsWith("00:06:66") ||
+                        device.getAddress().startsWith("d0:39:72")
                     }
 
                 if (hasConnectedShimmerDevices) {
