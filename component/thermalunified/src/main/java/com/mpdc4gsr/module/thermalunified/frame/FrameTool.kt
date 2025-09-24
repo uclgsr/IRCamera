@@ -264,7 +264,9 @@ class FrameTool {
                         dstImageRes.width.code,
                         dstImageRes.height.code, Bitmap.Config.ARGB_8888,
                     )
-                scrBitmap.copyPixelsFromBuffer(ByteBuffer.wrap(dstArgbBytes, 0, argbLen))
+                dstArgbBytes?.let {
+                    scrBitmap.copyPixelsFromBuffer(ByteBuffer.wrap(it, 0, argbLen))
+                }
             }
         } else {
             scrBitmap =
@@ -272,7 +274,9 @@ class FrameTool {
                     dstImageRes.width.code,
                     dstImageRes.height.code, Bitmap.Config.ARGB_8888,
                 )
-            scrBitmap.copyPixelsFromBuffer(ByteBuffer.wrap(dstArgbBytes, 0, argbLen))
+            dstArgbBytes?.let {
+                scrBitmap.copyPixelsFromBuffer(ByteBuffer.wrap(it, 0, argbLen))
+            }
         }
         return scrBitmap
     }
