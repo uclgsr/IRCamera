@@ -8,7 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import mpdc4gsr.R
+import com.csl.irCamera.R
 import mpdc4gsr.sensors.gsr.GSRSensorRecorder
 import mpdc4gsr.controller.RecordingController
 import java.io.File

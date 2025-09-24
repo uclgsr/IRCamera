@@ -10,6 +10,7 @@ import androidx.core.content.ContextCompat
 import com.mpdc4gsr.ble.core.UnifiedBleManager
 import com.mpdc4gsr.ble.core.UnifiedDevice
 import com.topdon.ble.EasyBLE
+import com.topdon.ble.Connection
 import com.topdon.ble.util.BluetoothPermissionUtils
 import com.mpdc4gsr.gsr.model.GSRSample
 import com.mpdc4gsr.gsr.model.SessionInfo
@@ -144,12 +145,11 @@ class GSRSensorRecorder(
     private var _isRecording = AtomicBoolean(false)
     override val isRecording: Boolean get() = _isRecording.get()
 
-    private var unifiedBleManager: UnifiedBleManager? = null
+    private var easyBLE: EasyBLE? = null
     private var unifiedShimmerDevice: ShimmerDevice? = null
 
     private var realShimmerGSRRecorder: ShimmerGSRRecorder? = null
-    // Note: ShimmerBleController is deprecated, using EasyBLE directly
-    // private var shimmerDevice: ShimmerBleController? = null
+    private var shimmerConnection: Connection? = null
 
     private var gsrDataPersistence: GSRDataPersistence? = null
     private var currentSessionId: String? = null
@@ -201,14 +201,11 @@ class GSRSensorRecorder(
 
                 }
 
-                unifiedBleManager = UnifiedBleManager.getInstance(context)
-                if (!unifiedBleManager!!.initialize()) {
-                    Log.w(
-                        TAG,
-                        "Unified BLE manager initialization failed, falling back to legacy implementation"
-                    )
-                } else {
-                    Log.i(TAG, "Unified BLE manager initialized successfully")
+                try {
+                    easyBLE = EasyBLE.getDefault()
+                    Log.i(TAG, "EasyBLE initialized successfully for GSR sensor integration")
+                } catch (e: Exception) {
+                    Log.w(TAG, "EasyBLE initialization failed, falling back to legacy implementation: ${e.message}")
                 }
 
 
@@ -942,7 +939,7 @@ class GSRSensorRecorder(
 
     private fun determineRecordingMode(): String {
         return when {
-            realShimmerGSRRecorder != null && unifiedBleManager != null -> "shimmer_unified_ble"
+            realShimmerGSRRecorder != null && easyBLE != null -> "shimmer_easyble"
             realShimmerGSRRecorder != null -> "shimmer_ble"
             legacyGSRRecorder != null -> "legacy_gsr"
             else -> "unknown"
@@ -1266,13 +1263,12 @@ class GSRSensorRecorder(
                     return@withContext emptyList()
                 }
 
-                val unifiedBle = unifiedBleManager
-                if (unifiedBle != null) {
-
-                    val connectedDevices = unifiedBle.getConnectedShimmerDevices()
+                val ble = easyBLE
+                if (ble != null) {
                     val deviceList = mutableListOf<String>()
-
-
+                    
+                    // Get connected devices first
+                    val connectedDevices = ble.connectedDevices
                     connectedDevices.forEach { device ->
                         deviceList.add("${device.getName()} (${device.getAddress()}) - Connected")
                     }
@@ -1318,7 +1314,7 @@ class GSRSensorRecorder(
 
                     scanResultDeferred.await()
                 } else {
-                    Log.w(TAG, "Unified BLE manager not available for device discovery")
+                    Log.w(TAG, "EasyBLE not available for device discovery")
                     emptyList()
                 }
             } catch (e: Exception) {
@@ -1342,7 +1338,6 @@ class GSRSensorRecorder(
 
                 Log.i(TAG, "Attempting to connect to Shimmer device: $deviceAddress")
 
-
                 val unifiedBle = unifiedBleManager
                 if (unifiedBle != null) {
 
@@ -1353,9 +1348,9 @@ class GSRSensorRecorder(
                     if (alreadyConnected) {
                         Log.i(TAG, "Device $deviceAddress is already connected")
                         isShimmerConnected = true
+                        shimmerConnection = existingConnection
                         return@withContext true
                     }
-
 
                     Log.i(TAG, "Scanning for device $deviceAddress to establish connection")
 
@@ -1415,11 +1410,12 @@ class GSRSensorRecorder(
                         isShimmerConnected = true
                     } else {
                         Log.w(TAG, "Failed to connect to Shimmer device: $deviceAddress")
+
                         isShimmerConnected = false
+                        false
                     }
-                    connectionSuccess
                 } else {
-                    Log.e(TAG, "UnifiedBleManager not available for device connection")
+                    Log.e(TAG, "EasyBLE not available for device connection")
                     false
                 }
             } catch (e: Exception) {
@@ -1797,8 +1793,8 @@ class GSRSensorRecorder(
                 Log.i(TAG, "Prompting user to pair with device: $deviceAddress")
 
 
-                val unifiedBle = unifiedBleManager
-                if (unifiedBle != null) {
+                val ble = easyBLE
+                if (ble != null) {
 
                     val bluetoothAdapter = android.bluetooth.BluetoothAdapter.getDefaultAdapter()
                     val bondedDevices = bluetoothAdapter?.bondedDevices

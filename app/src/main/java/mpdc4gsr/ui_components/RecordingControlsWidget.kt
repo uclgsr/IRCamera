@@ -35,7 +35,7 @@ class RecordingControlsWidget @JvmOverloads constructor(
         private const val COLOR_IDLE = Color.GRAY
         private const val COLOR_STARTING = Color.YELLOW
         private const val COLOR_RECORDING = Color.RED
-        private const val COLOR_STOPPING = Color.ORANGE
+        private const val COLOR_STOPPING = 0xFFFFA500.toInt() // Orange color
         private const val COLOR_ERROR = Color.RED
     }
 

@@ -10,7 +10,7 @@ import kotlinx.coroutines.launch
 import mpdc4gsr.controller.RecordingController
 import mpdc4gsr.sensors.TimeSynchronizationService
 import mpdc4gsr.sensors.TimestampManager
-import mpdc4gsr.sensors.TimestampManager.TimestampRecord
+import mpdc4gsr.sensors.TimestampRecord
 
 
 class TimeSynchronizationTestActivity : AppCompatActivity() {
