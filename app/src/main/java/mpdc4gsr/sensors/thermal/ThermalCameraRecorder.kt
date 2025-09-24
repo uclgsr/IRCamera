@@ -197,7 +197,11 @@ class ThermalCameraRecorder(
         val frameRate: Double = 9.0,
         val emissivity: Float = 0.95f,
         val reflectedTemperature: Float = 20.0f,
-        val ambientTemperature: Float = 25.0f
+        val ambientTemperature: Float = 25.0f,
+        val atmosphericTemperature: Float = 25.0f,
+        val relativeHumidity: Float = 50.0f,
+        val distance: Float = 1.0f,
+        val temperatureRange: Pair<Float, Float> = Pair(-20.0f, 400.0f)
     )
 
     data class ThermalPerformanceMetrics(
@@ -878,7 +882,6 @@ class ThermalCameraRecorder(
 
                     // Register frame callback for continuous 10Hz capture
                     ircamEngine!!.setFrameCallback(object : IIrFrameCallback {
-                        override fun onFrame(frame: ByteArray?, length: Int) {
                         override fun onFrame(frame: ByteArray?, length: Int) {
                             if (_isRecording.get() && frame != null) {
                                 recordingScope.launch {
@@ -1878,7 +1881,6 @@ class ThermalCameraRecorder(
 
             ircamEngine?.setFrameCallback(object : IIrFrameCallback {
                 override fun onFrame(frame: ByteArray?, length: Int) {
-                override fun onFrame(frame: ByteArray?, length: Int) {
                     val currentTime = System.currentTimeMillis()
 
 
@@ -1909,7 +1911,7 @@ class ThermalCameraRecorder(
                     }
 
 
-                    if (previewCallback != null && frame != null && frameCount.get() % PREVIEW_UPDATE_FRAME_INTERVAL == 0) {
+                    if (previewCallback != null && frame != null && frameCount.get() % PREVIEW_UPDATE_FRAME_INTERVAL.toLong() == 0L) {
                         recordingScope.launch {
                             try {
                                 val thermalData = processRealThermalData(frame, IR_CAMERA_WIDTH, IR_CAMERA_HEIGHT)
