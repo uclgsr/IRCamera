@@ -24,6 +24,9 @@ android {
         }
     }
 
+    // NOTE: The Java and Kotlin target versions have been updated from 1.8 to 17.
+    // This requires Java 17+ for building and running, and all dependencies and consumers
+    // must be compatible with Java 17. Please validate compatibility across the project.
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
