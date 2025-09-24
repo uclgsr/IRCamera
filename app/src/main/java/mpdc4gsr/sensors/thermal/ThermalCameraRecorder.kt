@@ -858,7 +858,7 @@ class ThermalCameraRecorder(
             if (ircamEngine != null) {
                 // Initialize on background thread to avoid UI blocking
                 ircamEngine!!.initHandle(object : com.energy.ac020library.bean.HandleInitCallback {
-                    override fun onSuccess(ircmdEngine: com.energy.ac020library.engine.IrcmdEngine?) {
+                    override fun onSuccess(ircmdEngine: com.energy.ac020library.engine.IrcmdEngine) {
                         isTopdonSdkInitialized = true
                         Log.i(TAG, "Topdon TC001 SDK engine initialized successfully")
 
