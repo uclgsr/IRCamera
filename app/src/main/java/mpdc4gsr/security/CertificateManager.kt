@@ -5,7 +5,7 @@ import android.util.Log
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import mpdc4gsr.libunified.app.StructuredLogger
+import mpdc4gsr.core.StructuredLogger
 import java.io.File
 import java.security.KeyFactory
 import java.security.KeyPair

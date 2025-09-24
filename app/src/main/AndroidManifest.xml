@@ -199,6 +199,20 @@
         <activity
             android:name="mpdc4gsr.activities.ClauseActivity"
             android:screenOrientation="userPortrait" />
+
+        <!-- Network Client Test Activity -->
+        <activity
+            android:name="mpdc4gsr.activities.NetworkClientTestActivity"
+            android:exported="true"
+            android:label="Network Client Test"
+            android:screenOrientation="userPortrait"
+            android:theme="@style/AppTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
         <activity
             android:name="mpdc4gsr.activities.PdfActivity"
             android:screenOrientation="userPortrait" />
@@ -217,6 +231,14 @@
         <activity
             android:name="mpdc4gsr.activities.WebViewActivity"
             android:screenOrientation="userPortrait" />
+
+        <!-- Network Configuration Activity -->
+        <activity
+            android:name="mpdc4gsr.activities.NetworkConfigActivity"
+            android:exported="false"
+            android:label="Network Configuration"
+            android:screenOrientation="userPortrait"
+            android:theme="@style/AppTheme" />
 
 
         <activity

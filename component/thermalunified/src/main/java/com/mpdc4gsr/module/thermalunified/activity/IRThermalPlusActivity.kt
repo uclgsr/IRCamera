@@ -248,8 +248,10 @@ class IRThermalPlusActivity : BaseIRPlushActivity() {
     }
 
     override fun onIrFrame(irFrame: ByteArray?): ByteArray {
-        System.arraycopy(irFrame, 0, preIrData, 0, preIrData.size)
-        System.arraycopy(irFrame, preIrData.size, preTempData, 0, preTempData.size)
+        irFrame?.let {
+            System.arraycopy(it, 0, preIrData, 0, preIrData.size)
+            System.arraycopy(it, preIrData.size, preTempData, 0, preTempData.size)
+        } ?: return preIrARGBData
         if (irImageHelp.getColorList() != null) {
 
             LibIRProcess.convertYuyvMapToARGBPseudocolor(
@@ -285,7 +287,9 @@ class IRThermalPlusActivity : BaseIRPlushActivity() {
                 Const.IR_HEIGHT,
                 Const.IR_WIDTH,
             )
-        System.arraycopy(tempData, 0, preIrARGBData, 0, preIrARGBData.size)
+        tempData?.let {
+            System.arraycopy(it, 0, preIrARGBData, 0, preIrARGBData.size)
+        }
         return preIrARGBData
     }
 

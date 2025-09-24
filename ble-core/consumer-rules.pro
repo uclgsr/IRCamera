@@ -1,1 +1,0 @@
-# Consumer ProGuard rules for ble-core module

@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.withContext
 import mpdc4gsr.data.SessionMetadata
 import mpdc4gsr.sensors.SensorRecorder
-import mpdc4gsr.util.SessionDirectoryManager
+import mpdc4gsr.utils.SessionDirectoryManager
 import java.io.File
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean

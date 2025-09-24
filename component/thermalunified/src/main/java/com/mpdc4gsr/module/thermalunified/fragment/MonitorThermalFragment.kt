@@ -255,9 +255,6 @@ class MonitorThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> 
         rotate: Float,
     ): Bitmap? {
         try {
-            if (origin == null) {
-                return null
-            }
             val width = origin.width
             val height = origin.height
             val matrix = Matrix()

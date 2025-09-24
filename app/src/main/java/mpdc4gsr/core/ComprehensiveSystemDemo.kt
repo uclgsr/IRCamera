@@ -426,14 +426,27 @@ class ComprehensiveSystemDemo : AppCompatActivity() {
     }
 
     private fun startStatusMonitoring() {
+        // Enhanced status monitoring with GSR-specific feedback
         lifecycleScope.launch {
             while (isRecording) {
                 try {
-
                     val stats = recordingController.getRecordingStatistics()
+                    val sensorSummary = recordingController.getSensorStatusSummary()
+
+                    // Create GSR-aware status message
+                    val gsrSensor = sensorSummary.sensors.find { 
+                        it.sensorType.contains("GSR", ignoreCase = true) || 
+                        it.sensorId.contains("gsr", ignoreCase = true) 
+                    }
+                    
+                    val gsrStatusText = when {
+                        gsrSensor?.isRecording == true -> "🟢 GSR streaming"
+                        gsrSensor?.isInitialized == true -> "🟡 GSR ready but not recording"
+                        else -> "🔴 GSR unavailable"
+                    }
 
                     addLog(
-                        "📊 Recording status: ${stats.activeSensors} sensors active, " +
+                        "📊 Recording status: ${stats.activeSensors} sensors active | $gsrStatusText | " +
                                 "${String.format("%.1f", stats.sessionDurationSeconds)}s elapsed"
                     )
 
@@ -442,6 +455,35 @@ class ComprehensiveSystemDemo : AppCompatActivity() {
                     Log.w(TAG, "Status monitoring error", e)
                     break
                 }
+            }
+        }
+
+        // Monitor for GSR-specific errors and provide user feedback
+        lifecycleScope.launch {
+            try {
+                recordingController.errorFlow.collect { error ->
+                    when (error.errorType) {
+                        "GSR_SENSOR_UNAVAILABLE" -> {
+                            addLog("⚠️ GSR sensor unavailable - check device pairing and proximity")
+                            updateStatus("Recording (GSR sensor lost)")
+                        }
+                        "SENSOR_RECOVERED" -> {
+                            if (error.sensorId?.contains("gsr", ignoreCase = true) == true) {
+                                addLog("✅ GSR sensor reconnected successfully")
+                                updateStatus("Recording (all sensors active)")
+                            }
+                        }
+                        "ALL_SENSORS_LOST" -> {
+                            addLog("❌ Critical: All sensors failed - stopping session")
+                            updateStatus("Session failed")
+                        }
+                        else -> {
+                            addLog("ℹ️ ${error.errorType}: ${error.message}")
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+                Log.w(TAG, "Error monitoring failed", e)
             }
         }
     }

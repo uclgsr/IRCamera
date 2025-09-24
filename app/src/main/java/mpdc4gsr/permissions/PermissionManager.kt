@@ -76,11 +76,14 @@ class PermissionManager(
             return@suspendCancellableCoroutine
         }
 
-        Log.i(TAG, "Requesting bluetooth permissions")
+        Log.i(TAG, "Requesting bluetooth permissions for GSR sensor access")
 
-
+        // Enhanced callback with detailed error handling
         permissionController.setPermissionCallback(REQUEST_BLUETOOTH_PERMISSIONS) { granted ->
             Log.i(TAG, "Bluetooth permissions result: $granted")
+            if (!granted) {
+                Log.w(TAG, "Bluetooth permissions denied - GSR sensor features will be unavailable")
+            }
             continuation.resume(granted)
         }
 
@@ -91,5 +94,56 @@ class PermissionManager(
     suspend fun requestStoragePermissions(): Boolean {
 
         return true
+    }
+
+    /**
+     * Request all permissions required for GSR sensor recording in a unified flow
+     * This ensures smooth multi-sensor recording without mid-session permission issues
+     */
+    suspend fun requestAllRequiredPermissionsForGSR(): Boolean {
+        Log.i(TAG, "Requesting all permissions required for GSR sensor recording")
+        
+        val cameraSuccess = requestCameraPermissions()
+        val bluetoothSuccess = requestBluetoothPermissions()
+        
+        val allSuccess = cameraSuccess && bluetoothSuccess
+        
+        if (allSuccess) {
+            Log.i(TAG, "All GSR recording permissions granted successfully")
+        } else {
+            Log.w(TAG, "Some GSR recording permissions were denied - functionality may be limited")
+        }
+        
+        return allSuccess
+    }
+
+    /**
+     * Check if all GSR-related permissions are granted
+     */
+    fun hasAllGSRPermissions(): Boolean {
+        val bluetoothPermissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            arrayOf(
+                Manifest.permission.BLUETOOTH_SCAN,
+                Manifest.permission.BLUETOOTH_CONNECT,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            )
+        } else {
+            arrayOf(
+                Manifest.permission.BLUETOOTH,
+                Manifest.permission.BLUETOOTH_ADMIN,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            )
+        }
+
+        val cameraPermissions = arrayOf(
+            Manifest.permission.CAMERA,
+            Manifest.permission.RECORD_AUDIO
+        )
+
+        val allPermissions = bluetoothPermissions + cameraPermissions
+
+        return allPermissions.all { permission ->
+            ActivityCompat.checkSelfPermission(activity, permission) == PackageManager.PERMISSION_GRANTED
+        }
     }
 }

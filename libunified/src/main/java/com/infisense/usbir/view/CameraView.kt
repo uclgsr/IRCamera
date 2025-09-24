@@ -34,4 +34,31 @@ class CameraView @JvmOverloads constructor(
     fun stop() {
         // Stub implementation
     }
+    
+    fun setImageSize(width: Int, height: Int) {
+        layoutParams = layoutParams?.apply {
+            this.width = width
+            this.height = height
+        }
+    }
+    
+    fun setShowCross(show: Boolean) {
+        // Stub implementation
+    }
+    
+    fun setSyncimage(syncImage: Any?) {
+        // Stub implementation
+    }
+    
+    fun start() {
+        // Stub implementation
+    }
+    
+    fun getScaledBitmap(): Bitmap {
+        return bitmap ?: Bitmap.createBitmap(
+            width.coerceAtLeast(1), 
+            height.coerceAtLeast(1), 
+            Bitmap.Config.ARGB_8888
+        )
+    }
 }
