@@ -221,14 +221,27 @@ class AdaptiveThermalStreamer {
 
             val startTime = System.currentTimeMillis()
 
-            // Send thermal frame via network client
+            // Send thermal frame via network client using existing sendMessage API
             try {
-                val frameData = frame.toNetworkMessage() // Convert frame to network format
-                networkClient?.sendThermalFrame(frameData)
-                    ?: run {
-                        // Fallback to simulation if no network client available
-                        simulateNetworkSend(frame)
+                val frameJson = JSONObject(frame.toNetworkMessage())
+                networkClient?.let { client ->
+                    // Use coroutine scope since sendMessage is suspend function
+                    kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
+                        try {
+                            val success = client.sendMessage(frameJson)
+                            if (success) {
+                                Log.v(TAG, "Sent thermal frame via NetworkClient")
+                            } else {
+                                Log.w(TAG, "Failed to send thermal frame via NetworkClient")
+                            }
+                        } catch (e: Exception) {
+                            Log.w(TAG, "Failed to send thermal frame via NetworkClient", e)
+                        }
                     }
+                } ?: run {
+                    // Fallback to simulation if no network client available
+                    simulateNetworkSend(frame)
+                }
             } catch (e: Exception) {
                 Log.w(TAG, "Network send failed, using simulation fallback", e)
                 simulateNetworkSend(frame)

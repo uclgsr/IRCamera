@@ -122,18 +122,39 @@ object InitUtil {
         try {
             val context = BaseApplication.instance
             
-            // Initialize JPush
-            cn.jpush.android.api.JPushInterface.setDebugMode(BuildConfig.DEBUG)
-            cn.jpush.android.api.JPushInterface.init(context)
-            
-            // Get registration ID
-            val registrationID = cn.jpush.android.api.JPushInterface.getRegistrationID(context)
-            
-            if (SharedManager.getHasShowClause()) {
-                XLog.w("JPush registrationID= $registrationID")
+            // Check if JPush SDK is available at runtime
+            val jpushClass = try {
+                Class.forName("cn.jpush.android.api.JPushInterface")
+            } catch (e: ClassNotFoundException) {
+                XLog.w("JPush SDK not available - skipping initialization")
+                if (SharedManager.getHasShowClause()) {
+                    XLog.w("registrationID= unavailable (JPush SDK not found)")
+                }
+                return
             }
             
-            XLog.i("JPush SDK initialized successfully")
+            // Use reflection to call JPush methods safely
+            try {
+                val setDebugModeMethod = jpushClass.getMethod("setDebugMode", Boolean::class.java)
+                val initMethod = jpushClass.getMethod("init", android.content.Context::class.java)
+                val getRegistrationIDMethod = jpushClass.getMethod("getRegistrationID", android.content.Context::class.java)
+                
+                setDebugModeMethod.invoke(null, BuildConfig.DEBUG)
+                initMethod.invoke(null, context)
+                
+                val registrationID = getRegistrationIDMethod.invoke(null, context) as? String ?: "unknown"
+                
+                if (SharedManager.getHasShowClause()) {
+                    XLog.w("JPush registrationID= $registrationID")
+                }
+                
+                XLog.i("JPush SDK initialized successfully")
+            } catch (e: Exception) {
+                XLog.e("Failed to initialize JPush SDK via reflection: ${e.message}")
+                if (SharedManager.getHasShowClause()) {
+                    XLog.w("registrationID= unavailable (JPush initialization failed)")
+                }
+            }
         } catch (e: Exception) {
             XLog.e("Failed to initialize JPush SDK: ${e.message}")
             
