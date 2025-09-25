@@ -23,7 +23,6 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import mpdc4gsr.data.SessionMetadata
-import mpdc4gsr.controller.RecordingConstants
 import mpdc4gsr.controller.RecordingConstants.RGB_STORAGE_MB_PER_MIN
 import mpdc4gsr.controller.RecordingConstants.THERMAL_STORAGE_MB_PER_MIN
 import mpdc4gsr.controller.RecordingConstants.SHIMMER_STORAGE_MB_PER_MIN
@@ -40,7 +39,6 @@ import mpdc4gsr.sensors.thermal.ThermalCameraRecorder
 import mpdc4gsr.utils.SessionDirectory
 import mpdc4gsr.utils.SessionDirectoryManager
 import mpdc4gsr.utils.StorageStatus
-import mpdc4gsr.controller.RecordingConstants
 import java.io.File
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean
