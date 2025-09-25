@@ -63,6 +63,7 @@ public class AppVersionUtil {
             return;
         }
         LMS.getInstance().checkAppUpdate(response -> {
+            // Passing null as the second parameter because no additional data is required for conversion in this context.
             CommonBean commonBean = ResponseBean.convertCommonBean(response, null);
             if (commonBean.code.equals(SUCCESS)) {
                 AppInfoBean appInfoBean = LMS.getInstance().getUpdateAppInfoBean();
