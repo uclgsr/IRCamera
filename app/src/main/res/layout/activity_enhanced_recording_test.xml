@@ -5,169 +5,169 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-    <!-- Title -->
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:gravity="center"
         android:text="Enhanced Recording Session Controller Test"
         android:textSize="18sp"
-        android:textStyle="bold"
-        android:gravity="center"
-        android:layout_marginBottom="16dp" />
+        android:textStyle="bold" />
 
-    <!-- Status Display -->
+
     <TextView
         android:id="@+id/statusDisplay"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:background="#E3F2FD"
+        android:gravity="center"
+        android:padding="12dp"
         android:text="Idle - Ready to start recording"
         android:textSize="16sp"
-        android:textStyle="bold"
-        android:gravity="center"
-        android:background="#E3F2FD"
-        android:padding="12dp"
-        android:layout_marginBottom="16dp" />
+        android:textStyle="bold" />
 
-    <!-- Sensor Selection -->
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
         android:text="Select Sensors:"
         android:textSize="14sp"
-        android:textStyle="bold"
-        android:layout_marginBottom="8dp" />
+        android:textStyle="bold" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginBottom="16dp">
+        android:layout_marginBottom="16dp"
+        android:orientation="horizontal">
 
         <CheckBox
             android:id="@+id/checkboxRgb"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="RGB Camera"
-            android:checked="true" />
+            android:checked="true"
+            android:text="RGB Camera" />
 
         <CheckBox
             android:id="@+id/checkboxThermal"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Thermal Camera"
-            android:checked="true" />
+            android:checked="true"
+            android:text="Thermal Camera" />
 
         <CheckBox
             android:id="@+id/checkboxGsr"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="GSR Sensor"
-            android:checked="true" />
+            android:checked="true"
+            android:text="GSR Sensor" />
 
     </LinearLayout>
 
-    <!-- Options -->
+
     <CheckBox
         android:id="@+id/checkboxAllowPartial"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Allow Partial Start (continue even if some sensors fail)"
+        android:layout_marginBottom="16dp"
         android:checked="true"
-        android:layout_marginBottom="16dp" />
+        android:text="Allow Partial Start (continue even if some sensors fail)" />
 
-    <!-- Control Buttons -->
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginBottom="16dp">
+        android:layout_marginBottom="16dp"
+        android:orientation="horizontal">
 
         <Button
             android:id="@+id/buttonStartSession"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
             android:layout_weight="1"
-            android:text="Start Session"
             android:backgroundTint="#4CAF50"
-            android:layout_marginEnd="8dp" />
+            android:text="Start Session" />
 
         <Button
             android:id="@+id/buttonStopSession"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Stop Session"
             android:backgroundTint="#F44336"
-            android:enabled="false" />
+            android:enabled="false"
+            android:text="Stop Session" />
 
     </LinearLayout>
 
-    <!-- Secondary Control Buttons -->
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginBottom="16dp">
+        android:layout_marginBottom="16dp"
+        android:orientation="horizontal">
 
         <Button
             android:id="@+id/buttonAddSyncMarker"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="4dp"
             android:layout_weight="1"
-            android:text="Add Sync Marker"
             android:backgroundTint="#FF9800"
             android:enabled="false"
-            android:layout_marginEnd="4dp" />
+            android:text="Add Sync Marker" />
 
         <Button
             android:id="@+id/buttonSessionStatus"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
             android:layout_weight="1"
-            android:text="Session Status"
             android:backgroundTint="#2196F3"
-            android:layout_marginStart="4dp" />
+            android:text="Session Status" />
 
     </LinearLayout>
 
-    <!-- Recovery and Utility Buttons -->
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginBottom="16dp">
+        android:layout_marginBottom="16dp"
+        android:orientation="horizontal">
 
         <Button
             android:id="@+id/buttonCheckCrashRecovery"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="4dp"
             android:layout_weight="1"
-            android:text="Check Crash Recovery"
             android:backgroundTint="#9C27B0"
-            android:layout_marginEnd="4dp" />
+            android:text="Check Crash Recovery" />
 
         <Button
             android:id="@+id/buttonClearLogs"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
             android:layout_weight="1"
-            android:text="Clear Logs"
             android:backgroundTint="#607D8B"
-            android:layout_marginStart="4dp" />
+            android:text="Clear Logs" />
 
     </LinearLayout>
 
-    <!-- Log Output -->
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
         android:text="Activity Log:"
         android:textSize="14sp"
-        android:textStyle="bold"
-        android:layout_marginBottom="8dp" />
+        android:textStyle="bold" />
 
     <ScrollView
         android:id="@+id/scrollView"
@@ -181,9 +181,9 @@
             android:id="@+id/logOutput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="12sp"
             android:fontFamily="monospace"
-            android:textColor="#333333" />
+            android:textColor="#333333"
+            android:textSize="12sp" />
 
     </ScrollView>
 

@@ -30,6 +30,11 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+
+/**
+ * date: 2019/10/1 14:44
+ * author: bichuanfeng
+ */
 abstract class AbstractScanner implements Scanner {
     final ScanConfiguration configuration;
     final BluetoothAdapter bluetoothAdapter;
@@ -60,6 +65,7 @@ abstract class AbstractScanner implements Scanner {
         scanListeners.remove(listener);
     }
 
+    //位置服务是否开户
     private boolean isLocationEnabled(Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
@@ -74,6 +80,7 @@ abstract class AbstractScanner implements Scanner {
         }
     }
 
+    //检查是否有定位权限
     private boolean noLocationPermission(Context context) {
         int sdkVersion = context.getApplicationInfo().targetSdkVersion;
         if (sdkVersion >= 29) {//target sdk版本在29以上的需要精确定位权限才能搜索到蓝牙设备
@@ -84,30 +91,7 @@ abstract class AbstractScanner implements Scanner {
         }
     }
 
-    private boolean noBluetoothPermission(Context context) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-
-            return ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED ||
-                    ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED;
-        } else {
-
-            return ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH) != PackageManager.PERMISSION_GRANTED ||
-                    ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_ADMIN) != PackageManager.PERMISSION_GRANTED;
-        }
-    }
-
-    private boolean hasBluetoothConnectPermission(Context context) {
-        if (context == null) return false;
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-
-            return ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED;
-        } else {
-
-            return ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH) == PackageManager.PERMISSION_GRANTED;
-        }
-    }
-
+    //处理搜索回调
     void handleScanCallback(final boolean start, final Device device, final boolean isConnectedBySys,
                             final int errorCode, final String errorMsg) {
         mainHandler.post(() -> {
@@ -125,6 +109,7 @@ abstract class AbstractScanner implements Scanner {
         });
     }
 
+    //如果系统已配对连接，那么是无法搜索到的，所以尝试获取已连接的设备
     @SuppressWarnings("all")
     private void getSystemConnectedDevices(Context context) {
         try {
@@ -144,7 +129,7 @@ abstract class AbstractScanner implements Scanner {
             }
         } catch (Exception ignore) {
         }
-
+        //遍历支持的，获取所有连接的
         for (int i = 1; i <= 21; i++) {
             try {
                 getSystemConnectedDevices(context, i);
@@ -193,35 +178,13 @@ abstract class AbstractScanner implements Scanner {
     }
 
     void parseScanResult(BluetoothDevice device, boolean isConnectedBySys, ScanResult result, int rssi, byte[] scanRecord) {
-
-        Context context = EasyBLE.getInstance().getContext();
-        if (context != null && noBluetoothPermission(context)) {
-            logger.log(Log.WARN, Logger.TYPE_SCAN_STATE, "Missing Bluetooth permissions, skipping device access");
+        if ((configuration.onlyAcceptBleDevice && device.getType() != BluetoothDevice.DEVICE_TYPE_LE) ||
+                !device.getAddress().matches("^[0-9A-F]{2}(:[0-9A-F]{2}){5}$")) {
             return;
         }
-
-        int deviceType = BluetoothDevice.DEVICE_TYPE_UNKNOWN;
-        String deviceAddress = "";
-        String deviceName = "";
-
-        try {
-            if (hasBluetoothConnectPermission(context)) {
-                deviceType = device.getType();
-                deviceAddress = device.getAddress();
-                deviceName = device.getName();
-            }
-        } catch (SecurityException e) {
-            logger.log(Log.WARN, Logger.TYPE_SCAN_STATE, "SecurityException accessing device properties: " + e.getMessage());
-            return;
-        }
-
-        if ((configuration.onlyAcceptBleDevice && deviceType != BluetoothDevice.DEVICE_TYPE_LE) ||
-                !deviceAddress.matches("^[0-9A-F]{2}(:[0-9A-F]{2}){5}$")) {
-            return;
-        }
-        String name = deviceName == null ? "" : deviceName;
+        String name = device.getName() == null ? "" : device.getName();
         if (configuration.rssiLowLimit <= rssi) {
-
+            //通过构建器实例化Device
             Device dev = deviceCreator.create(device, result);
             if (dev != null) {
                 dev.name = TextUtils.isEmpty(dev.getName()) ? name : dev.getName();
@@ -253,11 +216,6 @@ abstract class AbstractScanner implements Scanner {
                 } else if (noLocationPermission(context)) {
                     String errorMsg = "Unable to scan for Bluetooth devices, lack location permission.";
                     handleScanCallback(false, null, false, ScanListener.ERROR_LACK_LOCATION_PERMISSION, errorMsg);
-                    logger.log(Log.ERROR, Logger.TYPE_SCAN_STATE, errorMsg);
-                    return;
-                } else if (noBluetoothPermission(context)) {
-                    String errorMsg = "Unable to scan for Bluetooth devices, lack Bluetooth permission.";
-                    handleScanCallback(false, null, false, ScanListener.ERROR_LACK_BLUETOOTH_PERMISSION, errorMsg);
                     logger.log(Log.ERROR, Logger.TYPE_SCAN_STATE, errorMsg);
                     return;
                 }
@@ -317,6 +275,7 @@ abstract class AbstractScanner implements Scanner {
         }
     }
 
+    //蓝牙是否开启
     private boolean isBtEnabled() {
         if (bluetoothAdapter.isEnabled()) {
             try {
@@ -337,18 +296,27 @@ abstract class AbstractScanner implements Scanner {
             isScanning = false;
         }
         handleScanCallback(false, null, false, -1, "");
-    }
+    }    private final Runnable stopScanRunnable = () -> stopScan(false);
 
     @Override
     public void release() {
         stopScan(false);
         scanListeners.clear();
-    }    private final Runnable stopScanRunnable = () -> stopScan(false);
+    }
 
+    /**
+     * 是否可搜索
+     */
     protected abstract boolean isReady();
 
+    /**
+     * 执行搜索
+     */
     protected abstract void performStartScan();
 
+    /**
+     * 执行停止搜索
+     */
     protected abstract void performStopScan();
 
 

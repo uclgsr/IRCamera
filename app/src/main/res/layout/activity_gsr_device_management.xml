@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-    <!-- Header Section -->
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -35,7 +35,7 @@
             android:textSize="14sp" />
     </LinearLayout>
 
-    <!-- Connection Status Section -->
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -71,7 +71,7 @@
             android:textStyle="bold" />
     </LinearLayout>
 
-    <!-- Control Buttons Section -->
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -114,7 +114,7 @@
             android:textColor="@android:color/white" />
     </LinearLayout>
 
-    <!-- Scanning Indicator -->
+
     <LinearLayout
         android:id="@+id/scanningIndicator"
         android:layout_width="match_parent"
@@ -142,7 +142,7 @@
             android:textSize="14sp" />
     </LinearLayout>
 
-    <!-- Device Count and Settings -->
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -173,7 +173,7 @@
             android:textSize="12sp" />
     </LinearLayout>
 
-    <!-- Device List Section -->
+
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -187,7 +187,7 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <!-- Device List Header -->
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -211,7 +211,7 @@
                     android:textStyle="bold" />
             </LinearLayout>
 
-            <!-- Device RecyclerView -->
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/deviceRecyclerView"
                 android:layout_width="match_parent"
@@ -220,7 +220,7 @@
                 android:clipToPadding="false"
                 android:padding="8dp" />
 
-            <!-- Empty State -->
+
             <TextView
                 android:id="@+id/emptyStateText"
                 android:layout_width="match_parent"
@@ -234,7 +234,7 @@
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
-    <!-- Bottom Action Bar -->
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

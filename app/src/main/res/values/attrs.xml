@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Missing attributes causing build failures -->
+    <attr name="titleText" format="string" />
+    <attr name="leftDrawable" format="reference" />
+    <attr name="isInitLeft" format="boolean" />
+    <attr name="right2Drawable" format="reference" />
+    <attr name="rightDrawable" format="reference" />
+    <attr name="right3Drawable" format="reference" />
+    <attr name="deviceType" format="integer" />
+    <attr name="rightText" format="string" />
+    <attr name="temperature_count" format="integer" />
+    <attr name="drawable_height" format="dimension" />
+    <attr name="type" format="string" />
+    <attr name="index" format="integer" />
+
+    <!-- Additional missing attributes from build errors -->
+    <attr name="rightTextColor" format="color" />
+    <attr name="start_height" format="dimension" />
+    <attr name="isTitleCenter" format="boolean" />
+    <attr name="leftText" format="string" />
+    <attr name="leftTextColor" format="color" />
+    <attr name="top_height" format="dimension" />
+    <attr name="bottom_height" format="dimension" />
+    <attr name="end_height" format="dimension" />
+    <attr name="left_height" format="dimension" />
+    <attr name="right_height" format="dimension" />
+
+    <!-- TitleView styleable -->
+    <declare-styleable name="TitleView">
+        <attr name="titleText" />
+        <attr name="leftDrawable" />
+        <attr name="leftText" />
+        <attr name="leftTextColor" />
+        <attr name="isInitLeft" />
+        <attr name="rightText" />
+        <attr name="rightDrawable" />
+        <attr name="rightTextColor" />
+        <attr name="right2Drawable" />
+        <attr name="right3Drawable" />
+        <attr name="isTitleCenter" />
+    </declare-styleable>
+
+    <!-- MyTextView styleable -->
+    <declare-styleable name="MyTextView">
+        <attr name="drawable_height" />
+        <attr name="top_height" />
+        <attr name="bottom_height" />
+        <attr name="start_height" />
+        <attr name="end_height" />
+        <attr name="left_height" />
+        <attr name="right_height" />
+    </declare-styleable>
+
+    <!-- TemperatureView styleable -->
+    <declare-styleable name="TemperatureView">
+        <attr name="temperature_count" />
+    </declare-styleable>
+
+    <!-- ConnectionGuideView styleable -->
+    <declare-styleable name="ConnectionGuideView">
+        <attr name="guide_content_icon" format="reference" />
+        <attr name="guide_icon" format="reference" />
+        <attr name="guide_text" format="string" />
+        <attr name="guide_content_icon_show" format="boolean" />
+        <attr name="guide_icon_show" format="boolean" />
+    </declare-styleable>
+
+</resources>

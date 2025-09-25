@@ -9,6 +9,14 @@ import java.io.Reader;
 
 public class UTF8StringUtils {
 
+
+    /**
+     * @param @return 参数
+     * @return String    返回类型
+     * @throws
+     * @Title readByUtf8WithBom
+     * @Description 普通方式读取 txt文件，如果用记事本保存会存在bom格式
+     */
     public static String readByUtf8WithBom(String path) {
         File file = new File(path);
         FileInputStream in;
@@ -36,6 +44,13 @@ public class UTF8StringUtils {
         return "";
     }
 
+    /**
+     * @param @return 参数
+     * @return String    返回类型
+     * @throws
+     * @Title readByUtf8WithOutBom
+     * @Description 读取 txt文件，如果存在bom格式 则去掉
+     */
     public static String readByUtf8WithOutBom(String path) {
         File file = new File(path);
         FileInputStream in;

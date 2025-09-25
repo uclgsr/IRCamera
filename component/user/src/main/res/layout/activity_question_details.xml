@@ -7,7 +7,7 @@
     android:background="@color/color_16131E"
     android:fitsSystemWindows="true">
 
-    <com.topdon.lib.core.view.TitleView
+    <com.mpdc4gsr.libunified.app.view.TitleView
         android:id="@+id/title_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -28,7 +28,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/title_view"
         app:layout_constraintWidth_percent="0.9"
-        tools:text="为什么TC001、TS001插到手机上后，没有任何反应？" />
+        tools:text="WhyTC001、TS001After plugging into phone，No response？" />
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="0dp"

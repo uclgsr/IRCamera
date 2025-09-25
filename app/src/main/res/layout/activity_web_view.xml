@@ -19,7 +19,7 @@
             android:layout_height="match_parent"
             android:background="#16131e" />
 
-        <!-- 加载FailureError页面 -->
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_error"
             android:layout_width="match_parent"
@@ -27,7 +27,7 @@
             android:background="#16131e"
             android:visibility="gone">
 
-            <com.topdon.lib.core.view.TitleView
+            <com.mpdc4gsr.libunified.app.view.TitleView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"

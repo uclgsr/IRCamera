@@ -13,7 +13,7 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- GSR Settings Section -->
+
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -108,7 +108,7 @@
 
             </androidx.cardview.widget.CardView>
 
-            <!-- Shimmer Device Selection Section -->
+
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -223,7 +223,7 @@
 
             </androidx.cardview.widget.CardView>
 
-            <!-- Video Settings Section -->
+
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -340,7 +340,7 @@
 
             </androidx.cardview.widget.CardView>
 
-            <!-- RAW Capture Settings Section -->
+
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -435,7 +435,7 @@
 
             </androidx.cardview.widget.CardView>
 
-            <!-- Session Settings Section -->
+
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -532,7 +532,7 @@
 
             </androidx.cardview.widget.CardView>
 
-            <!-- Synchronization Settings Section -->
+
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

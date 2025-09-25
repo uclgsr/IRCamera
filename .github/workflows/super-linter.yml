@@ -1,21 +1,21 @@
-# Disabled CI/CD workflow - replaced with streamlined approach
-# Original super-linter workflow disabled per request
----
-name: Disabled Lint Code Base
-
-'on':
-  # Disabled - no triggers
-  workflow_dispatch:
-    inputs:
-      force_run:
-        description: 'Force run this disabled workflow'
-        required: false
-        default: false
-
-jobs:
-  disabled-lint:
-    if: false  # Always disabled
-    runs-on: ubuntu-latest
-    steps:
-      - name: Disabled
-        run: echo "This workflow has been disabled per request"
+#name: Lint Code Base
+#
+#'on':
+#  push:
+#    branches: ["dev"]
+#  pull_request:
+#    branches: ["dev"]
+#jobs:
+#  run-lint:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Checkout code
+#        uses: actions/checkout@v4
+#        with:
+#          fetch-depth: 0
+#      - name: Lint Code Base
+#        uses: github/super-linter@v4
+#        env:
+#          VALIDATE_ALL_CODEBASE: true
+#          DEFAULT_BRANCH: "dev"
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

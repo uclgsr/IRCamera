@@ -6,7 +6,7 @@
     android:orientation="vertical"
     android:padding="32dp">
 
-    <!-- Title -->
+
     <TextView
         android:id="@+id/tvTitle"
         android:layout_width="match_parent"
@@ -17,7 +17,7 @@
         android:textSize="18sp"
         android:textStyle="bold" />
 
-    <!-- Camera Preview Section -->
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -33,15 +33,25 @@
             android:textSize="16sp"
             android:textStyle="bold" />
 
-        <TextureView
-            android:id="@+id/cameraPreview"
+        <androidx.camera.view.PreviewView
+            android:id="@+id/previewView"
             android:layout_width="match_parent"
-            android:layout_height="400dp"
+            android:layout_height="200dp"
             android:background="@android:color/darker_gray" />
+
+        <TextView
+            android:id="@+id/cameraStatusText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:text="Camera: Initializing..."
+            android:textColor="@android:color/black"
+            android:textSize="14sp" />
 
     </LinearLayout>
 
-    <!-- Recording Options Section -->
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -59,7 +69,7 @@
             android:textSize="16sp"
             android:textStyle="bold" />
 
-        <!-- Video Recording Toggle -->
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -84,7 +94,7 @@
 
         </LinearLayout>
 
-        <!-- 4K Recording Toggle -->
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -109,7 +119,7 @@
 
         </LinearLayout>
 
-        <!-- RAW Capture Toggle (Highlighted) -->
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -136,7 +146,7 @@
 
         </LinearLayout>
 
-        <!-- RAW Frame Rate Selection -->
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -162,7 +172,7 @@
 
     </LinearLayout>
 
-    <!-- Session Info -->
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -180,7 +190,7 @@
 
     </LinearLayout>
 
-    <!-- Start/Stop Button -->
+
     <Button
         android:id="@+id/startStopButton"
         android:layout_width="match_parent"
@@ -193,7 +203,7 @@
         android:textSize="16sp"
         android:textStyle="bold" />
 
-    <!-- Status Display -->
+
     <TextView
         android:id="@+id/statusText"
         android:layout_width="match_parent"
@@ -203,7 +213,7 @@
         android:textColor="#1976D2"
         android:textSize="14sp" />
 
-    <!-- Feature Highlights -->
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

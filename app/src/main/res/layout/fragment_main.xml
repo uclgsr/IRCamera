@@ -12,7 +12,7 @@
         android:layout_height="match_parent"
         tools:background="#16131e">
 
-        <!-- 未Connect过任何DeviceInterface -->
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_no_device"
             android:layout_width="0dp"
@@ -63,7 +63,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.42" />
 
-            <!-- ConnectDevice -->
+
             <TextView
                 android:id="@+id/tv_connect_device"
                 android:layout_width="0dp"
@@ -82,7 +82,7 @@
                 app:layout_constraintWidth_percent="0.75" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <!-- Connect过任何DeviceInterface -->
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_has_device"
             android:layout_width="0dp"
@@ -153,7 +153,7 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <!-- GSR Multi-Modal Recording FAB -->
+
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab_gsr_recording"
             android:layout_width="wrap_content"

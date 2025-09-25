@@ -7,7 +7,7 @@
     android:background="@android:color/black"
     tools:context=".camera.integration.DualModeCameraActivity">
 
-    <!-- Camera Preview -->
+
     <TextureView
         android:id="@+id/texture_view"
         android:layout_width="0dp"
@@ -17,8 +17,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Camera Mode Selector -->
-    <com.topdon.tc001.camera.ui.CameraModeSelector
+
+    <com.mpdc4gsr.tc001.camera.ui.CameraModeSelector
         android:id="@+id/camera_mode_selector"
         android:layout_width="0dp"
         android:layout_height="80dp"
@@ -29,7 +29,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <!-- Info Text -->
+
     <TextView
         android:id="@+id/info_text"
         android:layout_width="0dp"

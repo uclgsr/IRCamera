@@ -1,3 +1,1 @@
-"""
-Utilities package for IRCamera PC Controller
-"""
+"""Utility components for IRCamera PC Controller Hub"""

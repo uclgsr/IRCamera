@@ -5,44 +5,44 @@
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
 
-    <!-- Android 12+ Bluetooth permissions for Shimmer3 GSR device connections -->
+
     <uses-permission
         android:name="android.permission.BLUETOOTH_SCAN"
         android:usesPermissionFlags="neverForLocation" />
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" />
 
-    <!-- Location permissions required for BLE device scanning on most Android versions -->
+
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
-    <!-- Storage permissions for GSR data recording -->
+
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
-    <!-- Network permissions for Hub-Spoke communication -->
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
 
-    <!-- Foreground service permissions for background recording -->
+
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CAMERA" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MICROPHONE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PROJECTION" />
 
-    <!-- Notification permissions for Android 13+ -->
+
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
-    <!-- Battery optimization exemption for reliable recording -->
+
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
 
-    <!-- Camera permissions for RGB video recording -->
+
     <uses-permission android:name="android.permission.CAMERA" />
 
-    <!-- USB permissions for thermal camera integration -->
+
     <uses-permission android:name="android.permission.USB_PERMISSION" />
     <uses-permission android:name="android.permission.ACCESS_USB_ACCESSORY" />
 
@@ -71,7 +71,7 @@
         android:required="false" />
 
     <application
-        android:name="com.topdon.tc001.app.App"
+        android:name="mpdc4gsr.core.App"
         android:allowBackup="true"
         android:allowNativeHeapPointerTagging="false"
         android:hardwareAccelerated="true"
@@ -83,7 +83,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
-        tools:replace="android:label">
+        tools:replace="android:hardwareAccelerated,android:label">
 
         <uses-native-library
             android:name="libOpenCL.so"
@@ -95,31 +95,14 @@
         <meta-data
             android:name="app_name"
             android:value="${app_name}" />
-        <!--        <service-->
-        <!--            android:name="com.topdon.tc001.jpush.JPushService"-->
-        <!--            android:enabled="true"-->
-        <!--            android:exported="false">-->
-        <!--            <intent-filter>-->
-        <!--                <action android:name="cn.jiguang.user.service.action" />-->
-        <!--            </intent-filter>-->
-        <!--        </service>-->
 
-        <!--        <receiver-->
-        <!--            android:name="com.topdon.tc001.jpush.PushMessageReceiver"-->
-        <!--            android:enabled="true"-->
-        <!--            android:exported="false">-->
-        <!--            <intent-filter>-->
-        <!--                <action android:name="cn.jpush.android.intent.RECEIVE_MESSAGE" />-->
-        <!--                <category android:name="com.topdon.tc001" />-->
-        <!--            </intent-filter>-->
-        <!--        </receiver>-->
 
         <meta-data
             android:name="ScopedStorage"
             android:value="true" />
 
         <activity
-            android:name="com.topdon.tc001.IRGalleryEditActivity"
+            android:name="mpdc4gsr.activities.IRGalleryEditActivity"
             android:launchMode="singleTop"
             android:screenOrientation="userPortrait"
             android:windowSoftInputMode="adjustPan" />
@@ -128,7 +111,7 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="true"
             android:theme="@style/Blank">
-            <!-- 监听USBDevice的插拔 -->
+
             <intent-filter>
                 <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
             </intent-filter>
@@ -137,14 +120,14 @@
                 android:resource="@xml/ir_device_filter" />
         </activity>
 
-        <!-- USB Device Hotplug Management for Topdon TC001 -->
+
         <receiver
-            android:name="com.topdon.tc001.thermal.ThermalUsbReceiver"
+            android:name="mpdc4gsr.sensors.thermal.ThermalUsbReceiver"
             android:exported="true">
             <intent-filter android:priority="1000">
                 <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
                 <action android:name="android.hardware.usb.action.USB_DEVICE_DETACHED" />
-                <action android:name="com.topdon.tc001.USB_PERMISSION" />
+                <action android:name="mpdc4gsr.USB_PERMISSION" />
             </intent-filter>
             <meta-data
                 android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
@@ -152,7 +135,7 @@
         </receiver>
 
         <activity
-            android:name="com.topdon.tc001.MainActivity"
+            android:name="mpdc4gsr.activities.MainActivity"
             android:exported="true"
             android:launchMode="singleTask"
             android:screenOrientation="userPortrait">
@@ -163,33 +146,46 @@
 
         </activity>
 
-        <!-- Shimmer GSR MVP Activity -->
+
         <activity
-            android:name="com.topdon.tc001.ShimmerMvpActivity"
+            android:name="mpdc4gsr.activities.ShimmerMvpActivity"
             android:exported="true"
             android:label="Shimmer GSR MVP"
             android:screenOrientation="userPortrait"
             android:theme="@style/AppTheme" />
 
-        <!-- Unified Sensor Activity for comprehensive IRCamera extension -->
+
         <activity
-            android:name="com.topdon.tc001.UnifiedSensorActivity"
+            android:name="mpdc4gsr.activities.UnifiedSensorActivity"
             android:exported="true"
             android:label="Unified Sensor Platform"
             android:screenOrientation="userPortrait"
             android:theme="@style/AppTheme" />
 
-        <!-- Phase 2 Validation Activity for Hardware Testing -->
+
         <activity
-            android:name="com.topdon.tc001.Phase2ValidationActivity"
+            android:name="mpdc4gsr.activities.Phase2ValidationActivity"
             android:exported="false"
             android:label="Phase 2 Hardware Validation"
             android:screenOrientation="userPortrait"
             android:theme="@style/AppTheme" />
 
-        <!-- Enhanced Recording Session Test Activity -->
+
         <activity
-            android:name="com.topdon.tc001.test.EnhancedRecordingSessionTestActivity"
+            android:name="mpdc4gsr.core.ComprehensiveSystemDemo"
+            android:exported="true"
+            android:label="Comprehensive System Demo"
+            android:screenOrientation="userPortrait"
+            android:theme="@style/AppTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+
+        <activity
+            android:name="mpdc4gsr.test.EnhancedRecordingSessionTestActivity"
             android:exported="true"
             android:label="Enhanced Recording Session Test"
             android:screenOrientation="userPortrait"
@@ -201,117 +197,158 @@
         </activity>
 
         <activity
-            android:name="com.topdon.tc001.ClauseActivity"
-            android:screenOrientation="userPortrait" />
+            android:name="mpdc4gsr.test.RGBCameraTestActivity"
+            android:exported="true"
+            android:label="RGB Camera Test"
+            android:screenOrientation="userPortrait"
+            android:theme="@style/AppTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
         <activity
-            android:name="com.topdon.tc001.PdfActivity"
-            android:screenOrientation="userPortrait" />
-        <activity
-            android:name="com.topdon.tc001.PolicyActivity"
-            android:screenOrientation="userPortrait" />
-        <activity
-            android:name="com.topdon.tc001.VersionActivity"
-            android:screenOrientation="userPortrait" />
-        <activity
-            android:name="com.topdon.tc001.DeviceTypeActivity"
-            android:screenOrientation="userPortrait" />
-        <activity
-            android:name="com.topdon.tc001.MoreHelpActivity"
-            android:screenOrientation="userPortrait" />
-        <activity
-            android:name="com.topdon.tc001.WebViewActivity"
+            android:name="mpdc4gsr.activities.ClauseActivity"
             android:screenOrientation="userPortrait" />
 
-        <!-- GSR Multi-Modal Recording Activities -->
+        <!-- Network Client Test Activity -->
         <activity
-            android:name="com.topdon.tc001.gsr.MultiModalRecordingActivity"
+            android:name="mpdc4gsr.activities.NetworkClientTestActivity"
+            android:exported="true"
+            android:label="Network Client Test"
+            android:screenOrientation="userPortrait"
+            android:theme="@style/AppTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name="mpdc4gsr.activities.PdfActivity"
+            android:screenOrientation="userPortrait" />
+        <activity
+            android:name="mpdc4gsr.activities.PolicyActivity"
+            android:screenOrientation="userPortrait" />
+        <activity
+            android:name="mpdc4gsr.activities.VersionActivity"
+            android:screenOrientation="userPortrait" />
+        <activity
+            android:name="mpdc4gsr.activities.DeviceTypeActivity"
+            android:screenOrientation="userPortrait" />
+        <activity
+            android:name="mpdc4gsr.activities.MoreHelpActivity"
+            android:screenOrientation="userPortrait" />
+        <activity
+            android:name="mpdc4gsr.activities.WebViewActivity"
+            android:screenOrientation="userPortrait" />
+
+        <!-- Network Configuration Activity -->
+        <activity
+            android:name="mpdc4gsr.activities.NetworkConfigActivity"
+            android:exported="false"
+            android:label="Network Configuration"
+            android:screenOrientation="userPortrait"
+            android:theme="@style/AppTheme" />
+
+
+        <activity
+            android:name="mpdc4gsr.sensors.gsr.MultiModalRecordingActivity"
             android:exported="false"
             android:screenOrientation="userPortrait" />
         <activity
-            android:name="com.topdon.tc001.gsr.GSRDemoActivity"
+            android:name="mpdc4gsr.sensors.gsr.GSRDemoActivity"
             android:exported="false"
             android:screenOrientation="userPortrait" />
         <activity
-            android:name="com.topdon.tc001.gsr.GSRQuickRecordingActivity"
+            android:name="mpdc4gsr.sensors.gsr.GSRQuickRecordingActivity"
             android:exported="false"
             android:label="@string/gsr_quick_access"
             android:screenOrientation="userPortrait" />
 
-        <!-- Session Management and Research Template Activities -->
+        <!-- Enhanced Fault-Tolerant Recording -->
         <activity
-            android:name="com.topdon.tc001.gsr.SessionManagerActivity"
+            android:name="mpdc4gsr.activities.FaultTolerantRecordingActivity"
+            android:exported="false"
+            android:label="@string/enhanced_recording_label"
+            android:screenOrientation="userPortrait" />
+
+
+        <activity
+            android:name="mpdc4gsr.sensors.gsr.SessionManagerActivity"
             android:exported="false"
             android:label="Session Manager"
             android:screenOrientation="userPortrait" />
         <activity
-            android:name="com.topdon.tc001.gsr.ResearchTemplateActivity"
+            android:name="mpdc4gsr.sensors.gsr.ResearchTemplateActivity"
             android:exported="false"
             android:label="Research Templates"
             android:screenOrientation="userPortrait" />
         <activity
-            android:name="com.topdon.tc001.gsr.SessionDetailActivity"
+            android:name="mpdc4gsr.sensors.gsr.SessionDetailActivity"
             android:exported="false"
             android:label="Session Details"
             android:screenOrientation="userPortrait" />
         <activity
-            android:name="com.topdon.tc001.gsr.SessionExportActivity"
+            android:name="mpdc4gsr.sensors.gsr.SessionExportActivity"
             android:exported="false"
             android:label="Export Session"
             android:screenOrientation="userPortrait" />
 
-        <!-- Hub-and-Spoke System Integration -->
+
         <activity
-            android:name="com.topdon.tc001.sensors.HubSpokeIntegrationActivity"
+            android:name="mpdc4gsr.sensors.HubSpokeIntegrationActivity"
             android:exported="false"
             android:label="Hub-Spoke Recording"
             android:screenOrientation="userPortrait" />
         <activity
-            android:name="com.topdon.tc001.network.DevicePairingActivity"
+            android:name="mpdc4gsr.network.DevicePairingActivity"
             android:exported="false"
             android:label="Device Pairing"
             android:screenOrientation="userPortrait" />
 
-        <!-- Testing Activities -->
+
         <activity
-            android:name="com.topdon.tc001.test.SynchronizationTestActivity"
+            android:name="mpdc4gsr.test.TimeSynchronizationTestActivity"
             android:exported="false"
             android:label="Synchronization Test"
             android:screenOrientation="userPortrait"
             android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" />
         <activity
-            android:name="com.topdon.tc001.test.ParallelRecordingTestActivity"
+            android:name="mpdc4gsr.test.ParallelRecordingTestActivity"
             android:exported="false"
             android:label="Parallel Recording Test"
             android:screenOrientation="userPortrait" />
         <activity
-            android:name="com.topdon.tc001.test.RAWCaptureTestActivity"
+            android:name="mpdc4gsr.test.RAWCaptureTestActivity"
             android:exported="false"
             android:label="RAW Capture Test"
             android:screenOrientation="userPortrait" />
         <activity
-            android:name="com.topdon.tc001.test.BLEIntegrationTestActivity"
+            android:name="mpdc4gsr.test.BLEIntegrationTestActivity"
             android:exported="false"
             android:label="BLE Integration Test"
             android:screenOrientation="userPortrait" />
         <activity
-            android:name="com.topdon.tc001.test.RGBCameraEnhancedTestActivity"
+            android:name="mpdc4gsr.test.RGBCameraEnhancedTestActivity"
             android:exported="false"
             android:label="RGB Camera Enhanced Test"
             android:screenOrientation="userPortrait" />
         <activity
-            android:name="com.topdon.tc001.permissions.PermissionRequestActivity"
+            android:name="mpdc4gsr.permissions.PermissionRequestActivity"
             android:exported="false"
             android:label="Enhanced Permission System Test"
             android:screenOrientation="userPortrait" />
 
-        <!-- Multi-Modal Recording Service -->
+
         <service
-            android:name="com.topdon.tc001.service.RecordingService"
+            android:name="mpdc4gsr.core.RecordingService"
             android:enabled="true"
             android:exported="false"
             android:foregroundServiceType="camera|microphone|mediaProjection" />
 
-        <!-- FileProvider configuration to resolve manifest conflicts -->
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"

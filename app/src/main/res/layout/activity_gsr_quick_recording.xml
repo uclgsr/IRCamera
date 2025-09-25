@@ -19,7 +19,7 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- Header -->
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -30,7 +30,7 @@
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
-            <!-- Status Card -->
+
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -73,7 +73,7 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- Recording Controls -->
+
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -118,7 +118,7 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- Real-time Data -->
+
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -154,7 +154,7 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- Session Info -->
+
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -189,7 +189,7 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- Navigation Buttons -->
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

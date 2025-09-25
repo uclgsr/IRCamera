@@ -12,8 +12,8 @@
     <usb-device class="14" />
     <usb-device
         class="239"
-        subclass="2" />    <!-- all device of UVC, change to other -->
-    <!-- a few android 9.0 -->
+        subclass="2" />
+
     <usb-device
         class="14"
         subclass="9" />
@@ -26,7 +26,7 @@
     <usb-device
         class="39"
         subclass="0" />
-    <!-- vid若为0A0A会影响到模组重新插拔之后的DataFormat转换 -->
+
     <usb-device
         product-id="9730"
         vendor-id="2570" />
@@ -43,20 +43,20 @@
         product-id="258"
         vendor-id="9228" />
 
-    <!-- 海康 256 -->
+
     <usb-device
         product-id="258"
         vendor-id="11231" />
 
-    <!-- Topdon TC001 Thermal Camera - Updated with correct VID/PID -->
+
     <usb-device
         product-id="0x0001"
         vendor-id="0x2744" />
-    <!-- Topdon TC001 Thermal Camera - Alternative format -->
+
     <usb-device
         product-id="1"
         vendor-id="10052" />
-    <!-- Legacy Topdon device identifiers for compatibility -->
+
     <usb-device
         product-id="14082"
         vendor-id="16902" />

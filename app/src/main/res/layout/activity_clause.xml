@@ -186,7 +186,7 @@
             app:layout_constraintBottom_toTopOf="@id/clause_agree_btn"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            tools:text="Copyright %s2023-2024 %s公司名 Technology Co.,Ltd.\nAll Rights Reserved." />
+            tools:text="Copyright %s2023-2024 %s[ph][ph][ph] Technology Co.,Ltd.\nAll Rights Reserved." />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

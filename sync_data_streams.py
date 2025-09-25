@@ -1,37 +1,16 @@
 #!/usr/bin/env python3
-"""
-Multi-Modal Data Stream Synchronization Script
 
-This script demonstrates how to align timestamps across different sensor modalities
-using the session metadata and timing information recorded by the IRCamera system.
 
-Usage:
-    python sync_data_streams.py <session_directory>
-
-The script expects to find the following files in the session directory:
-- session_metadata.json: Session timing and metadata
-- thermal_stats_*.csv: Thermal camera data with synchronized timestamps
-- gsr_data_*.csv: GSR sensor data with synchronized timestamps
-- rgb_video_*.mp4: RGB video file (timing derived from metadata)
-
-Author: IRCamera Synchronization System
-"""
-
-import json
-import pandas as pd
-import numpy as np
 import argparse
-import os
-from pathlib import Path
-from typing import Dict, List, Optional, Tuple
-from datetime import datetime
 import glob
+import json
+import numpy as np
+import pandas as pd
+from pathlib import Path
+from typing import Dict, List
 
 
 class MultiModalSynchronizer:
-    """
-    Synchronizes data streams from multiple sensor modalities using session metadata.
-    """
 
     def __init__(self, session_directory: str):
         self.session_dir = Path(session_directory)
@@ -40,11 +19,10 @@ class MultiModalSynchronizer:
         self.gsr_data = None
         self.sync_events = None
 
-        # Load session metadata
         self._load_session_metadata()
 
     def _load_session_metadata(self):
-        """Load session metadata from JSON file."""
+
         metadata_file = self.session_dir / "session_metadata.json"
 
         if not metadata_file.exists():
@@ -58,20 +36,18 @@ class MultiModalSynchronizer:
         print(f"Recording duration: {self.session_metadata.get('recordingDurationMs', 'N/A')}ms")
 
     def load_thermal_data(self) -> pd.DataFrame:
-        """Load and parse thermal camera data."""
+
         thermal_files = glob.glob(str(self.session_dir / "thermal_stats_*.csv"))
 
         if not thermal_files:
             print("Warning: No thermal data files found")
             return pd.DataFrame()
 
-        thermal_file = thermal_files[0]  # Use first file found
+        thermal_file = thermal_files[0]
         print(f"Loading thermal data from: {thermal_file}")
 
-        # Read CSV, skipping comment lines
         df = pd.read_csv(thermal_file, comment='#')
 
-        # Ensure we have the expected columns
         expected_cols = ['timestamp_wall_ms', 'timestamp_relative_ms', 'timestamp_monotonic_ns',
                          'frame_sequence', 'min_temp_c', 'avg_temp_c', 'max_temp_c', 'pixel_count']
 
@@ -80,7 +56,6 @@ class MultiModalSynchronizer:
         else:
             print("Warning: Thermal data may be in legacy format without full synchronization")
 
-        # Convert timestamps to datetime for easier handling
         if 'timestamp_wall_ms' in df.columns:
             df['datetime'] = pd.to_datetime(df['timestamp_wall_ms'], unit='ms')
 
@@ -88,20 +63,18 @@ class MultiModalSynchronizer:
         return df
 
     def load_gsr_data(self) -> pd.DataFrame:
-        """Load and parse GSR sensor data."""
+
         gsr_files = glob.glob(str(self.session_dir / "gsr_data_*.csv"))
 
         if not gsr_files:
             print("Warning: No GSR data files found")
             return pd.DataFrame()
 
-        gsr_file = gsr_files[0]  # Use first file found
+        gsr_file = gsr_files[0]
         print(f"Loading GSR data from: {gsr_file}")
 
-        # Read CSV, skipping comment lines
         df = pd.read_csv(gsr_file, comment='#')
 
-        # Ensure we have the expected columns
         expected_cols = ['timestamp_wall_ms', 'timestamp_relative_ms', 'timestamp_monotonic_ns',
                          'gsr_microsiemens', 'gsr_raw_12bit', 'ppg_raw', 'quality_score',
                          'connection_rssi']
@@ -111,7 +84,6 @@ class MultiModalSynchronizer:
         else:
             print("Warning: GSR data may be in legacy format without full synchronization")
 
-        # Convert timestamps to datetime
         if 'timestamp_wall_ms' in df.columns:
             df['datetime'] = pd.to_datetime(df['timestamp_wall_ms'], unit='ms')
 
@@ -119,7 +91,7 @@ class MultiModalSynchronizer:
         return df
 
     def extract_sync_events(self) -> pd.DataFrame:
-        """Extract synchronization events from session metadata."""
+
         if not self.session_metadata or 'syncEvents' not in self.session_metadata:
             print("Warning: No sync events found in session metadata")
             return pd.DataFrame()
@@ -141,18 +113,9 @@ class MultiModalSynchronizer:
         return df
 
     def align_data_streams(self, window_ms: int = 100) -> Dict[str, pd.DataFrame]:
-        """
-        Align data streams using relative timestamps from session start.
-        
-        Args:
-            window_ms: Time window in milliseconds for alignment tolerance
-            
-        Returns:
-            Dictionary containing aligned data frames
-        """
+
         aligned_data = {}
 
-        # Use relative timestamps as the common time base
         if self.thermal_data is not None and not self.thermal_data.empty:
             if 'timestamp_relative_ms' in self.thermal_data.columns:
                 thermal_aligned = self.thermal_data.copy()
@@ -172,15 +135,7 @@ class MultiModalSynchronizer:
         return aligned_data
 
     def find_simultaneous_events(self, window_ms: int = 50) -> List[Dict]:
-        """
-        Find data points that occur simultaneously across modalities.
-        
-        Args:
-            window_ms: Time window for considering events simultaneous
-            
-        Returns:
-            List of simultaneous event dictionaries
-        """
+
         aligned_data = self.align_data_streams()
         simultaneous_events = []
 
@@ -191,13 +146,12 @@ class MultiModalSynchronizer:
         thermal_df = aligned_data['thermal']
         gsr_df = aligned_data['gsr']
 
-        # Find overlapping time ranges
         thermal_times = thermal_df['common_time_ms'].values
-        gsr_times = gsr_df['common_time_ms'].values
+        gsr_df['common_time_ms'].values
 
         for thermal_time in thermal_times[
-                            ::10]:  # Sample every 10th thermal frame to reduce computation
-            # Find GSR samples within window
+            ::10]:
+
             gsr_matches = gsr_df[
                 (gsr_df['common_time_ms'] >= thermal_time - window_ms) &
                 (gsr_df['common_time_ms'] <= thermal_time + window_ms)
@@ -205,7 +159,7 @@ class MultiModalSynchronizer:
 
             if not gsr_matches.empty:
                 thermal_match = thermal_df[thermal_df['common_time_ms'] == thermal_time].iloc[0]
-                gsr_match = gsr_matches.iloc[0]  # Take closest match
+                gsr_match = gsr_matches.iloc[0]
 
                 simultaneous_events.append({
                     'common_time_ms': thermal_time,
@@ -220,7 +174,7 @@ class MultiModalSynchronizer:
         return simultaneous_events
 
     def generate_sync_report(self) -> str:
-        """Generate a synchronization quality report."""
+
         report = []
         report.append("=== Multi-Modal Data Synchronization Report ===")
         report.append(f"Session ID: {self.session_metadata['sessionId']}")
@@ -229,7 +183,6 @@ class MultiModalSynchronizer:
             f"Recording Duration: {self.session_metadata.get('recordingDurationMs', 'N/A')}ms")
         report.append("")
 
-        # Data stream summary
         if self.thermal_data is not None and not self.thermal_data.empty:
             thermal_duration = self.thermal_data['timestamp_relative_ms'].max() - self.thermal_data[
                 'timestamp_relative_ms'].min()
@@ -241,13 +194,11 @@ class MultiModalSynchronizer:
                 'timestamp_relative_ms'].min()
             report.append(f"GSR Data: {len(self.gsr_data)} samples over {gsr_duration:.1f}ms")
 
-        # Sync events
         if self.sync_events is not None and not self.sync_events.empty:
             report.append(f"Sync Events: {len(self.sync_events)} recorded")
             for _, event in self.sync_events.iterrows():
                 report.append(f"  - {event['event_type']} at {event['relative_offset_ms']:.1f}ms")
 
-        # Simultaneous events analysis
         simultaneous = self.find_simultaneous_events()
         if simultaneous:
             report.append(f"\nSimultaneous Events: {len(simultaneous)} found")
@@ -260,8 +211,8 @@ class MultiModalSynchronizer:
         return "\n".join(report)
 
     def export_aligned_data(self, output_file: str = "aligned_data.csv"):
-        """Export aligned data to CSV for further analysis."""
-        aligned_data = self.align_data_streams()
+
+        self.align_data_streams()
         simultaneous_events = self.find_simultaneous_events()
 
         if simultaneous_events:
@@ -282,19 +233,16 @@ def main():
     args = parser.parse_args()
 
     try:
-        # Initialize synchronizer
+
         synchronizer = MultiModalSynchronizer(args.session_directory)
 
-        # Load data streams
         synchronizer.load_thermal_data()
         synchronizer.load_gsr_data()
         synchronizer.extract_sync_events()
 
-        # Generate and display sync report
         report = synchronizer.generate_sync_report()
         print(report)
 
-        # Export aligned data if requested
         if args.export:
             synchronizer.export_aligned_data()
 

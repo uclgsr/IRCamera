@@ -1,0 +1,285 @@
+package com.mpdc4gsr.module.thermalunified.activity
+
+import android.content.Intent
+import android.media.MediaScannerConnection
+import android.net.Uri
+import android.view.View
+import androidx.activity.viewModels
+import androidx.core.view.isVisible
+import androidx.recyclerview.widget.GridLayoutManager
+import com.mpdc4gsr.libunified.app.bean.GalleryBean
+import com.mpdc4gsr.libunified.app.bean.GalleryTitle
+import com.mpdc4gsr.libunified.app.bean.event.GalleryDelEvent
+import com.mpdc4gsr.libunified.app.bean.event.ReportCreateEvent
+import com.mpdc4gsr.libunified.app.config.ExtraKeyConfig
+import com.mpdc4gsr.libunified.app.config.FileConfig
+import com.mpdc4gsr.libunified.app.config.RouterConfig
+import com.mpdc4gsr.libunified.app.dialog.TipDialog
+import com.mpdc4gsr.libunified.app.ktbase.BaseActivity
+import com.mpdc4gsr.libunified.app.lms.weiget.TToast
+import com.mpdc4gsr.libunified.app.navigation.NavigationManager
+import com.mpdc4gsr.libunified.app.repository.GalleryRepository.DirType
+import com.mpdc4gsr.libunified.app.tools.FileTools.getUri
+import com.mpdc4gsr.libunified.app.tools.ToastTools
+import com.mpdc4gsr.libunified.app.utils.Constants.IS_REPORT_FIRST
+import com.mpdc4gsr.module.thermalunified.R
+import com.mpdc4gsr.module.thermalunified.adapter.GalleryAdapter
+import com.mpdc4gsr.module.thermalunified.report.bean.ReportConditionBean
+import com.mpdc4gsr.module.thermalunified.report.bean.ReportIRBean
+import com.mpdc4gsr.module.thermalunified.report.bean.ReportInfoBean
+import com.mpdc4gsr.module.thermalunified.viewmodel.IRGalleryViewModel
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
+import java.io.File
+import com.mpdc4gsr.libunified.R as LibR
+
+
+class ReportPickImgActivity : BaseActivity(), View.OnClickListener {
+
+    private var isTC007 = false
+
+    private val viewModel: IRGalleryViewModel by viewModels()
+
+    private val adapter = GalleryAdapter(this)
+
+    private lateinit var titleView: com.mpdc4gsr.libunified.app.view.TitleView
+    private lateinit var clShare: androidx.constraintlayout.widget.ConstraintLayout
+    private lateinit var clDelete: androidx.constraintlayout.widget.ConstraintLayout
+    private lateinit var groupBottom: androidx.constraintlayout.widget.Group
+    private lateinit var irGalleryRecycler: androidx.recyclerview.widget.RecyclerView
+
+    override fun initContentView() = R.layout.activity_report_pick_img
+
+    override fun initView() {
+
+        titleView = findViewById(R.id.title_view)
+        clShare = findViewById(R.id.cl_share)
+        clDelete = findViewById(R.id.cl_delete)
+        groupBottom = findViewById(R.id.group_bottom)
+        irGalleryRecycler = findViewById(R.id.ir_gallery_recycler)
+
+        isTC007 = intent.getBooleanExtra(ExtraKeyConfig.IS_TC007, false)
+
+        titleView.setRightDrawable(LibR.drawable.ic_toolbar_check_svg)
+        titleView.setRightClickListener { setEditMode(true) }
+
+        initRecycler()
+
+        clShare.setOnClickListener(this)
+        clDelete.setOnClickListener(this)
+
+        showLoadingDialog()
+
+        viewModel.showListLD.observe(this) {
+            adapter.refreshList(it)
+            dismissLoadingDialog()
+        }
+        viewModel.deleteResultLD.observe(this) {
+            if (it) {
+                TToast.shortToast(this@ReportPickImgActivity, R.string.test_results_delete_success)
+                adapter.isEditMode = false
+                EventBus.getDefault().post(GalleryDelEvent())
+                MediaScannerConnection.scanFile(
+                    this,
+                    arrayOf(if (isTC007) FileConfig.tc007GalleryDir else FileConfig.lineGalleryDir),
+                    null,
+                    null,
+                )
+                viewModel.queryAllReportImg(if (isTC007) DirType.TC007 else DirType.LINE)
+            } else {
+                TToast.shortToast(
+                    this@ReportPickImgActivity,
+                    LibR.string.test_results_delete_failed
+                )
+            }
+        }
+        viewModel.queryAllReportImg(if (isTC007) DirType.TC007 else DirType.LINE)
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    fun onReportCreate(event: ReportCreateEvent) {
+        finish()
+    }
+
+    override fun initData() {
+    }
+
+    @Deprecated("Deprecated in Java")
+    override fun onBackPressed() {
+        if (adapter.isEditMode) {
+            setEditMode(false)
+        } else {
+            @Suppress("DEPRECATION")
+            super.onBackPressed()
+        }
+    }
+
+    private fun setEditMode(isEditMode: Boolean) {
+        adapter.isEditMode = isEditMode
+        groupBottom.isVisible = isEditMode
+        titleView.setTitleText(
+            if (isEditMode) getString(LibR.string.chosen_item, adapter.selectList.size) else getString(
+                LibR.string.app_gallery
+            ),
+        )
+        titleView.setLeftDrawable(if (isEditMode) 0 else 0)
+        titleView.setLeftClickListener {
+            if (isEditMode) {
+                setEditMode(false)
+            } else {
+                finish()
+            }
+        }
+        titleView.setRightDrawable(if (isEditMode) 0 else LibR.drawable.ic_toolbar_check_svg)
+        titleView.setRightText(if (isEditMode) getString(LibR.string.report_select_all) else "")
+        titleView.setRightClickListener {
+            if (isEditMode) {
+                adapter.selectAll()
+            } else {
+                setEditMode(true)
+            }
+        }
+    }
+
+    override fun onClick(v: View?) {
+        when (v) {
+            clShare -> {
+                shareImage()
+            }
+
+            clDelete -> {
+                deleteImage()
+            }
+        }
+    }
+
+    private fun initRecycler() {
+        val spanCount = 3
+        val gridLayoutManager = GridLayoutManager(this, spanCount)
+
+        gridLayoutManager.spanSizeLookup =
+            object : GridLayoutManager.SpanSizeLookup() {
+                override fun getSpanSize(position: Int): Int {
+                    return if (adapter.dataList[position] is GalleryTitle) spanCount else 1
+                }
+            }
+        irGalleryRecycler.adapter = adapter
+        irGalleryRecycler.layoutManager = gridLayoutManager
+
+        adapter.onLongEditListener = {
+
+            groupBottom.isVisible = true
+            titleView.setTitleText(getString(LibR.string.chosen_item, adapter.selectList.size))
+            titleView.setLeftDrawable(0)
+            titleView.setLeftClickListener {
+                setEditMode(false)
+            }
+            titleView.setRightDrawable(0)
+            titleView.setRightText(getString(LibR.string.report_select_all))
+            titleView.setRightClickListener {
+                adapter.selectAll()
+            }
+        }
+
+        adapter.selectCallback = { selectList ->
+            titleView.setTitleText(getString(LibR.string.chosen_item, selectList.size))
+        }
+        adapter.itemClickCallback = {
+            val data = adapter.dataList[it] as? GalleryBean
+            val fileName = data?.name?.substringBeforeLast(".") ?: ""
+            val irPath = "${FileConfig.lineIrGalleryDir}/$fileName.ir"
+            if (File(irPath).exists()) {
+                val navigation =
+                    NavigationManager.getInstance().build(RouterConfig.IR_GALLERY_EDIT)
+                        .withBoolean(ExtraKeyConfig.IS_TC007, isTC007)
+                        .withBoolean(ExtraKeyConfig.IS_PICK_REPORT_IMG, true)
+                        .withBoolean(IS_REPORT_FIRST, false)
+                        .withString(ExtraKeyConfig.FILE_ABSOLUTE_PATH, irPath)
+
+                val reportInfo = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+                    intent.getParcelableExtra(ExtraKeyConfig.REPORT_INFO, ReportInfoBean::class.java)
+                } else {
+                    @Suppress("DEPRECATION")
+                    intent.getParcelableExtra<ReportInfoBean>(ExtraKeyConfig.REPORT_INFO)
+                }
+                reportInfo?.let {
+                    navigation.withParcelable(ExtraKeyConfig.REPORT_INFO, it)
+                }
+                val reportCondition = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+                    intent.getParcelableExtra(ExtraKeyConfig.REPORT_CONDITION, ReportConditionBean::class.java)
+                } else {
+                    @Suppress("DEPRECATION")
+                    intent.getParcelableExtra<ReportConditionBean>(ExtraKeyConfig.REPORT_CONDITION)
+                }
+                reportCondition?.let {
+                    navigation.withParcelable(ExtraKeyConfig.REPORT_CONDITION, it)
+                }
+                val reportIrList = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+                    intent.getParcelableArrayListExtra(ExtraKeyConfig.REPORT_IR_LIST, ReportIRBean::class.java)
+                } else {
+                    @Suppress("DEPRECATION")
+                    intent.getParcelableArrayListExtra<ReportIRBean>(ExtraKeyConfig.REPORT_IR_LIST)
+                }
+                reportIrList?.let {
+                    navigation.withParcelableArrayList(ExtraKeyConfig.REPORT_IR_LIST, it)
+                }
+
+                navigation.navigation(this)
+            } else {
+                ToastTools.showShort(LibR.string.album_report_on_edit)
+            }
+        }
+    }
+
+    private fun deleteImage() {
+        val deleteList = adapter.buildSelectList()
+        if (deleteList.size > 0) {
+            TipDialog.Builder(this)
+                .setMessage(
+                    getString(
+                        LibR.string.tip_delete_chosen,
+                        deleteList.size,
+                    ),
+                )
+                .setPositiveListener(LibR.string.app_confirm) {
+                    viewModel.delete(deleteList, if (isTC007) DirType.TC007 else DirType.LINE, true)
+                }.setCancelListener(LibR.string.app_cancel)
+                .create().show()
+        } else {
+            ToastTools.showShort(getString(LibR.string.tip_least_select))
+        }
+    }
+
+    private fun shareImage() {
+        val data = adapter.buildSelectList()
+        if (data.size == 0) {
+            ToastTools.showShort(getString(LibR.string.tip_least_select))
+            return
+        }
+        if (data.size > 9) {
+            ToastTools.showShort(getString(LibR.string.Limite_di_9carte))
+            return
+        }
+        val imageUris = ArrayList<Uri>()
+        val shareIntent = Intent()
+        if (data.size == 1) {
+            if (data[0].name.uppercase().endsWith(".MP4")) {
+                shareIntent.type = "video/*"
+            } else {
+                shareIntent.type = "image/*"
+            }
+            shareIntent.action = Intent.ACTION_SEND
+            val uri = getUri(File(data[0].path))
+            shareIntent.putExtra(Intent.EXTRA_STREAM, uri)
+        } else {
+            shareIntent.type = "video/*"
+            for (bean in data) {
+                imageUris.add(getUri(File(bean.path)))
+            }
+            shareIntent.action = Intent.ACTION_SEND_MULTIPLE
+            shareIntent.putExtra(Intent.EXTRA_STREAM, imageUris)
+        }
+        startActivity(Intent.createChooser(shareIntent, getString(LibR.string.battery_share)))
+    }
+}

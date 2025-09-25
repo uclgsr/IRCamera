@@ -7,7 +7,7 @@
         android:background="#f5f5f5"
         android:orientation="vertical">
 
-        <!-- Category Filter -->
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -33,7 +33,7 @@
 
         </LinearLayout>
 
-        <!-- Main Content -->
+
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -44,7 +44,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <!-- Templates Grid -->
+
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
@@ -57,7 +57,7 @@
                         android:nestedScrollingEnabled="false"
                         android:padding="8dp" />
 
-                    <!-- Empty View -->
+
                     <LinearLayout
                         android:id="@+id/empty_view"
                         android:layout_width="match_parent"
@@ -77,7 +77,7 @@
 
                 </FrameLayout>
 
-                <!-- Selected Template Details -->
+
                 <LinearLayout
                     android:id="@+id/selected_template_container"
                     android:layout_width="match_parent"

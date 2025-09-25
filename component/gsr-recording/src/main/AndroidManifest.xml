@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- Permissions for GSR recording -->
+
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
-    <!-- Bluetooth permissions for Shimmer3 GSR device connection -->
+
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission
@@ -16,7 +16,7 @@
     <uses-permission
         android:name="android.permission.ACCESS_FINE_LOCATION"
         android:maxSdkVersion="30" />
-    <!-- Android 12+ Bluetooth permissions -->
+
     <uses-permission
         android:name="android.permission.BLUETOOTH_SCAN"
         android:usesPermissionFlags="neverForLocation" />
@@ -31,9 +31,9 @@
         android:required="false" />
 
     <application>
-        <!-- Multi-modal recording service -->
+
         <service
-            android:name="com.topdon.gsr.service.MultiModalRecordingService"
+            android:name="com.mpdc4gsr.gsr.service.MultiModalRecordingService"
             android:enabled="true"
             android:exported="false" />
     </application>

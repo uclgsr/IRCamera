@@ -1,22 +1,14 @@
 #!/usr/bin/env python3
-"""
-MVP Components Demo for IRCamera PC Controller Hub
 
-Demonstrates the implemented MVP components and their integration
-without requiring a full GUI environment.
-"""
 
 import sys
 import tempfile
-import time
 from pathlib import Path
 
-# Add src to path
 sys.path.insert(0, str(Path(__file__).parent / "src"))
 
 
 def demonstrate_configuration():
-    """Demonstrate configuration system."""
     print("=" * 60)
     print("CONFIGURATION SYSTEM")
     print("=" * 60)
@@ -38,39 +30,34 @@ def demonstrate_configuration():
 
 
 def demonstrate_session_management():
-    """Demonstrate session management capabilities."""
     print("\n" + "=" * 60)
     print("SESSION MANAGEMENT")
     print("=" * 60)
 
     try:
-        from ircamera_pc.core.session import SessionManager, SessionState
+        from ircamera_pc.core.session import SessionManager
 
         # Create session manager with temporary directory
         with tempfile.TemporaryDirectory() as temp_dir:
             session_manager = SessionManager()
             print("✓ Session manager initialized")
 
-            # Create a test session
             session_name = "MVP Demo Session"
             session_metadata = session_manager.create_session(session_name)
             session_id = session_metadata.session_id
             print(f"✓ Session created: {session_name}")
             print(f"  Session ID: {session_metadata}")
 
-            # Get session details
             session = session_manager.get_session(session_id)
             if session:
                 print(f"  Session state: {session.state}")
                 print(f"  Created at: {session.created_at}")
                 print(f"  Session directory: {session_manager.get_session_directory(session_id)}")
 
-            # Demonstrate session directory creation
             session_dir = session_manager.get_session_directory(session_id)
             if session_dir and session_dir.exists():
                 print("✓ Session directory created successfully")
 
-                # Check for metadata file
                 metadata_file = session_dir / "metadata.json"
                 if metadata_file.exists():
                     print("✓ Session metadata file created")
@@ -86,20 +73,18 @@ def demonstrate_session_management():
 
 
 def demonstrate_device_discovery():
-    """Demonstrate device discovery concepts."""
     print("\n" + "=" * 60)
     print("DEVICE DISCOVERY & MANAGEMENT")
     print("=" * 60)
 
     try:
-        # Test discovery components without full network setup
+
         print("Device Discovery Components:")
         print("✓ Zeroconf service discovery framework")
         print("✓ Device registry and capability management")
         print("✓ Connection state tracking")
         print("✓ Heartbeat monitoring")
 
-        # Simulate device discovery
         print("\nSimulated Device Discovery:")
         devices = [
             {"name": "Android-GSR-001", "type": "ANDROID_NODE", "ip": "192.168.1.100",
@@ -126,7 +111,6 @@ def demonstrate_device_discovery():
 
 
 def demonstrate_communication_protocol():
-    """Demonstrate communication protocol concepts."""
     print("\n" + "=" * 60)
     print("COMMUNICATION PROTOCOL")
     print("=" * 60)
@@ -138,7 +122,6 @@ def demonstrate_communication_protocol():
         print("✓ Response types: ack, error, status_update")
         print("✓ Data streaming: gsr_data, heartbeat")
 
-        # Demonstrate message structure
         print("\nSample Protocol Messages:")
 
         start_command = {
@@ -189,7 +172,6 @@ def demonstrate_communication_protocol():
 
 
 def demonstrate_gui_architecture():
-    """Demonstrate GUI architecture concepts."""
     print("\n" + "=" * 60)
     print("GUI ARCHITECTURE")
     print("=" * 60)
@@ -225,7 +207,6 @@ def demonstrate_gui_architecture():
 
 
 def demonstrate_integration_architecture():
-    """Demonstrate the overall Hub-and-Spoke integration."""
     print("\n" + "=" * 60)
     print("HUB-AND-SPOKE INTEGRATION ARCHITECTURE")
     print("=" * 60)
@@ -274,7 +255,6 @@ def demonstrate_integration_architecture():
 
 
 def main():
-    """Run the MVP components demonstration."""
     print("IRCamera PC Controller Hub - MVP Implementation Demo")
     print("=" * 80)
     print("This demonstration shows the implemented components of the")
@@ -306,7 +286,6 @@ def main():
             print(f"\n❌ {demo_name} - ERROR: {e}")
             results.append((demo_name, False))
 
-    # Final summary
     print("\n" + "=" * 80)
     print("IMPLEMENTATION SUMMARY")
     print("=" * 80)

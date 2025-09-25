@@ -21,26 +21,93 @@ tasks.register<Delete>("clean") {
     delete(rootProject.layout.buildDirectory.get().asFile)
 }
 
-// Custom task to build only release variants (since debug variants are disabled)
+// Enhanced clean task that also cleans all subprojects  
+tasks.register("cleanAll") {
+    group = "build"
+    description = "Clean all modules including build cache"
+    dependsOn("clean")
+    doLast {
+        // Do NOT delete .gradle directory to avoid Windows file lock issues
+        // Clean root build directory
+        delete(file("${rootProject.projectDir}/build"))
+
+        // Clean all subproject build directories
+        subprojects.forEach { subproject ->
+            delete(file("${subproject.projectDir}/build"))
+        }
+
+        println("All modules cleaned successfully (without deleting .gradle cache)")
+    }
+}
+
+
 tasks.register("buildRelease") {
     group = "build"
-    description = "Builds all modules using only release variants"
+    description = "Builds all modules using only release variants (starts with clean)"
     dependsOn(
+        "cleanAll",
         ":app:assembleRelease",
         ":BleModule:assembleRelease",
-        ":libapp:assembleRelease",
-        ":libcom:assembleRelease",
-        ":libir:assembleRelease",
-        ":libmatrix:assembleRelease",
-        ":libmenu:assembleRelease",
-        ":libui:assembleRelease",
-        ":RangeSeekBar:assembleRelease",
-        ":component:CommonComponent:assembleRelease",
+        ":libunified:assembleRelease",
         ":component:gsr-recording:assembleRelease",
-        ":component:pseudo:assembleRelease",
-        ":component:thermal:assembleRelease",
-        ":component:thermal-ir:assembleRelease",
-        ":component:thermal-lite:assembleRelease",
+        ":component:thermalunified:assembleRelease",
         ":component:user:assembleRelease"
+    )
+}
+
+tasks.register("buildDebug") {
+    group = "build"
+    description = "Builds all modules using only debug variants (starts with clean)"
+    dependsOn(
+        "cleanAll",
+        ":app:assembleDebug",
+        ":BleModule:assembleDebug",
+        ":libunified:assembleDebug",
+        ":component:gsr-recording:assembleDebug",
+        ":component:thermalunified:assembleDebug",
+        ":component:user:assembleDebug"
+    )
+}
+
+// Simplified unified build task for clean + build
+tasks.register("build") {
+    group = "build"
+    description = "Clean and build all modules (release)"
+    dependsOn("cleanAll", "buildRelease")
+}
+
+tasks.register("buildAll") {
+    group = "build"
+    description = "Builds all modules with all variants (starts with clean)"
+    dependsOn("cleanAll")
+    finalizedBy("buildRelease", "buildDebug")
+}
+
+// Create safer wrapper tasks for common build operations
+tasks.register("compileDebugSafe") {
+    group = "build"
+    description = "Safe debug compilation (clean + compile)"
+    dependsOn("cleanAll")
+    finalizedBy(
+        ":app:compileDebugSources",
+        ":BleModule:compileDebugSources",
+        ":libunified:compileDebugSources",
+        ":component:gsr-recording:compileDebugSources",
+        ":component:thermalunified:compileDebugSources",
+        ":component:user:compileDebugSources"
+    )
+}
+
+tasks.register("compileReleaseSafe") {
+    group = "build"
+    description = "Safe release compilation (clean + compile)"
+    dependsOn("cleanAll")
+    finalizedBy(
+        ":app:compileReleaseSources",
+        ":BleModule:compileReleaseSources",
+        ":libunified:compileReleaseSources",
+        ":component:gsr-recording:compileReleaseSources",
+        ":component:thermalunified:compileReleaseSources",
+        ":component:user:compileReleaseSources"
     )
 }

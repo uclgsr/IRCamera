@@ -13,7 +13,7 @@
         android:layout_height="match_parent"
         android:padding="12dp">
 
-        <!-- Selection Indicator -->
+
         <View
             android:id="@+id/selection_indicator"
             android:layout_width="4dp"
@@ -22,7 +22,7 @@
             android:background="#4CAF50"
             android:visibility="gone" />
 
-        <!-- Template Icon -->
+
         <TextView
             android:id="@+id/template_icon"
             android:layout_width="40dp"
@@ -33,7 +33,7 @@
             android:text="📊"
             android:textSize="24sp" />
 
-        <!-- Template Name -->
+
         <TextView
             android:id="@+id/template_name"
             android:layout_width="match_parent"
@@ -50,7 +50,7 @@
             android:textSize="12sp"
             android:textStyle="bold" />
 
-        <!-- Category -->
+
         <TextView
             android:id="@+id/template_category"
             android:layout_width="match_parent"
@@ -66,7 +66,7 @@
             android:textColor="#666666"
             android:textSize="10sp" />
 
-        <!-- Bottom Row: Sensors and Duration -->
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -77,7 +77,7 @@
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
-            <!-- Sensors -->
+
             <TextView
                 android:id="@+id/template_sensors"
                 android:layout_width="0dp"
@@ -87,7 +87,7 @@
                 android:text="📊🌡️📸"
                 android:textSize="12sp" />
 
-            <!-- Duration -->
+
             <TextView
                 android:id="@+id/template_duration"
                 android:layout_width="wrap_content"
