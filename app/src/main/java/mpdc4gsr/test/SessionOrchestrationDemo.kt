@@ -184,7 +184,7 @@ class SessionOrchestrationDemo(
     /**
      * Display session manifest information
      */
-    private fun displaySessionManifest(manifest: SessionManifest) {
+    private fun displaySessionManifest(manifest: RecordingController.SessionManifest) {
         Log.i(TAG, "")
         Log.i(TAG, "=== SESSION MANIFEST ===")
         Log.i(TAG, "Session ID: ${manifest.sessionId}")
@@ -194,7 +194,7 @@ class SessionOrchestrationDemo(
         Log.i(TAG, "")
 
         Log.i(TAG, "Sensor Activity Summary:")
-        manifest.sensorActivitySummary.forEach { (sensorName: String, info: SensorActivityInfo) ->
+        manifest.sensorActivitySummary.forEach { (sensorName, info) ->
             Log.i(TAG, "  $sensorName:")
             Log.i(TAG, "    - Active: ${info.wasActive}")
             Log.i(TAG, "    - Started Successfully: ${info.startedSuccessfully}")  
@@ -213,9 +213,9 @@ class SessionOrchestrationDemo(
         if (manifest.events.isNotEmpty()) {
             Log.i(TAG, "")
             Log.i(TAG, "Session Events (${manifest.events.size}):")
-            manifest.events.take(10).forEach { event: SessionEvent ->
+            manifest.events.take(10).forEach { event ->
                 val status = if (event.success) "✓" else "✗"
-                Log.i(TAG, "  $status ${event.eventType}${event.sensorId?.let { " ($it)" } ?: ""}")
+                Log.i(TAG, "  $status ${event.eventType}${if (event.sensorId != null) " (${event.sensorId})" else ""}")
                 if (!event.success && event.errorMessage != null) {
                     Log.i(TAG, "    Error: ${event.errorMessage}")
                 }

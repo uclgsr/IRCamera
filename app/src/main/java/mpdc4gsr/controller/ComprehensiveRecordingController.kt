@@ -61,16 +61,6 @@ class ComprehensiveRecordingController(
         STOPPED_INCOMPLETE
     }
 
-    // Type aliases for compatibility with RecordingController
-    companion object {
-        typealias SessionManifest = RecordingController.SessionManifest
-        typealias SessionEvent = RecordingController.SessionEvent
-        typealias SensorActivityInfo = RecordingController.SensorActivityInfo
-        typealias SensorHealthInfo = RecordingController.SensorHealthInfo
-        typealias DropoutEvent = RecordingController.DropoutEvent
-        typealias ReconnectionEvent = RecordingController.ReconnectionEvent
-    }
-
 
     private val _isRecording = AtomicBoolean(false)
     val isRecording: Boolean get() = _isRecording.get()
@@ -84,7 +74,7 @@ class ComprehensiveRecordingController(
     // Session orchestration state
     private val currentSessionState = java.util.concurrent.atomic.AtomicReference(SessionState.IDLE)
     private var lastTriggerSource: TriggerSource? = null
-    private val sessionEvents = mutableListOf<SessionEvent>()
+    private val sessionEvents = mutableListOf<RecordingController.SessionEvent>()
 
     private val _errorFlow = MutableStateFlow<RecordingError?>(null)
     val errorFlow: StateFlow<RecordingError?> = _errorFlow.asStateFlow()
@@ -113,8 +103,8 @@ class ComprehensiveRecordingController(
 
     fun addSensorRecorder(name: String, recorder: SensorRecorder) {
         sensorRecorders[name] = recorder
-        sensorHealthStatus[name] = SensorHealthInfo(
-            sensorId = name,
+        sensorHealthStatus[name] = ComprehensiveSensorHealthInfo(
+            name = name,
             isHealthy = true,
             lastHealthCheck = System.currentTimeMillis(),
             consecutiveFailures = 0,
@@ -904,7 +894,7 @@ class ComprehensiveRecordingController(
         errorMessage: String? = null,
         metadata: Map<String, String> = emptyMap()
     ) {
-        val event = SessionEvent(
+        val event = RecordingController.SessionEvent(
             eventType = eventType,
             timestampMs = System.currentTimeMillis(),
             sensorId = sensorId,
@@ -940,7 +930,7 @@ class ComprehensiveRecordingController(
     }
 
     // Session manifest generation
-    fun generateSessionManifest(): SessionManifest {
+    fun generateSessionManifest(): RecordingController.SessionManifest {
         val sessionDirectory = currentSessionDirectory?.rootDir?.name ?: currentSessionId ?: "unknown"
         val startTime = sessionStartTime.get()
         val stopTime = if (currentSessionState.get() in listOf(
@@ -958,7 +948,7 @@ class ComprehensiveRecordingController(
             val wasActive = activeRecorders[sensorName] == true
             val healthInfo = sensorHealthStatus[sensorName]
 
-            SensorActivityInfo(
+            RecordingController.SensorActivityInfo(
                 sensorName = sensorName,
                 wasActive = wasActive,
                 startedSuccessfully = wasActive,
@@ -975,7 +965,7 @@ class ComprehensiveRecordingController(
             it.eventType.contains("WARNING") || it.eventType.contains("CRITICAL")
         }.map { "${it.eventType}: ${it.metadata}" }
 
-        return SessionManifest(
+        return RecordingController.SessionManifest(
             sessionId = sessionDirectory,
             startTime = startTime,
             stopTime = stopTime,
