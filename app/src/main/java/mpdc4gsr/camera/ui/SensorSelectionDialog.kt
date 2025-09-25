@@ -43,8 +43,11 @@ class SensorSelectionDialog(
                 val shimmerManager = ShimmerBluetoothManagerAndroid(context, Handler(Looper.getMainLooper()))
 
                 val hasConnectedShimmerDevices = try {
-                    // Try to use Shimmer manager to check for devices, but fallback gracefully
-                    false // Simplified implementation for now
+                    // Use Shimmer manager to check for connected GSR-capable devices
+                    val deviceMap = shimmerManager.shimmerDeviceList
+                    deviceMap.values.any { device ->
+                        device.isConnected && device.enabledSensors.contains("GSR")
+                    }
                 } catch (e: Exception) {
                     Log.w(TAG, "Error checking connected Shimmer devices: ${e.message}")
                     false
