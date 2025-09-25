@@ -6,9 +6,12 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.cancel
 import mpdc4gsr.permissions.PermissionController
 import mpdc4gsr.sensors.unified.ShimmerDeviceManager
 import mpdc4gsr.sensors.unified.UnifiedGSRRecorder
+import mpdc4gsr.sensors.unified.model.DeviceInfo
 
 
 class BLEIntegrationTestActivity : AppCompatActivity() {
@@ -127,7 +130,16 @@ class BLEIntegrationTestActivity : AppCompatActivity() {
 
                         kotlinx.coroutines.delay(5000)
 
-                        val scanResults = deviceManager?.scanResults?.value ?: emptyList()
+                        // Collect the latest scan results
+                        var scanResults = emptyList<DeviceInfo>()
+                        val resultsJob = launch {
+                            deviceManager?.scanResults?.collect { results ->
+                                scanResults = results
+                            }
+                        }
+                        delay(100) // Give time to collect
+                        resultsJob.cancel()
+                        
                         addLog("✅ BLE scan results: ${scanResults.size} devices found")
 
                         deviceManager?.stopDeviceScanning()
