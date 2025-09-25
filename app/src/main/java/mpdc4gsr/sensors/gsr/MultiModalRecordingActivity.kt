@@ -210,7 +210,7 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
         sessionManager = SessionManager.getInstance(this)
 
         // Initialize RGB Camera Recorder with PreviewView
-        val previewView = binding.previewView
+        val previewView = binding.previewView.previewView
         rgbCameraRecorder = RgbCameraRecorder(
             context = this,
             lifecycleOwner = this,
@@ -818,9 +818,12 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
                 if (videoStopped) {
                     recordingInfo.add("Video recording completed")
                 }
-                rgbCameraRecorder?.getRawImagesDirectory()?.let { dir ->
-                    val rawCount = rgbCameraRecorder?.getRawCaptureCount() ?: 0
-                    recordingInfo.add("RAW images: $rawCount in ${dir.name}")
+                rgbCameraRecorder?.let { camera ->
+                    val stats = camera.getFrameCaptureStats()
+                    val frameCount = stats["frames_captured"] as? Long ?: 0
+                    if (frameCount > 0) {
+                        recordingInfo.add("Frames captured: $frameCount")
+                    }
                 }
                 recordingInfo.add("GSR samples: ${it.sampleCount}")
 
