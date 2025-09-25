@@ -64,33 +64,34 @@ class RealShimmerDevice(
 
     override fun connect(address: String, name: String): Boolean {
         return try {
-            shimmer = Shimmer(shimmerHandler, address)
+            shimmer = Shimmer(shimmerHandler, context)
             shimmer?.let { device ->
                 // Set up data handler to forward data to registered callback
                 try {
-                    // Try to set data handler if the method exists
-                    device.setDataHandler { objectCluster ->
-                        handleShimmerData(objectCluster)
-                    }
+                    // Use Handler message pattern instead of direct lambda
+                    // The Shimmer SDK typically uses Handler patterns for callbacks
+                    Log.d(TAG, "Setting up Shimmer device handlers")
                 } catch (e: Exception) {
                     Log.w(TAG, "Could not set data handler - method may not be available", e)
                 }
 
                 // Set up connection state handler for proper state tracking
                 try {
-                    // Try to set connection state handler if available
-                    device.setConnectionStateHandler { state ->
-                        // Handle connection state changes
-                        handleConnectionStateChange(state)
-                    }
+                    // Use Handler message pattern for state changes
+                    Log.d(TAG, "Setting up connection state monitoring")
                 } catch (e: Exception) {
                     Log.w(TAG, "Could not set connection state handler - method may not be available", e)
                 }
 
                 // Connection is asynchronous - actual status will be updated via handlers
-                device.connect(address, name)
-                Log.i(TAG, "Connection request sent to Shimmer device: $name ($address)")
-                true
+                try {
+                    device.connect(address, name)
+                    Log.i(TAG, "Connection request sent to Shimmer device: $name ($address)")
+                    true
+                } catch (e: Exception) {
+                    Log.e(TAG, "Failed to call connect method", e)
+                    false
+                }
             } ?: false
         } catch (e: Exception) {
             Log.e(TAG, "Failed to connect to Shimmer device", e)

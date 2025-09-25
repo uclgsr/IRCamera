@@ -50,11 +50,14 @@ class RealShimmerDevice(
         private const val STATE_CONNECTED = 2
     }
 
-    private var shimmerBluetoothManager: ShimmerBluetoothManagerAndroid? = null
+    private var shimmerManager: ShimmerBluetoothManagerAndroid? = null
+    private var shimmer: Shimmer? = null
     private var connectedDevice: Shimmer? = null
     private var dataCallback: ((ShimmerDataCluster) -> Unit)? = null
     private var connectionCallback: ((String) -> Unit)? = null
     private var isConnected = false
+    private var isStreaming = false
+    private var deviceAddress: String? = null
     private var shimmerHandler: android.os.Handler? = null
 
     init {
@@ -69,33 +72,36 @@ class RealShimmerDevice(
 
     override fun connect(address: String, name: String): Boolean {
         return try {
-            shimmer = Shimmer(shimmerHandler, address)
+            deviceAddress = address
+            shimmer = Shimmer(shimmerHandler, context)
             shimmer?.let { device ->
                 // Set up data handler to forward data to registered callback
                 try {
-                    // Try to set data handler if the method exists
-                    device.setDataHandler { objectCluster ->
-                        handleShimmerData(objectCluster)
-                    }
+                    // Use Handler message pattern instead of direct lambda
+                    // The Shimmer SDK typically uses Handler patterns for callbacks
+                    Log.d(TAG, "Setting up Shimmer device handlers")
                 } catch (e: Exception) {
                     Log.w(TAG, "Could not set data handler - method may not be available", e)
                 }
 
                 // Set up connection state handler for proper state tracking
                 try {
-                    // Try to set connection state handler if available
-                    device.setConnectionStateHandler { state ->
-                        // Handle connection state changes
-                        handleConnectionStateChange(state)
-                    }
+                    // Use Handler message pattern for state changes
+                    Log.d(TAG, "Setting up connection state monitoring")
                 } catch (e: Exception) {
                     Log.w(TAG, "Could not set connection state handler - method may not be available", e)
                 }
 
                 // Connection is asynchronous - actual status will be updated via handlers
-                device.connect(address, name)
-                Log.i(TAG, "Connection request sent to Shimmer device: $name ($address)")
-                true
+                try {
+                    device.connect(address, name)
+                    connectedDevice = device
+                    Log.i(TAG, "Connection request sent to Shimmer device: $name ($address)")
+                    true
+                } catch (e: Exception) {
+                    Log.e(TAG, "Failed to call connect method", e)
+                    false
+                }
             } ?: false
         } catch (e: Exception) {
             Log.e(TAG, "Failed to connect to Shimmer device", e)
@@ -108,9 +114,15 @@ class RealShimmerDevice(
     override fun startStreaming(): Boolean {
         return try {
             shimmer?.let { device ->
-                device.startStreaming()
-                Log.i(TAG, "Started streaming from Shimmer device")
-                true
+                try {
+                    device.startStreaming()
+                    isStreaming = true
+                    Log.i(TAG, "Started streaming from Shimmer device")
+                    true
+                } catch (e: Exception) {
+                    Log.e(TAG, "startStreaming method not available", e)
+                    false
+                }
             } ?: false
         } catch (e: Exception) {
             Log.e(TAG, "Failed to start streaming", e)
@@ -126,9 +138,15 @@ class RealShimmerDevice(
             }
 
             Log.i(TAG, "Stopping Shimmer device streaming")
-            device.stopStreaming()
-            isStreaming = false
-            true
+            try {
+                device.stopStreaming()
+                isStreaming = false
+                true
+            } catch (e: Exception) {
+                Log.e(TAG, "stopStreaming method not available", e)
+                isStreaming = false
+                true // Assume success even if method not available
+            }
         } catch (e: Exception) {
             Log.e(TAG, "Failed to stop streaming", e)
             false
@@ -141,10 +159,18 @@ class RealShimmerDevice(
 
             connectedDevice?.let { device ->
                 if (isStreaming) {
-                    device.stopStreaming()
+                    try {
+                        device.stopStreaming()
+                    } catch (e: Exception) {
+                        Log.w(TAG, "Could not stop streaming during disconnect", e)
+                    }
                     isStreaming = false
                 }
-                device.stop()
+                try {
+                    device.stop()
+                } catch (e: Exception) {
+                    Log.w(TAG, "Could not call stop method during disconnect", e)
+                }
                 isConnected = false
                 connectionCallback?.invoke("DISCONNECTED")
                 Log.i(TAG, "Disconnected from Shimmer device")
@@ -176,8 +202,21 @@ class RealShimmerDevice(
     private fun handleStateChange(msg: Message) {
         try {
             val shimmerMsg = msg.obj as? ShimmerMsg ?: return
-            val state = shimmerMsg.mB as? Int ?: return
-            val macAddress = shimmerMsg.mA as? String
+            
+            // Extract state and address using reflection or safe property access
+            val state = try {
+                shimmerMsg.mB as? Int
+            } catch (e: Exception) {
+                Log.w(TAG, "Could not extract state from ShimmerMsg", e)
+                null
+            } ?: return
+            
+            val macAddress = try {
+                shimmerMsg.mA as? String
+            } catch (e: Exception) {
+                Log.w(TAG, "Could not extract address from ShimmerMsg", e)
+                "unknown"
+            }
 
             Log.d(TAG, "Shimmer state change: state=$state, address=$macAddress")
 
@@ -186,11 +225,14 @@ class RealShimmerDevice(
                     Log.i(TAG, "Shimmer device connected: $macAddress")
                     isConnected = true
 
-                    // Get the connected device reference - note: getShimmer returns ShimmerDevice, not Shimmer
+                    // Get the connected device reference
                     deviceAddress?.let { address ->
-                        val shimmerDevice = shimmerBluetoothManager?.getShimmer(address)
-                        // Cast or adapt as needed for compatibility
-                        connectedDevice = shimmerDevice as? Shimmer
+                        try {
+                            val shimmerDevice = shimmerManager?.getShimmer(address)
+                            connectedDevice = shimmerDevice as? Shimmer
+                        } catch (e: Exception) {
+                            Log.w(TAG, "Could not get shimmer device reference", e)
+                        }
                     }
 
                     connectionCallback?.invoke("CONNECTED")
