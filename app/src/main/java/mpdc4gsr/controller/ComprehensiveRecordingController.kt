@@ -12,12 +12,13 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import mpdc4gsr.controller.SessionManifest
-import mpdc4gsr.controller.SessionEvent
-import mpdc4gsr.controller.SensorActivityInfo
-import mpdc4gsr.controller.SensorHealthInfo
-import mpdc4gsr.controller.DropoutEvent
-import mpdc4gsr.controller.ReconnectionEvent
+// Use proper type aliases from RecordingController
+typealias SessionManifest = RecordingController.SessionManifest
+typealias SessionEvent = RecordingController.SessionEvent
+typealias SensorActivityInfo = RecordingController.SensorActivityInfo
+typealias SensorHealthInfo = RecordingController.SensorHealthInfo
+typealias DropoutEvent = RecordingController.DropoutEvent
+typealias ReconnectionEvent = RecordingController.ReconnectionEvent
 import mpdc4gsr.controller.RecordingController
 import mpdc4gsr.data.SessionMetadata
 import mpdc4gsr.permissions.PermissionManager
