@@ -3,6 +3,7 @@ package mpdc4gsr.sensors.gsr
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
+import android.os.Message
 import android.util.Log
 import androidx.lifecycle.LifecycleOwner
 import com.mpdc4gsr.gsr.service.ShimmerDataCluster
@@ -11,6 +12,7 @@ import com.mpdc4gsr.gsr.service.ShimmerDeviceInterface
 import com.shimmerresearch.android.Shimmer
 import com.shimmerresearch.android.manager.ShimmerBluetoothManagerAndroid
 import com.shimmerresearch.driver.ObjectCluster
+import com.shimmerresearch.driver.ShimmerMsg
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -20,7 +22,7 @@ import mpdc4gsr.sensors.unified.ShimmerDeviceManager
  * Real Shimmer device factory that uses the actual Shimmer libraries from app/libs
  * instead of mock implementations
  */
-class RealShimmerDeviceFactory(
+class RealShimmerDeviceFactory @JvmOverloads constructor(
     private val context: Context,
     private val lifecycleOwner: LifecycleOwner? = null
 ) : ShimmerDeviceFactory {
@@ -51,14 +53,31 @@ class RealShimmerDevice(
     private var connectedDevice: Shimmer? = null
     private var dataCallback: ((ShimmerDataCluster) -> Unit)? = null
     private var connectionCallback: ((String) -> Unit)? = null
-    private val mainHandler = Handler(Looper.getMainLooper())
     private var isConnected = false
     private var isStreaming = false
+    private var deviceAddress: String? = null
+    
+    // Handler to process Shimmer messages from the SDK
+    private val shimmerMessageHandler = object : Handler(Looper.getMainLooper()) {
+        override fun handleMessage(msg: Message) {
+            when (msg.what) {
+                ShimmerMsg.MSG_IDENTIFIER_STATE_CHANGE -> {
+                    handleStateChange(msg)
+                }
+                ShimmerMsg.MSG_IDENTIFIER_DATA_PACKET -> {
+                    handleDataPacket(msg)
+                }
+                else -> {
+                    Log.d(TAG, "Received unknown Shimmer message: ${msg.what}")
+                }
+            }
+        }
+    }
     
     init {
         try {
-            shimmerBluetoothManager = ShimmerBluetoothManagerAndroid(context, mainHandler)
-            Log.i(TAG, "Real Shimmer device initialized with official SDK")
+            shimmerBluetoothManager = ShimmerBluetoothManagerAndroid(context, shimmerMessageHandler)
+            Log.i(TAG, "Real Shimmer device initialized with official SDK and message handler")
         } catch (e: Exception) {
             Log.e(TAG, "Failed to initialize Shimmer Bluetooth Manager", e)
         }
@@ -73,21 +92,13 @@ class RealShimmerDevice(
                 return false
             }
             
+            deviceAddress = address
+            
             // Use official Shimmer API to connect
             btManager.connectShimmerThroughBTAddress(address)
             
-            // Simple connection state tracking (real implementation would use proper callbacks)
-            isConnected = true
-            connectionCallback?.invoke("CONNECTED")
-            
-            // Get the connected device for future operations
-            // Note: This is simplified - in real implementation you'd wait for connection callback
-            try {
-                connectedDevice = btManager.getShimmer(address)
-            } catch (e: Exception) {
-                Log.w(TAG, "Could not get connected device immediately: ${e.message}")
-            }
-            
+            // Connection state will be updated via message handler
+            Log.i(TAG, "Connection request sent to Shimmer device: $address")
             true
         } catch (e: Exception) {
             Log.e(TAG, "Failed to connect to Shimmer device: $address", e)
@@ -145,6 +156,7 @@ class RealShimmerDevice(
             
             connectedDevice = null
             isConnected = false
+            deviceAddress = null
             connectionCallback?.invoke("DISCONNECTED")
             true
         } catch (e: Exception) {
@@ -159,24 +171,73 @@ class RealShimmerDevice(
     
     override fun setDataCallback(callback: (ShimmerDataCluster) -> Unit) {
         this.dataCallback = callback
-
-        // Set up data callback on the actual Shimmer device
-        connectedDevice?.let { device ->
-            // Remove any previous listeners if needed (not shown here)
-            // Set up the data packet callback using Shimmer SDK's mechanisms
-            if (isStreaming) {
-                // Register a listener for new data packets
-                device.setDataReceivedListener { objectCluster ->
-                    // Wrap the ObjectCluster in a RealShimmerDataCluster and invoke the callback
-                    dataCallback?.invoke(RealShimmerDataCluster(objectCluster))
-                }
-                Log.d(TAG, "Data callback registered with real Shimmer device")
-            }
-        }
+        Log.d(TAG, "Data callback set on real Shimmer device")
     }
     
     override fun setConnectionCallback(callback: (String) -> Unit) {
         this.connectionCallback = callback
+        Log.d(TAG, "Connection callback set on real Shimmer device")
+    }
+    
+    /**
+     * Handle Shimmer state change messages from the official SDK
+     */
+    private fun handleStateChange(msg: Message) {
+        try {
+            val shimmerMsg = msg.obj as? ShimmerMsg ?: return
+            val state = shimmerMsg.mB as? Int ?: return
+            val macAddress = shimmerMsg.mA as? String
+            
+            Log.d(TAG, "Shimmer state change: state=$state, address=$macAddress")
+            
+            when (state) {
+                Shimmer.STATE_CONNECTED -> {
+                    Log.i(TAG, "Shimmer device connected: $macAddress")
+                    isConnected = true
+                    
+                    // Get the connected device reference
+                    deviceAddress?.let { address ->
+                        connectedDevice = shimmerBluetoothManager?.getShimmer(address)
+                    }
+                    
+                    connectionCallback?.invoke("CONNECTED")
+                }
+                Shimmer.STATE_CONNECTING -> {
+                    Log.i(TAG, "Shimmer device connecting: $macAddress")
+                    connectionCallback?.invoke("CONNECTING")
+                }
+                Shimmer.STATE_NONE -> {
+                    Log.i(TAG, "Shimmer device disconnected: $macAddress")
+                    isConnected = false
+                    isStreaming = false
+                    connectedDevice = null
+                    connectionCallback?.invoke("DISCONNECTED")
+                }
+                else -> {
+                    Log.d(TAG, "Unknown Shimmer state: $state for device: $macAddress")
+                }
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Error handling Shimmer state change", e)
+        }
+    }
+    
+    /**
+     * Handle Shimmer data packet messages from the official SDK
+     */
+    private fun handleDataPacket(msg: Message) {
+        try {
+            val shimmerMsg = msg.obj as? ShimmerMsg ?: return
+            val objectCluster = shimmerMsg.mB as? ObjectCluster ?: return
+            
+            // Forward data to callback if set
+            dataCallback?.let { callback ->
+                val dataCluster = RealShimmerDataCluster(objectCluster)
+                callback(dataCluster)
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Error handling Shimmer data packet", e)
+        }
     }
 }
 

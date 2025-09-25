@@ -5,19 +5,18 @@ import com.mpdc4gsr.gsr.service.ShimmerDeviceFactory
 import com.mpdc4gsr.gsr.service.ShimmerDeviceInterface
 import org.junit.Test
 import org.junit.Assert.*
-import org.mockito.Mock
-import org.mockito.junit.MockitoJUnitRunner
+import io.mockk.mockk
 import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
 
 /**
  * Test to validate that RealShimmerDeviceFactory can be instantiated 
  * and creates proper ShimmerDeviceInterface instances
  */
-@RunWith(MockitoJUnitRunner::class)
+@RunWith(RobolectricTestRunner::class)
 class RealShimmerDeviceFactoryTest {
 
-    @Mock
-    private lateinit var mockContext: Context
+    private val mockContext: Context = mockk(relaxed = true)
 
     @Test
     fun `factory creates ShimmerDeviceInterface instance`() {
@@ -59,5 +58,6 @@ class RealShimmerDeviceFactoryTest {
 
         // Then
         assertFalse("Device should not be connected initially", isConnected)
+    }
     }
 }
