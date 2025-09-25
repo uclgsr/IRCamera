@@ -29,6 +29,7 @@ import com.mpdc4gsr.libunified.app.tools.ConstantLanguages
 import com.mpdc4gsr.libunified.app.utils.NetWorkUtils
 import com.mpdc4gsr.libunified.app.utils.WifiUtil
 import com.mpdc4gsr.libunified.app.utils.WsCmdConstants
+import com.mpdc4gsr.libunified.model.IRTempConfig
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -47,7 +48,7 @@ abstract class BaseApplication : Application() {
 
     var tau_data_H: ByteArray? = null
     var tau_data_L: ByteArray? = null
-    var config: com.mpdc4gsr.module.thermalunified.bean.DataBean? = null
+    var config: IRTempConfig? = null
 
     val module: String get() = javaClass.simpleName
 
@@ -164,7 +165,7 @@ abstract class BaseApplication : Application() {
         //     val fileList: List<FileBean>? = TS004Repository.getNewestFile(if (isVideo) 1 else 0)
         //     if (!fileList.isNullOrEmpty()) {
         //         val fileBean: FileBean = fileList[0]
-        //         val url = "http://192.168.40.1:8080/DCIM/${fileBean.name}"
+        //         val url = "http://192.168.40.1:8080/DCIM/${'$'}{fileBean.name}"
         //         val file = File(FileConfig.ts004GalleryDir, fileBean.name)
         //         TS004Repository.download(url, file)
         //         MediaScannerConnection.scanFile(
@@ -193,7 +194,7 @@ abstract class BaseApplication : Application() {
                         capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
                     ) {
                         connectWebSocket()
-                        Log.i("WebSocket", "WiFi network connected: $activeNetwork")
+                        Log.i("WebSocket", "WiFi network connected: ${'$'}activeNetwork")
                     }
                 } else {
 
@@ -202,7 +203,7 @@ abstract class BaseApplication : Application() {
                     @Suppress("DEPRECATION")
                     if (activeNetwork?.isConnected == true && activeNetwork.type == ConnectivityManager.TYPE_WIFI) {
                         connectWebSocket()
-                        Log.i("WebSocket", "WiFi network connected (legacy): ${activeNetwork.type}")
+                        Log.i("WebSocket", "WiFi network connected (legacy): ${'$'}{activeNetwork.type}")
                     }
                 }
             }
@@ -235,7 +236,7 @@ abstract class BaseApplication : Application() {
             try {
                 AppDatabase.getInstance().thermalDao().deleteZero(SharedManager.getUserId())
             } catch (e: Exception) {
-                XLog.e("delete db error: ${e.message}")
+                XLog.e("delete db error: ${'$'}{e.message}")
             }
         }
     }

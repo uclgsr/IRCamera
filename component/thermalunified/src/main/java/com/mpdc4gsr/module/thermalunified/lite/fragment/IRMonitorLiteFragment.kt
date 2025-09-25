@@ -630,261 +630,32 @@ class IRMonitorLiteFragment : BaseFragment(), ITsTempListener {
     // Temperature measurement wrapper methods for compatibility with IRMonitorLiteActivity
     // These methods provide a bridge between the AC020 TemperatureView and the expected API
     fun getPointTemp(point: Point): com.energy.iruvc.sdkisp.LibIRTemp.TemperatureSampleResult? {
-        // Use actual LibIRTempAC020 for point temperature measurement
+        // Delegate to TemperatureView built-in implementation
         return try {
-            // Get the actual temperature data using LibIRTempAC020
-            val config = BaseApplication.instance.config
-            if (config != null && BaseApplication.instance.tau_data_H != null && BaseApplication.instance.tau_data_L != null) {
-                val temp = LibIRTempAC020.getTemperature(
-                    point.x, point.y,
-                    config.emissivity,
-                    config.distance,
-                    0.8f
-                )
-                
-                val correctedTemp = LibIRTempAC020.temperatureCorrection(
-                    temp,
-                    BaseApplication.instance.tau_data_H,
-                    BaseApplication.instance.tau_data_L,
-                    config.emissivity,
-                    config.distance,
-                    config.ambientTemperature,
-                    config.humidity,
-                    config.transmittance,
-                    if (basicGainGetValue[0] == 0) GainStatus.LOW_GAIN else GainStatus.HIGH_GAIN
-                )
-                
-                createRealTemperatureSampleResult(correctedTemp, "Point", point.x, point.y)
-            } else {
-                // Fallback to estimation if calibration data not available
-                val estimatedTemp = estimateTemperatureAtPoint(point.x, point.y)
-                createTemperatureSampleResult(estimatedTemp, "Point")
-            }
+            temperatureView.getPointTemp(point)
         } catch (e: Exception) {
-            Log.w(TAG, "Failed to measure point temperature with LibIRTempAC020", e)
-            // Fallback to basic estimation
-            try {
-                val estimatedTemp = estimateTemperatureAtPoint(point.x, point.y)
-                createTemperatureSampleResult(estimatedTemp, "Point")
-            } catch (fallbackE: Exception) {
-                Log.e(TAG, "Failed point temperature fallback", fallbackE)
-                null
-            }
+            XLog.w(TAG, "getPointTemp failed: ${e.message}")
+            null
         }
     }
 
     fun getLineTemp(line: Line): com.energy.iruvc.sdkisp.LibIRTemp.TemperatureSampleResult? {
-        // Use LibIRTempAC020 for line temperature measurement by sampling multiple points
+        // Delegate to TemperatureView built-in implementation
         return try {
-            val config = BaseApplication.instance.config
-            if (config != null && BaseApplication.instance.tau_data_H != null && BaseApplication.instance.tau_data_L != null) {
-                val samples = 10
-                val temperatures = mutableListOf<Float>()
-                
-                for (i in 0 until samples) {
-                    val t = i.toFloat() / (samples - 1)
-                    val x = (line.start.x + t * (line.end.x - line.start.x)).toInt()
-                    val y = (line.start.y + t * (line.end.y - line.start.y)).toInt()
-                    
-                    try {
-                        val temp = LibIRTempAC020.getTemperature(
-                            x, y,
-                            config.emissivity,
-                            config.distance,
-                            0.8f
-                        )
-                        
-                        val correctedTemp = LibIRTempAC020.temperatureCorrection(
-                            temp,
-                            BaseApplication.instance.tau_data_H,
-                            BaseApplication.instance.tau_data_L,
-                            config.emissivity,
-                            config.distance,
-                            config.ambientTemperature,
-                            config.humidity,
-                            config.transmittance,
-                            if (basicGainGetValue[0] == 0) GainStatus.LOW_GAIN else GainStatus.HIGH_GAIN
-                        )
-                        
-                        temperatures.add(correctedTemp)
-                    } catch (e: Exception) {
-                        Log.w(TAG, "Failed to measure temperature at line point ($x, $y)", e)
-                    }
-                }
-                
-                if (temperatures.isNotEmpty()) {
-                    createTemperatureSampleResultWithRange(temperatures, "Line (LibIRTempAC020)")
-                } else {
-                    // Fallback to estimation
-                    val avgTemp = estimateAverageTemperatureAlongLine(line)
-                    createTemperatureSampleResult(avgTemp, "Line")
-                }
-            } else {
-                val avgTemp = estimateAverageTemperatureAlongLine(line)
-                createTemperatureSampleResult(avgTemp, "Line")
-            }
+            temperatureView.getLineTemp(line)
         } catch (e: Exception) {
-            Log.w(TAG, "Failed to measure line temperature with LibIRTempAC020", e)
-            try {
-                val avgTemp = estimateAverageTemperatureAlongLine(line)
-                createTemperatureSampleResult(avgTemp, "Line")
-            } catch (fallbackE: Exception) {
-                Log.e(TAG, "Failed line temperature fallback", fallbackE)
-                null
-            }
+            XLog.w(TAG, "getLineTemp failed: ${e.message}")
+            null
         }
     }
 
     fun getRectTemp(rect: Rect): com.energy.iruvc.sdkisp.LibIRTemp.TemperatureSampleResult? {
-        // Use LibIRTempAC020 for rectangle area temperature measurement
+        // Delegate to TemperatureView built-in implementation
         return try {
-            val config = BaseApplication.instance.config
-            if (config != null && BaseApplication.instance.tau_data_H != null && BaseApplication.instance.tau_data_L != null) {
-                val gridSize = 5 // 5x5 sampling grid
-                val temperatures = mutableListOf<Float>()
-                
-                for (i in 0 until gridSize) {
-                    for (j in 0 until gridSize) {
-                        val x = rect.left + (rect.width() * i / (gridSize - 1))
-                        val y = rect.top + (rect.height() * j / (gridSize - 1))
-                        
-                        try {
-                            val temp = LibIRTempAC020.getTemperature(
-                                x, y,
-                                config.emissivity,
-                                config.distance,
-                                0.8f
-                            )
-                            
-                            val correctedTemp = LibIRTempAC020.temperatureCorrection(
-                                temp,
-                                BaseApplication.instance.tau_data_H,
-                                BaseApplication.instance.tau_data_L,
-                                config.emissivity,
-                                config.distance,
-                                config.ambientTemperature,
-                                config.humidity,
-                                config.transmittance,
-                                if (basicGainGetValue[0] == 0) GainStatus.LOW_GAIN else GainStatus.HIGH_GAIN
-                            )
-                            
-                            temperatures.add(correctedTemp)
-                        } catch (e: Exception) {
-                            Log.w(TAG, "Failed to measure temperature at rect point ($x, $y)", e)
-                        }
-                    }
-                }
-                
-                if (temperatures.isNotEmpty()) {
-                    createTemperatureSampleResultWithRange(temperatures, "Rectangle (LibIRTempAC020)")
-                } else {
-                    // Fallback to estimation
-                    val avgTemp = estimateAverageTemperatureInRect(rect)
-                    createTemperatureSampleResult(avgTemp, "Rectangle")
-                }
-            } else {
-                val avgTemp = estimateAverageTemperatureInRect(rect)
-                createTemperatureSampleResult(avgTemp, "Rectangle")
-            }
+            temperatureView.getRectTemp(rect)
         } catch (e: Exception) {
-            Log.w(TAG, "Failed to measure rectangle temperature with LibIRTempAC020", e)
-            try {
-                val avgTemp = estimateAverageTemperatureInRect(rect)
-                createTemperatureSampleResult(avgTemp, "Rectangle")
-            } catch (fallbackE: Exception) {
-                Log.e(TAG, "Failed rectangle temperature fallback", fallbackE)
-                null
-            }
-        }
-    }
-    
-    // Helper methods for temperature estimation
-    private fun estimateTemperatureAtPoint(x: Int, y: Int): Float {
-        // Basic temperature estimation based on coordinate position
-        // This would normally access actual thermal sensor data
-        return 25.0f + (x + y) * 0.01f // Simple estimation algorithm
-    }
-    
-    private fun estimateAverageTemperatureAlongLine(line: Line): Float {
-        // Estimate temperature along a line by sampling multiple points
-        val samples = 10
-        var totalTemp = 0f
-        
-        for (i in 0 until samples) {
-            val t = i.toFloat() / (samples - 1)
-            val x = (line.start.x + t * (line.end.x - line.start.x)).toInt()
-            val y = (line.start.y + t * (line.end.y - line.start.y)).toInt()
-            totalTemp += estimateTemperatureAtPoint(x, y)
-        }
-        
-        return totalTemp / samples
-    }
-    
-    private fun estimateAverageTemperatureInRect(rect: Rect): Float {
-        // Estimate average temperature within a rectangular area
-        val samples = 25 // 5x5 grid
-        var totalTemp = 0f
-        val gridSize = 5
-        
-        for (i in 0 until gridSize) {
-            for (j in 0 until gridSize) {
-                val x = rect.left + (rect.width() * i / (gridSize - 1))
-                val y = rect.top + (rect.height() * j / (gridSize - 1))
-                totalTemp += estimateTemperatureAtPoint(x, y)
-            }
-        }
-        
-        return totalTemp / samples
-    }
-    
-    private fun createTemperatureSampleResultWithRange(temperatures: List<Float>, type: String): com.energy.iruvc.sdkisp.LibIRTemp.TemperatureSampleResult {
-        // Create a temperature sample result with min/max range for multi-point measurements
-        val avgTemp = if (temperatures.isNotEmpty()) temperatures.average().toFloat() else 0f
-        val minTemp = temperatures.minOrNull() ?: avgTemp
-        val maxTemp = temperatures.maxOrNull() ?: avgTemp
-        
-        return object : com.energy.iruvc.sdkisp.LibIRTemp.TemperatureSampleResult {
-            override fun getTemperature(): Float = avgTemp
-            override fun getType(): String = type
-            override fun getTimestamp(): Long = System.currentTimeMillis()
-            override fun isValid(): Boolean = temperatures.isNotEmpty()
-            
-            // Required methods for LibIRTemp.TemperatureSampleResult interface
-            override fun getMaxTemperature(): Float = maxTemp
-            override fun getMinTemperature(): Float = minTemp
-        }
-    }
-
-    private fun createTemperatureSampleResult(temperature: Float, type: String): com.energy.iruvc.sdkisp.LibIRTemp.TemperatureSampleResult {
-        // Create a temperature sample result object for fallback cases
-        return object : com.energy.iruvc.sdkisp.LibIRTemp.TemperatureSampleResult {
-            override fun getTemperature(): Float = temperature
-            override fun getType(): String = type
-            override fun getTimestamp(): Long = System.currentTimeMillis()
-            override fun isValid(): Boolean = true
-            
-            // Required methods for LibIRTemp.TemperatureSampleResult interface
-            override fun getMaxTemperature(): Float = temperature
-            override fun getMinTemperature(): Float = temperature
-        }
-    }
-    
-    private fun createRealTemperatureSampleResult(temperature: Float, type: String, x: Int, y: Int): com.energy.iruvc.sdkisp.LibIRTemp.TemperatureSampleResult {
-        // Create a temperature sample result using actual LibIRTempAC020 data
-        return object : com.energy.iruvc.sdkisp.LibIRTemp.TemperatureSampleResult {
-            override fun getTemperature(): Float = temperature
-            override fun getType(): String = "$type (LibIRTempAC020)"
-            override fun getTimestamp(): Long = System.currentTimeMillis()
-            override fun isValid(): Boolean = true
-            
-            // Required methods for LibIRTemp.TemperatureSampleResult interface
-            override fun getMaxTemperature(): Float = temperature
-            override fun getMinTemperature(): Float = temperature
-            
-            // Additional properties for enhanced result
-            fun getX(): Int = x
-            fun getY(): Int = y
-            fun isCalibrated(): Boolean = true
+            XLog.w(TAG, "getRectTemp failed: ${e.message}")
+            null
         }
     }
 }
