@@ -84,12 +84,12 @@ graph TB
     GradleBuild2 --> Settings
     
     %% Styling
-    classDef appLayer fill:
-    classDef libLayer fill:
-    classDef componentLayer fill:
-    classDef externalLayer fill:
-    classDef cicdLayer fill:
-    classDef buildLayer fill:
+    classDef appLayer
+    classDef libLayer
+    classDef componentLayer
+    classDef externalLayer
+    classDef cicdLayer
+    classDef buildLayer
     
     class App,MainActivity appLayer
     class LibApp,LibCom,LibIR,LibMatrix,LibMenu,LibUI libLayer
