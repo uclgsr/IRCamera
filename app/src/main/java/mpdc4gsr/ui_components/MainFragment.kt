@@ -518,7 +518,7 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
                         "• 4K video at 30/60fps\n" +
                         "• Fast session switching (~200ms)\n" +
                         "• Samsung S22 optimizations\n" +
-                        "• CameraModeSelector UI\n\n" +
+                        "• Unified camera controls\n\n" +
                         "Implementation ready for integration.",
             )
             .setPositiveListener("Got it") { }
