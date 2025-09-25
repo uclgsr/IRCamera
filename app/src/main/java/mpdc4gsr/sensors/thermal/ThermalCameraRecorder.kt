@@ -422,12 +422,23 @@ class ThermalCameraRecorder(
                 Log.d(TAG, "Recording already active")
                 return true
             }
-            // Start recording with current session
-            val sessionManager = SessionDirectoryManager(context)
-            val sessionId = sessionManager.generateSessionId()
-            val sessionDir = sessionManager.createSessionDirectory(sessionId)
-            val sessionMetadata = SessionMetadata.createSessionStart(sessionId)
-            val recordingSuccess = startRecording(sessionDir.directory.absolutePath, sessionMetadata)
+            
+            // Reuse existing session if available, otherwise create new one
+            val existingSessionDirectory = sessionDirectory
+            val existingSessionMetadata = sessionMetadata
+            
+            val recordingSuccess = if (existingSessionDirectory.isNotEmpty() && existingSessionMetadata != null) {
+                Log.d(TAG, "Reusing existing session directory: $existingSessionDirectory")
+                startRecording(existingSessionDirectory, existingSessionMetadata)
+            } else {
+                Log.d(TAG, "No existing session found, creating new session for recovery")
+                val sessionManager = SessionDirectoryManager(context)
+                val sessionId = sessionManager.generateSessionId()
+                val sessionDir = sessionManager.createSessionDirectory(sessionId)
+                val newSessionMetadata = SessionMetadata.createSessionStart(sessionId)
+                startRecording(sessionDir.rootDir.absolutePath, newSessionMetadata)
+            }
+            
             Log.d(TAG, "Thermal recording restart result: $recordingSuccess")
             recordingSuccess
         } catch (e: Exception) {
@@ -3485,6 +3496,42 @@ class ThermalCameraRecorder(
             Log.w(TAG, "HDF5 library not available, creating HDF5-compatible JSON format instead")
             val hdf5JsonFile = File(exportDir, "thermal_data.json")
             
+            // Prepare arrays for thermal data storage
+            val timestamps = mutableListOf<Long>()
+            val frameIndices = mutableListOf<Long>()
+            val minTemps = mutableListOf<Float>()
+            val maxTemps = mutableListOf<Float>()
+            val avgTemps = mutableListOf<Float>()
+            val centerTemps = mutableListOf<Float>()
+
+            // Read existing CSV data and convert to JSON format
+            val csvFile = File(sessionDirectory, THERMAL_DATA_FILENAME)
+            if (csvFile.exists()) {
+                csvFile.bufferedReader().use { reader ->
+                    var isHeader = true
+                    reader.forEachLine { line ->
+                        if (isHeader) {
+                            isHeader = false
+                            return@forEachLine
+                        }
+
+                        val values = line.split(",")
+                        if (values.size >= 6) {
+                            try {
+                                timestamps.add(values[0].toLong())
+                                frameIndices.add(values[1].toLong())
+                                minTemps.add(values[2].toFloat())
+                                maxTemps.add(values[3].toFloat())
+                                avgTemps.add(values[4].toFloat())
+                                centerTemps.add(values[5].toFloat())
+                            } catch (e: NumberFormatException) {
+                                Log.w(TAG, "Skipping malformed CSV line: $line")
+                            }
+                        }
+                    }
+                }
+            }
+            
             val hdf5Structure = JSONObject().apply {
                 put("format", "HDF5-Compatible JSON")
                 put("metadata", JSONObject().apply {
@@ -3497,11 +3544,27 @@ class ThermalCameraRecorder(
                     put("temperature_unit", "celsius")
                     put("emissivity", DEFAULT_EMISSIVITY.toFloat())
                 })
-                put("thermal_data", JSONObject())
+                put("thermal_data", JSONObject().apply {
+                    put("timestamps_ns", timestamps)
+                    put("frame_indices", frameIndices)
+                    put("min_temperatures_c", minTemps)
+                    put("max_temperatures_c", maxTemps)
+                    put("avg_temperatures_c", avgTemps)
+                    put("center_temperatures_c", centerTemps)
+                    if (includeImages) {
+                        put("temperature_matrices", JSONObject().apply {
+                            put("description", "Full temperature matrices for each frame")
+                            put("dimensions", "[frame, height, width]")
+                            put("height", IR_CAMERA_HEIGHT)
+                            put("width", IR_CAMERA_WIDTH)
+                            put("note", "Temperature matrices export requires additional implementation")
+                        })
+                    }
+                })
             }
             
             hdf5JsonFile.writeText(hdf5Structure.toString(2))
-            Log.i(TAG, "Created HDF5-compatible JSON file: ${hdf5JsonFile.absolutePath}")
+            Log.i(TAG, "Successfully exported ${timestamps.size} thermal frames to HDF5-compatible JSON: ${hdf5JsonFile.absolutePath}")
             
             return true
 
