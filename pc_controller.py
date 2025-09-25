@@ -78,18 +78,163 @@ try:
 except ImportError:
     PIL_AVAILABLE = False
 
+# OpenCV for native webcam support
+OPENCV_AVAILABLE = False
+try:
+    import cv2
+    OPENCV_AVAILABLE = True
+    logger.info("📹 OpenCV webcam support available")
+except ImportError:
+    logger.info("📷 No native webcam support (OpenCV not available)")
+
 # Optional C++ backend
 NATIVE_BACKEND_AVAILABLE = False
 try:
     sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'pc-controller/enhanced_native_backend'))
     import enhanced_native_backend
     NATIVE_BACKEND_AVAILABLE = True
-    logger.info("🚀 C++ backend available")
+    logger.info("🚀 C++ backend available for high-performance processing")
 except ImportError:
     logger.info("🐍 Using Python backend (C++ backend not available)")
 
 
-class Protocol:
+class WebcamCapture:
+    """Native webcam capture using OpenCV for PC-side video recording"""
+    
+    def __init__(self):
+        self.capture = None
+        self.is_capturing = False
+        self.frame_count = 0
+        
+    def start_capture(self, camera_id=0, width=640, height=480):
+        """Start webcam capture"""
+        if not OPENCV_AVAILABLE:
+            logger.warning("OpenCV not available, webcam capture disabled")
+            return False
+            
+        try:
+            self.capture = cv2.VideoCapture(camera_id)
+            if not self.capture.isOpened():
+                logger.error(f"Failed to open camera {camera_id}")
+                return False
+                
+            # Set resolution
+            self.capture.set(cv2.CAP_PROP_FRAME_WIDTH, width)
+            self.capture.set(cv2.CAP_PROP_FRAME_HEIGHT, height)
+            
+            self.is_capturing = True
+            self.frame_count = 0
+            logger.info(f"Started webcam capture: {width}x{height}")
+            return True
+            
+        except Exception as e:
+            logger.error(f"Failed to start webcam capture: {e}")
+            return False
+    
+    def capture_frame(self):
+        """Capture a single frame and return as JPEG bytes"""
+        if not self.is_capturing or not self.capture:
+            return None
+            
+        try:
+            ret, frame = self.capture.read()
+            if not ret:
+                return None
+                
+            self.frame_count += 1
+            
+            # Convert to JPEG
+            _, buffer = cv2.imencode('.jpg', frame, [cv2.IMWRITE_JPEG_QUALITY, 85])
+            return buffer.tobytes()
+            
+        except Exception as e:
+            logger.error(f"Frame capture failed: {e}")
+            return None
+    
+    def stop_capture(self):
+        """Stop webcam capture"""
+        self.is_capturing = False
+        if self.capture:
+            self.capture.release()
+            self.capture = None
+        logger.info(f"Stopped webcam capture (captured {self.frame_count} frames)")
+
+
+class DataProcessor:
+    """High-performance data processing with C++ backend integration"""
+    
+    def __init__(self):
+        self.use_cpp_backend = NATIVE_BACKEND_AVAILABLE
+        if self.use_cpp_backend:
+            try:
+                self.cpp_processor = enhanced_native_backend.DataProcessor()
+                logger.info("Using C++ backend for data processing")
+            except Exception as e:
+                logger.warning(f"C++ backend initialization failed: {e}, falling back to Python")
+                self.use_cpp_backend = False
+    
+    def process_gsr_data(self, raw_value: float, timestamp: float) -> Dict[str, Any]:
+        """Process GSR data using high-performance backend if available"""
+        if self.use_cpp_backend:
+            try:
+                # Use C++ backend for processing
+                result = self.cpp_processor.process_gsr_sample(raw_value, timestamp)
+                return {
+                    'timestamp': timestamp,
+                    'raw_value': raw_value,
+                    'processed_value': result.gsr_microsiemens,
+                    'quality': result.quality_score,
+                    'artifacts_detected': result.has_artifacts
+                }
+            except Exception as e:
+                logger.warning(f"C++ processing failed: {e}, using Python fallback")
+        
+        # Python fallback processing
+        return self._process_gsr_python(raw_value, timestamp)
+    
+    def _process_gsr_python(self, raw_value: float, timestamp: float) -> Dict[str, Any]:
+        """Python fallback for GSR processing"""
+        # Simple processing - convert to microsiemens
+        processed_value = raw_value * 0.00012207  # Shimmer3+ GSR+ calibration
+        
+        # Basic artifact detection
+        artifacts_detected = abs(raw_value) > 4000 or raw_value < 0
+        quality = 0.8 if not artifacts_detected else 0.3
+        
+        return {
+            'timestamp': timestamp,
+            'raw_value': raw_value,
+            'processed_value': processed_value,
+            'quality': quality,
+            'artifacts_detected': artifacts_detected
+        }
+    
+    def apply_filters(self, data: List[float], filter_type: str = "lowpass") -> List[float]:
+        """Apply signal filters using C++ backend if available"""
+        if self.use_cpp_backend and len(data) > 10:
+            try:
+                if filter_type == "lowpass":
+                    return self.cpp_processor.apply_lowpass_filter(data, 5.0, 50.0)
+                elif filter_type == "highpass":
+                    return self.cpp_processor.apply_highpass_filter(data, 0.5, 50.0)
+                elif filter_type == "notch":
+                    return self.cpp_processor.apply_notch_filter(data, 50.0, 50.0)
+            except Exception as e:
+                logger.warning(f"C++ filtering failed: {e}, using Python fallback")
+        
+        # Python fallback - simple moving average for lowpass
+        if filter_type == "lowpass" and len(data) > 5:
+            window = 5
+            filtered = []
+            for i in range(len(data)):
+                start = max(0, i - window // 2)
+                end = min(len(data), i + window // 2 + 1)
+                filtered.append(sum(data[start:end]) / (end - start))
+            return filtered
+        
+        return data
+
+
     """Unified protocol handler supporting both legacy text and modern JSON protocols"""
     
     # Legacy text protocol commands
@@ -581,6 +726,12 @@ class PCController(QMainWindow if GUI_AVAILABLE else object):
         self.port_spinner.setRange(1024, 65535)
         self.port_spinner.setValue(8080)
         layout.addWidget(self.port_spinner)
+        
+        # Webcam controls (if OpenCV available)
+        if OPENCV_AVAILABLE:
+            self.webcam_btn = QPushButton("Start PC Webcam")
+            self.webcam_btn.clicked.connect(self._toggle_webcam)
+            layout.addWidget(self.webcam_btn)
         
         return panel
     
