@@ -424,11 +424,13 @@ class ThermalCameraRecorder(
             }
             // Start recording with current session
             val sessionManager = SessionDirectoryManager(context)
-            val sessionMetadata = SessionMetadata.createSessionStart(sensorId).copy(
+            val sessionId = sessionManager.generateSessionId()
+            val sessionDir = sessionManager.createSessionDirectory(sessionId)
+            val sessionMetadata = SessionMetadata.createSessionStart(sessionId).copy(
                 participantId = "recovery_session",
                 studyName = "thermal_recovery"
             )
-            val recordingSuccess = startRecording(sessionDirectory, sessionMetadata)
+            val recordingSuccess = startRecording(sessionDir.rootDir.absolutePath, sessionMetadata)
             Log.d(TAG, "Thermal recording restart result: $recordingSuccess")
             recordingSuccess
         } catch (e: Exception) {
@@ -955,6 +957,7 @@ class ThermalCameraRecorder(
                                             "ThermalCameraRecorder",
                                             "Bitmap config is null; cannot safely copy thermal bitmap. Passing original bitmap."
                                         )
+                                        bitmap
                                     }
                                     val thermalData =
                                         if (ircamEngine != null && isTopdonSdkInitialized) {
