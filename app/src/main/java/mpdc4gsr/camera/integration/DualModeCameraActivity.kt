@@ -134,6 +134,8 @@ class DualModeCameraActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        rgbCameraRecorder?.stop()
+        lifecycleScope.launch {
+            rgbCameraRecorder?.cleanup()
+        }
     }
 }
