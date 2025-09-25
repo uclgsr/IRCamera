@@ -1,12 +1,3 @@
-plugins {
-    alias(libs.plugins.android.application) apply false
-    alias(libs.plugins.android.library) apply false  
-    alias(libs.plugins.kotlin.android) apply false
-    alias(libs.plugins.ktlint) apply false
-    alias(libs.plugins.detekt) apply false
-    alias(libs.plugins.spotless) apply false
-}
-
 buildscript {
     repositories {
         google()
@@ -121,64 +112,4 @@ tasks.register("compileReleaseSafe") {
     )
 }
 
-// Apply static analysis plugins to all subprojects
-subprojects {
-    apply(plugin = "org.jlleitschuh.gradle.ktlint")
-    apply(plugin = "io.gitlab.arturbosch.detekt")
-    apply(plugin = "com.diffplug.spotless")
-
-    // Configure ktlint
-    configure<org.jlleitschuh.gradle.ktlint.KtlintExtension> {
-        android.set(true)
-        outputColorName.set("RED")
-        enableExperimentalRules.set(true)
-        additionalEditorconfig.set(
-            mapOf(
-                "max_line_length" to "120",
-                "indent_size" to "4"
-            )
-        )
-    }
-
-    // Configure Detekt
-    configure<io.gitlab.arturbosch.detekt.extensions.DetektExtension> {
-        buildUponDefaultConfig = true
-        allRules = false
-        config.setFrom(files("$rootDir/config/detekt/detekt.yml"))
-        basePath = projectDir.absolutePath
-    }
-
-    // Configure Spotless
-    configure<com.diffplug.gradle.spotless.SpotlessExtension> {
-        kotlin {
-            target("**/*.kt")
-            ktlint()
-            indentWithSpaces(4)
-            trimTrailingWhitespace()
-            endWithNewline()
-        }
-        
-        java {
-            target("**/*.java")
-            googleJavaFormat()
-            trimTrailingWhitespace()
-            endWithNewline()
-        }
-    }
-}
-
-// Add quality gate tasks
-tasks.register("codeQuality") {
-    group = "verification"
-    description = "Run all code quality checks"
-    dependsOn(subprojects.map { "${it.path}:ktlintCheck" })
-    dependsOn(subprojects.map { "${it.path}:detekt" })
-    dependsOn(subprojects.map { "${it.path}:spotlessCheck" })
-}
-
-tasks.register("formatCode") {
-    group = "formatting"
-    description = "Format all code using Spotless and ktlint"
-    dependsOn(subprojects.map { "${it.path}:ktlintFormat" })
-    dependsOn(subprojects.map { "${it.path}:spotlessApply" })
-}
+// TODO: Add static analysis plugins (ktlint, detekt, spotless) after build system is stable
