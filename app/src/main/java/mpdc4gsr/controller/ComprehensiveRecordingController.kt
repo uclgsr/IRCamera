@@ -73,7 +73,7 @@ class ComprehensiveRecordingController(
 
     private val sensorRecorders = ConcurrentHashMap<String, SensorRecorder>()
     private val activeRecorders = ConcurrentHashMap<String, Boolean>()
-    private val sensorHealthStatus = ConcurrentHashMap<String, SensorHealthInfo>()
+    private val sensorHealthStatus = ConcurrentHashMap<String, ComprehensiveSensorHealthInfo>()
     private val reconnectionAttempts = ConcurrentHashMap<String, Int>()
 
     // Session orchestration state
@@ -981,9 +981,10 @@ data class SessionInfoData(
 
 data class SensorStatus(
     val name: String,
-    val isActive: Boolean,
     val isHealthy: Boolean,
-    val lastUpdate: Long
+    val lastHealthCheck: Long,
+    val consecutiveFailures: Int,
+    val lastError: String? = null
 )
 
 data class RecordingStats(
