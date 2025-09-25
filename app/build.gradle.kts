@@ -319,6 +319,14 @@ dependencies {
     testImplementation(libs.mockk)
     testImplementation(libs.mockk.android)
     testImplementation(libs.kotlinx.coroutines.test)
+    
+    // Mockito dependencies for integration tests
+    testImplementation("org.mockito:mockito-core:5.8.0")
+    testImplementation("org.mockito:mockito-inline:5.2.0")
+    testImplementation("org.mockito:mockito-android:5.8.0")
+    
+    // HDF5 support for thermal data export
+    implementation("io.jhdf:jhdf:0.6.10")
     androidTestImplementation(libs.test.ext.junit)
     androidTestImplementation(libs.test.espresso.core)
     androidTestImplementation(libs.test.runner)
