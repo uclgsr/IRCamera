@@ -36,6 +36,7 @@ import mpdc4gsr.sensors.thermal.ThermalCameraRecorder
 import mpdc4gsr.utils.SessionDirectory
 import mpdc4gsr.utils.SessionDirectoryManager
 import mpdc4gsr.utils.StorageStatus
+import mpdc4gsr.controller.RecordingConstants
 import java.io.File
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean
@@ -47,14 +48,6 @@ class RecordingController(
 ) {
     companion object {
         private const val TAG = "RecordingController"
-        private const val SYNC_MARKER_DISTRIBUTION_DELAY_MS = 50L
-        private const val STATUS_UPDATE_INTERVAL_MS = 1000L
-        private const val ERROR_RECOVERY_DELAY_MS = 2000L
-
-
-        private const val RGB_STORAGE_MB_PER_MIN = 50.0
-        private const val THERMAL_STORAGE_MB_PER_MIN = 5.0
-        private const val SHIMMER_STORAGE_MB_PER_MIN = 1.0
 
         // Type aliases for public API compatibility
         typealias SessionManifest = mpdc4gsr.controller.SessionManifest
@@ -775,7 +768,7 @@ class RecordingController(
                 addSyncMarker("session_end", System.nanoTime())
 
 
-                delay(SYNC_MARKER_DISTRIBUTION_DELAY_MS)
+                delay(RecordingConstants.SYNC_MARKER_DISTRIBUTION_DELAY_MS)
 
                 val stopResult = safeStopAll()
 
@@ -1293,7 +1286,7 @@ class RecordingController(
                     Log.w(TAG, "Status monitoring error", e)
                 }
 
-                delay(STATUS_UPDATE_INTERVAL_MS)
+                delay(RecordingConstants.STATUS_UPDATE_INTERVAL_MS)
             }
         }
 
@@ -1398,7 +1391,7 @@ class RecordingController(
             try {
                 Log.i(TAG, "Attempting error recovery for sensor ${sensor.sensorId}")
 
-                delay(ERROR_RECOVERY_DELAY_MS)
+                delay(RecordingConstants.ERROR_RECOVERY_DELAY_MS)
 
                 val recoverySuccess = sensor.initialize()
 
@@ -1952,10 +1945,10 @@ class RecordingController(
                     updateSensorStatusFlow()
 
                     // Wait before next health check
-                    delay(STATUS_UPDATE_INTERVAL_MS)
+                    delay(RecordingConstants.STATUS_UPDATE_INTERVAL_MS)
                 } catch (e: Exception) {
                     Log.w(TAG, "Error during sensor health monitoring", e)
-                    delay(ERROR_RECOVERY_DELAY_MS)
+                    delay(RecordingConstants.ERROR_RECOVERY_DELAY_MS)
                 }
             }
         }

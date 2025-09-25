@@ -11,6 +11,7 @@ import mpdc4gsr.sensors.RgbCameraRecorder
 import mpdc4gsr.permissions.PermissionController
 import mpdc4gsr.sensors.gsr.GSRSensorRecorder
 import mpdc4gsr.sensors.thermal.ThermalCameraRecorder
+import mpdc4gsr.controller.RecordingConstants
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.system.measureTimeMillis
@@ -23,10 +24,6 @@ class HardwareValidationController(
 ) {
     companion object {
         private const val TAG = "HardwareValidationController"
-        private const val VALIDATION_TIMEOUT_MS = 30000L
-        private const val SYNC_ACCURACY_THRESHOLD_MS = 5L
-        private const val MIN_RECORDING_DURATION_MS = 60000L
-        private const val BATTERY_OPTIMIZATION_CHECK_INTERVAL_MS = 5000L
     }
 
     private val _isValidating = AtomicBoolean(false)
@@ -274,7 +271,7 @@ class HardwareValidationController(
 
             val recordingDuration = measureTimeMillis {
 
-                delay(MIN_RECORDING_DURATION_MS)
+                delay(RecordingConstants.MIN_RECORDING_DURATION_MS)
             }
 
             validationResults["multi_sensor_recording"] = HardwareValidationResult(
@@ -442,41 +439,3 @@ class HardwareValidationController(
         )
     }
 }
-
-data class ValidationReport(
-    val timestamp: Long,
-    val deviceInfo: DeviceInfo,
-    val validationResults: Map<String, HardwareValidationResult>,
-    val sensorCapabilities: Map<String, SensorCapability>,
-    val performanceMetrics: Map<String, Any>,
-    val errorLogs: List<String>,
-    val summary: ValidationSummary
-)
-
-data class HardwareValidationResult(
-    val success: Boolean,
-    val message: String,
-    val metrics: Map<String, Any>
-)
-
-data class SensorCapability(
-    val sensorType: String,
-    val isAvailable: Boolean,
-    val capabilities: Map<String, Any>
-)
-
-data class ValidationSummary(
-    val totalTests: Int,
-    val passedTests: Int,
-    val failedTests: Int,
-    val totalDurationMs: Long,
-    val overallSuccess: Boolean
-)
-
-data class DeviceInfo(
-    val manufacturer: String,
-    val model: String,
-    val androidVersion: String,
-    val sdkInt: Int,
-    val appVersion: String
-)

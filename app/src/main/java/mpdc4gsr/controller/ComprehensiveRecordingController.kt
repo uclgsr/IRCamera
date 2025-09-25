@@ -16,6 +16,7 @@ import mpdc4gsr.core.RecordingService
 import mpdc4gsr.sensors.SensorRecorder
 import mpdc4gsr.utils.SessionDirectory
 import mpdc4gsr.utils.SessionDirectoryManager
+import mpdc4gsr.controller.RecordingConstants
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.File
@@ -31,31 +32,7 @@ class ComprehensiveRecordingController(
 ) {
     companion object {
         private const val TAG = "ComprehensiveRecordingController"
-        private const val FALLBACK_AVAILABLE_SPACE_GB = 10.0
-        private const val RGB_STORAGE_MB_PER_MIN = 50.0
-        private const val THERMAL_STORAGE_MB_PER_MIN = 5.0
-        private const val SHIMMER_STORAGE_MB_PER_MIN = 1.0
-        private const val MIN_STORAGE_SPACE_GB = 1.0
         private val DEFAULT_TRIGGER_SOURCE = TriggerSource.LOCAL_UI
-    }
-
-    // Session orchestration enums
-    enum class TriggerSource {
-        LOCAL_UI,
-        LOCAL_NOTIFICATION,
-        REMOTE_PC,
-        AUTOMATIC,
-        CRASH_RECOVERY
-    }
-
-    enum class SessionState {
-        IDLE,
-        STARTING,
-        RECORDING,
-        STOPPING,
-        STOPPED_COMPLETED,
-        STOPPED_FAILED,
-        STOPPED_INCOMPLETE
     }
 
 
@@ -321,11 +298,11 @@ class ComprehensiveRecordingController(
             val availableSpaceGB = getAvailableSpaceGB()
             val estimatedSpaceGB = estimateSessionSize(enabledSensors, estimatedDurationMinutes) / 1024.0
 
-            if (availableSpaceGB < estimatedSpaceGB + MIN_STORAGE_SPACE_GB) {
+            if (availableSpaceGB < estimatedSpaceGB + RecordingConstants.MIN_STORAGE_SPACE_GB) {
                 return ValidationResult(
                     false,
                     "Insufficient storage: ${String.format("%.1f", availableSpaceGB)}GB available, " +
-                            "${String.format("%.1f", estimatedSpaceGB + MIN_STORAGE_SPACE_GB)}GB required"
+                            "${String.format("%.1f", estimatedSpaceGB + RecordingConstants.MIN_STORAGE_SPACE_GB)}GB required"
                 )
             }
 
@@ -373,9 +350,9 @@ class ComprehensiveRecordingController(
 
         for (sensor in enabledSensors) {
             when (sensor.uppercase()) {
-                "RGB" -> estimatedMB += durationMinutes * RGB_STORAGE_MB_PER_MIN
-                "THERMAL" -> estimatedMB += durationMinutes * THERMAL_STORAGE_MB_PER_MIN
-                "SHIMMER" -> estimatedMB += durationMinutes * SHIMMER_STORAGE_MB_PER_MIN
+                "RGB" -> estimatedMB += durationMinutes * RecordingConstants.RGB_STORAGE_MB_PER_MIN
+                "THERMAL" -> estimatedMB += durationMinutes * RecordingConstants.THERMAL_STORAGE_MB_PER_MIN
+                "SHIMMER" -> estimatedMB += durationMinutes * RecordingConstants.SHIMMER_STORAGE_MB_PER_MIN
             }
         }
 
@@ -643,7 +620,7 @@ class ComprehensiveRecordingController(
             val sessionDir = File(context.filesDir, "sessions")
             sessionDir.freeSpace / (1024.0 * 1024.0 * 1024.0)
         } catch (e: Exception) {
-            FALLBACK_AVAILABLE_SPACE_GB
+            RecordingConstants.FALLBACK_AVAILABLE_SPACE_GB
         }
     }
 
@@ -1078,41 +1055,3 @@ data class RecordingStats(
         )
     }
 }
-
-enum class RecordingState {
-    IDLE, STARTING, RECORDING, STOPPING, ERROR
-}
-
-data class SensorHealthSummary(
-    val sensorId: String,
-    val name: String,
-    val isHealthy: Boolean
-)
-
-data class SensorStatusInfo(
-    val name: String,
-    val isRecording: Boolean,
-    val samplesRecorded: Long = 0,
-    val storageUsedMB: Double = 0.0,
-    val isHealthy: Boolean = true
-)
-
-data class RecordingError(
-    val message: String,
-    val isRecoverable: Boolean = true
-)
-
-data class ValidationResult(val isValid: Boolean, val failureReason: String)
-
-data class SessionInfoData(
-    val sessionId: String,
-    val startTime: Long,
-    val endTime: Long,
-    val durationMs: Long,
-    val durationSeconds: Double,
-    val recordingStatus: String,
-    val activeSensors: List<String>,
-    val sensorStopResults: Map<String, Boolean>,
-    val errors: List<String>?,
-    val finalizedAt: Long
-)
