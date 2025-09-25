@@ -12,7 +12,13 @@ data class SessionManifest(
     val metadata: Map<String, Any> = emptyMap(),
     val events: List<SessionEvent> = emptyList(),
     val errors: List<String> = emptyList(),
-    val warnings: List<String> = emptyList()
+    val warnings: List<String> = emptyList(),
+    val stopTime: Long? = endTime,
+    val duration: Long = if (endTime != null) endTime - startTime else 0L,
+    val triggerSource: String? = null,
+    val sensorActivitySummary: Map<String, Any> = emptyMap(),
+    val fileReferences: List<String> = emptyList(),
+    val sessionState: String = "COMPLETED"
 )
 
 /**
@@ -61,7 +67,15 @@ data class SensorHealthInfo(
 /**
  * Comprehensive sensor health information (alias for compatibility)
  */
-typealias ComprehensiveSensorHealthInfo = SensorHealthInfo
+data class ComprehensiveSensorHealthInfo(
+    val sensorId: String,
+    val isHealthy: Boolean,
+    val lastHealthCheck: Long,
+    val healthScore: Double = 1.0,
+    val issues: List<String> = emptyList(),
+    val consecutiveFailures: Int = 0,
+    val lastError: String? = null
+)
 
 /**
  * Dropout event tracking for resilient recording
