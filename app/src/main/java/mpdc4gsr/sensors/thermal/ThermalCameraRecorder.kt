@@ -364,7 +364,7 @@ class ThermalCameraRecorder(
         Log.i(TAG, "Thermal network streaming disabled")
     }
 
-    fun getThermalSystemStatus(): ThermalSystemStatus {
+    public fun getThermalSystemStatus(): ThermalSystemStatus {
         return ThermalSystemStatus(
             isConnected = isIRCameraConnected,
             hasUsbPermission = hasUsbPermission,
