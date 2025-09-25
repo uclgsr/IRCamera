@@ -14,10 +14,11 @@ import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import com.csl.irCamera.R
 import com.csl.irCamera.databinding.ActivityMultiModalRecordingBinding
-// UnifiedBleManager - replaced with EasyBLE
-import com.topdon.ble.EasyBLE
-// UnifiedDevice - replaced with Device  
-import com.topdon.ble.Device
+// Use Shimmer's official Bluetooth API for GSR device management
+import com.shimmerresearch.android.manager.ShimmerBluetoothManagerAndroid
+import com.shimmerresearch.android.Shimmer
+import android.os.Handler
+import android.os.Looper
 import com.mpdc4gsr.gsr.model.GSRSample
 import com.mpdc4gsr.gsr.model.SessionInfo
 import com.mpdc4gsr.gsr.model.SyncMark
@@ -72,10 +73,10 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
     private lateinit var permissionController: PermissionController
 
 
-    // Updated to use new BLE module classes
-    private var easyBLE: EasyBLE? = null
-    private var discoveredBleDevices = mutableListOf<Device>()
-    private var connectedBleDevices = mutableListOf<Device>()
+    // Use Shimmer's official Bluetooth manager for GSR devices
+    private var shimmerBluetoothManager: ShimmerBluetoothManagerAndroid? = null
+    private var discoveredShimmerDevices = mutableListOf<Shimmer>()
+    private var connectedShimmerDevices = mutableListOf<Shimmer>()
 
 
     private var enhancedRecordingService: com.mpdc4gsr.gsr.service.EnhancedRecordingService? = null

@@ -14,9 +14,11 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
-import com.topdon.ble.EasyBLE
+import com.shimmerresearch.android.manager.ShimmerBluetoothManagerAndroid
+import android.os.Handler
+import android.os.Looper
 
-// UnifiedBleManager - using EasyBLE from com.topdon.ble instead
+// Use Shimmer's official Bluetooth API for GSR device detection
 
 class SensorSelectionDialog(
     context: Context,
@@ -36,33 +38,36 @@ class SensorSelectionDialog(
             }
 
             try {
-                val easyBLE = EasyBLE.getDefault()
-
-                if (easyBLE != null) {
-                    val hasConnectedShimmerDevices =
-                        easyBLE.connectedDevices.any { device ->
-                            device.getName()?.contains("shimmer", ignoreCase = true) == true ||
-                            device.getAddress().startsWith("00:06:66") ||
-                            device.getAddress().startsWith("d0:39:72")
-                        }
-
-                    if (hasConnectedShimmerDevices) {
-                        available.add(SensorType.GSR)
-                        Log.d(TAG, "Connected Shimmer GSR devices found")
-                    } else {
-                        // GSR sensor available even without hardware (simulation mode)
-                        available.add(SensorType.GSR)
-                        Log.d(TAG, "GSR sensor available (will use simulation if no hardware found)")
+                // Use Shimmer's official Bluetooth manager to detect GSR devices
+                val shimmerManager = ShimmerBluetoothManagerAndroid(context, Handler(Looper.getMainLooper()))
+                
+                val hasConnectedShimmerDevices = try {
+                    val connectedDevices = shimmerManager.getConnectedDeviceList()
+                    connectedDevices.any { device ->
+                        val deviceName = device.getDeviceName()?.lowercase() ?: ""
+                        val deviceAddress = device.getBluetoothAddress()
+                        deviceName.contains("shimmer") ||
+                        deviceName.contains("gsr") ||
+                        deviceAddress.startsWith("00:06:66") ||
+                        deviceAddress.startsWith("d0:39:72")
                     }
+                } catch (e: Exception) {
+                    Log.w(TAG, "Error checking connected Shimmer devices: ${e.message}")
+                    false
+                }
+
+                if (hasConnectedShimmerDevices) {
+                    available.add(SensorType.GSR)
+                    Log.d(TAG, "Connected Shimmer GSR devices found")
                 } else {
                     // EasyBLE not initialized, assume GSR available with simulation
                     available.add(SensorType.GSR)
                     Log.d(TAG, "EasyBLE not available, GSR will use simulation mode")
                 }
             } catch (e: Exception) {
-
+                // GSR sensor available even without hardware (simulation mode)
                 available.add(SensorType.GSR)
-                Log.w(TAG, "BLE manager not available, GSR will use simulated data if needed", e)
+                Log.w(TAG, "Shimmer Bluetooth manager not available, GSR will use simulated data if needed", e)
             }
 
             Log.d(TAG, "Detected available sensors: $available")

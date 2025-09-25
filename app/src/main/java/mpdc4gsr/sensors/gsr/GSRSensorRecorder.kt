@@ -4,14 +4,9 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.util.Log
 import androidx.core.content.ContextCompat
-// GSR sensor recording using UnifiedBleManager and EasyBLE
-// MVP implementation with current BLE infrastructure
-// UnifiedBleManager - use the existing implementation
+import androidx.core.app.ActivityCompat
 import com.mpdc4gsr.ble.core.UnifiedBleManager
 import com.mpdc4gsr.ble.core.UnifiedDevice
-import com.topdon.ble.EasyBLE
-import com.topdon.ble.Connection
-import com.topdon.ble.util.BluetoothPermissionUtils
 import com.mpdc4gsr.gsr.model.GSRSample
 import com.mpdc4gsr.gsr.model.SessionInfo
 import com.mpdc4gsr.gsr.model.SyncMark
@@ -96,6 +91,15 @@ class GSRSensorRecorder(
             return hasBleScanningPermissions(context)
         }
 
+        fun hasBleScanningPermissions(context: Context): Boolean {
+            return if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+                ContextCompat.checkSelfPermission(context, android.Manifest.permission.BLUETOOTH_SCAN) == PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(context, android.Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED
+            } else {
+                ContextCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+            }
+        }
+
         fun getMissingPermissions(context: Context): List<String> {
             val missing = mutableListOf<String>()
             if (ContextCompat.checkSelfPermission(
@@ -146,11 +150,9 @@ class GSRSensorRecorder(
     private var _isRecording = AtomicBoolean(false)
     override val isRecording: Boolean get() = _isRecording.get()
 
-    private var easyBLE: EasyBLE? = null
     private var unifiedShimmerDevice: ShimmerDevice? = null
 
     private var realShimmerGSRRecorder: ShimmerGSRRecorder? = null
-    private var shimmerConnection: Connection? = null
 
     private var gsrDataPersistence: GSRDataPersistence? = null
     private var currentSessionId: String? = null
@@ -202,12 +204,7 @@ class GSRSensorRecorder(
 
                 }
 
-                try {
-                    easyBLE = EasyBLE.getDefault()
-                    Log.i(TAG, "EasyBLE initialized successfully for GSR sensor integration")
-                } catch (e: Exception) {
-                    Log.w(TAG, "EasyBLE initialization failed, falling back to legacy implementation: ${e.message}")
-                }
+                Log.i(TAG, "Using official Shimmer Bluetooth libraries for device communication")
 
 
                 if (initializeShimmerBluetoothManager()) {
@@ -361,18 +358,14 @@ class GSRSensorRecorder(
                 )
 
 
-                if (!BluetoothPermissionUtils.hasBleScanningPermissions(context)) {
+                if (!hasBleScanningPermissions(context)) {
                     Log.w(
                         TAG,
                         "Missing Bluetooth permissions for Shimmer GSR recording"
                     )
                     Log.i(
                         TAG,
-                        "Missing permissions: ${
-                            BluetoothPermissionUtils.getMissingPermissions(
-                                context
-                            )
-                        }"
+                        "Missing permissions: ${getMissingPermissions(context)}"
                     )
 
 
@@ -396,7 +389,7 @@ class GSRSensorRecorder(
                 var recordingSuccessful = false
 
 
-                if (BluetoothPermissionUtils.hasBleScanningPermissions(context)) {
+                if (hasBleScanningPermissions(context)) {
                     val shimmerRecorder = realShimmerGSRRecorder
                     if (shimmerRecorder != null) {
                         Log.i(TAG, "Attempting Shimmer3 GSR+ recording with enhanced BLE backend")
@@ -940,7 +933,7 @@ class GSRSensorRecorder(
 
     private fun determineRecordingMode(): String {
         return when {
-            realShimmerGSRRecorder != null && easyBLE != null -> "shimmer_easyble"
+            realShimmerGSRRecorder != null && shimmerBluetoothManager != null -> "shimmer_official"
             realShimmerGSRRecorder != null -> "shimmer_ble"
             legacyGSRRecorder != null -> "legacy_gsr"
             else -> "unknown"
@@ -1263,58 +1256,47 @@ class GSRSensorRecorder(
                     return@withContext emptyList()
                 }
 
-                val ble = easyBLE
-                if (ble != null) {
+                val shimmerManager = shimmerBluetoothManager
+                if (shimmerManager != null) {
                     val deviceList = mutableListOf<String>()
                     
-                    // Get connected devices first
-                    val connectedDevices = ble.connectedDevices
+                    // Get connected Shimmer devices using official Shimmer API
+                    val connectedDevices = shimmerManager.getConnectedDeviceList()
                     connectedDevices.forEach { device ->
-                        deviceList.add("${device.getName()} (${device.getAddress()}) - Connected")
+                        deviceList.add("${device.getDeviceName()} (${device.getBluetoothAddress()}) - Connected")
                     }
 
-
+                    // Scan for paired Shimmer devices
                     val scanResultDeferred = CompletableDeferred<List<String>>()
 
-                    unifiedBle.scanForShimmerDevices(
-                        10000L,
-                        object : UnifiedBleManager.ShimmerScanCallback {
-                            override fun onDeviceFound(device: UnifiedDevice) {
-                                val deviceAddress = device.getAddress()
-
-                                val isAlreadyConnected =
-                                    connectedDevices.any { it.getAddress() == deviceAddress }
+                    // Use Shimmer's paired device detection
+                    if (shimmerManager.getBluetoothAdapter()?.isEnabled == true) {
+                        val pairedDevices = shimmerManager.getBluetoothAdapter()?.bondedDevices
+                        pairedDevices?.forEach { btDevice ->
+                            val deviceName = btDevice.name ?: "Unknown"
+                            val deviceAddress = btDevice.address
+                            
+                            // Check if this is a Shimmer GSR device
+                            if (isShimmerGSRDevice(deviceName, deviceAddress)) {
+                                val isAlreadyConnected = connectedDevices.any { 
+                                    it.getBluetoothAddress() == deviceAddress 
+                                }
                                 if (!isAlreadyConnected) {
-                                    val deviceEntry =
-                                        "${device.getName()} (${deviceAddress}) - Available"
+                                    val deviceEntry = "$deviceName ($deviceAddress) - Available"
                                     if (!deviceList.contains(deviceEntry)) {
                                         deviceList.add(deviceEntry)
                                     }
-                                    Log.d(
-                                        TAG,
-                                        "Found nearby Shimmer device: ${device.getName()} at $deviceAddress"
-                                    )
+                                    Log.d(TAG, "Found paired Shimmer GSR device: $deviceName at $deviceAddress")
                                 }
                             }
+                        }
+                    }
 
-                            override fun onScanComplete(foundDevices: List<UnifiedDevice>) {
-                                Log.i(
-                                    TAG,
-                                    "Shimmer device scan completed. Total devices found: ${deviceList.size}"
-                                )
-                                scanResultDeferred.complete(deviceList.toList())
-                            }
-
-                            override fun onScanFailed(errorCode: Int) {
-                                Log.e(TAG, "Shimmer device scan failed with error code: $errorCode")
-
-                                scanResultDeferred.complete(deviceList.toList())
-                            }
-                        })
+                    scanResultDeferred.complete(deviceList.toList())
 
                     scanResultDeferred.await()
                 } else {
-                    Log.w(TAG, "EasyBLE not available for device discovery")
+                    Log.w(TAG, "Shimmer Bluetooth manager not available for device discovery")
                     emptyList()
                 }
             } catch (e: Exception) {
@@ -1338,85 +1320,64 @@ class GSRSensorRecorder(
 
                 Log.i(TAG, "Attempting to connect to Shimmer device: $deviceAddress")
 
-                val unifiedBle = unifiedBleManager
-                if (unifiedBle != null) {
-
-                    val connectedShimmerDevices = unifiedBle.getConnectedShimmerDevices()
-                    val alreadyConnected =
-                        connectedShimmerDevices.any { it.getAddress() == deviceAddress }
+                val shimmerManager = shimmerBluetoothManager
+                if (shimmerManager != null) {
+                    // Check if device is already connected using Shimmer API
+                    val connectedDevices = shimmerManager.getConnectedDeviceList()
+                    val alreadyConnected = connectedDevices.any { 
+                        it.getBluetoothAddress() == deviceAddress 
+                    }
 
                     if (alreadyConnected) {
                         Log.i(TAG, "Device $deviceAddress is already connected")
                         isShimmerConnected = true
-                        shimmerConnection = existingConnection
                         return@withContext true
                     }
 
-                    Log.i(TAG, "Scanning for device $deviceAddress to establish connection")
+                    Log.i(TAG, "Connecting to Shimmer device $deviceAddress using official API")
 
                     var connectionSuccess = false
-                    val connectionCompleted = CompletableDeferred<Boolean>()
-
+                    
                     try {
-                        unifiedBle.scanForShimmerDevices(
-                            5000L,
-                            object : UnifiedBleManager.ShimmerScanCallback {
-                                override fun onDeviceFound(device: UnifiedDevice) {
-                                    if (device.getAddress() == deviceAddress) {
-                                        Log.i(
-                                            TAG,
-                                            "Found target device $deviceAddress, attempting connection"
-                                        )
-
-                                        val shimmerRecorder = realShimmerGSRRecorder
-                                        if (shimmerRecorder != null) {
-                                            // Use a coroutine scope to call the suspend function
-                                            recordingScope.launch {
-                                                val success = shimmerRecorder.initializeDevice()
-                                                connectionCompleted.complete(success)
-                                            }
-                                        } else {
-                                            connectionCompleted.complete(false)
-                                        }
-                                    }
-                                }
-
-                                override fun onScanComplete(foundDevices: List<UnifiedDevice>) {
-                                    if (!connectionCompleted.isCompleted) {
-                                        Log.w(TAG, "Device $deviceAddress not found during scan")
-                                        connectionCompleted.complete(false)
-                                    }
-                                }
-
-                                override fun onScanFailed(errorCode: Int) {
-                                    Log.e(
-                                        TAG,
-                                        "Scan failed while looking for device $deviceAddress with error code: $errorCode"
-                                    )
-                                    if (!connectionCompleted.isCompleted) {
-                                        connectionCompleted.complete(false)
-                                    }
-                                }
-                            })
+                        // Use Shimmer's official connection API
+                        connectionSuccess = shimmerManager.connectShimmerDevice(deviceAddress)
                         
-                        connectionSuccess = connectionCompleted.await()
+                        if (connectionSuccess) {
+                            // Wait for connection to establish
+                            delay(2000)
+                            
+                            // Verify connection
+                            val updatedConnectedDevices = shimmerManager.getConnectedDeviceList()
+                            val actuallyConnected = updatedConnectedDevices.any { 
+                                it.getBluetoothAddress() == deviceAddress 
+                            }
+                            
+                            if (actuallyConnected) {
+                                currentConnectedDevice = updatedConnectedDevices.find { 
+                                    it.getBluetoothAddress() == deviceAddress 
+                                }
+                                Log.i(TAG, "Successfully connected to Shimmer device: $deviceAddress")
+                                isShimmerConnected = true
+                            } else {
+                                Log.w(TAG, "Connection established but device not in connected list")
+                                connectionSuccess = false
+                            }
+                        }
                     } catch (e: Exception) {
-                        Log.e(TAG, "Error during scanning for device $deviceAddress", e)
+                        Log.e(TAG, "Error during Shimmer device connection", e)
                         connectionSuccess = false
                     }
 
                     if (connectionSuccess) {
-                        Log.i(TAG, "Successfully connected to Shimmer device: $deviceAddress")
-                        isShimmerConnected = true
+                        return@withContext connectionSuccess
                     } else {
                         Log.w(TAG, "Failed to connect to Shimmer device: $deviceAddress")
-
                         isShimmerConnected = false
-                        false
+                        return@withContext false
                     }
                 } else {
-                    Log.e(TAG, "EasyBLE not available for device connection")
-                    false
+                    Log.e(TAG, "Shimmer Bluetooth manager not available for device connection")
+                    return@withContext false
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "Error connecting to Shimmer device: $deviceAddress", e)
@@ -1792,11 +1753,10 @@ class GSRSensorRecorder(
             try {
                 Log.i(TAG, "Prompting user to pair with device: $deviceAddress")
 
-
-                val ble = easyBLE
-                if (ble != null) {
-
-                    val bluetoothAdapter = android.bluetooth.BluetoothAdapter.getDefaultAdapter()
+                val shimmerManager = shimmerBluetoothManager
+                if (shimmerManager != null) {
+                    // Use standard Android Bluetooth pairing via Shimmer manager
+                    val bluetoothAdapter = shimmerManager.getBluetoothAdapter()
                     val bondedDevices = bluetoothAdapter?.bondedDevices
                     val isAlreadyBonded = bondedDevices?.any { it.address == deviceAddress } ?: false
 
@@ -1813,7 +1773,7 @@ class GSRSensorRecorder(
                         return@withContext false
                     }
                 } else {
-                    Log.e(TAG, "UnifiedBleManager not available for device pairing")
+                    Log.e(TAG, "Shimmer Bluetooth manager not available for device pairing")
                     return@withContext false
                 }
             } catch (e: Exception) {
@@ -1871,10 +1831,34 @@ class GSRSensorRecorder(
         }
     }
 
+    private fun isShimmerGSRDevice(deviceName: String, deviceAddress: String): Boolean {
+        val nameLower = deviceName.lowercase()
+        
+        // Check for Shimmer MAC address prefixes
+        val hasShimmerMacPrefix = deviceAddress.startsWith("00:06:66") ||
+                                 deviceAddress.startsWith("d0:39:72") ||
+                                 deviceAddress.startsWith("00:80:98")
+        
+        // Check for GSR-related device names
+        val hasGSRName = nameLower.contains("shimmer") ||
+                        nameLower.contains("gsr") ||
+                        nameLower.contains("rn4") ||
+                        nameLower.contains("shimmer3")
+        
+        return hasShimmerMacPrefix || hasGSRName
+    }
+
 
     private fun isShimmerDevice(device: android.bluetooth.BluetoothDevice): Boolean {
         return try {
-            val deviceName = BluetoothPermissionUtils.getDeviceName(context, device)
+            val deviceName = if (ActivityCompat.checkSelfPermission(
+                    context,
+                    android.Manifest.permission.BLUETOOTH_CONNECT
+                ) == PackageManager.PERMISSION_GRANTED) {
+                device.name
+            } else {
+                null
+            }
             deviceName?.lowercase()?.contains("shimmer") == true ||
                     device.address.startsWith("00:06:66") ||
                     device.address.startsWith("d0:39:72") ||
