@@ -429,7 +429,10 @@ class EnhancedPCController:
                 gsr_data.gsr_microsiemens = value
                 # Could do additional processing here
             except Exception as e:
-                self.logger.warning(f"Native backend processing error: {e}")
+                self.logger.warning(
+                    f"Native backend processing error for device {device_info.device_id} "
+                    f"while processing GSR telemetry (timestamp={timestamp}, value={value}): {e}"
+                )
     
     def _handle_frame_telemetry(self, device_info: DeviceInfo, message: Dict[str, Any]):
         """Handle frame telemetry (RGB/Thermal)"""
