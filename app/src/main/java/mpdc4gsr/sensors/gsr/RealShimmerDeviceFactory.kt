@@ -159,9 +159,29 @@ class RealShimmerDataCluster(private val objectCluster: ObjectCluster) : Shimmer
         private const val TAG = "RealShimmerDataCluster"
         
         // Shimmer sensor constants
+        /**
+         * Name of the GSR (Galvanic Skin Response) sensor channel as defined in the Shimmer SDK.
+         * Used to retrieve raw GSR values from ObjectCluster.
+         * See: https://shimmersensing.com/wp-content/uploads/2021/06/ConsensysPRO-User-Guide.pdf (Section: Data Structure)
+         */
         private const val GSR_SENSOR_NAME = "GSR"
+        /**
+         * Name of the GSR Conductance channel as defined in the Shimmer SDK.
+         * Used to retrieve calibrated GSR conductance values from ObjectCluster.
+         * See: https://shimmersensing.com/wp-content/uploads/2021/06/ConsensysPRO-User-Guide.pdf (Section: Data Structure)
+         */
         private const val GSR_CONDUCTANCE_NAME = "GSR Conductance"
+        /**
+         * Name of the PPG (Photoplethysmogram) sensor channel as defined in the Shimmer SDK.
+         * Used to retrieve raw PPG values from ObjectCluster.
+         * See: https://shimmersensing.com/wp-content/uploads/2021/06/ConsensysPRO-User-Guide.pdf (Section: Data Structure)
+         */
         private const val PPG_SENSOR_NAME = "PPG"
+        /**
+         * Name of the timestamp channel as defined in the Shimmer SDK.
+         * Used to retrieve the calibrated timestamp value from ObjectCluster.
+         * See: https://shimmersensing.com/wp-content/uploads/2021/06/ConsensysPRO-User-Guide.pdf (Section: Data Structure)
+         */
         private const val TIMESTAMP_NAME = "Timestamp"
     }
     
