@@ -2026,7 +2026,7 @@ class RecordingController(
                     DropoutEvent(
                         sensorId = info.sensorName,
                         startTime = dropout.timestampMs,
-                        endTime = dropout.durationMs?.let { dropout.timestampMs + it },
+                        endTime = dropout.durationMs?.takeIf { it > 0 }?.let { dropout.timestampMs + it },
                         reason = dropout.reason,
                         recoverable = true
                     )
