@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.MotionEvent
+import android.view.View
 import android.widget.FrameLayout
 import androidx.camera.view.PreviewView
 
@@ -20,6 +21,14 @@ class TapToFocusPreviewView @JvmOverloads constructor(
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
     val previewView = PreviewView(context, attrs, defStyleAttr)
+    
+    // Create an overlay view for drawing focus indicators
+    private val overlayView = object : View(context) {
+        override fun onDraw(canvas: Canvas) {
+            super.onDraw(canvas)
+            drawFocusIndicator(canvas)
+        }
+    }
 
     private val focusCirclePaint = Paint().apply {
         color = Color.WHITE
@@ -47,6 +56,9 @@ class TapToFocusPreviewView @JvmOverloads constructor(
         // Add the PreviewView to the FrameLayout
         addView(previewView, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT))
         
+        // Add the overlay view on top
+        addView(overlayView, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT))
+        
         // Enable drawing for focus indicators
         setWillNotDraw(false)
     }
@@ -54,8 +66,8 @@ class TapToFocusPreviewView @JvmOverloads constructor(
     override fun onTouchEvent(event: MotionEvent): Boolean {
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
-                val widthF = width.takeIf { it > 0 } ?: internalPreviewView.width
-                val heightF = height.takeIf { it > 0 } ?: internalPreviewView.height
+                val widthF = width.takeIf { it > 0 } ?: previewView.width
+                val heightF = height.takeIf { it > 0 } ?: previewView.height
                 if (widthF <= 0 || heightF <= 0) return super.onTouchEvent(event)
 
                 val normalizedX = event.x / widthF
@@ -114,7 +126,7 @@ class TapToFocusPreviewView @JvmOverloads constructor(
         }
     }
 
-    fun getPreviewView(): PreviewView = internalPreviewView
+    fun getPreviewView(): PreviewView = previewView
 
     fun triggerFocusAt(x: Float, y: Float) {
         focusX = x
@@ -123,8 +135,8 @@ class TapToFocusPreviewView @JvmOverloads constructor(
         focusIndicatorAlpha = 255
         overlayView.invalidate()
 
-        val widthF = width.takeIf { it > 0 } ?: internalPreviewView.width
-        val heightF = height.takeIf { it > 0 } ?: internalPreviewView.height
+        val widthF = width.takeIf { it > 0 } ?: previewView.width
+        val heightF = height.takeIf { it > 0 } ?: previewView.height
         if (widthF > 0 && heightF > 0) {
             val normalizedX = x / widthF
             val normalizedY = y / heightF

@@ -1406,13 +1406,9 @@ class GSRSensorRecorder(
                             }
 
                             if (actuallyConnected) {
-                                currentConnectedDevice = updatedConnectedDevices.find { device ->
-                                    try {
-                                        false // device.bluetoothAddress == deviceAddress
-                                    } catch (e: Exception) {
-                                        false
-                                    }
-                                }
+                                // For now, set to null since type conversion is needed
+                                // TODO: Convert ShimmerDevice to Shimmer or update type
+                                currentConnectedDevice = null
                                 Log.i(TAG, "Successfully connected to Shimmer device: $deviceAddress")
                                 isShimmerConnected = true
                             } else {

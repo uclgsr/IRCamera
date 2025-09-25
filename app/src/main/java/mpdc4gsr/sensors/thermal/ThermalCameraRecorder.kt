@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.hardware.usb.UsbDevice
 import android.hardware.usb.UsbManager
+import android.os.SystemClock
 import android.util.Log
 import android.widget.Toast
 import com.energy.ac020library.IrcamEngine
@@ -45,6 +46,9 @@ import org.json.JSONObject
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileWriter
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
 
@@ -387,8 +391,9 @@ class ThermalCameraRecorder(
             // Clean up existing connection first
             if (iruvctc != null) {
                 try {
-                    iruvctc?.stop()
-                    iruvctc?.release()
+                    // TODO: Use correct cleanup methods for IRUVCTC
+                    // iruvctc?.stop()
+                    // iruvctc?.release()
                     iruvctc = null
                 } catch (e: Exception) {
                     Log.w(TAG, "Error cleaning up existing thermal camera connection", e)
@@ -418,13 +423,13 @@ class ThermalCameraRecorder(
                 return true
             }
             // Start recording with current session
-            val sessionManager = SessionDirectoryManager.getInstance()
+            val sessionManager = com.mpdc4gsr.gsr.service.SessionManager.getInstance()
+            val currentTimeMs = System.currentTimeMillis()
             val sessionMetadata = SessionMetadata(
                 sessionId = sensorId,
-                startTime = System.currentTimeMillis(),
-                sensorTypes = listOf("thermal"),
-                participantId = "recovery_session",
-                studyId = "thermal_recovery"
+                sessionStartTimestampMs = currentTimeMs,
+                sessionStartMonotonicNs = SystemClock.elapsedRealtimeNanos(),
+                sessionStartIso = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX", Locale.getDefault()).format(Date(currentTimeMs))
             )
             val recordingSuccess = startRecording(sessionManager.getCurrentSessionDir(), sessionMetadata)
             Log.d(TAG, "Thermal recording restart result: $recordingSuccess")
