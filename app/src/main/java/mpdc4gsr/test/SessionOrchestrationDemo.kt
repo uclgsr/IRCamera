@@ -4,8 +4,12 @@ import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LifecycleOwner
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.runBlocking
 import mpdc4gsr.controller.RecordingController
+import mpdc4gsr.controller.SessionManifest
+import mpdc4gsr.controller.SensorActivityInfo
+import mpdc4gsr.controller.SessionEvent
 import mpdc4gsr.core.RecordingService
 
 /**
@@ -175,7 +179,7 @@ class SessionOrchestrationDemo(
     /**
      * Display session manifest information
      */
-    private fun displaySessionManifest(manifest: RecordingController.SessionManifest) {
+    private fun displaySessionManifest(manifest: SessionManifest) {
         Log.i(TAG, "")
         Log.i(TAG, "=== SESSION MANIFEST ===")
         Log.i(TAG, "Session ID: ${manifest.sessionId}")
@@ -188,7 +192,7 @@ class SessionOrchestrationDemo(
         manifest.sensorActivitySummary.forEach { (sensorName, info) ->
             Log.i(TAG, "  $sensorName:")
             Log.i(TAG, "    - Active: ${info.wasActive}")
-            Log.i(TAG, "    - Started Successfully: ${info.startedSuccessfully}")
+            Log.i(TAG, "    - Started Successfully: ${info.startedSuccessfully}")  
             Log.i(TAG, "    - Final Status: ${info.finalStatus}")
             if (info.errorMessages.isNotEmpty()) {
                 Log.i(TAG, "    - Errors: ${info.errorMessages.joinToString(", ")}")
