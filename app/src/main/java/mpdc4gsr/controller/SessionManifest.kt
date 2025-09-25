@@ -5,18 +5,15 @@ package mpdc4gsr.controller
  */
 data class SessionManifest(
     val sessionId: String,
-    val sessionDirectory: String,
     val startTime: Long,
-    val endTime: Long? = null,
-    val sensors: List<String> = emptyList(),
-    val metadata: Map<String, Any> = emptyMap(),
+    val stopTime: Long? = null,
+    val duration: Long? = null,
+    val triggerSource: String? = null,
+    val sensorActivitySummary: Map<String, SensorActivityInfo> = emptyMap(),
     val events: List<SessionEvent> = emptyList(),
     val errors: List<String> = emptyList(),
     val warnings: List<String> = emptyList(),
-    val duration: Long = (endTime?.minus(startTime)) ?: 0L,
-    val triggerSource: String? = null,
-    val sensorActivitySummary: Map<String, Any> = emptyMap(),
-    val fileReferences: List<String> = emptyList(),
+    val fileReferences: Map<String, Any> = emptyMap(),
     val sessionState: String = "COMPLETED"
 )
 
@@ -25,25 +22,22 @@ data class SessionManifest(
  */
 data class SessionEvent(
     val eventType: String,
-    val timestamp: Long,
+    val timestampMs: Long,
     val sensorId: String? = null,
+    val triggerSource: String,
+    val metadata: Map<String, String> = emptyMap(),
     val success: Boolean = true,
-    val errorMessage: String? = null,
-    val metadata: Map<String, Any> = emptyMap(),
-    val triggerSource: String? = null
+    val errorMessage: String? = null
 )
 
 /**
  * Sensor activity information for comprehensive recording
  */
 data class SensorActivityInfo(
-    val sensorId: String,
-    val isActive: Boolean,
-    val lastActivityTime: Long,
-    val totalSamples: Long = 0,
-    val errorCount: Long = 0,
+    val sensorName: String,
+    val wasActive: Boolean,
     val startedSuccessfully: Boolean = true,
-    val finalStatus: String = if (isActive) "ACTIVE" else "INACTIVE",
+    val finalStatus: String = if (wasActive) "ACTIVE" else "INACTIVE",
     val errorMessages: List<String> = emptyList()
 )
 
