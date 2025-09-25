@@ -443,7 +443,7 @@ class ShimmerMvpActivity : AppCompatActivity() {
                 gsrCalibrated
             } else if (gsrRaw > 0 && gsrRaw <= GSRConstants.ADC_MAX_VALUE.toInt()) {
                 // Use centralized GSR calculation
-                GSRCalculationUtils.calculateGSRFromRaw(gsrRaw)
+                GSRCalculationUtils.calculateGSRMicrosiemens(gsrRaw)
             } else {
                 0.0
             }

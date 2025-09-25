@@ -17,6 +17,7 @@ import mpdc4gsr.sensors.SensorRecorder
 import mpdc4gsr.utils.SessionDirectory
 import mpdc4gsr.utils.SessionDirectoryManager
 import mpdc4gsr.controller.RecordingConstants
+import mpdc4gsr.data.SessionMetadata
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.File
@@ -222,6 +223,22 @@ class ComprehensiveRecordingController(
                                     failedSensors.add(sensorName)
                                     Log.w(TAG, "❌ Failed to start sensor: $sensorName - continuing with others")
                                 }
+                                success
+                            } ?: run {
+                                // Handle case where sessionMetadata is null
+                                val success = sensor.startRecording(sensorDir.absolutePath)
+                                sensorResults[sensorName] = success
+                                if (success) {
+                                    activeRecorders[sensorName] = true
+                                    sensorsStarted++
+                                    updateSensorHealth(sensorName, true)
+                                    Log.i(TAG, "✅ Started sensor: $sensorName")
+                                } else {
+                                    updateSensorHealth(sensorName, false)
+                                    failedSensors.add(sensorName)
+                                    Log.w(TAG, "❌ Failed to start sensor: $sensorName - continuing with others")
+                                }
+                                success
                             }
                         } catch (e: Exception) {
                             // Isolate sensor failures - don't let one sensor crash the entire session
@@ -1033,10 +1050,14 @@ class ComprehensiveRecordingController(
             SessionState.IDLE -> RecordingController.SessionState.IDLE
             SessionState.STARTING -> RecordingController.SessionState.STARTING
             SessionState.RECORDING -> RecordingController.SessionState.RECORDING
+            SessionState.ACTIVE -> RecordingController.SessionState.RECORDING  // Map ACTIVE to RECORDING
             SessionState.STOPPING -> RecordingController.SessionState.STOPPING
+            SessionState.COMPLETED -> RecordingController.SessionState.STOPPED_COMPLETED
             SessionState.STOPPED_COMPLETED -> RecordingController.SessionState.STOPPED_COMPLETED
             SessionState.STOPPED_FAILED -> RecordingController.SessionState.STOPPED_FAILED
             SessionState.STOPPED_INCOMPLETE -> RecordingController.SessionState.STOPPED_INCOMPLETE
+            SessionState.FAILED -> RecordingController.SessionState.STOPPED_FAILED
+            SessionState.CANCELLED -> RecordingController.SessionState.STOPPED_INCOMPLETE
         }
     }
 }

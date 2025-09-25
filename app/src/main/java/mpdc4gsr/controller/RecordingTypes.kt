@@ -25,9 +25,13 @@ enum class TriggerSource {
 enum class SessionState {
     IDLE,
     STARTING,
+    RECORDING,
     ACTIVE,
     STOPPING,
     COMPLETED,
+    STOPPED_COMPLETED,
+    STOPPED_FAILED,
+    STOPPED_INCOMPLETE,
     FAILED,
     CANCELLED
 }
