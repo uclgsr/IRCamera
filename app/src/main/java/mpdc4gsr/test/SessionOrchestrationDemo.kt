@@ -8,11 +8,6 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.runBlocking
 import mpdc4gsr.controller.RecordingController
-import mpdc4gsr.controller.SessionManifest
-import mpdc4gsr.controller.SensorActivityInfo
-import mpdc4gsr.controller.SessionEvent
-import mpdc4gsr.controller.DropoutEvent
-import mpdc4gsr.controller.ReconnectionEvent
 import mpdc4gsr.core.RecordingService
 
 /**
@@ -32,6 +27,13 @@ class SessionOrchestrationDemo(
 ) {
     companion object {
         private const val TAG = "SessionOrchestrationDemo"
+        
+        // Type aliases for compatibility
+        typealias SessionManifest = RecordingController.SessionManifest
+        typealias SessionEvent = RecordingController.SessionEvent
+        typealias SensorActivityInfo = RecordingController.SensorActivityInfo
+        typealias DropoutEvent = RecordingController.DropoutEvent
+        typealias ReconnectionEvent = RecordingController.ReconnectionEvent
     }
 
     private val recordingController = RecordingController(context, lifecycleOwner)
