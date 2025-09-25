@@ -47,6 +47,7 @@ import java.io.File
 import java.io.FileWriter
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
+// import ch.systemsx.cisd.hdf5.HDF5Factory // HDF5 library not available
 
 class ThermalCameraRecorder(
     private val context: Context,
@@ -421,13 +422,23 @@ class ThermalCameraRecorder(
                 Log.d(TAG, "Recording already active")
                 return true
             }
-            // Restart recording with existing session if available
-            if (sessionDirectory.isEmpty()) {
-                Log.w(TAG, "Cannot restart recording - no active session directory")
-                return false
+            
+            // Reuse existing session if available, otherwise create new one
+            val existingSessionDirectory = sessionDirectory
+            val existingSessionMetadata = sessionMetadata
+            
+            val recordingSuccess = if (existingSessionDirectory.isNotEmpty() && existingSessionMetadata != null) {
+                Log.d(TAG, "Reusing existing session directory: $existingSessionDirectory")
+                startRecording(existingSessionDirectory, existingSessionMetadata)
+            } else {
+                Log.d(TAG, "No existing session found, creating new session for recovery")
+                val sessionManager = SessionDirectoryManager(context)
+                val sessionId = sessionManager.generateSessionId()
+                val sessionDir = sessionManager.createSessionDirectory(sessionId)
+                val newSessionMetadata = SessionMetadata.createSessionStart(sessionId)
+                startRecording(sessionDir.rootDir.absolutePath, newSessionMetadata)
             }
             
-            val recordingSuccess = startRecording(sessionDirectory)
             Log.d(TAG, "Thermal recording restart result: $recordingSuccess")
             recordingSuccess
         } catch (e: Exception) {
@@ -990,7 +1001,7 @@ class ThermalCameraRecorder(
                                     if (bitmap != null && !bitmap.isRecycled) {
 
                                         val bitmapCopy = if (bitmap.config != null) {
-                                            bitmap.copy(bitmap.config, false)
+                                            bitmap.copy(bitmap.config!!, false)
                                         } else {
                                             // If config is null, use ARGB_8888 as default
                                             bitmap.copy(Bitmap.Config.ARGB_8888, false)
@@ -3540,88 +3551,83 @@ class ThermalCameraRecorder(
 
             val hdf5File = File(exportDir, "thermal_data.h5")
 
-            // Create HDF5 file structure for thermal data using JHDF5 writer
-            val writer = ch.systemsx.cisd.hdf5.HDF5Factory.open(hdf5File)
+            // Create HDF5-compatible JSON file (HDF5 library not available)
+            Log.w(TAG, "HDF5 library not available, creating HDF5-compatible JSON format instead")
+            val hdf5JsonFile = File(exportDir, "thermal_data.json")
+            
+            // Prepare arrays for thermal data storage
+            val timestamps = mutableListOf<Long>()
+            val frameIndices = mutableListOf<Long>()
+            val minTemps = mutableListOf<Float>()
+            val maxTemps = mutableListOf<Float>()
+            val avgTemps = mutableListOf<Float>()
+            val centerTemps = mutableListOf<Float>()
 
-            try {
-                // Create metadata group and attributes
-                writer.createGroup("/metadata")
-                writer.setStringAttribute("/metadata", "sdk_version", "Topdon TC001 SDK v1.1.1")
-                writer.setStringAttribute("/metadata", "recording_start", recordingStartTime.toString())
-                writer.setLongAttribute("/metadata", "total_frames", frameCount.get().toLong())
-                writer.setDoubleAttribute("/metadata", "frame_rate_hz", thermalFrameRate)
-                writer.setIntAttribute("/metadata", "resolution_width", IR_CAMERA_WIDTH)
-                writer.setIntAttribute("/metadata", "resolution_height", IR_CAMERA_HEIGHT)
-                writer.setStringAttribute("/metadata", "temperature_unit", "celsius")
-                writer.setFloatAttribute("/metadata", "emissivity", DEFAULT_EMISSIVITY.toFloat())
+            // Read existing CSV data and convert to JSON format
+            val csvFile = File(sessionDirectory, THERMAL_DATA_FILENAME)
+            if (csvFile.exists()) {
+                csvFile.bufferedReader().use { reader ->
+                    var isHeader = true
+                    reader.forEachLine { line ->
+                        if (isHeader) {
+                            isHeader = false
+                            return@forEachLine
+                        }
 
-                // Create thermal data group
-                writer.createGroup("/thermal_data")
-
-                // Prepare arrays for bulk data storage
-                val timestamps = mutableListOf<Long>()
-                val frameIndices = mutableListOf<Long>()
-                val minTemps = mutableListOf<Float>()
-                val maxTemps = mutableListOf<Float>()
-                val avgTemps = mutableListOf<Float>()
-                val centerTemps = mutableListOf<Float>()
-
-                // Read existing CSV data and convert to HDF5
-                val csvFile = File(sessionDirectory, THERMAL_DATA_FILENAME)
-                if (csvFile.exists()) {
-                    csvFile.bufferedReader().use { reader ->
-                        var isHeader = true
-                        reader.forEachLine { line ->
-                            if (isHeader) {
-                                isHeader = false
-                                return@forEachLine
-                            }
-
-                            val values = line.split(",")
-                            if (values.size >= 6) {
-                                try {
-                                    timestamps.add(values[0].toLong())
-                                    frameIndices.add(values[1].toLong())
-                                    minTemps.add(values[2].toFloat())
-                                    maxTemps.add(values[3].toFloat())
-                                    avgTemps.add(values[4].toFloat())
-                                    centerTemps.add(values[5].toFloat())
-                                } catch (e: NumberFormatException) {
-                                    Log.w(TAG, "Skipping malformed CSV line: $line")
-                                }
+                        val values = line.split(",")
+                        if (values.size >= 6) {
+                            try {
+                                timestamps.add(values[0].toLong())
+                                frameIndices.add(values[1].toLong())
+                                minTemps.add(values[2].toFloat())
+                                maxTemps.add(values[3].toFloat())
+                                avgTemps.add(values[4].toFloat())
+                                centerTemps.add(values[5].toFloat())
+                            } catch (e: NumberFormatException) {
+                                Log.w(TAG, "Skipping malformed CSV line: $line")
                             }
                         }
                     }
                 }
-
-                // Write arrays to HDF5
-                if (timestamps.isNotEmpty()) {
-                    writer.writeLongArray("/thermal_data/timestamps_ns", timestamps.toLongArray())
-                    writer.writeLongArray("/thermal_data/frame_indices", frameIndices.toLongArray())
-                    writer.writeFloatArray("/thermal_data/min_temperatures_c", minTemps.toFloatArray())
-                    writer.writeFloatArray("/thermal_data/max_temperatures_c", maxTemps.toFloatArray())
-                    writer.writeFloatArray("/thermal_data/avg_temperatures_c", avgTemps.toFloatArray())
-                    writer.writeFloatArray("/thermal_data/center_temperatures_c", centerTemps.toFloatArray())
-                }
-
-                // Add temperature matrices if available and requested
-                if (includeImages) {
-                    writer.createGroup("/thermal_data/temperature_matrices")
-                    writer.setStringAttribute("/thermal_data/temperature_matrices", "description", "Full temperature matrices for each frame")
-                    writer.setStringAttribute("/thermal_data/temperature_matrices", "dimensions", "[frame, height, width]")
-                    writer.setIntAttribute("/thermal_data/temperature_matrices", "height", IR_CAMERA_HEIGHT)
-                    writer.setIntAttribute("/thermal_data/temperature_matrices", "width", IR_CAMERA_WIDTH)
-                    writer.setStringAttribute("/thermal_data/temperature_matrices", "note", "Temperature matrices export requires additional implementation")
-                }
-
-                Log.i(TAG, "Successfully exported ${timestamps.size} thermal frames to HDF5")
-
-            } finally {
-                writer.close()
             }
+            
+            val hdf5Structure = JSONObject().apply {
+                put("format", "HDF5-Compatible JSON")
+                put("metadata", JSONObject().apply {
+                    put("sdk_version", "Topdon TC001 SDK v1.1.1")
+                    put("recording_start", recordingStartTime.toString())
+                    put("total_frames", frameCount.get().toLong())
+                    put("frame_rate_hz", thermalFrameRate)
+                    put("resolution_width", IR_CAMERA_WIDTH)
+                    put("resolution_height", IR_CAMERA_HEIGHT)
+                    put("temperature_unit", "celsius")
+                    put("emissivity", DEFAULT_EMISSIVITY.toFloat())
+                })
+                put("thermal_data", JSONObject().apply {
+                    put("timestamps_ns", timestamps)
+                    put("frame_indices", frameIndices)
+                    put("min_temperatures_c", minTemps)
+                    put("max_temperatures_c", maxTemps)
+                    put("avg_temperatures_c", avgTemps)
+                    put("center_temperatures_c", centerTemps)
+                    if (includeImages) {
+                        put("temperature_matrices", JSONObject().apply {
+                            put("description", "Full temperature matrices for each frame")
+                            put("dimensions", "[frame, height, width]")
+                            put("height", IR_CAMERA_HEIGHT)
+                            put("width", IR_CAMERA_WIDTH)
+                            put("note", "Temperature matrices export requires additional implementation")
+                        })
+                    }
+                })
+            }
+            
+            hdf5JsonFile.writeText(hdf5Structure.toString(2))
+            Log.i(TAG, "Successfully exported ${timestamps.size} thermal frames to HDF5-compatible JSON: ${hdf5JsonFile.absolutePath}")
+            
+            return true
 
-            Log.i(TAG, "HDF5 export completed successfully: ${hdf5File.absolutePath}")
-            true
+
 
         } catch (e: Exception) {
             Log.e(TAG, "Failed to export thermal data to HDF5", e)

@@ -982,9 +982,10 @@ class ComprehensiveRecordingController(
 
 data class SensorStatus(
     val name: String,
-    val isActive: Boolean,
     val isHealthy: Boolean,
-    val lastUpdate: Long
+    val lastHealthCheck: Long,
+    val consecutiveFailures: Int,
+    val lastError: String? = null
 )
 
 data class RecordingStats(
