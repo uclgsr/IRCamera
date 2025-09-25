@@ -12,7 +12,6 @@ import com.mpdc4gsr.gsr.model.SessionInfo
 import com.mpdc4gsr.gsr.model.SyncMark
 import mpdc4gsr.sensors.gsr.RealShimmerDeviceFactory as GSRRealShimmerDeviceFactory
 import com.mpdc4gsr.gsr.service.ShimmerGSRRecorder
-import mpdc4gsr.sensors.unified.RealShimmerDeviceFactory as UnifiedRealShimmerDeviceFactory
 import com.shimmerresearch.android.Shimmer
 import com.shimmerresearch.android.manager.ShimmerBluetoothManagerAndroid
 import com.shimmerresearch.bluetooth.ShimmerBluetooth.BT_STATE
