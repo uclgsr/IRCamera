@@ -28,7 +28,10 @@ import kotlinx.coroutines.withContext
 import mpdc4gsr.config.FeatureFlags
 import mpdc4gsr.config.ProtocolVersion
 import mpdc4gsr.controller.ComprehensiveRecordingController
+import mpdc4gsr.controller.RecordingController
 import mpdc4gsr.controller.RecordingState
+import mpdc4gsr.controller.SessionManifest
+import mpdc4gsr.core.CrashRecoveryManager
 import mpdc4gsr.network.NetworkClient
 import mpdc4gsr.network.NetworkConnectionManager
 import mpdc4gsr.network.NetworkManager
@@ -172,6 +175,7 @@ class RecordingService : LifecycleService() {
     private lateinit var recordingController: ComprehensiveRecordingController
     private var permissionManager: PermissionManager? = null
     private var isInitialized = false
+    private lateinit var crashRecoveryManager: CrashRecoveryManager
 
     private lateinit var networkClient: NetworkClient
     private lateinit var networkServer: NetworkServer
@@ -246,6 +250,9 @@ class RecordingService : LifecycleService() {
         // Initialize ComprehensiveRecordingController without PermissionManager for service context
         // PermissionManager requires FragmentActivity which is not available in service context
         recordingController = ComprehensiveRecordingController(this, this, null)
+        
+        // Initialize crash recovery manager for session orchestration
+        crashRecoveryManager = CrashRecoveryManager(this)
 
         networkClient = NetworkClient(this)
         networkServer = NetworkServer(this, 8080)
@@ -283,8 +290,8 @@ class RecordingService : LifecycleService() {
                 try {
                     Log.i(TAG, "Initializing RecordingService with enhanced fault tolerance")
 
-                    // Check for crashed sessions on startup
-                    recordingController.checkForCrashedSessions()
+                    // Check for crashed sessions on startup using session orchestration crash recovery
+                    checkForCrashedSessionsOnStartup()
 
                     val sensorsSuccess = recordingController.initializeSensors()
                     val networkSuccess = initializeNetworkClient()
@@ -683,6 +690,297 @@ class RecordingService : LifecycleService() {
                     mapOf("error" to (e.message ?: "Unknown error"))
                 )
             }
+        }
+    }
+
+    // Enhanced recording methods with trigger source support for session orchestration
+    private suspend fun startRecordingSessionWithTrigger(sessionDirectory: String, triggerSource: RecordingController.TriggerSource): Boolean {
+        if (!isInitialized) {
+            Log.e(TAG, "Service not initialized, cannot start recording")
+            structuredLogger.log(
+                StructuredLogger.LogLevel.ERROR,
+                "RecordingService",
+                "recording_start_failed",
+                mapOf(
+                    "reason" to "service_not_initialized",
+                    "trigger_source" to triggerSource.name
+                )
+            )
+            return false
+        }
+
+        return try {
+            val sessionDir = File(sessionDirectory)
+            if (!sessionDir.exists()) {
+                sessionDir.mkdirs()
+            }
+
+            currentSessionDirectory = sessionDirectory
+            recordingStartTime = System.nanoTime()
+
+            // Initialize TimeSyncManager for this session
+            timeSyncManager?.initializeSession(sessionDirectory)
+            timeSyncManager?.setPeriodicSyncEnabled(true)
+
+            Log.i(TAG, "Starting recording session: $sessionDirectory (trigger: ${triggerSource.name})")
+            structuredLogger.log(
+                StructuredLogger.LogLevel.INFO,
+                "RecordingService",
+                "recording_session_start",
+                mapOf(
+                    "session_directory" to sessionDirectory,
+                    "trigger_source" to triggerSource.name,
+                    "available_sensors" to recordingController.getAvailableSensors()
+                        .map { it.sensorId }
+                )
+            )
+
+            // Update notification for different trigger sources
+            val notificationText = when (triggerSource) {
+                RecordingController.TriggerSource.REMOTE_PC -> "Starting recording session (PC Command)..."
+                RecordingController.TriggerSource.LOCAL_NOTIFICATION -> "Starting recording session (Notification)..."
+                else -> "Starting recording session..."
+            }
+            
+            startForeground(NOTIFICATION_ID, createRecordingNotification(notificationText))
+
+            // Start session with enhanced orchestration
+            val success = recordingController.startRecording(
+                sessionId = sessionDir.name,
+                triggerSource = triggerSource
+            )
+
+            if (success) {
+                Log.i(TAG, "Recording session started successfully via ${triggerSource.name}")
+                
+                // Update notification to show recording is active
+                val activeNotificationText = when (triggerSource) {
+                    RecordingController.TriggerSource.REMOTE_PC -> "Recording (PC Command) - Tap to stop"
+                    RecordingController.TriggerSource.LOCAL_NOTIFICATION -> "Recording (Notification) - Tap to stop"
+                    else -> "Recording - Tap to stop"
+                }
+                updateNotification(activeNotificationText)
+                
+                // Mark session as active for crash recovery
+                crashRecoveryManager.markSessionActive(
+                    sessionId = sessionDir.name,
+                    sessionDirectory = sessionDirectory,
+                    activeSensors = recordingController.getAvailableSensors().map { it.sensorId }
+                )
+                
+                structuredLogger.log(
+                    StructuredLogger.LogLevel.INFO,
+                    "RecordingService",
+                    "recording_session_started",
+                    mapOf(
+                        "session_id" to sessionDir.name,
+                        "trigger_source" to triggerSource.name
+                    )
+                )
+            } else {
+                Log.e(TAG, "Failed to start recording session via ${triggerSource.name}")
+                updateNotification("Recording start failed")
+                currentSessionDirectory = null
+                recordingStartTime = 0
+            }
+
+            success
+        } catch (e: Exception) {
+            Log.e(TAG, "Exception starting recording session via ${triggerSource.name}", e)
+            updateNotification("Recording start error")
+            structuredLogger.log(
+                StructuredLogger.LogLevel.ERROR,
+                "RecordingService",
+                "recording_session_start_exception",
+                mapOf(
+                    "error" to (e.message ?: "Unknown error"),
+                    "trigger_source" to triggerSource.name
+                )
+            )
+            currentSessionDirectory = null
+            recordingStartTime = 0
+            false
+        }
+    }
+
+    private suspend fun stopRecordingSessionWithTrigger(triggerSource: RecordingController.TriggerSource): Boolean {
+        return try {
+            updateNotification("Stopping recording session...")
+            Log.i(TAG, "Stopping recording session (trigger: ${triggerSource.name})")
+
+            val success = recordingController.stopRecording(triggerSource = triggerSource)
+
+            if (success) {
+                val sessionDuration = if (recordingStartTime > 0) {
+                    (System.nanoTime() - recordingStartTime) / 1_000_000_000.0
+                } else 0.0
+
+                Log.i(TAG, "Recording session stopped successfully (duration: ${String.format("%.1f", sessionDuration)}s, trigger: ${triggerSource.name})")
+                
+                val completedNotificationText = when (triggerSource) {
+                    RecordingController.TriggerSource.REMOTE_PC -> "Recording completed via PC (${String.format("%.1f", sessionDuration)}s)"
+                    RecordingController.TriggerSource.LOCAL_NOTIFICATION -> "Recording completed via notification (${String.format("%.1f", sessionDuration)}s)"
+                    else -> "Recording completed (${String.format("%.1f", sessionDuration)}s)"
+                }
+                updateNotification(completedNotificationText)
+
+                // Generate and save session manifest
+                val manifest = recordingController.generateSessionManifest()
+                saveSessionManifest(manifest)
+
+                // Mark session as completed for crash recovery
+                currentSessionDirectory?.let { sessionDir ->
+                    crashRecoveryManager.markSessionCompleted(File(sessionDir).name)
+                }
+
+                structuredLogger.log(
+                    StructuredLogger.LogLevel.INFO,
+                    "RecordingService",
+                    "recording_session_stopped",
+                    mapOf(
+                        "session_duration_seconds" to sessionDuration,
+                        "session_directory" to (currentSessionDirectory ?: "unknown"),
+                        "trigger_source" to triggerSource.name
+                    )
+                )
+
+                delay(2000)
+                stopForeground(true)
+            } else {
+                Log.e(TAG, "Failed to stop recording session cleanly (trigger: ${triggerSource.name})")
+                updateNotification("Recording stop failed")
+                structuredLogger.log(
+                    StructuredLogger.LogLevel.ERROR,
+                    "RecordingService",
+                    "recording_session_stop_failed",
+                    mapOf("trigger_source" to triggerSource.name)
+                )
+            }
+
+            currentSessionDirectory = null
+            recordingStartTime = 0
+
+            // Finalize TimeSyncManager session
+            try {
+                timeSyncManager?.finalizeSession()
+            } catch (e: Exception) {
+                Log.w(TAG, "TimeSyncManager finalize session failed", e)
+            }
+
+            if (!isServerRunning.get()) {
+                stopSelf()
+            }
+            
+            success
+        } catch (e: Exception) {
+            Log.e(TAG, "Error stopping recording session via ${triggerSource.name}", e)
+            updateNotification("Recording stop error")
+            structuredLogger.log(
+                StructuredLogger.LogLevel.ERROR,
+                "RecordingService",
+                "recording_session_stop_exception",
+                mapOf(
+                    "error" to (e.message ?: "Unknown error"),
+                    "trigger_source" to triggerSource.name
+                )
+            )
+            false
+        }
+    }
+
+    // Session manifest saving
+    private fun saveSessionManifest(manifest: SessionManifest) {
+        try {
+            currentSessionDirectory?.let { sessionDir ->
+                val manifestFile = File(sessionDir, "session_manifest.json")
+                val gson = com.google.gson.GsonBuilder().setPrettyPrinting().create()
+                manifestFile.writeText(gson.toJson(manifest))
+                Log.i(TAG, "Session manifest saved: ${manifestFile.absolutePath}")
+                
+                structuredLogger.log(
+                    StructuredLogger.LogLevel.INFO,
+                    "RecordingService",
+                    "session_manifest_saved",
+                    mapOf(
+                        "manifest_file" to manifestFile.absolutePath,
+                        "session_state" to manifest.sessionState.name,
+                        "trigger_source" to manifest.triggerSource.name
+                    )
+                )
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to save session manifest", e)
+            structuredLogger.log(
+                StructuredLogger.LogLevel.ERROR,
+                "RecordingService",
+                "session_manifest_save_failed",
+                mapOf("error" to (e.message ?: "Unknown error"))
+            )
+        }
+    }
+
+    // Crash recovery integration for session orchestration
+    private suspend fun checkForCrashedSessionsOnStartup() {
+        try {
+            Log.i(TAG, "Checking for crashed sessions on service startup")
+            val crashRecoveryResult = crashRecoveryManager.checkForCrashedSessions()
+            
+            if (crashRecoveryResult.hasCrashedSession) {
+                val recoveredSession = crashRecoveryResult.recoveredSession!!
+                Log.w(TAG, "Found crashed session: ${recoveredSession.sessionId}")
+                Log.i(TAG, "Crashed session analysis: ${recoveredSession.analysis.summary}")
+                
+                structuredLogger.log(
+                    StructuredLogger.LogLevel.WARNING,
+                    "RecordingService",
+                    "crashed_session_detected",
+                    mapOf(
+                        "session_id" to recoveredSession.sessionId,
+                        "session_age_ms" to recoveredSession.sessionAge.toString(),
+                        "active_sensors" to recoveredSession.activeSensors.joinToString(","),
+                        "has_partial_data" to (recoveredSession.analysis.partialDataSize > 0).toString(),
+                        "partial_data_size" to recoveredSession.analysis.partialDataSize.toString()
+                    )
+                )
+                
+                // Perform recovery
+                val recoveryResult = crashRecoveryManager.recoverCrashedSession(recoveredSession)
+                if (recoveryResult.success) {
+                    Log.i(TAG, "Successfully recovered crashed session: ${recoveredSession.sessionId}")
+                    Log.i(TAG, "Recovery actions performed: ${recoveryResult.recoveryActions.size}")
+                    
+                    structuredLogger.log(
+                        StructuredLogger.LogLevel.INFO,
+                        "RecordingService",
+                        "crashed_session_recovered",
+                        mapOf(
+                            "session_id" to recoveredSession.sessionId,
+                            "recovery_actions" to recoveryResult.recoveryActions.size.toString()
+                        )
+                    )
+                } else {
+                    Log.e(TAG, "Failed to recover crashed session: ${recoveryResult.error}")
+                    structuredLogger.log(
+                        StructuredLogger.LogLevel.ERROR,
+                        "RecordingService",
+                        "crashed_session_recovery_failed",
+                        mapOf(
+                            "session_id" to recoveredSession.sessionId,
+                            "error" to (recoveryResult.error ?: "Unknown error")
+                        )
+                    )
+                }
+            } else {
+                Log.i(TAG, "No crashed sessions found")
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Error during crash recovery check", e)
+            structuredLogger.log(
+                StructuredLogger.LogLevel.ERROR,
+                "RecordingService",
+                "crash_recovery_check_failed",
+                mapOf("error" to (e.message ?: "Unknown error"))
+            )
         }
     }
 
@@ -1161,12 +1459,24 @@ class RecordingService : LifecycleService() {
             override suspend fun onStartRecording(sessionId: String): ProtocolHandler.CommandResult {
                 return try {
                     Log.i(TAG, "Remote start recording command received for session: $sessionId")
-                    startRecordingSession(sessionId)
-                    ProtocolHandler.CommandResult(
-                        success = true,
-                        message = "Recording started",
-                        data = mapOf("start_time" to System.currentTimeMillis().toString())
-                    )
+                    // Use REMOTE_PC trigger source for session orchestration
+                    val success = startRecordingSessionWithTrigger(sessionId, RecordingController.TriggerSource.REMOTE_PC)
+                    if (success) {
+                        ProtocolHandler.CommandResult(
+                            success = true,
+                            message = "Recording started via PC command",
+                            data = mapOf(
+                                "start_time" to System.currentTimeMillis().toString(),
+                                "session_id" to sessionId,
+                                "trigger_source" to "REMOTE_PC"
+                            )
+                        )
+                    } else {
+                        ProtocolHandler.CommandResult(
+                            success = false,
+                            message = "Recording start failed - may already be recording or prerequisites not met"
+                        )
+                    }
                 } catch (e: Exception) {
                     Log.e(TAG, "Failed to start recording via PC command", e)
                     ProtocolHandler.CommandResult(false, "Start recording failed: ${e.message}")
@@ -1176,14 +1486,29 @@ class RecordingService : LifecycleService() {
             override suspend fun onStopRecording(sessionId: String): ProtocolHandler.CommandResult {
                 return try {
                     Log.i(TAG, "Remote stop recording command received for session: $sessionId")
-                    stopRecordingSession()
-                    ProtocolHandler.CommandResult(
-                        success = true,
-                        message = "Recording stopped",
-                        data = mapOf("stop_time" to System.currentTimeMillis().toString())
-                    )
+                    // Use REMOTE_PC trigger source for session orchestration  
+                    val success = stopRecordingSessionWithTrigger(RecordingController.TriggerSource.REMOTE_PC)
+                    if (success) {
+                        ProtocolHandler.CommandResult(
+                            success = true,
+                            message = "Recording stopped via PC command",
+                            data = mapOf(
+                                "stop_time" to System.currentTimeMillis().toString(),
+                                "session_id" to sessionId,
+                                "trigger_source" to "REMOTE_PC"
+                            )
+                        )
+                    } else {
+                        ProtocolHandler.CommandResult(
+                            success = false,
+                            message = "Stop recording failed - may not be recording"
+                        )
+                    }
                 } catch (e: Exception) {
                     Log.e(TAG, "Failed to stop recording via PC command", e)
+                    ProtocolHandler.CommandResult(false, "Stop recording failed: ${e.message}")
+                }
+            }
                     ProtocolHandler.CommandResult(false, "Stop recording failed: ${e.message}")
                 }
             }
