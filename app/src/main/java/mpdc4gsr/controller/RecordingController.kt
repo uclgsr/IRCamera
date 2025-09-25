@@ -2121,7 +2121,7 @@ data class RecordingControllerSessionManifest(
     val errors: List<String>,
     val warnings: List<String>,
     val fileReferences: Map<String, String>,
-    val sessionState: SessionState
+    val sessionState: RecordingController.SessionState
 )
 
 data class RecordingControllerSensorActivityInfo(
