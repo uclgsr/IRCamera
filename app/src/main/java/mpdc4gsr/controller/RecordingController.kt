@@ -39,6 +39,7 @@ import mpdc4gsr.utils.StorageStatus
 import java.io.File
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicReference
 
 class RecordingController(
     private val context: Context,

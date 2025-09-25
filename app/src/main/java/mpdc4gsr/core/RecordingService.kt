@@ -28,6 +28,7 @@ import kotlinx.coroutines.withContext
 import mpdc4gsr.config.FeatureFlags
 import mpdc4gsr.config.ProtocolVersion
 import mpdc4gsr.controller.ComprehensiveRecordingController
+import mpdc4gsr.controller.RecordingController
 import mpdc4gsr.controller.RecordingState
 import mpdc4gsr.network.NetworkClient
 import mpdc4gsr.network.NetworkConnectionManager
@@ -909,7 +910,7 @@ class RecordingService : LifecycleService() {
     }
 
     // Session manifest saving
-    private fun saveSessionManifest(manifest: ComprehensiveRecordingController.SessionManifest) {
+    private fun saveSessionManifest(manifest: RecordingController.SessionManifest) {
         try {
             currentSessionDirectory?.let { sessionDir ->
                 val manifestFile = File(sessionDir, "session_manifest.json")

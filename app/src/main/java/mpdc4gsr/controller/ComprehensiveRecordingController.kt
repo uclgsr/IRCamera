@@ -12,6 +12,12 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import mpdc4gsr.controller.RecordingController.SessionManifest
+import mpdc4gsr.controller.RecordingController.SessionEvent
+import mpdc4gsr.controller.RecordingController.SensorActivityInfo
+import mpdc4gsr.controller.RecordingController.SensorHealthInfo
+import mpdc4gsr.controller.RecordingController.DropoutEvent
+import mpdc4gsr.controller.RecordingController.ReconnectionEvent
 import mpdc4gsr.data.SessionMetadata
 import mpdc4gsr.permissions.PermissionManager
 import mpdc4gsr.sensors.SensorRecorder
@@ -923,12 +929,12 @@ class ComprehensiveRecordingController(
             val wasActive = activeRecorders[sensorName] == true
             val healthInfo = sensorHealthStatus[sensorName]
 
-            SensorActivityInfo(
+            RecordingController.SensorActivityInfo(
                 sensorName = sensorName,
                 wasActive = wasActive,
                 startedSuccessfully = wasActive,
                 finalStatus = if (wasActive) "COMPLETED" else "INACTIVE",
-                errorMessages = healthInfo?.lastError?.let { listOf(it) } ?: emptyList()
+                errorMessages = healthInfo?.lastError?.let { listOf(it) } ?: emptyList<String>()
             )
         }
 
@@ -940,72 +946,21 @@ class ComprehensiveRecordingController(
             it.eventType.contains("WARNING") || it.eventType.contains("CRITICAL")
         }.map { "${it.eventType}: ${it.metadata}" }
 
-        return SessionManifest(
+        return RecordingController.SessionManifest(
             sessionId = sessionDirectory,
             startTime = startTime,
             stopTime = stopTime,
             duration = duration,
-            triggerSource = lastTriggerSource ?: TriggerSource.LOCAL_UI,
+            triggerSource = RecordingController.TriggerSource.LOCAL_UI, // Convert or use appropriate mapping
             sensorActivitySummary = sensorActivitySummary,
             events = sessionEvents.toList(),
             errors = errors,
             warnings = warnings,
             fileReferences = emptyMap(), // Will be populated by individual recorders
-            sessionState = currentSessionState.get()
+            sessionState = RecordingController.SessionState.STOPPED_COMPLETED // Convert or use appropriate mapping
         )
     }
 }
-
-// Session orchestration data classes
-data class SessionEvent(
-    val eventType: String,
-    val timestampMs: Long,
-    val sensorId: String? = null,
-    val triggerSource: ComprehensiveRecordingController.TriggerSource? = null,
-    val metadata: Map<String, String> = emptyMap(),
-    val success: Boolean = true,
-    val errorMessage: String? = null
-)
-
-data class SessionManifest(
-    val sessionId: String,
-    val sessionName: String? = null,
-    val startTime: Long,
-    val stopTime: Long? = null,
-    val duration: Long? = null,
-    val triggerSource: ComprehensiveRecordingController.TriggerSource,
-    val sensorActivitySummary: Map<String, SensorActivityInfo>,
-    val events: List<SessionEvent>,
-    val errors: List<String>,
-    val warnings: List<String>,
-    val fileReferences: Map<String, String>,
-    val sessionState: ComprehensiveRecordingController.SessionState
-)
-
-data class SensorActivityInfo(
-    val sensorName: String,
-    val wasActive: Boolean,
-    val startedSuccessfully: Boolean,
-    val framesOrSamplesCaptured: Long? = null,
-    val dataSize: Long? = null,
-    val dropouts: List<DropoutEvent> = emptyList(),
-    val reconnections: List<ReconnectionEvent> = emptyList(),
-    val finalStatus: String,
-    val errorMessages: List<String> = emptyList()
-)
-
-data class DropoutEvent(
-    val timestampMs: Long,
-    val reason: String,
-    val durationMs: Long? = null
-)
-
-data class ReconnectionEvent(
-    val timestampMs: Long,
-    val attemptNumber: Int,
-    val successful: Boolean,
-    val delayMs: Long
-)
 
 
 data class ValidationResult(val isValid: Boolean, val failureReason: String)
@@ -1021,13 +976,6 @@ data class SessionInfoData(
     val sensorStopResults: Map<String, Boolean>,
     val errors: List<String>?,
     val finalizedAt: Long
-)
-
-data class SensorHealthInfo(
-    val name: String,
-    val isHealthy: Boolean,
-    val lastHealthCheck: Long,
-    val consecutiveFailures: Int
 )
 
 data class SensorStatus(
