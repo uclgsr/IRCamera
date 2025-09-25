@@ -71,11 +71,10 @@ class RealShimmerDevice(
         return try {
             shimmer = Shimmer(shimmerHandler, address)
             shimmer?.let { device ->
-                // Simple connection without handlers for now
+                // Connection is asynchronous - don't set isConnected immediately
                 device.connect(address, name)
-                isConnected = true
-                connectionCallback?.invoke("CONNECTED")
-                Log.i(TAG, "Connecting to Shimmer device: $name ($address)")
+                Log.i(TAG, "Connection request sent to Shimmer device: $name ($address)")
+                // Connection status will be updated via proper connection callbacks when available
                 true
             } ?: false
         } catch (e: Exception) {
@@ -183,11 +182,24 @@ class RealShimmerDataCluster(private val objectCluster: ObjectCluster) : Shimmer
          * See: https://shimmersensing.com/wp-content/uploads/2021/06/ConsensysPRO-User-Guide.pdf (Section: Data Structure)
          */
         private const val TIMESTAMP_NAME = "Timestamp"
+        
+        // Format constants for ObjectCluster data retrieval
+        /**
+         * Raw data format string used with getFormatClusterValue() to retrieve unprocessed sensor values.
+         * This format provides the direct ADC readings from the sensor hardware.
+         */
+        private const val FORMAT_RAW = "RAW"
+        
+        /**
+         * Calibrated data format string used with getFormatClusterValue() to retrieve processed sensor values.
+         * This format provides sensor readings converted to physical units (e.g., microsiemens for GSR).
+         */
+        private const val FORMAT_CALIBRATED = "CAL"
     }
     
     override fun getGSRRawValue(): Double {
         return try {
-            objectCluster.getFormatClusterValue(GSR_SENSOR_NAME, "RAW") ?: 0.0
+            objectCluster.getFormatClusterValue(GSR_SENSOR_NAME, FORMAT_RAW) ?: 0.0
         } catch (e: Exception) {
             Log.w(TAG, "Failed to get GSR raw value", e)
             0.0
@@ -196,7 +208,7 @@ class RealShimmerDataCluster(private val objectCluster: ObjectCluster) : Shimmer
     
     override fun getGSRCalibratedValue(): Double {
         return try {
-            objectCluster.getFormatClusterValue(GSR_CONDUCTANCE_NAME, "CAL") ?: 0.0
+            objectCluster.getFormatClusterValue(GSR_CONDUCTANCE_NAME, FORMAT_CALIBRATED) ?: 0.0
         } catch (e: Exception) {
             Log.w(TAG, "Failed to get GSR calibrated value", e)
             0.0
@@ -205,7 +217,7 @@ class RealShimmerDataCluster(private val objectCluster: ObjectCluster) : Shimmer
     
     override fun getPPGValue(): Double {
         return try {
-            objectCluster.getFormatClusterValue(PPG_SENSOR_NAME, "RAW") ?: 0.0
+            objectCluster.getFormatClusterValue(PPG_SENSOR_NAME, FORMAT_RAW) ?: 0.0
         } catch (e: Exception) {
             Log.w(TAG, "Failed to get PPG value", e)
             0.0
@@ -214,7 +226,7 @@ class RealShimmerDataCluster(private val objectCluster: ObjectCluster) : Shimmer
     
     override fun getTimestamp(): Long {
         return try {
-            objectCluster.getFormatClusterValue(TIMESTAMP_NAME, "CAL")?.toLong() ?: System.currentTimeMillis()
+            objectCluster.getFormatClusterValue(TIMESTAMP_NAME, FORMAT_CALIBRATED)?.toLong() ?: System.currentTimeMillis()
         } catch (e: Exception) {
             Log.w(TAG, "Failed to get timestamp", e)
             System.currentTimeMillis()
