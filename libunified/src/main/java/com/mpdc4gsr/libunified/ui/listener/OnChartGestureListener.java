@@ -1,4 +1,4 @@
-package com.mpdc4gsr.libunified.ui.charting.listener;
+package com.mpdc4gsr.libunified.ui.listener;
 
 import android.view.MotionEvent;
 

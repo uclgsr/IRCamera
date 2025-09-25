@@ -1,7 +1,7 @@
-package com.mpdc4gsr.libunified.ui.charting.interfaces.datasets;
+package com.mpdc4gsr.libunified.ui.interfaces.datasets;
 
-import com.mpdc4gsr.libunified.ui.charting.data.PieDataSet;
-import com.mpdc4gsr.libunified.ui.charting.data.PieEntry;
+import com.mpdc4gsr.libunified.ui.data.PieDataSet;
+import com.mpdc4gsr.libunified.ui.data.PieEntry;
 
 public interface IPieDataSet extends IDataSet<PieEntry> {
 

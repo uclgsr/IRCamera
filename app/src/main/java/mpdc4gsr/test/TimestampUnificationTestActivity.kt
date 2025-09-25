@@ -6,11 +6,11 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.csl.irCamera.R
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import mpdc4gsr.R
-import mpdc4gsr.sensors.TimestampManager
 import mpdc4gsr.sensors.TimeSynchronizationService
+import mpdc4gsr.sensors.TimestampManager
 import kotlin.math.abs
 
 class TimestampUnificationTestActivity : AppCompatActivity() {

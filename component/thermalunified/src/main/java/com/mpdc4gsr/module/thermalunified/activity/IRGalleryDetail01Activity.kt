@@ -21,6 +21,7 @@ import com.mpdc4gsr.libunified.app.config.ExtraKeyConfig
 import com.mpdc4gsr.libunified.app.config.FileConfig
 import com.mpdc4gsr.libunified.app.config.RouterConfig
 import com.mpdc4gsr.libunified.app.dialog.TipDialog
+import com.mpdc4gsr.libunified.app.dialog.TipProgressDialog
 import com.mpdc4gsr.libunified.app.ktbase.BaseActivity
 import com.mpdc4gsr.libunified.app.navigation.NavigationManager
 import com.mpdc4gsr.libunified.app.tools.FileTools
@@ -29,7 +30,6 @@ import com.mpdc4gsr.libunified.app.tools.ToastTools
 import com.mpdc4gsr.libunified.app.utils.ByteUtils.bytesToInt
 import com.mpdc4gsr.libunified.app.utils.Constants.IS_REPORT_FIRST
 import com.mpdc4gsr.libunified.app.view.TitleView
-import com.mpdc4gsr.lib.ui.dialog.ProgressDialog
 import com.mpdc4gsr.module.thermalunified.R
 import com.mpdc4gsr.module.thermalunified.event.ImageGalleryEvent
 import com.mpdc4gsr.module.thermalunified.fragment.GalleryFragment
@@ -91,8 +91,6 @@ class IRGalleryDetail01Activity : BaseActivity(), View.OnClickListener {
                             frameTool.getRotate90Temp(frameTool.temperatureBytes),
                         ) { current, total ->
                             lifecycleScope.launch(Dispatchers.Main) {
-                                progressDialog?.max = total
-                                progressDialog?.progress = current
                             }
                         }
                 }
@@ -199,12 +197,12 @@ class IRGalleryDetail01Activity : BaseActivity(), View.OnClickListener {
             .show()
     }
 
-    private var progressDialog: ProgressDialog? = null
+    private var progressDialog: TipProgressDialog? = null
     private var excelName: String = ""
 
     private fun actionExcel() {
         if (progressDialog == null) {
-            progressDialog = ProgressDialog(this)
+            progressDialog = TipProgressDialog.Builder(this).setCanceleable(false).create()
         }
         progressDialog?.show()
 

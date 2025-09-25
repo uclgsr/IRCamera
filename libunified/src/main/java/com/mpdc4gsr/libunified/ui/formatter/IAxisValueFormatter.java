@@ -1,6 +1,6 @@
-package com.mpdc4gsr.libunified.ui.charting.formatter;
+package com.mpdc4gsr.libunified.ui.formatter;
 
-import com.mpdc4gsr.libunified.ui.charting.components.AxisBase;
+import com.mpdc4gsr.libunified.ui.components.AxisBase;
 
 @Deprecated
 public interface IAxisValueFormatter {

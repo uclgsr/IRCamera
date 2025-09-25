@@ -1,4 +1,4 @@
-package com.mpdc4gsr.libunified.ui.charting.exception;
+package com.mpdc4gsr.libunified.ui.exception;
 
 public class DrawingDataSetNotCreatedException extends RuntimeException {
 

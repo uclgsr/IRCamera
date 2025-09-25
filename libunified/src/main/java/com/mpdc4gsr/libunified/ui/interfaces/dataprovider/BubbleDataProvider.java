@@ -1,6 +1,6 @@
-package com.mpdc4gsr.libunified.ui.charting.interfaces.dataprovider;
+package com.mpdc4gsr.libunified.ui.interfaces.dataprovider;
 
-import com.mpdc4gsr.libunified.ui.charting.data.BubbleData;
+import com.mpdc4gsr.libunified.ui.data.BubbleData;
 
 public interface BubbleDataProvider extends BarLineScatterCandleBubbleDataProvider {
 

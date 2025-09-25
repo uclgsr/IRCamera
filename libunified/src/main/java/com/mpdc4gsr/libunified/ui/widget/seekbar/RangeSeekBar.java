@@ -1236,6 +1236,11 @@ public class RangeSeekBar extends View {
         invalidate();
     }
 
+    public void drawIndPath(boolean isEnabled) {
+        // Placeholder implementation
+        invalidate();
+    }
+
     @IntDef({SEEKBAR_MODE_SINGLE, SEEKBAR_MODE_RANGE})
     @Retention(RetentionPolicy.SOURCE)
     public @interface SeekBarModeDef {
@@ -1251,11 +1256,11 @@ public class RangeSeekBar extends View {
     public @interface TickMarkGravityDef {
     }
 
+
     @IntDef({Gravity.TOP, Gravity.BOTTOM})
     @Retention(RetentionPolicy.SOURCE)
     public @interface TickMarkLayoutGravityDef {
     }
-
 
     @IntDef({Gravity.TOP, Gravity.CENTER, Gravity.BOTTOM})
     @Retention(RetentionPolicy.SOURCE)

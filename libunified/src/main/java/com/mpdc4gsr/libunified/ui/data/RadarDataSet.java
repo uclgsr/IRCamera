@@ -1,9 +1,9 @@
-package com.mpdc4gsr.libunified.ui.charting.data;
+package com.mpdc4gsr.libunified.ui.data;
 
 import android.graphics.Color;
 
-import com.mpdc4gsr.libunified.ui.charting.interfaces.datasets.IRadarDataSet;
-import com.mpdc4gsr.libunified.ui.charting.utils.ColorTemplate;
+import com.mpdc4gsr.libunified.ui.interfaces.datasets.IRadarDataSet;
+import com.mpdc4gsr.libunified.ui.utils.ColorTemplate;
 
 import java.util.ArrayList;
 import java.util.List;

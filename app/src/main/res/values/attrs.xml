@@ -52,9 +52,18 @@
         <attr name="right_height" />
     </declare-styleable>
 
-    <!-- MenuSecondView styleable -->
-    <declare-styleable name="MenuSecondView">
-        <attr name="deviceType" />
+    <!-- TemperatureView styleable -->
+    <declare-styleable name="TemperatureView">
+        <attr name="temperature_count" />
+    </declare-styleable>
+
+    <!-- ConnectionGuideView styleable -->
+    <declare-styleable name="ConnectionGuideView">
+        <attr name="guide_content_icon" format="reference" />
+        <attr name="guide_icon" format="reference" />
+        <attr name="guide_text" format="string" />
+        <attr name="guide_content_icon_show" format="boolean" />
+        <attr name="guide_icon_show" format="boolean" />
     </declare-styleable>
 
 </resources>

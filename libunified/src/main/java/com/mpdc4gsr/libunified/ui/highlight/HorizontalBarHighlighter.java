@@ -1,12 +1,12 @@
-package com.mpdc4gsr.libunified.ui.charting.highlight;
+package com.mpdc4gsr.libunified.ui.highlight;
 
-import com.mpdc4gsr.libunified.ui.charting.data.BarData;
-import com.mpdc4gsr.libunified.ui.charting.data.DataSet;
-import com.mpdc4gsr.libunified.ui.charting.data.Entry;
-import com.mpdc4gsr.libunified.ui.charting.interfaces.dataprovider.BarDataProvider;
-import com.mpdc4gsr.libunified.ui.charting.interfaces.datasets.IBarDataSet;
-import com.mpdc4gsr.libunified.ui.charting.interfaces.datasets.IDataSet;
-import com.mpdc4gsr.libunified.ui.charting.utils.MPPointD;
+import com.mpdc4gsr.libunified.ui.data.BarData;
+import com.mpdc4gsr.libunified.ui.data.DataSet;
+import com.mpdc4gsr.libunified.ui.data.Entry;
+import com.mpdc4gsr.libunified.ui.interfaces.dataprovider.BarDataProvider;
+import com.mpdc4gsr.libunified.ui.interfaces.datasets.IBarDataSet;
+import com.mpdc4gsr.libunified.ui.interfaces.datasets.IDataSet;
+import com.mpdc4gsr.libunified.ui.utils.MPPointD;
 
 import java.util.ArrayList;
 import java.util.List;

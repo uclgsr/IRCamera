@@ -17,8 +17,8 @@ import android.widget.Magnifier
 import androidx.core.content.ContextCompat
 import com.blankj.utilcode.util.SizeUtils
 import com.mpdc4gsr.libunified.R
-import com.mpdc4gsr.libunified.ir.utils.TargetUtils
 import com.mpdc4gsr.libunified.app.bean.ObserveBean
+import com.mpdc4gsr.libunified.ir.utils.TargetUtils
 
 class ZoomCaliperView : LinearLayout, ScaleGestureDetector.OnScaleGestureListener {
     private var centerX: Float = Float.MAX_VALUE

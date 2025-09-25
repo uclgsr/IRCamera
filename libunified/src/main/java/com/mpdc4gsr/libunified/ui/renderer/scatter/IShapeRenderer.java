@@ -1,10 +1,10 @@
-package com.mpdc4gsr.libunified.ui.charting.renderer.scatter;
+package com.mpdc4gsr.libunified.ui.renderer.scatter;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
 
-import com.mpdc4gsr.libunified.ui.charting.interfaces.datasets.IScatterDataSet;
-import com.mpdc4gsr.libunified.ui.charting.utils.ViewPortHandler;
+import com.mpdc4gsr.libunified.ui.interfaces.datasets.IScatterDataSet;
+import com.mpdc4gsr.libunified.ui.utils.ViewPortHandler;
 
 public interface IShapeRenderer {
 

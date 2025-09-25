@@ -1,6 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.lite.fragment
 
-import android.app.ProgressDialog
 import android.graphics.Bitmap
 import android.graphics.Point
 import android.graphics.Rect
@@ -17,7 +16,6 @@ import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import com.elvishew.xlog.XLog
 import com.energy.ac020library.bean.IrcmdError
-import com.energy.commoncomponent.bean.RotateDegree
 import com.energy.irutilslibrary.LibIRTempAC020
 import com.energy.irutilslibrary.bean.GainStatus
 import com.energy.iruvc.sdkisp.LibIRProcess
@@ -25,7 +23,20 @@ import com.energy.iruvc.utils.CommonParams
 import com.energy.iruvc.utils.Line
 import com.energy.iruvc.utils.SynchronizedBitmap
 import com.energy.iruvccamera.usb.USBMonitor
-import com.mpdc4gsr.module.thermalunified.lite.R
+import com.mpdc4gsr.libunified.app.BaseApplication
+import com.mpdc4gsr.libunified.app.common.SaveSettingUtil
+import com.mpdc4gsr.libunified.app.ktbase.BaseFragment
+import com.mpdc4gsr.libunified.common.RotateDegree
+import com.mpdc4gsr.libunified.ir.view.ITsTempListener
+import com.mpdc4gsr.libunified.ir.view.TemperatureView
+import com.mpdc4gsr.libunified.ir.view.TemperatureView.REGION_MODE_LINE
+import com.mpdc4gsr.libunified.ir.view.TemperatureView.REGION_MODE_POINT
+import com.mpdc4gsr.libunified.ir.view.TemperatureView.REGION_MODE_RECTANGLE
+import com.mpdc4gsr.libunified.ui.dialog.ProgressDialog
+import com.mpdc4gsr.module.thermalunified.R
+import com.mpdc4gsr.module.thermalunified.bean.DataBean
+import com.mpdc4gsr.module.thermalunified.bean.SelectPositionBean
+import com.mpdc4gsr.module.thermalunified.event.ThermalActionEvent
 import com.mpdc4gsr.module.thermalunified.lite.activity.IRMonitorLiteActivity
 import com.mpdc4gsr.module.thermalunified.lite.camera.CameraPreviewManager
 import com.mpdc4gsr.module.thermalunified.lite.camera.DeviceControlManager
@@ -40,17 +51,6 @@ import com.mpdc4gsr.module.thermalunified.lite.ui.activity.IrDisplayActivity.HID
 import com.mpdc4gsr.module.thermalunified.lite.ui.activity.IrDisplayActivity.PREVIEW_FAIL
 import com.mpdc4gsr.module.thermalunified.lite.ui.activity.IrDisplayActivity.SHOW_LOADING
 import com.mpdc4gsr.module.thermalunified.lite.util.IRTool
-import com.mpdc4gsr.libunified.ir.view.ITsTempListener
-import com.mpdc4gsr.libunified.ir.view.TemperatureView
-import com.mpdc4gsr.libunified.ir.view.TemperatureView.REGION_MODE_LINE
-import com.mpdc4gsr.libunified.ir.view.TemperatureView.REGION_MODE_POINT
-import com.mpdc4gsr.libunified.ir.view.TemperatureView.REGION_MODE_RECTANGLE
-import com.mpdc4gsr.libunified.app.BaseApplication
-import com.mpdc4gsr.libunified.app.common.SaveSettingUtil
-import com.mpdc4gsr.libunified.app.ktbase.BaseFragment
-import com.mpdc4gsr.module.thermalunified.bean.DataBean
-import com.mpdc4gsr.module.thermalunified.bean.SelectPositionBean
-import com.mpdc4gsr.module.thermalunified.event.ThermalActionEvent
 import com.mpdc4gsr.module.thermalunified.repository.ConfigRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -64,8 +64,8 @@ import org.greenrobot.eventbus.ThreadMode
 
 class IRMonitorLiteFragment : BaseFragment(), ITsTempListener {
 
-    lateinit var temperatureView: com.infisense.usbir.view.TemperatureView
-    protected lateinit var cameraView: com.topdon.lib.ui.widget.LiteSurfaceView
+    lateinit var temperatureView: com.mpdc4gsr.libunified.ir.view.TemperatureView
+    protected lateinit var cameraView: com.mpdc4gsr.libunified.ui.widget.LiteSurfaceView
 
     private var configJob: Job? = null
     protected var isConfigWait = true
@@ -113,8 +113,9 @@ class IRMonitorLiteFragment : BaseFragment(), ITsTempListener {
 
     override fun initView() {
 
-        temperatureView = requireView().findViewById(R.id.temperatureView)
-        cameraView = requireView().findViewById(R.id.cameraView)
+        temperatureView =
+            requireView().findViewById<com.mpdc4gsr.libunified.ir.view.TemperatureView>(R.id.temperatureView)
+        cameraView = requireView().findViewById<com.mpdc4gsr.libunified.ui.widget.LiteSurfaceView>(R.id.cameraView)
 
         lifecycleScope.launch {
             showLoadingDialog()
@@ -195,21 +196,21 @@ class IRMonitorLiteFragment : BaseFragment(), ITsTempListener {
             2001 -> {
 
                 temperatureView.visibility = View.VISIBLE
-                temperatureView.temperatureRegionMode = REGION_MODE_POINT
+                temperatureView.setTemperatureRegionMode(REGION_MODE_POINT)
                 readPosition(1)
             }
 
             2002 -> {
 
                 temperatureView.visibility = View.VISIBLE
-                temperatureView.temperatureRegionMode = REGION_MODE_LINE
+                temperatureView.setTemperatureRegionMode(REGION_MODE_LINE)
                 readPosition(2)
             }
 
             2003 -> {
 
                 temperatureView.visibility = View.VISIBLE
-                temperatureView.temperatureRegionMode = REGION_MODE_RECTANGLE
+                temperatureView.setTemperatureRegionMode(REGION_MODE_RECTANGLE)
                 readPosition(3)
             }
         }
@@ -240,35 +241,35 @@ class IRMonitorLiteFragment : BaseFragment(), ITsTempListener {
         val contentRectF = RectF(0f, 0f, 192f, 256f)
         when (type) {
             1 -> {
-                if (temperatureView.point != null &&
+                if (temperatureView.getPoint() != null &&
                     contentRectF.contains(
-                        temperatureView.point.x.toFloat(),
-                        temperatureView.point.y.toFloat(),
+                        temperatureView.getPoint().x.toFloat(),
+                        temperatureView.getPoint().y.toFloat(),
                     )
                 ) {
-                    result = SelectPositionBean(1, temperatureView.point)
+                    result = SelectPositionBean(1, temperatureView.getPoint())
                 }
             }
 
             2 -> {
-                if (temperatureView.line != null) {
+                if (temperatureView.getLine() != null) {
                     result =
                         SelectPositionBean(
                             2,
-                            temperatureView.line.start,
-                            temperatureView.line.end,
+                            temperatureView.getLine().start,
+                            temperatureView.getLine().end,
                         )
                 }
             }
 
             3 -> {
-                if (temperatureView.rectangle != null &&
+                if (temperatureView.getRectangle() != null &&
                     contentRectF.contains(
                         RectF(
-                            temperatureView.rectangle.left.toFloat(),
-                            temperatureView.rectangle.top.toFloat(),
-                            temperatureView.rectangle.right.toFloat(),
-                            temperatureView.rectangle.bottom.toFloat(),
+                            temperatureView.getRectangle().left.toFloat(),
+                            temperatureView.getRectangle().top.toFloat(),
+                            temperatureView.getRectangle().right.toFloat(),
+                            temperatureView.getRectangle().bottom.toFloat(),
                         ),
                     )
                 ) {
@@ -276,12 +277,12 @@ class IRMonitorLiteFragment : BaseFragment(), ITsTempListener {
                         SelectPositionBean(
                             3,
                             Point(
-                                temperatureView.rectangle.left,
-                                temperatureView.rectangle.top,
+                                temperatureView.getRectangle().left,
+                                temperatureView.getRectangle().top,
                             ),
                             Point(
-                                temperatureView.rectangle.right,
-                                temperatureView.rectangle.bottom,
+                                temperatureView.getRectangle().right,
+                                temperatureView.getRectangle().bottom,
                             ),
                         )
                 }
@@ -438,8 +439,9 @@ class IRMonitorLiteFragment : BaseFragment(), ITsTempListener {
                         mPreviewWidth,
                         this@IRMonitorLiteFragment
                     )
-                    temperatureView.temperatureRegionMode =
+                    temperatureView.setTemperatureRegionMode(
                         TemperatureView.REGION_MODE_CLEAN
+                    )
                 }
             }
         }
@@ -457,7 +459,7 @@ class IRMonitorLiteFragment : BaseFragment(), ITsTempListener {
             1 -> {
 
                 temperatureView.addScalePoint(selectBean.startPosition)
-                temperatureView.temperatureRegionMode = REGION_MODE_POINT
+                temperatureView.setTemperatureRegionMode(REGION_MODE_POINT)
             }
 
             2 -> {
@@ -468,7 +470,7 @@ class IRMonitorLiteFragment : BaseFragment(), ITsTempListener {
                         selectBean.endPosition,
                     ),
                 )
-                temperatureView.temperatureRegionMode = REGION_MODE_LINE
+                temperatureView.setTemperatureRegionMode(REGION_MODE_LINE)
             }
 
             3 -> {
@@ -481,7 +483,7 @@ class IRMonitorLiteFragment : BaseFragment(), ITsTempListener {
                         selectBean.endPosition!!.y,
                     ),
                 )
-                temperatureView.temperatureRegionMode = REGION_MODE_RECTANGLE
+                temperatureView.setTemperatureRegionMode(REGION_MODE_RECTANGLE)
             }
         }
         temperatureView.drawLine()
@@ -620,9 +622,41 @@ class IRMonitorLiteFragment : BaseFragment(), ITsTempListener {
     fun getBitmap(): Bitmap {
         return Bitmap.createScaledBitmap(
             CameraPreviewManager.getInstance().scaledBitmap(true),
-            cameraView!!.width,
-            cameraView!!.height,
+            cameraView.width,
+            cameraView.height,
             true,
         )
+    }
+
+    // Temperature measurement wrapper methods for compatibility with IRMonitorLiteActivity
+    // These methods provide a bridge between the AC020 TemperatureView and the expected API
+    fun getPointTemp(point: Point): com.energy.iruvc.sdkisp.LibIRTemp.TemperatureSampleResult? {
+        // Delegate to TemperatureView built-in implementation
+        return try {
+            temperatureView.getPointTemp(point)
+        } catch (e: Exception) {
+            XLog.w(TAG, "getPointTemp failed: ${e.message}")
+            null
+        }
+    }
+
+    fun getLineTemp(line: Line): com.energy.iruvc.sdkisp.LibIRTemp.TemperatureSampleResult? {
+        // Delegate to TemperatureView built-in implementation
+        return try {
+            temperatureView.getLineTemp(line)
+        } catch (e: Exception) {
+            XLog.w(TAG, "getLineTemp failed: ${e.message}")
+            null
+        }
+    }
+
+    fun getRectTemp(rect: Rect): com.energy.iruvc.sdkisp.LibIRTemp.TemperatureSampleResult? {
+        // Delegate to TemperatureView built-in implementation
+        return try {
+            temperatureView.getRectTemp(rect)
+        } catch (e: Exception) {
+            XLog.w(TAG, "getRectTemp failed: ${e.message}")
+            null
+        }
     }
 }

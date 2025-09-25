@@ -37,8 +37,6 @@ import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import java.io.File
 import com.mpdc4gsr.libunified.R as LibR
-import com.mpdc4gsr.lib.ui.R as UiR
-
 
 class IRGalleryDetail04Activity : BaseActivity() {
 
@@ -62,9 +60,9 @@ class IRGalleryDetail04Activity : BaseActivity() {
         findViewById<ConstraintLayout>(R.id.cl_bottom).isVisible = isRemote
 
         if (!isRemote) {
-            titleView.setRightDrawable(UiR.drawable.ic_toolbar_info_svg)
-            titleView.setRight2Drawable(UiR.drawable.ic_toolbar_share_svg)
-            titleView.setRight3Drawable(UiR.drawable.ic_toolbar_delete_svg)
+            titleView.setRightDrawable(LibR.drawable.ic_toolbar_info_svg)
+            titleView.setRight2Drawable(LibR.drawable.ic_toolbar_share_svg)
+            titleView.setRight3Drawable(LibR.drawable.ic_toolbar_delete_svg)
             titleView.setRightClickListener { actionInfo() }
             titleView.setRight2ClickListener { actionShare() }
             titleView.setRight3ClickListener { actionDelete() }

@@ -7,8 +7,6 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatDelegate
 import com.csl.irCamera.BuildConfig
 import com.elvishew.xlog.XLog
-import com.mpdc4gsr.module.thermalunified.lite.IrConst
-import com.mpdc4gsr.module.thermalunified.lite.util.CommonUtil
 import com.mpdc4gsr.libunified.app.BaseApplication
 import com.mpdc4gsr.libunified.app.common.SharedManager
 import com.mpdc4gsr.libunified.app.config.HttpConfig
@@ -16,6 +14,8 @@ import com.mpdc4gsr.libunified.app.lms.Config
 import com.mpdc4gsr.libunified.app.lms.LMS.mContext
 import com.mpdc4gsr.libunified.app.lms.UrlConstant
 import com.mpdc4gsr.libunified.app.lms.utils.SPUtils
+import com.mpdc4gsr.module.thermalunified.lite.IrConst
+import com.mpdc4gsr.module.thermalunified.lite.util.CommonUtil
 import io.reactivex.plugins.RxJavaPlugins
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -114,6 +114,10 @@ class App : BaseApplication() {
 
     private fun initZoho() {
 
+    }
 
+    override fun initWebSocket() {
+        // Initialize WebSocket connection
+        // This method can be implemented when WebSocket functionality is needed
     }
 }

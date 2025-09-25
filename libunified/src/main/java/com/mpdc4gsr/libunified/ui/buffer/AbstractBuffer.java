@@ -1,4 +1,4 @@
-package com.mpdc4gsr.libunified.ui.charting.buffer;
+package com.mpdc4gsr.libunified.ui.buffer;
 
 public abstract class AbstractBuffer<T> {
 

@@ -31,6 +31,7 @@ import com.mpdc4gsr.libunified.app.tools.ConstantLanguages
 import com.mpdc4gsr.libunified.app.tools.DeviceTools
 import com.mpdc4gsr.libunified.app.utils.NetWorkUtils
 import com.mpdc4gsr.libunified.app.utils.WsCmdConstants
+import com.mpdc4gsr.libunified.ui.widget.BatteryView
 import mpdc4gsr.activities.DeviceTypeActivity
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -51,44 +52,6 @@ data class BatteryInfo(
             null
         }
 }
-
-import android.annotation.SuppressLint
-import android.content.Intent
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
-import androidx.core.view.isVisible
-import androidx.lifecycle.DefaultLifecycleObserver
-import androidx.lifecycle.LifecycleOwner
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.csl.irCamera.R
-import com.csl.irCamera.databinding.FragmentMainBinding
-import com.mpdc4gsr.libunified.app.bean.event.SocketMsgEvent
-import com.mpdc4gsr.libunified.app.common.SharedManager
-import com.mpdc4gsr.libunified.app.config.ExtraKeyConfig
-import com.mpdc4gsr.libunified.app.config.RouterConfig
-import com.mpdc4gsr.libunified.app.dialog.TipDialog
-import com.mpdc4gsr.libunified.app.ktbase.BaseBindingFragment
-
-
-import com.mpdc4gsr.libunified.app.socket.SocketCmdUtil
-import com.mpdc4gsr.libunified.app.socket.WebSocketProxy
-import com.mpdc4gsr.libunified.app.tools.AppLanguageUtils
-import com.mpdc4gsr.libunified.app.tools.ConstantLanguages
-import com.mpdc4gsr.libunified.app.tools.DeviceTools
-import com.mpdc4gsr.libunified.app.utils.NetWorkUtils
-import com.mpdc4gsr.libunified.app.utils.WsCmdConstants
-import com.mpdc4gsr.libunified.app.comm.navigation.NavigationManager
-import com.mpdc4gsr.libunified.app.lms.weiget.TToast
-import mpdc4gsr.activities.DeviceTypeActivity
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
-import org.json.JSONObject
 
 @SuppressLint("NotifyDataSetChanged")
 class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickListener {
@@ -353,7 +316,7 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
             private val tvDeviceState: TextView = rootView.findViewById(R.id.tv_device_state)
             private val tvBattery: TextView = rootView.findViewById(R.id.tv_battery)
             private val ivImage: ImageView = rootView.findViewById(R.id.iv_image)
-            private val batteryView: com.mpdc4gsr.lib.ui.widget.BatteryView =
+            private val batteryView: BatteryView =
                 rootView.findViewById(R.id.battery_view)
             private val viewDeviceState: View = rootView.findViewById(R.id.view_device_state)
 

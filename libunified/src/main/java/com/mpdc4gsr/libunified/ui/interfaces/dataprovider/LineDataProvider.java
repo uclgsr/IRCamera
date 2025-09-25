@@ -1,7 +1,7 @@
-package com.mpdc4gsr.libunified.ui.charting.interfaces.dataprovider;
+package com.mpdc4gsr.libunified.ui.interfaces.dataprovider;
 
-import com.mpdc4gsr.libunified.ui.charting.components.YAxis;
-import com.mpdc4gsr.libunified.ui.charting.data.LineData;
+import com.mpdc4gsr.libunified.ui.components.YAxis;
+import com.mpdc4gsr.libunified.ui.data.LineData;
 
 public interface LineDataProvider extends BarLineScatterCandleBubbleDataProvider {
 

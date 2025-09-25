@@ -4,17 +4,18 @@ import android.os.Bundle
 import androidx.activity.OnBackPressedCallback
 import androidx.lifecycle.lifecycleScope
 import com.blankj.utilcode.util.ToastUtils
-import com.mpdc4gsr.module.thermalunified.lite.R
-import com.mpdc4gsr.module.thermalunified.lite.databinding.ActivityIrCorrectionLiteFourBinding
-import com.mpdc4gsr.module.thermalunified.lite.fragment.IRMonitorLiteFragment
 import com.mpdc4gsr.libunified.app.dialog.TipDialog
 import com.mpdc4gsr.libunified.app.ktbase.BaseActivity
+import com.mpdc4gsr.module.thermalunified.R
+import com.mpdc4gsr.module.thermalunified.databinding.ActivityIrCorrectionLiteFourBinding
 import com.mpdc4gsr.module.thermalunified.event.CorrectionFinishEvent
+import com.mpdc4gsr.module.thermalunified.lite.fragment.IRMonitorLiteFragment
 import com.mpdc4gsr.module.thermalunified.view.TimeDownView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
+import com.mpdc4gsr.libunified.R as LibR
 
 
 class IRCorrectionLiteFourActivity : BaseActivity() {
@@ -31,12 +32,12 @@ class IRCorrectionLiteFourActivity : BaseActivity() {
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 TipDialog.Builder(this@IRCorrectionLiteFourActivity)
-                    .setTitleMessage(getString(R.string.app_tip))
-                    .setMessage(R.string.tips_cancel_correction)
-                    .setPositiveListener(R.string.app_yes) {
+                    .setTitleMessage(getString(LibR.string.app_tip))
+                    .setMessage(LibR.string.tips_cancel_correction)
+                    .setPositiveListener(LibR.string.app_yes) {
                         EventBus.getDefault().post(CorrectionFinishEvent())
                         finish()
-                    }.setCancelListener(R.string.app_no) {
+                    }.setCancelListener(LibR.string.app_no) {
                     }
                     .create().show()
             }
@@ -44,12 +45,12 @@ class IRCorrectionLiteFourActivity : BaseActivity() {
 
         binding.titleView.setLeftClickListener {
             TipDialog.Builder(this)
-                .setTitleMessage(getString(R.string.app_tip))
-                .setMessage(R.string.tips_cancel_correction)
-                .setPositiveListener(R.string.app_yes) {
+                .setTitleMessage(getString(LibR.string.app_tip))
+                .setMessage(LibR.string.tips_cancel_correction)
+                .setPositiveListener(LibR.string.app_yes) {
                     EventBus.getDefault().post(CorrectionFinishEvent())
                     finish()
-                }.setCancelListener(R.string.app_no) {
+                }.setCancelListener(LibR.string.app_no) {
                 }
                 .create().show()
         }
@@ -94,8 +95,8 @@ class IRCorrectionLiteFourActivity : BaseActivity() {
                                 }
                                 if (!this@IRCorrectionLiteFourActivity.isFinishing) {
                                     TipDialog.Builder(this@IRCorrectionLiteFourActivity)
-                                        .setMessage(R.string.correction_complete)
-                                        .setPositiveListener(R.string.app_confirm) {
+                                        .setMessage(LibR.string.correction_complete)
+                                        .setPositiveListener(LibR.string.app_confirm) {
                                             EventBus.getDefault().post(CorrectionFinishEvent())
                                             finish()
                                         }

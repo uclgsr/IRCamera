@@ -79,6 +79,8 @@ dependencies {
     compileOnly(files("../../app/libs/libAC020sdk_USB_IR_1.1.1_2408291439.aar"))
     compileOnly(files("../../app/libs/libirutils_1.2.0_2409241055.aar"))
     compileOnly(files("../../app/libs/libcommon_1.2.0_24052117.aar"))
+
+    // Core Android libraries
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.localbroadcastmanager)
@@ -92,8 +94,9 @@ dependencies {
     implementation(libs.media3.exoplayer)
     implementation(libs.media3.exoplayer.dash)
     implementation(libs.media3.ui)
-    // implementation(libs.refresh.layout.kernel)
-    // implementation(libs.refresh.header.classics)
+    implementation("androidx.recyclerview:recyclerview:1.3.2")
+    implementation(libs.refresh.layout.kernel)
+    implementation(libs.refresh.header.classics)
     testImplementation(libs.junit)
     testImplementation("org.robolectric:robolectric:4.10.3")
     testImplementation("androidx.test:core:1.5.0")

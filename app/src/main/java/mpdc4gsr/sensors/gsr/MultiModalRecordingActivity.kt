@@ -1,6 +1,7 @@
 package mpdc4gsr.sensors.gsr
 
 
+// Use Shimmer's official Bluetooth API for GSR device management
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -14,20 +15,16 @@ import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import com.csl.irCamera.R
 import com.csl.irCamera.databinding.ActivityMultiModalRecordingBinding
-// UnifiedBleManager - replaced with EasyBLE
-import com.topdon.ble.EasyBLE
-// UnifiedDevice - replaced with Device  
-import com.topdon.ble.Device
 import com.mpdc4gsr.gsr.model.GSRSample
 import com.mpdc4gsr.gsr.model.SessionInfo
 import com.mpdc4gsr.gsr.model.SyncMark
 import com.mpdc4gsr.gsr.service.GSRRecorder
-import com.mpdc4gsr.gsr.service.MockShimmerDeviceFactory
 import com.mpdc4gsr.gsr.service.SessionManager
 import com.mpdc4gsr.gsr.util.TimeUtil
 import com.mpdc4gsr.libunified.app.ktbase.BaseBindingActivity
+import com.shimmerresearch.android.Shimmer
+import com.shimmerresearch.android.manager.ShimmerBluetoothManagerAndroid
 import kotlinx.coroutines.launch
-import mpdc4gsr.data.SessionMetadata
 import mpdc4gsr.permissions.PermissionController
 import mpdc4gsr.sensors.RgbCameraRecorder
 
@@ -72,10 +69,10 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
     private lateinit var permissionController: PermissionController
 
 
-    // Updated to use new BLE module classes
-    private var easyBLE: EasyBLE? = null
-    private var discoveredBleDevices = mutableListOf<Device>()
-    private var connectedBleDevices = mutableListOf<Device>()
+    // Use Shimmer's official Bluetooth manager for GSR devices
+    private var shimmerBluetoothManager: ShimmerBluetoothManagerAndroid? = null
+    private var discoveredShimmerDevices = mutableListOf<Shimmer>()
+    private var connectedShimmerDevices = mutableListOf<Shimmer>()
 
 
     private var enhancedRecordingService: com.mpdc4gsr.gsr.service.EnhancedRecordingService? = null
@@ -209,17 +206,25 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
         permissionController = PermissionController(this)
         permissionController.initialize()
 
-        gsrRecorder = GSRRecorder(this, MockShimmerDeviceFactory())
+        gsrRecorder = GSRRecorder(this, RealShimmerDeviceFactory(this))
         sessionManager = SessionManager.getInstance(this)
 
         // Initialize RGB Camera Recorder with PreviewView
-        val previewView = binding.previewView
+        val previewView = binding.previewView.previewView
         rgbCameraRecorder = RgbCameraRecorder(
             context = this,
             lifecycleOwner = this,
             previewView = previewView,
             useFrontCamera = false
         )
+
+        // Setup tap-to-focus on the preview
+        binding.previewView.onTapToFocus = { normalizedX, normalizedY ->
+            rgbCameraRecorder?.triggerTapToFocus(normalizedX, normalizedY)
+        }
+
+        // Setup camera settings view callbacks
+        setupCameraControlsCallbacks()
 
         // Initialize camera
         lifecycleScope.launch {
@@ -438,7 +443,7 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
 
     private fun observeCameraStatus() {
         lifecycleScope.launch {
-            rgbCameraRecorder?.statusFlow?.collect { status ->
+            rgbCameraRecorder?.getStatusFlow()?.collect { status ->
                 Log.d(TAG, "Camera status: ${status.displayText}")
             }
         }
@@ -813,10 +818,7 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
                 if (videoStopped) {
                     recordingInfo.add("Video recording completed")
                 }
-                rgbCameraRecorder?.getRawImagesDirectory()?.let { dir ->
-                    val rawCount = rgbCameraRecorder?.getRawCaptureCount() ?: 0
-                    recordingInfo.add("RAW images: $rawCount in ${dir.name}")
-                }
+                // Raw image info removed as methods are not available in current RgbCameraRecorder
                 recordingInfo.add("GSR samples: ${it.sampleCount}")
 
                 runOnUiThread {
@@ -930,7 +932,7 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
     }
 
     private fun openSynchronizationTest() {
-        val intent = Intent(this, com.mpdc4gsr.test.SynchronizationTestActivity::class.java)
+        val intent = Intent(this, mpdc4gsr.test.SynchronizationTestActivity::class.java)
         startActivity(intent)
     }
 
@@ -1078,15 +1080,70 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
         uiUpdateJob = null
     }
 
+    private fun setupCameraControlsCallbacks() {
+        binding.cameraSettingsView.apply {
+            // Manual exposure controls
+            onExposureModeToggle = { isManual ->
+                rgbCameraRecorder?.setManualExposureMode(isManual)
+            }
+
+            onExposureCompensationChanged = { evValue ->
+                rgbCameraRecorder?.setExposureCompensation(evValue)
+            }
+
+            onAeLockToggle = { isLocked ->
+                rgbCameraRecorder?.setAutoExposureLock(isLocked)
+            }
+
+            // Manual focus controls
+            onFocusModeToggle = { isManual ->
+                rgbCameraRecorder?.setManualFocusMode(isManual)
+            }
+
+            onFocusDistanceChanged = { distance ->
+                rgbCameraRecorder?.setFocusDistance(distance)
+            }
+
+            onAfLockToggle = { isLocked ->
+                rgbCameraRecorder?.setAutoFocusLock(isLocked)
+            }
+
+            // Basic camera controls
+            onCameraToggle = {
+                // Could implement front/back camera switching here
+            }
+
+            onRecordingToggle = { startRecording ->
+                if (startRecording) {
+                    startRecording()
+                } else {
+                    stopRecording()
+                }
+            }
+
+            onFlashToggle = { enabled ->
+                // Flash control could be implemented here
+            }
+
+            onStage3ProcessingToggle = { enabled ->
+                // Stage3 processing toggle could be implemented here
+            }
+        }
+    }
+
     override fun onDestroy() {
-        super.onDestroy()
         stopUIUpdates()
         gsrRecorder.removeListener(gsrListener)
         if (isRecording) {
             stopRecording()
         }
-        rgbCameraRecorder?.cleanup()
+        // Launch coroutine for cleanup since it's a suspend function
+        // Do this before super.onDestroy() to ensure lifecycleScope is still active
+        lifecycleScope.launch {
+            rgbCameraRecorder?.cleanup()
+        }
         networkClient?.cleanup()
         unbindEnhancedRecordingService()
+        super.onDestroy()
     }
 }

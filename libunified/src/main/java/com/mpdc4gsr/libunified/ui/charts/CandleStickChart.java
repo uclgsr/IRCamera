@@ -1,11 +1,11 @@
-package com.mpdc4gsr.libunified.ui.charting.charts;
+package com.mpdc4gsr.libunified.ui.charts;
 
 import android.content.Context;
 import android.util.AttributeSet;
 
-import com.mpdc4gsr.libunified.ui.charting.data.CandleData;
-import com.mpdc4gsr.libunified.ui.charting.interfaces.dataprovider.CandleDataProvider;
-import com.mpdc4gsr.libunified.ui.charting.renderer.CandleStickChartRenderer;
+import com.mpdc4gsr.libunified.ui.data.CandleData;
+import com.mpdc4gsr.libunified.ui.interfaces.dataprovider.CandleDataProvider;
+import com.mpdc4gsr.libunified.ui.renderer.CandleStickChartRenderer;
 
 public class CandleStickChart extends BarLineChartBase<CandleData> implements CandleDataProvider {
 

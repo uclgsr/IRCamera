@@ -12,9 +12,9 @@ import androidx.core.app.ActivityCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.csl.irCamera.R
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import mpdc4gsr.R
 import mpdc4gsr.sensors.unified.ShimmerDeviceManager
 import mpdc4gsr.sensors.unified.model.DeviceInfo
 
@@ -289,21 +289,17 @@ class ShimmerConfigActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             try {
-                val scanStopped = manager.stopDeviceScanning()
-                if (scanStopped) {
-                    isScanning = false
-                    updateScanButton(false)
+                manager.stopDeviceScanning()
+                isScanning = false
+                updateScanButton(false)
 
-                    val deviceCount = deviceAdapter.itemCount
-                    if (deviceCount > 0) {
-                        updateUI("Scan completed - found $deviceCount Shimmer device(s)")
-                    } else {
-                        updateUI("Scan completed - no Shimmer devices found")
-                    }
-                    Log.i(TAG, "Stopped Shimmer device scanning")
+                val deviceCount = deviceAdapter.itemCount
+                if (deviceCount > 0) {
+                    updateUI("Scan completed - found $deviceCount Shimmer device(s)")
                 } else {
-                    Log.w(TAG, "Failed to stop device scanning")
+                    updateUI("Scan completed - no Shimmer devices found")
                 }
+                Log.i(TAG, "Stopped Shimmer device scanning")
             } catch (e: Exception) {
                 Log.e(TAG, "Error stopping device scan", e)
             }

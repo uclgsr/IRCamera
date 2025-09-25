@@ -41,13 +41,18 @@ class PermissionManager(
 
         Log.i(TAG, "Requesting camera permissions")
 
-
-        permissionController.setPermissionCallback(REQUEST_CAMERA_PERMISSIONS) { granted ->
+        // Use proper permission callback mechanism from PermissionController
+        Log.i(TAG, "Requesting camera permissions through PermissionController")
+        permissionController.ensureAll { granted, deniedPermissions ->
             Log.i(TAG, "Camera permissions result: $granted")
+            if (deniedPermissions.isNotEmpty()) {
+                Log.w(TAG, "Some camera permissions were denied: ${deniedPermissions.joinToString()}")
+            }
             continuation.resume(granted)
         }
 
-        ActivityCompat.requestPermissions(activity, missingPermissions.toTypedArray(), REQUEST_CAMERA_PERMISSIONS)
+        // Camera permissions will be requested through the callback mechanism above
+        // No additional request needed since ensureAll() handles the permission flow
     }
 
 
@@ -76,20 +81,77 @@ class PermissionManager(
             return@suspendCancellableCoroutine
         }
 
-        Log.i(TAG, "Requesting bluetooth permissions")
+        Log.i(TAG, "Requesting bluetooth permissions for GSR sensor access")
 
-
-        permissionController.setPermissionCallback(REQUEST_BLUETOOTH_PERMISSIONS) { granted ->
+        // Use proper permission callback mechanism from PermissionController
+        Log.i(TAG, "Requesting bluetooth permissions through PermissionController")
+        permissionController.ensureAll { granted, deniedPermissions ->
             Log.i(TAG, "Bluetooth permissions result: $granted")
+            if (!granted) {
+                Log.w(TAG, "Bluetooth permissions denied - GSR sensor features will be unavailable")
+                Log.w(TAG, "Denied permissions: ${deniedPermissions.joinToString()}")
+            }
             continuation.resume(granted)
         }
 
-        ActivityCompat.requestPermissions(activity, missingPermissions.toTypedArray(), REQUEST_BLUETOOTH_PERMISSIONS)
+        // Enhanced callback with detailed error handling is now handled above
+        // The permissions will be requested through the callback mechanism
     }
 
 
     suspend fun requestStoragePermissions(): Boolean {
 
         return true
+    }
+
+    /**
+     * Request all permissions required for GSR sensor recording in a unified flow
+     * This ensures smooth multi-sensor recording without mid-session permission issues
+     */
+    suspend fun requestAllRequiredPermissionsForGSR(): Boolean {
+        Log.i(TAG, "Requesting all permissions required for GSR sensor recording")
+
+        val cameraSuccess = requestCameraPermissions()
+        val bluetoothSuccess = requestBluetoothPermissions()
+
+        val allSuccess = cameraSuccess && bluetoothSuccess
+
+        if (allSuccess) {
+            Log.i(TAG, "All GSR recording permissions granted successfully")
+        } else {
+            Log.w(TAG, "Some GSR recording permissions were denied - functionality may be limited")
+        }
+
+        return allSuccess
+    }
+
+    /**
+     * Check if all GSR-related permissions are granted
+     */
+    fun hasAllGSRPermissions(): Boolean {
+        val bluetoothPermissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            arrayOf(
+                Manifest.permission.BLUETOOTH_SCAN,
+                Manifest.permission.BLUETOOTH_CONNECT,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            )
+        } else {
+            arrayOf(
+                Manifest.permission.BLUETOOTH,
+                Manifest.permission.BLUETOOTH_ADMIN,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            )
+        }
+
+        val cameraPermissions = arrayOf(
+            Manifest.permission.CAMERA,
+            Manifest.permission.RECORD_AUDIO
+        )
+
+        val allPermissions = bluetoothPermissions + cameraPermissions
+
+        return allPermissions.all { permission ->
+            ActivityCompat.checkSelfPermission(activity, permission) == PackageManager.PERMISSION_GRANTED
+        }
     }
 }

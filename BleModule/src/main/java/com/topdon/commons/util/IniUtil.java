@@ -19,13 +19,13 @@ import java.util.HashMap;
  *
  */
 public class IniUtil {
-    private static String NAME = "Link";
     private static final String LINK = "link";
     private static final String LINK_NAME = "name";
     private static final String LANGUAGE = "language";
     private static final String VERSION = "version";
     private static final String MAINTENANCE = "maintenance";
     private static final String SYSTEM = "system";
+    private static String NAME = "Link";
 
     public static String getLink(String path) {
         File file = new File(path + "/Diag.ini");

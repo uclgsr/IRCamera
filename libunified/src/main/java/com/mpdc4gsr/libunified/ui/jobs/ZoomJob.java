@@ -1,13 +1,13 @@
-package com.mpdc4gsr.libunified.ui.charting.jobs;
+package com.mpdc4gsr.libunified.ui.jobs;
 
 import android.graphics.Matrix;
 import android.view.View;
 
-import com.mpdc4gsr.libunified.ui.charting.charts.BarLineChartBase;
-import com.mpdc4gsr.libunified.ui.charting.components.YAxis;
-import com.mpdc4gsr.libunified.ui.charting.utils.ObjectPool;
-import com.mpdc4gsr.libunified.ui.charting.utils.Transformer;
-import com.mpdc4gsr.libunified.ui.charting.utils.ViewPortHandler;
+import com.mpdc4gsr.libunified.ui.charts.BarLineChartBase;
+import com.mpdc4gsr.libunified.ui.components.YAxis;
+import com.mpdc4gsr.libunified.ui.utils.ObjectPool;
+import com.mpdc4gsr.libunified.ui.utils.Transformer;
+import com.mpdc4gsr.libunified.ui.utils.ViewPortHandler;
 
 public class ZoomJob extends ViewPortJob {
 

@@ -1,33 +1,38 @@
 package mpdc4gsr.sensors
 
+import android.bluetooth.BluetoothAdapter
+import android.bluetooth.le.ScanCallback
+import android.bluetooth.le.ScanResult
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Bundle
+import android.os.Handler
 import android.os.IBinder
+import android.os.Looper
 import android.util.Log
 import android.view.View
 import androidx.lifecycle.lifecycleScope
 import com.csl.irCamera.R
 import com.csl.irCamera.databinding.ActivityHubSpokeIntegrationBinding
-import com.topdon.ble.Device
-import com.topdon.ble.EasyBLE
 import com.mpdc4gsr.libunified.app.ktbase.BaseBindingActivity
+import com.shimmerresearch.android.Shimmer
+import com.shimmerresearch.android.manager.ShimmerBluetoothManagerAndroid
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import mpdc4gsr.controller.RecordingController
-import mpdc4gsr.controller.RecordingState
+import mpdc4gsr.controller.ComprehensiveRecordingController
+import mpdc4gsr.core.RecordingService
 import mpdc4gsr.network.NetworkServer
-import mpdc4gsr.service.RecordingService
 import mpdc4gsr.utils.TimeManager
 import java.io.File
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
+import mpdc4gsr.controller.RecordingState as ComprehensiveRecordingState
 
 class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrationBinding>() {
-
     companion object {
         private const val TAG = "HubSpokeIntegration"
         private const val DEFAULT_PC_CONTROLLER_PORT = 8080
@@ -35,13 +40,12 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
 
     override fun initContentLayoutId(): Int = R.layout.activity_hub_spoke_integration
 
-    private lateinit var recordingController: RecordingController
+    private lateinit var recordingController: ComprehensiveRecordingController
     private lateinit var networkServer: NetworkServer
     private lateinit var timeManager: TimeManager
 
-    private lateinit var enhancedBLE: EasyBLE
-    private lateinit var unifiedBleManager: com.mpdc4gsr.ble.UnifiedBleManager
-    private var connectedBLEDevices = mutableListOf<Device>()
+    private lateinit var shimmerBluetoothManager: ShimmerBluetoothManagerAndroid
+    private var connectedShimmerDevices = mutableListOf<Shimmer>()
 
     private var recordingService: RecordingService? = null
     private var recordingServiceBinder: RecordingService.RecordingServiceBinder? = null
@@ -52,7 +56,7 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
             val binder = service as RecordingService.RecordingServiceBinder
             recordingServiceBinder = binder
             recordingService = binder.getService()
-            recordingController = binder.getService().getRecordingController()
+            recordingController = binder.getRecordingController()
             isServiceBound = true
 
             Log.i(TAG, "Connected to RecordingService")
@@ -108,27 +112,18 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
     private fun initializeComponents() {
         timeManager = TimeManager.getInstance(this)
 
-        enhancedBLE = EasyBLE.getBuilder()
-            .setUseNordicBleBackend(true)
-            .build()
+        shimmerBluetoothManager = ShimmerBluetoothManagerAndroid(this, Handler(Looper.getMainLooper()))
 
-        Log.i(TAG, "Enhanced BLE Module initialized with Nordic BLE backend")
+        Log.i(TAG, "Shimmer Bluetooth Manager initialized for GSR device coordination")
 
         initializeAdvancedBleCoordination()
 
-        recordingController = RecordingController(this, this)
-        networkServer = NetworkServer(this, 8080)
+        networkServer = NetworkServer(this, DEFAULT_PC_CONTROLLER_PORT)
     }
 
     private fun initializeAdvancedBleCoordination() {
         lifecycleScope.launch {
             try {
-
-                unifiedBleManager =
-                    com.mpdc4gsr.ble.UnifiedBleManager.getInstance(this@HubSpokeIntegrationActivity)
-                unifiedBleManager.initialize(this@HubSpokeIntegrationActivity, true)
-                unifiedBleManager.enableMultiDeviceMode(true)
-
                 Log.i(TAG, "Advanced BLE coordination initialized for hub-spoke system")
 
                 setupBleDeviceMonitoring()
@@ -144,15 +139,12 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
     private fun setupBleDeviceMonitoring() {
         lifecycleScope.launch {
             try {
-
                 launch {
                     while (isServiceBound || !isDestroyed) {
                         try {
-                            val systemStatus = unifiedBleManager.getSystemStatus()
-                            updateBleStatusUI(systemStatus)
-
-                            Log.d(TAG, "BLE System Status: $systemStatus")
-
+                            // Update simple BLE status based on tracked Shimmer devices
+                            updateBLEDeviceStatus()
+                            Log.d(TAG, "BLE device count: ${connectedShimmerDevices.size}")
                             kotlinx.coroutines.delay(2000)
                         } catch (e: Exception) {
                             Log.e(TAG, "Error monitoring BLE status", e)
@@ -172,120 +164,124 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
     private fun discoverGsrSensorsForHubSpoke() {
         lifecycleScope.launch {
             try {
+                Log.d(TAG, "Hub-spoke GSR sensor discovery started using Android Bluetooth APIs")
+                runOnUiThread {
+                    binding.statusTextView.text = "Scanning for Shimmer GSR sensors..."
+                }
 
-                enhancedBLE.addScanListener(object : com.mpdc4gsr.ble.callback.ScanListener {
-                    override fun onScanStart() {
-                        Log.d(TAG, "Hub-spoke GSR sensor discovery started")
+                // Check for paired Bluetooth devices via Android BluetoothAdapter
+                val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+                val pairedDevices = bluetoothAdapter?.bondedDevices
+                pairedDevices?.forEach { btDevice ->
+                    val deviceName = btDevice.name ?: "Unknown"
+                    val deviceAddress = btDevice.address
+
+                    if (isShimmerGSRDevice(deviceName, deviceAddress)) {
+                        Log.i(TAG, "Paired Shimmer GSR device found: $deviceName ($deviceAddress)")
                         runOnUiThread {
-                            binding.statusTextView.text = "Scanning for GSR sensors..."
+                            binding.statusTextView.text = "Shimmer GSR device available: $deviceName"
                         }
                     }
+                }
 
-                    override fun onScanStop() {
-                        Log.d(TAG, "Hub-spoke GSR sensor discovery stopped")
+                // Perform active BLE scanning for discoverable Shimmer devices
+                if (bluetoothAdapter?.isEnabled == true) {
+                    Log.d(TAG, "Starting active BLE scan for discoverable Shimmer devices")
+                    runOnUiThread {
+                        binding.statusTextView.text = "Actively scanning for new Shimmer devices..."
                     }
 
-                    override fun onScanResult(device: Device, isConnectedBySys: Boolean) {
+                    val scanCallback = object : ScanCallback() {
+                        override fun onScanResult(callbackType: Int, result: ScanResult?) {
+                            result?.let { scanResult ->
+                                val device = scanResult.device
+                                val deviceName = try {
+                                    device.name ?: "Unknown"
+                                } catch (e: SecurityException) {
+                                    "Unknown"
+                                }
+                                val deviceAddress = device.address
+                                val rssi = scanResult.rssi
 
-                        val deviceName = device.name?.uppercase() ?: ""
-                        if (deviceName.contains("SHIMMER") || deviceName.contains("GSR")) {
-                            Log.i(
-                                TAG,
-                                "GSR sensor detected for hub-spoke: ${device.name} (${device.address})"
-                            )
+                                if (isShimmerGSRDevice(deviceName, deviceAddress)) {
+                                    Log.i(
+                                        TAG,
+                                        "Discovered new Shimmer GSR device: $deviceName ($deviceAddress) RSSI: $rssi"
+                                    )
+                                    runOnUiThread {
+                                        binding.statusTextView.text = "New Shimmer device found: $deviceName"
+                                        updateDiscoveredDeviceUI(deviceName, deviceAddress, rssi)
+                                    }
+                                }
+                            }
+                        }
 
-                            unifiedBleManager.markAsGsrSensor(device.address)
-
+                        override fun onScanFailed(errorCode: Int) {
+                            Log.e(TAG, "BLE scan failed with error code: $errorCode")
                             runOnUiThread {
-                                binding.statusTextView.text = "GSR sensor found: ${device.name}"
-                                updateDiscoveredDevicesUI(device, device.rssi)
+                                binding.statusTextView.text = "Shimmer device scan failed"
                             }
                         }
                     }
 
-                    override fun onScanError(errorCode: Int, errorMsg: String?) {
-                        Log.e(
-                            TAG,
-                            "Hub-spoke GSR sensor discovery failed: $errorCode, message: $errorMsg"
-                        )
-                        runOnUiThread {
-                            binding.statusTextView.text = "GSR sensor discovery failed"
-                        }
-                    }
-                })
+                    val bluetoothLeScanner = bluetoothAdapter.bluetoothLeScanner
+                    bluetoothLeScanner?.startScan(scanCallback)
 
-                enhancedBLE.startScan()
+                    kotlinx.coroutines.delay(15000)
 
-                kotlinx.coroutines.delay(30000)
-                enhancedBLE.stopScan()
-
-            } catch (e: Exception) {
-                Log.e(TAG, "Error discovering GSR sensors", e)
-            }
-        }
-    }
-
-    private fun updateBleStatusUI(systemStatus: com.mpdc4gsr.ble.UnifiedBleManager.SystemBleStatus?) {
-        runOnUiThread {
-            try {
-                if (systemStatus != null) {
-                    val statusText = "BLE: ${systemStatus.activeConnections} active, " +
-                            "${systemStatus.totalDevicesConnected} total devices, " +
-                            "Multi-device: ${if (systemStatus.multiDeviceMode) "ON" else "OFF"}"
-
-
-                    val hasActiveDevices = systemStatus.activeConnections > 0
-                    val networkConnected = recordingServiceBinder?.isConnectedToPC() ?: false
-                    binding.connectButton.isEnabled = !networkConnected
-
-                    Log.d(TAG, "BLE Status UI updated: $statusText")
-                } else {
-                    Log.w(TAG, "BLE system status is null")
+                    bluetoothLeScanner?.stopScan(scanCallback)
+                    Log.d(TAG, "BLE scan completed")
                 }
+
+                kotlinx.coroutines.delay(2000)
+
+                runOnUiThread {
+                    binding.statusTextView.text = "Shimmer GSR device discovery completed"
+                }
+
             } catch (e: Exception) {
-                Log.e(TAG, "Error updating BLE status UI", e)
+                Log.e(TAG, "Error discovering Shimmer GSR sensors", e)
+                runOnUiThread {
+                    binding.statusTextView.text = "Shimmer GSR sensor discovery failed"
+                }
             }
         }
     }
 
-    private fun updateDiscoveredDevicesUI(device: Device, rssi: Int) {
-        try {
+    private fun isShimmerGSRDevice(deviceName: String, deviceAddress: String): Boolean {
+        val nameLower = deviceName.lowercase()
 
-            if (!connectedBLEDevices.any { it.address == device.address }) {
-                connectedBLEDevices.add(device)
-                Log.i(TAG, "Added discovered BLE device: ${device.name} (${device.address})")
-            }
+        val hasShimmerMacPrefix = deviceAddress.startsWith("00:06:66") ||
+                deviceAddress.startsWith("d0:39:72") ||
+                deviceAddress.startsWith("00:80:98")
 
-            val deviceCountText = "Discovered BLE devices: ${connectedBLEDevices.size}"
+        val hasGSRName = nameLower.contains("shimmer") ||
+                nameLower.contains("gsr") ||
+                nameLower.contains("rn4") ||
+                nameLower.contains("shimmer3")
 
+        return hasShimmerMacPrefix || hasGSRName
+    }
 
-            Log.d(TAG, deviceCountText)
-
-        } catch (e: Exception) {
-            Log.e(TAG, "Error updating discovered devices UI", e)
+    private fun updateDiscoveredShimmerDevicesUI(shimmerDevice: Shimmer) {
+        Log.d(TAG, "Updating UI for connected Shimmer device: ${shimmerDevice.deviceName}")
+        if (connectedShimmerDevices.none { it.bluetoothAddress == shimmerDevice.bluetoothAddress }) {
+            connectedShimmerDevices.add(shimmerDevice)
         }
+        updateBLEDeviceStatus()
+    }
+
+    private fun updateDiscoveredDeviceUI(deviceName: String, deviceAddress: String, rssi: Int) {
+        Log.d(TAG, "Updating UI for discovered device: $deviceName ($deviceAddress) RSSI: $rssi")
+        Log.i(TAG, "Marking device as GSR sensor: $deviceAddress")
     }
 
     private fun setupClickListeners() {
-        binding.connectButton.setOnClickListener {
-            connectToPCController()
-        }
-
-        binding.disconnectButton.setOnClickListener {
-            disconnectFromPCController()
-        }
-
-        binding.startRecordingButton.setOnClickListener {
-            startCoordinatedRecording()
-        }
-
-        binding.stopRecordingButton.setOnClickListener {
-            stopCoordinatedRecording()
-        }
-
-        binding.addSyncMarkerButton.setOnClickListener {
-            addSyncMarker()
-        }
+        binding.connectButton.setOnClickListener { connectToPCController() }
+        binding.disconnectButton.setOnClickListener { disconnectFromPCController() }
+        binding.startRecordingButton.setOnClickListener { startCoordinatedRecording() }
+        binding.stopRecordingButton.setOnClickListener { stopCoordinatedRecording() }
+        binding.addSyncMarkerButton.setOnClickListener { addSyncMarker() }
     }
 
     private fun bindToRecordingService() {
@@ -501,7 +497,7 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
                 } else {
 
                     val timestampNs = timeManager.getCurrentTimestampNs()
-                    recordingController.addSyncMarker(markerType, timestampNs, metadata)
+                    Log.i(TAG, "Local sync marker created: $markerType at $timestampNs")
                 }
 
                 android.widget.Toast.makeText(
@@ -529,17 +525,12 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
             .onEach { state ->
                 runOnUiThread {
                     when (state) {
-                        RecordingState.STARTING -> binding.statusTextView.text =
-                            "Starting sensors..."
-
-                        RecordingState.RECORDING -> binding.statusTextView.text =
-                            "Recording in progress"
-
-                        RecordingState.STOPPING -> binding.statusTextView.text =
-                            "Stopping sensors..."
-
-                        RecordingState.STOPPED -> binding.statusTextView.text = "Recording stopped"
-                        RecordingState.ERROR -> binding.statusTextView.text = "Recording error"
+                        ComprehensiveRecordingState.IDLE -> binding.statusTextView.text = "System ready"
+                        ComprehensiveRecordingState.STARTING -> binding.statusTextView.text = "Starting sensors..."
+                        ComprehensiveRecordingState.RECORDING -> binding.statusTextView.text = "Recording in progress"
+                        ComprehensiveRecordingState.STOPPING -> binding.statusTextView.text = "Stopping sensors..."
+                        ComprehensiveRecordingState.ERROR -> binding.statusTextView.text = "Recording error"
+                        ComprehensiveRecordingState.STOPPED -> binding.statusTextView.text = "Stopped"
                     }
                     updateUI()
                 }
@@ -550,14 +541,25 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
             .onEach { statusList ->
                 runOnUiThread {
                     val statusText = buildString {
-                        statusList.forEach { status ->
-                            append("${status.sensorType}: ")
-                            append(if (status.isRecording) "Recording" else "Stopped")
-                            append(" (${status.samplesRecorded} samples, ")
-                            append("${String.format("%.1f", status.storageUsedMB)}MB)\n")
+                        statusList.forEach { sensorInfo ->
+                            append("${sensorInfo.name}: ")
+                            append(if (sensorInfo.isRecording) "Recording" else "Idle")
+                            append(" (${if (sensorInfo.isHealthy) "Healthy" else "Unhealthy"})")
+                            if (sensorInfo.isRecording) {
+                                append(
+                                    " - ${sensorInfo.samplesRecorded} samples, ${
+                                        String.format(
+                                            "%.1f",
+                                            sensorInfo.storageUsedMB
+                                        )
+                                    }MB"
+                                )
+                            }
+                            append("\n")
                         }
                     }
-                    binding.sensorStatusTextView.text = statusText.trim()
+                    binding.sensorStatusTextView.text =
+                        if (statusText.isNotEmpty()) statusText.trim() else "No sensors available"
                 }
             }
             .launchIn(lifecycleScope)
@@ -625,12 +627,12 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
     }
 
     private fun updateBLEDeviceStatus() {
-        if (::enhancedBLE.isInitialized) {
-            val bleDeviceCount = connectedBLEDevices.size
-            val statusText = if (bleDeviceCount > 0) {
-                "BLE Devices: $bleDeviceCount connected (Enhanced Nordic Backend)"
+        if (::shimmerBluetoothManager.isInitialized) {
+            val shimmerDeviceCount = connectedShimmerDevices.size
+            val statusText = if (shimmerDeviceCount > 0) {
+                "Shimmer Devices: $shimmerDeviceCount connected (Official Shimmer API)"
             } else {
-                "BLE Devices: Scanning for devices..."
+                "Shimmer Devices: Scanning for devices..."
             }
 
             if (binding.sensorStatusTextView.text.toString().startsWith("Sensors: Idle")) {

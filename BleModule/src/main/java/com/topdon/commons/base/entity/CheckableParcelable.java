@@ -9,18 +9,17 @@ import android.os.Parcelable;
  * author: chuanfeng.bi
  */
 public class CheckableParcelable<T extends Parcelable> extends CheckableItem<T> implements Parcelable {
-    @Override
-    public int describeContents() {
-        return 0;
-    }
+    public static final Creator<CheckableParcelable> CREATOR = new Creator<CheckableParcelable>() {
+        @Override
+        public CheckableParcelable createFromParcel(Parcel source) {
+            return new CheckableParcelable(source);
+        }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        Bundle bundle = new Bundle();
-        bundle.putParcelable("items", getData());
-        dest.writeBundle(bundle);
-        dest.writeByte(isChecked() ? (byte) 1 : (byte) 0);
-    }
+        @Override
+        public CheckableParcelable[] newArray(int size) {
+            return new CheckableParcelable[size];
+        }
+    };
 
     public CheckableParcelable() {
     }
@@ -42,15 +41,16 @@ public class CheckableParcelable<T extends Parcelable> extends CheckableItem<T> 
         setChecked(in.readByte() != 0);
     }
 
-    public static final Creator<CheckableParcelable> CREATOR = new Creator<CheckableParcelable>() {
-        @Override
-        public CheckableParcelable createFromParcel(Parcel source) {
-            return new CheckableParcelable(source);
-        }
+    @Override
+    public int describeContents() {
+        return 0;
+    }
 
-        @Override
-        public CheckableParcelable[] newArray(int size) {
-            return new CheckableParcelable[size];
-        }
-    };
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("items", getData());
+        dest.writeBundle(bundle);
+        dest.writeByte(isChecked() ? (byte) 1 : (byte) 0);
+    }
 }

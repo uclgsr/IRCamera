@@ -1,16 +1,16 @@
-package com.mpdc4gsr.libunified.ui.charting.utils;
+package com.mpdc4gsr.libunified.ui.utils;
 
 import android.graphics.Matrix;
 import android.graphics.Path;
 import android.graphics.RectF;
 
 import com.elvishew.xlog.XLog;
-import com.mpdc4gsr.libunified.ui.charting.data.CandleEntry;
-import com.mpdc4gsr.libunified.ui.charting.data.Entry;
-import com.mpdc4gsr.libunified.ui.charting.interfaces.datasets.IBubbleDataSet;
-import com.mpdc4gsr.libunified.ui.charting.interfaces.datasets.ICandleDataSet;
-import com.mpdc4gsr.libunified.ui.charting.interfaces.datasets.ILineDataSet;
-import com.mpdc4gsr.libunified.ui.charting.interfaces.datasets.IScatterDataSet;
+import com.mpdc4gsr.libunified.ui.data.CandleEntry;
+import com.mpdc4gsr.libunified.ui.data.Entry;
+import com.mpdc4gsr.libunified.ui.interfaces.datasets.IBubbleDataSet;
+import com.mpdc4gsr.libunified.ui.interfaces.datasets.ICandleDataSet;
+import com.mpdc4gsr.libunified.ui.interfaces.datasets.ILineDataSet;
+import com.mpdc4gsr.libunified.ui.interfaces.datasets.IScatterDataSet;
 
 import java.util.List;
 

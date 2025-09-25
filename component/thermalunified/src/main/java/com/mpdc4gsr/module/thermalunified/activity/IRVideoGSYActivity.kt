@@ -25,7 +25,6 @@ import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import java.io.File
 import com.mpdc4gsr.libunified.R as LibR
-import com.mpdc4gsr.lib.ui.R as UiR
 
 
 class IRVideoGSYActivity : BaseActivity() {
@@ -52,17 +51,22 @@ class IRVideoGSYActivity : BaseActivity() {
         ivDownload = findViewById(R.id.iv_download)
 
 
-        BarUtils.setNavBarColor(this, ContextCompat.getColor(this, UiR.color.black))
+        BarUtils.setNavBarColor(this, ContextCompat.getColor(this, LibR.color.black))
 
         isRemote = intent.getBooleanExtra("isRemote", false)
-        data = intent.getParcelableExtra("data") ?: throw NullPointerException("传递 data")
+        data = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+            intent.getParcelableExtra("data", GalleryBean::class.java) ?: throw NullPointerException("传递 data")
+        } else {
+            @Suppress("DEPRECATION")
+            intent.getParcelableExtra<GalleryBean>("data") ?: throw NullPointerException("传递 data")
+        }
 
         clBottom.isVisible = isRemote
 
         if (!isRemote) {
-            titleView.setRightDrawable(UiR.drawable.ic_toolbar_info_svg)
-            titleView.setRight2Drawable(UiR.drawable.ic_toolbar_share_svg)
-            titleView.setRight3Drawable(UiR.drawable.ic_toolbar_delete_svg)
+            titleView.setRightDrawable(LibR.drawable.ic_toolbar_info_svg)
+            titleView.setRight2Drawable(LibR.drawable.ic_toolbar_share_svg)
+            titleView.setRight3Drawable(LibR.drawable.ic_toolbar_delete_svg)
             titleView.setRightClickListener { actionInfo() }
             titleView.setRight2ClickListener { actionShare() }
             titleView.setRight3ClickListener { showDeleteDialog() }
@@ -83,7 +87,7 @@ class IRVideoGSYActivity : BaseActivity() {
         }
 
         ivDownload.isSelected = data.hasDownload
-        ivDownload.setImageResource(if (isRemote) R.drawable.selector_download else UiR.drawable.ic_toolbar_info_svg)
+        ivDownload.setImageResource(if (isRemote) R.drawable.selector_download else LibR.drawable.ic_toolbar_info_svg)
 
         previewVideo(isRemote, data.path)
     }

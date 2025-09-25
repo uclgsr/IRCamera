@@ -1,12 +1,12 @@
-package com.mpdc4gsr.libunified.ui.charting.components;
+package com.mpdc4gsr.libunified.ui.components;
 
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.util.Log;
 
-import com.mpdc4gsr.libunified.ui.charting.formatter.DefaultAxisValueFormatter;
-import com.mpdc4gsr.libunified.ui.charting.formatter.ValueFormatter;
-import com.mpdc4gsr.libunified.ui.charting.utils.Utils;
+import com.mpdc4gsr.libunified.ui.formatter.DefaultAxisValueFormatter;
+import com.mpdc4gsr.libunified.ui.formatter.ValueFormatter;
+import com.mpdc4gsr.libunified.ui.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;

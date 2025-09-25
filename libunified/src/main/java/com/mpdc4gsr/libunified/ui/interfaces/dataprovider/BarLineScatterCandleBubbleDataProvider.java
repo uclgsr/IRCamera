@@ -1,8 +1,8 @@
-package com.mpdc4gsr.libunified.ui.charting.interfaces.dataprovider;
+package com.mpdc4gsr.libunified.ui.interfaces.dataprovider;
 
-import com.mpdc4gsr.libunified.ui.charting.components.YAxis.AxisDependency;
-import com.mpdc4gsr.libunified.ui.charting.data.BarLineScatterCandleBubbleData;
-import com.mpdc4gsr.libunified.ui.charting.utils.Transformer;
+import com.mpdc4gsr.libunified.ui.components.YAxis.AxisDependency;
+import com.mpdc4gsr.libunified.ui.data.BarLineScatterCandleBubbleData;
+import com.mpdc4gsr.libunified.ui.utils.Transformer;
 
 public interface BarLineScatterCandleBubbleDataProvider extends ChartInterface {
 

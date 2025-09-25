@@ -1,4 +1,4 @@
-package com.mpdc4gsr.libunified.ui.charting.matrix;
+package com.mpdc4gsr.libunified.ui.matrix;
 
 public final class Vector3 {
     public static final Vector3 ZERO = new Vector3(0, 0, 0);

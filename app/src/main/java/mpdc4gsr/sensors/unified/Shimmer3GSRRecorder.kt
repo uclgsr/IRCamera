@@ -8,6 +8,7 @@ import androidx.core.app.ActivityCompat
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import com.shimmerresearch.android.Shimmer
+import com.shimmerresearch.bluetooth.ShimmerBluetooth.BT_STATE
 import com.shimmerresearch.driver.ObjectCluster
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -189,7 +190,8 @@ class Shimmer3GSRRecorder(
     }
 
     suspend fun stopDeviceDiscovery(): Boolean {
-        return deviceManager?.stopDeviceScanning() ?: false
+        deviceManager?.stopDeviceScanning()
+        return true
     }
 
     fun getDiscoveredDevices(): SharedFlow<List<DeviceInfo>> {
@@ -549,7 +551,7 @@ class Shimmer3GSRRecorder(
 
             val isStreaming = shimmer.isStreaming() ?: false
             val isConnected =
-                shimmer.isConnected() && shimmer.getBluetoothRadioState() == 2
+                shimmer.isConnected() && shimmer.getBluetoothRadioState() == BT_STATE.CONNECTED
 
             Log.d(TAG, "Shimmer state check - Streaming: $isStreaming, Connected: $isConnected")
             isStreaming && isConnected

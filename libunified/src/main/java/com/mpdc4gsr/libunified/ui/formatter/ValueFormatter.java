@@ -1,13 +1,13 @@
-package com.mpdc4gsr.libunified.ui.charting.formatter;
+package com.mpdc4gsr.libunified.ui.formatter;
 
-import com.mpdc4gsr.libunified.ui.charting.components.AxisBase;
-import com.mpdc4gsr.libunified.ui.charting.data.BarEntry;
-import com.mpdc4gsr.libunified.ui.charting.data.BubbleEntry;
-import com.mpdc4gsr.libunified.ui.charting.data.CandleEntry;
-import com.mpdc4gsr.libunified.ui.charting.data.Entry;
-import com.mpdc4gsr.libunified.ui.charting.data.PieEntry;
-import com.mpdc4gsr.libunified.ui.charting.data.RadarEntry;
-import com.mpdc4gsr.libunified.ui.charting.utils.ViewPortHandler;
+import com.mpdc4gsr.libunified.ui.components.AxisBase;
+import com.mpdc4gsr.libunified.ui.data.BarEntry;
+import com.mpdc4gsr.libunified.ui.data.BubbleEntry;
+import com.mpdc4gsr.libunified.ui.data.CandleEntry;
+import com.mpdc4gsr.libunified.ui.data.Entry;
+import com.mpdc4gsr.libunified.ui.data.PieEntry;
+import com.mpdc4gsr.libunified.ui.data.RadarEntry;
+import com.mpdc4gsr.libunified.ui.utils.ViewPortHandler;
 
 public abstract class ValueFormatter implements IAxisValueFormatter, IValueFormatter {
 

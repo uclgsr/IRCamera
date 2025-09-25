@@ -1,10 +1,10 @@
-package com.mpdc4gsr.libunified.ui.charting.data;
+package com.mpdc4gsr.libunified.ui.data;
 
 import android.graphics.Paint;
 
-import com.mpdc4gsr.libunified.ui.charting.interfaces.datasets.ICandleDataSet;
-import com.mpdc4gsr.libunified.ui.charting.utils.ColorTemplate;
-import com.mpdc4gsr.libunified.ui.charting.utils.Utils;
+import com.mpdc4gsr.libunified.ui.interfaces.datasets.ICandleDataSet;
+import com.mpdc4gsr.libunified.ui.utils.ColorTemplate;
+import com.mpdc4gsr.libunified.ui.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;

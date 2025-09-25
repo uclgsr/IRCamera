@@ -10,8 +10,8 @@ import android.view.ViewGroup.LayoutParams
 import android.widget.TextView
 import androidx.annotation.StringRes
 import com.mpdc4gsr.libunified.R
-import com.mpdc4gsr.libunified.databinding.DialogTipProgressBinding
 import com.mpdc4gsr.libunified.app.utils.ScreenUtil
+import com.mpdc4gsr.libunified.databinding.DialogTipProgressBinding
 
 
 class TipProgressDialog : Dialog {

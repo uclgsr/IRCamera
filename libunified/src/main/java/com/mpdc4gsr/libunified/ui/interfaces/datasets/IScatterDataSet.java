@@ -1,7 +1,7 @@
-package com.mpdc4gsr.libunified.ui.charting.interfaces.datasets;
+package com.mpdc4gsr.libunified.ui.interfaces.datasets;
 
-import com.mpdc4gsr.libunified.ui.charting.data.Entry;
-import com.mpdc4gsr.libunified.ui.charting.renderer.scatter.IShapeRenderer;
+import com.mpdc4gsr.libunified.ui.data.Entry;
+import com.mpdc4gsr.libunified.ui.renderer.scatter.IShapeRenderer;
 
 public interface IScatterDataSet extends ILineScatterCandleRadarDataSet<Entry> {
 

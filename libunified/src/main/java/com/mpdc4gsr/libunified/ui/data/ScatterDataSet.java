@@ -1,16 +1,16 @@
-package com.mpdc4gsr.libunified.ui.charting.data;
+package com.mpdc4gsr.libunified.ui.data;
 
-import com.mpdc4gsr.libunified.ui.charting.charts.ScatterChart;
-import com.mpdc4gsr.libunified.ui.charting.interfaces.datasets.IScatterDataSet;
-import com.mpdc4gsr.libunified.ui.charting.renderer.scatter.ChevronDownShapeRenderer;
-import com.mpdc4gsr.libunified.ui.charting.renderer.scatter.ChevronUpShapeRenderer;
-import com.mpdc4gsr.libunified.ui.charting.renderer.scatter.CircleShapeRenderer;
-import com.mpdc4gsr.libunified.ui.charting.renderer.scatter.CrossShapeRenderer;
-import com.mpdc4gsr.libunified.ui.charting.renderer.scatter.IShapeRenderer;
-import com.mpdc4gsr.libunified.ui.charting.renderer.scatter.SquareShapeRenderer;
-import com.mpdc4gsr.libunified.ui.charting.renderer.scatter.TriangleShapeRenderer;
-import com.mpdc4gsr.libunified.ui.charting.renderer.scatter.XShapeRenderer;
-import com.mpdc4gsr.libunified.ui.charting.utils.ColorTemplate;
+import com.mpdc4gsr.libunified.ui.charts.ScatterChart;
+import com.mpdc4gsr.libunified.ui.interfaces.datasets.IScatterDataSet;
+import com.mpdc4gsr.libunified.ui.renderer.scatter.ChevronDownShapeRenderer;
+import com.mpdc4gsr.libunified.ui.renderer.scatter.ChevronUpShapeRenderer;
+import com.mpdc4gsr.libunified.ui.renderer.scatter.CircleShapeRenderer;
+import com.mpdc4gsr.libunified.ui.renderer.scatter.CrossShapeRenderer;
+import com.mpdc4gsr.libunified.ui.renderer.scatter.IShapeRenderer;
+import com.mpdc4gsr.libunified.ui.renderer.scatter.SquareShapeRenderer;
+import com.mpdc4gsr.libunified.ui.renderer.scatter.TriangleShapeRenderer;
+import com.mpdc4gsr.libunified.ui.renderer.scatter.XShapeRenderer;
+import com.mpdc4gsr.libunified.ui.utils.ColorTemplate;
 
 import java.util.ArrayList;
 import java.util.List;

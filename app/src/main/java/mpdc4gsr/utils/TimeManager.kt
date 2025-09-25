@@ -428,7 +428,7 @@ class TimeManager(
 
 
                     val avgLatency = if (measurements.isNotEmpty()) measurements.average() else 0.0
-                    val delayMs = if (avgLatency > HIGH_LATENCY_THRESHOLD_MS) 500 else 100
+                    val delayMs = if (avgLatency > HIGH_LATENCY_THRESHOLD_MS) 500L else 100L
 
                     delay(delayMs)
                 } catch (e: Exception) {
@@ -560,6 +560,29 @@ class TimeManager(
         }
         Log.i(TAG, "Clock offset: ${quality.offsetNs}ns (${quality.offsetNs / 1_000_000}ms)")
     }
+
+    /**
+     * Set clock offset directly from protocol-based time sync
+     * This method allows setting the offset without making a separate connection
+     */
+    fun setClockOffsetFromProtocolSync(offsetNs: Long, estimatedLatencyMs: Long = 0) {
+        clockOffsetNs.set(offsetNs)
+        lastSyncTimestamp.set(getCurrentTimestampNs())
+        syncQualityMs.set(estimatedLatencyMs)
+        isTimeSynced = true
+
+        Log.i(TAG, "Clock offset set from protocol sync: ${offsetNs}ns (quality: ${estimatedLatencyMs}ms)")
+
+        // Start drift monitoring if not already active
+        if (driftMonitoringJob?.isActive != true) {
+            startDriftMonitoring()
+        }
+    }
+
+    /**
+     * Get the current clock offset in nanoseconds
+     */
+    fun getClockOffsetNs(): Long = clockOffsetNs.get()
 }
 
 private data class TimeSyncResult(

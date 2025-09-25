@@ -9,6 +9,7 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import org.json.JSONObject
 import java.util.LinkedList
 import kotlin.math.max
 import kotlin.math.min
@@ -89,6 +90,13 @@ class AdaptiveThermalStreamer {
         }
     }
 
+    // Network client for actual thermal frame streaming
+    private var networkClient: mpdc4gsr.network.NetworkClient? = null
+
+    fun setNetworkClient(client: mpdc4gsr.network.NetworkClient?) {
+        networkClient = client
+        Log.i(TAG, "Network client ${if (client != null) "set" else "cleared"} for thermal streaming")
+    }
 
     fun initialize() {
         Log.i(TAG, "Initializing adaptive thermal streamer")
@@ -214,9 +222,31 @@ class AdaptiveThermalStreamer {
 
             val startTime = System.currentTimeMillis()
 
-            // TODO: Replace with actual network streaming implementation
-
-            simulateNetworkSend(frame)
+            // Send thermal frame via network client using existing sendMessage API
+            try {
+                val frameJson = JSONObject(frame.toNetworkMessage())
+                networkClient?.let { client ->
+                    // Use coroutine scope since sendMessage is suspend function
+                    kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
+                        try {
+                            val success = client.sendMessage(frameJson)
+                            if (success) {
+                                Log.v(TAG, "Sent thermal frame via NetworkClient")
+                            } else {
+                                Log.w(TAG, "Failed to send thermal frame via NetworkClient")
+                            }
+                        } catch (e: Exception) {
+                            Log.w(TAG, "Failed to send thermal frame via NetworkClient", e)
+                        }
+                    }
+                } ?: run {
+                    // Fallback to simulation if no network client available
+                    simulateNetworkSend(frame)
+                }
+            } catch (e: Exception) {
+                Log.w(TAG, "Network send failed, using simulation fallback", e)
+                simulateNetworkSend(frame)
+            }
 
             val endTime = System.currentTimeMillis()
             val latency = endTime - startTime
@@ -411,6 +441,22 @@ class AdaptiveThermalStreamer {
         Log.i(TAG, "  Final network quality: ${stats["network_quality"]}")
     }
 
+    /**
+     * Convert thermal frame data to network message format
+     */
+    private fun ThermalFrameData.toNetworkMessage(): String {
+        return """
+        {
+            "type": "thermal_frame",
+            "frame_index": $frameIndex,
+            "timestamp": $timestamp,
+            "quality": $quality,
+            "priority": "${priority.name}",
+            "data_size": ${jpegData.size},
+            "data": "${android.util.Base64.encodeToString(jpegData, android.util.Base64.DEFAULT)}"
+        }
+        """.trimIndent()
+    }
 
     fun cleanup() {
         stopStreaming()

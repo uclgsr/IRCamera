@@ -1,4 +1,4 @@
-package com.mpdc4gsr.libunified.ui.charting.animation;
+package com.mpdc4gsr.libunified.ui.animation;
 
 import android.animation.TimeInterpolator;
 

@@ -33,18 +33,18 @@ import com.blankj.utilcode.util.StringUtils.getString
 import com.blankj.utilcode.util.ThreadUtils
 import com.blankj.utilcode.util.Utils
 import com.elvishew.xlog.XLog
-import com.mpdc4gsr.libunified.ir.usbdual.camera.DualViewWithExternalCameraCommonApi
-import com.mpdc4gsr.libunified.ir.view.CameraView
-import com.mpdc4gsr.libunified.ir.view.TemperatureView
 import com.mpdc4gsr.libunified.app.comm.view.TempLayout
 import com.mpdc4gsr.libunified.app.common.SharedManager
 import com.mpdc4gsr.libunified.app.config.FileConfig
 import com.mpdc4gsr.libunified.app.dialog.TipDialog
 import com.mpdc4gsr.libunified.app.tools.TimeTool
 import com.mpdc4gsr.libunified.app.utils.BitmapUtils
-import com.mpdc4gsr.lib.ui.camera.CameraPreView
-import com.mpdc4gsr.lib.ui.widget.BitmapConstraintLayout
-import com.mpdc4gsr.lib.ui.widget.LiteSurfaceView
+import com.mpdc4gsr.libunified.ir.usbdual.camera.DualViewWithExternalCameraCommonApi
+import com.mpdc4gsr.libunified.ir.view.CameraView
+import com.mpdc4gsr.libunified.ir.view.TemperatureView
+import com.mpdc4gsr.libunified.ui.widget.BitmapConstraintLayout
+import com.mpdc4gsr.libunified.ui.widget.LiteSurfaceView
+import com.mpdc4gsr.module.thermalunified.stubs.CameraPreView
 import com.mpdc4gsr.module.thermalunified.view.HikSurfaceView
 import com.mpdc4gsr.module.thermalunified.view.TemperatureHikView
 import com.mpdc4gsr.module.thermalunified.view.compass.LinearCompassView
@@ -555,7 +555,12 @@ class VideoRecordFFmpeg(
                 cameraView.getBitmap(cameraViewBitmap)
             }
 
-            is LiteSurfaceView -> cameraViewBitmap = cameraView.scaleBitmap()
+            is LiteSurfaceView -> cameraViewBitmap = cameraView.scaleBitmap() ?: Bitmap.createBitmap(
+                cameraView.width,
+                cameraView.height,
+                Bitmap.Config.ARGB_8888
+            )
+
             is HikSurfaceView -> cameraViewBitmap = cameraView.getScaleBitmap()
             else -> cameraViewBitmap =
                 Bitmap.createBitmap(cameraView.width, cameraView.height, Bitmap.Config.ARGB_8888)
@@ -591,14 +596,13 @@ class VideoRecordFFmpeg(
 
         if (thermalPseudoBarView?.visibility == VISIBLE) {
             try {
-                thermalPseudoBarView?.viewBitmap?.let {
-
+                thermalPseudoBarView.drawToBitmap()?.let { bitmap ->
                     cameraViewBitmap =
                         BitmapUtils.mergeBitmap(
                             cameraViewBitmap,
-                            it,
-                            cameraViewBitmap!!.width - it.width,
-                            (cameraViewBitmap!!.height - it.height) / 2,
+                            bitmap,
+                            cameraViewBitmap!!.width - bitmap.width,
+                            (cameraViewBitmap!!.height - bitmap.height) / 2,
                         )
                 }
 
@@ -645,16 +649,16 @@ class VideoRecordFFmpeg(
             }
         }
 
-        cameraPreview?.let {
-            if (it.isVisible) {
-                val newBitmap: Bitmap? =
-                    BitmapUtils.mergeBitmapByView(
-                        cameraViewBitmap,
-                        it.getBitmap(),
-                        it,
-                    )
-                if (newBitmap != null) {
-                    cameraViewBitmap = newBitmap
+        cameraPreview?.let { preview ->
+            if (preview.isVisible) {
+                val bitmapFromView = preview.getBitmap()
+                bitmapFromView?.let { bitmap ->
+                    // Simple bitmap overlay instead of BitmapUtils.mergeBitmapByView
+                    cameraViewBitmap?.let { baseBitmap ->
+                        val canvas = Canvas(baseBitmap)
+                        canvas.drawBitmap(bitmap, 0f, 0f, null)
+                        cameraViewBitmap = baseBitmap
+                    }
                 }
             }
         }

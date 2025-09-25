@@ -37,15 +37,46 @@ constructor(
     private lateinit var settingsPanel: LinearLayout
     private lateinit var statusText: TextView
 
+    // Manual exposure controls
+    private lateinit var exposureModeToggle: Switch
+    private lateinit var exposureCompensationSeekBar: SeekBar
+    private lateinit var exposureCompensationText: TextView
+    private lateinit var aeLockToggle: Switch
+
+    // Manual focus controls  
+    private lateinit var focusModeToggle: Switch
+    private lateinit var focusDistanceSeekBar: SeekBar
+    private lateinit var focusDistanceText: TextView
+    private lateinit var afLockToggle: Switch
+
     private var currentSettings = RGBCameraRecorder.RecordingSettings()
     private var isSettingsPanelVisible = false
     private var isRecording = false
+
+    // Manual camera control elements
+    private lateinit var exposureLockButton: ImageButton
+    private lateinit var focusLockButton: ImageButton
+    private lateinit var resetControlsButton: ImageButton
+    private lateinit var manualControlsPanel: LinearLayout
 
     var onCameraToggle: (() -> Unit)? = null
     var onRecordingToggle: ((Boolean) -> Unit)? = null
     var onSettingsChanged: ((RGBCameraRecorder.RecordingSettings) -> Unit)? = null
     var onFlashToggle: ((Boolean) -> Unit)? = null
     var onStage3ProcessingToggle: ((Boolean) -> Unit)? = null
+
+    // Manual camera control callbacks
+    var onExposureModeToggle: ((Boolean) -> Unit)? = null // true = manual, false = auto
+    var onExposureCompensationChanged: ((Float) -> Unit)? = null
+    var onAeLockToggle: ((Boolean) -> Unit)? = null
+    var onFocusModeToggle: ((Boolean) -> Unit)? = null // true = manual, false = auto
+    var onFocusDistanceChanged: ((Float) -> Unit)? = null // 0.0f = infinity, 1.0f = macro
+    var onAfLockToggle: ((Boolean) -> Unit)? = null
+    var onTapToFocus: ((Float, Float) -> Unit)? = null // x, y coordinates normalized to 0.0-1.0
+    var onExposureLockToggle: ((Boolean) -> Unit)? = null
+    var onFocusLockToggle: ((Boolean) -> Unit)? = null
+    var onResetCameraControls: (() -> Unit)? = null
+
 
     init {
         initView()
@@ -310,6 +341,102 @@ constructor(
         stage3Layout.addView(stage3ProcessingToggle)
         settingsPanel.addView(stage3Layout)
 
+        // Manual exposure controls
+        createExposureControls()
+
+        // Manual focus controls  
+        createFocusControls()
+
+        // Manual Camera Controls Panel
+        manualControlsPanel = LinearLayout(context).apply {
+            orientation = LinearLayout.VERTICAL
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+            setPadding(8, 16, 8, 8)
+        }
+
+        // Manual controls title
+        val manualControlsTitle = TextView(context).apply {
+            text = "Manual Camera Controls"
+            textSize = 16f
+            setTypeface(null, android.graphics.Typeface.BOLD)
+            setPadding(0, 0, 0, 8)
+        }
+        manualControlsPanel.addView(manualControlsTitle)
+
+        // Exposure Lock
+        val exposureLockLayout = LinearLayout(context).apply {
+            orientation = LinearLayout.HORIZONTAL
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+        }
+
+        val exposureLockLabel = TextView(context).apply {
+            text = "Exposure Lock:"
+            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+        }
+        exposureLockLayout.addView(exposureLockLabel)
+
+        exposureLockButton = ImageButton(context).apply {
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+            setImageResource(android.R.drawable.ic_lock_idle_low_battery) // Using unlocked icon initially
+            contentDescription = "Lock/Unlock Exposure"
+            background = null
+        }
+        exposureLockLayout.addView(exposureLockButton)
+        manualControlsPanel.addView(exposureLockLayout)
+
+        // Focus Lock
+        val focusLockLayout = LinearLayout(context).apply {
+            orientation = LinearLayout.HORIZONTAL
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+        }
+
+        val focusLockLabel = TextView(context).apply {
+            text = "Focus Lock:"
+            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+        }
+        focusLockLayout.addView(focusLockLabel)
+
+        focusLockButton = ImageButton(context).apply {
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+            setImageResource(android.R.drawable.ic_search_category_default) // Using focus icon
+            contentDescription = "Lock/Unlock Focus"
+            background = null
+        }
+        focusLockLayout.addView(focusLockButton)
+        manualControlsPanel.addView(focusLockLayout)
+
+        // Reset Controls Button
+        resetControlsButton = ImageButton(context).apply {
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply {
+                gravity = android.view.Gravity.CENTER_HORIZONTAL
+                topMargin = 8
+            }
+            setImageResource(android.R.drawable.ic_menu_revert)
+            contentDescription = "Reset to Auto Controls"
+            background = null
+        }
+        manualControlsPanel.addView(resetControlsButton)
+
+        settingsPanel.addView(manualControlsPanel)
+
         addView(settingsPanel)
     }
 
@@ -400,6 +527,71 @@ constructor(
         stage3ProcessingToggle.setOnCheckedChangeListener { _, isChecked ->
             onStage3ProcessingToggle?.invoke(isChecked)
         }
+
+        // Manual camera control listeners
+        exposureLockButton.setOnClickListener {
+            val isLocked = exposureLockButton.tag as? Boolean ?: false
+            val newLockState = !isLocked
+            exposureLockButton.tag = newLockState
+            exposureLockButton.setImageResource(
+                if (newLockState) android.R.drawable.ic_lock_lock
+                else android.R.drawable.ic_lock_idle_low_battery
+            )
+            onExposureLockToggle?.invoke(newLockState)
+        }
+
+        focusLockButton.setOnClickListener {
+            val isLocked = focusLockButton.tag as? Boolean ?: false
+            val newLockState = !isLocked
+            focusLockButton.tag = newLockState
+            focusLockButton.setImageResource(
+                if (newLockState) android.R.drawable.ic_menu_mylocation
+                else android.R.drawable.ic_search_category_default
+            )
+            onFocusLockToggle?.invoke(newLockState)
+        }
+
+        resetControlsButton.setOnClickListener {
+            resetManualControls()
+            onResetCameraControls?.invoke()
+        }
+    }
+
+    private fun resetManualControls() {
+        // Reset exposure lock
+        exposureLockButton.tag = false
+        exposureLockButton.setImageResource(android.R.drawable.ic_lock_idle_low_battery)
+
+        // Reset focus lock
+        focusLockButton.tag = false
+        focusLockButton.setImageResource(android.R.drawable.ic_search_category_default)
+
+        // Reset exposure compensation (for -2.0..+2.0 EV scale)
+        exposureCompensationSeekBar.progress = 100
+        exposureCompensationText.text = "Exposure Compensation: 0.0 EV"
+    }
+
+    fun updateExposureLockState(locked: Boolean) {
+        exposureLockButton.tag = locked
+        exposureLockButton.setImageResource(
+            if (locked) android.R.drawable.ic_lock_lock
+            else android.R.drawable.ic_lock_idle_low_battery
+        )
+    }
+
+    fun updateFocusLockState(locked: Boolean) {
+        focusLockButton.tag = locked
+        focusLockButton.setImageResource(
+            if (locked) android.R.drawable.ic_menu_mylocation
+            else android.R.drawable.ic_search_category_default
+        )
+    }
+
+    fun updateExposureCompensation(compensation: Float) {
+        // Map -2.0..+2.0 EV to 0..200 progress
+        val progress = ((compensation * 50f) + 100f).toInt().coerceIn(0, 200)
+        exposureCompensationSeekBar.progress = progress
+        exposureCompensationText.text = "Exposure Compensation: ${String.format("%.1f", compensation)} EV"
     }
 
     private fun updateUI() {
@@ -478,16 +670,227 @@ constructor(
     }
 
     /**
-     * TODO:  the state of Samsung Stage3/Level3 processing toggle
+     * Set the state of Samsung Stage3/Level3 processing toggle
      */
     fun setStage3ProcessingEnabled(enabled: Boolean) {
         stage3ProcessingToggle.isChecked = enabled
     }
 
     /**
-     * TODO: Show or hide Stage3/Level3 processing toggle based on device capabilities
+     * Show or hide Stage3/Level3 processing toggle based on device capabilities
      */
     fun setStage3ProcessingVisible(visible: Boolean) {
         stage3Layout.visibility = if (visible) View.VISIBLE else View.GONE
+    }
+
+    private fun createExposureControls() {
+        // Manual exposure mode toggle
+        val exposureModeLayout = LinearLayout(context).apply {
+            orientation = LinearLayout.HORIZONTAL
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+        }
+
+        val exposureModeLabel = TextView(context).apply {
+            text = "Manual Exposure:"
+            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+        }
+        exposureModeLayout.addView(exposureModeLabel)
+
+        exposureModeToggle = Switch(context).apply {
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+            isChecked = false
+        }
+        exposureModeLayout.addView(exposureModeToggle)
+        settingsPanel.addView(exposureModeLayout)
+
+        // Exposure compensation control
+        val exposureCompensationLayout = LinearLayout(context).apply {
+            orientation = LinearLayout.VERTICAL
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+        }
+
+        exposureCompensationText = TextView(context).apply {
+            text = "Exposure Compensation: 0.0 EV"
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+        }
+        exposureCompensationLayout.addView(exposureCompensationText)
+
+        exposureCompensationSeekBar = SeekBar(context).apply {
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+            max = 200  // -2.0 EV to +2.0 EV (100 = 0 EV)
+            progress = 100
+        }
+        exposureCompensationLayout.addView(exposureCompensationSeekBar)
+        settingsPanel.addView(exposureCompensationLayout)
+
+        // AE Lock toggle
+        val aeLockLayout = LinearLayout(context).apply {
+            orientation = LinearLayout.HORIZONTAL
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+        }
+
+        val aeLockLabel = TextView(context).apply {
+            text = "AE Lock:"
+            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+        }
+        aeLockLayout.addView(aeLockLabel)
+
+        aeLockToggle = Switch(context).apply {
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+            isChecked = false
+        }
+        aeLockLayout.addView(aeLockToggle)
+        settingsPanel.addView(aeLockLayout)
+    }
+
+    private fun createFocusControls() {
+        // Manual focus mode toggle
+        val focusModeLayout = LinearLayout(context).apply {
+            orientation = LinearLayout.HORIZONTAL
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+        }
+
+        val focusModeLabel = TextView(context).apply {
+            text = "Manual Focus:"
+            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+        }
+        focusModeLayout.addView(focusModeLabel)
+
+        focusModeToggle = Switch(context).apply {
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+            isChecked = false
+        }
+        focusModeLayout.addView(focusModeToggle)
+        settingsPanel.addView(focusModeLayout)
+
+        // Focus distance control
+        val focusDistanceLayout = LinearLayout(context).apply {
+            orientation = LinearLayout.VERTICAL
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+        }
+
+        focusDistanceText = TextView(context).apply {
+            text = "Focus Distance: Infinity"
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+        }
+        focusDistanceLayout.addView(focusDistanceText)
+
+        focusDistanceSeekBar = SeekBar(context).apply {
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+            max = 100  // 0 = infinity, 100 = macro
+            progress = 0
+        }
+        focusDistanceLayout.addView(focusDistanceSeekBar)
+        settingsPanel.addView(focusDistanceLayout)
+
+        // AF Lock toggle
+        val afLockLayout = LinearLayout(context).apply {
+            orientation = LinearLayout.HORIZONTAL
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+        }
+
+        val afLockLabel = TextView(context).apply {
+            text = "AF Lock:"
+            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+        }
+        afLockLayout.addView(afLockLabel)
+
+        afLockToggle = Switch(context).apply {
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+            isChecked = false
+        }
+        afLockLayout.addView(afLockToggle)
+        settingsPanel.addView(afLockLayout)
+
+        // Setup listeners for new controls
+        setupExposureFocusListeners()
+    }
+
+    private fun setupExposureFocusListeners() {
+        exposureModeToggle.setOnCheckedChangeListener { _, isChecked ->
+            onExposureModeToggle?.invoke(isChecked)
+        }
+
+        exposureCompensationSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                if (fromUser) {
+                    val evValue = (progress - 100) / 50.0f  // Convert to -2.0 to +2.0 EV
+                    exposureCompensationText.text = "Exposure Compensation: ${String.format("%.1f", evValue)} EV"
+                    onExposureCompensationChanged?.invoke(evValue)
+                }
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+        })
+
+        aeLockToggle.setOnCheckedChangeListener { _, isChecked ->
+            onAeLockToggle?.invoke(isChecked)
+        }
+
+        focusModeToggle.setOnCheckedChangeListener { _, isChecked ->
+            onFocusModeToggle?.invoke(isChecked)
+        }
+
+        focusDistanceSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                if (fromUser) {
+                    val focusValue = progress / 100.0f  // Convert to 0.0-1.0
+                    val focusText =
+                        if (focusValue < 0.1f) "Infinity" else String.format("%.1fm", 0.1f + focusValue * 2.0f)
+                    focusDistanceText.text = "Focus Distance: $focusText"
+                    onFocusDistanceChanged?.invoke(focusValue)
+                }
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+        })
+
+        afLockToggle.setOnCheckedChangeListener { _, isChecked ->
+            onAfLockToggle?.invoke(isChecked)
+        }
     }
 }

@@ -23,7 +23,7 @@
         android:background="@drawable/setting_bg_shape"
         app:layout_constraintTop_toBottomOf="@id/title_view">
 
-        <com.mpdc4gsr.lib.ui.SettingNightView
+        <com.mpdc4gsr.libunified.ui.SettingNightView
             android:id="@+id/setting_item_tisr"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

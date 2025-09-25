@@ -1,6 +1,6 @@
-package com.mpdc4gsr.libunified.ui.charting.utils;
+package com.mpdc4gsr.libunified.ui.utils;
 
-import com.mpdc4gsr.libunified.ui.charting.data.Entry;
+import com.mpdc4gsr.libunified.ui.data.Entry;
 
 import java.util.Comparator;
 

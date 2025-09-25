@@ -28,6 +28,7 @@ import com.mpdc4gsr.module.thermalunified.report.view.ReportIRInputView
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import com.mpdc4gsr.libunified.R as LibR
 
 
 class ReportCreateSecondActivity : BaseActivity(), View.OnClickListener {
@@ -174,7 +175,7 @@ class ReportCreateSecondActivity : BaseActivity(), View.OnClickListener {
         when (v) {
             tvAddImage -> {
                 if (reportIRList.size >= 9) {
-                    ToastUtils.showShort(R.string.album_report_max_image_tips)
+                    ToastUtils.showShort(LibR.string.album_report_max_image_tips)
                     return
                 }
                 val reportIRBeanList = ArrayList<ReportIRBean>(reportIRList)

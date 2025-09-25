@@ -24,11 +24,11 @@ tasks.register<Delete>("clean") {
 // Enhanced clean task that also cleans all subprojects  
 tasks.register("cleanAll") {
     group = "build"
-    description = "Clean all modules including build cache and gradle cache"
+    description = "Clean all modules including build cache"
     dependsOn("clean")
     doLast {
-        // Clean gradle build cache
-        delete(file("${rootProject.projectDir}/.gradle"))
+        // Do NOT delete .gradle directory to avoid Windows file lock issues
+        // Clean root build directory
         delete(file("${rootProject.projectDir}/build"))
 
         // Clean all subproject build directories
@@ -36,7 +36,7 @@ tasks.register("cleanAll") {
             delete(file("${subproject.projectDir}/build"))
         }
 
-        println("All modules and caches cleaned successfully")
+        println("All modules cleaned successfully (without deleting .gradle cache)")
     }
 }
 

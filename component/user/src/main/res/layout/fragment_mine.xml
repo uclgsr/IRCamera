@@ -180,7 +180,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/iv_winter">
 
-                <com.mpdc4gsr.lib.ui.SettingNightView
+                <com.mpdc4gsr.libunified.ui.SettingNightView
                     android:id="@+id/setting_electronic_manual"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -191,7 +191,7 @@
                     app:setting_more_night="true"
                     app:setting_text_night="@string/electronic_manual" />
 
-                <com.mpdc4gsr.lib.ui.SettingNightView
+                <com.mpdc4gsr.libunified.ui.SettingNightView
                     android:id="@+id/setting_faq"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -203,7 +203,7 @@
                     app:setting_more_night="true"
                     app:setting_text_night="@string/app_question" />
 
-                <com.mpdc4gsr.lib.ui.SettingNightView
+                <com.mpdc4gsr.libunified.ui.SettingNightView
                     android:id="@+id/setting_feedback"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -215,7 +215,7 @@
                     app:setting_more_night="true"
                     app:setting_text_night="@string/user_advice_feedback" />
 
-                <com.mpdc4gsr.lib.ui.SettingNightView
+                <com.mpdc4gsr.libunified.ui.SettingNightView
                     android:id="@+id/setting_item_unit"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -228,7 +228,7 @@
                     app:setting_text_night="@string/setting_unit" />
 
 
-                <com.mpdc4gsr.lib.ui.SettingNightView
+                <com.mpdc4gsr.libunified.ui.SettingNightView
                     android:id="@+id/setting_item_clear"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -241,7 +241,7 @@
                     app:setting_more_night="true"
                     app:setting_text_night="@string/set_clear_cache" />
 
-                <com.mpdc4gsr.lib.ui.SettingNightView
+                <com.mpdc4gsr.libunified.ui.SettingNightView
                     android:id="@+id/setting_item_version"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

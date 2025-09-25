@@ -3,10 +3,10 @@ package com.mpdc4gsr.module.thermalunified.lite.activity
 import android.content.Intent
 import android.os.Bundle
 import androidx.lifecycle.lifecycleScope
-import com.mpdc4gsr.module.thermalunified.lite.R
-import com.mpdc4gsr.module.thermalunified.lite.databinding.ActivityIrCorrectionLiteThreeBinding
-import com.mpdc4gsr.module.thermalunified.lite.fragment.IRMonitorLiteFragment
 import com.mpdc4gsr.libunified.app.ktbase.BaseActivity
+import com.mpdc4gsr.module.thermalunified.R
+import com.mpdc4gsr.module.thermalunified.databinding.ActivityIrCorrectionLiteThreeBinding
+import com.mpdc4gsr.module.thermalunified.lite.fragment.IRMonitorLiteFragment
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 

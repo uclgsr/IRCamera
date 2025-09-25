@@ -1,11 +1,11 @@
-package com.mpdc4gsr.libunified.ui.charting.data;
+package com.mpdc4gsr.libunified.ui.data;
 
 import android.annotation.TargetApi;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 
-import com.mpdc4gsr.libunified.ui.charting.interfaces.datasets.ILineRadarDataSet;
-import com.mpdc4gsr.libunified.ui.charting.utils.Utils;
+import com.mpdc4gsr.libunified.ui.interfaces.datasets.ILineRadarDataSet;
+import com.mpdc4gsr.libunified.ui.utils.Utils;
 
 import java.util.List;
 

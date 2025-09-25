@@ -13,10 +13,6 @@ import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.lifecycleScope
 import com.blankj.utilcode.util.TimeUtils
 import com.blankj.utilcode.util.ToastUtils
-import com.mpdc4gsr.libunified.ui.gzuliyujiang.wheelpicker.DatimePicker
-import com.mpdc4gsr.libunified.ui.gzuliyujiang.wheelpicker.entity.DateEntity
-import com.mpdc4gsr.libunified.ui.gzuliyujiang.wheelpicker.entity.DatimeEntity
-import com.mpdc4gsr.libunified.ui.gzuliyujiang.wheelpicker.entity.TimeEntity
 import com.hjq.permissions.OnPermissionCallback
 import com.hjq.permissions.Permission
 import com.hjq.permissions.XXPermissions
@@ -31,6 +27,10 @@ import com.mpdc4gsr.libunified.app.navigation.NavigationManager
 import com.mpdc4gsr.libunified.app.tools.NumberTools
 import com.mpdc4gsr.libunified.app.tools.UnitTools
 import com.mpdc4gsr.libunified.app.utils.CommUtils
+import com.mpdc4gsr.libunified.ui.gzuliyujiang.wheelpicker.DatimePicker
+import com.mpdc4gsr.libunified.ui.gzuliyujiang.wheelpicker.entity.DateEntity
+import com.mpdc4gsr.libunified.ui.gzuliyujiang.wheelpicker.entity.DatimeEntity
+import com.mpdc4gsr.libunified.ui.gzuliyujiang.wheelpicker.entity.TimeEntity
 import com.mpdc4gsr.module.thermalunified.R
 import com.mpdc4gsr.module.thermalunified.report.bean.ImageTempBean
 import com.mpdc4gsr.module.thermalunified.report.bean.ReportConditionBean
@@ -64,10 +64,10 @@ class ReportCreateFirstActivity : BaseActivity(), View.OnClickListener {
     private val etReportWatermark: android.widget.EditText by lazy { findViewById(R.id.et_report_watermark) }
     private val switchReportWatermark: android.widget.Switch by lazy { findViewById(R.id.switch_report_watermark) }
     private val etAmbientTemperature: android.widget.EditText by lazy { findViewById(R.id.et_ambient_temperature) }
-    private val tipSeekHumidity: com.topdon.lib.ui.widget.TipsSeekBar by lazy { findViewById(R.id.tip_seek_humidity) }
+    private val tipSeekHumidity: com.mpdc4gsr.libunified.ui.widget.TipsSeekBar by lazy { findViewById(R.id.tip_seek_humidity) }
     private val switchAmbientHumidity: android.widget.Switch by lazy { findViewById(R.id.switch_ambient_humidity) }
     private val switchAmbientTemperature: android.widget.Switch by lazy { findViewById(R.id.switch_ambient_temperature) }
-    private val tipSeekEmissivity: com.topdon.lib.ui.widget.TipsSeekBar by lazy { findViewById(R.id.tip_seek_emissivity) }
+    private val tipSeekEmissivity: com.mpdc4gsr.libunified.ui.widget.TipsSeekBar by lazy { findViewById(R.id.tip_seek_emissivity) }
     private val switchEmissivity: android.widget.Switch by lazy { findViewById(R.id.switch_emissivity) }
     private val etTestDistance: android.widget.EditText by lazy { findViewById(R.id.et_test_distance) }
     private val switchTestDistance: android.widget.Switch by lazy { findViewById(R.id.switch_test_distance) }
@@ -100,8 +100,8 @@ class ReportCreateFirstActivity : BaseActivity(), View.OnClickListener {
         tvReportDate.text = TimeUtils.millis2String(System.currentTimeMillis(), "yyyy.MM.dd HH:mm")
         etReportWatermark.setText(SaveSettingUtil.reportWatermarkText)
         tvAmbientTemperature.text =
-            getString(R.string.thermal_config_environment) + "(${UnitTools.showUnit()})"
-        tvEmissivity.text = getString(R.string.album_report_emissivity) + "(0~1)"
+            getString(LibR.string.thermal_config_environment) + "(${UnitTools.showUnit()})"
+        tvEmissivity.text = getString(LibR.string.album_report_emissivity) + "(0~1)"
 
         etReportAuthor.addTextChangedListener {
             SaveSettingUtil.reportAuthorName = it?.toString() ?: ""
@@ -198,7 +198,12 @@ class ReportCreateFirstActivity : BaseActivity(), View.OnClickListener {
                 val reportInfoBean = buildReportInfo()
                 val reportConditionBean = buildReportCondition()
                 val imageTempBean: ImageTempBean? =
-                    intent.getParcelableExtra(ExtraKeyConfig.IMAGE_TEMP_BEAN)
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+                        intent.getParcelableExtra(ExtraKeyConfig.IMAGE_TEMP_BEAN, ImageTempBean::class.java)
+                    } else {
+                        @Suppress("DEPRECATION")
+                        intent.getParcelableExtra(ExtraKeyConfig.IMAGE_TEMP_BEAN)
+                    }
                 val fileAbsolutePath = intent.getStringExtra(ExtraKeyConfig.FILE_ABSOLUTE_PATH)
                 if (fileAbsolutePath != null && imageTempBean != null) {
                     NavigationManager.getInstance().build(RouterConfig.REPORT_CREATE_SECOND)
@@ -249,6 +254,7 @@ class ReportCreateFirstActivity : BaseActivity(), View.OnClickListener {
         try {
             if (location != null) {
                 val gc = Geocoder(this, Locale.getDefault())
+                @Suppress("DEPRECATION")
                 result =
                     gc.getFromLocation(
                         location.latitude,
@@ -306,11 +312,11 @@ class ReportCreateFirstActivity : BaseActivity(), View.OnClickListener {
                 null
             }
         return ReportConditionBean(
-            tipSeekHumidity.valueText,
+            tipSeekHumidity.getFormattedValue(),
             if (switchAmbientHumidity.isChecked) 1 else 0,
             temperature,
             if (switchAmbientTemperature.isChecked && temperature != null) 1 else 0,
-            tipSeekEmissivity.valueText,
+            tipSeekEmissivity.getFormattedValue(),
             if (switchEmissivity.isChecked) 1 else 0,
             etTestDistance.text.toString(),
             if (switchTestDistance.isChecked && etTestDistance.text.isNotEmpty()) 1 else 0,
@@ -321,12 +327,12 @@ class ReportCreateFirstActivity : BaseActivity(), View.OnClickListener {
 
     private fun selectTime() {
         val picker = DatimePicker(this)
-        picker.setTitle(R.string.chart_start_time)
+        picker.setTitle(LibR.string.chart_start_time)
         picker.setOnDatimePickedListener { year, month, day, hour, minute, second ->
             val timeStr = "$year-$month-$day $hour:$minute:$second"
             val pattern = "yyyy-MM-dd HH:mm:ss"
             val time: Long =
-                SimpleDateFormat(pattern, Locale.getDefault()).parse(timeStr, ParsePosition(0)).time
+                SimpleDateFormat(pattern, Locale.getDefault()).parse(timeStr, ParsePosition(0))?.time ?: 0L
             tvReportDate.text = TimeUtils.millis2String(time, "yyyy.MM.dd HH:mm")
             startTime = time
         }
@@ -363,12 +369,12 @@ class ReportCreateFirstActivity : BaseActivity(), View.OnClickListener {
                 TipDialog.Builder(this)
                     .setMessage(
                         getString(
-                            R.string.permission_request_location_app,
+                            LibR.string.permission_request_location_app,
                             CommUtils.getAppName()
                         )
                     )
-                    .setCancelListener(R.string.app_cancel)
-                    .setPositiveListener(R.string.app_confirm) {
+                    .setCancelListener(LibR.string.app_cancel)
+                    .setPositiveListener(LibR.string.app_confirm) {
                         initLocationPermission()
                     }
                     .create().show()
@@ -392,7 +398,7 @@ class ReportCreateFirstActivity : BaseActivity(), View.OnClickListener {
                         all: Boolean,
                     ) {
                         if (all) {
-                            showLoadingDialog(R.string.get_current_address)
+                            showLoadingDialog(LibR.string.get_current_address)
                             lifecycleScope.launch {
                                 var addressText: String? = ""
                                 withContext(Dispatchers.IO) {
@@ -402,7 +408,7 @@ class ReportCreateFirstActivity : BaseActivity(), View.OnClickListener {
                                 if (addressText == null) {
                                     TipDialog.Builder(this@ReportCreateFirstActivity)
                                         .setMessage(LibR.string.get_Location_failed)
-                                        .setPositiveListener(R.string.app_ok)
+                                        .setPositiveListener(LibR.string.app_ok)
                                         .setCanceled(false)
                                         .create().show()
                                 } else {
@@ -410,7 +416,7 @@ class ReportCreateFirstActivity : BaseActivity(), View.OnClickListener {
                                 }
                             }
                         } else {
-                            ToastUtils.showShort(R.string.scan_ble_tip_authorize)
+                            ToastUtils.showShort(LibR.string.scan_ble_tip_authorize)
                         }
                     }
 
@@ -421,24 +427,24 @@ class ReportCreateFirstActivity : BaseActivity(), View.OnClickListener {
                         if (never) {
 
                             if (BaseApplication.instance.isDomestic()) {
-                                ToastUtils.showShort(getString(R.string.app_location_content))
+                                ToastUtils.showShort(getString(LibR.string.app_location_content))
                                 return
                             }
                             TipDialog.Builder(this@ReportCreateFirstActivity)
-                                .setTitleMessage(getString(R.string.app_tip))
-                                .setMessage(getString(R.string.app_location_content))
-                                .setPositiveListener(R.string.app_open) {
+                                .setTitleMessage(getString(LibR.string.app_tip))
+                                .setMessage(getString(LibR.string.app_location_content))
+                                .setPositiveListener(LibR.string.app_open) {
                                     XXPermissions.startPermissionActivity(
                                         this@ReportCreateFirstActivity,
                                         permissions
                                     )
                                 }
-                                .setCancelListener(R.string.app_cancel) {
+                                .setCancelListener(LibR.string.app_cancel) {
                                 }
                                 .setCanceled(true)
                                 .create().show()
                         } else {
-                            ToastUtils.showShort(R.string.scan_ble_tip_authorize)
+                            ToastUtils.showShort(LibR.string.scan_ble_tip_authorize)
                         }
                     }
                 },

@@ -22,6 +22,8 @@ import com.energy.iruvc.utils.SynchronizedBitmap
 import com.energy.iruvc.uvc.ConnectCallback
 import com.energy.iruvc.uvc.UVCCamera
 import com.example.suplib.wrapper.SupHelp
+import com.mpdc4gsr.libunified.app.common.SaveSettingUtil
+import com.mpdc4gsr.libunified.app.dialog.TipDialog
 import com.mpdc4gsr.libunified.ir.usbdual.Const
 import com.mpdc4gsr.libunified.ir.usbdual.camera.DualViewWithExternalCameraCommonApi
 import com.mpdc4gsr.libunified.ir.usbdual.camera.IRUVCDual
@@ -29,8 +31,6 @@ import com.mpdc4gsr.libunified.ir.usbdual.camera.USBMonitorManager
 import com.mpdc4gsr.libunified.ir.usbdual.inf.OnUSBConnectListener
 import com.mpdc4gsr.libunified.ir.utils.PseudocodeUtils
 import com.mpdc4gsr.libunified.ir.view.TemperatureView
-import com.mpdc4gsr.libunified.app.common.SaveSettingUtil
-import com.mpdc4gsr.libunified.app.dialog.TipDialog
 import com.mpdc4gsr.module.thermalunified.R
 import com.mpdc4gsr.module.thermalunified.utils.DualParamsUtil
 import com.mpdc4gsr.module.thermalunified.utils.IRCmdTool
@@ -83,7 +83,7 @@ abstract class BaseIRPlushActivity : IRThermalNightActivity(), OnUSBConnectListe
     abstract fun isDualIR(): Boolean
 
     abstract fun setTemperatureViewType()
-    
+
     abstract override fun getProductName(): String
 
     open fun setDispViewData(dualDisp: Int) {
@@ -387,8 +387,9 @@ abstract class BaseIRPlushActivity : IRThermalNightActivity(), OnUSBConnectListe
     protected val preTempData = ByteArray(256 * 192 * 2)
 
     override fun onIrFrame(irFrame: ByteArray?): ByteArray {
-
-        System.arraycopy(irFrame, 0, preIrData, 0, preIrData.size)
+        irFrame?.let {
+            System.arraycopy(it, 0, preIrData, 0, preIrData.size)
+        } ?: return preIrARGBData
         LibIRProcess.convertYuyvMapToARGBPseudocolor(
             preIrData,
             (Const.IR_WIDTH * Const.IR_HEIGHT).toLong(),

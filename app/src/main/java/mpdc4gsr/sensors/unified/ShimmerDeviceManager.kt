@@ -20,8 +20,17 @@ import androidx.lifecycle.lifecycleScope
 import com.shimmerresearch.android.Shimmer
 import com.shimmerresearch.android.manager.ShimmerBluetoothManagerAndroid
 import com.shimmerresearch.bluetooth.ShimmerBluetooth.BT_STATE
-import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import mpdc4gsr.sensors.unified.model.DeviceInfo
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
@@ -483,7 +492,7 @@ class ShimmerDeviceManager(
 
 
             shimmer.stopStreaming()
-            shimmer.stopBtConnection()
+            shimmer.disconnect()
 
             connectedDevices.remove(deviceAddress)
 
@@ -670,33 +679,33 @@ class ShimmerDeviceManager(
         return try {
             Log.i(TAG, "Starting synchronized streaming on ${connectedDevices.size} devices")
 
-
-            val streamingJobs = connectedDevices.map { (address, shimmer) ->
-                async {
-                    try {
-                        Log.d(TAG, "Starting streaming on device: $address")
-                        shimmer.startStreaming()
-                        Log.d(TAG, "✅ Streaming started successfully on device: $address")
-                        true
-                    } catch (e: Exception) {
-                        Log.e(TAG, "❌ Failed to start streaming on device $address", e)
-                        false
+            coroutineScope {
+                val streamingJobs = connectedDevices.map { (address, shimmer) ->
+                    async {
+                        try {
+                            Log.d(TAG, "Starting streaming on device: $address")
+                            shimmer.startStreaming()
+                            Log.d(TAG, "✅ Streaming started successfully on device: $address")
+                            true
+                        } catch (e: Exception) {
+                            Log.e(TAG, "❌ Failed to start streaming on device $address", e)
+                            false
+                        }
                     }
                 }
-            }
 
+                val results = streamingJobs.awaitAll()
+                val successCount = results.count { it }
 
-            val results = streamingJobs.awaitAll()
-            val successCount = results.count { it }
+                Log.i(TAG, "Synchronized streaming started: $successCount/${connectedDevices.size} devices successful")
 
-            Log.i(TAG, "Synchronized streaming started: $successCount/${connectedDevices.size} devices successful")
-
-            if (successCount >= 2) {
-                Log.i(TAG, "✅ Multi-device streaming barrier successful with $successCount devices")
-                return true
-            } else {
-                Log.e(TAG, "❌ Multi-device streaming barrier failed - insufficient devices streaming")
-                return false
+                if (successCount >= 2) {
+                    Log.i(TAG, "✅ Multi-device streaming barrier successful with $successCount devices")
+                    true
+                } else {
+                    Log.e(TAG, "❌ Multi-device streaming barrier failed - insufficient devices streaming")
+                    false
+                }
             }
 
         } catch (e: Exception) {
