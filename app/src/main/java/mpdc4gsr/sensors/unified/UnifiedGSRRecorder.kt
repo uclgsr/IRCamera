@@ -599,7 +599,7 @@ class UnifiedGSRRecorder(
             storageUsedMB = sessionDirectory?.let { dir ->
                 dir.walkTopDown().filter { it.isFile }.sumOf { it.length() } / (1024.0 * 1024.0)
             } ?: 0.0,
-            syncMarkersCount = syncMarkers.size.toLong(),
+            syncMarkersCount = syncMarkers.size,
             lastSampleTimestampNs = System.nanoTime()
         )
     }

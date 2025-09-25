@@ -44,7 +44,7 @@ class DeviceAdapter(
     inner class DeviceViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val deviceNameText: TextView = itemView.findViewById(R.id.deviceNameText)
         private val deviceAddressText: TextView = itemView.findViewById(R.id.deviceAddressText)
-        private val deviceStatusText: TextView = itemView.findViewById(R.id.deviceStatusText)
+        private val connectionStatusText: TextView = itemView.findViewById(R.id.connectionStatusText)
         private val signalStrengthText: TextView = itemView.findViewById(R.id.signalStrengthText)
 
         init {
@@ -65,7 +65,7 @@ class DeviceAdapter(
         fun bind(device: DeviceInfo, isSelected: Boolean) {
             deviceNameText.text = device.displayName
             deviceAddressText.text = device.address
-            deviceStatusText.text = device.statusSummary
+            connectionStatusText.text = device.statusSummary
             signalStrengthText.text = "${device.rssi} dBm"
 
             itemView.setBackgroundColor(
@@ -90,10 +90,10 @@ class DeviceAdapter(
             }
 
             if (device.isRecommended) {
-                deviceStatusText.text = "${device.statusSummary} • Recommended"
-                deviceStatusText.setTextColor(Color.GREEN)
+                connectionStatusText.text = "${device.statusSummary} • Recommended"
+                connectionStatusText.setTextColor(Color.GREEN)
             } else {
-                deviceStatusText.setTextColor(Color.GRAY)
+                connectionStatusText.setTextColor(Color.GRAY)
             }
         }
     }
