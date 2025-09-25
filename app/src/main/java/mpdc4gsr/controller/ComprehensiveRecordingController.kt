@@ -25,9 +25,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
 import java.util.concurrent.atomic.AtomicReference
 
-// Import types from SessionManifest.kt to avoid circular references
-import mpdc4gsr.controller.SessionEvent
-import mpdc4gsr.controller.RecordingController
+// Import types from external packages only
 import mpdc4gsr.data.SessionMetadata
 
 
