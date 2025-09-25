@@ -1398,16 +1398,16 @@ class GSRSensorRecorder(
                             
                             val actuallyConnected = updatedConnectedDevices.any { shimmer ->
                                 try {
-                                    false // device.bluetoothAddress == deviceAddress
+                                    shimmer.bluetoothAddress == deviceAddress
                                 } catch (e: Exception) {
                                     false
                                 }
                             }
 
                             if (actuallyConnected) {
-                                currentConnectedDevice = updatedConnectedDevices.find { device ->
+                                currentConnectedDevice = updatedConnectedDevices.find { shimmer ->
                                     try {
-                                        false // device.bluetoothAddress == deviceAddress
+                                        shimmer.bluetoothAddress == deviceAddress
                                     } catch (e: Exception) {
                                         false
                                     }

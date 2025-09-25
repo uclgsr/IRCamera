@@ -51,9 +51,8 @@ class PermissionManager(
             continuation.resume(granted)
         }
 
-        if (!hasPermissions) {
-            ActivityCompat.requestPermissions(activity, missingPermissions.toTypedArray(), REQUEST_CAMERA_PERMISSIONS)
-        }
+        // Camera permissions will be requested through the callback mechanism above
+        // No additional request needed since ensureAll() handles the permission flow
     }
 
 
