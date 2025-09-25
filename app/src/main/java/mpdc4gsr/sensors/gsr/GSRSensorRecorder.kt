@@ -365,11 +365,7 @@ class GSRSensorRecorder(
                     )
                     Log.i(
                         TAG,
-                        "Missing permissions: ${
-                            BluetoothPermissionUtils.getMissingPermissions(
-                                context
-                            )
-                        }"
+                        "Missing permissions: ${getMissingPermissions(context)}"
                     )
 
 

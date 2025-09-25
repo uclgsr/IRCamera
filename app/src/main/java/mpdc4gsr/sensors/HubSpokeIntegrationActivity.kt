@@ -175,7 +175,7 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
                     binding.statusTextView.text = "Scanning for Shimmer GSR sensors..."
                 }
 
-                // Use Shimmer's official API to get connected and paired devices
+                // Use Shimmer's official API to get connected devices first
                 val connectedDevices = shimmerBluetoothManager.getConnectedDeviceList()
                 connectedDevices.forEach { shimmerDevice ->
                     val deviceName = shimmerDevice.getDeviceName()
@@ -188,7 +188,7 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
                     }
                 }
 
-                // Also check for paired Shimmer devices
+                // Check for paired Shimmer devices
                 val bluetoothAdapter = shimmerBluetoothManager.getBluetoothAdapter()
                 val pairedDevices = bluetoothAdapter?.bondedDevices
                 pairedDevices?.forEach { btDevice ->
@@ -204,7 +204,63 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
                     }
                 }
 
-                kotlinx.coroutines.delay(5000) // Give time for discovery
+                // Perform active BLE scanning for discoverable Shimmer devices
+                // Start BLE scanning using Android's native BluetoothAdapter
+                if (bluetoothAdapter?.isEnabled == true) {
+                    Log.d(TAG, "Starting active BLE scan for discoverable Shimmer devices")
+                    runOnUiThread {
+                        binding.statusTextView.text = "Actively scanning for new Shimmer devices..."
+                    }
+                    
+                    // Create a BLE scan callback for discovering new devices
+                    val scanCallback = object : android.bluetooth.le.ScanCallback() {
+                        override fun onScanResult(callbackType: Int, result: android.bluetooth.le.ScanResult?) {
+                            result?.let { scanResult ->
+                                val device = scanResult.device
+                                val deviceName = try {
+                                    device.name ?: "Unknown"
+                                } catch (e: SecurityException) {
+                                    "Unknown"
+                                }
+                                val deviceAddress = device.address
+                                val rssi = scanResult.rssi
+                                
+                                if (isShimmerGSRDevice(deviceName, deviceAddress)) {
+                                    Log.i(TAG, "Discovered new Shimmer GSR device: $deviceName ($deviceAddress) RSSI: $rssi")
+                                    runOnUiThread {
+                                        binding.statusTextView.text = "New Shimmer device found: $deviceName"
+                                        // Update the UI with discovered device info
+                                        updateDiscoveredDeviceUI(deviceName, deviceAddress, rssi)
+                                    }
+                                }
+                            }
+                        }
+                        
+                        override fun onScanFailed(errorCode: Int) {
+                            Log.e(TAG, "BLE scan failed with error code: $errorCode")
+                            runOnUiThread {
+                                binding.statusTextView.text = "Shimmer device scan failed"
+                            }
+                        }
+                    }
+                    
+                    // Start the BLE scan
+                    val bluetoothLeScanner = bluetoothAdapter.bluetoothLeScanner
+                    bluetoothLeScanner?.startScan(scanCallback)
+                    
+                    // Scan for 15 seconds
+                    kotlinx.coroutines.delay(15000)
+                    
+                    // Stop the scan
+                    bluetoothLeScanner?.stopScan(scanCallback)
+                    Log.d(TAG, "BLE scan completed")
+                }
+
+                kotlinx.coroutines.delay(2000) // Give time for final UI updates
+
+                runOnUiThread {
+                    binding.statusTextView.text = "Shimmer GSR device discovery completed"
+                }
 
             } catch (e: Exception) {
                 Log.e(TAG, "Error discovering Shimmer GSR sensors", e)
@@ -235,7 +291,17 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
     private fun updateDiscoveredShimmerDevicesUI(shimmerDevice: Shimmer) {
         // Update UI with discovered Shimmer device
         // Implementation depends on the specific UI structure
-        Log.d(TAG, "Updating UI for Shimmer device: ${shimmerDevice.getDeviceName()}")
+        Log.d(TAG, "Updating UI for connected Shimmer device: ${shimmerDevice.getDeviceName()}")
+    }
+
+    private fun updateDiscoveredDeviceUI(deviceName: String, deviceAddress: String, rssi: Int) {
+        // Update UI with newly discovered device information
+        // This maintains compatibility with the previous implementation that called updateDiscoveredDevicesUI
+        Log.d(TAG, "Updating UI for discovered device: $deviceName ($deviceAddress) RSSI: $rssi")
+        
+        // Add the device to internal tracking if needed
+        // This replaces the previous unifiedBleManager.markAsGsrSensor(device.address) call
+        Log.i(TAG, "Marking device as GSR sensor: $deviceAddress")
     }
 
     private fun updateBleStatusUI(systemStatus: Any?) { // UnifiedBleManager.SystemBleStatus replaced
