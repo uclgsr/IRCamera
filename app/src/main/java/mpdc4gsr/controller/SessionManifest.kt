@@ -30,7 +30,6 @@ data class SessionEvent(
     val success: Boolean = true,
     val errorMessage: String? = null,
     val metadata: Map<String, Any> = emptyMap(),
-    val timestampMs: Long = timestamp,
     val triggerSource: String? = null
 )
 
