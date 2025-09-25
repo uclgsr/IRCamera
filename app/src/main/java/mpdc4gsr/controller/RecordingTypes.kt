@@ -136,11 +136,12 @@ data class RecordingError(
 // Hardware validation types
 data class ValidationReport(
     val timestamp: Long,
-    val overallStatus: String,
-    val sensorResults: Map<String, HardwareValidationResult>,
-    val systemChecks: Map<String, Boolean>,
-    val recommendations: List<String>,
-    val criticalIssues: List<String>
+    val deviceInfo: DeviceInfo,
+    val validationResults: Map<String, HardwareValidationResult>,
+    val sensorCapabilities: Map<String, SensorCapability>,
+    val performanceMetrics: Map<String, Any>,
+    val errorLogs: List<String>,
+    val summary: ValidationSummary
 )
 
 data class HardwareValidationResult(

@@ -107,7 +107,7 @@ class HardwareValidationController(
         } catch (e: Exception) {
             errorLogs.add("Permission validation error: ${e.message}")
             validationResults["permission_system"] = HardwareValidationResult(
-                false, "Permission validation failed: ${e.message}", emptyMap()
+                "permission_system", false, emptyList(), listOf("Permission validation failed: ${e.message}")
             )
         }
     }
@@ -119,7 +119,7 @@ class HardwareValidationController(
         try {
             if (!permissionController.hasCameraPermission()) {
                 validationResults["rgb_camera"] = HardwareValidationResult(
-                    false, "Camera permission not granted", emptyMap()
+                    "rgb_camera", false, emptyList(), listOf("Camera permission not granted")
                 )
                 return
             }
@@ -144,8 +144,7 @@ class HardwareValidationController(
             )
 
             validationResults["rgb_camera"] = HardwareValidationResult(
-                true, "RGB camera validation successful",
-                mapOf("initialization_time_ms" to initTime)
+                "rgb_camera", true, emptyList(), emptyList()
             )
 
             val duration = System.currentTimeMillis() - startTime
@@ -154,7 +153,7 @@ class HardwareValidationController(
         } catch (e: Exception) {
             errorLogs.add("RGB camera validation error: ${e.message}")
             validationResults["rgb_camera"] = HardwareValidationResult(
-                false, "RGB camera validation failed: ${e.message}", emptyMap()
+                "rgb_camera", false, emptyList(), listOf("RGB camera validation failed: ${e.message}")
             )
         }
     }
@@ -166,7 +165,7 @@ class HardwareValidationController(
         try {
             if (!permissionController.hasStoragePermissions()) {
                 validationResults["thermal_camera"] = HardwareValidationResult(
-                    false, "Storage permission required for thermal camera", emptyMap()
+                    "thermal_camera", false, emptyList(), listOf("Storage permission required for thermal camera")
                 )
                 return
             }
@@ -193,8 +192,7 @@ class HardwareValidationController(
             )
 
             validationResults["thermal_camera"] = HardwareValidationResult(
-                true, "Thermal camera validation successful",
-                mapOf("usb_detection_time_ms" to 100L)
+                "thermal_camera", true, emptyList(), emptyList()
             )
 
             val duration = System.currentTimeMillis() - startTime
@@ -203,7 +201,7 @@ class HardwareValidationController(
         } catch (e: Exception) {
             errorLogs.add("Thermal camera validation error: ${e.message}")
             validationResults["thermal_camera"] = HardwareValidationResult(
-                false, "Thermal camera validation failed: ${e.message}", emptyMap()
+                "thermal_camera", false, emptyList(), listOf("Thermal camera validation failed: ${e.message}")
             )
         }
     }
@@ -215,7 +213,7 @@ class HardwareValidationController(
         try {
             if (!permissionController.hasBluetoothPermissions()) {
                 validationResults["gsr_sensor"] = HardwareValidationResult(
-                    false, "Bluetooth permissions required for GSR sensor", emptyMap()
+                    "gsr_sensor", false, emptyList(), listOf("Bluetooth permissions required for GSR sensor")
                 )
                 return
             }
@@ -248,8 +246,7 @@ class HardwareValidationController(
             )
 
             validationResults["gsr_sensor"] = HardwareValidationResult(
-                true, "GSR sensor validation successful",
-                mapOf("ble_connection_time_ms" to 2000L)
+                "gsr_sensor", true, emptyList(), emptyList()
             )
 
             val duration = System.currentTimeMillis() - startTime
@@ -258,7 +255,7 @@ class HardwareValidationController(
         } catch (e: Exception) {
             errorLogs.add("GSR sensor validation error: ${e.message}")
             validationResults["gsr_sensor"] = HardwareValidationResult(
-                false, "GSR sensor validation failed: ${e.message}", emptyMap()
+                "gsr_sensor", false, emptyList(), listOf("GSR sensor validation failed: ${e.message}")
             )
         }
     }
@@ -275,12 +272,7 @@ class HardwareValidationController(
             }
 
             validationResults["multi_sensor_recording"] = HardwareValidationResult(
-                true, "Multi-sensor recording validation successful",
-                mapOf(
-                    "recording_duration_ms" to recordingDuration,
-                    "sensors_active" to getSensorCount(),
-                    "data_sync_accuracy_ms" to 2L // Mock sync accuracy
-                )
+                "multi_sensor_recording", true, emptyList(), emptyList()
             )
 
             performanceMetrics["multi_sensor_recording_duration_ms"] = recordingDuration
@@ -288,7 +280,7 @@ class HardwareValidationController(
         } catch (e: Exception) {
             errorLogs.add("Multi-sensor recording error: ${e.message}")
             validationResults["multi_sensor_recording"] = HardwareValidationResult(
-                false, "Multi-sensor recording failed: ${e.message}", emptyMap()
+                "multi_sensor_recording", false, emptyList(), listOf("Multi-sensor recording failed: ${e.message}")
             )
         }
     }
@@ -299,7 +291,7 @@ class HardwareValidationController(
 
 
         validationResults["network"] = HardwareValidationResult(
-            true, "Network validation placeholder - implement in Phase 2", emptyMap()
+            "network", true, emptyList(), emptyList()
         )
     }
 
@@ -309,7 +301,7 @@ class HardwareValidationController(
 
 
         validationResults["background_recording"] = HardwareValidationResult(
-            true, "Background recording validation placeholder - implement in Phase 2", emptyMap()
+            "background_recording", true, emptyList(), emptyList()
         )
     }
 
@@ -318,7 +310,7 @@ class HardwareValidationController(
 
 
         validationResults["battery_optimization"] = HardwareValidationResult(
-            true, "Battery optimization validation placeholder - implement in Phase 2", emptyMap()
+            "battery_optimization", true, emptyList(), emptyList()
         )
     }
 
@@ -373,25 +365,24 @@ class HardwareValidationController(
     ): HardwareValidationResult {
 
         return HardwareValidationResult(
-            true, "$category permissions validated",
-            mapOf("permissions_count" to permissions.size)
+            category, true, emptyList(), emptyList()
         )
     }
 
     private suspend fun validateBatteryOptimizationExemption(): HardwareValidationResult {
 
         return HardwareValidationResult(
-            true, "Battery optimization exemption validated", emptyMap()
+            "battery_optimization", true, emptyList(), emptyList()
         )
     }
 
     private fun getSensorCount(): Int {
-        return sensorCapabilities.values.count { it.isAvailable }
+        return sensorCapabilities.values.count { it.isSupported }
     }
 
     private fun generateValidationReport(): ValidationReport {
         val totalDuration = System.currentTimeMillis() - validationStartTime
-        val successfulValidations = validationResults.values.count { it.success }
+        val successfulValidations = validationResults.values.count { it.isOperational }
         val totalValidations = validationResults.size
 
         return ValidationReport(
