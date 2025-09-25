@@ -239,6 +239,7 @@ class UnifiedGSRRecorder(
 
         } catch (e: Exception) {
             Log.e(TAG, "Error during enhanced device discovery", e)
+            incrementErrorCount()
             _deviceStatus.value = "Discovery Failed"
             return@withContext false
         }
@@ -277,6 +278,7 @@ class UnifiedGSRRecorder(
 
         } catch (e: Exception) {
             Log.e(TAG, "Error connecting to device", e)
+            incrementErrorCount()
             _deviceStatus.value = "Connection Error"
             return@withContext false
         }
@@ -640,9 +642,16 @@ class UnifiedGSRRecorder(
 
     fun getAverageSignalQuality(): Double = _connectionQuality.value
 
+    // Error tracking implementation
+    private val errorCount = AtomicLong(0)
+    
     fun getErrorCount(): Long {
-        // Count based on error flow emissions (simplified approach)
-        return 0L // TODO: Could track errors with an AtomicLong if needed
+        return errorCount.get()
+    }
+    
+    private fun incrementErrorCount() {
+        errorCount.incrementAndGet()
+        Log.w(TAG, "GSR error count increased to: ${errorCount.get()}")
     }
 
     suspend fun flushAndCloseFiles() = withContext(Dispatchers.IO) {
