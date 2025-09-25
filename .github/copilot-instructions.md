@@ -1,11 +1,12 @@
 - THIS IS A MASTER THESIS PROJECT SO FOCUS ON MVP
 - NO COMMENTING, ONLY DEVELOPMENT RELATED COMMENTS
-- GROUNDTRUTH FOR TOPDON TC001 integration is https://github.com/CoderCaiSL/IRCamera/tree/github-main_ircamera
-- GROUNDTRUTH FOR Shimmer3 GSR is https://github.com/ShimmerEngineering/Shimmer-Java-Android-API.git
-  and https://github.com/ShimmerEngineering/ShimmerAndroidAPI
+- PRIORITIZE APP/LIBS SDK and LIBS FILES FIRST
+- GROUNDTRUTH FOR TOPDON TC001 integration is https://github.com/CoderCaiSL/IRCamera/tree/github-main_ircamera if an implementation is missing
+- GROUNDTRUTH FOR Shimmer3 GSR is https://github.com/ShimmerEngineering/Shimmer-Java-Android-API.git if an implementation is missing
+  and https://github.com/ShimmerEngineering/ShimmerAndroidAPI if an implementation is missing
 - ALWAYS VERIFY WITH GRADLE CLEAN AND BUILD
-- NEVER USE EMOJIS
-- ONLY USE ASCI SAFE CHARACTER
+- NEVER USE EMOJIS ANYWHERE
+- ONLY USE ASCI SAFE CHARACTER EVERYWHERE
   [//]: # (- ALWAYS UPDATE CHANGELOG.MD &#40;USE COMMIT ID TO AVOID MERGE CONFLICT&#41;)
   [//]: # (- ALWAYS UPDATE BACKLOG.MD &#40;USE COMMIT ID TO AVOID MERGE CONFLICT&#41;)
   [//]: # (- ALWAYS UPDATE README.MD &#40;USE COMMIT ID TO AVOID MERGE CONFLICT&#41;)
