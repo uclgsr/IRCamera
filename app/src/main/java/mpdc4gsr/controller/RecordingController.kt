@@ -2055,7 +2055,7 @@ class RecordingController(
             startTime = startTime,
             stopTime = stopTime,
             duration = duration,
-            triggerSource = lastTriggerSource ?: mpdc4gsr.controller.TriggerSource.LOCAL_UI,
+            triggerSource = convertFromRecordingControllerTriggerSource(lastTriggerSource) ?: mpdc4gsr.controller.TriggerSource.LOCAL_UI,
             sensorActivitySummary = convertedSensorActivitySummary,
             events = convertedEvents,
             errors = errors,
