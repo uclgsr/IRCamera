@@ -1027,7 +1027,8 @@ data class SensorHealthInfo(
     val name: String,
     val isHealthy: Boolean,
     val lastHealthCheck: Long,
-    val consecutiveFailures: Int
+    val consecutiveFailures: Int,
+    val lastError: String? = null
 )
 
 data class SensorStatus(
