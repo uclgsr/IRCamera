@@ -364,6 +364,78 @@ class ThermalCameraRecorder(
         Log.i(TAG, "Thermal network streaming disabled")
     }
 
+    // Added to fix compilation errors in ThermalCameraErrorRecoveryManager
+    suspend fun checkThermalCameraAvailability(): Boolean {
+        return try {
+            Log.d(TAG, "Checking thermal camera availability...")
+            if (isIRCameraConnected && iruvctc != null) {
+                Log.d(TAG, "Thermal camera already connected and available")
+                return true
+            }
+            // Simple device scan
+            val deviceFound = scanForThermalCameraDevices()
+            Log.d(TAG, "Thermal camera availability check result: $deviceFound")
+            deviceFound
+        } catch (e: Exception) {
+            Log.e(TAG, "Error checking thermal camera availability", e)
+            false
+        }
+    }
+
+    suspend fun reinitializeThermalCamera(): Boolean {
+        return try {
+            Log.d(TAG, "Reinitializing thermal camera...")
+            // Clean up existing connection first
+            if (iruvctc != null) {
+                try {
+                    iruvctc?.stop()
+                    iruvctc?.release()
+                    iruvctc = null
+                } catch (e: Exception) {
+                    Log.w(TAG, "Error cleaning up existing thermal camera connection", e)
+                }
+            }
+            isIRCameraConnected = false
+            isTopdonSdkInitialized = false
+            // Reinitialize the camera
+            val initSuccess = initialize()
+            Log.d(TAG, "Thermal camera reinitialization result: $initSuccess")
+            initSuccess
+        } catch (e: Exception) {
+            Log.e(TAG, "Error reinitializing thermal camera", e)
+            false
+        }
+    }
+
+    suspend fun restartThermalRecording(): Boolean {
+        return try {
+            Log.d(TAG, "Restarting thermal recording...")
+            if (!isIRCameraConnected) {
+                Log.w(TAG, "Cannot restart recording - thermal camera not connected")
+                return false
+            }
+            if (isRecording) {
+                Log.d(TAG, "Recording already active")
+                return true
+            }
+            // Start recording with current session
+            val sessionManager = SessionDirectoryManager.getInstance()
+            val sessionMetadata = SessionMetadata(
+                sessionId = sensorId,
+                startTime = System.currentTimeMillis(),
+                sensorTypes = listOf("thermal"),
+                participantId = "recovery_session",
+                studyId = "thermal_recovery"
+            )
+            val recordingSuccess = startRecording(sessionManager.getCurrentSessionDir(), sessionMetadata)
+            Log.d(TAG, "Thermal recording restart result: $recordingSuccess")
+            recordingSuccess
+        } catch (e: Exception) {
+            Log.e(TAG, "Error restarting thermal recording", e)
+            false
+        }
+    }
+
     override suspend fun initialize(): Boolean = withContext(Dispatchers.IO) {
         try {
             Log.i(
@@ -3061,6 +3133,8 @@ class ThermalCameraRecorder(
             }
 
 
+            // Nested function moved to class level - commented out to fix compilation error
+            /*
             fun getPerformanceMetrics(): ThermalPerformanceMetrics {
                 return try {
                     val currentTime = System.nanoTime()
@@ -3108,6 +3182,7 @@ class ThermalCameraRecorder(
                     performanceMetrics
                 }
             }
+            */
 
 
             private suspend fun captureRealThermalFrameWithErrorHandling(): Boolean =
@@ -3186,6 +3261,8 @@ class ThermalCameraRecorder(
             }
 
 
+            // Nested function moved to class level - commented out to fix compilation error
+            /*
             fun updateCalibration(
                 ambientTemp: Double,
                 emissivity: Double,
@@ -3199,6 +3276,7 @@ class ThermalCameraRecorder(
                     "Thermal calibration updated: ambient=$ambientTemp°C, emissivity=$emissivity, reflected=$reflectedTemp°C"
                 )
             }
+            */
 
     suspend fun exportThermalData(
         outputDir: String,
