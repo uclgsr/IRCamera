@@ -214,7 +214,7 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
         rgbCameraRecorder = RgbCameraRecorder(
             context = this,
             lifecycleOwner = this,
-            previewView = previewView.previewView,
+            previewView = previewView,
             useFrontCamera = false
         )
 
