@@ -62,7 +62,16 @@ class RealShimmerDevice(
 
     init {
         try {
-            shimmerHandler = android.os.Handler(android.os.Looper.getMainLooper())
+            // Create handler that processes Shimmer messages and dispatches to our methods
+            shimmerHandler = object : android.os.Handler(android.os.Looper.getMainLooper()) {
+                override fun handleMessage(msg: Message) {
+                    when (msg.what) {
+                        MSG_IDENTIFIER_STATE_CHANGE -> handleStateChange(msg)
+                        MSG_IDENTIFIER_DATA_PACKET -> handleDataPacket(msg)
+                        else -> Log.d(TAG, "Unknown message type: ${msg.what}")
+                    }
+                }
+            }
             shimmerManager = ShimmerBluetoothManagerAndroid(context, shimmerHandler)
             Log.i(TAG, "ShimmerBluetoothManagerAndroid initialized successfully")
         } catch (e: Exception) {
@@ -95,7 +104,7 @@ class RealShimmerDevice(
                 // Connection is asynchronous - actual status will be updated via handlers
                 try {
                     device.connect(address, name)
-                    connectedDevice = device
+                    // Don't set connectedDevice here - it will be set when connection is confirmed via handler
                     Log.i(TAG, "Connection request sent to Shimmer device: $name ($address)")
                     true
                 } catch (e: Exception) {
@@ -212,6 +221,8 @@ class RealShimmerDevice(
                 STATE_CONNECTED -> {
                     Log.i(TAG, "Shimmer device connected")
                     isConnected = true
+                    // Set connectedDevice only when connection is confirmed
+                    connectedDevice = shimmer
                     connectionCallback?.invoke("CONNECTED")
                 }
 
@@ -244,12 +255,29 @@ class RealShimmerDevice(
         try {
             Log.d(TAG, "Shimmer data packet received")
             
-            // For MVP implementation, use a simplified approach
-            // In the real implementation, this would extract ObjectCluster from ShimmerMsg
-            // and forward it to the data callback
-            
-            // For now, we'll just log that data was received
-            Log.d(TAG, "Shimmer data processing - handler pattern")
+            // Try to extract ObjectCluster from the message
+            // The actual data should be in msg.obj as ShimmerMsg, but we need to handle it safely
+            try {
+                val shimmerMsg = msg.obj as? ShimmerMsg
+                val objectCluster = shimmerMsg?.let { 
+                    // Try to get the ObjectCluster from the message
+                    // This is a simplified approach that may need adjustment based on actual SDK structure
+                    try {
+                        it.mB as? ObjectCluster
+                    } catch (e: Exception) {
+                        Log.d(TAG, "Could not extract ObjectCluster from ShimmerMsg", e)
+                        null
+                    }
+                }
+                
+                if (objectCluster != null) {
+                    handleShimmerData(objectCluster)
+                } else {
+                    Log.d(TAG, "No ObjectCluster found in data packet")
+                }
+            } catch (e: Exception) {
+                Log.w(TAG, "Could not process data packet", e)
+            }
             
         } catch (e: Exception) {
             Log.e(TAG, "Error handling Shimmer data packet", e)
