@@ -1021,7 +1021,7 @@ class ComprehensiveRecordingController(
                             put("success", event.success)
                             event.errorMessage?.let { put("errorMessage", it) }
                             if (event.metadata.isNotEmpty()) {
-                                put("metadata", JSONObject(event.metadata as Map<String, Any>))
+                                put("metadata", JSONObject(event.metadata))
                             }
                         })
                     }
