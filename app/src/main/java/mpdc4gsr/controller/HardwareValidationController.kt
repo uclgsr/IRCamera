@@ -126,7 +126,7 @@ class HardwareValidationController(
 
             // RGB camera validation uses the consolidated RgbCameraRecorder
             // which requires PreviewView and LifecycleOwner - simplified validation for now
-            val rgbCameraAvailable = checkCameraPermission(context)
+            val rgbCameraAvailable = context.checkSelfPermission(android.Manifest.permission.CAMERA) == android.content.pm.PackageManager.PERMISSION_GRANTED
             val initTime = measureTimeMillis {
 
 

@@ -927,8 +927,8 @@ class RecordingService : LifecycleService() {
                     "session_manifest_saved",
                     mapOf(
                         "manifest_file" to manifestFile.absolutePath,
-                        "session_state" to manifest.sessionState.name,
-                        "trigger_source" to manifest.triggerSource.name
+                        "session_state" to manifest.sessionState,
+                        "trigger_source" to (manifest.triggerSource ?: "UNKNOWN")
                     )
                 )
             }

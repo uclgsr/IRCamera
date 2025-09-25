@@ -26,9 +26,10 @@ import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
 import java.util.concurrent.atomic.AtomicReference
 
-
 class ComprehensiveRecordingController(
-    private val context: Context
+    private val context: Context,
+    private val lifecycleOwner: androidx.lifecycle.LifecycleOwner? = null,
+    private val permissionManager: mpdc4gsr.permissions.PermissionManager? = null
 ) {
     companion object {
         private const val TAG = "ComprehensiveRecordingController"
@@ -49,8 +50,8 @@ class ComprehensiveRecordingController(
     private val currentSessionState = AtomicReference(SessionState.IDLE)
     private var lastTriggerSource: TriggerSource? = null
 
-    // Use a thread-safe list for session events
-    private val sessionEvents = CopyOnWriteArrayList<RecordingController.SessionEvent>()
+    // Use a thread-safe list for session events  
+    private val sessionEvents = CopyOnWriteArrayList<mpdc4gsr.controller.RecordingControllerSessionEvent>()
 
     private val _errorFlow = MutableStateFlow<RecordingError?>(null)
     val errorFlow: StateFlow<RecordingError?> = _errorFlow.asStateFlow()
@@ -80,7 +81,7 @@ class ComprehensiveRecordingController(
     fun addSensorRecorder(name: String, recorder: SensorRecorder) {
         sensorRecorders[name] = recorder
         sensorHealthStatus[name] = SensorHealthInfo(
-            name = name,
+            sensorId = name,
             isHealthy = true,
             lastHealthCheck = System.currentTimeMillis(),
             consecutiveFailures = 0,
@@ -183,12 +184,7 @@ class ComprehensiveRecordingController(
                 val sessionDir = sessionDirectoryManager.createSessionDirectory(finalSessionId)
                 currentSessionDirectory = sessionDir
 
-                sessionMetadata = SessionMetadata.createSessionStart(finalSessionId).copy(
-                    experimentalConditions = mapOf(
-                        "estimatedDurationMinutes" to estimatedDurationMinutes,
-                        "enabledSensors" to enabledSensors
-                    )
-                )
+                sessionMetadata = SessionMetadata.createSessionStart(finalSessionId)
 
                 currentSessionId = finalSessionId
                 sessionStartTime.set(System.currentTimeMillis())
@@ -796,9 +792,11 @@ class ComprehensiveRecordingController(
                     else -> 0L
                 }
                 DropoutEvent(
-                    timestampMs = dropoutEvent.timestampMs,
+                    sensorId = sensorName,
+                    startTime = dropoutEvent.timestampMs,
+                    endTime = reconnection?.timestampMs,
                     reason = dropoutEvent.errorMessage ?: "Unknown reason",
-                    durationMs = durationMs
+                    recoverable = true
                 )
             }
 
@@ -806,10 +804,11 @@ class ComprehensiveRecordingController(
                 it.eventType == "SENSOR_RECONNECTION_SUCCESS" || it.eventType == "SENSOR_RESUMED"
             }.mapIndexed { index, event ->
                 ReconnectionEvent(
-                    timestampMs = event.timestampMs,
-                    attemptNumber = index + 1,
+                    sensorId = sensorName,
+                    timestamp = event.timestampMs,
                     successful = event.success,
-                    delayMs = event.metadata["delay_ms"]?.toLongOrNull() ?: 0L
+                    attemptCount = index + 1,
+                    errorMessage = if (!event.success) event.errorMessage else null
                 )
             }
 
@@ -834,7 +833,7 @@ class ComprehensiveRecordingController(
                 eventType = event.eventType,
                 timestampMs = event.timestampMs,
                 sensorId = event.sensorId,
-                triggerSource = event.triggerSource,
+                triggerSource = event.triggerSource?.name ?: "UNKNOWN",
                 metadata = event.metadata,
                 success = event.success,
                 errorMessage = event.errorMessage
@@ -861,13 +860,13 @@ class ComprehensiveRecordingController(
             startTime = startTime,
             stopTime = stopTime,
             duration = duration,
-            triggerSource = convertTriggerSource(lastTriggerSource ?: TriggerSource.LOCAL_UI),
+            triggerSource = convertTriggerSource(lastTriggerSource ?: TriggerSource.LOCAL_UI).name,
             sensorActivitySummary = sensorActivitySummary,
             events = events,
             errors = errors,
             warnings = warnings,
             fileReferences = fileReferences,
-            sessionState = convertSessionState(currentSessionState.get())
+            sessionState = convertSessionState(currentSessionState.get()).name
         )
     }
 
@@ -882,7 +881,7 @@ class ComprehensiveRecordingController(
                     put("startTime", manifest.startTime)
                     manifest.stopTime?.let { put("stopTime", it) }
                     manifest.duration?.let { put("duration", it) }
-                    put("triggerSource", manifest.triggerSource.name)
+                    put("triggerSource", manifest.triggerSource)
 
                     val sensorSummary = JSONObject()
                     manifest.sensorActivitySummary.forEach { (sensorName, info) ->
@@ -896,9 +895,11 @@ class ComprehensiveRecordingController(
                                 val dropoutsArray = JSONArray()
                                 info.dropouts.forEach { dropout ->
                                     dropoutsArray.put(JSONObject().apply {
-                                        put("timestampMs", dropout.timestampMs)
-                                        put("reason", dropout.reason)
-                                        put("durationMs", dropout.durationMs)
+                                        put("sensorId", dropout.sensorId)
+                                        put("startTime", dropout.startTime)
+                                        dropout.endTime?.let { put("endTime", it) }
+                                        dropout.reason?.let { put("reason", it) }
+                                        put("recoverable", dropout.recoverable)
                                     })
                                 }
                                 put("dropouts", dropoutsArray)
@@ -907,10 +908,10 @@ class ComprehensiveRecordingController(
                                 val reconnectionsArray = JSONArray()
                                 info.reconnections.forEach { reconnection ->
                                     reconnectionsArray.put(JSONObject().apply {
-                                        put("timestampMs", reconnection.timestampMs)
-                                        put("attemptNumber", reconnection.attemptNumber)
+                                        put("timestamp", reconnection.timestamp)
+                                        put("attemptCount", reconnection.attemptCount)
                                         put("successful", reconnection.successful)
-                                        put("delayMs", reconnection.delayMs)
+                                        reconnection.errorMessage?.let { put("errorMessage", it) }
                                     })
                                 }
                                 put("reconnections", reconnectionsArray)
@@ -926,7 +927,7 @@ class ComprehensiveRecordingController(
                             put("eventType", event.eventType)
                             put("timestampMs", event.timestampMs)
                             event.sensorId?.let { put("sensorId", it) }
-                            event.triggerSource?.let { put("triggerSource", it.name) }
+                            event.triggerSource.let { put("triggerSource", it) }
                             put("success", event.success)
                             event.errorMessage?.let { put("errorMessage", it) }
                             if (event.metadata.isNotEmpty()) {
@@ -944,7 +945,7 @@ class ComprehensiveRecordingController(
                     }
 
                     put("fileReferences", JSONObject(manifest.fileReferences as Map<*, *>))
-                    put("sessionState", manifest.sessionState.name)
+                    put("sessionState", manifest.sessionState)
                 }
 
                 manifestFile.writeText(manifestJson.toString(2))
@@ -1004,7 +1005,7 @@ class ComprehensiveRecordingController(
         errorMessage: String? = null,
         metadata: Map<String, String> = emptyMap()
     ) {
-        val event = RecordingController.SessionEvent(
+        val event = mpdc4gsr.controller.RecordingControllerSessionEvent(
             eventType = eventType,
             timestampMs = System.currentTimeMillis(),
             sensorId = sensorId,
