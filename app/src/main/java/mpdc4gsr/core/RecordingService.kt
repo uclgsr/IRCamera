@@ -30,6 +30,7 @@ import mpdc4gsr.config.ProtocolVersion
 import mpdc4gsr.controller.ComprehensiveRecordingController
 import mpdc4gsr.controller.RecordingController
 import mpdc4gsr.controller.RecordingState
+import mpdc4gsr.controller.TriggerSource
 import mpdc4gsr.network.NetworkClient
 import mpdc4gsr.network.NetworkConnectionManager
 import mpdc4gsr.network.NetworkManager
@@ -697,7 +698,7 @@ class RecordingService : LifecycleService() {
     // Enhanced recording methods with trigger source support for session orchestration
     private suspend fun startRecordingSessionWithTrigger(
         sessionDirectory: String,
-        triggerSource: ComprehensiveRecordingController.TriggerSource
+        triggerSource: TriggerSource
     ): Boolean {
         if (!isInitialized) {
             Log.e(TAG, "Service not initialized, cannot start recording")
@@ -707,7 +708,7 @@ class RecordingService : LifecycleService() {
                 "recording_start_failed",
                 mapOf(
                     "reason" to "service_not_initialized",
-                    "trigger_source" to triggerSource.name
+                    "trigger_source" to triggerSource.toString()
                 )
             )
             return false
@@ -726,14 +727,14 @@ class RecordingService : LifecycleService() {
             timeSyncManager?.initializeSession(sessionDirectory)
             timeSyncManager?.setPeriodicSyncEnabled(true)
 
-            Log.i(TAG, "Starting recording session: $sessionDirectory (trigger: ${triggerSource.name})")
+            Log.i(TAG, "Starting recording session: $sessionDirectory (trigger: $triggerSource)")
             structuredLogger.log(
                 StructuredLogger.LogLevel.INFO,
                 "RecordingService",
                 "recording_session_start",
                 mapOf(
                     "session_directory" to sessionDirectory,
-                    "trigger_source" to triggerSource.name,
+                    "trigger_source" to triggerSource.toString(),
                     "available_sensors" to recordingController.getAvailableSensors()
                         .map { it.sensorId }
                 )
@@ -741,8 +742,8 @@ class RecordingService : LifecycleService() {
 
             // Update notification for different trigger sources
             val notificationText = when (triggerSource) {
-                ComprehensiveRecordingController.TriggerSource.REMOTE_PC -> "Starting recording session (PC Command)..."
-                ComprehensiveRecordingController.TriggerSource.LOCAL_NOTIFICATION -> "Starting recording session (Notification)..."
+                TriggerSource.REMOTE_PC -> "Starting recording session (PC Command)..."
+                TriggerSource.LOCAL_NOTIFICATION -> "Starting recording session (Notification)..."
                 else -> "Starting recording session..."
             }
 
@@ -755,12 +756,12 @@ class RecordingService : LifecycleService() {
             )
 
             if (success) {
-                Log.i(TAG, "Recording session started successfully via ${triggerSource.name}")
+                Log.i(TAG, "Recording session started successfully via $triggerSource")
 
                 // Update notification to show recording is active
                 val activeNotificationText = when (triggerSource) {
-                    ComprehensiveRecordingController.TriggerSource.REMOTE_PC -> "Recording (PC Command) - Tap to stop"
-                    ComprehensiveRecordingController.TriggerSource.LOCAL_NOTIFICATION -> "Recording (Notification) - Tap to stop"
+                    TriggerSource.REMOTE_PC -> "Recording (PC Command) - Tap to stop"
+                    TriggerSource.LOCAL_NOTIFICATION -> "Recording (Notification) - Tap to stop"
                     else -> "Recording - Tap to stop"
                 }
                 updateNotification(activeNotificationText)
@@ -778,11 +779,11 @@ class RecordingService : LifecycleService() {
                     "recording_session_started",
                     mapOf(
                         "session_id" to sessionDir.name,
-                        "trigger_source" to triggerSource.name
+                        "trigger_source" to triggerSource.toString()
                     )
                 )
             } else {
-                Log.e(TAG, "Failed to start recording session via ${triggerSource.name}")
+                Log.e(TAG, "Failed to start recording session via $triggerSource")
                 updateNotification("Recording start failed")
                 currentSessionDirectory = null
                 recordingStartTime = 0
@@ -790,7 +791,7 @@ class RecordingService : LifecycleService() {
 
             success
         } catch (e: Exception) {
-            Log.e(TAG, "Exception starting recording session via ${triggerSource.name}", e)
+            Log.e(TAG, "Exception starting recording session via $triggerSource", e)
             updateNotification("Recording start error")
             structuredLogger.log(
                 StructuredLogger.LogLevel.ERROR,
@@ -798,7 +799,7 @@ class RecordingService : LifecycleService() {
                 "recording_session_start_exception",
                 mapOf(
                     "error" to (e.message ?: "Unknown error"),
-                    "trigger_source" to triggerSource.name
+                    "trigger_source" to triggerSource.toString()
                 )
             )
             currentSessionDirectory = null
@@ -807,10 +808,10 @@ class RecordingService : LifecycleService() {
         }
     }
 
-    private suspend fun stopRecordingSessionWithTrigger(triggerSource: ComprehensiveRecordingController.TriggerSource): Boolean {
+    private suspend fun stopRecordingSessionWithTrigger(triggerSource: TriggerSource): Boolean {
         return try {
             updateNotification("Stopping recording session...")
-            Log.i(TAG, "Stopping recording session (trigger: ${triggerSource.name})")
+            Log.i(TAG, "Stopping recording session (trigger: $triggerSource)")
 
             val success = recordingController.stopRecording(triggerSource = triggerSource)
 
@@ -826,18 +827,18 @@ class RecordingService : LifecycleService() {
                             "%.1f",
                             sessionDuration
                         )
-                    }s, trigger: ${triggerSource.name})"
+                    }s, trigger: $triggerSource)"
                 )
 
                 val completedNotificationText = when (triggerSource) {
-                    ComprehensiveRecordingController.TriggerSource.REMOTE_PC -> "Recording completed via PC (${
+                    TriggerSource.REMOTE_PC -> "Recording completed via PC (${
                         String.format(
                             "%.1f",
                             sessionDuration
                         )
                     }s)"
 
-                    ComprehensiveRecordingController.TriggerSource.LOCAL_NOTIFICATION -> "Recording completed via notification (${
+                    TriggerSource.LOCAL_NOTIFICATION -> "Recording completed via notification (${
                         String.format(
                             "%.1f",
                             sessionDuration
@@ -864,20 +865,20 @@ class RecordingService : LifecycleService() {
                     mapOf(
                         "session_duration_seconds" to sessionDuration,
                         "session_directory" to (currentSessionDirectory ?: "unknown"),
-                        "trigger_source" to triggerSource.name
+                        "trigger_source" to triggerSource.toString()
                     )
                 )
 
                 delay(2000)
                 stopForeground(true)
             } else {
-                Log.e(TAG, "Failed to stop recording session cleanly (trigger: ${triggerSource.name})")
+                Log.e(TAG, "Failed to stop recording session cleanly (trigger: $triggerSource)")
                 updateNotification("Recording stop failed")
                 structuredLogger.log(
                     StructuredLogger.LogLevel.ERROR,
                     "RecordingService",
                     "recording_session_stop_failed",
-                    mapOf("trigger_source" to triggerSource.name)
+                    mapOf("trigger_source" to triggerSource.toString())
                 )
             }
 
@@ -897,7 +898,7 @@ class RecordingService : LifecycleService() {
 
             success
         } catch (e: Exception) {
-            Log.e(TAG, "Error stopping recording session via ${triggerSource.name}", e)
+            Log.e(TAG, "Error stopping recording session via $triggerSource", e)
             updateNotification("Recording stop error")
             structuredLogger.log(
                 StructuredLogger.LogLevel.ERROR,
@@ -905,7 +906,7 @@ class RecordingService : LifecycleService() {
                 "recording_session_stop_exception",
                 mapOf(
                     "error" to (e.message ?: "Unknown error"),
-                    "trigger_source" to triggerSource.name
+                    "trigger_source" to triggerSource.toString()
                 )
             )
             false
@@ -1486,7 +1487,7 @@ class RecordingService : LifecycleService() {
                     // Use REMOTE_PC trigger source for session orchestration
                     val success = startRecordingSessionWithTrigger(
                         sessionId,
-                        ComprehensiveRecordingController.TriggerSource.REMOTE_PC
+                        TriggerSource.REMOTE_PC
                     )
                     if (success) {
                         ProtocolHandler.CommandResult(
@@ -1515,7 +1516,7 @@ class RecordingService : LifecycleService() {
                     Log.i(TAG, "Remote stop recording command received for session: $sessionId")
                     // Use REMOTE_PC trigger source for session orchestration  
                     val success =
-                        stopRecordingSessionWithTrigger(ComprehensiveRecordingController.TriggerSource.REMOTE_PC)
+                        stopRecordingSessionWithTrigger(TriggerSource.REMOTE_PC)
                     if (success) {
                         ProtocolHandler.CommandResult(
                             success = true,
