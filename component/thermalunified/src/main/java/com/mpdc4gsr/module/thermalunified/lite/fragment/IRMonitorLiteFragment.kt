@@ -650,7 +650,6 @@ class IRMonitorLiteFragment : BaseFragment(), ITsTempListener {
                     config.distance,
                     config.ambientTemperature,
                     config.humidity,
-                    config.atmosphericTemperature,
                     config.transmittance,
                     if (basicGainGetValue[0] == 0) GainStatus.LOW_GAIN else GainStatus.HIGH_GAIN
                 )
@@ -685,8 +684,8 @@ class IRMonitorLiteFragment : BaseFragment(), ITsTempListener {
                 
                 for (i in 0 until samples) {
                     val t = i.toFloat() / (samples - 1)
-                    val x = (line.startX + t * (line.endX - line.startX)).toInt()
-                    val y = (line.startY + t * (line.endY - line.startY)).toInt()
+                    val x = (line.start.x + t * (line.end.x - line.start.x)).toInt()
+                    val y = (line.start.y + t * (line.end.y - line.start.y)).toInt()
                     
                     try {
                         val temp = LibIRTempAC020.getTemperature(
@@ -704,7 +703,6 @@ class IRMonitorLiteFragment : BaseFragment(), ITsTempListener {
                             config.distance,
                             config.ambientTemperature,
                             config.humidity,
-                            config.atmosphericTemperature,
                             config.transmittance,
                             if (basicGainGetValue[0] == 0) GainStatus.LOW_GAIN else GainStatus.HIGH_GAIN
                         )
@@ -718,7 +716,7 @@ class IRMonitorLiteFragment : BaseFragment(), ITsTempListener {
                 
                 if (validSamples > 0) {
                     val avgTemp = totalTemp / validSamples
-                    createRealTemperatureSampleResult(avgTemp, "Line", line.startX, line.startY)
+                    createRealTemperatureSampleResult(avgTemp, "Line", line.start.x, line.start.y)
                 } else {
                     // Fallback to estimation
                     val avgTemp = estimateAverageTemperatureAlongLine(line)
@@ -770,7 +768,6 @@ class IRMonitorLiteFragment : BaseFragment(), ITsTempListener {
                                 config.distance,
                                 config.ambientTemperature,
                                 config.humidity,
-                                config.atmosphericTemperature,
                                 config.transmittance,
                                 if (basicGainGetValue[0] == 0) GainStatus.LOW_GAIN else GainStatus.HIGH_GAIN
                             )
@@ -821,8 +818,8 @@ class IRMonitorLiteFragment : BaseFragment(), ITsTempListener {
         
         for (i in 0 until samples) {
             val t = i.toFloat() / (samples - 1)
-            val x = (line.startX + t * (line.endX - line.startX)).toInt()
-            val y = (line.startY + t * (line.endY - line.startY)).toInt()
+            val x = (line.start.x + t * (line.end.x - line.start.x)).toInt()
+            val y = (line.start.y + t * (line.end.y - line.start.y)).toInt()
             totalTemp += estimateTemperatureAtPoint(x, y)
         }
         
