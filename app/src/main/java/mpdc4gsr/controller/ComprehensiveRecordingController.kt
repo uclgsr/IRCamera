@@ -25,17 +25,15 @@ import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
 import java.util.concurrent.atomic.AtomicReference
 
-// Use proper type aliases from controller package
-typealias SessionManifest = mpdc4gsr.controller.SessionManifest
-typealias SessionEvent = mpdc4gsr.controller.SessionEvent
-typealias SensorActivityInfo = mpdc4gsr.controller.SensorActivityInfo
-typealias SensorHealthInfo = mpdc4gsr.controller.SensorHealthInfo
-typealias DropoutEvent = mpdc4gsr.controller.DropoutEvent
-typealias ReconnectionEvent = mpdc4gsr.controller.ReconnectionEvent
+// Import types from SessionManifest.kt to avoid circular references
+import mpdc4gsr.controller.SessionEvent
+import mpdc4gsr.controller.RecordingController
 
 
 class ComprehensiveRecordingController(
-    private val context: Context
+    private val context: Context,
+    private val lifecycleOwner: androidx.lifecycle.LifecycleOwner? = null,
+    private val permissionManager: mpdc4gsr.permissions.PermissionManager? = null
 ) {
     companion object {
         private const val TAG = "ComprehensiveRecordingController"
@@ -80,8 +78,8 @@ class ComprehensiveRecordingController(
     private val currentSessionState = AtomicReference(SessionState.IDLE)
     private var lastTriggerSource: TriggerSource? = null
 
-    // Use a thread-safe list for session events
-    private val sessionEvents = CopyOnWriteArrayList<RecordingController.SessionEvent>()
+    // Use a thread-safe list for session events  
+    private val sessionEvents = CopyOnWriteArrayList<mpdc4gsr.controller.RecordingControllerSessionEvent>()
 
     private val _errorFlow = MutableStateFlow<RecordingError?>(null)
     val errorFlow: StateFlow<RecordingError?> = _errorFlow.asStateFlow()
@@ -1035,7 +1033,7 @@ class ComprehensiveRecordingController(
         errorMessage: String? = null,
         metadata: Map<String, String> = emptyMap()
     ) {
-        val event = RecordingController.SessionEvent(
+        val event = mpdc4gsr.controller.RecordingControllerSessionEvent(
             eventType = eventType,
             timestampMs = System.currentTimeMillis(),
             sensorId = sensorId,
@@ -1088,7 +1086,7 @@ data class RecordingStats(
 }
 
 enum class RecordingState {
-    IDLE, STARTING, RECORDING, STOPPING, ERROR
+    IDLE, STARTING, RECORDING, STOPPING, STOPPED, ERROR
 }
 
 data class SensorHealthSummary(
