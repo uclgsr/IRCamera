@@ -12,6 +12,12 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import mpdc4gsr.data.SessionManifest
+import mpdc4gsr.data.SessionEvent
+import mpdc4gsr.data.SensorActivityInfo
+import mpdc4gsr.data.SensorHealthInfo
+import mpdc4gsr.data.DropoutEvent
+import mpdc4gsr.data.ReconnectionEvent
 import mpdc4gsr.controller.RecordingController
 import mpdc4gsr.data.SessionMetadata
 import mpdc4gsr.permissions.PermissionManager
