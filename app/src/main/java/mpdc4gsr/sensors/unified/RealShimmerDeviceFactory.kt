@@ -203,8 +203,13 @@ class RealShimmerDevice(
                     // Get the connected device reference - note: getShimmer returns ShimmerDevice, not Shimmer
                     deviceAddress?.let { address ->
                         val shimmerDevice = shimmerBluetoothManager?.getShimmer(address)
-                        // Cast or adapt as needed for compatibility
-                        connectedDevice = shimmerDevice as? Shimmer
+                        // Assign only if shimmerDevice is actually a Shimmer instance
+                        if (shimmerDevice is Shimmer) {
+                            connectedDevice = shimmerDevice
+                        } else {
+                            Log.w(TAG, "Connected device is not a Shimmer instance: ${shimmerDevice?.javaClass?.name}")
+                            connectedDevice = null
+                        }
                     }
                     
                     connectionCallback?.invoke("CONNECTED")
