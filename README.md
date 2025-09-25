@@ -44,7 +44,7 @@ See [SIMPLIFIED_ARCHITECTURE.md](SIMPLIFIED_ARCHITECTURE.md) for complete detail
 
 ### Architecture & Design
 - **[Comprehensive Architecture Diagrams](docs/COMPREHENSIVE_ARCHITECTURE_DIAGRAMS.md)** - Complete system architecture with precise Mermaid diagrams
-- **[Interactive Architecture Viewer](docs/architecture-interactive-viewer.html)** - Web-based interactive diagram browser  
+- **[Interactive Architecture Viewer](docs/architecture-interactive-viewer.html)** - Web-based interactive diagram browser
 - [Simplified Architecture](SIMPLIFIED_ARCHITECTURE.md) - Current simplified project structure
 - [Complete Architecture Guide](docs/ARCHITECTURE.md) - Detailed technical architecture documentation
 
