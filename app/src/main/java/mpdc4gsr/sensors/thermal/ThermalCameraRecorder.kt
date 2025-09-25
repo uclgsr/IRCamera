@@ -26,7 +26,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import mpdc4gsr.data.SessionMetadata
+import mpdc4gsr.utils.SessionMetadata
 import mpdc4gsr.network.NetworkServer
 import mpdc4gsr.sensors.ErrorType
 import mpdc4gsr.sensors.RecordingStats
@@ -417,15 +417,13 @@ class ThermalCameraRecorder(
                 Log.d(TAG, "Recording already active")
                 return true
             }
-            // Start recording with current session
-            val sessionManager = SessionDirectoryManager.getInstance()
-            val sessionMetadata = SessionMetadata(
-                startTime = System.currentTimeMillis(),
-                enabledSensors = listOf("thermal"),
-                participantId = "recovery_session",
-                studyName = "thermal_recovery"
-            )
-            val recordingSuccess = startRecording(sessionManager.getCurrentSessionDir(), sessionMetadata)
+            // Restart recording with existing session if available
+            if (sessionDirectory.isEmpty()) {
+                Log.w(TAG, "Cannot restart recording - no active session directory")
+                return false
+            }
+            
+            val recordingSuccess = startRecording(sessionDirectory)
             Log.d(TAG, "Thermal recording restart result: $recordingSuccess")
             recordingSuccess
         } catch (e: Exception) {
