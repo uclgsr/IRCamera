@@ -26,7 +26,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import mpdc4gsr.utils.SessionMetadata
+import mpdc4gsr.data.SessionMetadata
 import mpdc4gsr.network.NetworkServer
 import mpdc4gsr.sensors.ErrorType
 import mpdc4gsr.sensors.RecordingStats
