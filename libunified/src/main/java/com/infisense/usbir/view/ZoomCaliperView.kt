@@ -15,48 +15,48 @@ class ZoomCaliperView @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : LinearLayout(context, attrs, defStyleAttr) {
-    
+
     var bitmap: Bitmap? = null
     var isOpenAmplify: Boolean = false
-    
+
     fun setTextSize(size: Float) {
         // Stub implementation
     }
-    
+
     fun setLinePaintColor(color: Int) {
         // Stub implementation
     }
-    
+
     var listener: ((Float, Float) -> Unit)? = null
-    
+
     fun setOnTrendChangeListener(listener: (Float, Float) -> Unit) {
         this.listener = listener
     }
-    
+
     fun setOnTrendAddListener(listener: () -> Unit) {
         // Stub implementation
     }
-    
+
     fun setOnTrendRemoveListener(listener: () -> Unit) {
         // Stub implementation
     }
-    
+
     var temperatureRegionMode: Int = 0
     var isUserHighTemp: Boolean = false
     var isUserLowTemp: Boolean = false
-    
+
     fun setUserHighTemp(temp: Float) {
         // Stub implementation
     }
-    
+
     fun setUserLowTemp(temp: Float) {
         // Stub implementation
     }
-    
+
     fun updateSelectBitmap() {
         // Stub implementation
     }
-    
+
     fun updateSelectBitmap(
         targetMeasureMode: Int,
         targetType: Int,
@@ -65,11 +65,11 @@ class ZoomCaliperView @JvmOverloads constructor(
     ) {
         // Stub implementation
     }
-    
+
     fun updateTargetBitmap() {
         // Stub implementation
     }
-    
+
     fun updateTargetBitmap(
         targetMeasureMode: Int,
         targetType: Int,
@@ -78,12 +78,12 @@ class ZoomCaliperView @JvmOverloads constructor(
     ) {
         // Stub implementation
     }
-    
+
     fun updateMagnifier() {
         // Stub implementation
         invalidate()
     }
-    
+
     fun setImageSize(imageHeight: Int, imageWidth: Int, parentViewWidth: Int, parentViewHeight: Int) {
         // Stub implementation for 4-parameter version
         layoutParams = layoutParams?.apply {
@@ -91,16 +91,16 @@ class ZoomCaliperView @JvmOverloads constructor(
             this.height = imageHeight
         }
     }
-    
+
     var isShowFull: Boolean = false
-    
+
     fun setShowCross(show: Boolean) {
         // Stub implementation
     }
-    
+
     override fun setRotation(rotation: Float) {
         super.setRotation(rotation)
     }
-    
+
     var regionAndValueBitmap: Bitmap? = null
 }

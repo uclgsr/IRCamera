@@ -9,8 +9,8 @@ import android.view.ViewGroup
 import androidx.annotation.StringRes
 import androidx.core.view.isVisible
 import com.mpdc4gsr.libunified.R
-import com.mpdc4gsr.libunified.databinding.DialogConfirmSelectBinding
 import com.mpdc4gsr.libunified.app.utils.ScreenUtil
+import com.mpdc4gsr.libunified.databinding.DialogConfirmSelectBinding
 
 class ConfirmSelectDialog(context: Context) : Dialog(context, R.style.InfoDialog),
     View.OnClickListener {

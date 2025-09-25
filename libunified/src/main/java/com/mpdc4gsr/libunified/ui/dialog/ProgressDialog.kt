@@ -1,6 +1,5 @@
 package com.mpdc4gsr.libunified.ui.dialog
 
-import android.app.Dialog
 import android.content.Context
 import android.view.LayoutInflater
 import android.widget.ProgressBar

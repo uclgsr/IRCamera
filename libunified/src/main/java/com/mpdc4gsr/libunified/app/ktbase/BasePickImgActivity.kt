@@ -10,10 +10,10 @@ import androidx.lifecycle.lifecycleScope
 import com.blankj.utilcode.util.ImageUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.mpdc4gsr.libunified.R
-import com.mpdc4gsr.libunified.databinding.ActivityImagePickIrPlushBinding
 import com.mpdc4gsr.libunified.app.dialog.ColorSelectDialog
 import com.mpdc4gsr.libunified.app.dialog.TipDialog
 import com.mpdc4gsr.libunified.app.view.ImageEditView
+import com.mpdc4gsr.libunified.databinding.ActivityImagePickIrPlushBinding
 import kotlinx.coroutines.launch
 import java.io.File
 

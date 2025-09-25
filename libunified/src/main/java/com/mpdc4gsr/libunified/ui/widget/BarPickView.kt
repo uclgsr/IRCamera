@@ -25,6 +25,7 @@ class BarPickView : View {
          */
         @ColorInt
         private const val DEFAULT_BG_COLOR = 0xff787878.toInt()
+
         /**
          * 默认进度条颜色.
          */
@@ -35,6 +36,7 @@ class BarPickView : View {
          * Thumb 圆角尺寸，单位 dp.
          */
         private const val THUMB_CORNERS = 11f
+
         /**
          * Thumb 描边尺寸，单位 dp.
          */
@@ -74,7 +76,6 @@ class BarPickView : View {
         }
 
 
-
     /**
      * 条条当前进度.
      */
@@ -95,15 +96,16 @@ class BarPickView : View {
      * 条条尺寸，单位 px（横向时是高度，竖向时是宽度）
      */
     private val barSize: Int
+
     /**
      * 顺时针旋转角度，仅支持 0、90、180、270.
      */
     private val rotate: Int
+
     /**
      * 标签文字.
      */
     private val labelText: String
-
 
 
     private val path = Path()
@@ -112,14 +114,18 @@ class BarPickView : View {
     private val barRect = RectF()
 
 
-
     constructor(context: Context) : this(context, null)
 
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
 
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : this(context, attrs, defStyleAttr, 0)
 
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes:Int) : super(context, attrs, defStyleAttr, defStyleRes) {
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) : super(
+        context,
+        attrs,
+        defStyleAttr,
+        defStyleRes
+    ) {
         val typedArray = context.obtainStyledAttributes(attrs, R.styleable.BarPickView, 0, 0)
         max = typedArray.getInt(R.styleable.BarPickView_android_max, 100)
         min = typedArray.getInt(R.styleable.BarPickView_barMin, 0)
@@ -179,7 +185,7 @@ class BarPickView : View {
 
         val thumbWidth = computeThumbWidth()
         val thumbHeight = paint.fontMetricsInt.bottom - paint.fontMetricsInt.top + SizeUtils.dp2px(4f)
-        
+
         val width: Int = if (rotate == 0 || rotate == 180) {
             if (widthMode == MeasureSpec.UNSPECIFIED) context.resources.displayMetrics.widthPixels else widthSize
         } else {
@@ -228,14 +234,16 @@ class BarPickView : View {
         val thumbWidth = computeThumbWidth()
         val thumbHeight = textHeight + SizeUtils.dp2px(4f)
         if (rotate == 0 || rotate == 180) {
-            val labelTextSpace = if (labelText.isEmpty()) 0 else (paint.measureText(labelText).toInt() + SizeUtils.dp2px(6f))
+            val labelTextSpace =
+                if (labelText.isEmpty()) 0 else (paint.measureText(labelText).toInt() + SizeUtils.dp2px(6f))
             val leftText = valueFormatListener.invoke(if (rotate == 0) min else max)
             val rightText = valueFormatListener.invoke(if (rotate == 0) max else min)
             val leftTextWidth = paint.measureText(leftText).toInt()
             val rightTextWidth = paint.measureText(rightText).toInt()
             val left = paddingStart.toFloat() + leftTextWidth + textMargin + if (rotate == 0) labelTextSpace else 0
             val top = (paddingTop + thumbHeight / 2 - barSize / 2).toFloat()
-            val right = (measuredWidth - paddingEnd - rightTextWidth - textMargin - if (rotate == 0) 0 else labelTextSpace).toFloat()
+            val right =
+                (measuredWidth - paddingEnd - rightTextWidth - textMargin - if (rotate == 0) 0 else labelTextSpace).toFloat()
             val bottom = top + barSize
             barRect.set(left, top, right, bottom)
         } else {
@@ -243,7 +251,8 @@ class BarPickView : View {
             val left = (paddingStart + thumbWidth / 2 - barSize / 2).toFloat()
             val top = paddingTop.toFloat() + textHeight + textMargin + if (rotate == 90) labelTextSpace else 0
             val right = left + barSize
-            val bottom = (measuredHeight - paddingBottom - textHeight - textMargin - if (rotate == 90) 0 else labelTextSpace).toFloat()
+            val bottom =
+                (measuredHeight - paddingBottom - textHeight - textMargin - if (rotate == 90) 0 else labelTextSpace).toFloat()
             barRect.set(left, top, right, bottom)
         }
     }
@@ -253,10 +262,11 @@ class BarPickView : View {
         val thumbHeight = paint.fontMetricsInt.bottom - paint.fontMetricsInt.top + SizeUtils.dp2px(4f)
         if (rotate == 0 || rotate == 180) {
             val progressWidth = (barRect.width() * (progress - min) / (max - min)).toInt()
-            val left = (if (rotate == 0) (barRect.left + progressWidth - thumbWidth / 2) else (barRect.right - progressWidth - thumbWidth / 2))
-                .toInt()
-                .coerceAtLeast(barRect.left.toInt())
-                .coerceAtMost(barRect.right.toInt() - thumbWidth)
+            val left =
+                (if (rotate == 0) (barRect.left + progressWidth - thumbWidth / 2) else (barRect.right - progressWidth - thumbWidth / 2))
+                    .toInt()
+                    .coerceAtLeast(barRect.left.toInt())
+                    .coerceAtMost(barRect.right.toInt() - thumbWidth)
             val right = left + thumbWidth
             val top = paddingTop
             val bottom = measuredHeight - paddingBottom
@@ -265,10 +275,11 @@ class BarPickView : View {
             val progressHeight = (barRect.height() * (progress - min) / (max - min).toFloat()).toInt()
             val left = paddingStart
             val right = measuredWidth - paddingEnd
-            val top = (if (rotate == 90) (barRect.top + progressHeight - thumbHeight / 2) else (barRect.bottom - progressHeight - thumbHeight / 2))
-                .toInt()
-                .coerceAtLeast(barRect.top.toInt())
-                .coerceAtMost(barRect.bottom.toInt() - thumbHeight)
+            val top =
+                (if (rotate == 90) (barRect.top + progressHeight - thumbHeight / 2) else (barRect.bottom - progressHeight - thumbHeight / 2))
+                    .toInt()
+                    .coerceAtLeast(barRect.top.toInt())
+                    .coerceAtMost(barRect.bottom.toInt() - thumbHeight)
             val bottom = top + thumbHeight
             thumbRect.set(left.toFloat(), top.toFloat(), right.toFloat(), bottom.toFloat())
         }
@@ -314,9 +325,21 @@ class BarPickView : View {
                 return
             }
             if (rotate == 0) {
-                canvas.drawRect((right - bgWidth + thumbWidth / 2).coerceAtLeast(left + thumbWidth), top, right, bottom, paint)
+                canvas.drawRect(
+                    (right - bgWidth + thumbWidth / 2).coerceAtLeast(left + thumbWidth),
+                    top,
+                    right,
+                    bottom,
+                    paint
+                )
             } else {
-                canvas.drawRect(left, top, (left + bgWidth - thumbWidth / 2).coerceAtMost(right - thumbWidth), bottom, paint)
+                canvas.drawRect(
+                    left,
+                    top,
+                    (left + bgWidth - thumbWidth / 2).coerceAtMost(right - thumbWidth),
+                    bottom,
+                    paint
+                )
             }
         } else {
             val thumbHeight = paint.fontMetricsInt.bottom - paint.fontMetricsInt.top + SizeUtils.dp2px(4f)
@@ -325,9 +348,21 @@ class BarPickView : View {
                 return
             }
             if (rotate == 90) {
-                canvas.drawRect(left, (bottom - bgHeight + thumbHeight / 2).coerceAtLeast(top + thumbHeight), right, bottom, paint)
+                canvas.drawRect(
+                    left,
+                    (bottom - bgHeight + thumbHeight / 2).coerceAtLeast(top + thumbHeight),
+                    right,
+                    bottom,
+                    paint
+                )
             } else {
-                canvas.drawRect(left, top, right, (top + bgHeight - thumbHeight / 2).coerceAtMost(bottom - thumbHeight), paint)
+                canvas.drawRect(
+                    left,
+                    top,
+                    right,
+                    (top + bgHeight - thumbHeight / 2).coerceAtMost(bottom - thumbHeight),
+                    paint
+                )
             }
         }
     }
@@ -346,20 +381,44 @@ class BarPickView : View {
                 return
             }
             if (rotate == 0) {
-                canvas.drawRect(left, top, (left + progressWidth - thumbWidth / 2).coerceAtMost(right - thumbWidth), bottom, paint)
+                canvas.drawRect(
+                    left,
+                    top,
+                    (left + progressWidth - thumbWidth / 2).coerceAtMost(right - thumbWidth),
+                    bottom,
+                    paint
+                )
             } else {
-                canvas.drawRect((right - progressWidth + thumbWidth / 2).coerceAtLeast(left + thumbWidth), top, right, bottom, paint)
+                canvas.drawRect(
+                    (right - progressWidth + thumbWidth / 2).coerceAtLeast(left + thumbWidth),
+                    top,
+                    right,
+                    bottom,
+                    paint
+                )
             }
         } else {
             val thumbHeight = paint.fontMetricsInt.bottom - paint.fontMetricsInt.top + SizeUtils.dp2px(4f)
-            val progressHeight = (barRect.height() * (progress - min)  / (max - min).toFloat()).toInt()
+            val progressHeight = (barRect.height() * (progress - min) / (max - min).toFloat()).toInt()
             if (progressHeight == 0) {
                 return
             }
             if (rotate == 90) {
-                canvas.drawRect(left, top, right, (top + progressHeight - thumbHeight / 2).coerceAtMost(bottom - thumbHeight), paint)
+                canvas.drawRect(
+                    left,
+                    top,
+                    right,
+                    (top + progressHeight - thumbHeight / 2).coerceAtMost(bottom - thumbHeight),
+                    paint
+                )
             } else {
-                canvas.drawRect(left, (bottom - progressHeight + thumbHeight / 2).coerceAtLeast(top + thumbHeight), right, bottom, paint)
+                canvas.drawRect(
+                    left,
+                    (bottom - progressHeight + thumbHeight / 2).coerceAtLeast(top + thumbHeight),
+                    right,
+                    bottom,
+                    paint
+                )
             }
         }
     }

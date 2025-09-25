@@ -12,8 +12,8 @@ This script simulates a PC controller that:
 4. Monitors live sensor data streams
 """
 
-import sys
 import os
+import sys
 
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 

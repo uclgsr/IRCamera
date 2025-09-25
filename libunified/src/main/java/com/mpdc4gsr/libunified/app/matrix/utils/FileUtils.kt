@@ -6,7 +6,6 @@ import android.graphics.BitmapFactory
 import android.graphics.Matrix
 import android.media.ExifInterface
 import com.mpdc4gsr.libunified.app.matrix.Logger
-import com.mpdc4gsr.libunified.app.matrix.utils.StringUtils
 import java.io.*
 
 

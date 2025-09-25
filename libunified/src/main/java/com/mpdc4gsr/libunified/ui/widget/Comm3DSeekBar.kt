@@ -17,7 +17,7 @@ import kotlin.math.roundToInt
  * 支持竖向的 SeekBar。
  * 暂不支持 thumbOffset.
  */
-class Comm3DSeekBar: AppCompatSeekBar {
+class Comm3DSeekBar : AppCompatSeekBar {
     private lateinit var mPaint: TextPaint
 
     /**
@@ -41,11 +41,11 @@ class Comm3DSeekBar: AppCompatSeekBar {
     private val mIndicatorWidth: Int = SizeUtils.dp2px(50f)
     private var onSeekBarChangeListener: OnSeekBarChangeListener? = null
 
-    constructor(context: Context): this(context, null)
+    constructor(context: Context) : this(context, null)
 
-    constructor(context: Context, attrs: AttributeSet?): this(context, attrs, 0)
+    constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
 
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int): super(context, attrs, defStyleAttr) {
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
         val typedArray = context.obtainStyledAttributes(attrs, R.styleable.CommSeekBar, defStyleAttr, 0)
         orientation = typedArray.getInt(R.styleable.CommSeekBar_android_orientation, 0)
         mMaxWidth = typedArray.getDimensionPixelSize(R.styleable.CommSeekBar_android_maxWidth, mMaxWidth)
@@ -120,7 +120,6 @@ class Comm3DSeekBar: AppCompatSeekBar {
     }
 
 
-
     private fun calculateDrawable(w: Int, h: Int) {
         val paddingWidth: Int = w - paddingLeft - paddingRight
         val paddingHeight: Int = h - paddingTop - paddingBottom
@@ -189,15 +188,18 @@ class Comm3DSeekBar: AppCompatSeekBar {
                 trackTouchEvent(event)
                 onSeekBarChangeListener?.onStartTrackingTouch(this)
             }
+
             MotionEvent.ACTION_MOVE -> {
                 trackTouchEvent(event)
             }
+
             MotionEvent.ACTION_UP -> {
                 isPressed = false
                 trackTouchEvent(event)
                 invalidate()
                 onSeekBarChangeListener?.onStopTrackingTouch(this)
             }
+
             MotionEvent.ACTION_CANCEL -> {
                 isPressed = false
                 invalidate()
@@ -211,11 +213,11 @@ class Comm3DSeekBar: AppCompatSeekBar {
     /**
      * 通过级别分层进行粘性处理
      */
-    fun stopTrackTouchLevel(){
-        if (level > 0){
+    fun stopTrackTouchLevel() {
+        if (level > 0) {
             val newLevel = (progress.toFloat() / 100 * 4).roundToInt()
             setProgress((newLevel.toFloat() / level * 100).toInt())
-         }
+        }
     }
 
 
