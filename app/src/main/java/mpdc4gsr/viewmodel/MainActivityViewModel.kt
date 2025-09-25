@@ -3,11 +3,15 @@ package mpdc4gsr.viewmodel
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.mpdc4gsr.gsr.model.SessionInfo
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import mpdc4gsr.core.SessionManager
@@ -26,53 +30,52 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
     }
 
 
-    private val _gsrConnectionState = MutableLiveData<GSRConnectionState>()
-    val gsrConnectionState: LiveData<GSRConnectionState> = _gsrConnectionState
+    // State properties using StateFlow for better coroutine support and lifecycle awareness
+    private val _gsrConnectionState = MutableStateFlow(GSRConnectionState.DISCONNECTED)
+    val gsrConnectionState: StateFlow<GSRConnectionState> = _gsrConnectionState.asStateFlow()
 
-    private val _gsrBatteryLevel = MutableLiveData<Int?>()
-    val gsrBatteryLevel: LiveData<Int?> = _gsrBatteryLevel
+    private val _gsrBatteryLevel = MutableStateFlow<Int?>(null)
+    val gsrBatteryLevel: StateFlow<Int?> = _gsrBatteryLevel.asStateFlow()
 
+    private val _networkConnectionState = MutableStateFlow(NetworkConnectionState.DISCONNECTED)
+    val networkConnectionState: StateFlow<NetworkConnectionState> = _networkConnectionState.asStateFlow()
 
-    private val _networkConnectionState = MutableLiveData<NetworkConnectionState>()
-    val networkConnectionState: LiveData<NetworkConnectionState> = _networkConnectionState
+    private val _connectedControllerInfo = MutableStateFlow<NetworkClient.ControllerInfo?>(null)
+    val connectedControllerInfo: StateFlow<NetworkClient.ControllerInfo?> = _connectedControllerInfo.asStateFlow()
 
-    private val _connectedControllerInfo = MutableLiveData<NetworkClient.ControllerInfo?>()
-    val connectedControllerInfo: LiveData<NetworkClient.ControllerInfo?> = _connectedControllerInfo
+    private val _sessionState = MutableStateFlow(SessionState.IDLE)
+    val sessionState: StateFlow<SessionState> = _sessionState.asStateFlow()
 
+    private val _currentSession = MutableStateFlow<SessionInfo?>(null)
+    val currentSession: StateFlow<SessionInfo?> = _currentSession.asStateFlow()
 
-    private val _sessionState = MutableLiveData<SessionState>()
-    val sessionState: LiveData<SessionState> = _sessionState
+    // Use SharedFlow for one-time events like status messages
+    private val _statusMessage = MutableSharedFlow<StatusMessage>(replay = 0)
+    val statusMessage: SharedFlow<StatusMessage> = _statusMessage.asSharedFlow()
 
-    private val _currentSession = MutableLiveData<SessionInfo?>()
-    val currentSession: LiveData<SessionInfo?> = _currentSession
+    // Enhanced sensor state tracking with StateFlow
+    private val _rgbCameraState = MutableStateFlow(SensorState())
+    val rgbCameraState: StateFlow<SensorState> = _rgbCameraState.asStateFlow()
 
+    private val _thermalCameraState = MutableStateFlow(SensorState())
+    val thermalCameraState: StateFlow<SensorState> = _thermalCameraState.asStateFlow()
 
-    private val _statusMessage = MutableLiveData<StatusMessage?>()
-    val statusMessage: LiveData<StatusMessage?> = _statusMessage
+    private val _gsrSensorState = MutableStateFlow(SensorState())
+    val gsrSensorState: StateFlow<SensorState> = _gsrSensorState.asStateFlow()
 
-    // Enhanced sensor state tracking
-    private val _rgbCameraState = MutableLiveData<SensorState>()
-    val rgbCameraState: LiveData<SensorState> = _rgbCameraState
+    // Recording control states with StateFlow
+    private val _isRemoteTriggered = MutableStateFlow(false)
+    val isRemoteTriggered: StateFlow<Boolean> = _isRemoteTriggered.asStateFlow()
 
-    private val _thermalCameraState = MutableLiveData<SensorState>()
-    val thermalCameraState: LiveData<SensorState> = _thermalCameraState
+    // Camera manual control states with StateFlow
+    private val _exposureLocked = MutableStateFlow(false)
+    val exposureLocked: StateFlow<Boolean> = _exposureLocked.asStateFlow()
 
-    private val _gsrSensorState = MutableLiveData<SensorState>()
-    val gsrSensorState: LiveData<SensorState> = _gsrSensorState
+    private val _focusLocked = MutableStateFlow(false)
+    val focusLocked: StateFlow<Boolean> = _focusLocked.asStateFlow()
 
-    // Recording control states
-    private val _isRemoteTriggered = MutableLiveData<Boolean>()
-    val isRemoteTriggered: LiveData<Boolean> = _isRemoteTriggered
-
-    // Camera manual control states
-    private val _exposureLocked = MutableLiveData<Boolean>()
-    val exposureLocked: LiveData<Boolean> = _exposureLocked
-
-    private val _focusLocked = MutableLiveData<Boolean>()
-    val focusLocked: LiveData<Boolean> = _focusLocked
-
-    private val _exposureCompensation = MutableLiveData<Float>()
-    val exposureCompensation: LiveData<Float> = _exposureCompensation
+    private val _exposureCompensation = MutableStateFlow(0.0f)
+    val exposureCompensation: StateFlow<Float> = _exposureCompensation.asStateFlow()
 
 
     private var gsrSensorRecorder: GSRSensorRecorder? = null
@@ -136,23 +139,7 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
     }
 
     init {
-        // Initialize connection states
-        _gsrConnectionState.value = GSRConnectionState.DISCONNECTED
-        _networkConnectionState.value = NetworkConnectionState.DISCONNECTED
-        _sessionState.value = SessionState.IDLE
-
-        // Initialize sensor states
-        _rgbCameraState.value = SensorState()
-        _thermalCameraState.value = SensorState()
-        _gsrSensorState.value = SensorState()
-
-        // Initialize control states
-        _isRemoteTriggered.value = false
-        _exposureLocked.value = false
-        _focusLocked.value = false
-        _exposureCompensation.value = 0.0f
-
-        Log.d(TAG, "MainActivityViewModel initialized with enhanced sensor tracking")
+        Log.d(TAG, "MainActivityViewModel initialized with StateFlow for reactive state management")
     }
 
     fun initializeComponents() {
@@ -173,10 +160,10 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
                 Log.i(TAG, "All components initialized successfully")
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to initialize components", e)
-                _statusMessage.value = StatusMessage(
+                _statusMessage.tryEmit(StatusMessage(
                     "Failed to initialize components: ${e.message}",
                     StatusMessage.Level.ERROR
-                )
+                ))
             }
         }
     }
@@ -187,12 +174,12 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
             gsrSessionManager = GSRSessionManager.getInstance(getApplication())
 
 
-            _gsrConnectionState.postValue(GSRConnectionState.DISCONNECTED)
+            _gsrConnectionState.value = GSRConnectionState.DISCONNECTED
 
             Log.d(TAG, "GSR components initialized (UnifiedGSRRecorder will be initialized on connection)")
         } catch (e: Exception) {
             Log.e(TAG, "Failed to initialize GSR components", e)
-            _gsrConnectionState.postValue(GSRConnectionState.ERROR)
+            _gsrConnectionState.value = GSRConnectionState.ERROR
             throw e
         }
     }
@@ -212,7 +199,7 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
 
                 override fun onError(error: String) {
                     Log.e(TAG, "Thermal recorder error: $error")
-                    _statusMessage.postValue(
+                    _statusMessage.value = 
                         StatusMessage("Thermal recording error: $error", StatusMessage.Level.ERROR)
                     )
                 }
@@ -268,14 +255,14 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
 
                 override fun onClientConnected(clientId: String, clientInfo: String) {
                     Log.i(TAG, "PC client connected: $clientId ($clientInfo)")
-                    _statusMessage.postValue(
+                    _statusMessage.value = 
                         StatusMessage("PC client connected: $clientInfo", StatusMessage.Level.INFO)
                     )
                 }
 
                 override fun onClientDisconnected(clientId: String, reason: String) {
                     Log.i(TAG, "PC client disconnected: $clientId - $reason")
-                    _statusMessage.postValue(
+                    _statusMessage.value = 
                         StatusMessage(
                             "PC client disconnected: $reason",
                             StatusMessage.Level.WARNING
@@ -285,7 +272,7 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
 
                 override fun onError(operation: String, error: String) {
                     Log.e(TAG, "NetworkController error in $operation: $error")
-                    _statusMessage.postValue(
+                    _statusMessage.value = 
                         StatusMessage("PC control error: $error", StatusMessage.Level.ERROR)
                     )
                 }
@@ -299,7 +286,7 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
                         TAG,
                         "NetworkController server started on port ${NetworkController.DEFAULT_PORT}"
                     )
-                    _statusMessage.postValue(
+                    _statusMessage.value = 
                         StatusMessage(
                             "PC remote control ready on port ${NetworkController.DEFAULT_PORT}",
                             StatusMessage.Level.INFO
@@ -313,14 +300,14 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
 
             networkClient?.setEventListener(object : NetworkClient.NetworkEventListener {
                 override fun onControllerDiscovered(controller: NetworkClient.ControllerInfo) {
-                    _networkConnectionState.postValue(NetworkConnectionState.DISCOVERING)
+                    _networkConnectionState.value = NetworkConnectionState.DISCOVERING)
                     Log.d(TAG, "PC Controller discovered: ${controller.deviceName}")
                 }
 
                 override fun onConnected(controller: NetworkClient.ControllerInfo) {
-                    _networkConnectionState.postValue(NetworkConnectionState.CONNECTED)
-                    _connectedControllerInfo.postValue(controller)
-                    _statusMessage.postValue(
+                    _networkConnectionState.value = NetworkConnectionState.CONNECTED)
+                    _connectedControllerInfo.value = controller)
+                    _statusMessage.value = 
                         StatusMessage(
                             "Connected to PC: ${controller.deviceName}",
                             StatusMessage.Level.INFO
@@ -330,9 +317,9 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
                 }
 
                 override fun onDisconnected(reason: String) {
-                    _networkConnectionState.postValue(NetworkConnectionState.DISCONNECTED)
-                    _connectedControllerInfo.postValue(null)
-                    _statusMessage.postValue(
+                    _networkConnectionState.value = NetworkConnectionState.DISCONNECTED)
+                    _connectedControllerInfo.value = null)
+                    _statusMessage.value = 
                         StatusMessage("Disconnected from PC: $reason", StatusMessage.Level.WARNING)
                     )
                     Log.w(TAG, "Disconnected from PC controller: $reason")
@@ -360,7 +347,7 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
                 }
 
                 override fun onError(operation: String, error: String) {
-                    _statusMessage.postValue(
+                    _statusMessage.value = 
                         StatusMessage(
                             "Network error in $operation: $error",
                             StatusMessage.Level.ERROR
@@ -370,11 +357,11 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
                 }
             })
 
-            _networkConnectionState.postValue(NetworkConnectionState.DISCONNECTED)
+            _networkConnectionState.value = NetworkConnectionState.DISCONNECTED)
             Log.d(TAG, "Network components initialized")
         } catch (e: Exception) {
             Log.e(TAG, "Failed to initialize network components", e)
-            _networkConnectionState.postValue(NetworkConnectionState.ERROR)
+            _networkConnectionState.value = NetworkConnectionState.ERROR)
             throw e
         }
     }
@@ -386,11 +373,11 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
                 mpdc4gsr.core.StructuredLogger.getInstance(getApplication())
             )
 
-            _sessionState.postValue(SessionState.IDLE)
+            _sessionState.value = SessionState.IDLE)
             Log.d(TAG, "Session components initialized")
         } catch (e: Exception) {
             Log.e(TAG, "Failed to initialize session components", e)
-            _sessionState.postValue(SessionState.ERROR)
+            _sessionState.value = SessionState.ERROR)
             throw e
         }
     }
@@ -418,16 +405,16 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
                             )
 
 
-                            _gsrConnectionState.postValue(GSRConnectionState.CONNECTING)
-                            _statusMessage.postValue(
+                            _gsrConnectionState.value = GSRConnectionState.CONNECTING)
+                            _statusMessage.value = 
                                 StatusMessage("Connecting to GSR sensor...", StatusMessage.Level.INFO)
                             )
 
 
                             kotlinx.coroutines.delay(2000)
 
-                            _gsrConnectionState.postValue(GSRConnectionState.CONNECTED)
-                            _statusMessage.postValue(
+                            _gsrConnectionState.value = GSRConnectionState.CONNECTED)
+                            _statusMessage.value = 
                                 StatusMessage("GSR sensor connected (simulated)", StatusMessage.Level.INFO)
                             )
 
@@ -440,23 +427,23 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
 
                         val initSuccess = recorder.initialize()
                         if (!initSuccess) {
-                            _gsrConnectionState.postValue(GSRConnectionState.ERROR)
-                            _statusMessage.postValue(
+                            _gsrConnectionState.value = GSRConnectionState.ERROR)
+                            _statusMessage.value = 
                                 StatusMessage("Failed to initialize GSR recorder", StatusMessage.Level.ERROR)
                             )
                             return@withContext
                         }
 
-                        _gsrConnectionState.postValue(GSRConnectionState.CONNECTING)
-                        _statusMessage.postValue(
+                        _gsrConnectionState.value = GSRConnectionState.CONNECTING)
+                        _statusMessage.value = 
                             StatusMessage("Starting device discovery...", StatusMessage.Level.INFO)
                         )
 
 
                         val discoverySuccess = recorder.startDeviceDiscovery()
                         if (!discoverySuccess) {
-                            _gsrConnectionState.postValue(GSRConnectionState.ERROR)
-                            _statusMessage.postValue(
+                            _gsrConnectionState.value = GSRConnectionState.ERROR)
+                            _statusMessage.value = 
                                 StatusMessage("No GSR devices found", StatusMessage.Level.ERROR)
                             )
                             return@withContext
@@ -465,8 +452,8 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
 
                         val devices = recorder.getDiscoveredDevices()
                         if (devices.isEmpty()) {
-                            _gsrConnectionState.postValue(GSRConnectionState.ERROR)
-                            _statusMessage.postValue(
+                            _gsrConnectionState.value = GSRConnectionState.ERROR)
+                            _statusMessage.value = 
                                 StatusMessage("No compatible GSR devices detected", StatusMessage.Level.ERROR)
                             )
                             return@withContext
@@ -474,30 +461,30 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
 
 
                         val targetDevice = devices.first()
-                        _statusMessage.postValue(
+                        _statusMessage.value = 
                             StatusMessage("Connecting to ${targetDevice.name}...", StatusMessage.Level.INFO)
                         )
 
                         val connectionSuccess = recorder.connectToDevice(targetDevice)
                         if (connectionSuccess) {
-                            _gsrConnectionState.postValue(GSRConnectionState.CONNECTED)
-                            _statusMessage.postValue(
+                            _gsrConnectionState.value = GSRConnectionState.CONNECTED)
+                            _statusMessage.value = 
                                 StatusMessage("Connected to ${targetDevice.name}", StatusMessage.Level.INFO)
                             )
 
 
                             monitorGSRStatus(recorder)
                         } else {
-                            _gsrConnectionState.postValue(GSRConnectionState.ERROR)
-                            _statusMessage.postValue(
+                            _gsrConnectionState.value = GSRConnectionState.ERROR)
+                            _statusMessage.value = 
                                 StatusMessage("Failed to connect to ${targetDevice.name}", StatusMessage.Level.ERROR)
                             )
                         }
 
                     } catch (e: Exception) {
                         Log.e(TAG, "Error during GSR connection", e)
-                        _gsrConnectionState.postValue(GSRConnectionState.ERROR)
-                        _statusMessage.postValue(
+                        _gsrConnectionState.value = GSRConnectionState.ERROR)
+                        _statusMessage.value = 
                             StatusMessage("GSR connection error: ${e.message}", StatusMessage.Level.ERROR)
                         )
                     }
@@ -523,7 +510,7 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
 
 
                     if (status.contains("Connected")) {
-                        _gsrBatteryLevel.postValue(85)
+                        _gsrBatteryLevel.value = 85)
                     }
                 }
             } catch (e: Exception) {
@@ -539,7 +526,7 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
 
 
                     if (quality < 0.3) {
-                        _statusMessage.postValue(
+                        _statusMessage.value = 
                             StatusMessage("GSR connection quality low", StatusMessage.Level.WARNING)
                         )
                     }
@@ -567,12 +554,12 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
                             val connected =
                                 client.connectToController(controller.ipAddress, controller.port)
                             if (connected) {
-                                _networkConnectionState.postValue(NetworkConnectionState.CONNECTED)
-                                _connectedControllerInfo.postValue(controller)
+                                _networkConnectionState.value = NetworkConnectionState.CONNECTED)
+                                _connectedControllerInfo.value = controller)
                             }
                         } else {
-                            _networkConnectionState.postValue(NetworkConnectionState.DISCONNECTED)
-                            _statusMessage.postValue(
+                            _networkConnectionState.value = NetworkConnectionState.DISCONNECTED)
+                            _statusMessage.value = 
                                 StatusMessage(
                                     "No PC controllers found",
                                     StatusMessage.Level.WARNING
@@ -646,9 +633,9 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
                             }
                         }
 
-                        _currentSession.postValue(session)
-                        _sessionState.postValue(SessionState.RECORDING)
-                        _statusMessage.postValue(
+                        _currentSession.value = session)
+                        _sessionState.value = SessionState.RECORDING)
+                        _statusMessage.value = 
                             StatusMessage(
                                 "Recording session started: ${session.sessionId}",
                                 StatusMessage.Level.INFO
@@ -699,9 +686,9 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
 
                         gsrSessionManager?.completeSession(session.sessionId)
 
-                        _currentSession.postValue(null)
-                        _sessionState.postValue(SessionState.IDLE)
-                        _statusMessage.postValue(
+                        _currentSession.value = null)
+                        _sessionState.value = SessionState.IDLE)
+                        _statusMessage.value = 
                             StatusMessage("Recording session stopped", StatusMessage.Level.INFO)
                         )
 
@@ -777,21 +764,21 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
 
     // Enhanced sensor state management methods
     fun updateRGBCameraState(status: SensorStatus, message: String? = null, isRecording: Boolean = false) {
-        _rgbCameraState.postValue(SensorState(status, message, isRecording))
+        _rgbCameraState.value = SensorState(status, message, isRecording))
     }
 
     fun updateThermalCameraState(status: SensorStatus, message: String? = null, isRecording: Boolean = false) {
-        _thermalCameraState.postValue(SensorState(status, message, isRecording))
+        _thermalCameraState.value = SensorState(status, message, isRecording))
     }
 
     fun updateGSRSensorState(status: SensorStatus, message: String? = null, isRecording: Boolean = false) {
-        _gsrSensorState.postValue(SensorState(status, message, isRecording))
+        _gsrSensorState.value = SensorState(status, message, isRecording))
     }
 
     // Manual camera controls
     fun lockExposure(locked: Boolean) {
-        _exposureLocked.postValue(locked)
-        _statusMessage.postValue(
+        _exposureLocked.value = locked)
+        _statusMessage.value = 
             StatusMessage(
                 if (locked) "Exposure locked" else "Exposure auto mode enabled",
                 StatusMessage.Level.INFO
@@ -800,8 +787,8 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
     }
 
     fun lockFocus(locked: Boolean) {
-        _focusLocked.postValue(locked)
-        _statusMessage.postValue(
+        _focusLocked.value = locked)
+        _statusMessage.value = 
             StatusMessage(
                 if (locked) "Focus locked" else "Focus auto mode enabled",
                 StatusMessage.Level.INFO
@@ -810,8 +797,8 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
     }
 
     fun setExposureCompensation(compensation: Float) {
-        _exposureCompensation.postValue(compensation)
-        _statusMessage.postValue(
+        _exposureCompensation.value = compensation)
+        _statusMessage.value = 
             StatusMessage(
                 "Exposure compensation: ${if (compensation > 0) "+" else ""}$compensation EV",
                 StatusMessage.Level.INFO
@@ -821,15 +808,15 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
 
     // Recording trigger indication
     fun setRemoteTriggered(isRemote: Boolean) {
-        _isRemoteTriggered.postValue(isRemote)
+        _isRemoteTriggered.value = isRemote)
     }
 
     // Reset manual controls to auto
     fun resetCameraControlsToAuto() {
-        _exposureLocked.postValue(false)
-        _focusLocked.postValue(false)
-        _exposureCompensation.postValue(0.0f)
-        _statusMessage.postValue(
+        _exposureLocked.value = false)
+        _focusLocked.value = false)
+        _exposureCompensation.value = 0.0f)
+        _statusMessage.value = 
             StatusMessage("Camera controls reset to auto", StatusMessage.Level.INFO)
         )
     }
