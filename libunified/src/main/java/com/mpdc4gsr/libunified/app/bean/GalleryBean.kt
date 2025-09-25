@@ -3,7 +3,7 @@ package com.mpdc4gsr.libunified.app.bean
 import android.os.Parcel
 import android.os.Parcelable
 import com.mpdc4gsr.libunified.app.config.FileConfig
-import com.mpdc4gsr.libunified.app.repository.FileBean
+import com.mpdc4gsr.libunified.app.repository.TS004FileBean
 import com.mpdc4gsr.libunified.app.tools.TimeTool
 import com.mpdc4gsr.libunified.app.tools.VideoTools
 import kotlinx.parcelize.Parcelize
@@ -30,7 +30,7 @@ open class GalleryBean(
         hasDownload = true,
     )
 
-    constructor(isVideo: Boolean, fileBean: FileBean) : this(
+    constructor(isVideo: Boolean, fileBean: TS004FileBean) : this(
         id = fileBean.id,
         path = "http://192.168.40.1:8080/DCIM/${fileBean.name}",
         thumb = if (isVideo) "http://192.168.40.1:8080/DCIM/${fileBean.thumb}" else "http://192.168.40.1:8080/DCIM/${fileBean.name}",
