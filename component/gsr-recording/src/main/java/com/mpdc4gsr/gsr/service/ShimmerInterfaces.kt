@@ -28,6 +28,29 @@ interface ShimmerDeviceFactory {
 }
 
 /**
+ * Factory resolver that tries to use real implementation if available from app module,
+ * falls back to mock implementation for testing/component-only builds
+ */
+object ShimmerDeviceFactoryResolver {
+    private const val TAG = "ShimmerFactoryResolver"
+    
+    fun createFactory(context: android.content.Context): ShimmerDeviceFactory {
+        return try {
+            // Try to use real implementation from app module if available
+            val realFactoryClass = Class.forName("mpdc4gsr.sensors.gsr.RealShimmerDeviceFactory")
+            val constructor = realFactoryClass.getConstructor(android.content.Context::class.java)
+            constructor.newInstance(context) as ShimmerDeviceFactory
+        } catch (e: ClassNotFoundException) {
+            Log.i(TAG, "Real Shimmer factory not available, using mock implementation")
+            MockShimmerDeviceFactory()
+        } catch (e: Exception) {
+            Log.w(TAG, "Failed to create real Shimmer factory, using mock implementation", e)
+            MockShimmerDeviceFactory()
+        }
+    }
+}
+
+/**
  * Temporary mock implementation for compilation - will be replaced by main app module implementation
  */
 class MockShimmerDeviceFactory : ShimmerDeviceFactory {

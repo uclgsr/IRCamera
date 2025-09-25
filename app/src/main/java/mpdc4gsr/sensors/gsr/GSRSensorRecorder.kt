@@ -15,6 +15,7 @@ import com.topdon.ble.util.BluetoothPermissionUtils
 import com.mpdc4gsr.gsr.model.GSRSample
 import com.mpdc4gsr.gsr.model.SessionInfo
 import com.mpdc4gsr.gsr.model.SyncMark
+import mpdc4gsr.sensors.gsr.RealShimmerDeviceFactory
 import com.mpdc4gsr.gsr.service.ShimmerGSRRecorder
 import mpdc4gsr.sensors.unified.RealShimmerDeviceFactory
 import com.shimmerresearch.android.Shimmer

@@ -22,7 +22,7 @@ import com.mpdc4gsr.gsr.model.GSRSample
 import com.mpdc4gsr.gsr.model.SessionInfo
 import com.mpdc4gsr.gsr.model.SyncMark
 import com.mpdc4gsr.gsr.service.GSRRecorder
-import mpdc4gsr.sensors.unified.RealShimmerDeviceFactory
+import mpdc4gsr.sensors.gsr.RealShimmerDeviceFactory
 import com.mpdc4gsr.gsr.service.SessionManager
 import com.mpdc4gsr.gsr.util.TimeUtil
 import com.mpdc4gsr.libunified.app.ktbase.BaseBindingActivity
