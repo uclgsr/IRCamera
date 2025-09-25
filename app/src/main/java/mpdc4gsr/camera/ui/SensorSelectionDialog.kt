@@ -14,8 +14,6 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
-import com.shimmerresearch.android.manager.ShimmerBluetoothManagerAndroid
-import com.shimmerresearch.driver.ShimmerDevice
 
 
 // Use simple feature checks for MVP; avoid direct Shimmer API calls
@@ -38,32 +36,14 @@ class SensorSelectionDialog(
             }
 
             try {
-                // Use Shimmer's official Bluetooth manager to detect GSR devices
-                val shimmerManager = ShimmerBluetoothManagerAndroid(context, Handler(Looper.getMainLooper()))
-
-                val hasConnectedShimmerDevices = try {
-                    // Use Shimmer manager to check for connected GSR-capable devices
-                    val deviceMap = shimmerManager.shimmerDeviceList
-                    deviceMap.values.any { device ->
-                        device.isConnected && device.enabledSensors.contains("GSR")
-                    }
-                } catch (e: Exception) {
-                    Log.w(TAG, "Error checking connected Shimmer devices: ${e.message}")
-                    false
-                }
-
-                if (hasConnectedShimmerDevices) {
-                    available.add(SensorType.GSR)
-                    Log.d(TAG, "Connected Shimmer GSR devices found")
-                } else {
-                    // EasyBLE not initialized, assume GSR available with simulation
-                    available.add(SensorType.GSR)
-                    Log.d(TAG, "EasyBLE not available, GSR will use simulation mode")
-                }
+                // For MVP: Use simplified GSR detection without direct Shimmer API calls
+                // GSR sensor available with simulation mode (avoiding problematic API calls)
+                available.add(SensorType.GSR)
+                Log.d(TAG, "GSR sensor available (hardware detection simplified for MVP)")
             } catch (e: Exception) {
                 // GSR sensor available even without hardware (simulation mode)
                 available.add(SensorType.GSR)
-                Log.w(TAG, "Shimmer Bluetooth manager not available, GSR will use simulated data if needed", e)
+                Log.w(TAG, "GSR sensor available with simulated data if needed", e)
             }
 
             Log.d(TAG, "Detected available sensors: $available")
