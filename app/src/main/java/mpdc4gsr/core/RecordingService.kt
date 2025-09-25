@@ -40,7 +40,7 @@ import mpdc4gsr.network.NetworkServer
 import mpdc4gsr.network.PreviewDataAdapter
 import mpdc4gsr.network.PreviewStreamer
 import mpdc4gsr.network.ProtocolHandler
-import mpdc4gsr.supervisor.CrashSafeSupervisor
+import mpdc4gsr.core.CrashSafeSupervisor
 import mpdc4gsr.sync.TimeSyncManager
 import org.json.JSONArray
 import org.json.JSONObject
@@ -174,7 +174,7 @@ class RecordingService : LifecycleService() {
     private val binder = RecordingServiceBinder()
 
     private lateinit var recordingController: ComprehensiveRecordingController
-    private lateinit var permissionManager: PermissionManager
+    private var permissionManager: PermissionManager? = null
     private var isInitialized = false
 
     private lateinit var networkClient: NetworkClient
@@ -182,10 +182,10 @@ class RecordingService : LifecycleService() {
     private lateinit var networkManager: NetworkManager
     private lateinit var protocolHandler: ProtocolHandler
     private lateinit var connectionManager: NetworkConnectionManager
-    private lateinit var previewStreamer: PreviewStreamer
-    private lateinit var previewDataAdapter: PreviewDataAdapter
+    internal lateinit var previewStreamer: PreviewStreamer
+    internal lateinit var previewDataAdapter: PreviewDataAdapter
     private var isNetworkInitialized = false
-    private var isConnectedToPC = false
+    internal var isConnectedToPC = false
 
     private var currentSessionDirectory: String? = null
     private var recordingStartTime: Long = 0
@@ -203,7 +203,7 @@ class RecordingService : LifecycleService() {
 
     private lateinit var structuredLogger: StructuredLogger
     private lateinit var crashSafeSupervisor: CrashSafeSupervisor
-    private lateinit var timeSyncManager: TimeSyncManager
+    private var timeSyncManager: TimeSyncManager? = null
 
     private data class ClientConnection(
         val socket: Socket,
@@ -247,9 +247,9 @@ class RecordingService : LifecycleService() {
 
         nsdManager = getSystemService(Context.NSD_SERVICE) as NsdManager
 
-        // Initialize PermissionManager and ComprehensiveRecordingController
-        permissionManager = PermissionManager(this)
-        recordingController = ComprehensiveRecordingController(this, this, permissionManager)
+        // Initialize ComprehensiveRecordingController without PermissionManager for service context
+        // PermissionManager requires FragmentActivity which is not available in service context
+        recordingController = ComprehensiveRecordingController(this, this, null)
 
         networkClient = NetworkClient(this)
         networkServer = NetworkServer(this, 8080)
@@ -257,8 +257,8 @@ class RecordingService : LifecycleService() {
         protocolHandler = ProtocolHandler(this, networkServer)
         protocolHandler.setTimeSyncManager(timeSyncManager)
         
-        // Set up sync trigger callback for manual sync requests
-        timeSyncManager.setSyncTriggerCallback(object : TimeSyncManager.SyncTriggerCallback {
+        // Set up sync trigger callback for manual sync requests (if TimeSyncManager is available)
+        timeSyncManager?.setSyncTriggerCallback(object : TimeSyncManager.SyncTriggerCallback {
             override suspend fun onManualSyncRequested(): Boolean {
                 return try {
                     // This would typically trigger a sync request to the PC
@@ -359,8 +359,13 @@ class RecordingService : LifecycleService() {
             crashSafeSupervisor = CrashSafeSupervisor.getInstance(this)
             crashSafeSupervisor.initialize()
             
-            // Initialize TimeSyncManager
-            timeSyncManager = TimeSyncManager(this)
+            // Initialize TimeSyncManager (optional due to compilation issues)
+            timeSyncManager = try {
+                TimeSyncManager(this)
+            } catch (e: Exception) {
+                Log.w(TAG, "Failed to initialize TimeSyncManager, continuing without sync", e)
+                null
+            }
 
             structuredLogger.log(
                 StructuredLogger.LogLevel.INFO,
@@ -470,8 +475,12 @@ class RecordingService : LifecycleService() {
             }
             
             // Cleanup TimeSyncManager
-            if (::timeSyncManager.isInitialized) {
-                timeSyncManager.cleanup()
+            timeSyncManager?.let { manager ->
+                try {
+                    manager.cleanup()
+                } catch (e: Exception) {
+                    Log.w(TAG, "TimeSyncManager cleanup failed", e)
+                }
             }
 
             if (::networkManager.isInitialized) {
@@ -530,10 +539,10 @@ class RecordingService : LifecycleService() {
                 recordingStartTime = System.nanoTime()
 
                 // Initialize TimeSyncManager for this session
-                timeSyncManager.initializeSession(sessionDirectory)
+                timeSyncManager?.initializeSession(sessionDirectory)
                 
                 // Enable periodic sync for long recording sessions
-                timeSyncManager.setPeriodicSyncEnabled(true)
+                timeSyncManager?.setPeriodicSyncEnabled(true)
 
                 Log.i(TAG, "Starting recording session: $sessionDirectory")
                 structuredLogger.log(
@@ -553,7 +562,13 @@ class RecordingService : LifecycleService() {
                 )
 
                 // Perform session start sync
-                timeSyncManager.performSessionStartSync()
+                lifecycleScope.launch {
+                    try {
+                        timeSyncManager?.performSessionStartSync()
+                    } catch (e: Exception) {
+                        Log.w(TAG, "Session start sync failed, continuing without sync", e)
+                    }
+                }
 
                 val success = recordingController.startSession(sessionDirectory)
 
@@ -653,7 +668,11 @@ class RecordingService : LifecycleService() {
                 recordingStartTime = 0
                 
                 // Finalize TimeSyncManager session
-                timeSyncManager.finalizeSession()
+                try {
+                    timeSyncManager?.finalizeSession()
+                } catch (e: Exception) {
+                    Log.w(TAG, "TimeSyncManager finalize session failed", e)
+                }
 
                 if (!isServerRunning.get()) {
                     stopSelf()

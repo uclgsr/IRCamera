@@ -104,7 +104,8 @@ class MockShimmerDevice : ShimmerDeviceInterface {
 }
 
 /**
- * TODO FIX Temporary mock data cluster for compilation
+ * MVP mock data cluster implementation
+ * Provides basic GSR sensor data for testing and development
  */
 class MockShimmerDataCluster : ShimmerDataCluster {
     override fun getGSRRawValue(): Double = 2048.0

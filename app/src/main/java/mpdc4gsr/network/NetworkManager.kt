@@ -538,5 +538,5 @@ class NetworkManager(
         
         val metricsInfo = connectionMetrics.getMetricsSummary()
         return baseInfo + metricsInfo
-    }}
+    }
 }

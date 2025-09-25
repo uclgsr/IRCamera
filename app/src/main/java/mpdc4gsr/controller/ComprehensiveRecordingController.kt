@@ -28,7 +28,7 @@ import java.util.concurrent.atomic.AtomicLong
 class ComprehensiveRecordingController(
     private val context: Context,
     private val lifecycleOwner: LifecycleOwner,
-    private val permissionManager: PermissionManager
+    private val permissionManager: PermissionManager? = null
 ) {
     companion object {
         private const val TAG = "ComprehensiveRecordingController"

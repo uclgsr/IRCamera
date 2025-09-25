@@ -112,7 +112,8 @@ class Stage3DemoActivity : AppCompatActivity() {
         cameraSettingsView.onRecordingToggle = { shouldRecord ->
             lifecycleScope.launch {
                 if (shouldRecord) {
-                    val success = camera2System.startRecording()
+                    val sessionId = "Stage3Demo_${System.currentTimeMillis()}"
+                    val success = camera2System.startRecording(sessionId)
                     if (!success) {
                         Toast.makeText(this@Stage3DemoActivity, "Failed to start recording", Toast.LENGTH_SHORT).show()
                     }

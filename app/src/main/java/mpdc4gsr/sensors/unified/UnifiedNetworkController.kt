@@ -379,13 +379,54 @@ class UnifiedNetworkController(
         return activeConnections.containsKey(controllerName)
     }
 
+    // Network statistics tracking
+    private val latencyMeasurements = mutableListOf<Double>()
+    private val maxLatencyHistory = 100
+    private var totalPacketsSent = 0L
+    private var totalPacketsLost = 0L
+    private var reconnectionAttempts = 0
+    
     // Additional methods required by UnifiedSessionManager
     fun getNetworkStatistics(): NetworkStatistics {
+        val avgLatency = if (latencyMeasurements.isNotEmpty()) {
+            latencyMeasurements.average()
+        } else {
+            0.0
+        }
+        
+        val packetLossRate = if (totalPacketsSent > 0) {
+            (totalPacketsLost.toDouble() / totalPacketsSent.toDouble()) * 100.0
+        } else {
+            0.0
+        }
+        
         return NetworkStatistics(
-            averageLatency = 0.0, // TODO: Implement actual latency measurement
-            packetLoss = 0.0, // TODO: Implement packet loss measurement
-            reconnectionCount = 0 // TODO: Track reconnection attempts
+            averageLatency = avgLatency,
+            packetLoss = packetLossRate,
+            reconnectionCount = reconnectionAttempts
         )
+    }
+    
+    fun recordLatencyMeasurement(latencyMs: Double) {
+        synchronized(latencyMeasurements) {
+            latencyMeasurements.add(latencyMs)
+            if (latencyMeasurements.size > maxLatencyHistory) {
+                latencyMeasurements.removeAt(0)
+            }
+        }
+    }
+    
+    fun recordPacketSent() {
+        totalPacketsSent++
+    }
+    
+    fun recordPacketLost() {
+        totalPacketsLost++
+    }
+    
+    private fun incrementReconnectionCount() {
+        reconnectionAttempts++
+        Log.i(TAG, "Reconnection attempts: $reconnectionAttempts")
     }
 
     fun getCurrentSyncQuality(): Double {
@@ -607,6 +648,7 @@ class UnifiedNetworkController(
                 discoveredControllers.values.forEach { controllerInfo ->
                     if (!activeConnections.containsKey(controllerInfo.name)) {
                         Log.i(TAG, "Trying to reconnect to ${controllerInfo.name}")
+                        incrementReconnectionCount()
                         launch { connectToController(controllerInfo) }
                     }
                 }

@@ -131,7 +131,7 @@ class BluetoothClient(
         }
     }
     
-    override suspend fun disconnect() = withContext(Dispatchers.IO) {
+    override suspend fun disconnect(): Unit = withContext(Dispatchers.IO) {
         Log.i(TAG, "Disconnecting from PC Bluetooth server")
         
         // Cancel reader job first to stop any ongoing reads

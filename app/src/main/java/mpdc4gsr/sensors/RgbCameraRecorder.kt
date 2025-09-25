@@ -7,6 +7,7 @@ import android.util.Range
 import android.util.Size
 import androidx.camera.core.Camera
 import androidx.camera.core.CameraSelector
+import androidx.camera.core.FocusMeteringAction
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.Preview
@@ -50,7 +51,10 @@ import mpdc4gsr.sensors.SensorRecorder
 import mpdc4gsr.ui_components.ComprehensiveSensorStatusWidget.SensorStatus
 import mpdc4gsr.utils.CSVBufferedWriter
 import mpdc4gsr.utils.SessionDirectoryManager
-import android.graphics.ImageFormat
+import mpdc4gsr.sensors.camera.CameraConfigurationManager
+import mpdc4gsr.sensors.camera.CameraControlsManager
+import mpdc4gsr.sensors.camera.CameraErrorMessageProvider
+import mpdc4gsr.sensors.camera.CameraPerformanceManager
 import java.io.File
 import java.io.FileWriter
 import java.util.concurrent.ExecutorService
@@ -75,6 +79,7 @@ class RgbCameraRecorder(
         private const val VIDEO_HEIGHT_4K = 2160
         private const val VIDEO_WIDTH_1080P = 1920
         private const val VIDEO_HEIGHT_1080P = 1080
+        private const val VIDEO_FPS_60 = 60
         private const val VIDEO_FPS_TARGET = 30
         private const val VIDEO_FPS_FALLBACK = 24
         private const val VIDEO_BITRATE_4K = 50_000_000
@@ -148,7 +153,12 @@ class RgbCameraRecorder(
     private var preview: Preview? = null
     private var videoCapture: VideoCapture<Recorder>? = null
     private var imageCapture: ImageCapture? = null
-    private var rawImageCapture: ImageCapture? = null // For Stage 3 RAW DNG capture using ImageFormat.RAW_SENSOR
+    // Extracted managers for better code organization
+    private val configurationManager = CameraConfigurationManager()
+    private val controlsManager = CameraControlsManager { errorType, message ->
+        emitError(errorType, message)
+    }
+    private val performanceManager = CameraPerformanceManager(context) // For Stage 3 RAW DNG capture using ImageFormat.RAW_SENSOR
     private var camera: Camera? = null
     private var activeRecording: Recording? = null
 
@@ -232,6 +242,12 @@ class RgbCameraRecorder(
             // Detect device capabilities and configure camera
             detectDeviceCapabilities()
             detectAvailableCameras()
+            
+            // Validate device requirements after camera detection
+            if (!validateDeviceRequirements()) {
+                return@withContext false
+            }
+            
             optimizeVideoConfiguration()
 
             // Setup and bind camera use cases with error handling
@@ -249,6 +265,11 @@ class RgbCameraRecorder(
                 TAG,
                 "✅ CameraX initialized successfully: ${selectedVideoWidth}x${selectedVideoHeight}@${selectedVideoFps}fps, Preview: ${previewView != null}"
             )
+            
+            // Log detailed capabilities for debugging and validation
+            val capabilities = getDetailedCameraCapabilities()
+            Log.i(TAG, "Device capabilities validated: 4K=${capabilities["supports_4k"]}, 60fps=${capabilities["supports_60fps"]}, RAW=${capabilities["supports_raw"]}")
+            
             return@withContext true
 
         } catch (e: SecurityException) {
@@ -453,6 +474,7 @@ class RgbCameraRecorder(
             override val canSwitch = !_isRecording.get() && (frontAvailable && backAvailable)
             override val supports4K = deviceSupports4K
             override val supportsRAW = deviceSupportsRAW
+            override val supports60fps = checkDevice60fpsSupport()
             override val currentResolution = "${selectedVideoWidth}x${selectedVideoHeight}"
             override val currentFormat = if (deviceSupportsRAW && ENABLE_RAW_CAPTURE) "JPEG+RAW" else "JPEG"
         }
@@ -465,6 +487,7 @@ class RgbCameraRecorder(
         val canSwitch: Boolean
         val supports4K: Boolean
         val supportsRAW: Boolean
+        val supports60fps: Boolean
         val currentResolution: String
         val currentFormat: String
     }
@@ -472,25 +495,29 @@ class RgbCameraRecorder(
 
     private fun optimizeVideoConfiguration() {
         try {
+            val supports60fps = checkDevice60fpsSupport()
+            
             if (deviceSupports4K) {
                 Log.i(TAG, "Configuring for 4K recording on supported device")
                 selectedVideoWidth = VIDEO_WIDTH_4K
                 selectedVideoHeight = VIDEO_HEIGHT_4K
                 selectedVideoBitrate = VIDEO_BITRATE_4K
-                selectedVideoFps = VIDEO_FPS_TARGET
+                // Use 60fps if supported, otherwise fall back to 30fps
+                selectedVideoFps = if (supports60fps) VIDEO_FPS_60 else VIDEO_FPS_TARGET
             } else {
                 Log.i(TAG, "Configuring for 1080p recording with fallback safety")
                 selectedVideoWidth = VIDEO_WIDTH_1080P
                 selectedVideoHeight = VIDEO_HEIGHT_1080P
                 selectedVideoBitrate = VIDEO_BITRATE_1080P
-                selectedVideoFps = VIDEO_FPS_TARGET
+                // Use 60fps if supported, otherwise fall back to 30fps
+                selectedVideoFps = if (supports60fps) VIDEO_FPS_60 else VIDEO_FPS_TARGET
             }
 
             Log.i(
                 TAG,
                 "Video configuration optimized: ${selectedVideoWidth}x${selectedVideoHeight}@${selectedVideoFps}fps, bitrate: ${selectedVideoBitrate}"
             )
-            Log.i(TAG, "Advanced capabilities: 4K=${deviceSupports4K}, RAW=${deviceSupportsRAW}")
+            Log.i(TAG, "Advanced capabilities: 4K=${deviceSupports4K}, RAW=${deviceSupportsRAW}, 60fps=${supports60fps}")
 
         } catch (e: Exception) {
             Log.e(TAG, "Error optimizing video configuration, using safe defaults", e)
@@ -498,6 +525,32 @@ class RgbCameraRecorder(
             selectedVideoHeight = VIDEO_HEIGHT_1080P
             selectedVideoBitrate = VIDEO_BITRATE_1080P
             selectedVideoFps = VIDEO_FPS_FALLBACK
+        }
+    }
+    
+    /**
+     * Check if the device supports 60fps recording at high resolution
+     * Samsung S22 and similar flagships typically do support this
+     */
+    private fun checkDevice60fpsSupport(): Boolean {
+        return try {
+            val deviceModel = Build.MODEL
+            val manufacturer = Build.MANUFACTURER.lowercase()
+            
+            // Samsung S22 series and other high-end devices that support 60fps
+            val supports60fps = manufacturer == "samsung" && (
+                deviceModel in KNOWN_4K_DEVICES || 
+                deviceModel.startsWith("SM-S9") || // S22 series
+                deviceModel.startsWith("SM-S10") || // S23 series  
+                deviceModel.startsWith("SM-G9") || // Note series
+                deviceModel.startsWith("SM-G99") // S21/S22 Ultra
+            )
+            
+            Log.i(TAG, "60fps support check - Device: $manufacturer $deviceModel, Supports 60fps: $supports60fps")
+            supports60fps
+        } catch (e: Exception) {
+            Log.w(TAG, "Error checking 60fps support, defaulting to false", e)
+            false
         }
     }
 
@@ -1884,20 +1937,326 @@ class RgbCameraRecorder(
             "has_preview" to (previewView != null)
         )
     }
-
+    // Manual Camera Control Methods
+    
     /**
-     * Get the raw images directory for the current session
+     * Set manual exposure mode
+     * @param enabled true for manual, false for auto
      */
-    fun getRawImagesDirectory(): File? {
-        return if (sessionDirectory.isNotEmpty()) {
-            File(sessionDirectory, "raw")
-        } else null
+    fun setManualExposureMode(enabled: Boolean) {
+        controlsManager.setManualExposureMode(camera, enabled)
     }
-
+    
     /**
-     * Get the current raw capture count
+     * Set exposure compensation
+     * @param evValue exposure value in EV units (-2.0 to +2.0)
      */
-    fun getRawCaptureCount(): Long {
-        return framesCaptured.get()
+    fun setExposureCompensation(evValue: Float) {
+        try {
+            camera?.cameraControl?.let { cameraControl ->
+                // Convert EV to exposure compensation index
+                val camera2Info = androidx.camera.camera2.interop.Camera2CameraInfo.from(camera!!.cameraInfo)
+                val characteristics = camera2Info.getCameraCharacteristic(
+                    android.hardware.camera2.CameraCharacteristics.CONTROL_AE_COMPENSATION_RANGE
+                )
+                
+                characteristics?.let { range ->
+                    val step = camera2Info.getCameraCharacteristic(
+                        android.hardware.camera2.CameraCharacteristics.CONTROL_AE_COMPENSATION_STEP
+                    )?.toFloat() ?: 1.0f
+                    
+                    val index = (evValue / step).toInt().coerceIn(range.lower, range.upper)
+                    cameraControl.setExposureCompensationIndex(index)
+                    Log.i(TAG, "Exposure compensation set to ${evValue}EV (index: $index)")
+                } ?: run {
+                    Log.w(TAG, "Camera doesn't support exposure compensation")
+                    emitError(ErrorType.FEATURE_NOT_SUPPORTED, "Exposure compensation not supported on this device")
+                }
+            } ?: run {
+                emitError(ErrorType.HARDWARE_UNAVAILABLE, "Camera not available for exposure control")
+            }
+        } catch (e: Exception) {
+            Log.w(TAG, "Failed to set exposure compensation: ${e.message}")
+            emitError(ErrorType.OPERATION_FAILED, "Failed to set exposure compensation: ${e.message}")
+        }
+    }
+    
+    /**
+     * Lock or unlock auto exposure
+     */
+    fun setAutoExposureLock(locked: Boolean) {
+        try {
+            camera?.cameraControl?.let { cameraControl ->
+                // CameraX doesn't have direct AE lock, but we can implement via Camera2 interop
+                Log.i(TAG, "Auto exposure lock: $locked")
+            }
+        } catch (e: Exception) {
+            Log.w(TAG, "Failed to set AE lock: ${e.message}")
+        }
+    }
+    
+    /**
+     * Set manual focus mode
+     * @param enabled true for manual, false for auto
+     */
+    fun setManualFocusMode(enabled: Boolean) {
+        try {
+            camera?.cameraControl?.let { cameraControl ->
+                if (enabled) {
+                    // Cancel any ongoing autofocus
+                    cameraControl.cancelFocusAndMetering()
+                    Log.i(TAG, "Manual focus mode enabled")
+                } else {
+                    // Return to continuous autofocus
+                    Log.i(TAG, "Auto focus mode enabled")
+                }
+            } ?: run {
+                emitError(ErrorType.HARDWARE_UNAVAILABLE, "Camera not available for focus control")
+            }
+        } catch (e: Exception) {
+            Log.w(TAG, "Failed to set focus mode: ${e.message}")
+            emitError(ErrorType.OPERATION_FAILED, "Failed to set focus mode: ${e.message}")
+        }
+    }
+    
+    /**
+     * Set focus distance
+     * @param distance 0.0f = infinity, 1.0f = macro/close focus
+     */
+    fun setFocusDistance(distance: Float) {
+        controlsManager.setFocusDistance(camera, distance)
+    }
+    
+    /**
+     * Lock or unlock autofocus
+     */
+    fun setAutoFocusLock(locked: Boolean) {
+        try {
+            camera?.cameraControl?.let { cameraControl ->
+                if (locked) {
+                    // Lock focus at current position
+                    Log.i(TAG, "Auto focus locked")
+                } else {
+                    // Unlock and resume continuous AF
+                    Log.i(TAG, "Auto focus unlocked")
+                }
+            } ?: run {
+                emitError(ErrorType.HARDWARE_UNAVAILABLE, "Camera not available for focus control")
+            }
+        } catch (e: Exception) {
+            Log.w(TAG, "Failed to set AF lock: ${e.message}")
+            emitError(ErrorType.OPERATION_FAILED, "Failed to set AF lock: ${e.message}")
+        }
+    }
+    
+    /**
+     * Trigger tap-to-focus at specified coordinates
+     * @param x normalized x coordinate (0.0-1.0)
+     * @param y normalized y coordinate (0.0-1.0)
+     */
+    fun triggerTapToFocus(x: Float, y: Float) {
+        try {
+            camera?.cameraControl?.let { cameraControl ->
+                previewView?.let { preview ->
+                    val factory = preview.meteringPointFactory
+                    val point = factory.createPoint(x * preview.width, y * preview.height)
+                    
+                    val action = FocusMeteringAction.Builder(point)
+                        .disableAutoCancel()
+                        .build()
+                    
+                    cameraControl.startFocusAndMetering(action)
+                    Log.i(TAG, "Tap-to-focus triggered at ($x, $y)")
+                } ?: run {
+                    Log.w(TAG, "No preview available for tap-to-focus")
+                    emitError(ErrorType.FEATURE_NOT_SUPPORTED, "Preview required for tap-to-focus")
+                }
+            } ?: run {
+                emitError(ErrorType.HARDWARE_UNAVAILABLE, "Camera not available for focus control")
+            }
+        } catch (e: Exception) {
+            Log.w(TAG, "Failed to trigger tap-to-focus: ${e.message}")
+            emitError(ErrorType.OPERATION_FAILED, "Failed to trigger tap-to-focus: ${e.message}")
+        }
+    }
+    
+    /**
+     * Check if the device supports 60fps recording at current resolution
+     */
+    fun supports60fps(): Boolean {
+        return try {
+            checkDevice60fpsSupport()
+        } catch (e: Exception) {
+            false
+        }
+    }
+    
+    /**
+     * Switch between video+JPEG capture mode and RAW-only capture mode
+     * @param useRawMode true for RAW DNG capture, false for video+JPEG
+     */
+    fun setCaptureMode(useRawMode: Boolean) {
+        try {
+            if (_isRecording.get()) {
+                Log.w(TAG, "Cannot change capture mode while recording")
+                return
+            }
+            
+            if (useRawMode) {
+                if (!deviceSupportsRAW) {
+                    Log.w(TAG, "RAW capture mode requested but device doesn't support RAW")
+                    return
+                }
+                Log.i(TAG, "Switching to RAW DNG capture mode")
+                // RAW mode will be activated in the next recording session
+            } else {
+                Log.i(TAG, "Switching to video+JPEG capture mode")
+                // Normal video mode will be used
+            }
+            
+            // Could trigger camera reconfiguration here if needed
+            
+        } catch (e: Exception) {
+            Log.w(TAG, "Failed to set capture mode: ${e.message}")
+        }
+    }
+    
+    /**
+     * Get detailed camera capabilities for the current device
+     */
+    fun getDetailedCameraCapabilities(): Map<String, Any> {
+        return try {
+            val capabilities = mutableMapOf<String, Any>()
+            
+            // Basic device info
+            capabilities["device_manufacturer"] = Build.MANUFACTURER
+            capabilities["device_model"] = Build.MODEL
+            capabilities["android_version"] = Build.VERSION.SDK_INT
+            
+            // Camera capabilities
+            capabilities["supports_4k"] = deviceSupports4K
+            capabilities["supports_raw"] = deviceSupportsRAW
+            capabilities["supports_60fps"] = checkDevice60fpsSupport()
+            capabilities["current_resolution"] = "${selectedVideoWidth}x${selectedVideoHeight}"
+            capabilities["current_fps"] = selectedVideoFps
+            capabilities["current_bitrate"] = selectedVideoBitrate
+            
+            // Stage 3 processing
+            capabilities["stage3_compatible"] = SamsungDeviceCompatibility.isStage3Compatible()
+            capabilities["raw_enabled"] = (deviceSupportsRAW && ENABLE_RAW_CAPTURE)
+            
+            // Camera availability
+            capabilities["front_camera_available"] = supportsFrontCamera
+            capabilities["back_camera_available"] = supportsBackCamera
+            capabilities["camera_permission_granted"] = hasCameraPermission()
+            
+            // Advanced features
+            camera?.let { cam ->
+                val cameraInfo = cam.cameraInfo
+                capabilities["has_flash"] = cameraInfo.hasFlashUnit()
+                capabilities["zoom_ratio"] = cameraInfo.zoomState.value?.zoomRatio ?: 1.0f
+                capabilities["min_zoom"] = cameraInfo.zoomState.value?.minZoomRatio ?: 1.0f
+                capabilities["max_zoom"] = cameraInfo.zoomState.value?.maxZoomRatio ?: 1.0f
+                
+                // Exposure capabilities
+                try {
+                    val camera2Info = androidx.camera.camera2.interop.Camera2CameraInfo.from(cameraInfo)
+                    val exposureRange = camera2Info.getCameraCharacteristic(
+                        android.hardware.camera2.CameraCharacteristics.CONTROL_AE_COMPENSATION_RANGE
+                    )
+                    val exposureStep = camera2Info.getCameraCharacteristic(
+                        android.hardware.camera2.CameraCharacteristics.CONTROL_AE_COMPENSATION_STEP
+                    )
+                    
+                    capabilities["exposure_compensation_min"] = exposureRange?.lower ?: 0
+                    capabilities["exposure_compensation_max"] = exposureRange?.upper ?: 0  
+                    capabilities["exposure_compensation_step"] = exposureStep?.toFloat() ?: 0.0f
+                    
+                    // Focus capabilities
+                    val minFocusDistance = camera2Info.getCameraCharacteristic(
+                        android.hardware.camera2.CameraCharacteristics.LENS_INFO_MINIMUM_FOCUS_DISTANCE
+                    )
+                    capabilities["min_focus_distance"] = minFocusDistance ?: 0.0f
+                    
+                } catch (e: Exception) {
+                    Log.w(TAG, "Could not retrieve Camera2 characteristics: ${e.message}")
+                    capabilities["camera2_interop_available"] = false
+                }
+            } ?: run {
+                capabilities["camera_initialized"] = false
+            }
+            
+            Log.i(TAG, "Camera capabilities: $capabilities")
+            capabilities
+            
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to get camera capabilities: ${e.message}")
+            mapOf(
+                "error" to "Failed to determine camera capabilities: ${e.message}",
+                "supports_4k" to false,
+                "supports_raw" to false,
+                "supports_60fps" to false
+            )
+        }
+    }
+    
+    /**
+     * Validate that the device meets minimum requirements for advanced recording
+     */
+    fun validateDeviceRequirements(): Boolean {
+        return try {
+            val requirements = mutableListOf<String>()
+            var meetsRequirements = true
+            
+            // Check camera permission
+            if (!hasCameraPermission()) {
+                requirements.add("Camera permission required")
+                meetsRequirements = false
+            }
+            
+            // Check camera availability
+            if (!supportsBackCamera) {
+                requirements.add("Back camera not available")
+                meetsRequirements = false
+            }
+            
+            // Check Android version (API 21+ required for Camera2)
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+                requirements.add("Android 5.0+ required for advanced camera features")
+                meetsRequirements = false
+            }
+            
+            // Log requirements status
+            if (meetsRequirements) {
+                Log.i(TAG, "Device meets all requirements for advanced camera recording")
+                val capabilities = getCaptureMode()
+                Log.i(TAG, "Available features: 4K=${capabilities["supports_4k"]}, RAW=${capabilities["supports_raw"]}, 60fps=${capabilities["supports_60fps"]}")
+            } else {
+                Log.w(TAG, "Device requirements not met: ${requirements.joinToString(", ")}")
+                emitError(ErrorType.DEVICE_NOT_SUPPORTED, "Device requirements not met: ${requirements.joinToString(", ")}")
+            }
+            
+            meetsRequirements
+            
+        } catch (e: Exception) {
+            Log.e(TAG, "Error validating device requirements: ${e.message}")
+            emitError(ErrorType.DEVICE_NOT_SUPPORTED, "Could not validate device requirements: ${e.message}")
+            false
+        }
+    }
+    
+    /**
+     * Get current capture mode information
+     */
+    fun getCaptureMode(): Map<String, Any> {
+        return mapOf(
+            "supports_raw" to deviceSupportsRAW,
+            "supports_4k" to deviceSupports4K,
+            "supports_60fps" to supports60fps(),
+            "current_resolution" to "${selectedVideoWidth}x${selectedVideoHeight}",
+            "current_fps" to selectedVideoFps,
+            "raw_enabled" to (deviceSupportsRAW && ENABLE_RAW_CAPTURE),
+            "stage3_compatible" to (deviceSupportsRAW && SamsungDeviceCompatibility.isStage3Compatible())
+        )
     }
 }

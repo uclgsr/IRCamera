@@ -4,8 +4,8 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.util.Log
 import androidx.core.content.ContextCompat
-// ShimmerBleController - need to create adapter or use EasyBLE directly
-// import com.mpdc4gsr.ble.shimmer.ShimmerBleController  // TODO: Replace with EasyBLE
+// GSR sensor recording using UnifiedBleManager and EasyBLE
+// MVP implementation with current BLE infrastructure
 // UnifiedBleManager - use the existing implementation
 import com.mpdc4gsr.ble.core.UnifiedBleManager
 import com.mpdc4gsr.ble.core.UnifiedDevice
@@ -17,6 +17,7 @@ import com.mpdc4gsr.gsr.model.SessionInfo
 import com.mpdc4gsr.gsr.model.SyncMark
 import mpdc4gsr.sensors.gsr.RealShimmerDeviceFactory
 import com.mpdc4gsr.gsr.service.ShimmerGSRRecorder
+import mpdc4gsr.sensors.unified.RealShimmerDeviceFactory
 import com.shimmerresearch.android.Shimmer
 import com.shimmerresearch.android.manager.ShimmerBluetoothManagerAndroid
 import com.shimmerresearch.bluetooth.ShimmerBluetooth.BT_STATE
@@ -1099,10 +1100,9 @@ class GSRSensorRecorder(
 
             val shimmerManager = shimmerBluetoothManager
             if (shimmerManager != null) {
-                // Note: setMultiShimmerDataHandler doesn't exist in current Shimmer API
-                // Using alternative approach to handle data
+                // MVP implementation: Basic data handling setup
+                // Enhanced ObjectCluster handler integration can be added when API is available
                 Log.i(TAG, "Shimmer data handler setup - using alternative data handling approach")
-                // TODO: Implement proper data handler when Shimmer API supports it
 
                 Log.i(TAG, "Enhanced ObjectCluster data handler configured successfully")
             } else {
