@@ -48,6 +48,8 @@ abstract class BaseApplication : Application() {
     var tau_data_H: ByteArray? = null
     var tau_data_L: ByteArray? = null
 
+    val module: String get() = javaClass.simpleName
+
     var activitys = arrayListOf<Activity>()
     var hasOtgShow = false
 
