@@ -849,9 +849,9 @@ class IRMonitorLiteFragment : BaseFragment(), ITsTempListener {
             override fun getTimestamp(): Long = System.currentTimeMillis()
             override fun isValid(): Boolean = temperatures.isNotEmpty()
             
-            // Required properties for LibIRTemp.TemperatureSampleResult interface
-            val maxTemperature: Float = maxTemp
-            val minTemperature: Float = minTemp
+            // Required methods for LibIRTemp.TemperatureSampleResult interface
+            override fun getMaxTemperature(): Float = maxTemp
+            override fun getMinTemperature(): Float = minTemp
         }
     }
 
@@ -863,9 +863,9 @@ class IRMonitorLiteFragment : BaseFragment(), ITsTempListener {
             override fun getTimestamp(): Long = System.currentTimeMillis()
             override fun isValid(): Boolean = true
             
-            // Required properties for LibIRTemp.TemperatureSampleResult interface
-            val maxTemperature: Float = temperature
-            val minTemperature: Float = temperature
+            // Required methods for LibIRTemp.TemperatureSampleResult interface
+            override fun getMaxTemperature(): Float = temperature
+            override fun getMinTemperature(): Float = temperature
         }
     }
     
@@ -877,9 +877,9 @@ class IRMonitorLiteFragment : BaseFragment(), ITsTempListener {
             override fun getTimestamp(): Long = System.currentTimeMillis()
             override fun isValid(): Boolean = true
             
-            // Required properties for LibIRTemp.TemperatureSampleResult interface
-            val maxTemperature: Float = temperature
-            val minTemperature: Float = temperature
+            // Required methods for LibIRTemp.TemperatureSampleResult interface
+            override fun getMaxTemperature(): Float = temperature
+            override fun getMinTemperature(): Float = temperature
             
             // Additional properties for enhanced result
             fun getX(): Int = x
