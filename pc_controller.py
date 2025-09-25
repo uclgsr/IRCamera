@@ -235,6 +235,7 @@ class DataProcessor:
         return data
 
 
+class Protocol:
     """Unified protocol handler supporting both legacy text and modern JSON protocols"""
     
     # Legacy text protocol commands
@@ -576,12 +577,12 @@ class NetworkThread(QThread if GUI_AVAILABLE else threading.Thread):
         """Process received message and send appropriate response"""
         msg_type = message.get('type', '').lower()
         
-        if msg_type in ['hello', MSG_HELLO.lower()]:
+        if msg_type in ['hello', Protocol.MSG_HELLO.lower()]:
             # Send acknowledgment
             response = Protocol.create_message("hello_ack", server_time=time.time())
             self._send_message(client_socket, response)
             
-        elif msg_type in ['sync_request', MSG_SYNC_REQUEST.lower()]:
+        elif msg_type in ['sync_request', Protocol.MSG_SYNC_REQUEST.lower()]:
             # Handle time synchronization
             client_time = message.get('client_time', time.time())
             server_time = time.time()
