@@ -35,6 +35,7 @@ public class Const {
     public static final boolean SP_KEY_IS_HORIZONTAL = true;
     public static final double SP_KEY_RATIO_THRESH = 0.9;
     public static final double SP_KEY_ROT_THRESH = 1.5;
+    public static final String DATA_FILE_SAVE_PATH = "/sdcard/IRCamera/data";
     public static int RESTART_USB = 1000;
     public static int HANDLE_CONNECT = 10001;
     public static int HANDLE_REGISTER = 10002;
@@ -45,11 +46,8 @@ public class Const {
     public static boolean isReadFlashData = false;
     public static boolean isDeviceConnected = false;
     public static DeviceType USE_DEVICE_TYPE = DeviceType.WN_256;
-    
-    // Additional constants needed by thermalunified component  
+    // Additional constants needed by thermalunified component
     public static com.mpdc4gsr.libunified.ir.usbdual.DeviceType DEVICE_TYPE = com.mpdc4gsr.libunified.ir.usbdual.DeviceType.DEVICE_TYPE_TC2C;
-    public static final String DATA_FILE_SAVE_PATH = "/sdcard/IRCamera/data";
-    
     public static int CAMERA_WIDTH = 640;
     public static int CAMERA_HEIGHT = 480;
     public static int IR_WIDTH = 192;

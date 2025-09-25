@@ -14,18 +14,17 @@ import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.Preview
 import androidx.camera.core.UseCase
 import androidx.camera.lifecycle.ProcessCameraProvider
+import androidx.camera.video.FallbackStrategy
+import androidx.camera.video.FileOutputOptions
 import androidx.camera.video.Quality
 import androidx.camera.video.QualitySelector
 import androidx.camera.video.Recorder
 import androidx.camera.video.Recording
 import androidx.camera.video.VideoCapture
 import androidx.camera.video.VideoRecordEvent
-import androidx.camera.video.FallbackStrategy
-import androidx.camera.video.FileOutputOptions
 import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
-import com.google.gson.Gson
 import com.opencsv.CSVWriter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -33,29 +32,23 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.isActive
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import mpdc4gsr.camera.core.SamsungDeviceCompatibility
 import mpdc4gsr.data.SessionMetadata
 import mpdc4gsr.permissions.PermissionManager
-import mpdc4gsr.sensors.ErrorType
-import mpdc4gsr.sensors.SensorError
-import mpdc4gsr.sensors.SensorRecorder
-import mpdc4gsr.ui_components.ComprehensiveSensorStatusWidget.SensorStatus
-import mpdc4gsr.utils.CSVBufferedWriter
-import mpdc4gsr.utils.SessionDirectoryManager
 import mpdc4gsr.sensors.camera.CameraConfigurationManager
 import mpdc4gsr.sensors.camera.CameraControlsManager
-import mpdc4gsr.sensors.camera.CameraErrorMessageProvider
 import mpdc4gsr.sensors.camera.CameraPerformanceManager
+import mpdc4gsr.utils.CSVBufferedWriter
+import mpdc4gsr.utils.SessionDirectoryManager
 import java.io.File
 import java.io.FileWriter
 import java.util.concurrent.ExecutorService
@@ -155,6 +148,7 @@ class RgbCameraRecorder(
     private var videoCapture: VideoCapture<Recorder>? = null
     private var imageCapture: ImageCapture? = null
     private var rawImageCapture: ImageCapture? = null
+
     // Extracted managers for better code organization
     private val configurationManager = CameraConfigurationManager()
     private val controlsManager = CameraControlsManager { errorType, message ->
@@ -162,7 +156,8 @@ class RgbCameraRecorder(
             emitError(errorType, message)
         }
     }
-    private val performanceManager = CameraPerformanceManager(context) // For Stage 3 RAW DNG capture using ImageFormat.RAW_SENSOR
+    private val performanceManager =
+        CameraPerformanceManager(context) // For Stage 3 RAW DNG capture using ImageFormat.RAW_SENSOR
     private var camera: Camera? = null
     private var activeRecording: Recording? = null
 
@@ -246,12 +241,12 @@ class RgbCameraRecorder(
             // Detect device capabilities and configure camera
             detectDeviceCapabilities()
             detectAvailableCameras()
-            
+
             // Validate device requirements after camera detection
             if (!validateDeviceRequirements()) {
                 return@withContext false
             }
-            
+
             optimizeVideoConfiguration()
 
             // Setup and bind camera use cases with error handling
@@ -269,11 +264,14 @@ class RgbCameraRecorder(
                 TAG,
                 "✅ CameraX initialized successfully: ${selectedVideoWidth}x${selectedVideoHeight}@${selectedVideoFps}fps, Preview: ${previewView != null}"
             )
-            
+
             // Log detailed capabilities for debugging and validation
             val capabilities = getDetailedCameraCapabilities()
-            Log.i(TAG, "Device capabilities validated: 4K=${capabilities["supports_4k"]}, 60fps=${capabilities["supports_60fps"]}, RAW=${capabilities["supports_raw"]}")
-            
+            Log.i(
+                TAG,
+                "Device capabilities validated: 4K=${capabilities["supports_4k"]}, 60fps=${capabilities["supports_60fps"]}, RAW=${capabilities["supports_raw"]}"
+            )
+
             return@withContext true
 
         } catch (e: SecurityException) {
@@ -500,7 +498,7 @@ class RgbCameraRecorder(
     private fun optimizeVideoConfiguration() {
         try {
             val supports60fps = checkDevice60fpsSupport()
-            
+
             if (deviceSupports4K) {
                 Log.i(TAG, "Configuring for 4K recording on supported device")
                 selectedVideoWidth = VIDEO_WIDTH_4K
@@ -521,7 +519,10 @@ class RgbCameraRecorder(
                 TAG,
                 "Video configuration optimized: ${selectedVideoWidth}x${selectedVideoHeight}@${selectedVideoFps}fps, bitrate: ${selectedVideoBitrate}"
             )
-            Log.i(TAG, "Advanced capabilities: 4K=${deviceSupports4K}, RAW=${deviceSupportsRAW}, 60fps=${supports60fps}")
+            Log.i(
+                TAG,
+                "Advanced capabilities: 4K=${deviceSupports4K}, RAW=${deviceSupportsRAW}, 60fps=${supports60fps}"
+            )
 
         } catch (e: Exception) {
             Log.e(TAG, "Error optimizing video configuration, using safe defaults", e)
@@ -531,7 +532,7 @@ class RgbCameraRecorder(
             selectedVideoFps = VIDEO_FPS_FALLBACK
         }
     }
-    
+
     /**
      * Check if the device supports 60fps recording at high resolution
      * Samsung S22 and similar flagships typically do support this
@@ -540,16 +541,16 @@ class RgbCameraRecorder(
         return try {
             val deviceModel = Build.MODEL
             val manufacturer = Build.MANUFACTURER.lowercase()
-            
+
             // Samsung S22 series and other high-end devices that support 60fps
             val supports60fps = manufacturer == "samsung" && (
-                deviceModel in KNOWN_4K_DEVICES || 
-                deviceModel.startsWith("SM-S9") || // S22 series
-                deviceModel.startsWith("SM-S10") || // S23 series  
-                deviceModel.startsWith("SM-G9") || // Note series
-                deviceModel.startsWith("SM-G99") // S21/S22 Ultra
-            )
-            
+                    deviceModel in KNOWN_4K_DEVICES ||
+                            deviceModel.startsWith("SM-S9") || // S22 series
+                            deviceModel.startsWith("SM-S10") || // S23 series
+                            deviceModel.startsWith("SM-G9") || // Note series
+                            deviceModel.startsWith("SM-G99") // S21/S22 Ultra
+                    )
+
             Log.i(TAG, "60fps support check - Device: $manufacturer $deviceModel, Supports 60fps: $supports60fps")
             supports60fps
         } catch (e: Exception) {
@@ -1266,7 +1267,7 @@ class RgbCameraRecorder(
                         }
                     }
                 }
-                
+
                 if (rawImageCapture == null) {
                     Log.w(TAG, "RAW ImageCapture not available, using fallback")
                     rawFile.writeText("RAW capture frame $frameNumber - ${timestampRecord.systemNanos}")
@@ -1944,7 +1945,7 @@ class RgbCameraRecorder(
         )
     }
     // Manual Camera Control Methods
-    
+
     /**
      * Set manual exposure mode
      * @param enabled true for manual, false for auto
@@ -1952,7 +1953,7 @@ class RgbCameraRecorder(
     fun setManualExposureMode(enabled: Boolean) {
         controlsManager.setManualExposureMode(camera, enabled)
     }
-    
+
     /**
      * Set exposure compensation
      * @param evValue exposure value in EV units (-2.0 to +2.0)
@@ -1965,12 +1966,12 @@ class RgbCameraRecorder(
                 val characteristics = camera2Info.getCameraCharacteristic(
                     android.hardware.camera2.CameraCharacteristics.CONTROL_AE_COMPENSATION_RANGE
                 )
-                
+
                 characteristics?.let { range ->
                     val step = camera2Info.getCameraCharacteristic(
                         android.hardware.camera2.CameraCharacteristics.CONTROL_AE_COMPENSATION_STEP
                     )?.toFloat() ?: 1.0f
-                    
+
                     val index = (evValue / step).toInt().coerceIn(range.lower, range.upper)
                     cameraControl.setExposureCompensationIndex(index)
                     Log.i(TAG, "Exposure compensation set to ${evValue}EV (index: $index)")
@@ -1992,7 +1993,7 @@ class RgbCameraRecorder(
             }
         }
     }
-    
+
     /**
      * Lock or unlock auto exposure
      */
@@ -2006,7 +2007,7 @@ class RgbCameraRecorder(
             Log.w(TAG, "Failed to set AE lock: ${e.message}")
         }
     }
-    
+
     /**
      * Set manual focus mode
      * @param enabled true for manual, false for auto
@@ -2034,7 +2035,7 @@ class RgbCameraRecorder(
             }
         }
     }
-    
+
     /**
      * Set focus distance
      * @param distance 0.0f = infinity, 1.0f = macro/close focus
@@ -2042,7 +2043,7 @@ class RgbCameraRecorder(
     fun setFocusDistance(distance: Float) {
         controlsManager.setFocusDistance(camera, distance)
     }
-    
+
     /**
      * Lock or unlock autofocus
      */
@@ -2068,7 +2069,7 @@ class RgbCameraRecorder(
             }
         }
     }
-    
+
     /**
      * Trigger tap-to-focus at specified coordinates
      * @param x normalized x coordinate (0.0-1.0)
@@ -2080,11 +2081,11 @@ class RgbCameraRecorder(
                 previewView?.let { preview ->
                     val factory = preview.meteringPointFactory
                     val point = factory.createPoint(x * preview.width, y * preview.height)
-                    
+
                     val action = FocusMeteringAction.Builder(point)
                         .disableAutoCancel()
                         .build()
-                    
+
                     cameraControl.startFocusAndMetering(action)
                     Log.i(TAG, "Tap-to-focus triggered at ($x, $y)")
                 } ?: run {
@@ -2105,7 +2106,7 @@ class RgbCameraRecorder(
             }
         }
     }
-    
+
     /**
      * Check if the device supports 60fps recording at current resolution
      */
@@ -2116,7 +2117,7 @@ class RgbCameraRecorder(
             false
         }
     }
-    
+
     /**
      * Switch between video+JPEG capture mode and RAW-only capture mode
      * @param useRawMode true for RAW DNG capture, false for video+JPEG
@@ -2127,7 +2128,7 @@ class RgbCameraRecorder(
                 Log.w(TAG, "Cannot change capture mode while recording")
                 return
             }
-            
+
             if (useRawMode) {
                 if (!deviceSupportsRAW) {
                     Log.w(TAG, "RAW capture mode requested but device doesn't support RAW")
@@ -2139,26 +2140,26 @@ class RgbCameraRecorder(
                 Log.i(TAG, "Switching to video+JPEG capture mode")
                 // Normal video mode will be used
             }
-            
+
             // Could trigger camera reconfiguration here if needed
-            
+
         } catch (e: Exception) {
             Log.w(TAG, "Failed to set capture mode: ${e.message}")
         }
     }
-    
+
     /**
      * Get detailed camera capabilities for the current device
      */
     fun getDetailedCameraCapabilities(): Map<String, Any> {
         return try {
             val capabilities = mutableMapOf<String, Any>()
-            
+
             // Basic device info
             capabilities["device_manufacturer"] = Build.MANUFACTURER
             capabilities["device_model"] = Build.MODEL
             capabilities["android_version"] = Build.VERSION.SDK_INT
-            
+
             // Camera capabilities
             capabilities["supports_4k"] = deviceSupports4K
             capabilities["supports_raw"] = deviceSupportsRAW
@@ -2166,16 +2167,16 @@ class RgbCameraRecorder(
             capabilities["current_resolution"] = "${selectedVideoWidth}x${selectedVideoHeight}"
             capabilities["current_fps"] = selectedVideoFps
             capabilities["current_bitrate"] = selectedVideoBitrate
-            
+
             // Stage 3 processing
             capabilities["stage3_compatible"] = SamsungDeviceCompatibility.isStage3Compatible()
             capabilities["raw_enabled"] = (deviceSupportsRAW && ENABLE_RAW_CAPTURE)
-            
+
             // Camera availability
             capabilities["front_camera_available"] = supportsFrontCamera
             capabilities["back_camera_available"] = supportsBackCamera
             capabilities["camera_permission_granted"] = hasCameraPermission()
-            
+
             // Advanced features
             camera?.let { cam ->
                 val cameraInfo = cam.cameraInfo
@@ -2183,7 +2184,7 @@ class RgbCameraRecorder(
                 capabilities["zoom_ratio"] = cameraInfo.zoomState.value?.zoomRatio ?: 1.0f
                 capabilities["min_zoom"] = cameraInfo.zoomState.value?.minZoomRatio ?: 1.0f
                 capabilities["max_zoom"] = cameraInfo.zoomState.value?.maxZoomRatio ?: 1.0f
-                
+
                 // Exposure capabilities
                 try {
                     val camera2Info = androidx.camera.camera2.interop.Camera2CameraInfo.from(cameraInfo)
@@ -2193,17 +2194,17 @@ class RgbCameraRecorder(
                     val exposureStep = camera2Info.getCameraCharacteristic(
                         android.hardware.camera2.CameraCharacteristics.CONTROL_AE_COMPENSATION_STEP
                     )
-                    
+
                     capabilities["exposure_compensation_min"] = exposureRange?.lower ?: 0
-                    capabilities["exposure_compensation_max"] = exposureRange?.upper ?: 0  
+                    capabilities["exposure_compensation_max"] = exposureRange?.upper ?: 0
                     capabilities["exposure_compensation_step"] = exposureStep?.toFloat() ?: 0.0f
-                    
+
                     // Focus capabilities
                     val minFocusDistance = camera2Info.getCameraCharacteristic(
                         android.hardware.camera2.CameraCharacteristics.LENS_INFO_MINIMUM_FOCUS_DISTANCE
                     )
                     capabilities["min_focus_distance"] = minFocusDistance ?: 0.0f
-                    
+
                 } catch (e: Exception) {
                     Log.w(TAG, "Could not retrieve Camera2 characteristics: ${e.message}")
                     capabilities["camera2_interop_available"] = false
@@ -2211,10 +2212,10 @@ class RgbCameraRecorder(
             } ?: run {
                 capabilities["camera_initialized"] = false
             }
-            
+
             Log.i(TAG, "Camera capabilities: $capabilities")
             capabilities
-            
+
         } catch (e: Exception) {
             Log.e(TAG, "Failed to get camera capabilities: ${e.message}")
             mapOf(
@@ -2225,7 +2226,7 @@ class RgbCameraRecorder(
             )
         }
     }
-    
+
     /**
      * Validate that the device meets minimum requirements for advanced recording
      */
@@ -2233,39 +2234,45 @@ class RgbCameraRecorder(
         return try {
             val requirements = mutableListOf<String>()
             var meetsRequirements = true
-            
+
             // Check camera permission
             if (!hasCameraPermission()) {
                 requirements.add("Camera permission required")
                 meetsRequirements = false
             }
-            
+
             // Check camera availability
             if (!supportsBackCamera) {
                 requirements.add("Back camera not available")
                 meetsRequirements = false
             }
-            
+
             // Check Android version (API 21+ required for Camera2)
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
                 requirements.add("Android 5.0+ required for advanced camera features")
                 meetsRequirements = false
             }
-            
+
             // Log requirements status
             if (meetsRequirements) {
                 Log.i(TAG, "Device meets all requirements for advanced camera recording")
                 val capabilities = getCaptureMode()
-                Log.i(TAG, "Available features: 4K=${capabilities["supports_4k"]}, RAW=${capabilities["supports_raw"]}, 60fps=${capabilities["supports_60fps"]}")
+                Log.i(
+                    TAG,
+                    "Available features: 4K=${capabilities["supports_4k"]}, RAW=${capabilities["supports_raw"]}, 60fps=${capabilities["supports_60fps"]}"
+                )
             } else {
                 Log.w(TAG, "Device requirements not met: ${requirements.joinToString(", ")}")
                 recordingScope.launch {
-                    emitError(ErrorType.DEVICE_NOT_SUPPORTED, "Device requirements not met: ${requirements.joinToString(", ")}")
+                    emitError(
+                        ErrorType.DEVICE_NOT_SUPPORTED,
+                        "Device requirements not met: ${requirements.joinToString(", ")}"
+                    )
                 }
             }
-            
+
             meetsRequirements
-            
+
         } catch (e: Exception) {
             Log.e(TAG, "Error validating device requirements: ${e.message}")
             recordingScope.launch {
@@ -2274,7 +2281,7 @@ class RgbCameraRecorder(
             false
         }
     }
-    
+
     /**
      * Get current capture mode information
      */

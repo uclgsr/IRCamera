@@ -24,16 +24,16 @@
             android:id="@+id/start_test_button"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:layout_marginEnd="8dp"
+            android:layout_weight="1"
             android:text="Start Full Test" />
 
         <Button
             android:id="@+id/test_connection_button"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:layout_marginStart="8dp"
+            android:layout_weight="1"
             android:text="Test Connection" />
 
     </LinearLayout>

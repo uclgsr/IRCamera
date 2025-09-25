@@ -13,7 +13,7 @@ class ConnectionMetrics {
         private const val TAG = "ConnectionMetrics"
         private const val PING_TIMEOUT_MS = 5000L
     }
-    
+
     private val mutex = Mutex()
     private val connectionStartTime = AtomicLong(0)
     private val lastPingTime = AtomicLong(0)
@@ -22,18 +22,18 @@ class ConnectionMetrics {
     private val totalReconnectAttempts = AtomicLong(0)
     private val totalBytesSent = AtomicLong(0)
     private val totalBytesReceived = AtomicLong(0)
-    
+
     private val latencyHistory = mutableListOf<Long>()
     private val bandwidthHistory = mutableListOf<BandwidthSample>()
     private val maxHistorySize = 100
-    
+
     data class BandwidthSample(
         val timestamp: Long,
         val bytesSent: Long,
         val bytesReceived: Long,
         val intervalMs: Long
     )
-    
+
     /**
      * Record connection establishment
      */
@@ -41,7 +41,7 @@ class ConnectionMetrics {
         connectionStartTime.set(System.currentTimeMillis())
         Log.d(TAG, "Connection metrics started")
     }
-    
+
     /**
      * Record connection end
      */
@@ -49,7 +49,7 @@ class ConnectionMetrics {
         val duration = getConnectionDuration()
         Log.d(TAG, "Connection ended after ${duration}ms")
     }
-    
+
     /**
      * Record message sent
      */
@@ -59,7 +59,7 @@ class ConnectionMetrics {
             totalBytesSent.addAndGet(messageSize.toLong())
         }
     }
-    
+
     /**
      * Record message received
      */
@@ -69,14 +69,14 @@ class ConnectionMetrics {
             totalBytesReceived.addAndGet(messageSize.toLong())
         }
     }
-    
+
     /**
      * Record ping sent
      */
     fun recordPingSent() {
         lastPingTime.set(System.currentTimeMillis())
     }
-    
+
     /**
      * Record pong received and calculate latency
      */
@@ -93,14 +93,14 @@ class ConnectionMetrics {
             Log.d(TAG, "Ping latency: ${latency}ms")
         }
     }
-    
+
     /**
      * Record reconnection attempt
      */
     fun recordReconnectAttempt() {
         totalReconnectAttempts.incrementAndGet()
     }
-    
+
     /**
      * Get current connection duration in milliseconds
      */
@@ -112,7 +112,7 @@ class ConnectionMetrics {
             0L
         }
     }
-    
+
     /**
      * Get average latency in milliseconds
      */
@@ -123,14 +123,14 @@ class ConnectionMetrics {
             latencyHistory.sum() / latencyHistory.size
         }
     }
-    
+
     /**
      * Get latest latency in milliseconds
      */
     suspend fun getLatestLatency(): Long = mutex.withLock {
         latencyHistory.lastOrNull() ?: -1L
     }
-    
+
     /**
      * Get connection quality metrics summary
      */
@@ -151,7 +151,7 @@ class ConnectionMetrics {
             "total_data_transferred_mb" to ((totalBytesSent.get() + totalBytesReceived.get()) / (1024.0 * 1024.0))
         )
     }
-    
+
     /**
      * Reset all metrics
      */
@@ -167,7 +167,7 @@ class ConnectionMetrics {
         bandwidthHistory.clear()
         Log.d(TAG, "Connection metrics reset")
     }
-    
+
     /**
      * Get average send bandwidth in bytes per second
      */
@@ -179,7 +179,7 @@ class ConnectionMetrics {
             0.0
         }
     }
-    
+
     /**
      * Get average receive bandwidth in bytes per second
      */
@@ -191,7 +191,7 @@ class ConnectionMetrics {
             0.0
         }
     }
-    
+
     /**
      * Record bandwidth sample for detailed monitoring
      */
@@ -207,19 +207,19 @@ class ConnectionMetrics {
                 1000L // Default 1 second interval
             }
         )
-        
+
         bandwidthHistory.add(sample)
         if (bandwidthHistory.size > maxHistorySize) {
             bandwidthHistory.removeAt(0)
         }
     }
-    
+
     /**
      * Get connection quality score (0-100)
      */
     suspend fun getConnectionQualityScore(): Int = mutex.withLock {
         var score = 100
-        
+
         // Reduce score based on latency
         val avgLatency = getAverageLatency()
         if (avgLatency > 0) {
@@ -230,13 +230,13 @@ class ConnectionMetrics {
                 avgLatency > 100 -> score -= 5    // Slight latency
             }
         }
-        
+
         // Reduce score based on reconnection attempts
         val reconnects = totalReconnectAttempts.get()
         if (reconnects > 0) {
             score -= (reconnects * 10).toInt().coerceAtMost(30)
         }
-        
+
         // Ensure score is in valid range
         score.coerceIn(0, 100)
     }

@@ -434,11 +434,11 @@ class ComprehensiveSystemDemo : AppCompatActivity() {
                     val sensorSummary = recordingController.getSensorStatusSummary()
 
                     // Create GSR-aware status message
-                    val gsrSensor = sensorSummary.sensors.find { 
-                        it.sensorType.contains("GSR", ignoreCase = true) || 
-                        it.sensorId.contains("gsr", ignoreCase = true) 
+                    val gsrSensor = sensorSummary.sensors.find {
+                        it.sensorType.contains("GSR", ignoreCase = true) ||
+                                it.sensorId.contains("gsr", ignoreCase = true)
                     }
-                    
+
                     val gsrStatusText = when {
                         gsrSensor?.isRecording == true -> "🟢 GSR streaming"
                         gsrSensor?.isInitialized == true -> "🟡 GSR ready but not recording"
@@ -467,16 +467,19 @@ class ComprehensiveSystemDemo : AppCompatActivity() {
                             addLog("⚠️ GSR sensor unavailable - check device pairing and proximity")
                             updateStatus("Recording (GSR sensor lost)")
                         }
+
                         "SENSOR_RECOVERED" -> {
                             if (error.sensorId?.contains("gsr", ignoreCase = true) == true) {
                                 addLog("✅ GSR sensor reconnected successfully")
                                 updateStatus("Recording (all sensors active)")
                             }
                         }
+
                         "ALL_SENSORS_LOST" -> {
                             addLog("❌ Critical: All sensors failed - stopping session")
                             updateStatus("Session failed")
                         }
+
                         else -> {
                             addLog("ℹ️ ${error.errorType}: ${error.message}")
                         }

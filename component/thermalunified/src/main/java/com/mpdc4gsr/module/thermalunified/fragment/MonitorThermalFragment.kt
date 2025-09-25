@@ -17,17 +17,17 @@ import com.blankj.utilcode.util.ToastUtils
 import com.mpdc4gsr.libunified.app.common.SharedManager
 import com.mpdc4gsr.libunified.app.db.AppDatabase
 import com.mpdc4gsr.libunified.app.db.entity.ThermalEntity
-import com.mpdc4gsr.module.thermalunified.stubs.GuideInterface
-import com.mpdc4gsr.module.thermalunified.stubs.IrSurfaceView
 import com.mpdc4gsr.libunified.app.tools.TimeTool
 import com.mpdc4gsr.libunified.app.utils.ByteUtils.getIndex
-import com.mpdc4gsr.module.thermalunified.stubs.FenceLineView
-import com.mpdc4gsr.module.thermalunified.stubs.FencePointView
-import com.mpdc4gsr.module.thermalunified.stubs.FenceView
 import com.mpdc4gsr.module.thermalunified.R
 import com.mpdc4gsr.module.thermalunified.activity.MonitorActivity
 import com.mpdc4gsr.module.thermalunified.base.BaseThermalFragment
 import com.mpdc4gsr.module.thermalunified.event.ThermalActionEvent
+import com.mpdc4gsr.module.thermalunified.stubs.FenceLineView
+import com.mpdc4gsr.module.thermalunified.stubs.FencePointView
+import com.mpdc4gsr.module.thermalunified.stubs.FenceView
+import com.mpdc4gsr.module.thermalunified.stubs.GuideInterface
+import com.mpdc4gsr.module.thermalunified.stubs.IrSurfaceView
 import com.mpdc4gsr.module.thermalunified.tools.Fence
 import com.mpdc4gsr.module.thermalunified.tools.ThermalTool
 import com.mpdc4gsr.module.thermalunified.tools.medie.IYapVideoProvider
@@ -49,8 +49,16 @@ class MonitorThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> 
     private val msgLiveData by lazy { MutableLiveData<Int>() }
 
     // Cached fence views to avoid repeated findViewById calls
-    private val fencePointView by lazy { requireView().findViewById<com.mpdc4gsr.module.thermalunified.stubs.FencePointView>(R.id.fence_point_view) }
-    private val fenceLineView by lazy { requireView().findViewById<com.mpdc4gsr.module.thermalunified.stubs.FenceLineView>(R.id.fence_line_view) }
+    private val fencePointView by lazy {
+        requireView().findViewById<com.mpdc4gsr.module.thermalunified.stubs.FencePointView>(
+            R.id.fence_point_view
+        )
+    }
+    private val fenceLineView by lazy {
+        requireView().findViewById<com.mpdc4gsr.module.thermalunified.stubs.FenceLineView>(
+            R.id.fence_line_view
+        )
+    }
     private val fenceView by lazy { requireView().findViewById<com.mpdc4gsr.module.thermalunified.stubs.FenceView>(R.id.fence_view) }
 
     private fun setViewPosition(

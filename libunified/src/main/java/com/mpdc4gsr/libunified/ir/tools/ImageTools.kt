@@ -2,10 +2,10 @@ package com.mpdc4gsr.libunified.ir.tools
 
 import androidx.annotation.ColorInt
 import com.elvishew.xlog.XLog
-import com.mpdc4gsr.libunified.ir.tools.bean.SelectIndexBean
 import com.mpdc4gsr.libunified.app.tools.NumberTools
 import com.mpdc4gsr.libunified.app.utils.ByteUtils.bytesToInt
 import com.mpdc4gsr.libunified.app.utils.ByteUtils.descBytes
+import com.mpdc4gsr.libunified.ir.tools.bean.SelectIndexBean
 import java.util.concurrent.LinkedBlockingQueue
 
 object ImageTools {

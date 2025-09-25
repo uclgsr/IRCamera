@@ -28,10 +28,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
-import com.mpdc4gsr.libunified.R as LibCoreR
 import org.greenrobot.eventbus.ThreadMode
 import java.util.Calendar
 import androidx.recyclerview.widget.RecyclerView as AndroidRecyclerView
+import com.mpdc4gsr.libunified.R as LibCoreR
 
 class IRMonitorHistoryFragment : Fragment() {
     private val adapter = MyAdapter(ArrayList())

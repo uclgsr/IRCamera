@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp">
@@ -80,14 +79,14 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Manual Exposure:"
-                android:layout_marginEnd="8dp" />
+                android:layout_marginEnd="8dp"
+                android:text="Manual Exposure:" />
 
             <Switch
                 android:id="@+id/manualExposureSwitch"
@@ -118,14 +117,14 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Manual Focus:"
-                android:layout_marginEnd="8dp" />
+                android:layout_marginEnd="8dp"
+                android:text="Manual Focus:" />
 
             <Switch
                 android:id="@+id/manualFocusSwitch"
@@ -148,9 +147,9 @@
                 android:id="@+id/focusDistanceSeekBar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:enabled="false"
                 android:max="100"
-                android:progress="0"
-                android:enabled="false" />
+                android:progress="0" />
         </LinearLayout>
 
         <!-- Test Buttons Section -->
@@ -171,8 +170,8 @@
                 android:id="@+id/test4KButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:layout_marginEnd="4dp"
+                android:layout_weight="1"
                 android:text="Test 4K"
                 android:textSize="12sp" />
 
@@ -180,9 +179,9 @@
                 android:id="@+id/testRawButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:layout_marginStart="4dp"
                 android:layout_marginEnd="4dp"
+                android:layout_weight="1"
                 android:text="Test RAW"
                 android:textSize="12sp" />
         </LinearLayout>
@@ -196,8 +195,8 @@
                 android:id="@+id/testManualControlsButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:layout_marginEnd="4dp"
+                android:layout_weight="1"
                 android:text="Test Manual Controls"
                 android:textSize="12sp" />
 
@@ -205,8 +204,8 @@
                 android:id="@+id/testTapToFocusButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:layout_marginStart="4dp"
+                android:layout_weight="1"
                 android:text="Test Tap-to-Focus"
                 android:textSize="12sp" />
         </LinearLayout>

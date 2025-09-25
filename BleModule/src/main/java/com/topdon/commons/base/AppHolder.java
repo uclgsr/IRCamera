@@ -40,36 +40,19 @@ public class AppHolder implements Application.ActivityLifecycleCallbacks {
         }
     }
 
-    private static final class Holder {
-        private static final AppHolder INSTANCE = new AppHolder();
-    }
-
-    private static class RunningActivity {
-        String name;
-        WeakReference<Activity> weakActivity;
-
-        RunningActivity(String name, WeakReference<Activity> weakActivity) {
-            this.name = name;
-            this.weakActivity = weakActivity;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (!(o instanceof RunningActivity)) return false;
-            RunningActivity runningActivity = (RunningActivity) o;
-            return name.equals(runningActivity.name);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(name);
-        }
-    }
-
     @NonNull
     public static AppHolder getInstance() {
         return Holder.INSTANCE;
+    }
+
+    public static void initialize(@NonNull Application application) {
+        Objects.requireNonNull(application, "application is null");
+        //如果自动获取的和传入的不是同一个Application，重新注册生命周期监听
+        if (Holder.INSTANCE.application != null && Holder.INSTANCE.application != application) {
+            Holder.INSTANCE.application.unregisterActivityLifecycleCallbacks(Holder.INSTANCE);
+            application.registerActivityLifecycleCallbacks(Holder.INSTANCE);
+        }
+        Holder.INSTANCE.application = application;
     }
 
     @SuppressLint("PrivateApi")
@@ -139,16 +122,6 @@ public class AppHolder implements Application.ActivityLifecycleCallbacks {
             android.os.Process.killProcess(android.os.Process.myPid());
             System.exit(0);
         }
-    }
-
-    public static void initialize(@NonNull Application application) {
-        Objects.requireNonNull(application, "application is null");
-        //如果自动获取的和传入的不是同一个Application，重新注册生命周期监听
-        if (Holder.INSTANCE.application != null && Holder.INSTANCE.application != application) {
-            Holder.INSTANCE.application.unregisterActivityLifecycleCallbacks(Holder.INSTANCE);
-            application.registerActivityLifecycleCallbacks(Holder.INSTANCE);
-        }
-        Holder.INSTANCE.application = application;
     }
 
     public boolean isMainThread() {
@@ -315,5 +288,32 @@ public class AppHolder implements Application.ActivityLifecycleCallbacks {
 
     public Activity getTopActivity() {
         return topActivity == null ? null : topActivity.weakActivity.get();
+    }
+
+    private static final class Holder {
+        private static final AppHolder INSTANCE = new AppHolder();
+    }
+
+    private static class RunningActivity {
+        String name;
+        WeakReference<Activity> weakActivity;
+
+        RunningActivity(String name, WeakReference<Activity> weakActivity) {
+            this.name = name;
+            this.weakActivity = weakActivity;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof RunningActivity)) return false;
+            RunningActivity runningActivity = (RunningActivity) o;
+            return name.equals(runningActivity.name);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(name);
+        }
     }
 }

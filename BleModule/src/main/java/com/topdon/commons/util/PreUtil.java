@@ -14,13 +14,12 @@ import java.lang.reflect.Method;
 import java.util.Set;
 
 public class PreUtil {
-    private WeakReference<Context> mContext;
-    private SharedPreferences preferences;
+    private static String SHARE_NAME = "ad900_data";
+    private static PreUtil instance;
     private final String DATA_URL = "/data/data/";
     private final String SHARED_PREFS = "/shared_prefs";
-    private static String SHARE_NAME = "ad900_data";
-
-    private static PreUtil instance;
+    private WeakReference<Context> mContext;
+    private SharedPreferences preferences;
 
     /**
      * 构造方法

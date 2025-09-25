@@ -9,27 +9,27 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/enhanced_fault_tolerant_recording_title"
-        android:textSize="20sp"
-        android:textStyle="bold"
         android:layout_marginBottom="32dp"
-        android:textColor="@color/text_primary" />
+        android:text="@string/enhanced_fault_tolerant_recording_title"
+        android:textColor="@color/text_primary"
+        android:textSize="20sp"
+        android:textStyle="bold" />
 
     <!-- Status text -->
     <TextView
         android:id="@+id/status_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/initializing_enhanced_recording_system"
         android:layout_marginBottom="16dp"
+        android:text="@string/initializing_enhanced_recording_system"
         android:textColor="@color/text_primary" />
 
     <!-- Progress bar -->
     <ProgressBar
         android:id="@+id/progress_bar"
+        style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="?android:attr/progressBarStyleHorizontal"
         android:visibility="gone" />
 
     <!-- Sensor status -->
@@ -37,9 +37,9 @@
         android:id="@+id/sensor_status_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/sensor_status_initializing"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
+        android:text="@string/sensor_status_initializing"
         android:textColor="@color/text_secondary" />
 
     <!-- Start button -->
@@ -47,18 +47,18 @@
         android:id="@+id/start_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/start_enhanced_recording"
+        android:layout_marginBottom="8dp"
         android:enabled="false"
-        android:layout_marginBottom="8dp" />
+        android:text="@string/start_enhanced_recording" />
 
     <!-- Stop button -->
     <Button
         android:id="@+id/stop_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/stop_recording"
+        android:layout_marginBottom="8dp"
         android:enabled="false"
-        android:layout_marginBottom="8dp" />
+        android:text="@string/stop_recording" />
 
     <!-- Back button -->
     <Button

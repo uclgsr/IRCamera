@@ -13,10 +13,10 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import mpdc4gsr.data.SessionMetadata
-import mpdc4gsr.sensors.SensorRecorder
-import mpdc4gsr.utils.SessionDirectoryManager
-import mpdc4gsr.utils.SessionDirectory
 import mpdc4gsr.permissions.PermissionManager
+import mpdc4gsr.sensors.SensorRecorder
+import mpdc4gsr.utils.SessionDirectory
+import mpdc4gsr.utils.SessionDirectoryManager
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.File
@@ -665,9 +665,9 @@ class ComprehensiveRecordingController(
                 Log.w(TAG, "Cannot add sync marker: not currently recording")
                 return
             }
-            
+
             Log.i(TAG, "Adding sync marker: $markerType at $timestampNs")
-            
+
             // Add marker to each active recorder
             sensorRecorders.values.forEach { recorder ->
                 try {
@@ -762,7 +762,6 @@ class ComprehensiveRecordingController(
     }
 
 
-
     /**
      * Get current sensor status summary
      */
@@ -771,7 +770,7 @@ class ComprehensiveRecordingController(
             val activeCount = activeRecorders.values.count { it }
             val healthyCount = sensorHealthStatus.values.count { it.isHealthy }
             val totalCount = sensorRecorders.size
-            
+
             buildString {
                 append("Active: $activeCount/$totalCount, ")
                 append("Healthy: $healthyCount/$totalCount")

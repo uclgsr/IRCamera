@@ -24,7 +24,7 @@ class TapToFocusPreviewView @JvmOverloads constructor(
         strokeWidth = 4f
         isAntiAlias = true
     }
-    
+
     private val focusInnerPaint = Paint().apply {
         color = Color.TRANSPARENT
         style = Paint.Style.FILL
@@ -36,7 +36,7 @@ class TapToFocusPreviewView @JvmOverloads constructor(
     private var showFocusIndicator = false
     private var focusIndicatorAlpha = 255
     private val focusCircleRadius = 60f
-    
+
     // Callback for tap-to-focus events
     var onTapToFocus: ((normalizedX: Float, normalizedY: Float) -> Unit)? = null
 
@@ -46,25 +46,25 @@ class TapToFocusPreviewView @JvmOverloads constructor(
                 // Calculate normalized coordinates (0.0 to 1.0)
                 val normalizedX = event.x / width
                 val normalizedY = event.y / height
-                
+
                 // Store touch position for visual feedback
                 focusX = event.x
                 focusY = event.y
-                
+
                 // Show focus indicator
                 showFocusIndicator = true
                 focusIndicatorAlpha = 255
                 invalidate()
-                
+
                 // Trigger focus callback
                 onTapToFocus?.invoke(normalizedX, normalizedY)
-                
+
                 // Hide focus indicator after delay
                 postDelayed({
                     showFocusIndicator = false
                     invalidate()
                 }, 1500)
-                
+
                 return true
             }
         }
@@ -73,18 +73,18 @@ class TapToFocusPreviewView @JvmOverloads constructor(
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        
+
         // Draw focus indicator if active
         if (showFocusIndicator && focusX >= 0 && focusY >= 0) {
             focusCirclePaint.alpha = focusIndicatorAlpha
             focusInnerPaint.alpha = (focusIndicatorAlpha * 0.3f).toInt()
-            
+
             // Draw outer circle
             canvas.drawCircle(focusX, focusY, focusCircleRadius, focusCirclePaint)
-            
+
             // Draw inner circle
             canvas.drawCircle(focusX, focusY, focusCircleRadius * 0.7f, focusInnerPaint)
-            
+
             // Draw crosshair
             val crosshairLength = focusCircleRadius * 0.4f
             canvas.drawLine(
@@ -97,7 +97,7 @@ class TapToFocusPreviewView @JvmOverloads constructor(
                 focusX, focusY + crosshairLength,
                 focusCirclePaint
             )
-            
+
             // Fade out effect
             if (focusIndicatorAlpha > 0) {
                 focusIndicatorAlpha = (focusIndicatorAlpha - 8).coerceAtLeast(0)
@@ -107,7 +107,7 @@ class TapToFocusPreviewView @JvmOverloads constructor(
             }
         }
     }
-    
+
     /**
      * Programmatically trigger focus at specific coordinates
      */
@@ -117,17 +117,17 @@ class TapToFocusPreviewView @JvmOverloads constructor(
         showFocusIndicator = true
         focusIndicatorAlpha = 255
         invalidate()
-        
+
         val normalizedX = x / width
         val normalizedY = y / height
         onTapToFocus?.invoke(normalizedX, normalizedY)
-        
+
         postDelayed({
             showFocusIndicator = false
             invalidate()
         }, 1500)
     }
-    
+
     /**
      * Hide focus indicator
      */

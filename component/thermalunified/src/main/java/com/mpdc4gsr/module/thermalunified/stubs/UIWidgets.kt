@@ -222,7 +222,11 @@ class CameraPreView @JvmOverloads constructor(
 
     fun getBitmap(): android.graphics.Bitmap? {
         return try {
-            android.graphics.Bitmap.createBitmap(width.coerceAtLeast(1), height.coerceAtLeast(1), android.graphics.Bitmap.Config.ARGB_8888)
+            android.graphics.Bitmap.createBitmap(
+                width.coerceAtLeast(1),
+                height.coerceAtLeast(1),
+                android.graphics.Bitmap.Config.ARGB_8888
+            )
         } catch (e: Exception) {
             null
         }
@@ -363,6 +367,7 @@ class TemperatureView @JvmOverloads constructor(
     override fun setEnabled(enabled: Boolean) {
         super.setEnabled(enabled)
     }
+
     var regionAndValueBitmap: android.graphics.Bitmap? = null
     var isShowFull: Boolean = false
 
@@ -406,7 +411,7 @@ class TemperatureView @JvmOverloads constructor(
             this.height = height
         }
     }
-    
+
     fun setImageSize(width: Int, height: Int, context: Any?) {
         setImageSize(width, height)
     }

@@ -139,7 +139,7 @@ class RGBCameraRecorder(
                 "sample_rate" to "30", // 30 FPS
                 "sync_marker" to "rgb_camera_start"
             )
-            
+
             // Store metadata in session for later access (Camera2System doesn't support setVideoMetadata)
             sessionMetadata.addMetadata("video_timing", timingMetadata)
             Log.i(TAG, "Session timing metadata stored in session metadata")

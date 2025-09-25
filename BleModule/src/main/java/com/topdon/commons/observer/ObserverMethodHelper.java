@@ -24,6 +24,27 @@ class ObserverMethodHelper {
         this.isObserveAnnotationRequired = isObserveAnnotationRequired;
     }
 
+    private static boolean contains(List<Method> methods, Method method) {
+        for (Method m : methods) {
+            if (m.getName().equals(method.getName()) && m.getReturnType().equals(method.getReturnType()) &&
+                    equalParamTypes(m.getParameterTypes(), method.getParameterTypes())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static boolean equalParamTypes(Class<?>[] params1, Class<?>[] params2) {
+        if (params1.length == params2.length) {
+            for (int i = 0; i < params1.length; i++) {
+                if (params1[i] != params2[i])
+                    return false;
+            }
+            return true;
+        }
+        return false;
+    }
+
     void clearCache() {
         METHOD_CACHE.clear();
     }
@@ -113,26 +134,5 @@ class ObserverMethodHelper {
             METHOD_CACHE.put(observer.getClass(), map);
         }
         return map;
-    }
-
-    private static boolean contains(List<Method> methods, Method method) {
-        for (Method m : methods) {
-            if (m.getName().equals(method.getName()) && m.getReturnType().equals(method.getReturnType()) &&
-                    equalParamTypes(m.getParameterTypes(), method.getParameterTypes())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private static boolean equalParamTypes(Class<?>[] params1, Class<?>[] params2) {
-        if (params1.length == params2.length) {
-            for (int i = 0; i < params1.length; i++) {
-                if (params1[i] != params2[i])
-                    return false;
-            }
-            return true;
-        }
-        return false;
     }
 }

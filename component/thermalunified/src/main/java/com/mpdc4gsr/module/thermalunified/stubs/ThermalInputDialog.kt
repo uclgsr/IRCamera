@@ -11,7 +11,7 @@ import android.widget.TextView
  * This provides basic input functionality for thermal parameters
  */
 class ThermalInputDialog {
-    
+
     class Builder(private val context: Context) {
         private var message: String = ""
         private var positiveListener: ((Float, Float, Int, Int) -> Unit)? = null
@@ -20,38 +20,38 @@ class ThermalInputDialog {
         private var minTemp: Float = 0f
         private var maxColor: Int = android.graphics.Color.RED
         private var minColor: Int = android.graphics.Color.BLUE
-        
+
         fun setMessage(message: String): Builder {
             this.message = message
             return this
         }
-        
+
         fun setNum(max: Float = 100f, min: Float = 0f): Builder {
             this.maxTemp = max
             this.minTemp = min
             return this
         }
-        
+
         fun setColor(maxColor: Int = android.graphics.Color.RED, minColor: Int = android.graphics.Color.BLUE): Builder {
             this.maxColor = maxColor
             this.minColor = minColor
             return this
         }
-        
+
         fun setPositiveListener(textResId: Int, listener: (Float, Float, Int, Int) -> Unit): Builder {
             this.positiveListener = listener
             return this
         }
-        
+
         fun setCancelListener(textResId: Int): Builder {
             return this
         }
-        
+
         fun setCancelListener(text: String, listener: () -> Unit): Builder {
             this.cancelListener = listener
             return this
         }
-        
+
         fun create(): ThermalInputDialog {
             return ThermalInputDialog().apply {
                 this.context = this@Builder.context
@@ -65,7 +65,7 @@ class ThermalInputDialog {
             }
         }
     }
-    
+
     private lateinit var context: Context
     private var message: String = ""
     private var positiveListener: ((Float, Float, Int, Int) -> Unit)? = null
@@ -74,19 +74,19 @@ class ThermalInputDialog {
     private var minTemp: Float = 0f
     private var maxColor: Int = android.graphics.Color.RED
     private var minColor: Int = android.graphics.Color.BLUE
-    
+
     fun show() {
         val layout = LinearLayout(context).apply {
             orientation = LinearLayout.VERTICAL
             setPadding(50, 50, 50, 50)
         }
-        
+
         // Add message
         layout.addView(TextView(context).apply {
             text = message
             setPadding(0, 0, 0, 20)
         })
-        
+
         // Add input fields
         val maxTempEdit = EditText(context).apply {
             hint = "Max Temperature"
@@ -94,14 +94,14 @@ class ThermalInputDialog {
         }
         layout.addView(TextView(context).apply { text = "Max Temperature:" })
         layout.addView(maxTempEdit)
-        
+
         val minTempEdit = EditText(context).apply {
             hint = "Min Temperature"
             setText(minTemp.toString())
         }
         layout.addView(TextView(context).apply { text = "Min Temperature:" })
         layout.addView(minTempEdit)
-        
+
         AlertDialog.Builder(context)
             .setTitle("Thermal Input")
             .setView(layout)

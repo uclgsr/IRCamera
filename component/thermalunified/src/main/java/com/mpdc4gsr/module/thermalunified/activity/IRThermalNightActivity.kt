@@ -49,29 +49,6 @@ import com.example.suplib.wrapper.SupHelp
 import com.hjq.permissions.OnPermissionCallback
 import com.hjq.permissions.Permission
 import com.hjq.permissions.XXPermissions
-import com.mpdc4gsr.libunified.ir.camera.IRUVCTC
-import com.mpdc4gsr.libunified.ir.config.MsgCode
-import com.mpdc4gsr.libunified.ir.event.IRMsgEvent
-import com.mpdc4gsr.libunified.ir.event.PreviewComplete
-import com.mpdc4gsr.module.thermalunified.extension.setAutoShutter
-import com.mpdc4gsr.module.thermalunified.extension.setContrast
-import com.mpdc4gsr.module.thermalunified.extension.setMirror
-import com.mpdc4gsr.module.thermalunified.extension.setPropDdeLevel
-import com.mpdc4gsr.libunified.ir.thread.ImageThreadTC
-import com.mpdc4gsr.libunified.ir.utils.OpencvTools
-import com.mpdc4gsr.libunified.ir.utils.USBMonitorCallback
-import com.mpdc4gsr.libunified.ir.view.DragViewUtil
-import com.mpdc4gsr.libunified.ir.view.ITsTempListener
-import com.mpdc4gsr.libunified.ir.view.TemperatureView.GONE
-import com.mpdc4gsr.libunified.ir.view.TemperatureView.REGION_MODE_CENTER
-import com.mpdc4gsr.libunified.ir.view.TemperatureView.REGION_MODE_CLEAN
-import com.mpdc4gsr.libunified.ir.view.TemperatureView.REGION_MODE_LINE
-import com.mpdc4gsr.libunified.ir.view.TemperatureView.REGION_MODE_POINT
-import com.mpdc4gsr.libunified.ir.view.TemperatureView.REGION_MODE_RECTANGLE
-import com.mpdc4gsr.libunified.ir.view.TemperatureView.REGION_MODE_RESET
-import com.mpdc4gsr.libunified.ir.view.TemperatureView.REGION_NODE_TREND
-import com.mpdc4gsr.libunified.ir.view.TemperatureView.TempListener
-import com.mpdc4gsr.libunified.ir.view.TemperatureView.VISIBLE
 import com.kylecorry.andromeda.core.math.DecimalFormatter
 import com.kylecorry.andromeda.sense.compass.ICompass
 import com.mpdc4gsr.libunified.app.BaseApplication
@@ -81,7 +58,6 @@ import com.mpdc4gsr.libunified.app.bean.CameraItemBean
 import com.mpdc4gsr.libunified.app.bean.CameraItemBean.Companion.DELAY_TIME_0
 import com.mpdc4gsr.libunified.app.bean.CustomPseudoBean
 import com.mpdc4gsr.libunified.app.bean.ObserveBean
-
 import com.mpdc4gsr.libunified.app.comm.AlarmHelp
 import com.mpdc4gsr.libunified.app.comm.dialog.ColorPickDialog
 import com.mpdc4gsr.libunified.app.comm.dialog.TempAlarmSetDialog
@@ -121,9 +97,25 @@ import com.mpdc4gsr.libunified.app.utils.Constants
 import com.mpdc4gsr.libunified.app.utils.ImageUtils
 import com.mpdc4gsr.libunified.app.utils.ScreenUtil
 import com.mpdc4gsr.libunified.app.view.MainTitleView
-import com.mpdc4gsr.module.thermalunified.stubs.ThermalInputDialog
-import com.mpdc4gsr.module.thermalunified.stubs.TipGuideDialog
-import com.mpdc4gsr.module.thermalunified.stubs.TipPreviewDialog
+import com.mpdc4gsr.libunified.ir.camera.IRUVCTC
+import com.mpdc4gsr.libunified.ir.config.MsgCode
+import com.mpdc4gsr.libunified.ir.event.IRMsgEvent
+import com.mpdc4gsr.libunified.ir.event.PreviewComplete
+import com.mpdc4gsr.libunified.ir.thread.ImageThreadTC
+import com.mpdc4gsr.libunified.ir.utils.OpencvTools
+import com.mpdc4gsr.libunified.ir.utils.USBMonitorCallback
+import com.mpdc4gsr.libunified.ir.view.DragViewUtil
+import com.mpdc4gsr.libunified.ir.view.ITsTempListener
+import com.mpdc4gsr.libunified.ir.view.TemperatureView.GONE
+import com.mpdc4gsr.libunified.ir.view.TemperatureView.REGION_MODE_CENTER
+import com.mpdc4gsr.libunified.ir.view.TemperatureView.REGION_MODE_CLEAN
+import com.mpdc4gsr.libunified.ir.view.TemperatureView.REGION_MODE_LINE
+import com.mpdc4gsr.libunified.ir.view.TemperatureView.REGION_MODE_POINT
+import com.mpdc4gsr.libunified.ir.view.TemperatureView.REGION_MODE_RECTANGLE
+import com.mpdc4gsr.libunified.ir.view.TemperatureView.REGION_MODE_RESET
+import com.mpdc4gsr.libunified.ir.view.TemperatureView.REGION_NODE_TREND
+import com.mpdc4gsr.libunified.ir.view.TemperatureView.TempListener
+import com.mpdc4gsr.libunified.ir.view.TemperatureView.VISIBLE
 import com.mpdc4gsr.libunified.ui.widget.seekbar.OnRangeChangedListener
 import com.mpdc4gsr.libunified.ui.widget.seekbar.RangeSeekBar
 import com.mpdc4gsr.module.thermalunified.R
@@ -132,9 +124,16 @@ import com.mpdc4gsr.module.thermalunified.adapter.MeasureItemAdapter
 import com.mpdc4gsr.module.thermalunified.adapter.TargetItemAdapter
 import com.mpdc4gsr.module.thermalunified.bean.DataBean
 import com.mpdc4gsr.module.thermalunified.event.GalleryAddEvent
+import com.mpdc4gsr.module.thermalunified.extension.setAutoShutter
+import com.mpdc4gsr.module.thermalunified.extension.setContrast
+import com.mpdc4gsr.module.thermalunified.extension.setMirror
+import com.mpdc4gsr.module.thermalunified.extension.setPropDdeLevel
 import com.mpdc4gsr.module.thermalunified.frame.FrameStruct
 import com.mpdc4gsr.module.thermalunified.popup.SeekBarPopup
 import com.mpdc4gsr.module.thermalunified.repository.ConfigRepository
+import com.mpdc4gsr.module.thermalunified.stubs.ThermalInputDialog
+import com.mpdc4gsr.module.thermalunified.stubs.TipGuideDialog
+import com.mpdc4gsr.module.thermalunified.stubs.TipPreviewDialog
 import com.mpdc4gsr.module.thermalunified.utils.IRConfigData
 import com.mpdc4gsr.module.thermalunified.video.VideoRecordFFmpeg
 import com.mpdc4gsr.module.thermalunified.view.compass.SensorService
@@ -1876,7 +1875,7 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
                 startUSB(isRestart = true, true)
                 ToastUtils.showShort("[ph][ph][ph][ph]")
             }
-            
+
             100 -> {
                 showCameraLoading()
             }
@@ -2958,7 +2957,6 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
     private fun dealY16ModePreviewComplete() {
         iruvc?.setFrameReady(true)
     }
-
 
 
     private fun printSN() {

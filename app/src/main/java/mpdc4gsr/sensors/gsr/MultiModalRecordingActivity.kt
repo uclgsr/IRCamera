@@ -1,6 +1,7 @@
 package mpdc4gsr.sensors.gsr
 
 
+// Use Shimmer's official Bluetooth API for GSR device management
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -14,21 +15,16 @@ import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import com.csl.irCamera.R
 import com.csl.irCamera.databinding.ActivityMultiModalRecordingBinding
-// Use Shimmer's official Bluetooth API for GSR device management
-import com.shimmerresearch.android.manager.ShimmerBluetoothManagerAndroid
-import com.shimmerresearch.android.Shimmer
-import android.os.Handler
-import android.os.Looper
 import com.mpdc4gsr.gsr.model.GSRSample
 import com.mpdc4gsr.gsr.model.SessionInfo
 import com.mpdc4gsr.gsr.model.SyncMark
 import com.mpdc4gsr.gsr.service.GSRRecorder
-import mpdc4gsr.sensors.gsr.RealShimmerDeviceFactory
 import com.mpdc4gsr.gsr.service.SessionManager
 import com.mpdc4gsr.gsr.util.TimeUtil
 import com.mpdc4gsr.libunified.app.ktbase.BaseBindingActivity
+import com.shimmerresearch.android.Shimmer
+import com.shimmerresearch.android.manager.ShimmerBluetoothManagerAndroid
 import kotlinx.coroutines.launch
-import mpdc4gsr.data.SessionMetadata
 import mpdc4gsr.permissions.PermissionController
 import mpdc4gsr.sensors.RgbCameraRecorder
 
@@ -1093,33 +1089,33 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
             onExposureModeToggle = { isManual ->
                 rgbCameraRecorder?.setManualExposureMode(isManual)
             }
-            
+
             onExposureCompensationChanged = { evValue ->
                 rgbCameraRecorder?.setExposureCompensation(evValue)
             }
-            
+
             onAeLockToggle = { isLocked ->
                 rgbCameraRecorder?.setAutoExposureLock(isLocked)
             }
-            
+
             // Manual focus controls
             onFocusModeToggle = { isManual ->
                 rgbCameraRecorder?.setManualFocusMode(isManual)
             }
-            
+
             onFocusDistanceChanged = { distance ->
                 rgbCameraRecorder?.setFocusDistance(distance)
             }
-            
+
             onAfLockToggle = { isLocked ->
                 rgbCameraRecorder?.setAutoFocusLock(isLocked)
             }
-            
+
             // Basic camera controls
             onCameraToggle = {
                 // Could implement front/back camera switching here
             }
-            
+
             onRecordingToggle = { startRecording ->
                 if (startRecording) {
                     startRecording()
@@ -1127,11 +1123,11 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
                     stopRecording()
                 }
             }
-            
+
             onFlashToggle = { enabled ->
                 // Flash control could be implemented here
             }
-            
+
             onStage3ProcessingToggle = { enabled ->
                 // Stage3 processing toggle could be implemented here
             }

@@ -16,7 +16,7 @@
     <string name="tips_tisr_on">Imaging Super Resolution has been activated.</string>
     <string name="tips_tisr_off">Imaging Super Resolution has been deactivated.</string>
     <string name="tips_tisr_fail">Your phone does not support OpenCL and cannot enable Imaging Super Resolution.</string>
-    
+
     <string name="compass_north">N</string>
     <string name="compass_northeast">NE</string>
     <string name="compass_east">E</string>
@@ -44,7 +44,7 @@
     <string name="tip_delete">Delete</string>
     <string name="also_del_from_phone_album">Also delete from phone album</string>
     <string name="test_results_delete_success">Deletion successful</string>
-    
+
     <string name="request_fail">Request failed</string>
     <string name="tip_no_more_data">No more data</string>
     <string name="tip_config_delete">Do you want to delete %s?</string>
@@ -61,7 +61,7 @@
     <string name="app_open">Open</string>
     <string name="tip_target_sdk">The current mobile device cannot be connected, try to update the software version.</string>
     <string name="permission_request_storage_app">Storage permission is required</string>
-    
+
     <string name="tips_observe_photo_content">Please observe the photo content carefully.</string>
     <string name="tc_high_temp_test_tips1">High temperature test tip 1</string>
     <string name="tc_high_temp_test_tips2">High temperature test tip 2</string>

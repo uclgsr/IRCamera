@@ -6,7 +6,6 @@ import android.bluetooth.le.ScanFilter;
 import android.bluetooth.le.ScanSettings;
 import android.os.Build;
 
-
 import androidx.annotation.RequiresApi;
 
 import java.util.List;
@@ -29,26 +28,6 @@ public class ScanConfiguration {
         return scanPeriodMillis;
     }
 
-    public boolean isAcceptSysConnectedDevice() {
-        return acceptSysConnectedDevice;
-    }
-
-    public ScanSettings getScanSettings() {
-        return scanSettings;
-    }
-
-    public boolean isOnlyAcceptBleDevice() {
-        return onlyAcceptBleDevice;
-    }
-
-    public int getRssiLowLimit() {
-        return rssiLowLimit;
-    }
-
-    public List<ScanFilter> getFilters() {
-        return filters;
-    }
-
     /**
      * 搜索周期
      *
@@ -62,12 +41,20 @@ public class ScanConfiguration {
         return this;
     }
 
+    public boolean isAcceptSysConnectedDevice() {
+        return acceptSysConnectedDevice;
+    }
+
     /**
      * 是否将通过系统蓝牙配对连接的设备添加到搜索结果中（有些手机无法获取到系统已连接的蓝牙设备）
      */
     public ScanConfiguration setAcceptSysConnectedDevice(boolean acceptSysConnectedDevice) {
         this.acceptSysConnectedDevice = acceptSysConnectedDevice;
         return this;
+    }
+
+    public ScanSettings getScanSettings() {
+        return scanSettings;
     }
 
     /**
@@ -80,6 +67,10 @@ public class ScanConfiguration {
         return this;
     }
 
+    public boolean isOnlyAcceptBleDevice() {
+        return onlyAcceptBleDevice;
+    }
+
     /**
      * 是否过滤非ble设备
      */
@@ -88,12 +79,20 @@ public class ScanConfiguration {
         return this;
     }
 
+    public int getRssiLowLimit() {
+        return rssiLowLimit;
+    }
+
     /**
      * 根据信号强度过滤
      */
     public ScanConfiguration setRssiLowLimit(int rssiLowLimit) {
         this.rssiLowLimit = rssiLowLimit;
         return this;
+    }
+
+    public List<ScanFilter> getFilters() {
+        return filters;
     }
 
     /**

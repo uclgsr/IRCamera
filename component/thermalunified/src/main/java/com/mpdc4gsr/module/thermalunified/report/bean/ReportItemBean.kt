@@ -2,8 +2,8 @@ package com.mpdc4gsr.module.thermalunified.report.bean
 
 import android.os.Parcelable
 import com.blankj.utilcode.util.GsonUtils
-import kotlinx.parcelize.Parcelize
 import kotlinx.parcelize.IgnoredOnParcel
+import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class ReportItemBean(
@@ -26,6 +26,7 @@ data class ReportItemBean(
 
     @IgnoredOnParcel
     var isFirst: Boolean = false
+
     @IgnoredOnParcel
     var isTitle: Boolean = false
 }

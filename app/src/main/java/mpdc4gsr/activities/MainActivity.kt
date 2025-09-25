@@ -31,7 +31,6 @@ import com.csl.irCamera.BuildConfig
 import com.csl.irCamera.R
 import com.csl.irCamera.databinding.ActivityMainBinding
 import com.elvishew.xlog.XLog
-import com.mpdc4gsr.module.thermalunified.lite.activity.IRThermalLiteActivity
 import com.mpdc4gsr.gsr.model.SessionInfo
 import com.mpdc4gsr.libunified.app.BaseApplication
 import com.mpdc4gsr.libunified.app.bean.event.TS004ResetEvent
@@ -56,14 +55,19 @@ import com.mpdc4gsr.libunified.app.viewmodel.VersionViewModel
 import com.mpdc4gsr.module.thermalunified.activity.IRThermalNightActivity
 import com.mpdc4gsr.module.thermalunified.activity.IRThermalPlusActivity
 import com.mpdc4gsr.module.thermalunified.fragment.IRGalleryTabFragment
+import com.mpdc4gsr.module.thermalunified.lite.activity.IRThermalLiteActivity
 import com.mpdc4gsr.module.user.fragment.MineFragment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import mpdc4gsr.core.App
+import mpdc4gsr.activities.ShimmerMvpActivity
+import mpdc4gsr.activities.UnifiedSensorActivity
 import mpdc4gsr.config.FeatureFlags
 import mpdc4gsr.config.ProtocolVersion
+import mpdc4gsr.core.App
+import mpdc4gsr.core.CrashSafeSupervisor
+import mpdc4gsr.core.RecordingService
 import mpdc4gsr.core.StructuredLogger
 import mpdc4gsr.network.NetworkClient
 import mpdc4gsr.network.WebSocketClient
@@ -71,21 +75,17 @@ import mpdc4gsr.permissions.PermissionController
 import mpdc4gsr.sensors.gsr.GSRQuickRecordingActivity
 import mpdc4gsr.sensors.gsr.GSRSensorRecorder
 import mpdc4gsr.sensors.thermal.ThermalCameraDemo
-import mpdc4gsr.core.RecordingService
-import mpdc4gsr.core.CrashSafeSupervisor
+import mpdc4gsr.ui_components.ComprehensiveSensorStatusWidget
 import mpdc4gsr.ui_components.MainFragment
+import mpdc4gsr.ui_components.RecordingControlsWidget
 import mpdc4gsr.utils.AppVersionUtil
-import mpdc4gsr.activities.ShimmerMvpActivity
-import mpdc4gsr.activities.UnifiedSensorActivity
+import mpdc4gsr.viewmodel.MainActivityViewModel
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.OutputStream
-import mpdc4gsr.ui_components.ComprehensiveSensorStatusWidget
-import mpdc4gsr.ui_components.RecordingControlsWidget
-import mpdc4gsr.viewmodel.MainActivityViewModel
 
 class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickListener {
     companion object {
@@ -102,7 +102,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
     private var serviceBinder: RecordingService.RecordingServiceBinder? = null
     private var isServiceBound = false
     private var connectionStatus: ConnectionStatus = ConnectionStatus.DISCONNECTED
-    
+
     private lateinit var networkSettings: mpdc4gsr.network.NetworkSettings
 
     private var networkStatusIndicator: ImageView? = null
@@ -243,17 +243,22 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         // Observe RGB camera state
         mainViewModel.rgbCameraState.observe(this) { sensorState ->
             val status = when (sensorState.status) {
-                MainActivityViewModel.SensorStatus.DISCONNECTED -> 
+                MainActivityViewModel.SensorStatus.DISCONNECTED ->
                     ComprehensiveSensorStatusWidget.SensorStatus.DISCONNECTED
-                MainActivityViewModel.SensorStatus.CONNECTING -> 
+
+                MainActivityViewModel.SensorStatus.CONNECTING ->
                     ComprehensiveSensorStatusWidget.SensorStatus.CONNECTING
-                MainActivityViewModel.SensorStatus.CONNECTED -> 
+
+                MainActivityViewModel.SensorStatus.CONNECTED ->
                     ComprehensiveSensorStatusWidget.SensorStatus.CONNECTED
-                MainActivityViewModel.SensorStatus.STREAMING -> 
+
+                MainActivityViewModel.SensorStatus.STREAMING ->
                     ComprehensiveSensorStatusWidget.SensorStatus.STREAMING
-                MainActivityViewModel.SensorStatus.ERROR -> 
+
+                MainActivityViewModel.SensorStatus.ERROR ->
                     ComprehensiveSensorStatusWidget.SensorStatus.ERROR
-                MainActivityViewModel.SensorStatus.SIMULATION -> 
+
+                MainActivityViewModel.SensorStatus.SIMULATION ->
                     ComprehensiveSensorStatusWidget.SensorStatus.SIMULATION
             }
             sensorStatusWidget.updateSensorStatus("rgb_camera", status, sensorState.message)
@@ -262,17 +267,22 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         // Observe thermal camera state
         mainViewModel.thermalCameraState.observe(this) { sensorState ->
             val status = when (sensorState.status) {
-                MainActivityViewModel.SensorStatus.DISCONNECTED -> 
+                MainActivityViewModel.SensorStatus.DISCONNECTED ->
                     ComprehensiveSensorStatusWidget.SensorStatus.DISCONNECTED
-                MainActivityViewModel.SensorStatus.CONNECTING -> 
+
+                MainActivityViewModel.SensorStatus.CONNECTING ->
                     ComprehensiveSensorStatusWidget.SensorStatus.CONNECTING
-                MainActivityViewModel.SensorStatus.CONNECTED -> 
+
+                MainActivityViewModel.SensorStatus.CONNECTED ->
                     ComprehensiveSensorStatusWidget.SensorStatus.CONNECTED
-                MainActivityViewModel.SensorStatus.STREAMING -> 
+
+                MainActivityViewModel.SensorStatus.STREAMING ->
                     ComprehensiveSensorStatusWidget.SensorStatus.STREAMING
-                MainActivityViewModel.SensorStatus.ERROR -> 
+
+                MainActivityViewModel.SensorStatus.ERROR ->
                     ComprehensiveSensorStatusWidget.SensorStatus.ERROR
-                MainActivityViewModel.SensorStatus.SIMULATION -> 
+
+                MainActivityViewModel.SensorStatus.SIMULATION ->
                     ComprehensiveSensorStatusWidget.SensorStatus.SIMULATION
             }
             sensorStatusWidget.updateSensorStatus("thermal_camera", status, sensorState.message)
@@ -281,17 +291,22 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         // Observe GSR sensor state
         mainViewModel.gsrSensorState.observe(this) { sensorState ->
             val status = when (sensorState.status) {
-                MainActivityViewModel.SensorStatus.DISCONNECTED -> 
+                MainActivityViewModel.SensorStatus.DISCONNECTED ->
                     ComprehensiveSensorStatusWidget.SensorStatus.DISCONNECTED
-                MainActivityViewModel.SensorStatus.CONNECTING -> 
+
+                MainActivityViewModel.SensorStatus.CONNECTING ->
                     ComprehensiveSensorStatusWidget.SensorStatus.CONNECTING
-                MainActivityViewModel.SensorStatus.CONNECTED -> 
+
+                MainActivityViewModel.SensorStatus.CONNECTED ->
                     ComprehensiveSensorStatusWidget.SensorStatus.CONNECTED
-                MainActivityViewModel.SensorStatus.STREAMING -> 
+
+                MainActivityViewModel.SensorStatus.STREAMING ->
                     ComprehensiveSensorStatusWidget.SensorStatus.STREAMING
-                MainActivityViewModel.SensorStatus.ERROR -> 
+
+                MainActivityViewModel.SensorStatus.ERROR ->
                     ComprehensiveSensorStatusWidget.SensorStatus.ERROR
-                MainActivityViewModel.SensorStatus.SIMULATION -> 
+
+                MainActivityViewModel.SensorStatus.SIMULATION ->
                     ComprehensiveSensorStatusWidget.SensorStatus.SIMULATION
             }
             sensorStatusWidget.updateSensorStatus("shimmer_gsr", status, sensorState.message)
@@ -300,19 +315,24 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         // Observe session state
         mainViewModel.sessionState.observe(this) { sessionState ->
             val controlsState = when (sessionState) {
-                MainActivityViewModel.SessionState.IDLE -> 
+                MainActivityViewModel.SessionState.IDLE ->
                     RecordingControlsWidget.SessionState.IDLE
-                MainActivityViewModel.SessionState.STARTING -> 
+
+                MainActivityViewModel.SessionState.STARTING ->
                     RecordingControlsWidget.SessionState.STARTING
-                MainActivityViewModel.SessionState.RECORDING -> 
+
+                MainActivityViewModel.SessionState.RECORDING ->
                     RecordingControlsWidget.SessionState.RECORDING
-                MainActivityViewModel.SessionState.STOPPING -> 
+
+                MainActivityViewModel.SessionState.STOPPING ->
                     RecordingControlsWidget.SessionState.STOPPING
-                MainActivityViewModel.SessionState.ERROR -> 
+
+                MainActivityViewModel.SessionState.ERROR ->
                     RecordingControlsWidget.SessionState.ERROR
+
                 else -> RecordingControlsWidget.SessionState.IDLE
             }
-            
+
             val isRemoteTriggered = mainViewModel.isRemoteTriggered.value ?: false
             val sessionId = mainViewModel.currentSession.value?.sessionId
             recordingControlsWidget.updateSessionState(controlsState, sessionId, isRemoteTriggered)
@@ -325,9 +345,11 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                     MainActivityViewModel.StatusMessage.Level.ERROR -> {
                         Toast.makeText(this, it.message, Toast.LENGTH_LONG).show()
                     }
+
                     MainActivityViewModel.StatusMessage.Level.WARNING -> {
                         Toast.makeText(this, it.message, Toast.LENGTH_SHORT).show()
                     }
+
                     MainActivityViewModel.StatusMessage.Level.INFO -> {
                         Log.i(TAG, "Status: ${it.message}")
                     }
@@ -366,7 +388,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         // Initialize permission controller
         permissionController = PermissionController(this)
         permissionController.initialize()
-        
+
         // Initialize network settings
         networkSettings = mpdc4gsr.network.NetworkSettings(this)
 
@@ -612,7 +634,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
     private fun onAllPermissionsGranted() {
         // Initialize and connect actual sensor modules to ViewModel
         initializeSensorIntegration()
-        
+
         Log.i(TAG, "Full multi-sensor recording functionality available")
     }
 
@@ -634,13 +656,13 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
 
             // Initialize RGB Camera integration
             initializeRGBCameraIntegration()
-            
+
             // Initialize Thermal Camera integration  
             initializeThermalCameraIntegration()
-            
+
             // Initialize GSR Sensor integration
             initializeGSRSensorIntegration()
-            
+
             Log.i(TAG, "Sensor integration initialized successfully")
         } catch (e: Exception) {
             Log.e(TAG, "Failed to initialize sensor integration", e)
@@ -656,13 +678,14 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                     MainActivityViewModel.SensorStatus.CONNECTING,
                     "Connecting to RGB camera..."
                 )
-                
+
                 delay(1000) // Simulate initialization time
-                
+
                 // Check if camera permission is granted and camera is available
-                if (ContextCompat.checkSelfPermission(this@MainActivity, android.Manifest.permission.CAMERA) 
-                    == PackageManager.PERMISSION_GRANTED) {
-                    
+                if (ContextCompat.checkSelfPermission(this@MainActivity, android.Manifest.permission.CAMERA)
+                    == PackageManager.PERMISSION_GRANTED
+                ) {
+
                     mainViewModel.updateRGBCameraState(
                         MainActivityViewModel.SensorStatus.CONNECTED,
                         "RGB camera ready"
@@ -690,12 +713,12 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                     MainActivityViewModel.SensorStatus.CONNECTING,
                     "Scanning for thermal camera..."
                 )
-                
+
                 delay(1500) // Simulate USB device detection time
-                
+
                 // Check if thermal camera is connected (simulate detection)
                 val thermalCameraConnected = checkThermalCameraAvailability()
-                
+
                 if (thermalCameraConnected) {
                     mainViewModel.updateThermalCameraState(
                         MainActivityViewModel.SensorStatus.CONNECTED,
@@ -724,12 +747,12 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                     MainActivityViewModel.SensorStatus.CONNECTING,
                     "Scanning for Shimmer GSR devices..."
                 )
-                
+
                 delay(2000) // Simulate BLE scanning time
-                
+
                 // Check if Bluetooth is available and GSR device can be found
                 val gsrDeviceFound = checkGSRDeviceAvailability()
-                
+
                 if (gsrDeviceFound) {
                     mainViewModel.updateGSRSensorState(
                         MainActivityViewModel.SensorStatus.CONNECTED,
@@ -756,13 +779,13 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         return try {
             val usbManager = getSystemService(Context.USB_SERVICE) as android.hardware.usb.UsbManager
             val deviceList = usbManager.deviceList
-            
+
             // Look for Topdon TC001 device (vendor ID and product ID would be specific)
             val hasThermalCamera = deviceList.values.any { device ->
                 // This would check for actual Topdon TC001 vendor/product IDs
                 device.deviceName.contains("usb") // Simplified check for demo
             }
-            
+
             Log.i(TAG, "Thermal camera availability check: $hasThermalCamera")
             hasThermalCamera
         } catch (e: Exception) {
@@ -779,14 +802,14 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                 Log.w(TAG, "Bluetooth not available or not enabled")
                 return false
             }
-            
+
             // This would normally scan for Shimmer devices
             // For now, simulate based on Bluetooth availability
             val hasBluetoothPermission = ContextCompat.checkSelfPermission(
-                this, 
+                this,
                 android.Manifest.permission.BLUETOOTH_SCAN
             ) == PackageManager.PERMISSION_GRANTED
-            
+
             Log.i(TAG, "GSR device availability check: $hasBluetoothPermission")
             hasBluetoothPermission
         } catch (e: Exception) {
@@ -1784,7 +1807,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
     private fun showConnectionOptionsDialog() {
         val options = arrayOf(
             "Connect with Saved Settings",
-            "Configure Wi-Fi Connection", 
+            "Configure Wi-Fi Connection",
             "Configure Bluetooth Connection",
             "Discover PC Servers",
             "Connection Settings",
@@ -1801,25 +1824,25 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                     Log.i(TAG, "Connecting with saved settings")
                     connectWithSavedSettings()
                 }
-                
+
                 1 -> {
                     // Configure Wi-Fi
                     Log.i(TAG, "Configuring Wi-Fi connection")
                     showWifiConfigurationDialog()
                 }
-                
+
                 2 -> {
                     // Configure Bluetooth
                     Log.i(TAG, "Configuring Bluetooth connection")
                     configureBluetoothConnection()
                 }
-                
+
                 3 -> {
                     // Discover PC Servers
                     Log.i(TAG, "Discovering PC servers")
                     showServerDiscoveryDialog()
                 }
-                
+
                 4 -> {
                     // Connection Settings
                     Log.i(TAG, "Opening connection settings")
@@ -2115,7 +2138,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         }
     }
     // Enhanced Network Configuration Methods
-    
+
     private fun setupNetworkManagerObservers() {
         networkManager?.let { manager ->
             lifecycleScope.launch {
@@ -2125,7 +2148,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                     }
                 }
             }
-            
+
             lifecycleScope.launch {
                 manager.connectionSummary.collect { summary ->
                     runOnUiThread {
@@ -2135,21 +2158,21 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             }
         }
     }
-    
+
     private fun updateConnectionStatusFromNetworkManager(state: mpdc4gsr.network.CommandConnection.ConnectionState) {
         val mainActivityStatus = when (state) {
             mpdc4gsr.network.CommandConnection.ConnectionState.DISCONNECTED -> ConnectionStatus.DISCONNECTED
-            mpdc4gsr.network.CommandConnection.ConnectionState.CONNECTING -> ConnectionStatus.CONNECTING  
+            mpdc4gsr.network.CommandConnection.ConnectionState.CONNECTING -> ConnectionStatus.CONNECTING
             mpdc4gsr.network.CommandConnection.ConnectionState.CONNECTED -> ConnectionStatus.CONNECTED
             mpdc4gsr.network.CommandConnection.ConnectionState.ERROR -> ConnectionStatus.ERROR
         }
         updateConnectionStatus(mainActivityStatus)
     }
-    
+
     private fun updateNetworkSummaryDisplay(summary: String) {
         networkStatusText?.text = "PC: $summary"
     }
-    
+
     private fun connectWithSavedSettings() {
         networkManager?.let { manager ->
             lifecycleScope.launch {
@@ -2157,16 +2180,20 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                     updateConnectionStatus(ConnectionStatus.CONNECTING)
                     val success = manager.connectUsingSavedSettings()
                     if (!success) {
-                        Toast.makeText(this@MainActivity, 
-                            "Failed to connect with saved settings. Please configure connection first.", 
-                            Toast.LENGTH_LONG).show()
+                        Toast.makeText(
+                            this@MainActivity,
+                            "Failed to connect with saved settings. Please configure connection first.",
+                            Toast.LENGTH_LONG
+                        ).show()
                         updateConnectionStatus(ConnectionStatus.ERROR)
                     }
                 } catch (e: Exception) {
                     Log.e(TAG, "Error connecting with saved settings", e)
-                    Toast.makeText(this@MainActivity, 
-                        "Connection error: ${e.message}", 
-                        Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this@MainActivity,
+                        "Connection error: ${e.message}",
+                        Toast.LENGTH_SHORT
+                    ).show()
                     updateConnectionStatus(ConnectionStatus.ERROR)
                 }
             }
@@ -2174,12 +2201,12 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             Toast.makeText(this, "Network manager not available", Toast.LENGTH_SHORT).show()
         }
     }
-    
+
     private fun showWifiConfigurationDialog() {
         val input = android.widget.EditText(this)
         input.setText("${networkSettings.pcIpAddress}:${networkSettings.pcPort}")
         input.hint = "IP Address:Port (e.g., 192.168.1.100:8080)"
-        
+
         androidx.appcompat.app.AlertDialog.Builder(this)
             .setTitle("Wi-Fi Connection")
             .setMessage("Enter PC IP address and port:")
@@ -2207,7 +2234,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             .setNegativeButton("Cancel", null)
             .show()
     }
-    
+
     private fun connectViaWifi(ip: String, port: Int) {
         networkManager?.let { manager ->
             lifecycleScope.launch {
@@ -2215,48 +2242,58 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                     updateConnectionStatus(ConnectionStatus.CONNECTING)
                     val success = manager.connectWifi(ip, port)
                     if (success) {
-                        Toast.makeText(this@MainActivity, 
-                            "Connected to PC at $ip:$port", 
-                            Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            this@MainActivity,
+                            "Connected to PC at $ip:$port",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     } else {
-                        Toast.makeText(this@MainActivity, 
-                            "Failed to connect to PC at $ip:$port", 
-                            Toast.LENGTH_LONG).show()
+                        Toast.makeText(
+                            this@MainActivity,
+                            "Failed to connect to PC at $ip:$port",
+                            Toast.LENGTH_LONG
+                        ).show()
                         updateConnectionStatus(ConnectionStatus.ERROR)
                     }
                 } catch (e: Exception) {
                     Log.e(TAG, "Error connecting via Wi-Fi", e)
-                    Toast.makeText(this@MainActivity, 
-                        "Wi-Fi connection error: ${e.message}", 
-                        Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this@MainActivity,
+                        "Wi-Fi connection error: ${e.message}",
+                        Toast.LENGTH_SHORT
+                    ).show()
                     updateConnectionStatus(ConnectionStatus.ERROR)
                 }
             }
         }
     }
-    
+
     private fun configureBluetoothConnection() {
         lifecycleScope.launch {
             try {
                 val permissionManager = mpdc4gsr.permissions.PermissionManager(this@MainActivity, permissionController)
                 val hasPermission = permissionManager.requestBluetoothPermissions()
-                
+
                 if (hasPermission) {
                     showBluetoothDeviceSelection()
                 } else {
-                    Toast.makeText(this@MainActivity, 
-                        "Bluetooth permissions required for device connection", 
-                        Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        this@MainActivity,
+                        "Bluetooth permissions required for device connection",
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "Error requesting Bluetooth permissions", e)
-                Toast.makeText(this@MainActivity, 
-                    "Error accessing Bluetooth: ${e.message}", 
-                    Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this@MainActivity,
+                    "Error accessing Bluetooth: ${e.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
     }
-    
+
     private fun showBluetoothDeviceSelection() {
         try {
             val bluetoothAdapter = android.bluetooth.BluetoothAdapter.getDefaultAdapter()
@@ -2264,12 +2301,12 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                 Toast.makeText(this, "Bluetooth not supported", Toast.LENGTH_SHORT).show()
                 return
             }
-            
+
             if (!bluetoothAdapter.isEnabled) {
                 Toast.makeText(this, "Please enable Bluetooth first", Toast.LENGTH_SHORT).show()
                 return
             }
-            
+
             val pairedDevices = try {
                 bluetoothAdapter.bondedDevices
             } catch (e: SecurityException) {
@@ -2277,12 +2314,12 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                 Toast.makeText(this, "Permission denied accessing Bluetooth devices", Toast.LENGTH_SHORT).show()
                 return
             }
-            
+
             if (pairedDevices.isEmpty()) {
                 Toast.makeText(this, "No paired Bluetooth devices found", Toast.LENGTH_SHORT).show()
                 return
             }
-            
+
             val deviceNames = try {
                 pairedDevices.map { "${it.name ?: "Unknown"} (${it.address})" }.toTypedArray()
             } catch (e: SecurityException) {
@@ -2290,7 +2327,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                 pairedDevices.map { "Device (${it.address})" }.toTypedArray()
             }
             val devices = pairedDevices.toList()
-            
+
             androidx.appcompat.app.AlertDialog.Builder(this)
                 .setTitle("Select PC Bluetooth Device")
                 .setItems(deviceNames) { _, which ->
@@ -2298,16 +2335,17 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                 }
                 .setNegativeButton("Cancel", null)
                 .show()
-                
+
         } catch (e: SecurityException) {
             Log.e(TAG, "Security exception in Bluetooth device selection", e)
-            Toast.makeText(this, "Bluetooth permission denied. Please grant permission in settings.", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "Bluetooth permission denied. Please grant permission in settings.", Toast.LENGTH_LONG)
+                .show()
         } catch (e: Exception) {
             Log.e(TAG, "Unexpected error in Bluetooth device selection", e)
             Toast.makeText(this, "Error accessing Bluetooth: ${e.message}", Toast.LENGTH_SHORT).show()
         }
     }
-    
+
     private fun connectViaBluetooth(device: android.bluetooth.BluetoothDevice) {
         networkManager?.let { manager ->
             lifecycleScope.launch {
@@ -2315,47 +2353,53 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                     updateConnectionStatus(ConnectionStatus.CONNECTING)
                     val success = manager.connectBluetooth(device)
                     if (success) {
-                        Toast.makeText(this@MainActivity, 
-                            "Connected to PC via Bluetooth: ${device.name}", 
-                            Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            this@MainActivity,
+                            "Connected to PC via Bluetooth: ${device.name}",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     } else {
-                        Toast.makeText(this@MainActivity, 
-                            "Failed to connect via Bluetooth to ${device.name}", 
-                            Toast.LENGTH_LONG).show()
+                        Toast.makeText(
+                            this@MainActivity,
+                            "Failed to connect via Bluetooth to ${device.name}",
+                            Toast.LENGTH_LONG
+                        ).show()
                         updateConnectionStatus(ConnectionStatus.ERROR)
                     }
                 } catch (e: Exception) {
                     Log.e(TAG, "Error connecting via Bluetooth", e)
-                    Toast.makeText(this@MainActivity, 
-                        "Bluetooth connection error: ${e.message}", 
-                        Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this@MainActivity,
+                        "Bluetooth connection error: ${e.message}",
+                        Toast.LENGTH_SHORT
+                    ).show()
                     updateConnectionStatus(ConnectionStatus.ERROR)
                 }
             }
         }
     }
-    
+
     private fun showServerDiscoveryDialog() {
         val serverDiscovery = mpdc4gsr.network.PcServerDiscovery(this)
-        
+
         val progressDialog = androidx.appcompat.app.AlertDialog.Builder(this)
             .setTitle("Discovering PC Servers")
             .setMessage("Scanning network for available PC servers...")
             .setCancelable(false)
             .create()
-        
+
         progressDialog.show()
-        
+
         lifecycleScope.launch {
             try {
                 val servers = serverDiscovery.discoverServers()
                 progressDialog.dismiss()
-                
+
                 if (servers.isNotEmpty()) {
-                    val serverNames = servers.map { 
+                    val serverNames = servers.map {
                         "${it.deviceName ?: "PC Server"} (${it.ipAddress}:${it.port}) - ${it.responseTime}ms"
                     }.toTypedArray()
-                    
+
                     androidx.appcompat.app.AlertDialog.Builder(this@MainActivity)
                         .setTitle("Discovered PC Servers")
                         .setItems(serverNames) { _, which ->
@@ -2365,35 +2409,39 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                         .setNegativeButton("Cancel", null)
                         .show()
                 } else {
-                    Toast.makeText(this@MainActivity, 
-                        "No PC servers found on the network", 
-                        Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        this@MainActivity,
+                        "No PC servers found on the network",
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
             } catch (e: Exception) {
                 progressDialog.dismiss()
                 Log.e(TAG, "Error during server discovery", e)
-                Toast.makeText(this@MainActivity, 
-                    "Server discovery failed: ${e.message}", 
-                    Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this@MainActivity,
+                    "Server discovery failed: ${e.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
             } finally {
                 serverDiscovery.cleanup()
             }
         }
     }
-    
+
     private fun showConnectionSettingsDialog() {
         val settings = networkManager?.getNetworkSettings()
         if (settings == null) {
             Toast.makeText(this, "Network settings not available", Toast.LENGTH_SHORT).show()
             return
         }
-        
+
         // Create a simple settings layout
         val layout = android.widget.LinearLayout(this).apply {
             orientation = android.widget.LinearLayout.VERTICAL
             setPadding(32, 32, 32, 32)
         }
-        
+
         // Connection timeout setting
         val timeoutLabel = android.widget.TextView(this).apply {
             text = "Connection Timeout (seconds)"
@@ -2403,7 +2451,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             setText((settings.connectionTimeout / 1000).toString())
             inputType = android.text.InputType.TYPE_CLASS_NUMBER
         }
-        
+
         // Keep-alive interval setting
         val keepAliveLabel = android.widget.TextView(this).apply {
             text = "Keep-Alive Interval (seconds)"
@@ -2413,39 +2461,40 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             setText((settings.keepAliveInterval / 1000).toString())
             inputType = android.text.InputType.TYPE_CLASS_NUMBER
         }
-        
+
         // Auto-reconnect setting
         val autoReconnectCheck = android.widget.CheckBox(this).apply {
             text = "Enable Auto-Reconnect"
             isChecked = settings.autoReconnect
         }
-        
+
         // Bandwidth monitoring setting
         val bandwidthCheck = android.widget.CheckBox(this).apply {
             text = "Enable Bandwidth Monitoring"
             isChecked = settings.bandwidthMonitoringEnabled
         }
-        
+
         layout.addView(timeoutLabel)
         layout.addView(timeoutInput)
         layout.addView(keepAliveLabel)
         layout.addView(keepAliveInput)
         layout.addView(autoReconnectCheck)
         layout.addView(bandwidthCheck)
-        
+
         androidx.appcompat.app.AlertDialog.Builder(this)
             .setTitle("Connection Settings")
             .setView(layout)
             .setPositiveButton("Save") { _, _ ->
                 try {
                     val timeout = timeoutInput.text.toString().toLongOrNull()?.times(1000) ?: settings.connectionTimeout
-                    val keepAlive = keepAliveInput.text.toString().toLongOrNull()?.times(1000) ?: settings.keepAliveInterval
-                    
+                    val keepAlive =
+                        keepAliveInput.text.toString().toLongOrNull()?.times(1000) ?: settings.keepAliveInterval
+
                     settings.connectionTimeout = timeout
                     settings.keepAliveInterval = keepAlive
                     settings.autoReconnect = autoReconnectCheck.isChecked
                     settings.bandwidthMonitoringEnabled = bandwidthCheck.isChecked
-                    
+
                     Toast.makeText(this, "Settings saved", Toast.LENGTH_SHORT).show()
                 } catch (e: Exception) {
                     Toast.makeText(this, "Error saving settings: ${e.message}", Toast.LENGTH_SHORT).show()

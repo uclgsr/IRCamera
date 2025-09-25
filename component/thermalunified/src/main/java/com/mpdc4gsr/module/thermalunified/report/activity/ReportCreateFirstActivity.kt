@@ -13,10 +13,6 @@ import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.lifecycleScope
 import com.blankj.utilcode.util.TimeUtils
 import com.blankj.utilcode.util.ToastUtils
-import com.mpdc4gsr.libunified.ui.gzuliyujiang.wheelpicker.DatimePicker
-import com.mpdc4gsr.libunified.ui.gzuliyujiang.wheelpicker.entity.DateEntity
-import com.mpdc4gsr.libunified.ui.gzuliyujiang.wheelpicker.entity.DatimeEntity
-import com.mpdc4gsr.libunified.ui.gzuliyujiang.wheelpicker.entity.TimeEntity
 import com.hjq.permissions.OnPermissionCallback
 import com.hjq.permissions.Permission
 import com.hjq.permissions.XXPermissions
@@ -31,6 +27,10 @@ import com.mpdc4gsr.libunified.app.navigation.NavigationManager
 import com.mpdc4gsr.libunified.app.tools.NumberTools
 import com.mpdc4gsr.libunified.app.tools.UnitTools
 import com.mpdc4gsr.libunified.app.utils.CommUtils
+import com.mpdc4gsr.libunified.ui.gzuliyujiang.wheelpicker.DatimePicker
+import com.mpdc4gsr.libunified.ui.gzuliyujiang.wheelpicker.entity.DateEntity
+import com.mpdc4gsr.libunified.ui.gzuliyujiang.wheelpicker.entity.DatimeEntity
+import com.mpdc4gsr.libunified.ui.gzuliyujiang.wheelpicker.entity.TimeEntity
 import com.mpdc4gsr.module.thermalunified.R
 import com.mpdc4gsr.module.thermalunified.report.bean.ImageTempBean
 import com.mpdc4gsr.module.thermalunified.report.bean.ReportConditionBean
@@ -197,12 +197,13 @@ class ReportCreateFirstActivity : BaseActivity(), View.OnClickListener {
             R.id.tv_next -> {
                 val reportInfoBean = buildReportInfo()
                 val reportConditionBean = buildReportCondition()
-                val imageTempBean: ImageTempBean? = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
-                    intent.getParcelableExtra(ExtraKeyConfig.IMAGE_TEMP_BEAN, ImageTempBean::class.java)
-                } else {
-                    @Suppress("DEPRECATION")
-                    intent.getParcelableExtra(ExtraKeyConfig.IMAGE_TEMP_BEAN)
-                }
+                val imageTempBean: ImageTempBean? =
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+                        intent.getParcelableExtra(ExtraKeyConfig.IMAGE_TEMP_BEAN, ImageTempBean::class.java)
+                    } else {
+                        @Suppress("DEPRECATION")
+                        intent.getParcelableExtra(ExtraKeyConfig.IMAGE_TEMP_BEAN)
+                    }
                 val fileAbsolutePath = intent.getStringExtra(ExtraKeyConfig.FILE_ABSOLUTE_PATH)
                 if (fileAbsolutePath != null && imageTempBean != null) {
                     NavigationManager.getInstance().build(RouterConfig.REPORT_CREATE_SECOND)

@@ -19,16 +19,16 @@ class CommandHandler(
     companion object {
         private const val TAG = "CommandHandler"
     }
-    
+
     private val handlerScope = CoroutineScope(Dispatchers.IO)
-    
+
     /**
      * Process incoming command from PC
      */
     suspend fun handleCommand(commandLine: String) {
         try {
             Log.d(TAG, "Processing command: $commandLine")
-            
+
             val response = when {
                 commandLine.startsWith("START") -> handleStartCommand(commandLine)
                 commandLine.startsWith("STOP") -> handleStopCommand(commandLine)
@@ -41,28 +41,28 @@ class CommandHandler(
                     "ERROR cmd=UNKNOWN code=UNKNOWN_COMMAND msg=\"Unknown command: $commandLine\""
                 }
             }
-            
+
             if (response.isNotEmpty()) {
                 networkManager.sendResponse(response)
             }
-            
+
         } catch (e: Exception) {
             Log.e(TAG, "Error handling command: $commandLine", e)
             val errorResponse = "ERROR cmd=UNKNOWN code=HANDLER_ERROR msg=\"Command handler error: ${e.message}\""
             networkManager.sendResponse(errorResponse)
         }
     }
-    
+
     private suspend fun handleStartCommand(commandLine: String): String = withContext(Dispatchers.IO) {
         try {
             if (recordingController.isRecording) {
                 Log.w(TAG, "START command received but already recording")
                 return@withContext "ERROR cmd=START code=ALREADY_RECORDING msg=\"Recording session already active\""
             }
-            
+
             Log.i(TAG, "Executing START command")
             val success = recordingController.startRecording()
-            
+
             if (success) {
                 Log.i(TAG, "Recording started successfully via remote command")
                 // Send acknowledgment with session info
@@ -77,17 +77,17 @@ class CommandHandler(
             "ERROR cmd=START code=START_EXCEPTION msg=\"Start error: ${e.message}\""
         }
     }
-    
+
     private suspend fun handleStopCommand(commandLine: String): String = withContext(Dispatchers.IO) {
         try {
             if (!recordingController.isRecording) {
                 Log.i(TAG, "STOP command received but not currently recording")
                 return@withContext "STOP-ACK msg=\"No active recording session\""
             }
-            
+
             Log.i(TAG, "Executing STOP command")
             val success = recordingController.stopRecording()
-            
+
             if (success) {
                 Log.i(TAG, "Recording stopped successfully via remote command")
                 "STOP-ACK msg=\"Recording session stopped\""
@@ -100,15 +100,15 @@ class CommandHandler(
             "ERROR cmd=STOP code=STOP_EXCEPTION msg=\"Stop error: ${e.message}\""
         }
     }
-    
+
     private suspend fun handleSyncCommand(commandLine: String): String = withContext(Dispatchers.IO) {
         try {
             Log.i(TAG, "Executing SYNC command")
             val phoneTimestamp = System.currentTimeMillis()
-            
+
             // Extract PC timestamp if provided in the command
             val pcTimestamp = extractTimestampFromCommand(commandLine)
-                
+
             if (pcTimestamp != null) {
                 Log.d(TAG, "Clock sync - PC timestamp: $pcTimestamp, Phone timestamp: $phoneTimestamp")
                 "SYNC-RESP t_pc=$pcTimestamp t_ph=$phoneTimestamp"
@@ -121,23 +121,23 @@ class CommandHandler(
             "ERROR cmd=SYNC code=SYNC_EXCEPTION msg=\"Sync error: ${e.message}\""
         }
     }
-    
+
     private fun handlePingCommand(): String {
         Log.d(TAG, "Responding to PING")
         return "PONG"
     }
-    
+
     private suspend fun handleGetStatusCommand(): String = withContext(Dispatchers.IO) {
         try {
             val status = if (recordingController.isRecording) "recording" else "idle"
             val uptime = System.currentTimeMillis() / 1000 // seconds since epoch
-            
+
             // Build sensor list (this could be enhanced to query actual sensor states)
             val sensors = mutableListOf<String>()
             if (recordingController.isRecording) {
                 sensors.addAll(listOf("RGB", "Thermal", "GSR"))
             }
-            
+
             // Create JSON response for rich status info
             val statusJson = JSONObject().apply {
                 put("status", status)
@@ -145,7 +145,7 @@ class CommandHandler(
                 put("sensors", sensors)
                 put("timestamp", System.currentTimeMillis())
             }
-            
+
             Log.d(TAG, "Status query response: $statusJson")
             "STATUS $statusJson"
         } catch (e: Exception) {
@@ -153,20 +153,21 @@ class CommandHandler(
             "ERROR cmd=GET_STATUS code=STATUS_EXCEPTION msg=\"Status error: ${e.message}\""
         }
     }
-    
+
     private suspend fun handleJsonCommand(jsonString: String): String = withContext(Dispatchers.IO) {
         try {
             val jsonObj = JSONObject(jsonString)
             val command = jsonObj.optString("cmd", "")
-            
+
             return@withContext when (command) {
                 "START" -> handleStartCommand("START")
-                "STOP" -> handleStopCommand("STOP") 
+                "STOP" -> handleStopCommand("STOP")
                 "SYNC" -> {
                     val pcTimestamp = jsonObj.optLong("t_pc", -1L)
                     val syncCmd = if (pcTimestamp > 0) "SYNC t_pc=$pcTimestamp" else "SYNC"
                     handleSyncCommand(syncCmd)
                 }
+
                 "PING" -> handlePingCommand()
                 "GET_STATUS" -> handleGetStatusCommand()
                 else -> "ERROR cmd=$command code=UNKNOWN_JSON_COMMAND msg=\"Unknown JSON command: $command\""
@@ -176,7 +177,7 @@ class CommandHandler(
             "ERROR cmd=JSON code=JSON_PARSE_ERROR msg=\"Invalid JSON command: ${e.message}\""
         }
     }
-    
+
     private fun extractTimestampFromCommand(commandLine: String): Long? {
         return try {
             val regex = Regex("t_pc=(\\d+)")
@@ -186,7 +187,7 @@ class CommandHandler(
             null
         }
     }
-    
+
     /**
      * Send periodic status updates while recording
      */
@@ -194,7 +195,7 @@ class CommandHandler(
         handlerScope.launch {
             while (true) {
                 kotlinx.coroutines.delay(5000) // Every 5 seconds
-                
+
                 if (recordingController.isRecording) {
                     try {
                         val statusResponse = handleGetStatusCommand()
@@ -206,7 +207,7 @@ class CommandHandler(
             }
         }
     }
-    
+
     /**
      * Send event-driven notifications for significant events
      */
@@ -221,7 +222,7 @@ class CommandHandler(
             }
         }
     }
-    
+
     fun notifySessionStopped(sessionId: String, duration: Long) {
         handlerScope.launch {
             try {
@@ -233,7 +234,7 @@ class CommandHandler(
             }
         }
     }
-    
+
     fun notifyError(errorType: String, errorMessage: String) {
         handlerScope.launch {
             try {

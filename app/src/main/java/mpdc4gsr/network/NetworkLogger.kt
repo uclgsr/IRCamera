@@ -6,14 +6,14 @@ import android.util.Log
  * Configurable logging for network components with debug/release level support
  */
 object NetworkLogger {
-    
+
     enum class LogLevel {
         VERBOSE, DEBUG, INFO, WARN, ERROR, NONE
     }
-    
+
     private var currentLogLevel = LogLevel.DEBUG
     private var enableFileLogging = false
-    
+
     /**
      * Set the current log level
      */
@@ -21,7 +21,7 @@ object NetworkLogger {
         currentLogLevel = level
         Log.i("NetworkLogger", "Log level set to: $level")
     }
-    
+
     /**
      * Enable or disable file logging
      */
@@ -29,7 +29,7 @@ object NetworkLogger {
         enableFileLogging = enabled
         Log.i("NetworkLogger", "File logging ${if (enabled) "enabled" else "disabled"}")
     }
-    
+
     /**
      * Log verbose message
      */
@@ -42,7 +42,7 @@ object NetworkLogger {
             }
         }
     }
-    
+
     /**
      * Log debug message
      */
@@ -55,7 +55,7 @@ object NetworkLogger {
             }
         }
     }
-    
+
     /**
      * Log info message
      */
@@ -68,7 +68,7 @@ object NetworkLogger {
             }
         }
     }
-    
+
     /**
      * Log warning message
      */
@@ -81,7 +81,7 @@ object NetworkLogger {
             }
         }
     }
-    
+
     /**
      * Log error message
      */
@@ -94,11 +94,11 @@ object NetworkLogger {
             }
         }
     }
-    
+
     private fun shouldLog(level: LogLevel): Boolean {
         return level.ordinal >= currentLogLevel.ordinal
     }
-    
+
     /**
      * Configure logging for debug builds
      */
@@ -106,7 +106,7 @@ object NetworkLogger {
         setLogLevel(LogLevel.DEBUG)
         setFileLogging(true)
     }
-    
+
     /**
      * Configure logging for release builds
      */

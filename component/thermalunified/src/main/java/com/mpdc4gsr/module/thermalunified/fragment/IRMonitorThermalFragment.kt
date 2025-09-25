@@ -8,7 +8,6 @@ import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.widget.FrameLayout
-import com.mpdc4gsr.libunified.ir.android.yt.jni.Usbcontorl
 import androidx.lifecycle.lifecycleScope
 import com.elvishew.xlog.XLog
 import com.energy.iruvc.ircmd.IRCMD
@@ -17,6 +16,11 @@ import com.energy.iruvc.utils.CommonUtils
 import com.energy.iruvc.utils.SynchronizedBitmap
 import com.energy.iruvc.uvc.ConnectCallback
 import com.energy.iruvc.uvc.UVCCamera
+import com.mpdc4gsr.libunified.app.common.SaveSettingUtil
+import com.mpdc4gsr.libunified.app.config.DeviceConfig
+import com.mpdc4gsr.libunified.app.ktbase.BaseFragment
+import com.mpdc4gsr.libunified.app.utils.ScreenUtil
+import com.mpdc4gsr.libunified.ir.android.yt.jni.Usbcontorl
 import com.mpdc4gsr.libunified.ir.camera.IRUVCTC
 import com.mpdc4gsr.libunified.ir.config.MsgCode
 import com.mpdc4gsr.libunified.ir.event.IRMsgEvent
@@ -29,11 +33,6 @@ import com.mpdc4gsr.libunified.ir.view.TemperatureView
 import com.mpdc4gsr.libunified.ir.view.TemperatureView.REGION_MODE_LINE
 import com.mpdc4gsr.libunified.ir.view.TemperatureView.REGION_MODE_POINT
 import com.mpdc4gsr.libunified.ir.view.TemperatureView.REGION_MODE_RECTANGLE
-
-import com.mpdc4gsr.libunified.app.common.SaveSettingUtil
-import com.mpdc4gsr.libunified.app.config.DeviceConfig
-import com.mpdc4gsr.libunified.app.ktbase.BaseFragment
-import com.mpdc4gsr.libunified.app.utils.ScreenUtil
 import com.mpdc4gsr.module.thermalunified.R
 import com.mpdc4gsr.module.thermalunified.activity.IRMonitorActivity
 import com.mpdc4gsr.module.thermalunified.bean.SelectPositionBean
@@ -147,7 +146,7 @@ class IRMonitorThermalFragment : BaseFragment(), ITsTempListener {
             MsgCode.RESTART_USB -> {
                 restartusbcamera()
             }
-            
+
             100 -> {
                 showLoadingDialog()
             }
@@ -436,7 +435,6 @@ class IRMonitorThermalFragment : BaseFragment(), ITsTempListener {
             }
         }
     }
-
 
 
     private var isConfigWait = true

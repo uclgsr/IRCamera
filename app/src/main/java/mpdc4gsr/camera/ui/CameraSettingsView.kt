@@ -5,7 +5,6 @@ import android.util.AttributeSet
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.CompoundButton
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -37,13 +36,13 @@ constructor(
     private lateinit var qualitySeekBar: SeekBar
     private lateinit var settingsPanel: LinearLayout
     private lateinit var statusText: TextView
-    
+
     // Manual exposure controls
     private lateinit var exposureModeToggle: Switch
     private lateinit var exposureCompensationSeekBar: SeekBar
     private lateinit var exposureCompensationText: TextView
     private lateinit var aeLockToggle: Switch
-    
+
     // Manual focus controls  
     private lateinit var focusModeToggle: Switch
     private lateinit var focusDistanceSeekBar: SeekBar
@@ -67,7 +66,7 @@ constructor(
     var onSettingsChanged: ((RGBCameraRecorder.RecordingSettings) -> Unit)? = null
     var onFlashToggle: ((Boolean) -> Unit)? = null
     var onStage3ProcessingToggle: ((Boolean) -> Unit)? = null
-    
+
     // Manual camera control callbacks
     var onExposureModeToggle: ((Boolean) -> Unit)? = null // true = manual, false = auto
     var onExposureCompensationChanged: ((Float) -> Unit)? = null
@@ -343,7 +342,7 @@ constructor(
 
         // Manual exposure controls
         createExposureControls()
-        
+
         // Manual focus controls  
         createFocusControls()
 
@@ -601,11 +600,11 @@ constructor(
         // Reset exposure lock
         exposureLockButton.tag = false
         exposureLockButton.setImageResource(android.R.drawable.ic_lock_idle_low_battery)
-        
+
         // Reset focus lock
         focusLockButton.tag = false
         focusLockButton.setImageResource(android.R.drawable.ic_search_category_default)
-        
+
         // Reset exposure compensation
         exposureCompensationSeekBar.progress = 40
         exposureCompensationText.text = "Exposure Compensation: 0.0 EV"
@@ -721,7 +720,7 @@ constructor(
     fun setStage3ProcessingVisible(visible: Boolean) {
         stage3Layout.visibility = if (visible) View.VISIBLE else View.GONE
     }
-    
+
     private fun createExposureControls() {
         // Manual exposure mode toggle
         val exposureModeLayout = LinearLayout(context).apply {
@@ -731,13 +730,13 @@ constructor(
                 LinearLayout.LayoutParams.WRAP_CONTENT
             )
         }
-        
+
         val exposureModeLabel = TextView(context).apply {
             text = "Manual Exposure:"
             layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
         }
         exposureModeLayout.addView(exposureModeLabel)
-        
+
         exposureModeToggle = Switch(context).apply {
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -747,7 +746,7 @@ constructor(
         }
         exposureModeLayout.addView(exposureModeToggle)
         settingsPanel.addView(exposureModeLayout)
-        
+
         // Exposure compensation control
         val exposureCompensationLayout = LinearLayout(context).apply {
             orientation = LinearLayout.VERTICAL
@@ -756,7 +755,7 @@ constructor(
                 LinearLayout.LayoutParams.WRAP_CONTENT
             )
         }
-        
+
         exposureCompensationText = TextView(context).apply {
             text = "Exposure Compensation: 0.0 EV"
             layoutParams = LinearLayout.LayoutParams(
@@ -765,7 +764,7 @@ constructor(
             )
         }
         exposureCompensationLayout.addView(exposureCompensationText)
-        
+
         exposureCompensationSeekBar = SeekBar(context).apply {
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -776,7 +775,7 @@ constructor(
         }
         exposureCompensationLayout.addView(exposureCompensationSeekBar)
         settingsPanel.addView(exposureCompensationLayout)
-        
+
         // AE Lock toggle
         val aeLockLayout = LinearLayout(context).apply {
             orientation = LinearLayout.HORIZONTAL
@@ -785,13 +784,13 @@ constructor(
                 LinearLayout.LayoutParams.WRAP_CONTENT
             )
         }
-        
+
         val aeLockLabel = TextView(context).apply {
             text = "AE Lock:"
             layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
         }
         aeLockLayout.addView(aeLockLabel)
-        
+
         aeLockToggle = Switch(context).apply {
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -802,7 +801,7 @@ constructor(
         aeLockLayout.addView(aeLockToggle)
         settingsPanel.addView(aeLockLayout)
     }
-    
+
     private fun createFocusControls() {
         // Manual focus mode toggle
         val focusModeLayout = LinearLayout(context).apply {
@@ -812,13 +811,13 @@ constructor(
                 LinearLayout.LayoutParams.WRAP_CONTENT
             )
         }
-        
+
         val focusModeLabel = TextView(context).apply {
             text = "Manual Focus:"
             layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
         }
         focusModeLayout.addView(focusModeLabel)
-        
+
         focusModeToggle = Switch(context).apply {
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -826,9 +825,9 @@ constructor(
             )
             isChecked = false
         }
-        focusModeLayout.addView(focusModeToggle) 
+        focusModeLayout.addView(focusModeToggle)
         settingsPanel.addView(focusModeLayout)
-        
+
         // Focus distance control
         val focusDistanceLayout = LinearLayout(context).apply {
             orientation = LinearLayout.VERTICAL
@@ -837,7 +836,7 @@ constructor(
                 LinearLayout.LayoutParams.WRAP_CONTENT
             )
         }
-        
+
         focusDistanceText = TextView(context).apply {
             text = "Focus Distance: Infinity"
             layoutParams = LinearLayout.LayoutParams(
@@ -846,7 +845,7 @@ constructor(
             )
         }
         focusDistanceLayout.addView(focusDistanceText)
-        
+
         focusDistanceSeekBar = SeekBar(context).apply {
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -857,7 +856,7 @@ constructor(
         }
         focusDistanceLayout.addView(focusDistanceSeekBar)
         settingsPanel.addView(focusDistanceLayout)
-        
+
         // AF Lock toggle
         val afLockLayout = LinearLayout(context).apply {
             orientation = LinearLayout.HORIZONTAL
@@ -866,13 +865,13 @@ constructor(
                 LinearLayout.LayoutParams.WRAP_CONTENT
             )
         }
-        
+
         val afLockLabel = TextView(context).apply {
             text = "AF Lock:"
             layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
         }
         afLockLayout.addView(afLockLabel)
-        
+
         afLockToggle = Switch(context).apply {
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -882,16 +881,16 @@ constructor(
         }
         afLockLayout.addView(afLockToggle)
         settingsPanel.addView(afLockLayout)
-        
+
         // Setup listeners for new controls
         setupExposureFocusListeners()
     }
-    
+
     private fun setupExposureFocusListeners() {
         exposureModeToggle.setOnCheckedChangeListener { _, isChecked ->
             onExposureModeToggle?.invoke(isChecked)
         }
-        
+
         exposureCompensationSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 if (fromUser) {
@@ -900,31 +899,34 @@ constructor(
                     onExposureCompensationChanged?.invoke(evValue)
                 }
             }
+
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
             override fun onStopTrackingTouch(seekBar: SeekBar?) {}
         })
-        
+
         aeLockToggle.setOnCheckedChangeListener { _, isChecked ->
             onAeLockToggle?.invoke(isChecked)
         }
-        
+
         focusModeToggle.setOnCheckedChangeListener { _, isChecked ->
             onFocusModeToggle?.invoke(isChecked)
         }
-        
+
         focusDistanceSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 if (fromUser) {
                     val focusValue = progress / 100.0f  // Convert to 0.0-1.0
-                    val focusText = if (focusValue < 0.1f) "Infinity" else String.format("%.1fm", 0.1f + focusValue * 2.0f)
+                    val focusText =
+                        if (focusValue < 0.1f) "Infinity" else String.format("%.1fm", 0.1f + focusValue * 2.0f)
                     focusDistanceText.text = "Focus Distance: $focusText"
                     onFocusDistanceChanged?.invoke(focusValue)
                 }
             }
+
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
             override fun onStopTrackingTouch(seekBar: SeekBar?) {}
         })
-        
+
         afLockToggle.setOnCheckedChangeListener { _, isChecked ->
             onAfLockToggle?.invoke(isChecked)
         }

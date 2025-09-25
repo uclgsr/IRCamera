@@ -1,9 +1,9 @@
 package mpdc4gsr.sensors.gsr
 
+// Import removed - ShimmerMsg constants may not be available in this version
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
-import android.os.Message
 import android.util.Log
 import androidx.lifecycle.LifecycleOwner
 import com.mpdc4gsr.gsr.service.ShimmerDataCluster
@@ -12,11 +12,6 @@ import com.mpdc4gsr.gsr.service.ShimmerDeviceInterface
 import com.shimmerresearch.android.Shimmer
 import com.shimmerresearch.android.manager.ShimmerBluetoothManagerAndroid
 import com.shimmerresearch.driver.ObjectCluster
-// Import removed - ShimmerMsg constants may not be available in this version
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import mpdc4gsr.sensors.unified.ShimmerDeviceManager
 
 /**
  * Real Shimmer device factory that uses the actual Shimmer libraries from app/libs
@@ -26,11 +21,11 @@ class RealShimmerDeviceFactory @JvmOverloads constructor(
     private val context: Context,
     private val lifecycleOwner: LifecycleOwner? = null
 ) : ShimmerDeviceFactory {
-    
+
     companion object {
         private const val TAG = "RealShimmerDeviceFactory"
     }
-    
+
     override fun createShimmerDevice(): ShimmerDeviceInterface {
         return RealShimmerDevice(context, lifecycleOwner)
     }
@@ -41,22 +36,22 @@ class RealShimmerDeviceFactory @JvmOverloads constructor(
  * Simplified version that avoids problematic APIs
  */
 class RealShimmerDevice(
-    private val context: Context,  
+    private val context: Context,
     private val lifecycleOwner: LifecycleOwner? = null
 ) : ShimmerDeviceInterface {
-    
+
     companion object {
         private const val TAG = "RealShimmerDevice"
     }
-    
+
     private var shimmer: Shimmer? = null
     private var shimmerManager: ShimmerBluetoothManagerAndroid? = null
     private var dataCallback: ((ShimmerDataCluster) -> Unit)? = null
     private var connectionCallback: ((String) -> Unit)? = null
     private var isConnected = false
-    
+
     private var shimmerHandler: Handler? = null
-    
+
     init {
         try {
             shimmerHandler = Handler(Looper.getMainLooper())
@@ -66,7 +61,7 @@ class RealShimmerDevice(
             Log.e(TAG, "Failed to initialize ShimmerBluetoothManagerAndroid", e)
         }
     }
-    
+
     override fun connect(address: String, name: String): Boolean {
         return try {
             shimmer = Shimmer(shimmerHandler, address)
@@ -80,7 +75,7 @@ class RealShimmerDevice(
                 } catch (e: Exception) {
                     Log.w(TAG, "Could not set data handler - method may not be available", e)
                 }
-                
+
                 // Set up connection state handler for proper state tracking
                 try {
                     // Try to set connection state handler if available
@@ -91,7 +86,7 @@ class RealShimmerDevice(
                 } catch (e: Exception) {
                     Log.w(TAG, "Could not set connection state handler - method may not be available", e)
                 }
-                
+
                 // Connection is asynchronous - actual status will be updated via handlers
                 device.connect(address, name)
                 Log.i(TAG, "Connection request sent to Shimmer device: $name ($address)")
@@ -104,7 +99,7 @@ class RealShimmerDevice(
             false
         }
     }
-    
+
     override fun startStreaming(): Boolean {
         return try {
             shimmer?.let { device ->
@@ -117,7 +112,7 @@ class RealShimmerDevice(
             false
         }
     }
-    
+
     override fun stopStreaming(): Boolean {
         return try {
             shimmer?.let { device ->
@@ -130,7 +125,7 @@ class RealShimmerDevice(
             false
         }
     }
-    
+
     override fun disconnect(): Boolean {
         return try {
             shimmer?.let { device ->
@@ -145,19 +140,19 @@ class RealShimmerDevice(
             false
         }
     }
-    
+
     override fun isConnected(): Boolean {
         return isConnected
     }
-    
+
     override fun setDataCallback(callback: (ShimmerDataCluster) -> Unit) {
         this.dataCallback = callback
     }
-    
+
     override fun setConnectionCallback(callback: (String) -> Unit) {
         this.connectionCallback = callback
     }
-    
+
     private fun handleShimmerData(objectCluster: ObjectCluster) {
         try {
             val shimmerDataCluster = RealShimmerDataCluster(objectCluster)
@@ -166,7 +161,7 @@ class RealShimmerDevice(
             Log.e(TAG, "Failed to handle Shimmer data", e)
         }
     }
-    
+
     /**
      * Handle connection state changes from the Shimmer SDK
      */
@@ -179,16 +174,19 @@ class RealShimmerDevice(
                     connectionCallback?.invoke("CONNECTED")
                     Log.i(TAG, "Shimmer device connected")
                 }
+
                 "CONNECTING", "2" -> {
                     isConnected = false
                     connectionCallback?.invoke("CONNECTING")
                     Log.i(TAG, "Shimmer device connecting")
                 }
+
                 "DISCONNECTED", "NONE", "0" -> {
                     isConnected = false
                     connectionCallback?.invoke("DISCONNECTED")
                     Log.i(TAG, "Shimmer device disconnected")
                 }
+
                 else -> {
                     Log.d(TAG, "Unknown Shimmer connection state: $state")
                 }
@@ -204,10 +202,10 @@ class RealShimmerDevice(
  * Based on the working unified implementation
  */
 class RealShimmerDataCluster(private val objectCluster: ObjectCluster) : ShimmerDataCluster {
-    
+
     companion object {
         private const val TAG = "RealShimmerDataCluster"
-        
+
         // Shimmer sensor constants
         /**
          * Name of the GSR (Galvanic Skin Response) sensor channel as defined in the Shimmer SDK.
@@ -215,39 +213,42 @@ class RealShimmerDataCluster(private val objectCluster: ObjectCluster) : Shimmer
          * See: https://shimmersensing.com/wp-content/uploads/2021/06/ConsensysPRO-User-Guide.pdf (Section: Data Structure)
          */
         private const val GSR_SENSOR_NAME = "GSR"
+
         /**
          * Name of the GSR Conductance channel as defined in the Shimmer SDK.
          * Used to retrieve calibrated GSR conductance values from ObjectCluster.
          * See: https://shimmersensing.com/wp-content/uploads/2021/06/ConsensysPRO-User-Guide.pdf (Section: Data Structure)
          */
         private const val GSR_CONDUCTANCE_NAME = "GSR Conductance"
+
         /**
          * Name of the PPG (Photoplethysmogram) sensor channel as defined in the Shimmer SDK.
          * Used to retrieve raw PPG values from ObjectCluster.
          * See: https://shimmersensing.com/wp-content/uploads/2021/06/ConsensysPRO-User-Guide.pdf (Section: Data Structure)
          */
         private const val PPG_SENSOR_NAME = "PPG"
+
         /**
          * Name of the timestamp channel as defined in the Shimmer SDK.
          * Used to retrieve the calibrated timestamp value from ObjectCluster.
          * See: https://shimmersensing.com/wp-content/uploads/2021/06/ConsensysPRO-User-Guide.pdf (Section: Data Structure)
          */
         private const val TIMESTAMP_NAME = "Timestamp"
-        
+
         // Format constants for ObjectCluster data retrieval
         /**
          * Raw data format string used with getFormatClusterValue() to retrieve unprocessed sensor values.
          * This format provides the direct ADC readings from the sensor hardware.
          */
         private const val FORMAT_RAW = "RAW"
-        
+
         /**
          * Calibrated data format string used with getFormatClusterValue() to retrieve processed sensor values.
          * This format provides sensor readings converted to physical units (e.g., microsiemens for GSR).
          */
         private const val FORMAT_CALIBRATED = "CAL"
     }
-    
+
     override fun getGSRRawValue(): Double {
         return try {
             objectCluster.getFormatClusterValue(GSR_SENSOR_NAME, FORMAT_RAW) ?: 0.0
@@ -256,7 +257,7 @@ class RealShimmerDataCluster(private val objectCluster: ObjectCluster) : Shimmer
             0.0
         }
     }
-    
+
     override fun getGSRCalibratedValue(): Double {
         return try {
             objectCluster.getFormatClusterValue(GSR_CONDUCTANCE_NAME, FORMAT_CALIBRATED) ?: 0.0
@@ -265,7 +266,7 @@ class RealShimmerDataCluster(private val objectCluster: ObjectCluster) : Shimmer
             0.0
         }
     }
-    
+
     override fun getPPGValue(): Double {
         return try {
             objectCluster.getFormatClusterValue(PPG_SENSOR_NAME, FORMAT_RAW) ?: 0.0
@@ -274,16 +275,17 @@ class RealShimmerDataCluster(private val objectCluster: ObjectCluster) : Shimmer
             0.0
         }
     }
-    
+
     override fun getTimestamp(): Long {
         return try {
-            objectCluster.getFormatClusterValue(TIMESTAMP_NAME, FORMAT_CALIBRATED)?.toLong() ?: System.currentTimeMillis()
+            objectCluster.getFormatClusterValue(TIMESTAMP_NAME, FORMAT_CALIBRATED)?.toLong()
+                ?: System.currentTimeMillis()
         } catch (e: Exception) {
             Log.w(TAG, "Failed to get timestamp", e)
             System.currentTimeMillis()
         }
     }
-    
+
     override fun hasValidGSRData(): Boolean {
         return try {
             val gsrValue = getGSRRawValue()

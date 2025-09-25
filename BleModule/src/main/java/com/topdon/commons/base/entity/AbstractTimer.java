@@ -13,9 +13,9 @@ import java.util.TimerTask;
  * author: chuanfeng.bi
  */
 public abstract class AbstractTimer {
-    private Timer timer;
     private final Handler handler;
     private final boolean callbackOnMainThread;
+    private Timer timer;
 
     public AbstractTimer(boolean callbackOnMainThread) {
         handler = new Handler(Looper.getMainLooper());

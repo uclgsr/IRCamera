@@ -25,7 +25,7 @@ class EnhancedPermissionManager(
 
         return permissionController.hasBluetoothPermissions()
     }
-    
+
     suspend fun requestAllCriticalPermissions(): Boolean {
         Log.d(TAG, "Enhanced request all critical permissions")
         return requestCameraPermissions() && requestBluetoothPermissions()

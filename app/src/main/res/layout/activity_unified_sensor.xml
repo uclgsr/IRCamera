@@ -62,29 +62,29 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
                     android:layout_marginTop="8dp"
-                    android:gravity="center">
+                    android:gravity="center"
+                    android:orientation="horizontal">
 
                     <Button
                         android:id="@+id/switchCameraButton"
                         android:layout_width="0dp"
                         android:layout_height="36dp"
-                        android:layout_weight="1"
                         android:layout_marginEnd="4dp"
+                        android:layout_weight="1"
+                        android:backgroundTint="#2196F3"
                         android:text="Switch Camera"
-                        android:textSize="12sp"
-                        android:backgroundTint="#2196F3" />
+                        android:textSize="12sp" />
 
                     <TextView
                         android:id="@+id/cameraTypeText"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
                         android:layout_weight="1"
-                        android:text="Back Camera"
-                        android:textSize="12sp"
                         android:gravity="center"
-                        android:layout_marginStart="4dp" />
+                        android:text="Back Camera"
+                        android:textSize="12sp" />
 
                 </LinearLayout>
 

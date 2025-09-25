@@ -1,36 +1,36 @@
 package mpdc4gsr.sensors
 
+import android.bluetooth.BluetoothAdapter
+import android.bluetooth.le.ScanCallback
+import android.bluetooth.le.ScanResult
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Bundle
+import android.os.Handler
 import android.os.IBinder
+import android.os.Looper
 import android.util.Log
 import android.view.View
 import androidx.lifecycle.lifecycleScope
 import com.csl.irCamera.R
 import com.csl.irCamera.databinding.ActivityHubSpokeIntegrationBinding
-import com.shimmerresearch.android.manager.ShimmerBluetoothManagerAndroid
-import com.shimmerresearch.android.Shimmer
-import android.os.Handler
-import android.os.Looper
 import com.mpdc4gsr.libunified.app.ktbase.BaseBindingActivity
+import com.shimmerresearch.android.Shimmer
+import com.shimmerresearch.android.manager.ShimmerBluetoothManagerAndroid
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import mpdc4gsr.controller.ComprehensiveRecordingController
-import mpdc4gsr.controller.SensorStatusInfo
-import mpdc4gsr.controller.RecordingState as ComprehensiveRecordingState
-import mpdc4gsr.network.NetworkServer
 import mpdc4gsr.core.RecordingService
+import mpdc4gsr.network.NetworkServer
 import mpdc4gsr.utils.TimeManager
 import java.io.File
 import java.text.SimpleDateFormat
-import java.util.*
-import android.bluetooth.BluetoothAdapter
-import android.bluetooth.le.ScanCallback
-import android.bluetooth.le.ScanResult
+import java.util.Date
+import java.util.Locale
+import mpdc4gsr.controller.RecordingState as ComprehensiveRecordingState
 
 class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrationBinding>() {
     companion object {
@@ -195,12 +195,19 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
                         override fun onScanResult(callbackType: Int, result: ScanResult?) {
                             result?.let { scanResult ->
                                 val device = scanResult.device
-                                val deviceName = try { device.name ?: "Unknown" } catch (e: SecurityException) { "Unknown" }
+                                val deviceName = try {
+                                    device.name ?: "Unknown"
+                                } catch (e: SecurityException) {
+                                    "Unknown"
+                                }
                                 val deviceAddress = device.address
                                 val rssi = scanResult.rssi
 
                                 if (isShimmerGSRDevice(deviceName, deviceAddress)) {
-                                    Log.i(TAG, "Discovered new Shimmer GSR device: $deviceName ($deviceAddress) RSSI: $rssi")
+                                    Log.i(
+                                        TAG,
+                                        "Discovered new Shimmer GSR device: $deviceName ($deviceAddress) RSSI: $rssi"
+                                    )
                                     runOnUiThread {
                                         binding.statusTextView.text = "New Shimmer device found: $deviceName"
                                         updateDiscoveredDeviceUI(deviceName, deviceAddress, rssi)
@@ -539,12 +546,20 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
                             append(if (sensorInfo.isRecording) "Recording" else "Idle")
                             append(" (${if (sensorInfo.isHealthy) "Healthy" else "Unhealthy"})")
                             if (sensorInfo.isRecording) {
-                                append(" - ${sensorInfo.samplesRecorded} samples, ${String.format("%.1f", sensorInfo.storageUsedMB)}MB")
+                                append(
+                                    " - ${sensorInfo.samplesRecorded} samples, ${
+                                        String.format(
+                                            "%.1f",
+                                            sensorInfo.storageUsedMB
+                                        )
+                                    }MB"
+                                )
                             }
                             append("\n")
                         }
                     }
-                    binding.sensorStatusTextView.text = if (statusText.isNotEmpty()) statusText.trim() else "No sensors available"
+                    binding.sensorStatusTextView.text =
+                        if (statusText.isNotEmpty()) statusText.trim() else "No sensors available"
                 }
             }
             .launchIn(lifecycleScope)
