@@ -55,6 +55,14 @@ class RecordingController(
         private const val RGB_STORAGE_MB_PER_MIN = 50.0
         private const val THERMAL_STORAGE_MB_PER_MIN = 5.0
         private const val SHIMMER_STORAGE_MB_PER_MIN = 1.0
+        
+        // Type aliases for public API compatibility
+        typealias SessionManifest = RecordingControllerSessionManifest
+        typealias SensorActivityInfo = RecordingControllerSensorActivityInfo
+        typealias SessionEvent = RecordingControllerSessionEvent
+        typealias SensorHealthInfo = RecordingControllerSensorHealthInfo
+        typealias DropoutEvent = RecordingControllerDropoutEvent
+        typealias ReconnectionEvent = RecordingControllerReconnectionEvent
     }
 
     private val sensorRecorders = ConcurrentHashMap<String, SensorRecorder>()
@@ -1972,7 +1980,7 @@ class RecordingController(
     }
 
     // Session manifest generation
-    fun generateSessionManifest(): RecordingControllerSessionManifest {
+    fun generateSessionManifest(): RecordingController.SessionManifest {
         val sessionDirectory = currentSessionDirectory?.rootDir?.name ?: "unknown"
         val startTime = sessionStartTimestampMs
         val stopTime = if (currentSessionState.get() in listOf(
@@ -2103,7 +2111,7 @@ data class RecordingControllerSessionEvent(
     val eventType: String,
     val timestampMs: Long,
     val sensorId: String? = null,
-    val triggerSource: TriggerSource? = null,
+    val triggerSource: RecordingController.TriggerSource? = null,
     val metadata: Map<String, String> = emptyMap(),
     val success: Boolean = true,
     val errorMessage: String? = null
@@ -2115,7 +2123,7 @@ data class RecordingControllerSessionManifest(
     val startTime: Long,
     val stopTime: Long? = null,
     val duration: Long? = null,
-    val triggerSource: TriggerSource,
+    val triggerSource: RecordingController.TriggerSource,
     val sensorActivitySummary: Map<String, RecordingControllerSensorActivityInfo>,
     val events: List<RecordingControllerSessionEvent>,
     val errors: List<String>,
