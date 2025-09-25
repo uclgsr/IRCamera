@@ -133,14 +133,9 @@ class HardwareValidationController(
             }
 
             sensorCapabilities["rgb_camera"] = SensorCapability(
-                sensorType = "RGB Camera",
-                isAvailable = rgbCameraAvailable,
-                capabilities = mapOf(
-                    "max_resolution" to "1920x1080",
-                    "max_fps" to "30",
-                    "supported_formats" to "MP4, JPEG",
-                    "initialization_time_ms" to initTime
-                )
+                name = "RGB Camera",
+                isSupported = rgbCameraAvailable,
+                details = "Max resolution: 1920x1080, Max FPS: 30, Formats: MP4/JPEG, Init time: ${initTime}ms"
             )
 
             validationResults["rgb_camera"] = HardwareValidationResult(
@@ -180,15 +175,9 @@ class HardwareValidationController(
 
 
             sensorCapabilities["thermal_camera"] = SensorCapability(
-                sensorType = "Topdon TC001 Thermal Camera",
-                isAvailable = true,
-                capabilities = mapOf(
-                    "resolution" to "256x192",
-                    "temperature_range" to "-40°C to 550°C",
-                    "accuracy" to "±2°C",
-                    "frame_rate" to "9 Hz",
-                    "interface" to "USB-C"
-                )
+                name = "Topdon TC001 Thermal Camera",
+                isSupported = true,
+                details = "Resolution: 256x192, Range: -40°C to 550°C, Accuracy: ±2°C, Frame rate: 9Hz, Interface: USB-C"
             )
 
             validationResults["thermal_camera"] = HardwareValidationResult(
@@ -234,15 +223,9 @@ class HardwareValidationController(
 
 
             sensorCapabilities["gsr_sensor"] = SensorCapability(
-                sensorType = "Shimmer3 GSR+ Sensor",
-                isAvailable = true,
-                capabilities = mapOf(
-                    "sampling_rate" to "100 Hz",
-                    "adc_resolution" to "12-bit (0-4095)",
-                    "gsr_range" to "0-4000 µS",
-                    "ppg_channels" to "2",
-                    "connection_type" to "Bluetooth LE"
-                )
+                name = "Shimmer3 GSR+ Sensor",
+                isSupported = true,
+                details = "Sampling rate: 100Hz, ADC: 12-bit (0-4095), GSR range: 0-4000µS, PPG channels: 2, Connection: Bluetooth LE"
             )
 
             validationResults["gsr_sensor"] = HardwareValidationResult(

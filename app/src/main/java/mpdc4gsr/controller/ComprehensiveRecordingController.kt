@@ -69,7 +69,19 @@ class ComprehensiveRecordingController(
     private val _sensorStatusFlow = MutableStateFlow<List<SensorStatusInfo>>(emptyList())
     val sensorStatusFlow: StateFlow<List<SensorStatusInfo>> = _sensorStatusFlow.asStateFlow()
 
-    private val _recordingStatsFlow = MutableStateFlow(RecordingStats.empty())
+    private val _recordingStatsFlow = MutableStateFlow(
+        RecordingStats(
+            sessionId = "",
+            duration = 0L,
+            activeSensors = 0,
+            totalSamples = 0L,
+            avgDataRate = 0.0,
+            storageUsedMB = 0.0,
+            errors = 0,
+            warnings = 0,
+            qualityScore = 1.0
+        )
+    )
     val recordingStatsFlow: StateFlow<RecordingStats> = _recordingStatsFlow.asStateFlow()
 
     private val recordingScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
@@ -594,13 +606,15 @@ class ComprehensiveRecordingController(
         val duration = if (sessionStartTime.get() > 0) currentTime - sessionStartTime.get() else 0
 
         val stats = RecordingStats(
-            isRecording = _isRecording.get(),
-            sessionId = currentSessionId,
-            durationMs = duration,
+            sessionId = currentSessionId ?: "",
+            duration = duration,
             activeSensors = activeRecorders.count { it.value },
-            totalSensors = sensorRecorders.size,
-            healthySensors = sensorHealthStatus.count { it.value.isHealthy },
-            recordingState = _recordingStateFlow.value
+            totalSamples = 0L, // Would need to aggregate from sensors
+            avgDataRate = 0.0, // Would need to calculate from sensors
+            storageUsedMB = 0.0, // Would need to calculate from file sizes
+            errors = sensorHealthStatus.count { !it.value.isHealthy },
+            warnings = 0, // Would need to track warnings
+            qualityScore = if (sensorHealthStatus.isEmpty()) 1.0 else sensorHealthStatus.values.count { it.isHealthy }.toDouble() / sensorHealthStatus.size
         )
 
         _recordingStatsFlow.value = stats
@@ -853,7 +867,7 @@ class ComprehensiveRecordingController(
                 eventType = event.eventType,
                 timestampMs = event.timestampMs,
                 sensorId = event.sensorId,
-                triggerSource = event.triggerSource?.name ?: "UNKNOWN",
+                triggerSource = event.triggerSource,
                 metadata = event.metadata,
                 success = event.success,
                 errorMessage = event.errorMessage
@@ -880,13 +894,13 @@ class ComprehensiveRecordingController(
             startTime = startTime,
             stopTime = stopTime,
             duration = duration,
-            triggerSource = convertTriggerSource(lastTriggerSource ?: TriggerSource.LOCAL_UI).name,
+            triggerSource = convertTriggerSource(lastTriggerSource ?: TriggerSource.LOCAL_UI),
             sensorActivitySummary = sensorActivitySummary,
             events = events,
             errors = errors,
             warnings = warnings,
             fileReferences = fileReferences,
-            sessionState = convertSessionState(currentSessionState.get()).name
+            sessionState = convertSessionState(currentSessionState.get())
         )
     }
 
@@ -1062,21 +1076,5 @@ class ComprehensiveRecordingController(
             SessionState.FAILED -> RecordingController.SessionState.STOPPED_FAILED
             SessionState.CANCELLED -> RecordingController.SessionState.STOPPED_INCOMPLETE
         }
-    }
-}
-
-data class RecordingStats(
-    val isRecording: Boolean,
-    val sessionId: String?,
-    val durationMs: Long,
-    val activeSensors: Int,
-    val totalSensors: Int,
-    val healthySensors: Int,
-    val recordingState: RecordingState
-) {
-    companion object {
-        fun empty() = RecordingStats(
-            false, null, 0, 0, 0, 0, RecordingState.IDLE
-        )
     }
 }
