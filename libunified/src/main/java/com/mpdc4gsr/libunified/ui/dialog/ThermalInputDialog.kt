@@ -1,10 +1,9 @@
 package com.mpdc4gsr.libunified.ui.dialog
 
 import android.content.Context
-import android.content.DialogInterface
 
 class ThermalInputDialog private constructor(private val builder: Builder) {
-    
+
     fun show() {
         // Basic implementation for MVP - real implementation would show a dialog
     }

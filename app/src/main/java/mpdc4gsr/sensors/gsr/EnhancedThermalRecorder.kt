@@ -80,7 +80,7 @@ class EnhancedThermalRecorder(private val context: Context) {
             closeSyncEventsFile()
             val sessionInfo = SessionInfo(
                 sessionDirectory = currentSessionDirectory,
-                sampleCount = thermalCameraRecorder.getRecordingStats().frameCount
+                sampleCount = thermalCameraRecorder.getRecordingStats().totalSamplesRecorded
             )
             Log.i(TAG, "Enhanced thermal recording stopped successfully")
             sessionInfo

@@ -10,7 +10,6 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mpdc4gsr.libunified.R
-import com.mpdc4gsr.libunified.databinding.ViewMenuSecondBinding
 import com.mpdc4gsr.libunified.app.menu.adapter.ColorAdapter
 import com.mpdc4gsr.libunified.app.menu.adapter.FenceAdapter
 import com.mpdc4gsr.libunified.app.menu.adapter.SettingAdapter
@@ -26,6 +25,7 @@ import com.mpdc4gsr.libunified.app.menu.constant.TargetType
 import com.mpdc4gsr.libunified.app.menu.constant.TempPointType
 import com.mpdc4gsr.libunified.app.menu.constant.TwoLightType
 import com.mpdc4gsr.libunified.app.repository.GalleryRepository
+import com.mpdc4gsr.libunified.databinding.ViewMenuSecondBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

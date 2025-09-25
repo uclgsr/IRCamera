@@ -6,7 +6,6 @@ import android.util.AttributeSet
 import android.view.SurfaceHolder
 import android.view.SurfaceView
 import com.blankj.utilcode.util.ScreenUtils
-import com.mpdc4gsr.libunified.app.matrix.Logger
 
 class IrSurfaceView : SurfaceView, SurfaceHolder.Callback {
 

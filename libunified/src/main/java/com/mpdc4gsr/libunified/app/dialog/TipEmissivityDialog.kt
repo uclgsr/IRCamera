@@ -12,11 +12,11 @@ import android.widget.TextView
 import com.mpdc4gsr.libunified.R
 import com.mpdc4gsr.libunified.app.config.ExtraKeyConfig
 import com.mpdc4gsr.libunified.app.config.RouterConfig
-import com.mpdc4gsr.libunified.databinding.DialogTipEmissivityBinding
 import com.mpdc4gsr.libunified.app.navigation.NavigationManager
 import com.mpdc4gsr.libunified.app.tools.NumberTools
 import com.mpdc4gsr.libunified.app.tools.UnitTools
 import com.mpdc4gsr.libunified.app.utils.ScreenUtil
+import com.mpdc4gsr.libunified.databinding.DialogTipEmissivityBinding
 
 class TipEmissivityDialog : Dialog {
     constructor(context: Context) : super(context)

@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.csl.irCamera.R
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import mpdc4gsr.controller.RecordingController
 
 class GSRDeviceManagementActivity : AppCompatActivity(), View.OnClickListener {
     companion object {
@@ -177,7 +178,7 @@ class GSRDeviceManagementActivity : AppCompatActivity(), View.OnClickListener {
                     this@GSRDeviceManagementActivity,
                     "gsr_management_1",
                     128,
-                    com.mpdc4gsr.controller.RecordingController(
+                    RecordingController(
                         this@GSRDeviceManagementActivity,
                         this@GSRDeviceManagementActivity
                     )

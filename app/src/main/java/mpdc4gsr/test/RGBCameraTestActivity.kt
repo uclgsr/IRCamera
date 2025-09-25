@@ -190,7 +190,7 @@ class RGBCameraTestActivity : AppCompatActivity() {
                 cameraRecorder = RgbCameraRecorder(
                     context = this@RGBCameraTestActivity,
                     lifecycleOwner = this@RGBCameraTestActivity,
-                    previewView = previewView,
+                    previewView = previewView.previewView,
                     useFrontCamera = false,
                     permissionManager = permissionManager
                 )
@@ -203,7 +203,8 @@ class RGBCameraTestActivity : AppCompatActivity() {
                     showError("Failed to initialize camera")
                 }
             } catch (e: Exception) {
-                showError("Camera initialization error: ${e.message}")
+                Log.e(TAG, "Failed to initialize camera", e)
+                showError("Initialization error: ${e.message}")
             }
         }
     }

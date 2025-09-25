@@ -134,14 +134,14 @@ class RGBCameraRecorder(
         try {
             val timingMetadata = mapOf(
                 "session_id" to sessionMetadata.sessionId,
-                "session_start_time" to sessionMetadata.startTime.toString(),
+                "session_start_time" to sessionMetadata.sessionStartTimestampMs.toString(),
                 "recording_start_time" to System.currentTimeMillis().toString(),
                 "sample_rate" to "30", // 30 FPS
                 "sync_marker" to "rgb_camera_start"
             )
 
-            // Store metadata in session for later access (Camera2System doesn't support setVideoMetadata)
-            sessionMetadata.addMetadata("video_timing", timingMetadata)
+            // Store metadata in session for later access via a sync event
+            sessionMetadata.addSyncEvent("VIDEO_TIMING", timingMetadata)
             Log.i(TAG, "Session timing metadata stored in session metadata")
         } catch (e: Exception) {
             Log.w(TAG, "Failed to store timing metadata", e)

@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
+import com.mpdc4gsr.libunified.R;
 import com.mpdc4gsr.libunified.ui.gzuliyujiang.wheelpicker.contract.LinkageProvider;
 import com.mpdc4gsr.libunified.ui.gzuliyujiang.wheelpicker.contract.OnLinkageSelectedListener;
 import com.mpdc4gsr.libunified.ui.gzuliyujiang.wheelview.annotation.CurtainCorner;
@@ -15,7 +16,6 @@ import com.mpdc4gsr.libunified.ui.gzuliyujiang.wheelview.annotation.ItemTextAlig
 import com.mpdc4gsr.libunified.ui.gzuliyujiang.wheelview.annotation.ScrollState;
 import com.mpdc4gsr.libunified.ui.gzuliyujiang.wheelview.contract.WheelFormatter;
 import com.mpdc4gsr.libunified.ui.gzuliyujiang.wheelview.widget.WheelView;
-import com.mpdc4gsr.libunified.R;
 
 import java.util.Arrays;
 import java.util.List;

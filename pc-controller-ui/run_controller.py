@@ -3,14 +3,15 @@
 Simple launcher for PC Session Controller
 """
 
-import sys
 import os
+import sys
 
 # Add src directory to path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
 
 try:
     from pc_session_controller import main
+
     main()
 except ImportError as e:
     print(f"Import error: {e}")

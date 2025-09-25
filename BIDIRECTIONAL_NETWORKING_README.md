@@ -1,72 +1,80 @@
 # Bidirectional Command/Control Networking Implementation
 
-This document describes the implementation of bidirectional command/control networking for the IRCamera Android application, allowing remote control from a PC.
+This document describes the implementation of bidirectional command/control networking for the IRCamera Android
+application, allowing remote control from a PC.
 
 ## Overview
 
-The implementation enables the Android app (Galaxy S22) to connect as a **client** to a PC-based host over either Wi-Fi (TCP) or Bluetooth (RFCOMM). The phone initiates the connection to a known PC server address/port or Bluetooth service. This allows the PC to remotely control recording on the phone by sending commands.
+The implementation enables the Android app (Galaxy S22) to connect as a **client** to a PC-based host over either
+Wi-Fi (TCP) or Bluetooth (RFCOMM). The phone initiates the connection to a known PC server address/port or Bluetooth
+service. This allows the PC to remotely control recording on the phone by sending commands.
 
 ## Architecture
 
 ### Key Components
 
 1. **CommandConnection Interface** (`app/src/main/java/mpdc4gsr/network/CommandConnection.kt`)
-   - Common interface for both TCP and Bluetooth connections
-   - Manages connection states and message callbacks
+    - Common interface for both TCP and Bluetooth connections
+    - Manages connection states and message callbacks
 
 2. **TcpClient** (`app/src/main/java/mpdc4gsr/network/TcpClient.kt`)
-   - Handles Wi-Fi TCP connections to PC server
-   - Implements socket communication with timeout handling
-   - Background threads for reading/writing messages
+    - Handles Wi-Fi TCP connections to PC server
+    - Implements socket communication with timeout handling
+    - Background threads for reading/writing messages
 
 3. **BluetoothClient** (`app/src/main/java/mpdc4gsr/network/BluetoothClient.kt`)
-   - Handles Bluetooth RFCOMM connections to PC server
-   - Uses standard Serial Port Profile (SPP)
-   - Manages Bluetooth adapter and device pairing
+    - Handles Bluetooth RFCOMM connections to PC server
+    - Uses standard Serial Port Profile (SPP)
+    - Manages Bluetooth adapter and device pairing
 
 4. **NetworkManager** (`app/src/main/java/mpdc4gsr/network/NetworkManager.kt`)
-   - High-level coordinator for connection lifecycle
-   - Decides which transport to use (TCP or Bluetooth)
-   - Provides unified interface for other components
+    - High-level coordinator for connection lifecycle
+    - Decides which transport to use (TCP or Bluetooth)
+    - Provides unified interface for other components
 
 5. **CommandHandler** (`app/src/main/java/mpdc4gsr/network/CommandHandler.kt`)
-   - Processes incoming commands from PC
-   - Executes actions on RecordingController
-   - Generates responses and telemetry
+    - Processes incoming commands from PC
+    - Executes actions on RecordingController
+    - Generates responses and telemetry
 
 6. **RecordingService Integration** (`app/src/main/java/mpdc4gsr/core/RecordingService.kt`)
-   - Service actions for client-side PC connections
-   - Manages NetworkManager lifecycle
-   - Provides binder access for activities
+    - Service actions for client-side PC connections
+    - Manages NetworkManager lifecycle
+    - Provides binder access for activities
 
 ## Supported Commands
 
 The implementation supports the following commands as specified in the issue:
 
 ### START Command
+
 - **Format**: `START` or `START session_id=<id>`
 - **Action**: Starts recording session using RecordingController
 - **Response**: `START-ACK session_id=<id>` or error message
 - **Validation**: Prevents multiple concurrent sessions
 
 ### STOP Command
+
 - **Format**: `STOP` or `STOP session_id=<id>`
 - **Action**: Stops current recording session
 - **Response**: `STOP-ACK msg="Recording session stopped"` or error message
 
 ### SYNC Command
+
 - **Format**: `SYNC` or `SYNC t_pc=<timestamp>`
 - **Action**: Clock synchronization handshake
 - **Response**: `SYNC-RESP t_pc=<pc_time> t_ph=<phone_time>`
 - **Purpose**: Enables timestamp alignment between PC and phone
 
 ### PING Command
+
 - **Format**: `PING`
 - **Action**: Keep-alive check
 - **Response**: `PONG`
 - **Purpose**: Connection health monitoring
 
 ### GET_STATUS Command
+
 - **Format**: `GET_STATUS`
 - **Action**: Query current system status
 - **Response**: JSON object with recording state, sensors, uptime
@@ -138,12 +146,14 @@ The networking layer integrates seamlessly with the existing recording architect
 ## Testing and Validation
 
 ### Test Activity
+
 - **NetworkClientTestActivity**: Demonstrates functionality
 - Accessible via launcher as "Network Client Test"
 - Tests Wi-Fi and Bluetooth connections
 - Logs all operations for debugging
 
 ### PC Test Server
+
 - **test_pc_server.py**: Simple Python server for testing
 - Accepts Android client connections
 - Demonstrates full command protocol
@@ -158,24 +168,26 @@ The networking layer integrates seamlessly with the existing recording architect
    ```
 
 2. **Launch Android App**:
-   - Open "Network Client Test" from launcher
-   - App will attempt connection to 192.168.1.100:8080
-   - Check logs for connection status and message exchange
+    - Open "Network Client Test" from launcher
+    - App will attempt connection to 192.168.1.100:8080
+    - Check logs for connection status and message exchange
 
 3. **Observe Protocol**:
-   - Server will send demo command sequence
-   - Android app responds to each command
-   - Recording sessions can be controlled remotely
+    - Server will send demo command sequence
+    - Android app responds to each command
+    - Recording sessions can be controlled remotely
 
 ## Configuration
 
 ### Default Settings
+
 - **TCP Port**: 8080
 - **Connection Timeout**: 10 seconds
 - **Read Timeout**: 30 seconds
 - **Bluetooth UUID**: Standard SPP UUID (00001101-0000-1000-8000-00805F9B34FB)
 
 ### Customization
+
 - Change default IP/port in RecordingService constants
 - Modify timeout values in TcpClient/BluetoothClient
 - Add custom commands in CommandHandler
@@ -198,6 +210,7 @@ The networking layer integrates seamlessly with the existing recording architect
 ## Files Modified/Created
 
 ### New Files
+
 - `app/src/main/java/mpdc4gsr/network/CommandConnection.kt`
 - `app/src/main/java/mpdc4gsr/network/TcpClient.kt`
 - `app/src/main/java/mpdc4gsr/network/BluetoothClient.kt`
@@ -207,12 +220,14 @@ The networking layer integrates seamlessly with the existing recording architect
 - `test_pc_server.py`
 
 ### Modified Files
+
 - `app/src/main/java/mpdc4gsr/core/RecordingService.kt` - Added NetworkManager integration
 - `app/src/main/AndroidManifest.xml` - Added test activity
 
 ## Permissions Required
 
 The following permissions are already present in AndroidManifest.xml:
+
 - `INTERNET`: For TCP connections
 - `ACCESS_NETWORK_STATE`: For network status
 - `BLUETOOTH_CONNECT`: For Bluetooth connections (Android 12+)
@@ -221,14 +236,17 @@ The following permissions are already present in AndroidManifest.xml:
 ## Troubleshooting
 
 ### Common Issues
+
 1. **Connection Refused**: Ensure PC server is running and accessible
 2. **Bluetooth Pairing**: Device must be paired before connection
 3. **Permission Denied**: Check Bluetooth permissions on Android 12+
 4. **Network Unreachable**: Verify IP address and network connectivity
 
 ### Debug Logging
+
 - Enable verbose logging in NetworkManager and clients
 - Check Android logs with tag filters: "NetworkManager", "TcpClient", "BluetoothClient"
 - PC server provides detailed connection logs
 
-This implementation provides a robust foundation for bidirectional command/control networking while maintaining compatibility with the existing recording architecture.
+This implementation provides a robust foundation for bidirectional command/control networking while maintaining
+compatibility with the existing recording architecture.
