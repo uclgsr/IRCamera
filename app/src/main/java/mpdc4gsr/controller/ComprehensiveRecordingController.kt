@@ -28,19 +28,7 @@ import java.util.concurrent.atomic.AtomicReference
 // Import types from SessionManifest.kt to avoid circular references
 import mpdc4gsr.controller.SessionEvent
 import mpdc4gsr.controller.RecordingController
-
-// Simple SessionMetadata class for minimal functionality
-data class SessionMetadata(
-    val sessionId: String,
-    val startTime: Long,
-    val experimentalConditions: Map<String, Any> = emptyMap()
-) {
-    companion object {
-        fun createSessionStart(sessionId: String): SessionMetadata {
-            return SessionMetadata(sessionId, System.currentTimeMillis())
-        }
-    }
-}
+import mpdc4gsr.data.SessionMetadata
 
 
 class ComprehensiveRecordingController(
@@ -225,12 +213,7 @@ class ComprehensiveRecordingController(
                 val sessionDir = sessionDirectoryManager.createSessionDirectory(finalSessionId)
                 currentSessionDirectory = sessionDir
 
-                sessionMetadata = SessionMetadata.createSessionStart(finalSessionId).copy(
-                    experimentalConditions = mapOf(
-                        "estimatedDurationMinutes" to estimatedDurationMinutes,
-                        "enabledSensors" to enabledSensors
-                    )
-                )
+                sessionMetadata = SessionMetadata.createSessionStart(finalSessionId)
 
                 currentSessionId = finalSessionId
                 sessionStartTime.set(System.currentTimeMillis())
