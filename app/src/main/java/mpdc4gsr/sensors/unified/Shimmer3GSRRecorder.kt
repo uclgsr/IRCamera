@@ -28,7 +28,7 @@ import mpdc4gsr.sensors.RecordingStatus
 import mpdc4gsr.sensors.SensorError
 import mpdc4gsr.sensors.SensorRecorder
 import mpdc4gsr.sensors.unified.model.DeviceInfo
-import com.mpdc4gsr.gsr.model.LegacyGSRSample as GSRSample
+import com.mpdc4gsr.gsr.model.GSRSample
 import java.io.File
 import java.io.FileWriter
 import java.text.SimpleDateFormat
@@ -374,7 +374,7 @@ class Shimmer3GSRRecorder(
             val qualityScore = calculateQualityScore(gsrRaw, timestamp)
 
 
-            val sample = GSRSample(
+            val sample = GSRSample.create(
                 timestamp = timestamp,
                 timestampIso = timestampIso,
                 gsrMicrosiemens = gsrMicrosiemens,
@@ -612,7 +612,7 @@ class Shimmer3GSRRecorder(
             val gsrMicrosiemens = calculateGSRMicrosiemens(rawValue)
 
 
-            val sample = GSRSample(
+            val sample = GSRSample.create(
                 timestamp = timestamp,
                 timestampIso = timestampIso,
                 gsrMicrosiemens = gsrMicrosiemens,

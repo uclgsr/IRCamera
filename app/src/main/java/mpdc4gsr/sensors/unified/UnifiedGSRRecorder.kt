@@ -34,7 +34,7 @@ import mpdc4gsr.sensors.RecordingStatus
 import mpdc4gsr.sensors.SensorError
 import mpdc4gsr.sensors.SensorRecorder
 import mpdc4gsr.sensors.unified.model.DeviceInfo
-import com.mpdc4gsr.gsr.model.LegacyGSRSample as GSRSample
+import com.mpdc4gsr.gsr.model.GSRSample
 import java.io.File
 import java.io.FileWriter
 import java.text.SimpleDateFormat
