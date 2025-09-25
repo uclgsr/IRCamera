@@ -12,12 +12,12 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import mpdc4gsr.controller.SessionManifest
-import mpdc4gsr.controller.SessionEvent
-import mpdc4gsr.controller.SensorActivityInfo
-import mpdc4gsr.controller.SensorHealthInfo
-import mpdc4gsr.controller.DropoutEvent
-import mpdc4gsr.controller.ReconnectionEvent
+import mpdc4gsr.data.SessionManifest
+import mpdc4gsr.data.SessionEvent
+import mpdc4gsr.data.SensorActivityInfo
+import mpdc4gsr.data.SensorHealthInfo
+import mpdc4gsr.data.DropoutEvent
+import mpdc4gsr.data.ReconnectionEvent
 import mpdc4gsr.controller.RecordingController
 import mpdc4gsr.data.SessionMetadata
 import mpdc4gsr.permissions.PermissionManager
@@ -30,6 +30,14 @@ import java.io.File
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
+
+// Use proper type aliases from RecordingController
+typealias SessionManifest = RecordingController.SessionManifest
+typealias SessionEvent = RecordingController.SessionEvent
+typealias SensorActivityInfo = RecordingController.SensorActivityInfo
+typealias SensorHealthInfo = RecordingController.SensorHealthInfo
+typealias DropoutEvent = RecordingController.DropoutEvent
+typealias ReconnectionEvent = RecordingController.ReconnectionEvent
 
 
 class ComprehensiveRecordingController(
@@ -74,7 +82,7 @@ class ComprehensiveRecordingController(
 
     private val sensorRecorders = ConcurrentHashMap<String, SensorRecorder>()
     private val activeRecorders = ConcurrentHashMap<String, Boolean>()
-    private val sensorHealthStatus = ConcurrentHashMap<String, ComprehensiveSensorHealthInfo>()
+    private val sensorHealthStatus = ConcurrentHashMap<String, SensorHealthInfo>()
     private val reconnectionAttempts = ConcurrentHashMap<String, Int>()
 
     // Session orchestration state
@@ -821,6 +829,9 @@ class ComprehensiveRecordingController(
                     val sessionInfoFile = File(sessionDir, "session_info.json")
                     sessionInfoFile.writeText(createSessionInfoJson(sessionInfo))
 
+                    // Write comprehensive session manifest as required by problem statement
+                    writeSessionManifest()
+
                     Log.i(TAG, "Session finalized with metadata: ${sessionInfoFile.absolutePath}")
                 } else {
                     Log.w(TAG, "Cannot finalize session - session directory not available")
@@ -845,6 +856,216 @@ class ComprehensiveRecordingController(
             sessionInfo.errors?.let { put("errors", JSONArray(it)) }
             put("finalized_at", sessionInfo.finalizedAt)
         }.toString(2)
+    }
+
+    /**
+     * Generate comprehensive session manifest with detailed sensor activity, 
+     * reconnection events, and trigger source tracking as per requirements
+     */
+    fun generateComprehensiveSessionManifest(): SessionManifest {
+        val sessionId = currentSessionId ?: "unknown"
+        val startTime = sessionStartTime.get()
+        val stopTime = if (currentSessionState.get() in listOf(
+                SessionState.STOPPED_COMPLETED,
+                SessionState.STOPPED_FAILED,
+                SessionState.STOPPED_INCOMPLETE
+            )) System.currentTimeMillis() else null
+        val duration = stopTime?.let { it - startTime }
+
+        // Build detailed sensor activity summary
+        val sensorActivitySummary = sensorRecorders.keys.associateWith { sensorName ->
+            val wasActive = activeRecorders[sensorName] == true
+            val healthInfo = sensorHealthStatus[sensorName]
+            
+            // Extract sensor-specific events (dropouts and reconnections)
+            val sensorEvents = sessionEvents.filter { it.sensorId == sensorName }
+            val dropoutEvents = sensorEvents.filter { 
+                it.eventType == "SENSOR_DROPOUT" || it.eventType == "SENSOR_DISCONNECTION" 
+            }.sortedBy { it.timestampMs }
+            val reconnectionEvents = sensorEvents.filter { 
+                it.eventType == "SENSOR_RECONNECTION_SUCCESS" || it.eventType == "SENSOR_RESUMED" 
+            }.sortedBy { it.timestampMs }
+
+            val dropouts = dropoutEvents.map { dropoutEvent ->
+                // Find the first reconnection after this dropout
+                val reconnection = reconnectionEvents.firstOrNull { it.timestampMs > dropoutEvent.timestampMs }
+                val durationMs = when {
+                    reconnection != null -> reconnection.timestampMs - dropoutEvent.timestampMs
+                    stopTime != null -> stopTime - dropoutEvent.timestampMs
+                    else -> 0L
+                }
+                DropoutEvent(
+                    timestampMs = dropoutEvent.timestampMs,
+                    reason = dropoutEvent.errorMessage ?: "Unknown reason",
+                    durationMs = durationMs
+                )
+            }
+            
+            val reconnections = sensorEvents.filter { 
+                it.eventType == "SENSOR_RECONNECTION_SUCCESS" || it.eventType == "SENSOR_RESUMED" 
+            }.mapIndexed { index, event ->
+                ReconnectionEvent(
+                    timestampMs = event.timestampMs,
+                    attemptNumber = index + 1,
+                    successful = event.success,
+                    delayMs = event.metadata["delay_ms"]?.toLongOrNull() ?: 0L
+                )
+            }
+
+            SensorActivityInfo(
+                sensorName = sensorName,
+                wasActive = wasActive,
+                startedSuccessfully = wasActive,
+                finalStatus = when {
+                    wasActive && healthInfo?.isHealthy == true -> "COMPLETED"
+                    wasActive && healthInfo?.isHealthy == false -> "COMPLETED_WITH_ERRORS"
+                    !wasActive -> "INACTIVE"
+                    else -> "UNKNOWN"
+                },
+                errorMessages = healthInfo?.lastError?.let { listOf(it) } ?: emptyList(),
+                dropouts = dropouts,
+                reconnections = reconnections
+            )
+        }
+
+        // Extract all session events
+        val events = sessionEvents.map { event ->
+            SessionEvent(
+                eventType = event.eventType,
+                timestampMs = event.timestampMs,
+                sensorId = event.sensorId,
+                triggerSource = event.triggerSource,
+                metadata = event.metadata,
+                success = event.success,
+                errorMessage = event.errorMessage
+            )
+        }
+
+        // Extract errors and warnings
+        val errors = sessionEvents.filter { !it.success }.map {
+            "${it.eventType}: ${it.errorMessage ?: "Unknown error"}"
+        }
+        
+        val warnings = sessionEvents.filter {
+            it.eventType.contains("WARNING") || it.eventType.contains("CRITICAL") ||
+            it.eventType.contains("DROPOUT") || it.eventType.contains("RECONNECTION")
+        }.map { "${it.eventType}: ${it.metadata}" }
+
+        // Build file references (basic structure - individual sensors can populate this)
+        val fileReferences = mutableMapOf<String, String>()
+        currentSessionDirectory?.rootDir?.let { sessionDir ->
+            fileReferences["session_info"] = "${sessionDir.name}/session_info.json"
+            fileReferences["session_manifest"] = "${sessionDir.name}/session_manifest.json"
+        }
+
+        return SessionManifest(
+            sessionId = sessionId,
+            startTime = startTime,
+            stopTime = stopTime,
+            duration = duration,
+            triggerSource = lastTriggerSource ?: TriggerSource.LOCAL_UI,
+            sensorActivitySummary = sensorActivitySummary,
+            events = events,
+            errors = errors,
+            warnings = warnings,
+            fileReferences = fileReferences,
+            sessionState = currentSessionState.get()
+        )
+    }
+
+    /**
+     * Write comprehensive session manifest to file
+     */
+    private suspend fun writeSessionManifest() {
+        try {
+            currentSessionDirectory?.rootDir?.let { sessionDir ->
+                val manifest = generateComprehensiveSessionManifest()
+                val manifestFile = File(sessionDir, "session_manifest.json")
+                
+                val manifestJson = JSONObject().apply {
+                    put("sessionId", manifest.sessionId)
+                    put("startTime", manifest.startTime)
+                    manifest.stopTime?.let { put("stopTime", it) }
+                    manifest.duration?.let { put("duration", it) }
+                    put("triggerSource", manifest.triggerSource.name)
+                    
+                    // Sensor activity summary
+                    val sensorSummary = JSONObject()
+                    manifest.sensorActivitySummary.forEach { (sensorName, info) ->
+                        val sensorInfo = JSONObject().apply {
+                            put("sensorName", info.sensorName)
+                            put("wasActive", info.wasActive)
+                            put("startedSuccessfully", info.startedSuccessfully)
+                            put("finalStatus", info.finalStatus)
+                            put("errorMessages", JSONArray(info.errorMessages))
+                            
+                            // Dropouts
+                            if (info.dropouts.isNotEmpty()) {
+                                val dropoutsArray = JSONArray()
+                                info.dropouts.forEach { dropout ->
+                                    dropoutsArray.put(JSONObject().apply {
+                                        put("timestampMs", dropout.timestampMs)
+                                        put("reason", dropout.reason)
+                                        put("durationMs", dropout.durationMs)
+                                    })
+                                }
+                                put("dropouts", dropoutsArray)
+                            }
+                            
+                            // Reconnections
+                            if (info.reconnections.isNotEmpty()) {
+                                val reconnectionsArray = JSONArray()
+                                info.reconnections.forEach { reconnection ->
+                                    reconnectionsArray.put(JSONObject().apply {
+                                        put("timestampMs", reconnection.timestampMs)
+                                        put("attemptNumber", reconnection.attemptNumber)
+                                        put("successful", reconnection.successful)
+                                        put("delayMs", reconnection.delayMs)
+                                    })
+                                }
+                                put("reconnections", reconnectionsArray)
+                            }
+                        }
+                        sensorSummary.put(sensorName, sensorInfo)
+                    }
+                    put("sensorActivitySummary", sensorSummary)
+                    
+                    // Events
+                    val eventsArray = JSONArray()
+                    manifest.events.forEach { event ->
+                        eventsArray.put(JSONObject().apply {
+                            put("eventType", event.eventType)
+                            put("timestampMs", event.timestampMs)
+                            event.sensorId?.let { put("sensorId", it) }
+                            event.triggerSource?.let { put("triggerSource", it.name) }
+                            put("success", event.success)
+                            event.errorMessage?.let { put("errorMessage", it) }
+                            if (event.metadata.isNotEmpty()) {
+                                put("metadata", JSONObject(event.metadata))
+                            }
+                        })
+                    }
+                    put("events", eventsArray)
+                    
+                    // Errors and warnings
+                    if (manifest.errors.isNotEmpty()) {
+                        put("errors", JSONArray(manifest.errors))
+                    }
+                    if (manifest.warnings.isNotEmpty()) {
+                        put("warnings", JSONArray(manifest.warnings))
+                    }
+                    
+                    // File references
+                    put("fileReferences", JSONObject(manifest.fileReferences))
+                    put("sessionState", manifest.sessionState.name)
+                }
+                
+                manifestFile.writeText(manifestJson.toString(2))
+                Log.i(TAG, "Comprehensive session manifest written: ${manifestFile.absolutePath}")
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to write session manifest", e)
+        }
     }
 
 
