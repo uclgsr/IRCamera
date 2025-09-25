@@ -327,23 +327,6 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
         }
     }
 
-    private fun updateDiscoveredDevicesUI(device: Device, rssi: Int) {
-        try {
-
-            if (!connectedBLEDevices.any { it.address == device.address }) {
-                connectedBLEDevices.add(device)
-                Log.i(TAG, "Added discovered BLE device: ${device.name} (${device.address})")
-            }
-
-            val deviceCountText = "Discovered BLE devices: ${connectedBLEDevices.size}"
-
-
-            Log.d(TAG, deviceCountText)
-
-        } catch (e: Exception) {
-            Log.e(TAG, "Error updating discovered devices UI", e)
-        }
-    }
 
     private fun setupClickListeners() {
         binding.connectButton.setOnClickListener {
@@ -711,12 +694,12 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
     }
 
     private fun updateBLEDeviceStatus() {
-        if (::enhancedBLE.isInitialized) {
-            val bleDeviceCount = connectedBLEDevices.size
-            val statusText = if (bleDeviceCount > 0) {
-                "BLE Devices: $bleDeviceCount connected (Enhanced Nordic Backend)"
+        if (::shimmerBluetoothManager.isInitialized) {
+            val shimmerDeviceCount = connectedShimmerDevices.size
+            val statusText = if (shimmerDeviceCount > 0) {
+                "Shimmer Devices: $shimmerDeviceCount connected (Official Shimmer API)"
             } else {
-                "BLE Devices: Scanning for devices..."
+                "Shimmer Devices: Scanning for devices..."
             }
 
             if (binding.sensorStatusTextView.text.toString().startsWith("Sensors: Idle")) {
