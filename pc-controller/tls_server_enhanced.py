@@ -225,9 +225,9 @@ class TLSSecurityManager:
         ).serial_number(
             x509.random_serial_number()
         ).not_valid_before(
-            datetime.utcnow()
+            datetime.now(timezone.utc)
         ).not_valid_after(
-            datetime.utcnow() + timedelta(days=self.cert_validity_days)
+            datetime.now(timezone.utc) + timedelta(days=self.cert_validity_days)
         ).add_extension(
             x509.SubjectAlternativeName([
                 x509.DNSName("localhost"),
