@@ -1486,18 +1486,17 @@ class RecordingController(
                     val thermalRecorder = sensorRecorders["Thermal"] as? ThermalCameraRecorder
                     if (thermalRecorder != null) {
                         try {
-                            // TODO: Re-enable when getThermalSystemStatus compilation issue is resolved
-                            // val thermalStatus = thermalRecorder.getThermalSystemStatus()
-                            // details["thermal_connected"] = thermalStatus.isConnected.toString()
-                            // details["thermal_usb_permission"] = thermalStatus.hasUsbPermission.toString()
-                            // details["thermal_simulation"] = thermalStatus.isSimulationMode.toString()
-                            
-                            // Temporary fallback
-                            details["thermal_connected"] = "unknown"
-                            details["thermal_usb_permission"] = "unknown"
-                            details["thermal_simulation"] = "unknown"
-                            warnings.add("Thermal: Status check temporarily disabled")
-                            
+                            val thermalStatus = thermalRecorder.getThermalSystemStatus()
+                            details["thermal_connected"] = thermalStatus.isConnected.toString()
+                            details["thermal_usb_permission"] = thermalStatus.hasUsbPermission.toString()
+                            details["thermal_simulation"] = thermalStatus.isSimulationMode.toString()
+
+                            if (!thermalStatus.hasUsbPermission) {
+                                warnings.add("Thermal: USB permission required - will use simulation")
+                            }
+                            if (!thermalStatus.isConnected) {
+                                warnings.add("Thermal: Camera not connected - will use simulation")
+                            }
                         } catch (e: Exception) {
                             Log.w(TAG, "Could not get thermal system status", e)
                             warnings.add("Thermal: Status unavailable")

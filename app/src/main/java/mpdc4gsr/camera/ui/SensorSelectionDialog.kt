@@ -14,6 +14,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import com.topdon.ble.EasyBLE
 
 // UnifiedBleManager - using EasyBLE from com.topdon.ble instead
 
@@ -35,14 +36,29 @@ class SensorSelectionDialog(
             }
 
             try {
-                // Note: EasyBLE integration disabled for sensor selection dialog
-                // to avoid compilation issues. GSR detection will be handled by
-                // the actual GSR sensor recorder during runtime.
-                Log.d(TAG, "GSR sensor detection deferred to runtime")
-                
-                // For now, assume GSR might be available - actual connection
-                // will be verified when recording starts
-                available.add(SensorType.GSR)
+                val easyBLE = EasyBLE.getDefault()
+
+                if (easyBLE != null) {
+                    val hasConnectedShimmerDevices =
+                        easyBLE.connectedDevices.any { device ->
+                            device.getName()?.contains("shimmer", ignoreCase = true) == true ||
+                            device.getAddress().startsWith("00:06:66") ||
+                            device.getAddress().startsWith("d0:39:72")
+                        }
+
+                    if (hasConnectedShimmerDevices) {
+                        available.add(SensorType.GSR)
+                        Log.d(TAG, "Connected Shimmer GSR devices found")
+                    } else {
+                        // GSR sensor available even without hardware (simulation mode)
+                        available.add(SensorType.GSR)
+                        Log.d(TAG, "GSR sensor available (will use simulation if no hardware found)")
+                    }
+                } else {
+                    // EasyBLE not initialized, assume GSR available with simulation
+                    available.add(SensorType.GSR)
+                    Log.d(TAG, "EasyBLE not available, GSR will use simulation mode")
+                }
             } catch (e: Exception) {
 
                 available.add(SensorType.GSR)
