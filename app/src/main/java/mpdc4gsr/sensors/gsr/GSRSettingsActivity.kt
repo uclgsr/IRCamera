@@ -118,7 +118,7 @@ class GSRSettingsActivity : BaseBindingActivity<ActivityGsrSettingsBinding>() {
             this,
             "gsr_settings_1",
             128,
-            RecordingController(this, this)
+            mpdc4gsr.controller.RecordingController(this, this)
         )
 
         setupUI()
