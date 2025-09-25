@@ -16,6 +16,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import com.shimmerresearch.android.manager.ShimmerBluetoothManagerAndroid
 
 
 // Use simple feature checks for MVP; avoid direct Shimmer API calls
