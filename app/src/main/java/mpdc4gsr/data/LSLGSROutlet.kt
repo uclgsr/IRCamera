@@ -315,9 +315,9 @@ class LSLGSROutlet(
                     // Convert GSR samples to LSL format
                     val lslSamples = samplesToSend.map { sample ->
                         floatArrayOf(
-                            sample.rawValue.toFloat(),
-                            sample.calibratedValue.toFloat(),
-                            sample.ppgValue?.toFloat() ?: 0f,
+                            sample.gsrRaw.toFloat(),
+                            sample.gsrMicrosiemens.toFloat(),
+                            sample.ppgRaw.toFloat(),
                             sample.timestamp.toFloat()
                         )
                     }.toTypedArray()
@@ -355,7 +355,7 @@ class LSLGSROutlet(
 
     private fun updateQualityMetrics(sample: GSRSample) {
         // Simple quality metric based on signal stability
-        val quality = if (sample.calibratedValue in 0.1..10.0) 1.0 else 0.0
+        val quality = if (sample.gsrMicrosiemens in 0.1..10.0) 1.0 else 0.0
 
         qualityHistory.offer(quality)
         while (qualityHistory.size > QUALITY_HISTORY_SIZE) {

@@ -73,7 +73,6 @@ constructor(
     var onFocusDistanceChanged: ((Float) -> Unit)? = null // 0.0f = infinity, 1.0f = macro
     var onAfLockToggle: ((Boolean) -> Unit)? = null
     var onTapToFocus: ((Float, Float) -> Unit)? = null // x, y coordinates normalized to 0.0-1.0
-    // Additional callbacks for lock buttons and reset
     var onExposureLockToggle: ((Boolean) -> Unit)? = null
     var onFocusLockToggle: ((Boolean) -> Unit)? = null
     var onResetCameraControls: (() -> Unit)? = null

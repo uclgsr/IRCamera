@@ -1,9 +1,13 @@
 package mpdc4gsr.sensors
 
 import android.util.Log
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileWriter
 
@@ -14,6 +18,7 @@ class TimeSynchronizationService {
         private const val SYNC_METADATA_FILENAME = "session_sync_metadata.csv"
     }
 
+    private val serviceScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     private var sessionReference: SessionTimestampReference? = null
     private var sessionDirectory: String? = null
 
@@ -29,7 +34,9 @@ class TimeSynchronizationService {
 
         writeSessionSyncMetadata()
 
-        logSessionStartSyncEvent()
+        serviceScope.launch {
+            logSessionStartSyncEvent()
+        }
 
         return sessionReference!!
     }

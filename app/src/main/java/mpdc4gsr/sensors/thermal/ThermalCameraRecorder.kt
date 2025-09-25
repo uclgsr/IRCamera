@@ -364,6 +364,54 @@ class ThermalCameraRecorder(
         Log.i(TAG, "Thermal network streaming disabled")
     }
 
+    public fun getThermalSystemStatus(): ThermalSystemStatus {
+        return ThermalSystemStatus(
+            isConnected = isIRCameraConnected,
+            hasUsbPermission = hasUsbPermission,
+            isRecording = _isRecording.get(),
+            isSimulationMode = isSimulationMode,
+            frameRate = thermalFrameRate,
+            framesRecorded = frameCount.get(),
+            deviceInfo = thermalCameraDevice?.let { device ->
+                ThermalDeviceInfo(
+                    productName = device.productName ?: "TC001",
+                    vendorId = device.vendorId,
+                    productId = device.productId,
+                    isEnhanced = thermalFrameRate >= 20.0
+                )
+            },
+            statusMessage = generateThermalStatusMessage()
+        )
+    }
+
+    private fun generateThermalStatusMessage(): String {
+        return when {
+            !hasUsbPermission -> "USB permission required for thermal camera"
+            !isIRCameraConnected -> "Thermal camera not connected - using simulation"
+            isSimulationMode -> "Running in simulation mode"
+            _isRecording.get() -> "Recording thermal data at ${String.format("%.1f", thermalFrameRate)}Hz"
+            else -> "Thermal camera ready"
+        }
+    }
+
+    data class ThermalSystemStatus(
+        val isConnected: Boolean,
+        val hasUsbPermission: Boolean,
+        val isRecording: Boolean,
+        val isSimulationMode: Boolean,
+        val frameRate: Double,
+        val framesRecorded: Long,
+        val deviceInfo: ThermalDeviceInfo?,
+        val statusMessage: String
+    )
+
+    data class ThermalDeviceInfo(
+        val productName: String,
+        val vendorId: Int,
+        val productId: Int,
+        val isEnhanced: Boolean
+    )
+
     override suspend fun initialize(): Boolean = withContext(Dispatchers.IO) {
         try {
             Log.i(
@@ -2059,22 +2107,12 @@ class ThermalCameraRecorder(
                 isSimulationMode = true
                 isIRCameraConnected = false
 
-                // Continue recording with other sensors - don't halt the app
-                if (_isRecording.get()) {
-                    Log.i(TAG, "Continuing recording session with simulation mode after TC001 failure")
-                    startSimulatedThermalRecording()
-                }
-            }
-        }
-    }
-
-
-    private suspend fun attemptThermalRecovery(errorType: String, errorMessage: String) {
-        try {
-            Log.i(TAG, "🔄 Attempting thermal camera recovery for: $errorType")
-
-            when {
-                errorType.contains("USB") -> {
+            override suspend fun stopRecording(): Boolean {
+                try {
+                    if (!_isRecording.get()) {
+                        Log.w(TAG, "Real IR thermal camera not recording")
+                        return true
+                    }
 
                     delay(2000)
 

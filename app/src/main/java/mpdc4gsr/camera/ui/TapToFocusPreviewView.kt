@@ -10,8 +10,8 @@ import android.widget.FrameLayout
 import androidx.camera.view.PreviewView
 
 /**
- * Composite view that wraps a CameraX PreviewView and provides tap-to-focus
- * visual feedback via a custom overlay.
+ * Custom FrameLayout that contains a PreviewView and supports tap-to-focus functionality
+ * with visual feedback for focus point
  */
 class TapToFocusPreviewView @JvmOverloads constructor(
     context: Context,
@@ -19,20 +19,7 @@ class TapToFocusPreviewView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
-    private val internalPreviewView = PreviewView(context).apply {
-        layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
-    }
-
-    private val overlayView = object : android.view.View(context) {
-        override fun onDraw(canvas: Canvas) {
-            super.onDraw(canvas)
-            drawFocusIndicator(canvas)
-        }
-    }.apply {
-        layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
-        isClickable = false
-        isFocusable = false
-    }
+    val previewView = PreviewView(context, attrs, defStyleAttr)
 
     private val focusCirclePaint = Paint().apply {
         color = Color.WHITE
@@ -57,10 +44,11 @@ class TapToFocusPreviewView @JvmOverloads constructor(
     var onTapToFocus: ((normalizedX: Float, normalizedY: Float) -> Unit)? = null
 
     init {
-        addView(internalPreviewView)
-        addView(overlayView)
-        isClickable = true
-        isFocusable = true
+        // Add the PreviewView to the FrameLayout
+        addView(previewView, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT))
+        
+        // Enable drawing for focus indicators
+        setWillNotDraw(false)
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {

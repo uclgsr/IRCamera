@@ -190,7 +190,7 @@ class RGBCameraTestActivity : AppCompatActivity() {
                 cameraRecorder = RgbCameraRecorder(
                     context = this@RGBCameraTestActivity,
                     lifecycleOwner = this@RGBCameraTestActivity,
-                    previewView = previewView.getPreviewView(),
+                    previewView = previewView.previewView,
                     useFrontCamera = false,
                     permissionManager = permissionManager
                 )
