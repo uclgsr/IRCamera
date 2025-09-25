@@ -871,13 +871,25 @@ class ComprehensiveRecordingController(
             
             // Extract sensor-specific events (dropouts and reconnections)
             val sensorEvents = sessionEvents.filter { it.sensorId == sensorName }
-            val dropouts = sensorEvents.filter { 
+            val dropoutEvents = sensorEvents.filter { 
                 it.eventType == "SENSOR_DROPOUT" || it.eventType == "SENSOR_DISCONNECTION" 
-            }.map { event ->
+            }.sortedBy { it.timestampMs }
+            val reconnectionEvents = sensorEvents.filter { 
+                it.eventType == "SENSOR_RECONNECTION_SUCCESS" || it.eventType == "SENSOR_RESUMED" 
+            }.sortedBy { it.timestampMs }
+
+            val dropouts = dropoutEvents.map { dropoutEvent ->
+                // Find the first reconnection after this dropout
+                val reconnection = reconnectionEvents.firstOrNull { it.timestampMs > dropoutEvent.timestampMs }
+                val durationMs = when {
+                    reconnection != null -> reconnection.timestampMs - dropoutEvent.timestampMs
+                    stopTime != null -> stopTime - dropoutEvent.timestampMs
+                    else -> 0L
+                }
                 DropoutEvent(
-                    timestampMs = event.timestampMs,
-                    reason = event.errorMessage ?: "Unknown reason",
-                    durationMs = 0L // Will be calculated based on reconnection events
+                    timestampMs = dropoutEvent.timestampMs,
+                    reason = dropoutEvent.errorMessage ?: "Unknown reason",
+                    durationMs = durationMs
                 )
             }
             
