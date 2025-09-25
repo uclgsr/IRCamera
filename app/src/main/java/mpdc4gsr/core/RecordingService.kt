@@ -1507,10 +1507,6 @@ class RecordingService : LifecycleService() {
                     ProtocolHandler.CommandResult(false, "Stop recording failed: ${e.message}")
                 }
             }
-                    ProtocolHandler.CommandResult(false, "Stop recording failed: ${e.message}")
-                }
-            }
-
             override suspend fun onSyncRequest(pcTimestamp: Long): ProtocolHandler.SyncResult {
                 return try {
                     val timeManager = mpdc4gsr.utils.TimeManager.getInstance(this@RecordingService)
