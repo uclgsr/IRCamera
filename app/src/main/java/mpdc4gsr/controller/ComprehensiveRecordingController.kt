@@ -38,6 +38,7 @@ class ComprehensiveRecordingController(
         private const val SHIMMER_STORAGE_MB_PER_MIN = 1.0
         private const val MIN_STORAGE_SPACE_GB = 1.0
         private const val SESSION_TIMEOUT_MS = 30000L
+        private val DEFAULT_TRIGGER_SOURCE = TriggerSource.LOCAL_UI
     }
 
     // Session orchestration enums
@@ -896,7 +897,7 @@ class ComprehensiveRecordingController(
             eventType = eventType,
             timestampMs = System.currentTimeMillis(),
             sensorId = sensorId,
-            triggerSource = triggerSource?.let { convertTriggerSource(it) },
+            triggerSource = convertTriggerSource(triggerSource ?: DEFAULT_TRIGGER_SOURCE),
             metadata = metadata,
             success = success,
             errorMessage = errorMessage
@@ -968,7 +969,7 @@ class ComprehensiveRecordingController(
             startTime = startTime,
             stopTime = stopTime,
             duration = duration,
-            triggerSource = convertTriggerSource(lastTriggerSource ?: TriggerSource.LOCAL_UI),
+            triggerSource = convertTriggerSource(lastTriggerSource ?: DEFAULT_TRIGGER_SOURCE),
             sensorActivitySummary = sensorActivitySummary,
             events = sessionEvents.toList(),
             errors = errors,
@@ -1025,7 +1026,22 @@ data class RecordingError(
     val isRecoverable: Boolean = true
 )
 
-// ComprehensiveRecordingController-specific SensorHealthInfo
+// ComprehensiveRecordingController-specific data classes
+data class ValidationResult(val isValid: Boolean, val failureReason: String)
+
+data class SessionInfoData(
+    val sessionId: String,
+    val startTime: Long,
+    val endTime: Long,
+    val durationMs: Long,
+    val durationSeconds: Double,
+    val recordingStatus: String,
+    val activeSensors: List<String>,
+    val sensorStopResults: Map<String, Boolean>,
+    val errors: List<String>?,
+    val finalizedAt: Long
+)
+
 data class ComprehensiveSensorHealthInfo(
     val name: String,
     val isHealthy: Boolean,
