@@ -309,7 +309,6 @@ class TimeSyncManager(private val context: Context) {
             startPeriodicSync()
         }
     }
-    }
     
     /**
      * Perform immediate sync response with validation and timeout handling

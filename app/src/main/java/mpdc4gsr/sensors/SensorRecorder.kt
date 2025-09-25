@@ -83,6 +83,10 @@ enum class ErrorType {
     CONNECTION_RESTORED,  // Added for enhanced reconnection feedback
     PAIRING_REQUIRED,
     DATA_PROCESSING_ERROR,
+    FEATURE_NOT_SUPPORTED,
+    HARDWARE_UNAVAILABLE,
+    OPERATION_FAILED,
+    DEVICE_NOT_SUPPORTED,
     UNKNOWN,
 }
 

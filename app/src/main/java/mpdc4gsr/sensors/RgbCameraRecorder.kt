@@ -1,6 +1,7 @@
 package mpdc4gsr.sensors
 
 import android.content.Context
+import android.graphics.ImageFormat
 import android.os.Build
 import android.util.Log
 import android.util.Range
@@ -153,10 +154,13 @@ class RgbCameraRecorder(
     private var preview: Preview? = null
     private var videoCapture: VideoCapture<Recorder>? = null
     private var imageCapture: ImageCapture? = null
+    private var rawImageCapture: ImageCapture? = null
     // Extracted managers for better code organization
     private val configurationManager = CameraConfigurationManager()
     private val controlsManager = CameraControlsManager { errorType, message ->
-        emitError(errorType, message)
+        recordingScope.launch {
+            emitError(errorType, message)
+        }
     }
     private val performanceManager = CameraPerformanceManager(context) // For Stage 3 RAW DNG capture using ImageFormat.RAW_SENSOR
     private var camera: Camera? = null
@@ -1261,7 +1265,9 @@ class RgbCameraRecorder(
                             rawFile.writeText("RAW capture frame $frameNumber - ${timestampRecord.systemNanos}")
                         }
                     }
-                } ?: run {
+                }
+                
+                if (rawImageCapture == null) {
                     Log.w(TAG, "RAW ImageCapture not available, using fallback")
                     rawFile.writeText("RAW capture frame $frameNumber - ${timestampRecord.systemNanos}")
                 }
@@ -1970,14 +1976,20 @@ class RgbCameraRecorder(
                     Log.i(TAG, "Exposure compensation set to ${evValue}EV (index: $index)")
                 } ?: run {
                     Log.w(TAG, "Camera doesn't support exposure compensation")
-                    emitError(ErrorType.FEATURE_NOT_SUPPORTED, "Exposure compensation not supported on this device")
+                    recordingScope.launch {
+                        emitError(ErrorType.FEATURE_NOT_SUPPORTED, "Exposure compensation not supported on this device")
+                    }
                 }
             } ?: run {
-                emitError(ErrorType.HARDWARE_UNAVAILABLE, "Camera not available for exposure control")
+                recordingScope.launch {
+                    emitError(ErrorType.HARDWARE_UNAVAILABLE, "Camera not available for exposure control")
+                }
             }
         } catch (e: Exception) {
             Log.w(TAG, "Failed to set exposure compensation: ${e.message}")
-            emitError(ErrorType.OPERATION_FAILED, "Failed to set exposure compensation: ${e.message}")
+            recordingScope.launch {
+                emitError(ErrorType.OPERATION_FAILED, "Failed to set exposure compensation: ${e.message}")
+            }
         }
     }
     
@@ -2011,11 +2023,15 @@ class RgbCameraRecorder(
                     Log.i(TAG, "Auto focus mode enabled")
                 }
             } ?: run {
-                emitError(ErrorType.HARDWARE_UNAVAILABLE, "Camera not available for focus control")
+                recordingScope.launch {
+                    emitError(ErrorType.HARDWARE_UNAVAILABLE, "Camera not available for focus control")
+                }
             }
         } catch (e: Exception) {
             Log.w(TAG, "Failed to set focus mode: ${e.message}")
-            emitError(ErrorType.OPERATION_FAILED, "Failed to set focus mode: ${e.message}")
+            recordingScope.launch {
+                emitError(ErrorType.OPERATION_FAILED, "Failed to set focus mode: ${e.message}")
+            }
         }
     }
     
@@ -2041,11 +2057,15 @@ class RgbCameraRecorder(
                     Log.i(TAG, "Auto focus unlocked")
                 }
             } ?: run {
-                emitError(ErrorType.HARDWARE_UNAVAILABLE, "Camera not available for focus control")
+                recordingScope.launch {
+                    emitError(ErrorType.HARDWARE_UNAVAILABLE, "Camera not available for focus control")
+                }
             }
         } catch (e: Exception) {
             Log.w(TAG, "Failed to set AF lock: ${e.message}")
-            emitError(ErrorType.OPERATION_FAILED, "Failed to set AF lock: ${e.message}")
+            recordingScope.launch {
+                emitError(ErrorType.OPERATION_FAILED, "Failed to set AF lock: ${e.message}")
+            }
         }
     }
     
@@ -2069,14 +2089,20 @@ class RgbCameraRecorder(
                     Log.i(TAG, "Tap-to-focus triggered at ($x, $y)")
                 } ?: run {
                     Log.w(TAG, "No preview available for tap-to-focus")
-                    emitError(ErrorType.FEATURE_NOT_SUPPORTED, "Preview required for tap-to-focus")
+                    recordingScope.launch {
+                        emitError(ErrorType.FEATURE_NOT_SUPPORTED, "Preview required for tap-to-focus")
+                    }
                 }
             } ?: run {
-                emitError(ErrorType.HARDWARE_UNAVAILABLE, "Camera not available for focus control")
+                recordingScope.launch {
+                    emitError(ErrorType.HARDWARE_UNAVAILABLE, "Camera not available for focus control")
+                }
             }
         } catch (e: Exception) {
             Log.w(TAG, "Failed to trigger tap-to-focus: ${e.message}")
-            emitError(ErrorType.OPERATION_FAILED, "Failed to trigger tap-to-focus: ${e.message}")
+            recordingScope.launch {
+                emitError(ErrorType.OPERATION_FAILED, "Failed to trigger tap-to-focus: ${e.message}")
+            }
         }
     }
     
@@ -2233,14 +2259,18 @@ class RgbCameraRecorder(
                 Log.i(TAG, "Available features: 4K=${capabilities["supports_4k"]}, RAW=${capabilities["supports_raw"]}, 60fps=${capabilities["supports_60fps"]}")
             } else {
                 Log.w(TAG, "Device requirements not met: ${requirements.joinToString(", ")}")
-                emitError(ErrorType.DEVICE_NOT_SUPPORTED, "Device requirements not met: ${requirements.joinToString(", ")}")
+                recordingScope.launch {
+                    emitError(ErrorType.DEVICE_NOT_SUPPORTED, "Device requirements not met: ${requirements.joinToString(", ")}")
+                }
             }
             
             meetsRequirements
             
         } catch (e: Exception) {
             Log.e(TAG, "Error validating device requirements: ${e.message}")
-            emitError(ErrorType.DEVICE_NOT_SUPPORTED, "Could not validate device requirements: ${e.message}")
+            recordingScope.launch {
+                emitError(ErrorType.DEVICE_NOT_SUPPORTED, "Could not validate device requirements: ${e.message}")
+            }
             false
         }
     }

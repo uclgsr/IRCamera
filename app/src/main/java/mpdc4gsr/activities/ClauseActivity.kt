@@ -19,7 +19,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import mpdc4gsr.app.App
+import mpdc4gsr.core.App
 import mpdc4gsr.utils.VersionUtils
 import java.util.Calendar
 import com.mpdc4gsr.libunified.R as LibCoreR
