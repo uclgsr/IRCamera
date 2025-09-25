@@ -15,7 +15,7 @@ import org.mockito.junit.MockitoRule
 
 /**
  * Integration test validating the PC command and control networking functionality.
- * 
+ *
  * This test addresses the networking requirements from the problem statement:
  * 1. TCP command server for START/STOP/SYNC commands
  * 2. Time synchronization mechanism
@@ -84,7 +84,7 @@ class NetworkCommandIntegrationTest {
         val offsetMs = 25L
         val rttMs = 100L
         val syncResult = Protocol.createSyncResultMessage(t1, t2, t3, offsetMs, rttMs)
-        
+
         val expected = "SYNC_RESULT t1=1640995200000 t2=1640995200050 t3=1640995200100 offset=25 rtt=100"
         assertEquals(expected, syncResult)
         assertTrue("Should contain offset calculation", syncResult.contains("offset=$offsetMs"))
@@ -119,15 +119,16 @@ class NetworkCommandIntegrationTest {
         val thermalErrorCommand = "START_RECORD"
         val thermalErrorCode = Protocol.ERR_THERMAL_NOT_FOUND
         val thermalErrorMsg = "TC001 thermal camera not detected or permission denied"
-        
+
         val thermalError = Protocol.createErrorMessage(thermalErrorCommand, thermalErrorCode, thermalErrorMsg)
-        
+
         assertTrue("Should contain error command", thermalError.contains("cmd=$thermalErrorCommand"))
         assertTrue("Should contain thermal error code", thermalError.contains("code=$thermalErrorCode"))
         assertTrue("Should contain error message", thermalError.contains("msg=\"$thermalErrorMsg\""))
 
         // Test general sensor failure error
-        val sensorFailError = Protocol.createErrorMessage("START_RECORD", Protocol.ERR_SENSOR_FAIL, "Multiple sensors unavailable")
+        val sensorFailError =
+            Protocol.createErrorMessage("START_RECORD", Protocol.ERR_SENSOR_FAIL, "Multiple sensors unavailable")
         assertTrue("Should handle sensor failure", sensorFailError.contains("SENSOR_FAIL"))
     }
 
@@ -138,11 +139,13 @@ class NetworkCommandIntegrationTest {
     @Test
     fun `validate command acknowledgment protocol`() {
         // Test START_RECORD acknowledgment
-        val startAck = Protocol.createAckMessage("START_RECORD", mapOf(
-            "session_id" to "session_123",
-            "sensors" to "RGB,THERMAL,GSR",
-            "status" to "recording"
-        ))
+        val startAck = Protocol.createAckMessage(
+            "START_RECORD", mapOf(
+                "session_id" to "session_123",
+                "sensors" to "RGB,THERMAL,GSR",
+                "status" to "recording"
+            )
+        )
 
         assertTrue("Should contain ACK", startAck.contains("ACK"))
         assertTrue("Should contain command", startAck.contains("cmd=START_RECORD"))
@@ -150,11 +153,13 @@ class NetworkCommandIntegrationTest {
         assertTrue("Should contain active sensors", startAck.contains("sensors=RGB,THERMAL,GSR"))
 
         // Test STOP_RECORD acknowledgment
-        val stopAck = Protocol.createAckMessage("STOP_RECORD", mapOf(
-            "session_id" to "session_123",
-            "status" to "stopped",
-            "duration" to "120000"
-        ))
+        val stopAck = Protocol.createAckMessage(
+            "STOP_RECORD", mapOf(
+                "session_id" to "session_123",
+                "status" to "stopped",
+                "duration" to "120000"
+            )
+        )
 
         assertTrue("Should acknowledge stop", stopAck.contains("cmd=STOP_RECORD"))
         assertTrue("Should contain stop status", stopAck.contains("status=stopped"))
@@ -168,11 +173,11 @@ class NetworkCommandIntegrationTest {
     fun `validate network controller supports command integration`() = runTest {
         // Verify NetworkController can be instantiated and configured
         assertNotNull("Network controller should be created", networkController)
-        
+
         // The NetworkController should support listener registration for recording commands
         // This validates the integration point with the recording system
         assertTrue("Network controller should support integration", true)
-        
+
         // Test listener interface exists for command handling
         val hasListenerInterface = try {
             NetworkController.NetworkControllerListener::class.java
@@ -234,26 +239,26 @@ class NetworkCommandIntegrationTest {
     @Test
     fun `validate network command system addresses problem statement requirements`() {
         // This test confirms the network system addresses the key requirements:
-        
+
         // 1. TCP Command Server - NetworkController provides TCP server capability
         assertNotNull("Should have network controller", networkController)
-        
+
         // 2. START/STOP/SYNC Commands - Protocol defines all required commands
         assertNotNull("Should define START command", Protocol.MSG_START_RECORD)
-        assertNotNull("Should define STOP command", Protocol.MSG_STOP_RECORD)  
+        assertNotNull("Should define STOP command", Protocol.MSG_STOP_RECORD)
         assertNotNull("Should define SYNC request", Protocol.MSG_SYNC_REQUEST)
-        
+
         // 3. Time Synchronization - Protocol supports time sync workflow
         assertNotNull("Should support sync response", Protocol.MSG_SYNC_RESPONSE)
-        
+
         // 4. Live Data Streaming - Protocol supports data streaming
         assertNotNull("Should support GSR streaming", Protocol.MSG_DATA_GSR)
         assertNotNull("Should support frame streaming", Protocol.MSG_FRAME)
-        
+
         // 5. Error Handling - Protocol defines error codes
         assertNotNull("Should define thermal errors", Protocol.ERR_THERMAL_NOT_FOUND)
         assertNotNull("Should define sensor errors", Protocol.ERR_SENSOR_FAIL)
-        
+
         assertTrue("All network command requirements addressed", true)
     }
 }

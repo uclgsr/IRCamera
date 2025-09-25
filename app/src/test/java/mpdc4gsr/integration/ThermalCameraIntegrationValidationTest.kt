@@ -18,7 +18,7 @@ import java.io.File
 
 /**
  * Integration test validating the key thermal camera issues from the problem statement.
- * 
+ *
  * This test specifically addresses:
  * 1. Real SDK integration vs dummy data
  * 2. USB permission handling and hot-plug detection
@@ -78,7 +78,7 @@ class ThermalCameraIntegrationValidationTest {
         assertTrue("Should initialize with real SDK", initResult)
         assertEquals("Should use thermal camera sensor ID", "thermal_camera_1", thermalRecorder.sensorId)
         assertEquals("Should identify as IR Thermal Camera", "IR Thermal Camera", thermalRecorder.sensorType)
-        
+
         // Validate frame rate is set for real hardware
         val frameRate = thermalRecorder.samplingRate
         assertTrue("Frame rate should be in 9-10Hz range for real hardware", frameRate >= 8.0 && frameRate <= 11.0)
@@ -136,7 +136,7 @@ class ThermalCameraIntegrationValidationTest {
     fun `validate thermal camera frame rate configuration`() {
         // The thermal recorder should be configured for ~10Hz operation
         val samplingRate = thermalRecorder.samplingRate
-        
+
         // Allow for 9Hz (standard TC001) to 10Hz range
         assertTrue(
             "Sampling rate should be approximately 10Hz (got $samplingRate)",

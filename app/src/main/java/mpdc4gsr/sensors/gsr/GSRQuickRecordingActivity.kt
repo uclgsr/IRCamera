@@ -13,8 +13,8 @@ import com.csl.irCamera.databinding.ActivityGsrQuickRecordingBinding
 import com.mpdc4gsr.libunified.app.ktbase.BaseBindingActivity
 import kotlinx.coroutines.launch
 import mpdc4gsr.controller.ComprehensiveRecordingController
-import mpdc4gsr.permissions.PermissionManager
 import mpdc4gsr.permissions.PermissionController
+import mpdc4gsr.permissions.PermissionManager
 
 class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingBinding>() {
     companion object {

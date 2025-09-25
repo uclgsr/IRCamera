@@ -152,7 +152,7 @@ class SessionManager:
         try:
             with open(metadata_file, "r", encoding="utf-8") as f:
                 data = json.load(f)
-            
+
             # Convert dict back to SessionMetadata
             return SessionMetadata(**data)
         except Exception as e:
@@ -183,10 +183,10 @@ class SessionManager:
             self._current_session.duration_seconds = (ended - started).total_seconds()
 
         self._save_metadata()
-        
+
         session = self._current_session
         self._current_session = None
-        
+
         logger.info(f"Session ended: {session.name}")
         return session
 

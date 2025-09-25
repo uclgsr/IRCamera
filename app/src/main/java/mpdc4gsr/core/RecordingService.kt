@@ -29,7 +29,6 @@ import mpdc4gsr.config.FeatureFlags
 import mpdc4gsr.config.ProtocolVersion
 import mpdc4gsr.controller.ComprehensiveRecordingController
 import mpdc4gsr.controller.RecordingState
-import mpdc4gsr.core.CrashRecoveryManager
 import mpdc4gsr.network.NetworkClient
 import mpdc4gsr.network.NetworkConnectionManager
 import mpdc4gsr.network.NetworkManager
@@ -248,7 +247,7 @@ class RecordingService : LifecycleService() {
         // Initialize ComprehensiveRecordingController without PermissionManager for service context
         // PermissionManager requires FragmentActivity which is not available in service context
         recordingController = ComprehensiveRecordingController(this, this, null)
-        
+
         // Initialize crash recovery manager for session orchestration
         crashRecoveryManager = CrashRecoveryManager(this)
 
@@ -692,7 +691,10 @@ class RecordingService : LifecycleService() {
     }
 
     // Enhanced recording methods with trigger source support for session orchestration
-    private suspend fun startRecordingSessionWithTrigger(sessionDirectory: String, triggerSource: ComprehensiveRecordingController.TriggerSource): Boolean {
+    private suspend fun startRecordingSessionWithTrigger(
+        sessionDirectory: String,
+        triggerSource: ComprehensiveRecordingController.TriggerSource
+    ): Boolean {
         if (!isInitialized) {
             Log.e(TAG, "Service not initialized, cannot start recording")
             structuredLogger.log(
@@ -739,7 +741,7 @@ class RecordingService : LifecycleService() {
                 ComprehensiveRecordingController.TriggerSource.LOCAL_NOTIFICATION -> "Starting recording session (Notification)..."
                 else -> "Starting recording session..."
             }
-            
+
             startForeground(NOTIFICATION_ID, createRecordingNotification(notificationText))
 
             // Start session with enhanced orchestration
@@ -750,7 +752,7 @@ class RecordingService : LifecycleService() {
 
             if (success) {
                 Log.i(TAG, "Recording session started successfully via ${triggerSource.name}")
-                
+
                 // Update notification to show recording is active
                 val activeNotificationText = when (triggerSource) {
                     ComprehensiveRecordingController.TriggerSource.REMOTE_PC -> "Recording (PC Command) - Tap to stop"
@@ -758,14 +760,14 @@ class RecordingService : LifecycleService() {
                     else -> "Recording - Tap to stop"
                 }
                 updateNotification(activeNotificationText)
-                
+
                 // Mark session as active for crash recovery
                 crashRecoveryManager.markSessionActive(
                     sessionId = sessionDir.name,
                     sessionDirectory = sessionDirectory,
                     activeSensors = recordingController.getAvailableSensors().map { it.sensorId }
                 )
-                
+
                 structuredLogger.log(
                     StructuredLogger.LogLevel.INFO,
                     "RecordingService",
@@ -813,11 +815,31 @@ class RecordingService : LifecycleService() {
                     (System.nanoTime() - recordingStartTime) / 1_000_000_000.0
                 } else 0.0
 
-                Log.i(TAG, "Recording session stopped successfully (duration: ${String.format("%.1f", sessionDuration)}s, trigger: ${triggerSource.name})")
-                
+                Log.i(
+                    TAG,
+                    "Recording session stopped successfully (duration: ${
+                        String.format(
+                            "%.1f",
+                            sessionDuration
+                        )
+                    }s, trigger: ${triggerSource.name})"
+                )
+
                 val completedNotificationText = when (triggerSource) {
-                    ComprehensiveRecordingController.TriggerSource.REMOTE_PC -> "Recording completed via PC (${String.format("%.1f", sessionDuration)}s)"
-                    ComprehensiveRecordingController.TriggerSource.LOCAL_NOTIFICATION -> "Recording completed via notification (${String.format("%.1f", sessionDuration)}s)"
+                    ComprehensiveRecordingController.TriggerSource.REMOTE_PC -> "Recording completed via PC (${
+                        String.format(
+                            "%.1f",
+                            sessionDuration
+                        )
+                    }s)"
+
+                    ComprehensiveRecordingController.TriggerSource.LOCAL_NOTIFICATION -> "Recording completed via notification (${
+                        String.format(
+                            "%.1f",
+                            sessionDuration
+                        )
+                    }s)"
+
                     else -> "Recording completed (${String.format("%.1f", sessionDuration)}s)"
                 }
                 updateNotification(completedNotificationText)
@@ -868,7 +890,7 @@ class RecordingService : LifecycleService() {
             if (!isServerRunning.get()) {
                 stopSelf()
             }
-            
+
             success
         } catch (e: Exception) {
             Log.e(TAG, "Error stopping recording session via ${triggerSource.name}", e)
@@ -894,7 +916,7 @@ class RecordingService : LifecycleService() {
                 val gson = com.google.gson.GsonBuilder().setPrettyPrinting().create()
                 manifestFile.writeText(gson.toJson(manifest))
                 Log.i(TAG, "Session manifest saved: ${manifestFile.absolutePath}")
-                
+
                 structuredLogger.log(
                     StructuredLogger.LogLevel.INFO,
                     "RecordingService",
@@ -922,12 +944,12 @@ class RecordingService : LifecycleService() {
         try {
             Log.i(TAG, "Checking for crashed sessions on service startup")
             val crashRecoveryResult = crashRecoveryManager.checkForCrashedSessions()
-            
+
             if (crashRecoveryResult.hasCrashedSession) {
                 val recoveredSession = crashRecoveryResult.recoveredSession!!
                 Log.w(TAG, "Found crashed session: ${recoveredSession.sessionId}")
                 Log.i(TAG, "Crashed session analysis: ${recoveredSession.analysis.summary}")
-                
+
                 structuredLogger.log(
                     StructuredLogger.LogLevel.WARNING,
                     "RecordingService",
@@ -940,13 +962,13 @@ class RecordingService : LifecycleService() {
                         "partial_data_size" to recoveredSession.analysis.partialDataSize.toString()
                     )
                 )
-                
+
                 // Perform recovery
                 val recoveryResult = crashRecoveryManager.recoverCrashedSession(recoveredSession)
                 if (recoveryResult.success) {
                     Log.i(TAG, "Successfully recovered crashed session: ${recoveredSession.sessionId}")
                     Log.i(TAG, "Recovery actions performed: ${recoveryResult.recoveryActions.size}")
-                    
+
                     structuredLogger.log(
                         StructuredLogger.LogLevel.INFO,
                         "RecordingService",
@@ -1458,7 +1480,10 @@ class RecordingService : LifecycleService() {
                 return try {
                     Log.i(TAG, "Remote start recording command received for session: $sessionId")
                     // Use REMOTE_PC trigger source for session orchestration
-                    val success = startRecordingSessionWithTrigger(sessionId, ComprehensiveRecordingController.TriggerSource.REMOTE_PC)
+                    val success = startRecordingSessionWithTrigger(
+                        sessionId,
+                        ComprehensiveRecordingController.TriggerSource.REMOTE_PC
+                    )
                     if (success) {
                         ProtocolHandler.CommandResult(
                             success = true,
@@ -1485,7 +1510,8 @@ class RecordingService : LifecycleService() {
                 return try {
                     Log.i(TAG, "Remote stop recording command received for session: $sessionId")
                     // Use REMOTE_PC trigger source for session orchestration  
-                    val success = stopRecordingSessionWithTrigger(ComprehensiveRecordingController.TriggerSource.REMOTE_PC)
+                    val success =
+                        stopRecordingSessionWithTrigger(ComprehensiveRecordingController.TriggerSource.REMOTE_PC)
                     if (success) {
                         ProtocolHandler.CommandResult(
                             success = true,
@@ -1507,6 +1533,7 @@ class RecordingService : LifecycleService() {
                     return ProtocolHandler.CommandResult(false, "Stop recording failed: ${e.message}")
                 }
             }
+
             override suspend fun onSyncRequest(pcTimestamp: Long): ProtocolHandler.SyncResult {
                 return try {
                     val timeManager = mpdc4gsr.utils.TimeManager.getInstance(this@RecordingService)

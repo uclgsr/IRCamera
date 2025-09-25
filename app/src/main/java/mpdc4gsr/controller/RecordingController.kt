@@ -262,7 +262,10 @@ class RecordingController(
                     Log.e(TAG, "❌ Insufficient storage space: ${storageStatus.formattedAvailable} available")
                     transitionSessionState(SessionState.STARTING, SessionState.STOPPED_FAILED)
                     _recordingStateFlow.value = RecordingState.ERROR
-                    addSessionEvent("STORAGE_CHECK_FAILED", errorMessage = "Insufficient storage: ${storageStatus.formattedAvailable}")
+                    addSessionEvent(
+                        "STORAGE_CHECK_FAILED",
+                        errorMessage = "Insufficient storage: ${storageStatus.formattedAvailable}"
+                    )
                     emitError(
                         RecordingControllerError(
                             errorType = "STORAGE_FULL",
@@ -280,7 +283,10 @@ class RecordingController(
 
                 if (storageStatus.shouldWarn) {
                     Log.w(TAG, "⚠️ Low storage warning: ${storageStatus.formattedAvailable} available")
-                    addSessionEvent("STORAGE_WARNING", metadata = mapOf("available" to storageStatus.formattedAvailable))
+                    addSessionEvent(
+                        "STORAGE_WARNING",
+                        metadata = mapOf("available" to storageStatus.formattedAvailable)
+                    )
                     emitError(
                         RecordingControllerError(
                             errorType = "STORAGE_WARNING",
@@ -410,7 +416,12 @@ class RecordingController(
                         } catch (e: Exception) {
                             Log.w(TAG, "Exception starting sensor $sensorName", e)
                             updateSensorHealth(sensorName, false, "Start exception: ${e.message}")
-                            addSessionEvent("SENSOR_START_EXCEPTION", sensorId = sensorName, success = false, errorMessage = e.message)
+                            addSessionEvent(
+                                "SENSOR_START_EXCEPTION",
+                                sensorId = sensorName,
+                                success = false,
+                                errorMessage = e.message
+                            )
                             emitError(
                                 RecordingControllerError(
                                     errorType = "SENSOR_START_EXCEPTION",
@@ -442,8 +453,10 @@ class RecordingController(
                     }
                     Log.w(TAG, "✗ Sensor $sensorName: FAILED$errorDetails")
                     updateSensorHealth(sensorName, false, "Start failed$errorDetails")
-                    addSessionEvent("SENSOR_START_FAILED", sensorId = sensorName, success = false, 
-                                    errorMessage = "Start failed$errorDetails")
+                    addSessionEvent(
+                        "SENSOR_START_FAILED", sensorId = sensorName, success = false,
+                        errorMessage = "Start failed$errorDetails"
+                    )
                     emitError(
                         RecordingControllerError(
                             errorType = "SENSOR_START_FAILED",
@@ -459,14 +472,16 @@ class RecordingController(
                 if (successfulStarts.isNotEmpty()) {
                     _isRecording.set(true)
                     _recordingStateFlow.value = RecordingState.RECORDING
-                    
+
                     // Transition to RECORDING state
                     transitionSessionState(SessionState.STARTING, SessionState.RECORDING)
-                    addSessionEvent("SESSION_RECORDING_STARTED", success = true, metadata = mapOf(
-                        "active_sensors" to successfulStarts.size.toString(),
-                        "total_sensors" to startResults.size.toString(),
-                        "partial_start" to (failedStarts.isNotEmpty()).toString()
-                    ))
+                    addSessionEvent(
+                        "SESSION_RECORDING_STARTED", success = true, metadata = mapOf(
+                            "active_sensors" to successfulStarts.size.toString(),
+                            "total_sensors" to startResults.size.toString(),
+                            "partial_start" to (failedStarts.isNotEmpty()).toString()
+                        )
+                    )
 
                     addSyncMarker("session_start", sessionStartTimestampNs)
 
@@ -494,7 +509,11 @@ class RecordingController(
                     // No sensors started successfully - abort session
                     _recordingStateFlow.value = RecordingState.ERROR
                     transitionSessionState(SessionState.STARTING, SessionState.STOPPED_FAILED)
-                    addSessionEvent("SESSION_START_FAILED", success = false, errorMessage = "No sensors could be started")
+                    addSessionEvent(
+                        "SESSION_START_FAILED",
+                        success = false,
+                        errorMessage = "No sensors could be started"
+                    )
 
 
                     currentSessionDirectory?.let { sessionDir ->
@@ -725,7 +744,10 @@ class RecordingController(
                 // Transition to STOPPING state
                 val transitionSuccess = transitionSessionState(SessionState.RECORDING, SessionState.STOPPING)
                 if (!transitionSuccess) {
-                    Log.w(TAG, "Failed to transition to STOPPING state - current state: ${currentSessionState.get().name}")
+                    Log.w(
+                        TAG,
+                        "Failed to transition to STOPPING state - current state: ${currentSessionState.get().name}"
+                    )
                 }
 
                 addSessionEvent("SESSION_STOP_REQUESTED", triggerSource = triggerSource)
@@ -760,18 +782,20 @@ class RecordingController(
                 // Determine final session state based on stop results
                 val finalSessionState = when {
                     stopResult.isEmpty() -> SessionState.STOPPED_COMPLETED
-                    stopResult.values.all { it } -> SessionState.STOPPED_COMPLETED  
+                    stopResult.values.all { it } -> SessionState.STOPPED_COMPLETED
                     stopResult.values.any { it } -> SessionState.STOPPED_INCOMPLETE
                     else -> SessionState.STOPPED_FAILED
                 }
 
                 transitionSessionState(SessionState.STOPPING, finalSessionState)
-                addSessionEvent("SESSION_FINALIZED", success = true, metadata = mapOf(
-                    "duration_seconds" to sessionDuration.toString(),
-                    "final_state" to finalSessionState.name,
-                    "stopped_sensors" to stopResult.size.toString(),
-                    "successful_stops" to stopResult.values.count { it }.toString()
-                ))
+                addSessionEvent(
+                    "SESSION_FINALIZED", success = true, metadata = mapOf(
+                        "duration_seconds" to sessionDuration.toString(),
+                        "final_state" to finalSessionState.name,
+                        "stopped_sensors" to stopResult.size.toString(),
+                        "successful_stops" to stopResult.values.count { it }.toString()
+                    )
+                )
 
                 currentSessionDirectory?.let { sessionDir ->
                     val stopErrors = stopResult.filterValues { success -> !success }
@@ -807,7 +831,12 @@ class RecordingController(
                 Log.e(TAG, "Failed to stop recording session (trigger: ${triggerSource.name})", e)
                 _recordingStateFlow.value = RecordingState.ERROR
                 transitionSessionState(currentSessionState.get(), SessionState.STOPPED_FAILED)
-                addSessionEvent("SESSION_STOP_ERROR", triggerSource = triggerSource, success = false, errorMessage = e.message)
+                addSessionEvent(
+                    "SESSION_STOP_ERROR",
+                    triggerSource = triggerSource,
+                    success = false,
+                    errorMessage = e.message
+                )
 
                 currentSessionDirectory?.let { sessionDir ->
                     sessionDirectoryManager.updateSessionMetadata(
@@ -1699,12 +1728,17 @@ class RecordingController(
         return currentSessionState.compareAndSet(from, to).also { success ->
             if (success) {
                 Log.d(TAG, "Session state transition: ${from.name} -> ${to.name}")
-                addSessionEvent("STATE_TRANSITION", metadata = mapOf(
-                    "from" to from.name,
-                    "to" to to.name
-                ))
+                addSessionEvent(
+                    "STATE_TRANSITION", metadata = mapOf(
+                        "from" to from.name,
+                        "to" to to.name
+                    )
+                )
             } else {
-                Log.w(TAG, "Failed session state transition: ${from.name} -> ${to.name} (current: ${currentSessionState.get().name})")
+                Log.w(
+                    TAG,
+                    "Failed session state transition: ${from.name} -> ${to.name} (current: ${currentSessionState.get().name})"
+                )
             }
         }
     }
@@ -1738,16 +1772,16 @@ class RecordingController(
             lastHealthCheck = 0L,
             consecutiveFailures = 0
         )
-        
+
         val updatedHealth = currentHealth.copy(
             isHealthy = isHealthy,
             lastHealthCheck = System.currentTimeMillis(),
             consecutiveFailures = if (isHealthy) 0 else currentHealth.consecutiveFailures + 1,
             lastError = error
         )
-        
+
         sensorHealthStatus[sensorName] = updatedHealth
-        
+
         if (!isHealthy && updatedHealth.consecutiveFailures >= 3) {
             Log.w(TAG, "Sensor $sensorName has failed ${updatedHealth.consecutiveFailures} consecutive times")
             addSessionEvent("SENSOR_HEALTH_CRITICAL", sensorId = sensorName, success = false, errorMessage = error)
@@ -1758,28 +1792,30 @@ class RecordingController(
     private suspend fun attemptSensorReconnection(sensorName: String): Boolean {
         val currentAttempts = reconnectionAttempts[sensorName] ?: 0
         val maxAttempts = 3
-        
+
         if (currentAttempts >= maxAttempts) {
             Log.w(TAG, "Max reconnection attempts reached for $sensorName")
             activeRecorders[sensorName] = false
             addSessionEvent("SENSOR_RECONNECTION_EXHAUSTED", sensorId = sensorName, success = false)
             return false
         }
-        
+
         Log.i(TAG, "Attempting to reconnect sensor $sensorName (attempt ${currentAttempts + 1}/$maxAttempts)")
         reconnectionAttempts[sensorName] = currentAttempts + 1
-        addSessionEvent("SENSOR_RECONNECTION_ATTEMPT", sensorId = sensorName, metadata = mapOf(
-            "attempt" to "${currentAttempts + 1}",
-            "max_attempts" to "$maxAttempts"
-        ))
-        
+        addSessionEvent(
+            "SENSOR_RECONNECTION_ATTEMPT", sensorId = sensorName, metadata = mapOf(
+                "attempt" to "${currentAttempts + 1}",
+                "max_attempts" to "$maxAttempts"
+            )
+        )
+
         val sensor = sensorRecorders[sensorName]
         if (sensor != null) {
             try {
                 // Stop and clean up current state
                 sensor.stopRecording()
                 delay(1000)
-                
+
                 // Attempt reconnection based on sensor type
                 val reconnectSuccess = when (sensorName.uppercase()) {
                     "GSR", "SHIMMER" -> {
@@ -1791,6 +1827,7 @@ class RecordingController(
                             false
                         }
                     }
+
                     "THERMAL" -> {
                         // Thermal camera USB reconnection
                         try {
@@ -1800,6 +1837,7 @@ class RecordingController(
                             false
                         }
                     }
+
                     "RGB" -> {
                         // RGB camera is usually always available
                         try {
@@ -1809,9 +1847,10 @@ class RecordingController(
                             false
                         }
                     }
+
                     else -> false
                 }
-                
+
                 if (reconnectSuccess) {
                     Log.i(TAG, "Successfully reconnected sensor $sensorName")
                     reconnectionAttempts[sensorName] = 0
@@ -1823,14 +1862,19 @@ class RecordingController(
                     updateSensorHealth(sensorName, false, "Reconnection failed")
                     addSessionEvent("SENSOR_RECONNECTION_FAILED", sensorId = sensorName, success = false)
                 }
-                
+
             } catch (e: Exception) {
                 Log.e(TAG, "Exception during sensor reconnection for $sensorName", e)
                 updateSensorHealth(sensorName, false, "Reconnection exception: ${e.message}")
-                addSessionEvent("SENSOR_RECONNECTION_EXCEPTION", sensorId = sensorName, success = false, errorMessage = e.message)
+                addSessionEvent(
+                    "SENSOR_RECONNECTION_EXCEPTION",
+                    sensorId = sensorName,
+                    success = false,
+                    errorMessage = e.message
+                )
             }
         }
-        
+
         return false
     }
 
@@ -1841,7 +1885,7 @@ class RecordingController(
                 try {
                     // Check health of all active sensors
                     val activeSensorNames = activeRecorders.filter { it.value }.keys.toList()
-                    
+
                     for (sensorName in activeSensorNames) {
                         val sensor = sensorRecorders[sensorName]
                         if (sensor != null) {
@@ -1849,14 +1893,16 @@ class RecordingController(
                                 // Check if sensor is still recording
                                 val isStillRecording = sensor.isRecording
                                 val healthInfo = sensorHealthStatus[sensorName]
-                                
+
                                 if (!isStillRecording && activeRecorders[sensorName] == true) {
                                     // Sensor stopped unexpectedly - attempt reconnection
                                     Log.w(TAG, "Sensor $sensorName stopped unexpectedly during session")
                                     updateSensorHealth(sensorName, false, "Unexpected stop during recording")
-                                    addSessionEvent("SENSOR_DROPOUT", sensorId = sensorName, success = false, 
-                                                  errorMessage = "Sensor stopped unexpectedly")
-                                    
+                                    addSessionEvent(
+                                        "SENSOR_DROPOUT", sensorId = sensorName, success = false,
+                                        errorMessage = "Sensor stopped unexpectedly"
+                                    )
+
                                     // Attempt automatic reconnection
                                     val reconnectSuccess = attemptSensorReconnection(sensorName)
                                     if (reconnectSuccess) {
@@ -1864,12 +1910,20 @@ class RecordingController(
                                         currentSessionDirectory?.let { sessionDir ->
                                             val sensorDir = resolveSensorDirectory(sessionDir, sensorName)
                                             sessionMetadata?.let { metadata ->
-                                                val restartSuccess = sensor.startRecording(sensorDir.absolutePath, metadata)
+                                                val restartSuccess =
+                                                    sensor.startRecording(sensorDir.absolutePath, metadata)
                                                 if (restartSuccess) {
                                                     activeRecorders[sensorName] = true
                                                     updateSensorHealth(sensorName, true)
-                                                    addSessionEvent("SENSOR_RESUMED", sensorId = sensorName, success = true)
-                                                    Log.i(TAG, "Sensor $sensorName resumed recording after reconnection")
+                                                    addSessionEvent(
+                                                        "SENSOR_RESUMED",
+                                                        sensorId = sensorName,
+                                                        success = true
+                                                    )
+                                                    Log.i(
+                                                        TAG,
+                                                        "Sensor $sensorName resumed recording after reconnection"
+                                                    )
                                                 }
                                             }
                                         }
@@ -1884,10 +1938,10 @@ class RecordingController(
                             }
                         }
                     }
-                    
+
                     // Update sensor status flow for UI
                     updateSensorStatusFlow()
-                    
+
                     // Wait before next health check
                     delay(STATUS_UPDATE_INTERVAL_MS)
                 } catch (e: Exception) {
@@ -1907,7 +1961,7 @@ class RecordingController(
                 timestamp = System.currentTimeMillis()
             )
         }
-        
+
         controllerScope.launch {
             _sensorStatusFlow.emit(statusList)
         }
@@ -1917,16 +1971,21 @@ class RecordingController(
     fun generateSessionManifest(): SessionManifest {
         val sessionDirectory = currentSessionDirectory?.rootDir?.name ?: "unknown"
         val startTime = sessionStartTimestampMs
-        val stopTime = if (currentSessionState.get() in listOf(SessionState.STOPPED_COMPLETED, SessionState.STOPPED_FAILED, SessionState.STOPPED_INCOMPLETE)) {
+        val stopTime = if (currentSessionState.get() in listOf(
+                SessionState.STOPPED_COMPLETED,
+                SessionState.STOPPED_FAILED,
+                SessionState.STOPPED_INCOMPLETE
+            )
+        ) {
             System.currentTimeMillis()
         } else null
-        
+
         val duration = stopTime?.let { it - startTime }
-        
+
         val sensorActivitySummary = sensorRecorders.keys.associateWith { sensorName ->
             val wasActive = activeRecorders[sensorName] == true
             val healthInfo = sensorHealthStatus[sensorName]
-            
+
             SensorActivityInfo(
                 sensorName = sensorName,
                 wasActive = wasActive,
@@ -1935,15 +1994,15 @@ class RecordingController(
                 errorMessages = healthInfo?.lastError?.let { listOf(it) } ?: emptyList()
             )
         }
-        
-        val errors = sessionEvents.filter { !it.success }.map { 
+
+        val errors = sessionEvents.filter { !it.success }.map {
             "${it.eventType}: ${it.errorMessage ?: "Unknown error"}"
         }
-        
-        val warnings = sessionEvents.filter { 
+
+        val warnings = sessionEvents.filter {
             it.eventType.contains("WARNING") || it.eventType.contains("CRITICAL")
         }.map { "${it.eventType}: ${it.metadata}" }
-        
+
         return SessionManifest(
             sessionId = sessionDirectory,
             startTime = startTime,

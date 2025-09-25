@@ -22,7 +22,6 @@ import com.csl.irCamera.R
 import com.csl.irCamera.databinding.ActivityGsrSettingsBinding
 import com.mpdc4gsr.libunified.app.ktbase.BaseBindingActivity
 import kotlinx.coroutines.launch
-import mpdc4gsr.controller.RecordingController
 import mpdc4gsr.permissions.PermissionController
 
 class GSRSettingsActivity : BaseBindingActivity<ActivityGsrSettingsBinding>() {

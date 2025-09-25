@@ -169,7 +169,7 @@ class RealShimmerDevice(
     private fun handleStateChange(msg: android.os.Message) {
         try {
             Log.d(TAG, "Shimmer state change message received")
-            
+
             // Use simplified approach for state handling
             val state = msg.what
             Log.d(TAG, "Shimmer state change: state=$state")
@@ -207,11 +207,11 @@ class RealShimmerDevice(
     private fun handleDataPacket(msg: android.os.Message) {
         try {
             Log.d(TAG, "Shimmer data packet received")
-            
+
             // Try to extract ObjectCluster from the message
             try {
                 val shimmerMsg = msg.obj as? com.shimmerresearch.driver.ShimmerMsg
-                val objectCluster = shimmerMsg?.let { 
+                val objectCluster = shimmerMsg?.let {
                     try {
                         it.mB as? ObjectCluster
                     } catch (e: Exception) {
@@ -219,7 +219,7 @@ class RealShimmerDevice(
                         null
                     }
                 }
-                
+
                 if (objectCluster != null) {
                     handleShimmerData(objectCluster)
                 } else {
@@ -228,7 +228,7 @@ class RealShimmerDevice(
             } catch (e: Exception) {
                 Log.w(TAG, "Could not process data packet", e)
             }
-            
+
         } catch (e: Exception) {
             Log.e(TAG, "Error handling Shimmer data packet", e)
         }

@@ -211,7 +211,7 @@ class RealShimmerDevice(
     private fun handleStateChange(msg: Message) {
         try {
             Log.d(TAG, "Shimmer state change message received")
-            
+
             // For now, use a simplified approach that doesn't rely on specific ShimmerMsg properties
             // This avoids compilation issues while maintaining basic functionality
             val state = msg.what
@@ -254,12 +254,12 @@ class RealShimmerDevice(
     private fun handleDataPacket(msg: Message) {
         try {
             Log.d(TAG, "Shimmer data packet received")
-            
+
             // Try to extract ObjectCluster from the message
             // The actual data should be in msg.obj as ShimmerMsg, but we need to handle it safely
             try {
                 val shimmerMsg = msg.obj as? ShimmerMsg
-                val objectCluster = shimmerMsg?.let { 
+                val objectCluster = shimmerMsg?.let {
                     // Try to get the ObjectCluster from the message
                     // This is a simplified approach that may need adjustment based on actual SDK structure
                     try {
@@ -269,7 +269,7 @@ class RealShimmerDevice(
                         null
                     }
                 }
-                
+
                 if (objectCluster != null) {
                     handleShimmerData(objectCluster)
                 } else {
@@ -278,7 +278,7 @@ class RealShimmerDevice(
             } catch (e: Exception) {
                 Log.w(TAG, "Could not process data packet", e)
             }
-            
+
         } catch (e: Exception) {
             Log.e(TAG, "Error handling Shimmer data packet", e)
         }

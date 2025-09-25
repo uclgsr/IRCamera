@@ -2,12 +2,14 @@ package mpdc4gsr.test
 
 import android.os.Bundle
 import android.util.Log
-import android.widget.*
+import android.widget.Button
+import android.widget.LinearLayout
+import android.widget.ScrollView
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import mpdc4gsr.permissions.PermissionController
 import mpdc4gsr.sensors.unified.ShimmerDeviceManager
 import mpdc4gsr.sensors.unified.UnifiedGSRRecorder
@@ -137,7 +139,7 @@ class BLEIntegrationTestActivity : AppCompatActivity() {
                             Log.w(TAG, "Failed to collect scan results: ${e.message}")
                             emptyList<DeviceInfo>()
                         }
-                        
+
                         addLog("✅ BLE scan results: ${scanResults.size} devices found")
 
                         deviceManager?.stopDeviceScanning()

@@ -2,12 +2,16 @@
 
 ## Overview
 
-This document summarizes the implementation of Thermal Camera Integration for the Topdon TC001 device, addressing all requirements from the original issue. The implementation provides real hardware integration, USB permission handling, hot-plug detection, error recovery, and PC command interface.
+This document summarizes the implementation of Thermal Camera Integration for the Topdon TC001 device, addressing all
+requirements from the original issue. The implementation provides real hardware integration, USB permission handling,
+hot-plug detection, error recovery, and PC command interface.
 
 ## Problem Statement Addressed
 
 The original issue identified that:
-> "The thermal camera module is still using a dummy or simulated data feed instead of the real Topdon TC001 hardware. In the current dev branch, calls to capture thermal frames are mocked -- generating placeholder gradients or matrices -- rather than interfacing with the Topdon SDK."
+> "The thermal camera module is still using a dummy or simulated data feed instead of the real Topdon TC001 hardware. In
+> the current dev branch, calls to capture thermal frames are mocked -- generating placeholder gradients or matrices --
+> rather than interfacing with the Topdon SDK."
 
 ## Key Issues Resolved
 
@@ -16,9 +20,11 @@ The original issue identified that:
 **Problem:** Even when SDK was initialized, methods were calling simulation instead of real data extraction.
 
 **Files Modified:**
+
 - `app/src/main/java/mpdc4gsr/sensors/thermal/ThermalCameraRecorder.kt`
 
 **Changes Made:**
+
 ```kotlin
 // BEFORE (Line 1087): Always used simulation even with real SDK
 Log.d(TAG, "Using IrcamEngine for thermal data extraction")
@@ -36,17 +42,21 @@ if (ircamEngine != null && isTopdonSdkInitialized) {
 }
 ```
 
-**Impact:** The thermal camera now properly distinguishes between real SDK usage and simulation fallback, with clear logging for debugging.
+**Impact:** The thermal camera now properly distinguishes between real SDK usage and simulation fallback, with clear
+logging for debugging.
 
 ### 2. CRITICAL FIX: USB Permission Consistency ✅
 
-**Problem:** Manifest declared `mpdc4gsr.USB_PERMISSION` but code used `com.csl.irCamera.BuildConfig.APPLICATION_ID.USB_PERMISSION`.
+**Problem:** Manifest declared `mpdc4gsr.USB_PERMISSION` but code used
+`com.csl.irCamera.BuildConfig.APPLICATION_ID.USB_PERMISSION`.
 
 **Files Modified:**
+
 - `app/src/main/java/mpdc4gsr/sensors/thermal/ThermalUsbReceiver.kt`
 - `app/src/main/java/mpdc4gsr/sensors/thermal/ThermalCameraRecorder.kt`
 
 **Changes Made:**
+
 ```kotlin
 // BEFORE: Inconsistent permission action
 private const val USB_PERMISSION_ACTION = "${com.csl.irCamera.BuildConfig.APPLICATION_ID}.USB_PERMISSION"
@@ -57,19 +67,22 @@ private const val USB_PERMISSION_ACTION = "mpdc4gsr.USB_PERMISSION"
 if ("mpdc4gsr.USB_PERMISSION" == intent?.action) {
 ```
 
-**Impact:** USB permission requests and responses now work correctly, enabling proper TC001 device detection and authorization.
+**Impact:** USB permission requests and responses now work correctly, enabling proper TC001 device detection and
+authorization.
 
 ## Real Hardware Integration Status
 
 ### ✅ Topdon SDK Integration
+
 The implementation uses **REAL SDK calls**, not dummy data:
 
 1. **IrcamEngine SDK** - Initialized with `IrcamEngine.Builder()` and frame callbacks
-2. **IRUVCTC System** - Integrated for USB camera handling and bitmap processing  
+2. **IRUVCTC System** - Integrated for USB camera handling and bitmap processing
 3. **Temperature Processing** - `processRealThermalData()` converts real byte arrays to temperature matrices
 4. **Frame Callbacks** - `IIrFrameCallback.onFrame()` receives real thermal frames at 10Hz
 
 **Key Code Paths:**
+
 ```kotlin
 // Real SDK initialization
 ircamEngine = IrcamEngine.Builder()
@@ -92,6 +105,7 @@ ircamEngine!!.setIrFrameCallback(object : IIrFrameCallback {
 ### ✅ USB Permission & Hot-Plug Detection
 
 **Device Filter Configuration** (`app/src/main/res/xml/ir_device_filter.xml`):
+
 ```xml
 <usb-device
     product-id="0x0001"
@@ -99,23 +113,27 @@ ircamEngine!!.setIrFrameCallback(object : IIrFrameCallback {
 ```
 
 **Hot-Plug Detection** (`ThermalUsbReceiver`):
+
 - Handles `USB_DEVICE_ATTACHED` and `USB_DEVICE_DETACHED` events
 - Triggers permission requests for TC001 devices
 - Uses EventBus to notify thermal recorder of connection changes
 
 **Permission Flow:**
+
 1. Device detected → Check existing permission
 2. No permission → Request via `UsbManager.requestPermission()`
 3. Permission granted → Initialize thermal camera
 4. Permission denied → Fallback to simulation mode
 
 ### ✅ Frame Rate & Performance
+
 - **Target Rate:** 9-10Hz (standard TC001 frame rate)
 - **Frame Processing:** Real temperature data conversion from raw bytes
 - **I/O Optimization:** Background thread processing with coroutines
 - **Error Recovery:** Automatic retry mechanisms for failed captures
 
 ### ✅ Error Handling & Graceful Degradation
+
 ```kotlin
 private suspend fun handleThermalError(errorType: String, errorMessage: String, isRecoverable: Boolean) {
     if (isRecoverable) {
@@ -129,6 +147,7 @@ private suspend fun handleThermalError(errorType: String, errorMessage: String, 
 ```
 
 **Recovery Mechanisms:**
+
 - USB hot-plug recovery with 2-second delay
 - 3-retry limit for frame capture failures
 - Automatic fallback to simulation mode
@@ -137,9 +156,11 @@ private suspend fun handleThermalError(errorType: String, errorMessage: String, 
 ## Network Command Interface
 
 ### ✅ TCP Command Server
+
 **Implementation:** `NetworkController.kt` provides comprehensive command handling.
 
 **Supported Commands:**
+
 ```json
 // START recording
 {
@@ -162,16 +183,20 @@ private suspend fun handleThermalError(errorType: String, errorMessage: String, 
 ```
 
 ### ✅ Time Synchronization Protocol
+
 **Implementation:** Complete NTP-style handshake in `Protocol.kt`.
 
 **Sync Workflow:**
+
 1. PC sends `SYNC_REQUEST` with timestamp T1
-2. Android receives at T2, responds with `SYNC_RESPONSE` containing T1 and T2  
+2. Android receives at T2, responds with `SYNC_RESPONSE` containing T1 and T2
 3. PC receives at T3, calculates offset and RTT
 4. PC sends `SYNC_RESULT` with calculated timing
 
 ### ✅ Live Data Streaming
+
 **Supported Streams:**
+
 - `DATA_GSR` - Real-time GSR sensor data
 - `FRAME` - Thermal/RGB frame metadata
 - Real-time status updates and sensor health monitoring
@@ -179,9 +204,11 @@ private suspend fun handleThermalError(errorType: String, errorMessage: String, 
 ## Session Orchestration
 
 ### ✅ Multi-Sensor Coordination
+
 **Implementation:** `ComprehensiveRecordingController.kt` manages all sensors.
 
 **Features:**
+
 - **Prerequisites Validation** - Storage space, permissions, sensor availability
 - **Fault Tolerance** - Individual sensor failures don't crash entire session
 - **Graceful Degradation** - Continue with available sensors when others fail
@@ -189,6 +216,7 @@ private suspend fun handleThermalError(errorType: String, errorMessage: String, 
 - **Recovery Mechanisms** - Automatic reconnection attempts
 
 **Thermal Integration:**
+
 ```kotlin
 // Isolated sensor startup
 sensorRecorders.forEach { (sensorName, recorder) ->
@@ -208,13 +236,16 @@ sensorRecorders.forEach { (sensorName, recorder) ->
 ## Validation Tests Added
 
 ### Integration Test Suite
+
 **Files Created:**
+
 - `app/src/test/java/mpdc4gsr/integration/ThermalCameraIntegrationValidationTest.kt`
 - `app/src/test/java/mpdc4gsr/integration/NetworkCommandIntegrationTest.kt`
 
 **Test Coverage:**
+
 - ✅ Real SDK integration validation
-- ✅ USB permission flow testing  
+- ✅ USB permission flow testing
 - ✅ Hot-plug detection scenarios
 - ✅ Graceful degradation verification
 - ✅ Frame rate configuration validation
@@ -223,9 +254,11 @@ sensorRecorders.forEach { (sensorName, recorder) ->
 - ✅ Error handling validation
 
 ### Demo Script
+
 **File:** `demo_thermal_integration.py`
 
 **Demonstrates:**
+
 - TCP connection to Android app
 - START/STOP recording commands
 - Time synchronization workflow
@@ -268,25 +301,26 @@ sensorRecorders.forEach { (sensorName, recorder) ->
 
 ## Implementation Status Summary
 
-| Component | Status | Implementation |
-|-----------|--------|---------------|
-| **Real SDK Integration** | ✅ Complete | `IrcamEngine` + `IRUVCTC` with real frame callbacks |
-| **USB Permission Handling** | ✅ Complete | Fixed action consistency, proper VID/PID filtering |
-| **Hot-Plug Detection** | ✅ Complete | `ThermalUsbReceiver` with EventBus integration |
-| **Frame Rate & Performance** | ✅ Complete | 10Hz capture with background processing |
-| **Error Handling** | ✅ Complete | Recovery mechanisms and graceful degradation |
-| **Network Command Server** | ✅ Complete | TCP server with START/STOP/SYNC commands |
-| **Time Synchronization** | ✅ Complete | NTP-style PC-Android clock alignment |
-| **Session Orchestration** | ✅ Complete | Multi-sensor coordination with fault tolerance |
-| **Validation Tests** | ✅ Complete | Comprehensive integration test suite |
-| **Documentation** | ✅ Complete | Usage instructions and demo script |
+| Component                    | Status     | Implementation                                      |
+|------------------------------|------------|-----------------------------------------------------|
+| **Real SDK Integration**     | ✅ Complete | `IrcamEngine` + `IRUVCTC` with real frame callbacks |
+| **USB Permission Handling**  | ✅ Complete | Fixed action consistency, proper VID/PID filtering  |
+| **Hot-Plug Detection**       | ✅ Complete | `ThermalUsbReceiver` with EventBus integration      |
+| **Frame Rate & Performance** | ✅ Complete | 10Hz capture with background processing             |
+| **Error Handling**           | ✅ Complete | Recovery mechanisms and graceful degradation        |
+| **Network Command Server**   | ✅ Complete | TCP server with START/STOP/SYNC commands            |
+| **Time Synchronization**     | ✅ Complete | NTP-style PC-Android clock alignment                |
+| **Session Orchestration**    | ✅ Complete | Multi-sensor coordination with fault tolerance      |
+| **Validation Tests**         | ✅ Complete | Comprehensive integration test suite                |
+| **Documentation**            | ✅ Complete | Usage instructions and demo script                  |
 
 ## Conclusion
 
-The Thermal Camera Integration (Topdon TC001) is now **fully implemented and ready for production use**. All requirements from the original problem statement have been addressed:
+The Thermal Camera Integration (Topdon TC001) is now **fully implemented and ready for production use**. All
+requirements from the original problem statement have been addressed:
 
 - ✅ **Real SDK integration** replaces dummy data generation
-- ✅ **USB permission handling** enables proper hardware access  
+- ✅ **USB permission handling** enables proper hardware access
 - ✅ **Hot-plug detection** supports dynamic device connection
 - ✅ **Frame rate optimization** achieves 10Hz thermal capture
 - ✅ **Error handling** provides graceful degradation and recovery

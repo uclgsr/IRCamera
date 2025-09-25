@@ -2,13 +2,16 @@
 
 ## Overview
 
-This document details the implemented session orchestration and lifecycle management system for the IRCamera multi-modal recording application. The implementation provides comprehensive session control, fault tolerance, and remote command support as specified in the requirements.
+This document details the implemented session orchestration and lifecycle management system for the IRCamera multi-modal
+recording application. The implementation provides comprehensive session control, fault tolerance, and remote command
+support as specified in the requirements.
 
 ## Architecture Components
 
 ### 1. RecordingController - Central Session Orchestrator
 
 **Enhanced Features:**
+
 - **Session State Machine**: Implements IDLE → STARTING → RECORDING → STOPPING → STOPPED states
 - **Trigger Source Tracking**: Differentiates between LOCAL_UI, REMOTE_PC, LOCAL_NOTIFICATION, etc.
 - **Partial Sensor Support**: Continues recording even if some sensors fail to start
@@ -16,6 +19,7 @@ This document details the implemented session orchestration and lifecycle manage
 - **Session Events**: Tracks all significant events during session lifecycle
 
 **Key Methods:**
+
 ```kotlin
 suspend fun startRecording(
     sessionId: String? = null,
@@ -33,12 +37,14 @@ fun generateSessionManifest(): SessionManifest
 ### 2. RecordingService - Background Service with Remote Commands
 
 **Enhanced Features:**
+
 - **Remote Command Handler**: Processes START/STOP commands from PC Controller
 - **Foreground Service Management**: Proper notification lifecycle for recording sessions
 - **Crash Recovery Integration**: Checks for crashed sessions on startup
 - **Session Manifest Generation**: Creates comprehensive session reports
 
 **Remote Command Support:**
+
 ```kotlin
 // PC Controller can send START command
 override suspend fun onStartRecording(sessionId: String): ProtocolHandler.CommandResult {
@@ -72,11 +78,13 @@ IDLE
 ### 4. Sensor Health and Reconnection Logic
 
 **Health Monitoring:**
+
 - Continuous monitoring of active sensors during recording
 - Automatic detection of sensor dropouts
 - Health status tracking with consecutive failure counts
 
 **Reconnection Strategy:**
+
 - **GSR/Shimmer**: Bluetooth reconnection with 3 retry attempts
 - **Thermal Camera**: USB reconnection handling
 - **RGB Camera**: Error recovery (usually always available)
@@ -85,6 +93,7 @@ IDLE
 ### 5. Session Manifest and Event Logging
 
 **Session Manifest Contents:**
+
 ```kotlin
 data class SessionManifest(
     val sessionId: String,
@@ -102,6 +111,7 @@ data class SessionManifest(
 ```
 
 **Event Types Tracked:**
+
 - `SESSION_START_REQUESTED` - Start command received
 - `SENSOR_START_SUCCESS` - Individual sensor started
 - `SENSOR_START_FAILED` - Sensor failed to start
@@ -113,6 +123,7 @@ data class SessionManifest(
 ## Crash Recovery Integration
 
 **Startup Recovery Check:**
+
 ```kotlin
 private suspend fun checkForCrashedSessionsOnStartup() {
     val crashRecoveryResult = crashRecoveryManager.checkForCrashedSessions()
@@ -125,6 +136,7 @@ private suspend fun checkForCrashedSessionsOnStartup() {
 ```
 
 **Runtime Protection:**
+
 - Active session tracking in SharedPreferences
 - Session marked as active at start, completed/failed at stop
 - Recovery of partial data if app crashes mid-session
@@ -132,12 +144,14 @@ private suspend fun checkForCrashedSessionsOnStartup() {
 ## Partial Failure Handling
 
 **Fault Tolerance Design:**
+
 - **Continue if ANY sensor starts**: Session proceeds with available sensors
 - **Sensor dropout handling**: Recording continues with remaining sensors
 - **Graceful degradation**: UI shows which sensors are active/inactive
 - **Automatic recovery**: Attempts to reconnect failed sensors during recording
 
 **Example Scenario:**
+
 1. User starts recording with RGB, Thermal, GSR enabled
 2. Thermal camera fails to connect (USB not plugged in)
 3. RGB and GSR start successfully → Recording proceeds
@@ -149,6 +163,7 @@ private suspend fun checkForCrashedSessionsOnStartup() {
 ## Remote PC Command Integration
 
 **Command Flow:**
+
 1. PC Controller sends START command via network
 2. RecordingService receives command in ProtocolHandler
 3. Service calls `startRecordingSessionWithTrigger(sessionId, REMOTE_PC)`
@@ -157,31 +172,37 @@ private suspend fun checkForCrashedSessionsOnStartup() {
 6. PC receives acknowledgment with session status
 
 **Unified Command Logic:**
-Both local UI and remote PC commands use the same underlying session orchestration logic, ensuring consistent behavior regardless of trigger source.
+Both local UI and remote PC commands use the same underlying session orchestration logic, ensuring consistent behavior
+regardless of trigger source.
 
 ## Session Orchestration Benefits
 
 ### 1. **Single-Session Design**
+
 - Only one recording session can be active at a time
 - Prevents resource conflicts and data corruption
 - Clear session boundaries and lifecycle management
 
 ### 2. **Comprehensive Event Logging**
+
 - Every session event is timestamped and logged
 - Reconnection attempts and failures documented
 - Complete audit trail for research analysis
 
 ### 3. **Fault Tolerance**
+
 - Partial sensor availability doesn't prevent data collection
 - Automatic recovery from transient failures
 - Graceful handling of hardware disconnections
 
 ### 4. **Remote Control Support**
+
 - PC Controller can start/stop sessions remotely
 - Consistent behavior across trigger sources
 - Status feedback for remote operations
 
 ### 5. **Crash Recovery**
+
 - Partial data preserved even if app crashes
 - Clear marking of incomplete sessions
 - Recovery reports for troubleshooting
@@ -189,6 +210,7 @@ Both local UI and remote PC commands use the same underlying session orchestrati
 ## Usage Examples
 
 ### Local UI Start
+
 ```kotlin
 val success = recordingController.startRecording(
     sessionId = "study_001_participant_123",
@@ -199,6 +221,7 @@ val success = recordingController.startRecording(
 ```
 
 ### Remote PC Start (via Protocol Handler)
+
 ```json
 {
     "command": "start_recording",
@@ -212,6 +235,7 @@ val success = recordingController.startRecording(
 ```
 
 ### Session Manifest Example
+
 ```json
 {
     "sessionId": "study_001_participant_123",
@@ -290,6 +314,7 @@ val success = recordingController.startRecording(
 ## Implementation Status
 
 ✅ **Completed Features:**
+
 - Session lifecycle state machine
 - Trigger source tracking and differentiation
 - Partial sensor failure handling
@@ -301,9 +326,11 @@ val success = recordingController.startRecording(
 - Common timebase synchronization integration
 
 🔄 **Integration Points:**
+
 - Works with existing TimeSynchronizationService for unified timestamps
 - Integrates with CrashRecoveryManager for session recovery
 - Uses existing SessionDirectoryManager for file organization
 - Compatible with current network protocol handlers
 
-This implementation provides a robust, fault-tolerant session orchestration system that meets all the specified requirements while maintaining compatibility with the existing codebase architecture.
+This implementation provides a robust, fault-tolerant session orchestration system that meets all the specified
+requirements while maintaining compatibility with the existing codebase architecture.

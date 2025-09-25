@@ -4,7 +4,6 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.hardware.usb.UsbDevice
 import android.hardware.usb.UsbManager
-import android.os.SystemClock
 import android.util.Log
 import android.widget.Toast
 import com.energy.ac020library.IrcamEngine
@@ -46,9 +45,6 @@ import org.json.JSONObject
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileWriter
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
 
@@ -283,7 +279,7 @@ class ThermalCameraRecorder(
     private var ircamEngine: IrcamEngine? = null
     internal var isIRCameraConnected = false
     private var isTopdonSdkInitialized = false
-    
+
     // Properties for real SDK data extraction
     private var lastCapturedFrame: ByteArray? = null
     private var lastFrameTimestamp: Long = 0L
@@ -395,9 +391,8 @@ class ThermalCameraRecorder(
             // Clean up existing connection first
             if (iruvctc != null) {
                 try {
-                    iruvctc?.stopPreview()
-                    iruvctc?.unregisterUSB()
-
+                    iruvctc?.stop()
+                    iruvctc?.release()
                     iruvctc = null
                 } catch (e: Exception) {
                     Log.w(TAG, "Error cleaning up existing thermal camera connection", e)
@@ -427,14 +422,15 @@ class ThermalCameraRecorder(
                 return true
             }
             // Start recording with current session
-            val sessionManager = SessionDirectoryManager(context)
-            val sessionId = sessionManager.generateSessionId()
-            val sessionDir = sessionManager.createSessionDirectory(sessionId)
-            val sessionMetadata = SessionMetadata.createSessionStart(sessionId).copy(
+            val sessionManager = SessionDirectoryManager.getInstance()
+            val sessionMetadata = SessionMetadata(
+                sessionId = sensorId,
+                startTime = System.currentTimeMillis(),
+                sensorTypes = listOf("thermal"),
                 participantId = "recovery_session",
-                studyName = "thermal_recovery"
+                studyId = "thermal_recovery"
             )
-            val recordingSuccess = startRecording(sessionDir.rootDir.absolutePath, sessionMetadata)
+            val recordingSuccess = startRecording(sessionManager.getCurrentSessionDir(), sessionMetadata)
             Log.d(TAG, "Thermal recording restart result: $recordingSuccess")
             recordingSuccess
         } catch (e: Exception) {
@@ -946,37 +942,37 @@ class ThermalCameraRecorder(
                                     processRealThermalFrameData(thermalData, frameNumber, timestampRecord)
                                 }
                             }
-                        }
 
-                        if (previewCallback != null) {
-                            recordingScope.launch {
-                                val bitmap = currentBitmap
-                                if (bitmap != null && !bitmap.isRecycled) {
+                            if (previewCallback != null) {
+                                recordingScope.launch {
+                                    val bitmap = currentBitmap
+                                    if (bitmap != null && !bitmap.isRecycled) {
 
-                                    val bitmapCopy = bitmap.config?.let { config ->
-                                        bitmap.copy(config, false)
-                                    } ?: run {
-                                        // If config is null, log a warning and use the original bitmap
-                                        Log.w(
-                                            "ThermalCameraRecorder",
-                                            "Bitmap config is null; cannot safely copy thermal bitmap. Passing original bitmap."
-                                        )
-                                        bitmap
-                                    }
-                                    val thermalData =
-                                        if (ircamEngine != null && isTopdonSdkInitialized) {
-                                            extractRealThermalDataFromEngine(
-                                                System.nanoTime(),
-                                                frameCount.get()
-                                            )
+                                        val bitmapCopy = if (bitmap.config != null) {
+                                            bitmap.copy(bitmap.config, false)
                                         } else {
-                                            extractThermalDataFromBitmap(
-                                                bitmapCopy,
-                                                System.nanoTime(),
-                                                frameCount.get()
+                                            // If config is null, log a warning and avoid copying with ARGB_8888
+                                            Log.w(
+                                                "ThermalCameraRecorder",
+                                                "Bitmap config is null; cannot safely copy thermal bitmap. Passing original bitmap."
                                             )
+                                            bitmap
                                         }
-                                    previewCallback?.onThermalFrame(bitmapCopy, thermalData)
+                                        val thermalData =
+                                            if (ircamEngine != null && isTopdonSdkInitialized) {
+                                                extractRealThermalDataFromEngine(
+                                                    System.nanoTime(),
+                                                    frameCount.get()
+                                                )
+                                            } else {
+                                                extractThermalDataFromBitmap(
+                                                    bitmapCopy,
+                                                    System.nanoTime(),
+                                                    frameCount.get()
+                                                )
+                                            }
+                                        previewCallback?.onThermalFrame(bitmapCopy, thermalData)
+                                    }
                                 }
                             }
                         }
@@ -1031,7 +1027,7 @@ class ThermalCameraRecorder(
                             lastCapturedFrame = frame.copyOf()
                             lastFrameTimestamp = System.nanoTime()
                         }
-                        
+
                         if (_isRecording.get() && frame != null) {
                             recordingScope.launch {
                                 try {
@@ -1053,19 +1049,19 @@ class ThermalCameraRecorder(
                                     Log.e(TAG, "Error processing thermal frame", e)
                                 }
                             }
-                        }
 
-                        if (previewCallback != null && frame != null) {
-                            recordingScope.launch {
-                                val thermalData =
-                                    processRealThermalData(frame, IR_CAMERA_WIDTH, IR_CAMERA_HEIGHT)
-                                val previewBitmap =
-                                    generateThermalPreviewBitmap(
-                                        thermalData,
-                                        IR_CAMERA_WIDTH,
-                                        IR_CAMERA_HEIGHT
-                                    )
-                                previewCallback?.onThermalFrame(previewBitmap, thermalData)
+                            if (previewCallback != null && frame != null) {
+                                recordingScope.launch {
+                                    val thermalData =
+                                        processRealThermalData(frame, IR_CAMERA_WIDTH, IR_CAMERA_HEIGHT)
+                                    val previewBitmap =
+                                        generateThermalPreviewBitmap(
+                                            thermalData,
+                                            IR_CAMERA_WIDTH,
+                                            IR_CAMERA_HEIGHT
+                                        )
+                                    previewCallback?.onThermalFrame(previewBitmap, thermalData)
+                                }
                             }
                         }
                     }
@@ -1090,11 +1086,11 @@ class ThermalCameraRecorder(
             if (ircamEngine != null && isTopdonSdkInitialized) {
                 // Extract real temperature data from the SDK
                 Log.d(TAG, "Extracting real thermal data from IrcamEngine SDK")
-                
+
                 // Get the latest frame from the SDK if available
                 // The frame data comes through the IIrFrameCallback.onFrame() method
                 // This method should extract real temperature data when available
-                
+
                 // Try to get real temperature data from the SDK
                 val realThermalData = try {
                     // Check if we have a recent frame from the callback
@@ -1107,7 +1103,7 @@ class ThermalCameraRecorder(
                         // Generate realistic thermal data that represents what real SDK would provide
                         // This uses enhanced simulation with proper thermal characteristics
                         val simulatedData = generateAdvancedSimulatedThermalData(timestamp, frameNumber)
-                        
+
                         // Apply SDK-specific calibration corrections to make it more realistic
                         applySDKCalibrationCorrections(simulatedData)
                     }
@@ -1115,10 +1111,10 @@ class ThermalCameraRecorder(
                     Log.w(TAG, "Error accessing real SDK data, falling back to enhanced simulation: ${e.message}")
                     generateAdvancedSimulatedThermalData(timestamp, frameNumber)
                 }
-                
+
                 // Mark the data source for tracking
                 Log.d(TAG, "Thermal data extracted: min=${realThermalData.minTemperature}°C, max=${realThermalData.maxTemperature}°C, source=${if (lastCapturedFrame != null) "SDK" else "Enhanced_Simulation"}")
-                
+
                 realThermalData
             } else {
                 Log.d(TAG, "IrcamEngine not available, using simulation mode")
@@ -1146,7 +1142,7 @@ class ThermalCameraRecorder(
         return@withContext try {
             if (iruvctc != null && isIRCameraConnected) {
                 Log.d(TAG, "Extracting real thermal data from IRUVCTC system")
-                
+
                 // Extract temperature data from the IRUVCTC bitmap if available
                 val bitmap = currentBitmap
                 if (bitmap != null && !bitmap.isRecycled) {
@@ -1204,7 +1200,7 @@ class ThermalCameraRecorder(
             // Apply calibration corrections that would be typical for Topdon TC001 SDK
             val calibrationOffset = 0.2f // Typical sensor offset
             val calibrationGain = 1.02f   // Typical sensor gain correction
-            
+
             // Apply corrections to temperature matrix
             val correctedMatrix = Array(thermalData.temperatureMatrix.size) { y ->
                 FloatArray(thermalData.temperatureMatrix[y].size) { x ->
@@ -1212,13 +1208,13 @@ class ThermalCameraRecorder(
                     (originalTemp * calibrationGain) + calibrationOffset
                 }
             }
-            
+
             // Recalculate statistics with corrected data
             var minTemp = Float.MAX_VALUE
             var maxTemp = Float.MIN_VALUE
             var sumTemp = 0f
             var count = 0
-            
+
             correctedMatrix.forEach { row ->
                 row.forEach { temp ->
                     minTemp = minOf(minTemp, temp)
@@ -1227,10 +1223,10 @@ class ThermalCameraRecorder(
                     count++
                 }
             }
-            
+
             val avgTemp = sumTemp / count
             val centerTemp = correctedMatrix[correctedMatrix.size / 2][correctedMatrix[0].size / 2]
-            
+
             ThermalFrameData(
                 temperatureMatrix = correctedMatrix,
                 minTemperature = minTemp,
@@ -2348,7 +2344,7 @@ class ThermalCameraRecorder(
                             ircamEngine = null
                             isTopdonSdkInitialized = false
                             delay(2000) // Allow complete cleanup
-                            
+
                             sdkRecoverySuccess = initializeTopdonSdk()
                             if (sdkRecoverySuccess) {
                                 Log.i(TAG, "✅ Thermal SDK recovery successful with full rebuild")
@@ -2357,7 +2353,7 @@ class ThermalCameraRecorder(
                             Log.w(TAG, "Full SDK rebuild failed: ${e.message}")
                         }
                     }
-                    
+
                     if (!sdkRecoverySuccess) {
                         Log.w(TAG, "❌ All SDK recovery strategies failed - switching to simulation")
                         isSimulationMode = true
@@ -2399,7 +2395,7 @@ class ThermalCameraRecorder(
                     Log.i(TAG, "Attempting frame buffer reset and capture restart")
                     lastCapturedFrame = null
                     lastFrameTimestamp = 0L
-                    
+
                     if (_isRecording.get()) {
                         Log.i(TAG, "✅ Frame capture recovery attempted with buffer reset")
                     }
@@ -2408,7 +2404,7 @@ class ThermalCameraRecorder(
                 errorType.contains("Permission") -> {
                     // Enhanced permission recovery
                     Log.i(TAG, "Attempting permission recovery with user guidance")
-                    
+
                     // Check current permission state
                     thermalCameraDevice?.let { device ->
                         val usbManager = context.getSystemService(Context.USB_SERVICE) as UsbManager
@@ -2417,7 +2413,7 @@ class ThermalCameraRecorder(
                             try {
                                 requestUsbPermission(device)
                                 delay(5000) // Wait for user response
-                                
+
                                 if (usbManager.hasPermission(device)) {
                                     Log.i(TAG, "✅ Permission recovery successful")
                                     val reconnected = initializeRealThermalCamera(device)
@@ -2440,11 +2436,11 @@ class ThermalCameraRecorder(
                 errorType.contains("Temperature") -> {
                     // Enhanced temperature processing recovery
                     Log.i(TAG, "Attempting temperature processing recovery")
-                    
+
                     // Reset temperature processing state
                     lastCapturedFrame = null
                     lastFrameTimestamp = 0L
-                    
+
                     // Verify calibration state
                     try {
                         val testData = generateAdvancedSimulatedThermalData(System.nanoTime(), 1L)
@@ -2456,19 +2452,16 @@ class ThermalCameraRecorder(
                     }
                 }
 
-                    delay(500)
-                    Log.i(TAG, "📸 Frame processing error recovery attempted")
-                }
-
                 else -> {
                     Log.w(TAG, "Unknown thermal error type - applying general recovery")
                     delay(1000)
 
-
-                    if (hasUsbPermission && thermalCameraDevice != null) {
-                        val generalRecoverySuccess = initializeRealThermalCamera(thermalCameraDevice!!)
-                        if (!generalRecoverySuccess) {
-                            isSimulationMode = true
+                    thermalCameraDevice?.let { device ->
+                        if (hasUsbPermission) {
+                            val generalRecoverySuccess = initializeRealThermalCamera(device)
+                            if (!generalRecoverySuccess) {
+                                isSimulationMode = true
+                            }
                         }
                     }
                 }
@@ -2645,113 +2638,113 @@ class ThermalCameraRecorder(
 
         val calibrationData = """
         {
-  "sensor_id": "$sensorId",
-  "thermal_resolution": {
-  	"width": $IR_CAMERA_WIDTH,
-  	"height": $IR_CAMERA_HEIGHT
-  },
-  "frame_rate_hz": $thermalFrameRate,
-  "frame_rate_info": {
-  	"detected_rate": $thermalFrameRate,
-  	"hardware_support": {
-  		"enhanced_25hz": ${supportsEnhancedFrameRate()},
-  		"standard_9hz": true,
-  		"tc001_plus_detected": ${supportsEnhancedFrameRate()}
-  	},
-  	"network_streaming_interval": $networkStreamingInterval
-  },
-  "session_metadata": {
-  	"session_id": "${sessionMetadata?.sessionId ?: "unknown"}",
-  	"session_name": "${sessionMetadata?.sessionName ?: ""}",
-  	"participant_id": "${sessionMetadata?.participantId ?: ""}",
-  	"study_name": "${sessionMetadata?.studyName ?: ""}",
-  	"session_start_time_iso": "${
+    "sensor_id": "$sensorId",
+    "thermal_resolution": {
+        "width": $IR_CAMERA_WIDTH,
+        "height": $IR_CAMERA_HEIGHT
+    },
+    "frame_rate_hz": $thermalFrameRate,
+    "frame_rate_info": {
+        "detected_rate": $thermalFrameRate,
+        "hardware_support": {
+            "enhanced_25hz": ${supportsEnhancedFrameRate()},
+            "standard_9hz": true,
+            "tc001_plus_detected": ${supportsEnhancedFrameRate()}
+        },
+        "network_streaming_interval": $networkStreamingInterval
+    },
+    "session_metadata": {
+        "session_id": "${sessionMetadata?.sessionId ?: "unknown"}",
+        "session_name": "${sessionMetadata?.sessionName ?: ""}",
+        "participant_id": "${sessionMetadata?.participantId ?: ""}",
+        "study_name": "${sessionMetadata?.studyName ?: ""}",
+        "session_start_time_iso": "${
             java.text.SimpleDateFormat(
                 "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
                 java.util.Locale.getDefault()
             ).format(java.util.Date())
         }",
-  	"session_start_monotonic_ns": ${sessionReferenceTimestampNs.get()},
-  	"local_start_offset_ns": ${sessionStartOffsetNs.get()}
-  },
-  "thermal_calibration": {
-  	"ambient_temperature_c": $ambientTemperature,
-  	"emissivity": $emissivity,
-  	"reflected_temperature_c": $reflectedTemperature,
-  	"temperature_sensitivity_c": $THERMAL_SENSITIVITY,
-  	"temp_range_min_c": $IR_TEMP_RANGE_MIN,
-  	"temp_range_max_c": $IR_TEMP_RANGE_MAX,
-  	"calibration_notes": "Enhanced thermal calibration with session-specific accuracy metadata",
-  	"calibration_accuracy": "±${THERMAL_SENSITIVITY}°C",
-  	"measurement_conditions": {
-  		"ambient_stable": true,
-  		"emissivity_verified": false,
-  		"distance_optimal": true,
-  		"environmental_factors": "Standard laboratory conditions assumed"
-  	}
-  },
-  "device_information": {
-  	"device_connected": $isIRCameraConnected,
-  	"usb_permission_granted": $hasUsbPermission,
-  	"simulation_mode": $isSimulationMode,
-  	"sdk_initialized": $isTopdonSdkInitialized,
-  	"device_description": "$deviceInfo",
-  	"sdk_version": "Topdon AC020 SDK v1.1.1 with IrcamEngine Integration - Enhanced Metadata",
-  	"firmware_version": "${getFirmwareVersion()}",
-  	"serial_number": "${getDeviceSerialNumber()}"
-  },
-  "csv_data_schema": {
-  	"thermal_data_columns": [
-  		"timestamp_ns",
-  		"frame_index",	
-  		"temp_matrix_serialized",
-  		"min_temp_c",
-  		"max_temp_c",
-  		"avg_temp_c",
-  		"center_temp_c",
-  		"hotspot_x",
-  		"hotspot_y",
-  		"coldspot_x",	
-  		"coldspot_y",
-  		"calibration_applied",
-  		"frame_quality_score"
-  	],
-  	"thermal_frames_columns": [
-  		"timestamp_ns",
-  		"frame_filename",
-  		"processing_time_ms",
-  		"compression_ratio",
-  		"file_size_bytes"
-  	],
-  	"data_format_notes": "All temperatures in Celsius, timestamps in nanoseconds since session start"
-  },
-  "quality_assurance": {
-  	"calibration_timestamp": ${System.nanoTime()},
-  	"validation_checks": {
-  		"temperature_range_valid": true,
-  		"emissivity_in_range": ${emissivity >= 0.1 && emissivity <= 1.0},
-  		"ambient_temp_reasonable": ${ambientTemperature >= -10 && ambientTemperature <= 50},
-  		"device_communication_stable": $isIRCameraConnected
-  	},
-  	"data_integrity": {
-  		"checksum_enabled": false,
-  		"frame_sequence_validation": true,
-  		"timestamp_monotonic_check": true
-  	}
-  },
-  "usb_device_details": ${
+        "session_start_monotonic_ns": ${sessionReferenceTimestampNs.get()},
+        "local_start_offset_ns": ${sessionStartOffsetNs.get()}
+    },
+    "thermal_calibration": {
+        "ambient_temperature_c": $ambientTemperature,
+        "emissivity": $emissivity,
+        "reflected_temperature_c": $reflectedTemperature,
+        "temperature_sensitivity_c": $THERMAL_SENSITIVITY,
+        "temp_range_min_c": $IR_TEMP_RANGE_MIN,
+        "temp_range_max_c": $IR_TEMP_RANGE_MAX,
+        "calibration_notes": "Enhanced thermal calibration with session-specific accuracy metadata",
+        "calibration_accuracy": "±${THERMAL_SENSITIVITY}°C",
+        "measurement_conditions": {
+            "ambient_stable": true,
+            "emissivity_verified": false,
+            "distance_optimal": true,
+            "environmental_factors": "Standard laboratory conditions assumed"
+        }
+    },
+    "device_information": {
+        "device_connected": $isIRCameraConnected,
+        "usb_permission_granted": $hasUsbPermission,
+        "simulation_mode": $isSimulationMode,
+        "sdk_initialized": $isTopdonSdkInitialized,
+        "device_description": "$deviceInfo",
+        "sdk_version": "Topdon AC020 SDK v1.1.1 with IrcamEngine Integration - Enhanced Metadata",
+        "firmware_version": "${getFirmwareVersion()}",
+        "serial_number": "${getDeviceSerialNumber()}"
+    },
+    "csv_data_schema": {
+        "thermal_data_columns": [
+            "timestamp_ns",
+            "frame_index", 
+            "temp_matrix_serialized",
+            "min_temp_c",
+            "max_temp_c",
+            "avg_temp_c",
+            "center_temp_c",
+            "hotspot_x",
+            "hotspot_y",
+            "coldspot_x", 
+            "coldspot_y",
+            "calibration_applied",
+            "frame_quality_score"
+        ],
+        "thermal_frames_columns": [
+            "timestamp_ns",
+            "frame_filename",
+            "processing_time_ms",
+            "compression_ratio",
+            "file_size_bytes"
+        ],
+        "data_format_notes": "All temperatures in Celsius, timestamps in nanoseconds since session start"
+    },
+    "quality_assurance": {
+        "calibration_timestamp": ${System.nanoTime()},
+        "validation_checks": {
+            "temperature_range_valid": true,
+            "emissivity_in_range": ${emissivity >= 0.1 && emissivity <= 1.0},
+            "ambient_temp_reasonable": ${ambientTemperature >= -10 && ambientTemperature <= 50},
+            "device_communication_stable": $isIRCameraConnected
+        },
+        "data_integrity": {
+            "checksum_enabled": false,
+            "frame_sequence_validation": true,
+            "timestamp_monotonic_check": true
+        }
+    },
+    "usb_device_details": ${
             if (thermalCameraDevice != null) {
                 """
-  	{
-  		"vendor_id": "${thermalCameraDevice!!.vendorId.toString(16)}",
-  		"product_id": "${thermalCameraDevice!!.productId.toString(16)}",
-  		"product_name": "${thermalCameraDevice!!.productName}",
-  		"device_name": "${thermalCameraDevice!!.deviceName}"
-  	}
-  	"""
+        {
+            "vendor_id": "${thermalCameraDevice!!.vendorId.toString(16)}",
+            "product_id": "${thermalCameraDevice!!.productId.toString(16)}",
+            "product_name": "${thermalCameraDevice!!.productName}",
+            "device_name": "${thermalCameraDevice!!.deviceName}"
+        }
+        """
             } else "null"
         }
-}
+    }
         """.trimIndent()
 
         calibrationFile.writeText(calibrationData)
@@ -2823,102 +2816,6 @@ class ThermalCameraRecorder(
             "ERROR-READING-SERIAL"
         }
     }
-
-
-    private fun writeEnhancedThermalCSVHeaders() {
-        try {
-
-            val thermalDataHeader = arrayOf(
-                "timestamp_ns",
-                "frame_index",
-                "temp_matrix_serialized",
-                "min_temp_c",
-                "max_temp_c",
-                "avg_temp_c",
-                "center_temp_c",
-                "hotspot_x",
-                "hotspot_y",
-                "coldspot_x",
-                "coldspot_y",
-                "emissivity",
-                "ambient_temp_c",
-                "reflected_temp_c",
-                "calibration_applied",
-                "frame_quality_score",
-                "processing_time_ms",
-                "is_simulation",
-                "network_streamed"
-            )
-
-            // Thermal frames header is managed by the CSV constructor
-
-            Log.i(TAG, "Enhanced thermal CSV headers configured")
-
-        } catch (e: Exception) {
-            Log.e(TAG, "Error writing enhanced thermal CSV headers", e)
-        }
-    }
-
-
-    private fun writeEnhancedFrameData(
-        timestamp: Long,
-        frameIndex: Long,
-        temperatureMatrix: FloatArray,
-        frameQuality: Double = 1.0,
-        processingTimeMs: Long = 0,
-        wasNetworkStreamed: Boolean = false
-    ) {
-        try {
-
-            val minTemp = temperatureMatrix.minOrNull() ?: 0f
-            val maxTemp = temperatureMatrix.maxOrNull() ?: 0f
-            val avgTemp = temperatureMatrix.average().toFloat()
-
-
-            val hotspotIndex = temperatureMatrix.indexOfFirst { it == maxTemp }
-            val coldspotIndex = temperatureMatrix.indexOfFirst { it == minTemp }
-            val hotspotX = hotspotIndex % IR_CAMERA_WIDTH
-            val hotspotY = hotspotIndex / IR_CAMERA_WIDTH
-            val coldspotX = coldspotIndex % IR_CAMERA_WIDTH
-            val coldspotY = coldspotIndex / IR_CAMERA_WIDTH
-
-
-            val centerIndex = (IR_CAMERA_HEIGHT / 2) * IR_CAMERA_WIDTH + (IR_CAMERA_WIDTH / 2)
-            val centerTemp =
-                if (centerIndex < temperatureMatrix.size) temperatureMatrix[centerIndex] else avgTemp
-
-
-            val matrixSerialized = temperatureMatrix.joinToString(",") { "%.2f".format(it) }
-
-            val enhancedFrameData = arrayOf(
-                timestamp.toString(),
-                frameIndex.toString(),
-                matrixSerialized,
-                "%.2f".format(minTemp),
-                "%.2f".format(maxTemp),
-                "%.2f".format(avgTemp),
-                "%.2f".format(centerTemp),
-                hotspotX.toString(),
-                hotspotY.toString(),
-                coldspotX.toString(),
-                coldspotY.toString(),
-                emissivity.toString(),
-                ambientTemperature.toString(),
-                reflectedTemperature.toString(),
-                "true",
-                "%.3f".format(frameQuality),
-                processingTimeMs.toString(),
-                isSimulationMode.toString(),
-                wasNetworkStreamed.toString()
-            )
-
-            thermalDataWriter?.writeRow(enhancedFrameData.toList())
-
-        } catch (e: Exception) {
-            Log.e(TAG, "Error writing enhanced frame data", e)
-        }
-    }
-
 
     fun getThermalRecordingStatistics(): ThermalRecordingStats {
         return ThermalRecordingStats(
@@ -3584,12 +3481,12 @@ class ThermalCameraRecorder(
     private fun exportToHDF5(exportDir: File, includeImages: Boolean): Boolean {
         return try {
             Log.i(TAG, "Starting HDF5 export of thermal data")
-            
+
             val hdf5File = File(exportDir, "thermal_data.h5")
-            
+
             // Create HDF5 file structure for thermal data using JHDF5 writer
             val writer = ch.systemsx.cisd.hdf5.HDF5Factory.open(hdf5File)
-            
+
             try {
                 // Create metadata group and attributes
                 writer.createGroup("/metadata")
@@ -3600,11 +3497,11 @@ class ThermalCameraRecorder(
                 writer.setIntAttribute("/metadata", "resolution_width", IR_CAMERA_WIDTH)
                 writer.setIntAttribute("/metadata", "resolution_height", IR_CAMERA_HEIGHT)
                 writer.setStringAttribute("/metadata", "temperature_unit", "celsius")
-                writer.setFloatAttribute("/metadata", "emissivity", DEFAULT_EMISSIVITY)
-                
+                writer.setFloatAttribute("/metadata", "emissivity", DEFAULT_EMISSIVITY.toFloat())
+
                 // Create thermal data group
                 writer.createGroup("/thermal_data")
-                
+
                 // Prepare arrays for bulk data storage
                 val timestamps = mutableListOf<Long>()
                 val frameIndices = mutableListOf<Long>()
@@ -3612,9 +3509,9 @@ class ThermalCameraRecorder(
                 val maxTemps = mutableListOf<Float>()
                 val avgTemps = mutableListOf<Float>()
                 val centerTemps = mutableListOf<Float>()
-                
+
                 // Read existing CSV data and convert to HDF5
-                val csvFile = File(currentSessionDir, THERMAL_DATA_FILENAME)
+                val csvFile = File(sessionDirectory, THERMAL_DATA_FILENAME)
                 if (csvFile.exists()) {
                     csvFile.bufferedReader().use { reader ->
                         var isHeader = true
@@ -3623,7 +3520,7 @@ class ThermalCameraRecorder(
                                 isHeader = false
                                 return@forEachLine
                             }
-                            
+
                             val values = line.split(",")
                             if (values.size >= 6) {
                                 try {
@@ -3640,7 +3537,7 @@ class ThermalCameraRecorder(
                         }
                     }
                 }
-                
+
                 // Write arrays to HDF5
                 if (timestamps.isNotEmpty()) {
                     writer.writeLongArray("/thermal_data/timestamps_ns", timestamps.toLongArray())
@@ -3650,7 +3547,7 @@ class ThermalCameraRecorder(
                     writer.writeFloatArray("/thermal_data/avg_temperatures_c", avgTemps.toFloatArray())
                     writer.writeFloatArray("/thermal_data/center_temperatures_c", centerTemps.toFloatArray())
                 }
-                
+
                 // Add temperature matrices if available and requested
                 if (includeImages) {
                     writer.createGroup("/thermal_data/temperature_matrices")
@@ -3660,16 +3557,16 @@ class ThermalCameraRecorder(
                     writer.setIntAttribute("/thermal_data/temperature_matrices", "width", IR_CAMERA_WIDTH)
                     writer.setStringAttribute("/thermal_data/temperature_matrices", "note", "Temperature matrices export requires additional implementation")
                 }
-                
+
                 Log.i(TAG, "Successfully exported ${timestamps.size} thermal frames to HDF5")
-                
+
             } finally {
                 writer.close()
             }
-            
+
             Log.i(TAG, "HDF5 export completed successfully: ${hdf5File.absolutePath}")
             true
-            
+
         } catch (e: Exception) {
             Log.e(TAG, "Failed to export thermal data to HDF5", e)
             false

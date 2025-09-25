@@ -1082,22 +1082,31 @@ class RgbCameraRecorder(
                     if (pendingCaptureCount >= MAX_PENDING_CAPTURES) {
                         droppedFrames.incrementAndGet()
                         consecutiveDroppedFrames++
-                        
+
                         // Adaptive optimization: increase skip multiplier if dropping many frames
                         if (consecutiveDroppedFrames >= ADAPTIVE_OPTIMIZATION_THRESHOLD) {
                             adaptiveSkipMultiplier = minOf(adaptiveSkipMultiplier + 1, 4) // Max 4x skip
                             consecutiveDroppedFrames = 0
-                            Log.i(TAG, "Adaptive optimization: increased frame skip to ${effectiveSkip}x due to I/O pressure")
+                            Log.i(
+                                TAG,
+                                "Adaptive optimization: increased frame skip to ${effectiveSkip}x due to I/O pressure"
+                            )
                         }
-                        
-                        Log.d(TAG, "Frame dropped due to backpressure (pending: $pendingCaptureCount, adaptive: ${adaptiveSkipMultiplier}x)")
+
+                        Log.d(
+                            TAG,
+                            "Frame dropped due to backpressure (pending: $pendingCaptureCount, adaptive: ${adaptiveSkipMultiplier}x)"
+                        )
                         delay(captureInterval)
                         continue
                     } else {
                         // Reset adaptive optimization if performance improves
                         if (consecutiveDroppedFrames == 0 && adaptiveSkipMultiplier > 1) {
                             adaptiveSkipMultiplier = maxOf(adaptiveSkipMultiplier - 1, 1)
-                            Log.d(TAG, "Adaptive optimization: reduced frame skip to ${effectiveSkip}x as performance improved")
+                            Log.d(
+                                TAG,
+                                "Adaptive optimization: reduced frame skip to ${effectiveSkip}x as performance improved"
+                            )
                         }
                         consecutiveDroppedFrames = 0
                     }

@@ -176,7 +176,12 @@ class ComprehensiveRecordingController(
                     Log.e(TAG, "Prerequisites validation failed: ${validationResult.failureReason}")
                     transitionSessionState(SessionState.STARTING, SessionState.STOPPED_FAILED)
                     _recordingStateFlow.value = RecordingState.ERROR
-                    addSessionEvent("VALIDATION_FAILED", triggerSource = triggerSource, success = false, errorMessage = validationResult.failureReason)
+                    addSessionEvent(
+                        "VALIDATION_FAILED",
+                        triggerSource = triggerSource,
+                        success = false,
+                        errorMessage = validationResult.failureReason
+                    )
                     return@withContext false
                 }
 
@@ -185,7 +190,12 @@ class ComprehensiveRecordingController(
                     Log.e(TAG, "Failed to obtain required permissions")
                     transitionSessionState(SessionState.STARTING, SessionState.STOPPED_FAILED)
                     _recordingStateFlow.value = RecordingState.ERROR
-                    addSessionEvent("PERMISSION_FAILED", triggerSource = triggerSource, success = false, errorMessage = "Required permissions not granted")
+                    addSessionEvent(
+                        "PERMISSION_FAILED",
+                        triggerSource = triggerSource,
+                        success = false,
+                        errorMessage = "Required permissions not granted"
+                    )
                     return@withContext false
                 }
 
@@ -257,7 +267,7 @@ class ComprehensiveRecordingController(
                 if (sensorsStarted > 0) {
                     _isRecording.set(true)
                     _recordingStateFlow.value = RecordingState.RECORDING
-                    
+
                     // Transition session state to RECORDING on successful start
                     transitionSessionState(SessionState.STARTING, SessionState.RECORDING)
 
@@ -400,7 +410,10 @@ class ComprehensiveRecordingController(
                 // Transition to STOPPING state
                 val transitionSuccess = transitionSessionState(SessionState.RECORDING, SessionState.STOPPING)
                 if (!transitionSuccess) {
-                    Log.w(TAG, "Failed to transition to STOPPING state - current state: ${currentSessionState.get().name}")
+                    Log.w(
+                        TAG,
+                        "Failed to transition to STOPPING state - current state: ${currentSessionState.get().name}"
+                    )
                 }
 
                 addSessionEvent("SESSION_STOP_REQUESTED", triggerSource = triggerSource)
@@ -466,11 +479,11 @@ class ComprehensiveRecordingController(
                 // Determine final session state based on stop results
                 val finalSessionState = when {
                     stopResults.isEmpty() -> SessionState.STOPPED_COMPLETED
-                    stopResults.values.all { it } -> SessionState.STOPPED_COMPLETED  
+                    stopResults.values.all { it } -> SessionState.STOPPED_COMPLETED
                     stopResults.values.any { it } -> SessionState.STOPPED_INCOMPLETE
                     else -> SessionState.STOPPED_FAILED
                 }
-                
+
                 // Transition to final state
                 transitionSessionState(SessionState.STOPPING, finalSessionState)
 
@@ -855,12 +868,17 @@ class ComprehensiveRecordingController(
         return currentSessionState.compareAndSet(from, to).also { success ->
             if (success) {
                 Log.d(TAG, "Session state transition: ${from.name} -> ${to.name}")
-                addSessionEvent("STATE_TRANSITION", metadata = mapOf(
-                    "from" to from.name,
-                    "to" to to.name
-                ))
+                addSessionEvent(
+                    "STATE_TRANSITION", metadata = mapOf(
+                        "from" to from.name,
+                        "to" to to.name
+                    )
+                )
             } else {
-                Log.w(TAG, "Failed session state transition: ${from.name} -> ${to.name} (current: ${currentSessionState.get().name})")
+                Log.w(
+                    TAG,
+                    "Failed session state transition: ${from.name} -> ${to.name} (current: ${currentSessionState.get().name})"
+                )
             }
         }
     }
@@ -890,16 +908,21 @@ class ComprehensiveRecordingController(
     fun generateSessionManifest(): SessionManifest {
         val sessionDirectory = currentSessionDirectory?.rootDir?.name ?: currentSessionId ?: "unknown"
         val startTime = sessionStartTime.get()
-        val stopTime = if (currentSessionState.get() in listOf(SessionState.STOPPED_COMPLETED, SessionState.STOPPED_FAILED, SessionState.STOPPED_INCOMPLETE)) {
+        val stopTime = if (currentSessionState.get() in listOf(
+                SessionState.STOPPED_COMPLETED,
+                SessionState.STOPPED_FAILED,
+                SessionState.STOPPED_INCOMPLETE
+            )
+        ) {
             System.currentTimeMillis()
         } else null
-        
+
         val duration = stopTime?.let { it - startTime }
-        
+
         val sensorActivitySummary = sensorRecorders.keys.associateWith { sensorName ->
             val wasActive = activeRecorders[sensorName] == true
             val healthInfo = sensorHealthStatus[sensorName]
-            
+
             SensorActivityInfo(
                 sensorName = sensorName,
                 wasActive = wasActive,
@@ -908,15 +931,15 @@ class ComprehensiveRecordingController(
                 errorMessages = healthInfo?.lastError?.let { listOf(it) } ?: emptyList()
             )
         }
-        
-        val errors = sessionEvents.filter { !it.success }.map { 
+
+        val errors = sessionEvents.filter { !it.success }.map {
             "${it.eventType}: ${it.errorMessage ?: "Unknown error"}"
         }
-        
-        val warnings = sessionEvents.filter { 
+
+        val warnings = sessionEvents.filter {
             it.eventType.contains("WARNING") || it.eventType.contains("CRITICAL")
         }.map { "${it.eventType}: ${it.metadata}" }
-        
+
         return SessionManifest(
             sessionId = sessionDirectory,
             startTime = startTime,

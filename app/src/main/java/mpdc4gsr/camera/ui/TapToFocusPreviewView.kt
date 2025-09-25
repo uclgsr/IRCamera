@@ -21,7 +21,7 @@ class TapToFocusPreviewView @JvmOverloads constructor(
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
     val previewView = PreviewView(context, attrs, defStyleAttr)
-    
+
     // Create an overlay view for drawing focus indicators
     private val overlayView = object : View(context) {
         override fun onDraw(canvas: Canvas) {
@@ -55,10 +55,10 @@ class TapToFocusPreviewView @JvmOverloads constructor(
     init {
         // Add the PreviewView to the FrameLayout
         addView(previewView, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT))
-        
+
         // Add the overlay view on top
         addView(overlayView, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT))
-        
+
         // Enable drawing for focus indicators
         setWillNotDraw(false)
     }
@@ -130,7 +130,6 @@ class TapToFocusPreviewView @JvmOverloads constructor(
             }
         }
     }
-
 
 
     fun triggerFocusAt(x: Float, y: Float) {
