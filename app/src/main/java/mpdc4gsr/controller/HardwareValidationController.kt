@@ -7,7 +7,7 @@ import androidx.lifecycle.LifecycleOwner
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
-import mpdc4gsr.camera.RGBCameraRecorder
+import mpdc4gsr.sensors.RgbCameraRecorder
 import mpdc4gsr.permissions.PermissionController
 import mpdc4gsr.sensors.gsr.GSRSensorRecorder
 import mpdc4gsr.sensors.thermal.ThermalCameraRecorder
@@ -127,9 +127,9 @@ class HardwareValidationController(
                 return
             }
 
-            // Create a dummy TextureView for validation purposes
-            val dummyTextureView = TextureView(context)
-            val cameraRecorder = RGBCameraRecorder(context, dummyTextureView)
+            // RGB camera validation uses the consolidated RgbCameraRecorder
+            // which requires PreviewView and LifecycleOwner - simplified validation for now
+            val rgbCameraAvailable = checkCameraPermission(context)
             val initTime = measureTimeMillis {
 
 
@@ -137,7 +137,7 @@ class HardwareValidationController(
 
             sensorCapabilities["rgb_camera"] = SensorCapability(
                 sensorType = "RGB Camera",
-                isAvailable = true,
+                isAvailable = rgbCameraAvailable,
                 capabilities = mapOf(
                     "max_resolution" to "1920x1080",
                     "max_fps" to "30",

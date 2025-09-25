@@ -12,7 +12,7 @@ import mpdc4gsr.camera.core.SamsungDeviceCompatibility
 import mpdc4gsr.data.SessionMetadata
 import mpdc4gsr.sensors.RgbCameraRecorder
 
-class RAWCaptureTestActivity : AppCompatActivity() {
+class RawCaptureTestActivity : AppCompatActivity() {
     companion object {
         private const val TAG = "RAWCaptureTest"
     }
@@ -114,7 +114,7 @@ class RAWCaptureTestActivity : AppCompatActivity() {
                 } else {
                     Log.w(TAG, "Camera initialization failed")
                     runOnUiThread {
-                        Toast.makeText(this@RAWCaptureTestActivity, "Camera initialization failed", Toast.LENGTH_SHORT)
+                        Toast.makeText(this@RawCaptureTestActivity, "Camera initialization failed", Toast.LENGTH_SHORT)
                             .show()
                     }
                 }
@@ -172,7 +172,7 @@ class RAWCaptureTestActivity : AppCompatActivity() {
                 binding.startStopButton.text = "⏹️ Stop Recording"
                 binding.startStopButton.setBackgroundColor(
                     androidx.core.content.ContextCompat.getColor(
-                        this@RAWCaptureTestActivity,
+                        this@RawCaptureTestActivity,
                         android.R.color.holo_red_dark
                     )
                 )
@@ -202,7 +202,7 @@ class RAWCaptureTestActivity : AppCompatActivity() {
                 isRecording = false
                 binding.startStopButton.text = "▶️ Start Multi-Modal Recording"
                 binding.startStopButton.setBackgroundColor(resources.getColor(android.R.color.holo_green_dark))
-                Toast.makeText(this@RAWCaptureTestActivity, "Recording failed: ${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@RawCaptureTestActivity, "Recording failed: ${e.message}", Toast.LENGTH_SHORT).show()
             }
         }
     }

@@ -3,14 +3,14 @@ package com.mpdc4gsr.gsr.service
 import android.util.Log
 import com.mpdc4gsr.gsr.model.GSRSample
 
-class ShimmerAPIBridge private constructor() {
+class ShimmerApiBridge private constructor() {
     companion object {
-        private const val TAG = "ShimmerAPIBridge"
-        private var instance: ShimmerAPIBridge? = null
+        private const val TAG = "ShimmerApiBridge"
+        private var instance: ShimmerApiBridge? = null
 
-        fun getInstance(): ShimmerAPIBridge {
+        fun getInstance(): ShimmerApiBridge {
             return instance ?: synchronized(this) {
-                instance ?: ShimmerAPIBridge().also { instance = it }
+                instance ?: ShimmerApiBridge().also { instance = it }
             }
         }
     }

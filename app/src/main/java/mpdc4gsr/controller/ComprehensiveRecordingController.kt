@@ -24,13 +24,13 @@ import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
 
-// Use proper type aliases from RecordingController
-typealias SessionManifest = RecordingController.SessionManifest
-typealias SessionEvent = RecordingController.SessionEvent
-typealias SensorActivityInfo = RecordingController.SensorActivityInfo
-typealias SensorHealthInfo = RecordingController.SensorHealthInfo
-typealias DropoutEvent = RecordingController.DropoutEvent
-typealias ReconnectionEvent = RecordingController.ReconnectionEvent
+// Use proper type aliases from controller package
+typealias SessionManifest = mpdc4gsr.controller.SessionManifest
+typealias SessionEvent = mpdc4gsr.controller.SessionEvent
+typealias SensorActivityInfo = mpdc4gsr.controller.SensorActivityInfo
+typealias SensorHealthInfo = mpdc4gsr.controller.SensorHealthInfo
+typealias DropoutEvent = mpdc4gsr.controller.DropoutEvent
+typealias ReconnectionEvent = mpdc4gsr.controller.ReconnectionEvent
 
 
 class ComprehensiveRecordingController(
@@ -1150,7 +1150,7 @@ class ComprehensiveRecordingController(
     }
 
     // Session manifest generation
-    fun generateSessionManifest(): RecordingController.SessionManifest {
+    fun generateSessionManifest(): SessionManifest {
         val sessionDirectory = currentSessionDirectory?.rootDir?.name ?: currentSessionId ?: "unknown"
         val startTime = sessionStartTime.get()
         val stopTime = if (currentSessionState.get() in listOf(
@@ -1185,7 +1185,7 @@ class ComprehensiveRecordingController(
             it.eventType.contains("WARNING") || it.eventType.contains("CRITICAL")
         }.map { "${it.eventType}: ${it.metadata}" }
 
-        return RecordingController.SessionManifest(
+        return SessionManifest(
             sessionId = sessionDirectory,
             startTime = startTime,
             stopTime = stopTime,
