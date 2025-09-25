@@ -83,7 +83,7 @@ class RecordingService : LifecycleService() {
         const val EXTRA_BLUETOOTH_DEVICE = "bluetooth_device"
         
         // Type aliases for compatibility
-        typealias SessionManifest = RecordingController.SessionManifest
+        typealias SessionManifest = mpdc4gsr.controller.SessionManifest
 
         fun startRecording(context: Context, sessionDirectory: String) {
             val intent = Intent(context, RecordingService::class.java).apply {

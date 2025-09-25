@@ -57,7 +57,7 @@ class RecordingController(
         private const val SHIMMER_STORAGE_MB_PER_MIN = 1.0
         
         // Type aliases for public API compatibility
-        typealias SessionManifest = RecordingControllerSessionManifest
+        typealias SessionManifest = mpdc4gsr.controller.SessionManifest
         typealias SensorActivityInfo = RecordingControllerSensorActivityInfo
         typealias SessionEvent = RecordingControllerSessionEvent
         typealias SensorHealthInfo = RecordingControllerSensorHealthInfo
@@ -1980,7 +1980,7 @@ class RecordingController(
     }
 
     // Session manifest generation
-    fun generateSessionManifest(): RecordingController.SessionManifest {
+    fun generateSessionManifest(): SessionManifest {
         val sessionDirectory = currentSessionDirectory?.rootDir?.name ?: "unknown"
         val startTime = sessionStartTimestampMs
         val stopTime = if (currentSessionState.get() in listOf(
@@ -2015,7 +2015,7 @@ class RecordingController(
             it.eventType.contains("WARNING") || it.eventType.contains("CRITICAL")
         }.map { "${it.eventType}: ${it.metadata}" }
 
-        return RecordingControllerSessionManifest(
+        return SessionManifest(
             sessionId = sessionDirectory,
             startTime = startTime,
             stopTime = stopTime,
