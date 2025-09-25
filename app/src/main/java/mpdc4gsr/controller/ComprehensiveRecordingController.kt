@@ -110,7 +110,7 @@ class ComprehensiveRecordingController(
 
     fun addSensorRecorder(name: String, recorder: SensorRecorder) {
         sensorRecorders[name] = recorder
-        sensorHealthStatus[name] = ComprehensiveSensorHealthInfo(
+        sensorHealthStatus[name] = SensorHealthInfo(
             name = name,
             isHealthy = true,
             lastHealthCheck = System.currentTimeMillis(),
