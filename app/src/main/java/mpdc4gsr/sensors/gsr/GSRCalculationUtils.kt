@@ -56,9 +56,9 @@ object GSRCalculationUtils {
     }
     
     /**
-     * Enhanced quality score calculation with timing and connection factors
+     * Enhanced quality score calculation based on GSR raw value.
      */
-    fun calculateQualityScore(gsrRaw: Int, timestamp: Long): Double {
+    fun calculateQualityScore(gsrRaw: Int): Double {
         val baseQuality = when {
             gsrRaw <= 0 -> 0.0
             gsrRaw < GSRConstants.GSR_RAW_LOWER_BOUND -> 0.3
