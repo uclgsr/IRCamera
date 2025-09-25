@@ -124,6 +124,26 @@ data class SensorStatusInfo(
     val errorCount: Int
 )
 
+// Legacy compatibility for ComprehensiveRecordingController
+data class SensorHealthSummary(
+    val sensorId: String,
+    val name: String,
+    val isHealthy: Boolean
+)
+
+data class SessionInfoData(
+    val sessionId: String,
+    val startTime: Long,
+    val endTime: Long,
+    val durationMs: Long,
+    val durationSeconds: Double,
+    val recordingStatus: String,
+    val activeSensors: List<String>,
+    val sensorStopResults: Map<String, Boolean>,
+    val errors: List<String>?,
+    val finalizedAt: Long
+)
+
 data class ValidationResult(
     val isValid: Boolean, 
     val failureReason: String = ""

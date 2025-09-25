@@ -578,9 +578,12 @@ class ComprehensiveRecordingController(
     private fun updateSensorStatusFlow() {
         val statusList = sensorHealthStatus.map { (name, health) ->
             SensorStatusInfo(
-                name = name,
-                isRecording = activeRecorders[name] ?: false,
-                isHealthy = health.isHealthy
+                sensorId = name,
+                isActive = activeRecorders[name] ?: false,
+                isHealthy = health.isHealthy,
+                lastSampleTime = System.currentTimeMillis(),
+                samplesRecorded = 0L, // Would need to track this from sensors
+                errorCount = 0 // Would need to track this from sensors
             )
         }
         _sensorStatusFlow.value = statusList
