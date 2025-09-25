@@ -1043,9 +1043,12 @@ class RecordingService : LifecycleService() {
 
         recordingController.sensorStatusFlow
             .onEach { statusList ->
-                val activeSensors = statusList.count { it.isRecording }
+                val activeSensors = statusList.count { it.isActive }
                 val totalSamples = statusList.sumOf { it.samplesRecorded }
-                val totalStorage = statusList.sumOf { it.storageUsedMB }
+                val totalStorage = statusList.sumOf { 
+                    // Calculate storage based on samples (rough estimate)
+                    (it.samplesRecorded * 0.001) // ~1KB per sample estimate
+                }
 
                 if (activeSensors > 0) {
                     val statusText = "Recording: $activeSensors sensors, " +
