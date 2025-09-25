@@ -94,7 +94,7 @@ object InitUtil {
 
     fun initUM() {
         try {
-            // Initialize UMeng analytics and common SDK
+            // Initialize UMeng analytics and common SDK using app/libs libraries
             val context = BaseApplication.instance
             
             // Initialize UMeng Common SDK first
@@ -107,14 +107,41 @@ object InitUtil {
                 null
             )
             
-            // Initialize analytics
+            // Initialize analytics with enhanced configuration
             com.umeng.analytics.MobclickAgent.setPageCollectionMode(
                 com.umeng.analytics.MobclickAgent.PageMode.AUTO
             )
             
-            XLog.i("UMeng SDK initialized successfully")
+            // Enable enhanced analytics features available in UMeng libs
+            try {
+                com.umeng.analytics.MobclickAgent.setCatchUncaughtExceptions(true)
+                com.umeng.analytics.MobclickAgent.setScenarioType(context, com.umeng.analytics.MobclickAgent.EScenarioType.E_UM_NORMAL)
+                
+                // Initialize auth-number service if available (from auth-number-2.13.2.1.aar)
+                initializeAuthNumberService(context)
+                
+                XLog.i("UMeng SDK with enhanced features initialized successfully")
+            } catch (e: Exception) {
+                XLog.w("UMeng enhanced features initialization partial: ${e.message}")
+                XLog.i("UMeng basic SDK initialized successfully")
+            }
         } catch (e: Exception) {
             XLog.e("Failed to initialize UMeng SDK: ${e.message}")
+        }
+    }
+    
+    private fun initializeAuthNumberService(context: Context) {
+        try {
+            // Use reflection to initialize auth-number service from app/libs if available
+            val authClass = Class.forName("com.netease.nis.quicklogin.QuickLogin")
+            val initMethod = authClass.getMethod("getInstance", Context::class.java, String::class.java)
+            val authInstance = initMethod.invoke(null, context, BuildConfig.APP_KEY)
+            
+            XLog.i("Auth number service initialized from app/libs")
+        } catch (e: ClassNotFoundException) {
+            XLog.d("Auth number service not available (expected for MVP)")
+        } catch (e: Exception) {
+            XLog.w("Auth number service initialization failed: ${e.message}")
         }
     }
 
