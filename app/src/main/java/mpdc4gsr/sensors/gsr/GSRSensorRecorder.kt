@@ -1262,20 +1262,19 @@ class GSRSensorRecorder(
                 if (shimmerManager != null) {
                     val deviceList = mutableListOf<String>()
 
-                    // Get connected Shimmer devices - using fallback for compilation
+                    // Get connected Shimmer devices using actual Shimmer SDK
                     val connectedDevices = try {
-                        // TODO: Replace with actual Shimmer SDK methods when available
-                        Log.w(TAG, "Using stub implementation for Shimmer device scanning")
-                        emptyList<ShimmerDevice>()
+                        Log.i(TAG, "Getting connected Shimmer devices from SDK")
+                        shimmerManager.getConnectedDeviceList()?.values?.toList() ?: emptyList()
                     } catch (e: Exception) {
                         Log.w(TAG, "Error getting connected devices: ${e.message}")
                         emptyList()
                     }
                     
-                    connectedDevices.forEach { device ->
+                    connectedDevices.forEach { shimmer ->
                         try {
-                            val deviceName = "Shimmer Device" // device.deviceName ?: "Unknown"  
-                            val deviceAddress = "00:00:00:00:00:00" // device.bluetoothAddress ?: "Unknown"
+                            val deviceName = shimmer.deviceName ?: "Unknown Shimmer"
+                            val deviceAddress = shimmer.bluetoothAddress ?: "Unknown Address"
                             deviceList.add("$deviceName ($deviceAddress) - Connected")
                         } catch (e: Exception) {
                             Log.w(TAG, "Error processing device info: ${e.message}")
@@ -1296,10 +1295,9 @@ class GSRSensorRecorder(
 
                                 // Check if this is a Shimmer GSR device
                                 if (isShimmerGSRDevice(deviceName, deviceAddress)) {
-                                    val isAlreadyConnected = connectedDevices.any { device ->
+                                    val isAlreadyConnected = connectedDevices.any { shimmer ->
                                         try {
-                                            // Use stub for now - replace with actual property access
-                                            false // device.bluetoothAddress == deviceAddress
+                                            shimmer.bluetoothAddress == deviceAddress
                                         } catch (e: Exception) {
                                             false
                                         }
@@ -1348,20 +1346,18 @@ class GSRSensorRecorder(
 
                 val shimmerManager = shimmerBluetoothManager
                 if (shimmerManager != null) {
-                    // Check if device is already connected - using fallback for compilation
+                    // Check if device is already connected using actual Shimmer SDK
                     val connectedDevices = try {
-                        // TODO: Replace with actual Shimmer SDK methods when available
-                        Log.w(TAG, "Using stub implementation for device connection check")
-                        emptyList<ShimmerDevice>()
+                        Log.i(TAG, "Checking connected devices from Shimmer SDK")
+                        shimmerManager.getConnectedDeviceList()?.values?.toList() ?: emptyList()                        
                     } catch (e: Exception) {
                         Log.w(TAG, "Error getting connected devices: ${e.message}")
                         emptyList()
                     }
                     
-                    val alreadyConnected = connectedDevices.any { device ->
+                    val alreadyConnected = connectedDevices.any { shimmer ->
                         try {
-                            // Use stub for now - replace with actual property access
-                            false // device.bluetoothAddress == deviceAddress
+                            shimmer.bluetoothAddress == deviceAddress
                         } catch (e: Exception) {
                             false
                         }
@@ -1378,26 +1374,29 @@ class GSRSensorRecorder(
                     var connectionSuccess = false
 
                     try {
-                        // Use Shimmer's official connection API - stub implementation for compilation
-                        Log.w(TAG, "Using stub implementation for Shimmer device connection")
+                        // Use Shimmer's official connection API
+                        Log.i(TAG, "Connecting to Shimmer device using official SDK")
                         
-                        // TODO: Replace with actual Shimmer SDK connection methods
-                        connectionSuccess = false // Stub - should connect to real device
+                        // Use actual Shimmer SDK connection methods
+                        shimmerManager.connectShimmerThroughBTAddress(deviceAddress)
+                        
+                        // Connection is asynchronous, success will be verified after delay
+                        connectionSuccess = true
                         
                         if (connectionSuccess) {
                             // Wait for connection to establish
                             delay(2000)
 
-                            // Verify connection - using fallback for compilation
+                            // Verify connection using actual Shimmer SDK
                             val updatedConnectedDevices = try {
-                                // TODO: Replace with actual connected device check
-                                emptyList<ShimmerDevice>()
+                                Log.i(TAG, "Verifying connection to Shimmer device")
+                                shimmerManager.getConnectedDeviceList()?.values?.toList() ?: emptyList()
                             } catch (e: Exception) {
                                 Log.w(TAG, "Error verifying connected devices: ${e.message}")
                                 emptyList()
                             }
                             
-                            val actuallyConnected = updatedConnectedDevices.any { device ->
+                            val actuallyConnected = updatedConnectedDevices.any { shimmer ->
                                 try {
                                     false // device.bluetoothAddress == deviceAddress
                                 } catch (e: Exception) {
