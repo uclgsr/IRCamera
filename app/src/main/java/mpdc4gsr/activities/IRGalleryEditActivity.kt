@@ -19,12 +19,6 @@ import com.elvishew.xlog.XLog
 import com.energy.iruvc.ircmd.IRCMDType
 import com.energy.iruvc.ircmd.IRUtils
 import com.energy.iruvc.utils.CommonParams
-import com.mpdc4gsr.module.thermalunified.lite.IrConst
-import com.mpdc4gsr.module.thermalunified.lite.util.CommonUtil
-import com.mpdc4gsr.module.thermalunified.lite.util.IRTool
-import com.mpdc4gsr.libunified.ir.utils.OpencvTools
-import com.mpdc4gsr.libunified.ir.utils.PseudocodeUtils.changePseudocodeModeByOld
-import com.mpdc4gsr.libunified.ir.view.ITsTempListener
 import com.mpdc4gsr.libunified.app.BaseApplication
 import com.mpdc4gsr.libunified.app.activity.PseudoSetActivity
 import com.mpdc4gsr.libunified.app.bean.CustomPseudoBean
@@ -54,6 +48,9 @@ import com.mpdc4gsr.libunified.app.utils.BitmapUtils
 import com.mpdc4gsr.libunified.app.utils.Constants.IS_REPORT_FIRST
 import com.mpdc4gsr.libunified.app.utils.ImageUtils
 import com.mpdc4gsr.libunified.app.utils.ScreenUtil
+import com.mpdc4gsr.libunified.ir.utils.OpencvTools
+import com.mpdc4gsr.libunified.ir.utils.PseudocodeUtils.changePseudocodeModeByOld
+import com.mpdc4gsr.libunified.ir.view.ITsTempListener
 import com.mpdc4gsr.libunified.ui.widget.seekbar.OnRangeChangedListener
 import com.mpdc4gsr.libunified.ui.widget.seekbar.RangeSeekBar
 import com.mpdc4gsr.module.thermalunified.event.GalleryAddEvent
@@ -61,6 +58,9 @@ import com.mpdc4gsr.module.thermalunified.event.ImageGalleryEvent
 import com.mpdc4gsr.module.thermalunified.frame.FrameStruct
 import com.mpdc4gsr.module.thermalunified.frame.FrameTool
 import com.mpdc4gsr.module.thermalunified.frame.ImageParams
+import com.mpdc4gsr.module.thermalunified.lite.IrConst
+import com.mpdc4gsr.module.thermalunified.lite.util.CommonUtil
+import com.mpdc4gsr.module.thermalunified.lite.util.IRTool
 import com.mpdc4gsr.module.thermalunified.report.bean.ImageTempBean
 import com.mpdc4gsr.module.thermalunified.view.TemperatureBaseView.Mode
 import com.mpdc4gsr.module.thermalunified.viewmodel.IRGalleryEditViewModel
@@ -71,8 +71,8 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.util.Locale
-import com.mpdc4gsr.module.thermalunified.R as ThermalLiteR
 import com.mpdc4gsr.module.thermalunified.R as ThermalIrR
+import com.mpdc4gsr.module.thermalunified.R as ThermalLiteR
 
 class IRGalleryEditActivity : BaseBindingActivity<ActivityIrGalleryEditBinding>(),
     View.OnClickListener, ITsTempListener {

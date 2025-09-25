@@ -4,15 +4,32 @@ import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeout
 import mpdc4gsr.controller.RecordingController
 import mpdc4gsr.core.StructuredLogger
-import mpdc4gsr.sensors.unified.model.*
+import mpdc4gsr.sensors.unified.model.SessionConfig
+import mpdc4gsr.sensors.unified.model.SessionInfo
+import mpdc4gsr.sensors.unified.model.SessionQuality
+import mpdc4gsr.sensors.unified.model.SessionStatistics
+import mpdc4gsr.sensors.unified.model.SessionStatus
+import mpdc4gsr.sensors.unified.model.SessionSummary
 import org.json.JSONObject
 import java.io.File
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
 
@@ -1024,14 +1041,14 @@ class UnifiedSessionManager(
                         try {
                             val connectionResults = recordingController.testSensorConnections()
                             val success = connectionResults["thermal"] ?: false
-                            
+
                             // Use approximate values based on typical thermal camera metrics
                             val samples = if (success) {
                                 val sessionDuration = System.currentTimeMillis() - sessionStartTime.get()
                                 (sessionDuration / 1000) * 30 // ~30 FPS thermal camera
                             } else 0L
                             val size = samples * 100 // ~100 bytes per thermal frame
-                            
+
                             Triple(success, samples, size)
                         } catch (e: Exception) {
                             Log.w(TAG, "Failed to get thermal metrics", e)
@@ -1044,14 +1061,14 @@ class UnifiedSessionManager(
                         try {
                             val connectionResults = recordingController.testSensorConnections()
                             val success = connectionResults["rgb"] ?: false
-                            
+
                             // Use approximate values based on typical RGB camera metrics
                             val samples = if (success) {
                                 val sessionDuration = System.currentTimeMillis() - sessionStartTime.get()
                                 (sessionDuration / 1000) * 30 // ~30 FPS RGB camera
                             } else 0L
                             val size = samples * 1024 // ~1KB per RGB frame metadata
-                            
+
                             Triple(success, samples, size)
                         } catch (e: Exception) {
                             Log.w(TAG, "Failed to get RGB metrics", e)
@@ -1064,14 +1081,14 @@ class UnifiedSessionManager(
                         try {
                             val connectionResults = recordingController.testSensorConnections()
                             val success = connectionResults["audio"] ?: false
-                            
+
                             // Use approximate values based on typical audio metrics
                             val samples = if (success) {
                                 val sessionDuration = System.currentTimeMillis() - sessionStartTime.get()
                                 (sessionDuration / 1000) * 44100 // 44.1kHz sample rate
                             } else 0L
                             val size = samples * 2 // 16-bit audio = 2 bytes per sample
-                            
+
                             Triple(success, samples, size)
                         } catch (e: Exception) {
                             Log.w(TAG, "Failed to get audio metrics", e)

@@ -2,7 +2,6 @@ package com.mpdc4gsr.module.thermalunified.lite.activity
 
 import android.Manifest
 import android.annotation.SuppressLint
-import com.mpdc4gsr.libunified.ui.dialog.ProgressDialog
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
@@ -38,40 +37,15 @@ import com.blankj.utilcode.util.SizeUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.elvishew.xlog.XLog
 import com.energy.ac020library.bean.IrcmdError
-import com.mpdc4gsr.libunified.common.RotateDegree
 import com.energy.irutilslibrary.LibIRTempAC020
 import com.energy.irutilslibrary.bean.GainStatus
 import com.energy.iruvc.sdkisp.LibIRProcess
 import com.energy.iruvc.utils.CommonParams
 import com.energy.iruvc.utils.SynchronizedBitmap
 import com.energy.iruvccamera.usb.USBMonitor
-import com.mpdc4gsr.module.thermalunified.lite.IrConst
-import com.mpdc4gsr.module.thermalunified.R
-import com.mpdc4gsr.libunified.R as LibR
-import com.mpdc4gsr.module.thermalunified.lite.camera.CameraPreviewManager
-import com.mpdc4gsr.module.thermalunified.lite.camera.DeviceControlManager
-import com.mpdc4gsr.module.thermalunified.lite.camera.DeviceIrcmdControlManager
-import com.mpdc4gsr.module.thermalunified.lite.camera.OnUSBConnectListener
-import com.mpdc4gsr.module.thermalunified.lite.camera.TempCompensation
-import com.mpdc4gsr.module.thermalunified.lite.camera.USBMonitorManager
-import com.mpdc4gsr.module.thermalunified.databinding.ActivityIrThermalLiteBinding
-import com.mpdc4gsr.module.thermalunified.lite.util.CommonUtil
-import com.mpdc4gsr.module.thermalunified.lite.util.IRTool
 import com.hjq.permissions.OnPermissionCallback
 import com.hjq.permissions.Permission
 import com.hjq.permissions.XXPermissions
-import com.mpdc4gsr.libunified.ir.inf.ILiteListener
-import com.mpdc4gsr.libunified.ir.utils.ViewStubUtils
-import com.mpdc4gsr.libunified.ir.view.ITsTempListener
-import com.mpdc4gsr.libunified.ir.view.TemperatureView
-import com.mpdc4gsr.libunified.ir.view.TemperatureView.GONE
-import com.mpdc4gsr.libunified.ir.view.TemperatureView.REGION_MODE_CENTER
-import com.mpdc4gsr.libunified.ir.view.TemperatureView.REGION_MODE_CLEAN
-import com.mpdc4gsr.libunified.ir.view.TemperatureView.REGION_MODE_LINE
-import com.mpdc4gsr.libunified.ir.view.TemperatureView.REGION_MODE_POINT
-import com.mpdc4gsr.libunified.ir.view.TemperatureView.REGION_MODE_RECTANGLE
-import com.mpdc4gsr.libunified.ir.view.TemperatureView.REGION_NODE_TREND
-import com.mpdc4gsr.libunified.ir.view.TemperatureView.VISIBLE
 import com.mpdc4gsr.libunified.app.BaseApplication
 import com.mpdc4gsr.libunified.app.activity.PseudoSetActivity
 import com.mpdc4gsr.libunified.app.bean.CameraItemBean
@@ -107,13 +81,38 @@ import com.mpdc4gsr.libunified.app.utils.BitmapUtils
 import com.mpdc4gsr.libunified.app.utils.CommUtils
 import com.mpdc4gsr.libunified.app.utils.ImageUtils
 import com.mpdc4gsr.libunified.app.utils.ScreenUtil
+import com.mpdc4gsr.libunified.common.RotateDegree
+import com.mpdc4gsr.libunified.ir.inf.ILiteListener
+import com.mpdc4gsr.libunified.ir.utils.ViewStubUtils
+import com.mpdc4gsr.libunified.ir.view.ITsTempListener
+import com.mpdc4gsr.libunified.ir.view.TemperatureView
+import com.mpdc4gsr.libunified.ir.view.TemperatureView.GONE
+import com.mpdc4gsr.libunified.ir.view.TemperatureView.REGION_MODE_CENTER
+import com.mpdc4gsr.libunified.ir.view.TemperatureView.REGION_MODE_CLEAN
+import com.mpdc4gsr.libunified.ir.view.TemperatureView.REGION_MODE_LINE
+import com.mpdc4gsr.libunified.ir.view.TemperatureView.REGION_MODE_POINT
+import com.mpdc4gsr.libunified.ir.view.TemperatureView.REGION_MODE_RECTANGLE
+import com.mpdc4gsr.libunified.ir.view.TemperatureView.REGION_NODE_TREND
+import com.mpdc4gsr.libunified.ir.view.TemperatureView.VISIBLE
+import com.mpdc4gsr.libunified.ui.dialog.ProgressDialog
 import com.mpdc4gsr.libunified.ui.widget.seekbar.OnRangeChangedListener
 import com.mpdc4gsr.libunified.ui.widget.seekbar.RangeSeekBar
+import com.mpdc4gsr.module.thermalunified.R
 import com.mpdc4gsr.module.thermalunified.activity.BaseIRActivity
 import com.mpdc4gsr.module.thermalunified.adapter.CameraItemAdapter
 import com.mpdc4gsr.module.thermalunified.bean.DataBean
+import com.mpdc4gsr.module.thermalunified.databinding.ActivityIrThermalLiteBinding
 import com.mpdc4gsr.module.thermalunified.event.GalleryAddEvent
 import com.mpdc4gsr.module.thermalunified.frame.FrameStruct
+import com.mpdc4gsr.module.thermalunified.lite.IrConst
+import com.mpdc4gsr.module.thermalunified.lite.camera.CameraPreviewManager
+import com.mpdc4gsr.module.thermalunified.lite.camera.DeviceControlManager
+import com.mpdc4gsr.module.thermalunified.lite.camera.DeviceIrcmdControlManager
+import com.mpdc4gsr.module.thermalunified.lite.camera.OnUSBConnectListener
+import com.mpdc4gsr.module.thermalunified.lite.camera.TempCompensation
+import com.mpdc4gsr.module.thermalunified.lite.camera.USBMonitorManager
+import com.mpdc4gsr.module.thermalunified.lite.util.CommonUtil
+import com.mpdc4gsr.module.thermalunified.lite.util.IRTool
 import com.mpdc4gsr.module.thermalunified.popup.SeekBarPopup
 import com.mpdc4gsr.module.thermalunified.repository.ConfigRepository
 import com.mpdc4gsr.module.thermalunified.utils.IRConfigData
@@ -134,6 +133,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.EventBus
 import kotlin.math.abs
+import com.mpdc4gsr.libunified.R as LibR
 
 
 class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {

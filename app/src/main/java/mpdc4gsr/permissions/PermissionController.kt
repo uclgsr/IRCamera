@@ -120,7 +120,6 @@ class PermissionController(
     }
 
 
-
     fun checkAndRequestThermalCameraPermissions(callback: (Boolean, List<UsbDevice>) -> Unit) {
         val thermalDevices = usbManager?.deviceList?.values?.filter { device ->
             device.vendorId == TOPDON_VENDOR_ID && device.productId == TC001_PRODUCT_ID

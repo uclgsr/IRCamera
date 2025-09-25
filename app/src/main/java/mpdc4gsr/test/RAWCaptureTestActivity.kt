@@ -5,7 +5,6 @@ import android.util.Log
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.camera.view.PreviewView
 import androidx.lifecycle.lifecycleScope
 import com.csl.irCamera.databinding.ActivityRawCaptureTestBinding
 import kotlinx.coroutines.launch
@@ -130,7 +129,8 @@ class RAWCaptureTestActivity : AppCompatActivity() {
         lifecycleScope.launch {
             rgbCameraRecorder?.getStatusFlow()?.collect { status ->
                 runOnUiThread {
-                    binding.cameraStatusText.text = "Camera: ${if (status.isRecording) "Recording" else "Ready"} - Rate: ${status.currentDataRate}"
+                    binding.cameraStatusText.text =
+                        "Camera: ${if (status.isRecording) "Recording" else "Ready"} - Rate: ${status.currentDataRate}"
                 }
             }
         }

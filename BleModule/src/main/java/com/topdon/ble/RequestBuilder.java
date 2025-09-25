@@ -1,11 +1,10 @@
 package com.topdon.ble;
 
 import com.topdon.ble.callback.RequestCallback;
-
-import java.util.UUID;
-
 import com.topdon.commons.observer.Observe;
 import com.topdon.commons.poster.RunOn;
+
+import java.util.UUID;
 
 /**
  * date: 2019/9/20 18:00

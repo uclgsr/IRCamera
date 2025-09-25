@@ -59,22 +59,22 @@ class CameraPreView : View, BitmapViewListener {
     // Keep the onDraw method from 'copilot' as it handles the visual state
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        
+
         if (isOpen) {
             // Draw a simple camera preview indicator
             val paint = Paint().apply {
                 color = Color.DKGRAY
                 alpha = (255 * cameraAlpha).toInt()
             }
-            
+
             canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), paint)
-            
+
             // Draw a simple camera icon in the center
             paint.color = Color.WHITE
             val centerX = width / 2f
             val centerY = height / 2f
             canvas.drawCircle(centerX, centerY, 20f, paint)
-            
+
             paint.color = Color.GRAY
             canvas.drawCircle(centerX, centerY, 15f, paint)
         }

@@ -12,9 +12,9 @@ import androidx.core.app.ActivityCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.csl.irCamera.R
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import com.csl.irCamera.R
 import mpdc4gsr.sensors.unified.ShimmerDeviceManager
 import mpdc4gsr.sensors.unified.model.DeviceInfo
 

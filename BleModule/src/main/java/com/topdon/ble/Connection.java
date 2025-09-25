@@ -6,7 +6,6 @@ import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothGattService;
 
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 

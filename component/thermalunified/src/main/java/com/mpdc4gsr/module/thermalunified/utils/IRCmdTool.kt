@@ -8,9 +8,9 @@ import com.energy.iruvc.ircmd.IRCMD
 import com.energy.iruvc.utils.CommonParams
 import com.energy.iruvc.utils.DualCameraParams
 import com.energy.iruvc.utils.SynchronizedBitmap
+import com.mpdc4gsr.libunified.app.common.SharedManager
 import com.mpdc4gsr.libunified.ir.usbdual.camera.BaseDualView
 import com.mpdc4gsr.libunified.ir.utils.HexDump
-import com.mpdc4gsr.libunified.app.common.SharedManager
 import java.io.IOException
 import java.io.InputStream
 import kotlin.math.ceil

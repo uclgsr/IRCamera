@@ -19,16 +19,16 @@ import mpdc4gsr.permissions.PermissionManager
  * Activity for configuring network connection settings
  */
 class NetworkConfigActivity : AppCompatActivity() {
-    
+
     companion object {
         private const val TAG = "NetworkConfigActivity"
         private const val REQUEST_ENABLE_BT = 1
     }
-    
+
     private lateinit var networkSettings: NetworkSettings
     private lateinit var permissionManager: PermissionManager
     private var bluetoothAdapter: BluetoothAdapter? = null
-    
+
     private val bluetoothEnableResult = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
@@ -38,31 +38,31 @@ class NetworkConfigActivity : AppCompatActivity() {
             Toast.makeText(this, "Bluetooth is required for device connection", Toast.LENGTH_SHORT).show()
         }
     }
-    
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main) // Temporary - will create proper layout
-        
+
         networkSettings = NetworkSettings(this)
         permissionManager = PermissionManager(this, PermissionController(this))
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
-        
+
         setupUI()
     }
-    
+
     private fun setupUI() {
         title = "Network Configuration"
-        
+
         // For now, show current settings in Toast (will replace with proper UI)
         val summary = networkSettings.getConnectionSummary()
         Toast.makeText(this, "Current settings: $summary", Toast.LENGTH_LONG).show()
-        
+
         Log.i(TAG, "Network configuration activity opened")
-        
+
         // Test Bluetooth device discovery
         testBluetoothConfiguration()
     }
-    
+
     private fun testBluetoothConfiguration() {
         lifecycleScope.launch {
             try {
@@ -72,38 +72,40 @@ class NetworkConfigActivity : AppCompatActivity() {
                     showBluetoothDevices()
                 } else {
                     Log.w(TAG, "Bluetooth permissions denied")
-                    Toast.makeText(this@NetworkConfigActivity, 
-                        "Bluetooth permissions required for device connection", 
-                        Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        this@NetworkConfigActivity,
+                        "Bluetooth permissions required for device connection",
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "Error requesting Bluetooth permissions", e)
             }
         }
     }
-    
+
     private fun showBluetoothDevices() {
         val adapter = bluetoothAdapter
         if (adapter == null) {
             Toast.makeText(this, "Bluetooth not supported", Toast.LENGTH_SHORT).show()
             return
         }
-        
+
         if (!adapter.isEnabled) {
             val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
             bluetoothEnableResult.launch(enableBtIntent)
             return
         }
-        
+
         try {
             val pairedDevices: Set<BluetoothDevice> = adapter.bondedDevices
             val deviceList = pairedDevices.map { "${it.name} (${it.address})" }
-            
+
             if (deviceList.isNotEmpty()) {
                 val message = "Available Bluetooth devices:\n${deviceList.joinToString("\n")}"
                 Toast.makeText(this, message, Toast.LENGTH_LONG).show()
                 Log.i(TAG, "Found ${deviceList.size} paired Bluetooth devices")
-                
+
                 // For demo purposes, save the first device
                 val firstDevice = pairedDevices.first()
                 lifecycleScope.launch {
@@ -123,17 +125,17 @@ class NetworkConfigActivity : AppCompatActivity() {
             Toast.makeText(this, "Error accessing Bluetooth devices", Toast.LENGTH_SHORT).show()
         }
     }
-    
+
     private fun configureWifiSettings() {
         // Configure Wi-Fi settings
         networkSettings.pcIpAddress = NetworkSettings.DEFAULT_PC_IP
         networkSettings.pcPort = NetworkSettings.DEFAULT_PC_PORT
         networkSettings.preferredConnectionType = NetworkSettings.ConnectionType.WIFI_TCP
-        
+
         val message = "Wi-Fi configured: ${networkSettings.pcIpAddress}:${networkSettings.pcPort}"
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
         Log.i(TAG, "Wi-Fi settings configured")
     }
-    
+
     fun getNetworkSettings(): NetworkSettings = networkSettings
 }

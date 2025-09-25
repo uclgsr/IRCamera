@@ -11,8 +11,8 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
-import com.csl.irCamera.databinding.UiMainConnectionGuideBinding
 import com.csl.irCamera.R
+import com.csl.irCamera.databinding.UiMainConnectionGuideBinding
 
 class ConnectionGuideView : LinearLayout {
     private var iconRes: Int = 0

@@ -96,7 +96,7 @@ object InitUtil {
         try {
             // Initialize UMeng analytics and common SDK using app/libs libraries
             val context = BaseApplication.instance
-            
+
             // Initialize UMeng Common SDK first
             com.umeng.commonsdk.UMConfigure.setLogEnabled(true)
             com.umeng.commonsdk.UMConfigure.init(
@@ -106,20 +106,23 @@ object InitUtil {
                 com.umeng.commonsdk.UMConfigure.DEVICE_TYPE_PHONE,
                 null
             )
-            
+
             // Initialize analytics with enhanced configuration
             com.umeng.analytics.MobclickAgent.setPageCollectionMode(
                 com.umeng.analytics.MobclickAgent.PageMode.AUTO
             )
-            
+
             // Enable enhanced analytics features available in UMeng libs
             try {
                 com.umeng.analytics.MobclickAgent.setCatchUncaughtExceptions(true)
-                com.umeng.analytics.MobclickAgent.setScenarioType(context, com.umeng.analytics.MobclickAgent.EScenarioType.E_UM_NORMAL)
-                
+                com.umeng.analytics.MobclickAgent.setScenarioType(
+                    context,
+                    com.umeng.analytics.MobclickAgent.EScenarioType.E_UM_NORMAL
+                )
+
                 // Initialize auth-number service if available (from auth-number-2.13.2.1.aar)
                 initializeAuthNumberService(context)
-                
+
                 XLog.i("UMeng SDK with enhanced features initialized successfully")
             } catch (e: Exception) {
                 XLog.w("UMeng enhanced features initialization partial: ${e.message}")
@@ -129,14 +132,14 @@ object InitUtil {
             XLog.e("Failed to initialize UMeng SDK: ${e.message}")
         }
     }
-    
+
     private fun initializeAuthNumberService(context: Context) {
         try {
             // Use reflection to initialize auth-number service from app/libs if available
             val authClass = Class.forName("com.netease.nis.quicklogin.QuickLogin")
             val initMethod = authClass.getMethod("getInstance", Context::class.java, String::class.java)
             val authInstance = initMethod.invoke(null, context, BuildConfig.APP_KEY)
-            
+
             XLog.i("Auth number service initialized from app/libs")
         } catch (e: ClassNotFoundException) {
             XLog.d("Auth number service not available (expected for MVP)")
@@ -148,7 +151,7 @@ object InitUtil {
     fun initJPush() {
         try {
             val context = BaseApplication.instance
-            
+
             // Check if JPush SDK is available at runtime
             val jpushClass = try {
                 Class.forName("cn.jpush.android.api.JPushInterface")
@@ -159,22 +162,23 @@ object InitUtil {
                 }
                 return
             }
-            
+
             // Use reflection to call JPush methods safely
             try {
                 val setDebugModeMethod = jpushClass.getMethod("setDebugMode", Boolean::class.java)
                 val initMethod = jpushClass.getMethod("init", android.content.Context::class.java)
-                val getRegistrationIDMethod = jpushClass.getMethod("getRegistrationID", android.content.Context::class.java)
-                
+                val getRegistrationIDMethod =
+                    jpushClass.getMethod("getRegistrationID", android.content.Context::class.java)
+
                 setDebugModeMethod.invoke(null, BuildConfig.DEBUG)
                 initMethod.invoke(null, context)
-                
+
                 val registrationID = getRegistrationIDMethod.invoke(null, context) as? String ?: "unknown"
-                
+
                 if (SharedManager.getHasShowClause()) {
                     XLog.w("JPush registrationID= $registrationID")
                 }
-                
+
                 XLog.i("JPush SDK initialized successfully")
             } catch (e: Exception) {
                 XLog.e("Failed to initialize JPush SDK via reflection: ${e.message}")
@@ -184,7 +188,7 @@ object InitUtil {
             }
         } catch (e: Exception) {
             XLog.e("Failed to initialize JPush SDK: ${e.message}")
-            
+
             // Fallback logging for debugging
             if (SharedManager.getHasShowClause()) {
                 XLog.w("registrationID= unavailable")

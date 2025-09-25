@@ -4,15 +4,15 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.widget.TextView;
 
+import com.mpdc4gsr.libunified.app.db.entity.ThermalEntity;
+import com.mpdc4gsr.libunified.app.tools.NumberTools;
+import com.mpdc4gsr.libunified.app.tools.TimeTool;
 import com.mpdc4gsr.libunified.ui.components.MarkerView;
 import com.mpdc4gsr.libunified.ui.data.CandleEntry;
 import com.mpdc4gsr.libunified.ui.data.Entry;
 import com.mpdc4gsr.libunified.ui.highlight.Highlight;
 import com.mpdc4gsr.libunified.ui.utils.MPPointF;
 import com.mpdc4gsr.libunified.ui.utils.Utils;
-import com.mpdc4gsr.libunified.app.db.entity.ThermalEntity;
-import com.mpdc4gsr.libunified.app.tools.NumberTools;
-import com.mpdc4gsr.libunified.app.tools.TimeTool;
 import com.mpdc4gsr.module.thermalunified.R;
 
 @SuppressLint("ViewConstructor")

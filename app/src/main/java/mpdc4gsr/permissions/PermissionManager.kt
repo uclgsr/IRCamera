@@ -120,18 +120,18 @@ class PermissionManager(
      */
     suspend fun requestAllRequiredPermissionsForGSR(): Boolean {
         Log.i(TAG, "Requesting all permissions required for GSR sensor recording")
-        
+
         val cameraSuccess = requestCameraPermissions()
         val bluetoothSuccess = requestBluetoothPermissions()
-        
+
         val allSuccess = cameraSuccess && bluetoothSuccess
-        
+
         if (allSuccess) {
             Log.i(TAG, "All GSR recording permissions granted successfully")
         } else {
             Log.w(TAG, "Some GSR recording permissions were denied - functionality may be limited")
         }
-        
+
         return allSuccess
     }
 

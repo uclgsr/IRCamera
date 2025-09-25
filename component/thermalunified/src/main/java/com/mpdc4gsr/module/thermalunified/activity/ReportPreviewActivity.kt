@@ -228,7 +228,10 @@ class ReportPreviewActivity : BaseActivity(), View.OnClickListener {
                         AppDatabase.getInstance().houseReportDao().insert(houseReport)
                         lifecycleScope.launch(Dispatchers.Main) {
                             dismissLoadingDialog()
-                            TToast.shortToast(this@ReportPreviewActivity, com.mpdc4gsr.libunified.R.string.pdf_saved_tips)
+                            TToast.shortToast(
+                                this@ReportPreviewActivity,
+                                com.mpdc4gsr.libunified.R.string.pdf_saved_tips
+                            )
 
 
                             finish()

@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.util.AttributeSet
 import androidx.core.content.ContextCompat
 import com.blankj.utilcode.util.SizeUtils
+import com.mpdc4gsr.libunified.app.tools.UnitTools
 import com.mpdc4gsr.libunified.ui.charts.LineChart
 import com.mpdc4gsr.libunified.ui.components.Legend
 import com.mpdc4gsr.libunified.ui.components.XAxis
@@ -12,7 +13,6 @@ import com.mpdc4gsr.libunified.ui.data.Entry
 import com.mpdc4gsr.libunified.ui.data.LineData
 import com.mpdc4gsr.libunified.ui.data.LineDataSet
 import com.mpdc4gsr.libunified.ui.formatter.ValueFormatter
-import com.mpdc4gsr.libunified.app.tools.UnitTools
 import com.mpdc4gsr.module.thermalunified.R
 import com.mpdc4gsr.libunified.R as LibR
 import com.mpdc4gsr.module.thermalunified.R as ThermalR

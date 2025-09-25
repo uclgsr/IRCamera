@@ -136,9 +136,11 @@ class RecordingControlsWidget @JvmOverloads constructor(
                 SessionState.IDLE -> {
                     onLocalStartClicked?.invoke()
                 }
+
                 SessionState.RECORDING -> {
                     onLocalStopClicked?.invoke()
                 }
+
                 else -> {
                     // Button disabled during transitions
                 }
@@ -219,14 +221,18 @@ class RecordingControlsWidget @JvmOverloads constructor(
 
     private fun updateTriggerSourceDisplay() {
         triggerSourceText.text = when {
-            isRemoteTriggered && currentState == SessionState.RECORDING -> 
+            isRemoteTriggered && currentState == SessionState.RECORDING ->
                 "Recording (Remote Control)"
-            isRemoteTriggered && currentState == SessionState.STARTING -> 
+
+            isRemoteTriggered && currentState == SessionState.STARTING ->
                 "Starting (Remote Control)"
-            !isRemoteTriggered && currentState == SessionState.RECORDING -> 
+
+            !isRemoteTriggered && currentState == SessionState.RECORDING ->
                 "Recording (Local Control)"
-            !isRemoteTriggered && currentState == SessionState.STARTING -> 
+
+            !isRemoteTriggered && currentState == SessionState.STARTING ->
                 "Starting (Local Control)"
+
             else -> ""
         }
     }
@@ -262,7 +268,8 @@ class RecordingControlsWidget @JvmOverloads constructor(
      * Enable/disable local controls (useful when only remote control is desired)
      */
     fun setLocalControlsEnabled(enabled: Boolean) {
-        recordButton.isEnabled = enabled && (currentState == SessionState.IDLE || currentState == SessionState.RECORDING)
+        recordButton.isEnabled =
+            enabled && (currentState == SessionState.IDLE || currentState == SessionState.RECORDING)
         if (!enabled) {
             recordButton.alpha = 0.5f
         } else {

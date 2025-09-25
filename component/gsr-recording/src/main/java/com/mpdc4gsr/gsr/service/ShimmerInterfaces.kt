@@ -33,7 +33,7 @@ interface ShimmerDeviceFactory {
  */
 object ShimmerDeviceFactoryResolver {
     private const val TAG = "ShimmerFactoryResolver"
-    
+
     fun createFactory(context: android.content.Context): ShimmerDeviceFactory {
         return try {
             // Try to use real implementation from app module if available

@@ -9,6 +9,7 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import org.json.JSONObject
 import java.util.LinkedList
 import kotlin.math.max
 import kotlin.math.min
@@ -91,7 +92,7 @@ class AdaptiveThermalStreamer {
 
     // Network client for actual thermal frame streaming
     private var networkClient: mpdc4gsr.network.NetworkClient? = null
-    
+
     fun setNetworkClient(client: mpdc4gsr.network.NetworkClient?) {
         networkClient = client
         Log.i(TAG, "Network client ${if (client != null) "set" else "cleared"} for thermal streaming")

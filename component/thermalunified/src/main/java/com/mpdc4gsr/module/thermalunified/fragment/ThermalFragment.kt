@@ -16,18 +16,17 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import com.blankj.utilcode.util.ScreenUtils
-import com.mpdc4gsr.module.thermalunified.stubs.GuideInterface
-import com.mpdc4gsr.module.thermalunified.stubs.IrSurfaceView
 import com.mpdc4gsr.libunified.app.tools.ToastTools
-import com.mpdc4gsr.libunified.app.matrix.GuideInterface as LibGuideInterface
 import com.mpdc4gsr.libunified.app.utils.ByteUtils.getIndex
-import com.mpdc4gsr.module.thermalunified.stubs.ThermalInputDialog
-import com.mpdc4gsr.module.thermalunified.stubs.FenceLineView
-import com.mpdc4gsr.module.thermalunified.stubs.FencePointView
-import com.mpdc4gsr.module.thermalunified.stubs.FenceView
 import com.mpdc4gsr.module.thermalunified.R
 import com.mpdc4gsr.module.thermalunified.base.BaseThermalFragment
 import com.mpdc4gsr.module.thermalunified.event.ThermalActionEvent
+import com.mpdc4gsr.module.thermalunified.stubs.FenceLineView
+import com.mpdc4gsr.module.thermalunified.stubs.FencePointView
+import com.mpdc4gsr.module.thermalunified.stubs.FenceView
+import com.mpdc4gsr.module.thermalunified.stubs.GuideInterface
+import com.mpdc4gsr.module.thermalunified.stubs.IrSurfaceView
+import com.mpdc4gsr.module.thermalunified.stubs.ThermalInputDialog
 import com.mpdc4gsr.module.thermalunified.tools.Fence
 import com.mpdc4gsr.module.thermalunified.tools.ThermalTool
 import com.mpdc4gsr.module.thermalunified.tools.medie.IYapVideoProvider
@@ -42,6 +41,7 @@ import java.io.File
 import java.math.BigDecimal
 import java.math.RoundingMode
 import com.mpdc4gsr.libunified.R as LibUiR
+import com.mpdc4gsr.libunified.app.matrix.GuideInterface as LibGuideInterface
 
 class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
     private val viewModel: ThermalViewModel by viewModels()
@@ -52,8 +52,16 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
     private val msgLiveData by lazy { MutableLiveData<Int>() }
 
     // Cached fence and camera views to avoid repeated findViewById calls
-    private val fencePointView by lazy { requireView().findViewById<com.mpdc4gsr.module.thermalunified.stubs.FencePointView>(R.id.fence_point_view) }
-    private val fenceLineView by lazy { requireView().findViewById<com.mpdc4gsr.module.thermalunified.stubs.FenceLineView>(R.id.fence_line_view) }
+    private val fencePointView by lazy {
+        requireView().findViewById<com.mpdc4gsr.module.thermalunified.stubs.FencePointView>(
+            R.id.fence_point_view
+        )
+    }
+    private val fenceLineView by lazy {
+        requireView().findViewById<com.mpdc4gsr.module.thermalunified.stubs.FenceLineView>(
+            R.id.fence_line_view
+        )
+    }
     private val fenceView by lazy { requireView().findViewById<com.mpdc4gsr.module.thermalunified.stubs.FenceView>(R.id.fence_view) }
     private val tempCameraView by lazy { requireView().findViewById<com.mpdc4gsr.libunified.ui.camera.CameraView>(R.id.temp_camera_view) }
 

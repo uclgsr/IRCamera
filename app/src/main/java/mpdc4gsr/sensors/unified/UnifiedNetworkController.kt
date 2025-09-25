@@ -385,7 +385,7 @@ class UnifiedNetworkController(
     private var totalPacketsSent = 0L
     private var totalPacketsLost = 0L
     private var reconnectionAttempts = 0
-    
+
     // Additional methods required by UnifiedSessionManager
     fun getNetworkStatistics(): NetworkStatistics {
         val avgLatency = if (latencyMeasurements.isNotEmpty()) {
@@ -393,20 +393,20 @@ class UnifiedNetworkController(
         } else {
             0.0
         }
-        
+
         val packetLossRate = if (totalPacketsSent > 0) {
             (totalPacketsLost.toDouble() / totalPacketsSent.toDouble()) * 100.0
         } else {
             0.0
         }
-        
+
         return NetworkStatistics(
             averageLatency = avgLatency,
             packetLoss = packetLossRate,
             reconnectionCount = reconnectionAttempts
         )
     }
-    
+
     fun recordLatencyMeasurement(latencyMs: Double) {
         synchronized(latencyMeasurements) {
             latencyMeasurements.add(latencyMs)
@@ -415,15 +415,15 @@ class UnifiedNetworkController(
             }
         }
     }
-    
+
     fun recordPacketSent() {
         totalPacketsSent++
     }
-    
+
     fun recordPacketLost() {
         totalPacketsLost++
     }
-    
+
     private fun incrementReconnectionCount() {
         reconnectionAttempts++
         Log.i(TAG, "Reconnection attempts: $reconnectionAttempts")

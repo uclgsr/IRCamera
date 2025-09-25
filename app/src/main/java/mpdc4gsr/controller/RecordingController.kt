@@ -1552,7 +1552,11 @@ class RecordingController(
     }
 
 
-    private fun createCrashRecoveryMarker(sessionId: String, enabledSensors: List<String>, sessionDir: SessionDirectory) {
+    private fun createCrashRecoveryMarker(
+        sessionId: String,
+        enabledSensors: List<String>,
+        sessionDir: SessionDirectory
+    ) {
         try {
             val recoveryFile = File(sessionDir.rootDir, ".recovery_marker")
             val recoveryInfo = mapOf(

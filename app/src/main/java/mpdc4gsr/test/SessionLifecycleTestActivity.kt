@@ -3,24 +3,20 @@ package mpdc4gsr.test
 import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.launch
 import mpdc4gsr.controller.ComprehensiveRecordingController
-import mpdc4gsr.permissions.PermissionManager
+import mpdc4gsr.data.SessionMetadata
 import mpdc4gsr.permissions.PermissionController
-import mpdc4gsr.sensors.SensorRecorder
+import mpdc4gsr.permissions.PermissionManager
 import mpdc4gsr.sensors.RecordingStats
 import mpdc4gsr.sensors.RecordingStatus
 import mpdc4gsr.sensors.SensorError
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOf
-import mpdc4gsr.data.SessionMetadata
-import java.io.File
+import mpdc4gsr.sensors.SensorRecorder
 
 /**
  * Comprehensive test activity for session lifecycle and recording coordination

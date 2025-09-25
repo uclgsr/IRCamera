@@ -644,11 +644,11 @@ class UnifiedGSRRecorder(
 
     // Error tracking implementation
     private val errorCount = AtomicLong(0)
-    
+
     fun getErrorCount(): Long {
         return errorCount.get()
     }
-    
+
     private fun incrementErrorCount() {
         errorCount.incrementAndGet()
         Log.w(TAG, "GSR error count increased to: ${errorCount.get()}")

@@ -107,22 +107,22 @@ class DataManagementService(private val context: Context) {
     ) {
         val type: String
             get() = fileType
-            
+
         val relativePath: String
             get() = "$sessionId/$deviceId/$fileName"
-            
+
         val createdAt: Long
             get() = timestamp
-            
+
         val absolutePath: String
             get() = filePath
-            
+
         val exists: Boolean
             get() = File(filePath).exists()
-            
+
         val isFile: Boolean
             get() = File(filePath).isFile
-        
+
         fun isUploaded(): Boolean {
             return uploadStatus == FileUploadService.UploadStatus.COMPLETED
         }
@@ -814,7 +814,10 @@ class DataManagementService(private val context: Context) {
                         put("participant_id", session.participantId)
                         put("start_time", session.startTime)
                         put("end_time", session.endTime)
-                        put("duration_sec", ((session.endTime ?: System.currentTimeMillis()) - session.startTime) / 1000.0)
+                        put(
+                            "duration_sec",
+                            ((session.endTime ?: System.currentTimeMillis()) - session.startTime) / 1000.0
+                        )
                     })
 
 

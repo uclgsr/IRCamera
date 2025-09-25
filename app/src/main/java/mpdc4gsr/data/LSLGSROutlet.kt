@@ -34,7 +34,7 @@ class LSLGSROutlet(
         private const val CHANNEL_COUNT = 4 // Raw GSR, Calibrated GSR, PPG, Timestamp
         private const val SAMPLE_RATE = 128.0
         private const val CHANNEL_FORMAT = "float32"
-        
+
         private const val BUFFER_SIZE = 1000
         private const val BATCH_SIZE = 10
         private const val QUALITY_HISTORY_SIZE = 100
@@ -70,16 +70,16 @@ class LSLGSROutlet(
         fun open(): Boolean {
             return try {
                 startTime = System.currentTimeMillis()
-                
+
                 // Start TCP server for LSL streaming
                 serverSocket = ServerSocket(serverPort)
                 isActive.set(true)
-                
+
                 // Start accepting client connections
                 serverJob = networkScope.launch {
                     acceptConnections()
                 }
-                
+
                 Log.i(TAG, "LSL outlet opened: ${streamInfo.name} on port $serverPort")
                 true
             } catch (e: Exception) {
@@ -94,17 +94,17 @@ class LSLGSROutlet(
                     val clientSocket = withContext(Dispatchers.IO) {
                         serverSocket?.accept()
                     }
-                    
+
                     clientSocket?.let { socket ->
                         synchronized(connectedClients) {
                             connectedClients.add(socket)
                         }
-                        
+
                         // Send stream info to new client
                         sendStreamInfo(socket)
-                        
+
                         Log.i(TAG, "LSL client connected: ${socket.remoteSocketAddress}")
-                        
+
                         // Handle client disconnection monitoring
                         networkScope.launch {
                             try {
@@ -144,7 +144,7 @@ class LSLGSROutlet(
                     put("session_id", streamInfo.sessionId)
                     put("channels", JSONArray().apply {
                         put("GSR_Raw")
-                        put("GSR_Calibrated") 
+                        put("GSR_Calibrated")
                         put("PPG")
                         put("Timestamp")
                     })
@@ -186,7 +186,7 @@ class LSLGSROutlet(
                         }
                     }
                 }
-                
+
                 true
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to push LSL sample", e)
@@ -240,17 +240,17 @@ class LSLGSROutlet(
 
         fun close() {
             isActive.set(false)
-            
+
             // Close all client connections
             synchronized(connectedClients) {
                 connectedClients.forEach { it.close() }
                 connectedClients.clear()
             }
-            
+
             // Close server socket
             serverSocket?.close()
             serverJob?.cancel()
-            
+
             Log.i(TAG, "LSL outlet closed")
         }
 
@@ -281,15 +281,15 @@ class LSLGSROutlet(
     fun startStreaming(): Boolean {
         return try {
             outlet = LSLStreamOutlet(streamInfo)
-            
+
             if (outlet?.open() == true) {
                 isStreaming.set(true)
-                
+
                 // Start streaming loop
                 streamingJob = networkScope.launch {
                     streamingLoop()
                 }
-                
+
                 Log.i(TAG, "LSL GSR streaming started")
                 true
             } else {
@@ -305,12 +305,12 @@ class LSLGSROutlet(
         while (isStreaming.get()) {
             try {
                 val samplesToSend = mutableListOf<GSRSample>()
-                
+
                 // Collect batch of samples
                 repeat(BATCH_SIZE) {
                     sampleBuffer.poll()?.let { samplesToSend.add(it) }
                 }
-                
+
                 if (samplesToSend.isNotEmpty()) {
                     // Convert GSR samples to LSL format
                     val lslSamples = samplesToSend.map { sample ->
@@ -321,7 +321,7 @@ class LSLGSROutlet(
                             sample.timestamp.toFloat()
                         )
                     }.toTypedArray()
-                    
+
                     // Send chunk to LSL
                     outlet?.pushChunk(lslSamples)?.let { success ->
                         if (success) {
@@ -329,7 +329,7 @@ class LSLGSROutlet(
                         }
                     }
                 }
-                
+
                 delay(50) // 20 Hz streaming rate
             } catch (e: Exception) {
                 Log.e(TAG, "Error in LSL streaming loop", e)
@@ -342,12 +342,12 @@ class LSLGSROutlet(
         if (isStreaming.get()) {
             // Add to buffer for batch processing
             sampleBuffer.offer(sample)
-            
+
             // Keep buffer size manageable
             while (sampleBuffer.size > BUFFER_SIZE) {
                 sampleBuffer.poll()
             }
-            
+
             // Update quality metrics
             updateQualityMetrics(sample)
         }
@@ -356,7 +356,7 @@ class LSLGSROutlet(
     private fun updateQualityMetrics(sample: GSRSample) {
         // Simple quality metric based on signal stability
         val quality = if (sample.calibratedValue in 0.1..10.0) 1.0 else 0.0
-        
+
         qualityHistory.offer(quality)
         while (qualityHistory.size > QUALITY_HISTORY_SIZE) {
             qualityHistory.poll()
@@ -370,7 +370,7 @@ class LSLGSROutlet(
         outlet = null
         sampleBuffer.clear()
         qualityHistory.clear()
-        
+
         Log.i(TAG, "LSL GSR streaming stopped")
     }
 

@@ -3,6 +3,8 @@ package mpdc4gsr.camera.ui
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.Gravity
 import android.view.View
@@ -15,8 +17,6 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.shimmerresearch.android.manager.ShimmerBluetoothManagerAndroid
-import android.os.Handler
-import android.os.Looper
 
 // Use Shimmer's official Bluetooth API for GSR device detection
 
@@ -40,16 +40,16 @@ class SensorSelectionDialog(
             try {
                 // Use Shimmer's official Bluetooth manager to detect GSR devices
                 val shimmerManager = ShimmerBluetoothManagerAndroid(context, Handler(Looper.getMainLooper()))
-                
+
                 val hasConnectedShimmerDevices = try {
                     val connectedDevices = shimmerManager.getConnectedDeviceList()
                     connectedDevices.any { device ->
                         val deviceName = device.getDeviceName()?.lowercase() ?: ""
                         val deviceAddress = device.getBluetoothAddress()
                         deviceName.contains("shimmer") ||
-                        deviceName.contains("gsr") ||
-                        deviceAddress.startsWith("00:06:66") ||
-                        deviceAddress.startsWith("d0:39:72")
+                                deviceName.contains("gsr") ||
+                                deviceAddress.startsWith("00:06:66") ||
+                                deviceAddress.startsWith("d0:39:72")
                     }
                 } catch (e: Exception) {
                     Log.w(TAG, "Error checking connected Shimmer devices: ${e.message}")

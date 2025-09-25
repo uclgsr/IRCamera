@@ -16,13 +16,13 @@ public class DefaultLogger implements Logger {
     }
 
     @Override
-    public void setEnabled(boolean isEnabled) {
-        this.isEnabled = isEnabled;
+    public boolean isEnabled() {
+        return isEnabled;
     }
 
     @Override
-    public boolean isEnabled() {
-        return isEnabled;
+    public void setEnabled(boolean isEnabled) {
+        this.isEnabled = isEnabled;
     }
 
     @Override

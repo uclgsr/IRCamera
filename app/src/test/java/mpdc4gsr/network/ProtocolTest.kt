@@ -1,6 +1,7 @@
 package mpdc4gsr.network
 
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class ProtocolTest {
@@ -9,7 +10,7 @@ class ProtocolTest {
     fun testCreateSyncRequestMessage() {
         val pcTimestamp = 1640995200000L
         val message = Protocol.createSyncRequestMessage(pcTimestamp)
-        
+
         assertEquals("SYNC_REQUEST t_pc=1640995200000", message)
         assertTrue("Message should contain MSG_SYNC_REQUEST", message.startsWith(Protocol.MSG_SYNC_REQUEST))
         assertTrue("Message should contain timestamp", message.contains("t_pc=$pcTimestamp"))
@@ -20,7 +21,7 @@ class ProtocolTest {
         val pcTimestamp = 1640995200000L
         val phoneTimestamp = 1640995200050L
         val message = Protocol.createSyncResponseMessage(pcTimestamp, phoneTimestamp)
-        
+
         assertEquals("SYNC_RESPONSE t_pc=1640995200000 t_ph=1640995200050", message)
         assertTrue("Message should contain MSG_SYNC_RESPONSE", message.startsWith(Protocol.MSG_SYNC_RESPONSE))
         assertTrue("Message should contain PC timestamp", message.contains("t_pc=$pcTimestamp"))
@@ -34,12 +35,12 @@ class ProtocolTest {
         val t3 = 1640995200100L
         val offsetMs = 50L
         val rttMs = 100L
-        
+
         val message = Protocol.createSyncResultMessage(t1, t2, t3, offsetMs, rttMs)
-        
+
         val expected = "SYNC_RESULT t1=1640995200000 t2=1640995200050 t3=1640995200100 offset=50 rtt=100"
         assertEquals(expected, message)
-        
+
         assertTrue("Message should contain MSG_SYNC_RESULT", message.startsWith(Protocol.MSG_SYNC_RESULT))
         assertTrue("Message should contain t1", message.contains("t1=$t1"))
         assertTrue("Message should contain t2", message.contains("t2=$t2"))
@@ -66,10 +67,10 @@ class ProtocolTest {
         val deviceId = "android_device_001"
         val sensors = listOf("RGB", "THERMAL", "GSR")
         val message = Protocol.createHelloMessage(deviceId, sensors)
-        
+
         val expected = "HELLO device_name=android_device_001 sensors=[RGB,THERMAL,GSR]"
         assertEquals(expected, message)
-        
+
         assertTrue("Message should contain device name", message.contains("device_name=$deviceId"))
         assertTrue("Message should contain all sensors", message.contains("RGB,THERMAL,GSR"))
     }
@@ -78,7 +79,7 @@ class ProtocolTest {
     fun testCreateStartRecordMessage() {
         val sessionId = "session_20240115_143022"
         val message = Protocol.createStartRecordMessage(sessionId)
-        
+
         assertEquals("START_RECORD session_id=session_20240115_143022", message)
         assertTrue("Message should contain session ID", message.contains("session_id=$sessionId"))
     }
@@ -87,7 +88,7 @@ class ProtocolTest {
     fun testCreateStopRecordMessage() {
         val sessionId = "session_20240115_143022"
         val message = Protocol.createStopRecordMessage(sessionId)
-        
+
         assertEquals("STOP_RECORD session_id=session_20240115_143022", message)
         assertTrue("Message should contain session ID", message.contains("session_id=$sessionId"))
     }

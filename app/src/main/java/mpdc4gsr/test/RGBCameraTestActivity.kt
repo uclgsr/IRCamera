@@ -26,17 +26,17 @@ import java.io.File
  * Tests device compatibility, recording quality, manual controls, and tap-to-focus
  */
 class RGBCameraTestActivity : AppCompatActivity() {
-    
+
     companion object {
         private const val TAG = "RGBCameraTest"
     }
-    
+
     private lateinit var previewView: TapToFocusPreviewView
     private lateinit var statusText: TextView
     private lateinit var capabilitiesText: TextView
     private lateinit var recordButton: Button
     private lateinit var testResultsText: TextView
-    
+
     // Manual controls
     private lateinit var manualExposureSwitch: Switch
     private lateinit var exposureCompensationSeekBar: SeekBar
@@ -44,17 +44,17 @@ class RGBCameraTestActivity : AppCompatActivity() {
     private lateinit var manualFocusSwitch: Switch
     private lateinit var focusDistanceSeekBar: SeekBar
     private lateinit var focusDistanceText: TextView
-    
+
     // Test controls
     private lateinit var test4KButton: Button
     private lateinit var testRawButton: Button
     private lateinit var testManualControlsButton: Button
     private lateinit var testTapToFocusButton: Button
-    
+
     private var cameraRecorder: RgbCameraRecorder? = null
     private var permissionManager: PermissionManager? = null
     private var isRecording = false
-    
+
     private val permissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
     ) { permissions ->
@@ -65,23 +65,23 @@ class RGBCameraTestActivity : AppCompatActivity() {
             showError("Camera permissions required for testing")
         }
     }
-    
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_rgb_camera_test)
-        
+
         initializeViews()
         setupListeners()
         checkPermissions()
     }
-    
+
     private fun initializeViews() {
         previewView = findViewById(R.id.previewView)
         statusText = findViewById(R.id.statusText)
         capabilitiesText = findViewById(R.id.capabilitiesText)
         recordButton = findViewById(R.id.recordButton)
         testResultsText = findViewById(R.id.testResultsText)
-        
+
         // Manual controls
         manualExposureSwitch = findViewById(R.id.manualExposureSwitch)
         exposureCompensationSeekBar = findViewById(R.id.exposureCompensationSeekBar)
@@ -89,19 +89,19 @@ class RGBCameraTestActivity : AppCompatActivity() {
         manualFocusSwitch = findViewById(R.id.manualFocusSwitch)
         focusDistanceSeekBar = findViewById(R.id.focusDistanceSeekBar)
         focusDistanceText = findViewById(R.id.focusDistanceText)
-        
+
         // Test controls
         test4KButton = findViewById(R.id.test4KButton)
         testRawButton = findViewById(R.id.testRawButton)
         testManualControlsButton = findViewById(R.id.testManualControlsButton)
         testTapToFocusButton = findViewById(R.id.testTapToFocusButton)
-        
+
         // Initial UI state
         statusText.text = "Initializing camera test..."
         exposureValueText.text = "Exposure: 0.0 EV"
         focusDistanceText.text = "Focus: Infinity"
     }
-    
+
     private fun setupListeners() {
         recordButton.setOnClickListener {
             if (isRecording) {
@@ -110,13 +110,13 @@ class RGBCameraTestActivity : AppCompatActivity() {
                 startRecording()
             }
         }
-        
+
         // Manual exposure controls
         manualExposureSwitch.setOnCheckedChangeListener { _, isChecked ->
             cameraRecorder?.setManualExposureMode(isChecked)
             exposureCompensationSeekBar.isEnabled = !isChecked
         }
-        
+
         exposureCompensationSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 if (fromUser) {
@@ -125,65 +125,68 @@ class RGBCameraTestActivity : AppCompatActivity() {
                     cameraRecorder?.setExposureCompensation(evValue)
                 }
             }
+
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
             override fun onStopTrackingTouch(seekBar: SeekBar?) {}
         })
-        
+
         // Manual focus controls
         manualFocusSwitch.setOnCheckedChangeListener { _, isChecked ->
             cameraRecorder?.setManualFocusMode(isChecked)
             focusDistanceSeekBar.isEnabled = isChecked
         }
-        
+
         focusDistanceSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 if (fromUser) {
                     val focusValue = progress / 100.0f  // 0.0-1.0
-                    val focusText = if (focusValue < 0.1f) "Infinity" else String.format("%.1fm", 0.1f + focusValue * 2.0f)
+                    val focusText =
+                        if (focusValue < 0.1f) "Infinity" else String.format("%.1fm", 0.1f + focusValue * 2.0f)
                     focusDistanceText.text = "Focus: $focusText"
                     cameraRecorder?.setFocusDistance(focusValue)
                 }
             }
+
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
             override fun onStopTrackingTouch(seekBar: SeekBar?) {}
         })
-        
+
         // Test buttons
         test4KButton.setOnClickListener { test4KCapability() }
         testRawButton.setOnClickListener { testRawCapability() }
         testManualControlsButton.setOnClickListener { testManualControls() }
         testTapToFocusButton.setOnClickListener { testTapToFocus() }
-        
+
         // Tap-to-focus
         previewView.onTapToFocus = { x, y ->
             cameraRecorder?.triggerTapToFocus(x, y)
             showMessage("Tap-to-focus triggered at (${String.format("%.2f", x)}, ${String.format("%.2f", y)})")
         }
     }
-    
+
     private fun checkPermissions() {
         val permissions = arrayOf(
             Manifest.permission.CAMERA,
             Manifest.permission.RECORD_AUDIO,
             Manifest.permission.WRITE_EXTERNAL_STORAGE
         )
-        
+
         val missingPermissions = permissions.filter {
             ContextCompat.checkSelfPermission(this, it) != PackageManager.PERMISSION_GRANTED
         }
-        
+
         if (missingPermissions.isEmpty()) {
             initializeCamera()
         } else {
             permissionLauncher.launch(missingPermissions.toTypedArray())
         }
     }
-    
+
     private fun initializeCamera() {
         lifecycleScope.launch {
             try {
                 statusText.text = "Initializing camera..."
-                
+
                 cameraRecorder = RgbCameraRecorder(
                     context = this@RGBCameraTestActivity,
                     lifecycleOwner = this@RGBCameraTestActivity,
@@ -191,7 +194,7 @@ class RGBCameraTestActivity : AppCompatActivity() {
                     useFrontCamera = false,
                     permissionManager = permissionManager
                 )
-                
+
                 val success = cameraRecorder?.initialize() ?: false
                 if (success) {
                     statusText.text = "Camera initialized successfully"
@@ -204,7 +207,7 @@ class RGBCameraTestActivity : AppCompatActivity() {
             }
         }
     }
-    
+
     private fun displayCameraCapabilities() {
         cameraRecorder?.let { recorder ->
             val capabilities = recorder.getDetailedCameraCapabilities()
@@ -224,16 +227,16 @@ class RGBCameraTestActivity : AppCompatActivity() {
             capabilitiesText.text = capabilitiesStr
         }
     }
-    
+
     private fun startRecording() {
         lifecycleScope.launch {
             try {
                 val testDir = File(filesDir, "camera_test_${System.currentTimeMillis()}")
                 testDir.mkdirs()
-                
+
                 val metadata = SessionMetadata.createSessionStart("camera_test")
                 val success = cameraRecorder?.startRecording(testDir.absolutePath, metadata) ?: false
-                
+
                 if (success) {
                     isRecording = true
                     recordButton.text = "Stop Recording"
@@ -246,7 +249,7 @@ class RGBCameraTestActivity : AppCompatActivity() {
             }
         }
     }
-    
+
     private fun stopRecording() {
         lifecycleScope.launch {
             try {
@@ -259,13 +262,13 @@ class RGBCameraTestActivity : AppCompatActivity() {
             }
         }
     }
-    
+
     private fun test4KCapability() {
         cameraRecorder?.let { recorder ->
             val capabilities = recorder.getCaptureMode()
             val supports4K = capabilities["supports_4k"] as? Boolean ?: false
             val supports60fps = capabilities["supports_60fps"] as? Boolean ?: false
-            
+
             val result = buildString {
                 appendLine("=== 4K Capability Test ===")
                 appendLine("4K Support: $supports4K")
@@ -281,18 +284,18 @@ class RGBCameraTestActivity : AppCompatActivity() {
                 }
                 appendLine()
             }
-            
+
             updateTestResults(result)
             Log.i(TAG, "4K capability test completed: $capabilities")
         }
     }
-    
+
     private fun testRawCapability() {
         cameraRecorder?.let { recorder ->
             val capabilities = recorder.getCaptureMode()
             val supportsRaw = capabilities["supports_raw"] as? Boolean ?: false
             val stage3Compatible = capabilities["stage3_compatible"] as? Boolean ?: false
-            
+
             val result = buildString {
                 appendLine("=== RAW Capability Test ===")
                 appendLine("RAW Support: $supportsRaw")
@@ -306,41 +309,41 @@ class RGBCameraTestActivity : AppCompatActivity() {
                 }
                 appendLine()
             }
-            
+
             updateTestResults(result)
             Log.i(TAG, "RAW capability test completed: $capabilities")
         }
     }
-    
+
     private fun testManualControls() {
         val result = buildString {
             appendLine("=== Manual Controls Test ===")
-            
+
             // Test exposure compensation
             cameraRecorder?.setExposureCompensation(1.0f)
             appendLine("✓ Exposure compensation +1.0 EV applied")
-            
+
             // Test manual focus mode
             cameraRecorder?.setManualFocusMode(true)
             appendLine("✓ Manual focus mode enabled")
-            
+
             // Test focus distance
             cameraRecorder?.setFocusDistance(0.5f)
             appendLine("✓ Focus distance set to 50% (mid-range)")
-            
+
             // Test AE/AF locks
             cameraRecorder?.setAutoExposureLock(true)
             cameraRecorder?.setAutoFocusLock(true)
             appendLine("✓ Auto-exposure and auto-focus locks enabled")
-            
+
             appendLine("Manual controls test completed successfully")
             appendLine()
         }
-        
+
         updateTestResults(result)
         showMessage("Manual controls test completed - check logs for details")
     }
-    
+
     private fun testTapToFocus() {
         val result = buildString {
             appendLine("=== Tap-to-Focus Test ===")
@@ -348,27 +351,27 @@ class RGBCameraTestActivity : AppCompatActivity() {
             appendLine("Watch for visual focus indicator and check logs")
             appendLine()
         }
-        
+
         updateTestResults(result)
         showMessage("Tap on the preview to test tap-to-focus functionality")
     }
-    
+
     private fun updateTestResults(result: String) {
         val currentText = testResultsText.text.toString()
         testResultsText.text = currentText + result
     }
-    
+
     private fun showMessage(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
         Log.i(TAG, message)
     }
-    
+
     private fun showError(error: String) {
         statusText.text = "Error: $error"
         Toast.makeText(this, error, Toast.LENGTH_LONG).show()
         Log.e(TAG, error)
     }
-    
+
     override fun onDestroy() {
         super.onDestroy()
         lifecycleScope.launch {

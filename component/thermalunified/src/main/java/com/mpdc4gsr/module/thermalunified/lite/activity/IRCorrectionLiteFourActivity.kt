@@ -4,18 +4,18 @@ import android.os.Bundle
 import androidx.activity.OnBackPressedCallback
 import androidx.lifecycle.lifecycleScope
 import com.blankj.utilcode.util.ToastUtils
-import com.mpdc4gsr.module.thermalunified.R
-import com.mpdc4gsr.module.thermalunified.databinding.ActivityIrCorrectionLiteFourBinding
-import com.mpdc4gsr.module.thermalunified.lite.fragment.IRMonitorLiteFragment
 import com.mpdc4gsr.libunified.app.dialog.TipDialog
 import com.mpdc4gsr.libunified.app.ktbase.BaseActivity
-import com.mpdc4gsr.libunified.R as LibR
+import com.mpdc4gsr.module.thermalunified.R
+import com.mpdc4gsr.module.thermalunified.databinding.ActivityIrCorrectionLiteFourBinding
 import com.mpdc4gsr.module.thermalunified.event.CorrectionFinishEvent
+import com.mpdc4gsr.module.thermalunified.lite.fragment.IRMonitorLiteFragment
 import com.mpdc4gsr.module.thermalunified.view.TimeDownView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
+import com.mpdc4gsr.libunified.R as LibR
 
 
 class IRCorrectionLiteFourActivity : BaseActivity() {

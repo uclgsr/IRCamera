@@ -3,14 +3,16 @@ package mpdc4gsr.sensors.gsr
 import android.content.Context
 import com.mpdc4gsr.gsr.service.ShimmerDeviceFactory
 import com.mpdc4gsr.gsr.service.ShimmerDeviceInterface
-import org.junit.Test
-import org.junit.Assert.*
 import io.mockk.mockk
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertTrue
+import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 
 /**
- * Test to validate that RealShimmerDeviceFactory can be instantiated 
+ * Test to validate that RealShimmerDeviceFactory can be instantiated
  * and creates proper ShimmerDeviceInterface instances
  */
 @RunWith(RobolectricTestRunner::class)
@@ -59,5 +61,5 @@ class RealShimmerDeviceFactoryTest {
         // Then
         assertFalse("Device should not be connected initially", isConnected)
     }
-    }
+}
 }

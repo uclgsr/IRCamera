@@ -12,11 +12,11 @@ import com.energy.ac020library.IrcamEngine;
 import com.energy.ac020library.bean.CommonParams;
 import com.energy.ac020library.bean.IFileHandleCallback;
 import com.energy.ac020library.bean.IrcmdError;
+import com.energy.irutilslibrary.LibIRTemp;
+import com.mpdc4gsr.libunified.app.BaseApplication;
 import com.mpdc4gsr.libunified.ir.usbdual.Const;
 import com.mpdc4gsr.libunified.ir.usbdual.DeviceType;
-import com.energy.irutilslibrary.LibIRTemp;
 import com.mpdc4gsr.libunified.ir.utils.FileUtil;
-import com.mpdc4gsr.libunified.app.BaseApplication;
 
 import java.io.File;
 import java.io.IOException;

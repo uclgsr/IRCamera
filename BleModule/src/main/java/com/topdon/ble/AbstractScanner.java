@@ -17,7 +17,6 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.util.SparseArray;
 
-
 import androidx.annotation.CallSuper;
 import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
@@ -39,12 +38,12 @@ import java.util.concurrent.CopyOnWriteArrayList;
 abstract class AbstractScanner implements Scanner {
     final ScanConfiguration configuration;
     final BluetoothAdapter bluetoothAdapter;
+    final Logger logger;
     private final Handler mainHandler;
-    private boolean isScanning;
     private final List<ScanListener> scanListeners = new CopyOnWriteArrayList<>();
     private final SparseArray<BluetoothProfile> proxyBluetoothProfiles = new SparseArray<>();
-    final Logger logger;
     private final DeviceCreator deviceCreator;
+    private boolean isScanning;
 
     AbstractScanner(EasyBLE easyBle, BluetoothAdapter bluetoothAdapter) {
         this.bluetoothAdapter = bluetoothAdapter;
@@ -276,8 +275,6 @@ abstract class AbstractScanner implements Scanner {
         }
     }
 
-    private final Runnable stopScanRunnable = () -> stopScan(false);
-
     //蓝牙是否开启
     private boolean isBtEnabled() {
         if (bluetoothAdapter.isEnabled()) {
@@ -291,7 +288,7 @@ abstract class AbstractScanner implements Scanner {
             }
         }
         return false;
-    }
+    }    private final Runnable stopScanRunnable = () -> stopScan(false);
 
     @Override
     public void onBluetoothOff() {
@@ -321,4 +318,6 @@ abstract class AbstractScanner implements Scanner {
      * 执行停止搜索
      */
     protected abstract void performStopScan();
+
+
 }

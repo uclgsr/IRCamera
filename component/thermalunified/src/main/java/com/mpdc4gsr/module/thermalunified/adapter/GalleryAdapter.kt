@@ -8,21 +8,20 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
-import com.mpdc4gsr.libunified.app.tools.GlideLoader
-import com.mpdc4gsr.libunified.app.bean.GalleryTitle
 import com.mpdc4gsr.libunified.app.bean.GalleryBean
+import com.mpdc4gsr.libunified.app.tools.GlideLoader
 import com.mpdc4gsr.module.thermalunified.R
 
 class GalleryAdapter(val context: Context) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     var listener: OnItemClickListener? = null
-    
+
     // Properties needed by ReportPickImgActivity
     var isEditMode: Boolean = false
     var selectList = mutableListOf<GalleryBean>()
     var dataList = arrayListOf<Any>()  // Can contain String paths or GalleryTitle objects
     var onLongEditListener: (() -> Unit)? = null
-    var selectCallback: ((List<GalleryBean>) -> Unit)? = null  
+    var selectCallback: ((List<GalleryBean>) -> Unit)? = null
     var itemClickCallback: ((Int) -> Unit)? = null
     var isTS004Remote: Boolean = false
 
@@ -33,7 +32,7 @@ class GalleryAdapter(val context: Context) :
             dataList.addAll(value)
             notifyDataSetChanged()
         }
-        
+
     fun refreshList(data: List<Any>) {
         dataList.clear()
         dataList.addAll(data)
@@ -42,11 +41,11 @@ class GalleryAdapter(val context: Context) :
         datas.addAll(data.filterIsInstance<String>())
         notifyDataSetChanged()
     }
-    
+
     fun selectAll() {
         selectList.clear()
         // Convert string paths to GalleryBean objects for compatibility
-        selectList.addAll(datas.map { path -> 
+        selectList.addAll(datas.map { path ->
             GalleryBean(
                 id = 0,
                 path = path,
@@ -59,7 +58,7 @@ class GalleryAdapter(val context: Context) :
         })
         selectCallback?.invoke(selectList)
     }
-    
+
     fun buildSelectList(): List<GalleryBean> {
         return selectList.toList()
     }

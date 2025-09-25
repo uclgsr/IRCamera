@@ -3,8 +3,14 @@ package mpdc4gsr.sensors.gsr
 import android.content.Context
 import android.util.Log
 import com.mpdc4gsr.gsr.model.GSRSample
-import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import mpdc4gsr.controller.RecordingController
 import mpdc4gsr.network.NetworkClient
 import org.json.JSONObject
@@ -187,7 +193,7 @@ class GSRNetworkStreamer(
 
         try {
             val batchMessage = createBatchMessage(batch)
-            
+
             // Send actual network message using NetworkClient
             networkClient?.let { client ->
                 try {
@@ -268,7 +274,7 @@ class GSRNetworkStreamer(
                         val roundTripTime = clientReceived - clientSent
                         clockOffset = 0 // Assume zero offset without server response
                         lastSyncTime = System.currentTimeMillis()
-                        
+
                         Log.d(TAG, "Network time sync completed, RTT: ${roundTripTime}ns")
                     } else {
                         Log.w(TAG, "Network time sync request failed, using local fallback")
@@ -286,13 +292,13 @@ class GSRNetworkStreamer(
             Log.w(TAG, "Time synchronization failed", e)
         }
     }
-    
+
     private fun performLocalTimeSync(clientSent: Long) {
         val clientReceived = System.nanoTime()
         val roundTripTime = clientReceived - clientSent
         clockOffset = 0 // No server available, assume zero offset
         lastSyncTime = System.currentTimeMillis()
-        
+
         Log.d(TAG, "Local time sync completed, RTT: ${roundTripTime}ns")
     }
 

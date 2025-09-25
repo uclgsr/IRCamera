@@ -2,10 +2,8 @@ package mpdc4gsr.network
 
 import android.content.Context
 import android.util.Log
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
-import mpdc4gsr.utils.TimeManager
 import mpdc4gsr.sync.TimeSyncManager
+import mpdc4gsr.utils.TimeManager
 
 /**
  * Handles protocol messages according to the standardized networking specification.
@@ -46,7 +44,7 @@ class ProtocolHandler(
     fun setCommandHandler(handler: CommandHandler) {
         commandHandler = handler
     }
-    
+
     /**
      * Set the TimeSyncManager for enhanced sync handling
      */
@@ -125,18 +123,18 @@ class ProtocolHandler(
                 Log.w(TAG, "No TimeSyncManager available for SYNC_RESULT")
                 return null // No response needed for SYNC_RESULT
             }
-            
+
             val t1 = message.parameters["t1"]?.toLong()
             val t2 = message.parameters["t2"]?.toLong()
             val t3 = message.parameters["t3"]?.toLong()
             val offset = message.parameters["offset"]?.toLong()
             val rtt = message.parameters["rtt"]?.toLong()
-            
+
             if (t1 == null || t2 == null || t3 == null || offset == null || rtt == null) {
                 Log.w(TAG, "SYNC_RESULT missing required parameters")
                 return null
             }
-            
+
             // Complete the sync calculation with data from PC
             try {
                 syncManager.completeSyncCalculation(t1, t2, t3, offset, rtt, 0)
@@ -144,7 +142,7 @@ class ProtocolHandler(
             } catch (e: Exception) {
                 Log.w(TAG, "TimeSyncManager completeSyncCalculation failed", e)
             }
-            
+
             null // No response needed for SYNC_RESULT
         } catch (e: Exception) {
             Log.e(TAG, "Error handling sync result", e)

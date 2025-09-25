@@ -5,20 +5,20 @@ import android.util.Log
 import android.util.Size
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.Preview
+import androidx.camera.video.FallbackStrategy
 import androidx.camera.video.Quality
 import androidx.camera.video.QualitySelector
 import androidx.camera.video.Recorder
-import androidx.camera.video.FallbackStrategy
 
 /**
  * Manages camera configuration including resolution, frame rate, and quality settings
  * Extracted from RgbCameraRecorder to reduce class complexity
  */
 class CameraConfigurationManager {
-    
+
     companion object {
         private const val TAG = "CameraConfigManager"
-        
+
         // Video configuration constants
         private const val VIDEO_WIDTH_4K = 3840
         private const val VIDEO_HEIGHT_4K = 2160
@@ -30,17 +30,17 @@ class CameraConfigurationManager {
         private const val VIDEO_BITRATE_4K = 50_000_000
         private const val VIDEO_BITRATE_1080P = 20_000_000
         private const val JPEG_QUALITY = 100
-        
+
         // Known devices that support specific features
         private val KNOWN_4K_DEVICES = setOf(
             "SM-S906B", "SM-S916B", "SM-S908B", "SM-S901B", "SM-S911B", "SM-S918B"
         )
-        
+
         private val KNOWN_RAW_DEVICES = setOf(
             "SM-S906B", "SM-S916B", "SM-S908B", "SM-S901B", "SM-S911B", "SM-S918B"
         )
     }
-    
+
     data class CameraConfiguration(
         val videoWidth: Int,
         val videoHeight: Int,
@@ -50,7 +50,7 @@ class CameraConfigurationManager {
         val supportsRAW: Boolean,
         val supports60fps: Boolean
     )
-    
+
     /**
      * Detect device capabilities for 4K, RAW, and 60fps support
      */
@@ -58,47 +58,48 @@ class CameraConfigurationManager {
         return try {
             val deviceModel = Build.MODEL
             val manufacturer = Build.MANUFACTURER.lowercase()
-            
+
             val deviceSupports4K = when {
                 manufacturer == "samsung" && deviceModel in KNOWN_4K_DEVICES -> true
                 manufacturer == "google" && deviceModel.startsWith("Pixel") -> true
                 manufacturer == "oneplus" && Build.VERSION.SDK_INT >= Build.VERSION_CODES.N -> true
                 else -> false
             }
-            
+
             val deviceSupportsRAW = when {
                 manufacturer == "samsung" && deviceModel in KNOWN_RAW_DEVICES -> true
                 manufacturer == "google" && deviceModel.startsWith("Pixel") -> true
                 else -> false
             }
-            
+
             val supports60fps = when {
                 manufacturer == "samsung" && (
-                    deviceModel.startsWith("SM-S9") || 
-                    deviceModel.startsWith("SM-S10") || 
-                    deviceModel.startsWith("SM-G9") || 
-                    deviceModel.startsWith("SM-G99")
-                ) -> true
+                        deviceModel.startsWith("SM-S9") ||
+                                deviceModel.startsWith("SM-S10") ||
+                                deviceModel.startsWith("SM-G9") ||
+                                deviceModel.startsWith("SM-G99")
+                        ) -> true
+
                 else -> false
             }
-            
+
             Log.i(TAG, "Device capabilities - 4K: $deviceSupports4K, RAW: $deviceSupportsRAW, 60fps: $supports60fps")
             Log.i(TAG, "Device: $manufacturer $deviceModel")
-            
+
             Triple(deviceSupports4K, deviceSupportsRAW, supports60fps)
-            
+
         } catch (e: Exception) {
             Log.w(TAG, "Error detecting device capabilities, using safe defaults", e)
             Triple(false, false, false)
         }
     }
-    
+
     /**
      * Create optimized camera configuration based on device capabilities
      */
     fun createOptimizedConfiguration(): CameraConfiguration {
         val (supports4K, supportsRAW, supports60fps) = detectDeviceCapabilities()
-        
+
         return if (supports4K) {
             CameraConfiguration(
                 videoWidth = VIDEO_WIDTH_4K,
@@ -121,7 +122,7 @@ class CameraConfigurationManager {
             )
         }
     }
-    
+
     /**
      * Create optimized video recorder with quality selector
      */
@@ -140,11 +141,11 @@ class CameraConfigurationManager {
                     FallbackStrategy.lowerQualityThan(Quality.FHD)
                 )
             }
-            
+
             Recorder.Builder()
                 .setQualitySelector(qualitySelector)
                 .build()
-                
+
         } catch (e: Exception) {
             Log.e(TAG, "Error creating optimized recorder, using conservative fallback", e)
             Recorder.Builder()
@@ -157,7 +158,7 @@ class CameraConfigurationManager {
                 .build()
         }
     }
-    
+
     /**
      * Create preview configuration
      */
@@ -168,7 +169,7 @@ class CameraConfigurationManager {
             Log.i(TAG, "Preview configured: ${previewSize.width}x${previewSize.height}")
         }.build()
     }
-    
+
     /**
      * Create image capture configuration
      */
@@ -178,7 +179,7 @@ class CameraConfigurationManager {
             setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
             setJpegQuality(JPEG_QUALITY)
             setFlashMode(ImageCapture.FLASH_MODE_AUTO)
-            
+
             if (configuration.supportsRAW) {
                 try {
                     androidx.camera.camera2.interop.Camera2Interop.Extender(this)
@@ -193,7 +194,7 @@ class CameraConfigurationManager {
             }
         }.build()
     }
-    
+
     /**
      * Get configuration summary for logging
      */

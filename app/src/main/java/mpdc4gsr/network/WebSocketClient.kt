@@ -5,6 +5,7 @@ import android.net.nsd.NsdManager
 import android.net.nsd.NsdServiceInfo
 import android.util.Base64
 import android.util.Log
+import com.mpdc4gsr.libunified.app.sync.TimeSyncService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -17,7 +18,6 @@ import mpdc4gsr.config.ProtocolVersion
 import mpdc4gsr.core.SessionManager
 import mpdc4gsr.core.StructuredLogger
 import mpdc4gsr.security.AdvancedAuthenticationManager
-import com.mpdc4gsr.libunified.app.sync.TimeSyncService
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response

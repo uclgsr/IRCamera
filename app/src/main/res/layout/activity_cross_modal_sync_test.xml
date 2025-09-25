@@ -24,18 +24,18 @@
             android:id="@+id/start_sync_test_button"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:layout_marginEnd="4dp"
+            android:layout_weight="1"
             android:text="Start Sync Test" />
 
         <Button
             android:id="@+id/generate_event_button"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:layout_marginStart="4dp"
-            android:text="Generate Event"
-            android:enabled="false" />
+            android:layout_weight="1"
+            android:enabled="false"
+            android:text="Generate Event" />
 
     </LinearLayout>
 
@@ -44,8 +44,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
-        android:text="Analyze Sync Data"
-        android:enabled="false" />
+        android:enabled="false"
+        android:text="Analyze Sync Data" />
 
     <ScrollView
         android:layout_width="match_parent"

@@ -29,9 +29,9 @@ import com.mpdc4gsr.libunified.app.socket.WebSocketProxy
 import com.mpdc4gsr.libunified.app.tools.AppLanguageUtils
 import com.mpdc4gsr.libunified.app.tools.ConstantLanguages
 import com.mpdc4gsr.libunified.app.tools.DeviceTools
-import com.mpdc4gsr.libunified.ui.widget.BatteryView
 import com.mpdc4gsr.libunified.app.utils.NetWorkUtils
 import com.mpdc4gsr.libunified.app.utils.WsCmdConstants
+import com.mpdc4gsr.libunified.ui.widget.BatteryView
 import mpdc4gsr.activities.DeviceTypeActivity
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode

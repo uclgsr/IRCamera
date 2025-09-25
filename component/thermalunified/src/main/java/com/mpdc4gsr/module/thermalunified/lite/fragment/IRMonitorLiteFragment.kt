@@ -1,6 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.lite.fragment
 
-import com.mpdc4gsr.libunified.ui.dialog.ProgressDialog
 import android.graphics.Bitmap
 import android.graphics.Point
 import android.graphics.Rect
@@ -17,7 +16,6 @@ import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import com.elvishew.xlog.XLog
 import com.energy.ac020library.bean.IrcmdError
-import com.mpdc4gsr.libunified.common.RotateDegree
 import com.energy.irutilslibrary.LibIRTempAC020
 import com.energy.irutilslibrary.bean.GainStatus
 import com.energy.iruvc.sdkisp.LibIRProcess
@@ -25,7 +23,20 @@ import com.energy.iruvc.utils.CommonParams
 import com.energy.iruvc.utils.Line
 import com.energy.iruvc.utils.SynchronizedBitmap
 import com.energy.iruvccamera.usb.USBMonitor
+import com.mpdc4gsr.libunified.app.BaseApplication
+import com.mpdc4gsr.libunified.app.common.SaveSettingUtil
+import com.mpdc4gsr.libunified.app.ktbase.BaseFragment
+import com.mpdc4gsr.libunified.common.RotateDegree
+import com.mpdc4gsr.libunified.ir.view.ITsTempListener
+import com.mpdc4gsr.libunified.ir.view.TemperatureView
+import com.mpdc4gsr.libunified.ir.view.TemperatureView.REGION_MODE_LINE
+import com.mpdc4gsr.libunified.ir.view.TemperatureView.REGION_MODE_POINT
+import com.mpdc4gsr.libunified.ir.view.TemperatureView.REGION_MODE_RECTANGLE
+import com.mpdc4gsr.libunified.ui.dialog.ProgressDialog
 import com.mpdc4gsr.module.thermalunified.R
+import com.mpdc4gsr.module.thermalunified.bean.DataBean
+import com.mpdc4gsr.module.thermalunified.bean.SelectPositionBean
+import com.mpdc4gsr.module.thermalunified.event.ThermalActionEvent
 import com.mpdc4gsr.module.thermalunified.lite.activity.IRMonitorLiteActivity
 import com.mpdc4gsr.module.thermalunified.lite.camera.CameraPreviewManager
 import com.mpdc4gsr.module.thermalunified.lite.camera.DeviceControlManager
@@ -40,17 +51,6 @@ import com.mpdc4gsr.module.thermalunified.lite.ui.activity.IrDisplayActivity.HID
 import com.mpdc4gsr.module.thermalunified.lite.ui.activity.IrDisplayActivity.PREVIEW_FAIL
 import com.mpdc4gsr.module.thermalunified.lite.ui.activity.IrDisplayActivity.SHOW_LOADING
 import com.mpdc4gsr.module.thermalunified.lite.util.IRTool
-import com.mpdc4gsr.libunified.ir.view.ITsTempListener
-import com.mpdc4gsr.libunified.ir.view.TemperatureView
-import com.mpdc4gsr.libunified.ir.view.TemperatureView.REGION_MODE_LINE
-import com.mpdc4gsr.libunified.ir.view.TemperatureView.REGION_MODE_POINT
-import com.mpdc4gsr.libunified.ir.view.TemperatureView.REGION_MODE_RECTANGLE
-import com.mpdc4gsr.libunified.app.BaseApplication
-import com.mpdc4gsr.libunified.app.common.SaveSettingUtil
-import com.mpdc4gsr.libunified.app.ktbase.BaseFragment
-import com.mpdc4gsr.module.thermalunified.bean.DataBean
-import com.mpdc4gsr.module.thermalunified.bean.SelectPositionBean
-import com.mpdc4gsr.module.thermalunified.event.ThermalActionEvent
 import com.mpdc4gsr.module.thermalunified.repository.ConfigRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -113,7 +113,8 @@ class IRMonitorLiteFragment : BaseFragment(), ITsTempListener {
 
     override fun initView() {
 
-        temperatureView = requireView().findViewById<com.mpdc4gsr.libunified.ir.view.TemperatureView>(R.id.temperatureView)
+        temperatureView =
+            requireView().findViewById<com.mpdc4gsr.libunified.ir.view.TemperatureView>(R.id.temperatureView)
         cameraView = requireView().findViewById<com.mpdc4gsr.libunified.ui.widget.LiteSurfaceView>(R.id.cameraView)
 
         lifecycleScope.launch {

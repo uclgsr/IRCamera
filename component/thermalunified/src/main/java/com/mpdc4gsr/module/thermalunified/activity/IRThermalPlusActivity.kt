@@ -9,15 +9,15 @@ import com.blankj.utilcode.util.ToastUtils
 import com.energy.iruvc.sdkisp.LibIRProcess
 import com.energy.iruvc.utils.CommonParams
 import com.energy.iruvc.utils.DualCameraParams
-import com.mpdc4gsr.libunified.ir.usbdual.Const
-import com.mpdc4gsr.libunified.ir.utils.IRImageHelp
-import com.mpdc4gsr.libunified.ir.utils.PseudocodeUtils
-import com.mpdc4gsr.libunified.ir.view.TemperatureView
 import com.mpdc4gsr.libunified.app.bean.CameraItemBean
 import com.mpdc4gsr.libunified.app.common.ProductType.PRODUCT_NAME_TCP
 import com.mpdc4gsr.libunified.app.common.SaveSettingUtil
 import com.mpdc4gsr.libunified.app.menu.constant.TwoLightType
 import com.mpdc4gsr.libunified.app.tools.ToastTools
+import com.mpdc4gsr.libunified.ir.usbdual.Const
+import com.mpdc4gsr.libunified.ir.utils.IRImageHelp
+import com.mpdc4gsr.libunified.ir.utils.PseudocodeUtils
+import com.mpdc4gsr.libunified.ir.view.TemperatureView
 import com.mpdc4gsr.module.thermalunified.R
 import com.mpdc4gsr.module.thermalunified.event.GalleryAddEvent
 import com.mpdc4gsr.module.thermalunified.video.VideoRecordFFmpeg
@@ -34,17 +34,17 @@ class IRThermalPlusActivity : BaseIRPlushActivity() {
     }
 
     private val dualTextureViewNativeCamera by lazy { findViewById<SurfaceView>(R.id.dualTextureViewNativeCamera) }
-    
+
     override val temperatureSeekbar by lazy {
         findViewById<com.mpdc4gsr.libunified.ui.widget.seekbar.RangeSeekBar>(
             R.id.temperature_seekbar
         )
     }
-    
-    override val cameraPreview by lazy { 
-        findViewById<com.mpdc4gsr.module.thermalunified.stubs.CameraPreView>(R.id.cameraPreview) 
+
+    override val cameraPreview by lazy {
+        findViewById<com.mpdc4gsr.module.thermalunified.stubs.CameraPreView>(R.id.cameraPreview)
     }
-    
+
     override val cl_seek_bar by lazy {
         findViewById<com.mpdc4gsr.libunified.ui.widget.BitmapConstraintLayout>(
             R.id.cl_seek_bar
