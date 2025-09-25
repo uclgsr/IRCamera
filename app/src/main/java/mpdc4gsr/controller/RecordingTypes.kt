@@ -199,5 +199,12 @@ data class DeviceInfo(
 
 // Legacy compatibility aliases
 typealias ComprehensiveSensorHealthInfo = SensorHealthInfo
-typealias SimpleRecordingStatus = SensorStatusInfo
+
+// Simple recording status for basic status reporting
+data class SimpleRecordingStatus(
+    val isRecording: Boolean,
+    val activeSensors: Int,
+    val totalSensors: Int,
+    val state: RecordingState
+)
 typealias MainRecordingState = RecordingState

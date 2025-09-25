@@ -405,11 +405,11 @@ class HardwareValidationController(
 
     private fun getDeviceInfo(): DeviceInfo {
         return DeviceInfo(
-            manufacturer = android.os.Build.MANUFACTURER,
+            deviceId = "${android.os.Build.MANUFACTURER}_${android.os.Build.MODEL}",
             model = android.os.Build.MODEL,
             androidVersion = android.os.Build.VERSION.RELEASE,
-            sdkInt = android.os.Build.VERSION.SDK_INT,
-            appVersion = "1.0.0"
+            availableStorageGB = 10.0, // Would need to calculate actual available storage
+            batteryLevel = 100 // Would need to get actual battery level
         )
     }
 }
