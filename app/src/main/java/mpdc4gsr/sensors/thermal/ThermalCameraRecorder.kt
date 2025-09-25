@@ -982,7 +982,6 @@ class ThermalCameraRecorder(
             )
         }
     }
-    }
 
     private suspend fun extractRealThermalDataFromIRUVCTC(
         timestamp: Long,
