@@ -1,12 +1,3 @@
-plugins {
-    alias(libs.plugins.android.application) apply false
-    alias(libs.plugins.android.library) apply false
-    alias(libs.plugins.kotlin.android) apply false
-    alias(libs.plugins.ktlint) apply false
-    alias(libs.plugins.detekt) apply false
-    alias(libs.plugins.spotless) apply false
-}
-
 buildscript {
     repositories {
         google()
@@ -121,21 +112,4 @@ tasks.register("compileReleaseSafe") {
     )
 }
 
-// TODO: Add static analysis plugins (ktlint, detekt, spotless) after build system is stable
-
-// Apply static analysis to key modules
-apply(plugin = "org.jlleitschuh.gradle.ktlint")
-apply(plugin = "io.gitlab.arturbosch.detekt")
-
-// Simple quality gate tasks
-tasks.register("codeQuality") {
-    group = "verification"
-    description = "Run code quality checks on main modules"
-    dependsOn(":app:ktlintCheck", ":libunified:ktlintCheck")
-}
-
-tasks.register("formatCode") {
-    group = "formatting"
-    description = "Format code with ktlint"
-    dependsOn(":app:ktlintFormat", ":libunified:ktlintFormat")
-}
+// TODO: Static analysis integration will be added in a future phase after core refactoring is complete
