@@ -71,10 +71,30 @@ class RealShimmerDevice(
         return try {
             shimmer = Shimmer(shimmerHandler, address)
             shimmer?.let { device ->
-                // Connection is asynchronous - don't set isConnected immediately
+                // Set up data handler to forward data to registered callback
+                try {
+                    // Try to set data handler if the method exists
+                    device.setDataHandler { objectCluster ->
+                        handleShimmerData(objectCluster)
+                    }
+                } catch (e: Exception) {
+                    Log.w(TAG, "Could not set data handler - method may not be available", e)
+                }
+                
+                // Set up connection state handler for proper state tracking
+                try {
+                    // Try to set connection state handler if available
+                    device.setConnectionStateHandler { state ->
+                        // Handle connection state changes
+                        handleConnectionStateChange(state)
+                    }
+                } catch (e: Exception) {
+                    Log.w(TAG, "Could not set connection state handler - method may not be available", e)
+                }
+                
+                // Connection is asynchronous - actual status will be updated via handlers
                 device.connect(address, name)
                 Log.i(TAG, "Connection request sent to Shimmer device: $name ($address)")
-                // Connection status will be updated via proper connection callbacks when available
                 true
             } ?: false
         } catch (e: Exception) {
@@ -144,6 +164,37 @@ class RealShimmerDevice(
             dataCallback?.invoke(shimmerDataCluster)
         } catch (e: Exception) {
             Log.e(TAG, "Failed to handle Shimmer data", e)
+        }
+    }
+    
+    /**
+     * Handle connection state changes from the Shimmer SDK
+     */
+    private fun handleConnectionStateChange(state: Any) {
+        try {
+            // Convert state to string and update connection status
+            when (state.toString()) {
+                "CONNECTED", "3" -> {
+                    isConnected = true
+                    connectionCallback?.invoke("CONNECTED")
+                    Log.i(TAG, "Shimmer device connected")
+                }
+                "CONNECTING", "2" -> {
+                    isConnected = false
+                    connectionCallback?.invoke("CONNECTING")
+                    Log.i(TAG, "Shimmer device connecting")
+                }
+                "DISCONNECTED", "NONE", "0" -> {
+                    isConnected = false
+                    connectionCallback?.invoke("DISCONNECTED")
+                    Log.i(TAG, "Shimmer device disconnected")
+                }
+                else -> {
+                    Log.d(TAG, "Unknown Shimmer connection state: $state")
+                }
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Error handling connection state change", e)
         }
     }
 }
