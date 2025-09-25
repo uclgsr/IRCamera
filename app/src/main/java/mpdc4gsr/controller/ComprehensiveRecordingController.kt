@@ -12,12 +12,13 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import mpdc4gsr.controller.RecordingController.SessionManifest
-import mpdc4gsr.controller.RecordingController.SessionEvent
-import mpdc4gsr.controller.RecordingController.SensorActivityInfo
-import mpdc4gsr.controller.RecordingController.SensorHealthInfo
-import mpdc4gsr.controller.RecordingController.DropoutEvent
-import mpdc4gsr.controller.RecordingController.ReconnectionEvent
+import mpdc4gsr.controller.SessionManifest
+import mpdc4gsr.controller.SessionEvent
+import mpdc4gsr.controller.SensorActivityInfo
+import mpdc4gsr.controller.SensorHealthInfo
+import mpdc4gsr.controller.DropoutEvent
+import mpdc4gsr.controller.ReconnectionEvent
+import mpdc4gsr.controller.RecordingController
 import mpdc4gsr.data.SessionMetadata
 import mpdc4gsr.permissions.PermissionManager
 import mpdc4gsr.sensors.SensorRecorder
@@ -108,7 +109,7 @@ class ComprehensiveRecordingController(
     fun addSensorRecorder(name: String, recorder: SensorRecorder) {
         sensorRecorders[name] = recorder
         sensorHealthStatus[name] = SensorHealthInfo(
-            name = name,
+            sensorId = name,
             isHealthy = true,
             lastHealthCheck = System.currentTimeMillis(),
             consecutiveFailures = 0
@@ -901,7 +902,7 @@ class ComprehensiveRecordingController(
             eventType = eventType,
             timestampMs = System.currentTimeMillis(),
             sensorId = sensorId,
-            triggerSource = triggerSource,
+            triggerSource = null, // Convert between enum types if needed
             metadata = metadata,
             success = success,
             errorMessage = errorMessage
@@ -929,7 +930,7 @@ class ComprehensiveRecordingController(
             val wasActive = activeRecorders[sensorName] == true
             val healthInfo = sensorHealthStatus[sensorName]
 
-            RecordingController.SensorActivityInfo(
+            SensorActivityInfo(
                 sensorName = sensorName,
                 wasActive = wasActive,
                 startedSuccessfully = wasActive,
@@ -946,7 +947,7 @@ class ComprehensiveRecordingController(
             it.eventType.contains("WARNING") || it.eventType.contains("CRITICAL")
         }.map { "${it.eventType}: ${it.metadata}" }
 
-        return RecordingController.SessionManifest(
+        return SessionManifest(
             sessionId = sessionDirectory,
             startTime = startTime,
             stopTime = stopTime,

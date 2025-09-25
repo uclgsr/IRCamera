@@ -1959,7 +1959,10 @@ class RecordingController(
                 sensorId = sensor.sensorId,
                 sensorType = sensor.sensorType,
                 isRecording = sensor.isRecording,
-                timestamp = System.currentTimeMillis()
+                samplesRecorded = 0L, // Default values for compilation
+                currentDataRate = 0.0,
+                storageUsedMB = 0.0,
+                timestampNs = System.nanoTime()
             )
         }
 
