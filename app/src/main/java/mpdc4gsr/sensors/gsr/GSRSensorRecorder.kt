@@ -1412,7 +1412,7 @@ class GSRSensorRecorder(
                                     } catch (e: Exception) {
                                         false
                                     }
-                                }
+                                } as Shimmer?
                                 Log.i(TAG, "Successfully connected to Shimmer device: $deviceAddress")
                                 isShimmerConnected = true
                             } else {
