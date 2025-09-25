@@ -1412,6 +1412,12 @@ class GSRSensorRecorder(
                                         false
                                     }
                                 } as? Shimmer
+                                
+                                // If cast failed, log warning but continue
+                                if (currentConnectedDevice == null) {
+                                    Log.w(TAG, "Connected device found but could not cast to Shimmer type")
+                                }
+                                
                                 Log.i(TAG, "Successfully connected to Shimmer device: $deviceAddress")
                                 isShimmerConnected = true
                             } else {
