@@ -226,7 +226,7 @@ class FileUtils {
                 }
 
                 options.inJustDecodeBounds = false
-                // Removed deprecated inDither field
+                // inDither was deprecated in API level 30 (Android 11); no replacement, dithering is now handled automatically.
                 options.inScaled = true
 
                 var fs: FileInputStream? = null
