@@ -143,27 +143,29 @@ class SessionOrchestrationDemo(
         Log.i(TAG, "=== Demo 4: Session State Machine ===")
         
         // Monitor state flow
-        recordingController.recordingStateFlow.collect { state ->
-            Log.i(TAG, "Session State: ${state.name}")
-            
-            when (state) {
-                RecordingController.RecordingState.STARTING -> {
-                    Log.i(TAG, "  → Validating prerequisites and initializing sensors")
-                }
-                RecordingController.RecordingState.RECORDING -> {
-                    Log.i(TAG, "  → Active recording with health monitoring")
-                }
-                RecordingController.RecordingState.STOPPING -> {
-                    Log.i(TAG, "  → Coordinated sensor shutdown in progress")
-                }
-                RecordingController.RecordingState.STOPPED -> {
-                    Log.i(TAG, "  → Session finalized, manifest generated")
-                }
-                else -> {
-                    Log.i(TAG, "  → State: ${state.name}")
+        recordingController.recordingStateFlow
+            .take(5) // Collect only the first 5 state changes for demonstration
+            .collect { state ->
+                Log.i(TAG, "Session State: ${state.name}")
+                
+                when (state) {
+                    RecordingController.RecordingState.STARTING -> {
+                        Log.i(TAG, "  → Validating prerequisites and initializing sensors")
+                    }
+                    RecordingController.RecordingState.RECORDING -> {
+                        Log.i(TAG, "  → Active recording with health monitoring")
+                    }
+                    RecordingController.RecordingState.STOPPING -> {
+                        Log.i(TAG, "  → Coordinated sensor shutdown in progress")
+                    }
+                    RecordingController.RecordingState.STOPPED -> {
+                        Log.i(TAG, "  → Session finalized, manifest generated")
+                    }
+                    else -> {
+                        Log.i(TAG, "  → State: ${state.name}")
+                    }
                 }
             }
-        }
     }
 
     /**
