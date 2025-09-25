@@ -515,6 +515,9 @@ public:
     
     bool validate_message_format(const std::string& message) {
         // Basic JSON validation
+        if (message.empty()) {
+            return false;
+        }
         return message.front() == '{' && message.back() == '}' && 
                message.find("\"type\"") != std::string::npos;
     }
