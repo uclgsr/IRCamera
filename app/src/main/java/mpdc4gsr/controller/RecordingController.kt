@@ -366,6 +366,8 @@ class RecordingController(
                             )
                             if (success) {
                                 activeRecorders[sensorName] = true
+                                updateSensorHealth(sensorName, true)
+                                addSessionEvent("SENSOR_START_SUCCESS", sensorId = sensorName)
                                 Log.i(TAG, "Sensor $sensorName started successfully")
 
                                 val relativePath = runCatching {
@@ -407,6 +409,8 @@ class RecordingController(
 
                         } catch (e: Exception) {
                             Log.w(TAG, "Exception starting sensor $sensorName", e)
+                            updateSensorHealth(sensorName, false, "Start exception: ${e.message}")
+                            addSessionEvent("SENSOR_START_EXCEPTION", sensorId = sensorName, success = false, errorMessage = e.message)
                             emitError(
                                 RecordingControllerError(
                                     errorType = "SENSOR_START_EXCEPTION",
@@ -424,9 +428,10 @@ class RecordingController(
                 val successfulStarts = startResults.filter { it.second }
                 val failedStarts = startResults.filter { !it.second }
 
-
+                // Enhanced sensor start result processing
                 successfulStarts.forEach { (sensorName, _, _) ->
                     Log.i(TAG, "✓ Sensor $sensorName: STARTED")
+                    addSessionEvent("SENSOR_STARTED", sensorId = sensorName, success = true)
                 }
 
                 failedStarts.forEach { (sensorName, _, exception) ->
@@ -436,6 +441,9 @@ class RecordingController(
                         " (Returned false)"
                     }
                     Log.w(TAG, "✗ Sensor $sensorName: FAILED$errorDetails")
+                    updateSensorHealth(sensorName, false, "Start failed$errorDetails")
+                    addSessionEvent("SENSOR_START_FAILED", sensorId = sensorName, success = false, 
+                                    errorMessage = "Start failed$errorDetails")
                     emitError(
                         RecordingControllerError(
                             errorType = "SENSOR_START_FAILED",
@@ -447,34 +455,46 @@ class RecordingController(
                 }
 
 
+                // Implement partial sensor start capability - proceed if ANY sensor starts
                 if (successfulStarts.isNotEmpty()) {
                     _isRecording.set(true)
                     _recordingStateFlow.value = RecordingState.RECORDING
-
+                    
+                    // Transition to RECORDING state
+                    transitionSessionState(SessionState.STARTING, SessionState.RECORDING)
+                    addSessionEvent("SESSION_RECORDING_STARTED", success = true, metadata = mapOf(
+                        "active_sensors" to successfulStarts.size.toString(),
+                        "total_sensors" to startResults.size.toString(),
+                        "partial_start" to (failedStarts.isNotEmpty()).toString()
+                    ))
 
                     addSyncMarker("session_start", sessionStartTimestampNs)
 
                     val totalSensors = startResults.size
                     val successCount = successfulStarts.size
 
-                    Log.i(
-                        TAG,
-                        "✓ Multi-modal recording session started: $successCount/$totalSensors sensors active"
-                    )
-                    Log.i(
-                        TAG,
-                        "Active sensors: ${successfulStarts.joinToString(", ") { it.first }}"
-                    )
-                    if (failedStarts.isNotEmpty()) {
-                        Log.w(
-                            TAG,
-                            "Failed sensors: ${failedStarts.joinToString(", ") { it.first }}"
-                        )
+                    val sessionTypeMessage = if (failedStarts.isEmpty()) {
+                        "Full multi-modal recording session started"
+                    } else {
+                        "Partial multi-modal recording session started"
                     }
+
+                    Log.i(TAG, "✓ $sessionTypeMessage: $successCount/$totalSensors sensors active")
+                    Log.i(TAG, "Active sensors: ${successfulStarts.joinToString(", ") { it.first }}")
+                    if (failedStarts.isNotEmpty()) {
+                        Log.w(TAG, "Failed sensors: ${failedStarts.joinToString(", ") { it.first }}")
+                        Log.w(TAG, "Recording will continue with available sensors - fault tolerance enabled")
+                    }
+
+                    // Start health monitoring for active sensors
+                    startSensorHealthMonitoring()
 
                     true
                 } else {
+                    // No sensors started successfully - abort session
                     _recordingStateFlow.value = RecordingState.ERROR
+                    transitionSessionState(SessionState.STARTING, SessionState.STOPPED_FAILED)
+                    addSessionEvent("SESSION_START_FAILED", success = false, errorMessage = "No sensors could be started")
 
 
                     currentSessionDirectory?.let { sessionDir ->
@@ -1812,6 +1832,85 @@ class RecordingController(
         }
         
         return false
+    }
+
+    // Sensor health monitoring during recording
+    private fun startSensorHealthMonitoring() {
+        statusMonitoringJob = controllerScope.launch {
+            while (_isRecording.get() && isActive) {
+                try {
+                    // Check health of all active sensors
+                    val activeSensorNames = activeRecorders.filter { it.value }.keys.toList()
+                    
+                    for (sensorName in activeSensorNames) {
+                        val sensor = sensorRecorders[sensorName]
+                        if (sensor != null) {
+                            try {
+                                // Check if sensor is still recording
+                                val isStillRecording = sensor.isRecording
+                                val healthInfo = sensorHealthStatus[sensorName]
+                                
+                                if (!isStillRecording && activeRecorders[sensorName] == true) {
+                                    // Sensor stopped unexpectedly - attempt reconnection
+                                    Log.w(TAG, "Sensor $sensorName stopped unexpectedly during session")
+                                    updateSensorHealth(sensorName, false, "Unexpected stop during recording")
+                                    addSessionEvent("SENSOR_DROPOUT", sensorId = sensorName, success = false, 
+                                                  errorMessage = "Sensor stopped unexpectedly")
+                                    
+                                    // Attempt automatic reconnection
+                                    val reconnectSuccess = attemptSensorReconnection(sensorName)
+                                    if (reconnectSuccess) {
+                                        // Resume recording after reconnection
+                                        currentSessionDirectory?.let { sessionDir ->
+                                            val sensorDir = resolveSensorDirectory(sessionDir, sensorName)
+                                            sessionMetadata?.let { metadata ->
+                                                val restartSuccess = sensor.startRecording(sensorDir.absolutePath, metadata)
+                                                if (restartSuccess) {
+                                                    activeRecorders[sensorName] = true
+                                                    updateSensorHealth(sensorName, true)
+                                                    addSessionEvent("SENSOR_RESUMED", sensorId = sensorName, success = true)
+                                                    Log.i(TAG, "Sensor $sensorName resumed recording after reconnection")
+                                                }
+                                            }
+                                        }
+                                    }
+                                } else if (isStillRecording) {
+                                    // Sensor is healthy
+                                    updateSensorHealth(sensorName, true)
+                                }
+                            } catch (e: Exception) {
+                                Log.w(TAG, "Error checking health of sensor $sensorName", e)
+                                updateSensorHealth(sensorName, false, "Health check exception: ${e.message}")
+                            }
+                        }
+                    }
+                    
+                    // Update sensor status flow for UI
+                    updateSensorStatusFlow()
+                    
+                    // Wait before next health check
+                    delay(STATUS_UPDATE_INTERVAL_MS)
+                } catch (e: Exception) {
+                    Log.w(TAG, "Error during sensor health monitoring", e)
+                    delay(ERROR_RECOVERY_DELAY_MS)
+                }
+            }
+        }
+    }
+
+    private fun updateSensorStatusFlow() {
+        val statusList = sensorRecorders.map { (sensorName, sensor) ->
+            RecordingStatus(
+                sensorId = sensor.sensorId,
+                sensorType = sensor.sensorType,
+                isRecording = sensor.isRecording,
+                timestamp = System.currentTimeMillis()
+            )
+        }
+        
+        controllerScope.launch {
+            _sensorStatusFlow.emit(statusList)
+        }
     }
 
     // Session manifest generation
