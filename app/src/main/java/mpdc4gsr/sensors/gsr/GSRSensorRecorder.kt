@@ -36,7 +36,6 @@ import mpdc4gsr.sensors.SensorRecorder
 import mpdc4gsr.sensors.TimeSynchronizationService
 import mpdc4gsr.sensors.TimestampManager
 import mpdc4gsr.sensors.TimestampRecord
-import mpdc4gsr.sensors.gsr.GSRSensorRecorder.Companion.hasBleScanningPermissions
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
 import com.mpdc4gsr.gsr.service.GSRRecorder as LegacyGSRRecorder
@@ -144,10 +143,6 @@ class GSRSensorRecorder(
 
         fun hasComprehensiveBluetoothPermissions(context: Context): Boolean {
             return hasBleScanningPermissions(context)
-        }
-
-        private fun hasBleScanningPermissions(context: Context): Boolean {
-            return getMissingPermissions(context).isEmpty()
         }
     }
 
@@ -365,7 +360,7 @@ class GSRSensorRecorder(
                 )
 
 
-                if (!hasBleScanningPermissions(context)) {
+                if (!GSRSensorRecorder.hasBleScanningPermissions(context)) {
                     Log.w(
                         TAG,
                         "Missing Bluetooth permissions for Shimmer GSR recording"
@@ -396,7 +391,7 @@ class GSRSensorRecorder(
                 var recordingSuccessful = false
 
 
-                if (hasBleScanningPermissions(context)) {
+                if (GSRSensorRecorder.hasBleScanningPermissions(context)) {
                     val shimmerRecorder = realShimmerGSRRecorder
                     if (shimmerRecorder != null) {
                         Log.i(TAG, "Attempting Shimmer3 GSR+ recording with enhanced BLE backend")
@@ -1268,35 +1263,51 @@ class GSRSensorRecorder(
                     val deviceList = mutableListOf<String>()
 
                     // Get connected Shimmer devices using official Shimmer API
-                    val connectedDevices = shimmerManager.getConnectedDeviceList()
+                    val connectedDevices = try {
+                        // Use available Shimmer API methods
+                        shimmerManager.getMapOfShimmerDevices().values.filter { 
+                            it.btConnectionState == BT_STATE.CONNECTED 
+                        }
+                    } catch (e: Exception) {
+                        Log.w(TAG, "Error getting connected devices: ${e.message}")
+                        emptyList()
+                    }
+                    
                     connectedDevices.forEach { device ->
-                        deviceList.add("${device.getDeviceName()} (${device.getBluetoothAddress()}) - Connected")
+                        val deviceName = device.deviceName ?: "Unknown"
+                        val deviceAddress = device.bluetoothAddress ?: "Unknown"
+                        deviceList.add("$deviceName ($deviceAddress) - Connected")
                     }
 
                     // Scan for paired Shimmer devices
                     val scanResultDeferred = CompletableDeferred<List<String>>()
 
                     // Use Shimmer's paired device detection
-                    if (shimmerManager.getBluetoothAdapter()?.isEnabled == true) {
-                        val pairedDevices = shimmerManager.getBluetoothAdapter()?.bondedDevices
-                        pairedDevices?.forEach { btDevice ->
-                            val deviceName = btDevice.name ?: "Unknown"
-                            val deviceAddress = btDevice.address
+                    try {
+                        val bluetoothAdapter = android.bluetooth.BluetoothAdapter.getDefaultAdapter()
+                        if (bluetoothAdapter?.isEnabled == true) {
+                            val pairedDevices = bluetoothAdapter.bondedDevices
+                            pairedDevices?.forEach { btDevice ->
+                                val deviceName = btDevice.name ?: "Unknown"
+                                val deviceAddress = btDevice.address
 
-                            // Check if this is a Shimmer GSR device
-                            if (isShimmerGSRDevice(deviceName, deviceAddress)) {
-                                val isAlreadyConnected = connectedDevices.any {
-                                    it.getBluetoothAddress() == deviceAddress
-                                }
-                                if (!isAlreadyConnected) {
-                                    val deviceEntry = "$deviceName ($deviceAddress) - Available"
-                                    if (!deviceList.contains(deviceEntry)) {
-                                        deviceList.add(deviceEntry)
+                                // Check if this is a Shimmer GSR device
+                                if (isShimmerGSRDevice(deviceName, deviceAddress)) {
+                                    val isAlreadyConnected = connectedDevices.any {
+                                        it.bluetoothAddress == deviceAddress
                                     }
-                                    Log.d(TAG, "Found paired Shimmer GSR device: $deviceName at $deviceAddress")
+                                    if (!isAlreadyConnected) {
+                                        val deviceEntry = "$deviceName ($deviceAddress) - Available"
+                                        if (!deviceList.contains(deviceEntry)) {
+                                            deviceList.add(deviceEntry)
+                                        }
+                                        Log.d(TAG, "Found paired Shimmer GSR device: $deviceName at $deviceAddress")
+                                    }
                                 }
                             }
                         }
+                    } catch (e: Exception) {
+                        Log.w(TAG, "Error scanning for paired devices: ${e.message}")
                     }
 
                     scanResultDeferred.complete(deviceList.toList())
@@ -1330,9 +1341,17 @@ class GSRSensorRecorder(
                 val shimmerManager = shimmerBluetoothManager
                 if (shimmerManager != null) {
                     // Check if device is already connected using Shimmer API
-                    val connectedDevices = shimmerManager.getConnectedDeviceList()
+                    val connectedDevices = try {
+                        shimmerManager.getMapOfShimmerDevices().values.filter { 
+                            it.btConnectionState == BT_STATE.CONNECTED 
+                        }
+                    } catch (e: Exception) {
+                        Log.w(TAG, "Error getting connected devices: ${e.message}")
+                        emptyList()
+                    }
+                    
                     val alreadyConnected = connectedDevices.any {
-                        it.getBluetoothAddress() == deviceAddress
+                        it.bluetoothAddress == deviceAddress
                     }
 
                     if (alreadyConnected) {
@@ -1347,21 +1366,36 @@ class GSRSensorRecorder(
 
                     try {
                         // Use Shimmer's official connection API
-                        connectionSuccess = shimmerManager.connectShimmerDevice(deviceAddress)
+                        val shimmerDevice = shimmerManager.getMapOfShimmerDevices()[deviceAddress]
+                        if (shimmerDevice != null) {
+                            shimmerManager.connectShimmer(shimmerDevice)
+                            connectionSuccess = true
+                        } else {
+                            Log.w(TAG, "Device $deviceAddress not found in Shimmer device map")
+                            connectionSuccess = false
+                        }
 
                         if (connectionSuccess) {
                             // Wait for connection to establish
                             delay(2000)
 
                             // Verify connection
-                            val updatedConnectedDevices = shimmerManager.getConnectedDeviceList()
+                            val updatedConnectedDevices = try {
+                                shimmerManager.getMapOfShimmerDevices().values.filter { 
+                                    it.btConnectionState == BT_STATE.CONNECTED 
+                                }
+                            } catch (e: Exception) {
+                                Log.w(TAG, "Error verifying connected devices: ${e.message}")
+                                emptyList()
+                            }
+                            
                             val actuallyConnected = updatedConnectedDevices.any {
-                                it.getBluetoothAddress() == deviceAddress
+                                it.bluetoothAddress == deviceAddress
                             }
 
                             if (actuallyConnected) {
                                 currentConnectedDevice = updatedConnectedDevices.find {
-                                    it.getBluetoothAddress() == deviceAddress
+                                    it.bluetoothAddress == deviceAddress
                                 }
                                 Log.i(TAG, "Successfully connected to Shimmer device: $deviceAddress")
                                 isShimmerConnected = true
@@ -1766,8 +1800,8 @@ class GSRSensorRecorder(
 
                 val shimmerManager = shimmerBluetoothManager
                 if (shimmerManager != null) {
-                    // Use standard Android Bluetooth pairing via Shimmer manager
-                    val bluetoothAdapter = shimmerManager.getBluetoothAdapter()
+                    // Use standard Android Bluetooth pairing
+                    val bluetoothAdapter = android.bluetooth.BluetoothAdapter.getDefaultAdapter()
                     val bondedDevices = bluetoothAdapter?.bondedDevices
                     val isAlreadyBonded = bondedDevices?.any { it.address == deviceAddress } ?: false
 

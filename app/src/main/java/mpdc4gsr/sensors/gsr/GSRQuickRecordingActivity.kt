@@ -14,6 +14,7 @@ import com.mpdc4gsr.libunified.app.ktbase.BaseBindingActivity
 import kotlinx.coroutines.launch
 import mpdc4gsr.controller.ComprehensiveRecordingController
 import mpdc4gsr.permissions.PermissionManager
+import mpdc4gsr.permissions.PermissionController
 
 class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingBinding>() {
     companion object {
@@ -41,6 +42,7 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
 
     private lateinit var recordingController: ComprehensiveRecordingController
     private lateinit var permissionManager: PermissionManager
+    private lateinit var permissionController: PermissionController
     private var currentSessionDirectory: String? = null
     private var isRecording = false
 
@@ -52,8 +54,9 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
     }
 
     private fun initRecordingController() {
-        // Initialize PermissionManager and ComprehensiveRecordingController
-        permissionManager = PermissionManager(this)
+        // Initialize PermissionController and PermissionManager, then ComprehensiveRecordingController
+        permissionController = PermissionController(this, this)
+        permissionManager = PermissionManager(this, permissionController)
         recordingController = ComprehensiveRecordingController(this, this, permissionManager)
 
         // Check for crashed sessions on startup
@@ -118,14 +121,15 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
             recordingController.sensorStatusFlow.collect { statusList ->
                 runOnUiThread {
                     val gsrStatus =
-                        statusList.find { it.sensorType.contains("GSR", ignoreCase = true) }
+                        statusList.find { it.name.contains("GSR", ignoreCase = true) }
                     if (gsrStatus != null) {
                         binding.sensorDataText.text =
                             buildString {
                                 append("GSR Sensor Status:\n")
                                 append("Samples: ${gsrStatus.samplesRecorded}\n")
-                                append("Data Rate: ${"%.1f".format(gsrStatus.currentDataRate)} Hz\n")
+                                append("Recording: ${if (gsrStatus.isRecording) "Active" else "Inactive"}\n")
                                 append("Storage: ${"%.2f".format(gsrStatus.storageUsedMB)} MB\n")
+                                append("Healthy: ${if (gsrStatus.isHealthy) "Yes" else "No"}\n")
                             }
                     }
                 }
@@ -283,8 +287,7 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
             lifecycleScope.launch {
                 recordingController.addSyncMarker(
                     markerType = "manual_sync",
-                    timestampNs = System.nanoTime(),
-                    metadata = mapOf("source" to "quick_recording_ui"),
+                    timestampNs = System.nanoTime()
                 )
 
                 runOnUiThread {

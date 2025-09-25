@@ -3319,4 +3319,96 @@ class ThermalCameraRecorder(
             false
         }
     }
+
+    /**
+     * Check if thermal camera device is available for connection
+     */
+    suspend fun checkThermalCameraAvailability(): Boolean = withContext(Dispatchers.IO) {
+        return@withContext try {
+            Log.d(TAG, "Checking thermal camera availability...")
+            
+            if (isIRCameraConnected && iruvctc != null) {
+                Log.d(TAG, "Thermal camera already connected and available")
+                return@withContext true
+            }
+            
+            // Scan for thermal camera devices
+            val deviceFound = scanForThermalCameraDevices()
+            Log.d(TAG, "Thermal camera availability check result: $deviceFound")
+            deviceFound
+            
+        } catch (e: Exception) {
+            Log.e(TAG, "Error checking thermal camera availability", e)
+            false
+        }
+    }
+
+    /**
+     * Reinitialize thermal camera connection
+     */
+    suspend fun reinitializeThermalCamera(): Boolean = withContext(Dispatchers.IO) {
+        return@withContext try {
+            Log.d(TAG, "Reinitializing thermal camera...")
+            
+            // Clean up existing connection first
+            if (iruvctc != null) {
+                try {
+                    iruvctc?.stop()
+                    iruvctc?.release()
+                    iruvctc = null
+                } catch (e: Exception) {
+                    Log.w(TAG, "Error cleaning up existing thermal camera connection", e)
+                }
+            }
+            
+            isIRCameraConnected = false
+            isTopdonSdkInitialized = false
+            
+            // Reinitialize the camera
+            val initSuccess = initialize()
+            Log.d(TAG, "Thermal camera reinitialization result: $initSuccess")
+            initSuccess
+            
+        } catch (e: Exception) {
+            Log.e(TAG, "Error reinitializing thermal camera", e)
+            false
+        }
+    }
+
+    /**
+     * Restart thermal recording after reconnection
+     */
+    suspend fun restartThermalRecording(): Boolean = withContext(Dispatchers.IO) {
+        return@withContext try {
+            Log.d(TAG, "Restarting thermal recording...")
+            
+            if (!isIRCameraConnected) {
+                Log.w(TAG, "Cannot restart recording - thermal camera not connected")
+                return@withContext false
+            }
+            
+            if (isRecording) {
+                Log.d(TAG, "Recording already active")
+                return@withContext true
+            }
+            
+            // Start recording with current session
+            val sessionManager = SessionDirectoryManager.getInstance()
+            val sessionMetadata = SessionMetadata(
+                sessionId = sensorId,
+                startTime = System.currentTimeMillis(),
+                sensorTypes = listOf("thermal"),
+                participantId = "recovery_session",
+                studyId = "thermal_recovery"
+            )
+            
+            val recordingSuccess = startRecording(sessionManager.getCurrentSessionDir(), sessionMetadata)
+            Log.d(TAG, "Thermal recording restart result: $recordingSuccess")
+            recordingSuccess
+            
+        } catch (e: Exception) {
+            Log.e(TAG, "Error restarting thermal recording", e)
+            false
+        }
+    }
 }

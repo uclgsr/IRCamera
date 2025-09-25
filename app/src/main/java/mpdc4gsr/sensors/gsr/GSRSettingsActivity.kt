@@ -22,6 +22,7 @@ import com.csl.irCamera.R
 import com.csl.irCamera.databinding.ActivityGsrSettingsBinding
 import com.mpdc4gsr.libunified.app.ktbase.BaseBindingActivity
 import kotlinx.coroutines.launch
+import mpdc4gsr.permissions.PermissionController
 
 class GSRSettingsActivity : BaseBindingActivity<ActivityGsrSettingsBinding>() {
     companion object {
@@ -96,6 +97,7 @@ class GSRSettingsActivity : BaseBindingActivity<ActivityGsrSettingsBinding>() {
     private var gsrSensorRecorder: GSRSensorRecorder? = null
     private val availableDevices = mutableListOf<String>()
     private lateinit var deviceAdapter: ArrayAdapter<String>
+    private lateinit var permissionController: PermissionController
 
     private lateinit var permissionLauncher: ActivityResultLauncher<Array<String>>
     private var pendingOperation: (() -> Unit)? = null
@@ -108,6 +110,8 @@ class GSRSettingsActivity : BaseBindingActivity<ActivityGsrSettingsBinding>() {
         prefs = PreferenceManager.getDefaultSharedPreferences(this)
 
         setupPermissionHandling()
+
+        permissionController = PermissionController(this, this)
 
         gsrSensorRecorder = GSRSensorRecorder(
             this,
