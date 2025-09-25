@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.runBlocking
 import mpdc4gsr.controller.RecordingController
-import mpdc4gsr.controller.RecordingControllerSessionManifest
+import mpdc4gsr.controller.SessionManifest
 import mpdc4gsr.core.RecordingService
 
 /**
@@ -178,7 +178,7 @@ class SessionOrchestrationDemo(
     /**
      * Display session manifest information
      */
-    private fun displaySessionManifest(manifest: RecordingControllerSessionManifest) {
+    private fun displaySessionManifest(manifest: SessionManifest) {
         Log.i(TAG, "")
         Log.i(TAG, "=== SESSION MANIFEST ===")
         Log.i(TAG, "Session ID: ${manifest.sessionId}")

@@ -25,7 +25,7 @@ import java.io.File
  * Dedicated test activity for RGB camera features
  * Tests device compatibility, recording quality, manual controls, and tap-to-focus
  */
-class RGBCameraTestActivity : AppCompatActivity() {
+class RgbCameraTestActivity : AppCompatActivity() {
 
     companion object {
         private const val TAG = "RGBCameraTest"
@@ -188,8 +188,8 @@ class RGBCameraTestActivity : AppCompatActivity() {
                 statusText.text = "Initializing camera..."
 
                 cameraRecorder = RgbCameraRecorder(
-                    context = this@RGBCameraTestActivity,
-                    lifecycleOwner = this@RGBCameraTestActivity,
+                    context = this@RgbCameraTestActivity,
+                    lifecycleOwner = this@RgbCameraTestActivity,
                     previewView = previewView.previewView,
                     useFrontCamera = false,
                     permissionManager = permissionManager
