@@ -134,6 +134,13 @@ pc-controller/.pytest_cache/
 pc-controller/venv/
 pc-controller/.env
 
+# PC Controller specific additions
+pc_recordings/
+demo_recordings/
+pc-controller/legacy_implementation/native_backend/build/
+pc-controller-ui/src/__pycache__/
+*.log
+
 # Backup files
 *.backup
 *.bak
