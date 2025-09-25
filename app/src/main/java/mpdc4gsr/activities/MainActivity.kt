@@ -228,9 +228,6 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                 handleLocalRecordingStop()
             }
 
-            // Setup manual camera control integration
-            setupManualCameraControls()
-
             Log.i(TAG, "Enhanced UI components initialized successfully")
 
         } catch (e: Exception) {

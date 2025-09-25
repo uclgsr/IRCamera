@@ -1485,16 +1485,21 @@ class RecordingController(
                 "THERMAL" -> {
                     val thermalRecorder = sensorRecorders["Thermal"] as? ThermalCameraRecorder
                     if (thermalRecorder != null) {
-                        val thermalStatus = thermalRecorder.getThermalSystemStatus()
-                        details["thermal_connected"] = thermalStatus.isConnected.toString()
-                        details["thermal_usb_permission"] = thermalStatus.hasUsbPermission.toString()
-                        details["thermal_simulation"] = thermalStatus.isSimulationMode.toString()
+                        try {
+                            val thermalStatus = thermalRecorder.getThermalSystemStatus()
+                            details["thermal_connected"] = thermalStatus.isConnected.toString()
+                            details["thermal_usb_permission"] = thermalStatus.hasUsbPermission.toString()
+                            details["thermal_simulation"] = thermalStatus.isSimulationMode.toString()
 
-                        if (!thermalStatus.hasUsbPermission) {
-                            warnings.add("Thermal: USB permission required - will use simulation")
-                        }
-                        if (!thermalStatus.isConnected) {
-                            warnings.add("Thermal: Camera not connected - will use simulation")
+                            if (!thermalStatus.hasUsbPermission) {
+                                warnings.add("Thermal: USB permission required - will use simulation")
+                            }
+                            if (!thermalStatus.isConnected) {
+                                warnings.add("Thermal: Camera not connected - will use simulation")
+                            }
+                        } catch (e: Exception) {
+                            Log.w(TAG, "Could not get thermal system status", e)
+                            warnings.add("Thermal: Status unavailable")
                         }
                     } else {
                         warnings.add("Thermal: Thermal recorder not initialized")

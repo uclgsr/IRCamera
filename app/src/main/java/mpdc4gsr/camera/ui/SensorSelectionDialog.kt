@@ -60,9 +60,9 @@ class SensorSelectionDialog(
                     available.add(SensorType.GSR)
                     Log.d(TAG, "Connected Shimmer GSR devices found")
                 } else {
-                    // GSR sensor available even without hardware (simulation mode)
+                    // EasyBLE not initialized, assume GSR available with simulation
                     available.add(SensorType.GSR)
-                    Log.d(TAG, "GSR sensor available (will use simulation if no hardware found)")
+                    Log.d(TAG, "EasyBLE not available, GSR will use simulation mode")
                 }
             } catch (e: Exception) {
                 // GSR sensor available even without hardware (simulation mode)

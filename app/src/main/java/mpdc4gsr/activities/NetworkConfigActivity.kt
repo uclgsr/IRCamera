@@ -44,7 +44,7 @@ class NetworkConfigActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main) // Temporary - will create proper layout
         
         networkSettings = NetworkSettings(this)
-        permissionManager = PermissionManager(this, PermissionController())
+        permissionManager = PermissionManager(this, PermissionController(this))
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
         
         setupUI()
@@ -106,10 +106,11 @@ class NetworkConfigActivity : AppCompatActivity() {
                 
                 // For demo purposes, save the first device
                 val firstDevice = pairedDevices.first()
-                networkSettings.saveBluetoothDevice(firstDevice)
-                networkSettings.preferredConnectionType = NetworkSettings.ConnectionType.BLUETOOTH_RFCOMM
-                
-                Log.i(TAG, "Saved Bluetooth device: ${firstDevice.name}")
+                lifecycleScope.launch {
+                    networkSettings.saveBluetoothDevice(firstDevice)
+                    networkSettings.preferredConnectionType = NetworkSettings.ConnectionType.BLUETOOTH_RFCOMM
+                    Log.i(TAG, "Saved Bluetooth device: ${firstDevice.name}")
+                }
             } else {
                 Toast.makeText(this, "No paired Bluetooth devices found", Toast.LENGTH_SHORT).show()
                 Log.w(TAG, "No paired Bluetooth devices available")
