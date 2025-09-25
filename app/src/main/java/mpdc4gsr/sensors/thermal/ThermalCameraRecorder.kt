@@ -387,8 +387,8 @@ class ThermalCameraRecorder(
             // Clean up existing connection first
             if (iruvctc != null) {
                 try {
-                    iruvctc?.stop()
-                    iruvctc?.release()
+                    iruvctc?.stopPreview()
+                    iruvctc?.unregisterUSB()
                     iruvctc = null
                 } catch (e: Exception) {
                     Log.w(TAG, "Error cleaning up existing thermal camera connection", e)
@@ -418,15 +418,12 @@ class ThermalCameraRecorder(
                 return true
             }
             // Start recording with current session
-            val sessionManager = SessionDirectoryManager.getInstance()
-            val sessionMetadata = SessionMetadata(
-                sessionId = sensorId,
-                startTime = System.currentTimeMillis(),
-                sensorTypes = listOf("thermal"),
+            val sessionManager = SessionDirectoryManager(context)
+            val sessionMetadata = SessionMetadata.createSessionStart(sensorId).copy(
                 participantId = "recovery_session",
-                studyId = "thermal_recovery"
+                studyName = "thermal_recovery"
             )
-            val recordingSuccess = startRecording(sessionManager.getCurrentSessionDir(), sessionMetadata)
+            val recordingSuccess = startRecording(sessionDirectory, sessionMetadata)
             Log.d(TAG, "Thermal recording restart result: $recordingSuccess")
             recordingSuccess
         } catch (e: Exception) {
@@ -949,10 +946,10 @@ class ThermalCameraRecorder(
                                     val bitmap = currentBitmap
                                     if (bitmap != null && !bitmap.isRecycled) {
 
-                                        val bitmapCopy = if (bitmap.config != null) {
-                                            bitmap.copy(bitmap.config, false)
-                                        } else {
-                                            // If config is null, log a warning and avoid copying with ARGB_8888
+                                        val bitmapCopy = bitmap.config?.let { config ->
+                                            bitmap.copy(config, false)
+                                        } ?: run {
+                                            // If config is null, log a warning and use the original bitmap
                                             Log.w(
                                                 "ThermalCameraRecorder",
                                                 "Bitmap config is null; cannot safely copy thermal bitmap. Passing original bitmap."
