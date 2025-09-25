@@ -24,7 +24,7 @@ import com.mpdc4gsr.libunified.app.tools.UnitTools
 import com.mpdc4gsr.libunified.ui.widget.MyItemDecoration
 import com.mpdc4gsr.module.thermalunified.R
 import com.mpdc4gsr.module.thermalunified.adapter.ConfigEmAdapter
-import com.mpdc4gsr.module.thermalunified.bean.DataBean
+import com.mpdc4gsr.libunified.app.bean.DataBean
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

@@ -4,7 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.mpdc4gsr.libunified.app.utils.SingleLiveEvent
-import com.mpdc4gsr.module.thermalunified.bean.DataBean
+import com.mpdc4gsr.libunified.app.bean.DataBean
 import com.mpdc4gsr.module.thermalunified.bean.ModelBean
 import com.mpdc4gsr.module.thermalunified.repository.ConfigRepository
 import kotlinx.coroutines.Dispatchers

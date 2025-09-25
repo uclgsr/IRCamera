@@ -47,7 +47,7 @@ abstract class BaseApplication : Application() {
 
     var tau_data_H: ByteArray? = null
     var tau_data_L: ByteArray? = null
-    var config: com.mpdc4gsr.module.thermalunified.bean.DataBean? = null
+    var config: com.mpdc4gsr.libunified.app.bean.DataBean? = null
 
     val module: String get() = javaClass.simpleName
 

@@ -2,7 +2,7 @@ package com.mpdc4gsr.module.thermalunified.repository
 
 import com.google.gson.Gson
 import com.mpdc4gsr.libunified.app.common.SharedManager
-import com.mpdc4gsr.module.thermalunified.bean.DataBean
+import com.mpdc4gsr.libunified.app.bean.DataBean
 import com.mpdc4gsr.module.thermalunified.bean.ModelBean
 
 object ConfigRepository {

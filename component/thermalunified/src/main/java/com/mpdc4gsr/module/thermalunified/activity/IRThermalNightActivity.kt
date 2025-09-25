@@ -130,7 +130,7 @@ import com.mpdc4gsr.module.thermalunified.R
 import com.mpdc4gsr.module.thermalunified.adapter.CameraItemAdapter
 import com.mpdc4gsr.module.thermalunified.adapter.MeasureItemAdapter
 import com.mpdc4gsr.module.thermalunified.adapter.TargetItemAdapter
-import com.mpdc4gsr.module.thermalunified.bean.DataBean
+import com.mpdc4gsr.libunified.app.bean.DataBean
 import com.mpdc4gsr.module.thermalunified.event.GalleryAddEvent
 import com.mpdc4gsr.module.thermalunified.frame.FrameStruct
 import com.mpdc4gsr.module.thermalunified.popup.SeekBarPopup

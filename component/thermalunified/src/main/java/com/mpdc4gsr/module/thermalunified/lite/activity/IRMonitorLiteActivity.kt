@@ -29,7 +29,7 @@ import com.mpdc4gsr.libunified.app.tools.NumberTools
 import com.mpdc4gsr.libunified.app.tools.TimeTool
 import com.mpdc4gsr.libunified.ui.dialog.MonitorSelectDialog
 import com.mpdc4gsr.libunified.ui.listener.SingleClickListener
-import com.mpdc4gsr.module.thermalunified.bean.DataBean
+import com.mpdc4gsr.libunified.app.bean.DataBean
 import com.mpdc4gsr.module.thermalunified.bean.SelectPositionBean
 import com.mpdc4gsr.module.thermalunified.event.MonitorSaveEvent
 import com.mpdc4gsr.module.thermalunified.event.ThermalActionEvent

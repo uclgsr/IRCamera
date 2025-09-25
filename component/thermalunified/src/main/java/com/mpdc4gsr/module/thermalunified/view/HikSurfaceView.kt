@@ -15,7 +15,7 @@ import com.mpdc4gsr.libunified.ir.utils.OpencvTools
 import com.mpdc4gsr.libunified.ir.utils.PseudocodeUtils
 import com.mpdc4gsr.libunified.app.bean.AlarmBean
 
-import com.mpdc4gsr.module.thermalunified.bean.DataBean
+import com.mpdc4gsr.libunified.app.bean.DataBean
 import java.nio.ByteBuffer
 
 

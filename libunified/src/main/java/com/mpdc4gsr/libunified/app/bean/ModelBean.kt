@@ -1,6 +1,4 @@
-package com.mpdc4gsr.module.thermalunified.bean
-
-import com.mpdc4gsr.libunified.app.bean.DataBean
+package com.mpdc4gsr.libunified.app.bean
 
 data class ModelBean(
     var defaultModel: DataBean,
