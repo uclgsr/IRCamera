@@ -25,14 +25,6 @@ import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
 import java.util.concurrent.atomic.AtomicReference
 
-// Use proper type aliases from controller package
-typealias SessionManifest = mpdc4gsr.controller.SessionManifest
-typealias SessionEvent = mpdc4gsr.controller.SessionEvent
-typealias SensorActivityInfo = mpdc4gsr.controller.SensorActivityInfo
-typealias SensorHealthInfo = mpdc4gsr.controller.SensorHealthInfo
-typealias DropoutEvent = mpdc4gsr.controller.DropoutEvent
-typealias ReconnectionEvent = mpdc4gsr.controller.ReconnectionEvent
-
 
 class ComprehensiveRecordingController(
     private val context: Context

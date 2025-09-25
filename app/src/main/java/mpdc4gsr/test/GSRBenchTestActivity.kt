@@ -179,7 +179,7 @@ class GSRBenchTestActivity : AppCompatActivity() {
     }
 
     private suspend fun testSamplingRate(): Boolean {
-        updateResults("Testing sampling rate (${EXPECTED_SAMPLE_RATE}Hz expected)...\n")
+        updateResults("Testing sampling rate (${GSRConstants.GSR_SAMPLING_RATE}Hz expected)...\n")
 
         return try {
             val recorder = gsrRecorder ?: return false
