@@ -212,7 +212,7 @@ class GSRBenchTestActivity : AppCompatActivity() {
 
             // Simulate calibration test
             val testAdcValue = 2048  // Mid-range ADC value
-            val expectedConductance = GSRCalculationUtils.calculateGSRFromRaw(testAdcValue)
+            val expectedConductance = GSRCalculationUtils.calculateGSRMicrosiemens(testAdcValue)
 
             updateResults("Test conversion: ADC=$testAdcValue → ${String.format("%.2f", expectedConductance)}µS\n")
             updateResults("✓ Calibration formulas verified\n")

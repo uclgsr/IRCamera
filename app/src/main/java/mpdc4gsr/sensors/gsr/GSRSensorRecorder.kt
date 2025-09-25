@@ -875,10 +875,10 @@ class GSRSensorRecorder(
             // Calculate health based on sample quality and timing using constants
             val sampleQuality = when {
                 sample.rawValue == 0 -> 0.0
-                sample.rawValue !in GSR_RAW_LOWER_BOUND..GSR_RAW_UPPER_BOUND -> 30.0
-                sample.conductance !in GSR_MICROSIEMENS_LOWER_BOUND..GSR_MICROSIEMENS_UPPER_BOUND -> 40.0
-                sample.conductance > GSR_HIGH_THRESHOLD -> 60.0
-                sample.conductance < GSR_LOW_THRESHOLD -> 70.0
+                sample.rawValue !in GSRConstants.GSR_RAW_LOWER_BOUND..GSRConstants.GSR_RAW_UPPER_BOUND -> 30.0
+                sample.conductance !in GSRConstants.GSR_MICROSIEMENS_LOWER_BOUND..GSRConstants.GSR_MICROSIEMENS_UPPER_BOUND -> 40.0
+                sample.conductance > GSRConstants.GSR_HIGH_THRESHOLD -> 60.0
+                sample.conductance < GSRConstants.GSR_LOW_THRESHOLD -> 70.0
                 else -> 95.0
             }
 
@@ -945,7 +945,7 @@ class GSRSensorRecorder(
                 gsrCalibratedValue
             } else {
                 // Fallback calculation from raw value if calibrated not available
-                calculateGSRFromRaw(gsrRawValue)
+                GSRCalculationUtils.calculateGSRMicrosiemens(gsrRawValue)
             }
 
             // Calculate signal quality score based on data integrity

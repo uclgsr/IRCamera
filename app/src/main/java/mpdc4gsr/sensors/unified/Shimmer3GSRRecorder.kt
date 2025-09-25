@@ -658,7 +658,7 @@ class Shimmer3GSRRecorder(
     private fun calculateQualityScore(gsrRaw: Int, timestamp: Long): Double {
         try {
             // Use centralized quality calculation as base
-            var qualityScore = GSRCalculationUtils.calculateQualityScore(gsrRaw, timestamp)
+            var qualityScore = GSRCalculationUtils.calculateQualityScore(gsrRaw)
 
             // Add timing-based quality adjustments specific to this recorder
             if (lastSampleTime > 0) {
