@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.first
 import mpdc4gsr.permissions.PermissionController
 import mpdc4gsr.sensors.unified.ShimmerDeviceManager
 import mpdc4gsr.sensors.unified.UnifiedGSRRecorder
@@ -130,15 +130,13 @@ class BLEIntegrationTestActivity : AppCompatActivity() {
 
                         kotlinx.coroutines.delay(5000)
 
-                        // Collect the latest scan results
-                        var scanResults = emptyList<DeviceInfo>()
-                        val resultsJob = launch {
-                            deviceManager?.scanResults?.collect { results ->
-                                scanResults = results
-                            }
+                        // Get the latest scan results safely
+                        val scanResults = try {
+                            deviceManager?.scanResults?.first() ?: emptyList()
+                        } catch (e: Exception) {
+                            Log.w(TAG, "Failed to collect scan results: ${e.message}")
+                            emptyList<DeviceInfo>()
                         }
-                        delay(100) // Give time to collect
-                        resultsJob.cancel()
                         
                         addLog("✅ BLE scan results: ${scanResults.size} devices found")
 
