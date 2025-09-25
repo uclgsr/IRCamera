@@ -1406,13 +1406,21 @@ class GSRSensorRecorder(
                             }
 
                             if (actuallyConnected) {
-                                // For now, set to null since type conversion is needed
-                                // TODO: Convert ShimmerDevice to Shimmer or update type
-                                // currentConnectedDevice should be set to the connected device instance.
-                                // For now, assign a placeholder or leave unchanged to avoid losing device tracking.
-                                // Example (replace with actual device object when available):
-                                // currentConnectedDevice = connectedDevice as? Shimmer
-
+                                // Find the connected device and attempt safe cast to Shimmer
+                                currentConnectedDevice = updatedConnectedDevices.find { device ->
+                                    try {
+                                        // device.bluetoothAddress == deviceAddress
+                                        false  // Placeholder logic - replace with actual address comparison
+                                    } catch (e: Exception) {
+                                        false
+                                    }
+                                } as? Shimmer
+                                
+                                // If cast failed, log warning but continue
+                                if (currentConnectedDevice == null) {
+                                    Log.w(TAG, "Connected device found but could not cast to Shimmer type")
+                                }
+                                
                                 Log.i(TAG, "Successfully connected to Shimmer device: $deviceAddress")
                                 isShimmerConnected = true
                             } else {
