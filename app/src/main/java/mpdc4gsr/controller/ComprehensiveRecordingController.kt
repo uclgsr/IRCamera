@@ -956,7 +956,6 @@ class ComprehensiveRecordingController(
     }
 }
 
-// Moved shared data classes to SessionOrchestrationTypes.kt
 
 data class ValidationResult(val isValid: Boolean, val failureReason: String)
 
