@@ -4,8 +4,15 @@ import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LifecycleOwner
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.runBlocking
 import mpdc4gsr.controller.RecordingController
+import mpdc4gsr.controller.SessionManifest
+import mpdc4gsr.controller.SensorActivityInfo
+import mpdc4gsr.controller.SessionEvent
+import mpdc4gsr.controller.DropoutEvent
+import mpdc4gsr.controller.ReconnectionEvent
 import mpdc4gsr.core.RecordingService
 
 /**
@@ -146,7 +153,7 @@ class SessionOrchestrationDemo(
         recordingController.recordingStateFlow
             .take(5) // Collect only the first 5 state changes for demonstration
             .collect { state ->
-                Log.i(TAG, "Session State: ${state.name}")
+                Log.i(TAG, "Session State: $state")
 
                 when (state) {
                     RecordingController.RecordingState.STARTING -> {
@@ -166,7 +173,7 @@ class SessionOrchestrationDemo(
                     }
 
                     else -> {
-                        Log.i(TAG, "  → State: ${state.name}")
+                        Log.i(TAG, "  → State: $state")
                     }
                 }
             }
@@ -175,7 +182,7 @@ class SessionOrchestrationDemo(
     /**
      * Display session manifest information
      */
-    private fun displaySessionManifest(manifest: RecordingController.SessionManifest) {
+    private fun displaySessionManifest(manifest: SessionManifest) {
         Log.i(TAG, "")
         Log.i(TAG, "=== SESSION MANIFEST ===")
         Log.i(TAG, "Session ID: ${manifest.sessionId}")
@@ -185,10 +192,10 @@ class SessionOrchestrationDemo(
         Log.i(TAG, "")
 
         Log.i(TAG, "Sensor Activity Summary:")
-        manifest.sensorActivitySummary.forEach { (sensorName, info) ->
+        manifest.sensorActivitySummary.forEach { (sensorName: String, info: SensorActivityInfo) ->
             Log.i(TAG, "  $sensorName:")
             Log.i(TAG, "    - Active: ${info.wasActive}")
-            Log.i(TAG, "    - Started Successfully: ${info.startedSuccessfully}")
+            Log.i(TAG, "    - Started Successfully: ${info.startedSuccessfully}")  
             Log.i(TAG, "    - Final Status: ${info.finalStatus}")
             if (info.errorMessages.isNotEmpty()) {
                 Log.i(TAG, "    - Errors: ${info.errorMessages.joinToString(", ")}")
@@ -204,7 +211,7 @@ class SessionOrchestrationDemo(
         if (manifest.events.isNotEmpty()) {
             Log.i(TAG, "")
             Log.i(TAG, "Session Events (${manifest.events.size}):")
-            manifest.events.take(10).forEach { event ->
+            manifest.events.take(10).forEach { event: SessionEvent ->
                 val status = if (event.success) "✓" else "✗"
                 Log.i(TAG, "  $status ${event.eventType}${event.sensorId?.let { " ($it)" } ?: ""}")
                 if (!event.success && event.errorMessage != null) {
@@ -219,7 +226,7 @@ class SessionOrchestrationDemo(
         if (manifest.errors.isNotEmpty()) {
             Log.i(TAG, "")
             Log.i(TAG, "Session Errors:")
-            manifest.errors.forEach { error ->
+            manifest.errors.forEach { error: String ->
                 Log.w(TAG, "  - $error")
             }
         }
@@ -227,7 +234,7 @@ class SessionOrchestrationDemo(
         if (manifest.warnings.isNotEmpty()) {
             Log.i(TAG, "")
             Log.i(TAG, "Session Warnings:")
-            manifest.warnings.forEach { warning ->
+            manifest.warnings.forEach { warning: String ->
                 Log.w(TAG, "  - $warning")
             }
         }

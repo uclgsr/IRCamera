@@ -66,7 +66,7 @@ class ComprehensiveRecordingController(
 
     private val sensorRecorders = ConcurrentHashMap<String, SensorRecorder>()
     private val activeRecorders = ConcurrentHashMap<String, Boolean>()
-    private val sensorHealthStatus = ConcurrentHashMap<String, SensorHealthInfo>()
+    private val sensorHealthStatus = ConcurrentHashMap<String, ComprehensiveSensorHealthInfo>()
     private val reconnectionAttempts = ConcurrentHashMap<String, Int>()
 
     // Session orchestration state
@@ -101,7 +101,7 @@ class ComprehensiveRecordingController(
 
     fun addSensorRecorder(name: String, recorder: SensorRecorder) {
         sensorRecorders[name] = recorder
-        sensorHealthStatus[name] = SensorHealthInfo(
+        sensorHealthStatus[name] = ComprehensiveSensorHealthInfo(
             name = name,
             isHealthy = true,
             lastHealthCheck = System.currentTimeMillis(),
@@ -956,57 +956,6 @@ class ComprehensiveRecordingController(
     }
 }
 
-// Session orchestration data classes
-data class SessionEvent(
-    val eventType: String,
-    val timestampMs: Long,
-    val sensorId: String? = null,
-    val triggerSource: ComprehensiveRecordingController.TriggerSource? = null,
-    val metadata: Map<String, String> = emptyMap(),
-    val success: Boolean = true,
-    val errorMessage: String? = null
-)
-
-data class SessionManifest(
-    val sessionId: String,
-    val sessionName: String? = null,
-    val startTime: Long,
-    val stopTime: Long? = null,
-    val duration: Long? = null,
-    val triggerSource: ComprehensiveRecordingController.TriggerSource,
-    val sensorActivitySummary: Map<String, SensorActivityInfo>,
-    val events: List<SessionEvent>,
-    val errors: List<String>,
-    val warnings: List<String>,
-    val fileReferences: Map<String, String>,
-    val sessionState: ComprehensiveRecordingController.SessionState
-)
-
-data class SensorActivityInfo(
-    val sensorName: String,
-    val wasActive: Boolean,
-    val startedSuccessfully: Boolean,
-    val framesOrSamplesCaptured: Long? = null,
-    val dataSize: Long? = null,
-    val dropouts: List<DropoutEvent> = emptyList(),
-    val reconnections: List<ReconnectionEvent> = emptyList(),
-    val finalStatus: String,
-    val errorMessages: List<String> = emptyList()
-)
-
-data class DropoutEvent(
-    val timestampMs: Long,
-    val reason: String,
-    val durationMs: Long? = null
-)
-
-data class ReconnectionEvent(
-    val timestampMs: Long,
-    val attemptNumber: Int,
-    val successful: Boolean,
-    val delayMs: Long
-)
-
 
 data class ValidationResult(val isValid: Boolean, val failureReason: String)
 
@@ -1023,18 +972,19 @@ data class SessionInfoData(
     val finalizedAt: Long
 )
 
-data class SensorHealthInfo(
-    val name: String,
-    val isHealthy: Boolean,
-    val lastHealthCheck: Long,
-    val consecutiveFailures: Int
-)
-
 data class SensorStatus(
     val name: String,
     val isActive: Boolean,
     val isHealthy: Boolean,
     val lastUpdate: Long
+)
+
+data class ComprehensiveSensorHealthInfo(
+    val name: String,
+    val isHealthy: Boolean,
+    val lastHealthCheck: Long,
+    val consecutiveFailures: Int,
+    val lastError: String? = null
 )
 
 data class RecordingStats(

@@ -876,6 +876,50 @@ class ThermalCameraRecorder(
 
                     override fun onIRCMDCreate(ircmd: com.energy.iruvc.ircmd.IRCMD?) {
                         Log.d(TAG, "IRCMD created for thermal camera")
+                        
+                        // Configure device settings equivalent to reference implementation
+                        ircmd?.let { ircmdInstance ->
+                            try {
+                                // Reset mirror/flip settings to no mirror flip (equivalent to reference)
+                                ircmdInstance.setPropImageParams(
+                                    com.energy.iruvc.utils.CommonParams.PropImageParams.IMAGE_PROP_SEL_MIRROR_FLIP,
+                                    com.energy.iruvc.utils.CommonParams.PropImageParamsValue.MirrorFlipType.NO_MIRROR_FLIP
+                                )
+                                Log.d(TAG, "Image mirror/flip properties configured")
+                                
+                                // Get device firmware version information (equivalent to reference)
+                                val fwBuildVersionInfoBytes = ByteArray(50)
+                                ircmdInstance.getDeviceInfo(
+                                    com.energy.iruvc.utils.CommonParams.DeviceInfoType.DEV_INFO_FW_BUILD_VERSION_INFO,
+                                    fwBuildVersionInfoBytes
+                                )
+                                
+                                val firmwareVersion = String(fwBuildVersionInfoBytes.copyOfRange(0, 8))
+                                Log.d(TAG, "Device firmware version: $firmwareVersion")
+                                
+                                // Check if this is a Mini256 device (TS001) equivalent to reference
+                                val isTS001Device = firmwareVersion.contains("Mini256", ignoreCase = true)
+                                Log.d(TAG, "Is TS001 device: $isTS001Device")
+                                
+                                // Get current gain settings (equivalent to reference)
+                                val gainValue = IntArray(1)
+                                ircmdInstance.getPropTPDParams(
+                                    com.energy.iruvc.utils.CommonParams.PropTPDParams.TPD_PROP_GAIN_SEL, 
+                                    gainValue
+                                )
+                                
+                                val currentGainStatus = if (gainValue[0] == 1) {
+                                    com.energy.iruvc.utils.CommonParams.GainStatus.HIGH_GAIN
+                                } else {
+                                    com.energy.iruvc.utils.CommonParams.GainStatus.LOW_GAIN
+                                }
+                                
+                                Log.d(TAG, "Current gain status: $currentGainStatus (value=${gainValue[0]})")
+                                
+                            } catch (e: Exception) {
+                                Log.w(TAG, "Error configuring IRCMD device settings", e)
+                            }
+                        }
                     }
                 }
 
@@ -959,12 +1003,8 @@ class ThermalCameraRecorder(
                                         val bitmapCopy = if (bitmap.config != null) {
                                             bitmap.copy(bitmap.config!!, false)
                                         } else {
-                                            // If config is null, log a warning and avoid copying with ARGB_8888
-                                            Log.w(
-                                                "ThermalCameraRecorder",
-                                                "Bitmap config is null; cannot safely copy thermal bitmap. Passing original bitmap."
-                                            )
-                                            bitmap
+                                            // If config is null, use ARGB_8888 as default
+                                            bitmap.copy(Bitmap.Config.ARGB_8888, false)
                                         }
                                         val thermalData =
                                             if (ircamEngine != null && isTopdonSdkInitialized) {
@@ -989,6 +1029,25 @@ class ThermalCameraRecorder(
 
                 Log.i(TAG, "IRUVCTC thermal camera initialized")
 
+                // Configure IRUVCTC settings equivalent to reference implementation
+                iruvctc?.let { iruvctcInstance ->
+                    try {
+                        // Set up image and temperature data sources (equivalent to reference)
+                        val imageDataBuffer = ByteArray(IR_CAMERA_WIDTH * IR_CAMERA_HEIGHT * 2)
+                        val temperatureDataBuffer = ByteArray(IR_CAMERA_WIDTH * IR_CAMERA_HEIGHT * 2)
+                        
+                        iruvctcInstance.setImageSrc(imageDataBuffer)
+                        iruvctcInstance.setTemperatureSrc(temperatureDataBuffer)
+                        
+                        // Set rotation angle (equivalent to reference - typically 0 for TC001)
+                        iruvctcInstance.setRotate(0)
+                        
+                        Log.d(TAG, "IRUVCTC image sources and rotation configured")
+                        
+                    } catch (e: Exception) {
+                        Log.w(TAG, "Error configuring IRUVCTC data sources", e)
+                    }
+                }
 
                 iruvctc?.registerUSB()
 
