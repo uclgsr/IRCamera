@@ -84,9 +84,10 @@ class RgbCameraRecorder(
         // Throttled frame capture at 10-15fps for optimized I/O performance
         private const val CAPTURE_FPS = 12 // Reduced from 30 to optimize I/O performance
 
-        // Frame capture throttling configuration
+        // Frame capture throttling configuration with adaptive optimization
         private const val FRAME_CAPTURE_EVERY_N_FRAMES = 2 // Capture every 2nd frame at 24fps = ~12fps output
         private const val MAX_PENDING_CAPTURES = 2 // Reduced for better I/O handling
+        private const val ADAPTIVE_OPTIMIZATION_THRESHOLD = 5 // Switch to more aggressive optimization if needed
 
 
         private const val ENABLE_RAW_CAPTURE = true
@@ -1051,9 +1052,11 @@ class RgbCameraRecorder(
 
             val captureInterval = 1000L / CAPTURE_FPS
             var frameSkipCounter = 0 // Counter for frame throttling
+            var adaptiveSkipMultiplier = 1 // For adaptive optimization
 
 
             var pendingCaptureCount = 0
+            var consecutiveDroppedFrames = 0 // Track dropped frames for adaptive optimization
 
 
             frameTimestamps.clear()
@@ -1067,9 +1070,10 @@ class RgbCameraRecorder(
 
             while (_isRecording.get() && isActive) {
                 try {
-                    // Implement frame throttling - only capture every Nth frame
+                    // Implement adaptive frame throttling - adjust based on system performance
                     frameSkipCounter++
-                    if (frameSkipCounter % FRAME_CAPTURE_EVERY_N_FRAMES != 0) {
+                    val effectiveSkip = FRAME_CAPTURE_EVERY_N_FRAMES * adaptiveSkipMultiplier
+                    if (frameSkipCounter % effectiveSkip != 0) {
                         // Skip frame but maintain timing for better performance
                         delay(captureInterval)
                         continue
@@ -1077,9 +1081,25 @@ class RgbCameraRecorder(
 
                     if (pendingCaptureCount >= MAX_PENDING_CAPTURES) {
                         droppedFrames.incrementAndGet()
-                        Log.d(TAG, "Frame dropped due to backpressure (pending: $pendingCaptureCount)")
+                        consecutiveDroppedFrames++
+                        
+                        // Adaptive optimization: increase skip multiplier if dropping many frames
+                        if (consecutiveDroppedFrames >= ADAPTIVE_OPTIMIZATION_THRESHOLD) {
+                            adaptiveSkipMultiplier = minOf(adaptiveSkipMultiplier + 1, 4) // Max 4x skip
+                            consecutiveDroppedFrames = 0
+                            Log.i(TAG, "Adaptive optimization: increased frame skip to ${effectiveSkip}x due to I/O pressure")
+                        }
+                        
+                        Log.d(TAG, "Frame dropped due to backpressure (pending: $pendingCaptureCount, adaptive: ${adaptiveSkipMultiplier}x)")
                         delay(captureInterval)
                         continue
+                    } else {
+                        // Reset adaptive optimization if performance improves
+                        if (consecutiveDroppedFrames == 0 && adaptiveSkipMultiplier > 1) {
+                            adaptiveSkipMultiplier = maxOf(adaptiveSkipMultiplier - 1, 1)
+                            Log.d(TAG, "Adaptive optimization: reduced frame skip to ${effectiveSkip}x as performance improved")
+                        }
+                        consecutiveDroppedFrames = 0
                     }
 
                     val frameStartTime = TimestampManager.getCurrentTimestampNanos()

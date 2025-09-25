@@ -284,7 +284,7 @@ class PermissionController(
                     val permissionIntent = android.app.PendingIntent.getBroadcast(
                         activity,
                         REQUEST_USB_PERMISSION,
-                        Intent("mpdc4gsr.ir_camera.USB_PERMISSION"),
+                        Intent("mpdc4gsr.USB_PERMISSION"),
                         android.app.PendingIntent.FLAG_UPDATE_CURRENT or android.app.PendingIntent.FLAG_IMMUTABLE
                     )
 
