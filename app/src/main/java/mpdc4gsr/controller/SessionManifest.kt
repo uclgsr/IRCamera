@@ -44,8 +44,6 @@ data class SensorActivityInfo(
     val lastActivityTime: Long,
     val totalSamples: Long = 0,
     val errorCount: Long = 0,
-    val sensorName: String = sensorId,
-    val wasActive: Boolean = isActive,
     val startedSuccessfully: Boolean = true,
     val finalStatus: String = if (isActive) "ACTIVE" else "INACTIVE",
     val errorMessages: List<String> = emptyList()
