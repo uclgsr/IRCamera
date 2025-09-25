@@ -94,7 +94,7 @@ class DualModeCameraActivity : AppCompatActivity() {
         // Simplified mode handling - the comprehensive RgbCameraRecorder handles modes internally
         val mode = when (initialMode) {
             "RAW_50MP" -> "RAW"
-            "VIDEO_4K" -> "VIDEO" 
+            "VIDEO_4K" -> "VIDEO"
             else -> "PREVIEW"
         }
 
@@ -120,9 +120,11 @@ class DualModeCameraActivity : AppCompatActivity() {
                         ).show()
                     }
                 }
+
                 "VIDEO" -> {
                     Toast.makeText(this, "Switched to 4K Video Mode", Toast.LENGTH_SHORT).show()
                 }
+
                 else -> {
                     Toast.makeText(this, "Switched to Preview Mode", Toast.LENGTH_SHORT).show()
                 }

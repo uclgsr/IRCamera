@@ -55,7 +55,7 @@ class RecordingController(
         private const val RGB_STORAGE_MB_PER_MIN = 50.0
         private const val THERMAL_STORAGE_MB_PER_MIN = 5.0
         private const val SHIMMER_STORAGE_MB_PER_MIN = 1.0
-        
+
         // Type aliases for public API compatibility
         typealias SessionManifest = mpdc4gsr.controller.SessionManifest
         typealias SensorActivityInfo = RecordingControllerSensorActivityInfo
@@ -2030,7 +2030,6 @@ class RecordingController(
         )
     }
 }
-
 
 
 data class RecordingControllerError(

@@ -47,6 +47,7 @@ import java.io.File
 import java.io.FileWriter
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
+
 // import ch.systemsx.cisd.hdf5.HDF5Factory // HDF5 library not available
 
 class ThermalCameraRecorder(
@@ -422,11 +423,11 @@ class ThermalCameraRecorder(
                 Log.d(TAG, "Recording already active")
                 return true
             }
-            
+
             // Reuse existing session if available, otherwise create new one
             val existingSessionDirectory = sessionDirectory
             val existingSessionMetadata = sessionMetadata
-            
+
             val recordingSuccess = if (existingSessionDirectory.isNotEmpty() && existingSessionMetadata != null) {
                 Log.d(TAG, "Reusing existing session directory: $existingSessionDirectory")
                 startRecording(existingSessionDirectory, existingSessionMetadata)
@@ -438,7 +439,7 @@ class ThermalCameraRecorder(
                 val newSessionMetadata = SessionMetadata.createSessionStart(sessionId)
                 startRecording(sessionDir.rootDir.absolutePath, newSessionMetadata)
             }
-            
+
             Log.d(TAG, "Thermal recording restart result: $recordingSuccess")
             recordingSuccess
         } catch (e: Exception) {
@@ -876,7 +877,7 @@ class ThermalCameraRecorder(
 
                     override fun onIRCMDCreate(ircmd: com.energy.iruvc.ircmd.IRCMD?) {
                         Log.d(TAG, "IRCMD created for thermal camera")
-                        
+
                         // Configure device settings equivalent to reference implementation
                         ircmd?.let { ircmdInstance ->
                             try {
@@ -886,36 +887,36 @@ class ThermalCameraRecorder(
                                     com.energy.iruvc.utils.CommonParams.PropImageParamsValue.MirrorFlipType.NO_MIRROR_FLIP
                                 )
                                 Log.d(TAG, "Image mirror/flip properties configured")
-                                
+
                                 // Get device firmware version information (equivalent to reference)
                                 val fwBuildVersionInfoBytes = ByteArray(50)
                                 ircmdInstance.getDeviceInfo(
                                     com.energy.iruvc.utils.CommonParams.DeviceInfoType.DEV_INFO_FW_BUILD_VERSION_INFO,
                                     fwBuildVersionInfoBytes
                                 )
-                                
+
                                 val firmwareVersion = String(fwBuildVersionInfoBytes.copyOfRange(0, 8))
                                 Log.d(TAG, "Device firmware version: $firmwareVersion")
-                                
+
                                 // Check if this is a Mini256 device (TS001) equivalent to reference
                                 val isTS001Device = firmwareVersion.contains("Mini256", ignoreCase = true)
                                 Log.d(TAG, "Is TS001 device: $isTS001Device")
-                                
+
                                 // Get current gain settings (equivalent to reference)
                                 val gainValue = IntArray(1)
                                 ircmdInstance.getPropTPDParams(
-                                    com.energy.iruvc.utils.CommonParams.PropTPDParams.TPD_PROP_GAIN_SEL, 
+                                    com.energy.iruvc.utils.CommonParams.PropTPDParams.TPD_PROP_GAIN_SEL,
                                     gainValue
                                 )
-                                
+
                                 val currentGainStatus = if (gainValue[0] == 1) {
                                     com.energy.iruvc.utils.CommonParams.GainStatus.HIGH_GAIN
                                 } else {
                                     com.energy.iruvc.utils.CommonParams.GainStatus.LOW_GAIN
                                 }
-                                
+
                                 Log.d(TAG, "Current gain status: $currentGainStatus (value=${gainValue[0]})")
-                                
+
                             } catch (e: Exception) {
                                 Log.w(TAG, "Error configuring IRCMD device settings", e)
                             }
@@ -1035,15 +1036,15 @@ class ThermalCameraRecorder(
                         // Set up image and temperature data sources (equivalent to reference)
                         val imageDataBuffer = ByteArray(IR_CAMERA_WIDTH * IR_CAMERA_HEIGHT * 2)
                         val temperatureDataBuffer = ByteArray(IR_CAMERA_WIDTH * IR_CAMERA_HEIGHT * 2)
-                        
+
                         iruvctcInstance.setImageSrc(imageDataBuffer)
                         iruvctcInstance.setTemperatureSrc(temperatureDataBuffer)
-                        
+
                         // Set rotation angle (equivalent to reference - typically 0 for TC001)
                         iruvctcInstance.setRotate(0)
-                        
+
                         Log.d(TAG, "IRUVCTC image sources and rotation configured")
-                        
+
                     } catch (e: Exception) {
                         Log.w(TAG, "Error configuring IRUVCTC data sources", e)
                     }
@@ -1180,7 +1181,10 @@ class ThermalCameraRecorder(
                 }
 
                 // Mark the data source for tracking
-                Log.d(TAG, "Thermal data extracted: min=${realThermalData.minTemperature}°C, max=${realThermalData.maxTemperature}°C, source=${if (lastCapturedFrame != null) "SDK" else "Enhanced_Simulation"}")
+                Log.d(
+                    TAG,
+                    "Thermal data extracted: min=${realThermalData.minTemperature}°C, max=${realThermalData.maxTemperature}°C, source=${if (lastCapturedFrame != null) "SDK" else "Enhanced_Simulation"}"
+                )
 
                 realThermalData
             } else {
@@ -3554,7 +3558,7 @@ class ThermalCameraRecorder(
             // Create HDF5-compatible JSON file (HDF5 library not available)
             Log.w(TAG, "HDF5 library not available, creating HDF5-compatible JSON format instead")
             val hdf5JsonFile = File(exportDir, "thermal_data.json")
-            
+
             // Prepare arrays for thermal data storage
             val timestamps = mutableListOf<Long>()
             val frameIndices = mutableListOf<Long>()
@@ -3590,7 +3594,7 @@ class ThermalCameraRecorder(
                     }
                 }
             }
-            
+
             val hdf5Structure = JSONObject().apply {
                 put("format", "HDF5-Compatible JSON")
                 put("metadata", JSONObject().apply {
@@ -3621,12 +3625,14 @@ class ThermalCameraRecorder(
                     }
                 })
             }
-            
-            hdf5JsonFile.writeText(hdf5Structure.toString(2))
-            Log.i(TAG, "Successfully exported ${timestamps.size} thermal frames to HDF5-compatible JSON: ${hdf5JsonFile.absolutePath}")
-            
-            return true
 
+            hdf5JsonFile.writeText(hdf5Structure.toString(2))
+            Log.i(
+                TAG,
+                "Successfully exported ${timestamps.size} thermal frames to HDF5-compatible JSON: ${hdf5JsonFile.absolutePath}"
+            )
+
+            return true
 
 
         } catch (e: Exception) {

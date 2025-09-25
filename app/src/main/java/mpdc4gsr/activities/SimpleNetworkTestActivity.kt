@@ -72,7 +72,7 @@ class SimpleNetworkTestActivity : AppCompatActivity() {
         connectButton.setOnClickListener {
             val ip = ipAddressInput.text.toString().trim()
             val portStr = portInput.text.toString().trim()
-            
+
             if (ip.isEmpty() || portStr.isEmpty()) {
                 Toast.makeText(this, "Please enter IP address and port", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
@@ -100,9 +100,9 @@ class SimpleNetworkTestActivity : AppCompatActivity() {
             try {
                 Log.i(TAG, "Connecting to PC at $ip:$port")
                 statusText.text = "Connecting to $ip:$port..."
-                
+
                 tcpClient = TcpClient(ip, port)
-                
+
                 // Set up message callback
                 tcpClient?.setMessageCallback { message ->
                     runOnUiThread {
@@ -111,7 +111,7 @@ class SimpleNetworkTestActivity : AppCompatActivity() {
                         statusText.text = "$currentText\nPC->Phone: $message"
                     }
                 }
-                
+
                 // Set up connection state callback
                 tcpClient?.setConnectionCallback { state ->
                     runOnUiThread {
@@ -120,14 +120,14 @@ class SimpleNetworkTestActivity : AppCompatActivity() {
                 }
 
                 val connected = tcpClient?.connect() ?: false
-                
+
                 if (connected) {
                     Log.i(TAG, "Successfully connected to PC")
                     Toast.makeText(this@SimpleNetworkTestActivity, "Connected to PC", Toast.LENGTH_SHORT).show()
-                    
+
                     // Send initial handshake
                     tcpClient?.sendMessage("HELLO device=SimpleNetworkTest sensors=[Mock]")
-                    
+
                     // Setup command handling (simplified)
                     tcpClient?.setMessageCallback { message ->
                         runOnUiThread {
@@ -135,17 +135,18 @@ class SimpleNetworkTestActivity : AppCompatActivity() {
                             handlePCMessage(message)
                         }
                     }
-                    
+
                 } else {
                     Log.e(TAG, "Failed to connect to PC")
                     Toast.makeText(this@SimpleNetworkTestActivity, "Failed to connect", Toast.LENGTH_SHORT).show()
                 }
-                
+
             } catch (e: Exception) {
                 Log.e(TAG, "Error connecting to PC", e)
-                Toast.makeText(this@SimpleNetworkTestActivity, "Connection error: ${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@SimpleNetworkTestActivity, "Connection error: ${e.message}", Toast.LENGTH_SHORT)
+                    .show()
             }
-            
+
             updateUI()
         }
     }
@@ -157,12 +158,12 @@ class SimpleNetworkTestActivity : AppCompatActivity() {
                 tcpClient?.disconnect()
                 tcpClient?.cleanup()
                 tcpClient = null
-                
+
                 Toast.makeText(this@SimpleNetworkTestActivity, "Disconnected", Toast.LENGTH_SHORT).show()
             } catch (e: Exception) {
                 Log.e(TAG, "Error disconnecting", e)
             }
-            
+
             updateUI()
         }
     }
@@ -179,15 +180,15 @@ class SimpleNetworkTestActivity : AppCompatActivity() {
                 // Test PING
                 client.sendMessage("PING")
                 appendStatus("Phone->PC: PING")
-                
+
                 kotlinx.coroutines.delay(1000)
-                
+
                 // Test GET_STATUS
                 client.sendMessage("GET_STATUS")
                 appendStatus("Phone->PC: GET_STATUS")
-                
+
                 kotlinx.coroutines.delay(1000)
-                
+
                 // Test START if not recording
                 if (!mockController.isRecording) {
                     client.sendMessage("START")
@@ -196,7 +197,7 @@ class SimpleNetworkTestActivity : AppCompatActivity() {
                     client.sendMessage("STOP")
                     appendStatus("Phone->PC: STOP")
                 }
-                
+
             } catch (e: Exception) {
                 Log.e(TAG, "Error testing commands", e)
                 Toast.makeText(this@SimpleNetworkTestActivity, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
@@ -206,7 +207,7 @@ class SimpleNetworkTestActivity : AppCompatActivity() {
 
     private fun handlePCMessage(message: String) {
         appendStatus("PC->Phone: $message")
-        
+
         lifecycleScope.launch {
             try {
                 val response = when {
@@ -215,24 +216,24 @@ class SimpleNetworkTestActivity : AppCompatActivity() {
                         if (success) "START-ACK session_id=demo_${System.currentTimeMillis()}"
                         else "ERROR cmd=START code=START_FAILED"
                     }
-                    
+
                     message.startsWith("STOP") -> {
                         val success = mockController.stopRecording()
                         if (success) "STOP-ACK msg=\"Recording stopped\""
                         else "ERROR cmd=STOP code=NOT_RECORDING"
                     }
-                    
+
                     message.startsWith("PING") -> "PONG"
-                    
+
                     message.startsWith("GET_STATUS") -> {
                         val status = mockController.getStatus()
                         "STATUS ${org.json.JSONObject(status)}"
                     }
-                    
+
                     message.startsWith("SYNC") -> {
                         "SYNC-RESP t_ph=${System.currentTimeMillis()}"
                     }
-                    
+
                     else -> null
                 }
 
@@ -240,7 +241,7 @@ class SimpleNetworkTestActivity : AppCompatActivity() {
                     tcpClient?.sendMessage(it)
                     appendStatus("Phone->PC: $it")
                 }
-                
+
             } catch (e: Exception) {
                 Log.e(TAG, "Error handling PC message: $message", e)
             }
@@ -252,7 +253,7 @@ class SimpleNetworkTestActivity : AppCompatActivity() {
             val currentText = statusText.text.toString()
             val newText = if (currentText.isEmpty()) text else "$currentText\n$text"
             statusText.text = newText
-            
+
             // Keep only last 20 lines
             val lines = newText.split("\n")
             if (lines.size > 20) {
@@ -267,14 +268,17 @@ class SimpleNetworkTestActivity : AppCompatActivity() {
                 connectionStatusIndicator.setImageResource(android.R.drawable.presence_online)
                 connectionStatusText.text = "Connected"
             }
+
             CommandConnection.ConnectionState.CONNECTING -> {
                 connectionStatusIndicator.setImageResource(android.R.drawable.presence_away)
                 connectionStatusText.text = "Connecting..."
             }
+
             CommandConnection.ConnectionState.DISCONNECTED -> {
                 connectionStatusIndicator.setImageResource(android.R.drawable.presence_offline)
                 connectionStatusText.text = "Disconnected"
             }
+
             CommandConnection.ConnectionState.ERROR -> {
                 connectionStatusIndicator.setImageResource(android.R.drawable.stat_notify_error)
                 connectionStatusText.text = "Error"
@@ -284,11 +288,11 @@ class SimpleNetworkTestActivity : AppCompatActivity() {
 
     private fun updateUI() {
         val isConnected = tcpClient?.isConnected() ?: false
-        
+
         connectButton.isEnabled = !isConnected
         disconnectButton.isEnabled = isConnected
         testCommandsButton.isEnabled = isConnected
-        
+
         ipAddressInput.isEnabled = !isConnected
         portInput.isEnabled = !isConnected
     }
