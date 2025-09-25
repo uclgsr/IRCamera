@@ -153,7 +153,7 @@ object TS004Repository {
     }
 
 
-    suspend fun getNewestFile(fileType: Int): List<FileBean>? = withContext(Dispatchers.IO) {
+    suspend fun getNewestFile(fileType: Int): List<TS004FileBean>? = withContext(Dispatchers.IO) {
         try {
             val paramMap: HashMap<String, Any> = HashMap()
             paramMap["pageNum"] = 1
@@ -166,7 +166,7 @@ object TS004Repository {
     }
 
 
-    suspend fun getAllFileList(fileType: Int): List<FileBean> = withContext(Dispatchers.IO) {
+    suspend fun getAllFileList(fileType: Int): List<TS004FileBean> = withContext(Dispatchers.IO) {
         try {
             val fileCount = getFileCount(fileType) ?: return@withContext ArrayList()
             if (fileCount < 1) {
@@ -184,7 +184,7 @@ object TS004Repository {
     }
 
 
-    suspend fun getFileByPage(fileType: Int, pageNum: Int, pageCount: Int): List<FileBean>? =
+    suspend fun getFileByPage(fileType: Int, pageNum: Int, pageCount: Int): List<TS004FileBean>? =
         withContext(Dispatchers.IO) {
             try {
                 val paramMap: HashMap<String, Any> = HashMap()

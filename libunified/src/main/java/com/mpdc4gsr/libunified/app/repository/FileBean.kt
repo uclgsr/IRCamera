@@ -1,9 +1,8 @@
-package com.topdon.libunified.app.bean
+package com.mpdc4gsr.libunified.app.repository
 
 import android.os.Parcel
 import android.os.Parcelable
 import com.mpdc4gsr.libunified.app.config.FileConfig
-import com.mpdc4gsr.libunified.app.repository.FileBean
 import com.mpdc4gsr.libunified.app.tools.TimeTool
 import com.mpdc4gsr.libunified.app.tools.VideoTools
 import java.io.File
@@ -28,7 +27,7 @@ open class FileBean(
         hasDownload = true,
     )
 
-    constructor(isVideo: Boolean, fileBean: FileBean) : this(
+    constructor(isVideo: Boolean, fileBean: TS004FileBean) : this(
         id = fileBean.id,
         path = "http://192.168.40.1:8080/DCIM/${fileBean.name}",
         thumb = if (isVideo) "http://192.168.40.1:8080/DCIM/${fileBean.thumb}" else "http://192.168.40.1:8080/DCIM/${fileBean.name}",
