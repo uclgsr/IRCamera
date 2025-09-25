@@ -387,8 +387,8 @@ class ThermalCameraRecorder(
             // Clean up existing connection first
             if (iruvctc != null) {
                 try {
-                    iruvctc?.stop()
-                    iruvctc?.release()
+                    iruvctc?.stopPreview()
+                    iruvctc?.unregisterUSB()
                     iruvctc = null
                 } catch (e: Exception) {
                     Log.w(TAG, "Error cleaning up existing thermal camera connection", e)
@@ -420,11 +420,10 @@ class ThermalCameraRecorder(
             // Start recording with current session
             val sessionManager = SessionDirectoryManager.getInstance()
             val sessionMetadata = SessionMetadata(
-                sessionId = sensorId,
                 startTime = System.currentTimeMillis(),
-                sensorTypes = listOf("thermal"),
+                enabledSensors = listOf("thermal"),
                 participantId = "recovery_session",
-                studyId = "thermal_recovery"
+                studyName = "thermal_recovery"
             )
             val recordingSuccess = startRecording(sessionManager.getCurrentSessionDir(), sessionMetadata)
             Log.d(TAG, "Thermal recording restart result: $recordingSuccess")
@@ -950,14 +949,10 @@ class ThermalCameraRecorder(
                                     if (bitmap != null && !bitmap.isRecycled) {
 
                                         val bitmapCopy = if (bitmap.config != null) {
-                                            bitmap.copy(bitmap.config, false)
+                                            bitmap.copy(bitmap.config!!, false)
                                         } else {
-                                            // If config is null, log a warning and avoid copying with ARGB_8888
-                                            Log.w(
-                                                "ThermalCameraRecorder",
-                                                "Bitmap config is null; cannot safely copy thermal bitmap. Passing original bitmap."
-                                            )
-                                            bitmap
+                                            // If config is null, use ARGB_8888 as default
+                                            bitmap.copy(Bitmap.Config.ARGB_8888, false)
                                         }
                                         val thermalData =
                                             if (ircamEngine != null && isTopdonSdkInitialized) {
