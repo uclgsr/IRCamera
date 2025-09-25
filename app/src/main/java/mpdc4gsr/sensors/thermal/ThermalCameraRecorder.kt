@@ -423,16 +423,17 @@ class ThermalCameraRecorder(
                 return true
             }
             // Start recording with current session
-            val sessionManager = com.mpdc4gsr.gsr.service.SessionManager.getInstance(context)
+            val sessionDirectoryManager = SessionDirectoryManager(context)
+            val sessionId = sessionDirectoryManager.generateSessionId()
+            val sessionDir = sessionDirectoryManager.createSessionDirectory(sessionId)
             val currentTimeMs = System.currentTimeMillis()
             val sessionMetadata = SessionMetadata(
-                sessionId = sensorId,
+                sessionId = sessionId,
                 sessionStartTimestampMs = currentTimeMs,
                 sessionStartMonotonicNs = SystemClock.elapsedRealtimeNanos(),
                 sessionStartIso = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX", Locale.getDefault()).format(Date(currentTimeMs))
             )
-            val sessionDir = sessionManager.getSessionDirectory()
-            val recordingSuccess = startRecording(sessionDir.absolutePath, sessionMetadata)
+            val recordingSuccess = startRecording(sessionDir.rootDir.absolutePath, sessionMetadata)
             Log.d(TAG, "Thermal recording restart result: $recordingSuccess")
             recordingSuccess
         } catch (e: Exception) {
