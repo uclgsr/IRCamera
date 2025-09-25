@@ -131,7 +131,7 @@ class TapToFocusPreviewView @JvmOverloads constructor(
         }
     }
 
-    fun getCameraPreviewView(): PreviewView = previewView
+    fun getPreviewView(): PreviewView = previewView
 
     fun triggerFocusAt(x: Float, y: Float) {
         focusX = x
