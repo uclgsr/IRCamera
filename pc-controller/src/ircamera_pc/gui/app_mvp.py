@@ -33,8 +33,9 @@ def main():
             import importlib.util
             
             # Load the session controller from pc-controller-ui
-            # Fix path: go up to project root, then to pc-controller-ui
-            controller_path = Path(__file__).parent.parent.parent.parent.parent / "pc-controller-ui" / "src" / "pc_session_controller.py"
+            # Define the relative path from this file to the session controller
+            RELATIVE_CONTROLLER_PATH = Path("../../../pc-controller-ui/src/pc_session_controller.py")
+            controller_path = (Path(__file__).resolve().parent / RELATIVE_CONTROLLER_PATH).resolve()
             
             if controller_path.exists():
                 spec = importlib.util.spec_from_file_location("pc_session_controller", controller_path)
