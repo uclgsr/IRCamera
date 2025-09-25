@@ -831,7 +831,7 @@ class ThermalCameraRecorder(
                                     if (bitmap != null && !bitmap.isRecycled) {
 
                                         val bitmapCopy = if (bitmap.config != null) {
-                                            bitmap.copy(bitmap.config!!, false)
+                                            bitmap.copy(bitmap.config, false)
                                         } else {
                                             // If config is null, log a warning and avoid copying with ARGB_8888
                                             Log.w(
