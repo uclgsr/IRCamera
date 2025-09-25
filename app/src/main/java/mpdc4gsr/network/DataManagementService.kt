@@ -126,10 +126,6 @@ class DataManagementService(private val context: Context) {
         fun isUploaded(): Boolean {
             return uploadStatus == FileUploadService.UploadStatus.COMPLETED
         }
-
-        fun getRelativePath(): String {
-            return "$sessionId/$deviceId/$fileName"
-        }
     }
 
     fun initialize(fileUploadService: FileUploadService? = null) {
@@ -774,7 +770,7 @@ class DataManagementService(private val context: Context) {
                             put("timestamp", file.timestamp)
                             put("mime_type", file.mimeType)
                             if (includeFiles) {
-                                put("relative_path", file.getRelativePath())
+                                put("relative_path", file.relativePath)
                             }
                         }
                     filesJson.put(fileJson)

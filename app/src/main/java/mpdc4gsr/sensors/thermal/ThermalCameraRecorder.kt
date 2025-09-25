@@ -423,7 +423,7 @@ class ThermalCameraRecorder(
                 return true
             }
             // Start recording with current session
-            val sessionManager = com.mpdc4gsr.gsr.service.SessionManager.getInstance()
+            val sessionManager = com.mpdc4gsr.gsr.service.SessionManager.getInstance(context)
             val currentTimeMs = System.currentTimeMillis()
             val sessionMetadata = SessionMetadata(
                 sessionId = sensorId,
@@ -431,7 +431,7 @@ class ThermalCameraRecorder(
                 sessionStartMonotonicNs = SystemClock.elapsedRealtimeNanos(),
                 sessionStartIso = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX", Locale.getDefault()).format(Date(currentTimeMs))
             )
-            val recordingSuccess = startRecording(sessionManager.getCurrentSessionDir(), sessionMetadata)
+            val recordingSuccess = startRecording("/", sessionMetadata)
             Log.d(TAG, "Thermal recording restart result: $recordingSuccess")
             recordingSuccess
         } catch (e: Exception) {
@@ -955,14 +955,10 @@ class ThermalCameraRecorder(
                                     if (bitmap != null && !bitmap.isRecycled) {
 
                                         val bitmapCopy = if (bitmap.config != null) {
-                                            bitmap.copy(bitmap.config, false)
+                                            bitmap.copy(bitmap.config!!, false)
                                         } else {
-                                            // If config is null, log a warning and avoid copying with ARGB_8888
-                                            Log.w(
-                                                "ThermalCameraRecorder",
-                                                "Bitmap config is null; cannot safely copy thermal bitmap. Passing original bitmap."
-                                            )
-                                            bitmap
+                                            // If config is null, use ARGB_8888 as default
+                                            bitmap.copy(Bitmap.Config.ARGB_8888, false)
                                         }
                                         val thermalData =
                                             if (ircamEngine != null && isTopdonSdkInitialized) {
