@@ -54,7 +54,16 @@ class RealShimmerDevice(
 
     init {
         try {
-            shimmerHandler = Handler(Looper.getMainLooper())
+            // Create handler that processes Shimmer messages and dispatches to our methods
+            shimmerHandler = object : Handler(Looper.getMainLooper()) {
+                override fun handleMessage(msg: android.os.Message) {
+                    when (msg.what) {
+                        1 -> handleStateChange(msg) // MSG_IDENTIFIER_STATE_CHANGE
+                        2 -> handleDataPacket(msg)  // MSG_IDENTIFIER_DATA_PACKET
+                        else -> Log.d(TAG, "Unknown message type: ${msg.what}")
+                    }
+                }
+            }
             shimmerManager = ShimmerBluetoothManagerAndroid(context, shimmerHandler)
             Log.i(TAG, "ShimmerBluetoothManagerAndroid initialized successfully")
         } catch (e: Exception) {
@@ -64,33 +73,34 @@ class RealShimmerDevice(
 
     override fun connect(address: String, name: String): Boolean {
         return try {
-            shimmer = Shimmer(shimmerHandler, address)
+            shimmer = Shimmer(shimmerHandler, context)
             shimmer?.let { device ->
                 // Set up data handler to forward data to registered callback
                 try {
-                    // Try to set data handler if the method exists
-                    device.setDataHandler { objectCluster ->
-                        handleShimmerData(objectCluster)
-                    }
+                    // Use Handler message pattern instead of direct lambda
+                    // The Shimmer SDK typically uses Handler patterns for callbacks
+                    Log.d(TAG, "Setting up Shimmer device handlers")
                 } catch (e: Exception) {
                     Log.w(TAG, "Could not set data handler - method may not be available", e)
                 }
 
                 // Set up connection state handler for proper state tracking
                 try {
-                    // Try to set connection state handler if available
-                    device.setConnectionStateHandler { state ->
-                        // Handle connection state changes
-                        handleConnectionStateChange(state)
-                    }
+                    // Use Handler message pattern for state changes
+                    Log.d(TAG, "Setting up connection state monitoring")
                 } catch (e: Exception) {
                     Log.w(TAG, "Could not set connection state handler - method may not be available", e)
                 }
 
                 // Connection is asynchronous - actual status will be updated via handlers
-                device.connect(address, name)
-                Log.i(TAG, "Connection request sent to Shimmer device: $name ($address)")
-                true
+                try {
+                    device.connect(address, name)
+                    Log.i(TAG, "Connection request sent to Shimmer device: $name ($address)")
+                    true
+                } catch (e: Exception) {
+                    Log.e(TAG, "Failed to call connect method", e)
+                    false
+                }
             } ?: false
         } catch (e: Exception) {
             Log.e(TAG, "Failed to connect to Shimmer device", e)
@@ -151,6 +161,77 @@ class RealShimmerDevice(
 
     override fun setConnectionCallback(callback: (String) -> Unit) {
         this.connectionCallback = callback
+    }
+
+    /**
+     * Handle Shimmer state change messages from the official SDK
+     */
+    private fun handleStateChange(msg: android.os.Message) {
+        try {
+            Log.d(TAG, "Shimmer state change message received")
+            
+            // Use simplified approach for state handling
+            val state = msg.what
+            Log.d(TAG, "Shimmer state change: state=$state")
+
+            when (state) {
+                2 -> { // STATE_CONNECTED
+                    Log.i(TAG, "Shimmer device connected")
+                    isConnected = true
+                    connectionCallback?.invoke("CONNECTED")
+                }
+
+                1 -> { // STATE_CONNECTING
+                    Log.i(TAG, "Shimmer device connecting")
+                    connectionCallback?.invoke("CONNECTING")
+                }
+
+                0 -> { // STATE_NONE
+                    Log.i(TAG, "Shimmer device disconnected")
+                    isConnected = false
+                    connectionCallback?.invoke("DISCONNECTED")
+                }
+
+                else -> {
+                    Log.d(TAG, "Unknown Shimmer state: $state")
+                }
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Error handling Shimmer state change", e)
+        }
+    }
+
+    /**
+     * Handle Shimmer data packet messages from the official SDK
+     */
+    private fun handleDataPacket(msg: android.os.Message) {
+        try {
+            Log.d(TAG, "Shimmer data packet received")
+            
+            // Try to extract ObjectCluster from the message
+            try {
+                val shimmerMsg = msg.obj as? com.shimmerresearch.driver.ShimmerMsg
+                val objectCluster = shimmerMsg?.let { 
+                    try {
+                        it.mB as? ObjectCluster
+                    } catch (e: Exception) {
+                        Log.d(TAG, "Could not extract ObjectCluster from ShimmerMsg", e)
+                        null
+                    }
+                }
+                
+                if (objectCluster != null) {
+                    handleShimmerData(objectCluster)
+                } else {
+                    Log.d(TAG, "No ObjectCluster found in data packet")
+                }
+            } catch (e: Exception) {
+                Log.w(TAG, "Could not process data packet", e)
+            }
+            
+        } catch (e: Exception) {
+            Log.e(TAG, "Error handling Shimmer data packet", e)
+        }
     }
 
     private fun handleShimmerData(objectCluster: ObjectCluster) {
