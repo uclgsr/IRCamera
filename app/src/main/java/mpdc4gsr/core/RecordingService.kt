@@ -29,7 +29,6 @@ import mpdc4gsr.config.FeatureFlags
 import mpdc4gsr.config.ProtocolVersion
 import mpdc4gsr.controller.ComprehensiveRecordingController
 import mpdc4gsr.controller.RecordingController
-import mpdc4gsr.controller.SessionManifest
 import mpdc4gsr.controller.RecordingState
 import mpdc4gsr.network.NetworkClient
 import mpdc4gsr.network.NetworkConnectionManager
@@ -82,6 +81,9 @@ class RecordingService : LifecycleService() {
         const val EXTRA_PC_IP = "pc_ip"
         const val EXTRA_PC_PORT = "pc_port"
         const val EXTRA_BLUETOOTH_DEVICE = "bluetooth_device"
+        
+        // Type aliases for compatibility
+        typealias SessionManifest = RecordingController.SessionManifest
 
         fun startRecording(context: Context, sessionDirectory: String) {
             val intent = Intent(context, RecordingService::class.java).apply {

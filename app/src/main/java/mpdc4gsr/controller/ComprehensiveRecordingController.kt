@@ -12,14 +12,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import mpdc4gsr.data.SessionManifest
-import mpdc4gsr.data.SessionEvent
-import mpdc4gsr.data.SensorActivityInfo
-import mpdc4gsr.data.SensorHealthInfo
-import mpdc4gsr.data.DropoutEvent
-import mpdc4gsr.data.ReconnectionEvent
 import mpdc4gsr.controller.RecordingController
-import mpdc4gsr.data.SessionMetadata
 import mpdc4gsr.permissions.PermissionManager
 import mpdc4gsr.sensors.SensorRecorder
 import mpdc4gsr.utils.SessionDirectory
@@ -88,7 +81,7 @@ class ComprehensiveRecordingController(
     // Session orchestration state
     private val currentSessionState = java.util.concurrent.atomic.AtomicReference(SessionState.IDLE)
     private var lastTriggerSource: TriggerSource? = null
-    private val sessionEvents = mutableListOf<SessionEvent>()
+    private val sessionEvents = mutableListOf<RecordingController.SessionEvent>()
 
     private val _errorFlow = MutableStateFlow<RecordingError?>(null)
     val errorFlow: StateFlow<RecordingError?> = _errorFlow.asStateFlow()
@@ -118,7 +111,7 @@ class ComprehensiveRecordingController(
     fun addSensorRecorder(name: String, recorder: SensorRecorder) {
         sensorRecorders[name] = recorder
         sensorHealthStatus[name] = SensorHealthInfo(
-            sensorId = name,
+            name = name,
             isHealthy = true,
             lastHealthCheck = System.currentTimeMillis(),
             consecutiveFailures = 0,
@@ -1121,7 +1114,7 @@ class ComprehensiveRecordingController(
         errorMessage: String? = null,
         metadata: Map<String, String> = emptyMap()
     ) {
-        val event = SessionEvent(
+        val event = RecordingController.SessionEvent(
             eventType = eventType,
             timestampMs = System.currentTimeMillis(),
             sensorId = sensorId,
@@ -1157,7 +1150,7 @@ class ComprehensiveRecordingController(
     }
 
     // Session manifest generation
-    fun generateSessionManifest(): SessionManifest {
+    fun generateSessionManifest(): RecordingController.SessionManifest {
         val sessionDirectory = currentSessionDirectory?.rootDir?.name ?: currentSessionId ?: "unknown"
         val startTime = sessionStartTime.get()
         val stopTime = if (currentSessionState.get() in listOf(
@@ -1175,7 +1168,7 @@ class ComprehensiveRecordingController(
             val wasActive = activeRecorders[sensorName] == true
             val healthInfo = sensorHealthStatus[sensorName]
 
-            SensorActivityInfo(
+            RecordingController.SensorActivityInfo(
                 sensorName = sensorName,
                 wasActive = wasActive,
                 startedSuccessfully = wasActive,
@@ -1192,7 +1185,7 @@ class ComprehensiveRecordingController(
             it.eventType.contains("WARNING") || it.eventType.contains("CRITICAL")
         }.map { "${it.eventType}: ${it.metadata}" }
 
-        return SessionManifest(
+        return RecordingController.SessionManifest(
             sessionId = sessionDirectory,
             startTime = startTime,
             stopTime = stopTime,

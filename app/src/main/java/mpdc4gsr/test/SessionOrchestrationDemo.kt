@@ -8,11 +8,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.runBlocking
 import mpdc4gsr.controller.RecordingController
-import mpdc4gsr.controller.SessionManifest
-import mpdc4gsr.controller.SensorActivityInfo
-import mpdc4gsr.controller.SessionEvent
-import mpdc4gsr.controller.DropoutEvent
-import mpdc4gsr.controller.ReconnectionEvent
+import mpdc4gsr.controller.RecordingControllerSessionManifest
 import mpdc4gsr.core.RecordingService
 
 /**
@@ -182,7 +178,7 @@ class SessionOrchestrationDemo(
     /**
      * Display session manifest information
      */
-    private fun displaySessionManifest(manifest: SessionManifest) {
+    private fun displaySessionManifest(manifest: RecordingControllerSessionManifest) {
         Log.i(TAG, "")
         Log.i(TAG, "=== SESSION MANIFEST ===")
         Log.i(TAG, "Session ID: ${manifest.sessionId}")
@@ -192,7 +188,7 @@ class SessionOrchestrationDemo(
         Log.i(TAG, "")
 
         Log.i(TAG, "Sensor Activity Summary:")
-        manifest.sensorActivitySummary.forEach { (sensorName: String, info: SensorActivityInfo) ->
+        manifest.sensorActivitySummary.forEach { (sensorName, info) ->
             Log.i(TAG, "  $sensorName:")
             Log.i(TAG, "    - Active: ${info.wasActive}")
             Log.i(TAG, "    - Started Successfully: ${info.startedSuccessfully}")  
@@ -211,9 +207,9 @@ class SessionOrchestrationDemo(
         if (manifest.events.isNotEmpty()) {
             Log.i(TAG, "")
             Log.i(TAG, "Session Events (${manifest.events.size}):")
-            manifest.events.take(10).forEach { event: SessionEvent ->
+            manifest.events.take(10).forEach { event ->
                 val status = if (event.success) "✓" else "✗"
-                Log.i(TAG, "  $status ${event.eventType}${event.sensorId?.let { " ($it)" } ?: ""}")
+                Log.i(TAG, "  $status ${event.eventType}${if (event.sensorId != null) " (${event.sensorId})" else ""}")
                 if (!event.success && event.errorMessage != null) {
                     Log.i(TAG, "    Error: ${event.errorMessage}")
                 }
@@ -226,16 +222,16 @@ class SessionOrchestrationDemo(
         if (manifest.errors.isNotEmpty()) {
             Log.i(TAG, "")
             Log.i(TAG, "Session Errors:")
-            manifest.errors.forEach { error: String ->
-                Log.w(TAG, "  - $error")
+            manifest.errors.forEach { error ->
+                Log.i(TAG, "  ✗ $error")
             }
         }
 
         if (manifest.warnings.isNotEmpty()) {
             Log.i(TAG, "")
             Log.i(TAG, "Session Warnings:")
-            manifest.warnings.forEach { warning: String ->
-                Log.w(TAG, "  - $warning")
+            manifest.warnings.forEach { warning ->
+                Log.i(TAG, "  ⚠ $warning")
             }
         }
 
