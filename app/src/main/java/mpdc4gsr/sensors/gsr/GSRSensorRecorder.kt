@@ -1266,7 +1266,8 @@ class GSRSensorRecorder(
                     val connectedDevices = try {
                         Log.i(TAG, "Checking for connected Shimmer devices")
                         // ShimmerBluetoothManagerAndroid doesn't have getConnectedDeviceList()
-                        // We'll implement a simpler approach to check for connected devices
+                        // TODO: Implement proper enumeration of connected Shimmer devices when SDK support is available.
+                        // Currently, this returns an empty list, which disables discovery of connected devices.
                         emptyList<Shimmer>()
                     } catch (e: Exception) {
                         Log.w(TAG, "Error getting connected devices: ${e.message}")
