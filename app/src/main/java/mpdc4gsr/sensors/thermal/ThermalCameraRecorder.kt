@@ -423,7 +423,7 @@ class ThermalCameraRecorder(
                 participantId = "recovery_session",
                 studyName = "thermal_recovery"
             )
-            val recordingSuccess = startRecording(sessionDirectory, sessionMetadata)
+            val recordingSuccess = startRecording(sessionManager.getCurrentSessionDir(), sessionMetadata)
             Log.d(TAG, "Thermal recording restart result: $recordingSuccess")
             recordingSuccess
         } catch (e: Exception) {
