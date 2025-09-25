@@ -263,6 +263,9 @@ class ThermalCameraRecorder(
         }
     }
 
+    enum class ThermalExportFormat {
+        CSV, JSON, HDF5, MATLAB
+    }
 
     override val sensorId: String = sensorIdParam
     override val sensorType: String = "IR Thermal Camera"
@@ -3194,14 +3197,13 @@ class ThermalCameraRecorder(
                 )
             }
 
-
-            suspend fun exportThermalData(
-                outputDir: String,
-                format: ThermalExportFormat = ThermalExportFormat.CSV,
-                includeImages: Boolean = true
-            ): Boolean = withContext(Dispatchers.IO) {
-                return@withContext try {
-                    Log.i(TAG, "Exporting thermal data to $outputDir in format $format")
+    suspend fun exportThermalData(
+        outputDir: String,
+        format: ThermalExportFormat,
+        includeImages: Boolean = true
+    ): Boolean = withContext(Dispatchers.IO) {
+        return@withContext try {
+            Log.i(TAG, "Exporting thermal data to $outputDir in format $format")
 
                     val exportDir = File(outputDir, "thermal_export_${System.currentTimeMillis()}")
                     exportDir.mkdirs()
@@ -3297,28 +3299,24 @@ class ThermalCameraRecorder(
                     val matFile = File(exportDir, "thermal_data.m")
                     val matContent = StringBuilder()
 
-                    matContent.appendLine("% Thermal data export from Topdon TC001")
-                    matContent.appendLine(
-                        "% Generated on ${
-                            java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(java.util.Date())
-                        }"
-                    )
-                    matContent.appendLine("")
-                    matContent.appendLine("thermal_config.emissivity = ${currentConfig.emissivity};")
-                    matContent.appendLine("thermal_config.atmospheric_temp = ${currentConfig.atmosphericTemperature};")
-                    matContent.appendLine("thermal_config.resolution = [${IR_CAMERA_WIDTH}, ${IR_CAMERA_HEIGHT}];")
-                    matContent.appendLine("thermal_config.frame_rate = ${IR_FRAME_RATE_STANDARD};")
+            matContent.appendLine("% Thermal data export from Topdon TC001")
+            matContent.appendLine(
+                "% Generated on ${
+                    java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(java.util.Date())
+                }"
+            )
+            matContent.appendLine("")
+            matContent.appendLine("thermal_config.emissivity = ${currentConfig.emissivity};")
+            matContent.appendLine("thermal_config.atmospheric_temp = ${currentConfig.atmosphericTemperature};")
+            matContent.appendLine("thermal_config.resolution = [${IR_CAMERA_WIDTH}, ${IR_CAMERA_HEIGHT}];")
+            matContent.appendLine("thermal_config.frame_rate = ${IR_FRAME_RATE_STANDARD};")
 
-                    matFile.writeText(matContent.toString())
-                    Log.i(TAG, "MATLAB export completed")
-                    true
-                } catch (e: Exception) {
-                    Log.e(TAG, "Failed to export to MATLAB", e)
-                    false
-                }
-            }
-
-            enum class ThermalExportFormat {
-                CSV, JSON, HDF5, MATLAB
-            }
+            matFile.writeText(matContent.toString())
+            Log.i(TAG, "MATLAB export completed")
+            true
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to export to MATLAB", e)
+            false
         }
+    }
+}
