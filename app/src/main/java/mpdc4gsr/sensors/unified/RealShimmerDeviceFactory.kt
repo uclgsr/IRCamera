@@ -8,6 +8,7 @@ import android.util.Log
 import com.shimmerresearch.android.Shimmer
 import com.shimmerresearch.android.manager.ShimmerBluetoothManagerAndroid
 import com.shimmerresearch.driver.ObjectCluster
+import com.shimmerresearch.driver.ShimmerMsg
 import com.mpdc4gsr.gsr.service.ShimmerDataCluster
 import com.mpdc4gsr.gsr.service.ShimmerDeviceFactory
 import com.mpdc4gsr.gsr.service.ShimmerDeviceInterface
@@ -189,44 +190,39 @@ class RealShimmerDevice(
      */
     private fun handleStateChange(msg: Message) {
         try {
-            // Since ShimmerMsg structure is unclear, work with basic message data
-            val state = msg.arg1
-            val deviceId = msg.obj as? String ?: deviceAddress
+            val shimmerMsg = msg.obj as? ShimmerMsg ?: return
+            val state = shimmerMsg.mB as? Int ?: return
+            val macAddress = shimmerMsg.mA as? String
             
-            Log.d(TAG, "Shimmer state change: state=$state, device=$deviceId")
+            Log.d(TAG, "Shimmer state change: state=$state, address=$macAddress")
             
             when (state) {
                 STATE_CONNECTED -> {
-                    Log.i(TAG, "Shimmer device connected: $deviceId")
+                    Log.i(TAG, "Shimmer device connected: $macAddress")
                     isConnected = true
                     
                     // Get the connected device reference - note: getShimmer returns ShimmerDevice, not Shimmer
                     deviceAddress?.let { address ->
                         val shimmerDevice = shimmerBluetoothManager?.getShimmer(address)
-                        // Assign only if shimmerDevice is actually a Shimmer instance
-                        if (shimmerDevice is Shimmer) {
-                            connectedDevice = shimmerDevice
-                        } else {
-                            Log.w(TAG, "Connected device is not a Shimmer instance: ${shimmerDevice?.javaClass?.name}")
-                            connectedDevice = null
-                        }
+                        // Cast or adapt as needed for compatibility
+                        connectedDevice = shimmerDevice as? Shimmer
                     }
                     
                     connectionCallback?.invoke("CONNECTED")
                 }
                 STATE_CONNECTING -> {
-                    Log.i(TAG, "Shimmer device connecting: $deviceId")
+                    Log.i(TAG, "Shimmer device connecting: $macAddress")
                     connectionCallback?.invoke("CONNECTING")
                 }
                 STATE_NONE -> {
-                    Log.i(TAG, "Shimmer device disconnected: $deviceId")
+                    Log.i(TAG, "Shimmer device disconnected: $macAddress")
                     isConnected = false
                     isStreaming = false
                     connectedDevice = null
                     connectionCallback?.invoke("DISCONNECTED")
                 }
                 else -> {
-                    Log.d(TAG, "Unknown Shimmer state: $state for device: $deviceId")
+                    Log.d(TAG, "Unknown Shimmer state: $state for device: $macAddress")
                 }
             }
         } catch (e: Exception) {
@@ -239,8 +235,8 @@ class RealShimmerDevice(
      */
     private fun handleDataPacket(msg: Message) {
         try {
-            // Extract ObjectCluster from message
-            val objectCluster = msg.obj as? ObjectCluster ?: return
+            val shimmerMsg = msg.obj as? ShimmerMsg ?: return
+            val objectCluster = shimmerMsg.mB as? ObjectCluster ?: return
             
             // Forward data to callback if set
             dataCallback?.let { callback ->
