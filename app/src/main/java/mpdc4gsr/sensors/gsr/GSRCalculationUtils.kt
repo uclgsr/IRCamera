@@ -3,7 +3,7 @@ package mpdc4gsr.sensors.gsr
 import kotlin.math.max
 
 object GSRCalculationUtils {
-    
+
     /**
      * Calculate GSR in microsiemens from raw ADC value.
      *
@@ -19,7 +19,8 @@ object GSRCalculationUtils {
         }
         return try {
             val voltage = (rawValue / GSRConstants.ADC_MAX_VALUE) * GSRConstants.REFERENCE_VOLTAGE
-            val gsrResistance = GSRConstants.REFERENCE_RESISTANCE_OHMS * ((GSRConstants.REFERENCE_VOLTAGE / voltage) - 1.0)
+            val gsrResistance =
+                GSRConstants.REFERENCE_RESISTANCE_OHMS * ((GSRConstants.REFERENCE_VOLTAGE / voltage) - 1.0)
             val conductance = if (gsrResistance > 0) {
                 (1.0 / gsrResistance) * GSRConstants.MICROSIEMENS_CONVERSION
             } else {
@@ -30,7 +31,7 @@ object GSRCalculationUtils {
             0.0
         }
     }
-    
+
     /**
      * Calculate resistance from GSR conductance value
      */
@@ -41,7 +42,7 @@ object GSRCalculationUtils {
             Double.MAX_VALUE
         }
     }
-    
+
     /**
      * Calculate signal quality score based on GSR values and thresholds
      */
@@ -54,7 +55,7 @@ object GSRCalculationUtils {
             else -> 0.9
         }
     }
-    
+
     /**
      * Enhanced quality score calculation based on GSR raw value.
      */
@@ -65,7 +66,7 @@ object GSRCalculationUtils {
             gsrRaw > GSRConstants.GSR_RAW_UPPER_BOUND -> 0.4
             else -> 0.8
         }
-        
+
         return max(0.0, baseQuality).coerceAtMost(1.0)
     }
 }

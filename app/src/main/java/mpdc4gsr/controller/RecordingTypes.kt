@@ -145,7 +145,7 @@ data class SessionInfoData(
 )
 
 data class ValidationResult(
-    val isValid: Boolean, 
+    val isValid: Boolean,
     val failureReason: String = ""
 )
 

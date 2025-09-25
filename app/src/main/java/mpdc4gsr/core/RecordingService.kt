@@ -1045,7 +1045,7 @@ class RecordingService : LifecycleService() {
             .onEach { statusList ->
                 val activeSensors = statusList.count { it.isActive }
                 val totalSamples = statusList.sumOf { it.samplesRecorded }
-                val totalStorage = statusList.sumOf { 
+                val totalStorage = statusList.sumOf {
                     // Calculate storage based on samples (rough estimate)
                     (it.samplesRecorded * 0.001) // ~1KB per sample estimate
                 }

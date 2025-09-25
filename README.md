@@ -1,16 +1,19 @@
 # IRCamera Multi-Modal Thermal Sensing Platform
 
-A Hub-and-Spoke architecture platform for multi-modal physiological sensing with thermal imaging, GSR, and RGB data collection.
+A Hub-and-Spoke architecture platform for multi-modal physiological sensing with thermal imaging, GSR, and RGB data
+collection.
 
 ## 🏆 Production Ready Status
 
 **BUILD STATUS**: ✅ All critical build and compilation issues **RESOLVED**
 
-The IRCamera platform has achieved production-ready status with complete build system stability, comprehensive sensor integration, and robust networking capabilities.
+The IRCamera platform has achieved production-ready status with complete build system stability, comprehensive sensor
+integration, and robust networking capabilities.
 
 ## 🎯 Platform Overview
 
 ### Hub-and-Spoke Architecture
+
 - **Hub (PC Controller)**: Central coordinator for multi-device scientific data collection
 - **Spokes (Android Nodes)**: Mobile sensor nodes with thermal, GSR, and RGB capabilities
 - **Communication**: JSON-based TCP protocol with mDNS device discovery
@@ -19,18 +22,21 @@ The IRCamera platform has achieved production-ready status with complete build s
 ### Key Features
 
 #### Multi-Modal Sensing
+
 - **Thermal Imaging**: Topdon TC001 thermal camera with 25Hz frame rate
 - **GSR Monitoring**: Shimmer3 GSR+ BLE sensors with real-time streaming
 - **RGB Camera**: 4K video recording with simultaneous JPEG frame extraction
 - **Time Synchronization**: Nanosecond precision across all sensors
 
 #### Professional Data Collection
+
 - **Session Management**: Complete lifecycle control with unique session IDs
 - **Real-Time Monitoring**: Live sensor status and data visualization
 - **Data Export**: CSV, JSON, and multimedia formats with metadata
 - **Quality Assurance**: Comprehensive validation and error recovery
 
 #### Enterprise-Grade Reliability
+
 - **Fault Tolerance**: Individual sensor failure isolation
 - **Auto-Recovery**: Intelligent reconnection with exponential backoff
 - **Partial Recording**: Continue operation with available sensors
@@ -39,11 +45,13 @@ The IRCamera platform has achieved production-ready status with complete build s
 ## 🚀 Quick Start
 
 ### Prerequisites
+
 - **Android**: Samsung Galaxy S22 (or compatible) with Android 8+ (API 26+)
 - **PC**: Windows/Linux/macOS with Python 3.7+
 - **Hardware**: Topdon TC001 thermal camera, Shimmer3 GSR sensors
 
 ### Android App Setup
+
 ```bash
 # Clone repository
 git clone https://github.com/uclgsr/IRCamera.git
@@ -57,6 +65,7 @@ adb install app/build/outputs/apk/debug/app-debug.apk
 ```
 
 ### PC Controller Setup
+
 ```bash
 # Navigate to PC controller
 cd pc-controller
@@ -74,16 +83,19 @@ python mvp_simple.py
 ## 📚 Documentation
 
 ### Getting Started
+
 - **[User Guide](docs/USER_GUIDE.md)**: Complete usage instructions
 - **[Developer Guide](docs/DEVELOPER_GUIDE.md)**: Development environment setup
 - **[Architecture Guide](docs/ARCHITECTURE.md)**: System design and components
 
 ### Technical Documentation
+
 - **[API Reference](docs/API_REFERENCE.md)**: Complete API documentation
 - **[Networking & Integration](docs/NETWORKING_AND_INTEGRATION.md)**: Protocol and networking details
 - **[Sensor Integration](docs/SENSOR_INTEGRATION.md)**: Sensor implementation guide
 
 ### Hardware & Integration
+
 - **[TC001 Testing Guide](docs/TC001_TESTING_GUIDE.md)**: Thermal camera integration
 - **[Integration Guide Stage 3](docs/INTEGRATION_GUIDE_STAGE3.md)**: Advanced integration
 - **[PC Controller README](pc-controller/README.md)**: PC controller details
@@ -91,6 +103,7 @@ python mvp_simple.py
 ## 🏗️ System Architecture
 
 ### Repository Structure
+
 ```
 IRCamera/
 ├── app/                          # Main Android application
@@ -106,6 +119,7 @@ IRCamera/
 ```
 
 ### Core Components
+
 - **libunified**: Consolidated library with IR processing, UI components, and application framework
 - **Component Architecture**: Modular feature-based organization
 - **BLE Integration**: Unified Bluetooth communication layer
@@ -114,6 +128,7 @@ IRCamera/
 ## 🔧 Development
 
 ### Build System
+
 ```bash
 # Clean build
 ./gradlew clean
@@ -129,6 +144,7 @@ IRCamera/
 ```
 
 ### Testing
+
 - **Unit Tests**: Comprehensive component testing
 - **Integration Tests**: Multi-sensor coordination testing
 - **Manual Testing**: Interactive validation activities
@@ -137,12 +153,14 @@ IRCamera/
 ## 📈 Recent Achievements
 
 ### Build System Stability
+
 - ✅ Android resource linking errors resolved (Commit 572ab30)
 - ✅ Kotlin deprecation warnings eliminated (Commit 96ece6b)
 - ✅ BLE device manager compilation fixed (Commit 82b6f42)
 - ✅ Library unification completed with 67% module reduction
 
 ### Feature Completeness
+
 - ✅ Topdon TC001 thermal camera integration (25Hz frame rate)
 - ✅ Shimmer3 GSR+ BLE support with multi-device capability
 - ✅ 4K RGB video recording with frame extraction
@@ -150,6 +168,7 @@ IRCamera/
 - ✅ Complete session lifecycle management
 
 ### Quality & Performance
+
 - ✅ Fault-tolerant recording with individual sensor isolation
 - ✅ Real-time data streaming and visualization
 - ✅ Comprehensive error recovery and reconnection
@@ -158,11 +177,13 @@ IRCamera/
 ## 🤝 Contributing
 
 We welcome contributions! Please see:
+
 - **[Developer Guide](docs/DEVELOPER_GUIDE.md)** for development setup
 - **[BACKLOG.md](BACKLOG.md)** for current priorities
 - **[CHANGELOG.md](CHANGELOG.md)** for recent changes
 
 ### Development Workflow
+
 1. Fork the repository
 2. Create a feature branch
 3. Follow existing code style
@@ -179,6 +200,7 @@ We welcome contributions! Please see:
 ## 📞 Support
 
 For issues, questions, or contributions:
+
 - **GitHub Issues**: Report bugs and feature requests
 - **Documentation**: Comprehensive guides in `docs/` directory
 - **Contact**: Master's thesis project - UCL GSR research

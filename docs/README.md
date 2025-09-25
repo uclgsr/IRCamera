@@ -35,26 +35,26 @@ consolidated and organized for easy navigation and maintenance.
 
 ### Technical Documentation
 
-| Document                                         | Purpose                                       | Audience        |
-|--------------------------------------------------|-----------------------------------------------|-----------------|
-| **[API Reference](API_REFERENCE.md)**            | Complete module and API documentation         | Developers      |
-| **[Architecture Guide](ARCHITECTURE.md)**        | System architecture and design decisions      | Technical Users |
-| **[Networking & Integration](NETWORKING_AND_INTEGRATION.md)** | Consolidated networking implementation | Developers |
-| **[Sensor Integration](SENSOR_INTEGRATION.md)**  | Consolidated sensor implementation guide      | Developers      |
+| Document                                                      | Purpose                                  | Audience        |
+|---------------------------------------------------------------|------------------------------------------|-----------------|
+| **[API Reference](API_REFERENCE.md)**                         | Complete module and API documentation    | Developers      |
+| **[Architecture Guide](ARCHITECTURE.md)**                     | System architecture and design decisions | Technical Users |
+| **[Networking & Integration](NETWORKING_AND_INTEGRATION.md)** | Consolidated networking implementation   | Developers      |
+| **[Sensor Integration](SENSOR_INTEGRATION.md)**               | Consolidated sensor implementation guide | Developers      |
 
 ### Hardware Integration
 
-| Document                                                    | Purpose                            | Audience           |
-|-------------------------------------------------------------|------------------------------------|--------------------|
-| **[TC001 Testing Guide](TC001_TESTING_GUIDE.md)**          | Topdon TC001 thermal camera guide | Hardware Developers |
-| **[Samsung Stage3 RAW DNG](SAMSUNG_STAGE3_RAW_DNG.md)**    | Advanced RAW capture documentation | Camera Developers  |
-| **[Stage3 Integration Guide](INTEGRATION_GUIDE_STAGE3.md)** | Developer integration guide        | System Integrators |
+| Document                                                    | Purpose                            | Audience            |
+|-------------------------------------------------------------|------------------------------------|---------------------|
+| **[TC001 Testing Guide](TC001_TESTING_GUIDE.md)**           | Topdon TC001 thermal camera guide  | Hardware Developers |
+| **[Samsung Stage3 RAW DNG](SAMSUNG_STAGE3_RAW_DNG.md)**     | Advanced RAW capture documentation | Camera Developers   |
+| **[Stage3 Integration Guide](INTEGRATION_GUIDE_STAGE3.md)** | Developer integration guide        | System Integrators  |
 
 ### Module Documentation
 
-| Document                          | Purpose                              | Audience    |
-|-----------------------------------|--------------------------------------|-------------|
-| **[Module Documentation](modules/README.md)** | Consolidated module documentation | Developers  |
+| Document                                      | Purpose                           | Audience   |
+|-----------------------------------------------|-----------------------------------|------------|
+| **[Module Documentation](modules/README.md)** | Consolidated module documentation | Developers |
 
 ## Quick Start
 

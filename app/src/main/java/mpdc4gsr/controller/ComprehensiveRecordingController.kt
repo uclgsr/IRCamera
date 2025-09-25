@@ -327,7 +327,12 @@ class ComprehensiveRecordingController(
                 return ValidationResult(
                     false,
                     "Insufficient storage: ${String.format("%.1f", availableSpaceGB)}GB available, " +
-                            "${String.format("%.1f", estimatedSpaceGB + RecordingConstants.MIN_STORAGE_SPACE_GB)}GB required"
+                            "${
+                                String.format(
+                                    "%.1f",
+                                    estimatedSpaceGB + RecordingConstants.MIN_STORAGE_SPACE_GB
+                                )
+                            }GB required"
                 )
             }
 
@@ -614,7 +619,8 @@ class ComprehensiveRecordingController(
             storageUsedMB = 0.0, // Would need to calculate from file sizes
             errors = sensorHealthStatus.count { !it.value.isHealthy },
             warnings = 0, // Would need to track warnings
-            qualityScore = if (sensorHealthStatus.isEmpty()) 1.0 else sensorHealthStatus.values.count { it.isHealthy }.toDouble() / sensorHealthStatus.size
+            qualityScore = if (sensorHealthStatus.isEmpty()) 1.0 else sensorHealthStatus.values.count { it.isHealthy }
+                .toDouble() / sensorHealthStatus.size
         )
 
         _recordingStatsFlow.value = stats

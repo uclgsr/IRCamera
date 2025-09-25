@@ -7,7 +7,7 @@ package mpdc4gsr.controller
 
 // Re-export centralized types for backward compatibility
 typealias SessionManifestCompat = SessionManifest
-typealias SessionEventCompat = SessionEvent 
+typealias SessionEventCompat = SessionEvent
 typealias SensorActivityInfoCompat = SensorActivityInfo
 typealias SensorHealthInfoCompat = SensorHealthInfo
 typealias DropoutEventCompat = DropoutEvent
