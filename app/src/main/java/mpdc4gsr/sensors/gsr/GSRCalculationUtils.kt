@@ -5,29 +5,20 @@ import kotlin.math.max
 object GSRCalculationUtils {
     
     /**
-     * Calculate GSR in microsiemens from raw ADC value using standard Shimmer formula
+     * Calculate GSR in microsiemens from raw ADC value.
+     *
+     * This method uses the standard Shimmer formula for converting a raw ADC value to GSR (microsiemens).
+     * It includes input validation and bounds checking.
+     *
+     * @param rawValue Raw ADC value from the GSR sensor.
+     * @return GSR value in microsiemens, or 0.0 if input is out of bounds or calculation fails.
      */
-    fun calculateGSRFromRaw(rawValue: Int): Double {
-        return if (rawValue > 0) {
-            val voltage = (rawValue / GSRConstants.ADC_MAX_VALUE) * GSRConstants.REFERENCE_VOLTAGE
-            val resistance = (GSRConstants.REFERENCE_VOLTAGE * GSRConstants.REFERENCE_RESISTANCE_OHMS) / 
-                (voltage * GSRConstants.VOLTAGE_DIVIDER) - GSRConstants.REFERENCE_RESISTANCE_OHMS
-            if (resistance > 0) GSRConstants.MICROSIEMENS_CONVERSION / resistance else 0.0
-        } else {
-            0.0
-        }
-    }
-    
-    /**
-     * Alternative GSR calculation method (used in Shimmer3GSRRecorder)
-     */
-    fun calculateGSRMicrosiemens(gsrRaw: Int): Double {
-        if (gsrRaw < GSRConstants.GSR_UNCAL_LIMIT_LOW || gsrRaw > GSRConstants.GSR_UNCAL_LIMIT_HIGH) {
+    fun calculateGSRMicrosiemens(rawValue: Int): Double {
+        if (rawValue < GSRConstants.GSR_UNCAL_LIMIT_LOW || rawValue > GSRConstants.GSR_UNCAL_LIMIT_HIGH) {
             return 0.0
         }
-        
         return try {
-            val voltage = (gsrRaw / GSRConstants.ADC_MAX_VALUE) * GSRConstants.REFERENCE_VOLTAGE
+            val voltage = (rawValue / GSRConstants.ADC_MAX_VALUE) * GSRConstants.REFERENCE_VOLTAGE
             val gsrResistance = GSRConstants.REFERENCE_RESISTANCE_OHMS * ((GSRConstants.REFERENCE_VOLTAGE / voltage) - 1.0)
             val conductance = if (gsrResistance > 0) {
                 (1.0 / gsrResistance) * GSRConstants.MICROSIEMENS_CONVERSION
