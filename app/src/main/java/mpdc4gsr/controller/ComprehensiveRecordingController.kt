@@ -66,7 +66,7 @@ class ComprehensiveRecordingController(
 
     private val sensorRecorders = ConcurrentHashMap<String, SensorRecorder>()
     private val activeRecorders = ConcurrentHashMap<String, Boolean>()
-    private val sensorHealthStatus = ConcurrentHashMap<String, SensorHealthInfo>()
+    private val sensorHealthStatus = ConcurrentHashMap<String, ComprehensiveSensorHealthInfo>()
     private val reconnectionAttempts = ConcurrentHashMap<String, Int>()
 
     // Session orchestration state
@@ -101,11 +101,12 @@ class ComprehensiveRecordingController(
 
     fun addSensorRecorder(name: String, recorder: SensorRecorder) {
         sensorRecorders[name] = recorder
-        sensorHealthStatus[name] = SensorHealthInfo(
+        sensorHealthStatus[name] = ComprehensiveSensorHealthInfo(
             name = name,
             isHealthy = true,
             lastHealthCheck = System.currentTimeMillis(),
-            consecutiveFailures = 0
+            consecutiveFailures = 0,
+            lastError = null
         )
         Log.d(TAG, "Added sensor recorder with health monitoring: $name")
         updateSensorStatusFlow()
@@ -895,13 +896,35 @@ class ComprehensiveRecordingController(
             eventType = eventType,
             timestampMs = System.currentTimeMillis(),
             sensorId = sensorId,
-            triggerSource = triggerSource,
+            triggerSource = triggerSource?.let { convertTriggerSource(it) },
             metadata = metadata,
             success = success,
             errorMessage = errorMessage
         )
         sessionEvents.add(event)
         Log.d(TAG, "Session event: $eventType${sensorId?.let { " ($it)" } ?: ""}")
+    }
+
+    private fun convertTriggerSource(source: TriggerSource): RecordingController.TriggerSource {
+        return when (source) {
+            TriggerSource.LOCAL_UI -> RecordingController.TriggerSource.LOCAL_UI
+            TriggerSource.LOCAL_NOTIFICATION -> RecordingController.TriggerSource.LOCAL_NOTIFICATION
+            TriggerSource.REMOTE_PC -> RecordingController.TriggerSource.REMOTE_PC
+            TriggerSource.AUTOMATIC -> RecordingController.TriggerSource.AUTOMATIC
+            TriggerSource.CRASH_RECOVERY -> RecordingController.TriggerSource.CRASH_RECOVERY
+        }
+    }
+
+    private fun convertSessionState(state: SessionState): RecordingController.SessionState {
+        return when (state) {
+            SessionState.IDLE -> RecordingController.SessionState.IDLE
+            SessionState.STARTING -> RecordingController.SessionState.STARTING
+            SessionState.RECORDING -> RecordingController.SessionState.RECORDING
+            SessionState.STOPPING -> RecordingController.SessionState.STOPPING
+            SessionState.STOPPED_COMPLETED -> RecordingController.SessionState.STOPPED_COMPLETED
+            SessionState.STOPPED_FAILED -> RecordingController.SessionState.STOPPED_FAILED
+            SessionState.STOPPED_INCOMPLETE -> RecordingController.SessionState.STOPPED_INCOMPLETE
+        }
     }
 
     // Session manifest generation
@@ -928,7 +951,7 @@ class ComprehensiveRecordingController(
                 wasActive = wasActive,
                 startedSuccessfully = wasActive,
                 finalStatus = if (wasActive) "COMPLETED" else "INACTIVE",
-                errorMessages = healthInfo?.lastError?.let { listOf(it) } ?: emptyList()
+                errorMessages = if (healthInfo?.lastError != null) listOf(healthInfo.lastError) else emptyList()
             )
         }
 
@@ -945,90 +968,16 @@ class ComprehensiveRecordingController(
             startTime = startTime,
             stopTime = stopTime,
             duration = duration,
-            triggerSource = lastTriggerSource ?: TriggerSource.LOCAL_UI,
+            triggerSource = convertTriggerSource(lastTriggerSource ?: TriggerSource.LOCAL_UI),
             sensorActivitySummary = sensorActivitySummary,
             events = sessionEvents.toList(),
             errors = errors,
             warnings = warnings,
             fileReferences = emptyMap(), // Will be populated by individual recorders
-            sessionState = currentSessionState.get()
+            sessionState = convertSessionState(currentSessionState.get())
         )
     }
 }
-
-// Session orchestration data classes
-data class SessionEvent(
-    val eventType: String,
-    val timestampMs: Long,
-    val sensorId: String? = null,
-    val triggerSource: ComprehensiveRecordingController.TriggerSource? = null,
-    val metadata: Map<String, String> = emptyMap(),
-    val success: Boolean = true,
-    val errorMessage: String? = null
-)
-
-data class SessionManifest(
-    val sessionId: String,
-    val sessionName: String? = null,
-    val startTime: Long,
-    val stopTime: Long? = null,
-    val duration: Long? = null,
-    val triggerSource: ComprehensiveRecordingController.TriggerSource,
-    val sensorActivitySummary: Map<String, SensorActivityInfo>,
-    val events: List<SessionEvent>,
-    val errors: List<String>,
-    val warnings: List<String>,
-    val fileReferences: Map<String, String>,
-    val sessionState: ComprehensiveRecordingController.SessionState
-)
-
-data class SensorActivityInfo(
-    val sensorName: String,
-    val wasActive: Boolean,
-    val startedSuccessfully: Boolean,
-    val framesOrSamplesCaptured: Long? = null,
-    val dataSize: Long? = null,
-    val dropouts: List<DropoutEvent> = emptyList(),
-    val reconnections: List<ReconnectionEvent> = emptyList(),
-    val finalStatus: String,
-    val errorMessages: List<String> = emptyList()
-)
-
-data class DropoutEvent(
-    val timestampMs: Long,
-    val reason: String,
-    val durationMs: Long? = null
-)
-
-data class ReconnectionEvent(
-    val timestampMs: Long,
-    val attemptNumber: Int,
-    val successful: Boolean,
-    val delayMs: Long
-)
-
-
-data class ValidationResult(val isValid: Boolean, val failureReason: String)
-
-data class SessionInfoData(
-    val sessionId: String,
-    val startTime: Long,
-    val endTime: Long,
-    val durationMs: Long,
-    val durationSeconds: Double,
-    val recordingStatus: String,
-    val activeSensors: List<String>,
-    val sensorStopResults: Map<String, Boolean>,
-    val errors: List<String>?,
-    val finalizedAt: Long
-)
-
-data class SensorHealthInfo(
-    val name: String,
-    val isHealthy: Boolean,
-    val lastHealthCheck: Long,
-    val consecutiveFailures: Int
-)
 
 data class SensorStatus(
     val name: String,
@@ -1074,4 +1023,13 @@ data class SensorStatusInfo(
 data class RecordingError(
     val message: String,
     val isRecoverable: Boolean = true
+)
+
+// ComprehensiveRecordingController-specific SensorHealthInfo
+data class ComprehensiveSensorHealthInfo(
+    val name: String,
+    val isHealthy: Boolean,
+    val lastHealthCheck: Long,
+    val consecutiveFailures: Int,
+    val lastError: String? = null
 )
