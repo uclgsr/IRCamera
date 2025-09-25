@@ -1135,13 +1135,32 @@ class ThermalCameraRecorder(
                     Log.d(TAG, "Processing real thermal data from IRUVCTC bitmap")
                     return@withContext extractThermalDataFromBitmap(bitmap, timestamp, frameNumber)
                 } else {
-                    Log.w(TAG, "IRUVCTC bitmap not available, using fallback thermal data")
-                    // Generate fallback data that represents real thermal characteristics
-                    return@withContext generateAdvancedSimulatedThermalData(timestamp, frameNumber)
+                    Log.e(TAG, "IRUVCTC bitmap not available, cannot extract real thermal data")
+                    // Return error data to indicate failure to extract real data
+                    return@withContext ThermalFrameData(
+                        temperatureMatrix = Array(IR_CAMERA_HEIGHT) { FloatArray(IR_CAMERA_WIDTH) { Float.NaN } },
+                        minTemperature = Float.NaN,
+                        maxTemperature = Float.NaN,
+                        avgTemperature = Float.NaN,
+                        centerTemperature = Float.NaN,
+                        ambientTemperature = Float.NaN,
+                        emissivity = 0.95f,
+                        reflectedTemperature = Float.NaN
+                    )
                 }
             } else {
                 Log.d(TAG, "IRUVCTC not connected, using simulation mode")
-                return@withContext generateAdvancedSimulatedThermalData(timestamp, frameNumber)
+                Log.e(TAG, "IRUVCTC not connected, cannot extract real thermal data")
+                return@withContext ThermalFrameData(
+                    temperatureMatrix = Array(IR_CAMERA_HEIGHT) { FloatArray(IR_CAMERA_WIDTH) { Float.NaN } },
+                    minTemperature = Float.NaN,
+                    maxTemperature = Float.NaN,
+                    avgTemperature = Float.NaN,
+                    centerTemperature = Float.NaN,
+                    ambientTemperature = Float.NaN,
+                    emissivity = 0.95f,
+                    reflectedTemperature = Float.NaN
+                )
             }
         } catch (e: Exception) {
             Log.e(TAG, "Failed to extract thermal data from IRUVCTC", e)
