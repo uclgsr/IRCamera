@@ -679,8 +679,7 @@ class IRMonitorLiteFragment : BaseFragment(), ITsTempListener {
             val config = BaseApplication.instance.config
             if (config != null && BaseApplication.instance.tau_data_H != null && BaseApplication.instance.tau_data_L != null) {
                 val samples = 10
-                var totalTemp = 0f
-                var validSamples = 0
+                val temperatures = mutableListOf<Float>()
                 
                 for (i in 0 until samples) {
                     val t = i.toFloat() / (samples - 1)
@@ -707,16 +706,14 @@ class IRMonitorLiteFragment : BaseFragment(), ITsTempListener {
                             if (basicGainGetValue[0] == 0) GainStatus.LOW_GAIN else GainStatus.HIGH_GAIN
                         )
                         
-                        totalTemp += correctedTemp
-                        validSamples++
+                        temperatures.add(correctedTemp)
                     } catch (e: Exception) {
                         Log.w(TAG, "Failed to measure temperature at line point ($x, $y)", e)
                     }
                 }
                 
-                if (validSamples > 0) {
-                    val avgTemp = totalTemp / validSamples
-                    createRealTemperatureSampleResult(avgTemp, "Line", line.start.x, line.start.y)
+                if (temperatures.isNotEmpty()) {
+                    createTemperatureSampleResultWithRange(temperatures, "Line (LibIRTempAC020)")
                 } else {
                     // Fallback to estimation
                     val avgTemp = estimateAverageTemperatureAlongLine(line)
@@ -744,8 +741,7 @@ class IRMonitorLiteFragment : BaseFragment(), ITsTempListener {
             val config = BaseApplication.instance.config
             if (config != null && BaseApplication.instance.tau_data_H != null && BaseApplication.instance.tau_data_L != null) {
                 val gridSize = 5 // 5x5 sampling grid
-                var totalTemp = 0f
-                var validSamples = 0
+                val temperatures = mutableListOf<Float>()
                 
                 for (i in 0 until gridSize) {
                     for (j in 0 until gridSize) {
@@ -772,17 +768,15 @@ class IRMonitorLiteFragment : BaseFragment(), ITsTempListener {
                                 if (basicGainGetValue[0] == 0) GainStatus.LOW_GAIN else GainStatus.HIGH_GAIN
                             )
                             
-                            totalTemp += correctedTemp
-                            validSamples++
+                            temperatures.add(correctedTemp)
                         } catch (e: Exception) {
                             Log.w(TAG, "Failed to measure temperature at rect point ($x, $y)", e)
                         }
                     }
                 }
                 
-                if (validSamples > 0) {
-                    val avgTemp = totalTemp / validSamples
-                    createRealTemperatureSampleResult(avgTemp, "Rectangle", rect.left, rect.top)
+                if (temperatures.isNotEmpty()) {
+                    createTemperatureSampleResultWithRange(temperatures, "Rectangle (LibIRTempAC020)")
                 } else {
                     // Fallback to estimation
                     val avgTemp = estimateAverageTemperatureInRect(rect)
@@ -843,6 +837,24 @@ class IRMonitorLiteFragment : BaseFragment(), ITsTempListener {
         return totalTemp / samples
     }
     
+    private fun createTemperatureSampleResultWithRange(temperatures: List<Float>, type: String): com.energy.iruvc.sdkisp.LibIRTemp.TemperatureSampleResult {
+        // Create a temperature sample result with min/max range for multi-point measurements
+        val avgTemp = if (temperatures.isNotEmpty()) temperatures.average().toFloat() else 0f
+        val minTemp = temperatures.minOrNull() ?: avgTemp
+        val maxTemp = temperatures.maxOrNull() ?: avgTemp
+        
+        return object : com.energy.iruvc.sdkisp.LibIRTemp.TemperatureSampleResult {
+            override fun getTemperature(): Float = avgTemp
+            override fun getType(): String = type
+            override fun getTimestamp(): Long = System.currentTimeMillis()
+            override fun isValid(): Boolean = temperatures.isNotEmpty()
+            
+            // Required properties for LibIRTemp.TemperatureSampleResult interface
+            val maxTemperature: Float = maxTemp
+            val minTemperature: Float = minTemp
+        }
+    }
+
     private fun createTemperatureSampleResult(temperature: Float, type: String): com.energy.iruvc.sdkisp.LibIRTemp.TemperatureSampleResult {
         // Create a temperature sample result object for fallback cases
         return object : com.energy.iruvc.sdkisp.LibIRTemp.TemperatureSampleResult {
@@ -850,6 +862,10 @@ class IRMonitorLiteFragment : BaseFragment(), ITsTempListener {
             override fun getType(): String = type
             override fun getTimestamp(): Long = System.currentTimeMillis()
             override fun isValid(): Boolean = true
+            
+            // Required properties for LibIRTemp.TemperatureSampleResult interface
+            val maxTemperature: Float = temperature
+            val minTemperature: Float = temperature
         }
     }
     
@@ -860,6 +876,10 @@ class IRMonitorLiteFragment : BaseFragment(), ITsTempListener {
             override fun getType(): String = "$type (LibIRTempAC020)"
             override fun getTimestamp(): Long = System.currentTimeMillis()
             override fun isValid(): Boolean = true
+            
+            // Required properties for LibIRTemp.TemperatureSampleResult interface
+            val maxTemperature: Float = temperature
+            val minTemperature: Float = temperature
             
             // Additional properties for enhanced result
             fun getX(): Int = x
