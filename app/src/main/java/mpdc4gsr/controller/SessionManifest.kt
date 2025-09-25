@@ -38,7 +38,9 @@ data class SensorActivityInfo(
     val wasActive: Boolean,
     val startedSuccessfully: Boolean = true,
     val finalStatus: String = if (wasActive) "ACTIVE" else "INACTIVE",
-    val errorMessages: List<String> = emptyList()
+    val errorMessages: List<String> = emptyList(),
+    val dropouts: List<DropoutEvent> = emptyList(),
+    val reconnections: List<ReconnectionEvent> = emptyList()
 )
 
 /**

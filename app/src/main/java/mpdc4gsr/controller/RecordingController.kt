@@ -2015,18 +2015,58 @@ class RecordingController(
             it.eventType.contains("WARNING") || it.eventType.contains("CRITICAL")
         }.map { "${it.eventType}: ${it.metadata}" }
 
+        val convertedSensorActivitySummary = sensorActivitySummary.mapValues { (_, info) ->
+            SensorActivityInfo(
+                sensorName = info.sensorName,
+                wasActive = info.wasActive,
+                startedSuccessfully = info.startedSuccessfully,
+                finalStatus = info.finalStatus,
+                errorMessages = info.errorMessages,
+                dropouts = info.dropouts.map { dropout ->
+                    DropoutEvent(
+                        sensorId = info.sensorName,
+                        startTime = dropout.timestampMs,
+                        endTime = dropout.durationMs?.takeIf { it > 0 }?.let { dropout.timestampMs + it },
+                        reason = dropout.reason,
+                        recoverable = true
+                    )
+                },
+                reconnections = info.reconnections.map { reconnection ->
+                    ReconnectionEvent(
+                        sensorId = info.sensorName,
+                        timestamp = reconnection.timestampMs,
+                        successful = reconnection.successful,
+                        attemptCount = reconnection.attemptNumber,
+                        errorMessage = if (!reconnection.successful) "Reconnection failed" else null
+                    )
+                }
+            )
+        }
+
+        val convertedEvents = sessionEvents.map { event ->
+            SessionEvent(
+                eventType = event.eventType,
+                timestampMs = event.timestampMs,
+                sensorId = event.sensorId,
+                triggerSource = event.triggerSource?.name ?: "UNKNOWN",
+                metadata = event.metadata,
+                success = event.success,
+                errorMessage = event.errorMessage
+            )
+        }
+
         return SessionManifest(
             sessionId = sessionDirectory,
             startTime = startTime,
             stopTime = stopTime,
             duration = duration,
-            triggerSource = lastTriggerSource ?: TriggerSource.LOCAL_UI,
-            sensorActivitySummary = sensorActivitySummary,
-            events = sessionEvents.toList(),
+            triggerSource = (lastTriggerSource ?: TriggerSource.LOCAL_UI).name,
+            sensorActivitySummary = convertedSensorActivitySummary,
+            events = convertedEvents,
             errors = errors,
             warnings = warnings,
             fileReferences = emptyMap(), // Will be populated by individual recorders
-            sessionState = currentSessionState.get()
+            sessionState = currentSessionState.get().name
         )
     }
 }
