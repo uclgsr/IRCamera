@@ -3,11 +3,15 @@ package mpdc4gsr.activities
 import android.Manifest
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
+import android.bluetooth.BluetoothManager
 import android.bluetooth.le.ScanCallback
 import android.bluetooth.le.ScanResult
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -171,7 +175,8 @@ class ShimmerMvpActivity : AppCompatActivity() {
             return
         }
 
-        val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+        val bluetoothManager = getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
+        val bluetoothAdapter = bluetoothManager.adapter
         if (bluetoothAdapter == null) {
             showToast("Bluetooth not supported on this device")
             return
@@ -193,7 +198,7 @@ class ShimmerMvpActivity : AppCompatActivity() {
 
 
                 shimmerBluetoothManager =
-                    ShimmerBluetoothManagerAndroid(this@ShimmerMvpActivity, android.os.Handler())
+                    ShimmerBluetoothManagerAndroid(this@ShimmerMvpActivity, Handler(Looper.getMainLooper()))
                 Log.i(TAG, "Shimmer manager initialized - API compatibility mode")
                 updateConnectionStatus("Shimmer manager ready")
                 binding.connectButton.isEnabled = true
@@ -221,7 +226,8 @@ class ShimmerMvpActivity : AppCompatActivity() {
                     return@launch
                 }
 
-                val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+                val bluetoothManager = getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
+                val bluetoothAdapter = bluetoothManager.adapter
                 if (bluetoothAdapter == null) {
                     showBluetoothNotSupportedDialog()
                     binding.connectButton.isEnabled = true
@@ -280,7 +286,8 @@ class ShimmerMvpActivity : AppCompatActivity() {
 
     private suspend fun performBluetoothLeScanning(): List<BluetoothDevice> = withContext(Dispatchers.IO) {
         val discoveredDevices = mutableListOf<BluetoothDevice>()
-        val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+        val bluetoothManager = getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
+        val bluetoothAdapter = bluetoothManager.adapter
         val bluetoothLeScanner = bluetoothAdapter?.bluetoothLeScanner
 
         if (bluetoothLeScanner == null) {

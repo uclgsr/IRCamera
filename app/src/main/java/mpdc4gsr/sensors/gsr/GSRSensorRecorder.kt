@@ -1,5 +1,6 @@
 package mpdc4gsr.sensors.gsr
 
+import android.bluetooth.BluetoothManager
 import android.content.Context
 import android.content.pm.PackageManager
 import android.util.Log
@@ -1274,7 +1275,8 @@ class GSRSensorRecorder(
 
                     // Use Shimmer's paired device detection
                     try {
-                        val bluetoothAdapter = android.bluetooth.BluetoothAdapter.getDefaultAdapter()
+                        val bluetoothManager = context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
+                        val bluetoothAdapter = bluetoothManager.adapter
                         if (bluetoothAdapter?.isEnabled == true) {
                             val pairedDevices = bluetoothAdapter.bondedDevices
                             pairedDevices?.forEach { btDevice ->
@@ -1808,7 +1810,8 @@ class GSRSensorRecorder(
                 val shimmerManager = shimmerBluetoothManager
                 if (shimmerManager != null) {
                     // Use standard Android Bluetooth pairing
-                    val bluetoothAdapter = android.bluetooth.BluetoothAdapter.getDefaultAdapter()
+                    val bluetoothManager = context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
+                    val bluetoothAdapter = bluetoothManager.adapter
                     val bondedDevices = bluetoothAdapter?.bondedDevices
                     val isAlreadyBonded = bondedDevices?.any { it.address == deviceAddress } ?: false
 

@@ -658,7 +658,12 @@ class RecordingService : LifecycleService() {
                     )
 
                     delay(2000)
-                    stopForeground(true)
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                        stopForeground(STOP_FOREGROUND_REMOVE)
+                    } else {
+                        @Suppress("DEPRECATION")
+                        stopForeground(true)
+                    }
                 } else {
                     Log.e(TAG, "Failed to stop recording session cleanly")
                     updateNotification("Recording stop failed")
@@ -870,7 +875,12 @@ class RecordingService : LifecycleService() {
                 )
 
                 delay(2000)
-                stopForeground(true)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    stopForeground(STOP_FOREGROUND_REMOVE)
+                } else {
+                    @Suppress("DEPRECATION")
+                    stopForeground(true)
+                }
             } else {
                 Log.e(TAG, "Failed to stop recording session cleanly (trigger: $triggerSource)")
                 updateNotification("Recording stop failed")
@@ -1198,7 +1208,7 @@ class RecordingService : LifecycleService() {
                         structuredLogger.logConnection(
                             "pc_client_connected",
                             clientId,
-                            mapOf("client_address" to clientSocket.inetAddress.hostAddress)
+                            mapOf("client_address" to (clientSocket.inetAddress.hostAddress ?: "unknown"))
                         )
                         handleNewClientConnection(clientSocket, clientId)
                         withContext(Dispatchers.Main) {
