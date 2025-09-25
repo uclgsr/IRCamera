@@ -186,7 +186,6 @@ class SessionOrchestrationDemo(
         Log.i(TAG, "=== END MANIFEST ===")
         Log.i(TAG, "")
     }
-    }
 
     /**
      * Run all demonstrations
