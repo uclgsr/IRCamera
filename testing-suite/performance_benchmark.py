@@ -52,7 +52,7 @@ class ThesisPerformanceBenchmark:
     def _random_normal(self, mean: float, std: float) -> float:
         """Generate random normal value (works with or without numpy)"""
         if HAS_NUMPY:
-            return np.random().normal(mean, std)
+            return np.random.normal(mean, std)
         else:
             import random
             return random.gauss(mean, std)
