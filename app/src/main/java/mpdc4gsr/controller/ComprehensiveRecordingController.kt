@@ -867,7 +867,7 @@ class ComprehensiveRecordingController(
                 eventType = event.eventType,
                 timestampMs = event.timestampMs,
                 sensorId = event.sensorId,
-                triggerSource = event.triggerSource,
+                triggerSource = convertFromRecordingControllerTriggerSource(event.triggerSource),
                 metadata = event.metadata,
                 success = event.success,
                 errorMessage = event.errorMessage
@@ -894,13 +894,13 @@ class ComprehensiveRecordingController(
             startTime = startTime,
             stopTime = stopTime,
             duration = duration,
-            triggerSource = convertTriggerSource(lastTriggerSource ?: TriggerSource.LOCAL_UI),
+            triggerSource = lastTriggerSource ?: TriggerSource.LOCAL_UI,
             sensorActivitySummary = sensorActivitySummary,
             events = events,
             errors = errors,
             warnings = warnings,
             fileReferences = fileReferences,
-            sessionState = convertSessionState(currentSessionState.get())
+            sessionState = currentSessionState.get()
         )
     }
 
@@ -1062,6 +1062,17 @@ class ComprehensiveRecordingController(
         }
     }
 
+    private fun convertFromRecordingControllerTriggerSource(source: RecordingController.TriggerSource?): TriggerSource? {
+        return when (source) {
+            RecordingController.TriggerSource.LOCAL_UI -> TriggerSource.LOCAL_UI
+            RecordingController.TriggerSource.LOCAL_NOTIFICATION -> TriggerSource.LOCAL_NOTIFICATION
+            RecordingController.TriggerSource.REMOTE_PC -> TriggerSource.REMOTE_PC
+            RecordingController.TriggerSource.AUTOMATIC -> TriggerSource.AUTOMATIC
+            RecordingController.TriggerSource.CRASH_RECOVERY -> TriggerSource.CRASH_RECOVERY
+            null -> null
+        }
+    }
+
     private fun convertSessionState(state: SessionState): RecordingController.SessionState {
         return when (state) {
             SessionState.IDLE -> RecordingController.SessionState.IDLE
@@ -1075,6 +1086,18 @@ class ComprehensiveRecordingController(
             SessionState.STOPPED_INCOMPLETE -> RecordingController.SessionState.STOPPED_INCOMPLETE
             SessionState.FAILED -> RecordingController.SessionState.STOPPED_FAILED
             SessionState.CANCELLED -> RecordingController.SessionState.STOPPED_INCOMPLETE
+        }
+    }
+
+    private fun convertFromRecordingControllerSessionState(state: RecordingController.SessionState): SessionState {
+        return when (state) {
+            RecordingController.SessionState.IDLE -> SessionState.IDLE
+            RecordingController.SessionState.STARTING -> SessionState.STARTING
+            RecordingController.SessionState.RECORDING -> SessionState.RECORDING
+            RecordingController.SessionState.STOPPING -> SessionState.STOPPING
+            RecordingController.SessionState.STOPPED_COMPLETED -> SessionState.STOPPED_COMPLETED
+            RecordingController.SessionState.STOPPED_FAILED -> SessionState.STOPPED_FAILED
+            RecordingController.SessionState.STOPPED_INCOMPLETE -> SessionState.STOPPED_INCOMPLETE
         }
     }
 }

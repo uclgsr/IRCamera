@@ -376,11 +376,11 @@ class HardwareValidationController(
             performanceMetrics = performanceMetrics.toMap(),
             errorLogs = errorLogs.toList(),
             summary = ValidationSummary(
-                totalTests = totalValidations,
-                passedTests = successfulValidations,
-                failedTests = totalValidations - successfulValidations,
-                totalDurationMs = totalDuration,
-                overallSuccess = successfulValidations == totalValidations
+                totalSensors = validationResults.size,
+                operationalSensors = successfulValidations,
+                criticalIssuesCount = totalValidations - successfulValidations,
+                overallHealthScore = if (totalValidations > 0) successfulValidations.toDouble() / totalValidations else 1.0,
+                readyForRecording = successfulValidations == totalValidations
             )
         )
     }
@@ -394,11 +394,11 @@ class HardwareValidationController(
             performanceMetrics = emptyMap(),
             errorLogs = listOf("CRITICAL FAILURE: ${exception.message}"),
             summary = ValidationSummary(
-                totalTests = 0,
-                passedTests = 0,
-                failedTests = 1,
-                totalDurationMs = System.currentTimeMillis() - validationStartTime,
-                overallSuccess = false
+                totalSensors = 0,
+                operationalSensors = 0,
+                criticalIssuesCount = 1,
+                overallHealthScore = 0.0,
+                readyForRecording = false
             )
         )
     }
