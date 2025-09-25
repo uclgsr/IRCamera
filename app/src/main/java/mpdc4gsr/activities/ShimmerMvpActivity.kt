@@ -25,7 +25,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import mpdc4gsr.ShimmerNetworkClient
 import mpdc4gsr.sensors.TimestampManager
-import mpdc4gsr.sensors.unified.model.GSRSample
+import com.mpdc4gsr.gsr.model.LegacyGSRSample as GSRSample
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale

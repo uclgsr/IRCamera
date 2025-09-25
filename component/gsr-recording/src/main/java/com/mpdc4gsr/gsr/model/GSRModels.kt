@@ -73,3 +73,23 @@ data class SyncMark(
         )
     }
 }
+
+// Legacy GSRSample class for backward compatibility with app module
+// This matches the original GSRSample that was in mpdc4gsr.sensors.unified.model
+data class LegacyGSRSample(
+    val timestamp: Long,
+    val timestampIso: String,
+    val gsrMicrosiemens: Double,
+    val gsrRaw: Int,
+    val ppgRaw: Int = 0,
+    val qualityScore: Double,
+    val connectionRssi: Int
+) {
+    val isValid: Boolean
+        get() = gsrRaw in 0..4095 &&
+                gsrMicrosiemens > 0.0 &&
+                qualityScore >= 0.5
+
+    val resistanceOhms: Double
+        get() = if (gsrMicrosiemens > 0) 1_000_000.0 / gsrMicrosiemens else Double.MAX_VALUE
+}
