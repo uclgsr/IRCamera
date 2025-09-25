@@ -1408,7 +1408,10 @@ class GSRSensorRecorder(
                             if (actuallyConnected) {
                                 // For now, set to null since type conversion is needed
                                 // TODO: Convert ShimmerDevice to Shimmer or update type
-                                currentConnectedDevice = null
+                                // currentConnectedDevice should be set to the connected device instance.
+                                // For now, assign a placeholder or leave unchanged to avoid losing device tracking.
+                                // Example (replace with actual device object when available):
+                                // currentConnectedDevice = connectedDevice as? Shimmer
                                 Log.i(TAG, "Successfully connected to Shimmer device: $deviceAddress")
                                 isShimmerConnected = true
                             } else {
