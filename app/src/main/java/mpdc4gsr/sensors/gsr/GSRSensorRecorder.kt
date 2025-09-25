@@ -1267,8 +1267,9 @@ class GSRSensorRecorder(
                         Log.i(TAG, "Checking for connected Shimmer devices")
                         // Check if we have a current device that's connected
                         currentConnectedDevice?.let { device ->
-                            if (device.bluetoothRadioState == BT_STATE.CONNECTED || 
-                                device.bluetoothRadioState == BT_STATE.STREAMING) {
+                            if (device.bluetoothRadioState == BT_STATE.CONNECTED ||
+                                device.bluetoothRadioState == BT_STATE.STREAMING
+                            ) {
                                 listOf(device)
                             } else {
                                 emptyList()
@@ -1279,8 +1280,9 @@ class GSRSensorRecorder(
                         // Fall back to checking current device if available
                         currentConnectedDevice?.let { device ->
                             try {
-                                if (device.bluetoothRadioState == BT_STATE.CONNECTED || 
-                                    device.bluetoothRadioState == BT_STATE.STREAMING) {
+                                if (device.bluetoothRadioState == BT_STATE.CONNECTED ||
+                                    device.bluetoothRadioState == BT_STATE.STREAMING
+                                ) {
                                     listOf(device)
                                 } else {
                                     emptyList()
@@ -1371,9 +1373,9 @@ class GSRSensorRecorder(
                     val alreadyConnected = try {
                         Log.i(TAG, "Checking if device is already connected")
                         currentConnectedDevice?.let { device ->
-                            device.getMacId() == deviceAddress && 
-                            (device.bluetoothRadioState == BT_STATE.CONNECTED || 
-                             device.bluetoothRadioState == BT_STATE.STREAMING)
+                            device.getMacId() == deviceAddress &&
+                                    (device.bluetoothRadioState == BT_STATE.CONNECTED ||
+                                            device.bluetoothRadioState == BT_STATE.STREAMING)
                         } ?: false
                     } catch (e: Exception) {
                         Log.w(TAG, "Error checking current connection: ${e.message}")

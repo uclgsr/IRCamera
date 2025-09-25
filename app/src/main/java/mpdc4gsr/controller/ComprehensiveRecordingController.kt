@@ -79,6 +79,7 @@ class ComprehensiveRecordingController(
     // Session orchestration state
     private val currentSessionState = AtomicReference(SessionState.IDLE)
     private var lastTriggerSource: TriggerSource? = null
+
     // Use a thread-safe list for session events
     private val sessionEvents = CopyOnWriteArrayList<RecordingController.SessionEvent>()
 
@@ -802,7 +803,8 @@ class ComprehensiveRecordingController(
                 SessionState.STOPPED_COMPLETED,
                 SessionState.STOPPED_FAILED,
                 SessionState.STOPPED_INCOMPLETE
-            )) System.currentTimeMillis() else null
+            )
+        ) System.currentTimeMillis() else null
         val duration = stopTime?.let { it - startTime }
 
         val sensorActivitySummary = sensorRecorders.keys.associateWith { sensorName ->

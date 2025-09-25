@@ -2,13 +2,16 @@
 
 ## Overview
 
-The Enhanced PC Controller is a comprehensive desktop application that orchestrates multi-modal recording sessions with Android devices. It provides real-time data visualization, session management, and high-performance data processing capabilities.
+The Enhanced PC Controller is a comprehensive desktop application that orchestrates multi-modal recording sessions with
+Android devices. It provides real-time data visualization, session management, and high-performance data processing
+capabilities.
 
 ## Key Features
 
 ### ✅ Implemented Features
 
 #### Networking and Device Interface
+
 - **Complete TCP Server/Protocol**: Full JSON-based communication protocol with Android devices
 - **Device Registration**: Automatic device discovery and registration system
 - **Session Coordination**: Remote session start/stop control
@@ -17,6 +20,7 @@ The Enhanced PC Controller is a comprehensive desktop application that orchestra
 - **Multi-device Support**: Simultaneous connections from multiple Android devices
 
 #### High-Performance Data Handling
+
 - **C++ Backend Integration**: PyBind11-based native processing modules
 - **GSR Data Processing**: Native C++ GSR packet parsing and analysis
 - **Thread-safe Operations**: Lock-free queues and concurrent data structures
@@ -24,6 +28,7 @@ The Enhanced PC Controller is a comprehensive desktop application that orchestra
 - **Data Export**: CSV, JSON, and HDF5 export capabilities
 
 #### GUI and Visualization
+
 - **Professional Interface**: Tkinter-based GUI with tabbed interface
 - **Real-time GSR Plotting**: Matplotlib-powered live signal visualization
 - **Device Management Panel**: Live device status and sensor monitoring
@@ -32,6 +37,7 @@ The Enhanced PC Controller is a comprehensive desktop application that orchestra
 - **Session Logging**: Comprehensive activity logging with timestamps
 
 #### Testing & Robustness
+
 - **Comprehensive Error Handling**: Network failure recovery and malformed data protection
 - **Configuration Management**: YAML-based configuration system
 - **Cross-platform Support**: Linux, Windows, and macOS compatibility
@@ -97,6 +103,7 @@ python3 enhanced_gui_controller.py
 ```
 
 #### 3. Connect Android Devices
+
 - Ensure Android devices are on the same network
 - Configure the PC's IP address in the Android app
 - Devices will automatically register when connected
@@ -169,6 +176,7 @@ controller.on_data_received = lambda device_info, message: handle_data(message)
 ### Network Protocol
 
 #### Device Registration
+
 ```json
 {
   "type": "device_registration",
@@ -180,6 +188,7 @@ controller.on_data_received = lambda device_info, message: handle_data(message)
 ```
 
 #### GSR Telemetry
+
 ```json
 {
   "type": "telemetry_gsr",
@@ -190,6 +199,7 @@ controller.on_data_received = lambda device_info, message: handle_data(message)
 ```
 
 #### Session Control
+
 ```json
 {
   "type": "start_recording",
@@ -254,6 +264,7 @@ python3 demo_complete_system.py
 ### Common Issues
 
 #### Connection Problems
+
 ```bash
 # Check if port is in use
 netstat -tulpn | grep 8080
@@ -263,6 +274,7 @@ telnet localhost 8080
 ```
 
 #### GUI Issues
+
 ```bash
 # Install missing GUI dependencies
 sudo apt-get install python3-tk
@@ -272,6 +284,7 @@ python3 -c "import matplotlib; print(matplotlib.get_backend())"
 ```
 
 #### C++ Backend Issues
+
 ```bash
 # Rebuild native backend
 cd legacy_implementation/native_backend
@@ -294,11 +307,13 @@ controller.logger.logger.setLevel(logging.DEBUG)
 ## Future Enhancements
 
 ### Security Layer (Planned)
+
 - **TLS Encryption**: SSL/TLS socket encryption
 - **Authentication**: Token-based device authentication
 - **Certificate Management**: Self-signed certificate generation
 
 ### Advanced Features (Planned)
+
 - **Video Frame Preview**: JPEG decoding and display
 - **Thermal Visualization**: Temperature mapping and coloring
 - **Advanced Signal Analysis**: FFT, filtering, and feature extraction
@@ -306,6 +321,7 @@ controller.logger.logger.setLevel(logging.DEBUG)
 - **Cloud Integration**: Remote data synchronization
 
 ### Performance Improvements (Planned)
+
 - **GPU Acceleration**: CUDA/OpenCL for signal processing
 - **Distributed Processing**: Multi-machine coordination
 - **Real-time Compression**: On-the-fly data compression
@@ -352,6 +368,7 @@ This project is part of the IRCamera multi-modal recording system developed for 
 ## Support
 
 For issues and questions:
+
 - Create GitHub issues for bugs
 - Use discussions for feature requests
 - Check existing documentation first

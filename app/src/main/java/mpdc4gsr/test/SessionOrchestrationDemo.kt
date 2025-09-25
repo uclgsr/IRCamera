@@ -191,7 +191,7 @@ class SessionOrchestrationDemo(
         manifest.sensorActivitySummary.forEach { (sensorName, info) ->
             Log.i(TAG, "  $sensorName:")
             Log.i(TAG, "    - Active: ${info.wasActive}")
-            Log.i(TAG, "    - Started Successfully: ${info.startedSuccessfully}")  
+            Log.i(TAG, "    - Started Successfully: ${info.startedSuccessfully}")
             Log.i(TAG, "    - Final Status: ${info.finalStatus}")
             if (info.errorMessages.isNotEmpty()) {
                 Log.i(TAG, "    - Errors: ${info.errorMessages.joinToString(", ")}")

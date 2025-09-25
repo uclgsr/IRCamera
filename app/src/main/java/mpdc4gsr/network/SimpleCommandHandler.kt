@@ -128,7 +128,7 @@ class SimpleCommandHandler(
     private suspend fun handleGetStatusCommand(): String = withContext(Dispatchers.IO) {
         try {
             val statusMap = recordingController.getStatus()
-            
+
             // Create JSON response for rich status info
             val statusJson = JSONObject().apply {
                 statusMap.forEach { (key, value) ->
@@ -157,6 +157,7 @@ class SimpleCommandHandler(
                     val syncCmd = if (pcTimestamp > 0) "SYNC t_pc=$pcTimestamp" else "SYNC"
                     handleSyncCommand(syncCmd)
                 }
+
                 "PING" -> handlePingCommand()
                 "GET_STATUS" -> handleGetStatusCommand()
                 else -> "ERROR cmd=$command code=UNKNOWN_JSON_COMMAND msg=\"Unknown JSON command: $command\""

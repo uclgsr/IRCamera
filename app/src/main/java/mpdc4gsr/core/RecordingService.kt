@@ -81,7 +81,7 @@ class RecordingService : LifecycleService() {
         const val EXTRA_PC_IP = "pc_ip"
         const val EXTRA_PC_PORT = "pc_port"
         const val EXTRA_BLUETOOTH_DEVICE = "bluetooth_device"
-        
+
         // Type aliases for compatibility
         typealias SessionManifest = mpdc4gsr.controller.SessionManifest
 
