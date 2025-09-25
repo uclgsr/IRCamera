@@ -860,20 +860,19 @@ class ThermalCameraRecorder(
                         }
                     })
 
-                    Log.i(TAG, "IRUVCTC thermal camera initialized")
+                Log.i(TAG, "IRUVCTC thermal camera initialized")
 
 
-                    iruvctc?.registerUSB()
+                iruvctc?.registerUSB()
 
-                    Log.i(TAG, "Real thermal camera initialization completed")
-                    return@withContext true
+                Log.i(TAG, "Real thermal camera initialization completed")
+                return@withContext true
 
                 } catch (e: Exception) {
                     Log.e(TAG, "Failed to initialize real thermal camera", e)
                     return@withContext false
                 }
-            }
-
+        }
 
     private suspend fun initializeTopdonSdk(): Boolean = withContext(Dispatchers.IO) {
         return@withContext try {
