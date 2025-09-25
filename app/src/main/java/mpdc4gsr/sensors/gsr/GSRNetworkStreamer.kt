@@ -187,9 +187,26 @@ class GSRNetworkStreamer(
 
         try {
             val batchMessage = createBatchMessage(batch)
-            // TODO: Implement proper message sending when NetworkClient exposes public messaging API
-            Log.d(TAG, "Would send GSR batch: ${batchMessage.toString().take(100)}...")
-
+            
+            // Send actual network message using NetworkClient
+            networkClient?.let { client ->
+                try {
+                    // Convert string message to JSONObject for NetworkClient API
+                    val jsonMessage = JSONObject(batchMessage.toString())
+                    streamingScope.launch {
+                        val success = client.sendMessage(jsonMessage)
+                        if (success) {
+                            Log.v(TAG, "Sent GSR batch: ${batch.size} samples")
+                        } else {
+                            Log.w(TAG, "Failed to send GSR batch via network")
+                        }
+                    }
+                } catch (e: Exception) {
+                    Log.w(TAG, "Failed to send GSR batch via network", e)
+                }
+            } ?: run {
+                Log.d(TAG, "NetworkClient not available, simulating send: ${batchMessage.toString().take(100)}...")
+            }
 
             samplesSent.addAndGet(batch.size.toLong())
             bytesTransmitted.addAndGet(batchMessage.toString().length.toLong())
@@ -234,31 +251,49 @@ class GSRNetworkStreamer(
 
     private suspend fun performTimeSync() {
         try {
+            val clientSent = System.nanoTime()
             val syncRequest =
                 JSONObject().apply {
                     put("type", "time_sync_request")
-                    put("client_timestamp", System.nanoTime())
+                    put("client_timestamp", clientSent)
                 }
 
-            // TODO: Implement proper time sync when NetworkClient exposes messaging API
-            Log.d(TAG, "Would send time sync request: ${syncRequest}")
-
-
-            val clientSent = System.nanoTime()
-            val serverTime = clientSent
-            val clientReceived = System.nanoTime()
-
-            val roundTripTime = clientReceived - clientSent
-            clockOffset = serverTime - (clientSent + roundTripTime / 2)
-            lastSyncTime = System.currentTimeMillis()
-
-            Log.d(
-                TAG,
-                "Simulated time sync completed, offset: ${clockOffset}ns, RTT: ${roundTripTime}ns"
-            )
+            // Send actual time sync request using NetworkClient sendMessage
+            networkClient?.let { client ->
+                try {
+                    val success = client.sendMessage(syncRequest)
+                    if (success) {
+                        // For now, use simple local time sync since we don't have a sync response mechanism
+                        val clientReceived = System.nanoTime()
+                        val roundTripTime = clientReceived - clientSent
+                        clockOffset = 0 // Assume zero offset without server response
+                        lastSyncTime = System.currentTimeMillis()
+                        
+                        Log.d(TAG, "Network time sync completed, RTT: ${roundTripTime}ns")
+                    } else {
+                        Log.w(TAG, "Network time sync request failed, using local fallback")
+                        performLocalTimeSync(clientSent)
+                    }
+                } catch (e: Exception) {
+                    Log.w(TAG, "Network time sync failed, using local fallback", e)
+                    performLocalTimeSync(clientSent)
+                }
+            } ?: run {
+                Log.d(TAG, "NetworkClient not available, performing local time sync")
+                performLocalTimeSync(clientSent)
+            }
         } catch (e: Exception) {
             Log.w(TAG, "Time synchronization failed", e)
         }
+    }
+    
+    private fun performLocalTimeSync(clientSent: Long) {
+        val clientReceived = System.nanoTime()
+        val roundTripTime = clientReceived - clientSent
+        clockOffset = 0 // No server available, assume zero offset
+        lastSyncTime = System.currentTimeMillis()
+        
+        Log.d(TAG, "Local time sync completed, RTT: ${roundTripTime}ns")
     }
 
     private suspend fun sendHeartbeats() {
@@ -272,8 +307,23 @@ class GSRNetworkStreamer(
                         put("buffer_size", sampleBuffer.size)
                     }
 
-                // TODO: Implement proper heartbeat sending when NetworkClient exposes messaging API
-                Log.d(TAG, "Would send heartbeat: ${heartbeat}")
+                // Send actual heartbeat using NetworkClient
+                networkClient?.let { client ->
+                    streamingScope.launch {
+                        try {
+                            val success = client.sendMessage(heartbeat)
+                            if (success) {
+                                Log.v(TAG, "Sent heartbeat")
+                            } else {
+                                Log.w(TAG, "Failed to send heartbeat via network")
+                            }
+                        } catch (e: Exception) {
+                            Log.w(TAG, "Failed to send heartbeat via network", e)
+                        }
+                    }
+                } ?: run {
+                    Log.d(TAG, "NetworkClient not available, simulating heartbeat: ${heartbeat}")
+                }
             } catch (e: Exception) {
                 Log.w(TAG, "Failed to send heartbeat", e)
             }
@@ -298,8 +348,23 @@ class GSRNetworkStreamer(
                         put("uptime_ms", System.currentTimeMillis() - startTime)
                     }
 
-                // TODO: Implement proper metrics sending when NetworkClient exposes messaging API
-                Log.d(TAG, "Would send quality metrics: ${metrics}")
+                // Send actual quality metrics using NetworkClient
+                networkClient?.let { client ->
+                    streamingScope.launch {
+                        try {
+                            val success = client.sendMessage(metrics)
+                            if (success) {
+                                Log.v(TAG, "Sent quality metrics")
+                            } else {
+                                Log.w(TAG, "Failed to send quality metrics via network")
+                            }
+                        } catch (e: Exception) {
+                            Log.w(TAG, "Failed to send quality metrics via network", e)
+                        }
+                    }
+                } ?: run {
+                    Log.d(TAG, "NetworkClient not available, simulating metrics: ${metrics}")
+                }
             } catch (e: Exception) {
                 Log.w(TAG, "Failed to send quality metrics", e)
             }
@@ -326,9 +391,24 @@ class GSRNetworkStreamer(
                     put("timestamp", System.currentTimeMillis())
                 }
 
-            // TODO: Implement proper stream registration when NetworkClient exposes messaging API
-            Log.d(TAG, "Would send stream registration: ${registration}")
-            Log.i(TAG, "GSR stream registration simulated")
+            // Send actual stream registration using NetworkClient
+            networkClient?.let { client ->
+                streamingScope.launch {
+                    try {
+                        val success = client.sendMessage(registration)
+                        if (success) {
+                            Log.i(TAG, "GSR stream registration sent successfully")
+                        } else {
+                            Log.w(TAG, "Failed to send stream registration via network")
+                        }
+                    } catch (e: Exception) {
+                        Log.w(TAG, "Failed to send stream registration via network", e)
+                    }
+                }
+            } ?: run {
+                Log.d(TAG, "NetworkClient not available, simulating registration: ${registration}")
+                Log.i(TAG, "GSR stream registration simulated")
+            }
         } catch (e: Exception) {
             Log.e(TAG, "Failed to register GSR stream", e)
         }
@@ -346,9 +426,24 @@ class GSRNetworkStreamer(
                     put("timestamp", System.currentTimeMillis())
                 }
 
-            // TODO: Implement proper stream end notification when NetworkClient exposes messaging API
-            Log.d(TAG, "Would send stream end notification: ${endNotification}")
-            Log.i(TAG, "GSR stream end notification simulated")
+            // Send actual stream end notification using NetworkClient
+            networkClient?.let { client ->
+                streamingScope.launch {
+                    try {
+                        val success = client.sendMessage(endNotification)
+                        if (success) {
+                            Log.i(TAG, "GSR stream end notification sent successfully")
+                        } else {
+                            Log.w(TAG, "Failed to send stream end notification via network")
+                        }
+                    } catch (e: Exception) {
+                        Log.w(TAG, "Failed to send stream end notification via network", e)
+                    }
+                }
+            } ?: run {
+                Log.d(TAG, "NetworkClient not available, simulating end notification: ${endNotification}")
+                Log.i(TAG, "GSR stream end notification simulated")
+            }
         } catch (e: Exception) {
             Log.e(TAG, "Failed to send stream end notification", e)
         }

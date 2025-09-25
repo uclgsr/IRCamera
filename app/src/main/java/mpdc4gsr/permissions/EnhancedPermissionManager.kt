@@ -16,7 +16,7 @@ class EnhancedPermissionManager(
     suspend fun requestCameraPermissions(): Boolean {
         Log.d(TAG, "Enhanced camera permission request")
 
-        return permissionController.hasCameraPermissions()
+        return permissionController.hasCameraPermission()
     }
 
 
@@ -24,5 +24,10 @@ class EnhancedPermissionManager(
         Log.d(TAG, "Enhanced Bluetooth permission request")
 
         return permissionController.hasBluetoothPermissions()
+    }
+    
+    suspend fun requestAllCriticalPermissions(): Boolean {
+        Log.d(TAG, "Enhanced request all critical permissions")
+        return requestCameraPermissions() && requestBluetoothPermissions()
     }
 }

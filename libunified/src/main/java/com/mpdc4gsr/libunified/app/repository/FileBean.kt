@@ -39,10 +39,34 @@ open class FileBean(
     )
 
     override fun describeContents(): Int {
-        TODO("Not yet implemented")
+        return 0
     }
 
     override fun writeToParcel(dest: Parcel, flags: Int) {
-        TODO("Not yet implemented")
+        dest.writeInt(id)
+        dest.writeString(path)
+        dest.writeString(thumb)
+        dest.writeString(name)
+        dest.writeLong(duration)
+        dest.writeLong(timeMillis)
+        dest.writeByte(if (hasDownload) 1 else 0)
+    }
+
+    companion object CREATOR : Parcelable.Creator<FileBean> {
+        override fun createFromParcel(parcel: Parcel): FileBean {
+            return FileBean(
+                id = parcel.readInt(),
+                path = parcel.readString() ?: "",
+                thumb = parcel.readString() ?: "",
+                name = parcel.readString() ?: "",
+                duration = parcel.readLong(),
+                timeMillis = parcel.readLong(),
+                hasDownload = parcel.readByte() != 0.toByte()
+            )
+        }
+
+        override fun newArray(size: Int): Array<FileBean?> {
+            return arrayOfNulls(size)
+        }
     }
 }

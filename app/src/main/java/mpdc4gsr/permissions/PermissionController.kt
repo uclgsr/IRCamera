@@ -120,40 +120,6 @@ class PermissionController(
     }
 
 
-    fun requestUsbPermission(device: UsbDevice, callback: (Boolean, UsbDevice?) -> Unit) {
-        usbPermissionCallback = callback
-
-        if (usbManager?.hasPermission(device) == true) {
-            Log.i(TAG, "USB permission already granted for device: ${device.deviceName}")
-            callback(true, device)
-            return
-        }
-
-        Log.i(TAG, "Requesting USB permission for device: ${device.deviceName}")
-
-        val permissionIntent = Intent("${com.csl.irCamera.BuildConfig.APPLICATION_ID}.USB_PERMISSION").apply {
-            setPackage(activity.packageName)
-        }
-
-        val pendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            android.app.PendingIntent.getBroadcast(
-                activity,
-                REQUEST_USB_PERMISSION,
-                permissionIntent,
-                android.app.PendingIntent.FLAG_UPDATE_CURRENT or android.app.PendingIntent.FLAG_IMMUTABLE
-            )
-        } else {
-            android.app.PendingIntent.getBroadcast(
-                activity,
-                REQUEST_USB_PERMISSION,
-                permissionIntent,
-                android.app.PendingIntent.FLAG_UPDATE_CURRENT
-            )
-        }
-
-        usbManager?.requestPermission(device, pendingIntent)
-    }
-
 
     fun checkAndRequestThermalCameraPermissions(callback: (Boolean, List<UsbDevice>) -> Unit) {
         val thermalDevices = usbManager?.deviceList?.values?.filter { device ->

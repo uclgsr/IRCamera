@@ -130,7 +130,22 @@ class RGBCameraRecorder(
         val videoFileName = "rgb_video_${sessionMetadata.sessionId}.mp4"
         sessionMetadata.addModalityFile("rgb_video", videoFileName)
 
-        // TODO: Pass session timing metadata to Camera2System for embedding in video metadata
+        // Session timing metadata - store in sessionMetadata for later use
+        try {
+            val timingMetadata = mapOf(
+                "session_id" to sessionMetadata.sessionId,
+                "session_start_time" to sessionMetadata.startTime.toString(),
+                "recording_start_time" to System.currentTimeMillis().toString(),
+                "sample_rate" to "30", // 30 FPS
+                "sync_marker" to "rgb_camera_start"
+            )
+            
+            // Store metadata in session for later access (Camera2System doesn't support setVideoMetadata)
+            sessionMetadata.addMetadata("video_timing", timingMetadata)
+            Log.i(TAG, "Session timing metadata stored in session metadata")
+        } catch (e: Exception) {
+            Log.w(TAG, "Failed to store timing metadata", e)
+        }
 
 
         return camera2System.startRecording(sessionMetadata.sessionId)

@@ -118,7 +118,7 @@ class TcpClient(
         }
     }
     
-    override suspend fun disconnect() = withContext(Dispatchers.IO) {
+    override suspend fun disconnect(): Unit = withContext(Dispatchers.IO) {
         Log.i(TAG, "Disconnecting from PC server")
         
         // Cancel reader job first to stop any ongoing reads

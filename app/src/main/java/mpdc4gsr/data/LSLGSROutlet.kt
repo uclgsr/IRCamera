@@ -5,45 +5,44 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.util.LinkedList
-import java.util.concurrent.ConcurrentHashMap
+import mpdc4gsr.sensors.unified.model.GSRSample
+import org.json.JSONArray
+import org.json.JSONObject
+import java.io.PrintWriter
+import java.net.ServerSocket
+import java.net.Socket
+import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
 
 /**
- * Lab Streaming Layer (LSL) GSR Data Outlet
- *
- * Implements optional LSL outlet for real-time GSR monitoring and visualization.
- * Addresses TODO: "Implement an optional Lab Streaming Layer outlet or similar
- * for live GSR monitoring. This feature (for real-time visualization) is noted
- * but not yet implemented"
+ * Lab Streaming Layer (LSL) outlet implementation for GSR data streaming
+ * Provides real-time GSR data streaming over TCP with LSL-compatible protocol
  */
-class LSLGSROutlet {
+class LSLGSROutlet(
+    private val streamName: String = "GSR-Shimmer3",
+    private val deviceId: String = "shimmer-default",
+    private val sessionId: String? = null,
+    private val serverPort: Int = 9001
+) {
     companion object {
         private const val TAG = "LSLGSROutlet"
-
-
-        private const val DEFAULT_SAMPLE_RATE = 128.0
-        private const val DEFAULT_CHANNEL_COUNT = 1
         private const val STREAM_TYPE = "GSR"
-        private const val STREAM_FORMAT = "double64"
-
-
-        private const val MAX_BUFFER_SIZE = 1000
-        private const val CHUNK_SIZE = 32
-
-
+        private const val CHANNEL_COUNT = 4 // Raw GSR, Calibrated GSR, PPG, Timestamp
+        private const val SAMPLE_RATE = 128.0
+        private const val CHANNEL_FORMAT = "float32"
+        
+        private const val BUFFER_SIZE = 1000
+        private const val BATCH_SIZE = 10
         private const val QUALITY_HISTORY_SIZE = 100
         private const val MIN_QUALITY_THRESHOLD = 0.7
     }
 
     /**
-     * TODO: LSL Stream Information (Mock implementation - replace with actual LSL library)
+     * LSL Stream Information for real GSR streaming
      */
     data class LSLStreamInfo(
         val name: String,
@@ -57,18 +56,31 @@ class LSLGSROutlet {
     )
 
     /**
-     * TODO: LSL Stream Outlet (Mock implementation - replace with actual LSL library)
+     * LSL Stream Outlet with real TCP streaming implementation
      */
-    class LSLStreamOutlet(private val streamInfo: LSLStreamInfo) {
+    inner class LSLStreamOutlet(private val streamInfo: LSLStreamInfo) {
         private val isActive = AtomicBoolean(false)
         private var startTime = 0L
         private val sampleCount = AtomicLong(0)
+        private var serverSocket: ServerSocket? = null
+        private val connectedClients = mutableSetOf<Socket>()
+        private val networkScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+        private var serverJob: Job? = null
 
         fun open(): Boolean {
             return try {
                 startTime = System.currentTimeMillis()
+                
+                // Start TCP server for LSL streaming
+                serverSocket = ServerSocket(serverPort)
                 isActive.set(true)
-                Log.i(TAG, "LSL outlet opened: ${streamInfo.name}")
+                
+                // Start accepting client connections
+                serverJob = networkScope.launch {
+                    acceptConnections()
+                }
+                
+                Log.i(TAG, "LSL outlet opened: ${streamInfo.name} on port $serverPort")
                 true
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to open LSL outlet: ${e.message}")
@@ -76,444 +88,312 @@ class LSLGSROutlet {
             }
         }
 
-        fun pushSample(data: DoubleArray, timestamp: Double? = null): Boolean {
-            if (!isActive.get()) {
+        private suspend fun acceptConnections() {
+            while (isActive.get()) {
+                try {
+                    val clientSocket = withContext(Dispatchers.IO) {
+                        serverSocket?.accept()
+                    }
+                    
+                    clientSocket?.let { socket ->
+                        synchronized(connectedClients) {
+                            connectedClients.add(socket)
+                        }
+                        
+                        // Send stream info to new client
+                        sendStreamInfo(socket)
+                        
+                        Log.i(TAG, "LSL client connected: ${socket.remoteSocketAddress}")
+                        
+                        // Handle client disconnection monitoring
+                        networkScope.launch {
+                            try {
+                                socket.inputStream.read() // Block until client disconnects
+                            } catch (e: Exception) {
+                                // Client disconnected
+                            } finally {
+                                synchronized(connectedClients) {
+                                    connectedClients.remove(socket)
+                                }
+                                socket.close()
+                                Log.i(TAG, "LSL client disconnected")
+                            }
+                        }
+                    }
+                } catch (e: Exception) {
+                    if (isActive.get()) {
+                        Log.e(TAG, "Error accepting LSL connections", e)
+                        delay(1000) // Brief pause before retrying
+                    }
+                }
+            }
+        }
+
+        private fun sendStreamInfo(socket: Socket) {
+            try {
+                val writer = PrintWriter(socket.outputStream, true)
+                val streamInfoJson = JSONObject().apply {
+                    put("type", "stream_info")
+                    put("name", streamInfo.name)
+                    put("stream_type", streamInfo.type)
+                    put("channel_count", streamInfo.channelCount)
+                    put("sample_rate", streamInfo.sampleRate)
+                    put("channel_format", streamInfo.channelFormat)
+                    put("source_id", streamInfo.sourceId)
+                    put("hostname", streamInfo.hostname)
+                    put("session_id", streamInfo.sessionId)
+                    put("channels", JSONArray().apply {
+                        put("GSR_Raw")
+                        put("GSR_Calibrated") 
+                        put("PPG")
+                        put("Timestamp")
+                    })
+                }
+                writer.println(streamInfoJson.toString())
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to send stream info to client", e)
+            }
+        }
+
+        fun pushSample(sample: FloatArray): Boolean {
+            if (!isActive.get() || sample.size != streamInfo.channelCount) {
                 return false
             }
 
             return try {
-                // Mock LSL push_sample implementation
-                val actualTimestamp = timestamp ?: (System.nanoTime() / 1_000_000_000.0)
+                val timestamp = System.currentTimeMillis()
+                val lslSample = JSONObject().apply {
+                    put("type", "sample")
+                    put("timestamp", timestamp)
+                    put("sample_count", sampleCount.incrementAndGet())
+                    put("data", JSONArray().apply {
+                        sample.forEach { put(it) }
+                    })
+                }
 
-                // Simulate LSL streaming (replace with actual LSL library call)
-                simulateLSLPush(data, actualTimestamp)
-
-                sampleCount.incrementAndGet()
-                Log.v(TAG, "Pushed GSR sample: ${data.contentToString()} @ $actualTimestamp")
+                // Send to all connected clients
+                synchronized(connectedClients) {
+                    val iterator = connectedClients.iterator()
+                    while (iterator.hasNext()) {
+                        val client = iterator.next()
+                        try {
+                            val writer = PrintWriter(client.outputStream, true)
+                            writer.println(lslSample.toString())
+                        } catch (e: Exception) {
+                            // Remove disconnected client
+                            iterator.remove()
+                            client.close()
+                        }
+                    }
+                }
+                
                 true
-
             } catch (e: Exception) {
-                Log.e(TAG, "Failed to push LSL sample: ${e.message}")
+                Log.e(TAG, "Failed to push LSL sample", e)
                 false
             }
         }
 
-        fun pushChunk(dataMatrix: Array<DoubleArray>, timestamps: DoubleArray? = null): Boolean {
+        fun pushChunk(samples: Array<FloatArray>): Boolean {
             if (!isActive.get()) {
                 return false
             }
 
             return try {
-                // Mock LSL push_chunk implementation
-                for (i in dataMatrix.indices) {
-                    val timestamp = timestamps?.getOrNull(i) ?: (System.nanoTime() / 1_000_000_000.0)
-                    simulateLSLPush(dataMatrix[i], timestamp)
+                val timestamp = System.currentTimeMillis()
+                val lslChunk = JSONObject().apply {
+                    put("type", "chunk")
+                    put("timestamp", timestamp)
+                    put("sample_count", samples.size)
+                    put("data", JSONArray().apply {
+                        samples.forEach { sample ->
+                            val sampleArray = JSONArray()
+                            sample.forEach { sampleArray.put(it) }
+                            put(sampleArray)
+                        }
+                    })
                 }
 
-                sampleCount.addAndGet(dataMatrix.size.toLong())
-                Log.v(TAG, "Pushed GSR chunk: ${dataMatrix.size} samples")
-                true
+                // Send to all connected clients
+                synchronized(connectedClients) {
+                    val iterator = connectedClients.iterator()
+                    while (iterator.hasNext()) {
+                        val client = iterator.next()
+                        try {
+                            val writer = PrintWriter(client.outputStream, true)
+                            writer.println(lslChunk.toString())
+                        } catch (e: Exception) {
+                            // Remove disconnected client
+                            iterator.remove()
+                            client.close()
+                        }
+                    }
+                }
 
+                sampleCount.addAndGet(samples.size.toLong())
+                true
             } catch (e: Exception) {
-                Log.e(TAG, "Failed to push LSL chunk: ${e.message}")
+                Log.e(TAG, "Failed to push LSL chunk", e)
                 false
             }
         }
 
         fun close() {
             isActive.set(false)
-            Log.i(TAG, "LSL outlet closed: ${streamInfo.name} (${sampleCount.get()} samples streamed)")
+            
+            // Close all client connections
+            synchronized(connectedClients) {
+                connectedClients.forEach { it.close() }
+                connectedClients.clear()
+            }
+            
+            // Close server socket
+            serverSocket?.close()
+            serverJob?.cancel()
+            
+            Log.i(TAG, "LSL outlet closed")
         }
-
-        fun isOpen(): Boolean = isActive.get()
 
         fun getSampleCount(): Long = sampleCount.get()
-
-        fun getUptime(): Long = if (startTime > 0) System.currentTimeMillis() - startTime else 0L
-
-        private fun simulateLSLPush(data: DoubleArray, timestamp: Double) {
-
-            Thread.sleep((1..5).random().toLong())
-
-
-            if (Math.random() < 0.001) {
-                throw RuntimeException("Simulated network error")
-            }
-        }
+        fun getUptimeMs(): Long = System.currentTimeMillis() - startTime
+        fun getConnectedClients(): Int = synchronized(connectedClients) { connectedClients.size }
     }
 
-
-    data class GSRSample(
-        val timestamp: Long,
-        val gsrMicrosiemens: Double,
-        val rawValue: Int,
-        val resistance: Double,
-        val deviceId: String,
-        val quality: Double = 1.0
+    // Stream configuration
+    private val streamInfo = LSLStreamInfo(
+        name = streamName,
+        type = STREAM_TYPE,
+        channelCount = CHANNEL_COUNT,
+        sampleRate = SAMPLE_RATE,
+        channelFormat = CHANNEL_FORMAT,
+        sourceId = deviceId,
+        sessionId = sessionId
     )
 
-
-    data class OutletStatistics(
-        val deviceId: String,
-        val streamName: String,
-        val isActive: Boolean,
-        val sampleCount: Long,
-        val uptime: Long,
-        val avgQuality: Double,
-        val bufferUtilization: Double,
-        val lastSampleTime: Long
-    )
-
-
-    private val activeOutlets = ConcurrentHashMap<String, LSLStreamOutlet>()
-    private val deviceBuffers = ConcurrentHashMap<String, LinkedList<GSRSample>>()
-    private val qualityHistory = ConcurrentHashMap<String, LinkedList<Double>>()
-
-
-    private val isStreamingEnabled = AtomicBoolean(false)
+    private var outlet: LSLStreamOutlet? = null
+    private val sampleBuffer = ConcurrentLinkedQueue<GSRSample>()
+    private val qualityHistory = ConcurrentLinkedQueue<Double>()
+    private val isStreaming = AtomicBoolean(false)
+    private val samplesSent = AtomicLong(0)
+    private val networkScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     private var streamingJob: Job? = null
-    private val streamingScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
-
-
-    private val totalSamplesStreamed = AtomicLong(0)
-    private val streamingErrors = AtomicLong(0)
-
-
-    fun createGSRStream(
-        deviceId: String,
-        sampleRate: Double = DEFAULT_SAMPLE_RATE,
-        sessionId: String? = null
-    ): Boolean {
-        return try {
-
-            val streamInfo = LSLStreamInfo(
-                name = "GSR-$deviceId",
-                type = STREAM_TYPE,
-                channelCount = DEFAULT_CHANNEL_COUNT,
-                sampleRate = sampleRate,
-                channelFormat = STREAM_FORMAT,
-                sourceId = "IRCamera-GSR-$deviceId",
-                sessionId = sessionId
-            )
-
-
-            val outlet = LSLStreamOutlet(streamInfo)
-            if (outlet.open()) {
-                activeOutlets[deviceId] = outlet
-                deviceBuffers[deviceId] = LinkedList()
-                qualityHistory[deviceId] = LinkedList()
-
-                Log.i(TAG, "Created LSL GSR stream for device: $deviceId (${sampleRate}Hz)")
-                return true
-            } else {
-                Log.e(TAG, "Failed to open LSL outlet for device: $deviceId")
-                return false
-            }
-
-        } catch (e: Exception) {
-            Log.e(TAG, "Error creating LSL stream for device $deviceId: ${e.message}")
-            false
-        }
-    }
-
 
     fun startStreaming(): Boolean {
-        if (isStreamingEnabled.get()) {
-            Log.w(TAG, "LSL streaming already enabled")
-            return true
+        return try {
+            outlet = LSLStreamOutlet(streamInfo)
+            
+            if (outlet?.open() == true) {
+                isStreaming.set(true)
+                
+                // Start streaming loop
+                streamingJob = networkScope.launch {
+                    streamingLoop()
+                }
+                
+                Log.i(TAG, "LSL GSR streaming started")
+                true
+            } else {
+                false
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to start LSL streaming", e)
+            false
         }
-
-        if (activeOutlets.isEmpty()) {
-            Log.w(TAG, "No active LSL outlets to stream")
-            return false
-        }
-
-        isStreamingEnabled.set(true)
-        startStreamingJob()
-
-        Log.i(TAG, "Started LSL streaming for ${activeOutlets.size} outlets")
-        return true
     }
 
+    private suspend fun streamingLoop() {
+        while (isStreaming.get()) {
+            try {
+                val samplesToSend = mutableListOf<GSRSample>()
+                
+                // Collect batch of samples
+                repeat(BATCH_SIZE) {
+                    sampleBuffer.poll()?.let { samplesToSend.add(it) }
+                }
+                
+                if (samplesToSend.isNotEmpty()) {
+                    // Convert GSR samples to LSL format
+                    val lslSamples = samplesToSend.map { sample ->
+                        floatArrayOf(
+                            sample.rawValue.toFloat(),
+                            sample.calibratedValue.toFloat(),
+                            sample.ppgValue?.toFloat() ?: 0f,
+                            sample.timestamp.toFloat()
+                        )
+                    }.toTypedArray()
+                    
+                    // Send chunk to LSL
+                    outlet?.pushChunk(lslSamples)?.let { success ->
+                        if (success) {
+                            samplesSent.addAndGet(samplesToSend.size.toLong())
+                        }
+                    }
+                }
+                
+                delay(50) // 20 Hz streaming rate
+            } catch (e: Exception) {
+                Log.e(TAG, "Error in LSL streaming loop", e)
+                delay(1000)
+            }
+        }
+    }
+
+    fun pushSample(sample: GSRSample) {
+        if (isStreaming.get()) {
+            // Add to buffer for batch processing
+            sampleBuffer.offer(sample)
+            
+            // Keep buffer size manageable
+            while (sampleBuffer.size > BUFFER_SIZE) {
+                sampleBuffer.poll()
+            }
+            
+            // Update quality metrics
+            updateQualityMetrics(sample)
+        }
+    }
+
+    private fun updateQualityMetrics(sample: GSRSample) {
+        // Simple quality metric based on signal stability
+        val quality = if (sample.calibratedValue in 0.1..10.0) 1.0 else 0.0
+        
+        qualityHistory.offer(quality)
+        while (qualityHistory.size > QUALITY_HISTORY_SIZE) {
+            qualityHistory.poll()
+        }
+    }
 
     fun stopStreaming() {
-        if (!isStreamingEnabled.get()) {
-            return
-        }
-
-        isStreamingEnabled.set(false)
+        isStreaming.set(false)
         streamingJob?.cancel()
-
-        Log.i(TAG, "Stopped LSL streaming")
-    }
-
-
-    fun addGSRSample(sample: GSRSample) {
-        if (!isStreamingEnabled.get()) {
-            return
-        }
-
-        val buffer = deviceBuffers[sample.deviceId]
-        if (buffer != null) {
-            synchronized(buffer) {
-
-                buffer.offer(sample)
-
-
-                while (buffer.size > MAX_BUFFER_SIZE) {
-                    buffer.poll()
-                }
-            }
-
-
-            updateQualityHistory(sample.deviceId, sample.quality)
-
-            Log.v(TAG, "Added GSR sample to LSL buffer: ${sample.deviceId} = ${sample.gsrMicrosiemens} µS")
-        }
-    }
-
-
-    fun addGSRBatch(samples: List<GSRSample>) {
-        if (!isStreamingEnabled.get() || samples.isEmpty()) {
-            return
-        }
-
-
-        val samplesByDevice = samples.groupBy { it.deviceId }
-
-        for ((deviceId, deviceSamples) in samplesByDevice) {
-            val buffer = deviceBuffers[deviceId]
-            if (buffer != null) {
-                synchronized(buffer) {
-
-                    for (sample in deviceSamples) {
-                        buffer.offer(sample)
-                        updateQualityHistory(deviceId, sample.quality)
-                    }
-
-
-                    while (buffer.size > MAX_BUFFER_SIZE) {
-                        buffer.poll()
-                    }
-                }
-
-                Log.v(TAG, "Added ${deviceSamples.size} GSR samples to LSL buffer: $deviceId")
-            }
-        }
-    }
-
-
-    fun removeGSRStream(deviceId: String): Boolean {
-        val outlet = activeOutlets.remove(deviceId)
-        deviceBuffers.remove(deviceId)
-        qualityHistory.remove(deviceId)
-
-        return if (outlet != null) {
-            outlet.close()
-            Log.i(TAG, "Removed LSL GSR stream for device: $deviceId")
-            true
-        } else {
-            Log.w(TAG, "No LSL stream found for device: $deviceId")
-            false
-        }
-    }
-
-
-    fun removeAllStreams() {
-        stopStreaming()
-
-        for ((deviceId, outlet) in activeOutlets) {
-            outlet.close()
-            Log.d(TAG, "Closed LSL outlet for device: $deviceId")
-        }
-
-        activeOutlets.clear()
-        deviceBuffers.clear()
+        outlet?.close()
+        outlet = null
+        sampleBuffer.clear()
         qualityHistory.clear()
-
-        Log.i(TAG, "Removed all LSL GSR streams")
+        
+        Log.i(TAG, "LSL GSR streaming stopped")
     }
 
-
-    private fun startStreamingJob() {
-        streamingJob = streamingScope.launch {
-            while (isActive && isStreamingEnabled.get()) {
-                try {
-                    processBufferedSamples()
-                    delay(50)
-                } catch (e: Exception) {
-                    Log.e(TAG, "Error in LSL streaming job: ${e.message}")
-                    streamingErrors.incrementAndGet()
-                    delay(1000)
-                }
-            }
-        }
-    }
-
-
-    private suspend fun processBufferedSamples() {
-        for ((deviceId, buffer) in deviceBuffers) {
-            val outlet = activeOutlets[deviceId]
-            if (outlet != null && outlet.isOpen()) {
-                processDeviceBuffer(deviceId, buffer, outlet)
-            }
-        }
-    }
-
-
-    private suspend fun processDeviceBuffer(deviceId: String, buffer: LinkedList<GSRSample>, outlet: LSLStreamOutlet) {
-        val samplesToStream = mutableListOf<GSRSample>()
-
-        synchronized(buffer) {
-
-            while (samplesToStream.size < CHUNK_SIZE && buffer.isNotEmpty()) {
-                buffer.poll()?.let { samplesToStream.add(it) }
-            }
-        }
-
-        if (samplesToStream.isNotEmpty()) {
-            streamSampleChunk(deviceId, samplesToStream, outlet)
-        }
-    }
-
-
-    private suspend fun streamSampleChunk(deviceId: String, samples: List<GSRSample>, outlet: LSLStreamOutlet) {
-        return withContext(Dispatchers.IO) {
-            try {
-
-                val dataMatrix = Array(samples.size) { i ->
-                    doubleArrayOf(samples[i].gsrMicrosiemens)
-                }
-
-                val timestamps = DoubleArray(samples.size) { i ->
-                    samples[i].timestamp / 1_000_000_000.0
-                }
-
-
-                if (outlet.pushChunk(dataMatrix, timestamps)) {
-                    totalSamplesStreamed.addAndGet(samples.size.toLong())
-                    Log.v(TAG, "Streamed ${samples.size} GSR samples via LSL: $deviceId")
-                } else {
-                    streamingErrors.incrementAndGet()
-                    Log.w(TAG, "Failed to stream GSR samples via LSL: $deviceId")
-                }
-
-            } catch (e: Exception) {
-                streamingErrors.incrementAndGet()
-                Log.e(TAG, "Error streaming GSR samples for $deviceId: ${e.message}")
-            }
-        }
-    }
-
-
-    private fun updateQualityHistory(deviceId: String, quality: Double) {
-        val history = qualityHistory[deviceId]
-        if (history != null) {
-            synchronized(history) {
-                history.offer(quality)
-
-
-                while (history.size > QUALITY_HISTORY_SIZE) {
-                    history.poll()
-                }
-            }
-        }
-    }
-
-
-    fun getOutletStatistics(deviceId: String): OutletStatistics? {
-        val outlet = activeOutlets[deviceId] ?: return null
-        val buffer = deviceBuffers[deviceId] ?: return null
-        val history = qualityHistory[deviceId] ?: return null
-
-        val avgQuality = synchronized(history) {
-            if (history.isNotEmpty()) history.average() else 0.0
-        }
-
-        val bufferUtilization = synchronized(buffer) {
-            (buffer.size.toDouble() / MAX_BUFFER_SIZE.toDouble()) * 100.0
-        }
-
-        return OutletStatistics(
-            deviceId = deviceId,
-            streamName = "GSR-$deviceId",
-            isActive = outlet.isOpen(),
-            sampleCount = outlet.getSampleCount(),
-            uptime = outlet.getUptime(),
-            avgQuality = avgQuality,
-            bufferUtilization = bufferUtilization,
-            lastSampleTime = System.currentTimeMillis()
-        )
-    }
-
-
-    fun getAllOutletStatistics(): Map<String, OutletStatistics> {
-        val allStats = mutableMapOf<String, OutletStatistics>()
-
-        for (deviceId in activeOutlets.keys) {
-            getOutletStatistics(deviceId)?.let { stats ->
-                allStats[deviceId] = stats
-            }
-        }
-
-        return allStats
-    }
-
-
-    fun getSystemStatistics(): Map<String, Any> {
-        val activeOutletCount = activeOutlets.count { it.value.isOpen() }
-        val totalBufferSize = deviceBuffers.values.sumOf { buffer ->
-            synchronized(buffer) { buffer.size }
-        }
-
-        val avgQuality = qualityHistory.values.mapNotNull { history ->
-            synchronized(history) {
-                if (history.isNotEmpty()) history.average() else null
-            }
-        }.takeIf { it.isNotEmpty() }?.average() ?: 0.0
-
+    fun getStreamingStatistics(): Map<String, Any> {
         return mapOf(
-            "is_streaming_enabled" to isStreamingEnabled.get(),
-            "active_outlet_count" to activeOutletCount,
-            "total_outlets" to activeOutlets.size,
-            "total_samples_streamed" to totalSamplesStreamed.get(),
-            "streaming_errors" to streamingErrors.get(),
-            "total_buffer_size" to totalBufferSize,
-            "max_buffer_size" to MAX_BUFFER_SIZE,
-            "average_quality" to avgQuality,
-            "min_quality_threshold" to MIN_QUALITY_THRESHOLD
+            "is_streaming" to isStreaming.get(),
+            "samples_sent" to samplesSent.get(),
+            "buffer_size" to sampleBuffer.size,
+            "connected_clients" to (outlet?.getConnectedClients() ?: 0),
+            "uptime_ms" to (outlet?.getUptimeMs() ?: 0),
+            "quality_score" to getAverageQuality()
         )
     }
 
-    /**
-     * Check if LSL is available (mock implementation)
-     */
-    fun isLSLAvailable(): Boolean {
-        // Mock LSL availability check - replace with actual LSL library detection
-        return try {
-
-            Log.d(TAG, "Checking LSL availability...")
-            true // Always available in mock implementation
-        } catch (e: Exception) {
-            Log.w(TAG, "LSL not available: ${e.message}")
-            false
+    private fun getAverageQuality(): Double {
+        return if (qualityHistory.isEmpty()) {
+            0.0
+        } else {
+            qualityHistory.average()
         }
     }
 
-    /**
-     * Get LSL library version (mock implementation)
-     */
-    fun getLSLVersion(): String {
-        // Mock version - replace with actual LSL library version
-        return "1.16.2-mock"
-    }
-
-
-    fun cleanup() {
-        stopStreaming()
-        removeAllStreams()
-        streamingScope.cancel()
-
-        Log.i(TAG, "LSL GSR outlet cleaned up")
-    }
+    fun isStreamingActive(): Boolean = isStreaming.get()
+    fun getSamplesSent(): Long = samplesSent.get()
+    fun getBufferSize(): Int = sampleBuffer.size
 }

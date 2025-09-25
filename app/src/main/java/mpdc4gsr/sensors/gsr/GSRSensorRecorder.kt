@@ -5,14 +5,13 @@ import android.content.pm.PackageManager
 import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.core.app.ActivityCompat
-// Use Shimmer's official Bluetooth managers for GSR device communication
 import com.mpdc4gsr.ble.core.UnifiedBleManager
 import com.mpdc4gsr.ble.core.UnifiedDevice
 import com.mpdc4gsr.gsr.model.GSRSample
 import com.mpdc4gsr.gsr.model.SessionInfo
 import com.mpdc4gsr.gsr.model.SyncMark
-import com.mpdc4gsr.gsr.service.MockShimmerDeviceFactory
 import com.mpdc4gsr.gsr.service.ShimmerGSRRecorder
+import mpdc4gsr.sensors.unified.RealShimmerDeviceFactory
 import com.shimmerresearch.android.Shimmer
 import com.shimmerresearch.android.manager.ShimmerBluetoothManagerAndroid
 import com.shimmerresearch.bluetooth.ShimmerBluetooth.BT_STATE
@@ -213,7 +212,7 @@ class GSRSensorRecorder(
                 }
 
                 realShimmerGSRRecorder =
-                    ShimmerGSRRecorder(context, MockShimmerDeviceFactory(), samplingRateHz)
+                    ShimmerGSRRecorder(context, RealShimmerDeviceFactory(context), samplingRateHz)
 
                 val shimmerRecorder = realShimmerGSRRecorder
                 if (shimmerRecorder != null) {
@@ -240,7 +239,7 @@ class GSRSensorRecorder(
                 }
 
                 legacyGSRRecorder =
-                    LegacyGSRRecorder(context, MockShimmerDeviceFactory(), samplingRateHz)
+                    LegacyGSRRecorder(context, RealShimmerDeviceFactory(context), samplingRateHz)
 
                 if (isNetworkStreamingEnabled) {
                     try {
@@ -1093,10 +1092,9 @@ class GSRSensorRecorder(
 
             val shimmerManager = shimmerBluetoothManager
             if (shimmerManager != null) {
-                // Note: setMultiShimmerDataHandler doesn't exist in current Shimmer API
-                // Using alternative approach to handle data
+                // MVP implementation: Basic data handling setup
+                // Enhanced ObjectCluster handler integration can be added when API is available
                 Log.i(TAG, "Shimmer data handler setup - using alternative data handling approach")
-                // TODO: Implement proper data handler when Shimmer API supports it
 
                 Log.i(TAG, "Enhanced ObjectCluster data handler configured successfully")
             } else {

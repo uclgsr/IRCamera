@@ -116,7 +116,7 @@ class App : BaseApplication() {
 
     }
 
-    fun initWebSocket() {
+    override fun initWebSocket() {
         // Initialize WebSocket connection
         // This method can be implemented when WebSocket functionality is needed
     }

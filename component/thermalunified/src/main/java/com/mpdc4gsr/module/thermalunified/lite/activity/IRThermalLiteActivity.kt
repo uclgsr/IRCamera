@@ -493,7 +493,18 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
                     try {
                         if (isVideo) {
                             binding.clSeekBar.requestLayout()
-                            // binding.clSeekBar.updateBitmap() // TODO: Fix this method call
+                            // Implement updateBitmap functionality using available SeekBar methods
+                            try {
+                                binding.clSeekBar.invalidate() // Force redraw
+                                binding.clSeekBar.requestLayout()
+                                // Alternative: refresh SeekBar content through visibility toggle
+                                val visibility = binding.clSeekBar.visibility
+                                binding.clSeekBar.visibility = View.GONE
+                                binding.clSeekBar.visibility = visibility
+                            } catch (e: Exception) {
+                                Log.w(TAG, "Failed to update SeekBar bitmap, using fallback", e)
+                                binding.clSeekBar.requestLayout()  // Fallback to basic request layout
+                            }
                         }
                     } catch (e: Exception) {
                         Log.w("[ph][ph][ph][ph][ph][ph][ph]:", "${e.message}")
@@ -1221,7 +1232,16 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
         binding.temperatureView.setUseIRISP(false)
 
         binding.clSeekBar.requestLayout()
-        // binding.clSeekBar.updateBitmap() // TODO: Fix this method call
+        // Implement updateBitmap functionality using available SeekBar methods
+        try {
+            binding.clSeekBar.invalidate() // Force redraw
+            // Alternative: refresh SeekBar content through visibility toggle if needed
+            val visibility = binding.clSeekBar.visibility
+            binding.clSeekBar.visibility = View.GONE
+            binding.clSeekBar.visibility = visibility
+        } catch (e: Exception) {
+            Log.w(TAG, "Failed to update SeekBar bitmap in main thermal view", e)
+        }
 
 
         binding.temperatureView.post {
@@ -1995,7 +2015,13 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
                     }
                 }
             }
-            // binding.clSeekBar.updateBitmap() // TODO: Fix this method call
+            // Implement updateBitmap functionality using available SeekBar methods
+            try {
+                binding.clSeekBar.invalidate() // Force redraw
+                binding.clSeekBar.requestLayout()
+            } catch (e: Exception) {
+                Log.w(TAG, "Failed to update SeekBar bitmap during video record", e)
+            }
             videoRecord?.updateAudioState(isRecordAudio)
             videoRecord?.startRecord()
             isVideo = true

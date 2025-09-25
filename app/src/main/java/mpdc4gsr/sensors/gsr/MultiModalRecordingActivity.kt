@@ -23,7 +23,7 @@ import com.mpdc4gsr.gsr.model.GSRSample
 import com.mpdc4gsr.gsr.model.SessionInfo
 import com.mpdc4gsr.gsr.model.SyncMark
 import com.mpdc4gsr.gsr.service.GSRRecorder
-import com.mpdc4gsr.gsr.service.MockShimmerDeviceFactory
+import mpdc4gsr.sensors.unified.RealShimmerDeviceFactory
 import com.mpdc4gsr.gsr.service.SessionManager
 import com.mpdc4gsr.gsr.util.TimeUtil
 import com.mpdc4gsr.libunified.app.ktbase.BaseBindingActivity
@@ -210,7 +210,7 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
         permissionController = PermissionController(this)
         permissionController.initialize()
 
-        gsrRecorder = GSRRecorder(this, MockShimmerDeviceFactory())
+        gsrRecorder = GSRRecorder(this, RealShimmerDeviceFactory(this))
         sessionManager = SessionManager.getInstance(this)
 
         // Initialize RGB Camera Recorder with PreviewView
@@ -221,6 +221,14 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
             previewView = previewView,
             useFrontCamera = false
         )
+
+        // Setup tap-to-focus on the preview
+        binding.previewView.onTapToFocus = { normalizedX, normalizedY ->
+            rgbCameraRecorder?.triggerTapToFocus(normalizedX, normalizedY)
+        }
+
+        // Setup camera settings view callbacks
+        setupCameraControlsCallbacks()
 
         // Initialize camera
         lifecycleScope.launch {
@@ -1077,6 +1085,57 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
     private fun stopUIUpdates() {
         uiUpdateJob?.cancel()
         uiUpdateJob = null
+    }
+
+    private fun setupCameraControlsCallbacks() {
+        binding.cameraSettingsView.apply {
+            // Manual exposure controls
+            onExposureModeToggle = { isManual ->
+                rgbCameraRecorder?.setManualExposureMode(isManual)
+            }
+            
+            onExposureCompensationChanged = { evValue ->
+                rgbCameraRecorder?.setExposureCompensation(evValue)
+            }
+            
+            onAeLockToggle = { isLocked ->
+                rgbCameraRecorder?.setAutoExposureLock(isLocked)
+            }
+            
+            // Manual focus controls
+            onFocusModeToggle = { isManual ->
+                rgbCameraRecorder?.setManualFocusMode(isManual)
+            }
+            
+            onFocusDistanceChanged = { distance ->
+                rgbCameraRecorder?.setFocusDistance(distance)
+            }
+            
+            onAfLockToggle = { isLocked ->
+                rgbCameraRecorder?.setAutoFocusLock(isLocked)
+            }
+            
+            // Basic camera controls
+            onCameraToggle = {
+                // Could implement front/back camera switching here
+            }
+            
+            onRecordingToggle = { startRecording ->
+                if (startRecording) {
+                    startRecording()
+                } else {
+                    stopRecording()
+                }
+            }
+            
+            onFlashToggle = { enabled ->
+                // Flash control could be implemented here
+            }
+            
+            onStage3ProcessingToggle = { enabled ->
+                // Stage3 processing toggle could be implemented here
+            }
+        }
     }
 
     override fun onDestroy() {
