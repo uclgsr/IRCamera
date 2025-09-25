@@ -58,7 +58,7 @@ class GSRNetworkStreamer(
             try {
                 Log.i(TAG, "Initializing GSR network streamer for session: $sessionId")
 
-                networkClient = NetworkClient(context, recordingController)
+                networkClient = NetworkClient(context)
 
                 val connected = networkClient?.connectToController("192.168.1.100") ?: false
                 if (!connected) {
