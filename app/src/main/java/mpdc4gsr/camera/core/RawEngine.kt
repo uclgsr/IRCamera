@@ -163,7 +163,7 @@ class RawEngine(private val context: Context) {
                     // Set Stage3/Level3 specific metadata
                     try {
                         // Disable thumbnail for maximum raw data preservation
-                        dngCreator.setThumbnail(null)
+                        // Note: Skipping thumbnail to preserve raw data
 
                         // Set DNG orientation based on device orientation
                         captureResult.get(CaptureResult.JPEG_ORIENTATION)?.let { orientation ->

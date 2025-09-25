@@ -54,7 +54,8 @@ class FaultTolerantRecordingActivity : AppCompatActivity() {
 
     private fun initializeRecordingSystem() {
         try {
-            permissionManager = PermissionManager(this)
+            val permissionController = mpdc4gsr.permissions.PermissionController(this)
+            permissionManager = PermissionManager(this, permissionController)
             recordingController = ComprehensiveRecordingController(this, this, permissionManager)
 
             lifecycleScope.launch {
@@ -107,6 +108,13 @@ class FaultTolerantRecordingActivity : AppCompatActivity() {
 
                             mpdc4gsr.controller.RecordingState.ERROR -> {
                                 statusText.text = "Recording error handled gracefully"
+                                startButton.isEnabled = true
+                                stopButton.isEnabled = false
+                                progressBar.visibility = View.GONE
+                            }
+
+                            mpdc4gsr.controller.RecordingState.STOPPED -> {
+                                statusText.text = "Recording stopped successfully"
                                 startButton.isEnabled = true
                                 stopButton.isEnabled = false
                                 progressBar.visibility = View.GONE
