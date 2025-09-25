@@ -3,7 +3,6 @@ package com.topdon.lib.ui.widget
 import android.content.Context
 import android.graphics.Canvas
 import android.util.AttributeSet
-import android.util.Log
 import android.view.MotionEvent
 import androidx.appcompat.widget.AppCompatSeekBar
 import com.mpdc4gsr.libunified.R
@@ -13,7 +12,7 @@ import kotlin.math.roundToInt
  * 支持竖向的 SeekBar。
  * 暂不支持 thumbOffset.
  */
-class CommSeekBar: AppCompatSeekBar {
+class CommSeekBar : AppCompatSeekBar {
     /**
      * 0-横向 1-竖向
      */
@@ -27,11 +26,11 @@ class CommSeekBar: AppCompatSeekBar {
 
     private var onSeekBarChangeListener: OnSeekBarChangeListener? = null
 
-    constructor(context: Context): this(context, null)
+    constructor(context: Context) : this(context, null)
 
-    constructor(context: Context, attrs: AttributeSet?): this(context, attrs, 0)
+    constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
 
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int): super(context, attrs, defStyleAttr) {
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
         val typedArray = context.obtainStyledAttributes(attrs, R.styleable.CommSeekBar, defStyleAttr, 0)
         orientation = typedArray.getInt(R.styleable.CommSeekBar_android_orientation, 0)
         mMaxWidth = typedArray.getDimensionPixelSize(R.styleable.CommSeekBar_android_maxWidth, mMaxWidth)
@@ -103,7 +102,6 @@ class CommSeekBar: AppCompatSeekBar {
     }
 
 
-
     private fun calculateDrawable(w: Int, h: Int) {
         val paddingWidth: Int = w - paddingLeft - paddingRight
         val paddingHeight: Int = h - paddingTop - paddingBottom
@@ -162,15 +160,18 @@ class CommSeekBar: AppCompatSeekBar {
                 trackTouchEvent(event)
                 onSeekBarChangeListener?.onStartTrackingTouch(this)
             }
+
             MotionEvent.ACTION_MOVE -> {
                 trackTouchEvent(event)
             }
+
             MotionEvent.ACTION_UP -> {
                 isPressed = false
                 trackTouchEvent(event)
                 invalidate()
                 onSeekBarChangeListener?.onStopTrackingTouch(this)
             }
+
             MotionEvent.ACTION_CANCEL -> {
                 isPressed = false
                 invalidate()
@@ -184,11 +185,11 @@ class CommSeekBar: AppCompatSeekBar {
     /**
      * 通过级别分层进行粘性处理
      */
-    fun stopTrackTouchLevel(){
-        if (level > 0){
+    fun stopTrackTouchLevel() {
+        if (level > 0) {
             val newLevel = (progress.toFloat() / 100 * 4).roundToInt()
             setProgress((newLevel.toFloat() / level * 100).toInt())
-         }
+        }
     }
 
 

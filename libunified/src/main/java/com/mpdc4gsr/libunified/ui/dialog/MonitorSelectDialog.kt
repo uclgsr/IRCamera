@@ -8,15 +8,15 @@ import android.content.Context
  * This is a minimal implementation for MVP - replace with actual dialog when available
  */
 class MonitorSelectDialog(context: Context) : Dialog(context) {
-    
+
     class Builder(private val context: Context) {
         private var positiveListener: ((Int) -> Unit)? = null
-        
+
         fun setPositiveListener(listener: (Int) -> Unit): Builder {
             this.positiveListener = listener
             return this
         }
-        
+
         fun create(): MonitorSelectDialog {
             val dialog = MonitorSelectDialog(context)
             // Stub implementation - automatically calls listener with default value 1

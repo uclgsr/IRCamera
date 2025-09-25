@@ -8,8 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import com.mpdc4gsr.libunified.R
-import com.mpdc4gsr.libunified.databinding.DialogFirmwareUpBinding
 import com.mpdc4gsr.libunified.app.utils.ScreenUtil
+import com.mpdc4gsr.libunified.databinding.DialogFirmwareUpBinding
 
 class FirmwareUpDialog(context: Context) : Dialog(context, R.style.InfoDialog),
     View.OnClickListener {

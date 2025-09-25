@@ -54,26 +54,25 @@ class TapToFocusPreviewView @JvmOverloads constructor(
     override fun onTouchEvent(event: MotionEvent): Boolean {
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
-                // Calculate normalized coordinates (0.0 to 1.0)
-                val normalizedX = event.x / width
-                val normalizedY = event.y / height
+                val widthF = width.takeIf { it > 0 } ?: internalPreviewView.width
+                val heightF = height.takeIf { it > 0 } ?: internalPreviewView.height
+                if (widthF <= 0 || heightF <= 0) return super.onTouchEvent(event)
 
-                // Store touch position for visual feedback
+                val normalizedX = event.x / widthF
+                val normalizedY = event.y / heightF
+
                 focusX = event.x
                 focusY = event.y
 
-                // Show focus indicator
                 showFocusIndicator = true
                 focusIndicatorAlpha = 255
-                invalidate()
+                overlayView.invalidate()
 
-                // Trigger focus callback
                 onTapToFocus?.invoke(normalizedX, normalizedY)
 
-                // Hide focus indicator after delay
                 postDelayed({
                     showFocusIndicator = false
-                    invalidate()
+                    overlayView.invalidate()
                 }, 1500)
 
                 return true
@@ -82,10 +81,7 @@ class TapToFocusPreviewView @JvmOverloads constructor(
         return super.onTouchEvent(event)
     }
 
-    override fun onDraw(canvas: Canvas) {
-        super.onDraw(canvas)
-
-        // Draw focus indicator if active
+    private fun drawFocusIndicator(canvas: Canvas) {
         if (showFocusIndicator && focusX >= 0 && focusY >= 0) {
             focusCirclePaint.alpha = focusIndicatorAlpha
             focusInnerPaint.alpha = (focusIndicatorAlpha * 0.3f).toInt()
@@ -109,41 +105,40 @@ class TapToFocusPreviewView @JvmOverloads constructor(
                 focusCirclePaint
             )
 
-            // Fade out effect
             if (focusIndicatorAlpha > 0) {
                 focusIndicatorAlpha = (focusIndicatorAlpha - 8).coerceAtLeast(0)
                 if (focusIndicatorAlpha > 0) {
-                    postInvalidateDelayed(50)
+                    overlayView.postInvalidateOnAnimation()
                 }
             }
         }
     }
 
-    /**
-     * Programmatically trigger focus at specific coordinates
-     */
+    fun getPreviewView(): PreviewView = internalPreviewView
+
     fun triggerFocusAt(x: Float, y: Float) {
         focusX = x
         focusY = y
         showFocusIndicator = true
         focusIndicatorAlpha = 255
-        invalidate()
+        overlayView.invalidate()
 
-        val normalizedX = x / width
-        val normalizedY = y / height
-        onTapToFocus?.invoke(normalizedX, normalizedY)
+        val widthF = width.takeIf { it > 0 } ?: internalPreviewView.width
+        val heightF = height.takeIf { it > 0 } ?: internalPreviewView.height
+        if (widthF > 0 && heightF > 0) {
+            val normalizedX = x / widthF
+            val normalizedY = y / heightF
+            onTapToFocus?.invoke(normalizedX, normalizedY)
+        }
 
         postDelayed({
             showFocusIndicator = false
-            invalidate()
+            overlayView.invalidate()
         }, 1500)
     }
 
-    /**
-     * Hide focus indicator
-     */
     fun hideFocusIndicator() {
         showFocusIndicator = false
-        invalidate()
+        overlayView.invalidate()
     }
 }

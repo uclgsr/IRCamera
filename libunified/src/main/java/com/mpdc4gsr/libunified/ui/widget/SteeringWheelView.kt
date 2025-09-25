@@ -22,17 +22,17 @@ class SteeringWheelView : LinearLayout, OnClickListener {
     var listener: ((action: Int, moveX: Int) -> Unit)? = null
     var moveX = 30
     var rotationIR = 270
-    set(value) {
-        field = value
-        if (value == 270 || value == 90){
-            if (::tvConfirm.isInitialized) tvConfirm.rotation = 270f
-            rotation = 90f
-        }else{
-            if (::tvConfirm.isInitialized) tvConfirm.rotation = 0f
-            rotation = 0f
+        set(value) {
+            field = value
+            if (value == 270 || value == 90) {
+                if (::tvConfirm.isInitialized) tvConfirm.rotation = 270f
+                rotation = 90f
+            } else {
+                if (::tvConfirm.isInitialized) tvConfirm.rotation = 0f
+                rotation = 0f
+            }
+            requestLayout()
         }
-        requestLayout()
-    }
 
     constructor(context: Context) : this(context, null)
 
@@ -52,15 +52,15 @@ class SteeringWheelView : LinearLayout, OnClickListener {
         steeringWheelStartBtn = findViewById(R.id.steering_wheel_start_btn)
         steeringWheelCenterBtn = findViewById(R.id.steering_wheel_center_btn)
         steeringWheelEndBtn = findViewById(R.id.steering_wheel_end_btn)
-        
+
         steeringWheelStartBtn.setOnClickListener(this)
         steeringWheelCenterBtn.setOnClickListener(this)
         steeringWheelEndBtn.setOnClickListener(this)
-        
-        if (rotationIR == 270 || rotationIR == 90){
+
+        if (rotationIR == 270 || rotationIR == 90) {
             tvConfirm.rotation = 270f
             rotation = 90f
-        }else{
+        } else {
             tvConfirm.rotation = 0f
             rotation = 0f
         }
@@ -75,9 +75,11 @@ class SteeringWheelView : LinearLayout, OnClickListener {
                 }
                 listener?.invoke(-1, moveX)
             }
+
             steeringWheelCenterBtn -> {
                 listener?.invoke(0, moveX)
             }
+
             steeringWheelEndBtn -> {
                 moveX -= 10
                 if (moveX < -20) {

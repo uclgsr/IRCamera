@@ -8,13 +8,11 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.RectF
-import android.graphics.Typeface
 import android.util.AttributeSet
 import android.view.View
 import android.view.animation.LinearInterpolator
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
-import com.blankj.utilcode.util.SizeUtils
 import com.mpdc4gsr.libunified.R
 
 class CountDownView : View {
@@ -74,26 +72,31 @@ class CountDownView : View {
                         R.styleable.CountDownView_ringColor,
                         ContextCompat.getColor(context, R.color.colorAccent)
                     )
+
                 R.styleable.CountDownView_ringWidth -> mRingWidth =
                     ta.getDimensionPixelSize(
                         R.styleable.CountDownView_ringWidth,
                         40
                     )
+
                 R.styleable.CountDownView_progressTextSize -> mRingProgressTextSize =
                     ta.getDimensionPixelSize(
                         R.styleable.CountDownView_progressTextSize,
                         20
                     )
+
                 R.styleable.CountDownView_progressTextColor -> mProgressTextColor =
                     ta.getColor(
                         R.styleable.CountDownView_progressTextColor,
                         ContextCompat.getColor(context, R.color.colorAccent)
                     )
+
                 R.styleable.CountDownView_countdownTime -> mCountdownTime =
                     ta.getInteger(
                         R.styleable.CountDownView_countdownTime,
                         60
                     )
+
                 R.styleable.CountDownView_progressText -> mRingText =
                     ta.getString(R.styleable.CountDownView_progressText)
             }

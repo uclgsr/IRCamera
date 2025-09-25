@@ -19,16 +19,16 @@ class LiteSurfaceView @JvmOverloads constructor(
 
     var mFinalImageHeight = 0
 
-    var tmpData: ByteArray ?= null
-    var mIrRotateData: ByteArray ?= null
+    var tmpData: ByteArray? = null
+    var mIrRotateData: ByteArray? = null
 
-    var imageBitmap : Bitmap ?= null
+    var imageBitmap: Bitmap? = null
 
 
-
-    fun scaleBitmap() : Bitmap{
+    fun scaleBitmap(): Bitmap {
         try {
-            val irData = mIrRotateData ?: return Bitmap.createBitmap(measuredWidth, measuredHeight, Bitmap.Config.ARGB_8888)
+            val irData =
+                mIrRotateData ?: return Bitmap.createBitmap(measuredWidth, measuredHeight, Bitmap.Config.ARGB_8888)
             if (tmpData == null) {
                 tmpData = ByteArray(irData.size)
             }
@@ -39,9 +39,11 @@ class LiteSurfaceView @JvmOverloads constructor(
                     Bitmap.createBitmap(mFinalImageWidth, mFinalImageHeight, Bitmap.Config.ARGB_8888)
             }
             imageBitmap?.copyPixelsFromBuffer(ByteBuffer.wrap(tempData))
-            return  Bitmap.createScaledBitmap(imageBitmap!!,
-                measuredWidth, measuredHeight, true)
-        }catch (e : Exception){
+            return Bitmap.createScaledBitmap(
+                imageBitmap!!,
+                measuredWidth, measuredHeight, true
+            )
+        } catch (e: Exception) {
             return Bitmap.createBitmap(measuredWidth, measuredHeight, Bitmap.Config.ARGB_8888)
         }
     }

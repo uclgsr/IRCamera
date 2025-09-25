@@ -12,8 +12,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mpdc4gsr.libunified.R
 import com.mpdc4gsr.libunified.app.adapter.TargetColorAdapter
 import com.mpdc4gsr.libunified.app.bean.ObserveBean
-import com.mpdc4gsr.libunified.databinding.DialogTipTargetColorBinding
 import com.mpdc4gsr.libunified.app.utils.ScreenUtil
+import com.mpdc4gsr.libunified.databinding.DialogTipTargetColorBinding
 
 class TipTargetColorDialog : Dialog {
     constructor(context: Context) : super(context)

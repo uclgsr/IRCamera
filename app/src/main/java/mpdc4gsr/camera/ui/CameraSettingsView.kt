@@ -73,8 +73,6 @@ constructor(
     var onFocusDistanceChanged: ((Float) -> Unit)? = null // 0.0f = infinity, 1.0f = macro
     var onAfLockToggle: ((Boolean) -> Unit)? = null
     var onTapToFocus: ((Float, Float) -> Unit)? = null // x, y coordinates normalized to 0.0-1.0
-    
-    // Missing callback declarations
     var onExposureLockToggle: ((Boolean) -> Unit)? = null
     var onFocusLockToggle: ((Boolean) -> Unit)? = null
     var onResetCameraControls: (() -> Unit)? = null
@@ -422,32 +420,6 @@ constructor(
         focusLockLayout.addView(focusLockButton)
         manualControlsPanel.addView(focusLockLayout)
 
-        // Exposure Compensation
-        val exposureCompLayout = LinearLayout(context).apply {
-            orientation = LinearLayout.VERTICAL
-            layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            )
-        }
-
-        exposureCompensationText = TextView(context).apply {
-            text = "Exposure Compensation: 0.0 EV"
-            setPadding(0, 8, 0, 4)
-        }
-        exposureCompLayout.addView(exposureCompensationText)
-
-        exposureCompensationSeekBar = SeekBar(context).apply {
-            layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            )
-            max = 80 // -4.0 to +4.0 EV in 0.1 steps (80 steps total, centered at 40)
-            progress = 40 // 0.0 EV
-        }
-        exposureCompLayout.addView(exposureCompensationSeekBar)
-        manualControlsPanel.addView(exposureCompLayout)
-
         // Reset Controls Button
         resetControlsButton = ImageButton(context).apply {
             layoutParams = LinearLayout.LayoutParams(
@@ -579,20 +551,6 @@ constructor(
             onFocusLockToggle?.invoke(newLockState)
         }
 
-        exposureCompensationSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                if (fromUser) {
-                    // Convert progress (0-80) to exposure compensation (-4.0 to +4.0 EV)
-                    val exposureComp = (progress - 40) * 0.1f
-                    exposureCompensationText.text = "Exposure Compensation: ${String.format("%.1f", exposureComp)} EV"
-                    onExposureCompensationChanged?.invoke(exposureComp)
-                }
-            }
-
-            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
-            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
-        })
-
         resetControlsButton.setOnClickListener {
             resetManualControls()
             onResetCameraControls?.invoke()
@@ -608,8 +566,8 @@ constructor(
         focusLockButton.tag = false
         focusLockButton.setImageResource(android.R.drawable.ic_search_category_default)
 
-        // Reset exposure compensation
-        exposureCompensationSeekBar.progress = 40
+        // Reset exposure compensation (for -2.0..+2.0 EV scale)
+        exposureCompensationSeekBar.progress = 100
         exposureCompensationText.text = "Exposure Compensation: 0.0 EV"
     }
 
@@ -630,7 +588,8 @@ constructor(
     }
 
     fun updateExposureCompensation(compensation: Float) {
-        val progress = ((compensation * 10) + 40).toInt().coerceIn(0, 80)
+        // Map -2.0..+2.0 EV to 0..200 progress
+        val progress = ((compensation * 50f) + 100f).toInt().coerceIn(0, 200)
         exposureCompensationSeekBar.progress = progress
         exposureCompensationText.text = "Exposure Compensation: ${String.format("%.1f", compensation)} EV"
     }

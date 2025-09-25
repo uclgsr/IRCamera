@@ -6,10 +6,10 @@ Simple test script to validate the standardized networking protocol
 between PC controller and Android device.
 """
 
-import socket
-import time
-import threading
 import re
+import socket
+import threading
+import time
 from typing import Dict, Any, Optional
 
 

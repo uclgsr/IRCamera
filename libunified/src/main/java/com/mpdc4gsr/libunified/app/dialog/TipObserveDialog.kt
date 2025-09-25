@@ -10,8 +10,8 @@ import android.widget.CheckBox
 import android.widget.ImageView
 import android.widget.TextView
 import com.mpdc4gsr.libunified.R
-import com.mpdc4gsr.libunified.databinding.DialogTipObserveBinding
 import com.mpdc4gsr.libunified.app.utils.ScreenUtil
+import com.mpdc4gsr.libunified.databinding.DialogTipObserveBinding
 
 class TipObserveDialog : Dialog {
     constructor(context: Context) : super(context)

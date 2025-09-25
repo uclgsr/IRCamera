@@ -9,8 +9,8 @@ Usage:
     python3 demo_networking.py
 """
 
-import sys
 import os
+import sys
 
 # Add the pc-controller directory to the path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'pc-controller'))
