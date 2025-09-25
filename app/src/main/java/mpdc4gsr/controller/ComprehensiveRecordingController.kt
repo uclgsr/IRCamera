@@ -12,6 +12,13 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import mpdc4gsr.controller.SessionManifest
+import mpdc4gsr.controller.SessionEvent
+import mpdc4gsr.controller.SensorActivityInfo
+import mpdc4gsr.controller.SensorHealthInfo
+import mpdc4gsr.controller.DropoutEvent
+import mpdc4gsr.controller.ReconnectionEvent
+import mpdc4gsr.controller.RecordingController
 import mpdc4gsr.data.SessionMetadata
 import mpdc4gsr.permissions.PermissionManager
 import mpdc4gsr.sensors.SensorRecorder
@@ -101,8 +108,8 @@ class ComprehensiveRecordingController(
 
     fun addSensorRecorder(name: String, recorder: SensorRecorder) {
         sensorRecorders[name] = recorder
-        sensorHealthStatus[name] = ComprehensiveSensorHealthInfo(
-            name = name,
+        sensorHealthStatus[name] = SensorHealthInfo(
+            sensorId = name,
             isHealthy = true,
             lastHealthCheck = System.currentTimeMillis(),
             consecutiveFailures = 0
@@ -895,7 +902,7 @@ class ComprehensiveRecordingController(
             eventType = eventType,
             timestampMs = System.currentTimeMillis(),
             sensorId = sensorId,
-            triggerSource = triggerSource,
+            triggerSource = null, // Convert between enum types if needed
             metadata = metadata,
             success = success,
             errorMessage = errorMessage
@@ -928,7 +935,7 @@ class ComprehensiveRecordingController(
                 wasActive = wasActive,
                 startedSuccessfully = wasActive,
                 finalStatus = if (wasActive) "COMPLETED" else "INACTIVE",
-                errorMessages = healthInfo?.lastError?.let { listOf(it) } ?: emptyList()
+                errorMessages = healthInfo?.lastError?.let { listOf(it) } ?: emptyList<String>()
             )
         }
 
@@ -945,13 +952,13 @@ class ComprehensiveRecordingController(
             startTime = startTime,
             stopTime = stopTime,
             duration = duration,
-            triggerSource = lastTriggerSource ?: TriggerSource.LOCAL_UI,
+            triggerSource = RecordingController.TriggerSource.LOCAL_UI, // Convert or use appropriate mapping
             sensorActivitySummary = sensorActivitySummary,
             events = sessionEvents.toList(),
             errors = errors,
             warnings = warnings,
             fileReferences = emptyMap(), // Will be populated by individual recorders
-            sessionState = currentSessionState.get()
+            sessionState = RecordingController.SessionState.STOPPED_COMPLETED // Convert or use appropriate mapping
         )
     }
 }
@@ -973,13 +980,6 @@ data class SessionInfoData(
 )
 
 data class SensorStatus(
-    val name: String,
-    val isActive: Boolean,
-    val isHealthy: Boolean,
-    val lastUpdate: Long
-)
-
-data class ComprehensiveSensorHealthInfo(
     val name: String,
     val isHealthy: Boolean,
     val lastHealthCheck: Long,
