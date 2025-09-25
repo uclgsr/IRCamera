@@ -257,6 +257,9 @@ class ComprehensiveRecordingController(
                 if (sensorsStarted > 0) {
                     _isRecording.set(true)
                     _recordingStateFlow.value = RecordingState.RECORDING
+                    
+                    // Transition session state to RECORDING on successful start
+                    transitionSessionState(SessionState.STARTING, SessionState.RECORDING)
 
                     // Start monitoring services
                     startHealthMonitoring()
@@ -281,6 +284,7 @@ class ComprehensiveRecordingController(
                 } else {
                     Log.e(TAG, "❌ No sensors started successfully - aborting recording")
                     cleanupFailedRecording()
+                    transitionSessionState(SessionState.STARTING, SessionState.STOPPED_FAILED)
                     _recordingStateFlow.value = RecordingState.ERROR
                     return@withContext false
                 }
@@ -288,6 +292,7 @@ class ComprehensiveRecordingController(
             } catch (e: Exception) {
                 Log.e(TAG, "Critical error starting recording", e)
                 cleanupFailedRecording()
+                transitionSessionState(SessionState.STARTING, SessionState.STOPPED_FAILED)
                 _recordingStateFlow.value = RecordingState.ERROR
                 return@withContext false
             }
@@ -458,6 +463,17 @@ class ComprehensiveRecordingController(
                     "📊 Stop results: ${stopResults.entries.joinToString { "${it.key}=${if (it.value) "✅" else "❌"}" }}"
                 )
 
+                // Determine final session state based on stop results
+                val finalSessionState = when {
+                    stopResults.isEmpty() -> SessionState.STOPPED_COMPLETED
+                    stopResults.values.all { it } -> SessionState.STOPPED_COMPLETED  
+                    stopResults.values.any { it } -> SessionState.STOPPED_INCOMPLETE
+                    else -> SessionState.STOPPED_FAILED
+                }
+                
+                // Transition to final state
+                transitionSessionState(SessionState.STOPPING, finalSessionState)
+
                 if (sensorErrors.isNotEmpty()) {
                     Log.w(TAG, "⚠️ Some sensors had stop errors but session was finalized successfully")
                 }
@@ -467,6 +483,7 @@ class ComprehensiveRecordingController(
             } catch (e: Exception) {
                 Log.e(TAG, "Critical error during recording stop", e)
                 // Even on failure, try to clean up gracefully
+                transitionSessionState(currentSessionState.get(), SessionState.STOPPED_FAILED)
                 cleanupFailedRecording()
                 return@withContext false
             }

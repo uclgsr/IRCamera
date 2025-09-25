@@ -1477,7 +1477,7 @@ class RecordingService : LifecycleService() {
                     }
                 } catch (e: Exception) {
                     Log.e(TAG, "Failed to start recording via PC command", e)
-                    ProtocolHandler.CommandResult(false, "Start recording failed: ${e.message}")
+                    return ProtocolHandler.CommandResult(false, "Start recording failed: ${e.message}")
                 }
             }
 
@@ -1504,7 +1504,7 @@ class RecordingService : LifecycleService() {
                     }
                 } catch (e: Exception) {
                     Log.e(TAG, "Failed to stop recording via PC command", e)
-                    ProtocolHandler.CommandResult(false, "Stop recording failed: ${e.message}")
+                    return ProtocolHandler.CommandResult(false, "Stop recording failed: ${e.message}")
                 }
             }
             override suspend fun onSyncRequest(pcTimestamp: Long): ProtocolHandler.SyncResult {
