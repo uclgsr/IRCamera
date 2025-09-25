@@ -78,19 +78,24 @@ class TapToFocusPreviewView @JvmOverloads constructor(
 
                 showFocusIndicator = true
                 focusIndicatorAlpha = 255
-                overlayView.invalidate()
+                invalidate()
 
                 onTapToFocus?.invoke(normalizedX, normalizedY)
 
                 postDelayed({
                     showFocusIndicator = false
-                    overlayView.invalidate()
+                    invalidate()
                 }, 1500)
 
                 return true
             }
         }
         return super.onTouchEvent(event)
+    }
+
+    override fun onDraw(canvas: Canvas) {
+        super.onDraw(canvas)
+        drawFocusIndicator(canvas)
     }
 
     private fun drawFocusIndicator(canvas: Canvas) {
@@ -120,7 +125,7 @@ class TapToFocusPreviewView @JvmOverloads constructor(
             if (focusIndicatorAlpha > 0) {
                 focusIndicatorAlpha = (focusIndicatorAlpha - 8).coerceAtLeast(0)
                 if (focusIndicatorAlpha > 0) {
-                    overlayView.postInvalidateOnAnimation()
+                    postInvalidateOnAnimation()
                 }
             }
         }
@@ -133,7 +138,7 @@ class TapToFocusPreviewView @JvmOverloads constructor(
         focusY = y
         showFocusIndicator = true
         focusIndicatorAlpha = 255
-        overlayView.invalidate()
+        invalidate()
 
         val widthF = width.takeIf { it > 0 } ?: previewView.width
         val heightF = height.takeIf { it > 0 } ?: previewView.height
@@ -145,12 +150,12 @@ class TapToFocusPreviewView @JvmOverloads constructor(
 
         postDelayed({
             showFocusIndicator = false
-            overlayView.invalidate()
+            invalidate()
         }, 1500)
     }
 
     fun hideFocusIndicator() {
         showFocusIndicator = false
-        overlayView.invalidate()
+        invalidate()
     }
 }

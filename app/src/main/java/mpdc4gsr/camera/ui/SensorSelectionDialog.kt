@@ -16,8 +16,6 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
-import com.shimmerresearch.android.manager.ShimmerBluetoothManagerAndroid
-import com.shimmerresearch.driver.ShimmerDevice
 
 
 // Use simple feature checks for MVP; avoid direct Shimmer API calls
@@ -63,7 +61,7 @@ class SensorSelectionDialog(
             } catch (e: Exception) {
                 // GSR sensor available even without hardware (simulation mode)
                 available.add(SensorType.GSR)
-                Log.w(TAG, "Shimmer Bluetooth manager not available, GSR will use simulated data if needed", e)
+                Log.w(TAG, "GSR sensor available with simulated data if needed", e)
             }
 
             Log.d(TAG, "Detected available sensors: $available")
