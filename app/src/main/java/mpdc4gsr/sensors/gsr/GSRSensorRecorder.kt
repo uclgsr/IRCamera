@@ -1262,24 +1262,18 @@ class GSRSensorRecorder(
                 if (shimmerManager != null) {
                     val deviceList = mutableListOf<String>()
 
-                    // Get connected Shimmer devices - using shimmer manager's internal tracking
+                    // Get connected Shimmer devices - using current device if available
                     val connectedDevices = try {
                         Log.i(TAG, "Checking for connected Shimmer devices")
-                        // Try to get connected devices from the shimmer manager
-                        val shimmerMap = shimmerManager.getShimmers()
-                        if (shimmerMap != null) {
-                            shimmerMap.values.toList()
-                        } else {
-                            // If no getShimmers method available, check if we have a current device
-                            currentConnectedDevice?.let { device ->
-                                if (device.bluetoothRadioState == BT_STATE.CONNECTED || 
-                                    device.bluetoothRadioState == BT_STATE.STREAMING) {
-                                    listOf(device)
-                                } else {
-                                    emptyList()
-                                }
-                            } ?: emptyList()
-                        }
+                        // Check if we have a current device that's connected
+                        currentConnectedDevice?.let { device ->
+                            if (device.bluetoothRadioState == BT_STATE.CONNECTED || 
+                                device.bluetoothRadioState == BT_STATE.STREAMING) {
+                                listOf(device)
+                            } else {
+                                emptyList()
+                            }
+                        } ?: emptyList()
                     } catch (e: Exception) {
                         Log.w(TAG, "Error getting connected devices: ${e.message}")
                         // Fall back to checking current device if available
@@ -1413,14 +1407,13 @@ class GSRSensorRecorder(
                             // Verify connection by checking if we can get a device from the manager
                             val connectedDevice = try {
                                 Log.i(TAG, "Verifying connection to Shimmer device")
-                                // Try to get the device from shimmer manager's internal tracking
-                                // The manager should have the device if connection succeeded
-                                val allConnectedDevices = shimmerManager.getShimmers()?.values?.toList() ?: emptyList()
-                                allConnectedDevices.find { shimmer ->
+                                // Try to verify the current connected device matches the requested address
+                                currentConnectedDevice?.let { device ->
                                     try {
-                                        shimmer.getMacId() == deviceAddress
+                                        if (device.getMacId() == deviceAddress) device else null
                                     } catch (e: Exception) {
-                                        false
+                                        Log.w(TAG, "Error getting device MAC ID: ${e.message}")
+                                        null
                                     }
                                 }
                             } catch (e: Exception) {
