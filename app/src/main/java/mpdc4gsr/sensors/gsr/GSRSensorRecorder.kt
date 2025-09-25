@@ -1008,7 +1008,7 @@ class GSRSensorRecorder(
 
     private fun calculateGSRFromRaw(rawValue: Int): Double {
         // Use centralized GSR calculation utility
-        return GSRCalculationUtils.calculateGSRFromRaw(rawValue)
+        return GSRCalculationUtils.calculateGSRMicrosiemens(rawValue)
     }
 
     private fun calculateSignalQuality(gsrMicrosiemens: Double, rawValue: Int): Double {
