@@ -431,7 +431,8 @@ class ThermalCameraRecorder(
                 sessionStartMonotonicNs = SystemClock.elapsedRealtimeNanos(),
                 sessionStartIso = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX", Locale.getDefault()).format(Date(currentTimeMs))
             )
-            val recordingSuccess = startRecording("/", sessionMetadata)
+            val sessionDir = sessionManager.getSessionDirectory()
+            val recordingSuccess = startRecording(sessionDir.absolutePath, sessionMetadata)
             Log.d(TAG, "Thermal recording restart result: $recordingSuccess")
             recordingSuccess
         } catch (e: Exception) {
