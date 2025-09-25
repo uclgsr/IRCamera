@@ -325,8 +325,9 @@ dependencies {
     testImplementation("org.mockito:mockito-inline:5.2.0")
     testImplementation("org.mockito:mockito-android:5.8.0")
     
-    // HDF5 support for thermal data export
-    implementation("io.jhdf:jhdf:0.6.10")
+    // HDF5 support for thermal data export - using write-capable library
+    implementation("io.jhdf:jhdf:0.6.10") // Keep read support
+    implementation("ch.systemsx.cisd:jhdf5:19.04.0") // Add write support
     androidTestImplementation(libs.test.ext.junit)
     androidTestImplementation(libs.test.espresso.core)
     androidTestImplementation(libs.test.runner)

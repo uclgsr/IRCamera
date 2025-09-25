@@ -3588,21 +3588,23 @@ class ThermalCameraRecorder(
             
             val hdf5File = File(exportDir, "thermal_data.h5")
             
-            // Create HDF5 file structure for thermal data
-            io.jhdf.HdfFile.write(hdf5File.toPath()) { hdfFile ->
-                // Create metadata group
-                val metadataGroup = hdfFile.putGroup("metadata")
-                metadataGroup.putAttribute("sdk_version", "Topdon TC001 SDK v1.1.1")
-                metadataGroup.putAttribute("recording_start", recordingStartTime.toString())
-                metadataGroup.putAttribute("total_frames", frameCount.get())
-                metadataGroup.putAttribute("frame_rate_hz", thermalFrameRate)
-                metadataGroup.putAttribute("resolution_width", IR_CAMERA_WIDTH)
-                metadataGroup.putAttribute("resolution_height", IR_CAMERA_HEIGHT)
-                metadataGroup.putAttribute("temperature_unit", "celsius")
-                metadataGroup.putAttribute("emissivity", DEFAULT_EMISSIVITY)
+            // Create HDF5 file structure for thermal data using JHDF5 writer
+            val writer = ch.systemsx.cisd.hdf5.HDF5Factory.open(hdf5File)
+            
+            try {
+                // Create metadata group and attributes
+                writer.createGroup("/metadata")
+                writer.setStringAttribute("/metadata", "sdk_version", "Topdon TC001 SDK v1.1.1")
+                writer.setStringAttribute("/metadata", "recording_start", recordingStartTime.toString())
+                writer.setLongAttribute("/metadata", "total_frames", frameCount.get().toLong())
+                writer.setDoubleAttribute("/metadata", "frame_rate_hz", thermalFrameRate)
+                writer.setIntAttribute("/metadata", "resolution_width", IR_CAMERA_WIDTH)
+                writer.setIntAttribute("/metadata", "resolution_height", IR_CAMERA_HEIGHT)
+                writer.setStringAttribute("/metadata", "temperature_unit", "celsius")
+                writer.setFloatAttribute("/metadata", "emissivity", DEFAULT_EMISSIVITY)
                 
                 // Create thermal data group
-                val thermalGroup = hdfFile.putGroup("thermal_data")
+                writer.createGroup("/thermal_data")
                 
                 // Prepare arrays for bulk data storage
                 val timestamps = mutableListOf<Long>()
@@ -3641,27 +3643,29 @@ class ThermalCameraRecorder(
                 }
                 
                 // Write arrays to HDF5
-                thermalGroup.putDataset("timestamps_ns", timestamps.toLongArray())
-                thermalGroup.putDataset("frame_indices", frameIndices.toLongArray())
-                thermalGroup.putDataset("min_temperatures_c", minTemps.toFloatArray())
-                thermalGroup.putDataset("max_temperatures_c", maxTemps.toFloatArray())
-                thermalGroup.putDataset("avg_temperatures_c", avgTemps.toFloatArray())
-                thermalGroup.putDataset("center_temperatures_c", centerTemps.toFloatArray())
+                if (timestamps.isNotEmpty()) {
+                    writer.writeLongArray("/thermal_data/timestamps_ns", timestamps.toLongArray())
+                    writer.writeLongArray("/thermal_data/frame_indices", frameIndices.toLongArray())
+                    writer.writeFloatArray("/thermal_data/min_temperatures_c", minTemps.toFloatArray())
+                    writer.writeFloatArray("/thermal_data/max_temperatures_c", maxTemps.toFloatArray())
+                    writer.writeFloatArray("/thermal_data/avg_temperatures_c", avgTemps.toFloatArray())
+                    writer.writeFloatArray("/thermal_data/center_temperatures_c", centerTemps.toFloatArray())
+                }
                 
                 // Add temperature matrices if available and requested
                 if (includeImages) {
-                    val matricesGroup = thermalGroup.putGroup("temperature_matrices")
-                    matricesGroup.putAttribute("description", "Full temperature matrices for each frame")
-                    matricesGroup.putAttribute("dimensions", "[frame, height, width]")
-                    matricesGroup.putAttribute("height", IR_CAMERA_HEIGHT)
-                    matricesGroup.putAttribute("width", IR_CAMERA_WIDTH)
-                    
-                    // For now, indicate matrices would be stored here
-                    // In a full implementation, this would include the complete temperature matrices
-                    matricesGroup.putAttribute("note", "Temperature matrices export requires additional implementation")
+                    writer.createGroup("/thermal_data/temperature_matrices")
+                    writer.setStringAttribute("/thermal_data/temperature_matrices", "description", "Full temperature matrices for each frame")
+                    writer.setStringAttribute("/thermal_data/temperature_matrices", "dimensions", "[frame, height, width]")
+                    writer.setIntAttribute("/thermal_data/temperature_matrices", "height", IR_CAMERA_HEIGHT)
+                    writer.setIntAttribute("/thermal_data/temperature_matrices", "width", IR_CAMERA_WIDTH)
+                    writer.setStringAttribute("/thermal_data/temperature_matrices", "note", "Temperature matrices export requires additional implementation")
                 }
                 
                 Log.i(TAG, "Successfully exported ${timestamps.size} thermal frames to HDF5")
+                
+            } finally {
+                writer.close()
             }
             
             Log.i(TAG, "HDF5 export completed successfully: ${hdf5File.absolutePath}")
