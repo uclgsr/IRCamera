@@ -50,26 +50,10 @@ class GSRSensorRecorder(
     companion object {
         private const val TAG = "GSRSensorRecorder"
 
-        // GSR calculation constants
-        private const val ADC_MAX_VALUE = 4095.0
-        private const val REFERENCE_VOLTAGE = 3.0
-        private const val REFERENCE_RESISTANCE_OHMS = 40200.0
-        private const val VOLTAGE_DIVIDER = 1000.0
-        private const val MICROSIEMENS_CONVERSION = 1000000.0
-
-        // Signal quality thresholds
-        private const val GSR_RAW_LOWER_BOUND = 100
-        private const val GSR_RAW_UPPER_BOUND = 4000
-        private const val GSR_MICROSIEMENS_LOWER_BOUND = 0.1
-        private const val GSR_MICROSIEMENS_UPPER_BOUND = 100.0
-        private const val GSR_HIGH_THRESHOLD = 50.0
-        private const val GSR_LOW_THRESHOLD = 0.5
-
-        // Connection health thresholds
+        // Connection health thresholds - keeping these as they are specific to this recorder
         private const val TIMING_HEALTH_POOR_MS = 2000L
-        private const val TIMING_HEALTH_ACCEPTABLE_MS = 1000L
 
-        // Health score weights
+        // Health score weights - specific to this implementation
         private const val HEALTH_SCORE_WEIGHT_HISTORICAL = 0.8
         private const val HEALTH_SCORE_WEIGHT_SAMPLE = 0.15
         private const val HEALTH_SCORE_WEIGHT_TIMING = 0.05
@@ -900,7 +884,7 @@ class GSRSensorRecorder(
 
             val timingHealth = when {
                 timeSinceLastCheck > TIMING_HEALTH_POOR_MS -> 20.0
-                timeSinceLastCheck > TIMING_HEALTH_ACCEPTABLE_MS -> 70.0
+                timeSinceLastCheck > GSRConstants.TIMING_HEALTH_ACCEPTABLE_MS -> 70.0
                 else -> 100.0
             }
 
@@ -926,11 +910,8 @@ class GSRSensorRecorder(
     }
 
     private fun calculateResistanceFromGSR(gsrMicrosiemens: Double): Double {
-        return if (gsrMicrosiemens > 0) {
-            1000000.0 / gsrMicrosiemens
-        } else {
-            Double.MAX_VALUE
-        }
+        // Use centralized resistance calculation utility
+        return GSRCalculationUtils.calculateResistanceFromGSR(gsrMicrosiemens)
     }
 
     private fun determineRecordingMode(): String {
@@ -1026,29 +1007,13 @@ class GSRSensorRecorder(
     }
 
     private fun calculateGSRFromRaw(rawValue: Int): Double {
-        // Standard Shimmer GSR calculation from raw ADC value using constants
-        return if (rawValue > 0) {
-            val voltage = (rawValue / ADC_MAX_VALUE) * REFERENCE_VOLTAGE
-            val resistance =
-                (REFERENCE_VOLTAGE * REFERENCE_RESISTANCE_OHMS) / (voltage * VOLTAGE_DIVIDER) - REFERENCE_RESISTANCE_OHMS
-            if (resistance > 0) MICROSIEMENS_CONVERSION / resistance else 0.0
-        } else {
-            0.0
-        }
+        // Use centralized GSR calculation utility
+        return GSRCalculationUtils.calculateGSRFromRaw(rawValue)
     }
 
     private fun calculateSignalQuality(gsrMicrosiemens: Double, rawValue: Int): Double {
-        // Calculate signal quality based on various factors using defined constants
-        val validRange = gsrMicrosiemens in GSR_MICROSIEMENS_LOWER_BOUND..GSR_MICROSIEMENS_UPPER_BOUND
-        val rawValueValid = rawValue in GSR_RAW_LOWER_BOUND..GSR_RAW_UPPER_BOUND
-        val noiseLevel = if (rawValue > 0) 1.0 - (rawValue % 10) / 10.0 else 0.0
-
-        return when {
-            !validRange || !rawValueValid -> 0.0
-            gsrMicrosiemens > GSR_HIGH_THRESHOLD -> 0.3 // Very high GSR might indicate poor contact
-            gsrMicrosiemens < GSR_LOW_THRESHOLD -> 0.4 // Very low GSR might indicate sensor issues
-            else -> 0.8 + (noiseLevel * 0.2) // Good signal with noise factor
-        }.coerceIn(0.0, 1.0)
+        // Use centralized signal quality calculation
+        return GSRCalculationUtils.calculateSignalQuality(gsrMicrosiemens, rawValue)
     }
 
     private fun setupGSRSampleCallback() {
