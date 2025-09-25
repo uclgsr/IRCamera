@@ -12,7 +12,7 @@ graph TB
     %% Library Layer
     subgraph "Library Layer"
         LibApp[📚 libapp<br/>Application Library]
-        LibCom[📚 libcom<br/>Communication Library] 
+        LibCom[📚 libcom<br/>Communication Library]
         LibIR[📚 libir<br/>Infrared Camera Library]
         LibMatrix[📚 libmatrix<br/>Matrix Operations]
         LibMenu[📚 libmenu<br/>Menu Components]
