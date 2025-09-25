@@ -2137,6 +2137,8 @@ class ThermalCameraRecorder(
             }
 
 
+            // Nested function moved to class level - commented out to fix compilation error
+            /*
             fun getThermalSystemStatus(): ThermalSystemStatus {
                 return ThermalSystemStatus(
                     isConnected = isIRCameraConnected,
@@ -2184,6 +2186,7 @@ class ThermalCameraRecorder(
                 val productId: Int,
                 val isEnhanced: Boolean
             )
+            */
 
             override suspend fun stopRecording(): Boolean {
                 try {
@@ -3411,4 +3414,104 @@ class ThermalCameraRecorder(
             false
         }
     }
+
+    /**
+     * Get thermal system status - moved from nested location to fix compilation error
+     */
+    fun getThermalSystemStatus(): ThermalSystemStatus {
+        return ThermalSystemStatus(
+            isConnected = isIRCameraConnected,
+            hasUsbPermission = hasUsbPermission,
+            isRecording = _isRecording.get(),
+            isSimulationMode = isSimulationMode,
+            frameRate = thermalFrameRate,
+            framesRecorded = frameCount.get(),
+            deviceInfo = thermalCameraDevice?.let { device ->
+                ThermalDeviceInfo(
+                    productName = device.productName ?: "TC001",
+                    vendorId = device.vendorId,
+                    productId = device.productId,
+                    isEnhanced = thermalFrameRate >= 20.0
+                )
+            },
+            statusMessage = generateThermalStatusMessage()
+        )
+    }
+
+    /**
+     * Get performance metrics - moved from nested location to fix compilation error
+     */
+    fun getPerformanceMetrics(): ThermalPerformanceMetrics {
+        return try {
+            val currentTime = System.nanoTime()
+            val timeDeltaMs = (currentTime - lastPerformanceUpdate) / 1_000_000.0
+            val avgFrameRate = if (timeDeltaMs > 0) frameCount.get() / (timeDeltaMs / 1000.0) else 0.0
+            
+            ThermalPerformanceMetrics(
+                averageFrameRate = avgFrameRate.coerceAtMost(thermalFrameRate),
+                cpuUsagePercent = 0.0, // Stub value
+                memoryUsageMB = Runtime.getRuntime().totalMemory() / (1024.0 * 1024.0),
+                totalFramesProcessed = frameCount.get(),
+                droppedFrameCount = 0L,
+                thermalProcessingTimeMs = 0.0,
+                networkLatencyMs = 0.0
+            )
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to get performance metrics", e)
+            ThermalPerformanceMetrics(
+                averageFrameRate = 0.0,
+                cpuUsagePercent = 0.0,
+                memoryUsageMB = 0.0,
+                totalFramesProcessed = 0L,
+                droppedFrameCount = 0L,
+                thermalProcessingTimeMs = 0.0,
+                networkLatencyMs = 0.0
+            )
+        }
+    }
+
+    /**
+     * Update calibration - moved from nested location to fix compilation error
+     */
+    fun updateCalibration(
+        ambientTemp: Double,
+        emissivity: Double,
+        reflectedTemp: Double
+    ) {
+        configureThermalDevice(emissivity, Pair(-20.0f, 400.0f), ambientTemp)
+        this.reflectedTemperature = reflectedTemp
+
+        Log.i(
+            TAG,
+            "Thermal calibration updated: ambient=$ambientTemp°C, emissivity=$emissivity, reflected=$reflectedTemp°C"
+        )
+    }
+
+    private fun generateThermalStatusMessage(): String {
+        return when {
+            !hasUsbPermission -> "USB permission required for thermal camera"
+            !isIRCameraConnected -> "Thermal camera not connected - using simulation"
+            isSimulationMode -> "Running in simulation mode"
+            _isRecording.get() -> "Recording thermal data at ${String.format("%.1f", thermalFrameRate)}Hz"
+            else -> "Thermal camera ready"
+        }
+    }
+
+    data class ThermalSystemStatus(
+        val isConnected: Boolean,
+        val hasUsbPermission: Boolean,
+        val isRecording: Boolean,
+        val isSimulationMode: Boolean,
+        val frameRate: Double,
+        val framesRecorded: Long,
+        val deviceInfo: ThermalDeviceInfo?,
+        val statusMessage: String
+    )
+
+    data class ThermalDeviceInfo(
+        val productName: String,
+        val vendorId: Int,
+        val productId: Int,
+        val isEnhanced: Boolean
+    )
 }

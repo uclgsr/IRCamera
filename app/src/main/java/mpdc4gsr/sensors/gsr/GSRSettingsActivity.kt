@@ -111,7 +111,7 @@ class GSRSettingsActivity : BaseBindingActivity<ActivityGsrSettingsBinding>() {
 
         setupPermissionHandling()
 
-        permissionController = PermissionController(this, this)
+        permissionController = PermissionController(this)
 
         gsrSensorRecorder = GSRSensorRecorder(
             this,

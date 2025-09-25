@@ -55,7 +55,7 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
 
     private fun initRecordingController() {
         // Initialize PermissionController and PermissionManager, then ComprehensiveRecordingController
-        permissionController = PermissionController(this, this)
+        permissionController = PermissionController(this)
         permissionManager = PermissionManager(this, permissionController)
         recordingController = ComprehensiveRecordingController(this, this, permissionManager)
 
