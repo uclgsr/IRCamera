@@ -17,6 +17,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.shimmerresearch.android.manager.ShimmerBluetoothManagerAndroid
+import com.shimmerresearch.driver.ShimmerDevice
 
 // Use Shimmer's official Bluetooth API for GSR device detection
 
@@ -43,7 +44,7 @@ class SensorSelectionDialog(
 
                 val hasConnectedShimmerDevices = try {
                     val connectedDevices = shimmerManager.getConnectedDeviceList()
-                    connectedDevices.any { device ->
+                    connectedDevices.any { device: com.shimmerresearch.driver.ShimmerDevice ->
                         val deviceName = device.getDeviceName()?.lowercase() ?: ""
                         val deviceAddress = device.getBluetoothAddress()
                         deviceName.contains("shimmer") ||

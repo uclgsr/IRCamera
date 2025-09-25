@@ -2930,6 +2930,54 @@ class ThermalCameraRecorder(
                 )
             }
 
+            fun getThermalSystemStatus(): ThermalSystemStatus {
+                return ThermalSystemStatus(
+                    isConnected = isIRCameraConnected,
+                    hasUsbPermission = hasUsbPermission,
+                    isRecording = _isRecording.get(),
+                    isSimulationMode = isSimulationMode,
+                    frameRate = thermalFrameRate,
+                    framesRecorded = frameCount.get(),
+                    deviceInfo = thermalCameraDevice?.let { device ->
+                        ThermalDeviceInfo(
+                            productName = device.productName ?: "TC001",
+                            vendorId = device.vendorId,
+                            productId = device.productId,
+                            isEnhanced = thermalFrameRate >= 20.0
+                        )
+                    },
+                    statusMessage = generateThermalStatusMessage()
+                )
+            }
+
+            private fun generateThermalStatusMessage(): String {
+                return when {
+                    !hasUsbPermission -> "USB permission required for thermal camera"
+                    !isIRCameraConnected -> "Thermal camera not connected - using simulation"
+                    isSimulationMode -> "Running in simulation mode"
+                    _isRecording.get() -> "Recording thermal data at ${String.format("%.1f", thermalFrameRate)}Hz"
+                    else -> "Thermal camera ready"
+                }
+            }
+
+            data class ThermalSystemStatus(
+                val isConnected: Boolean,
+                val hasUsbPermission: Boolean,
+                val isRecording: Boolean,
+                val isSimulationMode: Boolean,
+                val frameRate: Double,
+                val framesRecorded: Long,
+                val deviceInfo: ThermalDeviceInfo?,
+                val statusMessage: String
+            )
+
+            data class ThermalDeviceInfo(
+                val productName: String,
+                val vendorId: Int,
+                val productId: Int,
+                val isEnhanced: Boolean
+            )
+
             private fun calculateStorageUsed(): Double {
                 val dataSize = thermalDataFile?.length() ?: 0L
                 val framesSize = thermalFramesFile?.length() ?: 0L

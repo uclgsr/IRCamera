@@ -56,8 +56,6 @@ constructor(
     // Manual camera control elements
     private lateinit var exposureLockButton: ImageButton
     private lateinit var focusLockButton: ImageButton
-    private lateinit var exposureCompensationSeekBar: SeekBar
-    private lateinit var exposureCompensationText: TextView
     private lateinit var resetControlsButton: ImageButton
     private lateinit var manualControlsPanel: LinearLayout
 
@@ -75,6 +73,11 @@ constructor(
     var onFocusDistanceChanged: ((Float) -> Unit)? = null // 0.0f = infinity, 1.0f = macro
     var onAfLockToggle: ((Boolean) -> Unit)? = null
     var onTapToFocus: ((Float, Float) -> Unit)? = null // x, y coordinates normalized to 0.0-1.0
+    
+    // Missing callback declarations
+    var onExposureLockToggle: ((Boolean) -> Unit)? = null
+    var onFocusLockToggle: ((Boolean) -> Unit)? = null
+    var onResetCameraControls: (() -> Unit)? = null
 
 
     init {

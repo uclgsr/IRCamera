@@ -6,17 +6,20 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.MotionEvent
+import android.widget.FrameLayout
 import androidx.camera.view.PreviewView
 
 /**
- * Custom PreviewView that supports tap-to-focus functionality
+ * Custom FrameLayout that contains a PreviewView and supports tap-to-focus functionality
  * with visual feedback for focus point
  */
 class TapToFocusPreviewView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : PreviewView(context, attrs, defStyleAttr) {
+) : FrameLayout(context, attrs, defStyleAttr) {
+
+    val previewView = PreviewView(context, attrs, defStyleAttr)
 
     private val focusCirclePaint = Paint().apply {
         color = Color.WHITE
@@ -39,6 +42,14 @@ class TapToFocusPreviewView @JvmOverloads constructor(
 
     // Callback for tap-to-focus events
     var onTapToFocus: ((normalizedX: Float, normalizedY: Float) -> Unit)? = null
+
+    init {
+        // Add the PreviewView to the FrameLayout
+        addView(previewView, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT))
+        
+        // Enable drawing for focus indicators
+        setWillNotDraw(false)
+    }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
         when (event.action) {
