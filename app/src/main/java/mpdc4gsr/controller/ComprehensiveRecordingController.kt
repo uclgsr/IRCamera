@@ -40,6 +40,25 @@ class ComprehensiveRecordingController(
         private const val SESSION_TIMEOUT_MS = 30000L
     }
 
+    // Session orchestration enums
+    enum class TriggerSource {
+        LOCAL_UI,
+        LOCAL_NOTIFICATION,
+        REMOTE_PC,
+        AUTOMATIC,
+        CRASH_RECOVERY
+    }
+
+    enum class SessionState {
+        IDLE,
+        STARTING,
+        RECORDING,
+        STOPPING,
+        STOPPED_COMPLETED,
+        STOPPED_FAILED,
+        STOPPED_INCOMPLETE
+    }
+
 
     private val _isRecording = AtomicBoolean(false)
     val isRecording: Boolean get() = _isRecording.get()
@@ -50,6 +69,10 @@ class ComprehensiveRecordingController(
     private val sensorHealthStatus = ConcurrentHashMap<String, SensorHealthInfo>()
     private val reconnectionAttempts = ConcurrentHashMap<String, Int>()
 
+    // Session orchestration state
+    private val currentSessionState = java.util.concurrent.atomic.AtomicReference(SessionState.IDLE)
+    private var lastTriggerSource: TriggerSource? = null
+    private val sessionEvents = mutableListOf<SessionEvent>()
 
     private val _errorFlow = MutableStateFlow<RecordingError?>(null)
     val errorFlow: StateFlow<RecordingError?> = _errorFlow.asStateFlow()
@@ -123,30 +146,46 @@ class ComprehensiveRecordingController(
     suspend fun startRecording(
         sessionId: String? = null,
         enabledSensors: List<String> = listOf("RGB", "Thermal", "Shimmer"),
-        estimatedDurationMinutes: Int = 30
+        estimatedDurationMinutes: Int = 30,
+        triggerSource: TriggerSource = TriggerSource.LOCAL_UI
     ): Boolean {
         return withContext(Dispatchers.IO) {
             try {
+                // Enforce single-session operation
                 if (_isRecording.get()) {
-                    Log.w(TAG, "Recording already in progress")
+                    Log.w(TAG, "Recording already in progress, ignoring ${triggerSource.name} trigger")
                     return@withContext true
                 }
 
-                Log.i(TAG, "Starting comprehensive recording with validation")
+                // Transition to STARTING state
+                val transitionSuccess = transitionSessionState(SessionState.IDLE, SessionState.STARTING)
+                if (!transitionSuccess) {
+                    Log.w(TAG, "Failed to transition to STARTING state - invalid current state")
+                    return@withContext false
+                }
+
+                lastTriggerSource = triggerSource
+                addSessionEvent("SESSION_START_REQUESTED", triggerSource = triggerSource)
+
+                Log.i(TAG, "Starting comprehensive recording with validation (trigger: ${triggerSource.name})")
                 _recordingStateFlow.value = RecordingState.STARTING
 
                 // Phase 1: Validate recording prerequisites
                 val validationResult = validateRecordingPrerequisites(enabledSensors, estimatedDurationMinutes)
                 if (!validationResult.isValid) {
                     Log.e(TAG, "Prerequisites validation failed: ${validationResult.failureReason}")
+                    transitionSessionState(SessionState.STARTING, SessionState.STOPPED_FAILED)
                     _recordingStateFlow.value = RecordingState.ERROR
+                    addSessionEvent("VALIDATION_FAILED", triggerSource = triggerSource, success = false, errorMessage = validationResult.failureReason)
                     return@withContext false
                 }
 
                 // Phase 2: Request required permissions before starting
                 if (!requestRequiredPermissions(enabledSensors)) {
                     Log.e(TAG, "Failed to obtain required permissions")
+                    transitionSessionState(SessionState.STARTING, SessionState.STOPPED_FAILED)
                     _recordingStateFlow.value = RecordingState.ERROR
+                    addSessionEvent("PERMISSION_FAILED", triggerSource = triggerSource, success = false, errorMessage = "Required permissions not granted")
                     return@withContext false
                 }
 
@@ -345,14 +384,22 @@ class ComprehensiveRecordingController(
     }
 
 
-    suspend fun stopRecording(): Boolean {
+    suspend fun stopRecording(triggerSource: TriggerSource = TriggerSource.LOCAL_UI): Boolean {
         return withContext(Dispatchers.IO) {
             try {
                 if (!_isRecording.get()) {
+                    Log.w(TAG, "No recording in progress (trigger: ${triggerSource.name})")
                     return@withContext true
                 }
 
-                Log.i(TAG, "Stopping comprehensive recording with graceful teardown")
+                // Transition to STOPPING state
+                val transitionSuccess = transitionSessionState(SessionState.RECORDING, SessionState.STOPPING)
+                if (!transitionSuccess) {
+                    Log.w(TAG, "Failed to transition to STOPPING state - current state: ${currentSessionState.get().name}")
+                }
+
+                addSessionEvent("SESSION_STOP_REQUESTED", triggerSource = triggerSource)
+                Log.i(TAG, "Stopping comprehensive recording with graceful teardown (trigger: ${triggerSource.name})")
                 _recordingStateFlow.value = RecordingState.STOPPING
                 _isRecording.set(false)
 
@@ -785,7 +832,140 @@ class ComprehensiveRecordingController(
             "Error getting status"
         }
     }
+
+    // Session orchestration helper methods
+    private fun transitionSessionState(from: SessionState, to: SessionState): Boolean {
+        return currentSessionState.compareAndSet(from, to).also { success ->
+            if (success) {
+                Log.d(TAG, "Session state transition: ${from.name} -> ${to.name}")
+                addSessionEvent("STATE_TRANSITION", metadata = mapOf(
+                    "from" to from.name,
+                    "to" to to.name
+                ))
+            } else {
+                Log.w(TAG, "Failed session state transition: ${from.name} -> ${to.name} (current: ${currentSessionState.get().name})")
+            }
+        }
+    }
+
+    private fun addSessionEvent(
+        eventType: String,
+        sensorId: String? = null,
+        triggerSource: TriggerSource? = null,
+        success: Boolean = true,
+        errorMessage: String? = null,
+        metadata: Map<String, String> = emptyMap()
+    ) {
+        val event = SessionEvent(
+            eventType = eventType,
+            timestampMs = System.currentTimeMillis(),
+            sensorId = sensorId,
+            triggerSource = triggerSource,
+            metadata = metadata,
+            success = success,
+            errorMessage = errorMessage
+        )
+        sessionEvents.add(event)
+        Log.d(TAG, "Session event: $eventType${sensorId?.let { " ($it)" } ?: ""}")
+    }
+
+    // Session manifest generation
+    fun generateSessionManifest(): SessionManifest {
+        val sessionDirectory = currentSessionDirectory?.rootDir?.name ?: currentSessionId ?: "unknown"
+        val startTime = sessionStartTime.get()
+        val stopTime = if (currentSessionState.get() in listOf(SessionState.STOPPED_COMPLETED, SessionState.STOPPED_FAILED, SessionState.STOPPED_INCOMPLETE)) {
+            System.currentTimeMillis()
+        } else null
+        
+        val duration = stopTime?.let { it - startTime }
+        
+        val sensorActivitySummary = sensorRecorders.keys.associateWith { sensorName ->
+            val wasActive = activeRecorders[sensorName] == true
+            val healthInfo = sensorHealthStatus[sensorName]
+            
+            SensorActivityInfo(
+                sensorName = sensorName,
+                wasActive = wasActive,
+                startedSuccessfully = wasActive,
+                finalStatus = if (wasActive) "COMPLETED" else "INACTIVE",
+                errorMessages = healthInfo?.lastError?.let { listOf(it) } ?: emptyList()
+            )
+        }
+        
+        val errors = sessionEvents.filter { !it.success }.map { 
+            "${it.eventType}: ${it.errorMessage ?: "Unknown error"}"
+        }
+        
+        val warnings = sessionEvents.filter { 
+            it.eventType.contains("WARNING") || it.eventType.contains("CRITICAL")
+        }.map { "${it.eventType}: ${it.metadata}" }
+        
+        return SessionManifest(
+            sessionId = sessionDirectory,
+            startTime = startTime,
+            stopTime = stopTime,
+            duration = duration,
+            triggerSource = lastTriggerSource ?: TriggerSource.LOCAL_UI,
+            sensorActivitySummary = sensorActivitySummary,
+            events = sessionEvents.toList(),
+            errors = errors,
+            warnings = warnings,
+            fileReferences = emptyMap(), // Will be populated by individual recorders
+            sessionState = currentSessionState.get()
+        )
+    }
 }
+
+// Session orchestration data classes
+data class SessionEvent(
+    val eventType: String,
+    val timestampMs: Long,
+    val sensorId: String? = null,
+    val triggerSource: ComprehensiveRecordingController.TriggerSource? = null,
+    val metadata: Map<String, String> = emptyMap(),
+    val success: Boolean = true,
+    val errorMessage: String? = null
+)
+
+data class SessionManifest(
+    val sessionId: String,
+    val sessionName: String? = null,
+    val startTime: Long,
+    val stopTime: Long? = null,
+    val duration: Long? = null,
+    val triggerSource: ComprehensiveRecordingController.TriggerSource,
+    val sensorActivitySummary: Map<String, SensorActivityInfo>,
+    val events: List<SessionEvent>,
+    val errors: List<String>,
+    val warnings: List<String>,
+    val fileReferences: Map<String, String>,
+    val sessionState: ComprehensiveRecordingController.SessionState
+)
+
+data class SensorActivityInfo(
+    val sensorName: String,
+    val wasActive: Boolean,
+    val startedSuccessfully: Boolean,
+    val framesOrSamplesCaptured: Long? = null,
+    val dataSize: Long? = null,
+    val dropouts: List<DropoutEvent> = emptyList(),
+    val reconnections: List<ReconnectionEvent> = emptyList(),
+    val finalStatus: String,
+    val errorMessages: List<String> = emptyList()
+)
+
+data class DropoutEvent(
+    val timestampMs: Long,
+    val reason: String,
+    val durationMs: Long? = null
+)
+
+data class ReconnectionEvent(
+    val timestampMs: Long,
+    val attemptNumber: Int,
+    val successful: Boolean,
+    val delayMs: Long
+)
 
 
 data class ValidationResult(val isValid: Boolean, val failureReason: String)

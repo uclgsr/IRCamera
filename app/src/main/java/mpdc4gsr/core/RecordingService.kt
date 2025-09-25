@@ -28,9 +28,7 @@ import kotlinx.coroutines.withContext
 import mpdc4gsr.config.FeatureFlags
 import mpdc4gsr.config.ProtocolVersion
 import mpdc4gsr.controller.ComprehensiveRecordingController
-import mpdc4gsr.controller.RecordingController
 import mpdc4gsr.controller.RecordingState
-import mpdc4gsr.controller.SessionManifest
 import mpdc4gsr.core.CrashRecoveryManager
 import mpdc4gsr.network.NetworkClient
 import mpdc4gsr.network.NetworkConnectionManager
@@ -694,7 +692,7 @@ class RecordingService : LifecycleService() {
     }
 
     // Enhanced recording methods with trigger source support for session orchestration
-    private suspend fun startRecordingSessionWithTrigger(sessionDirectory: String, triggerSource: RecordingController.TriggerSource): Boolean {
+    private suspend fun startRecordingSessionWithTrigger(sessionDirectory: String, triggerSource: ComprehensiveRecordingController.TriggerSource): Boolean {
         if (!isInitialized) {
             Log.e(TAG, "Service not initialized, cannot start recording")
             structuredLogger.log(
@@ -737,8 +735,8 @@ class RecordingService : LifecycleService() {
 
             // Update notification for different trigger sources
             val notificationText = when (triggerSource) {
-                RecordingController.TriggerSource.REMOTE_PC -> "Starting recording session (PC Command)..."
-                RecordingController.TriggerSource.LOCAL_NOTIFICATION -> "Starting recording session (Notification)..."
+                ComprehensiveRecordingController.TriggerSource.REMOTE_PC -> "Starting recording session (PC Command)..."
+                ComprehensiveRecordingController.TriggerSource.LOCAL_NOTIFICATION -> "Starting recording session (Notification)..."
                 else -> "Starting recording session..."
             }
             
@@ -755,8 +753,8 @@ class RecordingService : LifecycleService() {
                 
                 // Update notification to show recording is active
                 val activeNotificationText = when (triggerSource) {
-                    RecordingController.TriggerSource.REMOTE_PC -> "Recording (PC Command) - Tap to stop"
-                    RecordingController.TriggerSource.LOCAL_NOTIFICATION -> "Recording (Notification) - Tap to stop"
+                    ComprehensiveRecordingController.TriggerSource.REMOTE_PC -> "Recording (PC Command) - Tap to stop"
+                    ComprehensiveRecordingController.TriggerSource.LOCAL_NOTIFICATION -> "Recording (Notification) - Tap to stop"
                     else -> "Recording - Tap to stop"
                 }
                 updateNotification(activeNotificationText)
@@ -803,7 +801,7 @@ class RecordingService : LifecycleService() {
         }
     }
 
-    private suspend fun stopRecordingSessionWithTrigger(triggerSource: RecordingController.TriggerSource): Boolean {
+    private suspend fun stopRecordingSessionWithTrigger(triggerSource: ComprehensiveRecordingController.TriggerSource): Boolean {
         return try {
             updateNotification("Stopping recording session...")
             Log.i(TAG, "Stopping recording session (trigger: ${triggerSource.name})")
@@ -818,8 +816,8 @@ class RecordingService : LifecycleService() {
                 Log.i(TAG, "Recording session stopped successfully (duration: ${String.format("%.1f", sessionDuration)}s, trigger: ${triggerSource.name})")
                 
                 val completedNotificationText = when (triggerSource) {
-                    RecordingController.TriggerSource.REMOTE_PC -> "Recording completed via PC (${String.format("%.1f", sessionDuration)}s)"
-                    RecordingController.TriggerSource.LOCAL_NOTIFICATION -> "Recording completed via notification (${String.format("%.1f", sessionDuration)}s)"
+                    ComprehensiveRecordingController.TriggerSource.REMOTE_PC -> "Recording completed via PC (${String.format("%.1f", sessionDuration)}s)"
+                    ComprehensiveRecordingController.TriggerSource.LOCAL_NOTIFICATION -> "Recording completed via notification (${String.format("%.1f", sessionDuration)}s)"
                     else -> "Recording completed (${String.format("%.1f", sessionDuration)}s)"
                 }
                 updateNotification(completedNotificationText)
@@ -889,7 +887,7 @@ class RecordingService : LifecycleService() {
     }
 
     // Session manifest saving
-    private fun saveSessionManifest(manifest: SessionManifest) {
+    private fun saveSessionManifest(manifest: ComprehensiveRecordingController.SessionManifest) {
         try {
             currentSessionDirectory?.let { sessionDir ->
                 val manifestFile = File(sessionDir, "session_manifest.json")
@@ -1460,7 +1458,7 @@ class RecordingService : LifecycleService() {
                 return try {
                     Log.i(TAG, "Remote start recording command received for session: $sessionId")
                     // Use REMOTE_PC trigger source for session orchestration
-                    val success = startRecordingSessionWithTrigger(sessionId, RecordingController.TriggerSource.REMOTE_PC)
+                    val success = startRecordingSessionWithTrigger(sessionId, ComprehensiveRecordingController.TriggerSource.REMOTE_PC)
                     if (success) {
                         ProtocolHandler.CommandResult(
                             success = true,
@@ -1487,7 +1485,7 @@ class RecordingService : LifecycleService() {
                 return try {
                     Log.i(TAG, "Remote stop recording command received for session: $sessionId")
                     // Use REMOTE_PC trigger source for session orchestration  
-                    val success = stopRecordingSessionWithTrigger(RecordingController.TriggerSource.REMOTE_PC)
+                    val success = stopRecordingSessionWithTrigger(ComprehensiveRecordingController.TriggerSource.REMOTE_PC)
                     if (success) {
                         ProtocolHandler.CommandResult(
                             success = true,
