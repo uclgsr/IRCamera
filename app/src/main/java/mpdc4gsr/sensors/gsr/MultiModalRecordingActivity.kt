@@ -818,13 +818,7 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
                 if (videoStopped) {
                     recordingInfo.add("Video recording completed")
                 }
-                rgbCameraRecorder?.let { camera ->
-                    val stats = camera.getFrameCaptureStats()
-                    val frameCount = stats["frames_captured"] as? Long ?: 0
-                    if (frameCount > 0) {
-                        recordingInfo.add("Frames captured: $frameCount")
-                    }
-                }
+                // Raw image info removed as methods are not available in current RgbCameraRecorder
                 recordingInfo.add("GSR samples: ${it.sampleCount}")
 
                 runOnUiThread {
