@@ -23,8 +23,8 @@ import logging
 import sys
 import os
 
-# Add parent directory to path for imports
-sys.path.insert(0, str(Path(__file__).parent.parent))
+# Add pc-controller directory to path for imports
+sys.path.insert(0, str(Path(__file__).parent.parent / "pc-controller"))
 
 from command_client import CommandClient
 

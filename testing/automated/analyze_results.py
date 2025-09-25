@@ -42,19 +42,20 @@ class TestResultAnalyzer:
         self.output_dir = Path(output_dir)
         self.output_dir.mkdir(parents=True, exist_ok=True)
         
-        # Configure matplotlib for publication-quality figures
-        plt.rcParams.update({
-            'font.size': 12,
-            'axes.labelsize': 12,
-            'axes.titlesize': 14,
-            'xtick.labelsize': 10,
-            'ytick.labelsize': 10,
-            'legend.fontsize': 11,
-            'figure.figsize': (10, 6),
-            'figure.dpi': 300,
-            'savefig.dpi': 300,
-            'savefig.bbox': 'tight'
-        })
+        # Configure matplotlib for publication-quality figures if available
+        if HAS_ANALYSIS_DEPS:
+            plt.rcParams.update({
+                'font.size': 12,
+                'axes.labelsize': 12,
+                'axes.titlesize': 14,
+                'xtick.labelsize': 10,
+                'ytick.labelsize': 10,
+                'legend.fontsize': 11,
+                'figure.figsize': (10, 6),
+                'figure.dpi': 300,
+                'savefig.dpi': 300,
+                'savefig.bbox': 'tight'
+            })
         
         self.test_metrics = None
         self.raw_data = {}
@@ -77,9 +78,17 @@ class TestResultAnalyzer:
                 csv_file = self.results_dir / f"{test_name}_raw_data.csv"
                 
                 if csv_file.exists():
-                    df = pd.read_csv(csv_file)
-                    self.raw_data[test_name] = df
-                    logger.info(f"Loaded {len(df)} data points for {test_name}")
+                    if HAS_ANALYSIS_DEPS:
+                        df = pd.read_csv(csv_file)
+                        self.raw_data[test_name] = df
+                        logger.info(f"Loaded {len(df)} data points for {test_name}")
+                    else:
+                        # Basic CSV reading without pandas
+                        with open(csv_file, 'r') as f:
+                            reader = csv.DictReader(f)
+                            data = list(reader)
+                            self.raw_data[test_name] = data
+                            logger.info(f"Loaded {len(data)} data points for {test_name}")
                 else:
                     logger.warning(f"Raw data file not found for {test_name}")
             

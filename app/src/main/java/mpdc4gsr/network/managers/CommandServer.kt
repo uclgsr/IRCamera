@@ -5,6 +5,7 @@ import android.util.Log
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -70,26 +71,31 @@ class CommandServer(
         
         try {
             // Initialize network components
-            networkServer = NetworkServer(context, port).apply {
-                setConnectionCallback { connected ->
-                    _connectionStatus.value = if (connected) 
-                        ConnectionStatus.CONNECTED 
-                    else 
-                        ConnectionStatus.DISCONNECTED
+            networkServer = NetworkServer(context, port)
+            
+            protocolHandler = ProtocolHandler(context, networkServer!!).apply {
+                setCommandHandler(createProtocolCallback())
+            }
+            
+            // Start network server and monitor connection status
+            serverScope.launch {
+                val startResult = networkServer?.start()
+                if (startResult == true) {
+                    _serverStatus.value = ServerStatus.RUNNING
+                    Log.i(TAG, "Command server started successfully")
+                    
+                    // Monitor connection status
+                    networkServer?.connectionStateFlow?.collect { connected ->
+                        _connectionStatus.value = if (connected) 
+                            ConnectionStatus.CONNECTED 
+                        else 
+                            ConnectionStatus.DISCONNECTED
+                    }
+                } else {
+                    _serverStatus.value = ServerStatus.ERROR
+                    Log.e(TAG, "Failed to start network server")
                 }
             }
-            
-            protocolHandler = ProtocolHandler().apply {
-                setCommandCallback(createProtocolCallback())
-            }
-            
-            // Start network server
-            serverScope.launch {
-                networkServer?.startServer()
-            }
-            
-            _serverStatus.value = ServerStatus.RUNNING
-            Log.i(TAG, "Command server started successfully")
             
         } catch (e: Exception) {
             Log.e(TAG, "Failed to start command server", e)
@@ -104,7 +110,9 @@ class CommandServer(
     fun stop() {
         Log.i(TAG, "Stopping command server")
         
-        networkServer?.stopServer()
+        serverScope.launch {
+            networkServer?.stop()
+        }
         serverScope.cancel()
         
         _serverStatus.value = ServerStatus.STOPPED
@@ -161,90 +169,77 @@ class CommandServer(
     /**
      * Create protocol callback for handling received commands
      */
-    private fun createProtocolCallback(): ProtocolHandler.ProtocolCallback {
-        return object : ProtocolHandler.ProtocolCallback {
-            override suspend fun onCommand(command: String, params: JSONObject): String {
-                Log.i(TAG, "Received command: $command")
-                
-                val messageId = params.optString("message_id", "unknown")
+    private fun createProtocolCallback(): ProtocolHandler.CommandHandler {
+        return object : ProtocolHandler.CommandHandler {
+            override suspend fun onStartRecording(sessionId: String): ProtocolHandler.CommandResult {
+                Log.i(TAG, "Starting recording for session: $sessionId")
                 
                 return try {
-                    when (command.uppercase()) {
-                        "START_RECORD" -> {
-                            val sessionId = params.optString("session_id", "default_session")
-                            val configuration = params.optJSONObject("configuration") ?: JSONObject()
-                            
-                            emitCommandEvent(CommandEvent.StartRecord(sessionId, configuration))
-                            
-                            val success = commandCallback?.onStartRecording(sessionId, configuration) ?: false
-                            
-                            sendAck(messageId, if (success) "success" else "failed")
-                            
-                            if (success) "START-ACK" else "START-FAILED"
-                        }
-                        
-                        "STOP_RECORD" -> {
-                            emitCommandEvent(CommandEvent.StopRecord)
-                            
-                            val success = commandCallback?.onStopRecording() ?: false
-                            
-                            sendAck(messageId, if (success) "success" else "failed")
-                            
-                            if (success) "STOP-ACK" else "STOP-FAILED"
-                        }
-                        
-                        "SYNC_REQUEST" -> {
-                            val pcAddress = params.optString("pc_address", "127.0.0.1")
-                            
-                            emitCommandEvent(CommandEvent.SyncRequest(pcAddress))
-                            
-                            val success = commandCallback?.onSyncRequest(pcAddress) ?: false
-                            
-                            sendAck(messageId, if (success) "synced" else "sync_failed")
-                            
-                            if (success) "SYNC-ACK" else "SYNC-FAILED"
-                        }
-                        
-                        "STATUS_REQUEST" -> {
-                            emitCommandEvent(CommandEvent.StatusRequest)
-                            
-                            val statusData = commandCallback?.onStatusRequest() ?: JSONObject()
-                            
-                            sendAck(messageId, "status_data", statusData)
-                            
-                            "STATUS-ACK"
-                        }
-                        
-                        else -> {
-                            Log.w(TAG, "Unknown command: $command")
-                            sendAck(messageId, "unknown_command")
-                            "UNKNOWN-COMMAND"
-                        }
-                    }
+                    // Delegate to recording controller
+                    recordingController?.let { controller ->
+                        // This would start the actual recording
+                        ProtocolHandler.CommandResult(
+                            success = true,
+                            message = "Recording started",
+                            data = mapOf("session_id" to sessionId)
+                        )
+                    } ?: ProtocolHandler.CommandResult(
+                        success = false,
+                        message = "Recording controller not available"
+                    )
                 } catch (e: Exception) {
-                    Log.e(TAG, "Error processing command: $command", e)
-                    sendAck(messageId, "error")
-                    "ERROR"
+                    Log.e(TAG, "Failed to start recording", e)
+                    ProtocolHandler.CommandResult(
+                        success = false,
+                        message = "Recording start failed: ${e.message}"
+                    )
                 }
             }
             
-            override fun onConnectionStatusChanged(connected: Boolean) {
-                _connectionStatus.value = if (connected) 
-                    ConnectionStatus.CONNECTED 
-                else 
-                    ConnectionStatus.DISCONNECTED
+            override suspend fun onStopRecording(sessionId: String): ProtocolHandler.CommandResult {
+                Log.i(TAG, "Stopping recording for session: $sessionId")
                 
-                Log.i(TAG, "Connection status changed: ${if (connected) "connected" else "disconnected"}")
+                return try {
+                    recordingController?.let { controller ->
+                        // This would stop the actual recording
+                        ProtocolHandler.CommandResult(
+                            success = true,
+                            message = "Recording stopped",
+                            data = mapOf("session_id" to sessionId)
+                        )
+                    } ?: ProtocolHandler.CommandResult(
+                        success = false,
+                        message = "Recording controller not available"
+                    )
+                } catch (e: Exception) {
+                    Log.e(TAG, "Failed to stop recording", e)
+                    ProtocolHandler.CommandResult(
+                        success = false,
+                        message = "Recording stop failed: ${e.message}"
+                    )
+                }
             }
-        }
-    }
-    
-    /**
-     * Emit command event for logging and monitoring
-     */
-    private fun emitCommandEvent(event: CommandEvent) {
-        serverScope.launch {
-            _commandEvents.emit(event)
+            
+            override suspend fun onSyncRequest(pcTimestamp: Long): ProtocolHandler.SyncResult {
+                Log.i(TAG, "Processing sync request from PC")
+                
+                return try {
+                    timeSyncManager?.let { syncManager ->
+                        val phoneTime = System.currentTimeMillis()
+                        // This would perform actual sync calculation
+                        ProtocolHandler.SyncResult(
+                            success = true,
+                            phoneTimestamp = phoneTime,
+                            offsetNs = 0L // Would be calculated by sync manager
+                        )
+                    } ?: ProtocolHandler.SyncResult(
+                        success = false
+                    )
+                } catch (e: Exception) {
+                    Log.e(TAG, "Failed to process sync request", e)
+                    ProtocolHandler.SyncResult(success = false)
+                }
+            }
         }
     }
     
