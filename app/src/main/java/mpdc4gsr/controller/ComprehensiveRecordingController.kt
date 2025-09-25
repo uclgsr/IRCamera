@@ -1036,7 +1036,7 @@ class ComprehensiveRecordingController(
                     }
                     
                     // File references
-                    put("fileReferences", JSONObject(manifest.fileReferences as Map<String, Any>))
+                    put("fileReferences", JSONObject(manifest.fileReferences))
                     put("sessionState", manifest.sessionState)
                 }
                 
