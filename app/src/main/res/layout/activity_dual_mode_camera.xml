@@ -8,8 +8,8 @@
     tools:context=".camera.integration.DualModeCameraActivity">
 
 
-    <mpdc4gsr.camera.ui.TapToFocusPreviewView
-        android:id="@+id/preview_view"
+    <TextureView
+        android:id="@+id/texture_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/camera_mode_selector"
@@ -18,29 +18,16 @@
         app:layout_constraintTop_toTopOf="parent" />
 
 
-    <!-- Camera mode selector can be removed or simplified since we're removing CameraModeSelector -->
-    <LinearLayout
+    <com.mpdc4gsr.tc001.camera.ui.CameraModeSelector
         android:id="@+id/camera_mode_selector"
         android:layout_width="0dp"
         android:layout_height="80dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="32dp"
-        android:orientation="horizontal"
-        android:gravity="center"
         app:layout_constraintBottom_toTopOf="@+id/info_text"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-        
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="RGB Camera Ready"
-            android:textColor="@android:color/white"
-            android:background="@android:color/holo_green_dark"
-            android:padding="12dp"
-            android:textSize="16sp" />
-    </LinearLayout>
+        app:layout_constraintStart_toStartOf="parent" />
 
 
     <TextView

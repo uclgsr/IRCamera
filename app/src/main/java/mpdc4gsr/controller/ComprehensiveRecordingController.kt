@@ -12,12 +12,12 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import mpdc4gsr.controller.SessionManifest
-import mpdc4gsr.controller.SessionEvent
-import mpdc4gsr.controller.SensorActivityInfo
-import mpdc4gsr.controller.SensorHealthInfo
-import mpdc4gsr.controller.DropoutEvent
-import mpdc4gsr.controller.ReconnectionEvent
+import mpdc4gsr.data.SessionManifest
+import mpdc4gsr.data.SessionEvent
+import mpdc4gsr.data.SensorActivityInfo
+import mpdc4gsr.data.SensorHealthInfo
+import mpdc4gsr.data.DropoutEvent
+import mpdc4gsr.data.ReconnectionEvent
 import mpdc4gsr.controller.RecordingController
 import mpdc4gsr.data.SessionMetadata
 import mpdc4gsr.permissions.PermissionManager
@@ -30,6 +30,14 @@ import java.io.File
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
+
+// Use proper type aliases from RecordingController
+typealias SessionManifest = RecordingController.SessionManifest
+typealias SessionEvent = RecordingController.SessionEvent
+typealias SensorActivityInfo = RecordingController.SensorActivityInfo
+typealias SensorHealthInfo = RecordingController.SensorHealthInfo
+typealias DropoutEvent = RecordingController.DropoutEvent
+typealias ReconnectionEvent = RecordingController.ReconnectionEvent
 
 
 class ComprehensiveRecordingController(
