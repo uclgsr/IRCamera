@@ -513,7 +513,7 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
         TipDialog.Builder(requireContext())
             .setTitleMessage("Dual-Mode Camera Integration")
             .setMessage(
-                "Enhanced RGBCameraRecorder with:\n\n" +
+                "Enhanced RgbCameraRecorder with:\n\n" +
                         "• RAW 50MP capture at ~15fps\n" +
                         "• 4K video at 30/60fps\n" +
                         "• Fast session switching (~200ms)\n" +
