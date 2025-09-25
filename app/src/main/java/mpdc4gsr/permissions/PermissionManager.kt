@@ -41,20 +41,18 @@ class PermissionManager(
 
         Log.i(TAG, "Requesting camera permissions")
 
-        // TODO: Fix permission callback mechanism - PermissionController doesn't have setPermissionCallback
-        // For now, directly check permissions without callback mechanism
-        val hasPermissions = missingPermissions.isEmpty()
-        Log.i(TAG, "Camera permissions result: $hasPermissions")
-        continuation.resume(hasPermissions)
-
-        // permissionController.setPermissionCallback(REQUEST_CAMERA_PERMISSIONS) { granted ->
-        //     Log.i(TAG, "Camera permissions result: $granted")
-        //     continuation.resume(granted)
-        // }
-
-        if (!hasPermissions) {
-            ActivityCompat.requestPermissions(activity, missingPermissions.toTypedArray(), REQUEST_CAMERA_PERMISSIONS)
+        // Use proper permission callback mechanism from PermissionController
+        Log.i(TAG, "Requesting camera permissions through PermissionController")
+        permissionController.ensureAll { granted, deniedPermissions ->
+            Log.i(TAG, "Camera permissions result: $granted")
+            if (deniedPermissions.isNotEmpty()) {
+                Log.w(TAG, "Some camera permissions were denied: ${deniedPermissions.joinToString()}")
+            }
+            continuation.resume(granted)
         }
+
+        // Camera permissions will be requested through the callback mechanism above
+        // No additional request needed since ensureAll() handles the permission flow
     }
 
 
@@ -85,27 +83,19 @@ class PermissionManager(
 
         Log.i(TAG, "Requesting bluetooth permissions for GSR sensor access")
 
-        // TODO: Fix permission callback mechanism - PermissionController doesn't have setPermissionCallback
-        // For now, directly check permissions without callback mechanism
-        val hasPermissions = missingPermissions.isEmpty()
-        Log.i(TAG, "Bluetooth permissions result: $hasPermissions")
-        if (!hasPermissions) {
-            Log.w(TAG, "Bluetooth permissions denied - GSR sensor features will be unavailable")
+        // Use proper permission callback mechanism from PermissionController
+        Log.i(TAG, "Requesting bluetooth permissions through PermissionController")
+        permissionController.ensureAll { granted, deniedPermissions ->
+            Log.i(TAG, "Bluetooth permissions result: $granted")
+            if (!granted) {
+                Log.w(TAG, "Bluetooth permissions denied - GSR sensor features will be unavailable")
+                Log.w(TAG, "Denied permissions: ${deniedPermissions.joinToString()}")
+            }
+            continuation.resume(granted)
         }
-        continuation.resume(hasPermissions)
 
-        // Enhanced callback with detailed error handling
-        // permissionController.setPermissionCallback(REQUEST_BLUETOOTH_PERMISSIONS) { granted ->
-        //     Log.i(TAG, "Bluetooth permissions result: $granted")
-        //     if (!granted) {
-        //         Log.w(TAG, "Bluetooth permissions denied - GSR sensor features will be unavailable")
-        //     }
-        //     continuation.resume(granted)
-        // }
-
-        if (!hasPermissions) {
-            ActivityCompat.requestPermissions(activity, bluetoothPermissions, REQUEST_BLUETOOTH_PERMISSIONS)
-        }
+        // Enhanced callback with detailed error handling is now handled above
+        // The permissions will be requested through the callback mechanism
     }
 
 
