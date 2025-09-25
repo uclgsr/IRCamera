@@ -31,6 +31,14 @@ import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
 
+// Use proper type aliases from RecordingController
+typealias SessionManifest = RecordingController.SessionManifest
+typealias SessionEvent = RecordingController.SessionEvent
+typealias SensorActivityInfo = RecordingController.SensorActivityInfo
+typealias SensorHealthInfo = RecordingController.SensorHealthInfo
+typealias DropoutEvent = RecordingController.DropoutEvent
+typealias ReconnectionEvent = RecordingController.ReconnectionEvent
+
 
 class ComprehensiveRecordingController(
     private val context: Context,
