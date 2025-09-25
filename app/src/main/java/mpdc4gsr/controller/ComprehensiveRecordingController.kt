@@ -934,7 +934,7 @@ class ComprehensiveRecordingController(
                 eventType = event.eventType,
                 timestampMs = event.timestampMs,
                 sensorId = event.sensorId,
-                triggerSource = event.triggerSource?.name,
+                triggerSource = event.triggerSource,
                 metadata = event.metadata,
                 success = event.success,
                 errorMessage = event.errorMessage
@@ -963,13 +963,13 @@ class ComprehensiveRecordingController(
             startTime = startTime,
             stopTime = stopTime,
             duration = duration,
-            triggerSource = lastTriggerSource?.name ?: "UNKNOWN",
+            triggerSource = lastTriggerSource ?: TriggerSource.LOCAL_UI,
             sensorActivitySummary = sensorActivitySummary,
             events = events,
             errors = errors,
             warnings = warnings,
             fileReferences = fileReferences,
-            sessionState = currentSessionState.get().name
+            sessionState = currentSessionState.get()
         )
     }
 
@@ -987,7 +987,7 @@ class ComprehensiveRecordingController(
                     put("startTime", manifest.startTime)
                     manifest.stopTime?.let { put("stopTime", it) }
                     manifest.duration?.let { put("duration", it) }
-                    put("triggerSource", manifest.triggerSource)
+                    put("triggerSource", manifest.triggerSource.name)
                     
                     // Sensor activity summary
                     val sensorSummary = JSONObject()
@@ -1037,7 +1037,7 @@ class ComprehensiveRecordingController(
                             put("eventType", event.eventType)
                             put("timestampMs", event.timestampMs)
                             event.sensorId?.let { put("sensorId", it) }
-                            event.triggerSource?.let { put("triggerSource", it) }
+                            event.triggerSource?.let { put("triggerSource", it.name) }
                             put("success", event.success)
                             event.errorMessage?.let { put("errorMessage", it) }
                             if (event.metadata.isNotEmpty()) {
@@ -1057,7 +1057,7 @@ class ComprehensiveRecordingController(
                     
                     // File references
                     put("fileReferences", JSONObject(manifest.fileReferences))
-                    put("sessionState", manifest.sessionState)
+                    put("sessionState", manifest.sessionState.name)
                 }
                 
                 manifestFile.writeText(manifestJson.toString(2))

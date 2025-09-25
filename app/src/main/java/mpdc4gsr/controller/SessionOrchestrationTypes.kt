@@ -6,13 +6,13 @@ data class SessionManifest(
     val startTime: Long,
     val stopTime: Long?,
     val duration: Long?,
-    val triggerSource: String,
+    val triggerSource: RecordingController.TriggerSource,
     val sensorActivitySummary: Map<String, SensorActivityInfo>,
     val events: List<SessionEvent>,
     val errors: List<String>,
     val warnings: List<String>,
     val fileReferences: Map<String, String>,
-    val sessionState: String
+    val sessionState: RecordingController.SessionState
 )
 
 data class SensorActivityInfo(
@@ -29,7 +29,7 @@ data class SessionEvent(
     val eventType: String,
     val timestampMs: Long,
     val sensorId: String? = null,
-    val triggerSource: String? = null,
+    val triggerSource: RecordingController.TriggerSource? = null,
     val metadata: Map<String, String> = emptyMap(),
     val success: Boolean = true,
     val errorMessage: String? = null
