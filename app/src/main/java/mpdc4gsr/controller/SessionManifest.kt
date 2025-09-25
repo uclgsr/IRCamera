@@ -67,15 +67,7 @@ data class SensorHealthInfo(
 /**
  * Comprehensive sensor health information (alias for compatibility)
  */
-data class ComprehensiveSensorHealthInfo(
-    val sensorId: String,
-    val isHealthy: Boolean,
-    val lastHealthCheck: Long,
-    val healthScore: Double = 1.0,
-    val issues: List<String> = emptyList(),
-    val consecutiveFailures: Int = 0,
-    val lastError: String? = null
-)
+typealias ComprehensiveSensorHealthInfo = SensorHealthInfo
 
 /**
  * Dropout event tracking for resilient recording
