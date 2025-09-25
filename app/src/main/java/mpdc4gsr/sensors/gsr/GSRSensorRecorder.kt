@@ -1412,6 +1412,7 @@ class GSRSensorRecorder(
                                 // For now, assign a placeholder or leave unchanged to avoid losing device tracking.
                                 // Example (replace with actual device object when available):
                                 // currentConnectedDevice = connectedDevice as? Shimmer
+
                                 Log.i(TAG, "Successfully connected to Shimmer device: $deviceAddress")
                                 isShimmerConnected = true
                             } else {
