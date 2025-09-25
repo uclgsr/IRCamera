@@ -400,10 +400,15 @@ class ThermalCameraRecorder(
             val exportDir = File(outputDir, "thermal_export_${System.currentTimeMillis()}")
             exportDir.mkdirs()
             
-            // Create a simple export file for MVP
-            val exportFile = File(exportDir, "thermal_data.csv")
-            exportFile.writeText("timestamp,frame_number,min_temp,max_temp,avg_temp\n")
-            exportFile.appendText("${System.currentTimeMillis()},1,20.0,35.0,27.5\n")
+            // TODO: Implement actual export logic for different formats. Currently, the 'format' parameter is ignored and only a placeholder CSV is created.
+            when (format) {
+                // Placeholder: All formats currently export the same dummy CSV data.
+                else -> {
+                    val exportFile = File(exportDir, "thermal_data.csv")
+                    exportFile.writeText("timestamp,frame_number,min_temp,max_temp,avg_temp\n")
+                    exportFile.appendText("${System.currentTimeMillis()},1,20.0,35.0,27.5\n")
+                }
+            }
             
             Log.i(TAG, "Thermal data export completed: ${exportDir.absolutePath}")
             true
