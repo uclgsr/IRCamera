@@ -107,14 +107,14 @@ object UnifiedArrayUtils {
         val x = index % width
         val y = index / width
 
-        val (newX, newY) = when (rotateType) {
-            1 -> Pair(height - 1 - y, x)           // 90 degrees clockwise
-            2 -> Pair(width - 1 - x, height - 1 - y) // 180 degrees
-            3 -> Pair(y, width - 1 - x)           // 270 degrees clockwise
-            else -> Pair(x, y)                    // No rotation
+        val (newX, newY, newWidth) = when (rotateType) {
+            1 -> Triple(height - 1 - y, x, height)           // 90 degrees clockwise, width and height swapped
+            2 -> Triple(width - 1 - x, height - 1 - y, width) // 180 degrees, dimensions unchanged
+            3 -> Triple(y, width - 1 - x, height)           // 270 degrees clockwise, width and height swapped
+            else -> Triple(x, y, width)                    // No rotation
         }
 
-        return newY * width + newX
+        return newY * newWidth + newX
     }
 
     /**
