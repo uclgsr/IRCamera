@@ -354,4 +354,4 @@ const val THERMAL_MAX_TEMP = 150.0f
 const val MAX_FILE_SIZE_MB = 100
 const val MAX_SESSION_DURATION_MS = 3600000L // 1 hour
 }
-}
+// End of file

@@ -77,9 +77,13 @@ class CameraMenuView @JvmOverloads constructor(
         isVideoMode = true
     }
 
-    fun refreshGallery() {
+    fun refreshGallery(isVideo: Boolean = false) {
         // Trigger gallery refresh
         onCameraClickListener?.invoke(MODE_GALLERY_REFRESH)
+    }
+
+    fun setToRecord(isVideo: Boolean = false) {
+        isVideoMode = true
     }
 
     companion object {

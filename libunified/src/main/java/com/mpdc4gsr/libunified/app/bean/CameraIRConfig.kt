@@ -32,7 +32,22 @@ class ObserveBean {
         const val TYPE_TARGET_COLOR_BLUE = 22 //蓝色
         const val TYPE_TARGET_COLOR_BLACK = 23 //黑色
         const val TYPE_TARGET_COLOR_WHITE = 24 //白色
+        
+        const val TYPE_TARGET_AREA = 30
+        const val TYPE_TARGET_LINE = 31
+        const val TYPE_TARGET_SPOT = 32
     }
+    
+    var observeType: Int = TYPE_NONE
+    var observeX: Float = 0f
+    var observeY: Float = 0f
+    var observeWidth: Float = 0f
+    var observeHeight: Float = 0f
+    var maxTemp: Float = 0f
+    var minTemp: Float = 0f
+    var avgTemp: Float = 0f
+    var isSelect: Boolean = false
+    var colorType: Int = TYPE_TARGET_COLOR_WHITE
 }
 
 data class CameraItemBean(

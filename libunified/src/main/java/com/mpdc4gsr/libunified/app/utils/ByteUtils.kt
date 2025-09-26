@@ -77,15 +77,6 @@ object ByteUtils {
     fun ByteArray.descBytes(): ByteArray = this.reversedArray()
     fun ByteArray.toBytes(): ByteArray = this
     
-    fun bytesToInt(bytes: ByteArray): Int {
-        var count = 0
-        for (i in bytes.indices.reversed()) {
-            val b = bytes[i].toInt() and 0xff
-            count += b shl (8 * (bytes.size - i - 1))
-        }
-        return count
-    }
-    
     fun bigBytesToInt(b1: Byte, b2: Byte, b3: Byte, b4: Byte): Int {
         return (b1.toInt() and 0xFF shl 24) or 
                (b2.toInt() and 0xFF shl 16) or 
@@ -117,6 +108,20 @@ object ByteUtils {
             list.add(Arrays.copyOfRange(src, from, to))
         }
         return list
+    }
+    
+    // Additional utility methods
+    fun toHexString(bytes: ByteArray): String {
+        return HexUtil.bytesToHexString(bytes)
+    }
+    
+    fun bytesToInt(bytes: ByteArray): Int {
+        var count = 0
+        for (i in bytes.indices.reversed()) {
+            val b = bytes[i].toInt() and 0xff
+            count += b shl (8 * (bytes.size - i - 1))
+        }
+        return count
     }
 }
 

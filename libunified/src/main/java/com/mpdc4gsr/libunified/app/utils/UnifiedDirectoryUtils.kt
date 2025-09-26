@@ -237,4 +237,11 @@ object UnifiedDirectoryUtils {
             false
         }
     }
+    
+    /**
+     * Get GSR data directory
+     */
+    fun getGsrDirectory(context: Context): File {
+        return File(getRecordingsDirectory(context), GSR_DIR).apply { mkdirs() }
+    }
 }

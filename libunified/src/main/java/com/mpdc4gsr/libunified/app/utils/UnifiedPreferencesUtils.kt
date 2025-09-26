@@ -353,4 +353,11 @@ object UnifiedPreferencesUtils {
         
         editor.apply()
     }
+    
+    /**
+     * Get SharedPreferences instance
+     */
+    fun getSharedPreferences(context: Context): SharedPreferences {
+        return context.getSharedPreferences(DEFAULT_PREFS_NAME, Context.MODE_PRIVATE)
+    }
 }
