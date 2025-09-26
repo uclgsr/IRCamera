@@ -229,7 +229,7 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
     private var isOpenTarget = SaveSettingUtil.isOpenTarget
     private var audioPosition: Int = 0
 
-    protected lateinit var cameraView: com.infisense.usbir.view.CameraView
+    protected lateinit var cameraView: com.mpdc4gsr.libunified.ui.camera.CameraView
     protected lateinit var temperatureView: com.mpdc4gsr.libunified.ir.view.TemperatureView
     private lateinit var spaceChart: View
     private lateinit var clTrendOpen: ConstraintLayout

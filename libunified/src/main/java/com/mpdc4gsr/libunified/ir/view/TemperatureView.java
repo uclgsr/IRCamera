@@ -1393,4 +1393,10 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
     public interface TempListener {
         void getTemp(float max, float min, byte[] tempData);
     }
+
+    // Additional method for compatibility
+    public void updateMagnifier() {
+        // Trigger a redraw to update magnifier display
+        post(runnable);
+    }
 }
