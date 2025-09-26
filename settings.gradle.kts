@@ -11,7 +11,7 @@ dependencyResolutionManagement {
         maven { url = uri("https://maven.scijava.org/content/groups/public") }
 
         flatDir {
-            dirs("libunified/libs", "app/libs", "BleModule/libs", "libir/libs")
+            dirs("libunified/libs", "app/libs", "BleModule/libs")
         }
     }
 }
@@ -24,4 +24,3 @@ include(":component:thermalunified")
 include(":component:user")
 include(":libunified")
 include(":BleModule")
-include(":libir")

@@ -13,7 +13,7 @@ ksp {
 
 android {
     namespace = "com.mpdc4gsr.libunified"
-    compileSdk = 35
+    compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
         minSdk = libs.versions.minSdk.get().toInt()
@@ -46,7 +46,6 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
         isCoreLibraryDesugaringEnabled = true
     }
-    ndkVersion = libs.versions.ndkVersion.get()
 
     kotlin {
         compilerOptions {
@@ -69,6 +68,7 @@ android {
         }
     }
 
+    ndkVersion = libs.versions.ndkVersion.get()
     buildFeatures {
         buildConfig = true
         dataBinding = true
@@ -124,7 +124,6 @@ android {
         abortOnError = false
         warningsAsErrors = false
     }
-    buildToolsVersion = "35.0.0"
 }
 
 configurations.all {
@@ -143,9 +142,6 @@ dependencies {
     implementation(libs.kotlinx.coroutines.android)
 
     coreLibraryDesugaring(libs.desugar.jdk.libs)
-
-    // libir dependency for infisense classes
-    implementation(project(":libir"))
 
     // Combined dependencies from all three libraries
     api(fileTree(mapOf("include" to listOf("*.jar"), "dir" to "libs")))
