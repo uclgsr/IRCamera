@@ -54,4 +54,8 @@ object CommUtils {
         val timestamp = System.currentTimeMillis()
         return "${prefix}_${timestamp}.${extension}"
     }
+    
+    fun getAppName(): String {
+        return "IRCamera"
+    }
 }

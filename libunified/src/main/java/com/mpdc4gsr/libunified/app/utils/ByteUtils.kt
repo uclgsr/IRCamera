@@ -23,6 +23,13 @@ object ByteUtils {
         return count
     }
     
+    fun bigBytesToInt(b1: Byte, b2: Byte, b3: Byte, b4: Byte): Int {
+        return (b1.toInt() and 0xFF shl 24) or 
+               (b2.toInt() and 0xFF shl 16) or 
+               (b3.toInt() and 0xFF shl 8) or 
+               (b4.toInt() and 0xFF)
+    }
+    
     fun joinPackage(vararg src: ByteArray): ByteArray {
         var bytes = ByteArray(0)
         for (bs in src) {
