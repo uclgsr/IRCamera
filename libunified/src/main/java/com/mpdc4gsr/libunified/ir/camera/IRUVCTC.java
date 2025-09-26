@@ -21,11 +21,11 @@ import com.infisense.iruvc.uvc.ConcreateUVCBuilder;
 import com.infisense.iruvc.uvc.ConnectCallback;
 import com.infisense.iruvc.uvc.UVCCamera;
 import com.infisense.iruvc.uvc.UVCType;
+import com.mpdc4gsr.libunified.app.utils.UnifiedFileUtils;
+import com.mpdc4gsr.libunified.app.utils.UnifiedScreenUtils;
 import com.mpdc4gsr.libunified.ir.config.MsgCode;
 import com.mpdc4gsr.libunified.ir.event.IRMsgEvent;
 import com.mpdc4gsr.libunified.ir.event.PreviewComplete;
-import com.mpdc4gsr.libunified.app.utils.UnifiedFileUtils;
-import com.mpdc4gsr.libunified.app.utils.UnifiedScreenUtils;
 import com.mpdc4gsr.libunified.ir.utils.USBMonitorCallback;
 
 import org.greenrobot.eventbus.EventBus;
@@ -35,6 +35,13 @@ import java.util.List;
 
 public class IRUVCTC {
     private static final String TAG = "IRUVC_DATA";
+    private static final int PID_5840 = 0x5840;
+    private static final int PID_3901 = 0x3901;
+    private static final int PID_5830 = 0x5830;
+    private static final int PID_5838 = 0x5838;
+    private static final int ROTATE_270 = 270;
+    private static final int ROTATE_90 = 90;
+    private static final int ROTATE_180 = 180;
     private final IFrameCallback iFrameCallback;
     private final USBMonitor mUSBMonitor;
     private final ConnectCallback mConnectCallback;
@@ -57,7 +64,7 @@ public class IRUVCTC {
     private boolean isFrameReady = true;
     private boolean isTempReplacedWithTNREnabled;
     private boolean isRestart;
-    private int pids[] = {0x5840, 0x3901, 0x5830, 0x5838};
+    private int pids[] = {PID_5840, PID_3901, PID_5830, PID_5838};
     private IFrameCallBackListener iFrameCallBackListener;
     private IFrameReadListener iFrameReadListener;
 
@@ -65,8 +72,8 @@ public class IRUVCTC {
                    CommonParams.DataFlowMode dataFlowMode,
                    ConnectCallback connectCallback, USBMonitorCallback usbMonitorCallback) {
         this.syncimage = syncimage;
-        this.mConnectCallback = connectCallback;
-        this.defaultDataFlowMode = dataFlowMode;
+        mConnectCallback = connectCallback;
+        defaultDataFlowMode = dataFlowMode;
         isFirstFrame = true;
 
         initUVCCamera();
@@ -214,19 +221,19 @@ public class IRUVCTC {
 
                         if (length >= imageOrTempDataLength * 2) {
 
-                            if (rotateInt == 270) {
+                            if (rotateInt == ROTATE_270) {
 
                                 System.arraycopy(frame, imageOrTempDataLength, temperatureTemp, 0,
                                         imageOrTempDataLength);
                                 LibIRProcess.rotateRight90(temperatureTemp, imageRes,
                                         CommonParams.IRPROCSRCFMTType.IRPROC_SRC_FMT_Y14, temperatureSrc);
-                            } else if (rotateInt == 90) {
+                            } else if (rotateInt == ROTATE_90) {
 
                                 System.arraycopy(frame, imageOrTempDataLength, temperatureTemp, 0,
                                         imageOrTempDataLength);
                                 LibIRProcess.rotateLeft90(temperatureTemp, imageRes,
                                         CommonParams.IRPROCSRCFMTType.IRPROC_SRC_FMT_Y14, temperatureSrc);
-                            } else if (rotateInt == 180) {
+                            } else if (rotateInt == ROTATE_180) {
 
                                 System.arraycopy(frame, imageOrTempDataLength, temperatureTemp, 0,
                                         imageOrTempDataLength);
@@ -362,7 +369,7 @@ public class IRUVCTC {
 
     private void openUVCCamera(USBMonitor.UsbControlBlock ctrlBlock) {
         Log.i(TAG, "openUVCCamera");
-        if (ctrlBlock.getProductId() == 0x3901) {
+        if (ctrlBlock.getProductId() == PID_3901) {
             if (syncimage != null) {
                 syncimage.type = 1;
             }
