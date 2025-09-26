@@ -1,12 +1,15 @@
 # IRCamera PC Controller Hub
 
-The PC Controller serves as the central **Hub** in the IRCamera Multi-Modal Thermal Sensing Platform's Hub-and-Spoke
+The PC Controller serves as the central **Hub** in the IRCamera Multi-Modal Thermal Sensing
+Platform's Hub-and-Spoke
 architecture, coordinating distributed Android sensor nodes for scientific data collection.
 
 ## Overview
 
-This directory contains both a simplified MVP implementation and a comprehensive full-featured application for
-multi-modal physiological sensing research. The PC Controller manages device discovery, session coordination, and data
+This directory contains both a simplified MVP implementation and a comprehensive full-featured
+application for
+multi-modal physiological sensing research. The PC Controller manages device discovery, session
+coordination, and data
 collection across multiple Android sensor nodes.
 
 ## Architecture
@@ -249,5 +252,6 @@ python demo_mvp_components.py --verbose
 **Research Ready**: SCIENTIFIC GRADE
 **Production Status**: DEPLOYMENT READY
 
-The PC Controller Hub is fully functional and ready for scientific research applications with multi-modal physiological
+The PC Controller Hub is fully functional and ready for scientific research applications with
+multi-modal physiological
 sensing capabilities.

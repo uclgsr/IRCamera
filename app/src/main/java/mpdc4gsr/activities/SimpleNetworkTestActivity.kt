@@ -123,7 +123,11 @@ class SimpleNetworkTestActivity : AppCompatActivity() {
 
                 if (connected) {
                     Log.i(TAG, "Successfully connected to PC")
-                    Toast.makeText(this@SimpleNetworkTestActivity, "Connected to PC", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this@SimpleNetworkTestActivity,
+                        "Connected to PC",
+                        Toast.LENGTH_SHORT
+                    ).show()
 
                     // Send initial handshake
                     tcpClient?.sendMessage("HELLO device=SimpleNetworkTest sensors=[Mock]")
@@ -138,12 +142,20 @@ class SimpleNetworkTestActivity : AppCompatActivity() {
 
                 } else {
                     Log.e(TAG, "Failed to connect to PC")
-                    Toast.makeText(this@SimpleNetworkTestActivity, "Failed to connect", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this@SimpleNetworkTestActivity,
+                        "Failed to connect",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
 
             } catch (e: Exception) {
                 Log.e(TAG, "Error connecting to PC", e)
-                Toast.makeText(this@SimpleNetworkTestActivity, "Connection error: ${e.message}", Toast.LENGTH_SHORT)
+                Toast.makeText(
+                    this@SimpleNetworkTestActivity,
+                    "Connection error: ${e.message}",
+                    Toast.LENGTH_SHORT
+                )
                     .show()
             }
 
@@ -159,7 +171,8 @@ class SimpleNetworkTestActivity : AppCompatActivity() {
                 tcpClient?.cleanup()
                 tcpClient = null
 
-                Toast.makeText(this@SimpleNetworkTestActivity, "Disconnected", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@SimpleNetworkTestActivity, "Disconnected", Toast.LENGTH_SHORT)
+                    .show()
             } catch (e: Exception) {
                 Log.e(TAG, "Error disconnecting", e)
             }
@@ -173,7 +186,11 @@ class SimpleNetworkTestActivity : AppCompatActivity() {
             try {
                 val client = tcpClient
                 if (client == null || !client.isConnected()) {
-                    Toast.makeText(this@SimpleNetworkTestActivity, "Not connected to PC", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this@SimpleNetworkTestActivity,
+                        "Not connected to PC",
+                        Toast.LENGTH_SHORT
+                    ).show()
                     return@launch
                 }
 
@@ -200,7 +217,11 @@ class SimpleNetworkTestActivity : AppCompatActivity() {
 
             } catch (e: Exception) {
                 Log.e(TAG, "Error testing commands", e)
-                Toast.makeText(this@SimpleNetworkTestActivity, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this@SimpleNetworkTestActivity,
+                    "Error: ${e.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
     }

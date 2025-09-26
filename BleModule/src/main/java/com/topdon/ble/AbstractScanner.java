@@ -307,12 +307,12 @@ abstract class AbstractScanner implements Scanner {
     /**
      * 是否可搜索
      */
-    protected abstract boolean isReady();    private final Runnable stopScanRunnable = () -> stopScan(false);
+    protected abstract boolean isReady();
 
     /**
      * 执行搜索
      */
-    protected abstract void performStartScan();
+    protected abstract void performStartScan();    private final Runnable stopScanRunnable = () -> stopScan(false);
 
     /**
      * 执行停止搜索

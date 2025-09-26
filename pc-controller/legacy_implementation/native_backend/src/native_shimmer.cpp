@@ -24,14 +24,13 @@ namespace ircamera {
     public:
         explicit Impl(const std::string &port_name)
                 : port_name_(port_name), is_connected_(false), is_streaming_(false),
-                  sampling_rate_(128)  
-                , gsr_range_(4)        
-                , should_stop_(false), data_callback_(nullptr), packet_sequence_(0) {
+                  sampling_rate_(128), gsr_range_(4), should_stop_(false), data_callback_(nullptr),
+                  packet_sequence_(0) {
 
 
-            gsr_calibration_factor_ = 1.0 / 4095.0;  
-            gsr_ref_voltage_ = 3.0;  
-            gsr_gain_ = 5.0;         
+            gsr_calibration_factor_ = 1.0 / 4095.0;
+            gsr_ref_voltage_ = 3.0;
+            gsr_gain_ = 5.0;
         }
 
         ~Impl() {
@@ -105,18 +104,18 @@ namespace ircamera {
             cfsetospeed(&tty, B115200);
             cfsetispeed(&tty, B115200);
 
-            tty.c_cflag = (tty.c_cflag & ~CSIZE) | CS8;  
-            tty.c_iflag &= ~IGNBRK;         
-            tty.c_lflag = 0;                
+            tty.c_cflag = (tty.c_cflag & ~CSIZE) | CS8;
+            tty.c_iflag &= ~IGNBRK;
+            tty.c_lflag = 0;
 
-            tty.c_oflag = 0;                
-            tty.c_cc[VMIN] = 0;            
-            tty.c_cc[VTIME] = 5;            
+            tty.c_oflag = 0;
+            tty.c_cc[VMIN] = 0;
+            tty.c_cc[VTIME] = 5;
 
-            tty.c_iflag &= ~(IXON | IXOFF | IXANY); 
+            tty.c_iflag &= ~(IXON | IXOFF | IXANY);
             tty.c_cflag |= (CLOCAL | CREAD);
 
-            tty.c_cflag &= ~(PARENB | PARODD);      
+            tty.c_cflag &= ~(PARENB | PARODD);
             tty.c_cflag &= ~CSTOPB;
             tty.c_cflag &= ~CRTSCTS;
 
@@ -209,7 +208,7 @@ namespace ircamera {
             if (is_connected_) {
 
                 uint8_t cmd[] = {0x05, static_cast<uint8_t>(rate_hz & 0xFF),
-                        static_cast<uint8_t>((rate_hz >> 8) & 0xFF)};
+                                 static_cast<uint8_t>((rate_hz >> 8) & 0xFF)};
                 return write_command(cmd, sizeof(cmd));
             }
 
@@ -254,15 +253,20 @@ namespace ircamera {
             return send_inquiry_command();
         }
 
-        
+
         bool is_connected() const { return is_connected_.load(); }
+
         bool is_streaming() const { return is_streaming_.load(); }
+
         int get_sampling_rate() const { return sampling_rate_; }
-        bool set_gsr_range(int range) { 
-            gsr_range_ = range; 
-            return true; 
+
+        bool set_gsr_range(int range) {
+            gsr_range_ = range;
+            return true;
         }
+
         void set_data_callback(DataCallback callback) { data_callback_ = callback; }
+
         std::string get_last_error() const { return last_error_; }
 
     private:
@@ -311,7 +315,7 @@ namespace ircamera {
             }
 
             SetupDiDestroyDeviceInfoList(device_info_set);
-            return "COM3";  
+            return "COM3";
 
 #else
 
@@ -325,11 +329,11 @@ namespace ircamera {
                 int fd = open(port.c_str(), O_RDWR | O_NOCTTY | O_NONBLOCK);
                 if (fd >= 0) {
                     close(fd);
-                    return port;  
+                    return port;
                 }
             }
 
-            return "/dev/ttyUSB0";  
+            return "/dev/ttyUSB0";
 #endif
         }
 
@@ -414,11 +418,11 @@ namespace ircamera {
                             std::chrono::high_resolution_clock::now().time_since_epoch()).count();
 
                     uint16_t raw_gsr = (data[i + 2] << 8) | data[i + 3];
-                    gsr_data.raw_gsr_value = raw_gsr & 0x0FFF;  
+                    gsr_data.raw_gsr_value = raw_gsr & 0x0FFF;
 
                     double voltage = (gsr_data.raw_gsr_value / 4095.0) * gsr_ref_voltage_;
-                    double conductance = voltage / (gsr_gain_ * 100000.0);  
-                    gsr_data.gsr_microsiemens = conductance * 1000000.0;  
+                    double conductance = voltage / (gsr_gain_ * 100000.0);
+                    gsr_data.gsr_microsiemens = conductance * 1000000.0;
 
                     uint16_t raw_ppg = (data[i + 4] << 8) | data[i + 5];
                     gsr_data.raw_ppg_value = raw_ppg;
@@ -439,9 +443,9 @@ namespace ircamera {
                         data_callback_(gsr_data);
                     }
 
-                    i += 7;  
+                    i += 7;
                 } else {
-                    i++;  
+                    i++;
                 }
             }
         }

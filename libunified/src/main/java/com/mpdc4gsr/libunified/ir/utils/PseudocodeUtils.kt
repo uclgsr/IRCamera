@@ -144,7 +144,6 @@ object PseudocodeUtils {
             }
 
 
-
             CommonParams.PseudoColorType.PSEUDO_10 -> {
                 10
             }

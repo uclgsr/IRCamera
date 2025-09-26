@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace = "com.mpdc4gsr.ble"
-    compileSdk = libs.versions.compileSdk.get().toInt()
+    compileSdk = 35
 
     defaultConfig {
         minSdk = libs.versions.minSdk.get().toInt()
@@ -31,6 +31,7 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
         isCoreLibraryDesugaringEnabled = true
     }
+    buildToolsVersion = "35.0.0"
 }
 
 dependencies {

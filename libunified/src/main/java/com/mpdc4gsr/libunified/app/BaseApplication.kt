@@ -203,7 +203,10 @@ abstract class BaseApplication : Application() {
                     @Suppress("DEPRECATION")
                     if (activeNetwork?.isConnected == true && activeNetwork.type == ConnectivityManager.TYPE_WIFI) {
                         connectWebSocket()
-                        Log.i("WebSocket", "WiFi network connected (legacy): ${'$'}{activeNetwork.type}")
+                        Log.i(
+                            "WebSocket",
+                            "WiFi network connected (legacy): ${'$'}{activeNetwork.type}"
+                        )
                     }
                 }
             }

@@ -165,7 +165,8 @@ class TimeSynchronizationTestActivity : AppCompatActivity() {
 
 
                 addLog("2. Testing multiple sync events...")
-                val syncEvents = listOf("session_start", "flash_sync", "manual_marker", "session_end")
+                val syncEvents =
+                    listOf("session_start", "flash_sync", "manual_marker", "session_end")
 
                 syncEvents.forEach { eventType ->
                     timeSyncService.emitSyncEvent(

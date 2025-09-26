@@ -1,6 +1,7 @@
 # Unified PC Session Controller
 
-This document describes the **Unified PC Session Controller** - a single, comprehensive implementation that merges all
+This document describes the **Unified PC Session Controller** - a single, comprehensive
+implementation that merges all
 previous PC controller implementations into one cohesive application.
 
 ## What Was Unified
@@ -192,7 +193,8 @@ SYNC_REQUEST t_pc=1640995200000
 
 ### Automatic Protocol Detection
 
-The unified controller automatically detects which protocol format is being used and responds appropriately, ensuring
+The unified controller automatically detects which protocol format is being used and responds
+appropriately, ensuring
 compatibility with all existing Android app versions.
 
 ## Benefits of Unification
@@ -275,5 +277,6 @@ The unified controller uses a message parsing strategy that:
 
 ---
 
-**The Unified PC Session Controller represents the culmination of all PC controller development efforts, providing a
+**The Unified PC Session Controller represents the culmination of all PC controller development
+efforts, providing a
 single, comprehensive solution for IRCamera multi-modal recording control.**

@@ -83,7 +83,10 @@ class CameraConfigurationManager {
                 else -> false
             }
 
-            Log.i(TAG, "Device capabilities - 4K: $deviceSupports4K, RAW: $deviceSupportsRAW, 60fps: $supports60fps")
+            Log.i(
+                TAG,
+                "Device capabilities - 4K: $deviceSupports4K, RAW: $deviceSupportsRAW, 60fps: $supports60fps"
+            )
             Log.i(TAG, "Device: $manufacturer $deviceModel")
 
             Triple(deviceSupports4K, deviceSupportsRAW, supports60fps)

@@ -173,7 +173,12 @@ object UnifiedCleanupUtils {
 
         // Check for redundant documentation
         val docFiles = root.walkTopDown()
-            .filter { it.extension == "md" && it.name.contains("IMPLEMENTATION", ignoreCase = true) }
+            .filter {
+                it.extension == "md" && it.name.contains(
+                    "IMPLEMENTATION",
+                    ignoreCase = true
+                )
+            }
             .toList()
 
         if (docFiles.size > 1) {

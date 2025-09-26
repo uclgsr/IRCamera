@@ -43,7 +43,8 @@ class TimeSyncIntegrationTest {
         protocolHandler.setTimeSyncManager(timeSyncManager)
 
         // Create test session directory
-        testSessionDirectory = System.getProperty("java.io.tmpdir") + "/integration_test_" + System.nanoTime()
+        testSessionDirectory =
+            System.getProperty("java.io.tmpdir") + "/integration_test_" + System.nanoTime()
         File(testSessionDirectory).mkdirs()
     }
 
@@ -70,8 +71,14 @@ class TimeSyncIntegrationTest {
 
         // 3. Create protocol response message
         val responseMessage = Protocol.createSyncResponseMessage(syncResult.t1, syncResult.t2)
-        assertTrue("Response should contain SYNC_RESPONSE", responseMessage.contains("SYNC_RESPONSE"))
-        assertTrue("Response should contain timestamps", responseMessage.contains("t_pc=$pcTimestamp"))
+        assertTrue(
+            "Response should contain SYNC_RESPONSE",
+            responseMessage.contains("SYNC_RESPONSE")
+        )
+        assertTrue(
+            "Response should contain timestamps",
+            responseMessage.contains("t_pc=$pcTimestamp")
+        )
 
         // 4. Simulate PC calculating and sending SYNC_RESULT
         val t3 = 1640995200150L
@@ -137,7 +144,8 @@ class TimeSyncIntegrationTest {
             100L            // RTT
         )
 
-        val expected = "SYNC_RESULT t1=1640995200000 t2=1640995200050 t3=1640995200100 offset=50 rtt=100"
+        val expected =
+            "SYNC_RESULT t1=1640995200000 t2=1640995200050 t3=1640995200100 offset=50 rtt=100"
         assertEquals("SYNC_RESULT message should be correctly formatted", expected, syncResult)
     }
 

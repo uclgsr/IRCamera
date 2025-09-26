@@ -59,7 +59,11 @@ class MonitorThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> 
             R.id.fence_line_view
         )
     }
-    private val fenceView by lazy { requireView().findViewById<com.mpdc4gsr.module.thermalunified.stubs.FenceView>(R.id.fence_view) }
+    private val fenceView by lazy {
+        requireView().findViewById<com.mpdc4gsr.module.thermalunified.stubs.FenceView>(
+            R.id.fence_view
+        )
+    }
 
     private fun setViewPosition(
         imageView: ImageView,

@@ -36,7 +36,10 @@ class CameraControlsManager(
                     Log.i(TAG, "Auto exposure mode enabled")
                 }
             } ?: run {
-                onError?.invoke(ErrorType.HARDWARE_UNAVAILABLE, "Camera not available for exposure control")
+                onError?.invoke(
+                    ErrorType.HARDWARE_UNAVAILABLE,
+                    "Camera not available for exposure control"
+                )
             }
         } catch (e: Exception) {
             Log.w(TAG, "Failed to set exposure mode: ${e.message}")
@@ -53,7 +56,8 @@ class CameraControlsManager(
         try {
             camera?.cameraControl?.let { cameraControl ->
                 // Convert EV to exposure compensation index
-                val camera2Info = androidx.camera.camera2.interop.Camera2CameraInfo.from(camera.cameraInfo)
+                val camera2Info =
+                    androidx.camera.camera2.interop.Camera2CameraInfo.from(camera.cameraInfo)
                 val characteristics = camera2Info.getCameraCharacteristic(
                     android.hardware.camera2.CameraCharacteristics.CONTROL_AE_COMPENSATION_RANGE
                 )
@@ -74,11 +78,17 @@ class CameraControlsManager(
                     )
                 }
             } ?: run {
-                onError?.invoke(ErrorType.HARDWARE_UNAVAILABLE, "Camera not available for exposure control")
+                onError?.invoke(
+                    ErrorType.HARDWARE_UNAVAILABLE,
+                    "Camera not available for exposure control"
+                )
             }
         } catch (e: Exception) {
             Log.w(TAG, "Failed to set exposure compensation: ${e.message}")
-            onError?.invoke(ErrorType.OPERATION_FAILED, "Failed to set exposure compensation: ${e.message}")
+            onError?.invoke(
+                ErrorType.OPERATION_FAILED,
+                "Failed to set exposure compensation: ${e.message}"
+            )
         }
     }
 
@@ -93,7 +103,10 @@ class CameraControlsManager(
                 // CameraX doesn't have direct AE lock, but we can implement via Camera2 interop
                 Log.i(TAG, "Auto exposure lock: $locked")
             } ?: run {
-                onError?.invoke(ErrorType.HARDWARE_UNAVAILABLE, "Camera not available for exposure control")
+                onError?.invoke(
+                    ErrorType.HARDWARE_UNAVAILABLE,
+                    "Camera not available for exposure control"
+                )
             }
         } catch (e: Exception) {
             Log.w(TAG, "Failed to set AE lock: ${e.message}")
@@ -118,7 +131,10 @@ class CameraControlsManager(
                     Log.i(TAG, "Auto focus mode enabled")
                 }
             } ?: run {
-                onError?.invoke(ErrorType.HARDWARE_UNAVAILABLE, "Camera not available for focus control")
+                onError?.invoke(
+                    ErrorType.HARDWARE_UNAVAILABLE,
+                    "Camera not available for focus control"
+                )
             }
         } catch (e: Exception) {
             Log.w(TAG, "Failed to set focus mode: ${e.message}")
@@ -138,7 +154,8 @@ class CameraControlsManager(
 
                 try {
                     // Use Camera2 interop for direct lens focus distance control
-                    val camera2Info = androidx.camera.camera2.interop.Camera2CameraInfo.from(cam.cameraInfo)
+                    val camera2Info =
+                        androidx.camera.camera2.interop.Camera2CameraInfo.from(cam.cameraInfo)
                     val characteristics = camera2Info.getCameraCharacteristic(
                         android.hardware.camera2.CameraCharacteristics.LENS_INFO_MINIMUM_FOCUS_DISTANCE
                     )
@@ -152,16 +169,17 @@ class CameraControlsManager(
                             // Use Camera2 interop to set focus distance
                             val camera2Control =
                                 androidx.camera.camera2.interop.Camera2CameraControl.from(cam.cameraControl)
-                            val captureRequestOptions = androidx.camera.camera2.interop.CaptureRequestOptions.Builder()
-                                .setCaptureRequestOption(
-                                    android.hardware.camera2.CaptureRequest.CONTROL_AF_MODE,
-                                    android.hardware.camera2.CameraMetadata.CONTROL_AF_MODE_OFF
-                                )
-                                .setCaptureRequestOption(
-                                    android.hardware.camera2.CaptureRequest.LENS_FOCUS_DISTANCE,
-                                    actualFocusDistance
-                                )
-                                .build()
+                            val captureRequestOptions =
+                                androidx.camera.camera2.interop.CaptureRequestOptions.Builder()
+                                    .setCaptureRequestOption(
+                                        android.hardware.camera2.CaptureRequest.CONTROL_AF_MODE,
+                                        android.hardware.camera2.CameraMetadata.CONTROL_AF_MODE_OFF
+                                    )
+                                    .setCaptureRequestOption(
+                                        android.hardware.camera2.CaptureRequest.LENS_FOCUS_DISTANCE,
+                                        actualFocusDistance
+                                    )
+                                    .build()
 
                             camera2Control.addCaptureRequestOptions(captureRequestOptions)
 
@@ -184,7 +202,10 @@ class CameraControlsManager(
                         }
                     } ?: run {
                         Log.w(TAG, "Could not retrieve minimum focus distance characteristic")
-                        onError?.invoke(ErrorType.FEATURE_NOT_SUPPORTED, "Focus distance characteristics not available")
+                        onError?.invoke(
+                            ErrorType.FEATURE_NOT_SUPPORTED,
+                            "Focus distance characteristics not available"
+                        )
                     }
                 } catch (e: Exception) {
                     Log.w(TAG, "Camera2 interop not available, using fallback focus control", e)
@@ -194,11 +215,17 @@ class CameraControlsManager(
                 }
 
             } ?: run {
-                onError?.invoke(ErrorType.HARDWARE_UNAVAILABLE, "Camera not available for focus control")
+                onError?.invoke(
+                    ErrorType.HARDWARE_UNAVAILABLE,
+                    "Camera not available for focus control"
+                )
             }
         } catch (e: Exception) {
             Log.w(TAG, "Failed to set focus distance: ${e.message}")
-            onError?.invoke(ErrorType.OPERATION_FAILED, "Failed to set focus distance: ${e.message}")
+            onError?.invoke(
+                ErrorType.OPERATION_FAILED,
+                "Failed to set focus distance: ${e.message}"
+            )
         }
     }
 
@@ -218,7 +245,10 @@ class CameraControlsManager(
                     Log.i(TAG, "Auto focus unlocked")
                 }
             } ?: run {
-                onError?.invoke(ErrorType.HARDWARE_UNAVAILABLE, "Camera not available for focus control")
+                onError?.invoke(
+                    ErrorType.HARDWARE_UNAVAILABLE,
+                    "Camera not available for focus control"
+                )
             }
         } catch (e: Exception) {
             Log.w(TAG, "Failed to set AF lock: ${e.message}")
@@ -248,14 +278,23 @@ class CameraControlsManager(
                     Log.i(TAG, "Tap-to-focus triggered at ($x, $y)")
                 } ?: run {
                     Log.w(TAG, "No preview available for tap-to-focus")
-                    onError?.invoke(ErrorType.FEATURE_NOT_SUPPORTED, "Preview required for tap-to-focus")
+                    onError?.invoke(
+                        ErrorType.FEATURE_NOT_SUPPORTED,
+                        "Preview required for tap-to-focus"
+                    )
                 }
             } ?: run {
-                onError?.invoke(ErrorType.HARDWARE_UNAVAILABLE, "Camera not available for focus control")
+                onError?.invoke(
+                    ErrorType.HARDWARE_UNAVAILABLE,
+                    "Camera not available for focus control"
+                )
             }
         } catch (e: Exception) {
             Log.w(TAG, "Failed to trigger tap-to-focus: ${e.message}")
-            onError?.invoke(ErrorType.OPERATION_FAILED, "Failed to trigger tap-to-focus: ${e.message}")
+            onError?.invoke(
+                ErrorType.OPERATION_FAILED,
+                "Failed to trigger tap-to-focus: ${e.message}"
+            )
         }
     }
 }

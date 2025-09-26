@@ -101,7 +101,12 @@ class TargetBarPickView : View {
         defStyleRes,
     ) {
         val typedArray =
-            context.obtainStyledAttributes(attrs, com.mpdc4gsr.libunified.R.styleable.BarPickView, 0, 0)
+            context.obtainStyledAttributes(
+                attrs,
+                com.mpdc4gsr.libunified.R.styleable.BarPickView,
+                0,
+                0
+            )
         max = typedArray.getInt(com.mpdc4gsr.libunified.R.styleable.BarPickView_android_max, 100)
         min = typedArray.getInt(com.mpdc4gsr.libunified.R.styleable.BarPickView_barMin, 0)
         progress =
@@ -111,8 +116,10 @@ class TargetBarPickView : View {
             com.mpdc4gsr.libunified.R.styleable.BarPickView_barSize,
             SizeUtils.dp2px(4f)
         )
-        rotate = typedArray.getInt(com.mpdc4gsr.libunified.R.styleable.BarPickView_barOrientation, 0)
-        labelText = typedArray.getString(com.mpdc4gsr.libunified.R.styleable.BarPickView_barLabel) ?: ""
+        rotate =
+            typedArray.getInt(com.mpdc4gsr.libunified.R.styleable.BarPickView_barOrientation, 0)
+        labelText =
+            typedArray.getString(com.mpdc4gsr.libunified.R.styleable.BarPickView_barLabel) ?: ""
         val textSize = typedArray.getDimensionPixelSize(
             com.mpdc4gsr.libunified.R.styleable.BarPickView_android_textSize,
             SizeUtils.sp2px(13f)

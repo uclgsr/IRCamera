@@ -2,7 +2,8 @@
 
 ## Current Status: Production Ready System
 
-The IRCamera platform has achieved production-ready status with all critical build and integration issues resolved. This
+The IRCamera platform has achieved production-ready status with all critical build and integration
+issues resolved. This
 backlog focuses on future enhancements and maintenance tasks.
 
 ## ✅ Recently Completed (See CHANGELOG.md for details)

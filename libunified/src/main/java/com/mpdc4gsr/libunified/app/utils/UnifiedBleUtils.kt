@@ -268,10 +268,16 @@ object UnifiedBleUtils {
     /**
      * Utility for logging BLE operations
      */
-    fun logBleOperation(operation: String, device: BluetoothDevice?, success: Boolean, details: String = "") {
+    fun logBleOperation(
+        operation: String,
+        device: BluetoothDevice?,
+        success: Boolean,
+        details: String = ""
+    ) {
         val deviceInfo = formatDeviceName(device)
         val status = if (success) "SUCCESS" else "FAILED"
-        val message = "BLE $operation: $status for $deviceInfo${if (details.isNotEmpty()) " - $details" else ""}"
+        val message =
+            "BLE $operation: $status for $deviceInfo${if (details.isNotEmpty()) " - $details" else ""}"
 
         if (success) {
             Log.d(TAG, message)

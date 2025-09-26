@@ -32,13 +32,19 @@ class ThermalInputDialog {
             return this
         }
 
-        fun setColor(maxColor: Int = android.graphics.Color.RED, minColor: Int = android.graphics.Color.BLUE): Builder {
+        fun setColor(
+            maxColor: Int = android.graphics.Color.RED,
+            minColor: Int = android.graphics.Color.BLUE
+        ): Builder {
             this.maxColor = maxColor
             this.minColor = minColor
             return this
         }
 
-        fun setPositiveListener(textResId: Int, listener: (Float, Float, Int, Int) -> Unit): Builder {
+        fun setPositiveListener(
+            textResId: Int,
+            listener: (Float, Float, Int, Int) -> Unit
+        ): Builder {
             this.positiveListener = listener
             return this
         }

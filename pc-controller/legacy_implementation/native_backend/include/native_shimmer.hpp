@@ -15,12 +15,12 @@ namespace ircamera {
     namespace sensors {
 
         struct ShimmerData {
-            uint64_t timestamp_ns;  
-            uint16_t gsr_raw;       
-            double gsr_microsiemens; 
-            uint16_t ppg_raw;       
-            int16_t accel_x, accel_y, accel_z; 
-            bool valid;             
+            uint64_t timestamp_ns;
+            uint16_t gsr_raw;
+            double gsr_microsiemens;
+            uint16_t ppg_raw;
+            int16_t accel_x, accel_y, accel_z;
+            bool valid;
         };
 
         class NativeShimmer {
@@ -88,7 +88,7 @@ namespace ircamera {
 
             double gsr_uncal_limit_[5] = {40.5, 287.0, 1498.0, 2895.0, 3660.0};
             double gsr_cal_limit_[5] = {0.1, 1.0, 10.0, 100.0, 1000.0};
-            int gsr_range_{4}; 
+            int gsr_range_{4};
 
             mutable std::atomic <uint64_t> total_samples_{0};
             mutable std::atomic <uint64_t> dropped_samples_{0};
@@ -111,5 +111,5 @@ namespace ircamera {
             void update_statistics();
         };
 
-    } 
+    }
 } 

@@ -177,8 +177,10 @@ class NetworkServer(
                     disconnectClient()
 
                     clientSocket = socket
-                    outputWriter = BufferedWriter(OutputStreamWriter(socket.getOutputStream(), Charsets.UTF_8))
-                    inputReader = BufferedReader(InputStreamReader(socket.getInputStream(), Charsets.UTF_8))
+                    outputWriter =
+                        BufferedWriter(OutputStreamWriter(socket.getOutputStream(), Charsets.UTF_8))
+                    inputReader =
+                        BufferedReader(InputStreamReader(socket.getInputStream(), Charsets.UTF_8))
                     binaryOutputStream = DataOutputStream(socket.getOutputStream())
 
                     isClientConnected.set(true)

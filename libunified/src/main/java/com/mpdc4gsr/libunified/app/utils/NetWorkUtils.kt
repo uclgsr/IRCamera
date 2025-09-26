@@ -32,7 +32,9 @@ object NetWorkUtils {
     }
 
     fun isWifiNameValid(context: Context, prefixes: List<String>): Boolean {
-        val wifiManager = context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
+        val wifiManager =
+            context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
+
         @Suppress("DEPRECATION")
         val wifiInfo = wifiManager.connectionInfo
         val ssid = wifiInfo.ssid.replace("\"", "") // 移除双引号
@@ -44,25 +46,29 @@ object NetWorkUtils {
         return false
     }
 
-    fun connectWifi(ssid: String, password: String, listener: ((network: Network?) -> Unit)? = null) {
+    fun connectWifi(
+        ssid: String,
+        password: String,
+        listener: ((network: Network?) -> Unit)? = null
+    ) {
         netWorkListener = listener
         if (Build.VERSION.SDK_INT < 29) {//低于 Android10
             val request = NetworkRequest.Builder()
                 .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
                 .build()
-            
+
             mNetworkCallback = object : ConnectivityManager.NetworkCallback() {
                 override fun onAvailable(network: Network) {
                     super.onAvailable(network)
                     netWorkListener?.invoke(network)
                 }
-                
+
                 override fun onUnavailable() {
                     super.onUnavailable()
                     netWorkListener?.invoke(null)
                 }
             }
-            
+
             connectivityManager.requestNetwork(request, mNetworkCallback!!)
         } else {
             // Android 10+ approach
@@ -108,7 +114,8 @@ object NetWorkUtils {
     }
 
     fun isNetworkAvailable(context: Context): Boolean {
-        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val connectivityManager =
+            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             val network = connectivityManager.activeNetwork ?: return false
             val capabilities = connectivityManager.getNetworkCapabilities(network) ?: return false

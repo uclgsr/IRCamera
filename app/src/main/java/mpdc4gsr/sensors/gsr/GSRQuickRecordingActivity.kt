@@ -66,7 +66,8 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
 
 
         lifecycleScope.launch {
-            val success = true // ComprehensiveRecordingController handles sensor initialization internally
+            val success =
+                true // ComprehensiveRecordingController handles sensor initialization internally
             runOnUiThread {
                 if (success) {
                     binding.statusText.text = "Enhanced recording system ready"
@@ -218,9 +219,11 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
                         ).show()
 
                         currentSessionDirectory?.let { sessionDir ->
-                            binding.sessionInfoText.text = "Recording: ${sessionDir.substringAfterLast("/")}"
+                            binding.sessionInfoText.text =
+                                "Recording: ${sessionDir.substringAfterLast("/")}"
                         } ?: run {
-                            binding.sessionInfoText.text = "Recording in progress with advanced fault tolerance..."
+                            binding.sessionInfoText.text =
+                                "Recording in progress with advanced fault tolerance..."
                         }
                     } else {
                         Toast.makeText(

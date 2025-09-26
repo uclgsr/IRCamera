@@ -221,7 +221,10 @@ class WsManager(
                             lastHeartBeatTime = currentTime
                         }
                         if (currentTime - lastHeartBeatTime > 15 * 1000) {
-                            Log.d("WebSocket", "[ph][ph]5[ph][ph][ph][ph][ph][ph][ph]，[ph][ph][ph][ph][ph][ph]")
+                            Log.d(
+                                "WebSocket",
+                                "[ph][ph]5[ph][ph][ph][ph][ph][ph][ph]，[ph][ph][ph][ph][ph][ph]"
+                            )
                             timeoutListener?.invoke()
                             lastHeartBeatTime = currentTime
                         } else {

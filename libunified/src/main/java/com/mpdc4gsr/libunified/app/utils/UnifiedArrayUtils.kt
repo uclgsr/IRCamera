@@ -81,7 +81,11 @@ object UnifiedArrayUtils {
     /**
      * Get rotated maximum index
      */
-    private fun getRotateMaxIndex(data: FloatArray, rotateType: Int, selectIndexList: ArrayList<Int>): Int {
+    private fun getRotateMaxIndex(
+        data: FloatArray,
+        rotateType: Int,
+        selectIndexList: ArrayList<Int>
+    ): Int {
         val maxIndex = getMaxIndex(data, selectIndexList)
         return rotateIndex(maxIndex, data.size, rotateType)
     }
@@ -89,7 +93,11 @@ object UnifiedArrayUtils {
     /**
      * Get rotated minimum index
      */
-    private fun getRotateMinIndex(data: FloatArray, rotateType: Int, selectIndexList: ArrayList<Int>): Int {
+    private fun getRotateMinIndex(
+        data: FloatArray,
+        rotateType: Int,
+        selectIndexList: ArrayList<Int>
+    ): Int {
         val minIndex = getMinIndex(data, selectIndexList)
         return rotateIndex(minIndex, data.size, rotateType)
     }
@@ -97,9 +105,17 @@ object UnifiedArrayUtils {
     /**
      * Rotate index based on rotation type
      */
-    private fun rotateIndex(index: Int, arraySize: Int, rotateType: Int, width: Int = 256, height: Int = 192): Int {
+    private fun rotateIndex(
+        index: Int,
+        arraySize: Int,
+        rotateType: Int,
+        width: Int = 256,
+        height: Int = 192
+    ): Int {
         // Support for thermal data arrays (typically 256x192 for IR cameras)
-        val actualWidth = if (width * height == arraySize) width else kotlin.math.sqrt(arraySize.toDouble()).toInt()
+        val actualWidth =
+            if (width * height == arraySize) width else kotlin.math.sqrt(arraySize.toDouble())
+                .toInt()
         val actualHeight = if (width * height == arraySize) height else arraySize / actualWidth
 
         if (actualWidth * actualHeight != arraySize) return index
@@ -108,9 +124,17 @@ object UnifiedArrayUtils {
         val y = index / width
 
         val (newX, newY, newWidth) = when (rotateType) {
-            1 -> Triple(height - 1 - y, x, height)           // 90 degrees clockwise, width and height swapped
+            1 -> Triple(
+                height - 1 - y,
+                x,
+                height
+            )           // 90 degrees clockwise, width and height swapped
             2 -> Triple(width - 1 - x, height - 1 - y, width) // 180 degrees, dimensions unchanged
-            3 -> Triple(y, width - 1 - x, height)           // 270 degrees clockwise, width and height swapped
+            3 -> Triple(
+                y,
+                width - 1 - x,
+                height
+            )           // 270 degrees clockwise, width and height swapped
             else -> Triple(x, y, width)                    // No rotation
         }
 
@@ -178,7 +202,12 @@ object UnifiedArrayUtils {
     /**
      * Apply gaussian filter to array
      */
-    fun applyGaussianFilter(data: FloatArray, width: Int, height: Int, sigma: Float = 1.0f): FloatArray {
+    fun applyGaussianFilter(
+        data: FloatArray,
+        width: Int,
+        height: Int,
+        sigma: Float = 1.0f
+    ): FloatArray {
         if (width * height != data.size) return data.copyOf()
 
         val result = data.copyOf()

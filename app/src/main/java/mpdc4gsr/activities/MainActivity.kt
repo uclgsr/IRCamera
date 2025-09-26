@@ -209,12 +209,14 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         try {
             // Initialize ComprehensiveSensorStatusWidget
             val sensorStatusWidget = ComprehensiveSensorStatusWidget(this)
-            val sensorStatusContainer = findViewById<android.widget.FrameLayout>(R.id.sensor_status_container)
+            val sensorStatusContainer =
+                findViewById<android.widget.FrameLayout>(R.id.sensor_status_container)
             sensorStatusContainer?.addView(sensorStatusWidget)
 
             // Initialize RecordingControlsWidget
             val recordingControlsWidget = RecordingControlsWidget(this)
-            val recordingControlsContainer = findViewById<android.widget.FrameLayout>(R.id.recording_controls_container)
+            val recordingControlsContainer =
+                findViewById<android.widget.FrameLayout>(R.id.recording_controls_container)
             recordingControlsContainer?.addView(recordingControlsWidget)
 
             // Setup ViewModel observers
@@ -370,7 +372,8 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             mainViewModel.setRemoteTriggered(false) // Mark as local trigger
         } catch (e: Exception) {
             Log.e(TAG, "Failed to start local recording", e)
-            Toast.makeText(this, "Failed to start recording: ${e.message}", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Failed to start recording: ${e.message}", Toast.LENGTH_SHORT)
+                .show()
         }
     }
 
@@ -380,7 +383,8 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             mainViewModel.stopRecordingSession()
         } catch (e: Exception) {
             Log.e(TAG, "Failed to stop local recording", e)
-            Toast.makeText(this, "Failed to stop recording: ${e.message}", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Failed to stop recording: ${e.message}", Toast.LENGTH_SHORT)
+                .show()
         }
     }
 
@@ -597,7 +601,8 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
     private fun launchFaultTolerantRecording() {
         try {
             Log.i(TAG, "Launching enhanced fault-tolerant recording interface")
-            val intent = Intent(this, mpdc4gsr.activities.FaultTolerantRecordingActivity::class.java)
+            val intent =
+                Intent(this, mpdc4gsr.activities.FaultTolerantRecordingActivity::class.java)
             startActivity(intent)
         } catch (e: Exception) {
             Log.e(TAG, "Failed to launch fault-tolerant recording", e)
@@ -682,7 +687,10 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                 delay(1000) // Simulate initialization time
 
                 // Check if camera permission is granted and camera is available
-                if (ContextCompat.checkSelfPermission(this@MainActivity, android.Manifest.permission.CAMERA)
+                if (ContextCompat.checkSelfPermission(
+                        this@MainActivity,
+                        android.Manifest.permission.CAMERA
+                    )
                     == PackageManager.PERMISSION_GRANTED
                 ) {
 
@@ -777,7 +785,8 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         // Check for USB thermal camera device
         // This would normally check USB device manager for Topdon TC001
         return try {
-            val usbManager = getSystemService(Context.USB_SERVICE) as android.hardware.usb.UsbManager
+            val usbManager =
+                getSystemService(Context.USB_SERVICE) as android.hardware.usb.UsbManager
             val deviceList = usbManager.deviceList
 
             // Look for Topdon TC001 device (vendor ID and product ID would be specific)
@@ -2224,7 +2233,8 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                             Toast.makeText(this, "Invalid port number", Toast.LENGTH_SHORT).show()
                         }
                     } else {
-                        Toast.makeText(this, "Invalid format. Use IP:Port", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "Invalid format. Use IP:Port", Toast.LENGTH_SHORT)
+                            .show()
                     }
                 } else {
                     // Assume default port
@@ -2271,7 +2281,8 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
     private fun configureBluetoothConnection() {
         lifecycleScope.launch {
             try {
-                val permissionManager = mpdc4gsr.permissions.PermissionManager(this@MainActivity, permissionController)
+                val permissionManager =
+                    mpdc4gsr.permissions.PermissionManager(this@MainActivity, permissionController)
                 val hasPermission = permissionManager.requestBluetoothPermissions()
 
                 if (hasPermission) {
@@ -2311,7 +2322,11 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                 bluetoothAdapter.bondedDevices
             } catch (e: SecurityException) {
                 Log.e(TAG, "Security exception accessing bonded devices", e)
-                Toast.makeText(this, "Permission denied accessing Bluetooth devices", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this,
+                    "Permission denied accessing Bluetooth devices",
+                    Toast.LENGTH_SHORT
+                ).show()
                 return
             }
 
@@ -2338,11 +2353,16 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
 
         } catch (e: SecurityException) {
             Log.e(TAG, "Security exception in Bluetooth device selection", e)
-            Toast.makeText(this, "Bluetooth permission denied. Please grant permission in settings.", Toast.LENGTH_LONG)
+            Toast.makeText(
+                this,
+                "Bluetooth permission denied. Please grant permission in settings.",
+                Toast.LENGTH_LONG
+            )
                 .show()
         } catch (e: Exception) {
             Log.e(TAG, "Unexpected error in Bluetooth device selection", e)
-            Toast.makeText(this, "Error accessing Bluetooth: ${e.message}", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Error accessing Bluetooth: ${e.message}", Toast.LENGTH_SHORT)
+                .show()
         }
     }
 
@@ -2486,9 +2506,11 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             .setView(layout)
             .setPositiveButton("Save") { _, _ ->
                 try {
-                    val timeout = timeoutInput.text.toString().toLongOrNull()?.times(1000) ?: settings.connectionTimeout
+                    val timeout = timeoutInput.text.toString().toLongOrNull()?.times(1000)
+                        ?: settings.connectionTimeout
                     val keepAlive =
-                        keepAliveInput.text.toString().toLongOrNull()?.times(1000) ?: settings.keepAliveInterval
+                        keepAliveInput.text.toString().toLongOrNull()?.times(1000)
+                            ?: settings.keepAliveInterval
 
                     settings.connectionTimeout = timeout
                     settings.keepAliveInterval = keepAlive
@@ -2497,7 +2519,8 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
 
                     Toast.makeText(this, "Settings saved", Toast.LENGTH_SHORT).show()
                 } catch (e: Exception) {
-                    Toast.makeText(this, "Error saving settings: ${e.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Error saving settings: ${e.message}", Toast.LENGTH_SHORT)
+                        .show()
                 }
             }
             .setNegativeButton("Cancel", null)

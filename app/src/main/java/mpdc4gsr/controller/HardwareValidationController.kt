@@ -107,7 +107,10 @@ class HardwareValidationController(
         } catch (e: Exception) {
             errorLogs.add("Permission validation error: ${e.message}")
             validationResults["permission_system"] = HardwareValidationResult(
-                "permission_system", false, emptyList(), listOf("Permission validation failed: ${e.message}")
+                "permission_system",
+                false,
+                emptyList(),
+                listOf("Permission validation failed: ${e.message}")
             )
         }
     }
@@ -149,7 +152,10 @@ class HardwareValidationController(
         } catch (e: Exception) {
             errorLogs.add("RGB camera validation error: ${e.message}")
             validationResults["rgb_camera"] = HardwareValidationResult(
-                "rgb_camera", false, emptyList(), listOf("RGB camera validation failed: ${e.message}")
+                "rgb_camera",
+                false,
+                emptyList(),
+                listOf("RGB camera validation failed: ${e.message}")
             )
         }
     }
@@ -161,7 +167,10 @@ class HardwareValidationController(
         try {
             if (!permissionController.hasStoragePermissions()) {
                 validationResults["thermal_camera"] = HardwareValidationResult(
-                    "thermal_camera", false, emptyList(), listOf("Storage permission required for thermal camera")
+                    "thermal_camera",
+                    false,
+                    emptyList(),
+                    listOf("Storage permission required for thermal camera")
                 )
                 return
             }
@@ -191,7 +200,10 @@ class HardwareValidationController(
         } catch (e: Exception) {
             errorLogs.add("Thermal camera validation error: ${e.message}")
             validationResults["thermal_camera"] = HardwareValidationResult(
-                "thermal_camera", false, emptyList(), listOf("Thermal camera validation failed: ${e.message}")
+                "thermal_camera",
+                false,
+                emptyList(),
+                listOf("Thermal camera validation failed: ${e.message}")
             )
         }
     }
@@ -203,7 +215,10 @@ class HardwareValidationController(
         try {
             if (!permissionController.hasBluetoothPermissions()) {
                 validationResults["gsr_sensor"] = HardwareValidationResult(
-                    "gsr_sensor", false, emptyList(), listOf("Bluetooth permissions required for GSR sensor")
+                    "gsr_sensor",
+                    false,
+                    emptyList(),
+                    listOf("Bluetooth permissions required for GSR sensor")
                 )
                 return
             }
@@ -239,7 +254,10 @@ class HardwareValidationController(
         } catch (e: Exception) {
             errorLogs.add("GSR sensor validation error: ${e.message}")
             validationResults["gsr_sensor"] = HardwareValidationResult(
-                "gsr_sensor", false, emptyList(), listOf("GSR sensor validation failed: ${e.message}")
+                "gsr_sensor",
+                false,
+                emptyList(),
+                listOf("GSR sensor validation failed: ${e.message}")
             )
         }
     }
@@ -264,7 +282,10 @@ class HardwareValidationController(
         } catch (e: Exception) {
             errorLogs.add("Multi-sensor recording error: ${e.message}")
             validationResults["multi_sensor_recording"] = HardwareValidationResult(
-                "multi_sensor_recording", false, emptyList(), listOf("Multi-sensor recording failed: ${e.message}")
+                "multi_sensor_recording",
+                false,
+                emptyList(),
+                listOf("Multi-sensor recording failed: ${e.message}")
             )
         }
     }

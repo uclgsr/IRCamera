@@ -121,7 +121,8 @@ class ManualStep2Activity :
 
                     takePhoto()
                     ivTakePhoto?.setText(com.mpdc4gsr.libunified.R.string.app_ok)
-                    tvTips.text = getString(com.mpdc4gsr.libunified.R.string.dual_light_correction_tips_3)
+                    tvTips.text =
+                        getString(com.mpdc4gsr.libunified.R.string.dual_light_correction_tips_3)
                     ivTips.visibility = View.GONE
                     llSeekBar.visibility = View.VISIBLE
                 } else {

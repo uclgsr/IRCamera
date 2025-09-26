@@ -95,7 +95,10 @@ class AdaptiveThermalStreamer {
 
     fun setNetworkClient(client: mpdc4gsr.network.NetworkClient?) {
         networkClient = client
-        Log.i(TAG, "Network client ${if (client != null) "set" else "cleared"} for thermal streaming")
+        Log.i(
+            TAG,
+            "Network client ${if (client != null) "set" else "cleared"} for thermal streaming"
+        )
     }
 
     fun initialize() {
@@ -180,7 +183,10 @@ class AdaptiveThermalStreamer {
                     framesStreamed++
                     streamed = true
 
-                    Log.v(TAG, "Streamed frame ${frame.frameIndex} (buffer size: ${frameBuffer.size})")
+                    Log.v(
+                        TAG,
+                        "Streamed frame ${frame.frameIndex} (buffer size: ${frameBuffer.size})"
+                    )
                 } else {
 
                     frameBuffer.offerFirst(frame)
@@ -349,7 +355,12 @@ class AdaptiveThermalStreamer {
         if (oldInterval != streamingFrameInterval) {
             Log.i(
                 TAG, "Streaming interval updated: $oldInterval -> $streamingFrameInterval " +
-                        "(latency: ${averageLatency}ms, loss: ${String.format("%.1f", packetLossRate * 100)}%)"
+                        "(latency: ${averageLatency}ms, loss: ${
+                            String.format(
+                                "%.1f",
+                                packetLossRate * 100
+                            )
+                        }%)"
             )
         }
 
@@ -435,9 +446,20 @@ class AdaptiveThermalStreamer {
         Log.i(TAG, "  Total frames generated: ${stats["total_frames_generated"]}")
         Log.i(TAG, "  Frames streamed: ${stats["frames_streamed"]}")
         Log.i(TAG, "  Frames dropped: ${stats["frames_dropped"]}")
-        Log.i(TAG, "  Streaming efficiency: ${String.format("%.1f", stats["streaming_efficiency"])}%")
+        Log.i(
+            TAG,
+            "  Streaming efficiency: ${String.format("%.1f", stats["streaming_efficiency"])}%"
+        )
         Log.i(TAG, "  Average latency: ${stats["average_latency_ms"]}ms")
-        Log.i(TAG, "  Packet loss rate: ${String.format("%.2f", stats["packet_loss_rate"] as Double * 100)}%")
+        Log.i(
+            TAG,
+            "  Packet loss rate: ${
+                String.format(
+                    "%.2f",
+                    stats["packet_loss_rate"] as Double * 100
+                )
+            }%"
+        )
         Log.i(TAG, "  Final network quality: ${stats["network_quality"]}")
     }
 

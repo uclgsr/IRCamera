@@ -138,7 +138,10 @@ class ThermalCameraErrorRecoveryManager(
         if (thermalRecorder.isRecording && !isInSimulationMode) {
             val lastFrameReceived = lastFrameTime.get()
             if (lastFrameReceived > 0 && (currentTime - lastFrameReceived) > FRAME_TIMEOUT_MS) {
-                Log.w(TAG, "Thermal camera frame timeout detected (${currentTime - lastFrameReceived}ms)")
+                Log.w(
+                    TAG,
+                    "Thermal camera frame timeout detected (${currentTime - lastFrameReceived}ms)"
+                )
                 handleFrameTimeout()
             }
         }
@@ -217,7 +220,10 @@ class ThermalCameraErrorRecoveryManager(
             MAX_RECONNECTION_DELAY_MS
         )
 
-        Log.i(TAG, "Attempting thermal camera reconnection #$attemptNumber after ${backoffDelay}ms delay")
+        Log.i(
+            TAG,
+            "Attempting thermal camera reconnection #$attemptNumber after ${backoffDelay}ms delay"
+        )
         errorEventListener?.onReconnectionAttempt(attemptNumber, MAX_RECONNECTION_ATTEMPTS)
 
 

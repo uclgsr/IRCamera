@@ -201,7 +201,7 @@ object UnifiedCameraUtils {
      * Consolidates CameraMenuView functionality
      */
     class CameraMenuManager(private val context: Context) {
-        
+
         private var popupWindow: PopupWindow? = null
         private val menuItems: MutableList<String> = mutableListOf()
 
@@ -224,7 +224,7 @@ object UnifiedCameraUtils {
      * Consolidates network camera functionality
      */
     object CameraNetworkIntegration {
-        
+
         private val TAG = "CameraNetwork"
         private var isNetworkEnabled = false
         private val networkCallbacks: MutableList<(ByteArray) -> Unit> = CopyOnWriteArrayList()
@@ -265,7 +265,7 @@ object UnifiedCameraUtils {
      * Consolidates preview management functionality
      */
     class CameraPreviewManager {
-        
+
         private var previewView: UnifiedCameraView? = null
         private var isPreviewRunning = false
 
@@ -295,7 +295,7 @@ object UnifiedCameraUtils {
      * Consolidates JPEG view and processing functionality
      */
     object JpegUtils {
-        
+
         fun compressBitmapToJpeg(bitmap: Bitmap, quality: Int = 85): ByteArray {
             val output = java.io.ByteArrayOutputStream()
             bitmap.compress(Bitmap.CompressFormat.JPEG, quality, output)
@@ -317,7 +317,7 @@ object UnifiedCameraUtils {
      */
     fun getCameraTypeName(type: Int): String = when (type) {
         TYPE_IR -> "IR Camera"
-        TYPE_RGB -> "RGB Camera" 
+        TYPE_RGB -> "RGB Camera"
         TYPE_THERMAL -> "Thermal Camera"
         else -> "Unknown Camera"
     }
@@ -327,7 +327,10 @@ object UnifiedCameraUtils {
     /**
      * Factory Methods
      */
-    fun createCameraView(context: Context, config: CameraConfig = CameraConfig()): UnifiedCameraView {
+    fun createCameraView(
+        context: Context,
+        config: CameraConfig = CameraConfig()
+    ): UnifiedCameraView {
         return UnifiedCameraView(context).apply {
             setConfig(config)
         }
@@ -345,7 +348,10 @@ object UnifiedCameraUtils {
      * Repository Validation
      */
     fun validateCameraConsolidation(): Boolean {
-        Log.d(TAG, "Camera consolidation validation: 12 camera files consolidated into UnifiedCameraUtils")
+        Log.d(
+            TAG,
+            "Camera consolidation validation: 12 camera files consolidated into UnifiedCameraUtils"
+        )
         return true
     }
 }

@@ -117,7 +117,8 @@ class RgbCameraTestActivity : AppCompatActivity() {
             exposureCompensationSeekBar.isEnabled = !isChecked
         }
 
-        exposureCompensationSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+        exposureCompensationSeekBar.setOnSeekBarChangeListener(object :
+            SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 if (fromUser) {
                     val evValue = (progress - 100) / 50.0f  // -2.0 to +2.0 EV
@@ -141,7 +142,10 @@ class RgbCameraTestActivity : AppCompatActivity() {
                 if (fromUser) {
                     val focusValue = progress / 100.0f  // 0.0-1.0
                     val focusText =
-                        if (focusValue < 0.1f) "Infinity" else String.format("%.1fm", 0.1f + focusValue * 2.0f)
+                        if (focusValue < 0.1f) "Infinity" else String.format(
+                            "%.1fm",
+                            0.1f + focusValue * 2.0f
+                        )
                     focusDistanceText.text = "Focus: $focusText"
                     cameraRecorder?.setFocusDistance(focusValue)
                 }
@@ -160,7 +164,14 @@ class RgbCameraTestActivity : AppCompatActivity() {
         // Tap-to-focus
         previewView.onTapToFocus = { x, y ->
             cameraRecorder?.triggerTapToFocus(x, y)
-            showMessage("Tap-to-focus triggered at (${String.format("%.2f", x)}, ${String.format("%.2f", y)})")
+            showMessage(
+                "Tap-to-focus triggered at (${
+                    String.format(
+                        "%.2f",
+                        x
+                    )
+                }, ${String.format("%.2f", y)})"
+            )
         }
     }
 
@@ -236,7 +247,8 @@ class RgbCameraTestActivity : AppCompatActivity() {
                 testDir.mkdirs()
 
                 val metadata = SessionMetadata.createSessionStart("camera_test")
-                val success = cameraRecorder?.startRecording(testDir.absolutePath, metadata) ?: false
+                val success =
+                    cameraRecorder?.startRecording(testDir.absolutePath, metadata) ?: false
 
                 if (success) {
                     isRecording = true

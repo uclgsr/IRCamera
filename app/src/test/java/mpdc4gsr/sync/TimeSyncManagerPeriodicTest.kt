@@ -34,7 +34,8 @@ class TimeSyncManagerPeriodicTest {
         timeSyncManager = TimeSyncManager(mockContext)
 
         // Create a temporary test directory
-        testSessionDirectory = System.getProperty("java.io.tmpdir") + "/periodic_test_" + System.nanoTime()
+        testSessionDirectory =
+            System.getProperty("java.io.tmpdir") + "/periodic_test_" + System.nanoTime()
         File(testSessionDirectory).mkdirs()
     }
 
@@ -53,7 +54,10 @@ class TimeSyncManagerPeriodicTest {
 
         // Initially periodic sync should be disabled
         val initialStats = timeSyncManager.getSyncStats()
-        assertTrue("Initial state should have sync logging enabled", initialStats["sync_log_exists"] as Boolean)
+        assertTrue(
+            "Initial state should have sync logging enabled",
+            initialStats["sync_log_exists"] as Boolean
+        )
 
         // Enable periodic sync
         timeSyncManager.setPeriodicSyncEnabled(true)
@@ -120,7 +124,11 @@ class TimeSyncManagerPeriodicTest {
 
         // Verify session is initialized
         val stats = timeSyncManager.getSyncStats()
-        assertEquals("Session directory should be set", testSessionDirectory, stats["session_directory"])
+        assertEquals(
+            "Session directory should be set",
+            testSessionDirectory,
+            stats["session_directory"]
+        )
         assertTrue("Sync log should exist", stats["sync_log_exists"] as Boolean)
 
         // Finalize session (should stop periodic sync)

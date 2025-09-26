@@ -30,7 +30,10 @@ class PermissionManager(
         )
 
         val missingPermissions = cameraPermissions.filter { permission ->
-            ActivityCompat.checkSelfPermission(activity, permission) != PackageManager.PERMISSION_GRANTED
+            ActivityCompat.checkSelfPermission(
+                activity,
+                permission
+            ) != PackageManager.PERMISSION_GRANTED
         }
 
         if (missingPermissions.isEmpty()) {
@@ -46,7 +49,10 @@ class PermissionManager(
         permissionController.ensureAll { granted, deniedPermissions ->
             Log.i(TAG, "Camera permissions result: $granted")
             if (deniedPermissions.isNotEmpty()) {
-                Log.w(TAG, "Some camera permissions were denied: ${deniedPermissions.joinToString()}")
+                Log.w(
+                    TAG,
+                    "Some camera permissions were denied: ${deniedPermissions.joinToString()}"
+                )
             }
             continuation.resume(granted)
         }
@@ -56,47 +62,54 @@ class PermissionManager(
     }
 
 
-    suspend fun requestBluetoothPermissions(): Boolean = suspendCancellableCoroutine { continuation ->
-        val bluetoothPermissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            arrayOf(
-                Manifest.permission.BLUETOOTH_SCAN,
-                Manifest.permission.BLUETOOTH_CONNECT,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            )
-        } else {
-            arrayOf(
-                Manifest.permission.BLUETOOTH,
-                Manifest.permission.BLUETOOTH_ADMIN,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            )
-        }
-
-        val missingPermissions = bluetoothPermissions.filter { permission ->
-            ActivityCompat.checkSelfPermission(activity, permission) != PackageManager.PERMISSION_GRANTED
-        }
-
-        if (missingPermissions.isEmpty()) {
-            Log.i(TAG, "Bluetooth permissions already granted")
-            continuation.resume(true)
-            return@suspendCancellableCoroutine
-        }
-
-        Log.i(TAG, "Requesting bluetooth permissions for GSR sensor access")
-
-        // Use proper permission callback mechanism from PermissionController
-        Log.i(TAG, "Requesting bluetooth permissions through PermissionController")
-        permissionController.ensureAll { granted, deniedPermissions ->
-            Log.i(TAG, "Bluetooth permissions result: $granted")
-            if (!granted) {
-                Log.w(TAG, "Bluetooth permissions denied - GSR sensor features will be unavailable")
-                Log.w(TAG, "Denied permissions: ${deniedPermissions.joinToString()}")
+    suspend fun requestBluetoothPermissions(): Boolean =
+        suspendCancellableCoroutine { continuation ->
+            val bluetoothPermissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                arrayOf(
+                    Manifest.permission.BLUETOOTH_SCAN,
+                    Manifest.permission.BLUETOOTH_CONNECT,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                )
+            } else {
+                arrayOf(
+                    Manifest.permission.BLUETOOTH,
+                    Manifest.permission.BLUETOOTH_ADMIN,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                )
             }
-            continuation.resume(granted)
-        }
 
-        // Enhanced callback with detailed error handling is now handled above
-        // The permissions will be requested through the callback mechanism
-    }
+            val missingPermissions = bluetoothPermissions.filter { permission ->
+                ActivityCompat.checkSelfPermission(
+                    activity,
+                    permission
+                ) != PackageManager.PERMISSION_GRANTED
+            }
+
+            if (missingPermissions.isEmpty()) {
+                Log.i(TAG, "Bluetooth permissions already granted")
+                continuation.resume(true)
+                return@suspendCancellableCoroutine
+            }
+
+            Log.i(TAG, "Requesting bluetooth permissions for GSR sensor access")
+
+            // Use proper permission callback mechanism from PermissionController
+            Log.i(TAG, "Requesting bluetooth permissions through PermissionController")
+            permissionController.ensureAll { granted, deniedPermissions ->
+                Log.i(TAG, "Bluetooth permissions result: $granted")
+                if (!granted) {
+                    Log.w(
+                        TAG,
+                        "Bluetooth permissions denied - GSR sensor features will be unavailable"
+                    )
+                    Log.w(TAG, "Denied permissions: ${deniedPermissions.joinToString()}")
+                }
+                continuation.resume(granted)
+            }
+
+            // Enhanced callback with detailed error handling is now handled above
+            // The permissions will be requested through the callback mechanism
+        }
 
 
     suspend fun requestStoragePermissions(): Boolean {
@@ -151,7 +164,10 @@ class PermissionManager(
         val allPermissions = bluetoothPermissions + cameraPermissions
 
         return allPermissions.all { permission ->
-            ActivityCompat.checkSelfPermission(activity, permission) == PackageManager.PERMISSION_GRANTED
+            ActivityCompat.checkSelfPermission(
+                activity,
+                permission
+            ) == PackageManager.PERMISSION_GRANTED
         }
     }
 }

@@ -12,9 +12,15 @@ sealed class UiState {
 }
 
 sealed class AppError(val message: String, val cause: Throwable? = null) {
-    data class NetworkError(val errorMessage: String, val errorCode: Int? = null) : AppError(errorMessage)
-    data class SensorError(val sensorType: String, val errorMessage: String) : AppError(errorMessage)
-    data class RecordingError(val operation: String, val errorMessage: String) : AppError(errorMessage)
+    data class NetworkError(val errorMessage: String, val errorCode: Int? = null) :
+        AppError(errorMessage)
+
+    data class SensorError(val sensorType: String, val errorMessage: String) :
+        AppError(errorMessage)
+
+    data class RecordingError(val operation: String, val errorMessage: String) :
+        AppError(errorMessage)
+
     data class UnknownError(val errorMessage: String, val throwable: Throwable? = null) :
         AppError(errorMessage, throwable)
 }

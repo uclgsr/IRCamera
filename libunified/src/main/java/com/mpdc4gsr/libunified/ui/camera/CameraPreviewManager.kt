@@ -139,7 +139,7 @@ class CameraPreviewManager private constructor() {
         XLog.d(TAG, "Temperature limits set with additional parameter: min=$min, max=$max")
     }
     
-    fun setColorList(colors: Any) {
+    fun setColorList(colors: Nothing?, nothing: Nothing?, bool: Boolean, f: Float, f1: Float) {
         XLog.d(TAG, "Color list set")
     }
     

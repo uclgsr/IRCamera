@@ -112,7 +112,8 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
     private fun initializeComponents() {
         timeManager = TimeManager.getInstance(this)
 
-        shimmerBluetoothManager = ShimmerBluetoothManagerAndroid(this, Handler(Looper.getMainLooper()))
+        shimmerBluetoothManager =
+            ShimmerBluetoothManagerAndroid(this, Handler(Looper.getMainLooper()))
 
         Log.i(TAG, "Shimmer Bluetooth Manager initialized for GSR device coordination")
 
@@ -179,7 +180,8 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
                     if (isShimmerGSRDevice(deviceName, deviceAddress)) {
                         Log.i(TAG, "Paired Shimmer GSR device found: $deviceName ($deviceAddress)")
                         runOnUiThread {
-                            binding.statusTextView.text = "Shimmer GSR device available: $deviceName"
+                            binding.statusTextView.text =
+                                "Shimmer GSR device available: $deviceName"
                         }
                     }
                 }
@@ -209,7 +211,8 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
                                         "Discovered new Shimmer GSR device: $deviceName ($deviceAddress) RSSI: $rssi"
                                     )
                                     runOnUiThread {
-                                        binding.statusTextView.text = "New Shimmer device found: $deviceName"
+                                        binding.statusTextView.text =
+                                            "New Shimmer device found: $deviceName"
                                         updateDiscoveredDeviceUI(deviceName, deviceAddress, rssi)
                                     }
                                 }
@@ -525,12 +528,23 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
             .onEach { state ->
                 runOnUiThread {
                     when (state) {
-                        ComprehensiveRecordingState.IDLE -> binding.statusTextView.text = "System ready"
-                        ComprehensiveRecordingState.STARTING -> binding.statusTextView.text = "Starting sensors..."
-                        ComprehensiveRecordingState.RECORDING -> binding.statusTextView.text = "Recording in progress"
-                        ComprehensiveRecordingState.STOPPING -> binding.statusTextView.text = "Stopping sensors..."
-                        ComprehensiveRecordingState.ERROR -> binding.statusTextView.text = "Recording error"
-                        ComprehensiveRecordingState.STOPPED -> binding.statusTextView.text = "Stopped"
+                        ComprehensiveRecordingState.IDLE -> binding.statusTextView.text =
+                            "System ready"
+
+                        ComprehensiveRecordingState.STARTING -> binding.statusTextView.text =
+                            "Starting sensors..."
+
+                        ComprehensiveRecordingState.RECORDING -> binding.statusTextView.text =
+                            "Recording in progress"
+
+                        ComprehensiveRecordingState.STOPPING -> binding.statusTextView.text =
+                            "Stopping sensors..."
+
+                        ComprehensiveRecordingState.ERROR -> binding.statusTextView.text =
+                            "Recording error"
+
+                        ComprehensiveRecordingState.STOPPED -> binding.statusTextView.text =
+                            "Stopped"
                     }
                     updateUI()
                 }

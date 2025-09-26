@@ -45,7 +45,8 @@ class TcpClient(
     private var readerJob: Job? = null
 
     private val _connectionState = MutableStateFlow(CommandConnection.ConnectionState.DISCONNECTED)
-    override val connectionState: StateFlow<CommandConnection.ConnectionState> = _connectionState.asStateFlow()
+    override val connectionState: StateFlow<CommandConnection.ConnectionState> =
+        _connectionState.asStateFlow()
 
     private var messageCallback: ((String) -> Unit)? = null
     private var connectionCallback: ((CommandConnection.ConnectionState) -> Unit)? = null

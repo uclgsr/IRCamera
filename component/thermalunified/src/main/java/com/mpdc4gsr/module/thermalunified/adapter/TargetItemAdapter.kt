@@ -29,8 +29,16 @@ class TargetItemAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVie
 
     private val secondBean =
         arrayListOf(
-            TargetColorBean(LibR.drawable.ic_menu_thermal6002, "", ObserveBean.TYPE_TARGET_HORIZONTAL),
-            TargetColorBean(LibR.drawable.ic_menu_thermal6001, "", ObserveBean.TYPE_TARGET_VERTICAL),
+            TargetColorBean(
+                LibR.drawable.ic_menu_thermal6002,
+                "",
+                ObserveBean.TYPE_TARGET_HORIZONTAL
+            ),
+            TargetColorBean(
+                LibR.drawable.ic_menu_thermal6001,
+                "",
+                ObserveBean.TYPE_TARGET_VERTICAL
+            ),
             TargetColorBean(LibR.drawable.ic_menu_thermal6003, "", ObserveBean.TYPE_TARGET_CIRCLE),
         )
 

@@ -76,12 +76,23 @@ class ThermalCameraIntegrationValidationTest {
 
         // Then: Should use real SDK paths
         assertTrue("Should initialize with real SDK", initResult)
-        assertEquals("Should use thermal camera sensor ID", "thermal_camera_1", thermalRecorder.sensorId)
-        assertEquals("Should identify as IR Thermal Camera", "IR Thermal Camera", thermalRecorder.sensorType)
+        assertEquals(
+            "Should use thermal camera sensor ID",
+            "thermal_camera_1",
+            thermalRecorder.sensorId
+        )
+        assertEquals(
+            "Should identify as IR Thermal Camera",
+            "IR Thermal Camera",
+            thermalRecorder.sensorType
+        )
 
         // Validate frame rate is set for real hardware
         val frameRate = thermalRecorder.samplingRate
-        assertTrue("Frame rate should be in 9-10Hz range for real hardware", frameRate >= 8.0 && frameRate <= 11.0)
+        assertTrue(
+            "Frame rate should be in 9-10Hz range for real hardware",
+            frameRate >= 8.0 && frameRate <= 11.0
+        )
     }
 
     /**

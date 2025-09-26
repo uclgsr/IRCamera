@@ -89,7 +89,10 @@ class AudioRecordHelp private constructor() {
                     if (recordingAudio) {
                         if (bufferReadResult > 0) {
                             audioData?.limit(bufferReadResult)
-                            Log.w("[ph][ph][ph][ph]", bufferReadResult.toString() + "//" + bufferReadResult)
+                            Log.w(
+                                "[ph][ph][ph][ph]",
+                                bufferReadResult.toString() + "//" + bufferReadResult
+                            )
                             recorder?.get()?.recordSamples(
                                 VideoRecordFFmpeg.SAMPLE_AUDIO_RETE_INHZ,
                                 VideoRecordFFmpeg.AUDIO_CHANNELS,

@@ -28,15 +28,27 @@ class LiteSurfaceView @JvmOverloads constructor(
     fun scaleBitmap(): Bitmap {
         try {
             val irData =
-                mIrRotateData ?: return Bitmap.createBitmap(measuredWidth, measuredHeight, Bitmap.Config.ARGB_8888)
+                mIrRotateData ?: return Bitmap.createBitmap(
+                    measuredWidth,
+                    measuredHeight,
+                    Bitmap.Config.ARGB_8888
+                )
             if (tmpData == null) {
                 tmpData = ByteArray(irData.size)
             }
-            val tempData = tmpData ?: return Bitmap.createBitmap(measuredWidth, measuredHeight, Bitmap.Config.ARGB_8888)
+            val tempData = tmpData ?: return Bitmap.createBitmap(
+                measuredWidth,
+                measuredHeight,
+                Bitmap.Config.ARGB_8888
+            )
             System.arraycopy(irData, 0, tempData, 0, irData.size)
             if (imageBitmap == null || imageBitmap!!.getWidth() != mFinalImageWidth) {
                 imageBitmap =
-                    Bitmap.createBitmap(mFinalImageWidth, mFinalImageHeight, Bitmap.Config.ARGB_8888)
+                    Bitmap.createBitmap(
+                        mFinalImageWidth,
+                        mFinalImageHeight,
+                        Bitmap.Config.ARGB_8888
+                    )
             }
             imageBitmap?.copyPixelsFromBuffer(ByteBuffer.wrap(tempData))
             return Bitmap.createScaledBitmap(

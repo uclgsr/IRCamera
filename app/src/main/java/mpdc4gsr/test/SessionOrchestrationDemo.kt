@@ -209,7 +209,10 @@ class SessionOrchestrationDemo(
             Log.i(TAG, "Session Events (${manifest.events.size}):")
             manifest.events.take(10).forEach { event ->
                 val status = if (event.success) "✓" else "✗"
-                Log.i(TAG, "  $status ${event.eventType}${if (event.sensorId != null) " (${event.sensorId})" else ""}")
+                Log.i(
+                    TAG,
+                    "  $status ${event.eventType}${if (event.sensorId != null) " (${event.sensorId})" else ""}"
+                )
                 if (!event.success && event.errorMessage != null) {
                     Log.i(TAG, "    Error: ${event.errorMessage}")
                 }

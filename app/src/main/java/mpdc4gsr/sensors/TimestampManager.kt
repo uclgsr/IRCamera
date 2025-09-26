@@ -89,7 +89,10 @@ object TimestampManager {
             bootTimeReferenceMs = bootTimeReference.get()
         )
 
-        Log.i(TAG, "Session started with reference: system=${systemStart}ms, monotonic=${monotonicStart}ns")
+        Log.i(
+            TAG,
+            "Session started with reference: system=${systemStart}ms, monotonic=${monotonicStart}ns"
+        )
         return reference
     }
 
@@ -146,7 +149,10 @@ object TimestampManager {
         return sessionStartSys + offsetMs
     }
 
-    @Deprecated("Use convertMonotonicToWallClock for clarity.", ReplaceWith("convertMonotonicToWallClock(monotonicNs)"))
+    @Deprecated(
+        "Use convertMonotonicToWallClock for clarity.",
+        ReplaceWith("convertMonotonicToWallClock(monotonicNs)")
+    )
     fun convertMonotonicToSystemTime(monotonicNs: Long): Long {
         return convertMonotonicToWallClock(monotonicNs)
     }

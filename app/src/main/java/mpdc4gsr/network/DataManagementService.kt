@@ -800,7 +800,12 @@ class DataManagementService(private val context: Context) {
             val hdf5Structure = JSONObject().apply {
                 put("format", "HDF5-Compatible JSON")
                 put("version", "1.0")
-                put("created", SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault()).format(Date()))
+                put(
+                    "created",
+                    SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault()).format(
+                        Date()
+                    )
+                )
 
 
                 val rootGroup = JSONObject().apply {
@@ -812,7 +817,8 @@ class DataManagementService(private val context: Context) {
                         put("end_time", session.endTime)
                         put(
                             "duration_sec",
-                            ((session.endTime ?: System.currentTimeMillis()) - session.startTime) / 1000.0
+                            ((session.endTime
+                                ?: System.currentTimeMillis()) - session.startTime) / 1000.0
                         )
                     })
 
@@ -874,7 +880,11 @@ class DataManagementService(private val context: Context) {
                             })
                             put("datasets", JSONObject().apply {
                                 put("video_file_ref", JSONObject().apply {
-                                    put("path", session.files.find { it.type == "rgb_video" }?.relativePath ?: "")
+                                    put(
+                                        "path",
+                                        session.files.find { it.type == "rgb_video" }?.relativePath
+                                            ?: ""
+                                    )
                                     put("description", "Reference to external video file")
                                 })
                                 put("frame_timestamps", JSONObject().apply {
@@ -958,7 +968,10 @@ class DataManagementService(private val context: Context) {
             }
 
             exportFile.writeText(hdf5Structure.toString(2))
-            Log.i(TAG, "Session exported in HDF5-compatible JSON format: ${exportFile.absolutePath}")
+            Log.i(
+                TAG,
+                "Session exported in HDF5-compatible JSON format: ${exportFile.absolutePath}"
+            )
 
         } catch (e: Exception) {
             Log.e(TAG, "Failed to export session as HDF5", e)
@@ -982,13 +995,18 @@ class DataManagementService(private val context: Context) {
                 put("participant_id", session.participantId)
                 put("start_time", session.startTime)
                 put("end_time", session.endTime)
-                put("duration_sec", ((session.endTime ?: System.currentTimeMillis()) - session.startTime) / 1000.0)
+                put(
+                    "duration_sec",
+                    ((session.endTime ?: System.currentTimeMillis()) - session.startTime) / 1000.0
+                )
                 put("total_samples", session.totalSamples)
                 put("device_info", session.deviceInfo)
                 put("export_format", "ZIP Archive")
                 put(
                     "export_timestamp",
-                    SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault()).format(Date())
+                    SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault()).format(
+                        Date()
+                    )
                 )
             }
 
@@ -1058,7 +1076,11 @@ class DataManagementService(private val context: Context) {
                 }
             }
                 
-                Generated: ${SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date())}
+                Generated: ${
+                SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(
+                    Date()
+                )
+            }
                 Export Tool: IRCamera Data Management Service v1.0
             """.trimIndent()
 
@@ -1069,7 +1091,10 @@ class DataManagementService(private val context: Context) {
             zipOutputStream.close()
 
             Log.i(TAG, "Session exported as ZIP archive: ${exportFile.absolutePath}")
-            Log.i(TAG, "ZIP contains ${session.files.size} files (${if (includeFiles) "with" else "without"} data)")
+            Log.i(
+                TAG,
+                "ZIP contains ${session.files.size} files (${if (includeFiles) "with" else "without"} data)"
+            )
 
         } catch (e: Exception) {
             Log.e(TAG, "Failed to create ZIP export", e)

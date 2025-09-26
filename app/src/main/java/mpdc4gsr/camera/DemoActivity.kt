@@ -50,7 +50,11 @@ class DemoActivity : AppCompatActivity() {
                         "Samsung Stage3/Level3 processing enabled for ${SamsungDeviceCompatibility.getDeviceInfo()}"
                     )
                     runOnUiThread {
-                        Toast.makeText(this@DemoActivity, "Stage3/Level3 DNG Recording Enabled", Toast.LENGTH_LONG)
+                        Toast.makeText(
+                            this@DemoActivity,
+                            "Stage3/Level3 DNG Recording Enabled",
+                            Toast.LENGTH_LONG
+                        )
                             .show()
                     }
                 } else {

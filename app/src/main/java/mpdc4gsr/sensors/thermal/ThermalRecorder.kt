@@ -430,7 +430,10 @@ class ThermalRecorder(private val context: Context) {
         try {
             sessionDirectory?.let { dir ->
                 val imageFile =
-                    File(dir, "thermal_frame_${frameSequence}_${TimestampManager.getCurrentTimestampNanos()}.raw")
+                    File(
+                        dir,
+                        "thermal_frame_${frameSequence}_${TimestampManager.getCurrentTimestampNanos()}.raw"
+                    )
 
                 FileOutputStream(imageFile).use { output ->
                     output.write(frameData)
@@ -467,7 +470,10 @@ class ThermalRecorder(private val context: Context) {
                 bitmap.setPixels(pixels, 0, width, 0, 0, width, height)
 
                 val imageFile =
-                    File(dir, "thermal_frame_${frameSequence}_${TimestampManager.getCurrentTimestampNanos()}.png")
+                    File(
+                        dir,
+                        "thermal_frame_${frameSequence}_${TimestampManager.getCurrentTimestampNanos()}.png"
+                    )
                 FileOutputStream(imageFile).use { output ->
                     bitmap.compress(Bitmap.CompressFormat.PNG, 100, output)
                 }

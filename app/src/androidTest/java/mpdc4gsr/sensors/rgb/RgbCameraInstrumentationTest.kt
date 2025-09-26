@@ -175,7 +175,10 @@ class RgbCameraInstrumentationTest {
 
         val capabilities = analyzeDeviceCapabilities()
 
-        Assert.assertTrue("Device should support basic recording", capabilities.supportsBasicRecording)
+        Assert.assertTrue(
+            "Device should support basic recording",
+            capabilities.supportsBasicRecording
+        )
 
         if (capabilities.supports4K) {
             Log.i(TAG, "Device supports 4K - running enhanced tests")
