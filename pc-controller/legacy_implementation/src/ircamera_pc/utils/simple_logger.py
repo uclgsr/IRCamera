@@ -1,36 +1,22 @@
-import logging
-import sys
-
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s | %(levelname)-8s | %(name)s:%(funcName)s:%(lineno)d"
-           "- %(message)s",
-    handlers=[
-        logging.StreamHandler(sys.stdout),
-        logging.FileHandler("ircamera_pc.log"),
-    ],
-)
-
-
 class SimpleLogger:
 
     def __init__(self, name: str = "ircamera_pc"):
-        self._logger = logging.getLogger(name)
+        pass
 
     def debug(self, message: str, *args, **kwargs) -> None:
-        self._logger.debug(message, *args)
+        pass
 
     def info(self, message: str, *args, **kwargs) -> None:
-        self._logger.info(message, *args)
+        pass
 
     def warning(self, message: str, *args, **kwargs) -> None:
-        self._logger.warning(message, *args)
+        pass
 
     def error(self, message: str, *args, **kwargs) -> None:
-        self._logger.error(message, *args)
+        pass
 
     def critical(self, message: str, *args, **kwargs) -> None:
-        self._logger.critical(message, *args)
+        pass
 
     def remove(self, *args, **kwargs) -> None:
         pass
@@ -43,23 +29,23 @@ logger = SimpleLogger()
 
 
 def debug(message: str, *args, **kwargs) -> None:
-    logger.debug(message, *args, **kwargs)
+    pass
 
 
 def info(message: str, *args, **kwargs) -> None:
-    logger.info(message, *args, **kwargs)
+    pass
 
 
 def warning(message: str, *args, **kwargs) -> None:
-    logger.warning(message, *args, **kwargs)
+    pass
 
 
 def error(message: str, *args, **kwargs) -> None:
-    logger.error(message, *args, **kwargs)
+    pass
 
 
 def critical(message: str, *args, **kwargs) -> None:
-    logger.critical(message, *args, **kwargs)
+    pass
 
 
 def get_logger(name: str = "ircamera_pc") -> SimpleLogger:
