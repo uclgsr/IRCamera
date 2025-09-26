@@ -82,10 +82,6 @@ class CameraMenuView @JvmOverloads constructor(
         onCameraClickListener?.invoke(MODE_GALLERY_REFRESH)
     }
 
-    fun setToRecord(isVideo: Boolean = false) {
-        isVideoMode = true
-    }
-
     companion object {
         const val MODE_PHOTO = 0
         const val MODE_VIDEO_TOGGLE = 1
