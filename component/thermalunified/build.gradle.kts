@@ -7,7 +7,7 @@ plugins {
 
 android {
     namespace = "com.mpdc4gsr.module.thermalunified"
-    compileSdk = 35
+    compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
         minSdk = libs.versions.minSdk.get().toInt()
@@ -65,7 +65,6 @@ android {
         ignoreWarnings = true
         checkReleaseBuilds = false
     }
-    buildToolsVersion = "35.0.0"
 }
 
 dependencies {

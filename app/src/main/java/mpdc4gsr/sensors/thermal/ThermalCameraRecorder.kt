@@ -9,7 +9,7 @@ import android.widget.Toast
 import com.energy.ac020library.IrcamEngine
 import com.energy.ac020library.bean.IIrFrameCallback
 import com.energy.ac020library.bean.UvcHandleParam
-import com.energy.iruvc.uvc.UVCCamera
+import com.infisense.iruvc.uvc.UVCCamera
 import com.mpdc4gsr.libunified.app.bean.event.device.DeviceConnectEvent
 import com.mpdc4gsr.libunified.app.bean.event.device.DevicePermissionEvent
 import com.mpdc4gsr.libunified.app.config.DeviceConfig.isTcTsDevice
@@ -145,13 +145,13 @@ class ThermalCameraRecorder(
         private fun checkForISPLibrarySupport(): Boolean {
             return try {
 
-                Class.forName("com.energy.iruvc.sdkisp.LibIRProcess")
+                Class.forName("com.infisense.iruvc.sdkisp.LibIRProcess")
 
 
-                val ispMethod = Class.forName("com.energy.iruvc.ircmd.IRCMD")
+                val ispMethod = Class.forName("com.infisense.iruvc.ircmd.IRCMD")
                     .getMethod(
                         "isTempReplacedWithTNREnabled",
-                        Class.forName("com.energy.iruvc.utils.DeviceType")
+                        Class.forName("com.infisense.iruvc.utils.DeviceType")
                     )
 
                 Log.d(TAG, "ISP/TNR library support confirmed")
@@ -875,7 +875,7 @@ class ThermalCameraRecorder(
                 }
 
 
-                val connectCallback = object : com.energy.iruvc.uvc.ConnectCallback {
+                val connectCallback = object : com.infisense.iruvc.uvc.ConnectCallback {
                     override fun onCameraOpened(camera: UVCCamera?) {
                         Log.i(TAG, "Thermal camera opened successfully")
                         isIRCameraConnected = true
@@ -885,7 +885,7 @@ class ThermalCameraRecorder(
                         }
                     }
 
-                    override fun onIRCMDCreate(ircmd: com.energy.iruvc.ircmd.IRCMD?) {
+                    override fun onIRCMDCreate(ircmd: com.infisense.iruvc.ircmd.IRCMD?) {
                         Log.d(TAG, "IRCMD created for thermal camera")
 
                         // Configure device settings equivalent to reference implementation
