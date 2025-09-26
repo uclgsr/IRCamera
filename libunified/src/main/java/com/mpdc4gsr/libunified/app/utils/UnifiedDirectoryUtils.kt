@@ -244,4 +244,11 @@ object UnifiedDirectoryUtils {
     fun getGsrDirectory(context: Context): File {
         return File(getRecordingsDirectory(context), GSR_DIR).apply { mkdirs() }
     }
+    
+    /**
+     * Get RGB data directory
+     */
+    fun getRgbDirectory(context: Context): File {
+        return File(getRecordingsDirectory(context), RGB_DIR).apply { mkdirs() }
+    }
 }

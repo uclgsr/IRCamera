@@ -20,9 +20,6 @@ class UnifiedDataWriterUtils(
     private val flushIntervalMs: Long = 1000L,
     private val maxQueueSize: Int = 10000
 ) {
-    companion object {
-        private const val TAG = "UnifiedDataWriter"
-    }
 
     private val dataQueue = LinkedBlockingQueue<String>(maxQueueSize)
     private val isRunning = AtomicBoolean(false)
