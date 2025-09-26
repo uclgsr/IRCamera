@@ -64,7 +64,8 @@ object UnifiedCameraUtils {
         defStyleAttr: Int = 0
     ) : TextureView(context, attrs, defStyleAttr) {
 
-        var config = CameraConfig()
+        private var _config = CameraConfig()
+        val config: CameraConfig get() = _config
         private var bitmap: Bitmap? = null
         private var syncImage: SynchronizedBitmap? = null
         private var canvas: Canvas? = null
@@ -81,8 +82,8 @@ object UnifiedCameraUtils {
         }
 
         private fun setupView() {
-            paint.color = config.linePaintColor
-            paint.textSize = config.textSize
+            paint.color = _config.linePaintColor
+            paint.textSize = _config.textSize
         }
 
         fun setBitmap(bitmap: Bitmap?) {
@@ -95,7 +96,7 @@ object UnifiedCameraUtils {
         }
 
         fun setConfig(config: CameraConfig) {
-            this.config = config
+            this._config = config
             setupView()
         }
 
@@ -138,7 +139,7 @@ object UnifiedCameraUtils {
                 canvas.drawBitmap(bmp, 0f, 0f, paint)
             }
 
-            if (config.drawLine) {
+            if (_config.drawLine) {
                 drawCrosshair(canvas)
             }
         }
@@ -146,7 +147,7 @@ object UnifiedCameraUtils {
         private fun drawCrosshair(canvas: Canvas) {
             val centerX = width / 2f
             val centerY = height / 2f
-            val crossLen = config.crossLength.toFloat()
+            val crossLen = _config.crossLength.toFloat()
 
             canvas.drawLine(centerX - crossLen, centerY, centerX + crossLen, centerY, paint)
             canvas.drawLine(centerX, centerY - crossLen, centerX, centerY + crossLen, paint)
