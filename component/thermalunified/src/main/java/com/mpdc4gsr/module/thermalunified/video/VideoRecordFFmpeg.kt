@@ -544,7 +544,7 @@ class VideoRecordFFmpeg(
 
         when (cameraView) {
             is CameraView -> cameraViewBitmap =
-                if (dualView == null) cameraView.scaledBitmap else dualView.scaledBitmap
+                if (dualView == null) cameraView.getScaledBitmap() else dualView.scaledBitmap
 
             is TextureView -> {
                 cameraViewBitmap = Bitmap.createBitmap(

@@ -28,10 +28,24 @@ class CameraPreView @JvmOverloads constructor(
     
     private var closeListener: CameraPreViewCloseListener? = null
     
+    var cameraPreViewCloseListener: CameraPreViewCloseListener? = null
+        set(value) {
+            field = value
+            closeListener = value
+        }
+    
     override fun setRotation(rotation: Float) {
         super.setRotation(rotation)
         isRotationSet = true
         XLog.d(TAG, "Camera rotation set to: $rotation")
+    }
+    
+    fun setRotation(enabled: Boolean) {
+        isRotationSet = enabled
+        if (!enabled) {
+            super.setRotation(0f)
+        }
+        XLog.d(TAG, "Camera rotation enabled: $enabled")
     }
     
     fun setCameraAlpha(alpha: Float) {

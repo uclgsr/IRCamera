@@ -502,7 +502,7 @@ class IRMonitorThermalFragment : BaseFragment(), ITsTempListener {
     }
 
     fun getBitmap(): Bitmap {
-        return cameraView.scaledBitmap
+        return cameraView.getScaledBitmap()
     }
 
     fun startCoverStsSwitchReady(): Int {

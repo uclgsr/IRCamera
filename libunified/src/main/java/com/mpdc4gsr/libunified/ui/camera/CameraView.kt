@@ -8,6 +8,7 @@ import android.graphics.Rect
 import android.util.AttributeSet
 import android.view.View
 import com.elvishew.xlog.XLog
+import com.energy.iruvc.utils.SynchronizedBitmap
 
 /**
  * Camera view for displaying thermal camera feed
@@ -34,10 +35,16 @@ class CameraView @JvmOverloads constructor(
             invalidate()
         }
     
+    var isDrawLine: Boolean = false
+        set(value) {
+            field = value
+            invalidate()
+        }
+    
     private var imageWidth: Int = 0
     private var imageHeight: Int = 0
     private var showCross: Boolean = false
-    private var syncImage: Boolean = false
+    private var syncImage: SynchronizedBitmap? = null
     
     private val paint = Paint().apply {
         isAntiAlias = true
@@ -55,6 +62,12 @@ class CameraView @JvmOverloads constructor(
         invalidate()
     }
     
+    fun openCamera() {
+        XLog.d(TAG, "Opening camera")
+        visibility = VISIBLE
+        start()
+    }
+    
     fun setImageSize(width: Int, height: Int) {
         this.imageWidth = width
         this.imageHeight = height
@@ -66,7 +79,7 @@ class CameraView @JvmOverloads constructor(
         invalidate()
     }
     
-    fun setSyncimage(sync: Boolean) {
+    fun setSyncimage(sync: SynchronizedBitmap?) {
         this.syncImage = sync
         invalidate()
     }

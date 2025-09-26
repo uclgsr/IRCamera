@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import android.os.Handler
 import com.elvishew.xlog.XLog
 import com.mpdc4gsr.libunified.app.bean.AlarmBean
+import com.mpdc4gsr.libunified.common.RotateDegree
 
 /**
  * Camera preview manager for thermal camera operations
@@ -29,6 +30,14 @@ class CameraPreviewManager private constructor() {
         set(value) {
             field = value
             XLog.d(TAG, "Image rotate set to: $value")
+        }
+        
+    // Property that accepts RotateDegree enum
+    var imageRotateDegree: RotateDegree = RotateDegree.DEGREE_0
+        set(value) {
+            field = value
+            imageRotate = value.getValue()
+            XLog.d(TAG, "Image rotate degree set to: $value")
         }
     
     var alarmBean: AlarmBean? = null
@@ -85,9 +94,11 @@ class CameraPreviewManager private constructor() {
         return cameraView?.bitmap
     }
     
-    fun updateCameraBitmap(bitmap: Bitmap) {
-        cameraView?.bitmap = bitmap
-        scaledBitmapCache = null // Invalidate cache
+    fun updateCameraBitmap(bitmap: Bitmap?) {
+        bitmap?.let { 
+            cameraView?.bitmap = it
+            scaledBitmapCache = null // Invalidate cache
+        }
     }
     
     fun startPreview() {
@@ -115,6 +126,31 @@ class CameraPreviewManager private constructor() {
         tempDataChangeCallback = null
         scaledBitmapCache = null
         XLog.d(TAG, "CameraPreviewManager released")
+    }
+    
+    fun releaseSource() {
+        release()
+        XLog.d(TAG, "CameraPreviewManager source released")
+    }
+    
+    // Method overloads for different parameter combinations
+    fun setLimit(min: Float, max: Float, param3: Any) {
+        setLimit(min, max)
+        XLog.d(TAG, "Temperature limits set with additional parameter: min=$min, max=$max")
+    }
+    
+    fun setColorList(colors: Any) {
+        XLog.d(TAG, "Color list set")
+    }
+    
+    fun setAutoSwitchGainEnable(enabled: Boolean) {
+        XLog.d(TAG, "Auto switch gain enabled: $enabled")
+    }
+    
+    // Camera view initialization with different types
+    fun init(surfaceView: Any, handler: Handler) {
+        this.handler = handler
+        XLog.d(TAG, "CameraPreviewManager initialized with surface view")
     }
     
     // Thermal data processing
