@@ -79,7 +79,7 @@ public class ZoomableDraggableView extends View {
         }
         showBitmapHeight = pxBitmapHeight / yscale;
         showBitmapHeightWidth = pxBitmapHeight * originalBitmapWidth / originalBitmapHeight * xscale;
-        showBitmap = BitmapUtils.scaleWithWH(originalBitmap, showBitmapHeightWidth, showBitmapHeight);
+        showBitmap = BitmapUtils.scaleWithWH(originalBitmap, (int) showBitmapHeightWidth, (int) showBitmapHeight);
     }
 
     @Override
