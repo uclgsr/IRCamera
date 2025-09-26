@@ -105,7 +105,7 @@ import com.mpdc4gsr.module.thermalunified.databinding.ActivityIrThermalLiteBindi
 import com.mpdc4gsr.module.thermalunified.event.GalleryAddEvent
 import com.mpdc4gsr.module.thermalunified.frame.FrameStruct
 import com.mpdc4gsr.module.thermalunified.lite.IrConst
-import com.mpdc4gsr.module.thermalunified.lite.camera.CameraPreviewManager
+import com.mpdc4gsr.libunified.ui.camera.CameraPreviewManager
 import com.mpdc4gsr.module.thermalunified.lite.camera.DeviceControlManager
 import com.mpdc4gsr.module.thermalunified.lite.camera.DeviceIrcmdControlManager
 import com.mpdc4gsr.module.thermalunified.lite.camera.OnUSBConnectListener
