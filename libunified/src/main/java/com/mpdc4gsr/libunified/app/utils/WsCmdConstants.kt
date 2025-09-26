@@ -62,6 +62,7 @@ object WsCmdConstants {
     const val AR_COMMAND_SAVE_KB: String = "AR_COMMAND_SAVE_KB"
     const val AR_COMMAND_TARGET_ZERO_SET: String = "AR_COMMAND_TARGET_ZERO_SET"
     const val AR_COMMAND_TARGET_ZERO_GET: String = "AR_COMMAND_TARGET_ZERO_GET"
+    const val AR_COMMAND_TISR_GET: Int = 121
 
     const val AR_COMMAND_IMG_SCENE_SET: Int = 201
     const val AR_COMMAND_IMG_SCENE_GET: String = "AR_COMMAND_IMG_SCENE_GET"
