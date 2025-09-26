@@ -138,8 +138,11 @@ pc-controller/.env
 pc_recordings/
 demo_recordings/
 pc-controller/legacy_implementation/native_backend/build/
-pc-controller-ui/src/__pycache__/
 *.log
+
+# Demos and tests cache files
+demos/__pycache__/
+tests/__pycache__/
 
 # Python cache files - project-wide
 __pycache__/
