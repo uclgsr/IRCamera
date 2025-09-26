@@ -120,7 +120,8 @@ class GSRBenchTestActivity : AppCompatActivity() {
         testResults.append("4. Calibration Test: ${if (calibrationResult) "PASS" else "FAIL"}\n")
 
         // Summary
-        val overallResult = connectionResult && streamingResult && samplingResult && calibrationResult
+        val overallResult =
+            connectionResult && streamingResult && samplingResult && calibrationResult
         testResults.append("\n=== OVERALL RESULT: ${if (overallResult) "PASS" else "FAIL"} ===\n")
 
         if (overallResult) {
@@ -214,7 +215,14 @@ class GSRBenchTestActivity : AppCompatActivity() {
             val testAdcValue = 2048  // Mid-range ADC value
             val expectedConductance = GSRCalculationUtils.calculateGSRMicrosiemens(testAdcValue)
 
-            updateResults("Test conversion: ADC=$testAdcValue → ${String.format("%.2f", expectedConductance)}µS\n")
+            updateResults(
+                "Test conversion: ADC=$testAdcValue → ${
+                    String.format(
+                        "%.2f",
+                        expectedConductance
+                    )
+                }µS\n"
+            )
             updateResults("✓ Calibration formulas verified\n")
 
             true

@@ -10,7 +10,7 @@ import org.json.JSONObject
  * Adapted from libapp/src/main/java/com/topdon/lib/core/socket/SocketCmdUtil.kt
  */
 object SocketCmdUtil {
-    fun getSocketCmd(cmd: Int): String?{
+    fun getSocketCmd(cmd: Int): String? {
         var cmdJson: String? = null
         try {
             val gson = Gson()

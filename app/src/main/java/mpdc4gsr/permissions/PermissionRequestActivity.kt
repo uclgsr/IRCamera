@@ -398,7 +398,8 @@ class PermissionRequestActivity : AppCompatActivity() {
     private fun addLog(message: String) {
         runOnUiThread {
             val timestamp =
-                java.text.SimpleDateFormat("HH:mm:ss", java.util.Locale.getDefault()).format(java.util.Date())
+                java.text.SimpleDateFormat("HH:mm:ss", java.util.Locale.getDefault())
+                    .format(java.util.Date())
             logText.append("[$timestamp] $message\n")
 
 

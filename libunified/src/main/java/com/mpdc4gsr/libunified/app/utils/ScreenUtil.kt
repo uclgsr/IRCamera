@@ -23,16 +23,16 @@ object ScreenUtil {
     fun isLandscape(context: Context): Boolean {
         return context.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
     }
-    
+
     // Additional compatibility methods
     @JvmStatic
-    fun dpToPx(context: Context, dp: Float): Int = 
+    fun dpToPx(context: Context, dp: Float): Int =
         (dp * context.resources.displayMetrics.density + 0.5f).toInt()
-    
+
     @JvmStatic
-    fun pxToDp(context: Context, px: Float): Int = 
+    fun pxToDp(context: Context, px: Float): Int =
         (px / context.resources.displayMetrics.density + 0.5f).toInt()
-    
+
     @JvmStatic
     fun getScreenDensity(context: Context): Float = context.resources.displayMetrics.density
 }

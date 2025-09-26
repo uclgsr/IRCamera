@@ -13,7 +13,7 @@ val buildTimeStr = SimpleDateFormat("HHmm", Locale.getDefault()).format(Date())
 
 android {
     namespace = "com.csl.irCamera"
-    compileSdk = libs.versions.compileSdk.get().toInt()
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.csl.irCamera"
@@ -243,6 +243,12 @@ android {
         dataBinding = true
         viewBinding = true
     }
+
+    dependenciesInfo {
+        includeInApk = true
+        includeInBundle = true
+    }
+    buildToolsVersion = "35.0.0"
 
 
 }

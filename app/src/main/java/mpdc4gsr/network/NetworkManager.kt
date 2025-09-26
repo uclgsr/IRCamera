@@ -46,7 +46,8 @@ class NetworkManager(
     private var lastConnectionConfig: ConnectionConfig? = null
 
     private val _connectionState = MutableStateFlow(CommandConnection.ConnectionState.DISCONNECTED)
-    val connectionState: StateFlow<CommandConnection.ConnectionState> = _connectionState.asStateFlow()
+    val connectionState: StateFlow<CommandConnection.ConnectionState> =
+        _connectionState.asStateFlow()
 
     private val _lastError = MutableStateFlow<String?>(null)
     val lastError: StateFlow<String?> = _lastError.asStateFlow()
@@ -170,7 +171,10 @@ class NetworkManager(
             disconnect()
         }
 
-        Log.i(TAG, "Attempting Bluetooth connection to ${bluetoothDevice.name} (${bluetoothDevice.address})")
+        Log.i(
+            TAG,
+            "Attempting Bluetooth connection to ${bluetoothDevice.name} (${bluetoothDevice.address})"
+        )
 
         // Save settings asynchronously
         managerScope.launch {
@@ -180,13 +184,19 @@ class NetworkManager(
         _connectionSummary.value = networkSettings.getConnectionSummary()
 
         lastConnectionConfig =
-            ConnectionConfig(NetworkSettings.ConnectionType.BLUETOOTH_RFCOMM, bluetoothDevice = bluetoothDevice)
+            ConnectionConfig(
+                NetworkSettings.ConnectionType.BLUETOOTH_RFCOMM,
+                bluetoothDevice = bluetoothDevice
+            )
 
         val bluetoothClient = BluetoothClient(bluetoothDevice)
         return connectWithClient(bluetoothClient, "Bluetooth RFCOMM")
     }
 
-    private suspend fun connectWithClient(client: CommandConnection, connectionType: String): Boolean {
+    private suspend fun connectWithClient(
+        client: CommandConnection,
+        connectionType: String
+    ): Boolean {
         try {
             // Set up callbacks before connecting
             client.setMessageCallback { message ->
@@ -376,7 +386,10 @@ class NetworkManager(
 
     // Enhanced connection management methods
 
-    private fun handleConnectionStateChange(state: CommandConnection.ConnectionState, connectionType: String) {
+    private fun handleConnectionStateChange(
+        state: CommandConnection.ConnectionState,
+        connectionType: String
+    ) {
         when (state) {
             CommandConnection.ConnectionState.CONNECTED -> {
                 Log.i(TAG, "$connectionType connection established")
@@ -420,14 +433,21 @@ class NetworkManager(
 
     private fun scheduleReconnection() {
         if (currentReconnectAttempts >= networkSettings.reconnectAttempts) {
-            Log.w(TAG, "Maximum reconnection attempts reached (${networkSettings.reconnectAttempts})")
-            _lastError.value = "Connection failed after ${networkSettings.reconnectAttempts} attempts"
+            Log.w(
+                TAG,
+                "Maximum reconnection attempts reached (${networkSettings.reconnectAttempts})"
+            )
+            _lastError.value =
+                "Connection failed after ${networkSettings.reconnectAttempts} attempts"
             return
         }
 
         currentReconnectAttempts++
         connectionMetrics.recordReconnectAttempt()
-        Log.i(TAG, "Scheduling reconnection attempt $currentReconnectAttempts/${networkSettings.reconnectAttempts}")
+        Log.i(
+            TAG,
+            "Scheduling reconnection attempt $currentReconnectAttempts/${networkSettings.reconnectAttempts}"
+        )
 
         reconnectionJob?.cancel()
         reconnectionJob = managerScope.launch {
@@ -501,7 +521,8 @@ class NetworkManager(
                 if (isConnected()) {
                     when (state) {
                         mpdc4gsr.controller.RecordingState.RECORDING -> {
-                            val message = "STATUS Recording started locally, sensors: [RGB,Thermal,GSR]"
+                            val message =
+                                "STATUS Recording started locally, sensors: [RGB,Thermal,GSR]"
                             sendTelemetry(message)
                         }
 

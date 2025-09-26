@@ -122,9 +122,10 @@ class RecordingControlsWidget @JvmOverloads constructor(
         recordButton = Button(context).apply {
             text = "START RECORDING"
             textSize = 16f
-            layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT).apply {
-                topMargin = 8
-            }
+            layoutParams =
+                LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT).apply {
+                    topMargin = 8
+                }
             setBackgroundColor(ContextCompat.getColor(context, android.R.color.holo_green_dark))
             setTextColor(Color.WHITE)
         }
@@ -167,7 +168,12 @@ class RecordingControlsWidget @JvmOverloads constructor(
                 statusText.text = "Ready to Record"
                 recordButton.text = "START RECORDING"
                 recordButton.isEnabled = true
-                recordButton.setBackgroundColor(ContextCompat.getColor(context, android.R.color.holo_green_dark))
+                recordButton.setBackgroundColor(
+                    ContextCompat.getColor(
+                        context,
+                        android.R.color.holo_green_dark
+                    )
+                )
                 sessionTimer.text = "00:00"
                 triggerSourceText.text = ""
                 stopTimer()
@@ -211,7 +217,12 @@ class RecordingControlsWidget @JvmOverloads constructor(
                 statusText.text = "Error"
                 recordButton.text = "START RECORDING"
                 recordButton.isEnabled = true
-                recordButton.setBackgroundColor(ContextCompat.getColor(context, android.R.color.holo_green_dark))
+                recordButton.setBackgroundColor(
+                    ContextCompat.getColor(
+                        context,
+                        android.R.color.holo_green_dark
+                    )
+                )
                 sessionTimer.text = "ERROR"
                 triggerSourceText.text = ""
                 stopTimer()

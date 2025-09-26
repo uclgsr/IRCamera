@@ -115,7 +115,8 @@ class IRMonitorLiteFragment : BaseFragment(), ITsTempListener {
 
         temperatureView =
             requireView().findViewById<com.mpdc4gsr.libunified.ir.view.TemperatureView>(R.id.temperatureView)
-        cameraView = requireView().findViewById<com.mpdc4gsr.libunified.ui.widget.LiteSurfaceView>(R.id.cameraView)
+        cameraView =
+            requireView().findViewById<com.mpdc4gsr.libunified.ui.widget.LiteSurfaceView>(R.id.cameraView)
 
         lifecycleScope.launch {
             showLoadingDialog()

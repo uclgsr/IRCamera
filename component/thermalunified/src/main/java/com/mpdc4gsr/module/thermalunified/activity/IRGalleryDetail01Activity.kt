@@ -16,7 +16,6 @@ import androidx.viewpager2.widget.ViewPager2
 import com.elvishew.xlog.XLog
 import com.mpdc4gsr.libunified.app.bean.GalleryBean
 import com.mpdc4gsr.libunified.app.bean.event.GalleryDelEvent
-import com.mpdc4gsr.libunified.app.comm.ExcelUtil
 import com.mpdc4gsr.libunified.app.config.ExtraKeyConfig
 import com.mpdc4gsr.libunified.app.config.FileConfig
 import com.mpdc4gsr.libunified.app.config.RouterConfig
@@ -29,6 +28,7 @@ import com.mpdc4gsr.libunified.app.tools.TimeTool
 import com.mpdc4gsr.libunified.app.tools.ToastTools
 import com.mpdc4gsr.libunified.app.utils.ByteUtils.bytesToInt
 import com.mpdc4gsr.libunified.app.utils.Constants.IS_REPORT_FIRST
+import com.mpdc4gsr.libunified.app.utils.UnifiedByteUtils.bytesToInt
 import com.mpdc4gsr.libunified.app.view.TitleView
 import com.mpdc4gsr.module.thermalunified.R
 import com.mpdc4gsr.module.thermalunified.event.ImageGalleryEvent

@@ -57,7 +57,8 @@ class TimestampUnificationTestActivity : AppCompatActivity() {
             for (i in 1..10) {
                 val timestampRecord = TimestampManager.createTimestampRecord()
 
-                val wallClockFromManager = TimestampManager.convertMonotonicToWallClock(timestampRecord.systemNanos)
+                val wallClockFromManager =
+                    TimestampManager.convertMonotonicToWallClock(timestampRecord.systemNanos)
 
                 val difference = abs(wallClockFromManager - timestampRecord.systemTimeMs)
 

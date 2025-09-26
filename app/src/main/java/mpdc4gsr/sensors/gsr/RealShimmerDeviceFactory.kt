@@ -89,7 +89,11 @@ class RealShimmerDevice(
                     // Use Handler message pattern for state changes
                     Log.d(TAG, "Setting up connection state monitoring")
                 } catch (e: Exception) {
-                    Log.w(TAG, "Could not set connection state handler - method may not be available", e)
+                    Log.w(
+                        TAG,
+                        "Could not set connection state handler - method may not be available",
+                        e
+                    )
                 }
 
                 // Connection is asynchronous - actual status will be updated via handlers

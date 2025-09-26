@@ -56,6 +56,7 @@ object UnifiedScreenUtils {
      */
     fun getScreenSize(context: Context): Point {
         val wm = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+
         @Suppress("DEPRECATION")
         val display = wm.defaultDisplay
         val size = Point()
@@ -111,7 +112,8 @@ object UnifiedScreenUtils {
      */
     fun getNavigationBarHeight(context: Context): Int {
         var result = 0
-        val resourceId = context.resources.getIdentifier("navigation_bar_height", "dimen", "android")
+        val resourceId =
+            context.resources.getIdentifier("navigation_bar_height", "dimen", "android")
         if (resourceId > 0) {
             result = context.resources.getDimensionPixelSize(resourceId)
         }
@@ -122,7 +124,8 @@ object UnifiedScreenUtils {
      * Check if navigation bar is present
      */
     fun hasNavigationBar(context: Context): Boolean {
-        val resourceId = context.resources.getIdentifier("config_showNavigationBar", "bool", "android")
+        val resourceId =
+            context.resources.getIdentifier("config_showNavigationBar", "bool", "android")
         return if (resourceId > 0) {
             context.resources.getBoolean(resourceId)
         } else {

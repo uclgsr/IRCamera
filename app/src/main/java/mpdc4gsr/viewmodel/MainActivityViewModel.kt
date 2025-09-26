@@ -38,10 +38,12 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
     val gsrBatteryLevel: StateFlow<Int?> = _gsrBatteryLevel.asStateFlow()
 
     private val _networkConnectionState = MutableStateFlow(NetworkConnectionState.DISCONNECTED)
-    val networkConnectionState: StateFlow<NetworkConnectionState> = _networkConnectionState.asStateFlow()
+    val networkConnectionState: StateFlow<NetworkConnectionState> =
+        _networkConnectionState.asStateFlow()
 
     private val _connectedControllerInfo = MutableStateFlow<NetworkClient.ControllerInfo?>(null)
-    val connectedControllerInfo: StateFlow<NetworkClient.ControllerInfo?> = _connectedControllerInfo.asStateFlow()
+    val connectedControllerInfo: StateFlow<NetworkClient.ControllerInfo?> =
+        _connectedControllerInfo.asStateFlow()
 
     private val _sessionState = MutableStateFlow(SessionState.IDLE)
     val sessionState: StateFlow<SessionState> = _sessionState.asStateFlow()
@@ -178,7 +180,10 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
 
             _gsrConnectionState.value = GSRConnectionState.DISCONNECTED
 
-            Log.d(TAG, "GSR components initialized (UnifiedGSRRecorder will be initialized on connection)")
+            Log.d(
+                TAG,
+                "GSR components initialized (UnifiedGSRRecorder will be initialized on connection)"
+            )
         } catch (e: Exception) {
             Log.e(TAG, "Failed to initialize GSR components", e)
             _gsrConnectionState.value = GSRConnectionState.ERROR
@@ -409,7 +414,10 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
 
                             _gsrConnectionState.value = GSRConnectionState.CONNECTING)
                             _statusMessage.value =
-                                StatusMessage("Connecting to GSR sensor...", StatusMessage.Level.INFO)
+                                StatusMessage(
+                                    "Connecting to GSR sensor...",
+                                    StatusMessage.Level.INFO
+                                )
                             )
 
 
@@ -417,7 +425,10 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
 
                             _gsrConnectionState.value = GSRConnectionState.CONNECTED)
                             _statusMessage.value =
-                                StatusMessage("GSR sensor connected (simulated)", StatusMessage.Level.INFO)
+                                StatusMessage(
+                                    "GSR sensor connected (simulated)",
+                                    StatusMessage.Level.INFO
+                                )
                             )
 
                             return@withContext
@@ -431,7 +442,10 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
                         if (!initSuccess) {
                             _gsrConnectionState.value = GSRConnectionState.ERROR)
                             _statusMessage.value =
-                                StatusMessage("Failed to initialize GSR recorder", StatusMessage.Level.ERROR)
+                                StatusMessage(
+                                    "Failed to initialize GSR recorder",
+                                    StatusMessage.Level.ERROR
+                                )
                             )
                             return@withContext
                         }
@@ -456,7 +470,10 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
                         if (devices.isEmpty()) {
                             _gsrConnectionState.value = GSRConnectionState.ERROR)
                             _statusMessage.value =
-                                StatusMessage("No compatible GSR devices detected", StatusMessage.Level.ERROR)
+                                StatusMessage(
+                                    "No compatible GSR devices detected",
+                                    StatusMessage.Level.ERROR
+                                )
                             )
                             return@withContext
                         }
@@ -464,14 +481,20 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
 
                         val targetDevice = devices.first()
                         _statusMessage.value =
-                            StatusMessage("Connecting to ${targetDevice.name}...", StatusMessage.Level.INFO)
+                            StatusMessage(
+                                "Connecting to ${targetDevice.name}...",
+                                StatusMessage.Level.INFO
+                            )
                         )
 
                         val connectionSuccess = recorder.connectToDevice(targetDevice)
                         if (connectionSuccess) {
                             _gsrConnectionState.value = GSRConnectionState.CONNECTED)
                             _statusMessage.value =
-                                StatusMessage("Connected to ${targetDevice.name}", StatusMessage.Level.INFO)
+                                StatusMessage(
+                                    "Connected to ${targetDevice.name}",
+                                    StatusMessage.Level.INFO
+                                )
                             )
 
 
@@ -479,7 +502,10 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
                         } else {
                             _gsrConnectionState.value = GSRConnectionState.ERROR)
                             _statusMessage.value =
-                                StatusMessage("Failed to connect to ${targetDevice.name}", StatusMessage.Level.ERROR)
+                                StatusMessage(
+                                    "Failed to connect to ${targetDevice.name}",
+                                    StatusMessage.Level.ERROR
+                                )
                             )
                         }
 
@@ -487,7 +513,10 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
                         Log.e(TAG, "Error during GSR connection", e)
                         _gsrConnectionState.value = GSRConnectionState.ERROR)
                         _statusMessage.value =
-                            StatusMessage("GSR connection error: ${e.message}", StatusMessage.Level.ERROR)
+                            StatusMessage(
+                                "GSR connection error: ${e.message}",
+                                StatusMessage.Level.ERROR
+                            )
                         )
                     }
                 }
@@ -765,15 +794,27 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
     )
 
     // Enhanced sensor state management methods
-    fun updateRGBCameraState(status: SensorStatus, message: String? = null, isRecording: Boolean = false) {
+    fun updateRGBCameraState(
+        status: SensorStatus,
+        message: String? = null,
+        isRecording: Boolean = false
+    ) {
         _rgbCameraState.value = SensorState(status, message, isRecording))
     }
 
-    fun updateThermalCameraState(status: SensorStatus, message: String? = null, isRecording: Boolean = false) {
+    fun updateThermalCameraState(
+        status: SensorStatus,
+        message: String? = null,
+        isRecording: Boolean = false
+    ) {
         _thermalCameraState.value = SensorState(status, message, isRecording))
     }
 
-    fun updateGSRSensorState(status: SensorStatus, message: String? = null, isRecording: Boolean = false) {
+    fun updateGSRSensorState(
+        status: SensorStatus,
+        message: String? = null,
+        isRecording: Boolean = false
+    ) {
         _gsrSensorState.value = SensorState(status, message, isRecording))
     }
 

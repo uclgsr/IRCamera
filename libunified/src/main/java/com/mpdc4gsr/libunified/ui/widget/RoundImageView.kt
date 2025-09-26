@@ -46,11 +46,19 @@ class RoundImageView : AppCompatImageView {
 
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
 
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
+        context,
+        attrs,
+        defStyleAttr
+    ) {
         density = context.resources.displayMetrics.density
 
-        val typedArray = context.obtainStyledAttributes(attrs, R.styleable.RoundImageView, defStyleAttr, 0)
-        radius = typedArray.getDimensionPixelSize(R.styleable.RoundImageView_round_radius, dp2px(DEFAULT_RADIUS))
+        val typedArray =
+            context.obtainStyledAttributes(attrs, R.styleable.RoundImageView, defStyleAttr, 0)
+        radius = typedArray.getDimensionPixelSize(
+            R.styleable.RoundImageView_round_radius,
+            dp2px(DEFAULT_RADIUS)
+        )
         position = typedArray.getInt(R.styleable.RoundImageView_round_position, DEFAULT_POSITION)
         typedArray.recycle()
 
@@ -72,7 +80,12 @@ class RoundImageView : AppCompatImageView {
 
         if (position and RIGHT_BOTTOM == RIGHT_BOTTOM) {
             path.lineTo(width.toFloat(), (height - radius).toFloat())
-            path.quadTo(width.toFloat(), height.toFloat(), (width - radius).toFloat(), height.toFloat())
+            path.quadTo(
+                width.toFloat(),
+                height.toFloat(),
+                (width - radius).toFloat(),
+                height.toFloat()
+            )
         } else {
             path.lineTo(width.toFloat(), height.toFloat())
         }

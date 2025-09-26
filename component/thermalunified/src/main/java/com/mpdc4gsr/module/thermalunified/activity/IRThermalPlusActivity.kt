@@ -18,6 +18,7 @@ import com.mpdc4gsr.libunified.ir.usbdual.Const
 import com.mpdc4gsr.libunified.ir.utils.IRImageHelp
 import com.mpdc4gsr.libunified.ir.utils.PseudocodeUtils
 import com.mpdc4gsr.libunified.ir.view.TemperatureView
+import com.mpdc4gsr.libunified.ui.camera.CameraPreView
 import com.mpdc4gsr.module.thermalunified.R
 import com.mpdc4gsr.module.thermalunified.event.GalleryAddEvent
 import com.mpdc4gsr.module.thermalunified.video.VideoRecordFFmpeg
@@ -321,7 +322,7 @@ class IRThermalPlusActivity : BaseIRPlushActivity() {
         videoRecord =
             VideoRecordFFmpeg(
                 cameraView,
-                cameraPreview,
+                cameraPreview as CameraPreView?,
                 temperatureView,
                 curChooseTabPos == 1,
                 cl_seek_bar,

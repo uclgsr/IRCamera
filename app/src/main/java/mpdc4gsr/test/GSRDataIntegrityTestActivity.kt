@@ -71,7 +71,14 @@ class GSRDataIntegrityTestActivity : AppCompatActivity() {
 
         updateResults("GSR Data Integrity Testing\nReady to verify sampling rate and data integrity...\n\n")
         updateResults("Expected: ${EXPECTED_SAMPLES} samples in ${TEST_DURATION_SECONDS}s at ${EXPECTED_SAMPLE_RATE}Hz\n")
-        updateResults("Expected interval: ${String.format("%.2f", EXPECTED_INTERVAL_MS)}ms between samples\n\n")
+        updateResults(
+            "Expected interval: ${
+                String.format(
+                    "%.2f",
+                    EXPECTED_INTERVAL_MS
+                )
+            }ms between samples\n\n"
+        )
     }
 
     private fun initializeComponents() {

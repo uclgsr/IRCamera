@@ -97,7 +97,9 @@ class IRGalleryDetail04Activity : BaseActivity() {
                 override fun onPageSelected(position: Int) {
                     super.onPageSelected(position)
                     this@IRGalleryDetail04Activity.position = position
-                    findViewById<com.mpdc4gsr.libunified.app.view.TitleView>(R.id.title_view).setTitleText("${position + 1}/${dataList.size}")
+                    findViewById<com.mpdc4gsr.libunified.app.view.TitleView>(R.id.title_view).setTitleText(
+                        "${position + 1}/${dataList.size}"
+                    )
                     findViewById<ImageView>(R.id.iv_download).isSelected =
                         dataList[position].hasDownload
                 }

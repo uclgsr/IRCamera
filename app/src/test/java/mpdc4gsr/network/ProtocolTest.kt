@@ -12,7 +12,10 @@ class ProtocolTest {
         val message = Protocol.createSyncRequestMessage(pcTimestamp)
 
         assertEquals("SYNC_REQUEST t_pc=1640995200000", message)
-        assertTrue("Message should contain MSG_SYNC_REQUEST", message.startsWith(Protocol.MSG_SYNC_REQUEST))
+        assertTrue(
+            "Message should contain MSG_SYNC_REQUEST",
+            message.startsWith(Protocol.MSG_SYNC_REQUEST)
+        )
         assertTrue("Message should contain timestamp", message.contains("t_pc=$pcTimestamp"))
     }
 
@@ -23,9 +26,15 @@ class ProtocolTest {
         val message = Protocol.createSyncResponseMessage(pcTimestamp, phoneTimestamp)
 
         assertEquals("SYNC_RESPONSE t_pc=1640995200000 t_ph=1640995200050", message)
-        assertTrue("Message should contain MSG_SYNC_RESPONSE", message.startsWith(Protocol.MSG_SYNC_RESPONSE))
+        assertTrue(
+            "Message should contain MSG_SYNC_RESPONSE",
+            message.startsWith(Protocol.MSG_SYNC_RESPONSE)
+        )
         assertTrue("Message should contain PC timestamp", message.contains("t_pc=$pcTimestamp"))
-        assertTrue("Message should contain phone timestamp", message.contains("t_ph=$phoneTimestamp"))
+        assertTrue(
+            "Message should contain phone timestamp",
+            message.contains("t_ph=$phoneTimestamp")
+        )
     }
 
     @Test
@@ -38,10 +47,14 @@ class ProtocolTest {
 
         val message = Protocol.createSyncResultMessage(t1, t2, t3, offsetMs, rttMs)
 
-        val expected = "SYNC_RESULT t1=1640995200000 t2=1640995200050 t3=1640995200100 offset=50 rtt=100"
+        val expected =
+            "SYNC_RESULT t1=1640995200000 t2=1640995200050 t3=1640995200100 offset=50 rtt=100"
         assertEquals(expected, message)
 
-        assertTrue("Message should contain MSG_SYNC_RESULT", message.startsWith(Protocol.MSG_SYNC_RESULT))
+        assertTrue(
+            "Message should contain MSG_SYNC_RESULT",
+            message.startsWith(Protocol.MSG_SYNC_RESULT)
+        )
         assertTrue("Message should contain t1", message.contains("t1=$t1"))
         assertTrue("Message should contain t2", message.contains("t2=$t2"))
         assertTrue("Message should contain t3", message.contains("t3=$t3"))

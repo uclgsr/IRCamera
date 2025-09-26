@@ -74,7 +74,8 @@ class FaultTolerantRecordingActivity : AppCompatActivity() {
                 // Initialize sensors and update UI
                 runOnUiThread {
                     statusText.text = "Enhanced fault-tolerant recording ready"
-                    sensorStatusText.text = "Sensors: RGB Camera + GSR + Thermal (with fault isolation)"
+                    sensorStatusText.text =
+                        "Sensors: RGB Camera + GSR + Thermal (with fault isolation)"
                     startButton.isEnabled = true
                 }
             }

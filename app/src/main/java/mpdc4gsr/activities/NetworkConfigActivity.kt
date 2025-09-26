@@ -35,7 +35,8 @@ class NetworkConfigActivity : AppCompatActivity() {
         if (result.resultCode == RESULT_OK) {
             showBluetoothDevices()
         } else {
-            Toast.makeText(this, "Bluetooth is required for device connection", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Bluetooth is required for device connection", Toast.LENGTH_SHORT)
+                .show()
         }
     }
 
@@ -110,7 +111,8 @@ class NetworkConfigActivity : AppCompatActivity() {
                 val firstDevice = pairedDevices.first()
                 lifecycleScope.launch {
                     networkSettings.saveBluetoothDevice(firstDevice)
-                    networkSettings.preferredConnectionType = NetworkSettings.ConnectionType.BLUETOOTH_RFCOMM
+                    networkSettings.preferredConnectionType =
+                        NetworkSettings.ConnectionType.BLUETOOTH_RFCOMM
                     Log.i(TAG, "Saved Bluetooth device: ${firstDevice.name}")
                 }
             } else {
@@ -119,7 +121,11 @@ class NetworkConfigActivity : AppCompatActivity() {
             }
         } catch (e: SecurityException) {
             Log.e(TAG, "Security exception accessing Bluetooth devices", e)
-            Toast.makeText(this, "Permission denied accessing Bluetooth devices", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                this,
+                "Permission denied accessing Bluetooth devices",
+                Toast.LENGTH_SHORT
+            ).show()
         } catch (e: Exception) {
             Log.e(TAG, "Error accessing Bluetooth devices", e)
             Toast.makeText(this, "Error accessing Bluetooth devices", Toast.LENGTH_SHORT).show()

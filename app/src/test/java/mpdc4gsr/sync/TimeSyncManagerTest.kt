@@ -33,7 +33,8 @@ class TimeSyncManagerTest {
         timeSyncManager = TimeSyncManager(mockContext)
 
         // Create a temporary test directory
-        testSessionDirectory = System.getProperty("java.io.tmpdir") + "/test_session_" + System.nanoTime()
+        testSessionDirectory =
+            System.getProperty("java.io.tmpdir") + "/test_session_" + System.nanoTime()
         File(testSessionDirectory).mkdirs()
     }
 
@@ -123,7 +124,10 @@ class TimeSyncManagerTest {
         assertNotNull("Sync log file should exist", syncLogFile)
 
         val content = FileReader(syncLogFile!!).readText()
-        assertTrue("Log should contain session start marker", content.contains("0,")) // sync index 0 for session start
+        assertTrue(
+            "Log should contain session start marker",
+            content.contains("0,")
+        ) // sync index 0 for session start
     }
 
     @Test
@@ -135,10 +139,17 @@ class TimeSyncManagerTest {
 
         assertTrue("Stats should contain total_syncs", stats.containsKey("total_syncs"))
         assertTrue("Stats should contain session_directory", stats.containsKey("session_directory"))
-        assertTrue("Stats should contain session_start_time", stats.containsKey("session_start_time"))
+        assertTrue(
+            "Stats should contain session_start_time",
+            stats.containsKey("session_start_time")
+        )
         assertTrue("Stats should contain sync_log_exists", stats.containsKey("sync_log_exists"))
 
-        assertEquals("Session directory should match", testSessionDirectory, stats["session_directory"])
+        assertEquals(
+            "Session directory should match",
+            testSessionDirectory,
+            stats["session_directory"]
+        )
         assertEquals("Sync log should exist", true, stats["sync_log_exists"])
     }
 

@@ -275,7 +275,10 @@ object UnifiedConfigUtils {
         return writeIniToFile(backupFile, config)
     }
 
-    fun restoreConfiguration(context: Context, backupFileName: String): Map<String, ConfigSection>? {
+    fun restoreConfiguration(
+        context: Context,
+        backupFileName: String
+    ): Map<String, ConfigSection>? {
         val backupFile = File(context.filesDir, backupFileName)
         return if (backupFile.exists()) {
             readIniFromFile(backupFile)

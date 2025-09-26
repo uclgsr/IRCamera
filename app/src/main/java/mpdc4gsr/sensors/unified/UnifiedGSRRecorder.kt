@@ -217,7 +217,10 @@ class UnifiedGSRRecorder(
 
                     deviceManager.stopDeviceScanning()
 
-                    Log.i(TAG, "Enhanced BLE scan completed: found ${discoveredDevices.size} devices")
+                    Log.i(
+                        TAG,
+                        "Enhanced BLE scan completed: found ${discoveredDevices.size} devices"
+                    )
 
                     if (discoveredDevices.isNotEmpty()) {
                         _deviceStatus.value = "Found ${discoveredDevices.size} Shimmer devices"
@@ -233,7 +236,8 @@ class UnifiedGSRRecorder(
                 _deviceStatus.value = "Found ${discoveredDevices.size} real Shimmer devices"
                 return@withContext true
             } else {
-                _deviceStatus.value = "No Shimmer devices found - ensure device is powered on and in range"
+                _deviceStatus.value =
+                    "No Shimmer devices found - ensure device is powered on and in range"
                 return@withContext false
             }
 
@@ -570,7 +574,10 @@ class UnifiedGSRRecorder(
                 csvWriter?.write("\n")
                 csvWriter?.flush()
 
-                Log.i(TAG, "Added sync marker: $markerType at $timestampNs with ${metadata.size} metadata entries")
+                Log.i(
+                    TAG,
+                    "Added sync marker: $markerType at $timestampNs with ${metadata.size} metadata entries"
+                )
             } else {
                 Log.i(TAG, "Sync marker added to tracking: $markerType (recording not active)")
             }
@@ -732,7 +739,8 @@ class UnifiedGSRRecorder(
                 val actualInterval = wallClockMs - lastExpectedSampleTime
 
                 if (actualInterval > expectedInterval * 1.5) {
-                    val estimatedDroppedSamples = ((actualInterval - expectedInterval) / expectedInterval).toLong()
+                    val estimatedDroppedSamples =
+                        ((actualInterval - expectedInterval) / expectedInterval).toLong()
                     droppedSamples.addAndGet(estimatedDroppedSamples)
 
                     Log.w(

@@ -24,7 +24,8 @@ object WifiUtil {
      * 不带双引号的 SSID.
      */
     @Suppress("DEPRECATION")
-    fun ScanResult.getWifiName(): String = if (Build.VERSION.SDK_INT < 33) SSID else removeQuotation(wifiSsid.toString())
+    fun ScanResult.getWifiName(): String =
+        if (Build.VERSION.SDK_INT < 33) SSID else removeQuotation(wifiSsid.toString())
 
     fun WifiInfo.getWifiName(): String = removeQuotation(ssid)
 
@@ -85,7 +86,10 @@ object WifiUtil {
 
         override fun onResume(owner: LifecycleOwner) {
             super.onResume(owner)
-            context.registerReceiver(receiver, IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION))
+            context.registerReceiver(
+                receiver,
+                IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION)
+            )
         }
 
         override fun onPause(owner: LifecycleOwner) {
@@ -94,16 +98,19 @@ object WifiUtil {
         }
     }
 
-    private class WifiStateReceiver(val listener: (isEnable: Boolean) -> Unit) : BroadcastReceiver() {
+    private class WifiStateReceiver(val listener: (isEnable: Boolean) -> Unit) :
+        BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             if (intent?.action == WifiManager.WIFI_STATE_CHANGED_ACTION) {
-                val wifiState = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, WifiManager.WIFI_STATE_UNKNOWN)
+                val wifiState =
+                    intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, WifiManager.WIFI_STATE_UNKNOWN)
                 listener(wifiState == WifiManager.WIFI_STATE_ENABLED)
             }
         }
     }
 
-    private class WifiScanReceiver(val listener: (isSuccess: Boolean) -> Unit) : BroadcastReceiver() {
+    private class WifiScanReceiver(val listener: (isSuccess: Boolean) -> Unit) :
+        BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             if (intent?.action == WifiManager.SCAN_RESULTS_AVAILABLE_ACTION) {
                 val success = intent.getBooleanExtra(WifiManager.EXTRA_RESULTS_UPDATED, false)

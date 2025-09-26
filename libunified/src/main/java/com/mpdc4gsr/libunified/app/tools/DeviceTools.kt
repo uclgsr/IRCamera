@@ -1,4 +1,5 @@
 @file:OptIn(kotlin.ExperimentalStdlibApi::class)
+
 package com.mpdc4gsr.libunified.app.tools
 
 import android.app.Activity
@@ -51,8 +52,20 @@ object DeviceTools {
         val deviceList: HashMap<String, UsbDevice> = usbManager.deviceList
         for (usbDevice in deviceList.values) {
             if (usbDevice.isTcTsDevice()) {
-                val productID = ByteUtils.toHexString(ByteUtils.numberToBytes(true, usbDevice.productId.toLong(), 2))
-                val vendorID = ByteUtils.toHexString(ByteUtils.numberToBytes(true, usbDevice.vendorId.toLong(), 2))
+                val productID = ByteUtils.toHexString(
+                    ByteUtils.numberToBytes(
+                        true,
+                        usbDevice.productId.toLong(),
+                        2
+                    )
+                )
+                val vendorID = ByteUtils.toHexString(
+                    ByteUtils.numberToBytes(
+                        true,
+                        usbDevice.vendorId.toLong(),
+                        2
+                    )
+                )
                 XLog.i("[ph][ph][ph][ph]usb[ph][ph] productId:$productID, vendorId:$vendorID, deviceName:${usbDevice.deviceName}")
                 return usbDevice
             }

@@ -44,7 +44,8 @@ class DeviceAdapter(
     inner class DeviceViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val deviceNameText: TextView = itemView.findViewById(R.id.deviceNameText)
         private val deviceAddressText: TextView = itemView.findViewById(R.id.deviceAddressText)
-        private val connectionStatusText: TextView = itemView.findViewById(R.id.connectionStatusText)
+        private val connectionStatusText: TextView =
+            itemView.findViewById(R.id.connectionStatusText)
         private val signalStrengthText: TextView = itemView.findViewById(R.id.signalStrengthText)
 
         init {

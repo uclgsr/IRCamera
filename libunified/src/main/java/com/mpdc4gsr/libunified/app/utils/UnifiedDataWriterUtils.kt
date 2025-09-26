@@ -184,7 +184,7 @@ class UnifiedDataWriterUtils(
     // Static utility methods for simple file operations
     companion object {
         private const val TAG = "UnifiedDataWriter"
-        
+
         /**
          * Write data to file synchronously
          */

@@ -56,7 +56,8 @@ class UpReportViewModel : BaseViewModel() {
                                     file.delete()
                                     val dataObject = jsonObject.optJSONObject("data")
                                     if (dataObject != null) {
-                                        reportIrBean.picture_id = dataObject.optString("fileSecret", "")
+                                        reportIrBean.picture_id =
+                                            dataObject.optString("fileSecret", "")
                                         reportIrBean.picture_url = dataObject.optString("url", "")
                                     }
                                 }

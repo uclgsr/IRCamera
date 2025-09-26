@@ -198,7 +198,10 @@ class ShimmerMvpActivity : AppCompatActivity() {
 
 
                 shimmerBluetoothManager =
-                    ShimmerBluetoothManagerAndroid(this@ShimmerMvpActivity, Handler(Looper.getMainLooper()))
+                    ShimmerBluetoothManagerAndroid(
+                        this@ShimmerMvpActivity,
+                        Handler(Looper.getMainLooper())
+                    )
                 Log.i(TAG, "Shimmer manager initialized - API compatibility mode")
                 updateConnectionStatus("Shimmer manager ready")
                 binding.connectButton.isEnabled = true
@@ -226,7 +229,8 @@ class ShimmerMvpActivity : AppCompatActivity() {
                     return@launch
                 }
 
-                val bluetoothManager = getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
+                val bluetoothManager =
+                    getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
                 val bluetoothAdapter = bluetoothManager.adapter
                 if (bluetoothAdapter == null) {
                     showBluetoothNotSupportedDialog()
@@ -240,7 +244,8 @@ class ShimmerMvpActivity : AppCompatActivity() {
 
 
                 val pairedDevices: Set<BluetoothDevice>? = bluetoothAdapter.bondedDevices
-                val pairedShimmers = pairedDevices?.filter { isValidShimmerDevice(it) } ?: emptyList()
+                val pairedShimmers =
+                    pairedDevices?.filter { isValidShimmerDevice(it) } ?: emptyList()
 
                 // Always perform BLE scan to get both paired and unpaired devices
                 Log.i(TAG, "Starting comprehensive Shimmer device discovery...")
@@ -284,49 +289,50 @@ class ShimmerMvpActivity : AppCompatActivity() {
         }
     }
 
-    private suspend fun performBluetoothLeScanning(): List<BluetoothDevice> = withContext(Dispatchers.IO) {
-        val discoveredDevices = mutableListOf<BluetoothDevice>()
-        val bluetoothManager = getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
-        val bluetoothAdapter = bluetoothManager.adapter
-        val bluetoothLeScanner = bluetoothAdapter?.bluetoothLeScanner
+    private suspend fun performBluetoothLeScanning(): List<BluetoothDevice> =
+        withContext(Dispatchers.IO) {
+            val discoveredDevices = mutableListOf<BluetoothDevice>()
+            val bluetoothManager = getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
+            val bluetoothAdapter = bluetoothManager.adapter
+            val bluetoothLeScanner = bluetoothAdapter?.bluetoothLeScanner
 
-        if (bluetoothLeScanner == null) {
-            Log.w(TAG, "BLE Scanner not available")
-            return@withContext discoveredDevices
-        }
+            if (bluetoothLeScanner == null) {
+                Log.w(TAG, "BLE Scanner not available")
+                return@withContext discoveredDevices
+            }
 
-        val scanCallback = object : ScanCallback() {
-            override fun onScanResult(callbackType: Int, result: ScanResult) {
-                val device = result.device
-                if (isValidShimmerDevice(device) && !discoveredDevices.contains(device)) {
-                    Log.d(TAG, "Discovered Shimmer device: ${device.name} (${device.address})")
-                    discoveredDevices.add(device)
+            val scanCallback = object : ScanCallback() {
+                override fun onScanResult(callbackType: Int, result: ScanResult) {
+                    val device = result.device
+                    if (isValidShimmerDevice(device) && !discoveredDevices.contains(device)) {
+                        Log.d(TAG, "Discovered Shimmer device: ${device.name} (${device.address})")
+                        discoveredDevices.add(device)
+                    }
+                }
+
+                override fun onScanFailed(errorCode: Int) {
+                    Log.e(TAG, "BLE scan failed with error code: $errorCode")
                 }
             }
 
-            override fun onScanFailed(errorCode: Int) {
-                Log.e(TAG, "BLE scan failed with error code: $errorCode")
+            try {
+                Log.i(TAG, "Starting BLE scan for Shimmer devices...")
+                bluetoothLeScanner.startScan(scanCallback)
+
+
+                delay(10000)
+
+                bluetoothLeScanner.stopScan(scanCallback)
+                Log.i(TAG, "BLE scan completed. Found ${discoveredDevices.size} devices")
+
+            } catch (e: SecurityException) {
+                Log.e(TAG, "Security exception during BLE scan", e)
+            } catch (e: Exception) {
+                Log.e(TAG, "Exception during BLE scan", e)
             }
+
+            return@withContext discoveredDevices
         }
-
-        try {
-            Log.i(TAG, "Starting BLE scan for Shimmer devices...")
-            bluetoothLeScanner.startScan(scanCallback)
-
-
-            delay(10000)
-
-            bluetoothLeScanner.stopScan(scanCallback)
-            Log.i(TAG, "BLE scan completed. Found ${discoveredDevices.size} devices")
-
-        } catch (e: SecurityException) {
-            Log.e(TAG, "Security exception during BLE scan", e)
-        } catch (e: Exception) {
-            Log.e(TAG, "Exception during BLE scan", e)
-        }
-
-        return@withContext discoveredDevices
-    }
 
     private fun connectToShimmerDevice(device: BluetoothDevice) {
         lifecycleScope.launch {
@@ -343,7 +349,10 @@ class ShimmerMvpActivity : AppCompatActivity() {
                 }
 
                 val targetDevice = prioritizedDevices.first()
-                Log.i(TAG, "Connecting to Shimmer3 GSR+: ${targetDevice.name} (${targetDevice.address})")
+                Log.i(
+                    TAG,
+                    "Connecting to Shimmer3 GSR+: ${targetDevice.name} (${targetDevice.address})"
+                )
                 updateConnectionStatus("Connecting to ${targetDevice.name}...")
 
                 // Set up the data handler BEFORE connecting
@@ -514,16 +523,30 @@ class ShimmerMvpActivity : AppCompatActivity() {
                         android.R.color.holo_orange_dark
                     )
 
-                    else -> ContextCompat.getColor(this@ShimmerMvpActivity, android.R.color.holo_red_dark)
+                    else -> ContextCompat.getColor(
+                        this@ShimmerMvpActivity,
+                        android.R.color.holo_red_dark
+                    )
                 }
                 binding.signalQualityText.text = "Quality: ${signalQualityPercent.toInt()}%"
                 binding.signalQualityText.setTextColor(qualityColor)
 
                 // Update connection health indicator
                 val healthColor = when (connectionHealth) {
-                    "Strong" -> ContextCompat.getColor(this@ShimmerMvpActivity, android.R.color.holo_green_dark)
-                    "Good" -> ContextCompat.getColor(this@ShimmerMvpActivity, android.R.color.holo_orange_dark)
-                    else -> ContextCompat.getColor(this@ShimmerMvpActivity, android.R.color.holo_red_dark)
+                    "Strong" -> ContextCompat.getColor(
+                        this@ShimmerMvpActivity,
+                        android.R.color.holo_green_dark
+                    )
+
+                    "Good" -> ContextCompat.getColor(
+                        this@ShimmerMvpActivity,
+                        android.R.color.holo_orange_dark
+                    )
+
+                    else -> ContextCompat.getColor(
+                        this@ShimmerMvpActivity,
+                        android.R.color.holo_red_dark
+                    )
                 }
                 binding.connectionHealthText.text = "Signal: $connectionHealth"
                 binding.connectionHealthText.setTextColor(healthColor)
@@ -843,7 +866,10 @@ class ShimmerMvpActivity : AppCompatActivity() {
             status.contains("connecting", true) || status.contains("scanning", true) ->
                 Pair(ContextCompat.getColor(this, android.R.color.holo_orange_dark), "●")
 
-            status.contains("failed", true) || status.contains("error", true) || status.contains("not found", true) ->
+            status.contains("failed", true) || status.contains(
+                "error",
+                true
+            ) || status.contains("not found", true) ->
                 Pair(ContextCompat.getColor(this, android.R.color.holo_red_dark), "●")
 
             status.contains("disconnected", true) ->
@@ -908,7 +934,8 @@ class ShimmerMvpActivity : AppCompatActivity() {
             }
             .setNegativeButton("Settings") { _, _ ->
 
-                val intent = android.content.Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                val intent =
+                    android.content.Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
                 intent.data = android.net.Uri.parse("package:$packageName")
                 startActivity(intent)
             }
@@ -935,7 +962,8 @@ class ShimmerMvpActivity : AppCompatActivity() {
             .setTitle("Bluetooth Disabled")
             .setMessage("Bluetooth must be enabled to connect to Shimmer devices. Would you like to enable it now?")
             .setPositiveButton("Enable Bluetooth") { _, _ ->
-                val enableBtIntent = android.content.Intent(android.bluetooth.BluetoothAdapter.ACTION_REQUEST_ENABLE)
+                val enableBtIntent =
+                    android.content.Intent(android.bluetooth.BluetoothAdapter.ACTION_REQUEST_ENABLE)
                 bluetoothLauncher.launch(enableBtIntent)
             }
             .setNegativeButton("Cancel") { dialog, _ ->
@@ -965,7 +993,8 @@ class ShimmerMvpActivity : AppCompatActivity() {
                 scanForShimmerDevices()
             }
             .setNegativeButton("Bluetooth Settings") { _, _ ->
-                val intent = android.content.Intent(android.provider.Settings.ACTION_BLUETOOTH_SETTINGS)
+                val intent =
+                    android.content.Intent(android.provider.Settings.ACTION_BLUETOOTH_SETTINGS)
                 startActivity(intent)
             }
             .setNeutralButton("OK") { dialog, _ ->
@@ -993,7 +1022,10 @@ class ShimmerMvpActivity : AppCompatActivity() {
             .setMessage("Multiple Shimmer devices found. Please select the device you want to connect to:")
             .setItems(deviceNames) { _, which ->
                 val selectedDevice = devices[which]
-                Log.i(TAG, "User selected device: ${selectedDevice.name} (${selectedDevice.address})")
+                Log.i(
+                    TAG,
+                    "User selected device: ${selectedDevice.name} (${selectedDevice.address})"
+                )
                 connectToShimmerDevice(selectedDevice)
             }
             .setNegativeButton("Cancel") { dialog, _ ->
@@ -1012,7 +1044,11 @@ class ShimmerMvpActivity : AppCompatActivity() {
     private fun showScanErrorDialog(error: Exception) {
         val errorMessage = when {
             error is SecurityException -> "Permission error during BLE scan. Please check Bluetooth permissions."
-            error.message?.contains("bluetooth", true) == true -> "Bluetooth error: ${error.message}"
+            error.message?.contains(
+                "bluetooth",
+                true
+            ) == true -> "Bluetooth error: ${error.message}"
+
             else -> "Scan failed: ${error.message}"
         }
 

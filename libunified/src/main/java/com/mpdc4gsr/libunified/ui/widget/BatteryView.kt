@@ -39,7 +39,11 @@ class BatteryView : AppCompatImageView {
 
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
 
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
+        context,
+        attrs,
+        defStyleAttr
+    ) {
         paint.isAntiAlias = true
     }
 
@@ -53,7 +57,11 @@ class BatteryView : AppCompatImageView {
                 val wantWidth = (heightSize * 58 / 30f).toInt()
                 when (widthMode) {
                     MeasureSpec.EXACTLY -> setMeasuredDimension(widthSize, heightSize)
-                    MeasureSpec.AT_MOST -> setMeasuredDimension(wantWidth.coerceAtMost(widthSize), heightSize)
+                    MeasureSpec.AT_MOST -> setMeasuredDimension(
+                        wantWidth.coerceAtMost(widthSize),
+                        heightSize
+                    )
+
                     else -> setMeasuredDimension(wantWidth, heightSize)
                 }
             }
@@ -71,7 +79,10 @@ class BatteryView : AppCompatImageView {
                                 if ((widthSize * 30 / 58f).toInt() <= heightSize) {
                                     setMeasuredDimension(widthSize, (widthSize * 30 / 58f).toInt())
                                 } else {
-                                    setMeasuredDimension((heightSize * 58 / 30f).toInt(), heightSize)
+                                    setMeasuredDimension(
+                                        (heightSize * 58 / 30f).toInt(),
+                                        heightSize
+                                    )
                                 }
                             } else {//宽✘ 高✔
                                 setMeasuredDimension(widthSize, (widthSize * 30 / 58f).toInt())
@@ -94,7 +105,11 @@ class BatteryView : AppCompatImageView {
 
             else -> {
                 when (widthMode) {
-                    MeasureSpec.EXACTLY -> setMeasuredDimension(widthSize, (widthSize * 30 / 58f).toInt())
+                    MeasureSpec.EXACTLY -> setMeasuredDimension(
+                        widthSize,
+                        (widthSize * 30 / 58f).toInt()
+                    )
+
                     MeasureSpec.AT_MOST -> setMeasuredDimension(
                         58.coerceAtMost(widthSize),
                         (58.coerceAtMost(widthSize) * 30 / 58f).toInt()
@@ -169,7 +184,8 @@ class BatteryView : AppCompatImageView {
         }
         val progressWidth = drawWidth * 42 / 58f * battery / 100
         paint.strokeCap = Paint.Cap.BUTT
-        paint.color = (if (isCharging) 0xff6dc80e else if (battery <= 10) 0xffeb433e else 0xffffffff).toInt()
+        paint.color =
+            (if (isCharging) 0xff6dc80e else if (battery <= 10) 0xffeb433e else 0xffffffff).toInt()
         canvas.clipPath(path)
         canvas.drawRect(
             lineSize + anodeWidth,

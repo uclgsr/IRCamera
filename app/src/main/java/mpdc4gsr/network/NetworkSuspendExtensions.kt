@@ -14,21 +14,22 @@ import kotlin.coroutines.resumeWithException
  * Suspend version of startDiscovery replacing callback pattern
  * Uses suspendCancellableCoroutine for proper cancellation support
  */
-suspend fun NetworkClient.startDiscoveryAsync(): Boolean = suspendCancellableCoroutine { continuation ->
-    val callback: (Boolean) -> Unit = { success ->
-        if (continuation.isActive) {
-            continuation.resume(success)
+suspend fun NetworkClient.startDiscoveryAsync(): Boolean =
+    suspendCancellableCoroutine { continuation ->
+        val callback: (Boolean) -> Unit = { success ->
+            if (continuation.isActive) {
+                continuation.resume(success)
+            }
+        }
+
+        startDiscovery(callback)
+
+        // Handle cancellation
+        continuation.invokeOnCancellation {
+            Log.d("NetworkSuspendExtensions", "Discovery cancelled")
+            // Cancel any ongoing discovery operations if needed
         }
     }
-
-    startDiscovery(callback)
-
-    // Handle cancellation
-    continuation.invokeOnCancellation {
-        Log.d("NetworkSuspendExtensions", "Discovery cancelled")
-        // Cancel any ongoing discovery operations if needed
-    }
-}
 
 /**
  * Example usage of modern suspend function patterns:

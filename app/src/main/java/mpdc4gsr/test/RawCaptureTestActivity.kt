@@ -109,12 +109,17 @@ class RawCaptureTestActivity : AppCompatActivity() {
                     Log.i(TAG, "RGB camera initialized for Stage 3 DNG testing")
                     observeCameraStatus()
                     runOnUiThread {
-                        binding.statusText.text = binding.statusText.text.toString() + " - Camera Ready"
+                        binding.statusText.text =
+                            binding.statusText.text.toString() + " - Camera Ready"
                     }
                 } else {
                     Log.w(TAG, "Camera initialization failed")
                     runOnUiThread {
-                        Toast.makeText(this@RawCaptureTestActivity, "Camera initialization failed", Toast.LENGTH_SHORT)
+                        Toast.makeText(
+                            this@RawCaptureTestActivity,
+                            "Camera initialization failed",
+                            Toast.LENGTH_SHORT
+                        )
                             .show()
                     }
                 }
@@ -202,7 +207,11 @@ class RawCaptureTestActivity : AppCompatActivity() {
                 isRecording = false
                 binding.startStopButton.text = "▶️ Start Multi-Modal Recording"
                 binding.startStopButton.setBackgroundColor(resources.getColor(android.R.color.holo_green_dark))
-                Toast.makeText(this@RawCaptureTestActivity, "Recording failed: ${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this@RawCaptureTestActivity,
+                    "Recording failed: ${e.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
     }

@@ -104,7 +104,10 @@ object UnifiedSessionUtils {
             put("sessionId", sessionId)
             put("deviceId", deviceId)
             put("timestamp", System.currentTimeMillis())
-            put("created", SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date()))
+            put(
+                "created",
+                SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date())
+            )
             additionalInfo.forEach { (key, value) ->
                 put(key, value)
             }
@@ -165,7 +168,8 @@ object UnifiedSessionUtils {
      */
     fun listSessionDirectories(context: Context): List<File> {
         val sessionsDir = getSessionsRootDirectory(context)
-        return sessionsDir.listFiles()?.filter { it.isDirectory }?.sortedByDescending { it.lastModified() }
+        return sessionsDir.listFiles()?.filter { it.isDirectory }
+            ?.sortedByDescending { it.lastModified() }
             ?: emptyList()
     }
 

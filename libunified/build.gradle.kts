@@ -13,7 +13,7 @@ ksp {
 
 android {
     namespace = "com.mpdc4gsr.libunified"
-    compileSdk = libs.versions.compileSdk.get().toInt()
+    compileSdk = 35
 
     defaultConfig {
         minSdk = libs.versions.minSdk.get().toInt()
@@ -46,6 +46,7 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
         isCoreLibraryDesugaringEnabled = true
     }
+    ndkVersion = libs.versions.ndkVersion.get()
 
     kotlin {
         compilerOptions {
@@ -68,7 +69,6 @@ android {
         }
     }
 
-    ndkVersion = libs.versions.ndkVersion.get()
     buildFeatures {
         buildConfig = true
         dataBinding = true
@@ -124,6 +124,7 @@ android {
         abortOnError = false
         warningsAsErrors = false
     }
+    buildToolsVersion = "35.0.0"
 }
 
 configurations.all {

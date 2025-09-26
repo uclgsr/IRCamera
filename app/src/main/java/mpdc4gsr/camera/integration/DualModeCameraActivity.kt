@@ -111,7 +111,11 @@ class DualModeCameraActivity : AppCompatActivity() {
             when (newMode) {
                 "RAW" -> {
                     if (enableSamsungOptimizations && SamsungDeviceCompatibility.isStage3Compatible()) {
-                        Toast.makeText(this, "RAW Mode: Samsung Stage3/Level3 DNG Enabled", Toast.LENGTH_LONG).show()
+                        Toast.makeText(
+                            this,
+                            "RAW Mode: Samsung Stage3/Level3 DNG Enabled",
+                            Toast.LENGTH_LONG
+                        ).show()
                     } else {
                         Toast.makeText(
                             this,

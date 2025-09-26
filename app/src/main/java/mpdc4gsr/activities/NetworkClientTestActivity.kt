@@ -112,7 +112,8 @@ class NetworkClientTestActivity : AppCompatActivity() {
                 if (port in 1..65535) {
                     testWifiConnection(ip, port)
                 } else {
-                    Toast.makeText(this, "Please enter a valid port (1-65535)", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Please enter a valid port (1-65535)", Toast.LENGTH_SHORT)
+                        .show()
                 }
             } else {
                 Toast.makeText(this, "Please enter a valid IP address", Toast.LENGTH_SHORT).show()
@@ -200,7 +201,8 @@ class NetworkClientTestActivity : AppCompatActivity() {
                         CommandConnection.ConnectionState.ERROR -> "Connection error occurred"
                     }
                     runOnUiThread {
-                        Toast.makeText(this@NetworkClientTestActivity, message, Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@NetworkClientTestActivity, message, Toast.LENGTH_SHORT)
+                            .show()
                     }
                 }
             }
@@ -299,7 +301,8 @@ class NetworkClientTestActivity : AppCompatActivity() {
         val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
         if (bluetoothAdapter == null) {
             Log.w(TAG, "Bluetooth not available on this device")
-            Toast.makeText(this, "Bluetooth not available on this device", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Bluetooth not available on this device", Toast.LENGTH_SHORT)
+                .show()
             return
         }
 
@@ -314,10 +317,14 @@ class NetworkClientTestActivity : AppCompatActivity() {
             val pairedDevices: Set<BluetoothDevice> = bluetoothAdapter.bondedDevices
             if (pairedDevices.isNotEmpty()) {
                 val testDevice = pairedDevices.first()
-                Log.i(TAG, "Testing Bluetooth connection to ${testDevice.name} (${testDevice.address})")
+                Log.i(
+                    TAG,
+                    "Testing Bluetooth connection to ${testDevice.name} (${testDevice.address})"
+                )
 
                 updateConnectionStatus(CommandConnection.ConnectionState.CONNECTING)
-                Toast.makeText(this, "Connecting to ${testDevice.name}...", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Connecting to ${testDevice.name}...", Toast.LENGTH_SHORT)
+                    .show()
 
                 lifecycleScope.launch {
                     try {
@@ -366,7 +373,8 @@ class NetworkClientTestActivity : AppCompatActivity() {
         return if (networkManager != null) {
             val baseInfo = networkManager?.getConnectionInfo()?.toString() ?: "No connection info"
             val timestamp =
-                java.text.SimpleDateFormat("HH:mm:ss", java.util.Locale.getDefault()).format(java.util.Date())
+                java.text.SimpleDateFormat("HH:mm:ss", java.util.Locale.getDefault())
+                    .format(java.util.Date())
             val connectionState = if (::connectionStatusText.isInitialized) {
                 connectionStatusText.text.toString()
             } else {

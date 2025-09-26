@@ -82,7 +82,12 @@ class ComprehensiveSystemDemo : AppCompatActivity() {
             text = "System Demo Ready - Click Initialize"
             textSize = 18f
             setPadding(0, 0, 0, 16)
-            setTextColor(ContextCompat.getColor(this@ComprehensiveSystemDemo, android.R.color.holo_blue_dark))
+            setTextColor(
+                ContextCompat.getColor(
+                    this@ComprehensiveSystemDemo,
+                    android.R.color.holo_blue_dark
+                )
+            )
         }
 
         progressBar = ProgressBar(this, null, android.R.attr.progressBarStyleHorizontal).apply {
@@ -138,7 +143,10 @@ class ComprehensiveSystemDemo : AppCompatActivity() {
             text = ""
             textSize = 11f
             setPadding(16, 16, 16, 16)
-            background = ContextCompat.getDrawable(this@ComprehensiveSystemDemo, android.R.drawable.editbox_background)
+            background = ContextCompat.getDrawable(
+                this@ComprehensiveSystemDemo,
+                android.R.drawable.editbox_background
+            )
         }
 
         val scrollView = ScrollView(this).apply {
@@ -190,11 +198,17 @@ class ComprehensiveSystemDemo : AppCompatActivity() {
 
                 updateStatus("Initializing sensors...")
                 addLog("Initializing GSR Sensor Recorder...")
-                gsrRecorder = GSRSensorRecorder(this@ComprehensiveSystemDemo, "gsr_shimmer_1", 128, recordingController)
+                gsrRecorder = GSRSensorRecorder(
+                    this@ComprehensiveSystemDemo,
+                    "gsr_shimmer_1",
+                    128,
+                    recordingController
+                )
                 recordingController.registerSensor("GSR", gsrRecorder!!)
 
                 addLog("Initializing Thermal Camera Recorder...")
-                thermalRecorder = ThermalCameraRecorder(this@ComprehensiveSystemDemo, "thermal_camera_1")
+                thermalRecorder =
+                    ThermalCameraRecorder(this@ComprehensiveSystemDemo, "thermal_camera_1")
                 recordingController.registerSensor("Thermal", thermalRecorder!!)
 
                 addLog("Initializing RGB Camera Recorder...")
@@ -213,7 +227,8 @@ class ComprehensiveSystemDemo : AppCompatActivity() {
                 updateStatus("Setting up network streaming...")
                 addLog("Initializing network streaming service...")
                 val networkClient = NetworkClient(this@ComprehensiveSystemDemo)
-                dataStreamingService = DataStreamingService(this@ComprehensiveSystemDemo, networkClient)
+                dataStreamingService =
+                    DataStreamingService(this@ComprehensiveSystemDemo, networkClient)
 
                 updateProgress(75)
 
@@ -296,7 +311,8 @@ class ComprehensiveSystemDemo : AppCompatActivity() {
                 updateStatus("Starting recording session...")
 
 
-                val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
+                val timestamp =
+                    SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
                 currentSessionId = "demo_session_$timestamp"
 
                 addLog("Session ID: $currentSessionId")

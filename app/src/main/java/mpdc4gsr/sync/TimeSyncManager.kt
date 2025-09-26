@@ -116,7 +116,8 @@ class TimeSyncManager(private val context: Context) {
     fun updateSyncConfiguration(config: SyncConfiguration) {
         syncConfig = config
         Log.i(
-            TAG, "Sync configuration updated: periodicInterval=${config.periodicSyncIntervalMs}ms, " +
+            TAG,
+            "Sync configuration updated: periodicInterval=${config.periodicSyncIntervalMs}ms, " +
                     "maxRetries=${config.maxSyncRetries}, timeout=${config.syncTimeoutMs}ms"
         )
     }
@@ -248,7 +249,10 @@ class TimeSyncManager(private val context: Context) {
         }
 
         periodicSyncJob = syncScope.launch {
-            Log.i(TAG, "Starting periodic sync monitoring (interval: ${syncConfig.periodicSyncIntervalMs}ms)")
+            Log.i(
+                TAG,
+                "Starting periodic sync monitoring (interval: ${syncConfig.periodicSyncIntervalMs}ms)"
+            )
 
             while (isActive && periodicSyncEnabled.get()) {
                 delay(syncConfig.periodicSyncIntervalMs)
@@ -257,7 +261,10 @@ class TimeSyncManager(private val context: Context) {
                     val sessionDuration = System.currentTimeMillis() - sessionStartTime
 
                     if (sessionDuration > syncConfig.longSessionThresholdMs) {
-                        Log.i(TAG, "Triggering periodic sync for long session (${sessionDuration / 1000}s)")
+                        Log.i(
+                            TAG,
+                            "Triggering periodic sync for long session (${sessionDuration / 1000}s)"
+                        )
 
                         try {
                             triggerManualSync()
@@ -355,7 +362,10 @@ class TimeSyncManager(private val context: Context) {
                         return@repeat
                     }
 
-                    Log.d(TAG, "Sync response: t1=$t1PcSendTime, t2=$t2PhoneTimestamp (attempt ${attempt + 1})")
+                    Log.d(
+                        TAG,
+                        "Sync response: t1=$t1PcSendTime, t2=$t2PhoneTimestamp (attempt ${attempt + 1})"
+                    )
 
                     val syncIndex = syncCounter.incrementAndGet().toInt()
 
@@ -431,7 +441,10 @@ class TimeSyncManager(private val context: Context) {
                 } ?: false
 
                 if (logged) {
-                    Log.d(TAG, "Sync calculation completed successfully (quality: $quality, attempt: ${attempt + 1})")
+                    Log.d(
+                        TAG,
+                        "Sync calculation completed successfully (quality: $quality, attempt: ${attempt + 1})"
+                    )
                     return
                 } else {
                     retryCount = attempt + 1
@@ -464,7 +477,8 @@ class TimeSyncManager(private val context: Context) {
                 return
             }
 
-            val timestamp = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US).format(Date())
+            val timestamp =
+                SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US).format(Date())
             val sessionRelativeTime = System.currentTimeMillis() - sessionStartTime
 
             FileWriter(logFile, true).use { writer ->

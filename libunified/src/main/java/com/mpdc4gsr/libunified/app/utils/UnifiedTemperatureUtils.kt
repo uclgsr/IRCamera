@@ -214,7 +214,10 @@ object UnifiedTemperatureUtils {
      * Format temperature with unit
      */
     @JvmStatic
-    fun formatTemperature(temperature: Float, unit: TemperatureUnit = TemperatureUnit.CELSIUS): String {
+    fun formatTemperature(
+        temperature: Float,
+        unit: TemperatureUnit = TemperatureUnit.CELSIUS
+    ): String {
         return when (unit) {
             TemperatureUnit.CELSIUS -> "%.1f°C".format(temperature)
             TemperatureUnit.FAHRENHEIT -> "%.1f°F".format(celsiusToFahrenheit(temperature))

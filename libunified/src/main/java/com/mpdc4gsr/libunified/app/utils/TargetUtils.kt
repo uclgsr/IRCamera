@@ -35,7 +35,12 @@ object TargetUtils {
         return observeBean.observeWidth * observeBean.observeHeight
     }
 
-    fun updateTargetTemperature(observeBean: ObserveBean, maxTemp: Float, minTemp: Float, avgTemp: Float) {
+    fun updateTargetTemperature(
+        observeBean: ObserveBean,
+        maxTemp: Float,
+        minTemp: Float,
+        avgTemp: Float
+    ) {
         observeBean.maxTemp = maxTemp
         observeBean.minTemp = minTemp
         observeBean.avgTemp = avgTemp
@@ -78,22 +83,27 @@ object TargetUtils {
                         ObserveBean.TYPE_MEASURE_SHEEP -> R.drawable.ic_target_circle_sheep_green
                         else -> R.drawable.ic_target_circle_person_green
                     }
+
                     ObserveBean.TYPE_TARGET_COLOR_RED -> when (targetMeasureMode) {
                         ObserveBean.TYPE_MEASURE_SHEEP -> R.drawable.ic_target_circle_sheep_red
                         else -> R.drawable.ic_target_circle_person_red
                     }
+
                     ObserveBean.TYPE_TARGET_COLOR_BLUE -> when (targetMeasureMode) {
                         ObserveBean.TYPE_MEASURE_SHEEP -> R.drawable.ic_target_circle_sheep_blue
                         else -> R.drawable.ic_target_circle_person_blue
                     }
+
                     ObserveBean.TYPE_TARGET_COLOR_BLACK -> when (targetMeasureMode) {
                         ObserveBean.TYPE_MEASURE_SHEEP -> R.drawable.ic_target_circle_sheep_black
                         else -> R.drawable.ic_target_circle_person_black
                     }
+
                     ObserveBean.TYPE_TARGET_COLOR_WHITE -> when (targetMeasureMode) {
                         ObserveBean.TYPE_MEASURE_SHEEP -> R.drawable.ic_target_circle_sheep_white
                         else -> R.drawable.ic_target_circle_person_white
                     }
+
                     else -> R.drawable.ic_target_circle_person_green
                 }
             }
@@ -104,22 +114,27 @@ object TargetUtils {
                         ObserveBean.TYPE_MEASURE_SHEEP -> R.drawable.ic_target_vertical_sheep_green
                         else -> R.drawable.ic_target_vertical_person_green
                     }
+
                     ObserveBean.TYPE_TARGET_COLOR_RED -> when (targetMeasureMode) {
                         ObserveBean.TYPE_MEASURE_SHEEP -> R.drawable.ic_target_vertical_sheep_red
                         else -> R.drawable.ic_target_vertical_person_red
                     }
+
                     ObserveBean.TYPE_TARGET_COLOR_BLUE -> when (targetMeasureMode) {
                         ObserveBean.TYPE_MEASURE_SHEEP -> R.drawable.ic_target_vertical_sheep_blue
                         else -> R.drawable.ic_target_vertical_person_blue
                     }
+
                     ObserveBean.TYPE_TARGET_COLOR_BLACK -> when (targetMeasureMode) {
                         ObserveBean.TYPE_MEASURE_SHEEP -> R.drawable.ic_target_vertical_sheep_black
                         else -> R.drawable.ic_target_vertical_person_black
                     }
+
                     ObserveBean.TYPE_TARGET_COLOR_WHITE -> when (targetMeasureMode) {
                         ObserveBean.TYPE_MEASURE_SHEEP -> R.drawable.ic_target_vertical_sheep_white
                         else -> R.drawable.ic_target_vertical_person_white
                     }
+
                     else -> R.drawable.ic_target_vertical_person_green
                 }
             }
@@ -130,22 +145,27 @@ object TargetUtils {
                         ObserveBean.TYPE_MEASURE_SHEEP -> R.drawable.ic_target_horizontal_sheep_green
                         else -> R.drawable.svg_ic_target_horizontal_person_green
                     }
+
                     ObserveBean.TYPE_TARGET_COLOR_RED -> when (targetMeasureMode) {
                         ObserveBean.TYPE_MEASURE_SHEEP -> R.drawable.ic_target_horizontal_sheep_red
                         else -> R.drawable.ic_target_horizontal_person_red
                     }
+
                     ObserveBean.TYPE_TARGET_COLOR_BLUE -> when (targetMeasureMode) {
                         ObserveBean.TYPE_MEASURE_SHEEP -> R.drawable.ic_target_horizontal_sheep_blue
                         else -> R.drawable.ic_target_horizontal_person_blue
                     }
+
                     ObserveBean.TYPE_TARGET_COLOR_BLACK -> when (targetMeasureMode) {
                         ObserveBean.TYPE_MEASURE_SHEEP -> R.drawable.ic_target_horizontal_sheep_black
                         else -> R.drawable.ic_target_horizontal_person_black
                     }
+
                     ObserveBean.TYPE_TARGET_COLOR_WHITE -> when (targetMeasureMode) {
                         ObserveBean.TYPE_MEASURE_SHEEP -> R.drawable.ic_target_horizontal_sheep_white
                         else -> R.drawable.ic_target_horizontal_person_white
                     }
+
                     else -> R.drawable.svg_ic_target_horizontal_person_green
                 }
             }

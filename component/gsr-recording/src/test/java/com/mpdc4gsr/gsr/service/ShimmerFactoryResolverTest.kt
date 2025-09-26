@@ -79,15 +79,27 @@ class ShimmerFactoryResolverTest {
         assertTrue("Should be able to call isConnected", connected == false || connected == true)
 
         val connectResult = device.connect("00:00:00:00:00:00", "test")
-        assertTrue("Should be able to call connect", connectResult == true || connectResult == false)
+        assertTrue(
+            "Should be able to call connect",
+            connectResult == true || connectResult == false
+        )
 
         val streamResult = device.startStreaming()
-        assertTrue("Should be able to call startStreaming", streamResult == true || streamResult == false)
+        assertTrue(
+            "Should be able to call startStreaming",
+            streamResult == true || streamResult == false
+        )
 
         val stopResult = device.stopStreaming()
-        assertTrue("Should be able to call stopStreaming", stopResult == true || stopResult == false)
+        assertTrue(
+            "Should be able to call stopStreaming",
+            stopResult == true || stopResult == false
+        )
 
         val disconnectResult = device.disconnect()
-        assertTrue("Should be able to call disconnect", disconnectResult == true || disconnectResult == false)
+        assertTrue(
+            "Should be able to call disconnect",
+            disconnectResult == true || disconnectResult == false
+        )
     }
 }

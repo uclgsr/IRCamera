@@ -213,7 +213,12 @@ class VideoRecordFFmpeg(
         paint.textSize = SizeUtils.sp2px(6f).toFloat()
         paint.isDither = true
         paint.isFilterBitmap = true
-        paint.getTextBounds("[ph][ph][ph][ph][ph][ph]", 0, "[ph][ph][ph][ph][ph][ph]".length, rectText)
+        paint.getTextBounds(
+            "[ph][ph][ph][ph][ph][ph]",
+            0,
+            "[ph][ph][ph][ph][ph][ph]".length,
+            rectText
+        )
     }
 
     var startTime: Long = 0L
@@ -555,11 +560,12 @@ class VideoRecordFFmpeg(
                 cameraView.getBitmap(cameraViewBitmap)
             }
 
-            is LiteSurfaceView -> cameraViewBitmap = cameraView.scaleBitmap() ?: Bitmap.createBitmap(
-                cameraView.width,
-                cameraView.height,
-                Bitmap.Config.ARGB_8888
-            )
+            is LiteSurfaceView -> cameraViewBitmap =
+                cameraView.scaleBitmap() ?: Bitmap.createBitmap(
+                    cameraView.width,
+                    cameraView.height,
+                    Bitmap.Config.ARGB_8888
+                )
 
             is HikSurfaceView -> cameraViewBitmap = cameraView.getScaleBitmap()
             else -> cameraViewBitmap =
@@ -705,7 +711,12 @@ class VideoRecordFFmpeg(
         canvas.save()
         val beginX = pix10.toDouble()
         var beginY = (bmp.height - pix10).toDouble()
-        paint.getTextBounds("[ph][ph][ph][ph][ph][ph]", 0, "[ph][ph][ph][ph][ph][ph]".length, rectText)
+        paint.getTextBounds(
+            "[ph][ph][ph][ph][ph][ph]",
+            0,
+            "[ph][ph][ph][ph][ph][ph]".length,
+            rectText
+        )
         if (!TextUtils.isEmpty(time)) {
             beginY = beginY - (rectText.bottom - rectText.top)
             canvas.drawText(time!!, beginX.toInt().toFloat(), beginY.toInt().toFloat(), paint)

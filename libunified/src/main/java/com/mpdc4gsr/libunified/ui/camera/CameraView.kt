@@ -84,7 +84,7 @@ class CameraView @JvmOverloads constructor(
         invalidate()
     }
     
-    fun getScaledBitmap(): Bitmap? {
+    fun getScaledBitmap(): Bitmap {
         return bitmap?.let { originalBitmap ->
             if (width > 0 && height > 0) {
                 try {

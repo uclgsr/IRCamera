@@ -2,8 +2,10 @@
 
 ## Overview
 
-The Enhanced PC Controller is a comprehensive desktop application that orchestrates multi-modal recording sessions with
-Android devices. It provides real-time data visualization, session management, and high-performance data processing
+The Enhanced PC Controller is a comprehensive desktop application that orchestrates multi-modal
+recording sessions with
+Android devices. It provides real-time data visualization, session management, and high-performance
+data processing
 capabilities.
 
 ## Key Features
@@ -363,7 +365,8 @@ pre-commit install
 
 ## License
 
-This project is part of the IRCamera multi-modal recording system developed for academic research purposes.
+This project is part of the IRCamera multi-modal recording system developed for academic research
+purposes.
 
 ## Support
 

@@ -59,14 +59,22 @@ object UnifiedPreferencesUtils {
     /**
      * Get default SharedPreferences instance
      */
-    private fun getPreferences(context: Context, prefsName: String = DEFAULT_PREFS_NAME): SharedPreferences {
+    private fun getPreferences(
+        context: Context,
+        prefsName: String = DEFAULT_PREFS_NAME
+    ): SharedPreferences {
         return context.getSharedPreferences(prefsName, Context.MODE_PRIVATE)
     }
 
     /**
      * Save string value
      */
-    fun putString(context: Context, key: String, value: String, prefsName: String = DEFAULT_PREFS_NAME) {
+    fun putString(
+        context: Context,
+        key: String,
+        value: String,
+        prefsName: String = DEFAULT_PREFS_NAME
+    ) {
         try {
             getPreferences(context, prefsName).edit().putString(key, value).apply()
         } catch (e: Exception) {
@@ -105,7 +113,12 @@ object UnifiedPreferencesUtils {
     /**
      * Get int value
      */
-    fun getInt(context: Context, key: String, defaultValue: Int = 0, prefsName: String = DEFAULT_PREFS_NAME): Int {
+    fun getInt(
+        context: Context,
+        key: String,
+        defaultValue: Int = 0,
+        prefsName: String = DEFAULT_PREFS_NAME
+    ): Int {
         return try {
             getPreferences(context, prefsName).getInt(key, defaultValue)
         } catch (e: Exception) {
@@ -117,7 +130,12 @@ object UnifiedPreferencesUtils {
     /**
      * Save boolean value
      */
-    fun putBoolean(context: Context, key: String, value: Boolean, prefsName: String = DEFAULT_PREFS_NAME) {
+    fun putBoolean(
+        context: Context,
+        key: String,
+        value: Boolean,
+        prefsName: String = DEFAULT_PREFS_NAME
+    ) {
         try {
             getPreferences(context, prefsName).edit().putBoolean(key, value).apply()
         } catch (e: Exception) {
@@ -145,7 +163,12 @@ object UnifiedPreferencesUtils {
     /**
      * Save float value
      */
-    fun putFloat(context: Context, key: String, value: Float, prefsName: String = DEFAULT_PREFS_NAME) {
+    fun putFloat(
+        context: Context,
+        key: String,
+        value: Float,
+        prefsName: String = DEFAULT_PREFS_NAME
+    ) {
         try {
             getPreferences(context, prefsName).edit().putFloat(key, value).apply()
         } catch (e: Exception) {
@@ -173,7 +196,12 @@ object UnifiedPreferencesUtils {
     /**
      * Save long value
      */
-    fun putLong(context: Context, key: String, value: Long, prefsName: String = DEFAULT_PREFS_NAME) {
+    fun putLong(
+        context: Context,
+        key: String,
+        value: Long,
+        prefsName: String = DEFAULT_PREFS_NAME
+    ) {
         try {
             getPreferences(context, prefsName).edit().putLong(key, value).apply()
         } catch (e: Exception) {
@@ -184,7 +212,12 @@ object UnifiedPreferencesUtils {
     /**
      * Get long value
      */
-    fun getLong(context: Context, key: String, defaultValue: Long = 0L, prefsName: String = DEFAULT_PREFS_NAME): Long {
+    fun getLong(
+        context: Context,
+        key: String,
+        defaultValue: Long = 0L,
+        prefsName: String = DEFAULT_PREFS_NAME
+    ): Long {
         return try {
             getPreferences(context, prefsName).getLong(key, defaultValue)
         } catch (e: Exception) {
@@ -196,7 +229,12 @@ object UnifiedPreferencesUtils {
     /**
      * Save string set
      */
-    fun putStringSet(context: Context, key: String, value: Set<String>, prefsName: String = DEFAULT_PREFS_NAME) {
+    fun putStringSet(
+        context: Context,
+        key: String,
+        value: Set<String>,
+        prefsName: String = DEFAULT_PREFS_NAME
+    ) {
         try {
             getPreferences(context, prefsName).edit().putStringSet(key, value).apply()
         } catch (e: Exception) {
@@ -338,7 +376,7 @@ object UnifiedPreferencesUtils {
     fun initializePreferences(context: Context, defaults: Map<String, Any>) {
         val prefs = getSharedPreferences(context)
         val editor = prefs.edit()
-        
+
         defaults.forEach { (key, value) ->
             if (!prefs.contains(key)) {
                 when (value) {
@@ -350,10 +388,10 @@ object UnifiedPreferencesUtils {
                 }
             }
         }
-        
+
         editor.apply()
     }
-    
+
     /**
      * Get SharedPreferences instance
      */

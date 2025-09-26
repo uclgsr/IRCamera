@@ -168,7 +168,10 @@ class NetworkConnectionManager(
         reconnectAttempts++
 
         scope.launch {
-            Log.i(TAG, "Scheduling reconnection attempt $reconnectAttempts in ${RECONNECT_DELAY_MS}ms")
+            Log.i(
+                TAG,
+                "Scheduling reconnection attempt $reconnectAttempts in ${RECONNECT_DELAY_MS}ms"
+            )
             delay(RECONNECT_DELAY_MS)
 
             if (isActive && _connectionState.value == ConnectionState.RECONNECTING) {

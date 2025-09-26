@@ -349,7 +349,10 @@ data class SessionMetadata(
 
             metadataFile.writeText(jsonContent)
 
-            android.util.Log.i(TAG, "Comprehensive session metadata exported to: ${metadataFile.absolutePath}")
+            android.util.Log.i(
+                TAG,
+                "Comprehensive session metadata exported to: ${metadataFile.absolutePath}"
+            )
             true
 
         } catch (e: Exception) {
@@ -440,8 +443,10 @@ data class SessionMetadata(
                 "file_schema" to mapOf(
                     "thermal_data_csv" to mpdc4gsr.data.FileSchemaManager()
                         .generateCsvHeader("thermal", includeUnits = false),
-                    "rgb_data_csv" to mpdc4gsr.data.FileSchemaManager().generateCsvHeader("rgb", includeUnits = false),
-                    "gsr_data_csv" to mpdc4gsr.data.FileSchemaManager().generateCsvHeader("gsr", includeUnits = false),
+                    "rgb_data_csv" to mpdc4gsr.data.FileSchemaManager()
+                        .generateCsvHeader("rgb", includeUnits = false),
+                    "gsr_data_csv" to mpdc4gsr.data.FileSchemaManager()
+                        .generateCsvHeader("gsr", includeUnits = false),
                     "audio_data_csv" to mpdc4gsr.data.FileSchemaManager()
                         .generateCsvHeader("audio", includeUnits = false)
                 )
@@ -551,9 +556,23 @@ data class SessionMetadata(
             appendLine()
 
             appendLine("Quality Metrics:")
-            appendLine("  Overall Score: ${String.format("%.2f", qualityMetrics.overallQualityScore)}")
+            appendLine(
+                "  Overall Score: ${
+                    String.format(
+                        "%.2f",
+                        qualityMetrics.overallQualityScore
+                    )
+                }"
+            )
             appendLine("  Sync Accuracy: ${qualityMetrics.syncAccuracyMs}ms")
-            appendLine("  Data Completeness: ${String.format("%.1f%%", qualityMetrics.dataCompletenessPercent)}")
+            appendLine(
+                "  Data Completeness: ${
+                    String.format(
+                        "%.1f%%",
+                        qualityMetrics.dataCompletenessPercent
+                    )
+                }"
+            )
             appendLine("  Errors: ${qualityMetrics.errorCount}")
             appendLine("  Warnings: ${qualityMetrics.warningCount}")
             appendLine()

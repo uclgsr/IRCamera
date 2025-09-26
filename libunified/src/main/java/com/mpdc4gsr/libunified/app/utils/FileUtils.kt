@@ -86,13 +86,13 @@ object FileUtils {
         return try {
             val inputStream = FileInputStream(source)
             val outputStream = FileOutputStream(dest)
-            
+
             val buffer = ByteArray(1024)
             var length: Int
             while (inputStream.read(buffer).also { length = it } > 0) {
                 outputStream.write(buffer, 0, length)
             }
-            
+
             inputStream.close()
             outputStream.close()
             true
@@ -153,7 +153,7 @@ object FileUtils {
             if (parent != null && !parent.exists()) {
                 parent.mkdirs()
             }
-            
+
             val outputStream = FileOutputStream(file)
             outputStream.write(data)
             outputStream.close()
@@ -163,7 +163,7 @@ object FileUtils {
             false
         }
     }
-    
+
     // Extension function for saveFile to be used as lambda
     fun saveFile(file: File?, data: ByteArray) = saveFile(file?.absolutePath ?: "", data)
 }

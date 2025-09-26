@@ -65,11 +65,6 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
     private final ArrayList<Rect> rectList = new ArrayList<>();
     // Paint objects for drawing temperature elements
     private final Paint tempPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-    {
-        tempPaint.setStyle(Paint.Style.FILL);
-        tempPaint.setTextSize(24f);
-        tempPaint.setColor(Color.WHITE);
-    }
     private final ArrayList<LibIRTemp.TemperatureSampleResult> pointResultList = new ArrayList<>(3);
     private final ArrayList<LibIRTemp.TemperatureSampleResult> lineResultList = new ArrayList<>(3);
     private final ArrayList<LibIRTemp.TemperatureSampleResult> rectangleResultList = new ArrayList<>(3);
@@ -115,7 +110,6 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
     private int downY = 0;
     private Line movingLine;
     private LineMoveType lineMoveType = LineMoveType.ALL;
-
     private Rect movingRect;
     private RectMoveType rectMoveType = RectMoveType.ALL;
     private RectMoveEdge rectMoveEdge = RectMoveEdge.LEFT;
@@ -124,6 +118,12 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
     private byte[] remapTempData;
     private DualUVCCamera dualUVCCamera;
     private byte[] llTempData;
+
+    {
+        tempPaint.setStyle(Paint.Style.FILL);
+        tempPaint.setTextSize(24f);
+        tempPaint.setColor(Color.WHITE);
+    }
 
     public TemperatureView(final Context context) {
         this(context, null, 0);
@@ -1259,7 +1259,7 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
             tempPaint.setColor(Color.WHITE);
             tempPaint.setStyle(Paint.Style.FILL);
             float textWidth = tempPaint.measureText(text);
-            int adjustedX = centerX + (int)textWidth > getWidth() ? (int)(getWidth() - textWidth) : centerX;
+            int adjustedX = centerX + (int) textWidth > getWidth() ? (int) (getWidth() - textWidth) : centerX;
             canvas.drawText(text, adjustedX, centerY - 15, tempPaint);
         }
     }
@@ -1294,7 +1294,7 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
         tempPaint.setColor(Color.WHITE);
         tempPaint.setStyle(Paint.Style.FILL);
         float textWidth = tempPaint.measureText(text);
-        int adjustedX = x + (int)textWidth > getWidth() ? (int)(getWidth() - textWidth) : x;
+        int adjustedX = x + (int) textWidth > getWidth() ? (int) (getWidth() - textWidth) : x;
         canvas.drawText(text, adjustedX, y - 15, tempPaint);
     }
 
@@ -1304,7 +1304,7 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
         tempPaint.setColor(Color.WHITE);
         tempPaint.setStyle(Paint.Style.FILL);
         float textWidth = tempPaint.measureText(text);
-        int adjustedX = x + (int)textWidth > getWidth() ? (int)(getWidth() - textWidth) : x;
+        int adjustedX = x + (int) textWidth > getWidth() ? (int) (getWidth() - textWidth) : x;
         canvas.drawText(text, adjustedX, y - 15, tempPaint);
     }
 

@@ -93,7 +93,10 @@ class ThermalCameraRecorder(
                     IR_FRAME_RATE_STANDARD
                 }
             } catch (e: Exception) {
-                Log.w(TAG, "Error detecting thermal hardware capabilities, using standard 9Hz: ${e.message}")
+                Log.w(
+                    TAG,
+                    "Error detecting thermal hardware capabilities, using standard 9Hz: ${e.message}"
+                )
                 IR_FRAME_RATE_STANDARD
             }
         }
@@ -428,17 +431,18 @@ class ThermalCameraRecorder(
             val existingSessionDirectory = sessionDirectory
             val existingSessionMetadata = sessionMetadata
 
-            val recordingSuccess = if (existingSessionDirectory.isNotEmpty() && existingSessionMetadata != null) {
-                Log.d(TAG, "Reusing existing session directory: $existingSessionDirectory")
-                startRecording(existingSessionDirectory, existingSessionMetadata)
-            } else {
-                Log.d(TAG, "No existing session found, creating new session for recovery")
-                val sessionManager = SessionDirectoryManager(context)
-                val sessionId = sessionManager.generateSessionId()
-                val sessionDir = sessionManager.createSessionDirectory(sessionId)
-                val newSessionMetadata = SessionMetadata.createSessionStart(sessionId)
-                startRecording(sessionDir.rootDir.absolutePath, newSessionMetadata)
-            }
+            val recordingSuccess =
+                if (existingSessionDirectory.isNotEmpty() && existingSessionMetadata != null) {
+                    Log.d(TAG, "Reusing existing session directory: $existingSessionDirectory")
+                    startRecording(existingSessionDirectory, existingSessionMetadata)
+                } else {
+                    Log.d(TAG, "No existing session found, creating new session for recovery")
+                    val sessionManager = SessionDirectoryManager(context)
+                    val sessionId = sessionManager.generateSessionId()
+                    val sessionDir = sessionManager.createSessionDirectory(sessionId)
+                    val newSessionMetadata = SessionMetadata.createSessionStart(sessionId)
+                    startRecording(sessionDir.rootDir.absolutePath, newSessionMetadata)
+                }
 
             Log.d(TAG, "Thermal recording restart result: $recordingSuccess")
             recordingSuccess
@@ -473,7 +477,13 @@ class ThermalCameraRecorder(
             !hasUsbPermission -> "USB permission required for thermal camera"
             !isIRCameraConnected -> "Thermal camera not connected - using simulation"
             isSimulationMode -> "Running in simulation mode"
-            _isRecording.get() -> "Recording thermal data at ${String.format("%.1f", thermalFrameRate)}Hz"
+            _isRecording.get() -> "Recording thermal data at ${
+                String.format(
+                    "%.1f",
+                    thermalFrameRate
+                )
+            }Hz"
+
             else -> "Thermal camera ready"
         }
     }
@@ -895,11 +905,13 @@ class ThermalCameraRecorder(
                                     fwBuildVersionInfoBytes
                                 )
 
-                                val firmwareVersion = String(fwBuildVersionInfoBytes.copyOfRange(0, 8))
+                                val firmwareVersion =
+                                    String(fwBuildVersionInfoBytes.copyOfRange(0, 8))
                                 Log.d(TAG, "Device firmware version: $firmwareVersion")
 
                                 // Check if this is a Mini256 device (TS001) equivalent to reference
-                                val isTS001Device = firmwareVersion.contains("Mini256", ignoreCase = true)
+                                val isTS001Device =
+                                    firmwareVersion.contains("Mini256", ignoreCase = true)
                                 Log.d(TAG, "Is TS001 device: $isTS001Device")
 
                                 // Get current gain settings (equivalent to reference)
@@ -915,7 +927,10 @@ class ThermalCameraRecorder(
                                     com.energy.iruvc.utils.CommonParams.GainStatus.LOW_GAIN
                                 }
 
-                                Log.d(TAG, "Current gain status: $currentGainStatus (value=${gainValue[0]})")
+                                Log.d(
+                                    TAG,
+                                    "Current gain status: $currentGainStatus (value=${gainValue[0]})"
+                                )
 
                             } catch (e: Exception) {
                                 Log.w(TAG, "Error configuring IRCMD device settings", e)
@@ -924,39 +939,40 @@ class ThermalCameraRecorder(
                     }
                 }
 
-                val usbMonitorCallback = object : com.mpdc4gsr.libunified.ir.utils.USBMonitorCallback {
-                    override fun onAttach() {
-                        Log.d(TAG, "USB thermal camera attached")
+                val usbMonitorCallback =
+                    object : com.mpdc4gsr.libunified.ir.utils.USBMonitorCallback {
+                        override fun onAttach() {
+                            Log.d(TAG, "USB thermal camera attached")
+                        }
+
+                        override fun onGranted() {
+                            Log.d(TAG, "USB thermal camera permission granted")
+                        }
+
+                        override fun onConnect() {
+                            Log.d(TAG, "USB thermal camera connected")
+                        }
+
+                        override fun onDisconnect() {
+                            Log.d(TAG, "USB thermal camera disconnected")
+                        }
+
+                        override fun onDettach() {
+                            Log.w(TAG, "🔌 USB thermal camera detached")
+                            isIRCameraConnected = false
+
+
+                            handleThermalError(
+                                "USB Device",
+                                "Thermal camera unplugged during operation",
+                                isRecoverable = false
+                            )
+                        }
+
+                        override fun onCancel() {
+                            Log.d(TAG, "USB thermal camera connection cancelled")
+                        }
                     }
-
-                    override fun onGranted() {
-                        Log.d(TAG, "USB thermal camera permission granted")
-                    }
-
-                    override fun onConnect() {
-                        Log.d(TAG, "USB thermal camera connected")
-                    }
-
-                    override fun onDisconnect() {
-                        Log.d(TAG, "USB thermal camera disconnected")
-                    }
-
-                    override fun onDettach() {
-                        Log.w(TAG, "🔌 USB thermal camera detached")
-                        isIRCameraConnected = false
-
-
-                        handleThermalError(
-                            "USB Device",
-                            "Thermal camera unplugged during operation",
-                            isRecoverable = false
-                        )
-                    }
-
-                    override fun onCancel() {
-                        Log.d(TAG, "USB thermal camera connection cancelled")
-                    }
-                }
 
 
                 val syncBitmap = com.energy.iruvc.utils.SynchronizedBitmap()
@@ -984,7 +1000,10 @@ class ThermalCameraRecorder(
 
                                     val thermalData =
                                         if (ircamEngine != null && isTopdonSdkInitialized) {
-                                            extractRealThermalDataFromEngine(timestampRecord.systemNanos, frameNumber)
+                                            extractRealThermalDataFromEngine(
+                                                timestampRecord.systemNanos,
+                                                frameNumber
+                                            )
                                         } else {
                                             extractThermalDataFromBitmap(
                                                 bitmap,
@@ -992,7 +1011,11 @@ class ThermalCameraRecorder(
                                                 frameNumber
                                             )
                                         }
-                                    processRealThermalFrameData(thermalData, frameNumber, timestampRecord)
+                                    processRealThermalFrameData(
+                                        thermalData,
+                                        frameNumber,
+                                        timestampRecord
+                                    )
                                 }
                             }
 
@@ -1035,7 +1058,8 @@ class ThermalCameraRecorder(
                     try {
                         // Set up image and temperature data sources (equivalent to reference)
                         val imageDataBuffer = ByteArray(IR_CAMERA_WIDTH * IR_CAMERA_HEIGHT * 2)
-                        val temperatureDataBuffer = ByteArray(IR_CAMERA_WIDTH * IR_CAMERA_HEIGHT * 2)
+                        val temperatureDataBuffer =
+                            ByteArray(IR_CAMERA_WIDTH * IR_CAMERA_HEIGHT * 2)
 
                         iruvctcInstance.setImageSrc(imageDataBuffer)
                         iruvctcInstance.setTemperatureSrc(temperatureDataBuffer)
@@ -1070,7 +1094,10 @@ class ThermalCameraRecorder(
                 System.loadLibrary("ircamera-native")
                 Log.d(TAG, "TC001 native library loaded successfully")
             } catch (e: UnsatisfiedLinkError) {
-                Log.w(TAG, "TC001 native library not available, proceeding with Java-only SDK: ${e.message}")
+                Log.w(
+                    TAG,
+                    "TC001 native library not available, proceeding with Java-only SDK: ${e.message}"
+                )
             }
 
             // Create UvcHandleParam - the library may handle internal configuration
@@ -1103,11 +1130,19 @@ class ThermalCameraRecorder(
 
                                     // Convert thermal data and save frame
                                     val thermalData =
-                                        processRealThermalData(frame, IR_CAMERA_WIDTH, IR_CAMERA_HEIGHT)
+                                        processRealThermalData(
+                                            frame,
+                                            IR_CAMERA_WIDTH,
+                                            IR_CAMERA_HEIGHT
+                                        )
 
                                     // Create proper timestamp record for processing
                                     val timestampRecord = TimestampManager.createTimestampRecord()
-                                    processRealThermalFrameData(thermalData, frameNumber, timestampRecord)
+                                    processRealThermalFrameData(
+                                        thermalData,
+                                        frameNumber,
+                                        timestampRecord
+                                    )
 
                                     // Save frame image if configured
                                     if (saveFrameImages) {
@@ -1121,7 +1156,11 @@ class ThermalCameraRecorder(
                             if (previewCallback != null && frame != null) {
                                 recordingScope.launch {
                                     val thermalData =
-                                        processRealThermalData(frame, IR_CAMERA_WIDTH, IR_CAMERA_HEIGHT)
+                                        processRealThermalData(
+                                            frame,
+                                            IR_CAMERA_WIDTH,
+                                            IR_CAMERA_HEIGHT
+                                        )
                                     val previewBitmap =
                                         generateThermalPreviewBitmap(
                                             thermalData,
@@ -1167,16 +1206,23 @@ class ThermalCameraRecorder(
                         Log.d(TAG, "Using real thermal data from SDK frame callback")
                         processRealThermalData(latestFrame, IR_CAMERA_WIDTH, IR_CAMERA_HEIGHT)
                     } else {
-                        Log.w(TAG, "No recent SDK frame available, using calibrated simulation with SDK context")
+                        Log.w(
+                            TAG,
+                            "No recent SDK frame available, using calibrated simulation with SDK context"
+                        )
                         // Generate realistic thermal data that represents what real SDK would provide
                         // This uses enhanced simulation with proper thermal characteristics
-                        val simulatedData = generateAdvancedSimulatedThermalData(timestamp, frameNumber)
+                        val simulatedData =
+                            generateAdvancedSimulatedThermalData(timestamp, frameNumber)
 
                         // Apply SDK-specific calibration corrections to make it more realistic
                         applySDKCalibrationCorrections(simulatedData)
                     }
                 } catch (e: Exception) {
-                    Log.w(TAG, "Error accessing real SDK data, falling back to enhanced simulation: ${e.message}")
+                    Log.w(
+                        TAG,
+                        "Error accessing real SDK data, falling back to enhanced simulation: ${e.message}"
+                    )
                     generateAdvancedSimulatedThermalData(timestamp, frameNumber)
                 }
 
@@ -1679,7 +1725,8 @@ class ThermalCameraRecorder(
                 val imageFile = File(thermalImagesDirectory, filename)
 
                 // Convert thermal data to bitmap and save as PNG
-                val bitmap = generateThermalPreviewBitmap(thermalData, IR_CAMERA_WIDTH, IR_CAMERA_HEIGHT)
+                val bitmap =
+                    generateThermalPreviewBitmap(thermalData, IR_CAMERA_WIDTH, IR_CAMERA_HEIGHT)
                 if (bitmap != null) {
                     imageFile.outputStream().use { outputStream ->
                         bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
@@ -2147,7 +2194,10 @@ class ThermalCameraRecorder(
                     } else {
                         consecutiveErrors++
                         if (consecutiveErrors >= maxConsecutiveErrors) {
-                            Log.e(TAG, "Too many consecutive TC001 capture failures, switching to simulation")
+                            Log.e(
+                                TAG,
+                                "Too many consecutive TC001 capture failures, switching to simulation"
+                            )
                             handleThermalError(
                                 "Frame Capture",
                                 "Continuous TC001 frame capture failed $maxConsecutiveErrors times",
@@ -2255,7 +2305,11 @@ class ThermalCameraRecorder(
 
                                 // Create proper timestamp record for processing
                                 val timestampRecord = TimestampManager.createTimestampRecord()
-                                processRealThermalFrameData(thermalData, frameNumber, timestampRecord)
+                                processRealThermalFrameData(
+                                    thermalData,
+                                    frameNumber,
+                                    timestampRecord
+                                )
 
                             } catch (e: Exception) {
                                 Log.w(TAG, "Error processing thermal frame", e)
@@ -2270,7 +2324,11 @@ class ThermalCameraRecorder(
                                 val thermalData =
                                     processRealThermalData(frame, IR_CAMERA_WIDTH, IR_CAMERA_HEIGHT)
                                 val previewBitmap =
-                                    generateThermalPreviewBitmap(thermalData, IR_CAMERA_WIDTH, IR_CAMERA_HEIGHT)
+                                    generateThermalPreviewBitmap(
+                                        thermalData,
+                                        IR_CAMERA_WIDTH,
+                                        IR_CAMERA_HEIGHT
+                                    )
                                 previewCallback?.onThermalFrame(previewBitmap, thermalData)
                             } catch (e: Exception) {
                                 Log.w(TAG, "Error generating thermal preview", e)
@@ -2331,7 +2389,11 @@ class ThermalCameraRecorder(
     }
 
 
-    private fun handleThermalError(errorType: String, errorMessage: String, isRecoverable: Boolean = true) {
+    private fun handleThermalError(
+        errorType: String,
+        errorMessage: String,
+        isRecoverable: Boolean = true
+    ) {
         Log.e(TAG, "🔥 TC001 thermal camera error [$errorType]: $errorMessage")
 
         recordingScope.launch {
@@ -2448,9 +2510,13 @@ class ThermalCameraRecorder(
 
                     // Diagnostic check 2: Verify USB connection
                     if (!isIRCameraConnected) {
-                        Log.w(TAG, "Frame error caused by USB disconnection - checking device status")
+                        Log.w(
+                            TAG,
+                            "Frame error caused by USB disconnection - checking device status"
+                        )
                         thermalCameraDevice?.let { device ->
-                            val usbManager = context.getSystemService(Context.USB_SERVICE) as UsbManager
+                            val usbManager =
+                                context.getSystemService(Context.USB_SERVICE) as UsbManager
                             if (usbManager.hasPermission(device)) {
                                 Log.i(TAG, "USB permission still valid - attempting reconnection")
                                 val usbRecovered = initializeRealThermalCamera(device)
@@ -2877,7 +2943,8 @@ class ThermalCameraRecorder(
 
                 val vendorId = thermalCameraDevice!!.vendorId.toString(16)
                 val productId = thermalCameraDevice!!.productId.toString(16)
-                val deviceName = thermalCameraDevice!!.deviceName?.hashCode()?.toString(16) ?: "0000"
+                val deviceName =
+                    thermalCameraDevice!!.deviceName?.hashCode()?.toString(16) ?: "0000"
                 "TC001-${vendorId}-${productId}-${deviceName.takeLast(4)}"
             } else {
                 "UNKNOWN-DEVICE-NOT-CONNECTED"
@@ -3068,7 +3135,10 @@ class ThermalCameraRecorder(
 
                 val disconnectedDevice = thermalCameraDevice
                 if (disconnectedDevice != null) {
-                    Log.w(TAG, "🔌 Thermal camera device disconnected - implementing enhanced recovery")
+                    Log.w(
+                        TAG,
+                        "🔌 Thermal camera device disconnected - implementing enhanced recovery"
+                    )
 
 
                     handleThermalError(
@@ -3620,7 +3690,10 @@ class ThermalCameraRecorder(
                             put("dimensions", "[frame, height, width]")
                             put("height", IR_CAMERA_HEIGHT)
                             put("width", IR_CAMERA_WIDTH)
-                            put("note", "Temperature matrices export requires additional implementation")
+                            put(
+                                "note",
+                                "Temperature matrices export requires additional implementation"
+                            )
                         })
                     }
                 })

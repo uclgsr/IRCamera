@@ -64,10 +64,18 @@ class ReportCreateFirstActivity : BaseActivity(), View.OnClickListener {
     private val etReportWatermark: android.widget.EditText by lazy { findViewById(R.id.et_report_watermark) }
     private val switchReportWatermark: android.widget.Switch by lazy { findViewById(R.id.switch_report_watermark) }
     private val etAmbientTemperature: android.widget.EditText by lazy { findViewById(R.id.et_ambient_temperature) }
-    private val tipSeekHumidity: com.mpdc4gsr.libunified.ui.widget.TipsSeekBar by lazy { findViewById(R.id.tip_seek_humidity) }
+    private val tipSeekHumidity: com.mpdc4gsr.libunified.ui.widget.TipsSeekBar by lazy {
+        findViewById(
+            R.id.tip_seek_humidity
+        )
+    }
     private val switchAmbientHumidity: android.widget.Switch by lazy { findViewById(R.id.switch_ambient_humidity) }
     private val switchAmbientTemperature: android.widget.Switch by lazy { findViewById(R.id.switch_ambient_temperature) }
-    private val tipSeekEmissivity: com.mpdc4gsr.libunified.ui.widget.TipsSeekBar by lazy { findViewById(R.id.tip_seek_emissivity) }
+    private val tipSeekEmissivity: com.mpdc4gsr.libunified.ui.widget.TipsSeekBar by lazy {
+        findViewById(
+            R.id.tip_seek_emissivity
+        )
+    }
     private val switchEmissivity: android.widget.Switch by lazy { findViewById(R.id.switch_emissivity) }
     private val etTestDistance: android.widget.EditText by lazy { findViewById(R.id.et_test_distance) }
     private val switchTestDistance: android.widget.Switch by lazy { findViewById(R.id.switch_test_distance) }
@@ -199,7 +207,10 @@ class ReportCreateFirstActivity : BaseActivity(), View.OnClickListener {
                 val reportConditionBean = buildReportCondition()
                 val imageTempBean: ImageTempBean? =
                     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
-                        intent.getParcelableExtra(ExtraKeyConfig.IMAGE_TEMP_BEAN, ImageTempBean::class.java)
+                        intent.getParcelableExtra(
+                            ExtraKeyConfig.IMAGE_TEMP_BEAN,
+                            ImageTempBean::class.java
+                        )
                     } else {
                         @Suppress("DEPRECATION")
                         intent.getParcelableExtra(ExtraKeyConfig.IMAGE_TEMP_BEAN)
@@ -332,7 +343,10 @@ class ReportCreateFirstActivity : BaseActivity(), View.OnClickListener {
             val timeStr = "$year-$month-$day $hour:$minute:$second"
             val pattern = "yyyy-MM-dd HH:mm:ss"
             val time: Long =
-                SimpleDateFormat(pattern, Locale.getDefault()).parse(timeStr, ParsePosition(0))?.time ?: 0L
+                SimpleDateFormat(pattern, Locale.getDefault()).parse(
+                    timeStr,
+                    ParsePosition(0)
+                )?.time ?: 0L
             tvReportDate.text = TimeUtils.millis2String(time, "yyyy.MM.dd HH:mm")
             startTime = time
         }

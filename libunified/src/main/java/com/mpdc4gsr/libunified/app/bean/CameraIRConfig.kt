@@ -6,8 +6,11 @@ package com.mpdc4gsr.libunified.app.bean
  * @param continuaTime 连续拍照时间间隔，单位毫秒
  * @param count 连续拍照数量
  */
-data class ContinuousBean(var isOpen: Boolean = false, var continuaTime: Long = 1000, var count: Int = 3)
-
+data class ContinuousBean(
+    var isOpen: Boolean = false,
+    var continuaTime: Long = 1000,
+    var count: Int = 3
+)
 
 
 class ObserveBean {
@@ -32,12 +35,12 @@ class ObserveBean {
         const val TYPE_TARGET_COLOR_BLUE = 22 //蓝色
         const val TYPE_TARGET_COLOR_BLACK = 23 //黑色
         const val TYPE_TARGET_COLOR_WHITE = 24 //白色
-        
+
         const val TYPE_TARGET_AREA = 30
         const val TYPE_TARGET_LINE = 31
         const val TYPE_TARGET_SPOT = 32
     }
-    
+
     var observeType: Int = TYPE_NONE
     var observeX: Float = 0f
     var observeY: Float = 0f

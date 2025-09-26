@@ -46,7 +46,8 @@ class BluetoothClient(
     private var readerJob: Job? = null
 
     private val _connectionState = MutableStateFlow(CommandConnection.ConnectionState.DISCONNECTED)
-    override val connectionState: StateFlow<CommandConnection.ConnectionState> = _connectionState.asStateFlow()
+    override val connectionState: StateFlow<CommandConnection.ConnectionState> =
+        _connectionState.asStateFlow()
 
     private var messageCallback: ((String) -> Unit)? = null
     private var connectionCallback: ((CommandConnection.ConnectionState) -> Unit)? = null
@@ -54,7 +55,10 @@ class BluetoothClient(
     override suspend fun connect(): Boolean = withContext(Dispatchers.IO) {
         try {
             if (isConnected()) {
-                Log.i(TAG, "Already connected to ${bluetoothDevice.name} (${bluetoothDevice.address})")
+                Log.i(
+                    TAG,
+                    "Already connected to ${bluetoothDevice.name} (${bluetoothDevice.address})"
+                )
                 return@withContext true
             }
 
@@ -65,7 +69,10 @@ class BluetoothClient(
                 return@withContext false
             }
 
-            Log.i(TAG, "Connecting to PC via Bluetooth: ${bluetoothDevice.name} (${bluetoothDevice.address})")
+            Log.i(
+                TAG,
+                "Connecting to PC via Bluetooth: ${bluetoothDevice.name} (${bluetoothDevice.address})"
+            )
             _connectionState.value = CommandConnection.ConnectionState.CONNECTING
             connectionCallback?.invoke(CommandConnection.ConnectionState.CONNECTING)
 

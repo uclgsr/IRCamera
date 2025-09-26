@@ -62,8 +62,16 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
             R.id.fence_line_view
         )
     }
-    private val fenceView by lazy { requireView().findViewById<com.mpdc4gsr.module.thermalunified.stubs.FenceView>(R.id.fence_view) }
-    private val tempCameraView by lazy { requireView().findViewById<com.mpdc4gsr.libunified.ui.camera.CameraView>(R.id.temp_camera_view) }
+    private val fenceView by lazy {
+        requireView().findViewById<com.mpdc4gsr.module.thermalunified.stubs.FenceView>(
+            R.id.fence_view
+        )
+    }
+    private val tempCameraView by lazy {
+        requireView().findViewById<com.mpdc4gsr.libunified.ui.camera.CameraView>(
+            R.id.temp_camera_view
+        )
+    }
 
     override fun initContentView() = R.layout.fragment_thermal
 

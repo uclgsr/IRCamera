@@ -266,7 +266,11 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
     protected var isOpenAmplify = SaveSettingUtil.isOpenAmplify
 
     private val titleView by lazy { findViewById<MainTitleView>(R.id.title_view) }
-    protected val thermalRecyclerNight by lazy { findViewById<com.mpdc4gsr.libunified.app.menu.MenuSecondView>(R.id.thermal_recycler_night) }
+    protected val thermalRecyclerNight by lazy {
+        findViewById<com.mpdc4gsr.libunified.app.menu.MenuSecondView>(
+            R.id.thermal_recycler_night
+        )
+    }
     private val thermalLay by lazy { findViewById<ConstraintLayout>(R.id.thermal_lay) }
     protected val tvTypeInd by lazy { findViewById<TextView>(R.id.tv_type_ind) }
 
@@ -283,7 +287,11 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
             R.id.cl_seek_bar
         )
     }
-    protected open val cameraPreview by lazy { findViewById<com.mpdc4gsr.module.thermalunified.stubs.CameraPreView>(R.id.cameraPreview) }
+    protected open val cameraPreview by lazy {
+        findViewById<com.mpdc4gsr.module.thermalunified.stubs.CameraPreView>(
+            R.id.cameraPreview
+        )
+    }
     private val distance_measure_view by lazy { findViewById<View>(R.id.distance_measure_view) }
     private val zoomView by lazy { findViewById<View>(R.id.zoomView) }
     protected open val temperatureSeekbar by lazy {
@@ -297,7 +305,8 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
     private val tvTitleObserve by lazy { findViewById<TextView>(R.id.tv_title_observe) }
 
 
-    protected var compassView: com.mpdc4gsr.module.thermalunified.view.compass.LinearCompassView? = null
+    protected var compassView: com.mpdc4gsr.module.thermalunified.view.compass.LinearCompassView? =
+        null
 
 
     private val bitmapWidth: Int

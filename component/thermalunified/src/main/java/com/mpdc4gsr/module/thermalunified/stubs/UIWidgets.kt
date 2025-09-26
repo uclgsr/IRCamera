@@ -145,7 +145,8 @@ class RangeSeekBar @JvmOverloads constructor(
         // Calculate thumb positions
         val trackWidth = width - paddingStart - paddingEnd
         val leftThumbX = paddingStart + (leftValue - minValue) / (maxValue - minValue) * trackWidth
-        val rightThumbX = paddingStart + (rightValue - minValue) / (maxValue - minValue) * trackWidth
+        val rightThumbX =
+            paddingStart + (rightValue - minValue) / (maxValue - minValue) * trackWidth
 
         // Draw thumbs
         canvas.drawCircle(leftThumbX, y, thumbRadius, thumbPaint)
@@ -156,7 +157,8 @@ class RangeSeekBar @JvmOverloads constructor(
         if (!isEnabled) return false
         val trackWidth = width - paddingStart - paddingEnd
         val leftThumbX = paddingStart + (leftValue - minValue) / (maxValue - minValue) * trackWidth
-        val rightThumbX = paddingStart + (rightValue - minValue) / (maxValue - minValue) * trackWidth
+        val rightThumbX =
+            paddingStart + (rightValue - minValue) / (maxValue - minValue) * trackWidth
 
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
@@ -180,7 +182,13 @@ class RangeSeekBar @JvmOverloads constructor(
                         rightValue = newValue.coerceIn(leftValue, maxValue)
                     }
 
-                    onRangeChangedListener?.onRangeChanged(this, leftValue, rightValue, true, tempMode)
+                    onRangeChangedListener?.onRangeChanged(
+                        this,
+                        leftValue,
+                        rightValue,
+                        true,
+                        tempMode
+                    )
                     invalidate()
                     return true
                 }

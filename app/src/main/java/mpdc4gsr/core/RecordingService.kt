@@ -64,17 +64,26 @@ class RecordingService : LifecycleService() {
         private const val SERVICE_TYPE = "_ircamera._tcp."
         private const val SERVICE_NAME = "IRCamera-Android"
 
-        const val ACTION_START_RECORDING = "${com.csl.irCamera.BuildConfig.APPLICATION_ID}.START_RECORDING"
-        const val ACTION_STOP_RECORDING = "${com.csl.irCamera.BuildConfig.APPLICATION_ID}.STOP_RECORDING"
-        const val ACTION_ADD_SYNC_MARKER = "${com.csl.irCamera.BuildConfig.APPLICATION_ID}.ADD_SYNC_MARKER"
-        const val ACTION_START_SERVER = "${com.csl.irCamera.BuildConfig.APPLICATION_ID}.START_SERVER"
+        const val ACTION_START_RECORDING =
+            "${com.csl.irCamera.BuildConfig.APPLICATION_ID}.START_RECORDING"
+        const val ACTION_STOP_RECORDING =
+            "${com.csl.irCamera.BuildConfig.APPLICATION_ID}.STOP_RECORDING"
+        const val ACTION_ADD_SYNC_MARKER =
+            "${com.csl.irCamera.BuildConfig.APPLICATION_ID}.ADD_SYNC_MARKER"
+        const val ACTION_START_SERVER =
+            "${com.csl.irCamera.BuildConfig.APPLICATION_ID}.START_SERVER"
         const val ACTION_STOP_SERVER = "${com.csl.irCamera.BuildConfig.APPLICATION_ID}.STOP_SERVER"
         const val ACTION_CONNECT_PC = "${com.csl.irCamera.BuildConfig.APPLICATION_ID}.CONNECT_PC"
-        const val ACTION_DISCONNECT_PC = "${com.csl.irCamera.BuildConfig.APPLICATION_ID}.DISCONNECT_PC"
-        const val ACTION_CONNECT_PC_CLIENT = "${com.csl.irCamera.BuildConfig.APPLICATION_ID}.CONNECT_PC_CLIENT"
-        const val ACTION_DISCONNECT_PC_CLIENT = "${com.csl.irCamera.BuildConfig.APPLICATION_ID}.DISCONNECT_PC_CLIENT"
-        const val ACTION_CONNECT_PC_BLUETOOTH = "${com.csl.irCamera.BuildConfig.APPLICATION_ID}.CONNECT_PC_BLUETOOTH"
-        const val ACTION_START_DISCOVERY = "${com.csl.irCamera.BuildConfig.APPLICATION_ID}.START_DISCOVERY"
+        const val ACTION_DISCONNECT_PC =
+            "${com.csl.irCamera.BuildConfig.APPLICATION_ID}.DISCONNECT_PC"
+        const val ACTION_CONNECT_PC_CLIENT =
+            "${com.csl.irCamera.BuildConfig.APPLICATION_ID}.CONNECT_PC_CLIENT"
+        const val ACTION_DISCONNECT_PC_CLIENT =
+            "${com.csl.irCamera.BuildConfig.APPLICATION_ID}.DISCONNECT_PC_CLIENT"
+        const val ACTION_CONNECT_PC_BLUETOOTH =
+            "${com.csl.irCamera.BuildConfig.APPLICATION_ID}.CONNECT_PC_BLUETOOTH"
+        const val ACTION_START_DISCOVERY =
+            "${com.csl.irCamera.BuildConfig.APPLICATION_ID}.START_DISCOVERY"
 
         const val EXTRA_SESSION_DIRECTORY = "session_directory"
         const val EXTRA_MARKER_TYPE = "marker_type"
@@ -142,7 +151,10 @@ class RecordingService : LifecycleService() {
             context.startService(intent)
         }
 
-        fun connectToPCBluetooth(context: Context, bluetoothDevice: android.bluetooth.BluetoothDevice) {
+        fun connectToPCBluetooth(
+            context: Context,
+            bluetoothDevice: android.bluetooth.BluetoothDevice
+        ) {
             val intent = Intent(context, RecordingService::class.java).apply {
                 action = ACTION_CONNECT_PC_BLUETOOTH
                 putExtra(EXTRA_BLUETOOTH_DEVICE, bluetoothDevice)
@@ -428,12 +440,16 @@ class RecordingService : LifecycleService() {
             }
 
             ACTION_CONNECT_PC_BLUETOOTH -> {
-                val bluetoothDevice = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
-                    intent.getParcelableExtra(EXTRA_BLUETOOTH_DEVICE, android.bluetooth.BluetoothDevice::class.java)
-                } else {
-                    @Suppress("DEPRECATION")
-                    intent.getParcelableExtra(EXTRA_BLUETOOTH_DEVICE)
-                }
+                val bluetoothDevice =
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+                        intent.getParcelableExtra(
+                            EXTRA_BLUETOOTH_DEVICE,
+                            android.bluetooth.BluetoothDevice::class.java
+                        )
+                    } else {
+                        @Suppress("DEPRECATION")
+                        intent.getParcelableExtra(EXTRA_BLUETOOTH_DEVICE)
+                    }
                 if (bluetoothDevice != null) {
                     connectToPCBluetooth(bluetoothDevice)
                 }
@@ -981,7 +997,10 @@ class RecordingService : LifecycleService() {
                 // Perform recovery
                 val recoveryResult = crashRecoveryManager.recoverCrashedSession(recoveredSession)
                 if (recoveryResult.success) {
-                    Log.i(TAG, "Successfully recovered crashed session: ${recoveredSession.sessionId}")
+                    Log.i(
+                        TAG,
+                        "Successfully recovered crashed session: ${recoveredSession.sessionId}"
+                    )
                     Log.i(TAG, "Recovery actions performed: ${recoveryResult.recoveryActions.size}")
 
                     structuredLogger.log(
@@ -1208,7 +1227,10 @@ class RecordingService : LifecycleService() {
                         structuredLogger.logConnection(
                             "pc_client_connected",
                             clientId,
-                            mapOf("client_address" to (clientSocket.inetAddress.hostAddress ?: "unknown"))
+                            mapOf(
+                                "client_address" to (clientSocket.inetAddress.hostAddress
+                                    ?: "unknown")
+                            )
                         )
                         handleNewClientConnection(clientSocket, clientId)
                         withContext(Dispatchers.Main) {
@@ -1520,7 +1542,10 @@ class RecordingService : LifecycleService() {
                     }
                 } catch (e: Exception) {
                     Log.e(TAG, "Failed to start recording via PC command", e)
-                    return ProtocolHandler.CommandResult(false, "Start recording failed: ${e.message}")
+                    return ProtocolHandler.CommandResult(
+                        false,
+                        "Start recording failed: ${e.message}"
+                    )
                 }
             }
 
@@ -1548,14 +1573,18 @@ class RecordingService : LifecycleService() {
                     }
                 } catch (e: Exception) {
                     Log.e(TAG, "Failed to stop recording via PC command", e)
-                    return ProtocolHandler.CommandResult(false, "Stop recording failed: ${e.message}")
+                    return ProtocolHandler.CommandResult(
+                        false,
+                        "Stop recording failed: ${e.message}"
+                    )
                 }
             }
 
             override suspend fun onSyncRequest(pcTimestamp: Long): ProtocolHandler.SyncResult {
                 return try {
                     val timeManager = mpdc4gsr.utils.TimeManager.getInstance(this@RecordingService)
-                    val phoneTimestamp = timeManager.getCurrentTimestampNs() / 1_000_000 // Convert to ms
+                    val phoneTimestamp =
+                        timeManager.getCurrentTimestampNs() / 1_000_000 // Convert to ms
 
                     Log.d(TAG, "Time sync request: PC=$pcTimestamp, Phone=$phoneTimestamp")
 
