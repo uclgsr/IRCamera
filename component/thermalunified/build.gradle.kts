@@ -79,6 +79,7 @@ dependencies {
     compileOnly(files("../../app/libs/libAC020sdk_USB_IR_1.1.1_2408291439.aar"))
     compileOnly(files("../../app/libs/libirutils_1.2.0_2409241055.aar"))
     compileOnly(files("../../app/libs/libcommon_1.2.0_24052117.aar"))
+    compileOnly(files("../../app/libs/topdon.aar"))
 
     // Core Android libraries
     implementation(libs.androidx.core.ktx)
