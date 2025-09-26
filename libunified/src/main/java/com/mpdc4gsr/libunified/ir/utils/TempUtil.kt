@@ -1,4 +1,4 @@
-package com.infisense.usbir.utils
+package com.mpdc4gsr.libunified.ir.utils
 
 import android.graphics.Point
 import kotlin.math.abs
