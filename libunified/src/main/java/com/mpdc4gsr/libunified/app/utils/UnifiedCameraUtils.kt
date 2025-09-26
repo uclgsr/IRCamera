@@ -113,10 +113,18 @@ object UnifiedCameraUtils {
 
         private fun startCameraThread() {
             cameraThread = Thread {
+                val frameDurationMs = 33L // ~30 FPS
                 while (isRunning && !Thread.currentThread().isInterrupted) {
+                    val frameStart = android.os.SystemClock.elapsedRealtime()
                     try {
                         // Camera processing logic would go here
-                        Thread.sleep(33) // ~30 FPS
+                        // Calculate how long processing took
+                        val frameEnd = android.os.SystemClock.elapsedRealtime()
+                        val elapsed = frameEnd - frameStart
+                        val sleepTime = frameDurationMs - elapsed
+                        if (sleepTime > 0) {
+                            Thread.sleep(sleepTime)
+                        }
                     } catch (e: InterruptedException) {
                         break
                     }
