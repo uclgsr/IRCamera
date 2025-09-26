@@ -1,4 +1,4 @@
-package com.infisense.usbir.utils
+package com.mpdc4gsr.libunified.ir.utils
 
 import android.widget.Switch
 import com.energy.iruvc.utils.CommonParams
@@ -143,6 +143,8 @@ object PseudocodeUtils {
                 9
             }
 
+
+
             CommonParams.PseudoColorType.PSEUDO_10 -> {
                 10
             }
@@ -158,4 +160,4 @@ object PseudocodeUtils {
     }
 
 
-}
+} // The file should end here.
