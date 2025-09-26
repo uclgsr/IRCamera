@@ -22,6 +22,8 @@ import com.mpdc4gsr.libunified.app.dialog.TipDialog;
 import com.mpdc4gsr.libunified.app.lms.LMS;
 import com.mpdc4gsr.libunified.app.lms.activity.LmsUpdateDialog;
 import com.mpdc4gsr.libunified.app.lms.bean.AppInfoBean;
+import com.mpdc4gsr.libunified.app.lms.bean.CommonBean;
+import com.mpdc4gsr.libunified.app.lms.network.ResponseBean;
 import com.mpdc4gsr.libunified.app.lms.utils.NetworkUtil;
 import com.mpdc4gsr.libunified.app.lms.weiget.TToast;
 import com.mpdc4gsr.libunified.app.lms.xutils.common.Callback;
@@ -60,8 +62,10 @@ public class AppVersionUtil {
             TToast.shortToast(mContext, R.string.lms_setting_http_error);
             return;
         }
-        LMS.getInstance().checkAppUpdate(commonBean -> {
-            if (commonBean.code == SUCCESS) {
+        LMS.getInstance().checkAppUpdate(response -> {
+            // Passing null as the second parameter because no additional data is required for conversion in this context.
+            CommonBean commonBean = ResponseBean.convertCommonBean(response, null);
+            if (commonBean.code.equals(SUCCESS)) {
                 AppInfoBean appInfoBean = LMS.getInstance().getUpdateAppInfoBean();
                 XLog.w("bcf", "appUpdate Information:" + GsonUtils.toJson(appInfoBean));
                 if (appInfoBean != null) {
