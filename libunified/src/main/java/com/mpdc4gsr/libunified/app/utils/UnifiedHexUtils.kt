@@ -104,7 +104,7 @@ object UnifiedHexUtils {
         val result = StringBuilder()
         for (i in bytes.indices step bytesPerLine) {
             result.append(String.format("%04X: ", i))
-            
+
             // Hex representation
             for (j in 0 until bytesPerLine) {
                 if (i + j < bytes.size) {
@@ -113,9 +113,9 @@ object UnifiedHexUtils {
                     result.append("   ")
                 }
             }
-            
+
             result.append(" | ")
-            
+
             // ASCII representation
             for (j in 0 until bytesPerLine) {
                 if (i + j < bytes.size) {
@@ -125,7 +125,7 @@ object UnifiedHexUtils {
                     result.append(' ')
                 }
             }
-            
+
             result.append("\n")
         }
         return result.toString()

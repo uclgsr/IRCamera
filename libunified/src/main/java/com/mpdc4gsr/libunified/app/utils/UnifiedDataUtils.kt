@@ -24,7 +24,11 @@ object UnifiedDataUtils {
     /**
      * Convert Bitmap to ByteArray
      */
-    fun bitmapToByteArray(bitmap: Bitmap, format: Bitmap.CompressFormat = Bitmap.CompressFormat.PNG, quality: Int = 100): ByteArray {
+    fun bitmapToByteArray(
+        bitmap: Bitmap,
+        format: Bitmap.CompressFormat = Bitmap.CompressFormat.PNG,
+        quality: Int = 100
+    ): ByteArray {
         val outputStream = ByteArrayOutputStream()
         bitmap.compress(format, quality, outputStream)
         return outputStream.toByteArray()
@@ -177,12 +181,12 @@ object UnifiedDataUtils {
         val units = arrayOf("B", "KB", "MB", "GB", "TB")
         var size = bytes.toDouble()
         var unitIndex = 0
-        
+
         while (size >= 1024 && unitIndex < units.size - 1) {
             size /= 1024
             unitIndex++
         }
-        
+
         return String.format("%.2f %s", size, units[unitIndex])
     }
 }

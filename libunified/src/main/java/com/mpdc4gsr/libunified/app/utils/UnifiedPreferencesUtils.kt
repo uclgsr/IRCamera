@@ -21,35 +21,35 @@ object UnifiedPreferencesUtils {
         const val FIRST_LAUNCH = "first_launch"
         const val APP_VERSION = "app_version"
         const val LAST_UPDATE_CHECK = "last_update_check"
-        
+
         // Camera settings
         const val CAMERA_RESOLUTION = "camera_resolution"
         const val CAMERA_FRAME_RATE = "camera_frame_rate"
         const val CAMERA_AUTO_FOCUS = "camera_auto_focus"
         const val CAMERA_FLASH_MODE = "camera_flash_mode"
-        
+
         // Thermal settings
         const val THERMAL_UNIT = "thermal_unit"
         const val THERMAL_PALETTE = "thermal_palette"
         const val THERMAL_TEMPERATURE_RANGE = "thermal_temp_range"
         const val THERMAL_EMISSIVITY = "thermal_emissivity"
-        
+
         // GSR settings
         const val GSR_SAMPLING_RATE = "gsr_sampling_rate"
         const val GSR_DEVICE_ADDRESS = "gsr_device_address"
         const val GSR_AUTO_CONNECT = "gsr_auto_connect"
-        
+
         // Network settings
         const val NETWORK_SERVER_IP = "network_server_ip"
         const val NETWORK_SERVER_PORT = "network_server_port"
         const val NETWORK_AUTO_CONNECT = "network_auto_connect"
         const val NETWORK_TIMEOUT = "network_timeout"
-        
+
         // Recording settings
         const val RECORDING_QUALITY = "recording_quality"
         const val RECORDING_AUTO_SAVE = "recording_auto_save"
         const val RECORDING_MAX_DURATION = "recording_max_duration"
-        
+
         // UI settings
         const val UI_THEME = "ui_theme"
         const val UI_LANGUAGE = "ui_language"
@@ -77,7 +77,12 @@ object UnifiedPreferencesUtils {
     /**
      * Get string value
      */
-    fun getString(context: Context, key: String, defaultValue: String = "", prefsName: String = DEFAULT_PREFS_NAME): String {
+    fun getString(
+        context: Context,
+        key: String,
+        defaultValue: String = "",
+        prefsName: String = DEFAULT_PREFS_NAME
+    ): String {
         return try {
             getPreferences(context, prefsName).getString(key, defaultValue) ?: defaultValue
         } catch (e: Exception) {
@@ -123,7 +128,12 @@ object UnifiedPreferencesUtils {
     /**
      * Get boolean value
      */
-    fun getBoolean(context: Context, key: String, defaultValue: Boolean = false, prefsName: String = DEFAULT_PREFS_NAME): Boolean {
+    fun getBoolean(
+        context: Context,
+        key: String,
+        defaultValue: Boolean = false,
+        prefsName: String = DEFAULT_PREFS_NAME
+    ): Boolean {
         return try {
             getPreferences(context, prefsName).getBoolean(key, defaultValue)
         } catch (e: Exception) {
@@ -146,7 +156,12 @@ object UnifiedPreferencesUtils {
     /**
      * Get float value
      */
-    fun getFloat(context: Context, key: String, defaultValue: Float = 0f, prefsName: String = DEFAULT_PREFS_NAME): Float {
+    fun getFloat(
+        context: Context,
+        key: String,
+        defaultValue: Float = 0f,
+        prefsName: String = DEFAULT_PREFS_NAME
+    ): Float {
         return try {
             getPreferences(context, prefsName).getFloat(key, defaultValue)
         } catch (e: Exception) {
@@ -192,7 +207,12 @@ object UnifiedPreferencesUtils {
     /**
      * Get string set
      */
-    fun getStringSet(context: Context, key: String, defaultValue: Set<String> = emptySet(), prefsName: String = DEFAULT_PREFS_NAME): Set<String> {
+    fun getStringSet(
+        context: Context,
+        key: String,
+        defaultValue: Set<String> = emptySet(),
+        prefsName: String = DEFAULT_PREFS_NAME
+    ): Set<String> {
         return try {
             getPreferences(context, prefsName).getStringSet(key, defaultValue) ?: defaultValue
         } catch (e: Exception) {

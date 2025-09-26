@@ -20,11 +20,11 @@ suspend fun NetworkClient.startDiscoveryAsync(): Boolean = suspendCancellableCor
             continuation.resume(success)
         }
     }
-    
+
     startDiscovery(callback)
-    
+
     // Handle cancellation
-    continuation.invokeOnCancellation { 
+    continuation.invokeOnCancellation {
         Log.d("NetworkSuspendExtensions", "Discovery cancelled")
         // Cancel any ongoing discovery operations if needed
     }
@@ -32,7 +32,7 @@ suspend fun NetworkClient.startDiscoveryAsync(): Boolean = suspendCancellableCor
 
 /**
  * Example usage of modern suspend function patterns:
- * 
+ *
  * // Old callback style:
  * networkClient.startDiscovery { success ->
  *     if (success) {

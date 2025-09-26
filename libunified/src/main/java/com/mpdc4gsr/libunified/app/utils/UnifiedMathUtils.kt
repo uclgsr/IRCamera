@@ -55,7 +55,7 @@ object UnifiedMathUtils {
             val j = if (bigEndian) 7 - i else i
             bytes[i] = (value shr (8 * j) and 0xff).toByte()
         }
-        
+
         return if (len > 8) {
             bytes
         } else {
@@ -71,7 +71,7 @@ object UnifiedMathUtils {
     fun splitPackage(src: ByteArray, size: Int): List<ByteArray> {
         val result = mutableListOf<ByteArray>()
         var offset = 0
-        
+
         while (offset < src.size) {
             val chunkSize = minOf(size, src.size - offset)
             val chunk = ByteArray(chunkSize)
@@ -79,7 +79,7 @@ object UnifiedMathUtils {
             result.add(chunk)
             offset += chunkSize
         }
-        
+
         return result
     }
 
@@ -90,12 +90,12 @@ object UnifiedMathUtils {
         val totalSize = src.sumOf { it.size }
         val result = ByteArray(totalSize)
         var offset = 0
-        
+
         for (array in src) {
             System.arraycopy(array, 0, result, offset, array.size)
             offset += array.size
         }
-        
+
         return result
     }
 

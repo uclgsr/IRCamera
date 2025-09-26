@@ -113,7 +113,7 @@ object UnifiedTimeUtils {
     fun isToday(timestamp: Long): Boolean {
         val today = Calendar.getInstance()
         val date = Calendar.getInstance().apply { timeInMillis = timestamp }
-        
+
         return today.get(Calendar.YEAR) == date.get(Calendar.YEAR) &&
                 today.get(Calendar.DAY_OF_YEAR) == date.get(Calendar.DAY_OF_YEAR)
     }

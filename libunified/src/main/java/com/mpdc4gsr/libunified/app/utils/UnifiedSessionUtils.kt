@@ -35,7 +35,7 @@ object UnifiedSessionUtils {
     fun createSessionDirectory(context: Context, sessionName: String? = null): File {
         val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
         val dirName = sessionName?.let { "${it}_$timestamp" } ?: "session_$timestamp"
-        
+
         val sessionDir = File(getSessionsRootDirectory(context), dirName)
         return createSessionDirectoryStructure(sessionDir)
     }
@@ -45,13 +45,13 @@ object UnifiedSessionUtils {
      */
     private fun createSessionDirectoryStructure(sessionDir: File): File {
         sessionDir.mkdirs()
-        
+
         // Create subdirectories
         File(sessionDir, RGB_SUBDIR).mkdirs()
         File(sessionDir, THERMAL_SUBDIR).mkdirs()
         File(sessionDir, SHIMMER_SUBDIR).mkdirs()
         File(sessionDir, METADATA_SUBDIR).mkdirs()
-        
+
         return sessionDir
     }
 
@@ -94,7 +94,12 @@ object UnifiedSessionUtils {
     /**
      * Create session info file
      */
-    fun createSessionInfo(sessionDir: File, sessionId: String, deviceId: String, additionalInfo: Map<String, Any> = emptyMap()): File {
+    fun createSessionInfo(
+        sessionDir: File,
+        sessionId: String,
+        deviceId: String,
+        additionalInfo: Map<String, Any> = emptyMap()
+    ): File {
         val sessionInfo = JSONObject().apply {
             put("sessionId", sessionId)
             put("deviceId", deviceId)
@@ -104,7 +109,7 @@ object UnifiedSessionUtils {
                 put(key, value)
             }
         }
-        
+
         val infoFile = File(sessionDir, SESSION_INFO_FILE)
         infoFile.writeText(sessionInfo.toString(2))
         return infoFile
@@ -143,7 +148,7 @@ object UnifiedSessionUtils {
         val cutoffTime = System.currentTimeMillis() - (olderThanDays * 24 * 60 * 60 * 1000L)
         val sessionsDir = getSessionsRootDirectory(context)
         var deletedCount = 0
-        
+
         sessionsDir.listFiles()?.forEach { sessionDir ->
             if (sessionDir.isDirectory && sessionDir.lastModified() < cutoffTime) {
                 if (sessionDir.deleteRecursively()) {
@@ -151,7 +156,7 @@ object UnifiedSessionUtils {
                 }
             }
         }
-        
+
         return deletedCount
     }
 
@@ -160,7 +165,8 @@ object UnifiedSessionUtils {
      */
     fun listSessionDirectories(context: Context): List<File> {
         val sessionsDir = getSessionsRootDirectory(context)
-        return sessionsDir.listFiles()?.filter { it.isDirectory }?.sortedByDescending { it.lastModified() } ?: emptyList()
+        return sessionsDir.listFiles()?.filter { it.isDirectory }?.sortedByDescending { it.lastModified() }
+            ?: emptyList()
     }
 
     /**
@@ -174,10 +180,10 @@ object UnifiedSessionUtils {
      * Validate session directory structure
      */
     fun validateSessionDirectory(sessionDir: File): Boolean {
-        return sessionDir.exists() && 
-               sessionDir.isDirectory &&
-               File(sessionDir, RGB_SUBDIR).exists() &&
-               File(sessionDir, THERMAL_SUBDIR).exists() &&
-               File(sessionDir, SHIMMER_SUBDIR).exists()
+        return sessionDir.exists() &&
+                sessionDir.isDirectory &&
+                File(sessionDir, RGB_SUBDIR).exists() &&
+                File(sessionDir, THERMAL_SUBDIR).exists() &&
+                File(sessionDir, SHIMMER_SUBDIR).exists()
     }
 }

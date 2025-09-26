@@ -302,12 +302,12 @@ abstract class AbstractScanner implements Scanner {
     public void release() {
         stopScan(false);
         scanListeners.clear();
-    }    private final Runnable stopScanRunnable = () -> stopScan(false);
+    }
 
     /**
      * 是否可搜索
      */
-    protected abstract boolean isReady();
+    protected abstract boolean isReady();    private final Runnable stopScanRunnable = () -> stopScan(false);
 
     /**
      * 执行搜索

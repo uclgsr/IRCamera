@@ -139,10 +139,10 @@ object UnifiedFileUtils {
         return try {
             val sourceFile = File(sourcePath)
             val destFile = File(destPath)
-            
+
             // Create parent directories if they don't exist
             destFile.parentFile?.mkdirs()
-            
+
             sourceFile.copyTo(destFile, overwrite = true)
             true
         } catch (e: Exception) {
@@ -167,11 +167,16 @@ object UnifiedFileUtils {
     /**
      * Save bitmap to file
      */
-    fun saveBitmapToFile(bitmap: Bitmap, filePath: String, format: Bitmap.CompressFormat = Bitmap.CompressFormat.PNG, quality: Int = 100): Boolean {
+    fun saveBitmapToFile(
+        bitmap: Bitmap,
+        filePath: String,
+        format: Bitmap.CompressFormat = Bitmap.CompressFormat.PNG,
+        quality: Int = 100
+    ): Boolean {
         return try {
             val file = File(filePath)
             file.parentFile?.mkdirs()
-            
+
             FileOutputStream(file).use { fos ->
                 bitmap.compress(format, quality, fos)
             }

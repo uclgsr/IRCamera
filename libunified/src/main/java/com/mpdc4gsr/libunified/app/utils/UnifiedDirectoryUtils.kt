@@ -11,7 +11,7 @@ object UnifiedDirectoryUtils {
 
     // Root directory constants
     private const val APP_ROOT_DIR = "IRCamera"
-    
+
     // Feature-based directory structure
     private const val RECORDINGS_DIR = "recordings"
     private const val THERMAL_DIR = "thermal"
@@ -142,7 +142,7 @@ object UnifiedDirectoryUtils {
      */
     fun getDirectorySize(directory: File): Long {
         if (!directory.exists() || !directory.isDirectory) return 0L
-        
+
         var size = 0L
         directory.walkTopDown().forEach { file ->
             if (file.isFile) {

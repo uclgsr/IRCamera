@@ -8,13 +8,13 @@ import java.util.*
 
 /**
  * Unified Package Utilities
- * 
+ *
  * Consolidates package management utilities from across the repository:
  * - Package information retrieval and validation
- * - Version comparison and management  
+ * - Version comparison and management
  * - Application metadata handling
  * - System compatibility checks
- * 
+ *
  * This utility replaces scattered package utilities from:
  * - BleModule package utilities
  * - libapp package management
@@ -68,19 +68,19 @@ object UnifiedPackageUtils {
     fun compareVersions(version1: String, version2: String): Int {
         val v1Parts = version1.split(".").map { it.toIntOrNull() ?: 0 }
         val v2Parts = version2.split(".").map { it.toIntOrNull() ?: 0 }
-        
+
         val maxLength = maxOf(v1Parts.size, v2Parts.size)
-        
+
         for (i in 0 until maxLength) {
             val v1Part = v1Parts.getOrNull(i) ?: 0
             val v2Part = v2Parts.getOrNull(i) ?: 0
-            
+
             when {
                 v1Part < v2Part -> return -1
                 v1Part > v2Part -> return 1
             }
         }
-        
+
         return 0
     }
 
@@ -169,14 +169,14 @@ object UnifiedPackageUtils {
      */
     fun isValidPackageName(packageName: String): Boolean {
         if (packageName.isEmpty()) return false
-        
+
         val parts = packageName.split(".")
         if (parts.size < 2) return false
-        
+
         return parts.all { part ->
-            part.isNotEmpty() && 
-            part.first().isLetter() && 
-            part.all { it.isLetterOrDigit() || it == '_' }
+            part.isNotEmpty() &&
+                    part.first().isLetter() &&
+                    part.all { it.isLetterOrDigit() || it == '_' }
         }
     }
 

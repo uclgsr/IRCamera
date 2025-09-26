@@ -6,13 +6,13 @@ import java.util.*
 
 /**
  * Unified Configuration Utilities
- * 
+ *
  * Consolidates configuration management utilities from across the repository:
  * - INI file parsing and management
  * - Configuration file I/O operations
  * - Settings validation and defaults
  * - System configuration handling
- * 
+ *
  * This utility replaces scattered configuration utilities from:
  * - BleModule IniUtil.java
  * - libunified Config.java and various config utilities
@@ -30,15 +30,15 @@ object UnifiedConfigUtils {
         fun getString(key: String, defaultValue: String = ""): String {
             return properties[key] ?: defaultValue
         }
-        
+
         fun getInt(key: String, defaultValue: Int = 0): Int {
             return properties[key]?.toIntOrNull() ?: defaultValue
         }
-        
+
         fun getBoolean(key: String, defaultValue: Boolean = false): Boolean {
             return properties[key]?.toBooleanStrictOrNull() ?: defaultValue
         }
-        
+
         fun getFloat(key: String, defaultValue: Float = 0f): Float {
             return properties[key]?.toFloatOrNull() ?: defaultValue
         }
@@ -50,20 +50,22 @@ object UnifiedConfigUtils {
     fun parseIniContent(content: String): Map<String, ConfigSection> {
         val sections = mutableMapOf<String, ConfigSection>()
         var currentSection: ConfigSection? = null
-        
+
         content.lines().forEach { line ->
             val trimmedLine = line.trim()
-            
+
             when {
                 trimmedLine.isEmpty() || trimmedLine.startsWith("#") || trimmedLine.startsWith(";") -> {
                     // Skip empty lines and comments
                 }
+
                 trimmedLine.startsWith("[") && trimmedLine.endsWith("]") -> {
                     // Section header
                     val sectionName = trimmedLine.substring(1, trimmedLine.length - 1)
                     currentSection = ConfigSection(sectionName)
                     sections[sectionName] = currentSection
                 }
+
                 trimmedLine.contains("=") -> {
                     // Key-value pair
                     val parts = trimmedLine.split("=", limit = 2)
@@ -75,7 +77,7 @@ object UnifiedConfigUtils {
                 }
             }
         }
-        
+
         return sections
     }
 
@@ -128,9 +130,12 @@ object UnifiedConfigUtils {
     /**
      * Merge configuration sections
      */
-    fun mergeSections(base: Map<String, ConfigSection>, overlay: Map<String, ConfigSection>): Map<String, ConfigSection> {
+    fun mergeSections(
+        base: Map<String, ConfigSection>,
+        overlay: Map<String, ConfigSection>
+    ): Map<String, ConfigSection> {
         val result = base.toMutableMap()
-        
+
         overlay.forEach { (sectionName, overlaySection) ->
             val existingSection = result[sectionName]
             if (existingSection != null) {
@@ -141,7 +146,7 @@ object UnifiedConfigUtils {
                 result[sectionName] = overlaySection.copy()
             }
         }
-        
+
         return result
     }
 
@@ -160,21 +165,22 @@ object UnifiedConfigUtils {
         rules: List<ConfigValidationRule>
     ): List<String> {
         val errors = mutableListOf<String>()
-        
+
         rules.forEach { rule ->
             val section = config[rule.section]
             val value = section?.properties?.get(rule.key)
-            
+
             when {
                 rule.required && value == null -> {
                     errors.add("Required configuration missing: [${rule.section}] ${rule.key}")
                 }
+
                 value != null && !rule.validator(value) -> {
                     errors.add("Invalid configuration value: [${rule.section}] ${rule.key} = $value")
                 }
             }
         }
-        
+
         return errors
     }
 
@@ -183,32 +189,42 @@ object UnifiedConfigUtils {
      */
     fun createDefaultAppConfig(): Map<String, ConfigSection> {
         return mapOf(
-            "app" to ConfigSection("app", mutableMapOf(
-                "version" to "1.0.0",
-                "debug" to "false",
-                "log_level" to "INFO"
-            )),
-            "camera" to ConfigSection("camera", mutableMapOf(
-                "width" to "1920",
-                "height" to "1080",
-                "fps" to "30",
-                "format" to "JPEG"
-            )),
-            "thermal" to ConfigSection("thermal", mutableMapOf(
-                "emissivity" to "0.95",
-                "temperature_unit" to "CELSIUS",
-                "color_palette" to "RAINBOW"
-            )),
-            "gsr" to ConfigSection("gsr", mutableMapOf(
-                "sampling_rate" to "128",
-                "gain" to "1",
-                "range" to "GSR_RANGE_AUTO"
-            )),
-            "network" to ConfigSection("network", mutableMapOf(
-                "server_port" to "8080",
-                "timeout" to "5000",
-                "retry_count" to "3"
-            ))
+            "app" to ConfigSection(
+                "app", mutableMapOf(
+                    "version" to "1.0.0",
+                    "debug" to "false",
+                    "log_level" to "INFO"
+                )
+            ),
+            "camera" to ConfigSection(
+                "camera", mutableMapOf(
+                    "width" to "1920",
+                    "height" to "1080",
+                    "fps" to "30",
+                    "format" to "JPEG"
+                )
+            ),
+            "thermal" to ConfigSection(
+                "thermal", mutableMapOf(
+                    "emissivity" to "0.95",
+                    "temperature_unit" to "CELSIUS",
+                    "color_palette" to "RAINBOW"
+                )
+            ),
+            "gsr" to ConfigSection(
+                "gsr", mutableMapOf(
+                    "sampling_rate" to "128",
+                    "gain" to "1",
+                    "range" to "GSR_RANGE_AUTO"
+                )
+            ),
+            "network" to ConfigSection(
+                "network", mutableMapOf(
+                    "server_port" to "8080",
+                    "timeout" to "5000",
+                    "retry_count" to "3"
+                )
+            )
         )
     }
 
@@ -240,13 +256,13 @@ object UnifiedConfigUtils {
         environment: Environment = Environment.PRODUCTION
     ): Map<String, ConfigSection> {
         val baseConfig = createDefaultAppConfig()
-        
+
         val envConfigFile = when (environment) {
             Environment.DEVELOPMENT -> "config-dev.ini"
             Environment.TESTING -> "config-test.ini"
             Environment.PRODUCTION -> "config-prod.ini"
         }
-        
+
         val envConfig = readIniFromAssets(context, envConfigFile)
         return mergeSections(baseConfig, envConfig)
     }

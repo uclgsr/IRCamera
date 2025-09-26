@@ -53,7 +53,7 @@ object UnifiedTemperatureUtils {
         height: Int
     ): List<Float> {
         val temperatures = mutableListOf<Float>()
-        
+
         val minX = max(0, min(topLeft.x, bottomRight.x))
         val maxX = min(width - 1, max(topLeft.x, bottomRight.x))
         val minY = max(0, min(topLeft.y, bottomRight.y))
@@ -237,7 +237,7 @@ object UnifiedTemperatureUtils {
      */
     private fun getLinePoints(point1: Point, point2: Point): List<Point> {
         val points = mutableListOf<Point>()
-        
+
         if (point1.x == point2.x) {
             // Vertical line
             val startY = min(point1.y, point2.y)
@@ -265,9 +265,9 @@ object UnifiedTemperatureUtils {
 
             while (true) {
                 points.add(Point(x, y))
-                
+
                 if (x == point2.x && y == point2.y) break
-                
+
                 val e2 = 2 * err
                 if (e2 > -dy) {
                     err -= dy
@@ -279,7 +279,7 @@ object UnifiedTemperatureUtils {
                 }
             }
         }
-        
+
         return points
     }
 }
