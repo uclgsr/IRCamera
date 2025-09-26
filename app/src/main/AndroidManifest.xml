@@ -173,40 +173,25 @@
 
         <activity
             android:name="mpdc4gsr.core.ComprehensiveSystemDemo"
-            android:exported="true"
+            android:exported="false"
             android:label="Comprehensive System Demo"
             android:screenOrientation="userPortrait"
-            android:theme="@style/AppTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:theme="@style/AppTheme" />
 
 
         <activity
             android:name="mpdc4gsr.test.EnhancedRecordingSessionTestActivity"
-            android:exported="true"
+            android:exported="false"
             android:label="Enhanced Recording Session Test"
             android:screenOrientation="userPortrait"
-            android:theme="@style/AppTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:theme="@style/AppTheme" />
 
         <activity
             android:name="mpdc4gsr.test.RgbCameraTestActivity"
-            android:exported="true"
+            android:exported="false"
             android:label="RGB Camera Test"
             android:screenOrientation="userPortrait"
-            android:theme="@style/AppTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:theme="@style/AppTheme" />
 
         <activity
             android:name="mpdc4gsr.activities.ClauseActivity"
@@ -215,28 +200,18 @@
         <!-- Network Client Test Activity -->
         <activity
             android:name="mpdc4gsr.activities.NetworkClientTestActivity"
-            android:exported="true"
+            android:exported="false"
             android:label="Network Client Test"
             android:screenOrientation="userPortrait"
-            android:theme="@style/AppTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:theme="@style/AppTheme" />
 
         <!-- Simple Network Test Activity -->
         <activity
             android:name="mpdc4gsr.activities.SimpleNetworkTestActivity"
-            android:exported="true"
+            android:exported="false"
             android:label="Simple Network Test"
             android:screenOrientation="userPortrait"
-            android:theme="@style/AppTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:theme="@style/AppTheme" />
 
         <activity
             android:name="mpdc4gsr.activities.PdfActivity"
