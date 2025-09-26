@@ -305,7 +305,7 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
                 180 -> RotateDegree.DEGREE_0
                 else -> RotateDegree.DEGREE_180
             }
-        CameraPreviewManager.getInstance().imageRotate = imageRotate
+        CameraPreviewManager.getInstance().imageRotate = imageRotate.getValue()
         initCameraSize()
         initUSBMonitorManager()
         DeviceControlManager.getInstance().init()
@@ -340,10 +340,12 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
 
 
 
-        binding.cameraPreview.cameraPreViewCloseListener = {
-            if (isOpenPreview) {
-                popupWindow?.dismiss()
-                cameraPreviewConfig(false)
+        binding.cameraPreview.cameraPreViewCloseListener = object : com.mpdc4gsr.libunified.ui.camera.CameraPreView.CameraPreViewCloseListener {
+            override fun onClose() {
+                if (isOpenPreview) {
+                    popupWindow?.dismiss()
+                    cameraPreviewConfig(false)
+                }
             }
         }
         binding.viewMenuFirst.onTabClickListener = {
@@ -458,8 +460,7 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
                             )
                             if (editMinValue != Float.MIN_VALUE && editMaxValue != Float.MAX_VALUE) {
                                 CameraPreviewManager.getInstance()?.setLimit(
-                                    editMaxValue, editMinValue,
-                                    upColor, downColor,
+                                    editMaxValue, editMinValue
                                 )
                             }
                         } catch (e: Exception) {
@@ -683,9 +684,7 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
                             }
                         CameraPreviewManager.getInstance()?.setLimit(
                             editMaxValue,
-                            editMinValue,
-                            upColor,
-                            downColor,
+                            editMinValue
                         )
                     }
                 }
@@ -784,7 +783,7 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
         editMaxValue = Float.MAX_VALUE
         editMinValue = Float.MIN_VALUE
         CameraPreviewManager.getInstance()
-            ?.setLimit(editMaxValue, editMinValue, upColor, downColor)
+            ?.setLimit(editMaxValue, editMinValue)
         binding.temperatureSeekbar.setRangeAndPro(
             editMinValue,
             editMaxValue,
@@ -1125,7 +1124,7 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
                 180 -> RotateDegree.DEGREE_0
                 else -> RotateDegree.DEGREE_180
             }
-        CameraPreviewManager.getInstance().imageRotate = imageRotate
+        CameraPreviewManager.getInstance().imageRotate = imageRotate.getValue()
 
         CameraPreviewManager.getInstance().init(binding.cameraView, mLiteHandler)
 
@@ -1171,19 +1170,19 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
     }
 
     private fun initCameraSize() {
-        if (RotateDegree.DEGREE_0 == CameraPreviewManager.getInstance().imageRotate ||
-            RotateDegree.DEGREE_180 == CameraPreviewManager.getInstance().imageRotate
+        if (RotateDegree.DEGREE_0.getValue() == CameraPreviewManager.getInstance().imageRotate ||
+            RotateDegree.DEGREE_180.getValue() == CameraPreviewManager.getInstance().imageRotate
         ) {
             binding.temperatureView.setImageSize(mPreviewWidth, mPreviewHeight, this)
-        } else if (RotateDegree.DEGREE_90 == CameraPreviewManager.getInstance().imageRotate ||
-            RotateDegree.DEGREE_270 == CameraPreviewManager.getInstance().imageRotate
+        } else if (RotateDegree.DEGREE_90.getValue() == CameraPreviewManager.getInstance().imageRotate ||
+            RotateDegree.DEGREE_270.getValue() == CameraPreviewManager.getInstance().imageRotate
         ) {
             binding.temperatureView.setImageSize(mPreviewHeight, mPreviewWidth, this)
         }
 
         val params = binding.thermalLay.layoutParams as ConstraintLayout.LayoutParams
-        if (RotateDegree.DEGREE_90 == CameraPreviewManager.getInstance().imageRotate ||
-            RotateDegree.DEGREE_270 == CameraPreviewManager.getInstance().imageRotate
+        if (RotateDegree.DEGREE_90.getValue() == CameraPreviewManager.getInstance().imageRotate ||
+            RotateDegree.DEGREE_270.getValue() == CameraPreviewManager.getInstance().imageRotate
         ) {
             params.dimensionRatio = "192:256"
         } else {
@@ -1362,9 +1361,7 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
 
         CameraPreviewManager.getInstance().setLimit(
             editMaxValue,
-            editMinValue,
-            upColor,
-            downColor,
+            editMinValue
         )
         lifecycleScope.launch {
             binding.temperatureView.clear()
@@ -1380,7 +1377,7 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
                     180 -> RotateDegree.DEGREE_0
                     else -> RotateDegree.DEGREE_180
                 }
-            CameraPreviewManager.getInstance().imageRotate = imageRotate
+            CameraPreviewManager.getInstance().imageRotate = imageRotate.getValue()
             initCameraSize()
             delay(100)
             binding.thermalRecyclerNight.fenceSelectType = FenceType.FULL
@@ -2110,8 +2107,7 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
                     saveSetBean.isOpenMirror
                 )
                 CameraPreviewManager.getInstance()?.setLimit(
-                    editMaxValue, editMinValue,
-                    upColor, downColor,
+                    editMaxValue, editMinValue
                 )
                 delay(2000)
 

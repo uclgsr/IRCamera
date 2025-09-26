@@ -293,7 +293,7 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
         )
     }
     private val distance_measure_view by lazy { findViewById<View>(R.id.distance_measure_view) }
-    private val zoomView by lazy { findViewById<View>(R.id.zoomView) }
+    private val zoomView by lazy { findViewById<com.mpdc4gsr.libunified.ir.view.ZoomCaliperView>(R.id.zoomView) }
     protected open val temperatureSeekbar by lazy {
         findViewById<RangeSeekBar>(
             R.id.temperature_seekbar
