@@ -14,7 +14,7 @@ import android.view.WindowManager;
 import android.widget.PopupWindow;
 
 
-import com.infisense.iruvc.utils.CommonParams;
+import com.energy.iruvc.utils.CommonParams;
 
 import java.lang.reflect.Method;
 

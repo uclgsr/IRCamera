@@ -13,7 +13,7 @@ import android.util.Log;
 
 import com.blankj.utilcode.util.SizeUtils;
 import com.blankj.utilcode.util.Utils;
-import com.infisense.iruvc.utils.CommonParams;
+import com.energy.iruvc.utils.CommonParams;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
