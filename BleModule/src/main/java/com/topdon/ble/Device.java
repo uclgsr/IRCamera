@@ -43,8 +43,14 @@ public class Device implements Comparable<Device>, Cloneable, Parcelable {
 
     public Device(BluetoothDevice originDevice) {
         this.originDevice = originDevice;
-        this.name = originDevice.getName() == null ? "" : originDevice.getName();
-        this.address = originDevice.getAddress();
+        try {
+            this.name = originDevice.getName() == null ? "" : originDevice.getName();
+            this.address = originDevice.getAddress();
+        } catch (SecurityException e) {
+            // Log the error and initialize with default values to prevent crashes
+            this.name = "";
+            this.address = "";
+        }
     }
 
     protected Device(Parcel in) {

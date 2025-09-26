@@ -43,6 +43,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  * date: 2021/8/12 19:47
  * author: bichuanfeng
  */
+// Permission checks are expected to be handled by the calling code before using this connection
 @SuppressLint("MissingPermission")
 class ConnectionImpl implements Connection, ScanListener {
     private static final int MSG_REQUEST_TIMEOUT = 0;
