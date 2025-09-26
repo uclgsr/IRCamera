@@ -97,12 +97,12 @@ object UnifiedArrayUtils {
     /**
      * Rotate index based on rotation type
      */
-    private fun rotateIndex(index: Int, arraySize: Int, rotateType: Int): Int {
-        // Assuming square array for thermal data
-        val width = kotlin.math.sqrt(arraySize.toDouble()).toInt()
-        val height = arraySize / width
+    private fun rotateIndex(index: Int, arraySize: Int, rotateType: Int, width: Int = 256, height: Int = 192): Int {
+        // Support for thermal data arrays (typically 256x192 for IR cameras)
+        val actualWidth = if (width * height == arraySize) width else kotlin.math.sqrt(arraySize.toDouble()).toInt()
+        val actualHeight = if (width * height == arraySize) height else arraySize / actualWidth
 
-        if (width * height != arraySize) return index
+        if (actualWidth * actualHeight != arraySize) return index
 
         val x = index % width
         val y = index / width
