@@ -64,7 +64,7 @@ object UnifiedCameraUtils {
         defStyleAttr: Int = 0
     ) : TextureView(context, attrs, defStyleAttr) {
 
-        var config = CameraConfig()
+        private var config = CameraConfig()
         private var bitmap: Bitmap? = null
         private var syncImage: SynchronizedBitmap? = null
         private var canvas: Canvas? = null

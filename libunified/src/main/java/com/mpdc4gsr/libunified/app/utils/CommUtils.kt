@@ -1,56 +1,31 @@
 package com.mpdc4gsr.libunified.app.utils
 
-import android.content.Context
+import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
+import com.blankj.utilcode.util.Utils
+import com.elvishew.xlog.XLog
 import com.mpdc4gsr.libunified.app.BaseApplication
 
 /**
- * Common utility functions used across the application
- */
+ * des:
+ * author: CaiSongL
+ * date: 2024/2/22 17:06S
+ **/
 object CommUtils {
-    
-    /**
-     * Get the application name
-     */
-    fun getAppName(): String {
-        return try {
-            val context = BaseApplication.instance
-            val packageManager = context.packageManager
-            val applicationInfo = packageManager.getApplicationInfo(context.packageName, 0)
-            packageManager.getApplicationLabel(applicationInfo).toString()
-        } catch (e: Exception) {
-            "IRCamera"
+
+    fun getAppName() : String{
+        var msg = ""
+        var appInfo: ApplicationInfo? = null
+        try {
+            appInfo = BaseApplication.instance.packageManager
+                .getApplicationInfo(
+                    BaseApplication.instance.packageName,
+                    PackageManager.GET_META_DATA
+                )
+            msg = appInfo.metaData?.getString("app_name")?.toString() ?: ""
+        } catch (e : Exception){
+            XLog.w("获取app名称异常： ${e.message}")
         }
-    }
-    
-    /**
-     * Get app version name
-     */
-    fun getAppVersionName(): String {
-        return try {
-            val context = BaseApplication.instance
-            val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
-            packageInfo.versionName ?: "1.0.0"
-        } catch (e: Exception) {
-            "1.0.0"
-        }
-    }
-    
-    /**
-     * Get app version code
-     */
-    fun getAppVersionCode(): Long {
-        return try {
-            val context = BaseApplication.instance
-            val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
-                packageInfo.longVersionCode
-            } else {
-                @Suppress("DEPRECATION")
-                packageInfo.versionCode.toLong()
-            }
-        } catch (e: Exception) {
-            1L
-        }
+        return msg
     }
 }

@@ -6,7 +6,7 @@ import org.json.JSONException
 import org.json.JSONObject
 
 object SocketCmdUtil {
-    fun getSocketCmd(cmd: Int): String? {
+    fun getSocketCmd(cmd: Int): String?{
         var cmdJson: String? = null
         try {
             val gson = Gson()
@@ -24,7 +24,7 @@ object SocketCmdUtil {
         var cmd: Int? = null
         if (TextUtils.isEmpty(response)) return null
         try {
-            val jsonObject = JSONObject(response!!)
+            val jsonObject = JSONObject(response)
             cmd = jsonObject.getInt("cmd")
         } catch (e: JSONException) {
             e.printStackTrace()
@@ -36,7 +36,7 @@ object SocketCmdUtil {
         var ip: String? = null
         if (TextUtils.isEmpty(response)) return null
         try {
-            val jsonObject = JSONObject(response!!)
+            val jsonObject = JSONObject(response)
             ip = jsonObject.getString("ip")
         } catch (e: JSONException) {
             e.printStackTrace()
