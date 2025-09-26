@@ -71,6 +71,7 @@ dependencies {
     coreLibraryDesugaring(libs.desugar.jdk.libs)
     implementation(project(":BleModule"))
     implementation(project(":libunified"))
+    implementation(project(":libir"))
     implementation(project(":component:user"))
     compileOnly(files("../../libunified/libs/suplib-release.aar"))
     compileOnly(files("../../libunified/libs/ai-upscale-release.aar"))

@@ -143,6 +143,9 @@ dependencies {
 
     coreLibraryDesugaring(libs.desugar.jdk.libs)
 
+    // libir dependency for infisense classes
+    implementation(project(":libir"))
+
     // Combined dependencies from all three libraries
     api(fileTree(mapOf("include" to listOf("*.jar"), "dir" to "libs")))
 
