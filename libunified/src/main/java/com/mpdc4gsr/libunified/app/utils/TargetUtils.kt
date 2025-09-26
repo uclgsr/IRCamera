@@ -2,6 +2,7 @@ package com.mpdc4gsr.libunified.app.utils
 
 import android.graphics.PointF
 import android.graphics.RectF
+import com.mpdc4gsr.libunified.R
 import com.mpdc4gsr.libunified.app.bean.ObserveBean
 
 /**
@@ -50,5 +51,104 @@ object TargetUtils {
     fun moveTarget(observeBean: ObserveBean, deltaX: Float, deltaY: Float) {
         observeBean.observeX += deltaX
         observeBean.observeY += deltaY
+    }
+
+    /**
+     * Get the measure size for different target measure modes
+     */
+    fun getMeasureSize(targetMeasureMode: Int): Float {
+        return when (targetMeasureMode) {
+            ObserveBean.TYPE_MEASURE_PERSON -> 180f
+            ObserveBean.TYPE_MEASURE_SHEEP -> 120f
+            ObserveBean.TYPE_MEASURE_DOG -> 100f
+            ObserveBean.TYPE_MEASURE_BIRD -> 80f
+            else -> 180f
+        }
+    }
+
+    /**
+     * Get the appropriate drawable resource for target display
+     */
+    fun getSelectTargetDraw(targetMeasureMode: Int, targetType: Int, targetColorType: Int): Int {
+        return when {
+            // Circle targets
+            targetType == ObserveBean.TYPE_TARGET_CIRCLE -> {
+                when (targetColorType) {
+                    ObserveBean.TYPE_TARGET_COLOR_GREEN -> when (targetMeasureMode) {
+                        ObserveBean.TYPE_MEASURE_SHEEP -> R.drawable.ic_target_circle_sheep_green
+                        else -> R.drawable.ic_target_circle_person_green
+                    }
+                    ObserveBean.TYPE_TARGET_COLOR_RED -> when (targetMeasureMode) {
+                        ObserveBean.TYPE_MEASURE_SHEEP -> R.drawable.ic_target_circle_sheep_red
+                        else -> R.drawable.ic_target_circle_person_red
+                    }
+                    ObserveBean.TYPE_TARGET_COLOR_BLUE -> when (targetMeasureMode) {
+                        ObserveBean.TYPE_MEASURE_SHEEP -> R.drawable.ic_target_circle_sheep_blue
+                        else -> R.drawable.ic_target_circle_person_blue
+                    }
+                    ObserveBean.TYPE_TARGET_COLOR_BLACK -> when (targetMeasureMode) {
+                        ObserveBean.TYPE_MEASURE_SHEEP -> R.drawable.ic_target_circle_sheep_black
+                        else -> R.drawable.ic_target_circle_person_black
+                    }
+                    ObserveBean.TYPE_TARGET_COLOR_WHITE -> when (targetMeasureMode) {
+                        ObserveBean.TYPE_MEASURE_SHEEP -> R.drawable.ic_target_circle_sheep_white
+                        else -> R.drawable.ic_target_circle_person_white
+                    }
+                    else -> R.drawable.ic_target_circle_person_green
+                }
+            }
+            // Vertical targets
+            targetType == ObserveBean.TYPE_TARGET_VERTICAL -> {
+                when (targetColorType) {
+                    ObserveBean.TYPE_TARGET_COLOR_GREEN -> when (targetMeasureMode) {
+                        ObserveBean.TYPE_MEASURE_SHEEP -> R.drawable.ic_target_vertical_sheep_green
+                        else -> R.drawable.ic_target_vertical_person_green
+                    }
+                    ObserveBean.TYPE_TARGET_COLOR_RED -> when (targetMeasureMode) {
+                        ObserveBean.TYPE_MEASURE_SHEEP -> R.drawable.ic_target_vertical_sheep_red
+                        else -> R.drawable.ic_target_vertical_person_red
+                    }
+                    ObserveBean.TYPE_TARGET_COLOR_BLUE -> when (targetMeasureMode) {
+                        ObserveBean.TYPE_MEASURE_SHEEP -> R.drawable.ic_target_vertical_sheep_blue
+                        else -> R.drawable.ic_target_vertical_person_blue
+                    }
+                    ObserveBean.TYPE_TARGET_COLOR_BLACK -> when (targetMeasureMode) {
+                        ObserveBean.TYPE_MEASURE_SHEEP -> R.drawable.ic_target_vertical_sheep_black
+                        else -> R.drawable.ic_target_vertical_person_black
+                    }
+                    ObserveBean.TYPE_TARGET_COLOR_WHITE -> when (targetMeasureMode) {
+                        ObserveBean.TYPE_MEASURE_SHEEP -> R.drawable.ic_target_vertical_sheep_white
+                        else -> R.drawable.ic_target_vertical_person_white
+                    }
+                    else -> R.drawable.ic_target_vertical_person_green
+                }
+            }
+            // Horizontal targets (default)
+            else -> {
+                when (targetColorType) {
+                    ObserveBean.TYPE_TARGET_COLOR_GREEN -> when (targetMeasureMode) {
+                        ObserveBean.TYPE_MEASURE_SHEEP -> R.drawable.ic_target_horizontal_sheep_green
+                        else -> R.drawable.svg_ic_target_horizontal_person_green
+                    }
+                    ObserveBean.TYPE_TARGET_COLOR_RED -> when (targetMeasureMode) {
+                        ObserveBean.TYPE_MEASURE_SHEEP -> R.drawable.ic_target_horizontal_sheep_red
+                        else -> R.drawable.ic_target_horizontal_person_red
+                    }
+                    ObserveBean.TYPE_TARGET_COLOR_BLUE -> when (targetMeasureMode) {
+                        ObserveBean.TYPE_MEASURE_SHEEP -> R.drawable.ic_target_horizontal_sheep_blue
+                        else -> R.drawable.ic_target_horizontal_person_blue
+                    }
+                    ObserveBean.TYPE_TARGET_COLOR_BLACK -> when (targetMeasureMode) {
+                        ObserveBean.TYPE_MEASURE_SHEEP -> R.drawable.ic_target_horizontal_sheep_black
+                        else -> R.drawable.ic_target_horizontal_person_black
+                    }
+                    ObserveBean.TYPE_TARGET_COLOR_WHITE -> when (targetMeasureMode) {
+                        ObserveBean.TYPE_MEASURE_SHEEP -> R.drawable.ic_target_horizontal_sheep_white
+                        else -> R.drawable.ic_target_horizontal_person_white
+                    }
+                    else -> R.drawable.svg_ic_target_horizontal_person_green
+                }
+            }
+        }
     }
 }
