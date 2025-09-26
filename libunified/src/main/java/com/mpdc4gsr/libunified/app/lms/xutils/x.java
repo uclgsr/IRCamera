@@ -16,7 +16,7 @@ public class x {
         public void post(RequestParams params, Callback.CommonCallback<String> callback) {
             // Stub implementation - do nothing
         }
-        
+
         public void get(RequestParams params, Callback.ProgressCallback<File> callback) {
             // Stub implementation - do nothing for now
             // In a real implementation, this would handle HTTP GET requests with progress callbacks

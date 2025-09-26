@@ -26,10 +26,6 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled = true
 
-        ndk {
-            abiFilters += listOf("arm64-v8a")
-        }
-
         buildConfigField("String", "VERSION_DATE", "\"$buildDayStr\"")
         buildConfigField("String", "SOFT_CODE", "\"TC001_DisplaySW_IRCamera_Adr\"")
         buildConfigField("String", "APP_KEY", "\"5B2F6F1FD80844FCB6E50BCA19222E76\"")
@@ -82,7 +78,6 @@ android {
     }
 
     androidResources {
-
         ignoreAssetsPattern = "!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~"
         additionalParameters += listOf("--allow-reserved-package-id", "--auto-add-overlay")
     }
@@ -99,13 +94,6 @@ android {
         }
     }
 
-    androidComponents {
-        beforeVariants { variant ->
-
-            variant.enable = variant.buildType == "release" || variant.buildType == "debug"
-        }
-    }
-
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
@@ -115,7 +103,6 @@ android {
     kotlin {
         compilerOptions {
             jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
-
             apiVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_0)
             languageVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_0)
             freeCompilerArgs.addAll(

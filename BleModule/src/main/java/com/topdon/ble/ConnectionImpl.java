@@ -18,15 +18,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.util.Pair;
 
+import com.android.identity.util.HexUtil;
 import com.topdon.ble.callback.RequestCallback;
 import com.topdon.ble.callback.ScanListener;
-import com.topdon.ble.util.HexUtil;
 import com.topdon.ble.util.Logger;
 import com.topdon.commons.observer.Observable;
 import com.topdon.commons.poster.MethodInfo;
 import com.topdon.commons.poster.PosterDispatcher;
-import com.topdon.commons.util.MathUtils;
-import com.topdon.commons.util.StringUtils;
+import com.mpdc4gsr.libunified.app.utils.UnifiedMathUtils;
+import com.mpdc4gsr.libunified.app.utils.UnifiedBleUtils;
 
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Method;
@@ -604,7 +604,7 @@ class ConnectionImpl implements Connection, ScanListener {
                 options.packageSize = mtu - 3;
             }
             if (value.length > options.packageSize) {
-                List<byte[]> list = MathUtils.splitPackage(value, options.packageSize);
+                List<byte[]> list = UnifiedMathUtils.INSTANCE.splitPackage(value, options.packageSize);
                 if (!options.isWaitWriteResult) { //不等待写入回调，直接写入下一包数据
                     int delay = options.packageWriteDelayMillis;
                     for (int i = 0; i < list.size(); i++) {
@@ -697,7 +697,7 @@ class ConnectionImpl implements Connection, ScanListener {
     }
 
     private String toHex(byte[] bytes) {
-        return StringUtils.toHex(bytes);
+        return UnifiedBleUtils.INSTANCE.bytesToHexString(bytes);
     }
 
     private String substringUuid(UUID uuid) {
@@ -1146,7 +1146,7 @@ class ConnectionImpl implements Connection, ScanListener {
 
         @Override
         public void onCharacteristicRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
-            Log.e("bcf", "onCharacteristicRead  status: " + status + "  value: " + HexUtil.bytesToHexString(characteristic.getValue()));
+            Log.e("bcf", "onCharacteristicRead  status: " + status + "  value: " + UnifiedBleUtils.INSTANCE.bytesToHexString(characteristic.getValue()));
             if (originCallback != null) {
                 easyBle.getExecutorService().execute(() -> originCallback.onCharacteristicRead(gatt, characteristic, status));
             }

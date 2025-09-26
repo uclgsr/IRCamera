@@ -241,7 +241,7 @@ class MenuSecondView : FrameLayout {
         CoroutineScope(Dispatchers.IO).launch {
             val path = GalleryRepository.readLatest(type)
             launch(Dispatchers.Main) {
-                binding.cameraMenuView.refreshGallery(path)
+                binding.cameraMenuView.refreshGallery(false)
             }
         }
     }

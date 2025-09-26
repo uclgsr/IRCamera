@@ -9,7 +9,7 @@ public class AppInfoBean {
     public String downloadUrl = "";
     public String description = "";
     public boolean forceUpdate = false;
-    
+
     // Additional fields needed by AppVersionUtil
     public String downloadPackageUrl = "";
     public String forcedUpgradeFlag = "0";
@@ -18,7 +18,7 @@ public class AppInfoBean {
 
     public AppInfoBean() {
     }
-    
+
     public int getVersionCode() {
         try {
             return Integer.parseInt(versionCode);
@@ -26,11 +26,11 @@ public class AppInfoBean {
             return 0;
         }
     }
-    
+
     public static class UpdateDescription {
         public int descType = 0;
         public String textDescription = "";
-        
+
         public UpdateDescription() {
         }
     }

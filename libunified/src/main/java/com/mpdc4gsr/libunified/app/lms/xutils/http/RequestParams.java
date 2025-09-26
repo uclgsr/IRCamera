@@ -25,23 +25,23 @@ public class RequestParams {
 
     public void addHeader(String key, String value) {
     }
-    
+
     public void setSaveFilePath(String path) {
         this.saveFilePath = path;
     }
-    
+
     public void setCacheDirName(String name) {
         this.cacheDirName = name;
     }
-    
+
     public void setAutoResume(boolean autoResume) {
         this.autoResume = autoResume;
     }
-    
+
     public void setExecutor(PriorityExecutor executor) {
         this.executor = executor;
     }
-    
+
     public void setUri(String uri) {
         this.uri = uri;
     }

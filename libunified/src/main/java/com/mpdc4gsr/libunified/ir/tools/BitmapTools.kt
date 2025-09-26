@@ -2,14 +2,13 @@ package com.mpdc4gsr.libunified.ir.tools
 
 import androidx.annotation.ColorInt
 import com.elvishew.xlog.XLog
-import com.mpdc4gsr.libunified.app.utils.ByteUtils.bytesToInt
-import com.mpdc4gsr.libunified.app.utils.ByteUtils.descBytes
+import com.mpdc4gsr.libunified.app.utils.ByteUtils
 
 object BitmapTools {
     private fun readTempValue(bytes: ByteArray): Float {
-        val data: ByteArray = bytes.descBytes()
+        val data: ByteArray = with(ByteUtils) { bytes.descBytes() }
         val scale = 16
-        val tempInt = data.bytesToInt() / 4
+        val tempInt = with(ByteUtils) { bytesToInt(data) } / 4
         return (tempInt.toDouble() / scale.toDouble() - 273.15).toFloat()
     }
 
