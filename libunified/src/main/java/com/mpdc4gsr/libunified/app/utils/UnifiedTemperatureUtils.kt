@@ -16,6 +16,7 @@ object UnifiedTemperatureUtils {
     /**
      * Get temperature values along a line between two points
      */
+    @JvmStatic
     fun getLineTemperatures(
         point1: Point,
         point2: Point,
@@ -212,6 +213,7 @@ object UnifiedTemperatureUtils {
     /**
      * Format temperature with unit
      */
+    @JvmStatic
     fun formatTemperature(temperature: Float, unit: TemperatureUnit = TemperatureUnit.CELSIUS): String {
         return when (unit) {
             TemperatureUnit.CELSIUS -> "%.1f°C".format(temperature)
