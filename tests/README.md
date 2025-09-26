@@ -7,7 +7,7 @@ This directory contains test scripts for validating various components of the IR
 ### Network and Protocol Tests
 
 - **test_networking_client.py** - Network client functionality tests
-- **test_pc_server.py** - PC server functionality tests  
+- **test_pc_server.py** - PC server functionality tests
 - **test_protocol.py** - Protocol implementation validation tests
 
 ## Usage
@@ -30,4 +30,5 @@ pip install -r ../pc-controller/requirements.txt
 
 ## Note
 
-These are integration and functionality tests. For unit tests, see the individual module test suites in their respective directories (e.g., `pc-controller/test_mvp*.py`).
+These are integration and functionality tests. For unit tests, see the individual module test suites in their respective
+directories (e.g., `pc-controller/test_mvp*.py`).

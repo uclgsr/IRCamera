@@ -2,7 +2,8 @@
 
 ## Overview
 
-This document describes the comprehensive REPOSITORY-WIDE refactoring that has been applied to the entire IRCamera project, addressing utilities and code consolidation across **ALL MODULES** in the repository.
+This document describes the comprehensive REPOSITORY-WIDE refactoring that has been applied to the entire IRCamera
+project, addressing utilities and code consolidation across **ALL MODULES** in the repository.
 
 ## Scope of Refactoring
 
@@ -11,7 +12,7 @@ This document describes the comprehensive REPOSITORY-WIDE refactoring that has b
 The refactoring has been applied to **ALL** modules across the entire repository:
 
 1. **BleModule** - Bluetooth Low Energy module
-2. **app** - Main Android application  
+2. **app** - Main Android application
 3. **libunified** - Unified library (primary consolidation location)
 4. **component/gsr-recording** - GSR recording component
 5. **component/thermalunified** - Thermal imaging component
@@ -53,6 +54,7 @@ Located in: `libunified/src/main/java/com/mpdc4gsr/libunified/app/utils/`
 ## Original Utilities Replaced (Repository-Wide)
 
 ### BleModule Utilities Consolidated
+
 ```
 BleModule/src/main/java/com/topdon/commons/util/
 ├── MathUtils.java ✅ → UnifiedMathUtils.kt
@@ -73,6 +75,7 @@ BleModule/src/main/java/com/topdon/ble/util/
 ```
 
 ### Component Module Utilities Consolidated
+
 ```
 component/gsr-recording/src/main/java/com/mpdc4gsr/gsr/util/
 ├── TimeUtil.kt ✅ → UnifiedGsrUtils.kt
@@ -88,6 +91,7 @@ component/user/src/main/java/com/mpdc4gsr/module/user/util/
 ```
 
 ### Library Module Utilities Consolidated
+
 ```
 libapp/src/main/java/com/mpdc4gsr/lib/util/
 ├── PreUtil.java ✅ → UnifiedPreferencesUtils.kt
@@ -111,6 +115,7 @@ libunified/src/main/java/com/mpdc4gsr/libunified/app/matrix/utils/
 ```
 
 ### App Module Utilities Consolidated
+
 ```
 app/src/main/java/mpdc4gsr/utils/
 ├── VersionUtils.kt ✅ → UnifiedVersionUtils.kt
@@ -124,6 +129,7 @@ app/src/main/java/mpdc4gsr/utils/
 ## Repository-Wide Impact
 
 ### Quantified Results
+
 - **35+ utility classes** scattered across ALL modules → **20 consolidated utilities**
 - **99.9% duplicate code elimination** across the ENTIRE repository
 - **100% module coverage** - every module in the repository addressed
@@ -131,6 +137,7 @@ app/src/main/java/mpdc4gsr/utils/
 - **Single source of truth** for all common operations
 
 ### Benefits Achieved
+
 1. **Complete Code Deduplication** - No duplicate utilities remain anywhere in the repository
 2. **Unified Interface** - Consistent API across all modules
 3. **Centralized Maintenance** - All utilities in one location for easy updates
@@ -141,6 +148,7 @@ app/src/main/java/mpdc4gsr/utils/
 ## Migration Guide
 
 ### For Developers
+
 To use the consolidated utilities:
 
 ```kotlin
@@ -161,6 +169,7 @@ val maxIndex = UnifiedArrayUtils.getMaxIndex(data)
 ```
 
 ### API Compatibility
+
 All consolidated utilities maintain **full backward compatibility** while providing enhanced functionality:
 
 - All original method signatures preserved
@@ -171,12 +180,14 @@ All consolidated utilities maintain **full backward compatibility** while provid
 ## Architecture Improvements
 
 ### Modern Android Practices (Repository-Wide)
+
 1. **StateFlow/SharedFlow** - Modern reactive programming patterns
 2. **Sealed Classes** - Type-safe state management
 3. **Suspend Functions** - Modern coroutine patterns
 4. **Kotlin Best Practices** - Repository-wide Kotlin adoption
 
 ### Build System (Repository-Wide)
+
 1. **Latest AGP 8.11.0** - Most recent Android Gradle Plugin
 2. **Kotlin 2.2.0** - Latest Kotlin with K2 compiler
 3. **JDK 17** - Modern Java target
@@ -185,12 +196,14 @@ All consolidated utilities maintain **full backward compatibility** while provid
 ## Quality Assurance
 
 ### Testing
+
 - All consolidated utilities tested for backward compatibility
 - Performance benchmarks confirm improvements
 - No behavioral changes to existing functionality
 - Repository-wide build validation passed
 
 ### Code Quality
+
 - Static analysis tools prepared for ongoing quality assurance
 - Comprehensive documentation for all utilities
 - Consistent coding standards across all modules
@@ -206,4 +219,5 @@ This REPOSITORY-WIDE refactoring represents a complete modernization of the IRCa
 - **Future-Proof**: Architecture prepared for ongoing development
 - **Maintainable**: Single source of truth for all common functionality
 
-The IRCamera project now exemplifies modern Android development with comprehensive utility consolidation, modern reactive programming patterns, and a stable, modernized build system across the ENTIRE repository.
+The IRCamera project now exemplifies modern Android development with comprehensive utility consolidation, modern
+reactive programming patterns, and a stable, modernized build system across the ENTIRE repository.
