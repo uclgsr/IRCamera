@@ -22,43 +22,43 @@ public class LmsUpdateDialog extends Dialog {
 
     public void setNegativeButton(String text, android.content.DialogInterface.OnClickListener listener) {
     }
-    
+
     public static class Build {
         public static final Build INSTANCE = new Build();
-        
+
         private String contentStr = "";
         private int upgradeFlag = 0;
         private Function0<Unit> sureEvent = null;
         private Function0<Unit> cancelEvent = null;
-        
+
         public Build setContentStr(String content) {
             this.contentStr = content;
             return this;
         }
-        
+
         public Build setUpgradeFlag(int flag) {
             this.upgradeFlag = flag;
             return this;
         }
-        
+
         public Build setSureEvent(Function0<Unit> event) {
             this.sureEvent = event;
             return this;
         }
-        
+
         public Build setCancelEvent(Function0<Unit> event) {
             this.cancelEvent = event;
             return this;
         }
-        
+
         public void setProgressNum(float progress) {
             // Stub implementation for progress updates
         }
-        
+
         public void dismiss() {
             // Stub implementation for dismissing dialog
         }
-        
+
         public LmsUpdateDialog build(Context context) {
             return new LmsUpdateDialog(context);
         }

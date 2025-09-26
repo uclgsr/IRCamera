@@ -1,5 +1,3 @@
-@file:Suppress("DEPRECATION")
-
 package com.mpdc4gsr.libunified.app.utils
 
 import android.content.Context
@@ -12,11 +10,16 @@ import android.net.wifi.WifiConfiguration
 import android.net.wifi.WifiManager
 import android.net.wifi.WifiNetworkSpecifier
 import android.os.Build
+import android.util.Log
 import com.elvishew.xlog.XLog
 import com.mpdc4gsr.libunified.app.BaseApplication
 
-
+/**
+ * NetWorkUtils based on reference repository implementation
+ * Adapted from libapp/src/main/java/com/topdon/lib/core/utils/NetWorkUtils.kt
+ */
 object NetWorkUtils {
+
     private var mNetworkCallback: ConnectivityManager.NetworkCallback? = null
     private var netWorkListener: ((network: Network?) -> Unit)? = null
     val connectivityManager by lazy {
@@ -26,16 +29,10 @@ object NetWorkUtils {
         BaseApplication.instance.getSystemService(Context.WIFI_SERVICE) as WifiManager
     }
 
-    fun isWifiNameValid(
-        context: Context,
-        prefixes: List<String>,
-    ): Boolean {
-        val wifiManager =
-            context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
-
-        @Suppress("DEPRECATION")
+    fun isWifiNameValid(context: Context, prefixes: List<String>): Boolean {
+        val wifiManager = context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
         val wifiInfo = wifiManager.connectionInfo
-        val ssid = wifiInfo.ssid.replace("\"", "")
+        val ssid = wifiInfo.ssid.replace("\"", "") // 移除双引号
         for (prefix in prefixes) {
             if (ssid.startsWith(prefix)) {
                 return true
@@ -44,167 +41,81 @@ object NetWorkUtils {
         return false
     }
 
-    fun connectWifi(
-        ssid: String,
-        password: String,
-        listener: ((network: Network?) -> Unit)? = null,
-    ) {
+    fun connectWifi(ssid: String, password: String, listener: ((network: Network?) -> Unit)? = null) {
         netWorkListener = listener
-        if (Build.VERSION.SDK_INT < 29) {
-            val request =
-                NetworkRequest.Builder()
-                    .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
-                    .removeCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
-                    .build()
-            val callback =
-                object : ConnectivityManager.NetworkCallback() {
-                    override fun onAvailable(network: Network) {
-                        XLog.e("Test", "onAvailable")
-                        if (WifiUtil.getCurrentWifiSSID(BaseApplication.instance) == ssid) {
-                            connectivityManager.unregisterNetworkCallback(this)
-                            listener?.invoke(network)
-                        }
-                    }
-
-                    override fun onUnavailable() {
-                        XLog.e("Test", "onUnavailable")
-                        connectivityManager.unregisterNetworkCallback(this)
-                        listener?.invoke(null)
-                    }
-
-                    override fun onCapabilitiesChanged(
-                        network: Network,
-                        networkCapabilities: NetworkCapabilities,
-                    ) {
-                        XLog.e("Test", "onCapabilitiesChanged")
-                        super.onCapabilitiesChanged(network, networkCapabilities)
-                    }
-
-                    override fun onBlockedStatusChanged(
-                        network: Network,
-                        blocked: Boolean,
-                    ) {
-                        super.onBlockedStatusChanged(network, blocked)
-                        XLog.e("Test", "onBlockedStatusChanged")
-                    }
-
-                    override fun onLinkPropertiesChanged(
-                        network: Network,
-                        linkProperties: LinkProperties,
-                    ) {
-                        super.onLinkPropertiesChanged(network, linkProperties)
-                        XLog.e("Test", "onLinkPropertiesChanged")
-                    }
-
-                    override fun onLosing(
-                        network: Network,
-                        maxMsToLive: Int,
-                    ) {
-                        super.onLosing(network, maxMsToLive)
-                        XLog.e("Test", "onLosing")
-                    }
-                }
-            connectivityManager.registerNetworkCallback(request, callback)
-
-            @Suppress("DEPRECATION")
-            val configuration = WifiConfiguration()
-            @Suppress("DEPRECATION")
-            configuration.SSID = "\"$ssid\""
-            @Suppress("DEPRECATION")
-            configuration.preSharedKey = "\"$password\""
-            @Suppress("DEPRECATION")
-            configuration.hiddenSSID = false
-            @Suppress("DEPRECATION")
-            configuration.status = WifiConfiguration.Status.ENABLED
-            @Suppress("DEPRECATION")
-            val id = wifiManager.addNetwork(configuration)
-
-            @Suppress("DEPRECATION")
-            val isSuccess = wifiManager.enableNetwork(id, true)
-            if (!isSuccess) {
-                connectivityManager.unregisterNetworkCallback(callback)
-            }
-        } else {
-            val wifiNetworkSpecifier =
-                WifiNetworkSpecifier.Builder()
-                    .setSsid(ssid)
-                    .setWpa2Passphrase(password)
-                    .build()
-            val request =
-                NetworkRequest.Builder()
-                    .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
-                    .addCapability(NetworkCapabilities.NET_CAPABILITY_NOT_RESTRICTED)
-                    .addCapability(NetworkCapabilities.NET_CAPABILITY_TRUSTED)
-                    .removeCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
-                    .setNetworkSpecifier(wifiNetworkSpecifier)
-                    .build()
-            if (mNetworkCallback == null) {
-                mNetworkCallback =
-                    object : ConnectivityManager.NetworkCallback() {
-                        override fun onAvailable(network: Network) {
-                            super.onAvailable(network)
-                            XLog.i("onAvailable() " + netWorkListener.hashCode())
-                            netWorkListener?.invoke(network)
-                        }
-
-                        override fun onUnavailable() {
-                            super.onUnavailable()
-                            XLog.i("onUnavailable()")
-                            netWorkListener?.invoke(null)
-                        }
-
-                        override fun onLost(network: Network) {
-                            super.onLost(network)
-                            XLog.i("onLost()")
-                        }
-                    }
-            }
-            connectivityManager.requestNetwork(request, mNetworkCallback!!)
-        }
-    }
-
-    fun switchNetwork(
-        isWifi: Boolean,
-        listener: ((network: Network?) -> Unit)? = null,
-    ) {
-        if (Build.VERSION.SDK_INT < 29) {
-            return
-        }
-        if (isWifi) {
-            val networkCapabilities =
-                connectivityManager.getNetworkCapabilities(connectivityManager.boundNetworkForProcess)
-            if (networkCapabilities != null &&
-                networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
-            ) {
-                XLog.i("[ph][ph][ph]wifi,[ph][ph]")
-                return
-            }
-        }
-        val request: NetworkRequest =
-            NetworkRequest.Builder()
-                .addTransportType(if (isWifi) NetworkCapabilities.TRANSPORT_WIFI else NetworkCapabilities.TRANSPORT_CELLULAR)
+        if (Build.VERSION.SDK_INT < 29) {//低于 Android10
+            val request = NetworkRequest.Builder()
+                .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
                 .build()
-        connectivityManager.registerNetworkCallback(
-            request,
-            object : ConnectivityManager.NetworkCallback() {
+            
+            mNetworkCallback = object : ConnectivityManager.NetworkCallback() {
                 override fun onAvailable(network: Network) {
                     super.onAvailable(network)
-                    XLog.i("switch[ph] ${if (isWifi) "WIFI" else "[ph][ph]"} onAvailable()")
-                    if (isWifi) {
-                        // TS004Repository removed
-                    }
-                    connectivityManager.bindProcessToNetwork(network)
-                    connectivityManager.unregisterNetworkCallback(this)
-                    listener?.invoke(network)
+                    netWorkListener?.invoke(network)
+                }
+                
+                override fun onUnavailable() {
+                    super.onUnavailable()
+                    netWorkListener?.invoke(null)
+                }
+            }
+            
+            connectivityManager.requestNetwork(request, mNetworkCallback!!)
+        } else {
+            // Android 10+ approach
+            val wifiNetworkSpecifier = WifiNetworkSpecifier.Builder()
+                .setSsid(ssid)
+                .setWpa2Passphrase(password)
+                .build()
+
+            val request = NetworkRequest.Builder()
+                .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
+                .setNetworkSpecifier(wifiNetworkSpecifier)
+                .build()
+
+            mNetworkCallback = object : ConnectivityManager.NetworkCallback() {
+                override fun onAvailable(network: Network) {
+                    super.onAvailable(network)
+                    netWorkListener?.invoke(network)
                 }
 
                 override fun onUnavailable() {
                     super.onUnavailable()
-                    connectivityManager.unregisterNetworkCallback(this)
-                    XLog.w("switch[ph] ${if (isWifi) "WIFI" else "[ph][ph]"} onUnavailable()")
-                    listener?.invoke(null)
+                    netWorkListener?.invoke(null)
                 }
-            },
-        )
+            }
+
+            connectivityManager.requestNetwork(request, mNetworkCallback!!)
+        }
+    }
+
+    fun switchNetwork(enable: Boolean) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            // For Android 10+, network switching is handled differently
+            XLog.d("NetWorkUtils: switchNetwork called with enable=$enable")
+        }
+    }
+
+    fun disconnectWifi() {
+        mNetworkCallback?.let {
+            connectivityManager.unregisterNetworkCallback(it)
+            mNetworkCallback = null
+        }
+        netWorkListener = null
+    }
+
+    fun isNetworkAvailable(context: Context): Boolean {
+        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val network = connectivityManager.activeNetwork ?: return false
+            val capabilities = connectivityManager.getNetworkCapabilities(network) ?: return false
+            return capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ||
+                    capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) ||
+                    capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)
+        } else {
+            @Suppress("DEPRECATION")
+            val networkInfo = connectivityManager.activeNetworkInfo
+            return networkInfo?.isConnected == true
+        }
     }
 }

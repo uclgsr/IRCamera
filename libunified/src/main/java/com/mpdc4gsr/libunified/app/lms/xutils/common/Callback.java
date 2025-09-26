@@ -25,11 +25,13 @@ public interface Callback<T> {
         default void onFinished() {
         }
     }
-    
+
     // Add ProgressCallback interface
     interface ProgressCallback<T> extends Callback<T> {
         void onWaiting();
+
         void onStarted();
+
         void onLoading(long total, long current, boolean isDownloading);
     }
 
