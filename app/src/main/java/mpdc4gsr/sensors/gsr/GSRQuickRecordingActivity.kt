@@ -121,14 +121,13 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
             recordingController.sensorStatusFlow.collect { statusList ->
                 runOnUiThread {
                     val gsrStatus =
-                        statusList.find { it.name.contains("GSR", ignoreCase = true) }
+                        statusList.find { it.sensorId.contains("GSR", ignoreCase = true) }
                     if (gsrStatus != null) {
                         binding.sensorDataText.text =
                             buildString {
                                 append("GSR Sensor Status:\n")
                                 append("Samples: ${gsrStatus.samplesRecorded}\n")
-                                append("Recording: ${if (gsrStatus.isRecording) "Active" else "Inactive"}\n")
-                                append("Storage: ${"%.2f".format(gsrStatus.storageUsedMB)} MB\n")
+                                append("Recording: ${if (gsrStatus.isActive) "Active" else "Inactive"}\n")
                                 append("Healthy: ${if (gsrStatus.isHealthy) "Yes" else "No"}\n")
                             }
                     }

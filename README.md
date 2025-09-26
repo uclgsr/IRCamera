@@ -108,12 +108,14 @@ python mvp_simple.py
 IRCamera/
 ├── app/                          # Main Android application
 ├── component/                    # Feature components
-│   ├── thermal-ir/              # Thermal imaging component
+│   ├── thermalunified/          # Unified thermal imaging component
 │   ├── gsr-recording/           # GSR sensor component
 │   └── user/                    # User interface component
-├── libunified/                  # Unified core library
-├── ble-core/                    # BLE communication module
-├── pc-controller/               # PC controller implementation
+├── libunified/                  # Unified core library (app+ir+ui functionality)
+├── BleModule/                   # Bluetooth Low Energy communication
+├── pc-controller/               # PC controller hub implementation
+├── demos/                       # Demonstration scripts
+├── tests/                       # Test scripts
 ├── docs/                        # Consolidated documentation
 └── scripts/                     # Build and utility scripts
 ```
