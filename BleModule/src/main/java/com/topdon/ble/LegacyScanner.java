@@ -5,6 +5,8 @@ import android.bluetooth.BluetoothDevice;
 
 import androidx.annotation.NonNull;
 
+import com.topdon.ble.util.Logger;
+
 
 /**
  * date: 2019/10/1 15:13
