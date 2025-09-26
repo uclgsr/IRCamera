@@ -51,6 +51,13 @@ class CameraPreviewManager private constructor() {
     private var tempDataChangeCallback: ((Any) -> Unit)? = null
     private var scaledBitmapCache: Bitmap? = null
     
+    // Frame data for thermal imaging
+    var frameIrAndTempData: ByteArray? = null
+        set(value) {
+            field = value
+            XLog.d(TAG, "Frame IR and temp data updated")
+        }
+    
     // Configuration
     private var minLimit: Float = 0f
     private var maxLimit: Float = 100f

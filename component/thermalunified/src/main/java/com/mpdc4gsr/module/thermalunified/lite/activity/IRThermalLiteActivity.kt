@@ -736,7 +736,7 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
         customMinTemp: Float,
     ) {
         CameraPreviewManager.getInstance()
-            ?.setColorList(colorList, places, isUseGray, customMaxTemp, customMinTemp)
+            ?.setColorList(null, null, isUseGray, customMaxTemp, customMinTemp)
     }
 
 
@@ -1861,11 +1861,23 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
                     var cameraViewBitmap: Bitmap? = getCameraViewBitmap()
 
                     if (isOpenPreview) {
-                        cameraViewBitmap = BitmapUtils.mergeBitmapByView(
-                            cameraViewBitmap,
-                            binding.cameraPreview.getBitmap(),
-                            binding.cameraPreview
-                        )
+                        val frontBitmap = binding.cameraPreview.getBitmap()
+                        if (cameraViewBitmap != null && frontBitmap != null) {
+                            // Create a simple bitmap view listener for merging
+                            val viewListener = object : com.mpdc4gsr.libunified.app.listener.BitmapViewListener {
+                                override val viewAlpha: Float = 0.8f
+                                override val viewScale: Float = 1.0f
+                                override val viewX: Float = 0f
+                                override val viewY: Float = 0f
+                                override val viewWidth: Float = frontBitmap.width.toFloat()
+                                override val viewHeight: Float = frontBitmap.height.toFloat()
+                            }
+                            cameraViewBitmap = BitmapUtils.mergeBitmapByView(
+                                cameraViewBitmap,
+                                frontBitmap,
+                                viewListener
+                            )
+                        }
 
                         binding.cameraPreview.getBitmap()?.let {
                             ImageUtils.saveImageToApp(it)
@@ -1946,7 +1958,7 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
                             false,
                         )
                     ImageUtils.saveFrame(
-                        bs = CameraPreviewManager.getInstance().frameIrAndTempData,
+                        bs = CameraPreviewManager.getInstance().frameIrAndTempData ?: ByteArray(0),
                         capital = capital,
                         name = name,
                     )
@@ -1962,12 +1974,21 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
     }
 
     private fun getCameraViewBitmap(): Bitmap {
-        return Bitmap.createScaledBitmap(
-            CameraPreviewManager.getInstance().scaledBitmap(true),
-            binding.cameraView.width,
-            binding.cameraView.height,
-            true,
-        )
+        val scaledBitmap = CameraPreviewManager.getInstance().scaledBitmap(true)
+        return if (scaledBitmap != null) {
+            Bitmap.createScaledBitmap(
+                scaledBitmap,
+                binding.cameraView.width,
+                binding.cameraView.height,
+                true,
+            )
+        } else {
+            Bitmap.createBitmap(
+                binding.cameraView.width.coerceAtLeast(1),
+                binding.cameraView.height.coerceAtLeast(1),
+                Bitmap.Config.ARGB_8888
+            )
+        }
     }
 
     private fun initVideoRecordFFmpeg() {

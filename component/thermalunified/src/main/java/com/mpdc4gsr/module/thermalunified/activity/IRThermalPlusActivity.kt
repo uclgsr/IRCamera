@@ -43,7 +43,7 @@ class IRThermalPlusActivity : BaseIRPlushActivity() {
     }
 
     override val cameraPreview by lazy {
-        findViewById<com.mpdc4gsr.module.thermalunified.stubs.CameraPreView>(R.id.cameraPreview)
+        findViewById<com.mpdc4gsr.libunified.ui.camera.CameraPreView>(R.id.cameraPreview)
     }
 
     override val cl_seek_bar by lazy {

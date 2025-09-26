@@ -288,7 +288,7 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
         )
     }
     protected open val cameraPreview by lazy {
-        findViewById<com.mpdc4gsr.module.thermalunified.stubs.CameraPreView>(
+        findViewById<com.mpdc4gsr.libunified.ui.camera.CameraPreView>(
             R.id.cameraPreview
         )
     }
@@ -1215,10 +1215,12 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
         thermalRecyclerNight.onTwoLightListener = { twoLightType, isSelected ->
             setTwoLight(twoLightType, isSelected)
         }
-        cameraPreview.cameraPreViewCloseListener = {
-            if (isOpenPreview) {
-                popupWindow?.dismiss()
-                cameraPreviewConfig(false)
+        cameraPreview.cameraPreViewCloseListener = object : com.mpdc4gsr.libunified.ui.camera.CameraPreView.CameraPreViewCloseListener {
+            override fun onClose() {
+                if (isOpenPreview) {
+                    popupWindow?.dismiss()
+                    cameraPreviewConfig(false)
+                }
             }
         }
         thermalRecyclerNight.onTempSourceListener = {
@@ -2483,11 +2485,12 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
 
     open fun getCameraViewBitmap(): Bitmap {
         if (isOpenAmplify) {
-
             return imageThread?.getBaseBitmap(saveSetBean.rotateAngle)
                 ?: cameraView.getScaledBitmap()
+                ?: Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888)
         } else {
             return cameraView.getScaledBitmap()
+                ?: Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888)
         }
     }
 
