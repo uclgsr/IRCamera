@@ -6,6 +6,7 @@ import io.mockk.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.test.*
 import mpdc4gsr.permissions.PermissionManager
+import mpdc4gsr.security.RoleBasedAccessControl
 import mpdc4gsr.sensors.SensorRecorder
 import org.junit.After
 import org.junit.Assert.*
@@ -74,7 +75,7 @@ class ComprehensiveRecordingControllerTest {
     @Test
     fun `test recording orchestration sequence starts all sensors with fault tolerance`() = testScope.runTest {
         // Setup
-        every { permissionManager.hasAllPermissions(any()) } returns true
+        every { permissionManager.hasAllGSRPermissions(any()) } returns true
         recordingController.addSensorRecorder("RGB", mockRgbSensor)
         recordingController.addSensorRecorder("Thermal", mockThermalSensor)
         recordingController.addSensorRecorder("GSR", mockGsrSensor)
@@ -99,7 +100,7 @@ class ComprehensiveRecordingControllerTest {
     @Test
     fun `test partial recording continues when one sensor fails to start`() = testScope.runTest {
         // Setup - thermal sensor fails to start
-        every { permissionManager.hasAllPermissions(any()) } returns true
+        every { permissionManager.hasAllGSRPermissions(any()) } returns true
         coEvery { mockThermalSensor.startRecording(any(), any()) } returns false
 
         recordingController.addSensorRecorder("RGB", mockRgbSensor)
@@ -120,7 +121,7 @@ class ComprehensiveRecordingControllerTest {
     @Test
     fun `test recording fails gracefully when all sensors fail to start`() = testScope.runTest {
         // Setup - all sensors fail
-        every { permissionManager.hasAllPermissions(any()) } returns true
+        every { permissionManager.hasAllGSRPermissions(any()) } returns true
         coEvery { mockRgbSensor.startRecording(any(), any()) } returns false
         coEvery { mockThermalSensor.startRecording(any(), any()) } returns false
         coEvery { mockGsrSensor.startRecording(any(), any()) } returns false
@@ -143,7 +144,7 @@ class ComprehensiveRecordingControllerTest {
     @Test
     fun `test sensor exception isolation - one sensor crash doesn't abort session`() = testScope.runTest {
         // Setup - GSR sensor throws exception on start
-        every { permissionManager.hasAllPermissions(any()) } returns true
+        every { permissionManager.hasAllGSRPermissions(any()) } returns true
         coEvery { mockGsrSensor.startRecording(any(), any()) } throws RuntimeException("GSR sensor connection failed")
 
         recordingController.addSensorRecorder("RGB", mockRgbSensor)
@@ -164,7 +165,7 @@ class ComprehensiveRecordingControllerTest {
     @Test
     fun `test graceful teardown stops all sensors individually`() = testScope.runTest {
         // Setup
-        every { permissionManager.hasAllPermissions(any()) } returns true
+        every { permissionManager.hasAllGSRPermissions(any()) } returns true
         recordingController.addSensorRecorder("RGB", mockRgbSensor)
         recordingController.addSensorRecorder("Thermal", mockThermalSensor)
         recordingController.addSensorRecorder("GSR", mockGsrSensor)
@@ -188,7 +189,7 @@ class ComprehensiveRecordingControllerTest {
     @Test
     fun `test stop recording continues even when sensor stop fails`() = testScope.runTest {
         // Setup - thermal sensor fails to stop
-        every { permissionManager.hasAllPermissions(any()) } returns true
+        every { permissionManager.hasAllGSRPermissions(any()) } returns true
         coEvery { mockThermalSensor.stopRecording() } throws RuntimeException("Thermal sensor stop failed")
 
         recordingController.addSensorRecorder("RGB", mockRgbSensor)
@@ -208,7 +209,7 @@ class ComprehensiveRecordingControllerTest {
     @Test
     fun `test prerequisites validation catches insufficient storage`() = testScope.runTest {
         // Setup - mock insufficient storage
-        every { permissionManager.hasAllPermissions(any()) } returns true
+        every { permissionManager.hasAllGSRPermissions(any()) } returns true
         mockkStatic(File::class)
         every { any<File>().freeSpace } returns 100 * 1024 * 1024 // 100MB - insufficient
 
@@ -229,7 +230,7 @@ class ComprehensiveRecordingControllerTest {
     @Test
     fun `test prerequisites validation catches missing permissions`() = testScope.runTest {
         // Setup - missing permissions
-        every { permissionManager.hasAllPermissions(any()) } returns false
+        every { permissionManager.hasAllGSRPermissions(any()) } returns false
 
         recordingController.addSensorRecorder("RGB", mockRgbSensor)
 

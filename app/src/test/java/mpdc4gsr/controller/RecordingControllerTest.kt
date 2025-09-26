@@ -123,7 +123,7 @@ class RecordingControllerTest {
         val sessionDir = createTempDirectory()
 
 
-        val result = recordingController.startSession(sessionDir.absolutePath)
+        val result = recordingController.startRecording(sessionDir.absolutePath)
 
         assertTrue("Session should start successfully with partial sensors", result)
         assertTrue("Recording should be active", recordingController.isRecording)
@@ -151,7 +151,7 @@ class RecordingControllerTest {
         val sessionDir = createTempDirectory()
 
 
-        val result = recordingController.startSession(sessionDir.absolutePath)
+        val result = recordingController.startRecording(sessionDir.absolutePath)
 
         assertFalse("Session should fail when all sensors fail", result)
         assertFalse("Recording should not be active", recordingController.isRecording)
@@ -169,7 +169,7 @@ class RecordingControllerTest {
         val sessionDir = createTempDirectory()
 
 
-        val result = recordingController.startSession(sessionDir.absolutePath)
+        val result = recordingController.startRecording(sessionDir.absolutePath)
 
         assertTrue("Session should start with single sensor", result)
         assertTrue("Recording should be active", recordingController.isRecording)
@@ -187,7 +187,7 @@ class RecordingControllerTest {
         val sessionDir = createTempDirectory()
 
 
-        recordingController.startSession(sessionDir.absolutePath)
+        recordingController.startRecording(sessionDir.absolutePath)
 
 
         val metadataFile = File(sessionDir, "session_metadata.json")
@@ -239,7 +239,7 @@ class RecordingControllerTest {
 
         val sessionDir = createTempDirectory()
 
-        recordingController.startSession(sessionDir.absolutePath)
+        recordingController.startRecording(sessionDir.absolutePath)
 
 
         assertTrue("RGB subdirectory should exist", File(sessionDir, "rgb").exists())
@@ -262,14 +262,14 @@ class RecordingControllerTest {
 
         assertTrue(
             "First session should start",
-            recordingController.startSession(sessionDir1.absolutePath)
+            recordingController.startRecording(sessionDir1.absolutePath)
         )
         assertTrue("First session should stop", recordingController.stopSession())
 
 
         assertTrue(
             "Second session should start after first completed",
-            recordingController.startSession(sessionDir2.absolutePath)
+            recordingController.startRecording(sessionDir2.absolutePath)
         )
         assertTrue("Second session should stop", recordingController.stopSession())
 

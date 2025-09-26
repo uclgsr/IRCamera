@@ -1,10 +1,9 @@
 package mpdc4gsr.network
+import org.junit.Assert.*
 
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertTrue
 
 /**
  * Unit tests for ConnectionMetrics functionality
