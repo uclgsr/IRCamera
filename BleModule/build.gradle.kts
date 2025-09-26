@@ -45,4 +45,5 @@ dependencies {
     api("no.nordicsemi.android:ble:2.11.0")
     api(libs.nordic.ble.ktx)
     implementation(files("libs/ini4j-0.5.5.jar"))
+    implementation(project(":libunified"))
 }

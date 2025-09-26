@@ -140,7 +140,6 @@ dependencies {
     implementation(libs.kotlin.stdlib)
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.coroutines.android)
-    implementation(project(":BleModule"))
 
     coreLibraryDesugaring(libs.desugar.jdk.libs)
 
