@@ -23,6 +23,7 @@ object UnifiedScreenUtils {
     fun getScreenWidth(context: Context): Int {
         val wm = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
         val displayMetrics = DisplayMetrics()
+        @Suppress("DEPRECATION")
         wm.defaultDisplay.getMetrics(displayMetrics)
         return displayMetrics.widthPixels
     }
@@ -33,6 +34,7 @@ object UnifiedScreenUtils {
     fun getScreenHeight(context: Context): Int {
         val wm = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
         val displayMetrics = DisplayMetrics()
+        @Suppress("DEPRECATION")
         wm.defaultDisplay.getMetrics(displayMetrics)
         return displayMetrics.heightPixels
     }
@@ -43,6 +45,7 @@ object UnifiedScreenUtils {
     fun getDisplayMetrics(context: Context): DisplayMetrics {
         val wm = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
         val displayMetrics = DisplayMetrics()
+        @Suppress("DEPRECATION")
         wm.defaultDisplay.getMetrics(displayMetrics)
         return displayMetrics
     }
@@ -52,8 +55,10 @@ object UnifiedScreenUtils {
      */
     fun getScreenSize(context: Context): Point {
         val wm = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+        @Suppress("DEPRECATION")
         val display = wm.defaultDisplay
         val size = Point()
+        @Suppress("DEPRECATION")
         display.getSize(size)
         return size
     }

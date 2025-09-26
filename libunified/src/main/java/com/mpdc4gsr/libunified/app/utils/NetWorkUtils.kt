@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package com.mpdc4gsr.libunified.app.utils
 
 import android.content.Context
@@ -31,6 +33,7 @@ object NetWorkUtils {
 
     fun isWifiNameValid(context: Context, prefixes: List<String>): Boolean {
         val wifiManager = context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
+        @Suppress("DEPRECATION")
         val wifiInfo = wifiManager.connectionInfo
         val ssid = wifiInfo.ssid.replace("\"", "") // 移除双引号
         for (prefix in prefixes) {
@@ -115,6 +118,7 @@ object NetWorkUtils {
         } else {
             @Suppress("DEPRECATION")
             val networkInfo = connectivityManager.activeNetworkInfo
+            @Suppress("DEPRECATION")
             return networkInfo?.isConnected == true
         }
     }

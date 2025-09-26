@@ -72,6 +72,7 @@ object UnifiedBleUtils {
      * Check if Bluetooth is enabled
      */
     fun isBluetoothEnabled(): Boolean {
+        @Suppress("DEPRECATION")
         val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
         return bluetoothAdapter?.isEnabled == true
     }
@@ -80,6 +81,7 @@ object UnifiedBleUtils {
      * Get Bluetooth adapter
      */
     fun getBluetoothAdapter(): BluetoothAdapter? {
+        @Suppress("DEPRECATION")
         return BluetoothAdapter.getDefaultAdapter()
     }
 
