@@ -77,6 +77,43 @@ object ByteUtils {
     fun ByteArray.descBytes(): ByteArray = this.reversedArray()
     fun ByteArray.toBytes(): ByteArray = this
     
+    fun String.toBytes(length: Int): ByteArray {
+        val bytes = this.toByteArray()
+        val result = ByteArray(length)
+        val copyLength = minOf(bytes.size, length)
+        System.arraycopy(bytes, 0, result, 0, copyLength)
+        return result
+    }
+    
+    fun Short.toLittleBytes(): ByteArray {
+        return byteArrayOf(
+            (this.toInt() and 0xFF).toByte(),
+            (this.toInt() shr 8 and 0xFF).toByte()
+        )
+    }
+    
+    fun Int.toLittleBytes(): ByteArray {
+        return byteArrayOf(
+            (this and 0xFF).toByte(),
+            (this shr 8 and 0xFF).toByte(),
+            (this shr 16 and 0xFF).toByte(),
+            (this shr 24 and 0xFF).toByte()
+        )
+    }
+    
+    fun Float.toLittleBytes(): ByteArray {
+        val bits = this.toBits()
+        return bits.toLittleBytes()
+    }
+    
+    fun Int.getIndex(index: Int): Int {
+        return if (index < 32) {
+            (this shr index) and 1
+        } else {
+            0
+        }
+    }
+    
     fun bigBytesToInt(b1: Byte, b2: Byte, b3: Byte, b4: Byte): Int {
         return (b1.toInt() and 0xFF shl 24) or 
                (b2.toInt() and 0xFF shl 16) or 

@@ -38,7 +38,7 @@ import com.mpdc4gsr.module.thermalunified.bean.DataBean
 import com.mpdc4gsr.module.thermalunified.bean.SelectPositionBean
 import com.mpdc4gsr.module.thermalunified.event.ThermalActionEvent
 import com.mpdc4gsr.module.thermalunified.lite.activity.IRMonitorLiteActivity
-import com.mpdc4gsr.module.thermalunified.lite.camera.CameraPreviewManager
+import com.mpdc4gsr.libunified.ui.camera.CameraPreviewManager
 import com.mpdc4gsr.module.thermalunified.lite.camera.DeviceControlManager
 import com.mpdc4gsr.module.thermalunified.lite.camera.DeviceIrcmdControlManager
 import com.mpdc4gsr.module.thermalunified.lite.camera.OnUSBConnectListener
