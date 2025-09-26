@@ -5,8 +5,12 @@ import com.google.gson.Gson
 import org.json.JSONException
 import org.json.JSONObject
 
+/**
+ * SocketCmdUtil based on reference repository implementation
+ * Adapted from libapp/src/main/java/com/topdon/lib/core/socket/SocketCmdUtil.kt
+ */
 object SocketCmdUtil {
-    fun getSocketCmd(cmd: Int): String? {
+    fun getSocketCmd(cmd: Int): String?{
         var cmdJson: String? = null
         try {
             val gson = Gson()
