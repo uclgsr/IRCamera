@@ -60,7 +60,7 @@ class FaultTolerantRecordingActivity : AppCompatActivity() {
         try {
             val permissionController = mpdc4gsr.permissions.PermissionController(this)
             permissionManager = PermissionManager(this, permissionController)
-            recordingController = ComprehensiveRecordingController(this, this, permissionManager)
+            recordingController = ComprehensiveRecordingController(this)
 
             lifecycleScope.launch {
                 // Check for any crashed sessions first

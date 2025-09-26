@@ -3,11 +3,15 @@ package mpdc4gsr.activities
 import android.Manifest
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
+import android.bluetooth.BluetoothManager
 import android.bluetooth.le.ScanCallback
 import android.bluetooth.le.ScanResult
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -25,6 +29,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import mpdc4gsr.ShimmerNetworkClient
 import mpdc4gsr.sensors.TimestampManager
+import mpdc4gsr.sensors.gsr.GSRCalculationUtils
+import mpdc4gsr.sensors.gsr.GSRConstants
 import mpdc4gsr.sensors.unified.model.GSRSample
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -35,24 +41,8 @@ class ShimmerMvpActivity : AppCompatActivity() {
     companion object {
         private const val TAG = "ShimmerMVP"
         private const val REQUEST_ENABLE_BT = 1
-        private const val GSR_SAMPLING_RATE = 128.0
 
-        // GSR calculation constants
-        private const val ADC_MAX_VALUE = 4095.0
-        private const val REFERENCE_VOLTAGE = 3.0
-        private const val REFERENCE_RESISTANCE_OHMS = 40200.0
-        private const val VOLTAGE_DIVIDER = 1000.0
-        private const val MICROSIEMENS_CONVERSION = 1000000.0
-
-        // Signal quality thresholds
-        private const val GSR_RAW_LOWER_BOUND = 100
-        private const val GSR_RAW_UPPER_BOUND = 4000
-        private const val GSR_MICROSIEMENS_LOWER_BOUND = 0.1
-        private const val GSR_MICROSIEMENS_UPPER_BOUND = 100.0
-        private const val GSR_HIGH_THRESHOLD = 50.0
-        private const val GSR_LOW_THRESHOLD = 0.5
-
-        // Quality range constants
+        // Quality range constants - keeping these as they are specific to this activity
         private const val QUALITY_EXCELLENT_LOWER = 500
         private const val QUALITY_EXCELLENT_UPPER = 3500
         private const val QUALITY_EXCELLENT_GSR_LOWER = 1.0
@@ -185,7 +175,8 @@ class ShimmerMvpActivity : AppCompatActivity() {
             return
         }
 
-        val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+        val bluetoothManager = getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
+        val bluetoothAdapter = bluetoothManager.adapter
         if (bluetoothAdapter == null) {
             showToast("Bluetooth not supported on this device")
             return
@@ -207,7 +198,7 @@ class ShimmerMvpActivity : AppCompatActivity() {
 
 
                 shimmerBluetoothManager =
-                    ShimmerBluetoothManagerAndroid(this@ShimmerMvpActivity, android.os.Handler())
+                    ShimmerBluetoothManagerAndroid(this@ShimmerMvpActivity, Handler(Looper.getMainLooper()))
                 Log.i(TAG, "Shimmer manager initialized - API compatibility mode")
                 updateConnectionStatus("Shimmer manager ready")
                 binding.connectButton.isEnabled = true
@@ -235,7 +226,8 @@ class ShimmerMvpActivity : AppCompatActivity() {
                     return@launch
                 }
 
-                val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+                val bluetoothManager = getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
+                val bluetoothAdapter = bluetoothManager.adapter
                 if (bluetoothAdapter == null) {
                     showBluetoothNotSupportedDialog()
                     binding.connectButton.isEnabled = true
@@ -294,7 +286,8 @@ class ShimmerMvpActivity : AppCompatActivity() {
 
     private suspend fun performBluetoothLeScanning(): List<BluetoothDevice> = withContext(Dispatchers.IO) {
         val discoveredDevices = mutableListOf<BluetoothDevice>()
-        val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+        val bluetoothManager = getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
+        val bluetoothAdapter = bluetoothManager.adapter
         val bluetoothLeScanner = bluetoothAdapter?.bluetoothLeScanner
 
         if (bluetoothLeScanner == null) {
@@ -455,12 +448,9 @@ class ShimmerMvpActivity : AppCompatActivity() {
             // Calculate GSR in microsiemens with enhanced method
             val gsrMicrosiemens = if (gsrCalibrated > 0) {
                 gsrCalibrated
-            } else if (gsrRaw > 0 && gsrRaw <= 4095) {
-                // Enhanced GSR calculation with proper resistance conversion using constants
-                val voltage = (gsrRaw / ADC_MAX_VALUE) * REFERENCE_VOLTAGE
-                val resistance =
-                    (REFERENCE_VOLTAGE * REFERENCE_RESISTANCE_OHMS) / (voltage * VOLTAGE_DIVIDER) - REFERENCE_RESISTANCE_OHMS
-                if (resistance > 0) MICROSIEMENS_CONVERSION / resistance else 0.0
+            } else if (gsrRaw > 0 && gsrRaw <= GSRConstants.ADC_MAX_VALUE.toInt()) {
+                // Use centralized GSR calculation
+                GSRCalculationUtils.calculateGSRMicrosiemens(gsrRaw)
             } else {
                 0.0
             }
@@ -469,14 +459,8 @@ class ShimmerMvpActivity : AppCompatActivity() {
             val ppgData = objectCluster.getFormatClusterValue("PPG_A13", "CAL")
             val ppgRaw = (ppgData as? Number)?.toInt() ?: 0
 
-            // Calculate quality score based on data validity
-            val qualityScore = when {
-                gsrRaw !in 100..4000 -> 0.2 // Poor ADC range
-                gsrMicrosiemens !in 0.1..100.0 -> 0.3 // Poor GSR range
-                gsrMicrosiemens > 50.0 -> 0.4 // Very high GSR (poor contact?)
-                gsrMicrosiemens < 0.5 -> 0.5 // Very low GSR (sensor issues?)
-                else -> 0.9 // Good quality data
-            }
+            // Calculate quality score using centralized utility
+            val qualityScore = GSRCalculationUtils.calculateSignalQuality(gsrMicrosiemens, gsrRaw)
 
             // Create GSRSample using the unified model
             GSRSample(
@@ -515,7 +499,7 @@ class ShimmerMvpActivity : AppCompatActivity() {
                     sample.resistanceOhms / 1000
                 )
                 binding.sampleCountText.text = "Samples: $sampleCount (${
-                    String.format("%.1f", sampleCount * 1000.0 / GSR_SAMPLING_RATE)
+                    String.format("%.1f", sampleCount * 1000.0 / GSRConstants.GSR_SAMPLING_RATE)
                 }s)"
 
                 // Update signal quality indicator
@@ -579,10 +563,10 @@ class ShimmerMvpActivity : AppCompatActivity() {
 
     private fun calculateSignalQuality(gsrValue: Double, rawValue: Int): Double {
         return when {
-            rawValue !in GSR_RAW_LOWER_BOUND..GSR_RAW_UPPER_BOUND -> 20.0 // Poor ADC range
-            gsrValue !in GSR_MICROSIEMENS_LOWER_BOUND..GSR_MICROSIEMENS_UPPER_BOUND -> 30.0 // Poor GSR range
-            gsrValue > GSR_HIGH_THRESHOLD -> 40.0 // Very high GSR (poor contact?)
-            gsrValue < GSR_LOW_THRESHOLD -> 50.0 // Very low GSR (sensor issues?)
+            rawValue !in GSRConstants.GSR_RAW_LOWER_BOUND..GSRConstants.GSR_RAW_UPPER_BOUND -> 20.0 // Poor ADC range
+            gsrValue !in GSRConstants.GSR_MICROSIEMENS_LOWER_BOUND..GSRConstants.GSR_MICROSIEMENS_UPPER_BOUND -> 30.0 // Poor GSR range
+            gsrValue > GSRConstants.GSR_HIGH_THRESHOLD -> 40.0 // Very high GSR (poor contact?)
+            gsrValue < GSRConstants.GSR_LOW_THRESHOLD -> 50.0 // Very low GSR (sensor issues?)
             rawValue in QUALITY_EXCELLENT_LOWER..QUALITY_EXCELLENT_UPPER && gsrValue in QUALITY_EXCELLENT_GSR_LOWER..QUALITY_EXCELLENT_GSR_UPPER -> 90.0 // Excellent signal
             rawValue in QUALITY_GOOD_LOWER..QUALITY_GOOD_UPPER && gsrValue in QUALITY_GOOD_GSR_LOWER..QUALITY_GOOD_GSR_UPPER -> 80.0 // Good signal
             else -> 70.0 // Acceptable signal
@@ -642,8 +626,8 @@ class ShimmerMvpActivity : AppCompatActivity() {
             Log.d(TAG, "GSR range configuration attempted")
 
             // Configure sampling rate with validation using standard Shimmer API
-            shimmer.setSamplingRateShimmer(GSR_SAMPLING_RATE)
-            Log.d(TAG, "Sampling rate configured to ${GSR_SAMPLING_RATE}Hz")
+            shimmer.setSamplingRateShimmer(GSRConstants.GSR_SAMPLING_RATE)
+            Log.d(TAG, "Sampling rate configured to ${GSRConstants.GSR_SAMPLING_RATE}Hz")
 
             // Note: enableBufferMode may not be available in all Shimmer SDK versions
             try {
@@ -757,14 +741,14 @@ class ShimmerMvpActivity : AppCompatActivity() {
                 csvContent.append("# Shimmer3 GSR+ Data Export\n")
                 csvContent.append("# Device: $deviceInfo\n")
                 csvContent.append("# Session ID: ${currentSessionId ?: "unknown"}\n")
-                csvContent.append("# Sampling Rate: ${GSR_SAMPLING_RATE} Hz\n")
-                csvContent.append("# ADC Resolution: 12-bit (0-4095)\n")
+                csvContent.append("# Sampling Rate: ${GSRConstants.GSR_SAMPLING_RATE} Hz\n")
+                csvContent.append("# ADC Resolution: 12-bit (0-${GSRConstants.ADC_MAX_VALUE.toInt()})\n")
                 csvContent.append("# Total Samples: ${gsrDataBuffer.size}\n")
                 csvContent.append(
                     "# Duration: ${
                         String.format(
                             "%.2f",
-                            gsrDataBuffer.size / GSR_SAMPLING_RATE
+                            gsrDataBuffer.size / GSRConstants.GSR_SAMPLING_RATE
                         )
                     } seconds\n"
                 )
@@ -823,7 +807,7 @@ class ShimmerMvpActivity : AppCompatActivity() {
                         "  Duration: ${
                             String.format(
                                 "%.2f",
-                                gsrDataBuffer.size / GSR_SAMPLING_RATE
+                                gsrDataBuffer.size / GSRConstants.GSR_SAMPLING_RATE
                             )
                         }s"
                     )

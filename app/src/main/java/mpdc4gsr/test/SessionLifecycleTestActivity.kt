@@ -42,7 +42,7 @@ class SessionLifecycleTestActivity : FragmentActivity() {
         // Initialize components
         permissionController = PermissionController(this)
         permissionManager = PermissionManager(this, permissionController)
-        recordingController = ComprehensiveRecordingController(this, this)
+        recordingController = ComprehensiveRecordingController(this)
 
         // Add test sensors
         setupTestSensors()
