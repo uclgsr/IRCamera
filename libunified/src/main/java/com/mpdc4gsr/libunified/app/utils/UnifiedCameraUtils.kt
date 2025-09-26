@@ -125,19 +125,20 @@ object UnifiedCameraUtils {
             cameraThread?.start()
         }
 
-        override fun onDraw(canvas: Canvas) {
-            super.onDraw(canvas)
-            
-            bitmap?.let { bmp ->
-                canvas.drawBitmap(bmp, 0f, 0f, paint)
-            }
+        // Note: TextureView doesn't support onDraw override, use SurfaceTextureListener instead
+        private fun drawOverlay(canvas: Canvas?) {
+            canvas?.let { c ->
+                bitmap?.let { bmp ->
+                    c.drawBitmap(bmp, 0f, 0f, paint)
+                }
 
-            if (config.drawLine) {
-                drawCrosshair(canvas)
+                if (config.drawLine) {
+                    drawCrosshair(c)
+                }
             }
         }
 
-        private fun drawCrosshair(canvas: Canvas) {
+        fun drawCrosshair(canvas: Canvas) {
             val centerX = width / 2f
             val centerY = height / 2f
             val crossLen = config.crossLength.toFloat()

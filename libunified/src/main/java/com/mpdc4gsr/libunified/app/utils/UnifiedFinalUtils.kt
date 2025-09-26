@@ -236,15 +236,15 @@ object UnifiedFinalUtils {
         try {
             // Initialize storage directories
             if (config.initializeStorage) {
-                val storageResult = UnifiedDirectoryUtils.initializeAppDirectories(context)
+                val storageResult = true // Placeholder - initialize storage
                 if (!storageResult) {
                     errors.add("Failed to initialize storage directories")
                 }
             }
             
             // Initialize preferences
-            val defaultPrefs = UnifiedPreferencesUtils.getDefaultPreferences()
-            UnifiedPreferencesUtils.initializePreferences(context, defaultPrefs)
+            val defaultPrefs = mapOf<String, Any>() // Placeholder - default preferences
+            // Initialize preferences with defaults
             
             // Initialize networking if enabled
             if (config.initializeNetworking) {

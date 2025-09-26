@@ -185,7 +185,7 @@ class UnifiedDataWriterUtils(
     }
 
     // Static utility methods for simple file operations
-    companion object {
+    object FileUtils {
         /**
          * Write data to file synchronously
          */
