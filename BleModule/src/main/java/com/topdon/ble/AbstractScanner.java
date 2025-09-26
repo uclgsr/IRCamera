@@ -298,13 +298,11 @@ abstract class AbstractScanner implements Scanner {
         handleScanCallback(false, null, false, -1, "");
     }
 
-    private final Runnable stopScanRunnable = () -> stopScan(false);
-
     @Override
     public void release() {
         stopScan(false);
         scanListeners.clear();
-    }
+    }    private final Runnable stopScanRunnable = () -> stopScan(false);
 
     /**
      * 是否可搜索
@@ -320,6 +318,8 @@ abstract class AbstractScanner implements Scanner {
      * 执行停止搜索
      */
     protected abstract void performStopScan();
+
+
 
 
 }

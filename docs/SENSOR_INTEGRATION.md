@@ -1,10 +1,12 @@
 # Sensor Integration Implementation Guide
 
-This document consolidates all sensor integration implementation details for RGB camera, thermal imaging, and GSR sensors in the IRCamera platform.
+This document consolidates all sensor integration implementation details for RGB camera, thermal imaging, and GSR
+sensors in the IRCamera platform.
 
 ## Overview
 
 The IRCamera platform supports multi-modal physiological sensing through three primary sensor types:
+
 - **RGB Camera**: High-resolution video and RAW image capture
 - **Thermal Camera**: Topdon TC001 thermal imaging device
 - **GSR Sensor**: Shimmer3 GSR+ Bluetooth-enabled galvanic skin response
@@ -17,13 +19,15 @@ The IRCamera platform supports multi-modal physiological sensing through three p
 **Location**: `RgbCameraRecorder.kt`
 
 #### Features
+
 - Automatic 4K60fps detection for Samsung S22 and compatible devices
-- Fallback to 4K30 or 1080p60/30 for unsupported devices  
+- Fallback to 4K30 or 1080p60/30 for unsupported devices
 - Simultaneous JPEG frame capture at ~12fps during video recording
 - Video files saved as H.264 MP4 format
 - JPEG frames saved with timestamps for synchronization
 
 #### Implementation Details
+
 ```kotlin
 class RgbCameraRecorder {
     // Automatic resolution detection
@@ -45,6 +49,7 @@ class RgbCameraRecorder {
 **Location**: `RawEngine.kt`, `RgbCameraRecorder.kt`
 
 #### Features
+
 - Samsung Stage 3/Level 3 RAW processing support
 - DNG file output using Android's DngCreator
 - Separate capture session for RAW mode (alternate to video mode)
@@ -52,6 +57,7 @@ class RgbCameraRecorder {
 - Device compatibility checking for RAW support
 
 #### Samsung Stage 3 RAW Processing
+
 ```kotlin
 // DNG Capture with Stage 3 RAW processing
 val dngCreator = DngCreator(characteristics, result)
@@ -62,6 +68,7 @@ dngCreator.writeImage(dngOutputStream, rawImage)
 
 **Status**: ✅ Implemented  
 **Features**:
+
 - TextureView-based preview display
 - Automatic aspect ratio handling
 - Integration with recording controls
@@ -74,6 +81,7 @@ dngCreator.writeImage(dngOutputStream, rawImage)
 The thermal camera integration supports the Topdon TC001 thermal imaging device with comprehensive feature set.
 
 #### Core Features
+
 - **Dual-camera fusion**: Thermal + RGB overlay capabilities
 - **Temperature measurement**: Point and area temperature analysis
 - **Recording modes**: Video recording and frame capture
@@ -81,6 +89,7 @@ The thermal camera integration supports the Topdon TC001 thermal imaging device 
 - **Color mapping**: Multiple thermal color palettes
 
 #### Hardware Communication
+
 ```kotlin
 // TC001 device communication
 class TopdonTC001Manager {
@@ -109,6 +118,7 @@ component/thermal-ir/src/main/java/com/mpdc4gsr/module/thermal/ir/
 ```
 
 #### Thermal Data Processing
+
 - **Frame rate optimization**: Achieved 25Hz TC001 Plus detection (177% improvement)
 - **Temperature calibration**: Accurate temperature measurement with device-specific calibration
 - **Color mapping algorithms**: Multiple thermal visualization modes
@@ -124,8 +134,9 @@ component/thermal-ir/src/main/java/com/mpdc4gsr/module/thermal/ir/
 #### Real Shimmer Libraries Integration
 
 Replaced mock implementations with actual Shimmer SDK JAR files from `app/libs/`:
+
 - `shimmerbluetoothmanager-0.11.5_beta.jar`
-- `shimmerdriver-0.11.5_beta.jar`  
+- `shimmerdriver-0.11.5_beta.jar`
 - `shimmerdriverpc-0.11.5_beta.jar`
 - `shimmerandroidinstrumentdriver-3.2.4_beta.aar`
 
@@ -151,13 +162,16 @@ class RealShimmerDataCluster(private val objectCluster: ObjectCluster) {
 ```
 
 #### GSR Data Processing
+
 - **12-bit ADC pipeline**: Correct 3.3V reference and calibration
 - **Streaming support**: Real-time GSR data with configurable sample rates
 - **Multi-device support**: Simultaneous connection to 2-3 Shimmer units
 - **Data quality**: Comprehensive validation and quality assurance
 
 #### BLE Command Control
+
 Implemented complete Shimmer GSR+ command set:
+
 - Start/stop streaming commands (0x07/0x20)
 - Device configuration and calibration
 - Sample rate configuration
@@ -170,11 +184,13 @@ Implemented complete Shimmer GSR+ command set:
 The platform provides precise temporal alignment across all sensors:
 
 #### Synchronized Sensor Start
+
 - **Barrier coordination**: <1000ms jitter control across all sensors
 - **Timestamp alignment**: Nanosecond precision timestamps
 - **Session boundaries**: Coordinated start/stop across modalities
 
 #### Time Synchronization
+
 - **NTP-style protocol**: Accurate time sync between Android devices and PC
 - **Network adaptation**: Auto-resync capabilities for varying network conditions
 - **Quality metrics**: RTT monitoring and sync accuracy tracking
@@ -198,6 +214,7 @@ class RecordingController {
 ## Data Management and Export
 
 ### File Organization Structure
+
 ```
 /sdcard/IRCamera/sessions/[session_id]/
 ├── rgb/
@@ -216,16 +233,19 @@ class RecordingController {
 ### Data Export Formats
 
 #### RGB Data
+
 - **Video**: H.264 MP4 with 4K/1080p resolution
 - **Frames**: JPEG images with timestamp metadata
 - **RAW**: DNG files for Stage 3 RAW capture
 
-#### Thermal Data  
+#### Thermal Data
+
 - **Video**: Thermal video with temperature data
 - **Frames**: Thermal images with temperature information
 - **CSV**: Temperature measurements with spatial coordinates
 
 #### GSR Data
+
 - **Format**: CSV with columns: timestamp, gsr_kohms, ppg_mv, quality_flag
 - **Sample Rate**: Configurable up to 1000Hz
 - **Calibration**: Device-specific calibration metadata included
@@ -233,12 +253,14 @@ class RecordingController {
 ## Error Handling and Recovery
 
 ### Sensor Fault Tolerance
+
 - **Individual sensor isolation**: Failure of one sensor doesn't affect others
 - **Graceful degradation**: Continue recording with available sensors
 - **Automatic reconnection**: Intelligent retry mechanisms for BLE/USB devices
 - **Health monitoring**: Continuous sensor status monitoring
 
 ### Recovery Mechanisms
+
 ```kotlin
 class SensorHealthMonitor {
     fun monitorSensorHealth(sensor: Sensor) {
@@ -252,12 +274,14 @@ class SensorHealthMonitor {
 ## Testing and Validation
 
 ### Automated Testing
+
 - **Instrumentation tests**: RGB camera 4K validation
-- **Unit tests**: Sensor communication protocols  
+- **Unit tests**: Sensor communication protocols
 - **Integration tests**: Multi-sensor coordination
 - **Performance tests**: Throughput and latency validation
 
 ### Manual Validation
+
 - **Multi-device testing**: 2-3 concurrent Shimmer units
 - **Resolution validation**: 4K recording capability confirmation
 - **Thermal accuracy**: Temperature measurement precision testing
@@ -266,6 +290,7 @@ class SensorHealthMonitor {
 ## Configuration Management
 
 ### Sensor Configuration
+
 ```yaml
 sensors:
   rgb:
@@ -284,4 +309,5 @@ sensors:
     enabled_sensors: ["GSR", "PPG"]
 ```
 
-This consolidated sensor integration provides enterprise-grade multi-modal sensing capabilities with robust error handling, precise synchronization, and comprehensive data management for scientific research applications.
+This consolidated sensor integration provides enterprise-grade multi-modal sensing capabilities with robust error
+handling, precise synchronization, and comprehensive data management for scientific research applications.

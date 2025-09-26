@@ -23,6 +23,9 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import mpdc4gsr.data.SessionMetadata
+import mpdc4gsr.controller.RecordingConstants.RGB_STORAGE_MB_PER_MIN
+import mpdc4gsr.controller.RecordingConstants.THERMAL_STORAGE_MB_PER_MIN
+import mpdc4gsr.controller.RecordingConstants.SHIMMER_STORAGE_MB_PER_MIN
 import mpdc4gsr.sensors.ErrorType
 import mpdc4gsr.sensors.RecordingStats
 import mpdc4gsr.sensors.RecordingStatus
@@ -47,14 +50,6 @@ class RecordingController(
 ) {
     companion object {
         private const val TAG = "RecordingController"
-        private const val SYNC_MARKER_DISTRIBUTION_DELAY_MS = 50L
-        private const val STATUS_UPDATE_INTERVAL_MS = 1000L
-        private const val ERROR_RECOVERY_DELAY_MS = 2000L
-
-
-        private const val RGB_STORAGE_MB_PER_MIN = 50.0
-        private const val THERMAL_STORAGE_MB_PER_MIN = 5.0
-        private const val SHIMMER_STORAGE_MB_PER_MIN = 1.0
 
         // Type aliases for public API compatibility
         typealias SessionManifest = mpdc4gsr.controller.SessionManifest
@@ -775,7 +770,7 @@ class RecordingController(
                 addSyncMarker("session_end", System.nanoTime())
 
 
-                delay(SYNC_MARKER_DISTRIBUTION_DELAY_MS)
+                delay(RecordingConstants.SYNC_MARKER_DISTRIBUTION_DELAY_MS)
 
                 val stopResult = safeStopAll()
 
@@ -1293,7 +1288,7 @@ class RecordingController(
                     Log.w(TAG, "Status monitoring error", e)
                 }
 
-                delay(STATUS_UPDATE_INTERVAL_MS)
+                delay(RecordingConstants.STATUS_UPDATE_INTERVAL_MS)
             }
         }
 
@@ -1398,7 +1393,7 @@ class RecordingController(
             try {
                 Log.i(TAG, "Attempting error recovery for sensor ${sensor.sensorId}")
 
-                delay(ERROR_RECOVERY_DELAY_MS)
+                delay(RecordingConstants.ERROR_RECOVERY_DELAY_MS)
 
                 val recoverySuccess = sensor.initialize()
 
@@ -1952,10 +1947,10 @@ class RecordingController(
                     updateSensorStatusFlow()
 
                     // Wait before next health check
-                    delay(STATUS_UPDATE_INTERVAL_MS)
+                    delay(RecordingConstants.STATUS_UPDATE_INTERVAL_MS)
                 } catch (e: Exception) {
                     Log.w(TAG, "Error during sensor health monitoring", e)
-                    delay(ERROR_RECOVERY_DELAY_MS)
+                    delay(RecordingConstants.ERROR_RECOVERY_DELAY_MS)
                 }
             }
         }
@@ -2048,7 +2043,7 @@ class RecordingController(
                 eventType = event.eventType,
                 timestampMs = event.timestampMs,
                 sensorId = event.sensorId,
-                triggerSource = event.triggerSource?.name ?: "UNKNOWN",
+                triggerSource = convertFromRecordingControllerTriggerSource(event.triggerSource),
                 metadata = event.metadata,
                 success = event.success,
                 errorMessage = event.errorMessage
@@ -2060,14 +2055,38 @@ class RecordingController(
             startTime = startTime,
             stopTime = stopTime,
             duration = duration,
-            triggerSource = (lastTriggerSource ?: TriggerSource.LOCAL_UI).name,
+            triggerSource = convertFromRecordingControllerTriggerSource(lastTriggerSource)
+                ?: mpdc4gsr.controller.TriggerSource.LOCAL_UI,
             sensorActivitySummary = convertedSensorActivitySummary,
             events = convertedEvents,
             errors = errors,
             warnings = warnings,
             fileReferences = emptyMap(), // Will be populated by individual recorders
-            sessionState = currentSessionState.get().name
+            sessionState = convertFromRecordingControllerSessionState(currentSessionState.get())
         )
+    }
+
+    private fun convertFromRecordingControllerTriggerSource(source: RecordingController.TriggerSource?): mpdc4gsr.controller.TriggerSource? {
+        return when (source) {
+            RecordingController.TriggerSource.LOCAL_UI -> mpdc4gsr.controller.TriggerSource.LOCAL_UI
+            RecordingController.TriggerSource.LOCAL_NOTIFICATION -> mpdc4gsr.controller.TriggerSource.LOCAL_NOTIFICATION
+            RecordingController.TriggerSource.REMOTE_PC -> mpdc4gsr.controller.TriggerSource.REMOTE_PC
+            RecordingController.TriggerSource.AUTOMATIC -> mpdc4gsr.controller.TriggerSource.AUTOMATIC
+            RecordingController.TriggerSource.CRASH_RECOVERY -> mpdc4gsr.controller.TriggerSource.CRASH_RECOVERY
+            null -> null
+        }
+    }
+
+    private fun convertFromRecordingControllerSessionState(state: RecordingController.SessionState): mpdc4gsr.controller.SessionState {
+        return when (state) {
+            RecordingController.SessionState.IDLE -> mpdc4gsr.controller.SessionState.IDLE
+            RecordingController.SessionState.STARTING -> mpdc4gsr.controller.SessionState.STARTING
+            RecordingController.SessionState.RECORDING -> mpdc4gsr.controller.SessionState.RECORDING
+            RecordingController.SessionState.STOPPING -> mpdc4gsr.controller.SessionState.STOPPING
+            RecordingController.SessionState.STOPPED_COMPLETED -> mpdc4gsr.controller.SessionState.STOPPED_COMPLETED
+            RecordingController.SessionState.STOPPED_FAILED -> mpdc4gsr.controller.SessionState.STOPPED_FAILED
+            RecordingController.SessionState.STOPPED_INCOMPLETE -> mpdc4gsr.controller.SessionState.STOPPED_INCOMPLETE
+        }
     }
 }
 
