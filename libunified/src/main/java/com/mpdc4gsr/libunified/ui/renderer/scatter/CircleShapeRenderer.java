@@ -34,7 +34,7 @@ public class CircleShapeRenderer implements IShapeRenderer {
                     renderPaint);
 
             if (shapeHoleColor != ColorTemplate.COLOR_NONE) {
-                renderPaint.setStyle(Paint.Style.FILL);
+                renderPaint.setStyle(Paint.Style.FIL// removed logging;
 
                 renderPaint.setColor(shapeHoleColor);
                 c.drawCircle(
@@ -44,7 +44,7 @@ public class CircleShapeRenderer implements IShapeRenderer {
                         renderPaint);
             }
         } else {
-            renderPaint.setStyle(Paint.Style.FILL);
+            renderPaint.setStyle(Paint.Style.FIL// removed logging;
 
             c.drawCircle(
                     posX,

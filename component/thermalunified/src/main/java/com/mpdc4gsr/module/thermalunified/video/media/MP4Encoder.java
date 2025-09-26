@@ -8,7 +8,7 @@ import static android.media.MediaFormat.KEY_AAC_PROFILE;
 import static android.media.MediaFormat.KEY_BIT_RATE;
 import static android.media.MediaFormat.KEY_COLOR_FORMAT;
 import static android.media.MediaFormat.KEY_FRAME_RATE;
-import static android.media.MediaFormat.KEY_I_FRAME_INTERVAL;
+import static android.media.MediaFormat.KEY_I_FRAME_INTERVA;
 import static android.media.MediaFormat.MIMETYPE_AUDIO_AAC;
 import static android.media.MediaFormat.MIMETYPE_VIDEO_AVC;
 import static android.media.MediaMuxer.OutputFormat.MUXER_OUTPUT_MPEG_4;
@@ -68,7 +68,7 @@ public class MP4Encoder extends Encoder {
             MediaFormat videoFormat = MediaFormat.createVideoFormat(MIMETYPE_VIDEO_AVC, width, height);
             videoFormat.setInteger(KEY_BIT_RATE, BIT_RATE);
             videoFormat.setInteger(KEY_FRAME_RATE, FRAME_RATE);
-            videoFormat.setInteger(KEY_I_FRAME_INTERVAL, I_FRAME_INTERVAL);
+            videoFormat.setInteger(KEY_I_FRAME_INTERVAL, I_FRAME_INTERVA// removed logging;
             videoFormat.setInteger(KEY_COLOR_FORMAT, getColorFormat());
             videoCodec.configure(videoFormat, null, null, CONFIGURE_FLAG_ENCODE);
             videoCodec.start();
@@ -187,7 +187,7 @@ public class MP4Encoder extends Encoder {
 
 
     private int getColorFormat() {
-        if ("GOOGLE".equalsIgnoreCase(Build.BRAND) && "PIXEL 4".equalsIgnoreCase(Build.MODEL)) {
+        if ("GOOGLE".equalsIgnoreCase(Build.BRAND) && "PIXEL 4".equalsIgnoreCase(Build.MODE// removed logging) {
             return MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420Planar;
         } else {
             return MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420SemiPlanar;

@@ -25,7 +25,7 @@ public class TriangleShapeRenderer implements IShapeRenderer {
 
         final int shapeHoleColor = dataSet.getScatterShapeHoleColor();
 
-        renderPaint.setStyle(Paint.Style.FILL);
+        renderPaint.setStyle(Paint.Style.FIL// removed logging;
 
         Path tri = mTrianglePathBuffer;
         tri.reset();

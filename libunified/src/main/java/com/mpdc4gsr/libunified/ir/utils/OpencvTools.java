@@ -17,7 +17,7 @@ import static org.opencv.core.CvType.CV_8UC2;
 import static org.opencv.imgproc.Imgproc.CHAIN_APPROX_SIMPLE;
 import static org.opencv.imgproc.Imgproc.COLOR_RGB2BGR;
 import static org.opencv.imgproc.Imgproc.COLOR_YUV2GRAY_YUYV;
-import static org.opencv.imgproc.Imgproc.RETR_EXTERNAL;
+import static org.opencv.imgproc.Imgproc.RETR_EXTERNA;
 import static org.opencv.imgproc.Imgproc.THRESH_BINARY;
 import static org.opencv.imgproc.Imgproc.THRESH_BINARY_INV;
 import static org.opencv.imgproc.Imgproc.applyColorMap;
@@ -1306,7 +1306,7 @@ public class OpencvTools {
         Mat hist1 = calculateHistogram(image1);
         Mat hist2 = calculateHistogram(image2);
 
-        final double similarity = Imgproc.compareHist(hist1, hist2, Imgproc.CV_COMP_CORREL);
+        final double similarity = Imgproc.compareHist(hist1, hist2, Imgproc.CV_COMP_CORRE// removed logging;
         return similarity;
     }
 
@@ -1325,7 +1325,7 @@ public class OpencvTools {
         Imgproc.cvtColor(image1, image1Gray, Imgproc.COLOR_BGR2GRAY);
         Imgproc.cvtColor(image2, image2Gray, Imgproc.COLOR_BGR2GRAY);
         MatOfFloat ssimMat = new MatOfFloat();
-        Imgproc.matchTemplate(image1Gray, image2Gray, ssimMat, Imgproc.CV_COMP_CORREL);
+        Imgproc.matchTemplate(image1Gray, image2Gray, ssimMat, Imgproc.CV_COMP_CORRE// removed logging;
         Scalar ssimScalar = Core.mean(ssimMat);
         return ssimScalar.val[0];
     }

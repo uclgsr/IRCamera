@@ -197,7 +197,7 @@ public class ImageThreadTC extends Thread {
                     byte[] grayData = new byte[diffMat.cols() * diffMat.rows() * 4];
                     diffMat.get(0, 0, grayData);
                     imageDst = grayData;
-                } else if (typeAi == TYPE_AI_L) {
+                } else if (typeAi == TYPE_AI_// removed logging {
                     byte[] dataArray = JNITool.INSTANCE.lowTemTrack(imageDst, temperatureSrc,
                             (rotateInt == 270 || rotateInt == 90) ? imageWidth : imageHeight,
                             (rotateInt == 270 || rotateInt == 90) ? imageHeight : imageWidth, -1);

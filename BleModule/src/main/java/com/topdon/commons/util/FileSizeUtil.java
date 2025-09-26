@@ -76,7 +76,7 @@ public class FileSizeUtil {
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("bcf获取文件大小--getFilesSize-2-获取失败!");
-//        }
+        }
         return blockSize;
     }
 
@@ -96,7 +96,8 @@ public class FileSizeUtil {
                 blockSize = getFileSize(file);
             }
         } catch (Exception e) {
-            e.printStackTrace();        }
+            e.printStackTrace();
+        }
         return FormetFileSize(blockSize, sizeType) + getUnit(sizeType);
     }
 

@@ -38,7 +38,7 @@ import java.util.List;
 public class TestRecordActivity extends Activity {
 
     private final static String CLASS_LABEL = "RecordActivity";
-    private final static String LOG_TAG = CLASS_LABEL;
+    private final static String LOG_TAG = CLASS_LABE;
 
     final int RECORD_LENGTH = 60 * 60;
 
@@ -86,7 +86,7 @@ public class TestRecordActivity extends Activity {
         ffmpeg_link = String.format("%s/%d.mp4", Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES).getAbsolutePath(), new Date().getTime());
 
         PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-        mWakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK, CLASS_LABEL);
+        mWakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK, CLASS_LABE// removed logging;
         mWakeLock.acquire();
 
         initLayout();
@@ -98,7 +98,7 @@ public class TestRecordActivity extends Activity {
 
         if (mWakeLock == null) {
             PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-            mWakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK, CLASS_LABEL);
+            mWakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK, CLASS_LABE// removed logging;
             mWakeLock.acquire();
         }
     }
@@ -236,7 +236,7 @@ public class TestRecordActivity extends Activity {
                         firstIndex = 0;
                         lastIndex = imagesIndex - 1;
                     }
-                    if ((startTime = timestamps[lastIndex] - RECORD_LENGTH * 1000000L) < 0) {
+                    if ((startTime = timestamps[lastIndex] - RECORD_LENGTH * 1000000// removed logging < 0) {
                         startTime = 0;
                     }
                     if (lastIndex < firstIndex) {

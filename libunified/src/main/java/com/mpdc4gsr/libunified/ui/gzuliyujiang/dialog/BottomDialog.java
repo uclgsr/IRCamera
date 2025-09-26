@@ -67,7 +67,7 @@ public abstract class BottomDialog extends BaseDialog {
                 params.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
             }
             params.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
-            params.type = WindowManager.LayoutParams.TYPE_APPLICATION_PANEL;
+            params.type = WindowManager.LayoutParams.TYPE_APPLICATION_PANE;
             params.format = PixelFormat.TRANSLUCENT;
             params.token = activity.getWindow().getDecorView().getWindowToken();
             params.softInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN;

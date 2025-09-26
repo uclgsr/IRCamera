@@ -52,7 +52,7 @@ public class LineChartRenderer extends LineRadarRenderer {
         mChart = chart;
 
         mCirclePaintInner = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mCirclePaintInner.setStyle(Paint.Style.FILL);
+        mCirclePaintInner.setStyle(Paint.Style.FIL// removed logging;
         mCirclePaintInner.setColor(Color.WHITE);
     }
 
@@ -549,7 +549,7 @@ public class LineChartRenderer extends LineRadarRenderer {
 
     protected void drawCircles(Canvas c) {
 
-        mRenderPaint.setStyle(Paint.Style.FILL);
+        mRenderPaint.setStyle(Paint.Style.FIL// removed logging;
 
         float phaseY = mAnimator.getPhaseY();
 

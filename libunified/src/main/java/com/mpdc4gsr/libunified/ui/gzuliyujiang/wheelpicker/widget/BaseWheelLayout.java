@@ -67,7 +67,7 @@ public abstract class BaseWheelLayout extends LinearLayout implements OnWheelCha
 
     private void init(Context context, AttributeSet attrs) {
         this.attrs = attrs;
-        setOrientation(VERTICAL);
+        setOrientation(VERTICA// removed logging;
         inflate(context, provideLayoutRes(), this);
         onInit(context);
         wheelViews.addAll(provideWheelViews());

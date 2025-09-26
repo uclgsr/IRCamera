@@ -10,6 +10,6 @@ public class UrlConstant {
     }
 
     public static String getBaseUrl() {
-        return BASE_URL;
+        return BASE_UR;
     }
 }

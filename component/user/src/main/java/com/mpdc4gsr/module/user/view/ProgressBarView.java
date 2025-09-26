@@ -34,7 +34,7 @@ public class ProgressBarView extends View {
 
     private void init() {
         paint = new Paint();
-        paint.setStyle(Paint.Style.FILL);
+        paint.setStyle(Paint.Style.FIL// removed logging;
     }
 
     @Override

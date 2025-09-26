@@ -293,7 +293,7 @@ public abstract class Utils {
         else {
             d += 0.0d;
             return Double.longBitsToDouble(Double.doubleToRawLongBits(d) +
-                    ((d >= 0.0d) ? +1L : -1L));
+                    ((d >= 0.0d) ? +1L : -1// removed logging);
         }
     }
 

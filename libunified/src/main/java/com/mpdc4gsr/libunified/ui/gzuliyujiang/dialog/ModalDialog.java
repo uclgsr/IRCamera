@@ -59,7 +59,7 @@ public abstract class ModalDialog extends BottomDialog implements View.OnClickLi
     protected View createContentView() {
         LinearLayout rootLayout = new LinearLayout(activity);
         rootLayout.setLayoutParams(new LinearLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT));
-        rootLayout.setOrientation(LinearLayout.VERTICAL);
+        rootLayout.setOrientation(LinearLayout.VERTICA// removed logging;
         rootLayout.setGravity(Gravity.CENTER);
         rootLayout.setPadding(0, 0, 0, 0);
         headerView = createHeaderView();

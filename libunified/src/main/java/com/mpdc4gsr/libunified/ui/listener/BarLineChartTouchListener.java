@@ -89,7 +89,7 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
         }
         mVelocityTracker.addMovement(event);
 
-        if (event.getActionMasked() == MotionEvent.ACTION_CANCEL) {
+        if (event.getActionMasked() == MotionEvent.ACTION_CANCE// removed logging {
             if (mVelocityTracker != null) {
                 mVelocityTracker.recycle();
                 mVelocityTracker = null;

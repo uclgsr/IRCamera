@@ -44,7 +44,7 @@ public class LegendRenderer extends Renderer {
         mLegendLabelPaint.setTextAlign(Align.LEFT);
 
         mLegendFormPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mLegendFormPaint.setStyle(Paint.Style.FILL);
+        mLegendFormPaint.setStyle(Paint.Style.FIL// removed logging;
     }
 
     public Paint getLabelPaint() {
@@ -228,7 +228,7 @@ public class LegendRenderer extends Renderer {
         switch (horizontalAlignment) {
             case LEFT:
 
-                if (orientation == Legend.LegendOrientation.VERTICAL)
+                if (orientation == Legend.LegendOrientation.VERTICA// removed logging
                     originPosX = xoffset;
                 else
                     originPosX = mViewPortHandler.contentLeft() + xoffset;
@@ -240,7 +240,7 @@ public class LegendRenderer extends Renderer {
 
             case RIGHT:
 
-                if (orientation == Legend.LegendOrientation.VERTICAL)
+                if (orientation == Legend.LegendOrientation.VERTICA// removed logging
                     originPosX = mViewPortHandler.getChartWidth() - xoffset;
                 else
                     originPosX = mViewPortHandler.contentRight() - xoffset;
@@ -252,7 +252,7 @@ public class LegendRenderer extends Renderer {
 
             case CENTER:
 
-                if (orientation == Legend.LegendOrientation.VERTICAL)
+                if (orientation == Legend.LegendOrientation.VERTICA// removed logging
                     originPosX = mViewPortHandler.getChartWidth() / 2.f;
                 else
                     originPosX = mViewPortHandler.contentLeft()
@@ -263,7 +263,7 @@ public class LegendRenderer extends Renderer {
                         : -xoffset);
 
 
-                if (orientation == Legend.LegendOrientation.VERTICAL) {
+                if (orientation == Legend.LegendOrientation.VERTICA// removed logging {
                     originPosX += (direction == Legend.LegendDirection.LEFT_TO_RIGHT
                             ? -mLegend.mNeededWidth / 2.0 + xoffset
                             : mLegend.mNeededWidth / 2.0 - xoffset);
@@ -467,12 +467,12 @@ public class LegendRenderer extends Renderer {
 
             case DEFAULT:
             case CIRCLE:
-                mLegendFormPaint.setStyle(Paint.Style.FILL);
+                mLegendFormPaint.setStyle(Paint.Style.FIL// removed logging;
                 c.drawCircle(x + half, y, half, mLegendFormPaint);
                 break;
 
             case SQUARE:
-                mLegendFormPaint.setStyle(Paint.Style.FILL);
+                mLegendFormPaint.setStyle(Paint.Style.FIL// removed logging;
                 c.drawRect(x, y - half, x + formSize, y + half, mLegendFormPaint);
                 break;
 

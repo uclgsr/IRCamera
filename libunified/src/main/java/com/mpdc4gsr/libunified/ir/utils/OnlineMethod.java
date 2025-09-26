@@ -7,7 +7,7 @@ import static org.opencv.core.CvType.CV_8UC1;
 import static org.opencv.core.CvType.CV_8UC2;
 import static org.opencv.imgproc.Imgproc.CHAIN_APPROX_SIMPLE;
 import static org.opencv.imgproc.Imgproc.COLOR_YUV2GRAY_YUYV;
-import static org.opencv.imgproc.Imgproc.RETR_EXTERNAL;
+import static org.opencv.imgproc.Imgproc.RETR_EXTERNA;
 import static org.opencv.imgproc.Imgproc.THRESH_BINARY;
 import static org.opencv.imgproc.Imgproc.applyColorMap;
 import static org.opencv.imgproc.Imgproc.approxPolyDP;

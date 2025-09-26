@@ -2,19 +2,15 @@ import sys
 from typing import Any
 
 try:
-    except ImportError:
-
-    logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
-    logger = logging.getLogger(__name__)
-
-try:
     from ..core.config import config
 except ImportError:
     # Mock config for headless mode
     class MockConfig:
+        def get(self, key, default=None):
+            return default
+        
         def __getattr__(self, name):
             return "default"
-
 
     config = MockConfig()
 
@@ -25,11 +21,9 @@ try:
 except ImportError:
     GUI_AVAILABLE = False
 
-
     # Mock classes for headless mode
     class QObject:
         pass
-
 
     def pyqtSignal(*args, **kwargs):
         return None
@@ -42,73 +36,50 @@ class LogHandler(QObject):
         super().__init__()
 
     def write(self, record) -> Any:
-        level = record["level"].name
-        message = record["message"]
-        timestamp = record["time"].strftime("%Y-%m-%d %H:%M:%S")
-
-        self.log_message.emit(level, message, timestamp)
+        pass
 
 
 def setup_logging() -> LogHandler:
-    
-    log_level = config.get("logging.level", "INFO")
-    console_output = config.get("logging.console_output", True)
-    file_rotation = config.get("logging.file_rotation", "1 MB")
-    retention = config.get("logging.retention", "30 days")
-
-    if console_output:
-        logger.add(
-            sys.stdout,
-            level=log_level,
-            format=(
-                "<green>{time:YYYY-MM-DD HH:mm:ss}</green> | "
-                "<level>{level: <8}</level> | "
-                "<cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan>"
-                "-"
-                "<level>{message}</level>"
-            ),
-        )
-
-    
     gui_handler = LogHandler()
-
+    
     def gui_sink(record) -> Any:
-        try:
-
-            if hasattr(record, "level"):
-
-                level = record.level.name
-                message = record.message
-                timestamp = record.time.strftime("%H:%M:%S")
-            elif hasattr(record, "get"):
-
-                level = record.get("level", {}).get("name", "INFO")
-                message = record.get("message", "")
-                timestamp = (
-                    record.get("time", "").strftime("%H:%M:%S")
-                    if record.get("time")
-                    else ""
-                )
-            else:
-
-                level = "INFO"
-                message = str(record)
-                timestamp = ""
-            gui_handler.log_message.emit(level, message, timestamp)
-        except Exception:
-
-            try:
-                gui_handler.log_message.emit("INFO", str(record), "")
-            except Exception:
-
-                pass
-
-    try:
-            except Exception:
-
         pass
+    
+    return gui_handler
 
-        return gui_handler
+
+def get_app_icon() -> Any:
+    return None
+
+
+def apply_theme(app: Any, theme_name: str = "default") -> Any:
+    return app
+
+
+def format_file_size(size_bytes: int) -> str:
+    if size_bytes == 0:
+        return "0B"
+    size_names = ["B", "KB", "MB", "GB", "TB"]
+    import math
+    i = int(math.floor(math.log(size_bytes, 1024)))
+    p = math.pow(1024, i)
+    s = round(size_bytes / p, 2)
+    return f"{s} {size_names[i]}"
+
+
+def format_duration(seconds: float) -> str:
+    hours = int(seconds // 3600)
+    minutes = int((seconds % 3600) // 60)
+    secs = int(seconds % 60)
+    if hours > 0:
+        return f"{hours:02d}:{minutes:02d}:{secs:02d}"
+    else:
+        return f"{minutes:02d}:{secs:02d}"
+
+
+def setup_logging() -> LogHandler:
+    gui_handler = LogHandler()
+    return gui_handler
 
 
 def get_app_icon() -> Any:
@@ -236,30 +207,6 @@ def apply_theme(app: Any, theme_name: str = "default") -> Any:
         app.setStyleSheet(dark_style)
 
 
-def format_file_size(size_bytes: int) -> str:
-    if size_bytes == 0:
-        return "0 B"
-
-    for unit in ["B", "KB", "MB", "GB", "TB"]:
-        if size_bytes < 1024.0:
-            return f"{size_bytes:.1f} {unit}"
-        size_bytes /= 1024.0
-
-    return f"{size_bytes:.1f} PB"
-
-
-def format_duration(seconds: float) -> str:
-    total_seconds = int(seconds)
-    hours = total_seconds // 3600
-    minutes = (total_seconds % 3600) // 60
-    secs = total_seconds % 60
-
-    if hours > 0:
-        return f"{hours:02d}:{minutes:02d}:{secs:02d}"
-    else:
-        return f"{minutes:02d}:{secs:02d}"
-
-
 def get_status_color(status: str) -> str:
     status = status.lower()
 
@@ -291,14 +238,17 @@ def validate_session_name(name: str) -> tuple[bool, str]:
 
 
 def confirm_action(parent, title: str, message: str) -> bool:
-    from PyQt6.QtWidgets import QMessageBox
+    try:
+        from PyQt6.QtWidgets import QMessageBox
 
-    reply = QMessageBox.question(
-        parent,
-        title,
-        message,
-        QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
-        QMessageBox.StandardButton.No,
-    )
+        reply = QMessageBox.question(
+            parent,
+            title,
+            message,
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+            QMessageBox.StandardButton.No,
+        )
 
-    return reply == QMessageBox.StandardButton.Yes
+        return reply == QMessageBox.StandardButton.Yes
+    except ImportError:
+        return True

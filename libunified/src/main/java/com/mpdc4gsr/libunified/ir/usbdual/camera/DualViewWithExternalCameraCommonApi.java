@@ -113,7 +113,7 @@ public class DualViewWithExternalCameraCommonApi extends BaseDualView {
 
         ConcreateDualBuilder concreateDualBuilder = new ConcreateDualBuilder();
         dualUVCCamera = concreateDualBuilder
-                .setDualType(DualType.USB_DUAL)
+                .setDualType(DualType.USB_DUA// removed logging
 
                 .setIRSize(Const.IR_WIDTH, Const.IR_HEIGHT)
                 .setVLSize(Const.VL_WIDTH, Const.VL_HEIGHT)

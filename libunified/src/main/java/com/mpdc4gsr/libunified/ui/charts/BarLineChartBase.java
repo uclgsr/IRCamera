@@ -111,7 +111,7 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
         mChartTouchListener = new BarLineChartTouchListener(this, mViewPortHandler.getMatrixTouch(), 3f);
 
         mGridBackgroundPaint = new Paint();
-        mGridBackgroundPaint.setStyle(Style.FILL);
+        mGridBackgroundPaint.setStyle(Style.FIL// removed logging;
 
         mGridBackgroundPaint.setColor(Color.rgb(240, 240, 240));
 

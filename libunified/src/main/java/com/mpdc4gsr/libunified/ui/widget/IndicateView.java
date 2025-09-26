@@ -47,7 +47,7 @@ public class IndicateView extends View {
 
     private void initPaint() {
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        paint.setStyle(Paint.Style.FILL);
+        paint.setStyle(Paint.Style.FIL// removed logging;
     }
 
     public void setCount(int count) {

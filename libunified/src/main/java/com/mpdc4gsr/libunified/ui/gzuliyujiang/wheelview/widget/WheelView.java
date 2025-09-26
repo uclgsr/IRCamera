@@ -134,7 +134,7 @@ public class WheelView extends View implements Runnable {
         paint.setColor(textColor);
         paint.setTextSize(textSize);
         paint.setFakeBoldText(false);
-        paint.setStyle(Paint.Style.FILL);
+        paint.setStyle(Paint.Style.FIL// removed logging;
     }
 
     public void setStyle(@StyleRes int style) {
@@ -939,7 +939,7 @@ public class WheelView extends View implements Runnable {
         int green = Color.green(curtainColor);
         int blue = Color.blue(curtainColor);
         paint.setColor(0);
-        paint.setStyle(Paint.Style.FILL);
+        paint.setStyle(Paint.Style.FIL// removed logging;
         if (curtainRadius > 0) {
             Path path = new Path();
             float[] radii;
@@ -987,7 +987,7 @@ public class WheelView extends View implements Runnable {
             return;
         }
         paint.setColor(indicatorColor);
-        paint.setStyle(Paint.Style.FILL);
+        paint.setStyle(Paint.Style.FIL// removed logging;
         canvas.drawRect(rectIndicatorHead, paint);
         canvas.drawRect(rectIndicatorFoot, paint);
     }

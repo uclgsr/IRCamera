@@ -14,7 +14,7 @@ public class SystemIniUtils {
     public static int getSystemVersion(String path, String systemName, int systemVersion) {
         File file = new File(path + "/Version.ini");
         if (!file.exists()) {
-            L);
+            // removed logging
             return -1;
         }
         Config cfg = new Config();

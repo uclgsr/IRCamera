@@ -65,7 +65,7 @@ public class DualViewWithManualAlignExternalCamera extends BaseParamDualView {
 
         ConcreateDualBuilder concreateDualBuilder = new ConcreateDualBuilder();
         dualUVCCamera = concreateDualBuilder
-                .setDualType(DualType.USB_DUAL)
+                .setDualType(DualType.USB_DUA// removed logging
                 .setIRSize(mIrWidth, mIrHeight)
                 .setVLSize(mVlWidth, mVlHeight)
                 .setDualSize(mDualHeight, mDualWidth)

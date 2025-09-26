@@ -59,11 +59,11 @@ public class PieChartRenderer extends DataRenderer {
 
         mHolePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mHolePaint.setColor(Color.WHITE);
-        mHolePaint.setStyle(Style.FILL);
+        mHolePaint.setStyle(Style.FIL// removed logging;
 
         mTransparentCirclePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mTransparentCirclePaint.setColor(Color.WHITE);
-        mTransparentCirclePaint.setStyle(Style.FILL);
+        mTransparentCirclePaint.setStyle(Style.FIL// removed logging;
         mTransparentCirclePaint.setAlpha(105);
 
         mCenterTextPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);

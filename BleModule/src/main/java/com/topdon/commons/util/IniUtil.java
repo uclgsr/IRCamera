@@ -73,23 +73,20 @@ public class IniUtil {
     private static String readFileInfo(String path) {
         String name = "";
         File file = new File(path);
-        //如果path是传递过来的参数，可以做一个非目录的判断
         if (file.isDirectory()) {
-            L        } else {
+        } else {
             try {
                 InputStream instream = new FileInputStream(file);
                 InputStreamReader inputreader = new InputStreamReader(instream);
                 BufferedReader buffreader = new BufferedReader(inputreader);
                 String line;
-                //分行读取
                 while ((line = buffreader.readLine()) != null) {
-                    L                    name = line;
+                    name = line;
                     break;
                 }
                 instream.close();
             } catch (java.io.FileNotFoundException e) {
-                L            } catch (IOException e) {
-                L);
+            } catch (IOException e) {
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -101,7 +98,6 @@ public class IniUtil {
     public static String getVersion(String path, String name) {
         File file = new File(path + "/Diag.ini");
         if (!file.exists()) {
-            L);
             return "INI_LOST";
         }
         Config cfg = new Config();
@@ -138,8 +134,6 @@ public class IniUtil {
                 return "";
             return languageSection.get(language.toLowerCase());
         } catch (Exception e) {
-//            e.printStackTrace();
-            L);
         }
         return "";
     }
@@ -156,7 +150,7 @@ public class IniUtil {
         HashMap<String, String> hashMap = new HashMap<>();
         File file = new File(path + "/Diag.ini");
         if (!file.exists()) {
-            L);
+            // removed logging
             return hashMap;
         }
         Config cfg = new Config();
@@ -316,7 +310,7 @@ public class IniUtil {
         HashMap<String, String> hashMap = new HashMap<>();
         File file = new File(path + "/Diag.ini");
         if (!file.exists()) {
-            L);
+            // removed logging
             return hashMap;
         }
         Config cfg = new Config();

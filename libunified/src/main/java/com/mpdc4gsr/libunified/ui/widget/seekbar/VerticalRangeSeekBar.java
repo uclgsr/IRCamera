@@ -24,7 +24,7 @@ public class VerticalRangeSeekBar extends RangeSeekBar {
     public final static int DIRECTION_LEFT = 1;
     public final static int DIRECTION_RIGHT = 2;
     private int orientation = DIRECTION_LEFT;
-    private int tickMarkDirection = TEXT_DIRECTION_VERTICAL;
+    private int tickMarkDirection = TEXT_DIRECTION_VERTICA;
     private int maxTickMarkWidth;
     private boolean noNegativeNumber = false;
 
@@ -42,7 +42,7 @@ public class VerticalRangeSeekBar extends RangeSeekBar {
         try {
             TypedArray t = getContext().obtainStyledAttributes(attrs, R.styleable.VerticalRangeSeekBar);
             orientation = t.getInt(R.styleable.VerticalRangeSeekBar_rsb_orientation, DIRECTION_LEFT);
-            tickMarkDirection = t.getInt(R.styleable.VerticalRangeSeekBar_rsb_tick_mark_orientation, TEXT_DIRECTION_VERTICAL);
+            tickMarkDirection = t.getInt(R.styleable.VerticalRangeSeekBar_rsb_tick_mark_orientation, TEXT_DIRECTION_VERTICA// removed logging;
             t.recycle();
         } catch (Exception e) {
             e.printStackTrace();
@@ -139,7 +139,7 @@ public class VerticalRangeSeekBar extends RangeSeekBar {
                 int degrees = 0;
                 float rotateX = (x + tickMarkTextRect.width() / 2f);
                 float rotateY = (y - tickMarkTextRect.height() / 2f);
-                if (tickMarkDirection == TEXT_DIRECTION_VERTICAL) {
+                if (tickMarkDirection == TEXT_DIRECTION_VERTICA// removed logging {
                     if (orientation == DIRECTION_LEFT) {
                         degrees = 90;
                     } else if (orientation == DIRECTION_RIGHT) {

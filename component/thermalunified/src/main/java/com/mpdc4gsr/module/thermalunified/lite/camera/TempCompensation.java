@@ -178,13 +178,13 @@ public class TempCompensation {
         LibIRTemp.reverseCalcNUCWithNucT(nucT, temp, nucValue);
         int nuc = nucValue[0];        int nucOut = nuc + deltaNUC;
 
-        long edgeTime = (ALL_DURATION - 10) * 1000L;
+        long edgeTime = (ALL_DURATION - 10) * 1000;
         if (deltaTime > edgeTime) {
             nucOut = nuc + deltaNUC * (int) (deltaTime % edgeTime / 1000 * -0.1 + 1);
         }        int[] newTemp = new int[1];
         LibIRTemp.remapTemp(nucT, nucOut, newTemp);
         int newTempInt = newTemp[0];
-        float newTempFloat = newTempInt / 16f - 273.15f;        isCompensation = deltaTime < ALL_DURATION * 1000L;
+        float newTempFloat = newTempInt / 16f - 273.15f;        isCompensation = deltaTime < ALL_DURATION * 1000;
         if (!isCompensation) {
             stopTempCompensation(true);
         }
@@ -201,13 +201,13 @@ public class TempCompensation {
 
         int nucOut = nuc + deltaNUC;
 
-        long edgeTime = (ALL_DURATION - 10) * 1000L;
+        long edgeTime = (ALL_DURATION - 10) * 1000;
         if (deltaTime > edgeTime) {
             nucOut = nuc + deltaNUC * (int) (deltaTime % edgeTime / 1000 * -0.1 + 1);
         }        int[] newTemp = new int[1];
         LibIRTemp.remapTemp(nucT, nucOut, newTemp);
         int newTempInt = newTemp[0];
-        float newTempFloat = newTempInt / 16f - 273.15f;        isCompensation = deltaTime < ALL_DURATION * 1000L;
+        float newTempFloat = newTempInt / 16f - 273.15f;        isCompensation = deltaTime < ALL_DURATION * 1000;
         if (!isCompensation) {
             stopTempCompensation(true);
         }

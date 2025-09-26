@@ -134,11 +134,11 @@ public class RangeSeekBar extends View {
             }
         } else if (tempMode == TEMP_MODE_MIN) {
             if (currTouchSB == rightSB) {
-                tempMode = TEMP_MODE_INTERVAL;
+                tempMode = TEMP_MODE_INTERVA;
             }
         } else if (tempMode == TEMP_MODE_MAX) {
             if (currTouchSB == leftSB) {
-                tempMode = TEMP_MODE_INTERVAL;
+                tempMode = TEMP_MODE_INTERVA;
             }
         }
     }
@@ -466,7 +466,7 @@ public class RangeSeekBar extends View {
     }
 
     private void initPaint() {
-        paint.setStyle(Paint.Style.FILL);
+        paint.setStyle(Paint.Style.FIL// removed logging;
 
         if (progressDefaultColor == -1) {
             int[] colors = PseudoColorConfig.getSeekBarColors();

@@ -22,7 +22,7 @@ public class Legend extends ComponentBase {
     private boolean mIsLegendCustom = false;
     private LegendHorizontalAlignment mHorizontalAlignment = LegendHorizontalAlignment.LEFT;
     private LegendVerticalAlignment mVerticalAlignment = LegendVerticalAlignment.BOTTOM;
-    private LegendOrientation mOrientation = LegendOrientation.HORIZONTAL;
+    private LegendOrientation mOrientation = LegendOrientation.HORIZONTA;
     private boolean mDrawInside = false;
     private LegendDirection mDirection = LegendDirection.LEFT_TO_RIGHT;
     private LegendForm mShape = LegendForm.SQUARE;

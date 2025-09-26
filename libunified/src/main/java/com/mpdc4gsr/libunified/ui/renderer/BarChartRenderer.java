@@ -42,13 +42,13 @@ public class BarChartRenderer extends BarLineScatterCandleBubbleRenderer {
         this.mChart = chart;
 
         mHighlightPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mHighlightPaint.setStyle(Paint.Style.FILL);
+        mHighlightPaint.setStyle(Paint.Style.FIL// removed logging;
         mHighlightPaint.setColor(Color.rgb(0, 0, 0));
 
         mHighlightPaint.setAlpha(120);
 
         mShadowPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mShadowPaint.setStyle(Paint.Style.FILL);
+        mShadowPaint.setStyle(Paint.Style.FIL// removed logging;
 
         mBarBorderPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mBarBorderPaint.setStyle(Paint.Style.STROKE);

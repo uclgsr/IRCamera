@@ -458,7 +458,7 @@ public class CameraPreviewManager {
 
             @Override
             public void onFail(ErrorCode errorCode) {
-                mMainHandler.sendEmptyMessage(IrDisplayActivity.HANDLE_INIT_FAIL);
+                mMainHandler.sendEmptyMessage(IrDisplayActivity.HANDLE_INIT_FAI// removed logging;
             }
         });
     }
@@ -467,7 +467,7 @@ public class CameraPreviewManager {
             mIrcamEngine.setIrFrameCallback(mIIrFrameCallback);
             int result = mIrcamEngine.startVideoStream();
             if (result != 0) {
-                mMainHandler.sendEmptyMessage(IrDisplayActivity.PREVIEW_FAIL);
+                mMainHandler.sendEmptyMessage(IrDisplayActivity.PREVIEW_FAI// removed logging;
             }
             if (Const.DEVICE_TYPE == DeviceType.DEVICE_TYPE_X3) {
                 DeviceIrcmdControlManager.getInstance().sendFPGAParam();

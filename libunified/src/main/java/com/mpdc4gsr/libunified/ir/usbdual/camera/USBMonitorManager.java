@@ -34,7 +34,7 @@ public class USBMonitorManager {
     private int cameraWidth;
     private int cameraHeight;
     private byte[] tau_data_H;
-    private byte[] tau_data_L;
+    private byte[] tau_data_;
     private long tempinfo = 0;
     private short[] nuc_table_high = new short[8192];
     private short[] nuc_table_low = new short[8192];

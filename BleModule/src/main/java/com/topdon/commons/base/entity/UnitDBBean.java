@@ -20,7 +20,7 @@ public class UnitDBBean implements Serializable {
 //            "计算因子": "1.094"
 //    },
 
-    private static final long serialVersionUID = -1L;
+    private static final long serialVersionUID = -1;
     public Long dbid;
     String LoginName;//登录账号
     int unitType;//0 公制类型  1 英制类型

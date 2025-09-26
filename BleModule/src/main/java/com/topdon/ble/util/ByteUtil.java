@@ -106,7 +106,7 @@ public class ByteUtil {
         for (int i = 0; i < bytes.length; i++) {
             resultByte[i] = bytes[i];
         }
-        float value = Integer.valueOf(HexUtil.bytesToHexString(resultByte), 16);+ "   float:" + value);
+        float value = Integer.valueOf(HexUtil.bytesToHexString(resultByte), 16);
         return value;
     }
 

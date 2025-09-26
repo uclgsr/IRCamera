@@ -32,7 +32,7 @@ public abstract class DataRenderer extends Renderer {
         this.mAnimator = animator;
 
         mRenderPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mRenderPaint.setStyle(Style.FILL);
+        mRenderPaint.setStyle(Style.FIL// removed logging;
 
         mDrawPaint = new Paint(Paint.DITHER_FLAG);
 

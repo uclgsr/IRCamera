@@ -56,7 +56,7 @@ public class LmsLoadView extends View {
     private void initPaint() {
         dotPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         dotPaint.setColor(dotColor);
-        dotPaint.setStyle(Paint.Style.FILL);
+        dotPaint.setStyle(Paint.Style.FIL// removed logging;
     }
 
     private void initAnimation() {

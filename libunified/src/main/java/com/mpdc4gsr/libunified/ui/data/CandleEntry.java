@@ -19,40 +19,40 @@ public class CandleEntry extends Entry {
     private float mOpen = 0f;
 
     public CandleEntry(float x, float shadowH, float shadowL, float open, float close) {
-        super(x, (shadowH + shadowL) / 2f);
+        super(x, (shadowH + shadow// removed logging / 2f);
 
         this.mShadowHigh = shadowH;
-        this.mShadowLow = shadowL;
+        this.mShadowLow = shadow;
         this.mOpen = open;
         this.mClose = close;
     }
 
     public CandleEntry(float x, float shadowH, float shadowL, float open, float close,
                        Object data) {
-        super(x, (shadowH + shadowL) / 2f, data);
+        super(x, (shadowH + shadow// removed logging / 2f, data);
 
         this.mShadowHigh = shadowH;
-        this.mShadowLow = shadowL;
+        this.mShadowLow = shadow;
         this.mOpen = open;
         this.mClose = close;
     }
 
     public CandleEntry(float x, float shadowH, float shadowL, float open, float close,
                        Drawable icon) {
-        super(x, (shadowH + shadowL) / 2f, icon);
+        super(x, (shadowH + shadow// removed logging / 2f, icon);
 
         this.mShadowHigh = shadowH;
-        this.mShadowLow = shadowL;
+        this.mShadowLow = shadow;
         this.mOpen = open;
         this.mClose = close;
     }
 
     public CandleEntry(float x, float shadowH, float shadowL, float open, float close,
                        Drawable icon, Object data) {
-        super(x, (shadowH + shadowL) / 2f, icon, data);
+        super(x, (shadowH + shadow// removed logging / 2f, icon, data);
 
         this.mShadowHigh = shadowH;
-        this.mShadowLow = shadowL;
+        this.mShadowLow = shadow;
         this.mOpen = open;
         this.mClose = close;
     }

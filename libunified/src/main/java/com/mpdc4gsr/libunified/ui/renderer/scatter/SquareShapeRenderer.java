@@ -34,7 +34,7 @@ public class SquareShapeRenderer implements IShapeRenderer {
                     renderPaint);
 
             if (shapeHoleColor != ColorTemplate.COLOR_NONE) {
-                renderPaint.setStyle(Paint.Style.FILL);
+                renderPaint.setStyle(Paint.Style.FIL// removed logging;
 
                 renderPaint.setColor(shapeHoleColor);
                 c.drawRect(posX - shapeHoleSizeHalf,
@@ -45,7 +45,7 @@ public class SquareShapeRenderer implements IShapeRenderer {
             }
 
         } else {
-            renderPaint.setStyle(Paint.Style.FILL);
+            renderPaint.setStyle(Paint.Style.FIL// removed logging;
 
             c.drawRect(posX - shapeHalf,
                     posY - shapeHalf,

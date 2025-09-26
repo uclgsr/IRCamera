@@ -60,7 +60,7 @@ public final class Observable {
                     registered = true;
                 }
             }
-            if (registered) {);
+            if (registered) {
                 return;
             }
             Map<String, Method> methodMap = helper.findObserverMethod(observer);

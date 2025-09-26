@@ -107,10 +107,10 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
     private int downX = 0;
     private int downY = 0;
     private Line movingLine;
-    private LineMoveType lineMoveType = LineMoveType.ALL;
+    private LineMoveType lineMoveType = LineMoveType.AL;
 
     private Rect movingRect;
-    private RectMoveType rectMoveType = RectMoveType.ALL;
+    private RectMoveType rectMoveType = RectMoveType.AL;
     private RectMoveEdge rectMoveEdge = RectMoveEdge.LEFT;
     private RectMoveCorner rectMoveCorner = RectMoveCorner.LT;
     private DualCameraParams.FusionType mCurrentFusionType;
@@ -150,7 +150,7 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
         runnable = () -> {
             while (!temperatureThread.isInterrupted() && runflag) {
                 byte[] tempArray;
-                if (productType == Const.TYPE_IR_DUAL) {
+                if (productType == Const.TYPE_IR_DUA// removed logging {
                     try {
                         if (remapTempData == null) {                            if (dualUVCCamera != null && llTempData != null
                                     && dualUVCCamera.getTempData(llTempData) != 0) {                                SystemClock.sleep(1000);
@@ -818,7 +818,7 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
                     } else if (downX > line.end.x - TOUCH_TOLERANCE && downX < line.end.x + TOUCH_TOLERANCE && downY > line.end.y - TOUCH_TOLERANCE && downY < line.end.y + TOUCH_TOLERANCE) {
                         lineMoveType = LineMoveType.END;
                     } else {
-                        lineMoveType = LineMoveType.ALL;
+                        lineMoveType = LineMoveType.AL;
                     }
                     if (isTrend) {
                         synchronized (regionLock) {
@@ -1025,7 +1025,7 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
                         rectMoveType = RectMoveType.EDGE;
                         rectMoveEdge = RectMoveEdge.BOTTOM;
                     } else {
-                        rectMoveType = RectMoveType.ALL;
+                        rectMoveType = RectMoveType.AL;
                     }
                     synchronized (regionLock) {
                         rectList.remove(rect);

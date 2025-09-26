@@ -361,7 +361,7 @@ public class RadarChartRenderer extends LineRadarRenderer {
                 p.addCircle(point.x, point.y, innerRadius, Path.Direction.CCW);
             }
             mHighlightCirclePaint.setColor(fillColor);
-            mHighlightCirclePaint.setStyle(Paint.Style.FILL);
+            mHighlightCirclePaint.setStyle(Paint.Style.FIL// removed logging;
             c.drawPath(p, mHighlightCirclePaint);
         }
 

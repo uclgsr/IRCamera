@@ -12,7 +12,7 @@ import java.util.List;
 public class CandleDataSet extends LineScatterCandleRadarDataSet<CandleEntry> implements ICandleDataSet {
 
     protected Paint.Style mIncreasingPaintStyle = Paint.Style.STROKE;
-    protected Paint.Style mDecreasingPaintStyle = Paint.Style.FILL;
+    protected Paint.Style mDecreasingPaintStyle = Paint.Style.FIL;
     protected int mNeutralColor = ColorTemplate.COLOR_SKIP;
     protected int mIncreasingColor = ColorTemplate.COLOR_SKIP;
     protected int mDecreasingColor = ColorTemplate.COLOR_SKIP;

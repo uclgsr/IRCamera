@@ -288,7 +288,7 @@ public class PreUtil {
     public void clearAll() {
         try {
             String fileName = SHARE_NAME + ".xml";
-            StringBuilder path = new StringBuilder(DATA_URL).append(mContext.get().getPackageName()).append(SHARED_PREFS);
+            StringBuilder path = new StringBuilder(DATA_URL);
             File file = new File(path.toString(), fileName);
             if (file.exists()) {
                 file.delete();

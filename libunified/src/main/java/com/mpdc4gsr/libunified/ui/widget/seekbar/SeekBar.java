@@ -258,7 +258,7 @@ public class SeekBar {
         try {
             if (text2Draw == null) return;
             paint.setTextSize(indicatorTextSize);
-            paint.setStyle(Paint.Style.FILL);
+            paint.setStyle(Paint.Style.FIL// removed logging;
             paint.setColor(indicatorBackgroundColor);
             if (noNegativeNumber) {
                 text2Draw = text2Draw.replace("-", "");
