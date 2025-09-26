@@ -194,6 +194,30 @@ android {
                     "lib/x86_64/libijkffmpeg.so",
                     "lib/x86_64/libijkplayer.so",
                     "lib/x86_64/libijksdl.so",
+                    "lib/arm64-v8a/libUSBUVCCamera.so",
+                    "lib/armeabi-v7a/libUSBUVCCamera.so",
+                    "lib/x86/libUSBUVCCamera.so",
+                    "lib/x86_64/libUSBUVCCamera.so",
+                    "lib/arm64-v8a/libencrypt.so",
+                    "lib/armeabi-v7a/libencrypt.so",
+                    "lib/x86/libencrypt.so",
+                    "lib/x86_64/libencrypt.so",
+                    "lib/arm64-v8a/libircmd.so",
+                    "lib/armeabi-v7a/libircmd.so",
+                    "lib/x86/libircmd.so",
+                    "lib/x86_64/libircmd.so",
+                    "lib/arm64-v8a/libirparse.so",
+                    "lib/armeabi-v7a/libirparse.so",
+                    "lib/x86/libirparse.so",
+                    "lib/x86_64/libirparse.so",
+                    "lib/arm64-v8a/libirprocess.so",
+                    "lib/armeabi-v7a/libirprocess.so",
+                    "lib/x86/libirprocess.so",
+                    "lib/x86_64/libirprocess.so",
+                    "lib/arm64-v8a/libirtemp.so",
+                    "lib/armeabi-v7a/libirtemp.so",
+                    "lib/x86/libirtemp.so",
+                    "lib/x86_64/libirtemp.so",
                 )
 
             keepDebugSymbols +=
@@ -262,6 +286,7 @@ dependencies {
     implementation(files("libs/auth-number-2.13.2.1.aar"))
     implementation(files("libs/logger-2.2.1-release.aar"))
     implementation(files("libs/main-2.2.1-release.aar"))
+    implementation(files("libs/topdon.aar"))
 
     implementation(
         fileTree(
