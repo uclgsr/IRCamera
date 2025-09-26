@@ -67,7 +67,11 @@ class LeScanner extends AbstractScanner {
     @Override
     protected void performStopScan() {
         if (bleScanner != null) {
-            bleScanner.stopScan(scanCallback);
+            try {
+                bleScanner.stopScan(scanCallback);
+            } catch (SecurityException e) {
+                logger.log(android.util.Log.ERROR, Logger.TYPE_SCAN_STATE, "Missing Bluetooth permission to stop LE scan: " + e.getMessage());
+            }
         }
     }
 
