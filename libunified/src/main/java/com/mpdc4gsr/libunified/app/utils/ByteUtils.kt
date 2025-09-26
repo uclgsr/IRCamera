@@ -1,23 +1,86 @@
 package com.mpdc4gsr.libunified.app.utils
 
-import java.util.Arrays
-import java.util.Locale
+import android.util.Log
+import java.util.*
 
 /**
- * ByteUtils class providing byte manipulation utilities
- * This is an alias/wrapper for UnifiedByteUtils to maintain compatibility
+ * ByteUtils based on reference repository implementation
+ * Adapted from BleModule/src/main/java/com/topdon/ble/util/ByteUtil.java
  */
 object ByteUtils {
     
-    fun ByteArray.descBytes(): ByteArray = this.reversedArray()
+    fun byteMerger(byte1: ByteArray, byte2: Int, byte3: Int, byte4: Int): ByteArray {
+        return byteMerger(byte1, intToByteArray(byte2), intToByteArray(byte3), intToByteArray2(byte4))
+    }
     
+    fun byteMerger(byte1: ByteArray, byte2: String, byte3: String): ByteArray {
+        return byteMerger(byte1, byte2.toByteArray(), byte3.toByteArray())
+    }
+    
+    fun byteMerger(byte1: String, byte2: Int): ByteArray {
+        return byteMerger(byte1.toByteArray(), intToByteArray(byte2))
+    }
+    
+    fun byteMerger(byte1: ByteArray, byte2: Int): ByteArray {
+        return byteMerger(byte1, intToByteArray(byte2))
+    }
+    
+    fun byteMerger(byte1: String, byte2: String): ByteArray {
+        return byteMerger(byte1.toByteArray(), byte2.toByteArray())
+    }
+    
+    fun byteMerger(vararg bytes: ByteArray): ByteArray {
+        var resultByteArray = ByteArray(0)
+        for (b in bytes) {
+            resultByteArray = Arrays.copyOf(resultByteArray, resultByteArray.size + b.size)
+            System.arraycopy(b, 0, resultByteArray, resultByteArray.size - b.size, b.size)
+        }
+        return resultByteArray
+    }
+    
+    fun bytesToFloat(bytes: ByteArray): Float {
+        val value = Integer.valueOf(HexUtil.bytesToHexString(bytes), 16)
+        return value.toFloat()
+    }
+    
+    fun byteToFloat(vararg bytes: Byte): Float {
+        val resultByte = ByteArray(bytes.size)
+        for (i in bytes.indices) {
+            resultByte[i] = bytes[i]
+        }
+        val value = Integer.valueOf(HexUtil.bytesToHexString(resultByte), 16)
+        Log.e("ByteUtils", "bytesToFloat bytes: ${HexUtil.bytesToHexString(resultByte)} float:$value")
+        return value.toFloat()
+    }
+    
+    fun byteToInt(b: Byte): Int {
+        return b.toInt() and 0xFF
+    }
+    
+    fun intToByteArray(value: Int): ByteArray {
+        return byteArrayOf(
+            (value shr 24 and 0xFF).toByte(),
+            (value shr 16 and 0xFF).toByte(),
+            (value shr 8 and 0xFF).toByte(),
+            (value and 0xFF).toByte()
+        )
+    }
+    
+    fun intToByteArray2(value: Int): ByteArray {
+        return byteArrayOf(
+            (value and 0xFF).toByte(),
+            (value shr 8 and 0xFF).toByte()
+        )
+    }
+    
+    // Compatibility methods for existing code
+    fun ByteArray.descBytes(): ByteArray = this.reversedArray()
     fun ByteArray.toBytes(): ByteArray = this
     
     fun bytesToInt(bytes: ByteArray): Int {
         var count = 0
-        var b: Int
-        for (i in bytes.size - 1 downTo 0) {
-            b = bytes[i].toInt() and 0xff
+        for (i in bytes.indices.reversed()) {
+            val b = bytes[i].toInt() and 0xff
             count += b shl (8 * (bytes.size - i - 1))
         }
         return count
@@ -30,14 +93,7 @@ object ByteUtils {
                (b4.toInt() and 0xFF)
     }
     
-    fun joinPackage(vararg src: ByteArray): ByteArray {
-        var bytes = ByteArray(0)
-        for (bs in src) {
-            bytes = Arrays.copyOf(bytes, bytes.length + bs.size)
-            System.arraycopy(bs, 0, bytes, bytes.size - bs.size, bs.size)
-        }
-        return bytes
-    }
+    fun joinPackage(vararg src: ByteArray): ByteArray = byteMerger(*src)
     
     fun numberToBytes(bigEndian: Boolean, value: Long, len: Int): ByteArray {
         val bytes = ByteArray(8)
@@ -61,5 +117,19 @@ object ByteUtils {
             list.add(Arrays.copyOfRange(src, from, to))
         }
         return list
+    }
+}
+
+object HexUtil {
+    fun bytesToHexString(bytes: ByteArray): String {
+        val sb = StringBuilder()
+        for (b in bytes) {
+            val hex = Integer.toHexString(b.toInt() and 0xFF)
+            if (hex.length == 1) {
+                sb.append('0')
+            }
+            sb.append(hex)
+        }
+        return sb.toString().uppercase(Locale.getDefault())
     }
 }

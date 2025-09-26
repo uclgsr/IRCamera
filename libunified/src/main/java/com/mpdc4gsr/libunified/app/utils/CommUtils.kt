@@ -1,16 +1,38 @@
 package com.mpdc4gsr.libunified.app.utils
 
 import android.content.Context
+import android.content.pm.ApplicationInfo
+import android.content.pm.PackageManager
 import android.os.Environment
+import com.blankj.utilcode.util.Utils
+import com.elvishew.xlog.XLog
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 
 /**
- * Common utilities for application-wide operations
+ * CommUtils based on reference repository implementation
+ * Adapted from libapp/src/main/java/com/topdon/lib/core/utils/CommUtils.kt
  */
 object CommUtils {
-    
+
+    fun getAppName(): String {
+        var msg = ""
+        var appInfo: ApplicationInfo? = null
+        appInfo = Utils.getApp().packageManager
+            .getApplicationInfo(
+                Utils.getApp().packageName,
+                PackageManager.GET_META_DATA
+            )
+        try {
+            msg = appInfo.metaData.getString("app_name")?.toString() ?: ""
+        } catch (e: Exception) {
+            XLog.w("获取app名称异常： ${e.message}")
+        }
+        return msg
+    }
+
+    // Additional compatibility methods
     private const val DATE_FORMAT_DEFAULT = "yyyy-MM-dd HH:mm:ss"
     
     fun getCurrentTimeString(): String {
@@ -53,9 +75,5 @@ object CommUtils {
     fun generateUniqueFileName(prefix: String, extension: String): String {
         val timestamp = System.currentTimeMillis()
         return "${prefix}_${timestamp}.${extension}"
-    }
-    
-    fun getAppName(): String {
-        return "IRCamera"
     }
 }
