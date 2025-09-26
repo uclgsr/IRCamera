@@ -125,6 +125,14 @@ object UnifiedScreenUtils {
     }
 
     /**
+     * Check if screen is in portrait orientation
+     */
+    fun isPortrait(context: Context): Boolean {
+        val displayMetrics = getDisplayMetrics(context)
+        return displayMetrics.heightPixels > displayMetrics.widthPixels
+    }
+
+    /**
      * Get view location on screen
      */
     fun getViewLocationOnScreen(view: View): IntArray {

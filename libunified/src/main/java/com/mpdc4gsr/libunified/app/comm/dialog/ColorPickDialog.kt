@@ -11,7 +11,7 @@ import androidx.annotation.ColorInt
 import androidx.core.content.ContextCompat
 import com.blankj.utilcode.util.SizeUtils
 import com.mpdc4gsr.libunified.R
-import com.mpdc4gsr.libunified.app.comm.util.ColorUtils
+import com.mpdc4gsr.libunified.app.utils.ColorUtils
 import com.mpdc4gsr.libunified.app.utils.ScreenUtil
 import com.mpdc4gsr.libunified.app.view.ColorSelectView
 import com.mpdc4gsr.libunified.ui.widget.seekbar.OnRangeChangedListener

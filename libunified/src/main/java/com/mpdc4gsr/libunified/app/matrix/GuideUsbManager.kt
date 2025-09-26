@@ -12,9 +12,11 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import com.mpdc4gsr.libunified.app.matrix.ResultCode.ERROR_CONNECT_DEVICE_FAILD
 import com.mpdc4gsr.libunified.app.matrix.ResultCode.SUCC_CONNECT_INTERFACE
-import com.mpdc4gsr.libunified.app.matrix.utils.ByteUtils.toHexString
+import com.mpdc4gsr.libunified.app.utils.UnifiedByteUtils.toHexString
 import com.mpdc4gsr.libunified.app.matrix.utils.HexDump
 import java.util.Arrays
+
+@OptIn(ExperimentalStdlibApi::class)
 
 class GuideUsbManager {
 

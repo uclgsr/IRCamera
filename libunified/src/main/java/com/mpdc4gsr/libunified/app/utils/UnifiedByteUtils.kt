@@ -75,9 +75,30 @@ object UnifiedByteUtils {
     fun joinPackage(vararg src: ByteArray): ByteArray {
         var bytes = ByteArray(0)
         for (bs in src) {
-            bytes = Arrays.copyOf(bytes, bytes.length + bs.size)
+            bytes = Arrays.copyOf(bytes, bytes.size + bs.size)
             System.arraycopy(bs, 0, bytes, bytes.size - bs.size, bs.size)
         }
         return bytes
+    }
+
+    /**
+     * Convert bytes to int (big endian)
+     */
+    fun bigBytesToInt(b1: Byte, b2: Byte, b3: Byte, b4: Byte): Int {
+        return (b1.toInt() and 0xFF shl 24) or
+                (b2.toInt() and 0xFF shl 16) or
+                (b3.toInt() and 0xFF shl 8) or
+                (b4.toInt() and 0xFF)
+    }
+
+    /**
+     * Convert Int to ByteArray with specified size
+     */
+    fun Int.toBytes(size: Int = 4): ByteArray {
+        val result = ByteArray(size)
+        for (i in 0 until size) {
+            result[size - 1 - i] = (this shr (i * 8)).toByte()
+        }
+        return result
     }
 }
