@@ -3,11 +3,15 @@ package com.mpdc4gsr.libunified.app.config
 import android.hardware.usb.UsbDevice
 
 object DeviceConfig {
-    // TS004 and TC007 constants removed
 
     const val IR_VENDOR_ID = 0x0BDA
     const val IR_PRODUCT_ID = 0x5840
 
+    const val TS004_NAME_START = "TS004_"
+    const val TS004_PASSWORD = "TS004001"
+
+    const val TC007_NAME_START = "TC007_"
+    const val TC007_PASSWORD = "12345678"
 
     const val TOPDON_VENDOR_ID = 0x0BDA
     const val TOPDON_PRODUCT_ID = 0x5830
