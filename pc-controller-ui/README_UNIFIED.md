@@ -1,24 +1,28 @@
 # Unified PC Session Controller
 
-This document describes the **Unified PC Session Controller** - a single, comprehensive implementation that merges all previous PC controller implementations into one cohesive application.
+This document describes the **Unified PC Session Controller** - a single, comprehensive implementation that merges all
+previous PC controller implementations into one cohesive application.
 
 ## What Was Unified
 
 The unified controller combines the best features from three separate implementations:
 
 ### 1. Original tkinter Controller (`pc_session_controller.py`)
+
 - **Features Used**: Basic GUI layout, device status tracking, session management
 - **GUI Framework**: tkinter (basic but functional)
 - **Network**: Simple TCP server
 - **Visualization**: matplotlib (slow but adequate)
 
-### 2. Standardized Protocol Controller (`standardized_controller.py`) 
+### 2. Standardized Protocol Controller (`standardized_controller.py`)
+
 - **Features Used**: Robust protocol handling, message parsing, time synchronization
-- **Network**: Advanced TCP with protocol definitions  
+- **Network**: Advanced TCP with protocol definitions
 - **Protocol**: Support for both legacy and JSON message formats
 - **Device Management**: Connection lifecycle management
 
 ### 3. Enhanced PyQt6 Controller (`enhanced_pc_controller.py`)
+
 - **Features Used**: Modern GUI, high-performance plotting, C++ backend integration
 - **GUI Framework**: PyQt6 (professional and responsive)
 - **Visualization**: PyQtGraph (high-performance real-time plotting)
@@ -28,6 +32,7 @@ The unified controller combines the best features from three separate implementa
 ## Unified Implementation Features
 
 ### 🔄 **Unified Protocol Support**
+
 ```python
 class Protocol:
     """Supports both legacy text protocol and modern JSON format"""
@@ -41,6 +46,7 @@ class Protocol:
 ```
 
 ### 🖥️ **Modern PyQt6 GUI**
+
 - **Real-time GSR plotting** with PyQtGraph (100ms updates)
 - **RGB and thermal image preview** with ImageView widgets
 - **Professional device management** with tree view and color coding
@@ -48,17 +54,20 @@ class Protocol:
 - **Session management** with timer and export functionality
 
 ### 🔒 **Security Layer**
+
 - **SSL/TLS encryption** with automatic self-signed certificate generation
 - **Secure device communication** for production environments
 - **Certificate management** in `certificates/` directory
 
 ### ⚡ **High-Performance Backend**
+
 - **C++ integration** via PyBind11 for intensive data processing
 - **Real-time signal filtering** (lowpass, highpass, notch filters)
 - **Statistical analysis** (mean, variance, RMS, signal quality)
 - **Fallback to Python** when C++ backend unavailable
 
 ### 📊 **Comprehensive Data Management**
+
 - **Multi-device support** (up to 10 simultaneous connections)
 - **Real-time data buffering** with configurable time windows
 - **Session export** to CSV, JSON, and log formats
@@ -96,6 +105,7 @@ unified_pc_controller.py (1,200+ lines)
 ## Installation & Usage
 
 ### Prerequisites
+
 ```bash
 # Required dependencies
 pip install PyQt6 pyqtgraph numpy matplotlib pillow
@@ -108,6 +118,7 @@ pip install cryptography
 ```
 
 ### Running the Unified Controller
+
 ```bash
 cd pc-controller-ui/src
 python3 unified_pc_controller.py
@@ -116,36 +127,42 @@ python3 unified_pc_controller.py
 ### Features Available
 
 **Device Connection:**
+
 - Automatic device detection via HELLO messages
 - Support for both legacy and JSON protocols
 - Real-time device status with color coding
 - Individual device control capabilities
 
 **Session Management:**
+
 - Start/stop recording on all devices simultaneously
 - Individual device recording control
 - Session timing and status tracking
 - Comprehensive session logging
 
 **Real-time Visualization:**
+
 - High-performance GSR plotting (10Hz updates)
 - RGB and thermal camera preview
 - Configurable time windows (10-300 seconds)
 - Auto-scaling and manual scale control
 
 **Data Processing:**
+
 - Optional C++ backend for signal processing
 - Real-time filtering and artifact detection
 - Statistical analysis and quality metrics
 - Python fallback when C++ unavailable
 
 **Network Security:**
+
 - SSL/TLS encryption support
 - Automatic self-signed certificate generation
 - Secure multi-device communication
 - Configurable port and security settings
 
 **Data Export:**
+
 - Session data to CSV format (GSR values with timestamps)
 - Device status to JSON format
 - Session logs to text format
@@ -156,6 +173,7 @@ python3 unified_pc_controller.py
 The unified controller supports multiple protocol versions:
 
 ### Legacy Text Protocol (from standardized_controller.py)
+
 ```
 HELLO device_id="android_123" sensors="GSR,RGB,Thermal"
 START_RECORD session_id="session_20240101_120000"
@@ -164,6 +182,7 @@ SYNC_REQUEST t_pc=1640995200000
 ```
 
 ### Modern JSON Protocol (from enhanced_pc_controller.py)
+
 ```json
 {"type": "HELLO", "device_id": "android_123", "sensors": ["GSR", "RGB", "Thermal"]}
 {"type": "start_recording", "session_id": "session_20240101_120000", "timestamp": 1640995200.0}
@@ -172,27 +191,33 @@ SYNC_REQUEST t_pc=1640995200000
 ```
 
 ### Automatic Protocol Detection
-The unified controller automatically detects which protocol format is being used and responds appropriately, ensuring compatibility with all existing Android app versions.
+
+The unified controller automatically detects which protocol format is being used and responds appropriately, ensuring
+compatibility with all existing Android app versions.
 
 ## Benefits of Unification
 
 ### 1. **Single Codebase**
+
 - **Maintenance**: Only one PC controller to maintain and update
 - **Features**: All features available in one application
 - **Testing**: Single test suite covers all functionality
 
 ### 2. **Protocol Flexibility**
+
 - **Backward Compatibility**: Works with existing Android app versions
 - **Forward Compatibility**: Ready for future protocol enhancements
 - **Graceful Degradation**: Falls back to simpler protocols when needed
 
 ### 3. **Performance Optimization**
+
 - **Modern GUI**: Responsive PyQt6 interface with professional appearance
 - **High-Performance Plotting**: PyQtGraph for smooth real-time visualization
 - **C++ Acceleration**: Optional native backend for intensive computations
 - **Efficient Networking**: Multi-threaded architecture with SSL support
 
 ### 4. **Comprehensive Functionality**
+
 - **All Original Features**: Everything from previous implementations
 - **Enhanced Capabilities**: Additional features like SSL, C++ processing
 - **Better User Experience**: Professional GUI with improved usability
@@ -200,17 +225,17 @@ The unified controller automatically detects which protocol format is being used
 
 ## Comparison with Previous Implementations
 
-| Feature | Original tkinter | Standardized | Enhanced PyQt6 | **Unified** |
-|---------|------------------|--------------|----------------|-------------|
-| GUI Framework | tkinter | Console | PyQt6 | **PyQt6** |
-| Protocol Support | Basic TCP | Legacy Protocol | JSON Messages | **Both Legacy + JSON** |
-| Real-time Plotting | matplotlib (slow) | None | PyQtGraph (fast) | **PyQtGraph (fast)** |
-| Multi-device | Limited | Full Support | Full Support | **Full Support** |
-| SSL/TLS Security | No | No | Yes | **Yes** |
-| C++ Backend | No | No | Yes | **Yes** |
-| Session Export | Basic | None | Advanced | **Advanced** |
-| Device Management | Basic | Good | Excellent | **Excellent** |
-| Protocol Detection | No | No | No | **Yes (Automatic)** |
+| Feature            | Original tkinter  | Standardized    | Enhanced PyQt6   | **Unified**            |
+|--------------------|-------------------|-----------------|------------------|------------------------|
+| GUI Framework      | tkinter           | Console         | PyQt6            | **PyQt6**              |
+| Protocol Support   | Basic TCP         | Legacy Protocol | JSON Messages    | **Both Legacy + JSON** |
+| Real-time Plotting | matplotlib (slow) | None            | PyQtGraph (fast) | **PyQtGraph (fast)**   |
+| Multi-device       | Limited           | Full Support    | Full Support     | **Full Support**       |
+| SSL/TLS Security   | No                | No              | Yes              | **Yes**                |
+| C++ Backend        | No                | No              | Yes              | **Yes**                |
+| Session Export     | Basic             | None            | Advanced         | **Advanced**           |
+| Device Management  | Basic             | Good            | Excellent        | **Excellent**          |
+| Protocol Detection | No                | No              | No               | **Yes (Automatic)**    |
 
 ## Future Enhancements
 
@@ -226,19 +251,23 @@ The unified controller provides a solid foundation for additional features:
 ## Technical Notes
 
 ### Protocol Unification Strategy
+
 The unified controller uses a message parsing strategy that:
+
 1. **Attempts JSON parsing first** (for modern messages)
 2. **Falls back to legacy text parsing** (for older messages)
 3. **Maintains separate response formats** based on detected input format
 4. **Logs protocol version** for debugging and compatibility tracking
 
 ### GUI Threading Architecture
+
 - **Main Thread**: PyQt6 GUI event handling and display updates
 - **Network Thread**: TCP server and client connection management
 - **Processing Thread**: Optional C++ backend processing (when available)
 - **Timer Threads**: Periodic GUI updates and real-time plotting
 
 ### Error Handling Strategy
+
 - **Network Errors**: Graceful connection handling with reconnection support
 - **Protocol Errors**: Message validation with detailed error logging
 - **GUI Errors**: Exception catching with user-friendly error dialogs
@@ -246,4 +275,5 @@ The unified controller uses a message parsing strategy that:
 
 ---
 
-**The Unified PC Session Controller represents the culmination of all PC controller development efforts, providing a single, comprehensive solution for IRCamera multi-modal recording control.**
+**The Unified PC Session Controller represents the culmination of all PC controller development efforts, providing a
+single, comprehensive solution for IRCamera multi-modal recording control.**

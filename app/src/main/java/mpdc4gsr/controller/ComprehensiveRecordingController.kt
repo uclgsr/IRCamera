@@ -16,6 +16,8 @@ import mpdc4gsr.core.RecordingService
 import mpdc4gsr.sensors.SensorRecorder
 import mpdc4gsr.utils.SessionDirectory
 import mpdc4gsr.utils.SessionDirectoryManager
+import mpdc4gsr.controller.RecordingConstants
+import mpdc4gsr.data.SessionMetadata
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.File
@@ -25,10 +27,6 @@ import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
 import java.util.concurrent.atomic.AtomicReference
 
-// Import types from external packages only
-import mpdc4gsr.data.SessionMetadata
-
-
 class ComprehensiveRecordingController(
     private val context: Context,
     private val lifecycleOwner: androidx.lifecycle.LifecycleOwner? = null,
@@ -36,31 +34,7 @@ class ComprehensiveRecordingController(
 ) {
     companion object {
         private const val TAG = "ComprehensiveRecordingController"
-        private const val FALLBACK_AVAILABLE_SPACE_GB = 10.0
-        private const val RGB_STORAGE_MB_PER_MIN = 50.0
-        private const val THERMAL_STORAGE_MB_PER_MIN = 5.0
-        private const val SHIMMER_STORAGE_MB_PER_MIN = 1.0
-        private const val MIN_STORAGE_SPACE_GB = 1.0
         private val DEFAULT_TRIGGER_SOURCE = TriggerSource.LOCAL_UI
-    }
-
-    // Session orchestration enums
-    enum class TriggerSource {
-        LOCAL_UI,
-        LOCAL_NOTIFICATION,
-        REMOTE_PC,
-        AUTOMATIC,
-        CRASH_RECOVERY
-    }
-
-    enum class SessionState {
-        IDLE,
-        STARTING,
-        RECORDING,
-        STOPPING,
-        STOPPED_COMPLETED,
-        STOPPED_FAILED,
-        STOPPED_INCOMPLETE
     }
 
 
@@ -95,7 +69,19 @@ class ComprehensiveRecordingController(
     private val _sensorStatusFlow = MutableStateFlow<List<SensorStatusInfo>>(emptyList())
     val sensorStatusFlow: StateFlow<List<SensorStatusInfo>> = _sensorStatusFlow.asStateFlow()
 
-    private val _recordingStatsFlow = MutableStateFlow(RecordingStats.empty())
+    private val _recordingStatsFlow = MutableStateFlow(
+        RecordingStats(
+            sessionId = "",
+            duration = 0L,
+            activeSensors = 0,
+            totalSamples = 0L,
+            avgDataRate = 0.0,
+            storageUsedMB = 0.0,
+            errors = 0,
+            warnings = 0,
+            qualityScore = 1.0
+        )
+    )
     val recordingStatsFlow: StateFlow<RecordingStats> = _recordingStatsFlow.asStateFlow()
 
     private val recordingScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
@@ -249,6 +235,22 @@ class ComprehensiveRecordingController(
                                     failedSensors.add(sensorName)
                                     Log.w(TAG, "❌ Failed to start sensor: $sensorName - continuing with others")
                                 }
+                                success
+                            } ?: run {
+                                // Handle case where sessionMetadata is null
+                                val success = sensor.startRecording(sensorDir.absolutePath)
+                                sensorResults[sensorName] = success
+                                if (success) {
+                                    activeRecorders[sensorName] = true
+                                    sensorsStarted++
+                                    updateSensorHealth(sensorName, true)
+                                    Log.i(TAG, "✅ Started sensor: $sensorName")
+                                } else {
+                                    updateSensorHealth(sensorName, false)
+                                    failedSensors.add(sensorName)
+                                    Log.w(TAG, "❌ Failed to start sensor: $sensorName - continuing with others")
+                                }
+                                success
                             }
                         } catch (e: Exception) {
                             // Isolate sensor failures - don't let one sensor crash the entire session
@@ -321,11 +323,16 @@ class ComprehensiveRecordingController(
             val availableSpaceGB = getAvailableSpaceGB()
             val estimatedSpaceGB = estimateSessionSize(enabledSensors, estimatedDurationMinutes) / 1024.0
 
-            if (availableSpaceGB < estimatedSpaceGB + MIN_STORAGE_SPACE_GB) {
+            if (availableSpaceGB < estimatedSpaceGB + RecordingConstants.MIN_STORAGE_SPACE_GB) {
                 return ValidationResult(
                     false,
                     "Insufficient storage: ${String.format("%.1f", availableSpaceGB)}GB available, " +
-                            "${String.format("%.1f", estimatedSpaceGB + MIN_STORAGE_SPACE_GB)}GB required"
+                            "${
+                                String.format(
+                                    "%.1f",
+                                    estimatedSpaceGB + RecordingConstants.MIN_STORAGE_SPACE_GB
+                                )
+                            }GB required"
                 )
             }
 
@@ -373,9 +380,9 @@ class ComprehensiveRecordingController(
 
         for (sensor in enabledSensors) {
             when (sensor.uppercase()) {
-                "RGB" -> estimatedMB += durationMinutes * RGB_STORAGE_MB_PER_MIN
-                "THERMAL" -> estimatedMB += durationMinutes * THERMAL_STORAGE_MB_PER_MIN
-                "SHIMMER" -> estimatedMB += durationMinutes * SHIMMER_STORAGE_MB_PER_MIN
+                "RGB" -> estimatedMB += durationMinutes * RecordingConstants.RGB_STORAGE_MB_PER_MIN
+                "THERMAL" -> estimatedMB += durationMinutes * RecordingConstants.THERMAL_STORAGE_MB_PER_MIN
+                "SHIMMER" -> estimatedMB += durationMinutes * RecordingConstants.SHIMMER_STORAGE_MB_PER_MIN
             }
         }
 
@@ -588,9 +595,12 @@ class ComprehensiveRecordingController(
     private fun updateSensorStatusFlow() {
         val statusList = sensorHealthStatus.map { (name, health) ->
             SensorStatusInfo(
-                name = name,
-                isRecording = activeRecorders[name] ?: false,
-                isHealthy = health.isHealthy
+                sensorId = name,
+                isActive = activeRecorders[name] ?: false,
+                isHealthy = health.isHealthy,
+                lastSampleTime = System.currentTimeMillis(),
+                samplesRecorded = 0L, // Would need to track this from sensors
+                errorCount = 0 // Would need to track this from sensors
             )
         }
         _sensorStatusFlow.value = statusList
@@ -601,13 +611,16 @@ class ComprehensiveRecordingController(
         val duration = if (sessionStartTime.get() > 0) currentTime - sessionStartTime.get() else 0
 
         val stats = RecordingStats(
-            isRecording = _isRecording.get(),
-            sessionId = currentSessionId,
-            durationMs = duration,
+            sessionId = currentSessionId ?: "",
+            duration = duration,
             activeSensors = activeRecorders.count { it.value },
-            totalSensors = sensorRecorders.size,
-            healthySensors = sensorHealthStatus.count { it.value.isHealthy },
-            recordingState = _recordingStateFlow.value
+            totalSamples = 0L, // Would need to aggregate from sensors
+            avgDataRate = 0.0, // Would need to calculate from sensors
+            storageUsedMB = 0.0, // Would need to calculate from file sizes
+            errors = sensorHealthStatus.count { !it.value.isHealthy },
+            warnings = 0, // Would need to track warnings
+            qualityScore = if (sensorHealthStatus.isEmpty()) 1.0 else sensorHealthStatus.values.count { it.isHealthy }
+                .toDouble() / sensorHealthStatus.size
         )
 
         _recordingStatsFlow.value = stats
@@ -643,7 +656,7 @@ class ComprehensiveRecordingController(
             val sessionDir = File(context.filesDir, "sessions")
             sessionDir.freeSpace / (1024.0 * 1024.0 * 1024.0)
         } catch (e: Exception) {
-            FALLBACK_AVAILABLE_SPACE_GB
+            RecordingConstants.FALLBACK_AVAILABLE_SPACE_GB
         }
     }
 
@@ -860,7 +873,7 @@ class ComprehensiveRecordingController(
                 eventType = event.eventType,
                 timestampMs = event.timestampMs,
                 sensorId = event.sensorId,
-                triggerSource = event.triggerSource?.name ?: "UNKNOWN",
+                triggerSource = convertFromRecordingControllerTriggerSource(event.triggerSource),
                 metadata = event.metadata,
                 success = event.success,
                 errorMessage = event.errorMessage
@@ -887,13 +900,13 @@ class ComprehensiveRecordingController(
             startTime = startTime,
             stopTime = stopTime,
             duration = duration,
-            triggerSource = convertTriggerSource(lastTriggerSource ?: TriggerSource.LOCAL_UI).name,
+            triggerSource = lastTriggerSource ?: TriggerSource.LOCAL_UI,
             sensorActivitySummary = sensorActivitySummary,
             events = events,
             errors = errors,
             warnings = warnings,
             fileReferences = fileReferences,
-            sessionState = convertSessionState(currentSessionState.get()).name
+            sessionState = currentSessionState.get()
         )
     }
 
@@ -1055,69 +1068,42 @@ class ComprehensiveRecordingController(
         }
     }
 
+    private fun convertFromRecordingControllerTriggerSource(source: RecordingController.TriggerSource?): TriggerSource? {
+        return when (source) {
+            RecordingController.TriggerSource.LOCAL_UI -> TriggerSource.LOCAL_UI
+            RecordingController.TriggerSource.LOCAL_NOTIFICATION -> TriggerSource.LOCAL_NOTIFICATION
+            RecordingController.TriggerSource.REMOTE_PC -> TriggerSource.REMOTE_PC
+            RecordingController.TriggerSource.AUTOMATIC -> TriggerSource.AUTOMATIC
+            RecordingController.TriggerSource.CRASH_RECOVERY -> TriggerSource.CRASH_RECOVERY
+            null -> null
+        }
+    }
+
     private fun convertSessionState(state: SessionState): RecordingController.SessionState {
         return when (state) {
             SessionState.IDLE -> RecordingController.SessionState.IDLE
             SessionState.STARTING -> RecordingController.SessionState.STARTING
             SessionState.RECORDING -> RecordingController.SessionState.RECORDING
+            SessionState.ACTIVE -> RecordingController.SessionState.RECORDING  // Map ACTIVE to RECORDING
             SessionState.STOPPING -> RecordingController.SessionState.STOPPING
+            SessionState.COMPLETED -> RecordingController.SessionState.STOPPED_COMPLETED
             SessionState.STOPPED_COMPLETED -> RecordingController.SessionState.STOPPED_COMPLETED
             SessionState.STOPPED_FAILED -> RecordingController.SessionState.STOPPED_FAILED
             SessionState.STOPPED_INCOMPLETE -> RecordingController.SessionState.STOPPED_INCOMPLETE
+            SessionState.FAILED -> RecordingController.SessionState.STOPPED_FAILED
+            SessionState.CANCELLED -> RecordingController.SessionState.STOPPED_INCOMPLETE
+        }
+    }
+
+    private fun convertFromRecordingControllerSessionState(state: RecordingController.SessionState): SessionState {
+        return when (state) {
+            RecordingController.SessionState.IDLE -> SessionState.IDLE
+            RecordingController.SessionState.STARTING -> SessionState.STARTING
+            RecordingController.SessionState.RECORDING -> SessionState.RECORDING
+            RecordingController.SessionState.STOPPING -> SessionState.STOPPING
+            RecordingController.SessionState.STOPPED_COMPLETED -> SessionState.STOPPED_COMPLETED
+            RecordingController.SessionState.STOPPED_FAILED -> SessionState.STOPPED_FAILED
+            RecordingController.SessionState.STOPPED_INCOMPLETE -> SessionState.STOPPED_INCOMPLETE
         }
     }
 }
-
-data class RecordingStats(
-    val isRecording: Boolean,
-    val sessionId: String?,
-    val durationMs: Long,
-    val activeSensors: Int,
-    val totalSensors: Int,
-    val healthySensors: Int,
-    val recordingState: RecordingState
-) {
-    companion object {
-        fun empty() = RecordingStats(
-            false, null, 0, 0, 0, 0, RecordingState.IDLE
-        )
-    }
-}
-
-enum class RecordingState {
-    IDLE, STARTING, RECORDING, STOPPING, STOPPED, ERROR
-}
-
-data class SensorHealthSummary(
-    val sensorId: String,
-    val name: String,
-    val isHealthy: Boolean
-)
-
-data class SensorStatusInfo(
-    val name: String,
-    val isRecording: Boolean,
-    val samplesRecorded: Long = 0,
-    val storageUsedMB: Double = 0.0,
-    val isHealthy: Boolean = true
-)
-
-data class RecordingError(
-    val message: String,
-    val isRecoverable: Boolean = true
-)
-
-data class ValidationResult(val isValid: Boolean, val failureReason: String)
-
-data class SessionInfoData(
-    val sessionId: String,
-    val startTime: Long,
-    val endTime: Long,
-    val durationMs: Long,
-    val durationSeconds: Double,
-    val recordingStatus: String,
-    val activeSensors: List<String>,
-    val sensorStopResults: Map<String, Boolean>,
-    val errors: List<String>?,
-    val finalizedAt: Long
-)

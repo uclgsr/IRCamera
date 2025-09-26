@@ -1,6 +1,7 @@
 # Enhanced PC Session Controller
 
-This document describes the enhanced PC Session Controller implementation that addresses all requirements from the issue for a modern, high-performance desktop application for IRCamera control.
+This document describes the enhanced PC Session Controller implementation that addresses all requirements from the issue
+for a modern, high-performance desktop application for IRCamera control.
 
 ## Overview
 
@@ -18,6 +19,7 @@ The Enhanced PC Session Controller is a complete redesign of the original PC con
 ### 1. Enhanced PyQt6 GUI (`enhanced_pc_controller.py`)
 
 **Key Features:**
+
 - Real-time GSR plotting with PyQtGraph (high-performance, 100ms updates)
 - RGB and thermal image preview with ImageView widgets
 - Professional tabbed interface for different visualization modes
@@ -26,6 +28,7 @@ The Enhanced PC Session Controller is a complete redesign of the original PC con
 - Network configuration with SSL/TLS toggle
 
 **Components:**
+
 - `EnhancedPCController`: Main window class
 - `NetworkThread`: Multi-threaded TCP server handling
 - `DeviceStatus`: Enhanced device state tracking
@@ -36,12 +39,14 @@ The Enhanced PC Session Controller is a complete redesign of the original PC con
 **Purpose:** Provides high-performance data processing capabilities that would be too slow in pure Python.
 
 **Key Classes:**
+
 - `EnhancedShimmer`: Shimmer3 GSR device interface with simulation
 - `DataProcessor`: JSON/binary data handling and statistics
 - `ThermalProcessor`: Thermal image processing and colormap application
 - `MessageProcessor`: Network protocol message creation/parsing
 
 **Features:**
+
 - Real-time signal filtering (lowpass, highpass, notch filters)
 - Statistical analysis (mean, variance, RMS)
 - Artifact detection (motion and electrical artifacts)
@@ -51,6 +56,7 @@ The Enhanced PC Session Controller is a complete redesign of the original PC con
 ### 3. Network Protocol & Security
 
 **Enhanced Features:**
+
 - JSON-based message protocol with validation
 - SSL/TLS encryption with self-signed certificate generation
 - Multi-device connection handling
@@ -58,6 +64,7 @@ The Enhanced PC Session Controller is a complete redesign of the original PC con
 - Robust error handling and reconnection logic
 
 **Message Types:**
+
 - `HELLO`: Device registration with capabilities
 - `telemetry_gsr`: Real-time GSR data transmission
 - `thermal_frame`/`rgb_frame`: Image frame transmission
@@ -102,11 +109,13 @@ python3 enhanced_pc_controller.py
 ### 2. Device Connection
 
 **Automatic Device Discovery:**
+
 - Android devices running IRCamera app connect automatically
 - HELLO message exchange establishes device capabilities
 - Devices appear in the device list with status indicators
 
 **Device Status Indicators:**
+
 - 🟢 Green: Connected and operational
 - 🔵 Blue: Recording in progress
 - 🟡 Yellow: Warning or error state
@@ -115,6 +124,7 @@ python3 enhanced_pc_controller.py
 ### 3. Session Management
 
 **Starting a Recording Session:**
+
 1. Ensure devices are connected (check device list)
 2. Optionally sync clocks using "Sync All Clocks" button
 3. Click "Start All Recording" to begin multi-device session
@@ -122,15 +132,17 @@ python3 enhanced_pc_controller.py
 5. Real-time data appears in visualization tabs
 
 **Stopping and Exporting:**
+
 1. Click "Stop All Recording" to end session
 2. Use "Export Session Data" to save:
-   - GSR data as CSV files (per device)
-   - Session log as text file
-   - Device status as JSON file
+    - GSR data as CSV files (per device)
+    - Session log as text file
+    - Device status as JSON file
 
 ### 4. Real-Time Visualization
 
 **GSR Data Tab:**
+
 - Real-time plotting of GSR signals from all connected devices
 - Configurable time window (10-300 seconds)
 - Auto-scaling option for optimal viewing
@@ -138,12 +150,14 @@ python3 enhanced_pc_controller.py
 - High-performance updates at 10Hz
 
 **Camera Preview Tab:**
+
 - Live RGB camera feed preview
 - Live thermal camera feed with temperature data
 - Frame information display
 - Support for JPEG-encoded frames
 
 **Session Log Tab:**
+
 - Real-time event logging
 - Timestamped entries for all operations
 - Save/clear log functionality
@@ -152,12 +166,14 @@ python3 enhanced_pc_controller.py
 ### 5. Individual Device Control
 
 **Device List Operations:**
+
 - Select device in tree view
 - "Start Selected": Begin recording on single device
-- "Stop Selected": Stop recording on single device  
+- "Stop Selected": Stop recording on single device
 - "Sync Selected": Synchronize clock with single device
 
 **Device Information:**
+
 - Device name and IP address
 - Sensor status (RGB, Thermal, GSR)
 - Time synchronization quality
@@ -166,11 +182,13 @@ python3 enhanced_pc_controller.py
 ### 6. Network Configuration
 
 **Basic Settings:**
+
 - Port configuration (default: 8080)
 - SSL/TLS encryption toggle
 - Server restart functionality
 
 **SSL/TLS Security:**
+
 - Automatic self-signed certificate generation
 - Secure device communication
 - Certificate stored in `certificates/` directory
@@ -205,6 +223,7 @@ artifacts = backend.processing.detect_motion_artifacts(
 ### 2. Data Processing Pipeline
 
 **Real-time Processing:**
+
 1. Raw data received from Android devices
 2. Optional C++ backend filtering/processing
 3. Statistical analysis and quality assessment
@@ -212,6 +231,7 @@ artifacts = backend.processing.detect_motion_artifacts(
 5. Data buffering for export
 
 **Signal Processing Options:**
+
 - Lowpass filtering (remove high-frequency noise)
 - Highpass filtering (remove baseline drift)
 - Notch filtering (remove power line interference)
@@ -221,6 +241,7 @@ artifacts = backend.processing.detect_motion_artifacts(
 ### 3. Thermal Image Processing
 
 For thermal camera data, the controller provides:
+
 - Raw temperature data to Celsius conversion
 - Colormap application (jet, hot, grayscale)
 - Image enhancement (Gaussian blur, histogram equalization)
@@ -271,6 +292,7 @@ python3 test_enhanced_controller.py
 ```
 
 **Test Coverage:**
+
 - Module import verification
 - Network protocol message handling
 - C++ backend functionality
@@ -290,24 +312,29 @@ python3 test_enhanced_controller.py
 ### Common Issues
 
 **"PyQt6 not available" Error:**
+
 - Install PyQt6: `pip install PyQt6`
 - For headless environments, this is expected
 
 **"Enhanced native backend not available":**
+
 - Build C++ module: `cd enhanced_native_backend && python3 setup.py build_ext --inplace`
 - Install build tools: `sudo apt-get install build-essential cmake`
 
 **SSL Certificate Errors:**
+
 - Certificates auto-generate in `certificates/` directory
 - Delete and restart to regenerate
 - Disable SSL for testing: uncheck "Enable SSL/TLS"
 
 **Network Connection Issues:**
+
 - Check firewall settings for port 8080
 - Verify Android device can reach PC IP address
 - Try different port in network settings
 
 **Performance Issues:**
+
 - Reduce GSR plot time window
 - Lower frame preview rate
 - Check system resources
@@ -386,12 +413,14 @@ namespace ircamera {
 ## Performance Characteristics
 
 **Real-time Performance:**
+
 - GSR plotting: 10Hz update rate with 1000+ samples
 - Network throughput: 100+ messages/second per device
 - Memory usage: <100MB for typical 4-device session
 - CPU usage: <5% on modern hardware
 
 **Scalability:**
+
 - Supports up to 10 simultaneous device connections
 - Handles continuous operation for hours
 - Automatic memory management prevents leaks
@@ -399,4 +428,5 @@ namespace ircamera {
 
 ---
 
-*This enhanced PC Session Controller implementation fully addresses all requirements from the original issue, providing a modern, high-performance, and feature-complete desktop application for IRCamera multi-modal recording control.*
+*This enhanced PC Session Controller implementation fully addresses all requirements from the original issue, providing
+a modern, high-performance, and feature-complete desktop application for IRCamera multi-modal recording control.*
