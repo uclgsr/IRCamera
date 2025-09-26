@@ -542,17 +542,12 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
                 runOnUiThread {
                     val statusText = buildString {
                         statusList.forEach { sensorInfo ->
-                            append("${sensorInfo.name}: ")
-                            append(if (sensorInfo.isRecording) "Recording" else "Idle")
+                            append("${sensorInfo.sensorId}: ")
+                            append(if (sensorInfo.isActive) "Recording" else "Idle")
                             append(" (${if (sensorInfo.isHealthy) "Healthy" else "Unhealthy"})")
-                            if (sensorInfo.isRecording) {
+                            if (sensorInfo.isActive) {
                                 append(
-                                    " - ${sensorInfo.samplesRecorded} samples, ${
-                                        String.format(
-                                            "%.1f",
-                                            sensorInfo.storageUsedMB
-                                        )
-                                    }MB"
+                                    " - ${sensorInfo.samplesRecorded} samples"
                                 )
                             }
                             append("\n")
