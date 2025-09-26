@@ -3,7 +3,7 @@ package com.mpdc4gsr.libunified.app.utils
 import android.content.Context
 import android.graphics.Bitmap
 import android.os.Environment
-import com.energy.iruvc.utils.CommonParams
+import com.infisense.iruvc.utils.CommonParams
 import java.io.*
 
 /**

@@ -8,7 +8,7 @@ import android.util.DisplayMetrics
 import android.view.Display
 import android.view.View
 import android.view.WindowManager
-import com.energy.iruvc.utils.CommonParams
+import com.infisense.iruvc.utils.CommonParams
 
 /**
  * Consolidated screen utilities replacing multiple ScreenUtils classes
