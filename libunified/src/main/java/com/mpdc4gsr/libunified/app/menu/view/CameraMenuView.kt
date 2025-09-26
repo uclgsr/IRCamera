@@ -14,7 +14,7 @@ class CameraMenuView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : LinearLayout(context, attrs, defStyleAttr) {
 
-    var onCameraClickListener: ((Boolean) -> Unit)? = null
+    var onCameraClickListener: ((actionCode: Int) -> Unit)? = null
     var isVideoMode: Boolean = false
         set(value) {
             field = value
@@ -32,13 +32,13 @@ class CameraMenuView @JvmOverloads constructor(
         // Set to normal photo mode
     }
 
-    fun setToRecord() {
+    fun setToRecord(isDelay: Boolean = false) {
         isVideoMode = true
-        // Set to video recording mode
+        // Set to video recording mode with delay option
     }
 
-    fun refreshGallery() {
-        // Refresh gallery display
+    fun refreshGallery(path: String? = null) {
+        // Refresh gallery display with optional path
     }
     
     fun getSelectTargetDraw(): View? {

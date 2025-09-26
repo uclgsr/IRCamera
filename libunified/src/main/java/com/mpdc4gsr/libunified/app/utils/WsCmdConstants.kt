@@ -21,7 +21,7 @@ object WsCmdConstants {
     const val AR_COMMAND_RECORD_START: String = "AR_COMMAND_RECORD_START"
     const val AR_COMMAND_RECORD_STOP: String = "AR_COMMAND_RECORD_STOP"
     const val AR_COMMAND_RECORD_DELETE: String = "AR_COMMAND_RECORD_DELETE"
-    const val AR_COMMAND_VRECORD: String = "AR_COMMAND_VRECORD"
+    const val AR_COMMAND_VRECORD: Int = 21
     const val AR_COMMAND_SCENE_COMP: Int = 120
     const val AR_COMMAND_IMG_SCENE_SET: Int = 201
     const val AR_COMMAND_PANEL_SHIFT_SET: String = "AR_COMMAND_PANEL_SHIFT_SET"

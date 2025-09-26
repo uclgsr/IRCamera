@@ -19,4 +19,10 @@ object TargetUtils {
         return targetMeasureMode == ObserveBean.TYPE_MEASURE_DOG ||
                 targetMeasureMode == ObserveBean.TYPE_MEASURE_BIRD
     }
+    
+    fun getSelectTargetDraw(targetMeasureMode: Int, targetType: Int, targetColorType: Int): Int {
+        // Return drawable resource ID based on parameters
+        // This is a placeholder - should return appropriate drawable resource ID
+        return android.R.drawable.ic_menu_camera
+    }
 }
