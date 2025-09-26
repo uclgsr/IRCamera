@@ -31,14 +31,8 @@ class GuideInterface {
     private var mNativeGuideCore: NativeGuideCore? = null
     private val mUsbReadbuffer = ByteArray(MAX_BULK_TRANSFER_SIZE)
     private val mFrame = ByteArray(FRAME_SIZE)
-
-
     private val mYuv = ByteArray(YUV_SIZE)
-
-
     private val mParam = ByteArray(PARAM_SIZE)
-
-
     private val mTempMatrixByte = ByteArray(TEMP_MATRIX_SIZE)
     private val mTempMatrixFloat = FloatArray(IR_SIZE)
     private var mIrDataCallback: IrDataCallback? = null
@@ -107,23 +101,11 @@ class GuideInterface {
                         )
                     }
                     mNativeGuideCore!!.toFloatTempMatrix(mTempMatrixFloat, mTempMatrixByte)
-//                    if (startTime == 0L) {
-//                        startTime = System.currentTimeMillis()
-//                    }
-//                    if (System.currentTimeMillis() > startTime + 2000L) {
-//                        BaseApplication.instance.tempLog(
-//                            mFrame = mFrame,
-//                            yuvBytes = mYuv,
-//                            tempMatrix = mTempMatrixByte,
-//                            tempFloat = mTempMatrixFloat,
-//                            paramBytes = mParam,
-//                        )
-//                    }
+
                     if (mIrDataCallback != null) {
                         mIrDataCallback!!.processIrData(mYuv, mTempMatrixFloat)
                     }
                 } else {
-//                        Logger.d(TAG, "read Frame failed");
                 }
             }
             Logger.d(TAG, "read thread exit")
@@ -274,22 +256,11 @@ class GuideInterface {
         return getParam(PARAM_INDEX_CONTRAST * 2, 2, 1).toInt()
     }
 
-
-    //    int count = 0;
     fun yuv2Bitmap(bitmap: Bitmap?, yuv: ByteArray?) {
         if (mNativeGuideCore == null) {
             return
         }
         mNativeGuideCore!!.yuv2Bitmap(bitmap!!, yuv!!)
-        /*
-                long time = System.currentTimeMillis();
-                count++;
-                if(count >= 1000 && count< 1030) {
-                    FileUtils.Companion.saveFile(mFrame, "/sdcard/frame/" + time + ".raw", false);
-                    FileUtils.Companion.saveFile(mYuv, "/sdcard/yuv/" + time + ".yuv", false);
-                    FileUtils.Companion.saveBitmap2JpegFile(bitmap, "/sdcard/yuv/" + time + ".jpg");
-                }
-        */
     }
 
     fun saveTempMatrix(path: String?) {
@@ -307,7 +278,6 @@ class GuideInterface {
         }
         mGuideUsbManager!!.setRange(range)
     }
-
 
     fun setEmiss(emiss: Int) {
         if (mGuideUsbManager == null) {
