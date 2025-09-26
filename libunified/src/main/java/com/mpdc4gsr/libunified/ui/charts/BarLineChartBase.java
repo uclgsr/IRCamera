@@ -223,10 +223,7 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
             long drawtime = (System.currentTimeMillis() - starttime);
             totalTime += drawtime;
             drawCycles += 1;
-            long average = totalTime / drawCycles;
-            Log.i(LOG_TAG, "Drawtime: " + drawtime + " ms, average: " + average + " ms, cycles: "
-                    + drawCycles);
-        }
+            long average = totalTime / drawCycles;        }
     }
 
     public void resetTracking() {
@@ -236,11 +233,7 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
 
     protected void prepareValuePxMatrix() {
 
-        if (mLogEnabled)
-            Log.i(LOG_TAG, "Preparing Value-Px Matrix, xmin: " + mXAxis.mAxisMinimum + ", xmax: "
-                    + mXAxis.mAxisMaximum + ", xdelta: " + mXAxis.mAxisRange);
-
-        mRightAxisTransformer.prepareMatrixValuePx(mXAxis.mAxisMinimum,
+        if (mLogEnabled)        mRightAxisTransformer.prepareMatrixValuePx(mXAxis.mAxisMinimum,
                 mXAxis.mAxisRange,
                 mAxisRight.mAxisRange,
                 mAxisRight.mAxisMinimum);
@@ -260,13 +253,9 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
     public void notifyDataSetChanged() {
 
         if (mData == null) {
-            if (mLogEnabled)
-                Log.i(LOG_TAG, "Preparing... DATA NOT SET.");
-            return;
+            if (mLogEnabled)            return;
         } else {
-            if (mLogEnabled)
-                Log.i(LOG_TAG, "Preparing...");
-        }
+            if (mLogEnabled)        }
 
         if (mRenderer != null)
             mRenderer.initBuffers();
@@ -439,10 +428,7 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
                     Math.max(minOffset, offsetRight),
                     Math.max(minOffset, offsetBottom));
 
-            if (mLogEnabled) {
-                Log.i(LOG_TAG, "offsetLeft: " + offsetLeft + ", offsetTop: " + offsetTop
-                        + ", offsetRight: " + offsetRight + ", offsetBottom: " + offsetBottom);
-                Log.i(LOG_TAG, "Content: " + mViewPortHandler.getContentRect().toString());
+            if (mLogEnabled) {.toString());
             }
         }
 

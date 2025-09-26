@@ -9,10 +9,8 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 try:
-    from loguru import logger
-except ImportError:
-    from ..utils.simple_logger import logger
-
+    except ImportError:
+    
 from .config import config
 
 
@@ -62,13 +60,11 @@ class SessionManager:
         self._data_root = Path(config.get("sessions.base_directory", "./sessions"))
         self._ensure_data_root()
 
-        logger.info("Session Manager initialized")
-
+        
     def _ensure_data_root(self) -> None:
         """Ensure session data root directory exists"""
         self._data_root.mkdir(parents=True, exist_ok=True)
-        logger.debug(f"Session data root: {self._data_root}")
-
+        
     def create_session(self, name: Optional[str] = None) -> SessionMetadata:
         """Create a new session"""
         if self._current_session and self._current_session.state in [
@@ -96,8 +92,7 @@ class SessionManager:
         self._save_metadata()
         self._session_history.append(session_id)
 
-        logger.info(f"Session created: {name} [{session_id}]")
-        return self._current_session
+                return self._current_session
 
     def _get_session_directory(self, session_id: str) -> Path:
         """Get session directory path"""
@@ -118,10 +113,8 @@ class SessionManager:
         try:
             with open(metadata_file, "w", encoding="utf-8") as f:
                 json.dump(asdict(self._current_session), f, indent=2)
-            logger.debug(f"Session metadata saved: {metadata_file}")
-        except Exception as e:
-            logger.error(f"Failed to save metadata: {e}")
-
+                    except Exception as e:
+            
     def start_session(self) -> None:
         """Start the current session"""
         if not self._current_session:
@@ -131,8 +124,7 @@ class SessionManager:
         self._current_session.started_at = datetime.now(timezone.utc).isoformat()
         self._save_metadata()
 
-        logger.info(f"Session started: {self._current_session.name}")
-
+        
     def get_session(self, session_id: str) -> Optional[SessionMetadata]:
         """Get session by ID"""
         if self._current_session and self._current_session.session_id == session_id:
@@ -156,8 +148,7 @@ class SessionManager:
             # Convert dict back to SessionMetadata
             return SessionMetadata(**data)
         except Exception as e:
-            logger.error(f"Failed to load session {session_id}: {e}")
-            return None
+                        return None
 
     def get_current_session(self) -> Optional[SessionMetadata]:
         """Get current active session"""
@@ -187,8 +178,7 @@ class SessionManager:
         session = self._current_session
         self._current_session = None
 
-        logger.info(f"Session ended: {session.name}")
-        return session
+                return session
 
     def add_device(self, device_info: Dict[str, Any]) -> None:
         """Add device to current session"""
@@ -212,4 +202,4 @@ class SessionManager:
 
         self._current_session.sync_events.append(sync_event)
         self._save_metadata()
-        logger.info(f"Sync event added: {event_type}")
+        

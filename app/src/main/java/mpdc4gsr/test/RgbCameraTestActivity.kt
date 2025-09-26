@@ -3,7 +3,6 @@ package mpdc4gsr.test
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.SeekBar
 import android.widget.Switch
@@ -202,9 +201,7 @@ class RgbCameraTestActivity : AppCompatActivity() {
                 } else {
                     showError("Failed to initialize camera")
                 }
-            } catch (e: Exception) {
-                Log.e(TAG, "Failed to initialize camera", e)
-                showError("Initialization error: ${e.message}")
+            } catch (e: Exception) {                showError("Initialization error: ${e.message}")
             }
         }
     }
@@ -286,9 +283,7 @@ class RgbCameraTestActivity : AppCompatActivity() {
                 appendLine()
             }
 
-            updateTestResults(result)
-            Log.i(TAG, "4K capability test completed: $capabilities")
-        }
+            updateTestResults(result)        }
     }
 
     private fun testRawCapability() {
@@ -311,9 +306,7 @@ class RgbCameraTestActivity : AppCompatActivity() {
                 appendLine()
             }
 
-            updateTestResults(result)
-            Log.i(TAG, "RAW capability test completed: $capabilities")
-        }
+            updateTestResults(result)        }
     }
 
     private fun testManualControls() {
@@ -363,15 +356,11 @@ class RgbCameraTestActivity : AppCompatActivity() {
     }
 
     private fun showMessage(message: String) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-        Log.i(TAG, message)
-    }
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()    }
 
     private fun showError(error: String) {
         statusText.text = "Error: $error"
-        Toast.makeText(this, error, Toast.LENGTH_LONG).show()
-        Log.e(TAG, error)
-    }
+        Toast.makeText(this, error, Toast.LENGTH_LONG).show()    }
 
     override fun onDestroy() {
         super.onDestroy()

@@ -1,11 +1,9 @@
 package com.mpdc4gsr.module.thermalunified.fragment
 
 import android.graphics.Bitmap
-import android.util.Log
 import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.lifecycle.lifecycleScope
-import com.elvishew.xlog.XLog
 import com.energy.iruvc.ircmd.IRCMD
 import com.energy.iruvc.utils.CommonParams
 import com.energy.iruvc.utils.SynchronizedBitmap
@@ -123,9 +121,7 @@ class IRCorrectionFragment : BaseFragment(), ITsTempListener {
         setViewLay()
 
         if (Usbcontorl.isload) {
-            Usbcontorl.usb3803_mode_setting(1)
-            Log.w("123", "打开5V")
-        }
+            Usbcontorl.usb3803_mode_setting(1)        }
         temperatureView.clear()
         temperatureView.temperatureRegionMode = REGION_MODE_CLEAN
     }
@@ -141,8 +137,7 @@ class IRCorrectionFragment : BaseFragment(), ITsTempListener {
             imageThread?.setRotate(rotateAngle)
             imageThread!!.setRotate(true)
             imageThread!!.start()
-        } catch (e: Exception) {
-            Log.e("图像线程重复启动", e.message.toString())
+        } catch (e: Exception) {)
         }
     }
 
@@ -156,12 +151,7 @@ class IRCorrectionFragment : BaseFragment(), ITsTempListener {
                         override fun onCameraOpened(uvcCamera: UVCCamera) {
                         }
 
-                        override fun onIRCMDCreate(ircmd: IRCMD) {
-                            Log.i(
-                                TAG,
-                                "ConnectCallback->onIRCMDCreate",
-                            )
-                            this@IRCorrectionFragment.ircmd = ircmd
+                        override fun onIRCMDCreate(ircmd: IRCMD) {                            this@IRCorrectionFragment.ircmd = ircmd
 
 
                         }
@@ -201,9 +191,7 @@ class IRCorrectionFragment : BaseFragment(), ITsTempListener {
     }
 
     override fun onStart() {
-        super.onStart()
-        Log.w(TAG, "onStart")
-        if (!isrun) {
+        super.onStart()        if (!isrun) {
 
             temperatureView.postDelayed({
                 pseudocolorMode = 3
@@ -219,9 +207,7 @@ class IRCorrectionFragment : BaseFragment(), ITsTempListener {
     }
 
     override fun onStop() {
-        super.onStop()
-        Log.w(TAG, "onStop")
-        if (iruvc != null) {
+        super.onStop()        if (iruvc != null) {
             iruvc!!.stopPreview()
             iruvc!!.unregisterUSB()
         }
@@ -233,12 +219,9 @@ class IRCorrectionFragment : BaseFragment(), ITsTempListener {
     }
 
     override fun onDestroy() {
-        super.onDestroy()
-        Log.w(TAG, "onDestroy")
-        try {
+        super.onDestroy()        try {
             imageThread?.join()
-        } catch (e: InterruptedException) {
-            Log.e(TAG, "imageThread.join(): catch an interrupted exception")
+        } catch (e: InterruptedException) {: catch an interrupted exception")
         }
     }
 
@@ -284,8 +267,7 @@ class IRCorrectionFragment : BaseFragment(), ITsTempListener {
             val config = ConfigRepository.readConfig(false)
             val disChar = (config.distance * 128).toInt()
             val emsChar = (config.radiation * 128).toInt()
-            XLog.w("设置TPD_PROP DISTANCE:$disChar, EMS:$emsChar}")
-            val timeMillis = 250L
+            X            val timeMillis = 250L
             delay(timeMillis)
 
             ircmd?.setPropTPDParams(
@@ -359,42 +341,22 @@ class IRCorrectionFragment : BaseFragment(), ITsTempListener {
 
 
             CalibrationTools.autoShutter(irCmd = ircmd, false)
-            XLog.w("锅盖矫正：" + "锅盖标定开始")
-
-
-
-
-
-            delay(2000)
-            XLog.w("锅盖矫正：" + "关闭锅盖校正")
-            CalibrationTools.stsSwitch(irCmd = ircmd, false)
+            X            delay(2000)
+            X            CalibrationTools.stsSwitch(irCmd = ircmd, false)
 
             CalibrationTools.pot(irCmd = ircmd!!, 1)
-            XLog.w("锅盖矫正：" + "发送锅盖标")
-
-            delay(5000)
-            XLog.w("锅盖矫正：" + "打开锅盖校正")
-            CalibrationTools.stsSwitch(irCmd = ircmd, true)
+            X            delay(5000)
+            X            CalibrationTools.stsSwitch(irCmd = ircmd, true)
             delay(20000)
-            XLog.w("锅盖矫正：" + "20000")
-
-
-
-
-
-            delay(2000)
+            X            delay(2000)
             CalibrationTools.stsSwitch(irCmd = ircmd, false)
-            XLog.w("锅盖矫正：" + "关闭锅盖校正")
-
-            CalibrationTools.pot(irCmd = ircmd!!, 1)
+            X            CalibrationTools.pot(irCmd = ircmd!!, 1)
 
             delay(5000)
-            XLog.w("锅盖矫正：" + "打开锅盖校正")
-            CalibrationTools.stsSwitch(irCmd = ircmd, true)
+            X            CalibrationTools.stsSwitch(irCmd = ircmd, true)
 
             CalibrationTools.autoShutter(irCmd = ircmd, true)
 
-            XLog.w("锅盖矫正：" + "锅盖结束")
-        }
+            X        }
     }
 }

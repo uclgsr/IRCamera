@@ -10,7 +10,6 @@ import com.blankj.utilcode.util.Utils
 import com.csl.irCamera.BuildConfig
 import com.elvishew.xlog.LogConfiguration
 import com.elvishew.xlog.LogLevel
-import com.elvishew.xlog.XLog
 import com.elvishew.xlog.flattener.PatternFlattener
 import com.elvishew.xlog.printer.AndroidPrinter
 import com.elvishew.xlog.printer.file.FilePrinter
@@ -54,11 +53,7 @@ object InitUtil {
                 .cleanStrategy(cleanStrategy)
                 .flattener(PatternFlattener(pattern))
                 .build()
-        if (BuildConfig.DEBUG) {
-            XLog.init(config, androidPrinter, filePrinter)
-        } else {
-            XLog.init(config, filePrinter)
-        }
+        if (BuildConfig.DEBUG) {        } else {        }
     }
 
     fun initLms() {
@@ -123,14 +118,10 @@ object InitUtil {
                 // Initialize auth-number service if available (from auth-number-2.13.2.1.aar)
                 initializeAuthNumberService(context)
 
-                XLog.i("UMeng SDK with enhanced features initialized successfully")
-            } catch (e: Exception) {
-                XLog.w("UMeng enhanced features initialization partial: ${e.message}")
-                XLog.i("UMeng basic SDK initialized successfully")
-            }
+                X            } catch (e: Exception) {
+                X                X            }
         } catch (e: Exception) {
-            XLog.e("Failed to initialize UMeng SDK: ${e.message}")
-        }
+            X        }
     }
 
     private fun initializeAuthNumberService(context: Context) {
@@ -140,12 +131,10 @@ object InitUtil {
             val initMethod = authClass.getMethod("getInstance", Context::class.java, String::class.java)
             val authInstance = initMethod.invoke(null, context, BuildConfig.APP_KEY)
 
-            XLog.i("Auth number service initialized from app/libs")
-        } catch (e: ClassNotFoundException) {
-            XLog.d("Auth number service not available (expected for MVP)")
+            X        } catch (e: ClassNotFoundException) {
+            X")
         } catch (e: Exception) {
-            XLog.w("Auth number service initialization failed: ${e.message}")
-        }
+            X        }
     }
 
     fun initJPush() {
@@ -156,9 +145,8 @@ object InitUtil {
             val jpushClass = try {
                 Class.forName("cn.jpush.android.api.JPushInterface")
             } catch (e: ClassNotFoundException) {
-                XLog.w("JPush SDK not available - skipping initialization")
-                if (SharedManager.getHasShowClause()) {
-                    XLog.w("registrationID= unavailable (JPush SDK not found)")
+                X                if (SharedManager.getHasShowClause()) {
+                    X")
                 }
                 return
             }
@@ -176,23 +164,17 @@ object InitUtil {
                 val registrationID = getRegistrationIDMethod.invoke(null, context) as? String ?: "unknown"
 
                 if (SharedManager.getHasShowClause()) {
-                    XLog.w("JPush registrationID= $registrationID")
-                }
+                    X                }
 
-                XLog.i("JPush SDK initialized successfully")
-            } catch (e: Exception) {
-                XLog.e("Failed to initialize JPush SDK via reflection: ${e.message}")
-                if (SharedManager.getHasShowClause()) {
-                    XLog.w("registrationID= unavailable (JPush initialization failed)")
+                X            } catch (e: Exception) {
+                X                if (SharedManager.getHasShowClause()) {
+                    X")
                 }
             }
         } catch (e: Exception) {
-            XLog.e("Failed to initialize JPush SDK: ${e.message}")
-
-            // Fallback logging for debugging
+            X            // Fallback logging for debugging
             if (SharedManager.getHasShowClause()) {
-                XLog.w("registrationID= unavailable")
-            }
+                X            }
         }
     }
 

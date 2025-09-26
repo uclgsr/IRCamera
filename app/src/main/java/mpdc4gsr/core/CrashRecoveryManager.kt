@@ -2,7 +2,6 @@ package mpdc4gsr.core
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.json.JSONArray
@@ -31,46 +30,31 @@ class CrashRecoveryManager(private val context: Context) {
     private val preferences: SharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
 
 
-    suspend fun checkForCrashedSessions(): CrashRecoveryResult = withContext(Dispatchers.IO) {
-        Log.i(TAG, "Checking for crashed sessions on app startup")
-
-        try {
+    suspend fun checkForCrashedSessions(): CrashRecoveryResult = withContext(Dispatchers.IO) {        try {
 
             val activeSessionId = preferences.getString(KEY_ACTIVE_SESSION, null)
             val sessionStartTime = preferences.getLong(KEY_SESSION_START_TIME, 0L)
             val activeSensorsJson = preferences.getString(KEY_ACTIVE_SENSORS, null)
             val sessionDirectory = preferences.getString(KEY_SESSION_DIRECTORY, null)
 
-            if (activeSessionId == null || sessionStartTime == 0L) {
-                Log.i(TAG, "No previous active session found")
-                return@withContext CrashRecoveryResult(
+            if (activeSessionId == null || sessionStartTime == 0L) {                return@withContext CrashRecoveryResult(
                     hasCrashedSession = false,
                     recoveredSession = null,
                     recoveryActions = emptyList()
                 )
-            }
-
-            Log.i(TAG, "Found potential crashed session: $activeSessionId")
-            Log.i(TAG, "Session start time: ${Date(sessionStartTime)}")
-            Log.i(TAG, "Session directory: $sessionDirectory")
-
-
-            val activeSensors = try {
+            }}")            val activeSensors = try {
                 activeSensorsJson?.let {
                     val jsonArray = JSONArray(it)
                     (0 until jsonArray.length()).map { i -> jsonArray.getString(i) }
                 } ?: emptyList()
-            } catch (e: Exception) {
-                Log.w(TAG, "Failed to parse active sensors", e)
-                emptyList<String>()
+            } catch (e: Exception) {                emptyList<String>()
             }
 
 
             val currentTime = System.currentTimeMillis()
             val sessionAge = currentTime - sessionStartTime
 
-            if (sessionAge > SESSION_TIMEOUT_MS) {
-                Log.w(TAG, "Session is too old (${sessionAge}ms), considering it invalid")
+            if (sessionAge > SESSION_TIMEOUT_MS) {, considering it invalid")
                 clearCrashRecoveryState()
                 return@withContext CrashRecoveryResult(
                     hasCrashedSession = false,
@@ -89,19 +73,13 @@ class CrashRecoveryManager(private val context: Context) {
                 activeSensors = activeSensors,
                 sessionAge = sessionAge,
                 analysis = sessionAnalysis
-            )
-
-            Log.i(TAG, "Crashed session analysis complete: ${sessionAnalysis.summary}")
-
-            return@withContext CrashRecoveryResult(
+            )            return@withContext CrashRecoveryResult(
                 hasCrashedSession = true,
                 recoveredSession = recoveredSession,
                 recoveryActions = generateRecoveryActions(recoveredSession)
             )
 
-        } catch (e: Exception) {
-            Log.e(TAG, "Error during crash recovery check", e)
-            return@withContext CrashRecoveryResult(
+        } catch (e: Exception) {            return@withContext CrashRecoveryResult(
                 hasCrashedSession = false,
                 recoveredSession = null,
                 recoveryActions = listOf("Error during recovery check: ${e.message}")
@@ -114,10 +92,7 @@ class CrashRecoveryManager(private val context: Context) {
         sessionId: String,
         sessionDirectory: String,
         activeSensors: List<String>
-    ) {
-        Log.i(TAG, "Marking session as active for crash recovery: $sessionId")
-
-        preferences.edit()
+    ) {        preferences.edit()
             .putString(KEY_ACTIVE_SESSION, sessionId)
             .putLong(KEY_SESSION_START_TIME, System.currentTimeMillis())
             .putString(KEY_ACTIVE_SENSORS, JSONArray(activeSensors).toString())
@@ -126,14 +101,11 @@ class CrashRecoveryManager(private val context: Context) {
     }
 
 
-    fun markSessionCompleted(sessionId: String) {
-        Log.i(TAG, "Marking session as completed: $sessionId")
-        clearCrashRecoveryState()
+    fun markSessionCompleted(sessionId: String) {        clearCrashRecoveryState()
     }
 
 
-    fun markSessionFailed(sessionId: String, reason: String) {
-        Log.i(TAG, "Marking session as failed: $sessionId (reason: $reason)")
+    fun markSessionFailed(sessionId: String, reason: String) {")
 
 
         try {
@@ -141,19 +113,14 @@ class CrashRecoveryManager(private val context: Context) {
             if (sessionDirectory != null) {
                 updateSessionMetadataWithFailure(sessionDirectory, reason)
             }
-        } catch (e: Exception) {
-            Log.w(TAG, "Failed to update session metadata with failure", e)
-        }
+        } catch (e: Exception) {        }
 
         clearCrashRecoveryState()
     }
 
 
     suspend fun recoverCrashedSession(recoveredSession: RecoveredSession): SessionRecoveryResult =
-        withContext(Dispatchers.IO) {
-            Log.i(TAG, "Recovering crashed session: ${recoveredSession.sessionId}")
-
-            try {
+        withContext(Dispatchers.IO) {            try {
                 val recoveryActions = mutableListOf<String>()
 
 
@@ -180,20 +147,14 @@ class CrashRecoveryManager(private val context: Context) {
 
 
                 clearCrashRecoveryState()
-                recoveryActions.add("Cleared crash recovery tracking state")
-
-                Log.i(TAG, "Session recovery completed: ${recoveryActions.size} actions performed")
-
-                return@withContext SessionRecoveryResult(
+                recoveryActions.add("Cleared crash recovery tracking state")                return@withContext SessionRecoveryResult(
                     success = true,
                     recoveredSessionId = recoveredSession.sessionId,
                     recoveryActions = recoveryActions,
                     error = null
                 )
 
-            } catch (e: Exception) {
-                Log.e(TAG, "Error during session recovery", e)
-                return@withContext SessionRecoveryResult(
+            } catch (e: Exception) {                return@withContext SessionRecoveryResult(
                     success = false,
                     recoveredSessionId = recoveredSession.sessionId,
                     recoveryActions = emptyList(),
@@ -274,9 +235,7 @@ class CrashRecoveryManager(private val context: Context) {
                 summary = summary
             )
 
-        } catch (e: Exception) {
-            Log.w(TAG, "Error analyzing session directory", e)
-            return@withContext SessionAnalysis(
+        } catch (e: Exception) {            return@withContext SessionAnalysis(
                 hasSessionDirectory = true,
                 sessionDirectoryExists = true,
                 dataFiles = emptyMap(),
@@ -352,13 +311,9 @@ class CrashRecoveryManager(private val context: Context) {
 
             existingMetadata.put("crash_recovery", crashRecoveryInfo)
 
-            metadataFile.writeText(existingMetadata.toString(2))
-            Log.i(TAG, "Updated session metadata with crash recovery info")
-            true
+            metadataFile.writeText(existingMetadata.toString(2))            true
 
-        } catch (e: Exception) {
-            Log.w(TAG, "Failed to update session metadata with crash recovery", e)
-            false
+        } catch (e: Exception) {            false
         }
     }
 
@@ -387,9 +342,7 @@ class CrashRecoveryManager(private val context: Context) {
             existingMetadata.put("failure_info", failureInfo)
             metadataFile.writeText(existingMetadata.toString(2))
 
-        } catch (e: Exception) {
-            Log.w(TAG, "Failed to update session metadata with failure", e)
-        }
+        } catch (e: Exception) {        }
     }
 
 
@@ -412,9 +365,7 @@ class CrashRecoveryManager(private val context: Context) {
                 cleanupActions.add("Cleared any remaining background jobs")
                 cleanupActions.add("Released file system locks")
 
-            } catch (e: Exception) {
-                Log.w(TAG, "Error during resource cleanup", e)
-                cleanupActions.add("Resource cleanup encountered errors: ${e.message}")
+            } catch (e: Exception) {                cleanupActions.add("Resource cleanup encountered errors: ${e.message}")
             }
 
             return@withContext cleanupActions
@@ -448,9 +399,7 @@ class CrashRecoveryManager(private val context: Context) {
                 } else {
                     false
                 }
-            } catch (e: Exception) {
-                Log.w(TAG, "Failed to preserve partial session data", e)
-                false
+            } catch (e: Exception) {                false
             }
         }
 
@@ -490,13 +439,9 @@ class CrashRecoveryManager(private val context: Context) {
                 })
             }
 
-            reportFile.writeText(report.toString(2))
-            Log.i(TAG, "Generated crash recovery report: ${reportFile.absolutePath}")
-            true
+            reportFile.writeText(report.toString(2))            true
 
-        } catch (e: Exception) {
-            Log.w(TAG, "Failed to generate recovery report", e)
-            false
+        } catch (e: Exception) {            false
         }
     }
 

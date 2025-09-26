@@ -37,7 +37,6 @@ except ImportError as e:
     print(f"Failed to import PyQt6 or pyqtgraph: {e}")
     sys.exit(1)
 
-from loguru import logger
 
 
 class GSRDeviceStatusWidget(QWidget):
@@ -499,8 +498,7 @@ class GSRMainWidget(QWidget):
             self.update_real_time_plots()
 
         except Exception as e:
-            logger.error(f"Error updating GSR data: {e}")
-
+            
     def update_real_time_plots(self) -> None:
         """Update real-time plots (placeholder for real data)"""
 
@@ -553,8 +551,7 @@ class GSRMainWidget(QWidget):
                 QMessageBox.warning(self, "Export Failed", "No data was exported.")
 
         except Exception as e:
-            logger.error(f"Error exporting GSR data: {e}")
-            QMessageBox.critical(self, "Export Error", f"Export failed: {str(e)}")
+                        QMessageBox.critical(self, "Export Error", f"Export failed: {str(e)}")
 
 
 class GSRAnalyticsWidget(QWidget):
@@ -720,8 +717,7 @@ class GSRAnalyticsWidget(QWidget):
             self.update_feature_display()
 
         except Exception as e:
-            logger.error(f"Error updating analytics display: {e}")
-
+            
     def update_stress_table(self, stress_summary: None = Dict) -> None:
 
         sessions = stress_summary.get("sessions", {})
@@ -872,8 +868,7 @@ class GSRAnalyticsWidget(QWidget):
             self.update_session_summary(analytics)
 
         except Exception as e:
-            logger.error(f"Error updating feature display: {e}")
-
+            
     def update_session_summary(self, analytics: None = Dict) -> None:
 
         summary_data = [
@@ -1016,8 +1011,7 @@ class GSRAnalyticsWidget(QWidget):
             )
 
         except Exception as e:
-            logger.error(f"Error exporting analytics data: {e}")
-            QMessageBox.critical(self, "Export Error", f"Export failed: {str(e)}")
+                        QMessageBox.critical(self, "Export Error", f"Export failed: {str(e)}")
 
     def clear_stress_history(self) -> None:
 
@@ -1033,8 +1027,7 @@ class GSRAnalyticsWidget(QWidget):
 
         self.summary_table.setRowCount(0)
 
-        logger.info("Cleared GSR analytics history")
-
+        
 
 class GSRMainTabWidget(QTabWidget):
 

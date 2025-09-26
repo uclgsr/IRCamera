@@ -1,7 +1,6 @@
 package mpdc4gsr.test
 
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.ScrollView
@@ -158,17 +157,11 @@ class FaultTolerantSessionDemoActivity : ComponentActivity() {
 
     private suspend fun initializeSensors() {
         try {
-            updateStatus("Initializing sensors with fault tolerance...")
-            Log.i(TAG, "Starting sensor initialization")
-
-            val success = recordingController.initializeSensors()
+            updateStatus("Initializing sensors with fault tolerance...")            val success = recordingController.initializeSensors()
 
             if (success) {
                 val availableSensors = recordingController.getAvailableSensors()
-                updateStatus("✓ Initialization complete: ${availableSensors.size} sensors available")
-                Log.i(TAG, "Sensors initialized: ${availableSensors.map { it.sensorId }}")
-
-                startSessionButton.isEnabled = true
+                updateStatus("✓ Initialization complete: ${availableSensors.size} sensors available")                startSessionButton.isEnabled = true
                 simulateFailureButton.isEnabled = false
 
                 showMessage(
@@ -177,18 +170,13 @@ class FaultTolerantSessionDemoActivity : ComponentActivity() {
                             "The system can now start sessions even if some sensors fail."
                 )
             } else {
-                updateStatus("✗ Initialization failed: No sensors available")
-                Log.e(TAG, "Sensor initialization failed completely")
-
-                showMessage(
+                updateStatus("✗ Initialization failed: No sensors available")                showMessage(
                     "Initialization failed - no sensors are available.\n" +
                             "This may indicate hardware or permission issues."
                 )
             }
         } catch (e: Exception) {
-            updateStatus("✗ Initialization error: ${e.message}")
-            Log.e(TAG, "Error during initialization", e)
-        }
+            updateStatus("✗ Initialization error: ${e.message}")        }
     }
 
     private suspend fun startFaultTolerantSession() {
@@ -199,20 +187,13 @@ class FaultTolerantSessionDemoActivity : ComponentActivity() {
                 getExternalFilesDir(null),
                 "demo_sessions/session_${System.currentTimeMillis()}"
             )
-            sessionDir.mkdirs()
-
-            Log.i(TAG, "Starting session: ${sessionDir.absolutePath}")
-
-            val success = recordingController.startRecording(sessionDir.absolutePath)
+            sessionDir.mkdirs()            val success = recordingController.startRecording(sessionDir.absolutePath)
 
             if (success) {
                 val activeSensors = recordingController.getActiveSensorCount()
                 val totalSensors = recordingController.getAvailableSensors().size
 
-                updateStatus("✓ Session started: $activeSensors/$totalSensors sensors active")
-                Log.i(TAG, "Session started successfully with partial sensors")
-
-                startSessionButton.isEnabled = false
+                updateStatus("✓ Session started: $activeSensors/$totalSensors sensors active")                startSessionButton.isEnabled = false
                 stopSessionButton.isEnabled = true
                 simulateFailureButton.isEnabled = true
 
@@ -222,18 +203,13 @@ class FaultTolerantSessionDemoActivity : ComponentActivity() {
                             "Session will continue even if individual sensors fail."
                 )
             } else {
-                updateStatus("✗ Session failed: No sensors could start")
-                Log.e(TAG, "Session start failed - all sensors failed")
-
-                showMessage(
+                updateStatus("✗ Session failed: No sensors could start")                showMessage(
                     "Session start failed.\n" +
                             "All sensors failed to start. Check sensor connections."
                 )
             }
         } catch (e: Exception) {
-            updateStatus("✗ Session start error: ${e.message}")
-            Log.e(TAG, "Error starting session", e)
-        }
+            updateStatus("✗ Session start error: ${e.message}")        }
     }
 
     private suspend fun stopSession() {
@@ -243,10 +219,7 @@ class FaultTolerantSessionDemoActivity : ComponentActivity() {
             val success = recordingController.stopSession()
 
             if (success) {
-                updateStatus("✓ Session stopped successfully")
-                Log.i(TAG, "Session stopped with smart cleanup")
-
-                startSessionButton.isEnabled = true
+                updateStatus("✓ Session stopped successfully")                startSessionButton.isEnabled = true
                 stopSessionButton.isEnabled = false
                 simulateFailureButton.isEnabled = false
 
@@ -255,13 +228,9 @@ class FaultTolerantSessionDemoActivity : ComponentActivity() {
                             "Smart cleanup ensured only active sensors were stopped."
                 )
             } else {
-                updateStatus("⚠ Session stop completed with issues")
-                Log.w(TAG, "Session stop had some issues")
-            }
+                updateStatus("⚠ Session stop completed with issues")            }
         } catch (e: Exception) {
-            updateStatus("✗ Session stop error: ${e.message}")
-            Log.e(TAG, "Error stopping session", e)
-        }
+            updateStatus("✗ Session stop error: ${e.message}")        }
     }
 
     private fun validateSessionState() {
@@ -289,9 +258,7 @@ class FaultTolerantSessionDemoActivity : ComponentActivity() {
             )
         }
 
-        showMessage(message)
-        Log.i(TAG, "Session validation: ${validation.summary}")
-    }
+        showMessage(message)    }
 
     private fun showSessionDiagnostics() {
         val diagnostics = recordingController.getSessionDiagnostics()
@@ -330,15 +297,11 @@ class FaultTolerantSessionDemoActivity : ComponentActivity() {
             }
         }
 
-        diagnosticsText.text = message
-        Log.i(TAG, "Diagnostics displayed")
-    }
+        diagnosticsText.text = message    }
 
     private fun showStatusReport() {
         val report = recordingController.getStatusReport()
-        diagnosticsText.text = report
-        Log.i(TAG, "Status report displayed")
-    }
+        diagnosticsText.text = report    }
 
     private fun simulateSensorFailure() {
         showMessage(
@@ -348,9 +311,7 @@ class FaultTolerantSessionDemoActivity : ComponentActivity() {
                     "• Error recovery attempts\n" +
                     "• Graceful degradation\n\n" +
                     "In a real implementation, this would trigger sensor disconnection."
-        )
-        Log.i(TAG, "Sensor failure simulation requested")
-    }
+        )    }
 
     private fun startRecordingService() {
         try {
@@ -366,12 +327,8 @@ class FaultTolerantSessionDemoActivity : ComponentActivity() {
             showMessage(
                 "Recording service started with fault-tolerant session management.\n" +
                         "The service will handle sensor failures gracefully."
-            )
-            Log.i(TAG, "Recording service started")
-        } catch (e: Exception) {
-            updateStatus("Service start failed: ${e.message}")
-            Log.e(TAG, "Failed to start recording service", e)
-        }
+            )        } catch (e: Exception) {
+            updateStatus("Service start failed: ${e.message}")        }
     }
 
     private fun updateStatus(status: String) {

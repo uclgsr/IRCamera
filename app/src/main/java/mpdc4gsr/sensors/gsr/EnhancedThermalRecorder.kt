@@ -1,7 +1,6 @@
 package mpdc4gsr.sensors.gsr
 
 import android.content.Context
-import android.util.Log
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
@@ -55,17 +54,11 @@ class EnhancedThermalRecorder(private val context: Context) {
                     thermalCameraRecorder.startRecording(currentSessionDirectory!!.absolutePath)
                 }
 
-                if (success) {
-                    Log.i(TAG, "Enhanced thermal recording started for session: $sessionId")
-                } else {
-                    Log.e(TAG, "Failed to start thermal recording for session: $sessionId")
-                }
+                if (success) {                } else {                }
             }
 
             return true
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to start enhanced thermal recording", e)
-            return false
+        } catch (e: Exception) {            return false
         }
     }
 
@@ -81,12 +74,8 @@ class EnhancedThermalRecorder(private val context: Context) {
             val sessionInfo = SessionInfo(
                 sessionDirectory = currentSessionDirectory,
                 sampleCount = thermalCameraRecorder.getRecordingStats().totalSamplesRecorded
-            )
-            Log.i(TAG, "Enhanced thermal recording stopped successfully")
-            sessionInfo
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to stop enhanced thermal recording", e)
-            null
+            )            sessionInfo
+        } catch (e: Exception) {            null
         }
     }
 
@@ -106,12 +95,7 @@ class EnhancedThermalRecorder(private val context: Context) {
                 writer.write(eventLine)
                 writer.write("\n")
                 writer.flush()
-            }
-
-            Log.d(TAG, "Sync event triggered: $eventType")
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to trigger sync event: $eventType", e)
-        }
+            }        } catch (e: Exception) {        }
     }
 
 
@@ -127,11 +111,7 @@ class EnhancedThermalRecorder(private val context: Context) {
             kotlinx.coroutines.GlobalScope.launch {
                 thermalCameraRecorder.cleanup()
             }
-            currentSessionDirectory = null
-            Log.i(TAG, "Enhanced thermal recorder cleaned up")
-        } catch (e: Exception) {
-            Log.e(TAG, "Error during cleanup", e)
-        }
+            currentSessionDirectory = null        } catch (e: Exception) {        }
     }
 
 
@@ -147,18 +127,14 @@ class EnhancedThermalRecorder(private val context: Context) {
                 syncEventWriter?.write("timestamp_ns,event_type,event_data\n")
                 syncEventWriter?.flush()
             }
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to setup sync events file", e)
-        }
+        } catch (e: Exception) {        }
     }
 
     private fun closeSyncEventsFile() {
         try {
             syncEventWriter?.close()
             syncEventWriter = null
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to close sync events file", e)
-        }
+        } catch (e: Exception) {        }
     }
 
 

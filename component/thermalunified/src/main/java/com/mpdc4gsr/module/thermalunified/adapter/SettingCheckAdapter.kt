@@ -2,7 +2,6 @@
 package com.mpdc4gsr.module.thermalunified.adapter
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -57,9 +56,7 @@ class SettingCheckAdapter(val context: Context) :
                     )
                 )
             }
-            holder.btn.setOnClickListener {
-                Log.w("123", "文件: ${datas[position]}")
-                listener?.onClick(position, dataTimes[position])
+            holder.btn.setOnClickListener {                listener?.onClick(position, dataTimes[position])
             }
         }
     }

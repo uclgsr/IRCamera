@@ -1,7 +1,6 @@
 package mpdc4gsr.test
 
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -92,9 +91,7 @@ class CrossModalSyncTestActivity : AppCompatActivity() {
             timeSyncService = TimeSynchronizationService()
             updateResults("✓ Synchronization components initialized\n\n")
         } catch (e: Exception) {
-            updateResults("✗ Failed to initialize components: ${e.message}\n\n")
-            Log.e(TAG, "Failed to initialize components", e)
-        }
+            updateResults("✗ Failed to initialize components: ${e.message}\n\n")        }
     }
 
     /**
@@ -179,9 +176,7 @@ class CrossModalSyncTestActivity : AppCompatActivity() {
             testSessionDir = testDir
 
             true
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to initialize multi-sensor recording", e)
-            false
+        } catch (e: Exception) {            false
         }
     }
 
@@ -213,9 +208,7 @@ class CrossModalSyncTestActivity : AppCompatActivity() {
             }
 
             recordingStarted
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to start synchronized recording", e)
-            false
+        } catch (e: Exception) {            false
         }
     }
 
@@ -248,9 +241,7 @@ class CrossModalSyncTestActivity : AppCompatActivity() {
             updateResults("- Potentially cause GSR response\n\n")
 
         } catch (e: Exception) {
-            updateResults("✗ Failed to generate sync event: ${e.message}\n")
-            Log.e(TAG, "Failed to generate sync event", e)
-        }
+            updateResults("✗ Failed to generate sync event: ${e.message}\n")        }
     }
 
     private suspend fun stopSynchronizedRecording(): Boolean {
@@ -273,9 +264,7 @@ class CrossModalSyncTestActivity : AppCompatActivity() {
             val recordingStopped = controller.stopSession()
             recordingStopped
 
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to stop synchronized recording", e)
-            false
+        } catch (e: Exception) {            false
         }
     }
 
@@ -310,9 +299,7 @@ class CrossModalSyncTestActivity : AppCompatActivity() {
 
         } catch (e: Exception) {
             testResults.append("✗ Analysis failed: ${e.message}\n")
-            updateResults(testResults.toString())
-            Log.e(TAG, "Failed to analyze sync data", e)
-        }
+            updateResults(testResults.toString())        }
     }
 
     private fun analyzeSessionStartSync(): String {
@@ -422,9 +409,7 @@ class CrossModalSyncTestActivity : AppCompatActivity() {
         testSessionDir?.let { dir ->
             try {
                 dir.deleteRecursively()
-            } catch (e: Exception) {
-                Log.w(TAG, "Failed to cleanup test directory", e)
-            }
+            } catch (e: Exception) {            }
         }
 
         // Ensure recording is stopped
@@ -435,9 +420,7 @@ class CrossModalSyncTestActivity : AppCompatActivity() {
                         controller.stopSession()
                     }
                     controller.cleanup()
-                } catch (e: Exception) {
-                    Log.e(TAG, "Error cleaning up recording controller", e)
-                }
+                } catch (e: Exception) {                }
             }
         }
     }

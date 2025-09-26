@@ -8,7 +8,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.provider.Settings
-import android.util.Log
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
@@ -142,9 +141,7 @@ class GSRSettingsActivity : BaseBindingActivity<ActivityGsrSettingsBinding>() {
                 val allGranted = permissions.values.all { it }
                 val deniedPermissions = permissions.filter { !it.value }.keys
 
-                if (allGranted) {
-                    Log.i(TAG, "All Bluetooth permissions granted")
-                    updatePermissionStatus(
+                if (allGranted) {                    updatePermissionStatus(
                         "All Required Permissions Granted",
                         android.graphics.Color.parseColor("#4caf50")
                     )
@@ -153,10 +150,7 @@ class GSRSettingsActivity : BaseBindingActivity<ActivityGsrSettingsBinding>() {
                     pendingOperation = null
 
                     enableDeviceManagement(true)
-                } else {
-                    Log.w(TAG, "Some Bluetooth permissions denied: $deniedPermissions")
-
-                    val permanentlyDenied =
+                } else {                    val permanentlyDenied =
                         deniedPermissions.any { permission ->
                             !ActivityCompat.shouldShowRequestPermissionRationale(this, permission)
                         }
@@ -256,9 +250,7 @@ class GSRSettingsActivity : BaseBindingActivity<ActivityGsrSettingsBinding>() {
                     data = Uri.fromParts("package", packageName, null)
                 }
             startActivity(intent)
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to open app settings", e)
-            Toast.makeText(
+        } catch (e: Exception) {            Toast.makeText(
                 this,
                 "Please grant permissions in app settings manually",
                 Toast.LENGTH_LONG
@@ -269,26 +261,19 @@ class GSRSettingsActivity : BaseBindingActivity<ActivityGsrSettingsBinding>() {
     private fun requestMissingPermissions() {
         val missingPermissions = getMissingPermissions(this)
 
-        if (missingPermissions.isEmpty()) {
-            Log.i(TAG, "All permissions already granted")
-            updatePermissionStatus(
+        if (missingPermissions.isEmpty()) {            updatePermissionStatus(
                 "All Permissions Granted",
                 android.graphics.Color.parseColor("#4caf50")
             )
             enableDeviceManagement(true)
             return
-        }
-
-        Log.i(TAG, "Requesting missing permissions: $missingPermissions")
-        permissionLauncher.launch(missingPermissions.toTypedArray())
+        }        permissionLauncher.launch(missingPermissions.toTypedArray())
     }
 
     private fun checkAndRequestPermissions(onPermissionsGranted: (() -> Unit)? = null) {
         val missingPermissions = getMissingPermissions(this)
 
-        if (missingPermissions.isEmpty()) {
-            Log.i(TAG, "All required permissions already granted")
-            updatePermissionStatus(
+        if (missingPermissions.isEmpty()) {            updatePermissionStatus(
                 "All Permissions Granted",
                 android.graphics.Color.parseColor("#4caf50")
             )
@@ -525,20 +510,14 @@ class GSRSettingsActivity : BaseBindingActivity<ActivityGsrSettingsBinding>() {
         lifecycleScope.launch {
             try {
                 gsrSensorRecorder?.initialize()
-                updateDeviceStatus()
-                Log.i(TAG, "GSR sensor recorder initialized successfully")
-            } catch (e: Exception) {
-                Log.e(TAG, "Failed to initialize GSR sensor recorder", e)
-                updateDeviceStatus("Initialization Failed")
+                updateDeviceStatus()            } catch (e: Exception) {                updateDeviceStatus("Initialization Failed")
             }
         }
     }
 
     private fun scanForDevices() {
 
-        if (!hasBleScanningPermissions(this)) {
-            Log.w(TAG, "Missing BLE scanning permissions")
-            binding.deviceInfoText.text = "Bluetooth permissions required for device scanning"
+        if (!hasBleScanningPermissions(this)) {            binding.deviceInfoText.text = "Bluetooth permissions required for device scanning"
             checkAndRequestPermissions {
                 scanForDevices()
             }
@@ -549,41 +528,26 @@ class GSRSettingsActivity : BaseBindingActivity<ActivityGsrSettingsBinding>() {
             try {
                 binding.scanDevicesButton.isEnabled = false
                 binding.scanDevicesButton.text = "Scanning..."
-                binding.deviceInfoText.text = "Scanning for Shimmer devices..."
-
-                Log.i(TAG, "Starting device scan with full permissions")
-                val devices = gsrSensorRecorder?.getAvailableShimmerDevices() ?: emptyList()
+                binding.deviceInfoText.text = "Scanning for Shimmer devices..."                val devices = gsrSensorRecorder?.getAvailableShimmerDevices() ?: emptyList()
 
                 availableDevices.clear()
                 if (devices.isNotEmpty()) {
                     availableDevices.addAll(devices)
                     binding.deviceInfoText.text =
-                        "Found ${devices.size} device(s). Select one and tap Connect."
-                    Log.i(TAG, "Found ${devices.size} Shimmer devices: $devices")
-                } else {
+                        "Found ${devices.size} device(s). Select one and tap Connect."                } else {
                     availableDevices.add("No devices found")
                     binding.deviceInfoText.text =
-                        "No devices found. Ensure Shimmer device is powered on and Bluetooth is enabled."
-                    Log.w(TAG, "No Shimmer devices found during scan")
-                }
+                        "No devices found. Ensure Shimmer device is powered on and Bluetooth is enabled."                }
 
                 deviceAdapter.notifyDataSetChanged()
-            } catch (e: SecurityException) {
-                Log.e(
-                    TAG,
-                    "SecurityException during device scan - permissions may have been revoked",
-                    e
-                )
-                binding.deviceInfoText.text =
+            } catch (e: SecurityException) {                binding.deviceInfoText.text =
                     "Permission error during scan. Please check app permissions."
                 availableDevices.clear()
                 availableDevices.add("Permission error")
                 deviceAdapter.notifyDataSetChanged()
 
                 checkAndRequestPermissions()
-            } catch (e: Exception) {
-                Log.e(TAG, "Failed to scan for devices", e)
-                binding.deviceInfoText.text = "Scan failed: ${e.message}"
+            } catch (e: Exception) {                binding.deviceInfoText.text = "Scan failed: ${e.message}"
                 availableDevices.clear()
                 availableDevices.add("Scan failed")
                 deviceAdapter.notifyDataSetChanged()
@@ -601,9 +565,7 @@ class GSRSettingsActivity : BaseBindingActivity<ActivityGsrSettingsBinding>() {
             return
         }
 
-        if (!hasBluetoothPermissions(this)) {
-            Log.w(TAG, "Missing Bluetooth permissions for device connection")
-            binding.deviceInfoText.text = "Bluetooth permissions required for device connection"
+        if (!hasBluetoothPermissions(this)) {            binding.deviceInfoText.text = "Bluetooth permissions required for device connection"
             checkAndRequestPermissions {
                 connectToSelectedDevice()
             }
@@ -621,38 +583,20 @@ class GSRSettingsActivity : BaseBindingActivity<ActivityGsrSettingsBinding>() {
                         selectedDevice.substringAfter("(").substringBefore(")")
                     } else {
                         selectedDevice
-                    }
-
-                Log.i(
-                    TAG,
-                    "Attempting to connect to device: $selectedDevice with address: $deviceAddress"
-                )
-                val success = gsrSensorRecorder?.connectToShimmerDevice(deviceAddress) ?: false
+                    }                val success = gsrSensorRecorder?.connectToShimmerDevice(deviceAddress) ?: false
 
                 if (success) {
                     updateDeviceStatus("Connected")
-                    binding.deviceInfoText.text = "Successfully connected to: $selectedDevice"
-                    Log.i(TAG, "Successfully connected to Shimmer device: $selectedDevice")
-                } else {
+                    binding.deviceInfoText.text = "Successfully connected to: $selectedDevice"                } else {
                     updateDeviceStatus("Connection Failed")
                     binding.deviceInfoText.text =
-                        "Failed to connect to: $selectedDevice. Check device pairing and permissions."
-                    Log.w(TAG, "Failed to connect to Shimmer device: $selectedDevice")
-                }
-            } catch (e: SecurityException) {
-                Log.e(
-                    TAG,
-                    "SecurityException during device connection - permissions may have been revoked",
-                    e
-                )
-                updateDeviceStatus("Permission Error")
+                        "Failed to connect to: $selectedDevice. Check device pairing and permissions."                }
+            } catch (e: SecurityException) {                updateDeviceStatus("Permission Error")
                 binding.deviceInfoText.text =
                     "Permission error during connection. Please check app permissions."
 
                 checkAndRequestPermissions()
-            } catch (e: Exception) {
-                Log.e(TAG, "Failed to connect to device", e)
-                updateDeviceStatus("Connection Error")
+            } catch (e: Exception) {                updateDeviceStatus("Connection Error")
                 binding.deviceInfoText.text = "Connection error: ${e.message}"
             } finally {
                 binding.connectDeviceButton.isEnabled = true
@@ -737,9 +681,7 @@ class GSRSettingsActivity : BaseBindingActivity<ActivityGsrSettingsBinding>() {
         lifecycleScope.launch {
             try {
                 gsrSensorRecorder?.cleanup()
-            } catch (e: Exception) {
-                Log.w(TAG, "Error during GSR sensor recorder cleanup", e)
-            }
+            } catch (e: Exception) {            }
         }
     }
 }

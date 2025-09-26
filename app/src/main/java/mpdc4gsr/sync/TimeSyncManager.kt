@@ -1,7 +1,6 @@
 package mpdc4gsr.sync
 
 import android.content.Context
-import android.util.Log
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -114,12 +113,7 @@ class TimeSyncManager(private val context: Context) {
      * Update sync configuration with custom parameters
      */
     fun updateSyncConfiguration(config: SyncConfiguration) {
-        syncConfig = config
-        Log.i(
-            TAG, "Sync configuration updated: periodicInterval=${config.periodicSyncIntervalMs}ms, " +
-                    "maxRetries=${config.maxSyncRetries}, timeout=${config.syncTimeoutMs}ms"
-        )
-    }
+        syncConfig = config    }
 
     /**
      * Get current sync configuration
@@ -134,14 +128,10 @@ class TimeSyncManager(private val context: Context) {
         val timeDiff = timestamp - currentTime
 
         return when {
-            timeDiff > syncConfig.maxFutureTimestampMs -> {
-                Log.w(TAG, "$context timestamp too far in future: ${timeDiff}ms")
-                false
+            timeDiff > syncConfig.maxFutureTimestampMs -> {                false
             }
 
-            timeDiff < -syncConfig.maxTimestampDriftMs -> {
-                Log.w(TAG, "$context timestamp too far in past: ${timeDiff}ms")
-                false
+            timeDiff < -syncConfig.maxTimestampDriftMs -> {                false
             }
 
             else -> true
@@ -212,9 +202,7 @@ class TimeSyncManager(private val context: Context) {
             startPeriodicSync()
         } else {
             stopPeriodicSync()
-        }
-
-        Log.i(TAG, "Periodic sync ${if (enabled) "enabled" else "disabled"}")
+        }"enabled" else "disabled"}")
     }
 
     /**
@@ -222,19 +210,12 @@ class TimeSyncManager(private val context: Context) {
      */
     suspend fun triggerManualSync(): Boolean {
         return withContext(Dispatchers.IO) {
-            try {
-                Log.i(TAG, "Manual sync trigger requested")
-
-                val callback = syncTriggerCallback
+            try {                val callback = syncTriggerCallback
                 if (callback != null) {
                     callback.onManualSyncRequested()
-                } else {
-                    Log.w(TAG, "No sync trigger callback registered - cannot perform manual sync")
-                    false
+                } else {                    false
                 }
-            } catch (e: Exception) {
-                Log.e(TAG, "Manual sync trigger failed", e)
-                false
+            } catch (e: Exception) {                false
             }
         }
     }
@@ -247,8 +228,7 @@ class TimeSyncManager(private val context: Context) {
             return // Already running
         }
 
-        periodicSyncJob = syncScope.launch {
-            Log.i(TAG, "Starting periodic sync monitoring (interval: ${syncConfig.periodicSyncIntervalMs}ms)")
+        periodicSyncJob = syncScope.launch {")
 
             while (isActive && periodicSyncEnabled.get()) {
                 delay(syncConfig.periodicSyncIntervalMs)
@@ -256,20 +236,14 @@ class TimeSyncManager(private val context: Context) {
                 if (currentSessionDirectory != null) {
                     val sessionDuration = System.currentTimeMillis() - sessionStartTime
 
-                    if (sessionDuration > syncConfig.longSessionThresholdMs) {
-                        Log.i(TAG, "Triggering periodic sync for long session (${sessionDuration / 1000}s)")
+                    if (sessionDuration > syncConfig.longSessionThresholdMs) {")
 
                         try {
                             triggerManualSync()
-                        } catch (e: Exception) {
-                            Log.e(TAG, "Periodic sync failed", e)
-                        }
+                        } catch (e: Exception) {                        }
                     }
                 }
-            }
-
-            Log.i(TAG, "Periodic sync monitoring stopped")
-        }
+            }        }
     }
 
     /**
@@ -277,9 +251,7 @@ class TimeSyncManager(private val context: Context) {
      */
     private fun stopPeriodicSync() {
         periodicSyncJob?.cancel()
-        periodicSyncJob = null
-        Log.d(TAG, "Periodic sync monitoring stopped")
-    }
+        periodicSyncJob = null    }
 
     /**
      * Initialize sync manager for a new session
@@ -301,11 +273,7 @@ class TimeSyncManager(private val context: Context) {
             try {
                 FileWriter(syncLogFile!!, false).use { writer ->
                     writer.write("$CSV_HEADER\n")
-                }
-                Log.i(TAG, "Initialized sync logging for session: $sessionDirectory")
-            } catch (e: Exception) {
-                Log.e(TAG, "Failed to initialize sync log file", e)
-            }
+                }            } catch (e: Exception) {            }
         }
 
         // Start periodic sync if enabled
@@ -353,9 +321,7 @@ class TimeSyncManager(private val context: Context) {
                             delay(syncConfig.retryDelayMs)
                         }
                         return@repeat
-                    }
-
-                    Log.d(TAG, "Sync response: t1=$t1PcSendTime, t2=$t2PhoneTimestamp (attempt ${attempt + 1})")
+                    }")
 
                     val syncIndex = syncCounter.incrementAndGet().toInt()
 
@@ -369,17 +335,11 @@ class TimeSyncManager(private val context: Context) {
 
                 } catch (e: Exception) {
                     lastError = "Sync response failed: ${e.message}"
-                    retryCount = attempt + 1
-                    Log.w(TAG, "Sync response attempt ${attempt + 1} failed", e)
-
-                    if (attempt < syncConfig.maxSyncRetries - 1) {
+                    retryCount = attempt + 1                    if (attempt < syncConfig.maxSyncRetries - 1) {
                         delay(syncConfig.retryDelayMs)
                     }
                 }
-            }
-
-            Log.e(TAG, "All sync response attempts failed after $retryCount retries")
-            SyncResult(success = false, retryCount = retryCount, errorMessage = lastError)
+            }            SyncResult(success = false, retryCount = retryCount, errorMessage = lastError)
         }
     }
 
@@ -403,9 +363,7 @@ class TimeSyncManager(private val context: Context) {
                 if (!validateTimestamp(t1, "PC send time") ||
                     !validateTimestamp(t2, "Phone receive time") ||
                     !validateTimestamp(t3, "PC receive time")
-                ) {
-                    Log.w(TAG, "Invalid timestamps in sync calculation, skipping")
-                    return
+                ) {                    return
                 }
 
                 // Calculate sync quality
@@ -430,28 +388,20 @@ class TimeSyncManager(private val context: Context) {
                     true
                 } ?: false
 
-                if (logged) {
-                    Log.d(TAG, "Sync calculation completed successfully (quality: $quality, attempt: ${attempt + 1})")
+                if (logged) {")
                     return
                 } else {
-                    retryCount = attempt + 1
-                    Log.w(TAG, "Failed to log sync result, attempt ${attempt + 1}")
-                    if (attempt < syncConfig.maxSyncRetries - 1) {
+                    retryCount = attempt + 1                    if (attempt < syncConfig.maxSyncRetries - 1) {
                         delay(syncConfig.retryDelayMs)
                     }
                 }
 
             } catch (e: Exception) {
-                retryCount = attempt + 1
-                Log.w(TAG, "Sync calculation attempt ${attempt + 1} failed", e)
-                if (attempt < syncConfig.maxSyncRetries - 1) {
+                retryCount = attempt + 1                if (attempt < syncConfig.maxSyncRetries - 1) {
                     delay(syncConfig.retryDelayMs)
                 }
             }
-        }
-
-        Log.e(TAG, "Failed to complete sync calculation after $retryCount retries")
-    }
+        }    }
 
     /**
      * Log sync result with structured JSON format for better machine readability
@@ -459,9 +409,7 @@ class TimeSyncManager(private val context: Context) {
     private suspend fun logSyncResult(result: SyncResult) {
         try {
             val logFile = syncLogFile
-            if (logFile == null) {
-                Log.w(TAG, "No sync log file initialized, skipping log")
-                return
+            if (logFile == null) {                return
             }
 
             val timestamp = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US).format(Date())
@@ -495,16 +443,7 @@ class TimeSyncManager(private val context: Context) {
                         "${result.syncIndex},$timestamp,${result.t2},${result.t1},${result.t3},${result.offsetMs},${result.rttMs},$sessionRelativeTime,${result.quality},${result.retryCount}"
                     writer.write("$csvEntry\n")
                 }
-            }
-
-            Log.d(
-                TAG,
-                "Logged sync result: index=${result.syncIndex}, offset=${result.offsetMs}ms, rtt=${result.rttMs}ms, quality=${result.quality}"
-            )
-
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to log sync result", e)
-            throw e // Re-throw to trigger retry logic
+            }        } catch (e: Exception) {            throw e // Re-throw to trigger retry logic
         }
     }
 
@@ -512,10 +451,7 @@ class TimeSyncManager(private val context: Context) {
      * Perform sync at session start - this is called automatically when recording starts
      */
     suspend fun performSessionStartSync(): Boolean {
-        return try {
-            Log.i(TAG, "Performing session start sync")
-
-            // Log a session start marker
+        return try {            // Log a session start marker
             val sessionStartMarker = SyncResult(
                 success = true,
                 t1 = System.currentTimeMillis(),
@@ -526,13 +462,8 @@ class TimeSyncManager(private val context: Context) {
                 syncIndex = 0
             )
 
-            logSyncResult(sessionStartMarker)
-
-            Log.i(TAG, "Session start sync marker logged")
-            true
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to perform session start sync", e)
-            false
+            logSyncResult(sessionStartMarker)            true
+        } catch (e: Exception) {            false
         }
     }
 
@@ -573,12 +504,8 @@ class TimeSyncManager(private val context: Context) {
 
             currentSessionDirectory = null
             syncLogFile = null
-            sessionStartTime = 0L
-
-            Log.i(TAG, "Session finalized, total syncs: ${syncCounter.get()}")
-        } catch (e: Exception) {
-            Log.e(TAG, "Error finalizing session", e)
-        }
+            sessionStartTime = 0L}")
+        } catch (e: Exception) {        }
     }
 
     /**
@@ -587,7 +514,5 @@ class TimeSyncManager(private val context: Context) {
     fun cleanup() {
         stopPeriodicSync()
         syncScope.cancel()
-        finalizeSession()
-        Log.i(TAG, "TimeSyncManager cleaned up")
-    }
+        finalizeSession()    }
 }

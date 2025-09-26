@@ -148,8 +148,7 @@ public class CameraPreviewManager {
                     }
 
                     if (mIsShowFPS) {
-                        double fps = CommonUtil.showFps();
-                        Log.d(TAG, "onFrame frame.length = " + length + " onFrame fps=" + String.format("%.1f", fps));
+                        double fps = CommonUtil.showFps(););
                         Message message = Message.obtain(mMainHandler, IrDisplayActivity.HANDLE_SHOW_FPS, fps);
                         mMainHandler.sendMessage(message);
                     }
@@ -218,9 +217,7 @@ public class CameraPreviewManager {
                             }
                             break;
                         case NV12_IMAGE_OUTPUT:
-                        case NV12_AND_TEMP_OUTPUT:
-                            Log.d(TAG, "NV12_AND_TEMP_OUTPUT");
-                            LibIRParse.NV12ToRGBA(mIrData, mPreviewWidth, mPreviewHeight, mIrARGBData);
+                        case NV12_AND_TEMP_OUTPUT:                            LibIRParse.NV12ToRGBA(mIrData, mPreviewWidth, mPreviewHeight, mIrARGBData);
 
                             break;
                         default:
@@ -235,23 +232,16 @@ public class CameraPreviewManager {
                     handleSurfaceDisplay();
 
 
-                    if (mAutoSwitchGainEnable && FRAME_OUT_PUT_FORMAT == CommonParams.FrameOutputFormat.YUYV_AND_TEMP_OUTPUT) {
-                        Log.d(TAG, "onAutoGainSwitchState switch");
-                        mIrcamEngine.advAutoGainSwitch(mTempData, mAutoGainImageRes, mAutoGainSwitchInfo, mGainSwitchParam, new AutoGainSwitchCallback() {
+                    if (mAutoSwitchGainEnable && FRAME_OUT_PUT_FORMAT == CommonParams.FrameOutputFormat.YUYV_AND_TEMP_OUTPUT) {                        mIrcamEngine.advAutoGainSwitch(mTempData, mAutoGainImageRes, mAutoGainSwitchInfo, mGainSwitchParam, new AutoGainSwitchCallback() {
                             @Override
-                            public void onAutoGainSwitchState(int gainselStatus) {
-                                Log.d(TAG, "onAutoGainSwitchState : " + gainselStatus);
-                            }
+                            public void onAutoGainSwitchState(int gainselStatus) {                            }
 
                             @Override
-                            public void onAutoGainSwitchResult(int gainselStatus, int result) {
-                                Log.d(TAG, "onAutoGainSwitchResult : " + gainselStatus);
-                                Log.d(TAG, "onAutoGainSwitchResult : " + result);
-                            }
+                            public void onAutoGainSwitchResult(int gainselStatus, int result) {                            }
                         });
                     }
                 } catch (Exception e) {
-                    XLog.e(TAG, "LiteImage Processing Error" + e.getMessage());
+                    X);
                 }
             }
         };
@@ -362,10 +352,7 @@ public class CameraPreviewManager {
                 break;
             default:
                 break;
-        }
-
-        Log.i(TAG, "mPreviewWidth = " + mPreviewWidth + " mPreviewHeight = " + mPreviewHeight);
-        mLibIRTemp = new LibIRTemp(mPreviewWidth, mPreviewHeight);
+        }        mLibIRTemp = new LibIRTemp(mPreviewWidth, mPreviewHeight);
         mImageRes = new LibIRProcess.ImageRes_t();
         mImageRes.width = (char) mPreviewWidth;
         mImageRes.height = (char) mPreviewHeight;
@@ -399,9 +386,7 @@ public class CameraPreviewManager {
                 public void run() {
 
                     IrcmdError basicVideoStreamContinueResult = DeviceIrcmdControlManager.getInstance()
-                            .getIrcmdEngine().basicVideoStreamContinue();
-                    Log.d(TAG, "basicVideoStreamContinueResult=" + basicVideoStreamContinueResult);
-                    mMainHandler.sendEmptyMessage(IrDisplayActivity.HIDE_LOADING);
+                            .getIrcmdEngine().basicVideoStreamContinue();                    mMainHandler.sendEmptyMessage(IrDisplayActivity.HIDE_LOADING);
                 }
             }, 10000);
         } else {
@@ -444,9 +429,7 @@ public class CameraPreviewManager {
                 IrConst.KEY_DEFAULT_STREAM_BANDWIDTH, IrConst.DEFAULT_STREAM_BANDWIDTH);
 
 
-        uvcHandleParam.setBandwidth(bandwidth);
-
-        Log.d(TAG, "initHandleEngine UvcHandleParam = " + uvcHandleParam.toString());
+        uvcHandleParam.setBandwidth(bandwidth););
 
         LibIRProcess.irprocessLogRegister(LogLevel.SDK_LOG_NO_PRINT);
         LibIRProcess.getIRProcessVersion();
@@ -463,17 +446,11 @@ public class CameraPreviewManager {
 
                 .setFrameOutputFormat(FRAME_OUT_PUT_FORMAT)
                 .setUvcHandleParam(uvcHandleParam)
-                .build();
-        Log.d(TAG, "stopPreview onSuccess initHandle : ");
-        mIrcamEngine.initHandle(new HandleInitCallback() {
+                .build();        mIrcamEngine.initHandle(new HandleInitCallback() {
             @Override
             public void onSuccess(IrcmdEngine ircmdEngine) {
                 DeviceIrcmdControlManager.getInstance().setIrcamEngine(mIrcamEngine);
-                DeviceIrcmdControlManager.getInstance().setIrcmdEngine(ircmdEngine);
-                Log.d(TAG, "IrcamVersion : " + mIrcamEngine.ircamVersion());
-                Log.d(TAG, "IrcmdVersion : " + ircmdEngine.ircmdVersion());
-                Log.d(TAG, "IrcamVersion number: " + mIrcamEngine.ircamVersionNumber());
-                Log.d(TAG, "IrcmdVersion number: " + ircmdEngine.ircmdVersionNumber());
+                DeviceIrcmdControlManager.getInstance().setIrcmdEngine(ircmdEngine);););););
                 if (isStartPreview) {
                     handleStartPreview();
                 }
@@ -486,9 +463,7 @@ public class CameraPreviewManager {
         });
     }
 
-    public void startPreview() {
-        Log.d(TAG, "startPreview");
-        if (mIrcamEngine != null) {
+    public void startPreview() {        if (mIrcamEngine != null) {
             mIrcamEngine.setIrFrameCallback(mIIrFrameCallback);
             int result = mIrcamEngine.startVideoStream();
             if (result != 0) {
@@ -523,15 +498,10 @@ public class CameraPreviewManager {
         }
     }
 
-    public void stopPreview() {
-        Log.i(TAG, "stopPreview");
-
-        if (Const.DEVICE_TYPE == DeviceType.DEVICE_TYPE_WN2640) {
+    public void stopPreview() {        if (Const.DEVICE_TYPE == DeviceType.DEVICE_TYPE_WN2640) {
 
             IrcmdError ircmdError = DeviceIrcmdControlManager.getInstance().getIrcmdEngine()
-                    .basicVideoStreamPause();
-            Log.d(TAG, "basicVideoStreamPause=" + ircmdError);
-        }
+                    .basicVideoStreamPause();        }
         if (mIrcamEngine != null) {
             mIrcamEngine.setIrFrameCallback(null);
             mIrcamEngine.stopVideoStream();
@@ -573,8 +543,7 @@ public class CameraPreviewManager {
     public void setImageRotate(RotateDegree imageRotate) {
         this.mImageRotate = imageRotate;
         mIrRotateData = null;
-        mIrRotateData = new byte[mIrARGBLength];
-        Log.d(TAG, "setImageRotate : " + imageRotate.getValue());
+        mIrRotateData = new byte[mIrARGBLength];);
     }
 
     public void setFramePause(boolean framePause) {
@@ -640,7 +609,7 @@ public class CameraPreviewManager {
                 mSurfaceNativeWindow.onDrawFrame(mSurface, mIrRotateData, mFinalImageWidth, mFinalImageHeight);
             }
         } catch (Exception e) {
-            XLog.e(TAG + ":liteImage Rendering Error：" + e.getMessage());
+            X);
         }
     }
 

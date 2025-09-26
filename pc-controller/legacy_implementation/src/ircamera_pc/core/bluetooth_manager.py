@@ -6,8 +6,7 @@ from enum import Enum
 from typing import Dict, List, Optional
 
 try:
-    from loguru import logger
-except ImportError:
+    except ImportError:
     from ..utils.simple_logger import get_logger
 
     logger = get_logger(__name__)
@@ -30,10 +29,7 @@ try:
 
     BLUETOOTH_AVAILABLE = True
 except ImportError:
-    logger.warning(
-        "Bluetooth dependencies not available." "Install 'bleak' for Bluetooth support"
-    )
-    BLUETOOTH_AVAILABLE = False
+        BLUETOOTH_AVAILABLE = False
 
     BLEDevice = object
     BleakClient = object
@@ -101,10 +97,7 @@ class BluetoothManager(BaseManager):
             self._scan_timer = None
 
         if not BLUETOOTH_AVAILABLE:
-            logger.error(
-                "Bluetooth functionality not available" "- missing dependencies"
-            )
-
+            
     def _emit_signal(self, signal_name: str, *args):
 
         if PYQT_AVAILABLE and hasattr(self, signal_name):
@@ -137,12 +130,10 @@ class BluetoothManager(BaseManager):
             return
 
         if self._scanning:
-            logger.warning("Already scanning for devices")
-            return
+                        return
 
         self._scanning = True
-        logger.info("Starting Bluetooth device scan")
-
+        
         asyncio.create_task(self._scan_devices())
 
         if continuous and self._scan_timer:
@@ -153,13 +144,11 @@ class BluetoothManager(BaseManager):
         self._scanning = False
         if self._scan_timer:
             self._scan_timer.stop()
-        logger.info("Stopped Bluetooth device scanning")
-
+        
     async def _scan_devices(self) -> None:
 
         try:
-            logger.debug("Scanning for BLE devices...")
-            devices = await BleakScanner.discover(timeout=5.0)
+                        devices = await BleakScanner.discover(timeout=5.0)
 
             discovered_count = 0
             for device in devices:
@@ -175,11 +164,9 @@ class BluetoothManager(BaseManager):
                     )
 
             self._emit_signal("scan_completed", discovered_count)
-            logger.info(f"Scan completed - found {discovered_count}" "new devices")
-
+            
         except (OSError, ValueError, RuntimeError) as e:
-            logger.error(f"Error during device scan: {e}")
-            self._emit_signal("error_occurred", "scan", str(e))
+                        self._emit_signal("error_occurred", "scan", str(e))
 
     def _periodic_scan(self) -> None:
 
@@ -253,30 +240,26 @@ class BluetoothManager(BaseManager):
 
             if self.IRCAMERA_SERVICE_UUID in device.services:
                 device.is_ircamera = True
-                logger.info(f"IRCamera service detected on {device.name}")
-
+                
             self._connections[address] = client
             device.connection_state = ConnectionState.CONNECTED
 
             self._emit_signal("device_connected", address, device.name)
-            logger.info(f"Successfully connected to {device.name}")
-
+            
             if device.is_ircamera:
                 await self._setup_ircamera_notifications(client)
 
             return True
 
         except (OSError, ValueError, RuntimeError) as e:
-            logger.error(f"Failed to connect to {address}: {e}")
-            device.connection_state = ConnectionState.ERROR
+                        device.connection_state = ConnectionState.ERROR
             self._emit_signal("error_occurred", "connect", str(e))
             return False
 
     async def disconnect_device(self, address: str) -> None:
 
         if address not in self._connections:
-            logger.warning(f"Device {address} not connected")
-            return
+                        return
 
         try:
             client = self._connections[address]
@@ -287,11 +270,9 @@ class BluetoothManager(BaseManager):
                 device = self._devices[address]
                 device.connection_state = ConnectionState.DISCONNECTED
                 self._emit_signal("device_disconnected", address, "User initiated")
-                logger.info(f"Disconnected from {device.name}")
-
+                
         except (OSError, ValueError, RuntimeError) as e:
-            logger.error(f"Error disconnecting from {address}: {e}")
-            self._emit_signal("error_occurred", "disconnect", str(e))
+                        self._emit_signal("error_occurred", "disconnect", str(e))
 
     async def send_data(self, address: str, data: bytes) -> bool:
 
@@ -316,8 +297,7 @@ class BluetoothManager(BaseManager):
             return True
 
         except (OSError, ValueError, RuntimeError) as e:
-            logger.error(f"Error sending data to {address}: {e}")
-            self._emit_signal("error_occurred", "send", str(e))
+                        self._emit_signal("error_occurred", "send", str(e))
             return False
 
     async def _setup_ircamera_notifications(self, client: BleakClient) -> None:
@@ -327,11 +307,9 @@ class BluetoothManager(BaseManager):
                 self.IRCAMERA_DATA_CHARACTERISTIC,
                 self._handle_ircamera_notification,
             )
-            logger.debug("IRCamera notifications enabled")
-
+            
         except (OSError, ValueError, RuntimeError) as e:
-            logger.error(f"Failed to enable IRCamera notifications: {e}")
-
+            
     def _handle_ircamera_notification(
             self, sender: BleakGATTCharacteristic, data: bytearray
     ) -> None:
@@ -342,8 +320,7 @@ class BluetoothManager(BaseManager):
             logger.debug(f"Received {len(data)} bytes from {address}")
 
         except (OSError, ValueError, RuntimeError) as e:
-            logger.error(f"Error handling notification: {e}")
-
+            
     def get_device_info(self, address: str) -> Optional[BluetoothDevice]:
 
         return self._devices.get(address)
@@ -356,8 +333,7 @@ class BluetoothManager(BaseManager):
             for addr, device in self._devices.items()
             if addr in connected_addresses
         }
-        logger.info("Cleared discovered devices list")
-
+        
     async def cleanup(self) -> None:
 
         self.stop_scanning()
@@ -365,4 +341,4 @@ class BluetoothManager(BaseManager):
         for address in list(self._connections.keys()):
             await self.disconnect_device(address)
 
-        logger.info("Bluetooth manager cleanup completed")
+        

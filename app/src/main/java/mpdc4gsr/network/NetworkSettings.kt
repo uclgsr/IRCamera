@@ -3,7 +3,6 @@ package mpdc4gsr.network
 import android.bluetooth.BluetoothDevice
 import android.content.Context
 import android.content.SharedPreferences
-import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -127,17 +126,9 @@ class NetworkSettings(private val context: Context) {
             try {
                 val deviceName = device.name
                 editor.putString(KEY_BLUETOOTH_DEVICE_NAME, deviceName)
-            } catch (e: SecurityException) {
-                Log.w(TAG, "Security exception accessing device name", e)
-                // Save address only
+            } catch (e: SecurityException) {                // Save address only
             }
-            editor.apply()
-            Log.i(TAG, "Saved Bluetooth device: ${device.address}")
-        } catch (e: SecurityException) {
-            Log.e(TAG, "Security exception saving Bluetooth device", e)
-        } catch (e: Exception) {
-            Log.e(TAG, "Error saving Bluetooth device", e)
-        }
+            editor.apply()        } catch (e: SecurityException) {        } catch (e: Exception) {        }
     }
 
     /**
@@ -148,9 +139,7 @@ class NetworkSettings(private val context: Context) {
             val address = prefs.getString(KEY_BLUETOOTH_DEVICE_ADDRESS, null)
             val name = prefs.getString(KEY_BLUETOOTH_DEVICE_NAME, null)
             Pair(address, name)
-        } catch (e: Exception) {
-            Log.e(TAG, "Error getting Bluetooth device info", e)
-            Pair(null, null)
+        } catch (e: Exception) {            Pair(null, null)
         }
     }
 
@@ -159,11 +148,7 @@ class NetworkSettings(private val context: Context) {
      */
     suspend fun clearSettings() = withContext(Dispatchers.IO) {
         try {
-            prefs.edit().clear().apply()
-            Log.i(TAG, "Network settings cleared")
-        } catch (e: Exception) {
-            Log.e(TAG, "Error clearing settings", e)
-        }
+            prefs.edit().clear().apply()        } catch (e: Exception) {        }
     }
 
     /**

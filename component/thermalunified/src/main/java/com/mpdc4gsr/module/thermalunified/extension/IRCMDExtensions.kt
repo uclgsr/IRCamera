@@ -1,6 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.extension
 
-import android.util.Log
 import com.energy.iruvc.ircmd.IRCMD
 
 
@@ -16,11 +15,7 @@ fun IRCMD.setMirror(enabled: Boolean) {
             } else {
 
                 nativeSetProperty("mirror", 0)
-            }
-        Log.d(TAG, "Mirror mode set to $enabled, result: $result")
-    } catch (e: Exception) {
-        Log.e(TAG, "Failed to set mirror mode: ${e.message}")
-    }
+            }    } catch (e: Exception) {    }
 }
 
 fun IRCMD.setAutoShutter(enabled: Boolean) {
@@ -31,33 +26,21 @@ fun IRCMD.setAutoShutter(enabled: Boolean) {
                 nativeSetProperty("auto_shutter", 1)
             } else {
                 nativeSetProperty("auto_shutter", 0)
-            }
-        Log.d(TAG, "Auto shutter set to $enabled, result: $result")
-    } catch (e: Exception) {
-        Log.e(TAG, "Failed to set auto shutter: ${e.message}")
-    }
+            }    } catch (e: Exception) {    }
 }
 
 fun IRCMD.setPropDdeLevel(level: Int) {
     try {
 
         val clampedLevel = level.coerceIn(0, 255)
-        val result = nativeSetProperty("dde_level", clampedLevel)
-        Log.d(TAG, "DDE level set to $clampedLevel, result: $result")
-    } catch (e: Exception) {
-        Log.e(TAG, "Failed to set DDE level: ${e.message}")
-    }
+        val result = nativeSetProperty("dde_level", clampedLevel)    } catch (e: Exception) {    }
 }
 
 fun IRCMD.setContrast(level: Int) {
     try {
 
         val clampedLevel = level.coerceIn(0, 255)
-        val result = nativeSetProperty("contrast", clampedLevel)
-        Log.d(TAG, "Contrast set to $clampedLevel, result: $result")
-    } catch (e: Exception) {
-        Log.e(TAG, "Failed to set contrast: ${e.message}")
-    }
+        val result = nativeSetProperty("contrast", clampedLevel)    } catch (e: Exception) {    }
 }
 
 private fun IRCMD.nativeSetProperty(
@@ -66,13 +49,7 @@ private fun IRCMD.nativeSetProperty(
 ): Boolean {
 
 
-    return try {
-
-
-        Log.d(TAG, "Setting $property to $value via native IRCMD interface")
-        true
-    } catch (e: Exception) {
-        Log.e(TAG, "Native property set failed for $property: ${e.message}")
-        false
+    return try {        true
+    } catch (e: Exception) {        false
     }
 }

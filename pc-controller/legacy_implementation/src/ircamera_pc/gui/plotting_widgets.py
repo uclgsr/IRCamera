@@ -5,7 +5,6 @@ from PyQt6.QtCore import QTimer, pyqtSignal
 from PyQt6.QtGui import QPixmap
 from PyQt6.QtWidgets import QGridLayout, QLabel, QVBoxLayout, QWidget
 from collections import deque
-from loguru import logger
 from typing import Any, Dict, List, Optional
 
 
@@ -62,8 +61,7 @@ class GSRPlotWidget(pg.PlotWidget):
         )
         self.plot_items[device_id] = plot_item
 
-        logger.info(f"Added GSR device {device_id} with color {color}")
-
+        
     def remove_device(self, device_id: str) -> None:
 
         if device_id not in self.gsr_data:
@@ -75,8 +73,7 @@ class GSRPlotWidget(pg.PlotWidget):
 
         del self.gsr_data[device_id]
 
-        logger.info(f"Removed GSR device {device_id}")
-
+        
     def add_gsr_data(
             self, device_id: str, timestamp_ns: int, gsr_microsiemens: float
     ) -> None:
@@ -223,8 +220,7 @@ class VideoPreviewWidget(QLabel):
             self.frame_updated.emit(width, height)
 
         except Exception as e:
-            logger.error(f"Error updating frame for {self.device_id}: {e}")
-
+            
     def _calculate_fps(self) -> None:
 
         current_time = time.time()
@@ -310,8 +306,7 @@ class MultiModalDashboard(QWidget):
 
         self._reorganize_video_grid()
 
-        logger.info(f"Removed video device {device_id}")
-
+        
     def _add_video_widget_to_grid(self, widget: VideoPreviewWidget) -> None:
 
         num_videos = len(self.video_widgets)

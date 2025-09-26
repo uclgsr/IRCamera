@@ -3,7 +3,6 @@ package mpdc4gsr.network
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
-import android.util.Log
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -61,9 +60,7 @@ class PcServerDiscovery(private val context: Context) {
      * Start one-time server discovery
      */
     suspend fun discoverServers(): List<DiscoveredServer> {
-        return withContext(Dispatchers.IO) {
-            Log.i(TAG, "Starting PC server discovery")
-            _isDiscovering.value = true
+        return withContext(Dispatchers.IO) {            _isDiscovering.value = true
 
             val servers = mutableListOf<DiscoveredServer>()
 
@@ -76,14 +73,9 @@ class PcServerDiscovery(private val context: Context) {
 
                 // Remove duplicates based on IP address
                 val uniqueServers = servers.distinctBy { it.ipAddress }
-                _discoveredServers.value = uniqueServers
+                _discoveredServers.value = uniqueServers                uniqueServers
 
-                Log.i(TAG, "Discovery completed. Found ${uniqueServers.size} servers")
-                uniqueServers
-
-            } catch (e: Exception) {
-                Log.e(TAG, "Error during server discovery", e)
-                emptyList()
+            } catch (e: Exception) {                emptyList()
             } finally {
                 _isDiscovering.value = false
             }
@@ -93,18 +85,13 @@ class PcServerDiscovery(private val context: Context) {
     /**
      * Start continuous server discovery
      */
-    fun startContinuousDiscovery() {
-        Log.i(TAG, "Starting continuous server discovery")
-
-        continuousDiscoveryJob?.cancel()
+    fun startContinuousDiscovery() {        continuousDiscoveryJob?.cancel()
         continuousDiscoveryJob = discoveryScope.launch {
             while (isActive) {
                 try {
                     discoverServers()
                     delay(SCAN_INTERVAL)
-                } catch (e: Exception) {
-                    Log.e(TAG, "Error in continuous discovery", e)
-                    delay(SCAN_INTERVAL)
+                } catch (e: Exception) {                    delay(SCAN_INTERVAL)
                 }
             }
         }
@@ -113,9 +100,7 @@ class PcServerDiscovery(private val context: Context) {
     /**
      * Stop continuous server discovery
      */
-    fun stopContinuousDiscovery() {
-        Log.i(TAG, "Stopping continuous server discovery")
-        continuousDiscoveryJob?.cancel()
+    fun stopContinuousDiscovery() {        continuousDiscoveryJob?.cancel()
         continuousDiscoveryJob = null
     }
 
@@ -164,16 +149,12 @@ class PcServerDiscovery(private val context: Context) {
                     } catch (e: SocketTimeoutException) {
                         // No response from this broadcast address
                     }
-                } catch (e: Exception) {
-                    Log.w(TAG, "Error broadcasting to $broadcastAddress", e)
-                }
+                } catch (e: Exception) {                }
             }
 
             socket.close()
 
-        } catch (e: Exception) {
-            Log.e(TAG, "Error in broadcast discovery", e)
-        }
+        } catch (e: Exception) {        }
 
         servers
     }
@@ -203,9 +184,7 @@ class PcServerDiscovery(private val context: Context) {
                     }
                 }
             }
-        } catch (e: Exception) {
-            Log.e(TAG, "Error in network range scanning", e)
-        }
+        } catch (e: Exception) {        }
 
         servers
     }
@@ -277,9 +256,7 @@ class PcServerDiscovery(private val context: Context) {
                 capabilities = capabilities,
                 responseTime = responseTime
             )
-        } catch (e: Exception) {
-            Log.w(TAG, "Error parsing discovery response: $response", e)
-            return null
+        } catch (e: Exception) {            return null
         }
     }
 
@@ -301,9 +278,7 @@ class PcServerDiscovery(private val context: Context) {
                     }
                 }
             }
-        } catch (e: Exception) {
-            Log.w(TAG, "Error getting broadcast addresses", e)
-        }
+        } catch (e: Exception) {        }
 
         // Fallback to common broadcast addresses
         if (addresses.isEmpty()) {
@@ -335,9 +310,7 @@ class PcServerDiscovery(private val context: Context) {
                     }
                 }
             }
-        } catch (e: Exception) {
-            Log.w(TAG, "Error getting local IP address", e)
-        }
+        } catch (e: Exception) {        }
 
         return null
     }

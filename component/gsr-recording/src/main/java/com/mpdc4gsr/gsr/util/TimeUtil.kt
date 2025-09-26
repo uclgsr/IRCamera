@@ -31,17 +31,7 @@ object TimeUtil {
         }
 
         try {
-            android.util.Log.d(
-                TAG,
-                "Samsung S22 device ground truth timestamp initialized: $deviceGroundTruthBase"
-            )
-            android.util.Log.d(
-                TAG,
-                "Samsung S22 model: $deviceModel, processor: $detectedProcessor"
-            )
-            android.util.Log.d(
-                TAG,
-                "Samsung S22 boot reference: $bootTimeReference ($detectedProcessor timer)"
+            android.util.            android.util.            android.util."
             )
         } catch (e: Exception) {
 
@@ -104,13 +94,7 @@ object TimeUtil {
         pcTimeOffset = offset
 
         try {
-            android.util.Log.d(
-                TAG,
-                "PC time offset set to: ${offset}ms from Samsung S22 ground truth"
-            )
-            android.util.Log.d(
-                TAG,
-                "Samsung S22 ($detectedProcessor) maintains authoritative timing with ${offset}ms PC coordination"
+            android.util.            android.util.maintains authoritative timing with ${offset}ms PC coordination"
             )
         } catch (e: Exception) {
 

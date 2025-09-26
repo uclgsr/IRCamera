@@ -1,7 +1,6 @@
 package mpdc4gsr.test
 
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -80,9 +79,7 @@ class GSRDataIntegrityTestActivity : AppCompatActivity() {
             gsrRecorder = GSRSensorRecorder(this, "data_integrity_test", 128, recordingController!!)
             updateResults("✓ GSR components initialized for testing\n\n")
         } catch (e: Exception) {
-            updateResults("✗ Failed to initialize GSR components: ${e.message}\n")
-            Log.e(TAG, "Failed to initialize components", e)
-        }
+            updateResults("✗ Failed to initialize GSR components: ${e.message}\n")        }
     }
 
     /**
@@ -171,9 +168,7 @@ class GSRDataIntegrityTestActivity : AppCompatActivity() {
             }
 
             true
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to setup test recording", e)
-            false
+        } catch (e: Exception) {            false
         }
     }
 
@@ -210,9 +205,7 @@ class GSRDataIntegrityTestActivity : AppCompatActivity() {
             updateResults("Actual duration: ${actualDuration}ms\n")
 
             recordingStopped
-        } catch (e: Exception) {
-            Log.e(TAG, "Error during timed recording", e)
-            false
+        } catch (e: Exception) {            false
         }
     }
 
@@ -253,9 +246,7 @@ class GSRDataIntegrityTestActivity : AppCompatActivity() {
             analysis.append("\nOverall Result: ${if (sampleCountPass) "PASS" else "FAIL"}\n")
 
         } catch (e: Exception) {
-            analysis.append("✗ Analysis failed: ${e.message}\n")
-            Log.e(TAG, "Error analyzing recorded data", e)
-        }
+            analysis.append("✗ Analysis failed: ${e.message}\n")        }
 
         return analysis.toString()
     }
@@ -361,18 +352,14 @@ class GSRDataIntegrityTestActivity : AppCompatActivity() {
         testSessionDir?.let { dir ->
             try {
                 dir.deleteRecursively()
-            } catch (e: Exception) {
-                Log.w(TAG, "Failed to cleanup test directory", e)
-            }
+            } catch (e: Exception) {            }
         }
 
         gsrRecorder?.let { recorder ->
             lifecycleScope.launch {
                 try {
                     recorder.cleanup()
-                } catch (e: Exception) {
-                    Log.e(TAG, "Error cleaning up GSR recorder", e)
-                }
+                } catch (e: Exception) {                }
             }
         }
     }

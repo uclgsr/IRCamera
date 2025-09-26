@@ -1,7 +1,6 @@
 package com.mpdc4gsr.libunified.app.ktbase
 
 import android.os.Bundle
-import android.util.Log
 import androidx.lifecycle.ViewModelProvider
 import com.mpdc4gsr.libunified.R
 import com.mpdc4gsr.libunified.app.dialog.MsgDialog
@@ -34,7 +33,7 @@ abstract class BaseViewModelActivity<VM : BaseViewModel> : BaseActivity() {
                     ""
                 )
 
-                is CancellationException -> Log.d("$TAG--->[ph][ph][ph][ph][ph][ph]", it.message.toString())
+                is CancellationException ->)
                 else -> httpErrorTip(getString(R.string.http_code_z5004), "")
             }
         }

@@ -73,8 +73,7 @@ class PdfViewModel : BaseViewModel() {
                     result?.msg = p0?.message
                     result?.code = -1
                     downLatch.countDown()
-                    TLog.e("bcf", "获取报告列表失败：" + p0?.message)
-                }
+                    T                }
 
                 override fun onFail(
                     failMsg: String?,

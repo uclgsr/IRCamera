@@ -43,7 +43,6 @@ except ImportError:
         def quit() -> Any:
             pass
 
-from loguru import logger
 
 try:
     if platform.system() == "Windows":
@@ -139,11 +138,9 @@ class AdminPrivilegesManager(BaseManager):
             return ElevationResult.ALREADY_ELEVATED
 
         if self._elevation_requested:
-            logger.warning("Elevation already requested")
-            return ElevationResult.FAILED
+                        return ElevationResult.FAILED
 
-        logger.info(f"Requesting privilege elevation: {reason}")
-        self._emit_signal("elevation_requested", reason)
+                self._emit_signal("elevation_requested", reason)
         self._elevation_requested = True
 
         try:
@@ -159,8 +156,7 @@ class AdminPrivilegesManager(BaseManager):
             return result
 
         except (OSError, ValueError, RuntimeError) as e:
-            logger.error(f"Elevation request failed: {e}")
-            result = ElevationResult.FAILED
+                        result = ElevationResult.FAILED
             self._emit_signal("elevation_completed", result, str(e))
             return result
         finally:
@@ -188,14 +184,12 @@ class AdminPrivilegesManager(BaseManager):
                 )
             return has_permission
 
-        logger.warning(f"Unknown operation permission check: {operation}")
-        return False
+                return False
 
     def run_as_admin(self, command: str, arguments: Optional[list] = None) -> bool:
 
         if not self.is_elevated:
-            logger.error("Cannot run admin command without elevation")
-            return False
+                        return False
 
         try:
             system = platform.system()
@@ -205,12 +199,10 @@ class AdminPrivilegesManager(BaseManager):
             elif system in ["Linux", "Darwin"]:
                 return self._run_unix_admin_command(command, arguments or [])
             else:
-                logger.error(f"Unsupported platform: {system}")
-                return False
+                                return False
 
         except (OSError, ValueError, RuntimeError) as e:
-            logger.error(f"Failed to run admin command: {e}")
-            return False
+                        return False
 
     def check_service_status(self, service_name: str) -> Optional[str]:
 
@@ -230,8 +222,7 @@ class AdminPrivilegesManager(BaseManager):
                 return None
 
         except (OSError, ValueError, RuntimeError) as e:
-            logger.error(f"Failed to check service status: {e}")
-            return None
+                        return None
 
     def manage_firewall_rule(self, rule_name: str, action: str, **kwargs) -> bool:
 
@@ -239,15 +230,13 @@ class AdminPrivilegesManager(BaseManager):
             return False
 
         if platform.system() != "Windows":
-            logger.warning("Firewall management only supported on Windows")
-            return False
+                        return False
 
         try:
             return self._manage_windows_firewall_rule(rule_name, action, **kwargs)
 
         except (OSError, ValueError, RuntimeError) as e:
-            logger.error(f"Firewall rule management failed: {e}")
-            return False
+                        return False
 
     def _check_current_privileges(self) -> None:
 
@@ -261,12 +250,10 @@ class AdminPrivilegesManager(BaseManager):
             else:
                 self._current_privilege = PrivilegeLevel.UNKNOWN
 
-            logger.info(f"Current privilege level: {self._current_privilege.value}")
-            self._emit_signal("privilege_changed", self._current_privilege)
+                        self._emit_signal("privilege_changed", self._current_privilege)
 
         except (OSError, ValueError, RuntimeError) as e:
-            logger.error(f"Failed to check privileges: {e}")
-            self._current_privilege = PrivilegeLevel.UNKNOWN
+                        self._current_privilege = PrivilegeLevel.UNKNOWN
 
     def _check_windows_privileges(self) -> PrivilegeLevel:
 
@@ -298,8 +285,7 @@ class AdminPrivilegesManager(BaseManager):
                 return PrivilegeLevel.USER
 
         except (OSError, ValueError, RuntimeError) as e:
-            logger.error(f"Windows privilege check failed: {e}")
-            return PrivilegeLevel.UNKNOWN
+                        return PrivilegeLevel.UNKNOWN
 
     def _check_unix_privileges(self) -> PrivilegeLevel:
 
@@ -327,8 +313,7 @@ class AdminPrivilegesManager(BaseManager):
                     return PrivilegeLevel.USER
 
         except (OSError, ValueError, RuntimeError) as e:
-            logger.error(f"Unix privilege check failed: {e}")
-            return PrivilegeLevel.UNKNOWN
+                        return PrivilegeLevel.UNKNOWN
 
     def _check_system_permissions(self) -> None:
 
@@ -340,13 +325,11 @@ class AdminPrivilegesManager(BaseManager):
             elif system in ["Linux", "Darwin"]:
                 self._check_unix_permissions()
             else:
-                logger.warning(f"Permission checking not implemented for {system}")
-
+                
             self._emit_signal("system_ready", self._permissions)
 
         except (OSError, ValueError, RuntimeError) as e:
-            logger.error(f"Permission check failed: {e}")
-
+            
     def _check_windows_permissions(self) -> None:
 
         self._permissions.network_config = self._test_network_config_access()
@@ -364,8 +347,7 @@ class AdminPrivilegesManager(BaseManager):
     def _check_unix_permissions(self) -> None:
 
         if platform.system() == "Windows":
-            logger.error("_check_unix_permissions called on Windows - this is a bug")
-            return
+                        return
 
         try:
             is_root = os.getuid() == 0
@@ -429,8 +411,7 @@ class AdminPrivilegesManager(BaseManager):
         except PermissionError:
             return ElevationResult.CANCELLED
         except (OSError, ValueError, RuntimeError) as e:
-            logger.error(f"Windows elevation failed: {e}")
-            return ElevationResult.FAILED
+                        return ElevationResult.FAILED
 
     def _elevate_unix(self, reason: str) -> ElevationResult:
 
@@ -467,8 +448,7 @@ class AdminPrivilegesManager(BaseManager):
             return ElevationResult.SUCCESS
 
         except (OSError, ValueError, RuntimeError) as e:
-            logger.error(f"Unix elevation failed: {e}")
-            return ElevationResult.FAILED
+                        return ElevationResult.FAILED
 
     def _manual_uac_elevation(self) -> ElevationResult:
 
@@ -492,8 +472,7 @@ class AdminPrivilegesManager(BaseManager):
                 return ElevationResult.NOT_SUPPORTED
 
         except (OSError, ValueError, RuntimeError) as e:
-            logger.error(f"Manual UAC elevation failed: {e}")
-            return ElevationResult.FAILED
+                        return ElevationResult.FAILED
 
     def _get_result_message(self, result: ElevationResult) -> str:
 
@@ -609,8 +588,7 @@ class AdminPrivilegesManager(BaseManager):
             )
             return result.returncode == 0
         except (OSError, ValueError, RuntimeError) as e:
-            logger.error(f"Windows admin command failed: {e}")
-            return False
+                        return False
 
     def _run_unix_admin_command(self, command: str, arguments: list) -> bool:
 
@@ -627,8 +605,7 @@ class AdminPrivilegesManager(BaseManager):
                 )
             return result.returncode == 0
         except (OSError, ValueError, RuntimeError) as e:
-            logger.error(f"Unix admin command failed: {e}")
-            return False
+                        return False
 
     def _check_windows_service(self, service_name: str) -> Optional[str]:
 
@@ -695,12 +672,10 @@ class AdminPrivilegesManager(BaseManager):
             elif action == "remove":
                 cmd = base_cmd + ["delete", "rule", f"name={rule_name}"]
             else:
-                logger.error(f"Unknown firewall action: {action}")
-                return False
+                                return False
 
             result = subprocess.run(cmd, capture_output=True, timeout=30)
             return result.returncode == 0
 
         except (OSError, ValueError, RuntimeError) as e:
-            logger.error(f"Firewall rule management failed: {e}")
-            return False
+                        return False

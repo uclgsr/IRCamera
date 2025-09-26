@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.ScrollView
@@ -309,9 +308,7 @@ class PermissionRequestActivity : AppCompatActivity() {
                 }
                 updatePermissionStatus()
             } catch (e: Exception) {
-                addLog("❌ Error requesting camera permissions: ${e.message}")
-                Log.e(TAG, "Error requesting camera permissions", e)
-            }
+                addLog("❌ Error requesting camera permissions: ${e.message}")            }
         }
     }
 
@@ -328,9 +325,7 @@ class PermissionRequestActivity : AppCompatActivity() {
                 }
                 updatePermissionStatus()
             } catch (e: Exception) {
-                addLog("❌ Error requesting Bluetooth permissions: ${e.message}")
-                Log.e(TAG, "Error requesting Bluetooth permissions", e)
-            }
+                addLog("❌ Error requesting Bluetooth permissions: ${e.message}")            }
         }
     }
 
@@ -347,9 +342,7 @@ class PermissionRequestActivity : AppCompatActivity() {
                 }
                 updatePermissionStatus()
             } catch (e: Exception) {
-                addLog("❌ Error in permission request sequence: ${e.message}")
-                Log.e(TAG, "Error in permission request sequence", e)
-            }
+                addLog("❌ Error in permission request sequence: ${e.message}")            }
         }
     }
 
@@ -405,10 +398,7 @@ class PermissionRequestActivity : AppCompatActivity() {
             (logText.parent as? ScrollView)?.post {
                 (logText.parent as ScrollView).fullScroll(ScrollView.FOCUS_DOWN)
             }
-        }
-
-        Log.i(TAG, message)
-    }
+        }    }
 
     private fun handlePermissionResults(permissions: Map<String, Boolean>) {
         addLog("📋 Permission results received:")

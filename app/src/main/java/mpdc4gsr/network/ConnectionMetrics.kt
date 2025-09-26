@@ -1,6 +1,5 @@
 package mpdc4gsr.network
 
-import android.util.Log
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import java.util.concurrent.atomic.AtomicLong
@@ -38,17 +37,13 @@ class ConnectionMetrics {
      * Record connection establishment
      */
     fun recordConnectionStart() {
-        connectionStartTime.set(System.currentTimeMillis())
-        Log.d(TAG, "Connection metrics started")
-    }
+        connectionStartTime.set(System.currentTimeMillis())    }
 
     /**
      * Record connection end
      */
     fun recordConnectionEnd() {
-        val duration = getConnectionDuration()
-        Log.d(TAG, "Connection ended after ${duration}ms")
-    }
+        val duration = getConnectionDuration()    }
 
     /**
      * Record message sent
@@ -89,9 +84,7 @@ class ConnectionMetrics {
                 if (latencyHistory.size > maxHistorySize) {
                     latencyHistory.removeAt(0)
                 }
-            }
-            Log.d(TAG, "Ping latency: ${latency}ms")
-        }
+            }        }
     }
 
     /**
@@ -164,9 +157,7 @@ class ConnectionMetrics {
         totalBytesSent.set(0)
         totalBytesReceived.set(0)
         latencyHistory.clear()
-        bandwidthHistory.clear()
-        Log.d(TAG, "Connection metrics reset")
-    }
+        bandwidthHistory.clear()    }
 
     /**
      * Get average send bandwidth in bytes per second

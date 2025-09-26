@@ -1,7 +1,6 @@
 package mpdc4gsr.network
 
 import android.content.Context
-import android.util.Log
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -71,27 +70,18 @@ class NetworkController(private val context: Context) {
 
 
     suspend fun start(port: Int = DEFAULT_PORT): Boolean = withContext(Dispatchers.IO) {
-        if (isRunning.get()) {
-            Log.w(TAG, "NetworkController already running")
-            return@withContext false
+        if (isRunning.get()) {            return@withContext false
         }
 
         try {
             serverSocket = ServerSocket(port)
             serverSocket?.soTimeout = SOCKET_TIMEOUT
-            isRunning.set(true)
-
-            Log.i(TAG, "NetworkController started on port $port")
-
-
-            controllerScope.launch {
+            isRunning.set(true)            controllerScope.launch {
                 acceptConnections()
             }
 
             return@withContext true
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to start NetworkController", e)
-            eventListener?.onError("start_server", e.message ?: "Unknown error")
+        } catch (e: Exception) {            eventListener?.onError("start_server", e.message ?: "Unknown error")
             return@withContext false
         }
     }
@@ -105,9 +95,7 @@ class NetworkController(private val context: Context) {
             clientConnections.values.forEach { connection ->
                 try {
                     connection.socket.close()
-                } catch (e: Exception) {
-                    Log.w(TAG, "Error closing client connection: ${e.message}")
-                }
+                } catch (e: Exception) {                }
             }
             clientConnections.clear()
 
@@ -121,12 +109,7 @@ class NetworkController(private val context: Context) {
 
             runBlocking {
                 delay(100)
-            }
-
-            Log.i(TAG, "NetworkController stopped")
-        } catch (e: Exception) {
-            Log.e(TAG, "Error stopping NetworkController", e)
-        }
+            }        } catch (e: Exception) {        }
     }
 
 
@@ -141,9 +124,7 @@ class NetworkController(private val context: Context) {
 
                 continue
             } catch (e: Exception) {
-                if (isRunning.get()) {
-                    Log.e(TAG, "Error accepting client connection", e)
-                    eventListener?.onError("accept_connection", e.message ?: "Unknown error")
+                if (isRunning.get()) {                    eventListener?.onError("accept_connection", e.message ?: "Unknown error")
                 }
                 break
             }
@@ -165,21 +146,14 @@ class NetworkController(private val context: Context) {
             )
 
             clientConnections[clientId] = connection
-            eventListener?.onClientConnected(clientId, "PC Controller")
-
-            Log.i(TAG, "New client connected: $clientId")
-
-
-            sendResponse(connection, createResponse("welcome", "Connected to IRCamera Android"))
+            eventListener?.onClientConnected(clientId, "PC Controller")            sendResponse(connection, createResponse("welcome", "Connected to IRCamera Android"))
 
 
             controllerScope.launch {
                 handleClientMessages(connection)
             }
 
-        } catch (e: Exception) {
-            Log.e(TAG, "Error handling new client", e)
-            try {
+        } catch (e: Exception) {            try {
                 clientSocket.close()
             } catch (ignored: Exception) {
             }
@@ -195,14 +169,9 @@ class NetworkController(private val context: Context) {
                     if (message == null) {
 
                         break
-                    }
-
-                    Log.d(TAG, "Received message from ${connection.clientId}: $message")
-                    handleCommand(connection, message)
+                    }                    handleCommand(connection, message)
                 }
-            } catch (e: Exception) {
-                Log.e(TAG, "Error handling client messages", e)
-            } finally {
+            } catch (e: Exception) {            } finally {
 
                 disconnectClient(connection.clientId, "Connection closed")
             }
@@ -212,27 +181,19 @@ class NetworkController(private val context: Context) {
     private suspend fun handleCommand(connection: ClientConnection, message: String) {
         try {
             val json = JSONObject(message)
-            val command = json.getString("command")
-
-            Log.i(TAG, "Processing command: $command")
-
-            when (command) {
+            val command = json.getString("command")            when (command) {
                 "start_recording" -> handleStartRecordingCommand(connection, json)
                 "stop_recording" -> handleStopRecordingCommand(connection, json)
                 "ping" -> handlePingCommand(connection, json)
                 "get_status" -> handleGetStatusCommand(connection, json)
-                else -> {
-                    Log.w(TAG, "Unknown command: $command")
-                    sendResponse(
+                else -> {                    sendResponse(
                         connection,
                         createErrorResponse("unknown_command", "Unknown command: $command")
                     )
                 }
             }
 
-        } catch (e: Exception) {
-            Log.e(TAG, "Error parsing command", e)
-            sendResponse(
+        } catch (e: Exception) {            sendResponse(
                 connection,
                 createErrorResponse("parse_error", "Failed to parse command: ${e.message}")
             )
@@ -269,12 +230,7 @@ class NetworkController(private val context: Context) {
             }
             json.optString("studyName", "").let {
                 if (it.isNotEmpty()) options["studyName"] = it
-            }
-
-            Log.i(TAG, "Start recording command: sessionId=$sessionId, modalities=$modalities")
-
-
-            eventListener?.onStartRecordingCommand(sessionId, modalities, options)
+            }            eventListener?.onStartRecordingCommand(sessionId, modalities, options)
 
 
             sendResponse(
@@ -286,9 +242,7 @@ class NetworkController(private val context: Context) {
                 )
             )
 
-        } catch (e: Exception) {
-            Log.e(TAG, "Error handling start_recording command", e)
-            sendResponse(
+        } catch (e: Exception) {            sendResponse(
                 connection,
                 createErrorResponse("start_recording_error", e.message ?: "Unknown error")
             )
@@ -297,11 +251,7 @@ class NetworkController(private val context: Context) {
 
 
     private suspend fun handleStopRecordingCommand(connection: ClientConnection, json: JSONObject) {
-        try {
-            Log.i(TAG, "Stop recording command received")
-
-
-            eventListener?.onStopRecordingCommand()
+        try {            eventListener?.onStopRecordingCommand()
 
 
             sendResponse(
@@ -309,9 +259,7 @@ class NetworkController(private val context: Context) {
                 createResponse("recording_stopped", "Recording session stopped")
             )
 
-        } catch (e: Exception) {
-            Log.e(TAG, "Error handling stop_recording command", e)
-            sendResponse(
+        } catch (e: Exception) {            sendResponse(
                 connection,
                 createErrorResponse("stop_recording_error", e.message ?: "Unknown error")
             )
@@ -337,11 +285,7 @@ class NetworkController(private val context: Context) {
 
     private fun sendResponse(connection: ClientConnection, response: String) {
         try {
-            connection.outputStream.println(response)
-            Log.d(TAG, "Sent response to ${connection.clientId}: $response")
-        } catch (e: Exception) {
-            Log.e(TAG, "Error sending response to ${connection.clientId}", e)
-        }
+            connection.outputStream.println(response)        } catch (e: Exception) {        }
     }
 
 
@@ -382,10 +326,7 @@ class NetworkController(private val context: Context) {
             }
 
             clientConnections.remove(clientId)
-            eventListener?.onClientDisconnected(clientId, reason)
-
-            Log.i(TAG, "Client disconnected: $clientId - $reason")
-        }
+            eventListener?.onClientDisconnected(clientId, reason)        }
     }
 
 

@@ -1,7 +1,6 @@
 package mpdc4gsr.test
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.LifecycleOwner
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
@@ -35,10 +34,7 @@ class SessionOrchestrationDemo(
     /**
      * Demo 1: Local UI triggered session with partial sensor failure
      */
-    suspend fun demonstrateLocalSessionWithPartialFailure() {
-        Log.i(TAG, "=== Demo 1: Local UI Session with Partial Sensor Failure ===")
-
-        // Initialize sensors (some may fail)
+    suspend fun demonstrateLocalSessionWithPartialFailure() {        // Initialize sensors (some may fail)
         recordingController.initializeSensors()
 
         // Start recording via local UI trigger
@@ -50,8 +46,7 @@ class SessionOrchestrationDemo(
             triggerSource = RecordingController.TriggerSource.LOCAL_UI
         )
 
-        if (success) {
-            Log.i(TAG, "Recording started successfully (local trigger)")
+        if (success) {")
 
             // Simulate recording duration
             delay(5000)
@@ -61,25 +56,17 @@ class SessionOrchestrationDemo(
                 triggerSource = RecordingController.TriggerSource.LOCAL_UI
             )
 
-            if (stopSuccess) {
-                Log.i(TAG, "Recording stopped successfully")
-
-                // Generate and display session manifest
+            if (stopSuccess) {                // Generate and display session manifest
                 val manifest = recordingController.generateSessionManifest()
                 displaySessionManifest(manifest)
             }
-        } else {
-            Log.e(TAG, "Failed to start recording session")
-        }
+        } else {        }
     }
 
     /**
      * Demo 2: Remote PC triggered session
      */
-    suspend fun demonstrateRemoteSessionTrigger() {
-        Log.i(TAG, "=== Demo 2: Remote PC Triggered Session ===")
-
-        // Simulate remote PC command
+    suspend fun demonstrateRemoteSessionTrigger() {        // Simulate remote PC command
         val success = recordingController.startRecording(
             sessionId = "demo_remote_002",
             participantId = "DEMO_P002",
@@ -88,10 +75,7 @@ class SessionOrchestrationDemo(
             triggerSource = RecordingController.TriggerSource.REMOTE_PC
         )
 
-        if (success) {
-            Log.i(TAG, "Recording started via remote PC command")
-
-            // Simulate recording duration
+        if (success) {            // Simulate recording duration
             delay(3000)
 
             // Simulate remote stop command
@@ -99,10 +83,7 @@ class SessionOrchestrationDemo(
                 triggerSource = RecordingController.TriggerSource.REMOTE_PC
             )
 
-            if (stopSuccess) {
-                Log.i(TAG, "Recording stopped via remote PC command")
-
-                // Generate manifest showing remote trigger
+            if (stopSuccess) {                // Generate manifest showing remote trigger
                 val manifest = recordingController.generateSessionManifest()
                 displaySessionManifest(manifest)
             }
@@ -112,10 +93,7 @@ class SessionOrchestrationDemo(
     /**
      * Demo 3: Session with sensor health monitoring and reconnection
      */
-    suspend fun demonstrateSensorReconnection() {
-        Log.i(TAG, "=== Demo 3: Sensor Health Monitoring and Reconnection ===")
-
-        // Start recording
+    suspend fun demonstrateSensorReconnection() {        // Start recording
         val success = recordingController.startRecording(
             sessionId = "demo_reconnect_003",
             participantId = "DEMO_P003",
@@ -123,10 +101,7 @@ class SessionOrchestrationDemo(
             triggerSource = RecordingController.TriggerSource.LOCAL_UI
         )
 
-        if (success) {
-            Log.i(TAG, "Recording started - monitoring sensor health")
-
-            // Simulate recording with sensor monitoring
+        if (success) {            // Simulate recording with sensor monitoring
             // In real scenario, health monitoring runs automatically
             delay(10000)
 
@@ -142,35 +117,19 @@ class SessionOrchestrationDemo(
     /**
      * Demo 4: Session state machine demonstration
      */
-    suspend fun demonstrateSessionStateMachine() {
-        Log.i(TAG, "=== Demo 4: Session State Machine ===")
-
-        // Monitor state flow
+    suspend fun demonstrateSessionStateMachine() {        // Monitor state flow
         recordingController.recordingStateFlow
             .take(5) // Collect only the first 5 state changes for demonstration
-            .collect { state ->
-                Log.i(TAG, "Session State: $state")
+            .collect { state ->                when (state) {
+                    RecordingController.RecordingState.STARTING -> {                    }
 
-                when (state) {
-                    RecordingController.RecordingState.STARTING -> {
-                        Log.i(TAG, "  → Validating prerequisites and initializing sensors")
-                    }
+                    RecordingController.RecordingState.RECORDING -> {                    }
 
-                    RecordingController.RecordingState.RECORDING -> {
-                        Log.i(TAG, "  → Active recording with health monitoring")
-                    }
+                    RecordingController.RecordingState.STOPPING -> {                    }
 
-                    RecordingController.RecordingState.STOPPING -> {
-                        Log.i(TAG, "  → Coordinated sensor shutdown in progress")
-                    }
+                    RecordingController.RecordingState.STOPPED -> {                    }
 
-                    RecordingController.RecordingState.STOPPED -> {
-                        Log.i(TAG, "  → Session finalized, manifest generated")
-                    }
-
-                    else -> {
-                        Log.i(TAG, "  → State: $state")
-                    }
+                    else -> {                    }
                 }
             }
     }
@@ -178,77 +137,32 @@ class SessionOrchestrationDemo(
     /**
      * Display session manifest information
      */
-    private fun displaySessionManifest(manifest: SessionManifest) {
-        Log.i(TAG, "")
-        Log.i(TAG, "=== SESSION MANIFEST ===")
-        Log.i(TAG, "Session ID: ${manifest.sessionId}")
-        Log.i(TAG, "Trigger Source: ${manifest.triggerSource}")
-        Log.i(TAG, "Duration: ${manifest.duration ?: 0}ms")
-        Log.i(TAG, "Final State: ${manifest.sessionState}")
-        Log.i(TAG, "")
-
-        Log.i(TAG, "Sensor Activity Summary:")
-        manifest.sensorActivitySummary.forEach { (sensorName, info) ->
-            Log.i(TAG, "  $sensorName:")
-            Log.i(TAG, "    - Active: ${info.wasActive}")
-            Log.i(TAG, "    - Started Successfully: ${info.startedSuccessfully}")
-            Log.i(TAG, "    - Final Status: ${info.finalStatus}")
-            if (info.errorMessages.isNotEmpty()) {
-                Log.i(TAG, "    - Errors: ${info.errorMessages.joinToString(", ")}")
+    private fun displaySessionManifest(manifest: SessionManifest) {        manifest.sensorActivitySummary.forEach { (sensorName, info) ->            if (info.errorMessages.isNotEmpty()) {}")
             }
-            if (info.dropouts.isNotEmpty()) {
-                Log.i(TAG, "    - Dropouts: ${info.dropouts.size}")
-            }
-            if (info.reconnections.isNotEmpty()) {
-                Log.i(TAG, "    - Reconnections: ${info.reconnections.size}")
-            }
+            if (info.dropouts.isNotEmpty()) {            }
+            if (info.reconnections.isNotEmpty()) {            }
         }
 
-        if (manifest.events.isNotEmpty()) {
-            Log.i(TAG, "")
-            Log.i(TAG, "Session Events (${manifest.events.size}):")
+        if (manifest.events.isNotEmpty()) {:")
             manifest.events.take(10).forEach { event ->
-                val status = if (event.success) "✓" else "✗"
-                Log.i(TAG, "  $status ${event.eventType}${if (event.sensorId != null) " (${event.sensorId})" else ""}")
-                if (!event.success && event.errorMessage != null) {
-                    Log.i(TAG, "    Error: ${event.errorMessage}")
-                }
+                val status = if (event.success) "✓" else "✗"" (${event.sensorId})" else ""}")
+                if (!event.success && event.errorMessage != null) {                }
             }
-            if (manifest.events.size > 10) {
-                Log.i(TAG, "  ... and ${manifest.events.size - 10} more events")
-            }
+            if (manifest.events.size > 10) {            }
         }
 
-        if (manifest.errors.isNotEmpty()) {
-            Log.i(TAG, "")
-            Log.i(TAG, "Session Errors:")
-            manifest.errors.forEach { error ->
-                Log.i(TAG, "  ✗ $error")
-            }
+        if (manifest.errors.isNotEmpty()) {            manifest.errors.forEach { error ->            }
         }
 
-        if (manifest.warnings.isNotEmpty()) {
-            Log.i(TAG, "")
-            Log.i(TAG, "Session Warnings:")
-            manifest.warnings.forEach { warning ->
-                Log.i(TAG, "  ⚠ $warning")
-            }
-        }
-
-        Log.i(TAG, "=== END MANIFEST ===")
-        Log.i(TAG, "")
-    }
+        if (manifest.warnings.isNotEmpty()) {            manifest.warnings.forEach { warning ->            }
+        }    }
 
     /**
      * Run all demonstrations
      */
     fun runAllDemonstrations() {
         runBlocking {
-            try {
-                Log.i(TAG, "Starting Session Orchestration Demonstrations...")
-                Log.i(TAG, "")
-
-                // Demo 1: Local UI with partial failure
+            try {                // Demo 1: Local UI with partial failure
                 demonstrateLocalSessionWithPartialFailure()
                 delay(2000)
 
@@ -258,32 +172,15 @@ class SessionOrchestrationDemo(
 
                 // Demo 3: Sensor reconnection
                 demonstrateSensorReconnection()
-                delay(2000)
-
-                Log.i(TAG, "All demonstrations completed successfully!")
-
-            } catch (e: Exception) {
-                Log.e(TAG, "Error during demonstrations", e)
-            }
+                delay(2000)            } catch (e: Exception) {            }
         }
     }
 
     /**
      * Demonstrate RecordingService integration
      */
-    fun demonstrateServiceIntegration() {
-        Log.i(TAG, "=== RecordingService Integration Demo ===")
-
-        // Start recording service
-        RecordingService.startRecording(context, "demo_service_session")
-
-        Log.i(TAG, "Recording service started with session orchestration")
-        Log.i(TAG, "- Foreground notification active")
-        Log.i(TAG, "- Remote PC commands enabled")
-        Log.i(TAG, "- Crash recovery monitoring active")
-        Log.i(TAG, "- Session manifest will be generated on stop")
-
-        // Service can be stopped via:
+    fun demonstrateServiceIntegration() {        // Start recording service
+        RecordingService.startRecording(context, "demo_service_session")        // Service can be stopped via:
         // - Local UI (notification action)
         // - Remote PC command
         // - API call: RecordingService.stopRecording(context)

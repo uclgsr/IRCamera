@@ -1,7 +1,6 @@
 package mpdc4gsr.test
 
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -105,9 +104,7 @@ class GSRReconnectionTestActivity : AppCompatActivity() {
             gsrRecorder = GSRSensorRecorder(this, "reconnection_test", 128, recordingController!!)
             updateResults("✓ GSR reconnection test components initialized\n\n")
         } catch (e: Exception) {
-            updateResults("✗ Failed to initialize components: ${e.message}\n")
-            Log.e(TAG, "Failed to initialize components", e)
-        }
+            updateResults("✗ Failed to initialize components: ${e.message}\n")        }
     }
 
     /**
@@ -233,9 +230,7 @@ class GSRReconnectionTestActivity : AppCompatActivity() {
             }
 
             true
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to setup reconnection test", e)
-            false
+        } catch (e: Exception) {            false
         }
     }
 
@@ -271,9 +266,7 @@ class GSRReconnectionTestActivity : AppCompatActivity() {
             updateResults("✓ Disconnect simulation completed\n")
 
         } catch (e: Exception) {
-            updateResults("✗ Failed to simulate disconnection: ${e.message}\n")
-            Log.e(TAG, "Failed to simulate disconnection", e)
-        }
+            updateResults("✗ Failed to simulate disconnection: ${e.message}\n")        }
     }
 
     private suspend fun simulateReconnection() {
@@ -308,9 +301,7 @@ class GSRReconnectionTestActivity : AppCompatActivity() {
             updateResults("✓ Reconnection simulation completed\n")
 
         } catch (e: Exception) {
-            updateResults("✗ Failed to simulate reconnection: ${e.message}\n")
-            Log.e(TAG, "Failed to simulate reconnection", e)
-        }
+            updateResults("✗ Failed to simulate reconnection: ${e.message}\n")        }
     }
 
     private suspend fun stopReconnectionTest(): Boolean {
@@ -335,9 +326,7 @@ class GSRReconnectionTestActivity : AppCompatActivity() {
             val recordingStopped = controller.stopSession()
             recordingStopped
 
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to stop reconnection test", e)
-            false
+        } catch (e: Exception) {            false
         }
     }
 
@@ -372,9 +361,7 @@ class GSRReconnectionTestActivity : AppCompatActivity() {
 
         } catch (e: Exception) {
             testResults.append("✗ Analysis failed: ${e.message}\n")
-            updateResults(testResults.toString())
-            Log.e(TAG, "Failed to analyze reconnection data", e)
-        }
+            updateResults(testResults.toString())        }
     }
 
     private fun analyzeReconnectionTiming(): String {
@@ -520,9 +507,7 @@ class GSRReconnectionTestActivity : AppCompatActivity() {
         testSessionDir?.let { dir ->
             try {
                 dir.deleteRecursively()
-            } catch (e: Exception) {
-                Log.w(TAG, "Failed to cleanup test directory", e)
-            }
+            } catch (e: Exception) {            }
         }
 
         // Ensure recording is stopped
@@ -533,9 +518,7 @@ class GSRReconnectionTestActivity : AppCompatActivity() {
                         controller.stopSession()
                     }
                     controller.cleanup()
-                } catch (e: Exception) {
-                    Log.e(TAG, "Error cleaning up recording controller", e)
-                }
+                } catch (e: Exception) {                }
             }
         }
     }

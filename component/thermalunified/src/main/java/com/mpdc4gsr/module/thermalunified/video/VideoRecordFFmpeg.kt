@@ -19,7 +19,6 @@ import android.text.Layout
 import android.text.StaticLayout
 import android.text.TextPaint
 import android.text.TextUtils
-import android.util.Log
 import android.view.TextureView
 import android.view.View
 import android.view.View.VISIBLE
@@ -32,7 +31,6 @@ import com.blankj.utilcode.util.SizeUtils
 import com.blankj.utilcode.util.StringUtils.getString
 import com.blankj.utilcode.util.ThreadUtils
 import com.blankj.utilcode.util.Utils
-import com.elvishew.xlog.XLog
 import com.mpdc4gsr.libunified.app.comm.view.TempLayout
 import com.mpdc4gsr.libunified.app.common.SharedManager
 import com.mpdc4gsr.libunified.app.config.FileConfig
@@ -173,12 +171,10 @@ class VideoRecordFFmpeg(
 
     private fun getVideoCodec(): Int {
         return if (Build.BRAND == "motorola" && Build.MODEL == "XT2201-2") {
-            XLog.i("[ph][ph][ph][ph][ph][ph]AV_CODEC_ID_H264")
-            avcodec.AV_CODEC_ID_H264
+            X            avcodec.AV_CODEC_ID_H264
         } else {
 
-            XLog.i("[ph][ph][ph][ph][ph][ph]AV_CODEC_ID_MPEG4")
-            avcodec.AV_CODEC_ID_MPEG4
+            X            avcodec.AV_CODEC_ID_MPEG4
         }
     }
 
@@ -277,9 +273,7 @@ class VideoRecordFFmpeg(
                                 setBitmap(it)
                             }
                         },
-                        Consumer {
-                            Log.e("[ph][ph][ph][ph][ph][ph][ph][ph]", "${it.message}")
-                        },
+                        Consumer {                        },
                     )
             if (audioRecord == null) {
                 audioRecord =
@@ -361,20 +355,15 @@ class VideoRecordFFmpeg(
                                 }
 
 
-                            } catch (e: Exception) {
-                                Log.e("[ph][ph][ph][ph]", "Caught an exception: " + e.message)
-                            }
+                            } catch (e: Exception) {                            }
                         },
-                        Consumer {
-                            Log.e("[ph][ph][ph][ph][ph][ph][ph][ph]", "${it.message}")
-                        },
+                        Consumer {                        },
                     )
         } catch (e: Exception) {
 
             exportDisposable?.dispose()
             stopVideoRecordListener?.invoke(false)
-            XLog.e("[ph][ph][ph][ph]")
-            e.printStackTrace()
+            X            e.printStackTrace()
         }
     }
 
@@ -435,9 +424,7 @@ class VideoRecordFFmpeg(
                         AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT, bufferSize,
                     )
             }
-        } catch (e: Exception) {
-            Log.e("[ph][ph][ph][ph][ph][ph][ph][ph]", "${e.message}")
-        }
+        } catch (e: Exception) {        }
     }
 
     fun canStartVideoRecord(videoFile: File?): Boolean {
@@ -501,8 +488,7 @@ class VideoRecordFFmpeg(
                     delay(300)
                     refreshAlbum()
                 } catch (e: Exception) {
-                    XLog.e("[ph][ph][ph][ph][ph][ph][ph][ph]" + e.message)
-                }
+                    X                }
             }
             isRunning = false
         }
@@ -642,9 +628,7 @@ class VideoRecordFFmpeg(
                             ((cameraView.parent as ViewGroup).width - it.width) / 2,
                             SizeUtils.dp2px(20f),
                         )
-                } catch (e: Exception) {
-                    Log.e(TAG, "[ph][ph][ph][ph][ph][ph][ph][ph] exception:${e.message}")
-                }
+                } catch (e: Exception) {                }
 
             }
         }

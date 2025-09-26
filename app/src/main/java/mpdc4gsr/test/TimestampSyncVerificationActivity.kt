@@ -1,7 +1,6 @@
 package mpdc4gsr.test
 
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -80,9 +79,7 @@ class TimestampSyncVerificationActivity : AppCompatActivity() {
             tempDir.deleteRecursively()
 
         } catch (e: Exception) {
-            appendResultText("❌ Test error: ${e.message}\n")
-            Log.e(TAG, "Timestamp sync verification test failed", e)
-        }
+            appendResultText("❌ Test error: ${e.message}\n")        }
     }
 
     private suspend fun simulateRGBFrameCapture(): SyncTestEvent {

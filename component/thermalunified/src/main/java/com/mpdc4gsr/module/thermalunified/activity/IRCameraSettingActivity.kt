@@ -12,7 +12,6 @@ import android.text.Editable
 import android.text.InputType
 import android.text.TextUtils
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import android.widget.EditText
 import android.widget.Switch
@@ -331,9 +330,7 @@ class IRCameraSettingActivity : BaseActivity() {
                     gc.getFromLocation(
                         location.latitude,
                         location.longitude, 1,
-                    )
-                Log.v("TAG", "[ph][ph][ph][ph][ph][ph]：$result")
-            }
+                    )            }
         } catch (e: Exception) {
             e.printStackTrace()
         }

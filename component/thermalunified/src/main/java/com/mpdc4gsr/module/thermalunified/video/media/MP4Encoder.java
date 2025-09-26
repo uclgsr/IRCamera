@@ -94,40 +94,27 @@ public class MP4Encoder extends Encoder {
     protected void onStop() {
         if (isStarted) {
             encode();
-            if (this.addedFrameCount > 0) {
-                Log.i(TAG, String.format("Total frame count = %s", this.addedFrameCount));
+            if (this.addedFrameCount > 0) {);
                 if (videoCodec != null) {
                     videoCodec.stop();
                     videoCodec.release();
-                    videoCodec = null;
-                    Log.i(TAG, "RELEASE VIDEO CODEC");
-                }
+                    videoCodec = null;                }
                 if (audioCodec != null) {
                     audioCodec.stop();
                     audioCodec.release();
-                    audioCodec = null;
-                    Log.i(TAG, "RELEASE AUDIO CODEC");
-                }
+                    audioCodec = null;                }
                 if (mediaMuxer != null) {
                     mediaMuxer.stop();
                     mediaMuxer.release();
-                    mediaMuxer = null;
-                    Log.i(TAG, "RELEASE MUXER");
-                }
-            } else {
-                Log.e(TAG, "not added any frame");
-            }
+                    mediaMuxer = null;                }
+            } else {            }
             isStarted = false;
         }
     }
 
     @Override
     protected void onAddFrame(Bitmap bitmap) {
-        if (!isStarted) {
-            Log.d(TAG, "already finished. can't add Frame ");
-        } else if (bitmap == null) {
-            Log.e(TAG, "Bitmap is null");
-        } else {
+        if (!isStarted) {        } else if (bitmap == null) {        } else {
             int inputBufIndex = videoCodec.dequeueInputBuffer(TIMEOUT_US);
             if (inputBufIndex >= 0) {
 
@@ -157,22 +144,14 @@ public class MP4Encoder extends Encoder {
     }
 
     private void encodeAudio() {
-        int audioStatus = audioCodec.dequeueOutputBuffer(bufferInfo, TIMEOUT_US);
-        Log.i(TAG, "Audio encoderStatus = " + audioStatus + ", presentationTimeUs = "
-                + bufferInfo.presentationTimeUs);
-        if (audioStatus == INFO_OUTPUT_FORMAT_CHANGED) {
-            MediaFormat audioFormat = audioCodec.getOutputFormat();
-            Log.i(TAG, String.format("output format changed. audio format: %s", audioFormat.toString()));
+        int audioStatus = audioCodec.dequeueOutputBuffer(bufferInfo, TIMEOUT_US);        if (audioStatus == INFO_OUTPUT_FORMAT_CHANGED) {
+            MediaFormat audioFormat = audioCodec.getOutputFormat();));
             audioTrackIndex = mediaMuxer.addTrack(audioFormat);
             trackCount++;
-            if (trackCount == 2) {
-                Log.i(TAG, "started media muxer.");
-                mediaMuxer.start();
+            if (trackCount == 2) {                mediaMuxer.start();
                 isMuxerStarted = true;
             }
-        } else if (audioStatus == INFO_TRY_AGAIN_LATER) {
-            Log.d(TAG, "no output from audio encoder available");
-        } else {
+        } else if (audioStatus == INFO_TRY_AGAIN_LATER) {        } else {
             ByteBuffer audioData = audioCodec.getOutputBuffer(audioStatus);
             if (audioData != null) {
                 audioData.position(bufferInfo.offset);
@@ -186,22 +165,14 @@ public class MP4Encoder extends Encoder {
     }
 
     private void encodeVideo() {
-        int encoderStatus = videoCodec.dequeueOutputBuffer(bufferInfo, TIMEOUT_US);
-        Log.i(TAG, "Video encoderStatus = " + encoderStatus + ", presentationTimeUs = "
-                + bufferInfo.presentationTimeUs);
-        if (encoderStatus == INFO_OUTPUT_FORMAT_CHANGED) {
-            MediaFormat videoFormat = videoCodec.getOutputFormat();
-            Log.i(TAG, String.format("output format changed. video format: %s", videoFormat.toString()));
+        int encoderStatus = videoCodec.dequeueOutputBuffer(bufferInfo, TIMEOUT_US);        if (encoderStatus == INFO_OUTPUT_FORMAT_CHANGED) {
+            MediaFormat videoFormat = videoCodec.getOutputFormat();));
             videoTrackIndex = mediaMuxer.addTrack(videoFormat);
             trackCount++;
-            if (trackCount == 2) {
-                Log.i(TAG, "started media muxer.");
-                mediaMuxer.start();
+            if (trackCount == 2) {                mediaMuxer.start();
                 isMuxerStarted = true;
             }
-        } else if (encoderStatus == INFO_TRY_AGAIN_LATER) {
-            Log.d(TAG, "no output from video encoder available");
-        } else {
+        } else if (encoderStatus == INFO_TRY_AGAIN_LATER) {        } else {
             ByteBuffer encodedData = videoCodec.getOutputBuffer(encoderStatus);
             if (encodedData != null) {
                 encodedData.position(bufferInfo.offset);
@@ -211,9 +182,7 @@ public class MP4Encoder extends Encoder {
                 }
                 videoCodec.releaseOutputBuffer(encoderStatus, false);
                 encodedFrameCount++;
-            }
-            Log.i(TAG, "encoderOutputBuffer " + encoderStatus + " was null");
-        }
+            }        }
     }
 
 

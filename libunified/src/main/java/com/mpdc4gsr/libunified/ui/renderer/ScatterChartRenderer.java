@@ -58,9 +58,7 @@ public class ScatterChartRenderer extends LineScatterCandleRadarRenderer {
         float phaseY = mAnimator.getPhaseY();
 
         IShapeRenderer renderer = dataSet.getShapeRenderer();
-        if (renderer == null) {
-            Log.i("MISSING", "There's no IShapeRenderer specified for ScatterDataSet");
-            return;
+        if (renderer == null) {            return;
         }
 
         int max = (int) (Math.min(

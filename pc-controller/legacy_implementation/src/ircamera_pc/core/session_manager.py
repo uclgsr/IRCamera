@@ -8,10 +8,8 @@ from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional
 
 try:
-    from loguru import logger
-except ImportError:
-    from ..utils.simple_logger import logger
-
+    except ImportError:
+    
 from .device_manager import DeviceConnectionState, DeviceInfo, DeviceManager
 
 
@@ -125,16 +123,14 @@ class AdvancedSessionManager:
             try:
                 callback(state, session or self.current_session)
             except Exception as e:
-                logger.error(f"Error in session state callback: {e}")
-
+                
     def _notify_ack_callbacks(self, device_id: str, command: str, success: bool) -> None:
 
         for callback in self._device_ack_callbacks:
             try:
                 callback(device_id, command, success)
             except Exception as e:
-                logger.error(f"Error in device ack callback: {e}")
-
+                
     def create_session(
             self,
             session_name: str,
@@ -229,15 +225,12 @@ class AdvancedSessionManager:
     async def stop_recording(self) -> bool:
 
         if not self.current_session:
-            logger.warning("No active session to stop recording")
-            return False
+                        return False
 
         if self.current_session.state != SessionState.RECORDING:
-            logger.warning(f"Cannot stop recording in state: {self.current_session.state}")
-            return False
+                        return False
 
-        logger.info(f"Stopping recording for session {self.current_session.session_id}")
-
+        
         self._update_session_state(SessionState.STOPPING)
 
         self.current_session.devices_acknowledged_stop.clear()
@@ -265,15 +258,12 @@ class AdvancedSessionManager:
     def finalize_session(self) -> bool:
 
         if not self.current_session:
-            logger.warning("No active session to finalize")
-            return False
+                        return False
 
         if self.current_session.state not in [SessionState.STOPPED, SessionState.ERROR]:
-            logger.warning(f"Cannot finalize session in state: {self.current_session.state}")
-            return False
+                        return False
 
-        logger.info(f"Finalizing session {self.current_session.session_id}")
-
+        
         self.current_session.completed_at = datetime.now(timezone.utc)
         self._update_session_state(SessionState.COMPLETE)
 
@@ -292,13 +282,11 @@ class AdvancedSessionManager:
         if self.current_session and self.current_session.state not in [
             SessionState.COMPLETE, SessionState.ERROR
         ]:
-            logger.warning("Resetting session manager with active session")
-
+            
         self.current_session = None
         self._pending_acknowledgments.clear()
 
-        logger.info("Session manager reset for next session")
-
+        
     async def _send_start_commands_to_devices(self, devices: List[DeviceInfo]) -> bool:
 
         # TODO: Integrate with network server to send actual JSON commands
@@ -317,13 +305,11 @@ class AdvancedSessionManager:
                 )
 
                 success_count += 1
-                logger.debug(f"Start command acknowledged by device: {device.device_id}")
-
+                
                 self._notify_ack_callbacks(device.device_id, "start_recording", True)
 
             except Exception as e:
-                logger.error(f"Failed to send start command to device {device.device_id}: {e}")
-                self.current_session.devices_failed.append({
+                                self.current_session.devices_failed.append({
                     "device_id": device.device_id,
                     "command": "start_recording",
                     "error": str(e),
@@ -358,13 +344,11 @@ class AdvancedSessionManager:
                 )
 
                 success_count += 1
-                logger.debug(f"Stop command acknowledged by device: {device_id}")
-
+                
                 self._notify_ack_callbacks(device_id, "stop_recording", True)
 
             except Exception as e:
-                logger.error(f"Failed to send stop command to device {device_id}: {e}")
-                self.current_session.devices_failed.append({
+                                self.current_session.devices_failed.append({
                     "device_id": device_id,
                     "command": "stop_recording",
                     "error": str(e),
@@ -387,9 +371,7 @@ class AdvancedSessionManager:
         old_state = self.current_session.state
         self.current_session.state = new_state
 
-        logger.info(
-            f"Session {self.current_session.session_id} state: {old_state.value} -> {new_state.value}")
-        self._notify_state_callbacks(new_state)
+                self._notify_state_callbacks(new_state)
 
     def _log_session_event(self, event_type: str, data: Dict[str, Any]) -> None:
 
@@ -416,11 +398,9 @@ class AdvancedSessionManager:
             with open(metadata_file, 'w') as f:
                 json.dump(self.current_session.to_dict(), f, indent=2)
 
-            logger.debug(f"Saved session metadata: {metadata_file}")
-
+            
         except Exception as e:
-            logger.error(f"Failed to save session metadata: {e}")
-
+            
     def get_current_session(self) -> Optional[SessionMetadata]:
 
         return self.current_session

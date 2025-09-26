@@ -15,7 +15,6 @@ import android.os.Looper
 import android.os.Message
 import android.os.SystemClock
 import android.provider.Settings
-import android.util.Log
 import android.view.Gravity
 import android.view.OrientationEventListener
 import android.view.View
@@ -35,7 +34,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.blankj.utilcode.util.ToastUtils
-import com.elvishew.xlog.XLog
 import com.energy.ac020library.bean.IrcmdError
 import com.energy.irutilslibrary.LibIRTempAC020
 import com.energy.irutilslibrary.bean.GainStatus
@@ -462,8 +460,7 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
                                     upColor, downColor,
                                 )
                             }
-                        } catch (e: Exception) {
-                            Log.e("[ph][ph][ph][ph][ph][ph][ph][ph]", e.message.toString())
+                        } catch (e: Exception) {)
                         }
                         try {
                             binding.tvTempContent.text =
@@ -473,8 +470,7 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
                                         isShowC
                                     )
                                 }"
-                        } catch (e: Exception) {
-                            Log.e("[ph][ph][ph][ph][ph][ph][ph][ph]", e.message.toString())
+                        } catch (e: Exception) {)
                         }
                     } else {
 
@@ -486,8 +482,7 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
                                         isShowC
                                     )
                                 }"
-                        } catch (e: Exception) {
-                            Log.e("[ph][ph][ph][ph][ph][ph][ph][ph]", e.message.toString())
+                        } catch (e: Exception) {)
                         }
                     }
                     try {
@@ -501,18 +496,13 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
                                 val visibility = binding.clSeekBar.visibility
                                 binding.clSeekBar.visibility = View.GONE
                                 binding.clSeekBar.visibility = visibility
-                            } catch (e: Exception) {
-                                Log.w(TAG, "Failed to update SeekBar bitmap, using fallback", e)
-                                binding.clSeekBar.requestLayout()  // Fallback to basic request layout
+                            } catch (e: Exception) {                                binding.clSeekBar.requestLayout()  // Fallback to basic request layout
                             }
                         }
-                    } catch (e: Exception) {
-                        Log.w("[ph][ph][ph][ph][ph][ph][ph]:", "${e.message}")
-                    }
+                    } catch (e: Exception) {                    }
                     try {
                         AlarmHelp.getInstance(application).alarmData(max, min, binding.tempBg)
-                    } catch (e: Exception) {
-                        Log.e("[ph][ph][ph][ph][ph][ph][ph][ph]", e.message.toString())
+                    } catch (e: Exception) {)
                     }
                 }
             }
@@ -1050,8 +1040,7 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
                                 ToastUtils.showShort(LibR.string.scan_ble_tip_authorize)
                             }
                         } catch (e: Exception) {
-                            XLog.e("[ph][ph][ph]" + e.message)
-                        }
+                            X                        }
                     }
 
                     override fun onDenied(
@@ -1085,16 +1074,10 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
         object : Handler(Looper.myLooper()!!) {
             override fun handleMessage(msg: Message) {
                 super.handleMessage(msg)
-                if (msg.what == SHOW_LOADING) {
-                    Log.d(TAG, "SHOW_LOADING")
-                    showLoadingDialog()
-                } else if (msg.what == HIDE_LOADING) {
-                    Log.d(TAG, "HIDE_LOADING")
-                    hideLoadingDialog()
+                if (msg.what == SHOW_LOADING) {                    showLoadingDialog()
+                } else if (msg.what == HIDE_LOADING) {                    hideLoadingDialog()
                     isConfigWait = false
-                } else if (msg.what == HANDLE_INIT_FAIL) {
-                    Log.d(TAG, "HANDLE_INIT_FAIL")
-                    hideLoadingDialog()
+                } else if (msg.what == HANDLE_INIT_FAIL) {                    hideLoadingDialog()
                     Toast.makeText(
                         this@IRThermalLiteActivity,
                         "handle init fail !",
@@ -1239,9 +1222,7 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
             val visibility = binding.clSeekBar.visibility
             binding.clSeekBar.visibility = View.GONE
             binding.clSeekBar.visibility = visibility
-        } catch (e: Exception) {
-            Log.w(TAG, "Failed to update SeekBar bitmap in main thermal view", e)
-        }
+        } catch (e: Exception) {        }
 
 
         binding.temperatureView.post {
@@ -1646,8 +1627,7 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
                     binding.thermalRecyclerNight.setToRecord(true)
                 }
             }
-        } catch (e: Exception) {
-            Log.e("[ph][ph]", e.message.toString())
+        } catch (e: Exception) {)
         }
     }
 
@@ -1709,9 +1689,7 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
                             } else {
                                 ToastUtils.showShort(LibR.string.scan_ble_tip_authorize)
                             }
-                        } catch (e: Exception) {
-                            Log.e("[ph][ph][ph][ph][ph][ph]", "" + e.message)
-                        }
+                        } catch (e: Exception) {                        }
                     }
 
                     override fun onDenied(
@@ -1751,8 +1729,7 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
                     binding.thermalRecyclerNight.refreshImg()
                 }
             }
-        } catch (e: Exception) {
-            Log.e("[ph][ph]", e.message.toString())
+        } catch (e: Exception) {)
         }
     }
 
@@ -1959,8 +1936,7 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
                     EventBus.getDefault().post(GalleryAddEvent())
                 }
             } catch (e: Exception) {
-                XLog.e(e.message)
-            }
+                X            }
         }
     }
 
@@ -2019,9 +1995,7 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
             try {
                 binding.clSeekBar.invalidate() // Force redraw
                 binding.clSeekBar.requestLayout()
-            } catch (e: Exception) {
-                Log.w(TAG, "Failed to update SeekBar bitmap during video record", e)
-            }
+            } catch (e: Exception) {            }
             videoRecord?.updateAudioState(isRecordAudio)
             videoRecord?.startRecord()
             isVideo = true
@@ -2121,8 +2095,7 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
 
                 delay(30 * 1000)
                 IRTool.setAutoShutter(isAutoShutter)
-                XLog.i("[ph][ph][ph][ph][ph][ph][ph][ph]")
-            }
+                X            }
     }
 
     private fun updateCustomPseudo() {
@@ -2238,8 +2211,7 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
                 }
             }
         } catch (e: Exception) {
-            XLog.e("$TAG:onStop-${e.message}")
-        }
+            X        }
     }
 
     override fun onDestroy() {
@@ -2258,8 +2230,7 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
             DeviceControlManager.getInstance().release()
             CameraPreviewManager.getInstance().releaseSource()
         } catch (e: Exception) {
-            XLog.e("$TAG:lite[ph][ph][ph][ph]-${e.message}")
-        }
+            X        }
         SystemClock.sleep(100)
     }
 
@@ -2299,8 +2270,7 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
                         DeviceIrcmdControlManager.getInstance().getIrcmdEngine()
                             ?.basicGainGet(basicGainGetValue)
                 } catch (e: Exception) {
-                    XLog.e("[ph][ph][ph][ph][ph][ph]")
-                }
+                    X                }
                 basicGainGetTime = System.currentTimeMillis()
             }
             val params_array =
@@ -2324,16 +2294,8 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
                     params_array[4],
                     params_array[5],
                     if (basicGainGetValue[0] == 0) GainStatus.LOW_GAIN else GainStatus.HIGH_GAIN,
-                )
-            Log.i(
-                TAG,
-                "temp correct, oldTemp = " + params_array[0] + " newtemp = " + tempNew +
-                        " ems = " + params_array[1] + " ta = " + params_array[2] + " " +
-                        "distance = " + params_array[4] + " hum = " + params_array[5] + " basicGain = " + basicGainGetValue[0],
-            )
-        } catch (e: Exception) {
-            XLog.e("$TAG--[ph][ph][ph][ph][ph][ph]：${e.message}")
-        } finally {
+                )        } catch (e: Exception) {
+            X        } finally {
             return tempNew ?: 0f
         }
     }

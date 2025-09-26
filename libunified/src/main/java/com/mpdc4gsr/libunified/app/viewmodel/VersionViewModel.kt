@@ -1,6 +1,5 @@
 package com.mpdc4gsr.libunified.app.viewmodel
 
-import com.elvishew.xlog.XLog
 import com.mpdc4gsr.libunified.app.bean.event.VersionUpData
 import com.mpdc4gsr.libunified.app.bean.json.CheckVersionJson
 import com.mpdc4gsr.libunified.app.bean.json.SoftConfigOtherTypeVO
@@ -21,9 +20,7 @@ class VersionViewModel : BaseViewModel() {
         val downPageUrl = result.downloadPageUrl
         val sizeStr = "${result.notUnZipSize}MB"
 
-        XLog.i("[ph][ph][ph][ph][ph],[ph][ph][ph][ph]: $description, [ph][ph][ph][ph][ph][ph]: $isForcedUpgrade")
-
-        val versionUpData =
+        X        val versionUpData =
             VersionUpData(
                 versionNo = result.versionNo ?: "",
                 isForcedUpgrade = isForcedUpgrade,

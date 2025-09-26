@@ -2,7 +2,6 @@ package com.mpdc4gsr.module.thermalunified.frame
 
 import android.graphics.Bitmap
 import android.graphics.Rect
-import com.elvishew.xlog.XLog
 import com.energy.iruvc.sdkisp.LibIRProcess
 import com.energy.iruvc.sdkisp.LibIRTemp
 import com.energy.iruvc.utils.CommonParams
@@ -48,8 +47,7 @@ class FrameTool {
             println("temperatureBytes len: ${temperatureBytes.size}")
         } catch (e: Exception) {
             e.printStackTrace()
-            XLog.e("Failed to read frame raw data: ${e.message}")
-        }
+            X        }
     }
 
     fun initStruct(struct: FrameStruct) {

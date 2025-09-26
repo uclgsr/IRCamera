@@ -1,7 +1,6 @@
 package com.mpdc4gsr.gsr.network
 
 import android.content.Context
-import android.util.Log
 import com.mpdc4gsr.gsr.model.GSRSample
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -85,14 +84,10 @@ class DataStreamingService(
 
     suspend fun startStreaming(sessionId: String): Boolean =
         withContext(Dispatchers.IO) {
-            if (isStreaming.get()) {
-                Log.w(TAG, "Data streaming already active")
-                return@withContext false
+            if (isStreaming.get()) {                return@withContext false
             }
 
-            if (!networkClient.isConnected()) {
-                Log.w(TAG, "Cannot start streaming - not connected to PC Controller")
-                return@withContext false
+            if (!networkClient.isConnected()) {                return@withContext false
             }
 
             try {
@@ -106,25 +101,19 @@ class DataStreamingService(
 
                 val success = networkClient.startDataStreaming()
                 if (success) {
-                    eventListener?.onStreamingStarted(sessionId)
-                    Log.i(TAG, "Data streaming started for session: $sessionId")
-                    true
+                    eventListener?.onStreamingStarted(sessionId)                    true
                 } else {
                     stopStreaming()
                     false
                 }
-            } catch (e: Exception) {
-                Log.e(TAG, "Failed to start data streaming", e)
-                eventListener?.onStreamingError("Failed to start: ${e.message}")
+            } catch (e: Exception) {                eventListener?.onStreamingError("Failed to start: ${e.message}")
                 false
             }
         }
 
     suspend fun stopStreaming(): Boolean =
         withContext(Dispatchers.IO) {
-            if (!isStreaming.get()) {
-                Log.w(TAG, "Data streaming not active")
-                return@withContext false
+            if (!isStreaming.get()) {                return@withContext false
             }
 
             try {
@@ -142,13 +131,8 @@ class DataStreamingService(
 
                 if (sessionId != null) {
                     eventListener?.onStreamingStopped(sessionId)
-                }
-
-                Log.i(TAG, "Data streaming stopped")
-                true
-            } catch (e: Exception) {
-                Log.e(TAG, "Error stopping data streaming", e)
-                false
+                }                true
+            } catch (e: Exception) {                false
             }
         }
 
@@ -159,9 +143,7 @@ class DataStreamingService(
 
             val dropped = minOf(BATCH_SIZE, gsrQueue.size / 2)
             repeat(dropped) { gsrQueue.poll() }
-            eventListener?.onQueueFull("GSR", dropped)
-            Log.w(TAG, "GSR queue full, dropped $dropped samples")
-        }
+            eventListener?.onQueueFull("GSR", dropped)        }
 
         gsrQueue.offer(sample)
     }
@@ -172,9 +154,7 @@ class DataStreamingService(
         if (thermalQueue.size >= MAX_QUEUE_SIZE) {
             val dropped = minOf(BATCH_SIZE, thermalQueue.size / 2)
             repeat(dropped) { thermalQueue.poll() }
-            eventListener?.onQueueFull("Thermal", dropped)
-            Log.w(TAG, "Thermal queue full, dropped $dropped samples")
-        }
+            eventListener?.onQueueFull("Thermal", dropped)        }
 
         thermalQueue.offer(sample)
     }
@@ -185,9 +165,7 @@ class DataStreamingService(
         if (videoMetadataQueue.size >= MAX_QUEUE_SIZE) {
             val dropped = minOf(BATCH_SIZE, videoMetadataQueue.size / 2)
             repeat(dropped) { videoMetadataQueue.poll() }
-            eventListener?.onQueueFull("VideoMetadata", dropped)
-            Log.w(TAG, "Video metadata queue full, dropped $dropped samples")
-        }
+            eventListener?.onQueueFull("VideoMetadata", dropped)        }
 
         videoMetadataQueue.offer(metadata)
     }
@@ -213,9 +191,7 @@ class DataStreamingService(
 
                         delay(BATCH_TIMEOUT_MS)
                     } catch (e: Exception) {
-                        if (isActive) {
-                            Log.e(TAG, "Error in batching process", e)
-                            eventListener?.onStreamingError("Batching error: ${e.message}")
+                        if (isActive) {                            eventListener?.onStreamingError("Batching error: ${e.message}")
                             delay(1000)
                         }
                     }
@@ -279,16 +255,11 @@ class DataStreamingService(
                 if (success) {
                     return true
                 }
-            } catch (e: Exception) {
-                Log.w(TAG, "Batch send attempt ${attempt + 1} failed for $dataType", e)
-                if (attempt < RETRY_ATTEMPTS - 1) {
+            } catch (e: Exception) {                if (attempt < RETRY_ATTEMPTS - 1) {
                     delay(RETRY_DELAY_MS)
                 }
             }
-        }
-
-        Log.e(TAG, "Failed to send $dataType batch after $RETRY_ATTEMPTS attempts")
-        eventListener?.onStreamingError("Failed to send $dataType batch")
+        }        eventListener?.onStreamingError("Failed to send $dataType batch")
         return false
     }
 

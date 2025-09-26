@@ -10,8 +10,7 @@ from enum import Enum
 from typing import Dict, List, Optional, Any
 
 try:
-    from loguru import logger
-except ImportError:
+    except ImportError:
     from ..utils.simple_logger import get_logger
 
     logger = get_logger(__name__)
@@ -65,10 +64,7 @@ try:
 
     PSUTIL_AVAILABLE = True
 except ImportError:
-    logger.warning(
-        "psutil not available. Install 'psutil'" "for network interface monitoring"
-    )
-    PSUTIL_AVAILABLE = False
+        PSUTIL_AVAILABLE = False
 
 try:
     if platform.system() == "Windows":
@@ -152,8 +148,7 @@ class WiFiScanWorker(BaseThread):
                 self.scan_completed.emit(len(networks))
         except (OSError, ValueError, RuntimeError) as e:
             if self._running:
-                logger.error(f"WiFi scan error: {e}")
-                self.error_occurred.emit(str(e))
+                                self.error_occurred.emit(str(e))
 
     def stop(self) -> Any:
 
@@ -216,8 +211,7 @@ class WiFiScanWorker(BaseThread):
                 networks = self._parse_windows_scan(scan_result.stdout)
 
         except (OSError, ValueError, RuntimeError) as e:
-            logger.error(f"Windows WiFi scan failed: {e}")
-            raise
+                        raise
 
         return networks
 
@@ -301,8 +295,7 @@ class WiFiScanWorker(BaseThread):
                 networks = self._scan_linux_iwlist()
 
         except (OSError, ValueError, RuntimeError) as e:
-            logger.error(f"Linux WiFi scan failed: {e}")
-            raise
+                        raise
 
         return networks
 
@@ -331,8 +324,7 @@ class WiFiScanWorker(BaseThread):
                 networks = self._parse_iwlist_output(result.stdout)
 
         except (OSError, ValueError, RuntimeError) as e:
-            logger.warning(f"iwlist scan failed: {e}")
-
+            
         return networks
 
     def _scan_macos(self) -> List[WiFiNetwork]:
@@ -361,8 +353,7 @@ class WiFiScanWorker(BaseThread):
                 networks = self._parse_airport_output(result.stdout)
 
         except (OSError, ValueError, RuntimeError) as e:
-            logger.error(f"macOS WiFi scan failed: {e}")
-            raise
+                        raise
 
         return networks
 
@@ -385,8 +376,7 @@ class WiFiScanWorker(BaseThread):
                 is_ircamera_hotspot=is_ircamera,
             )
         except (OSError, ValueError, RuntimeError) as e:
-            logger.warning(f"Failed to create network from data: {e}")
-            return None
+                        return None
 
     def _is_ircamera_network(self, ssid: str) -> bool:
 
@@ -478,11 +468,9 @@ class WiFiManager(BaseManager):
     def start_scanning(self, continuous: bool = False, interval: int = 15) -> None:
 
         if self._scan_worker and self._scan_worker.isRunning():
-            logger.warning("WiFi scan already in progress")
-            return
+                        return
 
-        logger.info("Starting WiFi network scan")
-        self._scan_worker = WiFiScanWorker()
+                self._scan_worker = WiFiScanWorker()
         self._scan_worker.networks_found.connect(self._handle_scan_results)
         self._scan_worker.scan_completed.connect(self._handle_scan_completed)
         self._scan_worker.error_occurred.connect(self._handle_scan_error)
@@ -495,8 +483,7 @@ class WiFiManager(BaseManager):
         if self._scan_worker and self._scan_worker.isRunning():
             self._scan_worker.stop()
             self._scan_worker.wait(5000)
-            logger.info("WiFi scanning stopped")
-
+            
     @pyqtSlot(list)
     def _handle_scan_results(self, networks: List[WiFiNetwork]) -> None:
 
@@ -509,8 +496,7 @@ class WiFiManager(BaseManager):
     @pyqtSlot(int)
     def _handle_scan_completed(self, count: int) -> None:
 
-        logger.debug(f"WiFi scan completed - {count} networks found")
-
+        
     @pyqtSlot(str)
     def _handle_scan_error(self, error: str) -> None:
 
@@ -525,8 +511,7 @@ class WiFiManager(BaseManager):
             return False
 
         network = self._networks[ssid]
-        logger.info(f"Connecting to network: {ssid}")
-
+        
         try:
             success = await self._platform_connect(
                 ssid, password, network.security_type
@@ -537,33 +522,28 @@ class WiFiManager(BaseManager):
 
                 ip_address = await self._get_interface_ip()
                 self.network_connected.emit(ssid, ip_address or "Unknown")
-                logger.info(f"Successfully connected to {ssid}")
-                return True
+                                return True
             else:
                 self.connection_failed.emit(ssid, "Connection failed")
                 return False
 
         except (OSError, ValueError, RuntimeError) as e:
-            logger.error(f"Failed to connect to {ssid}: {e}")
-            self.connection_failed.emit(ssid, str(e))
+                        self.connection_failed.emit(ssid, str(e))
             return False
 
     async def disconnect_from_network(self) -> None:
 
         if not self._current_connection:
-            logger.warning("No active WiFi connection to disconnect")
-            return
+                        return
 
         try:
             await self._platform_disconnect()
             ssid = self._current_connection
             self._current_connection = None
             self.network_disconnected.emit(ssid, "User initiated")
-            logger.info(f"Disconnected from {ssid}")
-
+            
         except (OSError, ValueError, RuntimeError) as e:
-            logger.error(f"Failed to disconnect: {e}")
-            self.error_occurred.emit("disconnect", str(e))
+                        self.error_occurred.emit("disconnect", str(e))
 
     async def start_hotspot(
             self,
@@ -576,8 +556,7 @@ class WiFiManager(BaseManager):
             HotspotState.RUNNING,
             HotspotState.STARTING,
         ]:
-            logger.warning("Hotspot already running or starting")
-            return True
+                        return True
 
         if ssid:
             self._hotspot_config["ssid"] = ssid
@@ -598,8 +577,7 @@ class WiFiManager(BaseManager):
                     self._hotspot_state,
                     f"Hotspot '{self._hotspot_config['ssid']}' running",
                 )
-                logger.info(f"Hotspot started: {self._hotspot_config['ssid']}")
-                return True
+                                return True
             else:
                 self._hotspot_state = HotspotState.ERROR
                 self.hotspot_state_changed.emit(
@@ -608,16 +586,14 @@ class WiFiManager(BaseManager):
                 return False
 
         except (OSError, ValueError, RuntimeError) as e:
-            logger.error(f"Failed to start hotspot: {e}")
-            self._hotspot_state = HotspotState.ERROR
+                        self._hotspot_state = HotspotState.ERROR
             self.hotspot_state_changed.emit(self._hotspot_state, str(e))
             return False
 
     async def stop_hotspot(self) -> None:
 
         if self._hotspot_state == HotspotState.STOPPED:
-            logger.warning("Hotspot already stopped")
-            return
+                        return
 
         self._hotspot_state = HotspotState.STOPPING
         self.hotspot_state_changed.emit(self._hotspot_state, "Stopping hotspot...")
@@ -626,11 +602,9 @@ class WiFiManager(BaseManager):
             await self._platform_stop_hotspot()
             self._hotspot_state = HotspotState.STOPPED
             self.hotspot_state_changed.emit(self._hotspot_state, "Hotspot stopped")
-            logger.info("Hotspot stopped")
-
+            
         except (OSError, ValueError, RuntimeError) as e:
-            logger.error(f"Failed to stop hotspot: {e}")
-            self._hotspot_state = HotspotState.ERROR
+                        self._hotspot_state = HotspotState.ERROR
             self.hotspot_state_changed.emit(self._hotspot_state, str(e))
 
     def get_network_info(self, ssid: str) -> Optional[WiFiNetwork]:
@@ -640,8 +614,7 @@ class WiFiManager(BaseManager):
     def _init_interfaces(self) -> None:
 
         if not PSUTIL_AVAILABLE:
-            logger.warning("Cannot monitor network interfaces" "- psutil not available")
-            return
+                        return
 
         try:
             interfaces = psutil.net_if_addrs()
@@ -675,8 +648,7 @@ class WiFiManager(BaseManager):
                     self._interfaces[name] = interface
 
         except (OSError, ValueError, RuntimeError) as e:
-            logger.error(f"Failed to initialize network interfaces: {e}")
-
+            
     def _is_wifi_interface(self, name: str) -> bool:
 
         wifi_patterns = [
@@ -711,8 +683,7 @@ class WiFiManager(BaseManager):
                             self.interface_changed.emit(name, interface.is_active)
 
         except (OSError, ValueError, RuntimeError) as e:
-            logger.error(f"Status update failed: {e}")
-
+            
     async def _platform_connect(
             self, ssid: str, password: str, security: NetworkSecurityType
     ) -> bool:
@@ -733,8 +704,7 @@ class WiFiManager(BaseManager):
     ) -> bool:
 
         try:
-            logger.info(f"Connecting to {ssid} on Windows")
-
+            
             netsh_path = "C:\\Windows\\System32\\netsh.exe"
             if not os.path.exists(netsh_path):
                 raise FileNotFoundError("netsh.exe not found")
@@ -785,30 +755,26 @@ class WiFiManager(BaseManager):
             stdout, stderr = await result.communicate()
 
             if result.returncode == 0:
-                logger.info(f"Successfully initiated connection to {ssid}")
-
+                
                 for _ in range(30):
                     await asyncio.sleep(1)
                     if await self._check_connection_status(ssid):
                         return True
 
-                logger.error(f"Connection to {ssid} timed out")
-                return False
+                                return False
             else:
                 logger.error(f"Failed to connect to {ssid}: {stderr.decode()}")
                 return False
 
         except Exception as e:
-            logger.error(f"Windows WiFi connection failed: {e}")
-            return False
+                        return False
 
     async def _connect_linux(
             self, ssid: str, password: str, security: NetworkSecurityType
     ) -> bool:
 
         try:
-            logger.info(f"Connecting to {ssid} on Linux")
-
+            
             nmcli_path = shutil.which("nmcli")
             if not nmcli_path:
                 raise FileNotFoundError("nmcli not found - NetworkManager required")
@@ -824,12 +790,10 @@ class WiFiManager(BaseManager):
             stdout, stderr = await result.communicate()
 
             if result.returncode == 0:
-                logger.info(f"Successfully connected to {ssid} on Linux")
-                return True
+                                return True
             else:
                 error_msg = stderr.decode().strip()
-                logger.error(f"Failed to connect to {ssid}: {error_msg}")
-
+                
                 if "already exists" in error_msg or "activation failed" in error_msg:
                     return await self._connect_linux_with_profile(
                         ssid, password, security
@@ -838,16 +802,14 @@ class WiFiManager(BaseManager):
                 return False
 
         except Exception as e:
-            logger.error(f"Linux WiFi connection failed: {e}")
-            return False
+                        return False
 
     async def _connect_macos(
             self, ssid: str, password: str, security: NetworkSecurityType
     ) -> bool:
 
         try:
-            logger.info(f"Connecting to {ssid} on macOS")
-
+            
             networksetup_path = "/usr/sbin/networksetup"
             if not os.path.exists(networksetup_path):
                 raise FileNotFoundError("networksetup not found")
@@ -870,8 +832,7 @@ class WiFiManager(BaseManager):
                         break
 
             if not wifi_interface:
-                logger.error("Could not find WiFi interface")
-                return False
+                                return False
 
             if password and security != NetworkSecurityType.OPEN:
 
@@ -898,22 +859,18 @@ class WiFiManager(BaseManager):
             stdout, stderr = await result.communicate()
 
             if result.returncode == 0:
-                logger.info(f"Successfully connected to {ssid} on macOS")
-                return True
+                                return True
             else:
                 error_msg = stderr.decode().strip()
-                logger.error(f"Failed to connect to {ssid}: {error_msg}")
-                return False
+                                return False
 
         except Exception as e:
-            logger.error(f"macOS WiFi connection failed: {e}")
-            return False
+                        return False
 
     async def _platform_disconnect(self) -> None:
 
         system = platform.system()
-        logger.info(f"Disconnecting WiFi on {system}")
-
+        
     async def _platform_start_hotspot(self) -> bool:
 
         system = platform.system()
@@ -921,8 +878,7 @@ class WiFiManager(BaseManager):
         if system == "Windows":
             return await self._start_hotspot_windows()
         else:
-            logger.warning(f"Hotspot not supported on {system}")
-            return False
+                        return False
 
     async def _start_hotspot_windows(self) -> bool:
 
@@ -942,8 +898,7 @@ class WiFiManager(BaseManager):
             )
 
             if result.returncode != 0:
-                logger.error(f"Failed to set hotspot profile: {result.stderr}")
-                return False
+                                return False
 
             result = subprocess.run(
                 ["netsh", "wlan", "start", "hostednetwork"],
@@ -954,8 +909,7 @@ class WiFiManager(BaseManager):
             return result.returncode == 0
 
         except (OSError, ValueError, RuntimeError) as e:
-            logger.error(f"Windows hotspot start failed: {e}")
-            return False
+                        return False
 
     async def _platform_stop_hotspot(self) -> None:
 
@@ -968,8 +922,7 @@ class WiFiManager(BaseManager):
                     capture_output=True,
                 )
             except (OSError, ValueError, RuntimeError) as e:
-                logger.error(f"Failed to stop Windows hotspot: {e}")
-
+                
     async def _get_interface_ip(self) -> Optional[str]:
 
         if not PSUTIL_AVAILABLE:
@@ -980,8 +933,7 @@ class WiFiManager(BaseManager):
                 if interface.is_wifi and interface.is_active and interface.ip_address:
                     return interface.ip_address
         except (OSError, ValueError, RuntimeError) as e:
-            logger.error(f"Failed to get interface IP: {e}")
-
+            
         return None
 
     def _create_wifi_profile_xml(
@@ -1043,8 +995,7 @@ class WiFiManager(BaseManager):
                 )
 
         except Exception as e:
-            logger.error(f"Failed to check connection status: {e}")
-
+            
         return False
 
     async def _connect_linux_with_profile(
@@ -1067,8 +1018,7 @@ class WiFiManager(BaseManager):
             stdout, stderr = await result.communicate()
 
             if result.returncode == 0:
-                logger.info(f"Activated existing connection to {ssid}")
-                return True
+                                return True
 
             security_type = (
                 "wpa-psk"
@@ -1113,8 +1063,7 @@ class WiFiManager(BaseManager):
             return False
 
         except Exception as e:
-            logger.error(f"Failed to connect with profile: {e}")
-            return False
+                        return False
 
     async def cleanup(self) -> None:
 
@@ -1124,4 +1073,4 @@ class WiFiManager(BaseManager):
             await self.stop_hotspot()
 
         self._status_timer.stop()
-        logger.info("WiFi manager cleanup completed")
+        

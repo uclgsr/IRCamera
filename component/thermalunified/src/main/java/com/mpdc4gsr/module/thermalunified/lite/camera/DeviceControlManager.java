@@ -65,30 +65,22 @@ public class DeviceControlManager implements IDeviceConnectListener {
 
 
     public void handleStartPreview(USBMonitor.UsbControlBlock ctrlBlock) {
-        if (mDeviceControlWorker != null) {
-            Log.d(TAG, "handleStartPreview");
-            mDeviceControlWorker.addTask(new StartPreviewTask(ctrlBlock, mDeviceControlWorker.getDeviceState()));
+        if (mDeviceControlWorker != null) {            mDeviceControlWorker.addTask(new StartPreviewTask(ctrlBlock, mDeviceControlWorker.getDeviceState()));
         }
     }
 
     public void handleStopPreview() {
-        if (mDeviceControlWorker != null) {
-            Log.d(TAG, "handleStopPreview");
-            mDeviceControlWorker.addTask(new StopPreviewTask(mDeviceControlWorker.getDeviceState()));
+        if (mDeviceControlWorker != null) {            mDeviceControlWorker.addTask(new StopPreviewTask(mDeviceControlWorker.getDeviceState()));
         }
     }
 
     public void handlePauseDualPreview() {
-        if (mDeviceControlWorker != null) {
-            Log.d(TAG, "handlePausePreview");
-            mDeviceControlWorker.addTask(new PausePreviewTask(mDeviceControlWorker.getDeviceState()));
+        if (mDeviceControlWorker != null) {            mDeviceControlWorker.addTask(new PausePreviewTask(mDeviceControlWorker.getDeviceState()));
         }
     }
 
     public void handleResumeDualPreview() {
-        if (mDeviceControlWorker != null) {
-            Log.d(TAG, "handleResumePreview");
-            mDeviceControlWorker.addTask(new ResumePreviewTask(mDeviceControlWorker.getDeviceState()));
+        if (mDeviceControlWorker != null) {            mDeviceControlWorker.addTask(new ResumePreviewTask(mDeviceControlWorker.getDeviceState()));
         }
     }
 

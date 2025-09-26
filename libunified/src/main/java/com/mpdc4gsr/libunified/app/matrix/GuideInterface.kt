@@ -3,7 +3,6 @@ package com.mpdc4gsr.libunified.app.matrix
 import android.content.Context
 import android.graphics.Bitmap
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import com.mpdc4gsr.libunified.app.matrix.utils.FileUtils.Companion.saveFile
 import com.mpdc4gsr.libunified.app.matrix.utils.HexDump
@@ -210,8 +209,7 @@ class GuideInterface {
         mGuideUsbManager!!.nuc()
     }
 
-    fun changePalette(i: Int) {
-        Log.d(TAG, "changePalette() called with: i = [$i]")
+    fun changePalette(i: Int) {called with: i = [$i]")
         if (mGuideUsbManager == null) {
             return
         }

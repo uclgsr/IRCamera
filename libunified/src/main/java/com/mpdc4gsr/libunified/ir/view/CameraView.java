@@ -68,8 +68,7 @@ public class CameraView extends TextureView {
                             try {
                                 syncimage.viewLock.wait();
                             } catch (InterruptedException e) {
-                                cameraThread.interrupt();
-                                Log.e(TAG, "lock.wait(): catch an interrupted exception");
+                                cameraThread.interrupt();: catch an interrupted exception");
                             }
                         }
 
@@ -99,9 +98,7 @@ public class CameraView extends TextureView {
                         }
                     }
                     SystemClock.sleep(1);
-                }
-                Log.w(TAG, "DisplayThread exit:");
-            }
+                }            }
         };
     }
 
@@ -161,8 +158,7 @@ public class CameraView extends TextureView {
                     getWidth() / 2f + cross_len, getHeight() / 2f, paint);
             canvas.drawLine(getWidth() / 2f, getHeight() / 2f - cross_len,
                     getWidth() / 2f, getHeight() / 2f + cross_len, paint);
-        } catch (Exception e) {
-            Log.e(TAG, "[ph][ph][ph]:" + e.getMessage());
+        } catch (Exception e) {);
         }
     }
 

@@ -13,16 +13,11 @@ public class StopPreviewTask extends BaseTask {
 
     @Override
     public void run() {
-        if (mDeviceState != DeviceState.CLOSED) {
-            Log.d(TAG, "stopPreview start");
-
-            CameraPreviewManager.getInstance().stopPreview();
+        if (mDeviceState != DeviceState.CLOSED) {            CameraPreviewManager.getInstance().stopPreview();
             SystemClock.sleep(100);
             CameraPreviewManager.getInstance().closePreview();
 
             SystemClock.sleep(200);
-            mDeviceState = DeviceState.CLOSED;
-            Log.d(TAG, "stopPreview end33");
-        }
+            mDeviceState = DeviceState.CLOSED;        }
     }
 }

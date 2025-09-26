@@ -1,5 +1,4 @@
 import json
-import logging
 import numpy as np
 import pandas as pd
 import queue
@@ -136,8 +135,7 @@ class AdvancedAnalyticsEngine:
         self._processing_thread.daemon = True
         self._processing_thread.start()
 
-        logger.info("Advanced Analytics Engine initialized with multi-modal fusion")
-
+        
     def add_sensor_reading(self, reading: SensorReading) -> None:
 
         session_key = f"{reading.device_id}_{reading.session_id}"
@@ -181,13 +179,11 @@ class AdvancedAnalyticsEngine:
                             'insights': insights
                         })
 
-                        logger.debug(f"Processed multi-modal features for {session_key}")
-
+                        
             except queue.Empty:
                 continue
             except Exception as e:
-                logger.error(f"Error in background processor: {e}")
-
+                
     def _has_sufficient_data(self, session_key: str) -> bool:
 
         if session_key not in self.sensor_buffers:
@@ -258,8 +254,7 @@ class AdvancedAnalyticsEngine:
             )
 
         except Exception as e:
-            logger.error(f"Multi-modal feature extraction failed: {e}")
-            return None
+                        return None
 
     def _extract_gsr_advanced_features(self, gsr_readings: List[SensorReading]) -> Dict[str, float]:
 
@@ -345,8 +340,7 @@ class AdvancedAnalyticsEngine:
             return features
 
         except Exception as e:
-            logger.error(f"GSR feature extraction error: {e}")
-            return {}
+                        return {}
 
     def _extract_thermal_features(self, thermal_readings: List[SensorReading]) -> Dict[str, float]:
 
@@ -376,8 +370,7 @@ class AdvancedAnalyticsEngine:
             return features
 
         except Exception as e:
-            logger.error(f"Thermal feature extraction error: {e}")
-            return {}
+                        return {}
 
     def _extract_facial_features(self, facial_readings: List[SensorReading]) -> Dict[str, float]:
 
@@ -398,8 +391,7 @@ class AdvancedAnalyticsEngine:
             return features
 
         except Exception as e:
-            logger.error(f"Facial feature extraction error: {e}")
-            return {}
+                        return {}
 
     def _extract_motion_features(self, motion_readings: List[SensorReading]) -> Dict[str, float]:
 
@@ -428,8 +420,7 @@ class AdvancedAnalyticsEngine:
             return features
 
         except Exception as e:
-            logger.error(f"Motion feature extraction error: {e}")
-            return {}
+                        return {}
 
     def _fuse_stress_indicators(self, gsr_features: Dict, thermal_features: Dict,
                                 facial_features: Dict) -> float:
@@ -877,8 +868,7 @@ class AdvancedAnalyticsEngine:
             )
 
         except Exception as e:
-            logger.error(f"Research report generation failed: {e}")
-            return None
+                        return None
 
     def export_research_data(self, device_id: str, session_id: str,
                              output_dir: str, format: str = "bids") -> bool:
@@ -935,8 +925,7 @@ class AdvancedAnalyticsEngine:
                 with open(insights_file, 'w') as f:
                     json.dump(insights_data, f, indent=2)
 
-                logger.info(f"BIDS-compliant data exported to {output_dir}")
-                return True
+                                return True
 
             else:
 
@@ -948,8 +937,7 @@ class AdvancedAnalyticsEngine:
                 return True
 
         except Exception as e:
-            logger.error(f"Research data export failed: {e}")
-            return False
+                        return False
 
     def cleanup_session(self, device_id: str, session_id: str) -> None:
 
@@ -958,8 +946,7 @@ class AdvancedAnalyticsEngine:
         if session_key in self.sensor_buffers:
             del self.sensor_buffers[session_key]
 
-        logger.info(f"Cleaned up advanced analytics for {session_key}")
-
+        
     def get_system_status(self) -> Dict[str, Any]:
 
         return {
@@ -980,8 +967,7 @@ class AdvancedAnalyticsEngine:
             self._processing_thread.join(timeout=5.0)
 
         self.executor.shutdown(wait=True)
-        logger.info("Advanced Analytics Engine shutdown complete")
-
+        
 
 def create_gsr_reading(device_id: str, session_id: str, timestamp: float,
                        gsr_value: float, quality: float = 95.0) -> SensorReading:

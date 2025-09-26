@@ -14,7 +14,6 @@ import android.content.IntentFilter
 import androidx.activity.ComponentActivity
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
-import com.elvishew.xlog.XLog
 import com.mpdc4gsr.libunified.app.tools.PermissionTool
 
 object BluetoothUtil {
@@ -69,19 +68,17 @@ object BluetoothUtil {
 
     @SuppressLint("MissingPermission")
     fun startLeScan(context: Context): Boolean {
-        XLog.i("startLeScan()")
+        X")
 
         if (!PermissionTool.hasBtPermission(context)) {
-            XLog.e("[ph][ph][ph][ph][ph][ph]-[ph][ph][ph][ph][ph][ph][ph][ph][ph][ph][ph]!")
-            return false
+            X            return false
         }
 
         val btAdapter: BluetoothAdapter =
             (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager).adapter
         val btLeScanner: BluetoothLeScanner? = btAdapter.bluetoothLeScanner
         if (btLeScanner == null) {
-            XLog.e("[ph][ph][ph][ph][ph][ph]-[ph][ph][ph][ph][ph]")
-            return false
+            X            return false
         }
 
         val settings =
@@ -96,19 +93,17 @@ object BluetoothUtil {
 
     @SuppressLint("MissingPermission")
     fun stopLeScan(context: Context): Boolean {
-        XLog.i("stopBtScan()")
+        X")
 
         if (!PermissionTool.hasBtPermission(context)) {
-            XLog.w("[ph][ph][ph][ph][ph][ph]-[ph][ph][ph][ph][ph][ph][ph][ph][ph][ph][ph]!")
-            return false
+            X            return false
         }
 
         val btAdapter: BluetoothAdapter =
             (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager).adapter
         val btLeScanner: BluetoothLeScanner? = btAdapter.bluetoothLeScanner
         if (btLeScanner == null) {
-            XLog.w("[ph][ph][ph][ph][ph][ph]-[ph][ph][ph][ph][ph]")
-            return false
+            X            return false
         }
 
         btLeScanner.stopScan(scanCallback)
@@ -126,11 +121,9 @@ object BluetoothUtil {
         ) {
             val name: String = result?.device?.name ?: return
             // TS004/TC007 device scanning functionality removed
-            XLog.v("[ph][ph][ph][ph][ph][ph][ph][ph][ph]：$name")
-        }
+            X        }
 
         override fun onScanFailed(errorCode: Int) {
-            XLog.e("[ph][ph][ph][ph][ph][ph]！$errorCode")
-        }
+            X        }
     }
 }

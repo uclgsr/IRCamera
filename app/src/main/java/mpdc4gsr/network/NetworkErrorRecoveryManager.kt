@@ -1,7 +1,6 @@
 package mpdc4gsr.network
 
 import android.content.Context
-import android.util.Log
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -84,31 +83,21 @@ class NetworkErrorRecoveryManager(
     }
 
     fun enableAutoRecovery() {
-        if (isRecoveryActive.get()) {
-            Log.w(TAG, "Auto recovery already enabled")
-            return
+        if (isRecoveryActive.get()) {            return
         }
 
         isRecoveryActive.set(true)
-        startHealthMonitoring()
-        Log.i(TAG, "Network error recovery enabled")
-    }
+        startHealthMonitoring()    }
 
     fun disableAutoRecovery() {
-        if (!isRecoveryActive.get()) {
-            Log.w(TAG, "Auto recovery not active")
-            return
+        if (!isRecoveryActive.get()) {            return
         }
 
         isRecoveryActive.set(false)
-        stopHealthMonitoring()
-        Log.i(TAG, "Network error recovery disabled")
-    }
+        stopHealthMonitoring()    }
 
     suspend fun triggerRecovery(reason: String): Boolean {
-        if (isRecoveryActive.get() && reconnectionAttempts.get() > 0) {
-            Log.w(TAG, "Recovery already in progress")
-            return false
+        if (isRecoveryActive.get() && reconnectionAttempts.get() > 0) {            return false
         }
 
         return performRecovery(reason)
@@ -119,17 +108,12 @@ class NetworkErrorRecoveryManager(
         reconnectionAttempts.set(0)
         rapidFailureCount.set(0)
         successfulConnections.incrementAndGet()
-        isHealthy = true
-        Log.i(TAG, "Recorded successful connection: ${controller.deviceName}")
-    }
+        isHealthy = true    }
 
     fun handleNetworkError(
         operation: String,
         error: String,
-    ) {
-        Log.w(TAG, "Network error in $operation: $error")
-
-        if (isRapidFailure()) {
+    ) {        if (isRapidFailure()) {
             eventListener?.onRapidFailureDetected(rapidFailureCount.get())
 
             recoveryScope.launch {
@@ -160,9 +144,7 @@ class NetworkErrorRecoveryManager(
 
                         delay(HEALTH_CHECK_INTERVAL_MS)
                     } catch (e: Exception) {
-                        if (isActive) {
-                            Log.e(TAG, "Health monitoring error", e)
-                            delay(HEALTH_CHECK_INTERVAL_MS)
+                        if (isActive) {                            delay(HEALTH_CHECK_INTERVAL_MS)
                         }
                     }
                 }
@@ -191,30 +173,20 @@ class NetworkErrorRecoveryManager(
                 networkClient.sendMeasurementData("health_check", pingMessage)
             }
             true
-        } catch (e: Exception) {
-            Log.d(TAG, "Health check failed: ${e.message}")
-            false
+        } catch (e: Exception) {            false
         }
     }
 
     private suspend fun performRecovery(reason: String): Boolean {
-        if (reconnectionAttempts.get() >= MAX_RECONNECTION_ATTEMPTS) {
-            Log.e(TAG, "Maximum reconnection attempts reached")
-            eventListener?.onRecoveryFailed("Maximum attempts reached")
+        if (reconnectionAttempts.get() >= MAX_RECONNECTION_ATTEMPTS) {            eventListener?.onRecoveryFailed("Maximum attempts reached")
             return false
-        }
-
-        Log.i(TAG, "Starting connection recovery: $reason")
-        eventListener?.onRecoveryStarted(reason)
+        }        eventListener?.onRecoveryStarted(reason)
 
         var success = false
         val maxAttempts = MAX_RECONNECTION_ATTEMPTS
 
         while (reconnectionAttempts.get() < maxAttempts && isRecoveryActive.get()) {
-            val attempt = reconnectionAttempts.incrementAndGet()
-
-            Log.i(TAG, "Recovery attempt $attempt/$maxAttempts")
-            eventListener?.onRecoveryAttempt(attempt, maxAttempts)
+            val attempt = reconnectionAttempts.incrementAndGet()            eventListener?.onRecoveryAttempt(attempt, maxAttempts)
 
             try {
 
@@ -226,67 +198,45 @@ class NetworkErrorRecoveryManager(
                     success = attemptDiscoveryAndConnect()
                 }
 
-                if (success) {
-                    Log.i(TAG, "Recovery successful after $attempt attempts")
-                    eventListener?.onRecoverySuccess(
+                if (success) {                    eventListener?.onRecoverySuccess(
                         lastKnownGoodController
                             ?: NetworkClient.ControllerInfo("unknown", 0, "Recovered", emptyList()),
                     )
                     reconnectionAttempts.set(0)
                     break
                 } else {
-                    val delay = calculateRetryDelay(attempt)
-                    Log.d(TAG, "Recovery attempt $attempt failed, retrying in ${delay}ms")
-                    delay(delay)
+                    val delay = calculateRetryDelay(attempt)                    delay(delay)
                 }
-            } catch (e: Exception) {
-                Log.e(TAG, "Recovery attempt $attempt failed with exception", e)
-                val delay = calculateRetryDelay(attempt)
+            } catch (e: Exception) {                val delay = calculateRetryDelay(attempt)
                 delay(delay)
             }
         }
 
-        if (!success) {
-            Log.e(TAG, "Connection recovery failed after $maxAttempts attempts")
-            eventListener?.onRecoveryFailed("All attempts exhausted")
+        if (!success) {            eventListener?.onRecoveryFailed("All attempts exhausted")
         }
 
         return success
     }
 
     private suspend fun attemptReconnection(controller: NetworkClient.ControllerInfo): Boolean {
-        return try {
-            Log.d(
-                TAG,
-                "Attempting reconnection to ${controller.deviceName} at ${controller.ipAddress}"
-            )
-
-            networkClient.disconnect()
+        return try {            networkClient.disconnect()
             delay(1000)
 
             withTimeout(CONNECTION_TIMEOUT_MS) {
                 networkClient.connectToController(controller.ipAddress, controller.port)
             }
-        } catch (e: Exception) {
-            Log.d(TAG, "Reconnection attempt failed: ${e.message}")
-            false
+        } catch (e: Exception) {            false
         }
     }
 
     private suspend fun attemptDiscoveryAndConnect(): Boolean {
-        return try {
-            Log.d(TAG, "Attempting discovery and connection")
-
-            val controllers =
+        return try {            val controllers =
                 withTimeout(15000) {
                     networkClient.discoverControllers()
                 }
 
             if (controllers.isNotEmpty()) {
-                val controller = controllers.first()
-                Log.d(TAG, "Found controller during recovery: ${controller.deviceName}")
-
-                val connected =
+                val controller = controllers.first()                val connected =
                     withTimeout(CONNECTION_TIMEOUT_MS) {
                         networkClient.connectToController(controller.ipAddress, controller.port)
                     }
@@ -296,13 +246,9 @@ class NetworkErrorRecoveryManager(
                 }
 
                 connected
-            } else {
-                Log.d(TAG, "No controllers found during discovery")
-                false
+            } else {                false
             }
-        } catch (e: Exception) {
-            Log.d(TAG, "Discovery and connect attempt failed: ${e.message}")
-            false
+        } catch (e: Exception) {            false
         }
     }
 
@@ -331,9 +277,7 @@ class NetworkErrorRecoveryManager(
     fun resetRecoveryState() {
         reconnectionAttempts.set(0)
         rapidFailureCount.set(0)
-        lastFailureTime = 0L
-        Log.i(TAG, "Recovery state reset")
-    }
+        lastFailureTime = 0L    }
 
     fun getRecoveryStats(): Map<String, Any> {
         return mapOf(
@@ -423,9 +367,7 @@ class NetworkErrorRecoveryManager(
 
 
     fun enableEnhancedNSDReconnection() {
-        if (serviceReadvertiseJob?.isActive == true) {
-            Log.d(TAG, "Enhanced NSD reconnection already active")
-            return
+        if (serviceReadvertiseJob?.isActive == true) {            return
         }
 
         serviceReadvertiseJob = recoveryScope.launch {
@@ -434,9 +376,7 @@ class NetworkErrorRecoveryManager(
                     val currentTime = System.currentTimeMillis()
 
 
-                    if (pcControllerLastSeen > 0 && (currentTime - pcControllerLastSeen) > pcControllerTimeoutMs) {
-                        Log.w(TAG, "PC controller connection timeout detected - triggering NSD recovery")
-                        handlePCControllerDisconnection()
+                    if (pcControllerLastSeen > 0 && (currentTime - pcControllerLastSeen) > pcControllerTimeoutMs) {                        handlePCControllerDisconnection()
                     }
 
 
@@ -444,26 +384,16 @@ class NetworkErrorRecoveryManager(
 
                     delay(HEALTH_CHECK_INTERVAL_MS)
 
-                } catch (e: Exception) {
-                    Log.e(TAG, "Error in enhanced NSD reconnection loop", e)
-                    delay(10000)
+                } catch (e: Exception) {                    delay(10000)
                 }
             }
-        }
-
-        Log.i(TAG, "Enhanced NSD reconnection enabled")
-    }
+        }    }
 
 
     private suspend fun handlePCControllerDisconnection() {
-        try {
-            Log.i(TAG, "Handling PC controller disconnection - attempting service re-advertising")
+        try {            val currentAttempts = nsdServiceReconnectionAttempts.incrementAndGet()
 
-            val currentAttempts = nsdServiceReconnectionAttempts.incrementAndGet()
-
-            if (currentAttempts > MAX_RECONNECTION_ATTEMPTS) {
-                Log.e(TAG, "Maximum NSD service reconnection attempts reached")
-                eventListener?.onRecoveryFailed("Max NSD reconnection attempts exceeded")
+            if (currentAttempts > MAX_RECONNECTION_ATTEMPTS) {                eventListener?.onRecoveryFailed("Max NSD reconnection attempts exceeded")
                 return
             }
 
@@ -471,77 +401,46 @@ class NetworkErrorRecoveryManager(
             val backoffDelay = minOf(
                 serviceDiscoveryBackoffMs.get() * currentAttempts,
                 MAX_RETRY_DELAY_MS.toInt()
-            )
+            )            val readvertiseSuccess = reAdvertiseNSDService()
 
-            Log.d(TAG, "NSD reconnection attempt $currentAttempts with ${backoffDelay}ms backoff")
-
-
-            val readvertiseSuccess = reAdvertiseNSDService()
-
-            if (readvertiseSuccess) {
-                Log.i(TAG, "✅ NSD service re-advertising successful")
-                nsdServiceReconnectionAttempts.set(0)
+            if (readvertiseSuccess) {                nsdServiceReconnectionAttempts.set(0)
                 serviceDiscoveryBackoffMs.set(5000)
 
 
                 attemptPCControllerReconnection()
 
-            } else {
-                Log.w(TAG, "❌ NSD service re-advertising failed, will retry")
-                serviceDiscoveryBackoffMs.set(minOf(backoffDelay * 2, MAX_RETRY_DELAY_MS.toInt()))
+            } else {                serviceDiscoveryBackoffMs.set(minOf(backoffDelay * 2, MAX_RETRY_DELAY_MS.toInt()))
                 delay(backoffDelay.toLong())
             }
 
-        } catch (e: Exception) {
-            Log.e(TAG, "Error handling PC controller disconnection", e)
-        }
+        } catch (e: Exception) {        }
     }
 
 
     private suspend fun reAdvertiseNSDService(): Boolean {
-        return try {
-            Log.d(TAG, "Re-advertising NSD service for PC controller discovery")
-
-
-
-            withTimeout(10000L) {
+        return try {            withTimeout(10000L) {
                 delay(2000)
 
 
-                lastServiceDiscoveryAttempt = System.currentTimeMillis()
-
-                Log.d(TAG, "NSD service re-advertising completed")
-                true
+                lastServiceDiscoveryAttempt = System.currentTimeMillis()                true
             }
 
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to re-advertise NSD service", e)
-            false
+        } catch (e: Exception) {            false
         }
     }
 
 
     private suspend fun attemptPCControllerReconnection() {
-        try {
-            Log.d(TAG, "Attempting PC controller reconnection after NSD re-advertising")
-
-
-            delay(3000)
+        try {            delay(3000)
 
             val reconnectionSuccess = networkClient.isConnected()
 
-            if (reconnectionSuccess) {
-                Log.i(TAG, "✅ PC controller reconnection successful")
-                pcControllerLastSeen = System.currentTimeMillis()
+            if (reconnectionSuccess) {                pcControllerLastSeen = System.currentTimeMillis()
                 connectionQualityScore = calculateConnectionQuality()
                 eventListener?.onRecoverySuccess(createControllerInfo())
-            } else {
-                Log.w(TAG, "❌ PC controller reconnection failed")
-            }
+            } else {            }
 
-        } catch (e: Exception) {
-            Log.e(TAG, "Error during PC controller reconnection attempt", e)
-        }
+        } catch (e: Exception) {        }
     }
 
 
@@ -551,10 +450,7 @@ class NetworkErrorRecoveryManager(
 
         if (lastServiceDiscoveryAttempt > 0 &&
             (currentTime - lastServiceDiscoveryAttempt) > (HEALTH_CHECK_INTERVAL_MS * 4)
-        ) {
-
-            Log.w(TAG, "Service discovery appears stale - triggering refresh")
-            refreshServiceDiscovery()
+        ) {            refreshServiceDiscovery()
         }
 
 
@@ -568,20 +464,10 @@ class NetworkErrorRecoveryManager(
 
 
     private suspend fun refreshServiceDiscovery() {
-        try {
-            Log.d(TAG, "Refreshing service discovery to maintain PC controller connectivity")
+        try {            lastServiceDiscoveryAttempt = System.currentTimeMillis()
 
 
-            lastServiceDiscoveryAttempt = System.currentTimeMillis()
-
-
-            delay(1000)
-
-            Log.d(TAG, "Service discovery refresh completed")
-
-        } catch (e: Exception) {
-            Log.e(TAG, "Error refreshing service discovery", e)
-        }
+            delay(1000)        } catch (e: Exception) {        }
     }
 
 
@@ -593,9 +479,7 @@ class NetworkErrorRecoveryManager(
 
             latencyScore + throughputScore + connectivityScore
 
-        } catch (e: Exception) {
-            Log.w(TAG, "Error calculating connection quality", e)
-            0.0
+        } catch (e: Exception) {            0.0
         }
     }
 
@@ -606,18 +490,7 @@ class NetworkErrorRecoveryManager(
             (currentTime - pcControllerLastSeen) / 60000
         } else {
             -1
-        }
-
-        Log.d(TAG, "=== NSD Health Status ===")
-        Log.d(TAG, "Connection Quality Score: ${String.format("%.2f", connectionQualityScore)}")
-        Log.d(TAG, "PC Controller Last Seen: ${lastSeenMinutes}m ago")
-        Log.d(TAG, "NSD Reconnection Attempts: ${nsdServiceReconnectionAttempts.get()}")
-        Log.d(TAG, "Auto-Reconnect Enabled: ${isAutoReconnectEnabled.get()}")
-        Log.d(TAG, "Service Discovery Backoff: ${serviceDiscoveryBackoffMs.get()}ms")
-        Log.d(TAG, "Average Latency: ${getAverageLatencyMs()}ms")
-        Log.d(TAG, "Throughput: ${String.format("%.1f", getThroughputKBps())} KB/s")
-        Log.d(TAG, "========================")
-    }
+        }}")}")}")}ms")}ms"))} KB/s")    }
 
 
     fun updatePCControllerLastSeen() {

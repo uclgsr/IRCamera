@@ -1,12 +1,10 @@
 package com.mpdc4gsr.module.thermalunified.lite.activity
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
-import com.elvishew.xlog.XLog
 import com.energy.ac020library.bean.IrcmdError
 import com.energy.irutilslibrary.LibIRTempAC020
 import com.energy.irutilslibrary.bean.GainStatus
@@ -139,10 +137,8 @@ class IRMonitorChartLiteActivity : BaseActivity(), ITsTempListener {
                         if (isFirstRead) {
                             if (result.maxTemperature > 200f || result.minTemperature < -200f) {
                                 errorReadCount++
-                                XLog.w("第 $errorReadCount 次读取到异常数据，max = ${result.maxTemperature} min = ${result.minTemperature}")
-                                if (errorReadCount > 10) {
-                                    XLog.i("连续10次获取到异常数据，认为温度区域稳定")
-                                    isFirstRead = false
+                                X                                if (errorReadCount > 10) {
+                                    X                                    isFirstRead = false
                                 }
                                 continue
                             } else {
@@ -241,8 +237,7 @@ class IRMonitorChartLiteActivity : BaseActivity(), ITsTempListener {
                             TimeTool.showVideoLongTime(System.currentTimeMillis() - startTime)
                     }
                 }
-                XLog.w("停止记录, 数据量:$time")
-            }
+                X            }
     }
 
 
@@ -270,8 +265,7 @@ class IRMonitorChartLiteActivity : BaseActivity(), ITsTempListener {
                         DeviceIrcmdControlManager.getInstance().getIrcmdEngine()
                             ?.basicGainGet(basicGainGetValue)
                 } catch (e: Exception) {
-                    XLog.e("增益获取失败")
-                }
+                    X                }
                 basicGainGetTime = System.currentTimeMillis()
             }
             val params_array =
@@ -295,16 +289,8 @@ class IRMonitorChartLiteActivity : BaseActivity(), ITsTempListener {
                     params_array[4],
                     params_array[5],
                     if (basicGainGetValue[0] == 0) GainStatus.LOW_GAIN else GainStatus.HIGH_GAIN,
-                )
-            Log.i(
-                TAG,
-                "temp correct,${basicGainGetValue[0]} oldTemp = " + params_array[0] + "newtemp = " + tempNew +
-                        " ems = " + params_array[1] + " ta = " + params_array[2] + " " +
-                        "distance = " + params_array[4] + " hum = " + params_array[5],
-            )
-        } catch (e: Exception) {
-            XLog.e("$TAG--温度修正异常：${e.message}")
-        } finally {
+                )        } catch (e: Exception) {
+            X        } finally {
             return tempNew ?: 0f
         }
     }

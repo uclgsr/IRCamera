@@ -1,6 +1,5 @@
 package com.mpdc4gsr.libunified.app.tools
 
-import com.elvishew.xlog.XLog
 import java.util.regex.Pattern
 
 object VersionTool {
@@ -33,8 +32,7 @@ object VersionTool {
             return serverV.toFloat() > localV.toFloat()
 
         } catch (e: Exception) {
-            XLog.e("[ph][ph][ph][ph][ph][ph][ph][ph]: ${e.message}")
-            return false
+            X            return false
         }
     }
 
@@ -58,8 +56,7 @@ object VersionTool {
             }
             return result
         } catch (e: Exception) {
-            XLog.e("[ph][ph][ph][ph][ph][ph]: ${e.message}, remoteStr: $remoteStr, localStr: $localStr")
-            return false
+            X            return false
         }
     }
 }

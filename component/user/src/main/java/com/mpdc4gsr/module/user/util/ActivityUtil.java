@@ -11,16 +11,12 @@ import com.mpdc4gsr.module.user.R;
 
 public class ActivityUtil {
 
-    public static void goSystemCustomer(Context mContext) {
-        Log.w("bcf", "[TEXT]Event");
-        String url = "https://www.topdon.cc/tc-chat";
+    public static void goSystemCustomer(Context mContext) {        String url = "https://www.topdon.cc/tc-chat";
         goSystemBrowser(mContext, url);
     }
 
 
-    public static void goSystemBrowser(Context mContext, String url) {
-        Log.w("bcf", "goSystemBrowser");
-        if (!NetworkUtil.isConnected(mContext)) {
+    public static void goSystemBrowser(Context mContext, String url) {        if (!NetworkUtil.isConnected(mContext)) {
             TToast.shortToast(mContext, R.string.lms_setting_http_error);
             return;
         }

@@ -1,7 +1,6 @@
 package mpdc4gsr.test
 
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.ScrollView
@@ -135,9 +134,7 @@ class BLEIntegrationTestActivity : AppCompatActivity() {
                         // Get the latest scan results safely
                         val scanResults = try {
                             deviceManager?.scanResults?.first() ?: emptyList()
-                        } catch (e: Exception) {
-                            Log.w(TAG, "Failed to collect scan results: ${e.message}")
-                            emptyList<DeviceInfo>()
+                        } catch (e: Exception) {                            emptyList<DeviceInfo>()
                         }
 
                         addLog("✅ BLE scan results: ${scanResults.size} devices found")
@@ -167,9 +164,7 @@ class BLEIntegrationTestActivity : AppCompatActivity() {
                 statusText.text = "BLE Integration Test Complete - Check logs"
 
             } catch (e: Exception) {
-                addLog("❌ Test failed with exception: ${e.message}")
-                Log.e(TAG, "BLE integration test failed", e)
-                statusText.text = "Test Failed - Check logs"
+                addLog("❌ Test failed with exception: ${e.message}")                statusText.text = "Test Failed - Check logs"
             } finally {
                 testButton.isEnabled = true
 
@@ -194,11 +189,7 @@ class BLEIntegrationTestActivity : AppCompatActivity() {
             (logText.parent as? ScrollView)?.post {
                 (logText.parent as ScrollView).fullScroll(ScrollView.FOCUS_DOWN)
             }
-        }
-
-
-        Log.i(TAG, message)
-    }
+        }    }
 
     private fun clearLogs() {
         logText.text = "Test logs cleared...\n"
@@ -213,9 +204,7 @@ class BLEIntegrationTestActivity : AppCompatActivity() {
             try {
                 gsrRecorder?.cleanup()
                 deviceManager?.release()
-            } catch (e: Exception) {
-                Log.e(TAG, "Error during activity cleanup", e)
-            }
+            } catch (e: Exception) {            }
         }
     }
 }

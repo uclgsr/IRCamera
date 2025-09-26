@@ -21,7 +21,6 @@ from PyQt6.QtWidgets import (
     QWidget,
 )
 from datetime import datetime
-from loguru import logger
 from typing import Dict, Optional
 
 from ..core.device_manager import DeviceConnectionState, DeviceInfo, DeviceManager, DeviceType
@@ -99,8 +98,7 @@ class DeviceDashboardWidget(QWidget):
 
     def _on_device_status_changed(self, device_id: str, device_info: DeviceInfo, event_type: str):
 
-        logger.debug(f"Device status changed: {device_id} - {event_type}")
-
+        
     @pyqtSlot()
     def _update_device_list(self):
 
@@ -170,8 +168,7 @@ class DeviceDashboardWidget(QWidget):
             self._update_status_summary(devices)
 
         except Exception as e:
-            logger.error(f"Error updating device list: {e}")
-
+            
     def _update_status_summary(self, devices: Dict[str, DeviceInfo]):
 
         if not devices:
@@ -309,8 +306,7 @@ class SessionControlWidget(QWidget):
 
     def _on_session_state_changed(self, state: SessionState, session):
 
-        logger.debug(f"Session state changed to: {state.value}")
-
+        
     @pyqtSlot()
     def _update_session_display(self):
 
@@ -374,8 +370,7 @@ class SessionControlWidget(QWidget):
                 self._update_button_states(SessionState.IDLE)
 
         except Exception as e:
-            logger.error(f"Error updating session display: {e}")
-
+            
     def _update_button_states(self, session_state: SessionState):
 
         self.create_session_btn.setEnabled(session_state == SessionState.IDLE)
@@ -629,8 +624,7 @@ class MVPMainWindow(QMainWindow):
         except Exception as e:
             self.logging_console.add_log_message(f"Error connecting device {device_id}: {e}",
                                                  "ERROR")
-            logger.error(f"Error connecting device: {e}")
-
+            
     @pyqtSlot(str)
     def _disconnect_device(self, device_id: str):
 
@@ -645,8 +639,7 @@ class MVPMainWindow(QMainWindow):
         except Exception as e:
             self.logging_console.add_log_message(f"Error disconnecting device {device_id}: {e}",
                                                  "ERROR")
-            logger.error(f"Error disconnecting device: {e}")
-
+            
     @pyqtSlot()
     def _refresh_devices(self):
 
@@ -658,8 +651,7 @@ class MVPMainWindow(QMainWindow):
 
         except Exception as e:
             self.logging_console.add_log_message(f"Error refreshing devices: {e}", "ERROR")
-            logger.error(f"Error refreshing devices: {e}")
-
+            
     @pyqtSlot()
     def _add_device_manually(self):
 
@@ -721,8 +713,7 @@ class MVPMainWindow(QMainWindow):
 
         except Exception as e:
             self.logging_console.add_log_message(f"Error adding manual device: {e}", "ERROR")
-            logger.error(f"Error adding manual device: {e}")
-            QMessageBox.critical(self, "Error", f"Failed to add device: {e}")
+                        QMessageBox.critical(self, "Error", f"Failed to add device: {e}")
 
     def _show_manual_device_dialog(self):
 
@@ -819,8 +810,7 @@ class MVPMainWindow(QMainWindow):
         except Exception as e:
             self.logging_console.add_log_message(f"Error creating session: {e}", "ERROR")
             QMessageBox.critical(self, "Session Creation Error", str(e))
-            logger.error(f"Error creating session: {e}")
-
+            
     @pyqtSlot()
     def _start_recording(self):
 
@@ -840,8 +830,7 @@ class MVPMainWindow(QMainWindow):
         except Exception as e:
             self.logging_console.add_log_message(f"Error starting recording: {e}", "ERROR")
             QMessageBox.critical(self, "Recording Start Error", str(e))
-            logger.error(f"Error starting recording: {e}")
-
+            
     async def _async_start_recording(self):
 
         try:
@@ -857,8 +846,7 @@ class MVPMainWindow(QMainWindow):
 
         except Exception as e:
             self.logging_console.add_log_message(f"Recording start failed: {e}", "ERROR")
-            logger.error(f"Recording start failed: {e}")
-
+            
     @pyqtSlot()
     def _stop_recording(self):
 
@@ -867,8 +855,7 @@ class MVPMainWindow(QMainWindow):
 
         except Exception as e:
             self.logging_console.add_log_message(f"Error stopping recording: {e}", "ERROR")
-            logger.error(f"Error stopping recording: {e}")
-
+            
     async def _async_stop_recording(self):
 
         try:
@@ -883,8 +870,7 @@ class MVPMainWindow(QMainWindow):
 
         except Exception as e:
             self.logging_console.add_log_message(f"Recording stop failed: {e}", "ERROR")
-            logger.error(f"Recording stop failed: {e}")
-
+            
     @pyqtSlot()
     def _finalize_session(self):
 
@@ -899,8 +885,7 @@ class MVPMainWindow(QMainWindow):
 
         except Exception as e:
             self.logging_console.add_log_message(f"Error finalizing session: {e}", "ERROR")
-            logger.error(f"Error finalizing session: {e}")
-
+            
     @pyqtSlot()
     def _reset_session(self):
 
@@ -923,8 +908,7 @@ class MVPMainWindow(QMainWindow):
 
         except Exception as e:
             self.logging_console.add_log_message(f"Error resetting session: {e}", "ERROR")
-            logger.error(f"Error resetting session: {e}")
-
+            
     @pyqtSlot()
     def _update_status(self):
 
@@ -954,8 +938,7 @@ class MVPMainWindow(QMainWindow):
             self.discovery_status_label.setText("Discovery: Running")
 
         except Exception as e:
-            logger.error(f"Error updating status: {e}")
-
+            
     def closeEvent(self, event):
 
         if self.session_manager and self.session_manager.is_recording():
@@ -977,6 +960,5 @@ class MVPMainWindow(QMainWindow):
             self.logging_console.add_log_message("Application closing...")
 
         except Exception as e:
-            logger.error(f"Error during shutdown: {e}")
-
+            
         event.accept()

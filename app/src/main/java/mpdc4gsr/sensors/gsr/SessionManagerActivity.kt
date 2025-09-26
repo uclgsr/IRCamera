@@ -3,7 +3,6 @@ package mpdc4gsr.sensors.gsr
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -143,9 +142,7 @@ class SessionManagerActivity : BaseBindingActivity<ActivitySessionManagerBinding
                     sessionDirectoryManager.cleanupFailedSessions()
                 }
 
-                if (cleanedSessions.isNotEmpty()) {
-                    Log.i(TAG, "Cleaned up ${cleanedSessions.size} failed sessions")
-                    Toast.makeText(
+                if (cleanedSessions.isNotEmpty()) {                    Toast.makeText(
                         this@SessionManagerActivity,
                         "Cleaned up ${cleanedSessions.size} failed sessions",
                         Toast.LENGTH_SHORT
@@ -163,12 +160,7 @@ class SessionManagerActivity : BaseBindingActivity<ActivitySessionManagerBinding
 
                 sessions.clear()
                 sessions.addAll(loadedSessions.sortedByDescending { it.startTime })
-                filterSessions(binding.searchView.query?.toString())
-
-                Log.i(TAG, "Loaded ${sessions.size} sessions")
-            } catch (e: Exception) {
-                Log.e(TAG, "Failed to load sessions", e)
-                showError("Failed to load sessions: ${e.message}")
+                filterSessions(binding.searchView.query?.toString())            } catch (e: Exception) {                showError("Failed to load sessions: ${e.message}")
             } finally {
                 showLoading(false)
             }
@@ -191,9 +183,7 @@ class SessionManagerActivity : BaseBindingActivity<ActivitySessionManagerBinding
                     ).show()
                 }
             }
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to get storage info", e)
-        }
+        } catch (e: Exception) {        }
     }
 
     private suspend fun loadHistoricalSessions(): List<SessionInfo> {
@@ -209,15 +199,11 @@ class SessionManagerActivity : BaseBindingActivity<ActivitySessionManagerBinding
                             try {
                                 val sessionInfo = parseSessionFromDirectory(sessionDir)
                                 historicalSessions.add(sessionInfo)
-                            } catch (e: Exception) {
-                                Log.w(TAG, "Failed to parse session from ${sessionDir.name}", e)
-                            }
+                            } catch (e: Exception) {                            }
                         }
                     }
                 }
-            } catch (e: Exception) {
-                Log.e(TAG, "Failed to load historical sessions", e)
-            }
+            } catch (e: Exception) {            }
 
             historicalSessions
         }
@@ -251,9 +237,7 @@ class SessionManagerActivity : BaseBindingActivity<ActivitySessionManagerBinding
                         }
                     }
                 }
-            } catch (e: Exception) {
-                Log.w(TAG, "Failed to parse metadata for session $sessionId", e)
-            }
+            } catch (e: Exception) {            }
         }
 
         sessionInfo.hasGSRData = File(sessionDir, "gsr_data.csv").exists()
@@ -359,14 +343,10 @@ class SessionManagerActivity : BaseBindingActivity<ActivitySessionManagerBinding
                         this@SessionManagerActivity,
                         "Session deleted successfully",
                         Toast.LENGTH_SHORT
-                    ).show()
-                    Log.i(TAG, "Session deleted: ${session.sessionId}")
-                } else {
+                    ).show()                } else {
                     showError("Failed to delete session files")
                 }
-            } catch (e: Exception) {
-                Log.e(TAG, "Failed to delete session", e)
-                showError("Failed to delete session: ${e.message}")
+            } catch (e: Exception) {                showError("Failed to delete session: ${e.message}")
             }
         }
     }
@@ -386,9 +366,7 @@ class SessionManagerActivity : BaseBindingActivity<ActivitySessionManagerBinding
                 }
 
                 true
-            } catch (e: Exception) {
-                Log.e(TAG, "Failed to delete session files for ${session.sessionId}", e)
-                false
+            } catch (e: Exception) {                false
             }
         }
     }

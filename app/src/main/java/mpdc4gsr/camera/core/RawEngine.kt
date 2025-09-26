@@ -8,7 +8,6 @@ import android.hardware.camera2.DngCreator
 import android.hardware.camera2.TotalCaptureResult
 import android.media.Image
 import android.media.ImageReader
-import android.util.Log
 import android.util.Size
 import android.view.Surface
 import java.io.File
@@ -59,11 +58,7 @@ class RawEngine(private val context: Context) {
 
             rawImageReader?.setOnImageAvailableListener(rawImageAvailableListener, null)
 
-            val processingMode = if (enableStage3) "Stage3/Level3" else "Standard"
-            Log.i(TAG, "RAW engine setup: ${rawSize.width}x${rawSize.height}, Processing: $processingMode")
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to setup RAW engine", e)
-            onError?.invoke("RAW setup failed: ${e.message}")
+            val processingMode = if (enableStage3) "Stage3/Level3" else "Standard"        } catch (e: Exception) {            onError?.invoke("RAW setup failed: ${e.message}")
         }
     }
 
@@ -71,14 +66,10 @@ class RawEngine(private val context: Context) {
 
     fun startCapture() {
         isCapturing = true
-        rawCaptureCount = 0
-        Log.i(TAG, "RAW capture started")
-    }
+        rawCaptureCount = 0    }
 
     fun stopCapture() {
-        isCapturing = false
-        Log.i(TAG, "RAW capture stopped, captured $rawCaptureCount images")
-    }
+        isCapturing = false    }
 
     fun storeCaptureResult(result: TotalCaptureResult) {
         if (isCapturing) {
@@ -101,9 +92,7 @@ class RawEngine(private val context: Context) {
      */
     fun setStage3ProcessingEnabled(enabled: Boolean) {
         enableStage3Processing = enabled
-        val mode = if (enabled) "Stage3/Level3" else "Standard"
-        Log.i(TAG, "RAW processing mode changed to: $mode")
-    }
+        val mode = if (enabled) "Stage3/Level3" else "Standard"    }
 
     /**
      * Check if Stage 3/Level 3 processing is enabled
@@ -114,9 +103,7 @@ class RawEngine(private val context: Context) {
         stopCapture()
         rawImageReader?.close()
         rawImageReader = null
-        pendingCaptureResults.clear()
-        Log.i(TAG, "RAW engine released")
-    }
+        pendingCaptureResults.clear()    }
 
 
     private val rawImageAvailableListener =
@@ -131,14 +118,9 @@ class RawEngine(private val context: Context) {
 
                 if (captureResult != null) {
                     saveRawImageAsDng(image, captureResult)
-                } else {
-                    Log.w(TAG, "No capture result found for timestamp $timestamp")
-
-                    saveRawImageAsRaw(image)
+                } else {                    saveRawImageAsRaw(image)
                 }
-            } catch (e: Exception) {
-                Log.e(TAG, "Failed to process RAW image", e)
-                onError?.invoke("RAW processing failed: ${e.message}")
+            } catch (e: Exception) {                onError?.invoke("RAW processing failed: ${e.message}")
             } finally {
                 image.close()
             }
@@ -175,15 +157,7 @@ class RawEngine(private val context: Context) {
                         // These may include:
                         // - Custom processing pipeline identifiers
                         // - Stage3/Level3 specific color space information
-                        // - Advanced sensor readout parameters
-
-                        Log.d(
-                            TAG,
-                            "Configured DNG for Samsung Stage3/Level3 processing with orientation and no thumbnail"
-                        )
-                    } catch (e: Exception) {
-                        Log.w(TAG, "Could not set Stage3/Level3 specific metadata: ${e.message}")
-                    }
+                        // - Advanced sensor readout parameters                    } catch (e: Exception) {                    }
                 }
 
                 FileOutputStream(dngFile).use { outputStream ->
@@ -191,23 +165,16 @@ class RawEngine(private val context: Context) {
                 }
                 dngCreator.close()
 
-                rawCaptureCount++
-                Log.d(TAG, "Saved Stage3/Level3 DNG: ${dngFile.name} (${image.width}x${image.height})")
+                rawCaptureCount++")
                 onRawImageSaved?.invoke(dngFile)
             } else {
-                // Fallback to raw binary if no characteristics available
-                Log.w(TAG, "No camera characteristics available, falling back to raw binary")
-                saveRawImageAsRaw(image)
+                // Fallback to raw binary if no characteristics available                saveRawImageAsRaw(image)
             }
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to save Stage3/Level3 DNG", e)
-            onError?.invoke("Stage3/Level3 DNG save failed: ${e.message}")
+        } catch (e: Exception) {            onError?.invoke("Stage3/Level3 DNG save failed: ${e.message}")
             // Fallback to raw binary on failure
             try {
                 saveRawImageAsRaw(image)
-            } catch (fallbackException: Exception) {
-                Log.e(TAG, "Fallback raw save also failed", fallbackException)
-            }
+            } catch (fallbackException: Exception) {            }
         }
     }
 
@@ -223,12 +190,9 @@ class RawEngine(private val context: Context) {
 
             rawFile.writeBytes(bytes)
 
-            rawCaptureCount++
-            Log.d(TAG, "Saved RAW binary: ${rawFile.name} (${image.width}x${image.height})")
+            rawCaptureCount++")
             onRawImageSaved?.invoke(rawFile)
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to save RAW binary", e)
-            onError?.invoke("RAW save failed: ${e.message}")
+        } catch (e: Exception) {            onError?.invoke("RAW save failed: ${e.message}")
         }
     }
 }

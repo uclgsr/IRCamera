@@ -115,20 +115,15 @@ public class EasyWifi {
 
     public boolean connectByOld(String str, String str2, WifiCapability wifiCapability) {
         int addNetwork = this.wifiManager.addNetwork(createWifiConfig(str, str2, wifiCapability));
-        if (addNetwork == -1) {
-            Log.e(this.TAG, "[CHINESE_TEXT]Failed,[CHINESE_TEXT]wifilist[CHINESE_TEXT]Cancel[CHINESE_TEXT]Connect[CHINESE_TEXT]saved");
-        }
-        boolean enableNetwork = this.wifiManager.enableNetwork(addNetwork, true);
-        Log.d(this.TAG, "connectByOld: " + (enableNetwork ? "Success" : "Failed"));
+        if (addNetwork == -1) {        }
+        boolean enableNetwork = this.wifiManager.enableNetwork(addNetwork, true););
         return enableNetwork;
     }
 
     private WifiConfiguration isExist(String str) {
 
         if (ActivityCompat.checkSelfPermission(BaseApplication.instance, Manifest.permission.ACCESS_WIFI_STATE) != PackageManager.PERMISSION_GRANTED ||
-                ActivityCompat.checkSelfPermission(BaseApplication.instance, Manifest.permission.ACCESS_NETWORK_STATE) != PackageManager.PERMISSION_GRANTED) {
-            Log.w(TAG, "Missing WiFi permissions");
-            return null;
+                ActivityCompat.checkSelfPermission(BaseApplication.instance, Manifest.permission.ACCESS_NETWORK_STATE) != PackageManager.PERMISSION_GRANTED) {            return null;
         }
 
         try {
@@ -137,8 +132,7 @@ public class EasyWifi {
                     return wifiConfiguration;
                 }
             }
-        } catch (SecurityException e) {
-            Log.e(TAG, "SecurityException accessing configured networks: " + e.getMessage());
+        } catch (SecurityException e) {);
         }
         return null;
     }
@@ -152,11 +146,8 @@ public class EasyWifi {
         wifiConfiguration.allowedProtocols.clear();
         wifiConfiguration.SSID = "\"" + str + "\"";
         WifiConfiguration isExist = isExist(str);
-        if (isExist != null) {
-            Log.d(this.TAG, "createWifiConfig: [CHINESE_TEXT]（true:Success，false:Failed），[CHINESE_TEXT]=" + this.wifiManager.removeNetwork(isExist.networkId) + "[CHINESE_TEXT]saved" + this.wifiManager.saveConfiguration());
-        }
-        Log.d(this.TAG, "createWifiConfig: currentssid=" + str);
-        if (wifiCapability == WifiCapability.WIFI_CIPHER_NO_PASS) {
+        if (isExist != null) {+ "[CHINESE_TEXT]saved" + this.wifiManager.saveConfiguration());
+        }        if (wifiCapability == WifiCapability.WIFI_CIPHER_NO_PASS) {
             wifiConfiguration.allowedKeyManagement.set(0);
         } else if (wifiCapability == WifiCapability.WIFI_CIPHER_WEP) {
             wifiConfiguration.hiddenSSID = true;
@@ -180,9 +171,7 @@ public class EasyWifi {
         return wifiConfiguration;
     }
 
-    public void setNetworkType(NetType netType) {
-        Log.d(this.TAG, "selectNetworkType: [CHINESE_TEXT]wifiNetwork[CHINESE_TEXT]DataNetwork");
-        NetworkRequest.Builder builder = new NetworkRequest.Builder();
+    public void setNetworkType(NetType netType) {        NetworkRequest.Builder builder = new NetworkRequest.Builder();
         if (netType == NetType.WIFI) {
             builder.addTransportType(NetworkCapabilities.TRANSPORT_WIFI);
         } else {
@@ -191,9 +180,7 @@ public class EasyWifi {
         getConnectivityManager().requestNetwork(builder.build(), new ConnectivityManager.NetworkCallback() {
             @Override
             public void onAvailable(Network network) {
-                try {
-                    Log.d(EasyWifi.this.TAG, "settingsNetwork[CHINESE_TEXT]HouronAvailable: ");
-                    EasyWifi.this.getConnectivityManager().bindProcessToNetwork(network);
+                try {                    EasyWifi.this.getConnectivityManager().bindProcessToNetwork(network);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

@@ -160,11 +160,7 @@ public abstract class AxisBase extends ComponentBase {
     public void addLimitLine(LimitLine l) {
         mLimitLines.add(l);
 
-        if (mLimitLines.size() > 6) {
-            Log.e("MPAndroiChart",
-                    "Warning! You have more than 6 LimitLines on your axis, do you really want " +
-                            "that?");
-        }
+        if (mLimitLines.size() > 6) {        }
     }
 
     public void removeLimitLine(LimitLine l) {

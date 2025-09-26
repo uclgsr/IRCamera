@@ -3,7 +3,6 @@
 
 import asyncio
 
-import logging
 import statistics
 import time
 from dataclasses import dataclass
@@ -79,8 +78,7 @@ class FlashSyncValidator:
                     f"Device {device_id}: sync accuracy {sync_accuracy:.3f}ms ({'PASS' if success else 'FAIL'})")
 
             except Exception as e:
-                logger.error(f"Flash sync failed for device {device_id}: {e}")
-                sync_results[device_id] = SyncTestResult(
+                                sync_results[device_id] = SyncTestResult(
                     device_id=device_id,
                     sync_accuracy_ms=float('inf'),
                     latency_ms=float('inf'),
@@ -131,8 +129,7 @@ class MultiDeviceCoordinator:
 
         if device_id in self.connected_devices:
             del self.connected_devices[device_id]
-            logger.info(f"Device unregistered: {device_id}")
-
+            
     async def start_coordinated_recording(self) -> Dict[str, bool]:
 
         logger.info(f"Starting coordinated recording on {len(self.connected_devices)} devices")
@@ -154,13 +151,10 @@ class MultiDeviceCoordinator:
 
                 if success:
                     self.connected_devices[device_id].recording_active = True
-                    logger.info(f"Recording started on device {device_id}")
-                else:
-                    logger.error(f"Failed to start recording on device {device_id}")
-
+                                    else:
+                    
             except Exception as e:
-                logger.error(f"Start command failed for device {device_id}: {e}")
-                start_results[device_id] = False
+                                start_results[device_id] = False
 
         self.recording_session_active = any(start_results.values())
 
@@ -168,11 +162,9 @@ class MultiDeviceCoordinator:
 
     async def stop_coordinated_recording(self) -> Dict[str, bool]:
 
-        logger.info("Stopping coordinated recording on all devices")
-
+        
         if not self.recording_session_active:
-            logger.warning("No active recording session to stop")
-            return {}
+                        return {}
 
         stop_results = {}
         stop_tasks = []
@@ -189,13 +181,10 @@ class MultiDeviceCoordinator:
 
                 if success:
                     self.connected_devices[device_id].recording_active = False
-                    logger.info(f"Recording stopped on device {device_id}")
-                else:
-                    logger.error(f"Failed to stop recording on device {device_id}")
-
+                                    else:
+                    
             except Exception as e:
-                logger.error(f"Stop command failed for device {device_id}: {e}")
-                stop_results[device_id] = False
+                                stop_results[device_id] = False
 
         self.recording_session_active = False
         return stop_results
@@ -223,13 +212,10 @@ class MultiDeviceCoordinator:
 
                 if success:
                     self.connected_devices[device_id].sync_markers_received += 1
-                    logger.info(f"Sync marker {marker_id} sent to device {device_id}")
-                else:
-                    logger.error(f"Failed to send sync marker to device {device_id}")
-
+                                    else:
+                    
             except Exception as e:
-                logger.error(f"Sync marker failed for device {device_id}: {e}")
-                marker_results[device_id] = False
+                                marker_results[device_id] = False
 
         return marker_results
 
@@ -299,14 +285,11 @@ class SynchronizationValidator:
 
         try:
 
-            logger.info("Phase 1: Device Registration")
-            for device_id, device_type in device_list:
+                        for device_id, device_type in device_list:
                 success = self.device_coordinator.register_device(device_id, device_type)
                 if not success:
-                    logger.error(f"Failed to register device {device_id}")
-
-            logger.info("Phase 2: Flash Sync Accuracy Test")
-            device_ids = [device_id for device_id, _ in device_list]
+                    
+                        device_ids = [device_id for device_id, _ in device_list]
             flash_results = await self.flash_sync.trigger_flash_sync(device_ids)
             validation_report["test_results"]["flash_sync"] = {
                 device_id: {
@@ -317,11 +300,9 @@ class SynchronizationValidator:
                 for device_id, result in flash_results.items()
             }
 
-            logger.info("Phase 3: Coordinated Recording Test")
-            start_results = await self.device_coordinator.start_coordinated_recording()
+                        start_results = await self.device_coordinator.start_coordinated_recording()
 
-            logger.info("Testing 30-second recording with sync markers")
-            for i in range(6):
+                        for i in range(6):
                 await asyncio.sleep(5)
                 marker_results = await self.device_coordinator.inject_sync_marker(
                     f"test_marker_{i + 1}")
@@ -336,8 +317,7 @@ class SynchronizationValidator:
                 "recording_duration": 30.0
             }
 
-            logger.info("Phase 4: Multi-Device Stress Test")
-            stress_results = await self._run_stress_test(device_ids)
+                        stress_results = await self._run_stress_test(device_ids)
             validation_report["test_results"]["stress_test"] = stress_results
 
             validation_report["performance_summary"] = self._generate_performance_summary()
@@ -346,8 +326,7 @@ class SynchronizationValidator:
                 flash_results)
 
         except Exception as e:
-            logger.error(f"Validation test suite failed: {e}")
-            validation_report["error"] = str(e)
+                        validation_report["error"] = str(e)
 
         finally:
 
@@ -359,8 +338,7 @@ class SynchronizationValidator:
 
     async def _run_stress_test(self, device_ids: List[str]) -> Dict[str, Any]:
 
-        logger.info("Running multi-device stress test")
-
+        
         stress_results = {
             "test_duration": 60.0,
             "operations_per_second": 10,
@@ -395,8 +373,7 @@ class SynchronizationValidator:
                 stress_results["successful_operations"] += 1
 
             except Exception as e:
-                logger.error(f"Stress test operation failed: {e}")
-                stress_results["failed_operations"] += 1
+                                stress_results["failed_operations"] += 1
 
             stress_results["total_operations"] += 1
 

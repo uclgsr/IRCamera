@@ -1,7 +1,6 @@
 package mpdc4gsr.camera
 
 import android.os.Bundle
-import android.util.Log
 import android.view.TextureView
 import android.widget.Button
 import android.widget.Toast
@@ -34,66 +33,40 @@ class DemoActivity : AppCompatActivity() {
         setupCallbacks()
 
         lifecycleScope.launch {
-            if (camera2System.initialize()) {
-                Log.i(TAG, "Camera2System initialized successfully")
-                val caps = camera2System.getDeviceCaps()
-                Log.i(
-                    TAG,
-                    "Device capabilities: RAW=${caps?.supportsRaw}, 4K60=${caps?.supports4k60}"
-                )
-
-                // Enable Samsung Stage3/Level3 processing for supported devices
+            if (camera2System.initialize()) {                val caps = camera2System.getDeviceCaps()                // Enable Samsung Stage3/Level3 processing for supported devices
                 if (SamsungDeviceCompatibility.isStage3Compatible() && caps?.supportsRaw == true) {
-                    camera2System.configureStage3Processing(true)
-                    Log.i(
-                        TAG,
-                        "Samsung Stage3/Level3 processing enabled for ${SamsungDeviceCompatibility.getDeviceInfo()}"
+                    camera2System.configureStage3Processing(true)}"
                     )
                     runOnUiThread {
                         Toast.makeText(this@DemoActivity, "Stage3/Level3 DNG Recording Enabled", Toast.LENGTH_LONG)
                             .show()
                     }
-                } else {
-                    Log.i(
-                        TAG,
-                        "Standard RAW processing for ${SamsungDeviceCompatibility.getDeviceInfo()} (Stage3/Level3 not available)"
+                } else {} (Stage3/Level3 not available)"
                     )
                 }
-            } else {
-                Log.e(TAG, "Failed to initialize Camera2System")
-            }
+            } else {            }
         }
     }
 
     private fun setupCallbacks() {
-        camera2System.onError = { error ->
-            Log.e(TAG, "Camera error: $error")
-            runOnUiThread {
+        camera2System.onError = { error ->            runOnUiThread {
                 Toast.makeText(this, "Camera error: $error", Toast.LENGTH_SHORT).show()
             }
         }
 
-        camera2System.onProgress = { message ->
-            Log.i(TAG, "Progress: $message")
-        }
+        camera2System.onProgress = { message ->        }
 
-        camera2System.onModeChanged = { mode ->
-            Log.i(TAG, "Mode changed to: $mode")
-            runOnUiThread {
+        camera2System.onModeChanged = { mode ->            runOnUiThread {
                 Toast.makeText(this, "Mode: $mode", Toast.LENGTH_SHORT).show()
             }
         }
 
-        camera2System.onRecordingStarted = {
-            Log.i(TAG, "Recording started")
-            runOnUiThread {
+        camera2System.onRecordingStarted = {            runOnUiThread {
                 Toast.makeText(this, "Recording started", Toast.LENGTH_SHORT).show()
             }
         }
 
-        camera2System.onRecordingStopped = {
-            Log.i(TAG, "Recording stopped")
-            runOnUiThread {
+        camera2System.onRecordingStopped = {            runOnUiThread {
                 Toast.makeText(this, "Recording stopped", Toast.LENGTH_SHORT).show()
             }
         }
@@ -102,9 +75,7 @@ class DemoActivity : AppCompatActivity() {
     private fun testModeSwitch() {
         lifecycleScope.launch {
 
-            if (camera2System.switchMode(ModeManager.CameraMode.RAW_50MP)) {
-                Log.i(TAG, "Switched to RAW mode")
-                delay(2000)
+            if (camera2System.switchMode(ModeManager.CameraMode.RAW_50MP)) {                delay(2000)
 
                 if (camera2System.startRecording("demo_session_raw")) {
                     delay(5000)
@@ -114,9 +85,7 @@ class DemoActivity : AppCompatActivity() {
 
             delay(1000)
 
-            if (camera2System.switchMode(ModeManager.CameraMode.VIDEO_4K)) {
-                Log.i(TAG, "Switched to Video mode")
-                delay(2000)
+            if (camera2System.switchMode(ModeManager.CameraMode.VIDEO_4K)) {                delay(2000)
 
                 if (camera2System.startRecording("demo_session_video")) {
                     delay(5000)

@@ -1,7 +1,6 @@
 package mpdc4gsr.camera.core
 
 import android.media.MediaRecorder
-import android.util.Log
 import android.util.Size
 import java.io.File
 
@@ -40,10 +39,7 @@ class VideoEngine {
                     setVideoEncoder(MediaRecorder.VideoEncoder.H264)
 
 
-                    setOrientationHint(orientationHint)
-                    Log.d(TAG, "Video orientation hint set to: $orientationHint degrees")
-
-                    if (audioEnabled) {
+                    setOrientationHint(orientationHint)                    if (audioEnabled) {
                         setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
                         setAudioEncodingBitRate(128000)
                         setAudioSamplingRate(44100)
@@ -52,34 +48,20 @@ class VideoEngine {
                     prepare()
                 }
 
-            isPrepared = true
-            Log.i(
-                TAG,
-                "MediaRecorder prepared for ${videoSize.width}x${videoSize.height}@${frameRate}fps, orientation=$orientationHint°"
-            )
-
-            return mediaRecorder?.surface
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to prepare MediaRecorder", e)
-            release()
+            isPrepared = true            return mediaRecorder?.surface
+        } catch (e: Exception) {            release()
             return null
         }
     }
 
     fun start(): Boolean {
         return try {
-            if (!isPrepared) {
-                Log.e(TAG, "MediaRecorder not prepared")
-                return false
+            if (!isPrepared) {                return false
             }
 
             mediaRecorder?.start()
-            isRecording = true
-            Log.i(TAG, "Video recording started")
-            true
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to start video recording", e)
-            false
+            isRecording = true            true
+        } catch (e: Exception) {            false
         }
     }
 
@@ -87,12 +69,8 @@ class VideoEngine {
         try {
             if (isRecording) {
                 mediaRecorder?.stop()
-                isRecording = false
-                Log.i(TAG, "Video recording stopped")
-            }
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to stop video recording", e)
-        }
+                isRecording = false            }
+        } catch (e: Exception) {        }
     }
 
     fun release() {
@@ -103,11 +81,7 @@ class VideoEngine {
             mediaRecorder?.release()
             mediaRecorder = null
             isPrepared = false
-            isRecording = false
-            Log.d(TAG, "MediaRecorder released")
-        } catch (e: Exception) {
-            Log.e(TAG, "Error releasing MediaRecorder", e)
-        }
+            isRecording = false        } catch (e: Exception) {        }
     }
 
     fun isRecording(): Boolean = isRecording

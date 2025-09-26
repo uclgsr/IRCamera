@@ -75,9 +75,7 @@ public class IRUVCTC {
 
 
             @Override
-            public void onAttach(UsbDevice device) {
-                Log.w(TAG, "onAttach");
-                if (uvcCamera == null || !uvcCamera.getOpenStatus()) {
+            public void onAttach(UsbDevice device) {                if (uvcCamera == null || !uvcCamera.getOpenStatus()) {
                     mUSBMonitor.requestPermission(device);
                 }
                 if (usbMonitorCallback != null) {
@@ -86,33 +84,23 @@ public class IRUVCTC {
             }
 
             @Override
-            public void onGranted(UsbDevice usbDevice, boolean granted) {
-                Log.w(TAG, "onGranted");
-                if (usbMonitorCallback != null) {
+            public void onGranted(UsbDevice usbDevice, boolean granted) {                if (usbMonitorCallback != null) {
                     usbMonitorCallback.onGranted();
                 }
             }
 
 
             @Override
-            public void onConnect(final UsbDevice device, USBMonitor.UsbControlBlock ctrlBlock, boolean createNew) {
-                Log.w(TAG, "onConnect");
-                if (isIRpid(device.getProductId())) {
+            public void onConnect(final UsbDevice device, USBMonitor.UsbControlBlock ctrlBlock, boolean createNew) {                if (isIRpid(device.getProductId())) {
                     if (createNew) {
                         openUVCCamera(ctrlBlock);
 
                         List<CameraSize> previewList = getAllSupportedSize();
-                        for (CameraSize size : previewList) {
-                            Log.i(TAG, "SupportedSize : " + size.width + " * " + size.height);
-                        }
+                        for (CameraSize size : previewList) {                        }
 
                         initIRCMD();
 
-                        if (ircmd != null) {
-                            Log.d(TAG, "startPreview");
-
-
-                            isTempReplacedWithTNREnabled = ircmd.isTempReplacedWithTNREnabled(DeviceType.P2);
+                        if (ircmd != null) {                            isTempReplacedWithTNREnabled = ircmd.isTempReplacedWithTNREnabled(DeviceType.P2);
                             if (isTempReplacedWithTNREnabled) {
 
                                 if (uvcCamera != null) {
@@ -136,18 +124,14 @@ public class IRUVCTC {
 
 
             @Override
-            public void onDisconnect(UsbDevice device, USBMonitor.UsbControlBlock ctrlBlock) {
-                Log.w(TAG, "onDisconnect");
-                if (usbMonitorCallback != null) {
+            public void onDisconnect(UsbDevice device, USBMonitor.UsbControlBlock ctrlBlock) {                if (usbMonitorCallback != null) {
                     usbMonitorCallback.onDisconnect();
                 }
             }
 
 
             @Override
-            public void onDettach(UsbDevice device) {
-                Log.w(TAG, "onDettach");
-                if (uvcCamera != null && uvcCamera.getOpenStatus()) {
+            public void onDettach(UsbDevice device) {                if (uvcCamera != null && uvcCamera.getOpenStatus()) {
                     if (usbMonitorCallback != null) {
                         usbMonitorCallback.onDettach();
                     }
@@ -155,9 +139,7 @@ public class IRUVCTC {
             }
 
             @Override
-            public void onCancel(UsbDevice device) {
-                Log.w(TAG, "onCancel");
-                if (usbMonitorCallback != null) {
+            public void onCancel(UsbDevice device) {                if (usbMonitorCallback != null) {
                     usbMonitorCallback.onCancel();
                 }
             }
@@ -244,14 +226,11 @@ public class IRUVCTC {
                                     ircmd.autoGainSwitch(temperatureSrc, imageRes, auto_gain_switch_info,
                                             gain_switch_param, new AutoGainSwitchCallback() {
                                                 @Override
-                                                public void onAutoGainSwitchState(CommonParams.PropTPDParamsValue.GAINSELStatus gainselStatus) {
-                                                    Log.i(TAG, "onAutoGainSwitchState->" + gainselStatus.getValue());
+                                                public void onAutoGainSwitchState(CommonParams.PropTPDParamsValue.GAINSELStatus gainselStatus) {);
                                                 }
 
                                                 @Override
-                                                public void onAutoGainSwitchResult(CommonParams.PropTPDParamsValue.GAINSELStatus gainselStatus, int result) {
-                                                    Log.i(TAG,
-                                                            "onAutoGainSwitchResult->" + gainselStatus.getValue() +
+                                                public void onAutoGainSwitchResult(CommonParams.PropTPDParamsValue.GAINSELStatus gainselStatus, int result) {+
                                                                     " result=" + result);
                                                 }
                                             });
@@ -264,10 +243,7 @@ public class IRUVCTC {
                                             close_frame_cnt,
                                             new AvoidOverexposureCallback() {
                                                 @Override
-                                                public void onAvoidOverexposureState(boolean avoidOverexpol) {
-                                                    Log.i(TAG,
-                                                            "onAvoidOverexposureState->avoidOverexpol=" + avoidOverexpol);
-                                                }
+                                                public void onAvoidOverexposureState(boolean avoidOverexpol) {                                                }
                                             });
                                 }
                             }
@@ -321,9 +297,7 @@ public class IRUVCTC {
         isRestart = restart;
     }
 
-    private void initUVCCamera() {
-        Log.i(TAG, "uvcCamera create");
-        uvcCamera = new ConcreateUVCBuilder()
+    private void initUVCCamera() {        uvcCamera = new ConcreateUVCBuilder()
                 .setUVCType(UVCType.USB_UVC)
                 .build();
 
@@ -360,9 +334,7 @@ public class IRUVCTC {
         }
     }
 
-    private void openUVCCamera(USBMonitor.UsbControlBlock ctrlBlock) {
-        Log.i(TAG, "openUVCCamera");
-        if (ctrlBlock.getProductId() == 0x3901) {
+    private void openUVCCamera(USBMonitor.UsbControlBlock ctrlBlock) {        if (ctrlBlock.getProductId() == 0x3901) {
             if (syncimage != null) {
                 syncimage.type = 1;
             }
@@ -381,14 +353,10 @@ public class IRUVCTC {
 
     private List<CameraSize> getAllSupportedSize() {
         List<CameraSize> previewList = new ArrayList<>();
-        if (uvcCamera != null) {
-            Log.w(TAG, "getSupportedSize = " + uvcCamera.getSupportedSize());
+        if (uvcCamera != null) {);
             previewList = uvcCamera.getSupportedSizeList();
-        }
-        Log.w(TAG, "getSupportedSize = " + uvcCamera.getSupportedSize());
-        for (CameraSize size : previewList) {
-            Log.i(TAG, "SupportedSize : " + size.width + " * " + size.height);
-        }
+        });
+        for (CameraSize size : previewList) {        }
         return previewList;
     }
 
@@ -402,34 +370,21 @@ public class IRUVCTC {
     private void startPreview() {
         if (ircmd == null) {
             return;
-        }
-        Log.i(TAG, "startPreview isRestart : " + isRestart + " defaultDataFlowMode : " + defaultDataFlowMode);
-        uvcCamera.setOpenStatus(true);
+        }        uvcCamera.setOpenStatus(true);
         uvcCamera.setFrameCallback(iFrameCallback);
         uvcCamera.onStartPreview();
 
         if (CommonParams.DataFlowMode.IMAGE_AND_TEMP_OUTPUT == defaultDataFlowMode ||
-                CommonParams.DataFlowMode.IMAGE_OUTPUT == defaultDataFlowMode) {
-
-            Log.i(TAG, "defaultDataFlowMode = IMAGE_AND_TEMP_OUTPUT or IMAGE_OUTPUT");
-
-            setFrameReady(false);
+                CommonParams.DataFlowMode.IMAGE_OUTPUT == defaultDataFlowMode) {            setFrameReady(false);
             if (isRestart) {
 
-                if (ircmd.stopPreview(CommonParams.PreviewPathChannel.PREVIEW_PATH0) == 0) {
-                    Log.i(TAG, "stopPreview complete");
-
-                    if (ircmd.startPreview(CommonParams.PreviewPathChannel.PREVIEW_PATH0,
+                if (ircmd.stopPreview(CommonParams.PreviewPathChannel.PREVIEW_PATH0) == 0) {                    if (ircmd.startPreview(CommonParams.PreviewPathChannel.PREVIEW_PATH0,
                             CommonParams.StartPreviewSource.SOURCE_SENSOR,
                             ScreenUtils.getPreviewFPSByDataFlowMode(defaultDataFlowMode),
                             CommonParams.StartPreviewMode.VOC_DVP_MODE,
-                            defaultDataFlowMode) == 0) {
-                        Log.i(TAG, "startPreview complete");
-                        handleStartPreviewComplete();
+                            defaultDataFlowMode) == 0) {                        handleStartPreviewComplete();
                     }
-                } else {
-                    Log.e(TAG, "stopPreview error");
-                }
+                } else {                }
             } else {
                 handleStartPreviewComplete();
             }
@@ -438,14 +393,10 @@ public class IRUVCTC {
 
             setFrameReady(false);
             if (isRestart) {
-                if (ircmd.stopPreview(CommonParams.PreviewPathChannel.PREVIEW_PATH0) == 0) {
-                    Log.i(TAG, "stopPreview complete [CHINESE_TEXT] restart");
-                    if (ircmd.startPreview(CommonParams.PreviewPathChannel.PREVIEW_PATH0,
+                if (ircmd.stopPreview(CommonParams.PreviewPathChannel.PREVIEW_PATH0) == 0) {                    if (ircmd.startPreview(CommonParams.PreviewPathChannel.PREVIEW_PATH0,
                             CommonParams.StartPreviewSource.SOURCE_SENSOR,
                             ScreenUtils.getPreviewFPSByDataFlowMode(defaultDataFlowMode),
-                            CommonParams.StartPreviewMode.VOC_DVP_MODE, defaultDataFlowMode) == 0) {
-                        Log.i(TAG, "startPreview complete [CHINESE_TEXT] restart");
-                        try {
+                            CommonParams.StartPreviewMode.VOC_DVP_MODE, defaultDataFlowMode) == 0) {                        try {
 
                             Thread.sleep(1500);
                         } catch (InterruptedException e) {
@@ -454,32 +405,19 @@ public class IRUVCTC {
                         if (ircmd.startY16ModePreview(CommonParams.PreviewPathChannel.PREVIEW_PATH0,
                                 FileUtil.getY16SrcTypeByDataFlowMode(defaultDataFlowMode)) == 0) {
                             handleStartPreviewComplete();
-                        } else {
-                            Log.e(TAG, "startY16ModePreview error [CHINESE_TEXT] restart");
-                        }
-                    } else {
-                        Log.e(TAG, "startPreview error [CHINESE_TEXT] restart");
-                    }
-                } else {
-                    Log.e(TAG, "stopPreview error [CHINESE_TEXT] restart");
-                }
+                        } else {                        }
+                    } else {                    }
+                } else {                }
             } else {
 
-                boolean isTempReplacedWithTNREnabled = ircmd.isTempReplacedWithTNREnabled(DeviceType.P2);
-                Log.i(TAG,
-                        "defaultDataFlowMode = others isTempReplacedWithTNREnabled = " + isTempReplacedWithTNREnabled);
-                if (isTempReplacedWithTNREnabled) {
+                boolean isTempReplacedWithTNREnabled = ircmd.isTempReplacedWithTNREnabled(DeviceType.P2);                if (isTempReplacedWithTNREnabled) {
 
 
-                    if (ircmd.stopPreview(CommonParams.PreviewPathChannel.PREVIEW_PATH0) == 0) {
-                        Log.i(TAG, "stopPreview complete infrared+TNR");
-                        if (ircmd.startPreview(CommonParams.PreviewPathChannel.PREVIEW_PATH0,
+                    if (ircmd.stopPreview(CommonParams.PreviewPathChannel.PREVIEW_PATH0) == 0) {                        if (ircmd.startPreview(CommonParams.PreviewPathChannel.PREVIEW_PATH0,
                                 CommonParams.StartPreviewSource.SOURCE_SENSOR,
                                 ScreenUtils.getPreviewFPSByDataFlowMode(CommonParams.DataFlowMode.IMAGE_AND_TEMP_OUTPUT),
                                 CommonParams.StartPreviewMode.VOC_DVP_MODE,
-                                CommonParams.DataFlowMode.IMAGE_AND_TEMP_OUTPUT) == 0) {
-                            Log.i(TAG, "startPreview complete infrared+TNR");
-                            try {
+                                CommonParams.DataFlowMode.IMAGE_AND_TEMP_OUTPUT) == 0) {                            try {
 
                                 Thread.sleep(1500);
                             } catch (InterruptedException e) {
@@ -488,26 +426,16 @@ public class IRUVCTC {
                             if (ircmd.startY16ModePreview(CommonParams.PreviewPathChannel.PREVIEW_PATH0,
                                     FileUtil.getY16SrcTypeByDataFlowMode(CommonParams.DataFlowMode.TNR_OUTPUT)) == 0) {
                                 handleStartPreviewComplete();
-                            } else {
-                                Log.e(TAG, "startY16ModePreview error infrared+TNR");
-                            }
-                        } else {
-                            Log.e(TAG, "startPreview error infrared+TNR");
-                        }
-                    } else {
-                        Log.e(TAG, "stopPreview error infrared+TNR");
-                    }
+                            } else {                            }
+                        } else {                        }
+                    } else {                    }
                 } else {
 
 
-                    if (ircmd.stopPreview(CommonParams.PreviewPathChannel.PREVIEW_PATH0) == 0) {
-                        Log.i(TAG, "stopPreview complete [CHINESE_TEXT]TNR");
-                        if (ircmd.startPreview(CommonParams.PreviewPathChannel.PREVIEW_PATH0,
+                    if (ircmd.stopPreview(CommonParams.PreviewPathChannel.PREVIEW_PATH0) == 0) {                        if (ircmd.startPreview(CommonParams.PreviewPathChannel.PREVIEW_PATH0,
                                 CommonParams.StartPreviewSource.SOURCE_SENSOR,
                                 ScreenUtils.getPreviewFPSByDataFlowMode(defaultDataFlowMode),
-                                CommonParams.StartPreviewMode.VOC_DVP_MODE, defaultDataFlowMode) == 0) {
-                            Log.i(TAG, "startPreview complete [CHINESE_TEXT]TNR");
-                            try {
+                                CommonParams.StartPreviewMode.VOC_DVP_MODE, defaultDataFlowMode) == 0) {                            try {
 
                                 Thread.sleep(1500);
                             } catch (InterruptedException e) {
@@ -516,23 +444,15 @@ public class IRUVCTC {
                             if (ircmd.startY16ModePreview(CommonParams.PreviewPathChannel.PREVIEW_PATH0,
                                     FileUtil.getY16SrcTypeByDataFlowMode(defaultDataFlowMode)) == 0) {
                                 handleStartPreviewComplete();
-                            } else {
-                                Log.e(TAG, "startY16ModePreview error [CHINESE_TEXT]TNR");
-                            }
-                        } else {
-                            Log.e(TAG, "startPreview error [CHINESE_TEXT]TNR");
-                        }
-                    } else {
-                        Log.e(TAG, "stopPreview error [CHINESE_TEXT]TNR");
-                    }
+                            } else {                            }
+                        } else {                        }
+                    } else {                    }
                 }
             }
         }
     }
 
-    public void stopPreview() {
-        Log.i(TAG, "stopPreview");
-        if (uvcCamera != null) {
+    public void stopPreview() {        if (uvcCamera != null) {
             if (uvcCamera.getOpenStatus()) {
                 uvcCamera.onStopPreview();
             }

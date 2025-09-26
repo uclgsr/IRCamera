@@ -1,7 +1,6 @@
 package mpdc4gsr.security
 
 import android.content.Context
-import android.util.Log
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -54,10 +53,7 @@ class CertificateManager(
     private var deviceKeyPair: KeyPair? = null
 
     fun initialize(): Boolean {
-        return try {
-            Log.i(TAG, "Initializing certificate manager")
-
-            if (!loadDeviceCertificate()) {
+        return try {            if (!loadDeviceCertificate()) {
                 generateDeviceCertificate()
             }
 
@@ -77,9 +73,7 @@ class CertificateManager(
             )
 
             true
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to initialize certificate manager", e)
-            logger.log(
+        } catch (e: Exception) {            logger.log(
                 StructuredLogger.LogLevel.ERROR,
                 TAG,
                 "init_failed",
@@ -104,14 +98,10 @@ class CertificateManager(
 
             cert.checkValidity()
 
-            if (!verifyCertificateChain(cert)) {
-                Log.w(TAG, "Certificate chain verification failed for device $deviceId")
-                return AdvancedAuthenticationManager.AuthenticationResult.CERTIFICATE_INVALID
+            if (!verifyCertificateChain(cert)) {                return AdvancedAuthenticationManager.AuthenticationResult.CERTIFICATE_INVALID
             }
 
-            if (!verifySignature(cert.publicKey, challenge.toByteArray(), signature)) {
-                Log.w(TAG, "Signature verification failed for device $deviceId")
-                return AdvancedAuthenticationManager.AuthenticationResult.CERTIFICATE_INVALID
+            if (!verifySignature(cert.publicKey, challenge.toByteArray(), signature)) {                return AdvancedAuthenticationManager.AuthenticationResult.CERTIFICATE_INVALID
             }
 
             deviceCertificates[deviceId] = cert
@@ -128,9 +118,7 @@ class CertificateManager(
             )
 
             AdvancedAuthenticationManager.AuthenticationResult.SUCCESS
-        } catch (e: Exception) {
-            Log.e(TAG, "Certificate validation failed for device $deviceId", e)
-            logger.log(
+        } catch (e: Exception) {            logger.log(
                 StructuredLogger.LogLevel.ERROR,
                 TAG,
                 "cert_validation_failed",
@@ -144,10 +132,7 @@ class CertificateManager(
     }
 
     private fun generateDeviceCertificate() {
-        try {
-            Log.i(TAG, "Generating new device certificate")
-
-            val keyPairGenerator = KeyPairGenerator.getInstance(KEY_ALGORITHM)
+        try {            val keyPairGenerator = KeyPairGenerator.getInstance(KEY_ALGORITHM)
             keyPairGenerator.initialize(KEY_SIZE, SecureRandom())
             val keyPair = keyPairGenerator.generateKeyPair()
 
@@ -169,9 +154,7 @@ class CertificateManager(
                     "algorithm" to KEY_ALGORITHM,
                 ),
             )
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to generate device certificate", e)
-            throw e
+        } catch (e: Exception) {            throw e
         }
     }
 
@@ -206,13 +189,8 @@ class CertificateManager(
             val keyPair = KeyPair(publicKey, privateKey)
 
             deviceCertificate = cert
-            deviceKeyPair = keyPair
-
-            Log.i(TAG, "Device certificate loaded successfully")
-            return true
-        } catch (e: Exception) {
-            Log.w(TAG, "Failed to load device certificate", e)
-            return false
+            deviceKeyPair = keyPair            return true
+        } catch (e: Exception) {            return false
         }
     }
 
@@ -226,28 +204,15 @@ class CertificateManager(
 
             certFile.writeBytes(certificate.encoded)
 
-            keyFile.writeBytes(keyPair.private.encoded)
-
-            Log.i(TAG, "Device certificate saved to storage")
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to save device certificate", e)
-            throw e
+            keyFile.writeBytes(keyPair.private.encoded)        } catch (e: Exception) {            throw e
         }
     }
 
     private fun loadTrustedCertificates() {
         try {
             val trustedFile = File(certDirectory, TRUSTED_CERTS_FILE)
-            if (!trustedFile.exists()) {
-                Log.i(TAG, "No trusted certificates file found")
-                return
-            }
-
-
-            Log.i(TAG, "Trusted certificates loaded")
-        } catch (e: Exception) {
-            Log.w(TAG, "Failed to load trusted certificates", e)
-        }
+            if (!trustedFile.exists()) {                return
+            }        } catch (e: Exception) {        }
     }
 
     private fun verifyCertificateChain(certificate: X509Certificate): Boolean {
@@ -266,9 +231,7 @@ class CertificateManager(
             verifier.initVerify(publicKey)
             verifier.update(data)
             verifier.verify(signature)
-        } catch (e: Exception) {
-            Log.e(TAG, "Signature verification failed", e)
-            false
+        } catch (e: Exception) {            false
         }
     }
 
@@ -283,26 +246,16 @@ class CertificateManager(
                         val currentTime = System.currentTimeMillis()
                         val daysUntilExpiry = (expiryTime - currentTime) / (24 * 60 * 60 * 1000L)
 
-                        if (daysUntilExpiry <= ROTATION_THRESHOLD_DAYS) {
-                            Log.i(
-                                TAG,
-                                "Certificate rotation needed - expires in $daysUntilExpiry days"
-                            )
-                            rotateCertificate()
+                        if (daysUntilExpiry <= ROTATION_THRESHOLD_DAYS) {                            rotateCertificate()
                         }
                     }
-                } catch (e: Exception) {
-                    Log.e(TAG, "Error in certificate rotation monitoring", e)
-                }
+                } catch (e: Exception) {                }
             }
         }
     }
 
     private fun rotateCertificate() {
-        try {
-            Log.i(TAG, "Rotating device certificate")
-
-            deviceCertificate?.let { oldCert ->
+        try {            deviceCertificate?.let { oldCert ->
                 val backupFile =
                     File(certDirectory, "device_cert_backup_${System.currentTimeMillis()}.pem")
                 backupFile.writeBytes(oldCert.encoded)
@@ -319,9 +272,7 @@ class CertificateManager(
                     "new_cert_generated" to true,
                 ),
             )
-        } catch (e: Exception) {
-            Log.e(TAG, "Certificate rotation failed", e)
-            logger.log(
+        } catch (e: Exception) {            logger.log(
                 StructuredLogger.LogLevel.ERROR,
                 TAG,
                 "cert_rotation_failed",
@@ -344,9 +295,7 @@ class CertificateManager(
             signature.initSign(privateKey)
             signature.update(data)
             signature.sign()
-        } catch (e: Exception) {
-            Log.e(TAG, "Data signing failed", e)
-            null
+        } catch (e: Exception) {            null
         }
     }
 
@@ -358,9 +307,7 @@ class CertificateManager(
             val cipher = Cipher.getInstance(CIPHER_TRANSFORMATION)
             cipher.init(Cipher.ENCRYPT_MODE, certificate.publicKey)
             cipher.doFinal(data)
-        } catch (e: Exception) {
-            Log.e(TAG, "Data encryption failed", e)
-            null
+        } catch (e: Exception) {            null
         }
     }
 
@@ -371,9 +318,7 @@ class CertificateManager(
             val cipher = Cipher.getInstance(CIPHER_TRANSFORMATION)
             cipher.init(Cipher.DECRYPT_MODE, privateKey)
             cipher.doFinal(encryptedData)
-        } catch (e: Exception) {
-            Log.e(TAG, "Data decryption failed", e)
-            null
+        } catch (e: Exception) {            null
         }
     }
 

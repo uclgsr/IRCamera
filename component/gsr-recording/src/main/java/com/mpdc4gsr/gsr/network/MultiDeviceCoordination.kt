@@ -1,7 +1,6 @@
 package com.mpdc4gsr.gsr.network
 
 import android.content.Context
-import android.util.Log
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -79,10 +78,7 @@ class MultiDeviceCoordination(
 
             initiateLeaderElection()
 
-            startSynchronizationLoop()
-
-            Log.d(TAG, "Multi-device coordination initialized for session: $sessionId")
-        }
+            startSynchronizationLoop()        }
 
     private suspend fun startDeviceDiscovery() {
         val discoveryMessage =
@@ -120,8 +116,7 @@ class MultiDeviceCoordination(
                 batteryLevel = message.optInt("battery_level", 100),
             )
 
-        connectedDevices[remoteDeviceId] = deviceInfo
-        Log.d(TAG, "Discovered device: $remoteDeviceId (${deviceInfo.deviceName})")
+        connectedDevices[remoteDeviceId] = deviceInfo")
     }
 
     private fun handleDeviceDiscoveryRequest(message: JSONObject) {
@@ -187,12 +182,8 @@ class MultiDeviceCoordination(
     }
 
     private fun determineLeader() {
-        if (isLeader.get()) {
-            Log.d(TAG, "This device is the coordination leader")
-            startLeadershipDuties()
-        } else {
-            Log.d(TAG, "This device is a follower")
-            startFollowerMode()
+        if (isLeader.get()) {            startLeadershipDuties()
+        } else {            startFollowerMode()
         }
     }
 
@@ -240,10 +231,7 @@ class MultiDeviceCoordination(
         val currentTime = System.currentTimeMillis()
         val drift = Math.abs(currentTime - leaderTimestamp)
 
-        if (drift > MAX_SYNC_DRIFT_MS) {
-            Log.w(TAG, "Time drift detected: ${drift}ms")
-
-            coordinationScope.launch {
+        if (drift > MAX_SYNC_DRIFT_MS) {            coordinationScope.launch {
                 requestTimeResync()
             }
         }
@@ -294,10 +282,7 @@ class MultiDeviceCoordination(
                     put("session_id", currentSessionId)
                 }
 
-            networkClient.broadcastMessage(eventMessage)
-
-            Log.d(TAG, "Scheduled coordinated event: ${eventType.eventType} at $scheduledTime")
-            eventId
+            networkClient.broadcastMessage(eventMessage)            eventId
         }
 
     private fun handleCoordinationEvent(message: JSONObject) {
@@ -320,10 +305,7 @@ class MultiDeviceCoordination(
     private suspend fun executeCoordinatedEvent(
         eventType: String,
         eventId: String,
-    ) {
-        Log.d(TAG, "Executing coordinated event: $eventType")
-
-        when (eventType) {
+    ) {        when (eventType) {
             "session_start" -> handleSessionStart()
             "session_stop" -> handleSessionStop()
             "recording_start" -> handleRecordingStart()
@@ -352,10 +334,7 @@ class MultiDeviceCoordination(
         }
     }
 
-    private suspend fun handleSyncFlash() {
-
-
-        Log.d(TAG, "Executing sync flash at ${System.currentTimeMillis()}")
+    private suspend fun handleSyncFlash() {}")
 
 
         val flashIntent = android.content.Intent("com.mpdc4gsr.gsr.SYNC_FLASH")
@@ -409,42 +388,25 @@ class MultiDeviceCoordination(
         return false // Placeholder
     }
 
-    private suspend fun requestTimeResync() {
+    private suspend fun requestTimeResync() {    }
 
-        Log.d(TAG, "Requesting time resynchronization")
-    }
+    private suspend fun handleSessionStart() {    }
 
-    private suspend fun handleSessionStart() {
-        Log.d(TAG, "Coordinated session start")
-    }
+    private suspend fun handleSessionStop() {    }
 
-    private suspend fun handleSessionStop() {
-        Log.d(TAG, "Coordinated session stop")
-    }
+    private suspend fun handleRecordingStart() {    }
 
-    private suspend fun handleRecordingStart() {
-        Log.d(TAG, "Coordinated recording start")
-    }
+    private suspend fun handleRecordingStop() {    }
 
-    private suspend fun handleRecordingStop() {
-        Log.d(TAG, "Coordinated recording stop")
-    }
+    private suspend fun handleCalibration() {    }
 
-    private suspend fun handleCalibration() {
-        Log.d(TAG, "Coordinated calibration")
-    }
-
-    private suspend fun handleTimeSync() {
-        Log.d(TAG, "Coordinated time sync")
-    }
+    private suspend fun handleTimeSync() {    }
 
     private fun checkDeviceHealth() {
         val currentTime = System.currentTimeMillis()
         connectedDevices.entries.removeAll { (_, device) ->
             val isStale = (currentTime - device.lastHeartbeat) > HEARTBEAT_TIMEOUT
-            if (isStale) {
-                Log.w(TAG, "Device ${device.deviceId} is no longer responding")
-            }
+            if (isStale) {            }
             isStale
         }
     }
@@ -474,8 +436,5 @@ class MultiDeviceCoordination(
         syncJob?.cancel()
         connectedDevices.clear()
         syncEvents.clear()
-        coordinationJob.cancel()
-
-        Log.d(TAG, "Multi-device coordination stopped")
-    }
+        coordinationJob.cancel()    }
 }

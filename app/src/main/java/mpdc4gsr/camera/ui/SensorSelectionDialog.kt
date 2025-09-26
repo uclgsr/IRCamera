@@ -5,7 +5,6 @@ import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
@@ -46,27 +45,17 @@ class SensorSelectionDialog(
                     // Use Shimmer manager to check for connected GSR-capable devices
                     // For MVP, we'll assume GSR is available and rely on runtime checks
                     false // Simplified check - actual device detection happens at runtime
-                } catch (e: Exception) {
-                    Log.w(TAG, "Error checking connected Shimmer devices: ${e.message}")
-                    false
+                } catch (e: Exception) {                    false
                 }
 
                 if (hasConnectedShimmerDevices) {
-                    available.add(SensorType.GSR)
-                    Log.d(TAG, "Connected Shimmer GSR devices found")
-                } else {
+                    available.add(SensorType.GSR)                } else {
                     // EasyBLE not initialized, assume GSR available with simulation
-                    available.add(SensorType.GSR)
-                    Log.d(TAG, "GSR available (will attempt connection or use simulation mode at runtime)")
+                    available.add(SensorType.GSR)")
                 }
             } catch (e: Exception) {
                 // GSR sensor available even without hardware (simulation mode)
-                available.add(SensorType.GSR)
-                Log.w(TAG, "GSR sensor available with simulated data if needed", e)
-            }
-
-            Log.d(TAG, "Detected available sensors: $available")
-            return available
+                available.add(SensorType.GSR)            }            return available
         }
 
         fun show(
@@ -149,9 +138,7 @@ class SensorSelectionDialog(
         cancelButton =
             Button(context).apply {
                 text = "Cancel"
-                setOnClickListener {
-                    Log.d(TAG, "Sensor selection canceled")
-                    dismiss()
+                setOnClickListener {                    dismiss()
                 }
             }
 
@@ -181,10 +168,7 @@ class SensorSelectionDialog(
             ViewGroup.LayoutParams.WRAP_CONTENT,
         )
         setCancelable(true)
-        setCanceledOnTouchOutside(false)
-
-        Log.i(TAG, "Sensor selection dialog created with available sensors: $availableSensors")
-    }
+        setCanceledOnTouchOutside(false)    }
 
     private fun createSensorCheckBox(sensorType: SensorType): Pair<CheckBox, LinearLayout> {
         val container =
@@ -279,10 +263,7 @@ class SensorSelectionDialog(
         if (selectedSensors.isEmpty()) {
             Toast.makeText(context, "Please select at least one sensor", Toast.LENGTH_SHORT).show()
             return
-        }
-
-        Log.i(TAG, "Starting recording with selected sensors: $selectedSensors")
-        onSensorsSelected(selectedSensors)
+        }        onSensorsSelected(selectedSensors)
         dismiss()
     }
 }

@@ -1,7 +1,6 @@
 package mpdc4gsr.test
 
 import android.os.Bundle
-import android.util.Log
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -72,10 +71,7 @@ class RawCaptureTestActivity : AppCompatActivity() {
                 "Standard RAW"
             } else {
                 "Video Only"
-            }
-
-            Log.i(TAG, "RAW capture mode changed to: $mode")
-        }
+            }        }
 
         // Enable RAW capture by default for testing
         binding.enableRawCaptureSwitch.isChecked = true
@@ -105,23 +101,17 @@ class RawCaptureTestActivity : AppCompatActivity() {
 
             lifecycleScope.launch {
                 val initialized = rgbCameraRecorder?.initialize() ?: false
-                if (initialized) {
-                    Log.i(TAG, "RGB camera initialized for Stage 3 DNG testing")
-                    observeCameraStatus()
+                if (initialized) {                    observeCameraStatus()
                     runOnUiThread {
                         binding.statusText.text = binding.statusText.text.toString() + " - Camera Ready"
                     }
-                } else {
-                    Log.w(TAG, "Camera initialization failed")
-                    runOnUiThread {
+                } else {                    runOnUiThread {
                         Toast.makeText(this@RawCaptureTestActivity, "Camera initialization failed", Toast.LENGTH_SHORT)
                             .show()
                     }
                 }
             }
-        } catch (e: Exception) {
-            Log.e(TAG, "Error initializing camera", e)
-            Toast.makeText(this, "Camera setup error: ${e.message}", Toast.LENGTH_SHORT).show()
+        } catch (e: Exception) {            Toast.makeText(this, "Camera setup error: ${e.message}", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -191,15 +181,11 @@ class RawCaptureTestActivity : AppCompatActivity() {
                         if (SamsungDeviceCompatibility.isStage3Compatible()) "Stage 3/Level 3 DNG" else "Standard RAW"
                     } else "Video Only"
 
-                    binding.statusText.text = "🎬 Recording: $mode | Session: $sessionId"
-                    Log.i(TAG, "Recording started with $mode processing")
-                } else {
+                    binding.statusText.text = "🎬 Recording: $mode | Session: $sessionId"                } else {
                     throw Exception("Failed to start recording")
                 }
 
-            } catch (e: Exception) {
-                Log.e(TAG, "Error starting recording", e)
-                isRecording = false
+            } catch (e: Exception) {                isRecording = false
                 binding.startStopButton.text = "▶️ Start Multi-Modal Recording"
                 binding.startStopButton.setBackgroundColor(resources.getColor(android.R.color.holo_green_dark))
                 Toast.makeText(this@RawCaptureTestActivity, "Recording failed: ${e.message}", Toast.LENGTH_SHORT).show()
@@ -218,15 +204,11 @@ class RawCaptureTestActivity : AppCompatActivity() {
 
                 if (success) {
                     binding.statusText.text =
-                        "✅ Recording stopped successfully - check files for Stage 3/Level 3 DNG output"
-                    Log.i(TAG, "Recording stopped successfully")
-                } else {
+                        "✅ Recording stopped successfully - check files for Stage 3/Level 3 DNG output"                } else {
                     binding.statusText.text = "⚠️ Recording stopped with warnings"
                 }
 
-            } catch (e: Exception) {
-                Log.e(TAG, "Error stopping recording", e)
-                binding.statusText.text = "❌ Error stopping recording: ${e.message}"
+            } catch (e: Exception) {                binding.statusText.text = "❌ Error stopping recording: ${e.message}"
             }
         }
     }
@@ -236,9 +218,7 @@ class RawCaptureTestActivity : AppCompatActivity() {
         lifecycleScope.launch {
             try {
                 rgbCameraRecorder?.cleanup()
-            } catch (e: Exception) {
-                Log.e(TAG, "Error during cleanup", e)
-            }
+            } catch (e: Exception) {            }
         }
     }
 }

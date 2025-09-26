@@ -1,7 +1,6 @@
 package com.mpdc4gsr.gsr.network
 
 import android.content.Context
-import android.util.Log
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -83,12 +82,7 @@ class CameraNetworkIntegration(
 
     suspend fun initializeCameraStreaming(sessionId: String) =
         withContext(Dispatchers.IO) {
-            currentSessionId = sessionId
-
-            Log.d(TAG, "Initialized camera streaming for session: $sessionId")
-
-
-            val initMessage =
+            currentSessionId = sessionId            val initMessage =
                 JSONObject().apply {
                     put("type", "camera_stream_init")
                     put("session_id", sessionId)
@@ -107,14 +101,8 @@ class CameraNetworkIntegration(
 
     suspend fun startRgbStreaming() =
         withContext(Dispatchers.IO) {
-            if (isRgbStreamingActive.getAndSet(true)) {
-                Log.w(TAG, "RGB streaming already active")
-                return@withContext
-            }
-
-            Log.d(TAG, "Starting RGB camera streaming")
-
-            rgbStreamingJob =
+            if (isRgbStreamingActive.getAndSet(true)) {                return@withContext
+            }            rgbStreamingJob =
                 streamingScope.launch {
                     while (isRgbStreamingActive.get()) {
                         processRgbFrameQueue()
@@ -136,14 +124,8 @@ class CameraNetworkIntegration(
 
     suspend fun startThermalStreaming() =
         withContext(Dispatchers.IO) {
-            if (isThermalStreamingActive.getAndSet(true)) {
-                Log.w(TAG, "Thermal streaming already active")
-                return@withContext
-            }
-
-            Log.d(TAG, "Starting thermal camera streaming")
-
-            thermalStreamingJob =
+            if (isThermalStreamingActive.getAndSet(true)) {                return@withContext
+            }            thermalStreamingJob =
                 streamingScope.launch {
                     while (isThermalStreamingActive.get()) {
                         processThermalFrameQueue()
@@ -179,9 +161,7 @@ class CameraNetworkIntegration(
             if (rgbFrameQueue.size >= MAX_FRAME_QUEUE_SIZE * FRAME_DROP_THRESHOLD) {
 
                 rgbFrameQueue.poll()?.let {
-                    droppedFrameCount.incrementAndGet()
-                    Log.v(TAG, "Dropped RGB frame due to queue overflow")
-                }
+                    droppedFrameCount.incrementAndGet()                }
             }
 
 
@@ -198,9 +178,7 @@ class CameraNetworkIntegration(
                 )
 
             rgbFrameQueue.offer(rgbFrame)
-        } catch (e: Exception) {
-            Log.e(TAG, "Error processing RGB frame", e)
-        }
+        } catch (e: Exception) {        }
     }
 
     fun processThermalFrame(
@@ -220,9 +198,7 @@ class CameraNetworkIntegration(
             if (thermalFrameQueue.size >= MAX_FRAME_QUEUE_SIZE * FRAME_DROP_THRESHOLD) {
 
                 thermalFrameQueue.poll()?.let {
-                    droppedFrameCount.incrementAndGet()
-                    Log.v(TAG, "Dropped thermal frame due to queue overflow")
-                }
+                    droppedFrameCount.incrementAndGet()                }
             }
 
             val thermalFrame =
@@ -238,9 +214,7 @@ class CameraNetworkIntegration(
                 )
 
             thermalFrameQueue.offer(thermalFrame)
-        } catch (e: Exception) {
-            Log.e(TAG, "Error processing thermal frame", e)
-        }
+        } catch (e: Exception) {        }
     }
 
     private fun determineJpegQuality(): Int {
@@ -290,9 +264,7 @@ class CameraNetworkIntegration(
 
 
             networkClient.sendMessage(frameMessage)
-        } catch (e: Exception) {
-            Log.e(TAG, "Error sending RGB frame", e)
-        }
+        } catch (e: Exception) {        }
     }
 
     private fun compressThermalData(thermalData: FloatArray): ByteArray {
@@ -340,10 +312,7 @@ class CameraNetworkIntegration(
                 }
             }
             compressed.toByteArray()
-        } catch (e: Exception) {
-            Log.w(TAG, "Failed to compress thermal data, using float-to-byte conversion", e)
-
-            val byteBuffer = ByteBuffer.allocate(thermalData.size * 4)
+        } catch (e: Exception) {            val byteBuffer = ByteBuffer.allocate(thermalData.size * 4)
             for (value in thermalData) {
                 byteBuffer.putFloat(value)
             }
@@ -389,9 +358,7 @@ class CameraNetworkIntegration(
 
 
             networkClient.sendMessage(frameMessage)
-        } catch (e: Exception) {
-            Log.e(TAG, "Error sending thermal frame", e)
-        }
+        } catch (e: Exception) {        }
     }
 
     private fun serializeThermalData(thermalData: FloatArray): ByteArray {
@@ -406,18 +373,11 @@ class CameraNetworkIntegration(
 
     suspend fun stopRgbStreaming() =
         withContext(Dispatchers.IO) {
-            if (!isRgbStreamingActive.getAndSet(false)) {
-                Log.w(TAG, "RGB streaming not active")
-                return@withContext
+            if (!isRgbStreamingActive.getAndSet(false)) {                return@withContext
             }
 
             rgbStreamingJob?.cancel()
-            rgbFrameQueue.clear()
-
-            Log.d(TAG, "RGB streaming stopped")
-
-
-            val stopMessage =
+            rgbFrameQueue.clear()            val stopMessage =
                 JSONObject().apply {
                     put("type", "stream_stopped")
                     put("stream_id", RGB_STREAM_ID)
@@ -430,18 +390,11 @@ class CameraNetworkIntegration(
 
     suspend fun stopThermalStreaming() =
         withContext(Dispatchers.IO) {
-            if (!isThermalStreamingActive.getAndSet(false)) {
-                Log.w(TAG, "Thermal streaming not active")
-                return@withContext
+            if (!isThermalStreamingActive.getAndSet(false)) {                return@withContext
             }
 
             thermalStreamingJob?.cancel()
-            thermalFrameQueue.clear()
-
-            Log.d(TAG, "Thermal streaming stopped")
-
-
-            val stopMessage =
+            thermalFrameQueue.clear()            val stopMessage =
                 JSONObject().apply {
                     put("type", "stream_stopped")
                     put("stream_id", THERMAL_STREAM_ID)
@@ -498,8 +451,5 @@ class CameraNetworkIntegration(
             rgbFrameQueue.clear()
             thermalFrameQueue.clear()
 
-            streamingJob.cancel()
-
-            Log.d(TAG, "All camera streaming stopped")
-        }
+            streamingJob.cancel()        }
 }

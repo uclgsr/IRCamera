@@ -19,8 +19,7 @@ public final class DialogLog {
     public static void print(@NonNull Object log) {
         if (!enable) {
             return;
-        }
-        Log.d(TAG, log.toString());
+        });
     }
 
 }

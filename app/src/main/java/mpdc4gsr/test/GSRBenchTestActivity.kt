@@ -1,7 +1,6 @@
 package mpdc4gsr.test
 
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -81,9 +80,7 @@ class GSRBenchTestActivity : AppCompatActivity() {
             gsrRecorder = GSRSensorRecorder(this, "bench_test_gsr", 128, recordingController!!)
             updateResults("✓ GSR components initialized successfully\n")
         } catch (e: Exception) {
-            updateResults("✗ Failed to initialize GSR components: ${e.message}\n")
-            Log.e(TAG, "Failed to initialize components", e)
-        }
+            updateResults("✗ Failed to initialize GSR components: ${e.message}\n")        }
     }
 
     /**
@@ -155,9 +152,7 @@ class GSRBenchTestActivity : AppCompatActivity() {
             true
 
         } catch (e: Exception) {
-            updateResults("✗ Connection test failed: ${e.message}\n")
-            Log.e(TAG, "Connection test failed", e)
-            false
+            updateResults("✗ Connection test failed: ${e.message}\n")            false
         }
     }
 
@@ -172,9 +167,7 @@ class GSRBenchTestActivity : AppCompatActivity() {
             true
 
         } catch (e: Exception) {
-            updateResults("✗ Data streaming test failed: ${e.message}\n")
-            Log.e(TAG, "Data streaming test failed", e)
-            false
+            updateResults("✗ Data streaming test failed: ${e.message}\n")            false
         }
     }
 
@@ -194,9 +187,7 @@ class GSRBenchTestActivity : AppCompatActivity() {
             }
 
         } catch (e: Exception) {
-            updateResults("✗ Sampling rate test failed: ${e.message}\n")
-            Log.e(TAG, "Sampling rate test failed", e)
-            false
+            updateResults("✗ Sampling rate test failed: ${e.message}\n")            false
         }
     }
 
@@ -220,9 +211,7 @@ class GSRBenchTestActivity : AppCompatActivity() {
             true
 
         } catch (e: Exception) {
-            updateResults("✗ Calibration test failed: ${e.message}\n")
-            Log.e(TAG, "Calibration test failed", e)
-            false
+            updateResults("✗ Calibration test failed: ${e.message}\n")            false
         }
     }
 
@@ -254,9 +243,7 @@ class GSRBenchTestActivity : AppCompatActivity() {
             lifecycleScope.launch {
                 try {
                     recorder.cleanup()
-                } catch (e: Exception) {
-                    Log.e(TAG, "Error cleaning up GSR recorder", e)
-                }
+                } catch (e: Exception) {                }
             }
         }
     }

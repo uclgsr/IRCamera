@@ -1,7 +1,6 @@
 package mpdc4gsr.security
 
 import android.content.Context
-import android.util.Log
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -108,10 +107,7 @@ class SecurityMonitor(
     private var securityListener: SecurityEventListener? = null
 
     fun initialize(): Boolean {
-        return try {
-            Log.i(TAG, "Initializing security monitoring system")
-
-            logger.log(
+        return try {            logger.log(
                 StructuredLogger.LogLevel.INFO,
                 TAG,
                 "security_monitor_initialized",
@@ -123,9 +119,7 @@ class SecurityMonitor(
             )
 
             true
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to initialize security monitor", e)
-            logger.log(
+        } catch (e: Exception) {            logger.log(
                 StructuredLogger.LogLevel.ERROR,
                 TAG,
                 "init_failed",
@@ -142,9 +136,7 @@ class SecurityMonitor(
     }
 
     fun startMonitoring() {
-        if (isMonitoring.get()) {
-            Log.w(TAG, "Security monitoring already started")
-            return
+        if (isMonitoring.get()) {            return
         }
 
         isMonitoring.set(true)
@@ -154,9 +146,7 @@ class SecurityMonitor(
                 try {
                     performSecurityCheck()
                     delay(MONITORING_INTERVAL_MS)
-                } catch (e: Exception) {
-                    Log.e(TAG, "Error in security monitoring loop", e)
-                }
+                } catch (e: Exception) {                }
             }
         }
 
@@ -165,15 +155,9 @@ class SecurityMonitor(
                 try {
                     performCleanup()
                     delay(CLEANUP_INTERVAL_MS)
-                } catch (e: Exception) {
-                    Log.e(TAG, "Error in cleanup task", e)
-                }
+                } catch (e: Exception) {                }
             }
-        }
-
-        Log.i(TAG, "Security monitoring started")
-
-        logger.log(
+        }        logger.log(
             StructuredLogger.LogLevel.INFO,
             TAG,
             "monitoring_started",
@@ -185,11 +169,7 @@ class SecurityMonitor(
 
     fun stopMonitoring() {
         isMonitoring.set(false)
-        scope.cancel()
-
-        Log.i(TAG, "Security monitoring stopped")
-
-        logger.log(
+        scope.cancel()        logger.log(
             StructuredLogger.LogLevel.INFO,
             TAG,
             "monitoring_stopped",

@@ -1,7 +1,6 @@
 package mpdc4gsr.camera.core
 
 import android.graphics.SurfaceTexture
-import android.util.Log
 import android.view.Surface
 import android.view.TextureView
 
@@ -30,9 +29,7 @@ class UiBridge(private val textureView: TextureView) {
     fun isTextureReady(): Boolean = isTextureAvailable
 
     fun updateMode(mode: String) {
-        currentMode = mode
-        Log.i(TAG, "Mode updated: $mode")
-        onModeChanged?.invoke(mode)
+        currentMode = mode        onModeChanged?.invoke(mode)
 
         onRecordingStateChanged?.invoke(isRecording, mode)
     }
@@ -41,9 +38,7 @@ class UiBridge(private val textureView: TextureView) {
         isRecording = recording
         val status = if (recording) "● REC" else "○ STOPPED"
         val fullInfo =
-            if (additionalInfo.isNotEmpty()) "$currentMode - $additionalInfo" else currentMode
-
-        Log.i(TAG, "Recording state: $status ($fullInfo)")
+            if (additionalInfo.isNotEmpty()) "$currentMode - $additionalInfo" else currentMode")
         onRecordingStateChanged?.invoke(recording, fullInfo)
 
         if (recording) {
@@ -53,30 +48,22 @@ class UiBridge(private val textureView: TextureView) {
         }
     }
 
-    fun reportError(error: String) {
-        Log.e(TAG, "Error: $error")
-        onError?.invoke(error)
+    fun reportError(error: String) {        onError?.invoke(error)
     }
 
-    fun reportProgress(message: String) {
-        Log.i(TAG, "Progress: $message")
-        onProgress?.invoke(message)
+    fun reportProgress(message: String) {        onProgress?.invoke(message)
     }
 
     fun updatePreviewSize(
         width: Int,
         height: Int,
     ) {
-        textureView.surfaceTexture?.setDefaultBufferSize(width, height)
-        Log.d(TAG, "Preview size updated: ${width}x$height")
-    }
+        textureView.surfaceTexture?.setDefaultBufferSize(width, height)    }
 
     fun release() {
         previewSurface?.release()
         previewSurface = null
-        isTextureAvailable = false
-        Log.d(TAG, "UiBridge released")
-    }
+        isTextureAvailable = false    }
 
     private fun setupTextureView() {
         textureView.surfaceTextureListener =
@@ -88,27 +75,19 @@ class UiBridge(private val textureView: TextureView) {
                 ) {
                     previewSurface?.release()
                     previewSurface = Surface(texture)
-                    isTextureAvailable = true
-
-                    Log.i(TAG, "TextureView surface available: ${width}x$height")
-                    reportProgress("Preview surface ready")
+                    isTextureAvailable = true                    reportProgress("Preview surface ready")
                 }
 
                 override fun onSurfaceTextureSizeChanged(
                     texture: SurfaceTexture,
                     width: Int,
                     height: Int,
-                ) {
-                    Log.d(TAG, "TextureView size changed: ${width}x$height")
-                }
+                ) {                }
 
                 override fun onSurfaceTextureDestroyed(texture: SurfaceTexture): Boolean {
                     previewSurface?.release()
                     previewSurface = null
-                    isTextureAvailable = false
-
-                    Log.i(TAG, "TextureView surface destroyed")
-                    return true
+                    isTextureAvailable = false                    return true
                 }
 
                 override fun onSurfaceTextureUpdated(texture: SurfaceTexture) {

@@ -1,7 +1,6 @@
 package mpdc4gsr.network
 
 import android.content.Context
-import android.util.Log
 import mpdc4gsr.core.StructuredLogger
 import org.json.JSONArray
 import org.json.JSONObject
@@ -957,13 +956,7 @@ class DataManagementService(private val context: Context) {
                 put("external_files", fileManifest)
             }
 
-            exportFile.writeText(hdf5Structure.toString(2))
-            Log.i(TAG, "Session exported in HDF5-compatible JSON format: ${exportFile.absolutePath}")
-
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to export session as HDF5", e)
-
-            exportSessionAsJSON(session, exportFile, includeFiles = true)
+            exportFile.writeText(hdf5Structure.toString(2))        } catch (e: Exception) {            exportSessionAsJSON(session, exportFile, includeFiles = true)
         }
     }
 
@@ -1025,14 +1018,8 @@ class DataManagementService(private val context: Context) {
                                 input.copyTo(zipOutputStream)
                             }
 
-                            zipOutputStream.closeEntry()
-                            Log.d(TAG, "Added file to ZIP: ${fileInfo.relativePath}")
-                        } else {
-                            Log.w(TAG, "File not found for ZIP export: ${sourceFile.absolutePath}")
-                        }
-                    } catch (e: Exception) {
-                        Log.e(TAG, "Failed to add file to ZIP: ${fileInfo.relativePath}", e)
-                    }
+                            zipOutputStream.closeEntry()                        } else {                        }
+                    } catch (e: Exception) {                    }
                 }
             }
 
@@ -1066,15 +1053,9 @@ class DataManagementService(private val context: Context) {
             zipOutputStream.write(readme.toByteArray())
             zipOutputStream.closeEntry()
 
-            zipOutputStream.close()
+            zipOutputStream.close()"with" else "without"} data)")
 
-            Log.i(TAG, "Session exported as ZIP archive: ${exportFile.absolutePath}")
-            Log.i(TAG, "ZIP contains ${session.files.size} files (${if (includeFiles) "with" else "without"} data)")
-
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to create ZIP export", e)
-
-            exportSessionAsJSON(session, exportFile, includeFiles)
+        } catch (e: Exception) {            exportSessionAsJSON(session, exportFile, includeFiles)
         }
     }
 

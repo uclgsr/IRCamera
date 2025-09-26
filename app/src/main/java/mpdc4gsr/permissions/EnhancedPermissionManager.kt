@@ -1,7 +1,6 @@
 package mpdc4gsr.permissions
 
 import android.content.Context
-import android.util.Log
 
 
 class EnhancedPermissionManager(
@@ -13,21 +12,13 @@ class EnhancedPermissionManager(
     }
 
 
-    suspend fun requestCameraPermissions(): Boolean {
-        Log.d(TAG, "Enhanced camera permission request")
-
-        return permissionController.hasCameraPermission()
+    suspend fun requestCameraPermissions(): Boolean {        return permissionController.hasCameraPermission()
     }
 
 
-    suspend fun requestBluetoothPermissions(): Boolean {
-        Log.d(TAG, "Enhanced Bluetooth permission request")
-
-        return permissionController.hasBluetoothPermissions()
+    suspend fun requestBluetoothPermissions(): Boolean {        return permissionController.hasBluetoothPermissions()
     }
 
-    suspend fun requestAllCriticalPermissions(): Boolean {
-        Log.d(TAG, "Enhanced request all critical permissions")
-        return requestCameraPermissions() && requestBluetoothPermissions()
+    suspend fun requestAllCriticalPermissions(): Boolean {        return requestCameraPermissions() && requestBluetoothPermissions()
     }
 }

@@ -1,6 +1,5 @@
 package mpdc4gsr
 
-import android.util.Log
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -42,14 +41,8 @@ class ShimmerNetworkClient(
 
     suspend fun connect(): Boolean = withContext(Dispatchers.IO) {
         try {
-            if (isConnected.get()) {
-                Log.i(TAG, "Already connected to server")
-                return@withContext true
-            }
-
-            Log.i(TAG, "Connecting to PC Controller at $serverHost:$serverPort")
-
-            socket = Socket()
+            if (isConnected.get()) {                return@withContext true
+            }            socket = Socket()
             socket?.connect(
                 java.net.InetSocketAddress(serverHost, serverPort),
                 CONNECTION_TIMEOUT_MS
@@ -63,18 +56,13 @@ class ShimmerNetworkClient(
 
             startMessageListener()
 
-            startHeartbeat()
-
-            Log.i(TAG, "Connected to PC Controller successfully")
-            withContext(Dispatchers.Main) {
+            startHeartbeat()            withContext(Dispatchers.Main) {
                 onConnected?.invoke()
             }
 
             return@withContext true
 
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to connect to PC Controller: ${e.message}")
-            cleanup()
+        } catch (e: Exception) {            cleanup()
             withContext(Dispatchers.Main) {
                 onError?.invoke("Connection failed: ${e.message}")
             }
@@ -84,17 +72,13 @@ class ShimmerNetworkClient(
 
     fun disconnect() {
         networkScope.launch {
-            try {
-                Log.i(TAG, "Disconnecting from PC Controller")
-                cleanup()
+            try {                cleanup()
 
                 withContext(Dispatchers.Main) {
                     onDisconnected?.invoke()
                 }
 
-            } catch (e: Exception) {
-                Log.e(TAG, "Error during disconnect: ${e.message}")
-            }
+            } catch (e: Exception) {            }
         }
     }
 
@@ -114,9 +98,7 @@ class ShimmerNetworkClient(
 
                 sendMessage(message)
 
-            } catch (e: Exception) {
-                Log.w(TAG, "Error sending GSR sample: ${e.message}")
-            }
+            } catch (e: Exception) {            }
         }
     }
 
@@ -129,12 +111,7 @@ class ShimmerNetworkClient(
                     put("timestamp_ms", System.currentTimeMillis())
                 }
 
-                sendMessage(message)
-                Log.i(TAG, "Sent recording start notification")
-
-            } catch (e: Exception) {
-                Log.w(TAG, "Error sending recording start: ${e.message}")
-            }
+                sendMessage(message)            } catch (e: Exception) {            }
         }
     }
 
@@ -148,12 +125,7 @@ class ShimmerNetworkClient(
                     put("total_samples", sampleCount)
                 }
 
-                sendMessage(message)
-                Log.i(TAG, "Sent recording stop notification")
-
-            } catch (e: Exception) {
-                Log.w(TAG, "Error sending recording stop: ${e.message}")
-            }
+                sendMessage(message)            } catch (e: Exception) {            }
         }
     }
 
@@ -167,12 +139,7 @@ class ShimmerNetworkClient(
                     put("metadata", JSONObject(metadata))
                 }
 
-                sendMessage(message)
-                Log.i(TAG, "Sent sync marker: $markerType")
-
-            } catch (e: Exception) {
-                Log.w(TAG, "Error sending sync marker: ${e.message}")
-            }
+                sendMessage(message)            } catch (e: Exception) {            }
         }
     }
 
@@ -183,10 +150,7 @@ class ShimmerNetworkClient(
                 out.print(messageStr)
                 out.flush()
             }
-        } catch (e: Exception) {
-            Log.e(TAG, "Error sending message: ${e.message}")
-
-            handleConnectionError(e)
+        } catch (e: Exception) {            handleConnectionError(e)
         }
     }
 
@@ -199,17 +163,13 @@ class ShimmerNetworkClient(
                         val line = input.readLine()
                         if (line != null) {
                             processServerMessage(line)
-                        } else {
-                            Log.w(TAG, "Server closed connection")
-                            return@launch
+                        } else {                            return@launch
                         }
                     } else {
                         return@launch
                     }
                 }
-            } catch (e: Exception) {
-                Log.e(TAG, "Message listener error: ${e.message}")
-                handleConnectionError(e)
+            } catch (e: Exception) {                handleConnectionError(e)
             }
         }
     }
@@ -227,9 +187,7 @@ class ShimmerNetworkClient(
 
                     sendMessage(heartbeat)
 
-                } catch (e: Exception) {
-                    Log.w(TAG, "Heartbeat error: ${e.message}")
-                    break
+                } catch (e: Exception) {                    break
                 }
             }
         }
@@ -241,36 +199,22 @@ class ShimmerNetworkClient(
             val type = json.getString("type")
 
             when (type) {
-                "connection_ack" -> {
-                    Log.i(TAG, "Received connection acknowledgment from PC Controller")
-                }
+                "connection_ack" -> {                }
 
-                "sync_request" -> {
-                    Log.i(TAG, "Received sync request from PC Controller")
+                "sync_request" -> {                }
 
-                }
-
-                else -> {
-                    Log.d(TAG, "Received message: $type")
-                }
+                else -> {                }
             }
 
-        } catch (e: Exception) {
-            Log.w(TAG, "Error processing server message: ${e.message}")
-        }
+        } catch (e: Exception) {        }
     }
 
-    private fun handleConnectionError(error: Exception) {
-        Log.w(TAG, "Connection error: ${error.message}")
-
-        if (isRunning.get()) {
+    private fun handleConnectionError(error: Exception) {        if (isRunning.get()) {
             cleanup()
 
             networkScope.launch {
                 delay(RECONNECT_DELAY_MS)
-                if (isRunning.get()) {
-                    Log.i(TAG, "Attempting to reconnect...")
-                    connect()
+                if (isRunning.get()) {                    connect()
                 }
             }
         }
@@ -287,9 +231,7 @@ class ShimmerNetworkClient(
             outputStream?.close()
             inputStream?.close()
             socket?.close()
-        } catch (e: Exception) {
-            Log.w(TAG, "Error during cleanup: ${e.message}")
-        }
+        } catch (e: Exception) {        }
 
         outputStream = null
         inputStream = null

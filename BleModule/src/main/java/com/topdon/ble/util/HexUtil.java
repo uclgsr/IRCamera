@@ -138,16 +138,12 @@ public class HexUtil {
 
     public static byte[] readFileToByteArray(String path) {
         File file = new File(path);
-        if (!file.exists()) {
-            Log.d("bcf", "File doesn't exist!");
-            return null;
+        if (!file.exists()) {            return null;
         }
         try {
             in = new FileInputStream(file);
             long inSize = in.getChannel().size();//判断FileInputStream中是否有内容
-            if (inSize == 0) {
-                Log.d("bcf", "The FileInputStream has no content!");
-                return null;
+            if (inSize == 0) {                return null;
             }
 
             byte[] buffer = new byte[in.available()];//in.available() 表示要读取的文件中的数据长度

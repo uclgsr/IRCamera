@@ -10,7 +10,6 @@ import android.media.MediaFormat
 import android.media.MediaMuxer
 import android.os.Build
 import android.os.Looper
-import android.util.Log
 import java.io.File
 import java.io.IOException
 import java.nio.ByteBuffer
@@ -246,9 +245,7 @@ class YapVideoEncoder(
         if (endOfStream) {
             try {
                 mediaCodec!!.signalEndOfInputStream()
-            } catch (e: Exception) {
-                Log.e("123", "[ph][ph][ph][ph]:${e.message}")
-                e.printStackTrace()
+            } catch (e: Exception) {                e.printStackTrace()
             }
         }
         while (true) {
@@ -265,12 +262,7 @@ class YapVideoEncoder(
                 mTrackIndex = mediaMuxer!!.addTrack(mediaFormat)
                 mediaMuxer!!.start()
                 mMuxerStarted = true
-            } else if (encoderStatus < 0) {
-                Log.d(
-                    "YapVideoEncoder",
-                    "unexpected result from encoder.dequeueOutputBuffer: $encoderStatus",
-                )
-            } else {
+            } else if (encoderStatus < 0) {            } else {
                 val outputBuffer =
                     (
                             if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP) {
@@ -283,9 +275,7 @@ class YapVideoEncoder(
                     bufferInfo.size = 0
                 }
                 if (bufferInfo.size != 0) {
-                    if (!mMuxerStarted) {
-                        Log.d("YapVideoEncoder", "error:muxer hasn't started")
-                    }
+                    if (!mMuxerStarted) {                    }
                     outputBuffer.position(bufferInfo.offset)
                     outputBuffer.limit(bufferInfo.offset + bufferInfo.size)
                     try {
@@ -296,12 +286,8 @@ class YapVideoEncoder(
                 }
                 mediaCodec!!.releaseOutputBuffer(encoderStatus, false)
                 if (bufferInfo.flags and MediaCodec.BUFFER_FLAG_END_OF_STREAM != 0) {
-                    if (!endOfStream) {
-                        Log.d("YapVideoEncoder", "reached end of stream unexpectedly")
-                        IProvider.progress(-1f)
-                    } else {
-                        Log.d("YapVideoEncoder", "end of stream reached")
-                    }
+                    if (!endOfStream) {                        IProvider.progress(-1f)
+                    } else {                    }
                     break
                 }
             }

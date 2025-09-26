@@ -3,7 +3,6 @@ package mpdc4gsr.security
 import android.content.Context
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
-import android.util.Log
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -130,10 +129,7 @@ class AdvancedAuthenticationManager(private val context: Context) {
     private var authListener: AuthenticationListener? = null
 
     fun initialize(): Boolean {
-        return try {
-            Log.i(TAG, "Initializing advanced authentication system")
-
-            certificateManager =
+        return try {            certificateManager =
                 CertificateManager(context, logger).apply {
                     initialize()
                 }
@@ -164,9 +160,7 @@ class AdvancedAuthenticationManager(private val context: Context) {
             )
 
             true
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to initialize advanced authentication", e)
-            logger.log(
+        } catch (e: Exception) {            logger.log(
                 StructuredLogger.LogLevel.ERROR,
                 TAG,
                 "init_failed",
@@ -209,9 +203,7 @@ class AdvancedAuthenticationManager(private val context: Context) {
             }
 
             return result
-        } catch (e: Exception) {
-            Log.e(TAG, "Authentication error for device $deviceId", e)
-            logger.log(
+        } catch (e: Exception) {            logger.log(
                 StructuredLogger.LogLevel.ERROR,
                 TAG,
                 "auth_error",
@@ -457,9 +449,7 @@ class AdvancedAuthenticationManager(private val context: Context) {
                 android.util.Base64.encodeToString(mac.doFinal(data), android.util.Base64.NO_WRAP)
 
             calculatedHmac == providedHmac
-        } catch (e: Exception) {
-            Log.e(TAG, "HMAC verification failed", e)
-            false
+        } catch (e: Exception) {            false
         }
     }
 
@@ -482,9 +472,7 @@ class AdvancedAuthenticationManager(private val context: Context) {
             signature_verifier.update(hardwareKey)
 
             signature_verifier.verify(signature)
-        } catch (e: Exception) {
-            Log.e(TAG, "Hardware key verification failed", e)
-            false
+        } catch (e: Exception) {            false
         }
     }
 
@@ -516,12 +504,7 @@ class AdvancedAuthenticationManager(private val context: Context) {
         try {
             generateDeviceKey()
             generateSessionKey()
-            generateHmacKey()
-
-            Log.i(TAG, "Android Keystore initialized successfully")
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to initialize keystore", e)
-        }
+            generateHmacKey()        } catch (e: Exception) {        }
     }
 
     private fun generateDeviceKey() {
@@ -651,8 +634,5 @@ class AdvancedAuthenticationManager(private val context: Context) {
         securityMonitor?.stopMonitoring()
         certificateManager = null
         roleManager = null
-        securityMonitor = null
-
-        Log.i(TAG, "Advanced authentication manager shutdown complete")
-    }
+        securityMonitor = null    }
 }

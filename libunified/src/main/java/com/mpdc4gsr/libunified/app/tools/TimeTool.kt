@@ -1,7 +1,6 @@
 package com.mpdc4gsr.libunified.app.tools
 
 import android.annotation.SuppressLint
-import android.util.Log
 import com.mpdc4gsr.libunified.app.utils.CommUtils
 import java.io.File
 import java.text.ParsePosition
@@ -140,9 +139,7 @@ object TimeTool {
                 } else {
                     file.lastModified()
                 }
-        } catch (e: Exception) {
-            Log.e("[ph][ph][ph][ph][ph][ph][ph][ph][ph][ph]", "${e.message}")
-        }
+        } catch (e: Exception) {        }
         return currentTime
     }
 }

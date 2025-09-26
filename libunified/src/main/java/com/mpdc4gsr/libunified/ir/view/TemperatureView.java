@@ -152,18 +152,11 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
                 byte[] tempArray;
                 if (productType == Const.TYPE_IR_DUAL) {
                     try {
-                        if (remapTempData == null) {
-                            Log.d(TAG, "remapTempData == NULL");
-                            if (dualUVCCamera != null && llTempData != null
-                                    && dualUVCCamera.getTempData(llTempData) != 0) {
-
-                                Log.d(TAG, "--------error----------");
-                                SystemClock.sleep(1000);
+                        if (remapTempData == null) {                            if (dualUVCCamera != null && llTempData != null
+                                    && dualUVCCamera.getTempData(llTempData) != 0) {                                SystemClock.sleep(1000);
                                 continue;
                             }
-                        } else {
-                            Log.d(TAG, "remapTempData != NULL");
-                            System.arraycopy(remapTempData, 0, llTempData, 0,
+                        } else {                            System.arraycopy(remapTempData, 0, llTempData, 0,
                                     temperatureHeight * temperatureWidth * 2);
                         }
                         if (llTempData == null) {
@@ -172,8 +165,7 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
                             tempArray = llTempData;
                             irtemp.setTempData(llTempData);
                         }
-                    } catch (Exception e) {
-                        Log.d(TAG, "remapTempData != NULL" + e.getMessage());
+                    } catch (Exception e) {);
                         continue;
                     }
                 } else {
@@ -183,8 +175,7 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
                             irtemp.setTempData(temperature);
                             if (syncimage.type == 1) irtemp.setScale(16);
                         }
-                    } catch (Exception e) {
-                        Log.d(TAG, "syncimage != NULL" + e.getMessage());
+                    } catch (Exception e) {);
                     }
                     tempArray = temperature;
                 }
@@ -333,17 +324,13 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
                             surfaceViewCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
                             surfaceViewCanvas.drawBitmap(regionAndValueBitmap, new Rect(0, 0, viewWidth, viewHeight), new Rect(0, 0, viewWidth, viewHeight), null);
                             getHolder().unlockCanvasAndPost(surfaceViewCanvas);
-                        } catch (Exception e) {
-                            Log.e(TAG, "temperatureThread:" + e.getMessage());
+                        } catch (Exception e) {);
                         }
                     }
-                } catch (Exception e) {
-                    Log.e(TAG, "temperatureError:" + e.getMessage());
+                } catch (Exception e) {);
                 }
                 SystemClock.sleep(1000);
-            }
-            Log.d(TAG, "temperatureThread exit");
-        };
+            }        };
     }
 
     private static boolean isLineConcat(@NonNull Line line, int x, int y) {

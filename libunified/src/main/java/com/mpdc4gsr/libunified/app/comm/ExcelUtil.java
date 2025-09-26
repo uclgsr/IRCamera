@@ -92,8 +92,7 @@ public class ExcelUtil {
                         workbook.write(bos);
                         bos.flush();
                         bos.close();
-                    }
-                    Log.w("Export", UriUtils.uri2File(uri).getAbsolutePath());
+                    }.getAbsolutePath());
                     return UriUtils.uri2File(uri).getAbsolutePath();
                 } else {
                     return null;
@@ -206,16 +205,13 @@ public class ExcelUtil {
                         wb.write(bos);
                         bos.flush();
                         bos.close();
-                    }
-                    Log.w("Export", UriUtils.uri2File(uri).getAbsolutePath());
+                    }.getAbsolutePath());
                     return UriUtils.uri2File(uri).getAbsolutePath();
                 } else {
                     return null;
                 }
             }
-        } catch (IOException e) {
-            Log.e("ExpressExcle", "exportExcel", e);
-            return null;
+        } catch (IOException e) {            return null;
         }
 
     }

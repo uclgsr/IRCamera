@@ -1,7 +1,6 @@
 package com.mpdc4gsr.module.thermalunified.activity
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -128,8 +127,7 @@ class AlgorithmImageActivity : AppCompatActivity() {
                 )
             val im = Mat(192, 256, CvType.CV_8UC4)
             im.put(0, 0, matByteArray)
-            val bitmap = ImageColorTools.matToBitmap(im)
-            Log.e("Test[ph][ph]：", "diff2firstFrameByTemp ： ${System.currentTimeMillis() - startTime}")
+            val bitmap = ImageColorTools.matToBitmap(im)- startTime}")
             imgARGB.setImageBitmap(ImageColorTools.adjustPhotoRotation(bitmap, 90))
         }
         findViewById<View>(R.id.btn_u4).setOnClickListener {

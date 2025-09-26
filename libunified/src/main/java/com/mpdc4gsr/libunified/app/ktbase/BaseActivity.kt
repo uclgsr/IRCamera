@@ -5,13 +5,11 @@ import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
-import com.elvishew.xlog.XLog
 import com.google.gson.Gson
 import com.mpdc4gsr.libunified.R
 import com.mpdc4gsr.libunified.app.BaseApplication
@@ -112,9 +110,7 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onSocketConnectState(event: SocketStateEvent) {
-        Log.d("onSocketConnectState", "${event.isConnect}")
-        if (event.isConnect) {
+    fun onSocketConnectState(event: SocketStateEvent) {        if (event.isConnect) {
             onSocketConnected(event.isTS004)
         } else {
             onSocketDisConnected(event.isTS004)
@@ -163,9 +159,7 @@ abstract class BaseActivity : AppCompatActivity() {
             if (!(isFinishing && isDestroyed)) {
                 cameraDialog?.show()
             }
-        } catch (e: Exception) {
-
-            Log.e("[ph][ph][ph][ph][ph][ph]", e.message.toString())
+        } catch (e: Exception) {)
         }
     }
 
@@ -192,8 +186,7 @@ abstract class BaseActivity : AppCompatActivity() {
                         headUrl = infoData.avatar,
                     )
                 } catch (e: Exception) {
-                    XLog.e("login error:${e.message}")
-                }
+                    X                }
             }
         } else {
             if (UserInfoManager.getInstance().isLogin()) {

@@ -9,10 +9,8 @@ import time
 from datetime import datetime
 
 try:
-    from loguru import logger
-except ImportError:
-    from ..utils.simple_logger import logger
-
+    except ImportError:
+    
 from ..core.config import config
 from ..core.session import SessionManager
 
@@ -269,8 +267,7 @@ def main():
         cli = MVPCLI()
         return cli.run()
     except Exception as e:
-        logger.error(f"CLI application failed: {e}")
-        return 1
+                return 1
 
 
 if __name__ == "__main__":

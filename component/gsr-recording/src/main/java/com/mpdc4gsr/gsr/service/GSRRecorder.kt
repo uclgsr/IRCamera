@@ -2,7 +2,6 @@ package com.mpdc4gsr.gsr.service
 
 import android.content.Context
 import android.os.Environment
-import android.util.Log
 import com.mpdc4gsr.gsr.model.GSRSample
 import com.mpdc4gsr.gsr.model.SessionInfo
 import com.mpdc4gsr.gsr.model.SyncMark
@@ -91,20 +90,12 @@ class GSRRecorder(
     }
 
     suspend fun initialize(): Boolean {
-        return if (useShimmerDevice) {
-            Log.i(TAG, "Attempting to initialize Shimmer3 GSR device...")
-            val success = shimmerRecorder.initializeDevice()
-            if (success) {
-                Log.i(TAG, "Shimmer3 device initialized successfully")
-                setupShimmerListeners()
+        return if (useShimmerDevice) {            val success = shimmerRecorder.initializeDevice()
+            if (success) {                setupShimmerListeners()
                 true
-            } else {
-                Log.w(TAG, "Failed to initialize Shimmer3 device, will use simulated data")
-                false
+            } else {                false
             }
-        } else {
-            Log.i(TAG, "Using simulated GSR data mode")
-            true
+        } else {            true
         }
     }
 
@@ -131,13 +122,9 @@ class GSRRecorder(
                     listeners.forEach { it.onError(error) }
                 }
 
-                override fun onDeviceConnected() {
-                    Log.i(TAG, "Shimmer3 GSR device connected")
-                }
+                override fun onDeviceConnected() {                }
 
-                override fun onDeviceDisconnected() {
-                    Log.w(TAG, "Shimmer3 GSR device disconnected")
-                }
+                override fun onDeviceDisconnected() {                }
             },
         )
     }
@@ -147,9 +134,7 @@ class GSRRecorder(
         participantId: String? = null,
         studyName: String? = null,
     ): Boolean {
-        if (isRecording.get()) {
-            Log.w(TAG, "Recording already in progress")
-            return false
+        if (isRecording.get()) {            return false
         }
 
         return if (useShimmerDevice) {
@@ -201,16 +186,8 @@ class GSRRecorder(
 
             currentSession?.let { session ->
                 listeners.forEach { it.onRecordingStarted(session) }
-            }
-
-            Log.i(
-                TAG,
-                "Simulated GSR recording started: sessionId=$sessionId, samplingRate=${samplingRateHz}Hz"
-            )
-            return true
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to start simulated recording", e)
-            cleanup()
+            }            return true
+        } catch (e: Exception) {            cleanup()
             notifyError("Failed to start recording: ${e.message}")
             return false
         }
@@ -269,18 +246,14 @@ class GSRRecorder(
 
                 delay(sampleIntervalMs)
             } catch (e: Exception) {
-                if (coroutineContext.isActive) {
-                    Log.e(TAG, "Error in simulated data generation", e)
-                    notifyError("Data generation error: ${e.message}")
+                if (coroutineContext.isActive) {                    notifyError("Data generation error: ${e.message}")
                 }
             }
         }
     }
 
     fun stopRecording(): SessionInfo? {
-        if (!isRecording.get()) {
-            Log.w(TAG, "No recording in progress")
-            return currentSession
+        if (!isRecording.get()) {            return currentSession
         }
 
         isRecording.set(false)
@@ -303,12 +276,7 @@ class GSRRecorder(
 
             saveSessionMetadata(session)
 
-            listeners.forEach { it.onRecordingStopped(session) }
-            Log.i(
-                TAG,
-                "Simulated GSR recording stopped: sessionId=${session.sessionId}, samples=${session.sampleCount}"
-            )
-        }
+            listeners.forEach { it.onRecordingStopped(session) }        }
 
         cleanup()
         val completedSession = currentSession
@@ -349,14 +317,9 @@ class GSRRecorder(
                 syncMarksWriter?.flush()
 
 
-                listeners.forEach { it.onSyncMarkAdded(syncMark) }
-
-                Log.d(TAG, "Sync event recorded: $eventType")
-                return true
+                listeners.forEach { it.onSyncMarkAdded(syncMark) }                return true
             }
-        } catch (e: Exception) {
-            Log.e(TAG, "Error recording sync event", e)
-            notifyError("Error recording sync event: ${e.message}")
+        } catch (e: Exception) {            notifyError("Error recording sync event: ${e.message}")
         }
 
         return false
@@ -368,16 +331,9 @@ class GSRRecorder(
             val sessionsDir = File(externalStorage, SESSIONS_DIR)
             val sessionDir = File(sessionsDir, sessionId)
 
-            if (!sessionDir.exists() && !sessionDir.mkdirs()) {
-                Log.e(TAG, "Failed to create session directory: ${sessionDir.absolutePath}")
-                return null
-            }
-
-            Log.d(TAG, "Created session directory: ${sessionDir.absolutePath}")
-            sessionDir
-        } catch (e: Exception) {
-            Log.e(TAG, "Error creating session directory", e)
-            null
+            if (!sessionDir.exists() && !sessionDir.mkdirs()) {                return null
+            }            sessionDir
+        } catch (e: Exception) {            null
         }
     }
 
@@ -402,9 +358,7 @@ class GSRRecorder(
 
                 true
             } ?: false
-        } catch (e: IOException) {
-            Log.e(TAG, "Failed to initialize CSV writers", e)
-            false
+        } catch (e: IOException) {            false
         }
     }
 
@@ -416,29 +370,21 @@ class GSRRecorder(
                 val gson = com.google.gson.Gson()
                 val json = gson.toJson(session)
 
-                metadataFile.writeText(json)
-                Log.d(TAG, "Session metadata saved")
-            }
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to save session metadata", e)
-        }
+                metadataFile.writeText(json)            }
+        } catch (e: Exception) {        }
     }
 
     private fun cleanup() {
         try {
             signalsWriter?.close()
             syncMarksWriter?.close()
-        } catch (e: IOException) {
-            Log.e(TAG, "Error closing CSV writers", e)
-        } finally {
+        } catch (e: IOException) {        } finally {
             signalsWriter = null
             syncMarksWriter = null
         }
     }
 
-    private fun notifyError(error: String) {
-        Log.e(TAG, error)
-        listeners.forEach { it.onError(error) }
+    private fun notifyError(error: String) {        listeners.forEach { it.onError(error) }
     }
 
     fun disconnect() {
@@ -475,9 +421,7 @@ class GSRRecorder(
         metadata: String = "",
     ): Boolean =
         withContext(Dispatchers.IO) {
-            if (!isRecording.get()) {
-                Log.w(TAG, "Cannot add sync mark - recording not active")
-                return@withContext false
+            if (!isRecording.get()) {                return@withContext false
             }
 
             return@withContext if (useShimmerDevice) {

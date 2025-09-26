@@ -10,7 +10,6 @@ import android.graphics.Bitmap
 import android.graphics.drawable.ColorDrawable
 import android.hardware.SensorManager
 import android.provider.Settings
-import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.OrientationEventListener
@@ -36,7 +35,6 @@ import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.BarUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.blankj.utilcode.util.ToastUtils
-import com.elvishew.xlog.XLog
 import com.energy.iruvc.ircmd.IRCMD
 import com.energy.iruvc.ircmd.IRCMDType
 import com.energy.iruvc.ircmd.IRUtils
@@ -322,8 +320,7 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
                             }
                             .create().show()
                     }
-                    XLog.e("[ph][ph][ph][ph][ph][ph][ph]")
-                }
+                    X                }
             }
             if (!SupHelp.getInstance().loadOpenclSuccess) {
                 return@launch
@@ -475,8 +472,7 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
                                     upColor, downColor,
                                 )
                             }
-                        } catch (e: Exception) {
-                            Log.e("[ph][ph][ph][ph][ph][ph][ph][ph]", e.message.toString())
+                        } catch (e: Exception) {)
                         }
                         try {
                             tvTempContent.text = "Max:${UnitTools.showC(max, isShowC)}\nMin:${
@@ -485,8 +481,7 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
                                     isShowC,
                                 )
                             }"
-                        } catch (e: Exception) {
-                            Log.e("[ph][ph][ph][ph][ph][ph][ph][ph]", e.message.toString())
+                        } catch (e: Exception) {)
                         }
                     } else {
 
@@ -497,8 +492,7 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
                                     isShowC,
                                 )
                             }"
-                        } catch (e: Exception) {
-                            Log.e("[ph][ph][ph][ph][ph][ph][ph][ph]", e.message.toString())
+                        } catch (e: Exception) {)
                         }
                     }
                     try {
@@ -506,13 +500,10 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
                             cl_seek_bar.requestLayout()
 
                         }
-                    } catch (e: Exception) {
-                        Log.w("[ph][ph][ph][ph][ph][ph][ph]:", "${e.message}")
-                    }
+                    } catch (e: Exception) {                    }
                     try {
                         AlarmHelp.getInstance(application).alarmData(max, min, temp_bg)
-                    } catch (e: Exception) {
-                        Log.e("[ph][ph][ph][ph][ph][ph][ph][ph]", e.message.toString())
+                    } catch (e: Exception) {)
                     }
                 }
             }
@@ -1065,8 +1056,7 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
 
         try {
             imageThread?.join()
-        } catch (e: InterruptedException) {
-            Log.e(TAG, "imageThread.join(): catch an interrupted exception")
+        } catch (e: InterruptedException) {: catch an interrupted exception")
         }
         startISP()
 
@@ -1150,9 +1140,7 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
                 1
             } else {
                 2
-            }
-        Log.w("[ph][ph][ph][ph][ph][ph]: ", "mOrientation: $mOrientation")
-    }
+            }    }
 
     private fun initRecycler() {
         thermalRecyclerNight.onCameraClickListener = {
@@ -1415,9 +1403,7 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
             lifecycleScope.launch(Dispatchers.Main) {
                 thermalRecyclerNight.setToRecord(true)
             }
-        } catch (e: Exception) {
-            Log.e("updateVideoDelayView", e.message ?: "Unknown error")
-        }
+        } catch (e: Exception) {        }
     }
 
     private fun updateDelayView() {
@@ -1428,9 +1414,7 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
                 thermalRecyclerNight.refreshImg()
             }
 
-        } catch (e: Exception) {
-            Log.e("updateDelayView", e.message ?: "Unknown error")
-        }
+        } catch (e: Exception) {        }
     }
 
     private fun setTemp(
@@ -2000,8 +1984,7 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
             imageThread?.alarmBean = alarmBean
             imageThread?.typeAi = if (curChooseTabPos == 2) aiConfig else ObserveBean.TYPE_NONE
             imageThread?.start()
-        } catch (e: Exception) {
-            Log.e("[ph][ph][ph][ph][ph][ph][ph][ph]", e.message.toString())
+        } catch (e: Exception) {)
         }
     }
 
@@ -2024,8 +2007,7 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
                 defaultDataFlowMode,
                 object : ConnectCallback {
                     override fun onCameraOpened(uvcCamera: UVCCamera) {
-                        XLog.w("[ph][ph]onCameraOpened:$uvcCamera}")
-                    }
+                        X                    }
 
                     override fun onIRCMDCreate(ircmd: IRCMD) {
                         this@IRThermalNightActivity.ircmd = ircmd
@@ -2110,9 +2092,7 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
 
 
                 val value = IntArray(1)
-                ircmd!!.getPropTPDParams(CommonParams.PropTPDParams.TPD_PROP_GAIN_SEL, value)
-                Log.d(TAG, "TPD_PROP_GAIN_SEL=" + value[0])
-                gainStatus =
+                ircmd!!.getPropTPDParams(CommonParams.PropTPDParams.TPD_PROP_GAIN_SEL, value)                gainStatus =
                     if (value[0] == 1) {
 
                         CommonParams.GainStatus.HIGH_GAIN
@@ -2180,14 +2160,7 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
                 paramsArray[5],
                 tempInfo,
                 gainStatus,
-            )
-        Log.i(
-            TAG,
-            "temp correct, oldTemp = " + paramsArray[0] + " ems = " + paramsArray[1] + " ta = " + paramsArray[2] + " " +
-                    "distance = " + paramsArray[4] + " hum = " + paramsArray[5] + " productType = ${CommonParams.ProductType.WN256}" + " " +
-                    "newtemp = " + newTemp,
-        )
-        return newTemp
+            )        return newTemp
     }
 
     protected fun initIRConfig() {
@@ -2255,8 +2228,7 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
                     false,
                 )
             }
-        } catch (e: InterruptedException) {
-            Log.e(TAG, "imageThread.join(): catch an interrupted exception")
+        } catch (e: InterruptedException) {: catch an interrupted exception")
         }
 
 
@@ -2616,8 +2588,7 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
                     EventBus.getDefault().post(GalleryAddEvent())
                 }
             } catch (e: Exception) {
-                XLog.e(e.message)
-            }
+                X            }
         }
     }
 
@@ -2822,8 +2793,7 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
                 val config = ConfigRepository.readConfig(false)
                 val disChar = (config.distance * 128).toInt()
                 val emsChar = (config.radiation * 128).toInt()
-                XLog.w("[ph][ph]TPD_PROP DISTANCE:$disChar, EMS:$emsChar}")
-                delay(timeMillis)
+                X                delay(timeMillis)
 
 
                 ircmd?.setPropTPDParams(
@@ -2840,8 +2810,7 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
                 setTemperatureMode(temperatureMode, false)
 
                 delay(timeMillis)
-                XLog.w("[ph][ph]TPD_PROP DISTANCE:$disChar, EMS:$emsChar}")
-                if (isFirst && isrun) {
+                X                if (isFirst && isrun) {
 
 
                     ircmd?.setMirror(saveSetBean.isOpenMirror)
@@ -2859,7 +2828,7 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
 
                     ircmd?.setContrast(saveSetBean.contrastValue)
                     if (SaveSettingUtil.isSaveSetting) {
-                        XLog.i("[ph][ph][ph][ph][ph][ph][ph]：${if (SaveSettingUtil.isMeasureTempMode) "[ph][ph]" else "[ph][ph]"}[ph][ph]")
+                        X"[ph][ph]" else "[ph][ph]"}[ph][ph]")
                         if (isTS001) {
                             switchTs001Mode(SaveSettingUtil.isMeasureTempMode)
                         } else {
@@ -2878,8 +2847,7 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
                 } else {
                     ircmd?.updateOOCOrB(CommonParams.UpdateOOCOrBType.B_UPDATE)
                 }
-                XLog.w("[ph][ph]TPD_PROP DISTANCE2:$disChar, EMS:$emsChar}")
-            }
+                X            }
     }
 
     private fun setTpdParams(
@@ -2981,10 +2949,8 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
                         infoBuilder.toString(),
                         HtmlCompat.FROM_HTML_MODE_LEGACY,
                     )
-                XLog.i("[ph][ph][ph][ph][ph][ph]: $str")
-            } catch (e: Exception) {
-                XLog.e("[ph][ph]SN[ph][ph]: ${e.message}")
-            }
+                X            } catch (e: Exception) {
+                X            }
         }
     }
 
@@ -2993,8 +2959,7 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
         try {
             tmp = tempCorrect(temp, gainStatus, tempinfo)
         } catch (e: Exception) {
-            XLog.i("[ph][ph][ph][ph][ph][ph]: ${e.message}")
-        }
+            X        }
         return tmp
     }
 
@@ -3081,8 +3046,7 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
                                 ToastUtils.showShort(R.string.scan_ble_tip_authorize)
                             }
                         } catch (e: Exception) {
-                            XLog.e("[ph][ph][ph]" + e.message)
-                        }
+                            X                        }
                     }
 
                     override fun onDenied(
@@ -3170,9 +3134,7 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
                             } else {
                                 ToastUtils.showShort(R.string.scan_ble_tip_authorize)
                             }
-                        } catch (e: Exception) {
-                            Log.e("[ph][ph][ph][ph][ph][ph]", "" + e.message)
-                        }
+                        } catch (e: Exception) {                        }
                     }
 
                     override fun onDenied(

@@ -8,7 +8,6 @@ import android.hardware.usb.UsbEndpoint
 import android.hardware.usb.UsbInterface
 import android.hardware.usb.UsbManager
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import com.mpdc4gsr.libunified.app.matrix.ResultCode.ERROR_CONNECT_DEVICE_FAILD
 import com.mpdc4gsr.libunified.app.matrix.ResultCode.SUCC_CONNECT_INTERFACE
@@ -302,8 +301,7 @@ class GuideUsbManager {
         val header = byteArrayOf(0x02)
         val reserve = byteArrayOf(0x00)
         val len = toByteArray(data.size)
-        val check = toByteArray(mNativeGuideCore!!.crc(data))
-        Log.w("123", "check: ${check.toHexString()}")
+        val check = toByteArray(mNativeGuideCore!!.crc(data))}")
         val tail = byteArrayOf(0x03)
         val buffer =
             ByteArray(header.size + cmd.size + reserve.size + len.size + check.size + data.size + tail.size)
@@ -321,8 +319,7 @@ class GuideUsbManager {
         System.arraycopy(data, 0, buffer, destPos, data.size)
         destPos += data.size
         System.arraycopy(tail, 0, buffer, destPos, tail.size)
-        val length = mConnection!!.bulkTransfer(mEndpointControlOut, buffer, buffer.size, 1000)
-        Log.w("123", "sendUsbCmd: ${buffer.toHexString()}")
+        val length = mConnection!!.bulkTransfer(mEndpointControlOut, buffer, buffer.size, 1000)}")
         Logger.d(TAG, "sendUsbCmd >> ${HexDump.dumpHexString(buffer)}".trimIndent())
         Logger.d(TAG, "<< end (length = $length)")
         return length

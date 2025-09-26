@@ -1,7 +1,6 @@
 import asyncio
 import hashlib
 import hmac
-import logging
 import secrets
 import time
 from cryptography import x509
@@ -12,8 +11,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Set, Tuple
 
 try:
-    from loguru import logger
-except ImportError:
+    except ImportError:
     logger = logging.getLogger(__name__)
 
 CERTIFICATE_VALIDITY_DAYS = 365
@@ -145,8 +143,7 @@ class AdvancedAuthenticationManager:
 
         self.session_tokens: Dict[str, AuthenticationContext] = {}
 
-        logger.info("Advanced authentication manager initialized")
-
+        
     async def authenticate(
             self, device_id: str, auth_level: AuthLevel, credentials: Dict[str, Any]
     ) -> Tuple[bool, Optional[AuthenticationContext], str]:
@@ -178,18 +175,14 @@ class AdvancedAuthenticationManager:
                 self.failed_attempts.pop(device_id, None)
                 self.locked_devices.pop(device_id, None)
 
-                logger.info(
-                    f"Authentication successful for device {device_id} at level {auth_level.name}"
-                )
-                return True, context, "success"
+                                return True, context, "success"
             else:
 
                 await self._handle_auth_failure(device_id)
                 return False, None, "invalid_credentials"
 
         except Exception as e:
-            logger.error(f"Authentication error for device {device_id}: {e}")
-            return False, None, "authentication_error"
+                        return False, None, "authentication_error"
 
     async def _authenticate_basic(self, credentials: Dict[str, Any]) -> bool:
 
@@ -223,8 +216,7 @@ class AdvancedAuthenticationManager:
             return True  # Placeholder for certificate validation
 
         except Exception as e:
-            logger.error(f"Certificate authentication failed for {device_id}: {e}")
-            return False
+                        return False
 
     async def _authenticate_token(
             self, device_id: str, credentials: Dict[str, Any]
@@ -326,10 +318,7 @@ class AdvancedAuthenticationManager:
             self.locked_devices[device_id] = current_time + (
                     LOCKOUT_DURATION_MINUTES * 60
             )
-            logger.warning(
-                f"Device {device_id} locked due to {MAX_FAILED_ATTEMPTS} failed attempts"
-            )
-
+            
     def _is_device_locked(self, device_id: str) -> bool:
 
         if device_id in self.locked_devices:
@@ -361,8 +350,7 @@ class AdvancedAuthenticationManager:
         context = self.authenticated_devices.pop(device_id, None)
         if context:
             self.session_tokens.pop(context.session_token, None)
-            logger.info(f"Device {device_id} logged out")
-            return True
+                        return True
         return False
 
     def get_active_sessions(self) -> List[AuthenticationContext]:
@@ -405,8 +393,7 @@ class AdvancedSecurityMonitor:
         self.total_failed_logins = 0
         self.total_alerts = 0
 
-        logger.info("Advanced security monitor initialized")
-
+        
     async def start_monitoring(self) -> Any:
 
         if self.is_monitoring:
@@ -416,13 +403,11 @@ class AdvancedSecurityMonitor:
 
         asyncio.create_task(self._monitoring_loop())
 
-        logger.info("Security monitoring started")
-
+        
     def stop_monitoring(self) -> Any:
 
         self.is_monitoring = False
-        logger.info("Security monitoring stopped")
-
+        
     async def _monitoring_loop(self):
 
         while self.is_monitoring:
@@ -430,8 +415,7 @@ class AdvancedSecurityMonitor:
                 await self._perform_security_check()
                 await asyncio.sleep(MONITORING_INTERVAL_SECONDS)
             except Exception as e:
-                logger.error(f"Error in security monitoring loop: {e}")
-
+                
     async def _perform_security_check(self):
 
         current_time = time.time()
@@ -535,10 +519,7 @@ class AdvancedSecurityMonitor:
         if len(self.security_alerts) > 1000:
             self.security_alerts = self.security_alerts[-1000:]
 
-        logger.warning(
-            f"Security alert generated: {alert.alert_type} for device {device_id}"
-        )
-
+        
     def get_security_alerts(self, limit: int = 100) -> List[Dict[str, Any]]:
 
         return [alert.to_dict() for alert in self.security_alerts[-limit:]]
@@ -548,8 +529,7 @@ class AdvancedSecurityMonitor:
         for alert in self.security_alerts:
             if alert.id == alert_id:
                 alert.acknowledged = True
-                logger.info(f"Alert acknowledged: {alert_id}")
-                return True
+                                return True
         return False
 
     def get_monitoring_statistics(self) -> Dict[str, Any]:
@@ -572,16 +552,13 @@ class EnhancedSecurityManager:
         self.auth_manager = AdvancedAuthenticationManager(cert_dir)
         self.security_monitor = AdvancedSecurityMonitor()
 
-        logger.info("Enhanced security manager initialized")
-
+        
     async def initialize(self) -> Any:
         await self.security_monitor.start_monitoring()
-        logger.info("Enhanced security system fully initialized")
-
+        
     def shutdown(self) -> Any:
         self.security_monitor.stop_monitoring()
-        logger.info("Enhanced security system shutdown complete")
-
+        
     async def authenticate_device(
             self, device_id: str, auth_level: AuthLevel, credentials: Dict[str, Any]
     ) -> Tuple[bool, Optional[AuthenticationContext], str]:

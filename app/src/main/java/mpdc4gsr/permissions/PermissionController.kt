@@ -9,7 +9,6 @@ import android.hardware.usb.UsbManager
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
-import android.util.Log
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
@@ -93,9 +92,7 @@ class PermissionController(
 
     fun initialize() {
         if (isInitialized.compareAndSet(false, true)) {
-            usbManager = activity.getSystemService(Context.USB_SERVICE) as UsbManager
-            Log.i(TAG, "PermissionController initialized")
-        }
+            usbManager = activity.getSystemService(Context.USB_SERVICE) as UsbManager        }
     }
 
     fun hasAllRequiredPermissions(): Boolean {
@@ -125,9 +122,7 @@ class PermissionController(
             device.vendorId == TOPDON_VENDOR_ID && device.productId == TC001_PRODUCT_ID
         } ?: emptyList()
 
-        if (thermalDevices.isEmpty()) {
-            Log.w(TAG, "No Topdon TC001 thermal camera devices found")
-            callback(false, emptyList())
+        if (thermalDevices.isEmpty()) {            callback(false, emptyList())
             return
         }
 
@@ -142,9 +137,7 @@ class PermissionController(
             }
         }
 
-        if (devicesNeedingPermission.isEmpty()) {
-            Log.i(TAG, "All thermal camera devices have permissions")
-            callback(true, devicesWithPermission)
+        if (devicesNeedingPermission.isEmpty()) {            callback(true, devicesWithPermission)
             return
         }
 
@@ -162,26 +155,16 @@ class PermissionController(
         permissionCallback = callback
 
         val missingPermissions = getMissingPermissions()
-        if (missingPermissions.isEmpty()) {
-            Log.i(TAG, "All permissions already granted")
-            callback(true, emptyList())
+        if (missingPermissions.isEmpty()) {            callback(true, emptyList())
             return
-        }
-
-        Log.i(
-            TAG,
-            "Requesting ${missingPermissions.size} missing permissions: ${
-                missingPermissions.joinToString(", ")
-            }"
+        }            }"
         )
 
 
         showPermissionRationaleDialog(missingPermissions) { userAccepted ->
             if (userAccepted) {
                 requestPermissionsSequentially(missingPermissions)
-            } else {
-                Log.w(TAG, "User declined permission rationale")
-                callback(false, missingPermissions)
+            } else {                callback(false, missingPermissions)
             }
         }
     }
@@ -208,31 +191,15 @@ class PermissionController(
                     if (grantResults[index] != PackageManager.PERMISSION_GRANTED) {
                         deniedPermissions.add(permission)
                     }
-                }
-
-                Log.i(
-                    TAG,
-                    "Permission result: granted=${permissions.size - deniedPermissions.size}, denied=${deniedPermissions.size}"
-                )
-
-
-                if (remainingPermissionGroups.isNotEmpty()) {
-                    Log.i(
-                        TAG,
-                        "Continuing with next permission group (${remainingPermissionGroups.size} groups remaining)"
+                }                if (remainingPermissionGroups.isNotEmpty()) {"
                     )
                     requestNextPermissionGroup()
                 } else {
 
                     val stillMissingPermissions =
                         allRequestedPermissions.filter { !isPermissionGranted(it) }
-                    if (stillMissingPermissions.isEmpty()) {
-                        Log.i(TAG, "All permissions successfully granted")
-                        permissionCallback?.invoke(true, emptyList())
-                    } else {
-                        Log.w(
-                            TAG,
-                            "Some permissions still denied: ${stillMissingPermissions.joinToString(", ")}"
+                    if (stillMissingPermissions.isEmpty()) {                        permissionCallback?.invoke(true, emptyList())
+                    } else {}"
                         )
                         handleDeniedPermissions(stillMissingPermissions)
                         permissionCallback?.invoke(false, stillMissingPermissions)
@@ -246,11 +213,7 @@ class PermissionController(
         when (requestCode) {
             REQUEST_BATTERY_OPTIMIZATION -> {
 
-                val isBatteryOptimizationDisabled = isBatteryOptimizationDisabled()
-                Log.i(TAG, "Battery optimization result: disabled=$isBatteryOptimizationDisabled")
-
-
-            }
+                val isBatteryOptimizationDisabled = isBatteryOptimizationDisabled()            }
         }
     }
 
@@ -258,23 +221,13 @@ class PermissionController(
         usbPermissionCallback = callback
 
         val manager = usbManager
-        if (manager == null) {
-            Log.e(TAG, "USB Manager not available")
-            callback(false, null)
+        if (manager == null) {            callback(false, null)
             return
         }
 
-        if (manager.hasPermission(device)) {
-            Log.i(TAG, "USB permission already granted for device ${device.productName}")
-            callback(true, device)
+        if (manager.hasPermission(device)) {            callback(true, device)
             return
-        }
-
-        Log.i(
-            TAG,
-            "Requesting USB permission for device: ${device.productName} (VID=${
-                device.vendorId.toString(16)
-            }, PID=${device.productId.toString(16)})"
+        }            }, PID=${device.productId.toString(16)})"
         )
 
 
@@ -290,13 +243,9 @@ class PermissionController(
 
                     manager.requestPermission(device, permissionIntent)
 
-                } catch (e: Exception) {
-                    Log.e(TAG, "Failed to request USB permission", e)
-                    callback(false, null)
+                } catch (e: Exception) {                    callback(false, null)
                 }
-            } else {
-                Log.w(TAG, "User declined USB permission rationale")
-                callback(false, null)
+            } else {                callback(false, null)
             }
         }
     }
@@ -336,10 +285,7 @@ class PermissionController(
             val powerManager =
                 activity.getSystemService(Context.POWER_SERVICE) as android.os.PowerManager
 
-            if (!powerManager.isIgnoringBatteryOptimizations(packageName)) {
-                Log.i(TAG, "Requesting battery optimization exemption")
-
-                showBatteryOptimizationRationaleDialog { userAccepted ->
+            if (!powerManager.isIgnoringBatteryOptimizations(packageName)) {                showBatteryOptimizationRationaleDialog { userAccepted ->
                     if (userAccepted) {
                         try {
                             val intent =
@@ -347,36 +293,17 @@ class PermissionController(
                                     data = Uri.parse("package:$packageName")
                                 }
                             activity.startActivityForResult(intent, REQUEST_BATTERY_OPTIMIZATION)
-                        } catch (e: Exception) {
-                            Log.e(TAG, "Failed to open battery optimization settings", e)
-
-                            try {
+                        } catch (e: Exception) {                            try {
                                 val fallbackIntent =
                                     Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS)
-                                activity.startActivity(fallbackIntent)
-
-                                Log.w(
-                                    TAG,
-                                    "Fallback battery optimization settings opened - treating as not granted"
-                                )
-                                callback(false)
-                            } catch (fallbackException: Exception) {
-                                Log.e(
-                                    TAG,
-                                    "Failed to open fallback battery optimization settings",
-                                    fallbackException
-                                )
-                                callback(false)
+                                activity.startActivity(fallbackIntent)                                callback(false)
+                            } catch (fallbackException: Exception) {                                callback(false)
                             }
                         }
-                    } else {
-                        Log.w(TAG, "User declined battery optimization exemption")
-                        callback(false)
+                    } else {                        callback(false)
                     }
                 }
-            } else {
-                Log.i(TAG, "Battery optimization already disabled")
-                callback(true)
+            } else {                callback(true)
             }
         } else {
 
@@ -615,15 +542,8 @@ class PermissionController(
 
             val stillMissingPermissions =
                 allRequestedPermissions.filter { !isPermissionGranted(it) }
-            if (stillMissingPermissions.isEmpty()) {
-                Log.i(TAG, "All permission groups successfully granted")
-                permissionCallback?.invoke(true, emptyList())
-            } else {
-                Log.w(
-                    TAG,
-                    "Some permissions still missing after all groups: ${
-                        stillMissingPermissions.joinToString(", ")
-                    }"
+            if (stillMissingPermissions.isEmpty()) {                permissionCallback?.invoke(true, emptyList())
+            } else {                    }"
                 )
                 handleDeniedPermissions(stillMissingPermissions)
                 permissionCallback?.invoke(false, stillMissingPermissions)
@@ -631,8 +551,7 @@ class PermissionController(
             return
         }
 
-        val nextGroup = remainingPermissionGroups.removeAt(0)
-        Log.i(TAG, "Requesting permission group: ${nextGroup.joinToString(", ")}")
+        val nextGroup = remainingPermissionGroups.removeAt(0)}")
         activity.requestPermissions(nextGroup.toTypedArray(), REQUEST_PERMISSIONS)
     }
 
@@ -877,8 +796,6 @@ class PermissionController(
                 data = Uri.parse("package:${activity.packageName}")
             }
             activity.startActivity(intent)
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to open app settings", e)
-        }
+        } catch (e: Exception) {        }
     }
 }

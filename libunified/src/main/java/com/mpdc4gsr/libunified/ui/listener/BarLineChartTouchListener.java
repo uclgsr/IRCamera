@@ -446,11 +446,7 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
 
             mChart.zoom(mChart.isScaleXEnabled() ? 1.4f : 1f, mChart.isScaleYEnabled() ? 1.4f : 1f, trans.x, trans.y);
 
-            if (mChart.isLogEnabled())
-                Log.i("BarlineChartTouch", "Double-Tap, Zooming In, x: " + trans.x + ", y: "
-                        + trans.y);
-
-            MPPointF.recycleInstance(trans);
+            if (mChart.isLogEnabled())            MPPointF.recycleInstance(trans);
         }
 
         return super.onDoubleTap(e);

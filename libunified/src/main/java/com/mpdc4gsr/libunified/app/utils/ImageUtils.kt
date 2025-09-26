@@ -2,10 +2,8 @@ package com.mpdc4gsr.libunified.app.utils
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.util.Log
 import com.blankj.utilcode.util.ImageUtils
 import com.blankj.utilcode.util.Utils
-import com.elvishew.xlog.XLog
 import com.mpdc4gsr.libunified.app.config.FileConfig.lineIrGalleryDir
 import java.io.File
 
@@ -54,11 +52,8 @@ object ImageUtils {
             val galleryPath = File(dir)
             val fileName = "$name.ir"
             val file = File(galleryPath, fileName)
-            file.writeBytes(capital.plus(bs))
-            Log.w("saved[ph][ph][ph]:", file.absolutePath)
-        } catch (e: Exception) {
-            XLog.e("[ph][ph][ph][ph]saved[ph][ph]: ${e.message}")
-        }
+            file.writeBytes(capital.plus(bs))        } catch (e: Exception) {
+            X        }
     }
 
     fun saveFrame(
@@ -71,11 +66,8 @@ object ImageUtils {
             val galleryPath = File(dir)
             val fileName = "$name.ir"
             val file = File(galleryPath, fileName)
-            file.writeBytes(capital.plus(bs))
-            Log.w("saved[ph][ph][ph]:", file.absolutePath)
-        } catch (e: Exception) {
-            XLog.e("[ph][ph][ph][ph]saved[ph][ph]: ${e.message}")
-        }
+            file.writeBytes(capital.plus(bs))        } catch (e: Exception) {
+            X        }
     }
 
     fun saveOneFrameAGRB(
@@ -89,7 +81,6 @@ object ImageUtils {
             val file = File(galleryPath, fileName)
             file.writeBytes(bs)
         } catch (e: Exception) {
-            XLog.e("[ph][ph][ph][ph]saved[ph][ph]: ${e.message}")
-        }
+            X        }
     }
 }

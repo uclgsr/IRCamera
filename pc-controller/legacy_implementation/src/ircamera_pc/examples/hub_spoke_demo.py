@@ -2,12 +2,10 @@
 
 
 import asyncio
-import logging
 import time
 
 from ..core.hub_coordinator import HubCoordinator, SyncMarkerType
 
-logging.basicConfig(level=logging.INFO)
 
 
 async def main():

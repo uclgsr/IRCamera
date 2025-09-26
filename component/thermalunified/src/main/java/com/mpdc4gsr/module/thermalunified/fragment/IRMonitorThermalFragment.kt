@@ -4,12 +4,10 @@ import android.graphics.Bitmap
 import android.graphics.Point
 import android.graphics.RectF
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.widget.FrameLayout
 import androidx.lifecycle.lifecycleScope
-import com.elvishew.xlog.XLog
 import com.energy.iruvc.ircmd.IRCMD
 import com.energy.iruvc.utils.CommonParams
 import com.energy.iruvc.utils.CommonUtils
@@ -98,9 +96,7 @@ class IRMonitorThermalFragment : BaseFragment(), ITsTempListener {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun action(event: ThermalActionEvent) {
-        temperatureView.isEnabled = true
-        Log.w("123", "event:${event.action}")
-        when (event.action) {
+        temperatureView.isEnabled = true        when (event.action) {
             2001 -> {
 
                 temperatureView.visibility = View.VISIBLE
@@ -183,9 +179,7 @@ class IRMonitorThermalFragment : BaseFragment(), ITsTempListener {
         setViewLay()
 
         if (Usbcontorl.isload) {
-            Usbcontorl.usb3803_mode_setting(1)
-            Log.w("123", "打开5V")
-        }
+            Usbcontorl.usb3803_mode_setting(1)        }
 
         temperatureView.post {
             if (!temperaturerun) {
@@ -207,8 +201,7 @@ class IRMonitorThermalFragment : BaseFragment(), ITsTempListener {
             imageThread?.setRotate(rotateAngle)
             imageThread!!.setRotate(true)
             imageThread!!.start()
-        } catch (e: Exception) {
-            Log.e("图像线程重复启动", e.message.toString())
+        } catch (e: Exception) {)
         }
     }
 
@@ -221,12 +214,7 @@ class IRMonitorThermalFragment : BaseFragment(), ITsTempListener {
                     override fun onCameraOpened(uvcCamera: UVCCamera) {
                     }
 
-                    override fun onIRCMDCreate(ircmd: IRCMD) {
-                        Log.i(
-                            TAG,
-                            "ConnectCallback->onIRCMDCreate",
-                        )
-                        this@IRMonitorThermalFragment.ircmd = ircmd
+                    override fun onIRCMDCreate(ircmd: IRCMD) {                        this@IRMonitorThermalFragment.ircmd = ircmd
 
                         ircmd.setPropImageParams(
                             CommonParams.PropImageParams.IMAGE_PROP_SEL_MIRROR_FLIP,
@@ -245,9 +233,7 @@ class IRMonitorThermalFragment : BaseFragment(), ITsTempListener {
                         ircmd!!.getPropTPDParams(
                             CommonParams.PropTPDParams.TPD_PROP_GAIN_SEL,
                             value
-                        )
-                        Log.d(TAG, "TPD_PROP_GAIN_SEL=" + value[0])
-                        gainStatus =
+                        )                        gainStatus =
                             if (value[0] == 1) {
 
                                 CommonParams.GainStatus.HIGH_GAIN
@@ -292,9 +278,7 @@ class IRMonitorThermalFragment : BaseFragment(), ITsTempListener {
     }
 
     override fun onStart() {
-        super.onStart()
-        Log.w(TAG, "onStart")
-        if (!isrun) {
+        super.onStart()        if (!isrun) {
 
             if (isPick) {
                 pseudocolorMode = SaveSettingUtil.pseudoColorMode
@@ -312,9 +296,7 @@ class IRMonitorThermalFragment : BaseFragment(), ITsTempListener {
     }
 
     override fun onStop() {
-        super.onStop()
-        Log.w(TAG, "onStop")
-        if (iruvc != null) {
+        super.onStop()        if (iruvc != null) {
             iruvc!!.stopPreview()
             iruvc!!.unregisterUSB()
         }
@@ -326,12 +308,9 @@ class IRMonitorThermalFragment : BaseFragment(), ITsTempListener {
     }
 
     override fun onDestroy() {
-        super.onDestroy()
-        Log.w(TAG, "onDestroy")
-        try {
+        super.onDestroy()        try {
             imageThread?.join()
-        } catch (e: InterruptedException) {
-            Log.e(TAG, "imageThread.join(): catch an interrupted exception")
+        } catch (e: InterruptedException) {: catch an interrupted exception")
         }
 
 
@@ -450,7 +429,7 @@ class IRMonitorThermalFragment : BaseFragment(), ITsTempListener {
             val disChar = (config.distance * 128).toInt()
             val emsChar = (config.radiation * 128).toInt()
 
-            XLog.w("设置TPD_PROP DISTANCE:${disChar.toInt()}, EMS:${emsChar.toInt()}}")
+            X}, EMS:${emsChar.toInt()}}")
             val timeMillis = 250L
             delay(timeMillis)
 
@@ -521,8 +500,7 @@ class IRMonitorThermalFragment : BaseFragment(), ITsTempListener {
         try {
             tmp = tempCorrect(temp!!, gainStatus, 0)
         } catch (e: Exception) {
-            XLog.i("温度校正失败: ${e.message}")
-        }
+            X        }
         return tmp!!
     }
 

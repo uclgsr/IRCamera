@@ -19,7 +19,6 @@ import queue
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Optional, Any, Tuple
-import logging
 
 # Try to import optional visualization libraries
 try:
@@ -62,14 +61,10 @@ class EnhancedLogger:
             handler.setFormatter(formatter)
             self.logger.addHandler(handler)
 
-    def info(self, msg): self.logger.info(msg)
-
-    def warning(self, msg): self.logger.warning(msg)
-
-    def error(self, msg): self.logger.error(msg)
-
-    def debug(self, msg): self.logger.debug(msg)
-
+    def info(self, msg): self.
+    def warning(self, msg): self.
+    def error(self, msg): self.
+    def debug(self, msg): self.
 
 class DeviceInfo:
     """Enhanced device information tracking"""
@@ -223,12 +218,9 @@ class EnhancedPCController:
         if HAS_MATPLOTLIB:
             self.setup_visualization()
 
-        self.logger.info(f"Enhanced PC Controller initialized on port {port}")
-        if HAS_NATIVE_BACKEND:
-            self.logger.info("Native C++ backend available")
-        if HAS_MATPLOTLIB:
-            self.logger.info("Real-time plotting available")
-
+        self.        if HAS_NATIVE_BACKEND:
+            self.        if HAS_MATPLOTLIB:
+            self.
     def setup_visualization(self):
         """Setup real-time plotting"""
         if not HAS_MATPLOTLIB:
@@ -251,8 +243,7 @@ class EnhancedPCController:
             self.server_socket.listen(5)
             self.running = True
 
-            self.logger.info(f"Server started on port {self.port}")
-
+            self.
             # Start background threads
             self.heartbeat_thread = threading.Thread(target=self._heartbeat_loop, daemon=True)
             self.heartbeat_thread.start()
@@ -265,8 +256,7 @@ class EnhancedPCController:
             while self.running:
                 try:
                     client_socket, address = self.server_socket.accept()
-                    self.logger.info(f"New connection from {address}")
-
+                    self.
                     # Handle new connection in separate thread
                     connection_thread = threading.Thread(
                         target=self._handle_device_connection,
@@ -277,13 +267,10 @@ class EnhancedPCController:
 
                 except Exception as e:
                     if self.running:
-                        self.logger.error(f"Error accepting connection: {e}")
-
+                        self.
         except KeyboardInterrupt:
-            self.logger.info("Shutdown requested by user")
-        except Exception as e:
-            self.logger.error(f"Server error: {e}")
-        finally:
+            self.        except Exception as e:
+            self.        finally:
             self.stop()
 
     def stop(self):
@@ -303,8 +290,7 @@ class EnhancedPCController:
             except:
                 pass
 
-        self.logger.info("PC Controller stopped")
-
+        self.
     def _handle_device_connection(self, client_socket: socket.socket, address: Tuple[str, int]):
         """Handle a new device connection"""
         connection = DeviceConnection(client_socket, address)
@@ -314,13 +300,11 @@ class EnhancedPCController:
             # Wait for device registration
             reg_message = connection.receive_json_message(timeout=10.0)
             if not reg_message or reg_message.get('type') != 'device_registration':
-                self.logger.warning(f"Invalid registration from {address}")
-                return
+                self.                return
 
             device_id = reg_message.get('device_id')
             if not device_id:
-                self.logger.warning(f"Missing device_id from {address}")
-                return
+                self.                return
 
             # Create device info
             device_info = DeviceInfo(device_id, connection)
@@ -350,16 +334,14 @@ class EnhancedPCController:
             self._handle_device_messages(device_info)
 
         except Exception as e:
-            self.logger.error(f"Error handling device {address}: {e}")
-        finally:
+            self.        finally:
             # Clean up disconnected device
             if device_id:
                 with self.device_lock:
                     if device_id in self.devices:
                         device_info = self.devices[device_id]
                         del self.devices[device_id]
-                        self.logger.info(f"Device disconnected: {device_id}")
-
+                        self.
                         # Callback for device disconnected
                         if self.on_device_disconnected:
                             self.on_device_disconnected(device_info)
@@ -377,8 +359,7 @@ class EnhancedPCController:
                 self._process_device_message(device_info, message)
 
             except Exception as e:
-                self.logger.error(f"Error processing message from {device_info.device_id}: {e}")
-                break
+                self.                break
 
     def _process_device_message(self, device_info: DeviceInfo, message: Dict[str, Any]):
         """Process a message from a device"""
@@ -399,8 +380,7 @@ class EnhancedPCController:
             # Just update last heartbeat time (already done above)
             pass
         else:
-            self.logger.warning(f"Unknown message type from {device_info.device_id}: {msg_type}")
-
+            self.
         # Callback for data received
         if self.on_data_received:
             self.on_data_received(device_info, message)
@@ -414,8 +394,7 @@ class EnhancedPCController:
             if sensor_name in device_info.sensors:
                 device_info.sensors[sensor_name].update(sensor_info)
 
-        self.logger.debug(f"Status update from {device_info.device_id}: {device_info.status}")
-
+        self.
     def _handle_gsr_telemetry(self, device_info: DeviceInfo, message: Dict[str, Any]):
         """Handle GSR telemetry data"""
         value = message.get('value', 0.0)
@@ -448,8 +427,7 @@ class EnhancedPCController:
         device_info.data_packets_received += 1
         device_info.last_data_time = time.time()
 
-        self.logger.debug(f"Frame telemetry from {device_info.device_id}: {frame_type}")
-
+        self.
     def _handle_session_started(self, device_info: DeviceInfo, message: Dict[str, Any]):
         """Handle session started notification"""
         session_id = message.get('session_id')
@@ -465,14 +443,12 @@ class EnhancedPCController:
             self.current_session.add_device(device_info.device_id)
             self.current_session.recording = True
 
-        self.logger.info(f"Session started: {session_id} on device {device_info.device_id}")
-
+        self.
     def _handle_session_stopped(self, device_info: DeviceInfo, message: Dict[str, Any]):
         """Handle session stopped notification"""
         device_info.recording = False
 
-        self.logger.info(f"Session stopped on device {device_info.device_id}")
-
+        self.
     def _heartbeat_loop(self):
         """Background thread to monitor device heartbeats"""
         while self.running:
@@ -493,13 +469,11 @@ class EnhancedPCController:
                             device_info = self.devices[device_id]
                             device_info.connection.close()
                             del self.devices[device_id]
-                            self.logger.warning(f"Device timed out: {device_id}")
-
+                            self.
                 time.sleep(5.0)  # Check every 5 seconds
 
             except Exception as e:
-                self.logger.error(f"Heartbeat loop error: {e}")
-                time.sleep(1.0)
+                self.                time.sleep(1.0)
 
     def _visualization_loop(self):
         """Background thread for real-time visualization"""
@@ -532,8 +506,7 @@ class EnhancedPCController:
                 time.sleep(0.1)  # Update at 10Hz
 
             except Exception as e:
-                self.logger.error(f"Visualization error: {e}")
-                time.sleep(1.0)
+                self.                time.sleep(1.0)
 
     def start_recording_session(self, session_id: str = None) -> bool:
         """Start a recording session on all connected devices"""
@@ -580,8 +553,7 @@ class EnhancedPCController:
                 if device_info.recording and device_info.connection.send_json_message(message):
                     success_count += 1
 
-        self.logger.info(f"Recording session stopped: {self.current_session.session_id}")
-        return success_count > 0
+        self.        return success_count > 0
 
     def get_device_status(self) -> Dict[str, Dict[str, Any]]:
         """Get status of all connected devices"""
@@ -634,12 +606,10 @@ class EnhancedPCController:
                 with open(output_file, 'w') as f:
                     json.dump(export_data, f, indent=2)
 
-            self.logger.info(f"Session data exported to {output_file}")
-            return output_file
+            self.            return output_file
 
         except Exception as e:
-            self.logger.error(f"Error exporting session data: {e}")
-            return None
+            self.            return None
 
 
 def main():

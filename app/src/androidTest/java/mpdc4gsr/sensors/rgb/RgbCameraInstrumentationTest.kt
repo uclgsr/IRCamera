@@ -1,7 +1,6 @@
 package mpdc4gsr.sensors.rgb
 
 import android.content.Context
-import android.util.Log
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
@@ -47,25 +46,16 @@ class RgbCameraInstrumentationTest {
 
 
         testOutputDir = File(context.cacheDir, "rgb_camera_test_${System.currentTimeMillis()}")
-        testOutputDir.mkdirs()
-
-        Log.i(TAG, "RGB Camera instrumentation test setup completed")
-    }
+        testOutputDir.mkdirs()    }
 
     @After
     fun tearDown() {
 
-        testOutputDir.deleteRecursively()
-        Log.i(TAG, "RGB Camera instrumentation test cleanup completed")
-    }
+        testOutputDir.deleteRecursively()    }
 
 
     @Test
-    fun test4KVideoRecording() {
-        Log.i(TAG, "Testing 4K video recording capability")
-
-
-        val sessionDir = File(testOutputDir, "4k_video_test")
+    fun test4KVideoRecording() {        val sessionDir = File(testOutputDir, "4k_video_test")
         sessionDir.mkdirs()
 
 
@@ -73,9 +63,7 @@ class RgbCameraInstrumentationTest {
         val supports4K = deviceModel.contains("SM-S9") || deviceModel.contains("Galaxy S22") ||
                 deviceModel.contains("Pixel") || deviceModel.contains("OnePlus")
 
-        if (!supports4K) {
-            Log.i(TAG, "Device $deviceModel may not support 4K recording - running basic test")
-        }
+        if (!supports4K) {        }
 
 
         val testResult = simulateVideoRecordingTest(
@@ -86,18 +74,11 @@ class RgbCameraInstrumentationTest {
         )
 
         Assert.assertTrue("4K video recording test should complete", testResult.success)
-        Assert.assertTrue("4K video should meet quality standards", testResult.qualityScore >= 0.8)
-
-        Log.i(TAG, "✅ 4K video recording test completed successfully")
-        Log.i(TAG, "Test results: ${testResult.summary}")
-    }
+        Assert.assertTrue("4K video should meet quality standards", testResult.qualityScore >= 0.8)    }
 
 
     @Test
-    fun test1080pVideoRecording() {
-        Log.i(TAG, "Testing 1080p video recording")
-
-        val sessionDir = File(testOutputDir, "1080p_video_test")
+    fun test1080pVideoRecording() {        val sessionDir = File(testOutputDir, "1080p_video_test")
         sessionDir.mkdirs()
 
         val testResult = simulateVideoRecordingTest(
@@ -108,17 +89,11 @@ class RgbCameraInstrumentationTest {
         )
 
         Assert.assertTrue("1080p video recording should succeed", testResult.success)
-        Assert.assertTrue("1080p video should have good quality", testResult.qualityScore >= 0.7)
-
-        Log.i(TAG, "✅ 1080p video recording test completed successfully")
-    }
+        Assert.assertTrue("1080p video should have good quality", testResult.qualityScore >= 0.7)    }
 
 
     @Test
-    fun testFrameRateValidation() {
-        Log.i(TAG, "Testing frame rate validation at 30 FPS")
-
-        val sessionDir = File(testOutputDir, "frame_rate_test")
+    fun testFrameRateValidation() {        val sessionDir = File(testOutputDir, "frame_rate_test")
         sessionDir.mkdirs()
 
         val frameRateTest = simulateFrameRateTest(
@@ -131,20 +106,11 @@ class RgbCameraInstrumentationTest {
         Assert.assertTrue(
             "Average FPS should be close to 30",
             frameRateTest.averageFps >= 25.5 && frameRateTest.averageFps <= 34.5
-        )
-
-        Log.i(TAG, "Frame rate test results:")
-        Log.i(TAG, "  Average FPS: ${frameRateTest.averageFps}")
-        Log.i(TAG, "  Deviation: ${frameRateTest.deviationPercent}%")
-        Log.i(TAG, "✅ Frame rate validation test passed")
-    }
+        )    }
 
 
     @Test
-    fun testBurstStillCapture() {
-        Log.i(TAG, "Testing burst still capture")
-
-        val sessionDir = File(testOutputDir, "burst_capture_test")
+    fun testBurstStillCapture() {        val sessionDir = File(testOutputDir, "burst_capture_test")
         sessionDir.mkdirs()
 
         val burstTest = simulateBurstCaptureTest(
@@ -157,50 +123,26 @@ class RgbCameraInstrumentationTest {
         Assert.assertTrue(
             "Should capture expected number of images",
             burstTest.capturedCount >= BURST_CAPTURE_COUNT - 1
-        )
-
-        Log.i(TAG, "✅ Burst capture test completed: ${burstTest.capturedCount} images")
-    }
+        )    }
 
 
     @Test
-    fun testDeviceSpecificConfigurations() {
-        Log.i(TAG, "Testing device-specific configurations")
-
-        val deviceModel = android.os.Build.MODEL
-        val deviceManufacturer = android.os.Build.MANUFACTURER
-
-        Log.i(TAG, "Testing on device: $deviceManufacturer $deviceModel")
-
-
-        val capabilities = analyzeDeviceCapabilities()
+    fun testDeviceSpecificConfigurations() {        val deviceModel = android.os.Build.MODEL
+        val deviceManufacturer = android.os.Build.MANUFACTURER        val capabilities = analyzeDeviceCapabilities()
 
         Assert.assertTrue("Device should support basic recording", capabilities.supportsBasicRecording)
 
-        if (capabilities.supports4K) {
-            Log.i(TAG, "Device supports 4K - running enhanced tests")
-            test4KVideoRecording()
-        }
-
-        Log.i(TAG, "Device capabilities: $capabilities")
-        Log.i(TAG, "✅ Device-specific configuration tests completed")
-    }
+        if (capabilities.supports4K) {            test4KVideoRecording()
+        }    }
 
 
     @Test
-    fun testErrorHandlingAndRecovery() {
-        Log.i(TAG, "Testing error handling and recovery")
-
-
-        val invalidConfigTest = testInvalidConfigurations()
+    fun testErrorHandlingAndRecovery() {        val invalidConfigTest = testInvalidConfigurations()
         Assert.assertTrue("Should handle invalid configs gracefully", invalidConfigTest)
 
 
         val resourceTest = testResourceManagement()
-        Assert.assertTrue("Should manage resources properly", resourceTest)
-
-        Log.i(TAG, "✅ Error handling and recovery tests passed")
-    }
+        Assert.assertTrue("Should manage resources properly", resourceTest)    }
 
 
     private fun simulateVideoRecordingTest(
@@ -208,11 +150,7 @@ class RgbCameraInstrumentationTest {
         resolution: String,
         frameRate: Int,
         durationMs: Long
-    ): VideoTestResult {
-
-        Log.d(TAG, "Simulating $resolution recording at ${frameRate}fps for ${durationMs}ms")
-
-        // Create mock video file
+    ): VideoTestResult {        // Create mock video file
         val videoFile = File(sessionDir, "test_video_${resolution}.mp4")
         val csvFile = File(sessionDir, "rgb.csv")
 
@@ -329,11 +267,7 @@ class RgbCameraInstrumentationTest {
 
 
     private fun testInvalidConfigurations(): Boolean {
-        return try {
-            Log.d(TAG, "Testing invalid configuration handling")
-
-
-            val nullDirResult = handleInvalidSessionDirectory(null)
+        return try {            val nullDirResult = handleInvalidSessionDirectory(null)
 
 
             val invalidFrameRateResult = handleInvalidFrameRate(-1)
@@ -343,19 +277,13 @@ class RgbCameraInstrumentationTest {
 
             nullDirResult && invalidFrameRateResult && invalidResolutionResult
 
-        } catch (e: Exception) {
-            Log.w(TAG, "Exception in invalid configuration test", e)
-            false
+        } catch (e: Exception) {            false
         }
     }
 
 
     private fun testResourceManagement(): Boolean {
-        return try {
-            Log.d(TAG, "Testing resource management")
-
-
-            val resourceTest1 = simulateResourceAllocation("recorder1")
+        return try {            val resourceTest1 = simulateResourceAllocation("recorder1")
             val resourceTest2 = simulateResourceAllocation("recorder2")
 
 
@@ -364,35 +292,23 @@ class RgbCameraInstrumentationTest {
 
             resourceTest1 && resourceTest2
 
-        } catch (e: Exception) {
-            Log.w(TAG, "Exception in resource management test", e)
-            false
+        } catch (e: Exception) {            false
         }
     }
 
-    private fun handleInvalidSessionDirectory(dir: String?): Boolean {
-        Log.d(TAG, "Handling invalid session directory: $dir")
-        return true
+    private fun handleInvalidSessionDirectory(dir: String?): Boolean {        return true
     }
 
-    private fun handleInvalidFrameRate(fps: Int): Boolean {
-        Log.d(TAG, "Handling invalid frame rate: $fps")
-        return true
+    private fun handleInvalidFrameRate(fps: Int): Boolean {        return true
     }
 
-    private fun handleInvalidResolution(resolution: String): Boolean {
-        Log.d(TAG, "Handling invalid resolution: $resolution")
-        return true
+    private fun handleInvalidResolution(resolution: String): Boolean {        return true
     }
 
-    private fun simulateResourceAllocation(instanceId: String): Boolean {
-        Log.d(TAG, "Simulating resource allocation for: $instanceId")
-        return true
+    private fun simulateResourceAllocation(instanceId: String): Boolean {        return true
     }
 
-    private fun simulateResourceCleanup(instanceId: String) {
-        Log.d(TAG, "Simulating resource cleanup for: $instanceId")
-    }
+    private fun simulateResourceCleanup(instanceId: String) {    }
 
 
     data class VideoTestResult(

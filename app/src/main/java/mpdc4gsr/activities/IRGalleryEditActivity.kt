@@ -15,7 +15,6 @@ import androidx.lifecycle.lifecycleScope
 import com.blankj.utilcode.util.SizeUtils
 import com.csl.irCamera.R
 import com.csl.irCamera.databinding.ActivityIrGalleryEditBinding
-import com.elvishew.xlog.XLog
 import com.energy.iruvc.ircmd.IRCMDType
 import com.energy.iruvc.ircmd.IRUtils
 import com.energy.iruvc.utils.CommonParams
@@ -834,8 +833,7 @@ class IRGalleryEditActivity : BaseBindingActivity<ActivityIrGalleryEditBinding>(
         try {
             tmp = tempCorrect(temp!!)
         } catch (e: Exception) {
-            XLog.i("[ph][ph][ph][ph][ph][ph]: ${e.message}")
-        }
+            X        }
         return tmp!!
     }
 
@@ -885,8 +883,7 @@ class IRGalleryEditActivity : BaseBindingActivity<ActivityIrGalleryEditBinding>(
                     )
             }
         } catch (e: Exception) {
-            XLog.e("$TAG:tempCorrect-${e.message}")
-        } finally {
+            X        } finally {
             return newTemp
         }
     }

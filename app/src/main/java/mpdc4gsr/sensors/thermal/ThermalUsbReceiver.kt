@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.hardware.usb.UsbDevice
 import android.hardware.usb.UsbManager
-import android.util.Log
 import com.mpdc4gsr.libunified.app.bean.event.device.DeviceConnectEvent
 import com.mpdc4gsr.libunified.app.bean.event.device.DevicePermissionEvent
 import com.mpdc4gsr.libunified.app.config.DeviceConfig.isTcTsDevice
@@ -36,9 +35,7 @@ class ThermalUsbReceiver : BroadcastReceiver() {
                     handleUsbPermissionResult(context, intent)
                 }
             }
-        } catch (e: Exception) {
-            Log.e(TAG, "Error handling USB broadcast", e)
-        }
+        } catch (e: Exception) {        }
     }
 
     private fun handleDeviceAttached(context: Context, intent: Intent) {
@@ -50,32 +47,18 @@ class ThermalUsbReceiver : BroadcastReceiver() {
                 intent.getParcelableExtra(UsbManager.EXTRA_DEVICE) as? UsbDevice
             }
 
-        if (device != null) {
-            Log.i(
-                TAG,
-                "USB device attached: ${device.productName} (VID=${device.vendorId.toString(16)}, PID=${
+        if (device != null) {}, PID=${
                     device.productId.toString(16)
                 })"
             )
 
-            if (device.isTcTsDevice()) {
-                Log.i(TAG, "Topdon thermal camera detected: ${device.productName}")
-
-                val usbManager = context.getSystemService(Context.USB_SERVICE) as UsbManager
+            if (device.isTcTsDevice()) {                val usbManager = context.getSystemService(Context.USB_SERVICE) as UsbManager
                 val hasPermission = usbManager.hasPermission(device)
 
-                if (hasPermission) {
-
-                    Log.i(TAG, "Thermal camera attached with existing permission")
-                    EventBus.getDefault().post(DeviceConnectEvent(true, device))
-                } else {
-
-                    Log.i(TAG, "Thermal camera attached, requesting USB permission")
-                    EventBus.getDefault().post(DevicePermissionEvent(device))
+                if (hasPermission) {                    EventBus.getDefault().post(DeviceConnectEvent(true, device))
+                } else {                    EventBus.getDefault().post(DevicePermissionEvent(device))
                 }
-            } else {
-                Log.d(TAG, "Non-thermal USB device attached, ignoring")
-            }
+            } else {            }
         }
     }
 
@@ -88,19 +71,12 @@ class ThermalUsbReceiver : BroadcastReceiver() {
                 intent.getParcelableExtra(UsbManager.EXTRA_DEVICE) as? UsbDevice
             }
 
-        if (device != null) {
-            Log.i(
-                TAG,
-                "USB device detached: ${device.productName} (VID=${device.vendorId.toString(16)}, PID=${
+        if (device != null) {}, PID=${
                     device.productId.toString(16)
                 })"
             )
 
-            if (device.isTcTsDevice()) {
-                Log.w(TAG, "Topdon thermal camera disconnected: ${device.productName}")
-
-
-                EventBus.getDefault().post(DeviceConnectEvent(false, device))
+            if (device.isTcTsDevice()) {                EventBus.getDefault().post(DeviceConnectEvent(false, device))
             }
         }
     }
@@ -116,18 +92,9 @@ class ThermalUsbReceiver : BroadcastReceiver() {
 
         val granted = intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)
 
-        if (device != null) {
-            Log.i(TAG, "USB permission result for ${device.productName}: granted=$granted")
-
-            if (device.isTcTsDevice()) {
-                if (granted) {
-                    Log.i(TAG, "USB permission granted for thermal camera")
-
-                    EventBus.getDefault().post(DeviceConnectEvent(true, device))
-                } else {
-                    Log.w(TAG, "USB permission denied for thermal camera")
-
-                    EventBus.getDefault().post(DevicePermissionEvent(device))
+        if (device != null) {            if (device.isTcTsDevice()) {
+                if (granted) {                    EventBus.getDefault().post(DeviceConnectEvent(true, device))
+                } else {                    EventBus.getDefault().post(DevicePermissionEvent(device))
                 }
             }
         }

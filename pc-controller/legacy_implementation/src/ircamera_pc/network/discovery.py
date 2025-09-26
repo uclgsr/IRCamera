@@ -16,11 +16,9 @@ except ImportError:
     AsyncZeroconf = None
 
 try:
-    from loguru import logger
-except ImportError:
-    try:
-        from ..utils.simple_logger import logger
     except ImportError:
+    try:
+            except ImportError:
 
         class FallbackLogger:
             def info(self, msg) -> Any:
@@ -111,12 +109,10 @@ class NetworkDiscoveryService:
     async def start_discovery(self) -> bool:
 
         if not self._check_zeroconf_available():
-            logger.warning("Zeroconf not available, using fallback discovery")
-            return await self._start_fallback_discovery()
+                        return await self._start_fallback_discovery()
 
         try:
-            logger.info("Starting mDNS discovery service...")
-
+            
             self.zeroconf = AsyncZeroconf()
 
             await self._register_pc_controller_service()
@@ -124,12 +120,10 @@ class NetworkDiscoveryService:
             await self._start_service_browser()
 
             self.is_running = True
-            logger.info("mDNS discovery service started successfully")
-            return True
+                        return True
 
         except Exception as e:
-            logger.error(f"Failed to start discovery service: {e}")
-            await self.stop_discovery()
+                        await self.stop_discovery()
             return False
 
     async def stop_discovery(self) -> Any:
@@ -137,8 +131,7 @@ class NetworkDiscoveryService:
         if not self.is_running:
             return
 
-        logger.info("Stopping discovery service...")
-
+        
         try:
 
             if self.zeroconf and self.registered_services:
@@ -155,11 +148,9 @@ class NetworkDiscoveryService:
                 self.zeroconf = None
 
             self.is_running = False
-            logger.info("Discovery service stopped")
-
+            
         except Exception as e:
-            logger.error(f"Error stopping discovery service: {e}")
-
+            
     async def get_discovered_devices(self) -> List[DiscoveredDevice]:
 
         return list(self.discovered_devices.values())
@@ -214,13 +205,9 @@ class NetworkDiscoveryService:
             await self.zeroconf.async_register_service(service_info)
             self.registered_services.append(service_info)
 
-            logger.info(
-                f"Registered PC controller service: {service_name} at {self.local_ip}:{port}"
-            )
-
+            
         except Exception as e:
-            logger.error(f"Failed to register PC controller service: {e}")
-
+            
     async def _start_service_browser(self):
 
         try:
@@ -238,21 +225,15 @@ class NetworkDiscoveryService:
                 self.zeroconf.zeroconf, service_types, handlers=handlers
             )
 
-            logger.debug(f"Started browsing for service types: {service_types}")
-
+            
         except Exception as e:
-            logger.error(f"Failed to start service browser: {e}")
-
+            
     async def _start_fallback_discovery(self) -> bool:
 
-        logger.info("Starting fallback subnet discovery...")
-
+        
         # This would implement subnet scanning as a fallback
 
-        logger.warning(
-            "Fallback discovery not fully implemented - install zeroconf for full functionality"
-        )
-
+        
         self.is_running = True
         return True
 
@@ -290,8 +271,7 @@ class NetworkDiscoveryService:
             return DeviceType.UNKNOWN
 
         except Exception as e:
-            logger.warning(f"Failed to determine device type: {e}")
-            return DeviceType.UNKNOWN
+                        return DeviceType.UNKNOWN
 
     async def _on_device_discovered(self, service_info: ServiceInfo):
 
@@ -339,11 +319,9 @@ class NetworkDiscoveryService:
                     else:
                         callback("discovered", device)
                 except Exception as e:
-                    logger.error(f"Discovery listener error: {e}")
-
+                    
         except Exception as e:
-            logger.error(f"Error processing discovered device: {e}")
-
+            
     async def _on_device_lost(self, service_name: str):
 
         try:
@@ -359,8 +337,7 @@ class NetworkDiscoveryService:
 
             if device_to_remove and key_to_remove:
                 del self.discovered_devices[key_to_remove]
-                logger.info(f"Lost device: {service_name}")
-
+                
                 for callback in self.discovery_listeners:
                     try:
                         if asyncio.iscoroutinefunction(callback):
@@ -368,11 +345,9 @@ class NetworkDiscoveryService:
                         else:
                             callback("lost", device_to_remove)
                     except Exception as e:
-                        logger.error(f"Discovery listener error: {e}")
-
+                        
         except Exception as e:
-            logger.error(f"Error processing lost device: {e}")
-
+            
 
 class ServiceBrowserHandler:
 
@@ -405,4 +380,4 @@ class ServiceBrowserHandler:
             if service_info:
                 await self.discovery_service._on_device_discovered(service_info)
         except Exception as e:
-            logger.error(f"Error in service addition handler: {e}")
+            

@@ -3,7 +3,6 @@ package com.mpdc4gsr.gsr.network
 import android.content.Context
 import android.net.nsd.NsdManager
 import android.net.nsd.NsdServiceInfo
-import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.util.concurrent.ConcurrentHashMap
@@ -47,9 +46,7 @@ class ZeroconfDiscoveryService(private val context: Context) {
 
     suspend fun startDiscovery(): Boolean =
         withContext(Dispatchers.Main) {
-            if (isDiscovering) {
-                Log.w(TAG, "Discovery already in progress")
-                return@withContext true
+            if (isDiscovering) {                return@withContext true
             }
 
             try {
@@ -59,12 +56,8 @@ class ZeroconfDiscoveryService(private val context: Context) {
                     NsdManager.PROTOCOL_DNS_SD,
                     discoveryListener
                 )
-                isDiscovering = true
-                Log.i(TAG, "Started mDNS service discovery for type: $SERVICE_TYPE")
-                true
-            } catch (e: Exception) {
-                Log.e(TAG, "Failed to start service discovery", e)
-                serviceListener?.onDiscoveryError(-1, e.message ?: "Discovery failed")
+                isDiscovering = true                true
+            } catch (e: Exception) {                serviceListener?.onDiscoveryError(-1, e.message ?: "Discovery failed")
                 false
             }
         }
@@ -75,11 +68,7 @@ class ZeroconfDiscoveryService(private val context: Context) {
         try {
             discoveryListener?.let { nsdManager.stopServiceDiscovery(it) }
             isDiscovering = false
-            discoveredServices.clear()
-            Log.i(TAG, "Stopped service discovery")
-        } catch (e: Exception) {
-            Log.e(TAG, "Error stopping discovery", e)
-        }
+            discoveredServices.clear()        } catch (e: Exception) {        }
     }
 
     suspend fun registerService(
@@ -87,9 +76,7 @@ class ZeroconfDiscoveryService(private val context: Context) {
         port: Int,
     ): Boolean =
         withContext(Dispatchers.Main) {
-            if (isRegistered) {
-                Log.w(TAG, "Service already registered")
-                return@withContext true
+            if (isRegistered) {                return@withContext true
             }
 
             try {
@@ -107,12 +94,8 @@ class ZeroconfDiscoveryService(private val context: Context) {
                     serviceInfo,
                     NsdManager.PROTOCOL_DNS_SD,
                     registrationListener
-                )
-                Log.i(TAG, "Registering service: ${serviceInfo.serviceName}")
-                true
-            } catch (e: Exception) {
-                Log.e(TAG, "Failed to register service", e)
-                false
+                )                true
+            } catch (e: Exception) {                false
             }
         }
 
@@ -121,11 +104,7 @@ class ZeroconfDiscoveryService(private val context: Context) {
 
         try {
             registrationListener?.let { nsdManager.unregisterService(it) }
-            isRegistered = false
-            Log.i(TAG, "Unregistered service")
-        } catch (e: Exception) {
-            Log.e(TAG, "Error unregistering service", e)
-        }
+            isRegistered = false        } catch (e: Exception) {        }
     }
 
     @Suppress("DEPRECATION")
@@ -143,24 +122,16 @@ class ZeroconfDiscoveryService(private val context: Context) {
                     deviceName = deviceName,
                     capabilities = capabilities,
                 )
-            } catch (e: Exception) {
-                Log.w(TAG, "Failed to parse service info: ${serviceInfo.serviceName}", e)
-                null
+            } catch (e: Exception) {                null
             }
         }
     }
 
     private fun createDiscoveryListener(): NsdManager.DiscoveryListener {
         return object : NsdManager.DiscoveryListener {
-            override fun onDiscoveryStarted(regType: String) {
-                Log.d(TAG, "Service discovery started: $regType")
-            }
+            override fun onDiscoveryStarted(regType: String) {            }
 
-            override fun onServiceFound(service: NsdServiceInfo) {
-                Log.d(TAG, "Service discovery success: ${service.serviceName}")
-
-
-                if (service.serviceName.startsWith(SERVICE_NAME)) {
+            override fun onServiceFound(service: NsdServiceInfo) {                if (service.serviceName.startsWith(SERVICE_NAME)) {
                     return
                 }
 
@@ -169,32 +140,24 @@ class ZeroconfDiscoveryService(private val context: Context) {
                 nsdManager.resolveService(service, createResolveListener())
             }
 
-            override fun onServiceLost(service: NsdServiceInfo) {
-                Log.i(TAG, "Service lost: ${service.serviceName}")
-                discoveredServices.remove(service.serviceName)
+            override fun onServiceLost(service: NsdServiceInfo) {                discoveredServices.remove(service.serviceName)
                 serviceListener?.onServiceLost(service.serviceName)
             }
 
-            override fun onDiscoveryStopped(serviceType: String) {
-                Log.i(TAG, "Discovery stopped: $serviceType")
-                isDiscovering = false
+            override fun onDiscoveryStopped(serviceType: String) {                isDiscovering = false
             }
 
             override fun onStartDiscoveryFailed(
                 serviceType: String,
                 errorCode: Int,
-            ) {
-                Log.e(TAG, "Discovery failed to start: $serviceType, error: $errorCode")
-                isDiscovering = false
+            ) {                isDiscovering = false
                 serviceListener?.onDiscoveryError(errorCode, "Failed to start discovery")
             }
 
             override fun onStopDiscoveryFailed(
                 serviceType: String,
                 errorCode: Int,
-            ) {
-                Log.e(TAG, "Discovery failed to stop: $serviceType, error: $errorCode")
-                serviceListener?.onDiscoveryError(errorCode, "Failed to stop discovery")
+            ) {                serviceListener?.onDiscoveryError(errorCode, "Failed to stop discovery")
             }
         }
     }
@@ -205,17 +168,9 @@ class ZeroconfDiscoveryService(private val context: Context) {
             override fun onResolveFailed(
                 serviceInfo: NsdServiceInfo,
                 errorCode: Int,
-            ) {
-                Log.e(TAG, "Resolve failed: ${serviceInfo.serviceName}, error: $errorCode")
-            }
+            ) {            }
 
-            override fun onServiceResolved(serviceInfo: NsdServiceInfo) {
-                Log.i(
-                    TAG,
-                    "Service resolved: ${serviceInfo.serviceName} at ${serviceInfo.host}:${serviceInfo.port}"
-                )
-
-                discoveredServices[serviceInfo.serviceName] = serviceInfo
+            override fun onServiceResolved(serviceInfo: NsdServiceInfo) {                discoveredServices[serviceInfo.serviceName] = serviceInfo
 
 
                 try {
@@ -234,47 +189,31 @@ class ZeroconfDiscoveryService(private val context: Context) {
                         )
 
                     serviceListener?.onServiceDiscovered(controllerInfo)
-                } catch (e: Exception) {
-                    Log.w(TAG, "Failed to parse resolved service", e)
-                }
+                } catch (e: Exception) {                }
             }
         }
     }
 
     private fun createRegistrationListener(): NsdManager.RegistrationListener {
         return object : NsdManager.RegistrationListener {
-            override fun onServiceRegistered(serviceInfo: NsdServiceInfo) {
-                Log.i(TAG, "Service registered: ${serviceInfo.serviceName}")
-                isRegistered = true
+            override fun onServiceRegistered(serviceInfo: NsdServiceInfo) {                isRegistered = true
                 serviceListener?.onServiceRegistered(serviceInfo.serviceName)
             }
 
             override fun onRegistrationFailed(
                 serviceInfo: NsdServiceInfo,
                 errorCode: Int,
-            ) {
-                Log.e(
-                    TAG,
-                    "Service registration failed: ${serviceInfo.serviceName}, error: $errorCode"
-                )
-                isRegistered = false
+            ) {                isRegistered = false
                 serviceListener?.onDiscoveryError(errorCode, "Registration failed")
             }
 
-            override fun onServiceUnregistered(serviceInfo: NsdServiceInfo) {
-                Log.i(TAG, "Service unregistered: ${serviceInfo.serviceName}")
-                isRegistered = false
+            override fun onServiceUnregistered(serviceInfo: NsdServiceInfo) {                isRegistered = false
             }
 
             override fun onUnregistrationFailed(
                 serviceInfo: NsdServiceInfo,
                 errorCode: Int,
-            ) {
-                Log.e(
-                    TAG,
-                    "Service unregistration failed: ${serviceInfo.serviceName}, error: $errorCode"
-                )
-                serviceListener?.onDiscoveryError(errorCode, "Unregistration failed")
+            ) {                serviceListener?.onDiscoveryError(errorCode, "Unregistration failed")
             }
         }
     }

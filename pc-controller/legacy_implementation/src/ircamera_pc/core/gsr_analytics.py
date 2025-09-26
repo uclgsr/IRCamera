@@ -1,5 +1,4 @@
 import asyncio
-import logging
 import numpy as np
 import pandas as pd
 import warnings
@@ -104,11 +103,7 @@ class GSRAnalytics:
 
         self.executor = ThreadPoolExecutor(max_workers=4)
 
-        logger.info(
-            f"GSR Analytics initialized: {window_size_seconds}s windows, "
-            f"{overlap_seconds}s overlap"
-        )
-
+        
     def add_gsr_samples(
             self,
             device_id: None = str,
@@ -175,8 +170,7 @@ class GSRAnalytics:
                 current_time,
             )
         except Exception as e:
-            logger.error(f"Error in async GSR analysis for {device_id}: {e}")
-
+            
     def _analyze_window_sync(
             self, device_id: str, session_id: str, current_time: float
     ):
@@ -209,13 +203,9 @@ class GSRAnalytics:
 
                 self.last_analysis[device_key] = current_time
 
-                logger.debug(
-                    f"GSR analysis completed for {device_id}: stress={features.stress_score:.1f}"
-                )
-
+                
         except Exception as e:
-            logger.error(f"Error in sync GSR analysis for {device_id}: {e}")
-
+            
     def _extract_features(
             self,
             device_id: str,
@@ -289,8 +279,7 @@ class GSRAnalytics:
             )
 
         except Exception as e:
-            logger.error(f"Feature extraction failed: {e}")
-            return None
+                        return None
 
     def _clean_gsr_signal(self, gsr_data: np.ndarray) -> np.ndarray:
 
@@ -489,8 +478,7 @@ class GSRAnalytics:
                 device_key not in self.feature_history
                 or not self.feature_history[device_key]
         ):
-            logger.warning(f"No feature history found for {device_key}")
-            return None
+                        return None
 
         features = self.feature_history[device_key]
 
@@ -552,8 +540,7 @@ class GSRAnalytics:
             )
 
         except Exception as e:
-            logger.error(f"Failed to generate session report: {e}")
-            return None
+                        return None
 
     def _generate_recommendations(
             self,
@@ -655,8 +642,7 @@ class GSRAnalytics:
             return True
 
         except Exception as e:
-            logger.error(f"Failed to export features: {e}")
-            return False
+                        return False
 
     def cleanup_device_session(
             self, device_id: Any = str, session_id: Any = str
@@ -671,8 +657,7 @@ class GSRAnalytics:
         if device_key in self.last_analysis:
             del self.last_analysis[device_key]
 
-        logger.debug(f"Cleaned up GSR analytics for {device_key}")
-
+        
     def get_stress_summary(self) -> Dict[str, Any]:
 
         summary = {"active_sessions": len(self.feature_history), "sessions": {}}

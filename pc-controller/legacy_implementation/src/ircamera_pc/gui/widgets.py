@@ -1,4 +1,3 @@
-import logging
 from PyQt6.QtCore import QTimer, pyqtSignal, pyqtSlot
 from PyQt6.QtGui import QFont
 from PyQt6.QtWidgets import (
@@ -477,8 +476,7 @@ class IntegrationManagementWidget(QWidget):
     def set_integration_error(self, error: str) -> None:
 
         self.add_status_message(f"Integration Error: {error}", "ERROR")
-        self.logger.error(f"Integration error: {error}")
-
+        self.
         if "critical" in error.lower() or "fatal" in error.lower():
             QMessageBox.critical(self, "Critical Integration Error", error)
 

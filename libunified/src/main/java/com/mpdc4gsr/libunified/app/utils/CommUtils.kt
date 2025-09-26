@@ -3,7 +3,6 @@ package com.mpdc4gsr.libunified.app.utils
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import com.blankj.utilcode.util.Utils
-import com.elvishew.xlog.XLog
 
 
 object CommUtils {
@@ -19,8 +18,7 @@ object CommUtils {
         try {
             msg = appInfo.metaData.getString("app_name")?.toString() ?: ""
         } catch (e: Exception) {
-            XLog.w("[ph][ph]app[ph][ph][ph][ph]： ${e.message}")
-        }
+            X        }
         return msg
     }
 }

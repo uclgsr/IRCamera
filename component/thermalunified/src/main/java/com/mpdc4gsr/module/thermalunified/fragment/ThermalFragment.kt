@@ -4,7 +4,6 @@ package com.mpdc4gsr.module.thermalunified.fragment
 import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.graphics.Matrix
-import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
@@ -161,9 +160,7 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
         initFence()
 
         onIrVideoStart()
-        mIrSurfaceView!!.post {
-            Log.w("123", "w:${mIrSurfaceView!!.width}, h:${mIrSurfaceView!!.height}")
-        }
+        mIrSurfaceView!!.post {        }
 
         msgLiveData.observe(this) { msg ->
             if (msg == 0) {
@@ -272,16 +269,12 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
                             mMaxTemp = maxBigDecimal.setScale(1, RoundingMode.HALF_UP).toFloat()
                             mMinTemp = minBigDecimal.setScale(1, RoundingMode.HALF_UP).toFloat()
                         } catch (e: Exception) {
-                            e.printStackTrace()
-                            Log.e(TAG, "[ph][ph][ph][ph][ph][ph]:${e.message}")
-                        }
+                            e.printStackTrace()                        }
                     }
                 },
             )
 
-        if (ret == 5) {
-            Log.w("123", "[ph][ph][ph][ph][ph][ph][ph]")
-        } else {
+        if (ret == 5) {        } else {
             ToastTools.showShort("[ph][ph][ph][ph][ph][ph][ph]")
         }
     }
@@ -301,9 +294,7 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
             }
             origin.recycle()
             return newBitmap
-        } catch (e: Exception) {
-            Log.e("123", "error:${e.message}")
-            return origin
+        } catch (e: Exception) {            return origin
         }
     }
 
@@ -405,9 +396,7 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun action(event: ThermalActionEvent) {
-        Log.w("123", "event:${event.action}")
-        when (event.action) {
+    fun action(event: ThermalActionEvent) {        when (event.action) {
             1001 -> {
 
                 ToastTools.showShort("[ph][ph]")
@@ -596,16 +585,12 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
     var isVideoRunning = false
 
     private fun video() {
-        if (isVideoRunning) {
-            Log.w("123", "[ph][ph][ph][ph]")
-            return
+        if (isVideoRunning) {            return
         }
 
 
         val latestResultPath =
-            "/tmp/YapBitmapToMp4_${System.currentTimeMillis()}.mp4" // Temporary fallback
-        Log.w("123", "latestResultPath:$latestResultPath")
-        YapVideoEncoder(this, File(latestResultPath)).start()
+            "/tmp/YapBitmapToMp4_${System.currentTimeMillis()}.mp4" // Temporary fallback        YapVideoEncoder(this, File(latestResultPath)).start()
     }
 
 
@@ -681,8 +666,6 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
         }
     }
 
-    override fun progress(progress: Float) {
-        Log.w("123", "progress:$progress")
-        isVideoRunning = progress > 0 || progress < 100
+    override fun progress(progress: Float) {        isVideoRunning = progress > 0 || progress < 100
     }
 }

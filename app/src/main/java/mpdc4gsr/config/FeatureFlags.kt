@@ -2,7 +2,6 @@ package mpdc4gsr.config
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.util.Log
 
 object FeatureFlags {
     private const val TAG = "FeatureFlags"
@@ -23,9 +22,7 @@ object FeatureFlags {
     private var prefs: SharedPreferences? = null
 
     fun initialize(context: Context) {
-        prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        Log.i(TAG, "Feature flags initialized with defaults")
-        logCurrentConfiguration()
+        prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)        logCurrentConfiguration()
     }
 
     val COMM_USE_WSS: Boolean
@@ -46,29 +43,19 @@ object FeatureFlags {
             ?: DEFAULT_TIME_SYNC_MODE
 
     fun setCommUseWSS(enabled: Boolean) {
-        prefs?.edit()?.putBoolean(KEY_COMM_USE_WSS, enabled)?.apply()
-        Log.i(TAG, "COMM_USE_WSS set to $enabled")
-    }
+        prefs?.edit()?.putBoolean(KEY_COMM_USE_WSS, enabled)?.apply()    }
 
     fun setTlsEnable(enabled: Boolean) {
-        prefs?.edit()?.putBoolean(KEY_TLS_ENABLE, enabled)?.apply()
-        Log.i(TAG, "TLS_ENABLE set to $enabled")
-    }
+        prefs?.edit()?.putBoolean(KEY_TLS_ENABLE, enabled)?.apply()    }
 
     fun setMdnsEnable(enabled: Boolean) {
-        prefs?.edit()?.putBoolean(KEY_MDNS_ENABLE, enabled)?.apply()
-        Log.i(TAG, "MDNS_ENABLE set to $enabled")
-    }
+        prefs?.edit()?.putBoolean(KEY_MDNS_ENABLE, enabled)?.apply()    }
 
     fun setFileUploadProtocol(protocol: String) {
-        prefs?.edit()?.putString(KEY_FILE_UPLOAD_PROTOCOL, protocol)?.apply()
-        Log.i(TAG, "FILE_UPLOAD_PROTOCOL set to $protocol")
-    }
+        prefs?.edit()?.putString(KEY_FILE_UPLOAD_PROTOCOL, protocol)?.apply()    }
 
     fun setTimeSyncMode(mode: String) {
-        prefs?.edit()?.putString(KEY_TIME_SYNC_MODE, mode)?.apply()
-        Log.i(TAG, "TIME_SYNC_MODE set to $mode")
-    }
+        prefs?.edit()?.putString(KEY_TIME_SYNC_MODE, mode)?.apply()    }
 
     fun getAllFlags(): Map<String, Any> {
         return mapOf(
@@ -81,17 +68,11 @@ object FeatureFlags {
     }
 
     fun resetToDefaults() {
-        prefs?.edit()?.clear()?.apply()
-        Log.i(TAG, "Feature flags reset to defaults")
-        logCurrentConfiguration()
+        prefs?.edit()?.clear()?.apply()        logCurrentConfiguration()
     }
 
     private fun logCurrentConfiguration() {
-        val flags = getAllFlags()
-        Log.i(TAG, "Current feature flag configuration:")
-        flags.forEach { (key, value) ->
-            Log.i(TAG, "  $key: $value")
-        }
+        val flags = getAllFlags()        flags.forEach { (key, value) ->        }
     }
 
     fun validateConfiguration(): List<String> {
@@ -110,9 +91,7 @@ object FeatureFlags {
         }
 
         if (warnings.isNotEmpty()) {
-            warnings.forEach { warning ->
-                Log.w(TAG, "Configuration warning: $warning")
-            }
+            warnings.forEach { warning ->            }
         }
 
         return warnings

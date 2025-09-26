@@ -4,7 +4,6 @@ import numpy as np
 import pandas as pd
 from dataclasses import dataclass, asdict
 from datetime import datetime, timezone
-from loguru import logger
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
@@ -82,8 +81,7 @@ class MultiModalHDF5Exporter:
         self.streaming_datasets: Dict[str, h5py.Dataset] = {}
         self.streaming_positions: Dict[str, int] = {}
 
-        logger.info(f"HDF5 Exporter initialized for session {session_id}")
-
+        
     def __enter__(self):
 
         self.open()
@@ -101,11 +99,9 @@ class MultiModalHDF5Exporter:
 
             self._create_file_structure()
 
-            logger.info(f"HDF5 file opened: {self.output_file}")
-
+            
         except Exception as e:
-            logger.error(f"Failed to open HDF5 file: {e}")
-            raise
+                        raise
 
     def close(self):
 
@@ -121,14 +117,11 @@ class MultiModalHDF5Exporter:
 
                 validation_report = self._generate_validation_report()
 
-                logger.info(f"HDF5 export completed: {self.output_file}")
-                logger.info(f"Data validation: {validation_report}")
-
+                                
                 return self.output_file
 
             except Exception as e:
-                logger.error(f"Error closing HDF5 file: {e}")
-                raise
+                                raise
 
     def set_session_metadata(self, metadata: SessionMetadata):
 
@@ -210,8 +203,7 @@ class MultiModalHDF5Exporter:
             logger.debug(f"Added {len(data)} samples to stream {stream_id}")
 
         except Exception as e:
-            logger.error(f"Failed to add timeseries data to {stream_id}: {e}")
-            raise
+                        raise
 
     def add_video_data(self, stream_id: str, timestamps: np.ndarray,
                        frames: np.ndarray, metadata: Optional[Dict] = None):
@@ -254,11 +246,9 @@ class MultiModalHDF5Exporter:
             self.data_streams[stream_id].total_samples = frames.shape[0]
             self.data_streams[stream_id].end_timestamp = float(timestamps[-1])
 
-            logger.info(f"Added video data to stream {stream_id}: {frames.shape[0]} frames")
-
+            
         except Exception as e:
-            logger.error(f"Failed to add video data to {stream_id}: {e}")
-            raise
+                        raise
 
     def add_sync_marker(self, marker: SyncMarkerInfo):
 
@@ -267,8 +257,7 @@ class MultiModalHDF5Exporter:
         if self.is_open:
             self._write_sync_marker(marker)
 
-        logger.debug(f"Sync marker added: {marker.marker_type} at {marker.timestamp}")
-
+        
     def create_streaming_dataset(self, stream_id: str, data_shape: Tuple[int, ...],
                                  dtype: np.dtype = np.float64, initial_size: int = 1000):
 
@@ -310,11 +299,9 @@ class MultiModalHDF5Exporter:
             self.streaming_datasets[f"{stream_id}_timestamps"] = timestamp_dataset
             self.streaming_positions[stream_id] = 0
 
-            logger.info(f"Streaming dataset created for {stream_id}")
-
+            
         except Exception as e:
-            logger.error(f"Failed to create streaming dataset for {stream_id}: {e}")
-            raise
+                        raise
 
     def export_to_formats(self, formats: List[str] = None) -> Dict[str, Path]:
 
@@ -587,8 +574,7 @@ class MultiModalHDF5Exporter:
         try:
             from scipy.io import savemat
         except ImportError:
-            logger.warning("scipy not available, skipping MATLAB export")
-            return None
+                        return None
 
         mat_file = self.output_file.with_suffix('.mat')
 

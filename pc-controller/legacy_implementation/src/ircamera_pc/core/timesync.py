@@ -6,10 +6,8 @@ from datetime import datetime, timezone
 from typing import Dict, List, Optional, Tuple
 
 try:
-    from loguru import logger
-except ImportError:
-    from ..utils.simple_logger import logger
-
+    except ImportError:
+    
 from .config import config
 
 
@@ -43,13 +41,11 @@ class TimeSyncService:
         self._max_offset_ms = config.get("time_sync.max_offset_ms", 15)
         self._history_size = 100
 
-        logger.info("Time Synchronization Service initialized")
-
+        
     async def start(self, host: str = "127.0.0.1", port: int = 8123) -> None:
 
         if self._is_running:
-            logger.warning("Time sync service is already running")
-            return
+                        return
 
         try:
             loop = asyncio.get_event_loop()
@@ -62,11 +58,9 @@ class TimeSyncService:
             self._protocol = protocol
             self._is_running = True
 
-            logger.info(f"Time sync service started on {host}:{port}")
-
+            
         except (OSError, ValueError, RuntimeError) as e:
-            logger.error(f"Failed to start time sync service: {e}")
-            raise
+                        raise
 
     async def stop(self) -> None:
 
@@ -77,8 +71,7 @@ class TimeSyncService:
             self._server_socket.close()
 
         self._is_running = False
-        logger.info("Time sync service stopped")
-
+        
     def handle_sync_request(
             self, device_id: str, request_data: bytes, addr: Tuple[str, int]
     ) -> bytes:
@@ -86,8 +79,7 @@ class TimeSyncService:
         try:
 
             if len(request_data) < 16:
-                logger.warning(f"Invalid sync request from {device_id}: too short")
-                return b""
+                                return b""
 
             client_send_time = struct.unpack("!Q", request_data[:8])[0] / 1000.0
 
@@ -102,12 +94,10 @@ class TimeSyncService:
 
             self._update_device_stats(device_id, client_send_time, server_time)
 
-            logger.debug(f"Time sync response sent to {device_id} at {addr}")
-            return response
+                        return response
 
         except (OSError, ValueError, RuntimeError) as e:
-            logger.error(f"Error handling sync request from {device_id}: {e}")
-            return b""
+                        return b""
 
     def _update_device_stats(
             self, device_id: str, client_time: float, server_time: float
@@ -143,25 +133,10 @@ class TimeSyncService:
             stats.p95_offset_ms = sorted_offsets[min(p95_index, n - 1)]
 
         if stats.median_offset_ms > self._target_accuracy_ms:
-            logger.warning(
-                f"Device {device_id} median offset"
-                "{stats.median_offset_ms:.1f}ms"
-                f"exceeds target {self._target_accuracy_ms}ms"
-            )
-
+            
         if stats.p95_offset_ms > self._max_offset_ms:
-            logger.warning(
-                f"Device {device_id} p95 offset {stats.p95_offset_ms:.1f}ms "
-                f"exceeds threshold {self._max_offset_ms}ms"
-            )
-
-        logger.debug(
-            f"Time sync stats for {device_id}: "
-            f"offset={offset_ms:.1f}ms, "
-            f"median={stats.median_offset_ms:.1f}ms, "
-            f"p95={stats.p95_offset_ms:.1f}ms"
-        )
-
+            
+        
     def get_device_stats(self, device_id: str) -> Optional[TimeSyncStats]:
 
         return self._device_stats.get(device_id)
@@ -251,15 +226,13 @@ class TimeSyncProtocol(asyncio.DatagramProtocol):
     def connection_made(self, transport: asyncio.DatagramTransport) -> None:
 
         self.transport = transport
-        logger.debug("Time sync protocol connection made")
-
+        
     def datagram_received(self, data: bytes, addr: Tuple[str, int]) -> None:
 
         try:
 
             if len(data) < 16:
-                logger.warning(f"Invalid time sync request from {addr}: too short")
-                return
+                                return
 
             device_id_hash = struct.unpack("!Q", data[8:16])[0]
             device_id = f"device_{device_id_hash:016x}"
@@ -270,15 +243,12 @@ class TimeSyncProtocol(asyncio.DatagramProtocol):
                 self.transport.sendto(response, addr)
 
         except (OSError, ValueError, RuntimeError) as e:
-            logger.error(f"Error processing time sync datagram from {addr}: {e}")
-
+            
     def error_received(self, exc: Exception) -> None:
 
-        logger.error(f"Time sync protocol error: {exc}")
-
+        
     def connection_lost(self, exc: Optional[Exception]) -> None:
 
         if exc:
-            logger.error(f"Time sync connection lost: {exc}")
-        else:
-            logger.debug("Time sync connection closed")
+                    else:
+            

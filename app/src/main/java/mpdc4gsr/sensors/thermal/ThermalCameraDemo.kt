@@ -4,7 +4,6 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
@@ -44,12 +43,8 @@ class ThermalCameraDemo : AppCompatActivity() {
         ActivityResultContracts.RequestMultiplePermissions()
     ) { permissions ->
         val granted = permissions.values.all { it }
-        if (granted) {
-            Log.i(TAG, "All permissions granted")
-            initializeThermalCamera()
-        } else {
-            Log.w(TAG, "Permissions denied")
-            updateStatus("Permissions required for thermal camera operation")
+        if (granted) {            initializeThermalCamera()
+        } else {            updateStatus("Permissions required for thermal camera operation")
         }
     }
 
@@ -139,9 +134,7 @@ class ThermalCameraDemo : AppCompatActivity() {
                     ) {
                         runOnUiThread {
 
-                            bitmap?.let {
-                                Log.d(TAG, "Thermal frame received: ${it.width}x${it.height}")
-                                thermalPreview.setImageBitmap(it)
+                            bitmap?.let {                                thermalPreview.setImageBitmap(it)
                             }
 
 
@@ -217,9 +210,7 @@ class ThermalCameraDemo : AppCompatActivity() {
                     updateStatus("❌ Failed to initialize thermal camera")
                 }
 
-            } catch (e: Exception) {
-                Log.e(TAG, "Failed to initialize thermal camera", e)
-                updateStatus("❌ Initialization failed: ${e.message}")
+            } catch (e: Exception) {                updateStatus("❌ Initialization failed: ${e.message}")
             }
         }
     }
@@ -268,9 +259,7 @@ class ThermalCameraDemo : AppCompatActivity() {
                 updateStatus("❌ Failed to start thermal recording")
             }
 
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to start recording", e)
-            updateStatus("❌ Recording failed: ${e.message}")
+        } catch (e: Exception) {            updateStatus("❌ Recording failed: ${e.message}")
         }
     }
 
@@ -297,9 +286,7 @@ class ThermalCameraDemo : AppCompatActivity() {
             } else {
                 updateStatus("❌ Failed to stop recording")
             }
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to stop recording", e)
-            updateStatus("❌ Stop recording failed: ${e.message}")
+        } catch (e: Exception) {            updateStatus("❌ Stop recording failed: ${e.message}")
         }
     }
 
@@ -446,15 +433,11 @@ class ThermalCameraDemo : AppCompatActivity() {
                 updateStatus("❌ Failed to export thermal data")
             }
 
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to export thermal data", e)
-            updateStatus("❌ Export failed: ${e.message}")
+        } catch (e: Exception) {            updateStatus("❌ Export failed: ${e.message}")
         }
     }
 
-    private fun updateStatus(message: String) {
-        Log.i(TAG, message)
-        runOnUiThread {
+    private fun updateStatus(message: String) {        runOnUiThread {
             statusText.text = message
         }
     }

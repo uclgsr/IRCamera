@@ -3,7 +3,6 @@ package mpdc4gsr.sensors.gsr
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import com.csl.irCamera.R
@@ -150,12 +149,7 @@ class GSRDemoActivity : BaseBindingActivity<ActivityGsrDemoBinding>() {
             val metadataJson = com.google.gson.Gson().toJson(metadata)
             val success = gsrRecorder.addSyncMark("DEMO_SYNC_EVENT", metadataJson)
 
-            if (success) {
-
-                Log.d(TAG, "Demo sync event triggered successfully")
-            } else {
-                Log.w(TAG, "Failed to trigger demo sync event")
-            }
+            if (success) {            } else {            }
         }
     }
 

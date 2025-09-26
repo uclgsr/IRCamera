@@ -1,7 +1,6 @@
 package com.mpdc4gsr.module.thermalunified.utils
 
 import android.graphics.Point
-import android.util.Log
 import com.mpdc4gsr.libunified.ui.charts.LineChart
 import kotlin.math.abs
 
@@ -132,9 +131,7 @@ object ChartTools {
                 chart.axisLeft.axisMaximum = maxVol + (maxVol - minVol) * 0.15f
                 chart.axisLeft.axisMinimum = minVol - (maxVol - minVol) * 0.15f
             }
-        }
-        Log.w("chart", "yAxis max:${chart.axisLeft.axisMaximum}, min:${chart.axisLeft.axisMinimum}")
-    }
+        }    }
 
     fun setX(
         chart: LineChart,

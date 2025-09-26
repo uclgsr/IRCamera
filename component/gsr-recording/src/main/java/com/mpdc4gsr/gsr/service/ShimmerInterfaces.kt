@@ -1,6 +1,5 @@
 package com.mpdc4gsr.gsr.service
 
-import android.util.Log
 
 
 interface ShimmerDataCluster {
@@ -40,12 +39,8 @@ object ShimmerDeviceFactoryResolver {
             val realFactoryClass = Class.forName("mpdc4gsr.sensors.gsr.RealShimmerDeviceFactory")
             val constructor = realFactoryClass.getConstructor(android.content.Context::class.java)
             constructor.newInstance(context) as ShimmerDeviceFactory
-        } catch (e: ClassNotFoundException) {
-            Log.i(TAG, "Real Shimmer factory not available, using mock implementation")
-            MockShimmerDeviceFactory()
-        } catch (e: Exception) {
-            Log.w(TAG, "Failed to create real Shimmer factory, using mock implementation", e)
-            MockShimmerDeviceFactory()
+        } catch (e: ClassNotFoundException) {            MockShimmerDeviceFactory()
+        } catch (e: Exception) {            MockShimmerDeviceFactory()
         }
     }
 }
@@ -66,28 +61,20 @@ class MockShimmerDevice : ShimmerDeviceInterface {
     private var dataCallback: ((ShimmerDataCluster) -> Unit)? = null
     private var connectionCallback: ((String) -> Unit)? = null
 
-    override fun connect(address: String, name: String): Boolean {
-        Log.d("MockShimmerDevice", "Mock connect to $address")
-        connected = true
+    override fun connect(address: String, name: String): Boolean {        connected = true
         connectionCallback?.invoke("CONNECTED")
         return true
     }
 
-    override fun startStreaming(): Boolean {
-        Log.d("MockShimmerDevice", "Mock start streaming")
-        streaming = true
+    override fun startStreaming(): Boolean {        streaming = true
         return true
     }
 
-    override fun stopStreaming(): Boolean {
-        Log.d("MockShimmerDevice", "Mock stop streaming")
-        streaming = false
+    override fun stopStreaming(): Boolean {        streaming = false
         return true
     }
 
-    override fun disconnect(): Boolean {
-        Log.d("MockShimmerDevice", "Mock disconnect")
-        connected = false
+    override fun disconnect(): Boolean {        connected = false
         connectionCallback?.invoke("DISCONNECTED")
         return true
     }

@@ -72,8 +72,7 @@ class SessionManager:
         session_dir.mkdir(exist_ok=True)
 
         self.current_session = session_id
-        logger.info(f"Created session: {session_id}")
-        return session_id
+                return session_id
 
     def start_recording(self, devices: List[str]):
         if not self.current_session:
@@ -84,13 +83,11 @@ class SessionManager:
 
     def stop_recording(self):
         if self.current_session:
-            logger.info(f"Stopped recording session: {self.current_session}")
-            self.session_devices = []
+                        self.session_devices = []
 
     def finalize_session(self):
         if self.current_session:
-            logger.info(f"Finalized session: {self.current_session}")
-            self.current_session = None
+                        self.current_session = None
 
 
 class SimpleTCPServer:
@@ -107,8 +104,7 @@ class SimpleTCPServer:
     def handle_client(self, client_socket, address):
         """Handle individual client connection"""
         client_id = f"{address[0]}:{address[1]}"
-        logger.info(f"Client connected: {client_id}")
-
+        
         try:
             while self.running:
                 data = client_socket.recv(4096)
@@ -123,16 +119,12 @@ class SimpleTCPServer:
                         client_socket.send(json.dumps(response).encode('utf-8'))
 
                 except json.JSONDecodeError:
-                    logger.error(f"Invalid JSON from {client_id}")
-                except Exception as e:
-                    logger.error(f"Error handling message from {client_id}: {e}")
-
+                                    except Exception as e:
+                    
         except Exception as e:
-            logger.error(f"Client handler error for {client_id}: {e}")
-        finally:
+                    finally:
             client_socket.close()
-            logger.info(f"Client disconnected: {client_id}")
-
+            
     def handle_message(self, message: Dict[str, Any], client_id: str) -> Optional[Dict[str, Any]]:
         """Handle incoming message from device"""
         msg_type = message.get('type')
@@ -191,8 +183,7 @@ class SimpleTCPServer:
             self.socket.listen(5)
             self.running = True
 
-            logger.info(f"MVP TCP Server started on port {self.port}")
-
+            
             while self.running:
                 try:
                     client_socket, address = self.socket.accept()
@@ -205,13 +196,10 @@ class SimpleTCPServer:
 
                 except Exception as e:
                     if self.running:
-                        logger.error(f"Accept error: {e}")
-
+                        
         except KeyboardInterrupt:
-            logger.info("Server shutdown requested")
-        except Exception as e:
-            logger.error(f"Server error: {e}")
-        finally:
+                    except Exception as e:
+                    finally:
             self.stop()
 
     def stop(self):
@@ -219,8 +207,7 @@ class SimpleTCPServer:
         self.running = False
         if self.socket:
             self.socket.close()
-        logger.info("Server stopped")
-
+        
     def get_status(self):
         """Get server status for CLI"""
         devices = self.device_registry.get_devices()
@@ -263,8 +250,7 @@ def main():
             if server.running:
                 devices = len(server.device_registry.get_devices())
                 if devices > 0:
-                    logger.info(f"Status: {devices} devices connected")
-
+                    
     status_thread = threading.Thread(target=status_monitor)
     status_thread.daemon = True
     status_thread.start()

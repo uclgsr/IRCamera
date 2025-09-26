@@ -1,7 +1,6 @@
 package mpdc4gsr.activities
 
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
@@ -97,17 +96,13 @@ class SimpleNetworkTestActivity : AppCompatActivity() {
 
     private fun connectToPC(ip: String, port: Int) {
         lifecycleScope.launch {
-            try {
-                Log.i(TAG, "Connecting to PC at $ip:$port")
-                statusText.text = "Connecting to $ip:$port..."
+            try {                statusText.text = "Connecting to $ip:$port..."
 
                 tcpClient = TcpClient(ip, port)
 
                 // Set up message callback
                 tcpClient?.setMessageCallback { message ->
-                    runOnUiThread {
-                        Log.d(TAG, "Received from PC: $message")
-                        val currentText = statusText.text.toString()
+                    runOnUiThread {                        val currentText = statusText.text.toString()
                         statusText.text = "$currentText\nPC->Phone: $message"
                     }
                 }
@@ -121,29 +116,21 @@ class SimpleNetworkTestActivity : AppCompatActivity() {
 
                 val connected = tcpClient?.connect() ?: false
 
-                if (connected) {
-                    Log.i(TAG, "Successfully connected to PC")
-                    Toast.makeText(this@SimpleNetworkTestActivity, "Connected to PC", Toast.LENGTH_SHORT).show()
+                if (connected) {                    Toast.makeText(this@SimpleNetworkTestActivity, "Connected to PC", Toast.LENGTH_SHORT).show()
 
                     // Send initial handshake
                     tcpClient?.sendMessage("HELLO device=SimpleNetworkTest sensors=[Mock]")
 
                     // Setup command handling (simplified)
                     tcpClient?.setMessageCallback { message ->
-                        runOnUiThread {
-                            Log.d(TAG, "Received from PC: $message")
-                            handlePCMessage(message)
+                        runOnUiThread {                            handlePCMessage(message)
                         }
                     }
 
-                } else {
-                    Log.e(TAG, "Failed to connect to PC")
-                    Toast.makeText(this@SimpleNetworkTestActivity, "Failed to connect", Toast.LENGTH_SHORT).show()
+                } else {                    Toast.makeText(this@SimpleNetworkTestActivity, "Failed to connect", Toast.LENGTH_SHORT).show()
                 }
 
-            } catch (e: Exception) {
-                Log.e(TAG, "Error connecting to PC", e)
-                Toast.makeText(this@SimpleNetworkTestActivity, "Connection error: ${e.message}", Toast.LENGTH_SHORT)
+            } catch (e: Exception) {                Toast.makeText(this@SimpleNetworkTestActivity, "Connection error: ${e.message}", Toast.LENGTH_SHORT)
                     .show()
             }
 
@@ -153,16 +140,12 @@ class SimpleNetworkTestActivity : AppCompatActivity() {
 
     private fun disconnectFromPC() {
         lifecycleScope.launch {
-            try {
-                Log.i(TAG, "Disconnecting from PC")
-                tcpClient?.disconnect()
+            try {                tcpClient?.disconnect()
                 tcpClient?.cleanup()
                 tcpClient = null
 
                 Toast.makeText(this@SimpleNetworkTestActivity, "Disconnected", Toast.LENGTH_SHORT).show()
-            } catch (e: Exception) {
-                Log.e(TAG, "Error disconnecting", e)
-            }
+            } catch (e: Exception) {            }
 
             updateUI()
         }
@@ -198,9 +181,7 @@ class SimpleNetworkTestActivity : AppCompatActivity() {
                     appendStatus("Phone->PC: STOP")
                 }
 
-            } catch (e: Exception) {
-                Log.e(TAG, "Error testing commands", e)
-                Toast.makeText(this@SimpleNetworkTestActivity, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+            } catch (e: Exception) {                Toast.makeText(this@SimpleNetworkTestActivity, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -242,9 +223,7 @@ class SimpleNetworkTestActivity : AppCompatActivity() {
                     appendStatus("Phone->PC: $it")
                 }
 
-            } catch (e: Exception) {
-                Log.e(TAG, "Error handling PC message: $message", e)
-            }
+            } catch (e: Exception) {            }
         }
     }
 

@@ -11,9 +11,7 @@ public class ResumePreviewTask extends BaseTask {
 
     @Override
     public void run() {
-        if (mDeviceState != DeviceState.RESUMED) {
-            Log.d(TAG, "resumePreview start");
-            CameraPreviewManager.getInstance().resumePreview();
+        if (mDeviceState != DeviceState.RESUMED) {            CameraPreviewManager.getInstance().resumePreview();
             mDeviceState = DeviceState.RESUMED;
         }
     }

@@ -6,7 +6,6 @@ import android.location.Geocoder
 import android.location.Location
 import android.location.LocationManager
 import android.text.TextUtils
-import android.util.Log
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
@@ -259,9 +258,7 @@ class ReportCreateFirstActivity : BaseActivity(), View.OnClickListener {
                     gc.getFromLocation(
                         location.latitude,
                         location.longitude, 1,
-                    )
-                Log.v("TAG", "获取地址信息：$result")
-            }
+                    )            }
         } catch (e: Exception) {
             e.printStackTrace()
         }

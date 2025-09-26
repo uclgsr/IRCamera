@@ -1,6 +1,5 @@
 package mpdc4gsr.utils
 
-import android.util.Log
 import java.io.File
 import java.util.concurrent.atomic.AtomicBoolean
 
@@ -31,9 +30,7 @@ class CSVBufferedWriter(
     private suspend fun writeHeaders() {
         if (headerWritten.compareAndSet(false, true)) {
             val headerLine = headers.joinToString(",")
-            writeLine(headerLine)
-            Log.d(TAG, "CSV headers written: $headerLine")
-        }
+            writeLine(headerLine)        }
     }
 
 

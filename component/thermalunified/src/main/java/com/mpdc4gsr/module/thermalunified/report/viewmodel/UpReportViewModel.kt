@@ -3,7 +3,6 @@ package com.mpdc4gsr.module.thermalunified.report.viewmodel
 import androidx.lifecycle.viewModelScope
 import com.blankj.utilcode.util.GsonUtils
 import com.blankj.utilcode.util.TimeUtils
-import com.elvishew.xlog.XLog
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 import com.mpdc4gsr.libunified.app.lms.LMS
 import com.mpdc4gsr.libunified.app.lms.UrlConstant
@@ -62,15 +61,12 @@ class UpReportViewModel : BaseViewModel() {
                                 }
                             }
                         } catch (e: Exception) {
-                            XLog.e("Error parsing upload response", e)
-                        }
-                        XLog.i("Upload完一张图")
-                        downLatch.countDown()
+                            X                        }
+                        X                        downLatch.countDown()
                     }
                 }
                 downLatch.await()
-                XLog.i("${irList.size} 张图Upload完毕")
-            }
+                X            }
         }
     }
 

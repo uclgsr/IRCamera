@@ -8,7 +8,6 @@ import android.content.pm.PackageManager
 import android.os.Environment
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import androidx.core.app.ActivityCompat
 import com.mpdc4gsr.gsr.model.GSRSample
 import com.mpdc4gsr.gsr.model.SessionInfo
@@ -123,18 +122,11 @@ class ShimmerGSRRecorder(
                     context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
                 bluetoothAdapter = bluetoothManager.adapter
 
-                if (bluetoothAdapter?.isEnabled != true) {
-                    Log.w(TAG, "Bluetooth is not enabled")
-                    notifyError("Bluetooth is not enabled")
+                if (bluetoothAdapter?.isEnabled != true) {                    notifyError("Bluetooth is not enabled")
                     return@withContext false
                 }
 
-                shimmerDevice = shimmerDeviceFactory.createShimmerDevice()
-
-                Log.i(TAG, "Shimmer API Bridge: ${shimmerAPIBridge.getProcessingInfo()}")
-                Log.i(
-                    TAG,
-                    "Official processing available: ${shimmerAPIBridge.isOfficialProcessingAvailable()}"
+                shimmerDevice = shimmerDeviceFactory.createShimmerDevice()}")}"
                 )
 
                 shimmerDevice?.let { device ->
@@ -146,31 +138,18 @@ class ShimmerGSRRecorder(
                     device.setConnectionCallback { connectionState ->
                         when (connectionState) {
                             "CONNECTED" -> {
-                                isDeviceConnected.set(true)
-                                Log.i(TAG, "Shimmer device connected")
-                                listeners.forEach { it.onDeviceConnected() }
+                                isDeviceConnected.set(true)                                listeners.forEach { it.onDeviceConnected() }
                             }
 
                             "DISCONNECTED" -> {
-                                isDeviceConnected.set(false)
-                                Log.w(TAG, "Shimmer device disconnected")
-                                listeners.forEach { it.onDeviceDisconnected() }
+                                isDeviceConnected.set(false)                                listeners.forEach { it.onDeviceDisconnected() }
                             }
 
-                            else -> {
-                                Log.d(TAG, "Shimmer connection state: $connectionState")
-                            }
+                            else -> {                            }
                         }
                     }
 
-                    try {
-
-
-                        Log.d(TAG, "Using official Shimmer API configuration")
-
-                    } catch (e: Exception) {
-                        Log.w(TAG, "Enhanced configuration failed, using defaults: ${e.message}")
-                    }
+                    try {                    } catch (e: Exception) {                    }
 
                     if (deviceAddress != null) {
 
@@ -182,9 +161,7 @@ class ShimmerGSRRecorder(
                                 context,
                                 android.Manifest.permission.BLUETOOTH_CONNECT
                             ) != PackageManager.PERMISSION_GRANTED
-                        ) {
-                            Log.w(TAG, "BLUETOOTH_CONNECT permission not granted")
-                            notifyError("BLUETOOTH_CONNECT permission not granted")
+                        ) {                            notifyError("BLUETOOTH_CONNECT permission not granted")
                             return@withContext false
                         }
 
@@ -196,9 +173,7 @@ class ShimmerGSRRecorder(
 
                         if (shimmerDevice != null) {
                             device.connect(shimmerDevice.address, "default")
-                        } else {
-                            Log.w(TAG, "No paired Shimmer devices found")
-                            notifyError("No paired Shimmer devices found")
+                        } else {                            notifyError("No paired Shimmer devices found")
                             return@withContext false
                         }
                     }
@@ -209,35 +184,25 @@ class ShimmerGSRRecorder(
                         attempts++
                     }
 
-                    if (isDeviceConnected.get()) {
-                        Log.i(TAG, "Shimmer device connected successfully")
-                        listeners.forEach { it.onDeviceConnected() }
+                    if (isDeviceConnected.get()) {                        listeners.forEach { it.onDeviceConnected() }
                         return@withContext true
-                    } else {
-                        Log.w(TAG, "Failed to connect to Shimmer device")
-                        notifyError("Failed to connect to Shimmer device")
+                    } else {                        notifyError("Failed to connect to Shimmer device")
                         return@withContext false
                     }
                 }
 
                 false
-            } catch (e: Exception) {
-                Log.e(TAG, "Error initializing Shimmer device", e)
-                notifyError("Error initializing device: ${e.message}")
+            } catch (e: Exception) {                notifyError("Error initializing device: ${e.message}")
                 false
             }
         }
 
     suspend fun startRecording(sessionId: String): Boolean =
         withContext(Dispatchers.IO) {
-            if (isRecording.get()) {
-                Log.w(TAG, "Recording already in progress")
-                return@withContext false
+            if (isRecording.get()) {                return@withContext false
             }
 
-            if (!isDeviceConnected.get()) {
-                Log.w(TAG, "Shimmer device not connected")
-                notifyError("Shimmer device not connected")
+            if (!isDeviceConnected.get()) {                notifyError("Shimmer device not connected")
                 return@withContext false
             }
 
@@ -269,26 +234,15 @@ class ShimmerGSRRecorder(
 
                 currentSession?.let { session ->
                     listeners.forEach { it.onRecordingStarted(session) }
-                }
-
-                Log.i(
-                    TAG,
-                    "Shimmer GSR recording started: sessionId=$sessionId, samplingRate=${samplingRateHz}Hz"
-                )
-
-                return@withContext true
-            } catch (e: Exception) {
-                Log.e(TAG, "Failed to start recording", e)
-                cleanup()
+                }                return@withContext true
+            } catch (e: Exception) {                cleanup()
                 notifyError("Failed to start recording: ${e.message}")
                 return@withContext false
             }
         }
 
     fun stopRecording(): SessionInfo? {
-        if (!isRecording.get()) {
-            Log.w(TAG, "No recording in progress")
-            return currentSession
+        if (!isRecording.get()) {            return currentSession
         }
 
         isRecording.set(false)
@@ -301,12 +255,7 @@ class ShimmerGSRRecorder(
 
             saveSessionMetadata(session)
 
-            listeners.forEach { it.onRecordingStopped(session) }
-            Log.i(
-                TAG,
-                "Shimmer GSR recording stopped: sessionId=${session.sessionId}, samples=${session.sampleCount}"
-            )
-        }
+            listeners.forEach { it.onRecordingStopped(session) }        }
 
         cleanup()
         val completedSession = currentSession
@@ -334,14 +283,9 @@ class ShimmerGSRRecorder(
                 syncMarksWriter?.writeNext(syncMark.toCsvRow())
                 syncMarksWriter?.flush()
 
-                listeners.forEach { it.onSyncMarkRecorded(syncMark) }
-
-                Log.d(TAG, "Sync event recorded: $eventType")
-                return true
+                listeners.forEach { it.onSyncMarkRecorded(syncMark) }                return true
             }
-        } catch (e: Exception) {
-            Log.e(TAG, "Error recording sync event", e)
-            notifyError("Error recording sync event: ${e.message}")
+        } catch (e: Exception) {            notifyError("Error recording sync event: ${e.message}")
         }
 
         return false
@@ -376,9 +320,7 @@ class ShimmerGSRRecorder(
 
                 listeners.forEach { it.onSampleRecorded(sample) }
             }
-        } catch (e: Exception) {
-            Log.e(TAG, "Error handling Shimmer data", e)
-            notifyError("Error processing Shimmer data: ${e.message}")
+        } catch (e: Exception) {            notifyError("Error processing Shimmer data: ${e.message}")
         }
     }
 
@@ -397,16 +339,8 @@ class ShimmerGSRRecorder(
 
             config[0] = samplingRateConfig
             config[1] = 0x08.toByte()
-            config[3] = TIMESTAMP_CHANNEL_BIT
-
-            Log.d(
-                TAG,
-                "Created enhanced GSR configuration: ${samplingRateHz}Hz sampling, auto-range GSR, timestamp enabled"
-            )
-            return config
-        } catch (e: Exception) {
-            Log.w(TAG, "Using default GSR configuration due to error", e)
-            return ByteArray(12) { if (it == 1) 0x08.toByte() else 0x00.toByte() }
+            config[3] = TIMESTAMP_CHANNEL_BIT            return config
+        } catch (e: Exception) {            return ByteArray(12) { if (it == 1) 0x08.toByte() else 0x00.toByte() }
         }
     }
 
@@ -416,16 +350,9 @@ class ShimmerGSRRecorder(
             val sessionsDir = File(externalStorage, SESSIONS_DIR)
             val sessionDir = File(sessionsDir, sessionId)
 
-            if (!sessionDir.exists() && !sessionDir.mkdirs()) {
-                Log.e(TAG, "Failed to create session directory: ${sessionDir.absolutePath}")
-                return null
-            }
-
-            Log.d(TAG, "Created session directory: ${sessionDir.absolutePath}")
-            sessionDir
-        } catch (e: Exception) {
-            Log.e(TAG, "Error creating session directory", e)
-            null
+            if (!sessionDir.exists() && !sessionDir.mkdirs()) {                return null
+            }            sessionDir
+        } catch (e: Exception) {            null
         }
     }
 
@@ -449,9 +376,7 @@ class ShimmerGSRRecorder(
 
                 true
             } ?: false
-        } catch (e: IOException) {
-            Log.e(TAG, "Failed to initialize CSV writers", e)
-            false
+        } catch (e: IOException) {            false
         }
     }
 
@@ -463,12 +388,8 @@ class ShimmerGSRRecorder(
                 val gson = com.google.gson.Gson()
                 val json = gson.toJson(session)
 
-                metadataFile.writeText(json)
-                Log.d(TAG, "Session metadata saved")
-            }
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to save session metadata", e)
-        }
+                metadataFile.writeText(json)            }
+        } catch (e: Exception) {        }
     }
 
     private fun cleanup() {
@@ -477,9 +398,7 @@ class ShimmerGSRRecorder(
             syncMarksWriter?.close()
             signalsWriter = null
             syncMarksWriter = null
-        } catch (e: Exception) {
-            Log.e(TAG, "Error cleaning up resources", e)
-        }
+        } catch (e: Exception) {        }
     }
 
     private fun notifyError(message: String) {
@@ -493,10 +412,7 @@ class ShimmerGSRRecorder(
 
         shimmerDevice?.disconnect()
         isDeviceConnected.set(false)
-        listeners.forEach { it.onDeviceDisconnected() }
-
-        Log.i(TAG, "Shimmer device disconnected")
-    }
+        listeners.forEach { it.onDeviceDisconnected() }    }
 
     fun isRecording(): Boolean = isRecording.get()
 
@@ -505,20 +421,12 @@ class ShimmerGSRRecorder(
 
     private fun startShimmerLogging() {
         try {
-            // Shimmer internal logging is not implemented in this wrapper
-            Log.i(TAG, "Shimmer internal logging not supported in this implementation")
-        } catch (e: Exception) {
-            Log.w(TAG, "Failed to start Shimmer logging: ${e.message}")
-        }
+            // Shimmer internal logging is not implemented in this wrapper        } catch (e: Exception) {        }
     }
 
     private fun stopShimmerLogging() {
         try {
-            // Shimmer internal logging is not implemented in this wrapper
-            Log.i(TAG, "Shimmer internal logging not supported in this implementation")
-        } catch (e: Exception) {
-            Log.w(TAG, "Failed to stop Shimmer logging: ${e.message}")
-        }
+            // Shimmer internal logging is not implemented in this wrapper        } catch (e: Exception) {        }
     }
 
 

@@ -3,7 +3,6 @@ package mpdc4gsr.utils
 import android.content.Context
 import android.os.Build
 import android.os.StatFs
-import android.util.Log
 import org.json.JSONObject
 import java.io.File
 import java.text.SimpleDateFormat
@@ -65,11 +64,7 @@ class SessionDirectoryManager(private val context: Context) {
 
         val rgbDir = File(sessionDir, RGB_SUBDIR).also { it.mkdirs() }
         val thermalDir = File(sessionDir, THERMAL_SUBDIR).also { it.mkdirs() }
-        val shimmerDir = File(sessionDir, SHIMMER_SUBDIR).also { it.mkdirs() }
-
-        Log.i(TAG, "Created session directory structure: $sessionId")
-
-        return SessionDirectory(
+        val shimmerDir = File(sessionDir, SHIMMER_SUBDIR).also { it.mkdirs() }        return SessionDirectory(
             sessionId = sessionId,
             rootDir = sessionDir,
             rgbDir = rgbDir,
@@ -95,10 +90,7 @@ class SessionDirectoryManager(private val context: Context) {
             put("metadata", JSONObject(metadata.customMetadata))
         }
 
-        metadataFile.writeText(jsonMetadata.toString(2))
-        Log.i(TAG, "Created session metadata: ${metadataFile.absolutePath}")
-
-        return metadataFile
+        metadataFile.writeText(jsonMetadata.toString(2))        return metadataFile
     }
 
 
@@ -125,12 +117,7 @@ class SessionDirectoryManager(private val context: Context) {
                 val filesInfo = getSessionFilesInfo(sessionDir)
                 jsonMetadata.put("files", JSONObject(filesInfo))
 
-                metadataFile.writeText(jsonMetadata.toString(2))
-                Log.i(TAG, "Updated session metadata: ${sessionDir.sessionId}")
-
-            } catch (e: Exception) {
-                Log.e(TAG, "Failed to update session metadata", e)
-            }
+                metadataFile.writeText(jsonMetadata.toString(2))            } catch (e: Exception) {            }
         }
     }
 
@@ -157,11 +144,7 @@ class SessionDirectoryManager(private val context: Context) {
             if (sessionDir.isDirectory && isFailedSession(sessionDir)) {
                 try {
                     sessionDir.deleteRecursively()
-                    cleanedSessions.add(sessionDir.name)
-                    Log.i(TAG, "Cleaned up failed session: ${sessionDir.name}")
-                } catch (e: Exception) {
-                    Log.w(TAG, "Failed to cleanup session: ${sessionDir.name}", e)
-                }
+                    cleanedSessions.add(sessionDir.name)                } catch (e: Exception) {                }
             }
         }
 
@@ -228,9 +211,7 @@ class SessionDirectoryManager(private val context: Context) {
 
                 return !hasDataFiles
             }
-        } catch (e: Exception) {
-            Log.w(TAG, "Failed to parse metadata for session ${sessionDir.name}", e)
-            return false
+        } catch (e: Exception) {            return false
         }
 
         return false

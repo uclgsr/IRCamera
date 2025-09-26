@@ -5,10 +5,8 @@ import android.graphics.Color
 import android.os.Handler
 import android.os.Looper
 import android.util.AttributeSet
-import android.util.Log
 import androidx.core.content.ContextCompat
 import com.blankj.utilcode.util.SizeUtils
-import com.elvishew.xlog.XLog
 import com.mpdc4gsr.libunified.app.db.entity.ThermalEntity
 import com.mpdc4gsr.libunified.ui.charts.LineChart
 import com.mpdc4gsr.libunified.ui.components.Legend
@@ -120,29 +118,19 @@ class ChartLogView : LineChart {
             GlobalScope.launch(Dispatchers.IO) {
                 try {
                     clearEntity(data.size == 0)
-                } catch (e: Exception) {
-                    Log.e("chart", "clearEntity error: ${e.message}")
-                }
-                Log.w("chart", "clearEntity finish")
-                if (data.size == 0) {
+                } catch (e: Exception) {                }                if (data.size == 0) {
                     return@launch
-                }
-                Log.w("chart", "update chart start")
-                val lineData: LineData = this@ChartLogView.data
+                }                val lineData: LineData = this@ChartLogView.data
                 if (lineData != null) {
                     val startTime = data[0].createTime / 1000 * 1000
                     xAxis.valueFormatter = IRMyValueFormatter(startTime = startTime, type = type)
-                    XLog.w("chart init startTime:$startTime")
-
-                    when (data[0].type) {
+                    X                    when (data[0].type) {
                         "point" -> {
                             var set = lineData.getDataSetByIndex(0)
                             if (set == null) {
                                 set = createSet(0, "point temp")
                                 lineData.addDataSet(set)
-                            }
-                            Log.w("123", "一条曲线")
-                            data.forEach {
+                            }                            data.forEach {
                                 val x =
                                     ChartTools.getChartX(
                                         x = it.createTime,
@@ -153,8 +141,7 @@ class ChartLogView : LineChart {
                                 entity.data = it
                                 set.addEntry(entity)
                             }
-                            XLog.w("DataSet:${set.entryCount}")
-                        }
+                            X                        }
 
                         "line" -> {
                             var maxDataSet = lineData.getDataSetByIndex(0)
@@ -165,9 +152,7 @@ class ChartLogView : LineChart {
                             var minDataSet = lineData.getDataSetByIndex(1)
                             if (minDataSet == null) {
                                 minDataSet = createSet(1, "line min temp")
-                            }
-                            Log.w("123", "两条曲线")
-                            data.forEach {
+                            }                            data.forEach {
                                 val x =
                                     ChartTools.getChartX(
                                         x = it.createTime,
@@ -186,8 +171,7 @@ class ChartLogView : LineChart {
                             }
                             lineData.addDataSet(maxDataSet)
                             lineData.addDataSet(minDataSet)
-                            XLog.w("DataSet:${maxDataSet.entryCount}")
-                        }
+                            X                        }
 
                         else -> {
 
@@ -201,9 +185,7 @@ class ChartLogView : LineChart {
                             if (centerTempDataSet == null) {
                                 centerTempDataSet = createSet(1, "fence min temp")
                                 lineData.addDataSet(centerTempDataSet)
-                            }
-                            Log.w("123", "三条曲线")
-                            data.forEach {
+                            }                            data.forEach {
                                 val x =
                                     ChartTools.getChartX(
                                         x = it.createTime,
@@ -219,8 +201,7 @@ class ChartLogView : LineChart {
                                 entity.data = it
                                 centerTempDataSet.addEntry(entity)
                             }
-                            XLog.w("DataSet:${centerTempDataSet.entryCount}")
-                        }
+                            X                        }
                     }
                     lineData.notifyDataChanged()
                     notifyDataSetChanged()
@@ -230,9 +211,7 @@ class ChartLogView : LineChart {
                     zoom(1f, 1f, xChartMin, 0f)
                     ChartTools.setX(this@ChartLogView, type)
 
-                }
-                Log.w("chart", "update chart finish")
-            }
+                }            }
         }
     }
 

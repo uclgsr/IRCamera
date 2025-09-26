@@ -11,7 +11,6 @@ import android.hardware.camera2.CaptureRequest
 import android.os.Build
 import android.os.Handler
 import android.os.HandlerThread
-import android.util.Log
 import android.util.Size
 import android.view.Surface
 import java.util.concurrent.Semaphore
@@ -39,28 +38,18 @@ class CameraController(private val context: Context) {
         startBackgroundThread()
     }
 
-    fun openCamera(cameraId: String = "0") {
-        Log.i(TAG, "Opening camera $cameraId")
-
-        try {
+    fun openCamera(cameraId: String = "0") {        try {
             val manager = context.getSystemService(Context.CAMERA_SERVICE) as CameraManager
             val characteristics = manager.getCameraCharacteristics(cameraId)
 
-            deviceCaps = detectCapabilities(characteristics)
-            Log.i(TAG, "Device capabilities: $deviceCaps")
-
-            if (!cameraOpenCloseLock.tryAcquire(CAMERA_OPEN_TIMEOUT_MS, TimeUnit.MILLISECONDS)) {
+            deviceCaps = detectCapabilities(characteristics)            if (!cameraOpenCloseLock.tryAcquire(CAMERA_OPEN_TIMEOUT_MS, TimeUnit.MILLISECONDS)) {
                 throw RuntimeException("Time out waiting to lock camera opening.")
             }
 
             manager.openCamera(cameraId, stateCallback, backgroundHandler)
             currentCameraId = cameraId
-        } catch (e: CameraAccessException) {
-            Log.e(TAG, "Failed to open camera $cameraId", e)
-            onCameraError?.invoke("Failed to open camera: ${e.message}")
-        } catch (e: SecurityException) {
-            Log.e(TAG, "Camera permission not granted", e)
-            onCameraError?.invoke("Camera permission required")
+        } catch (e: CameraAccessException) {            onCameraError?.invoke("Failed to open camera: ${e.message}")
+        } catch (e: SecurityException) {            onCameraError?.invoke("Camera permission required")
         }
     }
 
@@ -72,26 +61,17 @@ class CameraController(private val context: Context) {
             try {
 
                 captureSession?.close()
-                captureSession = null
-
-                Log.i(TAG, "Creating capture session with ${surfaces.size} surfaces")
-                device.createCaptureSession(surfaces, callback, backgroundHandler)
-            } catch (e: CameraAccessException) {
-                Log.e(TAG, "Failed to create capture session", e)
-                onCameraError?.invoke("Failed to create capture session: ${e.message}")
+                captureSession = null                device.createCaptureSession(surfaces, callback, backgroundHandler)
+            } catch (e: CameraAccessException) {                onCameraError?.invoke("Failed to create capture session: ${e.message}")
             }
-        } ?: run {
-            Log.e(TAG, "Cannot create session - camera device is null")
-            onCameraError?.invoke("Camera not opened")
+        } ?: run {            onCameraError?.invoke("Camera not opened")
         }
     }
 
     fun createCaptureRequest(template: Int): CaptureRequest.Builder? {
         return try {
             cameraDevice?.createCaptureRequest(template)
-        } catch (e: CameraAccessException) {
-            Log.e(TAG, "Failed to create capture request", e)
-            null
+        } catch (e: CameraAccessException) {            null
         }
     }
 
@@ -111,9 +91,7 @@ class CameraController(private val context: Context) {
                 val manager = context.getSystemService(Context.CAMERA_SERVICE) as CameraManager
                 manager.getCameraCharacteristics(currentCameraId)
             } else null
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to get camera characteristics", e)
-            null
+        } catch (e: Exception) {            null
         }
     }
 
@@ -159,9 +137,7 @@ class CameraController(private val context: Context) {
                     }
                 }
             }
-        } catch (e: Exception) {
-            Log.d(TAG, "High-speed video detection failed: ${e.message}")
-        }
+        } catch (e: Exception) {        }
 
         val sensorOrientation = characteristics.get(CameraCharacteristics.SENSOR_ORIENTATION) ?: 0
 
@@ -177,10 +153,7 @@ class CameraController(private val context: Context) {
         object : CameraDevice.StateCallback() {
             override fun onOpened(camera: CameraDevice) {
                 cameraOpenCloseLock.release()
-                cameraDevice = camera
-                Log.i(TAG, "Camera opened successfully")
-
-                deviceCaps?.let { caps ->
+                cameraDevice = camera                deviceCaps?.let { caps ->
                     onCameraOpened?.invoke(caps)
                 }
             }
@@ -188,9 +161,7 @@ class CameraController(private val context: Context) {
             override fun onDisconnected(camera: CameraDevice) {
                 cameraOpenCloseLock.release()
                 camera.close()
-                cameraDevice = null
-                Log.w(TAG, "Camera disconnected")
-                onCameraError?.invoke("Camera disconnected")
+                cameraDevice = null                onCameraError?.invoke("Camera disconnected")
             }
 
             override fun onError(
@@ -209,10 +180,7 @@ class CameraController(private val context: Context) {
                         CameraDevice.StateCallback.ERROR_CAMERA_DEVICE -> "Camera device error"
                         CameraDevice.StateCallback.ERROR_CAMERA_SERVICE -> "Camera service error"
                         else -> "Unknown camera error: $error"
-                    }
-
-                Log.e(TAG, "Camera error: $errorMessage")
-                onCameraError?.invoke("Camera error: $errorMessage")
+                    }                onCameraError?.invoke("Camera error: $errorMessage")
             }
         }
 
@@ -228,8 +196,6 @@ class CameraController(private val context: Context) {
             backgroundThread?.join()
             backgroundThread = null
             backgroundHandler = null
-        } catch (e: InterruptedException) {
-            Log.e(TAG, "Error stopping background thread", e)
-        }
+        } catch (e: InterruptedException) {        }
     }
 }

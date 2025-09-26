@@ -1,7 +1,6 @@
 package mpdc4gsr.security
 
 import android.content.Context
-import android.util.Log
 import mpdc4gsr.core.StructuredLogger
 import org.json.JSONObject
 import java.util.concurrent.ConcurrentHashMap
@@ -134,10 +133,7 @@ class RoleBasedAccessControl(
     )
 
     fun initialize(): Boolean {
-        return try {
-            Log.i(TAG, "Initializing Role-Based Access Control")
-
-            loadRoleAssignments()
+        return try {            loadRoleAssignments()
 
             initializeDefaultMappings()
 
@@ -153,9 +149,7 @@ class RoleBasedAccessControl(
             )
 
             true
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to initialize RBAC", e)
-            logger.log(
+        } catch (e: Exception) {            logger.log(
                 StructuredLogger.LogLevel.ERROR,
                 TAG,
                 "rbac_init_failed",
@@ -191,9 +185,7 @@ class RoleBasedAccessControl(
             saveRoleAssignments()
 
             true
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to assign role to device $deviceId", e)
-            false
+        } catch (e: Exception) {            false
         }
     }
 
@@ -427,21 +419,13 @@ class RoleBasedAccessControl(
         }
     }
 
-    private fun loadRoleAssignments() {
-
-
-        Log.i(TAG, "Role assignments loaded (placeholder implementation)")
+    private fun loadRoleAssignments() {")
     }
 
-    private fun saveRoleAssignments() {
-
-        Log.d(TAG, "Role assignments saved (placeholder implementation)")
+    private fun saveRoleAssignments() {")
     }
 
-    private fun initializeDefaultMappings() {
-
-        Log.i(TAG, "Default device type mappings initialized")
-    }
+    private fun initializeDefaultMappings() {    }
 
     fun getRole(deviceId: String): Role {
         return deviceRoles[deviceId] ?: Role.GUEST
@@ -472,9 +456,7 @@ class RoleBasedAccessControl(
     ): T? {
         return if (hasPermission(deviceId, permission)) {
             action()
-        } else {
-            Log.w(TAG, "Permission denied for device $deviceId: $permission")
-            null
+        } else {            null
         }
     }
 
@@ -485,10 +467,7 @@ class RoleBasedAccessControl(
     ): T? {
         return if (hasAllPermissions(deviceId, permissions)) {
             action()
-        } else {
-            Log.w(
-                TAG,
-                "Insufficient permissions for device $deviceId: ${permissions.joinToString(",")}"
+        } else {}"
             )
             null
         }

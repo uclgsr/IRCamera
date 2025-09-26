@@ -1,6 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.blankj.utilcode.util.Utils
 import com.mpdc4gsr.libunified.app.config.FileConfig
@@ -18,9 +17,7 @@ class GalleryViewModel : BaseViewModel() {
     fun getData() {
         viewModelScope.launch {
             getGalleryList().collect { it ->
-                if (it.size == 0) {
-                    Log.w("123", "[ph][ph][ph][ph][ph]")
-                } else {
+                if (it.size == 0) {                } else {
 
                     galleryLiveData.postValue(it)
                 }
@@ -31,9 +28,7 @@ class GalleryViewModel : BaseViewModel() {
     fun getVideoData() {
         viewModelScope.launch {
             getVideoList().collect { it ->
-                if (it.size == 0) {
-                    Log.w("123", "[ph][ph][ph][ph][ph]")
-                } else {
+                if (it.size == 0) {                } else {
 
                     galleryLiveData.postValue(it)
                 }

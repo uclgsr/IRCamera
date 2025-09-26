@@ -12,7 +12,6 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.blankj.utilcode.util.ToastUtils
-import com.elvishew.xlog.XLog
 import com.mpdc4gsr.libunified.app.BaseApplication
 import com.mpdc4gsr.libunified.app.common.SaveSettingUtil
 import com.mpdc4gsr.libunified.app.common.SharedManager
@@ -208,8 +207,7 @@ class MoreFragment : BaseFragment(), View.OnClickListener {
                 if (firmwareData != null) {
                     showFirmwareUpDialog(firmwareData)
                 } else {
-                    XLog.i("TC007 [ph][ph][ph][ph] - [ph][ph][ph][ph]")
-                    showLoadingDialog()
+                    X                    showLoadingDialog()
                     firmwareViewModel.queryFirmware(false)
                 }
 
@@ -300,16 +298,14 @@ class MoreFragment : BaseFragment(), View.OnClickListener {
 
     private fun installFirmware(file: File) {
         lifecycleScope.launch {
-            XLog.d("TC007 [ph][ph][ph][ph] - [ph][ph][ph][ph][ph][ph][ph][ph][ph]")
-            val installDialog = FirmwareInstallDialog(requireContext())
+            X            val installDialog = FirmwareInstallDialog(requireContext())
             installDialog.show()
 
             // TC007Repository functionality removed
             val isSuccess = false
             installDialog.dismiss()
             if (isSuccess) {
-                XLog.d("TC007 [ph][ph][ph][ph] - [ph][ph][ph][ph][ph][ph][ph][ph] TC007 [ph][ph]，[ph][ph][ph][ph][ph][ph]")
-                (requireActivity().application as BaseApplication).disconnectWebSocket()
+                X                (requireActivity().application as BaseApplication).disconnectWebSocket()
                 TipDialog.Builder(requireContext())
                     .setTitleMessage(getString(RCore.string.app_tip))
                     .setMessage(RCore.string.firmware_up_success)
@@ -322,8 +318,7 @@ class MoreFragment : BaseFragment(), View.OnClickListener {
                     }
                     .create().show()
             } else {
-                XLog.w("TC007 [ph][ph][ph][ph] - [ph][ph][ph][ph][ph][ph][ph][ph] TC007 [ph][ph]!")
-                showReInstallDialog(file)
+                X                showReInstallDialog(file)
             }
         }
     }
@@ -371,8 +366,7 @@ class MoreFragment : BaseFragment(), View.OnClickListener {
             // TC007Repository functionality removed
             val isSuccess = false
             if (isSuccess) {
-                XLog.d("TC007 [ph][ph][ph][ph][ph][ph][ph][ph]，[ph][ph][ph][ph][ph][ph]")
-                TToast.shortToast(requireContext(), RCore.string.ts004_reset_tip4)
+                X                TToast.shortToast(requireContext(), RCore.string.ts004_reset_tip4)
                 (requireActivity().application as BaseApplication).disconnectWebSocket()
                 // EventBus.getDefault().post(TS004ResetEvent()) // TS004ResetEvent removed
                 NavigationManager.getInstance().build(RouterConfig.MAIN)

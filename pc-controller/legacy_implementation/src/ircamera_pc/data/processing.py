@@ -5,7 +5,6 @@ import asyncio
 import json
 import time
 from dataclasses import asdict, dataclass
-from loguru import logger
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
@@ -13,16 +12,12 @@ try:
     import pandas as pd
 except ImportError:
     pd = None
-    logger.warning(
-        "pandas not available - some data processing features will be limited"
-    )
-
+    
 try:
     import h5py
 except ImportError:
     h5py = None
-    logger.warning("h5py not available - HDF5 export will not be available")
-
+    
 
 @dataclass
 class GSRDataPoint:
@@ -66,8 +61,7 @@ class GSRIngestor:
         self.buffer_size = 1000
         self.processing_queue = asyncio.Queue()
 
-        logger.info("GSRIngestor initialized")
-
+        
     async def process_gsr_batch(
             self, device_id: str, session_id: str, gsr_data: List[Dict[str, Any]]
     ) -> bool:
@@ -112,8 +106,7 @@ class GSRIngestor:
             return True
 
         except Exception as e:
-            logger.error(f"Error processing GSR batch: {e}")
-            return False
+                        return False
 
     def _convert_raw_to_gsr(self, raw_value: int) -> float:
 
@@ -160,10 +153,7 @@ class DataProcessor:
         self.active_sessions: Dict[str, Dict] = {}
         self.data_streams: Dict[str, List] = {"gsr": [], "thermal": [], "rgb": []}
 
-        logger.info(
-            f"DataProcessor initialized with output directory: {self.output_dir}"
-        )
-
+        
     async def start_session(self, session_id: str, devices: List[str]) -> bool:
 
         try:
@@ -173,14 +163,10 @@ class DataProcessor:
                 "data_points": {"gsr": [], "thermal": [], "rgb": []},
             }
 
-            logger.info(
-                f"Started data processing session {session_id} for devices: {devices}"
-            )
-            return True
+                        return True
 
         except Exception as e:
-            logger.error(f"Error starting session {session_id}: {e}")
-            return False
+                        return False
 
     async def process_gsr_data(
             self, device_id: str, session_id: str, data: List[Dict]
@@ -207,12 +193,10 @@ class DataProcessor:
             if session_id in self.active_sessions:
                 self.active_sessions[session_id]["data_points"]["thermal"].append(point)
 
-            logger.debug(f"Processed thermal frame from {device_id}")
-            return True
+                        return True
 
         except Exception as e:
-            logger.error(f"Error processing thermal data: {e}")
-            return False
+                        return False
 
     async def process_rgb_data(
             self, device_id: str, session_id: str, rgb_frame: Dict
@@ -232,12 +216,10 @@ class DataProcessor:
             if session_id in self.active_sessions:
                 self.active_sessions[session_id]["data_points"]["rgb"].append(point)
 
-            logger.debug(f"Processed RGB frame from {device_id}")
-            return True
+                        return True
 
         except Exception as e:
-            logger.error(f"Error processing RGB data: {e}")
-            return False
+                        return False
 
     async def export_session_data(
             self, session_id: str, format: str = "json"
@@ -245,8 +227,7 @@ class DataProcessor:
 
         try:
             if session_id not in self.active_sessions:
-                logger.error(f"Session {session_id} not found")
-                return None
+                                return None
 
             session_data = self.active_sessions[session_id]
             timestamp = int(time.time())
@@ -276,8 +257,7 @@ class DataProcessor:
                 with open(output_file, "w") as f:
                     json.dump(export_data, f, indent=2, default=str)
 
-                logger.info(f"Exported session {session_id} to {output_file}")
-                return str(output_file)
+                                return str(output_file)
 
             elif format.lower() == "hdf5" and h5py:
                 output_file = self.output_dir / f"session_{session_id}_{timestamp}.h5"
@@ -319,16 +299,13 @@ class DataProcessor:
                             "avg_temps", data=[p.avg_temp for p in thermal_points]
                         )
 
-                logger.info(f"Exported session {session_id} to HDF5: {output_file}")
-                return str(output_file)
+                                return str(output_file)
 
             else:
-                logger.error(f"Unsupported export format: {format}")
-                return None
+                                return None
 
         except Exception as e:
-            logger.error(f"Error exporting session data: {e}")
-            return None
+                        return None
 
     def get_session_stats(self, session_id: str) -> Optional[Dict[str, Any]]:
 

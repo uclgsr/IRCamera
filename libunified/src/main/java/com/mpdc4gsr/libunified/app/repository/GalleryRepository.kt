@@ -5,7 +5,6 @@ import android.media.MediaScannerConnection
 import android.provider.MediaStore
 import com.blankj.utilcode.util.FileUtils
 import com.blankj.utilcode.util.Utils
-import com.elvishew.xlog.XLog
 import com.mpdc4gsr.libunified.app.bean.GalleryBean
 import com.mpdc4gsr.libunified.app.config.FileConfig
 import com.mpdc4gsr.libunified.app.utils.CommUtils
@@ -92,8 +91,7 @@ object GalleryRepository {
             }
         } catch (e: Exception) {
             e.printStackTrace()
-            XLog.e("读取图库失败: ${e.message}")
-            return ""
+            X            return ""
         }
         return firstPath
     }
@@ -126,8 +124,7 @@ object GalleryRepository {
                         }
                     }
                 } catch (e: Exception) {
-                    XLog.e("读取图库失败: ${e.message}")
-                }
+                    X                }
             }
 
             return@withContext resultList
@@ -148,8 +145,7 @@ object GalleryRepository {
                     }
                 }
             } catch (e: Exception) {
-                XLog.e("读取图库失败: ${e.message}")
-            }
+                X            }
             return@withContext resultList
         }
 

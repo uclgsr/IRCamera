@@ -1,6 +1,5 @@
 package com.mpdc4gsr.libunified.app.matrix
 
-import android.util.Log
 
 class UsbBuffer {
 
@@ -76,15 +75,14 @@ class UsbBuffer {
             }
         }
 
-//        Log.d(TAG, "1 findHeadFrame=" + findHeadFrame);
-        if (findHeadFramePos != -1) {
-            //Log.d(TAG, "1: " + BaseDataTypeConvertUtils.Companion.byteArr2HexString(mPakagebuffer));
+//        if (findHeadFramePos != -1) {
+            //);
 
             mRingBuffer.moveBack(mPacketSize - findHeadFramePos)
 
             mRingBuffer.moveForward(mFrameSize)
             mRingBuffer.read(mPakagebuffer, 0, mPacketSize)
-            //Log.d(TAG, "2: " + BaseDataTypeConvertUtils.Companion.byteArr2HexString(mPakagebuffer));
+            //);
             findHeadFrame = if (mPacketSize == mPakagebuffer.size) {
                 isValidFrame(mPakagebuffer)
             } else {
@@ -99,8 +97,7 @@ class UsbBuffer {
         }
         while (mRingBuffer.getUnReadLength() < mFrameSize * 2) {
             try {
-                synchronized(this) {
-                    Log.d(TAG, "wait(100)")
+                synchronized(this) {")
                     lock.wait(100)
                 }
             } catch (e: InterruptedException) {

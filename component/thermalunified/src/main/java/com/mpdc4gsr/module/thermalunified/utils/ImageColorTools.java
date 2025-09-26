@@ -186,8 +186,7 @@ public class ImageColorTools {
                     }
                 }
             }
-        }
-        Log.e("Execution Time：", System.currentTimeMillis() - time + "//");
+        }- time + "//");
 
 
         Bitmap outputBitmap = Bitmap.createBitmap(imageColor.cols(), imageColor.rows(), Bitmap.Config.ARGB_8888);
@@ -238,10 +237,7 @@ public class ImageColorTools {
         Imgproc.cvtColor(imageMat, imageMat, Imgproc.COLOR_YUV2GRAY_YUYV);
 
         double srcValue = 0.1f;
-        long time = System.currentTimeMillis();
-
-
-        Log.e("Execution Time：", System.currentTimeMillis() - time + "//");
+        long time = System.currentTimeMillis();- time + "//");
 
 
         Bitmap outputBitmap = Bitmap.createBitmap(imageMat.cols(), imageMat.rows(), Bitmap.Config.ARGB_8888);

@@ -90,8 +90,7 @@ class Protocol:
 
             return {'type': msg_type, 'params': params}
         except Exception as e:
-            logger.error(f"Error parsing message '{message}': {e}")
-            return None
+                        return None
 
 
 class DeviceConnection:
@@ -115,11 +114,9 @@ class DeviceConnection:
         try:
             self.socket_file.write(message + '\n')
             self.socket_file.flush()
-            logger.debug(f"Sent to {self.device_id}: {message}")
-            return True
+                        return True
         except Exception as e:
-            logger.error(f"Error sending message to {self.device_id}: {e}")
-            return False
+                        return False
 
     def receive_message(self) -> Optional[str]:
         """Receive a text protocol message"""
@@ -128,12 +125,10 @@ class DeviceConnection:
             if line:
                 line = line.strip()
                 if line:
-                    logger.debug(f"Received from {self.device_id}: {line}")
-                    return line
+                                        return line
             return None
         except Exception as e:
-            logger.error(f"Error receiving message from {self.device_id}: {e}")
-            return None
+                        return None
 
     def close(self):
         """Close the connection"""
@@ -141,8 +136,7 @@ class DeviceConnection:
             self.socket_file.close()
             self.socket.close()
         except Exception as e:
-            logger.error(f"Error closing connection to {self.device_id}: {e}")
-
+            
 
 class DeviceRegistry:
     """Registry of connected devices"""
@@ -154,15 +148,13 @@ class DeviceRegistry:
     def add_device(self, connection: DeviceConnection):
         with self.lock:
             self.devices[connection.device_id] = connection
-            logger.info(f"Device registered: {connection.device_id} from {connection.address}")
-
+            
     def remove_device(self, device_id: str):
         with self.lock:
             if device_id in self.devices:
                 connection = self.devices.pop(device_id)
                 connection.close()
-                logger.info(f"Device removed: {device_id}")
-
+                
     def get_device(self, device_id: str) -> Optional[DeviceConnection]:
         with self.lock:
             return self.devices.get(device_id)
@@ -195,8 +187,7 @@ class SessionManager:
         session_dir.mkdir(exist_ok=True)
 
         self.current_session = session_id
-        logger.info(f"Created session: {session_id}")
-        return session_id
+                return session_id
 
     def start_recording(self, device_ids: List[str]):
         if not self.current_session:
@@ -209,13 +200,11 @@ class SessionManager:
     def stop_recording(self):
         if self.current_session and self.recording_devices:
             duration = time.time() - self.session_start_time
-            logger.info(f"Stopped recording session {self.current_session} after {duration:.2f} seconds")
-            self.recording_devices = []
+                        self.recording_devices = []
 
     def finalize_session(self):
         if self.current_session:
-            logger.info(f"Finalized session: {self.current_session}")
-            self.current_session = None
+                        self.current_session = None
 
 
 class TimeSyncManager:
@@ -235,11 +224,9 @@ class TimeSyncManager:
         time_diff = timestamp - current_time
 
         if time_diff > TimeSyncManager.MAX_FUTURE_TIMESTAMP_MS:
-            logger.warning(f"{context} timestamp too far in future: {time_diff}ms")
-            return False
+                        return False
         elif time_diff < -TimeSyncManager.MAX_TIMESTAMP_DRIFT_MS:
-            logger.warning(f"{context} timestamp too far in past: {time_diff}ms")
-            return False
+                        return False
         return True
 
     @staticmethod
@@ -282,8 +269,7 @@ class TimeSyncManager:
                 parsed = Protocol.parse_message(response)
                 if not parsed or parsed['type'] != Protocol.MSG_SYNC_RESPONSE:
                     last_error = f"Invalid sync response: {response}"
-                    logger.error(f"Invalid sync response from {connection.device_id}: {response}")
-                    retry_count = attempt + 1
+                                        retry_count = attempt + 1
                     if attempt < TimeSyncManager.MAX_SYNC_RETRIES - 1:
                         time.sleep(TimeSyncManager.RETRY_DELAY_MS / 1000.0)
                     continue
@@ -303,8 +289,7 @@ class TimeSyncManager:
 
                 # Verify echoed timestamp
                 if abs(t_pc_echo - t1) > 1000:  # Allow 1 second tolerance
-                    logger.warning(f"Timestamp echo mismatch for {connection.device_id}")
-
+                    
                 # Calculate offset and RTT using NTP-style calculation
                 rtt_ms = t3 - t1
 
@@ -325,30 +310,24 @@ class TimeSyncManager:
 
                 for result_attempt in range(TimeSyncManager.MAX_SYNC_RETRIES):
                     if connection.send_message(sync_result):
-                        logger.info(f"SYNC_RESULT sent to {connection.device_id}")
-                        result_sent = True
+                                                result_sent = True
                         break
                     else:
-                        logger.warning(
-                            f"Failed to send SYNC_RESULT to {connection.device_id}, attempt {result_attempt + 1}")
-                        if result_attempt < TimeSyncManager.MAX_SYNC_RETRIES - 1:
+                                                if result_attempt < TimeSyncManager.MAX_SYNC_RETRIES - 1:
                             time.sleep(TimeSyncManager.RETRY_DELAY_MS / 1000.0)
 
                 if not result_sent:
-                    logger.error(f"Failed to send SYNC_RESULT to {connection.device_id} after all retries")
-                    # But still consider sync successful if we got the timestamps
+                                        # But still consider sync successful if we got the timestamps
 
                 return True
 
             except Exception as e:
                 last_error = f"Sync attempt failed: {str(e)}"
                 retry_count = attempt + 1
-                logger.warning(f"Time sync attempt {attempt + 1} failed for {connection.device_id}: {e}")
-                if attempt < TimeSyncManager.MAX_SYNC_RETRIES - 1:
+                                if attempt < TimeSyncManager.MAX_SYNC_RETRIES - 1:
                     time.sleep(TimeSyncManager.RETRY_DELAY_MS / 1000.0)
 
-        logger.error(f"Time sync failed for {connection.device_id} after {retry_count} retries: {last_error}")
-        return False
+                return False
 
 
 class PCController:
@@ -374,8 +353,7 @@ class PCController:
             self.server_socket.listen(5)
             self.running = True
 
-            logger.info(f"PC Controller started on port {self.port}")
-
+            
             while self.running:
                 try:
                     client_socket, address = self.server_socket.accept()
@@ -390,13 +368,10 @@ class PCController:
 
                 except Exception as e:
                     if self.running:
-                        logger.error(f"Error accepting connection: {e}")
-
+                        
         except KeyboardInterrupt:
-            logger.info("Shutdown requested by user")
-        except Exception as e:
-            logger.error(f"Server error: {e}")
-        finally:
+                    except Exception as e:
+                    finally:
             self.stop()
 
     def stop(self):
@@ -411,8 +386,7 @@ class PCController:
         if self.server_socket:
             self.server_socket.close()
 
-        logger.info("PC Controller stopped")
-
+        
     def _handle_new_device(self, client_socket: socket.socket, address: Tuple[str, int]):
         """Handle a new device connection"""
         connection = None
@@ -425,14 +399,12 @@ class PCController:
             # Wait for HELLO message
             hello_msg = connection.receive_message()
             if not hello_msg:
-                logger.warning(f"No HELLO message received from {address}")
-                return
+                                return
 
             # Parse HELLO message
             parsed = Protocol.parse_message(hello_msg)
             if not parsed or parsed['type'] != Protocol.MSG_HELLO:
-                logger.warning(f"Invalid HELLO message from {address}: {hello_msg}")
-                return
+                                return
 
             # Extract device information
             device_name = parsed['params'].get('device_name', device_id)
@@ -452,8 +424,7 @@ class PCController:
             self.device_registry.add_device(connection)
 
             # Perform initial time synchronization
-            logger.info(f"Performing initial time sync with {device_name}")
-            self.time_sync_manager.perform_sync(connection)
+                        self.time_sync_manager.perform_sync(connection)
 
             # Start device handler thread
             handler_thread = threading.Thread(
@@ -464,11 +435,9 @@ class PCController:
             handler_thread.start()
             self.device_handler_threads[device_name] = handler_thread
 
-            logger.info(f"Device {device_name} connected with capabilities: {sensors}")
-
+            
         except Exception as e:
-            logger.error(f"Error handling new device {address}: {e}")
-            if connection:
+                        if connection:
                 connection.close()
 
     def _handle_device_messages(self, connection: DeviceConnection):
@@ -484,11 +453,9 @@ class PCController:
                 if parsed:
                     self._process_device_message(connection, parsed)
                 else:
-                    logger.warning(f"Failed to parse message from {connection.device_id}: {message}")
-
+                    
         except Exception as e:
-            logger.error(f"Error handling messages from {connection.device_id}: {e}")
-        finally:
+                    finally:
             # Clean up disconnected device
             if connection.device_id in self.device_registry.devices:
                 self.device_registry.remove_device(connection.device_id)
@@ -503,19 +470,16 @@ class PCController:
 
         if msg_type == Protocol.MSG_ACK:
             acked_cmd = params.get('cmd', 'unknown')
-            logger.info(f"Device {connection.device_id} acknowledged: {acked_cmd}")
-
+            
         elif msg_type == Protocol.MSG_ERROR:
             error_cmd = params.get('cmd', 'unknown')
             error_code = params.get('code', 'unknown')
             error_msg = params.get('msg', 'No message')
-            logger.error(f"Device {connection.device_id} error for {error_cmd}: {error_code} - {error_msg}")
-
+            
         elif msg_type == Protocol.MSG_DATA_GSR:
             timestamp = params.get('ts', 0)
             value = params.get('value', 0)
-            logger.debug(f"GSR data from {connection.device_id}: {value} at {timestamp}")
-
+            
         elif msg_type == Protocol.MSG_FRAME:
             # Handle frame header (binary data would follow)
             frame_type = params.get('type', 'unknown')
@@ -524,14 +488,12 @@ class PCController:
             logger.debug(f"Frame from {connection.device_id}: {frame_type} ({size} bytes) at {timestamp}")
 
         else:
-            logger.debug(f"Unhandled message type from {connection.device_id}: {msg_type}")
-
+            
     def start_recording_session(self, session_id: str = None) -> bool:
         """Start a recording session on all connected devices"""
         devices = self.device_registry.get_all_devices()
         if not devices:
-            logger.error("No devices connected")
-            return False
+                        return False
 
         # Create session
         if not session_id:
@@ -549,21 +511,18 @@ class PCController:
                 device_ids.append(device.device_id)
                 success_count += 1
             else:
-                logger.error(f"Failed to send start command to {device.device_id}")
-
+                
         if success_count > 0:
             self.session_manager.start_recording(device_ids)
             logger.info(f"Recording session {session_id} started on {success_count}/{len(devices)} devices")
             return True
         else:
-            logger.error("Failed to start recording on any device")
-            return False
+                        return False
 
     def stop_recording_session(self) -> bool:
         """Stop the current recording session on all devices"""
         if not self.session_manager.current_session:
-            logger.error("No active recording session")
-            return False
+                        return False
 
         session_id = self.session_manager.current_session
         devices = self.device_registry.get_all_devices()
@@ -575,8 +534,7 @@ class PCController:
             if device.send_message(stop_cmd):
                 success_count += 1
             else:
-                logger.error(f"Failed to send stop command to {device.device_id}")
-
+                
         self.session_manager.stop_recording()
         logger.info(f"Recording session {session_id} stopped on {success_count}/{len(devices)} devices")
         return success_count > 0
@@ -664,8 +622,7 @@ def main():
             except KeyboardInterrupt:
                 break
             except Exception as e:
-                logger.error(f"Command error: {e}")
-
+                
     finally:
         controller.stop()
 

@@ -3,7 +3,6 @@ package com.mpdc4gsr.libunified.app.discovery
 import android.content.Context
 import android.net.nsd.NsdManager
 import android.net.nsd.NsdServiceInfo
-import android.util.Log
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -76,14 +75,8 @@ class NetworkDiscoveryService(private val context: Context) {
 
     fun startDiscovery(): Boolean {
         return try {
-            if (isDiscovering) {
-                Log.w(TAG, "Discovery already in progress")
-                return true
-            }
-
-            Log.i(TAG, "Starting network service discovery")
-
-            startServiceDiscovery(SERVICE_TYPE_PC_CONTROLLER)
+            if (isDiscovering) {                return true
+            }            startServiceDiscovery(SERVICE_TYPE_PC_CONTROLLER)
 
             startServiceDiscovery(SERVICE_TYPE_THERMAL_CAMERA)
 
@@ -92,16 +85,12 @@ class NetworkDiscoveryService(private val context: Context) {
 
             discoveryScope.launch {
                 delay(DISCOVERY_TIMEOUT_MS)
-                if (isDiscovering) {
-                    Log.i(TAG, "Discovery timeout reached, stopping discovery")
-                    stopDiscovery()
+                if (isDiscovering) {                    stopDiscovery()
                 }
             }
 
             true
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to start discovery", e)
-            eventListener?.onError("start_discovery", e.message ?: "Unknown error")
+        } catch (e: Exception) {            eventListener?.onError("start_discovery", e.message ?: "Unknown error")
             false
         }
     }
@@ -113,18 +102,12 @@ class NetworkDiscoveryService(private val context: Context) {
             activeDiscoveryListeners.values.forEach { listener ->
                 try {
                     nsdManager.stopServiceDiscovery(listener)
-                } catch (e: Exception) {
-                    Log.w(TAG, "Error stopping individual discovery listener", e)
-                }
+                } catch (e: Exception) {                }
             }
             activeDiscoveryListeners.clear()
 
             isDiscovering = false
-            eventListener?.onDiscoveryStopped()
-            Log.i(TAG, "Network service discovery stopped")
-        } catch (e: Exception) {
-            Log.e(TAG, "Error stopping discovery", e)
-            eventListener?.onError("stop_discovery", e.message ?: "Unknown error")
+            eventListener?.onDiscoveryStopped()        } catch (e: Exception) {            eventListener?.onError("stop_discovery", e.message ?: "Unknown error")
         }
     }
 
@@ -135,9 +118,7 @@ class NetworkDiscoveryService(private val context: Context) {
         attributes: Map<String, String> = emptyMap(),
     ): Boolean {
         return try {
-            if (isRegistered) {
-                Log.w(TAG, "Service already registered")
-                return true
+            if (isRegistered) {                return true
             }
 
             val serviceType =
@@ -166,9 +147,7 @@ class NetworkDiscoveryService(private val context: Context) {
                     override fun onRegistrationFailed(
                         serviceInfo: NsdServiceInfo,
                         errorCode: Int,
-                    ) {
-                        Log.e(TAG, "Service registration failed: $errorCode")
-                        eventListener?.onError(
+                    ) {                        eventListener?.onError(
                             "register_service",
                             "Registration failed: $errorCode"
                         )
@@ -177,22 +156,16 @@ class NetworkDiscoveryService(private val context: Context) {
                     override fun onUnregistrationFailed(
                         serviceInfo: NsdServiceInfo,
                         errorCode: Int,
-                    ) {
-                        Log.e(TAG, "Service unregistration failed: $errorCode")
-                        eventListener?.onError(
+                    ) {                        eventListener?.onError(
                             "unregister_service",
                             "Unregistration failed: $errorCode"
                         )
                     }
 
-                    override fun onServiceRegistered(serviceInfo: NsdServiceInfo) {
-                        Log.i(TAG, "Service registered: ${serviceInfo.serviceName}")
-                        isRegistered = true
+                    override fun onServiceRegistered(serviceInfo: NsdServiceInfo) {                        isRegistered = true
                     }
 
-                    override fun onServiceUnregistered(serviceInfo: NsdServiceInfo) {
-                        Log.i(TAG, "Service unregistered: ${serviceInfo.serviceName}")
-                        isRegistered = false
+                    override fun onServiceUnregistered(serviceInfo: NsdServiceInfo) {                        isRegistered = false
                     }
                 }
 
@@ -200,12 +173,8 @@ class NetworkDiscoveryService(private val context: Context) {
                 serviceInfo,
                 NsdManager.PROTOCOL_DNS_SD,
                 registrationListener
-            )
-            Log.i(TAG, "Registering service: $serviceName on port $port")
-            true
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to register service", e)
-            eventListener?.onError("register_service", e.message ?: "Unknown error")
+            )            true
+        } catch (e: Exception) {            eventListener?.onError("register_service", e.message ?: "Unknown error")
             false
         }
     }
@@ -217,11 +186,7 @@ class NetworkDiscoveryService(private val context: Context) {
             registrationListener?.let { listener ->
                 nsdManager.unregisterService(listener)
             }
-            registrationListener = null
-            Log.i(TAG, "Service unregistered")
-        } catch (e: Exception) {
-            Log.e(TAG, "Error unregistering service", e)
-            eventListener?.onError("unregister_service", e.message ?: "Unknown error")
+            registrationListener = null        } catch (e: Exception) {            eventListener?.onError("unregister_service", e.message ?: "Unknown error")
         }
     }
 
@@ -243,9 +208,7 @@ class NetworkDiscoveryService(private val context: Context) {
                 override fun onStartDiscoveryFailed(
                     serviceType: String,
                     errorCode: Int,
-                ) {
-                    Log.e(TAG, "Discovery start failed for $serviceType: $errorCode")
-                    eventListener?.onError(
+                ) {                    eventListener?.onError(
                         "start_discovery",
                         "Failed to start discovery: $errorCode"
                     )
@@ -254,32 +217,20 @@ class NetworkDiscoveryService(private val context: Context) {
                 override fun onStopDiscoveryFailed(
                     serviceType: String,
                     errorCode: Int,
-                ) {
-                    Log.e(TAG, "Discovery stop failed for $serviceType: $errorCode")
-                    eventListener?.onError("stop_discovery", "Failed to stop discovery: $errorCode")
+                ) {                    eventListener?.onError("stop_discovery", "Failed to stop discovery: $errorCode")
                 }
 
-                override fun onDiscoveryStarted(serviceType: String) {
-                    Log.d(TAG, "Discovery started for $serviceType")
+                override fun onDiscoveryStarted(serviceType: String) {                }
+
+                override fun onDiscoveryStopped(serviceType: String) {                    activeDiscoveryListeners.remove(serviceType)
                 }
 
-                override fun onDiscoveryStopped(serviceType: String) {
-                    Log.d(TAG, "Discovery stopped for $serviceType")
-                    activeDiscoveryListeners.remove(serviceType)
-                }
-
-                override fun onServiceFound(serviceInfo: NsdServiceInfo) {
-                    Log.d(TAG, "Service found: ${serviceInfo.serviceName}")
-
-                    if (serviceInfo.serviceName.startsWith(SERVICE_NAME_PREFIX)) {
+                override fun onServiceFound(serviceInfo: NsdServiceInfo) {                    if (serviceInfo.serviceName.startsWith(SERVICE_NAME_PREFIX)) {
                         resolveService(serviceInfo)
                     }
                 }
 
-                override fun onServiceLost(serviceInfo: NsdServiceInfo) {
-                    Log.d(TAG, "Service lost: ${serviceInfo.serviceName}")
-
-                    discoveredServices.remove(serviceInfo.serviceName)
+                override fun onServiceLost(serviceInfo: NsdServiceInfo) {                    discoveredServices.remove(serviceInfo.serviceName)
                     eventListener?.onDeviceLost(serviceInfo.serviceName)
                 }
             }
@@ -294,14 +245,9 @@ class NetworkDiscoveryService(private val context: Context) {
                 override fun onResolveFailed(
                     serviceInfo: NsdServiceInfo,
                     errorCode: Int,
-                ) {
-                    Log.w(TAG, "Resolve failed for ${serviceInfo.serviceName}: $errorCode")
-                }
+                ) {                }
 
-                override fun onServiceResolved(serviceInfo: NsdServiceInfo) {
-                    Log.d(TAG, "Service resolved: ${serviceInfo.serviceName}")
-
-                    val deviceType = determineDeviceType(serviceInfo)
+                override fun onServiceResolved(serviceInfo: NsdServiceInfo) {                    val deviceType = determineDeviceType(serviceInfo)
                     val attributes = extractAttributes(serviceInfo)
 
                     @Suppress("DEPRECATION")
@@ -318,13 +264,7 @@ class NetworkDiscoveryService(private val context: Context) {
                         )
 
                     discoveredServices[serviceInfo.serviceName] = discoveredDevice
-                    eventListener?.onDeviceDiscovered(discoveredDevice)
-
-                    Log.i(
-                        TAG,
-                        "Discovered ${deviceType.name}: ${discoveredDevice.ipAddress}:${discoveredDevice.port}"
-                    )
-                }
+                    eventListener?.onDeviceDiscovered(discoveredDevice)                }
             }
 
         @Suppress("DEPRECATION")

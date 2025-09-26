@@ -1,7 +1,6 @@
 package mpdc4gsr.network
 
 import android.content.Context
-import android.util.Log
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -60,26 +59,15 @@ class NetworkServer(
     suspend fun start(): Boolean {
         return withContext(Dispatchers.IO) {
             try {
-                if (isRunning.get()) {
-                    Log.w(TAG, "Server already running")
-                    return@withContext true
-                }
-
-                Log.i(TAG, "Starting TCP server on port $port")
-
-                serverSocket = ServerSocket(port)
+                if (isRunning.get()) {                    return@withContext true
+                }                serverSocket = ServerSocket(port)
                 isRunning.set(true)
 
                 serverJob =
                     serverScope.launch {
                         acceptConnections()
-                    }
-
-                Log.i(TAG, "TCP server started successfully on port $port")
-                return@withContext true
-            } catch (e: Exception) {
-                Log.e(TAG, "Failed to start TCP server", e)
-                isRunning.set(false)
+                    }                return@withContext true
+            } catch (e: Exception) {                isRunning.set(false)
                 return@withContext false
             }
         }
@@ -87,10 +75,7 @@ class NetworkServer(
 
     suspend fun stop() {
         withContext(Dispatchers.IO) {
-            try {
-                Log.i(TAG, "Stopping TCP server")
-
-                isRunning.set(false)
+            try {                isRunning.set(false)
                 isClientConnected.set(false)
                 _connectionStateFlow.value = false
 
@@ -108,31 +93,19 @@ class NetworkServer(
                 inputReader = null
                 binaryOutputStream = null
                 clientSocket = null
-                serverSocket = null
-
-                Log.i(TAG, "TCP server stopped")
-            } catch (e: Exception) {
-                Log.e(TAG, "Error stopping TCP server", e)
-            }
+                serverSocket = null            } catch (e: Exception) {            }
         }
     }
 
     suspend fun sendMessage(message: String): Boolean {
         return withContext(Dispatchers.IO) {
             try {
-                if (!isClientConnected.get() || outputWriter == null) {
-                    Log.w(TAG, "No client connected, cannot send message")
-                    return@withContext false
+                if (!isClientConnected.get() || outputWriter == null) {                    return@withContext false
                 }
 
                 outputWriter!!.write(message + "\n")
-                outputWriter!!.flush()
-
-                Log.d(TAG, "Sent message to PC: $message")
-                return@withContext true
-            } catch (e: Exception) {
-                Log.e(TAG, "Error sending message to PC", e)
-                disconnectClient()
+                outputWriter!!.flush()                return@withContext true
+            } catch (e: Exception) {                disconnectClient()
                 return@withContext false
             }
         }
@@ -141,9 +114,7 @@ class NetworkServer(
     suspend fun sendBinaryData(header: String, data: ByteArray): Boolean {
         return withContext(Dispatchers.IO) {
             try {
-                if (!isClientConnected.get() || outputWriter == null || binaryOutputStream == null) {
-                    Log.w(TAG, "No client connected, cannot send binary data")
-                    return@withContext false
+                if (!isClientConnected.get() || outputWriter == null || binaryOutputStream == null) {                    return@withContext false
                 }
 
                 // Send text header first
@@ -153,13 +124,8 @@ class NetworkServer(
                 // Send binary data with length prefix
                 binaryOutputStream!!.writeInt(data.size)
                 binaryOutputStream!!.write(data)
-                binaryOutputStream!!.flush()
-
-                Log.d(TAG, "Sent binary data to PC: ${data.size} bytes")
-                return@withContext true
-            } catch (e: Exception) {
-                Log.e(TAG, "Error sending binary data to PC", e)
-                disconnectClient()
+                binaryOutputStream!!.flush()                return@withContext true
+            } catch (e: Exception) {                disconnectClient()
                 return@withContext false
             }
         }
@@ -167,14 +133,8 @@ class NetworkServer(
 
     private suspend fun acceptConnections() {
         while (isRunning.get() && !serverJob?.isCancelled!!) {
-            try {
-                Log.i(TAG, "Waiting for PC Controller connection...")
-
-                val socket = serverSocket?.accept()
-                if (socket != null && isRunning.get()) {
-                    Log.i(TAG, "PC Controller connected from ${socket.remoteSocketAddress}")
-
-                    disconnectClient()
+            try {                val socket = serverSocket?.accept()
+                if (socket != null && isRunning.get()) {                    disconnectClient()
 
                     clientSocket = socket
                     outputWriter = BufferedWriter(OutputStreamWriter(socket.getOutputStream(), Charsets.UTF_8))
@@ -193,15 +153,9 @@ class NetworkServer(
                         }
                 }
             } catch (e: SocketException) {
-                if (isRunning.get()) {
-                    Log.e(TAG, "Socket error accepting connections", e)
-                } else {
-                    Log.i(TAG, "Server socket closed normally")
-                }
+                if (isRunning.get()) {                } else {                }
                 break
-            } catch (e: Exception) {
-                Log.e(TAG, "Error accepting connection", e)
-                delay(1000)
+            } catch (e: Exception) {                delay(1000)
             }
         }
     }
@@ -214,18 +168,12 @@ class NetworkServer(
                     val protocolMessage = Protocol.parseMessage(messageText)
                     if (protocolMessage != null) {
                         _messageFlow.emit(protocolMessage)
-                    } else {
-                        Log.w(TAG, "Failed to parse protocol message: $messageText")
-                    }
+                    } else {                    }
                 } else {
                     break
                 }
-            } catch (e: SocketException) {
-                Log.i(TAG, "PC Controller disconnected")
-                break
-            } catch (e: Exception) {
-                Log.e(TAG, "Error receiving message from PC", e)
-                break
+            } catch (e: SocketException) {                break
+            } catch (e: Exception) {                break
             }
         }
 
@@ -238,23 +186,16 @@ class NetworkServer(
                 val reader = inputReader ?: return@withContext null
                 val line = reader.readLine()
 
-                if (line != null) {
-                    Log.d(TAG, "Received message from PC: $line")
-                }
+                if (line != null) {                }
 
                 return@withContext line
-            } catch (e: Exception) {
-                Log.e(TAG, "Error receiving message", e)
-                return@withContext null
+            } catch (e: Exception) {                return@withContext null
             }
         }
     }
 
     private fun disconnectClient() {
-        if (isClientConnected.get()) {
-            Log.i(TAG, "Disconnecting PC Controller client")
-
-            isClientConnected.set(false)
+        if (isClientConnected.get()) {            isClientConnected.set(false)
             _connectionStateFlow.value = false
 
             messageListenerJob?.cancel()
@@ -264,9 +205,7 @@ class NetworkServer(
                 inputReader?.close()
                 binaryOutputStream?.close()
                 clientSocket?.close()
-            } catch (e: Exception) {
-                Log.w(TAG, "Error closing client connection", e)
-            }
+            } catch (e: Exception) {            }
 
             outputWriter = null
             inputReader = null
@@ -281,7 +220,5 @@ class NetworkServer(
 
     suspend fun cleanup() {
         stop()
-        serverScope.cancel()
-        Log.i(TAG, "Network server cleaned up")
-    }
+        serverScope.cancel()    }
 }

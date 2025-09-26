@@ -2,7 +2,6 @@ package mpdc4gsr.test
 
 import android.app.AlertDialog
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
@@ -35,11 +34,7 @@ class SessionLifecycleTestActivity : FragmentActivity() {
     private var testSessionCounter = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        Log.i(TAG, "Starting Session Lifecycle Test Activity")
-
-        // Initialize components
+        super.onCreate(savedInstanceState)        // Initialize components
         permissionController = PermissionController(this)
         permissionManager = PermissionManager(this, permissionController)
         recordingController = ComprehensiveRecordingController(this)
@@ -58,10 +53,7 @@ class SessionLifecycleTestActivity : FragmentActivity() {
         // Add mock sensors for testing
         recordingController.addSensorRecorder("RGB", MockRgbSensor())
         recordingController.addSensorRecorder("Thermal", MockThermalSensor())
-        recordingController.addSensorRecorder("GSR", MockGSRSensor())
-
-        Log.i(TAG, "Added 3 test sensors: RGB, Thermal, GSR")
-    }
+        recordingController.addSensorRecorder("GSR", MockGSRSensor())    }
 
     private fun checkForCrashedSessions() {
         lifecycleScope.launch {
@@ -69,12 +61,8 @@ class SessionLifecycleTestActivity : FragmentActivity() {
                 val hasCrashedSession = recordingController.checkForCrashedSessions()
                 if (hasCrashedSession) {
                     showAlert("Crash Recovery", "Detected and recovered from crashed session. Check logs for details.")
-                } else {
-                    Log.i(TAG, "No crashed sessions detected on startup")
-                }
-            } catch (e: Exception) {
-                Log.e(TAG, "Error checking for crashed sessions", e)
-            }
+                } else {                }
+            } catch (e: Exception) {            }
         }
     }
 
@@ -130,10 +118,7 @@ class SessionLifecycleTestActivity : FragmentActivity() {
 
     private fun testNormalRecording() {
         lifecycleScope.launch {
-            try {
-                Log.i(TAG, "=== Test 1: Normal Recording with All Sensors ===")
-
-                // Reset all sensors to success mode
+            try {                // Reset all sensors to success mode
                 (recordingController as? ComprehensiveRecordingController)?.let { controller ->
                     // Configure sensors for success
                     MockRgbSensor.shouldSucceed = true
@@ -150,24 +135,17 @@ class SessionLifecycleTestActivity : FragmentActivity() {
                 )
 
                 if (result) {
-                    showToast("✅ Normal recording started successfully")
-                    Log.i(TAG, "✅ Test 1 PASSED: Normal recording started with all sensors")
-                } else {
-                    showToast("❌ Normal recording failed to start")
-                    Log.e(TAG, "❌ Test 1 FAILED: Normal recording should have started")
-                }
+                    showToast("✅ Normal recording started successfully")                } else {
+                    showToast("❌ Normal recording failed to start")                }
 
-            } catch (e: Exception) {
-                Log.e(TAG, "❌ Test 1 EXCEPTION: ${e.message}", e)
-                showToast("❌ Test 1 exception: ${e.message}")
+            } catch (e: Exception) {                showToast("❌ Test 1 exception: ${e.message}")
             }
         }
     }
 
     private fun testPartialRecording() {
         lifecycleScope.launch {
-            try {
-                Log.i(TAG, "=== Test 2: Partial Recording (Thermal Sensor Fails) ===")
+            try {===")
 
                 // Configure thermal sensor to fail, others succeed
                 MockRgbSensor.shouldSucceed = true
@@ -183,26 +161,17 @@ class SessionLifecycleTestActivity : FragmentActivity() {
                 )
 
                 if (result) {
-                    showToast("✅ Partial recording started (2/3 sensors)")
-                    Log.i(TAG, "✅ Test 2 PASSED: Partial recording started with fault tolerance")
-                } else {
-                    showToast("❌ Partial recording failed")
-                    Log.e(TAG, "❌ Test 2 FAILED: Partial recording should have started")
-                }
+                    showToast("✅ Partial recording started (2/3 sensors)")                } else {
+                    showToast("❌ Partial recording failed")                }
 
-            } catch (e: Exception) {
-                Log.e(TAG, "❌ Test 2 EXCEPTION: ${e.message}", e)
-                showToast("❌ Test 2 exception: ${e.message}")
+            } catch (e: Exception) {                showToast("❌ Test 2 exception: ${e.message}")
             }
         }
     }
 
     private fun testAllSensorsFail() {
         lifecycleScope.launch {
-            try {
-                Log.i(TAG, "=== Test 3: All Sensors Fail ===")
-
-                // Configure all sensors to fail
+            try {                // Configure all sensors to fail
                 MockRgbSensor.shouldSucceed = false
                 MockThermalSensor.shouldSucceed = false
                 MockGSRSensor.shouldSucceed = false
@@ -216,26 +185,17 @@ class SessionLifecycleTestActivity : FragmentActivity() {
                 )
 
                 if (!result) {
-                    showToast("✅ Recording correctly failed (no sensors started)")
-                    Log.i(TAG, "✅ Test 3 PASSED: Recording correctly failed when all sensors fail")
-                } else {
-                    showToast("❌ Recording should have failed but succeeded")
-                    Log.e(TAG, "❌ Test 3 FAILED: Recording should have failed when all sensors fail")
-                }
+                    showToast("✅ Recording correctly failed (no sensors started)")                } else {
+                    showToast("❌ Recording should have failed but succeeded")                }
 
-            } catch (e: Exception) {
-                Log.e(TAG, "❌ Test 3 EXCEPTION: ${e.message}", e)
-                showToast("❌ Test 3 exception: ${e.message}")
+            } catch (e: Exception) {                showToast("❌ Test 3 exception: ${e.message}")
             }
         }
     }
 
     private fun testSensorExceptionIsolation() {
         lifecycleScope.launch {
-            try {
-                Log.i(TAG, "=== Test 4: Sensor Exception Isolation ===")
-
-                // Configure GSR sensor to throw exception, others succeed
+            try {                // Configure GSR sensor to throw exception, others succeed
                 MockRgbSensor.shouldSucceed = true
                 MockThermalSensor.shouldSucceed = true
                 MockGSRSensor.shouldSucceed = true
@@ -249,26 +209,17 @@ class SessionLifecycleTestActivity : FragmentActivity() {
                 )
 
                 if (result) {
-                    showToast("✅ Recording continued despite sensor exception")
-                    Log.i(TAG, "✅ Test 4 PASSED: Recording continued despite GSR sensor exception")
-                } else {
-                    showToast("❌ Recording failed due to sensor exception")
-                    Log.e(TAG, "❌ Test 4 FAILED: Recording should continue despite isolated sensor exception")
-                }
+                    showToast("✅ Recording continued despite sensor exception")                } else {
+                    showToast("❌ Recording failed due to sensor exception")                }
 
-            } catch (e: Exception) {
-                Log.e(TAG, "❌ Test 4 EXCEPTION: ${e.message}", e)
-                showToast("❌ Test 4 exception: ${e.message}")
+            } catch (e: Exception) {                showToast("❌ Test 4 exception: ${e.message}")
             }
         }
     }
 
     private fun testInsufficientStorage() {
         lifecycleScope.launch {
-            try {
-                Log.i(TAG, "=== Test 5: Insufficient Storage Test ===")
-
-                // Reset sensors to succeed
+            try {                // Reset sensors to succeed
                 MockRgbSensor.shouldSucceed = true
                 MockThermalSensor.shouldSucceed = true
                 MockGSRSensor.shouldSucceed = true
@@ -282,38 +233,23 @@ class SessionLifecycleTestActivity : FragmentActivity() {
                 )
 
                 if (!result) {
-                    showToast("✅ Recording correctly failed (insufficient storage)")
-                    Log.i(TAG, "✅ Test 5 PASSED: Recording correctly failed due to storage requirements")
-                } else {
-                    showToast("⚠️ Storage check may have passed (device has lots of space)")
-                    Log.w(TAG, "⚠️ Test 5 WARNING: Storage check passed - device may have sufficient space")
-                }
+                    showToast("✅ Recording correctly failed (insufficient storage)")                } else {
+                    showToast("⚠️ Storage check may have passed (device has lots of space)")                }
 
-            } catch (e: Exception) {
-                Log.e(TAG, "❌ Test 5 EXCEPTION: ${e.message}", e)
-                showToast("❌ Test 5 exception: ${e.message}")
+            } catch (e: Exception) {                showToast("❌ Test 5 exception: ${e.message}")
             }
         }
     }
 
     private fun stopCurrentRecording() {
         lifecycleScope.launch {
-            try {
-                Log.i(TAG, "=== Stopping Current Recording ===")
-
-                val result = recordingController.stopRecording()
+            try {                val result = recordingController.stopRecording()
 
                 if (result) {
-                    showToast("✅ Recording stopped successfully")
-                    Log.i(TAG, "✅ Recording stopped with graceful teardown")
-                } else {
-                    showToast("❌ Failed to stop recording")
-                    Log.e(TAG, "❌ Failed to stop recording gracefully")
-                }
+                    showToast("✅ Recording stopped successfully")                } else {
+                    showToast("❌ Failed to stop recording")                }
 
-            } catch (e: Exception) {
-                Log.e(TAG, "❌ Stop recording EXCEPTION: ${e.message}", e)
-                showToast("❌ Stop exception: ${e.message}")
+            } catch (e: Exception) {                showToast("❌ Stop exception: ${e.message}")
             }
         }
     }
@@ -345,32 +281,26 @@ class SessionLifecycleTestActivity : FragmentActivity() {
         override val isRecording: Boolean = shouldSucceed
         override val samplingRate: Double = 30.0
 
-        override suspend fun initialize(): Boolean {
-            Log.d(TAG, "MockRgbSensor.initialize() called - returning $shouldSucceed")
+        override suspend fun initialize(): Boolean {called - returning $shouldSucceed")
             return shouldSucceed
         }
 
-        override suspend fun startRecording(sessionDirectory: String): Boolean {
-            Log.d(TAG, "MockRgbSensor.startRecording() called - returning $shouldSucceed")
+        override suspend fun startRecording(sessionDirectory: String): Boolean {called - returning $shouldSucceed")
             return shouldSucceed
         }
 
-        override suspend fun startRecording(sessionDirectory: String, sessionMetadata: SessionMetadata): Boolean {
-            Log.d(TAG, "MockRgbSensor.startRecording() called - returning $shouldSucceed")
+        override suspend fun startRecording(sessionDirectory: String, sessionMetadata: SessionMetadata): Boolean {called - returning $shouldSucceed")
             return shouldSucceed
         }
 
-        override suspend fun stopRecording(): Boolean {
-            Log.d(TAG, "MockRgbSensor.stopRecording() called")
+        override suspend fun stopRecording(): Boolean {called")
             return true
         }
 
-        override suspend fun addSyncMarker(markerType: String, timestampNs: Long, metadata: Map<String, String>) {
-            Log.d(TAG, "MockRgbSensor.addSyncMarker() called")
+        override suspend fun addSyncMarker(markerType: String, timestampNs: Long, metadata: Map<String, String>) {called")
         }
 
-        override suspend fun cleanup() {
-            Log.d(TAG, "MockRgbSensor.cleanup() called")
+        override suspend fun cleanup() {called")
         }
 
         private fun mockRecordingStatus(): RecordingStatus {
@@ -400,32 +330,26 @@ class SessionLifecycleTestActivity : FragmentActivity() {
         override val isRecording: Boolean = shouldSucceed
         override val samplingRate: Double = 10.0
 
-        override suspend fun initialize(): Boolean {
-            Log.d(TAG, "MockThermalSensor.initialize() called - returning $shouldSucceed")
+        override suspend fun initialize(): Boolean {called - returning $shouldSucceed")
             return shouldSucceed
         }
 
-        override suspend fun startRecording(sessionDirectory: String): Boolean {
-            Log.d(TAG, "MockThermalSensor.startRecording() called - returning $shouldSucceed")
+        override suspend fun startRecording(sessionDirectory: String): Boolean {called - returning $shouldSucceed")
             return shouldSucceed
         }
 
-        override suspend fun startRecording(sessionDirectory: String, sessionMetadata: SessionMetadata): Boolean {
-            Log.d(TAG, "MockThermalSensor.startRecording() called - returning $shouldSucceed")
+        override suspend fun startRecording(sessionDirectory: String, sessionMetadata: SessionMetadata): Boolean {called - returning $shouldSucceed")
             return shouldSucceed
         }
 
-        override suspend fun stopRecording(): Boolean {
-            Log.d(TAG, "MockThermalSensor.stopRecording() called")
+        override suspend fun stopRecording(): Boolean {called")
             return true
         }
 
-        override suspend fun addSyncMarker(markerType: String, timestampNs: Long, metadata: Map<String, String>) {
-            Log.d(TAG, "MockThermalSensor.addSyncMarker() called")
+        override suspend fun addSyncMarker(markerType: String, timestampNs: Long, metadata: Map<String, String>) {called")
         }
 
-        override suspend fun cleanup() {
-            Log.d(TAG, "MockThermalSensor.cleanup() called")
+        override suspend fun cleanup() {called")
         }
 
         private fun createMockRecordingStatus(): RecordingStatus {
@@ -456,40 +380,32 @@ class SessionLifecycleTestActivity : FragmentActivity() {
         override val isRecording: Boolean = shouldSucceed
         override val samplingRate: Double = 128.0
 
-        override suspend fun initialize(): Boolean {
-            Log.d(TAG, "MockGSRSensor.initialize() called - returning $shouldSucceed")
+        override suspend fun initialize(): Boolean {called - returning $shouldSucceed")
             return shouldSucceed
         }
 
         override suspend fun startRecording(sessionDirectory: String): Boolean {
-            if (shouldThrowException) {
-                Log.d(TAG, "MockGSRSensor.startRecording() throwing exception")
+            if (shouldThrowException) {throwing exception")
                 throw RuntimeException("Mock GSR sensor connection failed")
-            }
-            Log.d(TAG, "MockGSRSensor.startRecording() called - returning $shouldSucceed")
+            }called - returning $shouldSucceed")
             return shouldSucceed
         }
 
         override suspend fun startRecording(sessionDirectory: String, sessionMetadata: SessionMetadata): Boolean {
-            if (shouldThrowException) {
-                Log.d(TAG, "MockGSRSensor.startRecording() throwing exception")
+            if (shouldThrowException) {throwing exception")
                 throw RuntimeException("Mock GSR sensor connection failed")
-            }
-            Log.d(TAG, "MockGSRSensor.startRecording() called - returning $shouldSucceed")
+            }called - returning $shouldSucceed")
             return shouldSucceed
         }
 
-        override suspend fun stopRecording(): Boolean {
-            Log.d(TAG, "MockGSRSensor.stopRecording() called")
+        override suspend fun stopRecording(): Boolean {called")
             return true
         }
 
-        override suspend fun addSyncMarker(markerType: String, timestampNs: Long, metadata: Map<String, String>) {
-            Log.d(TAG, "MockGSRSensor.addSyncMarker() called")
+        override suspend fun addSyncMarker(markerType: String, timestampNs: Long, metadata: Map<String, String>) {called")
         }
 
-        override suspend fun cleanup() {
-            Log.d(TAG, "MockGSRSensor.cleanup() called")
+        override suspend fun cleanup() {called")
         }
 
         private fun createMockRecordingStatus(): RecordingStatus {

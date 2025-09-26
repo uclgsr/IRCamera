@@ -4,22 +4,19 @@ import android.database.Cursor
 import android.net.Uri
 import android.provider.MediaStore
 import com.blankj.utilcode.util.Utils
-import com.elvishew.xlog.XLog
 import com.mpdc4gsr.libunified.app.tools.FileTools
 import java.io.File
 
 object WriteTools {
     fun delete(file: File): Int {
         val uri: Uri = FileTools.getUri(file)
-        XLog.w("[ph][ph][ph][ph] uri:$uri")
-        val mediaId = queryId(uri)
+        X        val mediaId = queryId(uri)
         val resolver = Utils.getApp().applicationContext.contentResolver
         val selection = "${MediaStore.Images.Media._ID} = ?"
 
         val selectionArgs = arrayOf(mediaId.toString())
         val result = resolver.delete(uri, selection, selectionArgs)
-        XLog.w("[ph][ph][ph][ph][ph][ph]: $result")
-        return result
+        X        return result
     }
 
     private fun queryId(uri: Uri): Long {
@@ -39,12 +36,10 @@ object WriteTools {
             cursor?.let {
                 if (it.moveToFirst()) {
                     result = it.getLong(it.getColumnIndexOrThrow(MediaStore.Images.Media._ID))
-                    XLog.w("MediaStore.Images.Media._ID: $result")
-                }
+                    X                }
             }
         } catch (e: Exception) {
-            XLog.e("[ph][ph][ph][ph]: ${e.message}")
-        } finally {
+            X        } finally {
             cursor?.close()
         }
         return result

@@ -11,7 +11,6 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
-import android.util.Log
 import android.view.View
 import androidx.lifecycle.lifecycleScope
 import com.csl.irCamera.R
@@ -57,10 +56,7 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
             recordingServiceBinder = binder
             recordingService = binder.getService()
             recordingController = binder.getRecordingController()
-            isServiceBound = true
-
-            Log.i(TAG, "Connected to RecordingService")
-            setupRecordingMonitoring()
+            isServiceBound = true            setupRecordingMonitoring()
             setupNetworkMonitoring()
             updateUI()
         }
@@ -68,9 +64,7 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
         override fun onServiceDisconnected(name: ComponentName?) {
             recordingService = null
             recordingServiceBinder = null
-            isServiceBound = false
-            Log.i(TAG, "Disconnected from RecordingService")
-        }
+            isServiceBound = false        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -92,9 +86,7 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
                 if (::networkServer.isInitialized) {
                     networkServer.cleanup()
                 }
-            } catch (e: Exception) {
-                Log.e(TAG, "Error during cleanup", e)
-            }
+            } catch (e: Exception) {            }
         }
 
         if (isServiceBound) {
@@ -112,27 +104,18 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
     private fun initializeComponents() {
         timeManager = TimeManager.getInstance(this)
 
-        shimmerBluetoothManager = ShimmerBluetoothManagerAndroid(this, Handler(Looper.getMainLooper()))
-
-        Log.i(TAG, "Shimmer Bluetooth Manager initialized for GSR device coordination")
-
-        initializeAdvancedBleCoordination()
+        shimmerBluetoothManager = ShimmerBluetoothManagerAndroid(this, Handler(Looper.getMainLooper()))        initializeAdvancedBleCoordination()
 
         networkServer = NetworkServer(this, DEFAULT_PC_CONTROLLER_PORT)
     }
 
     private fun initializeAdvancedBleCoordination() {
         lifecycleScope.launch {
-            try {
-                Log.i(TAG, "Advanced BLE coordination initialized for hub-spoke system")
-
-                setupBleDeviceMonitoring()
+            try {                setupBleDeviceMonitoring()
 
                 discoverGsrSensorsForHubSpoke()
 
-            } catch (e: Exception) {
-                Log.e(TAG, "Error initializing advanced BLE coordination", e)
-            }
+            } catch (e: Exception) {            }
         }
     }
 
@@ -143,29 +126,17 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
                     while (isServiceBound || !isDestroyed) {
                         try {
                             // Update simple BLE status based on tracked Shimmer devices
-                            updateBLEDeviceStatus()
-                            Log.d(TAG, "BLE device count: ${connectedShimmerDevices.size}")
-                            kotlinx.coroutines.delay(2000)
-                        } catch (e: Exception) {
-                            Log.e(TAG, "Error monitoring BLE status", e)
-                            break
+                            updateBLEDeviceStatus()                            kotlinx.coroutines.delay(2000)
+                        } catch (e: Exception) {                            break
                         }
                     }
-                }
-
-                Log.i(TAG, "BLE device monitoring started")
-
-            } catch (e: Exception) {
-                Log.e(TAG, "Error setting up BLE device monitoring", e)
-            }
+                }            } catch (e: Exception) {            }
         }
     }
 
     private fun discoverGsrSensorsForHubSpoke() {
         lifecycleScope.launch {
-            try {
-                Log.d(TAG, "Hub-spoke GSR sensor discovery started using Android Bluetooth APIs")
-                runOnUiThread {
+            try {                runOnUiThread {
                     binding.statusTextView.text = "Scanning for Shimmer GSR sensors..."
                 }
 
@@ -176,8 +147,7 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
                     val deviceName = btDevice.name ?: "Unknown"
                     val deviceAddress = btDevice.address
 
-                    if (isShimmerGSRDevice(deviceName, deviceAddress)) {
-                        Log.i(TAG, "Paired Shimmer GSR device found: $deviceName ($deviceAddress)")
+                    if (isShimmerGSRDevice(deviceName, deviceAddress)) {")
                         runOnUiThread {
                             binding.statusTextView.text = "Shimmer GSR device available: $deviceName"
                         }
@@ -185,9 +155,7 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
                 }
 
                 // Perform active BLE scanning for discoverable Shimmer devices
-                if (bluetoothAdapter?.isEnabled == true) {
-                    Log.d(TAG, "Starting active BLE scan for discoverable Shimmer devices")
-                    runOnUiThread {
+                if (bluetoothAdapter?.isEnabled == true) {                    runOnUiThread {
                         binding.statusTextView.text = "Actively scanning for new Shimmer devices..."
                     }
 
@@ -203,10 +171,7 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
                                 val deviceAddress = device.address
                                 val rssi = scanResult.rssi
 
-                                if (isShimmerGSRDevice(deviceName, deviceAddress)) {
-                                    Log.i(
-                                        TAG,
-                                        "Discovered new Shimmer GSR device: $deviceName ($deviceAddress) RSSI: $rssi"
+                                if (isShimmerGSRDevice(deviceName, deviceAddress)) {RSSI: $rssi"
                                     )
                                     runOnUiThread {
                                         binding.statusTextView.text = "New Shimmer device found: $deviceName"
@@ -216,9 +181,7 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
                             }
                         }
 
-                        override fun onScanFailed(errorCode: Int) {
-                            Log.e(TAG, "BLE scan failed with error code: $errorCode")
-                            runOnUiThread {
+                        override fun onScanFailed(errorCode: Int) {                            runOnUiThread {
                                 binding.statusTextView.text = "Shimmer device scan failed"
                             }
                         }
@@ -229,9 +192,7 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
 
                     kotlinx.coroutines.delay(15000)
 
-                    bluetoothLeScanner?.stopScan(scanCallback)
-                    Log.d(TAG, "BLE scan completed")
-                }
+                    bluetoothLeScanner?.stopScan(scanCallback)                }
 
                 kotlinx.coroutines.delay(2000)
 
@@ -239,9 +200,7 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
                     binding.statusTextView.text = "Shimmer GSR device discovery completed"
                 }
 
-            } catch (e: Exception) {
-                Log.e(TAG, "Error discovering Shimmer GSR sensors", e)
-                runOnUiThread {
+            } catch (e: Exception) {                runOnUiThread {
                     binding.statusTextView.text = "Shimmer GSR sensor discovery failed"
                 }
             }
@@ -263,18 +222,13 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
         return hasShimmerMacPrefix || hasGSRName
     }
 
-    private fun updateDiscoveredShimmerDevicesUI(shimmerDevice: Shimmer) {
-        Log.d(TAG, "Updating UI for connected Shimmer device: ${shimmerDevice.deviceName}")
-        if (connectedShimmerDevices.none { it.bluetoothAddress == shimmerDevice.bluetoothAddress }) {
+    private fun updateDiscoveredShimmerDevicesUI(shimmerDevice: Shimmer) {        if (connectedShimmerDevices.none { it.bluetoothAddress == shimmerDevice.bluetoothAddress }) {
             connectedShimmerDevices.add(shimmerDevice)
         }
         updateBLEDeviceStatus()
     }
 
-    private fun updateDiscoveredDeviceUI(deviceName: String, deviceAddress: String, rssi: Int) {
-        Log.d(TAG, "Updating UI for discovered device: $deviceName ($deviceAddress) RSSI: $rssi")
-        Log.i(TAG, "Marking device as GSR sensor: $deviceAddress")
-    }
+    private fun updateDiscoveredDeviceUI(deviceName: String, deviceAddress: String, rssi: Int) {RSSI: $rssi")    }
 
     private fun setupClickListeners() {
         binding.connectButton.setOnClickListener { connectToPCController() }
@@ -311,21 +265,13 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
                         this@HubSpokeIntegrationActivity,
                         "Ready for PC connections on $deviceIP:8080",
                         android.widget.Toast.LENGTH_LONG
-                    ).show()
-                    Log.i(
-                        TAG,
-                        "Network server ready for PC Controller connections at $deviceIP:8080"
-                    )
-
-                } else {
+                    ).show()                } else {
                     binding.statusTextView.text = "Recording service not available"
                     android.widget.Toast.makeText(
                         this@HubSpokeIntegrationActivity,
                         "Recording service not ready",
                         android.widget.Toast.LENGTH_SHORT
-                    ).show()
-                    Log.e(TAG, "Recording service not bound")
-                }
+                    ).show()                }
 
             } catch (e: Exception) {
                 binding.statusTextView.text = "Server setup error: ${e.message}"
@@ -333,9 +279,7 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
                     this@HubSpokeIntegrationActivity,
                     "Server error: ${e.message}",
                     android.widget.Toast.LENGTH_LONG
-                ).show()
-                Log.e(TAG, "Error setting up network server", e)
-            } finally {
+                ).show()            } finally {
                 binding.progressBar.visibility = View.GONE
                 updateUI()
             }
@@ -357,16 +301,10 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
                         this@HubSpokeIntegrationActivity,
                         "Disconnected",
                         android.widget.Toast.LENGTH_SHORT
-                    ).show()
-                    Log.i(TAG, "Disconnected from PC Controller via RecordingService")
-                } else {
-                    binding.statusTextView.text = "Recording service not available"
-                    Log.e(TAG, "Recording service not bound")
-                }
+                    ).show()                } else {
+                    binding.statusTextView.text = "Recording service not available"                }
 
-            } catch (e: Exception) {
-                Log.e(TAG, "Disconnect error", e)
-                binding.statusTextView.text = "Disconnect error: ${e.message}"
+            } catch (e: Exception) {                binding.statusTextView.text = "Disconnect error: ${e.message}"
             } finally {
                 updateUI()
             }
@@ -422,9 +360,7 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
                     ).show()
                 }
 
-            } catch (e: Exception) {
-                Log.e(TAG, "Recording start error", e)
-                binding.statusTextView.text = "Recording start error: ${e.message}"
+            } catch (e: Exception) {                binding.statusTextView.text = "Recording start error: ${e.message}"
                 android.widget.Toast.makeText(
                     this@HubSpokeIntegrationActivity,
                     "Recording error",
@@ -468,9 +404,7 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
                     ).show()
                 }
 
-            } catch (e: Exception) {
-                Log.e(TAG, "Recording stop error", e)
-                binding.statusTextView.text = "Recording stop error: ${e.message}"
+            } catch (e: Exception) {                binding.statusTextView.text = "Recording stop error: ${e.message}"
             } finally {
                 binding.progressBar.visibility = View.GONE
                 updateUI()
@@ -496,20 +430,13 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
                     )
                 } else {
 
-                    val timestampNs = timeManager.getCurrentTimestampNs()
-                    Log.i(TAG, "Local sync marker created: $markerType at $timestampNs")
-                }
+                    val timestampNs = timeManager.getCurrentTimestampNs()                }
 
                 android.widget.Toast.makeText(
                     this@HubSpokeIntegrationActivity,
                     "Sync marker added",
                     android.widget.Toast.LENGTH_SHORT
-                ).show()
-                Log.i(TAG, "Sync marker added: $markerType")
-
-            } catch (e: Exception) {
-                Log.e(TAG, "Sync marker error", e)
-                android.widget.Toast.makeText(
+                ).show()            } catch (e: Exception) {                android.widget.Toast.makeText(
                     this@HubSpokeIntegrationActivity,
                     "Sync marker failed",
                     android.widget.Toast.LENGTH_SHORT
@@ -588,9 +515,7 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
                     }
 
                     kotlinx.coroutines.delay(2000)
-                } catch (e: Exception) {
-                    Log.e(TAG, "Error in network monitoring", e)
-                    break
+                } catch (e: Exception) {                    break
                 }
             }
         }
@@ -649,9 +574,7 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
                     }
                 }
             }
-        } catch (e: Exception) {
-            Log.e(TAG, "Error getting local IP address", e)
-        }
+        } catch (e: Exception) {        }
         return "Unknown IP"
     }
 }

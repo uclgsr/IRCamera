@@ -1,7 +1,6 @@
 package mpdc4gsr.sensors.camera
 
 import android.os.Build
-import android.util.Log
 import android.util.Size
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.Preview
@@ -81,16 +80,9 @@ class CameraConfigurationManager {
                         ) -> true
 
                 else -> false
-            }
+            }            Triple(deviceSupports4K, deviceSupportsRAW, supports60fps)
 
-            Log.i(TAG, "Device capabilities - 4K: $deviceSupports4K, RAW: $deviceSupportsRAW, 60fps: $supports60fps")
-            Log.i(TAG, "Device: $manufacturer $deviceModel")
-
-            Triple(deviceSupports4K, deviceSupportsRAW, supports60fps)
-
-        } catch (e: Exception) {
-            Log.w(TAG, "Error detecting device capabilities, using safe defaults", e)
-            Triple(false, false, false)
+        } catch (e: Exception) {            Triple(false, false, false)
         }
     }
 
@@ -128,15 +120,11 @@ class CameraConfigurationManager {
      */
     fun createOptimizedRecorder(configuration: CameraConfiguration): Recorder {
         return try {
-            val qualitySelector = if (configuration.supports4K) {
-                Log.i(TAG, "Creating 4K UHD quality selector with fallback strategy")
-                QualitySelector.from(
+            val qualitySelector = if (configuration.supports4K) {                QualitySelector.from(
                     Quality.UHD,
                     FallbackStrategy.lowerQualityThan(Quality.UHD)
                 )
-            } else {
-                Log.i(TAG, "Creating FHD quality selector with fallback strategy")
-                QualitySelector.from(
+            } else {                QualitySelector.from(
                     Quality.FHD,
                     FallbackStrategy.lowerQualityThan(Quality.FHD)
                 )
@@ -146,9 +134,7 @@ class CameraConfigurationManager {
                 .setQualitySelector(qualitySelector)
                 .build()
 
-        } catch (e: Exception) {
-            Log.e(TAG, "Error creating optimized recorder, using conservative fallback", e)
-            Recorder.Builder()
+        } catch (e: Exception) {            Recorder.Builder()
                 .setQualitySelector(
                     QualitySelector.from(
                         Quality.FHD,
@@ -165,9 +151,7 @@ class CameraConfigurationManager {
     fun createPreviewConfiguration(configuration: CameraConfiguration): Preview {
         return Preview.Builder().apply {
             val previewSize = Size(configuration.videoWidth, configuration.videoHeight)
-            setTargetResolution(previewSize)
-            Log.i(TAG, "Preview configured: ${previewSize.width}x${previewSize.height}")
-        }.build()
+            setTargetResolution(previewSize)        }.build()
     }
 
     /**
@@ -186,11 +170,7 @@ class CameraConfigurationManager {
                         .setCaptureRequestOption(
                             android.hardware.camera2.CaptureRequest.CONTROL_MODE,
                             android.hardware.camera2.CameraMetadata.CONTROL_MODE_USE_SCENE_MODE
-                        )
-                    Log.i(TAG, "RAW/DNG capture enabled for supported device")
-                } catch (e: Exception) {
-                    Log.w(TAG, "Could not enable RAW capture: ${e.message}")
-                }
+                        )                } catch (e: Exception) {                }
             }
         }.build()
     }

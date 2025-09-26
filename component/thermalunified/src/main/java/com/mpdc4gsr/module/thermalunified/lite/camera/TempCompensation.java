@@ -65,19 +65,14 @@ public class TempCompensation {
         DeviceIrcmdControlManager.getInstance().getIrcmdEngine().basicDeviceInfoGet(CommonParams.DeviceInfoType.TYPE_DEVICE_SN, snData);
         String sn = new String(snData).trim().replace("\0", "");
         File file = new File(BaseApplication.instance.getExternalCacheDir(), "NUC_T_HIGH_" + sn + ".bin");
-        if (file.exists()) {
-            Log.d(TAG, "File exists, reading from: " + file.getAbsolutePath());
+        if (file.exists()) {);
             byte[] nucTableHighByte = FileUtil.readFile2BytesByStream(BaseApplication.instance.getApplicationContext(), file);
-            nucT = byteToShort(nucTableHighByte);
-            Log.d(TAG, "getNucTData int: " + Arrays.toString(nucT));
-        } else {
-            Log.d(TAG, "getNucTData path: " + file.getAbsolutePath());
+            nucT = byteToShort(nucTableHighByte););
+        } else {);
             readFlashData(CommonParams.SdFilePath.DEFAULT_DATA_NUC_T_HIGH, file.getPath(),
-                    progress -> Log.d(TAG, "getNucTData readFlashData DEFAULT_DATA_NUC_T_HIGH : " + progress));
-            byte[] nucTableHighByte = FileUtil.readFile2BytesByStream(BaseApplication.instance.getApplicationContext(), file);
-            Log.d(TAG, "getNucTData byte: " + nucTableHighByte.length + "---" + Arrays.toString(nucTableHighByte));
-            nucT = byteToShort(nucTableHighByte);
-            Log.d(TAG, "getNucTData int: " + Arrays.toString(nucT));
+                    progress ->);
+            byte[] nucTableHighByte = FileUtil.readFile2BytesByStream(BaseApplication.instance.getApplicationContext(), file););
+            nucT = byteToShort(nucTableHighByte););
         }
     }
 
@@ -92,12 +87,8 @@ public class TempCompensation {
         try {
             result = ircamEngine.advFileRead(sdFilePath, localFilePath, iFileHandleCallback);
         } catch (IOException e) {
-            e.printStackTrace();
-            Log.d(TAG, sdFilePath + "  advFileRead fail !");
-        }
-        if (result != 0) {
-            Log.d(TAG, sdFilePath + "  advFileRead fail !");
-        }
+            e.printStackTrace();        }
+        if (result != 0) {        }
     }
 
     public void startTempCompensation() {
@@ -113,65 +104,39 @@ public class TempCompensation {
         param2 = Double.parseDouble(SPUtils.getInstance().getString(
                 KEY_PARAM2, DEFAULT_PARAM2));
         param3 = Double.parseDouble(SPUtils.getInstance().getString(
-                KEY_PARAM3, DEFAULT_PARAM3));
-        Log.d(TAG, "param1:" + param1 + "--param2:" + param2 + "--param3:" + param3);
-
-        handlerThread = new HandlerThread("TempCompensation");
+                KEY_PARAM3, DEFAULT_PARAM3));        handlerThread = new HandlerThread("TempCompensation");
         handlerThread.start();
         handler = new Handler(handlerThread.getLooper()) {
             @Override
             public void handleMessage(@NonNull Message msg) {
                 super.handleMessage(msg);
                 try {
-                    if (HANDLER_KEY_INIT == msg.what) {
-                        Log.d(TAG, "HANDLER_KEY_INIT");
-                        isStart = true;
+                    if (HANDLER_KEY_INIT == msg.what) {                        isStart = true;
 
                         if (DeviceIrcmdControlManager.getInstance().getIrcmdEngine() != null) {
                             IrcmdError basicAutoFFCStatusSet = DeviceIrcmdControlManager.getInstance().getIrcmdEngine()
-                                    .basicAutoFFCStatusSet(CommonParams.AutoFFCStatus.AUTO_FFC_DISABLED);
-                            Log.d(TAG, "basicAutoFFCStatusSet=" + basicAutoFFCStatusSet);
-                        }
+                                    .basicAutoFFCStatusSet(CommonParams.AutoFFCStatus.AUTO_FFC_DISABLED);                        }
 
                         getNucTData();
                     } else if (HANDLER_KEY_1s == msg.what) {
 
                         if (DeviceIrcmdControlManager.getInstance().getIrcmdEngine() != null) {
                             IrcmdError nativeAdvManualFFCUpdateResult = DeviceIrcmdControlManager.getInstance().getIrcmdEngine()
-                                    .basicFFCUpdate();
-                            Log.d(TAG, "nativeAdvManualFFCUpdateResult=" + nativeAdvManualFFCUpdateResult);
-
-                            int[] nativeAdvDeviceRealtimeStatusGetValue = new int[1];
+                                    .basicFFCUpdate();                            int[] nativeAdvDeviceRealtimeStatusGetValue = new int[1];
                             IrcmdError advDeviceRealtimeStatusGetResult = DeviceIrcmdControlManager.getInstance()
                                     .getIrcmdEngine()
                                     .advDeviceRealtimeStatusGet(CommonParams.RealtimeStatusType.ADV_IR_SENSOR_VTEMP,
-                                            nativeAdvDeviceRealtimeStatusGetValue);
-                            Log.d(TAG, "advDeviceRealtimeStatusGetResult=" + advDeviceRealtimeStatusGetResult);
-
-                            vTempStart = nativeAdvDeviceRealtimeStatusGetValue[0];
-                            Log.d(TAG, "Vtemp_start=" + vTempStart);
-
-                            nucNew = 0;
+                                            nativeAdvDeviceRealtimeStatusGetValue);                            vTempStart = nativeAdvDeviceRealtimeStatusGetValue[0];                            nucNew = 0;
 
                             isCompensation = true;
                             startTime = System.currentTimeMillis();
                         }
                     } else if (HANDLER_KEY_AFTER == msg.what) {
-                        if (DeviceIrcmdControlManager.getInstance().getIrcmdEngine() != null) {
-                            Log.d(TAG, "Shutter Release");
-
-                            IrcmdError advManualFFCUpdateResult = DeviceIrcmdControlManager.getInstance().getIrcmdEngine()
-                                    .advManualFFCUpdate(CommonParams.FFCShutterBehaviorMode.ONLY_B_UPDATE);
-                            Log.d(TAG, "advManualFFCUpdateResult=" + advManualFFCUpdateResult);
-
-                            nucNew = (int) (param1 * deltaVTemp * deltaVTemp + param2 * deltaVTemp - param3);
-                            Log.d(TAG, "NUC_new=" + nucNew);
-
-                            handler.sendEmptyMessageDelayed(HANDLER_KEY_AFTER, 6000);
+                        if (DeviceIrcmdControlManager.getInstance().getIrcmdEngine() != null) {                            IrcmdError advManualFFCUpdateResult = DeviceIrcmdControlManager.getInstance().getIrcmdEngine()
+                                    .advManualFFCUpdate(CommonParams.FFCShutterBehaviorMode.ONLY_B_UPDATE);                            nucNew = (int) (param1 * deltaVTemp * deltaVTemp + param2 * deltaVTemp - param3);                            handler.sendEmptyMessageDelayed(HANDLER_KEY_AFTER, 6000);
                         }
                     }
-                } catch (Exception e) {
-                    Log.d(TAG, "Temperature Compensation Error=" + e.getMessage());
+                } catch (Exception e) {);
                 }
             }
         };
@@ -197,52 +162,29 @@ public class TempCompensation {
             return;
         }
         if (DeviceIrcmdControlManager.getInstance()
-                .getIrcmdEngine() != null) {
-            Log.d(TAG, "getDeltaNucAndVTemp start");
-
-            int[] nativeAdvDeviceRealtimeStatusGetValue = new int[1];
+                .getIrcmdEngine() != null) {            int[] nativeAdvDeviceRealtimeStatusGetValue = new int[1];
             IrcmdError nativeAdvDeviceRealtimeStatusGetResult = DeviceIrcmdControlManager.getInstance()
                     .getIrcmdEngine()
                     .advDeviceRealtimeStatusGet(CommonParams.RealtimeStatusType.ADV_IR_SENSOR_VTEMP,
                             nativeAdvDeviceRealtimeStatusGetValue);
-            int currentVTemp = nativeAdvDeviceRealtimeStatusGetValue[0];
-            Log.d(TAG, "getDeltaNucAndVTemp currentVTemp = " + currentVTemp);
-
-            deltaVTemp = vTempStart - currentVTemp;
-            Log.d(TAG, "getDeltaNucAndVTemp deltaVTemp=" + deltaVTemp + "----NUC_new:" + nucNew);
-
-            deltaNUC = (int) (param1 * deltaVTemp * deltaVTemp + param2 * deltaVTemp - param3 - nucNew);
-            Log.d(TAG, "getDeltaNucAndVTemp deltaNUC=" + deltaNUC);
-        }
+            int currentVTemp = nativeAdvDeviceRealtimeStatusGetValue[0];            deltaVTemp = vTempStart - currentVTemp;            deltaNUC = (int) (param1 * deltaVTemp * deltaVTemp + param2 * deltaVTemp - param3 - nucNew);        }
     }
 
 
     private float getNewTempValue(float temp, long deltaTime, short[] nucT, int deltaNUC) {
         if (nucT == null) {
             return temp;
-        }
-        Log.d(TAG, "getNewTempValue start:" + temp);
-
-        int[] nucValue = new int[1];
+        }        int[] nucValue = new int[1];
         LibIRTemp.reverseCalcNUCWithNucT(nucT, temp, nucValue);
-        int nuc = nucValue[0];
-        Log.d(TAG, "getNewTempValue NUC: " + nuc);
-
-        int nucOut = nuc + deltaNUC;
+        int nuc = nucValue[0];        int nucOut = nuc + deltaNUC;
 
         long edgeTime = (ALL_DURATION - 10) * 1000L;
         if (deltaTime > edgeTime) {
             nucOut = nuc + deltaNUC * (int) (deltaTime % edgeTime / 1000 * -0.1 + 1);
-        }
-        Log.d(TAG, "getNewTempValue nucOut: " + nucOut);
-
-        int[] newTemp = new int[1];
+        }        int[] newTemp = new int[1];
         LibIRTemp.remapTemp(nucT, nucOut, newTemp);
         int newTempInt = newTemp[0];
-        float newTempFloat = newTempInt / 16f - 273.15f;
-        Log.d(TAG, "getNewTempValue end：" + newTempFloat);
-
-        isCompensation = deltaTime < ALL_DURATION * 1000L;
+        float newTempFloat = newTempInt / 16f - 273.15f;        isCompensation = deltaTime < ALL_DURATION * 1000L;
         if (!isCompensation) {
             stopTempCompensation(true);
         }
@@ -253,30 +195,19 @@ public class TempCompensation {
     private float getNewTempValue(float temp) {
         if (nucT == null) {
             return temp;
-        }
-        Log.d(TAG, "getNewTempValue start:" + temp);
-
-        int[] nucValue = new int[1];
+        }        int[] nucValue = new int[1];
         LibIRTemp.reverseCalcNUCWithNucT(nucT, temp, nucValue);
-        int nuc = nucValue[0];
-        Log.d(TAG, "getNewTempValue NUC: " + nuc);
-        long deltaTime = System.currentTimeMillis() - startTime;
+        int nuc = nucValue[0];        long deltaTime = System.currentTimeMillis() - startTime;
 
         int nucOut = nuc + deltaNUC;
 
         long edgeTime = (ALL_DURATION - 10) * 1000L;
         if (deltaTime > edgeTime) {
             nucOut = nuc + deltaNUC * (int) (deltaTime % edgeTime / 1000 * -0.1 + 1);
-        }
-        Log.d(TAG, "getNewTempValue nucOut: " + nucOut);
-
-        int[] newTemp = new int[1];
+        }        int[] newTemp = new int[1];
         LibIRTemp.remapTemp(nucT, nucOut, newTemp);
         int newTempInt = newTemp[0];
-        float newTempFloat = newTempInt / 16f - 273.15f;
-        Log.d(TAG, "getNewTempValue end：" + newTempFloat);
-
-        isCompensation = deltaTime < ALL_DURATION * 1000L;
+        float newTempFloat = newTempInt / 16f - 273.15f;        isCompensation = deltaTime < ALL_DURATION * 1000L;
         if (!isCompensation) {
             stopTempCompensation(true);
         }
@@ -290,9 +221,7 @@ public class TempCompensation {
         if (autoStop && isStart && DeviceIrcmdControlManager.getInstance().getIrcmdEngine() != null) {
 
             IrcmdError basicAutoFFCStatusSet = DeviceIrcmdControlManager.getInstance().getIrcmdEngine()
-                    .basicAutoFFCStatusSet(CommonParams.AutoFFCStatus.AUTO_FFC_ENABLE);
-            Log.d(TAG, "basicAutoFFCStatusSet=" + basicAutoFFCStatusSet);
-        }
+                    .basicAutoFFCStatusSet(CommonParams.AutoFFCStatus.AUTO_FFC_ENABLE);        }
         if (handler != null) {
             handler.removeCallbacksAndMessages(null);
             handler = null;

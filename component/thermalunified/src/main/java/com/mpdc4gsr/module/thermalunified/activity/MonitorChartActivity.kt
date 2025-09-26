@@ -2,7 +2,6 @@ package com.mpdc4gsr.module.thermalunified.activity
 
 import android.graphics.Color
 import android.text.TextUtils
-import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import androidx.activity.viewModels
@@ -63,9 +62,7 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
         toolbar?.title = getString(R.string.main_thermal_motion)
 
         selectType = intent.getIntExtra("type", 3)
-        selectIndex = intent.getIntegerArrayListExtra("select")!!
-        Log.w("123", "selectType:$selectType")
-        Log.w("123", "selectIndex:${selectIndex.joinToString()}")
+        selectIndex = intent.getIntegerArrayListExtra("select")!!}")
 
         type =
             when (selectType) {
@@ -76,10 +73,7 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
         chart = findViewById(R.id.mp_chart_view)
         initChart()
         initRecycler()
-        viewModel.resultLiveData.observe(this) {
-
-            Log.w("123", "查询到历史数据:${it.dataList.size}")
-            resultVol(it)
+        viewModel.resultLiveData.observe(this) {            resultVol(it)
         }
         lifecycleScope.launch {
             delay(300)
@@ -147,10 +141,7 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
                     if (recordTask != null && recordTask!!.isActive) {
                         recordTask!!.cancel()
                         recordTask = null
-                    }
-
-                    Log.w("123", "select:$time")
-                    adapter.setCheck(index)
+                    }                    adapter.setCheck(index)
                     timeMillis = time * 1000L
                     pointIndex = startIndex - defaultCount
                     recordThermal()
@@ -207,12 +198,8 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
                             updateChart()
                         }
                         delay(timeMillis)
-                    } else {
-                        Log.w("123", "当前不可更新")
-                    }
-                }
-                Log.w("123", "停止记录, 数据量:$time")
-            }
+                    } else {                    }
+                }            }
     }
 
     private fun initChart() {
@@ -307,9 +294,7 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
     private fun addPointToChart(bean: ThermalBean) {
         synchronized(chart) {
             try {
-                if (bean.createTime == 0L) {
-                    Log.w("123", "createTime = 0L, bean:$bean")
-                    return
+                if (bean.createTime == 0L) {                    return
                 }
                 val data = ThermalEntity()
                 data.thermalMax = bean.maxTemp
@@ -319,31 +304,23 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
                 val lineData: LineData = chart.data
                 var volDataSet = lineData.getDataSetByIndex(0)
                 if (volDataSet == null) {
-                    startTime = data.createTime
-                    Log.w("123", "设置初始时间startTime:$startTime")
-                    chart.xAxis.valueFormatter = MyValueFormatter(startTime = startTime)
+                    startTime = data.createTime                    chart.xAxis.valueFormatter = MyValueFormatter(startTime = startTime)
                 }
                 val x = (data.createTime - startTime).toFloat()
                 when (type) {
                     "point" -> {
                         if (volDataSet == null) {
                             volDataSet = createSet("green")
-                            lineData.addDataSet(volDataSet)
-                            Log.w("123", "volDataSet.entryCount:${volDataSet.entryCount}")
-                        }
+                            lineData.addDataSet(volDataSet)                        }
                         val entity = Entry(x, data.thermal)
                         entity.data = data
-                        volDataSet.addEntry(entity)
-                        Log.w("123", "添加一个数据:$entity")
-                    }
+                        volDataSet.addEntry(entity)                    }
 
                     "line" -> {
 
                         if (volDataSet == null) {
                             volDataSet = createSet("red")
-                            lineData.addDataSet(volDataSet)
-                            Log.w("123", "volDataSet.entryCount:${volDataSet.entryCount}")
-                        }
+                            lineData.addDataSet(volDataSet)                        }
                         val entity = Entry(x, data.thermalMax)
                         entity.data = data
                         volDataSet.addEntry(entity)
@@ -392,9 +369,7 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
                     chart.zoom(100f, 1f, chart.xChartMax, 0f)
                 }
                 return@synchronized
-            } catch (e: Exception) {
-                Log.e("123", "添加数据时异常:${e.message}")
-                return@synchronized
+            } catch (e: Exception) {                return@synchronized
             }
         }
     }
@@ -524,22 +499,16 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
                 "point" -> {
                     if (volDataSet == null) {
                         volDataSet = createSet("green")
-                        lineData.addDataSet(volDataSet)
-                        Log.w("123", "volDataSet.entryCount:${volDataSet.entryCount}")
-                    }
+                        lineData.addDataSet(volDataSet)                    }
                     val entity = Entry(x, it.thermal)
                     entity.data = it
-                    volDataSet.addEntry(entity)
-                    Log.w("123", "添加一个数据:$entity")
-                }
+                    volDataSet.addEntry(entity)                }
 
                 "line" -> {
 
                     if (volDataSet == null) {
                         volDataSet = createSet("red")
-                        lineData.addDataSet(volDataSet)
-                        Log.w("123", "volDataSet.entryCount:${volDataSet.entryCount}")
-                    }
+                        lineData.addDataSet(volDataSet)                    }
                     val entity = Entry(x, it.thermalMax)
                     entity.data = it
                     volDataSet.addEntry(entity)
@@ -574,17 +543,10 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
                     secondDataSet.addEntry(secondEntity)
                 }
             }
-        }
-        Log.w("123", "曲线数据:${volDataSet.entryCount}个")
-        lineData.notifyDataChanged()
+        }        lineData.notifyDataChanged()
         chart.notifyDataSetChanged()
         chart.setVisibleXRangeMinimum(getMinimum())
-        chart.setVisibleXRangeMaximum(getMaximum())
-        Log.i(
-            "123",
-            "list moveViewToX:${chart.xChartMax}, chart.highestVisibleX:${chart.highestVisibleX}",
-        )
-        chart.moveViewToX(chart.xChartMax)
+        chart.setVisibleXRangeMaximum(getMaximum())        chart.moveViewToX(chart.xChartMax)
         chart.xAxis.setLabelCount(getLabCount(volDataSet.entryCount), false)
         chart.zoom(100f, 1f, chart.xChartMax, 0f)
         startMonitor = true

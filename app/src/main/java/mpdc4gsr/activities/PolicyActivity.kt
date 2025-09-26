@@ -3,11 +3,9 @@ package mpdc4gsr.activities
 import android.annotation.SuppressLint
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import androidx.lifecycle.lifecycleScope
 import com.csl.irCamera.R
 import com.csl.irCamera.databinding.ActivityPolicyBinding
-import com.elvishew.xlog.XLog
 import com.mpdc4gsr.libunified.app.BaseApplication
 import com.mpdc4gsr.libunified.app.ktbase.BaseBindingActivity
 import kotlinx.coroutines.Dispatchers
@@ -115,9 +113,7 @@ class PolicyActivity : BaseBindingActivity<ActivityPolicyBinding>() {
                     view: android.webkit.WebView?,
                     url: String?,
                 ) {
-                    super.onPageFinished(view, url)
-                    Log.w("123", "onPageFinished url: $url")
-                }
+                    super.onPageFinished(view, url)                }
             }
 
         binding.policyWeb.webChromeClient =
@@ -165,8 +161,7 @@ class PolicyActivity : BaseBindingActivity<ActivityPolicyBinding>() {
         text: String,
         requestUrl: String,
     ) {
-        XLog.w("[ph][ph][ph][ph][ph][ph],[ph][ph][ph][ph][ph][ph]")
-        loadHttp(binding.policyWeb)
+        X        loadHttp(binding.policyWeb)
         delayShowWebView()
     }
 

@@ -20,7 +20,6 @@ import argparse
 import base64
 import io
 import json
-import logging
 import os
 import re
 import socket
@@ -54,8 +53,7 @@ try:
         PYQTGRAPH_AVAILABLE = False
         
     GUI_AVAILABLE = True
-    logger.info("🖥️ PyQt6 GUI interface available")
-except ImportError:
+    except ImportError:
     GUI_AVAILABLE = False
     logger.info("💻 Running in CLI mode (PyQt6 not available)")
     
@@ -83,8 +81,7 @@ OPENCV_AVAILABLE = False
 try:
     import cv2
     OPENCV_AVAILABLE = True
-    logger.info("📹 OpenCV webcam support available")
-except ImportError:
+    except ImportError:
     logger.info("📷 No native webcam support (OpenCV not available)")
 
 # Optional C++ backend
@@ -93,8 +90,7 @@ try:
     sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'pc-controller/enhanced_native_backend'))
     import enhanced_native_backend
     NATIVE_BACKEND_AVAILABLE = True
-    logger.info("🚀 C++ backend available for high-performance processing")
-except ImportError:
+    except ImportError:
     logger.info("🐍 Using Python backend (C++ backend not available)")
 
 
@@ -109,14 +105,12 @@ class WebcamCapture:
     def start_capture(self, camera_id=0, width=640, height=480):
         """Start webcam capture"""
         if not OPENCV_AVAILABLE:
-            logger.warning("OpenCV not available, webcam capture disabled")
-            return False
+                        return False
             
         try:
             self.capture = cv2.VideoCapture(camera_id)
             if not self.capture.isOpened():
-                logger.error(f"Failed to open camera {camera_id}")
-                return False
+                                return False
                 
             # Set resolution
             self.capture.set(cv2.CAP_PROP_FRAME_WIDTH, width)
@@ -124,12 +118,10 @@ class WebcamCapture:
             
             self.is_capturing = True
             self.frame_count = 0
-            logger.info(f"Started webcam capture: {width}x{height}")
-            return True
+                        return True
             
         except Exception as e:
-            logger.error(f"Failed to start webcam capture: {e}")
-            return False
+                        return False
     
     def capture_frame(self):
         """Capture a single frame and return as JPEG bytes"""
@@ -148,8 +140,7 @@ class WebcamCapture:
             return buffer.tobytes()
             
         except Exception as e:
-            logger.error(f"Frame capture failed: {e}")
-            return None
+                        return None
     
     def stop_capture(self):
         """Stop webcam capture"""
@@ -168,10 +159,8 @@ class DataProcessor:
         if self.use_cpp_backend:
             try:
                 self.cpp_processor = enhanced_native_backend.DataProcessor()
-                logger.info("Using C++ backend for data processing")
-            except Exception as e:
-                logger.warning(f"C++ backend initialization failed: {e}, falling back to Python")
-                self.use_cpp_backend = False
+                            except Exception as e:
+                                self.use_cpp_backend = False
     
     def process_gsr_data(self, raw_value: float, timestamp: float) -> Dict[str, Any]:
         """Process GSR data using high-performance backend if available"""
@@ -187,8 +176,7 @@ class DataProcessor:
                     'artifacts_detected': result.has_artifacts
                 }
             except Exception as e:
-                logger.warning(f"C++ processing failed: {e}, using Python fallback")
-        
+                        
         # Python fallback processing
         return self._process_gsr_python(raw_value, timestamp)
     
@@ -220,8 +208,7 @@ class DataProcessor:
                 elif filter_type == "notch":
                     return self.cpp_processor.apply_notch_filter(data, 50.0, 50.0)
             except Exception as e:
-                logger.warning(f"C++ filtering failed: {e}, using Python fallback")
-        
+                        
         # Python fallback - simple moving average for lowpass
         if filter_type == "lowpass" and len(data) > 5:
             window = 5
@@ -280,8 +267,7 @@ class Protocol:
             try:
                 return json.loads(message)
             except json.JSONDecodeError as e:
-                logger.error(f"Failed to parse JSON message: {e}")
-                return {"type": "error", "message": "Invalid JSON"}
+                                return {"type": "error", "message": "Invalid JSON"}
         else:
             # Parse legacy text protocol
             return Protocol._parse_legacy_message(message)
@@ -403,17 +389,14 @@ class NetworkThread(QThread if GUI_AVAILABLE else threading.Thread):
             
             if cert_file.exists() and key_file.exists():
                 self.ssl_context.load_cert_chain(cert_file, key_file)
-                logger.info(f"Loaded existing SSL certificates from {cert_dir}")
-            else:
+                            else:
                 # Generate self-signed certificate
-                logger.info("Generating self-signed SSL certificate...")
-                cert_dir.mkdir(exist_ok=True)
+                                cert_dir.mkdir(exist_ok=True)
                 self._generate_self_signed_cert(cert_file, key_file)
                 self.ssl_context.load_cert_chain(cert_file, key_file)
                 
         except Exception as e:
-            logger.error(f"Failed to setup SSL: {e}")
-            self.ssl_context = None
+                        self.ssl_context = None
             self.use_ssl = False
     
     def _generate_self_signed_cert(self, cert_file: Path, key_file: Path):
@@ -471,11 +454,9 @@ class NetworkThread(QThread if GUI_AVAILABLE else threading.Thread):
                     encryption_algorithm=serialization.NoEncryption()
                 ))
             
-            logger.info(f"Generated self-signed certificate: {cert_file}")
-            
+                        
         except ImportError:
-            logger.error("cryptography library not available, cannot generate SSL certificate")
-            raise
+                        raise
     
     def start_server(self):
         """Start the network server"""
@@ -492,8 +473,7 @@ class NetworkThread(QThread if GUI_AVAILABLE else threading.Thread):
             self.start()
             
         except Exception as e:
-            logger.error(f"Failed to start server: {e}")
-            raise
+                        raise
     
     def stop_server(self):
         """Stop the network server"""
@@ -521,13 +501,11 @@ class NetworkThread(QThread if GUI_AVAILABLE else threading.Thread):
                 
             except Exception as e:
                 if self.running:
-                    logger.error(f"Error accepting connection: {e}")
-    
+                        
     def _handle_client(self, client_socket: socket.socket, address: Tuple[str, int]):
         """Handle individual client connection"""
         client_id = f"{address[0]}:{address[1]}"
-        logger.info(f"📱 Device connected: {client_id}")
-        
+                
         if GUI_AVAILABLE:
             self.device_connected.emit(client_id, str(address))
         
@@ -559,18 +537,15 @@ class NetworkThread(QThread if GUI_AVAILABLE else threading.Thread):
                 except socket.timeout:
                     continue
                 except Exception as e:
-                    logger.error(f"Error handling message from {client_id}: {e}")
-                    break
+                                        break
                     
         except Exception as e:
-            logger.error(f"Error handling client {client_id}: {e}")
-        finally:
+                    finally:
             client_socket.close()
             if client_id in self.client_connections:
                 del self.client_connections[client_id]
             
-            logger.info(f"📱 Device disconnected: {client_id}")
-            if GUI_AVAILABLE:
+                        if GUI_AVAILABLE:
                 self.device_disconnected.emit(client_id, "Connection closed")
     
     def _process_message(self, client_id: str, client_socket: socket.socket, message: Dict[str, Any]):
@@ -596,8 +571,7 @@ class NetworkThread(QThread if GUI_AVAILABLE else threading.Thread):
         try:
             client_socket.send(message.encode('utf-8'))
         except Exception as e:
-            logger.error(f"Failed to send message: {e}")
-    
+                
     def broadcast_command(self, command: str, **params):
         """Broadcast command to all connected devices"""
         message = Protocol.create_message(command, **params)
@@ -605,10 +579,8 @@ class NetworkThread(QThread if GUI_AVAILABLE else threading.Thread):
         for client_id, client_socket in self.client_connections.items():
             try:
                 self._send_message(client_socket, message)
-                logger.info(f"📤 Sent {command} to {client_id}")
-            except Exception as e:
-                logger.error(f"Failed to send {command} to {client_id}: {e}")
-
+                            except Exception as e:
+                
 
 class PCController(QMainWindow if GUI_AVAILABLE else object):
     """Main PC Controller application - unified implementation"""
@@ -1036,8 +1008,7 @@ class PCController(QMainWindow if GUI_AVAILABLE else object):
                 self.rgb_label.setPixmap(scaled_pixmap)
                 
             except Exception as e:
-                logger.error(f"Failed to update RGB preview: {e}")
-    
+                    
     def _update_thermal_preview(self, base64_image: str):
         """Update thermal camera preview"""
         if PIL_AVAILABLE and hasattr(self, 'thermal_label'):
@@ -1054,8 +1025,7 @@ class PCController(QMainWindow if GUI_AVAILABLE else object):
                 self.thermal_label.setPixmap(scaled_pixmap)
                 
             except Exception as e:
-                logger.error(f"Failed to update thermal preview: {e}")
-    
+                    
     def _log_message(self, message: str):
         """Add message to session log"""
         timestamp = datetime.now().strftime('%H:%M:%S')
@@ -1064,20 +1034,17 @@ class PCController(QMainWindow if GUI_AVAILABLE else object):
         if hasattr(self, 'log_text'):
             self.log_text.append(log_entry)
         
-        logger.info(message)
-    
+            
     def _run_cli(self):
         """Run in CLI mode when GUI is not available"""
-        logger.info("🖥️ Starting PC Controller in CLI mode")
-        
+                
         # Start network server
         self.network_thread = NetworkThread(self.config['port'], self.config['use_ssl'])
         
         try:
             self.network_thread.start_server()
             
-            logger.info("Server started. Press Ctrl+C to stop.")
-            
+                        
             # Simple CLI loop
             while True:
                 try:
@@ -1086,32 +1053,26 @@ class PCController(QMainWindow if GUI_AVAILABLE else object):
                     if command == 'start':
                         session_id = f"session_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
                         self.network_thread.broadcast_command("start_recording", session_id=session_id)
-                        logger.info(f"Started recording session: {session_id}")
-                    
+                                            
                     elif command == 'stop':
                         self.network_thread.broadcast_command("stop_recording")
-                        logger.info("Stopped recording session")
-                    
+                                            
                     elif command == 'sync':
                         self.network_thread.broadcast_command("sync_request", server_time=time.time())
-                        logger.info("Time synchronization requested")
-                    
+                                            
                     elif command == 'quit':
                         break
                     
                     else:
-                        logger.info("Available commands: start, stop, sync, quit")
-                
+                                        
                 except KeyboardInterrupt:
                     break
                 except Exception as e:
-                    logger.error(f"Command error: {e}")
-        
+                            
         finally:
             if self.network_thread:
                 self.network_thread.stop_server()
-            logger.info("PC Controller stopped")
-
+            
 
 def main():
     """Main entry point"""

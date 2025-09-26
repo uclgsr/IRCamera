@@ -49,7 +49,6 @@ except ImportError:
 
         np = MockNumPy()
 
-from loguru import logger
 
 
 class CameraType(Enum):
@@ -177,8 +176,7 @@ class ChessboardDetector:
                 return False, None
 
         except (OSError, ValueError, RuntimeError) as e:
-            logger.error(f"Error detecting chessboard corners: {e}")
-            return False, None
+                        return False, None
 
 
 class CameraCalibrator:
@@ -202,11 +200,7 @@ class CameraCalibrator:
         self.active_sessions: Dict[str, Dict[str, Any]] = {}
         self.completed_calibrations: Dict[str, CalibrationResult] = {}
 
-        logger.info(
-            "Camera Calibrator initialized with " f"data directory: {self.data_dir}"
-        )
-        logger.info(f"Pattern: {self.pattern_size}, Square size: {self.square_size}mm")
-
+                
     async def start_calibration(
             self, device_id: str, session_id: str, camera_type: CameraType
     ) -> bool:
@@ -215,8 +209,7 @@ class CameraCalibrator:
             calibration_id = f"{device_id}_{camera_type.value}_{session_id}"
 
             if calibration_id in self.active_sessions:
-                logger.warning(f"Calibration already active: {calibration_id}")
-                return False
+                                return False
 
             self.active_sessions[calibration_id] = {
                 "device_id": device_id,
@@ -230,12 +223,10 @@ class CameraCalibrator:
                 "start_time": time.time(),
             }
 
-            logger.info(f"Started calibration session: {calibration_id}")
-            return True
+                        return True
 
         except (OSError, ValueError, RuntimeError) as e:
-            logger.error(f"Failed to start calibration: {e}")
-            return False
+                        return False
 
     async def process_calibration_image(
             self,
@@ -282,10 +273,7 @@ class CameraCalibrator:
                 image_path = self.data_dir / image_filename
                 cv2.imwrite(str(image_path), image)
 
-                logger.info(
-                    f"Calibration image {session_data['images_collected']}accepted for {calibration_id}"
-                )
-
+                
                 return {
                     "success": True,
                     "corners_detected": True,
@@ -295,10 +283,7 @@ class CameraCalibrator:
                                           >= self.min_images,
                 }
             else:
-                logger.debug(
-                    f"No chessboard pattern detectedin image for {calibration_id}"
-                )
-                return {
+                                return {
                     "success": True,
                     "corners_detected": False,
                     "images_collected": session_data["images_collected"],
@@ -307,8 +292,7 @@ class CameraCalibrator:
                 }
 
         except (OSError, ValueError, RuntimeError) as e:
-            logger.error(f"Error processing calibration image: {e}")
-            return {"success": False, "error": str(e)}
+                        return {"success": False, "error": str(e)}
 
     async def finalize_calibration(
             self, device_id: str, session_id: str, camera_type: CameraType
@@ -318,16 +302,12 @@ class CameraCalibrator:
             calibration_id = f"{device_id}_{camera_type.value}_{session_id}"
 
             if calibration_id not in self.active_sessions:
-                logger.error(f"No active calibration session:{calibration_id}")
-                return None
+                                return None
 
             session_data = self.active_sessions[calibration_id]
 
             if session_data["images_collected"] < self.min_images:
-                logger.error(
-                    f"Not enough images for calibration: {session_data['images_collected']}< {self.min_images}"
-                )
-                return None
+                                return None
 
             image_resolution = session_data["image_resolution"]
             object_points = session_data["object_points"]
@@ -342,10 +322,7 @@ class CameraCalibrator:
             )
 
             if not ret or ret > self.target_error:
-                logger.warning(
-                    f"Calibration error is high: {ret:.3f}> {self.target_error}"
-                )
-
+                
             intrinsics = CameraIntrinsics(
                 fx=camera_matrix[0, 0],
                 fy=camera_matrix[1, 1],
@@ -376,16 +353,14 @@ class CameraCalibrator:
             self.completed_calibrations[calibration_id] = result
             del self.active_sessions[calibration_id]
 
-            logger.info(f"Calibration completed: {calibration_id}")
-            logger.info(
+                        logger.info(
                 f"RMS error: {ret:.3f} pixels, Images used: {len(object_points)}"
             )
 
             return result
 
         except (OSError, ValueError, RuntimeError) as e:
-            logger.error(f"Failed to finalize calibration: {e}")
-            return None
+                        return None
 
     def get_calibration_status(
             self, device_id: str, session_id: str, camera_type: Union[CameraType, str]
@@ -431,8 +406,7 @@ class CameraCalibrator:
 
         if calibration_id in self.active_sessions:
             del self.active_sessions[calibration_id]
-            logger.info(f"Canceled calibration session: {calibration_id}")
-            return True
+                        return True
 
         return False
 
@@ -449,8 +423,7 @@ class CameraCalibrator:
     ) -> Optional[StereoCalibration]:
 
         try:
-            logger.info(f"Starting stereo calibration for device {device_id}")
-
+            
             left_intrinsics = left_result.intrinsics
             right_intrinsics = right_result.intrinsics
 
@@ -540,8 +513,7 @@ class CameraCalibrator:
                 ),
             )
 
-            logger.info(f"Stereo calibration completed with RMS error: {ret:.3f}")
-
+            
             R1, R2, P1, P2, Q, roi_left, roi_right = cv2.stereoRectify(
                 camera_matrix_left,
                 dist_coeffs_left,
@@ -575,17 +547,11 @@ class CameraCalibrator:
             left_result.stereo = stereo_calibration
             right_result.stereo = stereo_calibration
 
-            logger.info("Stereo calibration completed successfully")
-            logger.info(f"Baseline: {stereo_calibration.baseline:.2f}mm")
-            logger.info(
-                f"Convergence angle: {stereo_calibration.convergence_angle:.2f}°"
-            )
-
+                                    
             return stereo_calibration
 
         except (OSError, ValueError, RuntimeError) as e:
-            logger.error(f"Failed to perform stereo calibration: {e}")
-            return None
+                        return None
 
     def _generate_realistic_corners(
             self, pattern_size: tuple, image_size: tuple, seed: int

@@ -2,7 +2,6 @@ package mpdc4gsr.sensors.thermal
 
 import android.content.Context
 import android.hardware.usb.UsbDevice
-import android.util.Log
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.Job
@@ -89,15 +88,10 @@ class ThermalCameraErrorRecoveryManager(
                 try {
                     monitorThermalCameraHealth()
                     delay(DEVICE_CHECK_INTERVAL_MS)
-                } catch (e: Exception) {
-                    Log.e(TAG, "Error in device monitoring", e)
-                    delay(10000)
+                } catch (e: Exception) {                    delay(10000)
                 }
             }
-        }
-
-        Log.i(TAG, "Thermal camera error recovery monitoring started")
-    }
+        }    }
 
 
     private suspend fun monitorThermalCameraHealth() {
@@ -112,41 +106,32 @@ class ThermalCameraErrorRecoveryManager(
         if (isInSimulationMode != isSimulationModeActive) {
             isSimulationModeActive = isInSimulationMode
 
-            if (isInSimulationMode) {
-                Log.w(TAG, "⚠️ Thermal camera entered simulation mode")
-                updateErrorState(ThermalErrorState.SIMULATION_MODE)
+            if (isInSimulationMode) {                updateErrorState(ThermalErrorState.SIMULATION_MODE)
                 errorEventListener?.onSimulationModeActivated("Device disconnected or unavailable")
 
 
                 scheduleReconnectionAttempt()
 
-            } else {
-                Log.i(TAG, "✅ Thermal camera exited simulation mode")
-                updateErrorState(ThermalErrorState.NORMAL)
+            } else {                updateErrorState(ThermalErrorState.NORMAL)
                 errorEventListener?.onSimulationModeDeactivated()
                 resetReconnectionState()
             }
         }
 
 
-        if (!isDeviceConnected && !isInSimulationMode) {
-            Log.w(TAG, "Thermal camera device disconnection detected")
-            handleDeviceDisconnection()
+        if (!isDeviceConnected && !isInSimulationMode) {            handleDeviceDisconnection()
         }
 
 
         if (thermalRecorder.isRecording && !isInSimulationMode) {
             val lastFrameReceived = lastFrameTime.get()
-            if (lastFrameReceived > 0 && (currentTime - lastFrameReceived) > FRAME_TIMEOUT_MS) {
-                Log.w(TAG, "Thermal camera frame timeout detected (${currentTime - lastFrameReceived}ms)")
+            if (lastFrameReceived > 0 && (currentTime - lastFrameReceived) > FRAME_TIMEOUT_MS) {")
                 handleFrameTimeout()
             }
         }
 
 
-        if (isDeviceConnected && !hasUsbPermission) {
-            Log.w(TAG, "Thermal camera USB permission lost")
-            updateErrorState(ThermalErrorState.PERMISSION_DENIED)
+        if (isDeviceConnected && !hasUsbPermission) {            updateErrorState(ThermalErrorState.PERMISSION_DENIED)
             errorEventListener?.onErrorStateChanged(ThermalErrorState.PERMISSION_DENIED)
         }
     }
@@ -155,10 +140,7 @@ class ThermalCameraErrorRecoveryManager(
     private suspend fun handleDeviceDisconnection() {
         if (currentErrorState == ThermalErrorState.DISCONNECTED) {
             return
-        }
-
-        Log.w(TAG, "Handling thermal camera disconnection")
-        updateErrorState(ThermalErrorState.DISCONNECTED)
+        }        updateErrorState(ThermalErrorState.DISCONNECTED)
 
         val previousDevice = lastKnownDevice
         errorEventListener?.onThermalCameraDisconnected(previousDevice)
@@ -169,13 +151,7 @@ class ThermalCameraErrorRecoveryManager(
 
 
     private suspend fun handleFrameTimeout() {
-        val failureCount = consecutiveFrameFailures.incrementAndGet()
-
-        Log.w(TAG, "Frame timeout detected - consecutive failures: $failureCount")
-
-        if (failureCount >= MAX_CONSECUTIVE_FRAME_FAILURES) {
-            Log.e(TAG, "Too many consecutive frame failures - triggering recovery")
-            updateErrorState(ThermalErrorState.COMMUNICATION_ERROR)
+        val failureCount = consecutiveFrameFailures.incrementAndGet()        if (failureCount >= MAX_CONSECUTIVE_FRAME_FAILURES) {            updateErrorState(ThermalErrorState.COMMUNICATION_ERROR)
 
 
             consecutiveFrameFailures.set(0)
@@ -185,15 +161,11 @@ class ThermalCameraErrorRecoveryManager(
 
 
     private suspend fun scheduleReconnectionAttempt() {
-        if (isRecoveryActive.get()) {
-            Log.d(TAG, "Recovery already active, skipping new attempt")
-            return
+        if (isRecoveryActive.get()) {            return
         }
 
         val currentAttempts = reconnectionAttempts.get()
-        if (currentAttempts >= MAX_RECONNECTION_ATTEMPTS) {
-            Log.e(TAG, "Maximum reconnection attempts reached - giving up")
-            updateErrorState(ThermalErrorState.RECOVERY_FAILED)
+        if (currentAttempts >= MAX_RECONNECTION_ATTEMPTS) {            updateErrorState(ThermalErrorState.RECOVERY_FAILED)
             errorEventListener?.onReconnectionFailed("Maximum attempts exceeded")
             return
         }
@@ -215,10 +187,7 @@ class ThermalCameraErrorRecoveryManager(
         val backoffDelay = minOf(
             INITIAL_RECONNECTION_DELAY_MS * (1 shl (attemptNumber - 1)),
             MAX_RECONNECTION_DELAY_MS
-        )
-
-        Log.i(TAG, "Attempting thermal camera reconnection #$attemptNumber after ${backoffDelay}ms delay")
-        errorEventListener?.onReconnectionAttempt(attemptNumber, MAX_RECONNECTION_ATTEMPTS)
+        )        errorEventListener?.onReconnectionAttempt(attemptNumber, MAX_RECONNECTION_ATTEMPTS)
 
 
         delay(backoffDelay)
@@ -227,22 +196,14 @@ class ThermalCameraErrorRecoveryManager(
             withTimeout(CONNECTION_TIMEOUT_MS) {
                 val reconnectionSuccess = performThermalCameraReconnection()
 
-                if (reconnectionSuccess) {
-                    Log.i(TAG, "✅ Thermal camera reconnection successful!")
-                    handleSuccessfulReconnection()
-                } else {
-                    Log.w(TAG, "❌ Thermal camera reconnection failed")
-                    handleFailedReconnection()
+                if (reconnectionSuccess) {                    handleSuccessfulReconnection()
+                } else {                    handleFailedReconnection()
                 }
             }
 
-        } catch (e: TimeoutCancellationException) {
-            Log.w(TAG, "Thermal camera reconnection timed out")
-            handleFailedReconnection()
+        } catch (e: TimeoutCancellationException) {            handleFailedReconnection()
 
-        } catch (e: Exception) {
-            Log.e(TAG, "Error during thermal camera reconnection", e)
-            handleFailedReconnection()
+        } catch (e: Exception) {            handleFailedReconnection()
 
         } finally {
             isRecoveryActive.set(false)
@@ -252,33 +213,21 @@ class ThermalCameraErrorRecoveryManager(
 
 
     private suspend fun performThermalCameraReconnection(): Boolean {
-        return try {
-            Log.d(TAG, "Performing thermal camera reconnection sequence")
-
-
-            delay(1000)
+        return try {            delay(1000)
 
 
             val isAvailable = thermalRecorder.checkThermalCameraAvailability()
-            if (!isAvailable) {
-                Log.w(TAG, "No thermal camera device found during reconnection")
-                return false
+            if (!isAvailable) {                return false
             }
 
 
             val reinitSuccess = thermalRecorder.reinitializeThermalCamera()
-            if (!reinitSuccess) {
-                Log.w(TAG, "Failed to reinitialize thermal camera")
-                return false
+            if (!reinitSuccess) {                return false
             }
 
 
-            if (thermalRecorder.isRecording) {
-                Log.d(TAG, "Restarting thermal recording on reconnected device")
-                val restartSuccess = thermalRecorder.restartThermalRecording()
-                if (!restartSuccess) {
-                    Log.w(TAG, "Failed to restart recording on reconnected device")
-                    return false
+            if (thermalRecorder.isRecording) {                val restartSuccess = thermalRecorder.restartThermalRecording()
+                if (!restartSuccess) {                    return false
                 }
             }
 
@@ -286,26 +235,16 @@ class ThermalCameraErrorRecoveryManager(
             delay(2000)
             val isWorking = thermalRecorder.isIRCameraConnected && !thermalRecorder.isSimulationMode
 
-            if (isWorking) {
-                Log.i(TAG, "Thermal camera reconnection verified successful")
-                return true
-            } else {
-                Log.w(TAG, "Thermal camera reconnection verification failed")
-                return false
+            if (isWorking) {                return true
+            } else {                return false
             }
 
-        } catch (e: Exception) {
-            Log.e(TAG, "Exception during thermal camera reconnection", e)
-            false
+        } catch (e: Exception) {            false
         }
     }
 
 
-    private fun handleSuccessfulReconnection() {
-        Log.i(TAG, "Thermal camera successfully reconnected")
-
-
-        resetReconnectionState()
+    private fun handleSuccessfulReconnection() {        resetReconnectionState()
         updateErrorState(ThermalErrorState.NORMAL)
 
 
@@ -320,18 +259,9 @@ class ThermalCameraErrorRecoveryManager(
 
 
     private fun handleFailedReconnection() {
-        val currentAttempts = reconnectionAttempts.get()
-
-        Log.w(TAG, "Thermal camera reconnection attempt $currentAttempts failed")
-
-        if (currentAttempts >= MAX_RECONNECTION_ATTEMPTS) {
-            Log.e(TAG, "All thermal camera reconnection attempts exhausted")
-            updateErrorState(ThermalErrorState.RECOVERY_FAILED)
+        val currentAttempts = reconnectionAttempts.get()        if (currentAttempts >= MAX_RECONNECTION_ATTEMPTS) {            updateErrorState(ThermalErrorState.RECOVERY_FAILED)
             errorEventListener?.onReconnectionFailed("All reconnection attempts failed")
-        } else {
-            Log.i(
-                TAG,
-                "Will retry thermal camera reconnection (${MAX_RECONNECTION_ATTEMPTS - currentAttempts} attempts remaining)"
+        } else {"
             )
             updateErrorState(ThermalErrorState.DISCONNECTED)
 
@@ -356,10 +286,7 @@ class ThermalCameraErrorRecoveryManager(
     private fun updateErrorState(newState: ThermalErrorState) {
         if (currentErrorState != newState) {
             val previousState = currentErrorState
-            currentErrorState = newState
-
-            Log.i(TAG, "Thermal error state changed: $previousState -> $newState")
-            errorEventListener?.onErrorStateChanged(newState)
+            currentErrorState = newState            errorEventListener?.onErrorStateChanged(newState)
 
 
             EventBus.getDefault().post(ThermalErrorStateChangedEvent(previousState, newState))
@@ -387,9 +314,7 @@ class ThermalCameraErrorRecoveryManager(
 
 
     fun forceReconnectionAttempt() {
-        lifecycleOwner.lifecycleScope.launch {
-            Log.i(TAG, "Manual thermal camera reconnection requested")
-            reconnectionAttempts.set(0)
+        lifecycleOwner.lifecycleScope.launch {            reconnectionAttempts.set(0)
             scheduleReconnectionAttempt()
         }
     }
@@ -398,9 +323,7 @@ class ThermalCameraErrorRecoveryManager(
     fun cleanup() {
         deviceMonitorJob?.cancel()
         reconnectionJob?.cancel()
-        errorEventListener = null
-        Log.i(TAG, "Thermal camera error recovery manager cleaned up")
-    }
+        errorEventListener = null    }
 
 
     enum class ThermalErrorState {

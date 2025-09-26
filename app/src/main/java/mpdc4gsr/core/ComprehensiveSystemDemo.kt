@@ -1,7 +1,6 @@
 package mpdc4gsr.core
 
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.ProgressBar
@@ -56,11 +55,7 @@ class ComprehensiveSystemDemo : AppCompatActivity() {
     private var currentSessionId: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        Log.i(TAG, "=== Starting Comprehensive System Demo ===")
-
-        setupUI()
+        super.onCreate(savedInstanceState)        setupUI()
         initializeSystemComponents()
 
 
@@ -167,9 +162,7 @@ class ComprehensiveSystemDemo : AppCompatActivity() {
 
             addLog("System components created successfully")
         } catch (e: Exception) {
-            addLog("ERROR: Failed to create system components: ${e.message}")
-            Log.e(TAG, "Failed to initialize system components", e)
-        }
+            addLog("ERROR: Failed to create system components: ${e.message}")        }
     }
 
     private fun initializeSystemDemo() {
@@ -239,9 +232,7 @@ class ComprehensiveSystemDemo : AppCompatActivity() {
 
             } catch (e: Exception) {
                 addLog("❌ System initialization failed: ${e.message}")
-                updateStatus("Initialization Failed")
-                Log.e(TAG, "System initialization failed", e)
-            }
+                updateStatus("Initialization Failed")            }
         }
     }
 
@@ -338,9 +329,7 @@ class ComprehensiveSystemDemo : AppCompatActivity() {
 
             } catch (e: Exception) {
                 addLog("❌ Recording start failed: ${e.message}")
-                updateStatus("Recording Error")
-                Log.e(TAG, "Failed to start recording", e)
-            }
+                updateStatus("Recording Error")            }
         }
     }
 
@@ -379,9 +368,7 @@ class ComprehensiveSystemDemo : AppCompatActivity() {
 
             } catch (e: Exception) {
                 addLog("❌ Recording stop failed: ${e.message}")
-                updateStatus("Stop Error")
-                Log.e(TAG, "Failed to stop recording", e)
-            }
+                updateStatus("Stop Error")            }
         }
     }
 
@@ -419,9 +406,7 @@ class ComprehensiveSystemDemo : AppCompatActivity() {
                 }
 
             } catch (e: Exception) {
-                addLog("❌ Network test failed: ${e.message}")
-                Log.e(TAG, "Network test failed", e)
-            }
+                addLog("❌ Network test failed: ${e.message}")            }
         }
     }
 
@@ -451,9 +436,7 @@ class ComprehensiveSystemDemo : AppCompatActivity() {
                     )
 
                     delay(10000)
-                } catch (e: Exception) {
-                    Log.w(TAG, "Status monitoring error", e)
-                    break
+                } catch (e: Exception) {                    break
                 }
             }
         }
@@ -485,9 +468,7 @@ class ComprehensiveSystemDemo : AppCompatActivity() {
                         }
                     }
                 }
-            } catch (e: Exception) {
-                Log.w(TAG, "Error monitoring failed", e)
-            }
+            } catch (e: Exception) {            }
         }
     }
 
@@ -560,11 +541,7 @@ class ComprehensiveSystemDemo : AppCompatActivity() {
 
     private fun addLog(message: String) {
         val timestamp = SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(Date())
-        val logMessage = "[$timestamp] $message"
-
-        Log.i(TAG, message)
-
-        runOnUiThread {
+        val logMessage = "[$timestamp] $message"        runOnUiThread {
             val currentText = logText.text.toString()
             logText.text = if (currentText.isEmpty()) {
                 logMessage
@@ -592,11 +569,6 @@ class ComprehensiveSystemDemo : AppCompatActivity() {
                 if (isRecording) {
                     recordingController.stopRecording()
                 }
-            } catch (e: Exception) {
-                Log.w(TAG, "Error stopping recording on destroy", e)
-            }
-        }
-
-        Log.i(TAG, "=== Comprehensive System Demo Destroyed ===")
-    }
+            } catch (e: Exception) {            }
+        }    }
 }

@@ -1,7 +1,6 @@
 package mpdc4gsr.test
 
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import androidx.activity.ComponentActivity
@@ -112,10 +111,7 @@ class ParallelRecordingTestActivity : ComponentActivity() {
     private fun initializeSensors() {
         lifecycleScope.launch {
             try {
-                statusText.text = "Initializing sensors..."
-                Log.i(TAG, "Starting sensor initialization")
-
-                val success = recordingController.initializeSensors()
+                statusText.text = "Initializing sensors..."                val success = recordingController.initializeSensors()
 
                 if (success) {
                     val summary = recordingController.getSensorStatusSummary()
@@ -126,20 +122,10 @@ class ParallelRecordingTestActivity : ComponentActivity() {
 
                     startButton.isEnabled = true
                     testButton.isEnabled = true
-                    initializeButton.isEnabled = false
-
-                    Log.i(
-                        TAG,
-                        "Sensor initialization successful: ${summary.totalSensorsInitialized} sensors"
-                    )
-                } else {
-                    statusText.text = "Sensor initialization failed - no sensors available"
-                    Log.e(TAG, "All sensor initialization failed")
-                }
+                    initializeButton.isEnabled = false                } else {
+                    statusText.text = "Sensor initialization failed - no sensors available"                }
             } catch (e: Exception) {
-                statusText.text = "Initialization error: ${e.message}"
-                Log.e(TAG, "Sensor initialization error", e)
-            }
+                statusText.text = "Initialization error: ${e.message}"            }
         }
     }
 
@@ -161,17 +147,10 @@ class ParallelRecordingTestActivity : ComponentActivity() {
 
                     startButton.isEnabled = false
                     stopButton.isEnabled = true
-                    testButton.isEnabled = false
-
-                    Log.i(TAG, "Recording started with ${summary.totalSensorsRecording} sensors")
-                } else {
-                    statusText.text = "Failed to start recording - no sensors available"
-                    Log.e(TAG, "Recording start failed")
-                }
+                    testButton.isEnabled = false                } else {
+                    statusText.text = "Failed to start recording - no sensors available"                }
             } catch (e: Exception) {
-                statusText.text = "Recording start error: ${e.message}"
-                Log.e(TAG, "Recording start error", e)
-            }
+                statusText.text = "Recording start error: ${e.message}"            }
         }
     }
 
@@ -190,17 +169,10 @@ class ParallelRecordingTestActivity : ComponentActivity() {
 
                     startButton.isEnabled = true
                     stopButton.isEnabled = false
-                    testButton.isEnabled = true
-
-                    Log.i(TAG, "Recording stopped successfully")
-                } else {
-                    statusText.text = "Warning: Some sensors may not have stopped cleanly"
-                    Log.w(TAG, "Recording stop had issues")
-                }
+                    testButton.isEnabled = true                } else {
+                    statusText.text = "Warning: Some sensors may not have stopped cleanly"                }
             } catch (e: Exception) {
-                statusText.text = "Recording stop error: ${e.message}"
-                Log.e(TAG, "Recording stop error", e)
-            }
+                statusText.text = "Recording stop error: ${e.message}"            }
         }
     }
 
@@ -220,12 +192,8 @@ class ParallelRecordingTestActivity : ComponentActivity() {
                         }
                     }
 
-                statusText.text = resultText
-                Log.i(TAG, "Sensor test complete: $testResults")
-            } catch (e: Exception) {
-                statusText.text = "Sensor test error: ${e.message}"
-                Log.e(TAG, "Sensor test error", e)
-            }
+                statusText.text = resultText            } catch (e: Exception) {
+                statusText.text = "Sensor test error: ${e.message}"            }
         }
     }
 
@@ -240,9 +208,7 @@ class ParallelRecordingTestActivity : ComponentActivity() {
         lifecycleScope.launch {
             try {
                 recordingController.cleanup()
-            } catch (e: Exception) {
-                Log.e(TAG, "Cleanup error", e)
-            }
+            } catch (e: Exception) {            }
         }
     }
 }

@@ -1,6 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.activity
 
-import android.util.Log
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -49,10 +48,7 @@ class ThermalActivity : BaseActivity() {
         menuAdapter.initType(1)
         menuAdapter.listener =
             object : MenuTabAdapter.OnItemClickListener {
-                override fun onClick(index: Int) {
-
-                    Log.w("123", "index: $index")
-                    EventBus.getDefault().post(ThermalActionEvent(action = index))
+                override fun onClick(index: Int) {                    EventBus.getDefault().post(ThermalActionEvent(action = index))
                 }
             }
     }

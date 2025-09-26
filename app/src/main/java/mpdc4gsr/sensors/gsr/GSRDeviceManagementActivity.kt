@@ -8,7 +8,6 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
@@ -112,16 +111,12 @@ class GSRDeviceManagementActivity : AppCompatActivity(), View.OnClickListener {
         bluetoothManager = getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager?
         bluetoothAdapter = bluetoothManager?.adapter
 
-        if (bluetoothAdapter == null) {
-            Log.e(TAG, "Bluetooth not supported on this device")
-            showErrorMessage("Bluetooth not supported on this device")
+        if (bluetoothAdapter == null) {            showErrorMessage("Bluetooth not supported on this device")
             finish()
             return
         }
 
-        if (!bluetoothAdapter!!.isEnabled) {
-            Log.w(TAG, "Bluetooth is disabled. User should enable it.")
-            showBluetoothEnableDialog()
+        if (!bluetoothAdapter!!.isEnabled) {            showBluetoothEnableDialog()
         }
 
         initializeUI()
@@ -158,14 +153,10 @@ class GSRDeviceManagementActivity : AppCompatActivity(), View.OnClickListener {
             ) { permissions ->
                 val allGranted = permissions.values.all { it }
 
-                if (allGranted) {
-                    Log.i(TAG, "All required permissions granted")
-                    enableDeviceOperations(true)
+                if (allGranted) {                    enableDeviceOperations(true)
                     pendingOperation?.invoke()
                     pendingOperation = null
-                } else {
-                    Log.w(TAG, "Some permissions were denied")
-                    showPermissionRequiredDialog()
+                } else {                    showPermissionRequiredDialog()
                     enableDeviceOperations(false)
                 }
             }
@@ -185,16 +176,10 @@ class GSRDeviceManagementActivity : AppCompatActivity(), View.OnClickListener {
                 )
                 val initialized = gsrSensorRecorder?.initialize() ?: false
 
-                if (initialized) {
-                    Log.i(TAG, "GSR sensor recorder initialized successfully")
-                    enableDeviceOperations(hasBluetoothPermissions(this@GSRDeviceManagementActivity))
-                } else {
-                    Log.w(TAG, "GSR sensor recorder initialization failed")
-                    showErrorMessage("Failed to initialize GSR system")
+                if (initialized) {                    enableDeviceOperations(hasBluetoothPermissions(this@GSRDeviceManagementActivity))
+                } else {                    showErrorMessage("Failed to initialize GSR system")
                 }
-            } catch (e: Exception) {
-                Log.e(TAG, "Error initializing GSR components", e)
-                showErrorMessage("Error initializing GSR system: ${e.message}")
+            } catch (e: Exception) {                showErrorMessage("Error initializing GSR system: ${e.message}")
             }
         }
     }
@@ -214,12 +199,7 @@ class GSRDeviceManagementActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun loadSavedDevices() {
         try {
-            val savedDevicesJson = prefs.getString("saved_devices", "[]")
-
-            Log.i(TAG, "Loaded saved devices configuration")
-        } catch (e: Exception) {
-            Log.w(TAG, "Failed to load saved devices", e)
-        }
+            val savedDevicesJson = prefs.getString("saved_devices", "[]")        } catch (e: Exception) {        }
     }
 
     override fun onClick(v: View?) {
@@ -239,20 +219,13 @@ class GSRDeviceManagementActivity : AppCompatActivity(), View.OnClickListener {
             return
         }
 
-        if (isScanning) {
-            Log.w(TAG, "Device scan already in progress")
-            return
+        if (isScanning) {            return
         }
 
         lifecycleScope.launch {
             try {
                 isScanning = true
-                updateScanningState(true)
-
-                Log.i(TAG, "Starting GSR device scan")
-
-
-                discoveredDevices.clear()
+                updateScanningState(true)                discoveredDevices.clear()
                 deviceAdapter.notifyDataSetChanged()
                 updateDeviceListState()
 
@@ -275,16 +248,8 @@ class GSRDeviceManagementActivity : AppCompatActivity(), View.OnClickListener {
 
                     discoveredDevices.add(deviceInfo)
                     deviceAdapter.notifyItemInserted(discoveredDevices.size - 1)
-                    updateDeviceListState()
-
-                    Log.d(TAG, "Discovered GSR device: $deviceName")
-                }
-
-                Log.i(TAG, "Device scan completed. Found ${devices.size} devices")
-                showToast("Found ${devices.size} GSR devices")
-            } catch (e: Exception) {
-                Log.e(TAG, "Device scan failed", e)
-                showErrorMessage("Device scan failed: ${e.message}")
+                    updateDeviceListState()                }                showToast("Found ${devices.size} GSR devices")
+            } catch (e: Exception) {                showErrorMessage("Device scan failed: ${e.message}")
             } finally {
                 isScanning = false
                 updateScanningState(false)
@@ -296,9 +261,7 @@ class GSRDeviceManagementActivity : AppCompatActivity(), View.OnClickListener {
         if (!isScanning) return
 
         isScanning = false
-        updateScanningState(false)
-        Log.i(TAG, "Device scan stopped by user")
-        showToast("Device scan stopped")
+        updateScanningState(false)        showToast("Device scan stopped")
     }
 
     private fun refreshDeviceList() {
@@ -318,19 +281,12 @@ class GSRDeviceManagementActivity : AppCompatActivity(), View.OnClickListener {
                     updateConnectionStatus("Connected to ${connectedDevice.name}")
                 } else {
                     updateConnectionStatus("Not Connected")
-                }
-
-                Log.i(TAG, "Device list refreshed")
-            } catch (e: Exception) {
-                Log.w(TAG, "Failed to refresh device list", e)
-            }
+                }            } catch (e: Exception) {            }
         }
     }
 
     private fun connectToDevice(device: GSRDeviceInfo) {
-        if (isConnecting) {
-            Log.w(TAG, "Connection already in progress")
-            return
+        if (isConnecting) {            return
         }
 
         if (!hasBluetoothPermissions(this)) {
@@ -348,31 +304,19 @@ class GSRDeviceManagementActivity : AppCompatActivity(), View.OnClickListener {
         lifecycleScope.launch {
             try {
                 isConnecting = true
-                updateConnectionStatus("Connecting to ${device.name}...")
-
-                Log.i(TAG, "Attempting to connect to GSR device: ${device.name}")
-
-                val success = gsrSensorRecorder?.connectToShimmerDevice(device.address) ?: false
+                updateConnectionStatus("Connecting to ${device.name}...")                val success = gsrSensorRecorder?.connectToShimmerDevice(device.address) ?: false
 
                 if (success) {
                     device.isConnected = true
                     updateConnectionStatus("Connected to ${device.name}")
                     saveDeviceConnection(device)
-                    showToast("Successfully connected to ${device.name}")
-
-                    Log.i(TAG, "Successfully connected to GSR device: ${device.name}")
-                } else {
+                    showToast("Successfully connected to ${device.name}")                } else {
                     device.isConnected = false
                     updateConnectionStatus("Connection failed")
-                    showErrorMessage("Failed to connect to ${device.name}")
-
-                    Log.w(TAG, "Failed to connect to GSR device: ${device.name}")
-                }
+                    showErrorMessage("Failed to connect to ${device.name}")                }
 
                 deviceAdapter.notifyDataSetChanged()
-            } catch (e: Exception) {
-                Log.e(TAG, "Connection attempt failed", e)
-                device.isConnected = false
+            } catch (e: Exception) {                device.isConnected = false
                 updateConnectionStatus("Connection error")
                 showErrorMessage("Connection error: ${e.message}")
                 deviceAdapter.notifyDataSetChanged()
@@ -390,9 +334,7 @@ class GSRDeviceManagementActivity : AppCompatActivity(), View.OnClickListener {
                 try {
                     val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
                     startActivity(enableBtIntent)
-                } catch (e: Exception) {
-                    Log.e(TAG, "Failed to start Bluetooth enable intent", e)
-                    showErrorMessage("Could not open Bluetooth settings")
+                } catch (e: Exception) {                    showErrorMessage("Could not open Bluetooth settings")
                 }
             }
             .setNegativeButton("Cancel") { _, _ ->
@@ -405,21 +347,14 @@ class GSRDeviceManagementActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun checkDevicePairingStatus(device: GSRDeviceInfo) {
         try {
-            if (!hasBluetoothPermissions(this)) {
-                Log.w(TAG, "Cannot check pairing status without Bluetooth permissions")
-                return
+            if (!hasBluetoothPermissions(this)) {                return
             }
 
             val bluetoothDevice = bluetoothAdapter?.getRemoteDevice(device.address)
-            if (bluetoothDevice == null) {
-                Log.w(TAG, "Could not get Bluetooth device for address: ${device.address}")
-                return
+            if (bluetoothDevice == null) {                return
             }
 
-            val isPaired = bluetoothDevice.bondState == BluetoothDevice.BOND_BONDED
-            Log.d(
-                TAG,
-                "Device ${device.name} pairing status: ${if (isPaired) "Paired" else "Not paired"}"
+            val isPaired = bluetoothDevice.bondState == BluetoothDevice.BOND_BONDED"Paired" else "Not paired"}"
             )
 
             if (!isPaired) {
@@ -429,12 +364,8 @@ class GSRDeviceManagementActivity : AppCompatActivity(), View.OnClickListener {
                 proceedWithConnection(device)
             }
 
-        } catch (e: SecurityException) {
-            Log.e(TAG, "Security exception checking device pairing status", e)
-            showErrorMessage("Bluetooth permissions required to check device pairing")
-        } catch (e: Exception) {
-            Log.e(TAG, "Error checking device pairing status", e)
-            showErrorMessage("Error checking device pairing status")
+        } catch (e: SecurityException) {            showErrorMessage("Bluetooth permissions required to check device pairing")
+        } catch (e: Exception) {            showErrorMessage("Error checking device pairing status")
         }
     }
 
@@ -458,17 +389,9 @@ class GSRDeviceManagementActivity : AppCompatActivity(), View.OnClickListener {
                     initiateDevicePairing(deviceInfo, bluetoothDevice)
                 }
                 return
-            }
-
-            Log.i(TAG, "Initiating pairing for device: ${deviceInfo.name}")
-
-            val pairingResult = bluetoothDevice.createBond()
+            }            val pairingResult = bluetoothDevice.createBond()
             if (pairingResult) {
-                showToast("Pairing request sent. Please confirm on the device.")
-                Log.i(TAG, "Pairing request sent for ${deviceInfo.name}")
-
-
-                lifecycleScope.launch {
+                showToast("Pairing request sent. Please confirm on the device.")                lifecycleScope.launch {
                     delay(5000)
                     if (bluetoothDevice.bondState == BluetoothDevice.BOND_BONDED) {
                         showToast("Device paired successfully!")
@@ -478,16 +401,10 @@ class GSRDeviceManagementActivity : AppCompatActivity(), View.OnClickListener {
                     }
                 }
             } else {
-                showErrorMessage("Failed to initiate device pairing")
-                Log.w(TAG, "Failed to create bond for device: ${deviceInfo.name}")
-            }
+                showErrorMessage("Failed to initiate device pairing")            }
 
-        } catch (e: SecurityException) {
-            Log.e(TAG, "Security exception during device pairing", e)
-            showErrorMessage("Bluetooth permissions required for device pairing")
-        } catch (e: Exception) {
-            Log.e(TAG, "Error initiating device pairing", e)
-            showErrorMessage("Error during device pairing: ${e.message}")
+        } catch (e: SecurityException) {            showErrorMessage("Bluetooth permissions required for device pairing")
+        } catch (e: Exception) {            showErrorMessage("Error during device pairing: ${e.message}")
         }
     }
 
@@ -610,9 +527,7 @@ class GSRDeviceManagementActivity : AppCompatActivity(), View.OnClickListener {
         lifecycleScope.launch {
             try {
                 gsrSensorRecorder?.cleanup()
-            } catch (e: Exception) {
-                Log.w(TAG, "Error during GSR cleanup", e)
-            }
+            } catch (e: Exception) {            }
         }
     }
 }

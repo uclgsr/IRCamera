@@ -8,7 +8,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.IBinder
-import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.mpdc4gsr.gsr.model.GSRSample
 import com.mpdc4gsr.gsr.model.SessionInfo
@@ -79,14 +78,10 @@ class MultiModalRecordingService : Service() {
 
     private val gsrListener =
         object : GSRRecorder.GSRRecordingListener {
-            override fun onRecordingStarted(sessionInfo: SessionInfo) {
-                Log.i(TAG, "GSR recording started: ${sessionInfo.sessionId}")
-                updateNotification("Recording GSR data...")
+            override fun onRecordingStarted(sessionInfo: SessionInfo) {                updateNotification("Recording GSR data...")
             }
 
-            override fun onRecordingStopped(sessionInfo: SessionInfo) {
-                Log.i(TAG, "GSR recording stopped: ${sessionInfo.sessionId}")
-                isRecording = false
+            override fun onRecordingStopped(sessionInfo: SessionInfo) {                isRecording = false
                 currentSessionId = null
                 stopForeground(STOP_FOREGROUND_REMOVE)
                 stopSelf()
@@ -99,14 +94,9 @@ class MultiModalRecordingService : Service() {
                 }
             }
 
-            override fun onSyncMarkAdded(syncMark: SyncMark) {
-                Log.d(TAG, "Sync mark added: ${syncMark.eventType}")
-            }
+            override fun onSyncMarkAdded(syncMark: SyncMark) {            }
 
-            override fun onError(error: String) {
-                Log.e(TAG, "GSR recording error: $error")
-
-            }
+            override fun onError(error: String) {            }
         }
 
     override fun onCreate() {
@@ -114,9 +104,7 @@ class MultiModalRecordingService : Service() {
         gsrRecorder = GSRRecorder(this, ShimmerDeviceFactoryResolver.createFactory(this))
         sessionManager = SessionManager.getInstance(this)
         gsrRecorder.addListener(gsrListener)
-        createNotificationChannel()
-        Log.d(TAG, "MultiModalRecordingService created")
-    }
+        createNotificationChannel()    }
 
     override fun onStartCommand(
         intent: Intent?,
@@ -152,9 +140,7 @@ class MultiModalRecordingService : Service() {
         participantId: String?,
         studyName: String?,
     ) {
-        if (isRecording) {
-            Log.w(TAG, "Recording already in progress")
-            return
+        if (isRecording) {            return
         }
 
         sessionManager.createSession(sessionId, participantId, studyName)
@@ -164,36 +150,23 @@ class MultiModalRecordingService : Service() {
         CoroutineScope(Dispatchers.IO).launch {
             if (gsrRecorder.startRecording(sessionId, participantId, studyName)) {
                 isRecording = true
-                currentSessionId = sessionId
-                Log.i(TAG, "Multi-modal recording started: $sessionId")
-            } else {
-                Log.e(TAG, "Failed to start GSR recording")
-                stopSelf()
+                currentSessionId = sessionId            } else {                stopSelf()
             }
         }
     }
 
     private fun stopRecording() {
-        if (!isRecording) {
-            Log.w(TAG, "No recording in progress")
-            return
+        if (!isRecording) {            return
         }
 
         val session = gsrRecorder.stopRecording()
         session?.let {
             sessionManager.completeSession(it.sessionId)
-        }
-
-        Log.i(TAG, "Multi-modal recording stopped")
-    }
+        }    }
 
     private fun triggerSyncEvent(eventType: String) {
         if (isRecording) {
-            gsrRecorder.triggerSyncEvent(eventType)
-            Log.d(TAG, "Sync event triggered: $eventType")
-        } else {
-            Log.w(TAG, "Cannot trigger sync event - not recording")
-        }
+            gsrRecorder.triggerSyncEvent(eventType)        } else {        }
     }
 
     private fun createNotificationChannel() {
@@ -234,7 +207,5 @@ class MultiModalRecordingService : Service() {
         gsrRecorder.removeListener(gsrListener)
         if (isRecording) {
             stopRecording()
-        }
-        Log.d(TAG, "MultiModalRecordingService destroyed")
-    }
+        }    }
 }

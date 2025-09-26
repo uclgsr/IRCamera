@@ -3,7 +3,6 @@ import jsonschema
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from enum import Enum
-from loguru import logger
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
@@ -54,14 +53,11 @@ class ProtocolManager:
             logger.info(f"Protocol definition loaded: {self.get_protocol_info()}")
 
         except FileNotFoundError:
-            logger.error(f"Protocol file not found: {self._protocol_file}")
-            raise
+                        raise
         except json.JSONDecodeError as e:
-            logger.error(f"Invalid JSON in protocol file: {e}")
-            raise
+                        raise
         except (OSError, ValueError, RuntimeError) as e:
-            logger.error(f"Failed to load protocol definition: {e}")
-            raise
+                        raise
 
     def _parse_message_definitions(self) -> None:
 
@@ -135,15 +131,13 @@ class ProtocolManager:
             if strict:
                 raise ValidationError(error_msg)
             else:
-                logger.warning(error_msg)
-                return False
+                                return False
         except (OSError, ValueError, RuntimeError) as e:
             error_msg = f"Unexpected validation error: {e}"
             if strict:
                 raise ValidationError(error_msg)
             else:
-                logger.error(error_msg)
-                return False
+                                return False
 
     def _get_validator(
             self, message_type: str, schema: Dict[str, Any]
@@ -212,8 +206,7 @@ class ProtocolManager:
             tolerance = abs((timestamp - now).total_seconds() * 1000)
 
             if tolerance > tolerance_ms:
-                logger.warning(f"Timestamp tolerance exceeded: {tolerance:.0f}ms")
-
+                
         except ValueError as e:
             raise ValidationError(f"Invalid timestamp format: {e}")
 
@@ -247,8 +240,7 @@ class ProtocolManager:
         self._message_definitions.clear()
         self._validator_cache.clear()
         self._load_protocol()
-        logger.info("Protocol definition reloaded")
-
+        
 
 _protocol_manager: Optional[ProtocolManager] = None
 

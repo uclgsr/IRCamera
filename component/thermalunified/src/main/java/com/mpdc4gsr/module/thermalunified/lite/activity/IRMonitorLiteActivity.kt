@@ -1,13 +1,11 @@
 package com.mpdc4gsr.module.thermalunified.lite.activity
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.ViewTreeObserver
 import android.view.WindowManager
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
-import com.elvishew.xlog.XLog
 import com.energy.ac020library.bean.IrcmdError
 import com.energy.irutilslibrary.LibIRTempAC020
 import com.energy.irutilslibrary.bean.GainStatus
@@ -118,10 +116,8 @@ open class IRMonitorLiteActivity : BaseActivity(), View.OnClickListener, ITsTemp
                         if (isFirstRead) {
                             if (result.maxTemperature > 200f || result.minTemperature < -200f) {
                                 errorReadCount++
-                                XLog.w("[ph] $errorReadCount [ph][ph][ph][ph][ph][ph][ph][ph]，max = ${result.maxTemperature} min = ${result.minTemperature}")
-                                if (errorReadCount > 10) {
-                                    XLog.i("[ph][ph]10[ph][ph][ph][ph][ph][ph][ph][ph]，[ph][ph][ph][ph][ph][ph][ph][ph]")
-                                    isFirstRead = false
+                                X                                if (errorReadCount > 10) {
+                                    X                                    isFirstRead = false
                                 }
                                 continue
                             } else {
@@ -203,8 +199,7 @@ open class IRMonitorLiteActivity : BaseActivity(), View.OnClickListener, ITsTemp
                             TimeTool.showVideoLongTime(System.currentTimeMillis() - startTime)
                     }
                 }
-                XLog.w("[ph][ph][ph][ph], [ph][ph][ph]:$time")
-            }
+                X            }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -268,7 +263,7 @@ open class IRMonitorLiteActivity : BaseActivity(), View.OnClickListener, ITsTemp
 
     fun select(selectIndex: SelectPositionBean?) {
         this.selectIndex = selectIndex
-        XLog.i("[ph][ph][ph][ph][ph][ph]：${Gson().toJson(selectIndex)}")
+        X.toJson(selectIndex)}")
     }
 
     private fun updateUI() {
@@ -305,8 +300,7 @@ open class IRMonitorLiteActivity : BaseActivity(), View.OnClickListener, ITsTemp
                         DeviceIrcmdControlManager.getInstance().getIrcmdEngine()
                             ?.basicGainGet(basicGainGetValue)
                 } catch (e: Exception) {
-                    XLog.e("[ph][ph][ph][ph][ph][ph]")
-                }
+                    X                }
                 basicGainGetTime = System.currentTimeMillis()
             }
             val params_array =
@@ -330,16 +324,8 @@ open class IRMonitorLiteActivity : BaseActivity(), View.OnClickListener, ITsTemp
                     params_array[4],
                     params_array[5],
                     if (basicGainGetValue[0] == 0) GainStatus.LOW_GAIN else GainStatus.HIGH_GAIN,
-                )
-            Log.i(
-                TAG,
-                "temp correct,${basicGainGetValue[0]} oldTemp = " + params_array[0] + "newtemp = " + tempNew +
-                        " ems = " + params_array[1] + " ta = " + params_array[2] + " " +
-                        "distance = " + params_array[4] + " hum = " + params_array[5],
-            )
-        } catch (e: Exception) {
-            XLog.e("$TAG--[ph][ph][ph][ph][ph][ph]：${e.message}")
-        } finally {
+                )        } catch (e: Exception) {
+            X        } finally {
             return tempNew ?: 0f
         }
     }

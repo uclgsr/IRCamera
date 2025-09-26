@@ -5,10 +5,8 @@ from pathlib import Path
 from typing import Any, Dict, Optional
 
 try:
-    from loguru import logger
-except ImportError:
-    from ..utils.simple_logger import logger
-
+    except ImportError:
+    
 
 class ConfigManager:
     """Configuration manager for MVP implementation"""
@@ -26,18 +24,15 @@ class ConfigManager:
         """Load configuration from file or use defaults"""
         try:
             if not self.config_path.exists():
-                logger.warning(f"Config file not found: {self.config_path}")
-                self._config = self._get_default_config()
+                                self._config = self._get_default_config()
                 return
 
             with open(self.config_path, "r", encoding="utf-8") as file:
                 self._config = yaml.safe_load(file) or {}
 
-            logger.info(f"Configuration loaded from {self.config_path}")
-
+            
         except Exception as e:
-            logger.error(f"Failed to load configuration: {e}")
-            self._config = self._get_default_config()
+                        self._config = self._get_default_config()
 
     def _get_default_config(self) -> Dict[str, Any]:
         """Get default configuration values"""
@@ -102,8 +97,7 @@ class ConfigManager:
             config = config[k]
 
         config[keys[-1]] = value
-        logger.debug(f"Configuration updated: {key} = {value}")
-
+        
     def get_all(self) -> Dict[str, Any]:
         """Get all configuration values"""
         return self._config.copy()

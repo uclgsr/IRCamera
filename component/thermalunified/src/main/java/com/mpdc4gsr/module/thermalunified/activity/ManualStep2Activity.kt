@@ -7,7 +7,6 @@ import android.os.Handler
 import android.os.Looper
 import android.os.Message
 import android.os.SystemClock
-import android.util.Log
 import android.view.SurfaceView
 import android.view.View
 import android.widget.FrameLayout
@@ -80,12 +79,8 @@ class ManualStep2Activity :
         object : Handler(Looper.myLooper()!!) {
             override fun handleMessage(msg: Message) {
                 super.handleMessage(msg)
-                if (msg.what == SHOW_LOADING) {
-                    Log.d(TAG, "SHOW_LOADING")
-                    showLoadingDialog()
-                } else if (msg.what == HIDE_LOADING) {
-                    Log.d(TAG, "HIDE_LOADING")
-                    hideLoadingDialog()
+                if (msg.what == SHOW_LOADING) {                    showLoadingDialog()
+                } else if (msg.what == HIDE_LOADING) {                    hideLoadingDialog()
                 } else if (msg.what == HANDLE_CONNECT) {
                     initDualCamera()
 
@@ -231,9 +226,7 @@ class ManualStep2Activity :
             `is` = am.open("pseudocolor/White_Hot.bin")
             var lenth = `is`.available()
             mPseudoColors[0] = ByteArray(lenth + 1)
-            if (`is`.read(mPseudoColors[0]) != lenth) {
-                Log.d(Companion.TAG, "read file fail ")
-            }
+            if (`is`.read(mPseudoColors[0]) != lenth) {            }
             mPseudoColors[0]!![lenth] = 0
             mDualView!!.dualUVCCamera.loadPseudocolor(
                 CommonParams.PseudoColorUsbDualType.WHITE_HOT_MODE,
@@ -242,9 +235,7 @@ class ManualStep2Activity :
             `is` = am.open("pseudocolor/Black_Hot.bin")
             lenth = `is`.available()
             mPseudoColors[1] = ByteArray(lenth + 1)
-            if (`is`.read(mPseudoColors[1]) != lenth) {
-                Log.d(Companion.TAG, "read file fail ")
-            }
+            if (`is`.read(mPseudoColors[1]) != lenth) {            }
             mPseudoColors[1]!![lenth] = 1
             mDualView!!.dualUVCCamera.loadPseudocolor(
                 CommonParams.PseudoColorUsbDualType.BLACK_HOT_MODE,
@@ -253,9 +244,7 @@ class ManualStep2Activity :
             `is` = am.open("pseudocolor/new_Rainbow.bin")
             lenth = `is`.available()
             mPseudoColors[2] = ByteArray(lenth + 1)
-            if (`is`.read(mPseudoColors[2]) != lenth) {
-                Log.d(Companion.TAG, "read file fail ")
-            }
+            if (`is`.read(mPseudoColors[2]) != lenth) {            }
             mPseudoColors[2]!![lenth] = 2
             mDualView!!.dualUVCCamera.loadPseudocolor(
                 CommonParams.PseudoColorUsbDualType.RAINBOW_MODE,
@@ -264,9 +253,7 @@ class ManualStep2Activity :
             `is` = am.open("pseudocolor/Ironbow.bin")
             lenth = `is`.available()
             mPseudoColors[3] = ByteArray(lenth + 1)
-            if (`is`.read(mPseudoColors[3]) != lenth) {
-                Log.d(Companion.TAG, "read file fail ")
-            }
+            if (`is`.read(mPseudoColors[3]) != lenth) {            }
             mPseudoColors[3]!![lenth] = 3
             mDualView!!.dualUVCCamera.loadPseudocolor(
                 CommonParams.PseudoColorUsbDualType.IRONBOW_MODE,
@@ -288,16 +275,12 @@ class ManualStep2Activity :
             dualDisp = IRCmdTool.dispNumber
 
             mDualView?.dualUVCCamera?.setDisp(dualDisp)
-            mDualView?.startPreview()
-            Log.e("机芯数据加载成功", "初始化完成:")
-        }
+            mDualView?.startPreview()        }
     }
 
     fun onViewClicked(view: View?) {}
 
-    override fun onStart() {
-        Log.w(Companion.TAG, "onStart")
-        super.onStart()
+    override fun onStart() {        super.onStart()
     }
 
     override fun onResume() {
@@ -413,9 +396,7 @@ class ManualStep2Activity :
         dualStop()
     }
 
-    override fun onDestroy() {
-        Log.w(Companion.TAG, "onDestroy")
-        super.onDestroy()
+    override fun onDestroy() {        super.onDestroy()
         USBMonitorDualManager.getInstance().removeOnUSBConnectListener(this)
         USBMonitorDualManager.getInstance().onRelease()
     }
@@ -452,9 +433,7 @@ class ManualStep2Activity :
     ) {
         if (!canOperate) {
             return
-        }
-        Log.d(Companion.TAG, "prex :$preX prey : $preY curx : $curX cury : $curY")
-        if (mDualView != null) {
+        }        if (mDualView != null) {
             updateSaveButton()
             val newSrc = ByteArray(8)
             val xSrc = ByteArray(4)
@@ -470,9 +449,7 @@ class ManualStep2Activity :
     private fun handleAngle(angle: Float) {
         if (!canOperate) {
             return
-        }
-        Log.d(Companion.TAG, "angle :$angle")
-        if (mDualView != null) {
+        }        if (mDualView != null) {
             val newSrc = ByteArray(4)
             val xSrc = ByteArray(4)
             HexDump.float2byte(angle, xSrc)
@@ -541,9 +518,7 @@ class ManualStep2Activity :
             } else {
                 flag = true
                 lastClickTime = System.currentTimeMillis()
-            }
-            Log.d(TAG, "ACTION_MOVE isFastClick flag : $flag")
-            return flag
+            }            return flag
         }
     }
 }

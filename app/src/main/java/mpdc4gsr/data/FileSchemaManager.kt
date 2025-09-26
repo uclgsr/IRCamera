@@ -1,6 +1,5 @@
 package mpdc4gsr.data
 
-import android.util.Log
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -286,9 +285,7 @@ class FileSchemaManager {
 
     fun validateAndStandardizeFileName(filePath: String, sensorType: String, sessionId: String): StandardFileName? {
         val file = File(filePath)
-        if (!file.exists()) {
-            Log.w(TAG, "File does not exist: $filePath")
-            return null
+        if (!file.exists()) {            return null
         }
 
         val fileName = file.name
@@ -384,17 +381,13 @@ class FileSchemaManager {
         val sessionDir = File(baseDir, sessionId)
 
         if (!sessionDir.exists()) {
-            sessionDir.mkdirs()
-            Log.i(TAG, "Created session directory: ${sessionDir.absolutePath}")
-        }
+            sessionDir.mkdirs()        }
 
 
         for (sensorDir in REQUIRED_DIRECTORIES) {
             val subDir = File(sessionDir, sensorDir)
             if (!subDir.exists()) {
-                subDir.mkdirs()
-                Log.d(TAG, "Created sensor subdirectory: ${subDir.absolutePath}")
-            }
+                subDir.mkdirs()            }
         }
 
         return sessionDir

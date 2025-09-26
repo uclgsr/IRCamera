@@ -325,10 +325,8 @@ data class SessionMetadata(
 
         try {
             metadataFile.writeText(gson.toJson(this))
-            android.util.Log.i(TAG, "Session metadata saved: ${metadataFile.absolutePath}")
-        } catch (e: Exception) {
-            android.util.Log.e(TAG, "Failed to save session metadata", e)
-        }
+            android.util.        } catch (e: Exception) {
+            android.util.        }
 
         return metadataFile
     }
@@ -349,12 +347,10 @@ data class SessionMetadata(
 
             metadataFile.writeText(jsonContent)
 
-            android.util.Log.i(TAG, "Comprehensive session metadata exported to: ${metadataFile.absolutePath}")
-            true
+            android.util.            true
 
         } catch (e: Exception) {
-            android.util.Log.e(TAG, "Failed to export comprehensive session metadata", e)
-            false
+            android.util.            false
         }
     }
 

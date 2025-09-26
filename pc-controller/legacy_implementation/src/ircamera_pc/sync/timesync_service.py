@@ -6,10 +6,8 @@ from dataclasses import dataclass, field
 from typing import Dict, Optional, Set
 
 try:
-    from loguru import logger
-except ImportError:
-    from ..utils.simple_logger import logger
-
+    except ImportError:
+    
 
 @dataclass
 class TimeSyncMeasurement:
@@ -123,20 +121,17 @@ class AdvancedTimeSyncService:
 
         self._stats_update_task: Optional[asyncio.Task] = None
 
-        logger.info("Advanced Time Synchronization Service initialized")
-
+        
     async def start(self) -> None:
 
         if self._is_running:
-            logger.warning("Advanced time sync service already running")
-            return
+                        return
 
         self._is_running = True
 
         self._stats_update_task = asyncio.create_task(self._periodic_stats_update())
 
-        logger.info("Advanced Time Synchronization Service started")
-
+        
     async def stop(self) -> None:
 
         if not self._is_running:
@@ -151,8 +146,7 @@ class AdvancedTimeSyncService:
             except asyncio.CancelledError:
                 pass
 
-        logger.info("Advanced Time Synchronization Service stopped")
-
+        
     async def handle_time_sync_request(self, message: Dict[str, any], device_id: str) -> Dict[
         str, any]:
 
@@ -187,14 +181,11 @@ class AdvancedTimeSyncService:
                 "sync_session_id": message.get("session_id", "unknown")
             }
 
-            logger.debug(f"Time sync response for {device_id}: " +
-                         f"t1={client_timestamp}, t2={t2_server_receive}, t3={t3_server_send}")
-
+            
             return response
 
         except Exception as e:
-            logger.error(f"Error handling time sync request from {device_id}: {e}")
-            return {
+                        return {
                 "message_type": "error",
                 "error": f"Time sync processing error: {e}"
             }
@@ -218,12 +209,8 @@ class AdvancedTimeSyncService:
         stats.update_stats()
 
         if not stats.is_synchronized:
-            logger.warning(f"Device {device_id} sync quality {stats.sync_quality}: " +
-                           f"offset={stats.median_offset_ms:.1f}ms")
-        elif stats.sync_quality in ["EXCELLENT", "GOOD"]:
-            logger.debug(f"Device {device_id} sync quality {stats.sync_quality}: " +
-                         f"offset={stats.median_offset_ms:.1f}ms")
-
+                    elif stats.sync_quality in ["EXCELLENT", "GOOD"]:
+            
     async def register_session(self, session_id: str, device_id: str) -> bool:
 
         try:
@@ -232,12 +219,10 @@ class AdvancedTimeSyncService:
             if device_id not in self._device_stats:
                 self._device_stats[device_id] = DeviceTimeSyncStats(device_id=device_id)
 
-            logger.info(f"Registered time sync session {session_id} for device {device_id}")
-            return True
+                        return True
 
         except Exception as e:
-            logger.error(f"Error registering sync session {session_id}: {e}")
-            return False
+                        return False
 
     async def end_session(self, session_id: str) -> bool:
 
@@ -249,8 +234,7 @@ class AdvancedTimeSyncService:
             return False
 
         except Exception as e:
-            logger.error(f"Error ending sync session {session_id}: {e}")
-            return False
+                        return False
 
     def get_device_sync_stats(self, device_id: str) -> Optional[DeviceTimeSyncStats]:
 
@@ -311,15 +295,11 @@ class AdvancedTimeSyncService:
 
                 if self._device_stats:
                     summary = self.get_sync_quality_summary()
-                    logger.info(
-                        f"Time Sync Summary: {summary['synchronized_devices']}/{summary['total_devices']} " +
-                        f"devices synchronized, overall offset: {summary['overall_median_offset_ms']:.1f}ms")
-
+                    
             except asyncio.CancelledError:
                 break
             except Exception as e:
-                logger.error(f"Error in periodic stats update: {e}")
-                await asyncio.sleep(60)
+                                await asyncio.sleep(60)
 
     def is_device_synchronized(self, device_id: str, max_age_seconds: float = None) -> bool:
 

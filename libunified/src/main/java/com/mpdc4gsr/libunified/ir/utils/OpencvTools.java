@@ -108,8 +108,7 @@ public class OpencvTools {
 
         byte[] byteArray = new byte[dataOut.capacity()];
 
-        dataOut.get(byteArray);
-        Log.e("4[CHINESE_TEXT]Minute[CHINESE_TEXT]：", String.valueOf((System.currentTimeMillis() - startTime)));
+        dataOut.get(byteArray);- startTime)));
         return SupRUtils.INSTANCE.byteArrayToBitmap(byteArray);
     }
 
@@ -120,12 +119,10 @@ public class OpencvTools {
 
         ByteBuffer dataOut = ByteBuffer.allocateDirect(imgByte.length * 4);
 
-        SupHelp.getInstance().imgUpScalerFour(BaseApplication.instance, dataIn, dataOut);
-        Log.e("AI_UPSCALE 4[CHINESE_TEXT]Minute[CHINESE_TEXT]2：", String.valueOf((System.currentTimeMillis() - startTime)));
+        SupHelp.getInstance().imgUpScalerFour(BaseApplication.instance, dataIn, dataOut);- startTime)));
 
         byte[] outputData = new byte[dataOut.capacity()];
-        dataOut.get(outputData);
-        Log.e("4[CHINESE_TEXT]Minute[CHINESE_TEXT]：", String.valueOf((System.currentTimeMillis() - startTime)));
+        dataOut.get(outputData);- startTime)));
         Bitmap bitmap = SupRUtils.INSTANCE.byteArrayToBitmap(outputData);
         return outputData;
     }
@@ -138,8 +135,7 @@ public class OpencvTools {
 
         ByteBuffer dataOut = ByteBuffer.allocateDirect(dstArgbBytes.length * 4);
 
-        SupHelp.getInstance().imgUpScalerFour(BaseApplication.instance, dataIn, dataOut);
-        Log.e("AI_UPSCALE 4[CHINESE_TEXT]Minute[CHINESE_TEXT]2：", String.valueOf((System.currentTimeMillis() - startTime)) + "////" + dstArgbBytes.length);
+        SupHelp.getInstance().imgUpScalerFour(BaseApplication.instance, dataIn, dataOut);- startTime)) + "////" + dstArgbBytes.length);
 
         byte[] outputData = new byte[dataOut.capacity()];
         dataOut.get(outputData);
@@ -157,8 +153,7 @@ public class OpencvTools {
         Utils.matToBitmap(dstMat, finalBitmap);
 
         srcMat.release();
-        dstMat.release();
-        Log.e("4[CHINESE_TEXT]Minute[CHINESE_TEXT]：", String.valueOf((System.currentTimeMillis() - startTime)));
+        dstMat.release();- startTime)));
 
         return finalBitmap;
     }
@@ -174,8 +169,7 @@ public class OpencvTools {
 
         ByteBuffer dataOut = ByteBuffer.allocateDirect(256 * 192 * 4 * 4);
 
-        SupHelp.getInstance().imgUpScalerFour(BaseApplication.instance, dataIn, dataOut);
-        Log.e("AI_UPSCALE 4[CHINESE_TEXT]Minute[CHINESE_TEXT]2：", String.valueOf((System.currentTimeMillis() - startTime)) + "////" + rawData.length);
+        SupHelp.getInstance().imgUpScalerFour(BaseApplication.instance, dataIn, dataOut);- startTime)) + "////" + rawData.length);
 
         byte[] outputData = new byte[dataOut.capacity()];
         dataOut.get(outputData);
@@ -192,8 +186,7 @@ public class OpencvTools {
         Utils.matToBitmap(dstMat, finalBitmap);
 
         srcMat.release();
-        dstMat.release();
-        Log.e("4[CHINESE_TEXT]Minute[CHINESE_TEXT]：", String.valueOf((System.currentTimeMillis() - startTime)));
+        dstMat.release();- startTime)));
         return finalBitmap;
     }
 
@@ -720,9 +713,7 @@ public class OpencvTools {
 
     public static Bitmap draw_edge_from_temp_reigon_bitmap_argb_psd(byte[] image, byte[] temperature,
                                                                     int image_h, int image_w, float high_t,
-                                                                    float low_t, int color_h, int color_l, int type) throws IOException {
-        Log.w("[CHINESE_TEXT]", "[CHINESE_TEXT]：" + high_t + "//[CHINESE_TEXT]：" + low_t);
-        Mat src = draw_high_temp_edge_argb_pse(image, temperature, image_h, image_w, high_t == Float.MAX_VALUE ? 128f : high_t, color_h, type);
+                                                                    float low_t, int color_h, int color_l, int type) throws IOException {        Mat src = draw_high_temp_edge_argb_pse(image, temperature, image_h, image_w, high_t == Float.MAX_VALUE ? 128f : high_t, color_h, type);
         Mat mat = low_t == Float.MIN_VALUE ? src : draw_temp_edge(src, temperature, low_t, color_l, type);
         Imgproc.cvtColor(mat, mat, Imgproc.COLOR_BGR2RGBA);
         Bitmap dstBitmap = Bitmap.createBitmap(mat.width(), mat.height(), Bitmap.Config.ARGB_8888);
@@ -835,14 +826,10 @@ public class OpencvTools {
         Mat temp = new Mat();
         normalize(reinforce_src, temp, 0, 255, NORM_MINMAX);
         temp = iftCenter(temp);
-        Mat result = new Mat();
-        Log.w("123", temp.toString());
-        temp.convertTo(result, CV_8UC1);
-        Log.w("1234", result.toString());
+        Mat result = new Mat(););
+        temp.convertTo(result, CV_8UC1););
         applyColorMap(result, result, 15);
-        cvtColor(result, result, COLOR_RGB2BGR);
-
-        Log.w("1234", result.toString());
+        cvtColor(result, result, COLOR_RGB2BGR););
 
 
         return result;
@@ -878,9 +865,7 @@ public class OpencvTools {
                 int grey = (int) ((r * 0.3f) + (g * 0.59f) + (b * 0.11f));
                 colors[0] = r;
                 colors[1] = g;
-                colors[2] = b;
-                Log.w("[CHINESE_TEXT]", "[CHINESE_TEXT]");
-            } else if (maxGrey != -1 && ratio > maxGrey) {
+                colors[2] = b;            } else if (maxGrey != -1 && ratio > maxGrey) {
                 if (isGrayUse) {
 
                     ratio = (1 - ratio) / (1 - maxGrey);
@@ -896,12 +881,7 @@ public class OpencvTools {
                 int grey = (int) ((r * 0.3f) + (g * 0.59f) + (b * 0.11f));
                 colors[0] = r;
                 colors[1] = g;
-                colors[2] = b;
-                Log.w("[CHINESE_TEXT]", "[CHINESE_TEXT]");
-            } else if (maxTemp >= customMaxTemp && minTemp <= customMinTemp) {
-                Log.w("[CHINESE_TEXT]", "[CHINESE_TEXT]Custom[CHINESE_TEXT]high/low temperature");
-
-                colors = capColor(colorList, maxTemp, minTemp, customMaxTemp, customMinTemp, isGrayUse, ratio);
+                colors[2] = b;            } else if (maxTemp >= customMaxTemp && minTemp <= customMinTemp) {                colors = capColor(colorList, maxTemp, minTemp, customMaxTemp, customMinTemp, isGrayUse, ratio);
             } else if (customMinTemp > maxTemp) {
                 if (isGrayUse) {
 
@@ -932,9 +912,7 @@ public class OpencvTools {
                 int[] tmpColor = getStartOrEndColor(colorList, customMaxTemp, customMinTemp, maxTemp, minTemp);
                 colors = capColor(tmpColor,
                         maxTemp, minTemp, maxTemp, minTemp, isGrayUse, ratio);
-            }
-            Log.w("[CHINESE_TEXT]", "[CHINESE_TEXT]" + i + ":" + colors[0] + "--" + colors[1] + "--" + colors[2] + "//" + maxTemp + "--" + minTemp + "-" + customMaxTemp);
-            colorBar.put(i, 0, colors[2], colors[1], colors[0]);
+            }            colorBar.put(i, 0, colors[2], colors[1], colors[0]);
         }
         return colorBar;
     }

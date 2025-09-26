@@ -1,8 +1,6 @@
 package com.mpdc4gsr.module.thermalunified.utils
 
-import android.util.Log
 import com.blankj.utilcode.util.Utils
-import com.elvishew.xlog.XLog
 import com.energy.iruvc.dual.DualUVCCamera
 import com.energy.iruvc.ircmd.IRCMD
 import com.energy.iruvc.utils.CommonParams
@@ -28,8 +26,7 @@ object IRCmdTool {
         val snData = ByteArray(256)
         val dispData = ByteArray(5)
         irCmd?.oemRead(CommonParams.ProductType.P2, oemInfo)
-        XLog.w("[ph][ph][ph][ph][ph][ph][ph][ph]", "[ph][ph][ph][ph][ph][ph]:")
-        val calibrationData = ByteArray(calibrationDataSize)
+        X        val calibrationData = ByteArray(calibrationDataSize)
         val productTypeData = ByteArray(2)
         System.arraycopy(oemInfo, 0, calibrationData, 0, calibrationData.size)
         System.arraycopy(oemInfo, calibrationDataSize, productTypeData, 0, productTypeData.size)
@@ -51,10 +48,8 @@ object IRCmdTool {
             if (dispNumber < -20) {
                 dispNumber = -20
             }
-            XLog.w("[ph][ph][ph][ph]:", "" + dispNumber)
-        } catch (e: Exception) {
-            XLog.w("[ph][ph][ph][ph][ph][ph]")
-        }
+            X        } catch (e: Exception) {
+            X        }
         val snList = String(snData).split(";")
         val snStr =
             if (snList.isNotEmpty() && snList[0].contains("sn", true)) {
@@ -75,15 +70,12 @@ object IRCmdTool {
             try {
                 `is` = am.open("dual_calibration_parameters2.bin")
                 length = `is`.available()
-                if (`is`.read(parameters) != length) {
-                    Log.e(TAG, "read file fail ")
-                }
+                if (`is`.read(parameters) != length) {                }
                 parameters[length] = 1
 
                 val alignByte = SharedManager.getManualData(snStr)
                 System.arraycopy(alignByte, 0, parameters, calibrationDataSize + 1, alignByte.size)
-                XLog.w("[ph][ph][ph][ph][ph][ph][ph][ph][ph]，[ph][ph][ph][ph][ph][ph][ph]")
-            } catch (e: IOException) {
+                X            } catch (e: IOException) {
                 e.printStackTrace()
             } finally {
                 try {
@@ -237,8 +229,7 @@ object IRCmdTool {
         return try {
             irCmd?.setPropTPDParams(params, value) ?: 0
         } catch (e: Exception) {
-            XLog.w("[ph][ph][ph][ph][ph][ph][${params.name}]: ${e.message}")
-            0
+            X            0
         }
     }
 
@@ -250,8 +241,7 @@ object IRCmdTool {
         return try {
             irCmd?.setPropImageParams(params, value) ?: 0
         } catch (e: Exception) {
-            XLog.w("[ph][ph][ph][ph][ph][ph][${params.name}]: ${e.message}")
-            0
+            X            0
         }
     }
 
@@ -268,8 +258,7 @@ object IRCmdTool {
                 -1
             }
         } catch (e: Exception) {
-            XLog.w("[ph][ph][ph][ph][ph][ph][$value]: ${e.message}")
-            0
+            X            0
         }
     }
 

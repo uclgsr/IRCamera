@@ -1,6 +1,5 @@
 package com.mpdc4gsr.libunified.app.sync
 
-import android.util.Log
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -68,10 +67,7 @@ class TimeSyncService {
         targetPort: Int = 8080,
     ): SyncResult =
         withContext(Dispatchers.IO) {
-            listener?.onSyncStarted(targetHost)
-            Log.i(TAG, "Starting time synchronization with $targetHost:$targetPort")
-
-            val samples = mutableListOf<SyncSample>()
+            listener?.onSyncStarted(targetHost)            val samples = mutableListOf<SyncSample>()
             var lastError: String? = null
 
             repeat(MAX_SYNC_ATTEMPTS) { attempt ->
@@ -79,15 +75,7 @@ class TimeSyncService {
                     val sample = performSyncRequest(targetHost, targetPort)
 
                     if (sample.roundTripDelay <= MAX_ACCEPTABLE_DELAY_MS) {
-                        samples.add(sample)
-                        Log.d(
-                            TAG,
-                            "Sample ${attempt + 1}: offset=${sample.clockOffset}ms, delay=${sample.roundTripDelay}ms"
-                        )
-                    } else {
-                        Log.w(
-                            TAG,
-                            "Sample ${attempt + 1} rejected: delay too high (${sample.roundTripDelay}ms)"
+                        samples.add(sample)                    } else {"
                         )
                     }
 
@@ -95,30 +83,20 @@ class TimeSyncService {
                         delay(100)
                     }
                 } catch (e: Exception) {
-                    lastError = e.message
-                    Log.w(TAG, "Sync attempt ${attempt + 1} failed: ${e.message}")
-                    delay(500)
+                    lastError = e.message                    delay(500)
                 }
             }
 
             if (samples.size < MIN_SAMPLES) {
                 val error =
-                    "Insufficient samples for reliable sync (got ${samples.size}, need $MIN_SAMPLES)"
-                Log.e(TAG, error)
-                listener?.onSyncError(error)
+                    "Insufficient samples for reliable sync (got ${samples.size}, need $MIN_SAMPLES)"                listener?.onSyncError(error)
                 return@withContext SyncResult(
                     isSuccess = false,
                     errorMessage = lastError ?: error,
                 )
             }
 
-            val result = calculateSyncResult(samples)
-
-            Log.i(
-                TAG,
-                "Time sync completed: offset=${result.clockOffsetMs}ms, accuracy=±${result.accuracyMs}ms"
-            )
-            listener?.onSyncCompleted(result)
+            val result = calculateSyncResult(samples)            listener?.onSyncCompleted(result)
 
             result
         }
@@ -136,25 +114,17 @@ class TimeSyncService {
                     try {
                         synchronizeTime(targetHost, targetPort)
                         delay(intervalMs)
-                    } catch (e: Exception) {
-                        Log.e(TAG, "Periodic sync error", e)
-                        listener?.onSyncError("Periodic sync failed: ${e.message}")
+                    } catch (e: Exception) {                        listener?.onSyncError("Periodic sync failed: ${e.message}")
                         delay(intervalMs)
                     }
                 }
-            }
-
-        Log.i(
-            TAG,
-            "Started periodic time sync with $targetHost:$targetPort (interval: ${intervalMs}ms)"
+            }"
         )
     }
 
     fun stopPeriodicSync() {
         periodicSyncJob?.cancel()
-        periodicSyncJob = null
-        Log.i(TAG, "Stopped periodic time sync")
-    }
+        periodicSyncJob = null    }
 
     private suspend fun performSyncRequest(
         host: String,
@@ -276,9 +246,7 @@ class TimeSyncService {
             } else {
                 null
             }
-        } catch (e: Exception) {
-            Log.e(TAG, "Error processing sync packet", e)
-            null
+        } catch (e: Exception) {            null
         }
     }
 

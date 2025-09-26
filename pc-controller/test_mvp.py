@@ -8,7 +8,6 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent / "src"))
 
-from loguru import logger
 from ircamera_pc.core.device_manager import DeviceManager, DeviceConnectionState
 from ircamera_pc.core.session_manager import AdvancedSessionManager, SessionConfiguration, \
     SessionState
@@ -256,9 +255,7 @@ async def run_all_tests():
 
 if __name__ == "__main__":
 
-    logger.remove()
-    logger.add(sys.stderr, level="WARNING")
-
+        
     try:
         success = asyncio.run(run_all_tests())
         sys.exit(0 if success else 1)

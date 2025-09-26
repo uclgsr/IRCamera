@@ -1,7 +1,6 @@
 package mpdc4gsr.test
 
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import androidx.activity.ComponentActivity
@@ -117,9 +116,7 @@ class SynchronizationTestActivity : ComponentActivity() {
                     updateButtonStates()
                 }
 
-            } catch (e: Exception) {
-                Log.e(TAG, "Error starting synchronization test", e)
-                updateStatus("Error: ${e.message}")
+            } catch (e: Exception) {                updateStatus("Error: ${e.message}")
                 isTestRunning = false
                 updateButtonStates()
             }
@@ -144,11 +141,7 @@ class SynchronizationTestActivity : ComponentActivity() {
         if (!isTestRunning) return
 
         lifecycleScope.launch {
-            try {
-                Log.i(TAG, "Triggering manual flash sync event")
-
-
-                flashScreen()
+            try {                flashScreen()
 
 
                 recordingController.addSyncMarker(
@@ -163,20 +156,14 @@ class SynchronizationTestActivity : ComponentActivity() {
 
                 updateStatus("Flash sync event triggered - check for simultaneous detection across all sensors")
 
-            } catch (e: Exception) {
-                Log.e(TAG, "Error triggering flash sync", e)
-                updateStatus("Error triggering sync event: ${e.message}")
+            } catch (e: Exception) {                updateStatus("Error triggering sync event: ${e.message}")
             }
         }
     }
 
     private fun triggerAutomaticSyncEvent(eventName: String) {
         lifecycleScope.launch {
-            try {
-                Log.i(TAG, "Triggering automatic sync event: $eventName")
-
-
-                flashScreen(duration = 200L)
+            try {                flashScreen(duration = 200L)
 
 
                 recordingController.addSyncMarker(
@@ -191,9 +178,7 @@ class SynchronizationTestActivity : ComponentActivity() {
 
                 updateStatus("Auto sync event: $eventName")
 
-            } catch (e: Exception) {
-                Log.e(TAG, "Error triggering automatic sync event", e)
-            }
+            } catch (e: Exception) {            }
         }
     }
 
@@ -228,9 +213,7 @@ class SynchronizationTestActivity : ComponentActivity() {
                 isTestRunning = false
                 updateButtonStates()
 
-            } catch (e: Exception) {
-                Log.e(TAG, "Error stopping synchronization test", e)
-                updateStatus("Error stopping test: ${e.message}")
+            } catch (e: Exception) {                updateStatus("Error stopping test: ${e.message}")
                 isTestRunning = false
                 updateButtonStates()
             }
@@ -259,22 +242,15 @@ class SynchronizationTestActivity : ComponentActivity() {
                     appendLine("2. Look for corresponding temperature spikes in thermal data")
                     appendLine("3. Verify GSR readings show sync markers at same times")
                     appendLine("4. Use sync_data_streams.py script for automated alignment")
-                }
+                }                updateStatus("Test report generated. Check logs for details.")
 
-                Log.i(TAG, report)
-                updateStatus("Test report generated. Check logs for details.")
-
-            } catch (e: Exception) {
-                Log.e(TAG, "Error generating test report", e)
-            }
+            } catch (e: Exception) {            }
         }
     }
 
     private fun updateStatus(message: String) {
         runOnUiThread {
-            statusText.text = message
-            Log.i(TAG, "Status: $message")
-        }
+            statusText.text = message        }
     }
 
     private fun updateButtonStates() {

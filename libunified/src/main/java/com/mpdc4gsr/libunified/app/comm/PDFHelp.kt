@@ -9,7 +9,6 @@ import android.graphics.pdf.PdfDocument
 import android.graphics.pdf.PdfDocument.PageInfo
 import android.os.Build
 import android.provider.MediaStore
-import android.util.Log
 import android.view.View
 import android.widget.ScrollView
 import androidx.core.content.ContextCompat
@@ -103,8 +102,7 @@ object PDFHelp {
                     pdfDocument.writeTo(bos)
                     bos.flush()
                     bos.close()
-                }
-                Log.w("[ph][ph]", UriUtils.uri2File(uri).absolutePath)
+                }.absolutePath)
                 UriUtils.uri2File(uri).absolutePath
             } else {
                 ""

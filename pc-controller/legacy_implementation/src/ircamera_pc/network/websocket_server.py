@@ -10,10 +10,8 @@ from pathlib import Path
 from typing import Any, Callable, Dict, Optional, Set
 
 try:
-    from loguru import logger
-except ImportError:
-    from ..utils.simple_logger import logger
-
+    except ImportError:
+    
 # from ..sync import AdvancedTimeSyncServer  # TODO: Implement when needed
 from .discovery import NetworkDiscoveryService
 from .security_manager import AuthLevel, AdvancedSecurityManager
@@ -79,21 +77,15 @@ class WebSocketServer:
 
             if cert_file.exists() and key_file.exists():
                 self.ssl_context.load_cert_chain(cert_file, key_file)
-                logger.info(f"Loaded TLS certificates from {cert_dir}")
-            else:
+                            else:
 
-                logger.warning(
-                    "No TLS certificates found, generating self-signed certificate"
-                )
-                self.security_manager.generate_self_signed_certificate(cert_dir)
+                                self.security_manager.generate_self_signed_certificate(cert_dir)
                 self.ssl_context.load_cert_chain(cert_file, key_file)
 
         except Exception as e:
-            logger.error(f"Failed to setup TLS: {e}")
-
+            
             self.ssl_context = None
-            logger.warning("Running without TLS encryption")
-
+            
     def _setup_message_handlers(self):
 
         self.message_handlers = {
@@ -129,12 +121,10 @@ class WebSocketServer:
     async def start(self) -> Any:
 
         if self.is_running:
-            logger.warning("WebSocket server already running")
-            return
+                        return
 
         try:
-            logger.info(f"Starting WebSocket Secure server on {self.host}:{self.port}")
-
+            
             await self.enhanced_security.initialize()
 
             await self._start_mdns_advertising()
@@ -153,20 +143,16 @@ class WebSocketServer:
 
             self.heartbeat_task = asyncio.create_task(self._heartbeat_monitor())
 
-            logger.info("WebSocket Secure server started successfully")
-            logger.info(f"Service advertised as '_irhub._tcp' on port {self.port}")
-
+                        
         except Exception as e:
-            logger.error(f"Failed to start WebSocket server: {e}")
-            raise
+                        raise
 
     async def stop(self) -> Any:
 
         if not self.is_running:
             return
 
-        logger.info("Stopping WebSocket Secure server")
-
+        
         try:
 
             if self.heartbeat_task:
@@ -181,8 +167,7 @@ class WebSocketServer:
                     try:
                         await client.websocket.close()
                     except Exception as e:
-                        logger.warning(f"Error closing client {client_id}: {e}")
-                self.clients.clear()
+                                        self.clients.clear()
 
             if self.server:
                 self.server.close()
@@ -191,11 +176,9 @@ class WebSocketServer:
             await self._stop_mdns_advertising()
 
             self.is_running = False
-            logger.info("WebSocket Secure server stopped")
-
+            
         except Exception as e:
-            logger.error(f"Error stopping WebSocket server: {e}")
-
+            
     async def _start_mdns_advertising(self):
 
         try:
@@ -212,19 +195,15 @@ class WebSocketServer:
             }
 
             await self.discovery_service.advertise_service(service_info)
-            logger.info("mDNS advertising started for '_irhub._tcp' service")
-
+            
         except Exception as e:
-            logger.error(f"Failed to start mDNS advertising: {e}")
-
+            
     async def _stop_mdns_advertising(self):
 
         try:
             await self.discovery_service.stop_advertising()
-            logger.info("mDNS advertising stopped")
-        except Exception as e:
-            logger.error(f"Error stopping mDNS advertising: {e}")
-
+                    except Exception as e:
+            
     async def _handle_client(self, websocket, path):
 
         client_id = str(uuid.uuid4())
@@ -247,22 +226,18 @@ class WebSocketServer:
                 try:
                     await self._process_message(client_id, message)
                 except Exception as e:
-                    logger.error(f"Error processing message from {client_id}: {e}")
-                    await self._send_error(
+                                        await self._send_error(
                         client_id, "message_processing_error", str(e)
                     )
 
         except websockets.exceptions.ConnectionClosed:
-            logger.info(f"Client {client_id} disconnected")
-        except Exception as e:
-            logger.error(f"Error handling client {client_id}: {e}")
-        finally:
+                    except Exception as e:
+                    finally:
 
             async with self.client_lock:
                 if client_id in self.clients:
                     del self.clients[client_id]
-            logger.info(f"Client {client_id} cleaned up")
-
+            
     async def _process_message(self, client_id: str, raw_message: str):
 
         try:
@@ -285,8 +260,7 @@ class WebSocketServer:
             async with self.client_lock:
                 client = self.clients.get(client_id)
                 if not client:
-                    logger.error(f"Client {client_id} not found")
-                    return
+                                        return
 
             if (
                     message_type not in ["protocol_handshake", "auth_request", "pong"]
@@ -301,19 +275,16 @@ class WebSocketServer:
             if handler:
                 await handler(client_id, message)
             else:
-                logger.warning(f"Unknown message type: {message_type}")
-                await self._send_error(
+                                await self._send_error(
                     client_id,
                     "unknown_message_type",
                     f"Unknown message type: {message_type}",
                 )
 
         except json.JSONDecodeError as e:
-            logger.error(f"Invalid JSON from client {client_id}: {e}")
-            await self._send_error(client_id, "invalid_json", "Invalid JSON format")
+                        await self._send_error(client_id, "invalid_json", "Invalid JSON format")
         except Exception as e:
-            logger.error(f"Error processing message from client {client_id}: {e}")
-            await self._send_error(client_id, "processing_error", str(e))
+                        await self._send_error(client_id, "processing_error", str(e))
 
     async def _handle_handshake(self, client_id: str, message: dict):
 
@@ -346,8 +317,7 @@ class WebSocketServer:
             )
 
         except Exception as e:
-            logger.error(f"Error in handshake for client {client_id}: {e}")
-            await self._send_error(client_id, "handshake_error", str(e))
+                        await self._send_error(client_id, "handshake_error", str(e))
 
     async def _handle_auth(self, client_id: str, message: dict):
 
@@ -385,18 +355,15 @@ class WebSocketServer:
                     },
                 )
                 await self._send_message(client_id, response)
-                logger.info(f"Client {client_id} authenticated successfully")
-            else:
+                            else:
                 await self._send_error(client_id, "auth_error", "Invalid credentials")
 
         except Exception as e:
-            logger.error(f"Error in authentication for client {client_id}: {e}")
-            await self._send_error(client_id, "auth_error", str(e))
+                        await self._send_error(client_id, "auth_error", str(e))
 
     async def _handle_session_start(self, client_id: str, message: dict):
 
-        logger.info(f"Session start requested by client {client_id}")
-
+        
         response = create_message(
             "session_start_response",
             {
@@ -409,8 +376,7 @@ class WebSocketServer:
 
     async def _handle_session_stop(self, client_id: str, message: dict):
 
-        logger.info(f"Session stop requested by client {client_id}")
-
+        
         response = create_message(
             "session_stop_response", {"success": True, "stop_time": time.time()}
         )
@@ -419,8 +385,7 @@ class WebSocketServer:
     async def _handle_sync_flash(self, client_id: str, message: dict):
 
         duration = message.get("duration_ms", 500)
-        logger.info(f"Sync flash requested by client {client_id} for {duration}ms")
-
+        
         flash_message = create_message(
             "sync_flash_trigger", {"duration_ms": duration, "timestamp": time.time()}
         )
@@ -498,8 +463,7 @@ class WebSocketServer:
             )
 
         except Exception as e:
-            logger.error(f"Error handling time sync request from {client_id}: {e}")
-            await self._send_error(client_id, "time_sync_error", str(e))
+                        await self._send_error(client_id, "time_sync_error", str(e))
 
     async def _heartbeat_monitor(self):
 
@@ -516,17 +480,13 @@ class WebSocketServer:
                                 stale_clients.append(client_id)
 
                 for client_id in stale_clients:
-                    logger.warning(f"Disconnecting stale client {client_id}")
-                    try:
+                                        try:
                         async with self.client_lock:
                             client = self.clients.get(client_id)
                             if client:
                                 await client.websocket.close()
                     except Exception as e:
-                        logger.error(
-                            f"Error disconnecting stale client {client_id}: {e}"
-                        )
-
+                        
                 ping_message = create_message("ping", {"timestamp": current_time})
                 await self._broadcast_message(ping_message, authenticated_only=True)
 
@@ -535,8 +495,7 @@ class WebSocketServer:
             except asyncio.CancelledError:
                 break
             except Exception as e:
-                logger.error(f"Error in heartbeat monitor: {e}")
-                await asyncio.sleep(self.heartbeat_interval)
+                                await asyncio.sleep(self.heartbeat_interval)
 
     async def _send_message(self, client_id: str, message: dict):
 
@@ -544,15 +503,13 @@ class WebSocketServer:
             async with self.client_lock:
                 client = self.clients.get(client_id)
                 if not client:
-                    logger.error(f"Cannot send message to unknown client {client_id}")
-                    return
+                                        return
 
             json_message = json.dumps(message)
             await client.websocket.send(json_message)
 
         except Exception as e:
-            logger.error(f"Error sending message to client {client_id}: {e}")
-
+            
     async def _send_error(self, client_id: str, error_type: str, error_message: str):
 
         error_msg = create_message(
@@ -585,8 +542,7 @@ class WebSocketServer:
                 try:
                     await client.websocket.send(json_message)
                 except Exception as e:
-                    logger.error(f"Error broadcasting to client {client_id}: {e}")
-
+                    
     async def _handle_upload_initiate(self, client_id: str, message: dict):
 
         try:
@@ -670,8 +626,7 @@ class WebSocketServer:
                 )
 
         except Exception as e:
-            logger.error(f"Error handling upload initiation from {client_id}: {e}")
-            await self._send_error(client_id, "upload_init_error", str(e))
+                        await self._send_error(client_id, "upload_init_error", str(e))
 
     async def _handle_upload_chunk(self, client_id: str, message: dict):
 
@@ -729,8 +684,7 @@ class WebSocketServer:
                     )
 
                     if is_final_chunk:
-                        logger.info(f"Final chunk received for upload {job_id}")
-                else:
+                                        else:
                     await self._send_error(
                         client_id, "chunk_write_error", "Failed to write chunk"
                     )
@@ -742,8 +696,7 @@ class WebSocketServer:
                 )
 
         except Exception as e:
-            logger.error(f"Error handling chunk upload from {client_id}: {e}")
-            await self._send_error(client_id, "chunk_error", str(e))
+                        await self._send_error(client_id, "chunk_error", str(e))
 
     async def _handle_upload_verify(self, client_id: str, message: dict):
 
@@ -779,8 +732,7 @@ class WebSocketServer:
                             "checksum_match": verification_result.get("checksum_valid"),
                         },
                     )
-                    logger.info(f"Upload verification successful for {job_id}")
-                else:
+                                    else:
                     response = create_message(
                         "upload_verify_response",
                         {
@@ -802,8 +754,7 @@ class WebSocketServer:
                 )
 
         except Exception as e:
-            logger.error(f"Error handling upload verification from {client_id}: {e}")
-            await self._send_error(client_id, "verify_error", str(e))
+                        await self._send_error(client_id, "verify_error", str(e))
 
     async def _handle_upload_check_existing(self, client_id: str, message: dict):
 
@@ -841,11 +792,9 @@ class WebSocketServer:
             )
             await self._send_message(client_id, response)
 
-            logger.debug(f"Existing file check for {job_id}: {existing_size} bytes")
-
+            
         except Exception as e:
-            logger.error(f"Error checking existing upload from {client_id}: {e}")
-            await self._send_error(client_id, "check_error", str(e))
+                        await self._send_error(client_id, "check_error", str(e))
 
     async def _handle_file_chunk_response(self, client_id: str, message: dict):
 
@@ -853,8 +802,7 @@ class WebSocketServer:
 
             pass
         except Exception as e:
-            logger.error(f"Error handling file chunk response from {client_id}: {e}")
-
+            
     async def _handle_data_export_request(self, client_id: str, message: dict):
 
         try:
@@ -888,10 +836,7 @@ class WebSocketServer:
                         "status": "completed",
                     },
                 )
-                logger.info(
-                    f"Data export completed for session {session_id}: {export_path}"
-                )
-            else:
+                            else:
                 response = create_message(
                     "data_export_response",
                     {
@@ -900,13 +845,11 @@ class WebSocketServer:
                         "error": "Export process failed",
                     },
                 )
-                logger.error(f"Data export failed for session {session_id}")
-
+                
             await self._send_message(client_id, response)
 
         except Exception as e:
-            logger.error(f"Error handling data export request from {client_id}: {e}")
-            await self._send_error(client_id, "export_error", str(e))
+                        await self._send_error(client_id, "export_error", str(e))
 
     async def _handle_session_manifest_request(self, client_id: str, message: dict):
 
@@ -933,13 +876,9 @@ class WebSocketServer:
             )
             await self._send_message(client_id, response)
 
-            logger.debug(f"Session manifest sent for {session_id}")
-
+            
         except Exception as e:
-            logger.error(
-                f"Error handling session manifest request from {client_id}: {e}"
-            )
-            await self._send_error(client_id, "manifest_error", str(e))
+                        await self._send_error(client_id, "manifest_error", str(e))
 
     async def _write_chunk_to_transfer(
             self, job_id: str, chunk_index: int, chunk_offset: int, chunk_data: bytes
@@ -949,8 +888,7 @@ class WebSocketServer:
 
             return True
         except Exception as e:
-            logger.error(f"Error writing chunk for {job_id}: {e}")
-            return False
+                        return False
 
     async def _verify_transfer_completion(
             self, job_id: str, expected_size: int, expected_checksum: str
@@ -964,8 +902,7 @@ class WebSocketServer:
                 "checksum_valid": True,
             }
         except Exception as e:
-            logger.error(f"Error verifying transfer {job_id}: {e}")
-            return {"success": False, "error": str(e)}
+                        return {"success": False, "error": str(e)}
 
     async def _check_existing_partial_file(
             self, job_id: str, file_name: str, session_id: str, device_id: str
@@ -975,8 +912,7 @@ class WebSocketServer:
 
             return 0
         except Exception as e:
-            logger.error(f"Error checking existing file for {job_id}: {e}")
-            return 0
+                        return 0
 
     async def _export_session_data(
             self, session_id: str, format: str, include_files: bool
@@ -986,8 +922,7 @@ class WebSocketServer:
             # Implementation would use data management service
             return f"/exports/{session_id}.{format}"
         except Exception as e:
-            logger.error(f"Error exporting session {session_id}: {e}")
-            return None
+                        return None
 
     async def _get_session_manifest(self, session_id: str) -> dict:
 
@@ -999,8 +934,7 @@ class WebSocketServer:
                 "created_timestamp": time.time(),
             }
         except Exception as e:
-            logger.error(f"Error getting manifest for {session_id}: {e}")
-            return {}
+                        return {}
 
 
 def create_websocket_server(host: str = "0.0.0.0", port: int = 8443) -> WebSocketServer:
@@ -1054,15 +988,11 @@ class WebSocketServerPhase4Extension:
                 )
                 await self.server._send_message(client_id, response)
 
-                logger.info(
-                    f"Enhanced authentication successful for {device_id} at level {auth_level.name}"
-                )
-            else:
+                            else:
                 await self.server._send_error(client_id, "enhanced_auth_failed", reason)
 
         except Exception as e:
-            logger.error(f"Error in enhanced authentication for {client_id}: {e}")
-            await self.server._send_error(client_id, "enhanced_auth_error", str(e))
+                        await self.server._send_error(client_id, "enhanced_auth_error", str(e))
 
     async def _handle_certificate_auth(self, client_id: str, message: dict):
 
@@ -1107,15 +1037,13 @@ class WebSocketServerPhase4Extension:
                 )
                 await self.server._send_message(client_id, response)
 
-                logger.info(f"Certificate authentication successful for {device_id}")
-            else:
+                            else:
                 await self.server._send_error(
                     client_id, "certificate_auth_failed", reason
                 )
 
         except Exception as e:
-            logger.error(f"Error in certificate authentication for {client_id}: {e}")
-            await self.server._send_error(client_id, "certificate_auth_error", str(e))
+                        await self.server._send_error(client_id, "certificate_auth_error", str(e))
 
     async def _handle_token_auth(self, client_id: str, message: dict):
 
@@ -1159,13 +1087,11 @@ class WebSocketServerPhase4Extension:
                 )
                 await self.server._send_message(client_id, response)
 
-                logger.info(f"Token authentication successful for {device_id}")
-            else:
+                            else:
                 await self.server._send_error(client_id, "token_auth_failed", reason)
 
         except Exception as e:
-            logger.error(f"Error in token authentication for {client_id}: {e}")
-            await self.server._send_error(client_id, "token_auth_error", str(e))
+                        await self.server._send_error(client_id, "token_auth_error", str(e))
 
     async def _handle_biometric_auth(self, client_id: str, message: dict):
 
@@ -1207,15 +1133,13 @@ class WebSocketServerPhase4Extension:
                 )
                 await self.server._send_message(client_id, response)
 
-                logger.info(f"Biometric authentication successful for {device_id}")
-            else:
+                            else:
                 await self.server._send_error(
                     client_id, "biometric_auth_failed", reason
                 )
 
         except Exception as e:
-            logger.error(f"Error in biometric authentication for {client_id}: {e}")
-            await self.server._send_error(client_id, "biometric_auth_error", str(e))
+                        await self.server._send_error(client_id, "biometric_auth_error", str(e))
 
     async def _handle_security_alert(self, client_id: str, message: dict):
 
@@ -1254,8 +1178,7 @@ class WebSocketServerPhase4Extension:
             await self.server._send_message(client_id, response)
 
         except Exception as e:
-            logger.error(f"Error handling security alert from {client_id}: {e}")
-            await self.server._send_error(client_id, "security_alert_error", str(e))
+                        await self.server._send_error(client_id, "security_alert_error", str(e))
 
     async def _handle_permission_request(self, client_id: str, message: dict):
 
@@ -1285,13 +1208,9 @@ class WebSocketServerPhase4Extension:
             )
             await self.server._send_message(client_id, response)
 
-            logger.debug(
-                f"Permission check for {device_id}: {requested_permission} = {has_permission}"
-            )
-
+            
         except Exception as e:
-            logger.error(f"Error handling permission request from {client_id}: {e}")
-            await self.server._send_error(client_id, "permission_error", str(e))
+                        await self.server._send_error(client_id, "permission_error", str(e))
 
     async def _handle_role_change_request(self, client_id: str, message: dict):
 
@@ -1319,13 +1238,9 @@ class WebSocketServerPhase4Extension:
             )
             await self.server._send_message(client_id, response)
 
-            logger.warning(
-                f"Role change request denied for {device_id}: {requested_role}"
-            )
-
+            
         except Exception as e:
-            logger.error(f"Error handling role change request from {client_id}: {e}")
-            await self.server._send_error(client_id, "role_change_error", str(e))
+                        await self.server._send_error(client_id, "role_change_error", str(e))
 
 
 def extend_websocket_server_with_phase4(server: Any = WebSocketServer) -> Any:
@@ -1339,5 +1254,4 @@ def extend_websocket_server_with_phase4(server: Any = WebSocketServer) -> Any:
     server._handle_permission_request = extension._handle_permission_request
     server._handle_role_change_request = extension._handle_role_change_request
 
-    logger.info("WebSocket server extended with Phase 4 security handlers")
-    return WebSocketServer(host, port)
+        return WebSocketServer(host, port)

@@ -216,22 +216,19 @@ public class CombinedData extends BarLineScatterCandleBubbleData<IBarLineScatter
 
     @Deprecated
     @Override
-    public boolean removeDataSet(int index) {
-        Log.e("MPAndroidChart", "removeDataSet(int index) not supported for CombinedData");
+    public boolean removeDataSet(int index) {not supported for CombinedData");
         return false;
     }
 
     @Deprecated
     @Override
-    public boolean removeEntry(Entry e, int dataSetIndex) {
-        Log.e("MPAndroidChart", "removeEntry(...) not supported for CombinedData");
+    public boolean removeEntry(Entry e, int dataSetIndex) {not supported for CombinedData");
         return false;
     }
 
     @Deprecated
     @Override
-    public boolean removeEntry(float xValue, int dataSetIndex) {
-        Log.e("MPAndroidChart", "removeEntry(...) not supported for CombinedData");
+    public boolean removeEntry(float xValue, int dataSetIndex) {not supported for CombinedData");
         return false;
     }
 }

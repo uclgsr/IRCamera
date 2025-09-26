@@ -2,7 +2,6 @@ package mpdc4gsr.activities
 
 import android.app.AlertDialog
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ProgressBar
@@ -33,11 +32,7 @@ class FaultTolerantRecordingActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_fault_tolerant_recording)
-
-        Log.i(TAG, "Starting Enhanced Fault-Tolerant Recording Activity")
-
-        // Initialize views
+        setContentView(R.layout.activity_fault_tolerant_recording)        // Initialize views
         initializeViews()
 
         // Initialize the enhanced recording system
@@ -128,9 +123,7 @@ class FaultTolerantRecordingActivity : AppCompatActivity() {
                 }
             }
 
-        } catch (e: Exception) {
-            Log.e(TAG, "Error initializing recording system", e)
-            statusText.text = "Failed to initialize: ${e.message}"
+        } catch (e: Exception) {            statusText.text = "Failed to initialize: ${e.message}"
         }
     }
 
@@ -144,10 +137,7 @@ class FaultTolerantRecordingActivity : AppCompatActivity() {
 
     private fun startRecording() {
         lifecycleScope.launch {
-            try {
-                Log.i(TAG, "Starting enhanced fault-tolerant recording session")
-
-                val success = recordingController.startRecording(
+            try {                val success = recordingController.startRecording(
                     sessionId = "FaultTolerant_${System.currentTimeMillis()}",
                     enabledSensors = listOf("RGB", "GSR", "Thermal"),
                     estimatedDurationMinutes = 30
@@ -161,9 +151,7 @@ class FaultTolerantRecordingActivity : AppCompatActivity() {
                     }
                 }
 
-            } catch (e: Exception) {
-                Log.e(TAG, "Error starting recording", e)
-                runOnUiThread {
+            } catch (e: Exception) {                runOnUiThread {
                     showToast("Error: ${e.message}")
                 }
             }
@@ -172,10 +160,7 @@ class FaultTolerantRecordingActivity : AppCompatActivity() {
 
     private fun stopRecording() {
         lifecycleScope.launch {
-            try {
-                Log.i(TAG, "Stopping fault-tolerant recording with graceful teardown")
-
-                val success = recordingController.stopRecording()
+            try {                val success = recordingController.stopRecording()
 
                 runOnUiThread {
                     if (success) {
@@ -185,9 +170,7 @@ class FaultTolerantRecordingActivity : AppCompatActivity() {
                     }
                 }
 
-            } catch (e: Exception) {
-                Log.e(TAG, "Error stopping recording", e)
-                runOnUiThread {
+            } catch (e: Exception) {                runOnUiThread {
                     showToast("Error: ${e.message}")
                 }
             }

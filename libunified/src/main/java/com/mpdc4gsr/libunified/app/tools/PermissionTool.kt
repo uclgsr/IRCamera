@@ -3,7 +3,6 @@ package com.mpdc4gsr.libunified.app.tools
 import android.content.Context
 import android.os.Build
 import com.blankj.utilcode.util.AppUtils
-import com.elvishew.xlog.XLog
 import com.hjq.permissions.OnPermissionCallback
 import com.hjq.permissions.Permission
 import com.hjq.permissions.XXPermissions
@@ -158,7 +157,7 @@ object PermissionTool {
                         permissions: MutableList<String>,
                         allGranted: Boolean,
                     ) {
-                        XLog.i("onGranted($allGranted)")
+                        X")
                         callback.onResult(allGranted)
                     }
 
@@ -166,7 +165,7 @@ object PermissionTool {
                         permissions: MutableList<String>,
                         never: Boolean,
                     ) {
-                        XLog.i("onDenied($never)")
+                        X")
                         if (never) {
                             var isBtNever = false
                             var isLocationNever = false

@@ -8,7 +8,6 @@ import sqlite3
 import time
 from collections import deque
 from dataclasses import dataclass, field
-from loguru import logger
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Set
 
@@ -75,10 +74,7 @@ class GSRReceiver:
         self._quality_monitor_task: Optional[asyncio.Task] = None
         self._analytics_task: Optional[asyncio.Task] = None
 
-        logger.info(
-            f"GSR Receiver initialized with data directory: {self.data_dir} and advanced analytics"
-        )
-
+        
     def init_database(self) -> Any:
 
         try:
@@ -100,25 +96,21 @@ class GSRReceiver:
                 )
 
                 conn.commit()
-                logger.info("GSR database initialized successfully")
-
+                
         except Exception as e:
-            logger.error(f"Failed to initialize GSR database: {e}")
-            raise
+                        raise
 
     async def start(self) -> Any:
 
         if self._running:
-            logger.warning("GSR Receiver already running")
-            return
+                        return
 
         self._running = True
 
         self._flush_task = asyncio.create_task(self._periodic_flush())
         self._quality_monitor_task = asyncio.create_task(self._quality_monitor())
 
-        logger.info("GSR Receiver started")
-
+        
     async def stop(self) -> Any:
 
         if not self._running:
@@ -145,8 +137,7 @@ class GSRReceiver:
 
         await self._flush_to_database()
 
-        logger.info("GSR Receiver stopped")
-
+        
     async def register_device_session(self, device_id: str, session_id: str) -> bool:
 
         try:
@@ -157,8 +148,7 @@ class GSRReceiver:
             session_key = f"{device_id}_{session_id}"
 
             if session_key in self.active_sessions:
-                logger.warning(f"GSR session already exists: {session_key}")
-                return False
+                                return False
 
             session = DeviceSession(
                 device_id=device_id,
@@ -181,14 +171,10 @@ class GSRReceiver:
                 )
                 conn.commit()
 
-            logger.info(f"Registered GSR session: {session_key}")
-            return True
+                        return True
 
         except Exception as e:
-            logger.error(
-                f"Failed to register GSR session {device_id}_{session_id}: {e}"
-            )
-            return False
+                        return False
 
     async def process_gsr_batch(
             self, device_id: str, session_id: str, samples_data: List[Dict]
@@ -199,8 +185,7 @@ class GSRReceiver:
             session = self.active_sessions.get(session_key)
 
             if not session:
-                logger.warning(f"Received GSR batch for unknown session: {session_key}")
-                return False
+                                return False
 
             processed_samples = []
             for sample_data in samples_data:
@@ -245,8 +230,7 @@ class GSRReceiver:
             return True
 
         except Exception as e:
-            logger.error(f"Failed to process GSR batch from {device_id}: {e}")
-            return False
+                        return False
 
     async def handle_heartbeat(
             self, device_id: str, session_id: str, heartbeat_data: Dict
@@ -257,8 +241,7 @@ class GSRReceiver:
             session = self.active_sessions.get(session_key)
 
             if not session:
-                logger.warning(f"Received heartbeat for unknown session: {session_key}")
-                return False
+                                return False
 
             session.network_stats["last_heartbeat"] = time.time()
 
@@ -271,8 +254,7 @@ class GSRReceiver:
             return True
 
         except Exception as e:
-            logger.error(f"Failed to handle heartbeat from {device_id}: {e}")
-            return False
+                        return False
 
     async def handle_quality_metrics(
             self, device_id: str, session_id: str, metrics_data: Dict
@@ -283,10 +265,7 @@ class GSRReceiver:
             session = self.active_sessions.get(session_key)
 
             if not session:
-                logger.warning(
-                    f"Received quality metrics for unknown session: {session_key}"
-                )
-                return False
+                                return False
 
             session.network_stats.update(
                 {
@@ -306,8 +285,7 @@ class GSRReceiver:
             return True
 
         except Exception as e:
-            logger.error(f"Failed to handle quality metrics from {device_id}: {e}")
-            return False
+                        return False
 
     async def end_session(self, device_id: str, session_id: str) -> bool:
 
@@ -316,8 +294,7 @@ class GSRReceiver:
             session = self.active_sessions.get(session_key)
 
             if not session:
-                logger.warning(f"Cannot end unknown session: {session_key}")
-                return False
+                                return False
 
             await self._flush_session_to_database(session)
 
@@ -376,25 +353,16 @@ class GSRReceiver:
                     device_id, session_id, str(features_path)
                 )
 
-                logger.info(
-                    f"Generated analytics report for session {session_key}: "
-                    f"avg_stress={analysis_report.average_stress_score:.1f}, "
-                    f"trend={analysis_report.stress_trend}"
-                )
-
+                
             self.analytics.cleanup_device_session(device_id, session_id)
 
             self.completed_sessions[session_key] = session
             del self.active_sessions[session_key]
 
-            logger.info(
-                f"Ended GSR session {session_key}: {session.sample_count} samples"
-            )
-            return True
+                        return True
 
         except Exception as e:
-            logger.error(f"Failed to end GSR session {device_id}_{session_id}: {e}")
-            return False
+                        return False
 
     def _validate_sample(self, sample: GSRSample) -> bool:
 
@@ -404,21 +372,17 @@ class GSRReceiver:
             if (
                     abs(sample.timestamp - current_time) > 3600
             ):
-                logger.warning(f"Sample timestamp seems invalid: {sample.timestamp}")
-                return False
+                                return False
 
             if not (0.01 <= sample.gsr_value <= 1000):
-                logger.warning(f"GSR value out of range: {sample.gsr_value}")
-                return False
+                                return False
 
             if sample.quality < self.quality_threshold:
-                logger.debug(f"Low quality sample: {sample.quality}")
-
+                
             return True
 
         except Exception as e:
-            logger.error(f"Error validating GSR sample: {e}")
-            return False
+                        return False
 
     async def _periodic_flush(self):
 
@@ -430,8 +394,7 @@ class GSRReceiver:
             except asyncio.CancelledError:
                 break
             except Exception as e:
-                logger.error(f"Error in periodic flush: {e}")
-
+                
     async def _flush_to_database(self):
 
         if not self.sample_buffer:
@@ -462,8 +425,7 @@ class GSRReceiver:
             logger.debug(f"Flushed {len(samples_to_flush)} GSR samples to database")
 
         except Exception as e:
-            logger.error(f"Failed to flush samples to database: {e}")
-
+            
     async def _flush_session_to_database(self, session: DeviceSession):
 
         if not session.samples:
@@ -495,8 +457,7 @@ class GSRReceiver:
             )
 
         except Exception as e:
-            logger.error(f"Failed to flush session samples to database: {e}")
-
+            
     async def _quality_monitor(self):
 
         while self._running:
@@ -516,14 +477,12 @@ class GSRReceiver:
 
                 if self.quality_alerts:
                     for alert in self.quality_alerts:
-                        logger.warning(f"Quality Alert: {alert}")
-                    self.quality_alerts.clear()
+                                            self.quality_alerts.clear()
 
             except asyncio.CancelledError:
                 break
             except Exception as e:
-                logger.error(f"Error in quality monitor: {e}")
-
+                
     def get_session_stats(
             self, device_id: str, session_id: str
     ) -> Optional[Dict[str, Any]]:
@@ -640,8 +599,7 @@ class GSRReceiver:
                 )
 
             if df.empty:
-                logger.warning(f"No data found for session {device_id}_{session_id}")
-                return None
+                                return None
 
             timestamp = int(time.time())
             filename = f"gsr_{device_id}_{session_id}_{timestamp}.{format}"
@@ -654,12 +612,9 @@ class GSRReceiver:
             elif format == "hdf5":
                 df.to_hdf(export_path, key="gsr_data", mode="w")
             else:
-                logger.error(f"Unsupported export format: {format}")
-                return None
+                                return None
 
-            logger.info(f"Exported GSR data to {export_path}")
-            return export_path
+                        return export_path
 
         except Exception as e:
-            logger.error(f"Failed to export session data: {e}")
-            return None
+                        return None

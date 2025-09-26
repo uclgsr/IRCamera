@@ -3,10 +3,8 @@ from pathlib import Path
 from typing import Any, Dict, Optional
 
 try:
-    from loguru import logger
-except ImportError:
-    from ..utils.simple_logger import logger
-
+    except ImportError:
+    
 
 class ConfigManager:
 
@@ -24,18 +22,15 @@ class ConfigManager:
 
         try:
             if not self.config_path.exists():
-                logger.warning(f"Config file not found: {self.config_path}")
-                self._config = self._get_default_config()
+                                self._config = self._get_default_config()
                 return
 
             with open(self.config_path, "r", encoding="utf-8") as file:
                 self._config = yaml.safe_load(file) or {}
 
-            logger.info(f"Configuration loaded from {self.config_path}")
-
+            
         except (OSError, ValueError, RuntimeError) as e:
-            logger.error(f"Failed to load configuration: {e}")
-            self._config = self._get_default_config()
+                        self._config = self._get_default_config()
 
     def _get_default_config(self) -> Dict[str, Any]:
 
@@ -103,8 +98,7 @@ class ConfigManager:
             config = config[k]
 
         config[keys[-1]] = value
-        logger.debug(f"Configuration updated: {key} = {value}")
-
+        
     def save(self) -> None:
 
         try:
@@ -113,11 +107,9 @@ class ConfigManager:
             with open(self.config_path, "w", encoding="utf-8") as file:
                 yaml.dump(self._config, file, default_flow_style=False, indent=2)
 
-            logger.info(f"Configuration saved to {self.config_path}")
-
+            
         except (OSError, ValueError, RuntimeError) as e:
-            logger.error(f"Failed to save configuration: {e}")
-
+            
     def reload(self) -> None:
 
         self._load_config()

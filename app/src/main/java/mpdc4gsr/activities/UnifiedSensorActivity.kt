@@ -2,7 +2,6 @@ package mpdc4gsr.activities
 
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ProgressBar
@@ -86,18 +85,11 @@ class UnifiedSensorActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_unified_sensor)
-
-        Log.i(TAG, "Starting Unified Sensor Activity - IRCamera Extension")
-
-        initializeUI()
+        setContentView(R.layout.activity_unified_sensor)        initializeUI()
         checkPermissionsAndInitialize()
     }
 
-    private fun initializeUI() {
-        Log.d(TAG, "Initializing UI components")
-
-        statusText = findViewById(R.id.statusText)
+    private fun initializeUI() {        statusText = findViewById(R.id.statusText)
         qualityIndicator = findViewById(R.id.qualityIndicator)
         gsrStatusText = findViewById(R.id.gsrStatusText)
         networkStatusText = findViewById(R.id.networkStatusText)
@@ -151,18 +143,14 @@ class UnifiedSensorActivity : AppCompatActivity() {
             ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED
         }
 
-        if (missingPermissions.isNotEmpty()) {
-            Log.i(TAG, "Requesting missing permissions: ${missingPermissions.joinToString()}")
+        if (missingPermissions.isNotEmpty()) {}")
             requestPermissionLauncher.launch(missingPermissions.toTypedArray())
         } else {
             initializeComponents()
         }
     }
 
-    private fun initializeComponents() {
-        Log.i(TAG, "Initializing core components")
-
-        try {
+    private fun initializeComponents() {        try {
 
             recordingController = RecordingController(this, this)
 
@@ -193,9 +181,7 @@ class UnifiedSensorActivity : AppCompatActivity() {
 
                 // Register camera with RecordingController for unified session management
                 if (cameraInitialized) {
-                    recordingController.registerRgbCameraWithPreview(rgbCameraRecorder)
-                    Log.i(TAG, "RGB camera registered with RecordingController")
-                }
+                    recordingController.registerRgbCameraWithPreview(rgbCameraRecorder)                }
 
                 // Initialize other sensors (thermal, GSR) in RecordingController
                 val sensorsInitialized = recordingController.initializeSensors(skipRgbCamera = true)
@@ -209,16 +195,11 @@ class UnifiedSensorActivity : AppCompatActivity() {
                     showInitializationError(gsrInitialized, networkInitialized, cameraInitialized)
                 }
             }
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to initialize components", e)
-            statusText.text = "Initialization error: ${e.message}"
+        } catch (e: Exception) {            statusText.text = "Initialization error: ${e.message}"
         }
     }
 
-    private fun observeComponentStates() {
-        Log.d(TAG, "Setting up component state observers")
-
-        lifecycleScope.launch {
+    private fun observeComponentStates() {        lifecycleScope.launch {
             gsrRecorder.deviceStatus.collect { status ->
                 gsrStatusText.text = "GSR: $status"
             }
@@ -239,9 +220,7 @@ class UnifiedSensorActivity : AppCompatActivity() {
                     val cameraInfo = rgbCameraRecorder.getCurrentCameraInfo()
                     cameraTypeText.text = if (cameraInfo.isUsingFrontCamera) "Front Camera" else "Back Camera"
                     switchCameraButton.isEnabled = cameraInfo.canSwitch
-                } catch (e: Exception) {
-                    Log.w(TAG, "Could not get camera info", e)
-                }
+                } catch (e: Exception) {                }
             }
         }
 
@@ -266,10 +245,7 @@ class UnifiedSensorActivity : AppCompatActivity() {
         }
     }
 
-    private fun startDeviceDiscovery() {
-        Log.i(TAG, "Starting Shimmer device discovery")
-
-        discoverButton.isEnabled = false
+    private fun startDeviceDiscovery() {        discoverButton.isEnabled = false
         discoverButton.text = "Discovering..."
 
         lifecycleScope.launch {
@@ -297,10 +273,7 @@ class UnifiedSensorActivity : AppCompatActivity() {
         }
     }
 
-    private fun startPCDiscovery() {
-        Log.i(TAG, "Starting PC controller discovery")
-
-        discoverPCButton.isEnabled = false
+    private fun startPCDiscovery() {        discoverPCButton.isEnabled = false
         discoverPCButton.text = "Discovering..."
 
         lifecycleScope.launch {
@@ -325,10 +298,7 @@ class UnifiedSensorActivity : AppCompatActivity() {
         }
     }
 
-    private fun connectToDevice(device: DeviceInfo) {
-        Log.i(TAG, "Connecting to Shimmer device: ${device.name}")
-
-        lifecycleScope.launch {
+    private fun connectToDevice(device: DeviceInfo) {        lifecycleScope.launch {
             val connected = gsrRecorder.connectToDevice(device)
 
             if (connected) {
@@ -348,10 +318,7 @@ class UnifiedSensorActivity : AppCompatActivity() {
         }
     }
 
-    private fun connectToPC(controller: PCControllerInfo) {
-        Log.i(TAG, "Connecting to PC controller: ${controller.name}")
-
-        lifecycleScope.launch {
+    private fun connectToPC(controller: PCControllerInfo) {        lifecycleScope.launch {
             val connected = networkController.connectToController(controller)
 
             if (connected) {
@@ -370,10 +337,7 @@ class UnifiedSensorActivity : AppCompatActivity() {
         }
     }
 
-    private fun startSession() {
-        Log.i(TAG, "Starting recording session")
-
-        val sessionName = sessionNameEdit.text.toString().trim()
+    private fun startSession() {        val sessionName = sessionNameEdit.text.toString().trim()
         val participantId = participantIdEdit.text.toString().trim()
 
         if (sessionName.isEmpty() || participantId.isEmpty()) {
@@ -417,10 +381,7 @@ class UnifiedSensorActivity : AppCompatActivity() {
         }
     }
 
-    private fun stopSession() {
-        Log.i(TAG, "Stopping recording session")
-
-        lifecycleScope.launch {
+    private fun stopSession() {        lifecycleScope.launch {
             val stopped = sessionManager.stopSession()
             if (stopped) {
                 Toast.makeText(
@@ -439,10 +400,7 @@ class UnifiedSensorActivity : AppCompatActivity() {
         }
     }
 
-    private fun addSyncMarker() {
-        Log.i(TAG, "Adding sync marker")
-
-        lifecycleScope.launch {
+    private fun addSyncMarker() {        lifecycleScope.launch {
             val added = sessionManager.addSyncMarker(
                 markerType = "manual_marker",
                 markerData = mapOf(
@@ -567,9 +525,7 @@ class UnifiedSensorActivity : AppCompatActivity() {
                     cameraStatusText.text = "Camera: Switch failed"
                 }
 
-            } catch (e: Exception) {
-                Log.e(TAG, "Error switching camera", e)
-                cameraStatusText.text = "Camera: Switch error"
+            } catch (e: Exception) {                cameraStatusText.text = "Camera: Switch error"
             } finally {
                 switchCameraButton.isEnabled = true
                 switchCameraButton.text = "Switch Camera"
@@ -617,18 +573,13 @@ class UnifiedSensorActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
-        super.onDestroy()
-        Log.i(TAG, "Cleaning up Unified Sensor Activity")
-
-        lifecycleScope.launch {
+        super.onDestroy()        lifecycleScope.launch {
             try {
                 sessionManager.cleanup()
                 gsrRecorder.cleanup()
                 networkController.cleanup()
                 rgbCameraRecorder.cleanup()
-            } catch (e: Exception) {
-                Log.e(TAG, "Error during cleanup", e)
-            }
+            } catch (e: Exception) {            }
         }
     }
 }

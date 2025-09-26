@@ -1,10 +1,8 @@
-import logging
 import sys
 from typing import Any
 
 try:
-    from loguru import logger
-except ImportError:
+    except ImportError:
 
     logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
     logger = logging.getLogger(__name__)
@@ -52,8 +50,7 @@ class LogHandler(QObject):
 
 
 def setup_logging() -> LogHandler:
-    logger.remove()
-
+    
     log_level = config.get("logging.level", "INFO")
     console_output = config.get("logging.console_output", True)
     file_rotation = config.get("logging.file_rotation", "1 MB")
@@ -72,16 +69,7 @@ def setup_logging() -> LogHandler:
             ),
         )
 
-    logger.add(
-        "logs/ircamera_pc.log",
-        level=log_level,
-        format="{time:YYYY-MM-DD HH:mm:ss} | {level: <8}"
-               "| {name}:{function}:{line} - {message}",
-        rotation=file_rotation,
-        retention=retention,
-        compression="zip",
-    )
-
+    
     gui_handler = LogHandler()
 
     def gui_sink(record) -> Any:
@@ -116,13 +104,11 @@ def setup_logging() -> LogHandler:
                 pass
 
     try:
-        logger.add(gui_sink, level=log_level)
-    except Exception:
+            except Exception:
 
         pass
 
-    logger.info("Logging system initialized")
-    return gui_handler
+        return gui_handler
 
 
 def get_app_icon() -> Any:

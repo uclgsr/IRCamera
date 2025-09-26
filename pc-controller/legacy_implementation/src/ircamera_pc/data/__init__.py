@@ -6,7 +6,6 @@ import threading
 import time
 from collections import deque
 from dataclasses import dataclass, field
-from loguru import logger
 from pathlib import Path
 from queue import Empty, Queue
 from typing import Any, Dict, List, Optional, Tuple
@@ -69,15 +68,11 @@ class DataAggregationEngine:
         self.hdf5_file: Optional[h5py.File] = None
         self.export_enabled = True
 
-        logger.info(
-            f"Data aggregation engine initialized for session: {session_directory}"
-        )
-
+        
     def start(self) -> None:
 
         if self.is_running.is_set():
-            logger.warning("Data aggregation engine already running")
-            return
+                        return
 
         self.is_running.set()
 
@@ -89,15 +84,13 @@ class DataAggregationEngine:
         )
         self.aggregation_thread.start()
 
-        logger.info("Data aggregation engine started")
-
+        
     def stop(self) -> None:
 
         if not self.is_running.is_set():
             return
 
-        logger.info("Stopping data aggregation engine...")
-
+        
         self.is_running.clear()
 
         if self.aggregation_thread and self.aggregation_thread.is_alive():
@@ -105,15 +98,13 @@ class DataAggregationEngine:
 
         self._finalize_exports()
 
-        logger.info("Data aggregation engine stopped")
-
+        
     def add_stream(self, device_id: str, stream_type: str, sample_rate: float) -> str:
 
         stream_id = f"{device_id}_{stream_type}"
 
         if stream_id in self.streams:
-            logger.warning(f"Stream {stream_id} already exists, updating configuration")
-
+            
         stream = DataStream(
             device_id=device_id,
             stream_type=stream_type,
@@ -141,8 +132,7 @@ class DataAggregationEngine:
 
         del self.streams[stream_id]
 
-        logger.info(f"Removed data stream: {stream_id}")
-        return True
+                return True
 
     def add_data(self, stream_id: str, timestamp_ns: int, data: Any) -> bool:
 
@@ -150,8 +140,7 @@ class DataAggregationEngine:
             return False
 
         if stream_id not in self.streams:
-            logger.warning(f"Attempted to add data to unknown stream: {stream_id}")
-            return False
+                        return False
 
         self.data_queue.put(
             {
@@ -187,8 +176,7 @@ class DataAggregationEngine:
 
         self.sync_queue.put(sync_event)
 
-        logger.info(f"Added sync event: {event_type} from {source_device}")
-
+        
     def get_statistics(self) -> AggregationStats:
 
         self._update_statistics()
@@ -265,13 +253,11 @@ class DataAggregationEngine:
         with open(export_path / "session_metadata.json", "w") as f:
             json.dump(session_metadata, f, indent=2)
 
-        logger.info(f"Session data exported to: {export_path}")
-        return export_path
+                return export_path
 
     def _aggregation_loop(self) -> None:
 
-        logger.info("Data aggregation loop started")
-
+        
         while self.is_running.is_set():
             try:
 
@@ -287,11 +273,9 @@ class DataAggregationEngine:
                 time.sleep(0.001)
 
             except Exception as e:
-                logger.error(f"Error in aggregation loop: {e}")
-                time.sleep(0.1)
+                                time.sleep(0.1)
 
-        logger.info("Data aggregation loop stopped")
-
+        
     def _process_data_queue(self) -> None:
 
         processed_count = 0
@@ -391,11 +375,9 @@ class DataAggregationEngine:
             self.hdf5_file.attrs["start_time"] = self.start_time
             self.hdf5_file.attrs["session_directory"] = str(self.session_directory)
 
-            logger.info(f"HDF5 export initialized: {hdf5_path}")
-
+            
         except Exception as e:
-            logger.error(f"Failed to initialize HDF5 export: {e}")
-            self.export_enabled = False
+                        self.export_enabled = False
 
     def _create_hdf5_dataset(self, stream_id: str, stream: DataStream) -> None:
 
@@ -444,8 +426,7 @@ class DataAggregationEngine:
             dataset.attrs["sample_rate"] = stream.sample_rate
 
         except Exception as e:
-            logger.error(f"Failed to create HDF5 dataset for {stream_id}: {e}")
-
+            
     def _export_stream_data(self, stream_id: str) -> None:
 
         if not self.hdf5_file or stream_id not in self.streams:
@@ -485,8 +466,7 @@ class DataAggregationEngine:
             stream.data_buffer.clear()
 
         except Exception as e:
-            logger.error(f"Failed to export stream data for {stream_id}: {e}")
-
+            
     def _export_sync_event(self, sync_event: SyncEvent) -> None:
 
         if not self.hdf5_file:
@@ -520,8 +500,7 @@ class DataAggregationEngine:
             ]
 
         except Exception as e:
-            logger.error(f"Failed to export sync event: {e}")
-
+            
     def _periodic_export(self) -> None:
 
         current_time = time.time()
@@ -548,11 +527,9 @@ class DataAggregationEngine:
 
             self.export_session_data()
 
-            logger.info("Data export finalized")
-
+            
         except Exception as e:
-            logger.error(f"Error finalizing exports: {e}")
-
+            
 
 def calculate_temporal_alignment(
         sync_events: List[SyncEvent], tolerance_ms: float = 5.0
@@ -581,10 +558,7 @@ def calculate_temporal_alignment(
             if abs(offset_ms) <= tolerance_ms:
                 device_offsets[event.source_device] = offset_ns
             else:
-                logger.warning(
-                    f"Device {event.source_device} offset {offset_ms:.2f}ms exceeds tolerance"
-                )
-
+                
     return device_offsets
 
 

@@ -24,7 +24,6 @@ try:
 except ImportError:
     PIL_AVAILABLE = False
 
-import logging
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
@@ -53,8 +52,7 @@ class CameraManager:
         self.thermal_frames = {}  # {device_id: latest_thermal_frame}
         self.rgb_frames = {}  # {device_id: latest_rgb_frame}
 
-        logger.info("📷 Camera manager initialized")
-
+        
     def start_webcam_capture(self) -> bool:
         """Start local webcam capture"""
         try:
@@ -62,8 +60,7 @@ class CameraManager:
             self.camera = cv2.VideoCapture(self.camera_index)
 
             if not self.camera.isOpened():
-                logger.error(f"❌ Cannot open camera {self.camera_index}")
-                return False
+                                return False
 
             # Set camera properties
             self.camera.set(cv2.CAP_PROP_FRAME_WIDTH, self.resolution[0])
@@ -79,12 +76,10 @@ class CameraManager:
             actual_height = int(self.camera.get(cv2.CAP_PROP_FRAME_HEIGHT))
             actual_fps = self.camera.get(cv2.CAP_PROP_FPS)
 
-            logger.info(f"📷 Webcam started: {actual_width}x{actual_height} @ {actual_fps:.1f} FPS")
-            return True
+                        return True
 
         except Exception as e:
-            logger.error(f"❌ Failed to start webcam: {e}")
-            return False
+                        return False
 
     def stop_webcam_capture(self):
         """Stop local webcam capture"""
@@ -97,19 +92,16 @@ class CameraManager:
             self.camera.release()
             self.camera = None
 
-        logger.info("📷 Webcam capture stopped")
-
+        
     def _camera_capture_loop(self):
         """Camera capture loop running in background thread"""
-        logger.info("📷 Camera capture loop started")
-
+        
         while self.camera_running and self.camera:
             try:
                 ret, frame = self.camera.read()
 
                 if not ret or frame is None:
-                    logger.warning("⚠️ Failed to capture frame from webcam")
-                    time.sleep(0.1)
+                                        time.sleep(0.1)
                     continue
 
                 # Store latest frame
@@ -124,8 +116,7 @@ class CameraManager:
                 time.sleep(1.0 / self.fps)
 
             except Exception as e:
-                logger.error(f"Camera capture error: {e}")
-                time.sleep(1.0)
+                                time.sleep(1.0)
 
     def process_thermal_frame(self, device_id: str, frame_data: bytes, format: str = 'jpeg') -> bool:
         """Process thermal camera frame from Android device"""
@@ -141,12 +132,10 @@ class CameraManager:
                 np_arr = np.frombuffer(decoded_data, np.uint8)
                 frame = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
             else:
-                logger.error(f"❌ Unsupported thermal frame format: {format}")
-                return False
+                                return False
 
             if frame is None:
-                logger.error(f"❌ Failed to decode thermal frame from {device_id}")
-                return False
+                                return False
 
             # Store thermal frame
             self.thermal_frames[device_id] = {
@@ -160,12 +149,10 @@ class CameraManager:
             if self.preview_callback:
                 self.preview_callback(device_id, frame, 'thermal')
 
-            logger.debug(f"📷 Thermal frame processed from {device_id}: {frame.shape}")
-            return True
+                        return True
 
         except Exception as e:
-            logger.error(f"❌ Error processing thermal frame from {device_id}: {e}")
-            return False
+                        return False
 
     def process_rgb_frame(self, device_id: str, frame_data: bytes, format: str = 'jpeg') -> bool:
         """Process RGB camera frame from Android device"""
@@ -179,12 +166,10 @@ class CameraManager:
                 np_arr = np.frombuffer(decoded_data, np.uint8)
                 frame = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
             else:
-                logger.error(f"❌ Unsupported RGB frame format: {format}")
-                return False
+                                return False
 
             if frame is None:
-                logger.error(f"❌ Failed to decode RGB frame from {device_id}")
-                return False
+                                return False
 
             # Store RGB frame
             self.rgb_frames[device_id] = {
@@ -198,12 +183,10 @@ class CameraManager:
             if self.preview_callback:
                 self.preview_callback(device_id, frame, 'rgb')
 
-            logger.debug(f"📷 RGB frame processed from {device_id}: {frame.shape}")
-            return True
+                        return True
 
         except Exception as e:
-            logger.error(f"❌ Error processing RGB frame from {device_id}: {e}")
-            return False
+                        return False
 
     def get_latest_webcam_frame(self) -> Optional[np.ndarray]:
         """Get latest webcam frame"""
@@ -255,12 +238,10 @@ class CameraManager:
                 # Default to JPEG
                 cv2.imwrite(str(file_path), frame, [cv2.IMWRITE_JPEG_QUALITY, quality])
 
-            logger.info(f"📷 Frame saved to: {filename}")
-            return True
+                        return True
 
         except Exception as e:
-            logger.error(f"❌ Failed to save frame to {filename}: {e}")
-            return False
+                        return False
 
     def cleanup(self):
         """Clean up camera resources"""
@@ -276,8 +257,7 @@ class DataExporter:
         self.export_base_dir = export_base_dir or Path("./exports")
         self.export_base_dir.mkdir(exist_ok=True)
 
-        logger.info(f"📁 Data exporter initialized: {self.export_base_dir}")
-
+        
     def export_session_data(self, session_id: str, gsr_data: Dict,
                             camera_manager: CameraManager,
                             device_info: Dict) -> str:
@@ -287,8 +267,7 @@ class DataExporter:
             session_dir = self.export_base_dir / f"session_{session_id}_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
             session_dir.mkdir(exist_ok=True)
 
-            logger.info(f"📁 Exporting session data to: {session_dir}")
-
+            
             # Export GSR data to CSV
             gsr_file = session_dir / "gsr_data.csv"
             self._export_gsr_to_csv(gsr_data, gsr_file)
@@ -310,12 +289,10 @@ class DataExporter:
             summary_file = session_dir / "README.txt"
             self._create_session_summary(session_id, gsr_data, camera_manager, device_info, summary_file)
 
-            logger.info(f"✅ Session export completed: {session_dir}")
-            return str(session_dir)
+                        return str(session_dir)
 
         except Exception as e:
-            logger.error(f"❌ Failed to export session data: {e}")
-            raise
+                        raise
 
     def _export_gsr_to_csv(self, gsr_data: Dict, output_file: Path):
         """Export GSR data to CSV format"""
@@ -333,11 +310,9 @@ class DataExporter:
                             quality = gsr_value.get('quality', 1.0)
                             f.write(f"{timestamp},{device_id},{value},{quality}\n")
 
-            logger.info(f"📊 GSR data exported to: {output_file}")
-
+            
         except Exception as e:
-            logger.error(f"❌ Failed to export GSR data: {e}")
-
+            
     def _export_camera_frames(self, camera_manager: CameraManager, camera_dir: Path):
         """Export latest camera frames from all devices"""
         try:
@@ -370,22 +345,18 @@ class DataExporter:
                 camera_manager.save_frame_to_file(frame, str(rgb_file))
                 frame_count += 1
 
-            logger.info(f"📷 Exported {frame_count} camera frames to: {camera_dir}")
-
+            
         except Exception as e:
-            logger.error(f"❌ Failed to export camera frames: {e}")
-
+            
     def _export_device_info(self, device_info: Dict, output_file: Path):
         """Export device information to JSON"""
         try:
             with open(output_file, 'w') as f:
                 json.dump(device_info, f, indent=2, default=str)
 
-            logger.info(f"📱 Device info exported to: {output_file}")
-
+            
         except Exception as e:
-            logger.error(f"❌ Failed to export device info: {e}")
-
+            
     def _export_session_metadata(self, session_id: str, gsr_data: Dict,
                                  camera_manager: CameraManager, output_file: Path):
         """Export session metadata"""
@@ -411,11 +382,9 @@ class DataExporter:
             with open(output_file, 'w') as f:
                 json.dump(metadata, f, indent=2, default=str)
 
-            logger.info(f"📋 Session metadata exported to: {output_file}")
-
+            
         except Exception as e:
-            logger.error(f"❌ Failed to export session metadata: {e}")
-
+            
     def _create_session_summary(self, session_id: str, gsr_data: Dict,
                                 camera_manager: CameraManager, device_info: Dict,
                                 output_file: Path):
@@ -475,11 +444,9 @@ class DataExporter:
                 f.write("    • thermal/ - Thermal camera frames\n")
                 f.write("    • rgb/ - RGB camera frames\n")
 
-            logger.info(f"📄 Session summary created: {output_file}")
-
+            
         except Exception as e:
-            logger.error(f"❌ Failed to create session summary: {e}")
-
+            
 
 def main():
     """Test camera manager and data export functionality"""

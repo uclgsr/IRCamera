@@ -1,7 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.lite.util
 
-import android.util.Log
-import com.elvishew.xlog.XLog
 import com.energy.ac020library.bean.CommonParams
 import com.energy.ac020library.bean.IrcmdError
 import com.energy.irutilslibrary.LibIRTempAC020
@@ -24,20 +22,10 @@ object IRTool {
                     } else {
                         CommonParams.AutoFFCStatus.AUTO_FFC_DISABLED
                     },
-                )
-        Log.d(
-            TAG,
-            "basicAutoFFCStatusSet=$basicAutoFFCStatusSet",
-        )
-    }
+                )    }
 
     fun setOneShutter() {
-        val basicFFCUpdate = DeviceIrcmdControlManager.getInstance().ircmdEngine?.basicFFCUpdate()
-        Log.d(
-            TAG,
-            "basicFFCUpdate=$basicFFCUpdate",
-        )
-    }
+        val basicFFCUpdate = DeviceIrcmdControlManager.getInstance().ircmdEngine?.basicFFCUpdate()    }
 
 
     fun basicGainSet(gainType: Int) {
@@ -47,26 +35,17 @@ object IRTool {
             CameraPreviewManager.getInstance().setAutoSwitchGainEnable(false)
             val basicGainSet =
                 DeviceIrcmdControlManager.getInstance().ircmdEngine
-                    ?.basicGainSet(CommonParams.GainStatus.HIGH_GAIN)
-            Log.d(TAG, "basicGainSet=$basicGainSet--$gainType")
-        } else if (gainType == CameraItemBean.TYPE_TMP_H) {
+                    ?.basicGainSet(CommonParams.GainStatus.HIGH_GAIN)        } else if (gainType == CameraItemBean.TYPE_TMP_H) {
             CameraPreviewManager.getInstance().setAutoSwitchGainEnable(false)
             val basicGainSet =
                 DeviceIrcmdControlManager.getInstance().ircmdEngine
-                    ?.basicGainSet(CommonParams.GainStatus.LOW_GAIN)
-            Log.d(TAG, "basicGainSet=$basicGainSet--$gainType")
-        }
+                    ?.basicGainSet(CommonParams.GainStatus.LOW_GAIN)        }
     }
 
     fun basicGlobalContrastLevelSet(levelValue: Int) {
         val basicGlobalContrastLevelSetResult =
             DeviceIrcmdControlManager.getInstance().ircmdEngine
-                ?.basicGlobalContrastLevelSet(levelValue)
-        Log.d(
-            TAG,
-            "basicGlobalContrastLevelSet=$basicGlobalContrastLevelSetResult",
-        )
-    }
+                ?.basicGlobalContrastLevelSet(levelValue)    }
 
     fun basicImageDetailEnhanceLevelSet(levelValue: Int) {
 
@@ -83,9 +62,7 @@ object IRTool {
                     } else {
                         CommonParams.MirrorFlipType.NO_MIRROR_OR_FLIP
                     },
-                )
-        Log.d(TAG, "basicGlobalContrastLevelSet=$basicMirrorAndFlipStatusSet")
-    }
+                )    }
 
 
     fun onceAuto(): Boolean {
@@ -98,10 +75,7 @@ object IRTool {
 
         DeviceIrcmdControlManager.getInstance().getIrcmdEngine()?.basicFFCUpdate()
 
-        val result = DeviceIrcmdControlManager.getInstance().getIrcmdEngine()?.advAutoRmcoverCali()
-        Log.d(TAG, "advAutoRmcoverCali=$result")
-
-        DeviceIrcmdControlManager.getInstance().getIrcmdEngine()
+        val result = DeviceIrcmdControlManager.getInstance().getIrcmdEngine()?.advAutoRmcoverCali()        DeviceIrcmdControlManager.getInstance().getIrcmdEngine()
             ?.basicAutoFFCStatusSet(CommonParams.AutoFFCStatus.AUTO_FFC_ENABLE)
 
         val ircmdError =
@@ -113,15 +87,12 @@ object IRTool {
     suspend fun autoStart(): Boolean {
         basicGainSet(CameraItemBean.TYPE_TMP_C)
         delay(2000)
-        XLog.d(TAG, "onceAuto=start")
-        if (!onceAuto()) {
+        X        if (!onceAuto()) {
             return false
         }
-        XLog.d(TAG, "basicGainSet=start")
-        basicGainSet(CameraItemBean.TYPE_TMP_H)
+        X        basicGainSet(CameraItemBean.TYPE_TMP_H)
         delay(2000)
-        XLog.d(TAG, "onceAuto=start")
-        return onceAuto()
+        X        return onceAuto()
     }
 
     fun advEnvCorrectSwitchSet(open: Boolean) {
@@ -173,8 +144,7 @@ object IRTool {
                     if (basicGainGetValue == 0) GainStatus.LOW_GAIN else GainStatus.HIGH_GAIN,
                 )
         } catch (e: Exception) {
-            XLog.e("$TAG:temperatureCorrection-${e.message}")
-        } finally {
+            X        } finally {
             return newTemp
         }
     }

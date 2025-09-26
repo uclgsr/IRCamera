@@ -1,6 +1,5 @@
 package com.mpdc4gsr.gsr.service
 
-import android.util.Log
 import com.mpdc4gsr.gsr.model.GSRSample
 
 class ShimmerApiBridge private constructor() {
@@ -22,18 +21,12 @@ class ShimmerApiBridge private constructor() {
         initializeShimmerProcessing()
     }
 
-    private fun initializeShimmerProcessing() {
-
-
-        Log.i(TAG, "Using fallback processing - official Shimmer SDK handled by main app module")
-        setupEnhancedFallback()
+    private fun initializeShimmerProcessing() {        setupEnhancedFallback()
     }
 
     private fun setupEnhancedFallback() {
         isOfficialAPIAvailable = false
-        processingMode = "ENHANCED_FALLBACK"
-        Log.i(TAG, "Using enhanced fallback GSR processing with research-grade algorithms")
-    }
+        processingMode = "ENHANCED_FALLBACK"    }
 
     fun processGSRData(
         rawValue: Double,
@@ -64,9 +57,7 @@ class ShimmerApiBridge private constructor() {
                 rawValue = rawValue.toInt(),
                 sessionId = sessionId,
             )
-        } catch (e: Exception) {
-            Log.w(TAG, "Official API processing failed, falling back: ${e.message}")
-            processWithEnhancedFallback(rawValue, timestamp, sessionId)
+        } catch (e: Exception) {            processWithEnhancedFallback(rawValue, timestamp, sessionId)
         }
     }
 
@@ -94,9 +85,7 @@ class ShimmerApiBridge private constructor() {
 
             val resistance = convertToResistanceShimmer3(rawValue)
             if (resistance > 0) 1000000.0 / resistance else 0.0
-        } catch (e: Exception) {
-            Log.w(TAG, "Official conductance conversion failed: ${e.message}")
-            0.0
+        } catch (e: Exception) {            0.0
         }
     }
 
@@ -104,9 +93,7 @@ class ShimmerApiBridge private constructor() {
         return try {
 
             if (conductance > 0) 1000000.0 / conductance else Double.MAX_VALUE
-        } catch (e: Exception) {
-            Log.w(TAG, "Official resistance conversion failed: ${e.message}")
-            100.0
+        } catch (e: Exception) {            100.0
         }
     }
 

@@ -41,9 +41,7 @@ public class MoveImageView extends ImageView {
         } else {
             flag = true;
             lastClickTime = System.currentTimeMillis();
-        }
-        Log.d(TAG, "ACTION_MOVE isFastClick flag : " + flag);
-        return flag;
+        }        return flag;
     }
 
     private void init() {
@@ -55,34 +53,23 @@ public class MoveImageView extends ImageView {
         int action = event.getAction();
 
         switch (action) {
-            case MotionEvent.ACTION_DOWN:
-                Log.d(TAG, "ACTION_DOWN");
-                mPreX = event.getX();
+            case MotionEvent.ACTION_DOWN:                mPreX = event.getX();
                 mPreY = event.getY();
                 lastClickTime = System.currentTimeMillis();
                 break;
 
-            case MotionEvent.ACTION_MOVE:
-                Log.d(TAG, "ACTION_MOVE");
-                float preX = mPreX;
+            case MotionEvent.ACTION_MOVE:                float preX = mPreX;
                 float preY = mPreY;
                 float curX = event.getX();
                 float curY = event.getY();
 
-                if (onMoveListener != null && delayMoveTime()) {
-
-                    Log.d(TAG, "ACTION_MOVE isFastClick");
-                    onMoveListener.onMove(preX, preY, curX, curY);
+                if (onMoveListener != null && delayMoveTime()) {                    onMoveListener.onMove(preX, preY, curX, curY);
                     mPreX = curX;
                     mPreY = curY;
                 }
                 break;
-            case MotionEvent.ACTION_UP:
-                Log.d(TAG, "ACTION_UP");
-                break;
-            case MotionEvent.ACTION_CANCEL:
-                Log.d(TAG, "ACTION_CANCEL");
-                break;
+            case MotionEvent.ACTION_UP:                break;
+            case MotionEvent.ACTION_CANCEL:                break;
 
         }
         return true;

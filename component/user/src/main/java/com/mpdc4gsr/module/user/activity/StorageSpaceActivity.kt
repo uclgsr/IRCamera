@@ -6,7 +6,6 @@ import android.annotation.SuppressLint
 import android.view.View
 import android.widget.TextView
 import androidx.lifecycle.lifecycleScope
-import com.elvishew.xlog.XLog
 import com.mpdc4gsr.libunified.app.BaseApplication
 import com.mpdc4gsr.libunified.app.config.RouterConfig
 import com.mpdc4gsr.libunified.app.dialog.TipDialog
@@ -110,8 +109,7 @@ class StorageSpaceActivity : BaseActivity(), View.OnClickListener {
                         lifecycleScope.launch {
                             val isSuccess = false // TS004Repository.getFormatStorage()
                             if (isSuccess) {
-                                XLog.d("TS004 [ph][ph][ph][ph][ph][ph][ph]，[ph][ph][ph][ph][ph][ph]")
-                                (application as BaseApplication).disconnectWebSocket()
+                                X                                (application as BaseApplication).disconnectWebSocket()
                                 NavigationManager.getInstance().build(RouterConfig.MAIN)
                                     .navigation(this@StorageSpaceActivity)
                                 finish()

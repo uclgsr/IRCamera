@@ -6,7 +6,6 @@ import android.app.Application
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatDelegate
 import com.csl.irCamera.BuildConfig
-import com.elvishew.xlog.XLog
 import com.mpdc4gsr.libunified.app.BaseApplication
 import com.mpdc4gsr.libunified.app.common.SharedManager
 import com.mpdc4gsr.libunified.app.config.HttpConfig
@@ -60,8 +59,7 @@ class App : BaseApplication() {
 
         RxJavaPlugins.setErrorHandler {
             if (SharedManager.getHasShowClause()) {
-                XLog.w("[ph][ph][ph][ph]： ${it.message}")
-            }
+                X            }
         }
         if (!isDomestic()) {
 

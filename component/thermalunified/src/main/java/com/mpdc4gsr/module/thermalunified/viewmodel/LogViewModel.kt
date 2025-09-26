@@ -1,9 +1,7 @@
 package com.mpdc4gsr.module.thermalunified.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.elvishew.xlog.XLog
 import com.mpdc4gsr.libunified.app.common.SharedManager
 import com.mpdc4gsr.libunified.app.db.AppDatabase
 import com.mpdc4gsr.libunified.app.db.entity.ThermalDayEntity
@@ -35,21 +33,14 @@ class LogViewModel : BaseViewModel() {
                 var startTime = 0L
                 var endTime = 0L
                 when (selectType) {
-                    1 -> {
-                        Log.w("123", "[ph][ph][ph]")
-
-                        endTime = Date().time
-                        startTime = endTime - 7200 * 1000L
-                        Log.w("123", "query startTime:$startTime, endTime:$endTime")
-                        dataList =
+                    1 -> {                        endTime = Date().time
+                        startTime = endTime - 7200 * 1000L                        dataList =
                             AppDatabase.getInstance().thermalDao()
                                 .getThermalByDate(
                                     SharedManager.getUserId(),
                                     startTime,
                                     endTime,
-                                ) as ArrayList<ThermalEntity>
-                        Log.w("123", "data size: ${dataList.size}")
-                    }
+                                ) as ArrayList<ThermalEntity>                    }
 
                     2 -> {
 
@@ -87,9 +78,7 @@ class LogViewModel : BaseViewModel() {
                 delay(500)
                 if (dataList == null) {
                     dataList = arrayListOf()
-                } else {
-                    Log.w("123", "dataList size:${dataList.size}")
-                }
+                } else {                }
                 resultLiveData.postValue(ChartList(dataList = dataList))
             }
     }
@@ -138,10 +127,7 @@ class LogViewModel : BaseViewModel() {
                                 userId = userId,
                                 startTime = startLogTime,
                                 endTime = endLogTime,
-                            )
-                    Log.w("chart", "[ph][ph][ph][ph]:${bean.dataList.size}")
-                    Log.w("chart", "[ph][ph][ph][ph]max vol:${bean.maxVol},min vol:${bean.minVol}")
-                }
+                            )                }
 
                 2 -> {
                     val resultList =
@@ -176,10 +162,7 @@ class LogViewModel : BaseViewModel() {
                                 userId = userId,
                                 startTime = startLogTime,
                                 endTime = endLogTime,
-                            )
-                    Log.w("chart", "[ph][ph][ph][ph]:${bean.dataList.size}")
-                    Log.w("chart", "[ph][ph][ph][ph]max vol:${bean.maxVol},min vol:${bean.minVol}")
-                }
+                            )                }
 
                 3 -> {
                     val resultList =
@@ -214,10 +197,7 @@ class LogViewModel : BaseViewModel() {
                                 userId = userId,
                                 startTime = startLogTime,
                                 endTime = endLogTime,
-                            )
-                    Log.w("chart", "[ph][ph][ph][ph]:${bean.dataList.size}")
-                    Log.w("chart", "[ph][ph][ph][ph]max vol:${bean.maxVol},min vol:${bean.minVol}")
-                }
+                            )                }
 
                 4 -> {
                     val resultList =
@@ -252,17 +232,12 @@ class LogViewModel : BaseViewModel() {
                                 userId = userId,
                                 startTime = startLogTime,
                                 endTime = endLogTime,
-                            )
-                    Log.w("chart", "[ph][ph][ph][ph]:${bean.dataList.size}")
-                    Log.w("chart", "[ph][ph][ph][ph]max vol:${bean.maxVol},min vol:${bean.minVol}")
-                }
+                            )                }
             }
             bean.action = action
             if (action == 4) {
                 val startTime = TimeTool.showDateType(bean.dataList.first().createTime)
-                val endTime = TimeTool.showDateType(bean.dataList.last().createTime)
-                Log.w("123", "log start:$startTime, end:$endTime")
-            }
+                val endTime = TimeTool.showDateType(bean.dataList.last().createTime)            }
             resultLiveData.postValue(bean)
         }
     }
@@ -320,9 +295,7 @@ class LogViewModel : BaseViewModel() {
                                     userId = userId,
                                     startTime = startLogTime,
                                     endTime = endLogTime,
-                                )
-                        Log.w("chart", "[ph][ph][ph][ph]:${bean.dataList.size}")
-                    }
+                                )                    }
 
                     2 -> {
                         val resultList =
@@ -358,9 +331,7 @@ class LogViewModel : BaseViewModel() {
                                     userId = userId,
                                     startTime = startLogTime,
                                     endTime = endLogTime,
-                                )
-                        Log.w("chart", "[ph][ph][ph][ph]:${bean.dataList.size}")
-                    }
+                                )                    }
 
                     3 -> {
                         val resultList =
@@ -396,9 +367,7 @@ class LogViewModel : BaseViewModel() {
                                     userId = userId,
                                     startTime = startLogTime,
                                     endTime = endLogTime,
-                                )
-                        Log.w("chart", "[ph][ph][ph][ph]:${bean.dataList.size}")
-                    }
+                                )                    }
 
                     4 -> {
                         val resultList =
@@ -434,15 +403,12 @@ class LogViewModel : BaseViewModel() {
                                     userId = userId,
                                     startTime = startLogTime,
                                     endTime = endLogTime,
-                                )
-                        Log.w("chart", "[ph][ph][ph][ph]:${bean.dataList.size}")
-                    }
+                                )                    }
                 }
                 delay(500)
                 resultLiveData.postValue(bean)
             } catch (e: Exception) {
-                XLog.e("[ph][ph][ph][ph][ph][ph]:${e.message}")
-                resultLiveData.postValue(ChartList())
+                X                resultLiveData.postValue(ChartList())
             }
         }
     }
@@ -526,14 +492,10 @@ class LogViewModel : BaseViewModel() {
     private var syncRun = false
 
 
-    private suspend fun syncVol(selectTimeType: Int) {
-        Log.i("chart", "syncVol: $syncRun")
-        if (syncRun) {
+    private suspend fun syncVol(selectTimeType: Int) {        if (syncRun) {
 
             return
-        }
-        Log.i("chart", "syncVol start")
-        if (selectTimeType == 1) {
+        }        if (selectTimeType == 1) {
 
             return
         }
@@ -551,13 +513,10 @@ class LogViewModel : BaseViewModel() {
                             startTime = minuteTime,
                             endTime = System.currentTimeMillis(),
                         )
-                if (minuteVolLatestList.isNotEmpty()) {
-                    Log.w("chart", "[ph][ph][ph][ph][ph][ph][ph][ph][ph][ph]，[ph][ph][ph][ph][ph][ph][ph]")
-                    return
+                if (minuteVolLatestList.isNotEmpty()) {                    return
                 }
                 val maxTime =
-                    AppDatabase.getInstance().thermalMinDao().queryMaxTime(userId = userId)
-                Log.w("chart", "minute latest time: $maxTime, ${TimeTool.showDateType(maxTime)}")
+                    AppDatabase.getInstance().thermalMinDao().queryMaxTime(userId = userId)}")
 
                 val secondVolList =
                     AppDatabase.getInstance().thermalDao()
@@ -569,14 +528,7 @@ class LogViewModel : BaseViewModel() {
                         ) as ArrayList<ThermalEntity>
                 if (secondVolList.size > 0) {
                     val startTime = TimeTool.showDateType(secondVolList.first().createTime)
-                    val endTime = TimeTool.showDateType(secondVolList.last().createTime)
-                    Log.w(
-                        "chart",
-                        "[ph][ph][ph]${secondVolList.size}[ph][ph][ph], start:$startTime, end:$endTime"
-                    )
-                } else {
-                    Log.w("chart", "[ph][ph][ph][ph][ph]")
-                }
+                    val endTime = TimeTool.showDateType(secondVolList.last().createTime)                } else {                }
 
                 val minVolList = getNewVolData(secondVolList, 2)
 
@@ -594,8 +546,7 @@ class LogViewModel : BaseViewModel() {
                         bean.updateTime = System.currentTimeMillis()
                         AppDatabase.getInstance().thermalMinDao().insert(bean)
                     } catch (e: Exception) {
-                        XLog.e("insert error:${e.message}")
-                    }
+                        X                    }
                 }
                 val bean = ThermalMinuteEntity()
                 try {
@@ -607,8 +558,7 @@ class LogViewModel : BaseViewModel() {
                     bean.updateTime = System.currentTimeMillis()
                     AppDatabase.getInstance().thermalMinDao().insert(bean)
                 } catch (e: Exception) {
-                    XLog.e("insert error:${e.message}")
-                }
+                    X                }
 
                 AppDatabase.getInstance().thermalMinDao()
                     .deleteRepeatVol(userId)
@@ -624,13 +574,10 @@ class LogViewModel : BaseViewModel() {
                             startTime = hourTime,
                             endTime = System.currentTimeMillis(),
                         )
-                if (hourVolLatestList.isNotEmpty()) {
-                    Log.w("chart", "[ph][ph][ph][ph][ph][ph][ph][ph][ph][ph]，[ph][ph][ph][ph][ph][ph][ph]")
-                    return
+                if (hourVolLatestList.isNotEmpty()) {                    return
                 }
                 val maxTime =
-                    AppDatabase.getInstance().thermalHourDao().queryMaxTime(userId = userId)
-                Log.w("chart", "hour latest  time: $maxTime, ${TimeTool.showDateType(maxTime)}")
+                    AppDatabase.getInstance().thermalHourDao().queryMaxTime(userId = userId)}")
 
                 val secondVolList =
                     AppDatabase.getInstance().thermalDao()
@@ -641,14 +588,7 @@ class LogViewModel : BaseViewModel() {
                         ) as ArrayList<ThermalEntity>
                 if (secondVolList.size > 0) {
                     val startTime = TimeTool.showDateType(secondVolList.first().createTime)
-                    val endTime = TimeTool.showDateType(secondVolList.last().createTime)
-                    Log.w(
-                        "chart",
-                        "[ph][ph][ph]${secondVolList.size}[ph][ph][ph], start:$startTime, end:$endTime"
-                    )
-                } else {
-                    Log.w("chart", "[ph][ph][ph][ph][ph]")
-                }
+                    val endTime = TimeTool.showDateType(secondVolList.last().createTime)                } else {                }
 
                 val hourVolList = getNewVolData(secondVolList, 3)
 
@@ -688,14 +628,10 @@ class LogViewModel : BaseViewModel() {
                             startTime = todayStartTime,
                             endTime = System.currentTimeMillis(),
                         )
-                if (todayVolLatestList.isNotEmpty()) {
-
-                    Log.w("chart", "[ph][ph][ph][ph][ph][ph][ph]，[ph][ph][ph][ph][ph][ph][ph]")
-                    return
+                if (todayVolLatestList.isNotEmpty()) {                    return
                 }
                 val maxTime =
-                    AppDatabase.getInstance().thermalDayDao().queryMaxTime(userId = userId)
-                Log.w("chart", "day latest time: $maxTime, ${TimeTool.showDateType(maxTime)}")
+                    AppDatabase.getInstance().thermalDayDao().queryMaxTime(userId = userId)}")
 
                 val secondVolList =
                     AppDatabase.getInstance().thermalDao()
@@ -707,14 +643,7 @@ class LogViewModel : BaseViewModel() {
 
                 if (secondVolList.size > 0) {
                     val startTime = TimeTool.showDateType(secondVolList.first().createTime)
-                    val endTime = TimeTool.showDateType(secondVolList.last().createTime)
-                    Log.w(
-                        "chart",
-                        "[ph][ph][ph]${secondVolList.size}[ph][ph][ph], start:$startTime, end:$endTime"
-                    )
-                } else {
-                    Log.w("chart", "[ph][ph][ph][ph][ph]")
-                }
+                    val endTime = TimeTool.showDateType(secondVolList.last().createTime)                } else {                }
                 val dayVolList = getNewVolData(secondVolList, 4)
 
                 dayVolList.forEach {
@@ -744,9 +673,7 @@ class LogViewModel : BaseViewModel() {
                 AppDatabase.getInstance().thermalDayDao().deleteRepeatVol(userId)
             }
         }
-        syncRun = false
-        Log.w("chart", "syncVol end")
-    }
+        syncRun = false    }
 
     data class ChartList(
         var dataList: ArrayList<ThermalEntity> = arrayListOf(),

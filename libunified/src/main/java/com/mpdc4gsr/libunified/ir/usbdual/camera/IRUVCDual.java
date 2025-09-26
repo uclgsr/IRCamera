@@ -86,9 +86,7 @@ public class IRUVCDual {
             public void onAttach(UsbDevice device) {
                 if (mPid != 0) {
                     return;
-                }
-                Log.d(TAG, "onAttach");
-                if (!isRequest) {
+                }                if (!isRequest) {
                     isRequest = true;
                     requestPermission(0);
                 }
@@ -102,12 +100,8 @@ public class IRUVCDual {
 
 
             @Override
-            public void onConnect(final UsbDevice device, USBMonitor.UsbControlBlock ctrlBlock, boolean createNew) {
-                Log.w(TAG, "onConnect");
-                if (createNew) {
-                    if (mConnectCallback != null && uvcCamera != null) {
-                        Log.d(TAG, "onCameraOpened");
-                        mConnectCallback.onCameraOpened(uvcCamera);
+            public void onConnect(final UsbDevice device, USBMonitor.UsbControlBlock ctrlBlock, boolean createNew) {                if (createNew) {
+                    if (mConnectCallback != null && uvcCamera != null) {                        mConnectCallback.onCameraOpened(uvcCamera);
                     }
                     Const.isDeviceConnected = true;
                     handleUSBConnect(ctrlBlock);
@@ -116,16 +110,12 @@ public class IRUVCDual {
 
 
             @Override
-            public void onDisconnect(UsbDevice device, USBMonitor.UsbControlBlock ctrlBlock) {
-                Log.w(TAG, "onDisconnect");
-                Const.isDeviceConnected = false;
+            public void onDisconnect(UsbDevice device, USBMonitor.UsbControlBlock ctrlBlock) {                Const.isDeviceConnected = false;
             }
 
 
             @Override
-            public void onDettach(UsbDevice device) {
-                Log.w(TAG, "onDettach" + isRequest);
-                Const.isDeviceConnected = false;
+            public void onDettach(UsbDevice device) {                Const.isDeviceConnected = false;
                 if (isRequest) {
                     isRequest = false;
                     stopPreview();
@@ -168,8 +158,7 @@ public class IRUVCDual {
 
 
             @Override
-            public void onAttach(UsbDevice device) {
-                Log.w(TAG, "USBMonitor-onAttach mPid = " + pid + " getProductId = " + device.getProductId());
+            public void onAttach(UsbDevice device) {);
 
                 if (device.getProductId() != mPid) {
                     return;
@@ -180,15 +169,11 @@ public class IRUVCDual {
             }
 
             @Override
-            public void onGranted(UsbDevice usbDevice, boolean granted) {
-                Log.w(TAG, "USBMonitor-onGranted");
-            }
+            public void onGranted(UsbDevice usbDevice, boolean granted) {            }
 
 
             @Override
-            public void onDettach(UsbDevice device) {
-                Log.w(TAG, "USBMonitor-onDettach mPid = " + pid);
-                Const.isDeviceConnected = false;
+            public void onDettach(UsbDevice device) {                Const.isDeviceConnected = false;
                 if (uvcCamera != null && uvcCamera.getOpenStatus()) {
 
                     if (handler != null && status != 2) {
@@ -200,17 +185,12 @@ public class IRUVCDual {
 
 
             @Override
-            public void onConnect(final UsbDevice device, USBMonitor.UsbControlBlock ctrlBlock, boolean createNew) {
-                Log.w(TAG, "USBMonitor-onConnect mPid = " + pid);
-                Log.w(TAG, "USBMonitor-onConnect createNew = " + createNew);
-                if (createNew && device.getProductId() == pid) {
+            public void onConnect(final UsbDevice device, USBMonitor.UsbControlBlock ctrlBlock, boolean createNew) {                if (createNew && device.getProductId() == pid) {
                     if (handler != null) {
                         handler.sendEmptyMessage(Const.SHOW_LOADING);
                     }
 
-                    if (mConnectCallback != null && uvcCamera != null) {
-                        Log.w(TAG, "USBMonitor-onCameraOpened");
-                        mConnectCallback.onCameraOpened(uvcCamera);
+                    if (mConnectCallback != null && uvcCamera != null) {                        mConnectCallback.onCameraOpened(uvcCamera);
                     }
                     Const.isDeviceConnected = true;
                     handleUSBConnect(ctrlBlock);
@@ -220,16 +200,12 @@ public class IRUVCDual {
 
 
             @Override
-            public void onDisconnect(UsbDevice device, USBMonitor.UsbControlBlock ctrlBlock) {
-                Log.w(TAG, "USBMonitor-onDisconnect mPid = " + pid);
-                Const.isDeviceConnected = false;
+            public void onDisconnect(UsbDevice device, USBMonitor.UsbControlBlock ctrlBlock) {                Const.isDeviceConnected = false;
                 status = 4;
             }
 
             @Override
-            public void onCancel(UsbDevice device) {
-                Log.w(TAG, "USBMonitor-onCancel mPid = " + pid);
-                Const.isDeviceConnected = false;
+            public void onCancel(UsbDevice device) {                Const.isDeviceConnected = false;
             }
         });
     }
@@ -250,8 +226,7 @@ public class IRUVCDual {
 
 
             @Override
-            public void onAttach(UsbDevice device) {
-                Log.w(TAG, "USBMonitor-onAttach mPid = " + pid + " getProductId = " + device.getProductId());
+            public void onAttach(UsbDevice device) {);
 
                 if (device.getProductId() != mPid) {
                     return;
@@ -262,15 +237,11 @@ public class IRUVCDual {
             }
 
             @Override
-            public void onGranted(UsbDevice usbDevice, boolean granted) {
-                Log.w(TAG, "USBMonitor-onGranted");
-            }
+            public void onGranted(UsbDevice usbDevice, boolean granted) {            }
 
 
             @Override
-            public void onDettach(UsbDevice device) {
-                Log.w(TAG, "USBMonitor-onDettach mPid = " + pid);
-                Const.isDeviceConnected = false;
+            public void onDettach(UsbDevice device) {                Const.isDeviceConnected = false;
                 if (uvcCamera != null && uvcCamera.getOpenStatus()) {
 
                     if (handler != null && status != 2) {
@@ -282,17 +253,12 @@ public class IRUVCDual {
 
 
             @Override
-            public void onConnect(final UsbDevice device, USBMonitor.UsbControlBlock ctrlBlock, boolean createNew) {
-                Log.w(TAG, "USBMonitor-onConnect mPid = " + pid);
-                Log.w(TAG, "USBMonitor-onConnect createNew = " + createNew);
-                if (createNew && device.getProductId() == pid) {
+            public void onConnect(final UsbDevice device, USBMonitor.UsbControlBlock ctrlBlock, boolean createNew) {                if (createNew && device.getProductId() == pid) {
                     if (handler != null) {
                         handler.sendEmptyMessage(Const.SHOW_LOADING);
                     }
 
-                    if (mConnectCallback != null && uvcCamera != null) {
-                        Log.w(TAG, "USBMonitor-onCameraOpened");
-                        mConnectCallback.onCameraOpened(uvcCamera);
+                    if (mConnectCallback != null && uvcCamera != null) {                        mConnectCallback.onCameraOpened(uvcCamera);
                     }
                     Const.isDeviceConnected = true;
                     handleUSBConnect(ctrlBlock);
@@ -302,16 +268,12 @@ public class IRUVCDual {
 
 
             @Override
-            public void onDisconnect(UsbDevice device, USBMonitor.UsbControlBlock ctrlBlock) {
-                Log.w(TAG, "USBMonitor-onDisconnect mPid = " + pid);
-                Const.isDeviceConnected = false;
+            public void onDisconnect(UsbDevice device, USBMonitor.UsbControlBlock ctrlBlock) {                Const.isDeviceConnected = false;
                 status = 4;
             }
 
             @Override
-            public void onCancel(UsbDevice device) {
-                Log.w(TAG, "USBMonitor-onCancel mPid = " + pid);
-                Const.isDeviceConnected = false;
+            public void onCancel(UsbDevice device) {                Const.isDeviceConnected = false;
             }
         });
     }
@@ -332,12 +294,9 @@ public class IRUVCDual {
 
 
             @Override
-            public void onAttach(UsbDevice device) {
-                Log.w(TAG, "onAttach" + device.getProductId());
+            public void onAttach(UsbDevice device) {);
                 if (pid != 0) {
-                    if (uvcCamera == null || !uvcCamera.getOpenStatus()) {
-                        Log.w(TAG, "USBMonitor" + "onAttach requestPermission" + pid);
-                        mUSBMonitor.requestPermission(device);
+                    if (uvcCamera == null || !uvcCamera.getOpenStatus()) {                        mUSBMonitor.requestPermission(device);
                     }
                 }
             }
@@ -348,9 +307,7 @@ public class IRUVCDual {
 
 
             @Override
-            public void onDettach(UsbDevice device) {
-                Log.w(TAG, "onDettach");
-                if (pid != 0 && device != null) {
+            public void onDettach(UsbDevice device) {                if (pid != 0 && device != null) {
                     Const.isDeviceConnected = false;
                     if (uvcCamera != null && uvcCamera.getOpenStatus()) {
                         status = 2;
@@ -360,17 +317,13 @@ public class IRUVCDual {
 
 
             @Override
-            public void onConnect(final UsbDevice device, USBMonitor.UsbControlBlock ctrlBlock, boolean createNew) {
-                Log.w(TAG, "onConnect");
-                if (pid != 0) {
+            public void onConnect(final UsbDevice device, USBMonitor.UsbControlBlock ctrlBlock, boolean createNew) {                if (pid != 0) {
                     if (createNew) {
                         if (handler != null) {
                             handler.sendEmptyMessage(Const.SHOW_LOADING);
                         }
 
-                        if (mConnectCallback != null && uvcCamera != null) {
-                            Log.d(TAG, "onCameraOpened");
-                            mConnectCallback.onCameraOpened(uvcCamera);
+                        if (mConnectCallback != null && uvcCamera != null) {                            mConnectCallback.onCameraOpened(uvcCamera);
                         }
                         Const.isDeviceConnected = true;
                         handleUSBConnect(ctrlBlock);
@@ -381,9 +334,7 @@ public class IRUVCDual {
 
 
             @Override
-            public void onDisconnect(UsbDevice device, USBMonitor.UsbControlBlock ctrlBlock) {
-                Log.w(TAG, "onDisconnect");
-                if (pid != 0 && status != 4) {
+            public void onDisconnect(UsbDevice device, USBMonitor.UsbControlBlock ctrlBlock) {                if (pid != 0 && status != 4) {
                     Const.isDeviceConnected = false;
                     status = 4;
                 }
@@ -433,10 +384,7 @@ public class IRUVCDual {
         this.temperature = temperature;
     }
 
-    public void initUVCCamera(int cameraWidth, int cameraHeight) {
-        Log.i(TAG, "initUVCCamera->cameraWidth = " + cameraWidth + " cameraHeight = " + cameraHeight);
-
-        ConcreateUVCBuilder concreateUVCBuilder = new ConcreateUVCBuilder();
+    public void initUVCCamera(int cameraWidth, int cameraHeight) {        ConcreateUVCBuilder concreateUVCBuilder = new ConcreateUVCBuilder();
         uvcCamera = concreateUVCBuilder
                 .setUVCType(UVCType.USB_UVC)
                 .build();
@@ -450,16 +398,12 @@ public class IRUVCDual {
         return ircmd;
     }
 
-    public void registerUSB() {
-        Log.i(TAG, "registerUSB");
-        if (mUSBMonitor != null) {
+    public void registerUSB() {        if (mUSBMonitor != null) {
             mUSBMonitor.register();
         }
     }
 
-    public void unregisterUSB() {
-        Log.i(TAG, "unregisterUSB");
-        if (mUSBMonitor != null) {
+    public void unregisterUSB() {        if (mUSBMonitor != null) {
             mUSBMonitor.destroy();
         }
     }
@@ -474,9 +418,7 @@ public class IRUVCDual {
         return mUSBMonitor.getDeviceList(deviceFilters);
     }
 
-    public boolean requestPermission(int index) {
-        Log.i(TAG, "requestPermission");
-        List<UsbDevice> devList = getUsbDeviceList();
+    public boolean requestPermission(int index) {        List<UsbDevice> devList = getUsbDeviceList();
         if (devList == null || devList.size() == 0) {
             return false;
         }
@@ -492,9 +434,7 @@ public class IRUVCDual {
         return false;
     }
 
-    public void openUVCCamera(USBMonitor.UsbControlBlock ctrlBlock) {
-        Log.i(TAG, "openUVCCamera");
-        if (ctrlBlock.getProductId() == 0x3901) {
+    public void openUVCCamera(USBMonitor.UsbControlBlock ctrlBlock) {        if (ctrlBlock.getProductId() == 0x3901) {
             if (syncimage != null) {
                 syncimage.type = 1;
             }
@@ -506,9 +446,7 @@ public class IRUVCDual {
         uvcCamera.openUVCCamera(ctrlBlock);
     }
 
-    public void startPreview() {
-        Log.w(TAG, "startPreview mPid = " + mPid + " isUseIRISP = " + isUseIRISP);
-        uvcCamera.setOpenStatus(true);
+    public void startPreview() {        uvcCamera.setOpenStatus(true);
 
         if (iFrameCallback != null) {
             uvcCamera.setFrameCallback(iFrameCallback);
@@ -530,9 +468,7 @@ public class IRUVCDual {
         if (uvcCamera != null) {
             previewList = uvcCamera.getSupportedSizeList();
         }
-        for (CameraSize size : previewList) {
-            Log.i(TAG, "SupportedSize : " + size.width + " * " + size.height);
-        }
+        for (CameraSize size : previewList) {        }
         return previewList;
     }
 
@@ -548,25 +484,18 @@ public class IRUVCDual {
                     .setIdCamera(uvcCamera.getNativePtr())
                     .build();
 
-            if (mConnectCallback != null) {
-                Log.d(TAG, "onIRCMDCreate");
-                mConnectCallback.onIRCMDCreate(ircmd);
+            if (mConnectCallback != null) {                mConnectCallback.onIRCMDCreate(ircmd);
             }
         }
     }
 
     private int setPreviewSize(int cameraWidth, int cameraHeight) {
-        if (uvcCamera != null) {
-            Log.d(TAG, "setUSBPreviewSize mPid = " + mPid + " cameraWidth = " + cameraWidth +
-                    " cameraHeight = " + cameraHeight);
-            return uvcCamera.setUSBPreviewSize(cameraWidth, cameraHeight);
+        if (uvcCamera != null) {            return uvcCamera.setUSBPreviewSize(cameraWidth, cameraHeight);
         }
         return -1;
     }
 
-    public void stopPreview() {
-        Log.i(TAG, "stopPreview");
-        if (uvcCamera != null) {
+    public void stopPreview() {        if (uvcCamera != null) {
             if (uvcCamera.getOpenStatus()) {
                 uvcCamera.onStopPreview();
             }
@@ -580,14 +509,10 @@ public class IRUVCDual {
     }
 
 
-    public void setConnectCallback(ConnectCallback mConnectCallback) {
-        Log.d(TAG, "setConnectCallback");
-        this.mConnectCallback = mConnectCallback;
+    public void setConnectCallback(ConnectCallback mConnectCallback) {        this.mConnectCallback = mConnectCallback;
     }
 
-    private void handleUSBConnect(USBMonitor.UsbControlBlock ctrlBlock) {
-        Log.d(TAG, "handleUSBConnect mPid = " + mPid);
-        openUVCCamera(ctrlBlock);
+    private void handleUSBConnect(USBMonitor.UsbControlBlock ctrlBlock) {        openUVCCamera(ctrlBlock);
 
         List<CameraSize> previewList = getAllSupportedSize();
 
@@ -597,10 +522,7 @@ public class IRUVCDual {
             uvcCamera.setDefaultBandwidth(1.0f);
             uvcCamera.setDefaultPreviewMinFps(1);
             uvcCamera.setDefaultPreviewMaxFps(mFps);
-        } else {
-            Log.d(TAG, "startVLCamera handleUSBConnect mPid = " + mPid + " setDefaultPreviewMode");
-
-            uvcCamera.setDefaultPreviewMode(CommonParams.FRAMEFORMATType.FRAME_FORMAT_MJPEG);
+        } else {            uvcCamera.setDefaultPreviewMode(CommonParams.FRAMEFORMATType.FRAME_FORMAT_MJPEG);
 
             uvcCamera.setDefaultBandwidth(0.6f);
             uvcCamera.setDefaultPreviewMinFps(1);
@@ -608,13 +530,8 @@ public class IRUVCDual {
         }
 
         int result = setPreviewSize(cameraWidth, cameraHeight);
-        if (result == 0) {
-
-            Log.d(TAG, "handleUSBConnect setPreviewSize success = ");
-            startPreview();
-        } else {
-            Log.d(TAG, "handleUSBConnect setPreviewSize fail = ");
-            stopPreview();
+        if (result == 0) {            startPreview();
+        } else {            stopPreview();
         }
 
     }

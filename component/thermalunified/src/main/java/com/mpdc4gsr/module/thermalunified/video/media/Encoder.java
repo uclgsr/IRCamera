@@ -31,25 +31,19 @@ public abstract class Encoder {
                     Bitmap bitmap = null;
                     try {
                         bitmap = bitmapQueue.remove(0);
-                    } catch (IndexOutOfBoundsException e) {
-                        Log.e(TAG, e.getMessage());
+                    } catch (IndexOutOfBoundsException e) {);
                     }
                     if (bitmap != null) {
                         try {
                             onAddFrame(bitmap);
-                        } catch (ArrayIndexOutOfBoundsException e) {
-                            Log.e(TAG, e.getMessage());
+                        } catch (ArrayIndexOutOfBoundsException e) {);
                         }
                         bitmap.recycle();
                     }
-                    if (state == STATE_RECORDING_UNTIL_LAST_FRAME && bitmapQueue.size() == 0) {
-                        Log.d(TAG, "Last frame added");
-                        break;
+                    if (state == STATE_RECORDING_UNTIL_LAST_FRAME && bitmapQueue.size() == 0) {                        break;
                     }
                 }
-            }
-            Log.d(TAG, "add Frame finished");
-            onStop();
+            }            onStop();
             notifyEncodeFinish();
         }
     };

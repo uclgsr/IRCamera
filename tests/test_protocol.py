@@ -83,8 +83,7 @@ class Protocol:
 
             return {'type': msg_type, 'params': params}
         except Exception as e:
-            logger.error(f"Error parsing message '{message}': {e}")
-            return None
+                        return None
 
 
 def test_protocol_parsing():

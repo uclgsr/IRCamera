@@ -1,7 +1,6 @@
 package mpdc4gsr.controller
 
 import android.content.Context
-import android.util.Log
 import android.view.TextureView
 import androidx.lifecycle.LifecycleOwner
 import kotlinx.coroutines.Dispatchers
@@ -42,10 +41,7 @@ class HardwareValidationController(
         }
 
         try {
-            validationStartTime = System.currentTimeMillis()
-            Log.i(TAG, "Starting comprehensive hardware validation on Samsung S22")
-
-            validationResults.clear()
+            validationStartTime = System.currentTimeMillis()            validationResults.clear()
             errorLogs.clear()
             performanceMetrics.clear()
             sensorCapabilities.clear()
@@ -66,18 +62,14 @@ class HardwareValidationController(
 
             generateValidationReport()
 
-        } catch (e: Exception) {
-            Log.e(TAG, "Hardware validation failed", e)
-            errorLogs.add("CRITICAL: Validation failed - ${e.message}")
+        } catch (e: Exception) {            errorLogs.add("CRITICAL: Validation failed - ${e.message}")
             generateFailureReport(e)
         } finally {
             _isValidating.set(false)
         }
     }
 
-    private suspend fun validatePermissionSystem() {
-        Log.i(TAG, "Validating permission system...")
-        val startTime = System.currentTimeMillis()
+    private suspend fun validatePermissionSystem() {        val startTime = System.currentTimeMillis()
 
         try {
 
@@ -100,11 +92,7 @@ class HardwareValidationController(
             validationResults["battery_optimization"] = batteryOptResult
 
             val duration = System.currentTimeMillis() - startTime
-            performanceMetrics["permission_validation_duration_ms"] = duration
-
-            Log.i(TAG, "Permission system validation completed in ${duration}ms")
-
-        } catch (e: Exception) {
+            performanceMetrics["permission_validation_duration_ms"] = duration        } catch (e: Exception) {
             errorLogs.add("Permission validation error: ${e.message}")
             validationResults["permission_system"] = HardwareValidationResult(
                 "permission_system", false, emptyList(), listOf("Permission validation failed: ${e.message}")
@@ -112,9 +100,7 @@ class HardwareValidationController(
         }
     }
 
-    private suspend fun validateRGBCamera() {
-        Log.i(TAG, "Validating RGB camera...")
-        val startTime = System.currentTimeMillis()
+    private suspend fun validateRGBCamera() {        val startTime = System.currentTimeMillis()
 
         try {
             if (!permissionController.hasCameraPermission()) {
@@ -154,9 +140,7 @@ class HardwareValidationController(
         }
     }
 
-    private suspend fun validateThermalCamera() {
-        Log.i(TAG, "Validating thermal camera...")
-        val startTime = System.currentTimeMillis()
+    private suspend fun validateThermalCamera() {        val startTime = System.currentTimeMillis()
 
         try {
             if (!permissionController.hasStoragePermissions()) {
@@ -196,9 +180,7 @@ class HardwareValidationController(
         }
     }
 
-    private suspend fun validateGSRSensor() {
-        Log.i(TAG, "Validating GSR sensor...")
-        val startTime = System.currentTimeMillis()
+    private suspend fun validateGSRSensor() {        val startTime = System.currentTimeMillis()
 
         try {
             if (!permissionController.hasBluetoothPermissions()) {
@@ -244,9 +226,7 @@ class HardwareValidationController(
         }
     }
 
-    private suspend fun validateMultiSensorRecording() {
-        Log.i(TAG, "Validating multi-sensor recording...")
-        val startTime = System.currentTimeMillis()
+    private suspend fun validateMultiSensorRecording() {        val startTime = System.currentTimeMillis()
 
         try {
 
@@ -269,31 +249,17 @@ class HardwareValidationController(
         }
     }
 
-    private suspend fun validateNetworkCapabilities() {
-        Log.i(TAG, "Validating network capabilities...")
-
-
-
-        validationResults["network"] = HardwareValidationResult(
+    private suspend fun validateNetworkCapabilities() {        validationResults["network"] = HardwareValidationResult(
             "network", true, emptyList(), emptyList()
         )
     }
 
-    private suspend fun validateBackgroundRecording() {
-        Log.i(TAG, "Validating background recording...")
-
-
-
-        validationResults["background_recording"] = HardwareValidationResult(
+    private suspend fun validateBackgroundRecording() {        validationResults["background_recording"] = HardwareValidationResult(
             "background_recording", true, emptyList(), emptyList()
         )
     }
 
-    private suspend fun validateBatteryOptimization() {
-        Log.i(TAG, "Validating battery optimization...")
-
-
-        validationResults["battery_optimization"] = HardwareValidationResult(
+    private suspend fun validateBatteryOptimization() {        validationResults["battery_optimization"] = HardwareValidationResult(
             "battery_optimization", true, emptyList(), emptyList()
         )
     }

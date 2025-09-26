@@ -10,7 +10,6 @@ from PyQt6.QtWidgets import (
 )
 from dataclasses import dataclass
 from datetime import datetime
-from loguru import logger
 from pyqtgraph import PlotWidget, ImageView
 from typing import Dict, Optional, Tuple
 
@@ -649,11 +648,9 @@ class MultiModalDashboard(QMainWindow):
 
             self.websocket_server = WebSocketServer(port=8080)
 
-            logger.info("All core services initialized successfully")
-
+            
         except Exception as e:
-            logger.error(f"Failed to initialize services: {e}")
-            QMessageBox.critical(self, "Initialization Error", f"Failed to start services: {e}")
+                        QMessageBox.critical(self, "Initialization Error", f"Failed to start services: {e}")
 
     def connect_signals(self):
 
@@ -765,11 +762,9 @@ class MultiModalDashboard(QMainWindow):
                 self.connected_devices[device_id].is_recording = True
 
             self.status_bar.showMessage(f"Recording started for participant: {participant_id}")
-            logger.info(f"Recording session started: {participant_id}")
-
+            
         except Exception as e:
-            logger.error(f"Failed to start recording: {e}")
-            QMessageBox.critical(self, "Recording Error", f"Failed to start recording: {e}")
+                        QMessageBox.critical(self, "Recording Error", f"Failed to start recording: {e}")
 
     def on_stop_recording(self):
 
@@ -786,11 +781,9 @@ class MultiModalDashboard(QMainWindow):
                 export_path = self.hdf5_exporter.finalize_export()
                 self.status_bar.showMessage(f"Recording stopped. Data exported to: {export_path}")
 
-            logger.info("Recording session stopped")
-
+            
         except Exception as e:
-            logger.error(f"Failed to stop recording: {e}")
-            QMessageBox.critical(self, "Recording Error", f"Failed to stop recording: {e}")
+                        QMessageBox.critical(self, "Recording Error", f"Failed to stop recording: {e}")
 
     def on_inject_sync_marker(self, marker_type: str):
 
@@ -802,11 +795,9 @@ class MultiModalDashboard(QMainWindow):
                     self.send_sync_marker(device_id, marker_type, timestamp)
 
             self.status_bar.showMessage(f"Sync marker injected: {marker_type}")
-            logger.info(f"Sync marker injected: {marker_type} at {timestamp}")
-
+            
         except Exception as e:
-            logger.error(f"Failed to inject sync marker: {e}")
-
+            
     def send_recording_command(self, device_id: str, command: str, parameters: Dict):
 
         if self.websocket_server:
@@ -834,8 +825,7 @@ class MultiModalDashboard(QMainWindow):
         if self.websocket_server:
             self.websocket_server.stop()
 
-        logger.info("Multi-Modal Dashboard closed")
-        event.accept()
+                event.accept()
 
 
 def main():

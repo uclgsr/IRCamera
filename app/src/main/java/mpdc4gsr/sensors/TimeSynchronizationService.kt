@@ -1,6 +1,5 @@
 package mpdc4gsr.sensors
 
-import android.util.Log
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -28,11 +27,7 @@ class TimeSynchronizationService {
 
     fun initializeSession(sessionDirectory: String): SessionTimestampReference {
         this.sessionDirectory = sessionDirectory
-        sessionReference = TimestampManager.startSession()
-
-        Log.i(TAG, "Session initialized with unified timestamp reference")
-
-        writeSessionSyncMetadata()
+        sessionReference = TimestampManager.startSession()        writeSessionSyncMetadata()
 
         serviceScope.launch {
             logSessionStartSyncEvent()
@@ -49,11 +44,7 @@ class TimeSynchronizationService {
                     "unified_timestamp_system" to "enabled",
                     "cross_device_sync" to "available"
                 )
-            )
-            Log.i(TAG, "SessionStart sync event logged for cross-sensor alignment verification")
-        } catch (e: java.io.IOException) {
-            Log.w(TAG, "Failed to log SessionStart sync event", e)
-        }
+            )        } catch (e: java.io.IOException) {        }
     }
 
 
@@ -66,14 +57,7 @@ class TimeSynchronizationService {
 
 
     fun convertDeviceTimestamp(deviceTimestamp: Long, sensorId: String): TimestampRecord {
-        val unifiedTimestamp = TimestampManager.createTimestampRecord()
-
-        Log.v(
-            TAG,
-            "Converted device timestamp for $sensorId: device=$deviceTimestamp, unified=${unifiedTimestamp.systemNanos}"
-        )
-
-        return unifiedTimestamp
+        val unifiedTimestamp = TimestampManager.createTimestampRecord()        return unifiedTimestamp
     }
 
 
@@ -85,18 +69,13 @@ class TimeSynchronizationService {
             metadata = metadata
         )
 
-        _syncEvents.emit(syncEvent)
-        Log.i(TAG, "Sync event emitted: $eventType at ${timestampRecord.systemTimeMs}ms")
-    }
+        _syncEvents.emit(syncEvent)    }
 
 
     fun finalizeSession(): Long {
         val sessionDuration = TimestampManager.endSession()
         sessionReference = null
-        sessionDirectory = null
-
-        Log.i(TAG, "Session finalized. Duration: ${sessionDuration}ms")
-        return sessionDuration
+        sessionDirectory = null        return sessionDuration
     }
 
 
@@ -116,12 +95,7 @@ class TimeSynchronizationService {
                 writer.write("# session_relative_ms: time relative to session start\n")
                 writer.write("\n")
                 writer.write("sync_event_type,system_nanos,system_time_ms,session_relative_ms,metadata\n")
-            }
-
-            Log.i(TAG, "Session sync metadata written to: ${metadataFile.absolutePath}")
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to write session sync metadata", e)
-        }
+            }        } catch (e: Exception) {        }
     }
 
 
@@ -137,9 +111,7 @@ class TimeSynchronizationService {
             }
 
             emitSyncEvent(eventType, metadata)
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to log sync event", e)
-        }
+        } catch (e: Exception) {        }
     }
 
     suspend fun logTimestampWithDriftAnalysis(
@@ -157,18 +129,13 @@ class TimeSynchronizationService {
                 val driftNs = phoneTimestamp - deviceTs
                 val driftMs = driftNs / 1_000_000.0
                 driftMetadata["drift_ns"] = driftNs.toString()
-                driftMetadata["drift_ms"] = String.format("%.3f", driftMs)
-
-                Log.v(TAG, "Timestamp drift analysis for $sensorId: ${driftMs}ms")
-            } ?: run {
+                driftMetadata["drift_ms"] = String.format("%.3f", driftMs)            } ?: run {
                 driftMetadata["device_timestamp_ns"] = "unavailable"
                 driftMetadata["drift_analysis"] = "no_device_timestamp"
             }
 
             logSyncEvent("DRIFT_ANALYSIS", driftMetadata)
-        } catch (e: Exception) {
-            Log.w(TAG, "Failed to log drift analysis for $sensorId", e)
-        }
+        } catch (e: Exception) {        }
     }
 
 

@@ -1,7 +1,6 @@
 package com.mpdc4gsr.gsr.network
 
 import android.content.Context
-import android.util.Log
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -107,9 +106,7 @@ class FileTransferProtocol(
             synchronized(transferQueue) {
                 transferQueue.add(request)
                 transferQueue.sortByDescending { it.priority.weight }
-            }
-
-            Log.d(TAG, "Queued file transfer: $transferId, size: ${file.length()} bytes")
+            }} bytes")
             processTransferQueue()
             transferId
         }
@@ -152,12 +149,7 @@ class FileTransferProtocol(
 
                 transferFileInChunks(session)
 
-                verifyTransferIntegrity(session)
-
-                Log.d(TAG, "Transfer completed: ${request.transferId}")
-            } catch (e: Exception) {
-                Log.e(TAG, "Transfer failed: ${request.transferId}", e)
-                handleTransferError(session, e)
+                verifyTransferIntegrity(session)            } catch (e: Exception) {                handleTransferError(session, e)
             } finally {
                 activeTransfers.remove(request.transferId)
 
@@ -299,25 +291,17 @@ class FileTransferProtocol(
         return try {
             val response = networkClient.waitForResponse("resume_info", 5000L)
             response.optLong("resume_offset", 0L)
-        } catch (e: Exception) {
-            Log.d(TAG, "Resume not available for transfer: $transferId")
-            0L
+        } catch (e: Exception) {            0L
         }
     }
 
-    private suspend fun verifyPartialIntegrity(session: TransferSession) {
-
-        Log.d(TAG, "Partial integrity check at ${session.bytesTransferred.get()} bytes")
+    private suspend fun verifyPartialIntegrity(session: TransferSession) {} bytes")
     }
 
     private suspend fun handleTransferError(
         session: TransferSession,
         error: Exception,
-    ) {
-        Log.e(TAG, "Transfer error for ${session.request.transferId}", error)
-
-
-        if (error is IOException && session.resumeOffset < session.request.fileSize) {
+    ) {        if (error is IOException && session.resumeOffset < session.request.fileSize) {
 
             synchronized(transferQueue) {
                 transferQueue.add(0, session.request)
@@ -363,10 +347,7 @@ class FileTransferProtocol(
             }
 
         networkClient.sendMessage(cancelMessage)
-        activeTransfers.remove(transferId)
-
-        Log.d(TAG, "Transfer cancelled: $transferId")
-        return true
+        activeTransfers.remove(transferId)        return true
     }
 
     private fun generateTransferId(

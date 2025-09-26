@@ -1,4 +1,3 @@
-import logging
 from abc import ABC, abstractmethod
 from typing import Any, Dict, Optional
 
@@ -123,10 +122,8 @@ except ImportError:
         self._last_error = message
 
         if exception:
-            self._logger.error(f"{error_type}: {message}", exc_info=exception)
-        else:
-            self._logger.error(f"{error_type}: {message}")
-
+            self._        else:
+            self._
         if PYQT_AVAILABLE:
             self.error_occurred.emit(error_type, message)
 
@@ -136,12 +133,8 @@ except ImportError:
     ) -> None:
 
         if success:
-            self._logger.info(
-                f"Operation '{operation}' completed successfully: {message}"
-            )
-        else:
-            self._logger.warning(f"Operation '{operation}' failed: {message}")
-
+            self._        else:
+            self._
         if PYQT_AVAILABLE:
             self.operation_completed.emit(operation, success, message)
 
@@ -163,8 +156,7 @@ except ImportError:
         self._state.clear()
         self._last_error = None
         self._is_initialized = False
-        self._logger.info(f"Manager '{self._name}' state reset")
-
+        self._
 
 class AsyncContextManager(BaseManager):
 

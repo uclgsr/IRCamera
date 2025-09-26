@@ -1,6 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.tools
 
-import android.util.Log
 
 class Fence(var w: Int = 256, var h: Int = 192, val srcRect: IntArray, rotateType: Int = 0) {
     var scale = 0f
@@ -17,9 +16,7 @@ class Fence(var w: Int = 256, var h: Int = 192, val srcRect: IntArray, rotateTyp
                 h = 192
             }
         }
-        scale = w / srcRect[0].toFloat()
-        Log.w("123", "scale: $scale")
-    }
+        scale = w / srcRect[0].toFloat()    }
 
     fun getSinglePoint(start: IntArray): ArrayList<IntArray> {
         val startPoint: IntArray = start
@@ -51,10 +48,7 @@ class Fence(var w: Int = 256, var h: Int = 192, val srcRect: IntArray, rotateTyp
             endPoint = end
         }
         val k: Float =
-            (start[1].toFloat() - end[1].toFloat()) / (start[0].toFloat() - end[0].toFloat())
-        Log.w("123", "k: $k")
-
-        val startX: Int = (startPoint[0] * scale).toInt()
+            (start[1].toFloat() - end[1].toFloat()) / (start[0].toFloat() - end[0].toFloat())        val startX: Int = (startPoint[0] * scale).toInt()
         val startY: Int = (startPoint[1] * scale).toInt()
         val endX: Int = (endPoint[0] * scale).toInt()
         val endY: Int = (endPoint[1] * scale).toInt()
@@ -114,17 +108,11 @@ class Fence(var w: Int = 256, var h: Int = 192, val srcRect: IntArray, rotateTyp
         val stringBuilder = StringBuilder()
         list.forEach {
             stringBuilder.append(it.contentToString()).append(", ")
-        }
-        Log.w("123", "list size:${list.size}")
-        Log.w("123", "list point:$stringBuilder")
-    }
+        }    }
 
     private fun showArrayIndex(list: ArrayList<IntArray>) {
         val stringBuilder = StringBuilder()
         list.forEach {
             stringBuilder.append(FenceTool.pointToIndex(it, w)).append(", ")
-        }
-        Log.w("123", "list size:${list.size}")
-        Log.w("123", "list index:$stringBuilder")
-    }
+        }    }
 }

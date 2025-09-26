@@ -1,7 +1,6 @@
 package com.mpdc4gsr.module.user.ble
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.topdon.ble.Connection
@@ -70,31 +69,21 @@ class BleDeviceManager(private val context: Context) : CoroutineScope {
     )
 
     fun initialize(enableNordicBackend: Boolean = true) {
-        launch {
-            Log.i(TAG, "Initializing BLE Device Manager with Nordic backend: $enableNordicBackend")
-
-            easyBLE =
+        launch {            easyBLE =
                 EasyBLE.getBuilder()
                     .build().apply {
                         initialize(context.applicationContext as android.app.Application)
                     }
 
-            setupDeviceDiscovery()
-
-            Log.i(TAG, "BLE Device Manager initialized successfully")
-        }
+            setupDeviceDiscovery()        }
     }
 
     private fun setupDeviceDiscovery() {
         easyBLE?.addScanListener(
             object : com.topdon.ble.callback.ScanListener {
-                override fun onScanStart() {
-                    Log.d(TAG, "Enhanced BLE scan started")
-                }
+                override fun onScanStart() {                }
 
-                override fun onScanStop() {
-                    Log.d(TAG, "Enhanced BLE scan stopped")
-                }
+                override fun onScanStop() {                }
 
                 override fun onScanResult(
                     device: Device,
@@ -112,8 +101,7 @@ class BleDeviceManager(private val context: Context) : CoroutineScope {
                     deviceInfoMap[device.address] = deviceInfo
 
                     if (deviceInfo.isGsrSensor) {
-                        gsrSensorAddresses.add(device.address)
-                        Log.i(TAG, "GSR sensor detected: ${device.name} (${device.address})")
+                        gsrSensorAddresses.add(device.address)")
                     }
 
                     updateDiscoveredDevices()
@@ -122,12 +110,7 @@ class BleDeviceManager(private val context: Context) : CoroutineScope {
                 override fun onScanError(
                     errorCode: Int,
                     errorMsg: String?,
-                ) {
-                    Log.e(
-                        TAG,
-                        "Enhanced BLE scan failed with error code: $errorCode, message: $errorMsg"
-                    )
-                }
+                ) {                }
             },
         )
     }
@@ -140,27 +123,18 @@ class BleDeviceManager(private val context: Context) : CoroutineScope {
     }
 
     fun startDeviceDiscovery() {
-        launch {
-            Log.i(TAG, "Starting enhanced device discovery")
-            easyBLE?.startScan()
+        launch {            easyBLE?.startScan()
         }
     }
 
     fun stopDeviceDiscovery() {
-        launch {
-            Log.i(TAG, "Stopping device discovery")
-            easyBLE?.stopScan()
+        launch {            easyBLE?.stopScan()
         }
     }
 
     fun connectToDevice(deviceAddress: String): Boolean {
-        return try {
-            Log.i(TAG, "Attempting enhanced connection to device: $deviceAddress")
-
-            val deviceInfo = deviceInfoMap[deviceAddress]
-            if (deviceInfo == null) {
-                Log.e(TAG, "Device info not found for address: $deviceAddress")
-                return false
+        return try {            val deviceInfo = deviceInfoMap[deviceAddress]
+            if (deviceInfo == null) {                return false
             }
 
             val config = createOptimalConnectionConfig(deviceInfo.isGsrSensor)
@@ -169,16 +143,10 @@ class BleDeviceManager(private val context: Context) : CoroutineScope {
 
             if (connection != null) {
                 deviceConnections[deviceAddress] = connection
-                updateDeviceStatus()
-                Log.i(TAG, "Enhanced connection successful for device: $deviceAddress")
-                true
-            } else {
-                Log.e(TAG, "Enhanced connection failed for device: $deviceAddress")
-                false
+                updateDeviceStatus()                true
+            } else {                false
             }
-        } catch (e: Exception) {
-            Log.e(TAG, "Error connecting to device $deviceAddress", e)
-            false
+        } catch (e: Exception) {            false
         }
     }
 
@@ -187,9 +155,7 @@ class BleDeviceManager(private val context: Context) : CoroutineScope {
             if (isGsrSensor) {
 
                 setConnectTimeoutMillis(10000)
-                setAutoReconnect(true)
-                Log.d(TAG, "Applied GSR-optimized connection configuration")
-            } else {
+                setAutoReconnect(true)            } else {
 
                 setConnectTimeoutMillis(5000)
                 setAutoReconnect(false)
@@ -201,13 +167,7 @@ class BleDeviceManager(private val context: Context) : CoroutineScope {
         return object : EventObserver {
             override fun onConnectionStateChanged(device: Device) {
                 launch {
-                    val connectionState = device.connectionState
-                    Log.i(
-                        TAG,
-                        "Device connection state changed: $deviceAddress, state: $connectionState"
-                    )
-
-                    when (connectionState) {
+                    val connectionState = device.connectionState                    when (connectionState) {
                         ConnectionState.SERVICE_DISCOVERED -> {
                             val deviceInfo = deviceInfoMap[deviceAddress]?.copy(isPaired = true)
                             if (deviceInfo != null) {
@@ -225,13 +185,7 @@ class BleDeviceManager(private val context: Context) : CoroutineScope {
                             updatePairedDevices()
                         }
 
-                        else -> {
-
-                            Log.d(
-                                TAG,
-                                "Connection state: $connectionState for device: $deviceAddress"
-                            )
-                        }
+                        else -> {                        }
                     }
                     updateDeviceStatus()
                 }
@@ -241,9 +195,7 @@ class BleDeviceManager(private val context: Context) : CoroutineScope {
                 device: Device,
                 failType: Int,
             ) {
-                launch {
-                    Log.w(TAG, "Device connection failed: $deviceAddress, error: $failType")
-                    updateDeviceStatus()
+                launch {                    updateDeviceStatus()
                 }
             }
 
@@ -251,9 +203,7 @@ class BleDeviceManager(private val context: Context) : CoroutineScope {
                 device: Device,
                 type: Int,
             ) {
-                launch {
-                    Log.w(TAG, "Device connection timeout: $deviceAddress, type: $type")
-                    updateDeviceStatus()
+                launch {                    updateDeviceStatus()
                 }
             }
 
@@ -262,87 +212,56 @@ class BleDeviceManager(private val context: Context) : CoroutineScope {
                 service: java.util.UUID,
                 characteristic: java.util.UUID,
                 value: ByteArray?,
-            ) {
-                Log.d(
-                    TAG,
-                    "Characteristic changed for $deviceAddress: service=$service, char=$characteristic"
-                )
-            }
+            ) {            }
 
             override fun onNotificationChanged(
                 request: Request,
                 isEnabled: Boolean,
-            ) {
-                Log.d(
-                    TAG,
-                    "Notification changed for $deviceAddress: ${request.type}, enabled: $isEnabled"
-                )
-            }
+            ) {            }
 
             override fun onCharacteristicRead(
                 request: Request,
                 value: ByteArray?,
-            ) {
-                Log.d(TAG, "Characteristic read for $deviceAddress: ${request.type}")
-            }
+            ) {            }
 
             override fun onCharacteristicWrite(
                 request: Request,
                 value: ByteArray?,
-            ) {
-                Log.d(TAG, "Characteristic write for $deviceAddress: ${request.type}")
-            }
+            ) {            }
 
             override fun onRequestFailed(
                 request: Request,
                 failType: Int,
                 value: Any?,
-            ) {
-                Log.w(
-                    TAG,
-                    "Request failed for $deviceAddress: ${request.type}, fail type: $failType"
-                )
-            }
+            ) {            }
 
             override fun onMtuChanged(
                 request: Request,
                 mtu: Int,
-            ) {
-                Log.i(TAG, "MTU changed for $deviceAddress: $mtu")
-            }
+            ) {            }
 
             override fun onRssiRead(
                 request: Request,
                 rssi: Int,
-            ) {
-                Log.d(TAG, "RSSI read for $deviceAddress: $rssi")
-            }
+            ) {            }
 
             override fun onDescriptorRead(
                 request: Request,
                 value: ByteArray?,
-            ) {
-                Log.d(TAG, "Descriptor read for $deviceAddress: ${request.type}")
-            }
+            ) {            }
 
-            override fun onBluetoothAdapterStateChanged(state: Int) {
-                Log.d(TAG, "Bluetooth adapter state changed: $state")
-            }
+            override fun onBluetoothAdapterStateChanged(state: Int) {            }
 
             override fun onPhyChange(
                 request: Request,
                 txPhy: Int,
                 rxPhy: Int,
-            ) {
-                Log.d(TAG, "PHY change for $deviceAddress: TX=$txPhy, RX=$rxPhy")
-            }
+            ) {            }
         }
     }
 
     fun disconnectDevice(deviceAddress: String) {
-        launch {
-            Log.i(TAG, "Disconnecting device: $deviceAddress")
-            deviceConnections[deviceAddress]?.disconnect()
+        launch {            deviceConnections[deviceAddress]?.disconnect()
         }
     }
 
@@ -354,9 +273,7 @@ class BleDeviceManager(private val context: Context) : CoroutineScope {
                 adapter.isEnabled -> SystemBleStatus.ENABLED
                 else -> SystemBleStatus.DISABLED
             }
-        } catch (e: Exception) {
-            Log.e(TAG, "Error getting system BLE status", e)
-            null
+        } catch (e: Exception) {            null
         }
     }
 
@@ -384,10 +301,7 @@ class BleDeviceManager(private val context: Context) : CoroutineScope {
     }
 
     fun release() {
-        launch {
-            Log.i(TAG, "Releasing BLE Device Manager")
-
-            stopDeviceDiscovery()
+        launch {            stopDeviceDiscovery()
 
             deviceConnections.values.forEach { connection ->
                 connection.disconnect()
@@ -396,9 +310,6 @@ class BleDeviceManager(private val context: Context) : CoroutineScope {
             deviceConnections.clear()
             deviceInfoMap.clear()
 
-            easyBLE?.release()
-
-            Log.i(TAG, "BLE Device Manager released successfully")
-        }
+            easyBLE?.release()        }
     }
 }

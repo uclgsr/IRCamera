@@ -1,6 +1,5 @@
 package mpdc4gsr.network
 
-import android.util.Log
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -52,13 +51,8 @@ class TcpClient(
 
     override suspend fun connect(): Boolean = withContext(Dispatchers.IO) {
         try {
-            if (isConnected()) {
-                Log.i(TAG, "Already connected to $serverHost:$serverPort")
-                return@withContext true
-            }
-
-            Log.i(TAG, "Connecting to PC server at $serverHost:$serverPort")
-            _connectionState.value = CommandConnection.ConnectionState.CONNECTING
+            if (isConnected()) {                return@withContext true
+            }            _connectionState.value = CommandConnection.ConnectionState.CONNECTING
             connectionCallback?.invoke(CommandConnection.ConnectionState.CONNECTING)
 
             socket = Socket().apply {
@@ -79,21 +73,14 @@ class TcpClient(
                 connectionCallback?.invoke(CommandConnection.ConnectionState.CONNECTED)
 
                 // Start reader thread
-                startReaderLoop()
-
-                Log.i(TAG, "Successfully connected to PC server")
-                return@withContext true
+                startReaderLoop()                return@withContext true
             } else {
                 throw IOException("Failed to get socket streams")
             }
 
-        } catch (e: SocketTimeoutException) {
-            Log.e(TAG, "Connection timeout to $serverHost:$serverPort")
-            handleConnectionError("Connection timeout")
+        } catch (e: SocketTimeoutException) {            handleConnectionError("Connection timeout")
             return@withContext false
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to connect to $serverHost:$serverPort", e)
-            handleConnectionError("Connection failed: ${e.message}")
+        } catch (e: Exception) {            handleConnectionError("Connection failed: ${e.message}")
             return@withContext false
         }
     }
@@ -104,24 +91,15 @@ class TcpClient(
             if (currentWriter != null && isConnected()) {
                 currentWriter.write(message)
                 currentWriter.write("\n")
-                currentWriter.flush()
-                Log.d(TAG, "Sent message: $message")
-                return@withContext true
-            } else {
-                Log.w(TAG, "Cannot send message - not connected")
-                return@withContext false
+                currentWriter.flush()                return@withContext true
+            } else {                return@withContext false
             }
-        } catch (e: IOException) {
-            Log.e(TAG, "Failed to send message: $message", e)
-            handleConnectionError("Send failed: ${e.message}")
+        } catch (e: IOException) {            handleConnectionError("Send failed: ${e.message}")
             return@withContext false
         }
     }
 
-    override suspend fun disconnect(): Unit = withContext(Dispatchers.IO) {
-        Log.i(TAG, "Disconnecting from PC server")
-
-        // Cancel reader job first to stop any ongoing reads
+    override suspend fun disconnect(): Unit = withContext(Dispatchers.IO) {        // Cancel reader job first to stop any ongoing reads
         readerJob?.cancel()
         readerJob = null
 
@@ -131,19 +109,13 @@ class TcpClient(
                 try {
                     w.flush()
                     w.close()
-                } catch (e: IOException) {
-                    Log.w(TAG, "Error closing writer", e)
-                }
+                } catch (e: IOException) {                }
             }
-        } catch (e: Exception) {
-            Log.w(TAG, "Error flushing/closing writer", e)
-        }
+        } catch (e: Exception) {        }
 
         try {
             reader?.close()
-        } catch (e: IOException) {
-            Log.w(TAG, "Error closing reader", e)
-        }
+        } catch (e: IOException) {        }
 
         try {
             socket?.let { s ->
@@ -151,9 +123,7 @@ class TcpClient(
                     s.close()
                 }
             }
-        } catch (e: IOException) {
-            Log.w(TAG, "Error closing socket", e)
-        }
+        } catch (e: IOException) {        }
 
         // Clear all references
         writer = null
@@ -191,27 +161,19 @@ class TcpClient(
                 while (isActive && isConnected()) {
                     try {
                         val message = currentReader.readLine()
-                        if (message != null) {
-                            Log.d(TAG, "Received message: $message")
-                            messageCallback?.invoke(message)
-                        } else {
-                            Log.w(TAG, "Server closed connection")
-                            break
+                        if (message != null) {                            messageCallback?.invoke(message)
+                        } else {                            break
                         }
                     } catch (e: SocketTimeoutException) {
                         // Read timeout is normal, continue reading
                         continue
                     } catch (e: SocketException) {
-                        if (isActive) {
-                            Log.w(TAG, "Socket exception in reader loop", e)
-                            break
+                        if (isActive) {                            break
                         }
                     }
                 }
             } catch (e: Exception) {
-                if (isActive) {
-                    Log.e(TAG, "Error in reader loop", e)
-                    handleConnectionError("Reader error: ${e.message}")
+                if (isActive) {                    handleConnectionError("Reader error: ${e.message}")
                 }
             }
 
@@ -221,9 +183,7 @@ class TcpClient(
         }
     }
 
-    private fun handleConnectionError(errorMessage: String) {
-        Log.w(TAG, "Connection error: $errorMessage")
-        _connectionState.value = CommandConnection.ConnectionState.ERROR
+    private fun handleConnectionError(errorMessage: String) {        _connectionState.value = CommandConnection.ConnectionState.ERROR
         connectionCallback?.invoke(CommandConnection.ConnectionState.ERROR)
 
         clientScope.launch {

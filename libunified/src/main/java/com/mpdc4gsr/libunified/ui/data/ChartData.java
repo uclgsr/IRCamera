@@ -279,9 +279,7 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
 
             calcMinMax(e, set.getAxisDependency());
 
-        } else {
-            Log.e("addEntry", "Cannot add Entry because dataSetIndex too high or too low.");
-        }
+        } else {        }
     }
 
     protected void calcMinMax(Entry e, AxisDependency axis) {

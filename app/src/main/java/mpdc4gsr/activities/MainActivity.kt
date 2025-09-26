@@ -10,7 +10,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
-import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import android.widget.ImageView
@@ -30,7 +29,6 @@ import com.blankj.utilcode.util.AppUtils
 import com.csl.irCamera.BuildConfig
 import com.csl.irCamera.R
 import com.csl.irCamera.databinding.ActivityMainBinding
-import com.elvishew.xlog.XLog
 import com.mpdc4gsr.gsr.model.SessionInfo
 import com.mpdc4gsr.libunified.app.BaseApplication
 import com.mpdc4gsr.libunified.app.bean.event.TS004ResetEvent
@@ -127,10 +125,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             recordingService = binder.getService()
             networkClient = binder.getNetworkClient()
             networkManager = binder.getNetworkManager()
-            isServiceBound = true
-            Log.i(TAG, "Recording service connected")
-
-            setupRemoteControl()
+            isServiceBound = true            setupRemoteControl()
             setupNetworkManagerObservers()
         }
 
@@ -138,17 +133,10 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             serviceBinder = null
             recordingService = null
             networkClient = null
-            isServiceBound = false
-            Log.i(TAG, "Recording service disconnected")
-        }
+            isServiceBound = false        }
     }
 
-    private fun setupRemoteControl() {
-        Log.i(TAG, "Setting up enhanced remote control capabilities")
-
-        if (!isServiceBound || recordingService == null) {
-            Log.w(TAG, "Recording service not available for remote control setup")
-            return
+    private fun setupRemoteControl() {        if (!isServiceBound || recordingService == null) {            return
         }
 
         try {
@@ -158,13 +146,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             startHeartbeat()
 
             networkStatusIndicator?.setOnClickListener { handleNetworkStatusClick() }
-            networkStatusText?.setOnClickListener { handleNetworkStatusClick() }
-
-            Log.i(TAG, "Enhanced remote control setup completed")
-
-        } catch (e: Exception) {
-            Log.e(TAG, "Error setting up remote control", e)
-            showNetworkError("Failed to setup remote control: ${e.message}")
+            networkStatusText?.setOnClickListener { handleNetworkStatusClick() }        } catch (e: Exception) {            showNetworkError("Failed to setup remote control: ${e.message}")
         }
     }
 
@@ -185,12 +167,10 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             str.append("SDK_INT: ${Build.VERSION.SDK_INT}").append("\n")
             str.append("RELEASE: ${Build.VERSION.RELEASE}").append("\n")
             if (SharedManager.getHasShowClause()) {
-                XLog.i(str)
-            }
+                X            }
         } catch (e: Exception) {
             if (SharedManager.getHasShowClause()) {
-                XLog.e("log error: ${e.message}")
-            }
+                X            }
         }
     }
 
@@ -226,13 +206,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             }
             recordingControlsWidget.onLocalStopClicked = {
                 handleLocalRecordingStop()
-            }
-
-            Log.i(TAG, "Enhanced UI components initialized successfully")
-
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to initialize enhanced UI components", e)
-            Toast.makeText(this, "UI initialization error: ${e.message}", Toast.LENGTH_LONG).show()
+            }        } catch (e: Exception) {            Toast.makeText(this, "UI initialization error: ${e.message}", Toast.LENGTH_LONG).show()
         }
     }
 
@@ -350,37 +324,27 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                         Toast.makeText(this, it.message, Toast.LENGTH_SHORT).show()
                     }
 
-                    MainActivityViewModel.StatusMessage.Level.INFO -> {
-                        Log.i(TAG, "Status: ${it.message}")
-                    }
+                    MainActivityViewModel.StatusMessage.Level.INFO -> {                    }
                 }
             }
         }
     }
 
     private fun handleLocalRecordingStart() {
-        try {
-            Log.i(TAG, "Local recording start requested")
-            // Use existing session config or create a basic one
+        try {            // Use existing session config or create a basic one
             val config = MainActivityViewModel.SessionConfig(
                 sessionId = "local_${System.currentTimeMillis()}",
                 modalities = listOf("thermal", "GSR", "rgb")
             )
             mainViewModel.startRecordingSession(config)
             mainViewModel.setRemoteTriggered(false) // Mark as local trigger
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to start local recording", e)
-            Toast.makeText(this, "Failed to start recording: ${e.message}", Toast.LENGTH_SHORT).show()
+        } catch (e: Exception) {            Toast.makeText(this, "Failed to start recording: ${e.message}", Toast.LENGTH_SHORT).show()
         }
     }
 
     private fun handleLocalRecordingStop() {
-        try {
-            Log.i(TAG, "Local recording stop requested")
-            mainViewModel.stopRecordingSession()
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to stop local recording", e)
-            Toast.makeText(this, "Failed to stop recording: ${e.message}", Toast.LENGTH_SHORT).show()
+        try {            mainViewModel.stopRecordingSession()
+        } catch (e: Exception) {            Toast.makeText(this, "Failed to stop recording: ${e.message}", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -584,24 +548,16 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
 
 
     private fun launchThermalCamera() {
-        try {
-            Log.i(TAG, "Launching thermal camera interface")
-            val intent = Intent(this, ThermalCameraDemo::class.java)
+        try {            val intent = Intent(this, ThermalCameraDemo::class.java)
             startActivity(intent)
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to launch thermal camera", e)
-            Toast.makeText(this, "Thermal camera not available", Toast.LENGTH_SHORT).show()
+        } catch (e: Exception) {            Toast.makeText(this, "Thermal camera not available", Toast.LENGTH_SHORT).show()
         }
     }
 
     private fun launchFaultTolerantRecording() {
-        try {
-            Log.i(TAG, "Launching enhanced fault-tolerant recording interface")
-            val intent = Intent(this, mpdc4gsr.activities.FaultTolerantRecordingActivity::class.java)
+        try {            val intent = Intent(this, mpdc4gsr.activities.FaultTolerantRecordingActivity::class.java)
             startActivity(intent)
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to launch fault-tolerant recording", e)
-            Toast.makeText(this, "Enhanced recording not available", Toast.LENGTH_SHORT).show()
+        } catch (e: Exception) {            Toast.makeText(this, "Enhanced recording not available", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -609,22 +565,12 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         // Initialize MainActivityViewModel components
         mainViewModel.initializeComponents()
 
-        requestAllPermissions()
-
-        Log.i(
-            "MainActivity",
-            "✅ PC-to-Phone communication integration available - RecordingService supports network control"
-        )
-    }
+        requestAllPermissions()    }
 
     private fun requestAllPermissions() {
         permissionController.ensureAll { allGranted, deniedPermissions ->
-            if (allGranted) {
-                Log.i(TAG, "All permissions granted - full functionality enabled")
-
-                onAllPermissionsGranted()
-            } else {
-                Log.w(TAG, "Some permissions denied: ${deniedPermissions.joinToString(", ")}")
+            if (allGranted) {                onAllPermissionsGranted()
+            } else {}")
 
                 onPartialPermissions(deniedPermissions)
             }
@@ -633,10 +579,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
 
     private fun onAllPermissionsGranted() {
         // Initialize and connect actual sensor modules to ViewModel
-        initializeSensorIntegration()
-
-        Log.i(TAG, "Full multi-sensor recording functionality available")
-    }
+        initializeSensorIntegration()    }
 
     private fun initializeSensorIntegration() {
         try {
@@ -661,12 +604,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             initializeThermalCameraIntegration()
 
             // Initialize GSR Sensor integration
-            initializeGSRSensorIntegration()
-
-            Log.i(TAG, "Sensor integration initialized successfully")
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to initialize sensor integration", e)
-            Toast.makeText(this, "Sensor integration error: ${e.message}", Toast.LENGTH_LONG).show()
+            initializeGSRSensorIntegration()        } catch (e: Exception) {            Toast.makeText(this, "Sensor integration error: ${e.message}", Toast.LENGTH_LONG).show()
         }
     }
 
@@ -784,13 +722,8 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             val hasThermalCamera = deviceList.values.any { device ->
                 // This would check for actual Topdon TC001 vendor/product IDs
                 device.deviceName.contains("usb") // Simplified check for demo
-            }
-
-            Log.i(TAG, "Thermal camera availability check: $hasThermalCamera")
-            hasThermalCamera
-        } catch (e: Exception) {
-            Log.w(TAG, "Could not check thermal camera availability", e)
-            false
+            }            hasThermalCamera
+        } catch (e: Exception) {            false
         }
     }
 
@@ -798,9 +731,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         // Check for Shimmer3 GSR device via Bluetooth
         return try {
             val bluetoothAdapter = android.bluetooth.BluetoothAdapter.getDefaultAdapter()
-            if (bluetoothAdapter == null || !bluetoothAdapter.isEnabled) {
-                Log.w(TAG, "Bluetooth not available or not enabled")
-                return false
+            if (bluetoothAdapter == null || !bluetoothAdapter.isEnabled) {                return false
             }
 
             // This would normally scan for Shimmer devices
@@ -808,13 +739,8 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             val hasBluetoothPermission = ContextCompat.checkSelfPermission(
                 this,
                 android.Manifest.permission.BLUETOOTH_SCAN
-            ) == PackageManager.PERMISSION_GRANTED
-
-            Log.i(TAG, "GSR device availability check: $hasBluetoothPermission")
-            hasBluetoothPermission
-        } catch (e: Exception) {
-            Log.w(TAG, "Could not check GSR device availability", e)
-            false
+            ) == PackageManager.PERMISSION_GRANTED            hasBluetoothPermission
+        } catch (e: Exception) {            false
         }
     }
 
@@ -826,10 +752,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         val message = "Some features may be limited due to missing permissions: ${
             permissionNames.joinToString(", ")
         }"
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
-
-        Log.w(TAG, "Running with limited functionality: $message")
-    }
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show()    }
 
     override fun onResume() {
         super.onResume()
@@ -931,18 +854,8 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
     override fun connected() {
         if (SharedManager.isConnectAutoOpen) {
 
-            if (permissionController.canStartRecording()) {
-                Log.i(
-                    TAG,
-                    "Camera permissions available - device connected and ready for recording"
-                )
-
-            } else {
-                Log.w(TAG, "Camera permissions missing - requesting permissions")
-                permissionController.ensureAll { granted, _ ->
-                    if (granted && permissionController.canStartRecording()) {
-                        Log.i(TAG, "Camera permissions granted after device connection")
-                    }
+            if (permissionController.canStartRecording()) {            } else {                permissionController.ensureAll { granted, _ ->
+                    if (granted && permissionController.canStartRecording()) {                    }
                 }
             }
         }
@@ -1073,10 +986,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
     }
 
 
-    private fun initializePhase0Baseline() {
-        Log.i(TAG, "Initializing Phase 0 baseline components")
-
-        try {
+    private fun initializePhase0Baseline() {        try {
 
             FeatureFlags.initialize(this)
 
@@ -1109,21 +1019,11 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                 "MainActivity",
                 "feature_flags_initialized",
                 featureFlags
-            )
-
-            Log.i(TAG, "Phase 0 baseline initialization completed successfully")
-
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to initialize Phase 0 baseline components", e)
-
-        }
+            )        } catch (e: Exception) {        }
     }
 
 
-    private fun initNetworking() {
-        Log.i(TAG, "Initializing PC-to-phone control networking with Phase 0 baseline")
-
-        structuredLogger.log(
+    private fun initNetworking() {        structuredLogger.log(
             StructuredLogger.LogLevel.INFO,
             "MainActivity",
             "networking_initialization_started",
@@ -1176,9 +1076,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                 "networking_initialization_completed"
             )
 
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to initialize networking", e)
-            structuredLogger.log(
+        } catch (e: Exception) {            structuredLogger.log(
                 StructuredLogger.LogLevel.ERROR,
                 "MainActivity",
                 "networking_initialization_failed",
@@ -1218,9 +1116,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                     kotlinx.coroutines.delay(1000)
                 }
 
-            } catch (e: Exception) {
-                Log.e(TAG, "Error in WebSocket client supervision", e)
-                structuredLogger.log(
+            } catch (e: Exception) {                structuredLogger.log(
                     StructuredLogger.LogLevel.ERROR,
                     "WebSocketClient",
                     "supervision_error",
@@ -1370,10 +1266,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                         }
                     }
 
-                    else -> {
-
-                        Log.d(TAG, "Received message type: $messageType")
-                    }
+                    else -> {                    }
                 }
             }
 
@@ -1418,9 +1311,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
 
             Toast.makeText(this, "Remote recording started: $sessionId", Toast.LENGTH_LONG).show()
 
-        } catch (e: Exception) {
-            Log.e(TAG, "Error handling remote session start", e)
-            structuredLogger.log(
+        } catch (e: Exception) {            structuredLogger.log(
                 StructuredLogger.LogLevel.ERROR,
                 "RemoteControl",
                 "session_start_error",
@@ -1444,9 +1335,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
 
             Toast.makeText(this, "Remote recording stopped", Toast.LENGTH_LONG).show()
 
-        } catch (e: Exception) {
-            Log.e(TAG, "Error handling remote session stop", e)
-            structuredLogger.log(
+        } catch (e: Exception) {            structuredLogger.log(
                 StructuredLogger.LogLevel.ERROR,
                 "RemoteControl",
                 "session_stop_error",
@@ -1461,9 +1350,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
     }
 
 
-    private fun startNetworkDiscovery() {
-        Log.i(TAG, "Starting WebSocket discovery for PC servers")
-        updateConnectionStatus(ConnectionStatus.DISCOVERING)
+    private fun startNetworkDiscovery() {        updateConnectionStatus(ConnectionStatus.DISCOVERING)
 
 
         structuredLogger.log(
@@ -1476,12 +1363,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
 
     }
 
-    private fun handleRemoteRecordingRequest(sessionInfo: SessionInfo) {
-        Log.i(TAG, "Processing remote recording request for session: ${sessionInfo.sessionId}")
-
-        if (!isServiceBound || recordingService == null) {
-            Log.e(TAG, "Recording service not available for remote request")
-            showNetworkError("Recording service not ready")
+    private fun handleRemoteRecordingRequest(sessionInfo: SessionInfo) {        if (!isServiceBound || recordingService == null) {            showNetworkError("Recording service not ready")
             return
         }
 
@@ -1502,16 +1384,11 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                 Toast.LENGTH_LONG
             ).show()
 
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to start remote recording", e)
-            showNetworkError("Failed to start recording: ${e.message}")
+        } catch (e: Exception) {            showNetworkError("Failed to start recording: ${e.message}")
         }
     }
 
-    private fun performSyncFlash(durationMs: Int) {
-        Log.i(TAG, "Performing sync flash for ${durationMs}ms")
-
-        val originalBackground = window.decorView.background
+    private fun performSyncFlash(durationMs: Int) {        val originalBackground = window.decorView.background
 
         try {
 
@@ -1526,10 +1403,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                 window.decorView.background = originalBackground
             }, durationMs.toLong())
 
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to perform sync flash", e)
-
-            window.decorView.background = originalBackground
+        } catch (e: Exception) {            window.decorView.background = originalBackground
         }
     }
 
@@ -1568,10 +1442,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         }
     }
 
-    private fun showNetworkError(message: String) {
-        Log.e(TAG, "Network error: $message")
-
-        val builder = androidx.appcompat.app.AlertDialog.Builder(this)
+    private fun showNetworkError(message: String) {        val builder = androidx.appcompat.app.AlertDialog.Builder(this)
         builder.setTitle("Network Error")
         builder.setMessage("$message\n\nWhat would you like to do?")
 
@@ -1594,10 +1465,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         if (networkClient == null) {
             showNetworkError("Network client not initialized")
             return
-        }
-
-        Log.i(TAG, "Attempting connection to PC at $ipAddress:$port")
-        updateConnectionStatus(ConnectionStatus.CONNECTING)
+        }        updateConnectionStatus(ConnectionStatus.CONNECTING)
 
         lifecycleScope.launch {
             try {
@@ -1605,30 +1473,22 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
 
                     var success = networkClient?.connectToController(ipAddress, port, true) ?: false
 
-                    if (!success) {
-                        Log.i(TAG, "Secure connection failed, trying non-secure...")
-                        success =
+                    if (!success) {                        success =
                             networkClient?.connectToController(ipAddress, port, false) ?: false
                     }
 
                     withContext(Dispatchers.Main) {
-                        if (success) {
-                            Log.i(TAG, "Connection successful to $ipAddress:$port")
-                            Toast.makeText(
+                        if (success) {                            Toast.makeText(
                                 this@MainActivity,
                                 "Connected to PC at $ipAddress",
                                 Toast.LENGTH_LONG
                             ).show()
-                        } else {
-                            Log.w(TAG, "Connection failed to $ipAddress:$port")
-                            updateConnectionStatus(ConnectionStatus.ERROR)
+                        } else {                            updateConnectionStatus(ConnectionStatus.ERROR)
                             showNetworkError("Failed to connect to PC at $ipAddress:$port")
                         }
                     }
                 }
-            } catch (e: Exception) {
-                Log.e(TAG, "Connection error to $ipAddress:$port", e)
-                updateConnectionStatus(ConnectionStatus.ERROR)
+            } catch (e: Exception) {                updateConnectionStatus(ConnectionStatus.ERROR)
                 showNetworkError("Connection error: ${e.message}")
             }
         }
@@ -1653,18 +1513,11 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             while (!isFinishing) {
                 if (connectionStatus == ConnectionStatus.ERROR ||
                     connectionStatus == ConnectionStatus.DISCONNECTED
-                ) {
-
-                    Log.i(TAG, "Attempting auto-reconnection...")
-                    updateConnectionStatus(ConnectionStatus.CONNECTING)
+                ) {                    updateConnectionStatus(ConnectionStatus.CONNECTING)
 
                     val success = tryReconnection()
-                    if (success) {
-                        Log.i(TAG, "Auto-reconnection successful")
-                        reconnectDelay = 5000L
-                    } else {
-                        Log.w(TAG, "Auto-reconnection failed, retrying in ${reconnectDelay}ms")
-                        kotlinx.coroutines.delay(reconnectDelay)
+                    if (success) {                        reconnectDelay = 5000L
+                    } else {                        kotlinx.coroutines.delay(reconnectDelay)
                         reconnectDelay = minOf(reconnectDelay * 2, maxDelay)
                     }
                 } else {
@@ -1680,9 +1533,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
 
                 val controllers = networkClient?.getDiscoveredControllers()
                 if (!controllers.isNullOrEmpty()) {
-                    for (controller: NetworkClient.ControllerInfo in controllers) {
-                        Log.i(TAG, "Reconnection attempt to ${controller.ipAddress}")
-                        val success = networkClient?.connectToController(
+                    for (controller: NetworkClient.ControllerInfo in controllers) {                        val success = networkClient?.connectToController(
                             controller.ipAddress,
                             controller.port
                         ) ?: false
@@ -1715,9 +1566,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
 
                 return@withContext false
 
-            } catch (e: Exception) {
-                Log.e(TAG, "Error during reconnection attempt", e)
-                return@withContext false
+            } catch (e: Exception) {                return@withContext false
             }
         }
     }
@@ -1731,9 +1580,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
 
                         webSocketClient?.sendStatusRequest()
 
-                    } catch (e: Exception) {
-                        Log.w(TAG, "Status request exception", e)
-                        updateConnectionStatus(ConnectionStatus.ERROR)
+                    } catch (e: Exception) {                        updateConnectionStatus(ConnectionStatus.ERROR)
                     }
                 }
 
@@ -1820,33 +1667,23 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         builder.setItems(options) { _, which ->
             when (which) {
                 0 -> {
-                    // Connect with saved settings
-                    Log.i(TAG, "Connecting with saved settings")
-                    connectWithSavedSettings()
+                    // Connect with saved settings                    connectWithSavedSettings()
                 }
 
                 1 -> {
-                    // Configure Wi-Fi
-                    Log.i(TAG, "Configuring Wi-Fi connection")
-                    showWifiConfigurationDialog()
+                    // Configure Wi-Fi                    showWifiConfigurationDialog()
                 }
 
                 2 -> {
-                    // Configure Bluetooth
-                    Log.i(TAG, "Configuring Bluetooth connection")
-                    configureBluetoothConnection()
+                    // Configure Bluetooth                    configureBluetoothConnection()
                 }
 
                 3 -> {
-                    // Discover PC Servers
-                    Log.i(TAG, "Discovering PC servers")
-                    showServerDiscoveryDialog()
+                    // Discover PC Servers                    showServerDiscoveryDialog()
                 }
 
                 4 -> {
-                    // Connection Settings
-                    Log.i(TAG, "Opening connection settings")
-                    showConnectionSettingsDialog()
+                    // Connection Settings                    showConnectionSettingsDialog()
                 }
 
                 5 -> {
@@ -1927,9 +1764,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
 
             handleRemoteRecordingRequest(testSessionInfo)
 
-        } catch (e: Exception) {
-            Log.e(TAG, "Error testing remote recording", e)
-            Toast.makeText(this, "Test failed: ${e.message}", Toast.LENGTH_LONG).show()
+        } catch (e: Exception) {            Toast.makeText(this, "Test failed: ${e.message}", Toast.LENGTH_LONG).show()
         }
     }
 
@@ -1975,10 +1810,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             var connected = false
 
             for (ip in commonIPs) {
-                if (connected) break
-
-                Log.i(TAG, "Trying to connect to $ip")
-                updateConnectionStatus(ConnectionStatus.CONNECTING)
+                if (connected) break                updateConnectionStatus(ConnectionStatus.CONNECTING)
 
                 try {
                     val success = withContext(Dispatchers.IO) {
@@ -1987,21 +1819,15 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                                 networkClient?.connectToController(ip, 8080, false) ?: false
                     }
 
-                    if (success) {
-                        Log.i(TAG, "Successfully connected to $ip")
-                        Toast.makeText(
+                    if (success) {                        Toast.makeText(
                             this@MainActivity,
                             "Connected to PC at $ip",
                             Toast.LENGTH_LONG
                         ).show()
                         connected = true
                         break
-                    } else {
-                        Log.w(TAG, "Failed to connect to $ip")
-                    }
-                } catch (e: Exception) {
-                    Log.w(TAG, "Connection error to $ip: ${e.message}")
-                }
+                    } else {                    }
+                } catch (e: Exception) {                }
             }
 
             if (!connected) {
@@ -2036,9 +1862,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                 isServiceBound = false
             }
 
-        } catch (e: Exception) {
-            Log.e(TAG, "Error during networking cleanup", e)
-            structuredLogger.log(
+        } catch (e: Exception) {            structuredLogger.log(
                 StructuredLogger.LogLevel.ERROR,
                 "MainActivity",
                 "networking_cleanup_error",
@@ -2049,16 +1873,11 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         try {
             crashSafeSupervisor.shutdown()
             structuredLogger.cleanup()
-        } catch (e: Exception) {
-            Log.e(TAG, "Error during Phase 0 cleanup", e)
-        }
+        } catch (e: Exception) {        }
     }
 
     private fun launchShimmerMvp() {
-        try {
-            Log.i(TAG, "Showing developer sensor options")
-
-            val options = arrayOf(
+        try {            val options = arrayOf(
                 "Shimmer GSR MVP",
                 "Shimmer3 GSR+ Integration (Comprehensive)",
                 "Unified Sensor Platform",
@@ -2115,9 +1934,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                 }
                 .show()
 
-        } catch (e: Exception) {
-            Log.e(TAG, "Error launching sensor options: ${e.message}")
-            Toast.makeText(this, "Error: ${e.message}", Toast.LENGTH_LONG).show()
+        } catch (e: Exception) {            Toast.makeText(this, "Error: ${e.message}", Toast.LENGTH_LONG).show()
         }
     }
 
@@ -2187,9 +2004,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                         ).show()
                         updateConnectionStatus(ConnectionStatus.ERROR)
                     }
-                } catch (e: Exception) {
-                    Log.e(TAG, "Error connecting with saved settings", e)
-                    Toast.makeText(
+                } catch (e: Exception) {                    Toast.makeText(
                         this@MainActivity,
                         "Connection error: ${e.message}",
                         Toast.LENGTH_SHORT
@@ -2255,9 +2070,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                         ).show()
                         updateConnectionStatus(ConnectionStatus.ERROR)
                     }
-                } catch (e: Exception) {
-                    Log.e(TAG, "Error connecting via Wi-Fi", e)
-                    Toast.makeText(
+                } catch (e: Exception) {                    Toast.makeText(
                         this@MainActivity,
                         "Wi-Fi connection error: ${e.message}",
                         Toast.LENGTH_SHORT
@@ -2283,9 +2096,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                         Toast.LENGTH_LONG
                     ).show()
                 }
-            } catch (e: Exception) {
-                Log.e(TAG, "Error requesting Bluetooth permissions", e)
-                Toast.makeText(
+            } catch (e: Exception) {                Toast.makeText(
                     this@MainActivity,
                     "Error accessing Bluetooth: ${e.message}",
                     Toast.LENGTH_SHORT
@@ -2309,9 +2120,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
 
             val pairedDevices = try {
                 bluetoothAdapter.bondedDevices
-            } catch (e: SecurityException) {
-                Log.e(TAG, "Security exception accessing bonded devices", e)
-                Toast.makeText(this, "Permission denied accessing Bluetooth devices", Toast.LENGTH_SHORT).show()
+            } catch (e: SecurityException) {                Toast.makeText(this, "Permission denied accessing Bluetooth devices", Toast.LENGTH_SHORT).show()
                 return
             }
 
@@ -2322,9 +2131,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
 
             val deviceNames = try {
                 pairedDevices.map { "${it.name ?: "Unknown"} (${it.address})" }.toTypedArray()
-            } catch (e: SecurityException) {
-                Log.e(TAG, "Security exception accessing device names", e)
-                pairedDevices.map { "Device (${it.address})" }.toTypedArray()
+            } catch (e: SecurityException) {                pairedDevices.map { "Device (${it.address})" }.toTypedArray()
             }
             val devices = pairedDevices.toList()
 
@@ -2336,13 +2143,9 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                 .setNegativeButton("Cancel", null)
                 .show()
 
-        } catch (e: SecurityException) {
-            Log.e(TAG, "Security exception in Bluetooth device selection", e)
-            Toast.makeText(this, "Bluetooth permission denied. Please grant permission in settings.", Toast.LENGTH_LONG)
+        } catch (e: SecurityException) {            Toast.makeText(this, "Bluetooth permission denied. Please grant permission in settings.", Toast.LENGTH_LONG)
                 .show()
-        } catch (e: Exception) {
-            Log.e(TAG, "Unexpected error in Bluetooth device selection", e)
-            Toast.makeText(this, "Error accessing Bluetooth: ${e.message}", Toast.LENGTH_SHORT).show()
+        } catch (e: Exception) {            Toast.makeText(this, "Error accessing Bluetooth: ${e.message}", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -2366,9 +2169,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                         ).show()
                         updateConnectionStatus(ConnectionStatus.ERROR)
                     }
-                } catch (e: Exception) {
-                    Log.e(TAG, "Error connecting via Bluetooth", e)
-                    Toast.makeText(
+                } catch (e: Exception) {                    Toast.makeText(
                         this@MainActivity,
                         "Bluetooth connection error: ${e.message}",
                         Toast.LENGTH_SHORT
@@ -2416,9 +2217,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                     ).show()
                 }
             } catch (e: Exception) {
-                progressDialog.dismiss()
-                Log.e(TAG, "Error during server discovery", e)
-                Toast.makeText(
+                progressDialog.dismiss()                Toast.makeText(
                     this@MainActivity,
                     "Server discovery failed: ${e.message}",
                     Toast.LENGTH_SHORT

@@ -8,7 +8,6 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
-import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
@@ -50,9 +49,7 @@ class NetworkClientTestActivity : AppCompatActivity() {
     private lateinit var connectionInfoText: TextView
 
     private val serviceConnection = object : ServiceConnection {
-        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-            Log.i(TAG, "Service connected")
-            val binder = service as RecordingService.RecordingServiceBinder
+        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {            val binder = service as RecordingService.RecordingServiceBinder
             recordingService = binder.getService()
             networkManager = binder.getNetworkManager()
             isBound = true
@@ -60,9 +57,7 @@ class NetworkClientTestActivity : AppCompatActivity() {
             observeConnectionState()
         }
 
-        override fun onServiceDisconnected(name: ComponentName?) {
-            Log.i(TAG, "Service disconnected")
-            recordingService = null
+        override fun onServiceDisconnected(name: ComponentName?) {            recordingService = null
             networkManager = null
             isBound = false
         }
@@ -141,9 +136,7 @@ class NetworkClientTestActivity : AppCompatActivity() {
             !::testPingButton.isInitialized ||
             !::disconnectButton.isInitialized ||
             !::connectionInfoText.isInitialized
-        ) {
-            Log.w(TAG, "UI not fully initialized, skipping status update")
-            return
+        ) {            return
         }
 
         runOnUiThread {
@@ -175,9 +168,7 @@ class NetworkClientTestActivity : AppCompatActivity() {
         }
     }
 
-    private fun setupUI() {
-        Log.i(TAG, "Network Client Test Activity started")
-        updateConnectionStatus(CommandConnection.ConnectionState.DISCONNECTED)
+    private fun setupUI() {        updateConnectionStatus(CommandConnection.ConnectionState.DISCONNECTED)
 
         // Auto-test Wi-Fi connection after service binding (delayed)
         lifecycleScope.launch {
@@ -189,9 +180,7 @@ class NetworkClientTestActivity : AppCompatActivity() {
     private fun observeConnectionState() {
         networkManager?.let { manager ->
             lifecycleScope.launch {
-                manager.connectionState.collect { state ->
-                    Log.i(TAG, "Connection state changed: $state")
-                    updateConnectionStatus(state)
+                manager.connectionState.collect { state ->                    updateConnectionStatus(state)
 
                     val message = when (state) {
                         CommandConnection.ConnectionState.CONNECTING -> "Connecting to PC..."
@@ -208,28 +197,18 @@ class NetworkClientTestActivity : AppCompatActivity() {
     }
 
     private fun testWifiConnection(ip: String = DEFAULT_PC_IP, port: Int = DEFAULT_PC_PORT) {
-        if (!isBound || networkManager == null) {
-            Log.w(TAG, "Service not bound, cannot test connection")
-            Toast.makeText(this, "Service not ready, please wait", Toast.LENGTH_SHORT).show()
+        if (!isBound || networkManager == null) {            Toast.makeText(this, "Service not ready, please wait", Toast.LENGTH_SHORT).show()
             return
-        }
-
-        Log.i(TAG, "Testing Wi-Fi connection to PC server at $ip:$port")
-        updateConnectionStatus(CommandConnection.ConnectionState.CONNECTING)
+        }        updateConnectionStatus(CommandConnection.ConnectionState.CONNECTING)
 
         lifecycleScope.launch {
             try {
                 val success = networkManager?.connectWifi(ip, port) ?: false
-                if (success) {
-                    Log.i(TAG, "Successfully connected to PC server via Wi-Fi")
-
-                    // Test sending a message after connection
+                if (success) {                    // Test sending a message after connection
                     kotlinx.coroutines.delay(1000)
                     testSendMessage()
 
-                } else {
-                    Log.e(TAG, "Failed to connect to PC server via Wi-Fi")
-                    updateConnectionStatus(CommandConnection.ConnectionState.ERROR)
+                } else {                    updateConnectionStatus(CommandConnection.ConnectionState.ERROR)
                     runOnUiThread {
                         Toast.makeText(
                             this@NetworkClientTestActivity,
@@ -238,9 +217,7 @@ class NetworkClientTestActivity : AppCompatActivity() {
                         ).show()
                     }
                 }
-            } catch (e: Exception) {
-                Log.e(TAG, "Exception during Wi-Fi connection test", e)
-                updateConnectionStatus(CommandConnection.ConnectionState.ERROR)
+            } catch (e: Exception) {                updateConnectionStatus(CommandConnection.ConnectionState.ERROR)
                 runOnUiThread {
                     Toast.makeText(
                         this@NetworkClientTestActivity,
@@ -254,21 +231,15 @@ class NetworkClientTestActivity : AppCompatActivity() {
 
     private fun testSendMessage() {
         lifecycleScope.launch {
-            try {
-                Log.i(TAG, "Testing message sending")
-                val sent = networkManager?.sendResponse("PING")
-                if (sent == true) {
-                    Log.i(TAG, "Successfully sent PING message")
-                    runOnUiThread {
+            try {                val sent = networkManager?.sendResponse("PING")
+                if (sent == true) {                    runOnUiThread {
                         Toast.makeText(
                             this@NetworkClientTestActivity,
                             "PING message sent successfully",
                             Toast.LENGTH_SHORT
                         ).show()
                     }
-                } else {
-                    Log.w(TAG, "Failed to send PING message")
-                    runOnUiThread {
+                } else {                    runOnUiThread {
                         Toast.makeText(
                             this@NetworkClientTestActivity,
                             "Failed to send PING message",
@@ -276,9 +247,7 @@ class NetworkClientTestActivity : AppCompatActivity() {
                         ).show()
                     }
                 }
-            } catch (e: Exception) {
-                Log.e(TAG, "Exception during message send test", e)
-                runOnUiThread {
+            } catch (e: Exception) {                runOnUiThread {
                     Toast.makeText(
                         this@NetworkClientTestActivity,
                         "Message send error: ${e.message}",
@@ -290,22 +259,16 @@ class NetworkClientTestActivity : AppCompatActivity() {
     }
 
     private fun testBluetoothConnection() {
-        if (!isBound || networkManager == null) {
-            Log.w(TAG, "Service not bound, cannot test connection")
-            Toast.makeText(this, "Service not ready, please wait", Toast.LENGTH_SHORT).show()
+        if (!isBound || networkManager == null) {            Toast.makeText(this, "Service not ready, please wait", Toast.LENGTH_SHORT).show()
             return
         }
 
         val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
-        if (bluetoothAdapter == null) {
-            Log.w(TAG, "Bluetooth not available on this device")
-            Toast.makeText(this, "Bluetooth not available on this device", Toast.LENGTH_SHORT).show()
+        if (bluetoothAdapter == null) {            Toast.makeText(this, "Bluetooth not available on this device", Toast.LENGTH_SHORT).show()
             return
         }
 
-        if (!bluetoothAdapter.isEnabled) {
-            Log.w(TAG, "Bluetooth is not enabled")
-            Toast.makeText(this, "Please enable Bluetooth first", Toast.LENGTH_SHORT).show()
+        if (!bluetoothAdapter.isEnabled) {            Toast.makeText(this, "Please enable Bluetooth first", Toast.LENGTH_SHORT).show()
             return
         }
 
@@ -313,8 +276,7 @@ class NetworkClientTestActivity : AppCompatActivity() {
         try {
             val pairedDevices: Set<BluetoothDevice> = bluetoothAdapter.bondedDevices
             if (pairedDevices.isNotEmpty()) {
-                val testDevice = pairedDevices.first()
-                Log.i(TAG, "Testing Bluetooth connection to ${testDevice.name} (${testDevice.address})")
+                val testDevice = pairedDevices.first()")
 
                 updateConnectionStatus(CommandConnection.ConnectionState.CONNECTING)
                 Toast.makeText(this, "Connecting to ${testDevice.name}...", Toast.LENGTH_SHORT).show()
@@ -322,12 +284,7 @@ class NetworkClientTestActivity : AppCompatActivity() {
                 lifecycleScope.launch {
                     try {
                         val success = networkManager?.connectBluetooth(testDevice) ?: false
-                        if (success) {
-                            Log.i(TAG, "Successfully connected via Bluetooth")
-
-                        } else {
-                            Log.e(TAG, "Failed to connect via Bluetooth")
-                            updateConnectionStatus(CommandConnection.ConnectionState.ERROR)
+                        if (success) {                        } else {                            updateConnectionStatus(CommandConnection.ConnectionState.ERROR)
                             runOnUiThread {
                                 Toast.makeText(
                                     this@NetworkClientTestActivity,
@@ -336,9 +293,7 @@ class NetworkClientTestActivity : AppCompatActivity() {
                                 ).show()
                             }
                         }
-                    } catch (e: Exception) {
-                        Log.e(TAG, "Exception during Bluetooth connection test", e)
-                        updateConnectionStatus(CommandConnection.ConnectionState.ERROR)
+                    } catch (e: Exception) {                        updateConnectionStatus(CommandConnection.ConnectionState.ERROR)
                         runOnUiThread {
                             Toast.makeText(
                                 this@NetworkClientTestActivity,
@@ -348,17 +303,13 @@ class NetworkClientTestActivity : AppCompatActivity() {
                         }
                     }
                 }
-            } else {
-                Log.w(TAG, "No paired Bluetooth devices found")
-                Toast.makeText(
+            } else {                Toast.makeText(
                     this,
                     "No paired Bluetooth devices found. Please pair a device first.",
                     Toast.LENGTH_LONG
                 ).show()
             }
-        } catch (e: SecurityException) {
-            Log.e(TAG, "Bluetooth permission denied", e)
-            Toast.makeText(this, "Bluetooth permission denied", Toast.LENGTH_SHORT).show()
+        } catch (e: SecurityException) {            Toast.makeText(this, "Bluetooth permission denied", Toast.LENGTH_SHORT).show()
         }
     }
 

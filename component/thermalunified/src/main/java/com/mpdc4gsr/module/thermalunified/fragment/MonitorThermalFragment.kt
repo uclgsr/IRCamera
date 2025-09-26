@@ -2,7 +2,6 @@ package com.mpdc4gsr.module.thermalunified.fragment
 
 import android.graphics.Bitmap
 import android.graphics.Matrix
-import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
@@ -112,9 +111,7 @@ class MonitorThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> 
 
 
         val screenWidth = ScreenUtils.getScreenWidth()
-        val screenHeight = screenWidth * 270 / 360
-        Log.w("123", "screenWidth[ph][ph]:$screenWidth / $screenHeight")
-        Log.w("123", "screenWidth[ph][ph]:${screenWidth.toFloat() / screenHeight}")
+        val screenHeight = screenWidth * 270 / 360/ screenHeight}")
         width = screenWidth
         height = screenHeight
         highCrossWidth = resources.getDimension(R.dimen.high_cross_width).toInt()
@@ -157,9 +154,7 @@ class MonitorThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> 
 
         onIrVideoStart()
         mIrSurfaceView?.let { surfaceView ->
-            surfaceView.post {
-                Log.w("123", "w:${surfaceView.width}, h:${surfaceView.height}")
-            }
+            surfaceView.post {            }
         }
 
         msgLiveData.observe(this) { msg ->
@@ -241,19 +236,12 @@ class MonitorThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> 
                             mMinTemp =
                                 minBigDecimal.setScale(1, java.math.RoundingMode.HALF_UP).toFloat()
                         } catch (e: Exception) {
-                            e.printStackTrace()
-                            Log.e(TAG, "[ph][ph][ph][ph][ph][ph]:${e.message}")
-                        }
+                            e.printStackTrace()                        }
                     }
                 },
             )
 
-        if (ret == 5) {
-            Log.w("123", "[ph][ph][ph][ph][ph][ph][ph]")
-        } else {
-
-            Log.w("123", "[ph][ph][ph][ph][ph][ph][ph]")
-            mGuideInterface = null
+        if (ret == 5) {        } else {            mGuideInterface = null
             mIsIrVideoStart = false
         }
     }
@@ -273,24 +261,18 @@ class MonitorThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> 
             }
             origin.recycle()
             return newBitmap
-        } catch (e: Exception) {
-            Log.e("123", "error:${e.message}")
-            return origin
+        } catch (e: Exception) {            return origin
         }
     }
 
     fun onIrVideoStop() {
         mIsIrVideoStart =
-            if (!mIsIrVideoStart) {
-                Log.w("123", "[ph][ph][ph][ph][ph][ph]")
-                return
+            if (!mIsIrVideoStart) {                return
             } else {
                 false
             }
         mGuideInterface?.exit()
-        mGuideInterface = null
-        Log.w("123", "[ph][ph][ph][ph][ph][ph][ph]")
-    }
+        mGuideInterface = null    }
 
     fun onLowRangeBtnClick(view: View?) {
         if (mGuideInterface == null) {
@@ -362,9 +344,7 @@ class MonitorThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> 
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun action(event: ThermalActionEvent) {
-        Log.w("123", "event:${event.action}")
-        when (event.action) {
+    fun action(event: ThermalActionEvent) {        when (event.action) {
             1001 -> {
 
                 ToastUtils.showShort("[ph][ph]")
@@ -537,23 +517,17 @@ class MonitorThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> 
     var isVideoRunning = false
 
     private fun video() {
-        if (isVideoRunning) {
-            Log.w("123", "[ph][ph][ph][ph]")
-            return
+        if (isVideoRunning) {            return
         }
 
 
         val latestResultPath =
-            "/tmp/YapBitmapToMp4_${System.currentTimeMillis()}.mp4" // Temporary fallback
-        Log.w("123", "latestResultPath:$latestResultPath")
-        YapVideoEncoder(this, File(latestResultPath)).start()
+            "/tmp/YapBitmapToMp4_${System.currentTimeMillis()}.mp4" // Temporary fallback        YapVideoEncoder(this, File(latestResultPath)).start()
     }
 
     private fun full() {
         rotateType =
-            if (rotateType == 0) {
-                Log.w("123", "[ph][ph][ph][ph]")
-                1
+            if (rotateType == 0) {                1
             } else {
                 0
             }
@@ -570,9 +544,7 @@ class MonitorThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> 
         }
     }
 
-    override fun progress(progress: Float) {
-        Log.w("123", "progress:$progress")
-        isVideoRunning = progress > 0 || progress < 100
+    override fun progress(progress: Float) {        isVideoRunning = progress > 0 || progress < 100
     }
 
     var isRecord = false
@@ -598,8 +570,6 @@ class MonitorThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> 
                 AppDatabase.getInstance().thermalDao().insert(bean)
                 delay(timeMillis)
                 time++
-            }
-            Log.w("123", "[ph][ph][ph][ph], [ph][ph][ph]:$time")
-        }
+            }        }
     }
 }

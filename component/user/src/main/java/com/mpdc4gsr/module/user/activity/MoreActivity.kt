@@ -10,7 +10,6 @@ import androidx.activity.viewModels
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import com.blankj.utilcode.util.ToastUtils
-import com.elvishew.xlog.XLog
 import com.mpdc4gsr.libunified.app.BaseApplication
 import com.mpdc4gsr.libunified.app.config.ExtraKeyConfig
 import com.mpdc4gsr.libunified.app.config.FileConfig
@@ -126,8 +125,7 @@ class MoreActivity : BaseActivity(), View.OnClickListener {
                 if (firmwareData != null) {
                     showFirmwareUpDialog(firmwareData)
                 } else {
-                    XLog.i("TS004 [ph][ph][ph][ph] - [ph][ph][ph][ph]")
-                    showCameraLoading()
+                    X                    showCameraLoading()
                     firmwareViewModel.queryFirmware(true)
                 }
 
@@ -174,8 +172,7 @@ class MoreActivity : BaseActivity(), View.OnClickListener {
 
     private fun downloadFirmware(firmwareData: FirmwareViewModel.FirmwareData) {
         lifecycleScope.launch {
-            XLog.d("TS004 [ph][ph][ph][ph] - [ph][ph][ph][ph][ph][ph][ph][ph][ph]")
-            val progressDialog = DownloadProDialog(this@MoreActivity)
+            X            val progressDialog = DownloadProDialog(this@MoreActivity)
             progressDialog.show()
 
             val file = FileConfig.getFirmwareFile("TS004${firmwareData.version}.zip")
@@ -185,33 +182,28 @@ class MoreActivity : BaseActivity(), View.OnClickListener {
                 }
             progressDialog.dismiss()
             if (isSuccess) {
-                XLog.d("TS004 [ph][ph][ph][ph] - [ph][ph][ph][ph][ph][ph][ph][ph][ph]，[ph][ph][ph][ph][ph][ph]")
-                installFirmware(file)
+                X                installFirmware(file)
             } else {
-                XLog.w("TS004 [ph][ph][ph][ph] - [ph][ph][ph][ph][ph][ph][ph][ph][ph]!")
-                showReDownloadDialog(firmwareData)
+                X                showReDownloadDialog(firmwareData)
             }
         }
     }
 
     private fun installFirmware(file: File) {
         lifecycleScope.launch {
-            XLog.d("TS004 [ph][ph][ph][ph] - [ph][ph][ph][ph][ph][ph][ph][ph][ph]")
-            val installDialog = FirmwareInstallDialog(this@MoreActivity)
+            X            val installDialog = FirmwareInstallDialog(this@MoreActivity)
             installDialog.show()
 
             // TS004Repository functionality removed
             val isSuccess = false
             installDialog.dismiss()
             if (isSuccess) {
-                XLog.d("TS004 [ph][ph][ph][ph] - [ph][ph][ph][ph][ph][ph][ph][ph] TS004 [ph][ph]，[ph][ph][ph][ph][ph][ph]")
-                (application as BaseApplication).disconnectWebSocket()
+                X                (application as BaseApplication).disconnectWebSocket()
                 NavigationManager.getInstance().build(RouterConfig.MAIN)
                     .navigation(this@MoreActivity)
                 finish()
             } else {
-                XLog.w("TS004 [ph][ph][ph][ph] - [ph][ph][ph][ph][ph][ph][ph][ph] TS004 [ph][ph]!")
-                showReInstallDialog(file)
+                X                showReInstallDialog(file)
             }
         }
     }
@@ -264,10 +256,9 @@ class MoreActivity : BaseActivity(), View.OnClickListener {
     private fun resetAll() {
         showLoadingDialog(RCore.string.ts004_reset_tip3)
         lifecycleScope.launch {
-            XLog.i("[ph][ph][ph][ph][ph][ph][ph][ph][ph][ph][ph][ph]")
-            // TS004Repository functionality removed
+            X            // TS004Repository functionality removed
             val isSuccess = false // TS004Repository.getResetAll()
-            XLog.i("[ph][ph][ph][ph][ph][ph][ph][ph][ph][ph] ${if (isSuccess) "[ph][ph]" else "[ph][ph]"}")
+            X"[ph][ph]" else "[ph][ph]"}")
             if (isSuccess) {
                 TToast.shortToast(this@MoreActivity, RCore.string.ts004_reset_tip4)
                 (application as BaseApplication).disconnectWebSocket()

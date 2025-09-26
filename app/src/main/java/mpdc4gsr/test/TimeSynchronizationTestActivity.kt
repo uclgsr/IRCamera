@@ -1,7 +1,6 @@
 package mpdc4gsr.test
 
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.ScrollView
@@ -209,9 +208,7 @@ class TimeSynchronizationTestActivity : AppCompatActivity() {
         }
     }
 
-    private fun addLog(message: String) {
-        Log.i(TAG, message)
-        runOnUiThread {
+    private fun addLog(message: String) {        runOnUiThread {
             val currentText = logText.text.toString()
             logText.text = if (currentText.isEmpty()) {
                 message
@@ -236,8 +233,6 @@ class TimeSynchronizationTestActivity : AppCompatActivity() {
 
         try {
             timeSyncService.finalizeSession()
-        } catch (e: Exception) {
-            Log.w(TAG, "Error finalizing session on destroy", e)
-        }
+        } catch (e: Exception) {        }
     }
 }

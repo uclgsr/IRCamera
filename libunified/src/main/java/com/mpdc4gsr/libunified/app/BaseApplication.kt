@@ -13,11 +13,9 @@ import android.net.NetworkCapabilities
 import android.os.Build
 import android.os.Process
 import android.text.TextUtils
-import android.util.Log
 import android.webkit.WebView
 import androidx.annotation.RequiresApi
 import com.blankj.utilcode.util.LanguageUtils
-import com.elvishew.xlog.XLog
 import com.mpdc4gsr.libunified.app.bean.event.SocketMsgEvent
 import com.mpdc4gsr.libunified.app.broadcast.DeviceBroadcastReceiver
 import com.mpdc4gsr.libunified.app.common.SharedManager
@@ -89,9 +87,7 @@ abstract class BaseApplication : Application() {
                         super.onAvailable(network)
                         val capabilities = manager.getNetworkCapabilities(network)
                         if (capabilities?.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) == true) {
-                            connectWebSocket()
-                            Log.i("WebSocket", "WiFi network available: $network")
-                        }
+                            connectWebSocket()                        }
                     }
                 },
             )
@@ -116,9 +112,7 @@ abstract class BaseApplication : Application() {
     }
 
     private fun connectWebSocket() {
-        val ssid = WifiUtil.getCurrentWifiSSID(this) ?: return
-        Log.i("WebSocket", "current[ph][ph] Wifi SSID: $ssid")
-        // TS004/TC007 device functionality removed
+        val ssid = WifiUtil.getCurrentWifiSSID(this) ?: return        // TS004/TC007 device functionality removed
         // if (ssid.startsWith(DeviceConfig.TS004_NAME_START)) {
         //     SharedManager.hasTS004 = true
         //     WebSocketProxy.getInstance().startWebSocket(ssid)
@@ -130,8 +124,7 @@ abstract class BaseApplication : Application() {
         // }
     }
 
-    fun disconnectWebSocket() {
-        Log.i("WebSocket", "disconnectWebSocket()")
+    fun disconnectWebSocket() {")
         WebSocketProxy.getInstance().stopWebSocket()
     }
 
@@ -193,17 +186,14 @@ abstract class BaseApplication : Application() {
                     if (capabilities?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) == true &&
                         capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
                     ) {
-                        connectWebSocket()
-                        Log.i("WebSocket", "WiFi network connected: ${'$'}activeNetwork")
-                    }
+                        connectWebSocket()                    }
                 } else {
 
                     @Suppress("DEPRECATION")
                     val activeNetwork = manager.activeNetworkInfo
                     @Suppress("DEPRECATION")
                     if (activeNetwork?.isConnected == true && activeNetwork.type == ConnectivityManager.TYPE_WIFI) {
-                        connectWebSocket()
-                        Log.i("WebSocket", "WiFi network connected (legacy): ${'$'}{activeNetwork.type}")
+                        connectWebSocket(): ${'$'}{activeNetwork.type}")
                     }
                 }
             }
@@ -236,8 +226,7 @@ abstract class BaseApplication : Application() {
             try {
                 AppDatabase.getInstance().thermalDao().deleteZero(SharedManager.getUserId())
             } catch (e: Exception) {
-                XLog.e("delete db error: ${'$'}{e.message}")
-            }
+                X            }
         }
     }
 

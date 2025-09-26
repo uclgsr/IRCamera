@@ -17,7 +17,6 @@ from PyQt6.QtWidgets import (
     QWidget,
 )
 from datetime import datetime
-from loguru import logger
 from typing import Optional
 
 from .widgets import (
@@ -84,8 +83,7 @@ class MainWindow(QMainWindow):
         self._setup_system_integration_callbacks()
         self._start_ui_updates()
 
-        logger.info("Main window initialized with system integration features")
-
+        
     def _setup_ui(self) -> None:
 
         self.setWindowTitle("IRCamera PC Controller - System Integration")
@@ -252,12 +250,7 @@ class MainWindow(QMainWindow):
 
     def _setup_network_callbacks(self) -> None:
 
-        logger.info("Enhanced networking callbacks configured:")
-        logger.info("- WebSocket server for real-time communication")
-        logger.info("- TCP server for Android device connections")
-        logger.info("- TLS encryption support enabled")
-        logger.info("- mDNS device discovery active")
-
+                                        
     def _setup_system_integration_callbacks(self) -> None:
 
         if self.bluetooth_manager and self.bluetooth_control_widget:
@@ -423,8 +416,7 @@ def _update_displays(self) -> None:
         self._update_ui_state()
 
     except (OSError, ValueError, RuntimeError) as e:
-        logger.error(f"Error updating displays: {e}")
-
+        
 
 def _update_ui_state(self) -> None:
     current_session = self.session_manager.get_current_session()
@@ -488,12 +480,10 @@ def _on_start_session_requested(self) -> None:
         self._current_session_id = current_session.session_id
         self.session_started.emit(current_session.session_id)
 
-        logger.info(f"Session started: {current_session.name}")
-        self._add_log_message(f"Session started: {current_session.name}")
+                self._add_log_message(f"Session started: {current_session.name}")
 
     except (OSError, ValueError, RuntimeError) as e:
-        logger.error(f"Error starting session: {e}")
-        self._show_error("Error", f"Failed to start session: {e}")
+                self._show_error("Error", f"Failed to start session: {e}")
 
 
 def _on_stop_session_requested(self) -> None:
@@ -524,15 +514,13 @@ def _on_stop_session_requested(self) -> None:
 
         self.session_stopped.emit(ended_session.session_id)
 
-        logger.info(f"Session stopped: {ended_session.name}")
-        self._add_log_message(
+                self._add_log_message(
             f"Session stopped: {ended_session.name} "
             f"(duration: {ended_session.duration_seconds:.1f}s)"
         )
 
     except (OSError, ValueError, RuntimeError) as e:
-        logger.error(f"Error stopping session: {e}")
-        self._show_error("Error", f"Failed to stop session: {e}")
+                self._show_error("Error", f"Failed to stop session: {e}")
 
 
 def _on_new_session_requested(self) -> None:
@@ -551,12 +539,10 @@ def _on_new_session_requested(self) -> None:
 
         session = self.session_manager.create_session(session_name)
 
-        logger.info(f"New session created: {session.name}")
-        self._add_log_message(f"New session created: {session.name}")
+                self._add_log_message(f"New session created: {session.name}")
 
     except (OSError, ValueError, RuntimeError) as e:
-        logger.error(f"Error creating session: {e}")
-        self._show_error("Error", f"Failed to create session: {e}")
+                self._show_error("Error", f"Failed to create session: {e}")
 
 
 def _on_sync_flash_clicked(self) -> None:
@@ -581,12 +567,10 @@ def _on_sync_flash_clicked(self) -> None:
 
             self.sync_flash_triggered.emit()
 
-            logger.info("Sync flash sent to all devices")
-            self._add_log_message("Sync flash sent to all devices")
+                        self._add_log_message("Sync flash sent to all devices")
 
     except (OSError, ValueError, RuntimeError) as e:
-        logger.error(f"Error sending sync flash: {e}")
-        self._show_error("Error", f"Failed to send sync flash: {e}")
+                self._show_error("Error", f"Failed to send sync flash: {e}")
 
 
 def _on_sync_mark_clicked(self) -> None:
@@ -623,12 +607,10 @@ def _on_sync_mark_clicked(self) -> None:
                     "manual_mark", {"description": description}
                 )
 
-            logger.info(f"Sync mark added: {description}")
-            self._add_log_message(f"Sync mark added: {description}")
+                        self._add_log_message(f"Sync mark added: {description}")
 
     except (OSError, ValueError, RuntimeError) as e:
-        logger.error(f"Error adding sync mark: {e}")
-        self._show_error("Error", f"Failed to add sync mark: {e}")
+                self._show_error("Error", f"Failed to add sync mark: {e}")
 
 
 def _on_device_selected(self, device_id: str) -> None:
@@ -640,8 +622,7 @@ def _on_device_selected(self, device_id: str) -> None:
 
 
 def _on_device_connected(self, device_info: DeviceInfo) -> None:
-    logger.info(f"Device connected: {device_info.device_id}")
-    self._add_log_message(
+        self._add_log_message(
         f"Device connected: {device_info.device_id}"
         ""
         f"({device_info.device_type})"
@@ -653,8 +634,7 @@ def _on_device_connected(self, device_info: DeviceInfo) -> None:
 
 
 def _on_device_disconnected(self, device_info: DeviceInfo) -> None:
-    logger.warning(f"Device disconnected: {device_info.device_id}")
-    self._add_log_message(f"Device disconnected: {device_info.device_id}")
+        self._add_log_message(f"Device disconnected: {device_info.device_id}")
 
     if device_info.is_gsr_leader:
         self._show_warning(
@@ -665,8 +645,7 @@ def _on_device_disconnected(self, device_info: DeviceInfo) -> None:
 
 
 def _on_device_status_updated(self, device_info: DeviceInfo) -> None:
-    logger.debug(f"Device status updated: {device_info.device_id}")
-
+    
 
 def _add_log_message(self, message: str) -> None:
     if self.log_display:

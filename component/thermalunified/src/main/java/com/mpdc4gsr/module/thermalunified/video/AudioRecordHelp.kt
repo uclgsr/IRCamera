@@ -4,8 +4,6 @@ import android.annotation.SuppressLint
 import android.media.AudioFormat
 import android.media.AudioRecord
 import android.media.MediaRecorder
-import android.util.Log
-import com.elvishew.xlog.XLog
 import org.bytedeco.javacv.FFmpegFrameRecorder
 import java.lang.ref.WeakReference
 import java.nio.ShortBuffer
@@ -88,8 +86,7 @@ class AudioRecordHelp private constructor() {
                         audioRecord!!.read(audioData!!.array(), 0, audioData!!.capacity())
                     if (recordingAudio) {
                         if (bufferReadResult > 0) {
-                            audioData?.limit(bufferReadResult)
-                            Log.w("[ph][ph][ph][ph]", bufferReadResult.toString() + "//" + bufferReadResult)
+                            audioData?.limit(bufferReadResult)+ "//" + bufferReadResult)
                             recorder?.get()?.recordSamples(
                                 VideoRecordFFmpeg.SAMPLE_AUDIO_RETE_INHZ,
                                 VideoRecordFFmpeg.AUDIO_CHANNELS,
@@ -111,8 +108,7 @@ class AudioRecordHelp private constructor() {
                 }
 
             } catch (e: Exception) {
-                XLog.e("[ph][ph][ph][ph][ph][ph]")
-            }
+                X            }
         }
     }
 

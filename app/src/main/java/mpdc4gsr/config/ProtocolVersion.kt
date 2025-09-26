@@ -1,6 +1,5 @@
 package mpdc4gsr.config
 
-import android.util.Log
 import org.json.JSONObject
 
 object ProtocolVersion {
@@ -76,21 +75,12 @@ object ProtocolVersion {
             }
 
             val localCapabilities = getCapabilities(CURRENT_VERSION)
-            val commonCapabilities = localCapabilities.intersect(remoteCapabilities)
-
-            Log.i(
-                TAG,
-                "Protocol handshake successful: version=$remoteVersion, capabilities=${commonCapabilities.size}"
-            )
-
-            return HandshakeResult(
+            val commonCapabilities = localCapabilities.intersect(remoteCapabilities)            return HandshakeResult(
                 success = true,
                 negotiatedVersion = remoteVersion,
                 commonCapabilities = commonCapabilities,
             )
-        } catch (e: Exception) {
-            Log.e(TAG, "Error validating handshake response", e)
-            return HandshakeResult(
+        } catch (e: Exception) {            return HandshakeResult(
                 success = false,
                 error = "Invalid handshake response: ${e.message}",
             )
@@ -116,9 +106,7 @@ object ProtocolVersion {
         val version = message.optString("protocol_version", CURRENT_VERSION)
         val isValid = isVersionSupported(version)
 
-        if (!isValid) {
-            Log.w(TAG, "Received message with unsupported protocol version: $version")
-        }
+        if (!isValid) {        }
 
         return isValid
     }

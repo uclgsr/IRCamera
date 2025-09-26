@@ -2,7 +2,6 @@ import asyncio
 import os
 import signal
 import sys
-from loguru import logger
 from typing import Optional, Any
 
 GUI_AVAILABLE = True
@@ -14,8 +13,7 @@ try:
     from PyQt6.QtCore import QTimer
     from PyQt6.QtWidgets import QApplication
 except ImportError as e:
-    logger.warning(f"GUI libraries not available, running in headless mode: {e}")
-    GUI_AVAILABLE = False
+        GUI_AVAILABLE = False
 
 
     # Mock classes for headless mode
@@ -69,8 +67,7 @@ else:
 
     class MainWindow:
         def __init__(self, *args, **kwargs):
-            logger.info("MainWindow created in headless mode")
-
+            
         def show(self) -> Any:
             pass
 
@@ -102,10 +99,7 @@ class IRCameraApp:
         self._loop: Optional[asyncio.AbstractEventLoop] = None
         self._timer: Optional[QTimer] = None
 
-        logger.info(
-            "IRCamera Application initialized with system integration features"
-        )
-        components = [
+                components = [
             "Session Manager",
             "Time Sync",
             "WebSocket Server",
@@ -121,8 +115,7 @@ class IRCameraApp:
     def setup_qt_app(self) -> None:
 
         if not GUI_AVAILABLE:
-            logger.info("Running in headless mode - GUI not available")
-            self.qt_app = QApplication(sys.argv)
+                        self.qt_app = QApplication(sys.argv)
             return
 
         if self.qt_app is None:
@@ -150,10 +143,8 @@ class IRCameraApp:
             window_size = config.get("gui.window_size", [1400, 900])
             self.main_window.resize(window_size[0], window_size[1])
         else:
-            logger.info("Main window not created - running in headless mode")
-
-        logger.info("Qt application set up")
-
+            
+        
     def setup_event_loop_integration(self) -> None:
 
         try:
@@ -168,8 +159,7 @@ class IRCameraApp:
         update_interval = config.get("gui.update_interval_ms", 100)
         self._timer.start(update_interval)
 
-        logger.debug("Event loop integration set up")
-
+        
     def _process_async_events(self) -> None:
 
         if self._loop:
@@ -183,8 +173,7 @@ class IRCameraApp:
                     else:
                         break
             except (OSError, ValueError, RuntimeError) as e:
-                logger.error(f"Error processing async events: {e}")
-
+                
     async def start_services(self) -> None:
 
         try:
@@ -193,11 +182,9 @@ class IRCameraApp:
 
             await self.websocket_server.start()
 
-            logger.info("All services started successfully")
-
+            
         except (OSError, ValueError, RuntimeError) as e:
-            logger.error(f"Failed to start services: {e}")
-            raise
+                        raise
 
     async def stop_services(self) -> None:
 
@@ -212,11 +199,9 @@ class IRCameraApp:
             await self.websocket_server.stop()
             await self.time_sync_service.stop()
 
-            logger.info("All services and system integration managers stopped")
-
+            
         except (OSError, ValueError, RuntimeError) as e:
-            logger.error(f"Error stopping services: {e}")
-
+            
     def run(self) -> int:
 
         try:
@@ -235,16 +220,13 @@ class IRCameraApp:
             if GUI_AVAILABLE and self.main_window:
                 self.main_window.show()
             else:
-                logger.info("Running in headless mode - no GUI window to show")
-
-            logger.info("IRCamera PC Controller started")
-
+                
+            
             if GUI_AVAILABLE:
                 return self.qt_app.exec_()
             else:
 
-                logger.info("Headless mode - press Ctrl+C to stop")
-                try:
+                                try:
                     while True:
                         if self._loop:
                             self._process_async_events()
@@ -252,12 +234,10 @@ class IRCameraApp:
 
                         time.sleep(0.1)
                 except KeyboardInterrupt:
-                    logger.info("Keyboard interrupt received, shutting down...")
-                    return 0
+                                        return 0
 
         except (OSError, ValueError, RuntimeError) as e:
-            logger.error(f"Application error: {e}")
-            return 1
+                        return 1
         finally:
 
             if self._timer:
@@ -270,12 +250,10 @@ class IRCameraApp:
                     )
                     future.result(timeout=5)
                 except (OSError, ValueError, RuntimeError) as e:
-                    logger.error(f"Error during cleanup: {e}")
-
+                    
     def _handle_signal(self, signum: int, frame) -> None:
 
-        logger.info(f"Received signal {signum}, shutting down...")
-
+        
         if self.qt_app:
             self.qt_app.quit()
 
@@ -298,13 +276,11 @@ def main() -> int:
     args = parser.parse_args()
 
     if args.debug:
-        logger.info("Debug mode enabled")
-
+        
     app = IRCameraApp()
 
     if args.headless:
-        logger.info("Running in headless mode - network services only")
-
+        
         parser.print_help()
         return 0
 

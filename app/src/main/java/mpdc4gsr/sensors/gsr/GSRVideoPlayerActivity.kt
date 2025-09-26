@@ -5,7 +5,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.MediaController
@@ -56,29 +55,17 @@ class GSRVideoPlayerActivity : BaseBindingActivity<ActivityGsrVideoPlayerBinding
         supportActionBar?.title = videoFile.name
     }
 
-    private fun playVideo(videoFile: File) {
-        Log.w(TAG, "Opening video file: ${videoFile.absolutePath}")
-
-        val uri: Uri =
+    private fun playVideo(videoFile: File) {        val uri: Uri =
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 val authority = "$packageName.fileprovider"
                 FileProvider.getUriForFile(this, authority, videoFile)
             } else {
                 Uri.fromFile(videoFile)
-            }
-
-        Log.w(TAG, "Video URI: $uri")
-
-        binding.videoView.setVideoURI(uri)
+            }        binding.videoView.setVideoURI(uri)
         binding.videoView.setMediaController(MediaController(this))
-        binding.videoView.setOnPreparedListener { mediaPlayer ->
-            Log.i(TAG, "Video prepared, starting playback")
-
-            mediaPlayer.setVideoScalingMode(android.media.MediaPlayer.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING)
+        binding.videoView.setOnPreparedListener { mediaPlayer ->            mediaPlayer.setVideoScalingMode(android.media.MediaPlayer.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING)
         }
-        binding.videoView.setOnErrorListener { _, what: Int, extra: Int ->
-            Log.e(TAG, "Video playback error: what=$what, extra=$extra")
-            false
+        binding.videoView.setOnErrorListener { _, what: Int, extra: Int ->            false
         }
         binding.videoView.start()
         binding.videoView.requestFocus()

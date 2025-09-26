@@ -32,9 +32,7 @@ public class DualViewWithManualAlignExternalCamera extends BaseParamDualView {
 
 
         @Override
-        public void onFrame(byte[] frame) {
-            Log.d(TAG, "onFrame");
-            System.arraycopy(frame, 0, mixData, 0, fusionLength);
+        public void onFrame(byte[] frame) {            System.arraycopy(frame, 0, mixData, 0, fusionLength);
 
             mSurface = cameraview.getHolder().getSurface();
             if (mSurface != null) {

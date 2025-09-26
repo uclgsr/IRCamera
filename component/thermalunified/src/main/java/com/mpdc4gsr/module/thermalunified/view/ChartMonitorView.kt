@@ -5,7 +5,6 @@ import android.graphics.Color
 import android.os.Handler
 import android.os.Looper
 import android.util.AttributeSet
-import android.util.Log
 import android.view.MotionEvent
 import androidx.core.content.ContextCompat
 import com.blankj.utilcode.util.SizeUtils
@@ -116,9 +115,7 @@ class ChartMonitorView : LineChart, OnChartGestureListener {
     ) {
         synchronized(this) {
             try {
-                if (bean.createTime == 0L) {
-                    Log.w("123", "createTime = 0L, bean:$bean")
-                    return
+                if (bean.createTime == 0L) {                    return
                 }
                 val lineData: LineData = this.data
                 var volDataSet = lineData.getDataSetByIndex(0)
@@ -137,22 +134,16 @@ class ChartMonitorView : LineChart, OnChartGestureListener {
                     1 -> {
                         if (volDataSet == null) {
                             volDataSet = createSet(0, "point temp")
-                            lineData.addDataSet(volDataSet)
-                            Log.w("123", "volDataSet.entryCount:${volDataSet.entryCount}")
-                        }
+                            lineData.addDataSet(volDataSet)                        }
                         val entity = Entry(x, bean.thermal)
                         entity.data = bean
-                        volDataSet.addEntry(entity)
-                        Log.w("123", "添加一个数据:$entity")
-                    }
+                        volDataSet.addEntry(entity)                    }
 
                     2 -> {
 
                         if (volDataSet == null) {
                             volDataSet = createSet(0, "line max temp")
-                            lineData.addDataSet(volDataSet)
-                            Log.w("123", "volDataSet.entryCount:${volDataSet.entryCount}")
-                        }
+                            lineData.addDataSet(volDataSet)                        }
                         val entity = Entry(x, bean.thermalMax)
                         entity.data = bean
                         volDataSet.addEntry(entity)
@@ -202,9 +193,7 @@ class ChartMonitorView : LineChart, OnChartGestureListener {
                     zoom(100f, 1f, xChartMax, 0f)
                 }
                 return@synchronized
-            } catch (e: Exception) {
-                Log.e("123", "添加数据时异常:${e.message}")
-                return@synchronized
+            } catch (e: Exception) {                return@synchronized
             }
         }
     }

@@ -9,12 +9,10 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.os.Message
-import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
-import com.elvishew.xlog.XLog
 import com.energy.ac020library.bean.IrcmdError
 import com.energy.irutilslibrary.LibIRTempAC020
 import com.energy.irutilslibrary.bean.GainStatus
@@ -190,9 +188,7 @@ class IRMonitorLiteFragment : BaseFragment(), ITsTempListener {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun action(event: ThermalActionEvent) {
-        temperatureView.isEnabled = true
-        Log.w("123", "event:${event.action}")
-        when (event.action) {
+        temperatureView.isEnabled = true        when (event.action) {
             2001 -> {
 
                 temperatureView.visibility = View.VISIBLE
@@ -301,17 +297,11 @@ class IRMonitorLiteFragment : BaseFragment(), ITsTempListener {
         object : Handler(Looper.myLooper()!!) {
             override fun handleMessage(msg: Message) {
                 super.handleMessage(msg)
-                if (msg.what == SHOW_LOADING) {
-                    Log.d(TAG, "SHOW_LOADING")
-                    showLoadingDialog()
-                } else if (msg.what == HIDE_LOADING) {
-                    Log.d(TAG, "HIDE_LOADING")
-                    dismissLoadingDialog()
+                if (msg.what == SHOW_LOADING) {                    showLoadingDialog()
+                } else if (msg.what == HIDE_LOADING) {                    dismissLoadingDialog()
                     frameReady = true
                     isConfigWait = false
-                } else if (msg.what == HANDLE_INIT_FAIL) {
-                    Log.d(TAG, "HANDLE_INIT_FAIL")
-                    dismissLoadingDialog()
+                } else if (msg.what == HANDLE_INIT_FAIL) {                    dismissLoadingDialog()
                     Toast.makeText(requireActivity(), "handle init fail !", Toast.LENGTH_LONG)
                         .show()
                 } else if (msg.what == HANDLE_SHOW_TOAST) {
@@ -527,8 +517,7 @@ class IRMonitorLiteFragment : BaseFragment(), ITsTempListener {
             DeviceControlManager.getInstance().release()
             CameraPreviewManager.getInstance().releaseSource()
         } catch (e: Exception) {
-            XLog.e("$TAG:lite销毁异常--${e.message}")
-        }
+            X        }
     }
 
     override fun onDestroyView() {
@@ -549,8 +538,7 @@ class IRMonitorLiteFragment : BaseFragment(), ITsTempListener {
                 CameraPreviewManager.getInstance().releaseSource()
             }
         } catch (e: Exception) {
-            XLog.e("$TAG:lite销毁异常--${e.message}")
-        }
+            X        }
     }
 
     var config: DataBean? = null
@@ -580,8 +568,7 @@ class IRMonitorLiteFragment : BaseFragment(), ITsTempListener {
                         DeviceIrcmdControlManager.getInstance().getIrcmdEngine()
                             ?.basicGainGet(basicGainGetValue)
                 } catch (e: Exception) {
-                    XLog.e("增益获取失败")
-                }
+                    X                }
                 basicGainGetTime = System.currentTimeMillis()
             }
             val params_array =
@@ -605,16 +592,8 @@ class IRMonitorLiteFragment : BaseFragment(), ITsTempListener {
                     params_array[4],
                     params_array[5],
                     if (basicGainGetValue[0] == 0) GainStatus.LOW_GAIN else GainStatus.HIGH_GAIN,
-                )
-            Log.i(
-                TAG,
-                "temp correct, oldTemp = " + params_array[0] + " newtemp = " + tempNew +
-                        " ems = " + params_array[1] + " ta = " + params_array[2] + " " +
-                        "distance = " + params_array[4] + " hum = " + params_array[5] + " basicGain = " + basicGainGetValue[0],
-            )
-        } catch (e: Exception) {
-            XLog.e("$TAG--温度修正异常：${e.message}")
-        } finally {
+                )        } catch (e: Exception) {
+            X        } finally {
             return tempNew ?: 0f
         }
     }
@@ -635,8 +614,7 @@ class IRMonitorLiteFragment : BaseFragment(), ITsTempListener {
         return try {
             temperatureView.getPointTemp(point)
         } catch (e: Exception) {
-            XLog.w(TAG, "getPointTemp failed: ${e.message}")
-            null
+            X            null
         }
     }
 
@@ -645,8 +623,7 @@ class IRMonitorLiteFragment : BaseFragment(), ITsTempListener {
         return try {
             temperatureView.getLineTemp(line)
         } catch (e: Exception) {
-            XLog.w(TAG, "getLineTemp failed: ${e.message}")
-            null
+            X            null
         }
     }
 
@@ -655,8 +632,7 @@ class IRMonitorLiteFragment : BaseFragment(), ITsTempListener {
         return try {
             temperatureView.getRectTemp(rect)
         } catch (e: Exception) {
-            XLog.w(TAG, "getRectTemp failed: ${e.message}")
-            null
+            X            null
         }
     }
 }

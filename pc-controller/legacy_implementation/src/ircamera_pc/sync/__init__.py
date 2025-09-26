@@ -26,9 +26,7 @@ class AdvancedTimeSyncServer:
                 return True
             return False
         except Exception as e:
-            from loguru import logger
-            logger.error(f"Failed to start advanced time sync server: {e}")
-            return False
+                                    return False
 
     async def stop(self):
 

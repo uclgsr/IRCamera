@@ -7,7 +7,6 @@ import android.content.Intent
 import android.hardware.usb.UsbDevice
 import android.hardware.usb.UsbManager
 import com.blankj.utilcode.util.Utils
-import com.elvishew.xlog.XLog
 import com.mpdc4gsr.libunified.app.bean.event.device.DeviceConnectEvent
 import com.mpdc4gsr.libunified.app.bean.event.device.DevicePermissionEvent
 import com.mpdc4gsr.libunified.app.broadcast.DeviceBroadcastReceiver
@@ -29,14 +28,12 @@ object DeviceTools {
         for (usbDevice in deviceList.values) {
             if (usbDevice.isTcTsDevice()) {
                 return if (usbManager.hasPermission(usbDevice)) {
-                    XLog.i("[ph][ph][ph][ph][ph][ph][ph][ph][ph]")
-                    if (isSendConnectEvent) {
+                    X                    if (isSendConnectEvent) {
                         EventBus.getDefault().post(DeviceConnectEvent(true, usbDevice))
                     }
                     true
                 } else {
-                    XLog.w("[ph][ph][ph][ph][ph][ph][ph][ph][ph]")
-                    if (isAutoRequest) {
+                    X                    if (isAutoRequest) {
                         EventBus.getDefault().post(DevicePermissionEvent(usbDevice))
                     }
                     false
@@ -53,12 +50,10 @@ object DeviceTools {
             if (usbDevice.isTcTsDevice()) {
                 val productID = usbDevice.productId.toBytes(2).toHexString()
                 val vendorID = usbDevice.vendorId.toBytes(2).toHexString()
-                XLog.i("[ph][ph][ph][ph]usb[ph][ph] productId:$productID, vendorId:$vendorID, deviceName:${usbDevice.deviceName}")
-                return usbDevice
+                X                return usbDevice
             }
         }
-        XLog.i("[ph][ph][ph]${deviceList.size}[ph][ph][ph], [ph][ph][ph][ph][ph][ph]usb[ph][ph]")
-        return null
+        X        return null
     }
 
     fun isTC001PlusConnect(): Boolean {
@@ -109,6 +104,5 @@ object DeviceTools {
         val flag = PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         val pendingIntent = PendingIntent.getBroadcast(activity, requestCode, intent, flag)
         usbManager.requestPermission(device, pendingIntent)
-        XLog.i("[ph][ph]usb[ph][ph]")
-    }
+        X    }
 }

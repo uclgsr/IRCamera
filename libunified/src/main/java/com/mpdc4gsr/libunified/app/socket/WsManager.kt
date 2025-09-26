@@ -2,7 +2,6 @@ package com.mpdc4gsr.libunified.app.socket
 
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
@@ -123,10 +122,7 @@ class WsManager(
 
     @Synchronized
     fun startConnect() {
-        if (status == State.CONNECTING || status == State.CONNECTED) {
-            Log.w(
-                "WebSocket",
-                "${if (status == State.CONNECTING) "[ph][ph][ph]" else "[ph][ph][ph]"} startConnect() [ph][ph][ph][ph]"
+        if (status == State.CONNECTING || status == State.CONNECTED) {"[ph][ph][ph]" else "[ph][ph][ph]"} startConnect() [ph][ph][ph][ph]"
             )
             return
         }
@@ -220,19 +216,14 @@ class WsManager(
                         if (lastHeartBeatTime == 0L) {
                             lastHeartBeatTime = currentTime
                         }
-                        if (currentTime - lastHeartBeatTime > 15 * 1000) {
-                            Log.d("WebSocket", "[ph][ph]5[ph][ph][ph][ph][ph][ph][ph]，[ph][ph][ph][ph][ph][ph]")
-                            timeoutListener?.invoke()
+                        if (currentTime - lastHeartBeatTime > 15 * 1000) {                            timeoutListener?.invoke()
                             lastHeartBeatTime = currentTime
                         } else {
                             val heartBeatMsg: String? = wsManager.statusListener.onHeartBeat()
                             if (heartBeatMsg == null) {
                                 lastHeartBeatTime = currentTime
                             } else {
-                                val isSuccess = wsManager.sendMessage(heartBeatMsg)
-                                Log.v(
-                                    "WebSocket",
-                                    "--> [ph][ph][ph][ph][ph][ph] ${if (isSuccess) "[ph][ph]" else "[ph][ph]"}"
+                                val isSuccess = wsManager.sendMessage(heartBeatMsg)"[ph][ph]" else "[ph][ph]"}"
                                 )
                             }
                         }

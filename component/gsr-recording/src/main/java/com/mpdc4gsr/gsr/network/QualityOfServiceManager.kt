@@ -4,7 +4,6 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.net.wifi.WifiManager
-import android.util.Log
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -100,14 +99,8 @@ class QualityOfServiceManager(
 
     suspend fun startQoSMonitoring() =
         withContext(Dispatchers.IO) {
-            if (isMonitoring.getAndSet(true)) {
-                Log.w(TAG, "QoS monitoring already active")
-                return@withContext
-            }
-
-            Log.d(TAG, "Starting QoS monitoring")
-
-            startBandwidthMonitoring()
+            if (isMonitoring.getAndSet(true)) {                return@withContext
+            }            startBandwidthMonitoring()
 
             startLatencyMonitoring()
 
@@ -242,9 +235,7 @@ class QualityOfServiceManager(
                 bandwidth > 500 * 1024L -> NetworkTier.MEDIUM
                 bandwidth > 100 * 1024L -> NetworkTier.LOW
                 else -> NetworkTier.POOR
-            }
-
-        Log.d(TAG, "Network tier updated: $currentNetworkTier (${bandwidth / 1024}KB/s)")
+            }")
     }
 
     private fun adjustCompressionLevel(bandwidth: Long) {
@@ -284,10 +275,7 @@ class QualityOfServiceManager(
 
         if (utilization > CONGESTION_THRESHOLD) {
             adaptiveBatchSize = (adaptiveBatchSize * 0.7).toInt()
-        }
-
-        Log.v(TAG, "Adapted batch size: $adaptiveBatchSize, utilization: $utilization")
-    }
+        }    }
 
     private fun calculateBandwidthUtilization(): Float {
         val availableBandwidth = currentBandwidth.get()
@@ -331,9 +319,7 @@ class QualityOfServiceManager(
 
 
         while (targetQueue.size >= PRIORITY_QUEUE_SIZE) {
-            val dropped = targetQueue.poll()
-            Log.w(TAG, "Dropped packet due to queue overflow: ${dropped?.dataType}")
-        }
+            val dropped = targetQueue.poll()        }
 
         targetQueue.offer(packet)
     }
@@ -385,11 +371,7 @@ class QualityOfServiceManager(
             val batchMessage = createBatchMessage(compressedBatch)
 
             networkClient.sendMessage(batchMessage)
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to send batch", e)
-
-
-            batch.filter { it.priority.level >= Priority.HIGH.level }
+        } catch (e: Exception) {            batch.filter { it.priority.level >= Priority.HIGH.level }
                 .forEach { queueData(it.data, it.dataType, it.priority, it.sessionId, it.metadata) }
         }
     }
@@ -476,7 +458,5 @@ class QualityOfServiceManager(
         normalPriorityQueue.clear()
         lowPriorityQueue.clear()
 
-        qosJob.cancel()
-        Log.d(TAG, "QoS monitoring stopped")
-    }
+        qosJob.cancel()    }
 }

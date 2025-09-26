@@ -1,7 +1,6 @@
 package com.mpdc4gsr.libunified.app.security
 
 import android.content.Context
-import android.util.Log
 import java.io.ByteArrayInputStream
 import java.security.KeyStore
 import java.security.SecureRandom
@@ -34,13 +33,8 @@ class CertificateManager(private val context: Context) {
 
             trustManager = createCustomTrustManager()
 
-            keyManager = createKeyManager()
-
-            Log.i(TAG, "Certificate manager initialized successfully")
-            true
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to initialize certificate manager", e)
-            false
+            keyManager = createKeyManager()            true
+        } catch (e: Exception) {            false
         }
     }
 
@@ -51,12 +45,8 @@ class CertificateManager(private val context: Context) {
                 keyManager?.let { arrayOf(it) },
                 trustManager?.let { arrayOf(it) },
                 SecureRandom(),
-            )
-            Log.d(TAG, "SSL context created successfully")
-            sslContext
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to create SSL context", e)
-            null
+            )            sslContext
+        } catch (e: Exception) {            null
         }
     }
 
@@ -78,21 +68,12 @@ class CertificateManager(private val context: Context) {
                         subject.contains("CN=TS004") ||
                         subject.contains("CN=TC007")
 
-            if (!isValidDevice) {
-                Log.w(TAG, "Invalid device certificate subject: $subject")
-                return false
+            if (!isValidDevice) {                return false
             }
 
-            certificate.checkValidity()
-
-            Log.d(TAG, "Device certificate validated: $subject")
-            true
-        } catch (e: CertificateException) {
-            Log.e(TAG, "Certificate validation failed", e)
-            false
-        } catch (e: Exception) {
-            Log.e(TAG, "Unexpected error during certificate validation", e)
-            false
+            certificate.checkValidity()            true
+        } catch (e: CertificateException) {            false
+        } catch (e: Exception) {            false
         }
     }
 
@@ -107,18 +88,11 @@ class CertificateManager(private val context: Context) {
                     ByteArrayInputStream(certificateData),
                 ) as X509Certificate
 
-            if (!validateDeviceCertificate(certificate)) {
-                Log.w(TAG, "Refusing to install invalid certificate")
-                return false
+            if (!validateDeviceCertificate(certificate)) {                return false
             }
 
-            deviceKeyStore?.setCertificateEntry(alias, certificate)
-
-            Log.i(TAG, "Device certificate installed: $alias")
-            true
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to install device certificate", e)
-            false
+            deviceKeyStore?.setCertificateEntry(alias, certificate)            true
+        } catch (e: Exception) {            false
         }
     }
 
@@ -166,10 +140,7 @@ class CertificateManager(private val context: Context) {
 
                 if (!validateDeviceCertificate(leafCertificate)) {
                     throw CertificateException("Invalid $type certificate")
-                }
-
-                Log.d(TAG, "Certificate chain validated for $type")
-            }
+                }            }
         }
     }
 
@@ -178,9 +149,7 @@ class CertificateManager(private val context: Context) {
 
 
             null
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to create key manager", e)
-            null
+        } catch (e: Exception) {            null
         }
     }
 
@@ -198,9 +167,7 @@ class CertificateManager(private val context: Context) {
                 validHosts.contains(hostname) ||
                         hostname.matches(Regex("192\\.168\\.\\d+\\.\\d+"))
 
-            if (!isValid) {
-                Log.w(TAG, "Hostname verification failed for: $hostname")
-            }
+            if (!isValid) {            }
 
             isValid
         }
@@ -233,24 +200,15 @@ class CertificateManager(private val context: Context) {
             val timestamp = parts[1].toLong()
             val currentTime = System.currentTimeMillis()
 
-            if (currentTime - timestamp > maxAgeMs) {
-                Log.w(TAG, "Auth token expired")
-                return false
+            if (currentTime - timestamp > maxAgeMs) {                return false
             }
 
             val payload = "${parts[0]}:${parts[1]}:${parts[2]}"
             val expectedHash = payload.hashCode().toString(16)
 
-            if (parts[3] != expectedHash) {
-                Log.w(TAG, "Auth token hash mismatch")
-                return false
-            }
-
-            Log.d(TAG, "Auth token validated successfully")
-            true
-        } catch (e: Exception) {
-            Log.e(TAG, "Auth token validation failed", e)
-            false
+            if (parts[3] != expectedHash) {                return false
+            }            true
+        } catch (e: Exception) {            false
         }
     }
 }

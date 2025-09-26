@@ -1,7 +1,6 @@
 package mpdc4gsr.core
 
 import android.content.Context
-import android.util.Log
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
@@ -87,9 +86,7 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
     }
 
     fun initialize() {
-        if (isRunning.getAndSet(true)) {
-            Log.i(TAG, "Crash-safe supervisor already running")
-            return
+        if (isRunning.getAndSet(true)) {            return
         }
 
         logger.log(
@@ -99,10 +96,7 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
             mapOf("max_restart_attempts" to maxRestartAttempts),
         )
 
-        startHealthMonitoring()
-
-        Log.i(TAG, "Crash-safe supervisor initialized")
-    }
+        startHealthMonitoring()    }
 
     fun registerJob(
         id: String,
@@ -238,10 +232,7 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
             "CrashSafeSupervisor",
             "supervisor_exception",
             mapOf("error" to (exception.message ?: "Unknown error")),
-        )
-
-        Log.e(TAG, "Supervisor exception", exception)
-    }
+        )    }
 
     private fun handleCriticalJobFailure(
         id: String,
@@ -257,9 +248,7 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
                 "job_name" to name,
                 "error" to (exception.message ?: "Unknown error"),
             ),
-        )
-
-        Log.e(TAG, "Critical job failure: $name ($id)", exception)
+        )", exception)
 
 
     }
@@ -440,9 +429,7 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
                     supervisorScope.coroutineContext[Job]?.join()
                 }
             }
-        } catch (e: Exception) {
-            Log.w(TAG, "Timeout waiting for supervisor shutdown", e)
-        }
+        } catch (e: Exception) {        }
 
         managedJobs.clear()
         healthChecks.clear()
@@ -452,8 +439,5 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
             StructuredLogger.LogLevel.INFO,
             "CrashSafeSupervisor",
             "supervisor_shutdown_completed",
-        )
-
-        Log.i(TAG, "Crash-safe supervisor shutdown completed")
-    }
+        )    }
 }

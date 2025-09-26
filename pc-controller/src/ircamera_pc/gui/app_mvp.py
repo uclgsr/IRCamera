@@ -10,10 +10,8 @@ import time
 from pathlib import Path
 
 try:
-    from loguru import logger
-except ImportError:
-    from ..utils.simple_logger import logger
-
+    except ImportError:
+    
 from ..core.config import config
 from ..core.session import SessionManager
 
@@ -21,12 +19,10 @@ from ..core.session import SessionManager
 def main():
     """Main entry point for the MVP GUI application"""
     try:
-        logger.info("Starting IRCamera PC Controller Hub - MVP GUI Application")
-
+        
         # Initialize core components
         session_manager = SessionManager()
-        logger.info("Session manager initialized")
-
+        
         # Try to import and run the GUI components
         try:
             # Import the existing PC session controller
@@ -42,31 +38,25 @@ def main():
                 session_controller_module = importlib.util.module_from_spec(spec)
                 spec.loader.exec_module(session_controller_module)
 
-                logger.info("Session controller GUI loaded successfully")
-
+                
                 # Run the session controller GUI
                 if hasattr(session_controller_module, 'main'):
-                    logger.info("Launching session controller GUI...")
-                    return session_controller_module.main()
+                                        return session_controller_module.main()
                 else:
                     # Create and run SessionController directly
-                    logger.info("Creating session controller instance...")
-                    controller = session_controller_module.SessionController()
+                                        controller = session_controller_module.SessionController()
                     controller.start_server()
                     controller.run()
                     return 0
 
             else:
-                logger.warning(f"Session controller not found at {controller_path}")
-                return run_fallback_gui(session_manager)
+                                return run_fallback_gui(session_manager)
 
         except Exception as e:
-            logger.error(f"Failed to load session controller GUI: {e}")
-            return run_fallback_gui(session_manager)
+                        return run_fallback_gui(session_manager)
 
     except Exception as e:
-        logger.error(f"MVP GUI application failed: {e}")
-        return 1
+                return 1
 
 
 def run_fallback_gui(session_manager):
@@ -75,8 +65,7 @@ def run_fallback_gui(session_manager):
         import tkinter as tk
         from tkinter import ttk, messagebox
 
-        logger.info("Running fallback GUI interface")
-
+        
         class FallbackGUI:
             def __init__(self):
                 self.root = tk.Tk()
@@ -222,69 +211,55 @@ def run_fallback_gui(session_manager):
                     self.root.mainloop()
                     return 0
                 except KeyboardInterrupt:
-                    logger.info("GUI application interrupted by user")
-                    return 0
+                                        return 0
                 except Exception as e:
-                    logger.error(f"GUI application error: {e}")
-                    return 1
+                                        return 1
 
         gui = FallbackGUI()
         return gui.run()
 
     except ImportError:
-        logger.error("GUI frameworks not available - trying CLI interface")
-        return run_cli_interface(session_manager)
+                return run_cli_interface(session_manager)
     except Exception as e:
-        logger.error(f"Fallback GUI failed: {e}")
-        return run_cli_interface(session_manager)
+                return run_cli_interface(session_manager)
 
 
 def run_cli_interface(session_manager):
     """Run CLI interface when GUI is not available"""
     try:
         from .cli_mvp import MVPCLI
-        logger.info("Starting CLI interface")
-        cli = MVPCLI()
+                cli = MVPCLI()
         return cli.run()
     except Exception as e:
-        logger.error(f"CLI interface failed: {e}")
-        return run_headless_mode(session_manager)
+                return run_headless_mode(session_manager)
 
 
 def run_headless_mode(session_manager):
     """Run in headless mode when no GUI is available"""
-    logger.info("Running in headless mode")
-
+    
     try:
         # Create a demonstration session
         session = session_manager.create_session("Headless MVP Session")
-        logger.info(f"Created session: {session.name} [{session.session_id}]")
-
+        
         # Start the session
         session_manager.start_session()
-        logger.info("Session started")
-
+        
         # Simulate some activity
-        logger.info("Simulating device discovery and data collection...")
-        time.sleep(3)
+                time.sleep(3)
 
         # Add some sample events
         session_manager.add_sync_event("device_discovered", {"device": "Android-GSR-001", "ip": "192.168.1.100"})
         session_manager.add_sync_event("recording_started", {"modalities": ["rgb", "gsr"]})
 
-        logger.info("MVP demonstration complete")
-
+        
         # End the session
         final_session = session_manager.end_session()
         if final_session:
-            logger.info(f"Session completed: {final_session.name}")
-            logger.info(f"Duration: {final_session.duration_seconds} seconds")
-
+                        
         return 0
 
     except Exception as e:
-        logger.error(f"Headless mode failed: {e}")
-        return 1
+                return 1
 
 
 if __name__ == "__main__":

@@ -12,11 +12,9 @@ from pathlib import Path
 from typing import Dict, Optional, Tuple, Any
 
 try:
-    from loguru import logger
-except ImportError:
-    try:
-        from ..utils.simple_logger import logger
     except ImportError:
+    try:
+            except ImportError:
 
         class FallbackLogger:
             def info(self, msg) -> Any:
@@ -69,22 +67,17 @@ class SecurityManager:
     def initialize(self) -> bool:
 
         try:
-            logger.info("Initializing security manager...")
-
+            
             if not self._load_ca_certificate():
-                logger.info("Generating new CA certificate...")
-                self._generate_ca_certificate()
+                                self._generate_ca_certificate()
 
             if not self._load_server_certificate():
-                logger.info("Generating new server certificate...")
-                self._generate_server_certificate()
+                                self._generate_server_certificate()
 
-            logger.info("Security manager initialized successfully")
-            return True
+                        return True
 
         except Exception as e:
-            logger.error(f"Failed to initialize security manager: {e}")
-            return False
+                        return False
 
     def create_ssl_context(self, for_client_auth: bool = True) -> ssl.SSLContext:
 
@@ -127,14 +120,10 @@ class SecurityManager:
                         return True, "TC001"
                     # TS004/TC007 device support removed
 
-            logger.warning(
-                f"Unknown device certificate: {common_name} from {organization}"
-            )
-            return True, "UNKNOWN"
+                        return True, "UNKNOWN"
 
         except Exception as e:
-            logger.error(f"Certificate validation failed: {e}")
-            return False, None
+                        return False, None
 
     def generate_auth_token(self, device_id: str, duration_minutes: int = 5) -> str:
 
@@ -149,8 +138,7 @@ class SecurityManager:
         expiry_time = time.time() + (duration_minutes * 60)
         self.auth_tokens[token] = (device_id, expiry_time)
 
-        logger.debug(f"Generated auth token for device {device_id}: {token[:20]}...")
-        return token
+                return token
 
     def validate_auth_token(
             self, token: str, max_age_seconds: int = 300
@@ -186,8 +174,7 @@ class SecurityManager:
                 return False, None
 
         except Exception as e:
-            logger.error(f"Token validation failed: {e}")
-            return False, None
+                        return False, None
 
     def cleanup_expired_tokens(self) -> Any:
 
@@ -210,11 +197,9 @@ class SecurityManager:
             if self.ca_cert_path.exists() and self.ca_key_path.exists():
                 with open(self.ca_cert_path, "rb") as f:
                     x509.load_pem_x509_certificate(f.read())
-                logger.debug("Loaded existing CA certificate")
-                return True
+                                return True
         except Exception as e:
-            logger.warning(f"Failed to load CA certificate: {e}")
-        return False
+                    return False
 
     def _load_server_certificate(self) -> bool:
 
@@ -222,11 +207,9 @@ class SecurityManager:
             if self.server_cert_path.exists() and self.server_key_path.exists():
                 with open(self.server_cert_path, "rb") as f:
                     x509.load_pem_x509_certificate(f.read())
-                logger.debug("Loaded existing server certificate")
-                return True
+                                return True
         except Exception as e:
-            logger.warning(f"Failed to load server certificate: {e}")
-        return False
+                    return False
 
     def _generate_ca_certificate(self):
 
@@ -272,8 +255,7 @@ class SecurityManager:
                 )
             )
 
-        logger.info(f"Generated CA certificate: {self.ca_cert_path}")
-
+        
     def _generate_server_certificate(self):
 
         with open(self.ca_cert_path, "rb") as f:
@@ -330,4 +312,4 @@ class SecurityManager:
                 )
             )
 
-        logger.info(f"Generated server certificate: {self.server_cert_path}")
+        

@@ -1,7 +1,6 @@
 package com.mpdc4gsr.libunified.ir.tools
 
 import androidx.annotation.ColorInt
-import com.elvishew.xlog.XLog
 import com.mpdc4gsr.libunified.app.utils.ByteUtils.bytesToInt
 import com.mpdc4gsr.libunified.app.utils.ByteUtils.descBytes
 
@@ -81,7 +80,6 @@ object BitmapTools {
                 }
             }
         } catch (e: Exception) {
-            XLog.w("color[ph][ph][ph][ph]: ${e.message}")
-        }
+            X        }
     }
 }

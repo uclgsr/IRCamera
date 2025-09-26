@@ -4,7 +4,6 @@ import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
@@ -192,10 +191,7 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
     private fun startRecording() {
         lifecycleScope.launch {
             try {
-                // Enhanced controller handles storage validation internally during startRecording
-                Log.i(TAG, "Starting enhanced fault-tolerant recording")
-
-                val success = recordingController.startRecording(
+                // Enhanced controller handles storage validation internally during startRecording                val success = recordingController.startRecording(
                     sessionId = "QuickRecording_${System.currentTimeMillis()}",
                     enabledSensors = listOf("GSR", "RGB"),
                     estimatedDurationMinutes = 10
@@ -206,9 +202,7 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
                         // Get the current session directory from the recording controller
                         currentSessionDirectory = try {
                             recordingController.getCurrentSessionDirectory()
-                        } catch (e: Exception) {
-                            Log.w(TAG, "Could not get session directory", e)
-                            null
+                        } catch (e: Exception) {                            null
                         }
 
                         Toast.makeText(
@@ -230,9 +224,7 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
                         ).show()
                     }
                 }
-            } catch (e: Exception) {
-                Log.e(TAG, "Error starting recording", e)
-                runOnUiThread {
+            } catch (e: Exception) {                runOnUiThread {
                     Toast.makeText(
                         this@GSRQuickRecordingActivity,
                         "Error: ${e.message}",
@@ -268,9 +260,7 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
                         ).show()
                     }
                 }
-            } catch (e: Exception) {
-                Log.e(TAG, "Error stopping recording", e)
-                runOnUiThread {
+            } catch (e: Exception) {                runOnUiThread {
                     Toast.makeText(
                         this@GSRQuickRecordingActivity,
                         "Error: ${e.message}",

@@ -66,9 +66,7 @@ public class ImageThreadTC extends Thread {
     private volatile boolean isOpenAmplify = false;
 
 
-    public ImageThreadTC(Context context, int imageWidth, int imageHeight) {
-        Log.i(TAG, "ImageThread create->imageWidth = " + imageWidth + " imageHeight = " + imageHeight);
-        this.mContext = context;
+    public ImageThreadTC(Context context, int imageWidth, int imageHeight) {        this.mContext = context;
         this.imageWidth = imageWidth;
         this.imageHeight = imageHeight;
         imageYUV422 = new byte[imageWidth * imageHeight * 2];
@@ -231,8 +229,7 @@ public class ImageThreadTC extends Thread {
                                 diffMat.get(0, 0, grayData);
                                 imageDst = grayData;
                                 firstTime++;
-                            } catch (Throwable e) {
-                                Log.e("Static Intrusion Error：", e.getMessage());
+                            } catch (Throwable e) {);
                             }
                         } else {
 
@@ -272,11 +269,9 @@ public class ImageThreadTC extends Thread {
             try {
                 SystemClock.sleep(20);
             } catch (Exception e) {
-                XLog.e("Image ThreadrefreshException: " + e.getMessage());
+                X);
             }
-        }
-        Log.i(TAG, "ImageThread exit");
-    }
+        }    }
 
     public Bitmap getBaseBitmap(int rotateInt) {
         Bitmap baseBitmap = null;

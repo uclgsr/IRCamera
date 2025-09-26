@@ -3,7 +3,6 @@ package com.mpdc4gsr.gsr.network
 import android.content.Context
 import android.content.SharedPreferences
 import android.util.Base64
-import android.util.Log
 import org.json.JSONObject
 import java.security.SecureRandom
 import java.time.Instant
@@ -82,12 +81,7 @@ class DeviceAuthenticationManager(private val context: Context) {
 
             deviceId = getOrCreateDeviceId()
 
-            deviceToken = getOrCreateDeviceToken()
-
-            Log.d(TAG, "Device authentication initialized - ID: $deviceId")
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to initialize device authentication", e)
-        }
+            deviceToken = getOrCreateDeviceToken()        } catch (e: Exception) {        }
     }
 
     private fun getOrCreateDeviceId(): String {
@@ -182,18 +176,12 @@ class DeviceAuthenticationManager(private val context: Context) {
                     authEventListener?.onAuthTokenReceived(authToken)
                 }
 
-                authEventListener?.onPairingCompleted(controllerId, true)
-                Log.d(TAG, "Pairing completed successfully with controller: $controllerId")
-                return true
+                authEventListener?.onPairingCompleted(controllerId, true)                return true
             } else {
                 val reason = response.optString("reason", "Unknown error")
-                authEventListener?.onPairingCompleted(controllerId, false)
-                Log.w(TAG, "Pairing failed with controller $controllerId: $reason")
-                return false
+                authEventListener?.onPairingCompleted(controllerId, false)                return false
             }
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to process pairing response", e)
-            return false
+        } catch (e: Exception) {            return false
         }
     }
 
@@ -222,9 +210,7 @@ class DeviceAuthenticationManager(private val context: Context) {
             }
 
             return authToken
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to get auth token for controller $controllerId", e)
-            return null
+        } catch (e: Exception) {            return null
         }
     }
 
@@ -244,9 +230,7 @@ class DeviceAuthenticationManager(private val context: Context) {
                 }
 
             prefs.edit().putString("auth_token_$controllerId", tokenData.toString()).apply()
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to store auth token", e)
-        }
+        } catch (e: Exception) {        }
     }
 
     fun removeAuthToken(controllerId: String) {
@@ -280,21 +264,15 @@ class DeviceAuthenticationManager(private val context: Context) {
 
 
             val messageDeviceId = message.optString("device_id", "")
-            if (messageDeviceId.isNotEmpty() && messageDeviceId != deviceId) {
-                Log.w(TAG, "Message device ID mismatch")
-                return false
+            if (messageDeviceId.isNotEmpty() && messageDeviceId != deviceId) {                return false
             }
 
             val pairedControllers = getPairedControllers()
-            if (controllerId !in pairedControllers) {
-                Log.w(TAG, "Message from non-paired controller: $controllerId")
-                return false
+            if (controllerId !in pairedControllers) {                return false
             }
 
             return true
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to validate message authentication", e)
-            return false
+        } catch (e: Exception) {            return false
         }
     }
 
@@ -318,17 +296,13 @@ class DeviceAuthenticationManager(private val context: Context) {
         val pairedControllers = getPairedControllers().toMutableSet()
         pairedControllers.remove(controllerId)
         storePairedControllers(pairedControllers)
-        removeAuthToken(controllerId)
-        Log.d(TAG, "Unpaired controller: $controllerId")
-    }
+        removeAuthToken(controllerId)    }
 
     fun clearAllPairings() {
         val pairedControllers = getPairedControllers()
         pairedControllers.forEach { removeAuthToken(it) }
         storePairedControllers(emptySet())
-        prefs.edit().remove(PREF_PAIRING_PIN).apply()
-        Log.d(TAG, "Cleared all pairing data")
-    }
+        prefs.edit().remove(PREF_PAIRING_PIN).apply()    }
 
     private fun getDeviceName(): String {
         return android.os.Build.MODEL + " (" + android.os.Build.DEVICE + ")"

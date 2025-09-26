@@ -4,7 +4,6 @@ import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -55,11 +54,7 @@ class NetworkConfigActivity : AppCompatActivity() {
 
         // For now, show current settings in Toast (will replace with proper UI)
         val summary = networkSettings.getConnectionSummary()
-        Toast.makeText(this, "Current settings: $summary", Toast.LENGTH_LONG).show()
-
-        Log.i(TAG, "Network configuration activity opened")
-
-        // Test Bluetooth device discovery
+        Toast.makeText(this, "Current settings: $summary", Toast.LENGTH_LONG).show()        // Test Bluetooth device discovery
         testBluetoothConfiguration()
     }
 
@@ -67,20 +62,14 @@ class NetworkConfigActivity : AppCompatActivity() {
         lifecycleScope.launch {
             try {
                 val hasPermission = permissionManager.requestBluetoothPermissions()
-                if (hasPermission) {
-                    Log.i(TAG, "Bluetooth permissions granted")
-                    showBluetoothDevices()
-                } else {
-                    Log.w(TAG, "Bluetooth permissions denied")
-                    Toast.makeText(
+                if (hasPermission) {                    showBluetoothDevices()
+                } else {                    Toast.makeText(
                         this@NetworkConfigActivity,
                         "Bluetooth permissions required for device connection",
                         Toast.LENGTH_LONG
                     ).show()
                 }
-            } catch (e: Exception) {
-                Log.e(TAG, "Error requesting Bluetooth permissions", e)
-            }
+            } catch (e: Exception) {            }
         }
     }
 
@@ -103,26 +92,15 @@ class NetworkConfigActivity : AppCompatActivity() {
 
             if (deviceList.isNotEmpty()) {
                 val message = "Available Bluetooth devices:\n${deviceList.joinToString("\n")}"
-                Toast.makeText(this, message, Toast.LENGTH_LONG).show()
-                Log.i(TAG, "Found ${deviceList.size} paired Bluetooth devices")
-
-                // For demo purposes, save the first device
+                Toast.makeText(this, message, Toast.LENGTH_LONG).show()                // For demo purposes, save the first device
                 val firstDevice = pairedDevices.first()
                 lifecycleScope.launch {
                     networkSettings.saveBluetoothDevice(firstDevice)
-                    networkSettings.preferredConnectionType = NetworkSettings.ConnectionType.BLUETOOTH_RFCOMM
-                    Log.i(TAG, "Saved Bluetooth device: ${firstDevice.name}")
-                }
+                    networkSettings.preferredConnectionType = NetworkSettings.ConnectionType.BLUETOOTH_RFCOMM                }
             } else {
-                Toast.makeText(this, "No paired Bluetooth devices found", Toast.LENGTH_SHORT).show()
-                Log.w(TAG, "No paired Bluetooth devices available")
-            }
-        } catch (e: SecurityException) {
-            Log.e(TAG, "Security exception accessing Bluetooth devices", e)
-            Toast.makeText(this, "Permission denied accessing Bluetooth devices", Toast.LENGTH_SHORT).show()
-        } catch (e: Exception) {
-            Log.e(TAG, "Error accessing Bluetooth devices", e)
-            Toast.makeText(this, "Error accessing Bluetooth devices", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "No paired Bluetooth devices found", Toast.LENGTH_SHORT).show()            }
+        } catch (e: SecurityException) {            Toast.makeText(this, "Permission denied accessing Bluetooth devices", Toast.LENGTH_SHORT).show()
+        } catch (e: Exception) {            Toast.makeText(this, "Error accessing Bluetooth devices", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -133,9 +111,7 @@ class NetworkConfigActivity : AppCompatActivity() {
         networkSettings.preferredConnectionType = NetworkSettings.ConnectionType.WIFI_TCP
 
         val message = "Wi-Fi configured: ${networkSettings.pcIpAddress}:${networkSettings.pcPort}"
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-        Log.i(TAG, "Wi-Fi settings configured")
-    }
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()    }
 
     fun getNetworkSettings(): NetworkSettings = networkSettings
 }

@@ -294,9 +294,7 @@ public class SeekBar {
                 indicatorArrowPath.close();
                 canvas.drawPath(indicatorArrowPath, paint);
                 indicatorRect.bottom -= indicatorArrowSize;
-                indicatorRect.top -= indicatorArrowSize;
-                Log.w("pseudo color条refresh", "///");
-            }
+                indicatorRect.top -= indicatorArrowSize;            }
 
             int defaultPaddingOffset = Utils.dp2px(getContext(), 1);
             int leftOffset = indicatorRect.width() / 2 - (int) (rangeSeekBar.getProgressWidth() * currPercent) - rangeSeekBar.getProgressLeft() + defaultPaddingOffset;
@@ -340,8 +338,7 @@ public class SeekBar {
 
             paint.setColor(indicatorTextColor);
             canvas.drawText(text2Draw, tx, ty, paint);
-        } catch (Exception e) {
-            Log.w("渲染异常", e.getMessage() + "");
+        } catch (Exception e) {+ "");
         }
     }
 

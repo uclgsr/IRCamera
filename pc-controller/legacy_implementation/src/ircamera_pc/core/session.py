@@ -7,10 +7,8 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 try:
-    from loguru import logger
-except ImportError:
-    from ..utils.simple_logger import logger
-
+    except ImportError:
+    
 from .config import config
 
 
@@ -58,13 +56,11 @@ class SessionManager:
         self._data_root = Path(config.get("session.data_root", "./sessions"))
         self._ensure_data_root()
 
-        logger.info("Session Manager initialized")
-
+        
     def _ensure_data_root(self) -> None:
 
         self._data_root.mkdir(parents=True, exist_ok=True)
-        logger.debug(f"Session data root: {self._data_root}")
-
+        
     def create_session(self, name: Optional[str] = None) -> SessionMetadata:
 
         if self._current_session and self._current_session.state in [
@@ -93,8 +89,7 @@ class SessionManager:
 
         self._session_history.append(session_id)
 
-        logger.info(f"Session created: {name} [{session_id}]")
-        return self._current_session
+                return self._current_session
 
     def start_session(self) -> None:
 
@@ -111,8 +106,7 @@ class SessionManager:
 
         self._save_metadata()
 
-        logger.info(f"Session started: {self._current_session.name}")
-
+        
     def begin_recording(self) -> None:
 
         if not self._current_session:
@@ -126,8 +120,7 @@ class SessionManager:
         self._current_session.state = SessionState.RECORDING.value
         self._save_metadata()
 
-        logger.info(f"Recording started for session: {self._current_session.name}")
-
+        
     def end_session(self) -> SessionMetadata:
 
         if not self._current_session:
@@ -198,8 +191,7 @@ class SessionManager:
         self._current_session.sync_events.append(sync_event)
         self._save_metadata()
 
-        logger.info(f"Sync event added: {event_type}")
-
+        
     def get_current_session(self) -> Optional[SessionMetadata]:
 
         return self._current_session
@@ -249,19 +241,16 @@ class SessionManager:
                     ensure_ascii=False,
                 )
 
-            logger.debug(f"Session metadata saved: {metadata_file}")
-
+            
         except (OSError, ValueError, RuntimeError) as e:
-            logger.error(f"Failed to save session metadata: {e}")
-
+            
     def load_session(self, session_id: str) -> Optional[SessionMetadata]:
 
         metadata_file = self._get_session_directory(session_id) / "metadata.json"
 
         try:
             if not metadata_file.exists():
-                logger.warning(f"Session metadata not found: {session_id}")
-                return None
+                                return None
 
             with open(metadata_file, "r", encoding="utf-8") as f:
                 data = json.load(f)
@@ -269,8 +258,7 @@ class SessionManager:
             return SessionMetadata(**data)
 
         except (OSError, ValueError, RuntimeError) as e:
-            logger.error(f"Failed to load session metadata: {e}")
-            return None
+                        return None
 
     def list_sessions(self) -> List[str]:
 
@@ -282,6 +270,5 @@ class SessionManager:
                     sessions.append(item.name)
 
         except (OSError, ValueError, RuntimeError) as e:
-            logger.error(f"Failed to list sessions: {e}")
-
+            
         return sorted(sessions)

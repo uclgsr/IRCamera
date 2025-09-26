@@ -126,8 +126,7 @@ public class Transformer {
                                                  int min, int max) {
 
         if (max < min) {
-            XLog.w("generateTransformedValuesLine error: max:" + max + ", min:" + min + ", phaseX:" + phaseX);
-            return new float[0];
+            X            return new float[0];
         }
         final int count = ((int) ((max - min) * phaseX) + 1) * 2;
 

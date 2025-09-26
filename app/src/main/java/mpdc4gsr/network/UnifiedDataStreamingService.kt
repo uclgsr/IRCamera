@@ -1,7 +1,6 @@
 package mpdc4gsr.network
 
 import android.content.Context
-import android.util.Log
 import com.mpdc4gsr.gsr.model.GSRSample
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -51,14 +50,8 @@ class UnifiedDataStreamingService(
     suspend fun startStreaming(sessionId: String, port: Int = DEFAULT_PORT): Boolean {
         return withContext(Dispatchers.IO) {
             try {
-                if (isStreaming.get()) {
-                    Log.w(TAG, "Streaming already active")
-                    return@withContext true
-                }
-
-                Log.i(TAG, "Starting unified data streaming service on port $port")
-
-                currentSessionId = sessionId
+                if (isStreaming.get()) {                    return@withContext true
+                }                currentSessionId = sessionId
                 sessionStartReference = TimestampManager.createTimestampRecord()
                 streamStartTime.set(System.currentTimeMillis())
 
@@ -79,12 +72,7 @@ class UnifiedDataStreamingService(
 
                 streamingScope.launch {
                     distributeHeartbeats()
-                }
-
-                Log.i(TAG, "✅ Unified streaming service started on port $port")
-
-
-                broadcastSessionSyncEvent(
+                }                broadcastSessionSyncEvent(
                     "session_start", mapOf(
                         "session_id" to sessionId,
                         "timestamp_reference" to sessionStartReference!!.toCsvFormat()
@@ -93,9 +81,7 @@ class UnifiedDataStreamingService(
 
                 true
 
-            } catch (e: Exception) {
-                Log.e(TAG, "Failed to start streaming service", e)
-                stopStreaming()
+            } catch (e: Exception) {                stopStreaming()
                 false
             }
         }
@@ -104,11 +90,7 @@ class UnifiedDataStreamingService(
 
     suspend fun stopStreaming() {
         withContext(Dispatchers.IO) {
-            try {
-                Log.i(TAG, "Stopping unified streaming service")
-
-
-                currentSessionId?.let { sessionId ->
+            try {                currentSessionId?.let { sessionId ->
                     broadcastSessionSyncEvent(
                         "session_end", mapOf(
                             "session_id" to sessionId,
@@ -133,13 +115,7 @@ class UnifiedDataStreamingService(
                 serverSocket = null
 
 
-                dataQueue.clear()
-
-                Log.i(TAG, "Unified streaming service stopped")
-
-            } catch (e: Exception) {
-                Log.e(TAG, "Error stopping streaming service", e)
-            }
+                dataQueue.clear()            } catch (e: Exception) {            }
         }
     }
 
@@ -225,9 +201,7 @@ class UnifiedDataStreamingService(
             put("metadata", JSONObject(metadata))
         }
 
-        broadcastToClients(syncPacket.toString())
-        Log.d(TAG, "Broadcasted sync marker: $markerType")
-    }
+        broadcastToClients(syncPacket.toString())    }
 
 
     fun getStreamingStats(): StreamingStats {
@@ -255,26 +229,18 @@ class UnifiedDataStreamingService(
                     synchronized(connectedClients) {
                         if (connectedClients.size < MAX_CLIENTS) {
                             connectedClients.add(clientHandler)
-                            clientsConnected.incrementAndGet()
-
-                            Log.i(
-                                TAG,
-                                "Client connected: ${socket.remoteSocketAddress} (${connectedClients.size} total)"
+                            clientsConnected.incrementAndGet()"
                             )
 
 
                             clientHandler.sendSessionInfo()
 
-                        } else {
-                            Log.w(TAG, "Max clients reached, rejecting connection")
-                            socket.close()
+                        } else {                            socket.close()
                         }
                     }
                 }
             } catch (e: Exception) {
-                if (isStreaming.get()) {
-                    Log.e(TAG, "Error accepting client connection", e)
-                }
+                if (isStreaming.get()) {                }
             }
         }
     }
@@ -323,9 +289,7 @@ class UnifiedDataStreamingService(
 
                 delay(1)
 
-            } catch (e: Exception) {
-                Log.e(TAG, "Error processing streaming data", e)
-                delay(100)
+            } catch (e: Exception) {                delay(100)
             }
         }
     }
@@ -348,9 +312,7 @@ class UnifiedDataStreamingService(
                 broadcastToClients(heartbeat.toString())
                 delay(HEARTBEAT_INTERVAL_MS)
 
-            } catch (e: Exception) {
-                Log.e(TAG, "Error sending heartbeat", e)
-                delay(HEARTBEAT_INTERVAL_MS)
+            } catch (e: Exception) {                delay(HEARTBEAT_INTERVAL_MS)
             }
         }
     }
@@ -380,8 +342,7 @@ class UnifiedDataStreamingService(
 
             disconnectedClients.forEach { client ->
                 connectedClients.remove(client)
-                client.disconnect()
-                Log.i(TAG, "Client disconnected (${connectedClients.size} remaining)")
+                client.disconnect()")
             }
         }
     }
@@ -398,9 +359,7 @@ class UnifiedDataStreamingService(
                 } else {
                     false
                 }
-            } catch (e: Exception) {
-                Log.w(TAG, "Failed to send message to client", e)
-                false
+            } catch (e: Exception) {                false
             }
         }
 
@@ -420,9 +379,7 @@ class UnifiedDataStreamingService(
             try {
                 writer.close()
                 socket.close()
-            } catch (e: Exception) {
-                Log.w(TAG, "Error closing client connection", e)
-            }
+            } catch (e: Exception) {            }
         }
     }
 

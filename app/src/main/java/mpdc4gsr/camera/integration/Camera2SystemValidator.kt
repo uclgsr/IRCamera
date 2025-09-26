@@ -1,7 +1,6 @@
 package mpdc4gsr.camera.integration
 
 import android.content.Context
-import android.util.Log
 import mpdc4gsr.camera.core.ModeManager
 
 class Camera2SystemValidator(private val context: Context) {
@@ -13,10 +12,7 @@ class Camera2SystemValidator(private val context: Context) {
         val results = mutableListOf<String>()
         var allPassed = true
 
-        try {
-            Log.i(TAG, "Starting Camera2 system validation...")
-
-            if (validateArchitectureComponents()) {
+        try {            if (validateArchitectureComponents()) {
                 results.add("✅ Architecture components validated")
             } else {
                 results.add("❌ Architecture components missing")
@@ -49,12 +45,7 @@ class Camera2SystemValidator(private val context: Context) {
             } else {
                 results.add("❌ Samsung Stage3/Level3 DNG support failed")
                 allPassed = false
-            }
-
-            Log.i(TAG, "Validation completed. Success: $allPassed")
-        } catch (e: Exception) {
-            Log.e(TAG, "Validation failed with exception", e)
-            results.add("❌ Validation failed: ${e.message}")
+            }        } catch (e: Exception) {            results.add("❌ Validation failed: ${e.message}")
             allPassed = false
         }
 
@@ -73,9 +64,7 @@ class Camera2SystemValidator(private val context: Context) {
             Class.forName("com.mpdc4gsr.camera.core.UiBridge")
             Class.forName("com.mpdc4gsr.camera.core.DeviceCaps")
             true
-        } catch (e: ClassNotFoundException) {
-            Log.e(TAG, "Architecture component not found", e)
-            false
+        } catch (e: ClassNotFoundException) {            false
         }
     }
 
@@ -89,9 +78,7 @@ class Camera2SystemValidator(private val context: Context) {
                 modeManager.requestModeSwitch(ModeManager.CameraMode.PREVIEW_ONLY)
 
             canSwitchToRaw && canSwitchToVideo && canSwitchToPreview
-        } catch (e: Exception) {
-            Log.e(TAG, "Mode switching validation failed", e)
-            false
+        } catch (e: Exception) {            false
         }
     }
 
@@ -108,9 +95,7 @@ class Camera2SystemValidator(private val context: Context) {
                 )
 
             createSessionMethod != null
-        } catch (e: Exception) {
-            Log.e(TAG, "Fast session switching validation failed", e)
-            false
+        } catch (e: Exception) {            false
         }
     }
 
@@ -125,9 +110,7 @@ class Camera2SystemValidator(private val context: Context) {
             val hasSensorOrientation = fields.any { it.name == "sensorOrientation" }
 
             hasSupportsRaw && hasRawSize && hasSupports4k60 && hasSensorOrientation
-        } catch (e: Exception) {
-            Log.e(TAG, "Samsung compatibility validation failed", e)
-            false
+        } catch (e: Exception) {            false
         }
     }
 
@@ -143,9 +126,7 @@ class Camera2SystemValidator(private val context: Context) {
                 rawEngine.isStage3ProcessingEnabled() // This should not throw
                 rawEngine.setStage3ProcessingEnabled(false) // This should not throw
                 true
-            } catch (e: Exception) {
-                Log.e(TAG, "RawEngine Stage3/Level3 methods not available", e)
-                false
+            } catch (e: Exception) {                false
             }
 
             // Test Camera2System Stage3/Level3 functionality  
@@ -158,18 +139,14 @@ class Camera2SystemValidator(private val context: Context) {
                 camera2System.isStage3ProcessingEnabled() // This should not throw
                 camera2System.configureStage3Processing(false) // This should not throw
                 true
-            } catch (e: Exception) {
-                Log.e(TAG, "Camera2System Stage3/Level3 methods not available", e)
-                false
+            } catch (e: Exception) {                false
             }
 
             // Test DngCreator API availability (this is a standard Android API)
             val dngCreatorAvailable = try {
                 // Check if DngCreator class is available (API level 21+)
                 Class.forName("android.hardware.camera2.DngCreator") != null
-            } catch (e: Exception) {
-                Log.e(TAG, "DngCreator API not available", e)
-                false
+            } catch (e: Exception) {                false
             }
 
             // Test SamsungDeviceCompatibility utility
@@ -177,22 +154,11 @@ class Camera2SystemValidator(private val context: Context) {
                 mpdc4gsr.camera.core.SamsungDeviceCompatibility.isStage3Compatible()
                 mpdc4gsr.camera.core.SamsungDeviceCompatibility.getDeviceInfo()
                 true
-            } catch (e: Exception) {
-                Log.e(TAG, "SamsungDeviceCompatibility utility not working", e)
-                false
+            } catch (e: Exception) {                false
             }
 
-            val allWorking = rawEngineWorks && camera2SystemWorks && dngCreatorAvailable && deviceCompatibilityWorks
-
-            Log.i(
-                TAG,
-                "Stage3/Level3 validation - RawEngine: $rawEngineWorks, Camera2System: $camera2SystemWorks, DngCreator: $dngCreatorAvailable, DeviceCompatibility: $deviceCompatibilityWorks"
-            )
-
-            allWorking
-        } catch (e: Exception) {
-            Log.e(TAG, "Stage3/Level3 validation failed", e)
-            false
+            val allWorking = rawEngineWorks && camera2SystemWorks && dngCreatorAvailable && deviceCompatibilityWorks            allWorking
+        } catch (e: Exception) {            false
         }
     }
 

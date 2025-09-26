@@ -5,7 +5,6 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import com.blankj.utilcode.util.FileUtils
 import com.blankj.utilcode.util.Utils
-import com.elvishew.xlog.XLog
 import com.google.gson.Gson
 import com.mpdc4gsr.libunified.R
 import com.mpdc4gsr.libunified.app.config.FileConfig
@@ -76,7 +75,7 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
 
         val newVersion: Double = getVersionFromStr(apkVersionStr)
         val currentVersion: Double = getVersionFromStr(firmware)
-        XLog.d("${if (isTS004) "TS004" else "TC007"} [ph][ph][ph][ph] - current[ph][ph]：$currentVersion apk[ph][ph][ph][ph]：$newVersion")
+        X"TS004" else "TC007"} [ph][ph][ph][ph] - current[ph][ph]：$currentVersion apk[ph][ph][ph][ph]：$newVersion")
         if (newVersion <= currentVersion) {
             firmwareDataLD.postValue(null)
             isRequest = false
@@ -96,7 +95,7 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
             inputStream.close()
             outputStream.close()
         } catch (e: IOException) {
-            XLog.e("${if (isTS004) "TS004" else "TC007"} [ph][ph][ph][ph] - [ph][ph][ph][ph][ph][ph][ph][ph][ph][ph][ph]! ${e.message}")
+            X"TS004" else "TC007"} [ph][ph][ph][ph] - [ph][ph][ph][ph][ph][ph][ph][ph][ph][ph][ph]! ${e.message}")
             FileUtils.delete(firmwareFile)
             firmwareDataLD.postValue(null)
             isRequest = false
@@ -125,7 +124,7 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
 
         val bindCode = bindDevice(sn, randomNum)
         if (bindCode != LMS.SUCCESS.toInt() && bindCode != 15109) {
-            XLog.w("${if (isTS004) "TS004" else "TC007"} [ph][ph][ph][ph] - [ph][ph][ph][ph][ph][ph]! sn: $sn")
+            X"TS004" else "TC007"} [ph][ph][ph][ph] - [ph][ph][ph][ph][ph][ph]! sn: $sn")
             failLD.postValue(bindCode == 15162)
             isRequest = false
             return
@@ -134,7 +133,7 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
         val packageData: PackageData? =
             querySoftPackage(sn, if (isTS004) TS004_SOFT_CODE else TC007_SOFT_CODE)
         if (packageData == null) {
-            XLog.w("${if (isTS004) "TS004" else "TC007"} [ph][ph][ph][ph] - [ph][ph][ph][ph][ph][ph][ph][ph][ph][ph][ph]!")
+            X"TS004" else "TC007"} [ph][ph][ph][ph] - [ph][ph][ph][ph][ph][ph][ph][ph][ph][ph][ph]!")
             failLD.postValue(false)
             isRequest = false
             return
@@ -143,7 +142,7 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
         val record: PackageData.Record? = packageData.getFirstRecord()
         val newVersionStr: String? = record?.maxUpdateVersion
         if (record == null || newVersionStr == null) {
-            XLog.d("${if (isTS004) "TS004" else "TC007"} [ph][ph][ph][ph] - [ph][ph][ph][ph][ph][ph][ph]，[ph]current[ph][ph][ph][ph][ph][ph]")
+            X"TS004" else "TC007"} [ph][ph][ph][ph] - [ph][ph][ph][ph][ph][ph][ph]，[ph]current[ph][ph][ph][ph][ph][ph]")
             firmwareDataLD.postValue(null)
             isRequest = false
             return
@@ -151,7 +150,7 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
 
         val newVersion: Double = getVersionFromStr(newVersionStr)
         val currentVersion: Double = getVersionFromStr(firmware)
-        XLog.d("${if (isTS004) "TS004" else "TC007"} [ph][ph][ph][ph] - current[ph][ph]：$currentVersion [ph][ph][ph][ph][ph]：$newVersion")
+        X"TS004" else "TC007"} [ph][ph][ph][ph] - current[ph][ph]：$currentVersion [ph][ph][ph][ph][ph]：$newVersion")
         if (newVersion <= currentVersion) {
             firmwareDataLD.postValue(null)
             isRequest = false
@@ -169,7 +168,7 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
                 ),
             )
         } else {
-            XLog.w("${if (isTS004) "TS004" else "TC007"} [ph][ph][ph][ph] - [ph][ph][ph][ph][ph][ph][ph][ph][ph][ph][ph]!")
+            X"TS004" else "TC007"} [ph][ph][ph][ph] - [ph][ph][ph][ph][ph][ph][ph][ph][ph][ph][ph]!")
             failLD.postValue(downloadData?.responseCode == 60312)
         }
         isRequest = false

@@ -5,10 +5,8 @@ from enum import Enum
 from typing import Any, Callable, Dict, List, Optional
 
 try:
-    from loguru import logger
-except ImportError:
-    from ..utils.simple_logger import logger
-
+    except ImportError:
+    
 from ..network.discovery import DeviceType, DiscoveredDevice, NetworkDiscoveryService
 
 
@@ -102,8 +100,7 @@ class DeviceRegistry:
             try:
                 callback(device_id, device_info, event_type)
             except Exception as e:
-                logger.error(f"Error in device status callback: {e}")
-
+                
     def register_device(self, discovered_device: DiscoveredDevice) -> str:
 
         device_id = f"{discovered_device.service_name}_{discovered_device.ip_address}_{discovered_device.port}"
@@ -127,8 +124,7 @@ class DeviceRegistry:
             existing.port = discovered_device.port
             existing.discovered_at = datetime.now(timezone.utc)
             existing.state = DeviceConnectionState.DISCOVERED
-            logger.info(f"Updated existing device: {device_id}")
-            self._notify_callbacks(device_id, existing, "updated")
+                        self._notify_callbacks(device_id, existing, "updated")
         else:
 
             self.devices[device_id] = device_info
@@ -164,8 +160,7 @@ class DeviceRegistry:
     def update_device_state(self, device_id: str, new_state: DeviceConnectionState) -> bool:
 
         if device_id not in self.devices:
-            logger.warning(f"Cannot update state for unknown device: {device_id}")
-            return False
+                        return False
 
         device = self.devices[device_id]
         old_state = device.state
@@ -177,8 +172,7 @@ class DeviceRegistry:
         elif old_state == DeviceConnectionState.ONLINE and new_state == DeviceConnectionState.DISCONNECTED:
             device.total_disconnections += 1
 
-        logger.info(f"Device {device_id} state changed: {old_state.value} -> {new_state.value}")
-        self._notify_callbacks(device_id, device, "state_changed")
+                self._notify_callbacks(device_id, device, "state_changed")
 
         return True
 
@@ -198,8 +192,7 @@ class DeviceRegistry:
         device_info = self.devices[device_id]
         del self.devices[device_id]
 
-        logger.info(f"Removed device {device_id} from registry. Reason: {reason}")
-        self._notify_callbacks(device_id, device_info, "removed")
+                self._notify_callbacks(device_id, device_info, "removed")
 
         return True
 
@@ -270,18 +263,15 @@ class DeviceManager:
         try:
 
             if not await self.discovery_service.start_discovery():
-                logger.error("Failed to start discovery service")
-                return False
+                                return False
 
             self._running = True
             self._monitoring_task = asyncio.create_task(self._monitoring_loop())
 
-            logger.info("Device manager started successfully")
-            return True
+                        return True
 
         except Exception as e:
-            logger.error(f"Failed to start device manager: {e}")
-            return False
+                        return False
 
     async def stop(self) -> None:
 
@@ -297,11 +287,9 @@ class DeviceManager:
 
             await self.discovery_service.stop_discovery()
 
-            logger.info("Device manager stopped")
-
+            
         except Exception as e:
-            logger.error(f"Error stopping device manager: {e}")
-
+            
     async def _monitoring_loop(self) -> None:
 
         while self._running:
@@ -317,15 +305,13 @@ class DeviceManager:
             except asyncio.CancelledError:
                 break
             except Exception as e:
-                logger.error(f"Error in device monitoring loop: {e}")
-                await asyncio.sleep(5.0)
+                                await asyncio.sleep(5.0)
 
     def _on_device_discovered(self, event_type: str, discovered_device: DiscoveredDevice) -> None:
 
         if event_type == "discovered":
             device_id = self.registry.register_device(discovered_device)
-            logger.info(f"Device discovered and registered: {device_id}")
-
+            
     def _on_device_lost(self, event_type: str, lost_device: DiscoveredDevice) -> None:
 
         if event_type == "lost":
@@ -335,8 +321,7 @@ class DeviceManager:
             for device_id, device in self.registry.get_all_devices().items():
                 if device.device_name == service_name:
                     self.registry.update_device_state(device_id, DeviceConnectionState.DISCONNECTED)
-                    logger.info(f"Device lost: {device_id}")
-                    break
+                                        break
 
     def add_device_manually(self, ip_address: str, port: int, device_name: str) -> Optional[str]:
 
@@ -354,12 +339,10 @@ class DeviceManager:
             )
 
             device_id = self.registry.register_device(discovered_device)
-            logger.info(f"Manually added device: {device_id}")
-            return device_id
+                        return device_id
 
         except Exception as e:
-            logger.error(f"Failed to manually add device: {e}")
-            return None
+                        return None
 
     async def refresh_discovery(self) -> None:
 
@@ -382,17 +365,14 @@ class DeviceManager:
         try:
             device_info = self.registry.get_device(device_id)
             if not device_info:
-                logger.error(f"Device not found in registry: {device_id}")
-                return False
+                                return False
 
             self.registry.update_device_state(device_id, DeviceConnectionState.ONLINE)
 
             # TODO: Implement actual network connection logic
 
-            logger.info(f"Connected to device: {device_id}")
-            return True
+                        return True
 
         except Exception as e:
-            logger.error(f"Failed to connect to device {device_id}: {e}")
-            self.registry.update_device_state(device_id, DeviceConnectionState.ERROR)
+                        self.registry.update_device_state(device_id, DeviceConnectionState.ERROR)
             return False

@@ -21,7 +21,6 @@ from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.primitives.asymmetric import rsa
 from cryptography.x509.oid import NameOID
 
-import logging
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
@@ -48,12 +47,10 @@ class TLSSecurityManager:
             # Check if server certificates exist and are valid
             if (self.server_cert_path.exists() and self.server_key_path.exists() and
                     self._are_certificates_valid()):
-                logger.info(f"✅ Valid TLS certificates found in {self.cert_dir}")
-                return True
+                                return True
 
             # Generate new certificates
-            logger.info("🔐 Generating new TLS certificates for secure communication...")
-
+            
             # Generate CA certificate first
             ca_private_key, ca_certificate = self._generate_ca_certificate()
 
@@ -68,14 +65,10 @@ class TLSSecurityManager:
                 server_private_key, server_certificate
             )
 
-            logger.info(f"🔐 TLS certificates generated successfully")
-            logger.info(f"   CA Certificate: {self.ca_cert_path}")
-            logger.info(f"   Server Certificate: {self.server_cert_path}")
-            return True
+                                                return True
 
         except Exception as e:
-            logger.error(f"❌ Failed to generate TLS certificates: {e}")
-            return False
+                        return False
 
     def create_ssl_context(self) -> Optional[ssl.SSLContext]:
         """Create SSL context for secure server"""
@@ -96,12 +89,10 @@ class TLSSecurityManager:
             # Set cipher preferences for compatibility
             context.set_ciphers('ECDHE+AESGCM:ECDHE+CHACHA20:DHE+AESGCM:DHE+CHACHA20:!aNULL:!MD5:!DSS')
 
-            logger.info("🔐 SSL context created successfully")
-            return context
+                        return context
 
         except Exception as e:
-            logger.error(f"❌ Failed to create SSL context: {e}")
-            return None
+                        return None
 
     def get_certificate_info(self) -> Dict[str, str]:
         """Get information about current certificates"""
@@ -123,8 +114,7 @@ class TLSSecurityManager:
                 })
 
         except Exception as e:
-            logger.error(f"Failed to read certificate info: {e}")
-
+            
         return info
 
     def _are_certificates_valid(self) -> bool:
@@ -324,12 +314,9 @@ class SecureTCPServer:
             if self.use_tls:
                 self.ssl_context = self.security_manager.create_ssl_context()
                 if not self.ssl_context:
-                    logger.error("❌ Failed to create SSL context")
-                    return False
-                logger.info("🔐 TLS encryption enabled")
-            else:
-                logger.warning("⚠️ TLS encryption disabled - using plain TCP")
-
+                                        return False
+                            else:
+                
             # Create server socket
             self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self.server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -345,8 +332,7 @@ class SecureTCPServer:
             server_thread.start()
 
             protocol = "TLS" if self.use_tls else "TCP"
-            logger.info(f"🌐 Secure {protocol} Server started on port {self.port}")
-
+            
             if self.use_tls:
                 cert_info = self.security_manager.get_certificate_info()
                 logger.info(f"🔐 Server certificate valid until: {cert_info.get('valid_until', 'Unknown')}")
@@ -354,8 +340,7 @@ class SecureTCPServer:
             return True
 
         except Exception as e:
-            logger.error(f"❌ Failed to start secure server: {e}")
-            return False
+                        return False
 
     def stop(self):
         """Stop the secure TCP server"""
@@ -373,18 +358,12 @@ class SecureTCPServer:
                 pass
             self.server_socket = None
 
-        logger.info("🛑 Secure TCP Server stopped")
-
+        
         # Print final statistics
-        logger.info(f"📊 Session statistics:")
-        logger.info(f"   • Total connections: {self.connection_count}")
-        logger.info(f"   • Messages processed: {self.message_count}")
-        logger.info(f"   • Data transferred: {self.bytes_transferred / 1024:.1f} KB")
-
+                                
     def _server_loop(self):
         """Main server loop with TLS support"""
-        logger.info("🔄 Secure server loop started")
-
+        
         while self.running:
             try:
                 client_socket, address = self.server_socket.accept()
@@ -396,15 +375,12 @@ class SecureTCPServer:
                             client_socket,
                             server_side=True
                         )
-                        logger.info(f"🔐 TLS handshake completed with {address}")
-                    except ssl.SSLError as e:
-                        logger.error(f"❌ TLS handshake failed with {address}: {e}")
-                        client_socket.close()
+                                            except ssl.SSLError as e:
+                                                client_socket.close()
                         continue
 
                 self.connection_count += 1
-                logger.info(f"🔗 New secure connection #{self.connection_count} from {address}")
-
+                
                 # Start client handler thread
                 client_thread = threading.Thread(
                     target=self._handle_secure_client,
@@ -421,8 +397,7 @@ class SecureTCPServer:
                 continue
             except Exception as e:
                 if self.running:
-                    logger.error(f"Server loop error: {e}")
-                    time.sleep(1)
+                                        time.sleep(1)
                 else:
                     break
 
@@ -444,8 +419,7 @@ class SecureTCPServer:
                 'bytes_received': 0
             }
 
-            logger.info(f"📱 Secure device {device_id} connected from {address}")
-
+            
             while self.running:
                 try:
                     # Receive data with larger buffer for streaming
@@ -475,25 +449,20 @@ class SecureTCPServer:
                                 self.connected_clients[device_id]['message_count'] += 1
 
                             except json.JSONDecodeError as e:
-                                logger.warning(f"Invalid JSON from {device_id}: {line[:100]}...")
-                                self._send_error_response(client_socket, "INVALID_JSON", str(e))
+                                                                self._send_error_response(client_socket, "INVALID_JSON", str(e))
 
                 except socket.timeout:
                     # Check heartbeat timeout
                     if time.time() - last_heartbeat > 90:  # 90 second timeout for TLS
-                        logger.warning(f"⏰ Heartbeat timeout for secure device {device_id}")
-                        break
+                                                break
                     continue
                 except (ConnectionResetError, ssl.SSLError) as e:
-                    logger.info(f"🔌 Secure connection closed by device {device_id}: {e}")
-                    break
+                                        break
                 except Exception as e:
-                    logger.error(f"Secure client error for {device_id}: {e}")
-                    break
+                                        break
 
         except Exception as e:
-            logger.error(f"Secure client handler error for {device_id}: {e}")
-        finally:
+                    finally:
             self._disconnect_client(device_id)
 
     def _process_secure_message(self, device_id: str, message: Dict, client_socket):
@@ -522,11 +491,9 @@ class SecureTCPServer:
             if message_type in ['device_register', 'session_start']:
                 self._send_ack_response(client_socket, message.get('message_id', 'unknown'))
 
-            logger.debug(f"🔐 Secure message processed: {message_type} from {device_id}")
-
+            
         except Exception as e:
-            logger.error(f"Secure message processing error for {device_id}: {e}")
-            self._send_error_response(client_socket, "PROCESSING_ERROR", str(e))
+                        self._send_error_response(client_socket, "PROCESSING_ERROR", str(e))
 
     def _handle_device_registration(self, device_id: str, message: Dict, client_socket):
         """Handle device registration with TLS verification"""
@@ -588,8 +555,7 @@ class SecureTCPServer:
             response_json = json.dumps(response) + '\n'
             client_socket.send(response_json.encode('utf-8'))
         except Exception as e:
-            logger.error(f"Failed to send secure response: {e}")
-
+            
     def _disconnect_client(self, device_id: str):
         """Clean up client connection"""
         if device_id in self.connected_clients:
@@ -601,11 +567,7 @@ class SecureTCPServer:
 
             # Log connection statistics
             duration = (datetime.now(timezone.utc) - client_info['connected_at']).total_seconds()
-            logger.info(f"🔌 Device {device_id} disconnected")
-            logger.info(f"   Duration: {duration:.1f}s")
-            logger.info(f"   Messages: {client_info['message_count']}")
-            logger.info(f"   Data: {client_info['bytes_received'] / 1024:.1f} KB")
-
+                                                
             del self.connected_clients[device_id]
 
     def get_server_statistics(self) -> Dict:

@@ -9,7 +9,6 @@ import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.ToastUtils
-import com.elvishew.xlog.XLog
 import com.hjq.permissions.OnPermissionCallback
 import com.hjq.permissions.Permission
 import com.hjq.permissions.XXPermissions
@@ -70,8 +69,7 @@ class IRLogMPChartActivity : BaseActivity() {
                     findViewById<com.mpdc4gsr.module.thermalunified.view.ChartLogView>(R.id.log_chart_time_chart)
                 chartView.initEntry(it as ArrayList<ThermalEntity>)
             } catch (e: Exception) {
-                XLog.e("刷新图表异常:${e.message}")
-            }
+                X            }
         }
 
         findViewById<View>(R.id.btn_ex)?.setOnClickListener {

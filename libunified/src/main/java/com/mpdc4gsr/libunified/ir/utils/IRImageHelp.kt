@@ -1,6 +1,5 @@
 package com.mpdc4gsr.libunified.ir.utils
 
-import android.util.Log
 import com.mpdc4gsr.libunified.app.bean.AlarmBean
 import org.opencv.android.Utils
 import org.opencv.core.CvType
@@ -106,9 +105,7 @@ class IRImageHelp {
                 }
 
             }
-        } catch (exception: Exception) {
-            Log.e("[ph][ph][ph][ph]", exception.message!!)
-        } finally {
+        } catch (exception: Exception) {        } finally {
             return imageDst
         }
     }

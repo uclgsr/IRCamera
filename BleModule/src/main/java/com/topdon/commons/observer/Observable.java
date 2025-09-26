@@ -60,8 +60,7 @@ public final class Observable {
                     registered = true;
                 }
             }
-            if (registered) {
-                Log.e("Observable", "", new Error("Observer " + observer + " is already registered."));
+            if (registered) {);
                 return;
             }
             Map<String, Method> methodMap = helper.findObserverMethod(observer);

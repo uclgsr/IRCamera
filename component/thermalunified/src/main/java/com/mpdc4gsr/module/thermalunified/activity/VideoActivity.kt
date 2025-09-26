@@ -2,7 +2,6 @@ package com.mpdc4gsr.module.thermalunified.activity
 
 import android.net.Uri
 import android.os.Build
-import android.util.Log
 import android.widget.MediaController
 import android.widget.VideoView
 import androidx.core.content.ContextCompat
@@ -39,19 +38,13 @@ class VideoActivity : BaseActivity() {
     override fun initData() {
     }
 
-    private fun previewVideo(path: String) {
-        Log.w("123", "打开文件:$path")
-        val file = File(path.replace("//", "/"))
-        Log.i("123", "打开文件file:$file")
-        val uri: Uri =
+    private fun previewVideo(path: String) {        val file = File(path.replace("//", "/"))        val uri: Uri =
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 val authority = "$packageName.fileprovider"
                 FileProvider.getUriForFile(this, authority, file)
             } else {
                 Uri.fromFile(file)
-            }
-        Log.w("123", "打开文件uri:$uri")
-        val videoView = findViewById<VideoView>(R.id.video_play)
+            }        val videoView = findViewById<VideoView>(R.id.video_play)
         videoView.setVideoURI(uri)
         videoView.setMediaController(MediaController(this))
         videoView.start()

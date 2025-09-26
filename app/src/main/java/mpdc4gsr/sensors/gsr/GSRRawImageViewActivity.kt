@@ -7,7 +7,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
@@ -261,9 +260,7 @@ class GSRRawImageViewActivity : BaseBindingActivity<ActivityGsrRawImageViewBindi
             } else {
                 Toast.makeText(this, "Source file not found", Toast.LENGTH_SHORT).show()
             }
-        } catch (e: Exception) {
-            Log.e("GSRRawImageView", "Error exporting RAW image", e)
-            Toast.makeText(this, "Export failed: ${e.message}", Toast.LENGTH_SHORT).show()
+        } catch (e: Exception) {            Toast.makeText(this, "Export failed: ${e.message}", Toast.LENGTH_SHORT).show()
         }
 
         androidx.appcompat.app.AlertDialog.Builder(this)
@@ -309,9 +306,7 @@ class GSRRawImageViewActivity : BaseBindingActivity<ActivityGsrRawImageViewBindi
                 }
 
                 if (info.isNotEmpty()) info.toString() else "No EXIF data available"
-            } catch (e: Exception) {
-                Log.e("GSRRawImageView", "Error reading EXIF data", e)
-                "Error reading EXIF data: ${e.message}"
+            } catch (e: Exception) {                "Error reading EXIF data: ${e.message}"
             }
 
         val detailedInfo =

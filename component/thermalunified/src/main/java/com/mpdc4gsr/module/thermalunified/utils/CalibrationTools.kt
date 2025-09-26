@@ -1,7 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.utils
 
-import android.util.Log
-import com.elvishew.xlog.XLog
 import com.energy.iruvc.ircmd.IRCMD
 import com.energy.iruvc.utils.CommonParams
 import com.energy.iruvc.utils.SynchronizedBitmap
@@ -23,11 +21,9 @@ object CalibrationTools {
             if (result == 0) {
                 success = true
             } else {
-                XLog.w("Single point calibration failed")
-            }
+                X            }
         } else {
-            XLog.w("Single point calibration failed")
-        }
+            X        }
         return success
     }
 
@@ -45,11 +41,9 @@ object CalibrationTools {
             if (result == 0) {
                 success = true
             } else {
-                XLog.w("[ph][ph][ph][ph][ph][ph]")
-            }
+                X            }
         } else {
-            XLog.w("[ph][ph][ph][ph][ph][ph]")
-        }
+            X        }
         return success
     }
 
@@ -67,12 +61,8 @@ object CalibrationTools {
             )
             if (result == 0) {
                 success = true
-            } else {
-                Log.w("123", "[ph][ph]")
-            }
-        } else {
-            Log.w("123", "[ph][ph]")
-        }
+            } else {            }
+        } else {        }
         return success
     }
 
@@ -219,8 +209,7 @@ object CalibrationTools {
         return try {
             irCmd?.setPropTPDParams(params, value) ?: 0
         } catch (e: Exception) {
-            XLog.w("[ph][ph][ph][ph][ph][ph][${params.name}]: ${e.message}")
-            0
+            X            0
         }
     }
 }

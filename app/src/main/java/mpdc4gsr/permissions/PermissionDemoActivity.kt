@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.hardware.usb.UsbManager
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
@@ -148,17 +147,13 @@ class PermissionDemoActivity : AppCompatActivity() {
         }
     }
 
-    private fun requestAllPermissions() {
-        Log.i(TAG, "Requesting all permissions using ensureAll()")
+    private fun requestAllPermissions() {")
 
         permissionController.ensureAll { allGranted, deniedPermissions ->
             if (allGranted) {
-                showToast("All permissions granted! Multi-sensor recording ready.")
-                Log.i(TAG, "All permissions successfully granted")
-            } else {
+                showToast("All permissions granted! Multi-sensor recording ready.")            } else {
                 val permissionNames = permissionController.getPermissionNames(deniedPermissions)
-                showToast("Some permissions denied: ${permissionNames.joinToString(", ")}")
-                Log.w(TAG, "Denied permissions: ${deniedPermissions.joinToString(", ")}")
+                showToast("Some permissions denied: ${permissionNames.joinToString(", ")}")}")
             }
             updatePermissionStatus()
         }
@@ -179,12 +174,8 @@ class PermissionDemoActivity : AppCompatActivity() {
         showToast("Requesting USB permission for: ${device.productName}")
         permissionController.requestUsbPermission(device) { granted, grantedDevice ->
             if (granted && grantedDevice != null) {
-                showToast("USB permission granted for: ${grantedDevice.productName}")
-                Log.i(TAG, "USB permission granted for device: ${grantedDevice.productName}")
-            } else {
-                showToast("USB permission denied")
-                Log.w(TAG, "USB permission denied for device: ${device.productName}")
-            }
+                showToast("USB permission granted for: ${grantedDevice.productName}")            } else {
+                showToast("USB permission denied")            }
         }
     }
 
@@ -202,10 +193,7 @@ class PermissionDemoActivity : AppCompatActivity() {
             }
 
             else -> {
-                showToast("All permissions ready - starting multi-sensor recording!")
-
-                Log.i(TAG, "Recording would start now with all permissions granted")
-            }
+                showToast("All permissions ready - starting multi-sensor recording!")            }
         }
     }
 
@@ -220,10 +208,7 @@ class PermissionDemoActivity : AppCompatActivity() {
             "Start Recording (Ready)"
         } else {
             "Start Recording (Permissions Needed)"
-        }
-
-        Log.i(TAG, "Permission status updated: $statusMessage")
-    }
+        }    }
 
     override fun onRequestPermissionsResult(
         requestCode: Int,
@@ -256,7 +241,5 @@ class PermissionDemoActivity : AppCompatActivity() {
     }
 
     private fun showToast(message: String) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-        Log.i(TAG, "Toast: $message")
-    }
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()    }
 }

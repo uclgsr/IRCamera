@@ -19,12 +19,8 @@ public class DeviceControlWorker {
             DeviceState previousState;
 
             try {
-                while (!Thread.currentThread().isInterrupted()) {
-                    Log.d(TAG, "DeviceControlWorker run");
-                    synchronized (mEventQueue) {
-                        while (mEventQueue.isEmpty()) {
-                            Log.d(TAG, "DeviceControlWorker mEventQueue wait");
-                            try {
+                while (!Thread.currentThread().isInterrupted()) {                    synchronized (mEventQueue) {
+                        while (mEventQueue.isEmpty()) {                            try {
                                 mEventQueue.wait();
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
@@ -40,9 +36,7 @@ public class DeviceControlWorker {
                     task.run();
                     mEventQueue.poll();
 
-                    mDeviceState = task.getDeviceState();
-                    Log.d(TAG, "DeviceControlWorker do state : " + mDeviceState);
-                    if (mDeviceControlCallback != null) {
+                    mDeviceState = task.getDeviceState();                    if (mDeviceControlCallback != null) {
 
                         if (mDeviceState != previousState) {
                             if (mDeviceState == DeviceState.OPEN) {
@@ -64,17 +58,13 @@ public class DeviceControlWorker {
         }
     };
 
-    public void startWork() {
-        Log.d(TAG, "startWork");
-        if (mThread == null) {
+    public void startWork() {        if (mThread == null) {
             mThread = new Thread(mRunnable);
             mThread.start();
         }
     }
 
-    public void stopWork() {
-        Log.d(TAG, "stopWork");
-        if (mThread != null) {
+    public void stopWork() {        if (mThread != null) {
             try {
                 mThread.interrupt();
 
@@ -88,17 +78,10 @@ public class DeviceControlWorker {
 
     public void addTask(BaseTask task) {
         synchronized (mEventQueue) {
-            if (mEventQueue.size() < 2) {
-                Log.d(TAG, "addTask task：" + task.getClass().getSimpleName());
+            if (mEventQueue.size() < 2) {.getSimpleName());
                 mEventQueue.add(task);
-            } else {
-                Log.d(TAG, "addTask poll");
-                BaseTask task1 = mEventQueue.poll();
-                if (task1 instanceof StartPreviewTask) {
-                    Log.d(TAG, "addTask StartPreviewTask");
-                } else if (task1 instanceof StopPreviewTask) {
-                    Log.d(TAG, "addTask StopPreviewTask");
-                }
+            } else {                BaseTask task1 = mEventQueue.poll();
+                if (task1 instanceof StartPreviewTask) {                } else if (task1 instanceof StopPreviewTask) {                }
                 mEventQueue.add(task);
             }
             mEventQueue.notify();

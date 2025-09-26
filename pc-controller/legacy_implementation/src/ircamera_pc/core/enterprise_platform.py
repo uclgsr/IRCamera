@@ -1,5 +1,4 @@
 import json
-import logging
 import os
 import pandas as pd
 import shutil
@@ -121,8 +120,7 @@ class EnterpriseResearchPlatform:
         self.auth_provider = None
         self.notification_service = None
 
-        logger.info(f"Enterprise Research Platform initialized for {config.institution_name}")
-
+        
     def initialize_cloud_services(self) -> bool:
 
         try:
@@ -140,13 +138,11 @@ class EnterpriseResearchPlatform:
                 return self._initialize_local_services()
 
         except Exception as e:
-            logger.error(f"Cloud services initialization failed: {e}")
-            return False
+                        return False
 
     def _initialize_aws_services(self) -> bool:
 
-        logger.info("Initializing AWS cloud services...")
-
+        
         # Placeholder for AWS integration
         # In production, would use boto3 for:
 
@@ -161,13 +157,11 @@ class EnterpriseResearchPlatform:
         self.auth_provider = AWSAuthProvider(aws_config)
         self.notification_service = AWSNotificationService(aws_config)
 
-        logger.info("AWS services initialized successfully")
-        return True
+                return True
 
     def _initialize_azure_services(self) -> bool:
 
-        logger.info("Initializing Azure cloud services...")
-
+        
         # Placeholder for Azure integration
         # In production, would use Azure SDK for:
 
@@ -182,13 +176,11 @@ class EnterpriseResearchPlatform:
         self.auth_provider = AzureADProvider(azure_config)
         self.notification_service = AzureNotificationService(azure_config)
 
-        logger.info("Azure services initialized successfully")
-        return True
+                return True
 
     def _initialize_gcp_services(self) -> bool:
 
-        logger.info("Initializing GCP services...")
-
+        
         gcp_config = {
             "project_id": f"ircamera-{self.config.institution_id}",
             "storage_bucket": f"ircamera-data-{self.config.institution_id}",
@@ -200,13 +192,11 @@ class EnterpriseResearchPlatform:
         self.auth_provider = GCPAuthProvider(gcp_config)
         self.notification_service = GCPNotificationService(gcp_config)
 
-        logger.info("GCP services initialized successfully")
-        return True
+                return True
 
     def _initialize_institutional_services(self) -> bool:
 
-        logger.info("Initializing institutional services...")
-
+        
         institutional_config = {
             "file_server_path": f"/institutional/ircamera/{self.config.institution_id}",
             "ldap_server": "ldap://institutional.directory.server",
@@ -218,13 +208,11 @@ class EnterpriseResearchPlatform:
         self.auth_provider = LDAPAuthProvider(institutional_config)
         self.notification_service = EmailNotificationService(institutional_config)
 
-        logger.info("Institutional services initialized successfully")
-        return True
+                return True
 
     def _initialize_local_services(self) -> bool:
 
-        logger.info("Initializing local services...")
-
+        
         local_config = {
             "data_directory": os.path.join(self.temp_dir, "data"),
             "backup_directory": os.path.join(self.temp_dir, "backups"),
@@ -239,8 +227,7 @@ class EnterpriseResearchPlatform:
         self.auth_provider = LocalAuthProvider(local_config)
         self.notification_service = LocalNotificationService(local_config)
 
-        logger.info("Local services initialized successfully")
-        return True
+                return True
 
     def register_study(self, study_config: StudyConfiguration) -> bool:
 
@@ -266,12 +253,10 @@ class EnterpriseResearchPlatform:
             if ComplianceFramework.BIDS in self.config.compliance_frameworks:
                 self._initialize_bids_structure(study_config.study_id, study_path)
 
-            logger.info(f"Study registered successfully: {study_config.study_id}")
-            return True
+                        return True
 
         except Exception as e:
-            logger.error(f"Study registration failed: {e}")
-            return False
+                        return False
 
     def register_participant(self, study_id: str, participant_data: Dict[str, Any]) -> str:
 
@@ -304,12 +289,10 @@ class EnterpriseResearchPlatform:
                 details={"registration_date": datetime.utcnow().isoformat()}
             )
 
-            logger.info(f"Participant registered: {participant_id} for study {study_id}")
-            return participant_id
+                        return participant_id
 
         except Exception as e:
-            logger.error(f"Participant registration failed: {e}")
-            return None
+                        return None
 
     def start_data_collection(self, study_id: str, participant_id: str,
                               session_metadata: Dict[str, Any]) -> str:
@@ -347,12 +330,10 @@ class EnterpriseResearchPlatform:
                 details=validated_metadata
             )
 
-            logger.info(f"Data collection started: {session_id}")
-            return session_id
+                        return session_id
 
         except Exception as e:
-            logger.error(f"Data collection start failed: {e}")
-            return None
+                        return None
 
     def process_sensor_data(self, session_id: str, sensor_data: Dict[str, Any]) -> bool:
 
@@ -371,8 +352,7 @@ class EnterpriseResearchPlatform:
             storage_success = self._store_sensor_data(session_id, processed_data, quality_score)
 
             if not storage_success:
-                logger.error(f"Data storage failed for session {session_id}")
-                return False
+                                return False
 
             session_info["data_quality_checks"].append({
                 "timestamp": datetime.utcnow().isoformat(),
@@ -386,8 +366,7 @@ class EnterpriseResearchPlatform:
             return True
 
         except Exception as e:
-            logger.error(f"Sensor data processing failed: {e}")
-            return False
+                        return False
 
     def end_data_collection(self, session_id: str) -> bool:
 
@@ -413,8 +392,7 @@ class EnterpriseResearchPlatform:
             export_success = self._export_session_data(session_id)
 
             if not export_success:
-                logger.error(f"Data export failed for session {session_id}")
-                return False
+                                return False
 
             self._archive_session_data(session_id)
 
@@ -433,12 +411,10 @@ class EnterpriseResearchPlatform:
                 }
             )
 
-            logger.info(f"Data collection completed: {session_id}")
-            return True
+                        return True
 
         except Exception as e:
-            logger.error(f"Data collection end failed: {e}")
-            return False
+                        return False
 
     def generate_bids_dataset(self, study_id: str, output_path: str) -> bool:
 
@@ -505,12 +481,10 @@ class EnterpriseResearchPlatform:
             with open(bids_root / "CHANGES", 'w') as f:
                 f.write(changes_content)
 
-            logger.info(f"BIDS dataset generated successfully: {output_path}")
-            return True
+                        return True
 
         except Exception as e:
-            logger.error(f"BIDS dataset generation failed: {e}")
-            return False
+                        return False
 
     def setup_multi_site_coordination(self, coordinator_config: MultiSiteCoordinator) -> bool:
 
@@ -526,12 +500,10 @@ class EnterpriseResearchPlatform:
             if coordinator_config.cross_site_validation:
                 self._setup_cross_site_validation(coordinator_config)
 
-            logger.info(f"Multi-site coordination established: {coordinator_config.coordinator_id}")
-            return True
+                        return True
 
         except Exception as e:
-            logger.error(f"Multi-site coordination setup failed: {e}")
-            return False
+                        return False
 
     def get_compliance_status(self, study_id: str = None) -> Dict[str, Any]:
 
@@ -563,8 +535,7 @@ class EnterpriseResearchPlatform:
             return compliance_report
 
         except Exception as e:
-            logger.error(f"Compliance status check failed: {e}")
-            return {"error": str(e)}
+                        return {"error": str(e)}
 
     def export_audit_trail(self, output_file: str, start_date: datetime = None,
                            end_date: datetime = None) -> bool:
@@ -600,12 +571,10 @@ class EnterpriseResearchPlatform:
             with open(output_file, 'w') as f:
                 json.dump(audit_report, f, indent=2)
 
-            logger.info(f"Audit trail exported: {output_file}")
-            return True
+                        return True
 
         except Exception as e:
-            logger.error(f"Audit trail export failed: {e}")
-            return False
+                        return False
 
     def _validate_study_config(self, study_config: StudyConfiguration) -> bool:
 
@@ -613,8 +582,7 @@ class EnterpriseResearchPlatform:
 
         for field in required_fields:
             if not hasattr(study_config, field) or not getattr(study_config, field):
-                logger.error(f"Missing required study field: {field}")
-                return False
+                                return False
 
         return True
 
@@ -622,8 +590,7 @@ class EnterpriseResearchPlatform:
 
         for framework in self.config.compliance_frameworks:
             if not self._validate_framework_requirements(framework, study_config):
-                logger.error(f"Study does not meet {framework.value} requirements")
-                return False
+                                return False
 
         return True
 
@@ -690,8 +657,7 @@ class EnterpriseResearchPlatform:
         for directory in directories:
             os.makedirs(os.path.join(bids_path, directory), exist_ok=True)
 
-        logger.info(f"BIDS structure initialized for study {study_id}")
-
+        
     def _anonymize_participant_data(self, participant_data: Dict[str, Any]) -> Dict[str, Any]:
 
         anonymized = participant_data.copy()
@@ -762,8 +728,7 @@ class EnterpriseResearchPlatform:
     def _start_session_monitoring(self, session_id: str) -> None:
 
         # Placeholder for real-time monitoring setup
-        logger.info(f"Started monitoring for session {session_id}")
-
+        
     def _assess_data_quality(self, sensor_data: Dict[str, Any],
                              study_config: StudyConfiguration) -> float:
 
@@ -837,8 +802,7 @@ class EnterpriseResearchPlatform:
 
             return self.cloud_storage.store_data(session_id, data, quality_score)
         except Exception as e:
-            logger.error(f"Data storage failed: {e}")
-            return False
+                        return False
 
     def _send_quality_alert(self, session_id: str, quality_score: float) -> None:
 
@@ -846,8 +810,7 @@ class EnterpriseResearchPlatform:
             alert_message = f"Data quality alert for session {session_id}: Score {quality_score:.1f}"
             self.notification_service.send_alert(alert_message, "quality", session_id)
         except Exception as e:
-            logger.error(f"Failed to send quality alert: {e}")
-
+            
     def _generate_session_report(self, session_id: str) -> Dict[str, Any]:
 
         session_info = self.session_metadata[session_id]
@@ -914,31 +877,26 @@ class EnterpriseResearchPlatform:
             return True
 
         except Exception as e:
-            logger.error(f"Session data export failed: {e}")
-            return False
+                        return False
 
     def _export_session_bids_format(self, session_id: str) -> None:
 
         # Placeholder for BIDS export implementation
-        logger.info(f"Exporting session {session_id} in BIDS format")
-
+        
     def _export_session_raw_data(self, session_id: str) -> None:
 
         # Placeholder for raw data export
-        logger.info(f"Exporting raw data for session {session_id}")
-
+        
     def _export_session_analytics(self, session_id: str) -> None:
 
         # Placeholder for analytics export
-        logger.info(f"Exporting analytics for session {session_id}")
-
+        
     def _archive_session_data(self, session_id: str) -> bool:
 
         try:
             return self.cloud_storage.archive_data(session_id)
         except Exception as e:
-            logger.error(f"Session archival failed: {e}")
-            return False
+                        return False
 
     def _generate_compliance_certificate(self, session_id: str) -> None:
 
@@ -958,8 +916,7 @@ class EnterpriseResearchPlatform:
         with open(certificate_path, 'w') as f:
             json.dump(certificate, f, indent=2)
 
-        logger.info(f"Compliance certificate generated for {session_id}")
-
+        
     def _add_audit_entry(self, action: str, **kwargs) -> None:
 
         entry = {
@@ -1080,11 +1037,9 @@ When using this dataset, please cite the IRCamera platform and this specific dat
             if hasattr(self, 'cloud_storage') and self.cloud_storage:
                 self.cloud_storage.cleanup()
 
-            logger.info("Enterprise platform cleanup completed")
-
+            
         except Exception as e:
-            logger.error(f"Cleanup failed: {e}")
-
+            
 
 # Placeholder storage adapters (would be implemented for each cloud provider)
 

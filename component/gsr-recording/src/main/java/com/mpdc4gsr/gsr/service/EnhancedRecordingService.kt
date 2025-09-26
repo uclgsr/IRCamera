@@ -10,7 +10,6 @@ import android.os.Binder
 import android.os.Build
 import android.os.IBinder
 import android.os.PowerManager
-import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.mpdc4gsr.gsr.model.GSRSample
 import com.mpdc4gsr.gsr.model.SessionInfo
@@ -162,9 +161,7 @@ class EnhancedRecordingService : Service() {
         initializeComponents()
         setupNetworkListeners()
         createNotificationChannel()
-        acquireWakeLock()
-        Log.i(TAG, "Enhanced recording service created")
-    }
+        acquireWakeLock()    }
 
     override fun onStartCommand(
         intent: Intent?,
@@ -208,9 +205,7 @@ class EnhancedRecordingService : Service() {
 
         gsrRecorder.addListener(
             object : GSRRecorder.GSRRecordingListener {
-                override fun onRecordingStarted(sessionInfo: SessionInfo) {
-                    Log.i(TAG, "GSR recording started: ${sessionInfo.sessionId}")
-                    updateNotification("Recording started - ${sessionInfo.sessionId}")
+                override fun onRecordingStarted(sessionInfo: SessionInfo) {                    updateNotification("Recording started - ${sessionInfo.sessionId}")
                     eventListener?.onRecordingStateChanged(true, sessionInfo.sessionId)
 
                     if (isConnectedToPC) {
@@ -225,9 +220,7 @@ class EnhancedRecordingService : Service() {
                     }
                 }
 
-                override fun onRecordingStopped(sessionInfo: SessionInfo) {
-                    Log.i(TAG, "GSR recording stopped: ${sessionInfo.sessionId}")
-                    isRecording = false
+                override fun onRecordingStopped(sessionInfo: SessionInfo) {                    isRecording = false
                     currentSessionId = null
 
                     if (isStreamingData) {
@@ -253,36 +246,23 @@ class EnhancedRecordingService : Service() {
                     }
                 }
 
-                override fun onSyncMarkAdded(syncMark: SyncMark) {
-                    Log.d(TAG, "Sync mark added: ${syncMark.eventType}")
-                }
+                override fun onSyncMarkAdded(syncMark: SyncMark) {                }
 
-                override fun onError(error: String) {
-                    Log.e(TAG, "GSR recording error: $error")
-                    eventListener?.onServiceError("gsr_recording", error)
+                override fun onError(error: String) {                    eventListener?.onServiceError("gsr_recording", error)
                 }
             },
         )
 
         networkClient.setEventListener(
             object : NetworkClient.NetworkEventListener {
-                override fun onControllerDiscovered(controller: NetworkClient.ControllerInfo) {
-                    Log.i(
-                        TAG,
-                        "PC Controller discovered: ${controller.deviceName} at ${controller.ipAddress}"
-                    )
-                }
+                override fun onControllerDiscovered(controller: NetworkClient.ControllerInfo) {                }
 
-                override fun onConnected(controller: NetworkClient.ControllerInfo) {
-                    Log.i(TAG, "Connected to PC Controller: ${controller.deviceName}")
-                    isConnectedToPC = true
+                override fun onConnected(controller: NetworkClient.ControllerInfo) {                    isConnectedToPC = true
                     updateNotification("Connected to ${controller.deviceName}")
                     eventListener?.onNetworkStateChanged(true, controller)
                 }
 
-                override fun onDisconnected(reason: String) {
-                    Log.i(TAG, "Disconnected from PC Controller: $reason")
-                    isConnectedToPC = false
+                override fun onDisconnected(reason: String) {                    isConnectedToPC = false
 
                     if (isStreamingData) {
                         serviceScope.launch {
@@ -296,10 +276,7 @@ class EnhancedRecordingService : Service() {
                     eventListener?.onNetworkStateChanged(false, null)
                 }
 
-                override fun onRemoteMeasurementRequest(sessionInfo: SessionInfo) {
-                    Log.i(TAG, "Remote measurement request: ${sessionInfo.sessionId}")
-
-                    if (!isRecording) {
+                override fun onRemoteMeasurementRequest(sessionInfo: SessionInfo) {                    if (!isRecording) {
                         startRecording(
                             sessionInfo.sessionId,
                             sessionInfo.participantId,
@@ -308,42 +285,30 @@ class EnhancedRecordingService : Service() {
                     }
                 }
 
-                override fun onSyncFlash(durationMs: Int) {
-                    Log.i(TAG, "Sync flash requested: ${durationMs}ms")
-
-                    if (isRecording) {
+                override fun onSyncFlash(durationMs: Int) {                    if (isRecording) {
                         gsrRecorder.triggerSyncEvent("SYNC_FLASH_${durationMs}ms")
                     }
                 }
 
-                override fun onTimeSynchronized(offsetNanoseconds: Long) {
-                    Log.i(TAG, "Time synchronized: offset=${offsetNanoseconds}ns")
-                    updateNotification("Time synchronized (offset: ${offsetNanoseconds / 1000000}ms)")
+                override fun onTimeSynchronized(offsetNanoseconds: Long) {                    updateNotification("Time synchronized (offset: ${offsetNanoseconds / 1000000}ms)")
                 }
 
-                override fun onDataStreamingStarted() {
-                    Log.i(TAG, "Data streaming to PC started")
-                    updateNotification("Streaming data to PC")
+                override fun onDataStreamingStarted() {                    updateNotification("Streaming data to PC")
                 }
 
-                override fun onDataStreamingStopped() {
-                    Log.i(TAG, "Data streaming to PC stopped")
-                    updateNotification("Data streaming stopped")
+                override fun onDataStreamingStopped() {                    updateNotification("Data streaming stopped")
                 }
 
                 override fun onError(
                     operation: String,
                     error: String,
-                ) {
-                    Log.e(TAG, "Network error in $operation: $error")
-                    eventListener?.onServiceError("network_$operation", error)
+                ) {                    eventListener?.onServiceError("network_$operation", error)
                 }
 
                 override fun onPairingRequested(
                     controllerId: String,
                     controllerName: String,
-                ) {
-                    Log.i(TAG, "Pairing requested by controller: $controllerName ($controllerId)")
+                ) {")
                     updateNotification("Pairing requested by $controllerName")
                 }
 
@@ -351,76 +316,53 @@ class EnhancedRecordingService : Service() {
                     controllerId: String,
                     success: Boolean,
                 ) {
-                    if (success) {
-                        Log.i(TAG, "Pairing completed successfully with controller: $controllerId")
-                        updateNotification("Paired with controller")
-                    } else {
-                        Log.w(TAG, "Pairing failed with controller: $controllerId")
-                        updateNotification("Pairing failed")
+                    if (success) {                        updateNotification("Paired with controller")
+                    } else {                        updateNotification("Pairing failed")
                     }
                 }
 
-                override fun onAuthenticationRequired(controllerId: String) {
-                    Log.w(TAG, "Authentication required for controller: $controllerId")
-                    updateNotification("Authentication required")
+                override fun onAuthenticationRequired(controllerId: String) {                    updateNotification("Authentication required")
                 }
             },
         )
 
         dataStreamingService.setEventListener(
             object : DataStreamingService.StreamingEventListener {
-                override fun onStreamingStarted(sessionId: String) {
-                    Log.i(TAG, "Data streaming started for session: $sessionId")
-                    isStreamingData = true
+                override fun onStreamingStarted(sessionId: String) {                    isStreamingData = true
                     eventListener?.onDataStreamingStateChanged(true)
                 }
 
-                override fun onStreamingStopped(sessionId: String) {
-                    Log.i(TAG, "Data streaming stopped for session: $sessionId")
-                    isStreamingData = false
+                override fun onStreamingStopped(sessionId: String) {                    isStreamingData = false
                     eventListener?.onDataStreamingStateChanged(false)
                 }
 
                 override fun onBatchSent(
                     batchSize: Int,
                     dataType: String,
-                ) {
-                    Log.d(TAG, "Sent $dataType batch: $batchSize samples")
-                }
+                ) {                }
 
-                override fun onStreamingError(error: String) {
-                    Log.e(TAG, "Data streaming error: $error")
-                    eventListener?.onServiceError("data_streaming", error)
+                override fun onStreamingError(error: String) {                    eventListener?.onServiceError("data_streaming", error)
                 }
 
                 override fun onQueueFull(
                     dataType: String,
                     droppedSamples: Int,
-                ) {
-                    Log.w(TAG, "Queue full for $dataType: dropped $droppedSamples samples")
-                }
+                ) {                }
             },
         )
 
         discoveryService.setServiceListener(
             object : ZeroconfDiscoveryService.ServiceDiscoveryListener {
-                override fun onServiceDiscovered(serviceInfo: NetworkClient.ControllerInfo) {
-                    Log.i(TAG, "mDNS service discovered: ${serviceInfo.deviceName}")
-                }
+                override fun onServiceDiscovered(serviceInfo: NetworkClient.ControllerInfo) {                }
 
-                override fun onServiceLost(serviceName: String) {
-                    Log.i(TAG, "mDNS service lost: $serviceName")
-                }
+                override fun onServiceLost(serviceName: String) {                }
 
-                override fun onServiceRegistered(serviceName: String) {
-                    Log.i(TAG, "mDNS service registered: $serviceName")
-                }
+                override fun onServiceRegistered(serviceName: String) {                }
 
                 override fun onDiscoveryError(
                     errorCode: Int,
                     message: String,
-                ) {
-                    Log.e(TAG, "mDNS discovery error: $message (code: $errorCode)")
+                ) {")
                     eventListener?.onServiceError("mdns_discovery", message)
                 }
             },
@@ -432,9 +374,7 @@ class EnhancedRecordingService : Service() {
         participantId: String?,
         studyName: String?,
     ) {
-        if (isRecording) {
-            Log.w(TAG, "Recording already in progress")
-            return
+        if (isRecording) {            return
         }
 
         serviceScope.launch {
@@ -446,26 +386,18 @@ class EnhancedRecordingService : Service() {
 
                 if (gsrRecorder.startRecording(sessionId, participantId, studyName)) {
                     isRecording = true
-                    currentSessionId = sessionId
-                    Log.i(TAG, "Enhanced recording started: $sessionId")
-                } else {
-                    Log.e(TAG, "Failed to start GSR recording")
-                    eventListener?.onServiceError(
+                    currentSessionId = sessionId                } else {                    eventListener?.onServiceError(
                         "start_recording",
                         "Failed to start GSR recording"
                     )
                 }
-            } catch (e: Exception) {
-                Log.e(TAG, "Error starting recording", e)
-                eventListener?.onServiceError("start_recording", e.message ?: "Unknown error")
+            } catch (e: Exception) {                eventListener?.onServiceError("start_recording", e.message ?: "Unknown error")
             }
         }
     }
 
     private fun stopRecording() {
-        if (!isRecording) {
-            Log.w(TAG, "No recording in progress")
-            return
+        if (!isRecording) {            return
         }
 
         serviceScope.launch {
@@ -474,12 +406,7 @@ class EnhancedRecordingService : Service() {
                 val session = gsrRecorder.stopRecording()
                 session?.let {
                     sessionManager.completeSession(it.sessionId)
-                }
-
-                Log.i(TAG, "Enhanced recording stopped")
-            } catch (e: Exception) {
-                Log.e(TAG, "Error stopping recording", e)
-                eventListener?.onServiceError("stop_recording", e.message ?: "Unknown error")
+                }            } catch (e: Exception) {                eventListener?.onServiceError("stop_recording", e.message ?: "Unknown error")
             }
         }
     }
@@ -497,9 +424,7 @@ class EnhancedRecordingService : Service() {
                         "Failed to connect to $ipAddress:$port"
                     )
                 }
-            } catch (e: Exception) {
-                Log.e(TAG, "Error connecting to PC", e)
-                eventListener?.onServiceError("connect_pc", e.message ?: "Unknown error")
+            } catch (e: Exception) {                eventListener?.onServiceError("connect_pc", e.message ?: "Unknown error")
             }
         }
     }
@@ -526,9 +451,7 @@ class EnhancedRecordingService : Service() {
                 } else {
                     eventListener?.onServiceError("start_discovery", "Failed to start discovery")
                 }
-            } catch (e: Exception) {
-                Log.e(TAG, "Error starting discovery", e)
-                eventListener?.onServiceError("start_discovery", e.message ?: "Unknown error")
+            } catch (e: Exception) {                eventListener?.onServiceError("start_discovery", e.message ?: "Unknown error")
             }
         }
     }
@@ -618,8 +541,5 @@ class EnhancedRecordingService : Service() {
 
         serviceJob.cancel()
 
-        releaseWakeLock()
-
-        Log.i(TAG, "Enhanced recording service destroyed")
-    }
+        releaseWakeLock()    }
 }

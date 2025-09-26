@@ -50,8 +50,7 @@ public class FileUtils {
                     entries.add(new BarEntry(Integer.parseInt(split[split.length - 1]), vals));
                 }
             }
-        } catch (IOException e) {
-            Log.e(LOG, e.toString());
+        } catch (IOException e) {);
         }
 
         return entries;
@@ -88,16 +87,14 @@ public class FileUtils {
                 }
                 line = reader.readLine();
             }
-        } catch (IOException e) {
-            Log.e(LOG, e.toString());
+        } catch (IOException e) {);
 
         } finally {
 
             if (reader != null) {
                 try {
                     reader.close();
-                } catch (IOException e) {
-                    Log.e(LOG, e.toString());
+                } catch (IOException e) {);
                 }
             }
         }
@@ -115,8 +112,7 @@ public class FileUtils {
         if (!saved.exists()) {
             try {
                 saved.createNewFile();
-            } catch (IOException e) {
-                Log.e(LOG, e.toString());
+            } catch (IOException e) {);
             }
         }
         try {
@@ -130,8 +126,7 @@ public class FileUtils {
             }
 
             buf.close();
-        } catch (IOException e) {
-            Log.e(LOG, e.toString());
+        } catch (IOException e) {);
         }
     }
 
@@ -154,16 +149,14 @@ public class FileUtils {
 
                 line = reader.readLine();
             }
-        } catch (IOException e) {
-            Log.e(LOG, e.toString());
+        } catch (IOException e) {);
 
         } finally {
 
             if (reader != null) {
                 try {
                     reader.close();
-                } catch (IOException e) {
-                    Log.e(LOG, e.toString());
+                } catch (IOException e) {);
                 }
             }
         }

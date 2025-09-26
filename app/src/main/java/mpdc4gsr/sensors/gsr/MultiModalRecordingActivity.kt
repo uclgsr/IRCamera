@@ -8,7 +8,6 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
-import android.util.Log
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Toast
@@ -95,16 +94,12 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
                 val binder =
                     service as? com.mpdc4gsr.gsr.service.EnhancedRecordingService.EnhancedRecordingBinder
                 enhancedRecordingService = binder?.getService()
-                isServiceBound = true
-                Log.i(TAG, "Enhanced recording service connected")
-                updateNetworkStatusUI()
+                isServiceBound = true                updateNetworkStatusUI()
             }
 
             override fun onServiceDisconnected(name: ComponentName?) {
                 enhancedRecordingService = null
-                isServiceBound = false
-                Log.i(TAG, "Enhanced recording service disconnected")
-                updateNetworkStatusUI()
+                isServiceBound = false                updateNetworkStatusUI()
             }
         }
 
@@ -229,12 +224,8 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
         // Initialize camera
         lifecycleScope.launch {
             val cameraInitialized = rgbCameraRecorder?.initialize() ?: false
-            if (cameraInitialized) {
-                Log.i(TAG, "RGB Camera initialized successfully")
-                observeCameraStatus()
-            } else {
-                Log.w(TAG, "RGB Camera initialization failed")
-            }
+            if (cameraInitialized) {                observeCameraStatus()
+            } else {            }
         }
 
 
@@ -443,32 +434,21 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
 
     private fun observeCameraStatus() {
         lifecycleScope.launch {
-            rgbCameraRecorder?.getStatusFlow()?.collect { status ->
-                Log.d(TAG, "Camera status: ${status.displayText}")
-            }
+            rgbCameraRecorder?.getStatusFlow()?.collect { status ->            }
         }
     }
 
     private fun checkAndRequestPermissions() {
-        if (!permissionController.hasAllRequiredPermissions()) {
-            Log.i(TAG, "Not all permissions granted, requesting permissions...")
-
-
-            permissionController.ensureAll { allGranted, deniedPermissions ->
+        if (!permissionController.hasAllRequiredPermissions()) {            permissionController.ensureAll { allGranted, deniedPermissions ->
                 if (allGranted) {
                     binding.statusText.text =
-                        "All permissions granted. Multi-sensor recording ready."
-                    Log.i(TAG, "All permissions granted successfully")
-
-
-                    updateUIForPermissionState(true)
+                        "All permissions granted. Multi-sensor recording ready."                    updateUIForPermissionState(true)
 
                 } else {
                     val permissionNames = permissionController.getPermissionNames(deniedPermissions)
                     val statusMessage = permissionController.getPermissionStatusMessage()
 
-                    binding.statusText.text = "Limited functionality: Some permissions missing"
-                    Log.w(TAG, "Some permissions denied: ${deniedPermissions.joinToString(", ")}")
+                    binding.statusText.text = "Limited functionality: Some permissions missing"}")
 
 
                     updateUIForPartialPermissions(deniedPermissions)
@@ -541,16 +521,12 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
 
     private fun toggleRecording() {
 
-        if (!permissionController.canStartRecording()) {
-            Log.w(TAG, "Cannot start recording - missing camera or storage permissions")
-            checkAndRequestPermissions()
+        if (!permissionController.canStartRecording()) {            checkAndRequestPermissions()
             return
         }
 
 
-        if (isStartingRecording) {
-            Log.d(TAG, "Recording start already in progress, ignoring additional taps")
-            return
+        if (isStartingRecording) {            return
         }
 
         if (isRecording) {
@@ -568,12 +544,7 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
 
 
         permissionController.requestBatteryOptimizationExemption { exemptionGranted ->
-            if (!exemptionGranted) {
-                Log.w(
-                    TAG,
-                    "Battery optimization exemption not granted - recording may be interrupted"
-                )
-                Toast.makeText(
+            if (!exemptionGranted) {                Toast.makeText(
                     this,
                     "Warning: Battery optimization not disabled. Recording may be interrupted.",
                     Toast.LENGTH_LONG
@@ -592,17 +563,10 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
         participantId = binding.participantIdInput.text.toString().trim().takeIf { it.isNotEmpty() }
 
 
-        if (binding.enableVideoSwitch.isChecked) {
-            Log.i(TAG, "Starting RGB camera recording with CameraX")
-
-
-
-            lifecycleScope.launch {
+        if (binding.enableVideoSwitch.isChecked) {            lifecycleScope.launch {
 
                 val sessionDir = gsrRecorder.getSessionDirectory()?.absolutePath
-                if (sessionDir == null) {
-                    Log.e(TAG, "No session directory available for RGB camera recording")
-                    return@launch
+                if (sessionDir == null) {                    return@launch
                 }
 
                 val cameraStarted = rgbCameraRecorder?.startRecording(sessionDir) ?: false
@@ -645,11 +609,7 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
                             sessionId,
                             participantId,
                             null,
-                        )
-                        Log.i(TAG, "Enhanced recording service started")
-                    } catch (e: Exception) {
-                        Log.w(TAG, "Failed to start enhanced recording service", e)
-                    }
+                        )                    } catch (e: Exception) {                    }
 
                     runOnUiThread {
                         binding.startButton.text = "Stop Recording"
@@ -670,9 +630,7 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
                         ).show()
                     }
                 }
-            } catch (e: Exception) {
-                Log.e(TAG, "Error starting recording", e)
-                isStartingRecording = false
+            } catch (e: Exception) {                isStartingRecording = false
                 runOnUiThread {
                     binding.startButton.isEnabled = true
                     binding.startButton.text = "Start Recording"
@@ -706,12 +664,8 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
                                 )
                                 lifecycleScope.launch {
                                     camera.startRecording(sessionDir, metadata)
-                                }
-                                Log.i(TAG, "Camera recording started")
-                                true
-                            } catch (e: Exception) {
-                                Log.e(TAG, "Failed to start camera recording", e)
-                                false
+                                }                                true
+                            } catch (e: Exception) {                                false
                             }
                         } ?: false
                     }
@@ -729,12 +683,7 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
                             sessionId,
                             participantId,
                             null,
-                        )
-                        Log.i(TAG, "Enhanced recording service started")
-                    } catch (e: Exception) {
-                        Log.w(TAG, "Failed to start enhanced recording service", e)
-
-                    }
+                        )                    } catch (e: Exception) {                    }
 
                     runOnUiThread {
                         updateUI()
@@ -754,10 +703,7 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
 
                     runOnUiThread {
                         binding.statusText.text = "Recording: ${recordingModes.joinToString(", ")}"
-                    }
-
-                    Log.i(TAG, "Multi-modal recording started: $sessionId")
-                } else {
+                    }                } else {
 
                     isStartingRecording = false
 
@@ -783,10 +729,7 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
                     binding.startButton.isEnabled = true
                     binding.startButton.text = "Start Recording"
                     binding.statusText.text = "Error starting recording"
-                }
-
-                Log.e(TAG, "Error starting recording", e)
-                rgbCameraRecorder?.stopRecording()
+                }                rgbCameraRecorder?.stopRecording()
                 Toast.makeText(
                     this@MultiModalRecordingActivity,
                     "Error starting recording: ${e.message}",
@@ -800,21 +743,13 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
         lifecycleScope.launch {
 
             try {
-                com.mpdc4gsr.gsr.service.EnhancedRecordingService.stopRecording(this@MultiModalRecordingActivity)
-                Log.i(TAG, "Enhanced recording service stopped")
-            } catch (e: Exception) {
-                Log.w(TAG, "Failed to stop enhanced recording service", e)
-
-            }
+                com.mpdc4gsr.gsr.service.EnhancedRecordingService.stopRecording(this@MultiModalRecordingActivity)            } catch (e: Exception) {            }
 
 
             val videoStopped = rgbCameraRecorder?.stopRecording() ?: false
 
             val session = gsrRecorder.stopRecording()
-            session?.let {
-                Log.i(TAG, "Multi-modal recording stopped: ${it.sessionId}")
-
-                val recordingInfo = mutableListOf<String>()
+            session?.let {                val recordingInfo = mutableListOf<String>()
                 if (videoStopped) {
                     recordingInfo.add("Video recording completed")
                 }
@@ -841,12 +776,8 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
 
     private fun triggerSyncEvent() {
         lifecycleScope.launch {
-            if (gsrRecorder.addSyncMark("USER_TRIGGER", "Manual sync event triggered from UI")) {
-                Log.d(TAG, "User sync event triggered successfully")
-                binding.statusText.text = "Sync event added at ${System.currentTimeMillis()}"
-            } else {
-                Log.w(TAG, "Failed to trigger sync event")
-                binding.statusText.text = "Failed to add sync event"
+            if (gsrRecorder.addSyncMark("USER_TRIGGER", "Manual sync event triggered from UI")) {                binding.statusText.text = "Sync event added at ${System.currentTimeMillis()}"
+            } else {                binding.statusText.text = "Failed to add sync event"
             }
         }
     }
@@ -1035,9 +966,7 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
         try {
             val intent = Intent(this, com.mpdc4gsr.gsr.service.EnhancedRecordingService::class.java)
             bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to bind enhanced recording service", e)
-            Toast.makeText(this, "Enhanced recording service not available", Toast.LENGTH_SHORT)
+        } catch (e: Exception) {            Toast.makeText(this, "Enhanced recording service not available", Toast.LENGTH_SHORT)
                 .show()
         }
     }

@@ -7,11 +7,9 @@ from enum import Enum
 from typing import Any, Callable, Dict, Optional
 
 try:
-    from loguru import logger
-except ImportError:
-    try:
-        from ..utils.simple_logger import logger
     except ImportError:
+    try:
+            except ImportError:
 
         class FallbackLogger:
             def info(self, msg) -> Any:
@@ -121,33 +119,27 @@ class ReliableMessageService:
     ) -> Any:
 
         self.message_handlers[message_type] = handler
-        logger.debug(f"Registered handler for message type: {message_type}")
-
+        
     def unregister_message_handler(self, message_type: Any = str) -> Any:
 
         if message_type in self.message_handlers:
             del self.message_handlers[message_type]
-            logger.debug(f"Unregistered handler for message type: {message_type}")
-
+            
     async def initialize(self) -> bool:
 
         try:
             if self.is_running:
-                logger.warning("Messaging service already running")
-                return True
+                                return True
 
-            logger.info("Initializing reliable messaging service...")
-
+            
             self.processing_task = asyncio.create_task(self._message_processor())
             self.cleanup_task = asyncio.create_task(self._cleanup_processor())
 
             self.is_running = True
-            logger.info("Reliable messaging service initialized")
-            return True
+                        return True
 
         except Exception as e:
-            logger.error(f"Failed to initialize messaging service: {e}")
-            await self.shutdown()
+                        await self.shutdown()
             return False
 
     async def shutdown(self) -> Any:
@@ -155,8 +147,7 @@ class ReliableMessageService:
         if not self.is_running:
             return
 
-        logger.info("Shutting down reliable messaging service...")
-
+        
         self.is_running = False
 
         if self.processing_task:
@@ -181,8 +172,7 @@ class ReliableMessageService:
         self.pending_messages.clear()
         self.message_callbacks.clear()
 
-        logger.info("Reliable messaging service shutdown complete")
-
+        
     async def send_message(
             self,
             target_host: str,
@@ -235,21 +225,18 @@ class ReliableMessageService:
     ) -> None:
 
         if message_id not in self.pending_messages:
-            logger.warning(f"Received acknowledgment for unknown message: {message_id}")
-            return
+                        return
 
         message = self.pending_messages[message_id]
 
         if success:
             message.status = MessageStatus.ACKNOWLEDGED
             await self._notify_message_acknowledged(message_id)
-            logger.debug(f"Message {message_id} acknowledged successfully")
-        else:
+                    else:
             message.status = MessageStatus.FAILED
             message.error_message = error_message or "Remote processing failed"
             await self._notify_message_failed(message_id, message.error_message)
-            logger.warning(f"Message {message_id} failed: {message.error_message}")
-
+            
         self._remove_pending_message(message_id)
 
     async def handle_incoming_message(
@@ -259,8 +246,7 @@ class ReliableMessageService:
         try:
             message_type = message_data.get("message_type")
             if not message_type:
-                logger.warning("Received message without message_type")
-                return self._create_error_response("Missing message_type")
+                                return self._create_error_response("Missing message_type")
 
             if message_type == "message_ack":
                 await self._handle_ack_message(message_data)
@@ -280,16 +266,14 @@ class ReliableMessageService:
                     return response
 
                 except Exception as e:
-                    logger.error(f"Handler error for {message_type}: {e}")
-
+                    
                     await self._send_acknowledgment(
                         message_data, False, sender_info, str(e)
                     )
 
                     return self._create_error_response(f"Handler error: {e}")
             else:
-                logger.warning(f"No handler for message type: {message_type}")
-
+                
                 await self._send_acknowledgment(
                     message_data, False, sender_info, f"No handler for {message_type}"
                 )
@@ -299,13 +283,11 @@ class ReliableMessageService:
                 )
 
         except Exception as e:
-            logger.error(f"Error handling incoming message: {e}")
-            return self._create_error_response(f"Processing error: {e}")
+                        return self._create_error_response(f"Processing error: {e}")
 
     async def _message_processor(self):
 
-        logger.debug("Message processor started")
-
+        
         while self.is_running:
             try:
 
@@ -326,11 +308,9 @@ class ReliableMessageService:
                     await asyncio.sleep(0.1)
 
             except Exception as e:
-                logger.error(f"Error in message processor: {e}")
-                await asyncio.sleep(1.0)
+                                await asyncio.sleep(1.0)
 
-        logger.debug("Message processor stopped")
-
+        
     async def _process_message(self, message_id: str):
 
         message = self.pending_messages.get(message_id)
@@ -373,14 +353,12 @@ class ReliableMessageService:
             if success:
                 message.status = MessageStatus.SENT
 
-                logger.debug(f"Message {message_id} sent, waiting for acknowledgment")
-            else:
+                            else:
 
                 await self._handle_send_failure(message_id, "Transport failed")
 
         except Exception as e:
-            logger.error(f"Error sending message {message_id}: {e}")
-            await self._handle_send_failure(message_id, str(e))
+                        await self._handle_send_failure(message_id, str(e))
 
     async def _handle_send_failure(self, message_id: str, error: str):
 
@@ -403,14 +381,10 @@ class ReliableMessageService:
             message.error_message = f"Max retries exceeded: {error}"
             await self._notify_message_failed(message_id, message.error_message)
             self._remove_pending_message(message_id)
-            logger.warning(
-                f"Message {message_id} failed permanently: {message.error_message}"
-            )
-
+            
     async def _cleanup_processor(self):
 
-        logger.debug("Cleanup processor started")
-
+        
         while self.is_running:
             try:
                 await asyncio.sleep(self.cleanup_interval)
@@ -435,10 +409,8 @@ class ReliableMessageService:
                     logger.debug(f"Cleaned up {len(expired_messages)} expired messages")
 
             except Exception as e:
-                logger.error(f"Error in cleanup processor: {e}")
-
-        logger.debug("Cleanup processor stopped")
-
+                
+        
     async def _handle_ack_message(self, message_data: Dict[str, Any]):
 
         original_message_id = message_data.get("original_message_id")
@@ -483,8 +455,7 @@ class ReliableMessageService:
                 sender_info.get("host"), sender_info.get("port"), ack_payload
             )
         except Exception as e:
-            logger.error(f"Failed to send acknowledgment: {e}")
-
+            
     def _create_error_response(self, error_message: str) -> Dict[str, Any]:
 
         return {
@@ -506,8 +477,7 @@ class ReliableMessageService:
             try:
                 callback.on_acknowledged(message_id)
             except Exception as e:
-                logger.error(f"Error in acknowledgment callback: {e}")
-
+                
     async def _notify_message_failed(self, message_id: str, error_message: str):
 
         callback = self.message_callbacks.get(message_id)
@@ -515,8 +485,7 @@ class ReliableMessageService:
             try:
                 callback.on_failed(message_id, error_message)
             except Exception as e:
-                logger.error(f"Error in failure callback: {e}")
-
+                
     async def _notify_message_retrying(self, message_id: str, attempt: int):
 
         callback = self.message_callbacks.get(message_id)
@@ -524,8 +493,7 @@ class ReliableMessageService:
             try:
                 callback.on_retrying(message_id, attempt)
             except Exception as e:
-                logger.error(f"Error in retry callback: {e}")
-
+                
     def get_pending_message_count(self) -> int:
 
         return len(self.pending_messages)

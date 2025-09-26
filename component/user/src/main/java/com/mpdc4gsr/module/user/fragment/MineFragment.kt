@@ -17,7 +17,6 @@ import androidx.lifecycle.lifecycleScope
 import com.blankj.utilcode.util.CleanUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.bumptech.glide.request.RequestOptions
-import com.elvishew.xlog.XLog
 import com.google.gson.Gson
 import com.mpdc4gsr.libunified.app.BaseApplication
 import com.mpdc4gsr.libunified.app.bean.event.PDFEvent
@@ -195,8 +194,7 @@ class MineFragment : BaseFragment(), View.OnClickListener {
                         logPath = ""
                         sn = devSn
                         lastConnectSn = devSn
-                        XLog.e("bcf", "sn $sn  logPath $logPath")
-                    }.let { feedBackBean ->
+                        X                    }.let { feedBackBean ->
                         val intent = Intent(requireContext(), FeedbackActivity::class.java)
                         intent.putExtra(FeedbackActivity.FEEDBACKBEAN, feedBackBean)
                         startActivity(intent)
@@ -261,13 +259,11 @@ class MineFragment : BaseFragment(), View.OnClickListener {
 
                     changeLoginStyle()
                 } catch (e: Exception) {
-                    XLog.e(" [ph][ph][ph][ph]: ${e.message}")
-                }
+                    X                }
             }
         } else {
 
-            XLog.e(" [ph][ph][ph][ph]")
-            changeLoginStyle()
+            X            changeLoginStyle()
             settingUserImgNight.setImageResource(LibAppR.mipmap.ic_default_user_head)
         }
     }
@@ -340,8 +336,7 @@ class MineFragment : BaseFragment(), View.OnClickListener {
                     AppDatabase.getInstance().thermalDao().deleteByUserId(SharedManager.getUserId())
                     CleanUtils.cleanExternalCache()
                 } catch (e: Exception) {
-                    XLog.w("[ph][ph][ph][ph][ph][ph]: ${e.message}")
-                }
+                    X                }
                 delay(1000)
             }
             dismissLoadingDialog()

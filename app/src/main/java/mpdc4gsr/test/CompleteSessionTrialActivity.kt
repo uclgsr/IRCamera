@@ -1,7 +1,6 @@
 package mpdc4gsr.test
 
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -101,9 +100,7 @@ class CompleteSessionTrialActivity : AppCompatActivity() {
             recordingController = RecordingController(this, this)
             updateResults("✓ Complete session trial components initialized\n\n")
         } catch (e: Exception) {
-            updateResults("✗ Failed to initialize components: ${e.message}\n\n")
-            Log.e(TAG, "Failed to initialize components", e)
-        }
+            updateResults("✗ Failed to initialize components: ${e.message}\n\n")        }
     }
 
     /**
@@ -176,9 +173,7 @@ class CompleteSessionTrialActivity : AppCompatActivity() {
             // Require at least 2 sensors for meaningful trial
             diagnostics.totalSensorsActive >= 2
 
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to initialize sensors", e)
-            false
+        } catch (e: Exception) {            false
         }
     }
 
@@ -216,9 +211,7 @@ class CompleteSessionTrialActivity : AppCompatActivity() {
 
             recordingStarted
 
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to start comprehensive recording", e)
-            false
+        } catch (e: Exception) {            false
         }
     }
 
@@ -314,9 +307,7 @@ class CompleteSessionTrialActivity : AppCompatActivity() {
 
         } catch (e: Exception) {
             testResults.append("✗ Error stopping trial: ${e.message}\n")
-            updateResults(testResults.toString())
-            Log.e(TAG, "Error stopping complete session trial", e)
-        }
+            updateResults(testResults.toString())        }
     }
 
     private suspend fun verifySessionOutput() {
@@ -348,9 +339,7 @@ class CompleteSessionTrialActivity : AppCompatActivity() {
 
         } catch (e: Exception) {
             testResults.append("✗ Verification failed: ${e.message}\n")
-            updateResults(testResults.toString())
-            Log.e(TAG, "Failed to verify session output", e)
-        }
+            updateResults(testResults.toString())        }
     }
 
     private fun verifyOutputFiles(sessionDir: File): String {
@@ -554,9 +543,7 @@ class CompleteSessionTrialActivity : AppCompatActivity() {
 
         } catch (e: Exception) {
             testResults.append("Report generation error: ${e.message}\n")
-            updateResults(testResults.toString())
-            Log.e(TAG, "Failed to generate complete report", e)
-        }
+            updateResults(testResults.toString())        }
     }
 
     private fun updateResults(text: String) {
@@ -578,9 +565,7 @@ class CompleteSessionTrialActivity : AppCompatActivity() {
                 lifecycleScope.launch {
                     try {
                         controller.stopSession()
-                    } catch (e: Exception) {
-                        Log.e(TAG, "Error stopping recording on destroy", e)
-                    }
+                    } catch (e: Exception) {                    }
                 }
             }
         }
@@ -589,9 +574,7 @@ class CompleteSessionTrialActivity : AppCompatActivity() {
             lifecycleScope.launch {
                 try {
                     controller.cleanup()
-                } catch (e: Exception) {
-                    Log.e(TAG, "Error cleaning up recording controller", e)
-                }
+                } catch (e: Exception) {                }
             }
         }
     }

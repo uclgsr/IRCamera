@@ -1,5 +1,4 @@
 import asyncio
-import logging
 import numpy as np
 import queue
 import time
@@ -268,19 +267,16 @@ class SamsungS22Driver(DeviceDriver):
             self.status.connection_quality = 95.0
             self.status.last_heartbeat = time.time()
 
-            logger.info(f"Connected to Samsung S22: {self.device_spec.device_id}")
-            return True
+                        return True
 
         except Exception as e:
-            logger.error(f"Samsung S22 connection failed: {e}")
-            return False
+                        return False
 
     async def disconnect(self) -> bool:
 
         self.status.connected = False
         self.status.connection_quality = 0.0
-        logger.info(f"Disconnected from Samsung S22: {self.device_spec.device_id}")
-        return True
+                return True
 
     async def configure_sensor(self, sensor_config: SensorConfiguration) -> bool:
 
@@ -296,29 +292,24 @@ class SamsungS22Driver(DeviceDriver):
                 return await self._configure_generic_sensor(sensor_config)
 
         except Exception as e:
-            logger.error(f"Samsung S22 sensor configuration failed: {e}")
-            return False
+                        return False
 
     async def _configure_gsr_sensor(self, config: SensorConfiguration) -> bool:
 
-        logger.info(f"Configured GSR sensor at {config.sampling_rate}Hz")
-        return True
+                return True
 
     async def _configure_thermal_sensor(self, config: SensorConfiguration) -> bool:
 
-        logger.info(f"Configured thermal sensor at {config.sampling_rate}Hz")
-        return True
+                return True
 
     async def _configure_camera_sensor(self, config: SensorConfiguration) -> bool:
 
         # Would use Android CameraX API
-        logger.info(f"Configured RGB camera at {config.sampling_rate}fps")
-        return True
+                return True
 
     async def _configure_generic_sensor(self, config: SensorConfiguration) -> bool:
 
-        logger.info(f"Configured {config.sensor_type.value} sensor")
-        return True
+                return True
 
     async def start_streaming(self, sensors: List[SensorType]) -> bool:
 
@@ -337,8 +328,7 @@ class SamsungS22Driver(DeviceDriver):
             return True
 
         except Exception as e:
-            logger.error(f"Samsung S22 streaming start failed: {e}")
-            return False
+                        return False
 
     async def stop_streaming(self) -> bool:
 
@@ -346,8 +336,7 @@ class SamsungS22Driver(DeviceDriver):
         self.status.sensor_quality = {}
         self.status.data_rate_mbps = 0.0
 
-        logger.info(f"Stopped streaming on Samsung S22: {self.device_spec.device_id}")
-        return True
+                return True
 
     async def get_status(self) -> DeviceStatus:
 
@@ -363,8 +352,7 @@ class SamsungS22Driver(DeviceDriver):
     async def calibrate_sensor(self, sensor_type: SensorType,
                                calibration_data: Dict[str, Any]) -> bool:
 
-        logger.info(f"Calibrated {sensor_type.value} on Samsung S22")
-        return True
+                return True
 
 
 class GooglePixel7Driver(DeviceDriver):
@@ -434,24 +422,20 @@ class GooglePixel7Driver(DeviceDriver):
             self.status.connection_quality = 98.0
             self.status.last_heartbeat = time.time()
 
-            logger.info(f"Connected to Google Pixel 7: {self.device_spec.device_id}")
-            return True
+                        return True
 
         except Exception as e:
-            logger.error(f"Google Pixel 7 connection failed: {e}")
-            return False
+                        return False
 
     async def disconnect(self) -> bool:
 
         self.status.connected = False
         self.status.connection_quality = 0.0
-        logger.info(f"Disconnected from Google Pixel 7: {self.device_spec.device_id}")
-        return True
+                return True
 
     async def configure_sensor(self, sensor_config: SensorConfiguration) -> bool:
 
-        logger.info(f"Configured {sensor_config.sensor_type.value} on Pixel 7")
-        return True
+                return True
 
     async def start_streaming(self, sensors: List[SensorType]) -> bool:
 
@@ -487,8 +471,7 @@ class GooglePixel7Driver(DeviceDriver):
     async def calibrate_sensor(self, sensor_type: SensorType,
                                calibration_data: Dict[str, Any]) -> bool:
 
-        logger.info(f"Calibrated {sensor_type.value} on Pixel 7")
-        return True
+                return True
 
 
 class DesktopStationDriver(DeviceDriver):
@@ -569,24 +552,20 @@ class DesktopStationDriver(DeviceDriver):
             self.status.connection_quality = 99.0
             self.status.last_heartbeat = time.time()
 
-            logger.info(f"Connected to Desktop Station: {self.device_spec.device_id}")
-            return True
+                        return True
 
         except Exception as e:
-            logger.error(f"Desktop Station connection failed: {e}")
-            return False
+                        return False
 
     async def disconnect(self) -> bool:
 
         self.status.connected = False
         self.status.connection_quality = 0.0
-        logger.info(f"Disconnected from Desktop Station: {self.device_spec.device_id}")
-        return True
+                return True
 
     async def configure_sensor(self, sensor_config: SensorConfiguration) -> bool:
 
-        logger.info(f"Configured {sensor_config.sensor_type.value} on Desktop Station")
-        return True
+                return True
 
     async def start_streaming(self, sensors: List[SensorType]) -> bool:
 
@@ -622,8 +601,7 @@ class DesktopStationDriver(DeviceDriver):
     async def calibrate_sensor(self, sensor_type: SensorType,
                                calibration_data: Dict[str, Any]) -> bool:
 
-        logger.info(f"Calibrated {sensor_type.value} on Desktop Station")
-        return True
+                return True
 
 
 class WearableDeviceDriver(DeviceDriver):
@@ -691,24 +669,20 @@ class WearableDeviceDriver(DeviceDriver):
             self.status.connection_quality = 85.0
             self.status.last_heartbeat = time.time()
 
-            logger.info(f"Connected to Wearable Device: {self.device_spec.device_id}")
-            return True
+                        return True
 
         except Exception as e:
-            logger.error(f"Wearable Device connection failed: {e}")
-            return False
+                        return False
 
     async def disconnect(self) -> bool:
 
         self.status.connected = False
         self.status.connection_quality = 0.0
-        logger.info(f"Disconnected from Wearable Device: {self.device_spec.device_id}")
-        return True
+                return True
 
     async def configure_sensor(self, sensor_config: SensorConfiguration) -> bool:
 
-        logger.info(f"Configured {sensor_config.sensor_type.value} on Wearable")
-        return True
+                return True
 
     async def start_streaming(self, sensors: List[SensorType]) -> bool:
 
@@ -744,8 +718,7 @@ class WearableDeviceDriver(DeviceDriver):
     async def calibrate_sensor(self, sensor_type: SensorType,
                                calibration_data: Dict[str, Any]) -> bool:
 
-        logger.info(f"Calibrated {sensor_type.value} on Wearable")
-        return True
+                return True
 
 
 class HardwareEcosystemManager:
@@ -766,14 +739,12 @@ class HardwareEcosystemManager:
 
         self.performance_stats: Dict[str, Dict] = {}
 
-        logger.info("Hardware Ecosystem Manager initialized")
-
+        
     def register_device_type(self, device_type: DeviceType, driver_class):
 
         self.device_drivers = getattr(self, 'device_drivers', {})
         self.device_drivers[device_type] = driver_class
-        logger.info(f"Registered device type: {device_type.value}")
-
+        
     async def discover_devices(self, device_types: List[DeviceType] = None,
                                timeout_seconds: float = 30.0) -> List[DeviceSpecification]:
 
@@ -793,8 +764,7 @@ class HardwareEcosystemManager:
             return discovered_devices
 
         except Exception as e:
-            logger.error(f"Device discovery failed: {e}")
-            return []
+                        return []
 
     async def _discover_device_type(self, device_type: DeviceType,
                                     timeout: float) -> List[DeviceSpecification]:
@@ -837,13 +807,11 @@ class HardwareEcosystemManager:
         try:
 
             if device_id in self.devices:
-                logger.warning(f"Device already connected: {device_id}")
-                return True
+                                return True
 
             driver = self._create_device_driver(device_id, device_type)
             if not driver:
-                logger.error(f"Failed to create driver for {device_id}")
-                return False
+                                return False
 
             success = await driver.connect()
 
@@ -857,15 +825,12 @@ class HardwareEcosystemManager:
                 driver.set_status_callback(
                     lambda status: self._handle_device_status(device_id, status))
 
-                logger.info(f"Successfully connected to device: {device_id}")
-                return True
+                                return True
             else:
-                logger.error(f"Failed to connect to device: {device_id}")
-                return False
+                                return False
 
         except Exception as e:
-            logger.error(f"Device connection error: {e}")
-            return False
+                        return False
 
     def _create_device_driver(self, device_id: str, device_type: DeviceType = None) -> Optional[
         DeviceDriver]:
@@ -880,8 +845,7 @@ class HardwareEcosystemManager:
             elif "wearable" in device_id.lower():
                 device_type = DeviceType.WEARABLE_DEVICE
             else:
-                logger.error(f"Cannot determine device type for {device_id}")
-                return None
+                                return None
 
         if device_type == DeviceType.SAMSUNG_S22:
             return SamsungS22Driver(device_id)
@@ -892,15 +856,13 @@ class HardwareEcosystemManager:
         elif device_type == DeviceType.WEARABLE_DEVICE:
             return WearableDeviceDriver(device_id)
         else:
-            logger.error(f"Unsupported device type: {device_type}")
-            return None
+                        return None
 
     async def disconnect_device(self, device_id: str) -> bool:
 
         try:
             if device_id not in self.devices:
-                logger.warning(f"Device not connected: {device_id}")
-                return True
+                                return True
 
             driver = self.devices[device_id]
             success = await driver.disconnect()
@@ -913,15 +875,12 @@ class HardwareEcosystemManager:
                 if device_id in self.data_streams:
                     del self.data_streams[device_id]
 
-                logger.info(f"Successfully disconnected from device: {device_id}")
-                return True
+                                return True
             else:
-                logger.error(f"Failed to disconnect from device: {device_id}")
-                return False
+                                return False
 
         except Exception as e:
-            logger.error(f"Device disconnection error: {e}")
-            return False
+                        return False
 
     async def configure_multi_device_session(self,
                                              device_configs: Dict[str, Dict[str, Any]]) -> bool:
@@ -930,16 +889,13 @@ class HardwareEcosystemManager:
 
             master_device = self._select_sync_master(list(device_configs.keys()))
             if not master_device:
-                logger.error("No suitable sync master device found")
-                return False
+                                return False
 
             self.sync_master_device = master_device
-            logger.info(f"Selected sync master: {master_device}")
-
+            
             for device_id, config in device_configs.items():
                 if device_id not in self.devices:
-                    logger.error(f"Device not connected: {device_id}")
-                    return False
+                                        return False
 
                 driver = self.devices[device_id]
 
@@ -948,15 +904,13 @@ class HardwareEcosystemManager:
                     success = await driver.configure_sensor(sensor_conf)
 
                     if not success:
-                        logger.error(f"Failed to configure sensor on {device_id}")
-                        return False
+                                                return False
 
             logger.info(f"Successfully configured {len(device_configs)} devices for session")
             return True
 
         except Exception as e:
-            logger.error(f"Multi-device configuration failed: {e}")
-            return False
+                        return False
 
     def _select_sync_master(self, device_ids: List[str]) -> Optional[str]:
 
@@ -992,13 +946,11 @@ class HardwareEcosystemManager:
 
         try:
             if not self.sync_master_device:
-                logger.error("No sync master device configured")
-                return False
+                                return False
 
             for device_id in device_ids:
                 if device_id not in self.devices:
-                    logger.error(f"Device not ready: {device_id}")
-                    return False
+                                        return False
 
                 await self._prepare_device_for_sync_start(device_id)
 
@@ -1013,13 +965,11 @@ class HardwareEcosystemManager:
             return True
 
         except Exception as e:
-            logger.error(f"Synchronized recording start failed: {e}")
-            return False
+                        return False
 
     async def _prepare_device_for_sync_start(self, device_id: str) -> None:
 
-        logger.debug(f"Preparing device {device_id} for sync start")
-
+        
     async def _send_sync_start_command(self, driver: DeviceDriver, timestamp: float) -> None:
 
         # In real implementation, would send precise timestamp for synchronized start
@@ -1039,8 +989,7 @@ class HardwareEcosystemManager:
             return True
 
         except Exception as e:
-            logger.error(f"Synchronized recording stop failed: {e}")
-            return False
+                        return False
 
     def _handle_device_data(self, device_id: str, data: Dict[str, Any]) -> None:
 
@@ -1055,8 +1004,7 @@ class HardwareEcosystemManager:
             self._update_aggregated_data(device_id, data)
 
         except Exception as e:
-            logger.error(f"Error handling data from {device_id}: {e}")
-
+            
     def _handle_device_status(self, device_id: str, status: DeviceStatus) -> None:
 
         try:
@@ -1078,8 +1026,7 @@ class HardwareEcosystemManager:
                 stats["avg_quality"] = (stats["avg_quality"] + avg_sensor_quality) / 2
 
         except Exception as e:
-            logger.error(f"Error handling status from {device_id}: {e}")
-
+            
     def _update_aggregated_data(self, device_id: str, data: Dict[str, Any]) -> None:
 
         timestamp = data.get("timestamp", time.time())
@@ -1168,8 +1115,7 @@ class HardwareEcosystemManager:
                 calibration_results[device_id] = device_result
 
             except Exception as e:
-                logger.error(f"Calibration failed for {device_id}: {e}")
-                calibration_results[device_id] = False
+                                calibration_results[device_id] = False
 
         return calibration_results
 
@@ -1186,7 +1132,6 @@ class HardwareEcosystemManager:
             self.aggregated_data.clear()
             self.performance_stats.clear()
 
-            logger.info("Hardware Ecosystem Manager cleanup completed")
-
+            
         except Exception as e:
-            logger.error(f"Cleanup failed: {e}")
+            

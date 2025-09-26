@@ -130,9 +130,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
                 pw.print(field.getName() + " : ");
                 pw.println(field.get(null).toString());
             }
-        } catch (Exception e) {
-            Log.i(TAG, "an error occured when collect crash info" + e);
-        }
+        } catch (Exception e) {        }
 
         ex.printStackTrace(pw);
         return logFile;

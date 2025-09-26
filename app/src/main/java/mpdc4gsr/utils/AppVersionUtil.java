@@ -67,7 +67,7 @@ public class AppVersionUtil {
             CommonBean commonBean = ResponseBean.convertCommonBean(response, null);
             if (commonBean.code.equals(SUCCESS)) {
                 AppInfoBean appInfoBean = LMS.getInstance().getUpdateAppInfoBean();
-                XLog.w("bcf", "appUpdate Information:" + GsonUtils.toJson(appInfoBean));
+                X);
                 if (appInfoBean != null) {
                     if (appInfoBean.getVersionCode() > getDealVersionCode()) {
                         if (isShowDialog) {
@@ -232,12 +232,10 @@ public class AppVersionUtil {
             params.addBodyParameter(params2[0], params2[1]);
             params.addBodyParameter(params3[0], params3[1]);
         } catch (Exception e) {
-            XLog.e("bcf", "Upgrade Interface Parse Error");
-        }
+            X        }
         fileName = "mpdc4gsr" + System.currentTimeMillis() + ".zip";
         String path = mContext.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath() + File.separator + fileName;
-        XLog.e("bcf", "download path:" + path);
-        params.setSaveFilePath(path);
+        X        params.setSaveFilePath(path);
         params.setCacheDirName(fileName);
         params.setAutoResume(true);
         params.setExecutor(new PriorityExecutor(3, true));
@@ -246,44 +244,39 @@ public class AppVersionUtil {
         x.http().get(params, new Callback.ProgressCallback<File>() {
             @Override
             public void onWaiting() {
-                XLog.e("bcf", "onWaiting");
-            }
+                X            }
 
             @Override
             public void onStarted() {
-                XLog.e("bcf", "onStarted");
-            }
+                X            }
 
             @Override
             public void onLoading(long total, long current, boolean isDownloading) {
-                XLog.w("bcf", "onLoading： " + current + "/" + total);
-                int progress = (int) (current * 100 / total);
+                X                int progress = (int) (current * 100 / total);
                 LmsUpdateDialog.Build.INSTANCE.setProgressNum(progress / 100f);
             }
 
             @Override
             public void onSuccess(File result) {
-                XLog.e("bcf", "onSuccess,start install apk");
-                LmsUpdateDialog.Build.INSTANCE.dismiss();
+                X                LmsUpdateDialog.Build.INSTANCE.dismiss();
                 installApkNew();
             }
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
                 ex.printStackTrace();
-                XLog.e("bcf", "onError " + ex.getMessage());
+                X);
             }
 
             @Override
             public void onCancelled(CancelledException cex) {
                 cex.printStackTrace();
-                XLog.e("bcf", "onCancelled " + cex.getMessage());
+                X);
             }
 
             @Override
             public void onFinished() {
-                XLog.e("bcf", "onFinished");
-            }
+                X            }
         });
     }
 

@@ -1,7 +1,6 @@
 package mpdc4gsr.controller
 
 import android.content.Context
-import android.util.Log
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -99,9 +98,7 @@ class ComprehensiveRecordingController(
             lastHealthCheck = System.currentTimeMillis(),
             consecutiveFailures = 0,
             lastError = null
-        )
-        Log.d(TAG, "Added sensor recorder with health monitoring: $name")
-        updateSensorStatusFlow()
+        )        updateSensorStatusFlow()
     }
 
     /**
@@ -111,27 +108,14 @@ class ComprehensiveRecordingController(
     suspend fun checkForCrashedSessions(): Boolean {
         return try {
             val crashRecoveryResult = crashRecoveryManager.checkForCrashedSessions()
-            if (crashRecoveryResult.hasCrashedSession) {
-                Log.w(TAG, "Detected crashed session: ${crashRecoveryResult.recoveredSession?.sessionId}")
-                crashRecoveryResult.recoveredSession?.let { recoveredSession ->
+            if (crashRecoveryResult.hasCrashedSession) {                crashRecoveryResult.recoveredSession?.let { recoveredSession ->
                     val recoveryResult = crashRecoveryManager.recoverCrashedSession(recoveredSession)
-                    if (recoveryResult.success) {
-                        Log.i(
-                            TAG,
-                            "Successfully recovered crashed session with ${recoveryResult.recoveryActions.size} actions"
-                        )
-                    } else {
-                        Log.e(TAG, "Failed to recover crashed session: ${recoveryResult.error}")
-                    }
+                    if (recoveryResult.success) {                    } else {                    }
                 }
                 true
-            } else {
-                Log.i(TAG, "No crashed sessions detected")
-                false
+            } else {                false
             }
-        } catch (e: Exception) {
-            Log.e(TAG, "Error checking for crashed sessions", e)
-            false
+        } catch (e: Exception) {            false
         }
     }
 
@@ -145,29 +129,21 @@ class ComprehensiveRecordingController(
         return withContext(Dispatchers.IO) {
             try {
                 // Enforce single-session operation
-                if (_isRecording.get()) {
-                    Log.w(TAG, "Recording already in progress, ignoring ${triggerSource.name} trigger")
-                    return@withContext true
+                if (_isRecording.get()) {                    return@withContext true
                 }
 
                 // Transition to STARTING state
                 val transitionSuccess = transitionSessionState(SessionState.IDLE, SessionState.STARTING)
-                if (!transitionSuccess) {
-                    Log.w(TAG, "Failed to transition to STARTING state - invalid current state")
-                    return@withContext false
+                if (!transitionSuccess) {                    return@withContext false
                 }
 
                 lastTriggerSource = triggerSource
-                addSessionEvent("SESSION_START_REQUESTED", triggerSource = triggerSource)
-
-                Log.i(TAG, "Starting comprehensive recording with validation (trigger: ${triggerSource.name})")
+                addSessionEvent("SESSION_START_REQUESTED", triggerSource = triggerSource)")
                 _recordingStateFlow.value = RecordingState.STARTING
 
                 // Phase 1: Validate recording prerequisites
                 val validationResult = validateRecordingPrerequisites(enabledSensors, estimatedDurationMinutes)
-                if (!validationResult.isValid) {
-                    Log.e(TAG, "Prerequisites validation failed: ${validationResult.failureReason}")
-                    transitionSessionState(SessionState.STARTING, SessionState.STOPPED_FAILED)
+                if (!validationResult.isValid) {                    transitionSessionState(SessionState.STARTING, SessionState.STOPPED_FAILED)
                     _recordingStateFlow.value = RecordingState.ERROR
                     addSessionEvent(
                         "VALIDATION_FAILED",
@@ -179,9 +155,7 @@ class ComprehensiveRecordingController(
                 }
 
                 // Phase 2: Request required permissions before starting
-                if (!requestRequiredPermissions(enabledSensors)) {
-                    Log.e(TAG, "Failed to obtain required permissions")
-                    transitionSessionState(SessionState.STARTING, SessionState.STOPPED_FAILED)
+                if (!requestRequiredPermissions(enabledSensors)) {                    transitionSessionState(SessionState.STARTING, SessionState.STOPPED_FAILED)
                     _recordingStateFlow.value = RecordingState.ERROR
                     addSessionEvent(
                         "PERMISSION_FAILED",
@@ -216,9 +190,7 @@ class ComprehensiveRecordingController(
                 for (sensorName in enabledSensors) {
                     val sensor = sensorRecorders[sensorName]
                     if (sensor != null) {
-                        try {
-                            Log.i(TAG, "Starting sensor: $sensorName")
-                            val sensorDir = File(sessionDir.rootDir, sensorName.lowercase())
+                        try {                            val sensorDir = File(sessionDir.rootDir, sensorName.lowercase())
                             sensorDir.mkdirs()
 
                             sessionMetadata?.let { meta ->
@@ -228,13 +200,9 @@ class ComprehensiveRecordingController(
                                 if (success) {
                                     activeRecorders[sensorName] = true
                                     sensorsStarted++
-                                    updateSensorHealth(sensorName, true)
-                                    Log.i(TAG, "✅ Started sensor: $sensorName")
-                                } else {
+                                    updateSensorHealth(sensorName, true)                                } else {
                                     updateSensorHealth(sensorName, false)
-                                    failedSensors.add(sensorName)
-                                    Log.w(TAG, "❌ Failed to start sensor: $sensorName - continuing with others")
-                                }
+                                    failedSensors.add(sensorName)                                }
                                 success
                             } ?: run {
                                 // Handle case where sessionMetadata is null
@@ -243,26 +211,19 @@ class ComprehensiveRecordingController(
                                 if (success) {
                                     activeRecorders[sensorName] = true
                                     sensorsStarted++
-                                    updateSensorHealth(sensorName, true)
-                                    Log.i(TAG, "✅ Started sensor: $sensorName")
-                                } else {
+                                    updateSensorHealth(sensorName, true)                                } else {
                                     updateSensorHealth(sensorName, false)
-                                    failedSensors.add(sensorName)
-                                    Log.w(TAG, "❌ Failed to start sensor: $sensorName - continuing with others")
-                                }
+                                    failedSensors.add(sensorName)                                }
                                 success
                             }
                         } catch (e: Exception) {
-                            // Isolate sensor failures - don't let one sensor crash the entire session
-                            Log.w(TAG, "Exception starting sensor $sensorName (isolated): ${e.message}", e)
+                            // Isolate sensor failures - don't let one sensor crash the entire session: ${e.message}", e)
                             updateSensorHealth(sensorName, false)
                             sensorResults[sensorName] = false
                             failedSensors.add(sensorName)
                             // Continue with other sensors instead of failing the entire session
                         }
-                    } else {
-                        Log.w(TAG, "⚠️ Sensor recorder not available: $sensorName - continuing with others")
-                        sensorResults[sensorName] = false
+                    } else {                        sensorResults[sensorName] = false
                         failedSensors.add(sensorName)
                     }
                 }
@@ -277,35 +238,20 @@ class ComprehensiveRecordingController(
 
                     // Start monitoring services
                     startHealthMonitoring()
-                    startStatisticsUpdates()
-
-                    Log.i(TAG, "🚀 Recording started successfully with $sensorsStarted/${enabledSensors.size} sensors")
-
-                    // Log detailed status with fault tolerance info
-                    if (failedSensors.isNotEmpty()) {
-                        Log.w(
-                            TAG,
-                            "⚠️ Partial recording: Failed sensors [${failedSensors.joinToString(", ")}] - continuing with active sensors"
+                    startStatisticsUpdates()                    // Log detailed status with fault tolerance info
+                    if (failedSensors.isNotEmpty()) {}] - continuing with active sensors"
                         )
-                    }
-
-                    Log.i(
-                        TAG,
-                        "📊 Sensor status: ${sensorResults.entries.joinToString { "${it.key}=${if (it.value) "✅" else "❌"}" }}"
+                    }"✅" else "❌"}" }}"
                     )
 
                     return@withContext true
-                } else {
-                    Log.e(TAG, "❌ No sensors started successfully - aborting recording")
-                    cleanupFailedRecording()
+                } else {                    cleanupFailedRecording()
                     transitionSessionState(SessionState.STARTING, SessionState.STOPPED_FAILED)
                     _recordingStateFlow.value = RecordingState.ERROR
                     return@withContext false
                 }
 
-            } catch (e: Exception) {
-                Log.e(TAG, "Critical error starting recording", e)
-                cleanupFailedRecording()
+            } catch (e: Exception) {                cleanupFailedRecording()
                 transitionSessionState(SessionState.STARTING, SessionState.STOPPED_FAILED)
                 _recordingStateFlow.value = RecordingState.ERROR
                 return@withContext false
@@ -349,28 +295,21 @@ class ComprehensiveRecordingController(
             val unhealthySensors = enabledSensors.filter {
                 sensorHealthStatus[it]?.isHealthy == false
             }
-            if (unhealthySensors.isNotEmpty()) {
-                Log.w(TAG, "⚠️ Sensors with health issues: ${unhealthySensors.joinToString()}")
+            if (unhealthySensors.isNotEmpty()) {}")
 
             }
 
             return ValidationResult(true, "All prerequisites validated successfully")
 
-        } catch (e: Exception) {
-            Log.e(TAG, "Error during prerequisite validation", e)
-            return ValidationResult(false, "Validation error: ${e.message}")
+        } catch (e: Exception) {            return ValidationResult(false, "Validation error: ${e.message}")
         }
     }
 
 
     private suspend fun requestRequiredPermissions(enabledSensors: List<String>): Boolean {
-        return try {
-            Log.i(TAG, "Requesting permissions for sensors: $enabledSensors")
-            // In a real implementation, you'd check and request permissions here
+        return try {            // In a real implementation, you'd check and request permissions here
             true
-        } catch (e: Exception) {
-            Log.e(TAG, "Error requesting permissions", e)
-            false
+        } catch (e: Exception) {            false
         }
     }
 
@@ -396,33 +335,23 @@ class ComprehensiveRecordingController(
             crashRecoveryMarker?.writeText("RECORDING_ACTIVE:$sessionId:${System.currentTimeMillis()}")
 
             val sessionDirectory = currentSessionDirectory?.rootDir?.absolutePath ?: ""
-            crashRecoveryManager.markSessionActive(sessionId, sessionDirectory, enabledSensors)
-
-            Log.d(TAG, "Created crash recovery markers for session: $sessionId")
-        } catch (e: Exception) {
-            Log.w(TAG, "Failed to create crash recovery markers", e)
-        }
+            crashRecoveryManager.markSessionActive(sessionId, sessionDirectory, enabledSensors)        } catch (e: Exception) {        }
     }
 
 
     suspend fun stopRecording(triggerSource: TriggerSource = TriggerSource.LOCAL_UI): Boolean {
         return withContext(Dispatchers.IO) {
             try {
-                if (!_isRecording.get()) {
-                    Log.w(TAG, "No recording in progress (trigger: ${triggerSource.name})")
+                if (!_isRecording.get()) {")
                     return@withContext true
                 }
 
                 val transitionSuccess = transitionSessionState(SessionState.RECORDING, SessionState.STOPPING)
-                if (!transitionSuccess) {
-                    Log.w(
-                        TAG,
-                        "Failed to transition to STOPPING state - current state: ${currentSessionState.get().name}"
+                if (!transitionSuccess) {.name}"
                     )
                 }
 
-                addSessionEvent("SESSION_STOP_REQUESTED", triggerSource = triggerSource)
-                Log.i(TAG, "Stopping comprehensive recording with graceful teardown (trigger: ${triggerSource.name})")
+                addSessionEvent("SESSION_STOP_REQUESTED", triggerSource = triggerSource)")
                 _recordingStateFlow.value = RecordingState.STOPPING
                 _isRecording.set(false)
 
@@ -433,10 +362,7 @@ class ComprehensiveRecordingController(
                     if (isActive) {
                         try {
                             sensorRecorders[sensorName]?.stopRecording()
-                            stopResults[sensorName] = true
-                            Log.i(TAG, "✅ Stopped sensor: $sensorName")
-                        } catch (e: Exception) {
-                            Log.w(TAG, "❌ Error stopping sensor $sensorName (isolated): ${e.message}", e)
+                            stopResults[sensorName] = true                        } catch (e: Exception) {: ${e.message}", e)
                             stopResults[sensorName] = false
                             sensorErrors.add("$sensorName: ${e.message}")
                         }
@@ -454,20 +380,12 @@ class ComprehensiveRecordingController(
                 crashRecoveryMarker?.delete()
                 currentSessionId?.let { sessionId ->
                     crashRecoveryManager.markSessionCompleted(sessionId)
-                }
-                Log.d(TAG, "Removed crash recovery markers and cleared persistent state")
-
-                stopForegroundService()
+                }                stopForegroundService()
 
                 sessionMetadata = null
                 currentSessionId = null
                 currentSessionDirectory = null
-                _recordingStateFlow.value = RecordingState.IDLE
-
-                Log.i(TAG, "🏁 Recording stopped successfully (duration: ${sessionDuration}ms)")
-                Log.i(
-                    TAG,
-                    "📊 Stop results: ${stopResults.entries.joinToString { "${it.key}=${if (it.value) "✅" else "❌"}" }}"
+                _recordingStateFlow.value = RecordingState.IDLE")"✅" else "❌"}" }}"
                 )
 
                 val finalSessionState = when {
@@ -479,15 +397,11 @@ class ComprehensiveRecordingController(
 
                 transitionSessionState(SessionState.STOPPING, finalSessionState)
 
-                if (sensorErrors.isNotEmpty()) {
-                    Log.w(TAG, "⚠️ Some sensors had stop errors but session was finalized successfully")
-                }
+                if (sensorErrors.isNotEmpty()) {                }
 
                 return@withContext true
 
-            } catch (e: Exception) {
-                Log.e(TAG, "Critical error during recording stop", e)
-                transitionSessionState(currentSessionState.get(), SessionState.STOPPED_FAILED)
+            } catch (e: Exception) {                transitionSessionState(currentSessionState.get(), SessionState.STOPPED_FAILED)
                 cleanupFailedRecording()
                 return@withContext false
             }
@@ -502,20 +416,13 @@ class ComprehensiveRecordingController(
                         if (isActive) {
                             checkSensorHealth(sensorName)
                             val healthInfo = sensorHealthStatus[sensorName]
-                            if (healthInfo != null && !healthInfo.isHealthy && healthInfo.consecutiveFailures >= 3) {
-                                Log.w(
-                                    TAG,
-                                    "Sensor $sensorName has failed ${healthInfo.consecutiveFailures} times - attempting reconnection"
-                                )
-                                attemptSensorReconnection(sensorName)
+                            if (healthInfo != null && !healthInfo.isHealthy && healthInfo.consecutiveFailures >= 3) {                                attemptSensorReconnection(sensorName)
                             }
                         }
                     }
                     updateSensorStatusFlow()
                     delay(5000)
-                } catch (e: Exception) {
-                    Log.w(TAG, "Error during health monitoring", e)
-                    delay(10000)
+                } catch (e: Exception) {                    delay(10000)
                 }
             }
         }
@@ -525,14 +432,11 @@ class ComprehensiveRecordingController(
         val currentAttempts = reconnectionAttempts.getOrDefault(sensorName, 0)
         val maxAttempts = 3
 
-        if (currentAttempts >= maxAttempts) {
-            Log.w(TAG, "Max reconnection attempts reached for $sensorName - marking as inactive but continuing session")
-            activeRecorders[sensorName] = false
+        if (currentAttempts >= maxAttempts) {            activeRecorders[sensorName] = false
             return
         }
 
-        try {
-            Log.i(TAG, "Attempting to reconnect sensor $sensorName (attempt ${currentAttempts + 1}/$maxAttempts)")
+        try {")
             reconnectionAttempts[sensorName] = currentAttempts + 1
 
             val sensor = sensorRecorders[sensorName]
@@ -540,9 +444,7 @@ class ComprehensiveRecordingController(
                 try {
                     sensor.stopRecording()
                     delay(1000)
-                } catch (e: Exception) {
-                    Log.w(TAG, "Error stopping sensor during reconnection", e)
-                }
+                } catch (e: Exception) {                }
 
                 sessionMetadata?.let { meta ->
                     val sessionDir = currentSessionDirectory?.rootDir
@@ -550,20 +452,14 @@ class ComprehensiveRecordingController(
                         val sensorDir = File(sessionDir, sensorName.lowercase())
                         val success = sensor.startRecording(sensorDir.absolutePath, meta)
 
-                        if (success) {
-                            Log.i(TAG, "Successfully reconnected sensor $sensorName")
-                            reconnectionAttempts[sensorName] = 0 // Reset attempts on success
+                        if (success) {                            reconnectionAttempts[sensorName] = 0 // Reset attempts on success
                             updateSensorHealth(sensorName, true)
-                        } else {
-                            Log.w(TAG, "Failed to reconnect sensor $sensorName")
-                            updateSensorHealth(sensorName, false)
+                        } else {                            updateSensorHealth(sensorName, false)
                         }
                     }
                 }
             }
-        } catch (e: Exception) {
-            Log.e(TAG, "Exception during sensor reconnection for $sensorName", e)
-            updateSensorHealth(sensorName, false)
+        } catch (e: Exception) {            updateSensorHealth(sensorName, false)
         }
     }
 
@@ -574,9 +470,7 @@ class ComprehensiveRecordingController(
                 try {
                     updateRecordingStats()
                     delay(2000)
-                } catch (e: Exception) {
-                    Log.w(TAG, "Error updating statistics", e)
-                    delay(5000)
+                } catch (e: Exception) {                    delay(5000)
                 }
             }
         }
@@ -635,9 +529,7 @@ class ComprehensiveRecordingController(
     fun getCurrentSessionDirectory(): String? {
         return try {
             currentSessionDirectory?.rootDir?.absolutePath
-        } catch (e: Exception) {
-            Log.w(TAG, "Error getting current session directory", e)
-            null
+        } catch (e: Exception) {            null
         }
     }
 
@@ -665,20 +557,12 @@ class ComprehensiveRecordingController(
             RecordingService.startRecording(
                 context,
                 currentSessionDirectory?.rootDir?.absolutePath ?: ""
-            )
-            Log.i(TAG, "Started foreground recording service")
-        } catch (e: Exception) {
-            Log.w(TAG, "Failed to start foreground service - continuing without notification", e)
-        }
+            )        } catch (e: Exception) {        }
     }
 
     suspend fun initializeSensors(): Boolean {
-        return try {
-            Log.i(TAG, "Initializing sensors")
-            true
-        } catch (e: Exception) {
-            Log.e(TAG, "Error initializing sensors", e)
-            false
+        return try {            true
+        } catch (e: Exception) {            false
         }
     }
 
@@ -706,46 +590,26 @@ class ComprehensiveRecordingController(
 
     suspend fun addSyncMarker(markerType: String, timestampNs: Long) {
         try {
-            if (!isRecording) {
-                Log.w(TAG, "Cannot add sync marker: not currently recording")
-                return
-            }
-
-            Log.i(TAG, "Adding sync marker: $markerType at $timestampNs")
-
-            activeRecorders.keys.forEach { sensorName ->
+            if (!isRecording) {                return
+            }            activeRecorders.keys.forEach { sensorName ->
                 sensorRecorders[sensorName]?.let { recorder ->
                     try {
-                        recorder.addSyncMarker(markerType, timestampNs)
-                        Log.d(TAG, "Successfully added sync marker to ${recorder.javaClass.simpleName}")
-                    } catch (e: Exception) {
-                        Log.w(TAG, "Failed to add sync marker to ${recorder.javaClass.simpleName}: ${e.message}")
-                    }
+                        recorder.addSyncMarker(markerType, timestampNs)                    } catch (e: Exception) {                    }
                 }
             }
-        } catch (e: Exception) {
-            Log.e(TAG, "Error adding sync marker", e)
-        }
+        } catch (e: Exception) {        }
     }
 
     suspend fun cleanup() {
-        try {
-            Log.i(TAG, "Cleaning up ComprehensiveRecordingController")
-            activeRecorders.clear()
+        try {            activeRecorders.clear()
             sensorHealthStatus.clear()
             reconnectionAttempts.clear()
-        } catch (e: Exception) {
-            Log.e(TAG, "Error during cleanup", e)
-        }
+        } catch (e: Exception) {        }
     }
 
     private fun stopForegroundService() {
         try {
-            RecordingService.stopRecording(context)
-            Log.i(TAG, "Stopped foreground recording service")
-        } catch (e: Exception) {
-            Log.w(TAG, "Failed to stop foreground service gracefully", e)
-        }
+            RecordingService.stopRecording(context)        } catch (e: Exception) {        }
     }
 
     private suspend fun finalizeSession(
@@ -774,16 +638,9 @@ class ComprehensiveRecordingController(
                     val sessionInfoFile = File(sessionDir, "session_info.json")
                     sessionInfoFile.writeText(createSessionInfoJson(sessionInfo))
 
-                    writeSessionManifest()
-
-                    Log.i(TAG, "Session finalized with metadata: ${sessionInfoFile.absolutePath}")
-                } else {
-                    Log.w(TAG, "Cannot finalize session - session directory not available")
-                }
+                    writeSessionManifest()                } else {                }
             }
-        } catch (e: Exception) {
-            Log.w(TAG, "Error finalizing session metadata", e)
-        }
+        } catch (e: Exception) {        }
     }
 
     private fun createSessionInfoJson(sessionInfo: SessionInfoData): String {
@@ -988,12 +845,8 @@ class ComprehensiveRecordingController(
                     put("sessionState", manifest.sessionState)
                 }
 
-                manifestFile.writeText(manifestJson.toString(2))
-                Log.i(TAG, "Comprehensive session manifest written: ${manifestFile.absolutePath}")
-            }
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to write session manifest", e)
-        }
+                manifestFile.writeText(manifestJson.toString(2))            }
+        } catch (e: Exception) {        }
     }
 
 
@@ -1012,26 +865,19 @@ class ComprehensiveRecordingController(
                     append(" [IDLE]")
                 }
             }
-        } catch (e: Exception) {
-            Log.e(TAG, "Error getting sensor status summary", e)
-            "Error getting status"
+        } catch (e: Exception) {            "Error getting status"
         }
     }
 
     private fun transitionSessionState(from: SessionState, to: SessionState): Boolean {
         return currentSessionState.compareAndSet(from, to).also { success ->
-            if (success) {
-                Log.d(TAG, "Session state transition: ${from.name} -> ${to.name}")
-                addSessionEvent(
+            if (success) {                addSessionEvent(
                     "STATE_TRANSITION", metadata = mapOf(
                         "from" to from.name,
                         "to" to to.name
                     )
                 )
-            } else {
-                Log.w(
-                    TAG,
-                    "Failed session state transition: ${from.name} -> ${to.name} (current: ${currentSessionState.get().name})"
+            } else {.name})"
                 )
             }
         }
@@ -1054,8 +900,7 @@ class ComprehensiveRecordingController(
             success = success,
             errorMessage = errorMessage
         )
-        sessionEvents.add(event)
-        Log.d(TAG, "Session event: $eventType${sensorId?.let { " ($it)" } ?: ""}")
+        sessionEvents.add(event)" } ?: ""}")
     }
 
     private fun convertTriggerSource(source: TriggerSource): RecordingController.TriggerSource {

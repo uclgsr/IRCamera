@@ -76,9 +76,7 @@ public class FileUtil {
             }
             String fileName = fileTitle + new SimpleDateFormat("_HHmmss_yyMMdd").
                     format(new Date(System.currentTimeMillis())) + ".bin";
-            File file = new File(fileSaveDir, fileName);
-            Log.i(TAG, "fileSaveDir=" + fileSaveDir + " fileName=" + fileName);
-            FileOutputStream fos = new FileOutputStream(file);
+            File file = new File(fileSaveDir, fileName);            FileOutputStream fos = new FileOutputStream(file);
             fos.write(bytes);
             fos.close();
         } catch (IOException e) {
@@ -105,10 +103,7 @@ public class FileUtil {
             File file = new File(fileSaveDir, fileTitle);
             FileOutputStream fos = new FileOutputStream(file);
             fos.write(toByteArray(bytes));
-            fos.close();
-            Log.i(TAG, fileTitle + " savedSuccess");
-        } catch (IOException e) {
-            Log.e(TAG, fileTitle + " savedFailed：" + e.getMessage());
+            fos.close();        } catch (IOException e) {);
         }
     }
 
@@ -179,9 +174,7 @@ public class FileUtil {
         } else {
             boolean mkdirs = dirFile.mkdirs();
             boolean isSuccess = mkdirs || dirFile.exists();
-            if (!isSuccess) {
-                Log.e("FileUtil", "createFileDir fail " + dirFile);
-            }
+            if (!isSuccess) {            }
             return isSuccess;
         }
     }
@@ -190,29 +183,22 @@ public class FileUtil {
         try {
             File dirFile = new File(dirPath);
             if (!dirFile.exists()) {
-                if (!createFileDir(dirFile)) {
-                    Log.e(TAG, "createFile dirFile.mkdirs fail");
-                    return null;
+                if (!createFileDir(dirFile)) {                    return null;
                 }
             } else if (!dirFile.isDirectory()) {
                 boolean delete = dirFile.delete();
                 if (delete) {
                     return createFile(dirPath, fileName);
-                } else {
-                    Log.e(TAG, "createFile dirFile !isDirectory and delete fail");
-                    return null;
+                } else {                    return null;
                 }
             }
             File file = new File(dirPath, fileName);
             if (!file.exists()) {
-                if (!file.createNewFile()) {
-                    Log.e(TAG, "createFile createNewFile fail");
-                    return null;
+                if (!file.createNewFile()) {                    return null;
                 }
             }
             return file;
-        } catch (Exception e) {
-            Log.e(TAG, "createFile fail :" + e.getMessage());
+        } catch (Exception e) {);
             e.printStackTrace();
             return null;
         }
@@ -335,8 +321,7 @@ public class FileUtil {
         createOrExistsDir(fileDir);
         try {
             File file = new File(fileDir, fileTitle + ".bin");
-            createOrExistsDir(file);
-            Log.i("TAG", "getAbsolutePath = " + file.getAbsolutePath());
+            createOrExistsDir(file););
             FileOutputStream fos = new FileOutputStream(file);
             fos.write(toByteArray(bytes));
             fos.close();
@@ -407,16 +392,13 @@ public class FileUtil {
 
     public static void copyAssetsBigDataToSD(Context context, String srcFileName, String strOutFileName) {
         try {
-            File file = new File(strOutFileName);
-            Log.i(TAG, "file.exists->getAbsolutePath = " + file.getAbsolutePath());
+            File file = new File(strOutFileName););
             if (file.exists()) {
 
                 file.delete();
             }
 
-            if (!file.createNewFile()) {
-                Log.e(TAG, "Create File " + srcFileName + " Failed");
-                return;
+            if (!file.createNewFile()) {                return;
             }
 
             InputStream myInput;
@@ -554,9 +536,7 @@ public class FileUtil {
             makeFile(filePath, fileName);
             file = new File(filePath + fileName);
             fc = new FileOutputStream(file, false).getChannel();
-            if (fc == null) {
-                Log.e("FileUtils", "fc is null.");
-            }
+            if (fc == null) {            }
             fc.position(fc.size());
             fc.write(ByteBuffer.wrap(bytes));
             result = 0;
@@ -626,9 +606,7 @@ public class FileUtil {
     public static void float2Byte(float num, byte[] numbyte) {
         int fbit = Float.floatToIntBits(num);
         for (int i = 0; i < 4; i++) {
-            numbyte[i] = (byte) (fbit >> (i * 8));
-            Log.i(TAG, "numbyte[=" + i + "]=" + numbyte[i]);
-        }
+            numbyte[i] = (byte) (fbit >> (i * 8));        }
     }
 
 }

@@ -12,7 +12,6 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -92,12 +91,9 @@ class ShimmerMvpActivity : AppCompatActivity() {
         ActivityResultContracts.RequestMultiplePermissions()
     ) { permissions ->
         val allGranted = permissions.all { it.value }
-        if (allGranted) {
-            Log.i(TAG, "All permissions granted, initializing Shimmer")
-            initializeShimmer()
+        if (allGranted) {            initializeShimmer()
         } else {
-            val deniedPermissions = permissions.filter { !it.value }.keys
-            Log.w(TAG, "Permissions denied: ${deniedPermissions.joinToString()}")
+            val deniedPermissions = permissions.filter { !it.value }.keys}")
             showPermissionDeniedDialog(deniedPermissions.toList())
         }
     }
@@ -136,32 +132,22 @@ class ShimmerMvpActivity : AppCompatActivity() {
                 networkClient = ShimmerNetworkClient()
 
                 networkClient?.onConnected = {
-                    runOnUiThread {
-                        Log.i(TAG, "Connected to PC Controller")
-                        showToast("Connected to PC Controller")
+                    runOnUiThread {                        showToast("Connected to PC Controller")
                     }
                 }
 
                 networkClient?.onDisconnected = {
-                    runOnUiThread {
-                        Log.i(TAG, "Disconnected from PC Controller")
-                    }
+                    runOnUiThread {                    }
                 }
 
                 networkClient?.onError = { error ->
-                    runOnUiThread {
-                        Log.w(TAG, "Network error: $error")
-                    }
+                    runOnUiThread {                    }
                 }
 
                 val connected = networkClient?.connect() ?: false
-                if (!connected) {
-                    Log.i(TAG, "PC Controller not available, continuing without network")
-                }
+                if (!connected) {                }
 
-            } catch (e: Exception) {
-                Log.w(TAG, "Failed to initialize network client: ${e.message}")
-            }
+            } catch (e: Exception) {            }
         }
     }
 
@@ -193,19 +179,11 @@ class ShimmerMvpActivity : AppCompatActivity() {
 
     private fun initializeShimmer() {
         lifecycleScope.launch {
-            try {
-                Log.i(TAG, "Initializing Shimmer Bluetooth Manager")
-
-
-                shimmerBluetoothManager =
-                    ShimmerBluetoothManagerAndroid(this@ShimmerMvpActivity, Handler(Looper.getMainLooper()))
-                Log.i(TAG, "Shimmer manager initialized - API compatibility mode")
-                updateConnectionStatus("Shimmer manager ready")
+            try {                shimmerBluetoothManager =
+                    ShimmerBluetoothManagerAndroid(this@ShimmerMvpActivity, Handler(Looper.getMainLooper()))                updateConnectionStatus("Shimmer manager ready")
                 binding.connectButton.isEnabled = true
 
-            } catch (e: Exception) {
-                Log.e(TAG, "Failed to initialize Shimmer", e)
-                updateConnectionStatus("Initialization failed: ${e.message}")
+            } catch (e: Exception) {                updateConnectionStatus("Initialization failed: ${e.message}")
             }
         }
     }
@@ -218,8 +196,7 @@ class ShimmerMvpActivity : AppCompatActivity() {
 
 
                 if (!hasAllRequiredPermissions()) {
-                    val missingPermissions = getMissingPermissions()
-                    Log.w(TAG, "Missing permissions: ${missingPermissions.joinToString()}")
+                    val missingPermissions = getMissingPermissions()}")
                     showToast("Missing required permissions. Please grant permissions and try again.")
                     permissionLauncher.launch(missingPermissions)
                     binding.connectButton.isEnabled = true
@@ -242,9 +219,7 @@ class ShimmerMvpActivity : AppCompatActivity() {
                 val pairedDevices: Set<BluetoothDevice>? = bluetoothAdapter.bondedDevices
                 val pairedShimmers = pairedDevices?.filter { isValidShimmerDevice(it) } ?: emptyList()
 
-                // Always perform BLE scan to get both paired and unpaired devices
-                Log.i(TAG, "Starting comprehensive Shimmer device discovery...")
-                updateConnectionStatus("Scanning for all available Shimmer devices...")
+                // Always perform BLE scan to get both paired and unpaired devices                updateConnectionStatus("Scanning for all available Shimmer devices...")
 
                 val allDiscoveredDevices = mutableListOf<BluetoothDevice>()
                 allDiscoveredDevices.addAll(pairedShimmers)
@@ -257,10 +232,7 @@ class ShimmerMvpActivity : AppCompatActivity() {
                     }
                 }
 
-                if (allDiscoveredDevices.isNotEmpty()) {
-                    Log.i(
-                        TAG,
-                        "Found ${allDiscoveredDevices.size} total Shimmer devices (${pairedShimmers.size} paired, ${discoveredShimmers.size} discovered)"
+                if (allDiscoveredDevices.isNotEmpty()) {"
                     )
 
                     // Show device selection dialog if multiple devices found
@@ -275,9 +247,7 @@ class ShimmerMvpActivity : AppCompatActivity() {
                     binding.connectButton.isEnabled = true
                 }
 
-            } catch (e: Exception) {
-                Log.e(TAG, "Error scanning for Shimmer3 GSR+ devices", e)
-                updateConnectionStatus("Device scan failed: ${e.message}")
+            } catch (e: Exception) {                updateConnectionStatus("Device scan failed: ${e.message}")
                 showScanErrorDialog(e)
                 binding.connectButton.isEnabled = true
             }
@@ -290,40 +260,26 @@ class ShimmerMvpActivity : AppCompatActivity() {
         val bluetoothAdapter = bluetoothManager.adapter
         val bluetoothLeScanner = bluetoothAdapter?.bluetoothLeScanner
 
-        if (bluetoothLeScanner == null) {
-            Log.w(TAG, "BLE Scanner not available")
-            return@withContext discoveredDevices
+        if (bluetoothLeScanner == null) {            return@withContext discoveredDevices
         }
 
         val scanCallback = object : ScanCallback() {
             override fun onScanResult(callbackType: Int, result: ScanResult) {
                 val device = result.device
-                if (isValidShimmerDevice(device) && !discoveredDevices.contains(device)) {
-                    Log.d(TAG, "Discovered Shimmer device: ${device.name} (${device.address})")
+                if (isValidShimmerDevice(device) && !discoveredDevices.contains(device)) {")
                     discoveredDevices.add(device)
                 }
             }
 
-            override fun onScanFailed(errorCode: Int) {
-                Log.e(TAG, "BLE scan failed with error code: $errorCode")
-            }
+            override fun onScanFailed(errorCode: Int) {            }
         }
 
-        try {
-            Log.i(TAG, "Starting BLE scan for Shimmer devices...")
-            bluetoothLeScanner.startScan(scanCallback)
+        try {            bluetoothLeScanner.startScan(scanCallback)
 
 
             delay(10000)
 
-            bluetoothLeScanner.stopScan(scanCallback)
-            Log.i(TAG, "BLE scan completed. Found ${discoveredDevices.size} devices")
-
-        } catch (e: SecurityException) {
-            Log.e(TAG, "Security exception during BLE scan", e)
-        } catch (e: Exception) {
-            Log.e(TAG, "Exception during BLE scan", e)
-        }
+            bluetoothLeScanner.stopScan(scanCallback)        } catch (e: SecurityException) {        } catch (e: Exception) {        }
 
         return@withContext discoveredDevices
     }
@@ -342,24 +298,13 @@ class ShimmerMvpActivity : AppCompatActivity() {
                     }
                 }
 
-                val targetDevice = prioritizedDevices.first()
-                Log.i(TAG, "Connecting to Shimmer3 GSR+: ${targetDevice.name} (${targetDevice.address})")
+                val targetDevice = prioritizedDevices.first()")
                 updateConnectionStatus("Connecting to ${targetDevice.name}...")
 
                 // Set up the data handler BEFORE connecting
                 setupShimmerDataHandler()
 
-                shimmerBluetoothManager?.connectShimmerThroughBTAddress(targetDevice.address)
-
-                Log.i(TAG, "Target Device Details:")
-                Log.i(TAG, "  Name: ${targetDevice.name}")
-                Log.i(TAG, "  Address: ${targetDevice.address}")
-                Log.i(TAG, "  Type: ${targetDevice.type}")
-                Log.i(TAG, "  Bond State: ${targetDevice.bondState}")
-
-            } catch (e: Exception) {
-                Log.e(TAG, "Error scanning for Shimmer3 GSR+ devices", e)
-                updateConnectionStatus("Device scan failed: ${e.message}")
+                shimmerBluetoothManager?.connectShimmerThroughBTAddress(targetDevice.address)            } catch (e: Exception) {                updateConnectionStatus("Device scan failed: ${e.message}")
                 binding.connectButton.isEnabled = true
             }
         }
@@ -405,29 +350,17 @@ class ShimmerMvpActivity : AppCompatActivity() {
 
         val isValid = hasValidPrefix || hasValidName
 
-        if (isValid) {
-            Log.d(TAG, "Valid Shimmer device detected: $name ($address)")
+        if (isValid) {")
         }
 
         return isValid
     }
 
     private fun setupShimmerDataHandler() {
-        try {
-            Log.i(TAG, "Setting up enhanced Shimmer data handler with ObjectCluster conversion")
-
-            // Set up the multi-shimmer data handler to receive ObjectCluster data
+        try {            // Set up the multi-shimmer data handler to receive ObjectCluster data
             // Note: The exact API method may vary depending on Shimmer SDK version
-            // Using shimmerBluetoothManager as a fallback approach
-            Log.i(TAG, "Shimmer data handler setup - using available SDK methods")
-
-            // The data handler will need to be implemented using available Shimmer SDK callbacks
-            // This may require specific SDK documentation for the exact implementation
-
-            Log.i(TAG, "Enhanced Shimmer data handler configured successfully")
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to set up Shimmer data handler", e)
-        }
+            // Using shimmerBluetoothManager as a fallback approach            // The data handler will need to be implemented using available Shimmer SDK callbacks
+            // This may require specific SDK documentation for the exact implementation        } catch (e: Exception) {        }
     }
 
     /**
@@ -473,9 +406,7 @@ class ShimmerMvpActivity : AppCompatActivity() {
                 connectionRssi = getCurrentRssi() // Get actual RSSI if available
             )
 
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to convert ObjectCluster to enhanced GSRSample", e)
-            null
+        } catch (e: Exception) {            null
         }
     }
 
@@ -530,18 +461,12 @@ class ShimmerMvpActivity : AppCompatActivity() {
             }
 
             // Log periodic updates with enhanced metrics
-            if (sampleCount % 128 == 0L) {
-                Log.i(
-                    TAG, "Enhanced GSR [${sampleCount}]: ${
-                        String.format("%.3f", sample.gsrMicrosiemens)
-                    } µS, Raw: ${sample.gsrRaw}/4095, R: ${
+            if (sampleCount % 128 == 0L) {                    } µS, Raw: ${sample.gsrRaw}/4095, R: ${
                         String.format("%.1f", sample.resistanceOhms / 1000)
                     } kΩ, Quality: ${signalQualityPercent.toInt()}%, Health: $connectionHealth"
                 )
             }
-        } catch (e: Exception) {
-            Log.e(TAG, "Error processing enhanced GSR sample", e)
-        }
+        } catch (e: Exception) {        }
     }
 
     /**
@@ -555,9 +480,7 @@ class ShimmerMvpActivity : AppCompatActivity() {
                 // This is a placeholder - actual implementation depends on Shimmer SDK API
                 -50 // Default when RSSI is not available
             } ?: -50 // Default when device is null
-        } catch (e: Exception) {
-            Log.w(TAG, "Could not retrieve RSSI value", e)
-            -50 // Reasonable default for BLE connections
+        } catch (e: Exception) {            -50 // Reasonable default for BLE connections
         }
     }
 
@@ -591,26 +514,17 @@ class ShimmerMvpActivity : AppCompatActivity() {
 
     private fun setupShimmerConfiguration() {
         shimmerDevice?.let { shimmer ->
-            try {
-                Log.i(TAG, "Configuring Shimmer3 GSR+ for enhanced recording with validation")
-
-                // Validate and configure GSR sensor settings
+            try {                // Validate and configure GSR sensor settings
                 validateAndConfigureGSRSensor(shimmer)
 
                 // Verify configuration was applied successfully
-                if (verifyShimmerConfiguration(shimmer)) {
-                    Log.i(TAG, "Enhanced Shimmer3 GSR+ configuration verified successfully")
-                    updateConnectionStatus("GSR+ Configured & Verified - Ready for recording")
+                if (verifyShimmerConfiguration(shimmer)) {                    updateConnectionStatus("GSR+ Configured & Verified - Ready for recording")
                     binding.startRecordingButton.isEnabled = true
-                } else {
-                    Log.w(TAG, "Shimmer configuration verification failed - using defaults")
-                    updateConnectionStatus("GSR+ Configured (defaults) - Ready for recording")
+                } else {                    updateConnectionStatus("GSR+ Configured (defaults) - Ready for recording")
                     binding.startRecordingButton.isEnabled = true
                 }
 
-            } catch (e: Exception) {
-                Log.e(TAG, "Error configuring Shimmer3 GSR+", e)
-                updateConnectionStatus("GSR+ Configuration failed: ${e.message}")
+            } catch (e: Exception) {                updateConnectionStatus("GSR+ Configuration failed: ${e.message}")
             }
         }
     }
@@ -618,62 +532,33 @@ class ShimmerMvpActivity : AppCompatActivity() {
     private fun validateAndConfigureGSRSensor(shimmer: Shimmer): Boolean {
         return try {
             // Enable GSR sensor with validation using standard Shimmer API
-            // shimmer.enableGSRSensor(true) // May not be available in current SDK
-            Log.d(TAG, "GSR sensor configuration attempted")
-
-            // Set GSR range to auto with validation using standard Shimmer API
-            // shimmer.setGSRRange(GSR_RANGE_AUTO) // May not be available in current SDK
-            Log.d(TAG, "GSR range configuration attempted")
-
-            // Configure sampling rate with validation using standard Shimmer API
-            shimmer.setSamplingRateShimmer(GSRConstants.GSR_SAMPLING_RATE)
-            Log.d(TAG, "Sampling rate configured to ${GSRConstants.GSR_SAMPLING_RATE}Hz")
-
-            // Note: enableBufferMode may not be available in all Shimmer SDK versions
+            // shimmer.enableGSRSensor(true) // May not be available in current SDK            // Set GSR range to auto with validation using standard Shimmer API
+            // shimmer.setGSRRange(GSR_RANGE_AUTO) // May not be available in current SDK            // Configure sampling rate with validation using standard Shimmer API
+            shimmer.setSamplingRateShimmer(GSRConstants.GSR_SAMPLING_RATE)            // Note: enableBufferMode may not be available in all Shimmer SDK versions
             try {
-                // Try to enable buffer mode if available
-                Log.d(TAG, "Buffer mode configuration attempted")
-            } catch (e: Exception) {
-                Log.d(TAG, "Buffer mode not available in this Shimmer SDK version")
-            }
+                // Try to enable buffer mode if available            } catch (e: Exception) {            }
 
             true
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to configure GSR sensor settings", e)
-            false
+        } catch (e: Exception) {            false
         }
     }
 
     private fun verifyShimmerConfiguration(shimmer: Shimmer): Boolean {
         return try {
-            // Basic verification using available Shimmer SDK methods
-            Log.d(TAG, "Verifying Shimmer configuration...")
-
-            // Note: isGSRSensorEnabled may not be available, using basic checks
+            // Basic verification using available Shimmer SDK methods            // Note: isGSRSensorEnabled may not be available, using basic checks
             try {
-                // val currentRange = shimmer.getGSRRange() // May not be available in current SDK
-                Log.d(TAG, "GSR range configuration check attempted")
-
-                // Basic validation - assume configuration was successful if no exception
-                Log.d(TAG, "Shimmer configuration appears successful")
-                return true
-            } catch (e: Exception) {
-                Log.w(TAG, "Could not verify all configuration settings: ${e.message}")
-                // Return true if basic configuration didn't throw exceptions
+                // val currentRange = shimmer.getGSRRange() // May not be available in current SDK                // Basic validation - assume configuration was successful if no exception                return true
+            } catch (e: Exception) {                // Return true if basic configuration didn't throw exceptions
                 return true
             }
 
-        } catch (e: Exception) {
-            Log.w(TAG, "Configuration verification failed", e)
-            false
+        } catch (e: Exception) {            false
         }
     }
 
     private fun startRecording() {
         shimmerDevice?.let { shimmer ->
-            try {
-                Log.i(TAG, "Starting GSR recording")
-                isRecording = true
+            try {                isRecording = true
                 sampleCount = 0
                 gsrDataBuffer.clear()
 
@@ -687,13 +572,7 @@ class ShimmerMvpActivity : AppCompatActivity() {
                     updateConnectionStatus("Recording GSR data...")
                     binding.startRecordingButton.isEnabled = false
                     binding.stopRecordingButton.isEnabled = true
-                }
-
-                Log.i(TAG, "GSR recording started successfully")
-
-            } catch (e: Exception) {
-                Log.e(TAG, "Failed to start recording", e)
-                showToast("Failed to start recording: ${e.message}")
+                }            } catch (e: Exception) {                showToast("Failed to start recording: ${e.message}")
                 isRecording = false
             }
         } ?: run {
@@ -703,9 +582,7 @@ class ShimmerMvpActivity : AppCompatActivity() {
 
     private fun stopRecording() {
         shimmerDevice?.let { shimmer ->
-            try {
-                Log.i(TAG, "Stopping GSR recording")
-                isRecording = false
+            try {                isRecording = false
 
                 shimmer.stopStreaming()
 
@@ -717,13 +594,7 @@ class ShimmerMvpActivity : AppCompatActivity() {
                     updateConnectionStatus("Recording stopped - Data exported")
                     binding.startRecordingButton.isEnabled = true
                     binding.stopRecordingButton.isEnabled = false
-                }
-
-                Log.i(TAG, "GSR recording stopped, ${gsrDataBuffer.size} samples collected")
-
-            } catch (e: Exception) {
-                Log.e(TAG, "Failed to stop recording", e)
-                showToast("Failed to stop recording: ${e.message}")
+                }            } catch (e: Exception) {                showToast("Failed to stop recording: ${e.message}")
             }
         }
     }
@@ -798,34 +669,17 @@ class ShimmerMvpActivity : AppCompatActivity() {
                                 avgGsr
                             )
                         } µS"
-                    )
-                    Log.i(TAG, "Research-grade GSR data exported:")
-                    Log.i(TAG, "  File: ${file.absolutePath}")
-                    Log.i(TAG, "  Samples: ${gsrDataBuffer.size}")
-                    Log.i(
-                        TAG,
-                        "  Duration: ${
-                            String.format(
-                                "%.2f",
-                                gsrDataBuffer.size / GSRConstants.GSR_SAMPLING_RATE
-                            )
-                        }s"
-                    )
-                    Log.i(
-                        TAG,
-                        "  GSR Range: ${String.format("%.3f", minGsr)} - ${
+                    )                        }s"
+                    )} - ${
                             String.format(
                                 "%.3f",
                                 maxGsr
                             )
                         } µS"
-                    )
-                    Log.i(TAG, "  Avg GSR: ${String.format("%.3f", avgGsr)} µS")
+                    )} µS")
                 }
 
-            } catch (e: Exception) {
-                Log.e(TAG, "Error exporting GSR research data", e)
-                withContext(Dispatchers.Main) {
+            } catch (e: Exception) {                withContext(Dispatchers.Main) {
                     showToast("Error exporting data: ${e.message}")
                 }
             }
@@ -854,10 +708,7 @@ class ShimmerMvpActivity : AppCompatActivity() {
         }
 
         binding.connectionStatusIcon.setTextColor(iconColor)
-        binding.connectionStatusIcon.text = iconText
-
-        Log.i(TAG, "Status: $status")
-    }
+        binding.connectionStatusIcon.text = iconText    }
 
     private fun updateUI() {
         binding.connectButton.isEnabled = false
@@ -992,8 +843,7 @@ class ShimmerMvpActivity : AppCompatActivity() {
             .setTitle("Select Shimmer Device")
             .setMessage("Multiple Shimmer devices found. Please select the device you want to connect to:")
             .setItems(deviceNames) { _, which ->
-                val selectedDevice = devices[which]
-                Log.i(TAG, "User selected device: ${selectedDevice.name} (${selectedDevice.address})")
+                val selectedDevice = devices[which]")
                 connectToShimmerDevice(selectedDevice)
             }
             .setNegativeButton("Cancel") { dialog, _ ->
@@ -1052,8 +902,6 @@ class ShimmerMvpActivity : AppCompatActivity() {
             shimmerDevice?.disconnect()
             shimmerBluetoothManager?.disconnectAllDevices()
             networkClient?.disconnect()
-        } catch (e: Exception) {
-            Log.e(TAG, "Error during cleanup", e)
-        }
+        } catch (e: Exception) {        }
     }
 }

@@ -1,6 +1,5 @@
 package com.mpdc4gsr.libunified.app.matrix
 
-import android.util.Log
 import com.mpdc4gsr.libunified.BuildConfig
 import java.io.BufferedWriter
 import java.io.File
@@ -17,16 +16,12 @@ object Logger {
 
     @JvmStatic
     fun e(clazz: Class<*>, msg: String) {
-        if (BuildConfig.DEBUG) {
-            Log.e(clazz.simpleName, msg + "")
-        }
+        if (BuildConfig.DEBUG) {        }
     }
 
     @JvmStatic
     fun e(tag: String?, msg: String) {
-        if (BuildConfig.DEBUG) {
-            Log.e(tag, msg + "")
-        }
+        if (BuildConfig.DEBUG) {        }
     }
 
     /**
@@ -34,16 +29,12 @@ object Logger {
      */
     @JvmStatic
     fun w(clazz: Class<*>, msg: String) {
-        if (BuildConfig.DEBUG) {
-            Log.w(clazz.simpleName, msg + "")
-        }
+        if (BuildConfig.DEBUG) {        }
     }
 
     @JvmStatic
     fun w(tag: String?, msg: String) {
-        if (BuildConfig.DEBUG) {
-            Log.w(tag, msg + "")
-        }
+        if (BuildConfig.DEBUG) {        }
     }
 
     /**
@@ -52,16 +43,12 @@ object Logger {
 
     @JvmStatic
     fun i(clazz: Class<*>, msg: String) {
-        if (BuildConfig.DEBUG) {
-            Log.i(clazz.simpleName, msg + "")
-        }
+        if (BuildConfig.DEBUG) {        }
     }
 
     @JvmStatic
     fun i(tag: String?, msg: String) {
-        if (BuildConfig.DEBUG) {
-            Log.i(tag, msg + "")
-        }
+        if (BuildConfig.DEBUG) {        }
     }
 
     /**
@@ -70,16 +57,12 @@ object Logger {
 
     @JvmStatic
     fun d(clazz: Class<*>, msg: String) {
-        if (BuildConfig.DEBUG) {
-            Log.d(clazz.simpleName, msg + "")
-        }
+        if (BuildConfig.DEBUG) {        }
     }
 
     @JvmStatic
     fun d(tag: String?, msg: String) {
-        if (BuildConfig.DEBUG) {
-            Log.d(tag, msg + "")
-        }
+        if (BuildConfig.DEBUG) {        }
     }
 
     /**
@@ -88,15 +71,11 @@ object Logger {
 
     @JvmStatic
     fun v(clazz: Class<*>, msg: String) {
-        if (BuildConfig.DEBUG) {
-            Log.v(clazz.simpleName, msg + "")
-        }
+        if (BuildConfig.DEBUG) {        }
     }
 
     fun v(tag: String?, msg: String) {
-        if (BuildConfig.DEBUG) {
-            Log.v(tag, msg + "")
-        }
+        if (BuildConfig.DEBUG) {        }
     }
 
 
