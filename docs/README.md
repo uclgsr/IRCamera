@@ -96,18 +96,17 @@ The repository includes comprehensive development tools accessible via:
 
 ```
 IRCamera/
-+-- app/                    # Main Android application
-+-- pc-controller/          # Python PC Hub application  
-+-- component/             # Feature components (thermal, GSR, etc.)
-+-- consolidated_libraries/ # Consolidated support libraries (libcom, libmatrix, libmenu)
-+-- libapp/                # Application framework library
-+-- libir/                 # Core IR processing library
-+-- libui/                 # User interface components library
-+-- BleModule/             # Bluetooth Low Energy module
-+-- docs/                  # **THIS DOCUMENTATION HUB**
-+-- scripts/               # Build and utility scripts
-+-- .github/               # CI/CD workflows and configurations
-+-- README.md              # Project overview and quick start
+├── app/                    # Main Android application
+├── component/             # Feature components (thermal, GSR, etc.)
+├── libunified/            # Unified support library (app+ir+ui functionality) 
+├── BleModule/             # Bluetooth Low Energy module
+├── pc-controller/         # PC Hub application  
+├── demos/                 # Demonstration scripts
+├── tests/                 # Test scripts
+├── docs/                  # **THIS DOCUMENTATION HUB**
+├── scripts/               # Build and utility scripts
+├── .github/               # CI/CD workflows and configurations
+└── README.md              # Project overview and quick start
 ```
 
 ## Support & Troubleshooting
