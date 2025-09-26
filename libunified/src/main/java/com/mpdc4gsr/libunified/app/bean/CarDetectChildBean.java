@@ -1,6 +1,6 @@
 package com.mpdc4gsr.libunified.app.bean;
 
-import com.mpdc4gsr.libunified.app.utils.TemperatureUtil;
+import com.mpdc4gsr.libunified.app.utils.UnifiedTemperatureUtils;
 
 public class CarDetectChildBean {
     public int type;
@@ -20,6 +20,8 @@ public class CarDetectChildBean {
 
     public String buildString() {
         String[] temperatures = temperature.split("~");
-        return item + TemperatureUtil.INSTANCE.getTempStr(Integer.parseInt(temperatures[0]), Integer.parseInt(temperatures[1]));
+        String minTemp = UnifiedTemperatureUtils.INSTANCE.formatTemperature(Float.parseFloat(temperatures[0]), UnifiedTemperatureUtils.TemperatureUnit.CELSIUS);
+        String maxTemp = UnifiedTemperatureUtils.INSTANCE.formatTemperature(Float.parseFloat(temperatures[1]), UnifiedTemperatureUtils.TemperatureUnit.CELSIUS);
+        return item + "(" + minTemp + "~" + maxTemp + ")";
     }
 }

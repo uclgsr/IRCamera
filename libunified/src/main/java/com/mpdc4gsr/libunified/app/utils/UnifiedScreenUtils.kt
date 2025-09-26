@@ -8,6 +8,7 @@ import android.util.DisplayMetrics
 import android.view.Display
 import android.view.View
 import android.view.WindowManager
+import com.energy.iruvc.utils.CommonParams
 
 /**
  * Consolidated screen utilities replacing multiple ScreenUtils classes
@@ -152,5 +153,41 @@ object UnifiedScreenUtils {
     fun isPointInsideView(x: Float, y: Float, view: View): Boolean {
         val bounds = getViewBoundsOnScreen(view)
         return x >= bounds.left && x <= bounds.right && y >= bounds.top && y <= bounds.bottom
+    }
+
+    /**
+     * Get preview FPS by data flow mode for IR camera
+     */
+    @JvmStatic
+    fun getPreviewFPSByDataFlowMode(dataFlowMode: CommonParams.DataFlowMode): Int {
+        return when (dataFlowMode) {
+            CommonParams.DataFlowMode.IMAGE_AND_TEMP_OUTPUT -> 30
+            CommonParams.DataFlowMode.TNR_OUTPUT -> 15
+            else -> 25
+        }
+    }
+
+    /**
+     * Correct coordinate value to ensure it's within bounds - used for temperature drawing
+     */
+    @JvmStatic
+    fun correct(value: Float, maxValue: Int): Int {
+        return kotlin.math.max(0, kotlin.math.min(value.toInt(), maxValue - 1))
+    }
+
+    /**
+     * Correct point coordinate to ensure it's within bounds - used for temperature drawing
+     */
+    @JvmStatic
+    fun correctPoint(value: Float, maxValue: Int): Int {
+        return kotlin.math.max(0, kotlin.math.min(value.toInt(), maxValue - 1))
+    }
+
+    /**
+     * Get rectangle bounds for view - used for temperature drawing
+     */
+    @JvmStatic
+    fun getRect(width: Int, height: Int): android.graphics.Rect {
+        return android.graphics.Rect(0, 0, width, height)
     }
 }

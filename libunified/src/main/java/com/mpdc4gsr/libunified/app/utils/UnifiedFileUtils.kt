@@ -3,6 +3,7 @@ package com.mpdc4gsr.libunified.app.utils
 import android.content.Context
 import android.graphics.Bitmap
 import android.os.Environment
+import com.energy.iruvc.utils.CommonParams
 import java.io.*
 
 /**
@@ -183,6 +184,18 @@ object UnifiedFileUtils {
             true
         } catch (e: Exception) {
             false
+        }
+    }
+
+    /**
+     * Get Y16 source type by data flow mode for IR camera
+     */
+    @JvmStatic
+    fun getY16SrcTypeByDataFlowMode(dataFlowMode: CommonParams.DataFlowMode): CommonParams.Y16ModePreviewSrcType {
+        return when (dataFlowMode) {
+            CommonParams.DataFlowMode.IMAGE_AND_TEMP_OUTPUT -> CommonParams.Y16ModePreviewSrcType.Y16_MODE_TEMPERATURE
+            CommonParams.DataFlowMode.TNR_OUTPUT -> CommonParams.Y16ModePreviewSrcType.Y16_MODE_TNR
+            else -> CommonParams.Y16ModePreviewSrcType.Y16_MODE_TEMPERATURE
         }
     }
 }

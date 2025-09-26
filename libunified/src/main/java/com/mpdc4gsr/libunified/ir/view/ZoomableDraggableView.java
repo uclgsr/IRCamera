@@ -15,7 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.mpdc4gsr.libunified.R;
-import com.mpdc4gsr.libunified.app.utils.BitmapUtils;
+import com.mpdc4gsr.libunified.app.utils.UnifiedDataUtils;
 
 public class ZoomableDraggableView extends View {
     private ScaleGestureDetector scaleGestureDetector;
@@ -79,7 +79,7 @@ public class ZoomableDraggableView extends View {
         }
         showBitmapHeight = pxBitmapHeight / yscale;
         showBitmapHeightWidth = pxBitmapHeight * originalBitmapWidth / originalBitmapHeight * xscale;
-        showBitmap = BitmapUtils.scaleWithWH(originalBitmap, showBitmapHeightWidth, showBitmapHeight);
+        showBitmap = UnifiedDataUtils.scaleWithWH(originalBitmap, (int) showBitmapHeightWidth, (int) showBitmapHeight);
     }
 
     @Override

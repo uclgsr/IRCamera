@@ -24,8 +24,8 @@ import com.energy.iruvc.uvc.UVCType;
 import com.mpdc4gsr.libunified.ir.config.MsgCode;
 import com.mpdc4gsr.libunified.ir.event.IRMsgEvent;
 import com.mpdc4gsr.libunified.ir.event.PreviewComplete;
-import com.mpdc4gsr.libunified.ir.utils.FileUtil;
-import com.mpdc4gsr.libunified.ir.utils.ScreenUtils;
+import com.mpdc4gsr.libunified.app.utils.UnifiedFileUtils;
+import com.mpdc4gsr.libunified.app.utils.UnifiedScreenUtils;
 import com.mpdc4gsr.libunified.ir.utils.USBMonitorCallback;
 
 import org.greenrobot.eventbus.EventBus;
@@ -421,7 +421,7 @@ public class IRUVCTC {
 
                     if (ircmd.startPreview(CommonParams.PreviewPathChannel.PREVIEW_PATH0,
                             CommonParams.StartPreviewSource.SOURCE_SENSOR,
-                            ScreenUtils.getPreviewFPSByDataFlowMode(defaultDataFlowMode),
+                            UnifiedScreenUtils.getPreviewFPSByDataFlowMode(defaultDataFlowMode),
                             CommonParams.StartPreviewMode.VOC_DVP_MODE,
                             defaultDataFlowMode) == 0) {
                         Log.i(TAG, "startPreview complete");
@@ -442,7 +442,7 @@ public class IRUVCTC {
                     Log.i(TAG, "stopPreview complete [CHINESE_TEXT] restart");
                     if (ircmd.startPreview(CommonParams.PreviewPathChannel.PREVIEW_PATH0,
                             CommonParams.StartPreviewSource.SOURCE_SENSOR,
-                            ScreenUtils.getPreviewFPSByDataFlowMode(defaultDataFlowMode),
+                            UnifiedScreenUtils.getPreviewFPSByDataFlowMode(defaultDataFlowMode),
                             CommonParams.StartPreviewMode.VOC_DVP_MODE, defaultDataFlowMode) == 0) {
                         Log.i(TAG, "startPreview complete [CHINESE_TEXT] restart");
                         try {
@@ -452,7 +452,7 @@ public class IRUVCTC {
                             e.printStackTrace();
                         }
                         if (ircmd.startY16ModePreview(CommonParams.PreviewPathChannel.PREVIEW_PATH0,
-                                FileUtil.getY16SrcTypeByDataFlowMode(defaultDataFlowMode)) == 0) {
+                                UnifiedFileUtils.getY16SrcTypeByDataFlowMode(defaultDataFlowMode)) == 0) {
                             handleStartPreviewComplete();
                         } else {
                             Log.e(TAG, "startY16ModePreview error [CHINESE_TEXT] restart");
@@ -475,7 +475,7 @@ public class IRUVCTC {
                         Log.i(TAG, "stopPreview complete infrared+TNR");
                         if (ircmd.startPreview(CommonParams.PreviewPathChannel.PREVIEW_PATH0,
                                 CommonParams.StartPreviewSource.SOURCE_SENSOR,
-                                ScreenUtils.getPreviewFPSByDataFlowMode(CommonParams.DataFlowMode.IMAGE_AND_TEMP_OUTPUT),
+                                UnifiedScreenUtils.getPreviewFPSByDataFlowMode(CommonParams.DataFlowMode.IMAGE_AND_TEMP_OUTPUT),
                                 CommonParams.StartPreviewMode.VOC_DVP_MODE,
                                 CommonParams.DataFlowMode.IMAGE_AND_TEMP_OUTPUT) == 0) {
                             Log.i(TAG, "startPreview complete infrared+TNR");
@@ -486,7 +486,7 @@ public class IRUVCTC {
                                 e.printStackTrace();
                             }
                             if (ircmd.startY16ModePreview(CommonParams.PreviewPathChannel.PREVIEW_PATH0,
-                                    FileUtil.getY16SrcTypeByDataFlowMode(CommonParams.DataFlowMode.TNR_OUTPUT)) == 0) {
+                                    UnifiedFileUtils.getY16SrcTypeByDataFlowMode(CommonParams.DataFlowMode.TNR_OUTPUT)) == 0) {
                                 handleStartPreviewComplete();
                             } else {
                                 Log.e(TAG, "startY16ModePreview error infrared+TNR");
@@ -504,7 +504,7 @@ public class IRUVCTC {
                         Log.i(TAG, "stopPreview complete [CHINESE_TEXT]TNR");
                         if (ircmd.startPreview(CommonParams.PreviewPathChannel.PREVIEW_PATH0,
                                 CommonParams.StartPreviewSource.SOURCE_SENSOR,
-                                ScreenUtils.getPreviewFPSByDataFlowMode(defaultDataFlowMode),
+                                UnifiedScreenUtils.getPreviewFPSByDataFlowMode(defaultDataFlowMode),
                                 CommonParams.StartPreviewMode.VOC_DVP_MODE, defaultDataFlowMode) == 0) {
                             Log.i(TAG, "startPreview complete [CHINESE_TEXT]TNR");
                             try {
@@ -514,7 +514,7 @@ public class IRUVCTC {
                                 e.printStackTrace();
                             }
                             if (ircmd.startY16ModePreview(CommonParams.PreviewPathChannel.PREVIEW_PATH0,
-                                    FileUtil.getY16SrcTypeByDataFlowMode(defaultDataFlowMode)) == 0) {
+                                    UnifiedFileUtils.getY16SrcTypeByDataFlowMode(defaultDataFlowMode)) == 0) {
                                 handleStartPreviewComplete();
                             } else {
                                 Log.e(TAG, "startY16ModePreview error [CHINESE_TEXT]TNR");

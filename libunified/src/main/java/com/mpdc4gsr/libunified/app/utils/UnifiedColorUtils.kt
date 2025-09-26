@@ -4,6 +4,7 @@ import android.content.res.Resources
 import android.util.TypedValue
 import androidx.annotation.ColorInt
 import androidx.annotation.Dimension
+import com.energy.iruvc.utils.CommonParams
 import java.util.Locale
 
 /**
@@ -118,5 +119,15 @@ object UnifiedColorUtils {
                 (red.coerceIn(0, 255) shl 16) or
                 (green.coerceIn(0, 255) shl 8) or
                 blue.coerceIn(0, 255)
+    }
+
+    /**
+     * Change pseudocode mode by old value for IR camera processing
+     */
+    @JvmStatic
+    fun changePseudocodeModeByOld(oldMode: Int): CommonParams.PseudoColorType {
+        // For now, just return PSEUDO_1 as it's the only available option
+        // TODO: Add more pseudo color types when they become available
+        return CommonParams.PseudoColorType.PSEUDO_1
     }
 }
