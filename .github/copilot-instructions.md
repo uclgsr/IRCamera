@@ -1,12 +1,22 @@
 - THIS IS A MASTER THESIS PROJECT SO FOCUS ON MVP
+- BE MODEST, HUMBLE AND KIND
 - NO COMMENTING, ONLY DEVELOPMENT RELATED COMMENTS
+- NEVER DELETE CODE, COMMENT IT OUT
+- ALWAYS ASK IF UNSURE
+- ALWAYS FOLLOW KOTLIN CODING CONVENTIONS
+- ALWAYS FOLLOW ANDROID CODING CONVENTIONS
+- ALWAYS FOLLOW MVVM ARCHITECTURE
+- ALWAYS FOLLOW REPOSITORY PATTERN
 - PRIORITIZE APP/LIBS SDK and LIBS FILES FIRST
+- 
 - GROUNDTRUTH FOR TOPDON TC001 integration is https://github.com/CoderCaiSL/IRCamera/tree/github-main_ircamera if an
   implementation is missing
-- GROUNDTRUTH FOR Shimmer3 GSR is https://github.com/ShimmerEngineering/Shimmer-Java-Android-API.git if an
+- GROUNDTRUTH FOR TOPDON TC001 BLE integration is https://github.com/CoderCaiSL/IRCamera/tree/github-main_ircamera/BleModule if an
   implementation is missing
-  and https://github.com/ShimmerEngineering/ShimmerAndroidAPI if an implementation is missing
+- GROUNDTRUTH FOR Shimmer3 GSR is https://github.com/ShimmerEngineering/Shimmer-Java-Android-API.git if an
+  implementation is missing and https://github.com/ShimmerEngineering/ShimmerAndroidAPI if an implementation is missing
 - ALWAYS VERIFY WITH GRADLE CLEAN AND BUILD
+- ALWAYS VERIFY WITH ANDROID STUDIO LINT
 - NEVER USE EMOJIS ANYWHERE
 - ONLY USE ASCI SAFE CHARACTER EVERYWHERE
   [//]: # (- ALWAYS UPDATE CHANGELOG.MD &#40;USE COMMIT ID TO AVOID MERGE CONFLICT&#41;)
