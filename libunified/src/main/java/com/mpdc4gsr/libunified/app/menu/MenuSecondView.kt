@@ -248,11 +248,11 @@ class MenuSecondView : FrameLayout {
 
     fun setToRecord(isDelay: Boolean) {
         binding.cameraMenuView.canSwitchMode = false
-        binding.cameraMenuView.setToRecord(isDelay)
+        binding.cameraMenuView.setToRecord()
     }
 
     fun setToCamera() {
-        binding.cameraMenuView.setToRecord(false)
+        binding.cameraMenuView.setToRecord()
     }
 
 
