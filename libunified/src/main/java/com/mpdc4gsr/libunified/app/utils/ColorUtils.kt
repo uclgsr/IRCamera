@@ -14,8 +14,8 @@ import kotlin.math.roundToInt
 object ColorUtils {
 
     fun setColorAlpha(@ColorInt color: Int, alpha: Float): Int {
-        val origin = (0xff ) and 0xff
-        return color and 0x00ffffff or ((alpha * origin).toInt() shl 24)
+        val maxAlpha = 0xff
+        return color and 0x00ffffff or ((alpha * maxAlpha).toInt() shl 24)
     }
 
     fun toHexColorString(@ColorInt color: Int):String{
