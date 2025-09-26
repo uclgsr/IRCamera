@@ -313,4 +313,51 @@ object UnifiedPreferencesUtils {
             "{}"
         }
     }
+
+    /**
+     * Get default preferences map
+     */
+    fun getDefaultPreferences(): Map<String, Any> {
+        return mapOf(
+            Keys.FIRST_LAUNCH to true,
+            Keys.CAMERA_AUTO_FOCUS to true,
+            Keys.THERMAL_UNIT to "celsius",
+            Keys.THERMAL_PALETTE to "iron",
+            Keys.THERMAL_EMISSIVITY to 0.95f,
+            Keys.GSR_SAMPLING_RATE to 256,
+            Keys.GSR_AUTO_CONNECT to false,
+            Keys.NETWORK_AUTO_CONNECT to false,
+            Keys.NETWORK_TIMEOUT to 5000,
+            Keys.RECORDING_AUTO_SAVE to true
+        )
+    }
+
+    /**
+     * Initialize preferences with default values
+     */
+    fun initializePreferences(context: Context, defaults: Map<String, Any>) {
+        val prefs = getSharedPreferences(context)
+        val editor = prefs.edit()
+        
+        defaults.forEach { (key, value) ->
+            if (!prefs.contains(key)) {
+                when (value) {
+                    is Boolean -> editor.putBoolean(key, value)
+                    is String -> editor.putString(key, value)
+                    is Int -> editor.putInt(key, value)
+                    is Float -> editor.putFloat(key, value)
+                    is Long -> editor.putLong(key, value)
+                }
+            }
+        }
+        
+        editor.apply()
+    }
+    
+    /**
+     * Get SharedPreferences instance
+     */
+    fun getSharedPreferences(context: Context): SharedPreferences {
+        return context.getSharedPreferences(DEFAULT_PREFS_NAME, Context.MODE_PRIVATE)
+    }
 }

@@ -1,6 +1,7 @@
 package com.mpdc4gsr.libunified.app.utils
 
 import android.content.Context
+import android.util.Log
 import java.io.File
 
 /**
@@ -212,5 +213,42 @@ object UnifiedDirectoryUtils {
                 exists = dir.exists()
             )
         }
+    }
+
+    /**
+     * Initialize all application directories
+     */
+    fun initializeAppDirectories(context: Context): Boolean {
+        return try {
+            getAppRootDirectory(context)
+            getRecordingsDirectory(context)
+            getThermalDirectory(context)
+            getRgbDirectory(context)
+            getGsrDirectory(context)
+            getSessionsDirectory(context)
+            getExportsDirectory(context)
+            getCacheDirectory(context)
+            getLogsDirectory(context)
+            getConfigDirectory(context)
+            getTempDirectory(context)
+            true
+        } catch (e: Exception) {
+            Log.e("UnifiedDirectoryUtils", "Failed to initialize directories", e)
+            false
+        }
+    }
+    
+    /**
+     * Get GSR data directory
+     */
+    fun getGsrDirectory(context: Context): File {
+        return File(getRecordingsDirectory(context), GSR_DIR).apply { mkdirs() }
+    }
+    
+    /**
+     * Get RGB data directory
+     */
+    fun getRgbDirectory(context: Context): File {
+        return File(getRecordingsDirectory(context), RGB_DIR).apply { mkdirs() }
     }
 }

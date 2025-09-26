@@ -125,9 +125,7 @@ object UnifiedCameraUtils {
             cameraThread?.start()
         }
 
-        override fun onDraw(canvas: Canvas) {
-            super.onDraw(canvas)
-            
+        private fun drawOverlay(canvas: Canvas) {
             bitmap?.let { bmp ->
                 canvas.drawBitmap(bmp, 0f, 0f, paint)
             }
