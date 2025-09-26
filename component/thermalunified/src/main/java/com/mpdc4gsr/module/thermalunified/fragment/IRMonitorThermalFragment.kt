@@ -27,7 +27,7 @@ import com.mpdc4gsr.libunified.ir.event.IRMsgEvent
 import com.mpdc4gsr.libunified.ir.event.PreviewComplete
 import com.mpdc4gsr.libunified.ir.thread.ImageThreadTC
 import com.mpdc4gsr.libunified.ir.utils.USBMonitorCallback
-import com.mpdc4gsr.libunified.ir.view.CameraView
+import com.mpdc4gsr.libunified.ui.camera.CameraView
 import com.mpdc4gsr.libunified.ir.view.ITsTempListener
 import com.mpdc4gsr.libunified.ir.view.TemperatureView
 import com.mpdc4gsr.libunified.ir.view.TemperatureView.REGION_MODE_LINE

@@ -40,11 +40,11 @@ import com.mpdc4gsr.libunified.app.dialog.TipDialog
 import com.mpdc4gsr.libunified.app.tools.TimeTool
 import com.mpdc4gsr.libunified.app.utils.BitmapUtils
 import com.mpdc4gsr.libunified.ir.usbdual.camera.DualViewWithExternalCameraCommonApi
-import com.mpdc4gsr.libunified.ir.view.CameraView
+import com.mpdc4gsr.libunified.ui.camera.CameraView
 import com.mpdc4gsr.libunified.ir.view.TemperatureView
 import com.mpdc4gsr.libunified.ui.widget.BitmapConstraintLayout
 import com.mpdc4gsr.libunified.ui.widget.LiteSurfaceView
-import com.mpdc4gsr.module.thermalunified.stubs.CameraPreView
+import com.mpdc4gsr.libunified.ui.camera.CameraPreView
 import com.mpdc4gsr.module.thermalunified.view.HikSurfaceView
 import com.mpdc4gsr.module.thermalunified.view.TemperatureHikView
 import com.mpdc4gsr.module.thermalunified.view.compass.LinearCompassView
