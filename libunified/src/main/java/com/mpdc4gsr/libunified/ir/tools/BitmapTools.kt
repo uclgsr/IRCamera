@@ -8,7 +8,7 @@ object BitmapTools {
     private fun readTempValue(bytes: ByteArray): Float {
         val data: ByteArray = with(ByteUtils) { bytes.descBytes() }
         val scale = 16
-        val tempInt = ByteUtils.bytesToInt(data) / 4
+        val tempInt = with(ByteUtils) { bytesToInt(data) } / 4
         return (tempInt.toDouble() / scale.toDouble() - 273.15).toFloat()
     }
 
