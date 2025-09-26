@@ -18,6 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.util.Pair;
 
+import com.android.identity.util.HexUtil;
 import com.topdon.ble.callback.RequestCallback;
 import com.topdon.ble.callback.ScanListener;
 import com.topdon.ble.util.HexUtil;

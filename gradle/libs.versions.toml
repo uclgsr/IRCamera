@@ -189,6 +189,7 @@ desugarJdkLibs = "2.1.5"
 ktlint = "12.1.3"
 detekt = "1.24.0"
 spotless = "7.0.1"
+identityJvm = "202411.1"
 
 [libraries]
 
@@ -380,6 +381,7 @@ desugar-jdk-libs = { group = "com.android.tools", name = "desugar_jdk_libs", ver
 
 
 huawei-agconnect = { group = "com.huawei.agconnect", name = "agcp", version.ref = "huaweiAgcp" }
+identity-jvm = { group = "com.android.identity", name = "identity-jvm", version.ref = "identityJvm" }
 
 [bundles]
 androidx-lifecycle = ["lifecycle-runtime-ktx", "lifecycle-viewmodel-ktx", "lifecycle-livedata-ktx"]

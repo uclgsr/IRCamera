@@ -35,6 +35,7 @@ android {
 
 dependencies {
 
+    implementation(libs.identity.jvm)
     coreLibraryDesugaring(libs.desugar.jdk.libs)
     api("androidx.appcompat:appcompat:1.2.0")
     api("org.greenrobot:eventbus:3.2.0")
