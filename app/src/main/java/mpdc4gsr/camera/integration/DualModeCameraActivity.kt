@@ -101,6 +101,11 @@ class DualModeCameraActivity : BaseViewModelActivity<DualModeCameraViewModel>() 
         // This would typically update button states, indicators, etc.
     }
 
+    override fun initData() {
+        // Initialize any data needed for the activity
+        // This method is called by BaseActivity after initView()
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         viewModel.cleanup()

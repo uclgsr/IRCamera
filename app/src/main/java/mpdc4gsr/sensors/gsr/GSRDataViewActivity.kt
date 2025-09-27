@@ -52,6 +52,11 @@ class GSRDataViewActivity : BaseViewModelActivity<GSRDataViewViewModel>() {
         supportActionBar?.title = "GSR Data Analysis"
     }
 
+    override fun initData() {
+        // Initialize any data needed for the activity
+        // This method is called by BaseActivity after initView()
+    }
+
     private fun setupUI() {
         setupRecyclerView()
         setupFilterControls()
@@ -497,57 +502,6 @@ class GSRDataViewActivity : BaseViewModelActivity<GSRDataViewViewModel>() {
                 true
             }
             else -> super.onOptionsItemSelected(item)
-        }
-    }
-}
-
-/**
- * Adapter for GSR data rows with optimized view holder pattern
- */
-class GSRDataRowAdapter(
-    private val onItemClick: (GSRDataViewViewModel.GSRDataRow) -> Unit
-) : androidx.recyclerview.widget.RecyclerView.Adapter<GSRDataRowAdapter.ViewHolder>() {
-    
-    private var dataRows = listOf<GSRDataViewViewModel.GSRDataRow>()
-    
-    fun updateData(newDataRows: List<GSRDataViewViewModel.GSRDataRow>) {
-        dataRows = newDataRows
-        notifyDataSetChanged()
-    }
-    
-    override fun onCreateViewHolder(parent: android.view.ViewGroup, viewType: Int): ViewHolder {
-        val view = android.view.LayoutInflater.from(parent.context)
-            .inflate(android.R.layout.simple_list_item_2, parent, false)
-        return ViewHolder(view)
-    }
-    
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val dataRow = dataRows[position]
-        holder.bind(dataRow, onItemClick)
-    }
-    
-    override fun getItemCount(): Int = dataRows.size
-    
-    class ViewHolder(itemView: android.view.View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
-        private val text1: android.widget.TextView = itemView.findViewById(android.R.id.text1)
-        private val text2: android.widget.TextView = itemView.findViewById(android.R.id.text2)
-        
-        fun bind(dataRow: GSRDataViewViewModel.GSRDataRow, onItemClick: (GSRDataViewViewModel.GSRDataRow) -> Unit) {
-            text1.text = "${dataRow.timestamp} - ${dataRow.gsrValue} µS"
-            text2.text = "Resistance: ${dataRow.resistance/1000} kΩ | Quality: ${dataRow.quality}"
-            
-            // Color coding based on quality
-            val qualityColor = when (dataRow.quality) {
-                GSRDataViewViewModel.DataQuality.EXCELLENT -> android.graphics.Color.parseColor("#4caf50")
-                GSRDataViewViewModel.DataQuality.GOOD -> android.graphics.Color.parseColor("#8bc34a")
-                GSRDataViewViewModel.DataQuality.FAIR -> android.graphics.Color.parseColor("#ff9800")
-                GSRDataViewViewModel.DataQuality.POOR -> android.graphics.Color.parseColor("#f44336")
-                GSRDataViewViewModel.DataQuality.UNKNOWN -> android.graphics.Color.parseColor("#9e9e9e")
-            }
-            
-            itemView.setBackgroundColor(qualityColor and 0x20FFFFFF or 0x20000000) // Semi-transparent
-            
-            itemView.setOnClickListener { onItemClick(dataRow) }
         }
     }
 }

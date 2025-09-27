@@ -61,6 +61,11 @@ class DevicePairingActivity : BaseViewModelActivity<DevicePairingViewModel>(),
         binding.controllersRecyclerView.adapter = controllersAdapter
     }
 
+    override fun initData() {
+        // Initialize any data needed for the activity
+        // This method is called by BaseActivity after initView()
+    }
+
     private fun setupObservers() {
         viewModel.discoveredControllers.observe(this) { controllers ->
             controllersAdapter.updateControllers(controllers)
@@ -127,28 +132,111 @@ class DevicePairingActivity : BaseViewModelActivity<DevicePairingViewModel>(),
         }
     }
 
-    // NetworkClient.NetworkEventListener implementation - delegate to ViewModel
-    override fun onControllerConnected(controller: NetworkClient.ControllerInfo) {
+    // NetworkClient.NetworkEventListener implementation
+    override fun onControllerDiscovered(controller: NetworkClient.ControllerInfo) {
         // ViewModel handles this through its own NetworkEventListener implementation
     }
 
-    override fun onControllerDisconnected() {
+    override fun onConnected(controller: NetworkClient.ControllerInfo) {
         // ViewModel handles this through its own NetworkEventListener implementation
     }
 
-    override fun onConnectionError(error: String) {
+    override fun onDisconnected(reason: String) {
         // ViewModel handles this through its own NetworkEventListener implementation
     }
 
-    override fun onRecordingSessionStarted(sessionInfo: SessionInfo) {
+    override fun onRemoteMeasurementRequest(sessionInfo: SessionInfo) {
         // ViewModel handles this through its own NetworkEventListener implementation
     }
 
-    override fun onRecordingSessionStopped() {
-        // ViewModel handles this through its own NetworkEventListener implementation
+    override fun onSyncFlash(durationMs: Int) {
+        runOnUiThread {
+            val flashView = binding.flashOverlay
+            flashView.visibility = android.view.View.VISIBLE
+            flashView.alpha = 1.0f
+
+            flashView.animate()
+                .alpha(0.0f)
+                .setDuration(durationMs.toLong())
+                .withEndAction {
+                    flashView.visibility = android.view.View.GONE
+                }
+                .start()
+        }
     }
 
-    override fun onDataReceived(data: String) {
-        // ViewModel handles this through its own NetworkEventListener implementation
+    override fun onTimeSynchronized(offsetNanoseconds: Long) {
+        runOnUiThread {
+            binding.statusText.text =
+                "Time synchronized (offset: ${offsetNanoseconds / 1_000_000}ms)"
+        }
+    }
+
+    override fun onDataStreamingStarted() {
+        runOnUiThread {
+            binding.statusText.text = "Data streaming started"
+        }
+    }
+
+    override fun onDataStreamingStopped() {
+        runOnUiThread {
+            binding.statusText.text = "Data streaming stopped"
+        }
+    }
+
+    override fun onError(
+        operation: String,
+        error: String,
+    ) {
+        runOnUiThread {
+            binding.statusText.text = "Error in $operation: $error"
+            Toast.makeText(this, "Network error: $error", Toast.LENGTH_LONG).show()
+        }
+    }
+
+    private fun startRemoteMeasurement(sessionInfo: SessionInfo) {
+        val intent =
+            Intent(this, MultiModalRecordingActivity::class.java).apply {
+                putExtra("session_id", sessionInfo.sessionId)
+                putExtra("session_name", sessionInfo.studyName ?: sessionInfo.sessionId)
+                putExtra("remote_session", true)
+            }
+        startActivity(intent)
+
+        Toast.makeText(this, "Starting remote measurement session", Toast.LENGTH_SHORT).show()
+    }
+}
+
+class ControllersAdapter(
+    private var controllers: List<NetworkClient.ControllerInfo>,
+    private val onControllerClick: (NetworkClient.ControllerInfo) -> Unit,
+) : androidx.recyclerview.widget.RecyclerView.Adapter<ControllersAdapter.ControllerViewHolder>() {
+
+    class ControllerViewHolder(itemView: android.view.View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
+        val deviceNameText: android.widget.TextView = itemView.findViewById(android.R.id.text1)
+        val deviceInfoText: android.widget.TextView = itemView.findViewById(android.R.id.text2)
+    }
+
+    override fun onCreateViewHolder(parent: android.view.ViewGroup, viewType: Int): ControllerViewHolder {
+        val view = android.view.LayoutInflater.from(parent.context)
+            .inflate(android.R.layout.simple_list_item_2, parent, false)
+        return ControllerViewHolder(view)
+    }
+
+    override fun onBindViewHolder(holder: ControllerViewHolder, position: Int) {
+        val controller = controllers[position]
+        holder.deviceNameText.text = controller.deviceName
+        holder.deviceInfoText.text = "${controller.ipAddress}:${controller.port}"
+        
+        holder.itemView.setOnClickListener {
+            onControllerClick(controller)
+        }
+    }
+
+    override fun getItemCount(): Int = controllers.size
+
+    fun updateControllers(newControllers: List<NetworkClient.ControllerInfo>) {
+        controllers = newControllers
+        notifyDataSetChanged()
     }
 }
