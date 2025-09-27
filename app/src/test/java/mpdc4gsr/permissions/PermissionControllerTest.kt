@@ -248,4 +248,111 @@ class PermissionControllerTest {
         assertEquals(true, callbackResult?.first)
         assertEquals(mockDevice, callbackResult?.second)
     }
+
+    @Test
+    fun `test getCriticalPermissions excludes location permissions`() {
+        val testPermissions = listOf(
+            Manifest.permission.CAMERA,
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.BLUETOOTH_SCAN,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+        )
+
+        val criticalPermissions = permissionController.getCriticalPermissions(testPermissions)
+        
+        assertTrue(criticalPermissions.contains(Manifest.permission.CAMERA))
+        assertTrue(criticalPermissions.contains(Manifest.permission.BLUETOOTH_SCAN))
+        assertFalse(criticalPermissions.contains(Manifest.permission.ACCESS_FINE_LOCATION))
+        assertFalse(criticalPermissions.contains(Manifest.permission.ACCESS_COARSE_LOCATION))
+        assertFalse(criticalPermissions.contains(Manifest.permission.WRITE_EXTERNAL_STORAGE))
+    }
+
+    @Test
+    fun `test getLocationPermissions filters location permissions correctly`() {
+        val testPermissions = listOf(
+            Manifest.permission.CAMERA,
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.BLUETOOTH_SCAN
+        )
+
+        val locationPermissions = permissionController.getLocationPermissions(testPermissions)
+        
+        assertEquals(2, locationPermissions.size)
+        assertTrue(locationPermissions.contains(Manifest.permission.ACCESS_FINE_LOCATION))
+        assertTrue(locationPermissions.contains(Manifest.permission.ACCESS_COARSE_LOCATION))
+        assertFalse(locationPermissions.contains(Manifest.permission.CAMERA))
+        assertFalse(locationPermissions.contains(Manifest.permission.BLUETOOTH_SCAN))
+    }
+
+    @Test
+    fun `test canConnectToShimmerLimited returns true with bluetooth permissions only`() {
+        mockkStatic(ContextCompat::class)
+
+        // Mock Bluetooth permissions as granted, location as denied
+        mockBluetoothPermissions(granted = true)
+        every {
+            ContextCompat.checkSelfPermission(mockActivity, Manifest.permission.ACCESS_FINE_LOCATION)
+        } returns PackageManager.PERMISSION_DENIED
+        every {
+            ContextCompat.checkSelfPermission(mockActivity, Manifest.permission.ACCESS_COARSE_LOCATION)
+        } returns PackageManager.PERMISSION_DENIED
+
+        assertTrue(permissionController.canConnectToShimmerLimited())
+        assertFalse(permissionController.canConnectToShimmer())
+    }
+
+    @Test
+    fun `test getBluetoothConnectionStatus provides appropriate message`() {
+        mockkStatic(ContextCompat::class)
+
+        // Test with Bluetooth permissions but no location permission
+        mockBluetoothPermissions(granted = true)
+        every {
+            ContextCompat.checkSelfPermission(mockActivity, Manifest.permission.ACCESS_FINE_LOCATION)
+        } returns PackageManager.PERMISSION_DENIED
+        every {
+            ContextCompat.checkSelfPermission(mockActivity, Manifest.permission.ACCESS_COARSE_LOCATION)
+        } returns PackageManager.PERMISSION_DENIED
+
+        val status = permissionController.getBluetoothConnectionStatus()
+        assertTrue(status.contains("Limited Bluetooth functionality"))
+        assertTrue(status.contains("device scanning may not work"))
+    }
+
+    @Test
+    fun `test isLocationPermissionPermanentlyDenied detects permanent denial correctly`() {
+        mockkStatic(ContextCompat::class)
+
+        every {
+            ContextCompat.checkSelfPermission(mockActivity, Manifest.permission.ACCESS_FINE_LOCATION)
+        } returns PackageManager.PERMISSION_DENIED
+        every {
+            mockActivity.shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)
+        } returns false
+
+        every {
+            ContextCompat.checkSelfPermission(mockActivity, Manifest.permission.ACCESS_COARSE_LOCATION)
+        } returns PackageManager.PERMISSION_DENIED
+        every {
+            mockActivity.shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_COARSE_LOCATION)
+        } returns false
+
+        assertTrue(permissionController.isLocationPermissionPermanentlyDenied())
+    }
+
+    private fun mockBluetoothPermissions(granted: Boolean) {
+        val result = if (granted) PackageManager.PERMISSION_GRANTED else PackageManager.PERMISSION_DENIED
+        
+        every {
+            ContextCompat.checkSelfPermission(mockActivity, Manifest.permission.BLUETOOTH_SCAN)
+        } returns result
+        every {
+            ContextCompat.checkSelfPermission(mockActivity, Manifest.permission.BLUETOOTH_CONNECT)
+        } returns result
+        every {
+            ContextCompat.checkSelfPermission(mockActivity, Manifest.permission.BLUETOOTH_ADVERTISE)
+        } returns result
+    }
 }
