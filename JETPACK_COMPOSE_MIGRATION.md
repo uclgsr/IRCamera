@@ -176,6 +176,9 @@ override fun connected() {
 - ClauseComposeActivity as user agreement and app initialization
 - PdfComposeActivity as file handling and placeholder content
 - NetworkConfigComposeActivity as permissions and Bluetooth integration
+- SimpleNetworkTestComposeActivity as network testing and TCP/UDP connections
+- FaultTolerantRecordingComposeActivity as recording state management and fault tolerance
+- NetworkClientTestComposeActivity as service binding and bidirectional networking
 
 ### Next Steps
 1. Migrate simple activities (MoreHelp, WebView)
