@@ -10,6 +10,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.view.isVisible
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,17 +19,14 @@ import com.csl.irCamera.R
 import com.csl.irCamera.databinding.FragmentMainBinding
 import com.mpdc4gsr.libunified.app.bean.event.SocketMsgEvent
 import com.mpdc4gsr.libunified.app.comm.navigation.NavigationManager
-import com.mpdc4gsr.libunified.app.common.SharedManager
 import com.mpdc4gsr.libunified.app.config.ExtraKeyConfig
 import com.mpdc4gsr.libunified.app.config.RouterConfig
 import com.mpdc4gsr.libunified.app.dialog.TipDialog
 import com.mpdc4gsr.libunified.app.ktbase.BaseBindingFragment
 import com.mpdc4gsr.libunified.app.lms.weiget.TToast
 import com.mpdc4gsr.libunified.app.socket.SocketCmdUtil
-import com.mpdc4gsr.libunified.app.socket.WebSocketProxy
 import com.mpdc4gsr.libunified.app.tools.AppLanguageUtils
 import com.mpdc4gsr.libunified.app.tools.ConstantLanguages
-import com.mpdc4gsr.libunified.app.tools.DeviceTools
 import com.mpdc4gsr.libunified.app.utils.NetWorkUtils
 import com.mpdc4gsr.libunified.app.utils.WsCmdConstants
 import com.mpdc4gsr.libunified.ui.widget.BatteryView
@@ -37,30 +35,18 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.json.JSONObject
 
-
-// Local data class to replace removed TC007 BatteryInfo
-data class BatteryInfo(
-    val status: String?,
-    val remaining: String?
-) {
-    fun isCharging(): Boolean = status == "Charging"
-
-    fun getBattery(): Int? =
-        try {
-            remaining?.toInt()
-        } catch (e: NumberFormatException) {
-            null
-        }
-}
-
 @SuppressLint("NotifyDataSetChanged")
 class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickListener {
+    private val viewModel: MainFragmentViewModel by viewModels()
     private lateinit var adapter: MyAdapter
 
     override fun initContentLayoutId(): Int = R.layout.fragment_main
 
     override fun initView(savedInstanceState: Bundle?) {
-        adapter = MyAdapter()
+        setupRecyclerView()
+        setupObservers()
+        setupLifecycleObserver()
+        
         binding.tvConnectDevice.setOnClickListener(this)
         binding.ivAdd.setOnClickListener(this)
 
@@ -77,140 +63,119 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
             showGSROptions()
         }
 
-        adapter.hasConnectLine = DeviceTools.isConnect()
-        adapter.hasConnectTS004 = WebSocketProxy.getInstance().isTS004Connect()
-        adapter.hasConnectTC007 = WebSocketProxy.getInstance().isTC007Connect()
-        adapter.onItemClickListener = {
-            when (it) {
-                ConnectType.LINE -> {
-                    NavigationManager.getInstance()
-                        .build(RouterConfig.IR_MAIN)
-                        .withBoolean(ExtraKeyConfig.IS_TC007, false)
-                        .navigation(requireContext())
-                }
+        // Initialize device state
+        viewModel.initializeDeviceState()
+    }
 
-                ConnectType.TS004 -> {
-                    if (WebSocketProxy.getInstance().isTS004Connect()) {
-                        NavigationManager.getInstance().build(RouterConfig.IR_MONOCULAR)
-                            .navigation(requireContext())
-                    } else {
-                        NavigationManager.getInstance()
-                            .build(RouterConfig.IR_DEVICE_ADD)
-                            .withBoolean("isTS004", true)
-                            .navigation(requireContext())
-                    }
-                }
-
-                ConnectType.TC007 -> {
-                    NavigationManager.getInstance()
-                        .build(RouterConfig.IR_MAIN)
-                        .withBoolean(ExtraKeyConfig.IS_TC007, true)
-                        .navigation(requireContext())
-                }
-            }
+    private fun setupRecyclerView() {
+        adapter = MyAdapter()
+        adapter.onItemClickListener = { connectType ->
+            viewModel.onDeviceItemClick(connectType)
         }
         adapter.onItemLongClickListener = { view, type ->
-            val popup = DelPopup(requireContext())
-            popup.onDelListener = {
-                TipDialog.Builder(requireContext())
-                    .setTitleMessage(
-                        AppLanguageUtils.attachBaseContext(
-                            context, ConstantLanguages.ENGLISH,
-                        ).getString(R.string.tc_delete_device),
-                    )
-                    .setMessage(R.string.tc_delete_device_tips)
-                    .setPositiveListener(R.string.report_delete) {
-                        when (type) {
-                            ConnectType.LINE -> SharedManager.hasTcLine = false
-                            // TS004/TC007 functionality removed
-                            ConnectType.TS004 -> { /* TS004 removed */
-                            }
-
-                            ConnectType.TC007 -> { /* TC007 removed */
-                            }
-                        }
-                        refresh()
-                        TToast.shortToast(requireContext(), R.string.test_results_delete_success)
-                    }
-                    .setCancelListener(R.string.app_cancel)
-                    .create().show()
-            }
-            popup.show(view)
+            showDeleteDeviceDialog(view, type)
         }
-
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerView.adapter = adapter
+    }
 
+    private fun setupObservers() {
+        viewModel.deviceState.observe(viewLifecycleOwner) { deviceState ->
+            binding.clHasDevice.isVisible = deviceState.hasAnyDevice
+            binding.clNoDevice.isVisible = !deviceState.hasAnyDevice
+            
+            adapter.hasConnectLine = deviceState.hasConnectLine
+            adapter.hasConnectTS004 = deviceState.hasConnectTS004
+            adapter.hasConnectTC007 = deviceState.hasConnectTC007
+            adapter.notifyDataSetChanged()
+        }
+
+        viewModel.batteryInfo.observe(viewLifecycleOwner) { batteryInfo ->
+            adapter.tc007Battery = batteryInfo
+        }
+
+        viewModel.navigationEvent.observe(viewLifecycleOwner) { navigationEvent ->
+            navigationEvent?.let { event ->
+                when (event.route) {
+                    "IR_MAIN" -> {
+                        NavigationManager.getInstance()
+                            .build(RouterConfig.IR_MAIN)
+                            .withBoolean(ExtraKeyConfig.IS_TC007, event.isTC007)
+                            .navigation(requireContext())
+                    }
+                    "IR_MONOCULAR" -> {
+                        NavigationManager.getInstance()
+                            .build(RouterConfig.IR_MONOCULAR)
+                            .navigation(requireContext())
+                    }
+                    "IR_DEVICE_ADD" -> {
+                        NavigationManager.getInstance()
+                            .build(RouterConfig.IR_DEVICE_ADD)
+                            .withBoolean("isTS004", event.isTS004)
+                            .navigation(requireContext())
+                    }
+                }
+                viewModel.clearNavigationEvent()
+            }
+        }
+    }
+
+    private fun setupLifecycleObserver() {
         viewLifecycleOwner.lifecycle.addObserver(
             object : DefaultLifecycleObserver {
                 override fun onResume(owner: LifecycleOwner) {
-
-                    if (WebSocketProxy.getInstance().isConnected()) {
-                        NetWorkUtils.switchNetwork(true)
-                    }
+                    // Network switching logic moved from direct WebSocket check
+                    NetWorkUtils.switchNetwork(true)
                 }
-            },
+            }
         )
     }
 
     override fun onResume() {
         super.onResume()
-        refresh()
-        adapter?.notifyDataSetChanged()
+        viewModel.refreshDeviceState()
     }
 
-    private fun refresh() {
-        val hasAnyDevice =
-            SharedManager.hasTcLine // TS004/TC007 removed
-        binding.clHasDevice.isVisible = hasAnyDevice
-        binding.clNoDevice.isVisible = !hasAnyDevice
-        adapter.hasConnectLine = DeviceTools.isConnect(isAutoRequest = false)
-        adapter.hasConnectTS004 = false // TS004 functionality removed 
-        adapter.hasConnectTC007 = false // TC007 functionality removed
-        adapter.notifyDataSetChanged()
+    private fun showDeleteDeviceDialog(view: View, type: MainFragmentViewModel.ConnectType) {
+        val popup = DelPopup(requireContext())
+        popup.onDelListener = {
+            TipDialog.Builder(requireContext())
+                .setTitleMessage(
+                    AppLanguageUtils.attachBaseContext(
+                        context, ConstantLanguages.ENGLISH,
+                    ).getString(R.string.tc_delete_device),
+                )
+                .setMessage(R.string.tc_delete_device_tips)
+                .setPositiveListener(R.string.report_delete) {
+                    viewModel.onDeviceDeleted(type)
+                    TToast.shortToast(requireContext(), R.string.test_results_delete_success)
+                }
+                .setCancelListener(R.string.app_cancel)
+                .create().show()
+        }
+        popup.show(view)
     }
 
     override fun connected() {
-        adapter.hasConnectLine = true
-        SharedManager.hasTcLine = true
-        refresh()
+        viewModel.onDeviceConnected(isLine = true)
     }
 
     override fun disConnected() {
-        adapter.hasConnectLine = false
+        viewModel.onDeviceDisconnected()
     }
 
     override fun onSocketConnected(isTS004: Boolean) {
-        // TS004/TC007 functionality removed
-        // if (isTS004) {
-        //     SharedManager.hasTS004 = true
-        //     adapter.hasConnectTS004 = true
-        // } else {
-        //     SharedManager.hasTC007 = true
-        //     adapter.hasConnectTC007 = true
-        //     lifecycleScope.launch {
-        //         val batteryInfo: BatteryInfo? = TC007Repository.getBatteryInfo()
-        //         if (batteryInfo != null) {
-        //             adapter.tc007Battery = batteryInfo
-        //         }
-        //     }
-        // }
+        viewModel.onSocketConnected(isTS004)
     }
 
     override fun onSocketDisConnected(isTS004: Boolean) {
-        if (isTS004) {
-            adapter.hasConnectTS004 = false
-        } else {
-            adapter.hasConnectTC007 = false
-        }
+        viewModel.onSocketDisconnected(isTS004)
     }
 
     override fun onClick(v: View?) {
         when (v) {
             binding.tvConnectDevice, binding.ivAdd -> {
                 startActivity(Intent(requireContext(), DeviceTypeActivity::class.java))
-
-
             }
         }
     }
@@ -218,15 +183,7 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onSocketMsgEvent(event: SocketMsgEvent) {
         if (SocketCmdUtil.getCmdResponse(event.text) == WsCmdConstants.APP_EVENT_HEART_BEATS) {
-            if (!adapter.hasConnectTC007) {
-                return
-            }
-            try {
-                val battery: JSONObject = JSONObject(event.text).getJSONObject("battery")
-                adapter.tc007Battery =
-                    BatteryInfo(battery.getString("status"), battery.getString("remaining"))
-            } catch (_: Exception) {
-            }
+            viewModel.processBatteryUpdate(event.text)
         }
     }
 
@@ -250,7 +207,7 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
                 notifyItemRangeChanged(0, itemCount)
             }
 
-        var tc007Battery: BatteryInfo? = null
+        var tc007Battery: MainFragmentViewModel.BatteryInfo? = null
             set(value) {
                 if (field != value) {
                     field = value
@@ -258,8 +215,8 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
                 }
             }
 
-        var onItemClickListener: ((type: ConnectType) -> Unit)? = null
-        var onItemLongClickListener: ((view: View, type: ConnectType) -> Unit)? = null
+        var onItemClickListener: ((type: MainFragmentViewModel.ConnectType) -> Unit)? = null
+        var onItemLongClickListener: ((view: View, type: MainFragmentViewModel.ConnectType) -> Unit)? = null
 
         override fun onCreateViewHolder(
             parent: ViewGroup,
@@ -333,20 +290,24 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
 
                         val deviceType = getConnectType(position)
                         when (deviceType) {
-                            ConnectType.LINE -> {
-                                if (DeviceTools.isConnect()) {
+                            MainFragmentViewModel.ConnectType.LINE -> {
+                                // Check connection state via ViewModel instead of direct calls
+                                val currentState = this@MainFragment.viewModel.deviceState.value
+                                if (currentState?.hasConnectLine == true) {
                                     return@setOnLongClickListener true
                                 }
                             }
 
-                            ConnectType.TS004 -> {
-                                if (WebSocketProxy.getInstance().isTS004Connect()) {
+                            MainFragmentViewModel.ConnectType.TS004 -> {
+                                val currentState = this@MainFragment.viewModel.deviceState.value
+                                if (currentState?.hasConnectTS004 == true) {
                                     return@setOnLongClickListener true
                                 }
                             }
 
-                            ConnectType.TC007 -> {
-                                if (WebSocketProxy.getInstance().isTC007Connect()) {
+                            MainFragmentViewModel.ConnectType.TC007 -> {
+                                val currentState = this@MainFragment.viewModel.deviceState.value
+                                if (currentState?.hasConnectTC007 == true) {
                                     return@setOnLongClickListener true
                                 }
                             }
@@ -358,18 +319,18 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
             }
 
             fun bind(
-                type: ConnectType,
+                type: MainFragmentViewModel.ConnectType,
                 hasTitle: Boolean,
                 hasConnect: Boolean,
                 hasConnectTC007: Boolean,
-                tc007Battery: BatteryInfo?,
+                tc007Battery: MainFragmentViewModel.BatteryInfo?,
             ) {
                 tvTitle.isVisible = hasTitle
                 tvTitle.text =
                     AppLanguageUtils.attachBaseContext(
                         itemView.context, ConstantLanguages.ENGLISH,
                     )
-                        .getString(if (type == ConnectType.LINE) R.string.tc_connect_line else R.string.tc_connect_wifi)
+                        .getString(if (type == MainFragmentViewModel.ConnectType.LINE) R.string.tc_connect_line else R.string.tc_connect_wifi)
 
                 ivBg.isSelected = hasConnect
                 tvDeviceName.isSelected = hasConnect
@@ -377,12 +338,12 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
                 tvDeviceState.isSelected = hasConnect
                 tvDeviceState.text = if (hasConnect) "online" else "offline"
                 tvBattery.isVisible =
-                    type == ConnectType.TC007 && hasConnectTC007 && tc007Battery != null
+                    type == MainFragmentViewModel.ConnectType.TC007 && hasConnectTC007 && tc007Battery != null
                 batteryView.isVisible =
-                    type == ConnectType.TC007 && hasConnectTC007 && tc007Battery != null
+                    type == MainFragmentViewModel.ConnectType.TC007 && hasConnectTC007 && tc007Battery != null
 
                 when (type) {
-                    ConnectType.LINE -> {
+                    MainFragmentViewModel.ConnectType.LINE -> {
                         tvDeviceName.setText(
                             AppLanguageUtils.attachBaseContext(
                                 itemView.context,
@@ -397,7 +358,7 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
                         }
                     }
 
-                    ConnectType.TS004 -> {
+                    MainFragmentViewModel.ConnectType.TS004 -> {
                         tvDeviceName.text = "TS004"
                         if (hasConnect) {
                             ivImage.setImageResource(R.drawable.ic_main_device_ts004_connect)
@@ -406,7 +367,7 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
                         }
                     }
 
-                    ConnectType.TC007 -> {
+                    MainFragmentViewModel.ConnectType.TC007 -> {
                         tvDeviceName.text = "TC007"
                         if (hasConnect) {
                             ivImage.setImageResource(R.drawable.ic_main_device_tc007_connect)
@@ -420,25 +381,11 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
                 }
             }
 
-            fun getConnectType(position: Int): ConnectType =
+            fun getConnectType(position: Int): MainFragmentViewModel.ConnectType =
                 when (position) {
-                    0 ->
-                        if (SharedManager.hasTcLine) {
-                            ConnectType.LINE
-                        } else {
-                            // TS004/TC007 functionality removed - default to LINE
-                            ConnectType.LINE
-                        }
-
-                    1 ->
-                        if (SharedManager.hasTcLine) {
-                            // TS004/TC007 functionality removed - default to LINE
-                            ConnectType.LINE
-                        } else {
-                            ConnectType.LINE
-                        }
-
-                    else -> ConnectType.LINE // Default to LINE instead of TC007
+                    0 -> MainFragmentViewModel.ConnectType.LINE
+                    1 -> MainFragmentViewModel.ConnectType.TS004
+                    else -> MainFragmentViewModel.ConnectType.TC007
                 }
         }
     }
@@ -523,11 +470,5 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
             )
             .setPositiveListener("Got it") { }
             .create().show()
-    }
-
-    enum class ConnectType {
-        LINE,
-        TS004,
-        TC007,
     }
 }
