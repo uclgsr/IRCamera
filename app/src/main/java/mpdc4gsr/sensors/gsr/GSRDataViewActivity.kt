@@ -235,7 +235,7 @@ class GSRDataViewActivity : BaseViewModelActivity<GSRDataViewViewModel>() {
 
     private fun updateStatisticsUI(statistics: GSRDataViewViewModel.GSRStatistics?) {
         statistics?.let { stats ->
-            findViewById<android.widget.TextView>(R.id.statistics_text)?.text = buildString {
+            binding.statisticsText?.text = buildString {
                 appendLine("Dataset Statistics:")
                 appendLine("━━━━━━━━━━━━━━━━━━━━")
                 appendLine("Samples: ${stats.sampleCount}")
