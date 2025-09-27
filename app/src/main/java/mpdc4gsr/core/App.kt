@@ -33,8 +33,8 @@ class App : BaseApplication() {
         lateinit var instance: App
 
         fun delayInit() {
-            initReceiver()
             initLog()
+            initReceiver()
             initLms()
             initUM()
             initJPush()
