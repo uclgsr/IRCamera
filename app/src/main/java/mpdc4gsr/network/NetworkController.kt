@@ -89,6 +89,10 @@ class NetworkController(private val context: Context) {
             }
 
             return@withContext true
+        } catch (e: java.net.BindException) {
+            Log.e(TAG, "Failed to start NetworkController - port $port already in use", e)
+            eventListener?.onError("start_server", "Port $port is already in use. Please ensure no other services are using this port.")
+            return@withContext false
         } catch (e: Exception) {
             Log.e(TAG, "Failed to start NetworkController", e)
             eventListener?.onError("start_server", e.message ?: "Unknown error")
