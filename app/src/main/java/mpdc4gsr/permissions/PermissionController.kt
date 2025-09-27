@@ -102,7 +102,7 @@ class PermissionController(
         return hasBasicPermissions() &&
                 hasBluetoothPermissions() &&
                 hasStoragePermissions() &&
-                hasForegroundServicePermissions() &&
+                // Skip foreground service permissions as they are manifest permissions
                 hasNotificationPermissions() &&
                 hasUsbPermissions()
     }
@@ -159,9 +159,13 @@ class PermissionController(
 
 
     fun ensureAll(callback: (Boolean, List<String>) -> Unit) {
+        Log.d(TAG, "ensureAll() called - checking permissions")
         permissionCallback = callback
 
         val missingPermissions = getMissingPermissions()
+        Log.d(TAG, "Missing permissions check complete: ${missingPermissions.size} missing")
+        Log.d(TAG, "Missing permissions: ${missingPermissions.joinToString(", ")}")
+        
         if (missingPermissions.isEmpty()) {
             Log.i(TAG, "All permissions already granted")
             callback(true, emptyList())
@@ -175,8 +179,9 @@ class PermissionController(
             }"
         )
 
-
+        Log.d(TAG, "About to show permission rationale dialog")
         showPermissionRationaleDialog(missingPermissions) { userAccepted ->
+            Log.d(TAG, "Permission rationale dialog result: userAccepted=$userAccepted")
             if (userAccepted) {
                 requestPermissionsSequentially(missingPermissions)
             } else {
@@ -426,10 +431,14 @@ class PermissionController(
     }
 
     fun getMissingPermissions(): List<String> {
+        Log.d(TAG, "getMissingPermissions() called")
         val missing = mutableListOf<String>()
 
+        Log.d(TAG, "Checking CAMERA_PERMISSIONS: ${CAMERA_PERMISSIONS.joinToString(", ")}")
         CAMERA_PERMISSIONS.forEach { permission ->
-            if (!isPermissionGranted(permission)) {
+            val granted = isPermissionGranted(permission)
+            Log.d(TAG, "Permission $permission: granted=$granted")
+            if (!granted) {
                 missing.add(permission)
             }
         }
@@ -440,8 +449,11 @@ class PermissionController(
             STORAGE_PERMISSIONS_LEGACY
         }
 
+        Log.d(TAG, "Checking storage permissions (API ${Build.VERSION.SDK_INT}): ${storagePermissions.joinToString(", ")}")
         storagePermissions.forEach { permission ->
-            if (!isPermissionGranted(permission)) {
+            val granted = isPermissionGranted(permission)
+            Log.d(TAG, "Permission $permission: granted=$granted")
+            if (!granted) {
                 missing.add(permission)
             }
         }
@@ -452,25 +464,31 @@ class PermissionController(
             BLUETOOTH_PERMISSIONS_LEGACY
         }
 
+        Log.d(TAG, "Checking bluetooth permissions (API ${Build.VERSION.SDK_INT}): ${bluetoothPermissions.joinToString(", ")}")
         bluetoothPermissions.forEach { permission ->
-            if (!isPermissionGranted(permission)) {
+            val granted = isPermissionGranted(permission)
+            Log.d(TAG, "Permission $permission: granted=$granted")
+            if (!granted) {
                 missing.add(permission)
             }
         }
 
-        FOREGROUND_SERVICE_PERMISSIONS.forEach { permission ->
-            if (!isPermissionGranted(permission)) {
-                missing.add(permission)
-            }
-        }
+        // FOREGROUND_SERVICE permissions are manifest permissions, not runtime permissions
+        // Skip checking them as they don't require user dialogs
+        Log.d(TAG, "Skipping FOREGROUND_SERVICE_PERMISSIONS as they are manifest permissions")
 
+        Log.d(TAG, "Checking NOTIFICATION_PERMISSIONS: ${NOTIFICATION_PERMISSIONS.joinToString(", ")}")
         NOTIFICATION_PERMISSIONS.forEach { permission ->
-            if (!isPermissionGranted(permission)) {
+            val granted = isPermissionGranted(permission)
+            Log.d(TAG, "Permission $permission: granted=$granted")
+            if (!granted) {
                 missing.add(permission)
             }
         }
 
-        return missing.distinct()
+        val result = missing.distinct()
+        Log.d(TAG, "getMissingPermissions() returning ${result.size} missing permissions: ${result.joinToString(", ")}")
+        return result
     }
 
     fun getPermissionNames(permissions: List<String>): List<String> {
@@ -635,8 +653,9 @@ class PermissionController(
     }
 
     private fun requestNextPermissionGroup() {
+        Log.d(TAG, "requestNextPermissionGroup() called")
         if (remainingPermissionGroups.isEmpty()) {
-
+            Log.d(TAG, "No more permission groups remaining")
             val stillMissingPermissions =
                 allRequestedPermissions.filter { !isPermissionGranted(it) }
             if (stillMissingPermissions.isEmpty()) {
@@ -657,7 +676,9 @@ class PermissionController(
 
         val nextGroup = remainingPermissionGroups.removeAt(0)
         Log.i(TAG, "Requesting permission group: ${nextGroup.joinToString(", ")}")
+        Log.d(TAG, "Calling activity.requestPermissions() with REQUEST_PERMISSIONS=$REQUEST_PERMISSIONS")
         activity.requestPermissions(nextGroup.toTypedArray(), REQUEST_PERMISSIONS)
+        Log.d(TAG, "activity.requestPermissions() call completed")
     }
 
     private fun groupPermissionsLogically(permissions: List<String>): List<List<String>> {
@@ -715,7 +736,9 @@ class PermissionController(
         missingPermissions: List<String>,
         callback: (Boolean) -> Unit
     ) {
+        Log.d(TAG, "showPermissionRationaleDialog() called with ${missingPermissions.size} permissions")
         val permissionNames = getPermissionNames(missingPermissions)
+        Log.d(TAG, "Permission names: ${permissionNames.joinToString(", ")}")
 
         val message = buildString {
             appendLine("This app requires the following permissions for multi-sensor recording:")
@@ -734,17 +757,24 @@ class PermissionController(
             appendLine("The app will not function properly without these permissions.")
         }
 
-        AlertDialog.Builder(activity)
+        Log.d(TAG, "Creating AlertDialog for permission rationale")
+        val dialog = AlertDialog.Builder(activity)
             .setTitle("Permissions Required")
             .setMessage(message)
             .setPositiveButton("Grant Permissions") { _, _ ->
+                Log.d(TAG, "User clicked 'Grant Permissions'")
                 callback(true)
             }
             .setNegativeButton("Cancel") { _, _ ->
+                Log.d(TAG, "User clicked 'Cancel'")
                 callback(false)
             }
             .setCancelable(false)
-            .show()
+            .create()
+            
+        Log.d(TAG, "Showing permission rationale dialog")
+        dialog.show()
+        Log.d(TAG, "Permission rationale dialog.show() called")
     }
 
     private fun showPermissionExplanationDialog(
