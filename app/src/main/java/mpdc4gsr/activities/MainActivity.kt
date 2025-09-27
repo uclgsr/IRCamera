@@ -201,6 +201,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         super.onCreate(savedInstanceState)
 
         try {
+            Log.d(TAG, "MainActivity onCreate() called")
             initializePhase0Baseline()
 
             initView()
@@ -413,10 +414,12 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
     }
 
     private fun initView() {
+        Log.d(TAG, "initView() called")
         try {
             // Initialize permission controller
             permissionController = PermissionController(this)
             permissionController.initialize()
+            Log.d(TAG, "PermissionController initialized")
 
             // Initialize network settings
             networkSettings = mpdc4gsr.network.NetworkSettings(this)
@@ -424,6 +427,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             // Initialize enhanced UI components
             initializeEnhancedUIComponents()
 
+            Log.d(TAG, "Checking if clause has been shown: ${SharedManager.getHasShowClause()}")
             if (!SharedManager.getHasShowClause()) {
                 Log.i(TAG, "Clause not shown yet, navigating to ClauseActivity")
                 NavigationManager.build(RouterConfig.CLAUSE).navigation(this)
@@ -641,6 +645,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
     }
 
     private fun initData() {
+        Log.d(TAG, "initData() called - about to initialize components and request permissions")
         // Initialize MainActivityViewModel components
         mainViewModel.initializeComponents()
 
@@ -653,7 +658,9 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
     }
 
     private fun requestAllPermissions() {
+        Log.d(TAG, "requestAllPermissions() called")
         permissionController.ensureAll { allGranted, deniedPermissions ->
+            Log.d(TAG, "Permission callback: allGranted=$allGranted, deniedPermissions=${deniedPermissions.joinToString(",")}")
             if (allGranted) {
                 Log.i(TAG, "All permissions granted - full functionality enabled")
 
@@ -874,6 +881,18 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         super.onResume()
         LMS.getInstance().language = ConstantLanguages.ENGLISH
 
+        // Ensure permissions are requested even if they were missed during initialization
+        if (SharedManager.getHasShowClause() && ::permissionController.isInitialized) {
+            Log.d(TAG, "onResume() - checking if permissions need to be requested again")
+            val missingPermissions = permissionController.getMissingPermissions()
+            if (missingPermissions.isNotEmpty()) {
+                Log.w(TAG, "onResume() - Found missing permissions, requesting them: ${missingPermissions.joinToString(", ")}")
+                // Use a small delay to ensure the activity is fully resumed
+                binding.root.postDelayed({
+                    requestAllPermissions()
+                }, 500)
+            }
+        }
     }
 
     override fun onPause() {
