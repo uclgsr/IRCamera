@@ -156,9 +156,10 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
                 val intent = Intent(this, SessionManagerActivity::class.java)
                 startActivity(intent)
             } catch (e: Exception) {
-
-                val intent = Intent(this, GSRDemoActivity::class.java)
-                startActivity(intent)
+                // Demo activity removed - commented out to avoid compilation errors
+                // val intent = Intent(this, GSRDemoActivity::class.java)
+                // startActivity(intent)
+                Log.e(TAG, "Could not start SessionManagerActivity", e)
             }
         }
 
