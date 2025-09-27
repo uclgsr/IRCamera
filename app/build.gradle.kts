@@ -97,7 +97,7 @@ android {
     androidResources {
         ignoreAssetsPattern = "!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~"
         additionalParameters += listOf("--allow-reserved-package-id", "--auto-add-overlay")
-        generateLocaleConfig = true
+        generateLocaleConfig = false
     }
 
     packaging {
