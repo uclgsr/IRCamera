@@ -114,7 +114,7 @@
         app:layout_constraintTop_toBottomOf="@id/title_view">
 
 
-        <com.mpdc4gsr.libunified.ir.view.CameraView
+        <com.infisense.usbir.view.CameraView
             android:id="@+id/cameraView"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />

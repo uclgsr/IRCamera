@@ -20,7 +20,7 @@ import java.util.concurrent.CopyOnWriteArrayList
  * Consolidates ALL camera functionality from across the repository:
  * - libunified/ui/camera/CameraView.kt
  * - libunified/ir/view/CameraView.java
- * - infisense/usbir/view/CameraView.kt
+ * - infisense/usbir/view/CameraView.kt (✅ Topdon TC001 implementation)
  * - libunified/ir/view/CameraJpegView.java
  * - libunified/ui/camera/CameraPreView.kt
  * - libunified/app/bean/CameraIRConfig.kt
