@@ -47,10 +47,6 @@ android {
         isCoreLibraryDesugaringEnabled = true
     }
 
-    tasks.withType<JavaCompile> {
-        options.compilerArgs.add("-Xlint:deprecation")
-    }
-
     kotlin {
         compilerOptions {
             jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
