@@ -5,10 +5,10 @@
     <!-- Bluetooth LE hardware feature -->
     <uses-feature
         android:name="android.hardware.bluetooth_le"
-        android:required="true" />
+        android:required="false" />
     <uses-feature
         android:name="android.hardware.bluetooth"
-        android:required="true" />
+        android:required="false" />
 
     <!-- Legacy Bluetooth permissions for API < 31 -->
     <uses-permission 
