@@ -8,7 +8,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -42,9 +41,9 @@ object CommonComponents {
                 }
             },
             colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = Color(0xFF16131E),
-                titleContentColor = Color.White,
-                navigationIconContentColor = Color.White
+                containerColor = MaterialTheme.colorScheme.surface,
+                titleContentColor = MaterialTheme.colorScheme.onSurface,
+                navigationIconContentColor = MaterialTheme.colorScheme.onSurface
             )
         )
     }
@@ -59,7 +58,7 @@ object CommonComponents {
         Box(
             modifier = modifier
                 .fillMaxSize()
-                .background(Color(0xFF16131E)),
+                .background(MaterialTheme.colorScheme.background),
             contentAlignment = Alignment.Center
         ) {
             CircularProgressIndicator(
@@ -80,14 +79,14 @@ object CommonComponents {
         Column(
             modifier = modifier
                 .fillMaxSize()
-                .background(Color(0xFF16131E))
+                .background(MaterialTheme.colorScheme.background)
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
             Text(
                 text = message,
-                color = Color(0x80FFFFFF),
+                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
                 fontSize = 14.sp,
                 modifier = Modifier.padding(bottom = 24.dp)
             )
@@ -100,7 +99,7 @@ object CommonComponents {
             ) {
                 Text(
                     text = "Retry",
-                    color = Color.White
+                    color = MaterialTheme.colorScheme.onPrimary
                 )
             }
         }
@@ -116,7 +115,7 @@ object CommonComponents {
     ) {
         Text(
             text = text,
-            color = Color.White,
+            color = MaterialTheme.colorScheme.onBackground,
             fontSize = 16.sp,
             fontWeight = FontWeight.Bold,
             modifier = modifier.padding(vertical = 8.dp)
@@ -134,7 +133,7 @@ object CommonComponents {
         Card(
             modifier = modifier,
             colors = CardDefaults.cardColors(
-                containerColor = Color(0xFF2A2A2A)
+                containerColor = MaterialTheme.colorScheme.surfaceVariant
             )
         ) {
             content()
