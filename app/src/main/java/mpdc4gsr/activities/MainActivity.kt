@@ -24,6 +24,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.blankj.utilcode.util.AppUtils
@@ -80,6 +81,8 @@ import mpdc4gsr.ui_components.MainFragment
 import mpdc4gsr.ui_components.RecordingControlsWidget
 import mpdc4gsr.utils.AppVersionUtil
 import mpdc4gsr.viewmodel.MainActivityViewModel
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.io.File
@@ -243,117 +246,125 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         recordingControlsWidget: RecordingControlsWidget
     ) {
         // Observe RGB camera state
-        mainViewModel.rgbCameraState.observe(this) { sensorState ->
-            val status = when (sensorState.status) {
-                MainActivityViewModel.SensorStatus.DISCONNECTED ->
-                    ComprehensiveSensorStatusWidget.SensorStatus.DISCONNECTED
+        lifecycleScope.launchWhenStarted {
+            mainViewModel.rgbCameraState.collect { sensorState ->
+                val status = when (sensorState.status) {
+                    MainActivityViewModel.SensorStatus.DISCONNECTED ->
+                        ComprehensiveSensorStatusWidget.SensorStatus.DISCONNECTED
 
-                MainActivityViewModel.SensorStatus.CONNECTING ->
-                    ComprehensiveSensorStatusWidget.SensorStatus.CONNECTING
+                    MainActivityViewModel.SensorStatus.CONNECTING ->
+                        ComprehensiveSensorStatusWidget.SensorStatus.CONNECTING
 
-                MainActivityViewModel.SensorStatus.CONNECTED ->
-                    ComprehensiveSensorStatusWidget.SensorStatus.CONNECTED
+                    MainActivityViewModel.SensorStatus.CONNECTED ->
+                        ComprehensiveSensorStatusWidget.SensorStatus.CONNECTED
 
-                MainActivityViewModel.SensorStatus.STREAMING ->
-                    ComprehensiveSensorStatusWidget.SensorStatus.STREAMING
+                    MainActivityViewModel.SensorStatus.STREAMING ->
+                        ComprehensiveSensorStatusWidget.SensorStatus.STREAMING
 
-                MainActivityViewModel.SensorStatus.ERROR ->
-                    ComprehensiveSensorStatusWidget.SensorStatus.ERROR
+                    MainActivityViewModel.SensorStatus.ERROR ->
+                        ComprehensiveSensorStatusWidget.SensorStatus.ERROR
 
-                MainActivityViewModel.SensorStatus.SIMULATION ->
-                    ComprehensiveSensorStatusWidget.SensorStatus.SIMULATION
+                    MainActivityViewModel.SensorStatus.SIMULATION ->
+                        ComprehensiveSensorStatusWidget.SensorStatus.SIMULATION
+                }
+                sensorStatusWidget.updateSensorStatus("rgb_camera", status, sensorState.message)
             }
-            sensorStatusWidget.updateSensorStatus("rgb_camera", status, sensorState.message)
         }
 
         // Observe thermal camera state
-        mainViewModel.thermalCameraState.observe(this) { sensorState ->
-            val status = when (sensorState.status) {
-                MainActivityViewModel.SensorStatus.DISCONNECTED ->
-                    ComprehensiveSensorStatusWidget.SensorStatus.DISCONNECTED
+        lifecycleScope.launchWhenStarted {
+            mainViewModel.thermalCameraState.collect { sensorState ->
+                val status = when (sensorState.status) {
+                    MainActivityViewModel.SensorStatus.DISCONNECTED ->
+                        ComprehensiveSensorStatusWidget.SensorStatus.DISCONNECTED
 
-                MainActivityViewModel.SensorStatus.CONNECTING ->
-                    ComprehensiveSensorStatusWidget.SensorStatus.CONNECTING
+                    MainActivityViewModel.SensorStatus.CONNECTING ->
+                        ComprehensiveSensorStatusWidget.SensorStatus.CONNECTING
 
-                MainActivityViewModel.SensorStatus.CONNECTED ->
-                    ComprehensiveSensorStatusWidget.SensorStatus.CONNECTED
+                    MainActivityViewModel.SensorStatus.CONNECTED ->
+                        ComprehensiveSensorStatusWidget.SensorStatus.CONNECTED
 
-                MainActivityViewModel.SensorStatus.STREAMING ->
-                    ComprehensiveSensorStatusWidget.SensorStatus.STREAMING
+                    MainActivityViewModel.SensorStatus.STREAMING ->
+                        ComprehensiveSensorStatusWidget.SensorStatus.STREAMING
 
-                MainActivityViewModel.SensorStatus.ERROR ->
-                    ComprehensiveSensorStatusWidget.SensorStatus.ERROR
+                    MainActivityViewModel.SensorStatus.ERROR ->
+                        ComprehensiveSensorStatusWidget.SensorStatus.ERROR
 
-                MainActivityViewModel.SensorStatus.SIMULATION ->
-                    ComprehensiveSensorStatusWidget.SensorStatus.SIMULATION
+                    MainActivityViewModel.SensorStatus.SIMULATION ->
+                        ComprehensiveSensorStatusWidget.SensorStatus.SIMULATION
+                }
+                sensorStatusWidget.updateSensorStatus("thermal_camera", status, sensorState.message)
             }
-            sensorStatusWidget.updateSensorStatus("thermal_camera", status, sensorState.message)
         }
 
         // Observe GSR sensor state
-        mainViewModel.gsrSensorState.observe(this) { sensorState ->
-            val status = when (sensorState.status) {
-                MainActivityViewModel.SensorStatus.DISCONNECTED ->
-                    ComprehensiveSensorStatusWidget.SensorStatus.DISCONNECTED
+        lifecycleScope.launchWhenStarted {
+            mainViewModel.gsrSensorState.collect { sensorState ->
+                val status = when (sensorState.status) {
+                    MainActivityViewModel.SensorStatus.DISCONNECTED ->
+                        ComprehensiveSensorStatusWidget.SensorStatus.DISCONNECTED
 
-                MainActivityViewModel.SensorStatus.CONNECTING ->
-                    ComprehensiveSensorStatusWidget.SensorStatus.CONNECTING
+                    MainActivityViewModel.SensorStatus.CONNECTING ->
+                        ComprehensiveSensorStatusWidget.SensorStatus.CONNECTING
 
-                MainActivityViewModel.SensorStatus.CONNECTED ->
-                    ComprehensiveSensorStatusWidget.SensorStatus.CONNECTED
+                    MainActivityViewModel.SensorStatus.CONNECTED ->
+                        ComprehensiveSensorStatusWidget.SensorStatus.CONNECTED
 
-                MainActivityViewModel.SensorStatus.STREAMING ->
-                    ComprehensiveSensorStatusWidget.SensorStatus.STREAMING
+                    MainActivityViewModel.SensorStatus.STREAMING ->
+                        ComprehensiveSensorStatusWidget.SensorStatus.STREAMING
 
-                MainActivityViewModel.SensorStatus.ERROR ->
-                    ComprehensiveSensorStatusWidget.SensorStatus.ERROR
+                    MainActivityViewModel.SensorStatus.ERROR ->
+                        ComprehensiveSensorStatusWidget.SensorStatus.ERROR
 
-                MainActivityViewModel.SensorStatus.SIMULATION ->
-                    ComprehensiveSensorStatusWidget.SensorStatus.SIMULATION
+                    MainActivityViewModel.SensorStatus.SIMULATION ->
+                        ComprehensiveSensorStatusWidget.SensorStatus.SIMULATION
+                }
+                sensorStatusWidget.updateSensorStatus("shimmer_gsr", status, sensorState.message)
             }
-            sensorStatusWidget.updateSensorStatus("shimmer_gsr", status, sensorState.message)
         }
 
         // Observe session state
-        mainViewModel.sessionState.observe(this) { sessionState ->
-            val controlsState = when (sessionState) {
-                MainActivityViewModel.SessionState.IDLE ->
-                    RecordingControlsWidget.SessionState.IDLE
+        lifecycleScope.launchWhenStarted {
+            mainViewModel.sessionState.collect { sessionState ->
+                val controlsState = when (sessionState) {
+                    MainActivityViewModel.SessionState.IDLE ->
+                        RecordingControlsWidget.SessionState.IDLE
 
-                MainActivityViewModel.SessionState.STARTING ->
-                    RecordingControlsWidget.SessionState.STARTING
+                    MainActivityViewModel.SessionState.STARTING ->
+                        RecordingControlsWidget.SessionState.STARTING
 
-                MainActivityViewModel.SessionState.RECORDING ->
-                    RecordingControlsWidget.SessionState.RECORDING
+                    MainActivityViewModel.SessionState.RECORDING ->
+                        RecordingControlsWidget.SessionState.RECORDING
 
-                MainActivityViewModel.SessionState.STOPPING ->
-                    RecordingControlsWidget.SessionState.STOPPING
+                    MainActivityViewModel.SessionState.STOPPING ->
+                        RecordingControlsWidget.SessionState.STOPPING
 
-                MainActivityViewModel.SessionState.ERROR ->
-                    RecordingControlsWidget.SessionState.ERROR
+                    MainActivityViewModel.SessionState.ERROR ->
+                        RecordingControlsWidget.SessionState.ERROR
 
-                else -> RecordingControlsWidget.SessionState.IDLE
+                    else -> RecordingControlsWidget.SessionState.IDLE
+                }
+
+                val isRemoteTriggered = mainViewModel.isRemoteTriggered.value
+                val sessionId = mainViewModel.currentSession.value?.sessionId
+                recordingControlsWidget.updateSessionState(controlsState, sessionId, isRemoteTriggered)
             }
-
-            val isRemoteTriggered = mainViewModel.isRemoteTriggered.value ?: false
-            val sessionId = mainViewModel.currentSession.value?.sessionId
-            recordingControlsWidget.updateSessionState(controlsState, sessionId, isRemoteTriggered)
         }
 
         // Observe status messages
-        mainViewModel.statusMessage.observe(this) { statusMessage ->
-            statusMessage?.let {
-                when (it.level) {
+        lifecycleScope.launchWhenStarted {
+            mainViewModel.statusMessage.collect { statusMessage ->
+                when (statusMessage.level) {
                     MainActivityViewModel.StatusMessage.Level.ERROR -> {
-                        Toast.makeText(this, it.message, Toast.LENGTH_LONG).show()
+                        Toast.makeText(this@MainActivity, statusMessage.message, Toast.LENGTH_LONG).show()
                     }
 
                     MainActivityViewModel.StatusMessage.Level.WARNING -> {
-                        Toast.makeText(this, it.message, Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@MainActivity, statusMessage.message, Toast.LENGTH_SHORT).show()
                     }
 
                     MainActivityViewModel.StatusMessage.Level.INFO -> {
-                        Log.i(TAG, "Status: ${it.message}")
+                        Log.i(TAG, "Status: ${statusMessage.message}")
                     }
                 }
             }
