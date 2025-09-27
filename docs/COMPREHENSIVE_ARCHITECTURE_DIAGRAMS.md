@@ -39,10 +39,10 @@ graph TB
         end
         
         subgraph "Feature Components"
-            ThermalIR[thermal-ir<br/>Advanced Processing]
-            ThermalBasic[thermal<br/>Basic Processing]
-            ThermalLite[thermal-lite<br/>Lightweight Version]
-            GSRRecording[gsr-recording<br/>Data Collection]
+            ThermalIR[thermal-ir<br/>Advanced Thermal Processing]
+            ThermalBasic[thermal<br/>Basic Thermal Processing]
+            ThermalLite[thermal-lite<br/>Lightweight Thermal]
+            GSRRecording[gsr-recording<br/>GSR Data Collection]
             UserMgmt[user<br/>User Management]
         end
         
