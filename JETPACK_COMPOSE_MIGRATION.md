@@ -185,6 +185,9 @@ override fun connected() {
 - ShimmerMvpComposeActivity as GSR sensor integration with Bluetooth and real-time data
 - UnifiedSensorComposeActivity as multi-modal sensor coordination and session management
 - AboutComposeActivity as app information display with external links and team credits
+- DevicePairingComposeActivity as network device discovery and pairing with connection management
+- GSRSettingsComposeActivity as comprehensive GSR sensor configuration with advanced settings
+- IRGalleryComposeActivity as media gallery with thermal images, filtering, and selection management
 
 ### Next Steps
 1. Migrate simple activities (MoreHelp, WebView)
