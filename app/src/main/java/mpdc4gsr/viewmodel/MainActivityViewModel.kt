@@ -575,6 +575,7 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
                 _networkConnectionState.value = NetworkConnectionState.DISCOVERING
                 _statusMessage.tryEmit(
                     StatusMessage("Searching for PC controllers...", StatusMessage.Level.INFO)
+                )
 
                 withContext(Dispatchers.IO) {
                     networkClient?.let { client ->
@@ -622,6 +623,7 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
                 _sessionState.value = SessionState.STARTING
                 _statusMessage.tryEmit(
                     StatusMessage("Starting recording session...", StatusMessage.Level.INFO)
+                )
 
                 withContext(Dispatchers.IO) {
 
@@ -699,6 +701,7 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
                 _sessionState.value = SessionState.STOPPING
                 _statusMessage.tryEmit(
                     StatusMessage("Stopping recording session...", StatusMessage.Level.INFO)
+                )
 
                 withContext(Dispatchers.IO) {
                     _currentSession.value?.let { session ->
