@@ -2487,10 +2487,10 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
         if (isOpenAmplify) {
             return imageThread?.getBaseBitmap(saveSetBean.rotateAngle)
                 ?: cameraView.getScaledBitmap()
-                ?: Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888)
+                ?: throw IllegalStateException("Unable to obtain camera view bitmap")
         } else {
             return cameraView.getScaledBitmap()
-                ?: Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888)
+                ?: throw IllegalStateException("Unable to obtain camera view bitmap")
         }
     }
 
