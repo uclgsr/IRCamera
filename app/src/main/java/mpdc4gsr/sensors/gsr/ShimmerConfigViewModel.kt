@@ -18,8 +18,6 @@ import mpdc4gsr.sensors.unified.model.DeviceInfo
 
 class ShimmerConfigViewModel : BaseViewModel() {
 
-    private val application: Application? = null
-
     companion object {
         private val REQUIRED_PERMISSIONS =
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
