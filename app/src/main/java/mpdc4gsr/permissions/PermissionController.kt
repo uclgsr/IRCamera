@@ -506,7 +506,7 @@ class PermissionController(
 
 
     fun hasCameraPermission(): Boolean {
-        return isPermissionGranted(Manifest.permission.CAMERA)
+        return CAMERA_PERMISSIONS.all { isPermissionGranted(it) }
     }
 
     fun hasAudioPermission(): Boolean {
@@ -528,6 +528,19 @@ class PermissionController(
         return hasBluetoothPermissions() && hasLocationPermission()
     }
 
+    fun canConnectToShimmerLimited(): Boolean {
+        // Can attempt Bluetooth connection without location if we have the core Bluetooth permissions
+        return hasBluetoothPermissions()
+    }
+
+    fun getBluetoothConnectionStatus(): String {
+        return when {
+            hasBluetoothPermissions() && hasLocationPermission() -> "Full Bluetooth functionality available"
+            hasBluetoothPermissions() -> "Limited Bluetooth functionality - device scanning may not work without location permission"
+            else -> "Bluetooth permissions required for GSR sensor connection"
+        }
+    }
+
 
     fun canShowNotifications(): Boolean {
         return hasNotificationPermissions()
@@ -544,7 +557,11 @@ class PermissionController(
             status.add("Bluetooth permissions required for GSR sensor")
         }
         if (!hasLocationPermission()) {
-            status.add("Location permission required for Bluetooth scanning")
+            if (hasBluetoothPermissions()) {
+                status.add("Location permission missing - Bluetooth scanning limited, manual pairing may still work")
+            } else {
+                status.add("Location permission required for Bluetooth scanning")
+            }
         }
         if (!hasStoragePermissions()) {
             status.add("Storage permissions required for saving recordings")
@@ -775,6 +792,7 @@ class PermissionController(
         allDenied: List<String>
     ) {
         val criticalPermissions = getCriticalPermissions(allDenied)
+        val locationPermissions = getLocationPermissions(permanentlyDenied)
         val permissionNames = getPermissionNames(permanentlyDenied)
 
         val message = buildString {
@@ -784,21 +802,37 @@ class PermissionController(
                 appendLine("• $name")
             }
             appendLine()
+            
             if (criticalPermissions.isNotEmpty()) {
-                appendLine("These are critical permissions required for:")
+                appendLine("Critical permissions required for:")
                 if (criticalPermissions.any { it in CAMERA_PERMISSIONS }) {
                     appendLine("• Video recording functionality")
                 }
                 if (criticalPermissions.any { it in getBluetoothPermissions() }) {
                     appendLine("• Shimmer GSR sensor connection")
                 }
-                if (criticalPermissions.any { it == Manifest.permission.ACCESS_FINE_LOCATION || it == Manifest.permission.ACCESS_COARSE_LOCATION }) {
-                    appendLine("• Bluetooth device scanning")
-                }
                 appendLine()
                 appendLine("The app cannot function properly without these permissions.")
                 appendLine("Please enable them in Settings > Apps > IRCamera > Permissions")
-            } else {
+            }
+            
+            if (locationPermissions.isNotEmpty()) {
+                if (criticalPermissions.isNotEmpty()) {
+                    appendLine()
+                    appendLine("Location permissions are needed for:")
+                } else {
+                    appendLine("Location permissions are required for:")
+                }
+                appendLine("• Bluetooth device scanning for GSR sensors")
+                appendLine("• Automatic address detection for recordings")
+                appendLine()
+                if (criticalPermissions.isEmpty()) {
+                    appendLine("You can continue with limited Bluetooth functionality.")
+                    appendLine("Manual sensor pairing may still be possible.")
+                }
+            }
+            
+            if (criticalPermissions.isEmpty() && locationPermissions.isEmpty()) {
                 appendLine("You can continue with limited functionality, but some features may not work properly.")
             }
         }
@@ -809,11 +843,12 @@ class PermissionController(
             .setPositiveButton("Open Settings") { _, _ ->
                 openAppSettings()
             }
-            .setNegativeButton(if (criticalPermissions.isEmpty()) "Continue Limited" else "Exit") { _, _ ->
+            .setNegativeButton(if (criticalPermissions.isNotEmpty()) "Exit" else "Continue Limited") { _, _ ->
                 if (criticalPermissions.isNotEmpty()) {
-
+                    // Only exit for truly critical permissions (camera, core bluetooth)
                     activity.finish()
                 }
+                // For location-only or other non-critical permissions, allow continuation
             }
             .setCancelable(false)
             .show()
@@ -853,13 +888,18 @@ class PermissionController(
             .show()
     }
 
-    private fun getCriticalPermissions(permissions: List<String>): List<String> {
+    fun getCriticalPermissions(permissions: List<String>): List<String> {
         return permissions.filter { permission ->
             permission in CAMERA_PERMISSIONS ||
-                    permission == Manifest.permission.ACCESS_FINE_LOCATION ||
-                    permission == Manifest.permission.ACCESS_COARSE_LOCATION ||
                     permission == Manifest.permission.BLUETOOTH_SCAN ||
                     permission == Manifest.permission.BLUETOOTH_CONNECT
+        }
+    }
+
+    fun getLocationPermissions(permissions: List<String>): List<String> {
+        return permissions.filter { permission ->
+            permission == Manifest.permission.ACCESS_FINE_LOCATION ||
+                    permission == Manifest.permission.ACCESS_COARSE_LOCATION
         }
     }
 
@@ -880,5 +920,12 @@ class PermissionController(
         } catch (e: Exception) {
             Log.e(TAG, "Failed to open app settings", e)
         }
+    }
+
+    fun isLocationPermissionPermanentlyDenied(): Boolean {
+        return (!isPermissionGranted(Manifest.permission.ACCESS_FINE_LOCATION) && 
+                !activity.shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) ||
+               (!isPermissionGranted(Manifest.permission.ACCESS_COARSE_LOCATION) && 
+                !activity.shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_COARSE_LOCATION))
     }
 }
