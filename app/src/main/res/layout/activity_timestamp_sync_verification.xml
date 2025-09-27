@@ -18,8 +18,15 @@
         android:id="@+id/start_test_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="8dp"
         android:text="Start Verification Test" />
+
+    <Button
+        android:id="@+id/scan_devices_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:text="Scan for Devices" />
 
     <ScrollView
         android:layout_width="match_parent"

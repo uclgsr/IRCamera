@@ -362,6 +362,14 @@
             android:name="mpdc4gsr.sensors.gsr.TimeSynchronizationTestActivity"
             android:exported="false"
             android:label="Time Synchronization Test" />
+        <activity
+            android:name="mpdc4gsr.test.TimestampSyncVerificationActivity"
+            android:exported="false"
+            android:label="Timestamp Sync Verification" />
+        <activity
+            android:name="mpdc4gsr.test.TimestampUnificationTestActivity"
+            android:exported="false"
+            android:label="Timestamp Unification Test" />
 
         <!-- BLE and Permission Activities -->
         <activity
