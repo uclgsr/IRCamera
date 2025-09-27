@@ -290,14 +290,11 @@ class SessionDirectoryManager(private val context: Context) {
                 return false
             }
             
-            // For now, just log the export operation
-            // In a full implementation, this would copy files to external storage
-            Log.i(TAG, "Export requested for session: $sessionId")
+            // Export functionality is not implemented yet
+            Log.w(TAG, "Export functionality not implemented for session: $sessionId")
             
-            // TODO: Implement actual export logic to external storage
-            // This could involve creating a ZIP file or copying to Downloads folder
-            
-            true
+            // Return false to indicate the feature is not implemented
+            false
         } catch (e: Exception) {
             Log.e(TAG, "Failed to export session: $sessionId", e)
             false

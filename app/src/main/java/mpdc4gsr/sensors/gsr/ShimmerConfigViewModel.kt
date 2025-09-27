@@ -118,10 +118,10 @@ class ShimmerConfigViewModel : BaseViewModel() {
         }
     }
 
-    fun onPermissionResult(permissions: Map<String, Boolean>) {
+    fun onPermissionResult(context: Context, permissions: Map<String, Boolean>) {
         val allGranted = permissions.all { it.value }
         if (allGranted) {
-            initializeShimmerManager()
+            initializeShimmerManager(context)
         } else {
             _uiState.value = _uiState.value.copy(
                 statusMessage = "Bluetooth permissions required for Shimmer device scanning"

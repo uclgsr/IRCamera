@@ -45,7 +45,7 @@ class ShimmerConfigActivity : BaseViewModelActivity<ShimmerConfigViewModel>() {
     private val permissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
     ) { permissions ->
-        viewModel.onPermissionResult(permissions)
+        viewModel.onPermissionResult(this, permissions)
     }
 
     private fun setupUI() {
