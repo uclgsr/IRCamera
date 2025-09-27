@@ -38,7 +38,7 @@ cd pc-controller && python3 demo_mvp_components.py
 ## 1. Shimmer GSR Tests
 
 ### 1.1 Device Discovery and Connection
-**Test ID:** GSR_001  
+**Test ID:** GSR_001
 **Objective:** Verify Shimmer GSR device discovery and connection capabilities
 
 **Procedure:**
