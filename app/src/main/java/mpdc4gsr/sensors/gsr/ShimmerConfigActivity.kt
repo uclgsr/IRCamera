@@ -488,9 +488,10 @@ class ShimmerConfigActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             com.csl.irCamera.R.id.menu_background_scanning_demo -> {
-                // Open Background Scanning Demo Activity
-                val intent = Intent(this, BackgroundScanningDemoActivity::class.java)
-                startActivity(intent)
+                // Demo activity removed - commented out to avoid compilation errors
+                // val intent = Intent(this, BackgroundScanningDemoActivity::class.java)
+                // startActivity(intent)
+                Toast.makeText(this, "Demo functionality removed", Toast.LENGTH_SHORT).show()
                 true
             }
             com.csl.irCamera.R.id.menu_start_background_scanning -> {

@@ -30,7 +30,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import mpdc4gsr.core.RecordingService
 import mpdc4gsr.permissions.PermissionController
-import mpdc4gsr.sensors.thermal.ThermalCameraDemo
+
 import mpdc4gsr.ui_components.ComprehensiveSensorStatusWidget
 import mpdc4gsr.ui_components.MainFragment
 import mpdc4gsr.ui_components.RecordingControlsWidget
@@ -91,7 +91,10 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         binding.clIconMine.setOnClickListener(this)
 
         binding.networkStatusBar.setOnClickListener { /* Logic handled by ViewModel */ }
-        binding.thermalQuickAccess.setOnClickListener { launchThermalCamera() }
+        binding.thermalQuickAccess.setOnClickListener { 
+            // Demo functionality removed - commented out to avoid compilation errors
+            // launchThermalCamera() 
+        }
         binding.faultTolerantRecordingAccess.setOnClickListener { launchFaultTolerantRecording() }
         binding.viewMain.setOnLongClickListener {
             launchShimmerMvp()
@@ -222,7 +225,8 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         }
     }
 
-    private fun launchThermalCamera() = startActivity(Intent(this, ThermalCameraDemo::class.java))
+    // Demo functionality removed - commented out to avoid compilation errors
+    // private fun launchThermalCamera() = startActivity(Intent(this, ThermalCameraDemo::class.java))
     private fun launchFaultTolerantRecording() = startActivity(Intent(this, FaultTolerantRecordingActivity::class.java))
     private fun launchShimmerMvp() {
         AlertDialog.Builder(this)
