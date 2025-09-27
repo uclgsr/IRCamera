@@ -92,8 +92,8 @@ class GSRSettingsActivity : BaseViewModelActivity<GSRSettingsViewModel>() {
         deviceAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, mutableListOf<String>())
         deviceAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         
-        binding.deviceSpinner?.adapter = deviceAdapter
-        binding.deviceSpinner?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        binding.shimmerDeviceSpinner?.adapter = deviceAdapter
+        binding.shimmerDeviceSpinner?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: android.view.View?, position: Int, id: Long) {
                 // Handle device selection through ViewModel
             }
@@ -107,38 +107,38 @@ class GSRSettingsActivity : BaseViewModelActivity<GSRSettingsViewModel>() {
         val samplingRates = arrayOf("32 Hz", "64 Hz", "128 Hz", "256 Hz", "512 Hz", "1024 Hz")
         val samplingAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, samplingRates)
         samplingAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        binding.samplingRateSpinner?.adapter = samplingAdapter
+        binding.gsrSamplingRateSpinner?.adapter = samplingAdapter
 
-        // Data Format Spinner  
-        val dataFormats = arrayOf("CSV", "JSON", "Binary")
-        val formatAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, dataFormats)
-        formatAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        binding.dataFormatSpinner?.adapter = formatAdapter
+        // Data Format Spinner - commented out as it doesn't exist in current layout
+        // val dataFormats = arrayOf("CSV", "JSON", "Binary")
+        // val formatAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, dataFormats)
+        // formatAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        // binding.dataFormatSpinner?.adapter = formatAdapter
 
         // Button listeners
         binding.scanDevicesButton?.setOnClickListener { 
             viewModel.startDeviceScan()
         }
         
-        binding.connectButton?.setOnClickListener {
+        binding.connectDeviceButton?.setOnClickListener {
             // Handle device connection
         }
         
-        binding.disconnectButton?.setOnClickListener {
-            viewModel.disconnectDevice()
-        }
+        // binding.disconnectButton?.setOnClickListener {
+        //     viewModel.disconnectDevice()
+        // }
         
-        binding.exportSettingsButton?.setOnClickListener {
-            viewModel.exportSettings()
-        }
+        // binding.exportSettingsButton?.setOnClickListener {
+        //     viewModel.exportSettings()
+        // }
         
-        binding.resetSettingsButton?.setOnClickListener {
-            showResetConfirmationDialog()
-        }
+        // binding.resetSettingsButton?.setOnClickListener {
+        //     showResetConfirmationDialog()
+        // }
         
-        binding.requestPermissionsButton?.setOnClickListener {
-            viewModel.requestPermissions()
-        }
+        // binding.requestPermissionsButton?.setOnClickListener {
+        //     viewModel.requestPermissions()
+        // }
     }
 
     private fun setupObservers() {
@@ -195,11 +195,11 @@ class GSRSettingsActivity : BaseViewModelActivity<GSRSettingsViewModel>() {
     }
 
     private fun updateGSRSettingsUI(settings: GSRSettingsRepository.GSRSettings) {
-        binding.gsrEnabledSwitch?.isChecked = settings.isEnabled
-        binding.autoStartSwitch?.isChecked = settings.autoStartRecording
-        binding.realTimeMonitoringSwitch?.isChecked = settings.enableRealTimeMonitoring
-        binding.filteringEnabledSwitch?.isChecked = settings.enableFiltering
-        binding.notificationEnabledSwitch?.isChecked = settings.notificationEnabled
+        // binding.gsrEnabledSwitch?.isChecked = settings.isEnabled
+        // binding.autoStartSwitch?.isChecked = settings.autoStartRecording
+        // binding.realTimeMonitoringSwitch?.isChecked = settings.enableRealTimeMonitoring
+        // binding.filteringEnabledSwitch?.isChecked = settings.enableFiltering
+        // binding.notificationEnabledSwitch?.isChecked = settings.notificationEnabled
         
         // Update sampling rate spinner
         val samplingRateIndex = when (settings.samplingRate) {
@@ -211,24 +211,24 @@ class GSRSettingsActivity : BaseViewModelActivity<GSRSettingsViewModel>() {
             1024 -> 5
             else -> 2 // default to 128 Hz
         }
-        binding.samplingRateSpinner?.setSelection(samplingRateIndex)
+        binding.gsrSamplingRateSpinner?.setSelection(samplingRateIndex)
         
-        // Update data format spinner
-        val formatIndex = when (settings.dataFormat) {
-            GSRSettingsRepository.DataFormat.CSV -> 0
-            GSRSettingsRepository.DataFormat.JSON -> 1
-            GSRSettingsRepository.DataFormat.BINARY -> 2
-        }
-        binding.dataFormatSpinner?.setSelection(formatIndex)
+        // Update data format spinner - commented out as it doesn't exist in current layout
+        // val formatIndex = when (settings.dataFormat) {
+        //     GSRSettingsRepository.DataFormat.CSV -> 0
+        //     GSRSettingsRepository.DataFormat.JSON -> 1
+        //     GSRSettingsRepository.DataFormat.BINARY -> 2
+        // }
+        // binding.dataFormatSpinner?.setSelection(formatIndex)
     }
 
     private fun updateDeviceSettingsUI(settings: GSRSettingsRepository.DeviceSettings) {
-        binding.autoReconnectSwitch?.isChecked = settings.autoReconnect
-        binding.keepConnectedSwitch?.isChecked = settings.keepDeviceConnected
-        binding.calibrationEnabledSwitch?.isChecked = settings.deviceCalibrationEnabled
+        // binding.autoReconnectSwitch?.isChecked = settings.autoReconnect
+        // binding.keepConnectedSwitch?.isChecked = settings.keepDeviceConnected
+        binding.gsrCalibrationSwitch?.isChecked = settings.deviceCalibrationEnabled
         
-        // Update selected device display
-        binding.selectedDeviceText?.text = settings.deviceName ?: "No device selected"
+        // Update selected device display - commented out as it doesn't exist in current layout
+        // binding.selectedDeviceText?.text = settings.deviceName ?: "No device selected"
     }
 
     private fun updatePermissionUI(permissionState: GSRSettingsViewModel.PermissionState) {
@@ -238,27 +238,27 @@ class GSRSettingsActivity : BaseViewModelActivity<GSRSettingsViewModel>() {
             "Missing Required Permissions (${permissionState.missingPermissions.size})"
         }
         
-        binding.permissionStatusText?.text = status
-        binding.permissionStatusText?.setTextColor(
-            if (permissionState.hasAllPermissions) {
-                android.graphics.Color.parseColor("#4caf50") // Green
-            } else {
-                android.graphics.Color.parseColor("#f44336") // Red
-            }
-        )
+        // binding.permissionStatusText?.text = status
+        // binding.permissionStatusText?.setTextColor(
+        //     if (permissionState.hasAllPermissions) {
+        //         android.graphics.Color.parseColor("#4caf50") // Green
+        //     } else {
+        //         android.graphics.Color.parseColor("#f44336") // Red
+        //     }
+        // )
         
-        binding.requestPermissionsButton?.isVisible = !permissionState.hasAllPermissions
-        binding.deviceManagementLayout?.isVisible = permissionState.hasAllPermissions
+        // binding.requestPermissionsButton?.isVisible = !permissionState.hasAllPermissions
+        // binding.deviceManagementLayout?.isVisible = permissionState.hasAllPermissions
     }
 
     private fun updateDeviceConnectionUI(connectionState: GSRSettingsViewModel.DeviceConnectionState) {
-        binding.connectionStatusText?.text = connectionState.connectionStatus
-        binding.connectButton?.isVisible = !connectionState.isConnected
-        binding.disconnectButton?.isVisible = connectionState.isConnected
+        // binding.connectionStatusText?.text = connectionState.connectionStatus
+        binding.connectDeviceButton?.isVisible = !connectionState.isConnected
+        // binding.disconnectButton?.isVisible = connectionState.isConnected
         
         connectionState.deviceInfo?.let { device ->
-            binding.connectedDeviceText?.text = "Connected: ${device.name}"
-            binding.signalStrengthText?.text = "Signal: ${connectionState.signalStrength}%"
+            // binding.connectedDeviceText?.text = "Connected: ${device.name}"
+            // binding.signalStrengthText?.text = "Signal: ${connectionState.signalStrength}%"
         }
     }
 
@@ -267,19 +267,19 @@ class GSRSettingsActivity : BaseViewModelActivity<GSRSettingsViewModel>() {
         deviceAdapter.addAll(devices.map { "${it.name} (${it.address})" })
         deviceAdapter.notifyDataSetChanged()
         
-        binding.deviceCountText?.text = "Found ${devices.size} device(s)"
+        // binding.deviceCountText?.text = "Found ${devices.size} device(s)"
     }
 
     private fun updateScanningUI(scanningState: GSRSettingsViewModel.ScanningState) {
         binding.scanDevicesButton?.isEnabled = scanningState != GSRSettingsViewModel.ScanningState.SCANNING
-        binding.scanProgressBar?.isVisible = scanningState == GSRSettingsViewModel.ScanningState.SCANNING
+        // binding.scanProgressBar?.isVisible = scanningState == GSRSettingsViewModel.ScanningState.SCANNING
         
-        binding.scanStatusText?.text = when (scanningState) {
-            GSRSettingsViewModel.ScanningState.IDLE -> "Ready to scan"
-            GSRSettingsViewModel.ScanningState.SCANNING -> "Scanning for devices..."
-            GSRSettingsViewModel.ScanningState.COMPLETED -> "Scan completed"
-            GSRSettingsViewModel.ScanningState.FAILED -> "Scan failed"
-        }
+        // binding.scanStatusText?.text = when (scanningState) {
+        //     GSRSettingsViewModel.ScanningState.IDLE -> "Ready to scan"
+        //     GSRSettingsViewModel.ScanningState.SCANNING -> "Scanning for devices..."
+        //     GSRSettingsViewModel.ScanningState.COMPLETED -> "Scan completed"
+        //     GSRSettingsViewModel.ScanningState.FAILED -> "Scan failed"
+        // }
     }
 
     private fun updateCombinedUI(uiState: GSRSettingsViewModel.UIState) {
@@ -287,12 +287,12 @@ class GSRSettingsActivity : BaseViewModelActivity<GSRSettingsViewModel>() {
         val isFullyConfigured = uiState.gsrSettings.isEnabled && 
                                uiState.deviceSettings.selectedDeviceId != null
         
-        binding.readyIndicator?.isVisible = isFullyConfigured
-        binding.configurationStatusText?.text = if (isFullyConfigured) {
-            "GSR system ready for recording"
-        } else {
-            "Configuration incomplete"
-        }
+        // binding.readyIndicator?.isVisible = isFullyConfigured
+        // binding.configurationStatusText?.text = if (isFullyConfigured) {
+        //     "GSR system ready for recording"
+        // } else {
+        //     "Configuration incomplete"
+        // }
     }
 
     private fun handleSettingsAction(action: GSRSettingsViewModel.SettingsAction) {
