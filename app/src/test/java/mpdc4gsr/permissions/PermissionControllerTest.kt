@@ -342,6 +342,46 @@ class PermissionControllerTest {
         assertTrue(permissionController.isLocationPermissionPermanentlyDenied())
     }
 
+    @Test
+    fun `test simple permission cooldown mechanism`() {
+        // Mock permissions as missing
+        mockkStatic(ContextCompat::class)
+        every { 
+            ContextCompat.checkSelfPermission(mockActivity, any())
+        } returns PackageManager.PERMISSION_DENIED
+
+        var callbackCount = 0
+        val callback = { granted: Boolean, denied: List<String> ->
+            callbackCount++
+        }
+
+        // First request should go through
+        permissionController.ensureAll(callback)
+        
+        // Second request immediately after should be in cooldown
+        permissionController.ensureAll(callback)
+        
+        // Verify cooldown is active
+        assertTrue(permissionController.shouldSkipPermissionRequest())
+    }
+
+    @Test
+    fun `test hasMinimumPermissions for basic functionality`() {
+        // Mock basic permissions as granted
+        mockkStatic(ContextCompat::class)
+        every { 
+            ContextCompat.checkSelfPermission(mockActivity, Manifest.permission.CAMERA)
+        } returns PackageManager.PERMISSION_GRANTED
+        every { 
+            ContextCompat.checkSelfPermission(mockActivity, Manifest.permission.RECORD_AUDIO)
+        } returns PackageManager.PERMISSION_GRANTED
+        every { 
+            ContextCompat.checkSelfPermission(mockActivity, any())
+        } returns PackageManager.PERMISSION_GRANTED
+
+        assertTrue(permissionController.hasMinimumPermissions())
+    }
+
     private fun mockBluetoothPermissions(granted: Boolean) {
         val result = if (granted) PackageManager.PERMISSION_GRANTED else PackageManager.PERMISSION_DENIED
         

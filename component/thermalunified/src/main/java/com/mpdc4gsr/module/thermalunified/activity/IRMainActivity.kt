@@ -296,12 +296,6 @@ class IRMainActivity : AppCompatActivity(), View.OnClickListener {
             }
         }
     }
-}
-            }
-        } else {
-            initStoragePermission(permissionList)
-        }
-    }
 
     private fun initStoragePermission(permissionList: List<String>) {
         if (PermissionUtils.isVisualUser()) {
