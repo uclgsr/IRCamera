@@ -252,7 +252,7 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
         // Simulate device discovery completion
         binding.root.postDelayed({
             updateStatusMessage("Device discovery completed")
-            binding.deviceCountText?.text = "Discovered devices: 2"
+            binding.deviceCountText.text = "Discovered devices: 2"
         }, 2000)
     }
 
