@@ -191,17 +191,34 @@ class GSRDataViewActivity : BaseViewModelActivity<GSRDataViewViewModel>() {
     }
 
     private fun updateLoadingUI(loadingState: GSRDataViewViewModel.DataLoadingState) {
-        // Simplified UI update - focusing on core functionality
-        // In a full implementation, this would update actual UI elements
+        when (loadingState) {
+            GSRDataViewViewModel.DataLoadingState.Idle -> {
+                binding.progressBar?.isVisible = false
+                binding.loadingText?.isVisible = false
+            }
+            GSRDataViewViewModel.DataLoadingState.Loading -> {
+                binding.progressBar?.isVisible = true
+                binding.loadingText?.let { textView ->
+                    textView.isVisible = true
+                    textView.text = "Loading GSR data..."
+                }
+            }
+            GSRDataViewViewModel.DataLoadingState.Success -> {
+                binding.progressBar?.isVisible = false
+                binding.loadingText?.isVisible = false
+                binding.dataContainer?.isVisible = true
+            }
+            GSRDataViewViewModel.DataLoadingState.Error -> {
+                binding.progressBar?.isVisible = false
+                binding.loadingText?.isVisible = false
+                binding.errorContainer?.isVisible = true
+            }
+        }
     }
 
     private fun updateDataDisplay(filteredRows: List<GSRDataViewViewModel.GSRDataRow>) {
         adapter.updateData(filteredRows)
-        try {
-            findViewById<android.widget.TextView>(R.id.filteredCountText)?.text = "Showing ${filteredRows.size} samples"
-        } catch (e: Exception) {
-            // UI element may not exist
-        }
+        binding.filteredCountText?.text = "Showing ${filteredRows.size} samples"
     }
 
     private fun updateFileInfoUI(fileInfo: GSRDataViewViewModel.FileInfo?) {
@@ -241,30 +258,26 @@ class GSRDataViewActivity : BaseViewModelActivity<GSRDataViewViewModel>() {
 
     private fun updateCombinedDataUI(combinedState: GSRDataViewViewModel.CombinedDataState) {
         // Update overall UI state based on combined state
-        try {
-            findViewById<android.view.ViewGroup>(R.id.analysisContainer)?.isVisible = combinedState.isDataReady
-            findViewById<android.view.ViewGroup>(R.id.exportControls)?.isVisible = combinedState.isDataReady
-            findViewById<android.view.ViewGroup>(R.id.filterControls)?.isVisible = combinedState.isDataReady
-            
-            // Update status indicator
-            findViewById<android.widget.TextView>(R.id.dataStatusIndicator)?.let { indicator ->
-                when {
-                    combinedState.isDataReady -> {
-                        indicator.setBackgroundColor(android.graphics.Color.parseColor("#4caf50"))
-                        indicator.text = "✓ Data Ready"
-                    }
-                    combinedState.loadingState == GSRDataViewViewModel.DataLoadingState.Loading -> {
-                        indicator.setBackgroundColor(android.graphics.Color.parseColor("#ff9800"))
-                        indicator.text = "⟳ Loading..."
-                    }
-                    else -> {
-                        indicator.setBackgroundColor(android.graphics.Color.parseColor("#f44336"))
-                        indicator.text = "✗ No Data"
-                    }
+        binding.analysisContainer?.isVisible = combinedState.isDataReady
+        binding.exportControls?.isVisible = combinedState.isDataReady
+        binding.filterControls?.isVisible = combinedState.isDataReady
+        
+        // Update status indicator
+        binding.dataStatusIndicator?.let { indicator ->
+            when {
+                combinedState.isDataReady -> {
+                    indicator.setBackgroundColor(android.graphics.Color.parseColor("#4caf50"))
+                    indicator.text = "✓ Data Ready"
+                }
+                combinedState.loadingState == GSRDataViewViewModel.DataLoadingState.Loading -> {
+                    indicator.setBackgroundColor(android.graphics.Color.parseColor("#ff9800"))
+                    indicator.text = "⟳ Loading..."
+                }
+                else -> {
+                    indicator.setBackgroundColor(android.graphics.Color.parseColor("#f44336"))
+                    indicator.text = "✗ No Data"
                 }
             }
-        } catch (e: Exception) {
-            // UI elements may not exist - safe fallback
         }
     }
 
@@ -296,31 +309,27 @@ class GSRDataViewActivity : BaseViewModelActivity<GSRDataViewViewModel>() {
 
     private fun updateAnalysisUI(analysisResults: GSRDataViewViewModel.AnalysisResults?) {
         analysisResults?.let { analysis ->
-            try {
-                binding.analysisResultsText?.text = buildString {
-                    appendLine("Advanced Analysis Results:")
-                    appendLine("━━━━━━━━━━━━━━━━━━━━━━━━━━")
-                    appendLine()
-                    appendLine("Peak Detection:")
-                    appendLine("• Peaks Found: ${analysis.peakDetection.peaks.size}")
-                    appendLine("• Peak Frequency: %.2f peaks/min".format(analysis.peakDetection.peakFrequency))
-                    appendLine("• Avg Peak Height: %.3f µS".format(analysis.peakDetection.averagePeakHeight))
-                    appendLine("• Avg Peak Width: %.1f samples".format(analysis.peakDetection.averagePeakWidth))
-                    appendLine()
-                    appendLine("Trend Analysis:")
-                    appendLine("• Trend: ${analysis.trendAnalysis.trend}")
-                    appendLine("• Slope: %.4f µS/min".format(analysis.trendAnalysis.changeRate))
-                    appendLine("• R²: %.3f".format(analysis.trendAnalysis.rSquared))
-                    appendLine()
-                    appendLine("Frequency Analysis:")
-                    appendLine("• Dominant Freq: %.3f Hz".format(analysis.frequencyAnalysis.dominantFrequency))
-                    appendLine("• Bandwidth: %.3f Hz".format(analysis.frequencyAnalysis.bandwidth))
-                    appendLine()
-                    appendLine("Correlation Analysis:")
-                    appendLine("• GSR-PPG Correlation: %.3f".format(analysis.correlationAnalysis.gsrPpgCorrelation))
-                }
-            } catch (e: Exception) {
-                // UI element may not exist
+            binding.analysisResultsText?.text = buildString {
+                appendLine("Advanced Analysis Results:")
+                appendLine("━━━━━━━━━━━━━━━━━━━━━━━━━━")
+                appendLine()
+                appendLine("Peak Detection:")
+                appendLine("• Peaks Found: ${analysis.peakDetection.peaks.size}")
+                appendLine("• Peak Frequency: %.2f peaks/min".format(analysis.peakDetection.peakFrequency))
+                appendLine("• Avg Peak Height: %.3f µS".format(analysis.peakDetection.averagePeakHeight))
+                appendLine("• Avg Peak Width: %.1f samples".format(analysis.peakDetection.averagePeakWidth))
+                appendLine()
+                appendLine("Trend Analysis:")
+                appendLine("• Trend: ${analysis.trendAnalysis.trend}")
+                appendLine("• Slope: %.4f µS/min".format(analysis.trendAnalysis.changeRate))
+                appendLine("• R²: %.3f".format(analysis.trendAnalysis.rSquared))
+                appendLine()
+                appendLine("Frequency Analysis:")
+                appendLine("• Dominant Freq: %.3f Hz".format(analysis.frequencyAnalysis.dominantFrequency))
+                appendLine("• Bandwidth: %.3f Hz".format(analysis.frequencyAnalysis.bandwidth))
+                appendLine()
+                appendLine("Correlation Analysis:")
+                appendLine("• GSR-PPG Correlation: %.3f".format(analysis.correlationAnalysis.gsrPpgCorrelation))
             }
         }
     }
@@ -353,48 +362,36 @@ class GSRDataViewActivity : BaseViewModelActivity<GSRDataViewViewModel>() {
     }
 
     private fun applyDataFilters() {
-        try {
-            val minGSR = binding.minGsrInput?.text?.toString()?.toDoubleOrNull()
-            val maxGSR = binding.maxGsrInput?.text?.toString()?.toDoubleOrNull()
-            val qualityThreshold = getSelectedQualityThreshold()
-            
-            val filterConfig = GSRDataViewViewModel.FilterConfiguration(
-                minGSR = minGSR,
-                maxGSR = maxGSR,
-                qualityThreshold = qualityThreshold,
-                outlierRemoval = binding.removeOutliersCheckbox?.isChecked ?: false
-            )
-            
-            viewModel.updateFilterConfiguration(filterConfig)
-        } catch (e: Exception) {
-            // UI elements may not exist
-        }
+        val minGSR = binding.minGsrInput?.text?.toString()?.toDoubleOrNull()
+        val maxGSR = binding.maxGsrInput?.text?.toString()?.toDoubleOrNull()
+        val qualityThreshold = getSelectedQualityThreshold()
+        
+        val filterConfig = GSRDataViewViewModel.FilterConfiguration(
+            minGSR = minGSR,
+            maxGSR = maxGSR,
+            qualityThreshold = qualityThreshold,
+            outlierRemoval = binding.removeOutliersCheckbox?.isChecked ?: false
+        )
+        
+        viewModel.updateFilterConfiguration(filterConfig)
     }
 
     private fun resetDataFilters() {
-        try {
-            binding.minGsrInput?.text?.clear()
-            binding.maxGsrInput?.text?.clear()
-            binding.qualitySpinner?.setSelection(0)
-            binding.removeOutliersCheckbox?.isChecked = false
-            
-            viewModel.updateFilterConfiguration(GSRDataViewViewModel.FilterConfiguration())
-        } catch (e: Exception) {
-            // UI elements may not exist
-        }
+        binding.minGsrInput?.text?.clear()
+        binding.maxGsrInput?.text?.clear()
+        binding.qualitySpinner?.setSelection(0)
+        binding.removeOutliersCheckbox?.isChecked = false
+        
+        viewModel.updateFilterConfiguration(GSRDataViewViewModel.FilterConfiguration())
     }
 
     private fun getSelectedQualityThreshold(): GSRDataViewViewModel.DataQuality {
-        return try {
-            when (binding.qualitySpinner?.selectedItemPosition) {
-                0 -> GSRDataViewViewModel.DataQuality.POOR
-                1 -> GSRDataViewViewModel.DataQuality.FAIR
-                2 -> GSRDataViewViewModel.DataQuality.GOOD
-                3 -> GSRDataViewViewModel.DataQuality.EXCELLENT
-                else -> GSRDataViewViewModel.DataQuality.POOR
-            }
-        } catch (e: Exception) {
-            GSRDataViewViewModel.DataQuality.POOR
+        return when (binding.qualitySpinner?.selectedItemPosition) {
+            0 -> GSRDataViewViewModel.DataQuality.POOR
+            1 -> GSRDataViewViewModel.DataQuality.FAIR
+            2 -> GSRDataViewViewModel.DataQuality.GOOD
+            3 -> GSRDataViewViewModel.DataQuality.EXCELLENT
+            else -> GSRDataViewViewModel.DataQuality.POOR
         }
     }
 
@@ -536,84 +533,47 @@ class GSRDataViewActivity : BaseViewModelActivity<GSRDataViewViewModel>() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        try {
+        return try {
             menuInflater.inflate(R.menu.menu_data_view, menu)
+            true
         } catch (e: Exception) {
-            // Menu resource may not exist
+            // Menu resource may not exist - return true to continue with empty menu
+            true
         }
-        return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return try {
-            when (item.itemId) {
-                R.id.action_refresh -> {
-                    if (filePath.isNotEmpty()) {
-                        viewModel.loadGSRData(filePath)
-                    }
-                    true
+        return when (item.itemId) {
+            R.id.action_refresh -> {
+                if (filePath.isNotEmpty()) {
+                    viewModel.loadGSRData(filePath)
                 }
-                R.id.action_export_all -> {
-                    val allExportTypes = listOf(
-                        GSRDataViewViewModel.ExportType.ENHANCED_CSV,
-                        GSRDataViewViewModel.ExportType.EXCEL_CSV,
-                        GSRDataViewViewModel.ExportType.JSON,
-                        GSRDataViewViewModel.ExportType.SUMMARY,
-                        GSRDataViewViewModel.ExportType.ANALYSIS
-                    )
-                    viewModel.exportData(allExportTypes)
-                    true
-                }
-                R.id.action_analysis -> {
-                    generatePlot()
-                    true
-                }
-                android.R.id.home -> {
-                    onBackPressed()
-                    true
-                }
-                else -> super.onOptionsItemSelected(item)
+                true
             }
-        } catch (e: Exception) {
-            super.onOptionsItemSelected(item)
+            R.id.action_export_all -> {
+                val allExportTypes = listOf(
+                    GSRDataViewViewModel.ExportType.ENHANCED_CSV,
+                    GSRDataViewViewModel.ExportType.EXCEL_CSV,
+                    GSRDataViewViewModel.ExportType.JSON,
+                    GSRDataViewViewModel.ExportType.SUMMARY,
+                    GSRDataViewViewModel.ExportType.ANALYSIS
+                )
+                viewModel.exportData(allExportTypes)
+                true
+            }
+            R.id.action_analysis -> {
+                generatePlot()
+                true
+            }
+            android.R.id.home -> {
+                onBackPressed()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
         }
     }
 
-    // Data classes for plot functionality
-    data class GSRPlotData(
-        val timestamps: List<Double>,
-        val gsrValues: List<Double>,
-        val ppgValues: List<Double>,
-        val gsrMovingAverage: List<Double>,
-        val ppgMovingAverage: List<Double>,
-        val gsrEvents: List<GSREvent>,
-        val statistics: List<TimeWindowStats>,
-        val metadata: PlotMetadata
-    ) : Serializable
 
-    data class GSREvent(
-        val timestamp: Double,
-        val type: String,
-        val magnitude: Double,
-        val gsrValue: Double
-    ) : Serializable
-
-    data class TimeWindowStats(
-        val startTime: Double,
-        val endTime: Double,
-        val mean: Double,
-        val stdDev: Double,
-        val min: Double,
-        val max: Double,
-        val count: Int
-    ) : Serializable
-
-    data class PlotMetadata(
-        val fileName: String,
-        val duration: Double,
-        val samplingRate: Double,
-        val dataPoints: Int
-    ) : Serializable
 
     private fun preparePlotData(): GSRPlotData {
         val gsrDataPoints = viewModel.gsrDataPoints.value
@@ -712,15 +672,19 @@ class GSRDataViewActivity : BaseViewModelActivity<GSRDataViewViewModel>() {
         val stats = mutableListOf<TimeWindowStats>()
         val totalDuration = timestamps.lastOrNull() ?: 0.0
         
+        var dataIndex = 0
         var startTime = 0.0
-        while (startTime < totalDuration) {
+        while (startTime < totalDuration && dataIndex < timestamps.size) {
             val endTime = minOf(startTime + windowSize, totalDuration)
             
-            val windowValues = gsrValues.filterIndexed { index, _ ->
-                timestamps[index] in startTime..endTime
+            val windowStartIndex = dataIndex
+            while (dataIndex < timestamps.size && timestamps[dataIndex] < endTime) {
+                dataIndex++
             }
-            
-            if (windowValues.isNotEmpty()) {
+            val windowEndIndex = dataIndex
+
+            if (windowStartIndex < windowEndIndex) {
+                val windowValues = gsrValues.subList(windowStartIndex, windowEndIndex)
                 val mean = windowValues.average()
                 val variance = windowValues.map { (it - mean) * (it - mean) }.average()
                 val stdDev = kotlin.math.sqrt(variance)
