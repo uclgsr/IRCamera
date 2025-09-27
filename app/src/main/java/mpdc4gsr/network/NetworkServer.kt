@@ -174,7 +174,7 @@ class NetworkServer(
     }
 
     private suspend fun acceptConnections() {
-        while (isRunning.get() && !serverJob?.isCancelled!!) {
+        while (isRunning.get() && serverJob?.isCancelled != true) {
             try {
                 Log.i(TAG, "Waiting for PC Controller connection...")
 
@@ -217,7 +217,7 @@ class NetworkServer(
     }
 
     private suspend fun listenForMessages() {
-        while (isClientConnected.get() && isRunning.get() && !messageListenerJob?.isCancelled!!) {
+        while (isClientConnected.get() && isRunning.get() && messageListenerJob?.isCancelled != true) {
             try {
                 val messageText = receiveMessage()
                 if (messageText != null) {
