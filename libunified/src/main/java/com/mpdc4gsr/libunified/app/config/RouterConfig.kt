@@ -44,6 +44,8 @@ object RouterConfig {
     const val IR_CORRECTION_FOUR = "/$GROUP_IR/correction4"
     const val IR_IMG_PICK = "/$GROUP_IR/ImagePickIRActivity"
     const val IR_IMG_PICK_PLUS = "/$GROUP_IR/ImagePickIRPlushActivity"
+    const val IR_MODEL = "/$GROUP_IR/model"
+    const val IR_DUAL = "/$GROUP_IR/dual"
 
     const val IR_GALLERY_3D = "/menu/Image3DActivity"
 

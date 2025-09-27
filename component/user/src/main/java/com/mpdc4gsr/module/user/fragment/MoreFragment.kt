@@ -24,7 +24,7 @@ import com.mpdc4gsr.libunified.app.dialog.ConfirmSelectDialog
 import com.mpdc4gsr.libunified.app.dialog.FirmwareUpDialog
 import com.mpdc4gsr.libunified.app.dialog.TipDialog
 import com.mpdc4gsr.libunified.app.http.tool.DownloadTool
-import com.mpdc4gsr.libunified.app.ktbase.BaseViewModelFragment
+import com.mpdc4gsr.libunified.app.ktbase.BaseFragment
 import com.mpdc4gsr.libunified.app.lms.weiget.TToast
 import com.mpdc4gsr.libunified.app.navigation.NavigationManager
 import com.mpdc4gsr.libunified.app.socket.WebSocketProxy
@@ -32,7 +32,6 @@ import com.mpdc4gsr.libunified.app.tools.DeviceTools
 import com.mpdc4gsr.libunified.app.viewmodel.FirmwareViewModel
 import com.mpdc4gsr.libunified.ui.SettingNightView
 import com.mpdc4gsr.module.user.R
-import com.mpdc4gsr.module.user.viewmodel.MoreFragmentViewModel
 import com.mpdc4gsr.module.user.dialog.DownloadProDialog
 import com.mpdc4gsr.module.user.dialog.FirmwareInstallDialog
 import kotlinx.coroutines.delay
@@ -42,7 +41,7 @@ import java.text.DecimalFormat
 import com.mpdc4gsr.libunified.R as RCore
 
 
-class MoreFragment : BaseViewModelFragment<MoreFragmentViewModel>(), View.OnClickListener {
+class MoreFragment : BaseFragment(), View.OnClickListener {
 
     private var isTC007 = false
 
@@ -62,11 +61,8 @@ class MoreFragment : BaseViewModelFragment<MoreFragmentViewModel>(), View.OnClic
 
     override fun initContentView() = R.layout.fragment_more
 
-    override fun providerVMClass(): Class<MoreFragmentViewModel> = MoreFragmentViewModel::class.java
-
     override fun initView() {
         isTC007 = arguments?.getBoolean(ExtraKeyConfig.IS_TC007, false) ?: false
-        viewModel.setDeviceType(isTC007)
 
         settingItemModel = requireView().findViewById(R.id.setting_item_model)
         settingItemCorrection = requireView().findViewById(R.id.setting_item_correction)
@@ -92,127 +88,6 @@ class MoreFragment : BaseViewModelFragment<MoreFragmentViewModel>(), View.OnClic
     }
 
     private fun setupObservers() {
-        // Fragment actions from ViewModel
-        viewModel.fragmentAction.observe(viewLifecycleOwner) { action ->
-            when (action) {
-                is MoreFragmentViewModel.FragmentAction.Navigate -> {
-                    val builder = NavigationManager.getInstance().build(action.route)
-                    action.extras.forEach { (key, value) ->
-                        when (value) {
-                            is Boolean -> builder.withBoolean(key, value)
-                            is Int -> builder.withInt(key, value)
-                            is String -> builder.withString(key, value)
-                        }
-                    }
-                    builder.navigation(requireContext())
-                }
-                is MoreFragmentViewModel.FragmentAction.ShowFirmwareDialog -> {
-                    showFirmwareUpDialog(action.data)
-                }
-                is MoreFragmentViewModel.FragmentAction.ShowResetConfirmation -> {
-                    showResetConfirmation()
-                }
-            }
-        }
-
-        // Device type state updates
-        viewModel.deviceTypeState.observe(viewLifecycleOwner) { state ->
-            // Update UI based on device type
-            settingItemDual.isVisible = state.dualModeVisible
-        }
-
-        // Firmware state from ViewModel
-        viewModel.firmwareState.observe(viewLifecycleOwner) { state ->
-            when (state) {
-                is MoreFragmentViewModel.FirmwareState.Checking -> {
-                    // Show loading if needed
-                }
-                is MoreFragmentViewModel.FirmwareState.Available -> {
-                    showFirmwareUpDialog(state.data)
-                }
-                is MoreFragmentViewModel.FirmwareState.UpToDate -> {
-                    ToastUtils.showShort(RCore.string.setting_firmware_update_latest_version)
-                }
-                is MoreFragmentViewModel.FirmwareState.Failed -> {
-                    TToast.shortToast(
-                        requireContext(),
-                        if (state.isBindError) RCore.string.upgrade_bind_error else RCore.string.operation_failed_tips
-                    )
-                }
-            }
-        }
-
-        // Upgrade point visibility
-        viewModel.upgradePointVisible.observe(viewLifecycleOwner) { visible ->
-            tvUpgradePoint.isVisible = visible
-        }
-
-        // Existing firmware ViewModel observers (delegate to our ViewModel)
-        firmwareViewModel.firmwareDataLD.observe(viewLifecycleOwner) { data ->
-            viewModel.onFirmwareDataReceived(data)
-        }
-        firmwareViewModel.failLD.observe(viewLifecycleOwner) { isBindError ->
-            viewModel.onFirmwareFailed(isBindError)
-        }
-    }
-
-    override fun onClick(v: View?) {
-        when (v) {
-            settingItemModel -> {
-                viewModel.navigateToModel()
-            }
-
-            settingItemCorrection -> {
-                viewModel.navigateToCorrection()
-            }
-
-            settingItemDual -> {
-                viewModel.navigateToDual()
-            }
-
-            settingItemUnit -> {
-                viewModel.navigateToUnit()
-            }
-
-            settingDeviceInformation -> {
-                viewModel.navigateToDeviceInformation()
-            }
-
-            settingVersion -> {
-                val firmwareData = firmwareViewModel.firmwareDataLD.value
-                if (firmwareData != null) {
-                    showFirmwareUpDialog(firmwareData)
-                } else {
-                    XLog.i("TS004 firmware check")
-                    viewModel.checkFirmwareUpdate()
-                    firmwareViewModel.queryFirmware(isTC007)
-                }
-            }
-
-            settingReset -> {
-                viewModel.requestFactoryReset()
-            }
-        }
-    }
-
-    private fun showResetConfirmation() {
-        // Reset confirmation dialog logic would go here
-        val dialog = ConfirmSelectDialog.createForReset(requireContext()) {
-            // Handle factory reset
-        }
-        dialog.show()
-    }
-
-    private fun showFirmwareUpDialog(firmwareData: FirmwareViewModel.FirmwareData) {
-        // Firmware dialog logic
-        val dialog = FirmwareUpDialog(requireContext())
-        dialog.titleStr = "${getString(RCore.string.update_new_version)} ${firmwareData.version}"
-        dialog.contentStr = firmwareData.updateStr
-        dialog.show()
-    }
-            }
-        }
-
         settingItemConfigSelect.isChecked =
             if (isTC007) WifiSaveSettingUtil.isSaveSetting else SaveSettingUtil.isSaveSetting
         settingItemConfigSelect.setOnCheckedChangeListener { _, isChecked ->
@@ -309,18 +184,14 @@ class MoreFragment : BaseViewModelFragment<MoreFragmentViewModel>(), View.OnClic
             }
 
             settingVersion -> {
-
-
                 val firmwareData = firmwareViewModel.firmwareDataLD.value
                 if (firmwareData != null) {
                     showFirmwareUpDialog(firmwareData)
                 } else {
-                    XLog.i("TC007 [ph][ph][ph][ph] - [ph][ph][ph][ph]")
+                    XLog.i("TC007 firmware check")
                     showLoadingDialog()
                     firmwareViewModel.queryFirmware(false)
                 }
-
-
             }
 
             settingDeviceInformation -> {
@@ -365,8 +236,6 @@ class MoreFragment : BaseViewModelFragment<MoreFragmentViewModel>(), View.OnClic
         dialog.contentStr = firmwareData.updateStr
         dialog.isShowRestartTips = true
         dialog.onConfirmClickListener = {
-
-
             installFirmware(FileConfig.getFirmwareFile(firmwareData.downUrl))
         }
         dialog.show()
@@ -407,7 +276,7 @@ class MoreFragment : BaseViewModelFragment<MoreFragmentViewModel>(), View.OnClic
 
     private fun installFirmware(file: File) {
         lifecycleScope.launch {
-            XLog.d("TC007 [ph][ph][ph][ph] - [ph][ph][ph][ph][ph][ph][ph][ph][ph]")
+            XLog.d("TC007 firmware install")
             val installDialog = FirmwareInstallDialog(requireContext())
             installDialog.show()
 
@@ -415,7 +284,7 @@ class MoreFragment : BaseViewModelFragment<MoreFragmentViewModel>(), View.OnClic
             val isSuccess = false
             installDialog.dismiss()
             if (isSuccess) {
-                XLog.d("TC007 [ph][ph][ph][ph] - [ph][ph][ph][ph][ph][ph][ph][ph] TC007 [ph][ph]，[ph][ph][ph][ph][ph][ph]")
+                XLog.d("TC007 firmware install success")
                 (requireActivity().application as BaseApplication).disconnectWebSocket()
                 TipDialog.Builder(requireContext())
                     .setTitleMessage(getString(RCore.string.app_tip))
@@ -429,7 +298,7 @@ class MoreFragment : BaseViewModelFragment<MoreFragmentViewModel>(), View.OnClic
                     }
                     .create().show()
             } else {
-                XLog.w("TC007 [ph][ph][ph][ph] - [ph][ph][ph][ph][ph][ph][ph][ph] TC007 [ph][ph]!")
+                XLog.w("TC007 firmware install failed")
                 showReInstallDialog(file)
             }
         }
@@ -478,7 +347,7 @@ class MoreFragment : BaseViewModelFragment<MoreFragmentViewModel>(), View.OnClic
             // TC007Repository functionality removed
             val isSuccess = false
             if (isSuccess) {
-                XLog.d("TC007 [ph][ph][ph][ph][ph][ph][ph][ph]，[ph][ph][ph][ph][ph][ph]")
+                XLog.d("TC007 reset success")
                 TToast.shortToast(requireContext(), RCore.string.ts004_reset_tip4)
                 (requireActivity().application as BaseApplication).disconnectWebSocket()
                 // EventBus.getDefault().post(TS004ResetEvent()) // TS004ResetEvent removed
