@@ -21,6 +21,8 @@ import com.energy.iruvc.uvc.ConcreateUVCBuilder;
 import com.energy.iruvc.uvc.ConnectCallback;
 import com.energy.iruvc.uvc.UVCCamera;
 import com.energy.iruvc.uvc.UVCType;
+import com.mpdc4gsr.libunified.app.utils.UnifiedFileUtils;
+import com.mpdc4gsr.libunified.app.utils.UnifiedScreenUtils;
 import com.mpdc4gsr.libunified.ir.config.MsgCode;
 import com.mpdc4gsr.libunified.ir.event.IRMsgEvent;
 import com.mpdc4gsr.libunified.ir.event.PreviewComplete;
