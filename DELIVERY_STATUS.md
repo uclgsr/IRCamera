@@ -9,7 +9,7 @@ Based on the comprehensive implementation completed, **nothing critical is missi
 ### **Chapter 4: Design & Implementation** - 100% Complete
 - ✅ **Modular Architecture**: 5 dedicated manager classes created
   - `ThermalCameraManager.kt` - Topdon TC001 integration
-  - `GSRSensorService.kt` - Shimmer3 BLE management  
+  - `GSRSensorService.kt` - Shimmer3 BLE management
   - `RgbCameraManager.kt` - Phone Camera2 API handling
   - `TimeSyncManager.kt` - NTP-style time synchronization
   - `CommandServer.kt` - PC command coordination
