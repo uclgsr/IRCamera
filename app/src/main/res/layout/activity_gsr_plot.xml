@@ -17,7 +17,7 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- GSR Chart Section -->
+
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="300dp"
@@ -41,7 +41,7 @@
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
-                    <com.github.mikephil.charting.charts.LineChart
+                    <com.mpdc4gsr.libunified.ui.charts.LineChart
                         android:id="@+id/gsr_chart"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
@@ -51,7 +51,7 @@
 
             </androidx.cardview.widget.CardView>
 
-            <!-- PPG Chart Section -->
+
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="300dp"
@@ -75,7 +75,7 @@
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
-                    <com.github.mikephil.charting.charts.LineChart
+                    <com.mpdc4gsr.libunified.ui.charts.LineChart
                         android:id="@+id/ppg_chart"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
@@ -85,7 +85,7 @@
 
             </androidx.cardview.widget.CardView>
 
-            <!-- Statistics Section -->
+
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -123,7 +123,7 @@
 
             </androidx.cardview.widget.CardView>
 
-            <!-- Instructions Section -->
+
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="detail_date">time</string>
-    <string name="chart_temperature_low">Lowest Temperature</string>
-    <string name="chart_temperature_high">Highest Temperature</string>
-    <string name="chart_temperature">Temperature</string>
-</resources>

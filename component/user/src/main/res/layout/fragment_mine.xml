@@ -7,7 +7,7 @@
     android:background="@color/color_16131E"
     android:fitsSystemWindows="true">
 
-    <com.topdon.lib.core.view.TitleView
+    <com.mpdc4gsr.libunified.app.view.TitleView
         android:id="@+id/title_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -84,7 +84,7 @@
                 app:layout_constraintTop_toTopOf="@id/setting_user_img_night"
                 tools:visibility="visible" />
 
-            <!-- 冬季特辑入口 -->
+
             <ImageView
                 android:id="@+id/iv_winter"
                 android:layout_width="0dp"
@@ -98,7 +98,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/setting_user_img_night" />
-            <!-- 右侧图标占位 -->
+
             <View
                 android:id="@+id/space_winter_right"
                 android:layout_width="0dp"
@@ -107,7 +107,7 @@
                 app:layout_constraintDimensionRatio="W,116:103"
                 app:layout_constraintEnd_toEndOf="@id/iv_winter"
                 app:layout_constraintTop_toTopOf="@id/iv_winter" />
-            <!-- Title -->
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/cl_winter_title"
                 android:layout_width="0dp"
@@ -152,7 +152,7 @@
                     tools:ignore="SmallSp"
                     tools:visibility="visible" />
             </androidx.constraintlayout.widget.ConstraintLayout>
-            <!-- 副Title -->
+
             <TextView
                 android:id="@+id/tv_winter_sub_title"
                 android:layout_width="0dp"
@@ -180,7 +180,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/iv_winter">
 
-                <com.topdon.lib.ui.SettingNightView
+                <com.mpdc4gsr.libunified.ui.SettingNightView
                     android:id="@+id/setting_electronic_manual"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -191,7 +191,7 @@
                     app:setting_more_night="true"
                     app:setting_text_night="@string/electronic_manual" />
 
-                <com.topdon.lib.ui.SettingNightView
+                <com.mpdc4gsr.libunified.ui.SettingNightView
                     android:id="@+id/setting_faq"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -203,7 +203,7 @@
                     app:setting_more_night="true"
                     app:setting_text_night="@string/app_question" />
 
-                <com.topdon.lib.ui.SettingNightView
+                <com.mpdc4gsr.libunified.ui.SettingNightView
                     android:id="@+id/setting_feedback"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -215,7 +215,7 @@
                     app:setting_more_night="true"
                     app:setting_text_night="@string/user_advice_feedback" />
 
-                <com.topdon.lib.ui.SettingNightView
+                <com.mpdc4gsr.libunified.ui.SettingNightView
                     android:id="@+id/setting_item_unit"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -227,8 +227,8 @@
                     app:setting_more_night="true"
                     app:setting_text_night="@string/setting_unit" />
 
-                <!-- 由于原有逻辑清除缓存也会清除DataLibrary，温度MonitorData也没了，经Test与产品沟通后，于 2023/12/12 产品决定砍掉清除缓存 -->
-                <com.topdon.lib.ui.SettingNightView
+
+                <com.mpdc4gsr.libunified.ui.SettingNightView
                     android:id="@+id/setting_item_clear"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -241,7 +241,7 @@
                     app:setting_more_night="true"
                     app:setting_text_night="@string/set_clear_cache" />
 
-                <com.topdon.lib.ui.SettingNightView
+                <com.mpdc4gsr.libunified.ui.SettingNightView
                     android:id="@+id/setting_item_version"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

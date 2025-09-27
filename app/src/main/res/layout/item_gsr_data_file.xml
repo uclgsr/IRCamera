@@ -14,7 +14,7 @@
         android:orientation="horizontal"
         android:padding="16dp">
 
-        <!-- File Icon -->
+
         <ImageView
             android:id="@+id/file_icon"
             android:layout_width="48dp"
@@ -23,7 +23,7 @@
             android:src="@drawable/ic_insert_chart"
             android:tint="@color/colorAccent" />
 
-        <!-- File Info -->
+
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"

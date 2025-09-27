@@ -21,26 +21,35 @@ tasks.register<Delete>("clean") {
     delete(rootProject.layout.buildDirectory.get().asFile)
 }
 
-// Custom task to build only release variants (since debug variants are disabled)
-tasks.register("buildRelease") {
+// Enhanced clean task that also cleans all subprojects  
+tasks.register("cleanAll") {
     group = "build"
-    description = "Builds all modules using only release variants"
+    description = "Clean all modules including build cache"
+    dependsOn("clean")
+    doLast {
+        // Do NOT delete .gradle directory to avoid Windows file lock issues
+        // Clean root build directory
+        delete(file("${rootProject.projectDir}/build"))
+
+        // Clean all subproject build directories
+        subprojects.forEach { subproject ->
+            delete(file("${subproject.projectDir}/build"))
+        }
+
+        println("All modules cleaned successfully (without deleting .gradle cache)")
+    }
+}
+
+tasks.register("build") {
+    group = "build"
+    description = "Builds all modules using only release variants (starts with clean)"
     dependsOn(
+        "cleanAll",
         ":app:assembleRelease",
         ":BleModule:assembleRelease",
-        ":libapp:assembleRelease",
-        ":libcom:assembleRelease",
-        ":libir:assembleRelease",
-        ":libmatrix:assembleRelease",
-        ":libmenu:assembleRelease",
-        ":libui:assembleRelease",
-        ":RangeSeekBar:assembleRelease",
-        ":component:CommonComponent:assembleRelease",
+        ":libunified:assembleRelease",
         ":component:gsr-recording:assembleRelease",
-        ":component:pseudo:assembleRelease",
-        ":component:thermal:assembleRelease",
-        ":component:thermal-ir:assembleRelease",
-        ":component:thermal-lite:assembleRelease",
+        ":component:thermalunified:assembleRelease",
         ":component:user:assembleRelease"
     )
 }

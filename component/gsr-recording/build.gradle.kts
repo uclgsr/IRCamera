@@ -4,8 +4,8 @@ plugins {
 }
 
 android {
-    namespace = "com.topdon.gsr"
-    compileSdk = libs.versions.compileSdk.get().toInt()
+    namespace = "com.mpdc4gsr.gsr"
+    compileSdk = 35
 
     defaultConfig {
         minSdk = libs.versions.minSdk.get().toInt()
@@ -53,9 +53,10 @@ android {
     }
 
     buildFeatures {
-        dataBinding = false
+        dataBinding = true
         viewBinding = true
     }
+    buildToolsVersion = "35.0.0"
 }
 
 dependencies {
@@ -67,26 +68,19 @@ dependencies {
     implementation(libs.work.runtime.ktx)
     implementation(libs.gson)
     implementation(project(":BleModule"))
-    implementation(libs.coroutines.core.legacy)
-    implementation(libs.coroutines.android.legacy)
-    // CameraX dependencies - Compatible with AGP 8.5.2
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.kotlinx.coroutines.android)
     implementation(libs.bundles.camerax)
     implementation(libs.opencsv)
-    implementation(libs.guava.legacy)
+    implementation(libs.guava)
     implementation(libs.vecmath)
     implementation(libs.commons.lang3)
     implementation(libs.fastble)
-
-    // Shimmer GSR+ Sensor SDK - Official Shimmer Research Libraries
-    // Note: ShimmerBiophysicalProcessingLibrary and androidplot-core are now provided by 
-    // shimmerandroidinstrumentdriver-3.2.4_beta.aar in the main app module to prevent duplicate classes
-    // implementation(files("libs/ShimmerBiophysicalProcessingLibrary_Rev_0_11.jar"))
-    // implementation(files("libs/androidplot-core-0.5.0-release.jar"))
     testImplementation(libs.junit)
     testImplementation(libs.robolectric)
     testImplementation(libs.test.core)
     testImplementation(libs.test.ext.junit)
-    testImplementation(libs.coroutines.test.legacy)
+    testImplementation(libs.kotlinx.coroutines.test)
     androidTestImplementation(libs.test.ext.junit)
     androidTestImplementation(libs.test.espresso.core)
 }

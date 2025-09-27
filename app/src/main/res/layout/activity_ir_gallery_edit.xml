@@ -11,7 +11,7 @@
         android:background="#16131e"
         tools:context=".IRGalleryEditActivity">
 
-        <com.topdon.lib.core.view.TitleView
+        <com.mpdc4gsr.libunified.app.view.TitleView
             android:id="@+id/title_view"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -27,14 +27,14 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">
-            <!-- 二级Menu -->
-            <com.topdon.menu.MenuSecondView
+
+            <com.mpdc4gsr.libunified.app.menu.MenuSecondView
                 android:id="@+id/edit_recycler_second"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:deviceType="gallery_edit" />
-            <!-- 一级Menu -->
-            <com.topdon.menu.MenuEditView
+                app:deviceType="4" />
+
+            <com.mpdc4gsr.libunified.app.menu.MenuEditView
                 android:id="@+id/edit_recycler_first"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
@@ -51,7 +51,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/title_view" />
 
-        <com.topdon.module.thermal.ir.view.TemperatureEditView
+        <com.mpdc4gsr.module.thermalunified.view.TemperatureEditView
             android:id="@+id/temperature_view"
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -106,7 +106,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/temperature_seekbar" />
 
-            <com.topdon.lib.ui.widget.seekbar.VerticalRangeSeekBar
+            <com.mpdc4gsr.libunified.ui.widget.seekbar.RangeSeekBar
                 android:id="@+id/temperature_seekbar"
                 android:layout_width="80dp"
                 android:layout_height="0dp"

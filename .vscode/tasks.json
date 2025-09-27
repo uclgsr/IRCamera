@@ -1,130 +1,151 @@
 {
-    "version": "2.0.0",
-    "tasks": [
-        {
-            "label": "Clean Android Build",
-            "type": "shell",
-            "command": "./gradlew",
-            "args": ["clean"],
-            "group": "build",
-            "presentation": {
-                "echo": true,
-                "reveal": "always",
-                "focus": false,
-                "panel": "shared"
-            },
-            "options": {
-                "cwd": "${workspaceFolder}"
-            },
-            "problemMatcher": []
-        },
-        {
-            "label": "Build Android Debug",
-            "type": "shell",
-            "command": "./gradlew",
-            "args": ["assembleDebug"],
-            "group": "build",
-            "presentation": {
-                "echo": true,
-                "reveal": "always",
-                "focus": false,
-                "panel": "shared"
-            },
-            "options": {
-                "cwd": "${workspaceFolder}"
-            },
-            "problemMatcher": []
-        },
-        {
-            "label": "Dev Tools - Help",
-            "type": "shell",
-            "command": "./dev.sh",
-            "args": ["help"],
-            "group": "build",
-            "presentation": {
-                "echo": true,
-                "reveal": "always",
-                "focus": false,
-                "panel": "shared"
-            },
-            "options": {
-                "cwd": "${workspaceFolder}"
-            }
-        },
-        {
-            "label": "Dev Tools - Lint",
-            "type": "shell",
-            "command": "./dev.sh",
-            "args": ["lint"],
-            "group": "build",
-            "presentation": {
-                "echo": true,
-                "reveal": "always",
-                "focus": false,
-                "panel": "shared"
-            },
-            "options": {
-                "cwd": "${workspaceFolder}"
-            }
-        },
-        {
-            "label": "PC Controller - Install Dependencies",
-            "type": "shell",
-            "command": "pip3",
-            "args": [
-                "install", 
-                "PyQt6", "loguru", "zeroconf", "numpy", "pandas", 
-                "h5py", "pyqtgraph", "scipy", "opencv-python", "bleak", "psutil"
-            ],
-            "group": "build",
-            "presentation": {
-                "echo": true,
-                "reveal": "always",
-                "focus": false,
-                "panel": "shared"
-            },
-            "options": {
-                "cwd": "${workspaceFolder}/pc-controller"
-            }
-        },
-        {
-            "label": "PC Controller - Run MVP Demo",
-            "type": "shell",
-            "command": "python3",
-            "args": ["demo_mvp_components.py"],
-            "group": "test",
-            "presentation": {
-                "echo": true,
-                "reveal": "always",
-                "focus": false,
-                "panel": "shared"
-            },
-            "options": {
-                "cwd": "${workspaceFolder}/pc-controller",
-                "env": {
-                    "PYTHONPATH": "${workspaceFolder}/pc-controller/src",
-                    "QT_QPA_PLATFORM": "offscreen"
-                }
-            }
-        },
-        {
-            "label": "PC Controller - Run Tests",
-            "type": "shell",
-            "command": "python3",
-            "args": ["test_mvp_simple.py"],
-            "group": "test",
-            "presentation": {
-                "echo": true,
-                "reveal": "always",
-                "focus": false,
-                "panel": "shared"
-            },
-            "options": {
-                "cwd": "${workspaceFolder}/pc-controller",
-                "env": {
-                    "PYTHONPATH": "${workspaceFolder}/pc-controller/src"
-                }
-            }
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Clean Android Build",
+      "type": "shell",
+      "command": "./gradlew",
+      "args": [
+        "clean"
+      ],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Build Android Debug",
+      "type": "shell",
+      "command": "./gradlew",
+      "args": [
+        "assembleDebug"
+      ],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Dev Tools - Help",
+      "type": "shell",
+      "command": "./dev.sh",
+      "args": [
+        "help"
+      ],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "options": {
+        "cwd": "${workspaceFolder}"
+      }
+    },
+    {
+      "label": "Dev Tools - Lint",
+      "type": "shell",
+      "command": "./dev.sh",
+      "args": [
+        "lint"
+      ],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "options": {
+        "cwd": "${workspaceFolder}"
+      }
+    },
+    {
+      "label": "PC Controller - Install Dependencies",
+      "type": "shell",
+      "command": "pip3",
+      "args": [
+        "install",
+        "PyQt6",
+        "loguru",
+        "zeroconf",
+        "numpy",
+        "pandas",
+        "h5py",
+        "pyqtgraph",
+        "scipy",
+        "opencv-python",
+        "bleak",
+        "psutil"
+      ],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "options": {
+        "cwd": "${workspaceFolder}/pc-controller"
+      }
+    },
+    {
+      "label": "PC Controller - Run MVP Demo",
+      "type": "shell",
+      "command": "python3",
+      "args": [
+        "demo_mvp_components.py"
+      ],
+      "group": "test",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "options": {
+        "cwd": "${workspaceFolder}/pc-controller",
+        "env": {
+          "PYTHONPATH": "${workspaceFolder}/pc-controller/src",
+          "QT_QPA_PLATFORM": "offscreen"
         }
-    ]
+      }
+    },
+    {
+      "label": "PC Controller - Run Tests",
+      "type": "shell",
+      "command": "python3",
+      "args": [
+        "test_mvp_simple.py"
+      ],
+      "group": "test",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "options": {
+        "cwd": "${workspaceFolder}/pc-controller",
+        "env": {
+          "PYTHONPATH": "${workspaceFolder}/pc-controller/src"
+        }
+      }
+    }
+  ]
 }

@@ -9,7 +9,7 @@
         android:clipChildren="false"
         android:fitsSystemWindows="true">
 
-        <com.topdon.lib.core.view.TitleView
+        <com.mpdc4gsr.libunified.app.view.TitleView
             android:id="@+id/title_view"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -48,8 +48,8 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tv_title">
 
-                    <!-- 去Connect -->
-                    <com.topdon.tc001.view.ConnectionGuideView
+
+                    <com.mpdc4gsr.libunified.app.view.ConnectionGuideView
                         android:id="@+id/main_guide_tip1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -59,7 +59,7 @@
                         app:guide_text="@string/ts004_guide_text9"
                         app:layout_constraintTop_toTopOf="parent" />
 
-                    <com.topdon.tc001.view.ConnectionGuideView
+                    <com.mpdc4gsr.libunified.app.view.ConnectionGuideView
                         android:id="@+id/main_guide_tip2"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -69,7 +69,7 @@
                         app:guide_text="@string/ts004_guide_text10"
                         app:layout_constraintTop_toBottomOf="@+id/main_guide_tip1" />
 
-                    <com.topdon.tc001.view.ConnectionGuideView
+                    <com.mpdc4gsr.libunified.app.view.ConnectionGuideView
                         android:id="@+id/main_guide_tip3"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -80,7 +80,7 @@
                         app:guide_text="@string/ts004_guide_text11"
                         app:layout_constraintTop_toBottomOf="@+id/main_guide_tip2" />
 
-                    <com.topdon.tc001.view.ConnectionGuideView
+                    <com.mpdc4gsr.libunified.app.view.ConnectionGuideView
                         android:id="@+id/main_guide_tip4"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -89,8 +89,8 @@
                         app:guide_text="@string/ts004_guide_text12"
                         app:layout_constraintTop_toBottomOf="@+id/main_guide_tip3" />
 
-                    <!-- DisconnectConnect -->
-                    <com.topdon.tc001.view.ConnectionGuideView
+
+                    <com.mpdc4gsr.libunified.app.view.ConnectionGuideView
                         android:id="@+id/disconnect_tip1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -101,7 +101,7 @@
                         app:guide_text="@string/ts004_disconnect_tips2"
                         app:layout_constraintTop_toTopOf="parent" />
 
-                    <com.topdon.tc001.view.ConnectionGuideView
+                    <com.mpdc4gsr.libunified.app.view.ConnectionGuideView
                         android:id="@+id/disconnect_tip2"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -117,7 +117,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="30dp"
-                        android:text="去设置"
+                        android:text="[ph][ph][ph]"
                         android:textColor="@color/chart_line_min"
                         android:textSize="@dimen/app_small_font"
                         android:visibility="gone"

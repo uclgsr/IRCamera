@@ -1,40 +1,29 @@
 #!/usr/bin/env python3
-"""
-Simplified MVP Test for IRCamera PC Controller Hub
 
-Tests core functionality without heavy dependencies
-"""
 
 import asyncio
 import sys
 import tempfile
 from pathlib import Path
 
-# Add src to path
 sys.path.insert(0, str(Path(__file__).parent / "src"))
 
 
 def test_imports():
-    """Test that core modules can be imported."""
     print("\n=== Testing Core Imports ===")
 
     try:
-        # Test individual imports to isolate issues
+
         print("Testing device discovery...")
-        from ircamera_pc.network.discovery import DeviceType, DiscoveredDevice, \
-            NetworkDiscoveryService
         print("✓ Discovery service imports successful")
 
         print("Testing session management...")
-        from ircamera_pc.core.session import SessionManager, SessionState
         print("✓ Session management imports successful")
 
         print("Testing configuration...")
-        from ircamera_pc.core.config import config
         print("✓ Configuration imports successful")
 
         print("Testing device manager...")
-        # Skip the problematic imports for now
 
         return True
 
@@ -44,15 +33,13 @@ def test_imports():
 
 
 async def test_basic_discovery():
-    """Test basic discovery functionality."""
     print("\n=== Testing Basic Discovery ===")
 
     try:
         from ircamera_pc.network.discovery import DeviceType, DiscoveredDevice, \
             NetworkDiscoveryService
 
-        # Test discovery service creation
-        discovery = NetworkDiscoveryService()
+        NetworkDiscoveryService()
         print("✓ Discovery service created")
 
         # Test mock device creation
@@ -77,22 +64,19 @@ async def test_basic_discovery():
 
 
 async def test_basic_session():
-    """Test basic session functionality."""
     print("\n=== Testing Basic Session ===")
 
     try:
-        from ircamera_pc.core.session import SessionManager, SessionState
+        from ircamera_pc.core.session import SessionManager
 
         # Create temporary directory
         with tempfile.TemporaryDirectory() as temp_dir:
             session_dir = Path(temp_dir) / "sessions"
             session_dir.mkdir(parents=True)
 
-            # Create session manager
             session_manager = SessionManager()
             print("✓ Session manager created")
 
-            # Test session creation
             session_id = session_manager.create_session("Test Session")
             if session_id:
                 print(f"✓ Session created: {session_id}")
@@ -100,7 +84,6 @@ async def test_basic_session():
                 print("✗ Failed to create session")
                 return False
 
-            # Test state retrieval
             state = session_manager.get_session_state()
             if state:
                 print(f"✓ Session state: {state}")
@@ -116,17 +99,14 @@ async def test_basic_session():
 
 
 def test_configuration():
-    """Test configuration system."""
     print("\n=== Testing Configuration ===")
 
     try:
         from ircamera_pc.core.config import config
 
-        # Test config access
         version = config.get("version", "unknown")
         print(f"✓ Config loaded, version: {version}")
 
-        # Test network config
         port = config.get("network.server_port", 8080)
         print(f"✓ Network port configured: {port}")
 
@@ -138,7 +118,6 @@ def test_configuration():
 
 
 async def run_simple_tests():
-    """Run simplified MVP tests."""
     print("IRCamera PC Controller Hub - Simplified MVP Test")
     print("=" * 60)
 
@@ -170,7 +149,6 @@ async def run_simple_tests():
             print(f"❌ {test_name} test FAILED with exception: {e}")
             results.append((test_name, False))
 
-    # Summary
     print("\n" + "=" * 60)
     print("TEST SUMMARY")
     print("=" * 60)

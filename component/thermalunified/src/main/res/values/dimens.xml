@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+    <dimen name="ir_width">320dp</dimen>
+    <dimen name="ir_height">426dp</dimen>
+
+
+    <dimen name="cross_width">36dp</dimen>
+    <dimen name="cross_height">36dp</dimen>
+
+
+    <dimen name="high_cross_width">36dp</dimen>
+    <dimen name="high_cross_height">36dp</dimen>
+</resources>

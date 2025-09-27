@@ -1,12 +1,12 @@
 #!/bin/bash
-# Simple launcher script for Android preview client
 
-# Default values
+
+
 ANDROID_IP=""
 PORT=8080
 DURATION=30
 
-# Parse command line arguments
+
 while [[ $# -gt 0 ]]; do
     case $1 in
         -h|--help)
@@ -44,14 +44,14 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-# Validate Android IP
+
 if [[ -z "$ANDROID_IP" ]]; then
     echo "Error: Android IP address is required"
     echo "Usage: $0 <android_ip> [--port PORT] [--duration SECONDS]"
     exit 1
 fi
 
-# Validate IP format (basic check)
+
 if [[ ! "$ANDROID_IP" =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$ ]]; then
     echo "Warning: '$ANDROID_IP' doesn't look like a valid IP address"
     read -p "Continue anyway? (y/N): " -n 1 -r
@@ -66,10 +66,10 @@ echo "Test duration: ${DURATION} seconds"
 echo "Press Ctrl+C to stop early"
 echo ""
 
-# Get script directory
+
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-# Run the Python client
+
 python3 "$SCRIPT_DIR/test_android_preview_client.py" "$ANDROID_IP" --port "$PORT" --duration "$DURATION"
 
 echo ""

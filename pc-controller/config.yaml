@@ -1,0 +1,135 @@
+# Enhanced PC Controller Configuration
+# Configuration file for the IRCamera PC Controller system
+
+# Network settings
+network:
+  # Port for the TCP server
+  port: 8080
+  
+  # Interface to bind to (0.0.0.0 for all interfaces, 127.0.0.1 for localhost only)
+  bind_address: "0.0.0.0"
+  
+  # Maximum number of concurrent device connections
+  max_connections: 10
+  
+  # Connection timeout in seconds
+  connection_timeout: 30.0
+  
+  # Heartbeat interval in seconds
+  heartbeat_interval: 10.0
+
+# Data settings
+data:
+  # Output directory for recordings
+  output_directory: "pc_recordings"
+  
+  # Maximum data buffer size for real-time visualization
+  buffer_size: 1000
+  
+  # Data export formats supported
+  export_formats: [ "csv", "json", "hdf5" ]
+  
+  # Automatic data export after session
+  auto_export: true
+
+# Visualization settings
+visualization:
+  # Enable real-time plotting
+  enable_plots: true
+  
+  # Plot update frequency in Hz
+  plot_update_rate: 10.0
+  
+  # Maximum time window for real-time plots (seconds)
+  plot_time_window: 30.0
+  
+  # GSR plot settings
+  gsr_plot:
+    y_range_auto: true
+    y_min: 0.0
+    y_max: 50.0
+
+# Device settings
+devices:
+  # Device discovery timeout
+  discovery_timeout: 5.0
+  
+  # Sensor configuration
+  sensors:
+    gsr:
+      sampling_rate: 10.0  # Hz
+      enabled: true
+    
+    rgb_camera:
+      enabled: true
+      preview_enabled: true
+    
+    thermal_camera:
+      enabled: true
+      preview_enabled: true
+
+# Session settings
+sessions:
+  # Default session naming pattern
+  session_name_pattern: "session_{timestamp}"
+  
+  # Auto-start recording on device connection
+  auto_start_recording: false
+  
+  # Session timeout in seconds (0 for no timeout)
+  session_timeout: 0
+
+# Security settings (for future implementation)
+security:
+  # Enable TLS encryption
+  enable_tls: false
+  
+  # Certificate files (when TLS is enabled)
+  cert_file: "server.crt"
+  key_file: "server.key"
+  
+  # Authentication required
+  require_auth: false
+
+# Logging settings
+logging:
+  # Log level (DEBUG, INFO, WARNING, ERROR)
+  level: "INFO"
+  
+  # Log to file
+  log_to_file: true
+  
+  # Log file path
+  log_file: "pc_controller.log"
+  
+  # Maximum log file size in MB
+  max_log_size: 10
+  
+  # Number of backup log files to keep
+  backup_count: 3
+
+# Performance settings
+performance:
+  # Number of worker threads for data processing
+  worker_threads: 2
+  
+  # Enable native C++ backend if available
+  use_native_backend: true
+  
+  # Memory limit for data buffers (MB)
+  memory_limit: 100
+
+# GUI settings
+gui:
+  # Window dimensions
+  window_width: 1400
+  window_height: 900
+  
+  # Theme settings
+  theme: "default"
+  
+  # Update frequency for GUI elements (Hz)
+  gui_update_rate: 10.0
+  
+  # Show advanced features
+  show_advanced: false

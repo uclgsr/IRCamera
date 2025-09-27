@@ -6,8 +6,7 @@ public class Topdon {
     private static Context app;
 
     public static void init(Context context) {
-
-        app = context.getApplicationContext();
+        app = context;
     }
 
     public static Context getApp() {

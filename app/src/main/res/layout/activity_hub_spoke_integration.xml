@@ -15,7 +15,7 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- Header -->
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -26,7 +26,7 @@
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
-            <!-- Status Section -->
+
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -88,7 +88,7 @@
 
             </androidx.cardview.widget.CardView>
 
-            <!-- PC Controller Connection -->
+
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -163,7 +163,7 @@
 
             </androidx.cardview.widget.CardView>
 
-            <!-- Recording Controls -->
+
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -249,7 +249,7 @@
 
             </androidx.cardview.widget.CardView>
 
-            <!-- Sensor Status -->
+
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -284,7 +284,7 @@
 
             </androidx.cardview.widget.CardView>
 
-            <!-- Info Section -->
+
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

@@ -7,7 +7,7 @@
     android:background="@color/color_16131E"
     android:fitsSystemWindows="true">
 
-    <com.topdon.lib.core.view.TitleView
+    <com.mpdc4gsr.libunified.app.view.TitleView
         android:id="@+id/title_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -47,7 +47,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
-                <com.topdon.module.user.view.ProgressBarView
+                <com.mpdc4gsr.module.user.view.ProgressBarView
                     android:id="@+id/custom_view_progress"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -144,7 +144,7 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-            <com.topdon.module.user.view.ListItemView
+            <com.mpdc4gsr.module.user.view.ListItemView
                 android:id="@+id/list_storage_photo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -156,7 +156,7 @@
                 app:list_item_left_text="@string/album_menu_Photos"
                 app:list_item_line="true" />
 
-            <com.topdon.module.user.view.ListItemView
+            <com.mpdc4gsr.module.user.view.ListItemView
                 android:id="@+id/list_storage_video"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -167,7 +167,7 @@
                 app:list_item_left_text="@string/app_video"
                 app:list_item_line="true" />
 
-            <com.topdon.module.user.view.ListItemView
+            <com.mpdc4gsr.module.user.view.ListItemView
                 android:id="@+id/list_storage_system"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

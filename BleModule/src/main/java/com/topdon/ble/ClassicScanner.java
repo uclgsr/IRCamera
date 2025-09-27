@@ -1,16 +1,17 @@
 package com.topdon.ble;
 
 import android.bluetooth.BluetoothAdapter;
-import android.content.Context;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.topdon.ble.callback.ScanListener;
-import com.topdon.ble.util.BluetoothPermissionUtils;
+import com.topdon.ble.util.Logger;
 
+
+/**
+ * date: 2020/5/9 16:20
+ * author: bichuanfeng
+ */
 class ClassicScanner extends AbstractScanner {
-    private static final String TAG = "ClassicScanner";
     private boolean stopQuietly = false;
 
     ClassicScanner(EasyBLE easyBle, BluetoothAdapter bluetoothAdapter) {
@@ -24,35 +25,19 @@ class ClassicScanner extends AbstractScanner {
 
     @Override
     protected void performStartScan() {
-        Context context = EasyBLE.getInstance().getContext();
-        if (!BluetoothPermissionUtils.hasBluetoothScanPermission(context)) {
-            Log.w(TAG, "Missing BLUETOOTH_SCAN permission for startDiscovery()");
-            handleScanCallback(false, null, false, ScanListener.ERROR_LACK_BLUETOOTH_PERMISSION,
-                    "Missing Bluetooth scan permission");
-            return;
-        }
-
         try {
             bluetoothAdapter.startDiscovery();
         } catch (SecurityException e) {
-            Log.e(TAG, "SecurityException in startDiscovery(): " + e.getMessage());
-            handleScanCallback(false, null, false, ScanListener.ERROR_LACK_BLUETOOTH_PERMISSION,
-                    "Bluetooth permission denied: " + e.getMessage());
+            logger.log(android.util.Log.ERROR, Logger.TYPE_SCAN_STATE, "Missing Bluetooth permission for classic scan: " + e.getMessage());
         }
     }
 
     @Override
     protected void performStopScan() {
-        Context context = EasyBLE.getInstance().getContext();
-        if (!BluetoothPermissionUtils.hasBluetoothScanPermission(context)) {
-            Log.w(TAG, "Missing BLUETOOTH_SCAN permission for cancelDiscovery()");
-            return;
-        }
-
         try {
             bluetoothAdapter.cancelDiscovery();
         } catch (SecurityException e) {
-            Log.e(TAG, "SecurityException in cancelDiscovery(): " + e.getMessage());
+            logger.log(android.util.Log.ERROR, Logger.TYPE_SCAN_STATE, "Missing Bluetooth permission to stop classic scan: " + e.getMessage());
         }
     }
 

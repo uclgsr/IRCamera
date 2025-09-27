@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:background="#16131e">
 
-    <!-- Sessions RecyclerView -->
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/gsr_session_recycler"
         android:layout_width="match_parent"
@@ -12,7 +12,7 @@
         android:clipToPadding="false"
         android:padding="8dp" />
 
-    <!-- Empty View -->
+
     <LinearLayout
         android:id="@+id/empty_view"
         android:layout_width="match_parent"

@@ -14,7 +14,7 @@
         android:orientation="horizontal"
         android:padding="16dp">
 
-        <!-- Session Icon -->
+
         <ImageView
             android:id="@+id/session_icon"
             android:layout_width="56dp"
@@ -25,7 +25,7 @@
             android:src="@drawable/ic_folder_open"
             android:tint="@color/colorAccent" />
 
-        <!-- Session Info -->
+
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"

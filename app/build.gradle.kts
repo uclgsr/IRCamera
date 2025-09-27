@@ -5,7 +5,7 @@ import java.util.Locale
 plugins {
     id("com.android.application")
     kotlin("android")
-    id("com.google.devtools.ksp") // Use KSP for Room and Glide
+    id("com.google.devtools.ksp")
 }
 
 val buildDayStr = SimpleDateFormat("yyMMdd", Locale.getDefault()).format(Date())
@@ -13,7 +13,7 @@ val buildTimeStr = SimpleDateFormat("HHmm", Locale.getDefault()).format(Date())
 
 android {
     namespace = "com.csl.irCamera"
-    compileSdk = libs.versions.compileSdk.get().toInt()
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.csl.irCamera"
@@ -26,10 +26,6 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled = true
 
-        ndk {
-            abiFilters += listOf("arm64-v8a")
-        }
-
         buildConfigField("String", "VERSION_DATE", "\"$buildDayStr\"")
         buildConfigField("String", "SOFT_CODE", "\"TC001_DisplaySW_IRCamera_Adr\"")
         buildConfigField("String", "APP_KEY", "\"5B2F6F1FD80844FCB6E50BCA19222E76\"")
@@ -39,11 +35,28 @@ android {
         manifestPlaceholders["JPUSH_APPKEY"] = "cbd4eafc9049d751fc5a8c58"
         manifestPlaceholders["JPUSH_CHANNEL"] = "developer-default"
         manifestPlaceholders["app_name"] = "IRCamera"
+
+        // Configure native library architecture support
+        ndk {
+            abiFilters += listOf("armeabi-v7a", "arm64-v8a", "x86", "x86_64")
+        }
     }
 
     bundle {
         language {
             enableSplit = false
+        }
+        abi {
+            enableSplit = true
+        }
+    }
+
+    splits {
+        abi {
+            isEnable = true
+            reset()
+            include("armeabi-v7a", "arm64-v8a", "x86", "x86_64")
+            isUniversalApk = true
         }
     }
 
@@ -53,8 +66,6 @@ android {
             keyAlias = "Artibox"
             storePassword = "artibox2017"
             keyPassword = "artibox2017"
-
-
             enableV1Signing = true
             enableV2Signing = true
         }
@@ -84,57 +95,9 @@ android {
     }
 
     androidResources {
-
         ignoreAssetsPattern = "!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~"
         additionalParameters += listOf("--allow-reserved-package-id", "--auto-add-overlay")
-    }
-
-    packaging {
-        resources {
-            excludes += listOf(
-                "META-INF/DEPENDENCIES",
-                "META-INF/LICENSE",
-                "META-INF/LICENSE.txt",
-                "META-INF/NOTICE",
-                "META-INF/NOTICE.txt"
-            )
-        }
-    }
-
-    androidComponents {
-        beforeVariants { variant ->
-            // Enable both debug and release builds for CI/CD compatibility
-            variant.enable = variant.buildType == "release" || variant.buildType == "debug"
-        }
-    }
-
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-        isCoreLibraryDesugaringEnabled = true
-    }
-
-    kotlin {
-        compilerOptions {
-            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
-            // Updated to match Kotlin 2.2.0 for consistency and to eliminate version warnings
-            apiVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_0)
-            languageVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_0)
-            freeCompilerArgs.addAll(
-                listOf(
-                    "-opt-in=kotlin.RequiresOptIn",
-                    "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
-                    "-opt-in=kotlinx.coroutines.FlowPreview",
-                    "-Xjvm-default=all",
-                )
-            )
-        }
-    }
-
-    java {
-        toolchain {
-            languageVersion.set(JavaLanguageVersion.of(17))
-        }
+        generateLocaleConfig = false
     }
 
     packaging {
@@ -151,29 +114,29 @@ android {
                     "META-INF/LICENSE.md",
                     "META-INF/LICENSE-notice.md",
                 )
-            excludes +=
-                listOf(
-                    "META-INF/DEPENDENCIES",
-                    "META-INF/LICENSE",
-                    "META-INF/LICENSE.txt",
-                    "META-INF/license.txt",
-                    "META-INF/NOTICE",
-                    "META-INF/NOTICE.txt",
-                    "META-INF/notice.txt",
-                    "META-INF/ASL2.0",
+            excludes += listOf(
+                "META-INF/DEPENDENCIES",
+                "META-INF/LICENSE",
+                "META-INF/LICENSE.txt",
+                "META-INF/license.txt",
+                "META-INF/NOTICE",
+                "META-INF/NOTICE.txt",
+                "META-INF/notice.txt",
+                "META-INF/ASL2.0",
+                "META-INF/versions/9/OSGI-INF/MANIFEST.MF",
 
-                    "META-INF/com.android.art/baseline.prof",
-                    "META-INF/com.android.art/baseline.profm",
+                "META-INF/com.android.art/baseline.prof",
+                "META-INF/com.android.art/baseline.profm",
 
-                    "**/it/gerdavax/easybluetooth/**",
+                "**/it/gerdavax/easybluetooth/**",
 
-                    "**/android/bluetooth/IBluetoothDeviceCallback*",
+                "**/android/bluetooth/IBluetoothDeviceCallback*",
 
-                    "**/com/androidplot/**",
+                "**/com/androidplot/**",
 
-                    "**/com/shimmerresearch/biophysicalprocessing/**",
-                    "**/com/shimmerresearch/utilityfunctions/**",
-                )
+                "**/com/shimmerresearch/biophysicalprocessing/**",
+                "**/com/shimmerresearch/utilityfunctions/**",
+            )
         }
         jniLibs {
             useLegacyPackaging = true
@@ -191,6 +154,8 @@ android {
                     "lib/arm64-v8a/libopencv_java4.so",
                     "lib/armeabi-v7a/libomp.so",
                     "lib/arm64-v8a/libomp.so",
+                    "lib/x86/libomp.so",
+                    "lib/x86_64/libomp.so",
                     "lib/arm64-v8a/liblog.so",
                     "lib/armeabi-v7a/liblog.so",
                     "lib/arm64-v8a/libijkffmpeg.so",
@@ -208,25 +173,74 @@ android {
                     "lib/x86_64/libijkffmpeg.so",
                     "lib/x86_64/libijkplayer.so",
                     "lib/x86_64/libijksdl.so",
+                    "lib/arm64-v8a/libUSBUVCCamera.so",
+                    "lib/armeabi-v7a/libUSBUVCCamera.so",
+                    "lib/x86/libUSBUVCCamera.so",
+                    "lib/x86_64/libUSBUVCCamera.so",
+                    "lib/arm64-v8a/libencrypt.so",
+                    "lib/armeabi-v7a/libencrypt.so",
+                    "lib/x86/libencrypt.so",
+                    "lib/x86_64/libencrypt.so",
+                    "lib/arm64-v8a/libircmd.so",
+                    "lib/armeabi-v7a/libircmd.so",
+                    "lib/x86/libircmd.so",
+                    "lib/x86_64/libircmd.so",
+                    "lib/arm64-v8a/libirparse.so",
+                    "lib/armeabi-v7a/libirparse.so",
+                    "lib/x86/libirparse.so",
+                    "lib/x86_64/libirparse.so",
+                    "lib/arm64-v8a/libirprocess.so",
+                    "lib/armeabi-v7a/libirprocess.so",
+                    "lib/x86/libirprocess.so",
+                    "lib/x86_64/libirprocess.so",
+                    "lib/arm64-v8a/libirtemp.so",
+                    "lib/armeabi-v7a/libirtemp.so",
+                    "lib/x86/libirtemp.so",
+                    "lib/x86_64/libirtemp.so",
                 )
 
             keepDebugSymbols +=
                 listOf(
-                    "**/*.so", // Keep all debug symbols to prevent stripping issues
+                    "**/*.so",
                 )
 
             excludes +=
                 listOf(
-                    "**/libSRImage.so", // Primary culprit for stripping errors
+                    "**/libSRImage.so",
                 )
         }
-        jniLibs {
-            pickFirsts += listOf(
-                "**/libc++_shared.so",
-                "**/libomp.so"
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+        isCoreLibraryDesugaringEnabled = true
+    }
+
+    kotlin {
+        compilerOptions {
+            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
+            apiVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_0)
+            languageVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_0)
+            freeCompilerArgs.addAll(
+                listOf(
+                    "-opt-in=kotlin.RequiresOptIn",
+                    "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
+                    "-opt-in=kotlinx.coroutines.FlowPreview",
+                    "-Xjvm-default=all",
+                    "-Xnested-type-aliases",
+                )
             )
         }
     }
+
+    java {
+        toolchain {
+            languageVersion.set(JavaLanguageVersion.of(17))
+        }
+    }
+
+
 
     buildFeatures {
         buildConfig = true
@@ -234,13 +248,18 @@ android {
         viewBinding = true
     }
 
+    dependenciesInfo {
+        includeInApk = false
+        includeInBundle = false
+    }
+    buildToolsVersion = "35.0.0"
+
 
 }
 
 configurations.all {
     resolutionStrategy {
         force("com.google.guava:guava:31.1-android")
-        // Force androidx.core to compatible version for AGP 8.5.2
         force("androidx.core:core:1.13.1")
         force("androidx.core:core-ktx:1.13.1")
 
@@ -265,35 +284,19 @@ dependencies {
 
     implementation(libs.guava)
 
-    implementation(project(":component:thermal")) // Consolidated thermal functionality
-    implementation(project(":component:thermal-ir")) // Thermal IR resources needed by app
-    implementation(project(":component:thermal-lite")) // Thermal Lite functionality
-    implementation(project(":component:pseudo")) // Pseudo color functionality needed by app
+    implementation(project(":component:thermalunified"))
     implementation(project(":component:gsr-recording"))
-    implementation(project(":component:user")) // User module for MoreActivity and settings
-    implementation(project(":libapp"))
-    implementation(project(":libcom"))
-    implementation(project(":libir"))
-    implementation(project(":libui"))
-    implementation(project(":libmenu")) // Menu resources needed by app
-
+    implementation(project(":component:user"))
+    implementation(project(":libunified"))
     implementation(project(":BleModule"))
-
-    // Navigation - Using NavigationManager instead of ARouter
-    // implementation(libs.arouter.api)
-    // kapt(libs.arouter.compiler) // Removed ARouter to eliminate kapt dependency
-
     implementation(files("libs/libAC020sdk_USB_IR_1.1.1_2408291439.aar"))
     implementation(files("libs/libirutils_1.2.0_2409241055.aar"))
     implementation(files("libs/libcommon_1.2.0_24052117.aar"))
-
-    implementation(files("libs/lms_international-3.90.009.0.aar")) // LMS SDK for libapp
     implementation(files("libs/abtest-1.0.1.aar"))
     implementation(files("libs/auth-number-2.13.2.1.aar"))
     implementation(files("libs/logger-2.2.1-release.aar"))
     implementation(files("libs/main-2.2.1-release.aar"))
-
-
+    implementation(files("libs/topdon.aar"))
 
     implementation(
         fileTree(
@@ -302,9 +305,9 @@ dependencies {
                 "dir" to "libir/libs"
             )
         )
-    ) // All libir AAR files
+    )
 
-    implementation(files("../libir/libs/libusbdualsdk_1.3.4_2406271906_standard.aar")) // Required for iruvc classes in app module
+    implementation(files("../libunified/libs/libusbdualsdk_1.3.4_2406271906_standard.aar"))
 
     implementation(libs.jsbridge)
     implementation(libs.fastjson2)
@@ -312,67 +315,52 @@ dependencies {
     implementation(libs.play.app.update)
     implementation(libs.immersionbar)
     implementation(libs.xpopup)
-
     implementation(libs.wechat.sdk)
     implementation(libs.umeng.apm)
-
-
     implementation(libs.umeng.common)
-
     implementation(libs.opencsv)
     implementation(libs.gson)
-
-    // JmDNS dependency for network service discovery
     implementation(libs.jmdns)
-
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.okhttp)
     implementation(libs.logging.interceptor)
-
     implementation(libs.nordic.ble)
     implementation(libs.nordic.ble.ktx)
 
-
-    // Shimmer GSR+ Sensor SDK - Updated to 3.2.4_beta for enhanced BLE stability
     implementation(files("libs/shimmerandroidinstrumentdriver-3.2.4_beta.aar"))
     implementation(files("libs/shimmerdriver-0.11.5_beta.jar"))
     implementation(files("libs/shimmerdriverpc-0.11.5_beta.jar"))
     implementation(files("libs/shimmerbluetoothmanager-0.11.5_beta.jar"))
 
 
-    // CameraX dependencies - Compatible with AGP 8.5.2
+
     implementation(libs.bundles.camerax)
-
-
     testImplementation(libs.junit)
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.hamcrest)
-
     testImplementation(libs.mockk)
     testImplementation(libs.mockk.android)
-
     testImplementation(libs.kotlinx.coroutines.test)
+
+    // Mockito dependencies for integration tests
+    testImplementation("org.mockito:mockito-core:5.8.0")
+    testImplementation("org.mockito:mockito-inline:5.2.0")
+    testImplementation("org.mockito:mockito-android:5.8.0")
 
     androidTestImplementation(libs.test.ext.junit)
     androidTestImplementation(libs.test.espresso.core)
     androidTestImplementation(libs.test.runner)
     androidTestImplementation(libs.test.rules)
-
     androidTestImplementation(libs.test.ext.junit.ktx)
     androidTestImplementation(libs.test.espresso.contrib)
     androidTestImplementation(libs.test.espresso.intents)
     androidTestImplementation(libs.test.uiautomator)
-
     testImplementation(libs.robolectric)
-
     testImplementation(libs.mockwebserver)
-
     androidTestImplementation(libs.benchmark.junit4)
-
     testImplementation(libs.truth)
     androidTestImplementation(libs.truth)
-
     testImplementation(libs.javafaker)
 }
 

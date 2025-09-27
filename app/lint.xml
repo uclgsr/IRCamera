@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <lint>
-    <!-- Suppress string formatting errors that are causing build failures -->
+
     <issue id="StringFormatInvalid" severity="ignore" />
     <issue id="StringFormatMatches" severity="ignore" />
     <issue id="StringFormatCount" severity="ignore" />
 
-    <!-- Allow build to complete despite resource merge issues -->
+
     <issue id="ResourceType" severity="ignore" />
     <issue id="MissingTranslation" severity="ignore" />
 
-    <!-- Ignore Shimmer library specific warnings -->
+
     <issue id="UnsafeOptInUsageError" severity="ignore" />
     <issue id="ObsoleteSdkInt" severity="ignore" />
 </lint>

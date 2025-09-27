@@ -1,9 +1,4 @@
-"""
-Session Manager for IRCamera PC Controller
-
-Manages recording sessions including lifecycle, metadata, and storage organization.
-Implements FR4: Session Management requirements.
-"""
+"""Session management system for IRCamera PC Controller Hub"""
 
 import json
 import uuid
@@ -22,8 +17,7 @@ from .config import config
 
 
 class SessionState(Enum):
-    """Session states as per requirements."""
-
+    """Session states"""
     IDLE = "idle"
     ACTIVE = "active"
     RECORDING = "recording"
@@ -34,8 +28,7 @@ class SessionState(Enum):
 
 @dataclass
 class SessionMetadata:
-    """Session metadata structure."""
-
+    """Session metadata container"""
     session_id: str
     name: str
     state: str
@@ -61,56 +54,34 @@ class SessionMetadata:
 
 
 class SessionManager:
-    """
-    Manages recording sessions and metadata.
-
-    Implements the Session Management functional requirement (FR4):
-    - Organizes recordings into discrete sessions with unique IDs
-    - Creates session directories and metadata files
-    - Handles session lifecycle (create, start, stop, finalize)
-    - Only one session active at a time
-    """
+    """Session management for MVP implementation"""
 
     def __init__(self):
-        """Initialize session manager."""
         self._current_session: Optional[SessionMetadata] = None
         self._session_history: List[str] = []
-        self._data_root = Path(config.get("session.data_root", "./sessions"))
+        self._data_root = Path(config.get("sessions.base_directory", "./sessions"))
         self._ensure_data_root()
 
         logger.info("Session Manager initialized")
 
     def _ensure_data_root(self) -> None:
-        """Ensure the data root directory exists."""
+        """Ensure session data root directory exists"""
         self._data_root.mkdir(parents=True, exist_ok=True)
         logger.debug(f"Session data root: {self._data_root}")
 
     def create_session(self, name: Optional[str] = None) -> SessionMetadata:
-        """
-        Create a new session.
-
-        Args:
-            name: Optional session name. If None, generates timestamp-based name.
-
-        Returns:
-            Created session metadata
-
-        Raises:
-            ValueError: If a session is already active
-        """
+        """Create a new session"""
         if self._current_session and self._current_session.state in [
             SessionState.ACTIVE.value,
             SessionState.RECORDING.value,
         ]:
-            raise ValueError("Cannot create new session:" "another session is active")
+            raise ValueError("Cannot create new session: another session is active")
 
-        # Generate session ID and name
         session_id = str(uuid.uuid4())
         if name is None:
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
             name = f"session_{timestamp}"
 
-        # Create session metadata
         self._current_session = SessionMetadata(
             session_id=session_id,
             name=name,
@@ -119,145 +90,117 @@ class SessionManager:
             gsr_mode=config.get("gsr.default_mode", "local"),
         )
 
-        # Create session directory
         session_dir = self._get_session_directory(session_id)
         session_dir.mkdir(parents=True, exist_ok=True)
 
-        # Save initial metadata
         self._save_metadata()
-
-        # Add to history
         self._session_history.append(session_id)
 
         logger.info(f"Session created: {name} [{session_id}]")
         return self._current_session
 
-    def start_session(self) -> None:
-        """
-        Start the current session.
+    def _get_session_directory(self, session_id: str) -> Path:
+        """Get session directory path"""
+        return self._data_root / session_id
 
-        Raises:
-            ValueError: If no session exists or session is not in IDLE state
-        """
+    def get_session_directory(self, session_id: str) -> Path:
+        """Get session directory path (public method)"""
+        return self._get_session_directory(session_id)
+
+    def _save_metadata(self) -> None:
+        """Save session metadata to file"""
+        if not self._current_session:
+            return
+
+        session_dir = self._get_session_directory(self._current_session.session_id)
+        metadata_file = session_dir / "metadata.json"
+
+        try:
+            with open(metadata_file, "w", encoding="utf-8") as f:
+                json.dump(asdict(self._current_session), f, indent=2)
+            logger.debug(f"Session metadata saved: {metadata_file}")
+        except Exception as e:
+            logger.error(f"Failed to save metadata: {e}")
+
+    def start_session(self) -> None:
+        """Start the current session"""
         if not self._current_session:
             raise ValueError("No session to start")
 
-        if self._current_session.state != SessionState.IDLE.value:
-            raise ValueError(
-                f"Cannot start session in state: {self._current_session.state}"
-            )
-
         self._current_session.state = SessionState.ACTIVE.value
         self._current_session.started_at = datetime.now(timezone.utc).isoformat()
-
         self._save_metadata()
 
         logger.info(f"Session started: {self._current_session.name}")
 
-    def begin_recording(self) -> None:
-        """
-        Begin recording phase of the session.
+    def get_session(self, session_id: str) -> Optional[SessionMetadata]:
+        """Get session by ID"""
+        if self._current_session and self._current_session.session_id == session_id:
+            return self._current_session
 
-        Raises:
-            ValueError: If session is not in ACTIVE state
-        """
+        # Try to load from disk
+        return self.load_session(session_id)
+
+    def load_session(self, session_id: str) -> Optional[SessionMetadata]:
+        """Load session from disk"""
+        session_dir = self._get_session_directory(session_id)
+        metadata_file = session_dir / "metadata.json"
+
+        if not metadata_file.exists():
+            return None
+
+        try:
+            with open(metadata_file, "r", encoding="utf-8") as f:
+                data = json.load(f)
+
+            # Convert dict back to SessionMetadata
+            return SessionMetadata(**data)
+        except Exception as e:
+            logger.error(f"Failed to load session {session_id}: {e}")
+            return None
+
+    def get_current_session(self) -> Optional[SessionMetadata]:
+        """Get current active session"""
+        return self._current_session
+
+    def get_session_state(self) -> Optional[str]:
+        """Get current session state"""
+        if self._current_session:
+            return self._current_session.state
+        return None
+
+    def end_session(self) -> Optional[SessionMetadata]:
+        """End current session"""
         if not self._current_session:
-            raise ValueError("No active session")
-
-        if self._current_session.state != SessionState.ACTIVE.value:
-            raise ValueError(
-                f"Cannot begin recording in state: {self._current_session.state}"
-            )
-
-        self._current_session.state = SessionState.RECORDING.value
-        self._save_metadata()
-
-        logger.info(f"Recording started for session: {self._current_session.name}")
-
-    def end_session(self) -> SessionMetadata:
-        """
-        End the current session.
-
-        Returns:
-            Final session metadata
-
-        Raises:
-            ValueError: If no active session
-        """
-        if not self._current_session:
-            raise ValueError("No session to end")
-
-        # Calculate duration if started
-        if self._current_session.started_at:
-            start_time = datetime.fromisoformat(
-                self._current_session.started_at.replace("Z", "+00:00")
-            )
-            end_time = datetime.now(timezone.utc)
-            duration = (end_time - start_time).total_seconds()
-            self._current_session.duration_seconds = duration
+            return None
 
         self._current_session.state = SessionState.COMPLETED.value
         self._current_session.ended_at = datetime.now(timezone.utc).isoformat()
 
-        # Final metadata save
+        if self._current_session.started_at:
+            started = datetime.fromisoformat(self._current_session.started_at.replace('Z', '+00:00'))
+            ended = datetime.fromisoformat(self._current_session.ended_at.replace('Z', '+00:00'))
+            self._current_session.duration_seconds = (ended - started).total_seconds()
+
         self._save_metadata()
 
-        logger.info(
-            f"Session ended: {self._current_session.name} "
-            f"(duration: {self._current_session.duration_seconds:.1f}s)"
-        )
-
-        completed_session = self._current_session
+        session = self._current_session
         self._current_session = None
 
-        return completed_session
+        logger.info(f"Session ended: {session.name}")
+        return session
 
     def add_device(self, device_info: Dict[str, Any]) -> None:
-        """
-        Add device information to current session.
-
-        Args:
-            device_info: Device information dictionary
-        """
+        """Add device to current session"""
         if not self._current_session:
             raise ValueError("No active session")
 
-        self._current_session.devices.append(
-            {"added_at": datetime.now(timezone.utc).isoformat(), **device_info}
-        )
-
+        self._current_session.devices.append(device_info)
         self._save_metadata()
-        logger.debug(
-            f"Device added to session: {device_info.get('device_id', 'unknown')}"
-        )
+        logger.info(f"Device added to session: {device_info.get('name', 'unknown')}")
 
-    def add_file(self, file_info: Dict[str, Any]) -> None:
-        """
-        Add file information to current session.
-
-        Args:
-            file_info: File information dictionary
-        """
-        if not self._current_session:
-            raise ValueError("No active session")
-
-        self._current_session.files.append(
-            {"added_at": datetime.now(timezone.utc).isoformat(), **file_info}
-        )
-
-        self._save_metadata()
-        logger.debug(f"File added to session: {file_info.get('filename', 'unknown')}")
-
-    def add_sync_event(
-            self, event_type: str, event_data: Dict[str, Any] = None
-    ) -> None:
-        """
-        Add synchronization event to current session.
-
-        Args:
-            event_type: Type of sync event (e.g., 'flash', 'marker')
-            event_data: Additional event data
-        """
+    def add_sync_event(self, event_type: str, event_data: Dict[str, Any] = None) -> None:
+        """Add synchronization event to current session"""
         if not self._current_session:
             raise ValueError("No active session")
 
@@ -269,128 +212,4 @@ class SessionManager:
 
         self._current_session.sync_events.append(sync_event)
         self._save_metadata()
-
         logger.info(f"Sync event added: {event_type}")
-
-    def get_current_session(self) -> Optional[SessionMetadata]:
-        """Get current session metadata."""
-        return self._current_session
-
-    def get_session_state(self) -> Optional[str]:
-        """
-        Get the current session state.
-        
-        Returns:
-            Current session state as string, or None if no active session
-        """
-        if self._current_session:
-            return self._current_session.state
-        return None
-
-    def get_session(self, session_id: str) -> Optional[SessionMetadata]:
-        """
-        Get session by ID. First checks if it's the current session,
-        then attempts to load from storage.
-        
-        Args:
-            session_id: Session ID to retrieve
-            
-        Returns:
-            SessionMetadata if found, None otherwise
-        """
-        # Check if it's the current session
-        if self._current_session and self._current_session.session_id == session_id:
-            return self._current_session
-            
-        # Otherwise, load from storage
-        return self.load_session(session_id)
-
-    def get_session_directory(self, session_id: Optional[str] = None) -> Path:
-        """
-        Get session directory path.
-
-        Args:
-            session_id: Session ID. If None, uses current session.
-
-        Returns:
-            Path to session directory
-        """
-        if session_id is None:
-            if not self._current_session:
-                raise ValueError("No current session")
-            session_id = self._current_session.session_id
-
-        return self._get_session_directory(session_id)
-
-    def _get_session_directory(self, session_id: str) -> Path:
-        """Get session directory path by ID."""
-        return self._data_root / session_id
-
-    def _save_metadata(self) -> None:
-        """Save current session metadata to file."""
-        if not self._current_session:
-            return
-
-        metadata_file = (
-                self._get_session_directory(self._current_session.session_id)
-                / "metadata.json"
-        )
-
-        try:
-            with open(metadata_file, "w", encoding="utf-8") as f:
-                json.dump(
-                    asdict(self._current_session),
-                    f,
-                    indent=2,
-                    ensure_ascii=False,
-                )
-
-            logger.debug(f"Session metadata saved: {metadata_file}")
-
-        except (OSError, ValueError, RuntimeError) as e:
-            logger.error(f"Failed to save session metadata: {e}")
-
-    def load_session(self, session_id: str) -> Optional[SessionMetadata]:
-        """
-        Load session metadata from file.
-
-        Args:
-            session_id: Session ID to load
-
-        Returns:
-            Loaded session metadata or None if not found
-        """
-        metadata_file = self._get_session_directory(session_id) / "metadata.json"
-
-        try:
-            if not metadata_file.exists():
-                logger.warning(f"Session metadata not found: {session_id}")
-                return None
-
-            with open(metadata_file, "r", encoding="utf-8") as f:
-                data = json.load(f)
-
-            return SessionMetadata(**data)
-
-        except (OSError, ValueError, RuntimeError) as e:
-            logger.error(f"Failed to load session metadata: {e}")
-            return None
-
-    def list_sessions(self) -> List[str]:
-        """
-        List all session IDs in the data root.
-
-        Returns:
-            List of session IDs
-        """
-        sessions = []
-
-        try:
-            for item in self._data_root.iterdir():
-                if item.is_dir() and (item / "metadata.json").exists():
-                    sessions.append(item.name)
-
-        except (OSError, ValueError, RuntimeError) as e:
-            logger.error(f"Failed to list sessions: {e}")
-
-        return sorted(sessions)

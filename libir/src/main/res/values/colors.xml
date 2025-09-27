@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <!-- Green point color for connection status -->
-    <color name="color_green_point">#0CEB82</color>
-</resources>

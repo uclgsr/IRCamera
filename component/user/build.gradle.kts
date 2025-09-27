@@ -4,8 +4,8 @@ plugins {
 }
 
 android {
-    namespace = "com.topdon.module.user"
-    compileSdk = libs.versions.compileSdk.get().toInt()
+    namespace = "com.mpdc4gsr.module.user"
+    compileSdk = 35
 
     defaultConfig {
         minSdk = libs.versions.minSdk.get().toInt()
@@ -82,28 +82,30 @@ android {
             ),
         )
     }
+    buildToolsVersion = "35.0.0"
 }
 
 dependencies {
     coreLibraryDesugaring(libs.desugar.jdk.libs)
-    implementation(project(":libapp"))
-    implementation(project(":libcom"))
-    implementation(project(":libir"))
-    implementation(project(":libui"))
-    implementation(project(":libmenu"))
+
+    implementation(project(":libunified"))
     implementation(project(":BleModule"))
-    compileOnly(files("../../app/libs/lms_international-3.90.009.0.aar"))
+
+    // Core Android dependencies
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
+
+    // Utilities
     implementation(libs.utilcode)
     implementation(libs.glide)
-    coreLibraryDesugaring(libs.desugar.jdk.libs)
+
+    // Testing dependencies - use version catalog
     testImplementation(libs.junit)
-    testImplementation("org.robolectric:robolectric:4.10.3")
-    testImplementation("androidx.test:core:1.5.0")
-    testImplementation("androidx.test.ext:junit:1.1.5")
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
+    testImplementation(libs.robolectric)
+    testImplementation(libs.test.core)
+    testImplementation(libs.test.ext.junit)
+    testImplementation(libs.kotlinx.coroutines.test)
     androidTestImplementation(libs.test.ext.junit)
     androidTestImplementation(libs.test.espresso.core)
 }
