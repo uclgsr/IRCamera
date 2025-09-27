@@ -16,9 +16,9 @@ import com.blankj.utilcode.util.SizeUtils
 import com.csl.irCamera.R
 import com.csl.irCamera.databinding.ActivityIrGalleryEditBinding
 import com.elvishew.xlog.XLog
-import com.infisense.iruvc.ircmd.IRCMDType
-import com.infisense.iruvc.ircmd.IRUtils
-import com.infisense.iruvc.utils.CommonParams
+import com.energy.iruvc.ircmd.IRCMDType
+import com.energy.iruvc.ircmd.IRUtils
+import com.energy.iruvc.utils.CommonParams
 import com.mpdc4gsr.libunified.app.BaseApplication
 import com.mpdc4gsr.libunified.app.activity.PseudoSetActivity
 import com.mpdc4gsr.libunified.app.bean.CustomPseudoBean

@@ -229,7 +229,7 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
     private var isOpenTarget = SaveSettingUtil.isOpenTarget
     private var audioPosition: Int = 0
 
-    protected lateinit var cameraView: com.infisense.usbir.view.CameraView
+    protected lateinit var cameraView: com.mpdc4gsr.libunified.ui.camera.CameraView
     protected lateinit var temperatureView: com.mpdc4gsr.libunified.ir.view.TemperatureView
     private lateinit var spaceChart: View
     private lateinit var clTrendOpen: ConstraintLayout
@@ -288,12 +288,12 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
         )
     }
     protected open val cameraPreview by lazy {
-        findViewById<com.mpdc4gsr.module.thermalunified.stubs.CameraPreView>(
+        findViewById<com.mpdc4gsr.libunified.ui.camera.CameraPreView>(
             R.id.cameraPreview
         )
     }
     private val distance_measure_view by lazy { findViewById<View>(R.id.distance_measure_view) }
-    private val zoomView by lazy { findViewById<View>(R.id.zoomView) }
+    private val zoomView by lazy { findViewById<com.mpdc4gsr.libunified.ir.view.ZoomCaliperView>(R.id.zoomView) }
     protected open val temperatureSeekbar by lazy {
         findViewById<RangeSeekBar>(
             R.id.temperature_seekbar
@@ -1215,10 +1215,12 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
         thermalRecyclerNight.onTwoLightListener = { twoLightType, isSelected ->
             setTwoLight(twoLightType, isSelected)
         }
-        cameraPreview.cameraPreViewCloseListener = {
-            if (isOpenPreview) {
-                popupWindow?.dismiss()
-                cameraPreviewConfig(false)
+        cameraPreview.cameraPreViewCloseListener = object : com.mpdc4gsr.libunified.ui.camera.CameraPreView.CameraPreViewCloseListener {
+            override fun onClose() {
+                if (isOpenPreview) {
+                    popupWindow?.dismiss()
+                    cameraPreviewConfig(false)
+                }
             }
         }
         thermalRecyclerNight.onTempSourceListener = {
@@ -2483,11 +2485,12 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
 
     open fun getCameraViewBitmap(): Bitmap {
         if (isOpenAmplify) {
-
             return imageThread?.getBaseBitmap(saveSetBean.rotateAngle)
                 ?: cameraView.getScaledBitmap()
+                ?: throw IllegalStateException("Unable to obtain camera view bitmap")
         } else {
             return cameraView.getScaledBitmap()
+                ?: throw IllegalStateException("Unable to obtain camera view bitmap")
         }
     }
 

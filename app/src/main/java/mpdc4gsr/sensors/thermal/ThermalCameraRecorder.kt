@@ -9,7 +9,7 @@ import android.widget.Toast
 import com.energy.ac020library.IrcamEngine
 import com.energy.ac020library.bean.IIrFrameCallback
 import com.energy.ac020library.bean.UvcHandleParam
-import com.infisense.iruvc.uvc.UVCCamera
+import com.energy.iruvc.uvc.UVCCamera
 import com.mpdc4gsr.libunified.app.bean.event.device.DeviceConnectEvent
 import com.mpdc4gsr.libunified.app.bean.event.device.DevicePermissionEvent
 import com.mpdc4gsr.libunified.app.config.DeviceConfig.isTcTsDevice
