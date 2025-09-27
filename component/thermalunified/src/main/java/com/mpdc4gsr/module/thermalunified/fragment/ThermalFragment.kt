@@ -49,6 +49,7 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
 
     protected var mIrSurfaceViewLayout: FrameLayout? = null
     protected var mIrSurfaceView: IrSurfaceView? = null
+    private var mGuideInterface: GuideInterface? = null
 
     private val msgLiveData by lazy { MutableLiveData<Int>() }
 
@@ -76,7 +77,7 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
 
     override fun initContentView() = R.layout.fragment_thermal
 
-    override fun initView() {
+    private fun setupThermalObservers() {
         setupWindow()
         initializeViews()
         setupThermalSurface()
@@ -314,7 +315,7 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
     }
 
     private fun updateThermalImageDisplay(bitmap: Bitmap) {
-        mIrSurfaceView?.updateBitmap(bitmap)
+        mIrSurfaceView?.doDraw(bitmap, 0)
     }
 
     // Fence management delegated to ViewModel
@@ -610,7 +611,8 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
                             mIrBitmap = Bitmap.createBitmap(256, 192, Bitmap.Config.ARGB_8888)
                         }
                         if (upValue > downValue) {
-                            viewModel.yuvArea(yuv, temp, upValue, downValue)
+                            // TODO: Implement yuvArea functionality in ViewModel
+                            // thermalViewModel.yuvArea(yuv, temp, upValue, downValue)
                         }
                         mGuideInterface!!.yuv2Bitmap(mIrBitmap, yuv)
 

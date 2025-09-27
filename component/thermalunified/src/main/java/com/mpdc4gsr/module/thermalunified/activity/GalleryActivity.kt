@@ -10,8 +10,9 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
+import com.hjq.permissions.OnPermissionCallback
+import com.hjq.permissions.XXPermissions
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModelActivity
-import com.mpdc4gsr.libunified.app.tools.PermissionTool
 import com.mpdc4gsr.module.thermalunified.R
 import com.mpdc4gsr.module.thermalunified.fragment.GalleryPictureFragment
 import com.mpdc4gsr.module.thermalunified.fragment.GalleryVideoFragment
@@ -51,12 +52,17 @@ class GalleryActivity : BaseViewModelActivity<GalleryActivityViewModel>() {
     }
 
     private fun requestPermissions(permissions: List<String>) {
-        PermissionTool.with(this)
-            .setPermissions(permissions)
-            .setCallBack { isSuccess, _, _ ->
-                viewModel.onPermissionsResult(isSuccess)
-            }
-            .start()
+        XXPermissions.with(this)
+            .permission(permissions)
+            .request(object : OnPermissionCallback {
+                override fun onGranted(permissions: MutableList<String>, allGranted: Boolean) {
+                    viewModel.onPermissionsResult(allGranted)
+                }
+                
+                override fun onDenied(permissions: MutableList<String>, doNotAskAgain: Boolean) {
+                    viewModel.onPermissionsResult(false)
+                }
+            })
     }
 
     private fun setupViewPager() {
@@ -80,8 +86,8 @@ class GalleryActivity : BaseViewModelActivity<GalleryActivityViewModel>() {
         FragmentStatePagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 
         private val titles = arrayOf(
-            context.getString(R.string.tab_picture),
-            context.getString(R.string.tab_video)
+            context.getString(com.mpdc4gsr.libunified.R.string.album_menu_Photos),
+            context.getString(com.mpdc4gsr.libunified.R.string.app_video)
         )
 
         override fun getItem(position: Int): Fragment {
