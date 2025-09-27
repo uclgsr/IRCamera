@@ -174,7 +174,7 @@ class ArchitectureDocumentationGenerator:
                         purpose = ' '.join(comment_lines[:2])  # First 2 lines
                         break
                 
-                elif line.strip().startswith('//') and not line.strip().startswith('//'):
+                elif line.strip().startswith('//'):
                     # Single line comment
                     purpose = line.strip()[2:].strip()
                     break
