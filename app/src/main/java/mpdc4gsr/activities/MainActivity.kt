@@ -200,12 +200,25 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        initializePhase0Baseline()
+        try {
+            initializePhase0Baseline()
 
-        initView()
-        initData()
+            initView()
+            initData()
 
-        initNetworking()
+            initNetworking()
+        } catch (e: Exception) {
+            Log.e(TAG, "Critical error in MainActivity onCreate", e)
+            // If MainActivity fails to initialize, at least allow basic functionality
+            try {
+                setContentView(R.layout.activity_main)
+                // Basic fallback initialization
+                binding = ActivityMainBinding.inflate(layoutInflater)
+                setContentView(binding.root)
+            } catch (bindingException: Exception) {
+                Log.e(TAG, "Even basic binding failed", bindingException)
+            }
+        }
     }
 
     private fun initializeEnhancedUIComponents() {
