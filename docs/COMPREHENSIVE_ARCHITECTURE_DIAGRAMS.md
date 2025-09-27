@@ -295,7 +295,7 @@ graph TB
         SetupPy[setup.py<br/>Package Configuration<br/>Dependencies & Installation]
     end
     
-    subgraph "Legacy Implementation (ircamera_pc/)"
+    subgraph "Implementation (ircamera_pc/)"
         subgraph "Core Services (core/)"
             SessionMgr[session_manager.py<br/>Session Lifecycle<br/>Device Coordination]
             DeviceMgr[device_manager.py<br/>Hardware Management<br/>Device Registry]
