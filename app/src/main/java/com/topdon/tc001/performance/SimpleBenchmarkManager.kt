@@ -93,7 +93,7 @@ class SimpleBenchmarkManager {
      */
     fun startRGBBenchmark(): Boolean {
         rgbFrames.clear()
-        rgbSessionStart = System.currentTimeMillis()
+        rgbSessionStart = SystemClock.elapsedRealtime()
         Log.i(TAG, "Started RGB benchmark - target: $RGB_TARGET_RATE fps")
         return true
     }
