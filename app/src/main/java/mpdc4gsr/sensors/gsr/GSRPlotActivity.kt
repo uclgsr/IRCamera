@@ -15,7 +15,7 @@ import com.mpdc4gsr.libunified.ui.data.LineDataSet
 import com.mpdc4gsr.libunified.ui.formatter.ValueFormatter
 
 class GSRPlotActivity : BaseBindingActivity<ActivityGsrPlotBinding>() {
-    private lateinit var plotData: GSRDataViewActivity.GSRPlotData
+    private lateinit var plotData: GSRPlotData
 
     override fun initContentLayoutId() = R.layout.activity_gsr_plot
 
@@ -34,11 +34,11 @@ class GSRPlotActivity : BaseBindingActivity<ActivityGsrPlotBinding>() {
 
     private fun loadPlotData() {
         plotData = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            intent.getSerializableExtra("plot_data", GSRDataViewActivity.GSRPlotData::class.java)
+            intent.getSerializableExtra("plot_data", GSRPlotData::class.java)
         } else {
             @Suppress("DEPRECATION")
             intent.getSerializableExtra("plot_data")
-        } as GSRDataViewActivity.GSRPlotData
+        } as GSRPlotData
     }
 
     private fun setupCharts() {
