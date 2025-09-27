@@ -284,53 +284,53 @@ class GSRDataViewActivity : BaseViewModelActivity<GSRDataViewViewModel>() {
     private fun updateExportUI(exportState: GSRDataViewViewModel.ExportState) {
         when (exportState) {
             GSRDataViewViewModel.ExportState.Idle -> {
-                binding.exportProgress?.isVisible = false
-                binding.exportButton?.isEnabled = true
+                // binding.exportProgress?.isVisible = false
+                // binding.exportButton?.isEnabled = true
             }
             GSRDataViewViewModel.ExportState.Preparing -> {
-                binding.exportProgress?.isVisible = true
-                binding.exportButton?.isEnabled = false
+                // binding.exportProgress?.isVisible = true
+                // binding.exportButton?.isEnabled = false
             }
             GSRDataViewViewModel.ExportState.Exporting -> {
-                binding.exportProgress?.isVisible = true
-                binding.exportButton?.isEnabled = false
+                // binding.exportProgress?.isVisible = true
+                // binding.exportButton?.isEnabled = false
             }
             GSRDataViewViewModel.ExportState.Success -> {
-                binding.exportProgress?.isVisible = false
-                binding.exportButton?.isEnabled = true
+                // binding.exportProgress?.isVisible = false
+                // binding.exportButton?.isEnabled = true
                 Toast.makeText(this, "Export completed successfully", Toast.LENGTH_SHORT).show()
             }
             GSRDataViewViewModel.ExportState.Error -> {
-                binding.exportProgress?.isVisible = false
-                binding.exportButton?.isEnabled = true
+                // binding.exportProgress?.isVisible = false
+                // binding.exportButton?.isEnabled = true
             }
         }
     }
 
     private fun updateAnalysisUI(analysisResults: GSRDataViewViewModel.AnalysisResults?) {
         analysisResults?.let { analysis ->
-            binding.analysisResultsText?.text = buildString {
-                appendLine("Advanced Analysis Results:")
-                appendLine("━━━━━━━━━━━━━━━━━━━━━━━━━━")
-                appendLine()
-                appendLine("Peak Detection:")
-                appendLine("• Peaks Found: ${analysis.peakDetection.peaks.size}")
-                appendLine("• Peak Frequency: %.2f peaks/min".format(analysis.peakDetection.peakFrequency))
-                appendLine("• Avg Peak Height: %.3f µS".format(analysis.peakDetection.averagePeakHeight))
-                appendLine("• Avg Peak Width: %.1f samples".format(analysis.peakDetection.averagePeakWidth))
-                appendLine()
-                appendLine("Trend Analysis:")
-                appendLine("• Trend: ${analysis.trendAnalysis.trend}")
-                appendLine("• Slope: %.4f µS/min".format(analysis.trendAnalysis.changeRate))
-                appendLine("• R²: %.3f".format(analysis.trendAnalysis.rSquared))
-                appendLine()
-                appendLine("Frequency Analysis:")
-                appendLine("• Dominant Freq: %.3f Hz".format(analysis.frequencyAnalysis.dominantFrequency))
-                appendLine("• Bandwidth: %.3f Hz".format(analysis.frequencyAnalysis.bandwidth))
-                appendLine()
-                appendLine("Correlation Analysis:")
-                appendLine("• GSR-PPG Correlation: %.3f".format(analysis.correlationAnalysis.gsrPpgCorrelation))
-            }
+            // binding.analysisResultsText?.text = buildString {
+            //     appendLine("Advanced Analysis Results:")
+            //     appendLine("━━━━━━━━━━━━━━━━━━━━━━━━━━")
+            //     appendLine()
+            //     appendLine("Peak Detection:")
+            //     appendLine("• Peaks Found: ${analysis.peakDetection.peaks.size}")
+            //     appendLine("• Peak Frequency: %.2f peaks/min".format(analysis.peakDetection.peakFrequency))
+            //     appendLine("• Avg Peak Height: %.3f µS".format(analysis.peakDetection.averagePeakHeight))
+            //     appendLine("• Avg Peak Width: %.1f samples".format(analysis.peakDetection.averagePeakWidth))
+            //     appendLine()
+            //     appendLine("Trend Analysis:")
+            //     appendLine("• Trend: ${analysis.trendAnalysis.trend}")
+            //     appendLine("• Slope: %.4f µS/min".format(analysis.trendAnalysis.changeRate))
+            //     appendLine("• R²: %.3f".format(analysis.trendAnalysis.rSquared))
+            //     appendLine()
+            //     appendLine("Frequency Analysis:")
+            //     appendLine("• Dominant Freq: %.3f Hz".format(analysis.frequencyAnalysis.dominantFrequency))
+            //     appendLine("• Bandwidth: %.3f Hz".format(analysis.frequencyAnalysis.bandwidth))
+            //     appendLine()
+            //     appendLine("Correlation Analysis:")
+            //     appendLine("• GSR-PPG Correlation: %.3f".format(analysis.correlationAnalysis.gsrPpgCorrelation))
+            // }
         }
     }
 
@@ -362,37 +362,38 @@ class GSRDataViewActivity : BaseViewModelActivity<GSRDataViewViewModel>() {
     }
 
     private fun applyDataFilters() {
-        val minGSR = binding.minGsrInput?.text?.toString()?.toDoubleOrNull()
-        val maxGSR = binding.maxGsrInput?.text?.toString()?.toDoubleOrNull()
+        // val minGSR = binding.minGsrInput?.text?.toString()?.toDoubleOrNull()
+        // val maxGSR = binding.maxGsrInput?.text?.toString()?.toDoubleOrNull()
         val qualityThreshold = getSelectedQualityThreshold()
         
         val filterConfig = GSRDataViewViewModel.FilterConfiguration(
-            minGSR = minGSR,
-            maxGSR = maxGSR,
+            minGSR = null,
+            maxGSR = null,
             qualityThreshold = qualityThreshold,
-            outlierRemoval = binding.removeOutliersCheckbox?.isChecked ?: false
+            outlierRemoval = false // binding.removeOutliersCheckbox?.isChecked ?: false
         )
         
         viewModel.updateFilterConfiguration(filterConfig)
     }
 
     private fun resetDataFilters() {
-        binding.minGsrInput?.text?.clear()
-        binding.maxGsrInput?.text?.clear()
-        binding.qualitySpinner?.setSelection(0)
-        binding.removeOutliersCheckbox?.isChecked = false
+        // binding.minGsrInput?.text?.clear()
+        // binding.maxGsrInput?.text?.clear()
+        // binding.qualitySpinner?.setSelection(0)
+        // binding.removeOutliersCheckbox?.isChecked = false
         
         viewModel.updateFilterConfiguration(GSRDataViewViewModel.FilterConfiguration())
     }
 
     private fun getSelectedQualityThreshold(): GSRDataViewViewModel.DataQuality {
-        return when (binding.qualitySpinner?.selectedItemPosition) {
-            0 -> GSRDataViewViewModel.DataQuality.POOR
-            1 -> GSRDataViewViewModel.DataQuality.FAIR
-            2 -> GSRDataViewViewModel.DataQuality.GOOD
-            3 -> GSRDataViewViewModel.DataQuality.EXCELLENT
-            else -> GSRDataViewViewModel.DataQuality.POOR
-        }
+        // return when (binding.qualitySpinner?.selectedItemPosition) {
+        //     0 -> GSRDataViewViewModel.DataQuality.POOR
+        //     1 -> GSRDataViewViewModel.DataQuality.FAIR
+        //     2 -> GSRDataViewViewModel.DataQuality.GOOD
+        //     3 -> GSRDataViewViewModel.DataQuality.EXCELLENT
+        //     else -> GSRDataViewViewModel.DataQuality.POOR
+        // }
+        return GSRDataViewViewModel.DataQuality.POOR
     }
 
     private fun showExportDialog() {
@@ -544,13 +545,12 @@ class GSRDataViewActivity : BaseViewModelActivity<GSRDataViewViewModel>() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.action_refresh -> {
-                if (filePath.isNotEmpty()) {
-                    viewModel.loadGSRData(filePath)
-                }
+            R.id.action_plot -> {
+                // Could show detailed analysis view
+                Toast.makeText(this, "Advanced analysis view coming soon", Toast.LENGTH_SHORT).show()
                 true
             }
-            R.id.action_export_all -> {
+            R.id.action_export -> {
                 val allExportTypes = listOf(
                     GSRDataViewViewModel.ExportType.ENHANCED_CSV,
                     GSRDataViewViewModel.ExportType.EXCEL_CSV,
