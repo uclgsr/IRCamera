@@ -5,8 +5,10 @@ import android.net.Uri
 import android.os.Build
 import android.view.View
 import androidx.core.view.isVisible
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.lifecycleScope
 import com.blankj.utilcode.util.AppUtils
 import com.hjq.permissions.OnPermissionCallback
 import com.hjq.permissions.Permission
@@ -25,8 +27,12 @@ import com.mpdc4gsr.libunified.app.utils.NetWorkUtils
 import com.mpdc4gsr.module.thermalunified.R
 import com.mpdc4gsr.module.thermalunified.activity.IRThermalNightActivity
 import com.mpdc4gsr.module.thermalunified.activity.IRThermalPlusActivity
+import com.mpdc4gsr.module.thermalunified.viewmodel.IRThermalFragmentViewModel
+import kotlinx.coroutines.launch
 
 class IRThermalFragment : BaseFragment(), View.OnClickListener {
+
+    private val viewModel: IRThermalFragmentViewModel by viewModels()
 
     private var isTC007 = false
 
@@ -42,7 +48,6 @@ class IRThermalFragment : BaseFragment(), View.OnClickListener {
     override fun initContentView() = R.layout.fragment_thermal_ir
 
     override fun initView() {
-
         titleView = requireView().findViewById(R.id.title_view)
         clOpenThermal = requireView().findViewById(R.id.cl_open_thermal)
         tvMainEnter = requireView().findViewById(R.id.tv_main_enter)
@@ -64,169 +69,190 @@ class IRThermalFragment : BaseFragment(), View.OnClickListener {
         cl07ConnectTips.isVisible = isTC007
         tv07Connect.isVisible = isTC007
 
+        setupAnimation()
+        setupObservers()
+        setupLifecycleObserver()
+        
+        // Initial device state check
+        viewModel.checkDeviceConnection(isTC007)
+    }
+
+    private fun setupAnimation() {
         if (isTC007) {
             animationView.setAnimation("TC007AnimationJSON.json")
-            clNotConnect.isVisible = !WebSocketProxy.getInstance().isTC007Connect()
-            clConnect.isVisible = WebSocketProxy.getInstance().isTC007Connect()
         } else {
             animationView.setAnimation("TDAnimationJSON.json")
-            checkConnect()
         }
+    }
+
+    private fun setupObservers() {
+        // Device connection state observer
+        lifecycleScope.launch {
+            viewModel.uiState.collect { uiState ->
+                updateConnectionUI(uiState)
+            }
+        }
+
+        // Navigation events observer
+        viewModel.navigationEvent.observe(viewLifecycleOwner) { navigationEvent ->
+            handleNavigationEvent(navigationEvent)
+        }
+
+        // Thermal action events observer
+        viewModel.thermalAction.observe(viewLifecycleOwner) { action ->
+            handleThermalAction(action)
+        }
+
+        // Permission state observer
+        viewModel.permissionState.observe(viewLifecycleOwner) { permissionState ->
+            handlePermissionState(permissionState)
+        }
+    }
+
+    private fun setupLifecycleObserver() {
         viewLifecycleOwner.lifecycle.addObserver(
             object : DefaultLifecycleObserver {
                 override fun onResume(owner: LifecycleOwner) {
-
                     if (WebSocketProxy.getInstance().isConnected()) {
                         NetWorkUtils.switchNetwork(true)
                     } else {
                         NetWorkUtils.connectivityManager.bindProcessToNetwork(null)
                     }
+                    
+                    // Refresh device connection state on resume
+                    viewModel.checkDeviceConnection(isTC007)
                 }
-            },
+            }
         )
     }
 
+    private fun updateConnectionUI(uiState: IRThermalFragmentViewModel.ThermalUIState) {
+        clConnect.isVisible = uiState.isConnected
+        clNotConnect.isVisible = !uiState.isConnected
+    }
+
     override fun initData() {
+        // Data initialization handled in ViewModel
     }
 
     override fun onResume() {
         super.onResume()
-        if (!isTC007) {
-            checkConnect()
-        }
+        // Device connection check handled in lifecycle observer
     }
 
     override fun connected() {
-        SharedManager.hasTcLine = true
-        if (!isTC007) {
-            clConnect.isVisible = true
-            clNotConnect.isVisible = false
-        }
+        viewModel.onDeviceConnected(isTC007)
     }
 
     override fun disConnected() {
-        if (!isTC007) {
-            clConnect.isVisible = false
-            clNotConnect.isVisible = true
-        }
+        viewModel.onDeviceDisconnected()
     }
 
     override fun onSocketConnected(isTS004: Boolean) {
-        if (isTC007 && !isTS004) {
-            clConnect.isVisible = true
-            clNotConnect.isVisible = false
-        }
+        viewModel.onSocketConnected(isTS004, isTC007)
     }
 
-    override fun onSocketDisConnected(isTS004: Boolean) {
-        if (isTC007 && !isTS004) {
-            clConnect.isVisible = false
-            clNotConnect.isVisible = true
-        }
+    override fun onSocketDisconnected(isTS004: Boolean) {
+        viewModel.onSocketDisconnected(isTS004, isTC007)
     }
 
-    private fun checkConnect() {
-        if (DeviceTools.isConnect(isAutoRequest = false)) {
-            connected()
-        } else {
-            disConnected()
-            if (DeviceTools.findUsbDevice() != null) {
-                showConnectTip()
+    private fun handleNavigationEvent(event: IRThermalFragmentViewModel.NavigationEvent) {
+        when (event) {
+            is IRThermalFragmentViewModel.NavigationEvent.NavigateToTC007Thermal -> {
+                NavigationManager.getInstance().build(RouterConfig.IR_THERMAL_07)
+                    .navigation(requireContext())
+            }
+            is IRThermalFragmentViewModel.NavigationEvent.StartThermalPlusActivity -> {
+                startActivityForResult(
+                    Intent(requireContext(), IRThermalPlusActivity::class.java), 101
+                )
+            }
+            is IRThermalFragmentViewModel.NavigationEvent.NavigateToTCLite -> {
+                NavigationManager.getInstance().build(RouterConfig.IR_TCLITE)
+                    .navigation(requireActivity(), 101)
+            }
+            is IRThermalFragmentViewModel.NavigationEvent.NavigateToHikMain -> {
+                NavigationManager.getInstance().build(RouterConfig.IR_HIK_MAIN)
+                    .navigation(requireActivity())
+            }
+            is IRThermalFragmentViewModel.NavigationEvent.StartThermalNightActivity -> {
+                startActivityForResult(
+                    Intent(requireContext(), IRThermalNightActivity::class.java), 101
+                )
             }
         }
+    }
+
+    private fun handleThermalAction(action: IRThermalFragmentViewModel.ThermalAction) {
+        when (action) {
+            is IRThermalFragmentViewModel.ThermalAction.ShowDeviceConnectTip -> {
+                activity?.let { activity ->
+                    TipDialog.Builder(activity)
+                        .setMessage(R.string.device_connect_tip)
+                        .setPositiveListener(R.string.app_confirm)
+                        .create().show()
+                }
+            }
+            is IRThermalFragmentViewModel.ThermalAction.ShowConnectTip -> {
+                showConnectTip()
+            }
+            is IRThermalFragmentViewModel.ThermalAction.ShowPermissionSettingsTip -> {
+                context?.let { context ->
+                    TipDialog.Builder(context)
+                        .setTitleMessage(getString(R.string.app_tip))
+                        .setMessage(getString(R.string.app_camera_content))
+                        .setPositiveListener(R.string.app_open) {
+                            AppUtils.launchAppDetailsSettings()
+                        }
+                        .setCancelListener(R.string.app_cancel) {
+                        }
+                        .setCanceled(true)
+                        .create().show()
+                }
+            }
+        }
+    }
+
+    private fun handlePermissionState(state: IRThermalFragmentViewModel.PermissionState) {
+        when (state) {
+            is IRThermalFragmentViewModel.PermissionState.RequestCameraPermission -> {
+                requestCameraPermission()
+            }
+            else -> {
+                // Other permission states handled by callbacks
+            }
+        }
+    }
+
+    private fun requestCameraPermission() {
+        XXPermissions.with(requireContext())
+            .permission(listOf(Permission.CAMERA))
+            .request(object : OnPermissionCallback {
+                override fun onGranted(permissions: MutableList<String>, allGranted: Boolean) {
+                    if (allGranted) {
+                        viewModel.onPermissionGranted()
+                    }
+                }
+
+                override fun onDenied(permissions: MutableList<String>, doNotAskAgain: Boolean) {
+                    viewModel.onPermissionDenied(doNotAskAgain)
+                }
+            })
     }
 
     override fun onClick(v: View?) {
         when (v) {
             clOpenThermal -> {
-                if (isTC007) {
-                    NavigationManager.getInstance().build(RouterConfig.IR_THERMAL_07)
-                        .navigation(requireContext())
-                } else {
-                    if (DeviceTools.isTC001PlusConnect()) {
-                        startActivityForResult(
-                            Intent(
-                                requireContext(),
-                                IRThermalPlusActivity::class.java
-                            ), 101
-                        )
-                    } else if (DeviceTools.isTC001LiteConnect()) {
-                        NavigationManager.getInstance().build(RouterConfig.IR_TCLITE)
-                            .navigation(requireActivity(), 101)
-                    } else if (DeviceTools.isHikConnect()) {
-                        NavigationManager.getInstance().build(RouterConfig.IR_HIK_MAIN)
-                            .navigation(requireActivity())
-                    } else {
-                        startActivityForResult(
-                            Intent(
-                                requireContext(),
-                                IRThermalNightActivity::class.java
-                            ), 101
-                        )
-                    }
-                }
+                viewModel.handleThermalOpen(isTC007)
             }
-
             tvMainEnter -> {
-                if (!DeviceTools.isConnect(isAutoRequest = false)) {
-
-                    if (DeviceTools.findUsbDevice() == null) {
-                        activity?.let { activity ->
-                            TipDialog.Builder(activity)
-                                .setMessage(R.string.device_connect_tip)
-                                .setPositiveListener(R.string.app_confirm)
-                                .create().show()
-                        }
-                    } else {
-                        XXPermissions.with(requireContext())
-                            .permission(
-                                listOf(
-                                    Permission.CAMERA,
-                                ),
-                            )
-                            .request(
-                                object : OnPermissionCallback {
-                                    override fun onGranted(
-                                        permissions: MutableList<String>,
-                                        allGranted: Boolean,
-                                    ) {
-                                        if (allGranted) {
-                                            showConnectTip()
-                                        }
-                                    }
-
-                                    override fun onDenied(
-                                        permissions: MutableList<String>,
-                                        doNotAskAgain: Boolean,
-                                    ) {
-                                        if (doNotAskAgain) {
-
-                                            context?.let { context ->
-                                                TipDialog.Builder(context)
-                                                    .setTitleMessage(getString(R.string.app_tip))
-                                                    .setMessage(getString(R.string.app_camera_content))
-                                                    .setPositiveListener(R.string.app_open) {
-                                                        AppUtils.launchAppDetailsSettings()
-                                                    }
-                                                    .setCancelListener(R.string.app_cancel) {
-                                                    }
-                                                    .setCanceled(true)
-                                                    .create().show()
-                                            }
-                                        }
-                                    }
-                                },
-                            )
-                    }
-                }
+                viewModel.handleMainEnter()
             }
-
             cl07ConnectTips -> {
                 NavigationManager.getInstance().build(RouterConfig.IR_CONNECT_TIPS)
                     .withBoolean(ExtraKeyConfig.IS_TC007, true)
                     .navigation(requireContext())
             }
-
             tv07Connect -> {
                 NavigationManager.getInstance()
                     .build(RouterConfig.IR_DEVICE_ADD)
@@ -236,8 +262,8 @@ class IRThermalFragment : BaseFragment(), View.OnClickListener {
         }
     }
 
+    // Remaining methods maintain original functionality but are now better organized
     private var tipConnectDialog: TipDialog? = null
-
     private var isCancelUpdateVersion = false
 
     private fun showConnectTip() {
