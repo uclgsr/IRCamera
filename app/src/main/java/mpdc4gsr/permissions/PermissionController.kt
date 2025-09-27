@@ -22,6 +22,7 @@ class PermissionController(private val activity: FragmentActivity) {
     private val usbManager: UsbManager =
         activity.getSystemService(Context.USB_SERVICE) as UsbManager
     private var onPermissionsResult: ((isGranted: Boolean, denied: List<String>) -> Unit)? = null
+    private var currentDialog: AlertDialog? = null
 
     private val permissionLauncher: ActivityResultLauncher<Array<String>> =
         activity.registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { grants ->
@@ -159,6 +160,15 @@ class PermissionController(private val activity: FragmentActivity) {
         activity.packageManager.hasSystemFeature(PackageManager.FEATURE_USB_HOST)
 
     private fun showPermissionRationaleDialog(missing: List<String>, onResult: (Boolean) -> Unit) {
+        // Dismiss any existing dialog first
+        dismissCurrentDialog()
+        
+        // Check if activity is still valid
+        if (activity.isFinishing || activity.isDestroyed) {
+            onResult(false)
+            return
+        }
+        
         val names = getPermissionNames(missing)
         val message = """
             This app requires the following permissions for multi-sensor recording:
@@ -174,13 +184,22 @@ class PermissionController(private val activity: FragmentActivity) {
             The app will not function correctly without these permissions.
         """.trimIndent()
 
-        AlertDialog.Builder(activity)
+        currentDialog = AlertDialog.Builder(activity)
             .setTitle("Permissions Required")
             .setMessage(message)
-            .setPositiveButton("Grant Permissions") { _, _ -> onResult(true) }
-            .setNegativeButton("Cancel") { _, _ -> onResult(false) }
+            .setPositiveButton("Grant Permissions") { dialog, _ -> 
+                dialog.dismiss()
+                onResult(true) 
+            }
+            .setNegativeButton("Cancel") { dialog, _ -> 
+                dialog.dismiss()
+                onResult(false) 
+            }
             .setCancelable(false)
-            .show()
+            .setOnDismissListener { currentDialog = null }
+            .create()
+        
+        currentDialog?.show()
     }
 
     private fun handleDeniedPermissions(denied: List<String>) {
@@ -193,6 +212,14 @@ class PermissionController(private val activity: FragmentActivity) {
     }
 
     private fun showPermanentlyDeniedDialog(permanentlyDenied: List<String>) {
+        // Dismiss any existing dialog first
+        dismissCurrentDialog()
+        
+        // Check if activity is still valid
+        if (activity.isFinishing || activity.isDestroyed) {
+            return
+        }
+        
         val names = getPermissionNames(permanentlyDenied)
         val message = """
             You have permanently denied the following critical permissions:
@@ -202,12 +229,20 @@ class PermissionController(private val activity: FragmentActivity) {
             To enable the app's core features, please grant these permissions manually in your device settings.
         """.trimIndent()
 
-        AlertDialog.Builder(activity)
+        currentDialog = AlertDialog.Builder(activity)
             .setTitle("Permissions Permanently Denied")
             .setMessage(message)
-            .setPositiveButton("Open Settings") { _, _ -> openAppSettings() }
-            .setNegativeButton("Cancel", null)
-            .show()
+            .setPositiveButton("Open Settings") { dialog, _ -> 
+                dialog.dismiss()
+                openAppSettings() 
+            }
+            .setNegativeButton("Cancel") { dialog, _ -> 
+                dialog.dismiss()
+            }
+            .setOnDismissListener { currentDialog = null }
+            .create()
+            
+        currentDialog?.show()
     }
 
     private fun showUsbPermissionRationaleDialog(
@@ -288,6 +323,24 @@ class PermissionController(private val activity: FragmentActivity) {
                 callback(false)
             }
         }
+    }
+
+    private fun dismissCurrentDialog() {
+        currentDialog?.let { dialog ->
+            if (dialog.isShowing) {
+                try {
+                    dialog.dismiss()
+                } catch (e: Exception) {
+                    Log.w(TAG, "Failed to dismiss dialog: ${e.message}")
+                }
+            }
+            currentDialog = null
+        }
+    }
+
+    fun cleanup() {
+        dismissCurrentDialog()
+        onPermissionsResult = null
     }
 
     companion object {
