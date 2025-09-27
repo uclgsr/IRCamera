@@ -120,7 +120,7 @@ class SimpleBenchmarkManager {
         } else 0.0
         
         val rateError = abs(actualRate - RGB_TARGET_RATE) / RGB_TARGET_RATE
-        val success = rateError <= 0.2 // 20% tolerance for frames
+        val success = rateError <= RGB_RATE_TOLERANCE // 20% tolerance for frames
         
         val summary = if (success) {
             "✅ RGB: ${String.format("%.2f", actualRate)} fps - PASSED"
