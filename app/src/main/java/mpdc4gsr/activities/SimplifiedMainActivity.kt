@@ -70,7 +70,7 @@ class SimplifiedMainActivity : AppCompatActivity() {
                 PERMISSION_REQUEST_CODE
             )
         } else {
-            updateStatus("All permissions granted ✓")
+            updateStatus("All permissions granted")
         }
     }
 
@@ -84,7 +84,7 @@ class SimplifiedMainActivity : AppCompatActivity() {
         if (requestCode == PERMISSION_REQUEST_CODE) {
             val allGranted = grantResults.all { it == PermissionChecker.PERMISSION_GRANTED }
             if (allGranted) {
-                updateStatus("All permissions granted ✓")
+                updateStatus("All permissions granted")
             } else {
                 updateStatus("Some permissions denied ✗")
             }
@@ -135,7 +135,7 @@ class SimplifiedMainActivity : AppCompatActivity() {
         lifecycleScope.launch {
             delay(2000)
             isConnected = true
-            updateStatus("Connected to PC Controller ✓")
+            updateStatus("Connected to PC Controller")
             updateUI()
         }
     }

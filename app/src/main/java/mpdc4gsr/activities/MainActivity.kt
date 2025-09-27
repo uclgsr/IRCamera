@@ -648,7 +648,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
 
         Log.i(
             "MainActivity",
-            "✅ PC-to-Phone communication integration available - RecordingService supports network control"
+            "PC-to-Phone communication integration available - RecordingService supports network control"
         )
     }
 
