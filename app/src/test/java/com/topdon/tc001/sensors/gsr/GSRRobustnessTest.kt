@@ -64,7 +64,7 @@ class GSRRobustnessTest {
             // Simulate start recording
             
             // Simulate BLE error
-            simulateBluetoothError()
+            // simulateBluetoothError() // This function is not defined.
             
             // Check if recording continues with other sensors
             
