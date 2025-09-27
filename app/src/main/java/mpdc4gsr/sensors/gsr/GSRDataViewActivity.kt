@@ -366,8 +366,8 @@ class GSRDataViewActivity : BaseViewModelActivity<GSRDataViewViewModel>() {
         val qualityThreshold = getSelectedQualityThreshold()
         
         val filterConfig = GSRDataViewViewModel.FilterConfiguration(
-            minGSR = null, // minGSR,
-            maxGSR = null, // maxGSR,
+            minGSR = null,
+            maxGSR = null,
             qualityThreshold = qualityThreshold,
             outlierRemoval = false // binding.removeOutliersCheckbox?.isChecked ?: false
         )
