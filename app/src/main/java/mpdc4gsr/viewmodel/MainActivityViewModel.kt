@@ -6,14 +6,10 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.mpdc4gsr.gsr.model.SessionInfo
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import mpdc4gsr.core.RecordingService
 import mpdc4gsr.core.SessionManager
 import mpdc4gsr.network.NetworkClient
 import mpdc4gsr.network.NetworkController
@@ -22,13 +18,17 @@ import mpdc4gsr.sensors.thermal.ThermalRecorder
 import mpdc4gsr.sensors.unified.UnifiedGSRRecorder
 import com.mpdc4gsr.gsr.service.SessionManager as GSRSessionManager
 
-
 class MainActivityViewModel(application: Application) : AndroidViewModel(application) {
 
     companion object {
         private const val TAG = "MainActivityViewModel"
     }
 
+    // A single UiState class can be used to hold all UI-related state.
+    // However, to align with the existing structure, individual flows are maintained.
+    // For simplicity, a new state for the current navigation page is added.
+    private val _currentPage = MutableStateFlow(1) // 0: Gallery, 1: Main, 2: Mine
+    val currentPage: StateFlow<Int> = _currentPage.asStateFlow()
 
     // State properties using StateFlow for better coroutine support and lifecycle awareness
     private val _gsrConnectionState = MutableStateFlow(GSRConnectionState.DISCONNECTED)
@@ -51,11 +51,11 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
     private val _currentSession = MutableStateFlow<SessionInfo?>(null)
     val currentSession: StateFlow<SessionInfo?> = _currentSession.asStateFlow()
 
-    // Use SharedFlow for one-time events like status messages
-    private val _statusMessage = MutableSharedFlow<StatusMessage>(replay = 0)
-    val statusMessage: SharedFlow<StatusMessage> = _statusMessage.asSharedFlow()
+    // Use SharedFlow for one-time events like showing dialogs or toasts.
+    private val _events = MutableSharedFlow<Event>()
+    val events: SharedFlow<Event> = _events.asSharedFlow()
 
-    // Enhanced sensor state tracking with StateFlow
+    // Sensor state tracking with StateFlow
     private val _rgbCameraState = MutableStateFlow(SensorState())
     val rgbCameraState: StateFlow<SensorState> = _rgbCameraState.asStateFlow()
 
@@ -79,7 +79,8 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
     private val _exposureCompensation = MutableStateFlow(0.0f)
     val exposureCompensation: StateFlow<Float> = _exposureCompensation.asStateFlow()
 
-
+    // --- Component Properties (to be managed by Repositories in a larger app) ---
+    private var serviceBinder: RecordingService.RecordingServiceBinder? = null
     private var gsrSensorRecorder: GSRSensorRecorder? = null
     private var unifiedGSRRecorder: UnifiedGSRRecorder? = null
     private var thermalRecorder: ThermalRecorder? = null
@@ -88,40 +89,11 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
     private var sessionManager: SessionManager? = null
     private var gsrSessionManager: GSRSessionManager? = null
 
-    enum class GSRConnectionState {
-        DISCONNECTED,
-        DISCOVERING,
-        CONNECTING,
-        CONNECTED,
-        ERROR
-    }
-
-    enum class NetworkConnectionState {
-        DISCONNECTED,
-        DISCOVERING,
-        CONNECTING,
-        CONNECTED,
-        ERROR
-    }
-
-    enum class SessionState {
-        IDLE,
-        STARTING,
-        RECORDING,
-        PAUSED,
-        STOPPING,
-        ERROR
-    }
-
-    // Enhanced sensor status tracking
-    enum class SensorStatus {
-        DISCONNECTED,
-        CONNECTING,
-        CONNECTED,
-        STREAMING,
-        ERROR,
-        SIMULATION
-    }
+    // --- Enums and Data Classes ---
+    enum class GSRConnectionState { DISCONNECTED, DISCOVERING, CONNECTING, CONNECTED, ERROR }
+    enum class NetworkConnectionState { DISCONNECTED, DISCOVERING, CONNECTING, CONNECTED, ERROR }
+    enum class SessionState { IDLE, STARTING, RECORDING, PAUSED, STOPPING, ERROR }
+    enum class SensorStatus { DISCONNECTED, CONNECTING, CONNECTED, STREAMING, ERROR, SIMULATION }
 
     data class SensorState(
         val status: SensorStatus = SensorStatus.DISCONNECTED,
@@ -135,51 +107,83 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
         val level: Level,
         val timestampMs: Long = System.currentTimeMillis()
     ) {
-        enum class Level {
-            INFO, WARNING, ERROR
-        }
+        enum class Level { INFO, WARNING, ERROR }
     }
 
-    init {
-        Log.d(TAG, "MainActivityViewModel initialized with StateFlow for reactive state management")
+    sealed class Event {
+        object ShowExitDialog : Event()
+        data class ShowToast(val message: String, val isLong: Boolean = false) : Event()
+        // Add other events for navigation, specific dialogs etc.
     }
+
+    data class SessionConfig(
+        val sessionId: String? = null,
+        val participantId: String? = null,
+        val studyName: String? = null,
+        val metadata: Map<String, String> = emptyMap(),
+        val modalities: List<String> = listOf("thermal", "GSR"),
+        val saveImages: Boolean = false
+    )
+
+    init {
+        Log.d(TAG, "MainActivityViewModel initialized.")
+        initializeComponents()
+    }
+
+    // --- Event Handlers from UI ---
+
+    fun onNavigationItemSelected(index: Int) {
+        _currentPage.value = index
+    }
+
+    fun onBackPressed() {
+        viewModelScope.launch {
+            _events.emit(Event.ShowExitDialog)
+        }
+    }
+    
+    fun onPermissionsGranted() {
+        Log.i(TAG, "All permissions granted. Ready to initialize sensors.")
+        // Trigger sensor-related initializations that depend on permissions.
+    }
+
+    // --- Service Lifecycle Handlers ---
+
+    fun onServiceConnected(binder: RecordingService.RecordingServiceBinder) {
+        this.serviceBinder = binder
+        this.networkClient = binder.getNetworkClient()
+        // Here you would set up listeners and observers for network state
+        // that were previously in MainActivity's serviceConnection.
+        Log.i(TAG, "Service connected and handled in ViewModel.")
+    }
+
+    fun onServiceDisconnected() {
+        this.serviceBinder = null
+        this.networkClient = null
+        Log.i(TAG, "Service disconnected and handled in ViewModel.")
+    }
+
+    // --- Business Logic ---
 
     fun initializeComponents() {
         viewModelScope.launch {
             try {
-
                 initializeGSRComponents()
-
-
                 initializeThermalComponents()
-
-
                 initializeNetworkComponents()
-
-
                 initializeSessionComponents()
-
                 Log.i(TAG, "All components initialized successfully")
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to initialize components", e)
-                _statusMessage.tryEmit(
-                    StatusMessage(
-                        "Failed to initialize components: ${e.message}",
-                        StatusMessage.Level.ERROR
-                    )
-                )
+                _events.emit(Event.ShowToast("Initialization failed: ${e.message}", true))
             }
         }
     }
 
     private suspend fun initializeGSRComponents() = withContext(Dispatchers.IO) {
         try {
-
             gsrSessionManager = GSRSessionManager.getInstance(getApplication())
-
-
             _gsrConnectionState.value = GSRConnectionState.DISCONNECTED
-
             Log.d(
                 TAG,
                 "GSR components initialized (UnifiedGSRRecorder will be initialized on connection)"
@@ -190,12 +194,10 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
             throw e
         }
     }
-
+    
     private suspend fun initializeThermalComponents() = withContext(Dispatchers.IO) {
         try {
             thermalRecorder = ThermalRecorder(getApplication())
-
-
             thermalRecorder?.setFrameListener(object : ThermalRecorder.ThermalFrameListener {
                 override fun onFrameProcessed(stats: ThermalRecorder.ThermalFrameStats) {
                     Log.d(
@@ -206,12 +208,11 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
 
                 override fun onError(error: String) {
                     Log.e(TAG, "Thermal recorder error: $error")
-                    _statusMessage.tryEmit(
-                        StatusMessage("Thermal recording error: $error", StatusMessage.Level.ERROR)
-                    )
+                    viewModelScope.launch {
+                        _events.emit(Event.ShowToast("Thermal recording error: $error", true))
+                    }
                 }
             })
-
             Log.d(TAG, "Thermal components initialized")
         } catch (e: Exception) {
             Log.e(TAG, "Failed to initialize thermal components", e)
@@ -223,8 +224,6 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
         try {
             networkClient = NetworkClient(getApplication())
             networkController = NetworkController(getApplication())
-
-
             networkController?.setEventListener(object :
                 NetworkController.NetworkControllerListener {
                 override fun onStartRecordingCommand(
@@ -236,7 +235,6 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
                         TAG,
                         "Remote start recording command: sessionId=$sessionId, modalities=$modalities"
                     )
-
                     val config = SessionConfig(
                         sessionId = sessionId,
                         participantId = options["participantId"] as? String,
@@ -244,8 +242,6 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
                         modalities = modalities,
                         saveImages = options["saveImages"] as? Boolean ?: false
                     )
-
-
                     viewModelScope.launch {
                         startRecordingSession(config)
                     }
@@ -253,8 +249,6 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
 
                 override fun onStopRecordingCommand() {
                     Log.i(TAG, "Remote stop recording command received")
-
-
                     viewModelScope.launch {
                         stopRecordingSession()
                     }
@@ -262,55 +256,31 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
 
                 override fun onClientConnected(clientId: String, clientInfo: String) {
                     Log.i(TAG, "PC client connected: $clientId ($clientInfo)")
-                    _statusMessage.tryEmit(
-                        StatusMessage("PC client connected: $clientInfo", StatusMessage.Level.INFO)
-                    )
+                    viewModelScope.launch { _events.emit(Event.ShowToast("PC client connected: $clientInfo")) }
                 }
 
                 override fun onClientDisconnected(clientId: String, reason: String) {
                     Log.i(TAG, "PC client disconnected: $clientId - $reason")
-                    _statusMessage.tryEmit(
-                        StatusMessage(
-                            "PC client disconnected: $reason",
-                            StatusMessage.Level.WARNING
-                        )
-                    )
+                    viewModelScope.launch { _events.emit(Event.ShowToast("PC client disconnected: $reason")) }
                 }
 
                 override fun onError(operation: String, error: String) {
                     Log.e(TAG, "NetworkController error in $operation: $error")
-                    _statusMessage.tryEmit(
-                        StatusMessage("PC control error: $error", StatusMessage.Level.ERROR)
-                    )
+                    viewModelScope.launch { _events.emit(Event.ShowToast("PC control error: $error", true)) }
                 }
             })
-
 
             viewModelScope.launch {
                 val serverStarted = networkController?.start(NetworkController.DEFAULT_PORT)
                 if (serverStarted == true) {
                     val actualPort = networkController?.getServerPort() ?: NetworkController.DEFAULT_PORT
-                    Log.i(
-                        TAG,
-                        "NetworkController server started on port $actualPort"
-                    )
-                    _statusMessage.tryEmit(
-                        StatusMessage(
-                            "PC remote control ready on port $actualPort",
-                            StatusMessage.Level.INFO
-                        )
-                    )
+                    Log.i(TAG, "NetworkController server started on port $actualPort")
+                    _events.emit(Event.ShowToast("PC remote control ready on port $actualPort"))
                 } else {
                     Log.w(TAG, "Failed to start NetworkController server")
-                    _statusMessage.tryEmit(
-                        StatusMessage(
-                            "Failed to start PC remote control server",
-                            StatusMessage.Level.ERROR
-                        )
-                    )
+                    _events.emit(Event.ShowToast("Failed to start PC remote control server", true))
                 }
             }
-
 
             networkClient?.setEventListener(object : NetworkClient.NetworkEventListener {
                 override fun onControllerDiscovered(controller: NetworkClient.ControllerInfo) {
@@ -321,21 +291,14 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
                 override fun onConnected(controller: NetworkClient.ControllerInfo) {
                     _networkConnectionState.value = NetworkConnectionState.CONNECTED
                     _connectedControllerInfo.value = controller
-                    _statusMessage.tryEmit(
-                        StatusMessage(
-                            "Connected to PC: ${controller.deviceName}",
-                            StatusMessage.Level.INFO
-                        )
-                    )
+                    viewModelScope.launch { _events.emit(Event.ShowToast("Connected to PC: ${controller.deviceName}")) }
                     Log.i(TAG, "Connected to PC controller: ${controller.deviceName}")
                 }
 
                 override fun onDisconnected(reason: String) {
                     _networkConnectionState.value = NetworkConnectionState.DISCONNECTED
                     _connectedControllerInfo.value = null
-                    _statusMessage.tryEmit(
-                        StatusMessage("Disconnected from PC: $reason", StatusMessage.Level.WARNING)
-                    )
+                    viewModelScope.launch { _events.emit(Event.ShowToast("Disconnected from PC: $reason")) }
                     Log.w(TAG, "Disconnected from PC controller: $reason")
                 }
 
@@ -343,34 +306,15 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
                     handleRemoteRecordingRequest(sessionInfo)
                 }
 
-                override fun onSyncFlash(durationMs: Int) {
-
-                    Log.d(TAG, "Sync flash requested: ${durationMs}ms")
-                }
-
-                override fun onTimeSynchronized(offsetNanoseconds: Long) {
-                    Log.d(TAG, "Time synchronized with offset: ${offsetNanoseconds}ns")
-                }
-
-                override fun onDataStreamingStarted() {
-                    Log.d(TAG, "Data streaming to PC started")
-                }
-
-                override fun onDataStreamingStopped() {
-                    Log.d(TAG, "Data streaming to PC stopped")
-                }
-
+                override fun onSyncFlash(durationMs: Int) { Log.d(TAG, "Sync flash requested: ${durationMs}ms") }
+                override fun onTimeSynchronized(offsetNanoseconds: Long) { Log.d(TAG, "Time synchronized with offset: ${offsetNanoseconds}ns") }
+                override fun onDataStreamingStarted() { Log.d(TAG, "Data streaming to PC started") }
+                override fun onDataStreamingStopped() { Log.d(TAG, "Data streaming to PC stopped") }
                 override fun onError(operation: String, error: String) {
-                    _statusMessage.tryEmit(
-                        StatusMessage(
-                            "Network error in $operation: $error",
-                            StatusMessage.Level.ERROR
-                        )
-                    )
+                    viewModelScope.launch { _events.emit(Event.ShowToast("Network error in $operation: $error", true)) }
                     Log.e(TAG, "Network error in $operation: $error")
                 }
             })
-
             _networkConnectionState.value = NetworkConnectionState.DISCONNECTED
             Log.d(TAG, "Network components initialized")
         } catch (e: Exception) {
@@ -379,14 +323,13 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
             throw e
         }
     }
-
+    
     private suspend fun initializeSessionComponents() = withContext(Dispatchers.IO) {
         try {
             sessionManager = SessionManager(
                 getApplication(),
                 mpdc4gsr.core.StructuredLogger.getInstance(getApplication())
             )
-
             _sessionState.value = SessionState.IDLE
             Log.d(TAG, "Session components initialized")
         } catch (e: Exception) {
@@ -396,157 +339,77 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
         }
     }
 
-
     fun startGSRConnection() {
         viewModelScope.launch {
             try {
                 _gsrConnectionState.value = GSRConnectionState.DISCOVERING
-                _statusMessage.tryEmit(
-                    StatusMessage("Searching for GSR sensor...", StatusMessage.Level.INFO)
-                )
+                _events.emit(Event.ShowToast("Searching for GSR sensor..."))
 
                 withContext(Dispatchers.IO) {
-
-
                     try {
-
                         if (unifiedGSRRecorder == null) {
-
-
-                            Log.w(
-                                TAG,
-                                "UnifiedGSRRecorder requires LifecycleOwner - should be initialized in Activity context"
-                            )
-
-
+                            Log.w(TAG, "UnifiedGSRRecorder requires LifecycleOwner - should be initialized in Activity context")
                             _gsrConnectionState.value = GSRConnectionState.CONNECTING
-                            _statusMessage.tryEmit(
-                                StatusMessage(
-                                    "Connecting to GSR sensor...",
-                                    StatusMessage.Level.INFO
-                                )
-                            )
-
-
+                            viewModelScope.launch { _events.emit(Event.ShowToast("Connecting to GSR sensor...")) }
                             kotlinx.coroutines.delay(2000)
-
                             _gsrConnectionState.value = GSRConnectionState.CONNECTED
-                            _statusMessage.tryEmit(
-                                StatusMessage(
-                                    "GSR sensor connected (simulated)",
-                                    StatusMessage.Level.INFO
-                                )
-                            )
-
+                            viewModelScope.launch { _events.emit(Event.ShowToast("GSR sensor connected (simulated)")) }
                             return@withContext
                         }
 
-
                         val recorder = unifiedGSRRecorder!!
-
-
                         val initSuccess = recorder.initialize()
                         if (!initSuccess) {
                             _gsrConnectionState.value = GSRConnectionState.ERROR
-                            _statusMessage.tryEmit(
-                                StatusMessage(
-                                    "Failed to initialize GSR recorder",
-                                    StatusMessage.Level.ERROR
-                                )
-                            )
+                            viewModelScope.launch { _events.emit(Event.ShowToast("Failed to initialize GSR recorder", true)) }
                             return@withContext
                         }
 
                         _gsrConnectionState.value = GSRConnectionState.CONNECTING
-                        _statusMessage.tryEmit(
-                            StatusMessage("Starting device discovery...", StatusMessage.Level.INFO)
-                        )
-
-
+                        viewModelScope.launch { _events.emit(Event.ShowToast("Starting device discovery...")) }
                         val discoverySuccess = recorder.startDeviceDiscovery()
                         if (!discoverySuccess) {
                             _gsrConnectionState.value = GSRConnectionState.ERROR
-                            _statusMessage.tryEmit(
-                                StatusMessage("No GSR devices found", StatusMessage.Level.ERROR)
-                            )
+                            viewModelScope.launch { _events.emit(Event.ShowToast("No GSR devices found", true)) }
                             return@withContext
                         }
-
-
                         val devices = recorder.getDiscoveredDevices()
                         if (devices.isEmpty()) {
                             _gsrConnectionState.value = GSRConnectionState.ERROR
-                            _statusMessage.tryEmit(
-                                StatusMessage(
-                                    "No compatible GSR devices detected",
-                                    StatusMessage.Level.ERROR
-                                )
-                            )
+                            viewModelScope.launch { _events.emit(Event.ShowToast("No compatible GSR devices detected", true)) }
                             return@withContext
                         }
 
-
                         val targetDevice = devices.first()
-                        _statusMessage.tryEmit(
-                            StatusMessage(
-                                "Connecting to ${targetDevice.name}...",
-                                StatusMessage.Level.INFO
-                            )
-                        )
-
+                        viewModelScope.launch { _events.emit(Event.ShowToast("Connecting to ${targetDevice.name}...")) }
                         val connectionSuccess = recorder.connectToDevice(targetDevice)
                         if (connectionSuccess) {
                             _gsrConnectionState.value = GSRConnectionState.CONNECTED
-                            _statusMessage.tryEmit(
-                                StatusMessage(
-                                    "Connected to ${targetDevice.name}",
-                                    StatusMessage.Level.INFO
-                                )
-                            )
-
-
+                            viewModelScope.launch { _events.emit(Event.ShowToast("Connected to ${targetDevice.name}")) }
                             monitorGSRStatus(recorder)
                         } else {
                             _gsrConnectionState.value = GSRConnectionState.ERROR
-                            _statusMessage.tryEmit(
-                                StatusMessage(
-                                    "Failed to connect to ${targetDevice.name}",
-                                    StatusMessage.Level.ERROR
-                                )
-                            )
+                            viewModelScope.launch { _events.emit(Event.ShowToast("Failed to connect to ${targetDevice.name}", true)) }
                         }
-
                     } catch (e: Exception) {
                         Log.e(TAG, "Error during GSR connection", e)
                         _gsrConnectionState.value = GSRConnectionState.ERROR
-                        _statusMessage.tryEmit(
-                            StatusMessage(
-                                "GSR connection error: ${e.message}",
-                                StatusMessage.Level.ERROR
-                            )
-                        )
+                        viewModelScope.launch { _events.emit(Event.ShowToast("GSR connection error: ${e.message}", true)) }
                     }
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to start GSR connection", e)
                 _gsrConnectionState.value = GSRConnectionState.ERROR
-                _statusMessage.tryEmit(StatusMessage(
-                    "GSR connection failed: ${e.message}",
-                    StatusMessage.Level.ERROR
-                ))
+                _events.emit(Event.ShowToast("GSR connection failed: ${e.message}", true))
             }
         }
     }
-
-
+    
     private fun monitorGSRStatus(recorder: UnifiedGSRRecorder) {
         viewModelScope.launch {
             try {
-
                 recorder.deviceStatus.collect { status ->
                     Log.d(TAG, "GSR device status: $status")
-
-
                     if (status.contains("Connected")) {
                         _gsrBatteryLevel.value = 85
                     }
@@ -555,18 +418,12 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
                 Log.e(TAG, "Error monitoring GSR status", e)
             }
         }
-
         viewModelScope.launch {
             try {
-
                 recorder.connectionQuality.collect { quality ->
                     Log.d(TAG, "GSR connection quality: $quality")
-
-
                     if (quality < 0.3) {
-                        _statusMessage.tryEmit(
-                            StatusMessage("GSR connection quality low", StatusMessage.Level.WARNING)
-                        )
+                        _events.emit(Event.ShowToast("GSR connection quality low"))
                     }
                 }
             } catch (e: Exception) {
@@ -574,51 +431,36 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
             }
         }
     }
-
-
+    
     fun startNetworkDiscovery() {
         viewModelScope.launch {
             try {
                 _networkConnectionState.value = NetworkConnectionState.DISCOVERING
-                _statusMessage.tryEmit(
-                    StatusMessage("Searching for PC controllers...", StatusMessage.Level.INFO)
-                )
-
+                _events.emit(Event.ShowToast("Searching for PC controllers..."))
                 withContext(Dispatchers.IO) {
                     networkClient?.let { client ->
                         val controllers = client.discoverControllers()
                         if (controllers.isNotEmpty()) {
-
                             val controller = controllers.first()
-                            val connected =
-                                client.connectToController(controller.ipAddress, controller.port)
+                            val connected = client.connectToController(controller.ipAddress, controller.port)
                             if (connected) {
                                 _networkConnectionState.value = NetworkConnectionState.CONNECTED
                                 _connectedControllerInfo.value = controller
                             }
                         } else {
                             _networkConnectionState.value = NetworkConnectionState.DISCONNECTED
-                            _statusMessage.tryEmit(
-                                StatusMessage(
-                                    "No PC controllers found",
-                                    StatusMessage.Level.WARNING
-                                )
-                            )
+                            viewModelScope.launch { _events.emit(Event.ShowToast("No PC controllers found")) }
                         }
                     }
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to start network discovery", e)
                 _networkConnectionState.value = NetworkConnectionState.ERROR
-                _statusMessage.tryEmit(StatusMessage(
-                    "Network discovery failed: ${e.message}",
-                    StatusMessage.Level.ERROR
-                ))
+                _events.emit(Event.ShowToast("Network discovery failed: ${e.message}", true))
             }
         }
     }
-
-
+    
     fun startRecordingSession(sessionConfig: SessionConfig = SessionConfig()) {
         viewModelScope.launch {
             try {
@@ -626,14 +468,9 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
                     Log.w(TAG, "Recording already in progress")
                     return@launch
                 }
-
                 _sessionState.value = SessionState.STARTING
-                _statusMessage.tryEmit(
-                    StatusMessage("Starting recording session...", StatusMessage.Level.INFO)
-                )
-
+                _events.emit(Event.ShowToast("Starting recording session..."))
                 withContext(Dispatchers.IO) {
-
                     gsrSessionManager?.let { manager ->
                         val session = manager.createSession(
                             sessionId = sessionConfig.sessionId,
@@ -641,61 +478,36 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
                             studyName = sessionConfig.studyName,
                             metadata = sessionConfig.metadata
                         )
-
-
                         if (sessionConfig.modalities.contains("thermal")) {
-                            val sessionDir =
-                                "/storage/emulated/0/IRCamera/Sessions/${session.sessionId}"
-                            val thermalStarted = thermalRecorder?.startRecording(
-                                sessionDir,
-                                sessionConfig.saveImages
-                            )
+                            val sessionDir = "/storage/emulated/0/IRCamera/Sessions/${session.sessionId}"
+                            val thermalStarted = thermalRecorder?.startRecording(sessionDir, sessionConfig.saveImages)
                             if (thermalStarted == true) {
-                                Log.i(
-                                    TAG,
-                                    "Thermal recording started for session: ${session.sessionId}"
-                                )
+                                Log.i(TAG, "Thermal recording started for session: ${session.sessionId}")
                             } else {
                                 Log.w(TAG, "Failed to start thermal recording")
                             }
                         }
-
-
                         if (sessionConfig.modalities.contains("GSR")) {
                             val gsrStarted = gsrSensorRecorder?.initialize()
                             if (gsrStarted == true) {
-                                Log.i(
-                                    TAG,
-                                    "GSR recording started for session: ${session.sessionId}"
-                                )
+                                Log.i(TAG, "GSR recording started for session: ${session.sessionId}")
                             } else {
                                 Log.w(TAG, "Failed to start GSR recording")
                             }
                         }
-
                         _currentSession.value = session
                         _sessionState.value = SessionState.RECORDING
-                        _statusMessage.tryEmit(
-                            StatusMessage(
-                                "Recording session started: ${session.sessionId}",
-                                StatusMessage.Level.INFO
-                            )
-                        )
-
+                        viewModelScope.launch { _events.emit(Event.ShowToast("Recording session started: ${session.sessionId}")) }
                         Log.i(TAG, "Recording session started: ${session.sessionId}")
                     }
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to start recording session", e)
                 _sessionState.value = SessionState.ERROR
-                _statusMessage.tryEmit(StatusMessage(
-                    "Failed to start recording: ${e.message}",
-                    StatusMessage.Level.ERROR
-                ))
+                _events.emit(Event.ShowToast("Failed to start recording: ${e.message}", true))
             }
         }
     }
-
 
     fun stopRecordingSession() {
         viewModelScope.launch {
@@ -704,72 +516,42 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
                     Log.w(TAG, "No recording session in progress")
                     return@launch
                 }
-
                 _sessionState.value = SessionState.STOPPING
-                _statusMessage.tryEmit(
-                    StatusMessage("Stopping recording session...", StatusMessage.Level.INFO)
-                )
-
+                _events.emit(Event.ShowToast("Stopping recording session..."))
                 withContext(Dispatchers.IO) {
                     _currentSession.value?.let { session ->
-
                         val thermalStopped = thermalRecorder?.stopRecording()
                         if (thermalStopped == true) {
-                            Log.i(
-                                TAG,
-                                "Thermal recording stopped for session: ${session.sessionId}"
-                            )
+                            Log.i(TAG, "Thermal recording stopped for session: ${session.sessionId}")
                         }
-
-
-
-
-
                         gsrSessionManager?.completeSession(session.sessionId)
-
                         _currentSession.value = null
                         _sessionState.value = SessionState.IDLE
-                        _statusMessage.tryEmit(
-                            StatusMessage("Recording session stopped", StatusMessage.Level.INFO)
-                        )
-
+                        viewModelScope.launch { _events.emit(Event.ShowToast("Recording session stopped")) }
                         Log.i(TAG, "Recording session stopped: ${session.sessionId}")
                     }
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to stop recording session", e)
                 _sessionState.value = SessionState.ERROR
-                _statusMessage.tryEmit(StatusMessage(
-                    "Failed to stop recording: ${e.message}",
-                    StatusMessage.Level.ERROR
-                ))
+                _events.emit(Event.ShowToast("Failed to stop recording: ${e.message}", true))
             }
         }
     }
-
-
+    
     private fun handleRemoteRecordingRequest(sessionInfo: SessionInfo) {
         viewModelScope.launch {
             Log.i(TAG, "Remote recording request received: ${sessionInfo.sessionId}")
-
             val config = SessionConfig(
                 sessionId = sessionInfo.sessionId,
                 participantId = sessionInfo.participantId,
                 studyName = sessionInfo.studyName,
                 metadata = sessionInfo.metadata
             )
-
             startRecordingSession(config)
         }
     }
-
-
-    fun clearStatusMessage() {
-        // SharedFlow doesn't support null emission, so we skip this
-        // The UI should handle the clearing of status messages differently
-    }
-
-
+    
     fun processThermalFrame(
         frameData: ByteArray,
         width: Int,
@@ -778,100 +560,40 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
         maxTempRange: Float,
         timestampNs: Long = System.nanoTime()
     ) {
-        thermalRecorder?.processFrameFromIntensity(
-            frameData, width, height, minTempRange, maxTempRange, timestampNs
-        )
+        thermalRecorder?.processFrameFromIntensity(frameData, width, height, minTempRange, maxTempRange, timestampNs)
     }
-
-    override fun onCleared() {
-        super.onCleared()
-
-
-        viewModelScope.launch {
-            networkController?.stop()
-        }
-
-        Log.d(TAG, "MainActivityViewModel cleared")
-    }
-
-
-    data class SessionConfig(
-        val sessionId: String? = null,
-        val participantId: String? = null,
-        val studyName: String? = null,
-        val metadata: Map<String, String> = emptyMap(),
-        val modalities: List<String> = listOf("thermal", "GSR"),
-        val saveImages: Boolean = false
-    )
 
     // Enhanced sensor state management methods
-    fun updateRGBCameraState(
-        status: SensorStatus,
-        message: String? = null,
-        isRecording: Boolean = false
-    ) {
-        _rgbCameraState.value = SensorState(status, message, isRecording)
-    }
-
-    fun updateThermalCameraState(
-        status: SensorStatus,
-        message: String? = null,
-        isRecording: Boolean = false
-    ) {
-        _thermalCameraState.value = SensorState(status, message, isRecording)
-    }
-
-    fun updateGSRSensorState(
-        status: SensorStatus,
-        message: String? = null,
-        isRecording: Boolean = false
-    ) {
-        _gsrSensorState.value = SensorState(status, message, isRecording)
-    }
+    fun updateRGBCameraState(status: SensorStatus, message: String? = null, isRecording: Boolean = false) { _rgbCameraState.value = SensorState(status, message, isRecording) }
+    fun updateThermalCameraState(status: SensorStatus, message: String? = null, isRecording: Boolean = false) { _thermalCameraState.value = SensorState(status, message, isRecording) }
+    fun updateGSRSensorState(status: SensorStatus, message: String? = null, isRecording: Boolean = false) { _gsrSensorState.value = SensorState(status, message, isRecording) }
 
     // Manual camera controls
     fun lockExposure(locked: Boolean) {
         _exposureLocked.value = locked
-        _statusMessage.tryEmit(
-            StatusMessage(
-                if (locked) "Exposure locked" else "Exposure auto mode enabled",
-                StatusMessage.Level.INFO
-            )
-        )
+        viewModelScope.launch { _events.emit(Event.ShowToast(if (locked) "Exposure locked" else "Exposure auto mode enabled")) }
     }
-
     fun lockFocus(locked: Boolean) {
         _focusLocked.value = locked
-        _statusMessage.tryEmit(
-            StatusMessage(
-                if (locked) "Focus locked" else "Focus auto mode enabled",
-                StatusMessage.Level.INFO
-            )
-        )
+        viewModelScope.launch { _events.emit(Event.ShowToast(if (locked) "Focus locked" else "Focus auto mode enabled")) }
     }
-
     fun setExposureCompensation(compensation: Float) {
         _exposureCompensation.value = compensation
-        _statusMessage.tryEmit(
-            StatusMessage(
-                "Exposure compensation: ${if (compensation > 0) "+" else ""}$compensation EV",
-                StatusMessage.Level.INFO
-            )
-        )
+        viewModelScope.launch { _events.emit(Event.ShowToast("Exposure compensation: ${if (compensation > 0) "+" else ""}$compensation EV")) }
     }
-
-    // Recording trigger indication
-    fun setRemoteTriggered(isRemote: Boolean) {
-        _isRemoteTriggered.value = isRemote
-    }
-
-    // Reset manual controls to auto
+    fun setRemoteTriggered(isRemote: Boolean) { _isRemoteTriggered.value = isRemote }
     fun resetCameraControlsToAuto() {
         _exposureLocked.value = false
         _focusLocked.value = false
         _exposureCompensation.value = 0.0f
-        _statusMessage.tryEmit(
-            StatusMessage("Camera controls reset to auto", StatusMessage.Level.INFO)
-        )
+        viewModelScope.launch { _events.emit(Event.ShowToast("Camera controls reset to auto")) }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        viewModelScope.launch {
+            networkController?.stop()
+        }
+        Log.d(TAG, "MainActivityViewModel cleared")
     }
 }
