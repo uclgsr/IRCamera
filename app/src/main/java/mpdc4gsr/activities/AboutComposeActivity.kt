@@ -50,7 +50,7 @@ class AboutComposeActivity : BaseComposeActivity() {
     @Composable
     private fun AboutScreen() {
         val context = LocalContext.current
-        val currentYear = Calendar.getInstance().get(Calendar.YEAR)
+        val currentYear by remember { mutableStateOf(Calendar.getInstance().get(Calendar.YEAR)) }
 
         Scaffold(
             topBar = {
