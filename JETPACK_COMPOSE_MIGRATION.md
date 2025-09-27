@@ -97,8 +97,8 @@ class VersionComposeActivity : BaseComposeActivity() {
 ### High Priority (Simple Activities)
 1. **VersionActivity** ✓ (Example completed)
 2. **PolicyActivity** ✓ (Example completed)
-3. **MoreHelpActivity**
-4. **WebViewActivity**
+3. **MoreHelpActivity** ✓ (Example completed)
+4. **WebViewActivity** ✓ (Example completed)
 
 ### Medium Priority (Complex UI)
 1. **MainActivity** (Complex with services/networking)
@@ -170,6 +170,8 @@ override fun connected() {
 - IRCameraTheme established
 - VersionComposeActivity as simple UI example
 - PolicyComposeActivity as WebView integration example
+- WebViewComposeActivity as advanced WebView with error handling
+- MoreHelpComposeActivity as conditional UI and system integration example
 
 ### Next Steps
 1. Migrate simple activities (MoreHelp, WebView)
