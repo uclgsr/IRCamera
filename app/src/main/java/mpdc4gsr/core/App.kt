@@ -124,6 +124,8 @@ class App : BaseApplication() {
             },
         )
 
+        // Initialize WebSocket connection
+        initWebSocket()
     }
 
     private fun initZoho() {
@@ -131,7 +133,16 @@ class App : BaseApplication() {
     }
 
     override fun initWebSocket() {
-        // Initialize WebSocket connection
-        // This method can be implemented when WebSocket functionality is needed
+        try {
+            XLog.i("App: initWebSocket() - Initializing WebSocket connection")
+            
+            // Call parent implementation to set up network monitoring and WebSocket infrastructure
+            super.initWebSocket()
+            
+            XLog.i("App: WebSocket initialization completed successfully")
+        } catch (e: Exception) {
+            XLog.e("App: Error during WebSocket initialization: ${e.message}")
+            // Continue even if WebSocket initialization fails to avoid breaking app startup
+        }
     }
 }
