@@ -895,7 +895,7 @@ class PermissionController(
             .show()
     }
 
-    fun getCriticalPermissions(permissions: List<String>): List<String> {
+    private fun getCriticalPermissions(permissions: List<String>): List<String> {
         return permissions.filter { permission ->
             permission in CAMERA_PERMISSIONS ||
                     permission == Manifest.permission.BLUETOOTH_SCAN ||
