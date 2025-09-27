@@ -505,6 +505,13 @@ class PermissionController(
     }
 
 
+    /**
+     * Checks if all camera-related permissions are granted.
+     *
+     * Note: This method previously checked only a single camera permission (e.g., Manifest.permission.CAMERA).
+     * It now requires that *all* permissions in CAMERA_PERMISSIONS are granted.
+     * Ensure that this stricter check is intended wherever this method is used.
+     */
     fun hasCameraPermission(): Boolean {
         return CAMERA_PERMISSIONS.all { isPermissionGranted(it) }
     }
