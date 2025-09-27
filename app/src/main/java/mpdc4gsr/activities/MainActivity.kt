@@ -2108,6 +2108,12 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         } catch (e: Exception) {
             Log.e(TAG, "Error during Phase 0 cleanup", e)
         }
+
+        try {
+            permissionController.cleanup()
+        } catch (e: Exception) {
+            Log.e(TAG, "Error during permission controller cleanup", e)
+        }
     }
 
     private fun launchShimmerMvp() {

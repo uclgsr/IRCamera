@@ -91,7 +91,8 @@ class PermissionController(
     // Simple permission request state for MVP
     private var lastPermissionRequestTime: Long = 0
 
-
+    // Dialog management to prevent window leaks
+    private var currentDialog: AlertDialog? = null
     private var remainingPermissionGroups: MutableList<List<String>> = mutableListOf()
     private var allRequestedPermissions: List<String> = emptyList()
 
@@ -102,6 +103,14 @@ class PermissionController(
             usbManager = activity.getSystemService(Context.USB_SERVICE) as UsbManager
             Log.i(TAG, "PermissionController initialized")
         }
+    }
+
+    fun cleanup() {
+        currentDialog?.dismiss()
+        currentDialog = null
+        permissionCallback = null
+        usbPermissionCallback = null
+        Log.i(TAG, "PermissionController cleaned up")
     }
 
     fun hasAllRequiredPermissions(): Boolean {
@@ -767,22 +776,31 @@ class PermissionController(
         }
 
         Log.d(TAG, "Creating AlertDialog for permission rationale")
-        val dialog = AlertDialog.Builder(activity)
+        
+        // Dismiss any existing dialog first
+        currentDialog?.dismiss()
+        
+        currentDialog = AlertDialog.Builder(activity)
             .setTitle("Permissions Required")
             .setMessage(message)
             .setPositiveButton("Grant Permissions") { _, _ ->
                 Log.d(TAG, "User clicked 'Grant Permissions'")
+                currentDialog = null
                 callback(true)
             }
             .setNegativeButton("Cancel") { _, _ ->
                 Log.d(TAG, "User clicked 'Cancel'")
+                currentDialog = null
                 callback(false)
             }
             .setCancelable(false)
+            .setOnDismissListener {
+                currentDialog = null
+            }
             .create()
             
         Log.d(TAG, "Showing permission rationale dialog")
-        dialog.show()
+        currentDialog?.show()
         Log.d(TAG, "Permission rationale dialog.show() called")
     }
 

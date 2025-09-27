@@ -11,6 +11,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import mpdc4gsr.config.FeatureFlags
@@ -295,12 +296,18 @@ class WebSocketClient(private val context: Context) {
                         Log.w(TAG, "No servers discovered via mDNS, trying manual connection")
                         tryManualConnection()
                     }
+                } catch (e: kotlinx.coroutines.CancellationException) {
+                    Log.i(TAG, "Server discovery cancelled")
+                    logger.log(
+                        StructuredLogger.LogLevel.INFO, "WebSocketClient", "discovery_cancelled",
+                        emptyMap(),
+                    )
                 } catch (e: Exception) {
                     Log.e(TAG, "Error in server discovery", e)
                     logger.log(
                         StructuredLogger.LogLevel.ERROR, "WebSocketClient", "discovery_error",
                         mapOf(
-                            "error" to e.message.orEmpty(),
+                            "error" to (e.message ?: "Unknown error"),
                         ),
                     )
                 }
