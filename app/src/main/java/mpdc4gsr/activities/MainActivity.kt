@@ -114,6 +114,10 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
     private lateinit var structuredLogger: StructuredLogger
     private lateinit var crashSafeSupervisor: CrashSafeSupervisor
     private lateinit var permissionController: PermissionController
+    
+    // Permission request management
+    private var hasRequestedPermissionsThisSession = false
+    private var permissionRequestInProgress = false
 
     enum class ConnectionStatus {
         DISCONNECTED,
@@ -659,7 +663,23 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
 
     private fun requestAllPermissions() {
         Log.d(TAG, "requestAllPermissions() called")
+        
+        // Check if we should skip this request
+        if (permissionRequestInProgress) {
+            Log.d(TAG, "Permission request already in progress - skipping")
+            return
+        }
+        
+        if (hasRequestedPermissionsThisSession && permissionController.shouldSkipPermissionRequest()) {
+            Log.d(TAG, "Skipping permission request - already attempted this session with denials")
+            return
+        }
+        
+        permissionRequestInProgress = true
+        hasRequestedPermissionsThisSession = true
+        
         permissionController.ensureAll { allGranted, deniedPermissions ->
+            permissionRequestInProgress = false
             Log.d(TAG, "Permission callback: allGranted=$allGranted, deniedPermissions=${deniedPermissions.joinToString(",")}")
             if (allGranted) {
                 Log.i(TAG, "All permissions granted - full functionality enabled")
@@ -881,16 +901,24 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         super.onResume()
         LMS.getInstance().language = ConstantLanguages.ENGLISH
 
-        // Ensure permissions are requested even if they were missed during initialization
+        // Only check for permissions if we haven't requested them recently and the app has basic functionality
         if (SharedManager.getHasShowClause() && ::permissionController.isInitialized) {
             Log.d(TAG, "onResume() - checking if permissions need to be requested again")
-            val missingPermissions = permissionController.getMissingPermissions()
-            if (missingPermissions.isNotEmpty()) {
-                Log.w(TAG, "onResume() - Found missing permissions, requesting them: ${missingPermissions.joinToString(", ")}")
-                // Use a small delay to ensure the activity is fully resumed
+            
+            // Check if we have minimum permissions for basic functionality
+            if (!permissionController.hasMinimumPermissions() && !hasRequestedPermissionsThisSession) {
+                Log.d(TAG, "onResume() - Missing critical permissions, will request after delay")
+                // Use a longer delay to avoid interrupting user flow
                 binding.root.postDelayed({
-                    requestAllPermissions()
-                }, 500)
+                    // Double-check we still need permissions and haven't requested them
+                    if (!permissionController.hasMinimumPermissions() && !permissionRequestInProgress) {
+                        requestAllPermissions()
+                    }
+                }, 2000) // 2 second delay instead of 500ms
+            } else if (permissionController.hasMinimumPermissions()) {
+                Log.d(TAG, "onResume() - Minimum permissions available, skipping request")
+            } else {
+                Log.d(TAG, "onResume() - Permissions already requested this session")
             }
         }
     }
@@ -996,11 +1024,17 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                 )
 
             } else {
-                Log.w(TAG, "Camera permissions missing - requesting permissions")
-                permissionController.ensureAll { granted, _ ->
-                    if (granted && permissionController.canStartRecording()) {
-                        Log.i(TAG, "Camera permissions granted after device connection")
+                Log.w(TAG, "Camera permissions missing")
+                // Only request permissions if we haven't recently been denied
+                if (!permissionController.shouldSkipPermissionRequest() && !permissionRequestInProgress) {
+                    Log.i(TAG, "Requesting camera permissions after device connection")
+                    permissionController.ensureAll { granted, _ ->
+                        if (granted && permissionController.canStartRecording()) {
+                            Log.i(TAG, "Camera permissions granted after device connection")
+                        }
                     }
+                } else {
+                    Log.d(TAG, "Skipping permission request - user has recently declined or request in progress")
                 }
             }
         }
@@ -1103,10 +1137,16 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                 "Camera permission required for thermal imaging",
                 Toast.LENGTH_SHORT
             ).show()
-            permissionController.ensureAll { granted, _ ->
-                if (granted && permissionController.canStartRecording()) {
-                    jumpIRActivity()
+            
+            // Only request permissions if we haven't recently been denied
+            if (!permissionController.shouldSkipPermissionRequest() && !permissionRequestInProgress) {
+                permissionController.ensureAll { granted, _ ->
+                    if (granted && permissionController.canStartRecording()) {
+                        jumpIRActivity()
+                    }
                 }
+            } else {
+                Log.d(TAG, "Skipping permission request in jumpIRActivity - user has recently declined")
             }
         }
     }
