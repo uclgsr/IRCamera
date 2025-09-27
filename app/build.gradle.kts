@@ -147,6 +147,7 @@ android {
                     "META-INF/NOTICE.txt",
                     "META-INF/notice.txt",
                     "META-INF/ASL2.0",
+                    "META-INF/versions/9/OSGI-INF/MANIFEST.MF",
 
                     "META-INF/com.android.art/baseline.prof",
                     "META-INF/com.android.art/baseline.profm",
