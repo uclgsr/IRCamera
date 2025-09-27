@@ -61,7 +61,7 @@ class RecordingService : LifecycleService() {
         private const val NOTIFICATION_ID = 1001
         private const val CHANNEL_ID = "recording_service_channel"
 
-        private const val SERVER_PORT = 8080
+        private const val SERVER_PORT = 8081  // Use different port to avoid conflicts with NetworkController
         private const val SERVICE_TYPE = "_ircamera._tcp."
         private const val SERVICE_NAME = "IRCamera-Android"
 
@@ -270,7 +270,7 @@ class RecordingService : LifecycleService() {
         crashRecoveryManager = CrashRecoveryManager(this)
 
         networkClient = NetworkClient(this)
-        networkServer = NetworkServer(this, 8080)
+        networkServer = NetworkServer(this, 8081)  // Use port 8081 to avoid conflict with NetworkController
         networkManager = NetworkManager(this, recordingController)
         protocolHandler = ProtocolHandler(this, networkServer)
         protocolHandler.setTimeSyncManager(timeSyncManager)
@@ -1262,6 +1262,17 @@ class RecordingService : LifecycleService() {
                     }
                 }
             }
+        } catch (e: java.net.BindException) {
+            structuredLogger.logServerEvent(
+                "server_socket_bind_failed",
+                mapOf(
+                    "port" to SERVER_PORT,
+                    "error" to (e.message ?: "Port already in use")
+                )
+            )
+            Log.e(TAG, "Failed to bind to port $SERVER_PORT - address already in use", e)
+            isServerRunning.set(false)
+            throw e
         } catch (e: Exception) {
             structuredLogger.logServerEvent(
                 "server_socket_failed",
