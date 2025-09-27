@@ -857,6 +857,9 @@ class NetworkClient(private val context: Context) {
                 output.flush()
 
                 val responseLength = input.readInt()
+                if (responseLength > 1024 * 1024) {
+                    throw IOException("Response too large: $responseLength bytes")
+                }
                 val responseData = ByteArray(responseLength)
                 input.readFully(responseData)
 
