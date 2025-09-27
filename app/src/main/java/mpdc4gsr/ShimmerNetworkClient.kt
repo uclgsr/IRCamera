@@ -55,8 +55,8 @@ class ShimmerNetworkClient(
                 CONNECTION_TIMEOUT_MS
             )
 
-            outputStream = PrintWriter(socket?.getOutputStream(), true)
-            inputStream = BufferedReader(InputStreamReader(socket?.getInputStream()))
+            outputStream = PrintWriter(socket?.getOutputStream()!!, true)
+            inputStream = BufferedReader(InputStreamReader(socket?.getInputStream()!!))
 
             isConnected.set(true)
             isRunning.set(true)

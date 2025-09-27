@@ -303,7 +303,7 @@ class PcServerDiscovery(private val context: Context) {
                 for (interfaceAddress in networkInterface.interfaceAddresses) {
                     val broadcast = interfaceAddress.broadcast
                     if (broadcast != null) {
-                        addresses.add(broadcast.hostAddress)
+                        broadcast.hostAddress?.let { addresses.add(it) }
                     }
                 }
             }
