@@ -182,6 +182,9 @@ override fun connected() {
 - SimplifiedMainComposeActivity as main interface with permissions and state management
 - SettingsComposeActivity as configuration and preferences UI with multiple sections
 - DiagnosticsComposeActivity as system information and health checks with testing
+- ShimmerMvpComposeActivity as GSR sensor integration with Bluetooth and real-time data
+- UnifiedSensorComposeActivity as multi-modal sensor coordination and session management
+- AboutComposeActivity as app information display with external links and team credits
 
 ### Next Steps
 1. Migrate simple activities (MoreHelp, WebView)
