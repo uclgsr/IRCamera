@@ -15,12 +15,12 @@ import com.mpdc4gsr.libunified.app.lms.utils.NetworkUtil
 import com.mpdc4gsr.libunified.app.lms.weiget.TToast
 import com.mpdc4gsr.libunified.app.navigation.NavigationManager
 import com.mpdc4gsr.libunified.app.utils.CommUtils
+import com.mpdc4gsr.libunified.app.utils.UnifiedVersionUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import mpdc4gsr.core.App
-import mpdc4gsr.utils.VersionUtils
 import java.util.Calendar
 import com.mpdc4gsr.libunified.R as LibCoreR
 
@@ -106,7 +106,7 @@ class ClauseActivity : BaseBindingActivity<ActivityClauseBinding>() {
         }
         binding.tvWelcome.text = getString(R.string.welcome_use_app, CommUtils.getAppName())
         binding.tvVersion.text =
-            "${getString(R.string.set_version)}V${VersionUtils.getCodeStr(this)}"
+            "${getString(R.string.set_version)}V${UnifiedVersionUtils.getVersionName(this)}"
         binding.clauseName.text = CommUtils.getAppName()
     }
 
