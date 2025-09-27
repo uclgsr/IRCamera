@@ -14,6 +14,7 @@ import mpdc4gsr.sensors.TimestampRecord
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.PrintWriter
+import java.net.InetSocketAddress
 import java.net.ServerSocket
 import java.net.Socket
 import java.util.concurrent.ConcurrentLinkedQueue
@@ -63,7 +64,10 @@ class UnifiedDataStreamingService(
                 streamStartTime.set(System.currentTimeMillis())
 
 
-                serverSocket = ServerSocket(port)
+                serverSocket = ServerSocket().apply {
+                    reuseAddress = true
+                    bind(InetSocketAddress(port))
+                }
                 isStreaming.set(true)
 
 

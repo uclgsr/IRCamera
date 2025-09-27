@@ -12,6 +12,7 @@ import mpdc4gsr.sensors.unified.model.GSRSample
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.PrintWriter
+import java.net.InetSocketAddress
 import java.net.ServerSocket
 import java.net.Socket
 import java.util.concurrent.ConcurrentLinkedQueue
@@ -72,7 +73,10 @@ class LSLGSROutlet(
                 startTime = System.currentTimeMillis()
 
                 // Start TCP server for LSL streaming
-                serverSocket = ServerSocket(serverPort)
+                serverSocket = ServerSocket().apply {
+                    reuseAddress = true
+                    bind(InetSocketAddress(serverPort))
+                }
                 isActive.set(true)
 
                 // Start accepting client connections
