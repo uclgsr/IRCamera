@@ -857,6 +857,12 @@ class NetworkClient(private val context: Context) {
                 output.flush()
 
                 val responseLength = input.readInt()
+                if (responseLength < 0 || responseLength > 1024 * 1024) { // Max 1MB response
+                    Log.w(TAG, "Invalid response length: $responseLength bytes from $host")
+                    socket.close()
+                    return@withContext null
+                }
+                
                 val responseData = ByteArray(responseLength)
                 input.readFully(responseData)
 
