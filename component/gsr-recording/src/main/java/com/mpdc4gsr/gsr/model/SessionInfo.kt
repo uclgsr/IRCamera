@@ -1,5 +1,7 @@
 package com.mpdc4gsr.gsr.model
 
+import java.io.Serializable
+
 data class SessionInfo(
     val sessionId: String,
     val startTime: Long,
@@ -13,7 +15,7 @@ data class SessionInfo(
     var hasGSRData: Boolean = false,
     var hasRGBData: Boolean = false,
     var hasThermalData: Boolean = false,
-) {
+) : Serializable {
 
     fun isActive(): Boolean = endTime == null
 
