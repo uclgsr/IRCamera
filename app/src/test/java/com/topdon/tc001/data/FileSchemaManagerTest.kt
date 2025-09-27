@@ -21,7 +21,7 @@ class FileSchemaManagerTest {
     @Before
     fun setup() {
         fileSchemaManager = FileSchemaManager()
-        testDirectory = File("/tmp/test-schema-${System.currentTimeMillis()}")
+        testDirectory = File(System.getProperty("java.io.tmpdir"), "test-schema-${System.currentTimeMillis()}")
         testDirectory.mkdirs()
     }
 
