@@ -80,6 +80,11 @@ class MultiModalRecordingActivity : BaseViewModelActivity<MultiModalRecordingVie
         handleAutoStart()
     }
 
+    override fun initData() {
+        // Initialize any data needed for the activity
+        // This method is called by BaseActivity after initView()
+    }
+
     private fun initializePermissions() {
         permissionController = PermissionController(this)
         permissionController.initialize()

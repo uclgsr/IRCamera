@@ -49,6 +49,11 @@ class GSRVideoPlayerActivity : BaseViewModelActivity<GSRVideoPlayerViewModel>() 
         viewModel.loadVideo(videoPath, packageName)
     }
 
+    override fun initData() {
+        // Initialize any data needed for the activity
+        // This method is called by BaseActivity after initView()
+    }
+
     private fun setupObservers() {
         viewModel.videoState.observe(this) { videoState ->
             if (videoState.uri != null) {

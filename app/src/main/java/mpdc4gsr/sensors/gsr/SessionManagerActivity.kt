@@ -54,6 +54,11 @@ class SessionManagerActivity : BaseViewModelActivity<SessionManagerViewModel>() 
         viewModel.loadSessions(this)
     }
 
+    override fun initData() {
+        // Initialize any data needed for the activity
+        // This method is called by BaseActivity after initView()
+    }
+
     private fun initializeViews() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = "Session Manager"

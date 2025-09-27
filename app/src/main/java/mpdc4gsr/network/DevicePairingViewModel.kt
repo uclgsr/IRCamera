@@ -144,7 +144,13 @@ class DevicePairingViewModel : BaseViewModel(), NetworkClient.NetworkEventListen
 
         viewModelScope.launch {
             try {
-                val sessionInfo = networkClient.startRecordingSession()
+                // Create a SessionInfo for starting recording
+                val sessionInfo = com.mpdc4gsr.gsr.model.SessionInfo(
+                    sessionId = "remote_session_${System.currentTimeMillis()}",
+                    studyName = "Remote Recording Session",
+                    participantId = controller.deviceName,
+                    startTime = System.currentTimeMillis()
+                )
                 _navigationEvent.value = NavigationEvent(
                     action = "START_RECORDING",
                     sessionInfo = sessionInfo
