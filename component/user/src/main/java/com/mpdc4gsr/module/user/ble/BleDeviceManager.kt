@@ -383,6 +383,22 @@ class BleDeviceManager(private val context: Context) : CoroutineScope {
         _deviceStatus.postValue(statusMap)
     }
 
+    fun getDiscoveredDeviceCount(): Int {
+        return deviceInfoMap.size
+    }
+    
+    fun getGsrDeviceCount(): Int {
+        return gsrSensorAddresses.size
+    }
+    
+    fun getPairedDeviceCount(): Int {
+        return deviceInfoMap.values.count { it.isPaired }
+    }
+    
+    fun isScanning(): Boolean {
+        return easyBLE?.isScanning() ?: false
+    }
+
     fun release() {
         launch {
             Log.i(TAG, "Releasing BLE Device Manager")

@@ -49,6 +49,7 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CAMERA" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MICROPHONE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PROJECTION" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CONNECTED_DEVICE" />
 
 
     <!-- Notification permission for API >= 33 -->
@@ -299,6 +300,11 @@
             android:exported="false"
             android:label="Shimmer Configuration" />
 
+        <activity
+            android:name="mpdc4gsr.sensors.gsr.BackgroundScanningDemoActivity"
+            android:exported="false"
+            android:label="Background Scanning Demo" />
+
         <!-- Test and Demo Activities -->
         <activity
             android:name="mpdc4gsr.sensors.gsr.GSRBenchTestActivity"
@@ -382,6 +388,12 @@
             android:enabled="true"
             android:exported="false"
             android:foregroundServiceType="camera|microphone|mediaProjection" />
+
+        <service
+            android:name="mpdc4gsr.core.BackgroundDeviceScanningService"
+            android:enabled="true"
+            android:exported="false"
+            android:foregroundServiceType="connectedDevice" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
