@@ -23,13 +23,11 @@
         tools:targetApi="31" />
 
 
-    <!-- Location permissions needed for Bluetooth scanning on older APIs -->
+    <!-- Location permissions needed for Bluetooth scanning on older APIs and address detection -->
     <uses-permission 
-        android:name="android.permission.ACCESS_COARSE_LOCATION"
-        android:maxSdkVersion="30" />
+        android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission 
-        android:name="android.permission.ACCESS_FINE_LOCATION" 
-        android:maxSdkVersion="30" />
+        android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <!-- Storage permissions for legacy external storage -->
     <uses-permission 
