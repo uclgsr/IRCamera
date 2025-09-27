@@ -659,15 +659,14 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
 
     private fun requestAllPermissions() {
         Log.d(TAG, "requestAllPermissions() called")
+        
         permissionController.ensureAll { allGranted, deniedPermissions ->
             Log.d(TAG, "Permission callback: allGranted=$allGranted, deniedPermissions=${deniedPermissions.joinToString(",")}")
             if (allGranted) {
                 Log.i(TAG, "All permissions granted - full functionality enabled")
-
                 onAllPermissionsGranted()
             } else {
                 Log.w(TAG, "Some permissions denied: ${deniedPermissions.joinToString(", ")}")
-
                 onPartialPermissions(deniedPermissions)
             }
         }
@@ -881,16 +880,15 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         super.onResume()
         LMS.getInstance().language = ConstantLanguages.ENGLISH
 
-        // Ensure permissions are requested even if they were missed during initialization
+        // Simple permission check for MVP - only if we have minimum functionality
         if (SharedManager.getHasShowClause() && ::permissionController.isInitialized) {
-            Log.d(TAG, "onResume() - checking if permissions need to be requested again")
-            val missingPermissions = permissionController.getMissingPermissions()
-            if (missingPermissions.isNotEmpty()) {
-                Log.w(TAG, "onResume() - Found missing permissions, requesting them: ${missingPermissions.joinToString(", ")}")
-                // Use a small delay to ensure the activity is fully resumed
+            if (!permissionController.hasMinimumPermissions()) {
+                Log.d(TAG, "onResume() - Missing critical permissions, will request after delay")
                 binding.root.postDelayed({
-                    requestAllPermissions()
-                }, 500)
+                    if (!permissionController.hasMinimumPermissions()) {
+                        requestAllPermissions()
+                    }
+                }, 1000) // 1 second delay
             }
         }
     }
@@ -988,18 +986,15 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
 
     override fun connected() {
         if (SharedManager.isConnectAutoOpen) {
-
             if (permissionController.canStartRecording()) {
-                Log.i(
-                    TAG,
-                    "Camera permissions available - device connected and ready for recording"
-                )
-
+                Log.i(TAG, "Camera permissions available - device connected and ready for recording")
             } else {
-                Log.w(TAG, "Camera permissions missing - requesting permissions")
-                permissionController.ensureAll { granted, _ ->
-                    if (granted && permissionController.canStartRecording()) {
-                        Log.i(TAG, "Camera permissions granted after device connection")
+                Log.w(TAG, "Camera permissions missing")
+                if (!permissionController.shouldSkipPermissionRequest()) {
+                    permissionController.ensureAll { granted, _ ->
+                        if (granted && permissionController.canStartRecording()) {
+                            Log.i(TAG, "Camera permissions granted after device connection")
+                        }
                     }
                 }
             }
@@ -1103,9 +1098,12 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                 "Camera permission required for thermal imaging",
                 Toast.LENGTH_SHORT
             ).show()
-            permissionController.ensureAll { granted, _ ->
-                if (granted && permissionController.canStartRecording()) {
-                    jumpIRActivity()
+            
+            if (!permissionController.shouldSkipPermissionRequest()) {
+                permissionController.ensureAll { granted, _ ->
+                    if (granted && permissionController.canStartRecording()) {
+                        jumpIRActivity()
+                    }
                 }
             }
         }

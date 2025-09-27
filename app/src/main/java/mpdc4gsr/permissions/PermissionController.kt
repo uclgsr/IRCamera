@@ -24,6 +24,9 @@ class PermissionController(
         private const val REQUEST_PERMISSIONS = 100
         private const val REQUEST_USB_PERMISSION = 101
         private const val REQUEST_BATTERY_OPTIMIZATION = 102
+        
+        // Simple permission request cooldown for MVP
+        private const val PERMISSION_REQUEST_COOLDOWN_MS = 10000L // 10 seconds between requests
 
         private val CAMERA_PERMISSIONS = arrayOf(
             Manifest.permission.CAMERA,
@@ -85,9 +88,11 @@ class PermissionController(
     private var permissionCallback: ((Boolean, List<String>) -> Unit)? = null
     private var usbPermissionCallback: ((Boolean, UsbDevice?) -> Unit)? = null
 
+    // Simple permission request state for MVP
+    private var lastPermissionRequestTime: Long = 0
+
     // Dialog management to prevent window leaks
     private var currentDialog: AlertDialog? = null
-
     private var remainingPermissionGroups: MutableList<List<String>> = mutableListOf()
     private var allRequestedPermissions: List<String> = emptyList()
 
@@ -173,7 +178,6 @@ class PermissionController(
         permissionCallback = callback
 
         val missingPermissions = getMissingPermissions()
-        Log.d(TAG, "Missing permissions check complete: ${missingPermissions.size} missing")
         Log.d(TAG, "Missing permissions: ${missingPermissions.joinToString(", ")}")
         
         if (missingPermissions.isEmpty()) {
@@ -182,20 +186,24 @@ class PermissionController(
             return
         }
 
-        Log.i(
-            TAG,
-            "Requesting ${missingPermissions.size} missing permissions: ${
-                missingPermissions.joinToString(", ")
-            }"
-        )
+        // Simple cooldown check - only request if enough time has passed
+        val currentTime = System.currentTimeMillis()
+        val timeSinceLastRequest = currentTime - lastPermissionRequestTime
+        
+        if (timeSinceLastRequest < PERMISSION_REQUEST_COOLDOWN_MS) {
+            Log.w(TAG, "Permission request on cooldown - ${timeSinceLastRequest}ms since last request")
+            callback(false, missingPermissions)
+            return
+        }
 
-        Log.d(TAG, "About to show permission rationale dialog")
+        // Update timestamp and request permissions
+        lastPermissionRequestTime = currentTime
+
+        Log.d(TAG, "Requesting permissions")
         showPermissionRationaleDialog(missingPermissions) { userAccepted ->
-            Log.d(TAG, "Permission rationale dialog result: userAccepted=$userAccepted")
             if (userAccepted) {
                 requestPermissionsSequentially(missingPermissions)
             } else {
-                Log.w(TAG, "User declined permission rationale")
                 callback(false, missingPermissions)
             }
         }
@@ -976,6 +984,29 @@ class PermissionController(
         } catch (e: Exception) {
             Log.e(TAG, "Failed to open app settings", e)
         }
+    }
+
+    /**
+     * Reset permission request cooldown (simplified for MVP)
+     */
+    fun resetPermissionState() {
+        Log.i(TAG, "Resetting permission cooldown")
+        lastPermissionRequestTime = 0
+    }
+
+    /**
+     * Check if basic permissions are available for core functionality
+     */
+    fun hasMinimumPermissions(): Boolean {
+        return hasBasicPermissions() && hasStoragePermissions()
+    }
+
+    /**
+     * Simple cooldown check - are we still in cooldown period?
+     */
+    fun shouldSkipPermissionRequest(): Boolean {
+        val timeSinceLastRequest = System.currentTimeMillis() - lastPermissionRequestTime
+        return timeSinceLastRequest < PERMISSION_REQUEST_COOLDOWN_MS
     }
 
     fun isLocationPermissionPermanentlyDenied(): Boolean {
