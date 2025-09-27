@@ -1397,6 +1397,11 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
     // Additional method for compatibility
     public void updateMagnifier() {
         // Trigger a redraw to update magnifier display
-        post(runnable);
+        post(new Runnable() {
+            @Override
+            public void run() {
+                invalidate();
+            }
+        });
     }
 }
