@@ -84,6 +84,7 @@ dependencies {
     // Core Android libraries
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
+    implementation(libs.bundles.camerax)
     implementation(libs.localbroadcastmanager)
     implementation(libs.material)
     implementation(libs.utilcode)
