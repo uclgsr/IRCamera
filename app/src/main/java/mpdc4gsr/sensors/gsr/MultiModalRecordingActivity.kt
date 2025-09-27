@@ -451,8 +451,15 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
 
     private fun checkAndRequestPermissions() {
         if (!permissionController.hasAllRequiredPermissions()) {
-            Log.i(TAG, "Not all permissions granted, requesting permissions...")
+            Log.i(TAG, "Not all permissions granted, checking if we should request...")
 
+            // Use the built-in throttling mechanism in PermissionController
+            if (permissionController.shouldSkipPermissionRequest()) {
+                Log.w(TAG, "Skipping permission request due to recent denials or throttling")
+                binding.statusText.text = "Permissions required - please check app settings"
+                updateUIForPartialPermissions(permissionController.getMissingPermissions())
+                return
+            }
 
             permissionController.ensureAll { allGranted, deniedPermissions ->
                 if (allGranted) {
@@ -543,7 +550,17 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
 
         if (!permissionController.canStartRecording()) {
             Log.w(TAG, "Cannot start recording - missing camera or storage permissions")
-            checkAndRequestPermissions()
+            
+            // Only request permissions if throttling allows it
+            if (!permissionController.shouldSkipPermissionRequest()) {
+                checkAndRequestPermissions()
+            } else {
+                Toast.makeText(
+                    this,
+                    "Recording permissions required. Please check app settings.",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
             return
         }
 

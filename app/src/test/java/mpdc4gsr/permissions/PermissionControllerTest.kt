@@ -342,6 +342,79 @@ class PermissionControllerTest {
         assertTrue(permissionController.isLocationPermissionPermanentlyDenied())
     }
 
+    @Test
+    fun `test permission request throttling mechanism`() {
+        // Mock permissions as missing
+        mockkStatic(ContextCompat::class)
+        every { 
+            ContextCompat.checkSelfPermission(mockActivity, any())
+        } returns PackageManager.PERMISSION_DENIED
+
+        var callbackCount = 0
+        val callback = { granted: Boolean, denied: List<String> ->
+            callbackCount++
+        }
+
+        // Simulate user declining permission rationale multiple times
+        every { mockActivity.shouldShowRequestPermissionRationale(any()) } returns true
+        
+        // First few requests should go through until limit is reached
+        permissionController.ensureAll(callback)
+        Thread.sleep(100) // Small delay to avoid race conditions
+        permissionController.ensureAll(callback)
+        Thread.sleep(100)
+        permissionController.ensureAll(callback)
+        Thread.sleep(100)
+        
+        // After maximum attempts, should start throttling
+        permissionController.ensureAll(callback)
+        
+        // Verify throttling is active
+        assertTrue(permissionController.shouldSkipPermissionRequest())
+    }
+
+    @Test
+    fun `test hasMinimumPermissions for basic functionality`() {
+        // Mock basic permissions as granted
+        mockkStatic(ContextCompat::class)
+        every { 
+            ContextCompat.checkSelfPermission(mockActivity, Manifest.permission.CAMERA)
+        } returns PackageManager.PERMISSION_GRANTED
+        every { 
+            ContextCompat.checkSelfPermission(mockActivity, Manifest.permission.RECORD_AUDIO)
+        } returns PackageManager.PERMISSION_GRANTED
+        every { 
+            ContextCompat.checkSelfPermission(mockActivity, any())
+        } returns PackageManager.PERMISSION_GRANTED
+
+        assertTrue(permissionController.hasMinimumPermissions())
+    }
+
+    @Test
+    fun `test resetPermissionState clears throttling`() {
+        // Mock permissions as missing to trigger throttling
+        mockkStatic(ContextCompat::class)
+        every { 
+            ContextCompat.checkSelfPermission(mockActivity, any())
+        } returns PackageManager.PERMISSION_DENIED
+
+        // Trigger throttling by making multiple requests
+        val callback = { granted: Boolean, denied: List<String> -> }
+        repeat(4) {
+            permissionController.ensureAll(callback)
+            Thread.sleep(50)
+        }
+
+        // Verify throttling is active
+        assertTrue(permissionController.shouldSkipPermissionRequest())
+
+        // Reset state
+        permissionController.resetPermissionState()
+
+        // Verify throttling is cleared
+        assertFalse(permissionController.shouldSkipPermissionRequest())
+    }
+
     private fun mockBluetoothPermissions(granted: Boolean) {
         val result = if (granted) PackageManager.PERMISSION_GRANTED else PackageManager.PERMISSION_DENIED
         
