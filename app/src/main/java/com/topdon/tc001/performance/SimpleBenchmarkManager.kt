@@ -111,7 +111,7 @@ class SimpleBenchmarkManager {
      * Stop and evaluate RGB benchmark
      */
     fun stopRGBBenchmark(): BenchmarkResult {
-        val endTime = System.currentTimeMillis()
+        val endTime = SystemClock.elapsedRealtime()
         val durationMs = endTime - rgbSessionStart
         val frameCount = rgbFrames.size
         
