@@ -200,12 +200,25 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        initializePhase0Baseline()
+        try {
+            initializePhase0Baseline()
 
-        initView()
-        initData()
+            initView()
+            initData()
 
-        initNetworking()
+            initNetworking()
+        } catch (e: Exception) {
+            Log.e(TAG, "Critical error in MainActivity onCreate", e)
+            // If MainActivity fails to initialize, at least allow basic functionality
+            try {
+                setContentView(R.layout.activity_main)
+                // Basic fallback initialization
+                binding = ActivityMainBinding.inflate(layoutInflater)
+                setContentView(binding.root)
+            } catch (bindingException: Exception) {
+                Log.e(TAG, "Even basic binding failed", bindingException)
+            }
+        }
     }
 
     private fun initializeEnhancedUIComponents() {
@@ -400,30 +413,36 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
     }
 
     private fun initView() {
-        // Initialize permission controller
-        permissionController = PermissionController(this)
-        permissionController.initialize()
+        try {
+            // Initialize permission controller
+            permissionController = PermissionController(this)
+            permissionController.initialize()
 
-        // Initialize network settings
-        networkSettings = mpdc4gsr.network.NetworkSettings(this)
+            // Initialize network settings
+            networkSettings = mpdc4gsr.network.NetworkSettings(this)
 
-        // Initialize enhanced UI components
-        initializeEnhancedUIComponents()
+            // Initialize enhanced UI components
+            initializeEnhancedUIComponents()
 
-        if (!SharedManager.getHasShowClause()) {
-            NavigationManager.build(RouterConfig.CLAUSE).navigation(this)
-            finish()
-            return
-        }
+            if (!SharedManager.getHasShowClause()) {
+                Log.i(TAG, "Clause not shown yet, navigating to ClauseActivity")
+                NavigationManager.build(RouterConfig.CLAUSE).navigation(this)
+                finish()
+                return
+            }
 
-        logInfo()
+            Log.i(TAG, "MainActivity initialization proceeding normally")
+            logInfo()
 
-        networkStatusIndicator = binding.networkStatusIndicator
-        networkStatusText = binding.networkStatusText
+            networkStatusIndicator = binding.networkStatusIndicator
+            networkStatusText = binding.networkStatusText
 
-        lifecycleScope.launch(Dispatchers.IO) {
+            lifecycleScope.launch(Dispatchers.IO) {
 
-
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Error during MainActivity initView", e)
+            // Continue initialization even if some components fail
         }
         binding.viewPage.offscreenPageLimit = 3
         binding.viewPage.isUserInputEnabled = false
