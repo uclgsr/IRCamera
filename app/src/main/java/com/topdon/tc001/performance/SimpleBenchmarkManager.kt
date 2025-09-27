@@ -57,7 +57,7 @@ class SimpleBenchmarkManager {
      */
     fun recordGSRSample() {
         if (gsrSessionStart > 0) {
-            gsrSamples.add(System.currentTimeMillis())
+            gsrSamples.add(SystemClock.elapsedRealtime())
         }
     }
     
