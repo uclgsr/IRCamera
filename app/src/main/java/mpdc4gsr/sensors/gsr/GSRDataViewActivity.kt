@@ -68,44 +68,55 @@ class GSRDataViewActivity : BaseViewModelActivity<GSRDataViewViewModel>() {
             showDataRowDetails(dataRow)
         }
         
-        // Try to find recyclerView - if not found, use a safe fallback
-        try {
-            findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.recyclerView)?.let { recyclerView ->
+        // Try to find recyclerView - use safe resource lookup
+        val recyclerViewId = getResourceId("recyclerView")
+        if (recyclerViewId != 0) {
+            findViewById<androidx.recyclerview.widget.RecyclerView>(recyclerViewId)?.let { recyclerView ->
                 recyclerView.layoutManager = LinearLayoutManager(this@GSRDataViewActivity)
                 recyclerView.adapter = this@GSRDataViewActivity.adapter
             }
-        } catch (e: Exception) {
-            // RecyclerView may not exist in layout - this is a compilation fix
         }
     }
 
     private fun setupFilterControls() {
-        // Try to find filter buttons - if not found, use a safe fallback
-        try {
-            findViewById<android.widget.Button>(R.id.applyFiltersButton)?.setOnClickListener {
+        // Try to find filter buttons - use safe resource lookup
+        val applyButtonId = getResourceId("applyFiltersButton")
+        if (applyButtonId != 0) {
+            findViewById<android.widget.Button>(applyButtonId)?.setOnClickListener {
                 applyDataFilters()
             }
-            
-            findViewById<android.widget.Button>(R.id.resetFiltersButton)?.setOnClickListener {
+        }
+        
+        val resetButtonId = getResourceId("resetFiltersButton")
+        if (resetButtonId != 0) {
+            findViewById<android.widget.Button>(resetButtonId)?.setOnClickListener {
                 resetDataFilters()
             }
-        } catch (e: Exception) {
-            // Filter buttons may not exist in layout - this is a compilation fix
         }
     }
 
     private fun setupExportControls() {
-        // Try to find export buttons - if not found, use a safe fallback
-        try {
-            findViewById<android.widget.Button>(R.id.exportButton)?.setOnClickListener {
+        // Try to find export buttons - use safe resource lookup
+        val exportButtonId = getResourceId("exportButton")
+        if (exportButtonId != 0) {
+            findViewById<android.widget.Button>(exportButtonId)?.setOnClickListener {
                 showExportDialog()
             }
-            
-            findViewById<android.widget.Button>(R.id.quickExportButton)?.setOnClickListener {
+        }
+        
+        val quickExportButtonId = getResourceId("quickExportButton")
+        if (quickExportButtonId != 0) {
+            findViewById<android.widget.Button>(quickExportButtonId)?.setOnClickListener {
                 performQuickExport()
             }
+        }
+    }
+
+    private fun getResourceId(resourceName: String): Int {
+        return try {
+            resources.getIdentifier(resourceName, "id", packageName)
         } catch (e: Exception) {
-            // Export buttons may not exist in layout - this is a compilation fix
+            0
         }
     }
 
@@ -155,11 +166,7 @@ class GSRDataViewActivity : BaseViewModelActivity<GSRDataViewViewModel>() {
 
         // Status message observer
         viewModel.statusMessage.asLiveData().observe(this) { message ->
-            try {
-                findViewById<android.widget.TextView>(R.id.statusText)?.text = message
-            } catch (e: Exception) {
-                // Status text may not exist - safe fallback
-            }
+            safeSetText("statusText", message)
         }
 
         // Error observer
@@ -491,6 +498,21 @@ class GSRDataViewActivity : BaseViewModelActivity<GSRDataViewViewModel>() {
         val minutes = (seconds % 3600) / 60
         val secs = seconds % 60
         return "%02d:%02d:%02d".format(hours, minutes, secs)
+    }
+
+    // Helper methods for safe UI access
+    private fun safeSetText(resourceName: String, text: String) {
+        val resourceId = getResourceId(resourceName)
+        if (resourceId != 0) {
+            findViewById<android.widget.TextView>(resourceId)?.text = text
+        }
+    }
+
+    private fun safeSetVisibility(resourceName: String, visible: Boolean) {
+        val resourceId = getResourceId(resourceName)
+        if (resourceId != 0) {
+            findViewById<android.view.View>(resourceId)?.isVisible = visible
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
