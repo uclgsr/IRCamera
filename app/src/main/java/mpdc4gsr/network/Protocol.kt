@@ -22,6 +22,7 @@ object Protocol {
     // Protocol configuration
     const val PROTOCOL_VERSION = "1.0"
     const val DEFAULT_PORT = 8080
+    const val DEFAULT_SERVER_PORT = 8081  // Different port for NetworkServer to avoid conflicts
     const val MAX_MESSAGE_SIZE = 10 * 1024 * 1024 // 10MB for frames
 
     // Error codes
