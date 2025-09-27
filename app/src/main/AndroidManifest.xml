@@ -137,21 +137,17 @@
         <activity
             android:name="mpdc4gsr.activities.MainActivity"
             android:exported="true"
-            android:launchMode="singleTask"
-            android:screenOrientation="userPortrait">
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
-
 
         <activity
             android:name="mpdc4gsr.activities.ShimmerMvpActivity"
             android:exported="true"
             android:label="Shimmer GSR MVP"
-            android:screenOrientation="userPortrait"
             android:theme="@style/AppTheme" />
 
 
@@ -159,80 +155,29 @@
             android:name="mpdc4gsr.activities.UnifiedSensorActivity"
             android:exported="true"
             android:label="Unified Sensor Platform"
-            android:screenOrientation="userPortrait"
             android:theme="@style/AppTheme" />
 
+        <activity android:name="mpdc4gsr.activities.ClauseActivity" />
 
-        <activity
-            android:name="mpdc4gsr.activities.Phase2ValidationActivity"
-            android:exported="false"
-            android:label="Phase 2 Hardware Validation"
-            android:screenOrientation="userPortrait"
-            android:theme="@style/AppTheme" />
-
-
-        <activity
-            android:name="mpdc4gsr.core.ComprehensiveSystemDemo"
-            android:exported="false"
-            android:label="Comprehensive System Demo"
-            android:screenOrientation="userPortrait"
-            android:theme="@style/AppTheme" />
-
-
-        <activity
-            android:name="mpdc4gsr.test.EnhancedRecordingSessionTestActivity"
-            android:exported="false"
-            android:label="Enhanced Recording Session Test"
-            android:screenOrientation="userPortrait"
-            android:theme="@style/AppTheme" />
-
-        <activity
-            android:name="mpdc4gsr.test.RgbCameraTestActivity"
-            android:exported="false"
-            android:label="RGB Camera Test"
-            android:screenOrientation="userPortrait"
-            android:theme="@style/AppTheme" />
-
-        <activity
-            android:name="mpdc4gsr.activities.ClauseActivity"
-            android:screenOrientation="userPortrait" />
-
-        <!-- Network Client Test Activity -->
         <activity
             android:name="mpdc4gsr.activities.NetworkClientTestActivity"
             android:exported="false"
             android:label="Network Client Test"
-            android:screenOrientation="userPortrait"
             android:theme="@style/AppTheme" />
 
-        <!-- Simple Network Test Activity -->
         <activity
             android:name="mpdc4gsr.activities.SimpleNetworkTestActivity"
             android:exported="false"
             android:label="Simple Network Test"
-            android:screenOrientation="userPortrait"
             android:theme="@style/AppTheme" />
 
-        <activity
-            android:name="mpdc4gsr.activities.PdfActivity"
-            android:screenOrientation="userPortrait" />
-        <activity
-            android:name="mpdc4gsr.activities.PolicyActivity"
-            android:screenOrientation="userPortrait" />
-        <activity
-            android:name="mpdc4gsr.activities.VersionActivity"
-            android:screenOrientation="userPortrait" />
-        <activity
-            android:name="mpdc4gsr.activities.DeviceTypeActivity"
-            android:screenOrientation="userPortrait" />
-        <activity
-            android:name="mpdc4gsr.activities.MoreHelpActivity"
-            android:screenOrientation="userPortrait" />
-        <activity
-            android:name="mpdc4gsr.activities.WebViewActivity"
-            android:screenOrientation="userPortrait" />
+        <activity android:name="mpdc4gsr.activities.PdfActivity" />
+        <activity android:name="mpdc4gsr.activities.PolicyActivity" />
+        <activity android:name="mpdc4gsr.activities.VersionActivity" />
+        <activity android:name="mpdc4gsr.activities.DeviceTypeActivity" />
+        <activity android:name="mpdc4gsr.activities.MoreHelpActivity" />
+        <activity android:name="mpdc4gsr.activities.WebViewActivity" />
 
-        <!-- Network Configuration Activity -->
         <activity
             android:name="mpdc4gsr.activities.NetworkConfigActivity"
             android:exported="false"
@@ -240,102 +185,59 @@
             android:screenOrientation="userPortrait"
             android:theme="@style/AppTheme" />
 
-
         <activity
             android:name="mpdc4gsr.sensors.gsr.MultiModalRecordingActivity"
-            android:exported="false"
-            android:screenOrientation="userPortrait" />
+            android:exported="false" />
         <activity
             android:name="mpdc4gsr.sensors.gsr.GSRDemoActivity"
-            android:exported="false"
-            android:screenOrientation="userPortrait" />
+            android:exported="false" />
         <activity
             android:name="mpdc4gsr.sensors.gsr.GSRQuickRecordingActivity"
             android:exported="false"
-            android:label="@string/gsr_quick_access"
-            android:screenOrientation="userPortrait" />
+            android:label="@string/gsr_quick_access" />
 
-        <!-- Enhanced Fault-Tolerant Recording -->
         <activity
             android:name="mpdc4gsr.activities.FaultTolerantRecordingActivity"
             android:exported="false"
-            android:label="@string/enhanced_recording_label"
-            android:screenOrientation="userPortrait" />
-
+            android:label="@string/enhanced_recording_label" />
 
         <activity
             android:name="mpdc4gsr.sensors.gsr.SessionManagerActivity"
             android:exported="false"
-            android:label="Session Manager"
-            android:screenOrientation="userPortrait" />
+            android:label="Session Manager" />
         <activity
             android:name="mpdc4gsr.sensors.gsr.ResearchTemplateActivity"
             android:exported="false"
-            android:label="Research Templates"
-            android:screenOrientation="userPortrait" />
+            android:label="Research Templates" />
         <activity
             android:name="mpdc4gsr.sensors.gsr.SessionDetailActivity"
             android:exported="false"
-            android:label="Session Details"
-            android:screenOrientation="userPortrait" />
+            android:label="Session Details" />
         <activity
             android:name="mpdc4gsr.sensors.gsr.SessionExportActivity"
             android:exported="false"
-            android:label="Export Session"
-            android:screenOrientation="userPortrait" />
-
+            android:label="Export Session" />
 
         <activity
             android:name="mpdc4gsr.sensors.HubSpokeIntegrationActivity"
             android:exported="false"
-            android:label="Hub-Spoke Recording"
-            android:screenOrientation="userPortrait" />
+            android:label="Hub-Spoke Recording" />
+
         <activity
             android:name="mpdc4gsr.network.DevicePairingActivity"
             android:exported="false"
-            android:label="Device Pairing"
-            android:screenOrientation="userPortrait" />
+            android:label="Device Pairing" />
 
-
-        <activity
-            android:name="mpdc4gsr.test.TimeSynchronizationTestActivity"
-            android:exported="false"
-            android:label="Synchronization Test"
-            android:screenOrientation="userPortrait"
-            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" />
-        <activity
-            android:name="mpdc4gsr.test.ParallelRecordingTestActivity"
-            android:exported="false"
-            android:label="Parallel Recording Test"
-            android:screenOrientation="userPortrait" />
-        <activity
-            android:name="mpdc4gsr.test.RawCaptureTestActivity"
-            android:exported="false"
-            android:label="RAW Capture Test"
-            android:screenOrientation="userPortrait" />
-        <activity
-            android:name="mpdc4gsr.test.BLEIntegrationTestActivity"
-            android:exported="false"
-            android:label="BLE Integration Test"
-            android:screenOrientation="userPortrait" />
-        <activity
-            android:name="mpdc4gsr.test.RGBCameraEnhancedTestActivity"
-            android:exported="false"
-            android:label="RGB Camera Enhanced Test"
-            android:screenOrientation="userPortrait" />
         <activity
             android:name="mpdc4gsr.permissions.PermissionRequestActivity"
             android:exported="false"
-            android:label="Enhanced Permission System Test"
-            android:screenOrientation="userPortrait" />
-
+            android:label="Enhanced Permission System Test" />
 
         <service
             android:name="mpdc4gsr.core.RecordingService"
             android:enabled="true"
             android:exported="false"
             android:foregroundServiceType="camera|microphone|mediaProjection" />
-
 
         <provider
             android:name="androidx.core.content.FileProvider"

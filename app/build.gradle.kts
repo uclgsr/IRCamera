@@ -35,11 +35,28 @@ android {
         manifestPlaceholders["JPUSH_APPKEY"] = "cbd4eafc9049d751fc5a8c58"
         manifestPlaceholders["JPUSH_CHANNEL"] = "developer-default"
         manifestPlaceholders["app_name"] = "IRCamera"
+
+        // Configure native library architecture support
+        ndk {
+            abiFilters += listOf("armeabi-v7a", "arm64-v8a", "x86", "x86_64")
+        }
     }
 
     bundle {
         language {
             enableSplit = false
+        }
+        abi {
+            enableSplit = true
+        }
+    }
+
+    splits {
+        abi {
+            isEnable = true
+            reset()
+            include("armeabi-v7a", "arm64-v8a", "x86", "x86_64")
+            isUniversalApk = true
         }
     }
 
@@ -80,47 +97,7 @@ android {
     androidResources {
         ignoreAssetsPattern = "!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~"
         additionalParameters += listOf("--allow-reserved-package-id", "--auto-add-overlay")
-    }
-
-    packaging {
-        resources {
-            excludes += listOf(
-                "META-INF/DEPENDENCIES",
-                "META-INF/LICENSE",
-                "META-INF/LICENSE.txt",
-                "META-INF/NOTICE",
-                "META-INF/NOTICE.txt"
-            )
-        }
-    }
-
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-        isCoreLibraryDesugaringEnabled = true
-    }
-
-    kotlin {
-        compilerOptions {
-            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
-            apiVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_0)
-            languageVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_0)
-            freeCompilerArgs.addAll(
-                listOf(
-                    "-opt-in=kotlin.RequiresOptIn",
-                    "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
-                    "-opt-in=kotlinx.coroutines.FlowPreview",
-                    "-Xjvm-default=all",
-                    "-Xnested-type-aliases",
-                )
-            )
-        }
-    }
-
-    java {
-        toolchain {
-            languageVersion.set(JavaLanguageVersion.of(17))
-        }
+        generateLocaleConfig = false
     }
 
     packaging {
@@ -137,30 +114,29 @@ android {
                     "META-INF/LICENSE.md",
                     "META-INF/LICENSE-notice.md",
                 )
-            excludes +=
-                listOf(
-                    "META-INF/DEPENDENCIES",
-                    "META-INF/LICENSE",
-                    "META-INF/LICENSE.txt",
-                    "META-INF/license.txt",
-                    "META-INF/NOTICE",
-                    "META-INF/NOTICE.txt",
-                    "META-INF/notice.txt",
-                    "META-INF/ASL2.0",
-                    "META-INF/versions/9/OSGI-INF/MANIFEST.MF",
+            excludes += listOf(
+                "META-INF/DEPENDENCIES",
+                "META-INF/LICENSE",
+                "META-INF/LICENSE.txt",
+                "META-INF/license.txt",
+                "META-INF/NOTICE",
+                "META-INF/NOTICE.txt",
+                "META-INF/notice.txt",
+                "META-INF/ASL2.0",
+                "META-INF/versions/9/OSGI-INF/MANIFEST.MF",
 
-                    "META-INF/com.android.art/baseline.prof",
-                    "META-INF/com.android.art/baseline.profm",
+                "META-INF/com.android.art/baseline.prof",
+                "META-INF/com.android.art/baseline.profm",
 
-                    "**/it/gerdavax/easybluetooth/**",
+                "**/it/gerdavax/easybluetooth/**",
 
-                    "**/android/bluetooth/IBluetoothDeviceCallback*",
+                "**/android/bluetooth/IBluetoothDeviceCallback*",
 
-                    "**/com/androidplot/**",
+                "**/com/androidplot/**",
 
-                    "**/com/shimmerresearch/biophysicalprocessing/**",
-                    "**/com/shimmerresearch/utilityfunctions/**",
-                )
+                "**/com/shimmerresearch/biophysicalprocessing/**",
+                "**/com/shimmerresearch/utilityfunctions/**",
+            )
         }
         jniLibs {
             useLegacyPackaging = true
@@ -178,6 +154,8 @@ android {
                     "lib/arm64-v8a/libopencv_java4.so",
                     "lib/armeabi-v7a/libomp.so",
                     "lib/arm64-v8a/libomp.so",
+                    "lib/x86/libomp.so",
+                    "lib/x86_64/libomp.so",
                     "lib/arm64-v8a/liblog.so",
                     "lib/armeabi-v7a/liblog.so",
                     "lib/arm64-v8a/libijkffmpeg.so",
@@ -231,13 +209,38 @@ android {
                     "**/libSRImage.so",
                 )
         }
-        jniLibs {
-            pickFirsts += listOf(
-                "**/libc++_shared.so",
-                "**/libomp.so"
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+        isCoreLibraryDesugaringEnabled = true
+    }
+
+    kotlin {
+        compilerOptions {
+            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
+            apiVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_0)
+            languageVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_0)
+            freeCompilerArgs.addAll(
+                listOf(
+                    "-opt-in=kotlin.RequiresOptIn",
+                    "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
+                    "-opt-in=kotlinx.coroutines.FlowPreview",
+                    "-Xjvm-default=all",
+                    "-Xnested-type-aliases",
+                )
             )
         }
     }
+
+    java {
+        toolchain {
+            languageVersion.set(JavaLanguageVersion.of(17))
+        }
+    }
+
+
 
     buildFeatures {
         buildConfig = true
@@ -246,8 +249,8 @@ android {
     }
 
     dependenciesInfo {
-        includeInApk = true
-        includeInBundle = true
+        includeInApk = false
+        includeInBundle = false
     }
     buildToolsVersion = "35.0.0"
 
