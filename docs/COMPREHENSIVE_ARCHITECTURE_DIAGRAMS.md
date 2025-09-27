@@ -5,7 +5,7 @@ This document provides precise Mermaid diagrams for each feature, module, and ar
 ## Table of Contents
 
 1. [System Overview](#system-overview)
-2. [Hub-and-Spoke Architecture](#hub-and-spoke-architecture) 
+2. [Hub-and-Spoke Architecture](#hub-and-spoke-architecture)
 3. [Android Module Architecture](#android-module-architecture)
 4. [PC Controller Architecture](#pc-controller-architecture)
 5. [Android Class Structure](#android-class-structure)
