@@ -1,16 +1,15 @@
 package com.mpdc4gsr.module.user.viewmodel
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.mpdc4gsr.libunified.app.config.ExtraKeyConfig
 import com.mpdc4gsr.libunified.app.config.RouterConfig
+import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 import com.mpdc4gsr.libunified.app.viewmodel.FirmwareViewModel
 import kotlinx.coroutines.launch
 
-class MoreActivityViewModel(application: Application) : AndroidViewModel(application) {
+class MoreActivityViewModel : BaseViewModel() {
 
     private val _navigationEvent = MutableLiveData<NavigationEvent>()
     val navigationEvent: LiveData<NavigationEvent> = _navigationEvent
