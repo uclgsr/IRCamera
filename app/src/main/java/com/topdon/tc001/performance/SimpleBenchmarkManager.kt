@@ -47,7 +47,7 @@ class SimpleBenchmarkManager {
      */
     fun startGSRBenchmark(): Boolean {
         gsrSamples.clear()
-        gsrSessionStart = System.currentTimeMillis()
+        gsrSessionStart = SystemClock.elapsedRealtime()
         Log.i(TAG, "Started GSR benchmark - target: $GSR_TARGET_RATE Hz")
         return true
     }
