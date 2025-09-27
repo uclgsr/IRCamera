@@ -102,7 +102,7 @@ class VersionComposeActivity : BaseComposeActivity() {
 
 ### Medium Priority (Complex UI)
 1. **MainActivity** (Complex with services/networking)
-2. **DeviceTypeActivity**
+2. **DeviceTypeActivity** ✓ (Example completed)
 3. **IRGalleryEditActivity**
 
 ### Low Priority (Legacy/Specialized)
@@ -172,6 +172,10 @@ override fun connected() {
 - PolicyComposeActivity as WebView integration example
 - WebViewComposeActivity as advanced WebView with error handling
 - MoreHelpComposeActivity as conditional UI and system integration example
+- DeviceTypeComposeActivity as complex list UI with device selection
+- ClauseComposeActivity as user agreement and app initialization
+- PdfComposeActivity as file handling and placeholder content
+- NetworkConfigComposeActivity as permissions and Bluetooth integration
 
 ### Next Steps
 1. Migrate simple activities (MoreHelp, WebView)
