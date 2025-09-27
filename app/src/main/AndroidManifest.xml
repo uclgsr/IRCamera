@@ -221,9 +221,7 @@
         <activity
             android:name="mpdc4gsr.sensors.gsr.MultiModalRecordingActivity"
             android:exported="false" />
-        <activity
-            android:name="mpdc4gsr.sensors.gsr.GSRDemoActivity"
-            android:exported="false" />
+
         <activity
             android:name="mpdc4gsr.sensors.gsr.GSRQuickRecordingActivity"
             android:exported="false"
@@ -300,12 +298,9 @@
             android:exported="false"
             android:label="Shimmer Configuration" />
 
-        <activity
-            android:name="mpdc4gsr.sensors.gsr.BackgroundScanningDemoActivity"
-            android:exported="false"
-            android:label="Background Scanning Demo" />
 
-        <!-- Test and Demo Activities -->
+
+        <!-- Test Activities -->
         <activity
             android:name="mpdc4gsr.sensors.gsr.GSRBenchTestActivity"
             android:exported="false"
@@ -332,10 +327,7 @@
             android:name="mpdc4gsr.camera.integration.DualModeCameraActivity"
             android:exported="false"
             android:label="Dual Mode Camera" />
-        <activity
-            android:name="mpdc4gsr.camera.DemoActivity"
-            android:exported="false"
-            android:label="Camera Demo" />
+
         <activity
             android:name="mpdc4gsr.sensors.gsr.RawCaptureTestActivity"
             android:exported="false"
@@ -350,10 +342,7 @@
             android:name="mpdc4gsr.sensors.gsr.CompleteSessionTrialActivity"
             android:exported="false"
             android:label="Complete Session Trial" />
-        <activity
-            android:name="mpdc4gsr.sensors.gsr.FaultTolerantSessionDemoActivity"
-            android:exported="false"
-            android:label="Fault Tolerant Session Demo" />
+
         <activity
             android:name="mpdc4gsr.sensors.gsr.CrossModalSyncTestActivity"
             android:exported="false"
@@ -372,10 +361,7 @@
             android:name="mpdc4gsr.sensors.gsr.BLEIntegrationTestActivity"
             android:exported="false"
             android:label="BLE Integration Test" />
-        <activity
-            android:name="mpdc4gsr.permissions.PermissionDemoActivity"
-            android:exported="false"
-            android:label="Permission Demo" />
+
 
         <!-- Simplified Main Activity -->
         <activity

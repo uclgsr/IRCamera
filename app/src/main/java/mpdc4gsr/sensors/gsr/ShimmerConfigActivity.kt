@@ -226,9 +226,8 @@ class ShimmerConfigActivity : BaseViewModelActivity<ShimmerConfigViewModel>() {
         onBackPressed()
         return true
     }
-
+    
     override fun onDestroy() {
         super.onDestroy()
-        // ViewModel handles cleanup automatically
     }
 }

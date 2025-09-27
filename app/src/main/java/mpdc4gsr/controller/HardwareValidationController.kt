@@ -120,7 +120,7 @@ class HardwareValidationController(
         val startTime = System.currentTimeMillis()
 
         try {
-            if (!permissionController.hasCameraPermission()) {
+            if (!permissionController.hasCameraPermissions()) {
                 validationResults["rgb_camera"] = HardwareValidationResult(
                     "rgb_camera", false, emptyList(), listOf("Camera permission not granted")
                 )
