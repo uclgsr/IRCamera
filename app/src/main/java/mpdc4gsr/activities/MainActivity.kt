@@ -649,27 +649,12 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         // Initialize MainActivityViewModel components
         mainViewModel.initializeComponents()
 
-        // Use the new formal permission request method
-        requestAllPermissionsAtStartup()
+        requestAllPermissions()
 
         Log.i(
             "MainActivity",
             "✅ PC-to-Phone communication integration available - RecordingService supports network control"
         )
-    }
-
-    private fun requestAllPermissionsAtStartup() {
-        Log.d(TAG, "requestAllPermissionsAtStartup() called - formal comprehensive permission request")
-        permissionController.requestAllPermissionsAtStartup { allGranted, deniedPermissions ->
-            Log.d(TAG, "Startup permission callback: allGranted=$allGranted, denied=${deniedPermissions.joinToString(",")}")
-            if (allGranted) {
-                Log.i(TAG, "All permissions granted during startup - full functionality enabled")
-                onAllPermissionsGranted()
-            } else {
-                Log.w(TAG, "Some permissions denied during startup: ${deniedPermissions.joinToString(", ")}")
-                onPartialPermissions(deniedPermissions)
-            }
-        }
     }
 
     private fun requestAllPermissions() {

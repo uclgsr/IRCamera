@@ -85,9 +85,8 @@ class PermissionController(
     private var permissionCallback: ((Boolean, List<String>) -> Unit)? = null
     private var usbPermissionCallback: ((Boolean, UsbDevice?) -> Unit)? = null
 
-    // Dialog state management to prevent conflicts
+    // Simple dialog state management to prevent conflicts (MVP)
     private var isShowingDialog = AtomicBoolean(false)
-    private var pendingPermissionRequest: (() -> Unit)? = null
 
     private var remainingPermissionGroups: MutableList<List<String>> = mutableListOf()
     private var allRequestedPermissions: List<String> = emptyList()
@@ -98,154 +97,6 @@ class PermissionController(
         if (isInitialized.compareAndSet(false, true)) {
             usbManager = activity.getSystemService(Context.USB_SERVICE) as UsbManager
             Log.i(TAG, "PermissionController initialized")
-        }
-    }
-
-    /**
-     * Requests ALL required permissions formally at app startup.
-     * This ensures a comprehensive permission request flow, addressing the issue of
-     * "no formal request for all the permissions"
-     */
-    fun requestAllPermissionsAtStartup(callback: (Boolean, List<String>) -> Unit) {
-        Log.d(TAG, "requestAllPermissionsAtStartup() called - formal comprehensive permission request")
-        
-        // Prevent multiple simultaneous permission dialogs
-        if (isShowingDialog.get()) {
-            Log.w(TAG, "Dialog already showing, queuing permission request")
-            pendingPermissionRequest = { requestAllPermissionsAtStartup(callback) }
-            return
-        }
-        
-        val allRequiredPermissions = getAllRequiredPermissions()
-        Log.i(TAG, "Formal permission request for ${allRequiredPermissions.size} permissions: ${allRequiredPermissions.joinToString(", ")}")
-        
-        val missingPermissions = allRequiredPermissions.filter { !isPermissionGranted(it) }
-        
-        if (missingPermissions.isEmpty()) {
-            Log.i(TAG, "All required permissions already granted")
-            callback(true, emptyList())
-            return
-        }
-        
-        Log.i(TAG, "Missing ${missingPermissions.size} permissions, showing comprehensive request dialog")
-        showComprehensivePermissionDialog(missingPermissions, callback)
-    }
-
-    /**
-     * Get all permissions that should be requested at startup for full app functionality
-     */
-    private fun getAllRequiredPermissions(): List<String> {
-        val allPermissions = mutableListOf<String>()
-        
-        // Camera permissions
-        allPermissions.addAll(CAMERA_PERMISSIONS)
-        
-        // Storage permissions (API version dependent)
-        val storagePermissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            STORAGE_PERMISSIONS_ANDROID_13
-        } else {
-            STORAGE_PERMISSIONS_LEGACY
-        }
-        allPermissions.addAll(storagePermissions)
-        
-        // Bluetooth permissions (API version dependent)
-        val bluetoothPermissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            BLUETOOTH_PERMISSIONS_ANDROID_12
-        } else {
-            BLUETOOTH_PERMISSIONS_LEGACY
-        }
-        allPermissions.addAll(bluetoothPermissions)
-        
-        // Notification permissions
-        allPermissions.addAll(NOTIFICATION_PERMISSIONS)
-        
-        return allPermissions.distinct()
-    }
-
-    /**
-     * Shows a comprehensive dialog explaining all permissions at once
-     */
-    private fun showComprehensivePermissionDialog(
-        missingPermissions: List<String>,
-        callback: (Boolean, List<String>) -> Unit
-    ) {
-        if (!isShowingDialog.compareAndSet(false, true)) {
-            Log.w(TAG, "Dialog already showing, cannot show comprehensive dialog")
-            return
-        }
-        
-        permissionCallback = callback
-        
-        val permissionNames = getPermissionNames(missingPermissions)
-        Log.d(TAG, "Showing comprehensive permission dialog for: ${permissionNames.joinToString(", ")}")
-        
-        val message = buildString {
-            appendLine("Welcome to IRCamera Multi-Sensor Recording!")
-            appendLine()
-            appendLine("This app provides advanced multi-modal recording capabilities with:")
-            appendLine("• High-quality RGB video recording")
-            appendLine("• Shimmer GSR physiological sensor integration")
-            appendLine("• Thermal camera support (Topdon TC001)")
-            appendLine("• Synchronized multi-sensor data capture")
-            appendLine()
-            appendLine("To ensure full functionality, the following permissions are required:")
-            appendLine()
-            permissionNames.forEach { name ->
-                appendLine("✓ $name")
-            }
-            appendLine()
-            appendLine("All permissions are essential for proper operation:")
-            appendLine("• Recording high-quality RGB video with audio")
-            appendLine("• Connecting to Bluetooth GSR sensors")
-            appendLine("• Interfacing with USB thermal cameras")
-            appendLine("• Saving and managing recording data")
-            appendLine("• Providing recording status notifications")
-            appendLine("• Running continuous background recording")
-            appendLine()
-            appendLine("Would you like to grant these permissions now?")
-        }
-        
-        try {
-            val dialog = AlertDialog.Builder(activity)
-                .setTitle("IRCamera Permissions Setup")
-                .setMessage(message)
-                .setPositiveButton("Grant All Permissions") { _, _ ->
-                    Log.d(TAG, "User accepted comprehensive permission request")
-                    isShowingDialog.set(false)
-                    requestPermissionsSequentially(missingPermissions)
-                }
-                .setNegativeButton("Skip for Now") { _, _ ->
-                    Log.d(TAG, "User skipped comprehensive permission request")
-                    isShowingDialog.set(false)
-                    callback(false, missingPermissions)
-                    processPendingRequest()
-                }
-                .setCancelable(false)
-                .setOnDismissListener {
-                    isShowingDialog.set(false)
-                    processPendingRequest()
-                }
-                .create()
-                
-            Log.d(TAG, "Showing comprehensive permission dialog")
-            dialog.show()
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to show comprehensive permission dialog", e)
-            isShowingDialog.set(false)
-            callback(false, missingPermissions)
-            processPendingRequest()
-        }
-    }
-
-    private fun processPendingRequest() {
-        pendingPermissionRequest?.let { request ->
-            pendingPermissionRequest = null
-            activity.runOnUiThread {
-                // Small delay to prevent immediate dialog conflicts
-                android.os.Handler(android.os.Looper.getMainLooper()).postDelayed({
-                    request()
-                }, 300)
-            }
         }
     }
 
@@ -312,10 +163,10 @@ class PermissionController(
     fun ensureAll(callback: (Boolean, List<String>) -> Unit) {
         Log.d(TAG, "ensureAll() called - checking permissions")
         
-        // Prevent multiple simultaneous permission dialogs
+        // Simple dialog conflict prevention (MVP)
         if (isShowingDialog.get()) {
-            Log.w(TAG, "Dialog already showing, queuing ensureAll request")
-            pendingPermissionRequest = { ensureAll(callback) }
+            Log.w(TAG, "Dialog already showing, cannot show another dialog")
+            callback(false, getMissingPermissions())
             return
         }
         
@@ -466,7 +317,7 @@ class PermissionController(
     }
 
     private fun showUsbPermissionRationaleDialog(device: UsbDevice, callback: (Boolean) -> Unit) {
-        // Prevent dialog conflicts
+        // Simple dialog conflict prevention (MVP)
         if (!isShowingDialog.compareAndSet(false, true)) {
             Log.w(TAG, "Dialog already showing, cannot show USB rationale dialog")
             callback(false)
@@ -477,42 +328,31 @@ class PermissionController(
             appendLine("USB Device Permission Required")
             appendLine()
             appendLine("Device: ${device.productName ?: "Unknown Device"}")
-            appendLine("Vendor ID: 0x${device.vendorId.toString(16).uppercase()}")
-            appendLine("Product ID: 0x${device.productId.toString(16).uppercase()}")
             appendLine()
-            appendLine("This permission is required to:")
-            appendLine("• Connect to the thermal camera")
-            appendLine("• Capture thermal imaging data")
-            appendLine("• Perform real-time thermal analysis")
-            appendLine()
-            appendLine("The permission is granted on a per-device basis and is safe.")
+            appendLine("This permission is required to connect to the thermal camera.")
         }
 
         try {
             AlertDialog.Builder(activity)
                 .setTitle("Thermal Camera Access")
                 .setMessage(message)
-                .setPositiveButton("Allow Access") { _, _ ->
+                .setPositiveButton("Allow") { _, _ ->
                     isShowingDialog.set(false)
                     callback(true)
-                    processPendingRequest()
                 }
                 .setNegativeButton("Deny") { _, _ ->
                     isShowingDialog.set(false)
                     callback(false)
-                    processPendingRequest()
                 }
                 .setCancelable(false)
                 .setOnDismissListener {
                     isShowingDialog.set(false)
-                    processPendingRequest()
                 }
                 .show()
         } catch (e: Exception) {
             Log.e(TAG, "Failed to show USB permission dialog", e)
             isShowingDialog.set(false)
             callback(false)
-            processPendingRequest()
         }
     }
 
@@ -919,7 +759,7 @@ class PermissionController(
     ) {
         Log.d(TAG, "showPermissionRationaleDialog() called with ${missingPermissions.size} permissions")
         
-        // Prevent dialog conflicts
+        // Simple dialog conflict prevention (MVP)
         if (!isShowingDialog.compareAndSet(false, true)) {
             Log.w(TAG, "Dialog already showing, cannot show rationale dialog")
             callback(false)
@@ -930,20 +770,16 @@ class PermissionController(
         Log.d(TAG, "Permission names: ${permissionNames.joinToString(", ")}")
 
         val message = buildString {
-            appendLine("This app requires the following permissions for multi-sensor recording:")
+            appendLine("This app requires the following permissions:")
             appendLine()
             permissionNames.forEach { name ->
                 appendLine("• $name")
             }
             appendLine()
-            appendLine("These permissions are essential for:")
-            appendLine("• Recording high-quality RGB video")
-            appendLine("• Connecting to Shimmer GSR sensors via Bluetooth")
-            appendLine("• Interfacing with thermal cameras via USB")
-            appendLine("• Saving and managing recording data")
-            appendLine("• Running continuous background recording")
-            appendLine()
-            appendLine("The app will not function properly without these permissions.")
+            appendLine("These permissions are needed for:")
+            appendLine("• Recording RGB video")
+            appendLine("• Connecting to GSR sensors")
+            appendLine("• Saving recording data")
         }
 
         Log.d(TAG, "Creating AlertDialog for permission rationale")
@@ -955,18 +791,15 @@ class PermissionController(
                     Log.d(TAG, "User clicked 'Grant Permissions'")
                     isShowingDialog.set(false)
                     callback(true)
-                    processPendingRequest()
                 }
                 .setNegativeButton("Cancel") { _, _ ->
                     Log.d(TAG, "User clicked 'Cancel'")
                     isShowingDialog.set(false)
                     callback(false)
-                    processPendingRequest()
                 }
                 .setCancelable(false)
                 .setOnDismissListener {
                     isShowingDialog.set(false)
-                    processPendingRequest()
                 }
                 .create()
                 
@@ -977,7 +810,6 @@ class PermissionController(
             Log.e(TAG, "Failed to show permission rationale dialog", e)
             isShowingDialog.set(false)
             callback(false)
-            processPendingRequest()
         }
     }
 
