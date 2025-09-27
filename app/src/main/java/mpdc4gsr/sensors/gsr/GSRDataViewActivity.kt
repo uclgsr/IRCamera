@@ -222,7 +222,7 @@ class GSRDataViewActivity : BaseViewModelActivity<GSRDataViewViewModel>() {
 
     private fun updateFileInfoUI(fileInfo: GSRDataViewViewModel.FileInfo?) {
         fileInfo?.let { info ->
-            findViewById<android.widget.TextView>(R.id.file_info_text)?.text = buildString {
+            binding.fileInfoText?.text = buildString {
                 appendLine("File: ${info.name}")
                 appendLine("Size: ${info.size}")
                 appendLine("Path: ${info.path}")
