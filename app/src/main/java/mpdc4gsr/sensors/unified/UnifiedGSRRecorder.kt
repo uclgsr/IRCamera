@@ -155,7 +155,7 @@ class UnifiedGSRRecorder(
             }
 
             bluetoothManager =
-                context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
+                context.getSystemService(Context.BLUETOOTH_SERVICE) as? BluetoothManager
             bluetoothAdapter = bluetoothManager?.adapter
 
             if (bluetoothAdapter == null || !bluetoothAdapter!!.isEnabled) {

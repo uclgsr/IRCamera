@@ -2,6 +2,7 @@ package mpdc4gsr.network
 
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
+import android.bluetooth.BluetoothManager
 import android.content.Context
 import android.util.Log
 import kotlinx.coroutines.CoroutineScope
@@ -97,7 +98,8 @@ class NetworkManager(
                 try {
                     val (address, _) = networkSettings.getSavedBluetoothDeviceInfo()
                     if (address != null) {
-                        val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+                        val bluetoothManager = context.getSystemService(Context.BLUETOOTH_SERVICE) as? BluetoothManager
+                        val bluetoothAdapter = bluetoothManager?.adapter
                         if (bluetoothAdapter?.isEnabled == true) {
                             try {
                                 val device = bluetoothAdapter.getRemoteDevice(address)
@@ -189,7 +191,7 @@ class NetworkManager(
                 bluetoothDevice = bluetoothDevice
             )
 
-        val bluetoothClient = BluetoothClient(bluetoothDevice)
+        val bluetoothClient = BluetoothClient(context, bluetoothDevice)
         return connectWithClient(bluetoothClient, "Bluetooth RFCOMM")
     }
 
