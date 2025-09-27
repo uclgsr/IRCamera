@@ -3,22 +3,19 @@ package mpdc4gsr.network
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
-import android.widget.Button
-import android.widget.TextView
 import android.widget.Toast
-import androidx.lifecycle.lifecycleScope
+import androidx.activity.viewModels
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.csl.irCamera.R
 import com.csl.irCamera.databinding.ActivityDevicePairingBinding
 import com.mpdc4gsr.gsr.model.SessionInfo
-import com.mpdc4gsr.libunified.app.ktbase.BaseBindingActivity
-import kotlinx.coroutines.launch
+import com.mpdc4gsr.libunified.app.ktbase.BaseViewModelActivity
 import mpdc4gsr.sensors.gsr.MultiModalRecordingActivity
 
-class DevicePairingActivity : BaseBindingActivity<ActivityDevicePairingBinding>(),
+class DevicePairingActivity : BaseViewModelActivity<DevicePairingViewModel>(),
     NetworkClient.NetworkEventListener {
+    
     companion object {
         private const val TAG = "DevicePairingActivity"
 
@@ -28,259 +25,130 @@ class DevicePairingActivity : BaseBindingActivity<ActivityDevicePairingBinding>(
         }
     }
 
-    private lateinit var networkClient: NetworkClient
+    private lateinit var binding: ActivityDevicePairingBinding
     private lateinit var controllersAdapter: ControllersAdapter
 
-    private val discoveredControllers = mutableListOf<NetworkClient.ControllerInfo>()
-    private var connectedController: NetworkClient.ControllerInfo? = null
+    override fun providerVMClass(): Class<DevicePairingViewModel> = DevicePairingViewModel::class.java
 
-    override fun initContentLayoutId() = R.layout.activity_device_pairing
+    override fun initContentView() = R.layout.activity_device_pairing
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
+    override fun initView() {
+        binding = ActivityDevicePairingBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        
         initializeViews()
-        setupNetworkClient()
         setupRecyclerView()
-        updateUI()
+        setupObservers()
+        
+        viewModel.initialize(this)
     }
 
     private fun initializeViews() {
-        binding.scanButton.setOnClickListener { startControllerScan() }
-        binding.disconnectButton.setOnClickListener { disconnectFromController() }
-    }
-
-    private fun setupNetworkClient() {
-        networkClient = NetworkClient(this)
-        networkClient.setEventListener(this)
+        binding.scanButton.setOnClickListener { 
+            viewModel.startControllerScan()
+        }
+        binding.disconnectButton.setOnClickListener { 
+            viewModel.disconnectFromController()
+        }
     }
 
     private fun setupRecyclerView() {
-        controllersAdapter =
-            ControllersAdapter(discoveredControllers) { controller ->
-                connectToController(controller)
-            }
+        controllersAdapter = ControllersAdapter(emptyList()) { controller ->
+            viewModel.connectToController(controller)
+        }
 
         binding.controllersRecyclerView.layoutManager = LinearLayoutManager(this)
         binding.controllersRecyclerView.adapter = controllersAdapter
     }
 
-    private fun startControllerScan() {
-        binding.scanButton.isEnabled = false
-        binding.progressBar.visibility = View.VISIBLE
-        binding.statusText.text = "Scanning for PC Controllers..."
+    private fun setupObservers() {
+        viewModel.discoveredControllers.observe(this) { controllers ->
+            controllersAdapter.updateControllers(controllers)
+        }
 
-        discoveredControllers.clear()
-        controllersAdapter.notifyDataSetChanged()
+        viewModel.connectedController.observe(this) { controller ->
+            updateConnectionUI(controller)
+        }
 
-        lifecycleScope.launch {
-            try {
-                val controllers = networkClient.discoverControllers()
-                runOnUiThread {
-                    discoveredControllers.addAll(controllers)
-                    controllersAdapter.notifyDataSetChanged()
+        viewModel.connectionState.observe(this) { state ->
+            updateConnectionState(state)
+        }
 
-                    binding.statusText.text =
-                        if (controllers.isNotEmpty()) {
-                            "Found ${controllers.size} PC Controller(s)"
-                        } else {
-                            "No PC Controllers found. Make sure you're on the same network."
-                        }
+        viewModel.scanState.observe(this) { state ->
+            updateScanState(state)
+        }
 
-                    binding.progressBar.visibility = View.GONE
-                    binding.scanButton.isEnabled = true
-                }
-            } catch (e: Exception) {
-                runOnUiThread {
-                    binding.statusText.text = "Scan failed: ${e.message}"
-                    binding.progressBar.visibility = View.GONE
-                    binding.scanButton.isEnabled = true
+        viewModel.statusMessage.observe(this) { message ->
+            binding.statusText.text = message
+        }
+
+        viewModel.error.observe(this) { error ->
+            error?.let {
+                Toast.makeText(this, it, Toast.LENGTH_LONG).show()
+                viewModel.clearError()
+            }
+        }
+
+        viewModel.navigationEvent.observe(this) { event ->
+            event?.let {
+                handleNavigationEvent(it)
+                viewModel.clearNavigationEvent()
+            }
+        }
+    }
+
+    private fun updateConnectionUI(controller: NetworkClient.ControllerInfo?) {
+        binding.disconnectButton.isVisible = controller != null
+        if (::binding.isInitialized && binding.root.findViewById<android.widget.TextView>(R.id.connected_device_text) != null) {
+            val connectedDeviceText = binding.root.findViewById<android.widget.TextView>(R.id.connected_device_text)
+            connectedDeviceText.isVisible = controller != null
+            connectedDeviceText.text = controller?.let { 
+                "Connected to: ${it.deviceName} (${it.ipAddress}:${it.port})" 
+            }
+        }
+    }
+
+    private fun updateConnectionState(state: DevicePairingViewModel.ConnectionState) {
+        binding.progressBar.isVisible = state == DevicePairingViewModel.ConnectionState.CONNECTING
+    }
+
+    private fun updateScanState(state: DevicePairingViewModel.ScanState) {
+        binding.scanButton.isEnabled = viewModel.canStartScan()
+        binding.progressBar.isVisible = state == DevicePairingViewModel.ScanState.SCANNING
+    }
+
+    private fun handleNavigationEvent(event: DevicePairingViewModel.NavigationEvent) {
+        when (event.action) {
+            "START_RECORDING", "RECORDING_STARTED" -> {
+                event.sessionInfo?.let { sessionInfo ->
+                    MultiModalRecordingActivity.startRecording(this, sessionInfo)
                 }
             }
         }
     }
 
-    private fun connectToController(controller: NetworkClient.ControllerInfo) {
-        binding.statusText.text = "Connecting to ${controller.deviceName}..."
-        binding.progressBar.visibility = View.VISIBLE
-
-        lifecycleScope.launch {
-            val success = networkClient.connectToController(controller.ipAddress, controller.port)
-            runOnUiThread {
-                binding.progressBar.visibility = View.GONE
-                if (!success) {
-                    binding.statusText.text = "Failed to connect to ${controller.deviceName}"
-                }
-            }
-        }
+    // NetworkClient.NetworkEventListener implementation - delegate to ViewModel
+    override fun onControllerConnected(controller: NetworkClient.ControllerInfo) {
+        // ViewModel handles this through its own NetworkEventListener implementation
     }
 
-    private fun disconnectFromController() {
-        networkClient.disconnect()
+    override fun onControllerDisconnected() {
+        // ViewModel handles this through its own NetworkEventListener implementation
     }
 
-    private fun updateUI() {
-        val isConnected = networkClient.isConnected()
-
-        binding.scanButton.isEnabled = isConnected.not()
-        binding.disconnectButton.visibility = if (isConnected) View.VISIBLE else View.GONE
-        binding.controllersRecyclerView.visibility = if (isConnected) View.GONE else View.VISIBLE
-
-        binding.connectionStatusText.text =
-            if (isConnected) {
-                "Connected to: ${connectedController?.deviceName ?: "PC Controller"}"
-            } else {
-                "Not connected"
-            }
+    override fun onConnectionError(error: String) {
+        // ViewModel handles this through its own NetworkEventListener implementation
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        networkClient.disconnect()
+    override fun onRecordingSessionStarted(sessionInfo: SessionInfo) {
+        // ViewModel handles this through its own NetworkEventListener implementation
     }
 
-    override fun onControllerDiscovered(controller: NetworkClient.ControllerInfo) {
-        runOnUiThread {
-            if (!discoveredControllers.any { it.ipAddress == controller.ipAddress }) {
-                discoveredControllers.add(controller)
-                controllersAdapter.notifyItemInserted(discoveredControllers.size - 1)
-            }
-        }
+    override fun onRecordingSessionStopped() {
+        // ViewModel handles this through its own NetworkEventListener implementation
     }
 
-    override fun onConnected(controller: NetworkClient.ControllerInfo) {
-        runOnUiThread {
-            connectedController = controller
-            binding.statusText.text = "Connected to ${controller.deviceName}"
-            updateUI()
-
-            Toast.makeText(this, "Device paired successfully!", Toast.LENGTH_SHORT).show()
-        }
+    override fun onDataReceived(data: String) {
+        // ViewModel handles this through its own NetworkEventListener implementation
     }
-
-    override fun onDisconnected(reason: String) {
-        runOnUiThread {
-            connectedController = null
-            binding.statusText.text = "Disconnected: $reason"
-            updateUI()
-        }
-    }
-
-    override fun onRemoteMeasurementRequest(sessionInfo: SessionInfo) {
-        runOnUiThread {
-
-            androidx.appcompat.app.AlertDialog.Builder(this)
-                .setTitle("Remote Measurement Request")
-                .setMessage(
-                    "PC Controller is requesting to start measurement session:\n\n${sessionInfo.studyName ?: sessionInfo.sessionId}",
-                )
-                .setPositiveButton("Start") { _, _ ->
-                    startRemoteMeasurement(sessionInfo)
-                }
-                .setNegativeButton("Decline") { _, _ ->
-
-                    Toast.makeText(this, "Measurement request declined", Toast.LENGTH_SHORT).show()
-                }
-                .setCancelable(false)
-                .show()
-        }
-    }
-
-    override fun onSyncFlash(durationMs: Int) {
-        runOnUiThread {
-
-            val flashView = binding.flashOverlay
-            flashView.visibility = View.VISIBLE
-            flashView.alpha = 1.0f
-
-            flashView.animate()
-                .alpha(0.0f)
-                .setDuration(durationMs.toLong())
-                .withEndAction {
-                    flashView.visibility = View.GONE
-                }
-                .start()
-        }
-    }
-
-    override fun onTimeSynchronized(offsetNanoseconds: Long) {
-        runOnUiThread {
-            binding.statusText.text =
-                "Time synchronized (offset: ${offsetNanoseconds / 1_000_000}ms)"
-        }
-    }
-
-    override fun onDataStreamingStarted() {
-        runOnUiThread {
-            binding.statusText.text = "Data streaming started"
-        }
-    }
-
-    override fun onDataStreamingStopped() {
-        runOnUiThread {
-            binding.statusText.text = "Data streaming stopped"
-        }
-    }
-
-    override fun onError(
-        operation: String,
-        error: String,
-    ) {
-        runOnUiThread {
-            binding.statusText.text = "Error in $operation: $error"
-            Toast.makeText(this, "Network error: $error", Toast.LENGTH_LONG).show()
-        }
-    }
-
-    private fun startRemoteMeasurement(sessionInfo: SessionInfo) {
-
-        val intent =
-            Intent(this, MultiModalRecordingActivity::class.java).apply {
-                putExtra("session_id", sessionInfo.sessionId)
-                putExtra("session_name", sessionInfo.studyName ?: sessionInfo.sessionId)
-                putExtra("remote_session", true)
-            }
-        startActivity(intent)
-
-        Toast.makeText(this, "Starting remote measurement session", Toast.LENGTH_SHORT).show()
-    }
-}
-
-class ControllersAdapter(
-    private val controllers: List<NetworkClient.ControllerInfo>,
-    private val onControllerClick: (NetworkClient.ControllerInfo) -> Unit,
-) : RecyclerView.Adapter<ControllersAdapter.ControllerViewHolder>() {
-    class ControllerViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val nameText: TextView = view.findViewById(R.id.controller_name)
-        val ipText: TextView = view.findViewById(R.id.controller_ip)
-        val capabilitiesText: TextView = view.findViewById(R.id.controller_capabilities)
-        val connectButton: Button = view.findViewById(R.id.connect_button)
-    }
-
-    override fun onCreateViewHolder(
-        parent: android.view.ViewGroup,
-        viewType: Int,
-    ): ControllerViewHolder {
-        val view =
-            android.view.LayoutInflater.from(parent.context)
-                .inflate(R.layout.item_controller_device, parent, false)
-        return ControllerViewHolder(view)
-    }
-
-    override fun onBindViewHolder(
-        holder: ControllerViewHolder,
-        position: Int,
-    ) {
-        val controller = controllers[position]
-
-        holder.nameText.text = controller.deviceName
-        holder.ipText.text = "${controller.ipAddress}:${controller.port}"
-        holder.capabilitiesText.text = "Capabilities: ${controller.capabilities.joinToString(", ")}"
-
-        holder.connectButton.setOnClickListener {
-            onControllerClick(controller)
-        }
-    }
-
-    override fun getItemCount(): Int = controllers.size
 }
