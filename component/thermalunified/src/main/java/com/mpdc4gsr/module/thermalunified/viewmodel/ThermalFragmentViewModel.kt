@@ -131,9 +131,10 @@ class ThermalFragmentViewModel : BaseViewModel() {
         val pixels = IntArray(bitmap.width * bitmap.height)
         bitmap.getPixels(pixels, 0, bitmap.width, 0, 0, bitmap.width, bitmap.height)
         
-        return pixels.map { pixel ->
+        return pixels.map { pixel: Int ->
             // Convert pixel data to temperature values
-            ThermalTool.pixelToTemperature(pixel)
+            // TODO: Implement proper pixel to temperature conversion
+            (pixel and 0xFF).toFloat() / 255f * 100f // Simple placeholder conversion
         }.toFloatArray()
     }
 

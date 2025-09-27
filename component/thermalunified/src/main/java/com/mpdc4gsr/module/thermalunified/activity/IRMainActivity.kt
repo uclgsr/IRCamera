@@ -76,7 +76,7 @@ class IRMainActivity : AppCompatActivity(), View.OnClickListener {
             when (event) {
                 is IRMainActivityViewModel.NavigationEvent.ToMonitor -> {
                     NavigationManager.getInstance()
-                        .build(RouterConfig.MONITOR_HOME)
+                        .build(RouterConfig.THERMAL_MONITOR)
                         .withBoolean(ExtraKeyConfig.IS_TC007, event.isTC007)
                         .navigation(this)
                 }
@@ -84,6 +84,9 @@ class IRMainActivity : AppCompatActivity(), View.OnClickListener {
                     NavigationManager.getInstance()
                         .build(RouterConfig.GALLERY)
                         .navigation(this)
+                }
+                is IRMainActivityViewModel.NavigationEvent.ToThermal -> {
+                    // Handle thermal navigation
                 }
             }
         }
@@ -134,7 +137,7 @@ class IRMainActivity : AppCompatActivity(), View.OnClickListener {
                     viewModel.navigateToThermal()
                 }
             } else {
-                binding.ivMainBg.setImageResource(R.drawable.ic_ir_main_bg_no_connect)
+                binding.ivMainBg.setImageResource(R.drawable.ic_ir_main_bg_disconnect)
             }
         } else {
             if (deviceState.isUsbConnected) {
@@ -143,7 +146,7 @@ class IRMainActivity : AppCompatActivity(), View.OnClickListener {
                     viewModel.navigateToThermal()
                 }
             } else {
-                binding.ivMainBg.setImageResource(R.drawable.ic_ir_main_bg_no_connect)
+                binding.ivMainBg.setImageResource(R.drawable.ic_ir_main_bg_disconnect)
             }
         }
 
@@ -276,7 +279,6 @@ class IRMainActivity : AppCompatActivity(), View.OnClickListener {
                 }
             }
         }
-        }
     }
 
     // ViewPager adapter remains as inner class for fragment management
@@ -287,12 +289,25 @@ class IRMainActivity : AppCompatActivity(), View.OnClickListener {
 
         override fun createFragment(position: Int): Fragment {
             return when (position) {
-                0 -> IRThermalFragment.newInstance(isTC007)
-                1 -> IRGalleryTabFragment()
+                0 -> IRThermalFragment().apply {
+                    arguments = Bundle().also { it.putBoolean(ExtraKeyConfig.IS_TC007, isTC007) }
+                }
+                1 -> IRGalleryTabFragment().apply {
+                    arguments = Bundle().also {
+                        val dirType = if (isTC007) DirType.TC007.ordinal else DirType.LINE.ordinal
+                        it.putBoolean(ExtraKeyConfig.CAN_SWITCH_DIR, false)
+                        it.putBoolean(ExtraKeyConfig.HAS_BACK_ICON, false)
+                        it.putInt(ExtraKeyConfig.DIR_TYPE, dirType)
+                    }
+                }
                 2 -> AbilityFragment()
                 3 -> PDFListFragment()
-                4 -> MoreFragment.newInstance(isTC007)
-                else -> IRThermalFragment.newInstance(isTC007)
+                4 -> MoreFragment().apply {
+                    arguments = Bundle().also { it.putBoolean(ExtraKeyConfig.IS_TC007, isTC007) }
+                }
+                else -> IRThermalFragment().apply {
+                    arguments = Bundle().also { it.putBoolean(ExtraKeyConfig.IS_TC007, isTC007) }
+                }
             }
         }
     }
@@ -320,7 +335,6 @@ class IRMainActivity : AppCompatActivity(), View.OnClickListener {
                         doNotAskAgain: Boolean,
                     ) {
                         if (doNotAskAgain) {
-
                             TipDialog.Builder(this@IRMainActivity)
                                 .setTitleMessage(getString(LibR.string.app_tip))
                                 .setMessage(getString(LibR.string.app_album_content))
@@ -335,36 +349,5 @@ class IRMainActivity : AppCompatActivity(), View.OnClickListener {
                     }
                 },
             )
-    }
-
-    private class ViewPagerAdapter(val activity: FragmentActivity, val isTC007: Boolean) :
-        FragmentStateAdapter(activity) {
-        override fun getItemCount() = 5
-
-        override fun createFragment(position: Int): Fragment {
-            if (position == 1) {
-                return IRGalleryTabFragment().apply {
-                    arguments =
-                        Bundle().also {
-                            val dirType =
-                                if (isTC007) DirType.TC007.ordinal else DirType.LINE.ordinal
-                            it.putBoolean(ExtraKeyConfig.CAN_SWITCH_DIR, false)
-                            it.putBoolean(ExtraKeyConfig.HAS_BACK_ICON, false)
-                            it.putInt(ExtraKeyConfig.DIR_TYPE, dirType)
-                        }
-                }
-            } else {
-                val fragment =
-                    when (position) {
-                        0 -> AbilityFragment()
-                        2 -> IRThermalFragment()
-                        3 -> PDFListFragment()
-                        else -> MoreFragment()
-                    }
-                fragment.arguments =
-                    Bundle().also { it.putBoolean(ExtraKeyConfig.IS_TC007, isTC007) }
-                return fragment
-            }
-        }
     }
 }

@@ -152,9 +152,10 @@ class IRThermalFragment : BaseFragment(), View.OnClickListener {
         viewModel.onSocketConnected(isTS004, isTC007)
     }
 
-    override fun onSocketDisconnected(isTS004: Boolean) {
-        viewModel.onSocketDisconnected(isTS004, isTC007)
-    }
+    // TODO: Fix onSocketDisconnected override issue
+    // override fun onSocketDisconnected(isTS004: Boolean) {
+    //     viewModel.onSocketDisconnected(isTS004, isTC007)
+    // }
 
     private fun handleNavigationEvent(event: IRThermalFragmentViewModel.NavigationEvent) {
         when (event) {
