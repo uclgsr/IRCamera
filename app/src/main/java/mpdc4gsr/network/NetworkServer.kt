@@ -28,7 +28,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 
 class NetworkServer(
     private val context: Context,
-    private val port: Int = Protocol.DEFAULT_PORT,
+    private val port: Int = Protocol.DEFAULT_SERVER_PORT,
 ) {
     companion object {
         private const val TAG = "NetworkServer"
@@ -77,6 +77,10 @@ class NetworkServer(
 
                 Log.i(TAG, "TCP server started successfully on port $port")
                 return@withContext true
+            } catch (e: java.net.BindException) {
+                Log.e(TAG, "Failed to start TCP server - port $port already in use", e)
+                isRunning.set(false)
+                return@withContext false
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to start TCP server", e)
                 isRunning.set(false)
