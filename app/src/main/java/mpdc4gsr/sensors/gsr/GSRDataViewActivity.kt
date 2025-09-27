@@ -536,7 +536,7 @@ class GSRDataViewActivity : BaseViewModelActivity<GSRDataViewViewModel>() {
                 viewModel.exportData(allExportTypes)
                 true
             }
-            R.id.action_share -> {
+            R.id.action_refresh -> {
                 if (filePath.isNotEmpty()) {
                     viewModel.loadGSRData(filePath)
                 }
