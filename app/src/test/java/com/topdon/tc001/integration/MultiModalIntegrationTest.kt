@@ -96,7 +96,7 @@ class MultiModalIntegrationTest {
         
         // Execute - collect timestamps from different sensors over time
         repeat(5) { i ->
-            Thread.sleep(100) // 100ms between samples
+            delay(100) // 100ms between samples
             val currentTime = timestampManager.getCurrentSystemTimeMs()
             sensorTimestamps.add("GSR" to currentTime)
             sensorTimestamps.add("Thermal" to currentTime + 1) // Small offset
