@@ -33,11 +33,17 @@ class App : BaseApplication() {
         lateinit var instance: App
 
         fun delayInit() {
-            initLog()
-            initReceiver()
-            initLms()
-            initUM()
-            initJPush()
+            try {
+                initLog()
+                initReceiver()
+                initLms()
+                initUM()
+                initJPush()
+                XLog.i("App: delayInit completed successfully")
+            } catch (e: Exception) {
+                XLog.e("App: Error during delayInit: ${e.message}")
+                // Continue even if some initialization fails
+            }
         }
     }
 
@@ -52,26 +58,34 @@ class App : BaseApplication() {
         super.onCreate()
         instance = this
 
-        SPUtils.getInstance(this).put(Config.KEY_PRIVACY_AGREEMENT, true)
+        try {
+            SPUtils.getInstance(this).put(Config.KEY_PRIVACY_AGREEMENT, true)
 
-        if (SharedManager.getHasShowClause() || !isDomestic()) {
-            delayInit()
-        }
-
-        RxJavaPlugins.setErrorHandler {
-            if (SharedManager.getHasShowClause()) {
-                XLog.w("[ph][ph][ph][ph]： ${it.message}")
+            if (SharedManager.getHasShowClause() || !isDomestic()) {
+                delayInit()
             }
-        }
-        if (!isDomestic()) {
 
-            UrlConstant.setBaseUrl("${HttpConfig.HOST}/", false)
-            SharedManager.setBaseHost(UrlConstant.BASE_URL)
-        }
+            RxJavaPlugins.setErrorHandler {
+                if (SharedManager.getHasShowClause()) {
+                    XLog.w("[ph][ph][ph][ph]： ${it.message}")
+                }
+            }
+            if (!isDomestic()) {
 
-        CoroutineScope(Dispatchers.IO).launch {
-            tau_data_H = CommonUtil.getAssetData(mContext, IrConst.TAU_HIGH_GAIN_ASSET_PATH)
-            tau_data_L = CommonUtil.getAssetData(mContext, IrConst.TAU_LOW_GAIN_ASSET_PATH)
+                UrlConstant.setBaseUrl("${HttpConfig.HOST}/", false)
+                SharedManager.setBaseHost(UrlConstant.BASE_URL)
+            }
+
+            CoroutineScope(Dispatchers.IO).launch {
+                try {
+                    tau_data_H = CommonUtil.getAssetData(mContext, IrConst.TAU_HIGH_GAIN_ASSET_PATH)
+                    tau_data_L = CommonUtil.getAssetData(mContext, IrConst.TAU_LOW_GAIN_ASSET_PATH)
+                } catch (e: Exception) {
+                    XLog.e("App: Failed to load tau data assets: ${e.message}")
+                }
+            }
+        } catch (e: Exception) {
+            XLog.e("App: Critical error during onCreate: ${e.message}")
         }
 
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
