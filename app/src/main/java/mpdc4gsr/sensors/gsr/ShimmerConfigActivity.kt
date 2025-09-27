@@ -479,33 +479,28 @@ class ShimmerConfigActivity : AppCompatActivity() {
         onBackPressed()
         return true
     }
-    
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(com.csl.irCamera.R.menu.shimmer_config_menu, menu)
         return true
     }
-    
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            com.csl.irCamera.R.id.menu_background_scanning_demo -> {
-                // Demo activity removed - commented out to avoid compilation errors
-                // val intent = Intent(this, BackgroundScanningDemoActivity::class.java)
-                // startActivity(intent)
-                Toast.makeText(this, "Demo functionality removed", Toast.LENGTH_SHORT).show()
-                true
-            }
             com.csl.irCamera.R.id.menu_start_background_scanning -> {
                 // Start background scanning using helper
                 BackgroundScanHelper.startBackgroundScanning(this)
                 Toast.makeText(this, "Background scanning started", Toast.LENGTH_SHORT).show()
                 true
             }
+
             com.csl.irCamera.R.id.menu_stop_background_scanning -> {
                 // Stop background scanning using helper
                 BackgroundScanHelper.stopBackgroundScanning(this)
                 Toast.makeText(this, "Background scanning stopped", Toast.LENGTH_SHORT).show()
                 true
             }
+
             else -> super.onOptionsItemSelected(item)
         }
     }

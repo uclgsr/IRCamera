@@ -90,7 +90,10 @@ class NetworkController(private val context: Context) {
                     availablePort
                 } catch (e: IllegalStateException) {
                     Log.e(TAG, "Could not find available port starting from $port")
-                    eventListener?.onError("start_server", "Port $port is already in use and no alternative ports available. Please ensure no other services are using ports ${port} to ${port + 9}.")
+                    eventListener?.onError(
+                        "start_server",
+                        "Port $port is already in use and no alternative ports available. Please ensure no other services are using ports ${port} to ${port + 9}."
+                    )
                     return@withContext false
                 }
             }
@@ -111,7 +114,10 @@ class NetworkController(private val context: Context) {
             return@withContext true
         } catch (e: java.net.BindException) {
             Log.e(TAG, "Failed to start NetworkController - port $port already in use", e)
-            eventListener?.onError("start_server", "Port $port is already in use. Please ensure no other services are using this port.")
+            eventListener?.onError(
+                "start_server",
+                "Port $port is already in use. Please ensure no other services are using this port."
+            )
             return@withContext false
         } catch (e: Exception) {
             Log.e(TAG, "Failed to start NetworkController", e)
@@ -138,7 +144,10 @@ class NetworkController(private val context: Context) {
                     connection.inputStream.close()
                     connection.socket.close()
                 } catch (e: Exception) {
-                    Log.w(TAG, "Error closing client connection ${connection.clientId}: ${e.message}")
+                    Log.w(
+                        TAG,
+                        "Error closing client connection ${connection.clientId}: ${e.message}"
+                    )
                 }
             }
             clientConnections.clear()
@@ -245,11 +254,16 @@ class NetworkController(private val context: Context) {
                     e.message?.contains("Connection reset") == true -> {
                         Log.d(TAG, "Client ${connection.clientId} connection reset")
                     }
+
                     e.message?.contains("Socket closed") == true -> {
                         Log.d(TAG, "Client ${connection.clientId} socket closed")
                     }
+
                     else -> {
-                        Log.w(TAG, "Socket exception for client ${connection.clientId}: ${e.message}")
+                        Log.w(
+                            TAG,
+                            "Socket exception for client ${connection.clientId}: ${e.message}"
+                        )
                     }
                 }
             } catch (e: Exception) {

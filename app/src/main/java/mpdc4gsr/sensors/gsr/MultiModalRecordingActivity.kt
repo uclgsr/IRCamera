@@ -455,7 +455,8 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
 
             permissionController.ensureAll { allGranted, deniedPermissions ->
                 if (allGranted) {
-                    binding.statusText.text = "All permissions granted. Multi-sensor recording ready."
+                    binding.statusText.text =
+                        "All permissions granted. Multi-sensor recording ready."
                     Log.i(TAG, "All permissions granted successfully")
                     updateUIForPermissionState(true)
                 } else {

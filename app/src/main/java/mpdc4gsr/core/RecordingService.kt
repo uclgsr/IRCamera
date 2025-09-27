@@ -61,7 +61,8 @@ class RecordingService : LifecycleService() {
         private const val NOTIFICATION_ID = 1001
         private const val CHANNEL_ID = "recording_service_channel"
 
-        private const val SERVER_PORT = 8081  // Use different port to avoid conflicts with NetworkController
+        private const val SERVER_PORT =
+            8081  // Use different port to avoid conflicts with NetworkController
         private const val SERVICE_TYPE = "_ircamera._tcp."
         private const val SERVICE_NAME = "IRCamera-Android"
 
@@ -270,7 +271,8 @@ class RecordingService : LifecycleService() {
         crashRecoveryManager = CrashRecoveryManager(this)
 
         networkClient = NetworkClient(this)
-        networkServer = NetworkServer(this, 8081)  // Use port 8081 to avoid conflict with NetworkController
+        networkServer =
+            NetworkServer(this, 8081)  // Use port 8081 to avoid conflict with NetworkController
         networkManager = NetworkManager(this, recordingController)
         protocolHandler = ProtocolHandler(this, networkServer)
         protocolHandler.setTimeSyncManager(timeSyncManager)
@@ -1204,7 +1206,7 @@ class RecordingService : LifecycleService() {
         try {
             // Ensure any previous socket is fully released
             delay(100)
-            
+
             serverSocket = ServerSocket().apply {
                 reuseAddress = true
                 bind(InetSocketAddress(SERVER_PORT))
