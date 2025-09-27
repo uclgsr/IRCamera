@@ -66,7 +66,7 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
         initData()
     }
 
-    // Remove override annotations since BaseBindingActivity doesn't have these methods
+    // This is now a private helper method, not an override.
     fun initView() {
         // binding is already set up by BaseBindingActivity
         initializePermissions()
