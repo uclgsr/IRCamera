@@ -37,6 +37,7 @@ import mpdc4gsr.network.NetworkManager
 import mpdc4gsr.network.NetworkServer
 import mpdc4gsr.network.PreviewDataAdapter
 import mpdc4gsr.network.PreviewStreamer
+import mpdc4gsr.network.Protocol
 import mpdc4gsr.network.ProtocolHandler
 import mpdc4gsr.permissions.PermissionManager
 import mpdc4gsr.sync.TimeSyncManager
@@ -270,7 +271,7 @@ class RecordingService : LifecycleService() {
         crashRecoveryManager = CrashRecoveryManager(this)
 
         networkClient = NetworkClient(this)
-        networkServer = NetworkServer(this, 8081)  // Use port 8081 to avoid conflict with NetworkController
+        networkServer = NetworkServer(this, 8082)  // Use port 8082 to avoid conflict with direct ServerSocket on 8081
         networkManager = NetworkManager(this, recordingController)
         protocolHandler = ProtocolHandler(this, networkServer)
         protocolHandler.setTimeSyncManager(timeSyncManager)
@@ -1479,8 +1480,8 @@ class RecordingService : LifecycleService() {
             try {
                 val serverStarted = connectionManager.startServer()
                 if (serverStarted) {
-                    Log.i(TAG, "Network server started automatically, listening on port 8080")
-                    updateNotification("Listening for PC Controller on port 8080")
+                    Log.i(TAG, "Network server started automatically, listening on port ${Protocol.DEFAULT_SERVER_PORT}")
+                    updateNotification("Listening for PC Controller on port ${Protocol.DEFAULT_SERVER_PORT}")
                 } else {
                     Log.e(TAG, "Failed to start network server automatically")
                     updateNotification("Network server failed to start")
@@ -1504,8 +1505,8 @@ class RecordingService : LifecycleService() {
 
                     NetworkConnectionManager.ConnectionState.DISCONNECTED -> {
                         isConnectedToPC = false
-                        Log.i(TAG, "PC Controller disconnected, still listening on port 8080")
-                        updateNotification("Listening for PC Controller on port 8080")
+                        Log.i(TAG, "PC Controller disconnected, still listening on port ${Protocol.DEFAULT_SERVER_PORT}")
+                        updateNotification("Listening for PC Controller on port ${Protocol.DEFAULT_SERVER_PORT}")
                         previewDataAdapter.stopDataPolling()
                         previewStreamer.stopStreaming()
                     }
