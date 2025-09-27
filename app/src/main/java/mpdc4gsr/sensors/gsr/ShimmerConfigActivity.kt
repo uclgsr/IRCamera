@@ -1,5 +1,6 @@
 package mpdc4gsr.sensors.gsr
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -33,7 +34,7 @@ class ShimmerConfigActivity : BaseViewModelActivity<ShimmerConfigViewModel>() {
     override fun initView() {
         setupUI()
         setupObservers()
-        viewModel.checkPermissions()
+        viewModel.checkPermissions(this)
     }
 
     override fun initData() {

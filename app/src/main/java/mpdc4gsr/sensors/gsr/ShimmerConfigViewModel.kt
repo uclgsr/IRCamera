@@ -2,6 +2,7 @@ package mpdc4gsr.sensors.gsr
 
 import android.Manifest
 import android.app.Application
+import android.content.Context
 import android.content.pm.PackageManager
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.LiveData
@@ -100,10 +101,10 @@ class ShimmerConfigViewModel : BaseViewModel() {
     }
 
     // Permission management
-    fun checkPermissions() {
+    fun checkPermissions(context: Context) {
         val missingPermissions = REQUIRED_PERMISSIONS.filter { permission ->
             ActivityCompat.checkSelfPermission(
-                getApplication(),
+                context,
                 permission
             ) != PackageManager.PERMISSION_GRANTED
         }
@@ -115,7 +116,7 @@ class ShimmerConfigViewModel : BaseViewModel() {
         )
 
         if (hasAllPermissions) {
-            initializeShimmerManager()
+            initializeShimmerManager(context)
         }
     }
 
@@ -132,13 +133,13 @@ class ShimmerConfigViewModel : BaseViewModel() {
     }
 
     // Shimmer manager initialization
-    private fun initializeShimmerManager() {
+    private fun initializeShimmerManager(context: Context) {
         viewModelScope.launch {
             try {
                 _uiState.value = _uiState.value.copy(isLoading = true)
                 
                 // Note: This would need to be adapted based on actual ShimmerDeviceManager API
-                // shimmerDeviceManager = ShimmerDeviceManager(getApplication(), context)
+                // shimmerDeviceManager = ShimmerDeviceManager(context, context)
                 
                 // Simulated initialization - replace with actual implementation
                 val initialized = true // shimmerDeviceManager?.initialize() ?: false

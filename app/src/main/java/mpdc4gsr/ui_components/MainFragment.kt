@@ -286,35 +286,29 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
                         onItemClickListener?.invoke(getConnectType(position))
                     }
                 }
-                ivBg.setOnLongClickListener {
+                ivBg.setOnLongClickListener { view ->
                     val position = bindingAdapterPosition
                     if (position != RecyclerView.NO_POSITION) {
-
                         val deviceType = getConnectType(position)
-                        when (deviceType) {
+                        val currentState = this@MainFragment.viewModel.deviceState.value
+                        
+                        val shouldPreventLongClick = when (deviceType) {
                             MainFragmentViewModel.ConnectType.LINE -> {
-                                // Check connection state via ViewModel instead of direct calls
-                                val currentState = this@MainFragment.viewModel.deviceState.value
-                                if (currentState?.hasConnectLine == true) {
-                                    return@setOnLongClickListener true
-                                }
+                                currentState?.hasConnectLine == true
                             }
-
                             MainFragmentViewModel.ConnectType.TS004 -> {
-                                val currentState = this@MainFragment.viewModel.deviceState.value
-                                if (currentState?.hasConnectTS004 == true) {
-                                    return@setOnLongClickListener true
-                                }
+                                currentState?.hasConnectTS004 == true
                             }
-
                             MainFragmentViewModel.ConnectType.TC007 -> {
-                                val currentState = this@MainFragment.viewModel.deviceState.value
-                                if (currentState?.hasConnectTC007 == true) {
-                                    return@setOnLongClickListener true
-                                }
+                                currentState?.hasConnectTC007 == true
                             }
                         }
-                        onItemLongClickListener?.invoke(ivBg, deviceType)
+                        
+                        if (shouldPreventLongClick) {
+                            return@setOnLongClickListener true
+                        }
+                        
+                        onItemLongClickListener?.invoke(view, deviceType)
                     }
                     true
                 }
