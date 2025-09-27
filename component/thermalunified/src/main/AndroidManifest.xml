@@ -173,6 +173,20 @@
             android:requestLegacyExternalStorage="true"
             android:screenOrientation="userPortrait"
             android:windowSoftInputMode="adjustPan" />
+
+        <!-- Missing base activities -->
+        <activity
+            android:name=".activity.BaseIRActivity"
+            android:screenOrientation="userPortrait" />
+        <activity
+            android:name=".activity.BaseIRPlushActivity"
+            android:screenOrientation="userPortrait" />
+        <activity
+            android:name=".activity.ChartActivity"
+            android:screenOrientation="userPortrait" />
+        <activity
+            android:name=".lite.ui.activity.IrDisplayActivity"
+            android:screenOrientation="userPortrait" />
     </application>
 
 </manifest>
