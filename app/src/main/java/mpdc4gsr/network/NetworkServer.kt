@@ -21,6 +21,7 @@ import java.io.BufferedWriter
 import java.io.DataOutputStream
 import java.io.InputStreamReader
 import java.io.OutputStreamWriter
+import java.net.InetSocketAddress
 import java.net.ServerSocket
 import java.net.Socket
 import java.net.SocketException
@@ -67,7 +68,10 @@ class NetworkServer(
 
                 Log.i(TAG, "Starting TCP server on port $port")
 
-                serverSocket = ServerSocket(port)
+                serverSocket = ServerSocket().apply {
+                    reuseAddress = true
+                    bind(InetSocketAddress(port))
+                }
                 isRunning.set(true)
 
                 serverJob =
