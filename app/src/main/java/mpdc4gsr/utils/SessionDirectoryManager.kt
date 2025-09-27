@@ -284,7 +284,7 @@ class SessionDirectoryManager(private val context: Context) {
     
     fun exportSession(sessionId: String): Boolean {
         return try {
-            val sessionDir = File(context.getExternalFilesDir(null), "sessions/$sessionId")
+            val sessionDir = File(baseDirectory, sessionId)
             if (!sessionDir.exists()) {
                 Log.w(TAG, "Session directory not found for export: $sessionId")
                 return false
