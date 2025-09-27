@@ -1,6 +1,7 @@
 package mpdc4gsr.sensors
 
 import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothManager
 import android.bluetooth.le.ScanCallback
 import android.bluetooth.le.ScanResult
 import android.content.ComponentName
@@ -171,7 +172,8 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
                 }
 
                 // Check for paired Bluetooth devices via Android BluetoothAdapter
-                val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+                val bluetoothManager = getSystemService(Context.BLUETOOTH_SERVICE) as? BluetoothManager
+                val bluetoothAdapter = bluetoothManager?.adapter
                 val pairedDevices = bluetoothAdapter?.bondedDevices
                 pairedDevices?.forEach { btDevice ->
                     val deviceName = btDevice.name ?: "Unknown"

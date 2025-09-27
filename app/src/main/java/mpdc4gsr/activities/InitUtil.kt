@@ -59,7 +59,7 @@ object InitUtil {
         try {
             val context = BaseApplication.instance
             val locale = LanguageUtil.getCurrentLanguage()
-            
+
             LMS.getInstance().init(context).apply {
                 productType = "TC001"
                 setLoginType(ConstantUtil.LOGIN_TC001_TYPE)
@@ -68,7 +68,7 @@ object InitUtil {
                 setPrivacyPolicy("")
                 setServicesAgreement("")
             }
-            
+
             XLog.i("InitUtil: LMS initialized")
         } catch (e: Exception) {
             XLog.e("InitUtil: Failed to initialize LMS: ${e.message}")

@@ -36,7 +36,7 @@ Utility functions for permission validation and checking.
 ```kotlin
 class MyActivity : FragmentActivity() {
     private lateinit var permissionController: PermissionController
-    
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -45,7 +45,7 @@ class MyActivity : FragmentActivity() {
 
         checkAndRequestPermissions()
     }
-    
+
     private fun checkAndRequestPermissions() {
         if (!permissionController.hasAllRequiredPermissions()) {
             permissionController.requestAllPermissions { allGranted, deniedPermissions ->
@@ -62,7 +62,7 @@ class MyActivity : FragmentActivity() {
             startRecording()
         }
     }
-    
+
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
@@ -71,7 +71,7 @@ class MyActivity : FragmentActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         permissionController.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
-    
+
     private fun onUsbDeviceAttached(device: UsbDevice) {
 
         permissionController.requestUsbPermission(device) { granted, device ->

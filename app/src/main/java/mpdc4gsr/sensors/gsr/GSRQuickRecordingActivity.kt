@@ -179,7 +179,7 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
     private fun checkPermissions() {
         if (!permissionController.hasAllRequiredPermissions()) {
             Log.i(TAG, "Missing permissions detected")
-            
+
             permissionController.ensureAll { allGranted, deniedPermissions ->
                 if (allGranted) {
                     Log.i(TAG, "All permissions granted for GSR recording")
@@ -191,7 +191,7 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
             }
         }
     }
-    
+
     private fun showPermissionError(message: String) {
         runOnUiThread {
             binding.statusText.text = message
@@ -325,7 +325,7 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
 
         // Use PermissionController's result handling for consistent behavior
         permissionController.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        
+
         // Legacy handling for direct permission requests (if any remain)
         if (requestCode == REQUEST_PERMISSIONS) {
             val allGranted =

@@ -144,7 +144,7 @@ class StructuredLogger private constructor(private val context: Context) {
             } catch (e: Exception) {
                 Log.w(TAG, "Error closing previous log writer", e)
             }
-            
+
             currentLogWriter = BufferedWriter(FileWriter(currentLogFile, true))
             currentLogSize = currentLogFile?.length() ?: 0L
 
@@ -324,7 +324,7 @@ class StructuredLogger private constructor(private val context: Context) {
             } catch (e: Exception) {
                 Log.w(TAG, "Error closing corrupted log writer", e)
             }
-            
+
             val logFile = currentLogFile
             if (logFile != null) {
                 currentLogWriter = BufferedWriter(FileWriter(logFile, true))
@@ -407,12 +407,12 @@ class StructuredLogger private constructor(private val context: Context) {
         try {
             logScope.cancel()
             flushLogs()
-            
+
             synchronized(writerLock) {
                 currentLogWriter?.close()
                 currentLogWriter = null
             }
-            
+
             logExecutor.shutdown()
             logExecutor.awaitTermination(5, TimeUnit.SECONDS)
 

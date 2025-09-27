@@ -260,7 +260,7 @@ class PermissionControllerTest {
         )
 
         val criticalPermissions = permissionController.getCriticalPermissions(testPermissions)
-        
+
         assertTrue(criticalPermissions.contains(Manifest.permission.CAMERA))
         assertTrue(criticalPermissions.contains(Manifest.permission.BLUETOOTH_SCAN))
         assertFalse(criticalPermissions.contains(Manifest.permission.ACCESS_FINE_LOCATION))
@@ -278,7 +278,7 @@ class PermissionControllerTest {
         )
 
         val locationPermissions = permissionController.getLocationPermissions(testPermissions)
-        
+
         assertEquals(2, locationPermissions.size)
         assertTrue(locationPermissions.contains(Manifest.permission.ACCESS_FINE_LOCATION))
         assertTrue(locationPermissions.contains(Manifest.permission.ACCESS_COARSE_LOCATION))
@@ -293,10 +293,16 @@ class PermissionControllerTest {
         // Mock Bluetooth permissions as granted, location as denied
         mockBluetoothPermissions(granted = true)
         every {
-            ContextCompat.checkSelfPermission(mockActivity, Manifest.permission.ACCESS_FINE_LOCATION)
+            ContextCompat.checkSelfPermission(
+                mockActivity,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            )
         } returns PackageManager.PERMISSION_DENIED
         every {
-            ContextCompat.checkSelfPermission(mockActivity, Manifest.permission.ACCESS_COARSE_LOCATION)
+            ContextCompat.checkSelfPermission(
+                mockActivity,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            )
         } returns PackageManager.PERMISSION_DENIED
 
         assertTrue(permissionController.canConnectToShimmerLimited())
@@ -310,10 +316,16 @@ class PermissionControllerTest {
         // Test with Bluetooth permissions but no location permission
         mockBluetoothPermissions(granted = true)
         every {
-            ContextCompat.checkSelfPermission(mockActivity, Manifest.permission.ACCESS_FINE_LOCATION)
+            ContextCompat.checkSelfPermission(
+                mockActivity,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            )
         } returns PackageManager.PERMISSION_DENIED
         every {
-            ContextCompat.checkSelfPermission(mockActivity, Manifest.permission.ACCESS_COARSE_LOCATION)
+            ContextCompat.checkSelfPermission(
+                mockActivity,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            )
         } returns PackageManager.PERMISSION_DENIED
 
         val status = permissionController.getBluetoothConnectionStatus()
@@ -326,14 +338,20 @@ class PermissionControllerTest {
         mockkStatic(ContextCompat::class)
 
         every {
-            ContextCompat.checkSelfPermission(mockActivity, Manifest.permission.ACCESS_FINE_LOCATION)
+            ContextCompat.checkSelfPermission(
+                mockActivity,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            )
         } returns PackageManager.PERMISSION_DENIED
         every {
             mockActivity.shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)
         } returns false
 
         every {
-            ContextCompat.checkSelfPermission(mockActivity, Manifest.permission.ACCESS_COARSE_LOCATION)
+            ContextCompat.checkSelfPermission(
+                mockActivity,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            )
         } returns PackageManager.PERMISSION_DENIED
         every {
             mockActivity.shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_COARSE_LOCATION)
@@ -346,7 +364,7 @@ class PermissionControllerTest {
     fun `test simple permission cooldown mechanism`() {
         // Mock permissions as missing
         mockkStatic(ContextCompat::class)
-        every { 
+        every {
             ContextCompat.checkSelfPermission(mockActivity, any())
         } returns PackageManager.PERMISSION_DENIED
 
@@ -357,10 +375,10 @@ class PermissionControllerTest {
 
         // First request should go through
         permissionController.ensureAll(callback)
-        
+
         // Second request immediately after should be in cooldown
         permissionController.ensureAll(callback)
-        
+
         // Verify cooldown is active
         assertTrue(permissionController.shouldSkipPermissionRequest())
     }
@@ -369,13 +387,13 @@ class PermissionControllerTest {
     fun `test hasMinimumPermissions for basic functionality`() {
         // Mock basic permissions as granted
         mockkStatic(ContextCompat::class)
-        every { 
+        every {
             ContextCompat.checkSelfPermission(mockActivity, Manifest.permission.CAMERA)
         } returns PackageManager.PERMISSION_GRANTED
-        every { 
+        every {
             ContextCompat.checkSelfPermission(mockActivity, Manifest.permission.RECORD_AUDIO)
         } returns PackageManager.PERMISSION_GRANTED
-        every { 
+        every {
             ContextCompat.checkSelfPermission(mockActivity, any())
         } returns PackageManager.PERMISSION_GRANTED
 
@@ -383,8 +401,9 @@ class PermissionControllerTest {
     }
 
     private fun mockBluetoothPermissions(granted: Boolean) {
-        val result = if (granted) PackageManager.PERMISSION_GRANTED else PackageManager.PERMISSION_DENIED
-        
+        val result =
+            if (granted) PackageManager.PERMISSION_GRANTED else PackageManager.PERMISSION_DENIED
+
         every {
             ContextCompat.checkSelfPermission(mockActivity, Manifest.permission.BLUETOOTH_SCAN)
         } returns result
