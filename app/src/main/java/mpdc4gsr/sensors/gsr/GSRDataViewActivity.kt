@@ -68,13 +68,10 @@ class GSRDataViewActivity : BaseViewModelActivity<GSRDataViewViewModel>() {
             showDataRowDetails(dataRow)
         }
         
-        // Try to find recyclerView - use safe resource lookup
-        val recyclerViewId = getResourceId("recyclerView")
-        if (recyclerViewId != 0) {
-            findViewById<androidx.recyclerview.widget.RecyclerView>(recyclerViewId)?.let { recyclerView ->
-                recyclerView.layoutManager = LinearLayoutManager(this@GSRDataViewActivity)
-                recyclerView.adapter = this@GSRDataViewActivity.adapter
-            }
+        // Use the actual RecyclerView ID from the layout file
+        findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.data_recycler_view)?.let { recyclerView ->
+            recyclerView.layoutManager = LinearLayoutManager(this@GSRDataViewActivity)
+            recyclerView.adapter = this@GSRDataViewActivity.adapter
         }
     }
 
