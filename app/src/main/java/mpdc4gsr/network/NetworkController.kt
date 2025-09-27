@@ -14,6 +14,7 @@ import org.json.JSONObject
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.io.PrintWriter
+import java.net.InetSocketAddress
 import java.net.ServerSocket
 import java.net.Socket
 import java.net.SocketTimeoutException
@@ -77,8 +78,11 @@ class NetworkController(private val context: Context) {
         }
 
         try {
-            serverSocket = ServerSocket(port)
-            serverSocket?.soTimeout = SOCKET_TIMEOUT
+            serverSocket = ServerSocket().apply {
+                reuseAddress = true
+                bind(InetSocketAddress(port))
+                soTimeout = SOCKET_TIMEOUT
+            }
             isRunning.set(true)
 
             Log.i(TAG, "NetworkController started on port $port")
