@@ -203,7 +203,7 @@ graph TB
 ## Module Dependencies and Build Configuration
 
 ### Android Module Structure
-```
+```text
 app/
 ├── src/main/java/mpdc4gsr/
 │   ├── MainActivity.kt (298 lines)
