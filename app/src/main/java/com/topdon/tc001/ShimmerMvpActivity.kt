@@ -454,17 +454,20 @@ class ShimmerMvpActivity : AppCompatActivity() {
                 networkClient?.sendRecordingStop(currentSessionId ?: "unknown", sampleCount)
 
                 // Finalize simple performance benchmarks
+                var gsrResult: SimpleBenchmarkManager.BenchmarkResult? = null
                 if (gsrBenchmarkActive) {
-                    val gsrResult = simpleBenchmarkManager.stopGSRBenchmark()
+                    gsrResult = simpleBenchmarkManager.stopGSRBenchmark()
                     Log.i(TAG, "GSR Performance Result: ${gsrResult.summary}")
                     gsrBenchmarkActive = false
                 }
 
                 // Export simple performance results
                 try {
-                    val performanceFile = simpleBenchmarkManager.exportResults(listOf(gsrResult), cacheDir)
-                    performanceFile?.let {
-                        Log.i(TAG, "Simple performance results exported to: ${it.absolutePath}")
+                    gsrResult?.let {
+                        val performanceFile = simpleBenchmarkManager.exportResults(listOf(it), cacheDir)
+                        performanceFile?.let {
+                            Log.i(TAG, "Simple performance results exported to: ${it.absolutePath}")
+                        }
                     }
                 } catch (e: Exception) {
                     Log.w(TAG, "Error exporting simple performance results", e)
