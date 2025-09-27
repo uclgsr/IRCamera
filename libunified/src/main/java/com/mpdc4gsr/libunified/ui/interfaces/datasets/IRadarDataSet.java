@@ -1,6 +1,6 @@
-package com.mpdc4gsr.libunified.ui.charting.interfaces.datasets;
+package com.mpdc4gsr.libunified.ui.interfaces.datasets;
 
-import com.mpdc4gsr.libunified.ui.charting.data.RadarEntry;
+import com.mpdc4gsr.libunified.ui.data.RadarEntry;
 
 public interface IRadarDataSet extends ILineRadarDataSet<RadarEntry> {
 

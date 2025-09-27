@@ -1,7 +1,7 @@
-package com.mpdc4gsr.libunified.ui.charting.formatter;
+package com.mpdc4gsr.libunified.ui.formatter;
 
-import com.mpdc4gsr.libunified.ui.charting.charts.PieChart;
-import com.mpdc4gsr.libunified.ui.charting.data.PieEntry;
+import com.mpdc4gsr.libunified.ui.charts.PieChart;
+import com.mpdc4gsr.libunified.ui.data.PieEntry;
 
 import java.text.DecimalFormat;
 

@@ -3,13 +3,18 @@ package mpdc4gsr.network
 import android.content.Context
 import android.util.Log
 import com.mpdc4gsr.gsr.model.GSRSample
-import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import mpdc4gsr.sensors.TimestampManager
 import mpdc4gsr.sensors.TimestampRecord
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.PrintWriter
+import java.net.InetSocketAddress
 import java.net.ServerSocket
 import java.net.Socket
 import java.util.concurrent.ConcurrentLinkedQueue
@@ -59,7 +64,10 @@ class UnifiedDataStreamingService(
                 streamStartTime.set(System.currentTimeMillis())
 
 
-                serverSocket = ServerSocket(port)
+                serverSocket = ServerSocket().apply {
+                    reuseAddress = true
+                    bind(InetSocketAddress(port))
+                }
                 isStreaming.set(true)
 
 
@@ -147,10 +155,10 @@ class UnifiedDataStreamingService(
             dataType = "GSR",
             timestamp = timestampRecord,
             data = JSONObject().apply {
-                put("conductance_microsiemens", gsrSample.conductanceMicrosiemens)
-                put("raw_adc", gsrSample.rawAdc)
-                put("ppg_value", gsrSample.ppgValue)
-                put("device_id", gsrSample.deviceId)
+                put("conductance_microsiemens", gsrSample.conductance)
+                put("raw_adc", gsrSample.rawValue)
+                put("ppg_value", 0) // Not available in this GSRSample model
+                put("device_id", gsrSample.sessionId) // Use sessionId as device identifier
             }
         )
 

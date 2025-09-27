@@ -1,7 +1,7 @@
-package com.mpdc4gsr.libunified.ui.charting.listener;
+package com.mpdc4gsr.libunified.ui.listener;
 
-import com.mpdc4gsr.libunified.ui.charting.data.Entry;
-import com.mpdc4gsr.libunified.ui.charting.highlight.Highlight;
+import com.mpdc4gsr.libunified.ui.data.Entry;
+import com.mpdc4gsr.libunified.ui.highlight.Highlight;
 
 public interface OnChartValueSelectedListener {
 

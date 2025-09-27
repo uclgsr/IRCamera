@@ -359,12 +359,15 @@ class ComprehensiveSensorStatusWidget @JvmOverloads constructor(
 
         fun updateMultiDeviceInfo(connectedCount: Int, streamingCount: Int, maxDevices: Int) {
             if (sensorType == SensorType.GSR) {
-                detailsText.text = "Multi-device: $connectedCount/$maxDevices connected, $streamingCount streaming"
+                detailsText.text =
+                    "Multi-device: $connectedCount/$maxDevices connected, $streamingCount streaming"
                 detailsText.visibility = VISIBLE
             }
         }
 
-        fun isConnected(): Boolean = currentStatus in listOf(SensorStatus.CONNECTED, SensorStatus.STREAMING)
+        fun isConnected(): Boolean =
+            currentStatus in listOf(SensorStatus.CONNECTED, SensorStatus.STREAMING)
+
         fun hasError(): Boolean = hasErrorState
     }
 }

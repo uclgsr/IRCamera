@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.isActive
+import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
 
 /**
@@ -167,7 +168,10 @@ class NetworkConnectionManager(
         reconnectAttempts++
 
         scope.launch {
-            Log.i(TAG, "Scheduling reconnection attempt $reconnectAttempts in ${RECONNECT_DELAY_MS}ms")
+            Log.i(
+                TAG,
+                "Scheduling reconnection attempt $reconnectAttempts in ${RECONNECT_DELAY_MS}ms"
+            )
             delay(RECONNECT_DELAY_MS)
 
             if (isActive && _connectionState.value == ConnectionState.RECONNECTING) {
@@ -275,7 +279,7 @@ class NetworkConnectionManager(
      * Cleanup resources
      */
     fun cleanup() {
-        scope.cancel()
+        scope.coroutineContext.job.cancel()
         connectionTimeoutJob?.cancel()
         Log.i(TAG, "NetworkConnectionManager cleaned up")
     }

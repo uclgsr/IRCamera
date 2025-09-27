@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace = "com.mpdc4gsr.module.user"
-    compileSdk = libs.versions.compileSdk.get().toInt()
+    compileSdk = 35
 
     defaultConfig {
         minSdk = libs.versions.minSdk.get().toInt()
@@ -82,13 +82,13 @@ android {
             ),
         )
     }
+    buildToolsVersion = "35.0.0"
 }
 
 dependencies {
     coreLibraryDesugaring(libs.desugar.jdk.libs)
 
     implementation(project(":libunified"))
-    implementation(project(":ble-core"))
     implementation(project(":BleModule"))
 
     // Core Android dependencies

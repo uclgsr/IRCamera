@@ -11,11 +11,10 @@ import java.io.Reader;
  * to be used. If BOM is not found then use a given default or system encoding.
  */
 public class UnicodeReader extends Reader {
+    private static final int BOM_SIZE = 4;
     PushbackInputStream internalIn;
     InputStreamReader internalIn2 = null;
     String defaultEnc;
-
-    private static final int BOM_SIZE = 4;
 
     /**
      * @param in         inputstream to be read

@@ -14,10 +14,10 @@ import com.blankj.utilcode.util.SizeUtils
 import com.mpdc4gsr.libunified.R
 import com.mpdc4gsr.libunified.app.config.ExtraKeyConfig
 import com.mpdc4gsr.libunified.app.config.RouterConfig
-import com.mpdc4gsr.libunified.databinding.LayoutPopupTipEmissivityBinding
 import com.mpdc4gsr.libunified.app.navigation.NavigationManager
 import com.mpdc4gsr.libunified.app.tools.NumberTools
 import com.mpdc4gsr.libunified.app.tools.UnitTools
+import com.mpdc4gsr.libunified.databinding.LayoutPopupTipEmissivityBinding
 
 
 class EmissivityTipPopup(val context: Context, val isTC007: Boolean) {

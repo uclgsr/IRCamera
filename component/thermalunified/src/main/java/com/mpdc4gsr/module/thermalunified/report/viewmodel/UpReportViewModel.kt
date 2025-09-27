@@ -47,13 +47,23 @@ class UpReportViewModel : BaseViewModel() {
                         continue
                     }
                     val file = File(reportIrBean.picture_url)
-                    LMS.getInstance().uploadFile(file, 0, 13, 20) {
-                        XLog.i(it?.data)
-                        if (it?.code == LMS.SUCCESS) {
-                            file.delete()
-                            val jsonObject = JSONObject(it.data)
-                            reportIrBean.picture_id = jsonObject.getString("fileSecret")
-                            reportIrBean.picture_url = jsonObject.getString("url")
+                    LMS.getInstance().uploadFile(file, 0, 13, 20) { response ->
+                        try {
+                            if (response != null) {
+                                val jsonObject = JSONObject(response)
+                                val code = jsonObject.optString("code", "")
+                                if (code == LMS.SUCCESS) {
+                                    file.delete()
+                                    val dataObject = jsonObject.optJSONObject("data")
+                                    if (dataObject != null) {
+                                        reportIrBean.picture_id =
+                                            dataObject.optString("fileSecret", "")
+                                        reportIrBean.picture_url = dataObject.optString("url", "")
+                                    }
+                                }
+                            }
+                        } catch (e: Exception) {
+                            XLog.e("Error parsing upload response", e)
                         }
                         XLog.i("Upload完一张图")
                         downLatch.countDown()
@@ -80,7 +90,7 @@ class UpReportViewModel : BaseViewModel() {
             params.addBodyParameter("testTime", TimeUtils.getNowString())
             params.addBodyParameter("testInfo", GsonUtils.toJson(reportBean))
             params.addBodyParameter("sn", "")
-            HttpProxy.instant.post(
+            HttpProxy.getInstant().post(
                 url,
                 params,
                 object : IResponseCallback {

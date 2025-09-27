@@ -11,14 +11,13 @@ import com.elvishew.xlog.XLog;
 import com.energy.iruvc.sdkisp.LibIRProcess;
 import com.energy.iruvc.utils.CommonParams;
 import com.energy.iruvc.utils.SynchronizedBitmap;
-// import com.mpdc4gsr.libunified.open3d.JNITool;
-import com.mpdc4gsr.libunified.ir.utils.JNITool;
 import com.example.suplib.wrapper.SupHelp;
+import com.mpdc4gsr.libunified.app.bean.AlarmBean;
 import com.mpdc4gsr.libunified.ir.bean.ColorRGB;
 import com.mpdc4gsr.libunified.ir.utils.IRImageHelp;
+import com.mpdc4gsr.libunified.ir.utils.JNITool;
 import com.mpdc4gsr.libunified.ir.utils.OpencvTools;
-import com.mpdc4gsr.libunified.ir.utils.PseudocodeUtils;
-import com.mpdc4gsr.libunified.app.bean.AlarmBean;
+import com.mpdc4gsr.libunified.app.utils.UnifiedColorUtils;
 
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
@@ -158,7 +157,7 @@ public class ImageThreadTC extends Thread {
                     if (irImageHelp.getColorList() != null) {
                         LibIRProcess.convertYuyvMapToARGBPseudocolor(imageSrc, imageHeight * imageWidth, CommonParams.PseudoColorType.PSEUDO_1, imageARGB);
                     } else {
-                        LibIRProcess.convertYuyvMapToARGBPseudocolor(imageSrc, imageHeight * imageWidth, PseudocodeUtils.INSTANCE.changePseudocodeModeByOld(pseudocolorMode), imageARGB);
+                        LibIRProcess.convertYuyvMapToARGBPseudocolor(imageSrc, imageHeight * imageWidth, UnifiedColorUtils.changePseudocodeModeByOld(pseudocolorMode), imageARGB);
                     }
 
                     if (rotateInt == 270) {

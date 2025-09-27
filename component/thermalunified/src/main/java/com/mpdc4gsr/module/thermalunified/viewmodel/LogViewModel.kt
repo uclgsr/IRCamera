@@ -552,7 +552,10 @@ class LogViewModel : BaseViewModel() {
                             endTime = System.currentTimeMillis(),
                         )
                 if (minuteVolLatestList.isNotEmpty()) {
-                    Log.w("chart", "[ph][ph][ph][ph][ph][ph][ph][ph][ph][ph]，[ph][ph][ph][ph][ph][ph][ph]")
+                    Log.w(
+                        "chart",
+                        "[ph][ph][ph][ph][ph][ph][ph][ph][ph][ph]，[ph][ph][ph][ph][ph][ph][ph]"
+                    )
                     return
                 }
                 val maxTime =
@@ -625,7 +628,10 @@ class LogViewModel : BaseViewModel() {
                             endTime = System.currentTimeMillis(),
                         )
                 if (hourVolLatestList.isNotEmpty()) {
-                    Log.w("chart", "[ph][ph][ph][ph][ph][ph][ph][ph][ph][ph]，[ph][ph][ph][ph][ph][ph][ph]")
+                    Log.w(
+                        "chart",
+                        "[ph][ph][ph][ph][ph][ph][ph][ph][ph][ph]，[ph][ph][ph][ph][ph][ph][ph]"
+                    )
                     return
                 }
                 val maxTime =

@@ -6,8 +6,8 @@ import android.os.Bundle
 import android.view.ViewGroup
 import androidx.annotation.StringRes
 import com.mpdc4gsr.libunified.R
-import com.mpdc4gsr.libunified.databinding.DialogNotTipsSelectBinding
 import com.mpdc4gsr.libunified.app.utils.ScreenUtil
+import com.mpdc4gsr.libunified.databinding.DialogNotTipsSelectBinding
 
 class NotTipsSelectDialog(context: Context) : Dialog(context, R.style.InfoDialog) {
     @StringRes

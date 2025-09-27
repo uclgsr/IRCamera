@@ -1,6 +1,7 @@
 package com.mpdc4gsr.module.thermalunified.activity
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.location.Address
 import android.location.Geocoder
 import android.location.Location
@@ -31,8 +32,8 @@ import com.mpdc4gsr.libunified.app.dialog.TipDialog
 import com.mpdc4gsr.libunified.app.ktbase.BaseActivity
 import com.mpdc4gsr.libunified.app.tools.TimeTool
 import com.mpdc4gsr.libunified.app.utils.CommUtils
-import com.mpdc4gsr.lib.ui.listener.SingleClickListener
-import com.mpdc4gsr.lib.ui.widget.BarPickView
+import com.mpdc4gsr.libunified.ui.listener.SingleClickListener
+import com.mpdc4gsr.libunified.ui.widget.BarPickView
 import com.mpdc4gsr.module.thermalunified.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -285,21 +286,29 @@ class IRCameraSettingActivity : BaseActivity() {
             }
 
             override fun onLocationChanged(location: Location) {
-                if (location != null) {
-
-                    Toast.makeText(
-                        this@IRCameraSettingActivity,
-                        location.longitude.toString() + " " +
-                                location.latitude + "",
-                        Toast.LENGTH_SHORT,
-                    ).show()
+                Toast.makeText(
+                    this@IRCameraSettingActivity,
+                    location.longitude.toString() + " " +
+                            location.latitude + "",
+                    Toast.LENGTH_SHORT,
+                ).show()
+                lifecycleScope.launch {
+                    withContext(Dispatchers.IO) {
+                        val add = getAddress(location)
+                        withContext(Dispatchers.Main) {
+                            watermarkBean.address = add
+                            edAddress.setText(add)
+                            tvAddress.text = add
+                            tvAddress.isVisible = add.isNotEmpty()
+                        }
+                    }
                 }
             }
         }
 
     @SuppressLint("MissingPermission")
     private fun getLastKnownLocation(): Location? {
-        locationManager = applicationContext.getSystemService(LOCATION_SERVICE) as LocationManager
+        locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
         val providers: List<String> = locationManager!!.getProviders(true)
         var bestLocation: Location? = null
         for (provider in providers) {
@@ -317,6 +326,7 @@ class IRCameraSettingActivity : BaseActivity() {
         try {
             if (location != null) {
                 val gc = Geocoder(this, Locale.getDefault())
+                @Suppress("DEPRECATION")
                 result =
                     gc.getFromLocation(
                         location.latitude,

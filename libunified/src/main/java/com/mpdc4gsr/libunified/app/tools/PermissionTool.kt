@@ -2,16 +2,13 @@ package com.mpdc4gsr.libunified.app.tools
 
 import android.content.Context
 import android.os.Build
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
 import com.blankj.utilcode.util.AppUtils
 import com.elvishew.xlog.XLog
 import com.hjq.permissions.OnPermissionCallback
 import com.hjq.permissions.Permission
 import com.hjq.permissions.XXPermissions
-import com.mpdc4gsr.libunified.app.BaseApplication
 import com.mpdc4gsr.libunified.R
+import com.mpdc4gsr.libunified.app.BaseApplication
 import com.mpdc4gsr.libunified.app.dialog.TipDialog
 import com.mpdc4gsr.libunified.app.lms.weiget.TToast
 

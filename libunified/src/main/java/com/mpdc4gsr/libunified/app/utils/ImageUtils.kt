@@ -2,36 +2,32 @@ package com.mpdc4gsr.libunified.app.utils
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.net.Uri
+import android.os.Build
 import android.util.Log
+import androidx.core.content.FileProvider
+import com.blankj.utilcode.util.FileUtils
 import com.blankj.utilcode.util.ImageUtils
 import com.blankj.utilcode.util.Utils
 import com.elvishew.xlog.XLog
 import com.mpdc4gsr.libunified.app.config.FileConfig.lineIrGalleryDir
-import java.io.File
+import java.io.*
 
 object ImageUtils {
 
-    fun saveToCache(
-        context: Context,
-        bitmap: Bitmap,
-    ): String {
+    fun saveToCache(context: Context, bitmap: Bitmap): String {
         val cacheFile = context.externalCacheDir ?: context.cacheDir
         val file = File(cacheFile, "Report_${System.currentTimeMillis()}.jpg")
         ImageUtils.save(bitmap, file, Bitmap.CompressFormat.JPEG)
         return file.absolutePath
     }
 
-    fun save(
-        bitmap: Bitmap,
-        // isTC007 parameter removed - TC007 functionality disabled
-    ): String {
-
-        val dicName = CommUtils.getAppName() // Always use app name, TC007 functionality removed
+    fun save(bitmap: Bitmap, isTC007: Boolean = false): String {
+        val dicName = if (isTC007) "TC007" else CommUtils.getAppName()
         val fileName = "${dicName}_${System.currentTimeMillis()}.jpg"
         val saveFile = ImageUtils.save2Album(bitmap, dicName, Bitmap.CompressFormat.JPEG)
         return if (saveFile != null) {
-            val name = saveFile.name
-            name.replace(".JPG", "")
+            saveFile.name.replace(".JPG", "")
         } else {
             fileName.replace(".JPG", "")
         }
@@ -43,53 +39,41 @@ object ImageUtils {
         return saveFile.absolutePath
     }
 
-    fun saveLiteFrame(
-        bs: ByteArray,
-        capital: ByteArray,
-        nuct: ByteArray,
-        name: String,
-    ) {
+    fun saveLiteFrame(bs: ByteArray, capital: ByteArray, nuct: ByteArray, name: String) {
         try {
             val dir = lineIrGalleryDir
             val galleryPath = File(dir)
-            val fileName = "$name.ir"
+            val fileName = "${name}.ir"
             val file = File(galleryPath, fileName)
             file.writeBytes(capital.plus(bs))
-            Log.w("saved[ph][ph][ph]:", file.absolutePath)
+            Log.w("保存帧数据:", file.absolutePath)
         } catch (e: Exception) {
-            XLog.e("[ph][ph][ph][ph]saved[ph][ph]: ${e.message}")
+            XLog.e("一帧图像保存异常: ${e.message}")
         }
     }
 
-    fun saveFrame(
-        bs: ByteArray,
-        capital: ByteArray,
-        name: String,
-    ) {
+    fun saveFrame(bs: ByteArray, capital: ByteArray, name: String) {
         try {
             val dir = lineIrGalleryDir
             val galleryPath = File(dir)
-            val fileName = "$name.ir"
+            val fileName = "${name}.ir"
             val file = File(galleryPath, fileName)
             file.writeBytes(capital.plus(bs))
-            Log.w("saved[ph][ph][ph]:", file.absolutePath)
+            Log.w("保存帧数据:", file.absolutePath)
         } catch (e: Exception) {
-            XLog.e("[ph][ph][ph][ph]saved[ph][ph]: ${e.message}")
+            XLog.e("一帧图像保存异常: ${e.message}")
         }
     }
 
-    fun saveOneFrameAGRB(
-        bs: ByteArray,
-        name: String,
-    ) {
+    fun saveOneFrameAGRB(bs: ByteArray, name: String) {
         try {
             val dir = lineIrGalleryDir
             val galleryPath = File(dir)
-            val fileName = "$name.ir"
+            val fileName = "${name}.ir"
             val file = File(galleryPath, fileName)
             file.writeBytes(bs)
         } catch (e: Exception) {
-            XLog.e("[ph][ph][ph][ph]saved[ph][ph]: ${e.message}")
+            XLog.e("一帧图像保存异常: ${e.message}")
         }
     }
 }

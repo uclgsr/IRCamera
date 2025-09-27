@@ -1,4 +1,4 @@
-package com.mpdc4gsr.libunified.ui.charting.components;
+package com.mpdc4gsr.libunified.ui.components;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -6,11 +6,11 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 
-import com.mpdc4gsr.libunified.ui.charting.charts.Chart;
-import com.mpdc4gsr.libunified.ui.charting.data.Entry;
-import com.mpdc4gsr.libunified.ui.charting.highlight.Highlight;
-import com.mpdc4gsr.libunified.ui.charting.utils.FSize;
-import com.mpdc4gsr.libunified.ui.charting.utils.MPPointF;
+import com.mpdc4gsr.libunified.ui.charts.Chart;
+import com.mpdc4gsr.libunified.ui.data.Entry;
+import com.mpdc4gsr.libunified.ui.highlight.Highlight;
+import com.mpdc4gsr.libunified.ui.utils.FSize;
+import com.mpdc4gsr.libunified.ui.utils.MPPointF;
 
 import java.lang.ref.WeakReference;
 

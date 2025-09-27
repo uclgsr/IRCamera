@@ -2,6 +2,7 @@ package mpdc4gsr.sensors.gsr
 
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import com.csl.irCamera.R
 import com.csl.irCamera.databinding.ActivitySessionDetailBinding
@@ -45,7 +46,12 @@ class SessionDetailActivity : BaseBindingActivity<ActivitySessionDetailBinding>(
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        onBackPressed()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            onBackPressedDispatcher.onBackPressed()
+        } else {
+            @Suppress("DEPRECATION")
+            onBackPressed()
+        }
         return true
     }
 }

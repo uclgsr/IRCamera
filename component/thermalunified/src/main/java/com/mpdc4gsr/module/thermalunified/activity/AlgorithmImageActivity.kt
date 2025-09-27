@@ -6,7 +6,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import com.mpdc4gsr.libunified.open3d.JNITool
+import com.mpdc4gsr.libunified.ir.utils.JNITool
 import com.mpdc4gsr.module.thermalunified.R
 import com.mpdc4gsr.module.thermalunified.utils.ImageColorTools
 import org.opencv.core.CvType
@@ -119,7 +119,7 @@ class AlgorithmImageActivity : AppCompatActivity() {
             Imgproc.cvtColor(image, image, Imgproc.COLOR_BGR2RGBA)
             val startTime = System.currentTimeMillis()
             val matByteArray =
-                JNITool.diff2firstFrameByTempWH(
+                JNITool.INSTANCE.diff2firstFrameByTempWH(
                     256,
                     192,
                     baseTemperatureBytes,
@@ -129,7 +129,10 @@ class AlgorithmImageActivity : AppCompatActivity() {
             val im = Mat(192, 256, CvType.CV_8UC4)
             im.put(0, 0, matByteArray)
             val bitmap = ImageColorTools.matToBitmap(im)
-            Log.e("Test[ph][ph]：", "diff2firstFrameByTemp ： ${System.currentTimeMillis() - startTime}")
+            Log.e(
+                "Test[ph][ph]：",
+                "diff2firstFrameByTemp ： ${System.currentTimeMillis() - startTime}"
+            )
             imgARGB.setImageBitmap(ImageColorTools.adjustPhotoRotation(bitmap, 90))
         }
         findViewById<View>(R.id.btn_u4).setOnClickListener {

@@ -20,8 +20,17 @@ import androidx.lifecycle.lifecycleScope
 import com.shimmerresearch.android.Shimmer
 import com.shimmerresearch.android.manager.ShimmerBluetoothManagerAndroid
 import com.shimmerresearch.bluetooth.ShimmerBluetooth.BT_STATE
-import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import mpdc4gsr.sensors.unified.model.DeviceInfo
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
@@ -86,7 +95,8 @@ class ShimmerDeviceManager(
                 return@withContext false
             }
 
-            bluetoothManager = context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
+            bluetoothManager =
+                context.getSystemService(Context.BLUETOOTH_SERVICE) as? BluetoothManager
             bluetoothAdapter = bluetoothManager?.adapter
 
             if (bluetoothAdapter?.isEnabled != true) {
@@ -167,13 +177,15 @@ class ShimmerDeviceManager(
             != PackageManager.PERMISSION_GRANTED
         ) return emptyList()
 
-        return BluetoothAdapter.getDefaultAdapter()?.bondedDevices
+        val bluetoothManager = context.getSystemService(Context.BLUETOOTH_SERVICE) as? BluetoothManager
+        return bluetoothManager?.adapter?.bondedDevices
             ?.filter { isValidShimmerDevice(it) } ?: emptyList()
     }
 
 
     private suspend fun performEnhancedBluetoothLeScanning() {
-        val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+        val bluetoothManager = context.getSystemService(Context.BLUETOOTH_SERVICE) as? BluetoothManager
+        val bluetoothAdapter = bluetoothManager?.adapter
         val bluetoothLeScanner = bluetoothAdapter?.bluetoothLeScanner
 
         if (bluetoothLeScanner == null) {
@@ -269,7 +281,10 @@ class ShimmerDeviceManager(
         val rssi = result.rssi
 
         if (isValidShimmerDevice(device) && !discoveredDevices.containsKey(device.address)) {
-            Log.d(TAG, "Discovered new Shimmer device: ${device.name} (${device.address}) RSSI: $rssi")
+            Log.d(
+                TAG,
+                "Discovered new Shimmer device: ${device.name} (${device.address}) RSSI: $rssi"
+            )
 
             val deviceInfo = DeviceInfo(
                 address = device.address,
@@ -323,7 +338,8 @@ class ShimmerDeviceManager(
 
 
             currentScanCallback?.let { callback ->
-                val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+                val bluetoothManager = context.getSystemService(Context.BLUETOOTH_SERVICE) as? BluetoothManager
+                val bluetoothAdapter = bluetoothManager?.adapter
                 val bluetoothLeScanner = bluetoothAdapter?.bluetoothLeScanner
 
                 try {
@@ -349,7 +365,10 @@ class ShimmerDeviceManager(
 
 
     suspend fun connectToDevice(deviceInfo: DeviceInfo): Boolean = withContext(Dispatchers.IO) {
-        Log.i(TAG, "Initiating connection to Shimmer device: ${deviceInfo.address} (${deviceInfo.name})")
+        Log.i(
+            TAG,
+            "Initiating connection to Shimmer device: ${deviceInfo.address} (${deviceInfo.name})"
+        )
 
         val shimmerMgr = shimmerManager ?: run {
             Log.e(TAG, "Shimmer manager not initialized - call initialize() first")
@@ -435,7 +454,10 @@ class ShimmerDeviceManager(
             }
 
 
-            Log.w(TAG, "⏰ Connection timeout for device: ${deviceInfo.address} after ${CONNECTION_TIMEOUT_MS}ms")
+            Log.w(
+                TAG,
+                "⏰ Connection timeout for device: ${deviceInfo.address} after ${CONNECTION_TIMEOUT_MS}ms"
+            )
             _connectionEvents.emit(
                 ConnectionEvent(
                     deviceInfo.address,
@@ -483,7 +505,7 @@ class ShimmerDeviceManager(
 
 
             shimmer.stopStreaming()
-            shimmer.stopBtConnection()
+            shimmer.disconnect()
 
             connectedDevices.remove(deviceAddress)
 
@@ -627,76 +649,95 @@ class ShimmerDeviceManager(
     }
 
 
-    suspend fun startMultiDeviceTesting(targetDeviceCount: Int = 3): Boolean = withContext(Dispatchers.IO) {
-        try {
-            Log.i(TAG, "Starting multi-device testing with target $targetDeviceCount devices")
+    suspend fun startMultiDeviceTesting(targetDeviceCount: Int = 3): Boolean =
+        withContext(Dispatchers.IO) {
+            try {
+                Log.i(TAG, "Starting multi-device testing with target $targetDeviceCount devices")
 
-            if (targetDeviceCount > MAX_CONCURRENT_DEVICES) {
-                Log.w(TAG, "Target device count $targetDeviceCount exceeds maximum ${MAX_CONCURRENT_DEVICES}, limiting")
-            }
+                if (targetDeviceCount > MAX_CONCURRENT_DEVICES) {
+                    Log.w(
+                        TAG,
+                        "Target device count $targetDeviceCount exceeds maximum ${MAX_CONCURRENT_DEVICES}, limiting"
+                    )
+                }
 
-            val actualTargetCount = minOf(targetDeviceCount, MAX_CONCURRENT_DEVICES)
+                val actualTargetCount = minOf(targetDeviceCount, MAX_CONCURRENT_DEVICES)
 
 
-            val connectedCount = connectedDevices.size
-            if (connectedCount < actualTargetCount) {
-                Log.w(TAG, "Only $connectedCount devices connected, need $actualTargetCount for comprehensive testing")
+                val connectedCount = connectedDevices.size
+                if (connectedCount < actualTargetCount) {
+                    Log.w(
+                        TAG,
+                        "Only $connectedCount devices connected, need $actualTargetCount for comprehensive testing"
+                    )
 
-                if (connectedCount < 2) {
-                    Log.e(TAG, "Minimum 2 devices required for multi-device testing")
+                    if (connectedCount < 2) {
+                        Log.e(TAG, "Minimum 2 devices required for multi-device testing")
+                        return@withContext false
+                    }
+                }
+
+
+                val streamingResults = startSynchronizedStreamingOnAllDevices()
+
+                if (streamingResults) {
+                    Log.i(
+                        TAG,
+                        "✅ Multi-device testing started successfully with ${connectedDevices.size} devices"
+                    )
+                    return@withContext true
+                } else {
+                    Log.e(TAG, "❌ Failed to start streaming on all devices")
                     return@withContext false
                 }
-            }
 
-
-            val streamingResults = startSynchronizedStreamingOnAllDevices()
-
-            if (streamingResults) {
-                Log.i(TAG, "✅ Multi-device testing started successfully with ${connectedDevices.size} devices")
-                return@withContext true
-            } else {
-                Log.e(TAG, "❌ Failed to start streaming on all devices")
+            } catch (e: Exception) {
+                Log.e(TAG, "Error starting multi-device testing", e)
                 return@withContext false
             }
-
-        } catch (e: Exception) {
-            Log.e(TAG, "Error starting multi-device testing", e)
-            return@withContext false
         }
-    }
 
 
     private suspend fun startSynchronizedStreamingOnAllDevices(): Boolean {
         return try {
             Log.i(TAG, "Starting synchronized streaming on ${connectedDevices.size} devices")
 
-
-            val streamingJobs = connectedDevices.map { (address, shimmer) ->
-                async {
-                    try {
-                        Log.d(TAG, "Starting streaming on device: $address")
-                        shimmer.startStreaming()
-                        Log.d(TAG, "✅ Streaming started successfully on device: $address")
-                        true
-                    } catch (e: Exception) {
-                        Log.e(TAG, "❌ Failed to start streaming on device $address", e)
-                        false
+            coroutineScope {
+                val streamingJobs = connectedDevices.map { (address, shimmer) ->
+                    async {
+                        try {
+                            Log.d(TAG, "Starting streaming on device: $address")
+                            shimmer.startStreaming()
+                            Log.d(TAG, "✅ Streaming started successfully on device: $address")
+                            true
+                        } catch (e: Exception) {
+                            Log.e(TAG, "❌ Failed to start streaming on device $address", e)
+                            false
+                        }
                     }
                 }
-            }
 
+                val results = streamingJobs.awaitAll()
+                val successCount = results.count { it }
 
-            val results = streamingJobs.awaitAll()
-            val successCount = results.count { it }
+                Log.i(
+                    TAG,
+                    "Synchronized streaming started: $successCount/${connectedDevices.size} devices successful"
+                )
 
-            Log.i(TAG, "Synchronized streaming started: $successCount/${connectedDevices.size} devices successful")
-
-            if (successCount >= 2) {
-                Log.i(TAG, "✅ Multi-device streaming barrier successful with $successCount devices")
-                return true
-            } else {
-                Log.e(TAG, "❌ Multi-device streaming barrier failed - insufficient devices streaming")
-                return false
+                if (successCount >= 2) {
+                    Log.i(
+                        TAG,
+                        "✅ Multi-device streaming barrier successful with $successCount devices"
+                    )
+                    true
+                } else {
+                    Log.e(
+                        TAG,
+                        "❌ Multi-device streaming barrier failed - insufficient devices streaming"
+                    )
+                    false
+                }
             }
 
         } catch (e: Exception) {

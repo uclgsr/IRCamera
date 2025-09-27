@@ -16,8 +16,6 @@ import org.mockito.Mockito.*
 import org.mockito.junit.MockitoJUnit
 import org.mockito.junit.MockitoRule
 import java.io.File
-import java.util.concurrent.CountDownLatch
-import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -213,7 +211,8 @@ class TC001IntegrationTest {
         assertTrue("Should be recording", thermalRecorder.isRecording)
 
         // When: Simulate camera disconnect event by directly invoking the event handler
-        val disconnectEvent = mock(com.mpdc4gsr.libunified.app.bean.event.device.DeviceConnectEvent::class.java)
+        val disconnectEvent =
+            mock(com.mpdc4gsr.libunified.app.bean.event.device.DeviceConnectEvent::class.java)
         `when`(disconnectEvent.isConnected).thenReturn(false)
         `when`(disconnectEvent.device).thenReturn(mockTC001Device)
         thermalRecorder.onDeviceConnectEvent(disconnectEvent)
@@ -418,7 +417,8 @@ class TC001IntegrationTest {
         assertTrue("Thermal images directory should be a directory", thermalImagesDir.isDirectory())
 
         // Should have thermal data CSV file
-        val csvFiles = testSessionDir.listFiles { _, name -> name.contains("thermal") && name.endsWith(".csv") }
+        val csvFiles =
+            testSessionDir.listFiles { _, name -> name.contains("thermal") && name.endsWith(".csv") }
         assertNotNull("Should have thermal CSV files", csvFiles)
         assertTrue("Should have at least one thermal CSV file", csvFiles!!.isNotEmpty())
     }

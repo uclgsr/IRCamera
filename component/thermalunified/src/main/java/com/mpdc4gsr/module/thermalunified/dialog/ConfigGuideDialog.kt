@@ -21,7 +21,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mpdc4gsr.libunified.app.common.SharedManager
 import com.mpdc4gsr.libunified.app.tools.NumberTools
 import com.mpdc4gsr.libunified.app.tools.UnitTools
-import com.mpdc4gsr.lib.ui.widget.MyItemDecoration
+import com.mpdc4gsr.libunified.ui.widget.MyItemDecoration
 import com.mpdc4gsr.module.thermalunified.R
 import com.mpdc4gsr.module.thermalunified.adapter.ConfigEmAdapter
 import com.mpdc4gsr.module.thermalunified.bean.DataBean

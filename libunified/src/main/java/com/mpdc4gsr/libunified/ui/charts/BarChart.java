@@ -1,18 +1,18 @@
-package com.mpdc4gsr.libunified.ui.charting.charts;
+package com.mpdc4gsr.libunified.ui.charts;
 
 import android.content.Context;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.Log;
 
-import com.mpdc4gsr.libunified.ui.charting.components.YAxis;
-import com.mpdc4gsr.libunified.ui.charting.data.BarData;
-import com.mpdc4gsr.libunified.ui.charting.data.BarEntry;
-import com.mpdc4gsr.libunified.ui.charting.highlight.BarHighlighter;
-import com.mpdc4gsr.libunified.ui.charting.highlight.Highlight;
-import com.mpdc4gsr.libunified.ui.charting.interfaces.dataprovider.BarDataProvider;
-import com.mpdc4gsr.libunified.ui.charting.interfaces.datasets.IBarDataSet;
-import com.mpdc4gsr.libunified.ui.charting.renderer.BarChartRenderer;
+import com.mpdc4gsr.libunified.ui.components.YAxis;
+import com.mpdc4gsr.libunified.ui.data.BarData;
+import com.mpdc4gsr.libunified.ui.data.BarEntry;
+import com.mpdc4gsr.libunified.ui.highlight.BarHighlighter;
+import com.mpdc4gsr.libunified.ui.highlight.Highlight;
+import com.mpdc4gsr.libunified.ui.interfaces.dataprovider.BarDataProvider;
+import com.mpdc4gsr.libunified.ui.interfaces.datasets.IBarDataSet;
+import com.mpdc4gsr.libunified.ui.renderer.BarChartRenderer;
 
 public class BarChart extends BarLineChartBase<BarData> implements BarDataProvider {
 

@@ -1,4 +1,4 @@
-package com.mpdc4gsr.libunified.ui.charting.charts;
+package com.mpdc4gsr.libunified.ui.charts;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
@@ -13,27 +13,27 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 
-import com.mpdc4gsr.libunified.ui.charting.components.XAxis.XAxisPosition;
-import com.mpdc4gsr.libunified.ui.charting.components.YAxis;
-import com.mpdc4gsr.libunified.ui.charting.components.YAxis.AxisDependency;
-import com.mpdc4gsr.libunified.ui.charting.data.BarLineScatterCandleBubbleData;
-import com.mpdc4gsr.libunified.ui.charting.data.Entry;
-import com.mpdc4gsr.libunified.ui.charting.highlight.ChartHighlighter;
-import com.mpdc4gsr.libunified.ui.charting.highlight.Highlight;
-import com.mpdc4gsr.libunified.ui.charting.interfaces.dataprovider.BarLineScatterCandleBubbleDataProvider;
-import com.mpdc4gsr.libunified.ui.charting.interfaces.datasets.IBarLineScatterCandleBubbleDataSet;
-import com.mpdc4gsr.libunified.ui.charting.jobs.AnimatedMoveViewJob;
-import com.mpdc4gsr.libunified.ui.charting.jobs.AnimatedZoomJob;
-import com.mpdc4gsr.libunified.ui.charting.jobs.MoveViewJob;
-import com.mpdc4gsr.libunified.ui.charting.jobs.ZoomJob;
-import com.mpdc4gsr.libunified.ui.charting.listener.BarLineChartTouchListener;
-import com.mpdc4gsr.libunified.ui.charting.listener.OnDrawListener;
-import com.mpdc4gsr.libunified.ui.charting.renderer.XAxisRenderer;
-import com.mpdc4gsr.libunified.ui.charting.renderer.YAxisRenderer;
-import com.mpdc4gsr.libunified.ui.charting.utils.MPPointD;
-import com.mpdc4gsr.libunified.ui.charting.utils.MPPointF;
-import com.mpdc4gsr.libunified.ui.charting.utils.Transformer;
-import com.mpdc4gsr.libunified.ui.charting.utils.Utils;
+import com.mpdc4gsr.libunified.ui.components.XAxis.XAxisPosition;
+import com.mpdc4gsr.libunified.ui.components.YAxis;
+import com.mpdc4gsr.libunified.ui.components.YAxis.AxisDependency;
+import com.mpdc4gsr.libunified.ui.data.BarLineScatterCandleBubbleData;
+import com.mpdc4gsr.libunified.ui.data.Entry;
+import com.mpdc4gsr.libunified.ui.highlight.ChartHighlighter;
+import com.mpdc4gsr.libunified.ui.highlight.Highlight;
+import com.mpdc4gsr.libunified.ui.interfaces.dataprovider.BarLineScatterCandleBubbleDataProvider;
+import com.mpdc4gsr.libunified.ui.interfaces.datasets.IBarLineScatterCandleBubbleDataSet;
+import com.mpdc4gsr.libunified.ui.jobs.AnimatedMoveViewJob;
+import com.mpdc4gsr.libunified.ui.jobs.AnimatedZoomJob;
+import com.mpdc4gsr.libunified.ui.jobs.MoveViewJob;
+import com.mpdc4gsr.libunified.ui.jobs.ZoomJob;
+import com.mpdc4gsr.libunified.ui.listener.BarLineChartTouchListener;
+import com.mpdc4gsr.libunified.ui.listener.OnDrawListener;
+import com.mpdc4gsr.libunified.ui.renderer.XAxisRenderer;
+import com.mpdc4gsr.libunified.ui.renderer.YAxisRenderer;
+import com.mpdc4gsr.libunified.ui.utils.MPPointD;
+import com.mpdc4gsr.libunified.ui.utils.MPPointF;
+import com.mpdc4gsr.libunified.ui.utils.Transformer;
+import com.mpdc4gsr.libunified.ui.utils.Utils;
 
 @SuppressLint("RtlHardcoded")
 public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<? extends

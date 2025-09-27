@@ -18,6 +18,7 @@ public class LMS {
     private static volatile LMS instance;
     public String language = "en";
     public String softwareCode = "";
+    private String productType = "";
     private Context context;
     private boolean isLogin = false;
     private String token = "";
@@ -44,7 +45,12 @@ public class LMS {
     }
 
     // Stub methods for initialization configuration
+    public String getProductType() {
+        return productType;
+    }
+
     public void setProductType(String productType) {
+        this.productType = productType;
     }
 
     public void setLoginType(String loginType) {
@@ -129,7 +135,7 @@ public class LMS {
     public void checkAppUpdate(IResponseCallback callback) {
         if (callback != null) {
             // Return no update available
-            callback.onResponse("{\"code\":2000,\"data\":{\"hasNewVersion\":false}}");
+            callback.onResponse("{\"code\":\"2000\",\"data\":{\"hasNewVersion\":false}}");
         }
     }
 

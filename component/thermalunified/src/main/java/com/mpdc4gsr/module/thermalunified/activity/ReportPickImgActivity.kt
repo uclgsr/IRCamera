@@ -7,6 +7,7 @@ import android.view.View
 import androidx.activity.viewModels
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.GridLayoutManager
+import com.mpdc4gsr.libunified.app.bean.GalleryBean
 import com.mpdc4gsr.libunified.app.bean.GalleryTitle
 import com.mpdc4gsr.libunified.app.bean.event.GalleryDelEvent
 import com.mpdc4gsr.libunified.app.bean.event.ReportCreateEvent
@@ -32,7 +33,6 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.io.File
 import com.mpdc4gsr.libunified.R as LibR
-import com.mpdc4gsr.lib.ui.R as UiR
 
 
 class ReportPickImgActivity : BaseActivity(), View.OnClickListener {
@@ -41,7 +41,7 @@ class ReportPickImgActivity : BaseActivity(), View.OnClickListener {
 
     private val viewModel: IRGalleryViewModel by viewModels()
 
-    private val adapter = GalleryAdapter()
+    private val adapter = GalleryAdapter(this)
 
     private lateinit var titleView: com.mpdc4gsr.libunified.app.view.TitleView
     private lateinit var clShare: androidx.constraintlayout.widget.ConstraintLayout
@@ -61,7 +61,7 @@ class ReportPickImgActivity : BaseActivity(), View.OnClickListener {
 
         isTC007 = intent.getBooleanExtra(ExtraKeyConfig.IS_TC007, false)
 
-        titleView.setRightDrawable(UiR.drawable.ic_toolbar_check_svg)
+        titleView.setRightDrawable(LibR.drawable.ic_toolbar_check_svg)
         titleView.setRightClickListener { setEditMode(true) }
 
         initRecycler()
@@ -105,10 +105,12 @@ class ReportPickImgActivity : BaseActivity(), View.OnClickListener {
     override fun initData() {
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         if (adapter.isEditMode) {
             setEditMode(false)
         } else {
+            @Suppress("DEPRECATION")
             super.onBackPressed()
         }
     }
@@ -117,8 +119,11 @@ class ReportPickImgActivity : BaseActivity(), View.OnClickListener {
         adapter.isEditMode = isEditMode
         groupBottom.isVisible = isEditMode
         titleView.setTitleText(
-            if (isEditMode) getString(R.string.chosen_item, adapter.selectList.size) else getString(
-                R.string.app_gallery
+            if (isEditMode) getString(
+                LibR.string.chosen_item,
+                adapter.selectList.size
+            ) else getString(
+                LibR.string.app_gallery
             ),
         )
         titleView.setLeftDrawable(if (isEditMode) 0 else 0)
@@ -129,8 +134,8 @@ class ReportPickImgActivity : BaseActivity(), View.OnClickListener {
                 finish()
             }
         }
-        titleView.setRightDrawable(if (isEditMode) 0 else UiR.drawable.ic_toolbar_check_svg)
-        titleView.setRightText(if (isEditMode) getString(R.string.report_select_all) else "")
+        titleView.setRightDrawable(if (isEditMode) 0 else LibR.drawable.ic_toolbar_check_svg)
+        titleView.setRightText(if (isEditMode) getString(LibR.string.report_select_all) else "")
         titleView.setRightClickListener {
             if (isEditMode) {
                 adapter.selectAll()
@@ -168,24 +173,24 @@ class ReportPickImgActivity : BaseActivity(), View.OnClickListener {
         adapter.onLongEditListener = {
 
             groupBottom.isVisible = true
-            titleView.setTitleText(getString(R.string.chosen_item, adapter.selectList.size))
+            titleView.setTitleText(getString(LibR.string.chosen_item, adapter.selectList.size))
             titleView.setLeftDrawable(0)
             titleView.setLeftClickListener {
                 setEditMode(false)
             }
             titleView.setRightDrawable(0)
-            titleView.setRightText(getString(R.string.report_select_all))
+            titleView.setRightText(getString(LibR.string.report_select_all))
             titleView.setRightClickListener {
                 adapter.selectAll()
             }
         }
 
-        adapter.selectCallback = {
-            titleView.setTitleText(getString(R.string.chosen_item, it.size))
+        adapter.selectCallback = { selectList ->
+            titleView.setTitleText(getString(LibR.string.chosen_item, selectList.size))
         }
         adapter.itemClickCallback = {
-            val data = adapter.dataList[it]
-            val fileName = data.name.substringBeforeLast(".")
+            val data = adapter.dataList[it] as? GalleryBean
+            val fileName = data?.name?.substringBeforeLast(".") ?: ""
             val irPath = "${FileConfig.lineIrGalleryDir}/$fileName.ir"
             if (File(irPath).exists()) {
                 val navigation =
@@ -195,21 +200,49 @@ class ReportPickImgActivity : BaseActivity(), View.OnClickListener {
                         .withBoolean(IS_REPORT_FIRST, false)
                         .withString(ExtraKeyConfig.FILE_ABSOLUTE_PATH, irPath)
 
-                intent.getParcelableExtra<ReportInfoBean>(ExtraKeyConfig.REPORT_INFO)?.let {
+                val reportInfo =
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+                        intent.getParcelableExtra(
+                            ExtraKeyConfig.REPORT_INFO,
+                            ReportInfoBean::class.java
+                        )
+                    } else {
+                        @Suppress("DEPRECATION")
+                        intent.getParcelableExtra<ReportInfoBean>(ExtraKeyConfig.REPORT_INFO)
+                    }
+                reportInfo?.let {
                     navigation.withParcelable(ExtraKeyConfig.REPORT_INFO, it)
                 }
-                intent.getParcelableExtra<ReportConditionBean>(ExtraKeyConfig.REPORT_CONDITION)
-                    ?.let {
-                        navigation.withParcelable(ExtraKeyConfig.REPORT_CONDITION, it)
+                val reportCondition =
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+                        intent.getParcelableExtra(
+                            ExtraKeyConfig.REPORT_CONDITION,
+                            ReportConditionBean::class.java
+                        )
+                    } else {
+                        @Suppress("DEPRECATION")
+                        intent.getParcelableExtra<ReportConditionBean>(ExtraKeyConfig.REPORT_CONDITION)
                     }
-                intent.getParcelableArrayListExtra<ReportIRBean>(ExtraKeyConfig.REPORT_IR_LIST)
-                    ?.let {
-                        navigation.withParcelableArrayList(ExtraKeyConfig.REPORT_IR_LIST, it)
+                reportCondition?.let {
+                    navigation.withParcelable(ExtraKeyConfig.REPORT_CONDITION, it)
+                }
+                val reportIrList =
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+                        intent.getParcelableArrayListExtra(
+                            ExtraKeyConfig.REPORT_IR_LIST,
+                            ReportIRBean::class.java
+                        )
+                    } else {
+                        @Suppress("DEPRECATION")
+                        intent.getParcelableArrayListExtra<ReportIRBean>(ExtraKeyConfig.REPORT_IR_LIST)
                     }
+                reportIrList?.let {
+                    navigation.withParcelableArrayList(ExtraKeyConfig.REPORT_IR_LIST, it)
+                }
 
                 navigation.navigation(this)
             } else {
-                ToastTools.showShort(R.string.album_report_on_edit)
+                ToastTools.showShort(LibR.string.album_report_on_edit)
             }
         }
     }
@@ -220,27 +253,27 @@ class ReportPickImgActivity : BaseActivity(), View.OnClickListener {
             TipDialog.Builder(this)
                 .setMessage(
                     getString(
-                        R.string.tip_delete_chosen,
+                        LibR.string.tip_delete_chosen,
                         deleteList.size,
                     ),
                 )
-                .setPositiveListener(R.string.app_confirm) {
+                .setPositiveListener(LibR.string.app_confirm) {
                     viewModel.delete(deleteList, if (isTC007) DirType.TC007 else DirType.LINE, true)
-                }.setCancelListener(R.string.app_cancel)
+                }.setCancelListener(LibR.string.app_cancel)
                 .create().show()
         } else {
-            ToastTools.showShort(getString(R.string.tip_least_select))
+            ToastTools.showShort(getString(LibR.string.tip_least_select))
         }
     }
 
     private fun shareImage() {
         val data = adapter.buildSelectList()
         if (data.size == 0) {
-            ToastTools.showShort(getString(R.string.tip_least_select))
+            ToastTools.showShort(getString(LibR.string.tip_least_select))
             return
         }
         if (data.size > 9) {
-            ToastTools.showShort(getString(R.string.Limite_di_9carte))
+            ToastTools.showShort(getString(LibR.string.Limite_di_9carte))
             return
         }
         val imageUris = ArrayList<Uri>()
@@ -262,6 +295,6 @@ class ReportPickImgActivity : BaseActivity(), View.OnClickListener {
             shareIntent.action = Intent.ACTION_SEND_MULTIPLE
             shareIntent.putExtra(Intent.EXTRA_STREAM, imageUris)
         }
-        startActivity(Intent.createChooser(shareIntent, getString(R.string.battery_share)))
+        startActivity(Intent.createChooser(shareIntent, getString(LibR.string.battery_share)))
     }
 }

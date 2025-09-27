@@ -7,6 +7,8 @@ dependencyResolutionManagement {
         maven { url = uri("https://developer.huawei.com/repo/") }
         maven { url = uri("https://maven.aliyun.com/repository/central") }
         maven { url = uri("https://maven.aliyun.com/repository/google") }
+        maven { url = uri("https://maven.scijava.org/content/repositories/public") }
+        maven { url = uri("https://maven.scijava.org/content/groups/public") }
 
         flatDir {
             dirs("libunified/libs", "app/libs", "BleModule/libs")
@@ -22,4 +24,3 @@ include(":component:thermalunified")
 include(":component:user")
 include(":libunified")
 include(":BleModule")
-include(":ble-core")

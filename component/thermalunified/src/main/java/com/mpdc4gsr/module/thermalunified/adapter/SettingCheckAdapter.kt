@@ -11,7 +11,6 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.mpdc4gsr.module.thermalunified.R
 import com.mpdc4gsr.libunified.R as LibR
-import com.mpdc4gsr.lib.ui.R as LibUiR
 
 class SettingCheckAdapter(val context: Context) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -42,7 +41,7 @@ class SettingCheckAdapter(val context: Context) :
         if (holder is ItemView) {
             holder.btn.text = datas[position]
             if (position == selectTime) {
-                holder.btn.setBackgroundResource(LibUiR.drawable.ic_menu_thermal7001_svg)
+                holder.btn.setBackgroundResource(LibR.drawable.ic_menu_thermal7001_svg)
                 holder.btn.setTextColor(
                     ContextCompat.getColor(
                         context,
@@ -50,7 +49,7 @@ class SettingCheckAdapter(val context: Context) :
                     )
                 )
             } else {
-                holder.btn.setBackgroundResource(LibUiR.drawable.ic_menu_thermal7002_svg)
+                holder.btn.setBackgroundResource(LibR.drawable.ic_menu_thermal7002_svg)
                 holder.btn.setTextColor(
                     ContextCompat.getColor(
                         context,

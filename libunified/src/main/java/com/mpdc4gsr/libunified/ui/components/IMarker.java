@@ -1,10 +1,10 @@
-package com.mpdc4gsr.libunified.ui.charting.components;
+package com.mpdc4gsr.libunified.ui.components;
 
 import android.graphics.Canvas;
 
-import com.mpdc4gsr.libunified.ui.charting.data.Entry;
-import com.mpdc4gsr.libunified.ui.charting.highlight.Highlight;
-import com.mpdc4gsr.libunified.ui.charting.utils.MPPointF;
+import com.mpdc4gsr.libunified.ui.data.Entry;
+import com.mpdc4gsr.libunified.ui.highlight.Highlight;
+import com.mpdc4gsr.libunified.ui.utils.MPPointF;
 
 public interface IMarker {
 

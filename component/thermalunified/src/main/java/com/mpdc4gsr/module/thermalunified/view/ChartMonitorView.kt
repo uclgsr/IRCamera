@@ -9,16 +9,16 @@ import android.util.Log
 import android.view.MotionEvent
 import androidx.core.content.ContextCompat
 import com.blankj.utilcode.util.SizeUtils
-import com.mpdc4gsr.libunified.ui.charting.charts.LineChart
-import com.mpdc4gsr.libunified.ui.charting.components.Legend
-import com.mpdc4gsr.libunified.ui.charting.components.XAxis
-import com.mpdc4gsr.libunified.ui.charting.components.YAxis
-import com.mpdc4gsr.libunified.ui.charting.data.Entry
-import com.mpdc4gsr.libunified.ui.charting.data.LineData
-import com.mpdc4gsr.libunified.ui.charting.data.LineDataSet
-import com.mpdc4gsr.libunified.ui.charting.listener.ChartTouchListener
-import com.mpdc4gsr.libunified.ui.charting.listener.OnChartGestureListener
 import com.mpdc4gsr.libunified.app.db.entity.ThermalEntity
+import com.mpdc4gsr.libunified.ui.charts.LineChart
+import com.mpdc4gsr.libunified.ui.components.Legend
+import com.mpdc4gsr.libunified.ui.components.XAxis
+import com.mpdc4gsr.libunified.ui.components.YAxis
+import com.mpdc4gsr.libunified.ui.data.Entry
+import com.mpdc4gsr.libunified.ui.data.LineData
+import com.mpdc4gsr.libunified.ui.data.LineDataSet
+import com.mpdc4gsr.libunified.ui.listener.ChartTouchListener
+import com.mpdc4gsr.libunified.ui.listener.OnChartGestureListener
 import com.mpdc4gsr.module.thermalunified.R
 import com.mpdc4gsr.module.thermalunified.chart.IRMyValueFormatter
 import com.mpdc4gsr.module.thermalunified.chart.YValueFormatter
@@ -55,7 +55,7 @@ class ChartMonitorView : LineChart, OnChartGestureListener {
             this.isDragEnabled = true
             this.setDrawGridBackground(false)
             this.description = null
-            this.setBackgroundResource(LibR.color.chart_bg)
+            this.setBackgroundResource(ThermalR.color.chart_bg)
             this.setScaleEnabled(true)
             this.setPinchZoom(false)
             this.isDoubleTapToZoomEnabled = false

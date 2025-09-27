@@ -1,106 +1,185 @@
 package com.mpdc4gsr.libunified.app.utils
 
-import java.util.Locale
-import java.util.UUID
+import android.util.Log
+import java.util.*
 
-@OptIn(ExperimentalUnsignedTypes::class)
+/**
+ * ByteUtils based on reference repository implementation
+ * Adapted from BleModule/src/main/java/com/topdon/ble/util/ByteUtil.java
+ */
 object ByteUtils {
 
-    fun ByteArray.toHexString(separator: String = " ") =
-        asUByteArray().joinToString(separator) {
-            it.toString(16).padStart(2, '0').uppercase(Locale.getDefault())
+    fun byteMerger(byte1: ByteArray, byte2: Int, byte3: Int, byte4: Int): ByteArray {
+        return byteMerger(
+            byte1,
+            intToByteArray(byte2),
+            intToByteArray(byte3),
+            intToByteArray2(byte4)
+        )
+    }
+
+    fun byteMerger(byte1: ByteArray, byte2: String, byte3: String): ByteArray {
+        return byteMerger(byte1, byte2.toByteArray(), byte3.toByteArray())
+    }
+
+    fun byteMerger(byte1: String, byte2: Int): ByteArray {
+        return byteMerger(byte1.toByteArray(), intToByteArray(byte2))
+    }
+
+    fun byteMerger(byte1: ByteArray, byte2: Int): ByteArray {
+        return byteMerger(byte1, intToByteArray(byte2))
+    }
+
+    fun byteMerger(byte1: String, byte2: String): ByteArray {
+        return byteMerger(byte1.toByteArray(), byte2.toByteArray())
+    }
+
+    fun byteMerger(vararg bytes: ByteArray): ByteArray {
+        var resultByteArray = ByteArray(0)
+        for (b in bytes) {
+            resultByteArray = Arrays.copyOf(resultByteArray, resultByteArray.size + b.size)
+            System.arraycopy(b, 0, resultByteArray, resultByteArray.size - b.size, b.size)
         }
+        return resultByteArray
+    }
 
-    fun ByteArray.toHexMd5String() =
-        asUByteArray().joinToString(":") {
-            it.toString(16).padStart(2, '0').uppercase(Locale.getDefault())
+    fun bytesToFloat(bytes: ByteArray): Float {
+        val value = Integer.valueOf(HexUtil.bytesToHexString(bytes), 16)
+        return value.toFloat()
+    }
+
+    fun byteToFloat(vararg bytes: Byte): Float {
+        val resultByte = ByteArray(bytes.size)
+        for (i in bytes.indices) {
+            resultByte[i] = bytes[i]
         }
+        val value = Integer.valueOf(HexUtil.bytesToHexString(resultByte), 16)
+        Log.e(
+            "ByteUtils",
+            "bytesToFloat bytes: ${HexUtil.bytesToHexString(resultByte)} float:$value"
+        )
+        return value.toFloat()
+    }
 
-    fun String.hexStringToByteArray() =
-        ByteArray(this.length / 2) { this.substring(it * 2, it * 2 + 2).toInt(16).toByte() }
+    fun byteToInt(b: Byte): Int {
+        return b.toInt() and 0xFF
+    }
 
-    fun UUID.getTag() = toString().substring(4, 8)
+    fun intToByteArray(value: Int): ByteArray {
+        return byteArrayOf(
+            (value shr 24 and 0xFF).toByte(),
+            (value shr 16 and 0xFF).toByte(),
+            (value shr 8 and 0xFF).toByte(),
+            (value and 0xFF).toByte()
+        )
+    }
 
-    fun ByteArray.bytesToInt() =
-        run {
-            var total = 0
-            val size = this.size
-            for (i in 0 until size) {
-                total += this[i].toUByte().toInt().shl((size - i - 1) * 8)
-            }
-            total
-        }
+    fun intToByteArray2(value: Int): ByteArray {
+        return byteArrayOf(
+            (value and 0xFF).toByte(),
+            (value shr 8 and 0xFF).toByte()
+        )
+    }
 
-    fun ByteArray.bytesToLong() =
-        run {
-            var total = 0L
-            val size = this.size
-            for (i in 0 until size) {
-                total += this[i].toUByte().toInt().shl((size - i - 1) * 8)
-            }
-            total
-        }
+    // Compatibility methods for existing code
+    fun ByteArray.descBytes(): ByteArray = this.reversedArray()
+    fun ByteArray.toBytes(): ByteArray = this
 
-    fun Int.toBytes(size: Int) =
-        run {
-            var data = byteArrayOf()
-            for (i in 0 until size) {
-                data = data.plus(this.shr((size - i - 1) * 8).toByte())
-            }
-            data
-        }
-
-    fun String.toBytes(size: Int) =
-        run {
-            val data = ByteArray(size)
-            val srcBytes = this.toByteArray()
-            if (srcBytes.size > size) {
-                srcBytes.copyInto(data, 0, 0, size)
-            } else {
-                srcBytes.copyInto(data, 0, 0, srcBytes.size)
-            }
-            return@run data
-        }
-
-    fun Long.toBytes(size: Int) =
-        run {
-            var data = byteArrayOf()
-            for (i in 0 until size) {
-                data = data.plus(this.shr((size - i - 1) * 8).toByte())
-            }
-            data
-        }
-
-    fun Int.getIndex(index: Int): Int =
-        run {
-            val a = this % (1 shl (index * 4))
-            return a shr ((index - 1) * 4)
-        }
-
-    fun ByteArray.descBytes() =
-        run {
-            var data = byteArrayOf()
-            for (i in 0 until this.size) {
-                data = data.plus(this[this.size - 1 - i])
-            }
-            return@run data
-        }
-
-    fun bigBytesToInt(vararg bytes: Byte): Int {
-        val byteCount = bytes.size.coerceAtMost(4)
-        var result = 0
-        for (i in 0 until byteCount) {
-            result = result or (bytes[i].toInt().and(0xff).shl(8 * (byteCount - 1 - i)))
-        }
+    fun String.toBytes(length: Int): ByteArray {
+        val bytes = this.toByteArray()
+        val result = ByteArray(length)
+        val copyLength = minOf(bytes.size, length)
+        System.arraycopy(bytes, 0, result, 0, copyLength)
         return result
     }
 
+    fun Short.toLittleBytes(): ByteArray {
+        return byteArrayOf(
+            (this.toInt() and 0xFF).toByte(),
+            (this.toInt() shr 8 and 0xFF).toByte()
+        )
+    }
+
+    fun Int.toLittleBytes(): ByteArray {
+        return byteArrayOf(
+            (this and 0xFF).toByte(),
+            (this shr 8 and 0xFF).toByte(),
+            (this shr 16 and 0xFF).toByte(),
+            (this shr 24 and 0xFF).toByte()
+        )
+    }
+
     fun Float.toLittleBytes(): ByteArray {
-        val result = ByteArray(4)
-        val floatBit: Int = java.lang.Float.floatToIntBits(this)
-        for (i in 0 until 4) {
-            result[i] = (floatBit shr (i * 8)).toByte()
+        val bits = this.toBits()
+        return bits.toLittleBytes()
+    }
+
+    fun Int.getIndex(index: Int): Int {
+        return if (index < 32) {
+            (this shr index) and 1
+        } else {
+            0
         }
-        return result
+    }
+
+    fun bigBytesToInt(b1: Byte, b2: Byte, b3: Byte, b4: Byte): Int {
+        return (b1.toInt() and 0xFF shl 24) or
+                (b2.toInt() and 0xFF shl 16) or
+                (b3.toInt() and 0xFF shl 8) or
+                (b4.toInt() and 0xFF)
+    }
+
+    fun joinPackage(vararg src: ByteArray): ByteArray = byteMerger(*src)
+
+    fun numberToBytes(bigEndian: Boolean, value: Long, len: Int): ByteArray {
+        val bytes = ByteArray(8)
+        for (i in 0..7) {
+            val j = if (bigEndian) 7 - i else i
+            bytes[i] = (value shr 8 * j and 0xff).toByte()
+        }
+        return if (len > 8) {
+            bytes
+        } else {
+            Arrays.copyOfRange(bytes, if (bigEndian) 8 - len else 0, if (bigEndian) 8 else len)
+        }
+    }
+
+    fun splitPackage(src: ByteArray, size: Int): List<ByteArray> {
+        val list = mutableListOf<ByteArray>()
+        val loop = src.size / size + if (src.size % size == 0) 0 else 1
+        for (i in 0 until loop) {
+            val from = i * size
+            val to = minOf(src.size, from + size)
+            list.add(Arrays.copyOfRange(src, from, to))
+        }
+        return list
+    }
+
+    // Additional utility methods
+    fun toHexString(bytes: ByteArray): String {
+        return HexUtil.bytesToHexString(bytes)
+    }
+
+    fun bytesToInt(bytes: ByteArray): Int {
+        var count = 0
+        for (i in bytes.indices.reversed()) {
+            val b = bytes[i].toInt() and 0xff
+            count += b shl (8 * (bytes.size - i - 1))
+        }
+        return count
+    }
+}
+
+object HexUtil {
+    fun bytesToHexString(bytes: ByteArray): String {
+        val sb = StringBuilder()
+        for (b in bytes) {
+            val hex = Integer.toHexString(b.toInt() and 0xFF)
+            if (hex.length == 1) {
+                sb.append('0')
+            }
+            sb.append(hex)
+        }
+        return sb.toString().uppercase(Locale.getDefault())
     }
 }

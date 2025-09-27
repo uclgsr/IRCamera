@@ -26,7 +26,7 @@ class MonitoryHomeActivity : BaseActivity() {
 
         viewPager2.adapter = ViewPagerAdapter(this, isTC007)
         TabLayoutMediator(tabLayout, viewPager2) { tab, position ->
-            tab.setText(if (position == 0) R.string.chart_history else R.string.chart_real_time)
+            tab.setText(if (position == 0) com.mpdc4gsr.libunified.R.string.chart_history else com.mpdc4gsr.libunified.R.string.chart_real_time)
         }.attach()
     }
 

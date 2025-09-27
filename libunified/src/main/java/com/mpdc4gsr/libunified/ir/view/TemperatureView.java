@@ -5,6 +5,7 @@ import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.graphics.PorterDuff;
@@ -28,14 +29,14 @@ import com.energy.iruvc.sdkisp.LibIRTemp;
 import com.energy.iruvc.utils.DualCameraParams;
 import com.energy.iruvc.utils.Line;
 import com.energy.iruvc.utils.SynchronizedBitmap;
-import com.mpdc4gsr.libunified.ir.usbdual.Const;
-import com.mpdc4gsr.libunified.ir.usbdual.camera.BaseDualView;
 import com.mpdc4gsr.libunified.R;
-import com.mpdc4gsr.libunified.ir.inf.ILiteListener;
-import com.mpdc4gsr.libunified.ir.utils.TempDrawHelper;
-import com.mpdc4gsr.libunified.ir.utils.TempUtil;
 import com.mpdc4gsr.libunified.app.common.SharedManager;
 import com.mpdc4gsr.libunified.app.tools.UnitTools;
+import com.mpdc4gsr.libunified.ir.inf.ILiteListener;
+import com.mpdc4gsr.libunified.ir.usbdual.Const;
+import com.mpdc4gsr.libunified.ir.usbdual.camera.BaseDualView;
+import com.mpdc4gsr.libunified.app.utils.UnifiedScreenUtils;
+import com.mpdc4gsr.libunified.app.utils.UnifiedTemperatureUtils;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -59,10 +60,11 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
     private final int POINT_MAX_COUNT;
     private final int LINE_MAX_COUNT;
     private final int RECTANGLE_MAX_COUNT;
-    private final TempDrawHelper helper = new TempDrawHelper();
     private final ArrayList<Point> pointList = new ArrayList<>();
     private final ArrayList<Line> lineList = new ArrayList<>();
     private final ArrayList<Rect> rectList = new ArrayList<>();
+    // Paint objects for drawing temperature elements
+    private final Paint tempPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final ArrayList<LibIRTemp.TemperatureSampleResult> pointResultList = new ArrayList<>(3);
     private final ArrayList<LibIRTemp.TemperatureSampleResult> lineResultList = new ArrayList<>(3);
     private final ArrayList<LibIRTemp.TemperatureSampleResult> rectangleResultList = new ArrayList<>(3);
@@ -108,7 +110,6 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
     private int downY = 0;
     private Line movingLine;
     private LineMoveType lineMoveType = LineMoveType.ALL;
-
     private Rect movingRect;
     private RectMoveType rectMoveType = RectMoveType.ALL;
     private RectMoveEdge rectMoveEdge = RectMoveEdge.LEFT;
@@ -117,6 +118,12 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
     private byte[] remapTempData;
     private DualUVCCamera dualUVCCamera;
     private byte[] llTempData;
+
+    {
+        tempPaint.setStyle(Paint.Style.FILL);
+        tempPaint.setTextSize(24f);
+        tempPaint.setColor(Color.WHITE);
+    }
 
     public TemperatureView(final Context context) {
         this(context, null, 0);
@@ -217,28 +224,28 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
 
                             if (isShowFull) {
                                 String minTem = UnitTools.showC(fullMinTemp, isShowC);
-                                int x = TempDrawHelper.Companion.correct(fullResult.minTemperaturePixel.x * xScale, getWidth());
-                                int y = TempDrawHelper.Companion.correct(fullResult.minTemperaturePixel.y * yScale, getHeight());
+                                int x = UnifiedScreenUtils.correct(fullResult.minTemperaturePixel.x * xScale, getWidth());
+                                int y = UnifiedScreenUtils.correct(fullResult.minTemperaturePixel.y * yScale, getHeight());
                                 drawCircle(canvas, x, y, false);
                                 drawTempText(canvas, minTem, x, y);
                             }
                             if (isUserLowTemp) {
-                                int x = TempDrawHelper.Companion.correctPoint(fullResult.minTemperaturePixel.x * xScale, getWidth());
-                                int y = TempDrawHelper.Companion.correctPoint(fullResult.minTemperaturePixel.y * yScale, getHeight());
+                                int x = UnifiedScreenUtils.correctPoint(fullResult.minTemperaturePixel.x * xScale, getWidth());
+                                int y = UnifiedScreenUtils.correctPoint(fullResult.minTemperaturePixel.y * yScale, getHeight());
                                 drawPoint(canvas, x, y);
                                 drawCircle(canvas, x, y, false);
                             }
 
                             if (isShowFull) {
                                 String maxTem = UnitTools.showC(fullMaxTemp, isShowC);
-                                int x = TempDrawHelper.Companion.correct(fullResult.maxTemperaturePixel.x * xScale, getWidth());
-                                int y = TempDrawHelper.Companion.correct(fullResult.maxTemperaturePixel.y * yScale, getHeight());
+                                int x = UnifiedScreenUtils.correct(fullResult.maxTemperaturePixel.x * xScale, getWidth());
+                                int y = UnifiedScreenUtils.correct(fullResult.maxTemperaturePixel.y * yScale, getHeight());
                                 drawCircle(canvas, x, y, true);
                                 drawTempText(canvas, maxTem, x, y);
                             }
                             if (isUserHighTemp) {
-                                int x = TempDrawHelper.Companion.correctPoint(fullResult.maxTemperaturePixel.x * xScale, getWidth());
-                                int y = TempDrawHelper.Companion.correctPoint(fullResult.maxTemperaturePixel.y * yScale, getHeight());
+                                int x = UnifiedScreenUtils.correctPoint(fullResult.maxTemperaturePixel.x * xScale, getWidth());
+                                int y = UnifiedScreenUtils.correctPoint(fullResult.maxTemperaturePixel.y * yScale, getHeight());
                                 drawPoint(canvas, x, y);
                                 drawCircle(canvas, x, y, true);
                             }
@@ -262,7 +269,7 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
                                     drawDot(canvas, temperatureSampleResult.maxTemperaturePixel, true);
                                     drawTempText(canvas, max, temperatureSampleResult.maxTemperaturePixel);
                                     if (onTrendChangeListener != null) {
-                                        List<Float> tempList = TempUtil.INSTANCE.getLineTemps(new Point(startX, startY), new Point(endX, endY), tempArray, temperatureWidth);
+                                        List<Float> tempList = UnifiedTemperatureUtils.INSTANCE.getLineTemperatures(new Point(startX, startY), new Point(endX, endY), tempArray, temperatureWidth, temperatureHeight);
                                         onTrendChangeListener.onChange(tempList);
                                     }
                                 }
@@ -378,12 +385,12 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
     }
 
     public void setTextSize(int textSize) {
-        helper.setTextSize(textSize);
+        tempPaint.setTextSize(textSize);
         refreshRegion();
     }
 
     public void setLinePaintColor(@ColorInt int color) {
-        helper.setTextColor(color);
+        tempPaint.setColor(color);
         refreshRegion();
     }
 
@@ -604,8 +611,8 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
     public void addScalePoint(Point point) {
         float sx = getMeasuredWidth() / (float) temperatureWidth;
         float sy = getMeasuredHeight() / (float) temperatureHeight;
-        int viewX = TempDrawHelper.Companion.correctPoint(point.x * sx, getMeasuredWidth());
-        int viewY = TempDrawHelper.Companion.correctPoint(point.y * sy, getMeasuredHeight());
+        int viewX = UnifiedScreenUtils.correctPoint(point.x * sx, getMeasuredWidth());
+        int viewY = UnifiedScreenUtils.correctPoint(point.y * sy, getMeasuredHeight());
         if (pointList.size() == POINT_MAX_COUNT) {
             pointList.remove(0);
         }
@@ -616,10 +623,10 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
         float sx = getMeasuredWidth() / (float) temperatureWidth;
         float sy = getMeasuredHeight() / (float) temperatureHeight;
         Line line = new Line(new Point(), new Point());
-        line.start.x = TempDrawHelper.Companion.correct(l.start.x * sx, getMeasuredWidth());
-        line.start.y = TempDrawHelper.Companion.correct(l.start.y * sy, getMeasuredHeight());
-        line.end.x = TempDrawHelper.Companion.correct(l.end.x * sx, getMeasuredWidth());
-        line.end.y = TempDrawHelper.Companion.correct(l.end.y * sy, getMeasuredHeight());
+        line.start.x = UnifiedScreenUtils.correct(l.start.x * sx, getMeasuredWidth());
+        line.start.y = UnifiedScreenUtils.correct(l.start.y * sy, getMeasuredHeight());
+        line.end.x = UnifiedScreenUtils.correct(l.end.x * sx, getMeasuredWidth());
+        line.end.y = UnifiedScreenUtils.correct(l.end.y * sy, getMeasuredHeight());
         if (pointList.size() == POINT_MAX_COUNT) {
             pointList.remove(0);
         }
@@ -708,9 +715,9 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
         yScale = (float) viewHeight / (float) temperatureHeight;
 
         if (regionBitmap == null || regionBitmap.getWidth() != viewWidth || regionBitmap.getHeight() != viewHeight) {
-            regionBitmap = Bitmap.createBitmap(viewWidth, viewHeight, Bitmap.Config.ARGB_4444);
+            regionBitmap = Bitmap.createBitmap(viewWidth, viewHeight, Bitmap.Config.ARGB_8888);
         }
-        regionAndValueBitmap = Bitmap.createBitmap(viewWidth, viewHeight, Bitmap.Config.ARGB_4444);
+        regionAndValueBitmap = Bitmap.createBitmap(viewWidth, viewHeight, Bitmap.Config.ARGB_8888);
     }
 
     @Override
@@ -732,8 +739,8 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
     private boolean handleTouchPoint(MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN: {
-                downX = TempDrawHelper.Companion.correctPoint(event.getX(), getWidth());
-                downY = TempDrawHelper.Companion.correctPoint(event.getY(), getHeight());
+                downX = UnifiedScreenUtils.correctPoint(event.getX(), getWidth());
+                downY = UnifiedScreenUtils.correctPoint(event.getY(), getHeight());
                 Point point = getPoint(downX, downY);
                 if (point == null) {
                     isAddAction = true;
@@ -763,8 +770,8 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
                 return true;
             }
             case MotionEvent.ACTION_MOVE: {
-                int x = TempDrawHelper.Companion.correctPoint(event.getX(), getWidth());
-                int y = TempDrawHelper.Companion.correctPoint(event.getY(), getHeight());
+                int x = UnifiedScreenUtils.correctPoint(event.getX(), getWidth());
+                int y = UnifiedScreenUtils.correctPoint(event.getY(), getHeight());
                 Canvas surfaceViewCanvas = getHolder().lockCanvas();
                 surfaceViewCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
                 surfaceViewCanvas.drawBitmap(regionBitmap, new Rect(0, 0, viewWidth, viewHeight), new Rect(0, 0, viewWidth, viewHeight), null);
@@ -773,8 +780,8 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
                 return true;
             }
             case MotionEvent.ACTION_UP: {
-                int x = TempDrawHelper.Companion.correctPoint(event.getX(), getWidth());
-                int y = TempDrawHelper.Companion.correctPoint(event.getY(), getHeight());
+                int x = UnifiedScreenUtils.correctPoint(event.getX(), getWidth());
+                int y = UnifiedScreenUtils.correctPoint(event.getY(), getHeight());
                 if (isAddAction) {
                     synchronized (regionLock) {
                         if (pointList.size() == POINT_MAX_COUNT) {
@@ -818,8 +825,8 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
     private boolean handleTouchLine(MotionEvent event, boolean isTrend) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN: {
-                downX = TempDrawHelper.Companion.correct(event.getX(), getWidth());
-                downY = TempDrawHelper.Companion.correct(event.getY(), getHeight());
+                downX = UnifiedScreenUtils.correct(event.getX(), getWidth());
+                downY = UnifiedScreenUtils.correct(event.getY(), getHeight());
                 Line line = getLine(downX, downY, isTrend);
                 if (line == null) {
                     isAddAction = true;
@@ -856,8 +863,8 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
                 return true;
             }
             case MotionEvent.ACTION_MOVE: {
-                int x = TempDrawHelper.Companion.correct(event.getX(), getWidth());
-                int y = TempDrawHelper.Companion.correct(event.getY(), getHeight());
+                int x = UnifiedScreenUtils.correct(event.getX(), getWidth());
+                int y = UnifiedScreenUtils.correct(event.getY(), getHeight());
                 if (isAddAction) {
                     Canvas surfaceViewCanvas = getHolder().lockCanvas();
                     surfaceViewCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
@@ -873,7 +880,7 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
                     Point end = new Point();
                     switch (lineMoveType) {
                         case ALL:
-                            Rect rect = TempDrawHelper.Companion.getRect(getWidth(), getHeight());
+                            Rect rect = UnifiedScreenUtils.getRect(getWidth(), getHeight());
                             int minX = Math.min(movingLine.start.x, movingLine.end.x);
                             int maxX = Math.max(movingLine.start.x, movingLine.end.x);
                             int minY = Math.min(movingLine.start.y, movingLine.end.y);
@@ -898,8 +905,8 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
                 return true;
             }
             case MotionEvent.ACTION_UP: {
-                int x = TempDrawHelper.Companion.correct(event.getX(), getWidth());
-                int y = TempDrawHelper.Companion.correct(event.getY(), getHeight());
+                int x = UnifiedScreenUtils.correct(event.getX(), getWidth());
+                int y = UnifiedScreenUtils.correct(event.getY(), getHeight());
                 if (isAddAction) {
                     Canvas surfaceViewCanvas = getHolder().lockCanvas();
                     surfaceViewCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
@@ -933,7 +940,7 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
                         Point end = new Point();
                         switch (lineMoveType) {
                             case ALL:
-                                Rect rect = TempDrawHelper.Companion.getRect(getWidth(), getHeight());
+                                Rect rect = UnifiedScreenUtils.getRect(getWidth(), getHeight());
                                 int minX = Math.min(movingLine.start.x, movingLine.end.x);
                                 int maxX = Math.max(movingLine.start.x, movingLine.end.x);
                                 int minY = Math.min(movingLine.start.y, movingLine.end.y);
@@ -1000,8 +1007,8 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
     private boolean handleTouchRect(MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN: {
-                downX = TempDrawHelper.Companion.correct(event.getX(), getWidth());
-                downY = TempDrawHelper.Companion.correct(event.getY(), getHeight());
+                downX = UnifiedScreenUtils.correct(event.getX(), getWidth());
+                downY = UnifiedScreenUtils.correct(event.getY(), getHeight());
                 Rect rect = getRect(downX, downY);
                 if (rect == null) {
                     isAddAction = true;
@@ -1053,8 +1060,8 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
                 return true;
             }
             case MotionEvent.ACTION_MOVE: {
-                int x = TempDrawHelper.Companion.correct(event.getX(), getWidth());
-                int y = TempDrawHelper.Companion.correct(event.getY(), getHeight());
+                int x = UnifiedScreenUtils.correct(event.getX(), getWidth());
+                int y = UnifiedScreenUtils.correct(event.getY(), getHeight());
                 if (isAddAction) {
                     Canvas surfaceViewCanvas = getHolder().lockCanvas();
                     surfaceViewCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
@@ -1067,7 +1074,7 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
                     surfaceViewCanvas.drawBitmap(regionBitmap, new Rect(0, 0, viewWidth, viewHeight), new Rect(0, 0, viewWidth, viewHeight), null);
                     switch (rectMoveType) {
                         case ALL:
-                            Rect rect = TempDrawHelper.Companion.getRect(getWidth(), getHeight());
+                            Rect rect = UnifiedScreenUtils.getRect(getWidth(), getHeight());
                             int biasX = x < downX ? Math.max(x - downX, rect.left - movingRect.left) : Math.min(x - downX, rect.right - movingRect.right);
                             int biasY = y < downY ? Math.max(y - downY, rect.top - movingRect.top) : Math.min(y - downY, rect.bottom - movingRect.bottom);
                             drawRect(surfaceViewCanvas, movingRect.left + biasX, movingRect.top + biasY, movingRect.right + biasX, movingRect.bottom + biasY);
@@ -1110,8 +1117,8 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
                 return true;
             }
             case MotionEvent.ACTION_UP: {
-                int x = TempDrawHelper.Companion.correct(event.getX(), getWidth());
-                int y = TempDrawHelper.Companion.correct(event.getY(), getHeight());
+                int x = UnifiedScreenUtils.correct(event.getX(), getWidth());
+                int y = UnifiedScreenUtils.correct(event.getY(), getHeight());
                 if (isAddAction) {
                     Canvas surfaceViewCanvas = getHolder().lockCanvas();
                     surfaceViewCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
@@ -1134,7 +1141,7 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
                     if (Math.abs(x - downX) > TOUCH_TOLERANCE || Math.abs(y - downY) > TOUCH_TOLERANCE) {
                         switch (rectMoveType) {
                             case ALL:
-                                Rect rect = TempDrawHelper.Companion.getRect(getWidth(), getHeight());
+                                Rect rect = UnifiedScreenUtils.getRect(getWidth(), getHeight());
                                 int biasX = x < downX ? Math.max(x - downX, rect.left - movingRect.left) : Math.min(x - downX, rect.right - movingRect.right);
                                 int biasY = y < downY ? Math.max(y - downY, rect.top - movingRect.top) : Math.min(y - downY, rect.bottom - movingRect.bottom);
                                 movingRect.offset(biasX, biasY);
@@ -1224,7 +1231,9 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
     }
 
     private void drawPoint(Canvas canvas, int x, int y) {
-        helper.drawPoint(canvas, x, y);
+        // Draw point
+        tempPaint.setColor(Color.GREEN);
+        canvas.drawCircle(x, y, 8f, tempPaint);
     }
 
 
@@ -1235,10 +1244,23 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
         int startY = (int) ((int) (y1 / yScale) * yScale);
         int stopX = (int) ((int) (x2 / xScale) * xScale);
         int stopY = (int) ((int) (y2 / yScale) * yScale);
-        helper.drawLine(canvas, startX, startY, stopX, stopY);
+        // Draw line
+        tempPaint.setColor(Color.YELLOW);
+        tempPaint.setStyle(Paint.Style.STROKE);
+        tempPaint.setStrokeWidth(3f);
+        canvas.drawLine(startX, startY, stopX, stopY, tempPaint);
+        tempPaint.setStyle(Paint.Style.FILL);
 
         if (isTrend) {
-            helper.drawTrendText(canvas, getWidth(), getHeight(), startX, startY, stopX, stopY);
+            // Draw trend text
+            String text = "Trend";
+            int centerX = (startX + stopX) / 2;
+            int centerY = (startY + stopY) / 2;
+            tempPaint.setColor(Color.WHITE);
+            tempPaint.setStyle(Paint.Style.FILL);
+            float textWidth = tempPaint.measureText(text);
+            int adjustedX = centerX + (int) textWidth > getWidth() ? (int) (getWidth() - textWidth) : centerX;
+            canvas.drawText(text, adjustedX, centerY - 15, tempPaint);
         }
     }
 
@@ -1247,28 +1269,43 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
         int top = (int) ((int) (y1 / yScale) * yScale);
         int right = (int) ((int) (x2 / xScale) * xScale);
         int bottom = (int) ((int) (y2 / yScale) * yScale);
-        helper.drawRect(canvas, left, top, right, bottom);
+        // Draw rectangle
+        tempPaint.setColor(Color.CYAN);
+        tempPaint.setStyle(Paint.Style.STROKE);
+        tempPaint.setStrokeWidth(3f);
+        canvas.drawRect(left, top, right, bottom, tempPaint);
+        tempPaint.setStyle(Paint.Style.FILL);
     }
 
     private void drawCircle(Canvas canvas, int x, int y, boolean isMax) {
-        helper.drawCircle(canvas, x, y, isMax);
+        tempPaint.setColor(isMax ? Color.RED : Color.BLUE);
+        canvas.drawCircle(x, y, 10f, tempPaint);
     }
 
     private void drawDot(Canvas canvas, Point point, boolean isMax) {
 
-        int x = TempDrawHelper.Companion.correct(point.x * xScale, getWidth());
-        int y = TempDrawHelper.Companion.correct(point.y * yScale, getHeight());
-        helper.drawCircle(canvas, x, y, isMax);
+        int x = UnifiedScreenUtils.correct(point.x * xScale, getWidth());
+        int y = UnifiedScreenUtils.correct(point.y * yScale, getHeight());
+        tempPaint.setColor(isMax ? Color.RED : Color.BLUE);
+        canvas.drawCircle(x, y, 10f, tempPaint);
     }
 
     private void drawTempText(Canvas canvas, String text, int x, int y) {
-        helper.drawTempText(canvas, text, getWidth(), x, y);
+        tempPaint.setColor(Color.WHITE);
+        tempPaint.setStyle(Paint.Style.FILL);
+        float textWidth = tempPaint.measureText(text);
+        int adjustedX = x + (int) textWidth > getWidth() ? (int) (getWidth() - textWidth) : x;
+        canvas.drawText(text, adjustedX, y - 15, tempPaint);
     }
 
     private void drawTempText(Canvas canvas, String text, Point point) {
-        int x = TempDrawHelper.Companion.correct(point.x * xScale, getWidth());
-        int y = TempDrawHelper.Companion.correct(point.y * yScale, getHeight());
-        helper.drawTempText(canvas, text, getWidth(), x, y);
+        int x = UnifiedScreenUtils.correct(point.x * xScale, getWidth());
+        int y = UnifiedScreenUtils.correct(point.y * yScale, getHeight());
+        tempPaint.setColor(Color.WHITE);
+        tempPaint.setStyle(Paint.Style.FILL);
+        float textWidth = tempPaint.measureText(text);
+        int adjustedX = x + (int) textWidth > getWidth() ? (int) (getWidth() - textWidth) : x;
+        canvas.drawText(text, adjustedX, y - 15, tempPaint);
     }
 
     private void setBitmap() {
@@ -1355,5 +1392,16 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
 
     public interface TempListener {
         void getTemp(float max, float min, byte[] tempData);
+    }
+
+    // Additional method for compatibility
+    public void updateMagnifier() {
+        // Trigger a redraw to update magnifier display
+        post(new Runnable() {
+            @Override
+            public void run() {
+                invalidate();
+            }
+        });
     }
 }

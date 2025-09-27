@@ -11,10 +11,10 @@ import android.bluetooth.BluetoothGattCharacteristic;
 public class WriteOptions {
     final int packageWriteDelayMillis;
     final int requestWriteDelayMillis;
-    int packageSize;
     final boolean isWaitWriteResult;
     final int writeType;
     final boolean useMtuAsPackageSize;
+    int packageSize;
 
     private WriteOptions(Builder builder) {
         packageWriteDelayMillis = builder.packageWriteDelayMillis;

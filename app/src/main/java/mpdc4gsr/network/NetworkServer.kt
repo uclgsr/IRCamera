@@ -16,13 +16,12 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.json.JSONObject
 import java.io.BufferedReader
 import java.io.BufferedWriter
-import java.io.DataInputStream
 import java.io.DataOutputStream
 import java.io.InputStreamReader
 import java.io.OutputStreamWriter
+import java.net.InetSocketAddress
 import java.net.ServerSocket
 import java.net.Socket
 import java.net.SocketException
@@ -30,7 +29,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 
 class NetworkServer(
     private val context: Context,
-    private val port: Int = Protocol.DEFAULT_PORT,
+    private val port: Int = Protocol.DEFAULT_SERVER_PORT,
 ) {
     companion object {
         private const val TAG = "NetworkServer"
@@ -69,7 +68,10 @@ class NetworkServer(
 
                 Log.i(TAG, "Starting TCP server on port $port")
 
-                serverSocket = ServerSocket(port)
+                serverSocket = ServerSocket().apply {
+                    reuseAddress = true
+                    bind(InetSocketAddress(port))
+                }
                 isRunning.set(true)
 
                 serverJob =
@@ -79,6 +81,10 @@ class NetworkServer(
 
                 Log.i(TAG, "TCP server started successfully on port $port")
                 return@withContext true
+            } catch (e: java.net.BindException) {
+                Log.e(TAG, "Failed to start TCP server - port $port already in use", e)
+                isRunning.set(false)
+                return@withContext false
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to start TCP server", e)
                 isRunning.set(false)
@@ -168,7 +174,7 @@ class NetworkServer(
     }
 
     private suspend fun acceptConnections() {
-        while (isRunning.get() && !serverJob?.isCancelled!!) {
+        while (isRunning.get() && serverJob?.isCancelled != true) {
             try {
                 Log.i(TAG, "Waiting for PC Controller connection...")
 
@@ -179,8 +185,10 @@ class NetworkServer(
                     disconnectClient()
 
                     clientSocket = socket
-                    outputWriter = BufferedWriter(OutputStreamWriter(socket.getOutputStream(), Charsets.UTF_8))
-                    inputReader = BufferedReader(InputStreamReader(socket.getInputStream(), Charsets.UTF_8))
+                    outputWriter =
+                        BufferedWriter(OutputStreamWriter(socket.getOutputStream(), Charsets.UTF_8))
+                    inputReader =
+                        BufferedReader(InputStreamReader(socket.getInputStream(), Charsets.UTF_8))
                     binaryOutputStream = DataOutputStream(socket.getOutputStream())
 
                     isClientConnected.set(true)
@@ -209,7 +217,7 @@ class NetworkServer(
     }
 
     private suspend fun listenForMessages() {
-        while (isClientConnected.get() && isRunning.get() && !messageListenerJob?.isCancelled!!) {
+        while (isClientConnected.get() && isRunning.get() && messageListenerJob?.isCancelled != true) {
             try {
                 val messageText = receiveMessage()
                 if (messageText != null) {

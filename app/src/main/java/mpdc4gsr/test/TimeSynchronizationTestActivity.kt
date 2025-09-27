@@ -2,7 +2,10 @@ package mpdc4gsr.test
 
 import android.os.Bundle
 import android.util.Log
-import android.widget.*
+import android.widget.Button
+import android.widget.LinearLayout
+import android.widget.ScrollView
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.delay
@@ -10,7 +13,7 @@ import kotlinx.coroutines.launch
 import mpdc4gsr.controller.RecordingController
 import mpdc4gsr.sensors.TimeSynchronizationService
 import mpdc4gsr.sensors.TimestampManager
-import mpdc4gsr.sensors.TimestampManager.TimestampRecord
+import mpdc4gsr.sensors.TimestampRecord
 
 
 class TimeSynchronizationTestActivity : AppCompatActivity() {
@@ -162,7 +165,8 @@ class TimeSynchronizationTestActivity : AppCompatActivity() {
 
 
                 addLog("2. Testing multiple sync events...")
-                val syncEvents = listOf("session_start", "flash_sync", "manual_marker", "session_end")
+                val syncEvents =
+                    listOf("session_start", "flash_sync", "manual_marker", "session_end")
 
                 syncEvents.forEach { eventType ->
                     timeSyncService.emitSyncEvent(

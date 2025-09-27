@@ -4,7 +4,6 @@ import android.graphics.Bitmap
 import android.util.Log
 import android.view.ViewGroup
 import android.view.WindowManager
-import com.mpdc4gsr.libunified.ir.android.yt.jni.Usbcontorl
 import androidx.lifecycle.lifecycleScope
 import com.elvishew.xlog.XLog
 import com.energy.iruvc.ircmd.IRCMD
@@ -12,21 +11,21 @@ import com.energy.iruvc.utils.CommonParams
 import com.energy.iruvc.utils.SynchronizedBitmap
 import com.energy.iruvc.uvc.ConnectCallback
 import com.energy.iruvc.uvc.UVCCamera
+import com.mpdc4gsr.libunified.app.common.SaveSettingUtil
+import com.mpdc4gsr.libunified.app.config.DeviceConfig
+import com.mpdc4gsr.libunified.app.ktbase.BaseFragment
+import com.mpdc4gsr.libunified.app.utils.ScreenUtil
+import com.mpdc4gsr.libunified.ir.android.yt.jni.Usbcontorl
 import com.mpdc4gsr.libunified.ir.camera.IRUVCTC
 import com.mpdc4gsr.libunified.ir.config.MsgCode
 import com.mpdc4gsr.libunified.ir.event.IRMsgEvent
 import com.mpdc4gsr.libunified.ir.event.PreviewComplete
 import com.mpdc4gsr.libunified.ir.thread.ImageThreadTC
 import com.mpdc4gsr.libunified.ir.utils.USBMonitorCallback
-import com.mpdc4gsr.libunified.ir.view.CameraView
+import com.infisense.usbir.view.CameraView
 import com.mpdc4gsr.libunified.ir.view.ITsTempListener
 import com.mpdc4gsr.libunified.ir.view.TemperatureView
 import com.mpdc4gsr.libunified.ir.view.TemperatureView.REGION_MODE_CLEAN
-import com.mpdc4gsr.libunified.app.bean.event.device.DeviceCameraEvent
-import com.mpdc4gsr.libunified.app.common.SaveSettingUtil
-import com.mpdc4gsr.libunified.app.config.DeviceConfig
-import com.mpdc4gsr.libunified.app.ktbase.BaseFragment
-import com.mpdc4gsr.libunified.app.utils.ScreenUtil
 import com.mpdc4gsr.module.thermalunified.R
 import com.mpdc4gsr.module.thermalunified.repository.ConfigRepository
 import com.mpdc4gsr.module.thermalunified.utils.CalibrationTools
@@ -80,8 +79,23 @@ class IRCorrectionFragment : BaseFragment(), ITsTempListener {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun irEvent(event: IRMsgEvent) {
-        if (event.code == MsgCode.RESTART_USB) {
-            restartUsbCamera()
+        when (event.code) {
+            MsgCode.RESTART_USB -> {
+                restartUsbCamera()
+            }
+
+            100 -> {
+                showLoadingDialog()
+            }
+
+            101 -> {
+                lifecycleScope.launch {
+                    delay(500)
+                    isConfigWait = false
+                    delay(1000)
+                    dismissLoadingDialog()
+                }
+            }
         }
     }
 
@@ -258,25 +272,6 @@ class IRCorrectionFragment : BaseFragment(), ITsTempListener {
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun cameraEvent(event: DeviceCameraEvent) {
-        when (event.action) {
-            100 -> {
-
-                showLoadingDialog()
-            }
-
-            101 -> {
-
-                lifecycleScope.launch {
-                    delay(500)
-                    isConfigWait = false
-                    delay(1000)
-                    dismissLoadingDialog()
-                }
-            }
-        }
-    }
 
     private var isConfigWait = true
 

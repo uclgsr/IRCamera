@@ -37,7 +37,7 @@ namespace ircamera {
             slot_t &slot = slots_[head & mask_];
 
             if (slot.sequence.load(std::memory_order_acquire) != head) {
-                return false;  
+                return false;
             }
 
             new(&slot.item) T(std::forward<Args>(args)...);
@@ -53,7 +53,7 @@ namespace ircamera {
             slot_t &slot = slots_[tail & mask_];
 
             if (slot.sequence.load(std::memory_order_acquire) != tail + 1) {
-                return false;  
+                return false;
             }
 
             item = std::move(slot.item);

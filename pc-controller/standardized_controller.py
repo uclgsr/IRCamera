@@ -7,10 +7,10 @@ the standardized networking protocol as specified in the issue.
 """
 
 import json
+import re
 import socket
 import threading
 import time
-import re
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Optional, Any, Tuple
@@ -36,6 +36,7 @@ class Protocol:
     MSG_HELLO = "HELLO"
     MSG_SYNC_REQUEST = "SYNC_REQUEST"
     MSG_SYNC_RESPONSE = "SYNC_RESPONSE"
+    MSG_SYNC_RESULT = "SYNC_RESULT"
     MSG_START_RECORD = "START_RECORD"
     MSG_STOP_RECORD = "STOP_RECORD"
     MSG_ACK = "ACK"
@@ -51,6 +52,10 @@ class Protocol:
     @staticmethod
     def create_sync_request(pc_timestamp: int) -> str:
         return f"{Protocol.MSG_SYNC_REQUEST} t_pc={pc_timestamp}"
+
+    @staticmethod
+    def create_sync_result(t1: int, t2: int, t3: int, offset_ms: int, rtt_ms: int) -> str:
+        return f"{Protocol.MSG_SYNC_RESULT} t1={t1} t2={t2} t3={t3} offset={offset_ms} rtt={rtt_ms}"
 
     @staticmethod
     def create_start_record(session_id: str) -> str:
@@ -214,55 +219,136 @@ class SessionManager:
 
 
 class TimeSyncManager:
-    """Handles clock synchronization with devices"""
+    """Handles clock synchronization with devices with enhanced validation and retry logic"""
+
+    # Configuration constants
+    MAX_SYNC_RETRIES = 3
+    RETRY_DELAY_MS = 1000
+    SYNC_TIMEOUT_MS = 5000
+    MAX_TIMESTAMP_DRIFT_MS = 86400000  # 24 hours
+    MAX_FUTURE_TIMESTAMP_MS = 300000  # 5 minutes
+
+    @staticmethod
+    def _validate_timestamp(timestamp: int, context: str) -> bool:
+        """Validate timestamp reasonableness"""
+        current_time = int(time.time() * 1000)
+        time_diff = timestamp - current_time
+
+        if time_diff > TimeSyncManager.MAX_FUTURE_TIMESTAMP_MS:
+            logger.warning(f"{context} timestamp too far in future: {time_diff}ms")
+            return False
+        elif time_diff < -TimeSyncManager.MAX_TIMESTAMP_DRIFT_MS:
+            logger.warning(f"{context} timestamp too far in past: {time_diff}ms")
+            return False
+        return True
 
     @staticmethod
     def perform_sync(connection: DeviceConnection) -> bool:
-        """Perform NTP-style time synchronization"""
-        try:
-            # Get current PC time in milliseconds
-            t1 = int(time.time() * 1000)
+        """Perform complete NTP-style time synchronization with validation and retry logic"""
+        retry_count = 0
+        last_error = None
 
-            # Send sync request
-            sync_request = Protocol.create_sync_request(t1)
-            if not connection.send_message(sync_request):
-                return False
+        for attempt in range(TimeSyncManager.MAX_SYNC_RETRIES):
+            try:
+                # Get current PC time in milliseconds (t1)
+                t1 = int(time.time() * 1000)
 
-            # Wait for response
-            response = connection.receive_message()
-            if not response:
-                return False
+                # Validate our own timestamp
+                if not TimeSyncManager._validate_timestamp(t1, "PC sync request"):
+                    return False
 
-            # Parse response
-            parsed = Protocol.parse_message(response)
-            if not parsed or parsed['type'] != Protocol.MSG_SYNC_RESPONSE:
-                logger.error(f"Invalid sync response from {connection.device_id}: {response}")
-                return False
+                # Send sync request
+                sync_request = Protocol.create_sync_request(t1)
+                if not connection.send_message(sync_request):
+                    last_error = "Failed to send sync request"
+                    retry_count = attempt + 1
+                    if attempt < TimeSyncManager.MAX_SYNC_RETRIES - 1:
+                        time.sleep(TimeSyncManager.RETRY_DELAY_MS / 1000.0)
+                    continue
 
-            # Get timestamps
-            t2 = int(time.time() * 1000)  # PC time when response received
-            t_pc_echo = int(parsed['params'].get('t_pc', 0))
-            t_phone = int(parsed['params'].get('t_ph', 0))
+                # Wait for response with timeout
+                response = connection.receive_message()
+                if not response:
+                    last_error = "No response received"
+                    retry_count = attempt + 1
+                    if attempt < TimeSyncManager.MAX_SYNC_RETRIES - 1:
+                        time.sleep(TimeSyncManager.RETRY_DELAY_MS / 1000.0)
+                    continue
 
-            # Verify echoed timestamp
-            if abs(t_pc_echo - t1) > 1000:  # Allow 1 second tolerance
-                logger.warning(f"Timestamp echo mismatch for {connection.device_id}")
+                # Get t3 - PC time when response received
+                t3 = int(time.time() * 1000)
 
-            # Calculate clock offset (simplified NTP calculation)
-            network_delay = t2 - t1
-            clock_offset = t_phone - t1 - (network_delay // 2)
+                # Parse response
+                parsed = Protocol.parse_message(response)
+                if not parsed or parsed['type'] != Protocol.MSG_SYNC_RESPONSE:
+                    last_error = f"Invalid sync response: {response}"
+                    logger.error(f"Invalid sync response from {connection.device_id}: {response}")
+                    retry_count = attempt + 1
+                    if attempt < TimeSyncManager.MAX_SYNC_RETRIES - 1:
+                        time.sleep(TimeSyncManager.RETRY_DELAY_MS / 1000.0)
+                    continue
 
-            connection.clock_offset_ms = clock_offset
-            connection.last_sync_time = time.time()
+                # Get timestamps from response
+                t_pc_echo = int(parsed['params'].get('t_pc', 0))
+                t2 = int(parsed['params'].get('t_ph', 0))  # Phone timestamp when it received request
 
-            logger.info(f"Time sync completed for {connection.device_id}: "
-                        f"offset={clock_offset}ms, delay={network_delay}ms")
+                # Validate timestamps
+                if (not TimeSyncManager._validate_timestamp(t2, "Phone sync response") or
+                        not TimeSyncManager._validate_timestamp(t3, "PC sync receive")):
+                    last_error = "Invalid timestamps in response"
+                    retry_count = attempt + 1
+                    if attempt < TimeSyncManager.MAX_SYNC_RETRIES - 1:
+                        time.sleep(TimeSyncManager.RETRY_DELAY_MS / 1000.0)
+                    continue
 
-            return True
+                # Verify echoed timestamp
+                if abs(t_pc_echo - t1) > 1000:  # Allow 1 second tolerance
+                    logger.warning(f"Timestamp echo mismatch for {connection.device_id}")
 
-        except Exception as e:
-            logger.error(f"Time sync failed for {connection.device_id}: {e}")
-            return False
+                # Calculate offset and RTT using NTP-style calculation
+                rtt_ms = t3 - t1
+
+                # Clock offset: θ = ((t2 - t1) + (t2 - t3)) / 2
+                # This is the standard NTP offset calculation
+                offset_ms = ((t2 - t1) + (t2 - t3)) // 2
+
+                # Store in connection
+                connection.clock_offset_ms = offset_ms
+                connection.last_sync_time = time.time()
+
+                logger.info(f"Time sync calculated for {connection.device_id}: "
+                            f"offset={offset_ms}ms, rtt={rtt_ms}ms (attempt {attempt + 1})")
+
+                # Send SYNC_RESULT back to Android with retry logic
+                sync_result = Protocol.create_sync_result(t1, t2, t3, offset_ms, rtt_ms)
+                result_sent = False
+
+                for result_attempt in range(TimeSyncManager.MAX_SYNC_RETRIES):
+                    if connection.send_message(sync_result):
+                        logger.info(f"SYNC_RESULT sent to {connection.device_id}")
+                        result_sent = True
+                        break
+                    else:
+                        logger.warning(
+                            f"Failed to send SYNC_RESULT to {connection.device_id}, attempt {result_attempt + 1}")
+                        if result_attempt < TimeSyncManager.MAX_SYNC_RETRIES - 1:
+                            time.sleep(TimeSyncManager.RETRY_DELAY_MS / 1000.0)
+
+                if not result_sent:
+                    logger.error(f"Failed to send SYNC_RESULT to {connection.device_id} after all retries")
+                    # But still consider sync successful if we got the timestamps
+
+                return True
+
+            except Exception as e:
+                last_error = f"Sync attempt failed: {str(e)}"
+                retry_count = attempt + 1
+                logger.warning(f"Time sync attempt {attempt + 1} failed for {connection.device_id}: {e}")
+                if attempt < TimeSyncManager.MAX_SYNC_RETRIES - 1:
+                    time.sleep(TimeSyncManager.RETRY_DELAY_MS / 1000.0)
+
+        logger.error(f"Time sync failed for {connection.device_id} after {retry_count} retries: {last_error}")
+        return False
 
 
 class PCController:
@@ -282,7 +368,7 @@ class PCController:
     def start(self):
         """Start the PC controller server"""
         try:
-            self.server_socket = socket.socket(socket.AF_INET, socket.AF_SOCK_STREAM)
+            self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self.server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             self.server_socket.bind(('0.0.0.0', self.port))
             self.server_socket.listen(5)

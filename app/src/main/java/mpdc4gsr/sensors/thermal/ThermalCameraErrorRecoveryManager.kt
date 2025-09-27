@@ -5,8 +5,12 @@ import android.hardware.usb.UsbDevice
 import android.util.Log
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.TimeoutCancellationException
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeout
 import org.greenrobot.eventbus.EventBus
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
@@ -134,7 +138,10 @@ class ThermalCameraErrorRecoveryManager(
         if (thermalRecorder.isRecording && !isInSimulationMode) {
             val lastFrameReceived = lastFrameTime.get()
             if (lastFrameReceived > 0 && (currentTime - lastFrameReceived) > FRAME_TIMEOUT_MS) {
-                Log.w(TAG, "Thermal camera frame timeout detected (${currentTime - lastFrameReceived}ms)")
+                Log.w(
+                    TAG,
+                    "Thermal camera frame timeout detected (${currentTime - lastFrameReceived}ms)"
+                )
                 handleFrameTimeout()
             }
         }
@@ -213,7 +220,10 @@ class ThermalCameraErrorRecoveryManager(
             MAX_RECONNECTION_DELAY_MS
         )
 
-        Log.i(TAG, "Attempting thermal camera reconnection #$attemptNumber after ${backoffDelay}ms delay")
+        Log.i(
+            TAG,
+            "Attempting thermal camera reconnection #$attemptNumber after ${backoffDelay}ms delay"
+        )
         errorEventListener?.onReconnectionAttempt(attemptNumber, MAX_RECONNECTION_ATTEMPTS)
 
 

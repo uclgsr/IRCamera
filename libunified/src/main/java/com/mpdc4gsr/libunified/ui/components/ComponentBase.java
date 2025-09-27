@@ -1,9 +1,9 @@
-package com.mpdc4gsr.libunified.ui.charting.components;
+package com.mpdc4gsr.libunified.ui.components;
 
 import android.graphics.Color;
 import android.graphics.Typeface;
 
-import com.mpdc4gsr.libunified.ui.charting.utils.Utils;
+import com.mpdc4gsr.libunified.ui.utils.Utils;
 
 public abstract class ComponentBase {
 

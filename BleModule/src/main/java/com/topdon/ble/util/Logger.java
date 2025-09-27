@@ -63,12 +63,12 @@ public interface Logger {
     void log(int priority, int type, String msg, Throwable th);
 
     /**
-     * 日志输出控制
-     */
-    void setEnabled(boolean isEnabled);
-
-    /**
      * 日志输出是否使能
      */
     boolean isEnabled();
+
+    /**
+     * 日志输出控制
+     */
+    void setEnabled(boolean isEnabled);
 }

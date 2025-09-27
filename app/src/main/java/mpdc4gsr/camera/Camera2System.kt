@@ -5,6 +5,7 @@ import android.hardware.camera2.CameraCaptureSession
 import android.hardware.camera2.CameraDevice
 import android.hardware.camera2.CaptureRequest
 import android.hardware.camera2.TotalCaptureResult
+import android.os.Build
 import android.util.Log
 import android.util.Size
 import android.view.TextureView
@@ -235,6 +236,7 @@ class Camera2System(
         uiBridge.onProgress = { message -> onProgress?.invoke(message) }
     }
 
+    @Suppress("DEPRECATION")
     private suspend fun setupRawMode(): Boolean =
         withContext(Dispatchers.IO) {
             try {
@@ -289,6 +291,7 @@ class Camera2System(
             }
         }
 
+    @Suppress("DEPRECATION")
     private suspend fun setupVideoMode(): Boolean =
         withContext(Dispatchers.IO) {
             try {
@@ -337,6 +340,7 @@ class Camera2System(
             }
         }
 
+    @Suppress("DEPRECATION")
     private suspend fun setupPreviewMode(): Boolean =
         withContext(Dispatchers.IO) {
             try {
@@ -396,6 +400,7 @@ class Camera2System(
             }
         }
 
+    @Suppress("DEPRECATION")
     private suspend fun startVideoRecording(): Boolean =
         withContext(Dispatchers.IO) {
             try {
@@ -490,12 +495,18 @@ class Camera2System(
                 try {
                     requestBuilder?.apply {
                         // Samsung Stage3/Level3 specific settings for maximum raw data preservation
-                        set(CaptureRequest.CONTROL_MODE, android.hardware.camera2.CameraMetadata.CONTROL_MODE_OFF)
+                        set(
+                            CaptureRequest.CONTROL_MODE,
+                            android.hardware.camera2.CameraMetadata.CONTROL_MODE_OFF
+                        )
                         set(
                             CaptureRequest.NOISE_REDUCTION_MODE,
                             android.hardware.camera2.CameraMetadata.NOISE_REDUCTION_MODE_OFF
                         )
-                        set(CaptureRequest.EDGE_MODE, android.hardware.camera2.CameraMetadata.EDGE_MODE_OFF)
+                        set(
+                            CaptureRequest.EDGE_MODE,
+                            android.hardware.camera2.CameraMetadata.EDGE_MODE_OFF
+                        )
                         set(
                             CaptureRequest.COLOR_CORRECTION_MODE,
                             android.hardware.camera2.CameraMetadata.COLOR_CORRECTION_MODE_TRANSFORM_MATRIX
@@ -507,11 +518,17 @@ class Camera2System(
 
                         // Set highest quality capture settings for Stage3/Level3
                         set(CaptureRequest.JPEG_QUALITY, 100.toByte())
-                        set(CaptureRequest.HOT_PIXEL_MODE, android.hardware.camera2.CameraMetadata.HOT_PIXEL_MODE_OFF)
+                        set(
+                            CaptureRequest.HOT_PIXEL_MODE,
+                            android.hardware.camera2.CameraMetadata.HOT_PIXEL_MODE_OFF
+                        )
                     }
                     Log.d(TAG, "Applied Samsung Stage3/Level3 processing settings")
                 } catch (e: Exception) {
-                    Log.w(TAG, "Could not apply Stage3/Level3 settings, using defaults: ${e.message}")
+                    Log.w(
+                        TAG,
+                        "Could not apply Stage3/Level3 settings, using defaults: ${e.message}"
+                    )
                 }
             }
 
@@ -557,12 +574,23 @@ class Camera2System(
         return try {
             val windowManager =
                 context.getSystemService(Context.WINDOW_SERVICE) as android.view.WindowManager
-            val deviceRotation = when (windowManager.defaultDisplay.rotation) {
-                android.view.Surface.ROTATION_0 -> 0
-                android.view.Surface.ROTATION_90 -> 90
-                android.view.Surface.ROTATION_180 -> 180
-                android.view.Surface.ROTATION_270 -> 270
-                else -> 0
+            val deviceRotation = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                when (context.display?.rotation ?: android.view.Surface.ROTATION_0) {
+                    android.view.Surface.ROTATION_0 -> 0
+                    android.view.Surface.ROTATION_90 -> 90
+                    android.view.Surface.ROTATION_180 -> 180
+                    android.view.Surface.ROTATION_270 -> 270
+                    else -> 0
+                }
+            } else {
+                @Suppress("DEPRECATION")
+                when (windowManager.defaultDisplay.rotation) {
+                    android.view.Surface.ROTATION_0 -> 0
+                    android.view.Surface.ROTATION_90 -> 90
+                    android.view.Surface.ROTATION_180 -> 180
+                    android.view.Surface.ROTATION_270 -> 270
+                    else -> 0
+                }
             }
 
 

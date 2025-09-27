@@ -1,10 +1,10 @@
-package com.mpdc4gsr.libunified.ui.charting.highlight;
+package com.mpdc4gsr.libunified.ui.highlight;
 
-import com.mpdc4gsr.libunified.ui.charting.charts.RadarChart;
-import com.mpdc4gsr.libunified.ui.charting.data.Entry;
-import com.mpdc4gsr.libunified.ui.charting.interfaces.datasets.IDataSet;
-import com.mpdc4gsr.libunified.ui.charting.utils.MPPointF;
-import com.mpdc4gsr.libunified.ui.charting.utils.Utils;
+import com.mpdc4gsr.libunified.ui.charts.RadarChart;
+import com.mpdc4gsr.libunified.ui.data.Entry;
+import com.mpdc4gsr.libunified.ui.interfaces.datasets.IDataSet;
+import com.mpdc4gsr.libunified.ui.utils.MPPointF;
+import com.mpdc4gsr.libunified.ui.utils.Utils;
 
 import java.util.List;
 

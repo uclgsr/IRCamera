@@ -125,13 +125,13 @@
             android:layout_height="match_parent"
             android:visibility="gone" />
 
-        <com.mpdc4gsr.lib.ui.camera.CameraPreView
+        <com.mpdc4gsr.libunified.ui.camera.CameraPreView
             android:id="@+id/cameraPreview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:visibility="gone" />
 
-        <com.infisense.usbir.view.TemperatureView
+        <com.mpdc4gsr.libunified.ir.view.TemperatureView
             android:id="@+id/temperatureView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -166,13 +166,13 @@
             android:layout_height="match_parent"
             android:visibility="gone" />
 
-        <com.infisense.usbir.view.ZoomCaliperView
+        <com.mpdc4gsr.libunified.ir.view.ZoomCaliperView
             android:id="@+id/zoomView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:visibility="gone" />
 
-        <com.mpdc4gsr.lib.ui.widget.SteeringWheelView
+        <com.mpdc4gsr.libunified.ui.widget.SteeringWheelView
             android:id="@+id/thermal_steering_view"
             android:layout_width="200dp"
             android:layout_height="200dp"
@@ -255,7 +255,7 @@
     </LinearLayout>
 
 
-    <com.mpdc4gsr.lib.ui.widget.BitmapConstraintLayout
+    <com.mpdc4gsr.libunified.ui.widget.BitmapConstraintLayout
         android:id="@+id/cl_seek_bar"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
@@ -331,7 +331,7 @@
             app:rsb_thumb_height="24dp"
             app:rsb_thumb_width="24dp"
             app:rsb_tick_mark_mode="number" />
-    </com.mpdc4gsr.lib.ui.widget.BitmapConstraintLayout>
+    </com.mpdc4gsr.libunified.ui.widget.BitmapConstraintLayout>
 
     <com.mpdc4gsr.module.thermalunified.view.TimeDownView
         android:id="@+id/time_down_view"

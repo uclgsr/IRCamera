@@ -18,7 +18,7 @@
             app:layout_constraintBottom_toTopOf="@+id/cl_bottom"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/network_status_bar" />
+            app:layout_constraintTop_toBottomOf="@+id/sensor_controls_container" />
 
 
         <LinearLayout
@@ -74,6 +74,32 @@
                 android:text="PC: Disconnected"
                 android:textColor="#FFFFFF"
                 android:textSize="10sp" />
+
+        </LinearLayout>
+
+        <!-- Enhanced Sensor Status and Recording Controls -->
+        <LinearLayout
+            android:id="@+id/sensor_controls_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#FF1A1A1A"
+            android:orientation="vertical"
+            android:padding="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/network_status_bar">
+
+            <!-- Placeholder for ComprehensiveSensorStatusWidget -->
+            <FrameLayout
+                android:id="@+id/sensor_status_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <!-- Placeholder for RecordingControlsWidget -->
+            <FrameLayout
+                android:id="@+id/recording_controls_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
         </LinearLayout>
 

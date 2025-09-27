@@ -1,15 +1,15 @@
-package com.mpdc4gsr.libunified.ui.charting.interfaces.datasets;
+package com.mpdc4gsr.libunified.ui.interfaces.datasets;
 
 import android.graphics.DashPathEffect;
 import android.graphics.Typeface;
 
-import com.mpdc4gsr.libunified.ui.charting.components.Legend;
-import com.mpdc4gsr.libunified.ui.charting.components.YAxis;
-import com.mpdc4gsr.libunified.ui.charting.data.DataSet;
-import com.mpdc4gsr.libunified.ui.charting.data.Entry;
-import com.mpdc4gsr.libunified.ui.charting.formatter.ValueFormatter;
-import com.mpdc4gsr.libunified.ui.charting.model.GradientColor;
-import com.mpdc4gsr.libunified.ui.charting.utils.MPPointF;
+import com.mpdc4gsr.libunified.ui.components.Legend;
+import com.mpdc4gsr.libunified.ui.components.YAxis;
+import com.mpdc4gsr.libunified.ui.data.DataSet;
+import com.mpdc4gsr.libunified.ui.data.Entry;
+import com.mpdc4gsr.libunified.ui.formatter.ValueFormatter;
+import com.mpdc4gsr.libunified.ui.model.GradientColor;
+import com.mpdc4gsr.libunified.ui.utils.MPPointF;
 
 import java.util.List;
 

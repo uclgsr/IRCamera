@@ -13,12 +13,7 @@ import com.energy.irutilslibrary.LibIRTempAC020
 import com.energy.irutilslibrary.bean.GainStatus
 import com.energy.iruvc.sdkisp.LibIRTemp
 import com.energy.iruvc.utils.Line
-import com.mpdc4gsr.module.thermalunified.lite.R
-import com.mpdc4gsr.module.thermalunified.lite.camera.DeviceIrcmdControlManager
-import com.mpdc4gsr.module.thermalunified.lite.databinding.ActivityIrMonitorLiteBinding
-import com.mpdc4gsr.module.thermalunified.lite.fragment.IRMonitorLiteFragment
 import com.google.gson.Gson
-import com.mpdc4gsr.libunified.ir.view.ITsTempListener
 import com.mpdc4gsr.libunified.app.BaseApplication
 import com.mpdc4gsr.libunified.app.bean.tools.ThermalBean
 import com.mpdc4gsr.libunified.app.common.SharedManager
@@ -27,12 +22,17 @@ import com.mpdc4gsr.libunified.app.db.entity.ThermalEntity
 import com.mpdc4gsr.libunified.app.ktbase.BaseActivity
 import com.mpdc4gsr.libunified.app.tools.NumberTools
 import com.mpdc4gsr.libunified.app.tools.TimeTool
-import com.mpdc4gsr.lib.ui.dialog.MonitorSelectDialog
-import com.mpdc4gsr.lib.ui.listener.SingleClickListener
+import com.mpdc4gsr.libunified.ir.view.ITsTempListener
+import com.mpdc4gsr.libunified.ui.dialog.MonitorSelectDialog
+import com.mpdc4gsr.libunified.ui.listener.SingleClickListener
+import com.mpdc4gsr.module.thermalunified.R
 import com.mpdc4gsr.module.thermalunified.bean.DataBean
 import com.mpdc4gsr.module.thermalunified.bean.SelectPositionBean
+import com.mpdc4gsr.module.thermalunified.databinding.ActivityIrMonitorLiteBinding
 import com.mpdc4gsr.module.thermalunified.event.MonitorSaveEvent
 import com.mpdc4gsr.module.thermalunified.event.ThermalActionEvent
+import com.mpdc4gsr.module.thermalunified.lite.camera.DeviceIrcmdControlManager
+import com.mpdc4gsr.module.thermalunified.lite.fragment.IRMonitorLiteFragment
 import com.mpdc4gsr.module.thermalunified.repository.ConfigRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -103,15 +103,15 @@ open class IRMonitorLiteActivity : BaseActivity(), View.OnClickListener, ITsTemp
                     if (irMonitorLiteFragment != null) {
                         val result: LibIRTemp.TemperatureSampleResult =
                             when (selectBean.type) {
-                                1 -> irMonitorLiteFragment!!.temperatureView.getPointTemp(selectBean.startPosition)
-                                2 -> irMonitorLiteFragment!!.temperatureView.getLineTemp(
+                                1 -> irMonitorLiteFragment.getPointTemp(selectBean.startPosition)
+                                2 -> irMonitorLiteFragment.getLineTemp(
                                     Line(
                                         selectBean.startPosition,
                                         selectBean.endPosition
                                     )
                                 )
 
-                                else -> irMonitorLiteFragment!!.temperatureView.getRectTemp(
+                                else -> irMonitorLiteFragment.getRectTemp(
                                     selectBean.getRect()
                                 )
                             } ?: continue
@@ -240,12 +240,12 @@ open class IRMonitorLiteActivity : BaseActivity(), View.OnClickListener, ITsTemp
                                 return@launch
                             }
                             irMonitorLiteFragment?.stopTask()
-                            binding.thermalFragment.getViewTreeObserver().addOnGlobalLayoutListener(
+                            binding.thermalFragment.viewTreeObserver.addOnGlobalLayoutListener(
                                 object :
                                     ViewTreeObserver.OnGlobalLayoutListener {
                                     override fun onGlobalLayout() {
 
-                                        binding.thermalFragment.getViewTreeObserver()
+                                        binding.thermalFragment.viewTreeObserver
                                             .removeOnGlobalLayoutListener(this)
                                         irMonitorLiteFragment?.restTempView()
                                         irMonitorLiteFragment?.addTempLine(selectIndex!!)

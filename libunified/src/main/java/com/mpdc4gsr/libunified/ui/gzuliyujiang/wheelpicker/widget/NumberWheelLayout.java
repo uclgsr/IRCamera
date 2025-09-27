@@ -7,12 +7,12 @@ import android.util.AttributeSet;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.mpdc4gsr.libunified.R;
 import com.mpdc4gsr.libunified.ui.gzuliyujiang.wheelpicker.contract.OnNumberSelectedListener;
 import com.mpdc4gsr.libunified.ui.gzuliyujiang.wheelpicker.contract.OnOptionSelectedListener;
 import com.mpdc4gsr.libunified.ui.gzuliyujiang.wheelview.annotation.CurtainCorner;
 import com.mpdc4gsr.libunified.ui.gzuliyujiang.wheelview.annotation.ItemTextAlign;
 import com.mpdc4gsr.libunified.ui.gzuliyujiang.wheelview.widget.WheelView;
-import com.mpdc4gsr.libunified.R;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,10 +1,10 @@
 package com.mpdc4gsr.module.thermalunified.video
 
 import android.graphics.Bitmap
-import com.mpdc4gsr.libunified.ir.view.CameraView
-import com.mpdc4gsr.libunified.ir.view.TemperatureView
 import com.mpdc4gsr.libunified.app.config.FileConfig
 import com.mpdc4gsr.libunified.app.utils.BitmapUtils
+import com.infisense.usbir.view.CameraView
+import com.mpdc4gsr.libunified.ir.view.TemperatureView
 import com.mpdc4gsr.module.thermalunified.video.media.Encoder
 import com.mpdc4gsr.module.thermalunified.video.media.MP4Encoder
 import io.reactivex.Observable

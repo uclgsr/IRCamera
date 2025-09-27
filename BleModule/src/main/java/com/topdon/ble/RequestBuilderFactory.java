@@ -4,7 +4,6 @@ import android.bluetooth.BluetoothDevice;
 import android.os.Build;
 
 import androidx.annotation.IntRange;
-
 import androidx.annotation.RequiresApi;
 
 import com.topdon.ble.callback.MtuChangeCallback;

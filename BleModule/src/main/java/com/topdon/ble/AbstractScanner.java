@@ -17,7 +17,6 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.util.SparseArray;
 
-
 import androidx.annotation.CallSuper;
 import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
@@ -39,12 +38,12 @@ import java.util.concurrent.CopyOnWriteArrayList;
 abstract class AbstractScanner implements Scanner {
     final ScanConfiguration configuration;
     final BluetoothAdapter bluetoothAdapter;
+    final Logger logger;
     private final Handler mainHandler;
-    private boolean isScanning;
     private final List<ScanListener> scanListeners = new CopyOnWriteArrayList<>();
     private final SparseArray<BluetoothProfile> proxyBluetoothProfiles = new SparseArray<>();
-    final Logger logger;
     private final DeviceCreator deviceCreator;
+    private boolean isScanning;
 
     AbstractScanner(EasyBLE easyBle, BluetoothAdapter bluetoothAdapter) {
         this.bluetoothAdapter = bluetoothAdapter;
@@ -66,7 +65,7 @@ abstract class AbstractScanner implements Scanner {
         scanListeners.remove(listener);
     }
 
-    //位置服务是否开户
+    // Check if location service is enabled
     private boolean isLocationEnabled(Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
@@ -276,8 +275,6 @@ abstract class AbstractScanner implements Scanner {
         }
     }
 
-    private final Runnable stopScanRunnable = () -> stopScan(false);
-
     //蓝牙是否开启
     private boolean isBtEnabled() {
         if (bluetoothAdapter.isEnabled()) {
@@ -315,10 +312,14 @@ abstract class AbstractScanner implements Scanner {
     /**
      * 执行搜索
      */
-    protected abstract void performStartScan();
+    protected abstract void performStartScan();    private final Runnable stopScanRunnable = () -> stopScan(false);
 
     /**
      * 执行停止搜索
      */
     protected abstract void performStopScan();
+
+
+
+
 }

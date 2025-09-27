@@ -4,7 +4,6 @@ import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.mpdc4gsr.ble.core.UnifiedBleManager
 import com.topdon.ble.Connection
 import com.topdon.ble.ConnectionConfiguration
 import com.topdon.ble.ConnectionState
@@ -12,8 +11,6 @@ import com.topdon.ble.Device
 import com.topdon.ble.EasyBLE
 import com.topdon.ble.EventObserver
 import com.topdon.ble.Request
-import com.topdon.ble.callback.ScanListener
-// UnifiedBleManager - now properly imported from ble-core
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -33,10 +30,15 @@ class BleDeviceManager(private val context: Context) : CoroutineScope {
             )
     }
 
-    override val coroutineContext: CoroutineContext = Dispatchers.Main + Job()
+    enum class SystemBleStatus {
+        NOT_SUPPORTED,
+        ENABLED,
+        DISABLED
+    }
 
-    private val unifiedBleManager = UnifiedBleManager.getInstance(context)
+    override val coroutineContext: CoroutineContext = Dispatchers.Main + Job()
     private var easyBLE: EasyBLE? = null
+    private val gsrSensorAddresses = mutableSetOf<String>()
 
     private val _discoveredDevices = MutableLiveData<List<BleDeviceInfo>>()
     val discoveredDevices: LiveData<List<BleDeviceInfo>> = _discoveredDevices
@@ -70,9 +72,6 @@ class BleDeviceManager(private val context: Context) : CoroutineScope {
     fun initialize(enableNordicBackend: Boolean = true) {
         launch {
             Log.i(TAG, "Initializing BLE Device Manager with Nordic backend: $enableNordicBackend")
-
-            unifiedBleManager.initialize(context, enableNordicBackend)
-            unifiedBleManager.enableMultiDeviceMode(true)
 
             easyBLE =
                 EasyBLE.getBuilder()
@@ -113,7 +112,7 @@ class BleDeviceManager(private val context: Context) : CoroutineScope {
                     deviceInfoMap[device.address] = deviceInfo
 
                     if (deviceInfo.isGsrSensor) {
-                        unifiedBleManager.markAsGsrSensor(device.address)
+                        gsrSensorAddresses.add(device.address)
                         Log.i(TAG, "GSR sensor detected: ${device.name} (${device.address})")
                     }
 
@@ -164,10 +163,12 @@ class BleDeviceManager(private val context: Context) : CoroutineScope {
                 return false
             }
 
-            val connection = unifiedBleManager.connectWithEnhancements(deviceAddress)
+            val config = createOptimalConnectionConfig(deviceInfo.isGsrSensor)
+            val observer = createDeviceObserver(deviceAddress)
+            val connection = easyBLE?.connect(deviceAddress, config, observer)
 
             if (connection != null) {
-                deviceConnections[deviceAddress] = connection as Connection
+                deviceConnections[deviceAddress] = connection
                 updateDeviceStatus()
                 Log.i(TAG, "Enhanced connection successful for device: $deviceAddress")
                 true
@@ -345,9 +346,14 @@ class BleDeviceManager(private val context: Context) : CoroutineScope {
         }
     }
 
-    fun getSystemBleStatus(): UnifiedBleManager.SystemBleStatus? {
+    fun getSystemBleStatus(): Any? { // UnifiedBleManager.SystemBleStatus replaced
         return try {
-            unifiedBleManager.getSystemStatus()
+            val adapter = easyBLE?.bluetoothAdapter
+            when {
+                adapter == null -> SystemBleStatus.NOT_SUPPORTED
+                adapter.isEnabled -> SystemBleStatus.ENABLED
+                else -> SystemBleStatus.DISABLED
+            }
         } catch (e: Exception) {
             Log.e(TAG, "Error getting system BLE status", e)
             null
@@ -375,6 +381,22 @@ class BleDeviceManager(private val context: Context) : CoroutineScope {
                 )
             }
         _deviceStatus.postValue(statusMap)
+    }
+
+    fun getDiscoveredDeviceCount(): Int {
+        return deviceInfoMap.size
+    }
+    
+    fun getGsrDeviceCount(): Int {
+        return gsrSensorAddresses.size
+    }
+    
+    fun getPairedDeviceCount(): Int {
+        return deviceInfoMap.values.count { it.isPaired }
+    }
+    
+    fun isScanning(): Boolean {
+        return easyBLE?.isScanning() ?: false
     }
 
     fun release() {

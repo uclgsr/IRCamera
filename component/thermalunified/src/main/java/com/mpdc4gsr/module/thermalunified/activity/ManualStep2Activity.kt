@@ -20,15 +20,15 @@ import com.energy.iruvc.ircmd.IRCMD
 import com.energy.iruvc.usb.USBMonitor
 import com.energy.iruvc.utils.CommonParams
 import com.energy.iruvc.utils.DualCameraParams
+import com.mpdc4gsr.libunified.app.common.SharedManager
+import com.mpdc4gsr.libunified.app.ktbase.BaseActivity
+import com.mpdc4gsr.libunified.app.lms.weiget.LmsLoadDialog
+import com.mpdc4gsr.libunified.app.utils.ByteUtils.toLittleBytes
 import com.mpdc4gsr.libunified.ir.usbdual.Const
 import com.mpdc4gsr.libunified.ir.usbdual.camera.DualViewWithManualAlignExternalCamera
 import com.mpdc4gsr.libunified.ir.usbdual.camera.USBMonitorDualManager
 import com.mpdc4gsr.libunified.ir.usbdual.inf.OnUSBConnectListener
 import com.mpdc4gsr.libunified.ir.utils.HexDump
-import com.mpdc4gsr.libunified.app.common.SharedManager
-import com.mpdc4gsr.libunified.app.ktbase.BaseActivity
-import com.mpdc4gsr.libunified.app.lms.weiget.LmsLoadDialog
-import com.mpdc4gsr.libunified.app.utils.ByteUtils.toLittleBytes
 import com.mpdc4gsr.module.thermalunified.R
 import com.mpdc4gsr.module.thermalunified.event.ManualFinishBean
 import com.mpdc4gsr.module.thermalunified.utils.IRCmdTool
@@ -120,8 +120,9 @@ class ManualStep2Activity :
                 if (!canOperate) {
 
                     takePhoto()
-                    ivTakePhoto?.setText(R.string.app_ok)
-                    tvTips.text = getString(R.string.dual_light_correction_tips_3)
+                    ivTakePhoto?.setText(com.mpdc4gsr.libunified.R.string.app_ok)
+                    tvTips.text =
+                        getString(com.mpdc4gsr.libunified.R.string.dual_light_correction_tips_3)
                     ivTips.visibility = View.GONE
                     llSeekBar.visibility = View.VISIBLE
                 } else {

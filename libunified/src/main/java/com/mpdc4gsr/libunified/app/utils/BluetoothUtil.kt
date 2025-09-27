@@ -15,14 +15,15 @@ import androidx.activity.ComponentActivity
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import com.elvishew.xlog.XLog
+import com.mpdc4gsr.libunified.app.config.DeviceConfig
 import com.mpdc4gsr.libunified.app.tools.PermissionTool
 
 object BluetoothUtil {
 
-    fun addBtStateListener(
-        activity: ComponentActivity,
-        listener: ((isEnable: Boolean) -> Unit),
-    ) {
+    /**
+     * 在给定 activity 生命周期内添加 蓝牙 开关状态监听.
+     */
+    fun addBtStateListener(activity: ComponentActivity, listener: ((isEnable: Boolean) -> Unit)) {
         activity.lifecycle.addObserver(BtStateObserver(activity, listener))
     }
 
@@ -42,10 +43,7 @@ object BluetoothUtil {
         }
 
         private inner class BtStateReceiver : BroadcastReceiver() {
-            override fun onReceive(
-                context: Context?,
-                intent: Intent?,
-            ) {
+            override fun onReceive(context: Context?, intent: Intent?) {
                 when (intent?.getIntExtra(
                     BluetoothAdapter.EXTRA_STATE,
                     BluetoothAdapter.STATE_OFF
@@ -57,22 +55,27 @@ object BluetoothUtil {
         }
     }
 
+
     private val scanCallback = MyScanCallback()
 
-    fun setLeScanListener(
-        // isTS004 parameter removed - functionality disabled
-        listener: (name: String) -> Unit,
-    ) {
-        // scanCallback.isTS004 = isTS004 // TS004 functionality removed
+    /**
+     * 设置低功耗蓝牙搜索回调.
+     */
+    fun setLeScanListener(isTS004: Boolean, listener: (name: String) -> Unit) {
+        scanCallback.isTS004 = isTS004
         scanCallback.listener = listener
     }
 
+    /**
+     * 开启低功耗蓝牙搜索，调用前需确保拥有相应权限且开启蓝牙.
+     * @return true-调用成功 false-缺少权限或蓝牙未开启
+     */
     @SuppressLint("MissingPermission")
     fun startLeScan(context: Context): Boolean {
         XLog.i("startLeScan()")
 
         if (!PermissionTool.hasBtPermission(context)) {
-            XLog.e("[ph][ph][ph][ph][ph][ph]-[ph][ph][ph][ph][ph][ph][ph][ph][ph][ph][ph]!")
+            XLog.e("开始蓝牙扫描-没有相应定位或蓝牙权限!")
             return false
         }
 
@@ -80,26 +83,29 @@ object BluetoothUtil {
             (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager).adapter
         val btLeScanner: BluetoothLeScanner? = btAdapter.bluetoothLeScanner
         if (btLeScanner == null) {
-            XLog.e("[ph][ph][ph][ph][ph][ph]-[ph][ph][ph][ph][ph]")
+            XLog.e("开始蓝牙扫描-蓝牙未开启")
             return false
         }
 
-        val settings =
-            ScanSettings.Builder()
-                .setMatchMode(ScanSettings.MATCH_MODE_STICKY)
-                .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY)
-                .build()
+        val settings = ScanSettings.Builder()
+            .setMatchMode(ScanSettings.MATCH_MODE_STICKY)
+            .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY)
+            .build()
 
         btLeScanner.startScan(null, settings, scanCallback)
         return true
     }
 
+    /**
+     * 停止低功耗蓝牙搜索，调用前需确保拥有相应权限且开启蓝牙.
+     * @return true-调用成功 false-缺少权限或蓝牙未开启
+     */
     @SuppressLint("MissingPermission")
     fun stopLeScan(context: Context): Boolean {
         XLog.i("stopBtScan()")
 
         if (!PermissionTool.hasBtPermission(context)) {
-            XLog.w("[ph][ph][ph][ph][ph][ph]-[ph][ph][ph][ph][ph][ph][ph][ph][ph][ph][ph]!")
+            XLog.w("停止蓝牙扫描-没有相应定位或蓝牙权限!")
             return false
         }
 
@@ -107,7 +113,7 @@ object BluetoothUtil {
             (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager).adapter
         val btLeScanner: BluetoothLeScanner? = btAdapter.bluetoothLeScanner
         if (btLeScanner == null) {
-            XLog.w("[ph][ph][ph][ph][ph][ph]-[ph][ph][ph][ph][ph]")
+            XLog.w("停止蓝牙扫描-蓝牙未开启")
             return false
         }
 
@@ -116,21 +122,20 @@ object BluetoothUtil {
     }
 
     private class MyScanCallback : ScanCallback() {
-        // var isTS004: Boolean = false // TS004 functionality removed
+        var isTS004: Boolean = false
         var listener: ((name: String) -> Unit)? = null
 
         @SuppressLint("MissingPermission")
-        override fun onScanResult(
-            callbackType: Int,
-            result: ScanResult?,
-        ) {
+        override fun onScanResult(callbackType: Int, result: ScanResult?) {
             val name: String = result?.device?.name ?: return
-            // TS004/TC007 device scanning functionality removed
-            XLog.v("[ph][ph][ph][ph][ph][ph][ph][ph][ph]：$name")
+            if (name.startsWith(if (isTS004) DeviceConfig.TS004_NAME_START else DeviceConfig.TC007_NAME_START)) {
+                XLog.v("蓝牙扫描出一个目标设备：$name")
+                listener?.invoke(name)
+            }
         }
 
         override fun onScanFailed(errorCode: Int) {
-            XLog.e("[ph][ph][ph][ph][ph][ph]！$errorCode")
+            XLog.e("蓝牙扫描失败！$errorCode")
         }
     }
 }

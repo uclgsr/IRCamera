@@ -49,7 +49,10 @@ object TS004Repository {
         .create(TS004Service::class.java)
 
 
-    suspend fun downloadList(dataMap: Map<String, File>, listener: ((path: String, isSuccess: Boolean) -> Unit)): Int {
+    suspend fun downloadList(
+        dataMap: Map<String, File>,
+        listener: ((path: String, isSuccess: Boolean) -> Unit)
+    ): Int {
         return withContext(Dispatchers.IO) {
             var successCount = 0
             dataMap.forEach {
@@ -153,20 +156,21 @@ object TS004Repository {
     }
 
 
-    suspend fun getNewestFile(fileType: Int): List<FileBean>? = withContext(Dispatchers.IO) {
+    suspend fun getNewestFile(fileType: Int): List<TS004FileBean>? = withContext(Dispatchers.IO) {
         try {
             val paramMap: HashMap<String, Any> = HashMap()
             paramMap["pageNum"] = 1
             paramMap["pageCount"] = 1
             paramMap["fileType"] = fileType
-            getTS004Service().getFileList(paramMap.toBody()).data?.filelist ?: return@withContext ArrayList()
+            getTS004Service().getFileList(paramMap.toBody()).data?.filelist
+                ?: return@withContext ArrayList()
         } catch (_: Exception) {
             null
         }
     }
 
 
-    suspend fun getAllFileList(fileType: Int): List<FileBean> = withContext(Dispatchers.IO) {
+    suspend fun getAllFileList(fileType: Int): List<TS004FileBean> = withContext(Dispatchers.IO) {
         try {
             val fileCount = getFileCount(fileType) ?: return@withContext ArrayList()
             if (fileCount < 1) {
@@ -184,7 +188,7 @@ object TS004Repository {
     }
 
 
-    suspend fun getFileByPage(fileType: Int, pageNum: Int, pageCount: Int): List<FileBean>? =
+    suspend fun getFileByPage(fileType: Int, pageNum: Int, pageCount: Int): List<TS004FileBean>? =
         withContext(Dispatchers.IO) {
             try {
                 val paramMap: HashMap<String, Any> = HashMap()
@@ -277,7 +281,8 @@ object TS004Repository {
                     hasReadCount = 0
                     byteArray = ByteArray(1024 * 1024 * 5)
                 }
-                readCount = fileInputStream.read(byteArray, hasReadCount, byteArray.size - hasReadCount)
+                readCount =
+                    fileInputStream.read(byteArray, hasReadCount, byteArray.size - hasReadCount)
             }
 
             if (hasReadCount > 0) {

@@ -1,6 +1,6 @@
-package com.mpdc4gsr.libunified.ui.charting.data;
+package com.mpdc4gsr.libunified.ui.data;
 
-import com.mpdc4gsr.libunified.ui.charting.interfaces.datasets.IScatterDataSet;
+import com.mpdc4gsr.libunified.ui.interfaces.datasets.IScatterDataSet;
 
 import java.util.List;
 

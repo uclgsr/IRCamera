@@ -1,4 +1,4 @@
-package com.mpdc4gsr.libunified.ui.charting.renderer;
+package com.mpdc4gsr.libunified.ui.renderer;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -7,15 +7,15 @@ import android.graphics.Paint.Align;
 import android.graphics.Path;
 import android.graphics.RectF;
 
-import com.mpdc4gsr.libunified.ui.charting.components.LimitLine;
-import com.mpdc4gsr.libunified.ui.charting.components.XAxis;
-import com.mpdc4gsr.libunified.ui.charting.components.XAxis.XAxisPosition;
-import com.mpdc4gsr.libunified.ui.charting.utils.FSize;
-import com.mpdc4gsr.libunified.ui.charting.utils.MPPointD;
-import com.mpdc4gsr.libunified.ui.charting.utils.MPPointF;
-import com.mpdc4gsr.libunified.ui.charting.utils.Transformer;
-import com.mpdc4gsr.libunified.ui.charting.utils.Utils;
-import com.mpdc4gsr.libunified.ui.charting.utils.ViewPortHandler;
+import com.mpdc4gsr.libunified.ui.components.LimitLine;
+import com.mpdc4gsr.libunified.ui.components.XAxis;
+import com.mpdc4gsr.libunified.ui.components.XAxis.XAxisPosition;
+import com.mpdc4gsr.libunified.ui.utils.FSize;
+import com.mpdc4gsr.libunified.ui.utils.MPPointD;
+import com.mpdc4gsr.libunified.ui.utils.MPPointF;
+import com.mpdc4gsr.libunified.ui.utils.Transformer;
+import com.mpdc4gsr.libunified.ui.utils.Utils;
+import com.mpdc4gsr.libunified.ui.utils.ViewPortHandler;
 
 import java.util.List;
 

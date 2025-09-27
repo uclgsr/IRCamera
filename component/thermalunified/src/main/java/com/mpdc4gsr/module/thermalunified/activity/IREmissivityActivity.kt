@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.SizeUtils
 import com.mpdc4gsr.libunified.app.ktbase.BaseActivity
 import com.mpdc4gsr.libunified.app.tools.UnitTools
-import com.mpdc4gsr.lib.ui.widget.MyItemDecoration
+import com.mpdc4gsr.libunified.ui.widget.MyItemDecoration
 import com.mpdc4gsr.module.thermalunified.R
 import com.mpdc4gsr.module.thermalunified.view.EmissivityView
 import com.mpdc4gsr.libunified.R as LibR

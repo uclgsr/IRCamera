@@ -1,6 +1,6 @@
-package com.mpdc4gsr.libunified.ui.charting.data;
+package com.mpdc4gsr.libunified.ui.data;
 
-import com.mpdc4gsr.libunified.ui.charting.interfaces.datasets.ICandleDataSet;
+import com.mpdc4gsr.libunified.ui.interfaces.datasets.ICandleDataSet;
 
 import java.util.List;
 

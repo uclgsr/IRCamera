@@ -1,10 +1,10 @@
-package com.mpdc4gsr.libunified.ui.charting.jobs;
+package com.mpdc4gsr.libunified.ui.jobs;
 
 import android.view.View;
 
-import com.mpdc4gsr.libunified.ui.charting.utils.ObjectPool;
-import com.mpdc4gsr.libunified.ui.charting.utils.Transformer;
-import com.mpdc4gsr.libunified.ui.charting.utils.ViewPortHandler;
+import com.mpdc4gsr.libunified.ui.utils.ObjectPool;
+import com.mpdc4gsr.libunified.ui.utils.Transformer;
+import com.mpdc4gsr.libunified.ui.utils.ViewPortHandler;
 
 public class MoveViewJob extends ViewPortJob {
 

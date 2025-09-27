@@ -90,7 +90,7 @@ class ShimmerGSRRecorder(
 
     private val mainHandler = Handler(Looper.getMainLooper())
     private val listeners = mutableListOf<GSRRecordingListener>()
-    private val shimmerAPIBridge = ShimmerAPIBridge.getInstance()
+    private val shimmerAPIBridge = ShimmerApiBridge.getInstance()
 
     interface GSRRecordingListener {
         fun onRecordingStarted(session: SessionInfo)

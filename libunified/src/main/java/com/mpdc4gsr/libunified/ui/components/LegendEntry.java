@@ -1,8 +1,8 @@
-package com.mpdc4gsr.libunified.ui.charting.components;
+package com.mpdc4gsr.libunified.ui.components;
 
 import android.graphics.DashPathEffect;
 
-import com.mpdc4gsr.libunified.ui.charting.utils.ColorTemplate;
+import com.mpdc4gsr.libunified.ui.utils.ColorTemplate;
 
 public class LegendEntry {
     public String label;

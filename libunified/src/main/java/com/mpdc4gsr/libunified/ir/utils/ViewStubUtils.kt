@@ -4,12 +4,7 @@ import android.view.View
 import android.view.ViewStub
 
 object ViewStubUtils {
-
-    fun showViewStub(
-        viewStub: ViewStub?,
-        isShow: Boolean,
-        callback: ((view: View?) -> Unit)?,
-    ) {
+    fun showViewStub(viewStub: ViewStub?, isShow: Boolean, callback: ((view: View?) -> Unit)?) {
         if (viewStub != null) {
             if (isShow) {
                 try {
@@ -17,11 +12,9 @@ object ViewStubUtils {
                     callback?.invoke(view)
                 } catch (e: Exception) {
                     viewStub.visibility = View.VISIBLE
-
                 }
             } else {
                 viewStub.visibility = View.GONE
-
             }
         }
     }

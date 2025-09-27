@@ -1,3 +1,5 @@
+@file:OptIn(kotlin.ExperimentalStdlibApi::class)
+
 package com.mpdc4gsr.libunified.app.tools
 
 import android.app.Activity
@@ -14,8 +16,7 @@ import com.mpdc4gsr.libunified.app.broadcast.DeviceBroadcastReceiver
 import com.mpdc4gsr.libunified.app.config.DeviceConfig.isHik256
 import com.mpdc4gsr.libunified.app.config.DeviceConfig.isTcLiteDevice
 import com.mpdc4gsr.libunified.app.config.DeviceConfig.isTcTsDevice
-import com.mpdc4gsr.libunified.app.utils.ByteUtils.toBytes
-import com.mpdc4gsr.libunified.app.utils.ByteUtils.toHexString
+import com.mpdc4gsr.libunified.app.utils.ByteUtils
 import org.greenrobot.eventbus.EventBus
 
 object DeviceTools {
@@ -51,8 +52,20 @@ object DeviceTools {
         val deviceList: HashMap<String, UsbDevice> = usbManager.deviceList
         for (usbDevice in deviceList.values) {
             if (usbDevice.isTcTsDevice()) {
-                val productID = usbDevice.productId.toBytes(2).toHexString()
-                val vendorID = usbDevice.vendorId.toBytes(2).toHexString()
+                val productID = ByteUtils.toHexString(
+                    ByteUtils.numberToBytes(
+                        true,
+                        usbDevice.productId.toLong(),
+                        2
+                    )
+                )
+                val vendorID = ByteUtils.toHexString(
+                    ByteUtils.numberToBytes(
+                        true,
+                        usbDevice.vendorId.toLong(),
+                        2
+                    )
+                )
                 XLog.i("[ph][ph][ph][ph]usb[ph][ph] productId:$productID, vendorId:$vendorID, deviceName:${usbDevice.deviceName}")
                 return usbDevice
             }

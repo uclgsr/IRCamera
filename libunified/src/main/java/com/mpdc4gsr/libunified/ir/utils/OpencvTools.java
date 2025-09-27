@@ -37,6 +37,7 @@ import android.util.Log;
 
 import com.example.suplib.wrapper.SupHelp;
 import com.mpdc4gsr.libunified.app.BaseApplication;
+import com.mpdc4gsr.libunified.app.utils.UnifiedDataUtils;
 
 import org.opencv.android.Utils;
 import org.opencv.core.Core;
@@ -100,7 +101,7 @@ public class OpencvTools {
 
     public static Bitmap supImageFour(Bitmap inBitmap) {
         long startTime = System.currentTimeMillis();
-        ByteBuffer rawData = ByteBuffer.wrap(SupRUtils.INSTANCE.bitmapToByteArray(inBitmap));
+        ByteBuffer rawData = ByteBuffer.wrap(UnifiedDataUtils.bitmapToByteArray(inBitmap, Bitmap.CompressFormat.PNG, 100));
         ByteBuffer dataIn = ByteBuffer.allocateDirect(rawData.array().length);
         dataIn.put(rawData);
         ByteBuffer dataOut = ByteBuffer.allocateDirect(rawData.array().length * 4);
@@ -110,7 +111,7 @@ public class OpencvTools {
 
         dataOut.get(byteArray);
         Log.e("4[CHINESE_TEXT]Minute[CHINESE_TEXT]：", String.valueOf((System.currentTimeMillis() - startTime)));
-        return SupRUtils.INSTANCE.byteArrayToBitmap(byteArray);
+        return UnifiedDataUtils.byteArrayToBitmap(byteArray);
     }
 
 
@@ -126,7 +127,7 @@ public class OpencvTools {
         byte[] outputData = new byte[dataOut.capacity()];
         dataOut.get(outputData);
         Log.e("4[CHINESE_TEXT]Minute[CHINESE_TEXT]：", String.valueOf((System.currentTimeMillis() - startTime)));
-        Bitmap bitmap = SupRUtils.INSTANCE.byteArrayToBitmap(outputData);
+        Bitmap bitmap = UnifiedDataUtils.byteArrayToBitmap(outputData);
         return outputData;
     }
 
@@ -167,7 +168,7 @@ public class OpencvTools {
     public static Bitmap supImageFourExToBitmap(Bitmap inBitmap) {
         long startTime = System.currentTimeMillis();
 
-        byte[] rawData = SupRUtils.INSTANCE.bitmapToByteArray(inBitmap);
+        byte[] rawData = UnifiedDataUtils.bitmapToByteArray(inBitmap, Bitmap.CompressFormat.PNG, 100);
 
         ByteBuffer dataIn = ByteBuffer.allocateDirect(rawData.length);
         dataIn.put(rawData);
@@ -180,7 +181,7 @@ public class OpencvTools {
         byte[] outputData = new byte[dataOut.capacity()];
         dataOut.get(outputData);
 
-        Bitmap outputBitmap = SupRUtils.INSTANCE.byteArrayToBitmap(outputData);
+        Bitmap outputBitmap = UnifiedDataUtils.byteArrayToBitmap(outputData);
 
         Mat srcMat = new Mat();
         Utils.bitmapToMat(outputBitmap, srcMat);

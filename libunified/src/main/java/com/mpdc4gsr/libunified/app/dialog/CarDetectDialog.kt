@@ -12,8 +12,8 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.mpdc4gsr.libunified.app.BaseApplication
 import com.mpdc4gsr.libunified.R
+import com.mpdc4gsr.libunified.app.BaseApplication
 import com.mpdc4gsr.libunified.app.bean.CarDetectBean
 import com.mpdc4gsr.libunified.app.bean.CarDetectChildBean
 import com.mpdc4gsr.libunified.app.common.SharedManager
@@ -264,16 +264,12 @@ class CarDetectDialog(context: Context, val listener: ((bean: CarDetectChildBean
                     dismiss()
                 }
 
-                var selectCarDetect = SharedManager.getCarDetectInfo()
+                val selectCarDetect = SharedManager.getCarDetectInfo()
                 carDetects.forEachIndexed { index, carDetectBean ->
                     carDetectBean.detectChildBeans.forEachIndexed { childIndex, carDetectChildBean ->
-
-                        if (selectCarDetect == null) {
-                            carDetectChildBean.isSelected = (index == 0 && childIndex == 0)
-                        } else {
-                            carDetectChildBean.isSelected =
-                                TextUtils.equals(carDetectChildBean.item, selectCarDetect.item)
-                        }
+                        // SharedManager.getCarDetectInfo() never returns null, it returns a default value
+                        carDetectChildBean.isSelected =
+                            TextUtils.equals(carDetectChildBean.item, selectCarDetect.item)
                     }
                 }
 

@@ -227,7 +227,7 @@ class ShimmerGSRRecorderTest {
     @Test
     fun testGSRDataProcessingAccuracy() {
 
-        val apisBridge = ShimmerAPIBridge.getInstance()
+        val apisBridge = ShimmerApiBridge.getInstance()
 
 
         val testValues = arrayOf(0.0, 1024.0, 2048.0, 3072.0, 4095.0)

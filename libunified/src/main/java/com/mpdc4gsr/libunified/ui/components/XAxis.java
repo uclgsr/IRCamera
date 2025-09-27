@@ -1,6 +1,6 @@
-package com.mpdc4gsr.libunified.ui.charting.components;
+package com.mpdc4gsr.libunified.ui.components;
 
-import com.mpdc4gsr.libunified.ui.charting.utils.Utils;
+import com.mpdc4gsr.libunified.ui.utils.Utils;
 
 public class XAxis extends AxisBase {
 

@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace = "com.mpdc4gsr.gsr"
-    compileSdk = libs.versions.compileSdk.get().toInt()
+    compileSdk = 35
 
     defaultConfig {
         minSdk = libs.versions.minSdk.get().toInt()
@@ -53,9 +53,10 @@ android {
     }
 
     buildFeatures {
-        dataBinding = false
+        dataBinding = true
         viewBinding = true
     }
+    buildToolsVersion = "35.0.0"
 }
 
 dependencies {

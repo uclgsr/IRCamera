@@ -65,11 +65,11 @@ data class FileCountBean(
 data class FilePageBean(
     val current: Int,
     val total: Int,
-    val filelist: List<FileBean>,
+    val filelist: List<TS004FileBean>,
 )
 
 
-data class FileBean(
+data class TS004FileBean(
     val id: Int,
     val type: Int,
     val duration: Int,

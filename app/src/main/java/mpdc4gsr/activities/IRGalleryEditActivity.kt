@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Bitmap
 import android.media.MediaScannerConnection
+import android.os.Build
 import android.os.Parcelable
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
@@ -19,12 +20,6 @@ import com.elvishew.xlog.XLog
 import com.energy.iruvc.ircmd.IRCMDType
 import com.energy.iruvc.ircmd.IRUtils
 import com.energy.iruvc.utils.CommonParams
-import com.mpdc4gsr.module.thermalunified.lite.IrConst
-import com.mpdc4gsr.module.thermalunified.lite.util.CommonUtil
-import com.mpdc4gsr.module.thermalunified.lite.util.IRTool
-import com.mpdc4gsr.libunified.ir.utils.OpencvTools
-import com.mpdc4gsr.libunified.ir.utils.PseudocodeUtils.changePseudocodeModeByOld
-import com.mpdc4gsr.libunified.ir.view.ITsTempListener
 import com.mpdc4gsr.libunified.app.BaseApplication
 import com.mpdc4gsr.libunified.app.activity.PseudoSetActivity
 import com.mpdc4gsr.libunified.app.bean.CustomPseudoBean
@@ -54,6 +49,9 @@ import com.mpdc4gsr.libunified.app.utils.BitmapUtils
 import com.mpdc4gsr.libunified.app.utils.Constants.IS_REPORT_FIRST
 import com.mpdc4gsr.libunified.app.utils.ImageUtils
 import com.mpdc4gsr.libunified.app.utils.ScreenUtil
+import com.mpdc4gsr.libunified.ir.utils.OpencvTools
+import com.mpdc4gsr.libunified.ir.utils.PseudocodeUtils.changePseudocodeModeByOld
+import com.mpdc4gsr.libunified.ir.view.ITsTempListener
 import com.mpdc4gsr.libunified.ui.widget.seekbar.OnRangeChangedListener
 import com.mpdc4gsr.libunified.ui.widget.seekbar.RangeSeekBar
 import com.mpdc4gsr.module.thermalunified.event.GalleryAddEvent
@@ -61,6 +59,9 @@ import com.mpdc4gsr.module.thermalunified.event.ImageGalleryEvent
 import com.mpdc4gsr.module.thermalunified.frame.FrameStruct
 import com.mpdc4gsr.module.thermalunified.frame.FrameTool
 import com.mpdc4gsr.module.thermalunified.frame.ImageParams
+import com.mpdc4gsr.module.thermalunified.lite.IrConst
+import com.mpdc4gsr.module.thermalunified.lite.util.CommonUtil
+import com.mpdc4gsr.module.thermalunified.lite.util.IRTool
 import com.mpdc4gsr.module.thermalunified.report.bean.ImageTempBean
 import com.mpdc4gsr.module.thermalunified.view.TemperatureBaseView.Mode
 import com.mpdc4gsr.module.thermalunified.viewmodel.IRGalleryEditViewModel
@@ -71,8 +72,8 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.util.Locale
-import com.mpdc4gsr.module.thermalunified.R as ThermalLiteR
 import com.mpdc4gsr.module.thermalunified.R as ThermalIrR
+import com.mpdc4gsr.module.thermalunified.R as ThermalLiteR
 
 class IRGalleryEditActivity : BaseBindingActivity<ActivityIrGalleryEditBinding>(),
     View.OnClickListener, ITsTempListener {
@@ -240,7 +241,7 @@ class IRGalleryEditActivity : BaseBindingActivity<ActivityIrGalleryEditBinding>(
             temperatureSeekbar.setOnRangeChangedListener(
                 object : OnRangeChangedListener {
                     override fun onRangeChanged(
-                        view: RangeSeekBar?,
+                        view: RangeSeekBar,
                         leftValue: Float,
                         rightValue: Float,
                         isFromUser: Boolean,
@@ -270,14 +271,14 @@ class IRGalleryEditActivity : BaseBindingActivity<ActivityIrGalleryEditBinding>(
                     }
 
                     override fun onStartTrackingTouch(
-                        view: RangeSeekBar?,
+                        view: RangeSeekBar,
                         isLeft: Boolean,
                     ) {
 
                     }
 
                     override fun onStopTrackingTouch(
-                        view: RangeSeekBar?,
+                        view: RangeSeekBar,
                         isLeft: Boolean,
                     ) {
 
@@ -551,9 +552,15 @@ class IRGalleryEditActivity : BaseBindingActivity<ActivityIrGalleryEditBinding>(
     private val pseudoSetResult =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == RESULT_OK) {
-                val tmp =
+                val tmp = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    it.data?.getParcelableExtra(
+                        ExtraKeyConfig.CUSTOM_PSEUDO_BEAN,
+                        CustomPseudoBean::class.java
+                    )
+                } else {
+                    @Suppress("DEPRECATION")
                     it.data?.getParcelableExtra(ExtraKeyConfig.CUSTOM_PSEUDO_BEAN)
-                        ?: CustomPseudoBean()
+                } ?: CustomPseudoBean()
                 updateImageAndSeekbarColorList(tmp)
                 temperatureSeekbar.setColorList(tmp.getColorList(struct.isTC007())?.reversedArray())
                 temperatureSeekbar.setPlaces(tmp.getPlaceList())
@@ -669,23 +676,41 @@ class IRGalleryEditActivity : BaseBindingActivity<ActivityIrGalleryEditBinding>(
                                         buildImageTempBean()
                                     )
 
-                            intent.getParcelableExtra<Parcelable>(ExtraKeyConfig.REPORT_INFO)?.let {
+                            val reportInfo = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                intent.getParcelableExtra(ExtraKeyConfig.REPORT_INFO, Parcelable::class.java)
+                            } else {
+                                @Suppress("DEPRECATION")
+                                intent.getParcelableExtra<Parcelable>(ExtraKeyConfig.REPORT_INFO)
+                            }
+                            reportInfo?.let {
                                 navigationBuilder.withParcelable(ExtraKeyConfig.REPORT_INFO, it)
                             }
-                            intent.getParcelableExtra<Parcelable>(ExtraKeyConfig.REPORT_CONDITION)
-                                ?.let {
-                                    navigationBuilder.withParcelable(
-                                        ExtraKeyConfig.REPORT_CONDITION,
-                                        it
-                                    )
-                                }
-                            intent.getParcelableArrayListExtra<Parcelable>(ExtraKeyConfig.REPORT_IR_LIST)
-                                ?.let {
-                                    navigationBuilder.withParcelableArrayList(
-                                        ExtraKeyConfig.REPORT_IR_LIST,
-                                        it
-                                    )
-                                }
+                            
+                            val reportCondition = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                intent.getParcelableExtra(ExtraKeyConfig.REPORT_CONDITION, Parcelable::class.java)
+                            } else {
+                                @Suppress("DEPRECATION")
+                                intent.getParcelableExtra<Parcelable>(ExtraKeyConfig.REPORT_CONDITION)
+                            }
+                            reportCondition?.let {
+                                navigationBuilder.withParcelable(
+                                    ExtraKeyConfig.REPORT_CONDITION,
+                                    it
+                                )
+                            }
+                            
+                            val reportIrList = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                intent.getParcelableArrayListExtra(ExtraKeyConfig.REPORT_IR_LIST, Parcelable::class.java)
+                            } else {
+                                @Suppress("DEPRECATION")
+                                intent.getParcelableArrayListExtra<Parcelable>(ExtraKeyConfig.REPORT_IR_LIST)
+                            }
+                            reportIrList?.let {
+                                navigationBuilder.withParcelableArrayList(
+                                    ExtraKeyConfig.REPORT_IR_LIST,
+                                    it
+                                )
+                            }
                             navigationBuilder.navigation(this@IRGalleryEditActivity)
                         }
                     }
@@ -777,7 +802,7 @@ class IRGalleryEditActivity : BaseBindingActivity<ActivityIrGalleryEditBinding>(
 
             var name: String
             irBitmap.let {
-                name = ImageUtils.save(bitmap = it, isTC007)
+                name = ImageUtils.save(bitmap = it)
             }
             ImageUtils.saveFrame(bs = mFrame, capital = getCapital(), name = name)
             ToastTools.showShort(R.string.tip_photo_saved)
@@ -819,6 +844,8 @@ class IRGalleryEditActivity : BaseBindingActivity<ActivityIrGalleryEditBinding>(
         return capital
     }
 
+    @Deprecated("Deprecated in Java")
+    @Suppress("DEPRECATION")
     override fun onBackPressed() {
         lifecycleScope.launch {
             if (isReportPick) {
@@ -842,7 +869,8 @@ class IRGalleryEditActivity : BaseBindingActivity<ActivityIrGalleryEditBinding>(
     private fun tempCorrect(temp: Float): Float {
         var newTemp = temp
         try {
-            if (struct == null || struct.distance <= 0 || struct.radiation <= 0) {
+            val s = struct
+            if (s == null || s.distance <= 0 || s.radiation <= 0) {
                 return temp
             }
             val paramsArray =

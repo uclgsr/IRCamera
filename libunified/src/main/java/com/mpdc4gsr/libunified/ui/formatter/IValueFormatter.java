@@ -1,7 +1,7 @@
-package com.mpdc4gsr.libunified.ui.charting.formatter;
+package com.mpdc4gsr.libunified.ui.formatter;
 
-import com.mpdc4gsr.libunified.ui.charting.data.Entry;
-import com.mpdc4gsr.libunified.ui.charting.utils.ViewPortHandler;
+import com.mpdc4gsr.libunified.ui.data.Entry;
+import com.mpdc4gsr.libunified.ui.utils.ViewPortHandler;
 
 @Deprecated
 public interface IValueFormatter {

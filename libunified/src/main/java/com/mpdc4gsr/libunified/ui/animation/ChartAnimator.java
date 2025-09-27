@@ -1,11 +1,11 @@
-package com.mpdc4gsr.libunified.ui.charting.animation;
+package com.mpdc4gsr.libunified.ui.animation;
 
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator.AnimatorUpdateListener;
 
 import androidx.annotation.RequiresApi;
 
-import com.mpdc4gsr.libunified.ui.charting.animation.Easing.EasingFunction;
+import com.mpdc4gsr.libunified.ui.animation.Easing.EasingFunction;
 
 public class ChartAnimator {
 

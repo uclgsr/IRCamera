@@ -2,13 +2,18 @@ package mpdc4gsr.test
 
 import android.os.Bundle
 import android.util.Log
-import android.widget.*
+import android.widget.Button
+import android.widget.LinearLayout
+import android.widget.ScrollView
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import mpdc4gsr.permissions.PermissionController
 import mpdc4gsr.sensors.unified.ShimmerDeviceManager
 import mpdc4gsr.sensors.unified.UnifiedGSRRecorder
+import mpdc4gsr.sensors.unified.model.DeviceInfo
 
 
 class BLEIntegrationTestActivity : AppCompatActivity() {
@@ -85,7 +90,10 @@ class BLEIntegrationTestActivity : AppCompatActivity() {
 
                 addLog("Test 1: Initializing UnifiedGSRRecorder with enhanced BLE scanning...")
 
-                gsrRecorder = UnifiedGSRRecorder(this@BLEIntegrationTestActivity, this@BLEIntegrationTestActivity)
+                gsrRecorder = UnifiedGSRRecorder(
+                    this@BLEIntegrationTestActivity,
+                    this@BLEIntegrationTestActivity
+                )
                 val initSuccess = gsrRecorder?.initialize() ?: false
 
                 if (initSuccess) {
@@ -114,7 +122,10 @@ class BLEIntegrationTestActivity : AppCompatActivity() {
 
                 addLog("Test 3: Testing ShimmerDeviceManager directly...")
 
-                deviceManager = ShimmerDeviceManager(this@BLEIntegrationTestActivity, this@BLEIntegrationTestActivity)
+                deviceManager = ShimmerDeviceManager(
+                    this@BLEIntegrationTestActivity,
+                    this@BLEIntegrationTestActivity
+                )
                 val dmInitSuccess = deviceManager?.initialize() ?: false
 
                 if (dmInitSuccess) {
@@ -127,7 +138,14 @@ class BLEIntegrationTestActivity : AppCompatActivity() {
 
                         kotlinx.coroutines.delay(5000)
 
-                        val scanResults = deviceManager?.scanResults?.value ?: emptyList()
+                        // Get the latest scan results safely
+                        val scanResults = try {
+                            deviceManager?.scanResults?.first() ?: emptyList()
+                        } catch (e: Exception) {
+                            Log.w(TAG, "Failed to collect scan results: ${e.message}")
+                            emptyList<DeviceInfo>()
+                        }
+
                         addLog("✅ BLE scan results: ${scanResults.size} devices found")
 
                         deviceManager?.stopDeviceScanning()
@@ -142,7 +160,8 @@ class BLEIntegrationTestActivity : AppCompatActivity() {
 
                 addLog("Test 4: Validating BLE permissions...")
 
-                val hasPermissions = UnifiedGSRRecorder.hasRequiredPermissions(this@BLEIntegrationTestActivity)
+                val hasPermissions =
+                    UnifiedGSRRecorder.hasRequiredPermissions(this@BLEIntegrationTestActivity)
                 if (hasPermissions) {
                     addLog("✅ All required BLE permissions are granted")
                 } else {
@@ -175,7 +194,8 @@ class BLEIntegrationTestActivity : AppCompatActivity() {
     private fun addLog(message: String) {
         runOnUiThread {
             val timestamp =
-                java.text.SimpleDateFormat("HH:mm:ss", java.util.Locale.getDefault()).format(java.util.Date())
+                java.text.SimpleDateFormat("HH:mm:ss", java.util.Locale.getDefault())
+                    .format(java.util.Date())
             logText.append("[$timestamp] $message\n")
 
 

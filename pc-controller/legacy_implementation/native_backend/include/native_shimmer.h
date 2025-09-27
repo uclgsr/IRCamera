@@ -12,12 +12,12 @@
 namespace ircamera {
 
     struct GSRData {
-        uint64_t timestamp_ns;      
-        uint16_t raw_gsr_value;     
-        double gsr_microsiemens;    
-        uint16_t raw_ppg_value;     
-        double ppg_normalized;      
-        uint8_t packet_sequence;    
+        uint64_t timestamp_ns;
+        uint16_t raw_gsr_value;
+        double gsr_microsiemens;
+        uint16_t raw_ppg_value;
+        double ppg_normalized;
+        uint8_t packet_sequence;
     };
 
     class NativeShimmer {

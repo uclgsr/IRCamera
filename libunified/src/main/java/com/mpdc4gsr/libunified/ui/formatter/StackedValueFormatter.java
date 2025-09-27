@@ -1,6 +1,6 @@
-package com.mpdc4gsr.libunified.ui.charting.formatter;
+package com.mpdc4gsr.libunified.ui.formatter;
 
-import com.mpdc4gsr.libunified.ui.charting.data.BarEntry;
+import com.mpdc4gsr.libunified.ui.data.BarEntry;
 
 import java.text.DecimalFormat;
 

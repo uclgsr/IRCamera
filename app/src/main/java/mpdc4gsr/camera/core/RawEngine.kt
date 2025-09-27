@@ -60,7 +60,10 @@ class RawEngine(private val context: Context) {
             rawImageReader?.setOnImageAvailableListener(rawImageAvailableListener, null)
 
             val processingMode = if (enableStage3) "Stage3/Level3" else "Standard"
-            Log.i(TAG, "RAW engine setup: ${rawSize.width}x${rawSize.height}, Processing: $processingMode")
+            Log.i(
+                TAG,
+                "RAW engine setup: ${rawSize.width}x${rawSize.height}, Processing: $processingMode"
+            )
         } catch (e: Exception) {
             Log.e(TAG, "Failed to setup RAW engine", e)
             onError?.invoke("RAW setup failed: ${e.message}")
@@ -163,7 +166,7 @@ class RawEngine(private val context: Context) {
                     // Set Stage3/Level3 specific metadata
                     try {
                         // Disable thumbnail for maximum raw data preservation
-                        dngCreator.setThumbnail(null)
+                        // Note: Skipping thumbnail to preserve raw data
 
                         // Set DNG orientation based on device orientation
                         captureResult.get(CaptureResult.JPEG_ORIENTATION)?.let { orientation ->
@@ -192,7 +195,10 @@ class RawEngine(private val context: Context) {
                 dngCreator.close()
 
                 rawCaptureCount++
-                Log.d(TAG, "Saved Stage3/Level3 DNG: ${dngFile.name} (${image.width}x${image.height})")
+                Log.d(
+                    TAG,
+                    "Saved Stage3/Level3 DNG: ${dngFile.name} (${image.width}x${image.height})"
+                )
                 onRawImageSaved?.invoke(dngFile)
             } else {
                 // Fallback to raw binary if no characteristics available

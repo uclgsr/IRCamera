@@ -140,7 +140,6 @@ dependencies {
     implementation(libs.kotlin.stdlib)
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.coroutines.android)
-    implementation(project(":BleModule"))
 
     coreLibraryDesugaring(libs.desugar.jdk.libs)
 
@@ -148,16 +147,17 @@ dependencies {
     api(fileTree(mapOf("include" to listOf("*.jar"), "dir" to "libs")))
 
     // IR-specific AAR files that need to be compiled
-    compileOnly(files("libs/libusbdualsdk_1.3.4_2406271906_standard.aar"))
-    compileOnly(files("libs/libAC020sdk_USB_IR_1.1.1_2408291439.aar"))
-    compileOnly(files("libs/libirutils_1.2.0_2409241055.aar"))
-    compileOnly(files("libs/opengl_1.3.2_standard.aar"))
-    compileOnly(files("libs/suplib-release.aar"))
-    compileOnly(files("libs/ai-upscale-release.aar"))
-    compileOnly(files("libs/texturegesture-release.aar"))
-    compileOnly(files("libs/jetified-tas_api-1.0.4.0.aar"))
-    compileOnly(files("libs/library_1.0.aar"))
-    compileOnly(files("../app/libs/libcommon_1.2.0_24052117.aar"))
+    implementation(files("libs/libusbdualsdk_1.3.4_2406271906_standard.aar"))
+    implementation(files("libs/libAC020sdk_USB_IR_1.1.1_2408291439.aar"))
+    implementation(files("libs/libirutils_1.2.0_2409241055.aar"))
+    implementation(files("libs/opengl_1.3.2_standard.aar"))
+    implementation(files("libs/suplib-release.aar"))
+    implementation(files("libs/ai-upscale-release.aar"))
+    implementation(files("libs/texturegesture-release.aar"))
+    implementation(files("libs/jetified-tas_api-1.0.4.0.aar"))
+    implementation(files("libs/library_1.0.aar"))
+    implementation(files("libs/topdon.aar"))
+    implementation(files("../app/libs/libcommon_1.2.0_24052117.aar"))
 
     api(libs.androidx.appcompat)
     api(libs.androidx.preference)

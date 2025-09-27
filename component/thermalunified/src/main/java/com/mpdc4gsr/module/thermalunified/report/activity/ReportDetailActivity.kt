@@ -23,7 +23,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.File
 import com.mpdc4gsr.libunified.R as LibCoreR
-import com.mpdc4gsr.lib.ui.R as UiR
+import com.mpdc4gsr.libunified.R as UiR
 
 
 class ReportDetailActivity : BaseActivity() {
@@ -48,6 +48,7 @@ class ReportDetailActivity : BaseActivity() {
         llContent = findViewById(R.id.ll_content)
         watermarkView = findViewById(R.id.watermark_view)
 
+        @Suppress("DEPRECATION")
         reportBean = intent.getParcelableExtra(ExtraKeyConfig.REPORT_BEAN)
 
         titleView.setTitleText(R.string.album_edit_report)

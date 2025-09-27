@@ -6,8 +6,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.mpdc4gsr.libunified.R
-import com.mpdc4gsr.libunified.databinding.DialogLongTextBinding
 import com.mpdc4gsr.libunified.app.utils.ScreenUtil
+import com.mpdc4gsr.libunified.databinding.DialogLongTextBinding
 
 
 class LongTextDialog(context: Context, val title: String?, val content: String?) :

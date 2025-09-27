@@ -20,7 +20,6 @@ import com.mpdc4gsr.libunified.app.config.RouterConfig
 import com.mpdc4gsr.libunified.app.dialog.TipDialog
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModelActivity
 import com.mpdc4gsr.libunified.app.lms.LMS
-import com.mpdc4gsr.libunified.app.lms.utils.StringUtils
 import com.mpdc4gsr.libunified.app.lms.weiget.TToast
 import com.mpdc4gsr.libunified.app.navigation.NavigationManager
 import com.mpdc4gsr.libunified.app.socket.WebSocketProxy
@@ -39,7 +38,7 @@ import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import java.io.File
 import com.mpdc4gsr.libunified.R as LibCoreR
-import com.mpdc4gsr.lib.ui.R as UiR
+import com.mpdc4gsr.libunified.R as UiR
 
 
 class ReportPreviewSecondActivity : BaseViewModelActivity<UpReportViewModel>(),
@@ -73,6 +72,7 @@ class ReportPreviewSecondActivity : BaseViewModelActivity<UpReportViewModel>(),
         tvToPdf = findViewById(R.id.tv_to_pdf)
         tvComplete = findViewById(R.id.tv_complete)
 
+        @Suppress("DEPRECATION")
         reportBean = intent.getParcelableExtra(ExtraKeyConfig.REPORT_BEAN)
         isTC007 = intent.getBooleanExtra(ExtraKeyConfig.IS_TC007, false)
 
@@ -146,7 +146,7 @@ class ReportPreviewSecondActivity : BaseViewModelActivity<UpReportViewModel>(),
                     .navigation(this)
                 finish()
             } else {
-                ToastUtils.showShort(StringUtils.getResString(this, it.code.toString()))
+                ToastUtils.showShort("Error: ${it.code}")
             }
         }
         viewModel.exceptionLD.observe(this) {

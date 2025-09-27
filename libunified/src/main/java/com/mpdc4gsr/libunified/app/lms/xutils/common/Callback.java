@@ -26,6 +26,15 @@ public interface Callback<T> {
         }
     }
 
+    // Add ProgressCallback interface
+    interface ProgressCallback<T> extends Callback<T> {
+        void onWaiting();
+
+        void onStarted();
+
+        void onLoading(long total, long current, boolean isDownloading);
+    }
+
     class CancelledException extends Exception {
         public CancelledException(String message) {
             super(message);

@@ -5,19 +5,20 @@ import android.net.nsd.NsdManager
 import android.net.nsd.NsdServiceInfo
 import android.util.Base64
 import android.util.Log
+import com.mpdc4gsr.libunified.app.sync.TimeSyncService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import mpdc4gsr.config.FeatureFlags
 import mpdc4gsr.config.ProtocolVersion
-import mpdc4gsr.libunified.app.SessionManager
-import mpdc4gsr.libunified.app.StructuredLogger
+import mpdc4gsr.core.SessionManager
+import mpdc4gsr.core.StructuredLogger
 import mpdc4gsr.security.AdvancedAuthenticationManager
-import mpdc4gsr.sync.EnhancedTimeSyncService
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
@@ -79,7 +80,7 @@ class WebSocketClient(private val context: Context) {
     private val logger = StructuredLogger.getInstance(context)
     private val nsdManager: NsdManager = context.getSystemService(Context.NSD_SERVICE) as NsdManager
 
-    private var timeSyncService: EnhancedTimeSyncService? = null
+    private var timeSyncService: TimeSyncService? = null
     private var sessionManager: SessionManager? = null
 
     private var fileUploadService: FileUploadService? = null
@@ -295,12 +296,18 @@ class WebSocketClient(private val context: Context) {
                         Log.w(TAG, "No servers discovered via mDNS, trying manual connection")
                         tryManualConnection()
                     }
+                } catch (e: kotlinx.coroutines.CancellationException) {
+                    Log.i(TAG, "Server discovery cancelled")
+                    logger.log(
+                        StructuredLogger.LogLevel.INFO, "WebSocketClient", "discovery_cancelled",
+                        emptyMap(),
+                    )
                 } catch (e: Exception) {
                     Log.e(TAG, "Error in server discovery", e)
                     logger.log(
                         StructuredLogger.LogLevel.ERROR, "WebSocketClient", "discovery_error",
                         mapOf(
-                            "error" to e.message.orEmpty(),
+                            "error" to (e.message ?: "Unknown error"),
                         ),
                     )
                 }
@@ -886,36 +893,44 @@ class WebSocketClient(private val context: Context) {
 
     private fun initializePhase2Services() {
 
-        timeSyncService =
-            EnhancedTimeSyncService(context, logger).apply {
-                start { syncResult ->
-                    if (syncResult.success) {
+        timeSyncService = TimeSyncService().apply {
+            setListener(object : TimeSyncService.TimeSyncListener {
+                override fun onSyncCompleted(result: TimeSyncService.SyncResult) {
+                    if (result.isSuccess) {
                         Log.i(
                             TAG,
-                            "Enhanced time sync completed: offset=${syncResult.offset / 1_000_000.0}ms, quality=${syncResult.quality}"
+                            "Time sync completed: offset=${result.clockOffsetMs}ms, accuracy=±${result.accuracyMs}ms"
                         )
                         logger.log(
                             StructuredLogger.LogLevel.INFO,
                             "WebSocketClient",
-                            "enhanced_sync_completed",
+                            "sync_completed",
                             mapOf(
-                                "offset_ms" to (syncResult.offset / 1_000_000.0).toString(),
-                                "rtt_ms" to (syncResult.rtt / 1_000_000.0).toString(),
-                                "jitter_ms" to syncResult.jitter.toString(),
-                                "quality" to syncResult.quality.name,
+                                "offset_ms" to result.clockOffsetMs.toString(),
+                                "rtt_ms" to result.roundTripDelayMs.toString(),
+                                "accuracy_ms" to result.accuracyMs.toString(),
                             ),
                         )
                     } else {
-                        Log.w(TAG, "Enhanced time sync failed")
+                        Log.w(TAG, "Time sync failed: ${result.errorMessage}")
                         logger.log(
                             StructuredLogger.LogLevel.WARNING,
                             "WebSocketClient",
-                            "enhanced_sync_failed",
-                            emptyMap()
+                            "sync_failed",
+                            mapOf("error" to (result.errorMessage ?: "unknown"))
                         )
                     }
                 }
-            }
+
+                override fun onSyncStarted(targetHost: String) {
+                    Log.i(TAG, "Time sync started with $targetHost")
+                }
+
+                override fun onSyncError(error: String) {
+                    Log.e(TAG, "Time sync error: $error")
+                }
+            })
+        }
 
         sessionManager =
             SessionManager(context, logger).apply {
@@ -967,7 +982,8 @@ class WebSocketClient(private val context: Context) {
     }
 
     private fun stopPhase2Services() {
-        timeSyncService?.stop()
+        timeSyncService?.stopPeriodicSync()
+        timeSyncService?.cleanup()
         timeSyncService = null
 
         sessionManager?.stop()
@@ -1030,7 +1046,7 @@ class WebSocketClient(private val context: Context) {
                         put("device_count", devices.size)
                         put(
                             "sync_timestamp",
-                            timeSyncService?.getSynchronizedTime() ?: System.nanoTime()
+                            System.nanoTime()
                         )
                     }
 
@@ -1039,7 +1055,7 @@ class WebSocketClient(private val context: Context) {
                 devices.forEach { device ->
                     sessionManager?.updateDeviceHeartbeat(
                         device.deviceId,
-                        timeSyncService?.getCurrentOffset() ?: 0L,
+                        0L,
                         SessionManager.ConnectionQuality.GOOD,
                     )
                 }
@@ -1087,7 +1103,7 @@ class WebSocketClient(private val context: Context) {
     }
 
     fun getTimeSyncDiagnostics(): JSONObject {
-        return timeSyncService?.getDiagnostics() ?: JSONObject()
+        return JSONObject()
     }
 
     fun getSessionDiagnostics(): JSONObject {

@@ -145,7 +145,7 @@
             android:layout_height="match_parent" />
 
 
-        <com.infisense.usbir.view.TemperatureView
+        <com.mpdc4gsr.libunified.ir.view.TemperatureView
             android:id="@+id/temperatureView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

@@ -134,6 +134,39 @@ pc-controller/.pytest_cache/
 pc-controller/venv/
 pc-controller/.env
 
+# PC Controller specific additions
+pc_recordings/
+demo_recordings/
+pc-controller/legacy_implementation/native_backend/build/
+*.log
+
+# Demos and tests cache files
+demos/__pycache__/
+tests/__pycache__/
+
+# Python cache files - project-wide
+__pycache__/
+**/__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
 # Backup files
 *.backup
 *.bak
@@ -199,4 +232,3 @@ testing-suite/results/
 testing-suite/*.log
 testing-suite/temp/
 testing-suite/.pytest_cache/
-

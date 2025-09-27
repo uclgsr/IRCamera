@@ -1,22 +1,37 @@
 package com.mpdc4gsr.libunified.ir.view;
 
+
 import android.view.MotionEvent;
 import android.view.View;
 
-public class DragViewUtil {
-    public static void registerDragAction(View v) {
+/**
+ * 这个工具可以使任何一个view进行拖动。
+ *
+ * @author: CaiSongL
+ * @date: 2023/10/25 11:42
+ */
+public enum DragViewUtil {
+    ;
 
+    public static void registerDragAction(View v) {
+//        registerDragAction(v, 0);
     }
 
+    /**
+     * 拖动View方法
+     *
+     * @param v     view
+     * @param delay 延迟
+     */
     public static void registerDragAction(View v, long delay) {
         v.setOnTouchListener(new TouchListener(delay));
     }
 
     private static class TouchListener implements View.OnTouchListener {
+        private final long delay;
         private float downX;
         private float downY;
         private long downTime;
-        private long delay;
         private boolean isMove;
         private boolean canDrag;
 
@@ -29,7 +44,7 @@ public class DragViewUtil {
         }
 
         private boolean haveDelay() {
-            return delay > 0;
+            return 0 < this.delay;
         }
 
         @Override
@@ -40,11 +55,7 @@ public class DragViewUtil {
                     downY = event.getY();
                     isMove = false;
                     downTime = System.currentTimeMillis();
-                    if (haveDelay()) {
-                        canDrag = false;
-                    } else {
-                        canDrag = true;
-                    }
+                    canDrag = !haveDelay();
                     break;
                 case MotionEvent.ACTION_MOVE:
                     if (haveDelay() && !canDrag) {
@@ -58,12 +69,12 @@ public class DragViewUtil {
                     }
                     final float xDistance = event.getX() - downX;
                     final float yDistance = event.getY() - downY;
-                    if (xDistance != 0 && yDistance != 0) {
+                    if (0 != xDistance && 0 != yDistance) {
                         int l = (int) (v.getLeft() + xDistance);
-                        int r = (int) (l + v.getWidth());
+                        int r = l + v.getWidth();
                         int t = (int) (v.getTop() + yDistance);
-                        int b = (int) (t + v.getHeight());
-
+                        int b = t + v.getHeight();
+//                        v.layout(l, t, r, b);
                         v.setLeft(l);
                         v.setTop(t);
                         v.setRight(r);

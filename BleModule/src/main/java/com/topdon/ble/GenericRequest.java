@@ -14,8 +14,8 @@ import java.util.UUID;
  * author: bichuanfeng
  */
 class GenericRequest implements Request, Comparable<GenericRequest> {
-    Device device;
     private final String tag;
+    Device device;
     RequestType type;
     UUID service;
     UUID characteristic;

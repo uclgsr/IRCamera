@@ -1,9 +1,18 @@
 package com.mpdc4gsr.libunified.ir.utils;
 
-public class HexUtils {
+/**
+ * Created by fengjibo on 2022/12/9.
+ */
+public enum HexUtils {
+    ;
 
+    /**
+     * 将字节数组转换成十六进制的字符串
+     *
+     * @return
+     */
     public static String binaryToHexString(byte[] bytes) {
-        String hexStr = "0123456789ABCDEF";
+        final String hexStr = "0123456789ABCDEF";
         String result = "";
         String hex = "";
         for (byte b : bytes) {
