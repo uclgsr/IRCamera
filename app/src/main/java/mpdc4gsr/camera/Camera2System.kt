@@ -575,7 +575,7 @@ class Camera2System(
             val windowManager =
                 context.getSystemService(Context.WINDOW_SERVICE) as android.view.WindowManager
             val deviceRotation = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                when (context.display?.rotation) {
+                when (context.display?.rotation ?: android.view.Surface.ROTATION_0) {
                     android.view.Surface.ROTATION_0 -> 0
                     android.view.Surface.ROTATION_90 -> 90
                     android.view.Surface.ROTATION_180 -> 180

@@ -1293,8 +1293,8 @@ class GSRSensorRecorder(
                     // Use Shimmer's paired device detection
                     try {
                         val bluetoothManager =
-                            context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
-                        val bluetoothAdapter = bluetoothManager.adapter
+                            context.getSystemService(Context.BLUETOOTH_SERVICE) as? BluetoothManager
+                        val bluetoothAdapter = bluetoothManager?.adapter
                         if (bluetoothAdapter?.isEnabled == true) {
                             val pairedDevices = bluetoothAdapter.bondedDevices
                             pairedDevices?.forEach { btDevice ->
@@ -1860,8 +1860,8 @@ class GSRSensorRecorder(
                 if (shimmerManager != null) {
                     // Use standard Android Bluetooth pairing
                     val bluetoothManager =
-                        context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
-                    val bluetoothAdapter = bluetoothManager.adapter
+                        context.getSystemService(Context.BLUETOOTH_SERVICE) as? BluetoothManager
+                    val bluetoothAdapter = bluetoothManager?.adapter
                     val bondedDevices = bluetoothAdapter?.bondedDevices
                     val isAlreadyBonded =
                         bondedDevices?.any { it.address == deviceAddress } ?: false
@@ -1908,8 +1908,8 @@ class GSRSensorRecorder(
                 val deviceList = mutableListOf<String>()
 
 
-                val bluetoothManager = context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
-                val bluetoothAdapter = bluetoothManager.adapter
+                val bluetoothManager = context.getSystemService(Context.BLUETOOTH_SERVICE) as? BluetoothManager
+                val bluetoothAdapter = bluetoothManager?.adapter
                 val bondedDevices = bluetoothAdapter?.bondedDevices
 
                 bondedDevices?.forEach { device ->

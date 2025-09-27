@@ -299,8 +299,8 @@ class NetworkClientTestActivity : AppCompatActivity() {
             return
         }
 
-        val bluetoothManager = getSystemService(BLUETOOTH_SERVICE) as BluetoothManager
-        val bluetoothAdapter = bluetoothManager.adapter
+        val bluetoothManager = getSystemService(BLUETOOTH_SERVICE) as? BluetoothManager
+        val bluetoothAdapter = bluetoothManager?.adapter
         if (bluetoothAdapter == null) {
             Log.w(TAG, "Bluetooth not available on this device")
             Toast.makeText(this, "Bluetooth not available on this device", Toast.LENGTH_SHORT)

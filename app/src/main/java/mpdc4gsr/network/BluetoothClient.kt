@@ -65,10 +65,10 @@ class BluetoothClient(
                 return@withContext true
             }
 
-            val bluetoothManager = context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
-            val bluetoothAdapter = bluetoothManager.adapter
-            if (bluetoothAdapter == null || !bluetoothAdapter.isEnabled) {
-                Log.e(TAG, "Bluetooth adapter is null or disabled")
+            val bluetoothManager = context.getSystemService(Context.BLUETOOTH_SERVICE) as? BluetoothManager
+            val bluetoothAdapter = bluetoothManager?.adapter
+            if (bluetoothManager == null || bluetoothAdapter == null || !bluetoothAdapter.isEnabled) {
+                Log.e(TAG, "Bluetooth not available or disabled")
                 handleConnectionError("Bluetooth not available")
                 return@withContext false
             }

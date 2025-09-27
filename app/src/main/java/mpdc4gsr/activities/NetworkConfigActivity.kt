@@ -47,8 +47,8 @@ class NetworkConfigActivity : AppCompatActivity() {
 
         networkSettings = NetworkSettings(this)
         permissionManager = PermissionManager(this, PermissionController(this))
-        val bluetoothManager = getSystemService(BLUETOOTH_SERVICE) as BluetoothManager
-        bluetoothAdapter = bluetoothManager.adapter
+        val bluetoothManager = getSystemService(BLUETOOTH_SERVICE) as? BluetoothManager
+        bluetoothAdapter = bluetoothManager?.adapter
 
         setupUI()
     }
