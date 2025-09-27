@@ -194,7 +194,7 @@ class VersionComposeActivity : BaseComposeActivity() {
                             color = MaterialTheme.colorScheme.primary,
                             modifier = Modifier.clickable {
                                 NavigationManager.build(RouterConfig.POLICY)
-                                    .withInt(PolicyActivity.KEY_THEME_TYPE, 1)
+                                    .withInt(PolicyComposeActivity.KEY_THEME_TYPE, 1)
                                     .navigation(context)
                             }
                         )
