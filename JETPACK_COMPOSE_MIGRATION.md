@@ -188,6 +188,13 @@ override fun connected() {
 - DevicePairingComposeActivity as network device discovery and pairing with connection management
 - GSRSettingsComposeActivity as comprehensive GSR sensor configuration with advanced settings
 - IRGalleryComposeActivity as media gallery with thermal images, filtering, and selection management
+- GSRDataViewComposeActivity as professional GSR data visualization with plotting and export capabilities
+- IRThermalNightComposeActivity as thermal imaging interface with camera controls and night vision modes
+- DataExportComposeActivity as comprehensive data export with multiple formats and batch processing
+
+## Migration Progress
+
+**Current Status: 24 of 114 Activities converted (21% complete)**
 
 ### Next Steps
 1. Migrate simple activities (MoreHelp, WebView)
