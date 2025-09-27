@@ -9,9 +9,9 @@ import android.util.Log
  * Can be used from any activity or service throughout the app
  */
 object BackgroundScanHelper {
-    
+
     private const val TAG = "BackgroundScanHelper"
-    
+
     /**
      * Start background device scanning service
      * This will start a foreground service that continuously scans for BLE devices
@@ -27,7 +27,7 @@ object BackgroundScanHelper {
             Log.e(TAG, "Failed to start background scanning", e)
         }
     }
-    
+
     /**
      * Stop background device scanning service
      */
@@ -42,7 +42,7 @@ object BackgroundScanHelper {
             Log.e(TAG, "Failed to stop background scanning", e)
         }
     }
-    
+
     /**
      * Pause background device scanning (keeps service running but stops scanning)
      */
@@ -57,7 +57,7 @@ object BackgroundScanHelper {
             Log.e(TAG, "Failed to pause background scanning", e)
         }
     }
-    
+
     /**
      * Resume background device scanning
      */

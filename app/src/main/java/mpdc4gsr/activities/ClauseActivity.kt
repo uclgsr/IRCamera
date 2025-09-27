@@ -123,7 +123,7 @@ class ClauseActivity : BaseBindingActivity<ActivityClauseBinding>() {
                 }.await().let {
                     // Mark that clause has been shown before navigation
                     SharedManager.setHasShowClause(true)
-                    
+
                     // Navigate to main activity
                     NavigationManager.build(RouterConfig.MAIN).navigation(this@ClauseActivity)
                     dismissLoading()
@@ -135,7 +135,7 @@ class ClauseActivity : BaseBindingActivity<ActivityClauseBinding>() {
                 if (SharedManager.getHasShowClause()) {
                     com.elvishew.xlog.XLog.e("ClauseActivity: Error during initialization: ${e.message}")
                 }
-                
+
                 // Ensure user can still access the app even if initialization fails
                 SharedManager.setHasShowClause(true)
                 NavigationManager.build(RouterConfig.MAIN).navigation(this@ClauseActivity)

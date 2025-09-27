@@ -35,6 +35,7 @@ import mpdc4gsr.network.NetworkClient
 import mpdc4gsr.network.NetworkConnectionManager
 import mpdc4gsr.network.NetworkManager
 import mpdc4gsr.network.NetworkServer
+import mpdc4gsr.network.NetworkUtils
 import mpdc4gsr.network.PreviewDataAdapter
 import mpdc4gsr.network.PreviewStreamer
 import mpdc4gsr.network.ProtocolHandler
@@ -61,7 +62,8 @@ class RecordingService : LifecycleService() {
         private const val NOTIFICATION_ID = 1001
         private const val CHANNEL_ID = "recording_service_channel"
 
-        private const val SERVER_PORT = 8081  // Use different port to avoid conflicts with NetworkController
+        private const val SERVER_PORT =
+            8081  // Use different port to avoid conflicts with NetworkController
         private const val SERVICE_TYPE = "_ircamera._tcp."
         private const val SERVICE_NAME = "IRCamera-Android"
 
@@ -208,6 +210,7 @@ class RecordingService : LifecycleService() {
     private lateinit var notificationManager: NotificationManager
 
     private var serverSocket: ServerSocket? = null
+    private var actualServerPort: Int = SERVER_PORT
     private var isServerRunning = AtomicBoolean(false)
     private var serverJob: Job? = null
     private val activeConnections = ConcurrentHashMap<String, ClientConnection>()
@@ -237,11 +240,13 @@ class RecordingService : LifecycleService() {
         fun isConnectedToPC(): Boolean = this@RecordingService.isConnectedToPC
         fun getServerStatus(): String {
             return if (isServerRunning.get()) {
-                "Running on port $SERVER_PORT (${activeConnections.size} clients)"
+                "Running on port $actualServerPort (${activeConnections.size} clients)"
             } else {
                 "Stopped"
             }
         }
+
+        fun getActualServerPort(): Int = actualServerPort
 
         fun getConnectedClients(): List<String> {
             return activeConnections.keys.toList()
@@ -270,7 +275,8 @@ class RecordingService : LifecycleService() {
         crashRecoveryManager = CrashRecoveryManager(this)
 
         networkClient = NetworkClient(this)
-        networkServer = NetworkServer(this, 8081)  // Use port 8081 to avoid conflict with NetworkController
+        networkServer =
+            NetworkServer(this, 8081)  // Use port 8081 to avoid conflict with NetworkController
         networkManager = NetworkManager(this, recordingController)
         protocolHandler = ProtocolHandler(this, networkServer)
         protocolHandler.setTimeSyncManager(timeSyncManager)
@@ -1204,23 +1210,40 @@ class RecordingService : LifecycleService() {
         try {
             // Ensure any previous socket is fully released
             delay(100)
-            
+
+            // Find an available port starting from the preferred port
+            actualServerPort = try {
+                if (NetworkUtils.isPortAvailable(SERVER_PORT)) {
+                    SERVER_PORT
+                } else {
+                    Log.w(TAG, "Preferred port $SERVER_PORT is in use, finding alternative")
+                    NetworkUtils.findAvailablePort(SERVER_PORT + 1, 10)
+                }
+            } catch (e: IllegalStateException) {
+                Log.e(TAG, "Could not find available port starting from $SERVER_PORT", e)
+                throw e
+            }
+
             serverSocket = ServerSocket().apply {
                 reuseAddress = true
-                bind(InetSocketAddress(SERVER_PORT))
+                bind(InetSocketAddress(actualServerPort))
             }
             isServerRunning.set(true)
+            
             structuredLogger.logServerEvent(
                 "server_socket_started",
-                mapOf("port" to SERVER_PORT)
+                mapOf("port" to actualServerPort, "preferred_port" to SERVER_PORT)
             )
+            
+            Log.i(TAG, "Server socket bound to port $actualServerPort${if (actualServerPort != SERVER_PORT) " (preferred port $SERVER_PORT was in use)" else ""}")
+            
             if (FeatureFlags.MDNS_ENABLE) {
                 registerNsdService()
             }
             if (!isServiceForeground()) {
                 startForeground(
                     NOTIFICATION_ID,
-                    createServerNotification("Server listening for PC connections")
+                    createServerNotification("Server listening for PC connections on port $actualServerPort")
                 )
             }
             while (!stopToken.isStopRequested() && isServerRunning.get()) {
