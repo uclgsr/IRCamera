@@ -306,7 +306,7 @@ class BluetoothScannerComposeActivity : BaseComposeActivity() {
                     ) {
                         // Connection status
                         Surface(
-                            color = if (device.isConnected) Color.Green else Color.Gray,
+                            color = if (device.isConnected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f),
                             shape = MaterialTheme.shapes.small,
                             modifier = Modifier.padding(bottom = 4.dp)
                         ) {
