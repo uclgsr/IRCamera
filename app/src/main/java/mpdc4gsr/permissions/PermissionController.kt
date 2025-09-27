@@ -843,7 +843,7 @@ class PermissionController(
             .setPositiveButton("Open Settings") { _, _ ->
                 openAppSettings()
             }
-            .setNegativeButton(if (criticalPermissions.isNotEmpty()) "Exit" else "Continue Limited") { _, _ ->
+            .setNegativeButton(if (criticalPermissions.isEmpty()) "Continue Limited" else "Exit") { _, _ ->
                 if (criticalPermissions.isNotEmpty()) {
                     // Only exit for truly critical permissions (camera, core bluetooth)
                     activity.finish()
