@@ -42,7 +42,7 @@ class CrashRecoveryManagerTest {
     @Test
     fun `should detect incomplete recording session with MVP recovery data`() = runTest {
         // Setup - simulate real incomplete session scenario
-        val sessionId = "session_$(System.currentTimeMillis())"
+        val sessionId = "session_${System.currentTimeMillis()}"
         val sessionStartTime = System.currentTimeMillis() - 300000L // 5 minutes ago
         
         every { mockSharedPreferences.contains("last_session_id") } returns true
